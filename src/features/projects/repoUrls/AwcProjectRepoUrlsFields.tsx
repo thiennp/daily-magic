@@ -1,15 +1,12 @@
 "use client";
 
+import AwcProjectRepoUrlList from "@/features/projects/repoUrls/AwcProjectRepoUrlList";
 import { AWC_PROJECT_REPO_URLS_COPY } from "@/features/projects/repoUrls/awcProjectRepoUrlsCopy.constant";
-import {
-  PROJECT_REPO_URLS_MAX,
-  isValidProjectRepoUrl,
-} from "@/lib/projects/validateProjectRepoUrls";
+import type { AwcProjectRepoUrlsFieldsValue } from "@/features/projects/repoUrls/buildRepoUrlsPayload";
+import { PROJECT_REPO_URLS_MAX } from "@/lib/projects/validateProjectRepoUrls";
 
-export type AwcProjectRepoUrlsFieldsValue = {
-  readonly repoUrls: readonly string[];
-  readonly defaultBranch: string;
-};
+export type { AwcProjectRepoUrlsFieldsValue } from "@/features/projects/repoUrls/buildRepoUrlsPayload";
+export { buildRepoUrlsPayload } from "@/features/projects/repoUrls/buildRepoUrlsPayload";
 
 interface AwcProjectRepoUrlsFieldsProps {
   readonly value: AwcProjectRepoUrlsFieldsValue;
@@ -18,23 +15,6 @@ interface AwcProjectRepoUrlsFieldsProps {
   /** When set, show field-level errors keyed by URL index or "defaultBranch". */
   readonly fieldErrors?: Readonly<Record<string, string>>;
 }
-
-const urlFieldError = (url: string): string | null => {
-  const trimmed = url.trim();
-  if (trimmed.length === 0) {
-    return null;
-  }
-  if (!isValidProjectRepoUrl(trimmed)) {
-    if (/@/.test(trimmed) && /^https?:\/\//iu.test(trimmed)) {
-      return AWC_PROJECT_REPO_URLS_COPY.validationCredentials;
-    }
-    if (/[?&#](token|access_token|api_key|password|secret)=/iu.test(trimmed)) {
-      return AWC_PROJECT_REPO_URLS_COPY.validationCredentials;
-    }
-    return AWC_PROJECT_REPO_URLS_COPY.validationScheme;
-  }
-  return null;
-};
 
 export default function AwcProjectRepoUrlsFields({
   value,
@@ -77,43 +57,13 @@ export default function AwcProjectRepoUrlsFields({
           {copy.hint}
         </p>
       </div>
-      <ul className="space-y-2">
-        {urls.map((url, index) => {
-          const inlineError =
-            fieldErrors?.[String(index)] ?? urlFieldError(url);
-          return (
-            <li key={`repo-url-${index}`} className="space-y-1">
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                <label className="sr-only" htmlFor={`repo-url-input-${index}`}>
-                  {copy.urlLabel} {index + 1}
-                </label>
-                <input
-                  id={`repo-url-input-${index}`}
-                  type="text"
-                  disabled={disabled}
-                  value={url}
-                  placeholder={copy.urlPlaceholder}
-                  onChange={(event) => setUrlAt(index, event.target.value)}
-                  className="w-full flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 font-mono text-sm dark:border-gray-700 dark:bg-gray-800"
-                />
-                <button
-                  type="button"
-                  disabled={disabled || urls.length <= 1}
-                  className="rounded-md border px-2 py-1 text-xs disabled:opacity-40"
-                  onClick={() => removeAt(index)}
-                >
-                  {copy.removeUrl}
-                </button>
-              </div>
-              {inlineError !== null && inlineError.length > 0 ? (
-                <p className="text-xs text-error-600 dark:text-error-400">
-                  {inlineError}
-                </p>
-              ) : null}
-            </li>
-          );
-        })}
-      </ul>
+      <AwcProjectRepoUrlList
+        urls={urls}
+        disabled={disabled}
+        fieldErrors={fieldErrors}
+        onChangeUrl={setUrlAt}
+        onRemove={removeAt}
+      />
       <button
         type="button"
         disabled={disabled || urls.length >= PROJECT_REPO_URLS_MAX}
@@ -147,20 +97,3 @@ export default function AwcProjectRepoUrlsFields({
     </div>
   );
 }
-
-/** Collect non-empty trimmed URLs + optional branch for API payloads. */
-export const buildRepoUrlsPayload = (
-  value: AwcProjectRepoUrlsFieldsValue,
-): {
-  readonly repoUrls: string[];
-  readonly defaultBranch: string | null;
-} => {
-  const repoUrls = value.repoUrls
-    .map((url) => url.trim())
-    .filter((url) => url.length > 0);
-  const trimmedBranch = value.defaultBranch.trim();
-  return {
-    repoUrls,
-    defaultBranch: trimmedBranch.length > 0 ? trimmedBranch : null,
-  };
-};

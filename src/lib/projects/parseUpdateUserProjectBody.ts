@@ -4,7 +4,7 @@ import {
 } from "@/lib/projects/parseUserProjectBodyParsers";
 import type { ParseUpdateUserProjectBodyResult } from "@/lib/projects/parseUpdateUserProjectBodyResult.type";
 import type { UpdateUserProjectInput } from "@/lib/projects/parseUserProjectBody";
-import { parseOptionalProjectRepoFields } from "@/lib/projects/validateProjectRepoUrls";
+import { parseOptionalProjectRepoFields } from "@/lib/projects/parseOptionalProjectRepoFields";
 
 const buildUpdateInput = (input: {
   readonly name?: string;
