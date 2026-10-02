@@ -30,24 +30,11 @@ export const AWC_PROJECT_ACCESS_COPY = {
   revokeHint:
     "Revoke anytime to kick a member — access is denied on the next ACL check. Re-Approve restores membership after a new request.",
   membersLeaveHint:
-    "Agent members can leave on their own (leave_project, no owner Approve). Revoke is for kicking; Activity may show leave / Left project (membership revoked) for self-leave — not an owner kick.",
+    "Agent members can leave on their own (leave_project, no owner Approve). Revoke is for kicking; self-leave revokes membership (leave / Left project) — not an owner kick. Check Members for who remains.",
   addFolderRef: "Add folder ref",
   remove: "Remove",
   firstConnectRole: PROJECT_ACL_FIRST_CONNECT.role,
   firstConnectNote: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
-  activityHeading: "Activity",
-  activityToggleShow: "Show activity",
-  activityToggleHide: "Hide activity",
-  activityHonesty:
-    "Membership and status events via list_project_activity / GET …/activity — not a cloud content store.",
-  activityFilterLabel: "Filter",
-  activityFilterAll: "All types",
-  activityLoading: "Loading activity…",
-  activityEmpty: "No membership or status events yet.",
-  activityUnavailable:
-    "Activity API not available on this deploy yet — membership and status events will appear here once the backend lands.",
-  activityNonGoals:
-    "No transcripts, run logs, or prompt bodies — those stay on local machines.",
   invitesHeading: "Bot invites",
   invitesIntro:
     "One-time links for specialist bots. Redeem → pending → you Approve with a nickname.",

@@ -14,13 +14,11 @@ type AccessApi = ReturnType<typeof useAwcProjectAccess>;
 interface AwcProjectAccessPanelBodyProps {
   readonly projectId: string;
   readonly access: AccessApi;
-  readonly onMutate: () => void;
 }
 
 export default function AwcProjectAccessPanelBody({
   projectId,
   access,
-  onMutate,
 }: AwcProjectAccessPanelBodyProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
 
@@ -36,25 +34,16 @@ export default function AwcProjectAccessPanelBody({
         <AwcProjectAccessPendingList
           projectId={projectId}
           pending={access.pending}
-          onApprove={async (id, name) => {
-            const result = await access.approve(id, name);
-            onMutate();
-            return result;
-          }}
-          onDeny={(id) => void access.deny(id).then(onMutate)}
+          onApprove={async (id, name) => access.approve(id, name)}
+          onDeny={(id) => void access.deny(id)}
         />
         <div className="border-t border-gray-200/70 pt-3 dark:border-gray-800/70">
           <AwcProjectAccessMembersList
             members={access.members}
-            onRevoke={(id) => void access.revoke(id).then(onMutate)}
-            onRename={async (membershipId, projectDisplayName) => {
-              const result = await access.renameMember(
-                membershipId,
-                projectDisplayName,
-              );
-              onMutate();
-              return result;
-            }}
+            onRevoke={(id) => void access.revoke(id)}
+            onRename={async (membershipId, projectDisplayName) =>
+              access.renameMember(membershipId, projectDisplayName)
+            }
           />
         </div>
       </AwcProjectAccessSection>
@@ -72,8 +61,8 @@ export default function AwcProjectAccessPanelBody({
           projectId={projectId}
           projectName={access.projectName}
           hideChrome
-          onCreate={() => void access.createInvite().then(onMutate)}
-          onRevoke={(id) => void access.revokeInvite(id).then(onMutate)}
+          onCreate={() => void access.createInvite()}
+          onRevoke={(id) => void access.revokeInvite(id)}
           onClearCreatedUrl={() => {
             access.setCreatedInviteUrl(null);
             access.setCreatedInviteToken(null);

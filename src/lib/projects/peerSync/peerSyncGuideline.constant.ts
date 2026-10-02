@@ -10,7 +10,7 @@ export const PROJECT_PEER_SYNC_GUIDELINE = {
     "folder refs (machine × folder path strings)",
     "optional repo URLs + default branch (metadata only)",
     "allowed members/bots",
-    "approve + revoke audit (who/when)",
+    "membership (Approve / Deny / Revoke / leave — Members + Pending)",
   ],
   awcDoesNotStore: [
     "handoff bodies or summaries",

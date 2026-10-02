@@ -191,5 +191,5 @@ Weighted score: **52** (dimension scores × weights, rounded).
 
 ## Out of scope (recorded)
 
-- `/projects/[projectId]` detail, Project Access UI, Activity feed content.
+- `/projects/[projectId]` detail, Project Access UI (Members / Pending / Messages / Folders; Access Activity feed removed).
 - Code fixes (audit-only phase).

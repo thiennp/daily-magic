@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import AwcProjectAccessPanelBody from "@/features/projects/access/AwcProjectAccessPanelBody";
-import AwcProjectActivityFeed from "@/features/projects/access/AwcProjectActivityFeed";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
@@ -20,8 +18,6 @@ export default function AwcProjectAccessPanel({
   className = "",
 }: AwcProjectAccessPanelProps) {
   const access = useAwcProjectAccess(projectId);
-  const [activityRefreshSignal, setActivityRefreshSignal] = useState(0);
-  const bump = () => setActivityRefreshSignal((v) => v + 1);
   const copy = AWC_PROJECT_ACCESS_COPY;
   const ownerReady = !access.isLoading && !access.loadError;
 
@@ -53,21 +49,12 @@ export default function AwcProjectAccessPanel({
       ) : null}
 
       {ownerReady ? (
-        <AwcProjectAccessPanelBody
-          projectId={projectId}
-          access={access}
-          onMutate={bump}
-        />
+        <AwcProjectAccessPanelBody projectId={projectId} access={access} />
       ) : null}
 
       {access.message ? (
         <p className="text-sm text-gray-600 dark:text-gray-300">{access.message}</p>
       ) : null}
-
-      <AwcProjectActivityFeed
-        projectId={projectId}
-        refreshSignal={activityRefreshSignal}
-      />
     </section>
   );
 }

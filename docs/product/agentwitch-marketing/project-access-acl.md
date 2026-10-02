@@ -36,7 +36,7 @@ Immediate AuthZ deny on the next ACL check. Locals must stop treating that princ
 
 | Stores                                                   | Must not store (as cowork bus)                                   |
 | -------------------------------------------------------- | ---------------------------------------------------------------- |
-| Project name, folder refs, members, approve/revoke audit | Handoffs, run dumps, skill bodies, memory for multi-team sharing |
+| Project name, folder refs, members (Approve / Deny / Revoke / leave) | Handoffs, run dumps, skill bodies, memory for multi-team sharing |
 
 ## Related
 

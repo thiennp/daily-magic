@@ -1,6 +1,6 @@
 # Multi-bot cowork model
 
-**Status:** [SHIPPED ACL] + [UI activity feed; API may lag]  
+**Status:** [SHIPPED ACL]  
 **Slug:** `multi-bot-cowork`  
 **Audience:** owners + bot builders
 
@@ -12,16 +12,17 @@ Teams co-work **local↔local** (shared folder on one machine, or git / existing
 
 Same Mac, two Macs, or offline peers — coordination stays on local/git/bot channels. AWC remains the ACL gate.
 
-## Activity feed (membership / status)
+## Membership (no cloud Activity feed)
 
-Project Access includes an **Activity** surface for membership and status events (approve/deny/revoke, folder refs, claim checks) — **not** a cloud content store.
+Project Access shows **Members** and **Pending** for who may join. Prefer `list_project_peers` / `get_project_acl` / `check_membership` for bots — not a cloud content store or Activity product feed.
 
-Backend `GET /api/projects/:id/activity` may lag a deploy; the UI degrades gracefully until the API is live. Keep handoffs, runs, and skills on local/git/bot channels.
+Keep handoffs, runs, and skills on local/git/bot channels.
 
 ## Non-goals
 
 - No project content bus on AWC
 - No replacement for Slack / Outlook specialist bots
+- No Access Activity panel / cloud Activity feed as the product membership surface
 
 ## FAQ
 

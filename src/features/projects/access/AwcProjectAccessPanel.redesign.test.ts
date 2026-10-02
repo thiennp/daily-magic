@@ -21,4 +21,22 @@ describe("AwcProjectAccessPanel redesign", () => {
     expect(AWC_PROJECT_ACCESS_COPY.peopleHeading).toBe("People");
     expect(AWC_PROJECT_ACCESS_COPY.eyebrow).toBe("Collaboration");
   });
+
+  it("does not mount Access Activity feed", () => {
+    const panel = readFileSync(
+      join(process.cwd(), "src/features/projects/access/AwcProjectAccessPanel.tsx"),
+      "utf8",
+    );
+    const body = readFileSync(
+      join(
+        process.cwd(),
+        "src/features/projects/access/AwcProjectAccessPanelBody.tsx",
+      ),
+      "utf8",
+    );
+    expect(panel).not.toContain("AwcProjectActivityFeed");
+    expect(panel).not.toContain("activityRefreshSignal");
+    expect(body).not.toContain("onMutate");
+    expect(AWC_PROJECT_ACCESS_COPY).not.toHaveProperty("activityHeading");
+  });
 });

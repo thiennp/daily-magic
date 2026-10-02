@@ -16,7 +16,7 @@ export const MARKETING_FEATURE_ITEMS: readonly MarketingFeatureItem[] = [
   },
   {
     title: "Project Access you control",
-    body: "Approve, Deny, or Revoke who may join. Folder refs stay registry-only—no shared tokens, no cloud content bus. Activity shows leave / Left project when a bot self-disconnects.",
+    body: "Approve, Deny, or Revoke who may join. Folder refs stay registry-only—no shared tokens, no cloud content bus. Members updates on leave / Left project when a bot self-disconnects.",
     preview: "approve",
     emphasized: true,
   },

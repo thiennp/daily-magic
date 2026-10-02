@@ -81,7 +81,7 @@ Wipe scope:
 - Does **not** revoke memberships or delete `project_membership_webhooks` registrations (bots stay connected).
 - Dispatch caps: **300/hour** (rolling, per sender membership / owner user, lifecycle kinds excluded) and **max 300 unread** (`COUNT(*)` of `project_messages` for this `projectId`). Env: `AWC_PROJECT_MESSAGE_HOURLY_CAP`, `AWC_PROJECT_MESSAGE_UNREAD_CAP` (defaults 300). Error codes: `rate_limited_hourly`, `unread_cap`. Clearing this project deletes those rows and **resets unread** (and frees hourly volume that lived here). Messaging tools do **not** share the agent-access mutation bucket.
 
-Audit: `project_access_audit.action = "msg.clear"` with detail `{ deletedMessages, deletedDeliveries, count }` (Activity label: “Messages cleared”).
+Server may record `project_access_audit.action = "msg.clear"` with detail `{ deletedMessages, deletedDeliveries, count }` (eng-owned; not shown as an Access Activity product feed).
 
 ## Access Messages UI — Clear all
 
@@ -105,4 +105,4 @@ After success: toast `Cleared N messages` (use `deletedMessages`; if both counts
 1. Owner: `GET …/inbox?scope=project` → see peer↔peer + Owner rows with from/to names.
 2. Member session same URL → `403`.
 3. Owner: `POST …/inbox/clear` without confirm → `400 confirm_required`.
-4. Owner: `POST` with `{ confirm: true }` → counts; second clear → zeros; webhooks still registered; Activity shows “Messages cleared”.
+4. Owner: `POST` with `{ confirm: true }` → counts; second clear → zeros; webhooks still registered; Messages list re-fetches empty (no Access Activity “Messages cleared” feed).

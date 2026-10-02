@@ -3,7 +3,7 @@ export const AWC_PROJECT_INBOX_COPY = {
   toggleShow: "Show messages",
   toggleHide: "Hide messages",
   honesty:
-    "Full project message log (peer ↔ peer and Owner). Separate from Activity audit.",
+    "Full project message log (peer ↔ peer and Owner). Membership stays under Members + Pending.",
   loading: "Loading messages…",
   empty: "No messages yet.",
   unavailable:
