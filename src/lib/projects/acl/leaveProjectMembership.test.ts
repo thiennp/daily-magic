@@ -7,9 +7,9 @@ import {
   revokedLeaveMemberRow,
 } from "@/lib/projects/acl/leaveProjectMembership.fixtures";
 import { leaveProjectMembership } from "@/lib/projects/acl/leaveProjectMembership";
+import { revokeProjectApiKeysForMembership } from "@/lib/projects/acl/projectApiKeys/revokeProjectApiKeysForMembership";
 
 const sqlMock = vi.fn();
-const revokeKeysMock = vi.fn(async () => 0);
 
 vi.mock("@/lib/db", () => ({
   getSql: () => sqlMock,
@@ -17,8 +17,7 @@ vi.mock("@/lib/db", () => ({
 }));
 
 vi.mock("@/lib/projects/acl/projectApiKeys/revokeProjectApiKeysForMembership", () => ({
-  revokeProjectApiKeysForMembership: (...args: unknown[]) =>
-    revokeKeysMock(...args),
+  revokeProjectApiKeysForMembership: vi.fn(async () => 0),
 }));
 
 vi.mock("@/lib/projects/userProjectQueries", () => ({
@@ -30,7 +29,7 @@ vi.mock("@/lib/projects/userProjectQueries", () => ({
 describe("leaveProjectMembership happy path", () => {
   beforeEach(() => {
     sqlMock.mockReset();
-    revokeKeysMock.mockClear();
+    vi.mocked(revokeProjectApiKeysForMembership).mockClear();
     resetProjectAclSchemaEnsureForTests();
   });
 
@@ -60,7 +59,7 @@ describe("leaveProjectMembership happy path", () => {
       expect(result.membership.status).toBe("revoked");
       expect(result.alreadyLeft).toBeUndefined();
     }
-    expect(revokeKeysMock).toHaveBeenCalledWith(
+    expect(revokeProjectApiKeysForMembership).toHaveBeenCalledWith(
       expect.objectContaining({
         projectId: "proj-1",
         membershipId: "mem-1",
