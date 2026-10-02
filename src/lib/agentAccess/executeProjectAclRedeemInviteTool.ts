@@ -1,6 +1,7 @@
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
+import { normalizeProjectInviteTokenArg } from "@/lib/projects/acl/invites/extractProjectInviteTokenFromUrl";
 import { redeemProjectInvite } from "@/lib/projects/acl/invites/redeemProjectInvite";
 
 export const executeProjectAclRedeemInviteTool = async (input: {
@@ -24,7 +25,7 @@ export const executeProjectAclRedeemInviteTool = async (input: {
     );
   }
   const result = await redeemProjectInvite({
-    token,
+    token: normalizeProjectInviteTokenArg(token),
     actorUserId: input.actor.id,
   });
   if (!result.ok) {

@@ -18,3 +18,7 @@ See AgentWitch box doc `project-bot-invite-hooks-ui-contract.md` — locked DTO 
 2. GET display-name-presets → suggested available
 3. Agent redeems → pending; Approve with projectDisplayName → member shows nickname
 4. Collision → 409; rename via PATCH memberships
+
+## Invite URL page (2026-10-02)
+
+`GET /invite/p/<token>` — public instructions page (no auth). Redeem is MCP-only (`redeem_project_invite`). Do not treat missing browser session as dead invite. POST create returns `url` + `token` once.

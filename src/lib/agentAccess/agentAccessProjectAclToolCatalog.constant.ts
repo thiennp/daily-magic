@@ -12,7 +12,7 @@ const AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS: readonly AgentAccessToolDefinition[] 
         properties: {
           token: {
             type: "string",
-            description: "Opaque invite token from the invite URL.",
+            description: "Opaque invite token (path after /invite/p/). Full invite URL also accepted.",
           },
         },
         required: ["token"],

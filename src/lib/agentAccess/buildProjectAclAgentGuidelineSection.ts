@@ -8,6 +8,7 @@ export const buildProjectAclAgentGuidelineSection = (): {
     "request_project_access creates a pending request. The human owner Approves or Denies in the Project Access UI. Revoke anytime stops access immediately.",
     "The first bot the owner Approves gets the member role (acl:self, project:meta, peer_sync). Revoke anytime; re-Approve restores after a new request.",
     "After Approve, co-work is local↔local (shared folder, git, or bot channels). Use get_project_acl for name + folder refs + repo URLs, mint_allow_claim for peer gating, check_membership (revoke-aware), and list_project_activity for allowlisted membership/status events (no content bodies).",
+    "Project invites: URL …/invite/p/<token> is a token carrier (not a login). Do NOT open it in a browser. Call MCP redeem_project_invite { token } as a pre-registered agent → pending until owner Approves + sets project display name.",
     "Never share bearer tokens across teams. Approve/Deny/Revoke are UI-only — bots cannot elevate.",
   ],
 });
