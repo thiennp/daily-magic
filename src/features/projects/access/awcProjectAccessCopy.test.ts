@@ -13,6 +13,7 @@ describe("project ACL surface copy", () => {
     const blobs = [
       AWC_PROJECT_ACCESS_COPY.intro,
       AWC_PROJECT_ACCESS_COPY.revokeHint,
+      AWC_PROJECT_ACCESS_COPY.membersLeaveHint,
       AWC_PROJECT_ACCESS_COPY.activityHonesty,
       AWC_PROJECT_ACCESS_COPY.membersEmpty,
       AWC_PROJECT_ACCESS_COPY.firstConnectNote,
@@ -35,6 +36,11 @@ describe("project ACL surface copy", () => {
     expect(blobs.toLowerCase()).toMatch(/list_project_activity/);
     expect(blobs).toMatch(/first bot/i);
     expect(blobs).toMatch(/member role/i);
+    expect(blobs).toMatch(/leave on their own|leave_project/i);
+    expect(blobs).toMatch(/Revoke is for kicking|kick/i);
+    expect(AWC_PROJECT_ACCESS_COPY.membersLeaveHint).toMatch(
+      /no owner Approve|leave_project/i,
+    );
   });
 
   it("documents first-connect role for G5 empty state from API constant", () => {

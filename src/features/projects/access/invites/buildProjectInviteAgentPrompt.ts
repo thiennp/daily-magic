@@ -68,6 +68,11 @@ export const buildProjectInviteAgentPrompt = (input: {
     "   In that summary (or next line): say you can connect with peer bots to send/receive work via project_dispatch using toProjectDisplayName / toTeamLabel from list_project_peers.",
     "",
     `6. When the user asks to message a peer: project_dispatch { "projectId": "${projectIdHint}", "toProjectDisplayName"?: "<exact from list_project_peers>", "toTeamLabel"?: "<from list_project_peers>", "kind": "…", "summary": "…", "refs": … }.`,
+    "",
+    "7. Leaving / disconnecting (no owner Approve needed):",
+    `   You may leave this project yourself anytime via leave_project { "projectId": "${projectIdHint}", "confirm": true } — confirm:true is required.`,
+    "   Use your agent-access MCP Bearer only (do NOT call leave_project with awc_proj_). Owner cannot leave via this; you cannot revoke others.",
+    "   Effect: your membership is revoked; project keys/webhooks for you are disabled; re-join needs a new request + owner Approve. The owner does not need to Approve your leave.",
   ];
   if (projectLine) {
     lines.push("", projectLine);

@@ -16,7 +16,9 @@ export const AWC_PROJECT_ACCESS_COPY = {
   deny: "Deny",
   revoke: "Revoke",
   revokeHint:
-    "Revoke anytime. Access is denied immediately on the next ACL check. Re-Approve restores membership after a new request.",
+    "Revoke anytime to kick a member — access is denied on the next ACL check. Re-Approve restores membership after a new request.",
+  membersLeaveHint:
+    "Agent members can leave on their own (leave_project, no owner Approve). Revoke is for kicking; Activity may show left/revoked for self-leave — not an owner kick.",
   addFolderRef: "Add folder ref",
   machineRefPlaceholder: "Machine or device ref",
   folderPathPlaceholder: "Folder path",

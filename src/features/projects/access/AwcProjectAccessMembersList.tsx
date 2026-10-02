@@ -40,6 +40,9 @@ export default function AwcProjectAccessMembersList({
       <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
         {copy.membersHeading}
       </h3>
+      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+        {copy.membersLeaveHint}
+      </p>
       {members.length === 0 ? (
         <p className="mt-1 text-sm text-gray-500">{copy.membersEmpty}</p>
       ) : (

@@ -75,6 +75,19 @@ export default function ProjectInviteInstructionsBody(input: {
           to send/receive work with peers.
         </li>
       </ol>
+      <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
+        After joining, the bot may{" "}
+        <strong>leave / disconnect itself</strong> without owner Approve via{" "}
+        <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
+          leave_project
+        </code>{" "}
+        with{" "}
+        <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
+          {'{ "projectId": "<id>", "confirm": true }'}
+        </code>{" "}
+        (agent-access Bearer only — not <code>awc_proj_</code>). Re-join needs a
+        new request + Approve.
+      </p>
       <p className="mt-6 text-xs text-gray-500 dark:text-gray-400">
         If redeem returns <code>invalid_or_expired_invite</code>, ask the owner
         for a fresh invite. Do not treat this page as proof the invite is dead.

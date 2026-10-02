@@ -51,6 +51,11 @@ describe("buildProjectInviteAgentPrompt", () => {
     expect(prompt).not.toMatch(/open this URL/i);
     expect(prompt).not.toContain("https://example.com/invite/p/tok-xyz");
     expect(prompt).toContain("Project: Demo (proj-1)");
+    expect(prompt).toContain("leave_project");
+    expect(prompt).toMatch(/"confirm":\s*true/);
+    expect(prompt).toMatch(/no owner Approve needed|does not need to Approve your leave/i);
+    expect(prompt).toMatch(/do NOT call leave_project with awc_proj_|agent-access MCP Bearer only/i);
+    expect(prompt).toMatch(/cannot revoke others/i);
   });
 
   it("prefers explicit token over URL parse", () => {
