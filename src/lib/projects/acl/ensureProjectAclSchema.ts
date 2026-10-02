@@ -1,3 +1,4 @@
+import { ensureProjectInviteHooksSchema } from "@/lib/projects/acl/ensureProjectInviteHooksSchema";
 import { getSql } from "@/lib/db";
 
 const state: { ensured: boolean; promise: Promise<void> | null } = {
@@ -10,7 +11,7 @@ export const resetProjectAclSchemaEnsureForTests = (): void => {
   state.promise = null;
 };
 
-/** Idempotent CREATE for ACL tables (full DDL also in 041/044 migrations). */
+/** Idempotent CREATE for ACL tables (full DDL also in 041/044/045 migrations). */
 export const ensureProjectAclSchema = async (): Promise<void> => {
   if (state.ensured) {
     return;
@@ -58,59 +59,7 @@ export const ensureProjectAclSchema = async (): Promise<void> => {
       machine_or_device_ref TEXT NOT NULL, folder_path TEXT NOT NULL,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
-    await sql`CREATE TABLE IF NOT EXISTS project_invites (
-      id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
-      project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
-      created_by_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-      token_hash TEXT NOT NULL UNIQUE,
-      team_label TEXT,
-      scopes TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[],
-      max_uses INTEGER NOT NULL DEFAULT 1,
-      uses_remaining INTEGER NOT NULL DEFAULT 1,
-      expires_at TIMESTAMPTZ NOT NULL,
-      revoked_at TIMESTAMPTZ,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
-    await sql`CREATE TABLE IF NOT EXISTS project_api_keys (
-      id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
-      project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
-      membership_id TEXT NOT NULL REFERENCES project_memberships(id) ON DELETE CASCADE,
-      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-      token_hash TEXT NOT NULL UNIQUE,
-      token_prefix TEXT NOT NULL,
-      token_last4 TEXT NOT NULL,
-      scopes TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[],
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      revoked_at TIMESTAMPTZ,
-      last_used_at TIMESTAMPTZ)`;
-    await sql`CREATE TABLE IF NOT EXISTS project_membership_webhooks (
-      id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
-      project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
-      membership_id TEXT NOT NULL UNIQUE REFERENCES project_memberships(id) ON DELETE CASCADE,
-      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-      webhook_url TEXT NOT NULL,
-      secret_hash TEXT NOT NULL,
-      secret_prefix TEXT NOT NULL,
-      enabled BOOLEAN NOT NULL DEFAULT TRUE,
-      revoke_generation INTEGER NOT NULL DEFAULT 0,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
-    await sql`CREATE TABLE IF NOT EXISTS project_messages (
-      id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
-      project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
-      sender_membership_id TEXT NOT NULL REFERENCES project_memberships(id) ON DELETE CASCADE,
-      sender_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-      to_membership_id TEXT, to_user_id TEXT, to_team_label TEXT,
-      to_project_display_name TEXT, kind TEXT NOT NULL, summary TEXT NOT NULL,
-      refs JSONB NOT NULL DEFAULT '{}'::jsonb,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), acked_at TIMESTAMPTZ)`;
-    await sql`CREATE TABLE IF NOT EXISTS project_message_deliveries (
-      id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
-      message_id TEXT NOT NULL REFERENCES project_messages(id) ON DELETE CASCADE,
-      membership_id TEXT NOT NULL REFERENCES project_memberships(id) ON DELETE CASCADE,
-      attempt INTEGER NOT NULL DEFAULT 0, status TEXT NOT NULL,
-      last_error TEXT,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
+    await ensureProjectInviteHooksSchema();
     state.ensured = true;
   })();
 

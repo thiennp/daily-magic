@@ -49,12 +49,17 @@ export const assertSafeProjectWebhookUrl = async (
   if (typeof raw !== "string" || raw.trim().length === 0) {
     return { ok: false, code: "invalid_url" };
   }
-  let url: URL;
-  try {
-    url = new URL(raw.trim());
-  } catch {
+  const parsed = (() => {
+    try {
+      return { ok: true as const, url: new URL(raw.trim()) };
+    } catch {
+      return { ok: false as const };
+    }
+  })();
+  if (!parsed.ok) {
     return { ok: false, code: "invalid_url" };
   }
+  const url = parsed.url;
   if (url.protocol !== "https:") {
     return { ok: false, code: "https_only" };
   }

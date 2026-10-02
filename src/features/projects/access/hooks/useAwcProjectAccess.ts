@@ -9,12 +9,8 @@ import {
   type AwcProjectAccessMember,
   type AwcProjectAccessPending,
 } from "@/features/projects/access/hooks/loadAwcProjectAccess";
-import {
-  createProjectInviteApi,
-  postProjectAccessAction,
-  renameMembershipDisplayNameApi,
-  revokeProjectInviteApi,
-} from "@/features/projects/access/utils/projectAccessApi";
+import { useAwcProjectInviteActions } from "@/features/projects/access/hooks/useAwcProjectInviteActions";
+import { postProjectAccessAction } from "@/features/projects/access/utils/projectAccessApi";
 
 export const useAwcProjectAccess = (projectId: string) => {
   const [members, setMembers] = useState<readonly AwcProjectAccessMember[]>([]);
@@ -44,32 +40,22 @@ export const useAwcProjectAccess = (projectId: string) => {
 
   useEffect(() => {
     const controller = new AbortController();
-    const load = async (): Promise<void> => {
-      setIsLoading(true);
-      try {
-        const snapshot = await loadAwcProjectAccess(projectId);
-        if (!controller.signal.aborted) {
-          setMembers(snapshot.members);
-          setPending(snapshot.pending);
-          setFolderRefs(snapshot.folderRefs);
-          setInvites(snapshot.invites);
-        }
-      } finally {
-        if (!controller.signal.aborted) {
-          setIsLoading(false);
-        }
+    void reload().finally(() => {
+      if (controller.signal.aborted) {
+        /* ignore */
       }
-    };
-    void load();
-    return () => {
-      controller.abort();
-    };
-  }, [projectId]);
+    });
+    return () => controller.abort();
+  }, [reload]);
 
-  const approve = async (
-    requestId: string,
-    projectDisplayName?: string,
-  ) => {
+  const inviteActions = useAwcProjectInviteActions({
+    projectId,
+    reload,
+    setMessage,
+    setCreatedInviteUrl,
+  });
+
+  const approve = async (requestId: string, projectDisplayName?: string) => {
     const result = await postProjectAccessAction(
       `/api/projects/${projectId}/access/requests/${requestId}/approve`,
       projectDisplayName ? { projectDisplayName } : {},
@@ -95,37 +81,6 @@ export const useAwcProjectAccess = (projectId: string) => {
     await reload();
   };
 
-  const createInvite = async () => {
-    const result = await createProjectInviteApi(projectId, {});
-    if (result.url) {
-      setCreatedInviteUrl(result.url);
-      setMessage("Invite created — copy the URL now.");
-    } else {
-      setMessage(result.errorMessage ?? "Failed to create invite.");
-    }
-    await reload();
-  };
-
-  const revokeInvite = async (inviteId: string) => {
-    const result = await revokeProjectInviteApi(projectId, inviteId);
-    setMessage(result.ok ? "Invite revoked." : (result.errorMessage ?? "Failed."));
-    await reload();
-  };
-
-  const renameMember = async (
-    membershipId: string,
-    projectDisplayName: string,
-  ) => {
-    const result = await renameMembershipDisplayNameApi(
-      projectId,
-      membershipId,
-      projectDisplayName,
-    );
-    setMessage(result.ok ? "Renamed." : (result.errorMessage ?? "Failed."));
-    await reload();
-    return result;
-  };
-
   return {
     members,
     pending,
@@ -139,9 +94,7 @@ export const useAwcProjectAccess = (projectId: string) => {
     approve,
     deny,
     revoke,
-    createInvite,
-    revokeInvite,
-    renameMember,
+    ...inviteActions,
     setFolderRefs,
     setMessage,
   };

@@ -45,30 +45,41 @@ export const renameProjectMembershipDisplayName = async (input: {
 
   await ensureProjectAclSchema();
   const sql = getSql();
-  let rows: Record<string, unknown>[] = [];
-  try {
-    rows = asRowArray(
-      await sql`
-        UPDATE project_memberships
-        SET project_display_name = ${validated.name}
-        WHERE id = ${input.membershipId}
-          AND project_id = ${input.projectId}
-          AND status = 'active'
-          AND role = 'member'
-        RETURNING *
-      `,
-    );
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    if (
-      message.includes("project_memberships_display_name_active_idx") ||
-      message.includes("unique") ||
-      message.includes("duplicate")
-    ) {
-      return { ok: false, code: "display_name_taken" };
+  const updateResult = await (async (): Promise<
+    | { readonly ok: true; readonly rows: Record<string, unknown>[] }
+    | { readonly ok: false; readonly code: "display_name_taken" }
+  > => {
+    try {
+      return {
+        ok: true,
+        rows: asRowArray(
+          await sql`
+            UPDATE project_memberships
+            SET project_display_name = ${validated.name}
+            WHERE id = ${input.membershipId}
+              AND project_id = ${input.projectId}
+              AND status = 'active'
+              AND role = 'member'
+            RETURNING *
+          `,
+        ),
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      if (
+        message.includes("project_memberships_display_name_active_idx") ||
+        message.includes("unique") ||
+        message.includes("duplicate")
+      ) {
+        return { ok: false, code: "display_name_taken" };
+      }
+      throw error;
     }
-    throw error;
+  })();
+  if (!updateResult.ok) {
+    return { ok: false, code: updateResult.code };
   }
+  const rows = updateResult.rows;
   if (rows.length === 0) {
     return { ok: false, code: "not_active" };
   }

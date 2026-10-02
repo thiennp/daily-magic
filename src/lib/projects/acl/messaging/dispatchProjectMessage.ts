@@ -2,10 +2,10 @@ import { randomUUID } from "node:crypto";
 
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
-import { normalizeProjectDisplayNameKey } from "@/lib/projects/acl/displayNames/normalizeProjectDisplayName";
 import { parseProjectDispatchPayload } from "@/lib/projects/acl/messaging/parseProjectDispatchPayload";
+import { resolveDispatchRecipients } from "@/lib/projects/acl/messaging/resolveDispatchRecipients";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
-import { asRowArray, getSql } from "@/lib/db";
+import { getSql } from "@/lib/db";
 
 export type DispatchProjectMessageResult =
   | {
@@ -13,10 +13,7 @@ export type DispatchProjectMessageResult =
       readonly messageId: string;
       readonly recipientCount: number;
     }
-  | {
-      readonly ok: false;
-      readonly code: string;
-    };
+  | { readonly ok: false; readonly code: string };
 
 export const dispatchProjectMessage = async (input: {
   readonly projectId: string;
@@ -42,60 +39,20 @@ export const dispatchProjectMessage = async (input: {
   }
 
   await ensureProjectAclSchema();
+  const resolved = await resolveDispatchRecipients({
+    projectId: input.projectId,
+    actorUserId: input.actorUserId,
+    toProjectDisplayName: parsed.toProjectDisplayName,
+    toTeamLabel: parsed.toTeamLabel,
+  });
+  if (!resolved.ok) {
+    return { ok: false, code: resolved.code };
+  }
+
   const sql = getSql();
-
-  let recipients: { id: string; user_id: string }[] = [];
-  if (parsed.toProjectDisplayName) {
-    const key = normalizeProjectDisplayNameKey(parsed.toProjectDisplayName);
-    const rows = asRowArray(
-      await sql`
-        SELECT id, user_id, project_display_name
-        FROM project_memberships
-        WHERE project_id = ${input.projectId}
-          AND status = 'active'
-          AND project_display_name IS NOT NULL
-      `,
-    );
-    recipients = rows
-      .filter(
-        (row) =>
-          row.project_display_name &&
-          normalizeProjectDisplayNameKey(String(row.project_display_name)) ===
-            key &&
-          String(row.user_id) !== input.actorUserId,
-      )
-      .map((row) => ({ id: String(row.id), user_id: String(row.user_id) }));
-    if (recipients.length === 0) {
-      return { ok: false, code: "recipient_not_found" };
-    }
-  } else if (parsed.toTeamLabel) {
-    const rows = asRowArray(
-      await sql`
-        SELECT id, user_id
-        FROM project_memberships
-        WHERE project_id = ${input.projectId}
-          AND status = 'active'
-          AND team_label = ${parsed.toTeamLabel}
-          AND user_id <> ${input.actorUserId}
-      `,
-    );
-    recipients = rows.map((row) => ({
-      id: String(row.id),
-      user_id: String(row.user_id),
-    }));
-    if (recipients.length === 0) {
-      return { ok: false, code: "recipient_not_found" };
-    }
-  }
-
-  // Unicast by display name should be one; teamLabel may be small N (cap 20).
-  if (recipients.length > 20) {
-    return { ok: false, code: "fanout_cap" };
-  }
-
   const messageId = randomUUID();
   const refsJson = JSON.stringify(parsed.refs);
-  const primary = recipients[0];
+  const primary = resolved.recipients[0];
   await sql`
     INSERT INTO project_messages (
       id, project_id, sender_membership_id, sender_user_id,
@@ -116,8 +73,7 @@ export const dispatchProjectMessage = async (input: {
       ${refsJson}::jsonb
     )
   `;
-
-  for (const recipient of recipients) {
+  for (const recipient of resolved.recipients) {
     await sql`
       INSERT INTO project_message_deliveries (
         id, message_id, membership_id, attempt, status
@@ -132,7 +88,6 @@ export const dispatchProjectMessage = async (input: {
       ON CONFLICT DO NOTHING
     `;
   }
-
   await writeProjectAccessAudit({
     projectId: input.projectId,
     actorUserId: input.actorUserId,
@@ -140,11 +95,14 @@ export const dispatchProjectMessage = async (input: {
     detail: {
       messageId,
       kind: parsed.kind,
-      recipientCount: recipients.length,
+      recipientCount: resolved.recipients.length,
       toProjectDisplayName: parsed.toProjectDisplayName,
       toTeamLabel: parsed.toTeamLabel,
     },
   });
-
-  return { ok: true, messageId, recipientCount: recipients.length };
+  return {
+    ok: true,
+    messageId,
+    recipientCount: resolved.recipients.length,
+  };
 };

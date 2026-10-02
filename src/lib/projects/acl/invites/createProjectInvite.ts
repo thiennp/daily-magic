@@ -7,18 +7,12 @@ import {
   hashProjectInviteToken,
 } from "@/lib/projects/acl/invites/hashProjectInviteToken";
 import mapProjectInviteRow from "@/lib/projects/acl/invites/mapProjectInviteRow";
-import {
-  PROJECT_INVITE_DEFAULT_EXPIRES_DAYS,
-  PROJECT_INVITE_DEFAULT_MAX_USES,
-  PROJECT_INVITE_HARD_MAX_EXPIRES_DAYS,
-  PROJECT_INVITE_HARD_MAX_USES,
-} from "@/lib/projects/acl/invites/projectInvite.constants";
 import type ProjectInviteRecord from "@/lib/projects/acl/invites/types/ProjectInviteRecord.type";
 import {
-  isProjectAclScope,
-  PROJECT_ACL_DEFAULT_MEMBER_SCOPES,
-  type ProjectAclScope,
-} from "@/lib/projects/acl/projectAclScopes.constant";
+  clampInviteExpiresDays,
+  clampInviteMaxUses,
+  parseInviteScopes,
+} from "@/lib/projects/acl/invites/clampProjectInviteParams";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { asRowArray, getSql } from "@/lib/db";
@@ -31,35 +25,6 @@ export type CreateProjectInviteResult =
       readonly token: string;
     }
   | { readonly ok: false; readonly code: "not_found" | "forbidden" | "invalid" };
-
-const clampMaxUses = (raw: unknown): number => {
-  if (typeof raw !== "number" || !Number.isFinite(raw)) {
-    return PROJECT_INVITE_DEFAULT_MAX_USES;
-  }
-  const n = Math.floor(raw);
-  if (n < 1) return PROJECT_INVITE_DEFAULT_MAX_USES;
-  return Math.min(n, PROJECT_INVITE_HARD_MAX_USES);
-};
-
-const clampExpiresDays = (raw: unknown): number => {
-  if (typeof raw !== "number" || !Number.isFinite(raw)) {
-    return PROJECT_INVITE_DEFAULT_EXPIRES_DAYS;
-  }
-  const n = Math.floor(raw);
-  if (n < 1) return PROJECT_INVITE_DEFAULT_EXPIRES_DAYS;
-  return Math.min(n, PROJECT_INVITE_HARD_MAX_EXPIRES_DAYS);
-};
-
-const parseScopes = (raw: unknown): readonly ProjectAclScope[] => {
-  if (!Array.isArray(raw)) {
-    return PROJECT_ACL_DEFAULT_MEMBER_SCOPES;
-  }
-  const filtered = raw.filter(
-    (item): item is ProjectAclScope =>
-      typeof item === "string" && isProjectAclScope(item),
-  );
-  return filtered.length > 0 ? filtered : PROJECT_ACL_DEFAULT_MEMBER_SCOPES;
-};
 
 export const createProjectInvite = async (input: {
   readonly projectId: string;
@@ -77,9 +42,9 @@ export const createProjectInvite = async (input: {
     return { ok: false, code: "forbidden" };
   }
 
-  const maxUses = clampMaxUses(input.maxUses);
-  const expiresInDays = clampExpiresDays(input.expiresInDays);
-  const scopes = parseScopes(input.scopes);
+  const maxUses = clampInviteMaxUses(input.maxUses);
+  const expiresInDays = clampInviteExpiresDays(input.expiresInDays);
+  const scopes = parseInviteScopes(input.scopes);
   const teamLabel =
     typeof input.teamLabel === "string" && input.teamLabel.trim().length > 0
       ? input.teamLabel.trim().slice(0, 64)
