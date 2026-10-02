@@ -4,6 +4,7 @@ import { SidebarProvider } from "@/context/SidebarContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { SendTaskModalProvider } from "@/features/agent/SendTaskModalProvider";
 import { AgentWitchDashboardProvider } from "@/features/agent-witch/dashboard/AgentWitchDashboardProvider";
+import AdminShell from "@/features/admin/AdminShell";
 import AuthSessionProvider from "@/features/auth/AuthSessionProvider";
 import AppShell from "@/features/shell/AppShell";
 import { APP_SHELL_NARROW_CONTENT_CLASS } from "@/features/shell/appShellContentWidth.constant";
@@ -32,7 +33,7 @@ export default function AwcStorybookChrome({
       case "marketing":
         return children;
       case "admin":
-        return children;
+        return <AdminShell>{children}</AdminShell>;
       case "app-narrow":
         return (
           <AppShell

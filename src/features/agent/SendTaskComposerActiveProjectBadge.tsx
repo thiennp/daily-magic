@@ -1,5 +1,6 @@
 "use client";
 
+import AppIcon from "@/components/ui/icon/AppIcon";
 import { FolderIcon } from "@/icons";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
@@ -31,7 +32,11 @@ export default function SendTaskComposerActiveProjectBadge({
   return (
     <div className="flex items-start gap-2 rounded-xl border border-brand-100 bg-brand-50/50 px-3 py-2 dark:border-brand-900/40 dark:bg-brand-950/20">
       <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-brand-200 bg-white dark:border-brand-900/50 dark:bg-gray-900">
-        <FolderIcon className="h-4 w-4 text-brand-700 dark:text-brand-300" />
+        <AppIcon
+          icon={FolderIcon}
+          size="sm"
+          iconClassName="text-brand-700 dark:text-brand-300"
+        />
       </span>
       <span className="min-w-0">
         <span className="block text-[11px] font-medium uppercase tracking-wide text-brand-700 dark:text-brand-300">

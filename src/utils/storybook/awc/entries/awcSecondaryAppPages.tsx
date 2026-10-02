@@ -54,7 +54,7 @@ export const AWC_SECONDARY_APP_PAGE_ENTRIES: readonly AwcStorybookPageEntry[] =
       id: "connection-lab",
       title: "Connection lab",
       path: "/connection-lab",
-      shell: "none",
+      shell: "app",
       statuses: ["ready", "error"],
       renderBody: () => <ConnectionLabPageLayout />,
     },
