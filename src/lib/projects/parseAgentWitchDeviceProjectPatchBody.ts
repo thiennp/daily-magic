@@ -1,7 +1,7 @@
 import { isString } from "guardz";
 
 import { normalizeValidatedProjectFolderPath } from "@/lib/projects/validateProjectFolderPath";
-import { parseOptionalProjectRepoFields } from "@/lib/projects/validateProjectRepoUrls";
+import { parseOptionalProjectRepoFields } from "@/lib/projects/parseOptionalProjectRepoFields";
 
 export type ParsedAgentWitchDeviceProjectPatchBody =
   | {

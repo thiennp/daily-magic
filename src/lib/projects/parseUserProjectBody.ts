@@ -3,7 +3,7 @@ import {
   parseOptionalDeviceId,
   parseProjectName,
 } from "@/lib/projects/parseUserProjectBodyParsers";
-import { parseOptionalProjectRepoFields } from "@/lib/projects/validateProjectRepoUrls";
+import { parseOptionalProjectRepoFields } from "@/lib/projects/parseOptionalProjectRepoFields";
 
 export type { ParseUpdateUserProjectBodyResult } from "@/lib/projects/parseUpdateUserProjectBodyResult.type";
 export { parseUpdateUserProjectBody } from "@/lib/projects/parseUpdateUserProjectBody";

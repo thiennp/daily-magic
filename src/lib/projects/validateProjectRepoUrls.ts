@@ -1,3 +1,9 @@
+import {
+  hasEmbeddedCredentials,
+  isHttpsGitUrl,
+  isSshGitUrl,
+} from "@/lib/projects/isValidProjectRepoUrl";
+
 /** Max remotes stored per project (v1). */
 export const PROJECT_REPO_URLS_MAX = 20;
 
@@ -17,69 +23,7 @@ export type ValidateDefaultBranchResult =
   | { readonly ok: true; readonly defaultBranch: string | null }
   | { readonly ok: false; readonly error: string };
 
-const CREDENTIAL_QUERY_PATTERN =
-  /[?&#](token|access_token|auth_token|api_key|password|secret)=/iu;
-
-const SSH_SCP_PATTERN = /^git@[\w.-]+:[\w./~+-]+$/u;
-
-const hasEmbeddedCredentials = (url: string): boolean => {
-  if (/^https:\/\/[^/]*@/iu.test(url)) {
-    return true;
-  }
-  if (/^ssh:\/\/[^/@]+:[^/@]+@/iu.test(url)) {
-    return true;
-  }
-  if (CREDENTIAL_QUERY_PATTERN.test(url)) {
-    return true;
-  }
-  return false;
-};
-
-const isHttpsGitUrl = (url: string): boolean => {
-  try {
-    const parsed = new URL(url);
-    return (
-      parsed.protocol === "https:" &&
-      parsed.hostname.length > 0 &&
-      parsed.pathname.length > 1 &&
-      !parsed.username &&
-      !parsed.password
-    );
-  } catch {
-    return false;
-  }
-};
-
-const isSshGitUrl = (url: string): boolean => {
-  if (SSH_SCP_PATTERN.test(url)) {
-    return true;
-  }
-  if (!url.toLowerCase().startsWith("ssh://")) {
-    return false;
-  }
-  try {
-    const parsed = new URL(url);
-    return (
-      parsed.protocol === "ssh:" &&
-      parsed.hostname.length > 0 &&
-      parsed.pathname.length > 1 &&
-      !parsed.password
-    );
-  } catch {
-    return false;
-  }
-};
-
-export const isValidProjectRepoUrl = (url: string): boolean => {
-  const trimmed = url.trim();
-  if (trimmed.length === 0) {
-    return false;
-  }
-  if (hasEmbeddedCredentials(trimmed)) {
-    return false;
-  }
-  return isHttpsGitUrl(trimmed) || isSshGitUrl(trimmed);
-};
+export { isValidProjectRepoUrl } from "@/lib/projects/isValidProjectRepoUrl";
 
 /** Trim, validate, dedupe (case-sensitive), preserve order. Cap at PROJECT_REPO_URLS_MAX. */
 export const validateProjectRepoUrls = (
@@ -152,39 +96,4 @@ export const validateDefaultBranch = (
     return { ok: false, error: "defaultBranch cannot contain whitespace." };
   }
   return { ok: true, defaultBranch: trimmed };
-};
-
-/**
- * Parse optional repo metadata from a request body record.
- * Omitted fields → undefined (leave unchanged on update / defaults on create).
- */
-export const parseOptionalProjectRepoFields = (
-  record: Record<string, unknown>,
-):
-  | {
-      readonly ok: true;
-      readonly repoUrls?: readonly string[];
-      readonly defaultBranch?: string | null;
-    }
-  | { readonly ok: false; readonly error: string } => {
-  let repoUrls: readonly string[] | undefined;
-  let defaultBranch: string | null | undefined;
-
-  if (record.repoUrls !== undefined) {
-    const validated = validateProjectRepoUrls(record.repoUrls);
-    if (!validated.ok) {
-      return validated;
-    }
-    repoUrls = validated.repoUrls;
-  }
-
-  if (record.defaultBranch !== undefined) {
-    const validated = validateDefaultBranch(record.defaultBranch);
-    if (!validated.ok) {
-      return validated;
-    }
-    defaultBranch = validated.defaultBranch;
-  }
-
-  return { ok: true, repoUrls, defaultBranch };
 };
