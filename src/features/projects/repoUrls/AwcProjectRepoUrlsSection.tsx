@@ -9,6 +9,10 @@ import {
   canEditProjectRepoUrls,
   canViewProjectRepoUrls,
 } from "@/features/projects/repoUrls/canViewProjectRepoUrls";
+import {
+  buildProjectRepoMetadataKey,
+  readProjectRepoMetadata,
+} from "@/features/projects/repoUrls/readProjectRepoMetadata";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import type { ProjectRepoMetadata } from "@/lib/projects/validateProjectRepoUrls";
 
@@ -20,13 +24,6 @@ interface AwcProjectRepoUrlsSectionProps {
    */
   readonly isActiveMember?: boolean;
 }
-
-const readInitialMetadata = (
-  project: UserProjectRecord,
-): ProjectRepoMetadata => ({
-  repoUrls: [...project.repoUrls],
-  defaultBranch: project.defaultBranch,
-});
 
 /**
  * Detail-panel bind for locked repo URL contract (eng API DTOs).
@@ -53,8 +50,15 @@ export default function AwcProjectRepoUrlsSection({
   const canEdit = canEditProjectRepoUrls({ isOwner });
 
   const [metadata, setMetadata] = useState<ProjectRepoMetadata>(() =>
-    readInitialMetadata(project),
+    readProjectRepoMetadata(project),
   );
+  const serverMetadataKey = buildProjectRepoMetadataKey(project);
+  const [lastServerMetadataKey, setLastServerMetadataKey] =
+    useState(serverMetadataKey);
+  if (lastServerMetadataKey !== serverMetadataKey) {
+    setLastServerMetadataKey(serverMetadataKey);
+    setMetadata(readProjectRepoMetadata(project));
+  }
 
   const show = useMemo(() => canView, [canView]);
 
@@ -66,6 +70,7 @@ export default function AwcProjectRepoUrlsSection({
     <section className="mt-6 space-y-3 rounded-xl border border-gray-200/80 p-4 dark:border-gray-800/80">
       {canEdit ? (
         <AwcProjectRepoUrlsEditor
+          key={project.id}
           projectId={project.id}
           initial={metadata}
           onSaved={setMetadata}

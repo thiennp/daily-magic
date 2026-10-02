@@ -40,7 +40,6 @@ describe("parseUserProjectBody", () => {
       input: { name: "Renamed project" },
     });
   });
-});
 
   it("accepts optional repoUrls and defaultBranch on create", () => {
     expect(
@@ -89,3 +88,4 @@ describe("parseUserProjectBody", () => {
       },
     });
   });
+});
