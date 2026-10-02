@@ -107,4 +107,33 @@ describe("leaveProjectMembership happy path", () => {
     });
     expect(result.ok).toBe(true);
   });
+
+  it("returns ok after revoke even if leave audit side effects throw", async () => {
+    sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
+      const q = String(strings);
+      if (q.includes("CREATE TABLE")) return [];
+      if (q.includes("FROM project_memberships") && q.includes("SELECT")) {
+        return [LEAVE_MEMBER_ROW];
+      }
+      if (q.includes("UPDATE project_memberships")) {
+        return [revokedLeaveMemberRow()];
+      }
+      if (q.includes("DELETE FROM project_message_deliveries")) return [];
+      if (q.includes("DELETE FROM project_messages")) return [];
+      if (q.includes("DELETE FROM project_membership_webhooks")) return [];
+      if (q.includes("INSERT INTO project_access_audit")) {
+        throw new Error("check constraint project_access_audit_action_check");
+      }
+      return [];
+    });
+
+    const result = await leaveProjectMembership({
+      projectId: "proj-1",
+      actorUserId: "bot-1",
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.status).toBe("revoked");
+    }
+  });
 });
