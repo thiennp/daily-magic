@@ -1,3 +1,4 @@
+import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 import { getSql } from "@/lib/db";
 
 export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
@@ -55,4 +56,6 @@ export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
     last_error TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
+
+  await purgeExpiredProjectMessages();
 };
