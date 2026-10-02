@@ -9,8 +9,8 @@ import {
   type AwcProjectAccessMember,
   type AwcProjectAccessPending,
 } from "@/features/projects/access/hooks/loadAwcProjectAccess";
+import { createAwcProjectAccessMutations } from "@/features/projects/access/hooks/useAwcProjectAccessMutations";
 import { useAwcProjectInviteActions } from "@/features/projects/access/hooks/useAwcProjectInviteActions";
-import { postProjectAccessAction } from "@/features/projects/access/utils/projectAccessApi";
 import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
 
 export const useAwcProjectAccess = (projectId: string) => {
@@ -26,7 +26,9 @@ export const useAwcProjectAccess = (projectId: string) => {
   const [message, setMessage] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [createdInviteUrl, setCreatedInviteUrl] = useState<string | null>(null);
-  const [createdInviteToken, setCreatedInviteToken] = useState<string | null>(null);
+  const [createdInviteToken, setCreatedInviteToken] = useState<string | null>(
+    null,
+  );
   const [isLoading, setIsLoading] = useState(true);
 
   const applySnapshot = useCallback(
@@ -36,11 +38,7 @@ export const useAwcProjectAccess = (projectId: string) => {
       setFolderRefs(snapshot.folderRefs);
       setInvites(snapshot.invites);
       setProjectName(snapshot.projectName);
-      if (snapshot.ok) {
-        setLoadError(null);
-      } else {
-        setLoadError(snapshot.errorMessage);
-      }
+      setLoadError(snapshot.ok ? null : snapshot.errorMessage);
     },
     [],
   );
@@ -48,8 +46,7 @@ export const useAwcProjectAccess = (projectId: string) => {
   const reload = useCallback(async () => {
     setIsLoading(true);
     try {
-      const snapshot = await loadAwcProjectAccess(projectId);
-      applySnapshot(snapshot);
+      applySnapshot(await loadAwcProjectAccess(projectId));
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +54,7 @@ export const useAwcProjectAccess = (projectId: string) => {
 
   useEffect(() => {
     const controller = new AbortController();
-    const load = async (): Promise<void> => {
+    void (async () => {
       setIsLoading(true);
       try {
         const snapshot = await loadAwcProjectAccess(projectId);
@@ -69,19 +66,12 @@ export const useAwcProjectAccess = (projectId: string) => {
           setIsLoading(false);
         }
       }
-    };
-    void load();
-    return () => {
-      controller.abort();
-    };
+    })();
+    return () => controller.abort();
   }, [projectId, applySnapshot]);
 
   const setFriendlyMessage = useCallback((value: string | null) => {
-    if (value === null) {
-      setMessage(null);
-      return;
-    }
-    setMessage(mapProjectAccessError(value, value));
+    setMessage(value === null ? null : mapProjectAccessError(value, value));
   }, []);
 
   const inviteActions = useAwcProjectInviteActions({
@@ -92,48 +82,11 @@ export const useAwcProjectAccess = (projectId: string) => {
     setCreatedInviteToken,
   });
 
-  const approve = async (requestId: string, projectDisplayName?: string) => {
-    const result = await postProjectAccessAction(
-      `/api/projects/${projectId}/access/requests/${requestId}/approve`,
-      projectDisplayName ? { projectDisplayName } : {},
-    );
-    setFriendlyMessage(
-      result.ok
-        ? "Approved."
-        : mapProjectAccessError(result.errorMessage, "Failed."),
-    );
-    await reload();
-    return {
-      ...result,
-      errorMessage: result.ok
-        ? result.errorMessage
-        : mapProjectAccessError(result.errorMessage, "Failed."),
-    };
-  };
-
-  const deny = async (requestId: string) => {
-    const result = await postProjectAccessAction(
-      `/api/projects/${projectId}/access/requests/${requestId}/deny`,
-    );
-    setFriendlyMessage(
-      result.ok
-        ? "Denied."
-        : mapProjectAccessError(result.errorMessage, "Failed."),
-    );
-    await reload();
-  };
-
-  const revoke = async (membershipId: string) => {
-    const result = await postProjectAccessAction(
-      `/api/projects/${projectId}/access/members/${membershipId}/revoke`,
-    );
-    setFriendlyMessage(
-      result.ok
-        ? "Revoked."
-        : mapProjectAccessError(result.errorMessage, "Failed."),
-    );
-    await reload();
-  };
+  const mutations = createAwcProjectAccessMutations({
+    projectId,
+    reload,
+    setFriendlyMessage,
+  });
 
   return {
     members,
@@ -149,9 +102,7 @@ export const useAwcProjectAccess = (projectId: string) => {
     setCreatedInviteToken,
     isLoading,
     reload,
-    approve,
-    deny,
-    revoke,
+    ...mutations,
     ...inviteActions,
     setFolderRefs,
     setMessage: setFriendlyMessage,

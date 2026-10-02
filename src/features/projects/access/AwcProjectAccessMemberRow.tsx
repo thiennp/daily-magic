@@ -1,5 +1,6 @@
 "use client";
 
+import AwcProjectAccessMemberRenameEditor from "@/features/projects/access/AwcProjectAccessMemberRenameEditor";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
 import { awcProjectAccessMemberAnchorId } from "@/features/projects/access/awcProjectAccessMemberAnchor";
@@ -54,39 +55,18 @@ export default function AwcProjectAccessMemberRow({
           <span className="text-xs text-gray-500">{member.userId}</span>
         )}
         {member.teamLabel ? (
-          <span className="ml-1 text-xs text-gray-500">
-            ({member.teamLabel})
-          </span>
+          <span className="ml-1 text-xs text-gray-500">({member.teamLabel})</span>
         ) : null}
       </span>
       <span className="flex flex-wrap gap-2">
         {member.isAgent ? (
           editing ? (
-            <span className="flex flex-col gap-1">
-              <span className="flex flex-wrap items-center gap-2">
-                <input
-                  className="rounded-md border px-1 text-xs"
-                  value={editValue}
-                  aria-label={copy.displayNameLabel}
-                  onChange={(e) => onEditValue(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className={AWC_PROJECT_ACCESS_CTA.primary}
-                  onClick={onSaveRename}
-                >
-                  {copy.renameSave}
-                </button>
-                <button
-                  type="button"
-                  className={AWC_PROJECT_ACCESS_CTA.secondary}
-                  onClick={onCancelEdit}
-                >
-                  {copy.renameCancel}
-                </button>
-              </span>
-              <span className="text-[11px] text-gray-500">{copy.renameHint}</span>
-            </span>
+            <AwcProjectAccessMemberRenameEditor
+              editValue={editValue}
+              onEditValue={onEditValue}
+              onSaveRename={onSaveRename}
+              onCancelEdit={onCancelEdit}
+            />
           ) : (
             <button
               type="button"
