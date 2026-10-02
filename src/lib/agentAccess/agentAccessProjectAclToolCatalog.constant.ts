@@ -1,5 +1,6 @@
 import type { AgentAccessToolDefinition } from "@/lib/agentAccess/agentAccessToolCatalog.constant";
 import { AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS } from "@/lib/agentAccess/agentAccessProjectInviteHooksToolCatalog.constant";
+import { AGENT_ACCESS_PROJECT_LEAVE_TOOL } from "@/lib/agentAccess/agentAccessProjectLeaveTool.constant";
 
 const AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS: readonly AgentAccessToolDefinition[] =
   [
@@ -93,27 +94,11 @@ const AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS: readonly AgentAccessToolDefinition[] 
         additionalProperties: false,
       },
     },
-    {
-      name: "leave_project",
-      description:
-        "Leave this project (self-disconnect). No owner approval. Irreversible until you request access again and owner Approves. Requires confirm:true.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          projectId: { type: "string", description: "Project id to leave." },
-          confirm: {
-            type: "boolean",
-            description: "Must be true to confirm self-disconnect.",
-          },
-        },
-        required: ["projectId", "confirm"],
-        additionalProperties: false,
-      },
-    },
   ] as const;
 
 export const AGENT_ACCESS_PROJECT_ACL_TOOLS: readonly AgentAccessToolDefinition[] =
   [
     ...AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS,
+    AGENT_ACCESS_PROJECT_LEAVE_TOOL,
     ...AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS,
   ];
