@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { neonConfig, Pool } from "@neondatabase/serverless";
 import ws from "ws";
 
+import { applyDbMigrationFile } from "./applyDbMigrationFile";
 import {
   listLegacySchemaSqlMigrationFilenames,
   listPendingMigrationFilenames,
@@ -38,19 +39,7 @@ const applyMigrationFile = async (
   filename: string,
 ): Promise<void> => {
   const sql = await readFile(join(MIGRATIONS_DIR, filename), "utf8");
-
-  await pool.query("BEGIN");
-
-  try {
-    await pool.query(sql);
-    await pool.query("INSERT INTO schema_migrations (filename) VALUES ($1)", [
-      filename,
-    ]);
-    await pool.query("COMMIT");
-  } catch (error) {
-    await pool.query("ROLLBACK");
-    throw error;
-  }
+  await applyDbMigrationFile(pool, filename, sql);
 };
 
 const hasSchemaSqlSnapshot = async (pool: Pool): Promise<boolean> => {

@@ -37,6 +37,8 @@ npm run db:migrate
 
 Railway production runs this before start via `preDeployCommand`. Locally, migrations use the Neon driver (no `psql` required).
 
+Overlapping deploys can run that command at the same time. `db:migrate` holds a transaction advisory lock on one database connection and skips a file already stored in `schema_migrations`, so the second deploy does not fail on a duplicate migration filename.
+
 ### Existing databases
 
 If the database was created with `db/schema.sql` before `schema_migrations` existed:

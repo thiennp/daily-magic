@@ -122,7 +122,7 @@ Agent Witch is built for teams who accept that **running an agent on a Mac is eq
 
 ## Multi-instance production (brief)
 
-Agent Witch Cloud may run on more than one server replica. **Writer dispatch** requires the live Mac WebSocket on the node handling your send request. During deploys or load balancing, you may briefly see **Reconnecting** even when AWI on the Mac is healthy. The product fails closed rather than dropping **Tasks** on the wrong node.
+Agent Witch Cloud may run on more than one server replica. **Writer dispatch** requires the live Mac WebSocket on the node handling your send request. During deploys or load balancing, you may briefly see **Reconnecting** even when AWI on the Mac is healthy. The product fails closed rather than dropping **Tasks** on the wrong node. A second deploy that starts while the first is still applying database updates waits and continues, instead of failing because that update was already saved.
 
 User impact and mitigations: [AWC Mac reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md) · OPEN-002 in [Agent Witch KNOWN_ISSUES](../../../src/features/agent-witch/KNOWN_ISSUES.md).
 
