@@ -20,7 +20,17 @@ export interface EmptyStatePanelProps {
   readonly secondaryCta?: EmptyStateCtaLink;
   readonly tertiaryLink?: EmptyStateCtaLink;
   readonly density: "page" | "section";
+  /** Match full-width lists (e.g. reports); default centers narrow card. */
+  readonly width?: "centered" | "full";
 }
+
+const PANEL_WIDTH_CLASS: Record<
+  NonNullable<EmptyStatePanelProps["width"]>,
+  string
+> = {
+  centered: "mx-auto w-full max-w-lg",
+  full: "w-full",
+};
 
 export default function EmptyStatePanel({
   title,
@@ -29,6 +39,7 @@ export default function EmptyStatePanel({
   secondaryCta,
   tertiaryLink,
   density,
+  width = "centered",
 }: EmptyStatePanelProps) {
   const panelPadding = density === "page" ? "default" : "compact";
   const titleClassName =
@@ -37,7 +48,7 @@ export default function EmptyStatePanel({
       : "text-lg font-semibold text-gray-800 dark:text-white/90";
 
   return (
-    <AppPanel padding={panelPadding} className="mx-auto w-full max-w-lg">
+    <AppPanel padding={panelPadding} className={PANEL_WIDTH_CLASS[width]}>
       <div className="flex flex-col gap-4">
         <h2 className={titleClassName}>{title}</h2>
         <p className={APP_SURFACE_BODY_TEXT_CLASS}>{body}</p>

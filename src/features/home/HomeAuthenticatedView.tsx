@@ -19,7 +19,6 @@ import {
   HOME_MAIN_COLUMN_CLASS,
   HOME_RIGHT_RAIL_CLASS,
 } from "@/features/home/homeDashboardLayout.constant";
-import AppShellNav from "@/features/shell/AppShellNav";
 import { buildAppOriginFromHeaders } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
 import { buildLocalAgentInstallUrlsFromHeaders } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
 import { isAgentWitchWebSocketAvailableForHost } from "@/lib/agentWitch/isAgentWitchWebSocketAvailable";
@@ -57,7 +56,6 @@ export default async function HomeAuthenticatedView({
           <aside className={HOME_LEFT_RAIL_CLASS}>
             <HomeOnboardingChecklist />
             <HomeOnboardingAutomateNudge />
-            <AppShellNav />
             <HomeConnectedMacsPanel
               installCommand={installCommand}
               isWebSocketSupported={isWebSocketSupported}

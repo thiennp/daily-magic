@@ -21,7 +21,6 @@ import {
   HOME_MAIN_COLUMN_CLASS,
   HOME_RIGHT_RAIL_CLASS,
 } from "@/features/home/homeDashboardLayout.constant";
-import AppShellNav from "@/features/shell/AppShellNav";
 import {
   AWC_STORYBOOK_INSTALL_COMMAND,
   AWC_STORYBOOK_USER,
@@ -42,7 +41,6 @@ export default function AwcHomeSignedInStoryView() {
           <aside className={HOME_LEFT_RAIL_CLASS}>
             <HomeOnboardingChecklist />
             <HomeOnboardingAutomateNudge />
-            <AppShellNav />
             <HomeConnectedMacsPanel
               installCommand={AWC_STORYBOOK_INSTALL_COMMAND}
               isWebSocketSupported={true}

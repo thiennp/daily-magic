@@ -1,4 +1,3 @@
-import MarketingShell from "@/features/marketing/MarketingShell";
 import {
   MARKETING_TEXT_PRIMARY_CLASSES,
   MARKETING_TEXT_SECONDARY_CLASSES,
@@ -25,55 +24,53 @@ export default function MarketingLegalPageLayout({
   sections,
 }: MarketingLegalPageLayoutProps) {
   return (
-    <MarketingShell>
-      <article className="mx-auto max-w-3xl py-2 sm:py-4">
-        <h1
-          className={mergeMarketingClasses(
-            "text-3xl font-semibold tracking-tight sm:text-4xl",
-            MARKETING_TEXT_PRIMARY_CLASSES,
-          )}
-        >
-          {title}
-        </h1>
-        <p
-          className={mergeMarketingClasses(
-            "mt-2 text-sm",
-            MARKETING_TEXT_MUTED_CLASSES,
-          )}
-        >
-          Last updated: {lastUpdated}
-        </p>
-        <p
-          className={mergeMarketingClasses(
-            "mt-6 text-base leading-relaxed",
-            MARKETING_TEXT_SECONDARY_CLASSES,
-          )}
-        >
-          {intro}
-        </p>
-        <div className="mt-12 space-y-12 border-t border-zinc-200/80 pt-10 dark:border-gray-800">
-          {sections.map((section) => (
-            <section key={section.heading}>
-              <h2
-                className={mergeMarketingClasses(
-                  "text-2xl font-semibold tracking-tight",
-                  MARKETING_TEXT_PRIMARY_CLASSES,
-                )}
-              >
-                {section.heading}
-              </h2>
-              <p
-                className={mergeMarketingClasses(
-                  "mt-4 text-base leading-7",
-                  MARKETING_TEXT_SECONDARY_CLASSES,
-                )}
-              >
-                {section.body}
-              </p>
-            </section>
-          ))}
-        </div>
-      </article>
-    </MarketingShell>
+    <article className="mx-auto max-w-3xl py-2 sm:py-4">
+      <h1
+        className={mergeMarketingClasses(
+          "text-3xl font-semibold tracking-tight sm:text-4xl",
+          MARKETING_TEXT_PRIMARY_CLASSES,
+        )}
+      >
+        {title}
+      </h1>
+      <p
+        className={mergeMarketingClasses(
+          "mt-2 text-sm",
+          MARKETING_TEXT_MUTED_CLASSES,
+        )}
+      >
+        Last updated: {lastUpdated}
+      </p>
+      <p
+        className={mergeMarketingClasses(
+          "mt-6 text-base leading-relaxed",
+          MARKETING_TEXT_SECONDARY_CLASSES,
+        )}
+      >
+        {intro}
+      </p>
+      <div className="mt-12 space-y-12 border-t border-zinc-200/80 pt-10 dark:border-gray-800">
+        {sections.map((section) => (
+          <section key={section.heading}>
+            <h2
+              className={mergeMarketingClasses(
+                "text-2xl font-semibold tracking-tight",
+                MARKETING_TEXT_PRIMARY_CLASSES,
+              )}
+            >
+              {section.heading}
+            </h2>
+            <p
+              className={mergeMarketingClasses(
+                "mt-4 text-base leading-7",
+                MARKETING_TEXT_SECONDARY_CLASSES,
+              )}
+            >
+              {section.body}
+            </p>
+          </section>
+        ))}
+      </div>
+    </article>
   );
 }

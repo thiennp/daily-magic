@@ -13,10 +13,10 @@ export default function HomeMarketingLanding() {
   return (
     <MarketingShell>
       <HomeMarketingHero />
-      <div className="mt-12">
+      <div className="mt-28 space-y-16 sm:mt-32">
         <HomeAgentAccessPrompt />
+        <HomePromptSdlcSection />
       </div>
-      <HomePromptSdlcSection />
       <HomeMarketingPopularPresets />
       <HomeMarketingFeatures />
       <HomeMarketingShowcases />

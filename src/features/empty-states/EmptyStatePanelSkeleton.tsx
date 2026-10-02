@@ -1,7 +1,22 @@
-export default function EmptyStatePanelSkeleton() {
+interface EmptyStatePanelSkeletonProps {
+  /** Match full-width lists (e.g. reports run cards); default centers like EmptyStatePanel. */
+  readonly width?: "centered" | "full";
+}
+
+const SKELETON_WIDTH_CLASS: Record<
+  EmptyStatePanelSkeletonProps["width"] & string,
+  string
+> = {
+  centered: "mx-auto w-full max-w-lg",
+  full: "w-full",
+};
+
+export default function EmptyStatePanelSkeleton({
+  width = "centered",
+}: EmptyStatePanelSkeletonProps) {
   return (
     <div
-      className="mx-auto w-full max-w-lg space-y-3 py-2"
+      className={`${SKELETON_WIDTH_CLASS[width]} space-y-3 py-2`}
       aria-busy="true"
       aria-label="Loading"
     >

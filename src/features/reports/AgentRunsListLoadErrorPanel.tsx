@@ -9,7 +9,7 @@ export default function AgentRunsListLoadErrorPanel({
   onRetry,
 }: AgentRunsListLoadErrorPanelProps) {
   return (
-    <AppPanel padding="compact" className="mx-auto w-full max-w-lg">
+    <AppPanel padding="compact" className="w-full">
       <div className="flex flex-col gap-3">
         <p className="text-sm font-medium text-gray-800 dark:text-white/90">
           Could not load your reports

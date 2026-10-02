@@ -58,9 +58,9 @@ describe("COPY-P1 shell and auth labels", () => {
     expect(source.includes("Send a task")).toBe(false);
   });
 
-  it("shows compatible AWL install bundle version on the sidebar brand link", () => {
+  it("shows compatible AWL install bundle version in the app shell header brand", () => {
     const source = readFileSync(
-      join(process.cwd(), "src/features/shell/AppShellNav.tsx"),
+      join(process.cwd(), "src/features/shell/AppShellHeader.tsx"),
       "utf8",
     );
     expect(source.includes('aria-label="Agent Witch home"')).toBe(true);

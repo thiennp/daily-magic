@@ -2,13 +2,15 @@
 
 import Link from "next/link";
 
-import AgentWitchLogo from "@/components/branding/AgentWitchLogo";
+import AgentWitchLogoMark from "@/components/branding/AgentWitchLogoMark";
 import { APP_SURFACE_CTA_PRIMARY_ICON_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import AppIcon from "@/components/ui/icon/AppIcon";
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import UserDropdown from "@/components/header/UserDropdown";
 import useStyleguideNavAccess from "@/features/auth/hooks/useStyleguideNavAccess";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchInstallBundleVersion";
+import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import { BoltIcon } from "@/icons";
 
 interface AppShellHeaderProps {
@@ -26,11 +28,20 @@ export default function AppShellHeader({
         <div
           className={`min-w-0 ${showDesktopBrand ? "flex" : "flex md:hidden"}`}
         >
-          <Link href="/" aria-label="Agent Witch home">
-            <AgentWitchLogo
-              markClassName="h-6 w-6 text-gray-900 dark:text-zinc-100"
-              textClassName="text-sm font-bold tracking-tight text-gray-900 dark:text-zinc-100"
-            />
+          <Link
+            href="/"
+            aria-label="Agent Witch home"
+            className="flex min-w-0 items-center gap-2"
+          >
+            <AgentWitchLogoMark className="h-6 w-6 shrink-0 text-gray-900 dark:text-zinc-100" />
+            <span className="flex min-w-0 flex-col leading-tight">
+              <span className="text-sm font-bold tracking-tight text-gray-900 dark:text-zinc-100">
+                {AGENT_WITCH_PRODUCT_NAME}
+              </span>
+              <span className="text-[10px] font-medium tracking-wide text-gray-500 dark:text-zinc-400">
+                AWL {AGENT_WITCH_INSTALL_BUNDLE_VERSION}
+              </span>
+            </span>
           </Link>
         </div>
         <div

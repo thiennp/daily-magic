@@ -11,7 +11,7 @@ export default function AgentRunsList() {
   const { teamNavEnabled } = useShellNavContext();
 
   if (sessionState === "loading") {
-    return <EmptyStatePanelSkeleton />;
+    return <EmptyStatePanelSkeleton width="full" />;
   }
 
   if (sessionState === "guest") {

@@ -29,7 +29,6 @@ export const AWC_CORE_APP_PAGE_ENTRIES: readonly AwcStorybookPageEntry[] = [
     title: "Home (signed in)",
     path: "/",
     shell: "app",
-    renderPrimaryNav: false,
     statuses: signedInStatuses,
     renderBody: () => <AwcHomeSignedInStoryView />,
   },

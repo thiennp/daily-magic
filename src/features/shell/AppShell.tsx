@@ -35,28 +35,26 @@ export default function AppShell({
 
   const showHeaderBrand = renderPrimaryNav || sidebar !== undefined;
 
-  const embeddedPrimaryNav = renderPrimaryNav ? (
-    <div className="mb-6 max-w-[20rem]">
-      <AppShellNav placement="embedded" />
-    </div>
+  const primaryNavAside = renderPrimaryNav ? (
+    <aside className="hidden md:block">
+      <div className="sticky top-[5.25rem]">
+        <AppShellNav />
+      </div>
+    </aside>
   ) : null;
 
   const pageBody = sidebar ? (
-    <div className="mx-auto grid max-w-[1600px] gap-6 px-4 py-6 pb-24 lg:grid-cols-[240px_1fr] lg:px-6 md:pb-6">
-      {sidebar}
-      <main className={mainColumnClassName}>
-        {embeddedPrimaryNav}
-        {children}
-      </main>
+    <div className="mx-auto w-full max-w-[1600px] px-4 pb-24 pt-6 sm:px-6 md:pb-6 lg:px-6">
+      <div className="grid gap-6 md:grid-cols-[15rem_15rem_minmax(0,1fr)] lg:grid-cols-[16rem_240px_minmax(0,1fr)]">
+        {primaryNavAside}
+        {sidebar}
+        <main className={mainColumnClassName}>{children}</main>
+      </div>
     </div>
   ) : renderPrimaryNav ? (
     <div className="mx-auto w-full max-w-[1600px] px-4 pb-24 pt-6 sm:px-6 md:pb-6 lg:px-6">
       <div className="grid gap-6 md:grid-cols-[15rem_minmax(0,1fr)] lg:grid-cols-[16rem_minmax(0,1fr)]">
-        <aside className="hidden md:block">
-          <div className="sticky top-[5.25rem]">
-            <AppShellNav placement="sidebar" />
-          </div>
-        </aside>
+        {primaryNavAside}
         <main className={mainColumnClassName}>{children}</main>
       </div>
     </div>

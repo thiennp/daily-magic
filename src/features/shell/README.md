@@ -2,7 +2,7 @@
 
 Header actions, desktop primary nav card, mobile bottom nav, connection badge, approval listener mount.
 
-On home, the primary nav card sits in the devices column above Your Devices (`renderPrimaryNav={false}` on `AppShell`). Other routes render the same card above page content.
+Desktop primary nav is a sticky left column in `AppShell` (links only). Brand + AWL bundle version live in `AppShellHeader`. Home dashboard rails hold onboarding and devices only.
 
 ## Registry
 

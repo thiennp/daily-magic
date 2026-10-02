@@ -10,6 +10,7 @@ export default function AgentRunsListGuestPanel() {
   return (
     <EmptyStatePanel
       density="page"
+      width="full"
       title={REPORTS_GUEST_EMPTY_COPY.title}
       body="Reports are your Run history. After you connect a Mac and run a New task, every Run shows up here."
       primaryCta={{

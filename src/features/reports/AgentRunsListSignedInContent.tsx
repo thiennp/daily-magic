@@ -85,10 +85,11 @@ export default function AgentRunsListSignedInContent({
       {loadFailed ? (
         <AgentRunsListLoadErrorPanel onRetry={refresh} />
       ) : listIsLoading ? (
-        <EmptyStatePanelSkeleton />
+        <EmptyStatePanelSkeleton width="full" />
       ) : isEmpty ? (
         <EmptyStatePanel
           density="page"
+          width="full"
           title="No reports yet"
           body={resolveReportsSignedInEmptyBody({ teamNavEnabled })}
           primaryCta={{
