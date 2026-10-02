@@ -1,6 +1,7 @@
 "use client";
 
 import AppShellBottomNav from "@/features/shell/AppShellBottomNav";
+import AppShellDevicesPanel from "@/features/shell/AppShellDevicesPanel";
 import AppShellHeader from "@/features/shell/AppShellHeader";
 import AppShellSidebar from "@/features/shell/AppShellSidebar";
 import {
@@ -42,6 +43,13 @@ export default function AppShell({
     <AppShellSidebar showDevicesRail={showDevicesRail} />
   ) : null;
 
+  const mobileDevicesRail =
+    renderPrimaryNav && showDevicesRail ? (
+      <div className="mx-auto w-full max-w-[1600px] px-4 pt-4 md:hidden sm:px-6 lg:px-6">
+        <AppShellDevicesPanel />
+      </div>
+    ) : null;
+
   const pageBody = sidebar ? (
     <div className="mx-auto w-full max-w-[1600px] px-4 pb-24 pt-6 sm:px-6 md:pb-6 lg:px-6">
       <div className="grid gap-6 md:grid-cols-[15rem_15rem_minmax(0,1fr)] lg:grid-cols-[16rem_240px_minmax(0,1fr)]">
@@ -70,6 +78,7 @@ export default function AppShell({
       <DispatchApprovalListener />
       <WorkflowHumanStepListener />
       <GuestLibraryDraftSyncListener />
+      {mobileDevicesRail}
       {pageBody}
       <AppShellBottomNav />
     </div>

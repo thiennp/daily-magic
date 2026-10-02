@@ -10,7 +10,7 @@ Home is the hub for **easy authoring** (**New task** up front) and for **team le
 
 ## Primary navigation (signed-in)
 
-On desktop, primary nav links sit in the sticky **left sidebar**; **Your Devices** is pinned at the bottom of that same column on every signed-in App Shell page (not in the main content area). Home’s left rail holds onboarding only. On smaller screens, use the bottom bar.
+On desktop, primary nav links sit in the sticky **left sidebar**; **Your Devices** is pinned at the bottom of that same column on every signed-in App Shell page (not in the main content area). On smaller screens, **Your Devices** appears above page content and primary nav uses the bottom bar. Home’s left rail holds onboarding only.
 
 ### Everyone
 

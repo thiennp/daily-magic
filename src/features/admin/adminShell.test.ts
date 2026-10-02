@@ -26,6 +26,7 @@ describe("Admin production shell", () => {
   it("uses AppShell with admin sidebar and default primary nav", () => {
     expect(adminShellSource).toMatch(/<AppShell[\s\S]*sidebar=/);
     expect(adminShellSource).not.toMatch(/renderPrimaryNav=\{false\}/);
+    expect(adminShellSource).toContain("showDevicesRail={false}");
   });
 
   it("links styleguide from the admin management sidebar", () => {
