@@ -47,18 +47,9 @@ export default function AwcProjectAccessPendingList({
     return () => controller.abort();
   }, [projectId, pending.length]);
 
-  useEffect(() => {
-    if (!suggested) return;
-    setNames((prev) => {
-      const next = { ...prev };
-      for (const req of pending) {
-        if (req.requesterIsAgent !== false && !next[req.id]) {
-          next[req.id] = suggested;
-        }
-      }
-      return next;
-    });
-  }, [suggested, pending]);
+  const nameFor = (req: PendingRequest): string =>
+    names[req.id] ??
+    (req.requesterIsAgent !== false ? suggested : "");
 
   return (
     <div>
@@ -73,7 +64,7 @@ export default function AwcProjectAccessPendingList({
             <AwcProjectAccessPendingRow
               key={req.id}
               req={req}
-              nameValue={names[req.id] ?? ""}
+              nameValue={nameFor(req)}
               error={errors[req.id] ?? null}
               available={available}
               onNameChange={(value) =>
@@ -84,7 +75,7 @@ export default function AwcProjectAccessPendingList({
                 void runPendingApprove({
                   requestId: req.id,
                   needsName: req.requesterIsAgent !== false,
-                  nameValue: names[req.id] ?? "",
+                  nameValue: nameFor(req),
                   available,
                   onApprove,
                   setError: (message) => {

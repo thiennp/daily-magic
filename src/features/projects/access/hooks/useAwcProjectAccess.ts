@@ -40,13 +40,27 @@ export const useAwcProjectAccess = (projectId: string) => {
 
   useEffect(() => {
     const controller = new AbortController();
-    void reload().finally(() => {
-      if (controller.signal.aborted) {
-        /* ignore */
+    const load = async (): Promise<void> => {
+      setIsLoading(true);
+      try {
+        const snapshot = await loadAwcProjectAccess(projectId);
+        if (!controller.signal.aborted) {
+          setMembers(snapshot.members);
+          setPending(snapshot.pending);
+          setFolderRefs(snapshot.folderRefs);
+          setInvites(snapshot.invites);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoading(false);
+        }
       }
-    });
-    return () => controller.abort();
-  }, [reload]);
+    };
+    void load();
+    return () => {
+      controller.abort();
+    };
+  }, [projectId]);
 
   const inviteActions = useAwcProjectInviteActions({
     projectId,

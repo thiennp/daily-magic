@@ -1,4 +1,4 @@
-import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, randomBytes } from "node:crypto";
 
 export const PROJECT_WEBHOOK_SECRET_PREFIX = "awc_whsec_";
 
