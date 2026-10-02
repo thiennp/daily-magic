@@ -57,6 +57,13 @@ export async function PATCH(
     );
   }
 
+  if (parsed.kind === "validation_error") {
+    return Response.json(
+      { ok: false, errorMessage: parsed.errorMessage },
+      { status: 400 },
+    );
+  }
+
   if (parsed.kind === "invalid") {
     return Response.json(
       { ok: false, errorMessage: "Invalid project payload." },

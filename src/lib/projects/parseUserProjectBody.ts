@@ -1,7 +1,12 @@
-import buildDefaultProjectFolderPath from "@/lib/projects/buildDefaultProjectFolderPath";
-import type { ParseUpdateUserProjectBodyResult } from "@/lib/projects/parseUpdateUserProjectBodyResult.type";
+import {
+  parseFolderPath,
+  parseOptionalDeviceId,
+  parseProjectName,
+} from "@/lib/projects/parseUserProjectBodyParsers";
 import { parseOptionalProjectRepoFields } from "@/lib/projects/validateProjectRepoUrls";
-import { normalizeValidatedProjectFolderPath } from "@/lib/projects/validateProjectFolderPath";
+
+export type { ParseUpdateUserProjectBodyResult } from "@/lib/projects/parseUpdateUserProjectBodyResult.type";
+export { parseUpdateUserProjectBody } from "@/lib/projects/parseUpdateUserProjectBody";
 
 export interface CreateUserProjectInput {
   readonly name: string;
@@ -17,48 +22,6 @@ export interface UpdateUserProjectInput {
   readonly repoUrls?: readonly string[];
   readonly defaultBranch?: string | null;
 }
-
-const parseOptionalDeviceId = (value: unknown): string | null | undefined => {
-  if (value === undefined) {
-    return undefined;
-  }
-
-  if (value === null) {
-    return null;
-  }
-
-  return typeof value === "string" && value.trim().length > 0
-    ? value.trim()
-    : null;
-};
-
-const parseProjectName = (value: unknown): string | null => {
-  if (typeof value !== "string") {
-    return null;
-  }
-
-  const trimmed = value.trim();
-
-  return trimmed.length > 0 ? trimmed : null;
-};
-
-const parseFolderPath = (
-  value: unknown,
-  projectName: string,
-  profileEmail: string,
-): string | null => {
-  if (value === undefined || value === null) {
-    return normalizeValidatedProjectFolderPath(
-      buildDefaultProjectFolderPath(projectName, profileEmail),
-    );
-  }
-
-  if (typeof value !== "string") {
-    return null;
-  }
-
-  return normalizeValidatedProjectFolderPath(value);
-};
 
 export const parseCreateUserProjectBody = (
   body: unknown,
@@ -96,55 +59,5 @@ export const parseCreateUserProjectBody = (
     ...(repoFields.defaultBranch !== undefined
       ? { defaultBranch: repoFields.defaultBranch }
       : {}),
-  };
-};
-
-export const parseUpdateUserProjectBody = (
-  body: unknown,
-): ParseUpdateUserProjectBodyResult => {
-  if (typeof body !== "object" || body === null) {
-    return { kind: "invalid" };
-  }
-
-  const record = body as Record<string, unknown>;
-
-  if (record.folderPath !== undefined) {
-    return { kind: "folder_immutable" };
-  }
-
-  const name =
-    record.name === undefined ? undefined : parseProjectName(record.name);
-  const deviceId = parseOptionalDeviceId(record.deviceId);
-
-  if (name === null) {
-    return { kind: "invalid" };
-  }
-
-  const repoFields = parseOptionalProjectRepoFields(record);
-  if (!repoFields.ok) {
-    return { kind: "invalid" };
-  }
-
-  if (
-    name === undefined &&
-    deviceId === undefined &&
-    repoFields.repoUrls === undefined &&
-    repoFields.defaultBranch === undefined
-  ) {
-    return { kind: "invalid" };
-  }
-
-  return {
-    kind: "ok",
-    input: {
-      ...(name !== undefined ? { name } : {}),
-      ...(deviceId !== undefined ? { deviceId } : {}),
-      ...(repoFields.repoUrls !== undefined
-        ? { repoUrls: repoFields.repoUrls }
-        : {}),
-      ...(repoFields.defaultBranch !== undefined
-        ? { defaultBranch: repoFields.defaultBranch }
-        : {}),
-    },
   };
 };

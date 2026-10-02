@@ -3,23 +3,10 @@ import { requireAgentWitchDeviceAuth } from "@/lib/agentWitch/requireAgentWitchD
 import { ensureDefaultUserProject } from "@/lib/projects/ensureDefaultUserProject";
 import { parseCreateUserProjectBody } from "@/lib/projects/parseUserProjectBody";
 import { createUserProject } from "@/lib/projects/userProjectMutations";
+import { summarizeDeviceUserProject } from "@/lib/projects/summarizeDeviceUserProject";
 import { listUserProjectsForOwner } from "@/lib/projects/userProjectQueries";
 
 export const dynamic = "force-dynamic";
-
-const summarizeDeviceProject = (project: {
-  readonly id: string;
-  readonly name: string;
-  readonly folderPath: string;
-  readonly repoUrls: readonly string[];
-  readonly defaultBranch: string | null;
-}) => ({
-  id: project.id,
-  name: project.name,
-  folderPath: project.folderPath,
-  repoUrls: project.repoUrls,
-  defaultBranch: project.defaultBranch,
-});
 
 export async function GET(request: Request): Promise<Response> {
   const auth = await requireAgentWitchDeviceAuth(request);
@@ -50,7 +37,7 @@ export async function GET(request: Request): Promise<Response> {
 
   return Response.json({
     ok: true,
-    projects: projects.map(summarizeDeviceProject),
+    projects: projects.map(summarizeDeviceUserProject),
   });
 }
 
@@ -98,7 +85,7 @@ export async function POST(request: Request): Promise<Response> {
 
     return Response.json({
       ok: true,
-      project: summarizeDeviceProject(project),
+      project: summarizeDeviceUserProject(project),
     });
   } catch (caught) {
     const message =

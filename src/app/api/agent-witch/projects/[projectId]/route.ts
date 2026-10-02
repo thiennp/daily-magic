@@ -1,31 +1,14 @@
-import { isNonNullObject, isString } from "guardz";
+import { isNonNullObject } from "guardz";
 
 import { requireAgentWitchDeviceAuth } from "@/lib/agentWitch/requireAgentWitchDeviceAuth";
+import { applyAgentWitchDeviceProjectPatch } from "@/lib/projects/applyAgentWitchDeviceProjectPatch";
 import isDefaultUserProject from "@/lib/projects/isDefaultUserProject";
+import { parseAgentWitchDeviceProjectPatchBody } from "@/lib/projects/parseAgentWitchDeviceProjectPatchBody";
+import { summarizeDeviceUserProject } from "@/lib/projects/summarizeDeviceUserProject";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
-import {
-  deleteUserProject,
-  updateUserProject,
-} from "@/lib/projects/userProjectMutations";
-import { normalizeValidatedProjectFolderPath } from "@/lib/projects/validateProjectFolderPath";
-import { parseOptionalProjectRepoFields } from "@/lib/projects/validateProjectRepoUrls";
-import { updateUserProjectFolderPath } from "@/lib/projects/updateUserProjectFolderPath";
+import { deleteUserProject } from "@/lib/projects/userProjectMutations";
 
 export const dynamic = "force-dynamic";
-
-const summarizeDeviceProject = (project: {
-  readonly id: string;
-  readonly name: string;
-  readonly folderPath: string;
-  readonly repoUrls: readonly string[];
-  readonly defaultBranch: string | null;
-}) => ({
-  id: project.id,
-  name: project.name,
-  folderPath: project.folderPath,
-  repoUrls: project.repoUrls,
-  defaultBranch: project.defaultBranch,
-});
 
 export async function PATCH(
   request: Request,
@@ -45,86 +28,39 @@ export async function PATCH(
     );
   }
 
-  const folderPathRaw =
-    "folderPath" in body && isString(body.folderPath) ? body.folderPath : null;
-  const folderPath =
-    folderPathRaw !== null
-      ? normalizeValidatedProjectFolderPath(folderPathRaw)
-      : null;
-
-  if (folderPathRaw !== null && folderPath === null) {
-    return Response.json(
-      { ok: false, errorMessage: "Choose a valid project folder." },
-      { status: 400 },
-    );
-  }
-
-  const repoFields = parseOptionalProjectRepoFields(
+  const parsed = parseAgentWitchDeviceProjectPatchBody(
     body as Record<string, unknown>,
   );
-  if (!repoFields.ok) {
+  if (!parsed.ok) {
     return Response.json(
-      { ok: false, errorMessage: repoFields.error },
-      { status: 400 },
-    );
-  }
-
-  const hasRepoUpdate =
-    repoFields.repoUrls !== undefined ||
-    repoFields.defaultBranch !== undefined;
-
-  if (folderPath === null && !hasRepoUpdate) {
-    return Response.json(
-      {
-        ok: false,
-        errorMessage:
-          "Provide folderPath and/or repoUrls/defaultBranch to update.",
-      },
-      { status: 400 },
+      { ok: false, errorMessage: parsed.errorMessage },
+      { status: parsed.status },
     );
   }
 
   const { projectId } = await context.params;
-  let project =
-    folderPath !== null
-      ? await updateUserProjectFolderPath(
-          auth.device.userId,
-          projectId,
-          folderPath,
-          auth.device.id,
-        )
-      : await getUserProjectById(projectId.trim());
+  const project = await applyAgentWitchDeviceProjectPatch({
+    ownerUserId: auth.device.userId,
+    deviceId: auth.device.id,
+    projectId,
+    folderPath: parsed.folderPath,
+    hasRepoUpdate: parsed.hasRepoUpdate,
+    ...(parsed.repoUrls !== undefined ? { repoUrls: parsed.repoUrls } : {}),
+    ...(parsed.defaultBranch !== undefined
+      ? { defaultBranch: parsed.defaultBranch }
+      : {}),
+  });
 
-  if (
-    project === null ||
-    project.ownerUserId !== auth.device.userId
-  ) {
+  if (project === null) {
     return Response.json(
       { ok: false, errorMessage: "Project not found." },
       { status: 404 },
     );
   }
 
-  if (hasRepoUpdate) {
-    project = await updateUserProject(auth.device.userId, projectId, {
-      ...(repoFields.repoUrls !== undefined
-        ? { repoUrls: repoFields.repoUrls }
-        : {}),
-      ...(repoFields.defaultBranch !== undefined
-        ? { defaultBranch: repoFields.defaultBranch }
-        : {}),
-    });
-    if (project === null) {
-      return Response.json(
-        { ok: false, errorMessage: "Project not found." },
-        { status: 404 },
-      );
-    }
-  }
-
   return Response.json({
     ok: true,
-    project: summarizeDeviceProject(project),
+    project: summarizeDeviceUserProject(project),
   });
 }
 

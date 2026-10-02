@@ -74,6 +74,18 @@ describe("parseUserProjectBody", () => {
     ).toBeNull();
   });
 
+  it("returns validation_error for invalid repoUrls on update", () => {
+    expect(
+      parseUpdateUserProjectBody({
+        repoUrls: ["not-a-valid-remote"],
+      }),
+    ).toEqual({
+      kind: "validation_error",
+      errorMessage:
+        "Each repo URL must be https://… or SSH (git@host:path / ssh://…).",
+    });
+  });
+
   it("accepts repoUrls-only updates", () => {
     expect(
       parseUpdateUserProjectBody({
