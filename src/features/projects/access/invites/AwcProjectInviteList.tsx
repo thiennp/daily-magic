@@ -22,6 +22,7 @@ interface AwcProjectInviteListProps {
   readonly heading: string;
   readonly invites: readonly AwcProjectAccessInvite[];
   readonly emptyLabel: string;
+  readonly nowMs: number;
   readonly onRevoke: (inviteId: string) => void;
 }
 
@@ -29,6 +30,7 @@ export default function AwcProjectInviteList({
   heading,
   invites,
   emptyLabel,
+  nowMs,
   onRevoke,
 }: AwcProjectInviteListProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
@@ -42,7 +44,7 @@ export default function AwcProjectInviteList({
       ) : (
         <ul className="mt-1 space-y-2">
           {invites.map((invite) => {
-            const status = resolveInviteListStatus(invite);
+            const status = resolveInviteListStatus(invite, nowMs);
             const badge = statusLabel(status, copy);
             const usable = status === "active";
             return (

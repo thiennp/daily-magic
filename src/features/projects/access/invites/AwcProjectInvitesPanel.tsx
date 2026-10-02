@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
@@ -31,20 +31,20 @@ export default function AwcProjectInvitesPanel({
   onClearCreatedUrl,
 }: AwcProjectInvitesPanelProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
+  const [nowMs] = useState(() => Date.now());
 
   const { active, inactive } = useMemo(() => {
-    const now = Date.now();
     const activeInvites: AwcProjectAccessInvite[] = [];
     const inactiveInvites: AwcProjectAccessInvite[] = [];
     for (const invite of invites) {
-      if (isInviteStillUsable(invite, now)) {
+      if (isInviteStillUsable(invite, nowMs)) {
         activeInvites.push(invite);
       } else {
         inactiveInvites.push(invite);
       }
     }
     return { active: activeInvites, inactive: inactiveInvites };
-  }, [invites]);
+  }, [invites, nowMs]);
 
   return (
     <div>
@@ -83,6 +83,7 @@ export default function AwcProjectInvitesPanel({
             heading={copy.invitesActiveHeading}
             invites={active}
             emptyLabel="No active invites."
+            nowMs={nowMs}
             onRevoke={onRevoke}
           />
           {inactive.length > 0 ? (
@@ -90,6 +91,7 @@ export default function AwcProjectInvitesPanel({
               heading={copy.invitesInactiveHeading}
               invites={inactive}
               emptyLabel=""
+              nowMs={nowMs}
               onRevoke={onRevoke}
             />
           ) : null}
