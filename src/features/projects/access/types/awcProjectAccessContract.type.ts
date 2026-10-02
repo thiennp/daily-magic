@@ -64,13 +64,24 @@ export type AwcPendingRequestView = {
 
 export type AwcAccessAction = "approve" | "deny" | "revoke";
 
-export type AwcPatchAccessBody = {
+/** approve | deny — access-request id */
+export type AwcPatchAccessApproveDenyBody = {
+  readonly action: "approve" | "deny";
   readonly requestId: string;
-  readonly action: AwcAccessAction;
   readonly projectDisplayName?: string;
   readonly teamLabel?: string | null;
   readonly scopes?: readonly string[];
 };
+
+/** revoke — project_memberships.id (NOT requestId) */
+export type AwcPatchAccessRevokeBody = {
+  readonly action: "revoke";
+  readonly membershipId: string;
+};
+
+export type AwcPatchAccessBody =
+  | AwcPatchAccessApproveDenyBody
+  | AwcPatchAccessRevokeBody;
 
 export type AwcAccessActionResult =
   | { readonly ok: true }

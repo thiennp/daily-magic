@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildApproveAccessPayload,
+  buildRevokeAccessPayload,
   isReservedProjectDisplayName,
   isValidProjectDisplayName,
   mapAccessActionHttpError,
@@ -64,6 +65,16 @@ describe("projectDisplayName helpers", () => {
       ok: true,
       body: { requestId: "req-3", action: "approve" },
     });
+  });
+
+
+  it("builds Revoke payload with membershipId (not requestId)", () => {
+    expect(buildRevokeAccessPayload("mem-42")).toEqual({
+      ok: true,
+      body: { action: "revoke", membershipId: "mem-42" },
+    });
+    const body = buildRevokeAccessPayload("mem-42").body;
+    expect(body).not.toHaveProperty("requestId");
   });
 
   it("maps 409/400/422 name errors", () => {

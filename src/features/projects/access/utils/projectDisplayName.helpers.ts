@@ -139,3 +139,23 @@ export const mapAccessActionHttpError = (
   }
   return { code: "other", errorMessage: errorMessage || "Request failed." };
 };
+
+export type BuildRevokeAccessPayloadResult = {
+  readonly ok: true;
+  readonly body: {
+    readonly action: "revoke";
+    readonly membershipId: string;
+  };
+};
+
+/** Contract-locked revoke body — membershipId only (never requestId). */
+export const buildRevokeAccessPayload = (
+  membershipId: string,
+): BuildRevokeAccessPayloadResult => ({
+  ok: true,
+  body: {
+    action: "revoke",
+    membershipId,
+  },
+});
+

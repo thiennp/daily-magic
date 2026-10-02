@@ -10,7 +10,10 @@ import {
 } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 import type { AwcAccessActionResult } from "@/features/projects/access/types/awcProjectAccessContract.type";
 import { patchProjectAccess } from "@/features/projects/access/utils/patchProjectAccess";
-import { buildApproveAccessPayload } from "@/features/projects/access/utils/projectDisplayName.helpers";
+import {
+  buildApproveAccessPayload,
+  buildRevokeAccessPayload,
+} from "@/features/projects/access/utils/projectDisplayName.helpers";
 import { renameProjectMembership } from "@/features/projects/access/utils/renameProjectMembership";
 
 export const useAwcProjectAccess = (projectId: string) => {
@@ -95,10 +98,10 @@ export const useAwcProjectAccess = (projectId: string) => {
   };
 
   const revoke = async (membershipId: string) => {
-    const result = await patchProjectAccess(projectId, {
-      requestId: membershipId,
-      action: "revoke",
-    });
+    const result = await patchProjectAccess(
+      projectId,
+      buildRevokeAccessPayload(membershipId).body,
+    );
     setMessage(result.ok ? "Revoked." : (result.errorMessage ?? "Failed."));
     if (result.ok) {
       await reload();
