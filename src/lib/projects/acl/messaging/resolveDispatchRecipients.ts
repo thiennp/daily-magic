@@ -80,7 +80,7 @@ export const resolveDispatchRecipients = async (input: {
           AND project_display_name IS NOT NULL
       `,
     );
-    let recipients = rows
+    let recipients: DispatchRecipient[] = rows
       .filter(
         (row) =>
           row.project_display_name &&
