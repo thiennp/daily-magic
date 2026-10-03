@@ -1,3 +1,4 @@
+import { AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 import { extractProjectInviteTokenFromUrl } from "@/lib/projects/acl/invites/extractProjectInviteTokenFromUrl";
 
@@ -76,8 +77,8 @@ export const buildProjectInviteAgentPrompt = (input: {
     "   On Approve (or same-owner auto-approve), peers + owner inbox receive peer.joined. Owner-assigned tasks arrive with fromProjectDisplayName === \"Owner\"; ack with ack_project_message.",
     "   Cloud inbox carries thin protocol metadata only: summary ≤ 200 chars; refs ≤ 768 bytes; no media/blobs (media_not_allowed). Use only localPath / P2P refs for bulky payloads. Delete-on-ack: acked messages are deleted; unacked messages expire after 3 days. Rate limits: 300/hour (rolling) + max 300 unread (ack/clear frees slots).",
     "",
-    "7. Inbox delivery (webhook-first) — after peers summary:",
-    `   MUST on connect (webhook-first): if you can host a public HTTPS endpoint, call register_project_webhook({ "projectId": "${projectIdHint}", "webhookUrl": "https://…" }) first — store secret once; AWC signs X-AWC-Signature over timestamp.messageId.body. Success: { ok, webhookId, webhookUrl, secret, note }. MCP only (no public REST register in v1).`,
+    "7. Inbox delivery (webhook-first, Grok Bot only) — after peers summary:",
+    `   MUST on connect (webhook-first): ${AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS} MCP only (no public REST register in v1).`,
     "   Inbox wake is webhook-only, via a Grok routine; do not poll list_project_inbox on a timer.",
     "   Once a day, check the project webhook. If it is broken, repair it by re-registering register_project_webhook.",
     '   MUST ack_project_message { "messageId": "<id>" } after you handle each delivery (not optional).',

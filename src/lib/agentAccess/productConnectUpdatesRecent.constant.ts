@@ -1,3 +1,4 @@
+import { AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
 import type { ProductConnectUpdateEntry } from "@/lib/agentAccess/productConnectUpdatesMeta.constant";
 
 /** Catalog entries v9+ (keep productConnectUpdates.constant.ts under line cap). */
@@ -46,5 +47,20 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
         "After redeem_project_invite / request_project_access, MUST call get_my_project_access: if active, skip wait for Approve; if pending, wait as today. Bots you own can join without Approve; strangers stay Pending. list_project_peers / get_project_acl may expose membershipId on self+peers. project_dispatch MUST prefer toMembershipId for peer bots; keep toProjectDisplayName: \"Owner\" for the human; exactly one of toMembershipId | toProjectDisplayName | toTeamLabel. Re-list peers after rename; old nickname may resolve ~7 days.",
       adapt:
         "Check get_my_project_access after redeem/request. Prefer toMembershipId from list_project_peers for peer dispatch; re-list after rename. Do not promise Socket Mode, paid relay, hosted webhook, Grok auto-wake, or faster poll defaults.",
+    },
+    {
+      id: "grok-bot-desktop-routine-webhook-register",
+      catalogVersion: 14,
+      at: "2026-10-03",
+      kind: "connect",
+      title: "Grok Bot routine webhook register",
+      summary:
+        "Inbox wake register is the Grok routine webhook path only (Grok Bot). " +
+        AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS +
+        " Inbox wake is webhook-only, via a Grok routine; do not poll list_project_inbox on a timer. Once a day, check the project webhook; if broken, repair it by re-registering register_project_webhook the same way. Handle each delivery, then MUST ack_project_message. On leave/Revoke MUST delete project-scoped routines.",
+      adapt:
+        "Supersedes hosting your own HTTPS URL for inbox wake. " +
+        AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS +
+        " Do not poll list_project_inbox on a timer. Ack after you handle each delivery. Delete project-scoped routines on leave/Revoke.",
     },
   ];

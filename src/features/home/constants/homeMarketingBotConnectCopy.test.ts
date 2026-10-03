@@ -7,6 +7,7 @@ import {
   HOME_MARKETING_STEPS_COPY,
 } from "@/features/home/constants/homeMarketingLandingCopy.constant";
 import { MARKETING_FEATURE_ITEMS } from "@/features/marketing/marketingFeatureItems.constant";
+import { AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
 import { buildProjectAclAgentGuidelineSection } from "@/lib/agentAccess/buildProjectAclAgentGuidelineSection";
 
 describe("home marketing bot-to-bot connect (Grok launch)", () => {
@@ -49,6 +50,10 @@ describe("home marketing bot-to-bot connect (Grok launch)", () => {
     expect(body).toMatch(/register_project_webhook/);
     expect(body).toMatch(/list_project_inbox/);
     expect(body).toMatch(/ack_project_message/);
+    expect(body).toContain(AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS);
+    expect(body).toMatch(/Grok Bot only/);
+    expect(body).not.toMatch(/if you can host HTTPS/i);
+    expect(body).not.toMatch(/grokbot:\/\/|Slack|Discord/i);
     expect(body).toMatch(/MUST on connect \(webhook-first\)|Inbox: MUST/i);
     expect(body).toMatch(/Inbox wake is webhook-only, via a Grok routine/i);
     expect(body).toMatch(/do not poll list_project_inbox on a timer/i);

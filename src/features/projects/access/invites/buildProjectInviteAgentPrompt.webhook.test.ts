@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { buildProjectInviteAgentPrompt } from "@/features/projects/access/invites/buildProjectInviteAgentPrompt";
+import { AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
 
 describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
   it("MUST register_project_webhook first, then use webhook wake + ack", () => {
@@ -12,9 +13,13 @@ describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
     expect(prompt).toContain("register_project_webhook");
     expect(prompt).toContain("ack_project_message");
     expect(prompt).toMatch(/Inbox delivery|webhook-first/i);
-    expect(prompt).toMatch(/webhookUrl/);
-    expect(prompt).toMatch(/X-AWC-Signature/);
-    expect(prompt).toMatch(/timestamp\.messageId\.body/);
+    expect(prompt).toContain(AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS);
+    expect(prompt).toMatch(/grokWebhookUrl/);
+    expect(prompt).toMatch(/grokWebhookBearer/);
+    expect(prompt).toMatch(/Grok Bot desktop app/);
+    expect(prompt).toMatch(/routine status/);
+    expect(prompt).not.toMatch(/if you can host a public HTTPS endpoint/i);
+    expect(prompt).not.toMatch(/grokbot:\/\/|https?:\/\/[^\s]*webhook|sidebar|Slack|Discord/i);
     expect(prompt).toMatch(
       /Prefer agent-access Bearer for register_project_webhook and ack_project_message/i,
     );

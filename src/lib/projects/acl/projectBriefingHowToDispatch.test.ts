@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
 import { PROJECT_BRIEFING_HOW_TO_DISPATCH } from "@/lib/projects/acl/projectBriefingHowToDispatch.constant";
 
 describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
@@ -21,6 +22,10 @@ describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain("toMembershipId");
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/~7 days|alias TTL/i);
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain("peer.joined");
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain(
+      AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
+    );
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).not.toMatch(/if you can host HTTPS/i);
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/MUST on connect \(webhook-first\)/i);
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/Inbox wake is webhook-only, via a Grok routine/i);
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/do not poll list_project_inbox on a timer/i);

@@ -9,9 +9,14 @@ const readSrc = (relativePath: string): string =>
   readFileSync(join(process.cwd(), relativePath), "utf8");
 
 describe("Grok webhook setup copy", () => {
-  it("tells the user to copy the POST URL and key once", () => {
+  it("tells the user to open Grok Bot on desktop and paste the routine POST URL and key", () => {
     expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).toBe(
-      "Copy the routine webhook POST URL and key once. The bot registers them.",
+      "Open this bot on desktop (the Grok Bot desktop app). The bot shows two inputs, POST URL and key, and the Grok routine webhook panel link already in its routine status. Copy the POST URL and the key from that panel into the two inputs. The bot registers them.",
+    );
+    expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).toMatch(/Grok Bot/);
+    expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).toMatch(/Grok routine/);
+    expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).not.toMatch(
+      /grokbot:\/\/|https?:\/\/|sidebar|Slack|Discord|Cursor/i,
     );
   });
 
