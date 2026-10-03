@@ -13,8 +13,9 @@ const wakeMock = vi.fn((_input: unknown) => {
   throw new Error("wake_down");
 });
 vi.mock("@/lib/projects/acl/webhooks/wakeProjectGrokRoutineWebhooks", () => ({
-  scheduleProjectGrokRoutineWebhookWake: (input: unknown) => {
+  wakeProjectGrokRoutineWebhooks: async (input: unknown) => {
     wakeMock(input);
+    throw new Error("wake_down");
   },
 }));
 

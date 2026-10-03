@@ -62,6 +62,18 @@ describe("insertProjectMessageWithDeliveries grok wake without hmac", () => {
       return [];
     });
     const messageId = await store();
+    const attemptValues = sqlMock.mock.calls
+      .filter((call) =>
+        String(call[0]).includes(
+          "INSERT INTO project_grok_routine_wake_attempts",
+        ),
+      )
+      .flatMap((call) => call.slice(1));
+    expect(attemptValues).toEqual(
+      expect.arrayContaining([messageId, "mem-a", "http_200"]),
+    );
+    expect(attemptValues).not.toContain("https://example.com/wake");
+    expect(attemptValues).not.toContain("sekret-bearer");
     await drain();
     expect(messageId.length).toBeGreaterThan(0);
     expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -84,6 +96,7 @@ describe("insertProjectMessageWithDeliveries grok wake without hmac", () => {
     await store();
     await drain();
     expect(fetchMock).not.toHaveBeenCalled();
+    expect(boundValues()).toContain("not_postable");
     expect(boundValues()).toContain("no_webhook");
     expect(boundValues()).toContain("skipped");
   });

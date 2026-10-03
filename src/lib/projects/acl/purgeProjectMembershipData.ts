@@ -14,6 +14,10 @@ export const purgeProjectMembershipData = async (input: {
     WHERE membership_id = ${input.membership.id}
   `;
   await sql`
+    DELETE FROM project_grok_routine_wake_attempts
+    WHERE membership_id = ${input.membership.id}
+  `;
+  await sql`
     DELETE FROM project_messages
     WHERE project_id = ${input.projectId}
       AND (

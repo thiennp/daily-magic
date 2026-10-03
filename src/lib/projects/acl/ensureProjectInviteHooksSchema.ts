@@ -59,6 +59,12 @@ export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
     bearer_retained TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
+  await sql`CREATE TABLE IF NOT EXISTS project_grok_routine_wake_attempts (
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+    message_id TEXT NOT NULL REFERENCES project_messages(id) ON DELETE CASCADE,
+    membership_id TEXT NOT NULL REFERENCES project_memberships(id) ON DELETE CASCADE,
+    result TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
   await sql`CREATE TABLE IF NOT EXISTS project_message_deliveries (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
     message_id TEXT NOT NULL REFERENCES project_messages(id) ON DELETE CASCADE,

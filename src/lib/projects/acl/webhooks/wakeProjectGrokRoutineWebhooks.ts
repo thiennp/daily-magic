@@ -1,4 +1,5 @@
 import { asRowArray, getSql } from "@/lib/db";
+import { persistProjectGrokRoutineWakeAttempt } from "@/lib/projects/acl/webhooks/persistProjectGrokRoutineWakeAttempt";
 import { postProjectGrokRoutineWebhook } from "@/lib/projects/acl/webhooks/postProjectGrokRoutineWebhook";
 
 const isPostableGrokRoutineWebhook = (
@@ -37,9 +38,24 @@ export const loadPostableGrokRoutineWebhookMembershipIds = async (input: {
 
 export const PROJECT_GROK_ROUTINE_WAKE_EVENT = "project_message.stored";
 
+const wakeResultForRecipient = async (
+  row: Record<string, unknown> | undefined,
+  body: string,
+): Promise<string> => {
+  if (row === undefined || !isPostableGrokRoutineWebhook(row)) {
+    return "not_postable";
+  }
+  const posted = await postProjectGrokRoutineWebhook({
+    webhookUrl: String(row.webhook_url),
+    bearer: String(row.bearer_retained),
+    body,
+  });
+  return posted.result;
+};
+
 /**
- * Wake registered recipients only. Does not change delivery status or ack.
- * Fire-and-forget: callers must not fail dispatch on a miss.
+ * POST each addressed recipient and persist the short result.
+ * Callers must await this. A missed POST must not fail dispatch.
  */
 export const wakeProjectGrokRoutineWebhooks = async (input: {
   readonly projectId: string;
@@ -49,7 +65,7 @@ export const wakeProjectGrokRoutineWebhooks = async (input: {
   if (input.recipientMembershipIds.length === 0) {
     return;
   }
-  const membershipIds = [...input.recipientMembershipIds];
+  const membershipIds = [...new Set(input.recipientMembershipIds)];
   const sql = getSql();
   const rows = asRowArray(
     await sql`
@@ -59,32 +75,23 @@ export const wakeProjectGrokRoutineWebhooks = async (input: {
         AND membership_id = ANY(${membershipIds}::text[])
     `,
   );
+  const byMembership = new Map(
+    rows.map((row) => [String(row.membership_id), row]),
+  );
   const body = JSON.stringify({
     projectId: input.projectId,
     messageId: input.messageId,
     event: PROJECT_GROK_ROUTINE_WAKE_EVENT,
   });
-  for (const row of rows) {
-    if (!isPostableGrokRoutineWebhook(row)) {
-      continue;
-    }
-    await postProjectGrokRoutineWebhook({
-      webhookUrl: String(row.webhook_url),
-      bearer: String(row.bearer_retained),
+  for (const membershipId of membershipIds) {
+    const result = await wakeResultForRecipient(
+      byMembership.get(membershipId),
       body,
+    );
+    await persistProjectGrokRoutineWakeAttempt({
+      messageId: input.messageId,
+      membershipId,
+      result,
     });
   }
-};
-
-export const scheduleProjectGrokRoutineWebhookWake = (input: {
-  readonly projectId: string;
-  readonly messageId: string;
-  readonly recipientMembershipIds: readonly string[];
-}): void => {
-  void wakeProjectGrokRoutineWebhooks(input).catch((error: unknown) => {
-    console.error("project grok routine webhook wake failed", {
-      messageId: input.messageId,
-      error: error instanceof Error ? error.message : "wake_failed",
-    });
-  });
 };

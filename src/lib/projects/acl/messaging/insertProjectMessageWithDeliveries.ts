@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { getSql } from "@/lib/db";
 import { parseProjectMessageRefsJson } from "@/lib/projects/acl/messaging/parseProjectMessageRefsJson";
 import { scheduleProjectMessageWebhookDelivery } from "@/lib/projects/acl/webhooks/deliverProjectMessageWebhooks";
-import { scheduleProjectGrokRoutineWebhookWake } from "@/lib/projects/acl/webhooks/wakeProjectGrokRoutineWebhooks";
+import { wakeProjectGrokRoutineWebhooks } from "@/lib/projects/acl/webhooks/wakeProjectGrokRoutineWebhooks";
 
 type Recipient = { readonly id: string; readonly user_id: string };
 
@@ -58,7 +58,7 @@ export const insertProjectMessageWithDeliveries = async (input: {
       ON CONFLICT DO NOTHING
     `;
   }
-  // Accept = row stored. Pushes are best-effort and must not block the sender.
+  // Accept = row stored. HMAC push stays best-effort. Grok wake is recorded first.
   const refs = parseProjectMessageRefsJson(input.refsJson);
   const recipientMembershipIds = input.recipients.map(
     (recipient) => recipient.id,
@@ -76,7 +76,7 @@ export const insertProjectMessageWithDeliveries = async (input: {
     recipientMembershipIds,
   });
   try {
-    scheduleProjectGrokRoutineWebhookWake({
+    await wakeProjectGrokRoutineWebhooks({
       projectId: input.projectId,
       messageId,
       recipientMembershipIds,

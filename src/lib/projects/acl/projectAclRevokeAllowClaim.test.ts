@@ -96,6 +96,7 @@ describe("project ACL revoke allow-claim", () => {
     expect(deleted("project_messages")).toBe(true);
     expect(deleted("project_membership_webhooks")).toBe(true);
     expect(deleted("project_membership_grok_routine_webhooks")).toBe(true);
+    expect(deleted("project_grok_routine_wake_attempts")).toBe(true);
 
     if (minted.ok) {
       const verified = await verifyProjectAllowClaim(minted.allowClaim);
