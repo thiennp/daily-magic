@@ -5,6 +5,9 @@ import { useState } from "react";
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
 import { AWC_PROJECT_INBOX_COPY } from "@/features/projects/access/inbox/awcProjectInboxCopy.constant";
 import AwcProjectInboxDispatchFields from "@/features/projects/access/inbox/AwcProjectInboxDispatchFields";
+import AwcProjectInboxDispatchStatus from "@/features/projects/access/inbox/AwcProjectInboxDispatchStatus";
+import { useAwcProjectInboxDispatchClientSend } from "@/features/projects/access/inbox/hooks/useAwcProjectInboxDispatchClientSend";
+import type AwcProjectInboxMessage from "@/features/projects/access/inbox/types/awcProjectInboxMessage.type";
 import { buildInboxDispatchRefs } from "@/features/projects/access/inbox/utils/buildInboxDispatchRefs";
 import { dispatchProjectInboxMessage } from "@/features/projects/access/inbox/utils/dispatchProjectInboxMessage";
 import { inboxDispatchPeerOptions } from "@/features/projects/access/inbox/utils/inboxDispatchPeerOptions";
@@ -14,6 +17,7 @@ import type { AccessMembershipView } from "@/features/projects/access/utils/proj
 interface AwcProjectInboxDispatchFormProps {
   readonly projectId: string;
   readonly members: readonly AccessMembershipView[];
+  readonly messages: readonly AwcProjectInboxMessage[];
 }
 
 const SUMMARY_MAX = 200;
@@ -21,9 +25,11 @@ const SUMMARY_MAX = 200;
 export default function AwcProjectInboxDispatchForm({
   projectId,
   members,
+  messages,
 }: AwcProjectInboxDispatchFormProps) {
   const copy = AWC_PROJECT_INBOX_COPY;
   const peers = inboxDispatchPeerOptions(members);
+  const send = useAwcProjectInboxDispatchClientSend(messages);
   const [peerMembershipId, setPeerMembershipId] = useState("");
   const [summary, setSummary] = useState("");
   const [kind, setKind] = useState("");
@@ -32,7 +38,6 @@ export default function AwcProjectInboxDispatchForm({
   const [localPath, setLocalPath] = useState("");
   const [allowClaimId, setAllowClaimId] = useState("");
   const [toast, setToast] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
 
   const showToast = (text: string) => {
     setToast(text);
@@ -40,7 +45,7 @@ export default function AwcProjectInboxDispatchForm({
   };
 
   const onSubmit = () => {
-    if (busy) return;
+    if (send.isInFlight) return;
     const trimmed = summary.trim();
     if (
       peerMembershipId.length === 0 ||
@@ -50,7 +55,7 @@ export default function AwcProjectInboxDispatchForm({
       showToast(copy.dispatchInvalid);
       return;
     }
-    setBusy(true);
+    send.markInFlight();
     void dispatchProjectInboxMessage({
       projectId,
       toMembershipId: peerMembershipId,
@@ -58,12 +63,13 @@ export default function AwcProjectInboxDispatchForm({
       kind: kind.trim() || undefined,
       refs: buildInboxDispatchRefs({ prUrl, commitSha, localPath, allowClaimId }),
     }).then((result) => {
-      setBusy(false);
       if (result.ok) {
         setSummary("");
+        send.markAccepted(result.messageId);
         showToast(copy.dispatchSuccess);
         return;
       }
+      send.markIdle();
       showToast(mapInboxDispatchError(result));
     });
   };
@@ -98,16 +104,15 @@ export default function AwcProjectInboxDispatchForm({
       <button
         type="button"
         className={AWC_PROJECT_ACCESS_CTA.primary}
-        disabled={busy}
+        disabled={send.isInFlight}
         onClick={onSubmit}
       >
         {copy.dispatchSubmit}
       </button>
-      {toast ? (
-        <p className="text-[11px] font-medium text-gray-700 dark:text-gray-200">
-          {toast}
-        </p>
-      ) : null}
+      <AwcProjectInboxDispatchStatus
+        statusText={send.statusText}
+        toast={toast}
+      />
     </div>
   );
 }

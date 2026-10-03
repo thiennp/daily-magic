@@ -61,6 +61,7 @@ export default function AwcProjectInboxSection({
       <AwcProjectInboxDispatchForm
         projectId={projectId}
         members={inbox.members}
+        messages={inbox.messages}
       />
       <AwcProjectInboxClearConfirmModal
         isOpen={confirmOpen}
