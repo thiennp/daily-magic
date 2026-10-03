@@ -51,6 +51,14 @@ export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
   await sql`ALTER TABLE project_messages ALTER COLUMN sender_membership_id DROP NOT NULL`;
   await sql`ALTER TABLE project_membership_webhooks
     ADD COLUMN IF NOT EXISTS secret_retained TEXT`;
+  await sql`CREATE TABLE IF NOT EXISTS project_membership_grok_routine_webhooks (
+    membership_id TEXT PRIMARY KEY REFERENCES project_memberships(id) ON DELETE CASCADE,
+    project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
+    user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    webhook_url TEXT NOT NULL,
+    bearer_retained TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
   await sql`CREATE TABLE IF NOT EXISTS project_message_deliveries (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
     message_id TEXT NOT NULL REFERENCES project_messages(id) ON DELETE CASCADE,

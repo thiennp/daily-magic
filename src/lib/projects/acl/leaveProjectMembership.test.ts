@@ -73,6 +73,11 @@ describe("leaveProjectMembership happy path", () => {
         query.includes("DELETE FROM project_membership_webhooks"),
       ),
     ).toBe(true);
+    expect(
+      purgeSql.some((query) =>
+        query.includes("DELETE FROM project_membership_grok_routine_webhooks"),
+      ),
+    ).toBe(true);
   });
 
   it("allows leave from naming_required", async () => {

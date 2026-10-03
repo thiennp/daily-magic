@@ -27,4 +27,9 @@ export const purgeProjectMembershipData = async (input: {
     WHERE project_id = ${input.projectId}
       AND membership_id = ${input.membership.id}
   `;
+  await sql`
+    DELETE FROM project_membership_grok_routine_webhooks
+    WHERE project_id = ${input.projectId}
+      AND membership_id = ${input.membership.id}
+  `;
 };

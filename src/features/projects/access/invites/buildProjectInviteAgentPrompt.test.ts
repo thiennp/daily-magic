@@ -46,18 +46,15 @@ describe("buildProjectInviteAgentPrompt", () => {
     expect(prompt).toMatch(/project-scoped tools/i);
     expect(prompt).toMatch(/You MAY use awc_proj_/i);
     expect(prompt).toContain("list_project_peers");
-    expect(prompt).toContain("list_project_inbox");
     expect(prompt).toContain("check_membership");
     expect(prompt).toMatch(/awc_proj_ alone 401s|cannot call non-project/i);
     expect(prompt).toContain("get_project_acl");
-    expect(prompt).toContain("list_project_peers");
     expect(prompt).toMatch(/REQUIRED/i);
     expect(prompt).toContain("projectDisplayName");
     expect(prompt).toContain("teamLabel");
     expect(prompt).toContain("isAgent");
     expect(prompt).toContain("isOwner");
     expect(prompt).toMatch(/Expect self|from self/i);
-    expect(prompt).toMatch(/isOwner/i);
     expect(prompt).toMatch(
       /empty peers is less common|Empty peers besides the owner is normal/i,
     );
@@ -100,12 +97,6 @@ describe("buildProjectInviteAgentPrompt", () => {
     );
     expect(prompt).toMatch(/Left project|leave \//i);
     expect(prompt).toMatch(/cannot revoke others/i);
-    expect(prompt).toMatch(/MUST on leave or owner Revoke/i);
-    expect(prompt).toMatch(/delete all project-scoped routines/i);
-    expect(prompt).toMatch(/Softvale watches/i);
-    expect(prompt).toMatch(/MUST on connect \(webhook-first\)/i);
-    expect(prompt).toMatch(/every 30 seconds while actively working/i);
-    expect(prompt).toMatch(/routine poll every 5 minutes/i);
   });
 
   it("prefers explicit token over URL parse", () => {

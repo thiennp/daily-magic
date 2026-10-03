@@ -21,11 +21,19 @@ describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain("toMembershipId");
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/~7 days|alias TTL/i);
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain("peer.joined");
-    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/MUST on connect \(webhook-first\)/i);
-    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/MUST poll list_project_inbox/i);
-    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/MUST ack_project_message/i);
-    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/every 30 seconds while actively working/i);
-    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/routine poll every 5 minutes/i);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/grokWebhookUrl/);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/grokWebhookBearer/);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(
+      /MUST ack_project_message/i,
+    );
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/once a day/i);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/re-register/i);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).not.toMatch(/every 30 seconds/i);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).not.toMatch(/5 minutes/i);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).not.toMatch(
+      /MUST poll list_project_inbox/i,
+    );
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).not.toContain("bearer_retained");
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(
       /On leave or owner Revoke MUST delete all project-scoped routines/i,
     );

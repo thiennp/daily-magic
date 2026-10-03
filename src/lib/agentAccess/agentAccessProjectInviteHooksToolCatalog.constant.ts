@@ -1,32 +1,21 @@
 import type { AgentAccessToolDefinition } from "@/lib/agentAccess/agentAccessToolCatalog.constant";
+import { REGISTER_PROJECT_WEBHOOK_TOOL } from "@/lib/agentAccess/registerProjectWebhookTool.constant";
 
 export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDefinition[] =
   [
-    {
-      name: "register_project_webhook",
-      description:
-        "Register an https webhook for this project membership. AWC generates the HMAC secret (returned once). Client-supplied secrets are rejected.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          projectId: { type: "string" },
-          webhookUrl: { type: "string", description: "https URL only." },
-        },
-        required: ["projectId", "webhookUrl"],
-        additionalProperties: false,
-      },
-    },
+    REGISTER_PROJECT_WEBHOOK_TOOL,
     {
       name: "project_dispatch",
       description:
-        "Send thin protocol metadata. Prefer toMembershipId (UUID from list_project_peers) for peer bots; keep toProjectDisplayName: \"Owner\" for the human; else toProjectDisplayName / toTeamLabel. Exactly one of toMembershipId | toProjectDisplayName | toTeamLabel. No broadcast/media/blobs/bodies. summary ≤200 chars; allowlisted refs (prUrl|commitSha|localPath|allowClaimId) only; bulky payloads via P2P/localPath. Rate 300/hour + max 300 unread.",
+        'Send thin protocol metadata. Prefer toMembershipId (UUID from list_project_peers) for peer bots; keep toProjectDisplayName: "Owner" for the human; else toProjectDisplayName / toTeamLabel. Exactly one of toMembershipId | toProjectDisplayName | toTeamLabel. No broadcast/media/blobs/bodies. summary ≤200 chars; allowlisted refs (prUrl|commitSha|localPath|allowClaimId) only; bulky payloads via P2P/localPath. Rate 300/hour + max 300 unread.',
       inputSchema: {
         type: "object",
         properties: {
           projectId: { type: "string" },
           toMembershipId: {
             type: "string",
-            description: "Preferred stable peer membership UUID from list_project_peers.",
+            description:
+              "Preferred stable peer membership UUID from list_project_peers.",
           },
           toProjectDisplayName: { type: "string" },
           toTeamLabel: { type: "string" },
@@ -40,7 +29,8 @@ export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDe
     },
     {
       name: "list_project_inbox",
-      description: "List thin project messages addressed to you (poll path).",
+      description:
+        "List thin project messages addressed to you after a Grok routine wake. Not a timer.",
       inputSchema: {
         type: "object",
         properties: {
@@ -54,7 +44,8 @@ export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDe
     },
     {
       name: "ack_project_message",
-      description: "Ack a project inbox message by messageId (hard-deletes the row + deliveries).",
+      description:
+        "Ack a project inbox message by messageId (hard-deletes the row + deliveries).",
       inputSchema: {
         type: "object",
         properties: { messageId: { type: "string" } },

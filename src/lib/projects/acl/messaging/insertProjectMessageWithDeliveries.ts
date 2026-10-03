@@ -1,7 +1,9 @@
 import { randomUUID } from "node:crypto";
 
 import { getSql } from "@/lib/db";
+import { parseProjectMessageRefsJson } from "@/lib/projects/acl/messaging/parseProjectMessageRefsJson";
 import { scheduleProjectMessageWebhookDelivery } from "@/lib/projects/acl/webhooks/deliverProjectMessageWebhooks";
+import { scheduleProjectGrokRoutineWebhookWake } from "@/lib/projects/acl/webhooks/wakeProjectGrokRoutineWebhooks";
 
 type Recipient = { readonly id: string; readonly user_id: string };
 
@@ -56,16 +58,11 @@ export const insertProjectMessageWithDeliveries = async (input: {
       ON CONFLICT DO NOTHING
     `;
   }
-  // Accept = row stored. Webhook push is best-effort and must not block the sender.
-  let refs: Record<string, string> = {};
-  try {
-    const parsed: unknown = JSON.parse(input.refsJson);
-    if (parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)) {
-      refs = parsed as Record<string, string>;
-    }
-  } catch {
-    refs = {};
-  }
+  // Accept = row stored. Pushes are best-effort and must not block the sender.
+  const refs = parseProjectMessageRefsJson(input.refsJson);
+  const recipientMembershipIds = input.recipients.map(
+    (recipient) => recipient.id,
+  );
   scheduleProjectMessageWebhookDelivery({
     payload: {
       projectId: input.projectId,
@@ -76,7 +73,19 @@ export const insertProjectMessageWithDeliveries = async (input: {
       fromMembershipId: input.senderMembershipId,
       createdAt,
     },
-    recipientMembershipIds: input.recipients.map((recipient) => recipient.id),
+    recipientMembershipIds,
   });
+  try {
+    scheduleProjectGrokRoutineWebhookWake({
+      projectId: input.projectId,
+      messageId,
+      recipientMembershipIds,
+    });
+  } catch (error: unknown) {
+    console.error("project grok routine webhook wake failed", {
+      messageId,
+      error: error instanceof Error ? error.message : "wake_failed",
+    });
+  }
   return messageId;
 };

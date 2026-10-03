@@ -12,9 +12,12 @@ vi.mock("@/lib/db", () => ({
   asRowArray: (rows: unknown) => (Array.isArray(rows) ? rows : []),
 }));
 
-vi.mock("@/lib/projects/acl/projectApiKeys/revokeProjectApiKeysForMembership", () => ({
-  revokeProjectApiKeysForMembership: vi.fn(async () => 0),
-}));
+vi.mock(
+  "@/lib/projects/acl/projectApiKeys/revokeProjectApiKeysForMembership",
+  () => ({
+    revokeProjectApiKeysForMembership: vi.fn(async () => 0),
+  }),
+);
 
 vi.mock("@/lib/projects/userProjectQueries", () => ({
   getUserProjectById: vi.fn(async () => ({
@@ -87,9 +90,12 @@ describe("project ACL revoke allow-claim", () => {
     });
     expect(revoked.ok).toBe(true);
     const purgeSql = sqlMock.mock.calls.map((call) => String(call[0]));
-    expect(purgeSql.some((query) => query.includes("DELETE FROM project_message_deliveries"))).toBe(true);
-    expect(purgeSql.some((query) => query.includes("DELETE FROM project_messages"))).toBe(true);
-    expect(purgeSql.some((query) => query.includes("DELETE FROM project_membership_webhooks"))).toBe(true);
+    const deleted = (table: string) =>
+      purgeSql.some((query) => query.includes(`DELETE FROM ${table}`));
+    expect(deleted("project_message_deliveries")).toBe(true);
+    expect(deleted("project_messages")).toBe(true);
+    expect(deleted("project_membership_webhooks")).toBe(true);
+    expect(deleted("project_membership_grok_routine_webhooks")).toBe(true);
 
     if (minted.ok) {
       const verified = await verifyProjectAllowClaim(minted.allowClaim);
