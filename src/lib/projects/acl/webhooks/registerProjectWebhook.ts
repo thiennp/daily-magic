@@ -58,7 +58,7 @@ export const registerProjectWebhook = async (input: {
     await sql`
       INSERT INTO project_membership_webhooks (
         id, project_id, membership_id, user_id, webhook_url,
-        secret_hash, secret_prefix, enabled, revoke_generation
+        secret_hash, secret_prefix, secret_retained, enabled, revoke_generation
       )
       VALUES (
         ${webhookId},
@@ -68,6 +68,7 @@ export const registerProjectWebhook = async (input: {
         ${safe.url.toString()},
         ${secretHash},
         ${PROJECT_WEBHOOK_SECRET_PREFIX},
+        ${secret},
         TRUE,
         0
       )
@@ -75,6 +76,7 @@ export const registerProjectWebhook = async (input: {
         webhook_url = EXCLUDED.webhook_url,
         secret_hash = EXCLUDED.secret_hash,
         secret_prefix = EXCLUDED.secret_prefix,
+        secret_retained = EXCLUDED.secret_retained,
         enabled = TRUE,
         updated_at = NOW(),
         id = EXCLUDED.id

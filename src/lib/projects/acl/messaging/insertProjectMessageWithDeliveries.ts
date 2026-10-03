@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 
 import { getSql } from "@/lib/db";
+import { scheduleProjectMessageWebhookDelivery } from "@/lib/projects/acl/webhooks/deliverProjectMessageWebhooks";
 
 type Recipient = { readonly id: string; readonly user_id: string };
 
@@ -19,6 +20,7 @@ export const insertProjectMessageWithDeliveries = async (input: {
 }): Promise<string> => {
   const sql = getSql();
   const messageId = randomUUID();
+  const createdAt = new Date().toISOString();
   await sql`
     INSERT INTO project_messages (
       id, project_id, sender_membership_id, sender_user_id,
@@ -54,5 +56,27 @@ export const insertProjectMessageWithDeliveries = async (input: {
       ON CONFLICT DO NOTHING
     `;
   }
+  // Accept = row stored. Webhook push is best-effort and must not block the sender.
+  let refs: Record<string, string> = {};
+  try {
+    const parsed: unknown = JSON.parse(input.refsJson);
+    if (parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)) {
+      refs = parsed as Record<string, string>;
+    }
+  } catch {
+    refs = {};
+  }
+  scheduleProjectMessageWebhookDelivery({
+    payload: {
+      projectId: input.projectId,
+      messageId,
+      kind: input.kind,
+      summary: input.summary,
+      refs,
+      fromMembershipId: input.senderMembershipId,
+      createdAt,
+    },
+    recipientMembershipIds: input.recipients.map((recipient) => recipient.id),
+  });
   return messageId;
 };

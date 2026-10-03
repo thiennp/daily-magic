@@ -49,6 +49,8 @@ export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
     refs JSONB NOT NULL DEFAULT '{}'::jsonb,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), acked_at TIMESTAMPTZ)`;
   await sql`ALTER TABLE project_messages ALTER COLUMN sender_membership_id DROP NOT NULL`;
+  await sql`ALTER TABLE project_membership_webhooks
+    ADD COLUMN IF NOT EXISTS secret_retained TEXT`;
   await sql`CREATE TABLE IF NOT EXISTS project_message_deliveries (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
     message_id TEXT NOT NULL REFERENCES project_messages(id) ON DELETE CASCADE,
