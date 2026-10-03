@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "terms",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "product-naming",
+      "pointsDeducted": 1,
+      "reason": "Intro uses Agent Witch and agentwitch.com consistently; one body line repeats product name in prose — acceptable but slightly redundant."
+    },
+    {
+      "area": "disclaimer-tone",
+      "pointsDeducted": 1,
+      "reason": "Disclaimer section is clear about third-party AI risk; could add one clause on user responsibility for dispatched tasks for parity with Accounts section."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Minor redundancy in Service section"],
+  "mustFix": [],
+  "quickWins": ["Keep last-updated date aligned with Privacy page"]
+}
