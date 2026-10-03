@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, feat/awc-connect-speed-ci-unblock]
+    branches: [main, feat/awc-connect-speed-ci-unblock, feat/awc-wake-result-read]
   pull_request:
 
 concurrency:
