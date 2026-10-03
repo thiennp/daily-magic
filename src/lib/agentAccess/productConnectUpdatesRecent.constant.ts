@@ -10,9 +10,9 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
       kind: "changelog",
       title: "Owner address + 60/day inbox",
       summary:
-        'project_dispatch to the human with toProjectDisplayName: "Owner". Rate limit is 60/day (hourly + 500 unacked removed). peer.joined goes to peers + owner inbox; owner tasks show fromProjectDisplayName Owner.',
+        "project_dispatch to the human with toProjectDisplayName: \"Owner\". Rate limit is 60/day (hourly + 500 unacked removed). peer.joined goes to peers + owner inbox; owner tasks show fromProjectDisplayName Owner.",
       adapt:
-        'Use "Owner" for human dispatch (not account name). Expect peer.joined on Approve and from Owner on owner-assigned tasks. Cap sends at 60/day.',
+        "Use \"Owner\" for human dispatch (not account name). Expect peer.joined on Approve and from Owner on owner-assigned tasks. Cap sends at 60/day.",
     },
     {
       id: "webhook-first-self-setup-on-join",
@@ -21,9 +21,9 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
       kind: "connect",
       title: "Webhook-first inbox delivery on join",
       summary:
-        "After Approve, register_project_webhook for signed HTTPS delivery (store the secret, verify X-AWC-Signature) and optional grokWebhookUrl + grokWebhookBearer. AWC POSTs that URL once with Authorization: Bearer when a project message is stored. Do not poll list_project_inbox on a timer. After a wake, ack_project_message. Once a day, check the Grok routine webhook and re-register if broken. On leave/Revoke MUST delete project-scoped routines. Approve does not register delivery.",
+        "After Approve, MUST set up inbox delivery before further work: with HTTPS, MUST register_project_webhook and store the secret / verify X-AWC-Signature. Inbox wake is webhook-only, via a Grok routine; do not poll list_project_inbox on a timer. Once a day, check the project webhook; if broken, repair it by re-registering register_project_webhook. Handle each delivery, then MUST ack_project_message. On leave/Revoke MUST delete project-scoped routines. Approve does not register delivery.",
       adapt:
-        "Register signed delivery and grokWebhookUrl + grokWebhookBearer yourself after Approve. Do not poll list_project_inbox on a timer. After a wake, ack_project_message. Once a day, re-register the Grok routine webhook if it is broken. Delete project-scoped routines on leave/Revoke. Approve does not register delivery.",
+        "Set up delivery yourself after Approve before further work. HTTPS: register_project_webhook, store the secret, and verify X-AWC-Signature. Use a Grok routine webhook for inbox wake only; never poll list_project_inbox on a timer. Once a day, check the project webhook and repair it by re-registering register_project_webhook if broken. Handle each delivery, then ack_project_message. Delete project-scoped routines on leave/Revoke; Approve does not register delivery.",
     },
     {
       id: "project-message-caps-300",
@@ -43,19 +43,8 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
       kind: "connect",
       title: "Same-owner auto-approve + toMembershipId dispatch",
       summary:
-        'After redeem_project_invite / request_project_access, MUST call get_my_project_access: if active, skip wait for Approve; if pending, wait as today. Bots you own can join without Approve; strangers stay Pending. list_project_peers / get_project_acl may expose membershipId on self+peers. project_dispatch MUST prefer toMembershipId for peer bots; keep toProjectDisplayName: "Owner" for the human; exactly one of toMembershipId | toProjectDisplayName | toTeamLabel. Re-list peers after rename; old nickname may resolve ~7 days.',
+        "After redeem_project_invite / request_project_access, MUST call get_my_project_access: if active, skip wait for Approve; if pending, wait as today. Bots you own can join without Approve; strangers stay Pending. list_project_peers / get_project_acl may expose membershipId on self+peers. project_dispatch MUST prefer toMembershipId for peer bots; keep toProjectDisplayName: \"Owner\" for the human; exactly one of toMembershipId | toProjectDisplayName | toTeamLabel. Re-list peers after rename; old nickname may resolve ~7 days.",
       adapt:
-        "Check get_my_project_access after redeem/request. Prefer toMembershipId from list_project_peers for peer dispatch; re-list after rename. Do not promise Socket Mode, paid relay, or hosted webhook.",
-    },
-    {
-      id: "grok-routine-webhook-wake",
-      catalogVersion: 13,
-      at: "2026-10-03",
-      kind: "connect",
-      title: "Grok routine webhook wakes stored project messages",
-      summary:
-        "register_project_webhook accepts optional grokWebhookUrl + grokWebhookBearer (stored once, not returned). When a project message is stored, AWC POSTs that URL once with Authorization: Bearer. Do not poll list_project_inbox on a timer. The message stays pending until ack_project_message. Once a day, check the webhook and re-register if broken.",
-      adapt:
-        "Send grokWebhookUrl and grokWebhookBearer on register_project_webhook. Do not poll the inbox on a timer. After a wake, list_project_inbox and ack_project_message. Once a day, if the Grok routine webhook is broken, re-register URL + bearer.",
+        "Check get_my_project_access after redeem/request. Prefer toMembershipId from list_project_peers for peer dispatch; re-list after rename. Do not promise Socket Mode, paid relay, hosted webhook, Grok auto-wake, or faster poll defaults.",
     },
   ];

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { buildProjectInviteAgentPrompt } from "@/features/projects/access/invites/buildProjectInviteAgentPrompt";
 
 describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
-  it("registers a Grok routine webhook and a daily health check, not a timer poll", () => {
+  it("MUST register_project_webhook first, then use webhook wake + ack", () => {
     const prompt = buildProjectInviteAgentPrompt({
       inviteUrl: "https://example.com/invite/p/tok-xyz",
       projectId: "proj-1",
@@ -11,7 +11,7 @@ describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
     });
     expect(prompt).toContain("register_project_webhook");
     expect(prompt).toContain("ack_project_message");
-    expect(prompt).toMatch(/Inbox wake/i);
+    expect(prompt).toMatch(/Inbox delivery|webhook-first/i);
     expect(prompt).toMatch(/webhookUrl/);
     expect(prompt).toMatch(/X-AWC-Signature/);
     expect(prompt).toMatch(/timestamp\.messageId\.body/);
@@ -21,8 +21,6 @@ describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
     expect(prompt).toMatch(/awc_proj_ (is )?also allowed/i);
     expect(prompt).not.toMatch(/not on awc_proj_ allowlist/i);
     expect(prompt).toContain("list_project_inbox");
-    expect(prompt).toContain("grokWebhookUrl");
-    expect(prompt).toContain("grokWebhookBearer");
     expect(prompt).toMatch(/thin protocol metadata|no media\/blobs/i);
     expect(prompt).toMatch(/P2P|localPath/i);
     expect(prompt).toContain("summary ≤ 200 chars");
@@ -30,18 +28,17 @@ describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
     expect(prompt).toContain("media_not_allowed");
     expect(prompt).toContain("Delete-on-ack");
     expect(prompt).toContain("unacked messages expire after 3 days");
-    expect(prompt).toContain(
-      "Rate limits: 300/hour (rolling) + max 300 unread (ack/clear frees slots)",
-    );
+    expect(prompt).toContain("Rate limits: 300/hour (rolling) + max 300 unread (ack/clear frees slots)");
     expect(prompt).toContain('"toProjectDisplayName": "Owner"');
     expect(prompt).toContain("peer.joined");
     expect(prompt).toContain('fromProjectDisplayName === "Owner"');
+    expect(prompt).toMatch(/MUST on connect \(webhook-first\)/i);
+    expect(prompt).toMatch(/Inbox wake is webhook-only, via a Grok routine/i);
+    expect(prompt).toMatch(/do not poll list_project_inbox on a timer/i);
+    expect(prompt).toMatch(/Once a day, check the project webhook/i);
+    expect(prompt).toMatch(/re-registering register_project_webhook/i);
     expect(prompt).toMatch(/MUST ack_project_message/i);
-    expect(prompt).toMatch(/once a day/i);
-    expect(prompt).toMatch(/re-register grokWebhookUrl \+ grokWebhookBearer/i);
-    expect(prompt).not.toMatch(/every 30 seconds/i);
-    expect(prompt).not.toMatch(/5 minutes/i);
-    expect(prompt).not.toMatch(/MUST poll list_project_inbox/i);
+    expect(prompt).not.toMatch(/Else MUST poll list_project_inbox|every 30 seconds while actively working|every 5 minutes when idle/i);
     expect(prompt).toMatch(/MUST on leave or owner Revoke/i);
     expect(prompt).toMatch(/delete all project-scoped routines/i);
     expect(prompt).toMatch(/Softvale watches/i);
