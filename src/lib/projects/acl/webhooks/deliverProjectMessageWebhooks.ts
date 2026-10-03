@@ -1,6 +1,7 @@
 import { asRowArray, getSql } from "@/lib/db";
 import { markProjectMessageDeliveryStatus } from "@/lib/projects/acl/webhooks/markProjectMessageDeliveryStatus";
 import { postSignedProjectMembershipWebhook } from "@/lib/projects/acl/webhooks/postSignedProjectMembershipWebhook";
+import { loadPostableGrokRoutineWebhookMembershipIds } from "@/lib/projects/acl/webhooks/wakeProjectGrokRoutineWebhooks";
 
 export type ProjectMessageWebhookPayload = {
   readonly projectId: string;
@@ -14,7 +15,8 @@ export type ProjectMessageWebhookPayload = {
 
 /**
  * Push to enabled membership webhooks that retained a signing secret.
- * Skips null secret_retained until re-register. Do not await from dispatch HTTP.
+ * A missing HMAC URL is no_webhook only when no postable Grok webhook is stored.
+ * That Grok wake is separate and must stay pending. Do not await from dispatch HTTP.
  */
 export const deliverProjectMessageWebhooks = async (input: {
   readonly payload: ProjectMessageWebhookPayload;
@@ -35,6 +37,10 @@ export const deliverProjectMessageWebhooks = async (input: {
     `,
   );
   const body = JSON.stringify(input.payload);
+  const grokMembershipIds = await loadPostableGrokRoutineWebhookMembershipIds({
+    projectId: input.payload.projectId,
+    membershipIds,
+  });
   const byMembership = new Map(
     rows.map((row) => [
       String(row.membership_id),
@@ -51,6 +57,9 @@ export const deliverProjectMessageWebhooks = async (input: {
   for (const membershipId of membershipIds) {
     const hook = byMembership.get(membershipId);
     if (hook === undefined) {
+      if (grokMembershipIds.has(membershipId)) {
+        continue;
+      }
       await markProjectMessageDeliveryStatus({
         messageId: input.payload.messageId,
         membershipId,
