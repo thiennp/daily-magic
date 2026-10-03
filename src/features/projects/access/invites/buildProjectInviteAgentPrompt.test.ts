@@ -105,7 +105,7 @@ describe("buildProjectInviteAgentPrompt", () => {
     expect(prompt).toMatch(/Softvale watches/i);
     expect(prompt).toMatch(/MUST on connect \(webhook-first\)/i);
     expect(prompt).toMatch(/every 30 seconds while actively working/i);
-    expect(prompt).toMatch(/every 10 minutes when idle/i);
+    expect(prompt).toMatch(/routine poll every 5 minutes/i);
   });
 
   it("prefers explicit token over URL parse", () => {

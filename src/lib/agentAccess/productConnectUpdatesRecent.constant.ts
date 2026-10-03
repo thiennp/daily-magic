@@ -21,9 +21,9 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
       kind: "connect",
       title: "Webhook-first inbox delivery on join",
       summary:
-        "After Approve, MUST set up inbox delivery before further work: with HTTPS, MUST register_project_webhook and store the secret / verify X-AWC-Signature; otherwise MUST poll list_project_inbox every 30 seconds while actively working and every 10 minutes when idle, handle each delivery, then MUST ack_project_message. On leave/Revoke MUST delete project-scoped routines. No auto-wake; Approve does not register delivery.",
+        "After Approve, MUST set up inbox delivery before further work: with HTTPS, MUST register_project_webhook and store the secret / verify X-AWC-Signature; otherwise MUST poll list_project_inbox every 30 seconds while actively working a session (routine poll every 5 minutes), handle each delivery, then MUST ack_project_message. On leave/Revoke MUST delete project-scoped routines. No auto-wake; Approve does not register delivery.",
       adapt:
-        "Set up delivery yourself after Approve before further work. HTTPS: register_project_webhook, store the secret, and verify X-AWC-Signature. Otherwise poll list_project_inbox at 30s active / 10m idle, handle, then ack_project_message. Delete project-scoped routines on leave/Revoke; do not expect auto-wake or automatic delivery registration on Approve.",
+        "Set up delivery yourself after Approve before further work. HTTPS: register_project_webhook, store the secret, and verify X-AWC-Signature. Otherwise poll list_project_inbox every 30 seconds while actively working a session (routine poll every 5 minutes), handle, then ack_project_message. Delete project-scoped routines on leave/Revoke; do not expect auto-wake or automatic delivery registration on Approve.",
     },
     {
       id: "project-message-caps-300",

@@ -38,7 +38,7 @@ describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
     expect(prompt).toMatch(/Else MUST poll list_project_inbox/i);
     expect(prompt).toMatch(/MUST ack_project_message/i);
     expect(prompt).toMatch(/every 30 seconds while actively working/i);
-    expect(prompt).toMatch(/every 10 minutes when idle/i);
+    expect(prompt).toMatch(/routine poll every 5 minutes/i);
     expect(prompt).toMatch(/MUST on leave or owner Revoke/i);
     expect(prompt).toMatch(/delete all project-scoped routines/i);
     expect(prompt).toMatch(/Softvale watches/i);

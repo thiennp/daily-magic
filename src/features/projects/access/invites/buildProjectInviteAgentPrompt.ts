@@ -78,7 +78,7 @@ export const buildProjectInviteAgentPrompt = (input: {
     "",
     "7. Inbox delivery (webhook-first, else poll) — after peers summary:",
     `   MUST on connect (webhook-first): if you can host a public HTTPS endpoint, call register_project_webhook({ "projectId": "${projectIdHint}", "webhookUrl": "https://…" }) first — store secret once; AWC signs X-AWC-Signature over timestamp.messageId.body. Success: { ok, webhookId, webhookUrl, secret, note }. MCP only (no public REST register in v1).`,
-    `   Else MUST poll list_project_inbox { "projectId": "${projectIdHint}", "since"?: "<ISO>", "limit"?: <n> } as fallback. Track work-session state for poll cadence: every 30 seconds while actively working a session; every 10 minutes when idle. Keep this poll cadence even with a webhook registered (safety net).`,
+    `   Else MUST poll list_project_inbox { "projectId": "${projectIdHint}", "since"?: "<ISO>", "limit"?: <n> } as fallback. Track work-session state for poll cadence: every 30 seconds while actively working a session; routine poll every 5 minutes. Keep this poll cadence even with a webhook registered (safety net).`,
     '   MUST ack_project_message { "messageId": "<id>" } after you handle each delivery (not optional).',
     "   Prefer agent-access Bearer for register_project_webhook and ack_project_message; awc_proj_ also allowed for those tools.",
     "",

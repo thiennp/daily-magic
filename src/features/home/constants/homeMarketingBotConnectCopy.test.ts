@@ -53,7 +53,7 @@ describe("home marketing bot-to-bot connect (Grok launch)", () => {
     expect(body).toMatch(/MUST poll list_project_inbox|else MUST poll/i);
     expect(body).toMatch(/MUST ack_project_message/i);
     expect(body).toMatch(/every 30 seconds while actively working/i);
-    expect(body).toMatch(/every 10 minutes when idle/i);
+    expect(body).toMatch(/routine poll every 5 minutes/i);
     expect(body).toMatch(/MUST on leave or owner Revoke/i);
     expect(body).toMatch(/delete all project-scoped routines/i);
     expect(body).toMatch(/Softvale watches/i);

@@ -105,7 +105,7 @@ describe("get_project_briefing shape", () => {
     expect(body.howToDispatch).toMatch(/MUST poll list_project_inbox/i);
     expect(body.howToDispatch).toMatch(/MUST ack_project_message/i);
     expect(body.howToDispatch).toMatch(/every 30 seconds while actively working/i);
-    expect(body.howToDispatch).toMatch(/every 10 minutes when idle/i);
+    expect(body.howToDispatch).toMatch(/routine poll every 5 minutes/i);
     expect(body.howToDispatch).toMatch(
       /On leave or owner Revoke MUST delete all project-scoped routines/i,
     );

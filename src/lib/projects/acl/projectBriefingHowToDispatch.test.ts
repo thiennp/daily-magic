@@ -25,7 +25,7 @@ describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/MUST poll list_project_inbox/i);
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/MUST ack_project_message/i);
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/every 30 seconds while actively working/i);
-    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/every 10 minutes when idle/i);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/routine poll every 5 minutes/i);
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(
       /On leave or owner Revoke MUST delete all project-scoped routines/i,
     );
