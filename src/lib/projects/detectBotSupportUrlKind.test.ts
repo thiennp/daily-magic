@@ -16,9 +16,9 @@ describe("detectBotSupportUrlKind", () => {
     expect(detectBotSupportUrlKind("https://github.com/org/repo")).toBe(
       "github",
     );
-    expect(
-      detectBotSupportUrlKind("https://github.com/org/repo/pull/4"),
-    ).toBe("github");
+    expect(detectBotSupportUrlKind("https://github.com/org/repo/pull/4")).toBe(
+      "github",
+    );
     expect(detectBotSupportUrlKind("git@github.com:org/repo.git")).toBe(
       "github",
     );
@@ -28,9 +28,9 @@ describe("detectBotSupportUrlKind", () => {
   });
 
   it("detects LinkedIn including country subdomains", () => {
-    expect(
-      detectBotSupportUrlKind("https://www.linkedin.com/in/ada"),
-    ).toBe("linkedin");
+    expect(detectBotSupportUrlKind("https://www.linkedin.com/in/ada")).toBe(
+      "linkedin",
+    );
     expect(
       detectBotSupportUrlKind("https://de.linkedin.com/company/acme"),
     ).toBe("linkedin");
@@ -52,9 +52,7 @@ describe("detectBotSupportUrlKind", () => {
   });
 
   it("labels everything else Link", () => {
-    expect(detectBotSupportUrlKind("https://gitlab.com/org/repo")).toBe(
-      "link",
-    );
+    expect(detectBotSupportUrlKind("https://gitlab.com/org/repo")).toBe("link");
     expect(detectBotSupportUrlKind("https://github.com.evil.com/x")).toBe(
       "link",
     );

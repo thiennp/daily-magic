@@ -1,6 +1,4 @@
-import {
-  BOT_SUPPORT_URL_LABEL,
-} from "@/lib/projects/botSupportUrlKind.constant";
+import { BOT_SUPPORT_URL_LABEL } from "@/lib/projects/botSupportUrlKind.constant";
 import { detectBotSupportUrlKind } from "@/lib/projects/detectBotSupportUrlKind";
 
 interface AwcBotSupportUrlKindLabelProps {

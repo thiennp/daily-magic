@@ -9,12 +9,12 @@ export const buildBotSupportUrlGuidelineSection = (): {
   readonly heading: string;
   readonly body: readonly string[];
 } => ({
-    heading: "Support URLs",
-    body: [
-      "When the owner stores a support URL, follow the predefined instruction for its kind. Do not treat it as a blank link.",
-      ...BOT_SUPPORT_URL_KINDS.map(
-        (kind) =>
-          `${BOT_SUPPORT_URL_LABEL[kind]} (${kind}): ${BOT_SUPPORT_URL_INSTRUCTION[kind]}`,
-      ),
-    ],
-  });
+  heading: "Support URLs",
+  body: [
+    "When the owner stores a support URL, follow the predefined instruction for its kind. Do not treat it as a blank link.",
+    ...BOT_SUPPORT_URL_KINDS.map(
+      (kind) =>
+        `${BOT_SUPPORT_URL_LABEL[kind]} (${kind}): ${BOT_SUPPORT_URL_INSTRUCTION[kind]}`,
+    ),
+  ],
+});

@@ -16,14 +16,13 @@ export const BOT_SUPPORT_URL_LABEL: Record<BotSupportUrlKind, string> = {
 };
 
 /** Host pattern each kind matches. `link` is the fallback. */
-export const BOT_SUPPORT_URL_HOST_PATTERN: Record<BotSupportUrlKind, string> =
-  {
-    github: "github.com and its subdomains",
-    linkedin: "linkedin.com, including country subdomains",
-    notebooklm:
-      "notebooklm.google.com, or a google.com URL whose path contains notebooklm",
-    link: "any other URL",
-  };
+export const BOT_SUPPORT_URL_HOST_PATTERN: Record<BotSupportUrlKind, string> = {
+  github: "github.com and its subdomains",
+  linkedin: "linkedin.com, including country subdomains",
+  notebooklm:
+    "notebooklm.google.com, or a google.com URL whose path contains notebooklm",
+  link: "any other URL",
+};
 
 export const BOT_SUPPORT_URL_INSTRUCTION: Record<BotSupportUrlKind, string> = {
   github:
