@@ -1,5 +1,6 @@
 "use client";
 
+import AwcBotSupportUrlKindLabel from "@/features/projects/botSupportUrl/AwcBotSupportUrlKindLabel";
 import { AWC_PROJECT_REPO_URLS_COPY } from "@/features/projects/repoUrls/awcProjectRepoUrlsCopy.constant";
 import type { ProjectRepoMetadata } from "@/lib/projects/validateProjectRepoUrls";
 
@@ -31,11 +32,11 @@ export default function AwcProjectRepoUrlsDisplay({
       ) : (
         <ul className="mt-2 space-y-1">
           {metadata.repoUrls.map((url) => (
-            <li
-              key={url}
-              className="break-all font-mono text-xs text-gray-800 dark:text-white/90"
-            >
-              {url}
+            <li key={url} className="space-y-0.5">
+              <AwcBotSupportUrlKindLabel url={url} />
+              <p className="break-all font-mono text-xs text-gray-800 dark:text-white/90">
+                {url}
+              </p>
             </li>
           ))}
         </ul>

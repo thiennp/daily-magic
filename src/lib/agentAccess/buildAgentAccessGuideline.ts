@@ -2,6 +2,7 @@ import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName
 
 import { buildAgentWitchRoleGuidelineSection } from "@/lib/agentAccess/buildAgentWitchRoleGuidelineSection";
 import { buildPromptSdlcAgentGuidelineSection } from "@/lib/agentAccess/buildPromptSdlcAgentGuide";
+import { buildBotSupportUrlGuidelineSection } from "@/lib/agentAccess/buildBotSupportUrlGuidelineSection";
 import { buildProjectAclAgentGuidelineSection } from "@/lib/agentAccess/buildProjectAclAgentGuidelineSection";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 
@@ -88,6 +89,7 @@ export const buildAgentAccessGuideline = (): AgentAccessGuideline => {
         ],
       },
       buildProjectAclAgentGuidelineSection(),
+      buildBotSupportUrlGuidelineSection(),
       {
         heading: "Tell other bots",
         body: [

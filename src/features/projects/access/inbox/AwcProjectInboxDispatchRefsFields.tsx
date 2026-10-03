@@ -1,6 +1,7 @@
 "use client";
 
 import { AWC_PROJECT_INBOX_COPY } from "@/features/projects/access/inbox/awcProjectInboxCopy.constant";
+import AwcBotSupportUrlKindLabel from "@/features/projects/botSupportUrl/AwcBotSupportUrlKindLabel";
 
 const FIELD =
   "mt-1 w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-xs dark:border-gray-700 dark:bg-gray-950";
@@ -32,6 +33,7 @@ export default function AwcProjectInboxDispatchRefsFields({
       <p className="text-[11px] font-medium text-gray-600 dark:text-gray-400">
         {copy.dispatchRefsHeading}
       </p>
+      <AwcBotSupportUrlKindLabel url={prUrl} />
       <input
         className={FIELD}
         value={prUrl}

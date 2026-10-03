@@ -1,3 +1,4 @@
+import { AWC_GROK_WEBHOOK_SETUP_COPY } from "@/features/projects/access/awcGrokWebhookSetupCopy.constant";
 import type { AgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 
 export default function ProjectInviteConnectSteps(input: {
@@ -6,6 +7,7 @@ export default function ProjectInviteConnectSteps(input: {
   const { urls } = input;
   return (
     <li>
+      <p className="mb-2">{AWC_GROK_WEBHOOK_SETUP_COPY.instruction}</p>
       If you do <strong>not</strong> already have Agent Witch / agent-access
       connected, do <strong>not</strong> stop at &quot;no connector&quot;.
       Either:
