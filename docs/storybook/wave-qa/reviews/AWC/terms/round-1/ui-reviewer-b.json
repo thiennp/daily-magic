@@ -1,0 +1,34 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "terms",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/manifest.json",
+  "scoreDesktop": 100,
+  "scoreMobile": 100,
+  "scoreOverall": 100,
+  "passed": true,
+  "scoreBreakdown": [],
+  "whyBelowThreshold": "",
+  "topIssues": [
+    "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/zoom/sections-desktop-ready.png",
+    "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/zoom/sections-mobile-ready.png",
+    "No clipped headings, stray borders through body copy, or accidental dark surfaces on legal text"
+  ],
+  "mustFix": [],
+  "quickWins": [],
+  "zoomedSections": [
+    "header-desktop-ready",
+    "hero-desktop-ready",
+    "sections-desktop-ready",
+    "sidebar-devices-desktop-ready",
+    "header-mobile-ready",
+    "devices-mobile-ready",
+    "hero-mobile-ready",
+    "sections-mobile-ready"
+  ],
+  "obviousVisualDefects": "none",
+  "visualEvidenceMethod": "computerUse"
+}

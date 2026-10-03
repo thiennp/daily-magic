@@ -1,7 +1,7 @@
 {
   "passThreshold": 95,
   "currentRole": "ux",
-  "currentPageIndex": 5,
+  "currentPageIndex": 14,
   "pages": [
     {
       "order": 0,
@@ -1520,36 +1520,282 @@
       "statuses": ["ready"],
       "roles": {
         "ux": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 99,
+          "reviewerB": 98,
+          "notes": "Agent A=99 B=98 (round 1).\nA deductions: mobile-scroll-length -1: Signed-in shell plus Your Devices card pushes Terms body below the fold on 390px; expected for AppShell stories but adds scroll before legal headings.\nB deductions: scan-path-desktop -1: Sidebar nav competes slightly with main Terms heading on first scan; legal content still clearly dominant in main column. | mobile-menu-discovery -1: Hamburger-style shell on mobile hides secondary nav until opened; Terms readers rely on scroll rather than nav for this page.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "terms",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 98,
+              "scoreOverall": 99,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-scroll-length",
+                  "pointsDeducted": 1,
+                  "reason": "Signed-in shell plus Your Devices card pushes Terms body below the fold on 390px; expected for AppShell stories but adds scroll before legal headings."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Long mobile scroll before Terms title"],
+              "mustFix": [],
+              "quickWins": [
+                "Optional anchor link to Terms from devices card on mobile Storybook only"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "terms",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "scan-path-desktop",
+                  "pointsDeducted": 1,
+                  "reason": "Sidebar nav competes slightly with main Terms heading on first scan; legal content still clearly dominant in main column."
+                },
+                {
+                  "area": "mobile-menu-discovery",
+                  "pointsDeducted": 1,
+                  "reason": "Hamburger-style shell on mobile hides secondary nav until opened; Terms readers rely on scroll rather than nav for this page."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Mobile nav behind shell chrome"],
+              "mustFix": [],
+              "quickWins": [
+                "Terms title and date remain legible immediately after devices block"
+              ]
+            }
+          }
         },
         "copy": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 99,
+          "reviewerB": 98,
+          "notes": "Agent A=99 B=98 (round 1).\nA deductions: contact-path -1: Contact section references org administrator and account support channel without a direct mailto; accurate for B2B but slightly indirect for solo evaluators.\nB deductions: product-naming -1: Intro uses Agent Witch and agentwitch.com consistently; one body line repeats product name in prose — acceptable but slightly redundant. | disclaimer-tone -1: Disclaimer section is clear about third-party AI risk; could add one clause on user responsibility for dispatched tasks for parity with Accounts section.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "terms",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 99,
+              "scoreOverall": 99,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "contact-path",
+                  "pointsDeducted": 1,
+                  "reason": "Contact section references org administrator and account support channel without a direct mailto; accurate for B2B but slightly indirect for solo evaluators."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Indirect contact wording"],
+              "mustFix": [],
+              "quickWins": [
+                "Add published support email when product marketing provides one"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "terms",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "product-naming",
+                  "pointsDeducted": 1,
+                  "reason": "Intro uses Agent Witch and agentwitch.com consistently; one body line repeats product name in prose — acceptable but slightly redundant."
+                },
+                {
+                  "area": "disclaimer-tone",
+                  "pointsDeducted": 1,
+                  "reason": "Disclaimer section is clear about third-party AI risk; could add one clause on user responsibility for dispatched tasks for parity with Accounts section."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Minor redundancy in Service section"],
+              "mustFix": [],
+              "quickWins": ["Keep last-updated date aligned with Privacy page"]
+            }
+          }
         },
         "ui": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 100,
+          "round": 1,
+          "reviewerA": 100,
+          "reviewerB": 100,
+          "notes": "Agent A=100 B=100 (round 1).\nA: no deductions.\nB: no deductions.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "terms",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/manifest.json",
+              "scoreDesktop": 100,
+              "scoreMobile": 100,
+              "scoreOverall": 100,
+              "passed": true,
+              "scoreBreakdown": [],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/zoom/header-desktop-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/zoom/hero-desktop-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/zoom/sections-desktop-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/zoom/sidebar-devices-desktop-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/zoom/header-mobile-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/zoom/devices-mobile-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/zoom/hero-mobile-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/zoom/sections-mobile-ready.png",
+                "computerUse: /opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/zoom/computeruse-desktop-story.png",
+                "computerUse: /opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/zoom/computeruse-mobile-story.png",
+                "Production parity: legal typography and spacing match www.agentwitch.com/terms AppShell layout"
+              ],
+              "mustFix": [],
+              "quickWins": [],
+              "zoomedSections": [
+                "header-desktop-ready",
+                "hero-desktop-ready",
+                "sections-desktop-ready",
+                "sidebar-devices-desktop-ready",
+                "header-mobile-ready",
+                "devices-mobile-ready",
+                "hero-mobile-ready",
+                "sections-mobile-ready"
+              ],
+              "obviousVisualDefects": "none",
+              "visualEvidenceMethod": "computerUse"
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "terms",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/manifest.json",
+              "scoreDesktop": 100,
+              "scoreMobile": 100,
+              "scoreOverall": 100,
+              "passed": true,
+              "scoreBreakdown": [],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/zoom/sections-desktop-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/zoom/sections-mobile-ready.png",
+                "No clipped headings, stray borders through body copy, or accidental dark surfaces on legal text"
+              ],
+              "mustFix": [],
+              "quickWins": [],
+              "zoomedSections": [
+                "header-desktop-ready",
+                "hero-desktop-ready",
+                "sections-desktop-ready",
+                "sidebar-devices-desktop-ready",
+                "header-mobile-ready",
+                "devices-mobile-ready",
+                "hero-mobile-ready",
+                "sections-mobile-ready"
+              ],
+              "obviousVisualDefects": "none",
+              "visualEvidenceMethod": "computerUse"
+            }
+          }
         },
         "product": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 99,
+          "notes": "Agent A=98 B=99 (round 1).\nA deductions: story-fidelity -2: Terms copy is product-accurate at a high level but not jurisdiction-specific counsel text; acceptable Storybook legal placeholder until formal review.\nB deductions: fixture-honesty -1: Story shows signed-in AppShell with devices fixture; matches authenticated /terms route rather than a misleading marketing-only shell.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "terms",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "story-fidelity",
+                  "pointsDeducted": 2,
+                  "reason": "Terms copy is product-accurate at a high level but not jurisdiction-specific counsel text; acceptable Storybook legal placeholder until formal review."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Generic legal copy vs full compliance doc"],
+              "mustFix": [],
+              "quickWins": ["Track legal review before enterprise sales demos"]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "terms",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 99,
+              "scoreOverall": 99,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "fixture-honesty",
+                  "pointsDeducted": 1,
+                  "reason": "Story shows signed-in AppShell with devices fixture; matches authenticated /terms route rather than a misleading marketing-only shell."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Story reflects real signed-in terms route"],
+              "mustFix": [],
+              "quickWins": [
+                "Add empty-state story only if product ships logged-out terms variant"
+              ]
+            }
+          }
         },
         "tester": {
           "passed": true,
@@ -1568,7 +1814,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": false
+      "allRolesPassed": true
     },
     {
       "order": 6,

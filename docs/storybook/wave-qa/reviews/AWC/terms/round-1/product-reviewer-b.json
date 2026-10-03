@@ -1,0 +1,26 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "terms",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 99,
+  "scoreOverall": 99,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "fixture-honesty",
+      "pointsDeducted": 1,
+      "reason": "Story shows signed-in AppShell with devices fixture; matches authenticated /terms route rather than a misleading marketing-only shell."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Story reflects real signed-in terms route"],
+  "mustFix": [],
+  "quickWins": [
+    "Add empty-state story only if product ships logged-out terms variant"
+  ]
+}
