@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "terms",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/terms/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "story-fidelity",
+      "pointsDeducted": 2,
+      "reason": "Terms copy is product-accurate at a high level but not jurisdiction-specific counsel text; acceptable Storybook legal placeholder until formal review."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Generic legal copy vs full compliance doc"],
+  "mustFix": [],
+  "quickWins": ["Track legal review before enterprise sales demos"]
+}
