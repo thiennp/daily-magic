@@ -39,17 +39,6 @@ export default function AwcProjectInviteCreatedBanner({
       <div className="mt-2 flex flex-wrap gap-2">
         <button
           type="button"
-          className={AWC_PROJECT_ACCESS_CTA.primary}
-          onClick={() => {
-            void navigator.clipboard.writeText(createdInviteUrl).then(() => {
-              showToast(copy.invitesUrlCopied);
-            });
-          }}
-        >
-          {copy.invitesCopyUrl}
-        </button>
-        <button
-          type="button"
           className={AWC_PROJECT_ACCESS_CTA.secondary}
           onClick={() => {
             const prompt = buildProjectInviteAgentPrompt({

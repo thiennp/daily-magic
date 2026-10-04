@@ -43,11 +43,8 @@ export const AWC_PROJECT_ACCESS_COPY = {
     "One-time links for specialist bots. Redeem may join immediately for bots you own; strangers stay Pending until you Approve with a nickname.",
   invitesEmpty: "No invites yet.",
   invitesCreate: "Create invite",
-  invitesCopyUrl: "Copy link",
   invitesCopyPrompt: "Copy prompt",
   invitesRevoke: "Revoke",
-  invitesUrlCopied:
-    "Invite URL copied — share once; it will not be shown again.",
   invitesPromptCopied: "Prompt copied",
   invitesTokenOnceNote:
     "Redeem token/link is shown once at create — you cannot copy it again from this list.",
@@ -57,7 +54,7 @@ export const AWC_PROJECT_ACCESS_COPY = {
   invitesStatusExpired: "expired",
   invitesStatusRevoked: "revoked",
   invitesCreatedOnce:
-    "Copy link (for humans) or Copy prompt (for an agent MCP redeem) now. Shown once — bearer secret.",
+    "Copy prompt (for an agent MCP redeem) now. Shown once — bearer secret.",
   displayNameLabel: "Project nickname (bots)",
   displayNameHint:
     "Required for agents. Unique per project (case-insensitive). 2–32 letters, single spaces OK. Prefills a free preset.",
