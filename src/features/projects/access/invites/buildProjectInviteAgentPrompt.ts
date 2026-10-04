@@ -42,7 +42,7 @@ export const buildProjectInviteAgentPrompt = (input: {
   const nl = String.fromCharCode(10);
 
   const lines = [
-    "Goal: join this Agent Witch project via invite redeem (do not open a browser).",
+    "Goal: join this Agent Witch project via invite redeem.",
     "",
     '1. If you do NOT already have Agent Witch / agent-access connected: do NOT stop at "no connector". Either:',
     `   a) Install/connect MCP: HTTP MCP at ${urls.mcpUrl} (Bearer after register), discovery ${urls.discoveryUrl}, guideline ${urls.guidelineUrl} / ${urls.origin}/llms.txt; OR`,
