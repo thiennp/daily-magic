@@ -1,4 +1,5 @@
 import { AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
+import { PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE } from "@/lib/projects/acl/projectBriefingHowToDispatch.constant";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 import { extractProjectInviteTokenFromUrl } from "@/lib/projects/acl/invites/extractProjectInviteTokenFromUrl";
 
@@ -83,7 +84,8 @@ export const buildProjectInviteAgentPrompt = (input: {
     "   The pasted key is the Grok bearer, not the HMAC secret (awc_whsec_, returned once, signs timestamp.messageId.body).",
     "   Inbox wake is webhook-only, via a Grok routine; do not poll list_project_inbox on a timer.",
     "   Once a day, check the project webhook. If it is broken, repair it by re-registering register_project_webhook with both grokWebhookUrl and grokWebhookBearer again, because the bearer is never returned.",
-    '   On each delivery: read the sender, do the task, project_dispatch the reply to that sender, post the same reply in your own window, then MUST ack_project_message { "messageId": "<id>" }. Do not ack only. When the sender is the owner, toProjectDisplayName is "Owner".',
+    `   ${PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE}`,
+    '   MUST ack_project_message { "messageId": "<id>" }.',
     "   Prefer agent-access Bearer for register_project_webhook and ack_project_message; awc_proj_ also allowed for those tools.",
     "",
     "8. Leaving / disconnecting (no owner Approve needed):",

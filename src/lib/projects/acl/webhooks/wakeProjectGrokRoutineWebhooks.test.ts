@@ -36,7 +36,7 @@ describe("wakeProjectGrokRoutineWebhooks", () => {
       }
       return [];
     });
-    await wakeProjectGrokRoutineWebhooks({
+    const results = await wakeProjectGrokRoutineWebhooks({
       projectId: "proj-1",
       messageId: "msg-1",
       summary: "hello",
@@ -44,6 +44,10 @@ describe("wakeProjectGrokRoutineWebhooks", () => {
       fromProjectDisplayName: "Probe",
       recipientMembershipIds: ["mem-a", "mem-b"],
     });
+    expect(results).toEqual([
+      { membershipId: "mem-a", result: "http_200" },
+      { membershipId: "mem-b", result: "not_postable" },
+    ]);
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
     expect(url).toBe("https://example.com/wake");
@@ -67,7 +71,7 @@ describe("wakeProjectGrokRoutineWebhooks", () => {
   it("does not POST when the recipient has no registration", async () => {
     vi.stubGlobal("fetch", fetchMock);
     sqlMock.mockResolvedValue([]);
-    await wakeProjectGrokRoutineWebhooks({
+    const results = await wakeProjectGrokRoutineWebhooks({
       projectId: "proj-1",
       messageId: "msg-1",
       summary: "hello",
@@ -75,10 +79,25 @@ describe("wakeProjectGrokRoutineWebhooks", () => {
       fromProjectDisplayName: "Probe",
       recipientMembershipIds: ["mem-a"],
     });
+    expect(results).toEqual([{ membershipId: "mem-a", result: "not_postable" }]);
     expect(fetchMock).not.toHaveBeenCalled();
     expect(
       queries().some((q) => q.includes("'pending'") || q.includes("UPDATE")),
     ).toBe(false);
+  });
+
+  it("returns no results when there are no recipients", async () => {
+    const results = await wakeProjectGrokRoutineWebhooks({
+      projectId: "proj-1",
+      messageId: "msg-1",
+      summary: "hello",
+      fromMembershipId: "mem-s",
+      fromProjectDisplayName: "Probe",
+      recipientMembershipIds: [],
+    });
+    expect(results).toEqual([]);
+    expect(sqlMock).not.toHaveBeenCalled();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("does not throw or retry when the POST fails", async () => {
@@ -100,7 +119,7 @@ describe("wakeProjectGrokRoutineWebhooks", () => {
         fromProjectDisplayName: "Probe",
         recipientMembershipIds: ["mem-a"],
       }),
-    ).resolves.toBeUndefined();
+    ).resolves.toEqual([{ membershipId: "mem-a", result: "fetch_failed" }]);
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });

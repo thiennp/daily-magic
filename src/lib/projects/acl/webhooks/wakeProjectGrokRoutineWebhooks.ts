@@ -53,9 +53,15 @@ const wakeResultForRecipient = async (
   return posted.result;
 };
 
+export type ProjectGrokRoutineWakeResult = {
+  readonly membershipId: string;
+  readonly result: string;
+};
+
 /**
  * POST each addressed recipient and persist the short result.
- * Callers must await this. A missed POST must not fail dispatch.
+ * Returns one result per recipient. Callers must await this.
+ * A missed POST must not fail dispatch.
  */
 export const wakeProjectGrokRoutineWebhooks = async (input: {
   readonly projectId: string;
@@ -64,9 +70,9 @@ export const wakeProjectGrokRoutineWebhooks = async (input: {
   readonly fromMembershipId: string | null;
   readonly fromProjectDisplayName: string | null;
   readonly recipientMembershipIds: readonly string[];
-}): Promise<void> => {
+}): Promise<readonly ProjectGrokRoutineWakeResult[]> => {
   if (input.recipientMembershipIds.length === 0) {
-    return;
+    return [];
   }
   const membershipIds = [...new Set(input.recipientMembershipIds)];
   const sql = getSql();
@@ -89,6 +95,7 @@ export const wakeProjectGrokRoutineWebhooks = async (input: {
     fromMembershipId: input.fromMembershipId,
     fromProjectDisplayName: input.fromProjectDisplayName,
   });
+  const wakeResults: ProjectGrokRoutineWakeResult[] = [];
   for (const membershipId of membershipIds) {
     const result = await wakeResultForRecipient(
       byMembership.get(membershipId),
@@ -99,5 +106,7 @@ export const wakeProjectGrokRoutineWebhooks = async (input: {
       membershipId,
       result,
     });
+    wakeResults.push({ membershipId, result });
   }
+  return wakeResults;
 };

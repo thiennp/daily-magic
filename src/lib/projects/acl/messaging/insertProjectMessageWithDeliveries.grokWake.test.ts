@@ -23,7 +23,7 @@ import { insertProjectMessageWithDeliveries } from "@/lib/projects/acl/messaging
 
 describe("insertProjectMessageWithDeliveries grok wake", () => {
   it("keeps the insert pending when the wake throws", async () => {
-    const messageId = await insertProjectMessageWithDeliveries({
+    const stored = await insertProjectMessageWithDeliveries({
       projectId: "proj-1",
       senderMembershipId: "mem-s",
       senderUserId: "user-s",
@@ -36,7 +36,8 @@ describe("insertProjectMessageWithDeliveries grok wake", () => {
       refsJson: "{}",
       recipients: [{ id: "mem-a", user_id: "user-a" }],
     });
-    expect(messageId.length).toBeGreaterThan(0);
+    expect(stored.messageId.length).toBeGreaterThan(0);
+    expect(stored.wakeResults).toEqual([]);
     expect(wakeMock).toHaveBeenCalledTimes(1);
     const sql = sqlMock.mock.calls.map((call) => String(call[0]));
     expect(sql.some((q) => q.includes("'pending'"))).toBe(true);

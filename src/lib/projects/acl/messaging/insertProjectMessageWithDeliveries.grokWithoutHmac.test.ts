@@ -61,7 +61,11 @@ describe("insertProjectMessageWithDeliveries grok wake without hmac", () => {
       }
       return [];
     });
-    const messageId = await store();
+    const stored = await store();
+    const messageId = stored.messageId;
+    expect(stored.wakeResults).toEqual([
+      { membershipId: "mem-a", result: "http_200" },
+    ]);
     const attemptValues = sqlMock.mock.calls
       .filter((call) =>
         String(call[0]).includes(
@@ -93,7 +97,10 @@ describe("insertProjectMessageWithDeliveries grok wake without hmac", () => {
   it("still records no_webhook when the recipient has neither webhook", async () => {
     vi.stubGlobal("fetch", fetchMock);
     sqlMock.mockResolvedValue([]);
-    await store();
+    const stored = await store();
+    expect(stored.wakeResults).toEqual([
+      { membershipId: "mem-a", result: "not_postable" },
+    ]);
     await drain();
     expect(fetchMock).not.toHaveBeenCalled();
     expect(boundValues()).toContain("not_postable");

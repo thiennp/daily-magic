@@ -14,6 +14,9 @@ const readPositiveIntEnv = (name: string, fallback: number): number => {
 };
 
 export const PROJECT_MESSAGE_SUMMARY_MAX_CHARS = 200;
+
+/** Receipt stored when a peer wake is accepted (HTTP 200). */
+export const PROJECT_MESSAGE_KIND_TASK_PROCESSING = "task.processing";
 /** Total JSON byte size of the refs object. */
 export const PROJECT_MESSAGE_REFS_MAX_BYTES = 768;
 /** Per allowlisted ref string value. */

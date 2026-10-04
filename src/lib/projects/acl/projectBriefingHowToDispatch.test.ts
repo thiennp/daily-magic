@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import { AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
-import { PROJECT_BRIEFING_HOW_TO_DISPATCH } from "@/lib/projects/acl/projectBriefingHowToDispatch.constant";
+import { buildProjectInviteAgentPrompt } from "@/features/projects/access/invites/buildProjectInviteAgentPrompt";
+import { buildProjectAclAgentGuidelineSection } from "@/lib/agentAccess/buildProjectAclAgentGuidelineSection";
+import {
+  PROJECT_BRIEFING_HOW_TO_DISPATCH,
+  PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE,
+} from "@/lib/projects/acl/projectBriefingHowToDispatch.constant";
 
 describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
   it("states the thin project inbox caps", () => {
@@ -37,5 +42,27 @@ describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
       /On leave or owner Revoke MUST delete all project-scoped routines/i,
     );
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/Softvale watches/i);
+  });
+
+  it("shares one processing reply clause with the invite prompt and guideline", () => {
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).not.toMatch(/AgentWitch/);
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain("task.processing");
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain(
+      "not a server timer",
+    );
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain(
+      'toProjectDisplayName is "Owner"',
+    );
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain(
+      PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE,
+    );
+    const prompt = buildProjectInviteAgentPrompt({
+      inviteUrl: "https://example.com/invite/p/tok-xyz",
+      projectId: "proj-1",
+    });
+    expect(prompt).toContain(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE);
+    expect(buildProjectAclAgentGuidelineSection().body.join("\n")).toContain(
+      PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE,
+    );
   });
 });

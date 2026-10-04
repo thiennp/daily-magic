@@ -36,7 +36,7 @@ describe("wakeProjectGrokRoutineWebhooks persisted result", () => {
         bearer_retained: "sekret-bearer",
       },
     ]);
-    await wakeProjectGrokRoutineWebhooks({
+    const results = await wakeProjectGrokRoutineWebhooks({
       projectId: "proj-1",
       messageId: "msg-1",
       summary: "hello",
@@ -44,6 +44,7 @@ describe("wakeProjectGrokRoutineWebhooks persisted result", () => {
       fromProjectDisplayName: "Probe",
       recipientMembershipIds: ["mem-a"],
     });
+    expect(results).toEqual([{ membershipId: "mem-a", result: "http_200" }]);
     const stored = storedAttempts();
     expect(stored).toEqual(
       expect.arrayContaining(["msg-1", "mem-a", "http_200"]),
@@ -67,7 +68,7 @@ describe("wakeProjectGrokRoutineWebhooks persisted result", () => {
       }
       return [];
     });
-    await wakeProjectGrokRoutineWebhooks({
+    const results = await wakeProjectGrokRoutineWebhooks({
       projectId: "proj-1",
       messageId: "msg-1",
       summary: "hello",
@@ -75,6 +76,10 @@ describe("wakeProjectGrokRoutineWebhooks persisted result", () => {
       fromProjectDisplayName: "Probe",
       recipientMembershipIds: ["mem-a", "mem-b"],
     });
+    expect(results).toEqual([
+      { membershipId: "mem-a", result: "not_postable" },
+      { membershipId: "mem-b", result: "not_postable" },
+    ]);
     expect(fetchMock).not.toHaveBeenCalled();
     expect(
       storedAttempts().filter((value) => value === "not_postable"),
@@ -100,7 +105,7 @@ describe("wakeProjectGrokRoutineWebhooks persisted result", () => {
         fromProjectDisplayName: "Probe",
         recipientMembershipIds: ["mem-a"],
       }),
-    ).resolves.toBeUndefined();
+    ).resolves.toEqual([{ membershipId: "mem-a", result: "fetch_failed" }]);
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(storedAttempts()).toEqual(
       expect.arrayContaining(["msg-1", "mem-a", "fetch_failed"]),

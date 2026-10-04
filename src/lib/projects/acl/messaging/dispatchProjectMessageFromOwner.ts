@@ -65,7 +65,7 @@ export const dispatchProjectMessageFromOwner = async (input: {
   }
   const recipient = { id: resolvedRecipient.id, user_id: resolvedRecipient.user_id };
 
-  const messageId = await insertProjectMessageWithDeliveries({
+  const { messageId } = await insertProjectMessageWithDeliveries({
     projectId: input.projectId,
     senderMembershipId: null,
     senderUserId: input.ownerUserId,

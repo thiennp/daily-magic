@@ -3,7 +3,15 @@ import { randomUUID } from "node:crypto";
 import { getSql } from "@/lib/db";
 import { parseProjectMessageRefsJson } from "@/lib/projects/acl/messaging/parseProjectMessageRefsJson";
 import { scheduleProjectMessageWebhookDelivery } from "@/lib/projects/acl/webhooks/deliverProjectMessageWebhooks";
-import { wakeProjectGrokRoutineWebhooks } from "@/lib/projects/acl/webhooks/wakeProjectGrokRoutineWebhooks";
+import {
+  wakeProjectGrokRoutineWebhooks,
+  type ProjectGrokRoutineWakeResult,
+} from "@/lib/projects/acl/webhooks/wakeProjectGrokRoutineWebhooks";
+
+export type InsertProjectMessageWithDeliveriesResult = {
+  readonly messageId: string;
+  readonly wakeResults: readonly ProjectGrokRoutineWakeResult[];
+};
 
 type Recipient = { readonly id: string; readonly user_id: string };
 
@@ -20,7 +28,7 @@ export const insertProjectMessageWithDeliveries = async (input: {
   readonly summary: string;
   readonly refsJson: string;
   readonly recipients: readonly Recipient[];
-}): Promise<string> => {
+}): Promise<InsertProjectMessageWithDeliveriesResult> => {
   const sql = getSql();
   const messageId = randomUUID();
   const createdAt = new Date().toISOString();
@@ -76,8 +84,9 @@ export const insertProjectMessageWithDeliveries = async (input: {
     },
     recipientMembershipIds,
   });
+  let wakeResults: readonly ProjectGrokRoutineWakeResult[] = [];
   try {
-    await wakeProjectGrokRoutineWebhooks({
+    wakeResults = await wakeProjectGrokRoutineWebhooks({
       projectId: input.projectId,
       messageId,
       summary: input.summary,
@@ -94,5 +103,5 @@ export const insertProjectMessageWithDeliveries = async (input: {
       error: error instanceof Error ? error.message : "wake_failed",
     });
   }
-  return messageId;
+  return { messageId, wakeResults };
 };
