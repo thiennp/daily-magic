@@ -2,7 +2,7 @@ import { AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcGrokWe
 
 /** Shared reply clause for briefing, invite prompt, and agent guideline. */
 export const PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE =
-  "On send, the sender tells the user it sent. The recipient does the task, not only ack. When the recipient gets a task.processing message, that is the receipt: relay it to the user, and do not treat it as a new task. The summary contains the original message id. The sender of that receipt is the peer who is processing. Until done, every 5 minutes the recipient sends the sender a status. The sender relays that status to the user. The server does not know task progress, so this loop is the bots' job, not a server timer. When the recipient finishes or is blocked, it sends the sender done or blocked with the reason. The sender tells the user. The recipient acks the original message only after that. If the sender gets no signal for more than 5 minutes (about 6–7), it tells the user the peer is silent and asks the peer once. If another 5 minutes pass with no signal, it tells the user blocked and stops. No further asks, no new task. When the sender is the owner, toProjectDisplayName is \"Owner\".";
+  "On a wake, the first action is one short line in your own window that the message was received, before the task and before ack. Then do the task. On each delivery: read the sender, do the task, project_dispatch the reply to that sender, post the same reply in your own window, then ack. Do not ack only. When the sender is the owner, toProjectDisplayName is \"Owner\".";
 
 /** One paragraph: how active members address peers via project_dispatch. */
 export const PROJECT_BRIEFING_HOW_TO_DISPATCH =

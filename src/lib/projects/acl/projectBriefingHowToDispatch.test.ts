@@ -46,10 +46,23 @@ describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
 
   it("shares one processing reply clause with the invite prompt and guideline", () => {
     expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).not.toMatch(/AgentWitch/);
-    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain("task.processing");
-    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain(
-      "not a server timer",
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).not.toMatch(/task\.processing/);
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).not.toMatch(/every 5 minutes/i);
+    const receiptAt = PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE.indexOf(
+      "one short line in your own window that the message was received",
     );
+    const taskAt = PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE.indexOf(
+      "read the sender, do the task",
+    );
+    expect(receiptAt).toBeGreaterThanOrEqual(0);
+    expect(taskAt).toBeGreaterThan(receiptAt);
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain(
+      "before the task and before ack",
+    );
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain(
+      "post the same reply in your own window, then ack",
+    );
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain("Do not ack only.");
     expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain(
       'toProjectDisplayName is "Owner"',
     );
