@@ -37,56 +37,34 @@ export const listProjectInbox = async (input: {
   const limit = Math.min(Math.max(input.limit ?? 50, 1), 100);
   const since = input.since ?? null;
   const rows = asRowArray(
-    since
-      ? await sql`
-          SELECT m.*, sender.project_display_name AS sender_display_name,
-            (
-              SELECT a.result
-              FROM project_grok_routine_wake_attempts a
-              WHERE a.message_id = m.id
-                AND a.membership_id = ${membershipId}
-              ORDER BY a.created_at DESC
-              LIMIT 1
-            ) AS grok_wake_result
-          FROM project_messages m
-          LEFT JOIN project_memberships sender
-            ON sender.id = m.sender_membership_id
-          WHERE m.project_id = ${input.projectId}
-            AND (
-              m.to_user_id = ${input.actorUserId}
-              OR (
-                m.to_team_label IS NOT NULL
-                AND m.to_team_label = ${teamLabel}
-              )
-            )
-            AND m.created_at > ${since}::timestamptz
-          ORDER BY m.created_at DESC
-          LIMIT ${limit}
-        `
-      : await sql`
-          SELECT m.*, sender.project_display_name AS sender_display_name,
-            (
-              SELECT a.result
-              FROM project_grok_routine_wake_attempts a
-              WHERE a.message_id = m.id
-                AND a.membership_id = ${membershipId}
-              ORDER BY a.created_at DESC
-              LIMIT 1
-            ) AS grok_wake_result
-          FROM project_messages m
-          LEFT JOIN project_memberships sender
-            ON sender.id = m.sender_membership_id
-          WHERE m.project_id = ${input.projectId}
-            AND (
-              m.to_user_id = ${input.actorUserId}
-              OR (
-                m.to_team_label IS NOT NULL
-                AND m.to_team_label = ${teamLabel}
-              )
-            )
-          ORDER BY m.created_at DESC
-          LIMIT ${limit}
-        `,
+    await sql`
+      SELECT m.*, sender.project_display_name AS sender_display_name,
+        (
+          SELECT a.result
+          FROM project_grok_routine_wake_attempts a
+          WHERE a.message_id = m.id
+            AND a.membership_id = ${membershipId}
+          ORDER BY a.created_at DESC
+          LIMIT 1
+        ) AS grok_wake_result
+      FROM project_messages m
+      LEFT JOIN project_memberships sender
+        ON sender.id = m.sender_membership_id
+      WHERE m.project_id = ${input.projectId}
+        AND (
+          m.to_user_id = ${input.actorUserId}
+          OR (
+            m.to_team_label IS NOT NULL
+            AND m.to_team_label = ${teamLabel}
+          )
+        )
+        AND (
+          ${since}::timestamptz IS NULL
+          OR m.created_at > ${since}::timestamptz
+        )
+      ORDER BY m.created_at DESC
+      LIMIT ${limit}
+    `,
   );
   return {
     ok: true,

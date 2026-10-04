@@ -1,8 +1,7 @@
 import { asRowArray, getSql } from "@/lib/db";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
+import { STORED_GROK_WAKE_RESULT } from "@/lib/projects/acl/messaging/storedGrokWakeResult.constant";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
-
-const STORED_GROK_WAKE_RESULT = /^(?:http_\d{3}|fetch_failed|not_postable)$/;
 
 export type ReadProjectGrokWakeResult =
   | {
