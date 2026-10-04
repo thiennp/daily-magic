@@ -10,6 +10,7 @@ type Recipient = { readonly id: string; readonly user_id: string };
 export const insertProjectMessageWithDeliveries = async (input: {
   readonly projectId: string;
   readonly senderMembershipId: string | null;
+  readonly senderProjectDisplayName?: string | null;
   readonly senderUserId: string;
   readonly toMembershipId: string | null;
   readonly toUserId: string | null;
@@ -79,6 +80,12 @@ export const insertProjectMessageWithDeliveries = async (input: {
     await wakeProjectGrokRoutineWebhooks({
       projectId: input.projectId,
       messageId,
+      summary: input.summary,
+      fromMembershipId: input.senderMembershipId,
+      fromProjectDisplayName:
+        input.senderMembershipId === null
+          ? "Owner"
+          : (input.senderProjectDisplayName ?? null),
       recipientMembershipIds,
     });
   } catch (error: unknown) {

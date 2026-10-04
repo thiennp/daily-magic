@@ -44,6 +44,7 @@ export const dispatchProjectMessage = async (input: {
   const rate = await assertProjectMessageDispatchRateLimits({
     projectId: input.projectId,
     senderMembershipId: sender.id,
+    senderProjectDisplayName: sender.projectDisplayName,
     senderUserId: input.actorUserId,
   });
   if (!rate.ok) {

@@ -60,6 +60,9 @@ const wakeResultForRecipient = async (
 export const wakeProjectGrokRoutineWebhooks = async (input: {
   readonly projectId: string;
   readonly messageId: string;
+  readonly summary: string;
+  readonly fromMembershipId: string | null;
+  readonly fromProjectDisplayName: string | null;
   readonly recipientMembershipIds: readonly string[];
 }): Promise<void> => {
   if (input.recipientMembershipIds.length === 0) {
@@ -82,6 +85,9 @@ export const wakeProjectGrokRoutineWebhooks = async (input: {
     projectId: input.projectId,
     messageId: input.messageId,
     event: PROJECT_GROK_ROUTINE_WAKE_EVENT,
+    summary: input.summary,
+    fromMembershipId: input.fromMembershipId,
+    fromProjectDisplayName: input.fromProjectDisplayName,
   });
   for (const membershipId of membershipIds) {
     const result = await wakeResultForRecipient(

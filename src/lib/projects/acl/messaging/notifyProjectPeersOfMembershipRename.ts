@@ -28,6 +28,7 @@ export const notifyProjectPeersOfMembershipRename = async (input: {
     await insertProjectMessageWithDeliveries({
       projectId: input.projectId,
       senderMembershipId: input.membershipId,
+      senderProjectDisplayName: input.projectDisplayName,
       senderUserId: input.userId,
       toMembershipId: recipient.id,
       toUserId: recipient.user_id,
@@ -48,6 +49,7 @@ export const notifyProjectPeersOfMembershipRename = async (input: {
     await insertProjectMessageWithDeliveries({
       projectId: input.projectId,
       senderMembershipId: input.membershipId,
+      senderProjectDisplayName: input.projectDisplayName,
       senderUserId: input.userId,
       toMembershipId: null,
       toUserId: project.ownerUserId,

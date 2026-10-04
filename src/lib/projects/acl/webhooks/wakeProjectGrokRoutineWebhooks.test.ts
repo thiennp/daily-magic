@@ -39,6 +39,9 @@ describe("wakeProjectGrokRoutineWebhooks", () => {
     await wakeProjectGrokRoutineWebhooks({
       projectId: "proj-1",
       messageId: "msg-1",
+      summary: "hello",
+      fromMembershipId: "mem-s",
+      fromProjectDisplayName: "Probe",
       recipientMembershipIds: ["mem-a", "mem-b"],
     });
     expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -51,6 +54,9 @@ describe("wakeProjectGrokRoutineWebhooks", () => {
       projectId: "proj-1",
       messageId: "msg-1",
       event: "project_message.stored",
+      summary: "hello",
+      fromMembershipId: "mem-s",
+      fromProjectDisplayName: "Probe",
     });
     expect(String(init.body)).not.toContain("sekret-bearer");
     expect(
@@ -64,6 +70,9 @@ describe("wakeProjectGrokRoutineWebhooks", () => {
     await wakeProjectGrokRoutineWebhooks({
       projectId: "proj-1",
       messageId: "msg-1",
+      summary: "hello",
+      fromMembershipId: "mem-s",
+      fromProjectDisplayName: "Probe",
       recipientMembershipIds: ["mem-a"],
     });
     expect(fetchMock).not.toHaveBeenCalled();
@@ -86,6 +95,9 @@ describe("wakeProjectGrokRoutineWebhooks", () => {
       wakeProjectGrokRoutineWebhooks({
         projectId: "proj-1",
         messageId: "msg-1",
+        summary: "hello",
+        fromMembershipId: "mem-s",
+        fromProjectDisplayName: "Probe",
         recipientMembershipIds: ["mem-a"],
       }),
     ).resolves.toBeUndefined();

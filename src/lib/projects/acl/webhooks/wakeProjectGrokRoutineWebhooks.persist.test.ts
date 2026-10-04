@@ -39,6 +39,9 @@ describe("wakeProjectGrokRoutineWebhooks persisted result", () => {
     await wakeProjectGrokRoutineWebhooks({
       projectId: "proj-1",
       messageId: "msg-1",
+      summary: "hello",
+      fromMembershipId: "mem-s",
+      fromProjectDisplayName: "Probe",
       recipientMembershipIds: ["mem-a"],
     });
     const stored = storedAttempts();
@@ -67,6 +70,9 @@ describe("wakeProjectGrokRoutineWebhooks persisted result", () => {
     await wakeProjectGrokRoutineWebhooks({
       projectId: "proj-1",
       messageId: "msg-1",
+      summary: "hello",
+      fromMembershipId: "mem-s",
+      fromProjectDisplayName: "Probe",
       recipientMembershipIds: ["mem-a", "mem-b"],
     });
     expect(fetchMock).not.toHaveBeenCalled();
@@ -89,6 +95,9 @@ describe("wakeProjectGrokRoutineWebhooks persisted result", () => {
       wakeProjectGrokRoutineWebhooks({
         projectId: "proj-1",
         messageId: "msg-1",
+        summary: "hello",
+        fromMembershipId: "mem-s",
+        fromProjectDisplayName: "Probe",
         recipientMembershipIds: ["mem-a"],
       }),
     ).resolves.toBeUndefined();
