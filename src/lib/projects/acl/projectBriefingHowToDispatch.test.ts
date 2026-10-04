@@ -48,14 +48,18 @@ describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
     expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).not.toMatch(/AgentWitch/);
     expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).not.toMatch(/task\.processing/);
     expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).not.toMatch(/every 5 minutes/i);
-    const receiptAt = PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE.indexOf(
-      "one short line in your own window that the message was received",
+    const deliveryAt = PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE.indexOf(
+      "On each delivery:",
     );
-    const taskAt = PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE.indexOf(
-      "read the sender, do the task",
+    expect(deliveryAt).toBeGreaterThanOrEqual(0);
+    const delivery = PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE.slice(deliveryAt);
+    const receiptAt = delivery.indexOf(
+      "one short line in your own window that the message was received, before the task",
     );
+    const taskAt = delivery.indexOf("Then do the task");
     expect(receiptAt).toBeGreaterThanOrEqual(0);
     expect(taskAt).toBeGreaterThan(receiptAt);
+    expect(delivery).not.toContain("read the sender, do the task");
     expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain(
       "before the task and before ack",
     );
