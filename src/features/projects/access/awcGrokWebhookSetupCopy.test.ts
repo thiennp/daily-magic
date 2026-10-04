@@ -20,13 +20,19 @@ describe("Grok webhook setup copy", () => {
     );
   });
 
-  it("is on the invite connect screen without a fake href or sidebar path", () => {
-    const source = readSrc(
+  it("is on the invite page after access is active, not before redeem", () => {
+    const page = readSrc(
+      "src/features/projects/access/invites/ProjectInviteInstructionsBody.tsx",
+    );
+    const connect = readSrc(
       "src/features/projects/access/invites/ProjectInviteConnectSteps.tsx",
     );
-    expect(source).toContain("AWC_GROK_WEBHOOK_SETUP_COPY");
-    expect(source).not.toMatch(/grokbot:\/\//i);
-    expect(source).not.toMatch(/sidebar/i);
-    expect(source).not.toMatch(/<a\b/i);
+    expect(page).toContain("AWC_GROK_WEBHOOK_SETUP_COPY");
+    expect(page).toContain("After access is active");
+    expect(page).toMatch(/active[\s\S]*owner[\s\S]*skip the Approve wait/i);
+    expect(connect).not.toContain("AWC_GROK_WEBHOOK_SETUP_COPY");
+    expect(page).not.toMatch(/grokbot:\/\//i);
+    expect(page).not.toMatch(/sidebar/i);
+    expect(page).not.toMatch(/<a\b/i);
   });
 });

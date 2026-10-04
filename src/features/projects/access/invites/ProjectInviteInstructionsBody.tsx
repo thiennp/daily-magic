@@ -1,3 +1,4 @@
+import { AWC_GROK_WEBHOOK_SETUP_COPY } from "@/features/projects/access/awcGrokWebhookSetupCopy.constant";
 import ProjectInviteConnectSteps from "@/features/projects/access/invites/ProjectInviteConnectSteps";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 import { PROJECT_INVITE_URL_PATH_PREFIX } from "@/lib/projects/acl/invites/projectInvite.constants";
@@ -34,12 +35,19 @@ export default function ProjectInviteInstructionsBody(input: {
           <pre className="mt-2 overflow-x-auto rounded-md border border-gray-200 bg-gray-50 p-3 text-xs dark:border-white/10 dark:bg-white/5">
             {mcpArgs}
           </pre>
-          Then tell <strong>your user</strong> to wait for the owner to{" "}
-          <strong>Approve</strong> in Agent Witch Cloud and confirm back — do
-          not busy-poll forever.
+          Then call{" "}
+          <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
+            get_my_project_access
+          </code>
+          . If status is <strong>active</strong> or <strong>owner</strong>,
+          skip the Approve wait and continue. If status is{" "}
+          <strong>pending</strong>, tell <strong>your user</strong> to wait
+          for the owner to <strong>Approve</strong> in Agent Witch Cloud and
+          confirm back. Do not busy-poll forever.
         </li>
         <li>
-          On user confirm:{" "}
+          When status is active or owner (already, or after your user confirms
+          Approve):{" "}
           <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
             get_my_project_access
           </code>{" "}
@@ -76,6 +84,9 @@ export default function ProjectInviteInstructionsBody(input: {
             project_dispatch
           </code>{" "}
           to send/receive work with peers.
+        </li>
+        <li>
+          After access is active: {AWC_GROK_WEBHOOK_SETUP_COPY.instruction}
         </li>
       </ol>
       <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
