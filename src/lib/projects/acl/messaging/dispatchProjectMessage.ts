@@ -44,7 +44,6 @@ export const dispatchProjectMessage = async (input: {
   const rate = await assertProjectMessageDispatchRateLimits({
     projectId: input.projectId,
     senderMembershipId: sender.id,
-    senderProjectDisplayName: sender.projectDisplayName,
     senderUserId: input.actorUserId,
   });
   if (!rate.ok) {
@@ -68,6 +67,7 @@ export const dispatchProjectMessage = async (input: {
   const messageId = await insertProjectMessageWithDeliveries({
     projectId: input.projectId,
     senderMembershipId: sender.id,
+    senderProjectDisplayName: sender.projectDisplayName,
     senderUserId: input.actorUserId,
     toMembershipId: addressedByMembershipOrName ? primary.id : null,
     toUserId: addressedByMembershipOrName ? primary.user_id : null,
