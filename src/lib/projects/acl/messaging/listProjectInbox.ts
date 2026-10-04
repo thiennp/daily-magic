@@ -1,19 +1,14 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
+import {
+  mapProjectInboxRow,
+  type ProjectInboxMessage,
+} from "@/lib/projects/acl/messaging/mapProjectInboxRow";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { asRowArray, getSql } from "@/lib/db";
 
-export type ProjectInboxMessage = {
-  readonly messageId: string;
-  readonly kind: string;
-  readonly summary: string;
-  readonly refs: Readonly<Record<string, unknown>>;
-  readonly fromProjectDisplayName: string | null;
-  readonly fromMembershipId: string | null;
-  readonly createdAt: string;
-  readonly ackedAt: string | null;
-};
+export type { ProjectInboxMessage };
 
 export type ListProjectInboxResult =
   | { readonly ok: true; readonly messages: readonly ProjectInboxMessage[] }
@@ -35,6 +30,7 @@ export const listProjectInbox = async (input: {
     return { ok: false, code: "forbidden" };
   }
   const teamLabel = membership?.teamLabel ?? null;
+  const membershipId = membership?.id ?? null;
   await ensureProjectAclSchema();
   await purgeExpiredProjectMessages();
   const sql = getSql();
@@ -43,7 +39,15 @@ export const listProjectInbox = async (input: {
   const rows = asRowArray(
     since
       ? await sql`
-          SELECT m.*, sender.project_display_name AS sender_display_name
+          SELECT m.*, sender.project_display_name AS sender_display_name,
+            (
+              SELECT a.result
+              FROM project_grok_routine_wake_attempts a
+              WHERE a.message_id = m.id
+                AND a.membership_id = ${membershipId}
+              ORDER BY a.created_at DESC
+              LIMIT 1
+            ) AS grok_wake_result
           FROM project_messages m
           LEFT JOIN project_memberships sender
             ON sender.id = m.sender_membership_id
@@ -60,7 +64,15 @@ export const listProjectInbox = async (input: {
           LIMIT ${limit}
         `
       : await sql`
-          SELECT m.*, sender.project_display_name AS sender_display_name
+          SELECT m.*, sender.project_display_name AS sender_display_name,
+            (
+              SELECT a.result
+              FROM project_grok_routine_wake_attempts a
+              WHERE a.message_id = m.id
+                AND a.membership_id = ${membershipId}
+              ORDER BY a.created_at DESC
+              LIMIT 1
+            ) AS grok_wake_result
           FROM project_messages m
           LEFT JOIN project_memberships sender
             ON sender.id = m.sender_membership_id
@@ -78,24 +90,6 @@ export const listProjectInbox = async (input: {
   );
   return {
     ok: true,
-    messages: rows.map((row) => ({
-      messageId: String(row.id),
-      kind: String(row.kind),
-      summary: String(row.summary),
-      refs:
-        row.refs !== null && typeof row.refs === "object"
-          ? (row.refs as Record<string, unknown>)
-          : {},
-      fromProjectDisplayName: row.sender_membership_id === null
-        ? "Owner"
-        : row.sender_display_name
-          ? String(row.sender_display_name)
-          : null,
-      fromMembershipId: row.sender_membership_id
-        ? String(row.sender_membership_id)
-        : null,
-      createdAt: String(row.created_at),
-      ackedAt: row.acked_at ? String(row.acked_at) : null,
-    })),
+    messages: rows.map(mapProjectInboxRow),
   };
 };
