@@ -1,4 +1,3 @@
-import { spawn, type SpawnOptions } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -6,6 +5,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import { AGENT_WITCH_MIN_NODE_MAJOR } from "@/lib/agentWitch/agentWitchNodeRuntime.constant";
 import { buildAgentWitchInstallScriptNodeRuntime } from "@/lib/agentWitch/buildAgentWitchInstallScriptNodeRuntime";
+import { runBashWithoutTerminal } from "@/lib/agentWitch/runBashWithoutTerminal";
 
 const tempDirs: string[] = [];
 
@@ -27,48 +27,6 @@ const buildNodeRuntimeFunctions = (): string =>
     /\nagent_witch_ensure_node_runtime\n\s*$/,
     "\n",
   );
-
-/**
- * Runs bash detached (new session, no controlling terminal) with stdin closed —
- * the same shape as the Finder-launched Mac app running the installer.
- */
-const runWithoutTerminal = (
-  script: string,
-  env: Record<string, string>,
-): Promise<{ code: number | null; stdout: string; stderr: string }> =>
-  new Promise((resolve, reject) => {
-    // SpawnOptions (not inline literal) keeps Node's overloads from collapsing under
-    // `detached` + a typed stdio tuple.
-    const options: SpawnOptions = {
-      env: { ...process.env, ...env },
-      detached: true,
-      stdio: ["ignore", "pipe", "pipe"],
-    };
-    const child = spawn("/bin/bash", ["-c", script], options);
-    const stdoutStream = child.stdout;
-    const stderrStream = child.stderr;
-    if (stdoutStream === null || stderrStream === null) {
-      reject(new Error("expected piped stdout/stderr"));
-      return;
-    }
-    let stdout = "";
-    let stderr = "";
-    stdoutStream.on("data", (chunk: Buffer) => {
-      stdout += chunk.toString();
-    });
-    stderrStream.on("data", (chunk: Buffer) => {
-      stderr += chunk.toString();
-    });
-    const timer = setTimeout(() => {
-      child.kill("SIGKILL");
-      reject(new Error("install node runtime block hung"));
-    }, 10_000);
-    child.on("error", reject);
-    child.on("close", (code: number | null) => {
-      clearTimeout(timer);
-      resolve({ code, stdout, stderr });
-    });
-  });
 
 describe("buildAgentWitchInstallScriptNodeRuntime", () => {
   it("AGENT-065: prompts before Homebrew install when Node is missing or too old", () => {
@@ -92,7 +50,7 @@ describe("buildAgentWitchInstallScriptNodeRuntime", () => {
     const stubNode = path.join(localBin, "node");
     fs.writeFileSync(stubNode, "#!/bin/sh\necho 22\n", { mode: 0o755 });
 
-    const result = await runWithoutTerminal(
+    const result = await runBashWithoutTerminal(
       `uname() { echo Darwin; }\n${buildNodeRuntimeFunctions()}\nagent_witch_ensure_node_runtime\necho "NODE_BIN=\${NODE_BIN}"\necho "PATH=\${PATH}"\n`,
       { HOME: home, PATH: emptyBin },
     );
@@ -112,7 +70,7 @@ describe("buildAgentWitchInstallScriptNodeRuntime", () => {
     const emptyBin = path.join(home, "empty-bin");
     fs.mkdirSync(emptyBin, { recursive: true });
 
-    const result = await runWithoutTerminal(
+    const result = await runBashWithoutTerminal(
       `uname() { echo Darwin; }\n${buildNodeRuntimeFunctions()}\nagent_witch_add_node_search_paths() { :; }\nagent_witch_ensure_node_runtime\necho "UNREACHABLE"\n`,
       { HOME: home, PATH: emptyBin },
     );
