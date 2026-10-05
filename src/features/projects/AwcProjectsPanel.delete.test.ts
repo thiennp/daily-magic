@@ -19,14 +19,22 @@ describe("AwcProjectsPanel delete list update", () => {
       ),
       "utf8",
     );
+    const fields = readFileSync(
+      join(
+        process.cwd(),
+        "src/features/projects/AwcProjectDeleteConfirmFields.tsx",
+      ),
+      "utf8",
+    );
 
     expect(panel).toContain("onProjectDeleted");
     expect(panel).toContain("removeProject(projectId)");
     expect(menuItem).toContain("useDeleteProject");
     expect(menuItem).toContain("AwcProjectDeleteConfirmForm");
     expect(menuItem).toContain('variant="dialog"');
-    expect(menuItem).toContain("useDeleteProject");
-    expect(confirm).toContain("disabled={!canConfirm}");
-    expect(confirm).toContain("isProjectDeleteConfirmNameMatch");
+    expect(confirm).toContain('variant?: AwcProjectDeleteConfirmVariant');
+    expect(confirm).toContain("AwcProjectDeleteConfirmFields");
+    expect(fields).toContain("disabled={!canConfirm}");
+    expect(fields).toContain("isProjectDeleteConfirmNameMatch");
   });
 });
