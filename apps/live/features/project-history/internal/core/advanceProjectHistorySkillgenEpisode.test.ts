@@ -156,4 +156,34 @@ describe("advanceProjectHistorySkillgenEpisode", () => {
     });
     expect(result.episode.state).toBe("SKIPPED_FILTER");
   });
+
+  it("stops before EXTRACT when ownerLlm is null and records a metric", async () => {
+    const now = 1_000_000;
+    const messages = Array.from({ length: 20 }, (_, i) => ({
+      messageId: `m${i}`,
+      createdAtMs: now - 1_000,
+      text: i === 19 ? "tests green" : `step ${i}`,
+    }));
+    const result = await advanceProjectHistorySkillgenEpisode({
+      episode: baseEpisode(),
+      messages,
+      tokensUsedToday: 0,
+      lastClosedAtMs: now - 60_000,
+      nowMs: now,
+      deps: {
+        ownerLlm: null,
+        writeDraft: () => {
+          throw new Error("should not write");
+        },
+        listDraftFingerprints: () => [],
+        listPublishedFingerprints: () => [],
+        openDraftCount: () => 0,
+      },
+    });
+    expect(result.episode.state).toBe("DEDUP");
+    expect(result.draftWritten).toBeNull();
+    expect(
+      result.metrics.some((m) => m.reason === "owner_llm_unconfigured"),
+    ).toBe(true);
+  });
 });

@@ -37,7 +37,7 @@ export type AdvanceProjectHistorySkillgenMessage = {
 };
 
 export type AdvanceProjectHistorySkillgenEpisodeDeps = {
-  readonly ownerLlm: OwnerLlmDraftWriter;
+  readonly ownerLlm: OwnerLlmDraftWriter | null;
   readonly writeDraft: (input: {
     readonly projectId: string;
     readonly draftId: string;
@@ -243,6 +243,13 @@ export const advanceProjectHistorySkillgenEpisode = async (
         existingDrafts: input.deps.listDraftFingerprints(),
         existingPublished: input.deps.listPublishedFingerprints(),
       });
+      if (
+        (dedup.action === "create_new" || dedup.action === "update_draft") &&
+        input.deps.ownerLlm === null
+      ) {
+        pushMetric(episode.state, episode.state, "owner_llm_unconfigured");
+        break;
+      }
       const step = stepProjectHistorySkillgenFsm({
         state: episode.state,
         verdict: { kind: "dedup", action: dedup.action },
@@ -261,6 +268,10 @@ export const advanceProjectHistorySkillgenEpisode = async (
     }
 
     if (episode.state === "EXTRACT") {
+      if (input.deps.ownerLlm === null) {
+        pushMetric(episode.state, episode.state, "owner_llm_unconfigured");
+        break;
+      }
       const scrubbed = episode.scrubbedTranscript ?? "";
       const mode = resolveOwnerLlmDraftWriterMode({
         estimatedInputTokens: estimateTokens(scrubbed),

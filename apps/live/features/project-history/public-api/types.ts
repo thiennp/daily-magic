@@ -80,3 +80,6 @@ export type {
   RunProjectHistorySkillgenTickInput,
   RunProjectHistorySkillgenTickResult,
 } from "../internal/core/runProjectHistorySkillgenTick";
+
+export type { CreateDefaultProjectHistorySkillgenRunnerDeps } from "../internal/core/createDefaultProjectHistorySkillgenRunner";
+export type { LoadProjectHistorySkillgenMessagesSinceCursorInput } from "../internal/core/loadProjectHistorySkillgenMessagesSinceCursor";

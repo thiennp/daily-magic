@@ -11,7 +11,9 @@ import {
 
 import { createHttpProjectSkillAwcPublishedSource } from "./createHttpProjectSkillAwcPublishedSource";
 import { createProjectSkillHistoryPort } from "./createProjectSkillHistoryPort";
+import { createDefaultProjectHistorySkillgenRunner } from "./createDefaultProjectHistorySkillgenRunner";
 import { listLocalHistoryActiveProjectIds } from "./localProjectHistoryState";
+import type { OwnerLlmDraftWriter } from "./ownerLlmDraftWriter.port";
 
 const LOG_PREFIX = "[project-history-tick]";
 
@@ -20,13 +22,15 @@ export type TickProjectComputerHistoryDeps = {
   readonly cloudApi?: AgentWitchCloudApiConfig | null;
   readonly pullSkills?: PullPublishedProjectSkillsToMirror;
   /**
-   * Optional skillgen mining hook (phase 1). Injected so tests can supply a
-   * fake OwnerLlmDraftWriter path; omitted in production until wired to disk.
+   * Optional skillgen mining hook. When omitted, the default disk-backed runner
+   * runs (History ON only). Pass a no-op to skip mining in pull-focused tests.
    * Failures are isolated from skill pull and never affect ack/delete.
    */
   readonly runSkillgen?: (input: {
     readonly projectId: string;
   }) => void | Promise<void>;
+  /** Injected owner-LLM writer for the default skillgen runner (null = stop before EXTRACT). */
+  readonly ownerLlm?: OwnerLlmDraftWriter | null;
 };
 
 /**
@@ -54,15 +58,18 @@ export const tickProjectComputerHistory = async (
 
   const historyPort = createProjectSkillHistoryPort();
   const pull = deps.pullSkills ?? pullPublishedProjectSkillsToMirror;
+  const runSkillgen =
+    deps.runSkillgen ??
+    createDefaultProjectHistorySkillgenRunner({
+      ownerLlm: deps.ownerLlm ?? null,
+    });
 
   for (const projectId of projectIds) {
     // Skillgen mining — failures isolated from pull and ack/delete.
-    if (deps.runSkillgen !== undefined) {
-      try {
-        await deps.runSkillgen({ projectId });
-      } catch (error: unknown) {
-        console.error(LOG_PREFIX, "skillgen_failed", projectId, error);
-      }
+    try {
+      await runSkillgen({ projectId });
+    } catch (error: unknown) {
+      console.error(LOG_PREFIX, "skillgen_failed", projectId, error);
     }
 
     // Skill pull — failures isolated from ack/delete.

@@ -48,6 +48,7 @@ describe("tickProjectComputerHistory", () => {
       listProjectIds: () => ["p-ready"],
       pullSkills: pullMock,
       cloudApi: { appOrigin: "https://example.test", pairingToken: "tok" },
+      runSkillgen: async () => {},
     });
     expect(pullMock).toHaveBeenCalledTimes(1);
     expect(pullMock.mock.calls[0]![0]).toMatchObject({ projectId: "p-ready" });
@@ -61,6 +62,7 @@ describe("tickProjectComputerHistory", () => {
       listProjectIds: () => ["p1", "p2"],
       pullSkills: pullMock,
       cloudApi: { appOrigin: "https://example.test", pairingToken: "tok" },
+      runSkillgen: async () => {},
     });
     expect(pullMock).toHaveBeenCalledTimes(2);
   });

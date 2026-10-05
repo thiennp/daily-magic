@@ -64,3 +64,15 @@ export {
   PROJECT_HISTORY_SKILLGEN_TRANSITIONS,
   PROJECT_HISTORY_SKILLGEN_ACTIVE_STATES,
 } from "../internal/core/projectHistorySkillgenStateMachine";
+
+export { readProjectHistoryMessage } from "../internal/core/readProjectHistoryMessage";
+export { listProjectHistoryMessages } from "../internal/core/listProjectHistoryMessages";
+export { extractProjectHistoryMessageText } from "../internal/core/extractProjectHistoryMessageText";
+export { loadProjectHistorySkillgenMessagesSinceCursor } from "../internal/core/loadProjectHistorySkillgenMessagesSinceCursor";
+export { readProjectHistorySkillgenEpisodes } from "../internal/core/readProjectHistorySkillgenEpisodes";
+export { writeProjectHistorySkillgenEpisodes } from "../internal/core/writeProjectHistorySkillgenEpisodes";
+export { readProjectHistorySkillgenBudget } from "../internal/core/readProjectHistorySkillgenBudget";
+export { writeProjectHistorySkillgenBudget } from "../internal/core/writeProjectHistorySkillgenBudget";
+export { appendProjectHistorySkillgenMetrics } from "../internal/core/appendProjectHistorySkillgenMetrics";
+export { createDefaultProjectHistorySkillgenRunner } from "../internal/core/createDefaultProjectHistorySkillgenRunner";
+export { isLocalProjectHistoryOn } from "../internal/core/isLocalProjectHistoryOn";
