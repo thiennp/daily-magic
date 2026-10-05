@@ -16,7 +16,17 @@
  *   gate (gateProjectMessageDelete), run last inside
  *   deleteProjectMessageWithOutcome. Until History lands, the stub call site
  *   is isComputerAckSatisfiedForCloudDelete (mode "off" → always allows).
+ *
+ * Cloud delete rule (Lead plan):
+ * - History ON (on_configuring | on_ready | degraded): cloud delete ONLY after
+ *   SAVED_TO_PROJECT_FOLDER (folder ack). Never on age / 7d / timeout. The 7d
+ *   marker is flag + wake the machine only — it is NOT an arrow and never
+ *   bypasses the History gate.
+ * - History OFF: OFF-only exception — DOR rules may delete from READ via the
+ *   gate allow. No age-delete arrow exists in either mode.
  */
+export const PROJECT_MESSAGE_CLOUD_DELETE_REQUIRES_FOLDER_ACK_WHEN_HISTORY_ON =
+  true as const;
 export const PROJECT_MESSAGE_LIFECYCLE_STATES = [
   "READ",
   "SAVED_TO_PROJECT_FOLDER",
@@ -42,7 +52,10 @@ export const PROJECT_MESSAGE_LIFECYCLE_ARROWS = {
     to: "SAVED_TO_PROJECT_FOLDER",
     owner: "history",
   },
-  /** DOR readiness → History gate → deleteProjectMessageWithOutcome. */
+  /**
+   * DOR readiness → History gate → deleteProjectMessageWithOutcome.
+   * Only arrow that leaves the cloud; there is no age/7d/timeout arrow.
+   */
   deleteFromCloud: {
     from: "SAVED_TO_PROJECT_FOLDER",
     to: null,

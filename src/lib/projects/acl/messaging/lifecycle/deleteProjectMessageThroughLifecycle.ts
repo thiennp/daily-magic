@@ -14,9 +14,11 @@ export type DeleteProjectMessageThroughLifecycleResult =
  * deleteFromCloud arrow, in order:
  * 1. DOR readiness (Dispatch) — isProjectMessageReadyToLeaveRead.
  * 2. History gate — runs last inside deleteProjectMessageWithOutcome
- *    (today: isComputerAckSatisfiedForCloudDelete stub; History replaces it
- *    with gateProjectMessageDelete). Not duplicated here.
+ *    (gateProjectMessageDelete). Not duplicated here.
  * 3. deleteProjectMessageWithOutcome — outcome row + hard delete.
+ * History ON: the gate requires SAVED_TO_PROJECT_FOLDER; age/7d/timeout never
+ * bypasses it (see isCloudDeleteAllowedFromLifecycleState). History OFF: the
+ * OFF-only exception lets DOR delete from READ.
  */
 export const deleteProjectMessageThroughLifecycle = async (input: {
   readonly snapshot: Pick<
