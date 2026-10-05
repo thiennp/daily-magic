@@ -15,14 +15,11 @@ interface AwcProjectInboxSectionProps {
   readonly projectId: string;
   /** Owner Access loaded successfully — show inbox. */
   readonly enabled: boolean;
-  /** False for viewers — messages list only, no composer (Lead GO). */
-  readonly canCompose?: boolean;
 }
 
 export default function AwcProjectInboxSection({
   projectId,
   enabled,
-  canCompose = true,
 }: AwcProjectInboxSectionProps) {
   const copy = AWC_PROJECT_INBOX_COPY;
   const inbox = useAwcProjectInbox(projectId, enabled);
@@ -45,13 +42,11 @@ export default function AwcProjectInboxSection({
       count={inbox.unavailable ? undefined : inbox.messages.length}
       alertCount={inbox.messages.length > 0}
     >
-      {canCompose ? (
-        <AwcProjectInboxClearBar
-          clearing={inbox.clearing}
-          toast={inbox.clearToast}
-          onRequestClear={() => setConfirmOpen(true)}
-        />
-      ) : null}
+      <AwcProjectInboxClearBar
+        clearing={inbox.clearing}
+        toast={inbox.clearToast}
+        onRequestClear={() => setConfirmOpen(true)}
+      />
       {inbox.isLoading ? (
         <p className="text-xs text-gray-400">{copy.loading}</p>
       ) : null}
@@ -63,17 +58,11 @@ export default function AwcProjectInboxSection({
       {!inbox.isLoading && !inbox.unavailable ? (
         <AwcProjectInboxMessageList messages={inbox.messages} />
       ) : null}
-      {canCompose ? (
-        <AwcProjectInboxDispatchForm
-          projectId={projectId}
-          members={inbox.members}
-          messages={inbox.messages}
-        />
-      ) : (
-        <p className="mt-2 text-xs text-gray-500">
-          Viewers can&apos;t send messages.
-        </p>
-      )}
+      <AwcProjectInboxDispatchForm
+        projectId={projectId}
+        members={inbox.members}
+        messages={inbox.messages}
+      />
       <AwcProjectInboxClearConfirmModal
         isOpen={confirmOpen}
         clearing={inbox.clearing}

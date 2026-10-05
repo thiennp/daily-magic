@@ -5,7 +5,7 @@ import AppShell from "@/features/shell/AppShell";
 import AppPageHeader from "@/components/surfaces/AppPageHeader";
 import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
 import { getAuthActor } from "@/lib/auth/auth";
-import { authorizeProjectPageActor } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
+import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
 export const dynamic = "force-dynamic";
 
@@ -27,12 +27,9 @@ export default async function ProjectDetailPage({
   const { projectId } = await params;
   const query = await searchParams;
   const startRename = query.rename === "1" || query.rename === "true";
-  const access = await authorizeProjectPageActor({
-    projectId: projectId.trim(),
-    actorUserId: actor.id,
-  });
+  const project = await getUserProjectById(projectId.trim());
 
-  if (!access.ok) {
+  if (project === null || project.ownerUserId !== actor.id) {
     notFound();
   }
 
@@ -40,13 +37,7 @@ export default async function ProjectDetailPage({
     <AppShell>
       <div className={APP_PAGE_STACK_CLASS}>
         <AppPageHeader title="Project details" />
-        <AwcProjectDetailPanel
-          project={access.project}
-          startRename={startRename && access.role === "owner"}
-          pageActorRole={access.role}
-          actorEmail={actor.email}
-          actorDisplayName={actor.name}
-        />
+        <AwcProjectDetailPanel project={project} startRename={startRename} />
       </div>
     </AppShell>
   );

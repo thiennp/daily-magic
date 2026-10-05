@@ -8,10 +8,6 @@ export type AccessMembershipView = {
   readonly isAgent: boolean;
   readonly status?: string;
   readonly role?: string;
-  /** S0 may omit; UI stubs !isAgent when absent. */
-  readonly memberKind?: "human" | "bot" | string;
-  readonly email?: string | null;
-  readonly displayName?: string | null;
 };
 
 export type AccessPendingView = {

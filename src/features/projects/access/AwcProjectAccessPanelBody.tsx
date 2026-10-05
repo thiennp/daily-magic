@@ -1,14 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
-
 import AwcProjectAccessFoldersSection from "@/features/projects/access/AwcProjectAccessFoldersSection";
 import AwcProjectAccessMembersList from "@/features/projects/access/AwcProjectAccessMembersList";
 import AwcProjectAccessPendingList from "@/features/projects/access/AwcProjectAccessPendingList";
 import AwcProjectAccessSection from "@/features/projects/access/AwcProjectAccessSection";
 import AwcProjectInvitesPanel from "@/features/projects/access/invites/AwcProjectInvitesPanel";
 import AwcProjectInboxSection from "@/features/projects/access/inbox/AwcProjectInboxSection";
-import AwcHumanPeopleSection from "@/features/projects/access/humanInvites/AwcHumanPeopleSection";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import type { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 
@@ -17,21 +14,13 @@ type AccessApi = ReturnType<typeof useAwcProjectAccess>;
 interface AwcProjectAccessPanelBodyProps {
   readonly projectId: string;
   readonly access: AccessApi;
-  readonly ownerEmail?: string | null;
-  readonly ownerDisplayName?: string | null;
 }
 
 export default function AwcProjectAccessPanelBody({
   projectId,
   access,
-  ownerEmail = null,
-  ownerDisplayName = null,
 }: AwcProjectAccessPanelBodyProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
-  const botMembers = useMemo(
-    () => access.members.filter((member) => member.isAgent),
-    [access.members],
-  );
 
   return (
     <div className="space-y-3">
@@ -43,21 +32,11 @@ export default function AwcProjectAccessPanelBody({
           {access.autoApprovedBanner}
         </p>
       ) : null}
-
-      <AwcHumanPeopleSection
-        projectId={projectId}
-        projectName={access.projectName}
-        ownerEmail={ownerEmail}
-        ownerDisplayName={ownerDisplayName}
-        accessMembers={access.members}
-        enabled
-      />
-
       <AwcProjectAccessSection
         id="project-access-people"
         title={copy.peopleHeading}
         hint={copy.peopleHint}
-        count={botMembers.length + access.pending.length}
+        count={access.members.length + access.pending.length}
         alertCount={access.pending.length > 0}
       >
         <AwcProjectAccessPendingList
@@ -69,7 +48,7 @@ export default function AwcProjectAccessPanelBody({
         <div className="border-t border-gray-200/70 pt-3 dark:border-gray-800/70">
           <AwcProjectAccessMembersList
             projectId={projectId}
-            members={botMembers}
+            members={access.members}
             recentlyAutoApprovedIds={access.recentlyAutoApprovedIds}
             onRevoke={(id) => void access.revoke(id)}
             onRename={async (membershipId, projectDisplayName) =>
@@ -99,7 +78,7 @@ export default function AwcProjectAccessPanelBody({
         />
       </AwcProjectAccessSection>
 
-      <AwcProjectInboxSection projectId={projectId} enabled canCompose />
+      <AwcProjectInboxSection projectId={projectId} enabled />
 
       <AwcProjectAccessFoldersSection
         projectId={projectId}
