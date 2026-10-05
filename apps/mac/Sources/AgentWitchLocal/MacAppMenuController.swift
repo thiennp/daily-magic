@@ -9,13 +9,21 @@ import AgentWitchLocalCore
 @MainActor
 final class MacAppMenuController: ObservableObject {
     @Published private(set) var state: MacAppRuntimeState = .notInstalled
+    /// Non-nil while the first-run bootstrap FSA owns the UI (core not installed).
+    @Published private(set) var bootstrapState: MacAppBootstrapState?
     @Published var launchesAtLogin: Bool = false
     @Published var statusMessage: String = ""
 
     private let fileManager: FileManager
     private var healthTimer: Timer?
+    /// In-memory PKCE attempt only (never UserDefaults / disk).
+    private var pendingBootstrapAttempt: MacAppBootstrapPendingAttempt?
+    private var bootstrapTask: Task<Void, Never>?
 #if os(macOS)
     private let runner: LaunchctlRunning = ProcessLaunchctlRunner()
+    private let browserOpener: BrowserOpening = NSWorkspaceBrowserOpener()
+    private let httpClient: BootstrapHttpClienting = EphemeralBootstrapHttpClient()
+    private let scriptRunner: InstallScriptRunning = ProcessInstallScriptRunner()
 #endif
 
     init(fileManager: FileManager = .default) {
@@ -27,19 +35,86 @@ final class MacAppMenuController: ObservableObject {
 
     deinit {
         healthTimer?.invalidate()
+        bootstrapTask?.cancel()
     }
 
     func refreshInstallAndHealth() {
         Task {
             let healthy = await probeHealth()
-            let next = detectInstallFlow(
+            let installed = isAgentWitchCoreInstalled(
                 installDir: resolveAgentWitchInstallDir(),
                 plistPath: resolveAgentWitchLaunchAgentPlistPath(),
-                fileManager: fileManager,
-                isHealthy: healthy
+                fileManager: fileManager
             )
-            state = next
-            statusMessage = statusLabel(for: next)
+
+            if installed {
+                bootstrapState = nil
+                pendingBootstrapAttempt = nil
+                let next = detectInstallFlow(
+                    installDir: resolveAgentWitchInstallDir(),
+                    plistPath: resolveAgentWitchLaunchAgentPlistPath(),
+                    fileManager: fileManager,
+                    isHealthy: healthy
+                )
+                state = next
+                statusMessage = statusLabel(for: next)
+                return
+            }
+
+            // Not installed: start bootstrap once; leave in-flight / error alone until Retry.
+            if bootstrapState == nil {
+                await startOrResumeBootstrap(isHealthy: healthy)
+            }
+        }
+    }
+
+    func retryBootstrap() {
+        bootstrapTask?.cancel()
+        pendingBootstrapAttempt = nil
+        bootstrapState = .checking
+        statusMessage = bootstrapStatusLabel(for: .checking)
+        Task {
+            await startOrResumeBootstrap(isHealthy: await probeHealth())
+        }
+    }
+
+    func copyBootstrapFallbackInstallCommand() {
+        let command = resolveBootstrapFallbackInstallCommand()
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(command, forType: .string)
+        statusMessage = "Install command copied."
+    }
+
+    func handleOpenURL(_ url: URL) {
+        guard let currentBootstrap = bootstrapState else {
+            return
+        }
+        do {
+            let outcome = try handleBootstrapCallbackFlow(
+                current: currentBootstrap,
+                url: url,
+                pending: pendingBootstrapAttempt
+            )
+            switch outcome {
+            case .ignored:
+                return
+            case .failed(let next):
+                pendingBootstrapAttempt = nil
+                bootstrapState = next
+                statusMessage = bootstrapStatusLabel(for: next)
+            case .proceed(let code, let next, let pending):
+                bootstrapState = next
+                statusMessage = bootstrapStatusLabel(for: next)
+                pendingBootstrapAttempt = pending
+                bootstrapTask?.cancel()
+                bootstrapTask = Task {
+                    await continueInstall(code: code, pending: pending)
+                }
+            }
+        } catch {
+            let reason = sanitizeBootstrapErrorReason(error.localizedDescription)
+            bootstrapState = .error(reason: reason)
+            statusMessage = reason
         }
     }
 
@@ -121,6 +196,118 @@ final class MacAppMenuController: ObservableObject {
 #endif
     }
 
+    // MARK: - Bootstrap
+
+    private func startOrResumeBootstrap(isHealthy: Bool) async {
+        let installed = isAgentWitchCoreInstalled(
+            installDir: resolveAgentWitchInstallDir(),
+            plistPath: resolveAgentWitchLaunchAgentPlistPath(),
+            fileManager: fileManager
+        )
+
+        if bootstrapState == nil {
+            bootstrapState = .checking
+            statusMessage = bootstrapStatusLabel(for: .checking)
+        }
+
+        do {
+            let checked = try checkBootstrapInstallFlow(
+                current: .checking,
+                isCoreInstalled: installed,
+                isHealthy: isHealthy
+            )
+            if let handoff = checked.handoffRuntime {
+                bootstrapState = nil
+                pendingBootstrapAttempt = nil
+                state = handoff
+                statusMessage = statusLabel(for: handoff)
+                return
+            }
+        } catch {
+            let reason = sanitizeBootstrapErrorReason(error.localizedDescription)
+            bootstrapState = .error(reason: reason)
+            statusMessage = reason
+            return
+        }
+
+#if os(macOS)
+        do {
+            let result = try beginBootstrapSignInFlow(
+                current: .checking,
+                opener: browserOpener
+            )
+            // New attempt replaces any previous pending attempt.
+            pendingBootstrapAttempt = result.pending
+            bootstrapState = result.state
+            statusMessage = bootstrapStatusLabel(for: result.state)
+        } catch {
+            let reason = sanitizeBootstrapErrorReason(error.localizedDescription)
+            bootstrapState = .error(reason: reason)
+            statusMessage = reason
+        }
+#else
+        bootstrapState = .error(reason: "Bootstrap is only supported on macOS.")
+        statusMessage = "Bootstrap is only supported on macOS."
+#endif
+    }
+
+    private func continueInstall(
+        code: String,
+        pending: MacAppBootstrapPendingAttempt
+    ) async {
+#if os(macOS)
+        let install = await runBootstrapInstallFlow(
+            current: .installing,
+            code: code,
+            pending: pending,
+            http: httpClient,
+            scriptRunner: scriptRunner,
+            fileManager: fileManager
+        )
+        pendingBootstrapAttempt = install.pending
+        bootstrapState = install.state
+        statusMessage = bootstrapStatusLabel(for: install.state)
+
+        guard case .settingUp = install.state else {
+            return
+        }
+
+        let setup = await runBootstrapSetupFlow(
+            current: .settingUp,
+            probeHealth: { await self.probeHealth() }
+        )
+        bootstrapState = setup.state
+        statusMessage = bootstrapStatusLabel(for: setup.state)
+
+        if case .connected = setup.state {
+            bootstrapState = nil
+            state = .running
+            statusMessage = statusLabel(for: .running)
+        }
+#else
+        _ = code
+        _ = pending
+#endif
+    }
+
+
+    private func bootstrapStatusLabel(for state: MacAppBootstrapState) -> String {
+        switch state {
+        case .checking:
+            return "Checking…"
+        case .signingIn:
+            return "Sign in to connect this Mac…"
+        case .installing:
+            return "Installing Agent Witch…"
+        case .settingUp:
+            return "Setting up…"
+        case .connected:
+            return "Connected"
+        case .error(let reason):
+            return reason
+        }
+    }
+
     private func refreshLaunchAtLogin() {
 #if os(macOS)
         launchesAtLogin = SMAppService.mainApp.status == .enabled
@@ -137,6 +324,10 @@ final class MacAppMenuController: ObservableObject {
     }
 
     private func pollHealthOnce() {
+        // Skip routine health polling while bootstrap owns the session.
+        if bootstrapState != nil {
+            return
+        }
         Task {
             let healthy = await probeHealth()
             do {

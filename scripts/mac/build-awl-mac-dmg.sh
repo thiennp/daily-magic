@@ -69,6 +69,17 @@ cat > "${CONTENTS_DIR}/Info.plist" <<EOF
   <true/>
   <key>NSHighResolutionCapable</key>
   <true/>
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleURLName</key>
+      <string>com.agent-witch.local-app.install</string>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>agentwitch-local</string>
+      </array>
+    </dict>
+  </array>
 </dict>
 </plist>
 EOF
