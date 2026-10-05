@@ -1,18 +1,7 @@
 import {
   AWC_BOT_TO_BOT_SUPPORT_HEADING,
   AWC_BOT_TO_BOT_SUPPORT_ROWS,
-  type AwcBotToBotSupportLevel,
 } from "@/features/projects/access/invites/awcBotToBotSupportCopy.constant";
-
-const ROW_CLASS: Readonly<Record<AwcBotToBotSupportLevel, string>> = {
-  routine: "font-medium text-gray-800 dark:text-white/90",
-  hmac: "italic text-gray-500 dark:text-gray-400",
-};
-
-const MARKER: Readonly<Record<AwcBotToBotSupportLevel, string>> = {
-  routine: "●",
-  hmac: "○",
-};
 
 /** "Bot-to-bot works with" list, rendered from awcBotToBotSupportCopy.constant. */
 export default function AwcBotToBotSupportList() {
@@ -26,9 +15,9 @@ export default function AwcBotToBotSupportList() {
           <li
             key={row.level}
             data-support-level={row.level}
-            className={`flex gap-1.5 ${ROW_CLASS[row.level]}`}
+            className="flex gap-1.5 font-medium text-gray-800 dark:text-white/90"
           >
-            <span aria-hidden="true">{MARKER[row.level]}</span>
+            <span aria-hidden="true">●</span>
             <span>{row.label}</span>
           </li>
         ))}

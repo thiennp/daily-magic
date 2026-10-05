@@ -1,111 +1,48 @@
-import { AWC_GROK_WEBHOOK_SETUP_COPY } from "@/features/projects/access/awcGrokWebhookSetupCopy.constant";
 import ProjectInviteConnectSteps from "@/features/projects/access/invites/ProjectInviteConnectSteps";
-import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 import { PROJECT_INVITE_URL_PATH_PREFIX } from "@/lib/projects/acl/invites/projectInvite.constants";
 
 export default function ProjectInviteInstructionsBody(input: {
   readonly token: string;
   readonly hasToken: boolean;
 }) {
-  const urls = buildAgentAccessUrls();
-  const mcpArgs = input.hasToken
-    ? `{ "token": ${JSON.stringify(input.token)} }`
-    : '{ "token": "<paste token from URL path after /invite/p/>" }';
+  const tokenHint = input.hasToken
+    ? "Your invite token is in the link above."
+    : `Ask the owner for a fresh invite link (the token sits after ${PROJECT_INVITE_URL_PATH_PREFIX}).`;
 
   return (
     <>
       <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">
-        This URL carries an invite <strong>token</strong> for Agent Witch bots.
-        It is <strong>not</strong> a browser login and does <strong>not</strong>{" "}
-        redeem the invite in a human session. A missing login or missing
-        connector does <strong>not</strong> mean the invite is dead.
+        This invite is for an AI bot, not a person signing in. Opening it in a
+        browser does not join the project. Give the owner&apos;s{" "}
+        <strong>Copy prompt</strong> to your bot, or point your bot at this
+        page so it can join.
       </p>
       <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm text-gray-700 dark:text-gray-200">
-        <ProjectInviteConnectSteps urls={urls} />
+        <ProjectInviteConnectSteps />
         <li>
-          Extract the token after{" "}
-          <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
-            {PROJECT_INVITE_URL_PATH_PREFIX}
-          </code>
-          . Call{" "}
-          <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
-            redeem_project_invite
-          </code>
-          :
-          <pre className="mt-2 overflow-x-auto rounded-md border border-gray-200 bg-gray-50 p-3 text-xs dark:border-white/10 dark:bg-white/5">
-            {mcpArgs}
-          </pre>
-          Then call{" "}
-          <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
-            get_my_project_access
-          </code>
-          . If status is <strong>active</strong> or <strong>owner</strong>,
-          skip the Approve wait and continue. If status is{" "}
-          <strong>pending</strong>, tell <strong>your user</strong> to wait
-          for the owner to <strong>Approve</strong> in Agent Witch Cloud and
-          confirm back. Do not busy-poll forever.
+          {tokenHint} Your bot redeems the invite, then checks whether it is
+          already in the project. If it is still pending, tell{" "}
+          <strong>your user</strong> to wait for the owner to{" "}
+          <strong>Approve</strong> in Agent Witch Cloud and confirm back.
         </li>
         <li>
-          When status is active or owner (already, or after your user confirms
-          Approve):{" "}
-          <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
-            get_my_project_access
-          </code>{" "}
-          until active,{" "}
-          <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
-            rotate_project_api_key
-          </code>{" "}
-          (store <code>awc_proj_…</code>; dual-Bearer —{" "}
-          <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
-            awc_proj_
-          </code>{" "}
-          OK for project-scoped MCP tools; keep agent-access for catalog-wide),{" "}
-          <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
-            get_project_acl
-          </code>
-          , then <strong>required</strong>{" "}
-          <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
-            list_project_peers
-          </code>{" "}
-          (
-          <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
-            projectDisplayName
-          </code>
-          ,{" "}
-          <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
-            teamLabel
-          </code>
-          ,{" "}
-          <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
-            isAgent
-          </code>
-          ). Print a human summary before further work; use{" "}
-          <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
-            project_dispatch
-          </code>{" "}
-          to send/receive work with peers.
+          Once the bot is active (or is the owner), it reads the project room —
+          teammates, folders, and links — and can pass work to peers by
+          nickname.
         </li>
         <li>
-          After access is active: {AWC_GROK_WEBHOOK_SETUP_COPY.instruction}
+          After access is active, the project owner enters the bot&apos;s wake link
+          under Project Access → People → Members → Grok webhook (the key is
+          stored and never shown again).
         </li>
       </ol>
       <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
-        After joining, the bot may <strong>leave / disconnect itself</strong>{" "}
-        without owner Approve via{" "}
-        <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
-          leave_project
-        </code>{" "}
-        with{" "}
-        <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
-          {'{ "projectId": "<id>", "confirm": true }'}
-        </code>{" "}
-        (agent-access Bearer only — <code>leave_project</code> is not on the{" "}
-        <code>awc_proj_</code> allowlist). Re-join needs a new request +
-        Approve.
+        After joining, the bot may leave on its own. Re-joining needs a new
+        invite and Approve.
       </p>
       <p className="mt-6 text-xs text-gray-500 dark:text-gray-400">
-        If redeem returns <code>invalid_or_expired_invite</code>, ask the owner
-        for a fresh invite. Do not treat this page as proof the invite is dead.
+        If the invite is invalid or expired, ask the owner for a fresh one. This
+        page alone does not prove the invite is dead.
       </p>
     </>
   );

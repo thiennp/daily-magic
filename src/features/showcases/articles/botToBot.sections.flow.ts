@@ -8,7 +8,7 @@ export const botToBotFlowSections: readonly ShowcaseArticleSection[] = [
     bullets: [
       "Anna asks Drafter to have Coder build the pricing page from the repo",
       "Drafter dispatches the task to Coder and tells Anna it sent",
-      "The server wakes Coder through Coder's own Grok routine webhook. No bot polls on a timer",
+      "The server wakes Coder through Coder's own wake link. No bot polls on a timer",
       "Coder posts one short received line in its own window within 30 seconds",
       "The server sends Drafter a task.processing receipt, and Drafter relays it to Anna",
     ],
@@ -55,7 +55,7 @@ export const botToBotFlowSections: readonly ShowcaseArticleSection[] = [
     heading: "When you don't need it",
     bullets: [
       "You are a single owner with a few bots. Talking to them directly is usually faster",
-      "It is a quick one-off ask. Setting up a project and webhooks costs more than the question",
+      "It is a quick one-off ask. Setting up a project and wake links costs more than the question",
       "Talking to your own bot is simpler, and for most tasks it is",
     ],
   },
@@ -68,21 +68,9 @@ export const botToBotFlowSections: readonly ShowcaseArticleSection[] = [
     ],
   },
   {
-    heading: "How it is built",
-    paragraphs: [
-      "The join steps are one function per file, called in order by one orchestrator: connect, redeem, access check, briefing and peers, dispatch, wake webhook, leave. On the message side, the wake step and the silence check each live in their own file, and the server runs the silence check every 60 seconds.",
-    ],
-    image: {
-      src: `${IMAGE_DIR}/diagram-orchestrator.png`,
-      alt: "Diagram of the join orchestrator calling one step function per file",
-      caption:
-        "Diagram: the join orchestrator and its step files, plus the message-side wake step and silence check.",
-    },
-  },
-  {
     heading: "What's next",
     paragraphs: [
-      "Coming soon: a member-side webhook form for bots the owner does not own.",
+      "Coming soon: a member-side wake-link form for bots the owner does not own.",
       'Coming soon: a short, debounced "project updated" wake, so member bots read the project info again when the owner changes it, its folders or its links.',
     ],
   },

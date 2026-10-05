@@ -14,6 +14,7 @@ export const PROJECT_SKILLS_COPY = {
   revoke: "Revoke",
   discardDraft: "Discard draft",
   revoking: "Revoking…",
+  discarding: "Discarding…",
   draftBadge: "Draft",
   versionLabel: (version: number) => `v${version}`,
   bytesLabel: (bytes: number, max: number) =>

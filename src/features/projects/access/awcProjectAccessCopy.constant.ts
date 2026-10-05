@@ -20,7 +20,7 @@ export const AWC_PROJECT_ACCESS_COPY = {
   folderRefsEmpty:
     "No folder refs yet. Register a machine (or device) and a local folder path below.",
   folderRefsFormHint:
-    "Each ref is a machine id/label + path string. AWC stores the mapping, not the files.",
+    "Each ref is a machine id/label + path string. Agent Witch Cloud stores the mapping, not the files.",
   machineRefLabel: "Machine or device",
   machineRefPlaceholder: "e.g. MacBook Pro or device id",
   machineRefHelp: "Which machine holds the folder — label or device id.",

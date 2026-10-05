@@ -11,7 +11,7 @@ import { AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcGrokWe
 import { buildProjectAclAgentGuidelineSection } from "@/lib/agentAccess/buildProjectAclAgentGuidelineSection";
 
 describe("home marketing bot-to-bot connect (Grok launch)", () => {
-  it("landing hero and steps cover invite → Approve → peers → dispatch", () => {
+  it("landing hero and steps cover invite → Approve → peers → dispatch in plain words", () => {
     const blob = [
       HOME_MARKETING_HERO_COPY.description,
       ...HOME_MARKETING_HERO_COPY.steps,
@@ -22,22 +22,24 @@ describe("home marketing bot-to-bot connect (Grok launch)", () => {
     ].join("\n");
     expect(blob).toMatch(/invite/i);
     expect(blob).toMatch(/Approve/i);
-    expect(blob).toMatch(/peers|list_project_peers/i);
-    expect(blob).toMatch(/project_dispatch/i);
-    expect(blob).toMatch(/leave_project/i);
-    expect(blob).toMatch(/Dual Bearer|awc_proj_/i);
+    expect(blob).toMatch(/teammates|peers|pass work/i);
+    expect(blob).not.toMatch(/list_project_peers|project_dispatch|leave_project/i);
+    expect(blob).not.toMatch(/Dual Bearer|awc_proj_|agent-access|HMAC/i);
+    expect(HOME_MARKETING_HONESTY_FOOTNOTE).toBe("");
   });
 
-  it("feature cards lead with bot-to-bot project connect", () => {
+  it("feature cards lead with bot-to-bot project connect in plain words", () => {
     expect(MARKETING_FEATURE_ITEMS[0]?.title).toMatch(/Bot-to-bot/i);
-    expect(MARKETING_FEATURE_ITEMS[0]?.body).toMatch(/list_project_peers/);
-    expect(MARKETING_FEATURE_ITEMS[0]?.body).toMatch(/project_dispatch/);
-    expect(MARKETING_FEATURE_ITEMS[0]?.body).toMatch(/leave_project/);
-    expect(MARKETING_FEATURE_ITEMS[0]?.body).toMatch(/MUST delete project-scoped routines/i);
-    expect(MARKETING_FEATURE_ITEMS[1]?.body).toMatch(/Left project/i);
-    expect(HOME_MARKETING_STEPS_COPY.steps.map((s) => s.body).join(" ")).toMatch(
-      /MUST delete project-scoped routines on leave or Revoke/i,
+    expect(MARKETING_FEATURE_ITEMS[0]?.body).toMatch(/pass work/i);
+    expect(MARKETING_FEATURE_ITEMS[0]?.body).toMatch(/nickname/i);
+    expect(MARKETING_FEATURE_ITEMS[0]?.body).toMatch(/leave/i);
+    expect(MARKETING_FEATURE_ITEMS[0]?.body).not.toMatch(
+      /list_project_peers|project_dispatch|leave_project|Bearer|MCP/i,
     );
+    expect(MARKETING_FEATURE_ITEMS[1]?.body).toMatch(/Left project/i);
+    expect(
+      HOME_MARKETING_STEPS_COPY.steps.map((s) => s.body).join(" "),
+    ).toMatch(/clean up its project routines/i);
   });
 
   it("for-agents Project cowork ACL documents the full connect path", () => {

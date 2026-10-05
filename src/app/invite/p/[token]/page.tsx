@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: `Bot invite | ${AGENT_WITCH_PRODUCT_NAME}`,
   description:
-    "Agent Witch project invites are redeemed via MCP redeem_project_invite — register/connect first if needed; not a browser login.",
+    "Agent Witch project invites are for AI bots. Give the Copy prompt to your bot — this page is not a browser login.",
   robots: { index: false, follow: false },
 };
 
@@ -17,8 +17,7 @@ type PageProps = {
 };
 
 /**
- * Public token-carrier page (no auth). Redeem is MCP/REST — not browser login.
- * Instructs install/connect when no connector exists.
+ * Public token-carrier page (no auth). For bots / Copy prompt — not browser login.
  */
 export default async function ProjectInviteInstructionsPage({
   params,

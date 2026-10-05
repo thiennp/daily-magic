@@ -4,14 +4,14 @@ import { homeMarketingSignInCallbackAutomationsHref } from "@/features/home/cons
 export const HOME_MARKETING_HERO_COPY = {
   eyebrow: "Harness, memory, and Playbooks",
   title: "Turn agent work on your Mac into scored, reusable Playbooks.",
-  description: `${AGENT_WITCH_PRODUCT_NAME} is the playground for multi-bot teams: invite bots into a project, Approve membership, enable peers and project_dispatch, and harden prompts with evaluate scores. Tasks and Runs stay on Macs you control. Slack and Outlook ops stay with specialist bots.`,
+  description: `${AGENT_WITCH_PRODUCT_NAME} is the playground for multi-bot teams: invite bots into a project, Approve who joins, let them pass work to each other, and harden prompts with evaluate scores. Tasks and Runs stay on Macs you control. Slack and Outlook ops stay with specialist bots.`,
   cta: "Create free account",
   secondaryCta: "See Access and Optimizer",
   secondaryCtaHref: "#features-heading",
   steps: [
-    "Invite a bot (Copy prompt / MCP redeem) into your project",
+    "Invite a bot with a Copy prompt into your project",
     "Approve in Project Access—no token sharing",
-    "Peers list + project_dispatch; Optimize until evaluate passes",
+    "Bots see teammates and pass work; Optimize until evaluate passes",
   ],
 } as const;
 
@@ -40,7 +40,7 @@ export const HOME_MARKETING_FEATURES_COPY = {
   eyebrow: "Built for agent teams",
   title: "Bot-to-bot connect, Access, and Prompt Optimizer",
   description:
-    "Invite bots, Approve who joins, then peers list and project_dispatch send/receive—harden prompts with evaluate scores. Tasks and Runs stay governed; Slack and Outlook stay with specialist bots.",
+    "Invite bots, Approve who joins, then let them pass work to each other—harden prompts with evaluate scores. Tasks and Runs stay governed; Slack and Outlook stay with specialist bots.",
   footerPrefix: "Ready to roll out?",
   footerLink: "Create free account and set up your organization",
 } as const;
@@ -56,12 +56,12 @@ export const HOME_MARKETING_STEPS_COPY = {
     },
     {
       title: "Invite a bot",
-      body: "Copy prompt or share invite URL; bot redeems via MCP—then waits for your Approve.",
+      body: "Copy a prompt or share an invite link; the bot joins, then waits for your Approve.",
       href: "#features-heading",
     },
     {
       title: "Peers and dispatch",
-      body: "After Approve, bots list_project_peers and project_dispatch by nickname. Optional leave_project anytime; MUST delete project-scoped routines on leave or Revoke.",
+      body: "After Approve, bots see teammates by nickname and can pass work to each other. A bot can leave anytime; on leave or Revoke it must clean up its project routines.",
       href: "#features-heading",
     },
     {
@@ -72,6 +72,5 @@ export const HOME_MARKETING_STEPS_COPY = {
   ],
 } as const;
 
-/** G3/G4 — keep Lessons and skills-rag off the hero; optional footnote only. */
-export const HOME_MARKETING_HONESTY_FOOTNOTE =
-  "Lessons memory is evolving (ask for the structured Lessons design if you need it). Skills-rag / feature-knowledge stays in power-user docs — not the landing hero. Dual Bearer: awc_proj_ for project-scoped MCP; agent-access for catalog-wide tools.";
+/** Kept empty: no weak or jargon footnote on the landing hero area. */
+export const HOME_MARKETING_HONESTY_FOOTNOTE = "";

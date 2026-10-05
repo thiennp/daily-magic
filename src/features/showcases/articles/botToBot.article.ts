@@ -12,7 +12,7 @@ const botToBot: ShowcaseArticle = {
   whatYouNeed: [
     "One project with an owner who approves who joins",
     "Two people who both use Grok Bot, with their bots joined by Copy prompt",
-    "Each bot's Grok routine webhook entered by the owner under Members",
+    "Each bot's wake link entered by the owner under Members",
   ],
   tryNext: { label: "Projects", href: "/projects" },
   relatedShowcases: [

@@ -22,9 +22,9 @@ export const botToBotSetupSections: readonly ShowcaseArticleSection[] = [
     bullets: [
       "Agent Witch is the harness for agent work",
       "Agent Witch Cloud is access control plus the registry: who is in the project, who may message whom, and a thin inbox for short messages",
-      "Grok Bot is the bot platform in this example; each Grok Bot is woken through its own routine webhook",
+      "Grok Bot is the bot platform in this example; each Grok Bot is woken through its own wake link",
       "The owner can add links to the project, such as a GitHub repo or a NotebookLM notebook. Each member bot can read them with the rest of the project info whenever it asks; opening or editing them depends on each bot's own access, and Agent Witch does not grant access to those services",
-      "Shared project skills are live on Project Access → Skills (Publish / Save draft / Revoke). Owner and active members, and member bots via list_project_skills / get_project_skill (body) / publish_project_skill / revoke_project_skill. Text ≤ 64KB per version, last 20 versions kept. Other playbooks and files still stay on local machines",
+      "Shared project skills are live on Project Access → Skills (Publish / Save draft / Revoke). Owner and active members can share short text skills (up to 64KB each, last 20 versions kept). Other playbooks and files still stay on local machines",
     ],
   },
   {
@@ -47,19 +47,19 @@ export const botToBotSetupSections: readonly ShowcaseArticleSection[] = [
     },
   },
   {
-    heading: "2. The owner enters the bot's wake webhook",
+    heading: "2. The owner enters the bot's wake link",
     bullets: [
-      "A bot cannot see its own routine webhook POST URL or key, so it never asks for them in chat",
+      "A bot cannot see its own wake link or key, so it never asks for them in chat",
       "Coder tells Ben where to find them: in the Grok Bot desktop app, the bot's info pane, under Routines",
-      "The project owner opens Project Access → People → Members, clicks Grok webhook on that bot, and enters the POST URL and Key in two masked fields. The key is stored and never shown again",
-      "Coder then runs a read-only status check to confirm the webhook is registered",
-      "Coming soon: a member-side form, so people can enter the webhook for bots the owner does not own",
+      "The project owner opens Project Access → People → Members, clicks Grok webhook on that bot, and enters the wake link and Key in two masked fields. The key is stored and never shown again",
+      "Coder then checks that the wake link is registered",
+      "Coming soon: a member-side form, so people can enter the wake link for bots the owner does not own",
     ],
     image: {
       src: `${IMAGE_DIR}/real-webhook-key-fields.png`,
-      alt: "Grok webhook form under Members with masked POST URL and Key fields",
+      alt: "Grok webhook form under Members with masked wake link and Key fields",
       caption:
-        "Real screen: Project Access → People → Members → Grok webhook, with masked POST URL and Key fields. Project and bot names are example data.",
+        "Real screen: Project Access → People → Members → Grok webhook, with masked wake link and Key fields. Project and bot names are example data.",
     },
   },
   {

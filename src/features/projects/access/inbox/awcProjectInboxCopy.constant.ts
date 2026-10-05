@@ -6,8 +6,7 @@ export const AWC_PROJECT_INBOX_COPY = {
     "All messages between bots and you (the owner). Who can join still lives under Members and Pending.",
   loading: "Loading messages…",
   empty: "No messages yet.",
-  unavailable:
-    "Messages are not available on this version yet — check back after the next update.",
+  unavailable: "Messages aren't available right now.",
   forbidden: "Only the project owner can view project Messages.",
   loadFailed: "Could not load Messages.",
   fromUnknown: "Unknown",
@@ -26,8 +25,7 @@ export const AWC_PROJECT_INBOX_COPY = {
   clearSuccess: "Cleared {n} messages",
   clearAlreadyEmpty: "Inbox already empty",
   clearFailed: "Could not clear messages.",
-  clearUnavailable:
-    "Clear is not available on this version yet — check back after the next update.",
+  clearUnavailable: "Clear isn't available right now.",
   dispatchHeading: "Assign to a bot",
   dispatchIntro:
     "Send a short task to one active bot (pick them by nickname). They see it as from Owner.",
@@ -46,7 +44,7 @@ export const AWC_PROJECT_INBOX_COPY = {
   dispatchLocalPathLabel: "Local file or folder",
   dispatchLocalPathPlaceholder: "e.g. ~/code/daily-magic",
   dispatchAllowClaimIdLabel: "Access claim ID",
-  dispatchAllowClaimIdPlaceholder: "e.g. claim id from mint_allow_claim",
+  dispatchAllowClaimIdPlaceholder: "e.g. an access claim id",
   dispatchSubmit: "Send to bot",
   dispatchSuccess: "Task sent to bot.",
   dispatchRateLimited: "Rate limited — max 300 sends per hour.",

@@ -32,24 +32,21 @@ const panelHtml = () =>
     }),
   );
 
-describe("Create invite: Grok / Muse choice", () => {
-  it("panel shows both labelled create buttons and the support list", () => {
+describe("Create invite: Grok choice", () => {
+  it("panel shows the Grok create button and the support list", () => {
     const html = panelHtml();
     expect(html).toContain("Invite a Grok Bot");
-    expect(html).toContain("Invite a Muse bot");
+    expect(html).not.toContain("Invite a Muse bot");
     expect(html).not.toContain(">Create invite<");
     expect(html).toContain(AWC_BOT_TO_BOT_SUPPORT_HEADING);
   });
 
-  it("each button creates an invite for its own platform", () => {
+  it("the Grok button creates a grok invite", () => {
     const onCreate = vi.fn();
     const buttons = findButtons(AwcProjectInviteCreateControls({ onCreate }));
-    expect(buttons.map((b) => b.children)).toEqual([
-      "Invite a Grok Bot",
-      "Invite a Muse bot",
-    ]);
+    expect(buttons.map((b) => b.children)).toEqual(["Invite a Grok Bot"]);
     buttons.forEach((b) => b.onClick?.());
-    expect(onCreate.mock.calls).toEqual([["grok"], ["muse"]]);
+    expect(onCreate.mock.calls).toEqual([["grok"]]);
   });
 
   it("banner names the chosen platform for its Copy prompt", () => {
@@ -74,17 +71,17 @@ describe("Create invite: Grok / Muse choice", () => {
 describe("Bot-to-bot works with", () => {
   it("renders the exact product strings from the constant", () => {
     expect(AWC_BOT_TO_BOT_SUPPORT_ROWS.map((r) => r.label)).toEqual([
-      "Grok Bot — supported via routine webhook; covered by automated tests",
-      "Any agent that can call the agent-access API and receive an HMAC-signed webhook (for example Muse) — supported via HMAC webhook, not yet tested end to end",
+      "Grok Bot: works out of the box",
     ]);
     const html = renderToStaticMarkup(createElement(AwcBotToBotSupportList));
     expect(html).toContain("Bot-to-bot works with");
     for (const row of AWC_BOT_TO_BOT_SUPPORT_ROWS) {
       expect(html).toContain(row.label);
     }
+    expect(html).not.toMatch(/HMAC|agent-access|not yet tested|Muse/i);
   });
 
-  it("styles the routine and HMAC-supported entries differently", () => {
+  it("styles the Grok entry as ready (not italic caveat)", () => {
     const html = renderToStaticMarkup(createElement(AwcBotToBotSupportList));
     const classOf = (level: string) =>
       new RegExp(`data-support-level="${level}" class="([^"]+)"`).exec(
@@ -92,11 +89,8 @@ describe("Bot-to-bot works with", () => {
       )?.[1];
     expect(classOf("routine")).toContain("font-medium");
     expect(classOf("routine")).not.toContain("italic");
-    expect(classOf("hmac")).toContain("italic");
-    expect(classOf("routine")).not.toBe(classOf("hmac"));
     expect(html).toContain("●");
     expect(html).not.toContain("✓");
-    expect(html).not.toContain("tested end to end via routine webhook");
-    expect(html).toContain("○");
+    expect(html).not.toContain("○");
   });
 });

@@ -49,10 +49,8 @@ const collectMarketingStrings = (
   return strings;
 };
 
-/** Exact agent-support wording approved for the bot-to-bot article. */
-const ALLOWED_EXACT_STRINGS: ReadonlySet<string> = new Set([
-  "Any agent that can call the agent-access API and receive an HMAC-signed webhook (for example Muse) — supported via HMAC webhook, not yet tested end to end",
-]);
+/** No exception strings — caveated Muse/HMAC wording was removed. */
+const ALLOWED_EXACT_STRINGS: ReadonlySet<string> = new Set([]);
 
 describe("showcase marketing copy (SHOWCASES-011)", () => {
   it("avoids limit/demo/sample/apology phrasing in all articles", () => {

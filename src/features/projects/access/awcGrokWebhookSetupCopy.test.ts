@@ -25,16 +25,16 @@ describe("Grok webhook setup copy", () => {
     );
   });
 
-  it("is on the invite page after access is active, not before redeem", () => {
+  it("invite page tells humans about the wake link after access is active", () => {
     const page = readSrc(
       "src/features/projects/access/invites/ProjectInviteInstructionsBody.tsx",
     );
     const connect = readSrc(
       "src/features/projects/access/invites/ProjectInviteConnectSteps.tsx",
     );
-    expect(page).toContain("AWC_GROK_WEBHOOK_SETUP_COPY");
+    expect(page).toMatch(/wake link/i);
     expect(page).toContain("After access is active");
-    expect(page).toMatch(/active[\s\S]*owner[\s\S]*skip the Approve wait/i);
+    expect(page).toMatch(/Approve/i);
     expect(connect).not.toContain("AWC_GROK_WEBHOOK_SETUP_COPY");
     expect(page).not.toMatch(/grokbot:\/\//i);
     expect(page).not.toMatch(/sidebar/i);

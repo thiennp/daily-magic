@@ -70,7 +70,7 @@ export default function ProjectSkillRow({
             className={PROJECT_SKILLS_CTA.danger}
             onClick={() => onRevoke(skill.skillId)}
           >
-            {busy ? copy.revoking : skill.state === "draft" ? copy.discardDraft : copy.revoke}
+            {busy ? (skill.state === "draft" ? copy.discarding : copy.revoking) : skill.state === "draft" ? copy.discardDraft : copy.revoke}
           </button>
         ) : null}
       </span>

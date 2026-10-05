@@ -33,13 +33,11 @@ describe("member Grok webhook secret form", () => {
     expect(hook).toMatch(/setWebhookKey\(""\)/);
   });
 
-  it("shows HMAC webhook host status without the secret", () => {
-    expect(src).toContain("hmacWebhookUrlHost");
-    expect(src).toContain("copy.hmacHeading");
-    expect(src).toContain("copy.hmacSecretSet");
-    expect(AWC_GROK_WEBHOOK_FORM_COPY.hmacHint).toContain(
-      "register_project_webhook",
-    );
+  it("hides the other-wake-link status block from the owner form", () => {
+    expect(src).not.toContain("hmacWebhookUrlHost");
+    expect(src).not.toContain("copy.hmacHeading");
+    expect(src).not.toContain("copy.hmacSecretSet");
+    expect(src).not.toContain("hmacStatusLine");
     expect(AWC_GROK_WEBHOOK_FORM_COPY.hmacHint).toContain("never shown");
     expect(`${src}${hook}`).not.toMatch(/awc_whsec_/);
   });

@@ -24,7 +24,7 @@ describe("bot-to-bot showcase article", () => {
     const images = (article?.sections ?? []).flatMap((section) =>
       section.image ? [section.image] : [],
     );
-    expect(images.length).toBe(7);
+    expect(images.length).toBe(6);
     for (const image of images) {
       expect(image.src.startsWith("/showcases/bot-to-bot/")).toBe(true);
       expect(image.alt.length).toBeGreaterThan(0);
@@ -54,7 +54,7 @@ describe("bot-to-bot showcase article", () => {
 
   it("marks future features as coming soon and skills as live", () => {
     const text = allText();
-    expect(text).toMatch(/Coming soon: a member-side form/);
+    expect(text).toMatch(/Coming soon: a member-side wake-link form/);
     expect(text).toMatch(/Coming soon: a short, debounced/);
     expect(text).toContain("project updated");
     expect(text).not.toMatch(/Coming soon: shared playbooks and skills/);

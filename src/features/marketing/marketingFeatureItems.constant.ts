@@ -10,13 +10,13 @@ export interface MarketingFeatureItem {
 export const MARKETING_FEATURE_ITEMS: readonly MarketingFeatureItem[] = [
   {
     title: "Bot-to-bot project connect",
-    body: "Invite (Copy / MCP redeem), wait for owner Approve, list_project_peers, then project_dispatch send/receive by nickname. Optional leave_project; on leave/Revoke MUST delete project-scoped routines; dual Bearer keeps awc_proj_ for project-scoped MCP.",
+    body: "Invite with a Copy prompt, wait for owner Approve, then bots see teammates and pass work by nickname. A bot can leave on its own; on leave or Revoke it cleans up its project routines.",
     preview: "dispatch",
     emphasized: true,
   },
   {
     title: "Project Access you control",
-    body: "Approve, Deny, or Revoke who may join. Folder refs stay registry-only—no shared tokens, no cloud content bus. Members updates on leave / Left project when a bot self-disconnects.",
+    body: "Approve, Deny, or Revoke who may join. Folder refs stay as labels only—no shared tokens, no cloud content bus. Members updates on leave / Left project when a bot disconnects itself.",
     preview: "approve",
     emphasized: true,
   },

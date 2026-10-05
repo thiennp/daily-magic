@@ -3,7 +3,6 @@ import type { ProjectInvitePlatform } from "@/features/projects/access/invites/p
 /** Create-invite choices, in button order. */
 export const AWC_PROJECT_INVITE_PLATFORMS: readonly ProjectInvitePlatform[] = [
   "grok",
-  "muse",
 ];
 
 /** Owner-facing labels per invite platform (create button + created banner). */
