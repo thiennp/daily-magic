@@ -41,4 +41,17 @@ describe("resolveAgentWitchWakePort", () => {
       expect(resolveAgentWitchWakePort()).toBe(49123);
     });
   });
+  it("prefers wake-port.json over a drifted AGENT_WITCH_WAKE_PORT", () => {
+    withIsolatedAgentWitchHome(() => {
+      const installDir = process.env.AGENT_WITCH_HOME!;
+      fs.writeFileSync(
+        path.join(installDir, "wake-port.json"),
+        `${JSON.stringify({ wakePort: 49273 }, null, 2)}\n`,
+        "utf8",
+      );
+      process.env.AGENT_WITCH_WAKE_PORT = "61774";
+      expect(resolveAgentWitchWakePort()).toBe(49273);
+    });
+  });
 });
+

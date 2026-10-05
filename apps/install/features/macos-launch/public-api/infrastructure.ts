@@ -41,6 +41,8 @@ export {
 
 export { isAgentWitchLaunchAgentPlistXmlValid } from "../internal/core/isAgentWitchLaunchAgentPlistXmlValid";
 
+export { syncAgentWitchLaunchAgentPlistWakePort } from "../internal/core/syncAgentWitchLaunchAgentPlistWakePort";
+
 export { buildAgentWitchLaunchAgentPlistXml } from "../internal/core/buildAgentWitchLaunchAgentPlistXml";
 
 export {

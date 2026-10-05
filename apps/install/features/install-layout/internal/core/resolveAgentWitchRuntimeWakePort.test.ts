@@ -34,4 +34,22 @@ describe("resolveAgentWitchRuntimeWakePort", () => {
     expect(readAgentWitchWakePortFromFile(installDir)).toBe(51841);
     expect(resolveAgentWitchRuntimeWakePort(installDir)).toBe(51841);
   });
+  it("falls back to AGENT_WITCH_WAKE_PORT when the file is missing", () => {
+    const installDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "agent-witch-runtime-wake-env-"),
+    );
+    tempDirs.push(installDir);
+    const previous = process.env.AGENT_WITCH_WAKE_PORT;
+    process.env.AGENT_WITCH_WAKE_PORT = "61774";
+    try {
+      expect(resolveAgentWitchRuntimeWakePort(installDir)).toBe(61774);
+    } finally {
+      if (previous === undefined) {
+        delete process.env.AGENT_WITCH_WAKE_PORT;
+      } else {
+        process.env.AGENT_WITCH_WAKE_PORT = previous;
+      }
+    }
+  });
 });
+

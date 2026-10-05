@@ -7,6 +7,7 @@ import {
   resolveAgentWitchDefaultWakePort,
   resolveAgentWitchInstallDir,
 } from "./resolveAgentWitchLocalLayout";
+import { resolveAgentWitchWakePortFromSources } from "./resolveAgentWitchWakePortFromSources";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -37,9 +38,12 @@ export const readAgentWitchWakePortFromFile = (
   return null;
 };
 
-/** Wake port from `wake-port.json`, else the install-root default (AGENT-067). */
+/** Wake port: `wake-port.json` → `AGENT_WITCH_WAKE_PORT` → install-root default (AGENT-067). */
 export const resolveAgentWitchRuntimeWakePort = (
   installDir: string = resolveAgentWitchInstallDir(),
 ): number =>
-  readAgentWitchWakePortFromFile(installDir) ??
-  resolveAgentWitchDefaultWakePort(installDir);
+  resolveAgentWitchWakePortFromSources({
+    filePort: readAgentWitchWakePortFromFile(installDir),
+    envValue: process.env.AGENT_WITCH_WAKE_PORT,
+    defaultPort: resolveAgentWitchDefaultWakePort(installDir),
+  });
