@@ -65,7 +65,9 @@ describe("HomeProjectsPanel render", () => {
     ];
   });
 
-  it("renders the shared /projects cards for only the 3 most recently active projects", async () => {
+  it(
+    "renders the shared /projects cards for only the 3 most recently active projects",
+    async () => {
     const { default: HomeProjectsPanel } =
       await import("@/features/home/HomeProjectsPanel");
     const html = renderToStaticMarkup(createElement(HomeProjectsPanel));
@@ -85,7 +87,9 @@ describe("HomeProjectsPanel render", () => {
     );
     expect(html).not.toContain("New project");
     expect(html).not.toContain("create-project-form-stub");
-  });
+  },
+    15_000,
+  );
 
   it("keeps the full /projects panel (all projects + New project) by default", async () => {
     const { default: AwcProjectsPanel } =

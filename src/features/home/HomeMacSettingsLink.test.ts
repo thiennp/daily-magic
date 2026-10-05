@@ -40,7 +40,8 @@ describe("HomeMacSettingsLink", () => {
       "Status & settings on this Mac",
     );
     const html = renderToStaticMarkup(createElement(HomeMacSettingsLink));
-    expect(html).toContain("Status & settings on this Mac");
+    // renderToStaticMarkup escapes & in text nodes
+    expect(html).toContain("Status &amp; settings on this Mac");
     expect(html).toContain('href="/download"');
   });
 
