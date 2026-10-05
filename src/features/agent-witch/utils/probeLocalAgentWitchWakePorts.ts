@@ -10,6 +10,7 @@ import {
   AGENT_WITCH_PROD_WAKE_PORT,
 } from "@/lib/agentWitch/resolveAgentWitchAppHome";
 import { resolveAgentWitchWakePortForPage } from "@/lib/agentWitch/resolveAgentWitchWakeBaseUrl";
+import detectMobileClient from "@/lib/mobile/detectMobileClient";
 
 export const buildAllWakePortsForPage = (
   extraWakePorts: readonly number[],
@@ -25,6 +26,11 @@ export const probeLocalAgentWitchWakePorts = async (input: {
   readonly portsToProbe: readonly number[];
   readonly onPortAttempted: (wakePort: number) => void;
 }): Promise<LocalAgentWitchIdentity | null> => {
+  // Mobile browsers never talk to Agent Witch Local (no loopback probes).
+  if (detectMobileClient()) {
+    return null;
+  }
+
   if (shouldUseAppServerWakeIdentityProbe()) {
     input.portsToProbe.forEach((wakePort) => {
       input.onPortAttempted(wakePort);

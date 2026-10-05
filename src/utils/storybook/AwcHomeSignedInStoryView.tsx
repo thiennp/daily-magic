@@ -1,6 +1,6 @@
 "use client";
 
-import HomePromptSdlcSection from "@/features/home/components/HomePromptSdlcSection";
+import HomePromptOptimizerCtaBox from "@/features/home/components/HomePromptOptimizerCtaBox";
 import MyOfferingsPanel from "@/features/capabilities/MyOfferingsPanel";
 import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
@@ -30,7 +30,7 @@ export default function AwcHomeSignedInStoryView() {
         host={STORY_HOST}
         below={
           <HomeDashboardLowerSection>
-            <HomePromptSdlcSection showComposeForm storybookPreview />
+            <HomePromptOptimizerCtaBox />
             <HomeCollapsibleMarketingShowcases />
           </HomeDashboardLowerSection>
         }

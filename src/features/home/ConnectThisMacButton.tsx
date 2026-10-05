@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 
+import useIsMobileClient from "@/hooks/useIsMobileClient";
 import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
 import ConnectThisMacModal from "@/features/home/ConnectThisMacModal";
@@ -53,6 +54,11 @@ export default function ConnectThisMacButton({
     enabled: isModalOpen,
     fallbackInstallCommand: installCommand,
   });
+  const isMobileClient = useIsMobileClient();
+
+  if (isMobileClient) {
+    return null;
+  }
 
   return (
     <>

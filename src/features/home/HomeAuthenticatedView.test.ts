@@ -61,7 +61,7 @@ describe("HomeAuthenticatedView showcases", () => {
     );
   });
 
-  it("shows the prompt optimizer compose form on signed-in home", () => {
+  it("shows only the prompt optimizer CTA box (no compose form) on signed-in home", () => {
     const source = readFileSync(
       join(
         dirname(fileURLToPath(import.meta.url)),
@@ -70,7 +70,9 @@ describe("HomeAuthenticatedView showcases", () => {
       "utf8",
     );
 
-    expect(source).toContain("<HomePromptSdlcSection showComposeForm");
+    expect(source).toContain("<HomePromptOptimizerCtaBox />");
+    expect(source).not.toContain("showComposeForm");
+    expect(source).not.toContain("HomePromptOptimizerComposeCard");
   });
 
   it("HOME-023: keeps showcases in the main center column, not full shell width", () => {

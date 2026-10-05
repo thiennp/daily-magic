@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useSyncExternalStore } from "react";
 
+import useIsMobileClient from "@/hooks/useIsMobileClient";
 import {
   getLocalAgentWitchIdentitySnapshot,
   subscribeLocalAgentWitchIdentity,
@@ -57,7 +58,9 @@ const useLocalMacHostname = (): {
     detectBrowserOperatingSystem,
     getServerOperatingSystemSnapshot,
   );
-  const isMacBrowser = operatingSystem === "mac";
+  const isMobileClient = useIsMobileClient();
+  // iPhone UAs contain "like Mac OS X"; never treat a mobile client as a Mac.
+  const isMacBrowser = operatingSystem === "mac" && !isMobileClient;
   const pairedDevicesSnapshot = useSyncExternalStore(
     pairedDevicesResource.subscribe,
     () => pairedDevicesResource.getSnapshot(),

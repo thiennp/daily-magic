@@ -6,6 +6,7 @@ import {
   parseWakePortsQuery,
 } from "@/lib/agentWitch/parseWakePortsQuery";
 import { requireAuth } from "@/lib/auth/requireAuth";
+import isMobileRequest from "@/lib/mobile/isMobileRequest";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,11 @@ export async function GET(request: Request): Promise<Response> {
 
   if (error || !actor) {
     return error;
+  }
+
+  // Mobile clients never reach Agent Witch Local; skip the loopback fetch.
+  if (isMobileRequest(request.headers)) {
+    return new Response(null, { status: 503 });
   }
 
   const searchParams = new URL(request.url).searchParams;

@@ -4,18 +4,17 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 describe("HomeProjectsPanel", () => {
-  it("HOME-048: lists project names with Edit opening send-task composer", () => {
+  it("HOME-048: reuses the /projects panel and data instead of its own list", () => {
     const source = readFileSync(
       join(dirname(fileURLToPath(import.meta.url)), "HomeProjectsPanel.tsx"),
       "utf8",
     );
 
-    expect(source).toContain("useUserProjects");
-    expect(source).toContain("HomeProjectListRow");
-    expect(source).not.toContain("SendTaskComposerProjectPickerStep");
-    expect(source).not.toContain("onProjectDeleted");
-    expect(source).toContain("buildAgentComposerHref");
-    expect(source).toContain("projectId: project.id");
-    expect(source).toContain("customTask: true");
+    expect(source).toContain('from "@/features/projects/AwcProjectsPanel"');
+    expect(source).toContain("selectProjects={selectHomeRecentProjects}");
+    expect(source).toContain("showManageControls={false}");
+    expect(source).not.toContain("useUserProjects(");
+    expect(source).not.toContain("fetch(");
+    expect(source).not.toContain("HomeProjectListRow");
   });
 });

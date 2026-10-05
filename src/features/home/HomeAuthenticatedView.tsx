@@ -1,4 +1,4 @@
-import HomePromptSdlcSection from "@/features/home/components/HomePromptSdlcSection";
+import HomePromptOptimizerCtaBox from "@/features/home/components/HomePromptOptimizerCtaBox";
 import MyOfferingsPanel from "@/features/capabilities/MyOfferingsPanel";
 import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
@@ -44,7 +44,7 @@ export default async function HomeAuthenticatedView({
       host={host}
       below={
         <HomeDashboardLowerSection>
-          <HomePromptSdlcSection showComposeForm />
+          <HomePromptOptimizerCtaBox />
           <HomeCollapsibleMarketingShowcases />
         </HomeDashboardLowerSection>
       }

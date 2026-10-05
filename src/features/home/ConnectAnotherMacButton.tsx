@@ -2,6 +2,7 @@
 
 import { useCallback, useState, useSyncExternalStore } from "react";
 
+import useIsMobileClient from "@/hooks/useIsMobileClient";
 import { APP_SURFACE_TEXT_LINK_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectAnotherMacModal from "@/features/home/ConnectAnotherMacModal";
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
@@ -44,10 +45,13 @@ export default function ConnectAnotherMacButton({
   });
   const { isCheckingLocalApp, isLocalAppInstalled } =
     useLocalMacBrowserContext();
-  const showInstallCta = shouldShowAgentWitchAppDownloadCta({
-    isCheckingLocalApp,
-    isLocalAppInstalled,
-  });
+  const isMobileClient = useIsMobileClient();
+  const showInstallCta =
+    !isMobileClient &&
+    shouldShowAgentWitchAppDownloadCta({
+      isCheckingLocalApp,
+      isLocalAppInstalled,
+    });
   const operatingSystem = useSyncExternalStore(
     subscribeToOperatingSystem,
     detectBrowserOperatingSystem,

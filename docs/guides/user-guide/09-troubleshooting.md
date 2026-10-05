@@ -47,7 +47,7 @@ If the menu bar app is not installed, open [/download](https://www.agentwitch.co
 
 **Fix**
 
-1. In the console: **On this Mac → Status & settings** (or **Status & settings on this Mac** on Home). The console opens `http://127.0.0.1:43347/status` and shows the **Revive Agent Witch Local** modal when health is down—copy the Terminal block from the modal.
+1. In the console: **On this Mac → Status & settings** (or **Open AgentWitch Local** on Home). The console opens `http://127.0.0.1:43347/status` and shows the **Revive Agent Witch Local** modal when health is down—copy the Terminal block from the modal.
 2. If `http://127.0.0.1:43347/status` still loads, use the **Revive local app** section on that page.
 3. Otherwise paste the revive script from the modal, then read `"$AW_HOME/agent-witch.error.log"` if health stays down after `launchctl kickstart`.
 

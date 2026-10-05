@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import useIsMobileClient from "@/hooks/useIsMobileClient";
 import { refreshLocalAgentWitchIdentity } from "@/features/agent-witch/localAgentWitchIdentityResource";
 import { setLocalMacTokenHash } from "@/features/home/utils/localMacTokenHashStore";
 import { fetchAgentWitchInstallToken } from "@/lib/agentWitch/fetchAgentWitchInstallToken";
@@ -27,8 +28,14 @@ const usePersonalizedAgentWitchInstallCommand = (input: {
   );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isMobileClient = useIsMobileClient();
+  const enabled = input.enabled && !isMobileClient;
 
   const refresh = useCallback(async (): Promise<void> => {
+    if (isMobileClient) {
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
@@ -41,10 +48,10 @@ const usePersonalizedAgentWitchInstallCommand = (input: {
     }
 
     setIsLoading(false);
-  }, []);
+  }, [isMobileClient]);
 
   useEffect(() => {
-    if (!input.enabled) {
+    if (!enabled) {
       return;
     }
 
@@ -74,7 +81,7 @@ const usePersonalizedAgentWitchInstallCommand = (input: {
     return () => {
       cancelledRef.current = true;
     };
-  }, [input.enabled]);
+  }, [enabled]);
 
   return { installCommand, isLoading, error, refresh };
 };

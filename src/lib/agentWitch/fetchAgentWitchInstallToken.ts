@@ -1,3 +1,5 @@
+import detectMobileClient from "@/lib/mobile/detectMobileClient";
+
 interface InstallTokenResult {
   readonly ok: boolean;
   readonly installCommand?: string;
@@ -52,6 +54,14 @@ const parseInstallTokenPayload = (payload: unknown): InstallTokenResult => {
 
 export const fetchAgentWitchInstallToken =
   async (): Promise<InstallTokenResult> => {
+    // POST install-token reserves a Mac device row; never do that from mobile.
+    if (detectMobileClient()) {
+      return {
+        ok: false,
+        errorMessage: "Mac install links are not created on mobile devices.",
+      };
+    }
+
     try {
       const response = await fetch("/api/agent-witch/install-token", {
         method: "POST",

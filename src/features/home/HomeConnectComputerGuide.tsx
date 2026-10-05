@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 
+import useIsMobileClient from "@/hooks/useIsMobileClient";
 import AppHero from "@/components/surfaces/AppHero";
 import {
   APP_SURFACE_BODY_TEXT_CLASS,
@@ -39,10 +40,13 @@ export default function HomeConnectComputerGuide({
 }: HomeConnectComputerGuideProps) {
   const { isCheckingLocalApp, isLocalAppInstalled } =
     useLocalMacBrowserContext();
-  const showInstallCta = shouldShowAgentWitchAppDownloadCta({
-    isCheckingLocalApp,
-    isLocalAppInstalled,
-  });
+  const isMobileClient = useIsMobileClient();
+  const showInstallCta =
+    !isMobileClient &&
+    shouldShowAgentWitchAppDownloadCta({
+      isCheckingLocalApp,
+      isLocalAppInstalled,
+    });
   const operatingSystem = useSyncExternalStore(
     subscribeToOperatingSystem,
     detectBrowserOperatingSystem,
