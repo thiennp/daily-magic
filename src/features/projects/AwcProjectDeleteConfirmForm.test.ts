@@ -55,6 +55,8 @@ describe("AwcProjectDeleteConfirmForm", () => {
     );
 
     expect(html).toContain(AWC_PROJECT_DELETE_COPY.scope);
+    expect(AWC_PROJECT_DELETE_COPY.scope).toContain("library items");
+    expect(AWC_PROJECT_DELETE_COPY.scope).toContain("reports");
     expect(html).toContain(AWC_PROJECT_DELETE_COPY.typeToConfirmPrefix);
     expect(html).toContain("Client repo");
     expect(html).toContain(AWC_PROJECT_DELETE_COPY.confirm);
