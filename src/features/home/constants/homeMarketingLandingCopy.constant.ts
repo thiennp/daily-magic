@@ -4,7 +4,7 @@ import { homeMarketingSignInCallbackAutomationsHref } from "@/features/home/cons
 export const HOME_MARKETING_HERO_COPY = {
   eyebrow: "Harness, memory, and Playbooks",
   title: "Turn agent work on your Mac into scored, reusable Playbooks.",
-  description: `${AGENT_WITCH_PRODUCT_NAME} is the playground for multi-bot teams: invite bots into a project, Approve who joins, let them pass work to each other, and harden prompts with evaluate scores. Tasks and Runs stay on Macs you control. Slack and Outlook ops stay with specialist bots.`,
+  description: `${AGENT_WITCH_PRODUCT_NAME} is the playground for multi-bot teams: invite bots into a project, Approve who joins, so bots can pass work to each other, and harden prompts with evaluate scores. Tasks and Runs stay on Macs you control. Slack and Outlook ops stay with specialist bots.`,
   cta: "Create free account",
   secondaryCta: "See Access and Optimizer",
   secondaryCtaHref: "#features-heading",
@@ -40,7 +40,7 @@ export const HOME_MARKETING_FEATURES_COPY = {
   eyebrow: "Built for agent teams",
   title: "Bot-to-bot connect, Access, and Prompt Optimizer",
   description:
-    "Invite bots, Approve who joins, then let them pass work to each other—harden prompts with evaluate scores. Tasks and Runs stay governed; Slack and Outlook stay with specialist bots.",
+    "Invite bots, Approve who joins, then bots pass work to each other—harden prompts with evaluate scores. Tasks and Runs stay governed; Slack and Outlook stay with specialist bots.",
   footerPrefix: "Ready to roll out?",
   footerLink: "Create free account and set up your organization",
 } as const;
