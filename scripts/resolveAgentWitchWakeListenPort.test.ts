@@ -12,6 +12,21 @@ import { syncAgentWitchLaunchAgentPlistWakePort } from "@agent-witch/install-mac
 import { resolveAgentWitchWakeListenPort } from "./resolveAgentWitchWakeListenPort";
 import { writeAgentWitchWakePortFile } from "./agentWitchWakePortFile";
 
+const allocateEphemeralPort = (): Promise<number> =>
+  new Promise((resolve, reject) => {
+    const server = net.createServer();
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", () => {
+      const address = server.address();
+      if (address === null || typeof address === "string") {
+        server.close(() => reject(new Error("Failed to allocate test port")));
+        return;
+      }
+      const port = address.port;
+      server.close((error) => (error ? reject(error) : resolve(port)));
+    });
+  });
+
 const holdPort = async (port: number): Promise<net.Server> =>
   new Promise((resolve, reject) => {
     const server = net.createServer();
@@ -24,7 +39,7 @@ describe("resolveAgentWitchWakeListenPort", () => {
   const previousHome = process.env.AGENT_WITCH_HOME;
   const previousWake = process.env.AGENT_WITCH_WAKE_PORT;
 
-  afterEach(async () => {
+  afterEach(() => {
     if (previousHome === undefined) {
       delete process.env.AGENT_WITCH_HOME;
     } else {
@@ -45,11 +60,13 @@ describe("resolveAgentWitchWakeListenPort", () => {
     const installDir = fs.mkdtempSync(path.join(os.tmpdir(), "aw-listen-"));
     tempDirs.push(installDir);
     process.env.AGENT_WITCH_HOME = installDir;
-    writeAgentWitchWakePortFile(installDir, 49273);
-    process.env.AGENT_WITCH_WAKE_PORT = "61774";
+    const savedPort = await allocateEphemeralPort();
+    writeAgentWitchWakePortFile(installDir, savedPort);
+    // Drifted LaunchAgent env must lose to wake-port.json.
+    process.env.AGENT_WITCH_WAKE_PORT = String(savedPort === 61774 ? 49273 : 61774);
 
     const port = await resolveAgentWitchWakeListenPort({ attempts: 1 });
-    expect(port).toBe(49273);
+    expect(port).toBe(savedPort);
     expect(syncAgentWitchLaunchAgentPlistWakePort).not.toHaveBeenCalled();
   });
 
@@ -57,16 +74,17 @@ describe("resolveAgentWitchWakeListenPort", () => {
     const installDir = fs.mkdtempSync(path.join(os.tmpdir(), "aw-listen-"));
     tempDirs.push(installDir);
     process.env.AGENT_WITCH_HOME = installDir;
-    writeAgentWitchWakePortFile(installDir, 49273);
-    process.env.AGENT_WITCH_WAKE_PORT = "49273";
-    const holder = await holdPort(49273);
+    const savedPort = await allocateEphemeralPort();
+    writeAgentWitchWakePortFile(installDir, savedPort);
+    process.env.AGENT_WITCH_WAKE_PORT = String(savedPort);
+    const holder = await holdPort(savedPort);
 
     try {
       const port = await resolveAgentWitchWakeListenPort({
         attempts: 1,
         retryDelayMs: 1,
       });
-      expect(port).not.toBe(49273);
+      expect(port).not.toBe(savedPort);
       expect(
         JSON.parse(fs.readFileSync(path.join(installDir, "wake-port.json"), "utf8")),
       ).toEqual({ wakePort: port });
