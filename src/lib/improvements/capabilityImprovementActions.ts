@@ -74,7 +74,7 @@ export async function acceptCapabilityImprovement(
       UPDATE capability_improvements
       SET
         status = ${ImprovementStatus.ACCEPTED},
-        resulting_version_id = ${published.currentVersionId},
+        resulting_version_id = ${published.capability.currentVersionId},
         updated_at = NOW()
       WHERE id = ${improvementId}
       RETURNING *

@@ -46,6 +46,12 @@ describe("agent access workflows", () => {
     });
 
     expect(created?.text).toContain("templateId is required");
+    const createdWithoutProject = await executeAgentAccessWorkflowTool({
+      actor,
+      name: "create_workflow",
+      args: { templateId: "tpl-1" },
+    });
+    expect(createdWithoutProject?.text).toContain("project_id is required");
     expect(installed?.text).toContain("capabilityId is required");
     expect(started?.text).toContain("fieldValues");
     expect(listed?.text).toContain("harnessSlug");

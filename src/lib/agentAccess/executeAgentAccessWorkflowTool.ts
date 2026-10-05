@@ -1,6 +1,6 @@
 import { createAgentWitchInstallTokenForUser } from "@/lib/agentWitch/createAgentWitchInstallTokenForUser";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
-import createCapabilityFromTemplate from "@/lib/capabilities/createCapabilityFromTemplate";
+import { executeAgentAccessCreateWorkflow } from "@/lib/agentAccess/executeAgentAccessCreateWorkflow";
 import { listPublishedCapabilitiesForOwner } from "@/lib/capabilities/capabilityQueries";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 
@@ -10,18 +10,6 @@ import { runAgentAccessWorkflow } from "@/lib/agentAccess/runAgentAccessWorkflow
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
-
-const readId = (args: unknown, key: string): string | null => {
-  if (typeof args !== "object" || args === null) {
-    return null;
-  }
-
-  const value = (args as Record<string, unknown>)[key];
-
-  return typeof value === "string" && value.trim().length > 0
-    ? value.trim()
-    : null;
-};
 
 export const executeAgentAccessWorkflowTool = async (input: {
   readonly actor: AgentAccessActor;
@@ -71,41 +59,9 @@ export const executeAgentAccessWorkflowTool = async (input: {
   }
 
   if (input.name === "create_workflow") {
-    const templateId = readId(input.args, "templateId");
-
-    if (templateId === null) {
-      return agentAccessTextResult(
-        {
-          ok: false,
-          error: "templateId is required.",
-          code: "invalid_arguments",
-        },
-        true,
-      );
-    }
-
-    const created = await createCapabilityFromTemplate(
-      input.actor.id,
-      templateId,
-      readId(input.args, "targetDeviceId") ?? undefined,
-    );
-
-    if (created === null) {
-      return agentAccessTextResult(
-        { ok: false, error: "Template not found.", code: "not_found" },
-        true,
-      );
-    }
-
-    return agentAccessTextResult({
-      ok: true,
-      capabilityId: created.capability.id,
-      name: created.capability.name,
-      harnessInstalled: created.harnessInstalled,
-      harnessInstallMessage: created.harnessInstallMessage,
-      next: created.harnessInstalled
-        ? "Playbook files are on the computer. Call run_workflow with fieldValues."
-        : "Workflow is saved. Pair the computer with get_install_command, then call install_harness.",
+    return executeAgentAccessCreateWorkflow({
+      actor: input.actor,
+      args: input.args,
     });
   }
 

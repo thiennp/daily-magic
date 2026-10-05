@@ -26,9 +26,14 @@ export interface CreatePublishedCapabilityInput {
   readonly harnessSetSlug?: string | null;
 }
 
+export interface CreatePublishedCapabilityResult {
+  readonly capability: PublishedCapabilityRecord;
+  readonly componentId: string;
+}
+
 export async function createPublishedCapability(
   input: CreatePublishedCapabilityInput,
-): Promise<PublishedCapabilityRecord> {
+): Promise<CreatePublishedCapabilityResult> {
   await ensurePublishedCapabilityWorkflowOutputFieldsSchema();
   const sql = getSql();
   const capabilityId = randomUUID();
@@ -72,7 +77,7 @@ export async function createPublishedCapability(
     `,
   );
 
-  await ensureAgentComponentForPublishedCapability({
+  const componentId = await ensureAgentComponentForPublishedCapability({
     capabilityId,
     ownerUserId: input.ownerUserId,
     name: input.name,
@@ -85,9 +90,12 @@ export async function createPublishedCapability(
   const capability = mapPublishedCapabilityRow(rows[0]);
   if (input.harnessSetSlug?.trim()) {
     return {
-      ...capability,
-      harnessSetSlug: input.harnessSetSlug.trim(),
+      capability: {
+        ...capability,
+        harnessSetSlug: input.harnessSetSlug.trim(),
+      },
+      componentId,
     };
   }
-  return capability;
+  return { capability, componentId };
 }

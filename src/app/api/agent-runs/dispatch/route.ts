@@ -1,6 +1,10 @@
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { dispatchClaudeRunForDashboardUser } from "@/lib/dispatch/dispatchWriterRunForDashboardUser";
+import {
+  buildAgentRunDispatchFailureResponse,
+  buildAgentRunDispatchPromptRequiredResponse,
+} from "@/lib/dispatch/buildAgentRunDispatchFailureResponse";
 import { isAllowedAppHttpOrigin } from "@/lib/app/isAllowedAppHttpOrigin";
 import { parseAgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
 import { isCursorCloudDispatchBody } from "@/lib/dispatch/isCursorCloudDispatchBody";
@@ -11,33 +15,6 @@ import { resolveTargetDeviceId } from "@/lib/dispatch/resolveWriterRunAgentClien
 import { buildClaudeDispatchPayloadFromBody } from "@/lib/dispatch/buildWriterDispatchPayloadFromBody";
 
 export const dynamic = "force-dynamic";
-
-const readDispatchErrorMessage = (
-  payload: Readonly<Record<string, unknown>> | undefined,
-): string =>
-  typeof payload?.errorMessage === "string" && payload.errorMessage.length > 0
-    ? payload.errorMessage
-    : "Dispatch failed.";
-
-const buildDispatchFailureResponse = (
-  message: {
-    readonly type: string;
-    readonly payload?: Readonly<Record<string, unknown>>;
-    readonly requestId?: string;
-  },
-  status: number,
-): Response => {
-  const errorMessage = readDispatchErrorMessage(message.payload);
-
-  return Response.json(
-    {
-      ok: false,
-      errorMessage,
-      message,
-    },
-    { status },
-  );
-};
 
 export async function POST(request: Request): Promise<Response> {
   try {
@@ -51,13 +28,7 @@ export async function POST(request: Request): Promise<Response> {
     const parsed = parseAgentRunDispatchBody(body);
 
     if (parsed === null) {
-      return buildDispatchFailureResponse(
-        {
-          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-          payload: { errorMessage: "prompt is required." },
-        },
-        400,
-      );
+      return buildAgentRunDispatchPromptRequiredResponse();
     }
 
     const targetDeviceId = resolveTargetDeviceId(
@@ -76,7 +47,7 @@ export async function POST(request: Request): Promise<Response> {
     }
 
     if (isCursorCloudDispatchBody(parsed) && !isAllowedAppHttpOrigin(request)) {
-      return buildDispatchFailureResponse(
+      return buildAgentRunDispatchFailureResponse(
         {
           type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
           payload: {
@@ -96,7 +67,7 @@ export async function POST(request: Request): Promise<Response> {
     });
 
     if (!result.ok) {
-      return buildDispatchFailureResponse(result.message, 400);
+      return buildAgentRunDispatchFailureResponse(result.message, 400);
     }
 
     return Response.json({
@@ -108,7 +79,7 @@ export async function POST(request: Request): Promise<Response> {
     const errorMessage =
       error instanceof Error ? error.message : "Dispatch failed.";
     console.error("[dispatch] POST /api/agent-runs/dispatch failed:", error);
-    return buildDispatchFailureResponse(
+    return buildAgentRunDispatchFailureResponse(
       {
         type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
         payload: { errorMessage },

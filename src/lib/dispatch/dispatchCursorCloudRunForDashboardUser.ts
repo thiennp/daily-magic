@@ -9,6 +9,7 @@ export const dispatchCursorCloudRunForDashboardUser = async (input: {
   readonly requesterUserId: string;
   readonly prompt: string;
   readonly capabilityId: string | null;
+  readonly projectId: string | null;
   readonly requestId: string;
 }): Promise<DispatchClaudeRunForDashboardResult> => {
   const dispatchPolicy = await resolveDispatchPolicyForExecutor({
@@ -24,6 +25,7 @@ export const dispatchCursorCloudRunForDashboardUser = async (input: {
     dispatchPolicy,
     capabilityId: input.capabilityId,
     capabilityVersionId: null,
+    projectId: input.projectId,
     requestId: input.requestId,
   });
   if (!cloudResult.ok) {

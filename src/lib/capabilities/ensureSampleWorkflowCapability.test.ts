@@ -31,12 +31,14 @@ describe("ensureSampleWorkflowCapability", () => {
     vi.mocked(listPublishedCapabilitiesForOwner).mockResolvedValue([]);
     vi.mocked(ownerHasArchivedCapabilityNamed).mockResolvedValue(false);
     vi.mocked(createPublishedCapability).mockResolvedValue({
-      id: "cap-1",
-      name: SAMPLE_WORKFLOW_CAPABILITY_NAME,
+      capability: { id: "cap-1", name: SAMPLE_WORKFLOW_CAPABILITY_NAME },
+      componentId: "comp-1",
     } as never);
     vi.mocked(publishCapabilityVersion).mockResolvedValue({
-      id: "cap-1",
-      name: SAMPLE_WORKFLOW_CAPABILITY_NAME,
+      capability: { id: "cap-1", name: SAMPLE_WORKFLOW_CAPABILITY_NAME },
+      componentId: "comp-1",
+      capabilityVersionId: "cver-1",
+      componentVersionId: null,
     } as never);
 
     const result = await ensureSampleWorkflowCapability("user-1");
@@ -46,6 +48,7 @@ describe("ensureSampleWorkflowCapability", () => {
       "cap-1",
       "user-1",
       "Sample workflow",
+      "comp-1",
     );
     expect(result?.name).toBe(SAMPLE_WORKFLOW_CAPABILITY_NAME);
   });

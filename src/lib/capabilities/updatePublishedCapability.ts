@@ -59,13 +59,12 @@ export async function updatePublishedCapability(
   }
 
   if (existing.status === CapabilityStatus.PUBLISHED) {
-    return (
-      (await publishCapabilityVersion(
-        capabilityId,
-        ownerUserId,
-        "Updated playbook",
-      )) ?? mapPublishedCapabilityRow(rows[0])
+    const published = await publishCapabilityVersion(
+      capabilityId,
+      ownerUserId,
+      "Updated playbook",
     );
+    return published?.capability ?? mapPublishedCapabilityRow(rows[0]);
   }
 
   return mapPublishedCapabilityRow(rows[0]);

@@ -27,7 +27,7 @@ describe("ensureAgentComponentForPublishedCapability", () => {
         capabilityType: "workflow",
         harnessSetSlug: "template-vibe-coding-app-feature",
       }),
-    ).resolves.toBeUndefined();
+    ).resolves.toBe("existing-component-id");
 
     expect(sqlMock).toHaveBeenCalledTimes(1);
   });

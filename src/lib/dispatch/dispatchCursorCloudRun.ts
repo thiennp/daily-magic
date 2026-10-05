@@ -34,6 +34,7 @@ export const dispatchCursorCloudRun = async (input: {
   readonly dispatchPolicy: DispatchPolicyValue;
   readonly capabilityId: string | null;
   readonly capabilityVersionId: string | null;
+  readonly projectId?: string | null;
   readonly requestId?: string;
 }): Promise<
   | {
@@ -84,6 +85,7 @@ export const dispatchCursorCloudRun = async (input: {
     writerAgent: "cursor-cloud",
     capabilityId: input.capabilityId,
     capabilityVersionId: input.capabilityVersionId,
+    projectId: input.projectId ?? null,
   });
 
   const run =

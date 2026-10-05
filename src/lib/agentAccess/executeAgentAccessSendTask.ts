@@ -3,6 +3,7 @@ import { isNonEmptyString, isType, isUndefinedOr } from "guardz";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { dispatchClaudeRunForDashboardUser } from "@/lib/dispatch/dispatchWriterRunForDashboardUser";
 import { parseAgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
+import { readProjectIdFromUnknown } from "@/lib/projects/readProjectIdFromUnknown";
 
 import { AGENT_ACCESS_PROMPT_MAX_LENGTH } from "@/lib/agentAccess/agentAccess.constant";
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
@@ -31,8 +32,10 @@ export const executeAgentAccessSendTask = async (
     );
   }
 
+  const projectId = readProjectIdFromUnknown(args);
   const parsed = parseAgentRunDispatchBody({
     prompt: args.prompt,
+    ...(projectId !== null ? { project_id: projectId } : {}),
     ...(args.targetDeviceId !== undefined
       ? { targetDeviceId: args.targetDeviceId }
       : {}),
@@ -54,6 +57,7 @@ export const executeAgentAccessSendTask = async (
 
   if (!result.ok) {
     const errorMessage = result.message.payload?.errorMessage;
+    const errorCode = result.message.payload?.errorCode;
 
     return agentAccessTextResult(
       {
@@ -62,7 +66,7 @@ export const executeAgentAccessSendTask = async (
           typeof errorMessage === "string"
             ? errorMessage
             : "Task was not started.",
-        code: "dispatch_failed",
+        code: typeof errorCode === "string" ? errorCode : "dispatch_failed",
       },
       true,
     );

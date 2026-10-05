@@ -9,7 +9,7 @@ const ensureAgentComponentForPublishedCapability = async (input: {
   readonly visibility: string;
   readonly capabilityType: string;
   readonly harnessSetSlug?: string | null;
-}): Promise<void> => {
+}): Promise<string> => {
   const sql = getSql();
   const capabilityType = input.capabilityType.toLowerCase();
   const kind = capabilityType === "workflow" ? "workflow" : "agent";
@@ -53,6 +53,8 @@ const ensureAgentComponentForPublishedCapability = async (input: {
   if (rows.length === 0) {
     throw new Error("Could not ensure agent component for capability.");
   }
+
+  return String(rows[0].id);
 };
 
 export default ensureAgentComponentForPublishedCapability;

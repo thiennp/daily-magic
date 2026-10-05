@@ -30,14 +30,18 @@ export const AGENT_ACCESS_WORKFLOW_TOOLS: readonly AgentAccessToolDefinition[] =
     {
       name: "create_workflow",
       description:
-        "Save a workflow from a template onto this account and install its Playbook files on the paired computer.",
+        "Save a workflow from a template into a project library and install its Playbook files on the paired computer. Requires project_id.",
       inputSchema: {
         type: "object",
         properties: {
           templateId: { type: "string" },
+          project_id: {
+            type: "string",
+            description: "Project id that will own this library item.",
+          },
           targetDeviceId: deviceIdSchema,
         },
-        required: ["templateId"],
+        required: ["templateId", "project_id"],
         additionalProperties: false,
       },
     },

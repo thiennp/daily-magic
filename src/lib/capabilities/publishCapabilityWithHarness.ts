@@ -1,3 +1,4 @@
+import bindPublishedCapabilityToProjectOrCompensate from "@/lib/capabilities/bindPublishedCapabilityToProjectOrCompensate";
 import buildPlaybookHarnessSetSlug from "@/lib/capabilities/buildPlaybookHarnessSetSlug";
 import { createPublishedCapability } from "@/lib/capabilities/createPublishedCapability";
 import mapHarnessItemsToTemplateHarness from "@/lib/capabilities/mapHarnessItemsToTemplateHarness";
@@ -7,18 +8,37 @@ import { publishCapabilityVersion } from "@/lib/capabilities/publishCapabilityVe
 import requestCapabilityTemplateHarnessInstall from "@/lib/capabilities/requestCapabilityTemplateHarnessInstall";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import { partitionHarnessItemsByAudience } from "@/lib/harness/partitionHarnessItemsByAudience";
+import { requireProjectIdForCreate } from "@/lib/projects/requireProjectIdForCreate";
 
-export interface PublishCapabilityWithHarnessResult {
-  readonly capability: PublishedCapabilityRecord;
-  readonly harnessInstalled: boolean;
-  readonly harnessInstallMessage: string | null;
-}
+export type PublishCapabilityWithHarnessResult =
+  | {
+      readonly ok: true;
+      readonly capability: PublishedCapabilityRecord;
+      readonly harnessInstalled: boolean;
+      readonly harnessInstallMessage: string | null;
+      readonly projectId: string;
+    }
+  | {
+      readonly ok: false;
+      readonly status: 400 | 403 | 404;
+      readonly code: string;
+      readonly error: string;
+    };
 
 const publishCapabilityWithHarness = async (
   ownerUserId: string,
   parsed: ParsedCapabilityBody,
   harnessItems: readonly ParsedCapabilityHarnessItem[],
+  projectId: string,
 ): Promise<PublishCapabilityWithHarnessResult> => {
+  const project = await requireProjectIdForCreate({
+    actorUserId: ownerUserId,
+    projectId,
+  });
+  if (!project.ok) {
+    return project;
+  }
+
   const { agentItems, operatorSteps } =
     partitionHarnessItemsByAudience(harnessItems);
   const harnessSetSlug =
@@ -37,17 +57,40 @@ const publishCapabilityWithHarness = async (
     harnessSetSlug,
   });
   const published = await publishCapabilityVersion(
-    created.id,
+    created.capability.id,
     ownerUserId,
     "Initial publish",
+    created.componentId,
   );
-  const capability = published ?? created;
+  const capability = published?.capability ?? created.capability;
+  const componentId = published?.componentId ?? created.componentId;
+
+  const bound = await bindPublishedCapabilityToProjectOrCompensate({
+    ownerUserId,
+    projectId: project.projectId,
+    capabilityId: capability.id,
+    componentId,
+    capabilityVersionId: published?.capabilityVersionId ?? null,
+    componentVersionId: published?.componentVersionId ?? null,
+    capabilityType: parsed.type,
+    harnessSetSlug,
+  });
+  if (!bound.ok) {
+    return {
+      ok: false,
+      status: 400,
+      code: "project_bind_failed",
+      error: bound.error,
+    };
+  }
 
   if (harnessSetSlug === null || agentItems.length === 0) {
     return {
+      ok: true,
       capability,
       harnessInstalled: false,
       harnessInstallMessage: null,
+      projectId: project.projectId,
     };
   }
 
@@ -62,9 +105,11 @@ const publishCapabilityWithHarness = async (
   );
 
   return {
+    ok: true,
     capability,
     harnessInstalled: harnessInstall.installed,
     harnessInstallMessage: harnessInstall.errorMessage,
+    projectId: project.projectId,
   };
 };
 

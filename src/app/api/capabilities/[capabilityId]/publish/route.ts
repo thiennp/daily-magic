@@ -27,5 +27,5 @@ export async function POST(
     "Republished",
   );
 
-  return Response.json({ ok: true, capability: published });
+  return Response.json({ ok: true, capability: published?.capability ?? null });
 }

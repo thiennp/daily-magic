@@ -4,48 +4,44 @@ import { asRowArray, getSql } from "@/lib/db";
 
 const insertComponentVersionForCapabilityPublish = async (input: {
   readonly capabilityId: string;
+  readonly componentId: string;
   readonly versionNumber: number;
   readonly changelog: string;
   readonly harnessSetSlug: string | null;
-}): Promise<void> => {
+}): Promise<string | null> => {
   const sql = getSql();
-  const componentRows = asRowArray(
+  const versionId = randomUUID();
+
+  const rows = asRowArray(
     await sql`
-      SELECT id
-      FROM components
-      WHERE published_capability_id = ${input.capabilityId}
-      LIMIT 1
+      INSERT INTO component_versions (
+        id,
+        component_id,
+        version_number,
+        version_label,
+        changelog,
+        harness_set_slug,
+        published_at
+      )
+      VALUES (
+        ${versionId},
+        ${input.componentId},
+        ${input.versionNumber},
+        ${String(input.versionNumber)},
+        ${input.changelog},
+        ${input.harnessSetSlug},
+        NOW()
+      )
+      ON CONFLICT (component_id, version_number) DO NOTHING
+      RETURNING id
     `,
   );
 
-  if (componentRows.length === 0) {
-    return;
+  if (rows.length === 0) {
+    return null;
   }
 
-  const componentId = String(componentRows[0].id);
-  const versionId = randomUUID();
-
-  await sql`
-    INSERT INTO component_versions (
-      id,
-      component_id,
-      version_number,
-      version_label,
-      changelog,
-      harness_set_slug,
-      published_at
-    )
-    VALUES (
-      ${versionId},
-      ${componentId},
-      ${input.versionNumber},
-      ${String(input.versionNumber)},
-      ${input.changelog},
-      ${input.harnessSetSlug},
-      NOW()
-    )
-    ON CONFLICT (component_id, version_number) DO NOTHING
-  `;
+  return String(rows[0].id);
 };
 
 export default insertComponentVersionForCapabilityPublish;

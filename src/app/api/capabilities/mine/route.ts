@@ -2,6 +2,7 @@ import { listPublishedCapabilitiesForOwner } from "@/lib/capabilities/capability
 import publishCapabilityWithHarness from "@/lib/capabilities/publishCapabilityWithHarness";
 import { parseCreateCapabilityBody } from "@/lib/capabilities/parseCapabilityBody";
 import { requireAuth } from "@/lib/auth/requireAuth";
+import { readProjectIdFromUnknown } from "@/lib/projects/readProjectIdFromUnknown";
 
 export const dynamic = "force-dynamic";
 
@@ -38,12 +39,21 @@ export async function POST(request: Request): Promise<Response> {
     actor.id,
     parsed,
     parsed.harnessItems,
+    readProjectIdFromUnknown(body) ?? "",
   );
+
+  if (!result.ok) {
+    return Response.json(
+      { error: result.error, code: result.code },
+      { status: result.status },
+    );
+  }
 
   return Response.json({
     ok: true,
     capability: result.capability,
     harnessInstalled: result.harnessInstalled,
     harnessInstallMessage: result.harnessInstallMessage,
+    projectId: result.projectId,
   });
 }

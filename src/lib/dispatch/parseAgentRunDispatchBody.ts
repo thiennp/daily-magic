@@ -1,6 +1,7 @@
 import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";
 import isClaudeDispatchPayload from "@/lib/agentWitch/isWriterDispatchPayload";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import { readProjectIdFromUnknown } from "@/lib/projects/readProjectIdFromUnknown";
 
 export interface AgentRunDispatchBody {
   readonly prompt: string;
@@ -26,6 +27,7 @@ export const parseAgentRunDispatchBody = (
   const writerAgent = isHarnessWriterAgent(body.writerAgent)
     ? body.writerAgent
     : undefined;
+  const projectId = readProjectIdFromUnknown(body);
 
   return {
     prompt: body.prompt.trim(),
@@ -51,9 +53,7 @@ export const parseAgentRunDispatchBody = (
     body.projectFolderPath.length > 0
       ? { projectFolderPath: body.projectFolderPath }
       : {}),
-    ...(typeof body.projectId === "string" && body.projectId.length > 0
-      ? { projectId: body.projectId }
-      : {}),
+    ...(projectId !== null ? { projectId } : {}),
     ...(Array.isArray(body.runScopedComponentIds)
       ? {
           runScopedComponentIds: body.runScopedComponentIds.filter(

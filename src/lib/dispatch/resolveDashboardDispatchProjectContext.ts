@@ -17,7 +17,12 @@ export const resolveDashboardDispatchProjectContext = async (input: {
         readonly prompt: string;
       };
     }
-  | { readonly ok: false; readonly message: AgentWitchMessage }
+  | {
+      readonly ok: false;
+      readonly message: AgentWitchMessage;
+      readonly status: 400 | 403 | 404;
+      readonly code: string;
+    }
 > => {
   const projectResolution = await resolveAgentRunDispatchProject({
     body: input.body,
@@ -28,21 +33,22 @@ export const resolveDashboardDispatchProjectContext = async (input: {
   if (!projectResolution.ok) {
     return {
       ok: false,
+      status: projectResolution.status,
+      code: projectResolution.code,
       message: buildDispatchError(
         projectResolution.errorMessage,
         input.requestId,
+        projectResolution.code,
+        projectResolution.status,
       ),
     };
   }
 
-  const body =
-    projectResolution.projectId.length > 0
-      ? {
-          ...input.body,
-          projectId: projectResolution.projectId,
-          projectFolderPath: projectResolution.projectFolderPath,
-        }
-      : input.body;
+  const body = {
+    ...input.body,
+    projectId: projectResolution.projectId,
+    projectFolderPath: projectResolution.projectFolderPath,
+  };
 
   return {
     ok: true,

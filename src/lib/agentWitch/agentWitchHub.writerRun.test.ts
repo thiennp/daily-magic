@@ -27,7 +27,7 @@ describe("AgentWitchHub Claude commands", () => {
 
     const response = await hub.handleMessageAsync("dash-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
-      payload: { prompt: "run lint" },
+      payload: { prompt: "run lint", projectId: "proj-1" },
       requestId: "req-1",
     });
 
@@ -65,7 +65,7 @@ describe("AgentWitchHub Claude commands", () => {
 
     const response = await hub.handleMessageAsync("dash-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
-      payload: { prompt: "run lint" },
+      payload: { prompt: "run lint", projectId: "proj-1" },
     });
 
     expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR);

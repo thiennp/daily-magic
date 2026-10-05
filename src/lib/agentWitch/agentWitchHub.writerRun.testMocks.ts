@@ -69,3 +69,32 @@ vi.mock("@/lib/dispatch/dispatchWriterRunToAgent", async () => {
     markAgentRunCompleted: vi.fn(async () => undefined),
   };
 });
+
+vi.mock("@/lib/projects/acl/checkProjectMembershipStatus", () => ({
+  checkProjectMembershipStatus: vi.fn(async () => "owner"),
+}));
+
+vi.mock("@/lib/projects/userProjectQueries", () => ({
+  getUserProjectById: vi.fn(async (projectId: string) => ({
+    id: projectId,
+    ownerUserId: USER_ID,
+    deviceId: null,
+    name: "app",
+    folderPath: "/Users/me/app",
+    repoUrls: [],
+    defaultBranch: null,
+    lastUsedAt: null,
+    createdAt: "",
+    updatedAt: "",
+  })),
+}));
+
+vi.mock("@/lib/dispatch/resolveDispatchCompositionContext", () => ({
+  resolveDispatchCompositionContext: vi.fn(async (input: {
+    readonly payload: Readonly<Record<string, unknown>>;
+  }) => ({
+    ok: true as const,
+    enrichedPayload: input.payload,
+    compositionSnapshotId: null,
+  })),
+}));

@@ -26,6 +26,8 @@ Feature folders (FSA slices):
 
 Routes: `/library`, `/marketplace`. APIs include `/api/capabilities`, `/api/harness`, `/api/harness/marketplace`, `/api/agent-witch/harness-catalog`.
 
+**Library creates require a project.** `POST /api/capabilities/mine`, `POST /api/capabilities/templates/save`, and MCP `create_workflow` reject with `400` / code `project_required` when `project_id` (or `projectId`) is missing. Membership failures are `403`/`404`. Items bind into the project via `project_components` (Product owns the `published_capabilities.project_id` migration/backfill).
+
 ---
 
 ## Harness install paths (deterministic bundle)
@@ -35,7 +37,7 @@ Harness is **files on disk**, not an agent run.
 | User action                                      | Cloud                                                                                     | Mac                                                                                                                          |
 | ------------------------------------------------ | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | Marketplace → Install (+ device + **projectId**) | `installOfficialPresetListing` → `bindMarketplaceInstallToProject` (`project_components`) | Pull into repo on Mac (`applyInstalledHarnessSetsToProjectCursor`); no global `pushHarnessInstallBundleToDevice` for presets |
-| Save to library (template fork)                  | `createCapabilityFromTemplate` → `requestCapabilityTemplateHarnessInstall`                | Same when a target device is chosen                                                                                          |
+| Save to library (template fork)                  | `createCapabilityFromTemplate` **requires `project_id`** → bind `project_components` → harness install | Same when a target device is chosen                                                                                          |
 | Browser on same Mac (catalog)                    | Proxied via AWC                                                                           | AWB `POST http://127.0.0.1:47892/harness/install`                                                                            |
 
 Message builder: `buildHarnessInstallDispatchMessage` — inline `bundle` or `bundleFetch` (gzip artifact when JSON exceeds ~96 KiB). Mac: `runDeterministicHarnessInstall` → `applyHarnessInstallLocally` (no writer CLI for deterministic installs). Legacy dashboard harness UI may still use writer `instruction` paths.

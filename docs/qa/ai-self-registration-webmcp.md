@@ -27,9 +27,9 @@ An AI creates an account with `POST /api/agent-access/register`. Before `send_ta
 | Guideline      | `/for-agents` — static document with the full steps. No site header, footer, session, or analytics.  |
 | Browser WebMCP | `navigator.modelContext` tools registered by `AgentAccessWebMcpBridge`                               |
 
-Tools: `register_account`, `whoami`, `get_install_command`, `list_macs`, `list_workflow_templates`, `create_workflow`, `install_harness`, `list_workflows`, `run_workflow`, `send_task`, `list_runs`, `get_run`.
+Tools: `register_account`, `whoami`, `get_install_command`, `list_macs`, `list_workflow_templates`, `create_workflow` (requires `project_id`), `install_harness`, `list_workflows`, `run_workflow`, `send_task` (requires `project_id`), `list_runs`, `get_run`.
 
-An agent such as Grok does this without a human mailbox: register with method `none`, run `get_install_command` in a shell on the computer it controls, wait until `list_macs` shows that computer, then `create_workflow` with a template id. That saves the workflow and writes the Playbook to `~/.agent-witch/harness/` on that computer. `run_workflow` starts it. If the computer is offline, `install_harness` retries the Playbook write.
+An agent such as Grok does this without a human mailbox: register with method `none`, run `get_install_command` in a shell on the computer it controls, wait until `list_macs` shows that computer, then `create_workflow` with a template id and `project_id`. That saves the workflow into that project and writes the Playbook to `~/.agent-witch/harness/` on that computer. `run_workflow` starts it. If the computer is offline, `install_harness` retries the Playbook write.
 
 Public pages (`/for-agents`, `/llms.txt`, `/.well-known/webmcp.json`) are how any bot learns the tools. Agent Witch does not keep a directory of other accounts and does not send a bot another person's email, token, or Mac.
 

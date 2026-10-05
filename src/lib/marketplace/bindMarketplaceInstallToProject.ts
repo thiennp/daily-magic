@@ -1,11 +1,6 @@
-import resolveComponentIdForPublishedCapability from "@/lib/components/resolveComponentIdForPublishedCapability";
-import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
+import bindPublishedCapabilityToProject from "@/lib/capabilities/bindPublishedCapabilityToProject";
 import type { CapabilityTemplateHarness } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
-import ensureHarnessComponentForOwner from "@/lib/projects/ensureHarnessComponentForOwner";
-import resolveLatestComponentVersionId from "@/lib/projects/resolveLatestComponentVersionId";
-import upsertProjectComponentBinding from "@/lib/projects/upsertProjectComponentBinding";
-import { getUserProjectById } from "@/lib/projects/userProjectQueries";
-import { updateUserProject } from "@/lib/projects/userProjectMutations";
+import resolveProjectDeviceForCapabilityBind from "@/lib/marketplace/resolveProjectDeviceForCapabilityBind";
 
 export type BindMarketplaceInstallToProjectResult =
   | {
@@ -23,69 +18,29 @@ const bindMarketplaceInstallToProject = async (input: {
   readonly capabilityType: string;
   readonly harness: CapabilityTemplateHarness;
 }): Promise<BindMarketplaceInstallToProjectResult> => {
-  const project = await getUserProjectById(input.projectId);
-
-  if (project === null || project.ownerUserId !== input.ownerUserId) {
-    return { ok: false, errorMessage: "Project not found." };
-  }
-
-  if (
-    project.deviceId !== null &&
-    project.deviceId.length > 0 &&
-    project.deviceId !== input.deviceId
-  ) {
-    return {
-      ok: false,
-      errorMessage:
-        "This project is bound to another Mac. Pick that Mac or choose a different project.",
-    };
-  }
-
-  if (project.deviceId === null || project.deviceId.length === 0) {
-    await updateUserProject(input.ownerUserId, input.projectId, {
-      deviceId: input.deviceId,
-    });
-  }
-
-  const componentId = await resolveComponentIdForPublishedCapability(
-    input.libraryCapabilityId,
-  );
-
-  if (componentId === null) {
-    return {
-      ok: false,
-      errorMessage:
-        "Could not link this listing to the project (missing component).",
-    };
-  }
-
-  const versionId = await resolveLatestComponentVersionId(componentId);
-  const kind =
-    input.capabilityType.toLowerCase() === CapabilityType.WORKFLOW
-      ? "workflow"
-      : "agent";
-
-  await upsertProjectComponentBinding({
-    projectId: input.projectId,
-    componentId,
-    kind,
-    pinnedVersionId: versionId,
-  });
-
-  const harnessComponentId = await ensureHarnessComponentForOwner({
+  const opened = await resolveProjectDeviceForCapabilityBind({
     ownerUserId: input.ownerUserId,
-    setSlug: input.harness.slug,
-    setName: input.harness.name,
-  });
-  const harnessVersionId =
-    await resolveLatestComponentVersionId(harnessComponentId);
-
-  await upsertProjectComponentBinding({
     projectId: input.projectId,
-    componentId: harnessComponentId,
-    kind: "harness",
-    pinnedVersionId: harnessVersionId,
+    deviceId: input.deviceId,
+    otherMacErrorMessage:
+      "This project is bound to another Mac. Pick that Mac or choose a different project.",
   });
+  if (!opened.ok) {
+    return opened;
+  }
+
+  const bound = await bindPublishedCapabilityToProject({
+    ownerUserId: input.ownerUserId,
+    projectId: input.projectId,
+    libraryCapabilityId: input.libraryCapabilityId,
+    capabilityType: input.capabilityType,
+    harnessSetSlug: input.harness.slug,
+    harnessSetName: input.harness.name,
+  });
+
+  if (!bound.ok) {
+    return { ok: false, errorMessage: bound.error };
+  }
 
   return {
     ok: true,

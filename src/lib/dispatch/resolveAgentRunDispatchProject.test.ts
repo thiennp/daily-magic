@@ -5,10 +5,15 @@ import { resolveAgentRunDispatchProject } from "@/lib/dispatch/resolveAgentRunDi
 
 const mocks = vi.hoisted(() => ({
   getUserProjectById: vi.fn(),
+  checkProjectMembershipStatus: vi.fn(),
 }));
 
 vi.mock("@/lib/projects/userProjectQueries", () => ({
   getUserProjectById: mocks.getUserProjectById,
+}));
+
+vi.mock("@/lib/projects/acl/checkProjectMembershipStatus", () => ({
+  checkProjectMembershipStatus: mocks.checkProjectMembershipStatus,
 }));
 
 const baseBody: AgentRunDispatchBody = {
@@ -16,7 +21,7 @@ const baseBody: AgentRunDispatchBody = {
 };
 
 describe("resolveAgentRunDispatchProject", () => {
-  it("allows legacy dispatch with folder path only", async () => {
+  it("rejects dispatch without project_id", async () => {
     const result = await resolveAgentRunDispatchProject({
       body: { ...baseBody, projectFolderPath: "~/Projects/app" },
       requesterUserId: "user-1",
@@ -24,13 +29,15 @@ describe("resolveAgentRunDispatchProject", () => {
     });
 
     expect(result).toEqual({
-      ok: true,
-      projectId: "",
-      projectFolderPath: "~/Projects/app",
+      ok: false,
+      errorMessage: "project_id is required.",
+      code: "project_required",
+      status: 400,
     });
   });
 
   it("rejects unknown project id", async () => {
+    mocks.checkProjectMembershipStatus.mockResolvedValue("none");
     mocks.getUserProjectById.mockResolvedValue(null);
 
     const result = await resolveAgentRunDispatchProject({
@@ -41,11 +48,13 @@ describe("resolveAgentRunDispatchProject", () => {
 
     expect(result.ok).toBe(false);
     if (!result.ok) {
+      expect(result.code).toBe("not_found");
       expect(result.errorMessage).toContain("not found");
     }
   });
 
   it("rejects project bound to another device", async () => {
+    mocks.checkProjectMembershipStatus.mockResolvedValue("owner");
     mocks.getUserProjectById.mockResolvedValue({
       id: "proj-1",
       ownerUserId: "user-1",
@@ -69,9 +78,10 @@ describe("resolveAgentRunDispatchProject", () => {
   });
 
   it("resolves folder from cloud project record", async () => {
+    mocks.checkProjectMembershipStatus.mockResolvedValue("active");
     mocks.getUserProjectById.mockResolvedValue({
       id: "proj-1",
-      ownerUserId: "user-1",
+      ownerUserId: "owner-1",
       deviceId: "this-mac",
       name: "app",
       folderPath: "/Users/me/app",

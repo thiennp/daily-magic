@@ -1,5 +1,6 @@
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { isValidProjectFolderPath } from "@/lib/projects/validateProjectFolderPath";
+import { requireProjectIdForCreate } from "@/lib/projects/requireProjectIdForCreate";
 import type { AgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
 
 export type ResolvedAgentRunDispatchProject =
@@ -8,42 +9,43 @@ export type ResolvedAgentRunDispatchProject =
       readonly projectId: string;
       readonly projectFolderPath: string;
     }
-  | { readonly ok: false; readonly errorMessage: string };
+  | {
+      readonly ok: false;
+      readonly errorMessage: string;
+      readonly code:
+        | "project_required"
+        | "not_found"
+        | "forbidden"
+        | "invalid_project";
+      readonly status: 400 | 403 | 404;
+    };
 
 export const resolveAgentRunDispatchProject = async (input: {
   readonly body: AgentRunDispatchBody;
   readonly requesterUserId: string;
   readonly targetDeviceId: string | null;
 }): Promise<ResolvedAgentRunDispatchProject> => {
-  const projectId = input.body.projectId?.trim() ?? "";
-
-  if (projectId.length === 0) {
-    const hintedPath = input.body.projectFolderPath?.trim() ?? "";
-    if (hintedPath.length === 0) {
-      return { ok: true, projectId: "", projectFolderPath: "" };
-    }
-    if (!isValidProjectFolderPath(hintedPath)) {
-      return {
-        ok: false,
-        errorMessage: "Invalid project folder path.",
-      };
-    }
-    return { ok: true, projectId: "", projectFolderPath: hintedPath };
+  const gate = await requireProjectIdForCreate({
+    actorUserId: input.requesterUserId,
+    projectId: input.body.projectId,
+  });
+  if (!gate.ok) {
+    return {
+      ok: false,
+      errorMessage: gate.error,
+      code: gate.code,
+      status: gate.status,
+    };
   }
 
-  const project = await getUserProjectById(projectId);
+  const project = await getUserProjectById(gate.projectId);
   if (project === null) {
     return {
       ok: false,
       errorMessage:
         "Project not found. Refresh the project list and try again.",
-    };
-  }
-
-  if (project.ownerUserId !== input.requesterUserId) {
-    return {
-      ok: false,
-      errorMessage: "You do not have access to this project.",
+      code: "not_found",
+      status: 404,
     };
   }
 
@@ -58,6 +60,8 @@ export const resolveAgentRunDispatchProject = async (input: {
       ok: false,
       errorMessage:
         "This project is stored on a different Mac. Open Agent Witch on that Mac to run tasks in this repository.",
+      code: "invalid_project",
+      status: 400,
     };
   }
 
@@ -67,12 +71,14 @@ export const resolveAgentRunDispatchProject = async (input: {
       ok: false,
       errorMessage:
         "This project has no folder set yet. Choose a folder on the Mac that stores this project.",
+      code: "invalid_project",
+      status: 400,
     };
   }
 
   return {
     ok: true,
-    projectId,
+    projectId: gate.projectId,
     projectFolderPath: folderPath,
   };
 };

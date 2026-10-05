@@ -2,11 +2,11 @@ import { randomUUID } from "node:crypto";
 
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { isCursorCloudExecutorDeviceId } from "@/lib/cursorCloud/cursorCloudExecutorDeviceId.constant";
-import { buildClaudeDispatchPayloadFromBody } from "@/lib/dispatch/buildWriterDispatchPayloadFromBody";
 import { buildDashboardHttpSender } from "@/lib/dispatch/buildDashboardHttpSender";
 import { dispatchClaudeRunForDashboardUserMac } from "@/lib/dispatch/dispatchClaudeRunForDashboardUserMac";
 import { dispatchCursorCloudRunForDashboardUser } from "@/lib/dispatch/dispatchCursorCloudRunForDashboardUser";
 import type { AgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
+import { resolveDashboardDispatchProjectContext } from "@/lib/dispatch/resolveDashboardDispatchProjectContext";
 import { resolveTargetDeviceId } from "@/lib/dispatch/resolveWriterRunAgentClient";
 import { validateSessionContinuationRequiresTargetDevice } from "@/lib/dispatch/validateSessionContinuationRequiresTargetDevice";
 import type { DispatchClaudeRunForDashboardResult } from "@/lib/dispatch/types/DispatchClaudeRunForDashboardResult.type";
@@ -34,7 +34,17 @@ export const dispatchClaudeRunForDashboardUser = async (input: {
     return { ok: false, message: continuationError };
   }
 
-  const payload = buildClaudeDispatchPayloadFromBody(input.body);
+  const projectContext = await resolveDashboardDispatchProjectContext({
+    body: input.body,
+    requesterUserId: input.requesterUserId,
+    targetDeviceId: input.body.targetDeviceId?.trim() || null,
+    requestId,
+  });
+  if (!projectContext.ok) {
+    return { ok: false, message: projectContext.message };
+  }
+
+  const { body, payload } = projectContext;
   const targetDeviceId = resolveTargetDeviceId(payload);
 
   if (
@@ -44,8 +54,9 @@ export const dispatchClaudeRunForDashboardUser = async (input: {
     return dispatchCursorCloudRunForDashboardUser({
       runtime: input.runtime,
       requesterUserId: input.requesterUserId,
-      prompt: input.body.prompt,
-      capabilityId: input.body.capabilityId ?? null,
+      prompt: body.prompt,
+      capabilityId: body.capabilityId ?? null,
+      projectId: body.projectId ?? null,
       requestId,
     });
   }
@@ -53,7 +64,7 @@ export const dispatchClaudeRunForDashboardUser = async (input: {
   return dispatchClaudeRunForDashboardUserMac({
     runtime: input.runtime,
     sender,
-    body: input.body,
+    body,
     requesterUserId: input.requesterUserId,
     requestId,
     allowHubRelay: input.allowHubRelay !== false,

@@ -37,12 +37,13 @@ const ensureSampleWorkflowCapability = async (
     workflowFields: SAMPLE_WORKFLOW_FIELDS,
   });
   const published = await publishCapabilityVersion(
-    created.id,
+    created.capability.id,
     ownerUserId,
     "Sample workflow",
+    created.componentId,
   );
 
-  return published ?? created;
+  return published?.capability ?? created.capability;
 };
 
 export default ensureSampleWorkflowCapability;

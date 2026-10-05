@@ -26,17 +26,18 @@ const installOfficialPresetListing = async (
     };
   }
 
-  const result = await createCapabilityFromTemplate(
-    actorUserId,
+  const result = await createCapabilityFromTemplate({
+    ownerUserId: actorUserId,
     templateId,
-    undefined,
-    { deferHarnessInstall: true },
-  );
+    projectId,
+    deviceId,
+    deferHarnessInstall: true,
+  });
 
-  if (result === null) {
+  if (!result.ok) {
     return {
       ok: false,
-      errorMessage: "Could not save this starter.",
+      errorMessage: result.error,
       savedToLibrary: false,
       libraryCapabilityId: null,
       projectId: null,
