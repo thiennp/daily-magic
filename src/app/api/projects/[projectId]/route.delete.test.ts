@@ -44,14 +44,20 @@ describe("DELETE /api/projects/[projectId] (owner session, DB-only)", () => {
     vi.mocked(getUserProjectById).mockResolvedValue({ ...OWNER_PROJECT });
   });
 
-  it("owner: 200 and one delete transaction", async () => {
+  it("owner: 200 and one guarded DELETE of user_projects", async () => {
     const response = await callWeb(OWNER_PROJECT.id);
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({
       ok: true,
       projectId: OWNER_PROJECT.id,
     });
-    expect(sql().transaction).toHaveBeenCalledTimes(1);
+    expect(sql()).toHaveBeenCalledTimes(1);
+    expect(sql().transaction).not.toHaveBeenCalled();
+    expect(sql().calls[0]?.text).toContain("DELETE FROM user_projects");
+    expect(sql().calls[0]?.values).toEqual([
+      OWNER_PROJECT.id,
+      OWNER_PROJECT.ownerUserId,
+    ]);
   });
 
   it("non-owner: 404 and nothing deleted", async () => {
@@ -61,14 +67,14 @@ describe("DELETE /api/projects/[projectId] (owner session, DB-only)", () => {
     });
     const response = await callWeb(OWNER_PROJECT.id);
     expect(response.status).toBe(404);
-    expect(sql().transaction).not.toHaveBeenCalled();
+    expect(sql()).not.toHaveBeenCalled();
   });
 
   it("unknown id: 404 and nothing deleted", async () => {
     vi.mocked(getUserProjectById).mockResolvedValue(null);
     const response = await callWeb("missing");
     expect(response.status).toBe(404);
-    expect(sql().transaction).not.toHaveBeenCalled();
+    expect(sql()).not.toHaveBeenCalled();
   });
 
   it("signed out: 401 and no lookup", async () => {
@@ -79,7 +85,7 @@ describe("DELETE /api/projects/[projectId] (owner session, DB-only)", () => {
     const response = await callWeb(OWNER_PROJECT.id);
     expect(response.status).toBe(401);
     expect(getUserProjectById).not.toHaveBeenCalled();
-    expect(sql().transaction).not.toHaveBeenCalled();
+    expect(sql()).not.toHaveBeenCalled();
   });
 
   it("Default project: 400 and nothing deleted", async () => {
@@ -89,11 +95,11 @@ describe("DELETE /api/projects/[projectId] (owner session, DB-only)", () => {
     });
     const response = await callWeb(OWNER_PROJECT.id);
     expect(response.status).toBe(400);
-    expect(sql().transaction).not.toHaveBeenCalled();
+    expect(sql()).not.toHaveBeenCalled();
   });
 
-  it("transaction failure: 500, generic message, no SQL detail", async () => {
-    sql().transaction.mockRejectedValue(new Error("relation secret_x"));
+  it("delete failure: 500, generic message, no SQL detail", async () => {
+    sql().mockRejectedValue(new Error("relation secret_x"));
     const response = await callWeb(OWNER_PROJECT.id);
     expect(response.status).toBe(500);
     expect(JSON.stringify(await response.json())).not.toContain("secret_x");

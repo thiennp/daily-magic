@@ -40,13 +40,14 @@ describe("DELETE /api/agent-witch/projects/[projectId] (device auth, same orches
     vi.mocked(getUserProjectById).mockResolvedValue({ ...OWNER_PROJECT });
   });
 
-  it("device of the owner: 200", async () => {
+  it("device of the owner: 200 and one guarded DELETE", async () => {
     requireAgentWitchDeviceAuth.mockResolvedValue({
       device: { userId: OWNER_PROJECT.ownerUserId },
     });
     const response = await callDevice(OWNER_PROJECT.id);
     expect(response.status).toBe(200);
-    expect(sql().transaction).toHaveBeenCalledTimes(1);
+    expect(sql()).toHaveBeenCalledTimes(1);
+    expect(sql().transaction).not.toHaveBeenCalled();
   });
 
   it("device of another user: 404 and nothing deleted", async () => {
@@ -55,6 +56,6 @@ describe("DELETE /api/agent-witch/projects/[projectId] (device auth, same orches
     });
     const response = await callDevice(OWNER_PROJECT.id);
     expect(response.status).toBe(404);
-    expect(sql().transaction).not.toHaveBeenCalled();
+    expect(sql()).not.toHaveBeenCalled();
   });
 });

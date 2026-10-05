@@ -6,7 +6,7 @@ import type ProjectDeleteTarget from "@/lib/projects/delete/types/ProjectDeleteT
 /**
  * Owner-only project delete that touches the database only.
  * Never reads or writes files, never runs processes, never calls Agent Witch
- * Local or a wake port. Steps: check owner → delete rows in one transaction.
+ * Local or a wake port. Steps: check owner → one guarded DELETE (cascades).
  */
 const orchestrateDeleteProjectDbOnly = async (
   target: ProjectDeleteTarget,
@@ -16,11 +16,10 @@ const orchestrateDeleteProjectDbOnly = async (
     return { ok: false, code: owned.kind };
   }
 
-  const ownedTarget: ProjectDeleteTarget = {
+  const deleted = await runProjectDeleteTransaction({
     projectId: owned.project.id,
     ownerUserId: owned.project.ownerUserId,
-  };
-  const deleted = await runProjectDeleteTransaction(ownedTarget);
+  });
   if (!deleted) {
     return { ok: false, code: "not_found" };
   }

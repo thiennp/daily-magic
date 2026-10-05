@@ -5,25 +5,32 @@ export interface CapturedProjectDeleteQuery {
   readonly values: readonly unknown[];
 }
 
-/** Tagged-template stand-in for neon: builds inspectable query objects, never sends them. */
-export const createProjectDeleteSqlMock = () => {
+/** Tagged-template stand-in for neon: records the DELETE and returns RETURNING rows. */
+export const createProjectDeleteSqlMock = (options?: {
+  readonly returnProjectRow?: boolean;
+}) => {
+  const returnProjectRow = options?.returnProjectRow !== false;
+  const calls: CapturedProjectDeleteQuery[] = [];
   const tag = vi.fn(
-    (
+    async (
       strings: TemplateStringsArray,
       ...values: unknown[]
-    ): CapturedProjectDeleteQuery => ({
-      text: strings.join("$"),
-      values,
-    }),
-  );
-  const transaction = vi.fn(
-    async (queries: readonly CapturedProjectDeleteQuery[]) =>
-      queries.map((query, index) =>
-        index === queries.length - 1 ? [{ id: query.values[0] }] : [],
-      ),
+    ): Promise<Record<string, unknown>[]> => {
+      calls.push({ text: strings.join("$"), values });
+      if (!returnProjectRow) {
+        return [];
+      }
+      const projectId = values[0];
+      return typeof projectId === "string" ? [{ id: projectId }] : [];
+    },
   );
 
-  return Object.assign(tag, { transaction });
+  return Object.assign(tag, {
+    calls,
+    transaction: vi.fn(async () => {
+      throw new Error("project delete must not use sql.transaction");
+    }),
+  });
 };
 
 export const extractDeletedTableName = (text: string): string =>

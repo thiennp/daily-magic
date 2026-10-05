@@ -48,8 +48,8 @@ const asOwner = {
 };
 
 const expectNothingDeleted = (): void => {
-  expect(sql().transaction).not.toHaveBeenCalled();
   expect(sql()).not.toHaveBeenCalled();
+  expect(sql().transaction).not.toHaveBeenCalled();
   expectNoLocalCalls(expect);
 };
 

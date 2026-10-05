@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import AwcProjectDeleteConfirmForm from "@/features/projects/AwcProjectDeleteConfirmForm";
+import useDeleteUserProject from "@/features/projects/hooks/useDeleteUserProject";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import isDefaultUserProject from "@/lib/projects/isDefaultUserProject";
 import { FolderIcon, TrashBinIcon } from "@/icons";
@@ -10,26 +11,25 @@ import { FolderIcon, TrashBinIcon } from "@/icons";
 interface SendTaskComposerProjectRowProps {
   readonly project: UserProjectRecord;
   readonly onSelect: (project: UserProjectRecord) => void;
-  readonly onDelete: (projectId: string) => void | Promise<void>;
+  readonly onDeleted: (projectId: string) => void;
 }
 
 export default function SendTaskComposerProjectRow({
   project,
   onSelect,
-  onDelete,
+  onDeleted,
 }: SendTaskComposerProjectRowProps) {
   const canDelete = !isDefaultUserProject(project);
+  const { deleteProject, errorMessage, isDeleting } = useDeleteUserProject();
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const runDelete = async (): Promise<void> => {
-    setIsDeleting(true);
-    try {
-      await onDelete(project.id);
-    } finally {
-      setIsDeleting(false);
-      setConfirmOpen(false);
+    const ok = await deleteProject(project.id);
+    if (!ok) {
+      return;
     }
+    setConfirmOpen(false);
+    onDeleted(project.id);
   };
 
   return (
@@ -73,7 +73,7 @@ export default function SendTaskComposerProjectRow({
           <AwcProjectDeleteConfirmForm
             projectName={project.name}
             isDeleting={isDeleting}
-            errorMessage={null}
+            errorMessage={errorMessage}
             onConfirm={() => {
               void runDelete();
             }}

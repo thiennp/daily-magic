@@ -4,7 +4,6 @@ import {
   createProjectDeleteSqlMock,
   extractDeletedTableName,
   OWNER_PROJECT,
-  type CapturedProjectDeleteQuery,
 } from "@/lib/projects/delete/projectDeleteSqlMock.testUtils";
 import {
   expectNoLocalCalls,
@@ -33,7 +32,6 @@ vi.mock("node:child_process", async () =>
 
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import orchestrateDeleteProjectDbOnly from "@/lib/projects/delete/orchestrateDeleteProjectDbOnly";
-import { PROJECT_DELETE_TABLES_IN_ORDER } from "@/lib/projects/delete/projectDeleteTables.constant";
 
 const sql = (): ReturnType<typeof createProjectDeleteSqlMock> =>
   sqlMock.current as ReturnType<typeof createProjectDeleteSqlMock>;
@@ -50,46 +48,29 @@ const asOwner = {
   ownerUserId: OWNER_PROJECT.ownerUserId,
 };
 
-const sentQueries = (): readonly CapturedProjectDeleteQuery[] =>
-  (sql().transaction.mock.calls[0]?.[0] ??
-    []) as readonly CapturedProjectDeleteQuery[];
-
-describe("orchestrateDeleteProjectDbOnly — owner", () => {
+describe("orchestrateDeleteProjectDbOnly — owner (single CASCADE delete)", () => {
   beforeEach(resetMocks);
 
-  it("owner on any Mac: deletes every project table in one transaction, leaf rows first", async () => {
+  it("issues exactly one DELETE of user_projects guarded by owner", async () => {
     const result = await orchestrateDeleteProjectDbOnly(asOwner);
 
     expect(result).toEqual({ ok: true, projectId: OWNER_PROJECT.id });
-    expect(sql().transaction).toHaveBeenCalledTimes(1);
-    expect(sentQueries().map((q) => extractDeletedTableName(q.text))).toEqual([
-      ...PROJECT_DELETE_TABLES_IN_ORDER,
-    ]);
+    expect(sql()).toHaveBeenCalledTimes(1);
+    expect(sql().transaction).not.toHaveBeenCalled();
+    const [query] = sql().calls;
+    expect(extractDeletedTableName(query.text)).toBe("user_projects");
+    expect(query.text).toContain("owner_user_id = $");
+    expect(query.text).toContain("RETURNING id");
+    expect(query.values).toEqual([OWNER_PROJECT.id, OWNER_PROJECT.ownerUserId]);
   });
 
-  it("scopes every statement to this project id and this owner only", async () => {
-    await orchestrateDeleteProjectDbOnly(asOwner);
-
-    for (const query of sentQueries()) {
-      expect(query.text).toContain("owner_user_id = $");
-      expect(query.values).toContain(OWNER_PROJECT.id);
-      expect(query.values).toContain(OWNER_PROJECT.ownerUserId);
-      expect(
-        query.values.every(
-          (v) => v === OWNER_PROJECT.id || v === OWNER_PROJECT.ownerUserId,
-        ),
-      ).toBe(true);
-    }
-  });
-
-  it("ownership changed mid-flight: project row not deleted → not_found", async () => {
-    sql().transaction.mockImplementation(async (queries) =>
-      queries.map(() => []),
-    );
+  it("ownership changed mid-flight: empty RETURNING → not_found", async () => {
+    sqlMock.current = createProjectDeleteSqlMock({ returnProjectRow: false });
 
     const result = await orchestrateDeleteProjectDbOnly(asOwner);
 
     expect(result).toEqual({ ok: false, code: "not_found" });
+    expect(sql()).toHaveBeenCalledTimes(1);
   });
 
   it("never touches fs, child_process, or fetch (no local AgentWitch / wake port)", async () => {
