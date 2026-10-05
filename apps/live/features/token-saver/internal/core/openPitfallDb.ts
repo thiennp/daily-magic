@@ -2,7 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 
-import { PITFALL_SCHEMA_VERSION } from "./pitfall.constants";
+import {
+  PITFALL_DB_BUSY_TIMEOUT_MS,
+  PITFALL_SCHEMA_VERSION,
+} from "./pitfall.constants";
 import {
   PITFALL_SCHEMA_SQL,
   pitfallSchemaVersionValue,
@@ -32,6 +35,8 @@ const writeSchemaVersion = (db: DatabaseSync, version: number): void => {
 export const openPitfallDb = (dbPath: string): PitfallDatabase => {
   fs.mkdirSync(path.dirname(dbPath), { recursive: true });
   const db = new DatabaseSync(dbPath);
+  // Concurrent AWL processes (HTTP + stdio MCP) may share the file: wait on locks.
+  db.exec(`PRAGMA busy_timeout = ${PITFALL_DB_BUSY_TIMEOUT_MS}`);
   db.exec(PITFALL_SCHEMA_SQL);
   const current = readSchemaVersion(db);
   if (current < PITFALL_SCHEMA_VERSION) {

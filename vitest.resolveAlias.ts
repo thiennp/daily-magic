@@ -306,5 +306,17 @@ export const vitestResolveAlias: Record<string, string> = {
     ROOT,
     "./apps/live/features/token-saver/public-api/infrastructure.ts",
   ),
+  "@agent-witch/live-mcp/types": path.resolve(
+    ROOT,
+    "./apps/live/features/mcp/public-api/types.ts",
+  ),
+  "@agent-witch/live-mcp/presentation": path.resolve(
+    ROOT,
+    "./apps/live/features/mcp/public-api/presentation.ts",
+  ),
+  "@agent-witch/live-mcp": path.resolve(
+    ROOT,
+    "./apps/live/features/mcp/public-api/infrastructure.ts",
+  ),
   "@": path.resolve(ROOT, "./src"),
 };

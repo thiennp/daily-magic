@@ -86,10 +86,9 @@ const run = async (): Promise<void> => {
   }
 
   if (subcommand === "mcp") {
-    const { resolveAgentWitchLocalLayout } = await import(
-      "@agent-witch/install-layout"
-    );
-    const { runAwlMcpStdio } = await import("@agent-witch/live-token-saver");
+    const { resolveAgentWitchLocalLayout } =
+      await import("@agent-witch/install-layout");
+    const { runAwlMcpStdio } = await import("@agent-witch/live-mcp");
     await runAwlMcpStdio({ layout: resolveAgentWitchLocalLayout() });
     return;
   }

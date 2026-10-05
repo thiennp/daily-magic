@@ -21,6 +21,8 @@ export { default as expandAgentWitchProjectFolderPath } from "../internal/core/e
 
 export { ensureAgentWitchProjectFolder } from "../internal/core/ensureAgentWitchProjectFolder";
 
+export { resolveAgentWitchProjectIdFromCwd } from "../internal/core/resolveAgentWitchProjectIdFromCwd";
+
 export { handlePullBoundHarnessPost } from "../internal/core/handlePullBoundHarnessPost";
 export { handleRemoveHarnessSetPost } from "../internal/core/handleRemoveHarnessSetPost";
 

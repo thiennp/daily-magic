@@ -9,6 +9,9 @@ export {
   TOKEN_SAVER_DB_FILE_NAME,
 } from "../../public-api/types";
 
+/** SQLite busy_timeout for the pitfall DB (ms) so short write locks wait instead of failing. */
+export const PITFALL_DB_BUSY_TIMEOUT_MS = 3000;
+
 /** Approximate tokens from UTF-16 length (chars/4), enough for the bot payload cap. */
 export const estimateTokenCount = (text: string): number =>
   Math.ceil(text.length / 4);

@@ -1,4 +1,5 @@
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
+import { resolveAgentWitchProjectIdFromCwd } from "@agent-witch/live-projects";
 
 import type {
   CheckContextInput,
@@ -7,7 +8,6 @@ import type {
 import { checkContext } from "./checkContext";
 import { createPitfallRegistry } from "./createPitfallRegistry";
 import { parseCheckContextArgs } from "./parseCheckContextArgs";
-import { resolveProjectIdFromCwd } from "./resolveProjectIdFromCwd";
 
 export interface CheckContextRunnerDeps {
   readonly layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">;
@@ -37,7 +37,7 @@ export const createCheckContextRunner = (
       return checkContext(
         {
           registry,
-          resolveProjectId: resolveProjectIdFromCwd,
+          resolveProjectId: resolveAgentWitchProjectIdFromCwd,
           isDeclined: deps.isDeclined,
           logError,
         },

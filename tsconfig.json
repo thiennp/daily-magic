@@ -229,6 +229,15 @@
       ],
       "@agent-witch/live-token-saver/presentation": [
         "./apps/live/features/token-saver/public-api/presentation.ts"
+      ],
+      "@agent-witch/live-mcp": [
+        "./apps/live/features/mcp/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/live-mcp/types": [
+        "./apps/live/features/mcp/public-api/types.ts"
+      ],
+      "@agent-witch/live-mcp/presentation": [
+        "./apps/live/features/mcp/public-api/presentation.ts"
       ]
     }
   },

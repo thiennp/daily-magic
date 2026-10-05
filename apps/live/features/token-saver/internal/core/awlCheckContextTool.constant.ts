@@ -1,4 +1,4 @@
-/** Local AWL MCP tool: check_context (status hit|miss|none). */
+/** Local AWL MCP tool definition: check_context (status hit|miss|none). */
 export const AWL_CHECK_CONTEXT_TOOL = {
   name: "check_context",
   description:
@@ -26,12 +26,3 @@ export const AWL_CHECK_CONTEXT_TOOL = {
     additionalProperties: false as const,
   },
 } as const;
-
-export const AWL_MCP_TOOLS = [AWL_CHECK_CONTEXT_TOOL] as const;
-
-export const AWL_MCP_SERVER_INFO = {
-  name: "agent-witch",
-  version: "1.0.0",
-} as const;
-
-export const AWL_MCP_PROTOCOL_VERSION = "2024-11-05";

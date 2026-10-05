@@ -134,7 +134,14 @@
       "title": "Token-saver pitfall registry cache",
       "fsaStatus": "fsa",
       "featurePath": "apps/live/features/token-saver",
-      "notes": "Local SQLite pitfall cache + check_context MCP (HTTP /api/local/check-context, /mcp, stdio agent-witch mcp)."
+      "notes": "Local SQLite pitfall cache + check_context domain/tool handler (HTTP /api/local/check-context). MCP transport lives in mcp."
+    },
+    {
+      "slug": "mcp",
+      "title": "Local MCP server (stdio + HTTP /mcp)",
+      "fsaStatus": "fsa",
+      "featurePath": "apps/live/features/mcp",
+      "notes": "Shared JSON-RPC core for stdio `agent-witch mcp` and local app POST /mcp; tools come from owning features (token-saver check_context)."
     }
   ]
 }

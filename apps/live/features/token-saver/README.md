@@ -7,8 +7,9 @@ Local pitfall registry cache + `check_context` MCP for Agent Witch Local.
 - Profile SQLite DB: `~/.agent-witch/profiles/<email>/token-saver.db`
 - Bundled seed pitfalls (11 rows from API 01)
 - Ops: `listPitfalls`, `getPitfall`, `upsertPitfall`, `recordHit`, `matchPitfalls`
-- MCP tool `check_context` (status `hit`|`miss`|`none`); HTTP `/api/local/check-context` + `/mcp`
-- Stdio MCP via `agent-witch mcp`
+- `check_context` domain logic + tool definition (status `hit`|`miss`|`none`); HTTP `/api/local/check-context`
+- MCP transport (stdio `agent-witch mcp`, HTTP `/mcp`) is in `apps/live/features/mcp`
+- cwd → projectId via `@agent-witch/live-projects` `resolveAgentWitchProjectIdFromCwd`
 
 ## Aligns with (step 2)
 
@@ -23,5 +24,5 @@ Local pitfall registry cache + `check_context` MCP for Agent Witch Local.
 
 ## Public API
 
-- `@agent-witch/live-token-saver` — registry, `checkContext`, MCP handler, HTTP tryHandle
+- `@agent-witch/live-token-saver` — registry, `checkContext`, `createCheckContextRunner`, `AWL_CHECK_CONTEXT_TOOL`, HTTP tryHandle
 - `@agent-witch/live-token-saver/types` — DTOs, caps, `CheckContextResult`

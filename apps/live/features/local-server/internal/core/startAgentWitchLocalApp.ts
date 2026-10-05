@@ -49,6 +49,7 @@ import {
 import { buildAgentWitchLocalHomePageBody } from "@agent-witch/live-home/presentation";
 import { tryHandlePromptSdlcLocalRequest } from "../../../prompt-optimizer/public-api/infrastructure";
 import { tryHandleTokenSaverLocalRequest } from "@agent-witch/live-token-saver";
+import { tryHandleAwlMcpHttpRequest } from "@agent-witch/live-mcp";
 import { resolvePromptOptimizerCyclesPath } from "../../../prompt-optimizer/internal/core/promptOptimizerLocalStorePaths";
 import {
   buildAgentWitchLocalEstimateHistoryPageBody,
@@ -540,6 +541,20 @@ export const startAgentWitchLocalApp = (input: {
 
       if (
         await tryHandleTokenSaverLocalRequest({
+          method,
+          pathname,
+          request,
+          response,
+          layout: input.layout,
+          readBody,
+          sendJson,
+        })
+      ) {
+        return;
+      }
+
+      if (
+        await tryHandleAwlMcpHttpRequest({
           method,
           pathname,
           request,

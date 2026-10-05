@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import { PITFALL_MAX_ACTIVE_PER_PROJECT } from "../../public-api/types";
 import { createPitfallRegistry } from "./createPitfallRegistry";
+import { PITFALL_DB_BUSY_TIMEOUT_MS } from "./pitfall.constants";
 import { listBundledSeedPitfalls } from "./pitfallSeedRows";
 import { selectPitfall } from "./pitfallDbStatements";
 import { openPitfallDb, closePitfallDb } from "./openPitfallDb";
@@ -173,5 +174,16 @@ describe("createPitfallRegistry", () => {
       avoidance: expect.any(String),
     });
     registry.close();
+  });
+
+  it("opens the DB with a busy_timeout so short write locks wait", () => {
+    const { registry, dbPath } = openTempRegistry();
+    registry.close();
+    const db = openPitfallDb(dbPath);
+    const row = db.prepare("PRAGMA busy_timeout").get() as unknown as {
+      readonly timeout: number;
+    };
+    closePitfallDb(db);
+    expect(row.timeout).toBe(PITFALL_DB_BUSY_TIMEOUT_MS);
   });
 });

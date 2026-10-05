@@ -26,37 +26,53 @@ export interface CheckContextDeps {
 const resolveProjectId = (
   deps: CheckContextDeps,
   input: CheckContextInput,
+  cwd: string | null,
 ): string | null => {
   const explicit = input.projectId?.trim();
   if (explicit !== undefined && explicit.length > 0) {
     return explicit;
   }
-  const cwd = input.cwd?.trim();
-  if (cwd === undefined || cwd.length === 0 || deps.resolveProjectId === undefined) {
+  if (cwd === null || deps.resolveProjectId === undefined) {
     return null;
   }
   return deps.resolveProjectId(cwd);
 };
 
+/** Hit counters are telemetry: a failed write (e.g. SQLITE_BUSY) never drops the hit. */
+const recordHitsBestEffort = (
+  deps: CheckContextDeps,
+  registry: CheckContextRegistry,
+  projectId: string,
+  matched: readonly Pitfall[],
+): void => {
+  for (const pitfall of matched) {
+    try {
+      registry.recordHit({ projectId, id: pitfall.id });
+    } catch (error) {
+      deps.logError?.(error);
+    }
+  }
+};
+
 /**
  * Keyword check_context: hit|miss|none. Never throws to the caller.
- * Declined cwd → none without promptCreate (terminal).
+ * Declined cwd → none without promptCreate (terminal), checked before any
+ * project resolution or pitfall lookup.
  */
 export const checkContext = (
   deps: CheckContextDeps,
   input: CheckContextInput,
 ): CheckContextResult => {
   try {
-    const projectId = resolveProjectId(deps, input);
+    const trimmedCwd = input.cwd?.trim() ?? "";
+    const cwd = trimmedCwd.length > 0 ? trimmedCwd : null;
+    if (cwd !== null && deps.isDeclined?.(cwd) === true) {
+      return { status: "none" };
+    }
+
+    const projectId = resolveProjectId(deps, input, cwd);
     if (projectId === null || deps.registry === null) {
-      const cwd = input.cwd?.trim();
-      const declined =
-        cwd !== undefined &&
-        cwd.length > 0 &&
-        deps.isDeclined?.(cwd) === true;
-      return declined
-        ? { status: "none" }
-        : { status: "none", promptCreate: cwd !== undefined && cwd.length > 0 };
+      return { status: "none", promptCreate: cwd !== null };
     }
 
     const matched = deps.registry.matchPitfalls({
@@ -67,9 +83,7 @@ export const checkContext = (
       return { status: "miss", projectId };
     }
 
-    for (const pitfall of matched) {
-      deps.registry.recordHit({ projectId, id: pitfall.id });
-    }
+    recordHitsBestEffort(deps, deps.registry, projectId, matched);
     return {
       status: "hit",
       projectId,

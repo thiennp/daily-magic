@@ -2,10 +2,11 @@ import type http from "node:http";
 
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
-import { createCheckContextRunner } from "./createCheckContextRunner";
-import { parseCheckContextArgs } from "./parseCheckContextArgs";
+import type { McpServerDefinition } from "../../public-api/types";
+import { createAwlMcpServer } from "./createAwlMcpServer";
+import { handleMcpJsonRpcRequest } from "./handleMcpJsonRpcRequest";
 
-export interface TokenSaverLocalRouteInput {
+export interface AwlMcpHttpRouteInput {
   readonly method: string;
   readonly pathname: string;
   readonly request: http.IncomingMessage;
@@ -18,15 +19,17 @@ export interface TokenSaverLocalRouteInput {
     payload: unknown,
   ) => void;
   readonly isDeclined?: (cwd: string) => boolean;
+  /** Test seam; defaults to the AWL server for `layout`. */
+  readonly server?: McpServerDefinition;
 }
 
-const CHECK_CONTEXT_PATH = "/api/local/check-context";
+const MCP_PATH = "/mcp";
 
-/** Plain HTTP surface for check_context (MCP JSON-RPC lives in live-mcp). */
-export const tryHandleTokenSaverLocalRequest = async (
-  input: TokenSaverLocalRouteInput,
+/** HTTP transport (`POST /mcp`) over the shared JSON-RPC core. */
+export const tryHandleAwlMcpHttpRequest = async (
+  input: AwlMcpHttpRouteInput,
 ): Promise<boolean> => {
-  if (input.pathname !== CHECK_CONTEXT_PATH) {
+  if (input.pathname !== MCP_PATH) {
     return false;
   }
   if (input.method !== "POST") {
@@ -35,23 +38,17 @@ export const tryHandleTokenSaverLocalRequest = async (
     return true;
   }
 
-  let body: unknown = {};
+  let body: unknown = null;
   try {
     const raw = await input.readBody(input.request);
     body = raw.length > 0 ? JSON.parse(raw) : {};
   } catch {
-    input.sendJson(input.response, 400, { status: "none" });
-    return true;
+    body = null;
   }
 
-  const runCheckContext = createCheckContextRunner({
-    layout: input.layout,
-    isDeclined: input.isDeclined,
-  });
-  input.sendJson(
-    input.response,
-    200,
-    runCheckContext(parseCheckContextArgs(body)),
-  );
+  const server =
+    input.server ??
+    createAwlMcpServer({ layout: input.layout, isDeclined: input.isDeclined });
+  input.sendJson(input.response, 200, handleMcpJsonRpcRequest(body, server));
   return true;
 };

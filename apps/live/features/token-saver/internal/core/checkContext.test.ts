@@ -95,4 +95,61 @@ describe("checkContext", () => {
     expect(result).toEqual({ status: "none" });
     expect(logError).toHaveBeenCalledOnce();
   });
+
+  it("keeps the hit when recordHit fails (e.g. SQLITE_BUSY) and logs it", () => {
+    const logError = vi.fn();
+    const matched = [samplePitfall("missing-lock", ["npm install"])];
+    const registry: CheckContextRegistry = {
+      matchPitfalls: () => matched,
+      recordHit: () => {
+        throw new Error("database is locked");
+      },
+    };
+    const result = checkContext(
+      { registry, logError },
+      { projectId: "proj-1", message: "npm install" },
+    );
+    expect(result).toEqual({
+      status: "hit",
+      projectId: "proj-1",
+      pitfalls: [{ id: "missing-lock", avoidance: "Fix missing-lock" }],
+    });
+    expect(logError).toHaveBeenCalledOnce();
+  });
+
+  it("checks isDeclined first when cwd is present (no resolve, no lookup)", () => {
+    const registry = makeRegistry([samplePitfall("missing-lock", ["npm"])]);
+    const resolveProjectId = vi.fn(() => "proj-1");
+    const isDeclined = vi.fn(() => true);
+    const result = checkContext(
+      { registry, resolveProjectId, isDeclined },
+      { cwd: "/tmp/declined", projectId: "proj-1", message: "npm install" },
+    );
+    expect(result).toEqual({ status: "none" });
+    expect(isDeclined).toHaveBeenCalledWith("/tmp/declined");
+    expect(resolveProjectId).not.toHaveBeenCalled();
+    expect(registry.matchPitfalls).not.toHaveBeenCalled();
+    expect(registry.recordHit).not.toHaveBeenCalled();
+  });
+
+  it("resolves the project after a non-declined cwd", () => {
+    const registry = makeRegistry([]);
+    const calls: string[] = [];
+    const result = checkContext(
+      {
+        registry,
+        isDeclined: () => {
+          calls.push("isDeclined");
+          return false;
+        },
+        resolveProjectId: () => {
+          calls.push("resolveProjectId");
+          return "proj-2";
+        },
+      },
+      { cwd: "/tmp/repo", message: "hi" },
+    );
+    expect(result).toEqual({ status: "miss", projectId: "proj-2" });
+    expect(calls).toEqual(["isDeclined", "resolveProjectId"]);
+  });
 });
