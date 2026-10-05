@@ -3,20 +3,26 @@ import { ensureProjectSkillShareSchema } from "@/features/project-skill-share/in
 import { mapProjectSkillRow } from "@/features/project-skill-share/internal/infrastructure/db/mapProjectSkillRow";
 import { asRowArray, getSql } from "@/lib/db";
 
-/** Draft + published rows (revoked excluded); visibility filtered in the orchestrator. */
+/**
+ * Draft + published rows (revoked excluded); visibility filtered in the orchestrator.
+ * `strict` → throw on a non-array driver result instead of coercing to `[]`
+ * (required by pull listPublished: errors must never look like an empty set).
+ */
 export const selectProjectSkillRows = async (input: {
   readonly projectId: string;
   readonly states: readonly string[];
+  readonly strict?: boolean;
 }): Promise<readonly ProjectSkillRecord[]> => {
   await ensureProjectSkillShareSchema();
   const sql = getSql();
-  const rows = asRowArray(
-    await sql`
+  const result: unknown = await sql`
       SELECT * FROM project_skills
       WHERE project_id = ${input.projectId}
         AND state = ANY(${[...input.states]}::text[])
       ORDER BY updated_at DESC
-    `,
-  );
-  return rows.map(mapProjectSkillRow);
+    `;
+  if (input.strict === true && !Array.isArray(result)) {
+    throw new Error("project-skill selectProjectSkillRows: non-array result");
+  }
+  return asRowArray(result).map(mapProjectSkillRow);
 };

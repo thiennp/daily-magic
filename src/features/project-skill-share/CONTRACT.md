@@ -51,8 +51,15 @@ Hash: `sha256:` + lowercase hex of exact UTF-8 body bytes (no trim).
 ## Pull safety
 
 1. `listPublished` runs before any History disk helper used for mutation (`write` / `tombstone` / `read` on the mutation path / `listProjectSkillIds`).
-2. List fail / throw / non-ok → `{ ok: false, skipped: false, skills: [] }` and **zero** disk helper calls.
+2. List fail / throw / reject / non-array → `{ ok: false, skipped: false, skills: [] }` and **zero** disk helper calls.
 3. `remove` only after a successful list, for local ids absent from that set.
+
+### `listPublished` error contract (throw-needle)
+
+- **Errors throw.** Any `listPublished` failure MUST reject/throw: HTTP 401 / 403 / 404 / 5xx, empty or malformed response body, network / timeout, DB error, non-array driver result, published row missing version/contentHash.
+- **`[]` = real empty only.** Resolve `[]` only when AWC successfully returned an empty published set.
+- **Never tombstone on list failure.** Mapping an error to `[]` is forbidden — it would make every local skill look orphaned and tombstone it. On throw/reject/non-array, pull returns `{ ok: false }` with **zero** History disk calls and retries next tick.
+- Applies to the DB source (`createDbProjectSkillAwcPublishedSource`) and to any HTTP source AWL injects.
 
 ## ACL (list / get published)
 

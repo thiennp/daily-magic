@@ -9,16 +9,24 @@ export type ListPublishedProjectSkillsForPullResult =
   | { readonly ok: false };
 
 /**
- * listPublished for pull. Fail / throw / non-ok → `{ ok: false }` so the
- * orchestrator can early-return with zero History disk helper calls.
+ * listPublished for pull. Throw / reject / non-array → `{ ok: false }` so the
+ * orchestrator early-returns with zero History disk helper calls.
+ * `{ ok: true, published: [] }` ONLY when the source resolved a real `[]`.
+ * Errors are never coerced to an empty set (that would tombstone all locals).
  */
 export const listPublishedProjectSkillsForPull = async (input: {
   readonly awc: ProjectSkillAwcPublishedSource;
   readonly projectId: string;
 }): Promise<ListPublishedProjectSkillsForPullResult> => {
   try {
-    const published = await input.awc.listPublished(input.projectId);
-    return { ok: true, published };
+    const published: unknown = await input.awc.listPublished(input.projectId);
+    if (!Array.isArray(published)) {
+      return { ok: false };
+    }
+    return {
+      ok: true,
+      published: published as readonly ProjectSkillPublishedMeta[],
+    };
   } catch {
     return { ok: false };
   }

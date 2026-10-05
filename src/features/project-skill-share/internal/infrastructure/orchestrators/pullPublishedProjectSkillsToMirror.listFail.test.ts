@@ -56,4 +56,57 @@ describe("pullPublishedProjectSkillsToMirror list failure", () => {
     expect(spies.tombstone).not.toHaveBeenCalled();
     expect(spies.listLocal).not.toHaveBeenCalled();
   });
+
+  it.each([
+    ["HTTP 403", () => Promise.reject(new Error("HTTP 403"))],
+    ["HTTP 503", () => Promise.reject(new Error("HTTP 503"))],
+    ["network failure", () => Promise.reject(new TypeError("fetch failed"))],
+    ["empty-error body (null)", () => Promise.resolve(null)],
+    ["undefined", () => Promise.resolve(undefined)],
+  ])(
+    "list error (%s) never becomes [] → ok:false, zero History disk calls",
+    async (_label, listPublished) => {
+      const spies = historySpies();
+      const result = await pullPublishedProjectSkillsToMirror({
+        projectId: "proj-1",
+        deps: {
+          history: spies.port,
+          awcPublished: {
+            listPublished: listPublished as never,
+            getPublishedBody: async () => null,
+          },
+        },
+      });
+      expect(result).toEqual({ ok: false, skipped: false, skills: [] });
+      expect(spies.write).not.toHaveBeenCalled();
+      expect(spies.read).not.toHaveBeenCalled();
+      expect(spies.tombstone).not.toHaveBeenCalled();
+      expect(spies.listLocal).not.toHaveBeenCalled();
+    },
+  );
+
+  it("real empty published [] is a success (no throw) and may tombstone locals", async () => {
+    const spies = historySpies();
+    spies.listLocal.mockResolvedValue([
+      { skillId: "gone", contentHash: "sha256:gone" },
+    ]);
+    spies.tombstone.mockResolvedValue({ removed: true });
+    const result = await pullPublishedProjectSkillsToMirror({
+      projectId: "proj-1",
+      deps: {
+        history: spies.port,
+        awcPublished: {
+          listPublished: async () => [],
+          getPublishedBody: async () => null,
+        },
+      },
+    });
+    expect(result.ok).toBe(true);
+    expect(spies.listLocal).toHaveBeenCalledTimes(1);
+    expect(spies.tombstone).toHaveBeenCalledWith({
+      projectId: "proj-1",
+      skillId: "gone",
+      lastContentHash: "sha256:gone",
+    });
+  });
 });
