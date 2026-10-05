@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import AwcProjectAccessPanel from "@/features/projects/access/AwcProjectAccessPanel";
+import AwcProjectMessengerSection from "@/features/projects/messenger/AwcProjectMessengerSection";
 import AwcProjectDeleteControl from "@/features/projects/AwcProjectDeleteControl";
 import AwcProjectDetailPrimaryColumn from "@/features/projects/AwcProjectDetailPrimaryColumn";
 import useAwcProjectComposition from "@/features/projects/hooks/useAwcProjectComposition";
@@ -63,7 +64,12 @@ export default function AwcProjectDetailPanel({
       <aside className="order-2 min-w-0 xl:sticky xl:top-6 xl:order-none xl:col-start-2 xl:row-start-1">
         <AwcProjectAccessPanel projectId={project.id} className="mt-0" />
       </aside>
-      <div className="order-3 min-w-0 xl:order-none xl:col-start-1 xl:row-start-2">
+      <div className="order-3 min-w-0 xl:order-none xl:col-span-2 xl:col-start-1 xl:row-start-2">
+        <AppPanel padding="compact">
+          <AwcProjectMessengerSection projectId={project.id} />
+        </AppPanel>
+      </div>
+      <div className="order-4 min-w-0 xl:order-none xl:col-start-1 xl:row-start-3">
         <AwcProjectDeleteControl project={project} variant="detail" />
       </div>
     </div>
