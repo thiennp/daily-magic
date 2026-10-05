@@ -169,6 +169,62 @@
 }
 
 /*
+  Semantic aliases for layout slices (project-page redesign foundation).
+  No new hex — each var references an existing @theme palette color.
+  Driven by the existing .dark class (ThemeContext).
+*/
+:root {
+  --bg: var(--color-gray-50);
+  --surface: var(--color-white);
+  --surface-2: var(--color-gray-100);
+  --line: var(--color-gray-200);
+  --fg: var(--color-gray-900);
+  --muted: var(--color-gray-500);
+  --ok: var(--color-success-600);
+  --ok-soft: var(--color-success-50);
+  --warn: var(--color-warning-600);
+  --warn-soft: var(--color-warning-50);
+  --bad: var(--color-error-600);
+  --bad-soft: var(--color-error-50);
+}
+
+.dark {
+  --bg: var(--color-gray-950);
+  --surface: var(--color-gray-900);
+  --surface-2: var(--color-gray-800);
+  --line: var(--color-gray-800);
+  --fg: var(--color-gray-100);
+  --muted: var(--color-gray-400);
+  --ok: var(--color-success-400);
+  --ok-soft: var(--color-success-950);
+  --warn: var(--color-warning-400);
+  --warn-soft: var(--color-warning-950);
+  --bad: var(--color-error-400);
+  --bad-soft: var(--color-error-950);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+
+  --radius-card: 14px;
+  --radius-control: 10px;
+  --radius-control-sm: 8px;
+  --radius-pill: 999px;
+  --radius-banner: 12px;
+}
+
+/*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
   looks the same as it did with Tailwind CSS v3.
@@ -857,5 +913,13 @@ span.flatpickr-weekday,
     animation: none;
     width: 100%;
     opacity: 0.55;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

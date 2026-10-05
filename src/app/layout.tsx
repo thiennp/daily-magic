@@ -1,7 +1,9 @@
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import "flatpickr/dist/flatpickr.css";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
+import { AWC_THEME_INIT_INLINE_SCRIPT } from "@/lib/theme/themeInitInlineScript.constant";
 import type { Metadata } from "next";
 
 const inter = Inter({
@@ -20,8 +22,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} dark:bg-gray-900`}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.className} dark:bg-gray-900`}>
+        <Script
+          id="awc-theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: AWC_THEME_INIT_INLINE_SCRIPT }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
