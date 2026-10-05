@@ -10,6 +10,12 @@ describe("isClaudeCliAuthBlockerInOutput", () => {
     expect(isClaudeCliAuthBlockerInOutput(output)).toBe(true);
   });
 
+  it("detects Claude CLI not-logged-in /login prompt", () => {
+    expect(
+      isClaudeCliAuthBlockerInOutput("Not logged in · Please run /login"),
+    ).toBe(true);
+  });
+
   it("returns false for unrelated agent output", () => {
     expect(isClaudeCliAuthBlockerInOutput("Implemented README note.")).toBe(
       false,

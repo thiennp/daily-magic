@@ -22,6 +22,14 @@ describe("resolveWriterApiMissingCliFallbackHonesty", () => {
     });
   });
 
+  it("detects spawn ENOENT with no writer honesty marker", () => {
+    const output = "spawn /tmp/claude-missing ENOENT";
+
+    expect(resolveWriterApiMissingCliFallbackHonesty(output)).toEqual({
+      reasonCode: null,
+    });
+  });
+
   it("still detects marketplace cli-fallback marker", () => {
     const output = [
       "[[MARKETPLACE_PLAN_ESTIMATE]]",
