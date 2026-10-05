@@ -1,0 +1,12 @@
+/** Mirrors NRG `PROJECT_PITFALL_LIMITS` / `PROJECT_PITFALL_MAX_ACTIVE`. */
+export const PITFALL_SYMPTOM_MAX_LENGTH = 120;
+export const PITFALL_CAUSE_MAX_LENGTH = 200;
+export const PITFALL_AVOIDANCE_MAX_LENGTH = 280;
+export const PITFALL_CHECK_VALUE_MAX_LENGTH = 280;
+export const PITFALL_KEYWORD_MAX_COUNT = 24;
+export const PITFALL_KEYWORD_MAX_LENGTH = 40;
+export const PITFALL_TAG_MAX_COUNT = 12;
+export const PITFALL_TAG_MAX_LENGTH = 32;
+export const PITFALL_MAX_ACTIVE_PER_PROJECT = 64;
+/** `/^[a-z0-9][a-z0-9-]{0,63}$/` — max 64 chars. */
+export const PITFALL_ID_MAX_LENGTH = 64;

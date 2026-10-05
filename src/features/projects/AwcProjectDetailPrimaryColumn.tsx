@@ -5,10 +5,9 @@ import AwcProjectEditOnMacActions from "@/features/projects/AwcProjectEditOnMacA
 import AwcProjectNameEditor from "@/features/projects/AwcProjectNameEditor";
 import AwcProjectPresenceBadge from "@/features/projects/AwcProjectPresenceBadge";
 import AwcProjectReadOnlyCompositionSections from "@/features/projects/AwcProjectReadOnlyCompositionSections";
+import AwcProjectPitfallsSection from "@/features/projects/pitfalls/AwcProjectPitfallsSection";
 import AwcProjectRepoUrlsSection from "@/features/projects/repoUrls/AwcProjectRepoUrlsSection";
-import {
-  AWC_PROJECT_DETAIL_META_LABEL_CLASS,
-} from "@/features/projects/awcProjectDetailSection.constant";
+import { AWC_PROJECT_DETAIL_META_LABEL_CLASS } from "@/features/projects/awcProjectDetailSection.constant";
 import {
   shouldShowProjectEditOnMacHelperText,
   type ProjectEditOnMacCta,
@@ -76,7 +75,10 @@ export default function AwcProjectDetailPrimaryColumn({
         </p>
       ) : null}
 
-      <AwcProjectDetailSection title="Overview" hint="Paths and bound composition summary.">
+      <AwcProjectDetailSection
+        title="Overview"
+        hint="Paths and bound composition summary."
+      >
         <dl className="grid gap-3 sm:grid-cols-2">
           <div>
             <dt className={AWC_PROJECT_DETAIL_META_LABEL_CLASS}>Folder</dt>
@@ -98,6 +100,11 @@ export default function AwcProjectDetailPrimaryColumn({
         deviceDisplayName={deviceDisplayName}
         items={items}
         isLoading={isCompositionLoading}
+      />
+      <AwcProjectPitfallsSection
+        projectId={project.id}
+        deviceDisplayName={deviceDisplayName}
+        editCta={editCta}
       />
       <AwcProjectRepoUrlsSection project={project} />
     </div>

@@ -93,6 +93,11 @@ import {
 import { AGENT_WITCH_PAIRING_TOKEN_HEADER } from "../../../projects/internal/core/agentWitchDeviceAuth.constant";
 import fetchProjectCompositionFromCloud from "../../../projects/internal/core/fetchProjectCompositionFromCloud";
 import promoteAllProjectKnowledgeCandidatesFromCloud from "../../../projects/internal/core/knowledge/promoteAllProjectKnowledgeCandidatesFromCloud";
+import createCloudAgentWitchProjectPitfallsStore from "../../../projects/internal/core/pitfalls/createCloudAgentWitchProjectPitfallsStore";
+import handleProjectPitfallPost, {
+  resolveProjectPitfallPostAction,
+} from "../../../projects/internal/core/pitfalls/handleProjectPitfallPost";
+import resolveProjectPitfallFlash from "../../../projects/internal/core/pitfalls/resolveProjectPitfallFlash";
 import {
   buildAgentWitchLocalProjectEditorPageBody,
   buildAgentWitchLocalProjectsPageBody,
@@ -1099,9 +1104,15 @@ export const startAgentWitchLocalApp = (input: {
         const activeTab: ProjectEditorTab =
           tabParam === "workflows" ||
           tabParam === "agents" ||
-          tabParam === "knowledge"
+          tabParam === "knowledge" ||
+          tabParam === "pitfalls"
             ? tabParam
             : "harness";
+        const pitfallsShowRetired = url.searchParams.get("retired") === "1";
+        const pitfallsEditId = url.searchParams.get("edit")?.trim() || null;
+        const pitfallFlash = resolveProjectPitfallFlash(
+          url.searchParams.get("pitfall"),
+        );
         const runConfig = readAgentWitchRunConfig();
         const cloudConfig =
           runConfig === null
@@ -1144,6 +1155,14 @@ export const startAgentWitchLocalApp = (input: {
             knowledgeCandidateCount = 0;
           }
         }
+        const pitfalls =
+          cloudConfig === null
+            ? null
+            : await createCloudAgentWitchProjectPitfallsStore(
+                cloudConfig,
+              ).listPitfalls(project.id, {
+                includeRetired: pitfallsShowRetired || activeTab === "pitfalls",
+              });
         sendHtml(
           response,
           await buildLocalAppShell({
@@ -1159,9 +1178,16 @@ export const startAgentWitchLocalApp = (input: {
               ),
               composition,
               knowledgeCandidateCount,
+              pitfalls,
+              pitfallsShowRetired,
+              pitfallsEditId,
               activeTab,
-              flashMessage: linkedFlash ?? knowledgeFlashMessage,
-              flashError: knowledgeFlashError,
+              flashMessage:
+                linkedFlash ??
+                knowledgeFlashMessage ??
+                pitfallFlash?.message ??
+                null,
+              flashError: knowledgeFlashError ?? pitfallFlash?.error ?? null,
             }),
           }),
         );
@@ -1346,6 +1372,45 @@ export const startAgentWitchLocalApp = (input: {
         response.writeHead(303, {
           Location: `/project?id=${encodeURIComponent(project.id)}&${redirectQuery.toString()}`,
         });
+        response.end();
+        return;
+      }
+
+      const pitfallAction = resolveProjectPitfallPostAction(pathname);
+      if (method === "POST" && pitfallAction !== null) {
+        const rawBody = await readBody(request);
+        const form = new URLSearchParams(rawBody);
+        const projectId = form.get("projectId")?.trim() ?? "";
+        const cloudProjects = await loadCloudProjectsForLocalApp(input.layout);
+        const project = findAgentWitchProjectById(
+          cloudProjects.projects,
+          projectId,
+        );
+        if (project === null) {
+          await sendLocalAppNotFound(response, "Project not found");
+          return;
+        }
+
+        const runConfig = readAgentWitchRunConfig();
+        const cloudConfig =
+          runConfig === null
+            ? null
+            : resolveAgentWitchCloudApiConfig({
+                wsUrl: runConfig.wsUrl,
+                pairingToken: runConfig.pairingToken,
+              });
+        const store =
+          cloudConfig === null
+            ? null
+            : createCloudAgentWitchProjectPitfallsStore(cloudConfig);
+
+        const location = await handleProjectPitfallPost({
+          action: pitfallAction,
+          form,
+          projectId: project.id,
+          store,
+        });
+        response.writeHead(303, { Location: location });
         response.end();
         return;
       }

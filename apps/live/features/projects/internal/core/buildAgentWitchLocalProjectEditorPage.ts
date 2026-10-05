@@ -2,8 +2,12 @@ import type AgentWitchProjectView from "./agentWitchProjectView.type";
 import type { InstalledLocalHarnessSnapshot } from "../../../harness/internal/core/readInstalledLocalHarnessSnapshot";
 import type { CloudProjectComposition } from "./fetchProjectCompositionFromCloud";
 import isDefaultAgentWitchProjectName from "./isDefaultAgentWitchProjectName";
+import type { ListAgentWitchPitfallsResult } from "./pitfalls/agentWitchProjectPitfallsStore.type";
+import buildProjectPitfallsTab from "./pitfalls/buildProjectPitfallsTab";
+import { countActiveAgentWitchPitfalls } from "./pitfalls/parseAgentWitchProjectPitfalls";
 
-export type ProjectEditorTab = "harness" | "workflows" | "agents" | "knowledge";
+export type ProjectEditorTab =
+  "harness" | "workflows" | "agents" | "knowledge" | "pitfalls";
 
 type CompositionListItem = {
   readonly name: string;
@@ -50,8 +54,12 @@ const buildBoundHarnessPullTab = (input: {
   const lede = input.alreadyInRepo
     ? `This repo already has playbook files in <code>.cursor</code> (tracked in <code>.agent-witch/materialization.json</code>). Pull again only if you want to refresh them from Agent Witch Cloud.`
     : `This project’s playbook is linked in Agent Witch Cloud. Pull writes those files into this repo’s <code>.cursor</code> tree.`;
-  const buttonLabel = input.alreadyInRepo ? "Refresh in repo…" : "Pull into repo";
-  const buttonClass = input.alreadyInRepo ? "btn btn-secondary" : "btn btn-primary";
+  const buttonLabel = input.alreadyInRepo
+    ? "Refresh in repo…"
+    : "Pull into repo";
+  const buttonClass = input.alreadyInRepo
+    ? "btn btn-secondary"
+    : "btn btn-primary";
 
   return `<form method="POST" action="/projects/pull-bound-harness" class="stack">
         <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
@@ -201,6 +209,10 @@ export const buildAgentWitchLocalProjectEditorPageBody = (input: {
   readonly linkedSetSlugs: readonly string[];
   readonly composition: CloudProjectComposition | null;
   readonly knowledgeCandidateCount: number;
+  /** null = cloud not configured on this Mac. Omit on pages that do not load pitfalls. */
+  readonly pitfalls?: ListAgentWitchPitfallsResult | null;
+  readonly pitfallsShowRetired?: boolean;
+  readonly pitfallsEditId?: string | null;
   readonly activeTab: ProjectEditorTab;
   readonly flashMessage?: string | null;
   readonly flashError?: string | null;
@@ -245,12 +257,24 @@ export const buildAgentWitchLocalProjectEditorPageBody = (input: {
       agentItems,
       "No agents installed for this project yet.",
     );
-  } else {
+  } else if (input.activeTab === "knowledge") {
     tabBody = buildKnowledgeTab({
       projectId: input.project.id,
       candidateCount: input.knowledgeCandidateCount,
     });
+  } else {
+    tabBody = buildProjectPitfallsTab({
+      projectId: input.project.id,
+      list: input.pitfalls ?? null,
+      showRetired: input.pitfallsShowRetired ?? false,
+      editId: input.pitfallsEditId ?? null,
+    });
   }
+
+  const pitfallsTabLabel =
+    input.pitfalls !== undefined && input.pitfalls !== null && input.pitfalls.ok
+      ? `Pitfalls (${countActiveAgentWitchPitfalls(input.pitfalls.items)})`
+      : "Pitfalls";
 
   const cloudProjectHref = `${input.cloudAppOrigin.replace(/\/$/, "")}/projects/${encodeURIComponent(input.project.id)}`;
   const renameHref = `${cloudProjectHref}?rename=1`;
@@ -281,6 +305,7 @@ export const buildAgentWitchLocalProjectEditorPageBody = (input: {
         ${tabLink("workflows", `Workflows (${counts.workflow})`)}
         ${tabLink("agents", `Agents (${counts.agent})`)}
         ${tabLink("knowledge", `Knowledge (${input.knowledgeCandidateCount})`)}
+        ${tabLink("pitfalls", pitfallsTabLabel)}
       </nav>
       <div class="project-tab-panel">
         ${tabBody}
