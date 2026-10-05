@@ -76,10 +76,16 @@ describe("project delete CASCADE coverage (from migrations)", () => {
   });
 
   it("lists every external SET NULL reference that survives project delete", () => {
+    // Include SET NULL FKs onto user_projects even when the child table is also
+    // cascade-reachable through another parent (e.g. agent_automations via
+    // capability after 068). Other SET NULL refs only count when the child
+    // table is outside the cascade set.
     const setNull = refs
       .filter(
         (ref) =>
-          ref.action === "SET NULL" && !CASCADE_CHILDREN.includes(ref.table),
+          ref.action === "SET NULL" &&
+          (ref.parent === "user_projects" ||
+            !CASCADE_CHILDREN.includes(ref.table)),
       )
       .map((ref) => `${ref.table}.${ref.column}`)
       .sort();
