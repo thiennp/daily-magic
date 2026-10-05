@@ -84,6 +84,7 @@ export const createHumanInviteApi = async (
 export const revokeHumanInviteApi = async (
   projectId: string,
   inviteId: string,
+  options?: { readonly keepalive?: boolean },
 ): Promise<{
   readonly ok: boolean;
   readonly errorMessage?: string;
@@ -91,7 +92,7 @@ export const revokeHumanInviteApi = async (
 }> => {
   const response = await fetch(
     `/api/projects/${projectId}/human-invites/${inviteId}`,
-    { method: "DELETE" },
+    { method: "DELETE", keepalive: options?.keepalive === true },
   );
   if (response.status === 204) {
     return { ok: true };
@@ -110,13 +111,14 @@ export const revokeHumanInviteApi = async (
 export const removeHumanMemberApi = async (
   projectId: string,
   membershipId: string,
+  options?: { readonly keepalive?: boolean },
 ): Promise<
   | ({ readonly ok: true } & RemoveHumanMemberResponse)
   | { readonly ok: false; readonly errorMessage: string; readonly code?: string }
 > => {
   const response = await fetch(
     `/api/projects/${projectId}/human-members/${membershipId}/remove`,
-    { method: "POST" },
+    { method: "POST", keepalive: options?.keepalive === true },
   );
   const payload = (await response.json().catch(() => ({}))) as Partial<
     RemoveHumanMemberResponse

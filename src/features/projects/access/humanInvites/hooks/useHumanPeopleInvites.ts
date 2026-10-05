@@ -59,8 +59,12 @@ export const useHumanPeopleInvites = (input: {
   }, [reload]);
 
   const revokeCommit = useCallback(
-    async (inviteId: string) => {
-      const result = await revokeHumanInviteApi(input.projectId, inviteId);
+    async (inviteId: string, options?: { readonly keepalive?: boolean }) => {
+      const result = await revokeHumanInviteApi(
+        input.projectId,
+        inviteId,
+        options,
+      );
       if (!result.ok) {
         setMessage(result.errorMessage ?? copy.revokeFailed);
         setHiddenPending((prev) => {
@@ -76,8 +80,15 @@ export const useHumanPeopleInvites = (input: {
   );
 
   const removeCommit = useCallback(
-    async (membershipId: string) => {
-      const result = await removeHumanMemberApi(input.projectId, membershipId);
+    async (
+      membershipId: string,
+      options?: { readonly keepalive?: boolean },
+    ) => {
+      const result = await removeHumanMemberApi(
+        input.projectId,
+        membershipId,
+        options,
+      );
       if (!result.ok) {
         setMessage(result.errorMessage ?? copy.removeFailed);
         setHiddenRemoved((prev) => {
