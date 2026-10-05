@@ -1,12 +1,16 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
+import { deleteProjectMessageWithOutcome } from "@/lib/projects/acl/messaging/deleteProjectMessageWithOutcome";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { asRowArray, getSql } from "@/lib/db";
 
 export type AckProjectMessageResult =
   | { readonly ok: true; readonly messageId: string }
-  | { readonly ok: false; readonly code: "forbidden" | "not_found" };
+  | {
+      readonly ok: false;
+      readonly code: "forbidden" | "not_found" | "computer_ack_required";
+    };
 
 export const ackProjectMessage = async (input: {
   readonly messageId: string;
@@ -40,11 +44,15 @@ export const ackProjectMessage = async (input: {
   if (!addressed) {
     return { ok: false, code: "forbidden" };
   }
-  // Delete-on-ack: hard-delete row; CASCADE clears project_message_deliveries.
-  await sql`
-    DELETE FROM project_messages
-    WHERE id = ${input.messageId}
-  `;
+  // Explicit ack stays an immediate delete (with thin outcome first).
+  const deleted = await deleteProjectMessageWithOutcome({
+    messageId: input.messageId,
+    deletedReason: "ack",
+    finalB2bState: "acked",
+  });
+  if (!deleted.ok) {
+    return { ok: false, code: deleted.code };
+  }
   await writeProjectAccessAudit({
     projectId,
     actorUserId: input.actorUserId,

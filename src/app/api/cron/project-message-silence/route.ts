@@ -2,6 +2,7 @@ import { CRON_SECRET_ENV } from "@/lib/cron/cronSecret.constants";
 import { isCronSecretConfigured } from "@/lib/cron/isCronSecretConfigured";
 import { isValidCronSecretHeader } from "@/lib/cron/isValidCronSecretHeader";
 import { checkProjectMessageSilence } from "@/lib/projects/acl/messaging/checkProjectMessageSilence";
+import { deleteReadProjectMessages } from "@/lib/projects/acl/messaging/deleteReadProjectMessages";
 
 export const dynamic = "force-dynamic";
 
@@ -22,5 +23,6 @@ export async function POST(request: Request): Promise<Response> {
     return Response.json({ ok: false }, { status: 401 });
   }
   const notified = await checkProjectMessageSilence({ now: new Date() });
-  return Response.json({ ok: true, notified });
+  const deletedRead = await deleteReadProjectMessages();
+  return Response.json({ ok: true, notified, deletedRead });
 }

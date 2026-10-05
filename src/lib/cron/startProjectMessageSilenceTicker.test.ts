@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const checkMock = vi.hoisted(() => vi.fn());
+const deleteReadMock = vi.hoisted(() => vi.fn());
 const dbConfigured = vi.hoisted(() => ({ value: true }));
 
 vi.mock("@/lib/db", () => ({
@@ -8,6 +9,9 @@ vi.mock("@/lib/db", () => ({
 }));
 vi.mock("@/lib/projects/acl/messaging/checkProjectMessageSilence", () => ({
   checkProjectMessageSilence: (input: unknown) => checkMock(input),
+}));
+vi.mock("@/lib/projects/acl/messaging/deleteReadProjectMessages", () => ({
+  deleteReadProjectMessages: () => deleteReadMock(),
 }));
 
 import { startProjectMessageSilenceTicker } from "@/lib/cron/startProjectMessageSilenceTicker";
@@ -19,6 +23,8 @@ describe("startProjectMessageSilenceTicker", () => {
     vi.useFakeTimers();
     checkMock.mockReset();
     checkMock.mockResolvedValue(0);
+    deleteReadMock.mockReset();
+    deleteReadMock.mockResolvedValue(0);
     dbConfigured.value = true;
   });
 

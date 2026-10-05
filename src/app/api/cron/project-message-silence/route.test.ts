@@ -20,6 +20,11 @@ vi.mock(
   }),
 );
 
+const deleteReadMock = vi.hoisted(() => vi.fn(async () => 0));
+vi.mock("@/lib/projects/acl/messaging/deleteReadProjectMessages", () => ({
+  deleteReadProjectMessages: () => deleteReadMock(),
+}));
+
 import { POST } from "@/app/api/cron/project-message-silence/route";
 import {
   CRON_SECRET_ENV,
@@ -39,6 +44,8 @@ describe("POST /api/cron/project-message-silence", () => {
   beforeEach(() => {
     vi.stubEnv(CRON_SECRET_ENV, "cron-test-secret");
     insertMock.mockClear();
+    deleteReadMock.mockClear();
+    deleteReadMock.mockResolvedValue(0);
     const db = createProjectB2bFakeSql();
     fake.sql = db.sql;
     db.deliveries.set("del-1", {
@@ -77,8 +84,8 @@ describe("POST /api/cron/project-message-silence", () => {
   it("does not double-notify across two calls", async () => {
     const first = await call("cron-test-secret");
     const second = await call("cron-test-secret");
-    expect(await first.json()).toEqual({ ok: true, notified: 1 });
-    expect(await second.json()).toEqual({ ok: true, notified: 0 });
+    expect(await first.json()).toEqual({ ok: true, notified: 1, deletedRead: 0 });
+    expect(await second.json()).toEqual({ ok: true, notified: 0, deletedRead: 0 });
     expect(insertMock).toHaveBeenCalledTimes(1);
   });
 });

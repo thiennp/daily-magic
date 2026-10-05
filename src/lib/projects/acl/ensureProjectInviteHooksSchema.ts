@@ -79,6 +79,26 @@ export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
     ADD COLUMN IF NOT EXISTS last_activity_at TIMESTAMPTZ`;
   await sql`ALTER TABLE project_message_deliveries
     ADD COLUMN IF NOT EXISTS b2b_state_at TIMESTAMPTZ`;
+  await sql`ALTER TABLE project_messages
+    ADD COLUMN IF NOT EXISTS read_at TIMESTAMPTZ`;
+  await sql`CREATE TABLE IF NOT EXISTS project_message_outcomes (
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+    message_id TEXT NOT NULL UNIQUE,
+    project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
+    recipient_user_id TEXT,
+    recipient_membership_id TEXT,
+    final_b2b_state TEXT,
+    grok_wake_result TEXT,
+    deleted_reason TEXT NOT NULL,
+    message_created_at TIMESTAMPTZ,
+    read_at TIMESTAMPTZ,
+    deleted_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
+  await sql`CREATE TABLE IF NOT EXISTS project_message_computer_acks (
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+    project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
+    message_id TEXT NOT NULL,
+    acked_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (project_id, message_id))`;
 
   await purgeExpiredProjectMessages();
 };

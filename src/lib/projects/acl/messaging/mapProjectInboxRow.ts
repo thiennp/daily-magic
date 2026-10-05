@@ -10,6 +10,7 @@ export type ProjectInboxMessage = {
   readonly fromMembershipId: string | null;
   readonly createdAt: string;
   readonly ackedAt: string | null;
+  readonly readAt: string | null;
   /** Caller's membership only. Null when no attempt. Never a URL or bearer. */
   readonly grokWakeResult: string | null;
 };
@@ -32,6 +33,7 @@ export const mapProjectInboxRow = (
       : null,
     createdAt: String(row.created_at),
     ackedAt: row.acked_at ? String(row.acked_at) : null,
+    readAt: row.read_at ? String(row.read_at) : null,
     grokWakeResult:
       typeof wakeResult === "string" && STORED_GROK_WAKE_RESULT.test(wakeResult)
         ? wakeResult

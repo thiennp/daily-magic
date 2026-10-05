@@ -17,6 +17,7 @@ const row = (result: unknown) => ({
 
 describe("mapProjectInboxRow", () => {
   it("keeps allowlisted wake results and drops anything else", () => {
+    expect(mapProjectInboxRow(row("http_204")).readAt).toBeNull();
     expect(mapProjectInboxRow(row("http_204")).grokWakeResult).toBe("http_204");
     expect(mapProjectInboxRow(row("fetch_failed")).grokWakeResult).toBe(
       "fetch_failed",

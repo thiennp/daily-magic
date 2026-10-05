@@ -31,7 +31,9 @@ const storedWakeResult = (
 
 /**
  * Owner read of one stored wake result for a message in this project.
- * A missing row is not_found. Never invents http_200 and never returns a URL.
+ * Prefers the live wake-attempts join; falls back to project_message_outcomes
+ * after delete-on-read / ack removed the message row. Never invents http_200
+ * and never returns a URL.
  */
 export const readProjectGrokWakeResult = async (input: {
   readonly projectId: string;
@@ -48,7 +50,7 @@ export const readProjectGrokWakeResult = async (input: {
 
   await ensureProjectAclSchema();
   const sql = getSql();
-  const rows = asRowArray(
+  const live = asRowArray(
     await sql`
       SELECT a.message_id, a.membership_id, a.result
       FROM project_grok_routine_wake_attempts a
@@ -60,5 +62,22 @@ export const readProjectGrokWakeResult = async (input: {
       LIMIT 1
     `,
   );
-  return storedWakeResult(rows[0]);
+  const fromLive = storedWakeResult(live[0]);
+  if (fromLive.ok) {
+    return fromLive;
+  }
+
+  const outcomes = asRowArray(
+    await sql`
+      SELECT message_id,
+        recipient_membership_id AS membership_id,
+        grok_wake_result AS result
+      FROM project_message_outcomes
+      WHERE project_id = ${input.projectId}
+        AND message_id = ${input.messageId}
+      ORDER BY deleted_at DESC
+      LIMIT 1
+    `,
+  );
+  return storedWakeResult(outcomes[0]);
 };

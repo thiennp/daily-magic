@@ -1,5 +1,6 @@
 import { isDatabaseUrlConfigured } from "@/lib/db";
 import { checkProjectMessageSilence } from "@/lib/projects/acl/messaging/checkProjectMessageSilence";
+import { deleteReadProjectMessages } from "@/lib/projects/acl/messaging/deleteReadProjectMessages";
 import { PROJECT_B2B_SILENCE_TICK_MS } from "@/lib/projects/acl/messaging/projectMessage.constants";
 import {
   PROJECT_MESSAGE_SILENCE_TICKER_KEY,
@@ -12,6 +13,10 @@ const tick = (): void => {
       console.error("[project-messages] silence tick failed", error);
     },
   );
+  // Sibling of the silence check: delete read+terminal/unwatched rows.
+  void deleteReadProjectMessages().catch((error: unknown) => {
+    console.error("[project-messages] delete-on-read tick failed", error);
+  });
 };
 
 /**

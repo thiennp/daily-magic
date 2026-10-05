@@ -1,6 +1,7 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { checkProjectMessageSilence } from "@/lib/projects/acl/messaging/checkProjectMessageSilence";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
+import { stampProjectInboxReadAt } from "@/lib/projects/acl/messaging/stampProjectInboxReadAt";
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
 import {
   mapProjectInboxRow,
@@ -68,8 +69,13 @@ export const listProjectInbox = async (input: {
       LIMIT ${limit}
     `,
   );
+  const messages = rows.map(mapProjectInboxRow);
+  // Fetch stamps read_at only; hard-delete waits for terminal/unwatched (ticker).
+  await stampProjectInboxReadAt({
+    messageIds: messages.map((message) => message.messageId),
+  });
   return {
     ok: true,
-    messages: rows.map(mapProjectInboxRow),
+    messages,
   };
 };

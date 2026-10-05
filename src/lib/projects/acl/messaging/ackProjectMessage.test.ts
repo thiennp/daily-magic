@@ -5,6 +5,7 @@ import { resetProjectAclSchemaEnsureForTests } from "@/lib/projects/acl/ensurePr
 import { resetProjectMessagePurgeForTests } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 
 const sqlMock = vi.fn();
+const deleteWithOutcome = vi.hoisted(() => vi.fn());
 
 vi.mock("@/lib/db", () => ({
   getSql: () => sqlMock,
@@ -30,17 +31,23 @@ vi.mock("@/lib/projects/acl/writeProjectAccessAudit", () => ({
   writeProjectAccessAudit: vi.fn(async () => undefined),
 }));
 
+vi.mock("@/lib/projects/acl/messaging/deleteProjectMessageWithOutcome", () => ({
+  deleteProjectMessageWithOutcome: (input: unknown) => deleteWithOutcome(input),
+}));
+
 describe("ackProjectMessage delete-on-ack", () => {
   beforeEach(() => {
     sqlMock.mockReset();
+    deleteWithOutcome.mockReset();
+    deleteWithOutcome.mockResolvedValue({ ok: true, messageId: "msg-1" });
     resetProjectAclSchemaEnsureForTests();
     resetProjectMessagePurgeForTests();
   });
 
-  it("hard-deletes the message row instead of setting acked_at", async () => {
+  it("hard-deletes immediately via outcome helper", async () => {
     sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
       const q = String(strings);
-      if (q.includes("CREATE TABLE")) return [];
+      if (q.includes("CREATE TABLE") || q.includes("ALTER TABLE")) return [];
       if (q.includes("DELETE FROM project_messages") && q.includes("make_interval")) {
         return [];
       }
@@ -55,9 +62,6 @@ describe("ackProjectMessage delete-on-ack", () => {
           },
         ];
       }
-      if (q.includes("DELETE FROM project_messages")) {
-        return [];
-      }
       return [];
     });
 
@@ -66,14 +70,10 @@ describe("ackProjectMessage delete-on-ack", () => {
       actorUserId: "bot-1",
     });
     expect(result).toEqual({ ok: true, messageId: "msg-1" });
-
-    const deleteCalls = sqlMock.mock.calls.filter((call) => {
-      const q = String(call[0]);
-      return q.includes("DELETE FROM project_messages") && !q.includes("make_interval");
+    expect(deleteWithOutcome).toHaveBeenCalledWith({
+      messageId: "msg-1",
+      deletedReason: "ack",
+      finalB2bState: "acked",
     });
-    expect(deleteCalls.length).toBe(1);
-    expect(
-      sqlMock.mock.calls.some((call) => String(call[0]).includes("acked_at = NOW()")),
-    ).toBe(false);
   });
 });
