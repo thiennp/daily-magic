@@ -134,7 +134,7 @@
       "title": "Token-saver pitfall registry cache",
       "fsaStatus": "fsa",
       "featurePath": "apps/live/features/token-saver",
-      "notes": "Local SQLite pitfall cache under the AWL profile. Not wired into the entrypoint until local MCP (step 3)."
+      "notes": "Local SQLite pitfall cache + check_context MCP (HTTP /api/local/check-context, /mcp, stdio agent-witch mcp)."
     }
   ]
 }

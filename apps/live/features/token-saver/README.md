@@ -1,23 +1,22 @@
 # token-saver (AWL)
 
-Local pitfall registry cache for Agent Witch Local (token-saver step 1).
+Local pitfall registry cache + `check_context` MCP for Agent Witch Local.
 
 ## Owns
 
 - Profile SQLite DB: `~/.agent-witch/profiles/<email>/token-saver.db`
 - Bundled seed pitfalls (11 rows from API 01)
 - Ops: `listPitfalls`, `getPitfall`, `upsertPitfall`, `recordHit`, `matchPitfalls`
-- Pure keyword match (no Ollama); bot payload ≤4 lines / ~200 tokens
+- MCP tool `check_context` (status `hit`|`miss`|`none`); HTTP `/api/local/check-context` + `/mcp`
+- Stdio MCP via `agent-witch mcp`
 
 ## Does not own (later)
 
-- Local MCP tools / `check_context` (step 3)
 - `setup_project` / CLI config writers (step 4)
+- Decline-store writer (step 4; `isDeclined` is injectable)
 - Cloud sync (NRG AgentWitch)
 
 ## Public API
 
-- `@agent-witch/live-token-saver` — `createPitfallRegistry`, path helper, pure match helpers
-- `@agent-witch/live-token-saver/types` — DTOs and caps
-
-Not imported from the AWL entrypoint yet so the install bundle stays unchanged.
+- `@agent-witch/live-token-saver` — registry, `checkContext`, MCP handler, HTTP tryHandle
+- `@agent-witch/live-token-saver/types` — DTOs, caps, `CheckContextResult`

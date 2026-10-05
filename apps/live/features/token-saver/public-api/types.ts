@@ -79,3 +79,19 @@ export const PITFALL_MATCH_MAX_LINES = 4;
 export const PITFALL_MATCH_MAX_TOKENS = 200;
 export const TOKEN_SAVER_DB_FILE_NAME = "token-saver.db";
 export const PITFALL_SCHEMA_VERSION = 1;
+
+export type CheckContextStatus = "hit" | "miss" | "none";
+
+export interface CheckContextInput {
+  readonly cwd?: string;
+  readonly message?: string;
+  readonly sessionId?: string;
+  readonly projectId?: string;
+}
+
+export interface CheckContextResult {
+  readonly status: CheckContextStatus;
+  readonly pitfalls?: readonly PitfallBotLine[];
+  readonly promptCreate?: boolean;
+  readonly projectId?: string;
+}
