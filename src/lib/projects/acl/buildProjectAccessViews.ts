@@ -6,7 +6,7 @@ import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMember
 export type MembershipView = {
   readonly id: string;
   readonly userId: string;
-  readonly role: "owner" | "member";
+  readonly role: "owner" | "member" | "viewer";
   readonly status: "active" | "revoked" | "naming_required";
   readonly teamLabel: string | null;
   readonly scopes: readonly string[];

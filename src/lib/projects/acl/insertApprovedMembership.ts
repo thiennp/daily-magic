@@ -40,7 +40,7 @@ export const insertApprovedMembership = async (input: {
         new_member AS (
           INSERT INTO project_memberships (
             id, project_id, user_id, role, status, team_label, scopes,
-            project_display_name
+            project_display_name, member_kind
           )
           SELECT
             ${input.membershipId},
@@ -50,7 +50,8 @@ export const insertApprovedMembership = async (input: {
             'active',
             ${input.teamLabel},
             ${[...input.scopes]},
-            ${input.displayName}
+            ${input.displayName},
+            'bot'
           FROM approved_request
           RETURNING *
         )

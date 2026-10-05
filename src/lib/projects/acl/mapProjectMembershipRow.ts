@@ -20,16 +20,27 @@ const parseStatus = (
   return "active";
 };
 
+const parseRole = (value: unknown): ProjectMembershipRecord["role"] => {
+  if (value === "owner") return "owner";
+  if (value === "viewer") return "viewer";
+  return "member";
+};
+
+const parseMemberKind = (
+  value: unknown,
+): ProjectMembershipRecord["memberKind"] =>
+  value === "human" ? "human" : "bot";
+
 export default function mapProjectMembershipRow(
   row: Record<string, unknown>,
 ): ProjectMembershipRecord {
-  const role = row.role === "owner" ? "owner" : "member";
   return {
     id: String(row.id),
     projectId: String(row.project_id),
     userId: String(row.user_id),
-    role,
+    role: parseRole(row.role),
     status: parseStatus(row.status),
+    memberKind: parseMemberKind(row.member_kind),
     teamLabel: row.team_label ? String(row.team_label) : null,
     scopes: parseScopes(row.scopes),
     projectDisplayName: row.project_display_name
