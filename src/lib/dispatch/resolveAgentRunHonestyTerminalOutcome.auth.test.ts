@@ -77,6 +77,30 @@ describe("resolveAgentRunHonestyTerminalOutcome auth addendum", () => {
     );
   });
 
+  it("maps ensure-writer timeout to Waiting on you with locked Claude-login string", () => {
+    const output =
+      "Failed to prepare claude-cli: ensure-writer.sh timed out after 120s";
+
+    const floaterOutcome = resolveAgentRunHonestyTerminalOutcome({
+      output,
+      runStatus: AgentRunStatus.COMPLETED,
+    });
+    expect(floaterOutcome?.kind).toBe("waiting_you");
+    expect(floaterOutcome?.chipLabel).toBe("Waiting on you");
+    expect(floaterOutcome?.summaryLines[0]).toContain(
+      CLAUDE_LOGIN_EXPIRED_LOCKED_REASON,
+    );
+
+    const reportsOutcome = resolveAgentRunHonestyOutcomeFromRecord({
+      status: AgentRunStatus.FAILED,
+      resultOutput: output,
+    });
+    expect(reportsOutcome.chipLabel).toBe("Waiting on you");
+    expect(reportsOutcome.summaryLines[0]).toContain(
+      CLAUDE_LOGIN_EXPIRED_LOCKED_REASON,
+    );
+  });
+
   it("matches Reports badge resolver path for OAuth blocker output", () => {
     const output = buildWriterMissingCliFallbackFixtureOutput([
       "Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue.",

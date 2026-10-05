@@ -8,6 +8,8 @@ const CLAUDE_CLI_AUTH_BLOCKER_PATTERNS: readonly RegExp[] = [
   /not logged in/i,
   /please run\s+\/login/i,
   /\brun\s+\/login\b/i,
+  /ensure-writer\.sh timed out/i,
+  /failed to prepare\s+[\w-]+:\s*ensure-writer/i,
 ];
 
 export const isClaudeCliAuthBlockerInOutput = (output: string): boolean =>

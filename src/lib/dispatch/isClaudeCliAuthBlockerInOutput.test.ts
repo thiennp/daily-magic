@@ -21,4 +21,11 @@ describe("isClaudeCliAuthBlockerInOutput", () => {
       false,
     );
   });
+
+  it("detects ensure-writer login timeout (Testi state 3 @ 08cbffb)", () => {
+    const output =
+      "Failed to prepare claude-cli: ensure-writer.sh timed out after 120s";
+
+    expect(isClaudeCliAuthBlockerInOutput(output)).toBe(true);
+  });
 });
