@@ -7,6 +7,7 @@ export type MembershipView = {
   readonly id: string;
   readonly userId: string;
   readonly role: "owner" | "member" | "viewer";
+  readonly memberKind: "human" | "bot";
   readonly status: "active" | "revoked" | "naming_required";
   readonly teamLabel: string | null;
   readonly scopes: readonly string[];
@@ -44,6 +45,7 @@ export const buildMembershipViews = async (
       id: m.id,
       userId: m.userId,
       role: m.role,
+      memberKind: m.memberKind ?? "bot",
       status: m.status,
       teamLabel: m.teamLabel,
       scopes: [...m.scopes],

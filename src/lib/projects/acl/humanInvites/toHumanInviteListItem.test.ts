@@ -1,0 +1,34 @@
+import { describe, expect, it } from "vitest";
+
+import { toHumanInviteListItem } from "@/lib/projects/acl/humanInvites/toHumanInviteListItem";
+
+describe("toHumanInviteListItem", () => {
+  it("never includes url or token", () => {
+    const item = toHumanInviteListItem({
+      id: "inv-1",
+      projectId: "p",
+      createdByUserId: "o",
+      email: null,
+      role: "member",
+      maxUses: 1,
+      usesRemaining: 1,
+      expiresAt: "2026-10-20T00:00:00.000Z",
+      revokedAt: null,
+      redeemedAt: null,
+      redeemedByUserId: null,
+      createdAt: "2026-10-05T00:00:00.000Z",
+    });
+    expect(item).not.toHaveProperty("url");
+    expect(item).not.toHaveProperty("token");
+    expect(Object.keys(item).sort()).toEqual([
+      "createdAt",
+      "email",
+      "expiresAt",
+      "inviteId",
+      "maxUses",
+      "revokedAt",
+      "role",
+      "usesRemaining",
+    ]);
+  });
+});

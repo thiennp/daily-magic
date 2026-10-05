@@ -1,8 +1,10 @@
+import { randomUUID } from "node:crypto";
+
+import { defaultHumanMembershipScopes } from "@/lib/projects/acl/humanInvites/defaultHumanMembershipScopes";
+import type { HumanInviteRole } from "@/lib/projects/acl/humanInvites/humanInvite.constants";
 import mapProjectMembershipRow from "@/lib/projects/acl/mapProjectMembershipRow";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
-import type { HumanInviteRole } from "@/lib/projects/acl/humanInvites/humanInvite.constants";
 import { asRowArray, getSql } from "@/lib/db";
-import { randomUUID } from "node:crypto";
 
 export type InsertHumanMembershipResult =
   | { readonly ok: true; readonly membership: ProjectMembershipRecord }
@@ -16,6 +18,7 @@ export const insertHumanProjectMembership = async (input: {
 }): Promise<InsertHumanMembershipResult> => {
   const sql = getSql();
   const membershipId = randomUUID();
+  const scopes = [...defaultHumanMembershipScopes(input.role)];
   try {
     const rows = asRowArray(
       await sql`
@@ -30,7 +33,7 @@ export const insertHumanProjectMembership = async (input: {
           ${input.role},
           'active',
           NULL,
-          ${[]},
+          ${scopes},
           NULL,
           'human'
         )
