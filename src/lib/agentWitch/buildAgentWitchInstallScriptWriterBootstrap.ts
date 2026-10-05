@@ -1,3 +1,8 @@
+import {
+  ANTIGRAVITY_CLI_GEMINI_STATE_DIR,
+  ANTIGRAVITY_CLI_LEGACY_CREDENTIALS_RELATIVE_PATH,
+  ANTIGRAVITY_CLI_OAUTH_TOKEN_FILENAME,
+} from "@/lib/agentWitch/antigravityCliAuthLocations.constant";
 import { AGENT_WITCH_INSTALL_ENSURE_WRITER_CODEX } from "@/lib/agentWitch/buildAgentWitchInstallScriptEnsureWriterCodex.constant";
 
 import { AGENT_WITCH_COMMAND_DIR_NAME } from "@/lib/agentWitch/agentWitchInstallApp.constant";
@@ -55,10 +60,10 @@ agent_witch_ensure_antigravity_cli() {
   if ! agent_witch_has_command agy; then
     "\${CURL_BIN}" -fsSL https://antigravity.google/cli/install.sh | bash
   fi
-  if [[ -f "\${HOME}/.config/agy/credentials.json" ]]; then
+  if [[ -s "\${HOME}/${ANTIGRAVITY_CLI_GEMINI_STATE_DIR}/${ANTIGRAVITY_CLI_OAUTH_TOKEN_FILENAME}" ]] || [[ -s "\${HOME}/${ANTIGRAVITY_CLI_LEGACY_CREDENTIALS_RELATIVE_PATH}" ]]; then
     echo "  Antigravity CLI authenticated."
   else
-    echo "  Antigravity CLI needs Google sign-in. Run agy auth login in a terminal (ensure-writer does not open interactive login)." >&2
+    echo "  Antigravity CLI needs Google sign-in. Run agy in a terminal and complete sign-in (ensure-writer does not open interactive login)." >&2
   fi
 }
 

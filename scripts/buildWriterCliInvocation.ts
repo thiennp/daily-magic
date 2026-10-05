@@ -176,6 +176,6 @@ export const buildWriterCliInvocation = (
 
   return {
     command: commands.antigravityCommand,
-    args: [...continueArgs, "-p", "--dangerously-skip-permissions", prompt],
+    args: [...continueArgs, "--dangerously-skip-permissions", "-p", prompt],
   };
 };

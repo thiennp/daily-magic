@@ -7,6 +7,7 @@ export const resolveAgentRunHonestyOutcomeFromRecord = (input: {
   readonly status: AgentRunStatusValue;
   readonly resultOutput: string | null;
   readonly resultOutcomeCode?: string | null;
+  readonly resultExitCode?: number | null;
   readonly pendingQuestion?: string | null;
   readonly approvalWaitingLabel?: string | null;
 }): AgentRunHonestyOutcome =>
@@ -17,4 +18,5 @@ export const resolveAgentRunHonestyOutcomeFromRecord = (input: {
     approvalWaitingLabel: input.approvalWaitingLabel,
     runStatus: input.status,
     resultOutcomeCode: input.resultOutcomeCode ?? null,
+    resultExitCode: input.resultExitCode ?? null,
   });

@@ -10,4 +10,13 @@ describe("buildAgentWitchInstallScriptWriterBootstrap", () => {
     expect(script).not.toMatch(/^\s*agy auth login/m);
     expect(script).not.toMatch(/^\s*cursor agent login/m);
   });
+
+  it("checks gemini antigravity-cli oauth token path for agy auth", () => {
+    const script = buildAgentWitchInstallScriptWriterBootstrap();
+
+    expect(script).toContain(".gemini/antigravity-cli/antigravity-oauth-token");
+    expect(script).not.toContain(
+      'if [[ -f "${HOME}/.config/agy/credentials.json" ]]; then',
+    );
+  });
 });

@@ -11,6 +11,7 @@ export const resolveAgentRunHonestyOutcome = (input: {
   readonly approvalWaitingLabel?: string | null;
   readonly runStatus?: AgentRunStatusValue | null;
   readonly resultOutcomeCode?: string | null;
+  readonly resultExitCode?: number | null;
 }): AgentLiveRunOutcome =>
   resolveAgentRunHonestyOutcomeCore({
     status: input.status,
@@ -19,12 +20,14 @@ export const resolveAgentRunHonestyOutcome = (input: {
     approvalWaitingLabel: input.approvalWaitingLabel,
     runStatus: input.runStatus,
     resultOutcomeCode: input.resultOutcomeCode,
+    resultExitCode: input.resultExitCode,
   });
 
 export const resolveAgentRunHonestyOutcomeFromRecord = (input: {
   readonly status: AgentRunStatusValue;
   readonly resultOutput: string | null;
   readonly resultOutcomeCode?: string | null;
+  readonly resultExitCode?: number | null;
   readonly pendingQuestion?: string | null;
   readonly approvalWaitingLabel?: string | null;
 }): AgentLiveRunOutcome => resolveAgentRunHonestyOutcomeFromRecordCore(input);
