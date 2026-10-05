@@ -5,9 +5,10 @@ import { notifyProjectMembersOfProjectUpdated } from "@/lib/projects/acl/messagi
 import { reclaimStaleFlushedProjectUpdatedNotifyPending } from "@/lib/projects/acl/messaging/reclaimStaleFlushedProjectUpdatedNotifyPending";
 
 /**
- * Sole flush path (cron): reclaim stale flushed rows, claim due pending,
- * fan out via Dispatch notify per row (try/catch), delete on success.
- * On notify failure the row stays flushed for ~60s reclaim. Never throws.
+ * Shared flush path (in-process ticker = sole live owner; cron = optional
+ * backup): reclaim stale flushed rows, claim due pending, fan out via
+ * Dispatch notify per row (try/catch), delete on success. On notify failure
+ * the row stays flushed for ~60s reclaim. Never throws.
  */
 export const flushDueProjectUpdatedNotifies = async (input: {
   readonly now: Date;

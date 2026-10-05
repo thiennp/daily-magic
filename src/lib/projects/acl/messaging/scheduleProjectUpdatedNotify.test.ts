@@ -40,7 +40,7 @@ describe("scheduleProjectUpdatedNotify debounce", () => {
     fake.sql = db.sql;
   });
 
-  it("collapses a burst; cron flush only (schedule never notifies)", async () => {
+  it("collapses a burst; schedule never notifies (flush is separate)", async () => {
     await scheduleProjectUpdatedNotify({
       projectId: "proj-1", fields: ["knowledge"], actorUserId: "owner-1", now: at(0),
     });

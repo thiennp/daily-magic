@@ -5,7 +5,8 @@ import { PROJECT_UPDATED_DEBOUNCE_MS } from "@/lib/projects/acl/messaging/projec
 
 /**
  * Schedule a debounced project.updated notify (trailing 5s per projectId).
- * Does not flush — cron is the sole flush owner (multi-instance safe via claim).
+ * Does not flush — schedule-only; the in-process ticker is the sole live flush
+ * owner (cron route is an optional backup calling the same flushDue…).
  * Never throws: write hooks must not fail the successful mutation.
  */
 export const scheduleProjectUpdatedNotify = async (input: {

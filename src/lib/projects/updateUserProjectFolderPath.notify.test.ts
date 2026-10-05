@@ -19,6 +19,27 @@ vi.mock("@/lib/projects/acl/messaging/scheduleProjectUpdatedNotify", () => ({
 
 import { updateUserProjectFolderPath } from "@/lib/projects/updateUserProjectFolderPath";
 
+const existing = (folderPath: string, deviceId: string) => ({
+  id: "proj-1",
+  ownerUserId: "owner-1",
+  folderPath,
+  deviceId,
+});
+
+const updatedRow = (folderPath: string, deviceId: string) => [
+  {
+    id: "proj-1",
+    owner_user_id: "owner-1",
+    name: "P",
+    device_id: deviceId,
+    folder_path: folderPath,
+    repo_urls: [],
+    default_branch: null,
+    created_at: "2026-10-05T08:00:00.000Z",
+    updated_at: "2026-10-05T08:00:00.000Z",
+  },
+];
+
 describe("updateUserProjectFolderPath notify hook", () => {
   beforeEach(() => {
     scheduleMock.mockClear();
@@ -27,24 +48,8 @@ describe("updateUserProjectFolderPath notify hook", () => {
   });
 
   it("schedules project_info after success when path changes", async () => {
-    getProjectMock.mockResolvedValue({
-      id: "proj-1",
-      ownerUserId: "owner-1",
-      folderPath: "/old",
-    });
-    sqlMock.mockResolvedValueOnce([
-      {
-        id: "proj-1",
-        owner_user_id: "owner-1",
-        name: "P",
-        device_id: "dev-1",
-        folder_path: "/new",
-        repo_urls: [],
-        default_branch: null,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      },
-    ]);
+    getProjectMock.mockResolvedValue(existing("/old", "dev-1"));
+    sqlMock.mockResolvedValueOnce(updatedRow("/new", "dev-1"));
     await expect(
       updateUserProjectFolderPath("owner-1", "proj-1", "/new", "dev-1"),
     ).resolves.not.toBeNull();
@@ -56,13 +61,24 @@ describe("updateUserProjectFolderPath notify hook", () => {
     });
   });
 
-  it("skips write and schedule when folder path is unchanged", async () => {
-    getProjectMock.mockResolvedValue({
-      id: "proj-1",
-      ownerUserId: "owner-1",
-      folderPath: "/same",
-      deviceId: "dev-old",
-    });
+  it("skips write and schedule when folder path and deviceId are unchanged", async () => {
+    getProjectMock.mockResolvedValue(existing("/same", "dev-old"));
+    const result = await updateUserProjectFolderPath(
+      "owner-1",
+      "proj-1",
+      "/same",
+      "dev-old",
+    );
+    expect(result).toEqual(
+      expect.objectContaining({ id: "proj-1", folderPath: "/same" }),
+    );
+    expect(sqlMock).not.toHaveBeenCalled();
+    expect(scheduleMock).not.toHaveBeenCalled();
+  });
+
+  it("writes deviceId and skips schedule when path is same but device is new", async () => {
+    getProjectMock.mockResolvedValue(existing("/same", "dev-old"));
+    sqlMock.mockResolvedValueOnce(updatedRow("/same", "dev-new"));
     const result = await updateUserProjectFolderPath(
       "owner-1",
       "proj-1",
@@ -70,9 +86,13 @@ describe("updateUserProjectFolderPath notify hook", () => {
       "dev-new",
     );
     expect(result).toEqual(
-      expect.objectContaining({ id: "proj-1", folderPath: "/same" }),
+      expect.objectContaining({
+        id: "proj-1",
+        folderPath: "/same",
+        deviceId: "dev-new",
+      }),
     );
-    expect(sqlMock).not.toHaveBeenCalled();
+    expect(sqlMock).toHaveBeenCalledTimes(1);
     expect(scheduleMock).not.toHaveBeenCalled();
   });
 
