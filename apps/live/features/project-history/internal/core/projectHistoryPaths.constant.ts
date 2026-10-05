@@ -13,3 +13,6 @@ export const PROJECT_HISTORY_SKILLGEN_BUDGET_FILE_NAME = "budget.json";
 export const PROJECT_HISTORY_SKILLGEN_METRICS_FILE_NAME = "metrics.jsonl";
 export const PROJECT_HISTORY_SKILL_DRAFT_SKILL_FILE_NAME = "SKILL.md";
 export const PROJECT_HISTORY_SKILL_DRAFT_META_FILE_NAME = "meta.json";
+export const PROJECT_HISTORY_SKILLGEN_LEARNED_PITFALLS_FILE_NAME =
+  "learned-pitfalls.json";
+export const PROJECT_HISTORY_SKILLGEN_FLAGS_FILE_NAME = "flags.json";

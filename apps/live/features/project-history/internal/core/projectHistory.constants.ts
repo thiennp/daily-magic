@@ -27,3 +27,14 @@ export const PROJECT_HISTORY_SKILL_VALIDATE_RETRY_MAX = 1;
 export const PROJECT_HISTORY_SKILL_OWNER_LLM_INPUT_TOKEN_CAP = 12_000;
 /** Near-duplicate: Jaccard on step lines at or above this updates the draft. */
 export const PROJECT_HISTORY_SKILL_NEAR_DUP_STEP_JACCARD = 0.6;
+
+/** Max Pitfalls bullets appended into one SKILL.md draft. */
+export const PROJECT_HISTORY_PITFALL_MAX_PER_DRAFT = 8;
+/** Max learned-pitfall rows stored under skillgen/learned-pitfalls.json. */
+export const PROJECT_HISTORY_PITFALL_MAX_STORED = 64;
+/** Max characters per pitfall bullet / avoidance line after scrub. */
+export const PROJECT_HISTORY_PITFALL_MAX_BULLET_CHARS = 280;
+/** Max characters for the symptom half of a bullet. */
+export const PROJECT_HISTORY_PITFALL_MAX_SYMPTOM_CHARS = 120;
+/** Cross-bot local flag key inside skillgen/flags.json. */
+export const PROJECT_HISTORY_PITFALL_FLAG_KEY = "historyLearnedPitfalls";
