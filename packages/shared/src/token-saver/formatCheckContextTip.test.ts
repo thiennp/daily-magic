@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  estimateTokenCount,
-  truncateTextToTokenBudget,
-} from "@agent-witch/shared/pitfalls";
+import { estimateTokenCount } from "@agent-witch/shared/pitfalls";
 import { CHECK_CONTEXT_TIP_MAX_TOKENS } from "./checkContextStatus.constant";
 import { formatCheckContextTip } from "./formatCheckContextTip";
 
@@ -32,17 +29,30 @@ describe("formatCheckContextTip", () => {
     );
   });
 
-  it("truncates an over-budget first line instead of dropping it", () => {
+  it("truncates the first pitfall line to remaining budget instead of dropping it", () => {
     const huge = "y".repeat(CHECK_CONTEXT_TIP_MAX_TOKENS * 4 + 80);
-    const truncated = truncateTextToTokenBudget(huge, CHECK_CONTEXT_TIP_MAX_TOKENS);
-    expect(truncated.length).toBeGreaterThan(0);
-    expect(truncated.length).toBeLessThan(huge.length);
-    expect(estimateTokenCount(truncated)).toBeLessThanOrEqual(
+    const tip = formatCheckContextTip([{ id: "huge", avoidance: huge }]);
+    const tipLines = tip.split("\n");
+    expect(tipLines[0]).toContain("check_context");
+    expect(tipLines.length).toBeGreaterThanOrEqual(2);
+    expect(tipLines[1]).toMatch(/^huge\|/);
+    expect(tipLines[1]!.length).toBeLessThan(`huge|${huge}`.length);
+    expect(tip).toContain("huge|");
+    expect(estimateTokenCount(tip)).toBeLessThanOrEqual(
       CHECK_CONTEXT_TIP_MAX_TOKENS,
     );
-    // Tip path: oversized pitfall line is skipped; header kept under budget.
-    const tip = formatCheckContextTip([{ id: "huge", avoidance: huge }]);
-    expect(tip.startsWith("Agent Witch tip")).toBe(true);
+  });
+
+  it("skips an over-budget later line so a shorter following line can still fit", () => {
+    const overBudgetAvoidance = "z".repeat(CHECK_CONTEXT_TIP_MAX_TOKENS * 4);
+    const tip = formatCheckContextTip([
+      { id: "short-a", avoidance: "Keep this small." },
+      { id: "too-big", avoidance: overBudgetAvoidance },
+      { id: "short-b", avoidance: "Fits after skip." },
+    ]);
+    expect(tip).toContain("short-a|");
+    expect(tip).not.toContain("too-big|");
+    expect(tip).toContain("short-b|");
     expect(estimateTokenCount(tip)).toBeLessThanOrEqual(
       CHECK_CONTEXT_TIP_MAX_TOKENS,
     );

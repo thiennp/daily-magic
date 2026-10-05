@@ -12,6 +12,8 @@ import type { CheckContextPitfallLine } from "./tokenSaverTool.types";
 /**
  * Human tip for a hit: header + id|fix lines, capped to ≤~120 tokens / 4 lines.
  * If the header alone exceeds the budget, it is truncated to fit.
+ * The first pitfall line is truncated to the remaining budget (never dropped);
+ * later oversize lines are skipped so a shorter later line can still fit.
  */
 export const formatCheckContextTip = (
   pitfalls: readonly CheckContextPitfallLine[],
@@ -34,7 +36,18 @@ export const formatCheckContextTip = (
     const line = formatPitfallBotLine(pitfall);
     const lineTokens = estimateTokenCount(line);
     if (tokens + lineTokens > CHECK_CONTEXT_TIP_MAX_TOKENS) {
-      break;
+      // First pitfall line: truncate to remaining budget, never drop.
+      if (lines.length === 1) {
+        const remaining = CHECK_CONTEXT_TIP_MAX_TOKENS - tokens;
+        const truncated = truncateTextToTokenBudget(line, remaining);
+        if (truncated.length > 0) {
+          lines.push(truncated);
+          tokens += estimateTokenCount(truncated);
+        }
+        continue;
+      }
+      // Later lines: skip so a shorter later line can still fit.
+      continue;
     }
     lines.push(line);
     tokens += lineTokens;
