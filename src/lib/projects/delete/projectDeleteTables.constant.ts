@@ -15,6 +15,8 @@ export const PROJECT_DELETE_CASCADE_CHILD_TABLES = [
   "project_membership_grok_routine_webhooks",
   "project_membership_display_name_aliases",
   "project_messages",
+  "project_skill_versions",
+  "project_skills",
   "project_message_deliveries",
   "project_grok_routine_wake_attempts",
   "project_knowledge_items",
