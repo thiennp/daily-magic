@@ -33,7 +33,7 @@ const createTables = async (): Promise<void> => {
     ON project_skills (project_id, state)`;
 };
 
-/** Idempotent CREATE (full DDL in db/migrations/055-project-skill-share.sql). */
+/** Idempotent CREATE (full DDL in db/migrations/058-project-skill-share.sql). */
 export const ensureProjectSkillShareSchema = async (): Promise<void> => {
   if (state.promise === null) {
     state.promise = createTables().catch((error: unknown) => {

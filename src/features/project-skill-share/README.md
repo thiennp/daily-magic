@@ -7,7 +7,7 @@ Project owners and active members share playbooks/skills inside one project (**A
 - **Slug:** `project-skill-share`
 - **Feature path:** `src/features/project-skill-share` (FSA, ADR 0007)
 - **Lib path:** none (catalog + allowlist entries live in `src/lib/agentAccess` and `src/lib/projects/acl/projectApiKeys` because `src/lib` lists every MCP tool)
-- **Migration:** `db/migrations/055-project-skill-share.sql` (runtime `ensureProjectSkillShareSchema` mirrors it)
+- **Migration:** `db/migrations/058-project-skill-share.sql` (055–057 reserved for claim / delete-on-read / knowledge-change) (runtime `ensureProjectSkillShareSchema` mirrors it)
 
 ## Rules (locked by Lead + History)
 
@@ -51,6 +51,8 @@ Definitions: `src/lib/agentAccess/agentAccessProjectSkillShareToolCatalog.consta
 | presentation       | `ProjectSkillsSection`, `ProjectSkillRow`, `ProjectSkillPublishForm`, `useProjectSkills`, `fetchProjectSkills`, `postProjectSkillMutation`                                                                                                                                                                                                                                                                                                                                                                                         | Project Access → Skills                          |
 
 ## History port (stub until AW History ships)
+
+**Arch note:** the port stays a stub until AW History lands real `resolveProjectDataDir`, `writeProjectSkillVersion`, `readProjectSkillVersion`. The default port reports History OFF, so there is no mirror yet. AWC MCP cannot write Mac profile dirs — the real port must come from History/AWL (see `KNOWN_ISSUES.md` SKILL-001/002).
 
 `ProjectSkillHistoryPort` (`internal/infrastructure/history/projectSkillHistoryPort.type.ts`): `isHistoryEnabled`, `resolveProjectDataDir(projectId)`, `writeProjectSkillVersion({ projectId, skillId, version, body }) → { path, contentHash }`, `readProjectSkillVersion({ projectId, skillId, version }) → { body, contentHash } | null`. Orchestrators take `deps.history`; the default `PROJECT_SKILL_HISTORY_STUB_PORT` reports History OFF, so AWC is the only copy and nothing is mirrored. Read adapter treats a hash mismatch as missing; write adapter rejects a History hash that differs from ours.
 

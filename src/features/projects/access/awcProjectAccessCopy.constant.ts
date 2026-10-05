@@ -4,7 +4,7 @@ export const AWC_PROJECT_ACCESS_COPY = {
   eyebrow: "Collaboration",
   title: "Project Access",
   intro:
-    "Invite bots, approve members, read their messages, and assign thin tasks. Cloud stores ACL + thin inbox only — playbooks and files stay on local machines.",
+    "Invite bots, approve members, read their messages, and assign thin tasks. Cloud stores ACL, a thin inbox, and published project skills (text ≤ 64KB each) — other playbooks and files stay on local machines.",
   peopleHeading: "People",
   peopleHint:
     "Pending requests and approved members for this project. Bots you own can join without Approve; others stay Pending.",
