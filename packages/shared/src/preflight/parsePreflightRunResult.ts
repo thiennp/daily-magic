@@ -5,7 +5,10 @@ import type {
   PreflightRunResult,
 } from "./PreflightResult.type";
 import { PREFLIGHT_RESULT_STATUSES } from "./preflightStatus.constant";
-import { toSafePreflightEvidence } from "./toSafePreflightEvidence";
+import {
+  sanitizePreflightText,
+  toSafePreflightEvidence,
+} from "./toSafePreflightEvidence";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -51,10 +54,12 @@ const parseCheckResult = (value: unknown): PreflightCheckResult | null => {
   return {
     status,
     checkId,
-    name: name.length > 0 ? name : checkId,
-    reason: readString(value.reason)?.trim() ?? "",
-    fix: readString(value.fix)?.trim() ?? "",
-    rerunHint: readString(value.rerunHint)?.trim() ?? "",
+    name: sanitizePreflightText(name.length > 0 ? name : checkId),
+    reason: sanitizePreflightText(readString(value.reason)?.trim() ?? ""),
+    fix: sanitizePreflightText(readString(value.fix)?.trim() ?? ""),
+    rerunHint: sanitizePreflightText(
+      readString(value.rerunHint)?.trim() ?? "",
+    ),
     evidence: parseEvidenceList(value.evidence),
     actionId,
   };

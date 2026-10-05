@@ -27,6 +27,7 @@ export type {
 } from "./PreflightResult.type";
 export { aggregatePreflightStatus } from "./aggregatePreflightStatus";
 export { resolvePreflightChecks } from "./resolvePreflightChecks";
+export { isHashShapedFingerprint } from "./isHashShapedFingerprint";
 export {
   sanitizePreflightText,
   toSafePreflightEvidence,
