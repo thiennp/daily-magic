@@ -11,12 +11,17 @@ const readSrc = (relativePath: string): string =>
 describe("Grok webhook setup copy", () => {
   it("points to the bot info pane and the owner secret form, not chat", () => {
     expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).toBe(
-      "The bot cannot see its own routine webhook POST URL or key. Open this bot in the Grok Bot desktop app, open its info pane (click the bot's name in the chat header), find its webhook routine in Routines, and copy the POST URL and key. The project owner enters both in Agent Witch Cloud → Project Access → Members → this bot → Grok webhook (secret fields). Do not paste them into chat.",
+      "The bot cannot see its own routine webhook POST URL or key. Open this bot in the Grok Bot desktop app, open its info pane (click the bot's name in the chat header), find its webhook routine in Routines, and copy the POST URL and key. The project owner enters both in the Grok webhook form at Agent Witch Cloud → Project Access → People → Members → <bot> → Grok webhook (secret fields). If you are not the owner, give the URL and key to the owner outside chat, or call register_project_webhook yourself. Do not paste them into chat, and never paste the key into a project message.",
     );
     expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).toMatch(/Grok Bot/);
-    expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).not.toMatch(/routine status/);
     expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).not.toMatch(
-      /grokbot:\/\/|https?:\/\/|sidebar|Slack|Discord|Cursor/i,
+      /routine status/,
+    );
+    expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).not.toMatch(
+      /grokbot:\/\/|https?:\/\/|sidebar|<a\b|Slack|Discord|Cursor/i,
+    );
+    expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).not.toContain(
+      "Project Access → Members",
     );
   });
 

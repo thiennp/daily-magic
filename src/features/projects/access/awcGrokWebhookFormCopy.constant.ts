@@ -1,4 +1,4 @@
-/** Owner secret form for a member bot's Grok routine webhook (Project Access → Members). */
+/** Owner secret form for a member bot's Grok routine webhook (Project Access → People → Members). */
 export const AWC_GROK_WEBHOOK_FORM_COPY = {
   toggle: "Grok webhook",
   hide: "Hide",

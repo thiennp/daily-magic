@@ -1,4 +1,5 @@
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
+import { AWC_GROK_WEBHOOK_OWNER_ENTRY } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
 import { readProjectGrokRoutineWebhookStatus } from "@/lib/projects/acl/webhooks/readProjectGrokRoutineWebhookStatus";
@@ -28,7 +29,12 @@ export const executeGetMyProjectWebhookStatusTool = async (input: {
   });
   if (status === null) {
     return agentAccessTextResult(
-      { ok: false, error: "forbidden", code: "forbidden" },
+      {
+        ok: false,
+        error: "forbidden",
+        code: "forbidden",
+        note: "Your membership in this project is not active. Re-check get_my_project_access.",
+      },
       true,
     );
   }
@@ -40,6 +46,6 @@ export const executeGetMyProjectWebhookStatusTool = async (input: {
     lastGrokWakeResult: status.lastGrokWakeResult,
     note: view.grokWebhookRegistered
       ? "Registered. The key is stored and never returned."
-      : "Not registered. Ask the user to enter the routine POST URL and key in Project Access → Members → this bot → Grok webhook. Never ask for them in chat.",
+      : `Not registered. ${AWC_GROK_WEBHOOK_OWNER_ENTRY} Never ask for them in chat.`,
   });
 };

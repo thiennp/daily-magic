@@ -38,6 +38,16 @@ describe("guardProjectApiKeyToolUse", () => {
     expect(result?.text).toContain("forbidden");
   });
 
+  it("forbids get_my_project_webhook_status (agent-access Bearer only)", () => {
+    const result = guardProjectApiKeyToolUse({
+      name: "get_my_project_webhook_status",
+      args: { projectId: "proj-1" },
+      projectAuth,
+    });
+    expect(result?.isError).toBe(true);
+    expect(result?.text).toContain("Project API key cannot call this tool");
+  });
+
   it("forbids mismatched projectId", () => {
     const result = guardProjectApiKeyToolUse({
       name: "get_project_acl",

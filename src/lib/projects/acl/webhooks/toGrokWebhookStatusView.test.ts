@@ -22,16 +22,35 @@ describe("toGrokWebhookStatusView", () => {
 
   it("daily repair copy names only results STORED_GROK_WAKE_RESULT can hold", () => {
     expect(AWC_GROK_WEBHOOK_DAILY_REPAIR).toContain(
-      "fetch_failed, not_postable, or a non-2xx http_ code",
+      "http_401, http_403, http_404, not_postable, or fetch_failed on repeated checks",
     );
-    for (const value of [
-      "fetch_failed",
-      "not_postable",
-      "http_500",
-      "http_200",
-    ]) {
+    expect(AWC_GROK_WEBHOOK_DAILY_REPAIR).toContain(
+      "a single fetch_failed can just be the 3s wake timeout",
+    );
+    const named =
+      AWC_GROK_WEBHOOK_DAILY_REPAIR.match(
+        /\b(?:http_\w+|fetch_failed|not_postable)\b/g,
+      ) ?? [];
+    expect(new Set(named)).toEqual(
+      new Set([
+        "http_401",
+        "http_403",
+        "http_404",
+        "not_postable",
+        "fetch_failed",
+      ]),
+    );
+    for (const value of named) {
       expect(STORED_GROK_WAKE_RESULT.test(value)).toBe(true);
     }
+    expect(AWC_GROK_WEBHOOK_DAILY_REPAIR).not.toMatch(/non-2xx/);
     expect(STORED_GROK_WAKE_RESULT.test("timeout")).toBe(false);
+    expect(STORED_GROK_WAKE_RESULT.test("forbidden")).toBe(false);
+  });
+
+  it("daily repair copy sends forbidden to get_my_project_access, not re-entry", () => {
+    expect(AWC_GROK_WEBHOOK_DAILY_REPAIR).toContain(
+      "If it returns forbidden, your membership is not active: re-check get_my_project_access.",
+    );
   });
 });

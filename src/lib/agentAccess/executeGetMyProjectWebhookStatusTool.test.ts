@@ -11,6 +11,7 @@ vi.mock(
 
 import { AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS } from "@/lib/agentAccess/agentAccessProjectInviteHooksToolCatalog.constant";
 import { buildAgentAccessLiveGuide } from "@/lib/agentAccess/buildAgentAccessLiveGuide";
+import { GET_MY_PROJECT_WEBHOOK_STATUS_TOOL } from "@/lib/agentAccess/getMyProjectWebhookStatusTool.constant";
 import { executeProjectAclWebhookAndKeyTools } from "@/lib/agentAccess/executeProjectAclWebhookAndKeyTools";
 import { AGENT_ACCESS_MUTATING_TOOLS } from "@/lib/agentAccess/agentAccess.constant";
 import { PROJECT_API_KEY_MCP_TOOLS } from "@/lib/projects/acl/projectApiKeys/projectApiKeyMcpAllowlist.constant";
@@ -60,6 +61,26 @@ describe("get_my_project_webhook_status", () => {
     const outsider = await call({ projectId: "proj-1" });
     expect(outsider.result?.isError).toBe(true);
     expect(outsider.text).toContain("forbidden");
+    expect(outsider.text).toContain("Re-check get_my_project_access");
+  });
+
+  it("points an unregistered bot to the owner's form, never a member form", async () => {
+    readStatus.mockResolvedValue({
+      grokWebhookUrl: null,
+      lastGrokWakeResult: null,
+    });
+    const { text } = await call({ projectId: "proj-1" });
+    expect(text).toContain(
+      "The project owner enters both in the Grok webhook form at Agent Witch Cloud → Project Access → People → Members → <bot> → Grok webhook",
+    );
+    expect(text).toContain("Never paste the key into a project message.");
+    expect(text).not.toContain("Project Access → Members");
+    expect(GET_MY_PROJECT_WEBHOOK_STATUS_TOOL.description).toContain(
+      "Agent-access Bearer only; awc_proj_ keys are rejected for this tool.",
+    );
+    expect(GET_MY_PROJECT_WEBHOOK_STATUS_TOOL.description).toContain(
+      "Project Access → People → Members → <bot> → Grok webhook",
+    );
   });
 
   it("is listed in the catalog and guide as a read-only, agent-access tool", () => {

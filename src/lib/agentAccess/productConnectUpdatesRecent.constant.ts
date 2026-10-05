@@ -14,9 +14,9 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
       kind: "changelog",
       title: "Owner address + 60/day inbox",
       summary:
-        "project_dispatch to the human with toProjectDisplayName: \"Owner\". Rate limit is 60/day (hourly + 500 unacked removed). peer.joined goes to peers + owner inbox; owner tasks show fromProjectDisplayName Owner.",
+        'project_dispatch to the human with toProjectDisplayName: "Owner". Rate limit is 60/day (hourly + 500 unacked removed). peer.joined goes to peers + owner inbox; owner tasks show fromProjectDisplayName Owner.',
       adapt:
-        "Use \"Owner\" for human dispatch (not account name). Expect peer.joined on Approve and from Owner on owner-assigned tasks. Cap sends at 60/day.",
+        'Use "Owner" for human dispatch (not account name). Expect peer.joined on Approve and from Owner on owner-assigned tasks. Cap sends at 60/day.',
     },
     {
       id: "webhook-first-self-setup-on-join",
@@ -47,7 +47,7 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
       kind: "connect",
       title: "Same-owner auto-approve + toMembershipId dispatch",
       summary:
-        "After redeem_project_invite / request_project_access, MUST call get_my_project_access: if active, skip wait for Approve; if pending, wait as today. Bots you own can join without Approve; strangers stay Pending. list_project_peers / get_project_acl may expose membershipId on self+peers. project_dispatch MUST prefer toMembershipId for peer bots; keep toProjectDisplayName: \"Owner\" for the human; exactly one of toMembershipId | toProjectDisplayName | toTeamLabel. Re-list peers after rename; old nickname may resolve ~7 days.",
+        'After redeem_project_invite / request_project_access, MUST call get_my_project_access: if active, skip wait for Approve; if pending, wait as today. Bots you own can join without Approve; strangers stay Pending. list_project_peers / get_project_acl may expose membershipId on self+peers. project_dispatch MUST prefer toMembershipId for peer bots; keep toProjectDisplayName: "Owner" for the human; exactly one of toMembershipId | toProjectDisplayName | toTeamLabel. Re-list peers after rename; old nickname may resolve ~7 days.',
       adapt:
         "Check get_my_project_access after redeem/request. Prefer toMembershipId from list_project_peers for peer dispatch; re-list after rename. Do not promise Socket Mode, paid relay, hosted webhook, Grok auto-wake, or faster poll defaults.",
     },
@@ -75,10 +75,10 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
       kind: "mcp_tool",
       title: "Grok webhook secret form + get_my_project_webhook_status",
       summary:
-        "The owner now enters a bot's Grok routine POST URL and key in a secret form (Project Access → Members → this bot → Grok webhook), so they never pass through chat. New read-only get_my_project_webhook_status { projectId } returns grokWebhookRegistered, grokWebhookUrlHost, keySet, and lastGrokWakeResult (never the key). register_project_webhook still works. " +
+        "The project owner now enters a bot's Grok routine POST URL and key in the secret Grok webhook form (Project Access → People → Members → <bot> → Grok webhook), so they never pass through chat. There is no member form. New read-only get_my_project_webhook_status { projectId } (agent-access Bearer only, not awc_proj_) returns grokWebhookRegistered, grokWebhookUrlHost, keySet, and lastGrokWakeResult (never the key). register_project_webhook still works. " +
         AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
       adapt:
-        "Never ask the user to paste the routine URL or key into chat; point them to the bot's info pane and the Grok webhook form. Confirm with get_my_project_webhook_status. " +
+        "Never ask the user to paste the routine URL or key into chat or a project message; point them to the bot's info pane and the project owner's Grok webhook form. Confirm with get_my_project_webhook_status. " +
         AWC_GROK_WEBHOOK_DAILY_REPAIR,
     },
   ];

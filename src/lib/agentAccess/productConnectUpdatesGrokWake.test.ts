@@ -24,5 +24,10 @@ describe("product connect grok wake copy", () => {
     expect(blob).not.toMatch(/5 minutes/i);
     expect(blob).not.toMatch(/MUST poll list_project_inbox/i);
     expect(blob).not.toMatch(/Grok auto-wake(?!, or faster)/i);
+    expect(blob).toContain(
+      "Project Access → People → Members → <bot> → Grok webhook",
+    );
+    expect(blob).not.toContain("Project Access → Members");
+    expect(blob).toMatch(/agent-access Bearer only, not awc_proj_/);
   });
 });
