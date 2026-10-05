@@ -6,9 +6,14 @@ import { describe, expect, it } from "vitest";
 const read = (relative: string): string =>
   readFileSync(path.join(process.cwd(), relative), "utf8");
 
-const tabPanelsSource = read("src/features/projects/AwcProjectDetailTabPanels.tsx");
+const tabPanelsSource = read(
+  "src/features/projects/AwcProjectDetailTabPanels.tsx",
+);
 const resourcesPanelSource = read(
   "src/features/projects/resources/AwcProjectResourcesPanel.tsx",
+);
+const resourcesFoldersCardSource = read(
+  "src/features/projects/resources/AwcProjectResourcesFoldersCard.tsx",
 );
 const resourcesCopySource = read(
   "src/features/projects/resources/projectPageResourcesCopy.constant.ts",
@@ -32,9 +37,13 @@ describe("AwcProjectDetailPanel layout S6 resources", () => {
   });
 
   it("Resources is Folders + Git only (no shared skills list)", () => {
-    expect(resourcesPanelSource).toContain("AwcProjectAccessFolderRefs");
+    expect(resourcesPanelSource).toContain("AwcProjectResourcesFoldersCard");
+    expect(resourcesFoldersCardSource).toContain("AwcProjectAccessFolderRefs");
     expect(resourcesPanelSource).toContain("AwcProjectRepoUrlsSection");
     expect(resourcesPanelSource).not.toMatch(
+      /ProjectSkillsSection|skill-share|Skills/,
+    );
+    expect(resourcesFoldersCardSource).not.toMatch(
       /ProjectSkillsSection|skill-share|Skills/,
     );
     expect(resourcesCopySource).toContain("Folders on computers");
@@ -43,6 +52,9 @@ describe("AwcProjectDetailPanel layout S6 resources", () => {
 
   it("keeps gray-only Resources chrome and computer wording", () => {
     expect(resourcesPanelSource).not.toMatch(/indigo|purple|brand-|#6366f1/i);
+    expect(resourcesFoldersCardSource).not.toMatch(
+      /indigo|purple|brand-|#6366f1/i,
+    );
     expect(resourcesCopySource).toMatch(/computer/i);
     expect(resourcesCopySource).not.toMatch(/\bdevice\b|\bAWL\b|\bagent\b/i);
   });
