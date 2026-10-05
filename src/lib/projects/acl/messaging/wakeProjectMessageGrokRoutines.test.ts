@@ -37,22 +37,46 @@ describe("wakeProjectMessageGrokRoutines", () => {
     });
   });
 
-  it("names the owner when there is no sender membership", async () => {
+  it("names the owner when there is no sender membership or name", async () => {
     wakeMock.mockResolvedValue([]);
-    await wakeProjectMessageGrokRoutines({
-      ...base,
-      senderMembershipId: null,
-      senderProjectDisplayName: "Ignored",
-    });
+    await wakeProjectMessageGrokRoutines({ ...base, senderMembershipId: null });
     expect(wakeMock.mock.calls[0]?.[0]).toMatchObject({
       fromMembershipId: null,
       fromProjectDisplayName: "Owner",
     });
   });
 
+  it("names the owner when there is no sender membership and the name is empty", async () => {
+    wakeMock.mockResolvedValue([]);
+    await wakeProjectMessageGrokRoutines({
+      ...base,
+      senderMembershipId: null,
+      senderProjectDisplayName: "",
+    });
+    expect(wakeMock.mock.calls[0]?.[0]).toMatchObject({
+      fromProjectDisplayName: "Owner",
+    });
+  });
+
+  it("keeps a given name when there is no sender membership", async () => {
+    wakeMock.mockResolvedValue([]);
+    await wakeProjectMessageGrokRoutines({
+      ...base,
+      senderMembershipId: null,
+      senderProjectDisplayName: "System",
+    });
+    expect(wakeMock.mock.calls[0]?.[0]).toMatchObject({
+      fromMembershipId: null,
+      fromProjectDisplayName: "System",
+    });
+  });
+
   it("uses null when a member sender has no display name", async () => {
     wakeMock.mockResolvedValue([]);
-    await wakeProjectMessageGrokRoutines({ ...base, senderMembershipId: "mem-s" });
+    await wakeProjectMessageGrokRoutines({
+      ...base,
+      senderMembershipId: "mem-s",
+    });
     expect(wakeMock.mock.calls[0]?.[0]).toMatchObject({
       fromProjectDisplayName: null,
     });

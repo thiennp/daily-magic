@@ -12,6 +12,17 @@ export type WakeProjectMessageGrokRoutinesInput = {
   readonly recipientMembershipIds: readonly string[];
 };
 
+const wakeSenderDisplayName = (
+  input: WakeProjectMessageGrokRoutinesInput,
+): string | null => {
+  if (input.senderMembershipId !== null) {
+    return input.senderProjectDisplayName ?? null;
+  }
+  return input.senderProjectDisplayName
+    ? input.senderProjectDisplayName
+    : "Owner";
+};
+
 /**
  * Grok routine wake step for a stored project message.
  * Await it after the message and delivery rows exist.
@@ -26,10 +37,7 @@ export const wakeProjectMessageGrokRoutines = async (
       messageId: input.messageId,
       summary: input.summary,
       fromMembershipId: input.senderMembershipId,
-      fromProjectDisplayName:
-        input.senderMembershipId === null
-          ? "Owner"
-          : (input.senderProjectDisplayName ?? null),
+      fromProjectDisplayName: wakeSenderDisplayName(input),
       recipientMembershipIds: input.recipientMembershipIds,
     });
   } catch (error: unknown) {
