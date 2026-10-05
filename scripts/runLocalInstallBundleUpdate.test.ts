@@ -41,7 +41,10 @@ import {
   deferAgentWitchInstallBundleUpdate,
   isAgentWitchWriterWorkInProgress,
 } from "./agentWitchWriterWorkGuard";
-import { runLocalInstallBundleUpdate } from "./runLocalInstallBundleUpdate";
+import {
+  isAgentWitchInstallBundleUpdateNeeded,
+  runLocalInstallBundleUpdate,
+} from "./runLocalInstallBundleUpdate";
 import { resolveAgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 
 describe("runLocalInstallBundleUpdate", () => {
@@ -95,5 +98,25 @@ describe("runLocalInstallBundleUpdate", () => {
       trigger: "system.ack",
     });
     expect(requestLocalAgentWitchSelfUpdate).not.toHaveBeenCalled();
+  });
+});
+
+describe("isAgentWitchInstallBundleUpdateNeeded", () => {
+  it("is false when the advertised bundle is already installed", () => {
+    expect(
+      isAgentWitchInstallBundleUpdateNeeded({
+        installDir: "/tmp/install",
+        remoteBundleVersion: "36",
+      }),
+    ).toBe(false);
+  });
+
+  it("is true when the cloud advertises a different bundle", () => {
+    expect(
+      isAgentWitchInstallBundleUpdateNeeded({
+        installDir: "/tmp/install",
+        remoteBundleVersion: "37",
+      }),
+    ).toBe(true);
   });
 });

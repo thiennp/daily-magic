@@ -46,6 +46,22 @@ const runDirectInstallBundleUpdate = async (): Promise<{
   }
 };
 
+/**
+ * True when the cloud advertises a bundle different from install-version.json.
+ * Callers must check this before the writer-busy deferral, or every
+ * `system.ack` while a writer runs logs a bogus "Deferring install bundle
+ * update" for the version that is already installed.
+ */
+export const isAgentWitchInstallBundleUpdateNeeded = (input: {
+  readonly installDir: string;
+  readonly remoteBundleVersion: string;
+}): boolean =>
+  shouldTriggerAgentWitchHeartbeatSelfUpdate({
+    localBundleVersion:
+      readAgentWitchInstallVersion(input.installDir)?.bundleVersion ?? null,
+    remoteBundleVersion: input.remoteBundleVersion,
+  });
+
 export const runLocalInstallBundleUpdate = async (input: {
   readonly layout: AgentWitchLocalLayout;
   readonly remoteBundleVersion: string;

@@ -37,7 +37,10 @@ export {
 } from "../../../scripts/agentWitchTerminalStreamState";
 export { requestLocalAgentWitchRestart } from "../../../scripts/requestLocalAgentWitchRestart";
 export { ensureAgentWitchCoupledLiveAppHealth } from "../../../scripts/ensureAgentWitchCoupledLiveAppHealth";
-export { runLocalInstallBundleUpdate } from "../../../scripts/runLocalInstallBundleUpdate";
+export {
+  isAgentWitchInstallBundleUpdateNeeded,
+  runLocalInstallBundleUpdate,
+} from "../../../scripts/runLocalInstallBundleUpdate";
 export {
   beginAgentWitchWriterWork,
   deferAgentWitchInstallBundleUpdate,

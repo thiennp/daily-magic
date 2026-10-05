@@ -111,6 +111,7 @@ import {
   deferAgentWitchLocalRestart,
   ensureAgentWitchCoupledLiveAppHealth,
   endAgentWitchWriterWork,
+  isAgentWitchInstallBundleUpdateNeeded,
   isAgentWitchWriterWorkInProgress,
   buildWriterCliInvocation,
   buildWriterSessionReadyMessage,
@@ -1040,6 +1041,16 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     trigger: "system.ack" | "install.bundle.update" = "system.ack",
   ): void => {
     if (state.selfUpdateInFlight) {
+      return;
+    }
+
+    // Already on this bundle: nothing to update or defer (avoids per-ack log spam).
+    if (
+      !isAgentWitchInstallBundleUpdateNeeded({
+        installDir: config.layout.installDir,
+        remoteBundleVersion,
+      })
+    ) {
       return;
     }
 
