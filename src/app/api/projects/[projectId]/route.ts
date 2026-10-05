@@ -1,10 +1,8 @@
-import {
-  deleteUserProject,
-  updateUserProject,
-} from "@/lib/projects/userProjectMutations";
+import mapDeleteProjectDbOnlyResultToResponse from "@/lib/projects/delete/mapDeleteProjectDbOnlyResultToResponse";
+import orchestrateDeleteProjectDbOnly from "@/lib/projects/delete/orchestrateDeleteProjectDbOnly";
+import { updateUserProject } from "@/lib/projects/userProjectMutations";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { parseUpdateUserProjectBody } from "@/lib/projects/parseUserProjectBody";
-import isDefaultUserProject from "@/lib/projects/isDefaultUserProject";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -101,30 +99,17 @@ export async function DELETE(
   }
 
   const { projectId } = await context.params;
-  const project = await getUserProjectById(projectId);
 
-  if (project === null || project.ownerUserId !== actor.id) {
+  try {
+    const result = await orchestrateDeleteProjectDbOnly({
+      projectId,
+      ownerUserId: actor.id,
+    });
+    return mapDeleteProjectDbOnlyResultToResponse(result);
+  } catch {
     return Response.json(
-      { ok: false, errorMessage: "Project not found." },
-      { status: 404 },
+      { ok: false, errorMessage: "Could not delete project." },
+      { status: 500 },
     );
   }
-
-  if (isDefaultUserProject(project)) {
-    return Response.json(
-      { ok: false, errorMessage: "The Default project cannot be deleted." },
-      { status: 400 },
-    );
-  }
-
-  const deleted = await deleteUserProject(actor.id, projectId);
-
-  if (!deleted) {
-    return Response.json(
-      { ok: false, errorMessage: "Project not found." },
-      { status: 404 },
-    );
-  }
-
-  return Response.json({ ok: true });
 }

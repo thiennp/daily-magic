@@ -102,21 +102,4 @@ export const updateUserProject = async (
   return mapUserProjectRow(rows[0]);
 };
 
-export const deleteUserProject = async (
-  ownerUserId: string,
-  projectId: string,
-): Promise<boolean> => {
-  const sql = getSql();
-  const rows = asRowArray(
-    await sql`
-      DELETE FROM user_projects
-      WHERE id = ${projectId}
-        AND owner_user_id = ${ownerUserId}
-      RETURNING id
-    `,
-  );
-
-  return rows.length > 0;
-};
-
 export const listProjectsForOwner = listUserProjectsForOwner;
