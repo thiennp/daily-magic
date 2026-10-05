@@ -19,11 +19,19 @@ export type TickProjectComputerHistoryDeps = {
   readonly listProjectIds?: () => readonly string[];
   readonly cloudApi?: AgentWitchCloudApiConfig | null;
   readonly pullSkills?: PullPublishedProjectSkillsToMirror;
+  /**
+   * Optional skillgen mining hook (phase 1). Injected so tests can supply a
+   * fake OwnerLlmDraftWriter path; omitted in production until wired to disk.
+   * Failures are isolated from skill pull and never affect ack/delete.
+   */
+  readonly runSkillgen?: (input: {
+    readonly projectId: string;
+  }) => void | Promise<void>;
 };
 
 /**
- * One History tick: shared published-skill pull (mirror) with real HTTP listPublished.
- * Pull errors are caught, logged, retried next tick — never affect ack/delete.
+ * One History tick: optional skillgen mining (DI) then shared published-skill pull.
+ * Skillgen and pull errors are caught, logged, retried next tick — never affect ack/delete.
  */
 export const tickProjectComputerHistory = async (
   deps: TickProjectComputerHistoryDeps = {},
@@ -48,6 +56,15 @@ export const tickProjectComputerHistory = async (
   const pull = deps.pullSkills ?? pullPublishedProjectSkillsToMirror;
 
   for (const projectId of projectIds) {
+    // Skillgen mining — failures isolated from pull and ack/delete.
+    if (deps.runSkillgen !== undefined) {
+      try {
+        await deps.runSkillgen({ projectId });
+      } catch (error: unknown) {
+        console.error(LOG_PREFIX, "skillgen_failed", projectId, error);
+      }
+    }
+
     // Skill pull — failures isolated from ack/delete.
     if (cloudApi === null) {
       console.error(LOG_PREFIX, "pull_skipped_no_cloud_api", projectId);

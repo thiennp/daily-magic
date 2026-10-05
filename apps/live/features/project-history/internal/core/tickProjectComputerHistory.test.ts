@@ -64,4 +64,20 @@ describe("tickProjectComputerHistory", () => {
     });
     expect(pullMock).toHaveBeenCalledTimes(2);
   });
+
+  it("runs injected skillgen before pull and isolates skillgen failures", async () => {
+    const runSkillgen = vi
+      .fn()
+      .mockRejectedValueOnce(new Error("llm"))
+      .mockResolvedValueOnce(undefined);
+    pullMock.mockResolvedValue({ ok: true, skipped: false, skills: [] });
+    await tickProjectComputerHistory({
+      listProjectIds: () => ["p1", "p2"],
+      pullSkills: pullMock,
+      cloudApi: { appOrigin: "https://example.test", pairingToken: "tok" },
+      runSkillgen,
+    });
+    expect(runSkillgen).toHaveBeenCalledTimes(2);
+    expect(pullMock).toHaveBeenCalledTimes(2);
+  });
 });
