@@ -13,8 +13,6 @@ export type MembershipView = {
   readonly scopes: readonly string[];
   readonly projectDisplayName: string | null;
   readonly isAgent: boolean;
-  /** From mig 063; UI People Joined filters memberKind=human. */
-  readonly memberKind: "human" | "bot";
   readonly displayName: string | null;
   readonly email: string | null;
   readonly image: string | null;
@@ -53,7 +51,6 @@ export const buildMembershipViews = async (
       scopes: [...m.scopes],
       projectDisplayName: m.projectDisplayName,
       isAgent: profile?.isAgent ?? false,
-      memberKind: m.memberKind === "human" ? "human" : "bot",
       displayName: profile?.name ?? null,
       email: profile?.email ?? null,
       image: profile?.image ?? null,
