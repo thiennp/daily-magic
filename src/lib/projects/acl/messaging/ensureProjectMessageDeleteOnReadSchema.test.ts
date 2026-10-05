@@ -32,50 +32,14 @@ describe("ensureProjectMessageDeleteOnReadSchema", () => {
     const joined = sqlMock.mock.calls.map((c) => String(c[0])).join("\n");
     expect(joined).toMatch(/project_message_outcomes/);
     expect(joined).toMatch(/read_at/);
+    expect(joined).not.toMatch(/project_message_computer_acks/);
   });
 
-  it("does not CREATE computer_acks (History mig 060 owns that)", async () => {
+  it("runs no computer_acks DDL (History owns ALTER/indexes)", async () => {
     await ensureProjectMessageDeleteOnReadSchema();
     const queries = sqlMock.mock.calls.map((c) => String(c[0]));
     expect(
-      queries.some((q) =>
-        q.includes("CREATE TABLE IF NOT EXISTS project_message_computer_acks"),
-      ),
+      queries.some((q) => q.includes("project_message_computer_acks")),
     ).toBe(false);
-  });
-
-  it("only adds device_id as nullable when computer_acks already exists", async () => {
-    await ensureProjectMessageDeleteOnReadSchema();
-    const queries = sqlMock.mock.calls.map((c) => String(c[0]));
-    const add = queries.find((q) =>
-      /ALTER TABLE project_message_computer_acks\s+ADD COLUMN IF NOT EXISTS device_id TEXT\s*$/.test(
-        q.trim(),
-      ),
-    );
-    expect(add).toBeDefined();
-    expect(
-      queries.some((q) => /SET NOT NULL|DROP CONSTRAINT|DROP COLUMN/.test(q)),
-    ).toBe(false);
-    expect(queries.join("\n")).toMatch(
-      /project_message_computer_acks_acked_idx/,
-    );
-  });
-
-  it("skips computer_acks alters when the table is missing", async () => {
-    sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
-      const q = String(strings[0] ?? "");
-      if (q.includes("project_message_computer_acks")) {
-        const err = Object.assign(new Error("undefined_table"), {
-          code: "42P01",
-        });
-        throw err;
-      }
-      return [];
-    });
-    await expect(ensureProjectMessageDeleteOnReadSchema()).resolves.toBeUndefined();
-    const queries = sqlMock.mock.calls.map((c) => String(c[0]));
-    expect(queries.some((q) => q.includes("project_message_outcomes"))).toBe(
-      true,
-    );
   });
 });

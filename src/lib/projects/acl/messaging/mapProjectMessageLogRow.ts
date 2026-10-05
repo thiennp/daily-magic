@@ -1,5 +1,6 @@
 import type { ProjectMessageLogEntry } from "@/lib/projects/acl/messaging/projectMessageLog.types";
 import { projectMessageSenderDisplayName } from "@/lib/projects/acl/messaging/projectMessageSenderDisplayName";
+import { toPostgresTimestamptz } from "@/lib/projects/acl/messaging/toPostgresTimestamptz";
 
 export const mapProjectMessageLogRow = (
   row: Record<string, unknown>,
@@ -27,7 +28,9 @@ export const mapProjectMessageLogRow = (
     toMembershipId: row.to_membership_id ? String(row.to_membership_id) : null,
     toUserId: row.to_user_id ? String(row.to_user_id) : null,
     toTeamLabel: row.to_team_label ? String(row.to_team_label) : null,
-    createdAt: String(row.created_at),
-    ackedAt: row.acked_at ? String(row.acked_at) : null,
+    createdAt: toPostgresTimestamptz(row.created_at) ?? String(row.created_at),
+    ackedAt: row.acked_at
+      ? (toPostgresTimestamptz(row.acked_at) ?? String(row.acked_at))
+      : null,
   };
 };

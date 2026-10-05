@@ -112,6 +112,7 @@ import {
 } from "@agent-witch/live-shell";
 import { readAgentWitchInstallVersion } from "@agent-witch/install-self-update";
 import { runLocalSelfDelegatedTask } from "@agent-witch/live-tasks";
+import { startProjectComputerHistoryTick } from "@agent-witch/live-project-history";
 import {
   applyWriterApiSettings,
   readAgentWitchRunConfig,
@@ -1831,6 +1832,11 @@ export const startAgentWitchLocalApp = (input: {
       return;
     }
     console.error("[agent-witch] Local app server error:", error);
+  });
+
+  const historyTick = startProjectComputerHistoryTick();
+  server.on("close", () => {
+    historyTick.stop();
   });
 
   server.listen(AGENT_WITCH_LOCAL_APP_PORT, "127.0.0.1", () => {

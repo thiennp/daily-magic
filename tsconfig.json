@@ -238,6 +238,15 @@
       ],
       "@agent-witch/live-mcp/presentation": [
         "./apps/live/features/mcp/public-api/presentation.ts"
+      ],
+      "@agent-witch/live-project-history": [
+        "./apps/live/features/project-history/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/live-project-history/types": [
+        "./apps/live/features/project-history/public-api/types.ts"
+      ],
+      "@agent-witch/live-project-history/presentation": [
+        "./apps/live/features/project-history/public-api/presentation.ts"
       ]
     }
   },

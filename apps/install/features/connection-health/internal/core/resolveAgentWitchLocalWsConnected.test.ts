@@ -28,6 +28,7 @@ const createLayout = (rootDir: string): AgentWitchLocalLayout => ({
   harnessManifestPath: path.join(rootDir, "harness", "manifest.json"),
   harnessSetsDir: path.join(rootDir, "harness", "sets"),
   projectsDir: path.join(rootDir, "projects"),
+  projectDataDir: path.join(rootDir, "project-data"),
   logsDir: path.join(rootDir, "logs"),
   reportsDir: path.join(rootDir, "reports"),
   deviceKeypairPath: path.join(rootDir, "device-keypair.json"),

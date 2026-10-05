@@ -142,6 +142,13 @@
       "fsaStatus": "fsa",
       "featurePath": "apps/live/features/mcp",
       "notes": "Shared JSON-RPC core for stdio `agent-witch mcp` and local app POST /mcp; tools come from owning features (token-saver check_context)."
+    },
+    {
+      "slug": "project-history",
+      "title": "Project computer history (local)",
+      "fsaStatus": "fsa",
+      "featurePath": "apps/live/features/project-history",
+      "notes": "Opt-in project.message.history durable store, skill mirror FS, History tick + Share pull."
     }
   ]
 }

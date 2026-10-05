@@ -57,6 +57,8 @@ export const AGENT_WITCH_MESSAGE_TYPES = {
   AUTOMATIONS_RUN: "automations.run",
   WRITER_ENSURE: "writer.ensure",
   WRITER_STATUS: "writer.status",
+  /** AWC → owner's project computer: one project message to save locally (history on). */
+  PROJECT_MESSAGE_HISTORY: "project.message.history",
 } as const;
 
 export type AgentWitchMessageType =

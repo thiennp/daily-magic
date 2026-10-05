@@ -1,3 +1,4 @@
+import { ensureProjectComputerHistorySchema } from "@/lib/projects/acl/ensureProjectComputerHistorySchema";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 import { getSql } from "@/lib/db";
 
@@ -79,7 +80,9 @@ export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
     ADD COLUMN IF NOT EXISTS last_activity_at TIMESTAMPTZ`;
   await sql`ALTER TABLE project_message_deliveries
     ADD COLUMN IF NOT EXISTS b2b_state_at TIMESTAMPTZ`;
-  // read_at, outcomes, computer_acks: ensureProjectMessageDeleteOnReadSchema
+  // DOR DDL (read_at, outcomes): ensureProjectMessageDeleteOnReadSchema
   // (called once from ensureProjectAclSchema after this function).
+  await ensureProjectComputerHistorySchema();
+
   await purgeExpiredProjectMessages();
 };

@@ -8,8 +8,8 @@ vi.mock("@/lib/db", () => ({
   asRowArray: (rows: unknown) => (Array.isArray(rows) ? rows : []),
 }));
 
-vi.mock("@/lib/projects/acl/messaging/isComputerAckSatisfiedForCloudDelete", () => ({
-  isComputerAckSatisfiedForCloudDelete: vi.fn(async () => true),
+vi.mock("@/lib/projects/acl/messaging/gateProjectMessageDelete", () => ({
+  gateProjectMessageDelete: vi.fn(async () => "allow"),
 }));
 
 import {

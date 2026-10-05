@@ -1,19 +1,21 @@
-import { isComputerAckSatisfiedForCloudDelete } from "@/lib/projects/acl/messaging/isComputerAckSatisfiedForCloudDelete";
+import { getSql } from "@/lib/db";
+import { gateProjectMessageDelete } from "@/lib/projects/acl/messaging/gateProjectMessageDelete";
 import { loadProjectMessageDeleteSnapshot } from "@/lib/projects/acl/messaging/loadProjectMessageDeleteSnapshot";
 import {
   writeProjectMessageOutcome,
   type ProjectMessageDeletedReason,
 } from "@/lib/projects/acl/messaging/writeProjectMessageOutcome";
-import { getSql } from "@/lib/db";
 
 export type DeleteProjectMessageWithOutcomeResult =
   | { readonly ok: true; readonly messageId: string }
   | { readonly ok: false; readonly code: "not_found" | "computer_ack_required" };
 
 /**
- * Write a thin outcome, then hard-delete the message (CASCADE deliveries and
- * wake attempts). Caller enforces recipient rules; this enforces computerAck
- * composition when History mode is on.
+ * Write a thin outcome, then hard-delete through the History gate.
+ * When History is gated, allow only if a computerAck exists — never because
+ * the message is old (no gap marker, no timeout delete). Caller enforces
+ * recipient / DOR rules via existingRuleAllows semantics (this path always
+ * passes true once the caller has decided to delete).
  */
 export const deleteProjectMessageWithOutcome = async (input: {
   readonly messageId: string;
@@ -27,11 +29,15 @@ export const deleteProjectMessageWithOutcome = async (input: {
   if (snapshot === null) {
     return { ok: false, code: "not_found" };
   }
-  const computerOk = await isComputerAckSatisfiedForCloudDelete({
+  const createdAt =
+    snapshot.messageCreatedAt ?? new Date(0).toISOString();
+  const gate = await gateProjectMessageDelete({
     projectId: snapshot.projectId,
     messageId: snapshot.messageId,
+    createdAt,
+    existingRuleAllows: true,
   });
-  if (!computerOk) {
+  if (gate === "deny") {
     return { ok: false, code: "computer_ack_required" };
   }
   const finalB2bState =

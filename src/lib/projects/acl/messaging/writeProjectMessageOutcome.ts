@@ -1,7 +1,10 @@
 import { toPostgresTimestamptz } from "@/lib/projects/acl/messaging/toPostgresTimestamptz";
 import { getSql } from "@/lib/db";
 
-export type ProjectMessageDeletedReason = "ack" | "delete_on_read";
+export type ProjectMessageDeletedReason =
+  | "ack"
+  | "delete_on_read"
+  | "computer_ack";
 
 export type WriteProjectMessageOutcomeInput = {
   readonly messageId: string;

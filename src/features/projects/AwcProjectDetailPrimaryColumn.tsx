@@ -1,5 +1,6 @@
 "use client";
 
+import AwcProjectComputerHistorySection from "@/features/projects/computerHistory/AwcProjectComputerHistorySection";
 import AwcProjectDetailSection from "@/features/projects/AwcProjectDetailSection";
 import AwcProjectEditOnMacActions from "@/features/projects/AwcProjectEditOnMacActions";
 import AwcProjectNameEditor from "@/features/projects/AwcProjectNameEditor";
@@ -107,6 +108,7 @@ export default function AwcProjectDetailPrimaryColumn({
         editCta={editCta}
       />
       <AwcProjectRepoUrlsSection project={project} />
+      <AwcProjectComputerHistorySection projectId={project.id} />
     </div>
   );
 }

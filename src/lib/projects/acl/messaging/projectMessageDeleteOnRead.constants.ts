@@ -1,5 +1,11 @@
 /**
- * Delete-on-read and History computerAck composition for project messages.
+ * Delete-on-read constants for project messages.
+ *
+ * History composition (opt-in per project via project_computer_history_settings):
+ * when gated (on_configuring / on_ready / degraded), cloud deletes a message ONLY after the
+ * folder-save computerAck (gateProjectMessageDelete). Seven days of no ack
+ * triggers unsavedOverdue flag + throttled wake only — never an age-based
+ * delete or history gap marker. History off → normal delete-on-read / TTL.
  * See projectMessage.constants for retention / caps.
  */
 
@@ -16,18 +22,3 @@ export const PROJECT_B2B_DELETE_ON_READ_TERMINAL_STATES = [
 
 export type ProjectB2bDeleteOnReadTerminalState =
   (typeof PROJECT_B2B_DELETE_ON_READ_TERMINAL_STATES)[number];
-
-/**
- * History feature 551bf17d (computerAck). Cloud delete composition:
- * - off → delete-on-read / ack unchanged (always allow).
- * - ready | degraded → require a project_message_computer_acks row AND
- *   recipient rules (read+terminal/unwatched, or explicit ack).
- * - un-acked older than 7 days may delete with a thin history-gap marker
- *   (no body); History owns writing that marker.
- */
-export const PROJECT_MESSAGE_HISTORY_COMPUTER_ACK_MODE = "off" as const;
-
-export type ProjectMessageHistoryComputerAckMode =
-  | typeof PROJECT_MESSAGE_HISTORY_COMPUTER_ACK_MODE
-  | "ready"
-  | "degraded";

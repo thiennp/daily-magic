@@ -11,6 +11,7 @@ import {
   ensureProjectAclSchema,
   resetProjectAclSchemaEnsureForTests,
 } from "@/lib/projects/acl/ensureProjectAclSchema";
+import { resetProjectComputerHistorySchemaForTests } from "@/lib/projects/acl/ensureProjectComputerHistorySchema";
 import { resetProjectMessagePurgeForTests } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 
 const ddl = (): string[] => sqlMock.mock.calls.map((call) => String(call[0]));
@@ -21,8 +22,16 @@ const count = (pattern: RegExp): number =>
 describe("ensureProjectAclSchema owns delete-on-read ensure", () => {
   beforeEach(() => {
     sqlMock.mockReset();
-    sqlMock.mockResolvedValue([]);
+    // History soft ensure only upgrades computer_acks when the table exists.
+    sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
+      const q = String(strings);
+      if (q.includes("to_regclass")) {
+        return [{ t: "project_message_computer_acks" }];
+      }
+      return [];
+    });
     resetProjectAclSchemaEnsureForTests();
+    resetProjectComputerHistorySchemaForTests();
     resetProjectMessagePurgeForTests();
   });
 
@@ -56,6 +65,7 @@ describe("ensureProjectAclSchema owns delete-on-read ensure", () => {
   it("reset re-runs delete-on-read DDL with the ACL ensure", async () => {
     await ensureProjectAclSchema();
     resetProjectAclSchemaEnsureForTests();
+    resetProjectComputerHistorySchemaForTests();
     sqlMock.mockClear();
     await ensureProjectAclSchema();
     expect(count(/CREATE TABLE IF NOT EXISTS project_message_outcomes/)).toBe(

@@ -36,6 +36,7 @@ const createLayout = (): {
       appDir: path.join(root, "app"),
       appBundlePath: path.join(root, "app", "agent-witch.js"),
       projectsDir: path.join(root, "projects"),
+      projectDataDir: path.join(root, "project-data"),
       logsDir: path.join(root, "logs"),
       mainLogPath: path.join(root, "logs", "agent-witch.log"),
       errorLogPath: path.join(root, "logs", "agent-witch.error.log"),

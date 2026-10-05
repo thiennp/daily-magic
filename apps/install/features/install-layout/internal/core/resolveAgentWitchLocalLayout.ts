@@ -21,6 +21,7 @@ import {
   AGENT_WITCH_PROD_LAUNCH_AGENT_PREFIX,
   AGENT_WITCH_PROD_WAKE_PORT,
   AGENT_WITCH_PROFILES_DIR_NAME,
+  AGENT_WITCH_PROFILE_RELATIVE_PATHS,
   AGENT_WITCH_PROJECTS_DIR_NAME,
   AGENT_WITCH_REPORTS_DIR_NAME,
 } from "../../public-api/types";
@@ -251,6 +252,10 @@ export const resolveAgentWitchLocalLayout = (
     );
     const harnessRootDir = path.join(profileDir, AGENT_WITCH_HARNESS_DIR_NAME);
     const projectsDir = path.join(profileDir, AGENT_WITCH_PROJECTS_DIR_NAME);
+    const projectDataDir = path.join(
+      profileDir,
+      AGENT_WITCH_PROFILE_RELATIVE_PATHS.projectDataDir,
+    );
     const logsDir = path.join(profileDir, AGENT_WITCH_LOGS_DIR_NAME);
     const reportsDir = path.join(profileDir, AGENT_WITCH_REPORTS_DIR_NAME);
     const deviceKeypairPath = path.join(
@@ -274,6 +279,7 @@ export const resolveAgentWitchLocalLayout = (
       appDir,
       appBundlePath,
       projectsDir,
+      projectDataDir,
       logsDir,
       mainLogPath,
       errorLogPath,
@@ -294,6 +300,10 @@ export const resolveAgentWitchLocalLayout = (
 
   const harnessRootDir = path.join(installDir, AGENT_WITCH_HARNESS_DIR_NAME);
   const projectsDir = path.join(installDir, AGENT_WITCH_PROJECTS_DIR_NAME);
+  const projectDataDir = path.join(
+    installDir,
+    AGENT_WITCH_PROFILE_RELATIVE_PATHS.projectDataDir,
+  );
   const logsDir = path.join(installDir, AGENT_WITCH_LOGS_DIR_NAME);
   const reportsDir = path.join(installDir, AGENT_WITCH_REPORTS_DIR_NAME);
   const deviceKeypairPath = path.join(
@@ -317,6 +327,7 @@ export const resolveAgentWitchLocalLayout = (
     appDir,
     appBundlePath,
     projectsDir,
+    projectDataDir,
     logsDir,
     mainLogPath,
     errorLogPath,

@@ -76,6 +76,7 @@ const createHarnessLayout = (): {
       AGENT_WITCH_APP_BUNDLE_FILE_NAME,
     ),
     projectsDir: path.join(root, "projects"),
+    projectDataDir: path.join(root, "project-data"),
     logsDir: path.join(root, "logs"),
     mainLogPath: path.join(root, "logs", "agent-witch.log"),
     errorLogPath: path.join(root, "logs", "agent-witch.error.log"),

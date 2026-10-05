@@ -11,6 +11,7 @@ const layout: AgentWitchLocalLayout = {
   appDir: "/Users/me/.local-agent-witch/app",
   appBundlePath: "/Users/me/.local-agent-witch/app/Agent Witch.app",
   projectsDir: `${profileRoot}/projects`,
+  projectDataDir: `${profileRoot}/project-data`,
   logsDir: `${profileRoot}/logs`,
   mainLogPath: `${profileRoot}/logs/agent-witch.log`,
   errorLogPath: `${profileRoot}/logs/agent-witch-error.log`,

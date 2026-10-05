@@ -41,6 +41,7 @@ import {
   verifyProjectCompositionSnapshotBlobs,
   waitForAgentWitchClientConfigs as waitForConfigs,
 } from "@agent-witch/install-runtime-client";
+import { handleProjectMessageHistoryDispatch } from "@agent-witch/live-project-history";
 import type { AgentWitchClientConfig as AgentWitchConfig } from "@agent-witch/install-runtime-client/types";
 import {
   ensureAgentWitchInstallVersionRecorded,
@@ -1296,6 +1297,11 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
     if (parsed.type === "automations.sync" && isRecord(parsed.payload)) {
       applyAutomationsSyncFromCloud(parsed.payload);
+    }
+
+    if (parsed.type === "project.message.history" && isRecord(parsed.payload)) {
+      void handleProjectMessageHistoryDispatch({ payload: parsed.payload });
+      return;
     }
 
     if (parsed.type === "automations.run" && isRecord(parsed.payload)) {

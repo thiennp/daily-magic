@@ -76,6 +76,13 @@ When installed with `--email user@example.com` (or `AGENT_WITCH_PROFILE` / `acti
         │           │   └── runs.ndjson
         │           └── reports/         # Legacy per-project reports dir (superseded by profile reports/)
         │
+        ├── project-data/                # Opt-in project computer history + skill mirrors (by projectId)
+        │   └── <projectId>/
+        │       ├── history/             # Durable project.message.history records
+        │       └── skills/              # Published skill mirrors (vNNNN.md + meta.json)
+        │           ├── _drafts/
+        │           └── _tombstones/
+        │
         └── harness/                     # Cursor harness files synced from cloud
             ├── manifest.json            # Version 1 manifest (sets, items, host)
             ├── shared/
@@ -193,6 +200,28 @@ projects/<slug>/
 ```
 
 Default project path: `~/.agent-witch/profiles/<email>/projects/default`.
+
+### `project-data/<projectId>/`
+
+Opt-in **project computer history** and published skill mirrors. Resolved from
+`AGENT_WITCH_PROFILE_RELATIVE_PATHS.projectDataDir` as
+`<installRoot>/profiles/<sanitizedEmail>/project-data/<projectId>/`
+(or `<installRoot>/project-data/<projectId>/` when no profile email is set).
+
+Do **not** use the deprecated local projects registry or `projectFolderPath`
+for this tree. Dirs are `0700`, files `0600`, writes are atomic (temp + rename).
+
+```
+project-data/<projectId>/
+├── history/                 # One file per project.message.history messageId
+└── skills/
+    ├── <skillId>/
+    │   ├── vNNNN.md         # 4-digit zero-padded version body
+    │   └── meta.json        # { skillId, version, contentHash, updatedAt }
+    ├── _drafts/
+    └── _tombstones/
+        └── <skillId>.json   # { skillId, revokedAt, lastContentHash }
+```
 
 ### `harness/`
 

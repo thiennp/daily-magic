@@ -45,6 +45,10 @@ export const vitestResolveAlias: Record<string, string> = {
     ROOT,
     "./packages/shared/src/mcp/index.ts",
   ),
+  "@agent-witch/shared/projectSkills": path.resolve(
+    ROOT,
+    "./packages/shared/src/projectSkills/index.ts",
+  ),
   "@agent-witch/shared": path.resolve(ROOT, "./packages/shared/src/index.ts"),
   "@agent-witch/install-layout/types": path.resolve(
     ROOT,
@@ -321,6 +325,18 @@ export const vitestResolveAlias: Record<string, string> = {
   "@agent-witch/live-mcp": path.resolve(
     ROOT,
     "./apps/live/features/mcp/public-api/infrastructure.ts",
+  ),
+  "@agent-witch/live-project-history/types": path.resolve(
+    ROOT,
+    "./apps/live/features/project-history/public-api/types.ts",
+  ),
+  "@agent-witch/live-project-history/presentation": path.resolve(
+    ROOT,
+    "./apps/live/features/project-history/public-api/presentation.ts",
+  ),
+  "@agent-witch/live-project-history": path.resolve(
+    ROOT,
+    "./apps/live/features/project-history/public-api/infrastructure.ts",
   ),
   "@": path.resolve(ROOT, "./src"),
 };

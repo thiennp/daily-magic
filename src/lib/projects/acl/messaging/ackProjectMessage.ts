@@ -3,6 +3,8 @@ import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectM
 import { deleteProjectMessageWithOutcome } from "@/lib/projects/acl/messaging/deleteProjectMessageWithOutcome";
 import { ackProjectWholeMessageDelivery } from "@/lib/projects/acl/messaging/messenger/ackProjectWholeMessageDelivery";
 import { isProjectMessengerWholeAddress } from "@/lib/projects/acl/messaging/messenger/isProjectMessengerWholeAddress";
+import { gateProjectMessageDelete } from "@/lib/projects/acl/messaging/gateProjectMessageDelete";
+import { holdProjectMessageForComputerAck } from "@/lib/projects/acl/messaging/holdProjectMessageForComputerAck";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { asRowArray, getSql } from "@/lib/db";
@@ -64,13 +66,40 @@ export const ackProjectMessage = async (input: {
   if (!addressed) {
     return { ok: false, code: "forbidden" };
   }
-  // Explicit ack stays an immediate delete (with thin outcome first).
+  // History delete gate: hold when computerAck is still required.
+  const gate = await gateProjectMessageDelete({
+    projectId,
+    messageId: input.messageId,
+    createdAt: rows[0].created_at as Date | string,
+    existingRuleAllows: true,
+  });
+  if (gate === "deny") {
+    await holdProjectMessageForComputerAck({ messageId: input.messageId });
+    await writeProjectAccessAudit({
+      projectId,
+      actorUserId: input.actorUserId,
+      action: "msg.ack",
+      detail: { messageId: input.messageId, deleted: false },
+    });
+    return { ok: true, messageId: input.messageId };
+  }
+  // Main delete-on-ack: thin outcome first, then gated hard DELETE.
   const deleted = await deleteProjectMessageWithOutcome({
     messageId: input.messageId,
     deletedReason: "ack",
     finalB2bState: "acked",
   });
   if (!deleted.ok) {
+    if (deleted.code === "computer_ack_required") {
+      await holdProjectMessageForComputerAck({ messageId: input.messageId });
+      await writeProjectAccessAudit({
+        projectId,
+        actorUserId: input.actorUserId,
+        action: "msg.ack",
+        detail: { messageId: input.messageId, deleted: false },
+      });
+      return { ok: true, messageId: input.messageId };
+    }
     return { ok: false, code: deleted.code };
   }
   await writeProjectAccessAudit({

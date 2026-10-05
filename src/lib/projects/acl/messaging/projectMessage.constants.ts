@@ -4,7 +4,9 @@
  *
  * Retention: stamp read_at on inbox fetch; hard-delete on ack or when read and
  * delivery is terminal/unwatched (CASCADE deliveries). Outcome rows keep a thin
- * wake/final-state record with no FK to project_messages. Unacked TTL purge remains.
+ * wake/final-state record with no FK to project_messages. Unacked TTL purge
+ * remains for History-off projects only; gated History (on_configuring/on_ready/degraded)
+ * never age-deletes — only after folder-save computerAck (7d → flag + wake).
  * Dispatch caps: per-sender rolling hourly + project-wide unread (row count).
  */
 
@@ -51,7 +53,8 @@ export const PROJECT_B2B_SILENCE_TICK_MS = 60_000;
 export const PROJECT_MESSAGE_REFS_MAX_BYTES = 768;
 /** Per allowlisted ref string value. */
 export const PROJECT_MESSAGE_REF_VALUE_MAX_CHARS = 256;
-/** Unacked messages older than this are hard-deleted (CASCADE deliveries). */
+/** Unacked messages older than this are hard-deleted (CASCADE deliveries).
+ * Gated History projects are excluded from this TTL purge. */
 export const PROJECT_MESSAGE_UNACKED_TTL_DAYS = 3;
 
 /** Default max user/owner dispatches per sender in a rolling 1h window. */

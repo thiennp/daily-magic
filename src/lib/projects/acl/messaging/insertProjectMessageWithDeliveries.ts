@@ -1,6 +1,8 @@
 import { randomUUID } from "node:crypto";
 
 import { getSql } from "@/lib/db";
+import { buildProjectComputerHistoryMessage } from "@/lib/projects/acl/messaging/buildProjectComputerHistoryMessage";
+import { notifyProjectComputerOfMessage } from "@/lib/projects/acl/messaging/notifyProjectComputerOfMessage";
 import { parseProjectMessageRefsJson } from "@/lib/projects/acl/messaging/parseProjectMessageRefsJson";
 import { wakeProjectMessageGrokRoutines } from "@/lib/projects/acl/messaging/wakeProjectMessageGrokRoutines";
 import { scheduleProjectMessageWebhookDelivery } from "@/lib/projects/acl/webhooks/scheduleProjectMessageWebhookDelivery";
@@ -89,6 +91,16 @@ export const insertProjectMessageWithDeliveries = async (input: {
     senderMembershipId: input.senderMembershipId,
     senderProjectDisplayName: input.senderProjectDisplayName,
     recipientMembershipIds,
+  });
+  // History on: also tell the owner's project computer (no-op when off).
+  await notifyProjectComputerOfMessage({
+    projectId: input.projectId,
+    message: buildProjectComputerHistoryMessage({
+      ...input,
+      messageId,
+      createdAt,
+      refs,
+    }),
   });
   return { messageId, wakeResults };
 };

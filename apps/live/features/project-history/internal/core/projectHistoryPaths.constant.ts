@@ -1,0 +1,9 @@
+export const PROJECT_HISTORY_DIR_NAME = "history";
+export const PROJECT_HISTORY_SKILLS_DIR_NAME = "skills";
+export const PROJECT_HISTORY_SKILLS_DRAFTS_DIR_NAME = "_drafts";
+export const PROJECT_HISTORY_SKILLS_TOMBSTONES_DIR_NAME = "_tombstones";
+export const PROJECT_HISTORY_STATE_FILE_NAME = "state.json";
+export const PROJECT_HISTORY_SKILL_META_FILE_NAME = "meta.json";
+export const PROJECT_HISTORY_SKILL_VERSION_PAD = 4;
+export const PROJECT_HISTORY_DIR_MODE = 0o700;
+export const PROJECT_HISTORY_FILE_MODE = 0o600;

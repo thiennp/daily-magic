@@ -31,8 +31,8 @@ describe("decideProjectSkillPullAction", () => {
   });
 
   it("remove when local exists but not on AWC published set", () => {
-    expect(
-      decideProjectSkillPullAction({ onPublishedSet: false }),
-    ).toBe("remove");
+    expect(decideProjectSkillPullAction({ onPublishedSet: false })).toBe(
+      "remove",
+    );
   });
 });

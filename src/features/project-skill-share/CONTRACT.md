@@ -71,5 +71,5 @@ Hash: `sha256:` + lowercase hex of exact UTF-8 body bytes (no trim).
 
 - No tick implementation in Share (History owns tick).
 - No direct filesystem writes **or deletes** from Share (History helpers only).
-- No coupling to History cloud schema migrations (059–061 computer history) for skills pull.
+- No coupling to History cloud schema migrations (059–060 computer history) for skills pull.
 - No `removeProjectSkillVersion` on the Share History port.

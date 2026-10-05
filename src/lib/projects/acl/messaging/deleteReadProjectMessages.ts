@@ -9,9 +9,9 @@ import { asRowArray, getSql } from "@/lib/db";
  * terminal; actionable/task.*: terminal only — listing does not ack). Cron/ticker.
  * Never throws.
  *
- * computerAck composition (History 551bf17d): when that feature is off, the
- * delete path is unchanged. When ready/degraded, deleteProjectMessageWithOutcome
- * requires a project_message_computer_acks row first.
+ * History ON (gated): deleteProjectMessageWithOutcome → gateProjectMessageDelete
+ * deletes only after the folder-save computerAck. Un-acked overdue messages are
+ * never age-purged here (flag + wake elsewhere). History OFF: normal DOR.
  */
 export const deleteReadProjectMessages = async (): Promise<number> => {
   try {
