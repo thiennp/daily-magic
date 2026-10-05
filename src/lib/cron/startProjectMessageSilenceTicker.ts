@@ -1,13 +1,10 @@
 import { isDatabaseUrlConfigured } from "@/lib/db";
 import { checkProjectMessageSilence } from "@/lib/projects/acl/messaging/checkProjectMessageSilence";
 import { PROJECT_B2B_SILENCE_TICK_MS } from "@/lib/projects/acl/messaging/projectMessage.constants";
-
-// The only module state: the interval handle on globalThis, so dev hot reload or a second module copy never starts a second ticker in one process.
-const TICKER_GLOBAL_KEY = "__dailyMagicProjectMessageSilenceTicker";
-
-type TickerGlobal = typeof globalThis & {
-  [TICKER_GLOBAL_KEY]?: ReturnType<typeof setInterval>;
-};
+import {
+  PROJECT_MESSAGE_SILENCE_TICKER_KEY,
+  type ProjectMessageSilenceTickerGlobal,
+} from "@/lib/cron/projectMessageSilenceTicker.constants";
 
 const tick = (): void => {
   void checkProjectMessageSilence({ now: new Date() }).catch(
@@ -23,15 +20,15 @@ const tick = (): void => {
  * Returns true only on the call that started it.
  */
 export const startProjectMessageSilenceTicker = (): boolean => {
-  const globalState = globalThis as TickerGlobal;
+  const globalState = globalThis as ProjectMessageSilenceTickerGlobal;
   if (
-    globalState[TICKER_GLOBAL_KEY] !== undefined ||
+    globalState[PROJECT_MESSAGE_SILENCE_TICKER_KEY] !== undefined ||
     !isDatabaseUrlConfigured()
   ) {
     return false;
   }
   const handle = setInterval(tick, PROJECT_B2B_SILENCE_TICK_MS);
   handle.unref();
-  globalState[TICKER_GLOBAL_KEY] = handle;
+  globalState[PROJECT_MESSAGE_SILENCE_TICKER_KEY] = handle;
   return true;
 };

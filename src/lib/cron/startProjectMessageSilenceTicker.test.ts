@@ -11,10 +11,8 @@ vi.mock("@/lib/projects/acl/messaging/checkProjectMessageSilence", () => ({
 }));
 
 import { startProjectMessageSilenceTicker } from "@/lib/cron/startProjectMessageSilenceTicker";
+import { stopProjectMessageSilenceTicker } from "@/lib/cron/stopProjectMessageSilenceTicker";
 import { PROJECT_B2B_SILENCE_TICK_MS } from "@/lib/projects/acl/messaging/projectMessage.constants";
-
-const KEY = "__dailyMagicProjectMessageSilenceTicker";
-const globalState = globalThis as Record<string, unknown>;
 
 describe("startProjectMessageSilenceTicker", () => {
   beforeEach(() => {
@@ -25,14 +23,25 @@ describe("startProjectMessageSilenceTicker", () => {
   });
 
   afterEach(() => {
-    clearInterval(globalState[KEY] as ReturnType<typeof setInterval>);
-    delete globalState[KEY];
+    stopProjectMessageSilenceTicker();
     vi.useRealTimers();
   });
 
-  it("starts once when called twice", async () => {
+  it("starts once when called twice: one timer", async () => {
     expect(startProjectMessageSilenceTicker()).toBe(true);
     expect(startProjectMessageSilenceTicker()).toBe(false);
+    expect(vi.getTimerCount()).toBe(1);
+    await vi.advanceTimersByTimeAsync(PROJECT_B2B_SILENCE_TICK_MS);
+    expect(checkMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("start, stop, start leaves exactly one timer", async () => {
+    expect(startProjectMessageSilenceTicker()).toBe(true);
+    expect(stopProjectMessageSilenceTicker()).toBe(true);
+    expect(vi.getTimerCount()).toBe(0);
+    expect(stopProjectMessageSilenceTicker()).toBe(false);
+    expect(startProjectMessageSilenceTicker()).toBe(true);
+    expect(vi.getTimerCount()).toBe(1);
     await vi.advanceTimersByTimeAsync(PROJECT_B2B_SILENCE_TICK_MS);
     expect(checkMock).toHaveBeenCalledTimes(1);
   });
