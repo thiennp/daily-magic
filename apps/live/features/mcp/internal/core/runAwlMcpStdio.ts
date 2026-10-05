@@ -1,11 +1,11 @@
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
+import { handleMcpJsonRpcRequest } from "@agent-witch/shared/mcp";
 
 import type {
   McpJsonRpcResponse,
   McpServerDefinition,
 } from "../../public-api/types";
 import { createAwlMcpServer } from "./createAwlMcpServer";
-import { handleMcpJsonRpcRequest } from "./handleMcpJsonRpcRequest";
 
 interface StdioStreams {
   readonly stdin: AsyncIterable<unknown>;

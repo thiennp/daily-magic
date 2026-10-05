@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
 
-import type { McpServerDefinition } from "../../public-api/types";
 import { handleMcpJsonRpcRequest } from "./handleMcpJsonRpcRequest";
+import { MCP_PROTOCOL_VERSION } from "./mcpProtocol.constant";
+import type { McpServerDefinition } from "./McpServer.type";
 
 const makeServer = (
   call: (args: unknown) => unknown = () => ({ status: "miss" }),
 ): McpServerDefinition => ({
   serverInfo: { name: "agent-witch", version: "1.0.0" },
-  protocolVersion: "2024-11-05",
   tools: [
     {
       definition: {
@@ -31,7 +31,7 @@ describe("handleMcpJsonRpcRequest", () => {
       jsonrpc: "2.0",
       id: 1,
       result: {
-        protocolVersion: "2024-11-05",
+        protocolVersion: MCP_PROTOCOL_VERSION,
         capabilities: { tools: { listChanged: false } },
         serverInfo: { name: "agent-witch", version: "1.0.0" },
       },

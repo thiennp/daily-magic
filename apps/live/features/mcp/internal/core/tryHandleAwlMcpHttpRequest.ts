@@ -1,10 +1,10 @@
 import type http from "node:http";
 
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
+import { handleMcpJsonRpcRequest } from "@agent-witch/shared/mcp";
 
 import type { McpServerDefinition } from "../../public-api/types";
 import { createAwlMcpServer } from "./createAwlMcpServer";
-import { handleMcpJsonRpcRequest } from "./handleMcpJsonRpcRequest";
 
 export interface AwlMcpHttpRouteInput {
   readonly method: string;

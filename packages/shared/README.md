@@ -13,7 +13,8 @@ packages/shared/src/
 ├── projects/             # Project feature flags (token-saver defaults)
 ├── pitfalls/             # Project pitfalls enums, limits, wire parser
 ├── preflight/            # Risky-action check catalog + result model
-└── token-saver/          # Local MCP tool schemas + tip format
+├── token-saver/          # Local MCP tool schemas + tip format
+└── mcp/                  # MCP JSON-RPC core, protocol version, server info
 ```
 
 ## Import (today)

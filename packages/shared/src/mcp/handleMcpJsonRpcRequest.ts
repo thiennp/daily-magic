@@ -1,7 +1,5 @@
-import type {
-  McpJsonRpcResponse,
-  McpServerDefinition,
-} from "../../public-api/types";
+import { MCP_PROTOCOL_VERSION } from "./mcpProtocol.constant";
+import type { McpJsonRpcResponse, McpServerDefinition } from "./McpServer.type";
 
 const jsonRpcError = (
   id: unknown,
@@ -51,7 +49,8 @@ const callTool = (
 
 /**
  * Shared MCP JSON-RPC core (initialize, ping, notifications, tools/list,
- * tools/call, errors). Transports (stdio, HTTP) only frame bytes around it.
+ * tools/call, errors). Environment-neutral: pure request -> response for a
+ * tool registry. Transports (AWL stdio, HTTP `/mcp`) only frame bytes around it.
  */
 export const handleMcpJsonRpcRequest = (
   body: unknown,
@@ -68,7 +67,7 @@ export const handleMcpJsonRpcRequest = (
   }
   if (method === "initialize") {
     return jsonRpcResult(id, {
-      protocolVersion: server.protocolVersion,
+      protocolVersion: MCP_PROTOCOL_VERSION,
       capabilities: { tools: { listChanged: false } },
       serverInfo: server.serverInfo,
     });

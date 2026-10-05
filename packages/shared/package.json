@@ -14,6 +14,7 @@
     "./projects": "./src/projects/index.ts",
     "./pitfalls": "./src/pitfalls/index.ts",
     "./preflight": "./src/preflight/index.ts",
-    "./token-saver": "./src/token-saver/index.ts"
+    "./token-saver": "./src/token-saver/index.ts",
+    "./mcp": "./src/mcp/index.ts"
   }
 }

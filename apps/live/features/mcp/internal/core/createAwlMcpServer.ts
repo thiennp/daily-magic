@@ -3,12 +3,9 @@ import {
   AWL_CHECK_CONTEXT_TOOL,
   createCheckContextRunner,
 } from "@agent-witch/live-token-saver";
+import { AGENT_WITCH_MCP_SERVER_INFO } from "@agent-witch/shared/mcp";
 
 import type { McpServerDefinition } from "../../public-api/types";
-import {
-  AWL_MCP_PROTOCOL_VERSION,
-  AWL_MCP_SERVER_INFO,
-} from "./awlMcpServer.constant";
 
 export interface CreateAwlMcpServerInput {
   readonly layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">;
@@ -19,8 +16,7 @@ export interface CreateAwlMcpServerInput {
 export const createAwlMcpServer = (
   input: CreateAwlMcpServerInput,
 ): McpServerDefinition => ({
-  serverInfo: AWL_MCP_SERVER_INFO,
-  protocolVersion: AWL_MCP_PROTOCOL_VERSION,
+  serverInfo: AGENT_WITCH_MCP_SERVER_INFO,
   tools: [
     {
       definition: AWL_CHECK_CONTEXT_TOOL,

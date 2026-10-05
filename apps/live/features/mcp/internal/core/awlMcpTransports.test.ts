@@ -1,14 +1,13 @@
 import type http from "node:http";
+import { handleMcpJsonRpcRequest } from "@agent-witch/shared/mcp";
 import { describe, expect, it, vi } from "vitest";
 
 import type { McpServerDefinition } from "../../public-api/types";
-import { handleMcpJsonRpcRequest } from "./handleMcpJsonRpcRequest";
 import { serveMcpStdio } from "./runAwlMcpStdio";
 import { tryHandleAwlMcpHttpRequest } from "./tryHandleAwlMcpHttpRequest";
 
 const server: McpServerDefinition = {
   serverInfo: { name: "agent-witch", version: "1.0.0" },
-  protocolVersion: "2024-11-05",
   tools: [
     {
       definition: {
