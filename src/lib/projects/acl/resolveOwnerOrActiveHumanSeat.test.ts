@@ -11,15 +11,14 @@ vi.mock("@/lib/projects/userProjectQueries", () => ({
   getUserProjectById: vi.fn(),
 }));
 
-const humanSeat = (role: "member" | "viewer") =>
-  ({
-    id: "mem-1",
-    role,
-    memberKind: "human",
-    status: "active",
-    scopes: [],
-    projectDisplayName: null,
-  }) as never;
+const humanSeat = (role: "member" | "viewer") => ({
+  id: "mem-1",
+  role,
+  memberKind: "human" as const,
+  status: "active" as const,
+  scopes: [] as string[],
+  projectDisplayName: null as string | null,
+});
 
 describe("resolveOwnerOrActiveHumanSeat", () => {
   beforeEach(() => {
@@ -42,7 +41,7 @@ describe("resolveOwnerOrActiveHumanSeat", () => {
   it.each(["member", "viewer"] as const)(
     "allows active human %s",
     async (role) => {
-      vi.mocked(getActiveProjectMembership).mockResolvedValue(humanSeat(role));
+      vi.mocked(getActiveProjectMembership).mockResolvedValue(humanSeat(role) as never);
       await expect(
         resolveOwnerOrActiveHumanSeat({
           projectId: "proj-1",
@@ -55,7 +54,7 @@ describe("resolveOwnerOrActiveHumanSeat", () => {
   it("forbids bot seats and strangers", async () => {
     vi.mocked(getActiveProjectMembership).mockResolvedValue({
       ...humanSeat("member"),
-      memberKind: "bot",
+      memberKind: "bot" as const,
     } as never);
     await expect(
       resolveOwnerOrActiveHumanSeat({

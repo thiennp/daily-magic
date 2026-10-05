@@ -24,7 +24,7 @@ vi.mock("@/lib/projects/acl/getActiveProjectMembership", () => ({
   getActiveProjectMembership: vi.fn(async () => null),
 }));
 
-describe("listProjectMessageLog", () => {
+describe("listProjectMessageLog owner", () => {
   beforeEach(() => {
     sqlMock.mockReset();
     vi.mocked(getUserProjectById).mockResolvedValue({
@@ -35,55 +35,6 @@ describe("listProjectMessageLog", () => {
     resetProjectAclSchemaEnsureForTests();
     resetProjectMessagePurgeForTests();
   });
-
-  it("forbids strangers and bot seats", async () => {
-    vi.mocked(getActiveProjectMembership).mockResolvedValue(null);
-    expect(
-      await listProjectMessageLog({
-        projectId: "proj-1",
-        actorUserId: "stranger",
-      }),
-    ).toEqual({ ok: false, code: "forbidden" });
-
-    vi.mocked(getActiveProjectMembership).mockResolvedValue({
-      id: "mem-bot",
-      role: "member",
-      memberKind: "bot",
-      status: "active",
-      scopes: ["msg:dispatch"],
-      projectDisplayName: "Bot",
-    } as never);
-    expect(
-      await listProjectMessageLog({
-        projectId: "proj-1",
-        actorUserId: "bot-1",
-      }),
-    ).toEqual({ ok: false, code: "forbidden" });
-  });
-
-  it.each(["member", "viewer"] as const)(
-    "allows active human %s to read the project log",
-    async (role) => {
-      vi.mocked(getActiveProjectMembership).mockResolvedValue({
-        id: "mem-h",
-        role,
-        memberKind: "human",
-        status: "active",
-        scopes: [],
-        projectDisplayName: role === "member" ? "Alex" : null,
-      } as never);
-      sqlMock.mockResolvedValue([]);
-      const result = await listProjectMessageLog({
-        projectId: "proj-1",
-        actorUserId: "user-h",
-      });
-      expect(result.ok).toBe(true);
-      if (result.ok) {
-        expect(result.scope).toBe("project");
-        expect(result.messages).toEqual([]);
-      }
-    },
-  );
 
   it("returns full project log with sender/recipient names for owner", async () => {
     sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
