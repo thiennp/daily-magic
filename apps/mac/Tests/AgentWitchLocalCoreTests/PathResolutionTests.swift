@@ -58,7 +58,11 @@ final class PathResolutionTests: XCTestCase {
         try FileManager.default.setAttributes([.modificationDate: newerDate], ofItemAtPath: newerLog.path)
 
         let resolved = resolveNewestAgentWitchMainLogPath(installDir: temp)
-        XCTAssertEqual(resolved?.path, newerLog.path)
+        // macOS temp dirs live under /var -> /private/var; compare canonical paths.
+        XCTAssertEqual(
+            resolved?.resolvingSymlinksInPath().path,
+            newerLog.resolvingSymlinksInPath().path
+        )
     }
 
     func testNewestLogFallsBackToLegacyLogsDir() throws {
