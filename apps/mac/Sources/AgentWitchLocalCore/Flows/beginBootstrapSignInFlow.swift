@@ -17,7 +17,7 @@ public struct BeginBootstrapSignInFlowResult: Equatable, Sendable {
     }
 }
 
-/// From Checking: create PKCE attempt, open connect URL → Signing in.
+/// From Checking (first attempt) or Signing in (retry): create a fresh PKCE attempt, open connect URL → Signing in.
 public func beginBootstrapSignInFlow(
     current: MacAppBootstrapState,
     opener: BrowserOpening,

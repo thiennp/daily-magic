@@ -78,6 +78,29 @@ final class MacAppMenuController: ObservableObject {
         }
     }
 
+    /// Signing in → Signing in: fresh PKCE state/verifier replaces the pending attempt.
+    func restartBootstrapSignIn() {
+        guard bootstrapState == .signingIn else {
+            return
+        }
+#if os(macOS)
+        do {
+            let result = try beginBootstrapSignInFlow(
+                current: .signingIn,
+                opener: browserOpener
+            )
+            pendingBootstrapAttempt = result.pending
+            bootstrapState = result.state
+            statusMessage = bootstrapStatusLabel(for: result.state)
+        } catch {
+            pendingBootstrapAttempt = nil
+            let reason = sanitizeBootstrapErrorReason(error.localizedDescription)
+            bootstrapState = .error(reason: reason)
+            statusMessage = reason
+        }
+#endif
+    }
+
     func copyBootstrapFallbackInstallCommand() {
         let command = resolveBootstrapFallbackInstallCommand()
         NSPasteboard.general.clearContents()

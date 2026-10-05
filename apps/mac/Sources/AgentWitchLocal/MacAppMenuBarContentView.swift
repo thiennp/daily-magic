@@ -47,6 +47,11 @@ struct MacAppMenuBarContentView: View {
         case .checking, .signingIn, .installing, .settingUp:
             Text(progressLabel(for: bootstrap))
                 .foregroundStyle(.secondary)
+            if bootstrap == .signingIn {
+                Button("Try sign-in again") {
+                    controller.restartBootstrapSignIn()
+                }
+            }
             Button("Open Connect this Mac…") {
                 controller.openConnectThisMac()
             }

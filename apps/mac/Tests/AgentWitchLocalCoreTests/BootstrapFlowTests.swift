@@ -210,4 +210,33 @@ final class BootstrapFlowTests: XCTestCase {
         XCTAssertEqual(result.pending.codeVerifier, encodeBase64Url(fixed))
         XCTAssertEqual(result.pending.state, encodeBase64Url(fixed))
     }
+
+    func testRetrySignInFromSigningInReplacesPendingAndReopensBrowser() throws {
+        let opener = FakeBrowserOpener()
+        let first = try beginBootstrapSignInFlow(
+            current: .checking,
+            opener: opener,
+            randomBytes: { count in Data(repeating: 0x01, count: count) }
+        )
+        let retry = try beginBootstrapSignInFlow(
+            current: first.state,
+            opener: opener,
+            randomBytes: { count in Data(repeating: 0x02, count: count) }
+        )
+        XCTAssertEqual(retry.state, .signingIn)
+        XCTAssertEqual(opener.opened.count, 2)
+        XCTAssertNotEqual(retry.pending.state, first.pending.state)
+        XCTAssertNotEqual(retry.pending.codeVerifier, first.pending.codeVerifier)
+        XCTAssertNotEqual(opener.opened[0], opener.opened[1])
+        XCTAssertEqual(
+            isBootstrapPendingAttemptValid(pending: retry.pending, callbackState: first.pending.state),
+            .stateMismatch
+        )
+    }
+
+    func testRetrySignInDisallowedOutsideSigningIn() {
+        let opener = FakeBrowserOpener()
+        XCTAssertThrowsError(try beginBootstrapSignInFlow(current: .installing, opener: opener))
+        XCTAssertTrue(opener.opened.isEmpty)
+    }
 }
