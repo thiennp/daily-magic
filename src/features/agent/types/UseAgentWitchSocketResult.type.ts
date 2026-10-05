@@ -31,6 +31,8 @@ export interface UseAgentWitchSocketResult {
       readonly capabilityId?: string;
       readonly targetDeviceId?: string;
       readonly projectFolderPath?: string;
+      /** Required: dispatch always sends the current project's project_id. */
+      readonly projectId: string;
       readonly fieldValues?: Readonly<Record<string, string>>;
       readonly useOfficialWorkflowOrchestration?: boolean;
     },

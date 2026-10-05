@@ -68,6 +68,7 @@ export const useWsTestPanelController = (input: {
     refreshCount,
     sendClaudePrompt: socket.sendClaudePrompt,
     writerAgent,
+    projectId: composer.selectedProjectId,
   });
   useOpenMacShellFromQuery({
     connectionStatus: socket.connectionStatus,

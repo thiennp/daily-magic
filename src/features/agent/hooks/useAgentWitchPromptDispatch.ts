@@ -40,7 +40,7 @@ export const useAgentWitchPromptDispatch = (input: {
     readonly capabilityId?: string;
     readonly targetDeviceId?: string;
     readonly projectFolderPath?: string;
-    readonly projectId?: string;
+    readonly projectId: string;
     readonly runScopedComponentIds?: readonly string[];
     readonly fieldValues?: Readonly<Record<string, string>>;
     readonly useOfficialWorkflowOrchestration?: boolean;
@@ -92,9 +92,7 @@ export const useAgentWitchPromptDispatch = (input: {
         ...(options.projectFolderPath !== undefined
           ? { projectFolderPath: options.projectFolderPath }
           : {}),
-        ...(options.projectId !== undefined
-          ? { projectId: options.projectId }
-          : {}),
+        projectId: options.projectId,
         ...(options.runScopedComponentIds !== undefined &&
         options.runScopedComponentIds.length > 0
           ? { runScopedComponentIds: options.runScopedComponentIds }

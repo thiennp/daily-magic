@@ -10,6 +10,7 @@ type QueueFlushSendPrompt = (
     readonly targetUserId?: string;
     readonly groupId?: string;
     readonly capabilityId?: string;
+    readonly projectId: string;
   },
 ) => void;
 
@@ -18,9 +19,11 @@ interface UseWsTestPanelQueueFlushInput {
   readonly flushQueue: (
     sendPrompt: QueueFlushSendPrompt,
     writerAgent: HarnessWriterAgent,
+    projectId: string,
   ) => Promise<void>;
   readonly sendClaudePrompt: QueueFlushSendPrompt;
   readonly writerAgent: HarnessWriterAgent;
+  readonly projectId: string;
 }
 
 export function useWsTestPanelQueueFlush({
@@ -28,18 +31,19 @@ export function useWsTestPanelQueueFlush({
   flushQueue,
   sendClaudePrompt,
   writerAgent,
+  projectId,
 }: UseWsTestPanelQueueFlushInput): void {
   const flushedOnConnectRef = useRef(false);
 
   useEffect(() => {
     if (connectionStatus === "connected") {
-      if (!flushedOnConnectRef.current) {
+      if (!flushedOnConnectRef.current && projectId.trim().length > 0) {
         flushedOnConnectRef.current = true;
-        void flushQueue(sendClaudePrompt, writerAgent);
+        void flushQueue(sendClaudePrompt, writerAgent, projectId);
       }
       return;
     }
 
     flushedOnConnectRef.current = false;
-  }, [connectionStatus, flushQueue, sendClaudePrompt, writerAgent]);
+  }, [connectionStatus, flushQueue, projectId, sendClaudePrompt, writerAgent]);
 }

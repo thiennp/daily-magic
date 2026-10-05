@@ -5,6 +5,9 @@ import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessW
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
+export const DISPATCH_PROJECT_REQUIRED_MESSAGE =
+  "Open a project to send this task.";
+
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
@@ -32,10 +35,17 @@ const postClaudePromptDispatchOnce = async (input: {
   readonly sessionContinuation?: boolean;
   readonly sourceRunId?: string;
   readonly projectFolderPath?: string;
-  readonly projectId?: string;
+  /** Required: AWC composer lives inside a project (NRG project_required). */
+  readonly projectId: string;
   readonly runScopedComponentIds?: readonly string[];
   readonly onDispatchedRunId?: (runId: string) => void;
 }): Promise<string> => {
+  const projectId = input.projectId.trim();
+
+  if (projectId.length === 0) {
+    return buildDispatchErrorRaw(DISPATCH_PROJECT_REQUIRED_MESSAGE);
+  }
+
   const response = await fetch("/api/agent-runs/dispatch", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -61,7 +71,8 @@ const postClaudePromptDispatchOnce = async (input: {
       ...(input.projectFolderPath !== undefined
         ? { projectFolderPath: input.projectFolderPath }
         : {}),
-      ...(input.projectId !== undefined ? { projectId: input.projectId } : {}),
+      project_id: projectId,
+      projectId,
       ...(input.runScopedComponentIds !== undefined &&
       input.runScopedComponentIds.length > 0
         ? { runScopedComponentIds: [...input.runScopedComponentIds] }
@@ -102,7 +113,8 @@ export async function postClaudePromptDispatch(input: {
   readonly sessionContinuation?: boolean;
   readonly sourceRunId?: string;
   readonly projectFolderPath?: string;
-  readonly projectId?: string;
+  /** Required: AWC composer lives inside a project (NRG project_required). */
+  readonly projectId: string;
   readonly runScopedComponentIds?: readonly string[];
   readonly onDispatchedRunId?: (runId: string) => void;
 }): Promise<string> {

@@ -74,7 +74,8 @@ export const useSendTaskComposerStepTrail = (input: {
       showProjectTrail:
         input.composer.selectedProject !== null ||
         input.wizard.hasCompletedProjectStep,
-      projectSelectionLabel: input.composer.selectedProject?.name ?? "Default",
+      projectSelectionLabel:
+        input.composer.selectedProject?.name ?? "Current project",
       showWriterTrail:
         currentStep === "session"
           ? true

@@ -6,7 +6,6 @@ import { useSearchParams } from "next/navigation";
 import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
 import { applyProjectFolderToWorkflowFieldValues } from "@/lib/workflows/applyProjectFolderToWorkflowFieldValues";
 import { workflowRequiresProjectSelection } from "@/lib/workflows/workflowProjectFields";
-import { resolveDefaultUserProject } from "@/lib/projects/resolveDefaultUserProject";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
@@ -36,25 +35,18 @@ export function useComposerProjectSelection(input: {
   const requiresProjectSelection = workflowRequiresProjectSelection(
     input.workflowFields,
   );
-  const selectedProjectId = manualProjectId ?? urlProjectId;
-  const defaultProject = useMemo(
-    () => resolveDefaultUserProject(projects),
-    [projects],
+  // Composer lives inside a project: no Default/empty fallback. Dispatch
+  // always sends this id as project_id (NRG project_required).
+  const effectiveSelectedProjectId = (manualProjectId ?? urlProjectId).trim();
+  const selectedProject = useMemo(
+    () =>
+      effectiveSelectedProjectId.length === 0
+        ? null
+        : (projects.find(
+            (project) => project.id === effectiveSelectedProjectId,
+          ) ?? null),
+    [effectiveSelectedProjectId, projects],
   );
-  const effectiveSelectedProjectId =
-    selectedProjectId.length > 0
-      ? selectedProjectId
-      : (defaultProject?.id ?? "");
-  const selectedProject = useMemo(() => {
-    if (effectiveSelectedProjectId.length === 0) {
-      return defaultProject;
-    }
-
-    return (
-      projects.find((project) => project.id === effectiveSelectedProjectId) ??
-      defaultProject
-    );
-  }, [defaultProject, effectiveSelectedProjectId, projects]);
 
   const mergeProjectIntoFieldValues = (
     values: Readonly<Record<string, string>>,
@@ -78,8 +70,8 @@ export function useComposerProjectSelection(input: {
     selectedProject,
     setSelectedProjectId: setManualProjectId,
     clearSelectedProject: useCallback(() => {
-      setManualProjectId(defaultProject?.id ?? "");
-    }, [defaultProject?.id]),
+      setManualProjectId("");
+    }, []),
     addProject,
     removeProject,
     mergeProjectIntoFieldValues,

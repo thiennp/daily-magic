@@ -3,8 +3,9 @@ import type SaveCapabilityTemplateOutcome from "@/features/capabilities/types/Sa
 
 export const defaultSaveCapabilityTemplateOutcome = async (
   templateId: string,
+  projectId: string,
 ): Promise<SaveCapabilityTemplateOutcome> => {
-  const result = await saveCapabilityTemplateToLibrary(templateId);
+  const result = await saveCapabilityTemplateToLibrary(templateId, projectId);
   return {
     ok: result.ok,
     errorMessage: result.errorMessage,

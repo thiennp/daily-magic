@@ -29,6 +29,7 @@ const buildComposer = (
     harnessSetSlug: "template-weekly-team-status",
     operatorSteps: [{ id: "op-1", title: "Review", content: "Check draft" }],
     selectedProject: null,
+    selectedProjectId: "",
     ...overrides,
   }) as ReturnType<typeof useWsTestTaskComposer>;
 
@@ -63,6 +64,7 @@ describe("buildWsTestSendOptions (official workflow orchestration)", () => {
     const options = buildWsTestSendOptions(
       buildComposer({
         selectedProject: selectedProjectFixture,
+        selectedProjectId: selectedProjectFixture.id,
       }),
       "claude-cli",
       "mac-1",
@@ -70,5 +72,43 @@ describe("buildWsTestSendOptions (official workflow orchestration)", () => {
 
     expect(options.projectId).toBe("proj-1");
     expect(options.useOfficialWorkflowOrchestration).toBe(true);
+  });
+});
+
+describe("buildWsTestSendOptions (project required)", () => {
+  it("always sends the current project id even before projects load", () => {
+    const options = buildWsTestSendOptions(
+      buildComposer({ selectedProjectId: "proj-from-url" }),
+      "claude-cli",
+      "mac-1",
+    );
+
+    expect(options.projectId).toBe("proj-from-url");
+    expect(options.projectFolderPath).toBeUndefined();
+  });
+
+  it("does not fall back to a Default project folder", () => {
+    const options = buildWsTestSendOptions(
+      buildComposer(),
+      "claude-cli",
+      "mac-1",
+    );
+
+    expect(options.projectId).toBe("");
+    expect(options.projectFolderPath).toBeUndefined();
+  });
+
+  it("sends the selected project folder with its id", () => {
+    const options = buildWsTestSendOptions(
+      buildComposer({
+        selectedProject: selectedProjectFixture,
+        selectedProjectId: selectedProjectFixture.id,
+      }),
+      "claude-cli",
+      "mac-1",
+    );
+
+    expect(options.projectId).toBe("proj-1");
+    expect(options.projectFolderPath).toBe("~/projects/launch");
   });
 });

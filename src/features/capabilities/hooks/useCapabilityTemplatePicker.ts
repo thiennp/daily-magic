@@ -19,12 +19,18 @@ interface UseCapabilityTemplatePickerOptions {
   readonly onSaved?: () => void;
   readonly saveTemplate?: (
     templateId: string,
+    projectId: string,
   ) => Promise<SaveCapabilityTemplateOutcome>;
+  /** Target project for the save (from "Save to which project?"). */
+  readonly projectId?: string;
+  readonly onSavedToProject?: (projectId: string) => void;
 }
 
 export function useCapabilityTemplatePicker({
   onSaved,
   saveTemplate = defaultSaveCapabilityTemplateOutcome,
+  projectId = "",
+  onSavedToProject,
 }: UseCapabilityTemplatePickerOptions) {
   const { templates, isLoading } = useCapabilityTemplates();
   const [activeTab, setActiveTab] = useState<TemplateTab>("workflow");
@@ -77,7 +83,7 @@ export function useCapabilityTemplatePicker({
     setErrorMessage(null);
     setHarnessMessage(null);
     setSavingTemplateId(templateId);
-    const result = await saveTemplate(templateId);
+    const result = await saveTemplate(templateId, projectId);
     setSavingTemplateId(null);
 
     if (!result.ok) {
@@ -87,6 +93,9 @@ export function useCapabilityTemplatePicker({
 
     setSavedTemplateId(templateId);
     setHarnessMessage(resolveCapabilityTemplateSaveHarnessMessage(result));
+    if (projectId.length > 0) {
+      onSavedToProject?.(projectId);
+    }
     onSaved?.();
   };
 

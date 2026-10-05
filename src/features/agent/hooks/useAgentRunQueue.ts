@@ -26,9 +26,11 @@ export function useAgentRunQueue(): {
         readonly targetUserId?: string;
         readonly groupId?: string;
         readonly capabilityId?: string;
+        readonly projectId: string;
       },
     ) => void,
     writerAgent: HarnessWriterAgent,
+    projectId: string,
   ) => Promise<void>;
   readonly refreshCount: () => Promise<void>;
 } {
@@ -69,10 +71,17 @@ export function useAgentRunQueue(): {
           readonly targetUserId?: string;
           readonly groupId?: string;
           readonly capabilityId?: string;
+          readonly projectId: string;
         },
       ) => void,
       writerAgent: HarnessWriterAgent,
+      projectId: string,
     ) => {
+      // Dispatch requires project_id; keep the queue until a project is open.
+      if (projectId.trim().length === 0) {
+        return;
+      }
+
       const queued = await fetchQueuedAgentRuns();
       if (queued.length === 0) {
         return;
@@ -81,6 +90,7 @@ export function useAgentRunQueue(): {
       for (const item of queued) {
         sendPrompt(item.prompt, {
           writerAgent,
+          projectId,
           ...(item.groupId
             ? {
                 targetUserId: item.executorUserId,

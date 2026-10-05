@@ -102,6 +102,7 @@ export function useWsTestTaskComposer(): UseWsTestTaskComposerResult {
     ...baseResult,
     workflowTrialRunEligibility,
     isSendDisabled: (connectionStatus: string, deviceId?: string) =>
+      projectSelection.selectedProjectId.length === 0 ||
       shouldBlockWorkflowTrial ||
       baseResult.isSendDisabled(connectionStatus, deviceId),
   };

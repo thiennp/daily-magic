@@ -3,16 +3,21 @@
 import CapabilityTemplateCard from "@/features/capabilities/CapabilityTemplateCard";
 import CapabilityTemplateShowAllButton from "@/features/capabilities/CapabilityTemplateShowAllButton";
 import CapabilityTemplateTabBar from "@/features/capabilities/CapabilityTemplateTabBar";
+import SaveToProjectSelect from "@/features/capabilities/SaveToProjectSelect";
 import { useCapabilityTemplatePicker } from "@/features/capabilities/hooks/useCapabilityTemplatePicker";
+import { useSaveToProjectPicker } from "@/features/capabilities/hooks/useSaveToProjectPicker";
 import type SaveCapabilityTemplateOutcome from "@/features/capabilities/types/SaveCapabilityTemplateOutcome.type";
 
 interface CapabilityTemplatePickerProps {
   readonly onSaved?: () => void;
   readonly saveTemplate?: (
     templateId: string,
+    projectId: string,
   ) => Promise<SaveCapabilityTemplateOutcome>;
   readonly saveButtonLabel?: string;
   readonly savedButtonLabel?: string;
+  /** Current project when the picker is opened inside a project. */
+  readonly contextProjectId?: string;
 }
 
 export default function CapabilityTemplatePicker({
@@ -20,8 +25,20 @@ export default function CapabilityTemplatePicker({
   saveTemplate,
   saveButtonLabel = "Save",
   savedButtonLabel = "Saved",
+  contextProjectId,
 }: CapabilityTemplatePickerProps) {
-  const picker = useCapabilityTemplatePicker({ onSaved, saveTemplate });
+  // Custom saveTemplate (guest sync) keeps its own target; signed-in library
+  // saves need a project_id (NRG project_required).
+  const showProjectPicker = saveTemplate === undefined;
+  const projectPicker = useSaveToProjectPicker(contextProjectId);
+  const picker = useCapabilityTemplatePicker({
+    onSaved,
+    saveTemplate,
+    projectId: showProjectPicker ? projectPicker.selectedProjectId : "",
+    onSavedToProject: showProjectPicker
+      ? projectPicker.rememberProject
+      : undefined,
+  });
 
   if (picker.isLoading) {
     return (
@@ -56,6 +73,14 @@ export default function CapabilityTemplatePicker({
         agentCount={picker.agentCount}
         onChange={picker.handleTabChange}
       />
+      {showProjectPicker ? (
+        <div className="mt-3">
+          <SaveToProjectSelect
+            picker={projectPicker}
+            disabled={picker.savingTemplateId !== null}
+          />
+        </div>
+      ) : null}
       {picker.errorMessage ? (
         <p className="mt-3 text-sm text-error-600 dark:text-error-400">
           {picker.errorMessage}

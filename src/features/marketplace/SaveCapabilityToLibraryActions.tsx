@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import SaveToProjectSelect from "@/features/capabilities/SaveToProjectSelect";
+import { useSaveToProjectPicker } from "@/features/capabilities/hooks/useSaveToProjectPicker";
 import { saveCapabilityTemplateToLibrary } from "@/features/capabilities/utils/capabilityTemplatesApi";
 import forkCapabilityToLibrary from "@/features/harness/hooks/forkCapabilityToLibrary";
 import Button from "@/components/ui/button/Button";
@@ -14,13 +16,17 @@ interface SaveCapabilityToLibraryActionsProps {
   readonly capabilityId: string;
   readonly sourceOwnerLabel: string;
   readonly isOfficialPreset?: boolean;
+  /** Current project when opened inside a project. */
+  readonly contextProjectId?: string;
 }
 
 export default function SaveCapabilityToLibraryActions({
   capabilityId,
   sourceOwnerLabel,
   isOfficialPreset = false,
+  contextProjectId,
 }: SaveCapabilityToLibraryActionsProps) {
+  const projectPicker = useSaveToProjectPicker(contextProjectId);
   const [status, setStatus] = useState<SaveStatus>("idle");
   const [message, setMessage] = useState<string | null>(null);
   const [savedName, setSavedName] = useState<string | null>(null);
@@ -38,7 +44,11 @@ export default function SaveCapabilityToLibraryActions({
         return;
       }
 
-      const result = await saveCapabilityTemplateToLibrary(templateId);
+      const projectId = projectPicker.selectedProjectId;
+      const result = await saveCapabilityTemplateToLibrary(
+        templateId,
+        projectId,
+      );
 
       if (!result.ok) {
         setStatus("error");
@@ -46,6 +56,7 @@ export default function SaveCapabilityToLibraryActions({
         return;
       }
 
+      projectPicker.rememberProject(projectId);
       setStatus("saved");
       setSavedName(null);
       setMessage(
@@ -74,6 +85,12 @@ export default function SaveCapabilityToLibraryActions({
 
   return (
     <div className="mt-4 space-y-2">
+      {isOfficialPreset ? (
+        <SaveToProjectSelect
+          picker={projectPicker}
+          disabled={status === "saving" || status === "saved"}
+        />
+      ) : null}
       <Button
         disabled={status === "saving" || status === "saved"}
         onClick={() => {

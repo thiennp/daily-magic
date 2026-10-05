@@ -17,6 +17,7 @@ export const useWsTestPanelLifecycle = (input: {
     typeof useAgentWitchSocket
   >["sendClaudePrompt"];
   readonly writerAgent: HarnessWriterAgent;
+  readonly projectId: string;
 }): void => {
   const { refreshCount } = input;
 
@@ -29,5 +30,6 @@ export const useWsTestPanelLifecycle = (input: {
     flushQueue: input.flushQueue,
     sendClaudePrompt: input.sendClaudePrompt,
     writerAgent: input.writerAgent,
+    projectId: input.projectId,
   });
 };

@@ -48,13 +48,27 @@ export const fetchCapabilityTemplateDetail = async (
   return (payload as { template: CapabilityTemplateDetail }).template;
 };
 
+export const SAVE_TO_PROJECT_REQUIRED_MESSAGE = "Choose a project to save to.";
+
 export const saveCapabilityTemplateToLibrary = async (
   templateId: string,
+  projectId: string,
 ): Promise<SaveCapabilityTemplateResult> => {
+  const trimmedProjectId = projectId.trim();
+
+  if (trimmedProjectId.length === 0) {
+    return {
+      ok: false,
+      errorMessage: SAVE_TO_PROJECT_REQUIRED_MESSAGE,
+      harnessInstalled: false,
+      harnessInstallMessage: null,
+    };
+  }
+
   const response = await fetch("/api/capabilities/templates/save", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ templateId }),
+    body: JSON.stringify({ templateId, project_id: trimmedProjectId }),
   });
   const payload: unknown = await response.json();
 

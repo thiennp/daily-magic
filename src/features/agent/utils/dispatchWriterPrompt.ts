@@ -15,7 +15,7 @@ export async function dispatchClaudePrompt(input: {
   readonly sessionContinuation?: boolean;
   readonly sourceRunId?: string;
   readonly projectFolderPath?: string;
-  readonly projectId?: string;
+  readonly projectId: string;
   readonly runScopedComponentIds?: readonly string[];
   readonly fieldValues?: Readonly<Record<string, string>>;
   readonly useOfficialWorkflowOrchestration?: boolean;
