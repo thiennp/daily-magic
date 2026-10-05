@@ -24,11 +24,14 @@ export async function generateMetadata({
     return buildProjectDetailPageMetadata("Project");
   }
   const { projectId } = await params;
-  const project = await getUserProjectById(projectId.trim());
-  if (project === null || project.ownerUserId !== actor.id) {
+  const access = await authorizeProjectPageActor({
+    projectId: projectId.trim(),
+    actorUserId: actor.id,
+  });
+  if (!access.ok) {
     return buildProjectDetailPageMetadata("Project");
   }
-  return buildProjectDetailPageMetadata(project.name);
+  return buildProjectDetailPageMetadata(access.project.name);
 }
 
 export default async function ProjectDetailPage({
