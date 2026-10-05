@@ -32,15 +32,15 @@ export const createAgentAutomation = async (
     return { kind: "not_found" };
   }
 
-  let projectId =
+  const projectIdFromInput =
     typeof input.projectId === "string" && input.projectId.trim().length > 0
       ? input.projectId.trim()
       : null;
-
-  if (projectId === null) {
-    const projects = await listUserProjectsForOwner(ownerUserId);
-    projectId = resolveSaveToProjectDefault({ projects }) || null;
-  }
+  const projectId =
+    projectIdFromInput ??
+    (resolveSaveToProjectDefault({
+      projects: await listUserProjectsForOwner(ownerUserId),
+    }) || null);
 
   const prepared = await prepareAutomationFieldValues({
     ownerUserId,

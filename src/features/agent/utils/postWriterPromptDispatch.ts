@@ -8,6 +8,22 @@ import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 export const DISPATCH_PROJECT_REQUIRED_MESSAGE =
   "Open a project to send this task.";
 
+type PostWriterPromptDispatchInput = {
+  readonly prompt: string;
+  readonly writerAgent: HarnessWriterAgent;
+  readonly targetUserId?: string;
+  readonly groupId?: string;
+  readonly capabilityId?: string;
+  readonly targetDeviceId?: string;
+  readonly sessionContinuation?: boolean;
+  readonly sourceRunId?: string;
+  readonly projectFolderPath?: string;
+  /** Required: AWC composer lives inside a project (NRG project_required). */
+  readonly projectId: string;
+  readonly runScopedComponentIds?: readonly string[];
+  readonly onDispatchedRunId?: (runId: string) => void;
+};
+
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
@@ -25,21 +41,9 @@ const buildDispatchErrorRaw = (errorMessage: string): string =>
     payload: { errorMessage },
   });
 
-const postClaudePromptDispatchOnce = async (input: {
-  readonly prompt: string;
-  readonly writerAgent: HarnessWriterAgent;
-  readonly targetUserId?: string;
-  readonly groupId?: string;
-  readonly capabilityId?: string;
-  readonly targetDeviceId?: string;
-  readonly sessionContinuation?: boolean;
-  readonly sourceRunId?: string;
-  readonly projectFolderPath?: string;
-  /** Required: AWC composer lives inside a project (NRG project_required). */
-  readonly projectId: string;
-  readonly runScopedComponentIds?: readonly string[];
-  readonly onDispatchedRunId?: (runId: string) => void;
-}): Promise<string> => {
+const postClaudePromptDispatchOnce = async (
+  input: PostWriterPromptDispatchInput,
+): Promise<string> => {
   const projectId = input.projectId.trim();
 
   if (projectId.length === 0) {
@@ -103,21 +107,9 @@ const postClaudePromptDispatchOnce = async (input: {
   );
 };
 
-export async function postClaudePromptDispatch(input: {
-  readonly prompt: string;
-  readonly writerAgent: HarnessWriterAgent;
-  readonly targetUserId?: string;
-  readonly groupId?: string;
-  readonly capabilityId?: string;
-  readonly targetDeviceId?: string;
-  readonly sessionContinuation?: boolean;
-  readonly sourceRunId?: string;
-  readonly projectFolderPath?: string;
-  /** Required: AWC composer lives inside a project (NRG project_required). */
-  readonly projectId: string;
-  readonly runScopedComponentIds?: readonly string[];
-  readonly onDispatchedRunId?: (runId: string) => void;
-}): Promise<string> {
+export async function postClaudePromptDispatch(
+  input: PostWriterPromptDispatchInput,
+): Promise<string> {
   return retryPostClaudePromptDispatch(() =>
     postClaudePromptDispatchOnce(input),
   );

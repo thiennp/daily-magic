@@ -4,10 +4,8 @@ import { useState } from "react";
 
 import SaveToProjectSelect from "@/features/capabilities/SaveToProjectSelect";
 import { useSaveToProjectPicker } from "@/features/capabilities/hooks/useSaveToProjectPicker";
-import { saveCapabilityTemplateToLibrary } from "@/features/capabilities/utils/capabilityTemplatesApi";
-import forkCapabilityToLibrary from "@/features/harness/hooks/forkCapabilityToLibrary";
+import { runSaveCapabilityToLibrary } from "@/features/marketplace/utils/runSaveCapabilityToLibrary";
 import Button from "@/components/ui/button/Button";
-import { parsePresetMarketplaceTemplateId } from "@/lib/marketplace/presetMarketplaceCapabilityId";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 type SaveStatus = "idle" | "saving" | "saved" | "error";
@@ -35,54 +33,23 @@ export default function SaveCapabilityToLibraryActions({
     setStatus("saving");
     setMessage(null);
 
-    if (isOfficialPreset) {
-      const templateId = parsePresetMarketplaceTemplateId(capabilityId);
-
-      if (templateId === null) {
-        setStatus("error");
-        setMessage("Could not save this starter.");
-        return;
-      }
-
-      const projectId = projectPicker.selectedProjectId;
-      const result = await saveCapabilityTemplateToLibrary(
-        templateId,
-        projectId,
-      );
-
-      if (!result.ok) {
-        setStatus("error");
-        setMessage(result.errorMessage);
-        return;
-      }
-
-      projectPicker.rememberProject(projectId);
-      setStatus("saved");
-      setSavedName(null);
-      setMessage(
-        result.harnessInstalled
-          ? MAC_WORKER_BENEFIT_COPY.savedInstallRequested
-          : (result.harnessInstallMessage ??
-              MAC_WORKER_BENEFIT_COPY.savedSetupMacForRules),
-      );
-      return;
-    }
-
     const projectId = projectPicker.selectedProjectId;
-    const result = await forkCapabilityToLibrary(capabilityId, projectId);
+    const result = await runSaveCapabilityToLibrary({
+      capabilityId,
+      isOfficialPreset,
+      projectId,
+    });
 
-    if (!result.ok) {
+    if (result.status === "error") {
       setStatus("error");
-      setMessage(result.errorMessage);
+      setMessage(result.message);
       return;
     }
 
     projectPicker.rememberProject(projectId);
     setStatus("saved");
-    setSavedName(result.capability.name);
-    setMessage(
-      `Saved as a private draft. Edit it under Home → What teammates can request.`,
-    );
+    setSavedName(result.savedName);
+    setMessage(result.message);
   };
 
   return (

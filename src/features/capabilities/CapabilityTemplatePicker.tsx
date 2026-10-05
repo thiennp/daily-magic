@@ -6,19 +6,7 @@ import CapabilityTemplateTabBar from "@/features/capabilities/CapabilityTemplate
 import SaveToProjectSelect from "@/features/capabilities/SaveToProjectSelect";
 import { useCapabilityTemplatePicker } from "@/features/capabilities/hooks/useCapabilityTemplatePicker";
 import { useSaveToProjectPicker } from "@/features/capabilities/hooks/useSaveToProjectPicker";
-import type SaveCapabilityTemplateOutcome from "@/features/capabilities/types/SaveCapabilityTemplateOutcome.type";
-
-interface CapabilityTemplatePickerProps {
-  readonly onSaved?: () => void;
-  readonly saveTemplate?: (
-    templateId: string,
-    projectId: string,
-  ) => Promise<SaveCapabilityTemplateOutcome>;
-  readonly saveButtonLabel?: string;
-  readonly savedButtonLabel?: string;
-  /** Current project when the picker is opened inside a project. */
-  readonly contextProjectId?: string;
-}
+import type CapabilityTemplatePickerProps from "@/features/capabilities/types/CapabilityTemplatePickerProps.type";
 
 export default function CapabilityTemplatePicker({
   onSaved,
@@ -27,8 +15,6 @@ export default function CapabilityTemplatePicker({
   savedButtonLabel = "Saved",
   contextProjectId,
 }: CapabilityTemplatePickerProps) {
-  // Custom saveTemplate (guest sync) keeps its own target; signed-in library
-  // saves need a project_id (NRG project_required).
   const showProjectPicker = saveTemplate === undefined;
   const projectPicker = useSaveToProjectPicker(contextProjectId);
   const picker = useCapabilityTemplatePicker({
