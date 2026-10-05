@@ -48,7 +48,10 @@ import {
 } from "@agent-witch/live-shell/presentation";
 import { buildAgentWitchLocalHomePageBody } from "@agent-witch/live-home/presentation";
 import { tryHandlePromptSdlcLocalRequest } from "../../../prompt-optimizer/public-api/infrastructure";
-import { tryHandleTokenSaverLocalRequest } from "@agent-witch/live-token-saver";
+import {
+  tryHandleTokenSaverLocalRequest,
+  writeGlobalTriggers,
+} from "@agent-witch/live-token-saver";
 import { tryHandleAwlMcpHttpRequest } from "@agent-witch/live-mcp";
 import { resolvePromptOptimizerCyclesPath } from "../../../prompt-optimizer/internal/core/promptOptimizerLocalStorePaths";
 import {
@@ -1766,6 +1769,13 @@ export const startAgentWitchLocalApp = (input: {
   });
 
   server.listen(AGENT_WITCH_LOCAL_APP_PORT, "127.0.0.1", () => {
+    // GlobalTriggersWritten: idempotent MCP/hook writers (injectable in unit tests).
+    try {
+      writeGlobalTriggers();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(`[agent-witch] writeGlobalTriggers failed: ${message}`);
+    }
     console.log(`[agent-witch] Local app ${AGENT_WITCH_LOCAL_APP_ORIGIN}`);
   });
 

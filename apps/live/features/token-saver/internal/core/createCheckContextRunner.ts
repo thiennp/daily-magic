@@ -7,6 +7,7 @@ import type {
 } from "../../public-api/types";
 import { checkContext } from "./checkContext";
 import { createPitfallRegistry } from "./createPitfallRegistry";
+import { isDeclinedCwd } from "./declinedProjectsStore";
 import { parseCheckContextArgs } from "./parseCheckContextArgs";
 
 export interface CheckContextRunnerDeps {
@@ -18,6 +19,7 @@ export interface CheckContextRunnerDeps {
 /**
  * Build a check_context runner that opens the profile registry per call
  * and always closes it (DB errors → none + log).
+ * Default isDeclined reads the D2 decline store.
  */
 export const createCheckContextRunner = (
   deps: CheckContextRunnerDeps,
@@ -28,6 +30,10 @@ export const createCheckContextRunner = (
       const message = error instanceof Error ? error.message : String(error);
       console.error(`[agent-witch] check_context: ${message}`);
     });
+  const isDeclined =
+    deps.isDeclined ??
+    ((cwd: string): boolean =>
+      isDeclinedCwd({ layout: deps.layout, cwd }));
 
   return (raw: unknown): CheckContextResult => {
     const input: CheckContextInput = parseCheckContextArgs(raw);
@@ -38,7 +44,7 @@ export const createCheckContextRunner = (
         {
           registry,
           resolveProjectId: resolveAgentWitchProjectIdFromCwd,
-          isDeclined: deps.isDeclined,
+          isDeclined,
           logError,
         },
         input,

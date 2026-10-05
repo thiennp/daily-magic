@@ -134,7 +134,7 @@
       "title": "Token-saver pitfall registry cache",
       "fsaStatus": "fsa",
       "featurePath": "apps/live/features/token-saver",
-      "notes": "Local SQLite pitfall cache + check_context domain/tool handler (HTTP /api/local/check-context). MCP transport lives in mcp."
+      "notes": "Local SQLite pitfall cache + check_context domain/tool handler (HTTP /api/local/check-context) + setup_project writers (decline store, global triggers, Cursor project rule). MCP transport lives in mcp."
     },
     {
       "slug": "mcp",

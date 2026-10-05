@@ -1,0 +1,20 @@
+/** Marker key for all token-saver CLI merges (idempotent upsert). */
+export const TOKEN_SAVER_MARKER = "agent-witch-token-saver";
+
+export const MARKER_BEGIN = `# BEGIN ${TOKEN_SAVER_MARKER}`;
+export const MARKER_END = `# END ${TOKEN_SAVER_MARKER}`;
+export const HTML_MARKER_BEGIN = `<!-- BEGIN ${TOKEN_SAVER_MARKER} -->`;
+export const HTML_MARKER_END = `<!-- END ${TOKEN_SAVER_MARKER} -->`;
+
+export const CURSOR_PROJECT_RULE_RELATIVE =
+  ".cursor/rules/agent-witch-check-context.mdc";
+export const CURSOR_GLOBAL_MCP_RELATIVE = ".cursor/mcp.json";
+export const CODEX_GLOBAL_CONFIG_RELATIVE = ".codex/config.toml";
+export const CODEX_GLOBAL_AGENTS_RELATIVE = ".codex/AGENTS.md";
+export const CLAUDE_GLOBAL_SETTINGS_RELATIVE = ".claude/settings.json";
+export const DECLINED_PROJECTS_FILE_NAME = "declined-projects.json";
+export const MCP_SERVER_NAME = "agent-witch";
+export const MCP_STDIO_COMMAND = "agent-witch";
+export const MCP_STDIO_ARGS = ["mcp"] as const;
+export const CLAUDE_HOOK_COMMAND =
+  "agent-witch mcp-hook check_context";
