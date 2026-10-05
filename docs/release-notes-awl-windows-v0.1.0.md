@@ -10,11 +10,11 @@ Windows companion zip for Agent Witch Local, matching the Linux tray packaging p
 
 ## Assets (planned)
 
-| Asset | Purpose |
-| --- | --- |
-| `AgentWitchLocal-windows-amd64-v0.1.0.zip` | Zip containing the Windows `.exe` (when built), `icon.ico`, and install notes |
-| `AgentWitchLocal-windows-amd64-v0.1.0.zip.sha256` | Checksum |
-| `icon.ico` | Staged Windows icon from `apps/desktop/assets/icon.ico` |
+| Asset                                             | Purpose                                                                       |
+| ------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `AgentWitchLocal-windows-amd64-v0.1.0.zip`        | Zip containing the Windows `.exe` (when built), `icon.ico`, and install notes |
+| `AgentWitchLocal-windows-amd64-v0.1.0.zip.sha256` | Checksum                                                                      |
+| `icon.ico`                                        | Staged Windows icon from `apps/desktop/assets/icon.ico`                       |
 
 ## What exists on main today
 
