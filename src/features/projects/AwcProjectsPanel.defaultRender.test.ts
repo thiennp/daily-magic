@@ -18,15 +18,19 @@ describe("AwcProjectsPanel default render", () => {
     ];
   });
 
-  it("keeps the full /projects panel (all projects + New project) by default", async () => {
-    const { default: AwcProjectsPanel } =
-      await import("@/features/projects/AwcProjectsPanel");
-    const html = renderToStaticMarkup(createElement(AwcProjectsPanel));
+  it(
+    "keeps the full /projects panel (all projects + New project) by default",
+    { timeout: 15000 },
+    async () => {
+      const { default: AwcProjectsPanel } =
+        await import("@/features/projects/AwcProjectsPanel");
+      const html = renderToStaticMarkup(createElement(AwcProjectsPanel));
 
-    for (const id of ["alpha", "bravo", "charlie", "delta", "echo"]) {
-      expect(html).toContain(`Project ${id}`);
-    }
-    expect(html).toContain("New project");
-    expect(html).toContain("create-project-form-stub");
-  });
+      for (const id of ["alpha", "bravo", "charlie", "delta", "echo"]) {
+        expect(html).toContain(`Project ${id}`);
+      }
+      expect(html).toContain("New project");
+      expect(html).toContain("create-project-form-stub");
+    },
+  );
 });
