@@ -11,3 +11,9 @@ Target home for the four Agent Witch **deployables**. Code still lives mostly un
 
 Canonical doc: [docs/product/agent-witch-deployables.md](../docs/product/agent-witch-deployables.md).  
 Registry: [`deployables.registry.json`](deployables.registry.json).
+
+## Companion surfaces
+
+| Folder | Purpose |
+| ------ | ------- |
+| [`mac/`](mac/) | Unsigned SwiftUI menu bar app that starts/stops the existing AWI LaunchAgent (not a fifth deployable id). |

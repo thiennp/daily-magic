@@ -1,0 +1,58 @@
+name: Mac menu bar app
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - "awl-mac-v*"
+  pull_request:
+
+concurrency:
+  group: mac-app-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Swift test + dmg
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Show Swift version
+        run: swift --version
+
+      - name: Swift tests
+        run: swift test --package-path apps/mac
+
+      - name: Build unsigned dmg
+        run: bash scripts/mac/build-awl-mac-dmg.sh
+
+      - name: Upload dmg artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AgentWitchLocal-dmg
+          path: |
+            dist/mac/AgentWitchLocal.dmg
+            dist/mac/AgentWitchLocal.dmg.sha256
+          if-no-files-found: error
+
+      - name: Upload release assets for tag
+        if: startsWith(github.ref, 'refs/tags/awl-mac-v')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          # Create the GitHub Release for this tag if missing, then upload fixed asset names.
+          if ! gh release view "${TAG}" >/dev/null 2>&1; then
+            gh release create "${TAG}" \
+              --title "${TAG}" \
+              --notes "Agent Witch Local macOS menu bar app (${TAG}). Unsigned; right-click > Open on first launch."
+          fi
+          gh release upload "${TAG}" \
+            dist/mac/AgentWitchLocal.dmg \
+            dist/mac/AgentWitchLocal.dmg.sha256 \
+            --clobber

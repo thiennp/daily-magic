@@ -4,6 +4,7 @@ import { Modal } from "@/components/ui/modal";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import ConnectThisComputerInstallBody from "@/features/home/ConnectThisComputerInstallBody";
+import ConnectThisMacDownloadArea from "@/features/home/ConnectThisMacDownloadArea";
 import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
@@ -51,12 +52,15 @@ export default function ConnectThisMacModal({
           <AgentWitchUnsupportedHostNotice host={host} />
         </div>
       ) : installDescription !== undefined ? (
-        <ConnectThisComputerInstallBody
-          description={installDescription}
-          installCommand={installCommand}
-          isInstallCommandLoading={isInstallCommandLoading}
-          onInstallEngaged={onInstallEngaged}
-        />
+        <>
+          <ConnectThisComputerInstallBody
+            description={installDescription}
+            installCommand={installCommand}
+            isInstallCommandLoading={isInstallCommandLoading}
+            onInstallEngaged={onInstallEngaged}
+          />
+          <ConnectThisMacDownloadArea operatingSystem={operatingSystem} />
+        </>
       ) : (
         <div className={`mt-3 space-y-4 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
           <p>{MAC_WORKER_BENEFIT_COPY.connectThisMacMobileModalIntro}</p>
