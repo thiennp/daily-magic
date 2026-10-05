@@ -41,7 +41,9 @@ Releases are **manual only**. Cut a GitHub release with the owner’s explicit g
 
 ## Icons
 
-Tray glyph (`assets/icon.png`) is monochrome (black + alpha) from `assets/icon-mark-mono.svg`
-(same plus+slash paths as `src/app/icon.svg`). Full-color `.desktop` / AppImage / `.deb` icons
-are `assets/icon-{48,256}.png` from `src/app/apple-icon.svg`. Windows `.ico` is `assets/icon.ico`
+Tray glyph (`assets/icon.png`, also `tray-22/24.png`) is monochrome **white + alpha** from
+`assets/icon-mark-mono.svg` (same plus+slash paths as `src/app/icon.svg`) so it reads on dark
+GNOME/Ubuntu panels. Black variants (`tray-dark-glyph-{22,24,32}.png`) are kept for a future
+light-theme switch but are not wired. Full-color `.desktop` / AppImage / `.deb` icons are
+`assets/icon-{48,256}.png` from `src/app/apple-icon.svg`. Windows `.ico` is `assets/icon.ico`
 (for a future `.exe`). Regenerate: `bash scripts/agentWitchLocal/generateDesktopIcons.sh`.

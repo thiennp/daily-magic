@@ -4,6 +4,12 @@
 # Full-color app icons use src/app/apple-icon.svg (same mark + existing light tile).
 # Menu-bar / tray glyphs use apps/desktop/assets/icon-mark-mono.svg
 # (same plus+slash path data; diamond omitted + tighter viewBox for 16–24px legibility).
+#
+# Color convention:
+#   - macOS menu-bar templates: black + alpha (system tints them).
+#   - Linux tray embed (icon.png / tray-22/24): white + alpha (visible on dark panels;
+#     Linux systray does not tint like macOS).
+#   - tray-dark-glyph-*.png: black + alpha kept for a future light-theme switch (unwired).
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -39,24 +45,26 @@ render_svg() {
   rsvg-convert -w "$2" -h "$2" "$1" -o "$3"
 }
 
-# Force pure black + alpha (drop near-transparent haze).
-to_template() {
-  python3 - "$1" "$2" "${3:-8}" <<'PY'
+# Force pure RGB + alpha (drop near-transparent haze).
+# Usage: to_mono_glyph SRC DEST R G B [min_alpha]
+to_mono_glyph() {
+  python3 - "$1" "$2" "$3" "$4" "$5" "${6:-8}" <<'PY'
 import sys
 from PIL import Image
 
-src, dest, min_alpha_s = sys.argv[1], sys.argv[2], sys.argv[3]
-min_alpha = int(min_alpha_s)
+src, dest = sys.argv[1], sys.argv[2]
+r0, g0, b0 = int(sys.argv[3]), int(sys.argv[4]), int(sys.argv[5])
+min_alpha = int(sys.argv[6])
 im = Image.open(src).convert("RGBA")
 out = Image.new("RGBA", im.size, (0, 0, 0, 0))
 px_in, px_out = im.load(), out.load()
 w, h = im.size
 for y in range(h):
     for x in range(w):
-        r, g, b, a = px_in[x, y]
+        _r, _g, _b, a = px_in[x, y]
         if a < min_alpha:
             continue
-        px_out[x, y] = (0, 0, 0, a)
+        px_out[x, y] = (r0, g0, b0, a)
 out.save(dest, format="PNG", optimize=True)
 PY
 }
@@ -72,20 +80,28 @@ cp "${TMP_DIR}/app-64.png" "${DESKTOP_ASSETS}/icon-64.png"
 cp "${TMP_DIR}/app-128.png" "${DESKTOP_ASSETS}/icon-128.png"
 cp "${TMP_DIR}/app-256.png" "${DESKTOP_ASSETS}/icon-256.png"
 
-echo "Rendering mono tray / menu-bar templates from icon-mark-mono.svg…"
+echo "Rendering mono tray / menu-bar glyphs from icon-mark-mono.svg…"
 for size in 16 18 22 24 32 36 48 64; do
   render_svg "${MONO_SVG}" "${size}" "${TMP_DIR}/mark-${size}.png"
-  to_template "${TMP_DIR}/mark-${size}.png" "${TMP_DIR}/mono-${size}.png" 8
+  to_mono_glyph "${TMP_DIR}/mark-${size}.png" "${TMP_DIR}/black-${size}.png" 0 0 0 8
+  to_mono_glyph "${TMP_DIR}/mark-${size}.png" "${TMP_DIR}/white-${size}.png" 255 255 255 8
 done
 
-cp "${TMP_DIR}/mono-32.png" "${DESKTOP_ASSETS}/icon.png"
-cp "${TMP_DIR}/mono-22.png" "${DESKTOP_ASSETS}/tray-22.png"
-cp "${TMP_DIR}/mono-24.png" "${DESKTOP_ASSETS}/tray-24.png"
+# Linux tray embed: WHITE on transparency (dark GNOME/Ubuntu panels).
+cp "${TMP_DIR}/white-32.png" "${DESKTOP_ASSETS}/icon.png"
+cp "${TMP_DIR}/white-22.png" "${DESKTOP_ASSETS}/tray-22.png"
+cp "${TMP_DIR}/white-24.png" "${DESKTOP_ASSETS}/tray-24.png"
 
-cp "${TMP_DIR}/mono-18.png" "${MAC_RESOURCES}/MenuBarIconTemplate.png"
-cp "${TMP_DIR}/mono-36.png" "${MAC_RESOURCES}/MenuBarIconTemplate@2x.png"
-cp "${TMP_DIR}/mono-16.png" "${MAC_RESOURCES}/MenuBarIconTemplate16.png"
-cp "${TMP_DIR}/mono-32.png" "${MAC_RESOURCES}/MenuBarIconTemplate16@2x.png"
+# Black glyphs kept for a future light-theme tray (not wired).
+cp "${TMP_DIR}/black-22.png" "${DESKTOP_ASSETS}/tray-dark-glyph-22.png"
+cp "${TMP_DIR}/black-24.png" "${DESKTOP_ASSETS}/tray-dark-glyph-24.png"
+cp "${TMP_DIR}/black-32.png" "${DESKTOP_ASSETS}/tray-dark-glyph-32.png"
+
+# macOS menu-bar templates: BLACK (system tints).
+cp "${TMP_DIR}/black-18.png" "${MAC_RESOURCES}/MenuBarIconTemplate.png"
+cp "${TMP_DIR}/black-36.png" "${MAC_RESOURCES}/MenuBarIconTemplate@2x.png"
+cp "${TMP_DIR}/black-16.png" "${MAC_RESOURCES}/MenuBarIconTemplate16.png"
+cp "${TMP_DIR}/black-32.png" "${MAC_RESOURCES}/MenuBarIconTemplate16@2x.png"
 
 echo "Building macOS AppIcon.iconset PNGs…"
 cp "${TMP_DIR}/app-16.png"   "${MAC_ICONSET}/icon_16x16.png"
@@ -124,17 +140,20 @@ package assets
 
 import _ "embed"
 
-// IconPNG is the Linux tray glyph: monochrome (black + alpha) derived from
-// src/app/icon.svg (same mark as https://www.agentwitch.com/icon.svg).
-// Full-color packaging icons live beside this file as icon-{32,48,64,128,256}.png.
+// IconPNG is the Linux tray glyph: white + alpha (same main mark as
+// src/app/icon.svg / https://www.agentwitch.com/icon.svg). White so it reads
+// on dark GNOME/Ubuntu panels; Linux systray does not tint like macOS templates.
+// Black variants live beside this as tray-dark-glyph-{22,24,32}.png (unwired).
+// Full-color packaging icons: icon-{32,48,64,128,256}.png.
 //
 //go:embed icon.png
 var IconPNG []byte
 GO
 
 echo "Done."
-echo "  Linux assets: ${DESKTOP_ASSETS}"
-echo "  Mac menu bar: ${MAC_RESOURCES}"
+echo "  Linux tray (white): ${DESKTOP_ASSETS}/icon.png tray-22/24.png"
+echo "  Linux dark-glyph (black, unwired): tray-dark-glyph-{22,24,32}.png"
+echo "  Mac menu bar (black template): ${MAC_RESOURCES}"
 echo "  Mac iconset:  ${MAC_ICONSET}"
 echo "  Windows ico:  ${DESKTOP_ASSETS}/icon.ico"
 echo "Next on macOS: iconutil -c icns -o apps/mac/AppIcon.icns apps/mac/AppIcon.iconset"

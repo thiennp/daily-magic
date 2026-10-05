@@ -2,9 +2,11 @@ package assets
 
 import _ "embed"
 
-// IconPNG is the Linux tray glyph: monochrome (black + alpha) derived from
-// src/app/icon.svg (same mark as https://www.agentwitch.com/icon.svg).
-// Full-color packaging icons live beside this file as icon-{32,48,64,128,256}.png.
+// IconPNG is the Linux tray glyph: white + alpha (same main mark as
+// src/app/icon.svg / https://www.agentwitch.com/icon.svg). White so it reads
+// on dark GNOME/Ubuntu panels; Linux systray does not tint like macOS templates.
+// Black variants live beside this as tray-dark-glyph-{22,24,32}.png (unwired).
+// Full-color packaging icons: icon-{32,48,64,128,256}.png.
 //
 //go:embed icon.png
 var IconPNG []byte
