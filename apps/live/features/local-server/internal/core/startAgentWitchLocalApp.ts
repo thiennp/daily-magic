@@ -53,7 +53,10 @@ import {
   tryHandleTokenSaverLocalRequest,
   writeGlobalTriggers,
 } from "@agent-witch/live-token-saver";
-import { tryHandleAwlMcpHttpRequest } from "@agent-witch/live-mcp";
+import {
+  createAwlMcpServer,
+  tryHandleAwlMcpHttpRequest,
+} from "@agent-witch/live-mcp";
 import { resolvePromptOptimizerCyclesPath } from "../../../prompt-optimizer/internal/core/promptOptimizerLocalStorePaths";
 import {
   buildAgentWitchLocalEstimateHistoryPageBody,
@@ -521,6 +524,8 @@ export const startAgentWitchLocalApp = (input: {
     return code;
   };
 
+  // MCP tool list built once per app start (not per POST /mcp).
+  const awlMcpServer = createAwlMcpServer({ layout: input.layout });
   const server = http.createServer((request, response) => {
     void (async () => {
       const pathname = request.url?.split("?")[0] ?? "/";
@@ -573,6 +578,7 @@ export const startAgentWitchLocalApp = (input: {
           layout: input.layout,
           readBody,
           sendJson,
+          server: awlMcpServer,
         })
       ) {
         return;

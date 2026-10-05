@@ -1,4 +1,7 @@
+import fs from "node:fs";
 import type http from "node:http";
+import os from "node:os";
+import path from "node:path";
 import {
   handleMcpJsonRpcRequest,
   toMcpTextResult,
@@ -6,7 +9,7 @@ import {
 import { describe, expect, it, vi } from "vitest";
 
 import type { McpServerDefinition } from "../../public-api/types";
-import { serveMcpStdio } from "./runAwlMcpStdio";
+import { runAwlMcpStdio, serveMcpStdio } from "./runAwlMcpStdio";
 import { tryHandleAwlMcpHttpRequest } from "./tryHandleAwlMcpHttpRequest";
 
 const server: McpServerDefinition = {
@@ -109,5 +112,42 @@ describe("AWL MCP transports share the JSON-RPC core", () => {
       server,
     });
     expect(handled).toBe(false);
+  });
+  it("stdio injects isDeclined into the AWL server like HTTP does", async () => {
+    const installDir = fs.mkdtempSync(path.join(os.tmpdir(), "awl-mcp-stdio-"));
+    try {
+      const isDeclined = vi.fn(() => true);
+      const written: string[] = [];
+      await runAwlMcpStdio({
+        layout: { installDir, profileEmail: "t@x.com" },
+        isDeclined,
+        streams: {
+          stdin: (async function* () {
+            yield Buffer.from(
+              frame({
+                jsonrpc: "2.0",
+                id: 3,
+                method: "tools/call",
+                params: {
+                  name: "check_context",
+                  arguments: { cwd: "/declined/repo", message: "hi" },
+                },
+              }),
+              "utf8",
+            );
+          })(),
+          stdout: { write: (chunk: string) => written.push(chunk) },
+        },
+      });
+      expect(isDeclined).toHaveBeenCalledWith("/declined/repo");
+      const [response] = parseFrames(written.join("")) as {
+        result: { content: { text: string }[] };
+      }[];
+      expect(JSON.parse(response?.result.content[0]?.text ?? "null")).toEqual({
+        status: "none",
+      });
+    } finally {
+      fs.rmSync(installDir, { recursive: true, force: true });
+    }
   });
 });

@@ -89,12 +89,16 @@ export const serveMcpStdio = async (
   });
 };
 
-/** Stdio MCP for `agent-witch mcp`. */
+/** Stdio MCP for `agent-witch mcp` (server built once per process). */
 export const runAwlMcpStdio = async (input: {
   readonly layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">;
+  /** Same injection as HTTP `/mcp`; defaults to the D2 decline store. */
+  readonly isDeclined?: (cwd: string) => boolean;
+  /** Test seam; defaults to process stdin/stdout. */
+  readonly streams?: StdioStreams;
 }): Promise<void> => {
-  await serveMcpStdio(createAwlMcpServer({ layout: input.layout }), {
-    stdin: process.stdin,
-    stdout: process.stdout,
-  });
+  await serveMcpStdio(
+    createAwlMcpServer({ layout: input.layout, isDeclined: input.isDeclined }),
+    input.streams ?? { stdin: process.stdin, stdout: process.stdout },
+  );
 };

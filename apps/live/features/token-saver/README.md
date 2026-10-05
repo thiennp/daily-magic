@@ -10,7 +10,8 @@ Local pitfall registry cache + `check_context` MCP + `setup_project` CLI writers
 - `check_context` domain logic + tool definition (status `hit`|`miss`|`none`); HTTP `/api/local/check-context`
 - MCP transport (stdio `agent-witch mcp`, HTTP `/mcp`) is in `apps/live/features/mcp`
 - cwd → projectId via `@agent-witch/live-projects` `resolveAgentWitchProjectIdFromCwd`
-- Decline store (D2): `…/profiles/<email>/declined-projects.json` (default `isDeclined` for check_context)
+- Decline store (D2): `…/profiles/<email>/declined-projects.json` (default `isDeclined` for check_context);
+  DB + decline paths share `resolveProfileScopedPath`
 - Global writers at install (`GlobalTriggersWritten`): Cursor `~/.cursor/mcp.json`,
   Codex `~/.codex/config.toml` + `~/.codex/AGENTS.md`, Claude `UserPromptSubmit`
 - Claude hook runner `agent-witch mcp-hook check_context` (`runCheckContextHook`): reads the
@@ -19,7 +20,10 @@ Local pitfall registry cache + `check_context` MCP + `setup_project` CLI writers
   nothing). Always exits 0; errors go to stderr only
 - Project fragments on accept: Cursor `.cursor/rules/agent-witch-check-context.mdc`
   + `.git/info/exclude` (D1, never commit); project flags `.agent-witch/token-saver.json`
-  from `buildDefaultProjectFlags()` (`@agent-witch/shared/projects`)
+  (`AGENT_WITCH_PROJECT_META_DIR_NAME` from live-projects) from `buildDefaultProjectFlags()`
+  (`@agent-witch/shared/projects`); re-accept merges existing user flags over defaults
+- `runSetupProject` never throws on a missing/blank projectId or a failing resolver
+  (`ok:false` + reason; decline untouched)
 
 ## Aligns with
 

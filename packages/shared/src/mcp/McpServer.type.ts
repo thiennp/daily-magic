@@ -23,7 +23,7 @@ export interface McpTool<TContext = undefined> {
   readonly definition: McpToolDefinition;
   /**
    * Receives raw `arguments` and the per-call `context`. May return a value or
-   * a Promise; throw/reject maps to JSON-RPC -32603.
+   * a Promise; throw/reject maps to JSON-RPC -32603 (generic message).
    */
   readonly call: (
     args: unknown,
@@ -35,6 +35,11 @@ export interface McpTool<TContext = undefined> {
 export interface McpServerDefinition<TContext = undefined> {
   readonly serverInfo: McpServerInfo;
   readonly tools: readonly McpTool<TContext>[];
+  /**
+   * Host-side log for a throwing tool (e.g. stderr). The JSON-RPC -32603
+   * response itself only carries a generic message (no error text / stack).
+   */
+  readonly onToolError?: (toolName: string, error: unknown) => void;
 }
 
 export type McpJsonRpcResponse = Readonly<Record<string, unknown>>;

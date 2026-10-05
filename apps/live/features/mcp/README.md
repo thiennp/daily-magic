@@ -7,7 +7,11 @@ Local MCP server for Agent Witch Local.
 - Transports over the shared JSON-RPC core `handleMcpJsonRpcRequest`
   (`@agent-witch/shared/mcp`): stdio (`agent-witch mcp`, Content-Length
   framed) and HTTP `POST /mcp` on the local app
-- `createAwlMcpServer` — composes the AWL tool list from feature-owned handlers
+- `createAwlMcpServer` — composes the AWL tool list from feature-owned handlers;
+  built once per process (stdio) / per app start (HTTP), with the same optional
+  `isDeclined` injection on both transports
+- Tool failures: JSON-RPC -32603 carries only `Tool <name> failed`; the error
+  text goes to stderr via the shared core's `onToolError` hook
 
 ## Does not own
 

@@ -43,8 +43,13 @@ const callTool = async <TContext>(
     const result = await tool.call(params?.arguments ?? {}, context);
     return jsonRpcResult(id, result);
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    return jsonRpcError(id, -32603, `Tool ${name} failed: ${message}`);
+    // Never echo error text / stack / paths to the client; the host logs it.
+    try {
+      server.onToolError?.(name, error);
+    } catch {
+      // A failing logger must not change the protocol response.
+    }
+    return jsonRpcError(id, -32603, `Tool ${name} failed`);
   }
 };
 

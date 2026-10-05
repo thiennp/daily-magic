@@ -67,4 +67,23 @@ describe("writeCursorProjectRule", () => {
     expect(body).toContain(HTML_MARKER_BEGIN);
     expect(body).toContain("projectId: p2");
   });
+  it("replaces only our marked block in an existing rule (projectId change, backup)", () => {
+    const { root, io } = openRepo();
+    writeCursorProjectRule({ fs: io, projectRoot: root, projectId: "old" });
+    const filePath = path.join(root, CURSOR_PROJECT_RULE_RELATIVE);
+    io.writeUtf8(filePath, `${io.readUtf8(filePath)}# user tail\n`);
+    const result = writeCursorProjectRule({
+      fs: io,
+      projectRoot: root,
+      projectId: "new",
+    });
+    expect(result.wrote).toBe(true);
+    expect(result.backupPath).toBeTruthy();
+    const body = io.readUtf8(filePath);
+    expect(body).toContain("alwaysApply: true");
+    expect(body).toContain("projectId: new");
+    expect(body).not.toContain("projectId: old");
+    expect(body).toContain("# user tail");
+    expect(body.split(HTML_MARKER_BEGIN)).toHaveLength(2);
+  });
 });

@@ -23,6 +23,8 @@ export { ensureAgentWitchProjectFolder } from "../internal/core/ensureAgentWitch
 
 export { resolveAgentWitchProjectIdFromCwd } from "../internal/core/resolveAgentWitchProjectIdFromCwd";
 
+export { AGENT_WITCH_PROJECT_META_DIR_NAME } from "../internal/core/agentWitchProjectStorage.constants";
+
 export { handlePullBoundHarnessPost } from "../internal/core/handlePullBoundHarnessPost";
 export { handleRemoveHarnessSetPost } from "../internal/core/handleRemoveHarnessSetPost";
 

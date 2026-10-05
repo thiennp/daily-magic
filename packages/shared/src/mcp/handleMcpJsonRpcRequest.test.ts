@@ -218,9 +218,62 @@ describe("handleMcpJsonRpcRequest", () => {
       }),
       undefined,
     );
-    expect(response).toMatchObject({
+    expect(response).toEqual({
+      jsonrpc: "2.0",
       id: 13,
-      error: { code: -32603, message: expect.stringContaining("async boom") },
+      error: { code: -32603, message: "Tool check_context failed" },
+    });
+  });
+
+  it("-32603 never leaks error text, stack or paths; hands the error to onToolError", async () => {
+    const onToolError = vi.fn();
+    const secret = new Error("ENOENT: /Users/someone/.agent-witch/profiles/x/token-saver.db");
+    const response = await handleMcpJsonRpcRequest(
+      {
+        jsonrpc: "2.0",
+        id: 14,
+        method: "tools/call",
+        params: { name: "check_context" },
+      },
+      {
+        ...makeServer(() => {
+          throw secret;
+        }),
+        onToolError,
+      },
+      undefined,
+    );
+    expect(response).toEqual({
+      jsonrpc: "2.0",
+      id: 14,
+      error: { code: -32603, message: "Tool check_context failed" },
+    });
+    expect(JSON.stringify(response)).not.toContain("/Users/");
+    expect(JSON.stringify(response)).not.toContain("ENOENT");
+    expect(onToolError).toHaveBeenCalledWith("check_context", secret);
+  });
+
+  it("a throwing onToolError does not change the -32603 response", async () => {
+    const response = await handleMcpJsonRpcRequest(
+      {
+        jsonrpc: "2.0",
+        id: 15,
+        method: "tools/call",
+        params: { name: "check_context" },
+      },
+      {
+        ...makeServer(() => {
+          throw new Error("boom");
+        }),
+        onToolError: () => {
+          throw new Error("logger down");
+        },
+      },
+      undefined,
+    );
+    expect(response).toMatchObject({
+      id: 15,
+      error: { code: -32603, message: "Tool check_context failed" },
     });
   });
 });

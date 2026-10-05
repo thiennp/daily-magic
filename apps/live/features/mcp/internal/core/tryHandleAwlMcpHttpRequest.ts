@@ -19,7 +19,10 @@ export interface AwlMcpHttpRouteInput {
     payload: unknown,
   ) => void;
   readonly isDeclined?: (cwd: string) => boolean;
-  /** Test seam; defaults to the AWL server for `layout`. */
+  /**
+   * Prebuilt server (built once at app start). When omitted, one is built
+   * per request from `layout` + `isDeclined`.
+   */
   readonly server?: McpServerDefinition;
 }
 

@@ -19,7 +19,11 @@ const markedBodyFromDesired = (desired: string): string =>
     )
     .trim();
 
-/** Idempotent Cursor alwaysApply rule; preserves unmarked user lines. */
+/**
+ * Idempotent Cursor alwaysApply rule. A new file gets frontmatter + block;
+ * an existing file only has our marked block replaced or appended (unmarked
+ * user lines kept, backup on change).
+ */
 export const writeCursorProjectRule = (input: {
   readonly fs: CliFs;
   readonly projectRoot: string;
@@ -31,28 +35,8 @@ export const writeCursorProjectRule = (input: {
     writeTextFileAtomic({ fs: input.fs, filePath, contents: desired });
     return { ok: true, path: filePath, wrote: true };
   }
-  const existing = input.fs.readUtf8(filePath);
-  if (!existing.includes(HTML_MARKER_BEGIN)) {
-    // Keep user preamble; append our frontmatter+block only if empty-ish.
-    const { next, changed } = mergeMarkedBlock({
-      existing,
-      blockBody: markedBodyFromDesired(desired),
-      begin: HTML_MARKER_BEGIN,
-      end: HTML_MARKER_END,
-    });
-    if (!changed) {
-      return { ok: true, path: filePath, wrote: false };
-    }
-    const { backupPath } = writeTextFileAtomic({
-      fs: input.fs,
-      filePath,
-      contents: next,
-      backup: true,
-    });
-    return { ok: true, path: filePath, wrote: true, backupPath };
-  }
   const { next, changed } = mergeMarkedBlock({
-    existing,
+    existing: input.fs.readUtf8(filePath),
     blockBody: markedBodyFromDesired(desired),
     begin: HTML_MARKER_BEGIN,
     end: HTML_MARKER_END,

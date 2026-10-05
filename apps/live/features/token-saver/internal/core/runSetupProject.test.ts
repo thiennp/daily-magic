@@ -128,7 +128,7 @@ describe("runSetupProject", () => {
       io.exists(path.join(project, ".agent-witch", "token-saver.json")),
     ).toBe(false);
 
-    expect(() =>
+    expect(
       runSetupProject({
         layout,
         cwd: project,
@@ -139,7 +139,39 @@ describe("runSetupProject", () => {
           throw new Error("cloud resolve failed");
         },
       }),
-    ).toThrow("cloud resolve failed");
+    ).toEqual({
+      ok: false,
+      state: "Declined",
+      reason: "project resolve failed: cloud resolve failed",
+    });
+    expect(
+      runSetupProject({
+        layout,
+        cwd: project,
+        accept: true,
+        projectId: "   ",
+        fs: io,
+        io,
+      }),
+    ).toEqual({
+      ok: false,
+      state: "Declined",
+      reason: "projectId required on accept",
+    });
+    expect(
+      runSetupProject({
+        layout,
+        cwd: project,
+        accept: true,
+        fs: io,
+        io,
+        resolveProject: () => ({ projectId: "", kind: "created" }),
+      }),
+    ).toEqual({
+      ok: false,
+      state: "Declined",
+      reason: "projectId required on accept",
+    });
     expect(io.readUtf8(declinePath)).toBe(before);
     expect(isDeclinedCwd({ layout, cwd: project, fs: io })).toBe(true);
     expect(
@@ -148,6 +180,35 @@ describe("runSetupProject", () => {
     expect(
       io.exists(path.join(project, ".agent-witch", "token-saver.json")),
     ).toBe(false);
+  });
+
+  it("re-accept keeps user flags merged over defaults", () => {
+    const { layout, project, io } = open();
+    const flagsPath = path.join(project, ".agent-witch", "token-saver.json");
+    expect(
+      runSetupProject({ layout, cwd: project, accept: true, projectId: "p", fs: io, io }).ok,
+    ).toBe(true);
+    io.writeUtf8(
+      flagsPath,
+      `${JSON.stringify({ pitfalls: "off", history: "on", bogus: "x" }, null, 2)}\n`,
+    );
+    expect(
+      runSetupProject({ layout, cwd: project, accept: true, projectId: "p", fs: io, io }).ok,
+    ).toBe(true);
+    expect(JSON.parse(io.readUtf8(flagsPath))).toEqual({
+      ...buildDefaultProjectFlags(),
+      pitfalls: "off",
+      history: "on",
+    });
+  });
+
+  it("unreadable flags file falls back to defaults", () => {
+    const { layout, project, io } = open();
+    const flagsPath = path.join(project, ".agent-witch", "token-saver.json");
+    io.mkdirp(path.dirname(flagsPath));
+    io.writeUtf8(flagsPath, "{not json");
+    runSetupProject({ layout, cwd: project, accept: true, projectId: "p", fs: io, io });
+    expect(JSON.parse(io.readUtf8(flagsPath))).toEqual(buildDefaultProjectFlags());
   });
 
   it("on success, order is resolve, then clearDecline, then defaults/fragments", () => {

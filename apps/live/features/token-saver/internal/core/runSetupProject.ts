@@ -23,6 +23,39 @@ export interface SetupProjectFlowResult {
   readonly projectId?: string;
 }
 
+type ResolveProjectFn = (cwd: string) => {
+  readonly projectId: string;
+  readonly kind: "created" | "attached";
+};
+
+const PROJECT_ID_REQUIRED = "projectId required on accept";
+
+/**
+ * Injected resolve, else the explicit projectId. A throwing resolver or a
+ * missing/blank projectId is `ok:false` + reason, never a throw.
+ */
+const resolveProjectSafely = (input: {
+  readonly cwd: string;
+  readonly projectId?: string;
+  readonly resolveProject?: ResolveProjectFn;
+}):
+  | { readonly ok: true; readonly projectId: string }
+  | { readonly ok: false; readonly reason: string } => {
+  let candidate: string | undefined = input.projectId;
+  if (input.resolveProject !== undefined) {
+    try {
+      candidate = input.resolveProject(input.cwd).projectId;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return { ok: false, reason: `project resolve failed: ${message}` };
+    }
+  }
+  const projectId = candidate?.trim() ?? "";
+  return projectId.length > 0
+    ? { ok: true, projectId }
+    : { ok: false, reason: PROJECT_ID_REQUIRED };
+};
+
 /**
  * Explicit-state setup_project for one cwd. Cloud create/attach is injected
  * (NRG owns AWC). Declined stays Declined until resolve succeeds, then
@@ -33,10 +66,7 @@ export const runSetupProject = (input: {
   readonly cwd: string;
   readonly accept: boolean;
   readonly projectId?: string;
-  readonly resolveProject?: (cwd: string) => {
-    readonly projectId: string;
-    readonly kind: "created" | "attached";
-  };
+  readonly resolveProject?: ResolveProjectFn;
   readonly fs?: CliFs;
   readonly io?: CliIo;
   readonly fromState?: SetupProjectState;
@@ -62,13 +92,9 @@ export const runSetupProject = (input: {
   }
 
   // Resolve/create FIRST; decline file and Declined state stay until this succeeds.
-  const resolved =
-    input.resolveProject?.(input.cwd) ??
-    (input.projectId !== undefined
-      ? { projectId: input.projectId, kind: "attached" as const }
-      : null);
-  if (resolved === null) {
-    return { ok: false, state, reason: "projectId required on accept" };
+  const resolved = resolveProjectSafely(input);
+  if (!resolved.ok) {
+    return { ok: false, state, reason: resolved.reason };
   }
 
   if (wasDeclined) {
