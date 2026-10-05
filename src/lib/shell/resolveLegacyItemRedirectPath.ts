@@ -11,7 +11,7 @@ const HASH_KEY: Readonly<Record<LegacyItemIntent, string>> = {
 
 /**
  * `/library/<id>` and `/reports/<id>` → the item's own project tab.
- * Since migration 068 every library item and report has a project_id, so the
+ * Since migration 069 every library item and report has a project_id, so the
  * item's project wins over any `?project=`. Missing, no access, or a failed
  * lookup → `/projects?intent=…` notice. Signed out → login, then back here.
  * Never throws.

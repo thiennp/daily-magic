@@ -1,7 +1,7 @@
 import { asRowArray, getSql } from "@/lib/db";
 
 /**
- * project_id of a library item (published_capabilities, NOT NULL since 068).
+ * project_id of a library item (published_capabilities, NOT NULL since 069).
  * Returns null when the row is missing or the lookup fails.
  */
 export const lookupLibraryItemProjectId = async (

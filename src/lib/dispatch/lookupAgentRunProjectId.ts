@@ -1,7 +1,7 @@
 import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
 
 /**
- * project_id of a report (agent_runs, NOT NULL since 068). The project page
+ * project_id of a report (agent_runs, NOT NULL since 069). The project page
  * guard decides access, so project members can follow the link too, not only
  * the run's requester and executor.
  */
