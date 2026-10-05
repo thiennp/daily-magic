@@ -3,9 +3,9 @@ import { describe, expect, it } from "vitest";
 import { buildAgentWitchLocalMacAppDownloadUrl } from "@/lib/agentWitch/buildAgentWitchLocalMacAppDownloadUrl";
 
 describe("ConnectThisMacDownloadChoice wiring", () => {
-  it("uses the stable releases/latest URL for the Download for Mac link", () => {
+  it("uses the tag-pinned release URL for the Download for Mac link", () => {
     expect(buildAgentWitchLocalMacAppDownloadUrl()).toContain(
-      "/releases/latest/download/AgentWitchLocal.dmg",
+      "/releases/download/awl-mac-v0.1.0/AgentWitchLocal.dmg",
     );
   });
 });

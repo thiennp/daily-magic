@@ -2,17 +2,23 @@ import { describe, expect, it } from "vitest";
 
 import {
   AGENT_WITCH_LOCAL_MAC_APP_DMG_ASSET_NAME,
+  AGENT_WITCH_LOCAL_MAC_APP_RELEASE_TAG,
   buildAgentWitchLocalMacAppDownloadUrl,
 } from "@/lib/agentWitch/buildAgentWitchLocalMacAppDownloadUrl";
 
 describe("buildAgentWitchLocalMacAppDownloadUrl", () => {
-  it("returns the stable GitHub releases/latest download URL", () => {
+  it("returns the tag-pinned GitHub release download URL", () => {
     expect(buildAgentWitchLocalMacAppDownloadUrl()).toBe(
-      `https://github.com/thiennp/daily-magic/releases/latest/download/${AGENT_WITCH_LOCAL_MAC_APP_DMG_ASSET_NAME}`,
+      "https://github.com/thiennp/daily-magic/releases/download/awl-mac-v0.1.0/AgentWitchLocal.dmg",
     );
   });
 
-  it("keeps the fixed asset name for CI release uploads", () => {
+  it("does not use the repo-wide releases/latest URL", () => {
+    expect(buildAgentWitchLocalMacAppDownloadUrl()).not.toContain("/releases/latest/");
+  });
+
+  it("keeps the fixed asset name and an awl-mac-v tag for CI release uploads", () => {
     expect(AGENT_WITCH_LOCAL_MAC_APP_DMG_ASSET_NAME).toBe("AgentWitchLocal.dmg");
+    expect(AGENT_WITCH_LOCAL_MAC_APP_RELEASE_TAG).toMatch(/^awl-mac-v\d+\.\d+\.\d+$/);
   });
 });
