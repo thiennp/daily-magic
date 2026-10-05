@@ -65,7 +65,7 @@ describe("ensureProjectMessageDeleteOnReadSchema", () => {
     sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
       const q = String(strings[0] ?? "");
       if (q.includes("project_message_computer_acks")) {
-        const err = Object.assign(new Error('relation "project_message_computer_acks" does not exist'), {
+        const err = Object.assign(new Error("undefined_table"), {
           code: "42P01",
         });
         throw err;

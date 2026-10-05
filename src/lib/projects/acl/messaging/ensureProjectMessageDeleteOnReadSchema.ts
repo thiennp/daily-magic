@@ -15,13 +15,7 @@ const isUndefinedTableError = (error: unknown): boolean => {
     return false;
   }
   const code = "code" in error ? String((error as { code?: unknown }).code) : "";
-  const message =
-    error instanceof Error
-      ? error.message
-      : "message" in error
-        ? String((error as { message?: unknown }).message)
-        : "";
-  return code === "42P01" || /does not exist/i.test(message);
+  return code === "42P01";
 };
 
 /**
