@@ -10,7 +10,11 @@ const FIND_URL_AND_KEY =
 export const AWC_GROK_WEBHOOK_OWNER_ENTRY =
   "The project owner enters both in the Grok webhook form at " +
   AWC_GROK_WEBHOOK_FORM_SCREEN +
-  " (the key is stored and never shown again). If the user is not the owner, they give the URL and key to the owner outside chat, or you call register_project_webhook yourself. Never paste the key into a project message.";
+  " (the key is stored and never shown again). If you are not the owner, give the URL and key to the owner outside chat. Never paste the key into a project message.";
+
+/** get_my_project_webhook_status forbidden: guardProjectApiKeyToolUse's awc_proj_ rejection vs inactive membership. */
+export const AWC_GROK_WEBHOOK_STATUS_FORBIDDEN =
+  "If forbidden says 'Project API key cannot call this tool', retry with your agent-access Bearer. Any other forbidden means your membership is not active: re-check get_my_project_access.";
 
 /** get_my_project_webhook_status auth: not on the awc_proj_ allowlist. */
 export const AWC_GROK_WEBHOOK_STATUS_AUTH =
@@ -40,4 +44,4 @@ export const AWC_GROK_WEBHOOK_DAILY_REPAIR =
 export const AWC_GROK_WEBHOOK_SETUP_INSTRUCTION =
   "The bot cannot see its own routine webhook POST URL or key. Open this bot in the Grok Bot desktop app, open its info pane (click the bot's name in the chat header), find its webhook routine in Routines, and copy the POST URL and key. The project owner enters both in the Grok webhook form at " +
   AWC_GROK_WEBHOOK_FORM_SCREEN +
-  " (secret fields). If you are not the owner, give the URL and key to the owner outside chat, or call register_project_webhook yourself. Do not paste them into chat, and never paste the key into a project message.";
+  " (secret fields). If you are not the owner, give the URL and key to the owner outside chat. Do not paste them into chat, and never paste the key into a project message.";

@@ -41,12 +41,13 @@ describe("buildProjectInviteJoinWakeWebhookStep (step 7, copy only)", () => {
       "The project owner enters both in the Grok webhook form at Agent Witch Cloud → Project Access → People → Members → <bot> → Grok webhook",
     );
     expect(text).toContain(
-      "If the user is not the owner, they give the URL and key to the owner outside chat, or you call register_project_webhook yourself. Never paste the key into a project message.",
+      "If you are not the owner, give the URL and key to the owner outside chat. Never paste the key into a project message.",
     );
     expect(text).toContain(
       "get_my_project_webhook_status({ projectId }) (agent-access Bearer only; awc_proj_ keys are rejected for this tool)",
     );
     expect(text).not.toContain("Project Access → Members");
+    expect(text).not.toContain("register_project_webhook yourself");
     expect(text).not.toMatch(/member (enters|form)/i);
   });
 

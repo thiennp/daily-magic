@@ -1,5 +1,8 @@
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
-import { AWC_GROK_WEBHOOK_OWNER_ENTRY } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
+import {
+  AWC_GROK_WEBHOOK_OWNER_ENTRY,
+  AWC_GROK_WEBHOOK_STATUS_FORBIDDEN,
+} from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
 import { readProjectGrokRoutineWebhookStatus } from "@/lib/projects/acl/webhooks/readProjectGrokRoutineWebhookStatus";
@@ -33,7 +36,7 @@ export const executeGetMyProjectWebhookStatusTool = async (input: {
         ok: false,
         error: "forbidden",
         code: "forbidden",
-        note: "Your membership in this project is not active. Re-check get_my_project_access.",
+        note: AWC_GROK_WEBHOOK_STATUS_FORBIDDEN,
       },
       true,
     );
