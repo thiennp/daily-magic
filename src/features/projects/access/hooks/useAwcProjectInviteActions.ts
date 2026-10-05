@@ -5,6 +5,7 @@ import {
   renameMembershipDisplayNameApi,
   revokeProjectInviteApi,
 } from "@/features/projects/access/utils/projectAccessApi";
+import type { ProjectInvitePlatform } from "@/features/projects/access/invites/projectInvitePlatform.type";
 import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
 
 export const useAwcProjectInviteActions = (input: {
@@ -13,9 +14,13 @@ export const useAwcProjectInviteActions = (input: {
   readonly setMessage: (message: string | null) => void;
   readonly setCreatedInviteUrl: (url: string | null) => void;
   readonly setCreatedInviteToken: (token: string | null) => void;
-  readonly setCreatedInviteId: (inviteId: string | null) => void;
+  /** Writes inviteId and platform in one state update (success only). */
+  readonly setCreatedInviteId: (
+    inviteId: string | null,
+    platform: ProjectInvitePlatform,
+  ) => void;
 }) => {
-  const createInvite = async () => {
+  const createInvite = async (platform: ProjectInvitePlatform = "grok") => {
     const result = await createProjectInviteApi(input.projectId, {});
     if (result.url) {
       input.setCreatedInviteUrl(result.url);
@@ -28,6 +33,7 @@ export const useAwcProjectInviteActions = (input: {
         typeof result.inviteId === "string" && result.inviteId.length > 0
           ? result.inviteId
           : null,
+        platform,
       );
       input.setMessage("Invite created — copy the link or prompt now.");
     } else {

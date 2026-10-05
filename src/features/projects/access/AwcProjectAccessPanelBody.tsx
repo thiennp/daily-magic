@@ -68,10 +68,11 @@ export default function AwcProjectAccessPanelBody({
           invites={access.invites}
           createdInviteUrl={access.createdInviteUrl}
           createdInviteToken={access.createdInviteToken}
+          createdInvitePlatform={access.createdInvitePlatform}
           projectId={projectId}
           projectName={access.projectName}
           hideChrome
-          onCreate={() => void access.createInvite()}
+          onCreate={(platform) => void access.createInvite(platform)}
           onRevoke={(id) => void access.revokeInvite(id)}
           onClearCreatedUrl={access.clearCreatedInviteBanner}
         />

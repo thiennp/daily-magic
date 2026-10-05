@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import AwcProjectInviteCreateControls from "@/features/projects/access/invites/AwcProjectInviteCreateControls";
 import AwcProjectInviteCreatedBanner from "@/features/projects/access/invites/AwcProjectInviteCreatedBanner";
@@ -13,6 +11,8 @@ interface AwcProjectInvitesPanelProps {
   readonly invites: readonly AwcProjectAccessInvite[];
   readonly createdInviteUrl: string | null;
   readonly createdInviteToken?: string | null;
+  /** Set with createdInviteId on create success; labels the banner Copy prompt. */
+  readonly createdInvitePlatform?: ProjectInvitePlatform;
   readonly projectId: string;
   readonly projectName?: string | null;
   readonly onCreate: (platform: ProjectInvitePlatform) => void;
@@ -27,6 +27,7 @@ export default function AwcProjectInvitesPanel({
   invites,
   createdInviteUrl,
   createdInviteToken = null,
+  createdInvitePlatform = "grok",
   projectId,
   projectName = null,
   onCreate,
@@ -35,7 +36,6 @@ export default function AwcProjectInvitesPanel({
   hideChrome = false,
 }: AwcProjectInvitesPanelProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
-  const [platform, setPlatform] = useState<ProjectInvitePlatform>("grok");
 
   return (
     <div>
@@ -58,16 +58,11 @@ export default function AwcProjectInvitesPanel({
           createdInviteToken={createdInviteToken}
           projectId={projectId}
           projectName={projectName}
-          platform={platform}
+          platform={createdInvitePlatform}
           onClearCreatedUrl={onClearCreatedUrl}
         />
       ) : null}
-      <AwcProjectInviteCreateControls
-        onCreate={(next) => {
-          setPlatform(next);
-          onCreate(next);
-        }}
-      />
+      <AwcProjectInviteCreateControls onCreate={onCreate} />
       {invites.length === 0 ? (
         <p className="mt-2 text-sm text-gray-500">{copy.invitesEmpty}</p>
       ) : (

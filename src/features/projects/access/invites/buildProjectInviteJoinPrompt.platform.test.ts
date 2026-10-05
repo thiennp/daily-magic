@@ -14,7 +14,7 @@ const INPUT = {
   projectId: "proj-snapshot",
   projectName: "Snapshot Project",
 } as const;
-/** Generated from origin/main 86d6621a before the platform split. */
+/** Generated from origin/main 8f97c76b (before D landed); regenerate when main changes shared join copy. */
 const GROK_MAIN = readFileSync(
   join(
     process.cwd(),
