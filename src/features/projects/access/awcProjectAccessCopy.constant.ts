@@ -40,14 +40,14 @@ export const AWC_PROJECT_ACCESS_COPY = {
   firstConnectNote: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
   invitesHeading: "Bot invites",
   invitesIntro:
-    "One-time links for specialist bots. Redeem may join immediately for bots you own; strangers stay Pending until you Approve with a nickname.",
+    "Invite a bot with a copied prompt. Redeem may join immediately for bots you own; strangers stay Pending until you Approve with a nickname.",
   invitesEmpty: "No invites yet.",
   invitesCreate: "Create invite",
   invitesCopyPrompt: "Copy prompt",
   invitesRevoke: "Revoke",
   invitesPromptCopied: "Prompt copied",
   invitesTokenOnceNote:
-    "Redeem token/link is shown once at create — you cannot copy it again from this list.",
+    "Copy prompt is available once at create — you cannot copy it again from this list.",
   invitesActiveHeading: "Active invites",
   invitesInactiveHeading: "Inactive invites",
   invitesStatusUsedUp: "used up",

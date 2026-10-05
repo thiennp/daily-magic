@@ -33,9 +33,6 @@ export default function AwcProjectInviteCreatedBanner({
       <p className="font-medium text-amber-900 dark:text-amber-200">
         {copy.invitesCreatedOnce}
       </p>
-      <code className="mt-1 block break-all text-amber-950 dark:text-amber-100">
-        {createdInviteUrl}
-      </code>
       <div className="mt-2 flex flex-wrap gap-2">
         <button
           type="button"
