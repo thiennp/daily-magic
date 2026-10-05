@@ -70,10 +70,36 @@ describe("startProjectMessageSilenceTicker", () => {
     errorSpy.mockRestore();
   });
 
-  it("does not start without a database", async () => {
+  it("logs one disabled line at start without a database, never per tick", async () => {
+    const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
     dbConfigured.value = false;
     expect(startProjectMessageSilenceTicker()).toBe(false);
-    await vi.advanceTimersByTimeAsync(PROJECT_B2B_SILENCE_TICK_MS);
+    expect(infoSpy).toHaveBeenCalledTimes(1);
+    expect(infoSpy).toHaveBeenCalledWith(
+      "project message silence ticker disabled: no database configured",
+    );
+    await vi.advanceTimersByTimeAsync(PROJECT_B2B_SILENCE_TICK_MS * 3);
+    expect(infoSpy).toHaveBeenCalledTimes(1);
     expect(checkMock).not.toHaveBeenCalled();
+    expect(vi.getTimerCount()).toBe(0);
+    infoSpy.mockRestore();
+  });
+
+  it("repeat calls without a database stay harmless: no timer, one line each", () => {
+    const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
+    dbConfigured.value = false;
+    expect(startProjectMessageSilenceTicker()).toBe(false);
+    expect(startProjectMessageSilenceTicker()).toBe(false);
+    expect(infoSpy).toHaveBeenCalledTimes(2);
+    expect(vi.getTimerCount()).toBe(0);
+    infoSpy.mockRestore();
+  });
+
+  it("does not log the disabled line when a ticker is already running", () => {
+    const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
+    expect(startProjectMessageSilenceTicker()).toBe(true);
+    expect(startProjectMessageSilenceTicker()).toBe(false);
+    expect(infoSpy).not.toHaveBeenCalled();
+    infoSpy.mockRestore();
   });
 });

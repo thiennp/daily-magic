@@ -17,14 +17,18 @@ const tick = (): void => {
 /**
  * Start the in-process silence check every 60 s, once per process.
  * The interval is unref'd so it never keeps the process alive.
+ * Without a database it logs one line on this (boot) call and starts nothing.
  * Returns true only on the call that started it.
  */
 export const startProjectMessageSilenceTicker = (): boolean => {
   const globalState = globalThis as ProjectMessageSilenceTickerGlobal;
-  if (
-    globalState[PROJECT_MESSAGE_SILENCE_TICKER_KEY] !== undefined ||
-    !isDatabaseUrlConfigured()
-  ) {
+  if (globalState[PROJECT_MESSAGE_SILENCE_TICKER_KEY] !== undefined) {
+    return false;
+  }
+  if (!isDatabaseUrlConfigured()) {
+    console.info(
+      "project message silence ticker disabled: no database configured",
+    );
     return false;
   }
   const handle = setInterval(tick, PROJECT_B2B_SILENCE_TICK_MS);
