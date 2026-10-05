@@ -16,6 +16,11 @@ vi.mock("@/lib/db", () => ({
 
 import { selectUsableHumanInviteRows } from "@/lib/projects/acl/humanInvites/selectUsableHumanInviteRows";
 
+const CLAIM =
+  "src/lib/projects/acl/humanInvites/claimAndInsertHumanMembership.ts";
+const SELECT =
+  "src/lib/projects/acl/humanInvites/selectUsableHumanInviteRows.ts";
+
 const readSrc = (relativePath: string): string =>
   readFileSync(join(process.cwd(), relativePath), "utf8");
 
@@ -35,13 +40,9 @@ describe("selectUsableHumanInviteRows", () => {
     expect(query).toContain(HUMAN_INVITE_LIST_NEVER_REDEEMED_FRAGMENT);
   });
 
-  it("stays in lockstep with claim on the three shared fragments only", () => {
-    const claim = readSrc(
-      "src/lib/projects/acl/humanInvites/claimHumanInviteToken.ts",
-    );
-    const select = readSrc(
-      "src/lib/projects/acl/humanInvites/selectUsableHumanInviteRows.ts",
-    );
+  it("stays in lockstep with claim CTE on the three shared fragments only", () => {
+    const claim = readSrc(CLAIM);
+    const select = readSrc(SELECT);
     for (const fragment of HUMAN_INVITE_USABLE_WHERE_FRAGMENTS) {
       expect(claim).toContain(fragment);
       expect(select).toContain(fragment);
@@ -51,12 +52,8 @@ describe("selectUsableHumanInviteRows", () => {
   });
 
   it("hides a used invite from the list while claim required uses_remaining > 0", () => {
-    const select = readSrc(
-      "src/lib/projects/acl/humanInvites/selectUsableHumanInviteRows.ts",
-    );
-    const claim = readSrc(
-      "src/lib/projects/acl/humanInvites/claimHumanInviteToken.ts",
-    );
+    const select = readSrc(SELECT);
+    const claim = readSrc(CLAIM);
     expect(select).toContain("uses_remaining = max_uses");
     expect(claim).toContain("uses_remaining > 0");
     expect(claim).not.toContain("uses_remaining = max_uses");
