@@ -2,14 +2,13 @@
 # Stage Agent Witch Local Windows/WSL packaging into dist/windows/*.zip.
 # Mirrors scripts/linux/build-awl-linux-packages.sh (manual release only).
 #
-# Current apps/desktop is linux-only (platform_linux.go / platform_stub.go).
-# A GOOS=windows binary from today's tree exits immediately with:
-#   "this build only supports Linux (use the Linux package)"
-# Do NOT ship that stub as a release asset. This script:
-#   1) Documents the intended zip layout (WSL-oriented .exe + icon + README)
-#   2) Cross-compiles when ALLOW_STUB_EXE=1 (dev probe only)
-#   3) Always writes the zip scaffolding + release notes that CAN ship once a
-#      real windows/WSL backend exists
+# apps/desktop now has a Windows/WSL backend (platform_windows.go +
+# internal/windows). Prefer building a real .exe into the zip. This script:
+#   1) Documents the zip layout (WSL-oriented .exe + icon + README)
+#   2) Cross-compiles the Windows tray when ALLOW_STUB_EXE=1 (dev/box probe;
+#      name kept for compatibility — binary is the real backend, not the old stub)
+#   3) Always writes zip scaffolding + release notes
+# Do NOT publish the GitHub release until Arch SHIP + suite green + Lead GO.
 #
 # Real .exe build host (when windows backend lands):
 #   - Preferred: Windows 10/11 + Go 1.24+ + WSL2 (Ubuntu) with AWL installed
@@ -77,7 +76,7 @@ mkdir -p "${STAGE_DIR}" "${DIST_DIR}/bin"
 
 HAVE_EXE=0
 if [[ "${ALLOW_STUB_EXE}" == "1" ]]; then
-  echo "ALLOW_STUB_EXE=1 — cross-compiling stub .exe (NOT for release)…"
+  echo "ALLOW_STUB_EXE=1 — cross-compiling Windows tray .exe (NOT for release)…"
   (
     cd "${DESKTOP_DIR}"
     GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -ldflags "-s -w" \
@@ -87,8 +86,8 @@ if [[ "${ALLOW_STUB_EXE}" == "1" ]]; then
   cp "${DIST_DIR}/bin/${EXE_NAME}" "${STAGE_DIR}/${EXE_NAME}"
   HAVE_EXE=1
 else
-  echo "Skipping .exe build (set ALLOW_STUB_EXE=1 to probe today's linux-only stub)."
-  echo "Real .exe needs apps/desktop windows/WSL backend (see README in stage)."
+  echo "Skipping .exe build (set ALLOW_STUB_EXE=1 to cross-compile the Windows tray)."
+  echo "Windows/WSL backend lives in apps/desktop (see README in stage)."
 fi
 
 cp "${ICON_ICO}" "${STAGE_DIR}/icon.ico"
@@ -99,53 +98,50 @@ ${DISPLAY_NAME} — Windows / WSL companion (v${VERSION})
 Status
 ------
 This zip is the packaging stage for tag awl-windows-v0.1.0.
-The Linux tray lives in apps/desktop (systemd --user). Windows is not wired yet:
-cmd/agent-witch-local/platform_stub.go rejects non-Linux builds.
+The Windows tray (platform_windows.go) drives AWL inside the default WSL
+distro via wsl.exe; health uses the same localhost ports as Linux.
 
-Intended use (once a real .exe ships)
--------------------------------------
+Intended use
+------------
 1. Install Agent Witch Local inside WSL2 (Ubuntu recommended):
      curl -fsSL https://www.agentwitch.com/install/agent-witch.sh | bash
 2. Keep WSL running.
 3. Run AgentWitchLocal.exe on the Windows host (unsigned; SmartScreen may warn).
-   The tray will drive the WSL install via wsl.exe (planned), same role as the
-   Linux tray vs systemd.
+   The tray starts/stops the WSL systemd user unit and opens status/connect
+   in the Windows browser. Tray login autostart uses the per-user Run key.
 
 Assets
 ------
 - icon.ico — staged Windows icon (from apps/desktop/assets/icon.ico)
-- AgentWitchLocal.exe — present only when built with a real windows backend
-  (or ALLOW_STUB_EXE=1 for a non-functional stub that prints a Linux-only error)
+- AgentWitchLocal.exe — present when built (ALLOW_STUB_EXE=1 on non-Windows hosts)
 
-Build host for a real .exe
---------------------------
-Windows 10/11 amd64 with Go 1.24+, after a windows/WSL Platform backend lands
-in apps/desktop. Cross-compile from Linux/macOS may work with
+Build host for the .exe
+-----------------------
+Windows 10/11 amd64 with Go 1.24+, or cross-compile:
   GOOS=windows GOARCH=amd64 CGO_ENABLED=0
-when systray stays pure-Go; otherwise build on Windows.
+fyne.io/systray supports Windows. Prefer validating on a real Windows+WSL2 VM.
 
 Do not create the GitHub release/tag until Arch SHIP + suite green + Lead GO.
 README
 
 cat > "${STAGE_DIR}/WSL-RUNNER.txt" <<'WSL'
-WSL runner (no Windows .exe required)
-=====================================
-Until the Windows tray exists, run the Linux tray INSIDE WSL after installing
-AWL there, or use systemctl --user directly:
+WSL runner / tray companion
+===========================
+Install AWL inside WSL2, then either use AgentWitchLocal.exe on Windows
+(drives this install via wsl.exe) or systemctl --user directly:
 
   # Inside WSL
   curl -fsSL https://www.agentwitch.com/install/agent-witch.sh | bash
   systemctl --user enable --now agent-witch.service
   systemctl --user status agent-witch.service
 
-Optional: download the Linux AppImage/deb from awl-linux-v0.1.0 and run that
-tray inside WSL (needs a desktop/WSLg session for the icon).
-
-From Windows PowerShell, without a tray:
+From Windows PowerShell (same commands the tray uses):
 
   wsl.exe -e bash -lc 'systemctl --user is-active agent-witch.service'
   wsl.exe -e bash -lc 'systemctl --user enable --now agent-witch.service'
   wsl.exe -e bash -lc 'systemctl --user disable --now agent-witch.service'
+
+Health/status stay on http://127.0.0.1:43347 (WSL2 localhost forwarding).
 WSL
 
 # Optional notes file for the GitHub release body
@@ -162,8 +158,8 @@ zip_dir "${STAGE_DIR}" "${DIST_DIR}/${ZIP_NAME}"
 echo "Wrote ${DIST_DIR}/${ZIP_NAME}"
 echo "Wrote ${DIST_DIR}/${ZIP_NAME}.sha256"
 if [[ "${HAVE_EXE}" -eq 1 ]]; then
-  echo "Included stub ${EXE_NAME} (ALLOW_STUB_EXE=1) — do not attach to a public release."
+  echo "Included ${EXE_NAME} (ALLOW_STUB_EXE=1 cross-compile) — still draft; no public release yet."
 else
-  echo "Zip has icon + docs only (no .exe). Expected until windows backend lands."
+  echo "Zip has icon + docs only (no .exe). Set ALLOW_STUB_EXE=1 to include the tray binary."
 fi
 cat "${DIST_DIR}/${ZIP_NAME}.sha256"

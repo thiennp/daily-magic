@@ -16,20 +16,21 @@ Windows companion zip for Agent Witch Local, matching the Linux tray packaging p
 | `AgentWitchLocal-windows-amd64-v0.1.0.zip.sha256` | Checksum                                                                      |
 | `icon.ico`                                        | Staged Windows icon from `apps/desktop/assets/icon.ico`                       |
 
-## What exists on main today
+## What this draft branch adds
 
-- Linux tray: `apps/desktop` + `scripts/linux/build-awl-linux-packages.sh`
+- Windows/WSL tray backend: `platform_windows.go` + `internal/windows` (drives AWL via `wsl.exe`)
+- Packaging script: `scripts/windows/build-awl-windows-wsl.sh`
 - Icons: `apps/desktop/assets/icon.ico` (and PNG tray embeds)
-- Non-Linux builds hit `platform_stub.go` and exit with a Linux-only error
-- **No** `scripts/windows/` packaging directory yet on main
-- **No** Windows/WSL `Platform` backend yet
+- Unsupported OS builds still hit `platform_stub.go` (`!linux && !windows`)
+- Website download rows / release flags stay unchanged (Windows download remains hidden)
 
 ## Build / ship gates
 
-1. Land a Windows/WSL backend in `apps/desktop` (or document a WSL-only runner without shipping a stub `.exe`).
-2. Produce the zip via `scripts/windows/build-awl-windows-wsl.sh`.
+1. Cross-compile or build the Windows `.exe`; produce the zip via `scripts/windows/build-awl-windows-wsl.sh`.
+2. Windows VM e2e (WSL2 detect/start/stop/open/autostart) — still required before tag.
 3. Mac suite green under `/tmp/awl-ci.lock`; Arch SHIP; Lead GO for tag.
-4. `gh release create awl-windows-v0.1.0` with the zip + sha256 (manual; no Actions workflow).
+4. Signing / SmartScreen / installer are out of scope for this draft.
+5. `gh release create awl-windows-v0.1.0` with the zip + sha256 (manual; no Actions workflow).
 
 ## Interim (no .exe)
 
