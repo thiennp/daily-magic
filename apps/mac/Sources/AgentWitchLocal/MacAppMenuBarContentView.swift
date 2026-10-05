@@ -18,6 +18,13 @@ struct MacAppMenuBarContentView: View {
                 runtimeButtons
             }
 
+            if let offer = controller.updateOffer {
+                Divider()
+                Button(updateAvailableTitle(version: offer.version)) {
+                    controller.openUpdate()
+                }
+            }
+
             Divider()
 
             Toggle(

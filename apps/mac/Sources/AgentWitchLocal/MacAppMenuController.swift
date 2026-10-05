@@ -13,6 +13,8 @@ final class MacAppMenuController: ObservableObject {
     @Published private(set) var bootstrapState: MacAppBootstrapState?
     @Published var launchesAtLogin: Bool = false
     @Published var statusMessage: String = ""
+    @Published private(set) var updateOffer: UpdateOffer?
+
 
     private let fileManager: FileManager
     private var healthTimer: Timer?
@@ -23,18 +25,25 @@ final class MacAppMenuController: ObservableObject {
     private let runner: LaunchctlRunning = ProcessLaunchctlRunner()
     private let browserOpener: BrowserOpening = NSWorkspaceBrowserOpener()
     private let httpClient: BootstrapHttpClienting = EphemeralBootstrapHttpClient()
+    private let updateHttpClient: UpdateNoticeHttpClienting = EphemeralBootstrapHttpClient()
     private let scriptRunner: InstallScriptRunning = ProcessInstallScriptRunner()
 #endif
+    private var updateTimer: Timer?
+    private var lastUpdateCheckAt: Date?
+    private let nowProvider: () -> Date
 
-    init(fileManager: FileManager = .default) {
+    init(fileManager: FileManager = .default, now: @escaping () -> Date = Date.init) {
         self.fileManager = fileManager
+        self.nowProvider = now
         refreshInstallAndHealth()
         refreshLaunchAtLogin()
         startHealthPolling()
+        startUpdatePolling()
     }
 
     deinit {
         healthTimer?.invalidate()
+        updateTimer?.invalidate()
         bootstrapTask?.cancel()
     }
 
@@ -223,6 +232,52 @@ final class MacAppMenuController: ObservableObject {
             statusMessage = "Launch at login: \(error.localizedDescription)"
             refreshLaunchAtLogin()
         }
+#endif
+    }
+
+    func openUpdate() {
+        guard let offer = updateOffer else {
+            return
+        }
+        NSWorkspace.shared.open(offer.url)
+    }
+
+    private func startUpdatePolling() {
+        updateTimer?.invalidate()
+        // Launch check immediately; then poll daily via a coarse timer.
+        Task { await maybeCheckUpdate() }
+        updateTimer = Timer.scheduledTimer(
+            withTimeInterval: MacAppConstants.updateCheckIntervalSeconds,
+            repeats: true
+        ) { [weak self] _ in
+            Task { @MainActor in
+                await self?.maybeCheckUpdate()
+            }
+        }
+    }
+
+    private func maybeCheckUpdate() async {
+        let now = nowProvider()
+        if let last = lastUpdateCheckAt,
+           now.timeIntervalSince(last) < MacAppConstants.updateCheckIntervalSeconds {
+            return
+        }
+#if os(macOS)
+        let result = await checkForUpdate(
+            http: updateHttpClient,
+            prefix: MacAppConstants.tagPrefixMac,
+            currentVersion: resolveMacAppVersion()
+        )
+        lastUpdateCheckAt = now
+        switch result {
+        case .failed:
+            // Silent: keep any prior offer; no crash / no status noise.
+            return
+        case .checked(let offer):
+            updateOffer = offer
+        }
+#else
+        _ = now
 #endif
     }
 

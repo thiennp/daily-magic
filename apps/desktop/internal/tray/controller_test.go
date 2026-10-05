@@ -31,6 +31,7 @@ func (f *fakePlatform) Start(context.Context) error              { return f.star
 func (f *fakePlatform) Stop(context.Context) error               { return f.stopErr }
 func (f *fakePlatform) OpenStatus(context.Context) error         { return nil }
 func (f *fakePlatform) OpenConnect(context.Context) error        { return nil }
+func (f *fakePlatform) OpenURL(context.Context, string) error    { return nil }
 func (f *fakePlatform) OpenLogs(context.Context) (string, error) { return "", nil }
 
 // healthClient answers health probes; the optional hook runs before answering.
@@ -182,3 +183,79 @@ func TestControllerUninstalledMidStart(t *testing.T) {
 		t.Fatalf("got %s", m.State)
 	}
 }
+
+func TestControllerMaybeCheckUpdateAtLaunchAndDaily(t *testing.T) {
+	clock := &fakeClock{now: time.Date(2026, 10, 5, 12, 0, 0, 0, time.UTC)}
+	p := &fakePlatform{installed: true}
+	calls := 0
+	body := `[{"tag_name":"awl-linux-v0.2.0","html_url":"https://example/r","draft":false,"prerelease":false}]`
+	client := roundTripFunc(func(*http.Request) (*http.Response, error) {
+		calls++
+		return &http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(strings.NewReader(body)),
+			Header:     make(http.Header),
+		}, nil
+	})
+	c := &Controller{
+		Platform:  p,
+		Client:    client,
+		Now:       clock.Now,
+		TagPrefix: core.TagPrefixLinux,
+	}
+	ctx := context.Background()
+
+	c.MaybeCheckUpdate(ctx)
+	offer := c.UpdateOffer()
+	if offer == nil || offer.Version != "0.2.0" || calls != 1 {
+		t.Fatalf("launch check: offer=%+v calls=%d", offer, calls)
+	}
+
+	c.MaybeCheckUpdate(ctx)
+	if calls != 1 {
+		t.Fatalf("same day should not re-check: calls=%d", calls)
+	}
+
+	clock.Advance(time.Duration(core.UpdateCheckIntervalSeconds) * time.Second)
+	body = `[{"tag_name":"awl-linux-v0.3.0","html_url":"https://example/r3","draft":false,"prerelease":false}]`
+	c.MaybeCheckUpdate(ctx)
+	offer = c.UpdateOffer()
+	if offer == nil || offer.Version != "0.3.0" || calls != 2 {
+		t.Fatalf("daily check: offer=%+v calls=%d", offer, calls)
+	}
+}
+
+func TestControllerMaybeCheckUpdateFailureKeepsPriorOffer(t *testing.T) {
+	clock := &fakeClock{now: time.Date(2026, 10, 5, 12, 0, 0, 0, time.UTC)}
+	p := &fakePlatform{installed: true}
+	okBody := `[{"tag_name":"awl-linux-v0.2.0","html_url":"https://example/r","draft":false,"prerelease":false}]`
+	fail := false
+	client := roundTripFunc(func(*http.Request) (*http.Response, error) {
+		if fail {
+			return nil, context.DeadlineExceeded
+		}
+		return &http.Response{
+			StatusCode: 200,
+			Body:       io.NopCloser(strings.NewReader(okBody)),
+			Header:     make(http.Header),
+		}, nil
+	})
+	c := &Controller{Platform: p, Client: client, Now: clock.Now, TagPrefix: core.TagPrefixLinux}
+	ctx := context.Background()
+	c.MaybeCheckUpdate(ctx)
+	if c.UpdateOffer() == nil {
+		t.Fatal("expected offer after success")
+	}
+	fail = true
+	clock.Advance(time.Duration(core.UpdateCheckIntervalSeconds) * time.Second)
+	c.MaybeCheckUpdate(ctx)
+	offer := c.UpdateOffer()
+	if offer == nil || offer.Version != "0.2.0" {
+		t.Fatalf("failure must keep prior offer: %+v", offer)
+	}
+}
+
+// roundTripFunc is a tiny HTTPDoer for update-check tests.
+type roundTripFunc func(*http.Request) (*http.Response, error)
+
+func (f roundTripFunc) Do(req *http.Request) (*http.Response, error) { return f(req) }

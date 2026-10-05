@@ -10,5 +10,6 @@ type Platform interface {
 	Stop(ctx context.Context) error
 	OpenStatus(ctx context.Context) error
 	OpenConnect(ctx context.Context) error
+	OpenURL(ctx context.Context, rawURL string) error
 	OpenLogs(ctx context.Context) (message string, err error)
 }

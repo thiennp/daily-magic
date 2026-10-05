@@ -15,6 +15,17 @@ public enum MacAppConstants {
     public static let cloudOriginHostExact = "www.agentwitch.com"
     public static let cloudOriginHostApex = "agentwitch.com"
     public static let bundleIdentifier = "com.agent-witch.local-app"
+    /// Desktop app marketing version (keep in sync with CFBundleShortVersionString / Linux core.Version).
+    public static let appVersion = "0.1.0"
+
+    // MARK: - Desktop update notice (GitHub releases)
+
+    /// Do not use /releases/latest — shared across awl-mac / awl-linux / awl-windows tag families.
+    public static let releasesAPIURL = "https://api.github.com/repos/thiennp/daily-magic/releases"
+    public static let tagPrefixMac = "awl-mac-v"
+    public static let tagPrefixLinux = "awl-linux-v"
+    public static let tagPrefixWindows = "awl-windows-v"
+    public static let updateCheckIntervalSeconds: TimeInterval = 24 * 60 * 60
 
     // MARK: - First-run bootstrap (AWC PKCE contract)
 

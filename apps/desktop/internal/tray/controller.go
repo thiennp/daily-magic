@@ -17,10 +17,14 @@ type Controller struct {
 	Client   core.HTTPDoer
 	Now      func() time.Time
 	OnChange func()
+	// TagPrefix selects the release family (e.g. core.TagPrefixLinux).
+	TagPrefix string
 
-	mu             sync.Mutex
-	machine        core.Machine
-	statusOverride string
+	mu              sync.Mutex
+	machine         core.Machine
+	statusOverride  string
+	updateOffer     *core.UpdateOffer
+	lastUpdateCheck time.Time
 }
 
 // Snapshot returns the current machine and transient status message.
@@ -28,6 +32,17 @@ func (c *Controller) Snapshot() (core.Machine, string) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	return c.machine, c.statusOverride
+}
+
+// UpdateOffer returns the latest successful update offer, if any.
+func (c *Controller) UpdateOffer() *core.UpdateOffer {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.updateOffer == nil {
+		return nil
+	}
+	copy := *c.updateOffer
+	return &copy
 }
 
 // ShowMessage sets a transient status line (does not change state).
@@ -52,6 +67,34 @@ func (c *Controller) Poll(ctx context.Context) {
 		}
 	}
 	_, _ = c.dispatch(core.Probed(c.now(), started.Generation, installed, healthy, active))
+}
+
+// MaybeCheckUpdate runs a releases check at launch and then at most once per day.
+// Network failures are silent: no crash, and a prior offer is left unchanged.
+func (c *Controller) MaybeCheckUpdate(ctx context.Context) {
+	prefix := c.TagPrefix
+	if prefix == "" {
+		prefix = core.TagPrefixLinux
+	}
+	now := c.now()
+	c.mu.Lock()
+	due := c.lastUpdateCheck.IsZero() ||
+		now.Sub(c.lastUpdateCheck) >= time.Duration(core.UpdateCheckIntervalSeconds)*time.Second
+	c.mu.Unlock()
+	if !due {
+		return
+	}
+
+	result := core.CheckForUpdate(ctx, c.Client, prefix, core.Version)
+	c.mu.Lock()
+	c.lastUpdateCheck = now
+	if result.OK {
+		c.updateOffer = result.Offer
+	}
+	c.mu.Unlock()
+	if result.OK {
+		c.notify()
+	}
 }
 
 // Start runs Starting -> systemctl --user enable --now -> poll.

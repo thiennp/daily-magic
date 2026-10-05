@@ -99,6 +99,11 @@ func (b Backend) OpenConnect(ctx context.Context) error {
 	return b.open(ctx, core.ConnectURL())
 }
 
+// OpenURL opens an arbitrary URL (e.g. a GitHub release page).
+func (b Backend) OpenURL(ctx context.Context, rawURL string) error {
+	return b.open(ctx, rawURL)
+}
+
 // OpenLogs opens the newest agent-witch.log, or returns core.NoLogFoundMessage.
 func (b Backend) OpenLogs(ctx context.Context) (string, error) {
 	path := core.ResolveNewestMainLogPath(core.InstallDir(b.home()), b.ListLogs, b.exists())

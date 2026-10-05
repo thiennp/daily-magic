@@ -14,6 +14,8 @@ type App struct {
 	Platform Platform
 	Client   core.HTTPDoer
 	IconPNG  []byte
+	// TagPrefix defaults to core.TagPrefixLinux when empty.
+	TagPrefix string
 
 	ctrl *Controller
 
@@ -24,6 +26,7 @@ type App struct {
 	openStatus  *systray.MenuItem
 	stopItem    *systray.MenuItem
 	viewLogs    *systray.MenuItem
+	updateItem  *systray.MenuItem
 	quitItem    *systray.MenuItem
 }
 
@@ -50,11 +53,23 @@ func (a *App) onReady() {
 	a.openStatus = systray.AddMenuItem("Open AgentWitch Local", "Open AgentWitch Local")
 	a.stopItem = systray.AddMenuItem("Stop Agent Witch", "Stop Agent Witch")
 	a.viewLogs = systray.AddMenuItem("View logs", "View logs")
+	a.updateItem = systray.AddMenuItem("Update available", "Open release page")
+	a.updateItem.Hide()
 	systray.AddSeparator()
 	a.quitItem = systray.AddMenuItem("Quit", "Quit")
 
-	a.ctrl = &Controller{Platform: a.Platform, Client: a.Client, OnChange: a.applyMenu}
+	prefix := a.TagPrefix
+	if prefix == "" {
+		prefix = core.TagPrefixLinux
+	}
+	a.ctrl = &Controller{
+		Platform:  a.Platform,
+		Client:    a.Client,
+		TagPrefix: prefix,
+		OnChange:  a.applyMenu,
+	}
 	a.withTimeout(a.ctrl.Poll)
+	a.withTimeout(a.ctrl.MaybeCheckUpdate)
 	a.applyMenu()
 
 	go a.watchClicks()
@@ -66,6 +81,7 @@ func (a *App) pollLoop() {
 	defer ticker.Stop()
 	for range ticker.C {
 		a.withTimeout(a.ctrl.Poll)
+		a.withTimeout(a.ctrl.MaybeCheckUpdate)
 	}
 }
 
@@ -104,6 +120,14 @@ func (a *App) applyMenu() {
 	show(a.openStatus, core.ActionOpenStatus)
 	show(a.stopItem, core.ActionStop)
 	show(a.viewLogs, core.ActionViewLogs)
+
+	if offer := a.ctrl.UpdateOffer(); offer != nil {
+		a.updateItem.SetTitle(core.UpdateAvailableTitle(offer.Version))
+		a.updateItem.Show()
+		a.updateItem.Enable()
+	} else {
+		a.updateItem.Hide()
+	}
 }
 
 func (a *App) watchClicks() {
@@ -119,11 +143,21 @@ func (a *App) watchClicks() {
 			a.withTimeout(a.ctrl.Stop)
 		case <-a.viewLogs.ClickedCh:
 			a.withTimeout(a.runViewLogs)
+		case <-a.updateItem.ClickedCh:
+			a.withTimeout(a.openUpdate)
 		case <-a.quitItem.ClickedCh:
 			systray.Quit()
 			return
 		}
 	}
+}
+
+func (a *App) openUpdate(ctx context.Context) {
+	offer := a.ctrl.UpdateOffer()
+	if offer == nil || offer.URL == "" {
+		return
+	}
+	a.reportOpenError(a.Platform.OpenURL(ctx, offer.URL))
 }
 
 func (a *App) withTimeout(fn func(ctx context.Context)) {
