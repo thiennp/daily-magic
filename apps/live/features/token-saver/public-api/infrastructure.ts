@@ -16,6 +16,11 @@ export type {
 export { AWL_CHECK_CONTEXT_TOOL } from "../internal/core/awlCheckContextTool.constant";
 export { createCheckContextRunner } from "../internal/core/createCheckContextRunner";
 export type { CheckContextRunnerDeps } from "../internal/core/createCheckContextRunner";
+export {
+  runCheckContextHook,
+  type CheckContextHookIo,
+} from "../internal/core/runCheckContextHook";
+export { runCheckContextHookCli } from "../internal/core/runCheckContextHookCli";
 export { tryHandleTokenSaverLocalRequest } from "../internal/core/tryHandleTokenSaverLocalRequest";
 export { writeGlobalTriggers } from "../internal/core/writeGlobalTriggers";
 export { writeProjectFragments } from "../internal/core/writeProjectFragments";

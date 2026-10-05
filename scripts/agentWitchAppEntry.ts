@@ -3,6 +3,10 @@ import { runAgentWitchReportCli } from "./agentWitchReportCli";
 import { isAgentWitchBundled } from "./agentWitchBundled.constant";
 import { isAgentWitchScriptEntryPoint } from "./isAgentWitchScriptEntryPoint";
 import { assertAgentWitchNodeRuntimeVersion } from "./assertAgentWitchNodeRuntimeVersion";
+import {
+  CHECK_CONTEXT_HOOK_NAME,
+  CHECK_CONTEXT_HOOK_SUBCOMMAND,
+} from "@agent-witch/live-token-saver/types";
 
 const runSelfUpdateCli = async (): Promise<void> => {
   exitUnlessActiveMacOsConsoleUser("agent-witch-self-update");
@@ -44,6 +48,36 @@ const runWakeCli = async (): Promise<void> => {
   process.exit(1);
 };
 
+/**
+ * `agent-witch mcp-hook check_context` (Claude UserPromptSubmit). Always exits
+ * 0 so it never blocks the prompt; failures go to stderr only.
+ */
+const runMcpHookCli = async (hookName: string | undefined): Promise<never> => {
+  try {
+    if (hookName === CHECK_CONTEXT_HOOK_NAME) {
+      const { resolveAgentWitchLocalLayout } =
+        await import("@agent-witch/install-layout");
+      const { runCheckContextHookCli } =
+        await import("@agent-witch/live-token-saver");
+      await runCheckContextHookCli({ layout: resolveAgentWitchLocalLayout() });
+    } else {
+      process.stderr.write(
+        `[agent-witch] ${CHECK_CONTEXT_HOOK_SUBCOMMAND}: unknown hook ${hookName ?? "(none)"}\n`,
+      );
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    process.stderr.write(
+      `[agent-witch] ${CHECK_CONTEXT_HOOK_SUBCOMMAND}: ${message}\n`,
+    );
+  }
+  // Flush stdout (async pipe on macOS) before exiting 0.
+  await new Promise<void>((resolve) => {
+    process.stdout.write("", () => resolve());
+  });
+  process.exit(0);
+};
+
 const run = async (): Promise<void> => {
   if (
     !isAgentWitchScriptEntryPoint(
@@ -51,6 +85,11 @@ const run = async (): Promise<void> => {
     )
   ) {
     return;
+  }
+
+  // Before the runtime assert: a too-old Node must not exit 1 inside a hook.
+  if (process.argv[2] === CHECK_CONTEXT_HOOK_SUBCOMMAND) {
+    await runMcpHookCli(process.argv[3]);
   }
 
   assertAgentWitchNodeRuntimeVersion();

@@ -85,6 +85,12 @@ export const PITFALL_MAX_ACTIVE_PER_PROJECT = PROJECT_PITFALL_MAX_ACTIVE;
 export const TOKEN_SAVER_DB_FILE_NAME = "token-saver.db";
 export const PITFALL_SCHEMA_VERSION = 1;
 
+/** `agent-witch mcp-hook check_context` (Claude UserPromptSubmit); dependency-free for the CLI entry. */
+export {
+  CHECK_CONTEXT_HOOK_NAME,
+  CHECK_CONTEXT_HOOK_SUBCOMMAND,
+} from "../internal/core/tokenSaverMarkers.constants";
+
 export type {
   CheckContextInput,
   CheckContextPitfallLine,

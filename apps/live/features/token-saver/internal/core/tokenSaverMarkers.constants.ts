@@ -16,5 +16,7 @@ export const DECLINED_PROJECTS_FILE_NAME = "declined-projects.json";
 export const MCP_SERVER_NAME = "agent-witch";
 export const MCP_STDIO_COMMAND = "agent-witch";
 export const MCP_STDIO_ARGS = ["mcp"] as const;
-export const CLAUDE_HOOK_COMMAND =
-  "agent-witch mcp-hook check_context";
+/** `agent-witch <subcommand> <hook>` — dispatched in `scripts/agentWitchAppEntry.ts`. */
+export const CHECK_CONTEXT_HOOK_SUBCOMMAND = "mcp-hook";
+export const CHECK_CONTEXT_HOOK_NAME = "check_context";
+export const CLAUDE_HOOK_COMMAND = `${MCP_STDIO_COMMAND} ${CHECK_CONTEXT_HOOK_SUBCOMMAND} ${CHECK_CONTEXT_HOOK_NAME}`;

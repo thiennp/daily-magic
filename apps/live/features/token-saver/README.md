@@ -13,6 +13,10 @@ Local pitfall registry cache + `check_context` MCP + `setup_project` CLI writers
 - Decline store (D2): `…/profiles/<email>/declined-projects.json` (default `isDeclined` for check_context)
 - Global writers at install (`GlobalTriggersWritten`): Cursor `~/.cursor/mcp.json`,
   Codex `~/.codex/config.toml` + `~/.codex/AGENTS.md`, Claude `UserPromptSubmit`
+- Claude hook runner `agent-witch mcp-hook check_context` (`runCheckContextHook`): reads the
+  UserPromptSubmit stdin JSON (`cwd`, `prompt`, `session_id`), runs check_context, prints
+  `hookSpecificOutput.additionalContext` (hit → tip; none+promptCreate → create prompt; else
+  nothing). Always exits 0; errors go to stderr only
 - Project fragments on accept: Cursor `.cursor/rules/agent-witch-check-context.mdc`
   + `.git/info/exclude` (D1, never commit); project flags `.agent-witch/token-saver.json`
   from `buildDefaultProjectFlags()` (`@agent-witch/shared/projects`)
