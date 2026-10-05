@@ -5,6 +5,7 @@ import os from "node:os";
 import WebSocket from "ws";
 
 import {
+  readAgentWitchWakePortFromFile,
   resolveAgentWitchInstallDir,
   resolveAgentWitchLaunchAgentPrefix,
 } from "@agent-witch/install-layout";
@@ -15,6 +16,7 @@ import {
   exitUnlessActiveMacOsConsoleUser,
   kickstartAgentWitchClientLaunchAgents,
   startActiveMacOsConsoleUserGuard,
+  syncAgentWitchLaunchAgentPlistWakePort,
 } from "@agent-witch/install-macos-launch";
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 import {
@@ -2072,6 +2074,22 @@ const main = async (): Promise<void> => {
     });
     if (launchAgentPlist.rewritten) {
       console.log("[agent-witch] Repaired LaunchAgent plist (AGENT-067).");
+    }
+    try {
+      // Heal a plist whose AGENT_WITCH_WAKE_PORT drifted from wake-port.json (file wins; no reload).
+      const synced = syncAgentWitchLaunchAgentPlistWakePort({
+        launchAgentPrefix: resolveAgentWitchLaunchAgentPrefix(installDir),
+        wakePort: readAgentWitchWakePortFromFile(installDir),
+      });
+      if (synced.length > 0) {
+        console.log(
+          `[agent-witch] Synced AGENT_WITCH_WAKE_PORT to wake-port.json in ${String(synced.length)} LaunchAgent plist(s).`,
+        );
+      }
+    } catch (error) {
+      console.error(
+        `[agent-witch] Could not sync LaunchAgent wake port: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
 
     bootoutAgentWitchAuxiliaryLaunchAgents();

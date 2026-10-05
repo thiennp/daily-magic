@@ -135,7 +135,7 @@ New installs should use a profile email so accounts stay isolated.
 | ------------------------------- | ---------------------------------------------------------------------------------------------- |
 | `active-profile.json`           | `{ "email": "user@example.com" }` — default profile when env is unset                          |
 | `install-version.json`          | `{ "bundleVersion", "appOrigin", "updatedAt" }` — compared to hub on heartbeat for auto-update |
-| `wake-port.json`                | `{ "wakePort": 47892 }` — **source of truth** for the wake HTTP port. Resolution order: this file → `AGENT_WITCH_WAKE_PORT` (LaunchAgent / systemd) → 47892 / 47893. The installer writes the same value into both the file and every plist / unit; if the wake server has to move ports, it rewrites the file and the LaunchAgent plists together. |
+| `wake-port.json`                | `{ "wakePort": 47892 }` — **source of truth** for the wake HTTP port. Resolution order: this file → `AGENT_WITCH_WAKE_PORT` (LaunchAgent / systemd) → 47892 / 47893. The installer writes the same value into both the file and every plist / unit; if the wake server has to move ports, it rewrites the file and the LaunchAgent plists together; on start the client also rewrites a drifted plist `AGENT_WITCH_WAKE_PORT` to the file value (that key only, via `plutil`, no reload). |
 | `link-code.txt`                 | Short code shown in local app linking UI                                                       |
 | `watchdog-reinstall-state.json` | `{ "lastAttemptAt" }` — rate-limits watchdog reinstall                                         |
 | `rag/chunks.ndjson`             | Global RAG embeddings when runs are not tied to a project folder                               |
