@@ -61,6 +61,15 @@ describe("listProjectSkills", () => {
     expect(result.ok && result.skills.every((s) => s.canRevoke)).toBe(true);
   });
 
+  it("viewer: published only (no drafts)", async () => {
+    vi.mocked(resolveProjectSkillActorRole).mockResolvedValue("viewer");
+    const result = await listProjectSkills({
+      actorUserId: "v1",
+      args: { projectId: "proj-1" },
+    });
+    expect(result.ok && result.skills.map((s) => s.skillId)).toEqual(["pub"]);
+  });
+
   it("forbids non-members and rejects bad args", async () => {
     vi.mocked(resolveProjectSkillActorRole).mockResolvedValue("none");
     expect(

@@ -2,8 +2,8 @@ import type { PROJECT_SKILL_STATES } from "@/features/project-skill-share/intern
 
 export type ProjectSkillState = (typeof PROJECT_SKILL_STATES)[number];
 
-/** owner = user_projects.owner_user_id; member = active project_memberships row. */
-export type ProjectSkillActorRole = "owner" | "member" | "none";
+/** owner = user_projects.owner_user_id; member = active membership; viewer = read-only list/get published. */
+export type ProjectSkillActorRole = "owner" | "member" | "viewer" | "none";
 
 export type ProjectSkillShareErrorCode =
   | "forbidden"

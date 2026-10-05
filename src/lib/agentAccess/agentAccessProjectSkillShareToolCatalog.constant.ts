@@ -30,7 +30,7 @@ export const AGENT_ACCESS_PROJECT_SKILL_SHARE_TOOLS: readonly AgentAccessToolDef
     {
       name: "list_project_skills",
       description:
-        "List project skills (meta + contentHash, no body). Active members see published skills; your own drafts (and all drafts for the owner) are included. Requires active membership or ownership.",
+        "List project skills (meta + contentHash, no body). Members and viewers see published skills; your own drafts (and all drafts for the owner) are included. Requires ownership, active membership, or viewer access.",
       inputSchema: {
         type: "object",
         properties: { projectId: projectIdProp },

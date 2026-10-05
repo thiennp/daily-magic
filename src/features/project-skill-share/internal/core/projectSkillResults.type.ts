@@ -5,6 +5,7 @@ import type {
   ProjectSkillShareErrorCode,
   ProjectSkillView,
 } from "@/features/project-skill-share/internal/core/projectSkill.type";
+import type { ProjectSkillPullRow } from "@/features/project-skill-share/internal/core/projectSkillPull.type";
 
 export type PublishProjectSkillResult =
   | {
@@ -47,3 +48,10 @@ export type RehomeProjectSkillsToCloudResult =
       readonly code: "rehome_failed" | ProjectSkillShareErrorCode;
       readonly skills: readonly ProjectSkillRehomeRow[];
     };
+
+export type PullPublishedProjectSkillsToMirrorResult = {
+  readonly ok: boolean;
+  /** History OFF for this project — nothing to pull. */
+  readonly skipped: boolean;
+  readonly skills: readonly ProjectSkillPullRow[];
+};

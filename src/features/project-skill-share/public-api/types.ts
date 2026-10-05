@@ -11,9 +11,15 @@ export type {
   ListProjectSkillsResult,
   ProjectSkillRehomeRow,
   PublishProjectSkillResult,
+  PullPublishedProjectSkillsToMirrorResult,
   RehomeProjectSkillsToCloudResult,
   RevokeProjectSkillResult,
 } from "@/features/project-skill-share/internal/core/projectSkillResults.type";
+export type {
+  ProjectSkillPullRow,
+  ProjectSkillPublishedMeta,
+} from "@/features/project-skill-share/internal/core/projectSkillPull.type";
+export type { ProjectSkillAwcPublishedSource } from "@/features/project-skill-share/internal/infrastructure/awc/projectSkillAwcPublishedSource.type";
 export type {
   ProjectSkillHistoryPort,
   ProjectSkillVersionReadInput,

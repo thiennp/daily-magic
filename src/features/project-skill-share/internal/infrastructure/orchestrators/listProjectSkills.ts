@@ -6,7 +6,7 @@ import { selectProjectSkillRows } from "@/features/project-skill-share/internal/
 import { resolveProjectSkillMemberRole } from "@/features/project-skill-share/internal/infrastructure/orchestrators/resolveProjectSkillMemberRole";
 
 /**
- * Orchestrator: list_project_skills. Published for every active member / owner;
+ * Orchestrator: list_project_skills. Published for owner | member | viewer;
  * drafts only for their publisher or the owner. Revoked are not listed.
  */
 export const listProjectSkills = async (input: {

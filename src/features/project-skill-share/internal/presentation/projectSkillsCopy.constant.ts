@@ -1,6 +1,6 @@
 export const PROJECT_SKILLS_COPY = {
   title: "Skills",
-  hint: "Playbooks shared with this project. Members see published skills; drafts stay with you and the owner. Text up to 64KB, last 20 versions kept.",
+  hint: "Skills shared with this project. Members and viewers see published skills; drafts stay with you and the owner. Text up to 64KB, last 20 versions kept.",
   loading: "Loading skills…",
   empty: "No skills shared yet.",
   publishHeading: "Share a skill",

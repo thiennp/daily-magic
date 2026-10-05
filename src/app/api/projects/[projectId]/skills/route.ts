@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 type RouteContext = { params: Promise<{ readonly projectId: string }> };
 
-/** GET: skills visible to the session user (owner or active member). */
+/** GET: skills visible to the session user (owner | member | viewer). */
 export async function GET(
   _request: Request,
   context: RouteContext,

@@ -4,7 +4,7 @@ import type {
 } from "@/features/project-skill-share/internal/core/projectSkill.type";
 import { resolveProjectSkillActorRole } from "@/features/project-skill-share/internal/infrastructure/db/resolveProjectSkillActorRole";
 
-/** Owner or active member, else not_found / forbidden. */
+/** Owner, active member, or viewer; else not_found / forbidden. */
 export const resolveProjectSkillMemberRole = async (input: {
   readonly projectId: string;
   readonly actorUserId: string;

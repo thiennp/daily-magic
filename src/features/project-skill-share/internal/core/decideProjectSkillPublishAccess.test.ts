@@ -85,4 +85,28 @@ describe("project skill access rules", () => {
       canViewProjectSkill({ ...member, role: "none", state: "published" }),
     ).toBe(false);
   });
+
+  it("viewer: list/get published only; never publish or revoke", () => {
+    const viewer = {
+      role: "viewer" as const,
+      actorUserId: "v",
+      publisherUserId: "p",
+    };
+    expect(canViewProjectSkill({ ...viewer, state: "published" })).toBe(true);
+    expect(canViewProjectSkill({ ...viewer, state: "draft" })).toBe(false);
+    expect(
+      decideProjectSkillPublishAccess({
+        role: "viewer",
+        actorUserId: "v",
+        existingPublisherUserId: null,
+      }),
+    ).toBe(false);
+    expect(
+      decideProjectSkillRevokeAccess({
+        role: "viewer",
+        actorUserId: "p",
+        publisherUserId: "p",
+      }),
+    ).toBe(false);
+  });
 });

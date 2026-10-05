@@ -9,7 +9,8 @@ import { resolveProjectSkillMemberRole } from "@/features/project-skill-share/in
 
 /**
  * Orchestrator: get_project_skill. Body always comes from AWC (store of record).
- * Members: published (or older non-draft) versions only; hidden skills = not_found.
+ * Owner | member | viewer: published (or older non-draft) versions only;
+ * drafts for publisher/owner; hidden skills = not_found.
  */
 export const getProjectSkill = async (input: {
   readonly actorUserId: string;
