@@ -1,7 +1,10 @@
+/** Product tab order for the project page (Reports/Library are stubs for now). */
 export const PROJECT_PAGE_TAB_IDS = [
   "overview",
   "activity",
+  "reports",
   "team",
+  "library",
   "pitfalls",
   "resources",
   "settings",
@@ -12,7 +15,9 @@ export type ProjectPageTabId = (typeof PROJECT_PAGE_TAB_IDS)[number];
 export const PROJECT_PAGE_TAB_LABELS: Record<ProjectPageTabId, string> = {
   overview: "Overview",
   activity: "Activity",
+  reports: "Reports",
   team: "Team",
+  library: "Library",
   pitfalls: "Pitfalls",
   resources: "Resources",
   settings: "Settings",

@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 import { useAwcProjectMessengerThreads } from "@/features/projects/messenger/hooks/useAwcProjectMessengerThreads";
 import useAwcProjectComposition from "@/features/projects/hooks/useAwcProjectComposition";
-import useAwcProjectPitfalls from "@/features/projects/pitfalls/useAwcProjectPitfalls";
+import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
 import AwcProjectOverviewAttentionBanner from "@/features/projects/overview/AwcProjectOverviewAttentionBanner";
 import AwcProjectOverviewPitfallsCard from "@/features/projects/overview/AwcProjectOverviewPitfallsCard";
 import AwcProjectOverviewRecentCard from "@/features/projects/overview/AwcProjectOverviewRecentCard";
@@ -26,6 +26,8 @@ interface AwcProjectOverviewPanelProps {
   readonly project: UserProjectRecord;
   readonly deviceDisplayName: string;
   readonly editCta: ProjectEditOnMacCta;
+  /** Loaded once by the page so Overview, the tab badge and Pitfalls share it. */
+  readonly pitfalls: AwcProjectPitfallsState;
   readonly onGotoTab: (tab: ProjectPageTabId) => void;
   readonly onGotoActivity: (threadKey: string | null) => void;
 }
@@ -34,12 +36,12 @@ export default function AwcProjectOverviewPanel({
   project,
   deviceDisplayName,
   editCta,
+  pitfalls,
   onGotoTab,
   onGotoActivity,
 }: AwcProjectOverviewPanelProps) {
   const access = useAwcProjectAccess(project.id);
   const { threads } = useAwcProjectMessengerThreads(project.id);
-  const pitfalls = useAwcProjectPitfalls(project.id);
   const { counts, isLoading: compositionLoading } = useAwcProjectComposition(
     project.id,
   );

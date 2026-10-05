@@ -9,12 +9,14 @@ import AwcProjectDetailTabPanels from "@/features/projects/AwcProjectDetailTabPa
 import useAwcProjectDetailTab from "@/features/projects/hooks/useAwcProjectDetailTab";
 import useAwcProjectDevicePresentation from "@/features/projects/hooks/useAwcProjectDevicePresentation";
 import { useProjectActivityTaskDeepLink } from "@/features/projects/hooks/useProjectActivityTaskDeepLink";
+import useAwcProjectPitfalls from "@/features/projects/pitfalls/useAwcProjectPitfalls";
 import { useAwcProjectMessengerThreads } from "@/features/projects/messenger/hooks/useAwcProjectMessengerThreads";
 import sumMessengerUnread from "@/features/projects/overview/sumMessengerUnread";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
+import { countActiveProjectPitfalls } from "@agent-witch/shared/pitfalls";
 
 interface AwcProjectDetailPanelProps {
   readonly project: UserProjectRecord;
@@ -51,6 +53,9 @@ export default function AwcProjectDetailPanel({
   });
   const messengerThreads = useAwcProjectMessengerThreads(project.id);
   const activityUnreadCount = sumMessengerUnread(messengerThreads.threads);
+  const pitfalls = useAwcProjectPitfalls(project.id);
+  const pitfallsCount =
+    pitfalls.status === "ready" ? countActiveProjectPitfalls(pitfalls.items) : 0;
   const onGotoActivity = useCallback(
     (threadKey: string | null) => {
       setActivityThreadKey(threadKey === null ? "whole" : threadKey);
@@ -88,6 +93,7 @@ export default function AwcProjectDetailPanel({
         activeTab={activeTab}
         onTabChange={setActiveTab}
         activityUnreadCount={activityUnreadCount}
+        pitfallsCount={pitfallsCount}
       />
       <AwcProjectDetailTabPanels
         activeTab={activeTab}
@@ -96,6 +102,7 @@ export default function AwcProjectDetailPanel({
         pageActorRole={pageActorRole}
         deviceDisplayName={deviceDisplayName}
         editCta={editCta}
+        pitfalls={pitfalls}
         onGotoTab={setActiveTab}
         onGotoActivity={onGotoActivity}
         activityInitialThreadKey={activityThreadKey}

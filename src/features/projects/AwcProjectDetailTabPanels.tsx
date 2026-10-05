@@ -2,8 +2,10 @@
 
 import AwcProjectDetailSettingsPanel from "@/features/projects/AwcProjectDetailSettingsPanel";
 import AwcProjectMessengerSection from "@/features/projects/messenger/AwcProjectMessengerSection";
+import AwcProjectTabStub from "@/features/projects/AwcProjectTabStub";
 import AwcProjectOverviewPanel from "@/features/projects/overview/AwcProjectOverviewPanel";
-import { PROJECT_PAGE_SHELL_COPY } from "@/features/projects/projectPageShellCopy.constant";
+import AwcProjectPitfallsPanel from "@/features/projects/pitfalls/AwcProjectPitfallsPanel";
+import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
 import {
   PROJECT_PAGE_TAB_IDS,
   PROJECT_PAGE_TAB_LABELS,
@@ -20,6 +22,7 @@ interface AwcProjectDetailTabPanelsProps {
   readonly pageActorRole: ProjectPageActorRole;
   readonly deviceDisplayName: string;
   readonly editCta: ProjectEditOnMacCta;
+  readonly pitfalls: AwcProjectPitfallsState;
   readonly onGotoTab: (tab: ProjectPageTabId) => void;
   readonly onGotoActivity: (threadKey: string | null) => void;
   readonly activityInitialThreadKey?: string | null;
@@ -27,8 +30,9 @@ interface AwcProjectDetailTabPanelsProps {
 }
 
 const STUB_TABS: readonly ProjectPageTabId[] = [
+  "reports",
   "team",
-  "pitfalls",
+  "library",
   "resources",
 ];
 
@@ -39,13 +43,12 @@ export default function AwcProjectDetailTabPanels({
   pageActorRole,
   deviceDisplayName,
   editCta,
+  pitfalls,
   onGotoTab,
   onGotoActivity,
   activityInitialThreadKey = null,
   onActivityUnreadMaybeChanged,
 }: AwcProjectDetailTabPanelsProps) {
-  const copy = PROJECT_PAGE_SHELL_COPY;
-
   return (
     <>
       {PROJECT_PAGE_TAB_IDS.map((tabId) => {
@@ -64,8 +67,17 @@ export default function AwcProjectDetailTabPanels({
                 project={project}
                 deviceDisplayName={deviceDisplayName}
                 editCta={editCta}
+                pitfalls={pitfalls}
                 onGotoTab={onGotoTab}
                 onGotoActivity={onGotoActivity}
+              />
+            ) : null}
+            {tabId === "pitfalls" ? (
+              <AwcProjectPitfallsPanel
+                projectId={project.id}
+                pitfalls={pitfalls}
+                deviceDisplayName={deviceDisplayName}
+                editCta={editCta}
               />
             ) : null}
             {tabId === "activity" && selected ? (
@@ -83,12 +95,7 @@ export default function AwcProjectDetailTabPanels({
               />
             ) : null}
             {STUB_TABS.includes(tabId) ? (
-              <div className="rounded-xl border border-dashed border-gray-200 p-4 text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
-                <p className="font-medium text-gray-700 dark:text-gray-200">
-                  {PROJECT_PAGE_TAB_LABELS[tabId]}
-                </p>
-                <p className="mt-1">{copy.tabStubBody}</p>
-              </div>
+              <AwcProjectTabStub label={PROJECT_PAGE_TAB_LABELS[tabId]} />
             ) : null}
           </div>
         );
