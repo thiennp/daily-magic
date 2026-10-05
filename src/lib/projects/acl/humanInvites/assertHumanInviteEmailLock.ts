@@ -19,11 +19,20 @@ export const assertHumanInviteEmailLock = (input: {
   if (!input.requireEmailMatch) {
     return { ok: true };
   }
-  const invited = input.invitedEmail ?? "";
-  const masked = invited.length > 0 ? maskEmail(invited) : "***";
-  const claimant = parseHumanInviteEmail(input.claimantEmail ?? null);
-  if (claimant === null) {
-    return { ok: false, code: "invite_email_mismatch", invitedEmailMasked: masked };
+  const invitedNormalized = parseHumanInviteEmail(input.invitedEmail);
+  const masked =
+    invitedNormalized !== null
+      ? maskEmail(invitedNormalized)
+      : input.invitedEmail && input.invitedEmail.trim().length > 0
+        ? maskEmail(input.invitedEmail)
+        : "***";
+  const claimantNormalized = parseHumanInviteEmail(input.claimantEmail ?? null);
+  if (claimantNormalized === null || invitedNormalized === null) {
+    return {
+      ok: false,
+      code: "invite_email_mismatch",
+      invitedEmailMasked: masked,
+    };
   }
   if (!input.claimantEmailVerified) {
     return {
@@ -32,8 +41,12 @@ export const assertHumanInviteEmailLock = (input: {
       invitedEmailMasked: masked,
     };
   }
-  if (claimant !== invited) {
-    return { ok: false, code: "invite_email_mismatch", invitedEmailMasked: masked };
+  if (claimantNormalized !== invitedNormalized) {
+    return {
+      ok: false,
+      code: "invite_email_mismatch",
+      invitedEmailMasked: masked,
+    };
   }
   return { ok: true };
 };

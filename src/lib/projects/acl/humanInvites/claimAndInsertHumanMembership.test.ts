@@ -70,7 +70,7 @@ describe("claimAndInsertHumanMembership", () => {
       expect(query).toContain(fragment);
     }
     expect(query).toContain("require_email_match IS NOT TRUE");
-    expect(query).toContain("OR email =");
+    expect(query).toContain("OR lower(trim(email)) =");
     expect(query).not.toContain("uses_remaining = max_uses");
     const values = sqlMock.mock.calls[0]?.slice(1) ?? [];
     expect(values).toContain("ada@example.com");

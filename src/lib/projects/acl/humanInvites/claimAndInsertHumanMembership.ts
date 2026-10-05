@@ -53,7 +53,7 @@ export const claimAndInsertHumanMembership = async (input: {
             AND ${sql.unsafe(HUMAN_INVITE_USABLE_WHERE_SQL)}
             AND (
               require_email_match IS NOT TRUE
-              OR email = ${claimantEmail}
+              OR lower(trim(email)) = ${claimantEmail}
             )
           RETURNING *
         ),

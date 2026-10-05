@@ -25,6 +25,17 @@ describe("assertHumanInviteEmailLock", () => {
     ).toEqual({ ok: true });
   });
 
+  it("mode B match normalizes invite-side mixed case and whitespace", () => {
+    expect(
+      assertHumanInviteEmailLock({
+        requireEmailMatch: true,
+        invitedEmail: "Tom@Gmail.com ",
+        claimantEmail: "tom@gmail.com",
+        claimantEmailVerified: true,
+      }),
+    ).toEqual({ ok: true });
+  });
+
   it("mode B mismatch returns mask", () => {
     expect(
       assertHumanInviteEmailLock({

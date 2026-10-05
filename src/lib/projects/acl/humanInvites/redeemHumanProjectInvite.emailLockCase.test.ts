@@ -40,20 +40,14 @@ import {
 import { redeemHumanProjectInvite } from "@/lib/projects/acl/humanInvites/redeemHumanProjectInvite";
 
 const token = "t".repeat(22);
-const locked = {
-  ...inviteBase,
-  email: "ada@example.com",
-  requireEmailMatch: true,
-};
 
-describe("redeemHumanProjectInvite email lock match", () => {
+describe("redeemHumanProjectInvite email lock case", () => {
   beforeEach(() => {
     for (const m of [
       peek, claimInsert, resolveName, loadName, loadVerified, getProject, getMembership,
     ]) {
       m.mockReset();
     }
-    peek.mockResolvedValue(inviteBase);
     getProject.mockResolvedValue({ ownerUserId: "owner" });
     getMembership.mockResolvedValue(null);
     loadName.mockResolvedValue("Ada");
@@ -62,31 +56,46 @@ describe("redeemHumanProjectInvite email lock match", () => {
     claimInsert.mockResolvedValue({ ok: true, invite: inviteBase, membership });
   });
 
-  it("mode A accepts any account email", async () => {
+  it("mode B matches legacy mixed-case invite email to session", async () => {
+    peek.mockResolvedValue({
+      ...inviteBase,
+      email: "Tom@Gmail.com ",
+      requireEmailMatch: true,
+    });
     const result = await redeemHumanProjectInvite({
       token,
       claimantUserId: "user-1",
-      claimantEmail: "other@x.com",
+      claimantEmail: "tom@gmail.com",
       suggestedProjectDisplayName: "Soft Vale",
     });
     expect(result.ok).toBe(true);
-    expect(loadVerified).not.toHaveBeenCalled();
     expect(claimInsert).toHaveBeenCalledWith(
-      expect.objectContaining({ claimantEmailNormalized: "other@x.com" }),
+      expect.objectContaining({ claimantEmailNormalized: "tom@gmail.com" }),
     );
   });
 
-  it("mode B matching email (case-insensitive) claims once", async () => {
+  it("mode B mismatch then matching account succeeds", async () => {
+    const locked = {
+      ...inviteBase,
+      email: "ada@example.com",
+      requireEmailMatch: true,
+    };
     peek.mockResolvedValue(locked);
-    const result = await redeemHumanProjectInvite({
+    await redeemHumanProjectInvite({
       token,
-      claimantUserId: "user-1",
-      claimantEmail: "Ada@Example.COM",
+      claimantUserId: "wrong",
+      claimantEmail: "wrong@x.com",
       suggestedProjectDisplayName: "Soft Vale",
     });
-    expect(result.ok).toBe(true);
-    expect(claimInsert).toHaveBeenCalledWith(
-      expect.objectContaining({ claimantEmailNormalized: "ada@example.com" }),
-    );
+    expect(claimInsert).not.toHaveBeenCalled();
+    claimInsert.mockResolvedValue({ ok: true, invite: locked, membership });
+    const ok = await redeemHumanProjectInvite({
+      token,
+      claimantUserId: "user-1",
+      claimantEmail: "ada@example.com",
+      suggestedProjectDisplayName: "Soft Vale",
+    });
+    expect(ok.ok).toBe(true);
+    expect(claimInsert).toHaveBeenCalledTimes(1);
   });
 });
