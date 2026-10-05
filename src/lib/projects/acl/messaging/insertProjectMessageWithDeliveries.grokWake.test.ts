@@ -5,7 +5,7 @@ vi.mock("@/lib/db", () => ({
   getSql: () => sqlMock,
 }));
 
-vi.mock("@/lib/projects/acl/webhooks/deliverProjectMessageWebhooks", () => ({
+vi.mock("@/lib/projects/acl/webhooks/scheduleProjectMessageWebhookDelivery", () => ({
   scheduleProjectMessageWebhookDelivery: vi.fn(),
 }));
 

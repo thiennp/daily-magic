@@ -70,9 +70,36 @@ describe("owner grok-webhook route GET", () => {
       grokWebhookRegistered: true,
       grokWebhookUrlHost: "hooks.example.com",
       keySet: true,
+      hmacWebhookRegistered: false,
+      hmacWebhookUrlHost: null,
+      secretSet: false,
     });
     expect(statusQuery()).toContain("m.status = 'active'");
     expect(statusQuery()).not.toContain("bearer");
+  });
+
+  it("includes HMAC host + secretSet when registered, never the secret", async () => {
+    db.statusRow = {
+      webhook_url: "https://hooks.example.com/wake/abc",
+      last_wake_result: "http_200",
+    };
+    db.hmacStatusRow = {
+      webhook_url: "https://muse.example.com/inbox",
+      secret_set: true,
+    };
+    const response = await callGet();
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body).toEqual({
+      ok: true,
+      grokWebhookRegistered: true,
+      grokWebhookUrlHost: "hooks.example.com",
+      keySet: true,
+      hmacWebhookRegistered: true,
+      hmacWebhookUrlHost: "muse.example.com",
+      secretSet: true,
+    });
+    expect(JSON.stringify(body)).not.toMatch(/awc_whsec_|inbox/i);
   });
 
   it("404s when the membership is not an active member of this project", async () => {

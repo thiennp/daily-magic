@@ -6,6 +6,8 @@ export type GrokWebhookSqlState = {
   present: boolean;
   /** Status SELECT row, or null when no in-scope membership. */
   statusRow: Record<string, unknown> | null;
+  /** HMAC status SELECT row; omit or null → empty (no membership) when statusRow is null. */
+  hmacStatusRow?: Record<string, unknown> | null;
 };
 
 export const GUARDED_INSERT =
@@ -23,6 +25,15 @@ export const grokWebhookSql =
     }
     if (text.includes("LEFT JOIN project_membership_grok_routine_webhooks")) {
       return state.statusRow === null ? [] : [state.statusRow];
+    }
+    if (text.includes("LEFT JOIN project_membership_webhooks")) {
+      if (state.statusRow === null) {
+        return [];
+      }
+      if (state.hmacStatusRow === undefined || state.hmacStatusRow === null) {
+        return [{ webhook_url: null, secret_set: false }];
+      }
+      return [state.hmacStatusRow];
     }
     return [];
   };

@@ -6,9 +6,11 @@ import {
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
 import { readProjectGrokRoutineWebhookStatus } from "@/lib/projects/acl/webhooks/readProjectGrokRoutineWebhookStatus";
+import { readProjectMembershipHmacWebhookStatus } from "@/lib/projects/acl/webhooks/readProjectMembershipHmacWebhookStatus";
 import { toGrokWebhookStatusView } from "@/lib/projects/acl/webhooks/toGrokWebhookStatusView";
+import { toHmacWebhookStatusView } from "@/lib/projects/acl/webhooks/toHmacWebhookStatusView";
 
-/** get_my_project_webhook_status: caller's own active membership only; host + flags, never the key. */
+/** get_my_project_webhook_status: caller's own active membership only; host + flags, never secrets. */
 export const executeGetMyProjectWebhookStatusTool = async (input: {
   readonly actor: AgentAccessActor;
   readonly args: unknown;
@@ -25,11 +27,12 @@ export const executeGetMyProjectWebhookStatusTool = async (input: {
       true,
     );
   }
-  const status = await readProjectGrokRoutineWebhookStatus({
+  const target = {
     projectId,
-    by: "own_membership",
+    by: "own_membership" as const,
     userId: input.actor.id,
-  });
+  };
+  const status = await readProjectGrokRoutineWebhookStatus(target);
   if (status === null) {
     return agentAccessTextResult(
       {
@@ -41,14 +44,36 @@ export const executeGetMyProjectWebhookStatusTool = async (input: {
       true,
     );
   }
-  const view = toGrokWebhookStatusView(status.grokWebhookUrl);
+  const hmac =
+    (await readProjectMembershipHmacWebhookStatus(target)) ?? {
+      hmacWebhookUrl: null,
+      secretSet: false,
+    };
+  const grokView = toGrokWebhookStatusView(status.grokWebhookUrl);
+  const hmacView = toHmacWebhookStatusView(hmac);
+  const noteParts: string[] = [];
+  if (grokView.grokWebhookRegistered) {
+    noteParts.push("Grok registered. The key is stored and never returned.");
+  } else {
+    noteParts.push(
+      `Grok not registered. ${AWC_GROK_WEBHOOK_OWNER_ENTRY} Never ask for them in chat.`,
+    );
+  }
+  if (hmacView.hmacWebhookRegistered) {
+    noteParts.push(
+      "HMAC registered. The signing secret is stored and never returned.",
+    );
+  } else {
+    noteParts.push(
+      "HMAC not registered. Call register_project_webhook with webhookUrl to receive a one-time secret.",
+    );
+  }
   return agentAccessTextResult({
     ok: true,
     projectId,
-    ...view,
+    ...grokView,
+    ...hmacView,
     lastGrokWakeResult: status.lastGrokWakeResult,
-    note: view.grokWebhookRegistered
-      ? "Registered. The key is stored and never returned."
-      : `Not registered. ${AWC_GROK_WEBHOOK_OWNER_ENTRY} Never ask for them in chat.`,
+    note: noteParts.join(" "),
   });
 };

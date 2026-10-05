@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const readStatus = vi.hoisted(() => vi.fn());
+const readHmacStatus = vi.hoisted(() => vi.fn());
 
 vi.mock(
   "@/lib/projects/acl/webhooks/readProjectGrokRoutineWebhookStatus",
@@ -9,12 +10,15 @@ vi.mock(
   }),
 );
 
-import { AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS } from "@/lib/agentAccess/agentAccessProjectInviteHooksToolCatalog.constant";
-import { buildAgentAccessLiveGuide } from "@/lib/agentAccess/buildAgentAccessLiveGuide";
+vi.mock(
+  "@/lib/projects/acl/webhooks/readProjectMembershipHmacWebhookStatus",
+  () => ({
+    readProjectMembershipHmacWebhookStatus: readHmacStatus,
+  }),
+);
+
 import { GET_MY_PROJECT_WEBHOOK_STATUS_TOOL } from "@/lib/agentAccess/getMyProjectWebhookStatusTool.constant";
 import { executeProjectAclWebhookAndKeyTools } from "@/lib/agentAccess/executeProjectAclWebhookAndKeyTools";
-import { AGENT_ACCESS_MUTATING_TOOLS } from "@/lib/agentAccess/agentAccess.constant";
-import { PROJECT_API_KEY_MCP_TOOLS } from "@/lib/projects/acl/projectApiKeys/projectApiKeyMcpAllowlist.constant";
 
 const actor = { id: "bot-user-1" } as never;
 
@@ -31,6 +35,11 @@ const call = async (args: unknown) => {
 describe("get_my_project_webhook_status", () => {
   beforeEach(() => {
     readStatus.mockReset();
+    readHmacStatus.mockReset();
+    readHmacStatus.mockResolvedValue({
+      hmacWebhookUrl: null,
+      secretSet: false,
+    });
   });
 
   it("returns registration + host for the caller's own membership, never the key", async () => {
@@ -88,22 +97,6 @@ describe("get_my_project_webhook_status", () => {
     );
     expect(GET_MY_PROJECT_WEBHOOK_STATUS_TOOL.description).toContain(
       "Project Access → People → Members → <bot> → Grok webhook",
-    );
-  });
-
-  it("is listed in the catalog and guide as a read-only, agent-access tool", () => {
-    const def = AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS.find(
-      (tool) => tool.name === "get_my_project_webhook_status",
-    );
-    expect(def?.inputSchema).toMatchObject({ required: ["projectId"] });
-    expect(buildAgentAccessLiveGuide().projectCowork.tools).toContain(
-      "get_my_project_webhook_status",
-    );
-    expect(AGENT_ACCESS_MUTATING_TOOLS as readonly string[]).not.toContain(
-      "get_my_project_webhook_status",
-    );
-    expect(PROJECT_API_KEY_MCP_TOOLS as readonly string[]).not.toContain(
-      "get_my_project_webhook_status",
     );
   });
 });

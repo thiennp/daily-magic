@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { getSql } from "@/lib/db";
 import { parseProjectMessageRefsJson } from "@/lib/projects/acl/messaging/parseProjectMessageRefsJson";
 import { wakeProjectMessageGrokRoutines } from "@/lib/projects/acl/messaging/wakeProjectMessageGrokRoutines";
-import { scheduleProjectMessageWebhookDelivery } from "@/lib/projects/acl/webhooks/deliverProjectMessageWebhooks";
+import { scheduleProjectMessageWebhookDelivery } from "@/lib/projects/acl/webhooks/scheduleProjectMessageWebhookDelivery";
 import type { ProjectGrokRoutineWakeResult } from "@/lib/projects/acl/webhooks/wakeProjectGrokRoutineWebhooks";
 
 export type InsertProjectMessageWithDeliveriesResult = {

@@ -33,6 +33,17 @@ describe("member Grok webhook secret form", () => {
     expect(hook).toMatch(/setWebhookKey\(""\)/);
   });
 
+  it("shows HMAC webhook host status without the secret", () => {
+    expect(src).toContain("hmacWebhookUrlHost");
+    expect(src).toContain("copy.hmacHeading");
+    expect(src).toContain("copy.hmacSecretSet");
+    expect(AWC_GROK_WEBHOOK_FORM_COPY.hmacHint).toContain(
+      "register_project_webhook",
+    );
+    expect(AWC_GROK_WEBHOOK_FORM_COPY.hmacHint).toContain("never shown");
+    expect(`${src}${hook}`).not.toMatch(/awc_whsec_/);
+  });
+
   it("points to the bot info pane, not chat or a link", () => {
     expect(AWC_GROK_WEBHOOK_FORM_COPY.hint).toContain(
       "click the bot's name in the chat header",

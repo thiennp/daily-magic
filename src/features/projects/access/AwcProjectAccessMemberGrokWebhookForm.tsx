@@ -11,11 +11,21 @@ interface AwcProjectAccessMemberGrokWebhookFormProps {
   readonly membershipId: string;
 }
 
-const statusLine = (status: ProjectGrokWebhookStatusView | null): string => {
+const grokStatusLine = (status: ProjectGrokWebhookStatusView | null): string => {
   const copy = AWC_GROK_WEBHOOK_FORM_COPY;
   if (status === null) return copy.loading;
   if (!status.grokWebhookRegistered) return copy.notSet;
   return `${status.grokWebhookUrlHost ?? copy.saved} · ${copy.keySet}`;
+};
+
+const hmacStatusLine = (status: ProjectGrokWebhookStatusView | null): string => {
+  const copy = AWC_GROK_WEBHOOK_FORM_COPY;
+  if (status === null) return copy.loading;
+  if (!status.hmacWebhookRegistered) return copy.hmacNotSet;
+  const host = status.hmacWebhookUrlHost ?? copy.saved;
+  return status.secretSet
+    ? `${host} · ${copy.hmacSecretSet}`
+    : host;
 };
 
 /** Owner secret form: values go to the owner route, never into chat. After save: host + key set. */
@@ -52,7 +62,7 @@ export default function AwcProjectAccessMemberGrokWebhookForm({
             {copy.hint}
           </p>
           <p className="text-xs text-gray-700 dark:text-gray-300">
-            {statusLine(form.status)}
+            {grokStatusLine(form.status)}
           </p>
           <AwcProjectAccessSecretInput
             label={copy.urlLabel}
@@ -73,6 +83,15 @@ export default function AwcProjectAccessMemberGrokWebhookForm({
           >
             {form.saving ? copy.saving : copy.save}
           </button>
+          <p className="pt-1 text-[11px] font-medium text-gray-600 dark:text-gray-300">
+            {copy.hmacHeading}
+          </p>
+          <p className="text-[11px] text-gray-500 dark:text-gray-400">
+            {copy.hmacHint}
+          </p>
+          <p className="text-xs text-gray-700 dark:text-gray-300">
+            {hmacStatusLine(form.status)}
+          </p>
           {form.error ? (
             <p className="text-xs text-red-600">{form.error}</p>
           ) : null}

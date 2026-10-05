@@ -3,6 +3,9 @@ export type ProjectGrokWebhookStatusView = {
   readonly grokWebhookRegistered?: boolean;
   readonly grokWebhookUrlHost?: string | null;
   readonly keySet?: boolean;
+  readonly hmacWebhookRegistered?: boolean;
+  readonly hmacWebhookUrlHost?: string | null;
+  readonly secretSet?: boolean;
   readonly errorMessage?: string;
 };
 

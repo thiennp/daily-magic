@@ -76,6 +76,9 @@ describe("owner grok-webhook route PUT", () => {
       grokWebhookRegistered: true,
       grokWebhookUrlHost: "hooks.example.com",
       keySet: true,
+      hmacWebhookRegistered: false,
+      hmacWebhookUrlHost: null,
+      secretSet: false,
     });
     expect(text).not.toContain(SECRET_KEY);
     expect(inserts()).toHaveLength(1);

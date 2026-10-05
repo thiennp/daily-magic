@@ -3,7 +3,9 @@ import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner"
 import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import type { ProjectGrokWebhookTarget } from "@/lib/projects/acl/webhooks/projectGrokWebhookTarget";
 import { readProjectGrokRoutineWebhookStatus } from "@/lib/projects/acl/webhooks/readProjectGrokRoutineWebhookStatus";
+import { readProjectMembershipHmacWebhookStatus } from "@/lib/projects/acl/webhooks/readProjectMembershipHmacWebhookStatus";
 import { toGrokWebhookStatusView } from "@/lib/projects/acl/webhooks/toGrokWebhookStatusView";
+import { toHmacWebhookStatusView } from "@/lib/projects/acl/webhooks/toHmacWebhookStatusView";
 import { writeProjectGrokRoutineWebhook } from "@/lib/projects/acl/webhooks/writeProjectGrokRoutineWebhook";
 
 export const dynamic = "force-dynamic";
@@ -51,7 +53,7 @@ const ownerTarget = async (
   };
 };
 
-/** GET a member bot's webhook status. Project owner only. Host + key set; never the key. */
+/** GET a member bot's webhook status. Project owner only. Host + flags; never secrets. */
 export async function GET(
   _request: Request,
   context: RouteContext,
@@ -62,9 +64,15 @@ export async function GET(
   if (status === null) {
     return projectAccessErrorJson("not_found", 404);
   }
+  const hmac =
+    (await readProjectMembershipHmacWebhookStatus(target)) ?? {
+      hmacWebhookUrl: null,
+      secretSet: false,
+    };
   return Response.json({
     ok: true,
     ...toGrokWebhookStatusView(status.grokWebhookUrl),
+    ...toHmacWebhookStatusView(hmac),
   });
 }
 
@@ -91,8 +99,14 @@ export async function PUT(
   if (!result.ok) {
     return projectAccessErrorJson(result.code, statusForCode(result.code));
   }
+  const hmac =
+    (await readProjectMembershipHmacWebhookStatus(target)) ?? {
+      hmacWebhookUrl: null,
+      secretSet: false,
+    };
   return Response.json({
     ok: true,
     ...toGrokWebhookStatusView(result.grokWebhookUrl),
+    ...toHmacWebhookStatusView(hmac),
   });
 }

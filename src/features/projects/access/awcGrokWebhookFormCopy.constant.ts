@@ -12,4 +12,9 @@ export const AWC_GROK_WEBHOOK_FORM_COPY = {
   keySet: "key set",
   saved: "Saved",
   failed: "Could not save the webhook.",
+  hmacHeading: "HMAC webhook",
+  hmacNotSet: "HMAC not registered",
+  hmacSecretSet: "secret set",
+  hmacHint:
+    "HMAC URL is registered by the bot via register_project_webhook. Host only — the signing secret is never shown.",
 } as const;

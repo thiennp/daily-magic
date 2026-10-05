@@ -11,12 +11,26 @@ vi.mock("@/lib/projects/acl/webhooks/postSignedProjectMembershipWebhook", () => 
   postSignedProjectMembershipWebhook: (...args: unknown[]) => postMock(...args),
 }));
 
+const receiptMock = vi.fn();
+vi.mock(
+  "@/lib/projects/acl/webhooks/maybeInsertProjectHmacProcessingReceipt",
+  () => ({
+    maybeInsertProjectHmacProcessingReceipt: (...args: unknown[]) =>
+      receiptMock(...args),
+  }),
+);
+
+vi.mock("@/lib/projects/acl/webhooks/wakeProjectGrokRoutineWebhooks", () => ({
+  loadPostableGrokRoutineWebhookMembershipIds: async () => new Set(),
+}));
+
 import { deliverProjectMessageWebhooks } from "@/lib/projects/acl/webhooks/deliverProjectMessageWebhooks";
 
 describe("deliverProjectMessageWebhooks", () => {
   afterEach(() => {
     sqlMock.mockReset();
     postMock.mockReset();
+    receiptMock.mockReset();
   });
 
   const payload = {
@@ -48,6 +62,7 @@ describe("deliverProjectMessageWebhooks", () => {
       recipientMembershipIds: ["mem-a"],
     });
     expect(postMock).not.toHaveBeenCalled();
+    expect(receiptMock).toHaveBeenCalledTimes(0);
     expect(
       sqlMock.mock.calls.some((call) =>
         String(call[0]).includes("UPDATE project_message_deliveries"),
@@ -55,8 +70,9 @@ describe("deliverProjectMessageWebhooks", () => {
     ).toBe(true);
   });
 
-  it("POSTs when secret_retained is present", async () => {
+  it("POSTs when secret_retained is present and notifies receipt helper", async () => {
     postMock.mockResolvedValue({ ok: true });
+    receiptMock.mockResolvedValue(undefined);
     sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
       const q = String(strings);
       if (q.includes("FROM project_membership_webhooks")) {
@@ -79,6 +95,11 @@ describe("deliverProjectMessageWebhooks", () => {
       webhookUrl: "https://example.com/hook",
       secret: "awc_whsec_testsecret",
       messageId: "msg-1",
+    });
+    expect(receiptMock).toHaveBeenCalledWith({
+      payload,
+      peerMembershipId: "mem-a",
+      deliveryOk: true,
     });
   });
 });

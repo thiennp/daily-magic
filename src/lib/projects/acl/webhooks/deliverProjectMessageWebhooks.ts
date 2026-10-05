@@ -1,5 +1,6 @@
 import { asRowArray, getSql } from "@/lib/db";
 import { markProjectMessageDeliveryStatus } from "@/lib/projects/acl/webhooks/markProjectMessageDeliveryStatus";
+import { maybeInsertProjectHmacProcessingReceipt } from "@/lib/projects/acl/webhooks/maybeInsertProjectHmacProcessingReceipt";
 import { postSignedProjectMembershipWebhook } from "@/lib/projects/acl/webhooks/postSignedProjectMembershipWebhook";
 import { loadPostableGrokRoutineWebhookMembershipIds } from "@/lib/projects/acl/webhooks/wakeProjectGrokRoutineWebhooks";
 
@@ -17,6 +18,7 @@ export type ProjectMessageWebhookPayload = {
  * Push to enabled membership webhooks that retained a signing secret.
  * A missing HMAC URL is no_webhook only when no postable Grok webhook is stored.
  * That Grok wake is separate and must stay pending. Do not await from dispatch HTTP.
+ * On HMAC 2xx, insert the same thin task.processing receipt the Grok path sends on http_200.
  */
 export const deliverProjectMessageWebhooks = async (input: {
   readonly payload: ProjectMessageWebhookPayload;
@@ -89,17 +91,10 @@ export const deliverProjectMessageWebhooks = async (input: {
       status: result.ok ? "delivered" : "failed",
       lastError: result.ok ? null : result.error,
     });
-  }
-};
-
-export const scheduleProjectMessageWebhookDelivery = (input: {
-  readonly payload: ProjectMessageWebhookPayload;
-  readonly recipientMembershipIds: readonly string[];
-}): void => {
-  void deliverProjectMessageWebhooks(input).catch((error: unknown) => {
-    console.error("project message webhook delivery failed", {
-      messageId: input.payload.messageId,
-      error: error instanceof Error ? error.message : String(error),
+    await maybeInsertProjectHmacProcessingReceipt({
+      payload: input.payload,
+      peerMembershipId: membershipId,
+      deliveryOk: result.ok,
     });
-  });
+  }
 };
