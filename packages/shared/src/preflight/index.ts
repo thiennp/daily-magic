@@ -33,3 +33,14 @@ export {
   toSafePreflightEvidence,
 } from "./toSafePreflightEvidence";
 export { parsePreflightRunResult } from "./parsePreflightRunResult";
+
+export { PREFLIGHT_FAILURE_COPY } from "./preflightFailureCopy.constant";
+export type { PreflightUiState } from "./PreflightUiState.type";
+export {
+  formatPreflightFailureFacts,
+  formatPreflightFailureFactsFromRun,
+  pickPrimaryPreflightFailure,
+  sanitizePreflightDisplayText,
+  type PreflightFailureFacts,
+} from "./formatPreflightFailureFacts";
+export { formatPreflightFailureCliText } from "./formatPreflightFailureCliText";

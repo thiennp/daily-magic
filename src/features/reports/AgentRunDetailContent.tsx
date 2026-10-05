@@ -13,6 +13,9 @@ import { resolveAgentRunDetailResultOutputForHonesty } from "@/features/reports/
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { resolveAgentRunHistoryOutcomeBadge } from "@/features/reports/utils/resolveAgentRunHistoryOutcomeBadge";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
+import AwcPreflightFailureCard from "@/features/preflight/AwcPreflightFailureCard";
+import AgentRunDetailMeta from "@/features/reports/AgentRunDetailMeta";
+import { resolveAgentRunPreflightView } from "@/features/reports/resolveAgentRunPreflightView";
 
 interface AgentRunDetailContentProps {
   readonly run: EnrichedAgentRunRecord;
@@ -36,6 +39,11 @@ export default function AgentRunDetailContent({
       supplementalResultOutput.length > 0 ? supplementalResultOutput : null,
   });
 
+  const preflightView = resolveAgentRunPreflightView({
+    resultOutput: run.resultOutput,
+    denialReason: run.denialReason,
+  });
+
   return (
     <AppPanel as="div">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -48,36 +56,7 @@ export default function AgentRunDetailContent({
           Created {new Date(run.createdAt).toLocaleString()}
         </p>
       </div>
-      <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
-        <div>
-          <dt className="text-gray-500 dark:text-gray-400">Requester</dt>
-          <dd className="text-gray-800 dark:text-white/90">
-            {run.requesterEmail}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-gray-500 dark:text-gray-400">Executor</dt>
-          <dd className="text-gray-800 dark:text-white/90">
-            {run.executorEmail}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-gray-500 dark:text-gray-400">Policy</dt>
-          <dd className="capitalize text-gray-800 dark:text-white/90">
-            {run.dispatchPolicy}
-          </dd>
-        </div>
-        {run.approvalExpiresAt ? (
-          <div>
-            <dt className="text-gray-500 dark:text-gray-400">
-              Approval expires
-            </dt>
-            <dd className="text-gray-800 dark:text-white/90">
-              {new Date(run.approvalExpiresAt).toLocaleString()}
-            </dd>
-          </div>
-        ) : null}
-      </dl>
+      <AgentRunDetailMeta run={run} />
       <AgentRunEstimateComparison
         estimateSeconds={run.estimateSeconds}
         actualSeconds={run.actualSeconds}
@@ -96,6 +75,9 @@ export default function AgentRunDetailContent({
         <AgentRunLiveTerminal key={run.id} runId={run.id} />
       ) : null}
       <AgentRunOutcomeBanner run={run} />
+      {preflightView !== null ? (
+        <AwcPreflightFailureCard view={preflightView} showFixOnMacHint />
+      ) : null}
       {run.resultOutput ? (
         <AgentRunResultOutput run={run} resultOutput={run.resultOutput} />
       ) : null}
