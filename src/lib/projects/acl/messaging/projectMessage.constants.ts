@@ -35,6 +35,8 @@ export const PROJECT_MESSAGE_SYSTEM_NOTICE_KINDS = [
 ] as const;
 /** Inbox / log sender name for system notices (not "Owner", not the peer). */
 export const PROJECT_MESSAGE_SYSTEM_SENDER_DISPLAY_NAME = "System";
+/** Inbox / log / wake sender name when the sender membership is null (owner). */
+export const PROJECT_MESSAGE_OWNER_SENDER_DISPLAY_NAME = "Owner";
 
 /** No activity from the peer this long after the wake or its last activity: tell the sender. */
 export const PROJECT_B2B_SILENCE_NOTIFY_MS = 5 * 60_000;
@@ -60,6 +62,9 @@ export const PROJECT_MESSAGE_HOURLY_CAP = readPositiveIntEnv(
   "AWC_PROJECT_MESSAGE_HOURLY_CAP",
   PROJECT_MESSAGE_HOURLY_CAP_DEFAULT,
 );
+
+/** Rolling window for the hourly dispatch cap. */
+export const PROJECT_MESSAGE_HOURLY_WINDOW_MS = 3_600_000;
 
 /** Default max unacked project_messages rows per project. */
 export const PROJECT_MESSAGE_UNREAD_CAP_DEFAULT = 300;

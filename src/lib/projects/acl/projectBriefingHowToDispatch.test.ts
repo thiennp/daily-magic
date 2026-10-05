@@ -30,6 +30,12 @@ describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
       "Rate limits: 300/hour (rolling) + max 300 unread (ack/clear frees slots)",
     );
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain(
+      "On code rate_limited (reason hourly|unread_cap), tell your user the message was rate-limited",
+    );
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain(
+      "use retryAfterSeconds / retryAfterAt when present",
+    );
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain(
       'toProjectDisplayName: "Owner"',
     );
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain("toMembershipId");

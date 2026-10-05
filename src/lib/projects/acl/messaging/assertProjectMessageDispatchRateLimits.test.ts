@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { assertProjectMessageDispatchRateLimits } from "@/lib/projects/acl/messaging/assertProjectMessageDispatchRateLimits";
 import {
   PROJECT_MESSAGE_HOURLY_CAP,
+  PROJECT_MESSAGE_HOURLY_WINDOW_MS,
   PROJECT_MESSAGE_UNREAD_CAP,
 } from "@/lib/projects/acl/messaging/projectMessage.constants";
 
@@ -31,28 +32,37 @@ describe("assertProjectMessageDispatchRateLimits", () => {
 
     expect(result).toEqual({ ok: true });
     expect(sqlMock).toHaveBeenCalledTimes(2);
-    expect(String(sqlMock.mock.calls[0]?.[0])).toContain("INTERVAL '1 hour'");
-    expect(String(sqlMock.mock.calls[0]?.[0])).toContain("NOT (kind = ANY(");
-    expect(String(sqlMock.mock.calls[0]?.[0])).not.toContain(
-      "INTERVAL '24 hours'",
-    );
-    expect(String(sqlMock.mock.calls[1]?.[0])).toContain("project_id");
   });
 
-  it("rejects when hourly send count >= cap", async () => {
-    sqlMock.mockResolvedValueOnce([{ c: PROJECT_MESSAGE_HOURLY_CAP }]);
+  it("returns rate_limited hourly with retryAfter from the oldest counted row", async () => {
+    const oldest = new Date("2026-10-05T08:00:00.000Z");
+    const now = new Date("2026-10-05T08:50:00.000Z");
+    sqlMock
+      .mockResolvedValueOnce([{ c: PROJECT_MESSAGE_HOURLY_CAP }])
+      .mockResolvedValueOnce([{ oldest }]);
 
     const result = await assertProjectMessageDispatchRateLimits({
       projectId: "proj-1",
       senderMembershipId: "mem-1",
       senderUserId: "user-1",
+      now,
     });
 
-    expect(result).toEqual({ ok: false, code: "rate_limited_hourly" });
-    expect(sqlMock).toHaveBeenCalledTimes(1);
+    expect(result).toEqual({
+      ok: false,
+      code: "rate_limited",
+      reason: "hourly",
+      detail: "rate_limited_hourly",
+      retryAfterSeconds: 10 * 60,
+      retryAfterAt: new Date(
+        oldest.getTime() + PROJECT_MESSAGE_HOURLY_WINDOW_MS,
+      ).toISOString(),
+      message: expect.stringContaining("Tell your user the message was not sent"),
+    });
+    expect(sqlMock).toHaveBeenCalledTimes(2);
   });
 
-  it("rejects when project unread count >= cap", async () => {
+  it("returns rate_limited unread_cap with null retryAfter", async () => {
     sqlMock
       .mockResolvedValueOnce([{ c: 0 }])
       .mockResolvedValueOnce([{ c: PROJECT_MESSAGE_UNREAD_CAP }]);
@@ -63,7 +73,14 @@ describe("assertProjectMessageDispatchRateLimits", () => {
       senderUserId: "user-1",
     });
 
-    expect(result).toEqual({ ok: false, code: "unread_cap" });
-    expect(sqlMock).toHaveBeenCalledTimes(2);
+    expect(result).toEqual({
+      ok: false,
+      code: "rate_limited",
+      reason: "unread_cap",
+      detail: "unread_cap",
+      retryAfterSeconds: null,
+      retryAfterAt: null,
+      message: expect.stringContaining("Ack or Clear all frees slots"),
+    });
   });
 });

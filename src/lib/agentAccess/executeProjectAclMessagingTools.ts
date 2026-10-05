@@ -29,7 +29,16 @@ export const executeProjectAclMessagingTools = async (input: {
     });
     if (!result.ok) {
       return agentAccessTextResult(
-        { ok: false, error: result.code, code: result.code },
+        {
+          ok: false,
+          error: result.message ?? result.code,
+          code: result.code,
+          reason: result.reason,
+          detail: result.detail,
+          retryAfterSeconds: result.retryAfterSeconds,
+          retryAfterAt: result.retryAfterAt,
+          message: result.message,
+        },
         true,
       );
     }

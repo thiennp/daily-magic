@@ -76,9 +76,34 @@ export const dispatchProjectInboxMessage = async (input: {
     };
   }
 
+  const reason =
+    body.reason === "hourly" || body.reason === "unread_cap"
+      ? body.reason
+      : undefined;
+  const detail =
+    body.detail === "rate_limited_hourly" || body.detail === "unread_cap"
+      ? body.detail
+      : undefined;
+  const retryAfterSeconds =
+    typeof body.retryAfterSeconds === "number"
+      ? body.retryAfterSeconds
+      : body.retryAfterSeconds === null
+        ? null
+        : undefined;
+  const retryAfterAt =
+    typeof body.retryAfterAt === "string"
+      ? body.retryAfterAt
+      : body.retryAfterAt === null
+        ? null
+        : undefined;
+
   return {
     ok: false,
     code,
     errorMessage: errorMessage ?? "Could not send task.",
+    reason,
+    detail,
+    retryAfterSeconds,
+    retryAfterAt,
   };
 };

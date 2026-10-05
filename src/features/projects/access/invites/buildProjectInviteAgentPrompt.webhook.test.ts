@@ -48,6 +48,7 @@ describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
     expect(prompt).toContain("Delete-on-ack");
     expect(prompt).toContain("unacked messages expire after 3 days");
     expect(prompt).toContain("Rate limits: 300/hour (rolling) + max 300 unread (ack/clear frees slots)");
+    expect(prompt).toContain("On code rate_limited (reason hourly|unread_cap), tell your user the message was rate-limited");
     expect(prompt).toContain('"toProjectDisplayName": "Owner"');
     expect(prompt).toContain("peer.joined");
     expect(prompt).toContain('fromProjectDisplayName === "Owner"');

@@ -46,6 +46,10 @@ export type DispatchProjectInboxResult =
       readonly ok: false;
       readonly code: string | null;
       readonly errorMessage: string;
+      readonly reason?: "hourly" | "unread_cap";
+      readonly detail?: "rate_limited_hourly" | "unread_cap";
+      readonly retryAfterSeconds?: number | null;
+      readonly retryAfterAt?: string | null;
     };
 
 export type ClearProjectInboxResult =

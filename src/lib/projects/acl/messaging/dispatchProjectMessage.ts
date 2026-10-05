@@ -14,7 +14,15 @@ export type DispatchProjectMessageResult =
       readonly messageId: string;
       readonly recipientCount: number;
     }
-  | { readonly ok: false; readonly code: string };
+  | {
+      readonly ok: false;
+      readonly code: string;
+      readonly reason?: "hourly" | "unread_cap";
+      readonly detail?: "rate_limited_hourly" | "unread_cap";
+      readonly retryAfterSeconds?: number | null;
+      readonly retryAfterAt?: string | null;
+      readonly message?: string;
+    };
 
 export const dispatchProjectMessage = async (input: {
   readonly projectId: string;
@@ -49,7 +57,15 @@ export const dispatchProjectMessage = async (input: {
     senderUserId: input.actorUserId,
   });
   if (!rate.ok) {
-    return { ok: false, code: rate.code };
+    return {
+      ok: false,
+      code: rate.code,
+      reason: rate.reason,
+      detail: rate.detail,
+      retryAfterSeconds: rate.retryAfterSeconds,
+      retryAfterAt: rate.retryAfterAt,
+      message: rate.message,
+    };
   }
 
   const resolved = await resolveDispatchRecipients({

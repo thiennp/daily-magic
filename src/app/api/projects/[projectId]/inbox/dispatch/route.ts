@@ -40,12 +40,26 @@ export async function POST(
   });
   if (!result.ok) {
     const status =
+      result.code === "rate_limited" ||
+      result.detail === "rate_limited_hourly" ||
+      result.detail === "unread_cap" ||
       result.code === "rate_limited_hourly" ||
       result.code === "unread_cap" ||
       result.code === "rate_limited_daily"
         ? 429
         : 400;
-    return Response.json({ ok: false, errorMessage: result.code }, { status });
+    return Response.json(
+      {
+        ok: false,
+        errorMessage: result.message ?? result.code,
+        code: result.code,
+        reason: result.reason,
+        detail: result.detail,
+        retryAfterSeconds: result.retryAfterSeconds,
+        retryAfterAt: result.retryAfterAt,
+      },
+      { status },
+    );
   }
   return Response.json({
     ok: true,

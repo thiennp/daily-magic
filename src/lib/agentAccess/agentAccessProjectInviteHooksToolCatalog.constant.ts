@@ -9,7 +9,7 @@ export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDe
     {
       name: "project_dispatch",
       description:
-        'Send thin protocol metadata. Prefer toMembershipId (UUID from list_project_peers) for peer bots; keep toProjectDisplayName: "Owner" for the human; else toProjectDisplayName / toTeamLabel. Exactly one of toMembershipId | toProjectDisplayName | toTeamLabel. No broadcast/media/blobs/bodies. summary ≤200 chars; allowlisted refs (prUrl|commitSha|localPath|allowClaimId) only; bulky payloads via P2P/localPath. Rate 300/hour + max 300 unread.',
+        'Send thin protocol metadata. Prefer toMembershipId (UUID from list_project_peers) for peer bots; keep toProjectDisplayName: "Owner" for the human; else toProjectDisplayName / toTeamLabel. Exactly one of toMembershipId | toProjectDisplayName | toTeamLabel. No broadcast/media/blobs/bodies. summary ≤200 chars; allowlisted refs (prUrl|commitSha|localPath|allowClaimId) only; bulky payloads via P2P/localPath. Rate 300/hour + max 300 unread. On rate_limited tell your user and use retryAfterSeconds/retryAfterAt when present.',
       inputSchema: {
         type: "object",
         properties: {
