@@ -1,7 +1,6 @@
 import { classifyHumanInviteMiss } from "@/lib/projects/acl/humanInvites/classifyHumanInviteMiss";
 import { peekHumanInviteByToken } from "@/lib/projects/acl/humanInvites/peekHumanInviteByToken";
 import type { HumanInviteRole } from "@/features/projects/access/humanInvites/types/humanInviteUiContract.type";
-import { maskHumanInviteEmail } from "@/features/projects/access/humanInvites/utils/maskHumanInviteEmail";
 import { getUserById } from "@/lib/auth/userRepository";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
@@ -15,7 +14,7 @@ export type HumanInviteAcceptLoad =
       readonly role: HumanInviteRole;
       readonly expiresAt: string;
       readonly email: string | null;
-      /** From peek when API exposes requireEmailMatch (UI-ready ahead of merge). */
+      /** From peek/API when server exposes requireEmailMatch + invitedEmailMasked. */
       readonly requireEmailMatch: boolean;
       readonly invitedEmailMasked: string | null;
     }
@@ -102,12 +101,11 @@ export const loadHumanInviteAcceptPage = async (
     readonly invitedEmailMasked?: string | null;
   };
   const requireEmailMatch = peekedLock.requireEmailMatch === true;
+  // Arch soft: render server invitedEmailMasked only — no client-side mask fallback.
   const invitedEmailMasked =
     typeof peekedLock.invitedEmailMasked === "string"
       ? peekedLock.invitedEmailMasked
-      : requireEmailMatch
-        ? maskHumanInviteEmail(peeked.email)
-        : null;
+      : null;
 
   return {
     ok: true,
