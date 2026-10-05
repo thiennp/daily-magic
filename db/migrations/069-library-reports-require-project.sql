@@ -37,10 +37,18 @@ ALTER TABLE published_capabilities
 -- 2) At most one cloud Default / Personal without a Mac binding per owner.
 -- Deploy-safe: prod can already hold duplicates (user_projects.device_id is
 -- ON DELETE SET NULL, so removing a Mac turns its "Default"/"Personal" into a
--- second NULL-device row; the 031 index treats NULLs as distinct). A plain
+-- second NULL-device row; the 031 index treats NULLs as distinct). Extras are
+-- KEPT: this migration never deletes or re-points projects or their children
+-- (members, library, reports, messages, history). A plain
 -- CREATE UNIQUE INDEX would abort the whole migration on those rows, so only
 -- create each guard index when no duplicate exists. Personal is scoped to
 -- device_id IS NULL like Default (one Personal per Mac is legitimate).
+-- Drop first so a leftover index from any earlier/manual apply (including the
+-- old device-agnostic Personal index) never survives; re-created below only
+-- when the data allows it.
+DROP INDEX IF EXISTS user_projects_owner_default_null_device_idx;
+DROP INDEX IF EXISTS user_projects_owner_personal_idx;
+
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -54,7 +62,7 @@ BEGIN
       ON user_projects (owner_user_id)
       WHERE lower(name) = 'default' AND device_id IS NULL;
   ELSE
-    RAISE NOTICE '069: duplicate NULL-device Default projects; skipping user_projects_owner_default_null_device_idx';
+    RAISE NOTICE '069: duplicate NULL-device Default projects kept as-is (no delete, no re-point); skipping user_projects_owner_default_null_device_idx';
   END IF;
 
   IF NOT EXISTS (
@@ -68,20 +76,28 @@ BEGIN
       ON user_projects (owner_user_id)
       WHERE lower(name) = 'personal' AND device_id IS NULL;
   ELSE
-    RAISE NOTICE '069: duplicate NULL-device Personal projects; skipping user_projects_owner_personal_idx';
+    RAISE NOTICE '069: duplicate NULL-device Personal projects kept as-is (no delete, no re-point); skipping user_projects_owner_personal_idx';
   END IF;
 END
 $$;
 
 -- 3) Owners who still have orphans and need a private fallback project.
+-- Run owner = requester_user_id -> executor_user_id -> capability owner.
+-- NULL owners are never selected, so no Default/Personal is ever inserted
+-- without an owner (user_projects.owner_user_id is NOT NULL).
 WITH orphan_owners AS (
   SELECT owner_user_id AS owner_user_id
   FROM published_capabilities
   WHERE project_id IS NULL
+    AND owner_user_id IS NOT NULL
   UNION
-  SELECT requester_user_id AS owner_user_id
-  FROM agent_runs
-  WHERE project_id IS NULL
+  SELECT COALESCE(r.requester_user_id, r.executor_user_id, c.owner_user_id)
+    AS owner_user_id
+  FROM agent_runs r
+  LEFT JOIN published_capabilities c ON c.id = r.capability_id
+  WHERE r.project_id IS NULL
+    AND COALESCE(r.requester_user_id, r.executor_user_id, c.owner_user_id)
+      IS NOT NULL
 ),
 oldest AS (
   SELECT DISTINCT ON (p.owner_user_id)
@@ -170,6 +186,7 @@ WITH orphan_owners AS (
   SELECT DISTINCT owner_user_id
   FROM published_capabilities
   WHERE project_id IS NULL
+    AND owner_user_id IS NOT NULL
 ),
 oldest AS (
   SELECT DISTINCT ON (p.owner_user_id)
@@ -240,11 +257,21 @@ FROM target t
 WHERE c.owner_user_id = t.owner_user_id
   AND c.project_id IS NULL;
 
--- 4b) Backfill agent_runs (Reports)
-WITH orphan_owners AS (
-  SELECT DISTINCT requester_user_id AS owner_user_id
-  FROM agent_runs
-  WHERE project_id IS NULL
+-- 4b) Backfill agent_runs (Reports).
+--     Owner = requester_user_id -> executor_user_id -> capability owner.
+WITH run_owner AS (
+  SELECT
+    r.id AS run_id,
+    COALESCE(r.requester_user_id, r.executor_user_id, c.owner_user_id)
+      AS owner_user_id
+  FROM agent_runs r
+  LEFT JOIN published_capabilities c ON c.id = r.capability_id
+  WHERE r.project_id IS NULL
+),
+orphan_owners AS (
+  SELECT DISTINCT owner_user_id
+  FROM run_owner
+  WHERE owner_user_id IS NOT NULL
 ),
 oldest AS (
   SELECT DISTINCT ON (p.owner_user_id)
@@ -311,8 +338,9 @@ target AS (
 UPDATE agent_runs r
 SET project_id = t.project_id,
     updated_at = NOW()
-FROM target t
-WHERE r.requester_user_id = t.owner_user_id
+FROM run_owner o
+INNER JOIN target t ON t.owner_user_id = o.owner_user_id
+WHERE r.id = o.run_id
   AND r.project_id IS NULL;
 
 -- 4c) Safety net: any row still NULL (owner's projects missed every rule
@@ -331,13 +359,32 @@ WHERE c.owner_user_id = p.owner_user_id
 UPDATE agent_runs r
 SET project_id = p.project_id,
     updated_at = NOW()
-FROM (
+FROM agent_runs src
+LEFT JOIN published_capabilities c ON c.id = src.capability_id
+INNER JOIN (
   SELECT DISTINCT ON (owner_user_id) owner_user_id, id AS project_id
   FROM user_projects
   ORDER BY owner_user_id, created_at ASC, id ASC
-) p
-WHERE r.requester_user_id = p.owner_user_id
+) p ON p.owner_user_id =
+  COALESCE(src.requester_user_id, src.executor_user_id, c.owner_user_id)
+WHERE r.id = src.id
   AND r.project_id IS NULL;
+
+-- 4d) Report anything still unassigned (only possible for a row with no
+-- owner at all, which 003/012 NOT NULL owner columns forbid).
+DO $$
+DECLARE
+  cap_left BIGINT;
+  run_left BIGINT;
+BEGIN
+  SELECT COUNT(*) INTO cap_left FROM published_capabilities WHERE project_id IS NULL;
+  SELECT COUNT(*) INTO run_left FROM agent_runs WHERE project_id IS NULL;
+  IF cap_left > 0 OR run_left > 0 THEN
+    RAISE WARNING '069: % capabilities and % agent_runs still have NULL project_id (ownerless); left as-is, CHECK is NOT VALID',
+      cap_left, run_left;
+  END IF;
+END
+$$;
 
 -- 5) FK + required project_id, deploy-safe.
 -- FKs are added NOT VALID (no full-table validation scan / long lock, and an
