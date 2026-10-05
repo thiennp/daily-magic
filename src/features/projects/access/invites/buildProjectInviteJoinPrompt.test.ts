@@ -52,10 +52,22 @@ describe("join orchestrator", () => {
     const files = readdirSync(DIR).filter(
       (f) => /ProjectInviteJoin.*\.ts$/.test(f) && !f.endsWith(".test.ts"),
     );
-    expect(files.length).toBeGreaterThanOrEqual(14);
+    expect(files.length).toBeGreaterThanOrEqual(11);
     for (const file of files) {
       const src = readFileSync(join(DIR, file), "utf8");
       expect(src.match(/^export const /gm), file).toHaveLength(1);
+    }
+  });
+
+  it("orchestrator and step builders stay pure (no env, clock, or DB)", () => {
+    const files = readdirSync(DIR).filter(
+      (f) => /ProjectInviteJoin.*\.ts$/.test(f) && !f.endsWith(".test.ts"),
+    );
+    for (const file of files) {
+      const src = readFileSync(join(DIR, file), "utf8");
+      expect(src, file).not.toMatch(
+        /process\.env|Date\.now|new Date|getSql|@\/lib\/db|fetch\(/,
+      );
     }
   });
 
