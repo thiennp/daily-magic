@@ -1,0 +1,26 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "prompt-optimizer",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/prompt-optimizer/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 99,
+  "scoreOverall": 99,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "demo-expectations",
+      "pointsDeducted": 1,
+      "reason": "Storybook shows a connected Storybook Mac device; PM must know fixture is sample data, though MSW matches /api/agent-witch/devices shape."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Sample device fixture in sidebar"],
+  "mustFix": [],
+  "quickWins": [
+    "Mention Storybook Mac label in wave coordinator notes for external demos"
+  ]
+}
