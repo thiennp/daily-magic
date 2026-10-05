@@ -1,51 +1,18 @@
-import { randomUUID } from "node:crypto";
-
-import { approveProjectAccessRequest } from "@/lib/projects/acl/approveProjectAccessRequest";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
-import { isAgentSameProjectOwner } from "@/lib/agentAccess/resolveAgentLinkedOwnerUserId";
-import { isAgentUserId } from "@/lib/projects/acl/isAgentUser";
-import mapProjectAccessRequestRow from "@/lib/projects/acl/mapProjectAccessRequestRow";
+import { insertOpenPendingAccessRequest } from "@/lib/projects/acl/insertOpenPendingAccessRequest";
 import { PROJECT_ACL_DEFAULT_MEMBER_SCOPES } from "@/lib/projects/acl/projectAclScopes.constant";
 import { resolveRedeemSuggestedDisplayName } from "@/lib/projects/acl/invites/resolveRedeemSuggestedDisplayName";
-import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
-import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
-import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
+import type CreateProjectAccessRequestResult from "@/lib/projects/acl/types/CreateProjectAccessRequestResult.type";
 import { checkProjectMembershipStatus } from "@/lib/projects/acl/checkProjectMembershipStatus";
+import { tryAutoApproveCreatedAccessRequest } from "@/lib/projects/acl/tryAutoApproveCreatedAccessRequest";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
-import { asRowArray, getSql } from "@/lib/db";
 
-export type CreateProjectAccessRequestResult =
-  | {
-      readonly ok: true;
-      readonly status: "pending";
-      readonly request: ProjectAccessRequestRecord;
-      readonly membership?: undefined;
-      readonly projectApiKey?: undefined;
-    }
-  | {
-      readonly ok: true;
-      readonly status: "active";
-      readonly request: ProjectAccessRequestRecord;
-      readonly membership: ProjectMembershipRecord;
-      readonly projectApiKey: string | null;
-    }
-  | {
-      readonly ok: false;
-      readonly code:
-        | "not_found"
-        | "already_member"
-        | "already_pending"
-        | "owner"
-        | "display_name_invalid"
-        | "display_name_reserved"
-        | "display_name_required"
-        | "display_name_taken";
-    };
+export type { default as CreateProjectAccessRequestResult } from "@/lib/projects/acl/types/CreateProjectAccessRequestResult.type";
 
 /**
- * Open request without invite: auto-finalize only when agent is linked
- * same-owner (owner_user_id === project.owner_user_id) and a display name
- * is available for agents. Strangers stay pending.
+ * Open request without invite. Auto-finalize when the agent is same-owner
+ * or owned by an active human member/owner seat (not viewer), and a display
+ * name is available for agents. Otherwise stays pending.
  */
 export const createProjectAccessRequest = async (input: {
   readonly projectId: string;
@@ -82,72 +49,29 @@ export const createProjectAccessRequest = async (input: {
   }
 
   await ensureProjectAclSchema();
-  const sql = getSql();
   const scopes = [...PROJECT_ACL_DEFAULT_MEMBER_SCOPES];
   const reason =
     input.reason && input.reason.trim().length > 0
       ? input.reason.trim().slice(0, 200)
       : null;
-  const rows = asRowArray(
-    await sql`
-      INSERT INTO project_access_requests (
-        id, project_id, requester_user_id, reason, requested_scopes, status,
-        team_label, suggested_project_display_name
-      )
-      VALUES (
-        ${randomUUID()},
-        ${input.projectId},
-        ${input.requesterUserId},
-        ${reason},
-        ${scopes},
-        'pending',
-        ${input.teamLabel ?? null},
-        ${nameResult.name}
-      )
-      RETURNING *
-    `,
-  );
-  if (rows.length === 0) {
-    return { ok: false, code: "already_pending" };
-  }
-  const request = mapProjectAccessRequestRow(rows[0]);
-  await writeProjectAccessAudit({
+  const inserted = await insertOpenPendingAccessRequest({
     projectId: input.projectId,
-    actorUserId: input.requesterUserId,
-    action: "request",
-    targetUserId: input.requesterUserId,
-    detail: { requestId: request.id, teamLabel: input.teamLabel ?? null },
-  });
-
-  const sameOwner = await isAgentSameProjectOwner({
-    agentUserId: input.requesterUserId,
-    projectOwnerUserId: project.ownerUserId,
-  });
-  if (!sameOwner) {
-    return { ok: true, status: "pending", request };
-  }
-
-  const requesterIsAgent = await isAgentUserId(input.requesterUserId);
-  if (requesterIsAgent && nameResult.name === null) {
-    return { ok: true, status: "pending", request };
-  }
-
-  const approved = await approveProjectAccessRequest({
-    projectId: input.projectId,
-    requestId: request.id,
-    ownerUserId: project.ownerUserId,
+    requesterUserId: input.requesterUserId,
+    reason,
     teamLabel: input.teamLabel ?? null,
-    projectDisplayName: nameResult.name,
+    suggestedName: nameResult.name,
     scopes,
   });
-  if (!approved.ok) {
-    return { ok: true, status: "pending", request };
+  if (!inserted.ok) {
+    return { ok: false, code: "already_pending" };
   }
-  return {
-    ok: true,
-    status: "active",
-    request: approved.request,
-    membership: approved.membership,
-    projectApiKey: approved.projectApiKey,
-  };
+
+  return tryAutoApproveCreatedAccessRequest({
+    project,
+    request: inserted.request,
+    requesterUserId: input.requesterUserId,
+    teamLabel: input.teamLabel ?? null,
+    suggestedName: nameResult.name,
+    scopes,
+  });
 };
