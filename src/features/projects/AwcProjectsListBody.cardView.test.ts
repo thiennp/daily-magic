@@ -25,9 +25,10 @@ describe("Awc projects card view", () => {
     expect(card).toContain("APP_SURFACE_NESTED_CARD_CLASS");
     expect(card).toContain("shouldShowProjectEditOnMacHelperText");
     expect(menu).toContain('aria-label="Project actions"');
-    expect(menu).toContain("buildAgentComposerHref");
-    expect(menu).toContain("customTask: true");
+    expect(menu).toContain("buildNavConsolidationNewTaskHref");
     expect(menu).toContain("projectId");
+    expect(menu).not.toContain("buildAgentComposerHref");
+    expect(menu).not.toContain("customTask");
     expect(menu).toContain("toggleRef={toggleRef}");
     expect(menuItems).toContain("View details");
     expect(menuItems).toContain("Assign tasks");
