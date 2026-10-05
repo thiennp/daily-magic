@@ -43,7 +43,7 @@ func (a *App) onReady() {
 	a.statusItem.Disable()
 	systray.AddSeparator()
 
-	a.openConnect = systray.AddMenuItem("Open Connect this Mac…", "Open Connect this Mac")
+	a.openConnect = systray.AddMenuItem("Open Connect this computer…", "Open Connect this computer")
 	a.installHint = systray.AddMenuItem("Install hint", "Install via terminal")
 	a.installHint.Disable()
 	a.startItem = systray.AddMenuItem("Start Agent Witch", "Start Agent Witch")

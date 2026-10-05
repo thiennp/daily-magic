@@ -47,7 +47,7 @@ func DeriveMenu(state RuntimeState, errorMessage string) MenuModel {
 	case StateNotInstalled:
 		model.InstallHint = InstallHintCurl
 		model.Items = append(model.Items,
-			MenuItem{Action: ActionOpenConnect, Title: "Open Connect this Mac…", Enabled: true},
+			MenuItem{Action: ActionOpenConnect, Title: "Open Connect this computer…", Enabled: true},
 			MenuItem{Action: ActionInstallHint, Title: "Install: " + InstallHintCurl, Enabled: false},
 		)
 	case StateStopped:

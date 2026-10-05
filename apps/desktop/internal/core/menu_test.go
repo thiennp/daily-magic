@@ -11,6 +11,7 @@ func TestDeriveMenuNotInstalled(t *testing.T) {
 		t.Fatalf("hint: %s", model.InstallHint)
 	}
 	assertHasAction(t, model, ActionOpenConnect)
+	assertOpenConnectTitle(t, model)
 	assertNoAction(t, model, ActionStart)
 	assertHasAction(t, model, ActionQuit)
 }
@@ -76,4 +77,17 @@ func assertNoAction(t *testing.T, model MenuModel, action MenuAction) {
 			t.Fatalf("unexpected action %s", action)
 		}
 	}
+}
+
+func assertOpenConnectTitle(t *testing.T, model MenuModel) {
+	t.Helper()
+	for _, item := range model.Items {
+		if item.Action == ActionOpenConnect {
+			if item.Title != "Open Connect this computer…" {
+				t.Fatalf("open connect title: %q", item.Title)
+			}
+			return
+		}
+	}
+	t.Fatal("missing open connect item")
 }

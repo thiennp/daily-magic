@@ -9,8 +9,8 @@ export const AGENT_WITCH_LOCAL_LINUX_APP_DEB_ASSET_NAME =
 /** Current Linux tray app release tag. Bump when a new awl-linux-v* tag is cut. */
 export const AGENT_WITCH_LOCAL_LINUX_APP_RELEASE_TAG = "awl-linux-v0.1.0";
 
-/** Flip to true only after the awl-linux-v0.1.0 release exists; until then the Linux row stays hidden (asset URLs 404). */
-export const IS_AGENT_WITCH_LOCAL_LINUX_APP_RELEASED = false;
+/** Release awl-linux-v0.1.0 exists; flip to false to hide the Linux download row. */
+export const IS_AGENT_WITCH_LOCAL_LINUX_APP_RELEASED = true;
 
 const AGENT_WITCH_LOCAL_LINUX_APP_RELEASES_DOWNLOAD_BASE =
   "https://github.com/thiennp/daily-magic/releases/download";

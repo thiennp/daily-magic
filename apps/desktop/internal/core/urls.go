@@ -12,7 +12,7 @@ func StatusURL() string {
 	return fmt.Sprintf("http://%s:%d%s", LocalAppHost, LocalAppPort, StatusPath)
 }
 
-// ConnectURL returns the cloud home URL (Connect this Mac entry).
+// ConnectURL returns the cloud home URL (Connect this computer entry).
 func ConnectURL() string {
 	return CloudOrigin
 }
