@@ -39,19 +39,20 @@ export const recordProjectPeerActivity = async (input: {
         AND d.b2b_state IS NOT NULL
     `,
   );
-  let moved = 0;
+  const applied: boolean[] = [];
   for (const row of rows) {
     const from = parseProjectB2bState(row.b2b_state);
     if (from === null || !nextProjectB2bState(from, event).ok) {
       continue;
     }
-    const applied = await applyProjectB2bActivityTransition({
-      deliveryId: String(row.id),
-      from,
-      event,
-      now: input.now,
-    });
-    moved += applied ? 1 : 0;
+    applied.push(
+      await applyProjectB2bActivityTransition({
+        deliveryId: String(row.id),
+        from,
+        event,
+        now: input.now,
+      }),
+    );
   }
-  return { matched: rows.length, moved };
+  return { matched: rows.length, moved: applied.filter(Boolean).length };
 };

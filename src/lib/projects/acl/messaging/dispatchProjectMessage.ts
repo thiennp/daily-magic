@@ -6,7 +6,7 @@ import { orchestrateProjectBotToBotMessage } from "@/lib/projects/acl/messaging/
 import { parseProjectDispatchPayload } from "@/lib/projects/acl/messaging/parseProjectDispatchPayload";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 import { resolveDispatchRecipients } from "@/lib/projects/acl/messaging/resolveDispatchRecipients";
-import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
+import { writeProjectMessageDispatchAudit } from "@/lib/projects/acl/messaging/writeProjectMessageDispatchAudit";
 
 export type DispatchProjectMessageResult =
   | {
@@ -57,15 +57,8 @@ export const dispatchProjectMessage = async (input: {
     senderUserId: input.actorUserId,
   });
   if (!rate.ok) {
-    return {
-      ok: false,
-      code: rate.code,
-      reason: rate.reason,
-      detail: rate.detail,
-      retryAfterSeconds: rate.retryAfterSeconds,
-      retryAfterAt: rate.retryAfterAt,
-      message: rate.message,
-    };
+    // Same six fields (code, reason, detail, retryAfter*, message) as the result.
+    return rate;
   }
 
   const resolved = await resolveDispatchRecipients({
@@ -103,18 +96,12 @@ export const dispatchProjectMessage = async (input: {
     dispatchRecipients: resolved.recipients,
     now: new Date(),
   });
-  await writeProjectAccessAudit({
+  await writeProjectMessageDispatchAudit({
     projectId: input.projectId,
     actorUserId: input.actorUserId,
-    action: "msg.dispatch",
-    detail: {
-      messageId: inserted.messageId,
-      kind: parsed.kind,
-      recipientCount: resolved.recipients.length,
-      toMembershipId: parsed.toMembershipId,
-      toProjectDisplayName: parsed.toProjectDisplayName,
-      toTeamLabel: parsed.toTeamLabel,
-    },
+    messageId: inserted.messageId,
+    recipientCount: resolved.recipients.length,
+    parsed,
   });
   return {
     ok: true,
