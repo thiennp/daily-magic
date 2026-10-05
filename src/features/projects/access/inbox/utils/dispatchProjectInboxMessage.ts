@@ -11,7 +11,7 @@ const readJson = async (response: Response): Promise<unknown | null> => {
   }
 };
 
-/** POST /api/projects/:projectId/inbox/dispatch — owner → bot. */
+/** POST /api/projects/:projectId/inbox/dispatch — owner → bot or computer. */
 export const dispatchProjectInboxMessage = async (input: {
   readonly projectId: string;
   readonly toMembershipId: string;
@@ -97,10 +97,16 @@ export const dispatchProjectInboxMessage = async (input: {
         ? null
         : undefined;
 
+  const cause =
+    body.cause === "offline" || body.cause === "too_old"
+      ? body.cause
+      : undefined;
+
   return {
     ok: false,
     code,
     errorMessage: errorMessage ?? "Could not send task.",
+    cause,
     reason,
     detail,
     retryAfterSeconds,

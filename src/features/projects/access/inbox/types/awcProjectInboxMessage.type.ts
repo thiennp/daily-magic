@@ -46,6 +46,7 @@ export type DispatchProjectInboxResult =
       readonly ok: false;
       readonly code: string | null;
       readonly errorMessage: string;
+      readonly cause?: "offline" | "too_old";
       readonly reason?: "hourly" | "unread_cap";
       readonly detail?: "rate_limited_hourly" | "unread_cap";
       readonly retryAfterSeconds?: number | null;

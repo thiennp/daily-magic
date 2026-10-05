@@ -21,5 +21,14 @@ export const mapInboxDispatchError = (
   if (result.code === "recipient_not_found") {
     return AWC_PROJECT_INBOX_COPY.dispatchRecipientMissing;
   }
+  if (result.code === "computer_not_assignable") {
+    if (result.cause === "offline") {
+      return AWC_PROJECT_INBOX_COPY.dispatchComputerOffline;
+    }
+    if (result.cause === "too_old") {
+      return AWC_PROJECT_INBOX_COPY.dispatchComputerNeedsUpdate;
+    }
+    return AWC_PROJECT_INBOX_COPY.dispatchComputerNotAssignable;
+  }
   return result.errorMessage || AWC_PROJECT_INBOX_COPY.dispatchFailed;
 };
