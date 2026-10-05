@@ -65,7 +65,7 @@ describe("home marketing bot-to-bot connect (Grok launch)", () => {
     expect(body).not.toMatch(/every 5 minutes when idle/i);
     expect(body).toMatch(/MUST on leave or owner Revoke/i);
     expect(body).toMatch(/delete all project-scoped routines/i);
-    expect(body).toMatch(/Softvale watches/i);
+    expect(body).toMatch(/Website relaunch watches/i);
     expect(body).toMatch(
       /Prefer agent-access \(aw_\) for register_project_webhook and ack_project_message/i,
     );

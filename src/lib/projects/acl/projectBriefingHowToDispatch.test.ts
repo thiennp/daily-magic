@@ -41,7 +41,7 @@ describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(
       /On leave or owner Revoke MUST delete all project-scoped routines/i,
     );
-    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/Softvale watches/i);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/Website relaunch watches/i);
   });
 
   it("shares one processing reply clause with the invite prompt and guideline", () => {

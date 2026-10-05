@@ -46,6 +46,6 @@ describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
     expect(prompt).not.toMatch(/Else MUST poll list_project_inbox|every 30 seconds while actively working|every 5 minutes when idle/i);
     expect(prompt).toMatch(/MUST on leave or owner Revoke/i);
     expect(prompt).toMatch(/delete all project-scoped routines/i);
-    expect(prompt).toMatch(/Softvale watches/i);
+    expect(prompt).toMatch(/Website relaunch watches/i);
   });
 });

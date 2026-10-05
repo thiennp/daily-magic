@@ -102,7 +102,7 @@ describe("buildProjectInviteAgentPrompt", () => {
     expect(prompt).toMatch(/cannot revoke others/i);
     expect(prompt).toMatch(/MUST on leave or owner Revoke/i);
     expect(prompt).toMatch(/delete all project-scoped routines/i);
-    expect(prompt).toMatch(/Softvale watches/i);
+    expect(prompt).toMatch(/Website relaunch watches/i);
     expect(prompt).toMatch(/MUST on connect \(webhook-first\)/i);
     expect(prompt).toMatch(/Inbox wake is webhook-only, via a Grok routine/i);
     expect(prompt).toMatch(/do not poll list_project_inbox on a timer/i);
