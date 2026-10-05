@@ -11,6 +11,7 @@ import {
   PROJECT_HISTORY_SKILLS_DIR_NAME,
   PROJECT_HISTORY_SKILLS_DRAFTS_DIR_NAME,
   PROJECT_HISTORY_SKILLS_TOMBSTONES_DIR_NAME,
+  PROJECT_HISTORY_SKILLGEN_DIR_NAME,
 } from "./projectHistoryPaths.constant";
 
 export { isValidProjectComputerHistoryProjectId };
@@ -37,5 +38,6 @@ export const ensureProjectDataTree = (projectId: string): string => {
   ensureDir0700(
     path.join(skillsDir, PROJECT_HISTORY_SKILLS_TOMBSTONES_DIR_NAME),
   );
+  ensureDir0700(path.join(projectDataDir, PROJECT_HISTORY_SKILLGEN_DIR_NAME));
   return projectDataDir;
 };
