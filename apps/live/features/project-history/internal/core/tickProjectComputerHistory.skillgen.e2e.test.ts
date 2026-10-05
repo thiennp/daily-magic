@@ -123,4 +123,53 @@ describe("tickProjectComputerHistory skillgen e2e", () => {
     expect(fs.existsSync(path.join(tempRoot, "p1", "skillgen"))).toBe(false);
     expect(fs.existsSync(draftsDir)).toBe(false);
   });
+
+  it("does not merge new messages into a parked episode or move the cursor past them", async () => {
+    writeLocalProjectHistoryState({ projectId: "p1", state: "on_ready" });
+    for (let i = 0; i < 20; i += 1) {
+      writeProjectHistoryMessage({
+        projectId: "p1",
+        messageId: `m${i}`,
+        message: {
+          messageId: `m${i}`,
+          summary:
+            i === 19
+              ? "all done — tests green"
+              : `step ${i}: do the work carefully`,
+        },
+      });
+    }
+    const tick = () =>
+      tickProjectComputerHistory({
+        listProjectIds: () => ["p1"],
+        pullSkills: pullMock,
+        cloudApi: { appOrigin: "https://example.test", pairingToken: "tok" },
+        ownerLlm: null,
+      });
+    const readEpisodes = () =>
+      JSON.parse(
+        fs.readFileSync(path.join(tempRoot, "p1", "skillgen", "episodes.json"), "utf8"),
+      ) as {
+        cursorMessageId: string | null;
+        episodes: { state: string; messageIds: string[] }[];
+      };
+
+    await tick();
+    const parked = readEpisodes();
+    expect(parked.episodes).toHaveLength(1);
+    expect(parked.episodes[0]!.state).not.toBe("CAPTURING");
+    expect(parked.episodes[0]!.messageIds).toHaveLength(20);
+    expect(parked.cursorMessageId).toBe("m19");
+
+    writeProjectHistoryMessage({
+      projectId: "p1",
+      messageId: "m20",
+      message: { messageId: "m20", summary: "a new message after parking" },
+    });
+    await tick();
+    const after = readEpisodes();
+    expect(after.episodes[0]!.messageIds).not.toContain("m20");
+    expect(after.episodes[0]!.messageIds).toHaveLength(20);
+    expect(after.cursorMessageId).toBe("m19");
+  });
 });

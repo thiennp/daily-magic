@@ -25,10 +25,8 @@ export const persistProjectHistorySkillgenAdvance = (input: {
   ) {
     cursorMessageId =
       result.episode.messageIds[result.episode.messageIds.length - 1]!;
-    cursorSavedAtMs =
-      result.episode.closedAtMs ??
-      result.episode.lastMessageAtMs ??
-      cursorSavedAtMs;
+    // Pair the cursor id with that last message's savedAt, not closedAtMs.
+    cursorSavedAtMs = result.episode.lastMessageAtMs ?? cursorSavedAtMs;
   }
 
   writeProjectHistorySkillgenEpisodes({

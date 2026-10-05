@@ -105,7 +105,9 @@ export const createDefaultProjectHistorySkillgenRunner = (
           mergeDraftId: null,
           tokensUsed: 0,
         };
-      } else if (sinceCursor.length > 0) {
+      } else if (episode.state === "CAPTURING" && sinceCursor.length > 0) {
+        // Merge only while capturing; a parked episode (e.g. DEDUP with no owner
+        // LLM) must not absorb new messages or the cursor would skip them.
         const known = new Set(episode.messageIds);
         const mergedIds = [...episode.messageIds];
         let lastMessageAtMs = episode.lastMessageAtMs;
