@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 
+import AwcProjectAccessComputerMembersSection from "@/features/projects/access/AwcProjectAccessComputerMembersSection";
 import AwcProjectAccessFoldersSection from "@/features/projects/access/AwcProjectAccessFoldersSection";
 import AwcProjectAccessMembersList from "@/features/projects/access/AwcProjectAccessMembersList";
 import AwcProjectAccessPendingList from "@/features/projects/access/AwcProjectAccessPendingList";
@@ -10,6 +11,7 @@ import AwcProjectInvitesPanel from "@/features/projects/access/invites/AwcProjec
 import AwcProjectInboxSection from "@/features/projects/access/inbox/AwcProjectInboxSection";
 import AwcHumanPeopleSection from "@/features/projects/access/humanInvites/AwcHumanPeopleSection";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
+import { isComputerAccessMember } from "@/features/projects/access/utils/isComputerAccessMember";
 import type { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 
 type AccessApi = ReturnType<typeof useAwcProjectAccess>;
@@ -19,6 +21,8 @@ interface AwcProjectAccessPanelBodyProps {
   readonly access: AccessApi;
   readonly ownerEmail?: string | null;
   readonly ownerDisplayName?: string | null;
+  /** Signed-in owner's user id — "Your computer" sub-line on computer rows. */
+  readonly viewerUserId?: string | null;
 }
 
 export default function AwcProjectAccessPanelBody({
@@ -26,10 +30,15 @@ export default function AwcProjectAccessPanelBody({
   access,
   ownerEmail = null,
   ownerDisplayName = null,
+  viewerUserId = null,
 }: AwcProjectAccessPanelBodyProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
   const botMembers = useMemo(
     () => access.members.filter((member) => member.isAgent),
+    [access.members],
+  );
+  const computerMembers = useMemo(
+    () => access.members.filter(isComputerAccessMember),
     [access.members],
   );
 
@@ -78,6 +87,11 @@ export default function AwcProjectAccessPanelBody({
           />
         </div>
       </AwcProjectAccessSection>
+
+      <AwcProjectAccessComputerMembersSection
+        computers={computerMembers}
+        viewerUserId={viewerUserId}
+      />
 
       <AwcProjectAccessSection
         id="project-access-invites"

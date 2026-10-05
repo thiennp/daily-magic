@@ -7,7 +7,7 @@ export type AccessMemberForHumanFilter = {
   readonly role?: string;
   readonly status?: string;
   readonly isAgent: boolean;
-  readonly memberKind?: "human" | "bot" | string;
+  readonly memberKind?: "human" | "bot" | "computer" | string;
   readonly email?: string | null;
   readonly displayName?: string | null;
   readonly createdAt?: string;
@@ -28,7 +28,7 @@ export const filterJoinedHumanMembers = (
       if (member.memberKind === "human") {
         return true;
       }
-      if (member.memberKind === "bot") {
+      if (member.memberKind === "bot" || member.memberKind === "computer") {
         return false;
       }
       return !member.isAgent;

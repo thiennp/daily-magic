@@ -16,6 +16,7 @@ export type AwcProjectAccessOwnerPanelProps = {
   readonly className?: string;
   readonly ownerEmail?: string | null;
   readonly ownerDisplayName?: string | null;
+  readonly viewerUserId?: string | null;
 };
 
 /** Owner Bots & people panel — access body + skills. */
@@ -24,6 +25,7 @@ export default function AwcProjectAccessOwnerPanel({
   className = "",
   ownerEmail = null,
   ownerDisplayName = null,
+  viewerUserId = null,
 }: AwcProjectAccessOwnerPanelProps) {
   const access = useAwcProjectAccess(projectId);
   const copy = AWC_PROJECT_ACCESS_COPY;
@@ -63,6 +65,7 @@ export default function AwcProjectAccessOwnerPanel({
           access={access}
           ownerEmail={ownerEmail}
           ownerDisplayName={ownerDisplayName}
+          viewerUserId={viewerUserId}
         />
       ) : null}
 

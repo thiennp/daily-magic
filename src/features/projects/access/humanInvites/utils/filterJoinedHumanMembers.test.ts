@@ -46,4 +46,18 @@ describe("filterJoinedHumanMembers", () => {
     expect(rows).toHaveLength(1);
     expect(rows[0]?.role).toBe("viewer");
   });
+
+  it("excludes computer seats (isAgent=false) from People Joined", () => {
+    const rows = filterJoinedHumanMembers([
+      {
+        id: "c1",
+        userId: "owner-1",
+        role: "member",
+        status: "active",
+        isAgent: false,
+        memberKind: "computer",
+      },
+    ]);
+    expect(rows).toHaveLength(0);
+  });
 });

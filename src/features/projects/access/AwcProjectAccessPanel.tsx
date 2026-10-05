@@ -10,6 +10,7 @@ interface AwcProjectAccessPanelProps {
   readonly pageActorRole?: ProjectPageActorRole;
   readonly ownerEmail?: string | null;
   readonly ownerDisplayName?: string | null;
+  readonly viewerUserId?: string | null;
 }
 
 export default function AwcProjectAccessPanel({
@@ -18,6 +19,7 @@ export default function AwcProjectAccessPanel({
   pageActorRole = "owner",
   ownerEmail = null,
   ownerDisplayName = null,
+  viewerUserId = null,
 }: AwcProjectAccessPanelProps) {
   if (pageActorRole === "owner") {
     return (
@@ -26,6 +28,7 @@ export default function AwcProjectAccessPanel({
         className={className}
         ownerEmail={ownerEmail}
         ownerDisplayName={ownerDisplayName}
+        viewerUserId={viewerUserId}
       />
     );
   }
