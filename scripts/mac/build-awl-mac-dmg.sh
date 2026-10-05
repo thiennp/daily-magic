@@ -31,13 +31,20 @@ echo "Building ${APP_NAME} ${VERSION} (${BUILD_NUMBER})…"
 rm -rf "${DIST_DIR}"
 mkdir -p "${MACOS_DIR}" "${RESOURCES_DIR}"
 
-swift build -c release --package-path "${PACKAGE_DIR}"
+swift build -c release --package-path "${PACKAGE_DIR}" --arch arm64 --arch x86_64
 
-BIN_PATH="$(swift build -c release --package-path "${PACKAGE_DIR}" --show-bin-path)/${APP_NAME}"
+BIN_PATH="$(swift build -c release --package-path "${PACKAGE_DIR}" --arch arm64 --arch x86_64 --show-bin-path)/${APP_NAME}"
 if [[ ! -f "${BIN_PATH}" ]]; then
   echo "Release binary missing at ${BIN_PATH}" >&2
   exit 1
 fi
+
+LIPO_INFO="$(lipo -info "${BIN_PATH}" 2>/dev/null || true)"
+if [[ "${LIPO_INFO}" != *"arm64"* ]] || [[ "${LIPO_INFO}" != *"x86_64"* ]]; then
+  echo "Universal binary missing arm64 and/or x86_64 (lipo -info: ${LIPO_INFO})" >&2
+  exit 1
+fi
+echo "Universal binary OK: ${LIPO_INFO}"
 
 cp "${BIN_PATH}" "${MACOS_DIR}/${APP_NAME}"
 chmod +x "${MACOS_DIR}/${APP_NAME}"
