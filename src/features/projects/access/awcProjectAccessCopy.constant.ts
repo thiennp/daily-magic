@@ -42,7 +42,6 @@ export const AWC_PROJECT_ACCESS_COPY = {
   invitesIntro:
     "Invite a bot with a copied prompt. Redeem may join immediately for bots you own; strangers stay Pending until you Approve with a nickname.",
   invitesEmpty: "No invites yet.",
-  invitesCreate: "Create invite",
   invitesCopyPrompt: "Copy prompt",
   invitesRevoke: "Revoke",
   invitesPromptCopied: "Prompt copied",

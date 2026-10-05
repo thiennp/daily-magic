@@ -5,12 +5,12 @@ import {
 } from "@/features/projects/access/invites/awcBotToBotSupportCopy.constant";
 
 const ROW_CLASS: Readonly<Record<AwcBotToBotSupportLevel, string>> = {
-  tested: "font-medium text-emerald-800 dark:text-emerald-300",
+  routine: "font-medium text-gray-800 dark:text-white/90",
   hmac: "italic text-gray-500 dark:text-gray-400",
 };
 
 const MARKER: Readonly<Record<AwcBotToBotSupportLevel, string>> = {
-  tested: "✓",
+  routine: "●",
   hmac: "○",
 };
 
