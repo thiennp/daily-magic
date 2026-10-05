@@ -1,15 +1,12 @@
 import {
-  PROJECT_MESSAGE_KIND_PEER_SILENT,
-  PROJECT_MESSAGE_KIND_PEER_SILENT_BLOCKED,
+  PROJECT_MESSAGE_LIFECYCLE_KINDS,
+  PROJECT_MESSAGE_SYSTEM_NOTICE_KINDS,
 } from "@/lib/projects/acl/messaging/projectMessage.constants";
 
-/** Pure peer/system notices — listing may still make these delete-on-read eligible. */
+/** Peer/system notices — listing may still make these delete-on-read eligible. */
 const NOTICE_KINDS = new Set<string>([
-  "peer.joined",
-  "peer.left",
-  "peer.renamed",
-  PROJECT_MESSAGE_KIND_PEER_SILENT,
-  PROJECT_MESSAGE_KIND_PEER_SILENT_BLOCKED,
+  ...PROJECT_MESSAGE_LIFECYCLE_KINDS,
+  ...PROJECT_MESSAGE_SYSTEM_NOTICE_KINDS,
 ]);
 
 /**

@@ -83,6 +83,7 @@ export const PROJECT_MESSAGE_UNREAD_CAP = readPositiveIntEnv(
 export const PROJECT_MESSAGE_LIFECYCLE_KINDS = [
   "peer.joined",
   "peer.left",
+  "peer.renamed",
   ...PROJECT_MESSAGE_SYSTEM_NOTICE_KINDS,
 ] as const;
 /** Throttle for opportunistic purge (ensure / dispatch / list_inbox). */
