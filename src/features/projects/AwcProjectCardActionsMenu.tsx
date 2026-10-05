@@ -17,6 +17,7 @@ interface AwcProjectCardActionsMenuProps {
   readonly editCta: ProjectEditOnMacCta;
   readonly editHelperId: string | undefined;
   readonly onProjectDeleted?: () => void;
+  readonly canDelete: boolean;
 }
 
 export default function AwcProjectCardActionsMenu({
@@ -25,6 +26,7 @@ export default function AwcProjectCardActionsMenu({
   editCta,
   editHelperId,
   onProjectDeleted,
+  canDelete,
 }: AwcProjectCardActionsMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
@@ -68,6 +70,7 @@ export default function AwcProjectCardActionsMenu({
             projectId={projectId}
             projectName={projectName}
             isDefaultProject={isDefaultUserProject({ name: projectName })}
+            canDelete={canDelete}
             assignTasksHref={assignTasksHref}
             editCta={editCta}
             editHelperId={editHelperId}

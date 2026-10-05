@@ -7,6 +7,7 @@ import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import AwcProjectCardActionsMenu from "@/features/projects/AwcProjectCardActionsMenu";
 import AwcProjectPresenceBadge from "@/features/projects/AwcProjectPresenceBadge";
 import useAwcProjectDevicePresentation from "@/features/projects/hooks/useAwcProjectDevicePresentation";
+import useCanDeleteOwnedProject from "@/features/projects/hooks/useCanDeleteOwnedProject";
 import { shouldShowProjectEditOnMacHelperText } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import { APP_SURFACE_NESTED_CARD_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import formatProjectCompositionCountsLine from "@/lib/projects/formatProjectCompositionCountsLine";
@@ -38,7 +39,7 @@ export default function AwcProjectCard({
     displayNameById,
     localTokenHash,
   });
-
+  const canDelete = useCanDeleteOwnedProject(project.ownerUserId);
   const editHelperId = useId();
   const listTitle = resolveProjectListCardTitle(project);
   const folderPathDisplay = formatProjectFolderPathForList(project.folderPath);
@@ -85,6 +86,7 @@ export default function AwcProjectCard({
               editCta={editCta}
               editHelperId={showHelperText ? editHelperId : undefined}
               onProjectDeleted={onProjectDeleted}
+              canDelete={canDelete}
             />
           </div>
         </div>

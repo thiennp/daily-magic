@@ -13,6 +13,7 @@ interface AwcProjectCardActionsMenuItemsProps {
   readonly projectId: string;
   readonly projectName: string;
   readonly isDefaultProject: boolean;
+  readonly canDelete: boolean;
   readonly assignTasksHref: string;
   readonly editCta: ProjectEditOnMacCta;
   readonly editHelperId: string | undefined;
@@ -24,6 +25,7 @@ export default function AwcProjectCardActionsMenuItems({
   projectId,
   projectName,
   isDefaultProject,
+  canDelete,
   assignTasksHref,
   editCta,
   editHelperId,
@@ -86,7 +88,7 @@ export default function AwcProjectCardActionsMenuItems({
           </button>
         )}
       </li>
-      {isDefaultProject ? null : (
+      {canDelete && !isDefaultProject ? (
         <AwcProjectDeleteMenuItem
           projectId={projectId}
           projectName={projectName}
@@ -95,7 +97,7 @@ export default function AwcProjectCardActionsMenuItems({
             onProjectDeleted?.();
           }}
         />
-      )}
+      ) : null}
     </>
   );
 }
