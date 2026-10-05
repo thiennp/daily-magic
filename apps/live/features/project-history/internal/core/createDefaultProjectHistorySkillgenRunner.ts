@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 
 import { advanceProjectHistorySkillgenEpisode } from "./advanceProjectHistorySkillgenEpisode";
+import { attachProjectHistoryPitfallsAfterDraft } from "./attachProjectHistoryPitfallsAfterDraft";
 import type { AdvanceProjectHistorySkillgenMessage } from "./advanceProjectHistorySkillgenEpisode";
 import { extractProjectHistoryMessageText } from "./extractProjectHistoryMessageText";
 import { findActiveProjectHistorySkillgenEpisode } from "./findActiveProjectHistorySkillgenEpisode";
@@ -158,6 +159,25 @@ export const createDefaultProjectHistorySkillgenRunner = (
         result,
         nowMs,
       });
+
+      if (
+        result.draftWritten !== null &&
+        result.episode.state === "AWAITING_REVIEW"
+      ) {
+        const latestEpisodes = [
+          ...episodesFile.episodes.filter(
+            (row) => row.episodeId !== result.episode.episodeId,
+          ),
+          result.episode,
+        ];
+        attachProjectHistoryPitfallsAfterDraft({
+          projectId: input.projectId,
+          successEpisode: result.episode,
+          episodes: latestEpisodes,
+          draftWritten: result.draftWritten,
+          nowMs,
+        });
+      }
     } catch (error: unknown) {
       console.error(LOG_PREFIX, "run_failed", input.projectId, error);
     }

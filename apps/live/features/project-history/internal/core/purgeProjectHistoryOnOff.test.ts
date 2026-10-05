@@ -56,6 +56,10 @@ describe("purgeProjectHistoryOnOff", () => {
     expect(fs.existsSync(path.join(root, "history"))).toBe(false);
     expect(fs.existsSync(path.join(root, "skills", "_drafts"))).toBe(false);
     expect(fs.existsSync(path.join(root, "skillgen"))).toBe(false);
+    expect(
+      fs.existsSync(path.join(root, "skillgen", "learned-pitfalls.json")),
+    ).toBe(false);
+    expect(fs.existsSync(path.join(root, "skillgen", "flags.json"))).toBe(false);
     expect(fs.existsSync(path.join(root, "skills", "keep-me", "meta.json"))).toBe(
       true,
     );

@@ -76,3 +76,19 @@ export { writeProjectHistorySkillgenBudget } from "../internal/core/writeProject
 export { appendProjectHistorySkillgenMetrics } from "../internal/core/appendProjectHistorySkillgenMetrics";
 export { createDefaultProjectHistorySkillgenRunner } from "../internal/core/createDefaultProjectHistorySkillgenRunner";
 export { isLocalProjectHistoryOn } from "../internal/core/isLocalProjectHistoryOn";
+
+export { normalizeProjectHistoryPitfallText } from "../internal/core/normalizeProjectHistoryPitfallText";
+export { selectProjectHistorySkillgenFailureEpisodes } from "../internal/core/selectProjectHistorySkillgenFailureEpisodes";
+export { mapHistoryFailuresToSkillPitfalls } from "../internal/core/mapHistoryFailuresToSkillPitfalls";
+export { mergeSkillPitfallsIntoDraftMarkdown } from "../internal/core/mergeSkillPitfallsIntoDraftMarkdown";
+export { attachProjectHistoryPitfallsAfterDraft } from "../internal/core/attachProjectHistoryPitfallsAfterDraft";
+export { readProjectHistoryLearnedPitfalls } from "../internal/core/readProjectHistoryLearnedPitfalls";
+export { writeProjectHistoryLearnedPitfalls } from "../internal/core/writeProjectHistoryLearnedPitfalls";
+export { readProjectHistorySkillgenFlags } from "../internal/core/readProjectHistorySkillgenFlags";
+export { writeProjectHistorySkillgenFlags } from "../internal/core/writeProjectHistorySkillgenFlags";
+export {
+  PROJECT_HISTORY_PITFALL_MAX_PER_DRAFT,
+  PROJECT_HISTORY_PITFALL_MAX_STORED,
+  PROJECT_HISTORY_PITFALL_MAX_BULLET_CHARS,
+  PROJECT_HISTORY_PITFALL_FLAG_KEY,
+} from "../internal/core/projectHistory.constants";
