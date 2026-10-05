@@ -35,17 +35,30 @@ describe("maybeInsertProjectHmacProcessingReceipt", () => {
     });
   });
 
-  it("skips failed delivery, owner sender, and processing kind", async () => {
-    await maybeInsertProjectHmacProcessingReceipt({
-      payload,
-      peerMembershipId: "mem-a",
-      deliveryOk: false,
-    });
+  it("inserts when deliveryOk and sender is Owner (fromMembershipId null)", async () => {
     await maybeInsertProjectHmacProcessingReceipt({
       payload: { ...payload, fromMembershipId: null },
       peerMembershipId: "mem-a",
       deliveryOk: true,
     });
+    expect(insertMock).toHaveBeenCalledWith({
+      projectId: "proj-1",
+      peer: "mem-a",
+      sender: null,
+      originalMessageId: "msg-1",
+    });
+  });
+
+  it("skips failed delivery", async () => {
+    await maybeInsertProjectHmacProcessingReceipt({
+      payload,
+      peerMembershipId: "mem-a",
+      deliveryOk: false,
+    });
+    expect(insertMock).not.toHaveBeenCalled();
+  });
+
+  it("skips processing kind", async () => {
     await maybeInsertProjectHmacProcessingReceipt({
       payload: { ...payload, kind: PROJECT_MESSAGE_KIND_TASK_PROCESSING },
       peerMembershipId: "mem-a",
