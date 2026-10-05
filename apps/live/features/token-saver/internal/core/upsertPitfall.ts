@@ -1,6 +1,7 @@
 import type { Pitfall, UpsertPitfallInput } from "../../public-api/types";
 import type { PitfallDatabase } from "./openPitfallDb";
 import { insertPitfallRow, selectPitfall } from "./pitfallDbStatements";
+import { selectPitfallHit } from "./pitfallHitStatements";
 import { listShadowedPitfalls } from "./listPitfalls";
 import { countActivePitfalls } from "./shadowPitfalls";
 import {
@@ -15,7 +16,7 @@ export type UpsertPitfallResult =
 
 /**
  * Upsert a project row. Editing a seed id with projectId creates an override;
- * seed rows (project_id='') are never rewritten.
+ * seed rows (project_id='') are never rewritten. Hit counters are never written.
  */
 export const upsertPitfallInDb = (
   db: PitfallDatabase,
@@ -26,10 +27,12 @@ export const upsertPitfallInDb = (
     return { ok: false, error: lengthError };
   }
 
-  const existing = selectPitfall(db, input.projectId, input.id);
+  const id = input.id.trim();
+  const existing = selectPitfall(db, input.projectId, id);
+  const counters = selectPitfallHit(db, input.projectId, id);
   const source = input.source ?? "project";
   const next: Pitfall = {
-    id: input.id.trim(),
+    id,
     projectId: input.projectId,
     symptom: input.symptom,
     cause: input.cause,
@@ -38,8 +41,9 @@ export const upsertPitfallInDb = (
     keywords: input.keywords,
     tags: input.tags ?? [],
     source,
-    hitCount: existing?.hitCount ?? 0,
-    lastSeenAt: existing?.lastSeenAt ?? null,
+    // Counters are read-only here: they live in pitfall_hits and survive upserts.
+    hitCount: counters.hitCount,
+    lastSeenAt: counters.lastSeenAt,
     severity: input.severity ?? existing?.severity ?? "warn",
   };
 

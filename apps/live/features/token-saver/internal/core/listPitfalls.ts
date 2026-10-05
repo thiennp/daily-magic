@@ -23,8 +23,9 @@ export const listShadowedPitfalls = (
   db: PitfallDatabase,
   input: Pick<ListPitfallsInput, "projectId" | "includeRetired"> = {},
 ): readonly Pitfall[] => {
-  const seeds = selectPitfallsByProjectId(db, null);
   const projectId = input.projectId ?? null;
+  // Seed rows carry the querying project's hit counters (pitfall_hits).
+  const seeds = selectPitfallsByProjectId(db, null, projectId);
   const projectRows =
     projectId === null || projectId === ""
       ? []

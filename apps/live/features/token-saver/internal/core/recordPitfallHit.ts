@@ -1,39 +1,40 @@
 import type { Pitfall, RecordPitfallHitInput } from "../../public-api/types";
+import { getPitfallFromDb } from "./getPitfall";
 import type { PitfallDatabase } from "./openPitfallDb";
-import {
-  selectPitfall,
-  updatePitfallHit,
-} from "./pitfallDbStatements";
+import { bumpPitfallHit } from "./pitfallHitStatements";
 
 export type RecordPitfallHitResult =
   | { readonly ok: true; readonly pitfall: Pitfall }
   | { readonly ok: false; readonly reason: "not_found" };
 
 /**
- * Bump hitCount + lastSeenAt on the project override if present, else the seed.
+ * Atomically bump the per-project hit counter for an existing pitfall
+ * (project override or seed). Unknown ids return not_found and write nothing;
+ * pitfall rows are never created or rewritten here.
  */
 export const recordPitfallHitInDb = (
   db: PitfallDatabase,
   input: RecordPitfallHitInput,
 ): RecordPitfallHitResult => {
-  const nowIso = input.nowIso ?? new Date().toISOString();
-  const override = selectPitfall(db, input.projectId, input.id);
+  const id = input.id.trim();
   const target =
-    override ?? selectPitfall(db, null, input.id);
+    id.length === 0
+      ? null
+      : getPitfallFromDb(db, { projectId: input.projectId, id });
 
   if (target === null) {
     return { ok: false, reason: "not_found" };
   }
 
-  const nextHit = target.hitCount + 1;
-  updatePitfallHit(db, target.projectId, target.id, nextHit, nowIso);
+  const nowIso = input.nowIso ?? new Date().toISOString();
+  const counters = bumpPitfallHit(db, input.projectId, target.id, nowIso);
 
   return {
     ok: true,
     pitfall: {
       ...target,
-      hitCount: nextHit,
-      lastSeenAt: nowIso,
+      hitCount: counters.hitCount,
+      lastSeenAt: counters.lastSeenAt,
     },
   };
 };
