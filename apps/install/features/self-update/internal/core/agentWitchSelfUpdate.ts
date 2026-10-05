@@ -5,6 +5,7 @@ import {
   extractAgentWitchBundledDepsArchive,
   removeLegacyAgentWitchNpmInstallArtifacts,
 } from "@agent-witch/install-bundled-deps";
+import { restartAgentWitchLinuxSystemdUserService } from "@agent-witch/install-linux-launch";
 import {
   bootoutAgentWitchAuxiliaryLaunchAgents,
   kickstartAgentWitchClientLaunchAgents,
@@ -22,7 +23,10 @@ import {
   readAgentWitchInstallVersion,
   writeAgentWitchInstallVersion,
 } from "./agentWitchInstallVersion";
-import { isAgentWitchWriterWorkInProgress } from "../../../../../../scripts/agentWitchWriterWorkGuard";
+import {
+  deferAgentWitchLocalRestart,
+  isAgentWitchWriterWorkInProgress,
+} from "../../../../../../scripts/agentWitchWriterWorkGuard";
 import { resolveAgentWitchAppOriginFromWsUrl } from "./resolveAgentWitchAppOriginFromWsUrl";
 import {
   appendAgentWitchSelfUpdateLog,
@@ -132,6 +136,18 @@ const downloadInstallBundle = async (
 };
 
 const kickstartServicesAfterUpdate = async (): Promise<void> => {
+  if (process.platform === "linux") {
+    try {
+      await restartAgentWitchLinuxSystemdUserService();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.warn(
+        `[agent-witch-self-update] Linux service restart skipped: ${message}`,
+      );
+    }
+    return;
+  }
+
   bootoutAgentWitchAuxiliaryLaunchAgents();
   await kickstartAgentWitchClientLaunchAgents();
 };
@@ -267,6 +283,7 @@ export const runAgentWitchSelfUpdate = async (input?: {
       readActiveProfileEmailFromFile(installDir),
     );
     if (isAgentWitchWriterWorkInProgress(layout)) {
+      deferAgentWitchLocalRestart("install-bundle-update");
       const result = buildSelfUpdateResult(
         {
           ok: true,

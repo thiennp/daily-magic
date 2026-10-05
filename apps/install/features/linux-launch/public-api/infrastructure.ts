@@ -9,3 +9,5 @@ export {
 export { buildAgentWitchInstallScriptLinuxNodeRuntime } from "../internal/core/buildAgentWitchInstallScriptLinuxNodeRuntime";
 
 export { buildAgentWitchInstallScriptSystemdUserUnitBlock } from "../internal/core/buildAgentWitchInstallScriptSystemdUserUnitBlock";
+
+export { restartAgentWitchLinuxSystemdUserService } from "../internal/core/restartAgentWitchLinuxSystemdUserService";

@@ -4,6 +4,8 @@ import fs from "node:fs";
 
 import { resolveAgentWitchInstallBundleOutfile } from "@agent-witch/install-bundle";
 
+import { assertShippedInstallBundleAntigravityArgv } from "./assertShippedInstallBundleAntigravityArgv";
+
 describe("buildAgentWitchInstallBundle output", () => {
   it("AGENT-065: ships a CommonJS bundle without ESM dynamic-require shim", () => {
     const bundlePath = resolveAgentWitchInstallBundleOutfile(process.cwd());
@@ -14,5 +16,11 @@ describe("buildAgentWitchInstallBundle output", () => {
     expect(source).not.toContain("Dynamic require of");
     expect(source).not.toContain("local.agentwitch.com");
     expect(source).toContain("127.0.0.1");
+  });
+
+  it("ships antigravity argv with --dangerously-skip-permissions before -p (not Claude-shaped)", () => {
+    expect(() =>
+      assertShippedInstallBundleAntigravityArgv(process.cwd()),
+    ).not.toThrow();
   });
 });

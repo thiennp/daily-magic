@@ -13,14 +13,6 @@ export const tryResolveAgentRunHonestyAuthStopTerminalOutcome = (input: {
   readonly output: string;
   readonly resultExitCode?: number | null;
 }): AgentRunHonestyOutcome | null => {
-  if (isClaudeCliAuthBlockerInOutput(input.output)) {
-    return buildClaudeLoginExpiredWaitingYouOutcome();
-  }
-
-  if (isAntigravityCliAuthBlockerInOutput(input.output)) {
-    return buildAntigravityLoginWaitingYouOutcome();
-  }
-
   if (
     isStoppedByUserOutput(input.output) ||
     isAgentRunUserStoppedExitCode(input.resultExitCode ?? null)
@@ -30,6 +22,14 @@ export const tryResolveAgentRunHonestyAuthStopTerminalOutcome = (input: {
       chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.stopped,
       summaryLines: ["Stopped — run ended from the console."],
     };
+  }
+
+  if (isClaudeCliAuthBlockerInOutput(input.output)) {
+    return buildClaudeLoginExpiredWaitingYouOutcome();
+  }
+
+  if (isAntigravityCliAuthBlockerInOutput(input.output)) {
+    return buildAntigravityLoginWaitingYouOutcome();
   }
 
   return null;
