@@ -114,6 +114,8 @@ import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 import { loadOrCreateAgentWitchDeviceKeypair } from "@agent-witch/install-device-identity";
 import type { LocalHarnessRevealResult } from "@agent-witch/live-harness/types";
 
+import { buildAgentWitchLocalHealthIdentity } from "./buildAgentWitchLocalHealthIdentity";
+
 const formatLocalAppTimestamp = (value: string | null): string =>
   formatAgentWitchRelativeTimeAgo(value) ?? "never";
 
@@ -543,6 +545,10 @@ export const startAgentWitchLocalApp = (input: {
           ...status,
           installBundleVersion: installBundle.installBundleVersion,
           installBundleUpdatedAt: installBundle.installBundleUpdatedAt,
+          ...buildAgentWitchLocalHealthIdentity({
+            uid: process.getuid?.(),
+            installDir: input.layout.installDir,
+          }),
         });
         return;
       }

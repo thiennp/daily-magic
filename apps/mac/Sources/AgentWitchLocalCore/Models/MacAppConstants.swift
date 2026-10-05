@@ -32,6 +32,13 @@ public enum MacAppConstants {
     public static let bootstrapPendingAttemptTtlSeconds: TimeInterval = 5 * 60
     public static let bootstrapSetupHealthTimeoutSeconds: TimeInterval = 90
     public static let bootstrapSetupHealthPollIntervalSeconds: TimeInterval = 2
+    /// Shown when `/health` on the shared port is answered by another user's / install's AWL.
+    public static let foreignLocalHealthReason =
+        "Another Agent Witch (another macOS user or install) is answering on port 43347. "
+        + "Quit it there, then Retry."
+    /// Shown when `/health` answers without identity (AWL bundle older than this app).
+    public static let unverifiedLocalHealthReason =
+        "Timed out: the Agent Witch answering on port 43347 did not identify as this user's install."
     /// Generic copyable fallback (no token). Token-bearing command requires signed-in Home.
     public static let bootstrapFallbackInstallCommand =
         "curl -fsSL https://www.agentwitch.com/install/agent-witch.sh | bash"

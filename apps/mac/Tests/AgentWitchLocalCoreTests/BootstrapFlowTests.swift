@@ -114,7 +114,7 @@ final class BootstrapFlowTests: XCTestCase {
             current: .settingUp,
             probeHealth: {
                 probes += 1
-                return probes >= 2
+                return probes >= 2 ? .ours : .unhealthy
             },
             sleep: { _ in },
             now: {
@@ -175,7 +175,7 @@ final class BootstrapFlowTests: XCTestCase {
         var tick = 0
         let result = await runBootstrapSetupFlow(
             current: .settingUp,
-            probeHealth: { false },
+            probeHealth: { .unhealthy },
             sleep: { _ in tick += 1 },
             now: {
                 // Jump past timeout after a couple iterations.
@@ -191,6 +191,46 @@ final class BootstrapFlowTests: XCTestCase {
             return XCTFail("expected timeout error")
         }
         XCTAssertTrue(reason.lowercased().contains("timed out"))
+    }
+
+    func testSetupFailsFastWhenAnotherUsersAgentWitchAnswers() async {
+        var probes = 0
+        var slept = 0
+        let result = await runBootstrapSetupFlow(
+            current: .settingUp,
+            probeHealth: {
+                probes += 1
+                return .foreign
+            },
+            sleep: { _ in slept += 1 },
+            now: { Date(timeIntervalSince1970: 0) },
+            timeoutSeconds: 60,
+            pollIntervalSeconds: 1
+        )
+        guard case .error(let reason) = result.state else {
+            return XCTFail("expected foreign responder error, got \(result.state)")
+        }
+        XCTAssertTrue(reason.contains("another macOS user"))
+        XCTAssertEqual(probes, 1)
+        XCTAssertEqual(slept, 0)
+    }
+
+    func testSetupNeverConnectsOnUnverifiedOldServer() async {
+        let start = Date(timeIntervalSince1970: 0)
+        var tick = 0
+        let result = await runBootstrapSetupFlow(
+            current: .settingUp,
+            probeHealth: { .unverified },
+            sleep: { _ in tick += 1 },
+            now: { start.addingTimeInterval(TimeInterval(tick * 10)) },
+            timeoutSeconds: 25,
+            pollIntervalSeconds: 1
+        )
+        guard case .error(let reason) = result.state else {
+            return XCTFail("expected unverified timeout error, got \(result.state)")
+        }
+        XCTAssertTrue(reason.contains("did not identify"))
+        XCTAssertNotEqual(result.state, .connected)
     }
 
     func testBeginSignInOpensBrowserAndReplacesPending() throws {

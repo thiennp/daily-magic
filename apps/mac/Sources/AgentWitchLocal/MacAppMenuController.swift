@@ -40,7 +40,7 @@ final class MacAppMenuController: ObservableObject {
 
     func refreshInstallAndHealth() {
         Task {
-            let healthy = await probeHealth()
+            let healthy = await probeHealth().isHealthy
             let installed = isAgentWitchCoreInstalled(
                 installDir: resolveAgentWitchInstallDir(),
                 plistPath: resolveAgentWitchLaunchAgentPlistPath(),
@@ -74,7 +74,7 @@ final class MacAppMenuController: ObservableObject {
         bootstrapState = .checking
         statusMessage = bootstrapStatusLabel(for: .checking)
         Task {
-            await startOrResumeBootstrap(isHealthy: await probeHealth())
+            await startOrResumeBootstrap(isHealthy: await probeHealth().isHealthy)
         }
     }
 
@@ -352,25 +352,28 @@ final class MacAppMenuController: ObservableObject {
             return
         }
         Task {
-            let healthy = await probeHealth()
+            let ownership = await probeHealth()
             do {
-                state = try pollHealthFlow(current: state, isHealthy: healthy)
-                statusMessage = statusLabel(for: state)
+                state = try pollHealthFlow(current: state, isHealthy: ownership.isHealthy)
+                statusMessage = ownership == .foreign
+                    ? MacAppConstants.foreignLocalHealthReason
+                    : statusLabel(for: state)
             } catch {
                 // Keep current state when transition is disallowed mid-flight.
             }
         }
     }
 
-    private func probeHealth() async -> Bool {
+    /// `.ours` only when the responder on the shared port reports this user's uid.
+    private func probeHealth() async -> LocalHealthOwnership {
         var request = URLRequest(url: resolveAgentWitchLocalHealthUrl())
         request.timeoutInterval = 2.0
         do {
-            let (_, response) = try await URLSession.shared.data(for: request)
+            let (data, response) = try await URLSession.shared.data(for: request)
             let code = (response as? HTTPURLResponse)?.statusCode ?? 0
-            return parseLocalHealthResponse(statusCode: code)
+            return parseLocalHealthResponse(statusCode: code, body: data, expectedUid: getuid())
         } catch {
-            return false
+            return .unhealthy
         }
     }
 

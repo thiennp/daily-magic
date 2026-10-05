@@ -8,10 +8,12 @@ public struct RunBootstrapSetupFlowResult: Equatable, Sendable {
     }
 }
 
-/// Setting up: poll local health until healthy or timeout → Connected / Error.
+/// Setting up: poll local health until *this user's* AWL answers or timeout → Connected / Error.
+/// Port 43347 is shared by all macOS users: a `.foreign` responder fails fast (our AWL cannot
+/// bind while it holds the port); `.unverified` (no identity) keeps polling and never connects.
 public func runBootstrapSetupFlow(
     current: MacAppBootstrapState,
-    probeHealth: () async -> Bool,
+    probeHealth: () async -> LocalHealthOwnership,
     sleep: (TimeInterval) async -> Void = { ns in
         try? await Task.sleep(nanoseconds: UInt64(ns * 1_000_000_000))
     },
@@ -21,25 +23,34 @@ public func runBootstrapSetupFlow(
 ) async -> RunBootstrapSetupFlowResult {
     let deadline = now().addingTimeInterval(timeoutSeconds)
 
-    if await probeHealth() {
-        let next = (try? applyMacAppBootstrapStateTransition(from: current, to: .connected))
-            ?? .connected
+    func finish(_ target: MacAppBootstrapState) -> RunBootstrapSetupFlowResult {
+        let next = (try? applyMacAppBootstrapStateTransition(from: current, to: target)) ?? target
         return RunBootstrapSetupFlowResult(state: next)
     }
 
-    while now() < deadline {
-        await sleep(pollIntervalSeconds)
-        if await probeHealth() {
-            let next = (try? applyMacAppBootstrapStateTransition(from: current, to: .connected))
-                ?? .connected
-            return RunBootstrapSetupFlowResult(state: next)
-        }
+    func fail(_ reason: String) -> RunBootstrapSetupFlowResult {
+        finish(.error(reason: sanitizeBootstrapErrorReason(reason)))
     }
 
-    let reason = sanitizeBootstrapErrorReason("Timed out waiting for local Agent Witch health.")
-    let next = (try? applyMacAppBootstrapStateTransition(
-        from: current,
-        to: .error(reason: reason)
-    )) ?? .error(reason: reason)
-    return RunBootstrapSetupFlowResult(state: next)
+    var last = await probeHealth()
+    while true {
+        switch last {
+        case .ours:
+            return finish(.connected)
+        case .foreign:
+            return fail(MacAppConstants.foreignLocalHealthReason)
+        case .unverified, .unhealthy:
+            break
+        }
+        guard now() < deadline else {
+            break
+        }
+        await sleep(pollIntervalSeconds)
+        last = await probeHealth()
+    }
+
+    if last == .unverified {
+        return fail(MacAppConstants.unverifiedLocalHealthReason)
+    }
+    return fail("Timed out waiting for local Agent Witch health.")
 }
