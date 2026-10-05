@@ -26,14 +26,15 @@ describe("ensureProjectAclSchema owns delete-on-read ensure", () => {
     resetProjectMessagePurgeForTests();
   });
 
-  it("creates outcomes, computer_acks and read_at exactly once", async () => {
+  it("creates outcomes and read_at; computer_acks CREATE stays with History", async () => {
     await ensureProjectAclSchema();
     expect(count(/CREATE TABLE IF NOT EXISTS project_message_outcomes/)).toBe(
       1,
     );
     expect(
       count(/CREATE TABLE IF NOT EXISTS project_message_computer_acks/),
-    ).toBe(1);
+    ).toBe(0);
+    expect(count(/ADD COLUMN IF NOT EXISTS device_id/)).toBe(1);
     expect(count(/ADD COLUMN IF NOT EXISTS read_at/)).toBe(1);
     // Only ensureProjectMessageDeleteOnReadSchema creates this index.
     expect(count(/project_message_outcomes_project_idx/)).toBe(1);
