@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest";
 
 import { buildProjectInviteAgentPrompt } from "@/features/projects/access/invites/buildProjectInviteAgentPrompt";
-import { AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
+import {
+  AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
+  AWC_GROK_WEBHOOK_DAILY_REPAIR,
+  AWC_GROK_WEBHOOK_FORM_SCREEN,
+  AWC_GROK_WEBHOOK_KEY_NOTE,
+} from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
+import { PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE } from "@/lib/projects/acl/projectBriefingHowToDispatch.constant";
 
 describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
   it("MUST register_project_webhook first, then use webhook wake + ack", () => {
@@ -14,10 +20,18 @@ describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
     expect(prompt).toContain("ack_project_message");
     expect(prompt).toMatch(/Inbox delivery|webhook-first/i);
     expect(prompt).toContain(AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS);
-    expect(prompt).toMatch(/grokWebhookUrl/);
-    expect(prompt).toMatch(/grokWebhookBearer/);
+    expect(prompt).toContain(AWC_GROK_WEBHOOK_DAILY_REPAIR);
+    expect(prompt).toContain(AWC_GROK_WEBHOOK_KEY_NOTE);
     expect(prompt).toMatch(/Grok Bot desktop app/);
-    expect(prompt).toMatch(/routine status/);
+    expect(prompt).toContain("open its info pane (click the bot's name in the chat header)");
+    expect(prompt).toContain("find its webhook routine in Routines");
+    expect(prompt).toContain(AWC_GROK_WEBHOOK_FORM_SCREEN);
+    expect(prompt).toMatch(/you cannot see your own routine webhook POST URL or key/);
+    expect(prompt).toMatch(/never ask the user to paste them into chat/);
+    expect(prompt).toContain("get_my_project_webhook_status");
+    expect(prompt).not.toMatch(/routine status/);
+    expect(prompt).not.toMatch(/The pasted key/);
+    expect(prompt).not.toMatch(/re-registering register_project_webhook/);
     expect(prompt).not.toMatch(/if you can host a public HTTPS endpoint/i);
     expect(prompt).not.toMatch(/grokbot:\/\/|https?:\/\/[^\s]*webhook|sidebar|Slack|Discord/i);
     expect(prompt).toMatch(
@@ -41,7 +55,7 @@ describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
     expect(prompt).toMatch(/Inbox wake is webhook-only, via a Grok routine/i);
     expect(prompt).toMatch(/do not poll list_project_inbox on a timer/i);
     expect(prompt).toMatch(/Once a day, check the project webhook/i);
-    expect(prompt).toMatch(/re-registering register_project_webhook/i);
+    expect(prompt).toContain(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE);
     expect(prompt).toMatch(/MUST ack_project_message/i);
     expect(prompt).not.toMatch(/Else MUST poll list_project_inbox|every 30 seconds while actively working|every 5 minutes when idle/i);
     expect(prompt).toMatch(/MUST on leave or owner Revoke/i);

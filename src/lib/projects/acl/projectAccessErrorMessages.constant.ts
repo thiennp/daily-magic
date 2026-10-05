@@ -29,6 +29,11 @@ export const PROJECT_ACCESS_ERROR_MESSAGES: Readonly<Record<string, string>> = {
   confirm_required: "Pass confirm:true to leave this project.",
   owner_cannot_leave: "Project owners cannot leave via leave_project.",
   misconfigured: "Project Access is misconfigured. Try again later.",
+  invalid_url: "Enter the POST URL from the bot's webhook routine.",
+  https_only: "The POST URL must start with https.",
+  blocked_host: "That POST URL host is not allowed.",
+  invalid_bearer: "Enter the key from the bot's webhook routine (up to 2000 characters).",
+  naming_required: "Give this bot a project nickname first.",
 };
 
 /** Stable public codes Product can switch on (HTTP status still authoritative). */

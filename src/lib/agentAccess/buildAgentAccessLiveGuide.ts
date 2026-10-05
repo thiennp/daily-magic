@@ -60,6 +60,7 @@ export const buildAgentAccessLiveGuide = () => {
         "list_project_peers",
         "project_dispatch",
         "register_project_webhook",
+        "get_my_project_webhook_status",
         "list_project_inbox",
         "ack_project_message",
         "rotate_project_api_key",

@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
 import { awcProjectAccessMemberAnchorId } from "@/features/projects/access/awcProjectAccessMemberAnchor";
@@ -22,6 +24,7 @@ interface AwcProjectAccessMemberRowProps {
   readonly onSaveRename: () => void;
   readonly onCancelEdit: () => void;
   readonly onRevoke: () => void;
+  readonly grokWebhook?: ReactNode;
 }
 
 export default function AwcProjectAccessMemberRow({
@@ -34,6 +37,7 @@ export default function AwcProjectAccessMemberRow({
   onSaveRename,
   onCancelEdit,
   onRevoke,
+  grokWebhook = null,
 }: AwcProjectAccessMemberRowProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
   const mutedId = `${copy.memberUuidMuted} ${member.userId.slice(0, 8)}…`;
@@ -112,6 +116,7 @@ export default function AwcProjectAccessMemberRow({
           {copy.revoke}
         </button>
       </span>
+      {grokWebhook}
     </li>
   );
 }

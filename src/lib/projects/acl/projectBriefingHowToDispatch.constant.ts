@@ -1,4 +1,7 @@
-import { AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
+import {
+  AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
+  AWC_GROK_WEBHOOK_DAILY_REPAIR,
+} from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
 
 /** Shared reply clause for briefing, invite prompt, and agent guideline. */
 export const PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE =
@@ -8,6 +11,8 @@ export const PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE =
 export const PROJECT_BRIEFING_HOW_TO_DISPATCH =
   "Dispatch with project_dispatch: pass projectId, kind, summary ≤ 200 chars, optional refs ≤ 768 bytes (prUrl|commitSha|localPath|allowClaimId) — no media/blobs (media_not_allowed); use only localPath / P2P refs for bulky payloads; address the human with toProjectDisplayName: \"Owner\" (reserved; not account name); address one peer bot via toMembershipId (preferred when list_project_peers exposes membershipId) or toProjectDisplayName / toTeamLabel — exactly one of toMembershipId | toProjectDisplayName | toTeamLabel; no broadcast in v1; re-list peers after rename (old nickname may resolve ~7 days); on Approve/auto-approve peers+owner get peer.joined; owner tasks have fromProjectDisplayName === \"Owner\"; MUST on connect (webhook-first): " +
   AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS +
-  " Inbox wake is webhook-only, via a Grok routine; do not poll list_project_inbox on a timer. Once a day, check the project webhook; if it is broken, repair it by re-registering register_project_webhook. " +
+  " Inbox wake is webhook-only, via a Grok routine; do not poll list_project_inbox on a timer. " +
+  AWC_GROK_WEBHOOK_DAILY_REPAIR +
+  " " +
   PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE +
   " MUST ack_project_message after you handle each delivery (delete-on-ack; unacked messages expire after 3 days). Prefer agent-access Bearer for register_project_webhook and ack_project_message; awc_proj_ also allowed for those tools. On leave or owner Revoke MUST delete all project-scoped routines (project webhook, Website relaunch watches, and other project-tied scheduled/event watches). Rate limits: 300/hour (rolling) + max 300 unread (ack/clear frees slots).";

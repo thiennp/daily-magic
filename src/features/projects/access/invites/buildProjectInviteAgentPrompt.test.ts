@@ -107,7 +107,7 @@ describe("buildProjectInviteAgentPrompt", () => {
     expect(prompt).toMatch(/Inbox wake is webhook-only, via a Grok routine/i);
     expect(prompt).toMatch(/do not poll list_project_inbox on a timer/i);
     expect(prompt).toMatch(/Once a day, check the project webhook/i);
-    expect(prompt).toMatch(/re-registering register_project_webhook/i);
+    expect(prompt).toMatch(/get_my_project_webhook_status/);
     expect(prompt).not.toMatch(/Else MUST poll list_project_inbox|every 30 seconds while actively working|every 5 minutes when idle/i);
   });
 

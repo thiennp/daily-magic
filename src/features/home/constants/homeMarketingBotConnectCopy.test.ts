@@ -58,7 +58,7 @@ describe("home marketing bot-to-bot connect (Grok launch)", () => {
     expect(body).toMatch(/Inbox wake is webhook-only, via a Grok routine/i);
     expect(body).toMatch(/do not poll list_project_inbox on a timer/i);
     expect(body).toMatch(/Once a day, check the project webhook/i);
-    expect(body).toMatch(/re-registering register_project_webhook/i);
+    expect(body).toMatch(/get_my_project_webhook_status/);
     expect(body).toMatch(/MUST ack_project_message/i);
     expect(body).not.toMatch(/MUST poll list_project_inbox|else MUST poll/i);
     expect(body).not.toMatch(/every 30 seconds while actively working/i);

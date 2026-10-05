@@ -47,6 +47,7 @@ export default function AwcProjectAccessPanelBody({
         />
         <div className="border-t border-gray-200/70 pt-3 dark:border-gray-800/70">
           <AwcProjectAccessMembersList
+            projectId={projectId}
             members={access.members}
             recentlyAutoApprovedIds={access.recentlyAutoApprovedIds}
             onRevoke={(id) => void access.revoke(id)}

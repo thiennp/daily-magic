@@ -9,12 +9,12 @@ const readSrc = (relativePath: string): string =>
   readFileSync(join(process.cwd(), relativePath), "utf8");
 
 describe("Grok webhook setup copy", () => {
-  it("tells the user to open Grok Bot on desktop and paste the routine POST URL and key", () => {
+  it("points to the bot info pane and the owner secret form, not chat", () => {
     expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).toBe(
-      "Open this bot on desktop (the Grok Bot desktop app). The bot shows two inputs, POST URL and key, and the Grok routine webhook panel link already in its routine status. Copy the POST URL and the key from that panel into the two inputs. The bot registers them.",
+      "The bot cannot see its own routine webhook POST URL or key. Open this bot in the Grok Bot desktop app, open its info pane (click the bot's name in the chat header), find its webhook routine in Routines, and copy the POST URL and key. The project owner enters both in Agent Witch Cloud → Project Access → Members → this bot → Grok webhook (secret fields). Do not paste them into chat.",
     );
     expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).toMatch(/Grok Bot/);
-    expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).toMatch(/Grok routine/);
+    expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).not.toMatch(/routine status/);
     expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).not.toMatch(
       /grokbot:\/\/|https?:\/\/|sidebar|Slack|Discord|Cursor/i,
     );

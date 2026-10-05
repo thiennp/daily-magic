@@ -1,4 +1,7 @@
-import { AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
+import {
+  AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
+  AWC_GROK_WEBHOOK_DAILY_REPAIR,
+} from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
 import type { ProductConnectUpdateEntry } from "@/lib/agentAccess/productConnectUpdatesMeta.constant";
 
 /** Catalog entries v9+ (keep productConnectUpdates.constant.ts under line cap). */
@@ -57,10 +60,25 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
       summary:
         "Inbox wake register is the Grok routine webhook path only (Grok Bot). " +
         AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS +
-        " Inbox wake is webhook-only, via a Grok routine; do not poll list_project_inbox on a timer. Once a day, check the project webhook; if broken, repair it by re-registering register_project_webhook the same way. Handle each delivery, then MUST ack_project_message. On leave/Revoke MUST delete project-scoped routines.",
+        " Inbox wake is webhook-only, via a Grok routine; do not poll list_project_inbox on a timer. " +
+        AWC_GROK_WEBHOOK_DAILY_REPAIR +
+        " Handle each delivery, then MUST ack_project_message. On leave/Revoke MUST delete project-scoped routines.",
       adapt:
         "Supersedes hosting your own HTTPS URL for inbox wake. " +
         AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS +
         " Do not poll list_project_inbox on a timer. Ack after you handle each delivery. Delete project-scoped routines on leave/Revoke.",
+    },
+    {
+      id: "grok-webhook-secret-form-and-status",
+      catalogVersion: 15,
+      at: "2026-10-05",
+      kind: "mcp_tool",
+      title: "Grok webhook secret form + get_my_project_webhook_status",
+      summary:
+        "The owner now enters a bot's Grok routine POST URL and key in a secret form (Project Access → Members → this bot → Grok webhook), so they never pass through chat. New read-only get_my_project_webhook_status { projectId } returns grokWebhookRegistered, grokWebhookUrlHost, keySet, and lastGrokWakeResult (never the key). register_project_webhook still works. " +
+        AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
+      adapt:
+        "Never ask the user to paste the routine URL or key into chat; point them to the bot's info pane and the Grok webhook form. Confirm with get_my_project_webhook_status. " +
+        AWC_GROK_WEBHOOK_DAILY_REPAIR,
     },
   ];

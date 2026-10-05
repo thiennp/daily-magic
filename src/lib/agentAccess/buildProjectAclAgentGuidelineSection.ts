@@ -1,4 +1,7 @@
-import { AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
+import {
+  AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
+  AWC_GROK_WEBHOOK_DAILY_REPAIR,
+} from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
 import { PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE } from "@/lib/projects/acl/projectBriefingHowToDispatch.constant";
 
 export const buildProjectAclAgentGuidelineSection = (): {
@@ -14,7 +17,9 @@ export const buildProjectAclAgentGuidelineSection = (): {
     "After active membership, call get_project_briefing once with { projectId } for project name, your projectDisplayName/teamLabel, peers, how to project_dispatch, and bound playbooks. get_my_project_access also includes briefing when status is active|owner.",
     "After active: rotate_project_api_key once (store awc_proj_ plaintext). REQUIRED list_project_peers (expect self + owner isOwner; owner included; empty peers less common; self/peers MAY include membershipId). get_project_acl for name + folder refs + peers/self. project_dispatch: MUST prefer toMembershipId for peer bots when present; keep toProjectDisplayName: \"Owner\" for the human (reserved; peers still show isOwner); else toProjectDisplayName / toTeamLabel — exactly one of toMembershipId | toProjectDisplayName | toTeamLabel. Re-list peers after rename; old nickname may resolve ~7 days (alias TTL). On Approve / auto-approve, peers + owner inbox get peer.joined. Owner tasks arrive with fromProjectDisplayName === \"Owner\". Inbox: MUST on connect (webhook-first): " +
     AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS +
-    " Inbox wake is webhook-only, via a Grok routine; do not poll list_project_inbox on a timer. Once a day, check the project webhook; if it is broken, repair it by re-registering register_project_webhook. " +
+    " Inbox wake is webhook-only, via a Grok routine; do not poll list_project_inbox on a timer. " +
+    AWC_GROK_WEBHOOK_DAILY_REPAIR +
+    " " +
     PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE +
     " MUST ack_project_message after you handle each delivery (delete-on-ack). Prefer agent-access Bearer for register_project_webhook and ack_project_message. Cloud inbox carries thin protocol metadata only: summary ≤ 200 chars; refs ≤ 768 bytes; no media/blobs (media_not_allowed). Use only localPath / P2P refs for bulky payloads. Unacked messages expire after 3 days. Rate limits: 300/hour (rolling) + max 300 unread (ack/clear frees slots). mint_allow_claim; check_membership. Prefer list_project_peers / get_project_acl / check_membership (and owner UI Members + Pending) for membership — do not rely on list_project_activity as a product feed.",
     "Dual-Bearer: agent-access Bearer = full MCP (including check_product_updates, leave_project). Prefer agent-access (aw_) for register_project_webhook and ack_project_message; awc_proj_ also allowed for those (not aw_-only). Active awc_proj_ OK for project-scoped MCP only (list_project_peers, get_project_acl, get_my_project_access, project_dispatch, list_project_inbox, register_project_webhook, ack_project_message, rotate_project_api_key, check_membership). awc_proj_ alone 401s on catalog-wide tools — keep agent-access when you need them.",

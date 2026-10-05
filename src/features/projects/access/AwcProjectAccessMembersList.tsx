@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import AwcProjectAccessMemberGrokWebhookForm from "@/features/projects/access/AwcProjectAccessMemberGrokWebhookForm";
 import AwcProjectAccessMemberRow from "@/features/projects/access/AwcProjectAccessMemberRow";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
@@ -17,6 +18,7 @@ interface MemberRow {
 }
 
 interface AwcProjectAccessMembersListProps {
+  readonly projectId?: string;
   readonly members: readonly MemberRow[];
   readonly recentlyAutoApprovedIds?: readonly string[];
   readonly onRevoke: (membershipId: string) => void;
@@ -27,6 +29,7 @@ interface AwcProjectAccessMembersListProps {
 }
 
 export default function AwcProjectAccessMembersList({
+  projectId,
   members,
   recentlyAutoApprovedIds = [],
   onRevoke,
@@ -82,6 +85,14 @@ export default function AwcProjectAccessMembersList({
                 });
               }}
               onRevoke={() => onRevoke(member.id)}
+              grokWebhook={
+                member.isAgent && projectId ? (
+                  <AwcProjectAccessMemberGrokWebhookForm
+                    projectId={projectId}
+                    membershipId={member.id}
+                  />
+                ) : null
+              }
             />
           ))}
         </ul>

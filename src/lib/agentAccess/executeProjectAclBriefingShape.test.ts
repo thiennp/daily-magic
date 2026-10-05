@@ -105,7 +105,7 @@ describe("get_project_briefing shape", () => {
     expect(body.howToDispatch).toMatch(/Inbox wake is webhook-only, via a Grok routine/i);
     expect(body.howToDispatch).toMatch(/do not poll list_project_inbox on a timer/i);
     expect(body.howToDispatch).toMatch(/Once a day, check the project webhook/i);
-    expect(body.howToDispatch).toMatch(/re-registering register_project_webhook/i);
+    expect(body.howToDispatch).toMatch(/get_my_project_webhook_status/);
     expect(body.howToDispatch).toMatch(/MUST ack_project_message/i);
     expect(body.howToDispatch).not.toMatch(/MUST poll list_project_inbox|every 30 seconds while actively working|every 5 minutes when idle/i);
     expect(body.howToDispatch).toMatch(

@@ -1,6 +1,7 @@
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
+import { executeGetMyProjectWebhookStatusTool } from "@/lib/agentAccess/executeGetMyProjectWebhookStatusTool";
 import { executeRegisterProjectWebhookTool } from "@/lib/agentAccess/executeRegisterProjectWebhookTool";
 import { rotateOwnProjectApiKey } from "@/lib/projects/acl/projectApiKeys/rotateOwnProjectApiKey";
 
@@ -22,6 +23,13 @@ export const executeProjectAclWebhookAndKeyTools = async (input: {
 }): Promise<AgentAccessToolCallResult | null> => {
   if (input.name === "register_project_webhook") {
     return executeRegisterProjectWebhookTool({
+      actor: input.actor,
+      args: input.args,
+    });
+  }
+
+  if (input.name === "get_my_project_webhook_status") {
+    return executeGetMyProjectWebhookStatusTool({
       actor: input.actor,
       args: input.args,
     });

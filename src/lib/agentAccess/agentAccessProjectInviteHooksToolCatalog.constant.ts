@@ -1,9 +1,11 @@
 import type { AgentAccessToolDefinition } from "@/lib/agentAccess/agentAccessToolCatalog.constant";
+import { GET_MY_PROJECT_WEBHOOK_STATUS_TOOL } from "@/lib/agentAccess/getMyProjectWebhookStatusTool.constant";
 import { REGISTER_PROJECT_WEBHOOK_TOOL } from "@/lib/agentAccess/registerProjectWebhookTool.constant";
 
 export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDefinition[] =
   [
     REGISTER_PROJECT_WEBHOOK_TOOL,
+    GET_MY_PROJECT_WEBHOOK_STATUS_TOOL,
     {
       name: "project_dispatch",
       description:
