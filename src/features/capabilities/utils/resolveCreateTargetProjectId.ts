@@ -1,6 +1,6 @@
 import loadUserProjectsFromApi from "@/features/agent/hooks/loadUserProjectsFromApi";
-import { resolveSaveToProjectDefault } from "@/features/capabilities/utils/resolveSaveToProjectDefault";
 import { readLastSaveProjectId } from "@/features/capabilities/utils/lastSaveProjectStore";
+import { resolveSaveToProjectDefault } from "@/lib/projects/resolveSaveToProjectDefault";
 
 export const CREATE_PROJECT_REQUIRED_MESSAGE =
   "Create or open a project before saving to your library.";

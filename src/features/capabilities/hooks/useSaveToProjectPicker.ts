@@ -7,7 +7,7 @@ import {
   readLastSaveProjectId,
   writeLastSaveProjectId,
 } from "@/features/capabilities/utils/lastSaveProjectStore";
-import { resolveSaveToProjectDefault } from "@/features/capabilities/utils/resolveSaveToProjectDefault";
+import { resolveSaveToProjectDefault } from "@/lib/projects/resolveSaveToProjectDefault";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 export interface SaveToProjectPickerState {

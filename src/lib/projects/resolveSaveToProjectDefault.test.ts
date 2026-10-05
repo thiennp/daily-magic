@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { resolveSaveToProjectDefault } from "@/features/capabilities/utils/resolveSaveToProjectDefault";
+import { resolveSaveToProjectDefault } from "@/lib/projects/resolveSaveToProjectDefault";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 const project = (id: string, name: string): UserProjectRecord => ({

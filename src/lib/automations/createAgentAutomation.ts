@@ -9,7 +9,7 @@ import { resolveAutomationNextRunAt } from "@/lib/automations/resolveAutomationN
 import type AgentAutomationRecord from "@/lib/automations/types/AgentAutomationRecord.type";
 import { generateAutomationWebhookSecret } from "@/lib/automations/automationWebhookSecret";
 import { getPublishedCapabilityById } from "@/lib/capabilities/capabilityQueries";
-import { DEFAULT_USER_PROJECT_NAME } from "@/lib/projects/defaultUserProject.constants";
+import { resolveSaveToProjectDefault } from "@/lib/projects/resolveSaveToProjectDefault";
 import { listUserProjectsForOwner } from "@/lib/projects/userProjectQueries";
 
 export interface CreateAgentAutomationResult {
@@ -39,16 +39,7 @@ export const createAgentAutomation = async (
 
   if (projectId === null) {
     const projects = await listUserProjectsForOwner(ownerUserId);
-    const byName = (name: string) =>
-      projects.find(
-        (project) =>
-          project.name.trim().toLowerCase() === name.toLowerCase(),
-      );
-    projectId =
-      byName(DEFAULT_USER_PROJECT_NAME)?.id ??
-      byName("Personal")?.id ??
-      projects[0]?.id ??
-      null;
+    projectId = resolveSaveToProjectDefault({ projects }) || null;
   }
 
   const prepared = await prepareAutomationFieldValues({
