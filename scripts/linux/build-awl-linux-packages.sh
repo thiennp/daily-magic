@@ -110,9 +110,9 @@ Agent Witch Local (Linux tray)
 2. Install this package, then start agent-witch-local from the app menu.
 3. On stock GNOME, enable the AppIndicator extension so the tray icon appears.
 
-Launch-at-login for the Agent Witch service is controlled from the tray menu
-(systemctl --user enable/disable). Tray autostart (~/.config/autostart) is not
-wired yet — add a desktop entry there manually if you want the tray itself at login.
+Start uses systemctl --user enable --now (survives re-login).
+Stop uses systemctl --user disable --now (does not return after re-login).
+Tray autostart (~/.config/autostart) is not wired yet.
 README
 
 dpkg-deb --build --root-owner-group "${DEB_ROOT}" "${DIST_DIR}/${DEB_NAME}"

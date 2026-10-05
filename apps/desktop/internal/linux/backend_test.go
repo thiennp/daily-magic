@@ -33,7 +33,7 @@ func TestBackendIsInstalled(t *testing.T) {
 	}
 }
 
-func TestBackendStartStopUsesSystemctl(t *testing.T) {
+func TestBackendStartStopUsesEnableDisableNow(t *testing.T) {
 	fake := &host.FakeRunner{Results: []host.RunResult{{ExitCode: 0}, {ExitCode: 0}}}
 	b := Backend{Home: "/tmp/h", Runner: fake, Exists: func(string) bool { return true }}
 	if err := b.Start(context.Background()); err != nil {
@@ -45,32 +45,11 @@ func TestBackendStartStopUsesSystemctl(t *testing.T) {
 	if len(fake.Calls) != 2 {
 		t.Fatalf("calls %v", fake.Calls)
 	}
-	if fake.Calls[0][0] != "systemctl" || fake.Calls[0][1] != "--user" || fake.Calls[0][2] != "enable" {
+	if fake.Calls[0][0] != "systemctl" || fake.Calls[0][2] != "enable" || fake.Calls[0][3] != "--now" {
 		t.Fatalf("start call %v", fake.Calls[0])
 	}
-	if fake.Calls[1][2] != "stop" {
-		t.Fatalf("stop call %v", fake.Calls[1])
-	}
-}
-
-func TestBackendLaunchAtLogin(t *testing.T) {
-	fake := &host.FakeRunner{Results: []host.RunResult{
-		{ExitCode: 0, Stdout: "enabled\n"},
-		{ExitCode: 0},
-		{ExitCode: 0},
-	}}
-	b := Backend{Home: "/tmp/h", Runner: fake}
-	if !b.IsLaunchAtLoginEnabled(context.Background()) {
-		t.Fatal("expected enabled")
-	}
-	if err := b.SetLaunchAtLogin(context.Background(), true); err != nil {
-		t.Fatal(err)
-	}
-	if err := b.SetLaunchAtLogin(context.Background(), false); err != nil {
-		t.Fatal(err)
-	}
-	if fake.Calls[1][2] != "enable" || fake.Calls[2][2] != "disable" {
-		t.Fatalf("calls %v", fake.Calls)
+	if fake.Calls[1][2] != "disable" || fake.Calls[1][3] != "--now" {
+		t.Fatalf("stop must be disable --now, got %v", fake.Calls[1])
 	}
 }
 

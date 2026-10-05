@@ -16,8 +16,6 @@ type Platform interface {
 	IsInstalled() bool
 	Start(ctx context.Context) error
 	Stop(ctx context.Context) error
-	IsLaunchAtLoginEnabled(ctx context.Context) bool
-	SetLaunchAtLogin(ctx context.Context, enabled bool) error
 	OpenStatus(ctx context.Context) error
 	OpenConnect(ctx context.Context) error
 	OpenLogs(ctx context.Context) (message string, err error)
@@ -29,11 +27,10 @@ type App struct {
 	Client   core.HTTPDoer
 	IconPNG  []byte
 
-	mu              sync.Mutex
-	state           core.RuntimeState
-	errorMessage    string
-	statusOverride  string
-	launchesAtLogin bool
+	mu             sync.Mutex
+	state          core.RuntimeState
+	errorMessage   string
+	statusOverride string
 
 	statusItem  *systray.MenuItem
 	openConnect *systray.MenuItem
@@ -42,7 +39,6 @@ type App struct {
 	openStatus  *systray.MenuItem
 	stopItem    *systray.MenuItem
 	viewLogs    *systray.MenuItem
-	loginItem   *systray.MenuItem
 	quitItem    *systray.MenuItem
 }
 
@@ -69,9 +65,6 @@ func (a *App) onReady() {
 	a.openStatus = systray.AddMenuItem("Open AgentWitch Local", "Open AgentWitch Local")
 	a.stopItem = systray.AddMenuItem("Stop Agent Witch", "Stop Agent Witch")
 	a.viewLogs = systray.AddMenuItem("View logs", "View logs")
-	systray.AddSeparator()
-
-	a.loginItem = systray.AddMenuItemCheckbox("Launch at login", "Launch Agent Witch at login", false)
 	systray.AddSeparator()
 	a.quitItem = systray.AddMenuItem("Quit", "Quit")
 
@@ -102,17 +95,10 @@ func (a *App) refreshInstallAndHealth() {
 	installed := a.Platform.IsInstalled()
 	healthy := a.probeHealth()
 	next := core.DeriveRuntimeState(installed, healthy)
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(core.CommandTimeoutSeconds)*time.Second)
-	defer cancel()
-	login := false
-	if installed {
-		login = a.Platform.IsLaunchAtLoginEnabled(ctx)
-	}
 	a.mu.Lock()
 	a.state = next
 	a.errorMessage = ""
 	a.statusOverride = ""
-	a.launchesAtLogin = login
 	a.mu.Unlock()
 }
 
@@ -148,10 +134,10 @@ func (a *App) probeHealth() bool {
 	return core.ProbeHealth(ctx, a.client(), core.HealthURL())
 }
 
-func (a *App) snapshot() (core.RuntimeState, string, string, bool) {
+func (a *App) snapshot() (core.RuntimeState, string, string) {
 	a.mu.Lock()
 	defer a.mu.Unlock()
-	return a.state, a.errorMessage, a.statusOverride, a.launchesAtLogin
+	return a.state, a.errorMessage, a.statusOverride
 }
 
 func (a *App) setState(state core.RuntimeState, errMsg string) {
@@ -163,20 +149,17 @@ func (a *App) setState(state core.RuntimeState, errMsg string) {
 }
 
 func (a *App) applyMenu() {
-	state, errMsg, override, login := a.snapshot()
-	model := core.DeriveMenu(state, errMsg, login)
+	state, errMsg, override := a.snapshot()
+	model := core.DeriveMenu(state, errMsg)
 	title := model.StatusTitle
 	if override != "" {
 		title = override
 	}
 	a.statusItem.SetTitle(title)
 
-	hide := func(items ...*systray.MenuItem) {
-		for _, item := range items {
-			item.Hide()
-		}
+	for _, item := range []*systray.MenuItem{a.openConnect, a.installHint, a.startItem, a.openStatus, a.stopItem, a.viewLogs} {
+		item.Hide()
 	}
-	hide(a.openConnect, a.installHint, a.startItem, a.openStatus, a.stopItem, a.viewLogs)
 
 	show := func(item *systray.MenuItem, action core.MenuAction) {
 		for _, row := range model.Items {
@@ -200,12 +183,6 @@ func (a *App) applyMenu() {
 	show(a.openStatus, core.ActionOpenStatus)
 	show(a.stopItem, core.ActionStop)
 	show(a.viewLogs, core.ActionViewLogs)
-
-	if login {
-		a.loginItem.Check()
-	} else {
-		a.loginItem.Uncheck()
-	}
 }
 
 func (a *App) watchClicks() {
@@ -221,8 +198,6 @@ func (a *App) watchClicks() {
 			a.runStop()
 		case <-a.viewLogs.ClickedCh:
 			a.runViewLogs()
-		case <-a.loginItem.ClickedCh:
-			a.toggleLogin()
 		case <-a.quitItem.ClickedCh:
 			systray.Quit()
 			return
@@ -278,21 +253,5 @@ func (a *App) runViewLogs() {
 			a.mu.Unlock()
 			a.applyMenu()
 		}
-	})
-}
-
-func (a *App) toggleLogin() {
-	_, _, _, current := a.snapshot()
-	next := !current
-	a.withTimeout(func(ctx context.Context) {
-		if err := a.Platform.SetLaunchAtLogin(ctx, next); err != nil {
-			a.setState(core.StateError, err.Error())
-			a.applyMenu()
-			return
-		}
-		a.mu.Lock()
-		a.launchesAtLogin = next
-		a.mu.Unlock()
-		a.applyMenu()
 	})
 }

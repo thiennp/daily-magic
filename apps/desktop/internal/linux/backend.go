@@ -14,6 +14,7 @@ import (
 )
 
 // Backend drives AWI via systemd --user on Linux.
+// Start = enable --now (survives re-login). Stop = disable --now (does not).
 type Backend struct {
 	Home     string
 	Runner   host.Runner
@@ -54,7 +55,7 @@ func (b Backend) IsInstalled() bool {
 	return core.IsInstalled(b.home(), b.exists())
 }
 
-// Start enables and starts the user unit.
+// Start enables and starts the user unit (persists across login).
 func (b Backend) Start(ctx context.Context) error {
 	name, args := SystemctlEnableNowArgs()
 	result := b.runner().Run(ctx, name, args...)
@@ -64,35 +65,12 @@ func (b Backend) Start(ctx context.Context) error {
 	return nil
 }
 
-// Stop stops the user unit.
+// Stop disables and stops the user unit so it does not return after re-login.
 func (b Backend) Stop(ctx context.Context) error {
-	name, args := SystemctlStopArgs()
+	name, args := SystemctlDisableNowArgs()
 	result := b.runner().Run(ctx, name, args...)
 	if result.ExitCode != 0 {
 		return commandError("stop", result)
-	}
-	return nil
-}
-
-// IsLaunchAtLoginEnabled reports systemctl --user is-enabled.
-func (b Backend) IsLaunchAtLoginEnabled(ctx context.Context) bool {
-	name, args := SystemctlIsEnabledArgs()
-	result := b.runner().Run(ctx, name, args...)
-	return result.ExitCode == 0 && strings.TrimSpace(result.Stdout) == "enabled"
-}
-
-// SetLaunchAtLogin enables or disables the user unit.
-func (b Backend) SetLaunchAtLogin(ctx context.Context, enabled bool) error {
-	var name string
-	var args []string
-	if enabled {
-		name, args = SystemctlEnableArgs()
-	} else {
-		name, args = SystemctlDisableArgs()
-	}
-	result := b.runner().Run(ctx, name, args...)
-	if result.ExitCode != 0 {
-		return commandError("launch-at-login", result)
 	}
 	return nil
 }

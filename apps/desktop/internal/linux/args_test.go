@@ -12,12 +12,8 @@ func TestSystemctlArgs(t *testing.T) {
 	if name != "systemctl" || !reflect.DeepEqual(args, []string{"--user", "enable", "--now", core.SystemdUnitName}) {
 		t.Fatalf("%s %v", name, args)
 	}
-	name, args = SystemctlStopArgs()
-	if name != "systemctl" || !reflect.DeepEqual(args, []string{"--user", "stop", core.SystemdUnitName}) {
-		t.Fatalf("%s %v", name, args)
-	}
-	name, args = SystemctlIsEnabledArgs()
-	if name != "systemctl" || !reflect.DeepEqual(args, []string{"--user", "is-enabled", core.SystemdUnitName}) {
+	name, args = SystemctlDisableNowArgs()
+	if name != "systemctl" || !reflect.DeepEqual(args, []string{"--user", "disable", "--now", core.SystemdUnitName}) {
 		t.Fatalf("%s %v", name, args)
 	}
 	name, args = XdgOpenArgs("http://example")

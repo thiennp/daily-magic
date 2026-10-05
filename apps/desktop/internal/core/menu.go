@@ -9,7 +9,6 @@ const (
 	ActionStop        MenuAction = "stop"
 	ActionOpenStatus  MenuAction = "openStatus"
 	ActionViewLogs    MenuAction = "viewLogs"
-	ActionToggleLogin MenuAction = "toggleLaunchAtLogin"
 	ActionQuit        MenuAction = "quit"
 	ActionInstallHint MenuAction = "installHint"
 )
@@ -25,17 +24,17 @@ type MenuItem struct {
 
 // MenuModel is the full derived menu for the current runtime snapshot.
 type MenuModel struct {
-	StatusTitle     string
-	Items           []MenuItem
-	LaunchesAtLogin bool
-	InstallHint     string
+	StatusTitle string
+	Items       []MenuItem
+	InstallHint string
 }
 
-// DeriveMenu builds menu items from installed/health/login state (pure).
-func DeriveMenu(state RuntimeState, errorMessage string, launchesAtLogin bool) MenuModel {
+// DeriveMenu builds menu items from installed/health state (pure).
+// Start/Stop already control login persistence via enable/disable --now,
+// so there is no separate "Launch at login" toggle.
+func DeriveMenu(state RuntimeState, errorMessage string) MenuModel {
 	model := MenuModel{
-		StatusTitle:     StatusLabel(state, errorMessage),
-		LaunchesAtLogin: launchesAtLogin,
+		StatusTitle: StatusLabel(state, errorMessage),
 	}
 	model.Items = append(model.Items, MenuItem{
 		Action:   "",
@@ -70,12 +69,6 @@ func DeriveMenu(state RuntimeState, errorMessage string, launchesAtLogin bool) M
 	}
 
 	model.Items = append(model.Items,
-		MenuItem{
-			Action:  ActionToggleLogin,
-			Title:   "Launch at login",
-			Enabled: true,
-			Checked: launchesAtLogin,
-		},
 		MenuItem{Action: ActionQuit, Title: "Quit", Enabled: true},
 	)
 	return model

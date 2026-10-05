@@ -3,7 +3,7 @@ package core
 import "testing"
 
 func TestDeriveMenuNotInstalled(t *testing.T) {
-	model := DeriveMenu(StateNotInstalled, "", false)
+	model := DeriveMenu(StateNotInstalled, "")
 	if model.StatusTitle != "Not installed" {
 		t.Fatalf("status: %s", model.StatusTitle)
 	}
@@ -12,40 +12,39 @@ func TestDeriveMenuNotInstalled(t *testing.T) {
 	}
 	assertHasAction(t, model, ActionOpenConnect)
 	assertNoAction(t, model, ActionStart)
+	assertHasAction(t, model, ActionQuit)
 }
 
 func TestDeriveMenuStopped(t *testing.T) {
-	model := DeriveMenu(StateStopped, "", true)
+	model := DeriveMenu(StateStopped, "")
 	assertHasAction(t, model, ActionStart)
 	assertHasAction(t, model, ActionOpenStatus)
 	assertHasAction(t, model, ActionViewLogs)
 	assertNoAction(t, model, ActionStop)
-	found := false
-	for _, item := range model.Items {
-		if item.Action == ActionToggleLogin {
-			found = true
-			if !item.Checked {
-				t.Fatal("login should be checked")
-			}
-		}
-	}
-	if !found {
-		t.Fatal("missing launch at login")
-	}
+	assertHasAction(t, model, ActionQuit)
 }
 
 func TestDeriveMenuRunning(t *testing.T) {
-	model := DeriveMenu(StateRunning, "", false)
+	model := DeriveMenu(StateRunning, "")
 	assertHasAction(t, model, ActionStop)
 	assertHasAction(t, model, ActionOpenStatus)
 	assertNoAction(t, model, ActionStart)
 }
 
 func TestDeriveMenuStartingDisablesStop(t *testing.T) {
-	model := DeriveMenu(StateStarting, "", false)
+	model := DeriveMenu(StateStarting, "")
 	for _, item := range model.Items {
 		if item.Action == ActionStop && item.Enabled {
 			t.Fatal("stop should be disabled while starting")
+		}
+	}
+}
+
+func TestDeriveMenuHasNoLaunchAtLogin(t *testing.T) {
+	model := DeriveMenu(StateRunning, "")
+	for _, item := range model.Items {
+		if item.Title == "Launch at login" {
+			t.Fatal("launch at login toggle must not appear; start/stop own persistence")
 		}
 	}
 }

@@ -34,5 +34,6 @@ Releases are **manual only**. Cut a GitHub release with the owner’s explicit g
 - linux/amd64 only (matches the Linux installer).
 - Tray uses DBus StatusNotifierItem (`fyne.io/systray`); stock GNOME needs the AppIndicator extension.
 - Install Agent Witch via the terminal command first, then run this tray app.
-- “Launch at login” toggles `systemctl --user enable|disable` for `agent-witch.service`. Tray autostart (`~/.config/autostart`) is not wired yet.
+- Start = `systemctl --user enable --now` (survives re-login). Stop = `systemctl --user disable --now` (does not return after re-login). No separate launch-at-login toggle.
+- Tray autostart (`~/.config/autostart`) is not wired yet.
 - This folder is **not** a separate deployable in `deployables.registry.json` (schema is fixed to AWC/AWL/AWB/AWI). It is a packaging surface for AWL/AWI.
