@@ -42,13 +42,27 @@ export const createProjectB2bFakeSql = () => {
           )
         : [];
     }
-    if (query.includes("SET last_activity_at")) {
-      const [atIso, id, from] = values as [string, string, string];
+    if (query.includes("SET b2b_state") && query.includes("last_activity_at =")) {
+      // b2b_state, b2b_state_at, last_activity_at, id, from — or start-watch shape
+      if (query.includes("b2b_state IS NULL")) {
+        return [];
+      }
+      const [to, , activityAt, id, from] = values as [
+        string,
+        string,
+        string,
+        string,
+        string,
+      ];
       const row = deliveries.get(id);
       if (row === undefined || row.b2b_state !== from) {
         return [];
       }
-      deliveries.set(id, { ...row, last_activity_at: new Date(atIso) });
+      deliveries.set(id, {
+        ...row,
+        b2b_state: to,
+        last_activity_at: new Date(activityAt),
+      });
       return [{ id }];
     }
     if (query.includes("SET b2b_state")) {
@@ -58,6 +72,15 @@ export const createProjectB2bFakeSql = () => {
         return [];
       }
       deliveries.set(id, { ...row, b2b_state: to });
+      return [{ id }];
+    }
+    if (query.includes("SET last_activity_at")) {
+      const [atIso, id, from] = values as [string, string, string];
+      const row = deliveries.get(id);
+      if (row === undefined || row.b2b_state !== from) {
+        return [];
+      }
+      deliveries.set(id, { ...row, last_activity_at: new Date(atIso) });
       return [{ id }];
     }
     throw new Error(`unexpected query: ${query}`);

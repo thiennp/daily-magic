@@ -1,9 +1,15 @@
-import { CRON_SECRET_ENV } from "@/lib/cron/cronSecret.constants";
+import {
+  CRON_SECRET_ENV,
+  PROJECT_MESSAGE_SILENCE_CRON_PATH,
+} from "@/lib/cron/cronSecret.constants";
 import { isCronSecretConfigured } from "@/lib/cron/isCronSecretConfigured";
 import { isValidCronSecretHeader } from "@/lib/cron/isValidCronSecretHeader";
 import { checkProjectMessageSilence } from "@/lib/projects/acl/messaging/checkProjectMessageSilence";
 
 export const dynamic = "force-dynamic";
+
+/** Named route path for ops docs and schedulers. */
+export const PROJECT_MESSAGE_SILENCE_CRON_ROUTE = PROJECT_MESSAGE_SILENCE_CRON_PATH;
 
 /**
  * Optional external trigger for the bot-to-bot silence check. The server

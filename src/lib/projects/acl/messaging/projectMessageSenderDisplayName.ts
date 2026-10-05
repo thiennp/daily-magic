@@ -1,6 +1,7 @@
 import {
   PROJECT_MESSAGE_SYSTEM_NOTICE_KINDS,
   PROJECT_MESSAGE_SYSTEM_SENDER_DISPLAY_NAME,
+  PROJECT_MESSAGE_OWNER_SENDER_DISPLAY_NAME,
 } from "@/lib/projects/acl/messaging/projectMessage.constants";
 
 const SYSTEM_KINDS: ReadonlySet<string> = new Set(
@@ -17,7 +18,7 @@ export const projectMessageSenderDisplayName = (
   ) {
     return SYSTEM_KINDS.has(String(row.kind))
       ? PROJECT_MESSAGE_SYSTEM_SENDER_DISPLAY_NAME
-      : "Owner";
+      : PROJECT_MESSAGE_OWNER_SENDER_DISPLAY_NAME;
   }
   return row.sender_display_name ? String(row.sender_display_name) : null;
 };

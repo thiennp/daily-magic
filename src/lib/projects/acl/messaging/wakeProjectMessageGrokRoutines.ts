@@ -1,3 +1,4 @@
+import { PROJECT_MESSAGE_OWNER_SENDER_DISPLAY_NAME } from "@/lib/projects/acl/messaging/projectMessage.constants";
 import {
   wakeProjectGrokRoutineWebhooks,
   type ProjectGrokRoutineWakeResult,
@@ -20,7 +21,7 @@ const wakeSenderDisplayName = (
   }
   return input.senderProjectDisplayName
     ? input.senderProjectDisplayName
-    : "Owner";
+    : PROJECT_MESSAGE_OWNER_SENDER_DISPLAY_NAME;
 };
 
 /**
