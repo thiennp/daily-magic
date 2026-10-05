@@ -64,3 +64,7 @@ next-env.d.ts
 # Mac app packaging output
 dist/mac/
 apps/mac/.build/
+
+# Desktop tray packaging output
+dist/linux/
+dist/windows/
