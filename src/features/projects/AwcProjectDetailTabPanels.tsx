@@ -1,7 +1,7 @@
 "use client";
 
-import AwcProjectDeleteControl from "@/features/projects/AwcProjectDeleteControl";
-import AwcProjectNameEditor from "@/features/projects/AwcProjectNameEditor";
+import AwcProjectDetailSettingsPanel from "@/features/projects/AwcProjectDetailSettingsPanel";
+import AwcProjectMessengerSection from "@/features/projects/messenger/AwcProjectMessengerSection";
 import AwcProjectOverviewPanel from "@/features/projects/overview/AwcProjectOverviewPanel";
 import { PROJECT_PAGE_SHELL_COPY } from "@/features/projects/projectPageShellCopy.constant";
 import {
@@ -21,10 +21,12 @@ interface AwcProjectDetailTabPanelsProps {
   readonly deviceDisplayName: string;
   readonly editCta: ProjectEditOnMacCta;
   readonly onGotoTab: (tab: ProjectPageTabId) => void;
+  readonly onGotoActivity: (threadKey: string | null) => void;
+  readonly activityInitialThreadKey?: string | null;
+  readonly onActivityUnreadMaybeChanged?: () => void;
 }
 
 const STUB_TABS: readonly ProjectPageTabId[] = [
-  "activity",
   "team",
   "pitfalls",
   "resources",
@@ -38,9 +40,11 @@ export default function AwcProjectDetailTabPanels({
   deviceDisplayName,
   editCta,
   onGotoTab,
+  onGotoActivity,
+  activityInitialThreadKey = null,
+  onActivityUnreadMaybeChanged,
 }: AwcProjectDetailTabPanelsProps) {
   const copy = PROJECT_PAGE_SHELL_COPY;
-  const isOwner = pageActorRole === "owner";
 
   return (
     <>
@@ -61,33 +65,22 @@ export default function AwcProjectDetailTabPanels({
                 deviceDisplayName={deviceDisplayName}
                 editCta={editCta}
                 onGotoTab={onGotoTab}
+                onGotoActivity={onGotoActivity}
+              />
+            ) : null}
+            {tabId === "activity" && selected ? (
+              <AwcProjectMessengerSection
+                projectId={project.id}
+                initialThreadKey={activityInitialThreadKey}
+                onUnreadMaybeChanged={onActivityUnreadMaybeChanged}
               />
             ) : null}
             {tabId === "settings" ? (
-              <div className="flex max-w-[760px] flex-col gap-6">
-                <section className="space-y-3 rounded-xl border border-gray-200/80 bg-white p-5 dark:border-gray-800/80 dark:bg-gray-900/40">
-                  <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
-                    Project name
-                  </h2>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {copy.settingsNameHint}
-                  </p>
-                  {isOwner ? (
-                    <AwcProjectNameEditor
-                      projectId={project.id}
-                      initialName={project.name}
-                      startInEditMode={startRename}
-                    />
-                  ) : (
-                    <p className="text-sm text-gray-700 dark:text-gray-200">
-                      {project.name}
-                    </p>
-                  )}
-                </section>
-                {isOwner ? (
-                  <AwcProjectDeleteControl project={project} variant="detail" />
-                ) : null}
-              </div>
+              <AwcProjectDetailSettingsPanel
+                project={project}
+                startRename={startRename}
+                pageActorRole={pageActorRole}
+              />
             ) : null}
             {STUB_TABS.includes(tabId) ? (
               <div className="rounded-xl border border-dashed border-gray-200 p-4 text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">

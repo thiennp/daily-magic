@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 
 import AwcMessengerEmptyState from "@/features/projects/messenger/AwcMessengerEmptyState";
+import AwcProjectMessengerHeading from "@/features/projects/messenger/AwcProjectMessengerHeading";
 import AwcProjectMessengerPanels from "@/features/projects/messenger/AwcProjectMessengerPanels";
 import { AWC_PROJECT_MESSENGER_COPY } from "@/features/projects/messenger/awcProjectMessengerCopy.constant";
 import { useAwcProjectMessengerThread } from "@/features/projects/messenger/hooks/useAwcProjectMessengerThread";
@@ -16,6 +17,8 @@ interface AwcProjectMessengerSectionProps {
   readonly projectId: string;
   /** Overview attention / hash deep-link into a bot thread (membershipId or "whole"). */
   readonly initialThreadKey?: string | null;
+  /** Parent tab badge: refresh after open/send marks read or changes unread. */
+  readonly onUnreadMaybeChanged?: () => void;
 }
 
 const WHOLE_KEY = "whole";
@@ -23,6 +26,7 @@ const WHOLE_KEY = "whole";
 export default function AwcProjectMessengerSection({
   projectId,
   initialThreadKey = null,
+  onUnreadMaybeChanged,
 }: AwcProjectMessengerSectionProps) {
   const copy = AWC_PROJECT_MESSENGER_COPY;
   const list = useAwcProjectMessengerThreads(projectId);
@@ -35,7 +39,8 @@ export default function AwcProjectMessengerSection({
   );
   const onOpened = useCallback(() => {
     void reloadThreads();
-  }, [reloadThreads]);
+    onUnreadMaybeChanged?.();
+  }, [onUnreadMaybeChanged, reloadThreads]);
   const open = useAwcProjectMessengerThread({
     projectId,
     threadKey: selectedKey,
@@ -69,19 +74,10 @@ export default function AwcProjectMessengerSection({
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2">
-        <h2 className="text-base font-semibold text-gray-900 dark:text-white">
-          {copy.tab}
-        </h2>
-        {unreadTotal > 0 ? (
-          <span className="inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-blue-600 px-1.5 py-0.5 text-[11px] font-semibold text-white">
-            {unreadTotal}
-          </span>
-        ) : null}
-      </div>
-      {open.message !== null ? (
-        <p className="text-xs text-amber-800 dark:text-amber-200">{open.message}</p>
-      ) : null}
+      <AwcProjectMessengerHeading
+        unreadTotal={unreadTotal}
+        message={open.message}
+      />
       <AwcProjectMessengerPanels
         threads={list.threads}
         selectedKey={selectedKey}
@@ -102,12 +98,18 @@ export default function AwcProjectMessengerSection({
         }}
         onSendMessage={async (text, needsReply) => {
           const ok = await open.send(text, needsReply);
-          if (ok) void list.reload();
+          if (ok) {
+            void list.reload();
+            onUnreadMaybeChanged?.();
+          }
           return ok;
         }}
         onSendTask={async (draft) => {
           const ok = await open.sendTask(draft);
-          if (ok) void list.reload();
+          if (ok) {
+            void list.reload();
+            onUnreadMaybeChanged?.();
+          }
           return ok;
         }}
       />

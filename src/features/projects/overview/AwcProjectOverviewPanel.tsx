@@ -27,6 +27,7 @@ interface AwcProjectOverviewPanelProps {
   readonly deviceDisplayName: string;
   readonly editCta: ProjectEditOnMacCta;
   readonly onGotoTab: (tab: ProjectPageTabId) => void;
+  readonly onGotoActivity: (threadKey: string | null) => void;
 }
 
 export default function AwcProjectOverviewPanel({
@@ -34,6 +35,7 @@ export default function AwcProjectOverviewPanel({
   deviceDisplayName,
   editCta,
   onGotoTab,
+  onGotoActivity,
 }: AwcProjectOverviewPanelProps) {
   const access = useAwcProjectAccess(project.id);
   const { threads } = useAwcProjectMessengerThreads(project.id);
@@ -88,7 +90,7 @@ export default function AwcProjectOverviewPanel({
             <AwcProjectOverviewAttentionBanner
               attention={attention}
               onOpen={() => {
-                onGotoTab("activity");
+                onGotoActivity(attention.membershipId);
               }}
             />
           ) : null}
@@ -103,7 +105,7 @@ export default function AwcProjectOverviewPanel({
           <AwcProjectOverviewRecentCard
             items={recent}
             onViewAll={() => {
-              onGotoTab("activity");
+              onGotoActivity(null);
             }}
           />
           <AwcProjectOverviewPitfallsCard

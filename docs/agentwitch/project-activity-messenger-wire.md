@@ -3,8 +3,14 @@
 Contract for Human UI layout S3 Activity. **Do not redesign page chrome here** —
 reuse `src/features/projects/messenger/*` and drop into the layout shell.
 
-Base: main tip that includes Messenger API `3af3cdb2` + UI `f5db55b1` (and later).
-Lifecycle FSA (`feat/awc-message-lifecycle-fsa`) stays untouched.
+Base: Human UI S2 shell `feat/awc-project-page-layout-s2` @ `41ce167c`
+(Overview + S1 tab scaffold; stacks Messenger API/UI + Connect). Lifecycle
+landed separately — untouched here.
+
+Activity tab mounts `AwcProjectMessengerSection`. Tab bar badge uses Overview
+`sumMessengerUnread` (+ section `onUnreadMaybeChanged` refresh). Overview
+attention/recent call `onGotoActivity(threadKey)` → Activity with
+`initialThreadKey`.
 
 ## UX modes (artifact Activity)
 

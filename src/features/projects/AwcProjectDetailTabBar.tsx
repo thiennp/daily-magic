@@ -9,6 +9,8 @@ import {
 interface AwcProjectDetailTabBarProps {
   readonly activeTab: ProjectPageTabId;
   readonly onTabChange: (tab: ProjectPageTabId) => void;
+  /** Real messenger unread total for Activity alert badge (hidden at 0). */
+  readonly activityUnreadCount?: number;
 }
 
 /** Active tab uses existing black/gray chrome — no new accent palette. */
@@ -22,6 +24,7 @@ const TAB_INACTIVE =
 export default function AwcProjectDetailTabBar({
   activeTab,
   onTabChange,
+  activityUnreadCount = 0,
 }: AwcProjectDetailTabBarProps) {
   return (
     <div
@@ -31,6 +34,7 @@ export default function AwcProjectDetailTabBar({
     >
       {PROJECT_PAGE_TAB_IDS.map((tabId) => {
         const selected = tabId === activeTab;
+        const showUnread = tabId === "activity" && activityUnreadCount > 0;
         return (
           <button
             key={tabId}
@@ -45,7 +49,14 @@ export default function AwcProjectDetailTabBar({
               onTabChange(tabId);
             }}
           >
-            {PROJECT_PAGE_TAB_LABELS[tabId]}
+            <span className="inline-flex items-center gap-1.5">
+              {PROJECT_PAGE_TAB_LABELS[tabId]}
+              {showUnread ? (
+                <span className="inline-flex min-w-[1.15rem] items-center justify-center rounded-full bg-gray-900 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white dark:bg-white dark:text-gray-900">
+                  {activityUnreadCount}
+                </span>
+              ) : null}
+            </span>
           </button>
         );
       })}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import AwcProjectDetailHeader from "@/features/projects/AwcProjectDetailHeader";
@@ -9,6 +9,8 @@ import AwcProjectDetailTabPanels from "@/features/projects/AwcProjectDetailTabPa
 import useAwcProjectDetailTab from "@/features/projects/hooks/useAwcProjectDetailTab";
 import useAwcProjectDevicePresentation from "@/features/projects/hooks/useAwcProjectDevicePresentation";
 import { useProjectActivityTaskDeepLink } from "@/features/projects/hooks/useProjectActivityTaskDeepLink";
+import { useAwcProjectMessengerThreads } from "@/features/projects/messenger/hooks/useAwcProjectMessengerThreads";
+import sumMessengerUnread from "@/features/projects/overview/sumMessengerUnread";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
@@ -34,15 +36,28 @@ export default function AwcProjectDetailPanel({
   const [renameInSettings, setRenameInSettings] = useState(
     startRename && isOwner,
   );
-  const { deviceDisplayName, presence, editCta } = useAwcProjectDevicePresentation({
-    project,
-    devices,
-    displayNameById,
-    localTokenHash,
-  });
+  const [activityThreadKey, setActivityThreadKey] = useState<string | null>(
+    null,
+  );
+  const { deviceDisplayName, presence, editCta } =
+    useAwcProjectDevicePresentation({
+      project,
+      devices,
+      displayNameById,
+      localTokenHash,
+    });
   const { activeTab, setActiveTab } = useAwcProjectDetailTab({
     preferSettingsOnMount: renameInSettings,
   });
+  const messengerThreads = useAwcProjectMessengerThreads(project.id);
+  const activityUnreadCount = sumMessengerUnread(messengerThreads.threads);
+  const onGotoActivity = useCallback(
+    (threadKey: string | null) => {
+      setActivityThreadKey(threadKey === null ? "whole" : threadKey);
+      setActiveTab("activity");
+    },
+    [setActiveTab],
+  );
   const copy = HUMAN_INVITE_UI_COPY;
   const roleChip =
     pageActorRole === "member"
@@ -72,6 +87,7 @@ export default function AwcProjectDetailPanel({
       <AwcProjectDetailTabBar
         activeTab={activeTab}
         onTabChange={setActiveTab}
+        activityUnreadCount={activityUnreadCount}
       />
       <AwcProjectDetailTabPanels
         activeTab={activeTab}
@@ -81,6 +97,9 @@ export default function AwcProjectDetailPanel({
         deviceDisplayName={deviceDisplayName}
         editCta={editCta}
         onGotoTab={setActiveTab}
+        onGotoActivity={onGotoActivity}
+        activityInitialThreadKey={activityThreadKey}
+        onActivityUnreadMaybeChanged={messengerThreads.reload}
       />
     </div>
   );
