@@ -2,20 +2,21 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { useAwcProjectMessengerThreadSend } from "@/features/projects/messenger/hooks/useAwcProjectMessengerThreadSend";
 import type { AwcMessengerOpenThread } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 import { fetchMessengerThread } from "@/features/projects/messenger/utils/fetchMessengerThread";
-import { sendMessengerMessage } from "@/features/projects/messenger/utils/sendMessengerMessage";
 
 export const useAwcProjectMessengerThread = (input: {
   readonly projectId: string;
   readonly threadKey: string | null;
+  /** Fired after GET open succeeds (server marks read). Refresh thread-list badge. */
+  readonly onOpened?: (threadKey: string) => void;
 }) => {
-  const { projectId, threadKey } = input;
+  const { projectId, threadKey, onOpened } = input;
   const [thread, setThread] = useState<AwcMessengerOpenThread | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [sending, setSending] = useState(false);
   const generationRef = useRef(0);
 
   // Clear cached thread when the selection becomes empty (render-time adjust).
@@ -44,53 +45,36 @@ export const useAwcProjectMessengerThread = (input: {
   );
 
   const reload = useCallback(async () => {
-    if (threadKey === null) {
-      return;
-    }
+    if (threadKey === null) return;
     setIsLoading(true);
-    const result = await fetchMessengerThread({ projectId, threadKey });
-    applyResult(result);
+    applyResult(await fetchMessengerThread({ projectId, threadKey }));
     setIsLoading(false);
   }, [projectId, threadKey, applyResult]);
 
   useEffect(() => {
-    if (threadKey === null) {
-      return;
-    }
+    if (threadKey === null) return;
     const generation = generationRef.current + 1;
     generationRef.current = generation;
     const load = async (): Promise<void> => {
       setIsLoading(true);
       const result = await fetchMessengerThread({ projectId, threadKey });
-      if (generationRef.current !== generation) {
-        return;
-      }
+      if (generationRef.current !== generation) return;
       applyResult(result);
       setIsLoading(false);
+      if (result.ok) onOpened?.(threadKey);
     };
     void load();
-  }, [projectId, threadKey, applyResult]);
+  }, [projectId, threadKey, applyResult, onOpened]);
 
-  const send = useCallback(
-    async (text: string, needsReply: boolean): Promise<boolean> => {
-      if (threadKey === null) return false;
-      setSending(true);
-      const result = await sendMessengerMessage({
-        projectId,
-        threadKey,
-        text,
-        needsReply,
-      });
-      setSending(false);
-      if (!result.ok) {
-        setMessage(result.errorMessage);
-        return false;
-      }
-      await reload();
-      return true;
-    },
-    [projectId, reload, threadKey],
-  );
+  const onError = useCallback((errorMessage: string) => {
+    setMessage(errorMessage);
+  }, []);
+  const { sending, send, sendTask } = useAwcProjectMessengerThreadSend({
+    projectId,
+    threadKey,
+    reload,
+    onError,
+  });
 
   return {
     thread: threadKey === null ? null : thread,
@@ -100,5 +84,6 @@ export const useAwcProjectMessengerThread = (input: {
     sending,
     reload,
     send,
+    sendTask,
   };
 };
