@@ -8,13 +8,14 @@ import { asRowArray, getSql } from "@/lib/db";
 
 export type InsertHumanMembershipResult =
   | { readonly ok: true; readonly membership: ProjectMembershipRecord }
-  | { readonly ok: false; readonly code: "already_member" };
+  | { readonly ok: false; readonly code: "already_member" | "display_name_taken" };
 
-/** Insert an active human seat (member_kind=human). Unique active seat per user. */
+/** Insert an active human seat with project nickname (member_kind=human). */
 export const insertHumanProjectMembership = async (input: {
   readonly projectId: string;
   readonly userId: string;
   readonly role: HumanInviteRole;
+  readonly projectDisplayName: string;
 }): Promise<InsertHumanMembershipResult> => {
   const sql = getSql();
   const membershipId = randomUUID();
@@ -34,7 +35,7 @@ export const insertHumanProjectMembership = async (input: {
           'active',
           NULL,
           ${scopes},
-          NULL,
+          ${input.projectDisplayName},
           'human'
         )
         RETURNING *
@@ -46,6 +47,9 @@ export const insertHumanProjectMembership = async (input: {
     return { ok: true, membership: mapProjectMembershipRow(rows[0]) };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
+    if (message.includes("project_memberships_display_name_active_idx")) {
+      return { ok: false, code: "display_name_taken" };
+    }
     if (
       message.includes("project_memberships_project_user_active_idx") ||
       message.includes("unique") ||

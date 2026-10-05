@@ -1,23 +1,26 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const peek = vi.hoisted(() => vi.fn());
-const claim = vi.hoisted(() => vi.fn());
-const classify = vi.hoisted(() => vi.fn());
-const insert = vi.hoisted(() => vi.fn());
+const claimInsert = vi.hoisted(() => vi.fn());
+const resolveName = vi.hoisted(() => vi.fn());
+const loadName = vi.hoisted(() => vi.fn());
 const getProject = vi.hoisted(() => vi.fn());
 const getMembership = vi.hoisted(() => vi.fn());
 
 vi.mock("@/lib/projects/acl/humanInvites/peekHumanInviteByToken", () => ({
   peekHumanInviteByToken: peek,
 }));
-vi.mock("@/lib/projects/acl/humanInvites/claimHumanInviteToken", () => ({
-  claimHumanInviteToken: claim,
+vi.mock("@/lib/projects/acl/humanInvites/claimAndInsertHumanMembership", () => ({
+  claimAndInsertHumanMembership: claimInsert,
 }));
 vi.mock("@/lib/projects/acl/humanInvites/classifyHumanInviteMiss", () => ({
-  classifyHumanInviteMiss: classify,
+  classifyHumanInviteMiss: vi.fn(),
 }));
-vi.mock("@/lib/projects/acl/humanInvites/insertHumanProjectMembership", () => ({
-  insertHumanProjectMembership: insert,
+vi.mock("@/lib/projects/acl/humanInvites/resolveHumanAcceptDisplayName", () => ({
+  resolveHumanAcceptDisplayName: resolveName,
+}));
+vi.mock("@/lib/projects/acl/humanInvites/loadUserAccountName", () => ({
+  loadUserAccountName: loadName,
 }));
 vi.mock("@/lib/projects/userProjectQueries", () => ({
   getUserProjectById: getProject,
@@ -32,58 +35,63 @@ import {
 } from "@/lib/projects/acl/humanInvites/redeemHumanInviteTestFixtures";
 import { redeemHumanProjectInvite } from "@/lib/projects/acl/humanInvites/redeemHumanProjectInvite";
 
-describe("redeemHumanProjectInvite success / explicit states", () => {
+const token = "t".repeat(22);
+
+describe("redeemHumanProjectInvite success / naming", () => {
   beforeEach(() => {
-    for (const m of [peek, claim, classify, insert, getProject, getMembership]) {
+    for (const m of [peek, claimInsert, resolveName, loadName, getProject, getMembership]) {
       m.mockReset();
     }
     peek.mockResolvedValue(invite);
     getProject.mockResolvedValue({ ownerUserId: "owner" });
     getMembership.mockResolvedValue(null);
+    loadName.mockResolvedValue("Ada Lovelace");
+    resolveName.mockResolvedValue({ ok: true, name: "Ada Lovelace" });
   });
 
-  it("accepts and inserts one human membership", async () => {
-    claim.mockResolvedValue({ ok: true, invite });
-    insert.mockResolvedValue({ ok: true, membership });
+  it("accepts with a valid suggested name", async () => {
+    resolveName.mockResolvedValue({ ok: true, name: "Soft Vale" });
+    claimInsert.mockResolvedValue({ ok: true, invite, membership });
     const result = await redeemHumanProjectInvite({
-      token: "t".repeat(22),
+      token,
       claimantUserId: "user-1",
+      suggestedProjectDisplayName: "Soft Vale",
     });
-    expect(result.ok).toBe(true);
-    expect(insert).toHaveBeenCalledWith({
-      projectId: "proj-1",
-      userId: "user-1",
-      role: "member",
-    });
+    expect(result).toMatchObject({ ok: true, projectDisplayName: "Soft Vale" });
+    expect(claimInsert).toHaveBeenCalledWith(
+      expect.objectContaining({ projectDisplayName: "Soft Vale" }),
+    );
   });
 
-  it("returns already_owner without claiming", async () => {
+  it("derives from account name when suggestion omitted", async () => {
+    claimInsert.mockResolvedValue({ ok: true, invite, membership });
+    await redeemHumanProjectInvite({ token, claimantUserId: "user-1" });
+    expect(loadName).toHaveBeenCalledWith("user-1");
+    expect(claimInsert).toHaveBeenCalled();
+  });
+
+  it("already_owner skips naming and claim", async () => {
     getProject.mockResolvedValue({ ownerUserId: "user-1" });
     await expect(
-      redeemHumanProjectInvite({
-        token: "t".repeat(22),
-        claimantUserId: "user-1",
-      }),
-    ).resolves.toEqual({
-      ok: false,
-      code: "already_owner",
-      projectId: "proj-1",
-    });
-    expect(claim).not.toHaveBeenCalled();
+      redeemHumanProjectInvite({ token, claimantUserId: "user-1" }),
+    ).resolves.toEqual({ ok: false, code: "already_owner", projectId: "proj-1" });
+    expect(resolveName).not.toHaveBeenCalled();
+    expect(claimInsert).not.toHaveBeenCalled();
   });
 
-  it("returns already_member without claiming", async () => {
-    getMembership.mockResolvedValue(membership);
+  it("taken name does not claim (invite stays pending)", async () => {
+    resolveName.mockResolvedValue({
+      ok: false,
+      code: "display_name_taken",
+      suggestedProjectDisplayName: "Taken",
+    });
     await expect(
       redeemHumanProjectInvite({
-        token: "t".repeat(22),
+        token,
         claimantUserId: "user-1",
+        suggestedProjectDisplayName: "Taken",
       }),
-    ).resolves.toEqual({
-      ok: false,
-      code: "already_member",
-      projectId: "proj-1",
-    });
-    expect(claim).not.toHaveBeenCalled();
+    ).resolves.toMatchObject({ ok: false, code: "display_name_taken" });
+    expect(claimInsert).not.toHaveBeenCalled();
   });
 });

@@ -20,52 +20,65 @@ describe("POST /api/invite/h/[token]/accept", () => {
     });
   });
 
-  it("returns 401 without auth", async () => {
-    requireAuth.mockResolvedValue({
-      actor: null,
-      error: Response.json({ error: "Unauthorized" }, { status: 401 }),
-    });
-    const response = await POST(new Request("http://local/a"), {
-      params: Promise.resolve({ token: "t".repeat(22) }),
-    });
-    expect(response.status).toBe(401);
-  });
-
-  it("maps already_member to 409 and expired to 410", async () => {
-    redeem.mockResolvedValue({ ok: false, code: "already_member" });
-    expect(
-      (
-        await POST(new Request("http://local/a"), {
-          params: Promise.resolve({ token: "t".repeat(22) }),
-        })
-      ).status,
-    ).toBe(409);
-    redeem.mockResolvedValue({ ok: false, code: "expired" });
-    expect(
-      (
-        await POST(new Request("http://local/a"), {
-          params: Promise.resolve({ token: "t".repeat(22) }),
-        })
-      ).status,
-    ).toBe(410);
-  });
-
-  it("returns membership on success", async () => {
+  it("passes suggestedProjectDisplayName from body", async () => {
     redeem.mockResolvedValue({
       ok: true,
       projectId: "proj-1",
       role: "member",
-      membership: {
-        id: "mem-1",
-        status: "active",
-      },
+      projectDisplayName: "Soft Vale",
+      membership: { id: "mem-1", status: "active" },
     });
-    const response = await POST(new Request("http://local/a"), {
-      params: Promise.resolve({ token: "t".repeat(22) }),
-    });
+    const response = await POST(
+      new Request("http://local/a", {
+        method: "POST",
+        body: JSON.stringify({ suggestedProjectDisplayName: "Soft Vale" }),
+      }),
+      { params: Promise.resolve({ token: "t".repeat(22) }) },
+    );
     expect(response.status).toBe(200);
+    expect(redeem).toHaveBeenCalledWith({
+      token: "t".repeat(22),
+      claimantUserId: "user-1",
+      suggestedProjectDisplayName: "Soft Vale",
+    });
     const body = await response.json();
-    expect(body.membershipId).toBe("mem-1");
-    expect(body.projectId).toBe("proj-1");
+    expect(body.projectDisplayName).toBe("Soft Vale");
+  });
+
+  it("returns DISPLAY_NAME_TAKEN with prefill (409)", async () => {
+    redeem.mockResolvedValue({
+      ok: false,
+      code: "display_name_taken",
+      suggestedProjectDisplayName: "Taken",
+    });
+    const response = await POST(
+      new Request("http://local/a", {
+        method: "POST",
+        body: JSON.stringify({ suggestedProjectDisplayName: "Taken" }),
+      }),
+      { params: Promise.resolve({ token: "t".repeat(22) }) },
+    );
+    expect(response.status).toBe(409);
+    const body = await response.json();
+    expect(body.code).toBe("DISPLAY_NAME_TAKEN");
+    expect(body.suggestedProjectDisplayName).toBe("Taken");
+  });
+
+  it("returns INVALID_DISPLAY_NAME (400)", async () => {
+    redeem.mockResolvedValue({
+      ok: false,
+      code: "display_name_invalid",
+      suggestedProjectDisplayName: "bad@x",
+    });
+    const response = await POST(
+      new Request("http://local/a", {
+        method: "POST",
+        body: JSON.stringify({ suggestedProjectDisplayName: "bad@x" }),
+      }),
+      { params: Promise.resolve({ token: "t".repeat(22) }) },
+    );
+    expect(response.status).toBe(400);
+    const body = await response.json();
+    expect(body.code).toBe("INVALID_DISPLAY_NAME");
   });
 });

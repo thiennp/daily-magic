@@ -15,5 +15,8 @@ import type { ProjectAclScope } from "@/lib/projects/acl/projectAclScopes.consta
  * - connect own bots: claim-bot / later auto-approve (no ACL scope)
  */
 export const defaultHumanMembershipScopes = (
-  _role: HumanInviteRole,
-): readonly ProjectAclScope[] => [];
+  role: HumanInviteRole,
+): readonly ProjectAclScope[] => {
+  void role;
+  return [];
+};
