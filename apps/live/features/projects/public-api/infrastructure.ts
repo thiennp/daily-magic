@@ -26,6 +26,10 @@ export { resolveAgentWitchProjectIdFromCwd } from "../internal/core/resolveAgent
 export { handlePullBoundHarnessPost } from "../internal/core/handlePullBoundHarnessPost";
 export { handleRemoveHarnessSetPost } from "../internal/core/handleRemoveHarnessSetPost";
 
+export { handleProjectPitfallRoutePost } from "../internal/core/pitfalls/handleProjectPitfallRoutePost";
+export { resolveProjectPitfallPostAction } from "../internal/core/pitfalls/projectPitfallPostPaths.constant";
+export type { ProjectPitfallPostAction } from "../internal/core/pitfalls/projectPitfallPostPaths.constant";
+
 export { listLinkedHarnessSetSlugsFromProjectFolder } from "../internal/core/listLinkedHarnessSetSlugsFromProjectFolder";
 
 export { default as shouldCaptureRunOutputForProjectKnowledge } from "../internal/core/knowledge/shouldCaptureRunOutputForProjectKnowledge";

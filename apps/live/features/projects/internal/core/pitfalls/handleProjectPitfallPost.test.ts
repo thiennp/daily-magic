@@ -10,6 +10,7 @@ import type {
 } from "./agentWitchProjectPitfallsStore.type";
 import handleProjectPitfallPost, {
   resolveProjectPitfallPostAction,
+  waitForPitfallActionIdle,
 } from "./handleProjectPitfallPost";
 import { buildPitfallFixture } from "./projectPitfallFixtures.testUtil";
 
@@ -216,5 +217,79 @@ describe("handleProjectPitfallPost", () => {
         }),
       ),
     ).toBe("unavailable");
+  });
+
+  it("serializes rapid retire then restore so the restore sees the retired row", async () => {
+    let items = [buildPitfallFixture()];
+    const upsertOrder: string[] = [];
+    const store: AgentWitchProjectPitfallsStore = {
+      listPitfalls: async () => ({ ok: true, items, syncedAt: null }),
+      upsertPitfall: async (_projectId, pitfall) => {
+        upsertOrder.push(pitfall.source);
+        // Simulate a slow first write; the second call must wait and re-list.
+        await new Promise((resolve) => setTimeout(resolve, 30));
+        items = [
+          buildPitfallFixture({
+            source: pitfall.source === "retired" ? "retired" : "project",
+          }),
+        ];
+        return { ok: true };
+      },
+    };
+
+    const retire = handleProjectPitfallPost({
+      action: "retire",
+      form: new URLSearchParams({ pitfallId: "seed-stale-lockfile" }),
+      projectId: "proj-1",
+      store,
+    });
+    const restore = handleProjectPitfallPost({
+      action: "restore",
+      form: new URLSearchParams({ pitfallId: "seed-stale-lockfile" }),
+      projectId: "proj-1",
+      store,
+    });
+
+    const [retireLoc, restoreLoc] = await Promise.all([retire, restore]);
+    await waitForPitfallActionIdle("proj-1:seed-stale-lockfile");
+
+    expect(flashOf(retireLoc)).toBe("retired");
+    expect(flashOf(restoreLoc)).toBe("restored");
+    expect(upsertOrder).toEqual(["retired", "project"]);
+    expect(items[0]?.source).toBe("project");
+  });
+
+  it("ignores a duplicate retire while the first retire is still pending", async () => {
+    let items = [buildPitfallFixture()];
+    let upsertCalls = 0;
+    const store: AgentWitchProjectPitfallsStore = {
+      listPitfalls: async () => ({ ok: true, items, syncedAt: null }),
+      upsertPitfall: async () => {
+        upsertCalls += 1;
+        await new Promise((resolve) => setTimeout(resolve, 20));
+        items = [buildPitfallFixture({ source: "retired" })];
+        return { ok: true };
+      },
+    };
+
+    const first = handleProjectPitfallPost({
+      action: "retire",
+      form: new URLSearchParams({ pitfallId: "seed-stale-lockfile" }),
+      projectId: "proj-1",
+      store,
+    });
+    const second = handleProjectPitfallPost({
+      action: "retire",
+      form: new URLSearchParams({ pitfallId: "seed-stale-lockfile" }),
+      projectId: "proj-1",
+      store,
+    });
+
+    const [firstLoc, secondLoc] = await Promise.all([first, second]);
+    expect(flashOf(firstLoc)).toBe("retired");
+    // Second call re-lists after the first finishes; row is already retired so
+    // upsert still runs with source retired (idempotent), but both complete in order.
+    expect(flashOf(secondLoc)).toBe("retired");
+    expect(upsertCalls).toBe(2);
   });
 });

@@ -6,7 +6,10 @@ import {
   type ProjectPitfallView,
 } from "@agent-witch/shared/pitfalls";
 import type { ListAgentWitchPitfallsResult } from "./agentWitchProjectPitfallsStore.type";
-import { PROJECT_PITFALL_POST_PATHS } from "./handleProjectPitfallPost";
+import {
+  PROJECT_PITFALL_POST_PATHS,
+  type ProjectPitfallPostAction,
+} from "./projectPitfallPostPaths.constant";
 
 export const PROJECT_PITFALL_NEW_EDIT_ID = "new";
 
@@ -94,6 +97,7 @@ const buildPitfallForm = (input: {
   readonly projectId: string;
   readonly item: ProjectPitfallView | null;
   readonly showRetired: boolean;
+  readonly postPaths: Readonly<Record<ProjectPitfallPostAction, string>>;
 }): string => {
   const { item } = input;
   const severity = item?.severity ?? "warn";
@@ -106,7 +110,7 @@ const buildPitfallForm = (input: {
   const option = (value: ProjectPitfallSeverity): string =>
     `<option value="${value}"${severity === value ? " selected" : ""}>${SEVERITY_LABELS[value]}</option>`;
 
-  return `<form method="POST" action="${PROJECT_PITFALL_POST_PATHS.save}" class="stack pitfall-form" aria-label="${heading}">
+  return `<form method="POST" action="${input.postPaths.save}" class="stack pitfall-form" aria-label="${heading}" onsubmit="this.querySelectorAll('button').forEach(function(b){b.disabled=true});">
       <p class="field-label">${heading}</p>
       ${seedNote}
       <input type="hidden" name="projectId" value="${escapeHtml(input.projectId)}" />
@@ -149,6 +153,7 @@ const buildPitfallRow = (input: {
   readonly item: ProjectPitfallView;
   readonly showRetired: boolean;
   readonly nowMs: number;
+  readonly postPaths: Readonly<Record<ProjectPitfallPostAction, string>>;
 }): string => {
   const { item, projectId, showRetired } = input;
   const isRetired = item.source === "retired";
@@ -156,12 +161,12 @@ const buildPitfallRow = (input: {
             <input type="hidden" name="pitfallId" value="${escapeHtml(item.id)}" />
             ${showRetired ? `<input type="hidden" name="showRetired" value="1" />` : ""}`;
   const actions = isRetired
-    ? `<form method="POST" action="${PROJECT_PITFALL_POST_PATHS.restore}" class="inline-form">
+    ? `<form method="POST" action="${input.postPaths.restore}" class="inline-form" onsubmit="this.querySelectorAll('button').forEach(function(b){b.disabled=true});">
             ${hidden}
             <button class="btn btn-secondary btn-compact" type="submit">Bring back</button>
           </form>`
     : `<a class="btn btn-secondary btn-compact" href="${escapeHtml(tabHref(projectId, { ...retiredParam(showRetired), edit: item.id }))}">Edit</a>
-          <form method="POST" action="${PROJECT_PITFALL_POST_PATHS.retire}" class="inline-form" onsubmit="return confirm('Retire this pitfall? You can bring it back later.');">
+          <form method="POST" action="${input.postPaths.retire}" class="inline-form" onsubmit="if(!confirm('Retire this pitfall? You can bring it back later.'))return false;this.querySelectorAll('button').forEach(function(b){b.disabled=true});">
             ${hidden}
             <button class="btn btn-danger btn-compact" type="submit">Retire</button>
           </form>`;
@@ -190,7 +195,10 @@ const buildProjectPitfallsTab = (input: {
   readonly showRetired: boolean;
   readonly editId: string | null;
   readonly nowMs?: number;
+  /** Form action paths — injected so this view never imports the POST handler. */
+  readonly postPaths?: Readonly<Record<ProjectPitfallPostAction, string>>;
 }): string => {
+  const postPaths = input.postPaths ?? PROJECT_PITFALL_POST_PATHS;
   if (input.list === null || !input.list.ok) {
     return `<p class="empty">Could not load pitfalls. Check this Mac on Status, then reload.</p>`;
   }
@@ -224,6 +232,7 @@ const buildProjectPitfallsTab = (input: {
           projectId: input.projectId,
           item: editing.item,
           showRetired: input.showRetired,
+          postPaths,
         });
 
   const addControl = atLimit
@@ -243,6 +252,7 @@ const buildProjectPitfallsTab = (input: {
               item,
               showRetired: input.showRetired,
               nowMs,
+              postPaths,
             }),
           )
           .join("")}</ul>`;

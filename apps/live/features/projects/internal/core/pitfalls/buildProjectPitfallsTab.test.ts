@@ -153,4 +153,16 @@ describe("formatPitfallLastHit", () => {
       "Last hit 2026-07-01",
     );
   });
+
+  it("disables submit buttons on retire/restore/save so double-clicks cannot race", () => {
+    const active = render();
+    expect(active).toContain("querySelectorAll('button')");
+    expect(active).toContain("b.disabled=true");
+    const retired = render({ showRetired: true });
+    expect(retired).toContain('action="/project/pitfalls/restore"');
+    expect(retired).toContain("b.disabled=true");
+    const form = render({ editId: seed.id });
+    expect(form).toContain('action="/project/pitfalls/save"');
+    expect(form).toContain("b.disabled=true");
+  });
 });

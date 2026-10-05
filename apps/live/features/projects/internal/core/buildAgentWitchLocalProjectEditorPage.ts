@@ -239,37 +239,43 @@ export const buildAgentWitchLocalProjectEditorPageBody = (input: {
   const agentItems =
     input.composition?.items.filter((item) => item.kind === "agent") ?? [];
 
-  let tabBody = "";
-  if (input.activeTab === "harness") {
-    tabBody = buildHarnessTab({
-      project: input.project,
-      installed: input.installed,
-      linkedSetSlugs: input.linkedSetSlugs,
-      boundHarnessCount: input.composition?.counts.harness ?? 0,
-    });
-  } else if (input.activeTab === "workflows") {
-    tabBody = buildCompositionList(
-      workflowItems,
-      "No workflows installed for this project yet.",
-    );
-  } else if (input.activeTab === "agents") {
-    tabBody = buildCompositionList(
-      agentItems,
-      "No agents installed for this project yet.",
-    );
-  } else if (input.activeTab === "knowledge") {
-    tabBody = buildKnowledgeTab({
-      projectId: input.project.id,
-      candidateCount: input.knowledgeCandidateCount,
-    });
-  } else {
-    tabBody = buildProjectPitfallsTab({
-      projectId: input.project.id,
-      list: input.pitfalls ?? null,
-      showRetired: input.pitfallsShowRetired ?? false,
-      editId: input.pitfallsEditId ?? null,
-    });
-  }
+  const tabBody = ((): string => {
+    switch (input.activeTab) {
+      case "harness":
+        return buildHarnessTab({
+          project: input.project,
+          installed: input.installed,
+          linkedSetSlugs: input.linkedSetSlugs,
+          boundHarnessCount: input.composition?.counts.harness ?? 0,
+        });
+      case "workflows":
+        return buildCompositionList(
+          workflowItems,
+          "No workflows installed for this project yet.",
+        );
+      case "agents":
+        return buildCompositionList(
+          agentItems,
+          "No agents installed for this project yet.",
+        );
+      case "knowledge":
+        return buildKnowledgeTab({
+          projectId: input.project.id,
+          candidateCount: input.knowledgeCandidateCount,
+        });
+      case "pitfalls":
+        return buildProjectPitfallsTab({
+          projectId: input.project.id,
+          list: input.pitfalls ?? null,
+          showRetired: input.pitfallsShowRetired ?? false,
+          editId: input.pitfallsEditId ?? null,
+        });
+      default: {
+        const _exhaustive: never = input.activeTab;
+        return _exhaustive;
+      }
+    }
+  })();
 
   const pitfallsTabLabel =
     input.pitfalls !== undefined && input.pitfalls !== null && input.pitfalls.ok

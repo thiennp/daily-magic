@@ -9,25 +9,14 @@ import {
 import type { AgentWitchProjectPitfallsStore } from "./agentWitchProjectPitfallsStore.type";
 import parseProjectPitfallForm from "./parseProjectPitfallForm";
 import type { ProjectPitfallFlashCode } from "./resolveProjectPitfallFlash";
+import type { ProjectPitfallPostAction } from "./projectPitfallPostPaths.constant";
+import {
+  PROJECT_PITFALL_POST_PATHS,
+  resolveProjectPitfallPostAction,
+} from "./projectPitfallPostPaths.constant";
 
-export type ProjectPitfallPostAction = "save" | "retire" | "restore";
-
-export const PROJECT_PITFALL_POST_PATHS: Readonly<
-  Record<ProjectPitfallPostAction, string>
-> = {
-  save: "/project/pitfalls/save",
-  retire: "/project/pitfalls/retire",
-  restore: "/project/pitfalls/restore",
-};
-
-export const resolveProjectPitfallPostAction = (
-  pathname: string,
-): ProjectPitfallPostAction | null => {
-  const entry = Object.entries(PROJECT_PITFALL_POST_PATHS).find(
-    ([, path]) => path === pathname,
-  );
-  return entry === undefined ? null : (entry[0] as ProjectPitfallPostAction);
-};
+export type { ProjectPitfallPostAction };
+export { PROJECT_PITFALL_POST_PATHS, resolveProjectPitfallPostAction };
 
 const defaultRandomSuffix = (): string => randomBytes(3).toString("hex");
 
@@ -59,10 +48,48 @@ const toUpsert = (
   source,
 });
 
+/** Per-pitfall chain so rapid retire/restore (or double-clicks) cannot interleave. */
+const pitfallActionChains = new Map<string, Promise<unknown>>();
+
+export const runSerializedPitfallAction = async <T>(
+  key: string,
+  action: () => Promise<T>,
+): Promise<T> => {
+  const previous = pitfallActionChains.get(key) ?? Promise.resolve();
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const chained: Promise<unknown> = previous
+    .catch(() => undefined)
+    .then(() => gate);
+  pitfallActionChains.set(key, chained);
+  await previous.catch(() => undefined);
+  try {
+    return await action();
+  } finally {
+    release();
+    if (pitfallActionChains.get(key) === chained) {
+      pitfallActionChains.delete(key);
+    }
+  }
+};
+
+/** Test helper: wait until no pitfall action is in flight for `key`. */
+export const waitForPitfallActionIdle = async (key: string): Promise<void> => {
+  const pending = pitfallActionChains.get(key);
+  if (pending !== undefined) {
+    await pending.catch(() => undefined);
+  }
+};
+
 /**
  * Handles AWL Pitfalls tab POSTs and returns the 303 redirect location.
  * Project existence / ACL is checked by the caller (same as other /project
  * routes); the cloud enforces project ACL and the 64-active cap again.
+ *
+ * Retire/restore/save for the same project+pitfall id are serialized so a
+ * rapid retire→restore (or double click) cannot race on a stale list.
  */
 const handleProjectPitfallPost = async (input: {
   readonly action: ProjectPitfallPostAction;
@@ -71,88 +98,97 @@ const handleProjectPitfallPost = async (input: {
   readonly store: AgentWitchProjectPitfallsStore | null;
   readonly randomSuffix?: () => string;
 }): Promise<string> => {
-  const { projectId, store } = input;
-  const keepRetired: Readonly<Record<string, string>> =
-    input.form.get("showRetired") === "1" ? { retired: "1" } : {};
-
-  if (store === null) {
-    return buildLocation(projectId, "unavailable", keepRetired);
-  }
-
-  const listed = await store.listPitfalls(projectId, { includeRetired: true });
-  if (!listed.ok) {
-    return buildLocation(projectId, "unavailable", keepRetired);
-  }
-
-  if (input.action === "save") {
-    const parsed = parseProjectPitfallForm({
-      form: input.form,
-      randomSuffix: input.randomSuffix ?? defaultRandomSuffix,
-    });
-    if (!parsed.ok) {
-      return buildLocation(projectId, "invalid", keepRetired);
-    }
-    const existing = listed.items.find((item) => item.id === parsed.pitfall.id);
-    const addsActive = existing === undefined || existing.source === "retired";
-    if (
-      addsActive &&
-      countActiveProjectPitfalls(listed.items) >= PROJECT_PITFALL_MAX_ACTIVE
-    ) {
-      return buildLocation(projectId, "limit", keepRetired);
-    }
-    const saved = await store.upsertPitfall(projectId, parsed.pitfall);
-    return buildLocation(
-      projectId,
-      saved.ok
-        ? "saved"
-        : saved.reason === "active_limit"
-          ? "limit"
-          : saved.reason,
-      keepRetired,
-    );
-  }
-
   const pitfallId = (input.form.get("pitfallId") ?? "").trim();
-  const existing = listed.items.find((item) => item.id === pitfallId);
-  if (existing === undefined) {
-    return buildLocation(projectId, "missing", keepRetired);
-  }
+  const lockKey = `${input.projectId}:${pitfallId || "__new__"}`;
 
-  if (input.action === "restore") {
-    if (
-      existing.source === "retired" &&
-      countActiveProjectPitfalls(listed.items) >= PROJECT_PITFALL_MAX_ACTIVE
-    ) {
-      return buildLocation(projectId, "limit", keepRetired);
+  return runSerializedPitfallAction(lockKey, async () => {
+    const { projectId, store } = input;
+    const keepRetired: Readonly<Record<string, string>> =
+      input.form.get("showRetired") === "1" ? { retired: "1" } : {};
+
+    if (store === null) {
+      return buildLocation(projectId, "unavailable", keepRetired);
     }
-    const restored = await store.upsertPitfall(
+
+    const listed = await store.listPitfalls(projectId, {
+      includeRetired: true,
+    });
+    if (!listed.ok) {
+      return buildLocation(projectId, "unavailable", keepRetired);
+    }
+
+    if (input.action === "save") {
+      const parsed = parseProjectPitfallForm({
+        form: input.form,
+        randomSuffix: input.randomSuffix ?? defaultRandomSuffix,
+      });
+      if (!parsed.ok) {
+        return buildLocation(projectId, "invalid", keepRetired);
+      }
+      const existing = listed.items.find(
+        (item) => item.id === parsed.pitfall.id,
+      );
+      const addsActive =
+        existing === undefined || existing.source === "retired";
+      if (
+        addsActive &&
+        countActiveProjectPitfalls(listed.items) >= PROJECT_PITFALL_MAX_ACTIVE
+      ) {
+        return buildLocation(projectId, "limit", keepRetired);
+      }
+      const saved = await store.upsertPitfall(projectId, parsed.pitfall);
+      return buildLocation(
+        projectId,
+        saved.ok
+          ? "saved"
+          : saved.reason === "active_limit"
+            ? "limit"
+            : saved.reason,
+        keepRetired,
+      );
+    }
+
+    const existing = listed.items.find((item) => item.id === pitfallId);
+    if (existing === undefined) {
+      return buildLocation(projectId, "missing", keepRetired);
+    }
+
+    if (input.action === "restore") {
+      if (
+        existing.source === "retired" &&
+        countActiveProjectPitfalls(listed.items) >= PROJECT_PITFALL_MAX_ACTIVE
+      ) {
+        return buildLocation(projectId, "limit", keepRetired);
+      }
+      const restored = await store.upsertPitfall(
+        projectId,
+        toUpsert(existing, "project"),
+      );
+      return buildLocation(
+        projectId,
+        restored.ok
+          ? "restored"
+          : restored.reason === "active_limit"
+            ? "limit"
+            : restored.reason,
+        keepRetired,
+      );
+    }
+
+    const retired = await store.upsertPitfall(
       projectId,
-      toUpsert(existing, "project"),
+      toUpsert(existing, "retired"),
     );
     return buildLocation(
       projectId,
-      restored.ok
-        ? "restored"
-        : restored.reason === "active_limit"
+      retired.ok
+        ? "retired"
+        : retired.reason === "active_limit"
           ? "limit"
-          : restored.reason,
+          : retired.reason,
       keepRetired,
     );
-  }
-
-  const retired = await store.upsertPitfall(
-    projectId,
-    toUpsert(existing, "retired"),
-  );
-  return buildLocation(
-    projectId,
-    retired.ok
-      ? "retired"
-      : retired.reason === "active_limit"
-        ? "limit"
-        : retired.reason,
-    keepRetired,
-  );
+  });
 };
 
 export default handleProjectPitfallPost;
