@@ -1,6 +1,6 @@
 import type DeleteProjectDbOnlyResult from "@/lib/projects/delete/types/DeleteProjectDbOnlyResult.type";
 
-/** HTTP shape: 200 deleted, 404 unknown or not owner, 400 Default project. */
+/** HTTP shape: 200 deleted, 404 unknown, 403 not owner, 400 Default project. */
 const mapDeleteProjectDbOnlyResultToResponse = (
   result: DeleteProjectDbOnlyResult,
 ): Response => {
@@ -11,6 +11,12 @@ const mapDeleteProjectDbOnlyResultToResponse = (
     return Response.json(
       { ok: false, errorMessage: "The Default project cannot be deleted." },
       { status: 400 },
+    );
+  }
+  if (result.code === "not_owner") {
+    return Response.json(
+      { ok: false, errorMessage: "Only the owner can delete this project." },
+      { status: 403 },
     );
   }
 

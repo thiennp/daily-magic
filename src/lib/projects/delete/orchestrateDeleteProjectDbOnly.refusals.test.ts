@@ -56,13 +56,13 @@ const expectNothingDeleted = (): void => {
 describe("orchestrateDeleteProjectDbOnly — refusals delete nothing", () => {
   beforeEach(resetMocks);
 
-  it("non-owner: not_found", async () => {
+  it("non-owner: not_owner", async () => {
     const result = await orchestrateDeleteProjectDbOnly({
       ...asOwner,
       ownerUserId: "intruder-2",
     });
 
-    expect(result).toEqual({ ok: false, code: "not_found" });
+    expect(result).toEqual({ ok: false, code: "not_owner" });
     expectNothingDeleted();
   });
 

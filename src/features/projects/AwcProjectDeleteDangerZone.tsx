@@ -6,7 +6,7 @@ import { useState } from "react";
 import Button from "@/components/ui/button/Button";
 import AwcProjectDeleteConfirmForm from "@/features/projects/AwcProjectDeleteConfirmForm";
 import { AWC_PROJECT_DELETE_COPY } from "@/features/projects/awcProjectDeleteCopy.constant";
-import useDeleteUserProject from "@/features/projects/hooks/useDeleteUserProject";
+import useDeleteProject from "@/features/projects/hooks/useDeleteProject";
 
 interface AwcProjectDeleteDangerZoneProps {
   readonly projectId: string;
@@ -18,11 +18,12 @@ const AwcProjectDeleteDangerZone = ({
   projectName,
 }: AwcProjectDeleteDangerZoneProps) => {
   const router = useRouter();
-  const { deleteProject, errorMessage, isDeleting } = useDeleteUserProject();
+  const { deleteProject, errorMessage, pending, clearError } =
+    useDeleteProject(projectId);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const runDelete = async (): Promise<void> => {
-    const ok = await deleteProject(projectId);
+    const ok = await deleteProject();
     if (!ok) {
       return;
     }
@@ -47,6 +48,7 @@ const AwcProjectDeleteDangerZone = ({
             size="sm"
             className="mt-3 border-error-200 text-error-600 hover:bg-error-50 dark:border-error-900/40 dark:text-error-400"
             onClick={() => {
+              clearError();
               setConfirmOpen(true);
             }}
           >
@@ -56,13 +58,15 @@ const AwcProjectDeleteDangerZone = ({
       ) : (
         <div className="mt-3 rounded-lg border border-error-200/80 bg-error-50/50 p-3 dark:border-error-900/40 dark:bg-error-950/20">
           <AwcProjectDeleteConfirmForm
+            variant="inline"
             projectName={projectName}
-            isDeleting={isDeleting}
+            pending={pending}
             errorMessage={errorMessage}
             onConfirm={() => {
               void runDelete();
             }}
             onCancel={() => {
+              clearError();
               setConfirmOpen(false);
             }}
           />

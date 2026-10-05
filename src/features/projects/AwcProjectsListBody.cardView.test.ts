@@ -40,11 +40,14 @@ describe("Awc projects card view", () => {
     expect(card).toContain("useCanDeleteOwnedProject");
     expect(menuItems).not.toContain("localTokenHash");
     expect(
-      readSource("src/features/projects/hooks/useDeleteUserProject.ts"),
+      readSource("src/features/projects/utils/requestDeleteUserProject.ts"),
     ).toContain('method: "DELETE"');
     expect(
-      readSource("src/features/projects/hooks/useDeleteUserProject.ts"),
+      readSource("src/features/projects/utils/requestDeleteUserProject.ts"),
     ).toContain("/api/projects/");
+    expect(
+      readSource("src/features/projects/hooks/useDeleteProject.ts"),
+    ).toContain("requestDeleteUserProject");
     expect(readSource("src/components/ui/dropdown/Dropdown.tsx")).toContain(
       "createPortal",
     );

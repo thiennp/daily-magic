@@ -60,13 +60,17 @@ describe("DELETE /api/projects/[projectId] (owner session, DB-only)", () => {
     ]);
   });
 
-  it("non-owner: 404 and nothing deleted", async () => {
+  it("non-owner: 403 and nothing deleted", async () => {
     requireAuth.mockResolvedValue({
       actor: { id: "intruder-2", email: "i@example.com" },
       error: null,
     });
     const response = await callWeb(OWNER_PROJECT.id);
-    expect(response.status).toBe(404);
+    expect(response.status).toBe(403);
+    expect(await response.json()).toEqual({
+      ok: false,
+      errorMessage: "Only the owner can delete this project.",
+    });
     expect(sql()).not.toHaveBeenCalled();
   });
 

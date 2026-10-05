@@ -4,8 +4,8 @@ import type ProjectDeleteTarget from "@/lib/projects/delete/types/ProjectDeleteT
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
 /**
- * Ownership gate: unknown ids and projects owned by someone else both read as
- * not_found so a non-owner cannot probe which project ids exist.
+ * Ownership gate: unknown id → not_found; exists but other owner → not_owner
+ * (403); Default project → default_project.
  */
 const findOwnedProjectForDelete = async (
   target: ProjectDeleteTarget,
@@ -17,8 +17,11 @@ const findOwnedProjectForDelete = async (
   }
 
   const project = await getUserProjectById(projectId);
-  if (project === null || project.ownerUserId !== ownerUserId) {
+  if (project === null) {
     return { kind: "not_found" };
+  }
+  if (project.ownerUserId !== ownerUserId) {
+    return { kind: "not_owner" };
   }
   if (isDefaultUserProject(project)) {
     return { kind: "default_project" };

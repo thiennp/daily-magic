@@ -50,12 +50,12 @@ describe("DELETE /api/agent-witch/projects/[projectId] (device auth, same orches
     expect(sql().transaction).not.toHaveBeenCalled();
   });
 
-  it("device of another user: 404 and nothing deleted", async () => {
+  it("device of another user: 403 and nothing deleted", async () => {
     requireAgentWitchDeviceAuth.mockResolvedValue({
       device: { userId: "intruder-2" },
     });
     const response = await callDevice(OWNER_PROJECT.id);
-    expect(response.status).toBe(404);
+    expect(response.status).toBe(403);
     expect(sql()).not.toHaveBeenCalled();
   });
 });

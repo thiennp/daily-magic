@@ -22,8 +22,10 @@ describe("AwcProjectsPanel delete list update", () => {
 
     expect(panel).toContain("onProjectDeleted");
     expect(panel).toContain("removeProject(projectId)");
-    expect(menuItem).toContain("useDeleteUserProject");
+    expect(menuItem).toContain("useDeleteProject");
     expect(menuItem).toContain("AwcProjectDeleteConfirmForm");
+    expect(menuItem).toContain('variant="dialog"');
+    expect(menuItem).toContain("useDeleteProject");
     expect(confirm).toContain("disabled={!canConfirm}");
     expect(confirm).toContain("isProjectDeleteConfirmNameMatch");
   });

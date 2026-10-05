@@ -21,9 +21,22 @@ vi.mock("@/components/ui/button/Button", () => ({
     ),
 }));
 
+vi.mock("@/components/ui/modal", () => ({
+  Modal: ({
+    children,
+    isOpen,
+  }: {
+    readonly children?: ReactNode;
+    readonly isOpen: boolean;
+  }) =>
+    isOpen
+      ? createElement("div", { "data-testid": "delete-dialog" }, children)
+      : null,
+}));
+
 describe("AwcProjectDeleteConfirmForm", () => {
-  it("keeps Delete project disabled until the typed name matches exactly", async () => {
-    const { default: AwcProjectDeleteConfirmForm } = await import(
+  it("inline: Delete forever stays disabled until the typed name matches", async () => {
+    const { default: Form } = await import(
       "@/features/projects/AwcProjectDeleteConfirmForm"
     );
     const { AWC_PROJECT_DELETE_COPY } = await import(
@@ -31,18 +44,47 @@ describe("AwcProjectDeleteConfirmForm", () => {
     );
 
     const html = renderToStaticMarkup(
-      createElement(AwcProjectDeleteConfirmForm, {
+      createElement(Form, {
+        variant: "inline",
         projectName: "Client repo",
-        isDeleting: false,
+        pending: false,
         errorMessage: null,
         onConfirm: () => undefined,
         onCancel: () => undefined,
       }),
     );
 
-    expect(html).toContain(AWC_PROJECT_DELETE_COPY.typeToConfirm);
+    expect(html).toContain(AWC_PROJECT_DELETE_COPY.scope);
+    expect(html).toContain(AWC_PROJECT_DELETE_COPY.typeToConfirmPrefix);
     expect(html).toContain("Client repo");
     expect(html).toContain(AWC_PROJECT_DELETE_COPY.confirm);
-    expect(html).toMatch(/disabled[^>]*>\s*Delete project/);
+    expect(html).toMatch(/disabled[^>]*>\s*Delete forever/);
+    expect(html).not.toContain('data-testid="delete-dialog"');
+    expect(html).not.toContain(AWC_PROJECT_DELETE_COPY.title);
+  });
+
+  it("dialog: wraps the same confirm UI in a modal with the delete title", async () => {
+    const { default: Form } = await import(
+      "@/features/projects/AwcProjectDeleteConfirmForm"
+    );
+    const { AWC_PROJECT_DELETE_COPY } = await import(
+      "@/features/projects/awcProjectDeleteCopy.constant"
+    );
+
+    const html = renderToStaticMarkup(
+      createElement(Form, {
+        variant: "dialog",
+        projectName: "Client repo",
+        pending: false,
+        errorMessage: null,
+        onConfirm: () => undefined,
+        onCancel: () => undefined,
+      }),
+    );
+
+    expect(html).toContain('data-testid="delete-dialog"');
+    expect(html).toContain(AWC_PROJECT_DELETE_COPY.title);
+    expect(html).toContain(AWC_PROJECT_DELETE_COPY.confirm);
+    expect(html).toMatch(/disabled[^>]*>\s*Delete forever/);
   });
 });

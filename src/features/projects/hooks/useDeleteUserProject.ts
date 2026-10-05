@@ -2,6 +2,12 @@
 
 import { useCallback, useState } from "react";
 
+import requestDeleteUserProject from "@/features/projects/utils/requestDeleteUserProject";
+
+/**
+ * @deprecated Prefer `useDeleteProject(projectId)` (binds id at hook time).
+ * Kept for older call sites that pass projectId into `deleteProject(id)`.
+ */
 const useDeleteUserProject = (): {
   readonly isDeleting: boolean;
   readonly errorMessage: string | null;
@@ -15,31 +21,15 @@ const useDeleteUserProject = (): {
       setIsDeleting(true);
       setErrorMessage(null);
 
-      try {
-        const response = await fetch(
-          `/api/projects/${encodeURIComponent(projectId)}`,
-          { method: "DELETE" },
-        );
-        const body: unknown = await response.json().catch(() => null);
-        const message =
-          typeof body === "object" &&
-          body !== null &&
-          typeof (body as { errorMessage?: unknown }).errorMessage === "string"
-            ? (body as { errorMessage: string }).errorMessage
-            : "Could not delete project.";
-
-        if (!response.ok) {
-          setErrorMessage(message);
-          return false;
-        }
-
-        return true;
-      } catch {
-        setErrorMessage("Could not delete project.");
-        return false;
-      } finally {
+      const result = await requestDeleteUserProject(projectId);
+      if (!result.ok) {
+        setErrorMessage(result.errorMessage);
         setIsDeleting(false);
+        return false;
       }
+
+      setIsDeleting(false);
+      return true;
     },
     [],
   );
