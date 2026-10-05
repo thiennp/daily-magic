@@ -41,10 +41,7 @@ describe("AppShell mobile nav layout (SHELL-005)", () => {
     expect(BOTTOM_NAV.map((item) => item.label)).toEqual([
       "Home",
       "Projects",
-      "Library",
       "Marketplace",
-      "New task",
-      "Reports",
       "Prompt optimizer",
     ]);
   });

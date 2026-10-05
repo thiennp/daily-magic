@@ -11,6 +11,7 @@ describe("ProjectsPageLayout", () => {
     );
 
     expect(source).toContain("AwcProjectsPanel");
+    expect(source).toContain("Suspense");
     expect(source).not.toContain("HomeProjectsPanel");
   });
 });

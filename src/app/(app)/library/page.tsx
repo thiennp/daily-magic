@@ -1,18 +1,20 @@
-import { GuestSessionStateProvider } from "@/features/empty-states/GuestSessionStateProvider";
-import LibraryPageLayout from "@/features/pages/layouts/LibraryPageLayout";
-import AppShell from "@/features/shell/AppShell";
-import { resolveServerSessionHint } from "@/lib/auth/resolveServerSessionHint";
+import { runNavConsolidationPageRedirect } from "@/lib/shell/runNavConsolidationPageRedirect";
 
 export const dynamic = "force-dynamic";
 
-export default async function LibraryPage() {
-  const serverSessionHint = await resolveServerSessionHint();
+interface LibraryPageProps {
+  readonly searchParams: Promise<
+    Record<string, string | string[] | undefined>
+  >;
+}
 
-  return (
-    <AppShell>
-      <GuestSessionStateProvider serverSessionHint={serverSessionHint}>
-        <LibraryPageLayout />
-      </GuestSessionStateProvider>
-    </AppShell>
-  );
+/**
+ * Retired top-level Library (incl. create UI) → project Library picker.
+ * Create forms are not reachable here anymore — creates belong in a project.
+ */
+export default async function LibraryPage({ searchParams }: LibraryPageProps) {
+  await runNavConsolidationPageRedirect({
+    intent: "library",
+    searchParams,
+  });
 }

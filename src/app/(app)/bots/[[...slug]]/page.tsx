@@ -2,16 +2,16 @@ import { runNavConsolidationPageRedirect } from "@/lib/shell/runNavConsolidation
 
 export const dynamic = "force-dynamic";
 
-interface ReportsPageProps {
+interface BotsPageProps {
   readonly searchParams: Promise<
     Record<string, string | string[] | undefined>
   >;
 }
 
-/** Retired top-level Reports → project Reports picker. */
-export default async function ReportsPage({ searchParams }: ReportsPageProps) {
+/** /bots and /bots/* → project Team consolidation redirect. */
+export default async function BotsPage({ searchParams }: BotsPageProps) {
   await runNavConsolidationPageRedirect({
-    intent: "reports",
+    intent: "bots",
     searchParams,
   });
 }

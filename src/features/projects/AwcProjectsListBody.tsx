@@ -9,6 +9,7 @@ import { AWC_PROJECTS_PAGE_COPY } from "@/features/projects/awcProjectsPageCopy.
 import { APP_SURFACE_TEXT_LINK_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
+import type { NavConsolidationIntent } from "@/lib/shell/navConsolidationIntent.constant";
 
 const EMPTY_COMPOSITION_COUNTS: ProjectCompositionCounts = {
   harness: 0,
@@ -30,6 +31,7 @@ interface AwcProjectsListBodyProps {
   readonly displayNameById: ReadonlyMap<string, string>;
   readonly localTokenHash: string | null;
   readonly onProjectDeleted?: (projectId: string) => void;
+  readonly intent?: NavConsolidationIntent | null;
 }
 
 export default function AwcProjectsListBody({
@@ -44,6 +46,7 @@ export default function AwcProjectsListBody({
   displayNameById,
   localTokenHash,
   onProjectDeleted,
+  intent = null,
 }: AwcProjectsListBodyProps) {
   if (isLoading) {
     return (
@@ -100,6 +103,7 @@ export default function AwcProjectsListBody({
             devices={devices}
             displayNameById={displayNameById}
             localTokenHash={localTokenHash}
+            intent={intent}
             onProjectDeleted={() => {
               onProjectDeleted?.(project.id);
             }}

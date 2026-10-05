@@ -2,16 +2,16 @@ import { runNavConsolidationPageRedirect } from "@/lib/shell/runNavConsolidation
 
 export const dynamic = "force-dynamic";
 
-interface ReportsPageProps {
+interface NewTaskPageProps {
   readonly searchParams: Promise<
     Record<string, string | string[] | undefined>
   >;
 }
 
-/** Retired top-level Reports → project Reports picker. */
-export default async function ReportsPage({ searchParams }: ReportsPageProps) {
+/** Retired top-level New task → project picker (or project Activity Task mode). */
+export default async function NewTaskPage({ searchParams }: NewTaskPageProps) {
   await runNavConsolidationPageRedirect({
-    intent: "reports",
+    intent: "new-task",
     searchParams,
   });
 }

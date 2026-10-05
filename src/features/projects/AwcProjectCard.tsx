@@ -15,6 +15,8 @@ import formatProjectFolderPathForList from "@/features/projects/utils/formatProj
 import resolveProjectListCardTitle from "@/features/projects/utils/resolveProjectListCardTitle";
 import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
+import { buildProjectCardHrefForIntent } from "@/features/projects/navConsolidation/buildProjectCardHrefForIntent";
+import type { NavConsolidationIntent } from "@/lib/shell/navConsolidationIntent.constant";
 
 interface AwcProjectCardProps {
   readonly project: UserProjectRecord;
@@ -23,6 +25,7 @@ interface AwcProjectCardProps {
   readonly displayNameById: ReadonlyMap<string, string>;
   readonly localTokenHash: string | null;
   readonly onProjectDeleted?: () => void;
+  readonly intent?: NavConsolidationIntent | null;
 }
 
 export default function AwcProjectCard({
@@ -32,6 +35,7 @@ export default function AwcProjectCard({
   displayNameById,
   localTokenHash,
   onProjectDeleted,
+  intent = null,
 }: AwcProjectCardProps) {
   const { presence, editCta } = useAwcProjectDevicePresentation({
     project,
@@ -47,7 +51,7 @@ export default function AwcProjectCard({
   const showHelperText =
     editCta.helperText !== null &&
     shouldShowProjectEditOnMacHelperText(editCta.state);
-  const detailHref = `/projects/${project.id}`;
+  const detailHref = buildProjectCardHrefForIntent(project.id, intent);
 
   return (
     <article

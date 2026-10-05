@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, type ReactNode } from "react";
+import { useSearchParams } from "next/navigation";
 
 import SendTaskComposerCreateProjectForm from "@/features/agent/SendTaskComposerCreateProjectForm";
 import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
@@ -8,10 +9,13 @@ import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import { pickDefaultMacDeviceId } from "@/features/agent-witch/online-wake";
 import AwcProjectsListBody from "@/features/projects/AwcProjectsListBody";
 import AwcProjectsToolbar from "@/features/projects/AwcProjectsToolbar";
+import AwcProjectsIntentNotice from "@/features/projects/navConsolidation/AwcProjectsIntentNotice";
+import { parseProjectsNavIntent } from "@/features/projects/navConsolidation/parseProjectsNavIntent";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import { filterAwcProjectsByQuery } from "@/features/projects/utils/filterAwcProjectsByQuery";
 import AppPanel from "@/components/surfaces/AppPanel";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
+import { NAV_CONSOLIDATION_INTENT_QUERY_PARAM } from "@/lib/shell/navConsolidationIntent.constant";
 
 interface AwcProjectsPanelProps {
   /** Optional content rendered at the top of the panel (e.g. a section title). */
@@ -29,6 +33,10 @@ export default function AwcProjectsPanel({
   selectProjects,
   showManageControls = true,
 }: AwcProjectsPanelProps = {}) {
+  const searchParams = useSearchParams();
+  const intent = parseProjectsNavIntent(
+    searchParams.get(NAV_CONSOLIDATION_INTENT_QUERY_PARAM),
+  );
   const { localTokenHash } = useLocalMacBrowserContext();
   const { devices, displayNameById } = useMyMacDevices();
   const defaultDeviceId = pickDefaultMacDeviceId(devices) ?? "";
@@ -51,6 +59,13 @@ export default function AwcProjectsPanel({
   return (
     <AppPanel padding="compact">
       {header}
+      {intent !== null ? (
+        <AwcProjectsIntentNotice
+          intent={intent}
+          projectCount={projects.length}
+          isLoading={isLoading}
+        />
+      ) : null}
       {showManageControls && !isLoading && projects.length > 0 ? (
         <AwcProjectsToolbar
           searchQuery={searchQuery}
@@ -72,6 +87,7 @@ export default function AwcProjectsPanel({
         devices={devices}
         displayNameById={displayNameById}
         localTokenHash={localTokenHash}
+        intent={intent}
         onProjectDeleted={(projectId) => {
           removeProject(projectId);
           void refreshProjects();

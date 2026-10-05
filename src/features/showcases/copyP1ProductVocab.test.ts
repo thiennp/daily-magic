@@ -60,11 +60,12 @@ describe("COPY-P1 product vocab", () => {
     expect(source).not.toContain("Create a free account");
   });
 
-  it("mobile bottom nav uses New task label", () => {
+  it("mobile bottom nav no longer lists retired New task destination", () => {
     const source = readFileSync(APP_BOTTOM_NAV_PATH, "utf8");
 
-    expect(source).toContain('label: "New task"');
+    expect(source).not.toContain('label: "New task"');
     expect(source).not.toContain('label: "Send"');
+    expect(source).toContain('label: "Projects"');
   });
 
   it("Reports empty states use New task not Send a task (Rity)", () => {

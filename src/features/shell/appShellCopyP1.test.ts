@@ -9,17 +9,18 @@ import { resolveMarketingFooterProductLinks } from "@/features/marketing/resolve
 import { LOGIN_PAGE_COPY } from "@/features/auth/loginPageCopy.constant";
 
 describe("COPY-P1 shell and auth labels", () => {
-  it("uses Projects, Library, Reports, Marketplace, and New task in primary nav", () => {
+  it("keeps Projects and Marketplace in primary nav without retired top-level entries", () => {
     const labels = PRIMARY_NAV.map((item) => item.label);
     expect(labels).toContain("Projects");
-    expect(labels).toContain("My bots");
-    expect(labels).toContain("Library");
-    expect(labels).toContain("Reports");
-    expect(labels).toContain("New task");
     expect(labels).toContain("Prompt optimizer");
+    expect(labels).toContain("Marketplace");
     expect(
       PRIMARY_NAV.find((item) => item.label === "Prompt optimizer")?.href,
     ).toBe("/prompt-optimizer");
+    expect(labels).not.toContain("My bots");
+    expect(labels).not.toContain("Library");
+    expect(labels).not.toContain("Reports");
+    expect(labels).not.toContain("New task");
     expect(labels).not.toContain("Playbooks");
     expect(labels).not.toContain("Runs");
   });
@@ -29,10 +30,7 @@ describe("COPY-P1 shell and auth labels", () => {
     expect(labels).toEqual([
       "Home",
       "Projects",
-      "Library",
       "Marketplace",
-      "New task",
-      "Reports",
       "Prompt optimizer",
     ]);
   });
