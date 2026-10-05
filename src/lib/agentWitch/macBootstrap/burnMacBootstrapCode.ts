@@ -21,3 +21,20 @@ export const burnMacBootstrapCode = async (input: {
   const row = burned[0];
   return typeof row?.user_id === "string" ? row.user_id : null;
 };
+
+/**
+ * Consume a found code after a failed exchange (wrong state, bad verifier, …).
+ * By hash only — do not call when no row exists.
+ */
+export const burnMacBootstrapCodeOnFailedAttempt = async (input: {
+  readonly codeHash: string;
+  readonly nowIso: string;
+}): Promise<void> => {
+  const sql = getSql();
+  await sql`
+    UPDATE agent_witch_mac_bootstrap_codes
+    SET consumed_at = ${input.nowIso}::timestamptz
+    WHERE code_hash = ${input.codeHash}
+      AND consumed_at IS NULL
+  `;
+};

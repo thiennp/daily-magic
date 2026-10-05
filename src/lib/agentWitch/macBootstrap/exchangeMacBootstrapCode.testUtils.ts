@@ -30,3 +30,10 @@ export const pendingBootstrapRow = (input: {
   expires_at: input.expiresAt ?? EXCHANGE_TEST_FUTURE,
   consumed_at: input.consumedAt === undefined ? null : input.consumedAt,
 });
+
+export const sqlMockDidBurn = (sqlMock: {
+  readonly mock: { readonly calls: readonly unknown[][] };
+}): boolean =>
+  sqlMock.mock.calls.some((call) =>
+    String(call[0]).includes("SET consumed_at"),
+  );

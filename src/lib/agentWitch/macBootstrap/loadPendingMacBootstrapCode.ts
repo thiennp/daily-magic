@@ -1,3 +1,4 @@
+import { burnMacBootstrapCodeOnFailedAttempt } from "@/lib/agentWitch/macBootstrap/burnMacBootstrapCode";
 import { MAC_BOOTSTRAP_ERROR_SLUG } from "@/lib/agentWitch/macBootstrap/macBootstrapErrorSlug.constant";
 import type { ExchangeMacBootstrapCodeFailure } from "@/lib/agentWitch/macBootstrap/types/ExchangeMacBootstrapCodeResult.type";
 import { asRowArray, getSql } from "@/lib/db";
@@ -43,6 +44,10 @@ export const loadPendingMacBootstrapCode = async (input: {
     return { ok: false, status: 410, error: MAC_BOOTSTRAP_ERROR_SLUG.expired };
   }
   if (typeof found.state !== "string" || found.state !== input.state) {
+    await burnMacBootstrapCodeOnFailedAttempt({
+      codeHash: input.codeHash,
+      nowIso: new Date(input.nowMs).toISOString(),
+    });
     return {
       ok: false,
       status: 400,
@@ -50,6 +55,10 @@ export const loadPendingMacBootstrapCode = async (input: {
     };
   }
   if (typeof found.user_id !== "string" || found.user_id.length === 0) {
+    await burnMacBootstrapCodeOnFailedAttempt({
+      codeHash: input.codeHash,
+      nowIso: new Date(input.nowMs).toISOString(),
+    });
     return {
       ok: false,
       status: 400,

@@ -1,5 +1,8 @@
 import { createAgentWitchInstallTokenForUser } from "@/lib/agentWitch/createAgentWitchInstallTokenForUser";
-import { burnMacBootstrapCode } from "@/lib/agentWitch/macBootstrap/burnMacBootstrapCode";
+import {
+  burnMacBootstrapCode,
+  burnMacBootstrapCodeOnFailedAttempt,
+} from "@/lib/agentWitch/macBootstrap/burnMacBootstrapCode";
 import { classifyMacBootstrapExchangeMiss } from "@/lib/agentWitch/macBootstrap/classifyMacBootstrapExchangeMiss";
 import { computeMacBootstrapScriptSha256 } from "@/lib/agentWitch/macBootstrap/computeMacBootstrapScriptSha256";
 import { ensureMacBootstrapSchema } from "@/lib/agentWitch/macBootstrap/ensureMacBootstrapSchema";
@@ -14,8 +17,10 @@ import { asRowArray, getSql } from "@/lib/db";
 export type { ExchangeMacBootstrapCodeResult };
 
 /**
- * Validate unused/unexpired code, state match, S256 verifier; burn code;
- * return installToken + tokenless script metadata. Never logs secrets.
+ * Validate unused/unexpired code, state match, S256 verifier; burn code
+ * on success and on failed attempts once a matching row was found
+ * (OAuth one-time: failed redeem suggests interception). Return installToken
+ * + tokenless script metadata. Never logs secrets.
  */
 export const exchangeMacBootstrapCode = async (input: {
   readonly code: string;
@@ -40,6 +45,10 @@ export const exchangeMacBootstrapCode = async (input: {
       codeChallenge: loaded.pending.codeChallenge,
     })
   ) {
+    await burnMacBootstrapCodeOnFailedAttempt({
+      codeHash,
+      nowIso: new Date(nowMs).toISOString(),
+    });
     return {
       ok: false,
       status: 400,

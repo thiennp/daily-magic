@@ -9,6 +9,7 @@ import {
   EXCHANGE_TEST_VERIFIER,
   isMacBootstrapSchemaSql,
   pendingBootstrapRow,
+  sqlMockDidBurn,
 } from "@/lib/agentWitch/macBootstrap/exchangeMacBootstrapCode.testUtils";
 
 const sqlMock = vi.fn();
@@ -26,12 +27,12 @@ vi.mock("@/lib/agentWitch/macBootstrap/computeMacBootstrapScriptSha256", () => (
   computeMacBootstrapScriptSha256: () => "a".repeat(64),
 }));
 
-const mockPending = (row: Record<string, unknown>): void => {
+const mockPending = (row: Record<string, unknown> | null): void => {
   sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
     const q = String(strings);
     if (isMacBootstrapSchemaSql(q)) return [];
     if (q.includes("SELECT user_id, state, code_challenge")) {
-      return [row];
+      return row === null ? [] : [row];
     }
     return [];
   });
@@ -43,7 +44,19 @@ describe("exchangeMacBootstrapCode validation", () => {
     resetMacBootstrapSchemaEnsureForTests();
   });
 
-  it("rejects state mismatch without burning", async () => {
+  it("rejects unknown code without burning", async () => {
+    mockPending(null);
+    const result = await exchangeMacBootstrapCode({
+      code: EXCHANGE_TEST_CODE,
+      state: "st-1",
+      codeVerifier: EXCHANGE_TEST_VERIFIER,
+      nowMs: EXCHANGE_TEST_NOW,
+    });
+    expect(result).toEqual({ ok: false, status: 400, error: "invalid_code" });
+    expect(sqlMockDidBurn(sqlMock)).toBe(false);
+  });
+
+  it("rejects state mismatch and burns the found code", async () => {
     mockPending(pendingBootstrapRow({ state: "expected-state" }));
     const result = await exchangeMacBootstrapCode({
       code: EXCHANGE_TEST_CODE,
@@ -56,14 +69,10 @@ describe("exchangeMacBootstrapCode validation", () => {
       status: 400,
       error: "state_mismatch",
     });
-    expect(
-      sqlMock.mock.calls.some((call) =>
-        String(call[0]).includes("SET consumed_at"),
-      ),
-    ).toBe(false);
+    expect(sqlMockDidBurn(sqlMock)).toBe(true);
   });
 
-  it("rejects bad verifier without burning", async () => {
+  it("rejects bad verifier and burns the found code", async () => {
     mockPending(pendingBootstrapRow({}));
     const result = await exchangeMacBootstrapCode({
       code: EXCHANGE_TEST_CODE,
@@ -76,11 +85,7 @@ describe("exchangeMacBootstrapCode validation", () => {
       status: 400,
       error: "bad_verifier",
     });
-    expect(
-      sqlMock.mock.calls.some((call) =>
-        String(call[0]).includes("SET consumed_at"),
-      ),
-    ).toBe(false);
+    expect(sqlMockDidBurn(sqlMock)).toBe(true);
   });
 
   it("rejects expired codes with 410", async () => {
