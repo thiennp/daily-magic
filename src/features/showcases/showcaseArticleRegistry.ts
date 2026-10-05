@@ -1,5 +1,6 @@
 import agentDelegatesInsideYourCompany from "@/features/showcases/articles/agentDelegatesInsideYourCompany.article";
 import automateRecurringWorkWithoutHeadcount from "@/features/showcases/articles/automateRecurringWorkWithoutHeadcount.article";
+import botToBot from "@/features/showcases/articles/botToBot.article";
 import automateForYourselfOrYourTeam from "@/features/showcases/articles/automateForYourselfOrYourTeam.article";
 import companyOnboardIn30Minutes from "@/features/showcases/articles/companyOnboardIn30Minutes.article";
 import companyWorkflowsSetupOnce from "@/features/showcases/articles/companyWorkflowsSetupOnce.article";
@@ -58,6 +59,7 @@ export const SHOWCASE_ARTICLES_PHASE_2: readonly ShowcaseArticle[] = [
   scheduleWorkflowOnYourMac,
   phoneAsksCoworkerMacRuns,
   agentDelegatesInsideYourCompany,
+  botToBot,
 ] as const;
 
 export const SHOWCASE_ARTICLES_PHASE_LEADERSHIP: readonly ShowcaseArticle[] = [

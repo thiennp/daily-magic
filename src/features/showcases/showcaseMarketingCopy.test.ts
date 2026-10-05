@@ -49,12 +49,20 @@ const collectMarketingStrings = (
   return strings;
 };
 
+/** Exact agent-support wording approved for the bot-to-bot article. */
+const ALLOWED_EXACT_STRINGS: ReadonlySet<string> = new Set([
+  "Any agent that can call the agent-access API and receive an HMAC-signed webhook (for example Muse) — supported via HMAC webhook, not yet tested end to end",
+]);
+
 describe("showcase marketing copy (SHOWCASES-011)", () => {
   it("avoids limit/demo/sample/apology phrasing in all articles", () => {
     const offenders: string[] = [];
 
     for (const article of SHOWCASE_ARTICLES) {
       for (const text of collectMarketingStrings(article)) {
+        if (ALLOWED_EXACT_STRINGS.has(text)) {
+          continue;
+        }
         for (const pattern of BANNED_MARKETING_PHRASE_PATTERNS) {
           if (pattern.test(text)) {
             offenders.push(`${article.slug}: "${text}" (~${pattern})`);
