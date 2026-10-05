@@ -1,43 +1,61 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import isMobileBrowser from "@/features/home/utils/isMobileBrowser";
+import { MOBILE_UA_FIXTURES as UA } from "@/lib/mobile/mobileUserAgentFixtures.constant";
+
+/** Same signal stub as `detectMobileClient` — `isMobileBrowser` is an alias. */
+const stubBrowser = (input: {
+  readonly userAgent: string;
+  readonly maxTouchPoints: number;
+  readonly coarse: boolean;
+  readonly fine: boolean;
+  readonly width: number;
+  readonly platform?: string;
+}): void => {
+  vi.stubGlobal("navigator", {
+    userAgent: input.userAgent,
+    platform: input.platform ?? "",
+    maxTouchPoints: input.maxTouchPoints,
+  });
+  vi.stubGlobal("window", {
+    innerWidth: input.width,
+    matchMedia: (query: string) => ({
+      matches:
+        query === "(pointer: coarse)"
+          ? input.coarse
+          : query === "(any-pointer: fine)"
+            ? input.fine
+            : false,
+    }),
+  });
+};
 
 describe("isMobileBrowser", () => {
-  it("HOME-028: detects Android mobile user agents", () => {
-    const originalNavigator = globalThis.navigator;
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
 
-    Object.defineProperty(globalThis, "navigator", {
-      configurable: true,
-      value: {
-        userAgent:
-          "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/120.0.0.0 Mobile Safari/537.36",
-      },
+  it("HOME-028: aliases detectMobileClient for an Android phone UA", () => {
+    stubBrowser({
+      userAgent: UA.androidChrome,
+      maxTouchPoints: 5,
+      coarse: true,
+      fine: false,
+      width: 390,
     });
 
     expect(isMobileBrowser()).toBe(true);
-
-    Object.defineProperty(globalThis, "navigator", {
-      configurable: true,
-      value: originalNavigator,
-    });
   });
 
-  it("HOME-028: does not treat desktop Linux as mobile", () => {
-    const originalNavigator = globalThis.navigator;
-
-    Object.defineProperty(globalThis, "navigator", {
-      configurable: true,
-      value: {
-        userAgent:
-          "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36",
-      },
+  it("HOME-028: aliases detectMobileClient for desktop Linux", () => {
+    stubBrowser({
+      userAgent: UA.linuxChrome,
+      maxTouchPoints: 0,
+      coarse: false,
+      fine: true,
+      width: 1280,
     });
 
     expect(isMobileBrowser()).toBe(false);
-
-    Object.defineProperty(globalThis, "navigator", {
-      configurable: true,
-      value: originalNavigator,
-    });
   });
 });

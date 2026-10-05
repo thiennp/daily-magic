@@ -1,20 +1,6 @@
-const MOBILE_USER_AGENT_PATTERN =
-  /android|iphone|ipad|ipod|mobile|webos|blackberry|opera mini|iemobile/i;
+import detectMobileClient from "@/lib/mobile/detectMobileClient";
 
-const isMobileBrowser = (): boolean => {
-  if (typeof navigator === "undefined") {
-    return false;
-  }
-
-  const navigatorWithUserAgentData = navigator as Navigator & {
-    readonly userAgentData?: { readonly mobile?: boolean };
-  };
-
-  if (navigatorWithUserAgentData.userAgentData?.mobile === true) {
-    return true;
-  }
-
-  return MOBILE_USER_AGENT_PATTERN.test(navigator.userAgent);
-};
+/** @deprecated Prefer `detectMobileClient` / `useIsMobileClient`; kept as alias. */
+const isMobileBrowser = (): boolean => detectMobileClient();
 
 export default isMobileBrowser;
