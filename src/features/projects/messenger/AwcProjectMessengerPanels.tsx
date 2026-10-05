@@ -4,7 +4,7 @@ import AwcMessengerThreadListPanel from "@/features/projects/messenger/AwcMessen
 import AwcMessengerThreadPane from "@/features/projects/messenger/AwcMessengerThreadPane";
 import type { AwcMessengerOpenThread } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 import type { AwcMessengerThreadList } from "@/features/projects/messenger/types/awcProjectMessenger.type";
-import type { MessengerBotAssigneeOption } from "@/features/projects/messenger/utils/messengerBotAssigneeOptions";
+import type { MessengerTaskAssigneeOption } from "@/features/projects/messenger/utils/messengerTaskAssigneeOptions";
 import type { MessengerThreadMeta } from "@/features/projects/messenger/utils/selectMessengerThreadMeta";
 import type { MessengerTaskDraft } from "@/features/projects/messenger/utils/validateMessengerTaskDraft";
 
@@ -17,7 +17,7 @@ interface AwcProjectMessengerPanelsProps {
   readonly canSend: boolean;
   readonly sending: boolean;
   readonly mobileShowThread: boolean;
-  readonly assignees: readonly MessengerBotAssigneeOption[];
+  readonly assignees: readonly MessengerTaskAssigneeOption[];
   readonly defaultAssigneeMembershipId: string;
   readonly onSelect: (threadKey: string) => void;
   readonly onBack: () => void;

@@ -1,19 +1,19 @@
 import type { AwcMessengerBotThread } from "@/features/projects/messenger/types/awcProjectMessenger.type";
+import {
+  messengerTaskAssigneeOptions,
+  type MessengerTaskAssigneeOption,
+} from "@/features/projects/messenger/utils/messengerTaskAssigneeOptions";
 
-export type MessengerBotAssigneeOption = {
-  readonly membershipId: string;
-  readonly displayName: string;
-};
+export type MessengerBotAssigneeOption = Omit<
+  MessengerTaskAssigneeOption,
+  "kind"
+> & { readonly kind?: never };
 
-/** Assignee select for Activity task mode — bots from messenger thread list. */
+/** @deprecated Prefer messengerTaskAssigneeOptions (supports computer seats). */
 export const messengerBotAssigneeOptions = (
   bots: readonly AwcMessengerBotThread[],
-): readonly MessengerBotAssigneeOption[] => {
-  const options: MessengerBotAssigneeOption[] = [];
-  for (const bot of bots) {
-    const name = bot.displayName?.trim() ?? "";
-    if (name.length === 0) continue;
-    options.push({ membershipId: bot.membershipId, displayName: name });
-  }
-  return options;
-};
+): readonly { readonly membershipId: string; readonly displayName: string }[] =>
+  messengerTaskAssigneeOptions({ bots }).map(({ membershipId, displayName }) => ({
+    membershipId,
+    displayName,
+  }));

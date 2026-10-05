@@ -6,13 +6,13 @@ import AwcMessengerTaskComposerFields from "@/features/projects/messenger/AwcMes
 import AwcMessengerTaskRefsPanel from "@/features/projects/messenger/AwcMessengerTaskRefsPanel";
 import { buildInboxDispatchRefs } from "@/features/projects/access/inbox/utils/buildInboxDispatchRefs";
 import { AWC_PROJECT_MESSENGER_COPY } from "@/features/projects/messenger/awcProjectMessengerCopy.constant";
-import type { MessengerBotAssigneeOption } from "@/features/projects/messenger/utils/messengerBotAssigneeOptions";
+import type { MessengerTaskAssigneeOption } from "@/features/projects/messenger/utils/messengerTaskAssigneeOptions";
 import type { MessengerTaskDraft } from "@/features/projects/messenger/utils/validateMessengerTaskDraft";
 
 interface AwcMessengerTaskComposerProps {
   readonly disabled: boolean;
   readonly sending: boolean;
-  readonly assignees: readonly MessengerBotAssigneeOption[];
+  readonly assignees: readonly MessengerTaskAssigneeOption[];
   readonly defaultAssigneeMembershipId: string;
   readonly onSend: (draft: MessengerTaskDraft) => Promise<boolean>;
 }

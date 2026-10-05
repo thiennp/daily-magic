@@ -1,7 +1,7 @@
 "use client";
 
 import { AWC_PROJECT_MESSENGER_COPY } from "@/features/projects/messenger/awcProjectMessengerCopy.constant";
-import type { MessengerBotAssigneeOption } from "@/features/projects/messenger/utils/messengerBotAssigneeOptions";
+import type { MessengerTaskAssigneeOption } from "@/features/projects/messenger/utils/messengerTaskAssigneeOptions";
 import { PROJECT_MESSAGE_SUMMARY_MAX_CHARS } from "@/lib/projects/acl/messaging/projectMessage.constants";
 
 const FIELD =
@@ -9,7 +9,7 @@ const FIELD =
 
 interface AwcMessengerTaskComposerFieldsProps {
   readonly disabled: boolean;
-  readonly assignees: readonly MessengerBotAssigneeOption[];
+  readonly assignees: readonly MessengerTaskAssigneeOption[];
   readonly assigneeMembershipId: string;
   readonly summary: string;
   readonly kind: string;
@@ -43,9 +43,11 @@ export default function AwcMessengerTaskComposerFields({
             }}
           >
             <option value="">{copy.taskAssigneePlaceholder}</option>
-            {assignees.map((bot) => (
-              <option key={bot.membershipId} value={bot.membershipId}>
-                {bot.displayName}
+            {assignees.map((assignee) => (
+              <option key={assignee.membershipId} value={assignee.membershipId}>
+                {assignee.kind === "computer"
+                  ? `${assignee.displayName} (This Mac)`
+                  : assignee.displayName}
               </option>
             ))}
           </select>

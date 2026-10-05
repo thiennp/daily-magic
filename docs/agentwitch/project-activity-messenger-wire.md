@@ -58,3 +58,22 @@ Overview “recent activity” / “open conversation” should call `showTab('a
 - Project page tab bar / sidebar / Overview chrome redesign
 - Vietnamese mock strings (shipped messenger copy stays English; Human may localize)
 - Lifecycle / History / delete-on-ack FSA
+
+## Owner-computer / This Mac task routing (Dispatch)
+
+**Status (main `423864f9` / S2 stack):** **GAP — Mac membership not in main yet.**
+
+| Piece | Today |
+| --- | --- |
+| `ProjectMemberKind` | `human` \| `bot` only |
+| Messenger assign targets | `loadProjectMessengerBots` (`member_kind = 'bot'`) |
+| Inbox peers | Access members with `isAgent` + nickname |
+| `POST .../inbox/dispatch` `toMembershipId` | Any **active** membership whose `user_id ≠ actor` (no kind filter) |
+| This Mac / Connect | Device identity + `project_device_bindings`; **not** a project_memberships agent seat |
+
+**Needed from Mac/Connect before assignee select can list This Mac:**
+1. A project membership for the owner-computer agent (synthetic agent `user_id`, **not** the owner human id — self-dispatch is rejected).
+2. Nickname / `project_display_name` (e.g. "This Mac").
+3. Prefer `member_kind = 'bot'` (works with existing loaders) **or** a new kind + loader fill of `loadProjectMessengerComputerSeats` (currently returns `[]`).
+
+UI: `messengerTaskAssigneeOptions({ bots, computers })` already accepts computer seats; Human can label `kind: "computer"`.

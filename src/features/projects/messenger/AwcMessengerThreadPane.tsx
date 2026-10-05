@@ -6,7 +6,7 @@ import AwcMessengerTimeline from "@/features/projects/messenger/AwcMessengerTime
 import { AWC_PROJECT_MESSENGER_COPY } from "@/features/projects/messenger/awcProjectMessengerCopy.constant";
 import type { AwcMessengerBotStatus } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 import type { AwcMessengerOpenThread } from "@/features/projects/messenger/types/awcProjectMessenger.type";
-import type { MessengerBotAssigneeOption } from "@/features/projects/messenger/utils/messengerBotAssigneeOptions";
+import type { MessengerTaskAssigneeOption } from "@/features/projects/messenger/utils/messengerTaskAssigneeOptions";
 import type { MessengerTaskDraft } from "@/features/projects/messenger/utils/validateMessengerTaskDraft";
 
 interface AwcMessengerThreadPaneProps {
@@ -18,7 +18,7 @@ interface AwcMessengerThreadPaneProps {
   readonly canSend: boolean;
   readonly sending: boolean;
   readonly showBack: boolean;
-  readonly assignees: readonly MessengerBotAssigneeOption[];
+  readonly assignees: readonly MessengerTaskAssigneeOption[];
   readonly defaultAssigneeMembershipId: string;
   readonly onBack: () => void;
   readonly onSendMessage: (text: string, needsReply: boolean) => Promise<boolean>;

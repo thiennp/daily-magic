@@ -6,13 +6,13 @@ import AwcMessengerComposerModeToggle from "@/features/projects/messenger/AwcMes
 import type { AwcMessengerComposerMode } from "@/features/projects/messenger/AwcMessengerComposerModeToggle";
 import AwcMessengerMessageComposer from "@/features/projects/messenger/AwcMessengerMessageComposer";
 import AwcMessengerTaskComposer from "@/features/projects/messenger/AwcMessengerTaskComposer";
-import type { MessengerBotAssigneeOption } from "@/features/projects/messenger/utils/messengerBotAssigneeOptions";
+import type { MessengerTaskAssigneeOption } from "@/features/projects/messenger/utils/messengerTaskAssigneeOptions";
 import type { MessengerTaskDraft } from "@/features/projects/messenger/utils/validateMessengerTaskDraft";
 
 interface AwcMessengerComposerProps {
   readonly disabled: boolean;
   readonly sending: boolean;
-  readonly assignees: readonly MessengerBotAssigneeOption[];
+  readonly assignees: readonly MessengerTaskAssigneeOption[];
   readonly defaultAssigneeMembershipId: string;
   readonly onSendMessage: (text: string, needsReply: boolean) => Promise<boolean>;
   readonly onSendTask: (draft: MessengerTaskDraft) => Promise<boolean>;
