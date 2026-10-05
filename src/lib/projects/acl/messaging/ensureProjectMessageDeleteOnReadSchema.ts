@@ -10,10 +10,25 @@ export const resetProjectMessageDeleteOnReadSchemaForTests = (): void => {
   state.promise = null;
 };
 
+const isUndefinedTableError = (error: unknown): boolean => {
+  if (!error || typeof error !== "object") {
+    return false;
+  }
+  const code = "code" in error ? String((error as { code?: unknown }).code) : "";
+  const message =
+    error instanceof Error
+      ? error.message
+      : "message" in error
+        ? String((error as { message?: unknown }).message)
+        : "";
+  return code === "42P01" || /does not exist/i.test(message);
+};
+
 /**
- * Idempotent DDL for delete-on-read / ack outcomes (migration 056) and the
- * computer_acks table (History migration 060 shape). Called once from
- * ensureProjectAclSchema.
+ * Idempotent DDL for delete-on-read / ack outcomes (migration 056).
+ * computer_acks CREATE is owned by History migration 060 — this path only
+ * adds nullable device_id (+ indexes) when that table already exists (live 056).
+ * Called once from ensureProjectAclSchema.
  */
 export const ensureProjectMessageDeleteOnReadSchema = async (): Promise<void> => {
   if (state.ensured) {
@@ -50,26 +65,23 @@ export const ensureProjectMessageDeleteOnReadSchema = async (): Promise<void> =>
     await sql`
       CREATE INDEX IF NOT EXISTS project_message_outcomes_project_idx
         ON project_message_outcomes (project_id, deleted_at DESC)`;
-    // Fresh installs: History mig 060 shape (device_id NOT NULL, PK on ids).
-    await sql`
-      CREATE TABLE IF NOT EXISTS project_message_computer_acks (
-        project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
-        message_id TEXT NOT NULL,
-        device_id TEXT NOT NULL,
-        acked_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        PRIMARY KEY (project_id, message_id)
-      )`;
-    // Live table from 056 (id PK, no device_id): additive nullable column only.
-    // SET NOT NULL / PK swap to match 060 is a Lead-gated manual step.
-    await sql`
-      ALTER TABLE project_message_computer_acks
-        ADD COLUMN IF NOT EXISTS device_id TEXT`;
-    await sql`
-      CREATE INDEX IF NOT EXISTS project_message_computer_acks_acked_idx
-        ON project_message_computer_acks (acked_at)`;
-    await sql`
-      CREATE INDEX IF NOT EXISTS project_message_computer_acks_message_idx
-        ON project_message_computer_acks (message_id)`;
+    // History mig 060 owns CREATE for project_message_computer_acks.
+    // Live 056-shaped tables: additive nullable device_id only when present.
+    try {
+      await sql`
+        ALTER TABLE project_message_computer_acks
+          ADD COLUMN IF NOT EXISTS device_id TEXT`;
+      await sql`
+        CREATE INDEX IF NOT EXISTS project_message_computer_acks_acked_idx
+          ON project_message_computer_acks (acked_at)`;
+      await sql`
+        CREATE INDEX IF NOT EXISTS project_message_computer_acks_message_idx
+          ON project_message_computer_acks (message_id)`;
+    } catch (error: unknown) {
+      if (!isUndefinedTableError(error)) {
+        throw error;
+      }
+    }
     state.ensured = true;
   })();
 

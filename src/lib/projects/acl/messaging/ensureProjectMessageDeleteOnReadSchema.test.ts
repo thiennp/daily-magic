@@ -21,7 +21,7 @@ describe("ensureProjectMessageDeleteOnReadSchema", () => {
   it("runs DDL once then no-ops", async () => {
     await ensureProjectMessageDeleteOnReadSchema();
     await ensureProjectMessageDeleteOnReadSchema();
-    expect(sqlMock.mock.calls.length).toBeGreaterThanOrEqual(5);
+    expect(sqlMock.mock.calls.length).toBeGreaterThanOrEqual(4);
     const first = sqlMock.mock.calls.length;
     await ensureProjectMessageDeleteOnReadSchema();
     expect(sqlMock.mock.calls.length).toBe(first);
@@ -34,19 +34,17 @@ describe("ensureProjectMessageDeleteOnReadSchema", () => {
     expect(joined).toMatch(/read_at/);
   });
 
-  it("creates computer_acks in the History 060 shape", async () => {
+  it("does not CREATE computer_acks (History mig 060 owns that)", async () => {
     await ensureProjectMessageDeleteOnReadSchema();
-    const create = sqlMock.mock.calls
-      .map((c) => String(c[0]))
-      .find((q) =>
+    const queries = sqlMock.mock.calls.map((c) => String(c[0]));
+    expect(
+      queries.some((q) =>
         q.includes("CREATE TABLE IF NOT EXISTS project_message_computer_acks"),
-      );
-    expect(create).toMatch(/device_id TEXT NOT NULL/);
-    expect(create).toMatch(/PRIMARY KEY \(project_id, message_id\)/);
-    expect(create).not.toMatch(/\bid TEXT PRIMARY KEY/);
+      ),
+    ).toBe(false);
   });
 
-  it("only adds device_id as nullable on a live 056 table", async () => {
+  it("only adds device_id as nullable when computer_acks already exists", async () => {
     await ensureProjectMessageDeleteOnReadSchema();
     const queries = sqlMock.mock.calls.map((c) => String(c[0]));
     const add = queries.find((q) =>
@@ -60,6 +58,24 @@ describe("ensureProjectMessageDeleteOnReadSchema", () => {
     ).toBe(false);
     expect(queries.join("\n")).toMatch(
       /project_message_computer_acks_acked_idx/,
+    );
+  });
+
+  it("skips computer_acks alters when the table is missing", async () => {
+    sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
+      const q = String(strings[0] ?? "");
+      if (q.includes("project_message_computer_acks")) {
+        const err = Object.assign(new Error('relation "project_message_computer_acks" does not exist'), {
+          code: "42P01",
+        });
+        throw err;
+      }
+      return [];
+    });
+    await expect(ensureProjectMessageDeleteOnReadSchema()).resolves.toBeUndefined();
+    const queries = sqlMock.mock.calls.map((c) => String(c[0]));
+    expect(queries.some((q) => q.includes("project_message_outcomes"))).toBe(
+      true,
     );
   });
 });
