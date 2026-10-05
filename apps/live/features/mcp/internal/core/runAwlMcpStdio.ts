@@ -24,7 +24,7 @@ const writeFramed = (
 
 const readFrames = async (
   streams: StdioStreams,
-  onMessage: (message: unknown) => void,
+  onMessage: (message: unknown) => void | Promise<void>,
 ): Promise<void> => {
   let buffer = Buffer.alloc(0);
   for await (const chunk of streams.stdin) {
@@ -56,7 +56,8 @@ const readFrames = async (
       } catch {
         parsed = null;
       }
-      onMessage(parsed);
+      // Await each handler so responses stay ordered and serialized.
+      await onMessage(parsed);
     }
   }
 };
@@ -66,13 +67,17 @@ export const serveMcpStdio = async (
   server: McpServerDefinition,
   streams: StdioStreams,
 ): Promise<void> => {
-  await readFrames(streams, (message) => {
+  await readFrames(streams, async (message) => {
     const record =
       typeof message === "object" && message !== null
         ? (message as Readonly<Record<string, unknown>>)
         : null;
     const method = record?.method;
-    const response = handleMcpJsonRpcRequest(message, server);
+    const response = await handleMcpJsonRpcRequest(
+      message,
+      server,
+      undefined,
+    );
     // Notifications may omit id; only ack when the client sent one.
     if (typeof method === "string" && method.startsWith("notifications/")) {
       if (record?.id !== undefined) {

@@ -49,6 +49,10 @@ export const tryHandleAwlMcpHttpRequest = async (
   const server =
     input.server ??
     createAwlMcpServer({ layout: input.layout, isDeclined: input.isDeclined });
-  input.sendJson(input.response, 200, handleMcpJsonRpcRequest(body, server));
+  input.sendJson(
+    input.response,
+    200,
+    await handleMcpJsonRpcRequest(body, server, undefined),
+  );
   return true;
 };

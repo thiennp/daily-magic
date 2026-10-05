@@ -2,11 +2,23 @@ import { describe, expect, it, vi } from "vitest";
 
 import { handleMcpJsonRpcRequest } from "./handleMcpJsonRpcRequest";
 import { MCP_PROTOCOL_VERSION } from "./mcpProtocol.constant";
-import type { McpServerDefinition } from "./McpServer.type";
+import type { McpServerDefinition, McpToolResult } from "./McpServer.type";
 
-const makeServer = (
-  call: (args: unknown) => unknown = () => ({ status: "miss" }),
-): McpServerDefinition => ({
+const textResult = (
+  value: unknown,
+  isError?: boolean,
+): McpToolResult => ({
+  content: [{ type: "text", text: JSON.stringify(value) }],
+  ...(isError === undefined ? {} : { isError }),
+});
+
+const makeServer = <TContext = undefined>(
+  call: (
+    args: unknown,
+    context: TContext,
+  ) => McpToolResult | Promise<McpToolResult> = () =>
+    textResult({ status: "miss" }, false),
+): McpServerDefinition<TContext> => ({
   serverInfo: { name: "agent-witch", version: "1.0.0" },
   tools: [
     {
@@ -21,11 +33,13 @@ const makeServer = (
 });
 
 describe("handleMcpJsonRpcRequest", () => {
-  it("answers initialize with protocol version, capabilities and serverInfo", () => {
+  it("answers initialize with protocol version, capabilities and serverInfo", async () => {
+    expect(MCP_PROTOCOL_VERSION).toBe("2025-03-26");
     expect(
-      handleMcpJsonRpcRequest(
+      await handleMcpJsonRpcRequest(
         { jsonrpc: "2.0", id: 1, method: "initialize" },
         makeServer(),
+        undefined,
       ),
     ).toEqual({
       jsonrpc: "2.0",
@@ -38,34 +52,39 @@ describe("handleMcpJsonRpcRequest", () => {
     });
   });
 
-  it("acks ping and notifications/initialized with an empty result", () => {
+  it("acks ping and notifications/initialized with an empty result", async () => {
     const server = makeServer();
     expect(
-      handleMcpJsonRpcRequest(
+      await handleMcpJsonRpcRequest(
         { jsonrpc: "2.0", id: 2, method: "ping" },
         server,
+        undefined,
       ),
     ).toEqual({ jsonrpc: "2.0", id: 2, result: {} });
     expect(
-      handleMcpJsonRpcRequest(
+      await handleMcpJsonRpcRequest(
         { jsonrpc: "2.0", method: "notifications/initialized" },
         server,
+        undefined,
       ),
     ).toEqual({ jsonrpc: "2.0", id: null, result: {} });
   });
 
-  it("lists tool definitions", () => {
+  it("lists tool definitions", async () => {
     expect(
-      handleMcpJsonRpcRequest(
+      await handleMcpJsonRpcRequest(
         { jsonrpc: "2.0", id: 3, method: "tools/list" },
         makeServer(),
+        undefined,
       ),
     ).toMatchObject({ result: { tools: [{ name: "check_context" }] } });
   });
 
-  it("calls a tool with raw arguments and returns JSON text content", () => {
-    const call = vi.fn(() => ({ status: "miss", projectId: "p1" }));
-    const response = handleMcpJsonRpcRequest(
+  it("calls a tool with raw arguments and returns MCP text content", async () => {
+    const call = vi.fn(() =>
+      textResult({ status: "miss", projectId: "p1" }, false),
+    );
+    const response = await handleMcpJsonRpcRequest(
       {
         jsonrpc: "2.0",
         id: 4,
@@ -73,8 +92,9 @@ describe("handleMcpJsonRpcRequest", () => {
         params: { name: "check_context", arguments: { projectId: "p1" } },
       },
       makeServer(call),
+      undefined,
     );
-    expect(call).toHaveBeenCalledWith({ projectId: "p1" });
+    expect(call).toHaveBeenCalledWith({ projectId: "p1" }, undefined);
     expect(response).toEqual({
       jsonrpc: "2.0",
       id: 4,
@@ -86,6 +106,72 @@ describe("handleMcpJsonRpcRequest", () => {
             text: JSON.stringify({ status: "miss", projectId: "p1" }),
           },
         ],
+      },
+    });
+  });
+
+  it("awaits an async tool and returns its result", async () => {
+    const response = await handleMcpJsonRpcRequest(
+      {
+        jsonrpc: "2.0",
+        id: 10,
+        method: "tools/call",
+        params: { name: "check_context", arguments: { x: 1 } },
+      },
+      makeServer(async () => textResult({ ok: true }, false)),
+      undefined,
+    );
+    expect(response).toEqual({
+      jsonrpc: "2.0",
+      id: 10,
+      result: textResult({ ok: true }, false),
+    });
+  });
+
+  it("passes per-call context through to the tool", async () => {
+    const call = vi.fn((_: unknown, context: { authorization: string }) =>
+      textResult({ auth: context.authorization }, false),
+    );
+    const response = await handleMcpJsonRpcRequest(
+      {
+        jsonrpc: "2.0",
+        id: 11,
+        method: "tools/call",
+        params: { name: "check_context", arguments: {} },
+      },
+      makeServer<{ authorization: string }>(call),
+      { authorization: "Bearer tok" },
+    );
+    expect(call).toHaveBeenCalledWith({}, { authorization: "Bearer tok" });
+    expect(response).toMatchObject({
+      result: {
+        content: [
+          { type: "text", text: JSON.stringify({ auth: "Bearer tok" }) },
+        ],
+      },
+    });
+  });
+
+  it("passes through an isError tool result", async () => {
+    const response = await handleMcpJsonRpcRequest(
+      {
+        jsonrpc: "2.0",
+        id: 12,
+        method: "tools/call",
+        params: { name: "check_context" },
+      },
+      makeServer(() => ({
+        content: [{ type: "text", text: "denied" }],
+        isError: true,
+      })),
+      undefined,
+    );
+    expect(response).toEqual({
+      jsonrpc: "2.0",
+      id: 12,
+      result: {
+        content: [{ type: "text", text: "denied" }],
+        isError: true,
       },
     });
   });
@@ -105,15 +191,17 @@ describe("handleMcpJsonRpcRequest", () => {
       },
       -32602,
     ],
-  ])("returns a JSON-RPC error for %j", (body, code) => {
-    expect(handleMcpJsonRpcRequest(body, makeServer())).toMatchObject({
+  ])("returns a JSON-RPC error for %j", async (body, code) => {
+    expect(
+      await handleMcpJsonRpcRequest(body, makeServer(), undefined),
+    ).toMatchObject({
       jsonrpc: "2.0",
       error: { code },
     });
   });
 
-  it("maps a throwing tool to an internal error instead of throwing", () => {
-    const response = handleMcpJsonRpcRequest(
+  it("maps a throwing tool to an internal error instead of throwing", async () => {
+    const response = await handleMcpJsonRpcRequest(
       {
         jsonrpc: "2.0",
         id: 9,
@@ -123,7 +211,27 @@ describe("handleMcpJsonRpcRequest", () => {
       makeServer(() => {
         throw new Error("boom");
       }),
+      undefined,
     );
     expect(response).toMatchObject({ id: 9, error: { code: -32603 } });
+  });
+
+  it("maps a rejecting tool to an internal error instead of rejecting", async () => {
+    const response = await handleMcpJsonRpcRequest(
+      {
+        jsonrpc: "2.0",
+        id: 13,
+        method: "tools/call",
+        params: { name: "check_context" },
+      },
+      makeServer(async () => {
+        throw new Error("async boom");
+      }),
+      undefined,
+    );
+    expect(response).toMatchObject({
+      id: 13,
+      error: { code: -32603, message: expect.stringContaining("async boom") },
+    });
   });
 });

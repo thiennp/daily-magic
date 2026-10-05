@@ -15,15 +15,23 @@ export interface CreateAwlMcpServerInput {
 /** AWL local MCP server: tool list composed from feature-owned handlers. */
 export const createAwlMcpServer = (
   input: CreateAwlMcpServerInput,
-): McpServerDefinition => ({
-  serverInfo: AGENT_WITCH_MCP_SERVER_INFO,
-  tools: [
-    {
-      definition: AWL_CHECK_CONTEXT_TOOL,
-      call: createCheckContextRunner({
-        layout: input.layout,
-        isDeclined: input.isDeclined,
-      }),
-    },
-  ],
-});
+): McpServerDefinition => {
+  const runCheckContext = createCheckContextRunner({
+    layout: input.layout,
+    isDeclined: input.isDeclined,
+  });
+  return {
+    serverInfo: AGENT_WITCH_MCP_SERVER_INFO,
+    tools: [
+      {
+        definition: AWL_CHECK_CONTEXT_TOOL,
+        call: (args) => ({
+          content: [
+            { type: "text", text: JSON.stringify(runCheckContext(args)) },
+          ],
+          isError: false,
+        }),
+      },
+    ],
+  };
+};

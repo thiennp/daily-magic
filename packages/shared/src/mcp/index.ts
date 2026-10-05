@@ -9,4 +9,5 @@ export type {
   McpServerInfo,
   McpTool,
   McpToolDefinition,
+  McpToolResult,
 } from "./McpServer.type";

@@ -8,4 +8,5 @@ export type {
   McpServerInfo,
   McpTool,
   McpToolDefinition,
+  McpToolResult,
 } from "@agent-witch/shared/mcp";

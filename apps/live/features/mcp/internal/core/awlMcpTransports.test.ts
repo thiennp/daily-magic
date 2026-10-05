@@ -15,7 +15,15 @@ const server: McpServerDefinition = {
         description: "d",
         inputSchema: { type: "object" },
       },
-      call: () => ({ status: "miss", projectId: "p1" }),
+      call: () => ({
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({ status: "miss", projectId: "p1" }),
+          },
+        ],
+        isError: false,
+      }),
     },
   ],
 };
@@ -68,13 +76,17 @@ const runHttp = async (rawBody: string): Promise<unknown> => {
 
 describe("AWL MCP transports share the JSON-RPC core", () => {
   it("stdio and HTTP return the core response for tools/call", async () => {
-    const expected = handleMcpJsonRpcRequest(callRequest, server);
+    const expected = await handleMcpJsonRpcRequest(
+      callRequest,
+      server,
+      undefined,
+    );
     expect(await runStdio(frame(callRequest))).toEqual([expected]);
     expect(await runHttp(JSON.stringify(callRequest))).toEqual(expected);
   });
 
   it("both map malformed JSON to the core parse error", async () => {
-    const expected = handleMcpJsonRpcRequest(null, server);
+    const expected = await handleMcpJsonRpcRequest(null, server, undefined);
     expect(await runStdio("Content-Length: 5\r\n\r\n{nope")).toEqual([
       expected,
     ]);

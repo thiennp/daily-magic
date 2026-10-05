@@ -1,5 +1,8 @@
 import { MCP_PROTOCOL_VERSION } from "./mcpProtocol.constant";
-import type { McpJsonRpcResponse, McpServerDefinition } from "./McpServer.type";
+import type {
+  McpJsonRpcResponse,
+  McpServerDefinition,
+} from "./McpServer.type";
 
 const jsonRpcError = (
   id: unknown,
@@ -22,11 +25,12 @@ const asRecord = (value: unknown): Readonly<Record<string, unknown>> | null =>
     ? (value as Readonly<Record<string, unknown>>)
     : null;
 
-const callTool = (
+const callTool = async <TContext>(
   id: unknown,
   params: Readonly<Record<string, unknown>> | null,
-  server: McpServerDefinition,
-): McpJsonRpcResponse => {
+  server: McpServerDefinition<TContext>,
+  context: TContext,
+): Promise<McpJsonRpcResponse> => {
   const name = params?.name;
   if (typeof name !== "string") {
     return jsonRpcError(id, -32602, "tool name is required");
@@ -36,11 +40,8 @@ const callTool = (
     return jsonRpcError(id, -32602, `Unknown tool: ${name}`);
   }
   try {
-    const result = tool.call(params?.arguments ?? {});
-    return jsonRpcResult(id, {
-      content: [{ type: "text", text: JSON.stringify(result) }],
-      isError: false,
-    });
+    const result = await tool.call(params?.arguments ?? {}, context);
+    return jsonRpcResult(id, result);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     return jsonRpcError(id, -32603, `Tool ${name} failed: ${message}`);
@@ -49,13 +50,15 @@ const callTool = (
 
 /**
  * Shared MCP JSON-RPC core (initialize, ping, notifications, tools/list,
- * tools/call, errors). Environment-neutral: pure request -> response for a
- * tool registry. Transports (AWL stdio, HTTP `/mcp`) only frame bytes around it.
+ * tools/call, errors). Environment-neutral: pure async request -> response for
+ * a tool registry with a per-call `context`. Transports (AWL stdio, HTTP
+ * `/mcp`, AWC) only frame bytes / auth around it.
  */
-export const handleMcpJsonRpcRequest = (
+export const handleMcpJsonRpcRequest = async <TContext = undefined>(
   body: unknown,
-  server: McpServerDefinition,
-): McpJsonRpcResponse => {
+  server: McpServerDefinition<TContext>,
+  context: TContext,
+): Promise<McpJsonRpcResponse> => {
   const record = asRecord(body);
   if (record === null) {
     return jsonRpcError(null, -32700, "Parse error");
@@ -81,7 +84,7 @@ export const handleMcpJsonRpcRequest = (
     });
   }
   if (method === "tools/call") {
-    return callTool(id, asRecord(record.params), server);
+    return callTool(id, asRecord(record.params), server, context);
   }
   return jsonRpcError(id, -32601, "Method not found");
 };
