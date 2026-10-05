@@ -7,8 +7,9 @@ import { buildProjectInviteJoinFallbackPrompt } from "@/features/projects/access
 import { buildProjectInviteJoinLeaveStep } from "@/features/projects/access/invites/buildProjectInviteJoinLeaveStep";
 import { buildProjectInviteJoinProjectLine } from "@/features/projects/access/invites/buildProjectInviteJoinProjectLine";
 import { buildProjectInviteJoinRedeemStep } from "@/features/projects/access/invites/buildProjectInviteJoinRedeemStep";
-import { buildProjectInviteJoinWakeWebhookStep } from "@/features/projects/access/invites/buildProjectInviteJoinWakeWebhookStep";
+import type { ProjectInvitePlatform } from "@/features/projects/access/invites/projectInvitePlatform.type";
 import { resolveProjectInviteJoinToken } from "@/features/projects/access/invites/resolveProjectInviteJoinToken";
+import { selectProjectInviteJoinWakeStep } from "@/features/projects/access/invites/selectProjectInviteJoinWakeStep";
 
 /** Static join text (no input, not reused): kept inline. */
 const GOAL_LINES: readonly string[] = [
@@ -36,11 +37,13 @@ export type ProjectInviteJoinPromptInput = {
   readonly token?: string | null;
   readonly projectId?: string;
   readonly projectName?: string | null;
+  /** Picks step 7 only (wake/webhook). Default grok. */
+  readonly platform?: ProjectInvitePlatform;
 };
 
 /**
  * Join orchestrator — the invite Copy prompt. Calls each join step in order
- * and joins them with a blank line. Pure: no env, clock, or DB reads; copy only.
+ * and joins them with a blank line. Only step 7 depends on platform. Pure: no env, clock, or DB reads; copy only.
  */
 export const buildProjectInviteJoinPrompt = (
   input: ProjectInviteJoinPromptInput,
@@ -60,7 +63,7 @@ export const buildProjectInviteJoinPrompt = (
     buildProjectInviteJoinBriefingPeersStep({ projectIdHint }),
     SUMMARY_LINES,
     buildProjectInviteJoinDispatchStep({ projectIdHint }),
-    buildProjectInviteJoinWakeWebhookStep(),
+    selectProjectInviteJoinWakeStep(input.platform ?? "grok")(),
     buildProjectInviteJoinLeaveStep({ projectIdHint }),
     PRODUCT_UPDATES_LINES,
   ];
