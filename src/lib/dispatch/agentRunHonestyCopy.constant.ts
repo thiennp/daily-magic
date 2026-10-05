@@ -32,6 +32,10 @@ export const MARKETPLACE_CLI_FALLBACK_LOCKED_REASON =
 export const CLAUDE_LOGIN_EXPIRED_LOCKED_REASON =
   "Claude login expired — sign in again to continue.";
 
+/** Antigravity (agy) OAuth — exact copy; do not paraphrase. */
+export const ANTIGRAVITY_LOGIN_REQUIRED_LOCKED_REASON =
+  "Antigravity sign-in required — run agy in a terminal and complete Google sign-in.";
+
 /** Pimi auth addendum — exact copy (curly apostrophe in can’t). */
 export const WRITER_MISSING_CLI_CANT_RUN_LOCKED_REASON =
   "Writer API key missing and Claude CLI can’t run.";

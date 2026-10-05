@@ -29,4 +29,10 @@ describe("formatWriterCliDisplayCommand", () => {
       "claude -v",
     );
   });
+
+  it("orders antigravity flags so -p is not followed by another flag", () => {
+    expect(formatWriterCliDisplayCommand("antigravity", "plan")).toBe(
+      'agy --dangerously-skip-permissions -p "plan"',
+    );
+  });
 });
