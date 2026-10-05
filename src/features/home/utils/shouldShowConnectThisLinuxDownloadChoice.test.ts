@@ -8,6 +8,7 @@ describe("shouldShowConnectThisLinuxDownloadChoice", () => {
       shouldShowConnectThisLinuxDownloadChoice({
         operatingSystem: "linux",
         isMobile: false,
+        isReleased: true,
       }),
     ).toBe(true);
   });
@@ -17,6 +18,7 @@ describe("shouldShowConnectThisLinuxDownloadChoice", () => {
       shouldShowConnectThisLinuxDownloadChoice({
         operatingSystem: "linux",
         isMobile: true,
+        isReleased: true,
       }),
     ).toBe(false);
   });
@@ -26,12 +28,24 @@ describe("shouldShowConnectThisLinuxDownloadChoice", () => {
       shouldShowConnectThisLinuxDownloadChoice({
         operatingSystem: "mac",
         isMobile: false,
+        isReleased: true,
       }),
     ).toBe(false);
     expect(
       shouldShowConnectThisLinuxDownloadChoice({
         operatingSystem: "windows",
         isMobile: false,
+        isReleased: true,
+      }),
+    ).toBe(false);
+  });
+
+  it("hides on desktop Linux until the release exists", () => {
+    expect(
+      shouldShowConnectThisLinuxDownloadChoice({
+        operatingSystem: "linux",
+        isMobile: false,
+        isReleased: false,
       }),
     ).toBe(false);
   });

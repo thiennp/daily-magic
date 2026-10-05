@@ -9,6 +9,7 @@ import { shouldShowConnectThisLinuxDownloadChoice } from "@/features/home/utils/
 import {
   buildAgentWitchLocalLinuxAppImageDownloadUrl,
   buildAgentWitchLocalLinuxDebDownloadUrl,
+  IS_AGENT_WITCH_LOCAL_LINUX_APP_RELEASED,
 } from "@/lib/agentWitch/buildAgentWitchLocalLinuxAppDownloadUrl";
 
 interface ConnectThisLinuxDownloadAreaProps {
@@ -23,6 +24,7 @@ export default function ConnectThisLinuxDownloadArea({
   const shouldShow = shouldShowConnectThisLinuxDownloadChoice({
     operatingSystem,
     isMobile,
+    isReleased: IS_AGENT_WITCH_LOCAL_LINUX_APP_RELEASED,
   });
 
   if (!shouldShow) {
