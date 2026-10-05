@@ -2,29 +2,19 @@
 
 import { useState } from "react";
 
-import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
+import AwcHumanInviteCreatedLinkBanner from "@/features/projects/access/humanInvites/AwcHumanInviteCreatedLinkBanner";
 import AwcHumanInviteEmailLockField from "@/features/projects/access/humanInvites/AwcHumanInviteEmailLockField";
+import AwcHumanInvitePersonPanelActions from "@/features/projects/access/humanInvites/AwcHumanInvitePersonPanelActions";
+import AwcHumanInvitePersonRolePicker from "@/features/projects/access/humanInvites/AwcHumanInvitePersonRolePicker";
 import {
   HUMAN_INVITE_UI_COPY,
   withProjectName,
 } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
+import type { AwcHumanInvitePersonPanelProps } from "@/features/projects/access/humanInvites/types/awcHumanInvitePersonPanelProps.type";
 import { buildHumanInviteCreateBody } from "@/features/projects/access/humanInvites/utils/buildHumanInviteCreateBody";
-import type {
-  CreateHumanInviteBody,
-  CreateHumanInviteResponse,
-  HumanInviteRole,
-} from "@/features/projects/access/humanInvites/types/humanInviteUiContract.type";
+import type { HumanInviteRole } from "@/features/projects/access/humanInvites/types/humanInviteUiContract.type";
 
-export type AwcHumanInvitePersonPanelProps = {
-  readonly projectName: string;
-  readonly createdInvite?: CreateHumanInviteResponse | null;
-  readonly busy?: boolean;
-  readonly errorMessage?: string | null;
-  readonly onCreate?: (body: CreateHumanInviteBody) => void;
-  readonly onCopyLink?: (url: string) => void;
-  readonly onCancel?: () => void;
-  readonly onDismissCreated?: () => void;
-};
+export type { AwcHumanInvitePersonPanelProps } from "@/features/projects/access/humanInvites/types/awcHumanInvitePersonPanelProps.type";
 
 /**
  * Owner Invite person — role picker + optional email lock + Copy link.
@@ -45,9 +35,6 @@ export default function AwcHumanInvitePersonPanel({
   const [email, setEmail] = useState("");
   const [requireEmailMatch, setRequireEmailMatch] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
-
-  const roleOneLiner =
-    role === "member" ? copy.roleMemberOneLiner : copy.roleViewerOneLiner;
   const shownError = localError ?? errorMessage;
 
   const onSubmitCreate = () => {
@@ -75,29 +62,11 @@ export default function AwcHumanInvitePersonPanel({
         </p>
       </header>
 
-      <fieldset className="space-y-2">
-        <legend className="text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
-          Role
-        </legend>
-        <div className="flex flex-wrap gap-2">
-          {(["member", "viewer"] as const).map((value) => (
-            <button
-              key={value}
-              type="button"
-              disabled={busy}
-              className={
-                role === value
-                  ? AWC_PROJECT_ACCESS_CTA.primary
-                  : AWC_PROJECT_ACCESS_CTA.secondary
-              }
-              onClick={() => setRole(value)}
-            >
-              {value === "member" ? copy.roleMember : copy.roleViewer}
-            </button>
-          ))}
-        </div>
-        <p className="text-xs text-gray-500 dark:text-gray-400">{roleOneLiner}</p>
-      </fieldset>
+      <AwcHumanInvitePersonRolePicker
+        role={role}
+        busy={busy}
+        onRoleChange={setRole}
+      />
 
       <label className="block space-y-1">
         <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
@@ -126,70 +95,22 @@ export default function AwcHumanInvitePersonPanel({
       />
 
       {createdInvite ? (
-        <div className="rounded-lg border border-amber-300/80 bg-amber-50/80 p-3 text-xs dark:border-amber-700/60 dark:bg-amber-950/30">
-          <p className="font-medium text-amber-900 dark:text-amber-200">
-            {copy.createdBannerTitle}
-          </p>
-          <p className="mt-1 text-amber-900 dark:text-amber-200">
-            Role · {createdInvite.role} · exp{" "}
-            {new Date(createdInvite.expiresAt).toLocaleDateString()}
-            {createdInvite.requireEmailMatch ? ` · ${copy.pendingEmailLocked}` : ""}
-          </p>
-          <p className="mt-1 break-all text-amber-900/90 dark:text-amber-100/90">
-            {createdInvite.url}
-          </p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            <button
-              type="button"
-              className={AWC_PROJECT_ACCESS_CTA.primary}
-              onClick={() => onCopyLink?.(createdInvite.url)}
-            >
-              {copy.copyLink}
-            </button>
-            <button
-              type="button"
-              className={AWC_PROJECT_ACCESS_CTA.secondary}
-              onClick={onDismissCreated}
-            >
-              Dismiss
-            </button>
-          </div>
-        </div>
+        <AwcHumanInviteCreatedLinkBanner
+          createdInvite={createdInvite}
+          onCopyLink={onCopyLink}
+          onDismissCreated={onDismissCreated}
+        />
       ) : null}
 
       {shownError ? (
         <p className="text-xs text-red-600 dark:text-red-300">{shownError}</p>
       ) : null}
 
-      <div className="flex flex-wrap items-center gap-2">
-        <button
-          type="button"
-          className={AWC_PROJECT_ACCESS_CTA.primary}
-          disabled={busy}
-          onClick={onSubmitCreate}
-        >
-          {copy.copyLink}
-        </button>
-        <button
-          type="button"
-          className={AWC_PROJECT_ACCESS_CTA.secondary}
-          disabled
-          title="S3 — Resend"
-        >
-          {copy.sendEmail}
-          <span className="ml-1 rounded bg-amber-100 px-1 text-[10px] font-semibold text-amber-800">
-            {copy.sendEmailLaterBadge}
-          </span>
-        </button>
-        <button
-          type="button"
-          className={AWC_PROJECT_ACCESS_CTA.secondary}
-          disabled={busy}
-          onClick={onCancel}
-        >
-          {copy.cancel}
-        </button>
-      </div>
+      <AwcHumanInvitePersonPanelActions
+        busy={busy}
+        onSubmitCreate={onSubmitCreate}
+        onCancel={onCancel}
+      />
     </div>
   );
 }

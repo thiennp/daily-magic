@@ -1,33 +1,11 @@
 import { classifyHumanInviteMiss } from "@/lib/projects/acl/humanInvites/classifyHumanInviteMiss";
 import { peekHumanInviteByToken } from "@/lib/projects/acl/humanInvites/peekHumanInviteByToken";
-import type { HumanInviteRole } from "@/features/projects/access/humanInvites/types/humanInviteUiContract.type";
+import type { HumanInviteAcceptLoad } from "@/features/projects/access/humanInvites/types/humanInviteAcceptLoad.type";
+import { formatHumanInviteInviter } from "@/features/projects/access/humanInvites/utils/formatHumanInviteInviter";
 import { getUserById } from "@/lib/auth/userRepository";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
-export type HumanInviteAcceptLoad =
-  | {
-      readonly ok: true;
-      readonly token: string;
-      readonly projectId: string;
-      readonly projectName: string;
-      readonly inviterDisplayName: string;
-      readonly role: HumanInviteRole;
-      readonly expiresAt: string;
-      readonly email: string | null;
-      /** From peek/API when server exposes requireEmailMatch + invitedEmailMasked. */
-      readonly requireEmailMatch: boolean;
-      readonly invitedEmailMasked: string | null;
-    }
-  | {
-      readonly ok: false;
-      readonly token: string;
-      readonly miss: "invalid_token" | "expired" | "revoked" | "already_redeemed";
-      readonly projectName: string | null;
-      readonly inviterDisplayName: string;
-    };
-
-const formatInviter = (name: string | null, email: string | null): string =>
-  name?.trim() || email?.trim() || "Someone";
+export type { HumanInviteAcceptLoad } from "@/features/projects/access/humanInvites/types/humanInviteAcceptLoad.type";
 
 /** Server load for /invite/h/[token] — peek + project + inviter (open-link v1). */
 export const loadHumanInviteAcceptPage = async (
@@ -60,7 +38,7 @@ export const loadHumanInviteAcceptPage = async (
     getUserProjectById(peeked.projectId),
     getUserById(peeked.createdByUserId),
   ]);
-  const inviterDisplayName = formatInviter(
+  const inviterDisplayName = formatHumanInviteInviter(
     inviter?.name ?? null,
     inviter?.email ?? null,
   );

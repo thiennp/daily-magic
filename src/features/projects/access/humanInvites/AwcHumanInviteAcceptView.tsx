@@ -1,15 +1,8 @@
 "use client";
 
-import type { FormEvent, ReactNode } from "react";
-
-import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
+import AwcHumanInviteAcceptJoinBody from "@/features/projects/access/humanInvites/AwcHumanInviteAcceptJoinBody";
+import AwcHumanInviteAcceptTerminalView from "@/features/projects/access/humanInvites/AwcHumanInviteAcceptTerminalView";
 import AwcHumanInviteEmailLockAcceptPanel from "@/features/projects/access/humanInvites/AwcHumanInviteEmailLockAcceptPanel";
-import AwcHumanInviteNicknameField from "@/features/projects/access/humanInvites/AwcHumanInviteNicknameField";
-import {
-  HUMAN_INVITE_UI_COPY,
-  withMaskedEmail,
-  withProjectName,
-} from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
 import type { HumanInviteRole } from "@/features/projects/access/humanInvites/types/humanInviteUiContract.type";
 
 export type HumanInviteAcceptViewState =
@@ -64,10 +57,6 @@ export default function AwcHumanInviteAcceptView({
   invitedEmailMasked = null,
   onSwitchAccount,
 }: AwcHumanInviteAcceptViewProps) {
-  const copy = HUMAN_INVITE_UI_COPY;
-  const roleLabel = role === "member" ? copy.roleMember : copy.roleViewer;
-  const roleOneLiner =
-    role === "member" ? copy.roleMemberOneLiner : copy.roleViewerOneLiner;
   const masked = invitedEmailMasked?.trim() || "the invited email";
 
   if (viewState === "email_mismatch" || viewState === "email_unverified") {
@@ -81,162 +70,40 @@ export default function AwcHumanInviteAcceptView({
     );
   }
 
-  if (viewState === "invalid") {
+  if (
+    viewState === "invalid" ||
+    viewState === "expired" ||
+    viewState === "used" ||
+    viewState === "revoked" ||
+    viewState === "already_member"
+  ) {
     return (
-      <AcceptShell projectName={projectName}>
-        <h1 className="text-xl font-semibold">{copy.invalidInviteTitle}</h1>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          {copy.invalidInviteBody}
-        </p>
-      </AcceptShell>
-    );
-  }
-
-  if (viewState === "expired") {
-    return (
-      <AcceptShell badge={copy.badgeExpired} projectName={projectName}>
-        <h1 className="text-xl font-semibold">{copy.expiredTitle}</h1>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          Ask {inviterDisplayName} for a new invite to {projectName}. Expired
-          links cannot be reused.
-        </p>
-      </AcceptShell>
-    );
-  }
-
-  if (viewState === "used") {
-    return (
-      <AcceptShell badge={copy.badgeUsed} projectName={projectName}>
-        <h1 className="text-xl font-semibold">{copy.usedTitle}</h1>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          Someone already joined with this link. Ask {inviterDisplayName} to
-          send a fresh invite if you still need access.
-        </p>
-      </AcceptShell>
-    );
-  }
-
-  if (viewState === "revoked") {
-    return (
-      <AcceptShell badge={copy.badgeRevoked} projectName={projectName}>
-        <h1 className="text-xl font-semibold">{copy.revokedTitle}</h1>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          {inviterDisplayName} revoked this invite. It no longer works. Ask for
-          a new one if you still need to join.
-        </p>
-      </AcceptShell>
-    );
-  }
-
-  if (viewState === "already_member") {
-    return (
-      <AcceptShell projectName={projectName}>
-        <h1 className="text-xl font-semibold">
-          {withProjectName(copy.alreadyMemberTitle, projectName)}
-        </h1>
-        <button
-          type="button"
-          className={`${AWC_PROJECT_ACCESS_CTA.primary} mt-4`}
-          onClick={onOpenProject}
-        >
-          {copy.openProject}
-        </button>
-      </AcceptShell>
+      <AwcHumanInviteAcceptTerminalView
+        viewState={viewState}
+        projectName={projectName}
+        inviterDisplayName={inviterDisplayName}
+        onOpenProject={onOpenProject}
+      />
     );
   }
 
   return (
-    <AcceptShell projectName={projectName}>
-      <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">
-        {copy.acceptEyebrow}
-      </p>
-      <h1 className="mt-1 text-xl font-semibold">
-        {withProjectName(copy.acceptJoinTitle, projectName)}
-      </h1>
-      <p className="mt-2 text-sm text-gray-700 dark:text-white/80">
-        {inviterDisplayName} invited you as a {roleLabel}.
-      </p>
-      <p className="mt-1 text-xs text-gray-500">{roleOneLiner}</p>
-      <p className="mt-2 text-xs text-gray-500">
-        Invited by {inviterDisplayName} · {expiresInLabel}
-      </p>
-
-      {requireEmailMatch ? (
-        <p className="mt-3 rounded-lg border border-amber-200/80 bg-amber-50/80 px-3 py-2 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100">
-          {withMaskedEmail(copy.emailLockSignedOutHint, masked)}
-        </p>
-      ) : null}
-
-      {viewState === "signed_out" ? (
-        <>
-          <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-            {copy.acceptSignedOutHint}
-          </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <button
-              type="button"
-              className={AWC_PROJECT_ACCESS_CTA.primary}
-              onClick={onSignUp}
-            >
-              {copy.signUp}
-            </button>
-            <button
-              type="button"
-              className={AWC_PROJECT_ACCESS_CTA.secondary}
-              onClick={onLogIn}
-            >
-              {copy.logIn}
-            </button>
-          </div>
-        </>
-      ) : (
-        <>
-          <p className="mt-4 text-sm text-gray-700 dark:text-white/80">
-            You&apos;re signed in as {signedInEmail ?? "you"}.{" "}
-            {inviterDisplayName} invited you as a {roleLabel}.
-          </p>
-          <p className="mt-1 text-xs text-gray-500">{copy.acceptSignedInHint}</p>
-          <form
-            onSubmit={(event: FormEvent<HTMLFormElement>) => {
-              event.preventDefault();
-              if (!busy) onAccept?.();
-            }}
-          >
-            <AwcHumanInviteNicknameField
-              value={nickname}
-              error={nicknameError}
-              disabled={busy}
-              onChange={onNicknameChange}
-            />
-            <button
-              type="submit"
-              className={`${AWC_PROJECT_ACCESS_CTA.primary} mt-4`}
-              disabled={busy}
-            >
-              {busy ? copy.joining : copy.joinProject}
-            </button>
-          </form>
-        </>
-      )}
-    </AcceptShell>
+    <AwcHumanInviteAcceptJoinBody
+      viewState={viewState}
+      projectName={projectName}
+      inviterDisplayName={inviterDisplayName}
+      role={role}
+      expiresInLabel={expiresInLabel}
+      signedInEmail={signedInEmail}
+      busy={busy}
+      nickname={nickname}
+      nicknameError={nicknameError}
+      onNicknameChange={onNicknameChange}
+      onAccept={onAccept}
+      onSignUp={onSignUp}
+      onLogIn={onLogIn}
+      requireEmailMatch={requireEmailMatch}
+      invitedEmailMasked={masked}
+    />
   );
 }
-
-const AcceptShell = ({
-  children,
-  badge,
-  projectName,
-}: {
-  readonly children: ReactNode;
-  readonly badge?: string;
-  readonly projectName: string;
-}) => (
-  <main className="mx-auto max-w-xl px-4 py-12 text-gray-900 dark:text-white">
-    {badge ? (
-      <p className="mb-3 inline-flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700 dark:bg-gray-800 dark:text-gray-200">
-        {badge} · {projectName}
-      </p>
-    ) : null}
-    {children}
-  </main>
-);
