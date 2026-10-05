@@ -1,14 +1,28 @@
 import { normalizeProjectDisplayNameKey } from "@/lib/projects/acl/displayNames/normalizeProjectDisplayName";
 import { asRowArray, getSql } from "@/lib/db";
 
+export type DispatchMemberKind = "human" | "bot" | "computer";
+
 export type DispatchRecipient = {
   readonly id: string | null;
   readonly user_id: string;
+  /** Present when resolved from project_memberships (not owner alias). */
+  readonly memberKind?: DispatchMemberKind;
+  /** Computer seats only; loaded when memberKind=computer. */
+  readonly deviceId?: string | null;
+};
+
+const parseMemberKind = (value: unknown): DispatchMemberKind => {
+  if (value === "human") return "human";
+  if (value === "computer") return "computer";
+  return "bot";
 };
 
 const toRecipient = (row: Record<string, unknown>): DispatchRecipient => ({
   id: String(row.id),
   user_id: String(row.user_id),
+  memberKind: parseMemberKind(row.member_kind),
+  deviceId: row.device_id ? String(row.device_id) : null,
 });
 
 const resolveByDisplayNameAlias = async (input: {

@@ -21,7 +21,7 @@ describe("resolveDispatchRecipients membershipId + rename alias", () => {
     sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
       const q = String(strings);
       if (q.includes("AND id =") && q.includes("project_memberships")) {
-        return [{ id: "mem-ada", user_id: "bot-ada" }];
+        return [{ id: "mem-ada", user_id: "bot-ada", member_kind: "bot" }];
       }
       return [];
     });
@@ -34,7 +34,14 @@ describe("resolveDispatchRecipients membershipId + rename alias", () => {
     });
     expect(result).toEqual({
       ok: true,
-      recipients: [{ id: "mem-ada", user_id: "bot-ada" }],
+      recipients: [
+        {
+          id: "mem-ada",
+          user_id: "bot-ada",
+          memberKind: "bot",
+          deviceId: null,
+        },
+      ],
     });
   });
 
@@ -66,7 +73,14 @@ describe("resolveDispatchRecipients membershipId + rename alias", () => {
     });
     expect(result).toEqual({
       ok: true,
-      recipients: [{ id: "mem-ada", user_id: "bot-ada" }],
+      recipients: [
+        {
+          id: "mem-ada",
+          user_id: "bot-ada",
+          memberKind: "bot",
+          deviceId: null,
+        },
+      ],
     });
   });
 

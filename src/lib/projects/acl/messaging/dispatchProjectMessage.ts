@@ -7,6 +7,7 @@ import { orchestrateProjectBotToBotMessage } from "@/lib/projects/acl/messaging/
 import { parseProjectDispatchPayload } from "@/lib/projects/acl/messaging/parseProjectDispatchPayload";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 import { resolveDispatchRecipients } from "@/lib/projects/acl/messaging/resolveDispatchRecipients";
+import { routeResolvedComputerDispatch } from "@/lib/projects/acl/messaging/routeResolvedComputerDispatch";
 import { writeProjectMessageDispatchAudit } from "@/lib/projects/acl/messaging/writeProjectMessageDispatchAudit";
 
 export type DispatchProjectMessageResult =
@@ -14,10 +15,12 @@ export type DispatchProjectMessageResult =
       readonly ok: true;
       readonly messageId: string;
       readonly recipientCount: number;
+      readonly agentRunId?: string;
     }
   | {
       readonly ok: false;
       readonly code: string;
+      readonly cause?: "offline" | "too_old";
       readonly reason?: "hourly" | "unread_cap";
       readonly detail?: "rate_limited_hourly" | "unread_cap";
       readonly retryAfterSeconds?: number | null;
@@ -56,7 +59,6 @@ export const dispatchProjectMessage = async (input: {
     senderUserId: input.actorUserId,
   });
   if (!rate.ok) {
-    // Same six fields (code, reason, detail, retryAfter*, message) as the result.
     return rate;
   }
 
@@ -69,6 +71,33 @@ export const dispatchProjectMessage = async (input: {
   });
   if (!resolved.ok) {
     return { ok: false, code: resolved.code };
+  }
+
+  const computer = await routeResolvedComputerDispatch({
+    projectId: input.projectId,
+    actorUserId: input.actorUserId,
+    senderMembershipId: sender.id,
+    senderProjectDisplayName: access.projectDisplayName,
+    primary: resolved.recipients[0],
+    parsed,
+  });
+  if (computer.ok) {
+    await writeProjectMessageDispatchAudit({
+      projectId: input.projectId,
+      actorUserId: input.actorUserId,
+      messageId: computer.messageId,
+      recipientCount: 1,
+      parsed,
+    });
+    return {
+      ok: true,
+      messageId: computer.messageId,
+      recipientCount: 1,
+      agentRunId: computer.agentRunId,
+    };
+  }
+  if (computer.code !== "not_computer") {
+    return { ok: false, code: computer.code, cause: computer.cause };
   }
 
   const primary = resolved.recipients[0];

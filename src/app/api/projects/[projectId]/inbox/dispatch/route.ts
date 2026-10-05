@@ -72,6 +72,7 @@ export async function POST(
         ok: false,
         errorMessage: result.message ?? result.code,
         code: result.code,
+        cause: "cause" in result ? result.cause : undefined,
         reason: result.reason,
         detail: result.detail,
         retryAfterSeconds: result.retryAfterSeconds,
