@@ -6,6 +6,7 @@ import {
   PROJECT_SKILLS_BADGE_CLASS,
   PROJECT_SKILLS_CTA,
 } from "@/features/project-skill-share/internal/presentation/projectSkillsSection.constant";
+import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPageMetadataText.constant";
 
 interface ProjectSkillRowProps {
   readonly skill: ProjectSkillView;
@@ -49,7 +50,7 @@ export default function ProjectSkillRow({
             {skill.description}
           </span>
         ) : null}
-        <span className="block text-[11px] text-gray-400">{skill.skillId}</span>
+        <span className={`block text-[11px] ${PROJECT_PAGE_METADATA_TEXT_CLASS}`}>{skill.skillId}</span>
       </span>
       <span className="flex flex-wrap gap-2">
         {hasPendingDraft ? (
@@ -69,7 +70,7 @@ export default function ProjectSkillRow({
             className={PROJECT_SKILLS_CTA.danger}
             onClick={() => onRevoke(skill.skillId)}
           >
-            {busy ? copy.revoking : copy.revoke}
+            {busy ? copy.revoking : skill.state === "draft" ? copy.discardDraft : copy.revoke}
           </button>
         ) : null}
       </span>

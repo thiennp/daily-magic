@@ -33,6 +33,7 @@ describe("COPY-P1 shell and auth labels", () => {
       "Marketplace",
       "New task",
       "Reports",
+      "Prompt optimizer",
     ]);
   });
 

@@ -12,6 +12,7 @@ export const PROJECT_SKILLS_COPY = {
   publishDraft: "Publish draft",
   publishing: "Saving…",
   revoke: "Revoke",
+  discardDraft: "Discard draft",
   revoking: "Revoking…",
   draftBadge: "Draft",
   versionLabel: (version: number) => `v${version}`,

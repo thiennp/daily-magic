@@ -2,6 +2,7 @@
 
 import { AWC_PROJECT_INBOX_COPY } from "@/features/projects/access/inbox/awcProjectInboxCopy.constant";
 import type AwcProjectInboxMessage from "@/features/projects/access/inbox/types/awcProjectInboxMessage.type";
+import formatProjectMessageKindLabel from "@/features/projects/access/inbox/utils/formatProjectMessageKindLabel";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 
 interface AwcProjectInboxMessageListProps {
@@ -40,7 +41,7 @@ export default function AwcProjectInboxMessageList({
         >
           <div className="min-w-0">
             <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-              {row.kind}
+              {formatProjectMessageKindLabel(row.kind)}
             </p>
             <p className={`mt-0.5 text-sm ${APP_SURFACE_BODY_TEXT_CLASS}`}>
               {row.summary}

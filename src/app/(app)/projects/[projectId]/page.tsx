@@ -1,6 +1,8 @@
+import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
 import AwcProjectDetailPanel from "@/features/projects/AwcProjectDetailPanel";
+import buildProjectDetailPageMetadata from "@/features/projects/buildProjectDetailPageMetadata";
 import AppShell from "@/features/shell/AppShell";
 import AppPageHeader from "@/components/surfaces/AppPageHeader";
 import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
@@ -12,6 +14,21 @@ export const dynamic = "force-dynamic";
 interface ProjectsDetailPageProps {
   readonly params: Promise<{ projectId: string }>;
   readonly searchParams: Promise<{ rename?: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: ProjectsDetailPageProps): Promise<Metadata> {
+  const actor = await getAuthActor();
+  if (!actor) {
+    return buildProjectDetailPageMetadata("Project");
+  }
+  const { projectId } = await params;
+  const project = await getUserProjectById(projectId.trim());
+  if (project === null || project.ownerUserId !== actor.id) {
+    return buildProjectDetailPageMetadata("Project");
+  }
+  return buildProjectDetailPageMetadata(project.name);
 }
 
 export default async function ProjectDetailPage({

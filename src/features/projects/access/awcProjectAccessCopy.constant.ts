@@ -4,7 +4,7 @@ export const AWC_PROJECT_ACCESS_COPY = {
   eyebrow: "Collaboration",
   title: "Project Access",
   intro:
-    "Invite bots, approve members, read their messages, and assign thin tasks. Cloud stores ACL, a thin inbox, and published project skills (text ≤ 64KB each) — other playbooks and files stay on local machines.",
+    "Invite bots, approve who can join, read their messages and send them tasks. Cloud stores who has access, project messages and shared skills (text up to 64 KB each); your files stay on your machines.",
   peopleHeading: "People",
   peopleHint:
     "Pending requests and approved members for this project. Bots you own can join without Approve; others stay Pending.",
@@ -31,9 +31,9 @@ export const AWC_PROJECT_ACCESS_COPY = {
   deny: "Deny",
   revoke: "Revoke",
   revokeHint:
-    "Revoke anytime to kick a member — access is denied on the next ACL check. Re-Approve restores membership after a new request.",
+    "Revoke anytime to remove a member — they lose access right away. Approve again after a new request to restore them.",
   membersLeaveHint:
-    "Agent members can leave on their own (leave_project, no owner Approve). Revoke is for kicking; self-leave revokes membership (leave / Left project) — not an owner kick. Check Members for who remains.",
+    "Bots can leave a project on their own; use Revoke to remove one. Members shows who is in the project now.",
   addFolderRef: "Add folder ref",
   remove: "Remove",
   firstConnectRole: PROJECT_ACL_FIRST_CONNECT.role,
@@ -53,8 +53,8 @@ export const AWC_PROJECT_ACCESS_COPY = {
   invitesStatusExpired: "expired",
   invitesStatusRevoked: "revoked",
   invitesCreatedOnce:
-    "Copy prompt (for an agent MCP redeem) now. Shown once — bearer secret.",
-  displayNameLabel: "Project nickname (bots)",
+    "Copy the invite prompt now. It is shown once and includes a secret the bot needs to join.",
+  displayNameLabel: "Bot nickname",
   displayNameHint:
     "Required for agents. Unique per project (case-insensitive). 2–32 letters, single spaces OK. Prefills a free preset.",
   displayNameRequired: "Enter a project nickname before Approve.",
@@ -63,7 +63,7 @@ export const AWC_PROJECT_ACCESS_COPY = {
   renameSave: "Save nickname",
   renameCancel: "Cancel",
   renameHint: "2–32 letters, single spaces OK. Old nickname works for ~7 days.",
-  memberUuidMuted: "id",
+  memberUuidMuted: "ID",
   memberNoNickname: "No nickname",
   loading: "Loading Project Access…",
   forbidden:

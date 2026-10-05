@@ -34,4 +34,9 @@ export const BOTTOM_NAV: readonly AppNavItem[] = [
     label: "Reports",
     isActive: (pathname) => pathname.startsWith("/reports"),
   },
+  {
+    href: "/prompt-optimizer",
+    label: "Prompt optimizer",
+    isActive: (pathname) => pathname.startsWith("/prompt-optimizer"),
+  },
 ];

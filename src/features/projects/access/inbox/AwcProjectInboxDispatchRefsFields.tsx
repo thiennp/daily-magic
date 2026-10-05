@@ -1,5 +1,7 @@
 "use client";
 
+import { useId } from "react";
+
 import { AWC_PROJECT_INBOX_COPY } from "@/features/projects/access/inbox/awcProjectInboxCopy.constant";
 import AwcBotSupportUrlKindLabel from "@/features/projects/botSupportUrl/AwcBotSupportUrlKindLabel";
 
@@ -28,36 +30,61 @@ export default function AwcProjectInboxDispatchRefsFields({
   onAllowClaimId,
 }: AwcProjectInboxDispatchRefsFieldsProps) {
   const copy = AWC_PROJECT_INBOX_COPY;
+  const idBase = useId();
+  const prUrlId = `${idBase}-prUrl`;
+  const commitShaId = `${idBase}-commitSha`;
+  const localPathId = `${idBase}-localPath`;
+  const allowClaimIdField = `${idBase}-allowClaimId`;
+
   return (
     <div className="space-y-1.5">
       <p className="text-[11px] font-medium text-gray-600 dark:text-gray-400">
         {copy.dispatchRefsHeading}
       </p>
       <AwcBotSupportUrlKindLabel url={prUrl} />
-      <input
-        className={FIELD}
-        value={prUrl}
-        placeholder={copy.dispatchPrUrl}
-        onChange={(event) => onPrUrl(event.target.value)}
-      />
-      <input
-        className={FIELD}
-        value={commitSha}
-        placeholder={copy.dispatchCommitSha}
-        onChange={(event) => onCommitSha(event.target.value)}
-      />
-      <input
-        className={FIELD}
-        value={localPath}
-        placeholder={copy.dispatchLocalPath}
-        onChange={(event) => onLocalPath(event.target.value)}
-      />
-      <input
-        className={FIELD}
-        value={allowClaimId}
-        placeholder={copy.dispatchAllowClaimId}
-        onChange={(event) => onAllowClaimId(event.target.value)}
-      />
+      <label className="block text-xs text-gray-600 dark:text-gray-400" htmlFor={prUrlId}>
+        {copy.dispatchPrUrlLabel}
+        <input
+          id={prUrlId}
+          className={FIELD}
+          value={prUrl}
+          placeholder={copy.dispatchPrUrlPlaceholder}
+          onChange={(event) => onPrUrl(event.target.value)}
+        />
+      </label>
+      <label className="block text-xs text-gray-600 dark:text-gray-400" htmlFor={commitShaId}>
+        {copy.dispatchCommitShaLabel}
+        <input
+          id={commitShaId}
+          className={FIELD}
+          value={commitSha}
+          placeholder={copy.dispatchCommitShaPlaceholder}
+          onChange={(event) => onCommitSha(event.target.value)}
+        />
+      </label>
+      <label className="block text-xs text-gray-600 dark:text-gray-400" htmlFor={localPathId}>
+        {copy.dispatchLocalPathLabel}
+        <input
+          id={localPathId}
+          className={FIELD}
+          value={localPath}
+          placeholder={copy.dispatchLocalPathPlaceholder}
+          onChange={(event) => onLocalPath(event.target.value)}
+        />
+      </label>
+      <label
+        className="block text-xs text-gray-600 dark:text-gray-400"
+        htmlFor={allowClaimIdField}
+      >
+        {copy.dispatchAllowClaimIdLabel}
+        <input
+          id={allowClaimIdField}
+          className={FIELD}
+          value={allowClaimId}
+          placeholder={copy.dispatchAllowClaimIdPlaceholder}
+          onChange={(event) => onAllowClaimId(event.target.value)}
+        />
+      </label>
     </div>
   );
 }

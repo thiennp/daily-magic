@@ -40,12 +40,14 @@ describe("project ACL surface copy", () => {
     );
     expect(blobs).toMatch(/first bot/i);
     expect(blobs).toMatch(/member role/i);
-    expect(blobs).toMatch(/leave on their own|leave_project/i);
-    expect(blobs).toMatch(/Revoke is for kicking|kick/i);
+    expect(blobs).toMatch(/leave(?: a project)? on their own|leave_project/i);
+    expect(blobs).toMatch(/use Revoke to remove|Revoke is for kicking|kick/i);
     expect(AWC_PROJECT_ACCESS_COPY.membersLeaveHint).toMatch(
-      /no owner Approve|leave_project/i,
+      /Bots can leave a project on their own/i,
     );
-    expect(AWC_PROJECT_ACCESS_COPY.membersLeaveHint).toMatch(/Left project/i);
+    expect(AWC_PROJECT_ACCESS_COPY.membersLeaveHint).toMatch(
+      /use Revoke to remove/i,
+    );
     expect(AWC_PROJECT_ACCESS_COPY.membersLeaveHint).toMatch(/Members/i);
     expect(AWC_PROJECT_ACCESS_COPY).not.toHaveProperty("activityHeading");
     expect(AWC_PROJECT_ACCESS_COPY).not.toHaveProperty("activityHonesty");

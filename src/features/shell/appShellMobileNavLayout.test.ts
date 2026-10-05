@@ -45,6 +45,7 @@ describe("AppShell mobile nav layout (SHELL-005)", () => {
       "Marketplace",
       "New task",
       "Reports",
+      "Prompt optimizer",
     ]);
   });
 });

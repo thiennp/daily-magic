@@ -22,7 +22,7 @@ describe("project message status copy", () => {
     expect(PROJECT_MESSAGE_RECEIVED_STARTED_PROCESSING).toBe(
       "Received. Started processing.",
     );
-    expect(AWC_PROJECT_INBOX_COPY.ackedLabel).toBe("Acked");
+    expect(AWC_PROJECT_INBOX_COPY.ackedLabel).toBe("Read");
     expect(AWC_PROJECT_INBOX_COPY.ackedLabel).not.toMatch(/Received|processing/i);
     expect(formatProjectMessageNewFrom("Ada")).not.toMatch(/processing|Received/i);
   });

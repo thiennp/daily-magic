@@ -10,6 +10,7 @@ import AwcProjectInboxDispatchForm from "@/features/projects/access/inbox/AwcPro
 import AwcProjectInboxMessageList from "@/features/projects/access/inbox/AwcProjectInboxMessageList";
 import { useAwcProjectInbox } from "@/features/projects/access/inbox/hooks/useAwcProjectInbox";
 import { useAwcProjectInboxLivePoll } from "@/features/projects/access/inbox/hooks/useAwcProjectInboxLivePoll";
+import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPageMetadataText.constant";
 
 interface AwcProjectInboxSectionProps {
   readonly projectId: string;
@@ -53,7 +54,7 @@ export default function AwcProjectInboxSection({
         />
       ) : null}
       {inbox.isLoading ? (
-        <p className="text-xs text-gray-400">{copy.loading}</p>
+        <p className={`text-xs ${PROJECT_PAGE_METADATA_TEXT_CLASS}`}>{copy.loading}</p>
       ) : null}
       {inbox.unavailable ? (
         <p className="rounded-md border border-amber-200/80 bg-amber-50/80 px-3 py-2 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100">

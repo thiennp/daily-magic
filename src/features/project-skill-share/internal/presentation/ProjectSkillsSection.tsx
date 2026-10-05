@@ -10,6 +10,7 @@ import {
   PROJECT_SKILLS_SECTION_CLASS,
   PROJECT_SKILLS_TITLE_CLASS,
 } from "@/features/project-skill-share/internal/presentation/projectSkillsSection.constant";
+import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPageMetadataText.constant";
 
 interface ProjectSkillsSectionProps {
   readonly projectId: string;
@@ -41,7 +42,7 @@ export default function ProjectSkillsSection({
         <p className={PROJECT_SKILLS_HINT_CLASS}>{copy.hint}</p>
       </header>
       {skills.isLoading ? (
-        <p className="text-xs text-gray-400">{copy.loading}</p>
+        <p className={`text-xs ${PROJECT_PAGE_METADATA_TEXT_CLASS}`}>{copy.loading}</p>
       ) : null}
       {!skills.isLoading && skills.skills.length === 0 ? (
         <p className="text-xs text-gray-500">{copy.empty}</p>
