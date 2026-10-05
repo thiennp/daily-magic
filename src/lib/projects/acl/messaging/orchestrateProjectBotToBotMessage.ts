@@ -37,8 +37,6 @@ export const orchestrateProjectBotToBotMessage = async (input: {
   await insertProjectProcessingReceipts({
     projectId: message.projectId,
     senderMembershipId: message.senderMembershipId,
-    senderUserId: message.senderUserId,
-    senderProjectDisplayName: message.senderProjectDisplayName,
     recipients: input.dispatchRecipients,
     originalMessageId: stored.messageId,
     wakeResults,

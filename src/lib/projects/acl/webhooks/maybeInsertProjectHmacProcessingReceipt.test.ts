@@ -1,13 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const insertMock = vi.fn();
-vi.mock(
-  "@/lib/projects/acl/messaging/insertProjectHmacProcessingReceipt",
-  () => ({
-    insertProjectHmacProcessingReceipt: (...args: unknown[]) =>
-      insertMock(...args),
-  }),
-);
+vi.mock("@/lib/projects/acl/messaging/insertProjectProcessingReceipt", () => ({
+  insertProjectProcessingReceipt: (...args: unknown[]) => insertMock(...args),
+}));
 
 import { maybeInsertProjectHmacProcessingReceipt } from "@/lib/projects/acl/webhooks/maybeInsertProjectHmacProcessingReceipt";
 import { PROJECT_MESSAGE_KIND_TASK_PROCESSING } from "@/lib/projects/acl/messaging/projectMessage.constants";
@@ -33,13 +29,13 @@ describe("maybeInsertProjectHmacProcessingReceipt", () => {
     });
     expect(insertMock).toHaveBeenCalledWith({
       projectId: "proj-1",
+      peer: "mem-a",
+      sender: "mem-sender",
       originalMessageId: "msg-1",
-      senderMembershipId: "mem-sender",
-      peerMembershipId: "mem-a",
     });
   });
 
-  it("skips failed delivery, owner sender, self, and processing kind", async () => {
+  it("skips failed delivery, owner sender, and processing kind", async () => {
     await maybeInsertProjectHmacProcessingReceipt({
       payload,
       peerMembershipId: "mem-a",
@@ -48,11 +44,6 @@ describe("maybeInsertProjectHmacProcessingReceipt", () => {
     await maybeInsertProjectHmacProcessingReceipt({
       payload: { ...payload, fromMembershipId: null },
       peerMembershipId: "mem-a",
-      deliveryOk: true,
-    });
-    await maybeInsertProjectHmacProcessingReceipt({
-      payload,
-      peerMembershipId: "mem-sender",
       deliveryOk: true,
     });
     await maybeInsertProjectHmacProcessingReceipt({

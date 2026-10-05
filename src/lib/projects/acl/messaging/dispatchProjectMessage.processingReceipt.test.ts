@@ -1,14 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const insertMock = vi.fn();
+const receiptMock = vi.fn();
 const resolveMock = vi.fn();
-const sqlMock = vi.fn();
-const auditMock = vi.fn(async (_input: unknown) => undefined);
-
-vi.mock("@/lib/db", () => ({
-  getSql: () => sqlMock,
-  asRowArray: (value: unknown) => (Array.isArray(value) ? value : []),
-}));
 
 vi.mock("@/lib/projects/acl/ensureProjectAclSchema", () => ({
   ensureProjectAclSchema: async () => undefined,
@@ -18,9 +12,12 @@ vi.mock("@/lib/projects/acl/messaging/purgeExpiredProjectMessages", () => ({
   purgeExpiredProjectMessages: async () => undefined,
 }));
 
-vi.mock("@/lib/projects/acl/messaging/assertProjectMessageDispatchRateLimits", () => ({
-  assertProjectMessageDispatchRateLimits: async () => ({ ok: true }),
-}));
+vi.mock(
+  "@/lib/projects/acl/messaging/assertProjectMessageDispatchRateLimits",
+  () => ({
+    assertProjectMessageDispatchRateLimits: async () => ({ ok: true }),
+  }),
+);
 
 vi.mock("@/lib/projects/acl/getActiveProjectMembership", () => ({
   getActiveProjectMembership: async () => ({
@@ -41,8 +38,15 @@ vi.mock("@/lib/projects/acl/messaging/resolveDispatchRecipients", () => ({
   resolveDispatchRecipients: (input: unknown) => resolveMock(input),
 }));
 
-vi.mock("@/lib/projects/acl/messaging/insertProjectMessageWithDeliveries", () => ({
-  insertProjectMessageWithDeliveries: (input: unknown) => insertMock(input),
+vi.mock(
+  "@/lib/projects/acl/messaging/insertProjectMessageWithDeliveries",
+  () => ({
+    insertProjectMessageWithDeliveries: (input: unknown) => insertMock(input),
+  }),
+);
+
+vi.mock("@/lib/projects/acl/messaging/insertProjectProcessingReceipt", () => ({
+  insertProjectProcessingReceipt: (input: unknown) => receiptMock(input),
 }));
 
 vi.mock("@/lib/projects/acl/messaging/checkProjectMessageSilence", () => ({
@@ -58,14 +62,10 @@ vi.mock("@/lib/projects/acl/messaging/startProjectMessageSilenceWatch", () => ({
 }));
 
 vi.mock("@/lib/projects/acl/writeProjectAccessAudit", () => ({
-  writeProjectAccessAudit: (input: unknown) => auditMock(input),
+  writeProjectAccessAudit: async () => undefined,
 }));
 
 import { dispatchProjectMessage } from "@/lib/projects/acl/messaging/dispatchProjectMessage";
-import {
-  PROJECT_MESSAGE_KIND_TASK_PROCESSING,
-  PROJECT_MESSAGE_SUMMARY_MAX_CHARS,
-} from "@/lib/projects/acl/messaging/projectMessage.constants";
 
 const recipients = [
   { id: "mem-b", user_id: "user-b" },
@@ -88,105 +88,32 @@ const dispatch = () =>
 describe("dispatchProjectMessage processing receipt", () => {
   beforeEach(() => {
     insertMock.mockReset();
+    receiptMock.mockClear();
     resolveMock.mockReset();
-    sqlMock.mockReset();
-    auditMock.mockReset();
     resolveMock.mockResolvedValue({ ok: true, recipients });
   });
 
-  it("stores one task.processing receipt per http_200 peer and skips other results", async () => {
-    insertMock.mockImplementation(async (input: { kind?: string }) => {
-      if (input.kind === PROJECT_MESSAGE_KIND_TASK_PROCESSING) {
-        return { messageId: "receipt", wakeResults: [] };
-      }
-      return {
-        messageId: "msg-1",
-        wakeResults: [
-          { membershipId: "mem-b", result: "http_200" },
-          { membershipId: "mem-c", result: "not_postable" },
-          { membershipId: "mem-a", result: "http_200" },
-          { membershipId: "mem-d", result: "http_200" },
-          { membershipId: "mem-stranger", result: "http_200" },
-          { membershipId: "mem-c", result: "fetch_failed" },
-          { membershipId: "mem-b", result: "http_500" },
-        ],
-      };
-    });
-    sqlMock.mockResolvedValue([
-      { id: "mem-b", project_display_name: "Peer B" },
-    ]);
-
-    const result = await dispatch();
-    expect(result).toEqual({
-      ok: true,
-      messageId: "msg-1",
-      recipientCount: recipients.length,
-    });
-    expect(sqlMock).toHaveBeenCalledTimes(1);
-    expect(sqlMock.mock.calls[0]?.slice(1)).toEqual(
-      expect.arrayContaining(["proj-1", ["mem-b", "mem-d"]]),
-    );
-
-    const receipts = insertMock.mock.calls
-      .map((call) => call[0] as Record<string, unknown>)
-      .filter((input) => input.kind === PROJECT_MESSAGE_KIND_TASK_PROCESSING);
-    expect(receipts).toEqual([
-      {
-        projectId: "proj-1",
-        senderMembershipId: "mem-b",
-        senderUserId: "user-b",
-        senderProjectDisplayName: "Peer B",
-        toMembershipId: "mem-a",
-        toUserId: "user-a",
-        toTeamLabel: null,
-        toProjectDisplayName: "Sender Bot",
-        kind: PROJECT_MESSAGE_KIND_TASK_PROCESSING,
-        summary: "processing msg-1",
-        refsJson: "{}",
-        recipients: [{ id: "mem-a", user_id: "user-a" }],
-      },
-      {
-        projectId: "proj-1",
-        senderMembershipId: "mem-d",
-        senderUserId: "user-d",
-        senderProjectDisplayName: null,
-        toMembershipId: "mem-a",
-        toUserId: "user-a",
-        toTeamLabel: null,
-        toProjectDisplayName: "Sender Bot",
-        kind: PROJECT_MESSAGE_KIND_TASK_PROCESSING,
-        summary: "processing msg-1",
-        refsJson: "{}",
-        recipients: [{ id: "mem-a", user_id: "user-a" }],
-      },
-    ]);
-    expect(String(receipts[0]?.summary).length).toBeLessThanOrEqual(
-      PROJECT_MESSAGE_SUMMARY_MAX_CHARS,
-    );
-    expect(auditMock).toHaveBeenCalledTimes(1);
-    expect(auditMock.mock.calls[0]?.[0]).toEqual(
-      expect.objectContaining({
-        detail: expect.objectContaining({ messageId: "msg-1" }),
-      }),
-    );
-  });
-
-  it("does not store a receipt when the wake is not http_200", async () => {
+  it("asks for one shared receipt per http_200 recipient peer", async () => {
     insertMock.mockResolvedValue({
-      messageId: "msg-2",
+      messageId: "msg-1",
       wakeResults: [
-        { membershipId: "mem-b", result: "not_postable" },
-        { membershipId: "mem-c", result: "fetch_failed" },
-        { membershipId: "mem-d", result: "http_500" },
+        { membershipId: "mem-b", result: "http_200" },
+        { membershipId: "mem-c", result: "not_postable" },
+        { membershipId: "mem-d", result: "http_200" },
+        { membershipId: "mem-stranger", result: "http_200" },
+        { membershipId: "mem-b", result: "http_500" },
       ],
     });
     const result = await dispatch();
-    expect(result).toEqual({
-      ok: true,
-      messageId: "msg-2",
-      recipientCount: recipients.length,
-    });
-    expect(insertMock).toHaveBeenCalledTimes(1);
-    expect(sqlMock).not.toHaveBeenCalled();
+    expect(result).toMatchObject({ ok: true, messageId: "msg-1" });
+    const shared = {
+      projectId: "proj-1",
+      sender: "mem-a",
+      originalMessageId: "msg-1",
+    };
+    expect(receiptMock.mock.calls.map((call) => call[0])).toEqual([
+      { ...shared, peer: "mem-b" },
+      { ...shared, peer: "mem-d" },
+    ]);
   });
 });

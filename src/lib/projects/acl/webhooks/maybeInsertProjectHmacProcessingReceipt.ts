@@ -1,9 +1,10 @@
-import { insertProjectHmacProcessingReceipt } from "@/lib/projects/acl/messaging/insertProjectHmacProcessingReceipt";
+import { insertProjectProcessingReceipt } from "@/lib/projects/acl/messaging/insertProjectProcessingReceipt";
 import { PROJECT_MESSAGE_KIND_TASK_PROCESSING } from "@/lib/projects/acl/messaging/projectMessage.constants";
 
 /**
- * After an HMAC POST 2xx, insert the same thin task.processing receipt the Grok
- * path sends on http_200. Best-effort: delivery status is already recorded.
+ * HMAC path: after a POST 2xx, insert the shared task.processing receipt (the
+ * Grok path calls the same function on http_200, deduped per peer + original).
+ * Best-effort: delivery status is already recorded.
  */
 export const maybeInsertProjectHmacProcessingReceipt = async (input: {
   readonly payload: {
@@ -22,18 +23,15 @@ export const maybeInsertProjectHmacProcessingReceipt = async (input: {
   if (senderMembershipId === null) {
     return;
   }
-  if (senderMembershipId === input.peerMembershipId) {
-    return;
-  }
   if (input.payload.kind === PROJECT_MESSAGE_KIND_TASK_PROCESSING) {
     return;
   }
   try {
-    await insertProjectHmacProcessingReceipt({
+    await insertProjectProcessingReceipt({
       projectId: input.payload.projectId,
+      peer: input.peerMembershipId,
+      sender: senderMembershipId,
       originalMessageId: input.payload.messageId,
-      senderMembershipId,
-      peerMembershipId: input.peerMembershipId,
     });
   } catch (error: unknown) {
     console.error("project hmac processing receipt failed", {
