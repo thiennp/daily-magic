@@ -61,6 +61,37 @@ const copyNodePtyForAgentWitchBundle = (input: {
   }
 };
 
+/** Fixed epoch for archive members so `deps.tar.gz` is byte-stable across rebuilds. */
+const AGENT_WITCH_DEPS_ARCHIVE_MTIME = "197001010000";
+
+/**
+ * Pack `deps/` with fixed file mtimes and `gzip -n` (no gzip header timestamp).
+ * macOS bsdtar has no `--mtime`; GNU gzip timestamps otherwise flip the blob every build.
+ */
+const writeDeterministicDepsTarGz = (input: {
+  readonly appDir: string;
+  readonly depsDir: string;
+  readonly archivePath: string;
+}): void => {
+  execFileSync(
+    "find",
+    [input.depsDir, "-exec", "touch", "-t", AGENT_WITCH_DEPS_ARCHIVE_MTIME, "{}", "+"],
+    { stdio: "pipe" },
+  );
+  execFileSync(
+    "bash",
+    [
+      "-c",
+      'COPYFILE_DISABLE=1 tar -cf - -C "$1" "$2" | gzip -n > "$3"',
+      "agent-witch-deps-tar",
+      input.appDir,
+      AWI_BUNDLED_DEPS_DIR_NAME,
+      input.archivePath,
+    ],
+    { stdio: "pipe" },
+  );
+};
+
 export const buildAgentWitchBundledDepsArchive = (input: {
   readonly workspaceRoot: string;
   readonly appDir: string;
@@ -79,11 +110,11 @@ export const buildAgentWitchBundledDepsArchive = (input: {
   });
 
   fs.rmSync(archivePath, { force: true });
-  execFileSync(
-    "tar",
-    ["-czf", archivePath, "-C", input.appDir, AWI_BUNDLED_DEPS_DIR_NAME],
-    { stdio: "pipe" },
-  );
+  writeDeterministicDepsTarGz({
+    appDir: input.appDir,
+    depsDir,
+    archivePath,
+  });
   fs.rmSync(depsDir, { recursive: true, force: true });
 
   return path.join(
