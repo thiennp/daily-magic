@@ -1,5 +1,5 @@
 /**
- * Pure decision helper mirroring db/migrations/068-library-reports-require-project.sql.
+ * Pure decision helper mirroring db/migrations/069-library-reports-require-project.sql.
  * Private fallback prefers the owner's Default project
  * (DEFAULT_USER_PROJECT_NAME / isDefaultUserProject / resolveDefaultUserProject).
  */

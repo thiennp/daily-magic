@@ -7,12 +7,12 @@ const readMigration = (): string =>
   fs.readFileSync(
     path.join(
       process.cwd(),
-      "db/migrations/068-library-reports-require-project.sql",
+      "db/migrations/069-library-reports-require-project.sql",
     ),
     "utf8",
   );
 
-describe("068-library-reports-require-project.sql", () => {
+describe("069-library-reports-require-project.sql", () => {
   it("adds capability project_id, backfills, then sets NOT NULL with FK", () => {
     const sql = readMigration();
     expect(sql).toContain("ADD COLUMN IF NOT EXISTS project_id TEXT");

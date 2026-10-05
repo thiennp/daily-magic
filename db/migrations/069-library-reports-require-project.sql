@@ -2,8 +2,11 @@
 -- Every published_capabilities row and every agent_runs row must have a project_id.
 -- Orphan rule:
 --   1) owner's oldest project by created_at ASC, id ASC
---   2) if that project has any other active member (human or bot, status=active,
---      user_id <> owner_user_id), OR the owner has no project:
+--   2) if that project has any other active member (human, bot or computer,
+--      status=active, user_id <> owner_user_id), OR the owner has no project:
+--      (068-project-membership-computer: a computer seat carries its device
+--      owner's user_id, so the owner's own computer does not make a project
+--      shared; a teammate's computer does.)
 --        prefer the owner's solo "Default" project (DEFAULT_USER_PROJECT_NAME;
 --        isDefaultUserProject / resolveDefaultUserProject / ensureDefaultUserProject);
 --        create one Default (device_id NULL) if missing;
