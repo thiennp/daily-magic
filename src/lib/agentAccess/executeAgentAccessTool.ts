@@ -1,3 +1,4 @@
+import { executeIssueClaimBotCodeTool } from "@/lib/agentAccess/claimBot/executeIssueClaimBotCodeTool";
 import { executeAgentAccessAccountTools } from "@/lib/agentAccess/executeAgentAccessAccountTools";
 import { executeAgentAccessGuideTool } from "@/lib/agentAccess/executeAgentAccessGuideTool";
 import { executeAgentAccessProjectAclTool } from "@/lib/agentAccess/executeAgentAccessProjectAclTool";
@@ -58,6 +59,10 @@ export const executeAgentAccessTool = async (input: {
   });
   if (accountResult !== null) {
     return accountResult;
+  }
+
+  if (input.name === "issue_bot_claim_code") {
+    return executeIssueClaimBotCodeTool({ token });
   }
 
   if (input.name === "send_task") {

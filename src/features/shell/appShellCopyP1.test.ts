@@ -12,6 +12,7 @@ describe("COPY-P1 shell and auth labels", () => {
   it("uses Projects, Library, Reports, Marketplace, and New task in primary nav", () => {
     const labels = PRIMARY_NAV.map((item) => item.label);
     expect(labels).toContain("Projects");
+    expect(labels).toContain("My bots");
     expect(labels).toContain("Library");
     expect(labels).toContain("Reports");
     expect(labels).toContain("New task");

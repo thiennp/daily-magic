@@ -3,6 +3,7 @@ import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchem
 import { assertSafeProjectWebhookUrl } from "@/lib/projects/acl/webhooks/assertSafeProjectWebhookUrl";
 import { explainProjectGrokWebhookWriteMiss } from "@/lib/projects/acl/webhooks/explainProjectGrokWebhookWriteMiss";
 import {
+  projectGrokWebhookOwnerUserId,
   projectGrokWebhookTargetId,
   type ProjectGrokWebhookTarget,
 } from "@/lib/projects/acl/webhooks/projectGrokWebhookTarget";
@@ -24,11 +25,8 @@ export type WriteProjectGrokRoutineWebhookResult =
     };
 
 /**
- * Shared save step (owner form + register_project_webhook). Validates URL + key,
- * then ONE guarded INSERT … SELECT: the row is written only if the target
- * membership is active in this project (role 'member' for member_row) and has
- * a nickname. Never decides permission; the caller passes the condition.
- * Bearer is stored, never returned. Does not mutate its input.
+ * Shared save step (owner form + register_project_webhook + owned-bot form).
+ * ONE guarded INSERT … SELECT. Bearer stored, never returned.
  */
 export const writeProjectGrokRoutineWebhook = async (input: {
   readonly target: ProjectGrokWebhookTarget;
@@ -48,6 +46,7 @@ export const writeProjectGrokRoutineWebhook = async (input: {
   }
   const { target } = input;
   const targetId = projectGrokWebhookTargetId(target);
+  const ownerUserId = projectGrokWebhookOwnerUserId(target);
   await ensureProjectAclSchema();
   const sql = getSql();
   const rows = asRowArray(
@@ -64,6 +63,15 @@ export const writeProjectGrokRoutineWebhook = async (input: {
         AND (
           (${target.by}::text = 'member_row' AND m.id = ${targetId}::text AND m.role = 'member')
           OR (${target.by}::text = 'own_membership' AND m.user_id = ${targetId}::text)
+          OR (
+            ${target.by}::text = 'owned_bot_row'
+            AND m.id = ${targetId}::text
+            AND EXISTS (
+              SELECT 1 FROM agent_access_tokens t
+              WHERE t.user_id = m.user_id
+                AND t.owner_user_id = ${ownerUserId}::text
+            )
+          )
         )
       LIMIT 1
       ON CONFLICT (membership_id) DO UPDATE SET

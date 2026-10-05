@@ -38,6 +38,7 @@ export const AGENT_ACCESS_MUTATING_TOOLS = [
   "rotate_project_api_key",
   "register_project_webhook",
   "mint_allow_claim",
+  "issue_bot_claim_code",
 ] as const;
 
 export const AGENT_ACCESS_MCP_PROTOCOL_VERSION = "2025-03-26";

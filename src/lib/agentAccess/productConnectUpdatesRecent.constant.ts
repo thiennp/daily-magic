@@ -81,4 +81,16 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
         "Never ask the user to paste the routine URL or key into chat or a project message; point them to the bot's info pane and the project owner's Grok webhook form. Confirm with get_my_project_webhook_status. " +
         AWC_GROK_WEBHOOK_DAILY_REPAIR,
     },
+    {
+      id: "issue-bot-claim-code",
+      catalogVersion: 16,
+      at: "2026-10-05",
+      kind: "mcp_tool",
+      title: "issue_bot_claim_code + My bots ownership",
+      summary:
+        "New issue_bot_claim_code (agent-access Bearer only) returns a 10-minute single-use claim code for this bot. A signed-in human redeems it on My bots to set owner_user_id. Issuing supersedes unused codes; already_claimed while owned. Same-owner project access auto-approves when the bot's owner_user_id matches the project owner.",
+      adapt:
+        "After register_account, call issue_bot_claim_code and give the code to your human once. They claim on My bots. Prefer claiming before request_project_access so same-owner auto-approve can run.",
+    },
+
   ];

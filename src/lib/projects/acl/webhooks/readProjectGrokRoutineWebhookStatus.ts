@@ -2,6 +2,7 @@ import { asRowArray, getSql } from "@/lib/db";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { STORED_GROK_WAKE_RESULT } from "@/lib/projects/acl/messaging/storedGrokWakeResult.constant";
 import {
+  projectGrokWebhookOwnerUserId,
   projectGrokWebhookTargetId,
   type ProjectGrokWebhookTarget,
 } from "@/lib/projects/acl/webhooks/projectGrokWebhookTarget";
@@ -12,13 +13,14 @@ export type ProjectGrokRoutineWebhookStatus = {
 };
 
 /**
- * One SELECT scoped like the save step (project + active, role member for member_row).
- * null = no such membership. Never selects bearer_retained.
+ * One SELECT scoped like the save step. null = no such membership.
+ * Never selects bearer_retained.
  */
 export const readProjectGrokRoutineWebhookStatus = async (
   target: ProjectGrokWebhookTarget,
 ): Promise<ProjectGrokRoutineWebhookStatus | null> => {
   const targetId = projectGrokWebhookTargetId(target);
+  const ownerUserId = projectGrokWebhookOwnerUserId(target);
   await ensureProjectAclSchema();
   const sql = getSql();
   const rows = asRowArray(
@@ -40,6 +42,15 @@ export const readProjectGrokRoutineWebhookStatus = async (
         AND (
           (${target.by}::text = 'member_row' AND m.id = ${targetId}::text AND m.role = 'member')
           OR (${target.by}::text = 'own_membership' AND m.user_id = ${targetId}::text)
+          OR (
+            ${target.by}::text = 'owned_bot_row'
+            AND m.id = ${targetId}::text
+            AND EXISTS (
+              SELECT 1 FROM agent_access_tokens t
+              WHERE t.user_id = m.user_id
+                AND t.owner_user_id = ${ownerUserId}::text
+            )
+          )
         )
       LIMIT 1
     `,
