@@ -15,6 +15,14 @@ vi.mock("@/lib/projects/acl/ensureProjectAclSchema", () => ({
 
 import { claimAndInsertHumanMembership } from "@/lib/projects/acl/humanInvites/claimAndInsertHumanMembership";
 
+const baseInput = {
+  token: "t".repeat(22),
+  claimantUserId: "u",
+  claimantEmailNormalized: "ada@example.com" as string | null,
+  projectDisplayName: "Name",
+  role: "member" as const,
+};
+
 const sqlCallText = (call: unknown[]): string => {
   const strings = call[0] as TemplateStringsArray;
   const values = call.slice(1);
@@ -41,40 +49,30 @@ describe("claimAndInsertHumanMembership", () => {
       new Error("duplicate key project_memberships_display_name_active_idx"),
     );
     await expect(
-      claimAndInsertHumanMembership({
-        token: "t".repeat(22),
-        claimantUserId: "u",
-        projectDisplayName: "Same",
-        role: "member",
-      }),
+      claimAndInsertHumanMembership({ ...baseInput, projectDisplayName: "Same" }),
     ).resolves.toEqual({ ok: false, code: "display_name_taken" });
   });
 
   it("returns invalid_token when CTE matches nothing", async () => {
     sqlMock.mockResolvedValueOnce([]);
-    await expect(
-      claimAndInsertHumanMembership({
-        token: "t".repeat(22),
-        claimantUserId: "u",
-        projectDisplayName: "Name",
-        role: "member",
-      }),
-    ).resolves.toEqual({ ok: false, code: "invalid_token" });
+    await expect(claimAndInsertHumanMembership(baseInput)).resolves.toEqual({
+      ok: false,
+      code: "invalid_token",
+    });
   });
 
-  it("embeds shared usable WHERE fragments in the claim CTE SQL", async () => {
+  it("embeds usable WHERE + email-lock predicate in the claim CTE", async () => {
     sqlMock.mockResolvedValueOnce([]);
-    await claimAndInsertHumanMembership({
-      token: "t".repeat(22),
-      claimantUserId: "u",
-      projectDisplayName: "Name",
-      role: "member",
-    });
+    await claimAndInsertHumanMembership(baseInput);
     const query = sqlCallText(sqlMock.mock.calls[0] ?? []);
     expect(query).toContain("WITH claimed AS");
     for (const fragment of HUMAN_INVITE_USABLE_WHERE_FRAGMENTS) {
       expect(query).toContain(fragment);
     }
+    expect(query).toContain("require_email_match IS NOT TRUE");
+    expect(query).toContain("OR email =");
     expect(query).not.toContain("uses_remaining = max_uses");
+    const values = sqlMock.mock.calls[0]?.slice(1) ?? [];
+    expect(values).toContain("ada@example.com");
   });
 });

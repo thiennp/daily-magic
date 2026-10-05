@@ -80,6 +80,8 @@ export const ensureProjectAclSchema = async (): Promise<void> => {
       redeemed_at TIMESTAMPTZ,
       redeemed_by_user_id TEXT REFERENCES users(id) ON DELETE SET NULL,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
+    await sql`ALTER TABLE project_human_invites
+      ADD COLUMN IF NOT EXISTS require_email_match BOOLEAN NOT NULL DEFAULT false`;
 
     await sql`CREATE TABLE IF NOT EXISTS project_membership_display_name_aliases (
       id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,

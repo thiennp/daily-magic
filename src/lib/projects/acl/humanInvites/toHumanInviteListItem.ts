@@ -5,6 +5,7 @@ export type HumanInviteListItem = {
   readonly inviteId: string;
   readonly role: string;
   readonly email: string | null;
+  readonly requireEmailMatch: boolean;
   readonly createdAt: string;
   readonly expiresAt: string;
   readonly revokedAt: string | null;
@@ -18,6 +19,7 @@ export const toHumanInviteListItem = (
   inviteId: invite.id,
   role: invite.role,
   email: invite.email,
+  requireEmailMatch: invite.requireEmailMatch,
   createdAt: invite.createdAt,
   expiresAt: invite.expiresAt,
   revokedAt: invite.revokedAt,

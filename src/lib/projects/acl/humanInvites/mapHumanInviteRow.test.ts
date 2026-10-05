@@ -16,6 +16,7 @@ describe("mapHumanInviteRow", () => {
       project_id: "proj-1",
       created_by_user_id: "owner-1",
       email: null,
+      require_email_match: false,
       role: "member",
       max_uses: 1,
       uses_remaining: 1,
@@ -46,7 +47,8 @@ describe("mapHumanInviteRow", () => {
       id: "inv-1",
       project_id: "proj-1",
       created_by_user_id: "owner-1",
-      email: null,
+      email: "Ada@X.com",
+      require_email_match: true,
       role: "viewer",
       max_uses: 1,
       uses_remaining: 1,
@@ -59,5 +61,7 @@ describe("mapHumanInviteRow", () => {
     expect(mapped.revokedAt).toBeNull();
     expect(mapped.redeemedAt).toBeNull();
     expect(mapped.role).toBe("viewer");
+    expect(mapped.requireEmailMatch).toBe(true);
+    expect(mapped.email).toBe("Ada@X.com");
   });
 });

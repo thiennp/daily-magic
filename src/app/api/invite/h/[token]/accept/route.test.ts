@@ -39,6 +39,7 @@ describe("POST /api/invite/h/[token]/accept", () => {
     expect(redeem).toHaveBeenCalledWith({
       token: "t".repeat(22),
       claimantUserId: "user-1",
+      claimantEmail: "u@x.com",
       suggestedProjectDisplayName: "Soft Vale",
     });
     const body = await response.json();

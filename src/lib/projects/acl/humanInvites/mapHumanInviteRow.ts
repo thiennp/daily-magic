@@ -16,6 +16,7 @@ export default function mapHumanInviteRow(
     projectId: String(row.project_id),
     createdByUserId: String(row.created_by_user_id),
     email: row.email ? String(row.email) : null,
+    requireEmailMatch: row.require_email_match === true,
     role: parseRole(row.role),
     maxUses: Number(row.max_uses),
     usesRemaining: Number(row.uses_remaining),

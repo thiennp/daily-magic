@@ -22,3 +22,6 @@ export const parseHumanInviteEmail = (value: unknown): string | null => {
   if (typeof value !== "string" || value.trim().length === 0) return null;
   return value.trim().slice(0, 320).toLowerCase();
 };
+
+export const parseRequireEmailMatch = (value: unknown): boolean =>
+  value === true || value === "true";

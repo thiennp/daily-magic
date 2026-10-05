@@ -23,10 +23,11 @@ export type ClaimAndInsertHumanResult =
       readonly code: "invalid_token" | "already_member" | "display_name_taken";
     };
 
-/** Atomic claim + insert with nickname; unique races roll back the claim. */
+/** Atomic claim + insert; email-lock predicate races with require_email_match. */
 export const claimAndInsertHumanMembership = async (input: {
   readonly token: string;
   readonly claimantUserId: string;
+  readonly claimantEmailNormalized: string | null;
   readonly projectDisplayName: string;
   readonly role: HumanInviteRole;
 }): Promise<ClaimAndInsertHumanResult> => {
@@ -39,6 +40,7 @@ export const claimAndInsertHumanMembership = async (input: {
   const tokenHash = hashHumanInviteToken(trimmed);
   const membershipId = randomUUID();
   const scopes = [...defaultHumanMembershipScopes(input.role)];
+  const claimantEmail = input.claimantEmailNormalized ?? "";
   try {
     const rows = asRowArray(
       await sql`
@@ -49,6 +51,10 @@ export const claimAndInsertHumanMembership = async (input: {
               redeemed_by_user_id = ${input.claimantUserId}
           WHERE token_hash = ${tokenHash}
             AND ${sql.unsafe(HUMAN_INVITE_USABLE_WHERE_SQL)}
+            AND (
+              require_email_match IS NOT TRUE
+              OR email = ${claimantEmail}
+            )
           RETURNING *
         ),
         inserted AS (

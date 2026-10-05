@@ -1,7 +1,10 @@
+import { assertHumanInviteEmailLock } from "@/lib/projects/acl/humanInvites/assertHumanInviteEmailLock";
 import { claimAndInsertHumanMembership } from "@/lib/projects/acl/humanInvites/claimAndInsertHumanMembership";
 import { classifyHumanInviteMiss } from "@/lib/projects/acl/humanInvites/classifyHumanInviteMiss";
+import { parseHumanInviteEmail } from "@/lib/projects/acl/humanInvites/clampHumanInviteParams";
 import { decideHumanMembershipTransition } from "@/lib/projects/acl/humanInvites/decideHumanMembershipTransition";
 import { loadUserAccountName } from "@/lib/projects/acl/humanInvites/loadUserAccountName";
+import { loadUserEmailVerified } from "@/lib/projects/acl/humanInvites/loadUserEmailVerified";
 import { peekHumanInviteByToken } from "@/lib/projects/acl/humanInvites/peekHumanInviteByToken";
 import { resolveHumanAcceptDisplayName } from "@/lib/projects/acl/humanInvites/resolveHumanAcceptDisplayName";
 import type { RedeemHumanInviteResult } from "@/lib/projects/acl/humanInvites/types/RedeemHumanInviteResult.type";
@@ -10,10 +13,11 @@ import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
 export type { RedeemHumanInviteResult };
 
-/** Peek → guards → name (no claim) → atomic claim+insert with nickname. */
+/** Peek → email lock → guards → name (no claim) → atomic claim+insert. */
 export const redeemHumanProjectInvite = async (input: {
   readonly token: string;
   readonly claimantUserId: string;
+  readonly claimantEmail?: string | null;
   readonly suggestedProjectDisplayName?: string | null;
 }): Promise<RedeemHumanInviteResult> => {
   const peeked = await peekHumanInviteByToken(input.token);
@@ -30,6 +34,29 @@ export const redeemHumanProjectInvite = async (input: {
   );
   if (existing !== null) {
     return { ok: false, code: "already_member", projectId: peeked.projectId };
+  }
+
+  const claimantEmailNormalized = parseHumanInviteEmail(
+    input.claimantEmail ?? null,
+  );
+  if (peeked.requireEmailMatch) {
+    const claimantEmailVerified = await loadUserEmailVerified(
+      input.claimantUserId,
+    );
+    const lock = assertHumanInviteEmailLock({
+      requireEmailMatch: true,
+      invitedEmail: peeked.email,
+      claimantEmail: input.claimantEmail,
+      claimantEmailVerified,
+    });
+    if (!lock.ok) {
+      return {
+        ok: false,
+        code: lock.code,
+        projectId: peeked.projectId,
+        invitedEmailMasked: lock.invitedEmailMasked,
+      };
+    }
   }
 
   const accountName = await loadUserAccountName(input.claimantUserId);
@@ -57,6 +84,7 @@ export const redeemHumanProjectInvite = async (input: {
   const settled = await claimAndInsertHumanMembership({
     token: input.token,
     claimantUserId: input.claimantUserId,
+    claimantEmailNormalized,
     projectDisplayName: named.name,
     role: peeked.role,
   });

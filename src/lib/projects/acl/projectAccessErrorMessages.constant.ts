@@ -6,6 +6,12 @@ export const PROJECT_ACCESS_ERROR_MESSAGES: Readonly<Record<string, string>> = {
   display_name_taken: "That project nickname is already taken.",
   display_name_missing: "Enter a project nickname.",
   display_name_required: "Enter a project nickname.",
+  invite_email_mismatch:
+    "This invite is locked to a different email address.",
+  invite_email_unverified:
+    "Verify your email before accepting this invite.",
+  email_required_for_lock:
+    "Enter an email to lock this invite to one account.",
   INVALID_DISPLAY_NAME:
     "Nickname must be 2–32 letters (single spaces OK). Avoid @ / and reserved words.",
   DISPLAY_NAME_RESERVED: "That name is reserved.",
@@ -43,6 +49,9 @@ export const PUBLIC_ACCESS_ERROR_CODES: Readonly<Record<string, string>> = {
   display_name_taken: "DISPLAY_NAME_TAKEN",
   display_name_missing: "DISPLAY_NAME_REQUIRED",
   display_name_required: "DISPLAY_NAME_REQUIRED",
+  invite_email_mismatch: "INVITE_EMAIL_MISMATCH",
+  invite_email_unverified: "INVITE_EMAIL_UNVERIFIED",
+  email_required_for_lock: "EMAIL_REQUIRED_FOR_LOCK",
   missing: "DISPLAY_NAME_REQUIRED",
   invalid: "INVALID_DISPLAY_NAME",
   reserved: "DISPLAY_NAME_RESERVED",

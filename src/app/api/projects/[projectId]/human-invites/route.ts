@@ -47,6 +47,7 @@ export async function POST(
     ownerUserId: actor.id,
     role: payload.role,
     email: payload.email,
+    requireEmailMatch: payload.requireEmailMatch,
     expiresInDays: payload.expiresInDays,
   });
   if (!result.ok) {
@@ -65,6 +66,7 @@ export async function POST(
       token: result.token,
       role: result.invite.role,
       email: result.invite.email,
+      requireEmailMatch: result.invite.requireEmailMatch,
       expiresAt: result.invite.expiresAt,
       maxUses: result.invite.maxUses,
       usesRemaining: result.invite.usesRemaining,

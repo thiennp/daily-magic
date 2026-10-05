@@ -21,7 +21,10 @@ export type RedeemHumanInviteResult =
         | "display_name_invalid"
         | "display_name_reserved"
         | "display_name_required"
-        | "display_name_taken";
+        | "display_name_taken"
+        | "invite_email_mismatch"
+        | "invite_email_unverified";
       readonly projectId?: string;
       readonly suggestedProjectDisplayName?: string | null;
+      readonly invitedEmailMasked?: string;
     };

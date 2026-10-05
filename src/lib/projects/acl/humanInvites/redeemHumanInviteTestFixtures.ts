@@ -3,6 +3,7 @@ export const REDEEM_TEST_INVITE = {
   projectId: "proj-1",
   createdByUserId: "owner",
   email: null,
+  requireEmailMatch: false,
   role: "member" as const,
   maxUses: 1,
   usesRemaining: 1,

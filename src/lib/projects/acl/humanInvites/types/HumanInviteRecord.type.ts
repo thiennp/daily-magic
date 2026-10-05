@@ -5,6 +5,7 @@ export default interface HumanInviteRecord {
   readonly projectId: string;
   readonly createdByUserId: string;
   readonly email: string | null;
+  readonly requireEmailMatch: boolean;
   readonly role: HumanInviteRole;
   readonly maxUses: number;
   readonly usesRemaining: number;
