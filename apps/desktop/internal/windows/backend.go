@@ -125,6 +125,15 @@ func (b Backend) OpenConnect(ctx context.Context) error {
 	return b.open(ctx, core.ConnectURL())
 }
 
+// OpenURL opens an update-notice release page in the default Windows browser.
+// Only https://github.com URLs without cmd.exe metacharacters are opened.
+func (b Backend) OpenURL(ctx context.Context, rawURL string) error {
+	if err := validateOpenURL(rawURL); err != nil {
+		return err
+	}
+	return b.open(ctx, rawURL)
+}
+
 // OpenLogs opens the newest agent-witch.log via its Windows path, or returns
 // core.NoLogFoundMessage when none exists.
 func (b Backend) OpenLogs(ctx context.Context) (string, error) {

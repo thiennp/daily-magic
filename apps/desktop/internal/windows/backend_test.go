@@ -2,6 +2,7 @@ package windows
 
 import (
 	"context"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -113,7 +114,7 @@ func TestBackendOpenStatusConnectLogs(t *testing.T) {
 		{ExitCode: 0}, // open status
 		{ExitCode: 0}, // open connect
 		{ExitCode: 0, Stdout: `\\wsl$\Ubuntu\home\u\.agent-witch\logs\agent-witch.log`}, // log path
-		{ExitCode: 0}, // open log
+		{ExitCode: 0},                 // open log
 		{ExitCode: 0, Stdout: "  \n"}, // empty log path
 	}}
 	b := Backend{Distro: "Ubuntu", Runner: fake}
@@ -180,5 +181,56 @@ func TestBackendStartError(t *testing.T) {
 	err := b.Start(context.Background())
 	if err == nil || !strings.Contains(err.Error(), "start failed") {
 		t.Fatalf("err=%v", err)
+	}
+}
+
+func TestBackendOpenURLValidReleasePage(t *testing.T) {
+	const releaseURL = "https://github.com/thiennp/daily-magic/releases/tag/awl-windows-v0.2.0"
+	fake := &host.FakeRunner{Results: []host.RunResult{{ExitCode: 0}}}
+	b := Backend{Distro: "Ubuntu", Runner: fake}
+
+	if err := b.OpenURL(context.Background(), releaseURL); err != nil {
+		t.Fatal(err)
+	}
+	want := [][]string{{CmdExe, "/c", "start", "", releaseURL}}
+	if !reflect.DeepEqual(fake.Calls, want) {
+		t.Fatalf("calls %v want %v", fake.Calls, want)
+	}
+}
+
+func TestBackendOpenURLRejectsUnsafe(t *testing.T) {
+	tests := []struct {
+		name    string
+		rawURL  string
+		wantErr string
+	}{
+		{"empty", "", "empty URL"},
+		{"http scheme", "http://github.com/thiennp/daily-magic/releases", "scheme \"http\" not allowed"},
+		{"non-github host", "https://evil.example/thiennp/daily-magic/releases", "host \"evil.example\" not allowed"},
+		{"github lookalike host", "https://github.com.evil.example/releases", "host \"github.com.evil.example\" not allowed"},
+		{"host with port", "https://github.com:443/thiennp/daily-magic", "host \"github.com:443\" not allowed"},
+		{"userinfo", "https://user@github.com/thiennp/daily-magic", "host \"github.com\" not allowed"},
+		{"ampersand", "https://github.com/thiennp/daily-magic/releases?a=1&calc.exe", "character '&' not allowed"},
+		{"caret", "https://github.com/thiennp/daily-magic/releases^x", "character '^' not allowed"},
+		{"percent", "https://github.com/thiennp/daily-magic/releases/%PATH%", "character '%' not allowed"},
+		{"pipe", "https://github.com/thiennp|calc", "character '|' not allowed"},
+		{"double quote", "https://github.com/thiennp\"x", "character '\"' not allowed"},
+		{"space", "https://github.com/thiennp daily-magic", "whitespace, control or non-ASCII"},
+		{"newline", "https://github.com/thiennp\ncalc", "whitespace, control or non-ASCII"},
+		{"non-ascii", "https://github.com/thi\u00e9n", "whitespace, control or non-ASCII"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			fake := &host.FakeRunner{}
+			b := Backend{Distro: "Ubuntu", Runner: fake}
+
+			err := b.OpenURL(context.Background(), tt.rawURL)
+			if err == nil || !strings.Contains(err.Error(), tt.wantErr) {
+				t.Fatalf("err=%v want substring %q", err, tt.wantErr)
+			}
+			if len(fake.Calls) != 0 {
+				t.Fatalf("runner called: %v", fake.Calls)
+			}
+		})
 	}
 }
