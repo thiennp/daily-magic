@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 
 import { syncProjectComputerMembership } from "@/lib/projects/acl/syncProjectComputerMembership";
+import { setUserProjectLinkedDevice } from "@/lib/projects/setUserProjectLinkedDevice";
 import {
   getUserProjectById,
   listUserProjectsForOwner,
@@ -73,8 +74,6 @@ export const updateUserProject = async (
     input.defaultBranch !== undefined
       ? input.defaultBranch
       : existing.defaultBranch;
-  const nextDeviceId =
-    input.deviceId !== undefined ? input.deviceId : existing.deviceId;
 
   const sql = getSql();
   const rows = asRowArray(
@@ -82,7 +81,6 @@ export const updateUserProject = async (
       UPDATE user_projects
       SET
         name = ${input.name ?? existing.name},
-        device_id = ${nextDeviceId},
         repo_urls = ${nextRepoUrls},
         default_branch = ${nextDefaultBranch},
         updated_at = NOW()
@@ -96,16 +94,16 @@ export const updateUserProject = async (
     return null;
   }
 
-  const project = mapUserProjectRow(rows[0]);
-  if (input.deviceId !== undefined) {
-    await syncProjectComputerMembership({
-      projectId,
-      ownerUserId,
-      previousDeviceId: existing.deviceId,
-      nextDeviceId: project.deviceId,
-    });
+  if (input.deviceId === undefined) {
+    return mapUserProjectRow(rows[0]);
   }
-  return project;
+
+  // Device bind/rebind/unbind goes through the sole device_id UPDATE choke.
+  return setUserProjectLinkedDevice({
+    ownerUserId,
+    projectId,
+    deviceId: input.deviceId,
+  });
 };
 
 export const listProjectsForOwner = listUserProjectsForOwner;
