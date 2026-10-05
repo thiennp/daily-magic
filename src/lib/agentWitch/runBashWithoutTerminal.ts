@@ -23,13 +23,12 @@ export const runBashWithoutTerminal = (
       reject(new Error("expected piped stdout/stderr"));
       return;
     }
-    let stdout = "";
-    let stderr = "";
+    const captured = { stdout: "", stderr: "" };
     stdoutStream.on("data", (chunk: Buffer) => {
-      stdout += chunk.toString();
+      captured.stdout += chunk.toString();
     });
     stderrStream.on("data", (chunk: Buffer) => {
-      stderr += chunk.toString();
+      captured.stderr += chunk.toString();
     });
     const timer = setTimeout(() => {
       child.kill("SIGKILL");
@@ -38,6 +37,6 @@ export const runBashWithoutTerminal = (
     child.on("error", reject);
     child.on("close", (code: number | null) => {
       clearTimeout(timer);
-      resolve({ code, stdout, stderr });
+      resolve({ code, stdout: captured.stdout, stderr: captured.stderr });
     });
   });
