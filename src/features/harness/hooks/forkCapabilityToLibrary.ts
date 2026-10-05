@@ -1,3 +1,4 @@
+import { resolveCreateTargetProjectId } from "@/features/capabilities/utils/resolveCreateTargetProjectId";
 import { markOnboardingWorkflowCreated } from "@/features/home/utils/onboardingWorkflowCreatedStore";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 
@@ -7,9 +8,20 @@ export type ForkCapabilityToLibraryResult =
 
 export default async function forkCapabilityToLibrary(
   capabilityId: string,
+  projectId?: string,
 ): Promise<ForkCapabilityToLibraryResult> {
+  const project = await resolveCreateTargetProjectId({ projectId });
+  if (!project.ok) {
+    return { ok: false, errorMessage: project.errorMessage };
+  }
+
   const response = await fetch(`/api/capabilities/${capabilityId}/fork`, {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      project_id: project.projectId,
+      projectId: project.projectId,
+    }),
   });
 
   const data: unknown = await response.json();

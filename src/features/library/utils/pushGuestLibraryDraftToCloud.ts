@@ -1,3 +1,4 @@
+import { resolveCreateTargetProjectId } from "@/features/capabilities/utils/resolveCreateTargetProjectId";
 import guestLibraryDraftToCreatePlaybookPayload from "@/lib/library/guest/guestLibraryDraftToCreatePlaybookPayload";
 import type GuestLibraryDraft from "@/lib/library/guest/types/GuestLibraryDraft.type";
 
@@ -57,6 +58,11 @@ export const pushGuestLibraryDraftToCloud = async (
     return { ok: true, capabilityId: remoteCapabilityId };
   }
 
+  const project = await resolveCreateTargetProjectId();
+  if (!project.ok) {
+    return { ok: false, errorMessage: project.errorMessage };
+  }
+
   const response = await fetch("/api/capabilities/mine", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -67,6 +73,8 @@ export const pushGuestLibraryDraftToCloud = async (
       exampleRequest: payload.exampleRequest,
       workflowFields: payload.workflowFields ?? [],
       harnessItems: payload.harnessItems,
+      project_id: project.projectId,
+      projectId: project.projectId,
     }),
   });
 

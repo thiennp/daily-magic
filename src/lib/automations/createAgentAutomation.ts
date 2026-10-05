@@ -9,6 +9,8 @@ import { resolveAutomationNextRunAt } from "@/lib/automations/resolveAutomationN
 import type AgentAutomationRecord from "@/lib/automations/types/AgentAutomationRecord.type";
 import { generateAutomationWebhookSecret } from "@/lib/automations/automationWebhookSecret";
 import { getPublishedCapabilityById } from "@/lib/capabilities/capabilityQueries";
+import { DEFAULT_USER_PROJECT_NAME } from "@/lib/projects/defaultUserProject.constants";
+import { listUserProjectsForOwner } from "@/lib/projects/userProjectQueries";
 
 export interface CreateAgentAutomationResult {
   readonly automation: AgentAutomationRecord;
@@ -30,11 +32,30 @@ export const createAgentAutomation = async (
     return { kind: "not_found" };
   }
 
+  let projectId =
+    typeof input.projectId === "string" && input.projectId.trim().length > 0
+      ? input.projectId.trim()
+      : null;
+
+  if (projectId === null) {
+    const projects = await listUserProjectsForOwner(ownerUserId);
+    const byName = (name: string) =>
+      projects.find(
+        (project) =>
+          project.name.trim().toLowerCase() === name.toLowerCase(),
+      );
+    projectId =
+      byName(DEFAULT_USER_PROJECT_NAME)?.id ??
+      byName("Personal")?.id ??
+      projects[0]?.id ??
+      null;
+  }
+
   const prepared = await prepareAutomationFieldValues({
     ownerUserId,
     capability,
     fieldValues: input.fieldValues ?? {},
-    projectId: input.projectId ?? null,
+    projectId,
   });
 
   if (!prepared.ok) {

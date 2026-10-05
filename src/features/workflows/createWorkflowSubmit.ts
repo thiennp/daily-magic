@@ -1,4 +1,5 @@
 import { markOnboardingWorkflowCreated } from "@/features/home/utils/onboardingWorkflowCreatedStore";
+import { resolveCreateTargetProjectId } from "@/features/capabilities/utils/resolveCreateTargetProjectId";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
@@ -9,6 +10,8 @@ export interface CreateWorkflowPayload {
   readonly description: string;
   readonly exampleRequest: string;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
+  /** Optional; when omitted, Default/Personal is resolved for project_required. */
+  readonly projectId?: string;
 }
 
 export async function submitCreateWorkflow(
@@ -17,6 +20,13 @@ export async function submitCreateWorkflow(
   | { readonly ok: true; readonly capabilityId: string }
   | { readonly ok: false; readonly errorMessage: string }
 > {
+  const project = await resolveCreateTargetProjectId({
+    projectId: payload.projectId,
+  });
+  if (!project.ok) {
+    return { ok: false, errorMessage: project.errorMessage };
+  }
+
   const response = await fetch("/api/capabilities/mine", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -26,6 +36,8 @@ export async function submitCreateWorkflow(
       description: payload.description,
       exampleRequest: payload.exampleRequest,
       workflowFields: payload.workflowFields,
+      project_id: project.projectId,
+      projectId: project.projectId,
     }),
   });
 

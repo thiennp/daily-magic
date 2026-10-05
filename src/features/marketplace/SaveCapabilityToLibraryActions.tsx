@@ -68,7 +68,8 @@ export default function SaveCapabilityToLibraryActions({
       return;
     }
 
-    const result = await forkCapabilityToLibrary(capabilityId);
+    const projectId = projectPicker.selectedProjectId;
+    const result = await forkCapabilityToLibrary(capabilityId, projectId);
 
     if (!result.ok) {
       setStatus("error");
@@ -76,6 +77,7 @@ export default function SaveCapabilityToLibraryActions({
       return;
     }
 
+    projectPicker.rememberProject(projectId);
     setStatus("saved");
     setSavedName(result.capability.name);
     setMessage(
@@ -85,12 +87,10 @@ export default function SaveCapabilityToLibraryActions({
 
   return (
     <div className="mt-4 space-y-2">
-      {isOfficialPreset ? (
-        <SaveToProjectSelect
-          picker={projectPicker}
-          disabled={status === "saving" || status === "saved"}
-        />
-      ) : null}
+      <SaveToProjectSelect
+        picker={projectPicker}
+        disabled={status === "saving" || status === "saved"}
+      />
       <Button
         disabled={status === "saving" || status === "saved"}
         onClick={() => {

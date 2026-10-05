@@ -1,4 +1,5 @@
 import { markOnboardingWorkflowCreated } from "@/features/home/utils/onboardingWorkflowCreatedStore";
+import { resolveCreateTargetProjectId } from "@/features/capabilities/utils/resolveCreateTargetProjectId";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type { HarnessItemKind } from "@/lib/agentWitch/harness/types/HarnessItemKind.constant";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
@@ -19,6 +20,8 @@ export interface CreatePlaybookPayload {
   readonly workflowFields?: readonly WorkflowFieldDefinition[];
   readonly workflowOutputFields?: readonly WorkflowOutputFieldDefinition[];
   readonly harnessItems: readonly CreatePlaybookHarnessItem[];
+  /** Optional; when omitted, Default/Personal is resolved for project_required. */
+  readonly projectId?: string;
 }
 
 export type CreatePlaybookResult =
@@ -33,6 +36,13 @@ export type CreatePlaybookResult =
 export async function submitCreatePlaybook(
   payload: CreatePlaybookPayload,
 ): Promise<CreatePlaybookResult> {
+  const project = await resolveCreateTargetProjectId({
+    projectId: payload.projectId,
+  });
+  if (!project.ok) {
+    return { ok: false, errorMessage: project.errorMessage };
+  }
+
   const response = await fetch("/api/capabilities/mine", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -44,6 +54,8 @@ export async function submitCreatePlaybook(
       workflowFields: payload.workflowFields ?? [],
       workflowOutputFields: payload.workflowOutputFields ?? [],
       harnessItems: payload.harnessItems,
+      project_id: project.projectId,
+      projectId: project.projectId,
     }),
   });
 
