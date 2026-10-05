@@ -1,4 +1,4 @@
-import { spawn, type ChildProcess } from "node:child_process";
+import { spawn, type SpawnOptions } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -37,18 +37,26 @@ const runWithoutTerminal = (
   env: Record<string, string>,
 ): Promise<{ code: number | null; stdout: string; stderr: string }> =>
   new Promise((resolve, reject) => {
-    // Cast: Node's spawn overloads collapse to `never` when detached + typed stdio tuple.
-    const child = spawn("/bin/bash", ["-c", script], {
-      env,
+    // SpawnOptions (not inline literal) keeps Node's overloads from collapsing under
+    // `detached` + a typed stdio tuple.
+    const options: SpawnOptions = {
+      env: { ...process.env, ...env },
       detached: true,
       stdio: ["ignore", "pipe", "pipe"],
-    }) as ChildProcess;
+    };
+    const child = spawn("/bin/bash", ["-c", script], options);
+    const stdoutStream = child.stdout;
+    const stderrStream = child.stderr;
+    if (stdoutStream === null || stderrStream === null) {
+      reject(new Error("expected piped stdout/stderr"));
+      return;
+    }
     let stdout = "";
     let stderr = "";
-    child.stdout.on("data", (chunk: Buffer) => {
+    stdoutStream.on("data", (chunk: Buffer) => {
       stdout += chunk.toString();
     });
-    child.stderr.on("data", (chunk: Buffer) => {
+    stderrStream.on("data", (chunk: Buffer) => {
       stderr += chunk.toString();
     });
     const timer = setTimeout(() => {
