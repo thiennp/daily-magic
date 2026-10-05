@@ -4,6 +4,7 @@ import { Modal } from "@/components/ui/modal";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import ConnectThisComputerInstallBody from "@/features/home/ConnectThisComputerInstallBody";
+import ConnectThisLinuxDownloadArea from "@/features/home/ConnectThisLinuxDownloadArea";
 import ConnectThisMacDownloadArea from "@/features/home/ConnectThisMacDownloadArea";
 import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
@@ -60,6 +61,7 @@ export default function ConnectThisMacModal({
             onInstallEngaged={onInstallEngaged}
           />
           <ConnectThisMacDownloadArea operatingSystem={operatingSystem} />
+          <ConnectThisLinuxDownloadArea operatingSystem={operatingSystem} />
         </>
       ) : (
         <div className={`mt-3 space-y-4 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
