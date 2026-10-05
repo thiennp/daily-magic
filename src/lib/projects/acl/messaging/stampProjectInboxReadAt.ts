@@ -1,8 +1,8 @@
-import { ensureProjectMessageDeleteOnReadSchema } from "@/lib/projects/acl/messaging/ensureProjectMessageDeleteOnReadSchema";
 import { getSql } from "@/lib/db";
 
 /**
  * Stamp read_at on fetched inbox rows. Does not delete.
+ * Caller (listProjectInbox) runs ensureProjectAclSchema first (adds read_at).
  */
 export const stampProjectInboxReadAt = async (input: {
   readonly messageIds: readonly string[];
@@ -10,7 +10,6 @@ export const stampProjectInboxReadAt = async (input: {
   if (input.messageIds.length === 0) {
     return 0;
   }
-  await ensureProjectMessageDeleteOnReadSchema();
   const sql = getSql();
   const ids = [...input.messageIds];
   const result = await sql`

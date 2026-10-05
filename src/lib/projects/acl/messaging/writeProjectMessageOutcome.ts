@@ -1,4 +1,3 @@
-import { ensureProjectMessageDeleteOnReadSchema } from "@/lib/projects/acl/messaging/ensureProjectMessageDeleteOnReadSchema";
 import { toPostgresTimestamptz } from "@/lib/projects/acl/messaging/toPostgresTimestamptz";
 import { getSql } from "@/lib/db";
 
@@ -18,11 +17,11 @@ export type WriteProjectMessageOutcomeInput = {
 
 /**
  * Thin outcome retained after the message row is gone. No FK to project_messages.
+ * Caller runs ensureProjectAclSchema first (creates project_message_outcomes).
  */
 export const writeProjectMessageOutcome = async (
   input: WriteProjectMessageOutcomeInput,
 ): Promise<void> => {
-  await ensureProjectMessageDeleteOnReadSchema();
   const sql = getSql();
   const createdAt = toPostgresTimestamptz(input.messageCreatedAt);
   const readAt = toPostgresTimestamptz(input.readAt);

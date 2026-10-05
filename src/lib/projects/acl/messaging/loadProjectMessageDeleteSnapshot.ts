@@ -1,4 +1,3 @@
-import { ensureProjectMessageDeleteOnReadSchema } from "@/lib/projects/acl/messaging/ensureProjectMessageDeleteOnReadSchema";
 import { toPostgresTimestamptz } from "@/lib/projects/acl/messaging/toPostgresTimestamptz";
 import { asRowArray, getSql } from "@/lib/db";
 
@@ -18,11 +17,11 @@ const optionalString = (value: unknown): string | null =>
 
 /**
  * Load message + delivery states + latest wake result before a hard delete.
+ * Caller runs ensureProjectAclSchema first (ack, delete-on-read tick).
  */
 export const loadProjectMessageDeleteSnapshot = async (input: {
   readonly messageId: string;
 }): Promise<ProjectMessageDeleteSnapshot | null> => {
-  await ensureProjectMessageDeleteOnReadSchema();
   const sql = getSql();
   const rows = asRowArray(
     await sql`

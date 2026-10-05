@@ -1,3 +1,4 @@
+import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { deleteProjectMessageWithOutcome } from "@/lib/projects/acl/messaging/deleteProjectMessageWithOutcome";
 import { isProjectMessageReadyForDeleteOnRead } from "@/lib/projects/acl/messaging/isProjectMessageReadyForDeleteOnRead";
 import { loadProjectMessageDeleteSnapshot } from "@/lib/projects/acl/messaging/loadProjectMessageDeleteSnapshot";
@@ -13,6 +14,8 @@ import { asRowArray, getSql } from "@/lib/db";
  */
 export const deleteReadProjectMessages = async (): Promise<number> => {
   try {
+    // Tick/cron entry skips ACL routes; ensure once here for snapshot/outcome leaves.
+    await ensureProjectAclSchema();
     const sql = getSql();
     const rows = asRowArray(
       await sql`

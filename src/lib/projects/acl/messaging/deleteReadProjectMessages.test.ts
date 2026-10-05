@@ -9,10 +9,19 @@ vi.mock("@/lib/db", () => ({
   asRowArray: (rows: unknown) => (Array.isArray(rows) ? rows : []),
 }));
 
-vi.mock("@/lib/projects/acl/messaging/loadProjectMessageDeleteSnapshot", () => ({
-  loadProjectMessageDeleteSnapshot: async (input: { messageId: string }) =>
-    snapshots.get(input.messageId) ?? null,
+const ensureAcl = vi.hoisted(() => vi.fn(async () => undefined));
+
+vi.mock("@/lib/projects/acl/ensureProjectAclSchema", () => ({
+  ensureProjectAclSchema: ensureAcl,
 }));
+
+vi.mock(
+  "@/lib/projects/acl/messaging/loadProjectMessageDeleteSnapshot",
+  () => ({
+    loadProjectMessageDeleteSnapshot: async (input: { messageId: string }) =>
+      snapshots.get(input.messageId) ?? null,
+  }),
+);
 
 vi.mock("@/lib/projects/acl/messaging/deleteProjectMessageWithOutcome", () => ({
   deleteProjectMessageWithOutcome: async (input: {
@@ -31,10 +40,21 @@ describe("deleteReadProjectMessages", () => {
     sqlMock.mockReset();
     snapshots.clear();
     deleted.length = 0;
+    ensureAcl.mockClear();
+  });
+
+  it("runs the single ACL ensure before reading snapshots", async () => {
+    sqlMock.mockResolvedValue([]);
+    await expect(deleteReadProjectMessages()).resolves.toBe(0);
+    expect(ensureAcl).toHaveBeenCalledTimes(1);
   });
 
   it("deletes read + terminal and skips unread or still-watched", async () => {
-    sqlMock.mockResolvedValue([{ id: "msg-done" }, { id: "msg-watch" }, { id: "msg-unread" }]);
+    sqlMock.mockResolvedValue([
+      { id: "msg-done" },
+      { id: "msg-watch" },
+      { id: "msg-unread" },
+    ]);
     snapshots.set("msg-done", {
       messageId: "msg-done",
       readAt: "2026-10-05T08:00:00.000Z",

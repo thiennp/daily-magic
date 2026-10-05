@@ -18,6 +18,7 @@ const SQL_SOURCES = [
     .map((name) => `db/migrations/${name}`),
   "src/lib/projects/acl/ensureProjectAclSchema.ts",
   "src/lib/projects/acl/ensureProjectInviteHooksSchema.ts",
+  "src/lib/projects/acl/messaging/ensureProjectMessageDeleteOnReadSchema.ts",
 ];
 
 const refsInCreate = (statement: string): ForeignKeyRef[] => {
