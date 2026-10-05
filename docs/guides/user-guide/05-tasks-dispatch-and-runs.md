@@ -10,11 +10,12 @@ This chapter is where three pillars meet daily work: **easy authoring** (compose
 
 ## Task composer — minimum viable send
 
-1. Open **New task** from Home or nav.
-2. Choose **Mac** — yours by default when **this Mac** is linked; teammates’ Macs appear when paired to your org.
-3. Choose a **project folder**. **Default** is only the starting folder. The folder you pick stays selected when you choose a workflow or custom task and when you choose the LLM CLI. Marketplace **Start a task** after install opens on the project you just installed into. The Mac runs the writer CLI in that folder.
-4. Write the **prompt** — concrete scope beats vague “fix everything.”
-5. Click **Send** when enabled.
+1. Open a **project**, then choose **New task**.
+2. **Assign to** a bot on that project.
+3. Write **what needs doing** — concrete scope beats vague “fix everything.”
+4. Click **Send task** when enabled.
+
+Project folders, playbooks, and writer CLI choices still apply when a bot runs work on a linked computer. Marketplace **Start a task** after install should open **New task** on the project you just installed into.
 
 If **Send** is disabled, fix what the **Send readiness** banner says first—empty prompt, Mac offline, update needed, reconnecting, etc. ([reason codes](../../agent-witch/send-readiness-reason-codes.md)). The product **blocks** bad sends instead of dropping tasks silently.
 

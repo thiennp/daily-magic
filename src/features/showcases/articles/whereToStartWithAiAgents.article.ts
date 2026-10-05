@@ -42,7 +42,7 @@ const whereToStartWithAiAgents: ShowcaseArticle = {
       heading: "How we help",
       bullets: [
         "My library — store playbooks and tap Use instead of retyping",
-        "New task — dispatch to your Mac or someone on your team",
+        "Open a project — give a task to a bot on that project",
         "Reports — a run log in this browser for who asked and what came back",
       ],
     },

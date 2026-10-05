@@ -5,12 +5,12 @@ export const AGENT_WITCH_INSTRUCTION_TASKS_SECTION: AgentWitchInstructionSection
     id: "tasks",
     title: "Sending tasks",
     summary:
-      "Tasks are composed in the browser, sent to a Mac, executed there, and recorded in Reports.",
+      "Open a project and use New task there. Work is assigned to a bot on the project, runs where that bot works, and shows up in Reports.",
     topics: [
       {
         id: "open-composer",
         title: "Opening the task composer",
-        body: "Use New task from Home or navigation. The composer opens as a modal on Home with optional prefill from Library.",
+        body: "Open a project, then choose New task on that project. Assign the work there. The composer still supports optional prefill from Library.",
       },
       {
         id: "writer-agents",

@@ -12,7 +12,7 @@ const phoneAsksCoworkerMacRuns: ShowcaseArticle = {
     "Their Mac agent online — not yours",
     "Approval policy if your company requires it",
   ],
-  tryNext: { label: "New task", href: "/?sendTask=1" },
+  tryNext: { label: "Open projects", href: "/projects?intent=new-task" },
   relatedShowcases: [
     {
       slug: "control-mac-from-phone",

@@ -12,7 +12,7 @@ const firstAgentTaskIn5Minutes: ShowcaseArticle = {
     "Sign-in so the browser can send work to your Mac live",
     "A short task description — one sentence is enough",
   ],
-  tryNext: { label: "New task", href: "/?sendTask=1" },
+  tryNext: { label: "Open projects", href: "/projects?intent=new-task" },
   sections: [
     {
       paragraphs: [
@@ -23,13 +23,13 @@ const firstAgentTaskIn5Minutes: ShowcaseArticle = {
       heading: "Step by step",
       bullets: [
         "Sign in and open Home → Your setup to add your Mac as a worker",
-        "Go to New task and write what you want done",
+        "Open a project, choose New task, and write what you want done",
         "Press send — your Mac runs the agent with your local context",
         "Open Reports in this browser to see status and output",
       ],
     },
     {
-      heading: "If New task is disabled",
+      heading: "If New task is blocked",
       paragraphs: [
         "The button stays off until this page is connected and your Mac is online. That is intentional: we run on real machines, not a faceless cloud tab.",
       ],

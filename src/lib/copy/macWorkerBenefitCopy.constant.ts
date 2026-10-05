@@ -42,7 +42,7 @@ export const MAC_WORKER_BENEFIT_COPY = {
   marketplacePageDescription:
     "Pick a free starter or a teammate listing, then run it on your Mac.",
   libraryPageDescription:
-    "Your saved workflows in Library. Run them with New task — connect a Mac on Home first if New task is disabled.",
+    "Your saved workflows in Library. Open a project and use New task to run them — connect your computer on Home first if you still need this computer online.",
   marketplacePromo:
     "Install free starters or teammate listings so they run on your Mac.",
   runsOnMacMeta: "runs on your Mac",

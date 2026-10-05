@@ -13,7 +13,7 @@ export const SHOWCASE_TOPIC_SCREEN_CAPTION: Readonly<
   [SHOWCASE_TOPIC_SCREEN.AUTOMATIONS]:
     "Friday team status scheduled on weekdays.",
   [SHOWCASE_TOPIC_SCREEN.MOBILE]:
-    "Open New task from your phone while away from your desk.",
+    "Open a project and give a task from your phone while away from your desk.",
   [SHOWCASE_TOPIC_SCREEN.LIBRARY]: "Company playbooks saved in Library.",
   [SHOWCASE_TOPIC_SCREEN.REPORTS]: "Weekly report output in Reports.",
   [SHOWCASE_TOPIC_SCREEN.APPROVALS]:

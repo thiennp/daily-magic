@@ -2,7 +2,7 @@
 
 This chapter walks you from zero to **one completed Run** with live terminal output—the solo-maker success bar in [Chapter 0](00-philosophy-and-vocabulary.md). You will use plain product words: **Mac**, **Task**, **Run**, **Playbook** ([UX simplification](../../product/ux-simplification.md)).
 
-That path is the **easy authoring** pillar in practice: one prompt on **New task**, no workflow builder required. Team templates and structured **Workflows** come later when you need them ([Chapter 6](06-workflows-and-checkpoints.md)).
+That path is the **easy authoring** pillar in practice: open a project, give one prompt with **New task**, no workflow builder required. Team templates and structured **Workflows** come later when you need them ([Chapter 6](06-workflows-and-checkpoints.md)).
 
 **Production URL:** [https://www.agentwitch.com](https://www.agentwitch.com) (Agent Witch Cloud). The git repo is named `daily-magic`; the product you use in the browser is **Agent Witch**, not CHECK24 `daily-magic.*` hosts unless your organization says otherwise ([repo name & hosting](../../product/repo-name-and-hosting.md)).
 
@@ -51,9 +51,9 @@ On the **same Mac** where you want agents to run:
 
 What you installed (user-facing names):
 
-| You see                                      | It does                                                                                                                |
-| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| **Mac helper** / **Agent Witch on this Mac** | Background runtime that keeps a secure link to the Console and runs writer CLIs in your projects.                      |
+| You see                                      | It does                                                                                                                                                                                    |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Mac helper** / **Agent Witch on this Mac** | Background runtime that keeps a secure link to the Console and runs writer CLIs in your projects.                                                                                          |
 | **Mac app** (optional)                       | Menu bar app for Apple Silicon — get it from [/download](https://www.agentwitch.com/download). Opens the local UI at `http://127.0.0.1:43347` for folders, playbooks, and troubleshooting. |
 
 Technical map: [Agent Witch deployables](../../product/agent-witch-deployables.md) · [Local bridge](../../agent-witch/local-bridge.md).
@@ -74,13 +74,13 @@ Pairing means: **your account** knows **this install**, and the browser on this 
 
 - **“This computer”** on the connect row means “the Mac where you opened the browser,” not a magic server guess.
 - If you open Agent Witch on an iPhone or a PC, you will **not** get a “this Mac” badge; you can still dispatch to a **paired Mac** you select in the task composer.
-- Right after a **production deploy**, status may show **Reconnecting** for a few seconds even though the helper is running locally. Refresh Home and retry **New task**—do not reinstall. [Reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md).
+- Right after a **production deploy**, status may show **Reconnecting** for a few seconds even though the helper is running locally. Refresh Home, open your project, and retry **New task**—do not reinstall. [Reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md).
 
 ---
 
 ## Step 4 — Send your first Task
 
-1. From **Home**, click **New task** (or open the task composer from the nav).
+1. Open a **project**, then click **New task** on that project.
 2. **Mac:** leave **your Mac** selected (default when paired).
 3. **Prompt:** describe a small, safe job—for example: “List files in my home directory and summarize in three bullets.”
 4. Expand **More options** only if you need them (repository folder, **Playbook**, writer choice). For the first run, the default Mac + prompt is enough—that is intentional **progressive disclosure** so authoring stays approachable ([UX simplification](../../product/ux-simplification.md), [four pillars — easy authoring](00-philosophy-and-vocabulary.md#four-pillars)).

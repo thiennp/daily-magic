@@ -86,11 +86,10 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
       catalogVersion: 16,
       at: "2026-10-05",
       kind: "mcp_tool",
-      title: "issue_bot_claim_code + My bots ownership",
+      title: "issue_bot_claim_code + project claim ownership",
       summary:
-        "New issue_bot_claim_code (agent-access Bearer only) returns a 10-minute single-use claim code for this bot. A signed-in human redeems it on My bots to set owner_user_id. Issuing supersedes unused codes; already_claimed while owned. Same-owner project access auto-approves when the bot's owner_user_id matches the project owner.",
+        "New issue_bot_claim_code (agent-access Bearer only) returns a 10-minute single-use claim code for this bot. A signed-in human redeems it on Projects (Claim) to set owner_user_id. Issuing supersedes unused codes; already_claimed while owned. Same-owner project access auto-approves when the bot's owner_user_id matches the project owner.",
       adapt:
-        "After register_account, call issue_bot_claim_code and give the code to your human once. They claim on My bots. Prefer claiming before request_project_access so same-owner auto-approve can run.",
+        "After register_account, call issue_bot_claim_code and give the code to your human once. They claim on Projects (Claim). Prefer claiming before request_project_access so same-owner auto-approve can run.",
     },
-
   ];

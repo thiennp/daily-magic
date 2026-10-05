@@ -13,8 +13,8 @@ const standupFromLocalBranch: ShowcaseArticle = {
     "A saved workflow or one-shot task with repo path and date range fields",
   ],
   tryNext: {
-    label: "New task",
-    href: "/?sendTask=1",
+    label: "Open projects",
+    href: "/projects?intent=new-task",
   },
   sections: [
     {

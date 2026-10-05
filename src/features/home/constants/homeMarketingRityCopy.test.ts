@@ -17,9 +17,9 @@ describe("home marketing Rity copy locks", () => {
     expect(HOME_MARKETING_AUTH_COPY.title).toBe("Create free account");
   });
 
-  it("library helper uses New task is disabled vocab", () => {
+  it("library helper points New task at a project", () => {
     expect(MAC_WORKER_BENEFIT_COPY.libraryPageDescription).toContain(
-      "New task is disabled",
+      "Open a project and use New task",
     );
     expect(MAC_WORKER_BENEFIT_COPY.libraryPageDescription).not.toContain(
       "send is disabled",

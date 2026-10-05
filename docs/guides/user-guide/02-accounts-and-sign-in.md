@@ -13,7 +13,7 @@ For vocabulary (**Mac**, **Task**, **Run**, **Playbook**), see [Chapter 0](00-ph
 | **Production** | [https://www.agentwitch.com/login](https://www.agentwitch.com/login) | Magic link and/or Google, per environment config.                           |
 | **Local dev**  | `http://localhost:3000/login`                                        | Engineers use `.env.local` auth secrets; test accounts available—see below. |
 
-After sign-in, you land in the **Console** (Home, Runs, New task). Marketing pages without a session do **not** probe your Mac for identity ([browser knows this computer](../../qa/awc-how-browser-knows-this-computer.md)).
+After sign-in, you land in the **Console** (Home, Projects, Runs). Marketing pages without a session do **not** probe your computer for identity ([browser knows this computer](../../qa/awc-how-browser-knows-this-computer.md)).
 
 ---
 
@@ -63,7 +63,7 @@ Agent Witch uses one codebase with **persona gates** in navigation:
 
 | Mode               | What you typically see                                                                                                                                       |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Solo maker**     | Home, Runs, **New task**, **Marketplace** (official playbook install), **Playbooks** (`/library`), account menu.                                             |
+| **Solo maker**     | Home, Projects (with **New task** inside each project), Runs, **Marketplace** (official playbook install), **Playbooks** (`/library`), account menu.         |
 | **Company / team** | Same core loop plus team visibility on **Runs**, shared **Playbooks**, fewer solo-only growth surfaces; **Automations** may appear when team nav is enabled. |
 
 Exact nav labels follow [UX simplification](../../product/ux-simplification.md). Your org may enable groups without changing how **Mac** pairing works.
@@ -104,7 +104,7 @@ Open your profile / account menu (top bar) for:
 | **Settings**      | Profile, notifications, integrations (as shipped).        |
 | **Sign out**      | Ends browser session; Mac helper may keep running.        |
 
-**Mac settings** links often open the **local helper** or `#your-setup` anchors for update, wake, and repositories—browser daily work stays on Home and **New task** ([Chapter 4](04-mac-connect-and-bridge.md)).
+**Mac settings** links often open the **local helper** or `#your-setup` anchors for update, wake, and repositories—browser daily work stays on Home and **Projects** ([Chapter 4](04-mac-connect-and-bridge.md)).
 
 ---
 

@@ -12,7 +12,7 @@ export const resolveLibrarySignedInEmptyBody = (
 ): string =>
   input.teamNavEnabled
     ? "Save or share workflows your team can run. Ownership is shared."
-    : "Save one from Marketplace or turn a New task into a saved workflow. Only you see and run these.";
+    : "Save one from Marketplace or use New task in a project. Only you see and run these.";
 
 export const resolveReportsPageSubtitle = (input: SoloTeamCopyInput): string =>
   input.teamNavEnabled
@@ -24,7 +24,7 @@ export const resolveReportsSignedInEmptyBody = (
 ): string =>
   input.teamNavEnabled
     ? "Team jobs and named approvals land here."
-    : "Start a New task on your Mac — finished jobs and approvals will land here.";
+    : "Open a project and use New task — finished jobs and approvals will land here.";
 
 export const resolveComposerApprovalHelper = (
   input: SoloTeamCopyInput,

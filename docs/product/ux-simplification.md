@@ -66,7 +66,7 @@ See [concepts.md](concepts.md) for engineer glossary; UI should prefer the table
 
 ### Solo — three surfaces
 
-1. **Home** — Mac status + primary CTA **New task**
+1. **Home** — computer status + recent projects; **New task** lives inside each project
 2. **Task** — Mac (default mine), optional folder, prompt, send
 3. **Runs** — List, live view, **Run again** / **Save as playbook**
 
@@ -85,7 +85,7 @@ See [concepts.md](concepts.md) for engineer glossary; UI should prefer the table
 
 - Home
 - Runs
-- New task (prominent action; may be button rather than nav item)
+- New task (inside each project; not a top-level nav item)
 
 **When org / team features enabled**
 
@@ -157,7 +157,7 @@ Use for Home / first-run design reviews. **Default path = solo.** “Team” var
 
 ### Home (wireframe)
 
-- [x] Hero: Mac status banner (Online / Sleeping / Offline / none) + primary **New task**
+- [x] Hero: computer status banner (Online / Sleeping / Offline / none); primary work path is open a project → **New task**
 - [ ] Secondary: **Runs** (last run snippet) — panel exists via `HomeRunningJobsPanel`; tighten copy later
 - [x] Tertiary link: **Mac settings** (local helper or `#your-setup`), **Having trouble?** hint
 - [ ] Onboarding checklist: max 3 steps; collapsible after complete

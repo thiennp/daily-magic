@@ -5,7 +5,7 @@ import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor
 
 const ERROR_COPY: Readonly<Record<string, string>> = {
   already_claimed:
-    "This bot is already claimed. The current owner must Unclaim on My bots before a new code can be issued.",
+    "This bot is already claimed. The current owner must Unclaim on Projects (Claim) before a new code can be issued.",
   token_not_found: "Agent-access token not found.",
 };
 
@@ -30,6 +30,6 @@ export const executeIssueClaimBotCodeTool = async (input: {
     ok: true,
     code: result.code,
     expiresAt: result.expiresAt,
-    note: "Give this code to the human once. They enter it on My bots. It expires in 10 minutes and is single-use.",
+    note: "Give this code to the human once. They enter it on Projects (Claim). It expires in 10 minutes and is single-use.",
   });
 };

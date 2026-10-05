@@ -52,7 +52,7 @@ const buildUsageGuideForTemplate = (
           },
           {
             title: "Send a task",
-            body: "Open **New task**, pick this agent from your library, set the project folder, choose your writer, and send.",
+            body: "Open the **project**, choose **New task**, pick this playbook from your library when offered, and send.",
           },
         ],
     whenToUse: template.outcomes[0] ?? template.detail,

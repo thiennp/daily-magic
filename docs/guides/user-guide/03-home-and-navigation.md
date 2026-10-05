@@ -1,10 +1,10 @@
 # Chapter 3 — Home and navigation
 
-Once you are signed in, Agent Witch orients you around **three daily surfaces**: **Home**, **New task**, and **Runs**. This chapter explains what each area does, how **Mac status** on Home should be read honestly, and what stays out of primary navigation on purpose.
+Once you are signed in, Agent Witch orients you around **Home**, **Projects**, and **Runs**. You give work with **New task** inside a project. This chapter explains what each area does, how computer status on Home should be read honestly, and what stays out of primary navigation on purpose.
 
 Vocabulary: [Chapter 0](00-philosophy-and-vocabulary.md) · Nav direction: [UX simplification](../../product/ux-simplification.md).
 
-Home is the hub for **easy authoring** (**New task** up front) and for **team learning** when **Runs** and **Playbooks** appear in nav—same shell, different org chrome ([four pillars](00-philosophy-and-vocabulary.md#four-pillars)).
+Home is the hub for your computers and recent projects. **Easy authoring** starts when you open a project and choose **New task**. **Team learning** shows up when **Runs** and **Playbooks** appear in nav—same shell, different org chrome ([four pillars](00-philosophy-and-vocabulary.md#four-pillars)).
 
 ---
 
@@ -14,11 +14,11 @@ On desktop, primary nav links sit in the sticky **left sidebar**; **Your Devices
 
 ### Everyone
 
-| Nav / action | User job                                                            |
-| ------------ | ------------------------------------------------------------------- |
-| **Home**     | See **Mac status**, onboarding checklist, shortcut to **New task**. |
-| **Runs**     | History, live output, **Run again**, optional search past runs.     |
-| **New task** | Prominent action (button or route)—opens the **Task** composer.     |
+| Nav / action | User job                                                        |
+| ------------ | --------------------------------------------------------------- |
+| **Home**     | See computer status, onboarding checklist, and recent projects. |
+| **Runs**     | History, live output, **Run again**, optional search past runs. |
+| **Projects** | Open a project, then use **New task** or **Team** there.        |
 
 ### Often visible (solo and team variants)
 
@@ -63,7 +63,7 @@ Picker labels on **New task** use related wording: **Online**, **Reconnecting (a
 
 ### Primary call to action
 
-**New task** — default path for solo makers ([onboarding step 2](../../product/ux-simplification.md)).
+**Open a project → New task** — default path for solo makers ([onboarding step 2](../../product/ux-simplification.md)).
 
 ### Secondary panels
 
@@ -83,15 +83,15 @@ Advanced items (workflow authoring, deep marketplace browse) stay collapsed unde
 
 ---
 
-## New task (composer entry)
+## New task (inside a project)
 
-You can open the composer from Home or nav. Above the fold ([wireframe intent](../../product/ux-simplification.md)):
+Open a project, then choose **New task**. That opens Activity in task mode so you can assign the work. Above the fold on the project ([wireframe intent](../../product/ux-simplification.md)):
 
-| Control          | Purpose                                                  |
-| ---------------- | -------------------------------------------------------- |
-| **Mac** selector | Target machine (default: yours when paired).             |
-| **Prompt**       | What you want done—the **Task**.                         |
-| **Send**         | Dispatch (disabled with explicit banner when not ready). |
+| Control              | Purpose                                                      |
+| -------------------- | ------------------------------------------------------------ |
+| **Assign to**        | Who should do it (bots on this project).                     |
+| **What needs doing** | The **Task** (short summary).                                |
+| **Send task**        | Sends the task (blocked with a clear reason when not ready). |
 
 Collapsed **More options**:
 
@@ -99,7 +99,7 @@ Collapsed **More options**:
 - **Playbook** template.
 - **Writer** agent choice.
 
-Empty state when no Mac is dispatch-ready: **Connect a Mac to send tasks** with install CTA.
+If no bot can take work yet, invite a bot on **Team**. Connect your computer from Home when you need this computer online for other project actions.
 
 Full composer behavior: [Chapter 5](05-tasks-dispatch-and-runs.md).
 
@@ -156,14 +156,14 @@ If you expected a nav item your teammate has, ask whether your account is in the
 
 Production hosts paths under `www.agentwitch.com`. Common routes:
 
-| Path                   | Chapter focus              |
-| ---------------------- | -------------------------- |
-| `/`                    | Home — Mac status          |
-| `/login`               | Sign-in                    |
-| Task composer route(s) | **New task**               |
-| Reports / runs UI      | **Runs**                   |
-| `/library`             | **Playbooks**              |
-| Marketplace routes     | Install official playbooks |
+| Path               | Chapter focus              |
+| ------------------ | -------------------------- |
+| `/`                | Home — Mac status          |
+| `/login`           | Sign-in                    |
+| New task entry     | Inside each **project**    |
+| Reports / runs UI  | **Runs**                   |
+| `/library`         | **Playbooks**              |
+| Marketplace routes | Install official playbooks |
 
 Exact paths may shift; trust nav labels over memorizing URLs.
 
