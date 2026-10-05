@@ -1,7 +1,10 @@
 import listProjectKnowledgeItemsForProject from "@/lib/projects/knowledge/listProjectKnowledgeItemsForProject";
 import updateProjectKnowledgeItemStatus from "@/lib/projects/knowledge/updateProjectKnowledgeItemStatus";
-import { scheduleProjectUpdatedNotify } from "@/lib/projects/acl/messaging/scheduleProjectUpdatedNotify";
 
+/**
+ * Promote every candidate. Schedules project.updated only via leaf
+ * updateProjectKnowledgeItemStatus — no orchestrator re-schedule.
+ */
 const promoteAllProjectKnowledgeCandidates = async (input: {
   readonly ownerUserId: string;
   readonly projectId: string;
@@ -24,15 +27,7 @@ const promoteAllProjectKnowledgeCandidates = async (input: {
     ),
   );
 
-  const promotedCount = results.filter(Boolean).length;
-  if (promotedCount > 0) {
-    await scheduleProjectUpdatedNotify({
-      projectId: input.projectId,
-      fields: ["knowledge"],
-      actorUserId: input.ownerUserId,
-    });
-  }
-  return promotedCount;
+  return results.filter(Boolean).length;
 };
 
 export default promoteAllProjectKnowledgeCandidates;

@@ -6,9 +6,9 @@ import { flushDueProjectUpdatedNotifies } from "@/lib/projects/acl/messaging/flu
 export const dynamic = "force-dynamic";
 
 /**
- * Optional external trigger for debounced project.updated flush. The server
- * already runs it in-process every second when a database is configured.
- * Idempotent: each pending row is claimed once via conditional state update.
+ * Sole flush owner for debounced project.updated notify.
+ * Multi-instance safe: each pending row is claimed once via conditional state
+ * update; stale flushed rows (>~60s) reclaim to pending before claim.
  */
 export async function POST(request: Request): Promise<Response> {
   if (!isCronSecretConfigured(process.env)) {

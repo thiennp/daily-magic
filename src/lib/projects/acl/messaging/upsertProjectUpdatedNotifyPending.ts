@@ -5,8 +5,8 @@ import { PROJECT_UPDATED_DEBOUNCE_MS } from "@/lib/projects/acl/messaging/projec
 
 /**
  * Insert or extend a pending notify row (trailing debounce).
- * Merges fields; resets flush_after to now + PROJECT_UPDATED_DEBOUNCE_MS.
- * Returns true when a pending row is stored.
+ * Pending: merges (appends) fields. Flushed: replaces fields (do not append).
+ * Resets flush_after to now + debounce. Returns true when a pending row is stored.
  */
 export const upsertProjectUpdatedNotifyPending = async (input: {
   readonly projectId: string;
@@ -43,7 +43,11 @@ export const upsertProjectUpdatedNotifyPending = async (input: {
         ${flushAfter}::timestamptz
       )
       ON CONFLICT (project_id) DO UPDATE SET
-        fields = project_updated_notify_pending.fields || EXCLUDED.fields,
+        fields = CASE
+          WHEN project_updated_notify_pending.state = 'flushed'
+          THEN EXCLUDED.fields
+          ELSE project_updated_notify_pending.fields || EXCLUDED.fields
+        END,
         actor_user_id = COALESCE(
           EXCLUDED.actor_user_id,
           project_updated_notify_pending.actor_user_id

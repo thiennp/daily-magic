@@ -2,23 +2,25 @@ import { claimDueProjectUpdatedNotifyPending } from "@/lib/projects/acl/messagin
 import { deleteFlushedProjectUpdatedNotifyPending } from "@/lib/projects/acl/messaging/deleteFlushedProjectUpdatedNotifyPending";
 import { ensureProjectUpdatedNotifyPendingSchema } from "@/lib/projects/acl/messaging/ensureProjectUpdatedNotifyPendingSchema";
 import { notifyProjectMembersOfProjectUpdated } from "@/lib/projects/acl/messaging/notifyProjectMembersOfProjectUpdated";
+import { reclaimStaleFlushedProjectUpdatedNotifyPending } from "@/lib/projects/acl/messaging/reclaimStaleFlushedProjectUpdatedNotifyPending";
 
 /**
- * Claim due pending rows, fan out via Dispatch notify, then delete (→ idle).
- * Idempotent under concurrency: claim is conditional on state=pending.
- * Never throws: tickers and write-path opportunistic flush must stay safe.
+ * Sole flush path (cron): reclaim stale flushed rows, claim due pending,
+ * fan out via Dispatch notify per row (try/catch), delete on success.
+ * On notify failure the row stays flushed for ~60s reclaim. Never throws.
  */
 export const flushDueProjectUpdatedNotifies = async (input: {
   readonly now: Date;
 }): Promise<number> => {
   try {
     await ensureProjectUpdatedNotifyPendingSchema();
+    await reclaimStaleFlushedProjectUpdatedNotifyPending({ now: input.now });
     const claimed = await claimDueProjectUpdatedNotifyPending({
       now: input.now,
     });
-    const results = await claimed.reduce<Promise<readonly boolean[]>>(
-      async (prior, row) => {
-        const done = await prior;
+    return claimed.reduce<Promise<number>>(async (prior, row) => {
+      const flushed = await prior;
+      try {
         await notifyProjectMembersOfProjectUpdated({
           projectId: row.projectId,
           fields: row.fields,
@@ -29,11 +31,18 @@ export const flushDueProjectUpdatedNotifies = async (input: {
         await deleteFlushedProjectUpdatedNotifyPending({
           projectId: row.projectId,
         });
-        return [...done, true];
-      },
-      Promise.resolve([]),
-    );
-    return results.length;
+        return flushed + 1;
+      } catch (error: unknown) {
+        console.error("project.updated notify row failed; left flushed", {
+          projectId: row.projectId,
+          error:
+            error instanceof Error
+              ? error.message
+              : "project_updated_notify_row_failed",
+        });
+        return flushed;
+      }
+    }, Promise.resolve(0));
   } catch (error: unknown) {
     console.error("project.updated notify flush failed", {
       error:

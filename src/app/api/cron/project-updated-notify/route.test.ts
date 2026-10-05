@@ -74,6 +74,7 @@ describe("POST /api/cron/project-updated-notify", () => {
       fields: ["knowledge", "folder_refs"],
       actor_user_id: "owner-1",
       flush_after: new Date(Date.now() - 1_000),
+      updated_at: new Date(Date.now() - 1_000),
     });
 
     const first = await call("cron-test-secret");

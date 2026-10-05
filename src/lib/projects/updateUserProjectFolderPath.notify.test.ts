@@ -26,10 +26,11 @@ describe("updateUserProjectFolderPath notify hook", () => {
     sqlMock.mockReset();
   });
 
-  it("schedules project_info after success", async () => {
+  it("schedules project_info after success when path changes", async () => {
     getProjectMock.mockResolvedValue({
       id: "proj-1",
       ownerUserId: "owner-1",
+      folderPath: "/old",
     });
     sqlMock.mockResolvedValueOnce([
       {
@@ -47,11 +48,32 @@ describe("updateUserProjectFolderPath notify hook", () => {
     await expect(
       updateUserProjectFolderPath("owner-1", "proj-1", "/new", "dev-1"),
     ).resolves.not.toBeNull();
+    expect(sqlMock).toHaveBeenCalledTimes(1);
     expect(scheduleMock).toHaveBeenCalledWith({
       projectId: "proj-1",
       fields: ["project_info"],
       actorUserId: "owner-1",
     });
+  });
+
+  it("skips write and schedule when folder path is unchanged", async () => {
+    getProjectMock.mockResolvedValue({
+      id: "proj-1",
+      ownerUserId: "owner-1",
+      folderPath: "/same",
+      deviceId: "dev-old",
+    });
+    const result = await updateUserProjectFolderPath(
+      "owner-1",
+      "proj-1",
+      "/same",
+      "dev-new",
+    );
+    expect(result).toEqual(
+      expect.objectContaining({ id: "proj-1", folderPath: "/same" }),
+    );
+    expect(sqlMock).not.toHaveBeenCalled();
+    expect(scheduleMock).not.toHaveBeenCalled();
   });
 
   it("does not schedule before a failed ownership check", async () => {

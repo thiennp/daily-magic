@@ -7,8 +7,4 @@ export async function register(): Promise<void> {
     "@/lib/cron/startProjectMessageSilenceTicker"
   );
   startProjectMessageSilenceTicker();
-  const { startProjectUpdatedNotifyTicker } = await import(
-    "@/lib/cron/startProjectUpdatedNotifyTicker"
-  );
-  startProjectUpdatedNotifyTicker();
 }

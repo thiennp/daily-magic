@@ -52,6 +52,7 @@ export type ProjectUpdatedSummaryField =
  */
 export const PROJECT_UPDATED_DEBOUNCE_MS = 5_000;
 
+
 /** Notices from the server, stored with no sender membership. */
 export const PROJECT_MESSAGE_SYSTEM_NOTICE_KINDS = [
   PROJECT_MESSAGE_KIND_PEER_SILENT,

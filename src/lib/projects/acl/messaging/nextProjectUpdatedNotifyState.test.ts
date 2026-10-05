@@ -7,7 +7,7 @@ import {
 } from "@/lib/projects/acl/messaging/projectUpdatedNotifyStateMachine";
 
 describe("nextProjectUpdatedNotifyState", () => {
-  it("names idle → pending → flushed → idle", () => {
+  it("keeps flushed FSA: idle → pending → flushed → idle", () => {
     expect(PROJECT_UPDATED_NOTIFY_STATES).toEqual([
       "idle",
       "pending",
@@ -29,6 +29,14 @@ describe("nextProjectUpdatedNotifyState", () => {
       ok: true,
       state: "idle",
     });
+    expect(nextProjectUpdatedNotifyState("flushed", "schedule")).toEqual({
+      ok: true,
+      state: "pending",
+    });
+    expect(nextProjectUpdatedNotifyState("flushed", "reclaim_stale")).toEqual({
+      ok: true,
+      state: "pending",
+    });
   });
 
   it("rejects illegal transitions", () => {
@@ -41,6 +49,11 @@ describe("nextProjectUpdatedNotifyState", () => {
       ok: false,
       from: "flushed",
       event: "flush_due",
+    });
+    expect(nextProjectUpdatedNotifyState("idle", "reclaim_stale")).toEqual({
+      ok: false,
+      from: "idle",
+      event: "reclaim_stale",
     });
     expect(PROJECT_UPDATED_NOTIFY_TRANSITIONS.idle.flush_due).toBeUndefined();
   });

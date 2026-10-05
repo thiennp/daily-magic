@@ -1,13 +1,11 @@
 import { ensureProjectUpdatedNotifyPendingSchema } from "@/lib/projects/acl/messaging/ensureProjectUpdatedNotifyPendingSchema";
 import { filterProjectUpdatedSummaryFields } from "@/lib/projects/acl/messaging/buildProjectUpdatedSummary";
-import { flushDueProjectUpdatedNotifies } from "@/lib/projects/acl/messaging/flushDueProjectUpdatedNotifies";
 import { upsertProjectUpdatedNotifyPending } from "@/lib/projects/acl/messaging/upsertProjectUpdatedNotifyPending";
 import { PROJECT_UPDATED_DEBOUNCE_MS } from "@/lib/projects/acl/messaging/projectMessage.constants";
 
 /**
  * Schedule a debounced project.updated notify (trailing 5s per projectId).
- * Does not flush the just-scheduled row unless its window is already due
- * (e.g. debounceMs 0 in tests); always opportunistically flushes other due rows.
+ * Does not flush — cron is the sole flush owner (multi-instance safe via claim).
  * Never throws: write hooks must not fail the successful mutation.
  */
 export const scheduleProjectUpdatedNotify = async (input: {
@@ -34,8 +32,6 @@ export const scheduleProjectUpdatedNotify = async (input: {
       now,
       debounceMs,
     });
-    // Opportunistic flush: due rows only (just-scheduled stays pending unless elapsed).
-    await flushDueProjectUpdatedNotifies({ now });
     return { scheduled };
   } catch (error: unknown) {
     console.error("project.updated notify schedule failed", {

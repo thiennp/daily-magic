@@ -1,6 +1,7 @@
 -- Debounced project.updated fan-out (Wake). One pending row per project.
 -- States: pending → flushed (then deleted → idle). Trailing debounce resets
--- flush_after on each schedule. Multi-instance safe via conditional claim.
+-- flush_after on each schedule. Stale flushed rows (>~60s) reclaim to pending.
+-- Multi-instance safe via conditional claim. Sole flush owner: cron route.
 
 CREATE TABLE IF NOT EXISTS project_updated_notify_pending (
   project_id TEXT PRIMARY KEY REFERENCES user_projects(id) ON DELETE CASCADE,
