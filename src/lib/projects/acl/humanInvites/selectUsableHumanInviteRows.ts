@@ -1,3 +1,7 @@
+import {
+  HUMAN_INVITE_LIST_NEVER_REDEEMED_FRAGMENT,
+  HUMAN_INVITE_USABLE_WHERE_SQL,
+} from "@/lib/projects/acl/humanInvites/humanInviteUsableSql.constant";
 import { asRowArray, getSql } from "@/lib/db";
 
 /**
@@ -13,10 +17,8 @@ export const selectUsableHumanInviteRows = async (
       SELECT *
       FROM project_human_invites
       WHERE project_id = ${projectId}
-        AND revoked_at IS NULL
-        AND expires_at > NOW()
-        AND uses_remaining > 0
-        AND uses_remaining = max_uses
+        AND ${sql.unsafe(HUMAN_INVITE_USABLE_WHERE_SQL)}
+        AND ${sql.unsafe(HUMAN_INVITE_LIST_NEVER_REDEEMED_FRAGMENT)}
       ORDER BY created_at DESC
       LIMIT 100
     `,

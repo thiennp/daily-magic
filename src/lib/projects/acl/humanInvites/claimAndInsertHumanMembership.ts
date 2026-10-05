@@ -4,6 +4,7 @@ import { classifyClaimInsertError } from "@/lib/projects/acl/humanInvites/classi
 import { defaultHumanMembershipScopes } from "@/lib/projects/acl/humanInvites/defaultHumanMembershipScopes";
 import { hashHumanInviteToken } from "@/lib/projects/acl/humanInvites/hashHumanInviteToken";
 import type { HumanInviteRole } from "@/lib/projects/acl/humanInvites/humanInvite.constants";
+import { HUMAN_INVITE_USABLE_WHERE_SQL } from "@/lib/projects/acl/humanInvites/humanInviteUsableSql.constant";
 import mapHumanInviteRow from "@/lib/projects/acl/humanInvites/mapHumanInviteRow";
 import type HumanInviteRecord from "@/lib/projects/acl/humanInvites/types/HumanInviteRecord.type";
 import mapProjectMembershipRow from "@/lib/projects/acl/mapProjectMembershipRow";
@@ -47,9 +48,7 @@ export const claimAndInsertHumanMembership = async (input: {
               redeemed_at = NOW(),
               redeemed_by_user_id = ${input.claimantUserId}
           WHERE token_hash = ${tokenHash}
-            AND revoked_at IS NULL
-            AND expires_at > NOW()
-            AND uses_remaining > 0
+            AND ${sql.unsafe(HUMAN_INVITE_USABLE_WHERE_SQL)}
           RETURNING *
         ),
         inserted AS (

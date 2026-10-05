@@ -8,7 +8,9 @@ import {
   HUMAN_INVITE_USABLE_WHERE_FRAGMENTS,
 } from "@/lib/projects/acl/humanInvites/humanInviteUsableSql.constant";
 
-const sqlMock = vi.fn();
+const sqlMock = Object.assign(vi.fn(), {
+  unsafe: (raw: string) => ({ sql: raw }),
+});
 vi.mock("@/lib/db", () => ({
   getSql: () => sqlMock,
   asRowArray: (value: unknown) => (Array.isArray(value) ? value : []),
@@ -24,6 +26,22 @@ const SELECT =
 const readSrc = (relativePath: string): string =>
   readFileSync(join(process.cwd(), relativePath), "utf8");
 
+const sqlCallText = (call: unknown[]): string => {
+  const strings = call[0] as TemplateStringsArray;
+  const values = call.slice(1);
+  let out = "";
+  for (let i = 0; i < strings.length; i++) {
+    out += strings[i];
+    if (i < values.length) {
+      const v = values[i];
+      if (v !== null && typeof v === "object" && "sql" in v) {
+        out += String((v as { sql: string }).sql);
+      }
+    }
+  }
+  return out;
+};
+
 describe("selectUsableHumanInviteRows", () => {
   beforeEach(() => {
     sqlMock.mockReset();
@@ -32,7 +50,7 @@ describe("selectUsableHumanInviteRows", () => {
 
   it("applies shared claim fragments plus list-only never-redeemed", async () => {
     await selectUsableHumanInviteRows("proj-1");
-    const query = String(sqlMock.mock.calls[0]?.[0] ?? "");
+    const query = sqlCallText(sqlMock.mock.calls[0] ?? []);
     expect(query).toContain("FROM project_human_invites");
     for (const fragment of HUMAN_INVITE_USABLE_WHERE_FRAGMENTS) {
       expect(query).toContain(fragment);
@@ -40,22 +58,17 @@ describe("selectUsableHumanInviteRows", () => {
     expect(query).toContain(HUMAN_INVITE_LIST_NEVER_REDEEMED_FRAGMENT);
   });
 
-  it("stays in lockstep with claim CTE on the three shared fragments only", () => {
+  it("stays in lockstep with claim CTE via shared USABLE_WHERE_SQL", () => {
     const claim = readSrc(CLAIM);
     const select = readSrc(SELECT);
-    for (const fragment of HUMAN_INVITE_USABLE_WHERE_FRAGMENTS) {
-      expect(claim).toContain(fragment);
-      expect(select).toContain(fragment);
-    }
-    expect(select).toContain(HUMAN_INVITE_LIST_NEVER_REDEEMED_FRAGMENT);
-    expect(claim).not.toContain(HUMAN_INVITE_LIST_NEVER_REDEEMED_FRAGMENT);
+    expect(claim).toContain("HUMAN_INVITE_USABLE_WHERE_SQL");
+    expect(select).toContain("HUMAN_INVITE_USABLE_WHERE_SQL");
+    expect(select).toContain("HUMAN_INVITE_LIST_NEVER_REDEEMED_FRAGMENT");
+    expect(claim).not.toContain("HUMAN_INVITE_LIST_NEVER_REDEEMED_FRAGMENT");
   });
 
-  it("hides a used invite from the list while claim required uses_remaining > 0", () => {
-    const select = readSrc(SELECT);
-    const claim = readSrc(CLAIM);
-    expect(select).toContain("uses_remaining = max_uses");
-    expect(claim).toContain("uses_remaining > 0");
-    expect(claim).not.toContain("uses_remaining = max_uses");
+  it("hides a used invite from the list while claim omits never-redeemed", () => {
+    expect(readSrc(SELECT)).toContain("LIST_NEVER_REDEEMED");
+    expect(readSrc(CLAIM)).not.toContain("LIST_NEVER_REDEEMED");
   });
 });
