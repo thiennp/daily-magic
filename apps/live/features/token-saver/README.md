@@ -10,6 +10,11 @@ Local pitfall registry cache + `check_context` MCP for Agent Witch Local.
 - MCP tool `check_context` (status `hit`|`miss`|`none`); HTTP `/api/local/check-context` + `/mcp`
 - Stdio MCP via `agent-witch mcp`
 
+## Aligns with (step 2)
+
+- Enums/limits from `@agent-witch/shared/pitfalls` (branch tip includes `d65e2888`)
+- Does **not** reuse preflight statuses (`pass|warn|block|…`); check_context stays `hit|miss|none`
+
 ## Does not own (later)
 
 - `setup_project` / CLI config writers (step 4)

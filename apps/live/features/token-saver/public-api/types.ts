@@ -1,16 +1,23 @@
 /**
- * AWL slice `token-saver` — pitfall registry types (local SQLite cache).
+ * AWL slice `token-saver` — pitfall registry + check_context types.
+ * Enums/limits align with `@agent-witch/shared/pitfalls` (step 2 / d65e2888).
+ * check_context status stays hit|miss|none (Arch lock; not preflight statuses).
  */
-export type PitfallSource = "seed" | "project" | "retired";
+import type {
+  ProjectPitfallCheck,
+  ProjectPitfallCheckKind,
+  ProjectPitfallSeverity,
+  ProjectPitfallSource,
+} from "@agent-witch/shared/pitfalls";
+import {
+  PROJECT_PITFALL_LIMITS,
+  PROJECT_PITFALL_MAX_ACTIVE,
+} from "@agent-witch/shared/pitfalls";
 
-export type PitfallSeverity = "block" | "warn" | "info";
-
-export type PitfallCheckKind = "command" | "id";
-
-export interface PitfallCheck {
-  readonly kind: PitfallCheckKind;
-  readonly value: string;
-}
+export type PitfallSource = ProjectPitfallSource;
+export type PitfallSeverity = ProjectPitfallSeverity;
+export type PitfallCheckKind = ProjectPitfallCheckKind;
+export type PitfallCheck = ProjectPitfallCheck;
 
 export interface Pitfall {
   readonly id: string;
@@ -71,27 +78,17 @@ export interface PitfallBotLine {
   readonly avoidance: string;
 }
 
-export const PITFALL_SYMPTOM_MAX_CHARS = 120;
-export const PITFALL_CAUSE_MAX_CHARS = 200;
-export const PITFALL_AVOIDANCE_MAX_CHARS = 280;
-export const PITFALL_MAX_ACTIVE_PER_PROJECT = 64;
+export const PITFALL_SYMPTOM_MAX_CHARS = PROJECT_PITFALL_LIMITS.symptom;
+export const PITFALL_CAUSE_MAX_CHARS = PROJECT_PITFALL_LIMITS.cause;
+export const PITFALL_AVOIDANCE_MAX_CHARS = PROJECT_PITFALL_LIMITS.avoidance;
+export const PITFALL_MAX_ACTIVE_PER_PROJECT = PROJECT_PITFALL_MAX_ACTIVE;
 export const PITFALL_MATCH_MAX_LINES = 4;
 export const PITFALL_MATCH_MAX_TOKENS = 200;
 export const TOKEN_SAVER_DB_FILE_NAME = "token-saver.db";
 export const PITFALL_SCHEMA_VERSION = 1;
 
-export type CheckContextStatus = "hit" | "miss" | "none";
-
-export interface CheckContextInput {
-  readonly cwd?: string;
-  readonly message?: string;
-  readonly sessionId?: string;
-  readonly projectId?: string;
-}
-
-export interface CheckContextResult {
-  readonly status: CheckContextStatus;
-  readonly pitfalls?: readonly PitfallBotLine[];
-  readonly promptCreate?: boolean;
-  readonly projectId?: string;
-}
+export type {
+  CheckContextInput,
+  CheckContextResult,
+  CheckContextStatus,
+} from "./checkContext.types";
