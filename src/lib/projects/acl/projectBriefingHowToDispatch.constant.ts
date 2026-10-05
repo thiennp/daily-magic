@@ -5,6 +5,7 @@ import {
 import {
   PROJECT_B2B_SILENCE_BLOCK_MS,
   PROJECT_B2B_SILENCE_NOTIFY_MS,
+  PROJECT_MESSAGE_KIND_PROJECT_UPDATED,
   PROJECT_MESSAGE_KIND_TASK_BLOCKED,
   PROJECT_MESSAGE_KIND_TASK_DONE,
   PROJECT_MESSAGE_KIND_TASK_PROCESSING,
@@ -27,14 +28,20 @@ export const PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE =
   `If you are silent for ${SILENCE_NOTIFY_MINUTES} minutes the server tells the sender; after ${SILENCE_BLOCK_MINUTES} minutes the delivery is blocked. ` +
   'Do not ack only. When the sender is the owner, toProjectDisplayName is "Owner".';
 
+/** Shared project.updated wake clause for briefing, invite prompt, and agent guideline. */
+export const PROJECT_UPDATED_WAKE_REPLY_CLAUSE =
+  `On kind "${PROJECT_MESSAGE_KIND_PROJECT_UPDATED}": re-pull get_project_acl and get_project_briefing (and knowledge list if relevant), tell the user in one short line that project info changed, then ack. Do not ack only.`;
+
 /** One paragraph: how active members address peers via project_dispatch. */
 export const PROJECT_BRIEFING_HOW_TO_DISPATCH =
-  "Dispatch with project_dispatch: pass projectId, kind, summary ≤ 200 chars, optional refs ≤ 768 bytes (prUrl|commitSha|localPath|allowClaimId) — no media/blobs (media_not_allowed); use only localPath / P2P refs for bulky payloads; address the human with toProjectDisplayName: \"Owner\" (reserved; not account name); address one peer bot via toMembershipId (preferred when list_project_peers exposes membershipId) or toProjectDisplayName / toTeamLabel — exactly one of toMembershipId | toProjectDisplayName | toTeamLabel; no broadcast in v1; re-list peers after rename (old nickname may resolve ~7 days); on Approve/auto-approve peers+owner get peer.joined; owner tasks have fromProjectDisplayName === \"Owner\"; MUST on connect (webhook-first): " +
+  "Dispatch with project_dispatch: pass projectId, kind, summary ≤ 200 chars, optional refs ≤ 768 bytes (prUrl|commitSha|localPath|allowClaimId) — no media/blobs (media_not_allowed); use only localPath / P2P refs for bulky payloads; address the human with toProjectDisplayName: \"Owner\" (reserved; not account name); address one peer bot via toMembershipId (preferred when list_project_peers exposes membershipId) or toProjectDisplayName / toTeamLabel — exactly one of toMembershipId | toProjectDisplayName | toTeamLabel; no broadcast in v1; re-list peers after rename (old nickname may resolve ~7 days); on Approve/auto-approve peers+owner get peer.joined; on knowledge|folder_refs|repo_urls|project_info change peers+owner get project.updated; owner tasks have fromProjectDisplayName === \"Owner\"; MUST on connect (webhook-first): " +
   AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS +
   " Inbox wake is webhook-only, via a Grok routine; do not poll list_project_inbox on a timer. " +
   AWC_GROK_WEBHOOK_DAILY_REPAIR +
   " " +
   PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE +
+  " " +
+  PROJECT_UPDATED_WAKE_REPLY_CLAUSE +
   " MUST ack_project_message after you handle each delivery (delete-on-ack; unacked messages expire after 3 days). Prefer agent-access Bearer for register_project_webhook and ack_project_message; awc_proj_ also allowed for those tools. On leave or owner Revoke MUST delete all project-scoped routines (project webhook, Website relaunch watches, and other project-tied scheduled/event watches). Rate limits: 300/hour (rolling) + max 300 unread (ack/clear frees slots). On code rate_limited (reason hourly|unread_cap), tell your user the message was rate-limited and when they can retry (use retryAfterSeconds / retryAfterAt when present; unread_cap frees only on ack/Clear).";
 
 /**

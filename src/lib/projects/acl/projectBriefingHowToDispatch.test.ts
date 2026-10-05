@@ -1,7 +1,22 @@
 import { describe, expect, it } from "vitest";
 
 import { AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
-import { PROJECT_BRIEFING_HOW_TO_DISPATCH } from "@/lib/projects/acl/projectBriefingHowToDispatch.constant";
+import { buildProjectInviteAgentPrompt } from "@/features/projects/access/invites/buildProjectInviteAgentPrompt";
+import { buildProjectAclAgentGuidelineSection } from "@/lib/agentAccess/buildProjectAclAgentGuidelineSection";
+import {
+  PROJECT_BRIEFING_HOW_TO_DISPATCH,
+  PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE,
+  PROJECT_UPDATED_WAKE_REPLY_CLAUSE,
+} from "@/lib/projects/acl/projectBriefingHowToDispatch.constant";
+import {
+  PROJECT_B2B_SILENCE_BLOCK_MS,
+  PROJECT_B2B_SILENCE_NOTIFY_MS,
+  PROJECT_MESSAGE_KIND_PROJECT_UPDATED,
+  PROJECT_MESSAGE_KIND_TASK_BLOCKED,
+  PROJECT_MESSAGE_KIND_TASK_DONE,
+  PROJECT_MESSAGE_KIND_TASK_PROCESSING,
+  PROJECT_MESSAGE_KIND_TASK_STATUS,
+} from "@/lib/projects/acl/messaging/projectMessage.constants";
 
 describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
   it("states the thin project inbox caps", () => {
@@ -28,6 +43,10 @@ describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain("toMembershipId");
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/~7 days|alias TTL/i);
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain("peer.joined");
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain("project.updated");
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain(
+      PROJECT_UPDATED_WAKE_REPLY_CLAUSE,
+    );
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain(
       AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
     );
@@ -43,5 +62,37 @@ describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
       /On leave or owner Revoke MUST delete all project-scoped routines/i,
     );
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/Website relaunch watches/i);
+  });
+});
+
+describe("PROJECT_UPDATED_WAKE_REPLY_CLAUSE", () => {
+  it("requires a short user line then ack (not ack-only)", () => {
+    expect(PROJECT_UPDATED_WAKE_REPLY_CLAUSE).toContain(
+      `kind "${PROJECT_MESSAGE_KIND_PROJECT_UPDATED}"`,
+    );
+    expect(PROJECT_UPDATED_WAKE_REPLY_CLAUSE).toContain("get_project_acl");
+    expect(PROJECT_UPDATED_WAKE_REPLY_CLAUSE).toContain("get_project_briefing");
+    expect(PROJECT_UPDATED_WAKE_REPLY_CLAUSE).toContain(
+      "tell the user in one short line that project info changed",
+    );
+    expect(PROJECT_UPDATED_WAKE_REPLY_CLAUSE).toContain("then ack");
+    expect(PROJECT_UPDATED_WAKE_REPLY_CLAUSE).toContain("Do not ack only.");
+    const lineAt = PROJECT_UPDATED_WAKE_REPLY_CLAUSE.indexOf(
+      "tell the user in one short line",
+    );
+    const ackAt = PROJECT_UPDATED_WAKE_REPLY_CLAUSE.indexOf("then ack");
+    expect(lineAt).toBeGreaterThanOrEqual(0);
+    expect(ackAt).toBeGreaterThan(lineAt);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain(
+      PROJECT_UPDATED_WAKE_REPLY_CLAUSE,
+    );
+    const prompt = buildProjectInviteAgentPrompt({
+      inviteUrl: "https://example.com/invite/p/tok-xyz",
+      projectId: "proj-1",
+    });
+    expect(prompt).toContain(PROJECT_UPDATED_WAKE_REPLY_CLAUSE);
+    expect(buildProjectAclAgentGuidelineSection().body.join("\n")).toContain(
+      PROJECT_UPDATED_WAKE_REPLY_CLAUSE,
+    );
   });
 });

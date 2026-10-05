@@ -9,7 +9,10 @@ import {
   AWC_GROK_WEBHOOK_DAILY_REPAIR,
   AWC_GROK_WEBHOOK_KEY_NOTE,
 } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
-import { PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE } from "@/lib/projects/acl/projectBriefingHowToDispatch.constant";
+import {
+  PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE,
+  PROJECT_UPDATED_WAKE_REPLY_CLAUSE,
+} from "@/lib/projects/acl/projectBriefingHowToDispatch.constant";
 
 describe("buildProjectInviteJoinWakeWebhookStep (step 7, copy only)", () => {
   const lines = buildProjectInviteJoinWakeWebhookStep();
@@ -24,6 +27,7 @@ describe("buildProjectInviteJoinWakeWebhookStep (step 7, copy only)", () => {
     expect(lines).toContain(`   ${AWC_GROK_WEBHOOK_KEY_NOTE}`);
     expect(lines).toContain(`   ${AWC_GROK_WEBHOOK_DAILY_REPAIR}`);
     expect(lines).toContain(`   ${PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE}`);
+    expect(lines).toContain(`   ${PROJECT_UPDATED_WAKE_REPLY_CLAUSE}`);
     expect(lines).toContain(
       '   MUST ack_project_message { "messageId": "<id>" }.',
     );

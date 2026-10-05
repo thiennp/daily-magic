@@ -7,7 +7,10 @@ import {
   AWC_GROK_WEBHOOK_FORM_SCREEN,
   AWC_GROK_WEBHOOK_KEY_NOTE,
 } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
-import { PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE } from "@/lib/projects/acl/projectBriefingHowToDispatch.constant";
+import {
+  PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE,
+  PROJECT_UPDATED_WAKE_REPLY_CLAUSE,
+} from "@/lib/projects/acl/projectBriefingHowToDispatch.constant";
 
 describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
   it("MUST register_project_webhook first, then use webhook wake + ack", () => {
@@ -51,12 +54,14 @@ describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
     expect(prompt).toContain("On code rate_limited (reason hourly|unread_cap), tell your user the message was rate-limited");
     expect(prompt).toContain('"toProjectDisplayName": "Owner"');
     expect(prompt).toContain("peer.joined");
+    expect(prompt).toContain("project.updated");
     expect(prompt).toContain('fromProjectDisplayName === "Owner"');
     expect(prompt).toMatch(/MUST on connect \(webhook-first\)/i);
     expect(prompt).toMatch(/Inbox wake is webhook-only, via a Grok routine/i);
     expect(prompt).toMatch(/do not poll list_project_inbox on a timer/i);
     expect(prompt).toMatch(/Once a day, check the project webhook/i);
     expect(prompt).toContain(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE);
+    expect(prompt).toContain(PROJECT_UPDATED_WAKE_REPLY_CLAUSE);
     expect(prompt).toMatch(/MUST ack_project_message/i);
     expect(prompt).not.toMatch(/Else MUST poll list_project_inbox|every 30 seconds while actively working|every 5 minutes when idle/i);
     expect(prompt).toMatch(/MUST on leave or owner Revoke/i);
