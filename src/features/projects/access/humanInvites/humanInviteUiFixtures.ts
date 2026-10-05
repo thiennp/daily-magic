@@ -78,4 +78,5 @@ export const FIXTURE_ACCEPT_200: AcceptHumanInviteResponse = {
   membershipId: "mem-new-ben",
   role: "member",
   status: "active",
+  projectDisplayName: "Ben",
 };

@@ -1,6 +1,6 @@
 /**
  * UI-facing types aligned to S0 API contract
- * (`feat/awc-human-member-invites-s0`, tip 68761257…; box:
+ * (S0 live on main `c00a989b`; box:
  * `/workspace/awc-human-invites-s0-api-contract.md`).
  * Stub/stories only — do not invent fields beyond the contract.
  */
@@ -44,6 +44,11 @@ export type CreateHumanInviteResponse = {
   readonly usesRemaining: number;
 };
 
+/** POST /api/invite/h/{token}/accept body (same rules as bot redeem nickname). */
+export type AcceptHumanInviteBody = {
+  readonly suggestedProjectDisplayName?: string;
+};
+
 /** POST /api/invite/h/{token}/accept → 200 */
 export type AcceptHumanInviteResponse = {
   readonly ok: true;
@@ -51,7 +56,19 @@ export type AcceptHumanInviteResponse = {
   readonly membershipId: string;
   readonly role: HumanInviteRole | string;
   readonly status: string;
+  readonly projectDisplayName: string;
 };
+
+/**
+ * Accept naming errors (invite NOT consumed — retry with a new nickname).
+ * 409 TAKEN · 400 INVALID / REQUIRED · 422 RESERVED.
+ * Body: { ok:false, code, errorMessage, suggestedProjectDisplayName }.
+ */
+export type AcceptHumanInviteNamingErrorCode =
+  | "DISPLAY_NAME_TAKEN"
+  | "INVALID_DISPLAY_NAME"
+  | "DISPLAY_NAME_RESERVED"
+  | "DISPLAY_NAME_REQUIRED";
 
 /** Accept error codes from S0 (envelope: ok:false, code, errorMessage). */
 export type AcceptHumanInviteErrorCode =
@@ -60,7 +77,18 @@ export type AcceptHumanInviteErrorCode =
   | "expired"
   | "revoked"
   | "already_redeemed"
-  | "invalid_token";
+  | "invalid_token"
+  | AcceptHumanInviteNamingErrorCode;
+
+/** Non-2xx accept result from acceptHumanInviteApi. */
+export type AcceptHumanInviteFailure = {
+  readonly ok: false;
+  readonly status: number;
+  readonly code?: string;
+  readonly errorMessage?: string;
+  /** Present on naming errors; prefill the nickname input for retry. */
+  readonly suggestedProjectDisplayName?: string | null;
+};
 
 /** POST .../human-members/{membershipId}/remove → 200 */
 export type RemoveHumanMemberResponse = {

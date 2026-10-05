@@ -1,4 +1,6 @@
 import type {
+  AcceptHumanInviteBody,
+  AcceptHumanInviteFailure,
   AcceptHumanInviteResponse,
   CreateHumanInviteBody,
   CreateHumanInviteResponse,
@@ -140,18 +142,15 @@ export const removeHumanMemberApi = async (
 
 export const acceptHumanInviteApi = async (
   token: string,
-): Promise<
-  | AcceptHumanInviteResponse
-  | {
-      readonly ok: false;
-      readonly status: number;
-      readonly code?: string;
-      readonly errorMessage?: string;
-    }
-> => {
+  body: AcceptHumanInviteBody = {},
+): Promise<AcceptHumanInviteResponse | AcceptHumanInviteFailure> => {
   const response = await fetch(
     `/api/invite/h/${encodeURIComponent(token)}/accept`,
-    { method: "POST" },
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    },
   );
   if (response.status === 401) {
     return { ok: false, status: 401, code: "unauthorized" };
@@ -159,13 +158,17 @@ export const acceptHumanInviteApi = async (
   const payload = (await response.json().catch(() => ({}))) as Partial<
     AcceptHumanInviteResponse
   > &
-    ErrorEnvelope;
+    ErrorEnvelope & { readonly suggestedProjectDisplayName?: string | null };
   if (!response.ok) {
     return {
       ok: false,
       status: response.status,
       code: payload.code,
       errorMessage: payload.errorMessage,
+      suggestedProjectDisplayName:
+        typeof payload.suggestedProjectDisplayName === "string"
+          ? payload.suggestedProjectDisplayName
+          : null,
     };
   }
   return {
@@ -174,5 +177,6 @@ export const acceptHumanInviteApi = async (
     membershipId: String(payload.membershipId ?? ""),
     role: payload.role ?? "member",
     status: String(payload.status ?? "active"),
+    projectDisplayName: String(payload.projectDisplayName ?? ""),
   };
 };

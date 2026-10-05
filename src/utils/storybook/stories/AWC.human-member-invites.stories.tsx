@@ -51,6 +51,31 @@ export const AcceptPage_SignedIn = () => (
     inviterDisplayName={project.ownerDisplayName}
     role="member"
     signedInEmail="ben@example.com"
+    nickname="Ben"
+  />
+);
+
+export const AcceptPage_NicknameTaken = () => (
+  <AwcHumanInviteAcceptView
+    viewState="signed_in"
+    projectName={project.projectName}
+    inviterDisplayName={project.ownerDisplayName}
+    role="member"
+    signedInEmail="ben@example.com"
+    nickname="Ben"
+    nicknameError="That project nickname is already taken."
+  />
+);
+
+export const AcceptPage_NicknameInvalid = () => (
+  <AwcHumanInviteAcceptView
+    viewState="signed_in"
+    projectName={project.projectName}
+    inviterDisplayName={project.ownerDisplayName}
+    role="member"
+    signedInEmail="ben@example.com"
+    nickname="ben@example"
+    nicknameError="Nickname must be 2–32 letters (single spaces OK). Avoid @ / and reserved words."
   />
 );
 

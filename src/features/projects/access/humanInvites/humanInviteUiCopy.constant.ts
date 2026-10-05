@@ -47,6 +47,9 @@ export const HUMAN_INVITE_UI_COPY = {
   logIn: "Log in",
   joinProject: "Join project",
   joining: "Joining…",
+  /** Nickname copy reuses bot redeem / rename patterns (awcProjectAccessCopy). */
+  nicknameLabel: "Project nickname",
+  nicknameHint: "Unique per project. 2–32 letters, single spaces OK.",
   acceptSignedInHint:
     "One click — no Approve wait when the owner already invited you.",
   expiredTitle: "This invite expired",

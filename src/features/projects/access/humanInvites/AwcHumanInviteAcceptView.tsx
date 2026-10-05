@@ -1,8 +1,9 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { FormEvent, ReactNode } from "react";
 
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
+import AwcHumanInviteNicknameField from "@/features/projects/access/humanInvites/AwcHumanInviteNicknameField";
 import {
   HUMAN_INVITE_UI_COPY,
   withProjectName,
@@ -26,6 +27,10 @@ export type AwcHumanInviteAcceptViewProps = {
   readonly expiresInLabel?: string;
   readonly signedInEmail?: string | null;
   readonly busy?: boolean;
+  /** Project nickname (required for humans; prefilled from account name). */
+  readonly nickname?: string;
+  readonly nicknameError?: string | null;
+  readonly onNicknameChange?: (value: string) => void;
   readonly onAccept?: () => void;
   readonly onSignUp?: () => void;
   readonly onLogIn?: () => void;
@@ -41,6 +46,9 @@ export default function AwcHumanInviteAcceptView({
   expiresInLabel = "expires soon",
   signedInEmail = null,
   busy = false,
+  nickname = "",
+  nicknameError = null,
+  onNicknameChange,
   onAccept,
   onSignUp,
   onLogIn,
@@ -160,14 +168,26 @@ export default function AwcHumanInviteAcceptView({
             {inviterDisplayName} invited you as a {roleLabel}.
           </p>
           <p className="mt-1 text-xs text-gray-500">{copy.acceptSignedInHint}</p>
-          <button
-            type="button"
-            className={`${AWC_PROJECT_ACCESS_CTA.primary} mt-4`}
-            disabled={busy}
-            onClick={onAccept}
+          <form
+            onSubmit={(event: FormEvent<HTMLFormElement>) => {
+              event.preventDefault();
+              if (!busy) onAccept?.();
+            }}
           >
-            {busy ? copy.joining : copy.joinProject}
-          </button>
+            <AwcHumanInviteNicknameField
+              value={nickname}
+              error={nicknameError}
+              disabled={busy}
+              onChange={onNicknameChange}
+            />
+            <button
+              type="submit"
+              className={`${AWC_PROJECT_ACCESS_CTA.primary} mt-4`}
+              disabled={busy}
+            >
+              {busy ? copy.joining : copy.joinProject}
+            </button>
+          </form>
         </>
       )}
     </AcceptShell>

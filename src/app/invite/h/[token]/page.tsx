@@ -67,6 +67,7 @@ export default async function HumanInviteAcceptRoutePage({
       role={loaded.role}
       expiresAt={loaded.expiresAt}
       signedInEmail={actor?.email ?? null}
+      accountName={actor?.name ?? null}
     />
   );
 }
