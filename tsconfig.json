@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,9 +23,15 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@agent-witch/shared": ["./packages/shared/src/index.ts"],
-      "@agent-witch/shared/*": ["./packages/shared/src/*"],
+      "@/*": [
+        "./src/*"
+      ],
+      "@agent-witch/shared": [
+        "./packages/shared/src/index.ts"
+      ],
+      "@agent-witch/shared/*": [
+        "./packages/shared/src/*"
+      ],
       "@agent-witch/install-layout/presentation": [
         "./apps/install/features/install-layout/public-api/presentation.ts"
       ],
@@ -210,6 +220,15 @@
       ],
       "@agent-witch/live-automations/presentation": [
         "./apps/live/features/automations/public-api/presentation.ts"
+      ],
+      "@agent-witch/live-token-saver": [
+        "./apps/live/features/token-saver/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/live-token-saver/types": [
+        "./apps/live/features/token-saver/public-api/types.ts"
+      ],
+      "@agent-witch/live-token-saver/presentation": [
+        "./apps/live/features/token-saver/public-api/presentation.ts"
       ]
     }
   },
@@ -221,5 +240,7 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -8,7 +8,9 @@
       "title": "Local HTTP server and routing",
       "fsaStatus": "fsa",
       "featurePath": "apps/live/features/local-server",
-      "legacyPaths": ["scripts/agentWitchLocalApp.ts"],
+      "legacyPaths": [
+        "scripts/agentWitchLocalApp.ts"
+      ],
       "notes": "Router in startAgentWitchLocalApp; scripts/agentWitchLocalApp.ts shims apps/live/entry/."
     },
     {
@@ -26,7 +28,9 @@
       "title": "Home dashboard",
       "fsaStatus": "fsa",
       "featurePath": "apps/live/features/home",
-      "legacyPaths": ["scripts/buildAgentWitchLocalHomePage.ts"]
+      "legacyPaths": [
+        "scripts/buildAgentWitchLocalHomePage.ts"
+      ]
     },
     {
       "slug": "tasks",
@@ -64,21 +68,27 @@
       "title": "RAG knowledge browse",
       "fsaStatus": "fsa",
       "featurePath": "apps/live/features/knowledge",
-      "legacyPaths": ["scripts/agentWitchLocalRag.ts"]
+      "legacyPaths": [
+        "scripts/agentWitchLocalRag.ts"
+      ]
     },
     {
       "slug": "memory",
       "title": "Local memory",
       "fsaStatus": "fsa",
       "featurePath": "apps/live/features/memory",
-      "legacyPaths": ["scripts/agentWitchLocalMemory.ts"]
+      "legacyPaths": [
+        "scripts/agentWitchLocalMemory.ts"
+      ]
     },
     {
       "slug": "writer-settings",
       "title": "Writer API and execution backend settings",
       "fsaStatus": "fsa",
       "featurePath": "apps/live/features/writer-settings",
-      "legacyPaths": ["scripts/buildAgentWitchLocalWriterApiPage.ts"]
+      "legacyPaths": [
+        "scripts/buildAgentWitchLocalWriterApiPage.ts"
+      ]
     },
     {
       "slug": "status-health",
@@ -118,6 +128,13 @@
       "fsaStatus": "fsa",
       "featurePath": "apps/live/features/prompt-optimizer",
       "notes": "Local prompt judge and improver loop. Picks the best installed reasoning writers."
+    },
+    {
+      "slug": "token-saver",
+      "title": "Token-saver pitfall registry cache",
+      "fsaStatus": "fsa",
+      "featurePath": "apps/live/features/token-saver",
+      "notes": "Local SQLite pitfall cache under the AWL profile. Not wired into the entrypoint until local MCP (step 3)."
     }
   ]
 }

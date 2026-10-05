@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "builtAt": "2026-10-05T10:26:22.181Z",
+  "builtAt": "2026-10-05T13:18:00.285Z",
   "idf": {
     "0": 3.5726122302071057,
     "1": 2.59976932882803,
@@ -85,7 +85,7 @@
     "242": 7.5799454154395765,
     "249": 7.5799454154395765,
     "250": 7.5799454154395765,
-    "255": 7.5799454154395765,
+    "256": 7.5799454154395765,
     "300": 6.481333126771467,
     "400": 6.663654683565421,
     "401": 7.5799454154395765,
@@ -42771,9 +42771,9 @@
       "featureSlug": "docs",
       "sourcePath": "docs/guides/developer-guide/04-mac-bridge-awl-awb-awi.md",
       "section": "Install and config paths",
-      "text": "| Path                         | Contents                                                          |\n| ---------------------------- | ----------------------------------------------------------------- |\n| `~/.agent-witch/`            | Production-style install (LaunchAgents, config, harness)          |\n| `~/.local-agent-witch/`      | Localhost-origin dev install variant                              |\n| `~/.agent-witch/config.json` | Device identity, app origin — **not** production `wsUrl` override |\n| `~/.agent-witch/harness/`    | Harness file drops from browser install API                       |\n\nInstall bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` in `apps/install/features/bundle/public-api/types.ts` whenever the shipped Mac client changes, including the prompt optimizer in `agent-witch.js`. `src/lib/agentWitch/agentWitchInstallBundleVersion.ts` re-exports that constant. A source change that is not rebuilt into `public/install/agent-witch/` does not update AWL. Current bundle: **255**. After a successful self-update, AWI restarts the host: macOS LaunchAgents kickstart, Linux `systemctl --user restart agent-witch.service` (best-effort when no user unit is present). Wake `/identity` field `tokenHash` prefers the profile with fresh `connection-health.json`, then `active-profile.json`. AWC adopts the sole reachable device hash that matches a local install token when the browser cookie is an orphan install claim (HOME-064). AWC’s primary nav brand (`AppShellNav`) renders that constant as `AWL {version}` under the product name so the Console chrome shows the latest compatible AWI/AWL bundle this deploy expects. That label is **not** per-device presence data—device rows still use each Mac’s reported install version.\n\n`agent.register` includes `platform`: `linux` when `process.platform` is `linux`, otherwise `mac`. The hub stores it with `updateAgentWitchDevicePlatform` (`resolveAgentRegisterPlatform`). The install script already posted platform; the dev WebSocket client does too.\n\n`AGENT_WITCH_SERVER_RELEASE_LABEL` (`src/lib/release/agentWitchServerReleaseLabel.constant.ts`) is surfaced on **`GET /api/health`** only. There is no in-app Live header badge (`AgentWitchServerReleaseBadge` / `useAgentWitchServerRelease` were removed).",
+      "text": "| Path                         | Contents                                                          |\n| ---------------------------- | ----------------------------------------------------------------- |\n| `~/.agent-witch/`            | Production-style install (LaunchAgents, config, harness)          |\n| `~/.local-agent-witch/`      | Localhost-origin dev install variant                              |\n| `~/.agent-witch/config.json` | Device identity, app origin — **not** production `wsUrl` override |\n| `~/.agent-witch/harness/`    | Harness file drops from browser install API                       |\n\nInstall bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` in `apps/install/features/bundle/public-api/types.ts` whenever the shipped Mac client changes, including the prompt optimizer in `agent-witch.js`. `src/lib/agentWitch/agentWitchInstallBundleVersion.ts` re-exports that constant. A source change that is not rebuilt into `public/install/agent-witch/` does not update AWL. Current bundle: **256**. After a successful self-update, AWI restarts the host: macOS LaunchAgents kickstart, Linux `systemctl --user restart agent-witch.service` (best-effort when no user unit is present). Wake `/identity` field `tokenHash` prefers the profile with fresh `connection-health.json`, then `active-profile.json`. AWC adopts the sole reachable device hash that matches a local install token when the browser cookie is an orphan install claim (HOME-064). AWC’s primary nav brand (`AppShellNav`) renders that constant as `AWL {version}` under the product name so the Console chrome shows the latest compatible AWI/AWL bundle this deploy expects. That label is **not** per-device presence data—device rows still use each Mac’s reported install version.\n\n`agent.register` includes `platform`: `linux` when `process.platform` is `linux`, otherwise `mac`. The hub stores it with `updateAgentWitchDevicePlatform` (`resolveAgentRegisterPlatform`). The install script already posted platform; the dev WebSocket client does too.\n\n`AGENT_WITCH_SERVER_RELEASE_LABEL` (`src/lib/release/agentWitchServerReleaseLabel.constant.ts`) is surfaced on **`GET /api/health`** only. There is no in-app Live header badge (`AgentWitchServerReleaseBadge` / `useAgentWitchServerRelease` were removed).",
       "vector": {
-        "255": 0.631662117953298,
+        "256": 0.631662117953298,
         "path": 0.26545802173059485,
         "contents": 0.5553045569637851,
         "agent-witch": 1.365914525420548,

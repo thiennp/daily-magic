@@ -278,5 +278,17 @@ export const vitestResolveAlias: Record<string, string> = {
     ROOT,
     "./apps/live/features/automations/public-api/infrastructure.ts",
   ),
+  "@agent-witch/live-token-saver/types": path.resolve(
+    ROOT,
+    "./apps/live/features/token-saver/public-api/types.ts",
+  ),
+  "@agent-witch/live-token-saver/presentation": path.resolve(
+    ROOT,
+    "./apps/live/features/token-saver/public-api/presentation.ts",
+  ),
+  "@agent-witch/live-token-saver": path.resolve(
+    ROOT,
+    "./apps/live/features/token-saver/public-api/infrastructure.ts",
+  ),
   "@": path.resolve(ROOT, "./src"),
 };

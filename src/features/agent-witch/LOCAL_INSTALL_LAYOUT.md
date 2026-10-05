@@ -51,6 +51,7 @@ When installed with `--email user@example.com` (or `AGENT_WITCH_PROFILE` / `acti
         ├── automations.json         # Locally scheduled automations
         ├── pending-run-inputs.json  # Mid-run [[AWAITING_INPUT]] sessions
         ├── run-completion-outbox.json # Cloud completion retries when offline
+        ├── token-saver.db            # Local pitfall registry cache (SQLite; token-saver step 1)
         │
         ├── logs/
         │   ├── agent-witch.log          # Main client stdout (runtime redirect from run.sh)
