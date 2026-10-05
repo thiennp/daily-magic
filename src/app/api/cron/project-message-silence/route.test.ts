@@ -1,0 +1,75 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { createProjectB2bFakeSql } from "@/lib/projects/acl/messaging/projectB2bFakeSql.fixtures";
+
+const fake = vi.hoisted(() => ({ sql: null as unknown }));
+
+vi.mock("@/lib/db", () => ({
+  getSql: () => fake.sql,
+  asRowArray: (value: unknown) => (Array.isArray(value) ? value : []),
+}));
+
+const insertMock = vi.fn(async (input: unknown) => {
+  void input;
+  return { messageId: "notice", wakeResults: [] };
+});
+vi.mock(
+  "@/lib/projects/acl/messaging/insertProjectMessageWithDeliveries",
+  () => ({
+    insertProjectMessageWithDeliveries: (input: unknown) => insertMock(input),
+  }),
+);
+
+import { POST } from "@/app/api/cron/project-message-silence/route";
+import {
+  CRON_SECRET_ENV,
+  CRON_SECRET_HEADER,
+} from "@/lib/cron/cronSecret.constants";
+
+const call = (secret?: string) =>
+  POST(
+    new Request("http://localhost/api/cron/project-message-silence", {
+      method: "POST",
+      headers: secret === undefined ? {} : { [CRON_SECRET_HEADER]: secret },
+    }),
+  );
+
+describe("POST /api/cron/project-message-silence", () => {
+  beforeEach(() => {
+    vi.stubEnv(CRON_SECRET_ENV, "cron-test-secret");
+    insertMock.mockClear();
+    const db = createProjectB2bFakeSql();
+    fake.sql = db.sql;
+    db.deliveries.set("del-1", {
+      id: "del-1",
+      message_id: "msg-1",
+      membership_id: "mem-b",
+      b2b_state: "awaiting_first_activity",
+      last_activity_at: new Date(Date.now() - 6 * 60_000),
+    });
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("refuses a missing or wrong secret", async () => {
+    expect((await call()).status).toBe(401);
+    expect((await call("nope")).status).toBe(401);
+    expect(insertMock).not.toHaveBeenCalled();
+  });
+
+  it("refuses every call when the env secret is unset", async () => {
+    vi.stubEnv(CRON_SECRET_ENV, "");
+    expect((await call("")).status).toBe(401);
+    expect((await call("cron-test-secret")).status).toBe(401);
+  });
+
+  it("does not double-notify across two calls", async () => {
+    const first = await call("cron-test-secret");
+    const second = await call("cron-test-secret");
+    expect(await first.json()).toEqual({ ok: true, notified: 1 });
+    expect(await second.json()).toEqual({ ok: true, notified: 0 });
+    expect(insertMock).toHaveBeenCalledTimes(1);
+  });
+});

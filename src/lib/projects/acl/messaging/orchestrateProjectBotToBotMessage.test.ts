@@ -3,7 +3,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const calls: string[] = [];
 const wakeResults = [{ membershipId: "mem-b", result: "http_200" }];
 
-const insertMock = vi.fn(async (_input: unknown) => {
+const insertMock = vi.fn(async (input: unknown) => {
+  void input;
   calls.push("insert");
   return { messageId: "msg-1", wakeResults };
 });
@@ -11,14 +12,17 @@ const wakeStepMock = vi.fn((stored: { wakeResults: unknown }) => {
   calls.push("wake");
   return stored.wakeResults;
 });
-const receiptsMock = vi.fn(async (_input: unknown) => {
+const receiptsMock = vi.fn(async (input: unknown) => {
+  void input;
   calls.push("receipts");
 });
-const activityMock = vi.fn(async (_input: unknown) => {
+const activityMock = vi.fn(async (input: unknown) => {
+  void input;
   calls.push("activity");
   return { matched: 0, moved: 0 };
 });
-const watchMock = vi.fn(async (_input: unknown) => {
+const watchMock = vi.fn(async (input: unknown) => {
+  void input;
   calls.push("watch");
   return 1;
 });

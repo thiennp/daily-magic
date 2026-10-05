@@ -1,4 +1,5 @@
 import type { ProjectMessageLogEntry } from "@/lib/projects/acl/messaging/projectMessageLog.types";
+import { projectMessageSenderDisplayName } from "@/lib/projects/acl/messaging/projectMessageSenderDisplayName";
 
 export const mapProjectMessageLogRow = (
   row: Record<string, unknown>,
@@ -20,12 +21,7 @@ export const mapProjectMessageLogRow = (
       row.refs !== null && typeof row.refs === "object"
         ? (row.refs as Record<string, unknown>)
         : {},
-    fromProjectDisplayName:
-      senderMembershipId === null
-        ? "Owner"
-        : row.sender_display_name
-          ? String(row.sender_display_name)
-          : null,
+    fromProjectDisplayName: projectMessageSenderDisplayName(row),
     fromMembershipId: senderMembershipId,
     toProjectDisplayName: liveToName ?? storedToName,
     toMembershipId: row.to_membership_id ? String(row.to_membership_id) : null,

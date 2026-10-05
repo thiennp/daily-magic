@@ -14,11 +14,13 @@ type InsertInput = Parameters<typeof insertProjectMessageWithDeliveries>[0];
 /**
  * Bot A → bot B send, server side, in order:
  * 1. store the message and pending deliveries (dispatched)
- * 2. wake step: wake runs once inside insert after the rows exist (woken)
+ * 2. wake step: wake runs once inside insert after the rows exist
  * 3. task.processing receipt B → A for each accepted wake
  * 4. this message as activity on A's open requests to the sender (a reply)
- * 5. start the 5/10 minute silence watch, unless this message is a reply
- * B's later received / status / done / blocked come back through step 4;
+ * 5. start the 5/10 minute silence watch (awaiting_first_activity), unless
+ *    this message is a reply
+ * B's later received / processing / status / done / blocked come back
+ * through step 4 and reset the silence clock;
  * ack deletes the row; checkProjectMessageSilence applies the timeouts.
  */
 export const orchestrateProjectBotToBotMessage = async (input: {

@@ -23,14 +23,22 @@ export const PROJECT_MESSAGE_KIND_TASK_STATUS = "task.status";
 export const PROJECT_MESSAGE_KIND_TASK_DONE = "task.done";
 export const PROJECT_MESSAGE_KIND_TASK_BLOCKED = "task.blocked";
 
-/** System notice to the sender: the woken peer is silent (5 min). */
+/** System notice to the sender: the peer is silent for 5 min. */
 export const PROJECT_MESSAGE_KIND_PEER_SILENT = "peer.silent";
 /** System notice to the sender: still silent at 10 min, delivery blocked. */
 export const PROJECT_MESSAGE_KIND_PEER_SILENT_BLOCKED = "peer.silent_blocked";
 
-/** No activity from the woken peer this long after the wake: tell the sender. */
+/** Notices from the server, stored with no sender membership. */
+export const PROJECT_MESSAGE_SYSTEM_NOTICE_KINDS = [
+  PROJECT_MESSAGE_KIND_PEER_SILENT,
+  PROJECT_MESSAGE_KIND_PEER_SILENT_BLOCKED,
+] as const;
+/** Inbox / log sender name for system notices (not "Owner", not the peer). */
+export const PROJECT_MESSAGE_SYSTEM_SENDER_DISPLAY_NAME = "System";
+
+/** No activity from the peer this long after the wake or its last activity: tell the sender. */
 export const PROJECT_B2B_SILENCE_NOTIFY_MS = 5 * 60_000;
-/** No activity this long after the wake in total: mark the delivery blocked. */
+/** No activity this long after the wake or its last activity: mark the delivery blocked. */
 export const PROJECT_B2B_SILENCE_BLOCK_MS = 10 * 60_000;
 
 /** Total JSON byte size of the refs object. */
@@ -66,8 +74,7 @@ export const PROJECT_MESSAGE_UNREAD_CAP = readPositiveIntEnv(
 export const PROJECT_MESSAGE_LIFECYCLE_KINDS = [
   "peer.joined",
   "peer.left",
-  PROJECT_MESSAGE_KIND_PEER_SILENT,
-  PROJECT_MESSAGE_KIND_PEER_SILENT_BLOCKED,
+  ...PROJECT_MESSAGE_SYSTEM_NOTICE_KINDS,
 ] as const;
 /** Throttle for opportunistic purge (ensure / dispatch / list_inbox). */
 export const PROJECT_MESSAGE_PURGE_MIN_INTERVAL_MS = 3_600_000;

@@ -1,4 +1,5 @@
 import { STORED_GROK_WAKE_RESULT } from "@/lib/projects/acl/messaging/storedGrokWakeResult.constant";
+import { projectMessageSenderDisplayName } from "@/lib/projects/acl/messaging/projectMessageSenderDisplayName";
 
 export type ProjectInboxMessage = {
   readonly messageId: string;
@@ -25,12 +26,7 @@ export const mapProjectInboxRow = (
       row.refs !== null && typeof row.refs === "object"
         ? (row.refs as Record<string, unknown>)
         : {},
-    fromProjectDisplayName:
-      row.sender_membership_id === null
-        ? "Owner"
-        : row.sender_display_name
-          ? String(row.sender_display_name)
-          : null,
+    fromProjectDisplayName: projectMessageSenderDisplayName(row),
     fromMembershipId: row.sender_membership_id
       ? String(row.sender_membership_id)
       : null,

@@ -1,67 +1,18 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-type Delivery = {
-  id: string;
-  message_id: string;
-  membership_id: string;
-  b2b_state: string;
-  woken_at: Date;
-};
+import { createProjectB2bFakeSql } from "@/lib/projects/acl/messaging/projectB2bFakeSql.fixtures";
 
-const deliveries = new Map<string, Delivery>();
-
-const fakeSql = async (
-  strings: TemplateStringsArray,
-  ...values: unknown[]
-): Promise<unknown[]> => {
-  const query = strings.join("?");
-  if (query.includes("SELECT d.id, d.message_id")) {
-    const [states, nowIso, secs] = values as [string[], string, number];
-    const cutoffMs = Date.parse(nowIso) - secs * 1_000;
-    return [...deliveries.values()]
-      .filter(
-        (d) => states.includes(d.b2b_state) && d.woken_at.getTime() <= cutoffMs,
-      )
-      .map((d) => ({
-        ...d,
-        project_id: "proj-1",
-        sender_membership_id: "mem-a",
-        sender_user_id: "user-a",
-        sender_display_name: "Bot A",
-        peer_membership_id: d.membership_id,
-        peer_user_id: "user-b",
-        peer_display_name: "Bot B",
-      }));
-  }
-  if (query.includes("SELECT d.id, d.b2b_state")) {
-    const [fromMembershipId, toIds] = values as [string, string[]];
-    return toIds.includes("mem-a")
-      ? [...deliveries.values()].filter(
-          (d) => d.membership_id === fromMembershipId,
-        )
-      : [];
-  }
-  if (query.includes("UPDATE project_message_deliveries")) {
-    const [to, , id, from] = values as [string, string, string, string];
-    const row = deliveries.get(id);
-    if (row === undefined || row.b2b_state !== from) {
-      return [];
-    }
-    row.b2b_state = to;
-    return [{ id }];
-  }
-  throw new Error(`unexpected query: ${query}`);
-};
+const fake = vi.hoisted(() => ({ sql: null as unknown }));
 
 vi.mock("@/lib/db", () => ({
-  getSql: () => fakeSql,
+  getSql: () => fake.sql,
   asRowArray: (value: unknown) => (Array.isArray(value) ? value : []),
 }));
 
-const insertMock = vi.fn(async (_input: unknown) => ({
-  messageId: "notice",
-  wakeResults: [],
-}));
+const insertMock = vi.fn(async (input: unknown) => {
+  void input;
+  return { messageId: "notice", wakeResults: [] };
+});
 vi.mock(
   "@/lib/projects/acl/messaging/insertProjectMessageWithDeliveries",
   () => ({
@@ -74,6 +25,7 @@ import {
   PROJECT_MESSAGE_KIND_PEER_SILENT,
   PROJECT_MESSAGE_KIND_PEER_SILENT_BLOCKED,
   PROJECT_MESSAGE_SUMMARY_MAX_CHARS,
+  PROJECT_MESSAGE_SYSTEM_SENDER_DISPLAY_NAME,
 } from "@/lib/projects/acl/messaging/projectMessage.constants";
 import { recordProjectPeerActivity } from "@/lib/projects/acl/messaging/recordProjectPeerActivity";
 
@@ -81,46 +33,50 @@ const wokenAt = new Date("2026-10-05T08:00:00.000Z");
 const at = (minutes: number): Date =>
   new Date(wokenAt.getTime() + minutes * 60_000);
 
+let db = createProjectB2bFakeSql();
+
 const noticeKinds = (): unknown[] =>
   insertMock.mock.calls.map((call) => (call[0] as { kind: string }).kind);
-
-const stateOf = (): string | undefined => deliveries.get("del-1")?.b2b_state;
-
-const replyFromB = (kind: string, now: Date) =>
+const stateOf = (): string | undefined => db.deliveries.get("del-1")?.b2b_state;
+const check = (minutes: number) =>
+  checkProjectMessageSilence({ now: at(minutes) });
+const fromB = (kind: string, minutes: number) =>
   recordProjectPeerActivity({
     fromMembershipId: "mem-b",
     toMembershipIds: ["mem-a"],
     kind,
-    now,
+    now: at(minutes),
   });
 
 describe("checkProjectMessageSilence", () => {
   beforeEach(() => {
     insertMock.mockClear();
-    deliveries.clear();
-    deliveries.set("del-1", {
+    db = createProjectB2bFakeSql();
+    fake.sql = db.sql;
+    db.deliveries.set("del-1", {
       id: "del-1",
       message_id: "msg-1",
       membership_id: "mem-b",
       b2b_state: "awaiting_first_activity",
-      woken_at: wokenAt,
+      last_activity_at: wokenAt,
     });
   });
 
   it("does nothing before 5 minutes", async () => {
-    expect(await checkProjectMessageSilence({ now: at(4) })).toBe(0);
+    expect(await check(4)).toBe(0);
     expect(insertMock).not.toHaveBeenCalled();
-    expect(stateOf()).toBe("awaiting_first_activity");
   });
 
-  it("tells A once at 5 minutes, then blocks and tells A at 10 minutes", async () => {
-    expect(await checkProjectMessageSilence({ now: at(5) })).toBe(1);
+  it("tells A at 5 minutes from the system, then blocks at 10", async () => {
+    expect(await check(5)).toBe(1);
     expect(stateOf()).toBe("silent_5m_notified");
     const notice = insertMock.mock.calls[0]?.[0] as Record<string, unknown>;
     expect(notice).toEqual(
       expect.objectContaining({
         kind: PROJECT_MESSAGE_KIND_PEER_SILENT,
-        senderMembershipId: "mem-b",
+        senderMembershipId: null,
+        senderProjectDisplayName: PROJECT_MESSAGE_SYSTEM_SENDER_DISPLAY_NAME,
+        senderUserId: "user-a",
         toMembershipId: "mem-a",
         refsJson: "{}",
         recipients: [{ id: "mem-a", user_id: "user-a" }],
@@ -130,51 +86,75 @@ describe("checkProjectMessageSilence", () => {
     expect(String(notice.summary).length).toBeLessThanOrEqual(
       PROJECT_MESSAGE_SUMMARY_MAX_CHARS,
     );
-
-    expect(await checkProjectMessageSilence({ now: at(10) })).toBe(1);
+    expect(await check(10)).toBe(1);
     expect(stateOf()).toBe("blocked_silent_10m");
+    expect(await check(30)).toBe(0);
     expect(noticeKinds()).toEqual([
       PROJECT_MESSAGE_KIND_PEER_SILENT,
       PROJECT_MESSAGE_KIND_PEER_SILENT_BLOCKED,
     ]);
+  });
 
-    expect(await checkProjectMessageSilence({ now: at(30) })).toBe(0);
+  it("asks once per silence window", async () => {
+    await check(5);
+    await check(6);
+    await check(9);
+    expect(noticeKinds()).toEqual([PROJECT_MESSAGE_KIND_PEER_SILENT]);
+  });
+
+  it("sends one notice when two runs read the same row concurrently", async () => {
+    const counts = await Promise.all([check(5), check(5)]);
+    expect(counts.reduce((sum, n) => sum + n, 0)).toBe(1);
+    expect(noticeKinds()).toEqual([PROJECT_MESSAGE_KIND_PEER_SILENT]);
+    const blocked = await Promise.all([check(10), check(10)]);
+    expect(blocked.reduce((sum, n) => sum + n, 0)).toBe(1);
+    expect(stateOf()).toBe("blocked_silent_10m");
     expect(insertMock).toHaveBeenCalledTimes(2);
   });
 
-  it("asks B only once: repeated checks before 10 minutes add no notice", async () => {
-    await checkProjectMessageSilence({ now: at(5) });
-    await checkProjectMessageSilence({ now: at(6) });
-    await checkProjectMessageSilence({ now: at(9) });
-    expect(noticeKinds()).toEqual([PROJECT_MESSAGE_KIND_PEER_SILENT]);
-    expect(stateOf()).toBe("silent_5m_notified");
-  });
-
-  it("returns to the normal path on activity after the 5 minute notice", async () => {
-    await checkProjectMessageSilence({ now: at(5) });
-    expect(await replyFromB("task.processing", at(6))).toEqual({
-      matched: 1,
-      moved: 1,
-    });
+  it("restarts the clock on each status: 5 then 10 minutes after the last one", async () => {
+    await fromB("task.processing", 3);
     expect(stateOf()).toBe("processing");
-    expect(await checkProjectMessageSilence({ now: at(10) })).toBe(0);
-    expect(noticeKinds()).toEqual([PROJECT_MESSAGE_KIND_PEER_SILENT]);
-  });
-
-  it("does not reopen a delivery blocked at 10 minutes on a late reply", async () => {
-    await checkProjectMessageSilence({ now: at(5) });
-    await checkProjectMessageSilence({ now: at(10) });
-    for (const kind of ["task.received", "task.done", "free.text"]) {
-      expect(await replyFromB(kind, at(11))).toEqual({ matched: 1, moved: 0 });
-    }
+    expect(await check(7)).toBe(0);
+    await fromB("task.status", 7);
+    expect(stateOf()).toBe("status_reporting");
+    expect(db.deliveries.get("del-1")?.last_activity_at).toEqual(at(7));
+    expect(await check(11)).toBe(0);
+    expect(await check(12)).toBe(1);
+    expect(stateOf()).toBe("silent_5m_notified");
+    expect(await check(16)).toBe(0);
+    expect(await check(17)).toBe(1);
     expect(stateOf()).toBe("blocked_silent_10m");
   });
 
-  it("uses only the passed now, with fake timers far in the future", async () => {
+  it("re-allows one ask after B speaks in the 5 minute window", async () => {
+    await check(5);
+    await fromB("task.status", 6);
+    expect(stateOf()).toBe("status_reporting");
+    expect(await check(10)).toBe(0);
+    expect(await check(11)).toBe(1);
+    expect(await check(12)).toBe(0);
+    expect(noticeKinds()).toEqual([
+      PROJECT_MESSAGE_KIND_PEER_SILENT,
+      PROJECT_MESSAGE_KIND_PEER_SILENT,
+    ]);
+  });
+
+  it("rejects a late reply after the 10 minute block", async () => {
+    await check(5);
+    await check(10);
+    for (const kind of ["task.received", "task.status", "task.done", "x"]) {
+      expect(await fromB(kind, 11)).toEqual({ matched: 1, moved: 0 });
+    }
+    expect(stateOf()).toBe("blocked_silent_10m");
+    expect(db.deliveries.get("del-1")?.last_activity_at).toEqual(wokenAt);
+  });
+
+  it("uses only the passed now, even with fake timers far ahead", async () => {
     vi.useFakeTimers();
     vi.setSystemTime(at(60));
     try {
-      expect(await checkProjectMessageSilence({ now: at(1) })).toBe(0);
+      expect(await check(1)).toBe(0);
       expect(stateOf()).toBe("awaiting_first_activity");
     } finally {
       vi.useRealTimers();

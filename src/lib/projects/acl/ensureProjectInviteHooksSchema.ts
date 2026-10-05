@@ -76,7 +76,7 @@ export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
   await sql`ALTER TABLE project_message_deliveries
     ADD COLUMN IF NOT EXISTS b2b_state TEXT`;
   await sql`ALTER TABLE project_message_deliveries
-    ADD COLUMN IF NOT EXISTS woken_at TIMESTAMPTZ`;
+    ADD COLUMN IF NOT EXISTS last_activity_at TIMESTAMPTZ`;
   await sql`ALTER TABLE project_message_deliveries
     ADD COLUMN IF NOT EXISTS b2b_state_at TIMESTAMPTZ`;
 

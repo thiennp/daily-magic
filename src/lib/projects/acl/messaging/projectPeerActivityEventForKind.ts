@@ -8,7 +8,7 @@ import {
 import type { ProjectB2bEvent } from "@/lib/projects/acl/messaging/projectB2bStateMachine";
 
 const EVENT_BY_KIND: Readonly<Record<string, ProjectB2bEvent>> = {
-  [PROJECT_MESSAGE_KIND_TASK_RECEIVED]: "received",
+  [PROJECT_MESSAGE_KIND_TASK_RECEIVED]: "processing",
   [PROJECT_MESSAGE_KIND_TASK_PROCESSING]: "processing",
   [PROJECT_MESSAGE_KIND_TASK_STATUS]: "status",
   [PROJECT_MESSAGE_KIND_TASK_DONE]: "done",
