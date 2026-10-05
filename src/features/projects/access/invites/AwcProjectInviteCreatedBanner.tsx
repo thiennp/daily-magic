@@ -4,13 +4,17 @@ import { useState } from "react";
 
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
+import { AWC_PROJECT_INVITE_PLATFORM_COPY } from "@/features/projects/access/invites/awcProjectInvitePlatformCopy.constant";
 import { buildProjectInviteAgentPrompt } from "@/features/projects/access/invites/buildProjectInviteAgentPrompt";
+import type { ProjectInvitePlatform } from "@/features/projects/access/invites/projectInvitePlatform.type";
 
 interface AwcProjectInviteCreatedBannerProps {
   readonly createdInviteUrl: string;
   readonly createdInviteToken: string | null;
   readonly projectId: string;
   readonly projectName: string | null;
+  /** Which Copy prompt to build (step 7 differs). */
+  readonly platform?: ProjectInvitePlatform;
   readonly onClearCreatedUrl: () => void;
 }
 
@@ -19,6 +23,7 @@ export default function AwcProjectInviteCreatedBanner({
   createdInviteToken,
   projectId,
   projectName,
+  platform = "grok",
   onClearCreatedUrl,
 }: AwcProjectInviteCreatedBannerProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
@@ -33,6 +38,12 @@ export default function AwcProjectInviteCreatedBanner({
       <p className="font-medium text-amber-900 dark:text-amber-200">
         {copy.invitesCreatedOnce}
       </p>
+      <p
+        className="mt-1 text-amber-900 dark:text-amber-200"
+        data-invite-platform={platform}
+      >
+        {AWC_PROJECT_INVITE_PLATFORM_COPY[platform].createdFor}
+      </p>
       <div className="mt-2 flex flex-wrap gap-2">
         <button
           type="button"
@@ -43,6 +54,7 @@ export default function AwcProjectInviteCreatedBanner({
               token: createdInviteToken,
               projectId,
               projectName,
+              platform,
             });
             void navigator.clipboard.writeText(prompt).then(() => {
               showToast(copy.invitesPromptCopied);

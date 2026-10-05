@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from "react";
+
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
-import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
+import AwcProjectInviteCreateControls from "@/features/projects/access/invites/AwcProjectInviteCreateControls";
 import AwcProjectInviteCreatedBanner from "@/features/projects/access/invites/AwcProjectInviteCreatedBanner";
 import AwcProjectInviteListSections from "@/features/projects/access/invites/AwcProjectInviteListSections";
+import type { ProjectInvitePlatform } from "@/features/projects/access/invites/projectInvitePlatform.type";
 import type { AwcProjectAccessInvite } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 
 interface AwcProjectInvitesPanelProps {
@@ -12,7 +15,7 @@ interface AwcProjectInvitesPanelProps {
   readonly createdInviteToken?: string | null;
   readonly projectId: string;
   readonly projectName?: string | null;
-  readonly onCreate: () => void;
+  readonly onCreate: (platform: ProjectInvitePlatform) => void;
   readonly onRevoke: (inviteId: string) => void;
   readonly onClearCreatedUrl: () => void;
   /** When nested under AccessSection, skip local heading/intro. */
@@ -32,6 +35,7 @@ export default function AwcProjectInvitesPanel({
   hideChrome = false,
 }: AwcProjectInvitesPanelProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
+  const [platform, setPlatform] = useState<ProjectInvitePlatform>("grok");
 
   return (
     <div>
@@ -54,18 +58,16 @@ export default function AwcProjectInvitesPanel({
           createdInviteToken={createdInviteToken}
           projectId={projectId}
           projectName={projectName}
+          platform={platform}
           onClearCreatedUrl={onClearCreatedUrl}
         />
       ) : null}
-      <div className="mt-2">
-        <button
-          type="button"
-          className={AWC_PROJECT_ACCESS_CTA.primary}
-          onClick={onCreate}
-        >
-          {copy.invitesCreate}
-        </button>
-      </div>
+      <AwcProjectInviteCreateControls
+        onCreate={(next) => {
+          setPlatform(next);
+          onCreate(next);
+        }}
+      />
       {invites.length === 0 ? (
         <p className="mt-2 text-sm text-gray-500">{copy.invitesEmpty}</p>
       ) : (
