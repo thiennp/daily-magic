@@ -1,8 +1,9 @@
 import { asRowArray, getSql } from "@/lib/db";
 
 /**
- * project_id of a library item (published_capabilities, NOT NULL since 069).
- * Returns null when the row is missing or the lookup fails.
+ * project_id of a library item (published_capabilities). 069 keeps the
+ * column nullable (CHECK NOT VALID), so a NULL or empty value, a missing row,
+ * or a failed lookup all return null and the caller shows the notice.
  */
 export const lookupLibraryItemProjectId = async (
   itemId: string,

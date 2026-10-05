@@ -11,9 +11,9 @@ const HASH_KEY: Readonly<Record<LegacyItemIntent, string>> = {
 
 /**
  * `/library/<id>` and `/reports/<id>` → the item's own project tab.
- * Since migration 069 every library item and report has a project_id, so the
- * item's project wins over any `?project=`. Missing, no access, or a failed
- * lookup → `/projects?intent=…` notice. Signed out → login, then back here.
+ * When the item has a project_id (backfilled by migration 069) it wins over
+ * any `?project=`. A NULL project_id (069 keeps the column nullable), missing
+ * item, no access, or a failed lookup → `/projects?intent=…` notice. Signed out → login, then back here.
  * Never throws.
  */
 export const resolveLegacyItemRedirectPath = async (input: {
