@@ -74,6 +74,7 @@ describe("GET /api/projects/:projectId/access for human seats", () => {
     const response = await GET(new Request("http://local/access"), {
       params: Promise.resolve({ projectId: "proj-1" }),
     });
+    expect(response.status).toBe(200);
     expect(await response.json()).toMatchObject({
       ok: true,
       actorRole: "viewer",

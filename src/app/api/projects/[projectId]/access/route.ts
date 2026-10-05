@@ -3,8 +3,10 @@ import {
   buildMembershipViews,
   buildPendingRequestViews,
 } from "@/lib/projects/acl/buildProjectAccessViews";
+import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
 import { listPendingProjectAccessRequests } from "@/lib/projects/acl/listPendingProjectAccessRequests";
 import { listProjectMembershipsForProject } from "@/lib/projects/acl/listProjectMembershipsForProject";
+import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import { PROJECT_ACL_FIRST_CONNECT } from "@/lib/projects/acl/projectAclFirstConnect.constant";
 import { resolveOwnerOrActiveHumanSeat } from "@/lib/projects/acl/resolveOwnerOrActiveHumanSeat";
 import { requireAuth } from "@/lib/auth/requireAuth";
@@ -73,6 +75,14 @@ export async function PATCH(
     return error;
   }
   const { projectId } = await context.params;
+  const decision = await authorizeProjectOwner({
+    projectId,
+    actorUserId: actor.id,
+  });
+  if (!decision.allow) {
+    const status = decision.reason === "not_found" ? 404 : 403;
+    return projectAccessErrorJson(decision.reason, status);
+  }
   const body: unknown = await request.json().catch(() => ({}));
   const payload =
     body !== null && typeof body === "object"
