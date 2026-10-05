@@ -7,16 +7,11 @@ import {
   resolveAgentWitchDefaultWakePort,
   resolveAgentWitchInstallDir,
 } from "./resolveAgentWitchLocalLayout";
+import { isValidAgentWitchWakePort } from "./isValidAgentWitchWakePort";
 import { resolveAgentWitchWakePortFromSources } from "./resolveAgentWitchWakePortFromSources";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
-
-const isValidWakePort = (value: unknown): value is number =>
-  typeof value === "number" &&
-  Number.isInteger(value) &&
-  value > 0 &&
-  value <= 65535;
 
 export const readAgentWitchWakePortFromFile = (
   installDir: string,
@@ -28,7 +23,7 @@ export const readAgentWitchWakePortFromFile = (
 
   try {
     const parsed: unknown = JSON.parse(fs.readFileSync(portFilePath, "utf8"));
-    if (isRecord(parsed) && isValidWakePort(parsed.wakePort)) {
+    if (isRecord(parsed) && isValidAgentWitchWakePort(parsed.wakePort)) {
       return parsed.wakePort;
     }
   } catch {

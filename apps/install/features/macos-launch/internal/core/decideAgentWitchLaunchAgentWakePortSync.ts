@@ -1,3 +1,5 @@
+import { isValidAgentWitchWakePort } from "@agent-witch/install-layout";
+
 /** What to do with one LaunchAgent plist's `AGENT_WITCH_WAKE_PORT` versus `wake-port.json`. */
 export type AgentWitchLaunchAgentWakePortSyncDecision =
   | { readonly kind: "sync"; readonly wakePort: number }
@@ -7,15 +9,12 @@ export type AgentWitchLaunchAgentWakePortSyncDecision =
   /** The plist has no `AGENT_WITCH_WAKE_PORT` entry: do not add keys on a live plist. */
   | { readonly kind: "skip-no-entry" };
 
-const isValidWakePort = (value: number | null): value is number =>
-  value !== null && Number.isInteger(value) && value > 0 && value <= 65535;
-
 /** Pure: `wake-port.json` is the source of truth; the plist only mirrors it (AGENT-067). */
 export const decideAgentWitchLaunchAgentWakePortSync = (input: {
   readonly filePort: number | null;
   readonly plistValue: string | null;
 }): AgentWitchLaunchAgentWakePortSyncDecision => {
-  if (!isValidWakePort(input.filePort)) {
+  if (!isValidAgentWitchWakePort(input.filePort)) {
     return { kind: "skip-invalid" };
   }
   if (input.plistValue === null) {
