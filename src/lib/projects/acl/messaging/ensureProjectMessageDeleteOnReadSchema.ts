@@ -10,7 +10,11 @@ export const resetProjectMessageDeleteOnReadSchemaForTests = (): void => {
   state.promise = null;
 };
 
-/** Idempotent DDL for delete-on-read / ack outcomes (full file: migration 056). */
+/**
+ * Idempotent DDL for delete-on-read / ack outcomes (migration 056) and the
+ * computer_acks table (History migration 060 shape). Called once from
+ * ensureProjectAclSchema.
+ */
 export const ensureProjectMessageDeleteOnReadSchema = async (): Promise<void> => {
   if (state.ensured) {
     return;
@@ -46,14 +50,23 @@ export const ensureProjectMessageDeleteOnReadSchema = async (): Promise<void> =>
     await sql`
       CREATE INDEX IF NOT EXISTS project_message_outcomes_project_idx
         ON project_message_outcomes (project_id, deleted_at DESC)`;
+    // Fresh installs: History mig 060 shape (device_id NOT NULL, PK on ids).
     await sql`
       CREATE TABLE IF NOT EXISTS project_message_computer_acks (
-        id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
         project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
         message_id TEXT NOT NULL,
+        device_id TEXT NOT NULL,
         acked_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        UNIQUE (project_id, message_id)
+        PRIMARY KEY (project_id, message_id)
       )`;
+    // Live table from 056 (id PK, no device_id): additive nullable column only.
+    // SET NOT NULL / PK swap to match 060 is a Lead-gated manual step.
+    await sql`
+      ALTER TABLE project_message_computer_acks
+        ADD COLUMN IF NOT EXISTS device_id TEXT`;
+    await sql`
+      CREATE INDEX IF NOT EXISTS project_message_computer_acks_acked_idx
+        ON project_message_computer_acks (acked_at)`;
     await sql`
       CREATE INDEX IF NOT EXISTS project_message_computer_acks_message_idx
         ON project_message_computer_acks (message_id)`;

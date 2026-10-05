@@ -20,7 +20,7 @@ export const isComputerAckSatisfiedForCloudDelete = async (input: {
   const sql = getSql();
   const rows = asRowArray(
     await sql`
-      SELECT id FROM project_message_computer_acks
+      SELECT 1 AS found FROM project_message_computer_acks
       WHERE project_id = ${input.projectId}
         AND message_id = ${input.messageId}
       LIMIT 1
