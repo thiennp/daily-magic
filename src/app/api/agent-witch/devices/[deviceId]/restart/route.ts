@@ -3,6 +3,7 @@ import { sendAgentWitchDeviceRestartNow } from "@/lib/agentWitch/deliverAgentWit
 import isAgentWitchDeviceOwnedByUser from "@/lib/agentWitch/isAgentWitchDeviceOwnedByUser";
 import { ensureAgentWitchDeviceSchema } from "@/lib/agentWitch/ensureAgentWitchDeviceSchema";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
+import { refuseTooOldAgentWitchDeviceForConnect } from "@/lib/agentWitch/refuseTooOldAgentWitchDeviceForConnect";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -33,6 +34,11 @@ export async function POST(
       { ok: false, error: "Device not found." },
       { status: 404 },
     );
+  }
+
+  const tooOldResponse = await refuseTooOldAgentWitchDeviceForConnect(deviceId);
+  if (tooOldResponse !== null) {
+    return tooOldResponse;
   }
 
   const queued = await requestAgentWitchDeviceRestart(deviceId);

@@ -108,4 +108,22 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
       displayName: "Work Mac",
     });
   });
+
+
+  it("sets connectVersionStatus from installBundleVersion", () => {
+    const ok = buildAgentWitchDevicesWithOnlineStatus([
+      baseDevice({ installBundleVersion: "35" }),
+    ]);
+    const tooOld = buildAgentWitchDevicesWithOnlineStatus([
+      baseDevice({ installBundleVersion: null }),
+    ]);
+    const behind = buildAgentWitchDevicesWithOnlineStatus([
+      baseDevice({ installBundleVersion: "34" }),
+    ]);
+
+    expect(ok[0]?.connectVersionStatus).toBe("ok");
+    expect(tooOld[0]?.connectVersionStatus).toBe("too_old");
+    expect(behind[0]?.connectVersionStatus).toBe("too_old");
+  });
+
 });

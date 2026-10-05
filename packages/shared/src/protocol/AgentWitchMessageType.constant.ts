@@ -51,6 +51,7 @@ export const AGENT_WITCH_MESSAGE_TYPES = {
   DEVICE_AUTH_ATTESTATION: "device.auth.attestation",
   DEVICE_HEALTH_LOG: "device.health.log",
   DEVICE_RESTART: "device.restart",
+  DEVICE_RESTART_ACK: "device.restart.ack",
   INSTALL_BUNDLE_UPDATE: "install.bundle.update",
   ACCOUNT_LINK: "account.link",
   AUTOMATIONS_SYNC: "automations.sync",

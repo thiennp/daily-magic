@@ -94,7 +94,21 @@ final class BootstrapPkceAndCallbackTests: XCTestCase {
         )
     }
 
+    func testHandleCallbackSurfacesUnsupportedConnectDeepLink() throws {
+        let url = URL(string: "agentwitch-local://other?code=a&state=b")!
+        let outcome = try handleBootstrapCallbackFlow(
+            current: .signingIn,
+            url: url,
+            pending: nil
+        )
+        XCTAssertEqual(
+            outcome,
+            .unsupported(reason: MacAppConstants.unsupportedConnectDeepLinkReason)
+        )
+    }
+
     func testHandleCallbackIgnoresStateMismatch() throws {
+
         let pending = MacAppBootstrapPendingAttempt(
             state: "good",
             codeVerifier: "v",

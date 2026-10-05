@@ -4,7 +4,11 @@ import { dispatchClaudeRunForDashboardUser } from "@/lib/dispatch/dispatchWriter
 import { isAllowedAppHttpOrigin } from "@/lib/app/isAllowedAppHttpOrigin";
 import { parseAgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
 import { isCursorCloudDispatchBody } from "@/lib/dispatch/isCursorCloudDispatchBody";
+import { isCursorCloudExecutorDeviceId } from "@/lib/cursorCloud/cursorCloudExecutorDeviceId.constant";
 import { requireAuth } from "@/lib/auth/requireAuth";
+import { refuseTooOldAgentWitchDeviceForConnect } from "@/lib/agentWitch/refuseTooOldAgentWitchDeviceForConnect";
+import { resolveTargetDeviceId } from "@/lib/dispatch/resolveWriterRunAgentClient";
+import { buildClaudeDispatchPayloadFromBody } from "@/lib/dispatch/buildWriterDispatchPayloadFromBody";
 
 export const dynamic = "force-dynamic";
 
@@ -54,6 +58,21 @@ export async function POST(request: Request): Promise<Response> {
         },
         400,
       );
+    }
+
+    const targetDeviceId = resolveTargetDeviceId(
+      buildClaudeDispatchPayloadFromBody(parsed),
+    );
+    if (
+      targetDeviceId !== undefined &&
+      !isCursorCloudExecutorDeviceId(targetDeviceId)
+    ) {
+      const tooOldResponse = await refuseTooOldAgentWitchDeviceForConnect(
+        targetDeviceId,
+      );
+      if (tooOldResponse !== null) {
+        return tooOldResponse;
+      }
     }
 
     if (isCursorCloudDispatchBody(parsed) && !isAllowedAppHttpOrigin(request)) {

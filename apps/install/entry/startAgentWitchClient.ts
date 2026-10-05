@@ -43,6 +43,7 @@ import {
 } from "@agent-witch/install-runtime-client";
 import { handleProjectMessageHistoryDispatch } from "@agent-witch/live-project-history";
 import type { AgentWitchClientConfig as AgentWitchConfig } from "@agent-witch/install-runtime-client/types";
+import { buildAgentWitchDeviceRestartAckPayload } from "@agent-witch/install-runtime-client";
 import {
   ensureAgentWitchInstallVersionRecorded,
   resolveAgentWitchAppOriginFromWsUrl,
@@ -972,9 +973,11 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     selfUpdateInFlight: false,
   };
 
-  const runLocalRestart = (reason: string): void => {
+  const runLocalRestart = (
+    reason: string,
+  ): "accepted" | "already_in_progress" | "deferred_writer_busy" => {
     if (state.restartInFlight) {
-      return;
+      return "already_in_progress";
     }
 
     if (isAgentWitchWriterWorkInProgress(config.layout)) {
@@ -982,7 +985,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       console.log(
         `[agent-witch] Deferring local restart (${reason}) until the active writer task finishes.`,
       );
-      return;
+      return "deferred_writer_busy";
     }
 
     state.restartInFlight = true;
@@ -1009,6 +1012,25 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       .finally(() => {
         state.restartInFlight = false;
       });
+
+    return "accepted";
+  };
+
+  const acknowledgeDeviceRestart = (
+    socket: AgentWitchOutboundSocket,
+    reason: string,
+    status: "accepted" | "already_in_progress" | "deferred_writer_busy",
+    requestId: string | undefined,
+  ): void => {
+    sendMessage(
+      socket,
+      {
+        type: "device.restart.ack",
+        payload: buildAgentWitchDeviceRestartAckPayload({ status, reason }),
+        ...(requestId !== undefined ? { requestId } : {}),
+      },
+      config.layout,
+    );
   };
 
   const runLocalSelfUpdateFromHeartbeat = (
@@ -1292,7 +1314,13 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     }
 
     if (parsed.type === "device.restart") {
-      runLocalRestart("cloud-device-restart");
+      const restartStatus = runLocalRestart("cloud-device-restart");
+      acknowledgeDeviceRestart(
+        socket,
+        "cloud-device-restart",
+        restartStatus,
+        requestId,
+      );
     }
 
     if (parsed.type === "automations.sync" && isRecord(parsed.payload)) {

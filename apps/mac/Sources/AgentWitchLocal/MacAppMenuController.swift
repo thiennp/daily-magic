@@ -125,6 +125,9 @@ final class MacAppMenuController: ObservableObject {
             switch outcome {
             case .ignored:
                 return
+            case .unsupported(let reason):
+                statusMessage = reason
+                return
             case .failed(let next):
                 pendingBootstrapAttempt = nil
                 bootstrapState = next

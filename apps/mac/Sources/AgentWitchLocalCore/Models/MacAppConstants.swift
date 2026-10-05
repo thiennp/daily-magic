@@ -40,6 +40,10 @@ public enum MacAppConstants {
     public static let unverifiedLocalHealthReason =
         "Agent Witch Local needs an update to finish connecting. "
         + "Keep it running so it can self-update, or use Copy install command / Connect this Mac."
+    /// Menu-bar notice when web opens agentwitch-local:// with a path this app cannot handle.
+    public static let unsupportedConnectDeepLinkReason =
+        "This Agent Witch Local cannot handle that Connect link. "
+        + "Update from https://www.agentwitch.com/download."
     /// Generic copyable fallback (no token). Token-bearing command requires signed-in Home.
     public static let bootstrapFallbackInstallCommand =
         "curl -fsSL https://www.agentwitch.com/install/agent-witch.sh | bash"

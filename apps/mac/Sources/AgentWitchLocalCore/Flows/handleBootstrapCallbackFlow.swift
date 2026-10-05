@@ -1,8 +1,10 @@
 import Foundation
 
 public enum HandleBootstrapCallbackOutcome: Equatable, Sendable {
-    /// Ignore silently (wrong scheme/host, state mismatch, no pending, expired).
+    /// Ignore silently (wrong scheme, state mismatch, no pending, expired).
     case ignored
+    /// Scheme matched but this Local cannot handle the URL path (e.g. Connect).
+    case unsupported(reason: String)
     /// Transition to Installing with the authorization code (pending still held for exchange).
     case proceed(code: String, state: MacAppBootstrapState, pending: MacAppBootstrapPendingAttempt)
     /// Transition to Error (AWC returned error slug, or similar).
@@ -20,6 +22,10 @@ public func handleBootstrapCallbackFlow(
     let parsed = parseBootstrapCallbackUrl(url)
     switch parsed {
     case .rejected:
+        let scheme = (url.scheme ?? "").lowercased()
+        if scheme == MacAppConstants.bootstrapURLScheme {
+            return .unsupported(reason: MacAppConstants.unsupportedConnectDeepLinkReason)
+        }
         return .ignored
     case .error(let slug, let callbackState):
         let validation = isBootstrapPendingAttemptValid(
