@@ -65,7 +65,7 @@ describe("enrichProjectAccessComputerMembers", () => {
     sqlMock.mockResolvedValueOnce([
       {
         id: "dev-1",
-        install_bundle_version: "10",
+        install_bundle_version: "40",
         last_seen_at: new Date().toISOString(),
       },
     ]);
@@ -81,7 +81,7 @@ describe("enrichProjectAccessComputerMembers", () => {
         ownerDisplayName: "Thien",
         isOnline: true,
         isDispatchReady: true,
-        installBundleVersion: "10",
+        installBundleVersion: "40",
         connectVersionStatus: "ok",
         assignable: true,
       }),
@@ -92,7 +92,7 @@ describe("enrichProjectAccessComputerMembers", () => {
     sqlMock.mockResolvedValueOnce([
       {
         id: "dev-1",
-        install_bundle_version: "10",
+        install_bundle_version: "40",
         last_seen_at: "2020-01-01T00:00:00.000Z",
       },
     ]);
