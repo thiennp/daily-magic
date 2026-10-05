@@ -25,21 +25,53 @@
 --   UNION ALL
 --   SELECT id, 'agent_run' FROM agent_runs WHERE project_id IS NULL;
 --
--- Rollback: DROP NOT NULL on both columns; restore agent_runs FK ON DELETE SET NULL
--- if needed. Do not delete Default/Personal projects or null out assigned ids.
+-- Later (ops, after verification returns 0 rows): ALTER TABLE ... VALIDATE
+-- CONSTRAINT for *_project_id_required and *_project_id_fkey.
+-- Rollback: DROP CONSTRAINT *_project_id_required on both tables; restore
+-- agent_runs FK ON DELETE SET NULL if needed. Do not delete Default/Personal projects or null out assigned ids.
 
--- 1) Library: add nullable project_id (filled below, then NOT NULL).
+-- 1) Library: add nullable project_id (filled below, then required via CHECK).
 ALTER TABLE published_capabilities
   ADD COLUMN IF NOT EXISTS project_id TEXT;
 
 -- 2) At most one cloud Default / Personal without a Mac binding per owner.
-CREATE UNIQUE INDEX IF NOT EXISTS user_projects_owner_default_null_device_idx
-  ON user_projects (owner_user_id)
-  WHERE lower(name) = 'default' AND device_id IS NULL;
+-- Deploy-safe: prod can already hold duplicates (user_projects.device_id is
+-- ON DELETE SET NULL, so removing a Mac turns its "Default"/"Personal" into a
+-- second NULL-device row; the 031 index treats NULLs as distinct). A plain
+-- CREATE UNIQUE INDEX would abort the whole migration on those rows, so only
+-- create each guard index when no duplicate exists. Personal is scoped to
+-- device_id IS NULL like Default (one Personal per Mac is legitimate).
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM user_projects
+    WHERE lower(name) = 'default' AND device_id IS NULL
+    GROUP BY owner_user_id
+    HAVING COUNT(*) > 1
+  ) THEN
+    CREATE UNIQUE INDEX IF NOT EXISTS user_projects_owner_default_null_device_idx
+      ON user_projects (owner_user_id)
+      WHERE lower(name) = 'default' AND device_id IS NULL;
+  ELSE
+    RAISE NOTICE '069: duplicate NULL-device Default projects; skipping user_projects_owner_default_null_device_idx';
+  END IF;
 
-CREATE UNIQUE INDEX IF NOT EXISTS user_projects_owner_personal_idx
-  ON user_projects (owner_user_id)
-  WHERE lower(name) = 'personal';
+  IF NOT EXISTS (
+    SELECT 1
+    FROM user_projects
+    WHERE lower(name) = 'personal' AND device_id IS NULL
+    GROUP BY owner_user_id
+    HAVING COUNT(*) > 1
+  ) THEN
+    CREATE UNIQUE INDEX IF NOT EXISTS user_projects_owner_personal_idx
+      ON user_projects (owner_user_id)
+      WHERE lower(name) = 'personal' AND device_id IS NULL;
+  ELSE
+    RAISE NOTICE '069: duplicate NULL-device Personal projects; skipping user_projects_owner_personal_idx';
+  END IF;
+END
+$$;
 
 -- 3) Owners who still have orphans and need a private fallback project.
 WITH orphan_owners AS (
@@ -283,16 +315,50 @@ FROM target t
 WHERE r.requester_user_id = t.owner_user_id
   AND r.project_id IS NULL;
 
--- 5) FK + NOT NULL (fails the whole transaction if any orphan remains).
+-- 4c) Safety net: any row still NULL (owner's projects missed every rule
+-- above) goes to that owner's oldest project. Never DELETE.
+UPDATE published_capabilities c
+SET project_id = p.project_id,
+    updated_at = NOW()
+FROM (
+  SELECT DISTINCT ON (owner_user_id) owner_user_id, id AS project_id
+  FROM user_projects
+  ORDER BY owner_user_id, created_at ASC, id ASC
+) p
+WHERE c.owner_user_id = p.owner_user_id
+  AND c.project_id IS NULL;
+
+UPDATE agent_runs r
+SET project_id = p.project_id,
+    updated_at = NOW()
+FROM (
+  SELECT DISTINCT ON (owner_user_id) owner_user_id, id AS project_id
+  FROM user_projects
+  ORDER BY owner_user_id, created_at ASC, id ASC
+) p
+WHERE r.requester_user_id = p.owner_user_id
+  AND r.project_id IS NULL;
+
+-- 5) FK + required project_id, deploy-safe.
+-- FKs are added NOT VALID (no full-table validation scan / long lock, and an
+-- existing dangling id cannot abort the deploy). project_id is required via
+-- CHECK ... NOT VALID instead of SET NOT NULL: new and updated rows must carry
+-- a project; any legacy NULL left over cannot fail this migration. Ops can
+-- VALIDATE CONSTRAINT later once the verification query returns 0 rows.
 ALTER TABLE published_capabilities
   DROP CONSTRAINT IF EXISTS published_capabilities_project_id_fkey;
 
 ALTER TABLE published_capabilities
   ADD CONSTRAINT published_capabilities_project_id_fkey
-  FOREIGN KEY (project_id) REFERENCES user_projects(id) ON DELETE CASCADE;
+  FOREIGN KEY (project_id) REFERENCES user_projects(id) ON DELETE CASCADE
+  NOT VALID;
 
 ALTER TABLE published_capabilities
-  ALTER COLUMN project_id SET NOT NULL;
+  DROP CONSTRAINT IF EXISTS published_capabilities_project_id_required;
+
+ALTER TABLE published_capabilities
+  ADD CONSTRAINT published_capabilities_project_id_required
+  CHECK (project_id IS NOT NULL) NOT VALID;
 
 CREATE INDEX IF NOT EXISTS published_capabilities_project_idx
   ON published_capabilities (project_id, status);
@@ -302,10 +368,15 @@ ALTER TABLE agent_runs
 
 ALTER TABLE agent_runs
   ADD CONSTRAINT agent_runs_project_id_fkey
-  FOREIGN KEY (project_id) REFERENCES user_projects(id) ON DELETE CASCADE;
+  FOREIGN KEY (project_id) REFERENCES user_projects(id) ON DELETE CASCADE
+  NOT VALID;
 
 ALTER TABLE agent_runs
-  ALTER COLUMN project_id SET NOT NULL;
+  DROP CONSTRAINT IF EXISTS agent_runs_project_id_required;
+
+ALTER TABLE agent_runs
+  ADD CONSTRAINT agent_runs_project_id_required
+  CHECK (project_id IS NOT NULL) NOT VALID;
 
 DROP INDEX IF EXISTS agent_runs_project_idx;
 
