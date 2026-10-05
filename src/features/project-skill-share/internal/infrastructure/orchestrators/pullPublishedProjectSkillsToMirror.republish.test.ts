@@ -36,48 +36,12 @@ const pullMirrorAwcFixture = (
   ...overrides,
 });
 
-describe("pullPublishedProjectSkillsToMirror", () => {
+describe("pullPublishedProjectSkillsToMirror republish / failure", () => {
   beforeEach(() => {
     vi.spyOn(console, "warn").mockImplementation(() => undefined);
   });
 
-  it("History OFF → skipped, no writes", async () => {
-    const write = vi.fn();
-    const result = await pullPublishedProjectSkillsToMirror({
-      projectId: "proj-1",
-      deps: {
-        history: pullMirrorHistoryFixture({
-          isHistoryEnabled: () => false,
-          writeProjectSkillVersion: write,
-        }),
-        awcPublished: pullMirrorAwcFixture(),
-      },
-    });
-    expect(result).toEqual({ ok: true, skipped: true, skills: [] });
-    expect(write).not.toHaveBeenCalled();
-  });
-
-  it("skips when local meta hash already matches", async () => {
-    const write = vi.fn();
-    const result = await pullPublishedProjectSkillsToMirror({
-      projectId: "proj-1",
-      deps: {
-        history: pullMirrorHistoryFixture({
-          writeProjectSkillVersion: write,
-          readProjectSkillVersion: () => ({ body, contentHash: hash }),
-        }),
-        awcPublished: pullMirrorAwcFixture(),
-      },
-    });
-    expect(result).toMatchObject({
-      ok: true,
-      skipped: false,
-      skills: [{ skillId: "deploy", action: "skipped" }],
-    });
-    expect(write).not.toHaveBeenCalled();
-  });
-
-  it("fetches and writes when local missing; hash must match AWC", async () => {
+  it("list hit still fetch_writes even when a tombstone exists", async () => {
     const write = vi.fn().mockResolvedValue({
       path: "/p/skills/deploy/v0001.md",
       contentHash: hash,
@@ -85,7 +49,14 @@ describe("pullPublishedProjectSkillsToMirror", () => {
     const result = await pullPublishedProjectSkillsToMirror({
       projectId: "proj-1",
       deps: {
-        history: pullMirrorHistoryFixture({ writeProjectSkillVersion: write }),
+        history: pullMirrorHistoryFixture({
+          writeProjectSkillVersion: write,
+          readProjectSkillTombstone: async () => ({
+            skillId: "deploy",
+            revokedAt: "2026-10-01T00:00:00.000Z",
+            lastContentHash: "sha256:old",
+          }),
+        }),
         awcPublished: pullMirrorAwcFixture(),
       },
     });
@@ -93,11 +64,22 @@ describe("pullPublishedProjectSkillsToMirror", () => {
       ok: true,
       skills: [{ action: "mirrored" }],
     });
-    expect(write).toHaveBeenCalledWith({
+    expect(write).toHaveBeenCalled();
+  });
+
+  it("logs and continues on per-skill failure (never throws)", async () => {
+    const result = await pullPublishedProjectSkillsToMirror({
       projectId: "proj-1",
-      skillId: "deploy",
-      version: 1,
-      body,
+      deps: {
+        history: pullMirrorHistoryFixture({
+          writeProjectSkillVersion: () => {
+            throw new Error("disk full");
+          },
+        }),
+        awcPublished: pullMirrorAwcFixture(),
+      },
     });
+    expect(result.ok).toBe(false);
+    expect(result.skills[0]?.action).toBe("unavailable");
   });
 });
