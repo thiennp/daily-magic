@@ -2,10 +2,11 @@ name: Mac menu bar app
 
 on:
   push:
-    branches: [main]
+    branches: [main, "feat/awl-mac-*"]
     tags:
       - "awl-mac-v*"
   pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: mac-app-${{ github.workflow }}-${{ github.ref }}
