@@ -9,7 +9,8 @@ export type TransitionResult =
 
 /**
  * Pure state transitions. Declined is TERMINAL (no DefaultsApplied /
- * fragments) until clearDecline → GlobalTriggersWritten.
+ * fragments) until clearDecline → GlobalTriggersWritten (invoked only after
+ * a successful project resolve in runSetupProject).
  */
 export const transitionSetupProject = (
   state: SetupProjectState,

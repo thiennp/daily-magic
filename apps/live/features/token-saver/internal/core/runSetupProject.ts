@@ -25,7 +25,8 @@ export interface SetupProjectFlowResult {
 
 /**
  * Explicit-state setup_project for one cwd. Cloud create/attach is injected
- * (NRG owns AWC); Declined is terminal (no defaults/fragments).
+ * (NRG owns AWC). Declined stays Declined until resolve succeeds, then
+ * clearDecline → GlobalTriggersWritten; only then defaults/fragments.
  */
 export const runSetupProject = (input: {
   readonly layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">;
@@ -53,20 +54,14 @@ export const runSetupProject = (input: {
     return { ok: true, state: "Declined" };
   }
 
-  if (isDeclinedCwd({ layout: input.layout, cwd: input.cwd, fs })) {
-    clearProjectDecline({ layout: input.layout, cwd: input.cwd, fs });
-    state = "GlobalTriggersWritten";
-  }
-  if (isDeclinedTerminal(state)) {
-    return { ok: false, state, reason: "Declined is terminal" };
+  const wasDeclined =
+    isDeclinedTerminal(state) ||
+    isDeclinedCwd({ layout: input.layout, cwd: input.cwd, fs });
+  if (wasDeclined) {
+    state = "Declined";
   }
 
-  // Ensure globals exist (idempotent; install path also calls this).
-  writeGlobalTriggers({ io });
-  state = transitionSetupProject(state, "writeGlobalTriggers").ok
-    ? "GlobalTriggersWritten"
-    : state;
-
+  // Resolve/create FIRST; decline file and Declined state stay until this succeeds.
   const resolved =
     input.resolveProject?.(input.cwd) ??
     (input.projectId !== undefined
@@ -75,6 +70,22 @@ export const runSetupProject = (input: {
   if (resolved === null) {
     return { ok: false, state, reason: "projectId required on accept" };
   }
+
+  if (wasDeclined) {
+    const cleared = transitionSetupProject(state, "clearDecline");
+    if (!cleared.ok) {
+      return { ok: false, state: cleared.state, reason: cleared.reason };
+    }
+    clearProjectDecline({ layout: input.layout, cwd: input.cwd, fs });
+    state = cleared.state;
+  }
+
+  // Ensure globals exist (idempotent; install path also calls this).
+  writeGlobalTriggers({ io });
+  state = transitionSetupProject(state, "writeGlobalTriggers").ok
+    ? "GlobalTriggersWritten"
+    : state;
+
   const toResolved = transitionSetupProject(state, "accept");
   if (!toResolved.ok) {
     return { ok: false, state: toResolved.state, reason: toResolved.reason };

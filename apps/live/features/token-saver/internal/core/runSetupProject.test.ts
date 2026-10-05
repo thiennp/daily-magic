@@ -7,8 +7,13 @@ import {
 } from "@agent-witch/shared/projects";
 import { afterEach, describe, expect, it } from "vitest";
 
+import type { CliIo } from "./cliFs.types";
 import { createTempCliIo } from "./createNodeCliFs";
-import { isDeclinedCwd } from "./declinedProjectsStore";
+import {
+  isDeclinedCwd,
+  readDeclinedProjectsStore,
+} from "./declinedProjectsStore";
+import { resolveDeclinedProjectsPath } from "./resolveDeclinedProjectsPath";
 import { runSetupProject } from "./runSetupProject";
 import { CURSOR_PROJECT_RULE_RELATIVE } from "./tokenSaverMarkers.constants";
 
@@ -33,6 +38,21 @@ const open = () => {
   const layout = { installDir, profileEmail: "t@x.com" };
   return { root, layout, project, io };
 };
+
+/** Track rename targets so success-order asserts resolve → clearDecline → defaults/fragments. */
+const withOrderTracking = (io: CliIo, calls: string[]): CliIo => ({
+  ...io,
+  rename: (from, to) => {
+    if (to.endsWith("declined-projects.json")) {
+      calls.push("clearDecline");
+    } else if (to.endsWith("token-saver.json")) {
+      calls.push("defaults");
+    } else if (to.endsWith("agent-witch-check-context.mdc")) {
+      calls.push("fragments");
+    }
+    io.rename(from, to);
+  },
+});
 
 describe("runSetupProject", () => {
   it("decline is terminal: no fragments or defaults written", () => {
@@ -77,5 +97,89 @@ describe("runSetupProject", () => {
     );
     expect(flagsRaw).toEqual(buildDefaultProjectFlags());
     expect(parseProjectFlags(flagsRaw)).toEqual(buildDefaultProjectFlags());
+  });
+
+  it("when resolve fails, clearProjectDecline is not called and decline is unchanged", () => {
+    const { layout, project, io } = open();
+    runSetupProject({ layout, cwd: project, accept: false, fs: io, io });
+    const declinePath = resolveDeclinedProjectsPath(layout);
+    const before = io.readUtf8(declinePath);
+    const storeBefore = readDeclinedProjectsStore(layout, io);
+
+    const missing = runSetupProject({
+      layout,
+      cwd: project,
+      accept: true,
+      fs: io,
+      io,
+    });
+    expect(missing).toEqual({
+      ok: false,
+      state: "Declined",
+      reason: "projectId required on accept",
+    });
+    expect(io.readUtf8(declinePath)).toBe(before);
+    expect(isDeclinedCwd({ layout, cwd: project, fs: io })).toBe(true);
+    expect(readDeclinedProjectsStore(layout, io)).toEqual(storeBefore);
+    expect(
+      io.exists(path.join(project, CURSOR_PROJECT_RULE_RELATIVE)),
+    ).toBe(false);
+    expect(
+      io.exists(path.join(project, ".agent-witch", "token-saver.json")),
+    ).toBe(false);
+
+    expect(() =>
+      runSetupProject({
+        layout,
+        cwd: project,
+        accept: true,
+        fs: io,
+        io,
+        resolveProject: () => {
+          throw new Error("cloud resolve failed");
+        },
+      }),
+    ).toThrow("cloud resolve failed");
+    expect(io.readUtf8(declinePath)).toBe(before);
+    expect(isDeclinedCwd({ layout, cwd: project, fs: io })).toBe(true);
+    expect(
+      io.exists(path.join(project, CURSOR_PROJECT_RULE_RELATIVE)),
+    ).toBe(false);
+    expect(
+      io.exists(path.join(project, ".agent-witch", "token-saver.json")),
+    ).toBe(false);
+  });
+
+  it("on success, order is resolve, then clearDecline, then defaults/fragments", () => {
+    const { layout, project, io } = open();
+    runSetupProject({ layout, cwd: project, accept: false, fs: io, io });
+    const calls: string[] = [];
+    const tracked = withOrderTracking(io, calls);
+    const result = runSetupProject({
+      layout,
+      cwd: project,
+      accept: true,
+      fs: tracked,
+      io: tracked,
+      resolveProject: () => {
+        expect(isDeclinedCwd({ layout, cwd: project, fs: tracked })).toBe(
+          true,
+        );
+        calls.push("resolve");
+        return { projectId: "proj-order", kind: "created" };
+      },
+    });
+    expect(result).toEqual({
+      ok: true,
+      state: "ProjectFragmentsWritten",
+      projectId: "proj-order",
+    });
+    expect(isDeclinedCwd({ layout, cwd: project, fs: tracked })).toBe(false);
+    expect(calls).toEqual([
+      "resolve",
+      "clearDecline",
+      "defaults",
+      "fragments",
+    ]);
   });
 });
