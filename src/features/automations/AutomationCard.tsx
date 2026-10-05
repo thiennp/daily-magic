@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { buildProjectTabRedirectPath } from "@/lib/shell/buildNavConsolidationRedirect";
+import { PROJECTS_REPORTS_INTENT_HREF } from "@/lib/shell/projectTabIntentHrefs.constant";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import Button from "@/components/ui/button/Button";
@@ -80,7 +82,13 @@ export default function AutomationCard({
           {AUTOMATIONS_PAGE_COPY.delete}
         </Button>
         {automation.lastRunAt !== null ? (
-          <Link href="/reports">
+          <Link
+            href={
+              automation.projectId !== null
+                ? buildProjectTabRedirectPath(automation.projectId, "reports")
+                : PROJECTS_REPORTS_INTENT_HREF
+            }
+          >
             <Button variant="outline">Reports</Button>
           </Link>
         ) : null}

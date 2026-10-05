@@ -13,7 +13,7 @@ const stopCopyPasteEveryMonday: ShowcaseArticle = {
   ],
   tryNext: {
     label: "Library",
-    href: "/library",
+    href: "/projects?intent=library",
   },
   relatedShowcases: [
     {

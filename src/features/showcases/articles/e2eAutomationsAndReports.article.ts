@@ -8,7 +8,7 @@ const e2eAutomationsAndReports: ShowcaseArticle = {
   supportLevel: "full",
   readMinutes: 3,
   whatYouNeed: ["Library playbook", "Paired Mac"],
-  tryNext: { label: "Reports", href: "/reports" },
+  tryNext: { label: "Reports", href: "/projects?intent=reports" },
   sections: [
     {
       heading: "Automations",

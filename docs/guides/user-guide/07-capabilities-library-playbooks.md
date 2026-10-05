@@ -39,7 +39,9 @@ Capabilities are **cloud** objects. They do not execute code on the Mac by thems
 
 ## Playbooks and the library
 
-The **Library** (`/library`) is where **playbooks** you care about live after you save or fork them.
+Each project has a **Library** tab (`/projects/<id>#library`). It is where **playbooks**, workflows, and skills for that project live after you save or fork them. Every library item belongs to one project. To reuse an item in another project, use **Add from another project**; that makes a copy.
+
+The old top-level `/library` page is gone. `/library` opens **Projects** with a note to pick a project, and `/library/<id>` opens the item in its own project. If you cannot open that project, you land on Projects instead.
 
 Typical solo loop:
 
@@ -51,7 +53,7 @@ You stay in control: saving or forking does not silently change team templates u
 
 ### Guest library (before sign-in)
 
-You can open `/library` without an account and save **drafts in this browser only** (local storage). Starter templates come from public template APIs. After you sign in, drafts **sync** to your cloud library; **newer `updatedAt` wins**, with the cloud copy winning on a tie.
+Drafts saved earlier in this browser (local storage, before sign-in) still **sync** after you sign in, into a project Library; **newer `updatedAt` wins**, with the cloud copy winning on a tie.
 
 Details: [Guest library browser drafts](../../qa/guest-library-browser-drafts.md).
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { PROJECTS_LIBRARY_INTENT_HREF } from "@/lib/shell/projectTabIntentHrefs.constant";
 
 import AppHero from "@/components/surfaces/AppHero";
 import {
@@ -36,17 +37,20 @@ export default function HomeOnboardingTemplateStep({
         Create your first workflow or agent
       </h1>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Build your own in Library — no template required. Or browse presets
-        below; each includes a rules bundle (skills, shortcuts, instructions,
-        and a specialist assistant) that installs to your Mac when Agent Witch
-        is online.
+        Build your own in a project&apos;s Library — no template required. Or
+        browse presets below; each includes a rules bundle (skills, shortcuts,
+        instructions, and a specialist assistant) that installs to your Mac when
+        Agent Witch is online.
       </p>
       <div className="mt-5 flex flex-wrap gap-3">
-        <Link href="/library" className={APP_SURFACE_CTA_PRIMARY_SM_CLASS}>
+        <Link
+          href={PROJECTS_LIBRARY_INTENT_HREF}
+          className={APP_SURFACE_CTA_PRIMARY_SM_CLASS}
+        >
           Create in Library
         </Link>
-        <Link href="/library" className={APP_SURFACE_CTA_SECONDARY_SM_CLASS}>
-          Library
+        <Link href="/projects" className={APP_SURFACE_CTA_SECONDARY_SM_CLASS}>
+          Projects
         </Link>
       </div>
       <CapabilityTemplatePicker onSaved={onSaved} />

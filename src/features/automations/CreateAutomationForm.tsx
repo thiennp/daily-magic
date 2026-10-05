@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { PROJECTS_LIBRARY_INTENT_HREF } from "@/lib/shell/projectTabIntentHrefs.constant";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import Button from "@/components/ui/button/Button";
@@ -100,7 +101,7 @@ export default function CreateAutomationForm({
           >
             {form.isSubmitting ? "Saving…" : "Create automation"}
           </Button>
-          <Link href="/library">
+          <Link href={PROJECTS_LIBRARY_INTENT_HREF}>
             <Button variant="outline">Back to library</Button>
           </Link>
         </div>

@@ -7,6 +7,7 @@ const AUTH_REQUIRED_PATH_PREFIXES = [
   "/reports",
   "/marketplace",
   "/agent",
+  "/projects",
 ] as const;
 
 const EXAMPLE_ORIGIN = "https://example.local";

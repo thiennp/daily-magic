@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import ProjectLibraryLink from "@/features/agent/ProjectLibraryLink";
 
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
@@ -55,9 +55,7 @@ export default function SendTaskLibraryPicker({
       {!isLoading && capabilities.length === 0 ? (
         <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
           No saved items yet.{" "}
-          <Link href="/library" className="text-brand-700 dark:text-brand-300">
-            Library
-          </Link>{" "}
+          <ProjectLibraryLink>Open a project&apos;s Library</ProjectLibraryLink>{" "}
           or save one from Marketplace.
         </p>
       ) : null}

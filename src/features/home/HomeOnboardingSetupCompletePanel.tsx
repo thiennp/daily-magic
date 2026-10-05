@@ -1,6 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import {
+  PROJECTS_LIBRARY_INTENT_HREF,
+  PROJECTS_REPORTS_INTENT_HREF,
+} from "@/lib/shell/projectTabIntentHrefs.constant";
 
 import AppHero from "@/components/surfaces/AppHero";
 import {
@@ -70,14 +74,14 @@ export default function HomeOnboardingSetupCompletePanel({
           Browse showcases →
         </Link>
         <Link
-          href="/library"
+          href={PROJECTS_LIBRARY_INTENT_HREF}
           className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}
           onClick={onDismiss}
         >
           Library →
         </Link>
         <Link
-          href="/reports"
+          href={PROJECTS_REPORTS_INTENT_HREF}
           className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}
           onClick={onDismiss}
         >

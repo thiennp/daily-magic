@@ -1,6 +1,7 @@
 "use client";
 
 import { forwardRef } from "react";
+import { PROJECTS_REPORTS_INTENT_HREF } from "@/lib/shell/projectTabIntentHrefs.constant";
 
 import Link from "next/link";
 
@@ -44,10 +45,10 @@ const AgentLiveTerminalSection = forwardRef<
         <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">
           This job is saved locally in{" "}
           <Link
-            href="/reports"
+            href={PROJECTS_REPORTS_INTENT_HREF}
             className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
           >
-            Runs
+            Reports
           </Link>
           .{" "}
           <Link

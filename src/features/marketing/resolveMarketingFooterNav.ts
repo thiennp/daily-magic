@@ -1,5 +1,6 @@
 import { COMPANIES_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import { buildNavConsolidationNewTaskHref } from "@/lib/shell/buildNavConsolidationNewTaskHref";
+import { PROJECTS_REPORTS_INTENT_HREF } from "@/lib/shell/projectTabIntentHrefs.constant";
 
 export interface MarketingFooterLink {
   readonly label: string;
@@ -10,7 +11,7 @@ const FOOTER_PUBLIC_PRODUCT_LINKS: readonly MarketingFooterLink[] = [
   { label: "Real examples", href: "/showcases" },
   { label: "For agents", href: "/for-agents" },
   { label: "New task", href: buildNavConsolidationNewTaskHref() },
-  { label: "Reports", href: "/reports" },
+  { label: "Reports", href: PROJECTS_REPORTS_INTENT_HREF },
   { label: "Prompt optimizer", href: "/prompt-optimizer" },
 ];
 

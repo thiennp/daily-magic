@@ -13,7 +13,7 @@ const weeklyReportInFiveMinutes: ShowcaseArticle = {
   ],
   tryNext: {
     label: "Library (weekly status workflow)",
-    href: "/library",
+    href: "/projects?intent=library",
   },
   relatedShowcases: [
     {

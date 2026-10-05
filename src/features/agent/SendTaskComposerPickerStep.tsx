@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import ProjectLibraryLink from "@/features/agent/ProjectLibraryLink";
 
 import SendTaskComposerPickerRow from "@/features/agent/SendTaskComposerPickerRow";
 import { useSendTaskComposerHistoryDelete } from "@/features/agent/hooks/useSendTaskComposerHistoryDelete";
@@ -103,9 +103,7 @@ export default function SendTaskComposerPickerStep({
       {!isLoading && capabilities.length === 0 ? (
         <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
           No saved workflows yet. Start a custom task, or{" "}
-          <Link href="/library" className="text-brand-700 dark:text-brand-300">
-            open Library
-          </Link>
+          <ProjectLibraryLink>open a project&apos;s Library</ProjectLibraryLink>
           .
         </p>
       ) : null}

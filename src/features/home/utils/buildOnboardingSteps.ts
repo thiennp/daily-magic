@@ -1,4 +1,5 @@
 import { buildNavConsolidationNewTaskHref } from "@/lib/shell/buildNavConsolidationNewTaskHref";
+import { PROJECTS_LIBRARY_INTENT_HREF } from "@/lib/shell/projectTabIntentHrefs.constant";
 
 export type OnboardingStep = {
   readonly id: string;
@@ -34,7 +35,7 @@ export const buildOnboardingSteps = (
     id: "workflow",
     label: "Save a playbook (optional)",
     done: input.hasCreatedWorkflowOrAgent,
-    href: "/library",
+    href: PROJECTS_LIBRARY_INTENT_HREF,
     optional: true,
   },
   {

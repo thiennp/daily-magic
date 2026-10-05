@@ -14,7 +14,7 @@ const seeWhatTheAgentDid: ShowcaseArticle = {
   ],
   tryNext: {
     label: "Reports",
-    href: "/reports",
+    href: "/projects?intent=reports",
   },
   sections: [
     {

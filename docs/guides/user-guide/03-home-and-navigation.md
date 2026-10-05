@@ -22,10 +22,10 @@ On desktop, primary nav links sit in the sticky **left sidebar**; **Your Devices
 
 ### Often visible (solo and team variants)
 
-| Nav                        | User job                                                                                  |
-| -------------------------- | ----------------------------------------------------------------------------------------- |
-| **Playbooks** (`/library`) | Saved templates and team standards—user word for harness/library merge.                   |
-| **Marketplace**            | Install official **Playbooks** to your **Mac** (solo nav keeps this for harness install). |
+| Nav                            | User job                                                                                             |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| **Projects** → **Library** tab | Saved playbooks, workflows, and skills live inside each project. Old `/library` links open Projects. |
+| **Marketplace**                | Install official **Playbooks** to your **Mac** (solo nav keeps this for harness install).            |
 
 ### When team features are enabled
 
@@ -156,14 +156,14 @@ If you expected a nav item your teammate has, ask whether your account is in the
 
 Production hosts paths under `www.agentwitch.com`. Common routes:
 
-| Path               | Chapter focus              |
-| ------------------ | -------------------------- |
-| `/`                | Home — Mac status          |
-| `/login`           | Sign-in                    |
-| New task entry     | Inside each **project**    |
-| Reports / runs UI  | **Runs**                   |
-| `/library`         | **Playbooks**              |
-| Marketplace routes | Install official playbooks |
+| Path                     | Chapter focus                               |
+| ------------------------ | ------------------------------------------- |
+| `/`                      | Home — Mac status                           |
+| `/login`                 | Sign-in                                     |
+| New task entry           | Inside each **project**                     |
+| `/projects/<id>#reports` | **Reports** (old `/reports` links redirect) |
+| `/projects/<id>#library` | **Library** (old `/library` links redirect) |
+| Marketplace routes       | Install official playbooks                  |
 
 Exact paths may shift; trust nav labels over memorizing URLs.
 

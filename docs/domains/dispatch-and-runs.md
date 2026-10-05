@@ -7,7 +7,7 @@
 ## Skim (L1)
 
 - **Dispatch** = policies, approvals, routing to Mac or `__cursor_cloud__`.
-- **Agent** (`/agent`) = compose and send tasks; **Reports** (`/reports`) = history and live output.
+- **Agent** (`/agent`) = compose and send tasks; **Reports** = a tab inside each project (`/projects/<id>#reports`) with history and live output. Every report belongs to a project; old `/reports` and `/reports/<id>` links redirect there.
 - Glossary: [product/concepts.md](../product/concepts.md) (dispatch, agent run).
 
 **Product pillars (this domain):**

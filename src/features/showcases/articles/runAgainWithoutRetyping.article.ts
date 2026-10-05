@@ -11,7 +11,7 @@ const runAgainWithoutRetyping: ShowcaseArticle = {
     "At least one completed job in this browser's Reports",
     "Mac agent online if you want to send again (not just view)",
   ],
-  tryNext: { label: "Reports", href: "/reports" },
+  tryNext: { label: "Reports", href: "/projects?intent=reports" },
   sections: [
     {
       paragraphs: [
