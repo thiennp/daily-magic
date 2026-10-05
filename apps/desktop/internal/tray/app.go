@@ -2,8 +2,6 @@ package tray
 
 import (
 	"context"
-	"net/http"
-	"sync"
 	"time"
 
 	"fyne.io/systray"
@@ -11,26 +9,13 @@ import (
 	"github.com/thiennp/daily-magic/apps/desktop/internal/core"
 )
 
-// Platform is the OS-specific start/stop/open surface.
-type Platform interface {
-	IsInstalled() bool
-	Start(ctx context.Context) error
-	Stop(ctx context.Context) error
-	OpenStatus(ctx context.Context) error
-	OpenConnect(ctx context.Context) error
-	OpenLogs(ctx context.Context) (message string, err error)
-}
-
-// App is the systray companion controller.
+// App is the systray UI; state lives in Controller.
 type App struct {
 	Platform Platform
 	Client   core.HTTPDoer
 	IconPNG  []byte
 
-	mu             sync.Mutex
-	state          core.RuntimeState
-	errorMessage   string
-	statusOverride string
+	ctrl *Controller
 
 	statusItem  *systray.MenuItem
 	openConnect *systray.MenuItem
@@ -68,89 +53,25 @@ func (a *App) onReady() {
 	systray.AddSeparator()
 	a.quitItem = systray.AddMenuItem("Quit", "Quit")
 
-	a.refreshInstallAndHealth()
+	a.ctrl = &Controller{Platform: a.Platform, Client: a.Client, OnChange: a.applyMenu}
+	a.withTimeout(a.ctrl.Poll)
 	a.applyMenu()
 
 	go a.watchClicks()
 	go a.pollLoop()
 }
 
-func (a *App) client() core.HTTPDoer {
-	if a.Client != nil {
-		return a.Client
-	}
-	return &http.Client{Timeout: time.Duration(core.HealthTimeoutSeconds) * time.Second}
-}
-
 func (a *App) pollLoop() {
 	ticker := time.NewTicker(time.Duration(core.HealthPollIntervalSeconds) * time.Second)
 	defer ticker.Stop()
 	for range ticker.C {
-		a.pollHealthOnce()
-		a.applyMenu()
+		a.withTimeout(a.ctrl.Poll)
 	}
-}
-
-func (a *App) refreshInstallAndHealth() {
-	installed := a.Platform.IsInstalled()
-	healthy := a.probeHealth()
-	next := core.DeriveRuntimeState(installed, healthy)
-	a.mu.Lock()
-	a.state = next
-	a.errorMessage = ""
-	a.statusOverride = ""
-	a.mu.Unlock()
-}
-
-func (a *App) pollHealthOnce() {
-	a.mu.Lock()
-	current := a.state
-	a.mu.Unlock()
-
-	if !a.Platform.IsInstalled() {
-		a.mu.Lock()
-		a.state = core.StateNotInstalled
-		a.mu.Unlock()
-		return
-	}
-
-	healthy := a.probeHealth()
-	next, ok := core.PollHealthTransition(current, healthy)
-	if !ok {
-		return
-	}
-	a.mu.Lock()
-	a.state = next
-	if next != core.StateError {
-		a.errorMessage = ""
-	}
-	a.statusOverride = ""
-	a.mu.Unlock()
-}
-
-func (a *App) probeHealth() bool {
-	ctx, cancel := core.NewHealthContext(context.Background())
-	defer cancel()
-	return core.ProbeHealth(ctx, a.client(), core.HealthURL())
-}
-
-func (a *App) snapshot() (core.RuntimeState, string, string) {
-	a.mu.Lock()
-	defer a.mu.Unlock()
-	return a.state, a.errorMessage, a.statusOverride
-}
-
-func (a *App) setState(state core.RuntimeState, errMsg string) {
-	a.mu.Lock()
-	a.state = state
-	a.errorMessage = errMsg
-	a.statusOverride = ""
-	a.mu.Unlock()
 }
 
 func (a *App) applyMenu() {
-	state, errMsg, override := a.snapshot()
-	model := core.DeriveMenu(state, errMsg)
+	machine, override := a.ctrl.Snapshot()
+	model := core.DeriveMenu(machine.State, machine.ErrorMessage)
 	title := model.StatusTitle
 	if override != "" {
 		title = override
@@ -189,15 +110,15 @@ func (a *App) watchClicks() {
 	for {
 		select {
 		case <-a.openConnect.ClickedCh:
-			a.withTimeout(func(ctx context.Context) { _ = a.Platform.OpenConnect(ctx) })
+			a.withTimeout(func(ctx context.Context) { a.reportOpenError(a.Platform.OpenConnect(ctx)) })
 		case <-a.startItem.ClickedCh:
-			a.runStart()
+			a.withTimeout(a.ctrl.Start)
 		case <-a.openStatus.ClickedCh:
-			a.withTimeout(func(ctx context.Context) { _ = a.Platform.OpenStatus(ctx) })
+			a.withTimeout(func(ctx context.Context) { a.reportOpenError(a.Platform.OpenStatus(ctx)) })
 		case <-a.stopItem.ClickedCh:
-			a.runStop()
+			a.withTimeout(a.ctrl.Stop)
 		case <-a.viewLogs.ClickedCh:
-			a.runViewLogs()
+			a.withTimeout(a.runViewLogs)
 		case <-a.quitItem.ClickedCh:
 			systray.Quit()
 			return
@@ -211,47 +132,20 @@ func (a *App) withTimeout(fn func(ctx context.Context)) {
 	fn(ctx)
 }
 
-func (a *App) runStart() {
-	a.setState(core.StateStarting, "")
-	a.applyMenu()
-	a.withTimeout(func(ctx context.Context) {
-		if err := a.Platform.Start(ctx); err != nil {
-			a.setState(core.StateError, err.Error())
-			a.applyMenu()
-			return
-		}
-		a.pollHealthOnce()
-		a.applyMenu()
-	})
+// Opening a URL/log is not a service state change: show failures as a message.
+func (a *App) reportOpenError(err error) {
+	if err != nil {
+		a.ctrl.ShowMessage(err.Error())
+	}
 }
 
-func (a *App) runStop() {
-	a.setState(core.StateStopping, "")
-	a.applyMenu()
-	a.withTimeout(func(ctx context.Context) {
-		if err := a.Platform.Stop(ctx); err != nil {
-			a.setState(core.StateError, err.Error())
-			a.applyMenu()
-			return
-		}
-		a.pollHealthOnce()
-		a.applyMenu()
-	})
-}
-
-func (a *App) runViewLogs() {
-	a.withTimeout(func(ctx context.Context) {
-		msg, err := a.Platform.OpenLogs(ctx)
-		if err != nil {
-			a.setState(core.StateError, err.Error())
-			a.applyMenu()
-			return
-		}
-		if msg != "" {
-			a.mu.Lock()
-			a.statusOverride = msg
-			a.mu.Unlock()
-			a.applyMenu()
-		}
-	})
+func (a *App) runViewLogs(ctx context.Context) {
+	msg, err := a.Platform.OpenLogs(ctx)
+	if err != nil {
+		a.reportOpenError(err)
+		return
+	}
+	if msg != "" {
+		a.ctrl.ShowMessage(msg)
+	}
 }

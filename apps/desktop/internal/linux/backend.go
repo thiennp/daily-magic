@@ -75,6 +75,20 @@ func (b Backend) Stop(ctx context.Context) error {
 	return nil
 }
 
+// IsActive reports `systemctl --user is-active` for the unit (used while Stopping).
+// A non-zero exit means inactive; failing to run systemctl at all is an error.
+func (b Backend) IsActive(ctx context.Context) (bool, error) {
+	name, args := SystemctlIsActiveArgs()
+	result := b.runner().Run(ctx, name, args...)
+	if result.ExitCode == 0 {
+		return true, nil
+	}
+	if result.ExitCode < 0 {
+		return false, commandError("is-active", result)
+	}
+	return false, nil
+}
+
 // OpenStatus opens the local status page.
 func (b Backend) OpenStatus(ctx context.Context) error {
 	return b.open(ctx, core.StatusURL())

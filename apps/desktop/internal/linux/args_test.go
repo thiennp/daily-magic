@@ -16,6 +16,10 @@ func TestSystemctlArgs(t *testing.T) {
 	if name != "systemctl" || !reflect.DeepEqual(args, []string{"--user", "disable", "--now", core.SystemdUnitName}) {
 		t.Fatalf("%s %v", name, args)
 	}
+	name, args = SystemctlIsActiveArgs()
+	if name != "systemctl" || !reflect.DeepEqual(args, []string{"--user", "is-active", "--quiet", core.SystemdUnitName}) {
+		t.Fatalf("%s %v", name, args)
+	}
 	name, args = XdgOpenArgs("http://example")
 	if name != "xdg-open" || !reflect.DeepEqual(args, []string{"http://example"}) {
 		t.Fatalf("%s %v", name, args)

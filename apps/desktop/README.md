@@ -35,5 +35,6 @@ Releases are **manual only**. Cut a GitHub release with the owner’s explicit g
 - Tray uses DBus StatusNotifierItem (`fyne.io/systray`); stock GNOME needs the AppIndicator extension.
 - Install Agent Witch via the terminal command first, then run this tray app.
 - Start = `systemctl --user enable --now` (survives re-login). Stop = `systemctl --user disable --now` (does not return after re-login). No separate launch-at-login toggle.
+- State machine: `internal/core/transition_table.go` (allowed edges) + `apply_state_transition.go` (the only state writer). Starting/Stopping time out to Error after 30s; Stopping completes on `systemctl --user is-active` = inactive. Poll results carry the generation they started at and are dropped if a newer transition happened.
 - Tray autostart (`~/.config/autostart`) is not wired yet.
 - This folder is **not** a separate deployable in `deployables.registry.json` (schema is fixed to AWC/AWL/AWB/AWI). It is a packaging surface for AWL/AWI.

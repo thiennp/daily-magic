@@ -13,6 +13,11 @@ func SystemctlDisableNowArgs() (string, []string) {
 	return "systemctl", []string{"--user", "disable", "--now", core.SystemdUnitName}
 }
 
+// SystemctlIsActiveArgs checks the unit; exit 0 means active.
+func SystemctlIsActiveArgs() (string, []string) {
+	return "systemctl", []string{"--user", "is-active", "--quiet", core.SystemdUnitName}
+}
+
 func XdgOpenArgs(target string) (string, []string) {
 	return "xdg-open", []string{target}
 }

@@ -40,6 +40,16 @@ func TestDeriveMenuStartingDisablesStop(t *testing.T) {
 	}
 }
 
+func TestDeriveMenuErrorOffersStartStopAndLogs(t *testing.T) {
+	model := DeriveMenu(StateError, "Start timed out")
+	if model.StatusTitle != "Start timed out" {
+		t.Fatalf("status: %s", model.StatusTitle)
+	}
+	assertHasAction(t, model, ActionStart)
+	assertHasAction(t, model, ActionStop)
+	assertHasAction(t, model, ActionViewLogs)
+}
+
 func TestDeriveMenuHasNoLaunchAtLogin(t *testing.T) {
 	model := DeriveMenu(StateRunning, "")
 	for _, item := range model.Items {

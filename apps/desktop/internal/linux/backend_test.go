@@ -108,3 +108,20 @@ func TestBackendOpenStatusAndConnect(t *testing.T) {
 		t.Fatalf("calls %v", fake.Calls)
 	}
 }
+
+func TestBackendIsActive(t *testing.T) {
+	fake := &host.FakeRunner{Results: []host.RunResult{{ExitCode: 0}, {ExitCode: 3}, {ExitCode: -1, Stderr: "no systemctl"}}}
+	b := Backend{Home: "/tmp/h", Runner: fake}
+	if active, err := b.IsActive(context.Background()); err != nil || !active {
+		t.Fatalf("exit 0 => active, got %v %v", active, err)
+	}
+	if active, err := b.IsActive(context.Background()); err != nil || active {
+		t.Fatalf("exit 3 => inactive, got %v %v", active, err)
+	}
+	if _, err := b.IsActive(context.Background()); err == nil {
+		t.Fatal("exec failure => error")
+	}
+	if fake.Calls[0][2] != "is-active" {
+		t.Fatalf("calls %v", fake.Calls)
+	}
+}

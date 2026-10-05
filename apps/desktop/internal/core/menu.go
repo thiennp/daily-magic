@@ -50,9 +50,18 @@ func DeriveMenu(state RuntimeState, errorMessage string) MenuModel {
 			MenuItem{Action: ActionOpenConnect, Title: "Open Connect this Mac…", Enabled: true},
 			MenuItem{Action: ActionInstallHint, Title: "Install: " + InstallHintCurl, Enabled: false},
 		)
-	case StateStopped, StateError:
+	case StateStopped:
 		model.Items = append(model.Items,
 			MenuItem{Action: ActionStart, Title: "Start Agent Witch", Enabled: true},
+			MenuItem{Action: ActionOpenStatus, Title: "Open AgentWitch Local", Enabled: true},
+			MenuItem{Action: ActionViewLogs, Title: "View logs", Enabled: true},
+		)
+	case StateError:
+		// Error exits: Start again, or Stop (e.g. after a Stop timeout); the next
+		// healthy probe also moves to Running.
+		model.Items = append(model.Items,
+			MenuItem{Action: ActionStart, Title: "Start Agent Witch", Enabled: true},
+			MenuItem{Action: ActionStop, Title: "Stop Agent Witch", Enabled: true},
 			MenuItem{Action: ActionOpenStatus, Title: "Open AgentWitch Local", Enabled: true},
 			MenuItem{Action: ActionViewLogs, Title: "View logs", Enabled: true},
 		)
@@ -65,6 +74,7 @@ func DeriveMenu(state RuntimeState, errorMessage string) MenuModel {
 	case StateStopping:
 		model.Items = append(model.Items,
 			MenuItem{Action: ActionStop, Title: "Stopping…", Enabled: false},
+			MenuItem{Action: ActionViewLogs, Title: "View logs", Enabled: true},
 		)
 	}
 
