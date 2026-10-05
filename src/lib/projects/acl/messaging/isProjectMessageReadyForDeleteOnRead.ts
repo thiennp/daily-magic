@@ -1,4 +1,4 @@
-import { PROJECT_B2B_DELETE_ON_READ_TERMINAL_STATES } from "@/lib/projects/acl/messaging/projectMessage.constants";
+import { PROJECT_B2B_DELETE_ON_READ_TERMINAL_STATES } from "@/lib/projects/acl/messaging/projectMessageDeleteOnRead.constants";
 
 const TERMINAL = new Set<string>(PROJECT_B2B_DELETE_ON_READ_TERMINAL_STATES);
 

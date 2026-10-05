@@ -6,7 +6,7 @@ vi.mock("@/lib/db", () => ({
 }));
 
 import { isComputerAckSatisfiedForCloudDelete } from "@/lib/projects/acl/messaging/isComputerAckSatisfiedForCloudDelete";
-import { PROJECT_MESSAGE_HISTORY_COMPUTER_ACK_MODE } from "@/lib/projects/acl/messaging/projectMessage.constants";
+import { PROJECT_MESSAGE_HISTORY_COMPUTER_ACK_MODE } from "@/lib/projects/acl/messaging/projectMessageDeleteOnRead.constants";
 
 describe("isComputerAckSatisfiedForCloudDelete", () => {
   it("is a no-op allow while History computerAck mode is off", async () => {

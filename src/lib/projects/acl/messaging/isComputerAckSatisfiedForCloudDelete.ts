@@ -1,4 +1,4 @@
-import { PROJECT_MESSAGE_HISTORY_COMPUTER_ACK_MODE } from "@/lib/projects/acl/messaging/projectMessage.constants";
+import { PROJECT_MESSAGE_HISTORY_COMPUTER_ACK_MODE } from "@/lib/projects/acl/messaging/projectMessageDeleteOnRead.constants";
 import { asRowArray, getSql } from "@/lib/db";
 
 /**

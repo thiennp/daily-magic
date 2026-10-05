@@ -22,7 +22,7 @@ export const deleteReadProjectMessages = async (): Promise<number> => {
         LIMIT 100
       `,
     );
-    let deleted = 0;
+    const deletedIds: string[] = [];
     for (const row of rows) {
       const messageId = String(row.id);
       const snapshot = await loadProjectMessageDeleteSnapshot({ messageId });
@@ -42,10 +42,10 @@ export const deleteReadProjectMessages = async (): Promise<number> => {
         deletedReason: "delete_on_read",
       });
       if (result.ok) {
-        deleted += 1;
+        deletedIds.push(messageId);
       }
     }
-    return deleted;
+    return deletedIds.length;
   } catch (error: unknown) {
     console.error("project message delete-on-read failed", {
       error: error instanceof Error ? error.message : "delete_on_read_failed",

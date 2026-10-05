@@ -12,6 +12,10 @@ vi.mock("@/lib/projects/acl/messaging/isComputerAckSatisfiedForCloudDelete", () 
   isComputerAckSatisfiedForCloudDelete: vi.fn(async () => true),
 }));
 
+import {
+  DELETE_ON_READ_EXPECTED_OUTCOME,
+  DELETE_ON_READ_MESSAGE_ROW,
+} from "@/lib/projects/acl/messaging/deleteProjectMessageWithOutcome.fixtures";
 import { deleteProjectMessageWithOutcome } from "@/lib/projects/acl/messaging/deleteProjectMessageWithOutcome";
 import { readProjectGrokWakeResult } from "@/lib/projects/acl/messaging/readProjectGrokWakeResult";
 import { resetProjectAclSchemaEnsureForTests } from "@/lib/projects/acl/ensureProjectAclSchema";
@@ -40,17 +44,7 @@ describe("deleteProjectMessageWithOutcome + owner wake result", () => {
         return [];
       }
       if (q.includes("FROM project_messages m") && q.includes("grok_wake_result")) {
-        return [
-          {
-            id: "msg-1",
-            project_id: "proj-1",
-            to_user_id: "bot-1",
-            to_membership_id: "mem-1",
-            created_at: "2026-10-05T07:00:00.000Z",
-            read_at: "2026-10-05T08:00:00.000Z",
-            grok_wake_result: "http_200",
-          },
-        ];
+        return [DELETE_ON_READ_MESSAGE_ROW];
       }
       if (q.includes("FROM project_message_deliveries")) {
         return [{ b2b_state: "done" }];
@@ -93,17 +87,7 @@ describe("deleteProjectMessageWithOutcome + owner wake result", () => {
       deletedReason: "delete_on_read",
     });
     expect(deleted).toEqual({ ok: true, messageId: "msg-1" });
-    expect(outcomes).toEqual([
-      {
-        message_id: "msg-1",
-        project_id: "proj-1",
-        recipient_user_id: "bot-1",
-        recipient_membership_id: "mem-1",
-        final_b2b_state: "done",
-        grok_wake_result: "http_200",
-        deleted_reason: "delete_on_read",
-      },
-    ]);
+    expect(outcomes).toEqual([DELETE_ON_READ_EXPECTED_OUTCOME]);
 
     const wake = await readProjectGrokWakeResult({
       projectId: "proj-1",
