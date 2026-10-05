@@ -8,22 +8,31 @@ export const resolveAgentRunDetailOutcomeMessage = (input: {
   readonly denialReason: string | null;
   readonly reportSummary: string | null | undefined;
   readonly resultOutcomeCode?: string | null;
+  /** Terminal output when `resultOutput` was not persisted (e.g. fast Failed can't-run). */
+  readonly supplementalResultOutput?: string | null;
 }): string | null => {
   if (input.denialReason !== null && input.denialReason.trim().length > 0) {
     return input.denialReason.trim();
   }
 
-  if (input.resultOutput !== null && input.resultOutput.trim().length > 0) {
+  const outputForHonesty = (
+    input.resultOutput !== null && input.resultOutput.trim().length > 0
+      ? input.resultOutput
+      : (input.supplementalResultOutput ?? "").trim().length > 0
+        ? (input.supplementalResultOutput ?? "").trim()
+        : ""
+  ).trim();
+
+  if (outputForHonesty.length > 0) {
     const honestySummary =
       resolveAgentRunHonestyOutcomeFromRecord({
         status: input.status,
-        resultOutput: input.resultOutput,
+        resultOutput: outputForHonesty,
         resultOutcomeCode: input.resultOutcomeCode ?? null,
       }).summaryLines[0]?.trim() ?? "";
     if (honestySummary.length > 0) {
       return honestySummary;
     }
-    return null;
   }
 
   const reportLine =
