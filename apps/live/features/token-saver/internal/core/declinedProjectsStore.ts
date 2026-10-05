@@ -79,7 +79,9 @@ export const clearProjectDecline = (input: {
   if (store.byRealpath[key] === undefined) {
     return false;
   }
-  const { [key]: _removed, ...rest } = store.byRealpath;
+  const rest = Object.fromEntries(
+    Object.entries(store.byRealpath).filter(([entryKey]) => entryKey !== key),
+  );
   writeStore(input.layout, { byRealpath: rest }, fs);
   return true;
 };

@@ -1,6 +1,10 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import {
+  buildDefaultProjectFlags,
+  parseProjectFlags,
+} from "@agent-witch/shared/projects";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { createTempCliIo } from "./createNodeCliFs";
@@ -68,8 +72,10 @@ describe("runSetupProject", () => {
     expect(
       io.readUtf8(path.join(project, CURSOR_PROJECT_RULE_RELATIVE)),
     ).toContain("projectId: proj-9");
-    expect(
+    const flagsRaw: unknown = JSON.parse(
       io.readUtf8(path.join(project, ".agent-witch", "token-saver.json")),
-    ).toContain('"history": false');
+    );
+    expect(flagsRaw).toEqual(buildDefaultProjectFlags());
+    expect(parseProjectFlags(flagsRaw)).toEqual(buildDefaultProjectFlags());
   });
 });
