@@ -12,6 +12,7 @@
     "./ui": "./src/ui/index.ts",
     "./dispatch": "./src/dispatch/index.ts",
     "./pitfalls": "./src/pitfalls/index.ts",
-    "./preflight": "./src/preflight/index.ts"
+    "./preflight": "./src/preflight/index.ts",
+    "./token-saver": "./src/token-saver/index.ts"
   }
 }

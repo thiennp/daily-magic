@@ -11,7 +11,8 @@ packages/shared/src/
 ├── network/              # Origins, WS path, AWL :43347
 ├── protocol/             # WebSocket frame shape + message type strings
 ├── pitfalls/             # Project pitfalls enums, limits, wire parser
-└── preflight/            # Risky-action check catalog + result model
+├── preflight/            # Risky-action check catalog + result model
+└── token-saver/          # Local MCP tool schemas, flags, tip format
 ```
 
 ## Import (today)
