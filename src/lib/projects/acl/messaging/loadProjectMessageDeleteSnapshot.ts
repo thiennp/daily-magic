@@ -1,3 +1,4 @@
+import { ensureProjectMessageDeleteOnReadSchema } from "@/lib/projects/acl/messaging/ensureProjectMessageDeleteOnReadSchema";
 import { asRowArray, getSql } from "@/lib/db";
 
 export type ProjectMessageDeleteSnapshot = {
@@ -20,6 +21,7 @@ const optionalString = (value: unknown): string | null =>
 export const loadProjectMessageDeleteSnapshot = async (input: {
   readonly messageId: string;
 }): Promise<ProjectMessageDeleteSnapshot | null> => {
+  await ensureProjectMessageDeleteOnReadSchema();
   const sql = getSql();
   const rows = asRowArray(
     await sql`

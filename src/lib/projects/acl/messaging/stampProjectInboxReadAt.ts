@@ -1,3 +1,4 @@
+import { ensureProjectMessageDeleteOnReadSchema } from "@/lib/projects/acl/messaging/ensureProjectMessageDeleteOnReadSchema";
 import { getSql } from "@/lib/db";
 
 /**
@@ -9,6 +10,7 @@ export const stampProjectInboxReadAt = async (input: {
   if (input.messageIds.length === 0) {
     return 0;
   }
+  await ensureProjectMessageDeleteOnReadSchema();
   const sql = getSql();
   const ids = [...input.messageIds];
   const result = await sql`

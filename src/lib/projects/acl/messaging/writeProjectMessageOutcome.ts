@@ -1,3 +1,4 @@
+import { ensureProjectMessageDeleteOnReadSchema } from "@/lib/projects/acl/messaging/ensureProjectMessageDeleteOnReadSchema";
 import { getSql } from "@/lib/db";
 
 export type ProjectMessageDeletedReason = "ack" | "delete_on_read";
@@ -20,6 +21,7 @@ export type WriteProjectMessageOutcomeInput = {
 export const writeProjectMessageOutcome = async (
   input: WriteProjectMessageOutcomeInput,
 ): Promise<void> => {
+  await ensureProjectMessageDeleteOnReadSchema();
   const sql = getSql();
   const createdAt =
     input.messageCreatedAt instanceof Date
