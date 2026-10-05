@@ -8,10 +8,6 @@ import (
 	"testing"
 )
 
-type roundTripFunc func(*http.Request) (*http.Response, error)
-
-func (f roundTripFunc) Do(req *http.Request) (*http.Response, error) { return f(req) }
-
 func TestCheckForUpdateSuccess(t *testing.T) {
 	body := `[{"tag_name":"awl-linux-v0.2.0","html_url":"https://example/r","draft":false,"prerelease":false}]`
 	client := roundTripFunc(func(req *http.Request) (*http.Response, error) {
