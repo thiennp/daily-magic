@@ -15,24 +15,22 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request: Request): Promise<Response> {
   const origin = buildAppOrigin(request);
-  const presetPairingToken = new URL(request.url).searchParams
-    .get("token")
-    ?.trim();
+  const rawToken = new URL(request.url).searchParams.get("token")?.trim();
+  const hasToken = rawToken !== undefined && rawToken.length > 0;
 
-  if (
-    presetPairingToken === undefined ||
-    !isValidAgentWitchPairingToken(presetPairingToken)
-  ) {
+  if (hasToken && !isValidAgentWitchPairingToken(rawToken)) {
     return new Response(
       "Install token is required. Open Home while signed in and copy the Connect this Mac install command.",
       { status: 400 },
     );
   }
 
-  const script = renderInstallAgentWitchScript(origin, {
-    presetPairingToken,
-    presetProfileEmail: readPresetProfileEmail(request),
-  });
+  const script = hasToken
+    ? renderInstallAgentWitchScript(origin, {
+        presetPairingToken: rawToken,
+        presetProfileEmail: readPresetProfileEmail(request),
+      })
+    : renderInstallAgentWitchScript(origin);
 
   return new Response(script, {
     headers: {
