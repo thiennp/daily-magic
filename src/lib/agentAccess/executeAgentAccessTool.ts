@@ -1,3 +1,4 @@
+import type { AgentAccessFeatureToolExecutor } from "@/lib/agentAccess/agentAccessFeatureToolExecutor.type";
 import { executeIssueClaimBotCodeTool } from "@/lib/agentAccess/claimBot/executeIssueClaimBotCodeTool";
 import { executeAgentAccessAccountTools } from "@/lib/agentAccess/executeAgentAccessAccountTools";
 import { executeAgentAccessGuideTool } from "@/lib/agentAccess/executeAgentAccessGuideTool";
@@ -14,12 +15,15 @@ import {
   resolveMcpBearerAuth,
 } from "@/lib/agentAccess/resolveMcpBearerAuth";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
+import { runAgentAccessFeatureToolExecutors } from "@/lib/agentAccess/runAgentAccessFeatureToolExecutors";
 
 export const executeAgentAccessTool = async (input: {
   readonly name: string;
   readonly args: unknown;
   readonly authorization: string | null;
   readonly ip: string;
+  /** FSA feature tools (e.g. project skill share), injected by route handlers. */
+  readonly featureToolExecutors?: readonly AgentAccessFeatureToolExecutor[];
 }): Promise<AgentAccessToolCallResult> => {
   if (input.name === "register_account") {
     return executeAgentAccessRegisterTool(input.args, input.ip);
@@ -76,6 +80,16 @@ export const executeAgentAccessTool = async (input: {
   });
   if (projectAclResult !== null) {
     return projectAclResult;
+  }
+
+  const featureResult = await runAgentAccessFeatureToolExecutors({
+    executors: input.featureToolExecutors ?? [],
+    actor,
+    name: input.name,
+    args: input.args,
+  });
+  if (featureResult !== null) {
+    return featureResult;
   }
 
   const guideResult = await executeAgentAccessGuideTool({

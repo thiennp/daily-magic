@@ -1,3 +1,4 @@
+import { executeProjectSkillShareTool } from "@/features/project-skill-share/public-api/infrastructure";
 import { buildWebMcpDocument } from "@/lib/agentAccess/buildWebMcpDocument";
 import { executeAgentAccessTool } from "@/lib/agentAccess/executeAgentAccessTool";
 import { guardAgentAccessPost } from "@/lib/agentAccess/guardAgentAccessPost";
@@ -48,6 +49,7 @@ export async function POST(request: Request): Promise<Response> {
           args,
           authorization,
           ip: readClientIp(request),
+          featureToolExecutors: [executeProjectSkillShareTool],
         }),
     },
   );

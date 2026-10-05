@@ -1,3 +1,4 @@
+import { executeProjectSkillShareTool } from "@/features/project-skill-share/public-api/infrastructure";
 import { readAgentAccessInvokeBody } from "@/lib/agentAccess/coerceAgentAccessArguments";
 import { executeAgentAccessTool } from "@/lib/agentAccess/executeAgentAccessTool";
 import {
@@ -64,6 +65,7 @@ export async function POST(request: Request): Promise<Response> {
     args: invokeBody.arguments,
     authorization: request.headers.get("authorization"),
     ip: readClientIp(request),
+    featureToolExecutors: [executeProjectSkillShareTool],
   });
   const parsed = parseToolText(result.text);
 

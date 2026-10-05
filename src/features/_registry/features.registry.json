@@ -230,6 +230,21 @@
       "apiPaths": ["/api/prompt-optimizer"],
       "dependsOn": ["dispatch", "agent-witch"],
       "migrationStatus": "migrated"
+    },
+    {
+      "slug": "project-skill-share",
+      "title": "Project skill share",
+      "purpose": "Project owners and active members publish, list, get, and revoke project playbooks/skills (draft → published → revoked) over MCP and the Project Access panel. AWC stores the capped body; History ON also mirrors published versions to AWL project-data.",
+      "featurePath": "src/features/project-skill-share",
+      "libPath": null,
+      "routePaths": [],
+      "apiPaths": [
+        "/api/projects/[projectId]/skills",
+        "/api/agent-access/mcp",
+        "/api/agent-access/invoke"
+      ],
+      "dependsOn": ["auth", "agent-access"],
+      "migrationStatus": "in_progress"
     }
   ]
 }

@@ -5,6 +5,7 @@ import { twMerge } from "tailwind-merge";
 import AwcProjectAccessPanelBody from "@/features/projects/access/AwcProjectAccessPanelBody";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
+import { ProjectSkillsSection } from "@/features/project-skill-share/public-api/presentation";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { APP_SURFACE_EYEBROW_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 
@@ -52,8 +53,15 @@ export default function AwcProjectAccessPanel({
         <AwcProjectAccessPanelBody projectId={projectId} access={access} />
       ) : null}
 
+      {/* Owner + active members; self-hides when the skills API says forbidden. */}
+      {!access.isLoading ? (
+        <ProjectSkillsSection projectId={projectId} />
+      ) : null}
+
       {access.message ? (
-        <p className="text-sm text-gray-600 dark:text-gray-300">{access.message}</p>
+        <p className="text-sm text-gray-600 dark:text-gray-300">
+          {access.message}
+        </p>
       ) : null}
     </section>
   );

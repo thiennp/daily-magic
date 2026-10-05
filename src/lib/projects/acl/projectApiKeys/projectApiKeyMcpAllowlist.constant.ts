@@ -9,6 +9,10 @@ export const PROJECT_API_KEY_MCP_TOOLS = [
   "ack_project_message",
   "rotate_project_api_key",
   "check_membership",
+  "publish_project_skill",
+  "list_project_skills",
+  "get_project_skill",
+  "revoke_project_skill",
 ] as const;
 
 export type ProjectApiKeyMcpTool = (typeof PROJECT_API_KEY_MCP_TOOLS)[number];
