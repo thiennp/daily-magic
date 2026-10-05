@@ -3,6 +3,7 @@ import { AGENT_RUN_WRITER_EXECUTION_HONESTY_MARKER } from "@agent-witch/shared/d
 import { isStoppedByUserOutput } from "@/lib/dispatch/agentRunHonestyCopy.constant";
 import { AGENT_RUN_WORKING_ESTIMATE_MARKER } from "@/lib/dispatch/agentRunWorkingEstimate.constant";
 import { isClaudeCliAuthBlockerInOutput } from "@/lib/dispatch/isClaudeCliAuthBlockerInOutput";
+import { isClaudeCliNonWorkErrorJsonLine } from "@/lib/dispatch/isClaudeCliNonWorkErrorJsonLine";
 import {
   isAgentRunBareShellPromptLine,
   isAgentRunSpawnFailureLine,
@@ -73,6 +74,9 @@ const stripAuthAndFallbackLogNoise = (output: string): string => {
         return false;
       }
       if (isClaudeCliAuthBlockerInOutput(trimmed)) {
+        return false;
+      }
+      if (isClaudeCliNonWorkErrorJsonLine(trimmed)) {
         return false;
       }
       if (

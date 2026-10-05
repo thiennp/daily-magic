@@ -9,6 +9,8 @@ import {
   AGENT_WITCH_COMMAND_DIR_NAME,
 } from "./agentWitchInstallApp.constants";
 
+const ENSURE_WRITER_SCRIPT_TIMEOUT_MS = 120_000;
+
 export const ensureHarnessWriterCli = (
   installDir: string,
   writerAgent: HarnessWriterAgentId,
@@ -32,11 +34,22 @@ export const ensureHarnessWriterCli = (
     child.stdout?.resume();
     child.stderr?.resume();
 
+    const timeout = setTimeout(() => {
+      child.kill("SIGTERM");
+      reject(
+        new Error(
+          `ensure-writer.sh timed out after ${String(ENSURE_WRITER_SCRIPT_TIMEOUT_MS / 1000)}s`,
+        ),
+      );
+    }, ENSURE_WRITER_SCRIPT_TIMEOUT_MS);
+
     child.on("error", (error) => {
+      clearTimeout(timeout);
       reject(error);
     });
 
     child.on("close", (exitCode) => {
+      clearTimeout(timeout);
       if (exitCode === 0) {
         resolve();
         return;

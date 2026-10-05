@@ -31,8 +31,7 @@ agent_witch_ensure_claude_cli() {
   if claude auth status 2>/dev/null | "\${NODE_BIN}" -e "const input=require('fs').readFileSync(0,'utf8'); const parsed=JSON.parse(input); process.exit(parsed.loggedIn===true?0:1);"; then
     echo "  Claude CLI authenticated."
   else
-    echo "  Claude CLI needs sign-in. Complete browser login if prompted…" >&2
-    claude auth login || true
+    echo "  Claude CLI needs sign-in. Run claude auth login in a terminal (ensure-writer does not open interactive login)." >&2
   fi
 }
 
@@ -47,8 +46,7 @@ agent_witch_ensure_cursor_cli() {
   if cursor agent status --format json 2>/dev/null | "\${NODE_BIN}" -e "const input=require('fs').readFileSync(0,'utf8'); const parsed=JSON.parse(input); process.exit(parsed.isAuthenticated===true?0:1);"; then
     echo "  Cursor CLI authenticated."
   else
-    echo "  Cursor CLI needs sign-in. Complete browser login if prompted…" >&2
-    cursor agent login || true
+    echo "  Cursor CLI needs sign-in. Run cursor agent login in a terminal (ensure-writer does not open interactive login)." >&2
   fi
 }
 
@@ -60,8 +58,7 @@ agent_witch_ensure_antigravity_cli() {
   if [[ -f "\${HOME}/.config/agy/credentials.json" ]]; then
     echo "  Antigravity CLI authenticated."
   else
-    echo "  Antigravity CLI needs Google sign-in. Complete browser login if prompted…" >&2
-    SSH_CONNECTION="127.0.0.1 0 127.0.0.1 0" agy auth login 2>/dev/null || true
+    echo "  Antigravity CLI needs Google sign-in. Run agy auth login in a terminal (ensure-writer does not open interactive login)." >&2
   fi
 }
 
