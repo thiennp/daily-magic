@@ -73,6 +73,12 @@ export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
     last_error TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
+  await sql`ALTER TABLE project_message_deliveries
+    ADD COLUMN IF NOT EXISTS b2b_state TEXT`;
+  await sql`ALTER TABLE project_message_deliveries
+    ADD COLUMN IF NOT EXISTS woken_at TIMESTAMPTZ`;
+  await sql`ALTER TABLE project_message_deliveries
+    ADD COLUMN IF NOT EXISTS b2b_state_at TIMESTAMPTZ`;
 
   await purgeExpiredProjectMessages();
 };

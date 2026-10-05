@@ -17,6 +17,22 @@ export const PROJECT_MESSAGE_SUMMARY_MAX_CHARS = 200;
 
 /** Receipt stored when a peer wake is accepted (HTTP 200). */
 export const PROJECT_MESSAGE_KIND_TASK_PROCESSING = "task.processing";
+/** Peer reply kinds. Each one counts as activity on the sender's open request. */
+export const PROJECT_MESSAGE_KIND_TASK_RECEIVED = "task.received";
+export const PROJECT_MESSAGE_KIND_TASK_STATUS = "task.status";
+export const PROJECT_MESSAGE_KIND_TASK_DONE = "task.done";
+export const PROJECT_MESSAGE_KIND_TASK_BLOCKED = "task.blocked";
+
+/** System notice to the sender: the woken peer is silent (5 min). */
+export const PROJECT_MESSAGE_KIND_PEER_SILENT = "peer.silent";
+/** System notice to the sender: still silent at 10 min, delivery blocked. */
+export const PROJECT_MESSAGE_KIND_PEER_SILENT_BLOCKED = "peer.silent_blocked";
+
+/** No activity from the woken peer this long after the wake: tell the sender. */
+export const PROJECT_B2B_SILENCE_NOTIFY_MS = 5 * 60_000;
+/** No activity this long after the wake in total: mark the delivery blocked. */
+export const PROJECT_B2B_SILENCE_BLOCK_MS = 10 * 60_000;
+
 /** Total JSON byte size of the refs object. */
 export const PROJECT_MESSAGE_REFS_MAX_BYTES = 768;
 /** Per allowlisted ref string value. */
@@ -46,10 +62,12 @@ export const PROJECT_MESSAGE_UNREAD_CAP = readPositiveIntEnv(
   PROJECT_MESSAGE_UNREAD_CAP_DEFAULT,
 );
 
-/** System membership events — not user dispatches; excluded from hourly cap. */
+/** System events — not user dispatches; excluded from hourly cap. */
 export const PROJECT_MESSAGE_LIFECYCLE_KINDS = [
   "peer.joined",
   "peer.left",
+  PROJECT_MESSAGE_KIND_PEER_SILENT,
+  PROJECT_MESSAGE_KIND_PEER_SILENT_BLOCKED,
 ] as const;
 /** Throttle for opportunistic purge (ensure / dispatch / list_inbox). */
 export const PROJECT_MESSAGE_PURGE_MIN_INTERVAL_MS = 3_600_000;

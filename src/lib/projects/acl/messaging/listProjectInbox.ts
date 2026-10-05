@@ -1,4 +1,5 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
+import { checkProjectMessageSilence } from "@/lib/projects/acl/messaging/checkProjectMessageSilence";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
 import {
@@ -33,6 +34,7 @@ export const listProjectInbox = async (input: {
   const membershipId = membership?.id ?? null;
   await ensureProjectAclSchema();
   await purgeExpiredProjectMessages();
+  await checkProjectMessageSilence({ now: new Date() });
   const sql = getSql();
   const limit = Math.min(Math.max(input.limit ?? 50, 1), 100);
   const since = input.since ?? null;

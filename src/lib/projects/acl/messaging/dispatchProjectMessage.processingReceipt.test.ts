@@ -45,6 +45,18 @@ vi.mock("@/lib/projects/acl/messaging/insertProjectMessageWithDeliveries", () =>
   insertProjectMessageWithDeliveries: (input: unknown) => insertMock(input),
 }));
 
+vi.mock("@/lib/projects/acl/messaging/checkProjectMessageSilence", () => ({
+  checkProjectMessageSilence: async () => 0,
+}));
+
+vi.mock("@/lib/projects/acl/messaging/recordProjectPeerActivity", () => ({
+  recordProjectPeerActivity: async () => ({ matched: 0, moved: 0 }),
+}));
+
+vi.mock("@/lib/projects/acl/messaging/startProjectMessageSilenceWatch", () => ({
+  startProjectMessageSilenceWatch: async () => 0,
+}));
+
 vi.mock("@/lib/projects/acl/writeProjectAccessAudit", () => ({
   writeProjectAccessAudit: (input: unknown) => auditMock(input),
 }));
