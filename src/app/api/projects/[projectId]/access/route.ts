@@ -5,8 +5,8 @@ import {
 } from "@/lib/projects/acl/buildProjectAccessViews";
 import { listPendingProjectAccessRequests } from "@/lib/projects/acl/listPendingProjectAccessRequests";
 import { listProjectMembershipsForProject } from "@/lib/projects/acl/listProjectMembershipsForProject";
-import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { PROJECT_ACL_FIRST_CONNECT } from "@/lib/projects/acl/projectAclFirstConnect.constant";
+import { resolveOwnerOrActiveHumanSeat } from "@/lib/projects/acl/resolveOwnerOrActiveHumanSeat";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -21,33 +21,46 @@ export async function GET(
   }
 
   const { projectId } = await context.params;
-  const project = await getUserProjectById(projectId);
-  if (project === null || project.ownerUserId !== actor.id) {
+  const access = await resolveOwnerOrActiveHumanSeat({
+    projectId,
+    actorUserId: actor.id,
+  });
+  if (!access.ok) {
+    const status = access.code === "not_found" ? 404 : 403;
     return Response.json(
-      { ok: false, errorMessage: "Project not found." },
-      { status: 404 },
+      {
+        ok: false,
+        errorMessage:
+          access.code === "not_found" ? "Project not found." : "forbidden",
+      },
+      { status },
     );
   }
 
-  const [memberRows, pendingRows] = await Promise.all([
-    listProjectMembershipsForProject(projectId),
-    listPendingProjectAccessRequests(projectId),
-  ]);
-  const [members, pendingRequests] = await Promise.all([
-    buildMembershipViews(memberRows),
-    buildPendingRequestViews(pendingRows),
-  ]);
+  const memberRows = await listProjectMembershipsForProject(projectId);
+  const members = await buildMembershipViews(memberRows);
+  // Pending + firstConnect admin meta stay owner-only; humans get roster for inbox.
+  const pendingRequests =
+    access.kind === "owner"
+      ? await buildPendingRequestViews(
+          await listPendingProjectAccessRequests(projectId),
+        )
+      : [];
 
   return Response.json({
     ok: true,
-    project: { id: project.id, name: project.name },
+    project: { id: access.project.id, name: access.project.name },
     members,
     pendingRequests,
-    firstConnect: {
-      role: PROJECT_ACL_FIRST_CONNECT.role,
-      scopes: PROJECT_ACL_FIRST_CONNECT.scopes,
-      note: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
-    },
+    firstConnect:
+      access.kind === "owner"
+        ? {
+            role: PROJECT_ACL_FIRST_CONNECT.role,
+            scopes: PROJECT_ACL_FIRST_CONNECT.scopes,
+            note: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
+          }
+        : null,
+    actorRole: access.kind === "owner" ? "owner" : access.membership.role,
   });
 }
 

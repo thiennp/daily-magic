@@ -2,7 +2,7 @@ import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchem
 import { mapProjectMessageLogRow } from "@/lib/projects/acl/messaging/mapProjectMessageLogRow";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 import type { ListProjectMessageLogResult } from "@/lib/projects/acl/messaging/projectMessageLog.types";
-import { getUserProjectById } from "@/lib/projects/userProjectQueries";
+import { resolveOwnerOrActiveHumanSeat } from "@/lib/projects/acl/resolveOwnerOrActiveHumanSeat";
 import { asRowArray, getSql } from "@/lib/db";
 
 export type {
@@ -21,7 +21,8 @@ const clampLimit = (limit: number | undefined): number => {
 };
 
 /**
- * Owner-only full project message log (peer↔peer + Owner-addressed).
+ * Full project message log (peer↔peer + Owner-addressed).
+ * Owner, or active human member|viewer (read-only seats still may read).
  * Reverse-chrono with optional since + cursor pagination.
  */
 export const listProjectMessageLog = async (input: {
@@ -31,12 +32,12 @@ export const listProjectMessageLog = async (input: {
   readonly cursor?: string | null;
   readonly limit?: number;
 }): Promise<ListProjectMessageLogResult> => {
-  const project = await getUserProjectById(input.projectId);
-  if (project === null) {
-    return { ok: false, code: "not_found" };
-  }
-  if (project.ownerUserId !== input.actorUserId) {
-    return { ok: false, code: "forbidden" };
+  const access = await resolveOwnerOrActiveHumanSeat({
+    projectId: input.projectId,
+    actorUserId: input.actorUserId,
+  });
+  if (!access.ok) {
+    return { ok: false, code: access.code };
   }
 
   await ensureProjectAclSchema();

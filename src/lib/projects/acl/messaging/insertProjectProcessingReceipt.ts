@@ -1,4 +1,5 @@
 import { asRowArray, getSql } from "@/lib/db";
+import { isProjectMessageReadOnlyRole } from "@/lib/projects/acl/messaging/decideProjectMessagePostAccess";
 import { hasProjectProcessingReceipt } from "@/lib/projects/acl/messaging/hasProjectProcessingReceipt";
 import { insertProjectMessageWithDeliveries } from "@/lib/projects/acl/messaging/insertProjectMessageWithDeliveries";
 import {
@@ -11,6 +12,7 @@ type Membership = {
   readonly id: string;
   readonly userId: string;
   readonly projectDisplayName: string | null;
+  readonly role: unknown;
 };
 
 const processingReceiptSummary = (originalMessageId: string): string =>
@@ -24,7 +26,7 @@ const loadMemberships = async (input: {
 }): Promise<ReadonlyMap<string, Membership>> => {
   const rows = asRowArray(
     await getSql()`
-      SELECT id, user_id, project_display_name
+      SELECT id, user_id, project_display_name, role
       FROM project_memberships
       WHERE project_id = ${input.projectId}
         AND id = ANY(${[...input.ids]}::text[])
@@ -40,6 +42,7 @@ const loadMemberships = async (input: {
           typeof row.project_display_name === "string"
             ? row.project_display_name
             : null,
+        role: row.role,
       },
     ]),
   );
@@ -73,7 +76,8 @@ export const insertProjectProcessingReceipt = async (input: {
     });
     const peer = byId.get(input.peer);
     const sender = byId.get(input.sender);
-    if (peer === undefined || sender === undefined) {
+    // Viewers are read-only on messages: never post a receipt as them.
+    if (peer === undefined || sender === undefined || isProjectMessageReadOnlyRole(peer.role)) {
       return;
     }
     await insertProjectMessageWithDeliveries({

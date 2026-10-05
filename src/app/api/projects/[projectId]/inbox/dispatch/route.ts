@@ -1,6 +1,32 @@
+import { dispatchProjectMessageFromHumanMember } from "@/lib/projects/acl/messaging/dispatchProjectMessageFromHumanMember";
 import { dispatchProjectMessageFromOwner } from "@/lib/projects/acl/messaging/dispatchProjectMessageFromOwner";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { requireAuth } from "@/lib/auth/requireAuth";
+
+type DispatchFailure = Extract<
+  Awaited<ReturnType<typeof dispatchProjectMessageFromOwner>>,
+  { readonly ok: false }
+>;
+
+const RATE_LIMITED_CODES = new Set([
+  "rate_limited",
+  "rate_limited_hourly",
+  "unread_cap",
+  "rate_limited_daily",
+]);
+
+const FORBIDDEN_CODES = new Set(["forbidden", "viewer_read_only"]);
+
+const failureStatus = (result: DispatchFailure): number => {
+  if (
+    RATE_LIMITED_CODES.has(result.code) ||
+    result.detail === "rate_limited_hourly" ||
+    result.detail === "unread_cap"
+  ) {
+    return 429;
+  }
+  return FORBIDDEN_CODES.has(result.code) ? 403 : 400;
+};
 
 const readJsonBody = async (
   request: Request,
@@ -12,6 +38,7 @@ const readJsonBody = async (
   }
 };
 
+/** Owner → bot, or human member (memberKind human, role member) → peer. Viewers 403. */
 export async function POST(
   request: Request,
   context: { params: Promise<{ readonly projectId: string }> },
@@ -23,31 +50,23 @@ export async function POST(
   if (project === null) {
     return Response.json({ ok: false, errorMessage: "not_found" }, { status: 404 });
   }
-  if (project.ownerUserId !== actor.id) {
-    return Response.json({ ok: false, errorMessage: "forbidden" }, { status: 403 });
-  }
+  const isOwner = project.ownerUserId === actor.id;
   const body = await readJsonBody(request);
-  if (!body.ok) {
+  if (isOwner && !body.ok) {
     return Response.json(
       { ok: false, errorMessage: "invalid_arguments" },
       { status: 400 },
     );
   }
-  const result = await dispatchProjectMessageFromOwner({
-    projectId,
-    ownerUserId: actor.id,
-    args: body.args,
-  });
+  const args = body.ok ? body.args : null;
+  const result = isOwner
+    ? await dispatchProjectMessageFromOwner({ projectId, ownerUserId: actor.id, args })
+    : await dispatchProjectMessageFromHumanMember({
+        projectId,
+        actorUserId: actor.id,
+        args,
+      });
   if (!result.ok) {
-    const status =
-      result.code === "rate_limited" ||
-      result.detail === "rate_limited_hourly" ||
-      result.detail === "unread_cap" ||
-      result.code === "rate_limited_hourly" ||
-      result.code === "unread_cap" ||
-      result.code === "rate_limited_daily"
-        ? 429
-        : 400;
     return Response.json(
       {
         ok: false,
@@ -59,7 +78,7 @@ export async function POST(
         retryAfterAt: result.retryAfterAt,
         message: result.message,
       },
-      { status },
+      { status: failureStatus(result) },
     );
   }
   return Response.json({

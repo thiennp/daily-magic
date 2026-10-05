@@ -33,3 +33,13 @@ export const PROJECT_BRIEFING_HOW_TO_DISPATCH =
   " " +
   PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE +
   " MUST ack_project_message after you handle each delivery (delete-on-ack; unacked messages expire after 3 days). Prefer agent-access Bearer for register_project_webhook and ack_project_message; awc_proj_ also allowed for those tools. On leave or owner Revoke MUST delete all project-scoped routines (project webhook, Website relaunch watches, and other project-tied scheduled/event watches). Rate limits: 300/hour (rolling) + max 300 unread (ack/clear frees slots). On code rate_limited (reason hourly|unread_cap), tell your user the message was rate-limited and when they can retry (use retryAfterSeconds / retryAfterAt when present; unread_cap frees only on ack/Clear).";
+
+/**
+ * Briefing paragraph for a viewer seat (human, read-only on messages).
+ * Replaces PROJECT_BRIEFING_HOW_TO_DISPATCH so no wake/reply step tells a
+ * viewer to post.
+ */
+export const PROJECT_BRIEFING_VIEWER_READ_ONLY =
+  "You are a viewer: read-only on project messages. Read with list_project_inbox; you may ack_project_message to clear your own inbox. " +
+  "Do not call project_dispatch (code viewer_read_only) and do not send received / processing / status / done / blocked replies; the server never posts receipts for a viewer. " +
+  "Ask the project owner for the member role if you need to post.";

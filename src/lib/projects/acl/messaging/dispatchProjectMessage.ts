@@ -2,6 +2,7 @@ import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchem
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
 import { assertProjectMessageDispatchRateLimits } from "@/lib/projects/acl/messaging/assertProjectMessageDispatchRateLimits";
 import { checkProjectMessageSilence } from "@/lib/projects/acl/messaging/checkProjectMessageSilence";
+import { decideProjectMessagePostAccess } from "@/lib/projects/acl/messaging/decideProjectMessagePostAccess";
 import { orchestrateProjectBotToBotMessage } from "@/lib/projects/acl/messaging/orchestrateProjectBotToBotMessage";
 import { parseProjectDispatchPayload } from "@/lib/projects/acl/messaging/parseProjectDispatchPayload";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
@@ -36,11 +37,9 @@ export const dispatchProjectMessage = async (input: {
   if (sender === null) {
     return { ok: false, code: "forbidden" };
   }
-  if (!sender.projectDisplayName) {
-    return { ok: false, code: "naming_required" };
-  }
-  if (!sender.scopes.includes("msg:dispatch")) {
-    return { ok: false, code: "missing_scope" };
+  const access = decideProjectMessagePostAccess(sender);
+  if (!access.ok) {
+    return { ok: false, code: access.code };
   }
   const parsed = parseProjectDispatchPayload(input.args);
   if (!parsed.ok) {
@@ -79,7 +78,7 @@ export const dispatchProjectMessage = async (input: {
     message: {
       projectId: input.projectId,
       senderMembershipId: sender.id,
-      senderProjectDisplayName: sender.projectDisplayName,
+      senderProjectDisplayName: access.projectDisplayName,
       senderUserId: input.actorUserId,
       toMembershipId: addressedByMembershipOrName ? primary.id : null,
       toUserId: addressedByMembershipOrName ? primary.user_id : null,

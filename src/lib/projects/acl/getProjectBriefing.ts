@@ -1,8 +1,8 @@
 import { formatProjectBriefingText } from "@/lib/projects/acl/formatProjectBriefingText";
 import { listBoundHarnessSlugsForProject } from "@/lib/projects/acl/listBoundHarnessSlugsForProject";
 import { listProjectPeers } from "@/lib/projects/acl/messaging/listProjectPeers";
-import { PROJECT_BRIEFING_HOW_TO_DISPATCH } from "@/lib/projects/acl/projectBriefingHowToDispatch.constant";
 import { resolveProjectAclAccess } from "@/lib/projects/acl/resolveProjectAclAccess";
+import { selectProjectBriefingHowToDispatch } from "@/lib/projects/acl/selectProjectBriefingHowToDispatch";
 import type { ProjectBriefing } from "@/lib/projects/acl/types/ProjectBriefing.type";
 
 export type GetProjectBriefingResult =
@@ -52,7 +52,7 @@ export const getProjectBriefing = async (input: {
       teamLabel: access.membership?.teamLabel ?? null,
     },
     peers,
-    howToDispatch: PROJECT_BRIEFING_HOW_TO_DISPATCH,
+    howToDispatch: selectProjectBriefingHowToDispatch(access.membership?.role),
     playbooks: {
       boundHarnessSetSlugs,
       note:
