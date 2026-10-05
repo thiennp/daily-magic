@@ -49,16 +49,17 @@ echo "Universal binary OK: ${LIPO_INFO}"
 cp "${BIN_PATH}" "${MACOS_DIR}/${APP_NAME}"
 chmod +x "${MACOS_DIR}/${APP_NAME}"
 
-# SPM resource bundle (menu-bar template PNGs) must sit in Contents/Resources
-# so Bundle.module resolves inside the .app.
-RESOURCE_BUNDLE_NAME="AgentWitchLocal_AgentWitchLocal.bundle"
-RESOURCE_BUNDLE_SRC="$(dirname "${BIN_PATH}")/${RESOURCE_BUNDLE_NAME}"
-if [[ ! -d "${RESOURCE_BUNDLE_SRC}" ]]; then
-  echo "Missing SPM resource bundle at ${RESOURCE_BUNDLE_SRC}" >&2
-  exit 1
-fi
-rm -rf "${RESOURCES_DIR}/${RESOURCE_BUNDLE_NAME}"
-cp -R "${RESOURCE_BUNDLE_SRC}" "${RESOURCES_DIR}/${RESOURCE_BUNDLE_NAME}"
+# Menu-bar template PNGs live in apps/mac/Resources/ (outside the Swift
+# target Sources) and are copied straight into Contents/Resources. Loaded via
+# Bundle.main — not SPM Bundle.module (which fatalErrors when missing).
+MENUBAR_RES_DIR="${PACKAGE_DIR}/Resources"
+for menubar_png in MenuBarIconTemplate.png "MenuBarIconTemplate@2x.png"; do
+  if [[ ! -f "${MENUBAR_RES_DIR}/${menubar_png}" ]]; then
+    echo "Missing menu-bar template ${MENUBAR_RES_DIR}/${menubar_png}" >&2
+    exit 1
+  fi
+  cp "${MENUBAR_RES_DIR}/${menubar_png}" "${RESOURCES_DIR}/${menubar_png}"
+done
 
 ICONSET_DIR="${PACKAGE_DIR}/AppIcon.iconset"
 ICNS_PATH="${PACKAGE_DIR}/AppIcon.icns"

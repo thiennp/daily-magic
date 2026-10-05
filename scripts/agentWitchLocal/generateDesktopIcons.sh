@@ -8,7 +8,7 @@
 # Color convention:
 #   - macOS menu-bar templates: black + alpha (system tints them).
 #   - Linux tray embed (icon.png / tray-22/24): white + alpha (visible on dark panels;
-#     Linux systray does not tint like macOS).
+#     Linux systray does not tint like macOS templates).
 #   - tray-dark-glyph-*.png: black + alpha kept for a future light-theme switch (unwired).
 set -euo pipefail
 
@@ -17,7 +17,7 @@ MARK_SVG="${ROOT_DIR}/src/app/icon.svg"
 APP_SVG="${ROOT_DIR}/src/app/apple-icon.svg"
 DESKTOP_ASSETS="${ROOT_DIR}/apps/desktop/assets"
 MONO_SVG="${DESKTOP_ASSETS}/icon-mark-mono.svg"
-MAC_RESOURCES="${ROOT_DIR}/apps/mac/Sources/AgentWitchLocal/Resources"
+MAC_RESOURCES="${ROOT_DIR}/apps/mac/Resources"
 MAC_ICONSET="${ROOT_DIR}/apps/mac/AppIcon.iconset"
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "${TMP_DIR}"' EXIT
@@ -38,6 +38,35 @@ for f in "${MARK_SVG}" "${APP_SVG}" "${MONO_SVG}"; do
     exit 1
   fi
 done
+
+# Keep mono mark paths in lockstep with the live-site logo SVG (plus + slash).
+python3 - "${MARK_SVG}" "${MONO_SVG}" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+mark = Path(sys.argv[1]).read_text()
+mono = Path(sys.argv[2]).read_text()
+
+
+def path_ds(svg: str):
+    return re.findall(r'\bd="([^"]+)"', svg)
+
+
+mark_ds = path_ds(mark)
+mono_ds = path_ds(mono)
+# icon.svg: diamond, plus, slash — mono keeps plus + slash only.
+if len(mark_ds) < 3:
+    raise SystemExit(f"expected >=3 path d= in {sys.argv[1]}, got {mark_ds!r}")
+plus, slash = mark_ds[1], mark_ds[2]
+if mono_ds != [plus, slash]:
+    raise SystemExit(
+        "icon-mark-mono.svg path d= drifted from src/app/icon.svg plus/slash:\n"
+        f"  icon.svg plus/slash = {[plus, slash]!r}\n"
+        f"  mono.svg paths      = {mono_ds!r}"
+    )
+print("OK: icon-mark-mono.svg plus/slash paths match src/app/icon.svg")
+PY
 
 mkdir -p "${DESKTOP_ASSETS}" "${MAC_RESOURCES}" "${MAC_ICONSET}"
 
@@ -97,11 +126,13 @@ cp "${TMP_DIR}/black-22.png" "${DESKTOP_ASSETS}/tray-dark-glyph-22.png"
 cp "${TMP_DIR}/black-24.png" "${DESKTOP_ASSETS}/tray-dark-glyph-24.png"
 cp "${TMP_DIR}/black-32.png" "${DESKTOP_ASSETS}/tray-dark-glyph-32.png"
 
-# macOS menu-bar templates: BLACK (system tints).
+# macOS menu-bar templates: BLACK (system tints). Staged into the .app by
+# build-awl-mac-dmg.sh from apps/mac/Resources/ (not SPM Bundle.module).
+mkdir -p "${MAC_RESOURCES}"
 cp "${TMP_DIR}/black-18.png" "${MAC_RESOURCES}/MenuBarIconTemplate.png"
 cp "${TMP_DIR}/black-36.png" "${MAC_RESOURCES}/MenuBarIconTemplate@2x.png"
-cp "${TMP_DIR}/black-16.png" "${MAC_RESOURCES}/MenuBarIconTemplate16.png"
-cp "${TMP_DIR}/black-32.png" "${MAC_RESOURCES}/MenuBarIconTemplate16@2x.png"
+rm -f "${MAC_RESOURCES}/MenuBarIconTemplate16.png" \
+      "${MAC_RESOURCES}/MenuBarIconTemplate16@2x.png"
 
 echo "Building macOS AppIcon.iconset PNGs…"
 cp "${TMP_DIR}/app-16.png"   "${MAC_ICONSET}/icon_16x16.png"
@@ -153,7 +184,7 @@ GO
 echo "Done."
 echo "  Linux tray (white): ${DESKTOP_ASSETS}/icon.png tray-22/24.png"
 echo "  Linux dark-glyph (black, unwired): tray-dark-glyph-{22,24,32}.png"
-echo "  Mac menu bar (black template): ${MAC_RESOURCES}"
+echo "  Mac menu bar (black template → apps/mac/Resources): ${MAC_RESOURCES}"
 echo "  Mac iconset:  ${MAC_ICONSET}"
 echo "  Windows ico:  ${DESKTOP_ASSETS}/icon.ico"
 echo "Next on macOS: iconutil -c icns -o apps/mac/AppIcon.icns apps/mac/AppIcon.iconset"
