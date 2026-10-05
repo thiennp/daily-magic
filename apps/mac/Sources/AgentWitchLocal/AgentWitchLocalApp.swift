@@ -7,8 +7,14 @@ struct AgentWitchLocalApp: App {
     @NSApplicationDelegateAdaptor(MacAppAppDelegate.self) private var appDelegate
 
     var body: some Scene {
-        MenuBarExtra("Agent Witch Local", systemImage: "wand.and.stars") {
+        MenuBarExtra {
             MacAppMenuBarContentView(controller: appDelegate.controller)
+        } label: {
+            if let template = MenuBarTemplateImage.load() {
+                Image(nsImage: template)
+            } else {
+                Image(systemName: "wand.and.stars")
+            }
         }
         .menuBarExtraStyle(.window)
     }

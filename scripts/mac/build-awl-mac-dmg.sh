@@ -49,6 +49,19 @@ echo "Universal binary OK: ${LIPO_INFO}"
 cp "${BIN_PATH}" "${MACOS_DIR}/${APP_NAME}"
 chmod +x "${MACOS_DIR}/${APP_NAME}"
 
+ICONSET_DIR="${PACKAGE_DIR}/AppIcon.iconset"
+ICNS_PATH="${PACKAGE_DIR}/AppIcon.icns"
+if [[ ! -f "${ICNS_PATH}" ]]; then
+  if [[ -d "${ICONSET_DIR}" ]] && command -v iconutil >/dev/null 2>&1; then
+    echo "Building AppIcon.icns via iconutil…"
+    iconutil -c icns -o "${ICNS_PATH}" "${ICONSET_DIR}"
+  else
+    echo "Missing ${ICNS_PATH} (and cannot run iconutil)." >&2
+    exit 1
+  fi
+fi
+cp "${ICNS_PATH}" "${RESOURCES_DIR}/AppIcon.icns"
+
 cat > "${CONTENTS_DIR}/Info.plist" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -72,6 +85,8 @@ cat > "${CONTENTS_DIR}/Info.plist" <<EOF
   <string>${BUILD_NUMBER}</string>
   <key>LSMinimumSystemVersion</key>
   <string>13.0</string>
+  <key>CFBundleIconFile</key>
+  <string>AppIcon</string>
   <key>LSUIElement</key>
   <true/>
   <key>NSHighResolutionCapable</key>

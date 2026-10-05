@@ -18,7 +18,10 @@ let package = Package(
         .executableTarget(
             name: "AgentWitchLocal",
             dependencies: ["AgentWitchLocalCore"],
-            path: "Sources/AgentWitchLocal"
+            path: "Sources/AgentWitchLocal",
+            resources: [
+                .process("Resources"),
+            ]
         ),
         .testTarget(
             name: "AgentWitchLocalCoreTests",

@@ -38,3 +38,10 @@ Releases are **manual only**. Cut a GitHub release with the owner’s explicit g
 - State machine: `internal/core/transition_table.go` (allowed edges) + `apply_state_transition.go` (the only state writer). Starting/Stopping time out to Error after 30s; Stopping completes on `systemctl --user is-active` = inactive. Poll results carry the generation they started at and are dropped if a newer transition happened.
 - Tray autostart (`~/.config/autostart`) is not wired yet.
 - This folder is **not** a separate deployable in `deployables.registry.json` (schema is fixed to AWC/AWL/AWB/AWI). It is a packaging surface for AWL/AWI.
+
+## Icons
+
+Tray glyph (`assets/icon.png`) is monochrome (black + alpha) from `assets/icon-mark-mono.svg`
+(same plus+slash paths as `src/app/icon.svg`). Full-color `.desktop` / AppImage / `.deb` icons
+are `assets/icon-{48,256}.png` from `src/app/apple-icon.svg`. Windows `.ico` is `assets/icon.ico`
+(for a future `.exe`). Regenerate: `bash scripts/agentWitchLocal/generateDesktopIcons.sh`.
