@@ -24,11 +24,12 @@ import { POST } from "@/app/api/cron/project-message-silence/route";
 import {
   CRON_SECRET_ENV,
   CRON_SECRET_HEADER,
+  PROJECT_MESSAGE_SILENCE_CRON_PATH,
 } from "@/lib/cron/cronSecret.constants";
 
 const call = (secret?: string) =>
   POST(
-    new Request("http://localhost/api/cron/project-message-silence", {
+    new Request(`http://localhost${PROJECT_MESSAGE_SILENCE_CRON_PATH}`, {
       method: "POST",
       headers: secret === undefined ? {} : { [CRON_SECRET_HEADER]: secret },
     }),
