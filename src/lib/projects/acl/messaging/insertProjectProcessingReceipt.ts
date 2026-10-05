@@ -1,54 +1,16 @@
-import { asRowArray, getSql } from "@/lib/db";
 import { isProjectMessageReadOnlyRole } from "@/lib/projects/acl/messaging/decideProjectMessagePostAccess";
 import { hasProjectProcessingReceipt } from "@/lib/projects/acl/messaging/hasProjectProcessingReceipt";
+import { insertOwnerProjectProcessingReceipt } from "@/lib/projects/acl/messaging/insertOwnerProjectProcessingReceipt";
 import { insertProjectMessageWithDeliveries } from "@/lib/projects/acl/messaging/insertProjectMessageWithDeliveries";
+import { loadProjectProcessingReceiptMemberships } from "@/lib/projects/acl/messaging/loadProjectProcessingReceiptMemberships";
 import {
   PROJECT_MESSAGE_KIND_TASK_PROCESSING,
-  PROJECT_MESSAGE_OWNER_SENDER_DISPLAY_NAME,
   PROJECT_MESSAGE_SUMMARY_MAX_CHARS,
 } from "@/lib/projects/acl/messaging/projectMessage.constants";
 import { serializeByKey } from "@/lib/projects/acl/messaging/serializeByKey";
-import { getUserProjectById } from "@/lib/projects/userProjectQueries";
-
-type Membership = {
-  readonly id: string;
-  readonly userId: string;
-  readonly projectDisplayName: string | null;
-  readonly role: unknown;
-};
 
 const processingReceiptSummary = (originalMessageId: string): string =>
   `processing ${originalMessageId}`.slice(0, PROJECT_MESSAGE_SUMMARY_MAX_CHARS);
-
-// No status filter: both wake paths only reach peers that
-// resolveDispatchRecipients already resolved with status = 'active'.
-const loadMemberships = async (input: {
-  readonly projectId: string;
-  readonly ids: readonly string[];
-}): Promise<ReadonlyMap<string, Membership>> => {
-  const rows = asRowArray(
-    await getSql()`
-      SELECT id, user_id, project_display_name, role
-      FROM project_memberships
-      WHERE project_id = ${input.projectId}
-        AND id = ANY(${[...input.ids]}::text[])
-    `,
-  );
-  return new Map(
-    rows.map((row) => [
-      String(row.id),
-      {
-        id: String(row.id),
-        userId: String(row.user_id),
-        projectDisplayName:
-          typeof row.project_display_name === "string"
-            ? row.project_display_name
-            : null,
-        role: row.role,
-      },
-    ]),
-  );
-};
 
 /**
  * Thin task.processing receipt peer → sender for one accepted wake (Grok
@@ -70,41 +32,10 @@ export const insertProjectProcessingReceipt = async (input: {
   const key = `${input.projectId}:${input.peer}:${input.originalMessageId}`;
   await serializeByKey(key, async () => {
     if (input.sender === null) {
-      const project = await getUserProjectById(input.projectId);
-      if (project === null) {
-        return;
-      }
-      if (
-        await hasProjectProcessingReceipt({
-          ...input,
-          ownerUserId: project.ownerUserId,
-          summary,
-        })
-      ) {
-        return;
-      }
-      const byId = await loadMemberships({
+      await insertOwnerProjectProcessingReceipt({
         projectId: input.projectId,
-        ids: [input.peer],
-      });
-      const peer = byId.get(input.peer);
-      // Viewers are read-only on messages: never post a receipt as them.
-      if (peer === undefined || isProjectMessageReadOnlyRole(peer.role)) {
-        return;
-      }
-      await insertProjectMessageWithDeliveries({
-        projectId: input.projectId,
-        senderMembershipId: peer.id,
-        senderUserId: peer.userId,
-        senderProjectDisplayName: peer.projectDisplayName,
-        toMembershipId: null,
-        toUserId: project.ownerUserId,
-        toTeamLabel: null,
-        toProjectDisplayName: PROJECT_MESSAGE_OWNER_SENDER_DISPLAY_NAME,
-        kind: PROJECT_MESSAGE_KIND_TASK_PROCESSING,
+        peer: input.peer,
         summary,
-        refsJson: "{}",
-        recipients: [],
       });
       return;
     }
@@ -112,7 +43,7 @@ export const insertProjectProcessingReceipt = async (input: {
     if (await hasProjectProcessingReceipt({ ...input, summary })) {
       return;
     }
-    const byId = await loadMemberships({
+    const byId = await loadProjectProcessingReceiptMemberships({
       projectId: input.projectId,
       ids: [input.peer, input.sender],
     });
