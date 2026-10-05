@@ -25,6 +25,10 @@ A host started with `npm run agent-witch` reports its platform when it connects:
 
 ## Install
 
+### Mac menu bar app
+
+On a Mac with Apple Silicon, open [/download](https://www.agentwitch.com/download) in the console for the menu bar app (same release as **Download for Mac** on Connect this Mac). Phones and other computers can open that page and finish on the Mac.
+
 ### Production (most users)
 
 On macOS, from Agent Witch Home while signed in:

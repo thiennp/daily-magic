@@ -3,17 +3,12 @@
 import { useState } from "react";
 
 import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
-import {
-  MAC_DEVICE_LOCAL_LOG_MENU_LABEL,
-  MAC_DEVICE_LOCAL_STATUS_MENU_LABEL,
-  MAC_DEVICE_ROW_THIS_MAC_SUBMENU_LABEL,
-} from "@/features/agent-witch/macDevices/macDeviceRowMenuCopy.constant";
+import { MAC_DEVICE_ROW_THIS_MAC_SUBMENU_LABEL } from "@/features/agent-witch/macDevices/macDeviceRowMenuCopy.constant";
+import MacDeviceRowThisMacMenuItems from "@/features/agent-witch/macDevices/MacDeviceRowThisMacMenuItems";
 import ReviveAwlMacModal from "@/features/agent-witch/macDevices/ReviveAwlMacModal";
 import { openAgentWitchLocalStatus } from "@/features/agent-witch/macDevices/openAgentWitchLocalStatus";
-import { renderMacDeviceRowMenuItem } from "@/features/agent-witch/macDevices/utils/renderMacDeviceRowMenuItem";
-import { runMacDeviceRowMenuAction } from "@/features/agent-witch/macDevices/utils/runMacDeviceRowMenuAction";
 import AppIcon from "@/components/ui/icon/AppIcon";
-import { ArrowUpIcon, ChevronDownIcon, TrashBinIcon } from "@/icons";
+import { ChevronDownIcon } from "@/icons";
 
 interface MacDeviceRowThisMacMenuSectionProps {
   readonly closeMenu: () => void;
@@ -21,9 +16,6 @@ interface MacDeviceRowThisMacMenuSectionProps {
   readonly onUpdateLocal?: () => void;
   readonly onDeleteLocalScript?: () => void;
 }
-
-const nestedItemClassName =
-  "flex w-full items-center gap-2 py-2 pl-9 pr-3 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5";
 
 export default function MacDeviceRowThisMacMenuSection({
   closeMenu,
@@ -66,43 +58,13 @@ export default function MacDeviceRowThisMacMenuSection({
         <span>{MAC_DEVICE_ROW_THIS_MAC_SUBMENU_LABEL}</span>
       </DropdownItem>
       {isExpanded ? (
-        <ul className="flex flex-col pb-1">
-          <li>
-            <DropdownItem
-              onClick={runMacDeviceRowMenuAction(closeMenu, openLocalStatus)}
-              baseClassName={nestedItemClassName}
-            >
-              <span>{MAC_DEVICE_LOCAL_STATUS_MENU_LABEL}</span>
-            </DropdownItem>
-          </li>
-          {onSeeLocalLog
-            ? renderMacDeviceRowMenuItem(
-                runMacDeviceRowMenuAction(closeMenu, onSeeLocalLog),
-                <span className="inline-flex h-4 w-4 shrink-0" />,
-                MAC_DEVICE_LOCAL_LOG_MENU_LABEL,
-                false,
-                true,
-              )
-            : null}
-          {onUpdateLocal
-            ? renderMacDeviceRowMenuItem(
-                runMacDeviceRowMenuAction(closeMenu, onUpdateLocal),
-                <AppIcon icon={ArrowUpIcon} size="sm" />,
-                "Update Agent Witch",
-                false,
-                true,
-              )
-            : null}
-          {onDeleteLocalScript
-            ? renderMacDeviceRowMenuItem(
-                runMacDeviceRowMenuAction(closeMenu, onDeleteLocalScript),
-                <AppIcon icon={TrashBinIcon} size="sm" />,
-                "Remove from this Mac",
-                true,
-                true,
-              )
-            : null}
-        </ul>
+        <MacDeviceRowThisMacMenuItems
+          closeMenu={closeMenu}
+          openLocalStatus={openLocalStatus}
+          onSeeLocalLog={onSeeLocalLog}
+          onUpdateLocal={onUpdateLocal}
+          onDeleteLocalScript={onDeleteLocalScript}
+        />
       ) : null}
     </li>
   );

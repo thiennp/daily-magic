@@ -9,7 +9,7 @@ const promptOptimizerInTheProject: ShowcaseArticle = {
   supportLevel: "full",
   readMinutes: 3,
   whatYouNeed: [
-    "Agent Witch Local on this Mac",
+    "Agent Witch Local on this Mac (get the app from /download)",
     "A project folder the prompt is about",
   ],
   tryNext: {

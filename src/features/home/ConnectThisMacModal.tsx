@@ -7,6 +7,7 @@ import ConnectThisComputerInstallBody from "@/features/home/ConnectThisComputerI
 import ConnectThisLinuxDownloadArea from "@/features/home/ConnectThisLinuxDownloadArea";
 import ConnectThisMacDownloadArea from "@/features/home/ConnectThisMacDownloadArea";
 import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
+import DownloadNonMacNote from "@/features/download/DownloadNonMacNote";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 interface ConnectThisMacModalProps {
@@ -62,6 +63,7 @@ export default function ConnectThisMacModal({
           />
           <ConnectThisMacDownloadArea operatingSystem={operatingSystem} />
           <ConnectThisLinuxDownloadArea operatingSystem={operatingSystem} />
+          {operatingSystem !== "mac" ? <DownloadNonMacNote /> : null}
         </>
       ) : (
         <div className={`mt-3 space-y-4 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
@@ -71,6 +73,7 @@ export default function ConnectThisMacModal({
               <li key={step}>{step}</li>
             ))}
           </ol>
+          <DownloadNonMacNote />
         </div>
       )}
     </Modal>

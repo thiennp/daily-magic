@@ -26,6 +26,12 @@ Try this order (most issues resolve without a fresh install):
 
 ---
 
+## Mac app missing
+
+If the menu bar app is not installed, open [/download](https://www.agentwitch.com/download) on that Mac (Apple Silicon) before you try revive steps below.
+
+---
+
 ## Agent Witch Local not responding (`:43347`)
 
 **Symptoms**

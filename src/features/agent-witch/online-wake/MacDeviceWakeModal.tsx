@@ -4,8 +4,8 @@ import { useState } from "react";
 
 import Button from "@/components/ui/button/Button";
 import { Modal } from "@/components/ui/modal";
-import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { refreshPairedDevices } from "@/features/agent-witch/pairedDevicesResource";
+import MacDeviceWakeOfflineLede from "@/features/agent-witch/online-wake/MacDeviceWakeOfflineLede";
 import MacDeviceWakeShellCommandBlock from "@/features/agent-witch/online-wake/MacDeviceWakeShellCommandBlock";
 import {
   requestAgentWitchWake,
@@ -69,11 +69,10 @@ export default function MacDeviceWakeModal({
       <h2 className="pr-10 text-lg font-semibold text-gray-900 dark:text-white/90">
         {isThisMac ? "Start Agent Witch on this Mac" : "Turn on this Mac"}
       </h2>
-      <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        {isThisMac
-          ? `${displayName} is offline. Wake HTTP and the Mac client run in one process — when nothing is listening locally, run wake.sh in Terminal (or Restart below when the wake server responds).`
-          : `${displayName} is offline. Power it on and wait for Agent Witch to reconnect at login. If the app is not installed yet, download it from Home on that Mac.`}
-      </p>
+      <MacDeviceWakeOfflineLede
+        displayName={displayName}
+        isThisMac={isThisMac}
+      />
       {shouldShowWakeShellCommand ? <MacDeviceWakeShellCommandBlock /> : null}
       {isThisMac && canRequestRestart ? (
         <div className="mt-4">

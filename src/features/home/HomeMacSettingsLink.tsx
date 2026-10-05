@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { APP_SURFACE_CTA_SECONDARY_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import { DOWNLOAD_PAGE_COPY } from "@/features/download/downloadPageCopy.constant";
 import useThisMacHasConnectedLocalBridge from "@/features/home/hooks/useThisMacHasConnectedLocalBridge";
 import HomeOpenLocalStatusButton from "@/features/home/HomeOpenLocalStatusButton";
 
@@ -11,9 +12,17 @@ export default function HomeMacSettingsLink() {
 
   if (hasLocalBridge) {
     return (
-      <HomeOpenLocalStatusButton>
-        Status & settings on this Mac
-      </HomeOpenLocalStatusButton>
+      <div className="flex flex-wrap items-center gap-3">
+        <HomeOpenLocalStatusButton>
+          Status & settings on this Mac
+        </HomeOpenLocalStatusButton>
+        <Link
+          href="/download"
+          className={APP_SURFACE_CTA_SECONDARY_CLASS}
+        >
+          {DOWNLOAD_PAGE_COPY.pairedLinkLabel}
+        </Link>
+      </div>
     );
   }
 

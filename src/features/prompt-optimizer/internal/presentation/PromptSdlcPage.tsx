@@ -40,8 +40,8 @@ export default function PromptSdlcPage(): ReactElement {
         “fail-clean timeout” in the Mac app for recommendTimeoutMs budgets.
       </p>
       <div className="flex flex-wrap items-center gap-3">
-        <Link href="/" className={APP_SURFACE_CTA_PRIMARY_CLASS}>
-          Install Agent Witch on this Mac
+        <Link href="/download" className={APP_SURFACE_CTA_PRIMARY_CLASS}>
+          Download the Mac app
         </Link>
         <a
           href={PROMPT_SDLC_AWL_PAGE_HREF}
@@ -51,8 +51,12 @@ export default function PromptSdlcPage(): ReactElement {
         </a>
       </div>
       <p className={APP_SURFACE_BODY_TEXT_CLASS}>
-        Agent Witch Local is the Mac app ({PROMPT_SDLC_AWL_PAGE_HREF}). This
-        console page does not run the optimizer.
+        Agent Witch Local is the Mac app for Apple Silicon
+        ({PROMPT_SDLC_AWL_PAGE_HREF}). Need the installer? Open{" "}
+        <Link href="/download" className={APP_SURFACE_TEXT_LINK_CLASS}>
+          Download
+        </Link>
+        . This console page does not run the optimizer.
       </p>
       <p>
         <Link
