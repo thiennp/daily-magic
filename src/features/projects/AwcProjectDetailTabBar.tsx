@@ -5,11 +5,12 @@ import {
   PROJECT_PAGE_TAB_LABELS,
   type ProjectPageTabId,
 } from "@/features/projects/projectPageTabs.constant";
+import { ACTIVITY_UNREAD_BADGE_CLASS } from "@/features/projects/messenger/activityChrome.constant";
 
 interface AwcProjectDetailTabBarProps {
   readonly activeTab: ProjectPageTabId;
   readonly onTabChange: (tab: ProjectPageTabId) => void;
-  /** Real messenger unread total for Activity alert badge (hidden at 0). */
+  /** Soft badge: Activity unread from messenger threads (hidden at 0). */
   readonly activityUnreadCount?: number;
 }
 
@@ -52,7 +53,10 @@ export default function AwcProjectDetailTabBar({
             <span className="inline-flex items-center gap-1.5">
               {PROJECT_PAGE_TAB_LABELS[tabId]}
               {showUnread ? (
-                <span className="inline-flex min-w-[1.15rem] items-center justify-center rounded-full bg-gray-900 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white dark:bg-white dark:text-gray-900">
+                <span
+                  className={ACTIVITY_UNREAD_BADGE_CLASS}
+                  aria-label={`${activityUnreadCount} unread`}
+                >
                   {activityUnreadCount}
                 </span>
               ) : null}

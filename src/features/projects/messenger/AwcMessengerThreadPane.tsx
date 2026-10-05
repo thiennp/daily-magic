@@ -4,6 +4,7 @@ import AwcMessengerComposer from "@/features/projects/messenger/AwcMessengerComp
 import AwcMessengerStatusDot from "@/features/projects/messenger/AwcMessengerStatusDot";
 import AwcMessengerTimeline from "@/features/projects/messenger/AwcMessengerTimeline";
 import { AWC_PROJECT_MESSENGER_COPY } from "@/features/projects/messenger/awcProjectMessengerCopy.constant";
+import { ACTIVITY_LINK_CLASS } from "@/features/projects/messenger/activityChrome.constant";
 import type { AwcMessengerBotStatus } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 import type { AwcMessengerOpenThread } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 import type { MessengerTaskAssigneeOption } from "@/features/projects/messenger/utils/messengerTaskAssigneeOptions";
@@ -49,7 +50,7 @@ export default function AwcMessengerThreadPane({
             <button
               type="button"
               onClick={onBack}
-              className="mb-1 text-sm font-medium text-blue-700 dark:text-blue-300"
+              className={`mb-1 ${ACTIVITY_LINK_CLASS}`}
               aria-label={copy.a11yBack}
             >
               ← {copy.listHeading}

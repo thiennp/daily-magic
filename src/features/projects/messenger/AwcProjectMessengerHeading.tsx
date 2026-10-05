@@ -1,4 +1,5 @@
 import { AWC_PROJECT_MESSENGER_COPY } from "@/features/projects/messenger/awcProjectMessengerCopy.constant";
+import { ACTIVITY_UNREAD_BADGE_CLASS } from "@/features/projects/messenger/activityChrome.constant";
 
 interface AwcProjectMessengerHeadingProps {
   readonly unreadTotal: number;
@@ -17,7 +18,10 @@ export default function AwcProjectMessengerHeading({
           {copy.tab}
         </h2>
         {unreadTotal > 0 ? (
-          <span className="inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-blue-600 px-1.5 py-0.5 text-[11px] font-semibold text-white">
+          <span
+            className={ACTIVITY_UNREAD_BADGE_CLASS}
+            aria-label={`${unreadTotal} unread`}
+          >
             {unreadTotal}
           </span>
         ) : null}

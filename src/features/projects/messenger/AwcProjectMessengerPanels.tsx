@@ -1,6 +1,7 @@
 "use client";
 
 import AwcMessengerThreadListPanel from "@/features/projects/messenger/AwcMessengerThreadList";
+import { ACTIVITY_PANEL_GRID_CLASS } from "@/features/projects/messenger/activityChrome.constant";
 import AwcMessengerThreadPane from "@/features/projects/messenger/AwcMessengerThreadPane";
 import type { AwcMessengerOpenThread } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 import type { AwcMessengerThreadList } from "@/features/projects/messenger/types/awcProjectMessenger.type";
@@ -42,7 +43,7 @@ export default function AwcProjectMessengerPanels({
   onSendTask,
 }: AwcProjectMessengerPanelsProps) {
   return (
-    <div className="grid min-h-[28rem] overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950 md:grid-cols-[17.5rem_minmax(0,1fr)]">
+    <div className={ACTIVITY_PANEL_GRID_CLASS}>
       <div
         className={`${
           mobileShowThread ? "hidden md:flex" : "flex"

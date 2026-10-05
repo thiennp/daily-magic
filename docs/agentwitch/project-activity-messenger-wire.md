@@ -77,3 +77,12 @@ Overview “recent activity” / “open conversation” should call `showTab('a
 3. Prefer `member_kind = 'bot'` (works with existing loaders) **or** a new kind + loader fill of `loadProjectMessengerComputerSeats` (currently returns `[]`).
 
 UI: `messengerTaskAssigneeOptions({ bots, computers })` already accepts computer seats; Human can label `kind: "computer"`.
+
+
+## Softs deferred (S3-r2 stack)
+
+- **This Mac / owner-computer assignee:** Mac membership not in main yet — see table above.
+  UI `messengerTaskAssigneeOptions({ bots, computers })` ready; `loadProjectMessengerComputerSeats` returns `[]` until Mac lands.
+- **Deep-link `#activity?mode=task`:** open Activity already in Task composer mode (and optional thread). Shell hash today only selects the tab id — deferred.
+- **Overview attention → specific thread:** wire already passes `initialThreadKey` / `onGotoActivity`; Overview still primarily `onGotoTab("activity")` until Product deep-link lands.
+- Inbox / Folders / Skills ride-along stay deferred.

@@ -61,3 +61,40 @@ describe("AwcProjectDetailPanel layout S2 overview", () => {
     expect(detailPanelSource).toContain("onGotoTab={setActiveTab}");
   });
 });
+
+
+const messengerSectionSource = readFileSync(
+  path.join(
+    process.cwd(),
+    "src/features/projects/messenger/AwcProjectMessengerSection.tsx",
+  ),
+  "utf8",
+);
+
+const messengerComposerSource = readFileSync(
+  path.join(
+    process.cwd(),
+    "src/features/projects/messenger/AwcMessengerComposer.tsx",
+  ),
+  "utf8",
+);
+
+describe("AwcProjectDetailPanel layout S3 activity", () => {
+  it("mounts messenger Activity panel with dual-mode composer", () => {
+    expect(tabPanelsSource).toContain("AwcProjectMessengerSection");
+    expect(tabPanelsSource).toMatch(
+      /const STUB_TABS[\s\S]*?= \[[\s\S]*?"team"[\s\S]*?\];/,
+    );
+    expect(tabPanelsSource).not.toMatch(
+      /const STUB_TABS[\s\S]*?= \[[\s\S]*?"activity"[\s\S]*?\];/,
+    );
+    expect(messengerSectionSource).toContain("AwcProjectMessengerPanels");
+    expect(messengerComposerSource).toContain("AwcMessengerMessageComposer");
+    expect(messengerComposerSource).toContain("AwcMessengerTaskComposer");
+  });
+
+  it("keeps gray-only Activity chrome (no indigo/purple/blue brand)", () => {
+    expect(messengerSectionSource).not.toMatch(/indigo|purple|#6366f1|blue-6/i);
+    expect(detailPanelSource).toContain("activityUnreadCount");
+  });
+});

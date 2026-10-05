@@ -1,3 +1,7 @@
+import {
+  ACTIVITY_SELECTED_THREAD_CLASS,
+  ACTIVITY_UNREAD_BADGE_CLASS,
+} from "@/features/projects/messenger/activityChrome.constant";
 import AwcMessengerStatusDot from "@/features/projects/messenger/AwcMessengerStatusDot";
 import { AWC_PROJECT_MESSENGER_COPY } from "@/features/projects/messenger/awcProjectMessengerCopy.constant";
 import type { AwcMessengerBotStatus } from "@/features/projects/messenger/types/awcProjectMessenger.type";
@@ -29,7 +33,7 @@ export default function AwcMessengerThreadRow({
       aria-current={selected ? "true" : undefined}
       className={`flex w-full items-start gap-2.5 border-l-4 px-3.5 py-2.5 text-left ${
         selected
-          ? "border-blue-600 bg-blue-50 dark:bg-blue-950/30"
+          ? ACTIVITY_SELECTED_THREAD_CLASS
           : "border-transparent hover:bg-gray-50 dark:hover:bg-white/[0.03]"
       }`}
     >
@@ -37,7 +41,7 @@ export default function AwcMessengerThreadRow({
         <span className="flex items-center gap-1.5 text-sm font-semibold text-gray-900 dark:text-white">
           {name}
           {pinned ? (
-            <span className="text-[11px] font-semibold text-blue-700 dark:text-blue-300">
+            <span className="text-[11px] font-semibold text-gray-700 dark:text-gray-200">
               {copy.pinned}
             </span>
           ) : null}
@@ -54,7 +58,7 @@ export default function AwcMessengerThreadRow({
       </span>
       {unreadCount > 0 ? (
         <span
-          className="inline-grid h-[18px] min-w-[18px] place-items-center rounded-full bg-blue-600 px-1.5 text-[11px] font-semibold text-white"
+          className={ACTIVITY_UNREAD_BADGE_CLASS}
           aria-label={`${unreadCount} unread`}
         >
           {unreadCount}

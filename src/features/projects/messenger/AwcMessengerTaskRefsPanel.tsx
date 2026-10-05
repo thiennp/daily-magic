@@ -2,6 +2,7 @@
 
 import AwcProjectInboxDispatchRefsFields from "@/features/projects/access/inbox/AwcProjectInboxDispatchRefsFields";
 import { AWC_PROJECT_MESSENGER_COPY } from "@/features/projects/messenger/awcProjectMessengerCopy.constant";
+import { ACTIVITY_LINK_CLASS } from "@/features/projects/messenger/activityChrome.constant";
 
 export type MessengerTaskRefsDraft = {
   readonly prUrl: string;
@@ -30,7 +31,7 @@ export default function AwcMessengerTaskRefsPanel({
     <>
       <button
         type="button"
-        className="self-start text-xs font-medium text-blue-700 dark:text-blue-300"
+        className={`self-start ${ACTIVITY_LINK_CLASS} text-xs`}
         disabled={disabled}
         aria-expanded={open}
         onClick={() => {

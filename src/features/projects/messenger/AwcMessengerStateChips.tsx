@@ -8,7 +8,7 @@ interface AwcMessengerStateChipsProps {
 
 const TONE_CLASS: Record<string, string> = {
   ok: "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-100",
-  info: "border-blue-200 bg-blue-50 text-blue-800 dark:border-blue-900/50 dark:bg-blue-950/40 dark:text-blue-100",
+  info: "border-gray-200 bg-gray-50 text-gray-800 dark:border-gray-700 dark:bg-white/10 dark:text-gray-100",
   warn: "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100",
   err: "border-red-200 bg-red-50 text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-100",
   muted:

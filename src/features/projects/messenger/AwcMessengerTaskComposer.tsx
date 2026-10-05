@@ -6,6 +6,7 @@ import AwcMessengerTaskComposerFields from "@/features/projects/messenger/AwcMes
 import AwcMessengerTaskRefsPanel from "@/features/projects/messenger/AwcMessengerTaskRefsPanel";
 import { buildInboxDispatchRefs } from "@/features/projects/access/inbox/utils/buildInboxDispatchRefs";
 import { AWC_PROJECT_MESSENGER_COPY } from "@/features/projects/messenger/awcProjectMessengerCopy.constant";
+import { ACTIVITY_CTA_PRIMARY_CLASS } from "@/features/projects/messenger/activityChrome.constant";
 import type { MessengerTaskAssigneeOption } from "@/features/projects/messenger/utils/messengerTaskAssigneeOptions";
 import type { MessengerTaskDraft } from "@/features/projects/messenger/utils/validateMessengerTaskDraft";
 
@@ -88,7 +89,7 @@ export default function AwcMessengerTaskComposer({
       <button
         type="submit"
         disabled={busy}
-        className="ml-auto rounded-lg bg-blue-600 px-3.5 py-2 text-sm font-medium text-white disabled:opacity-50"
+        className={`ml-auto ${ACTIVITY_CTA_PRIMARY_CLASS}`}
       >
         {copy.taskSend}
       </button>

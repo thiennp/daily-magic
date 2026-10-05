@@ -1,3 +1,7 @@
+import {
+  ACTIVITY_OWN_BUBBLE_CLASS,
+  ACTIVITY_OWN_META_CLASS,
+} from "@/features/projects/messenger/activityChrome.constant";
 import AwcMessengerStateChips from "@/features/projects/messenger/AwcMessengerStateChips";
 import type { AwcMessengerTimelineEntry } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 
@@ -26,13 +30,13 @@ export default function AwcMessengerTimelineEntryRow({
       <div
         className={`rounded-xl px-3 py-2 text-sm leading-5 ${
           isMine
-            ? "rounded-br-sm bg-blue-600 text-white"
+            ? ACTIVITY_OWN_BUBBLE_CLASS
             : "rounded-bl-sm border border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
         }`}
       >
         <div
           className={`mb-1 text-xs font-semibold ${
-            isMine ? "text-blue-100" : "text-gray-500"
+            isMine ? ACTIVITY_OWN_META_CLASS : "text-gray-500"
           }`}
         >
           {isMine ? "You" : who}
