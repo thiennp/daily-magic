@@ -42,9 +42,10 @@ export default function AppShell({
     <AppShellSidebar showDevicesRail={showDevicesRail} />
   ) : null;
 
+  /** Mobile: devices sit below main content (artifact order), not above. */
   const mobileDevicesRail =
     renderPrimaryNav && showDevicesRail ? (
-      <div className="mx-auto w-full max-w-[1600px] px-4 pt-4 md:hidden sm:px-6 lg:px-6">
+      <div className="mx-auto w-full max-w-[1600px] px-4 pb-6 pt-2 md:hidden sm:px-6 lg:px-6">
         <AppShellDevicesPanel />
       </div>
     ) : null;
@@ -83,8 +84,8 @@ export default function AppShell({
       <DispatchApprovalListener />
       <WorkflowHumanStepListener />
       <GuestLibraryDraftSyncListener />
-      {mobileDevicesRail}
       {pageBody}
+      {mobileDevicesRail}
     </div>
   );
 }

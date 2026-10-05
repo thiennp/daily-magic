@@ -4,7 +4,6 @@ import { notFound, redirect } from "next/navigation";
 import AwcProjectDetailPanel from "@/features/projects/AwcProjectDetailPanel";
 import buildProjectDetailPageMetadata from "@/features/projects/buildProjectDetailPageMetadata";
 import AppShell from "@/features/shell/AppShell";
-import AppPageHeader from "@/components/surfaces/AppPageHeader";
 import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
 import { getAuthActor } from "@/lib/auth/auth";
 import { authorizeProjectPageActor } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
@@ -59,7 +58,6 @@ export default async function ProjectDetailPage({
   return (
     <AppShell>
       <div className={APP_PAGE_STACK_CLASS}>
-        <AppPageHeader title="Project details" />
         <AwcProjectDetailPanel
           project={access.project}
           startRename={startRename && access.role === "owner"}

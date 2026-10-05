@@ -20,7 +20,7 @@ describe("AppShell sidebar layout", () => {
     expect(source).not.toContain('placement="embedded"');
   });
 
-  it("SHELL-004: renders Your Devices on mobile outside the hidden desktop sidebar", () => {
+  it("SHELL-004: renders Your Devices on mobile below main content", () => {
     const source = readFileSync(
       join(process.cwd(), "src/features/shell/AppShell.tsx"),
       "utf8",
@@ -29,7 +29,7 @@ describe("AppShell sidebar layout", () => {
     expect(source).toContain("const mobileDevicesRail =");
     expect(source).toContain("<AppShellDevicesPanel />");
     expect(source).toMatch(/mobileDevicesRail[\s\S]*md:hidden/);
-    expect(source).toMatch(/\{mobileDevicesRail\}[\s\S]*\{pageBody\}/);
+    expect(source).toMatch(/\{pageBody\}[\s\S]*\{mobileDevicesRail\}/);
   });
 
   it("pins Your Devices at the bottom of the desktop sidebar", () => {

@@ -13,27 +13,29 @@ const detailPageSource = readFileSync(
   "utf8",
 );
 
-describe("AwcProjectDetailPanel layout", () => {
-  it("places Project Access in a page-level right column on xl wide screens", () => {
-    expect(detailPanelSource).toMatch(
-      /xl:grid-cols-\[minmax\(0,1fr\)_minmax\(20rem,24rem\)\]/,
-    );
-    expect(detailPanelSource).toMatch(/<aside[\s\S]*AwcProjectAccessPanel/);
-    expect(detailPanelSource).toMatch(
-      /AwcProjectDeleteControl[\s\S]*variant="detail"/,
-    );
-    // Access must sit outside the main AppPanel (page-level column), not nested
-    // only as the right side of a middle-column card.
-    expect(detailPanelSource).toMatch(
-      /<\/AppPanel>[\s\S]*<aside[\s\S]*AwcProjectAccessPanel/,
-    );
-    expect(detailPanelSource).not.toMatch(
-      /AwcProjectRepoUrlsSection[\s\S]*AwcProjectAccessPanel[\s\S]*AwcProjectDeleteControl/,
-    );
+const headerSource = readFileSync(
+  path.join(process.cwd(), "src/features/projects/AwcProjectDetailHeader.tsx"),
+  "utf8",
+);
+
+describe("AwcProjectDetailPanel layout S1 shell", () => {
+  it("uses shell header + tab bar (no purple proposal banner)", () => {
+    expect(detailPanelSource).toContain("AwcProjectDetailHeader");
+    expect(detailPanelSource).toContain("AwcProjectDetailTabBar");
+    expect(detailPanelSource).toContain("AwcProjectDetailTabPanels");
+    expect(detailPanelSource).not.toMatch(/proposal|Bản thiết kế|đề xuất/i);
+    expect(detailPageSource).not.toMatch(/proposal|Bản thiết kế|đề xuất/i);
   });
 
-  it("uses wide AppShell so Access can reach the outermost page right column", () => {
+  it("keeps wide AppShell and drops the old page title chrome", () => {
     expect(detailPageSource).toMatch(/<AppShell>/);
     expect(detailPageSource).not.toMatch(/APP_SHELL_NARROW_CONTENT_CLASS/);
+    expect(detailPageSource).not.toContain("AppPageHeader");
+  });
+
+  it("header path area uses min-w-0 for mobile overflow", () => {
+    expect(headerSource).toContain("min-w-0");
+    expect(headerSource).toContain("AwcProjectPathDisplay");
+    expect(headerSource).not.toMatch(/direction\s*:\s*rtl/);
   });
 });
