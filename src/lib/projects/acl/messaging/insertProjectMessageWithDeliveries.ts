@@ -2,11 +2,9 @@ import { randomUUID } from "node:crypto";
 
 import { getSql } from "@/lib/db";
 import { parseProjectMessageRefsJson } from "@/lib/projects/acl/messaging/parseProjectMessageRefsJson";
+import { wakeProjectMessageGrokRoutines } from "@/lib/projects/acl/messaging/wakeProjectMessageGrokRoutines";
 import { scheduleProjectMessageWebhookDelivery } from "@/lib/projects/acl/webhooks/deliverProjectMessageWebhooks";
-import {
-  wakeProjectGrokRoutineWebhooks,
-  type ProjectGrokRoutineWakeResult,
-} from "@/lib/projects/acl/webhooks/wakeProjectGrokRoutineWebhooks";
+import type { ProjectGrokRoutineWakeResult } from "@/lib/projects/acl/webhooks/wakeProjectGrokRoutineWebhooks";
 
 export type InsertProjectMessageWithDeliveriesResult = {
   readonly messageId: string;
@@ -84,24 +82,13 @@ export const insertProjectMessageWithDeliveries = async (input: {
     },
     recipientMembershipIds,
   });
-  let wakeResults: readonly ProjectGrokRoutineWakeResult[] = [];
-  try {
-    wakeResults = await wakeProjectGrokRoutineWebhooks({
-      projectId: input.projectId,
-      messageId,
-      summary: input.summary,
-      fromMembershipId: input.senderMembershipId,
-      fromProjectDisplayName:
-        input.senderMembershipId === null
-          ? "Owner"
-          : (input.senderProjectDisplayName ?? null),
-      recipientMembershipIds,
-    });
-  } catch (error: unknown) {
-    console.error("project grok routine webhook wake failed", {
-      messageId,
-      error: error instanceof Error ? error.message : "wake_failed",
-    });
-  }
+  const wakeResults = await wakeProjectMessageGrokRoutines({
+    projectId: input.projectId,
+    messageId,
+    summary: input.summary,
+    senderMembershipId: input.senderMembershipId,
+    senderProjectDisplayName: input.senderProjectDisplayName,
+    recipientMembershipIds,
+  });
   return { messageId, wakeResults };
 };
