@@ -1,6 +1,6 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { assertProjectMessageDispatchRateLimits } from "@/lib/projects/acl/messaging/assertProjectMessageDispatchRateLimits";
-import { insertProjectMessageWithDeliveries } from "@/lib/projects/acl/messaging/insertProjectMessageWithDeliveries";
+import { completeOwnerProjectMessageInsert } from "@/lib/projects/acl/messaging/completeOwnerProjectMessageInsert";
 import { parseProjectDispatchPayload } from "@/lib/projects/acl/messaging/parseProjectDispatchPayload";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 import { resolveDispatchRecipients } from "@/lib/projects/acl/messaging/resolveDispatchRecipients";
@@ -83,18 +83,21 @@ export const dispatchProjectMessageFromOwner = async (input: {
   }
   const recipient = { id: resolvedRecipient.id, user_id: resolvedRecipient.user_id };
 
-  const { messageId } = await insertProjectMessageWithDeliveries({
-    projectId: input.projectId,
-    senderMembershipId: null,
-    senderUserId: input.ownerUserId,
-    toMembershipId: recipient.id,
-    toUserId: recipient.user_id,
-    toTeamLabel: null,
-    toProjectDisplayName: parsed.toProjectDisplayName,
-    kind: parsed.kind,
-    summary: parsed.summary,
-    refsJson: JSON.stringify(parsed.refs),
-    recipients: [recipient],
+  const { messageId } = await completeOwnerProjectMessageInsert({
+    message: {
+      projectId: input.projectId,
+      senderMembershipId: null,
+      senderUserId: input.ownerUserId,
+      toMembershipId: recipient.id,
+      toUserId: recipient.user_id,
+      toTeamLabel: null,
+      toProjectDisplayName: parsed.toProjectDisplayName,
+      kind: parsed.kind,
+      summary: parsed.summary,
+      refsJson: JSON.stringify(parsed.refs),
+      recipients: [recipient],
+    },
+    dispatchRecipients: resolved.recipients,
   });
   await writeProjectAccessAudit({
     projectId: input.projectId,

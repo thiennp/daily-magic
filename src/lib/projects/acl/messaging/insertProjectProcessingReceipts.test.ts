@@ -53,4 +53,22 @@ describe("insertProjectProcessingReceipts (Grok path)", () => {
     ]);
     expect(receiptMock).not.toHaveBeenCalled();
   });
+
+  it("passes null sender for Owner→bot wakes", async () => {
+    await insertProjectProcessingReceipts({
+      projectId: "proj-1",
+      senderMembershipId: null,
+      recipients,
+      originalMessageId: "msg-owner",
+      wakeResults: [{ membershipId: "mem-b", result: "http_200" }],
+    });
+    expect(receiptMock.mock.calls.map((call) => call[0])).toEqual([
+      {
+        projectId: "proj-1",
+        peer: "mem-b",
+        sender: null,
+        originalMessageId: "msg-owner",
+      },
+    ]);
+  });
 });

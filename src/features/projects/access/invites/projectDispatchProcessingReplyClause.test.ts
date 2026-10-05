@@ -12,6 +12,7 @@ import {
   PROJECT_MESSAGE_KIND_TASK_BLOCKED,
   PROJECT_MESSAGE_KIND_TASK_DONE,
   PROJECT_MESSAGE_KIND_TASK_PROCESSING,
+  PROJECT_MESSAGE_KIND_TASK_RECEIVED,
   PROJECT_MESSAGE_KIND_TASK_STATUS,
 } from "@/lib/projects/acl/messaging/projectMessage.constants";
 
@@ -34,6 +35,7 @@ describe("PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE", () => {
       `after ${PROJECT_B2B_SILENCE_BLOCK_MS / 60_000} minutes the delivery is blocked`,
     );
     const steps = [
+      PROJECT_MESSAGE_KIND_TASK_RECEIVED,
       PROJECT_MESSAGE_KIND_TASK_PROCESSING,
       PROJECT_MESSAGE_KIND_TASK_STATUS,
       PROJECT_MESSAGE_KIND_TASK_DONE,
@@ -41,21 +43,24 @@ describe("PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE", () => {
     ].map((step) => PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE.indexOf(step));
     expect(steps.every((at) => at >= 0)).toBe(true);
     expect([...steps].sort((x, y) => x - y)).toEqual(steps);
-    const deliveryAt = PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE.indexOf(
-      "On each delivery:",
-    );
-    expect(deliveryAt).toBeGreaterThanOrEqual(0);
-    const delivery = PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE.slice(deliveryAt);
-    const receiptAt = delivery.indexOf(
-      "one short line in your own window that the message was received, before the task",
-    );
-    const taskAt = delivery.indexOf("Then do the task");
-    expect(receiptAt).toBeGreaterThanOrEqual(0);
-    expect(taskAt).toBeGreaterThan(receiptAt);
-    expect(delivery).not.toContain("read the sender, do the task");
     expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain(
-      "before the task and before ack",
+      "before list_project_inbox, before composing, before the task and before ack",
     );
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain(
+      'summary "received <messageId>" using the wake payload messageId',
+    );
+    const receivedDispatchAt = PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE.indexOf(
+      `kind "${PROJECT_MESSAGE_KIND_TASK_RECEIVED}" to that sender`,
+    );
+    const thenTaskAt = PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE.indexOf(
+      "Then do the task: list_project_inbox if needed",
+    );
+    const processingAt = PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE.indexOf(
+      `kind "${PROJECT_MESSAGE_KIND_TASK_PROCESSING}" to that sender`,
+    );
+    expect(receivedDispatchAt).toBeGreaterThanOrEqual(0);
+    expect(thenTaskAt).toBeGreaterThan(receivedDispatchAt);
+    expect(processingAt).toBeGreaterThan(thenTaskAt);
     expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain(
       "post the same reply in your own window, then ack",
     );

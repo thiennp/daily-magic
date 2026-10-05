@@ -8,6 +8,7 @@ import {
   PROJECT_MESSAGE_KIND_TASK_BLOCKED,
   PROJECT_MESSAGE_KIND_TASK_DONE,
   PROJECT_MESSAGE_KIND_TASK_PROCESSING,
+  PROJECT_MESSAGE_KIND_TASK_RECEIVED,
   PROJECT_MESSAGE_KIND_TASK_STATUS,
 } from "@/lib/projects/acl/messaging/projectMessage.constants";
 
@@ -16,9 +17,11 @@ const SILENCE_BLOCK_MINUTES = PROJECT_B2B_SILENCE_BLOCK_MS / 60_000;
 
 /** Shared reply clause for briefing, invite prompt, and agent guideline. */
 export const PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE =
-  "On a wake, the first action is one short line in your own window that the message was received, before the task and before ack. Then do the task. " +
-  "On each delivery: one short line in your own window that the message was received, before the task. " +
-  `Then do the task: first project_dispatch kind "${PROJECT_MESSAGE_KIND_TASK_PROCESSING}" to that sender with summary "processing <messageId>" (refs cannot carry the message id), ` +
+  "On a wake, the first action — before list_project_inbox, before composing, before the task and before ack — is project_dispatch kind " +
+  `"${PROJECT_MESSAGE_KIND_TASK_RECEIVED}" to that sender with summary "received <messageId>" using the wake payload messageId and from* (do not wait to read inbox); ` +
+  "also one short line in your own window that the message was received. " +
+  "On each delivery: same first action (task.received + own-window line) before list_project_inbox and before the task. " +
+  `Then do the task: list_project_inbox if needed, then project_dispatch kind "${PROJECT_MESSAGE_KIND_TASK_PROCESSING}" to that sender with summary "processing <messageId>" (refs cannot carry the message id), ` +
   `then kind "${PROJECT_MESSAGE_KIND_TASK_STATUS}" with summary "status <messageId>: <progress>" every ${SILENCE_NOTIFY_MINUTES} minutes while working, ` +
   `then kind "${PROJECT_MESSAGE_KIND_TASK_DONE}" or "${PROJECT_MESSAGE_KIND_TASK_BLOCKED}" with summary "<messageId>: <result>" as the reply to that sender, post the same reply in your own window, then ack. ` +
   `If you are silent for ${SILENCE_NOTIFY_MINUTES} minutes the server tells the sender; after ${SILENCE_BLOCK_MINUTES} minutes the delivery is blocked. ` +

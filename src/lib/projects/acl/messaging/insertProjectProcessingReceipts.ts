@@ -18,10 +18,10 @@ const acceptedWakePeerIds = (input: {
   );
 };
 
-/** Grok path: one receipt per accepted (http_200) peer wake. */
+/** Grok path: one receipt per accepted (http_200) peer wake. Owner sends use null. */
 export const insertProjectProcessingReceipts = async (input: {
   readonly projectId: string;
-  readonly senderMembershipId: string;
+  readonly senderMembershipId: string | null;
   readonly recipients: readonly DispatchRecipient[];
   readonly originalMessageId: string;
   readonly wakeResults: readonly ProjectGrokRoutineWakeResult[];
