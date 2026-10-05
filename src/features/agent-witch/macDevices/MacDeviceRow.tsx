@@ -7,6 +7,7 @@ import {
   MacDeviceOfflineWakeHint,
   shouldOfferMacOfflineWakeHint,
 } from "@/features/agent-witch/online-wake";
+import MacDeviceRowHost from "@/features/agent-witch/macDevices/MacDeviceRowHost";
 import MacDeviceRowInner from "@/features/agent-witch/macDevices/MacDeviceRowInner";
 
 interface MacDeviceRowProps {
@@ -28,7 +29,6 @@ interface MacDeviceRowProps {
   readonly onDelegateTask?: (deviceId: string) => void;
   readonly onOpenShell?: (deviceId: string) => void;
   readonly onDelete?: (deviceId: string) => void | Promise<void>;
-  /** Extra content under the row (e.g. Connect this Mac / AWL too old). */
   readonly footer?: ReactNode;
 }
 
@@ -100,21 +100,9 @@ export default function MacDeviceRow({
     rowInner
   );
 
-  if (onSelect !== undefined) {
-    return footer === undefined ? (
-      wrappedRow
-    ) : (
-      <>
-        {wrappedRow}
-        {footer}
-      </>
-    );
-  }
-
   return (
-    <li>
+    <MacDeviceRowHost onSelect={onSelect} footer={footer}>
       {wrappedRow}
-      {footer}
-    </li>
+    </MacDeviceRowHost>
   );
 }
