@@ -102,12 +102,9 @@ describe("isProjectMessageReadyForDeleteOnRead", () => {
     ).toBe(false);
   });
 
-  it("treats null delivery state as unwatched for delivery helper", () => {
+  it("delivery helpers: null unwatched; all must be terminal", () => {
     expect(isDeliveryReadyForDeleteOnRead(null)).toBe(true);
     expect(isDeliveryReadyForDeleteOnRead("dispatched")).toBe(false);
-  });
-
-  it("requires all deliveries terminal for actionable helper", () => {
     expect(areDeliveriesTerminalForDeleteOnRead([])).toBe(false);
     expect(areDeliveriesTerminalForDeleteOnRead([null])).toBe(false);
     expect(areDeliveriesTerminalForDeleteOnRead(["done"])).toBe(true);
