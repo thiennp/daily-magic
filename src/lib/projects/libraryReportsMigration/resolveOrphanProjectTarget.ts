@@ -1,6 +1,5 @@
 /**
  * Pure decision helper mirroring db/migrations/068-library-reports-require-project.sql.
- * Used by unit tests so the privacy rule stays locked without hitting a real DB.
  */
 
 export interface MigrationProject {
@@ -54,10 +53,8 @@ const findPersonal = (
 };
 
 /**
- * Resolve where an orphan Library item or Report for `ownerUserId` should go.
- * - Oldest existing project for the owner (created_at, then id) if it is solo.
- * - Otherwise Personal (reuse existing Personal name, else create).
- * Deleted/archived projects are simply absent from `projects` and are skipped.
+ * Oldest existing project (created_at, then id) if solo; else Personal.
+ * Deleted projects are absent from `projects` and are skipped.
  */
 export const resolveOrphanProjectTarget = (input: {
   readonly ownerUserId: string;
@@ -79,59 +76,4 @@ export const resolveOrphanProjectTarget = (input: {
     kind: "personal",
     reuseProjectId: personal?.id ?? null,
   };
-};
-
-/**
- * Idempotent assignment map: itemId -> projectId.
- * Items that already have a projectId are left untouched (re-run no-op).
- * When Personal must be created, `ensurePersonalProjectId` supplies one stable id.
- */
-export const assignOrphansToProjects = (input: {
-  readonly orphans: readonly {
-    readonly id: string;
-    readonly ownerUserId: string;
-    readonly projectId: string | null;
-  }[];
-  readonly projects: readonly MigrationProject[];
-  readonly activeMemberships: readonly MigrationMembership[];
-  readonly ensurePersonalProjectId: (ownerUserId: string) => string;
-}): {
-  readonly assignments: ReadonlyMap<string, string>;
-  readonly createdPersonalOwnerIds: readonly string[];
-} => {
-  const projects = [...input.projects];
-  const createdPersonalOwnerIds: string[] = [];
-  const assignments = new Map<string, string>();
-
-  for (const orphan of input.orphans) {
-    if (orphan.projectId !== null && orphan.projectId.length > 0) {
-      continue;
-    }
-
-    const target = resolveOrphanProjectTarget({
-      ownerUserId: orphan.ownerUserId,
-      projects,
-      activeMemberships: input.activeMemberships,
-    });
-
-    if (target.kind === "existing") {
-      assignments.set(orphan.id, target.projectId);
-      continue;
-    }
-
-    let personalId = target.reuseProjectId;
-    if (personalId === null) {
-      personalId = input.ensurePersonalProjectId(orphan.ownerUserId);
-      projects.push({
-        id: personalId,
-        ownerUserId: orphan.ownerUserId,
-        name: "Personal",
-        createdAt: "9999-01-01T00:00:00.000Z",
-      });
-      createdPersonalOwnerIds.push(orphan.ownerUserId);
-    }
-    assignments.set(orphan.id, personalId);
-  }
-
-  return { assignments, createdPersonalOwnerIds };
 };
