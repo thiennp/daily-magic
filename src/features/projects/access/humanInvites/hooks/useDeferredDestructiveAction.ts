@@ -34,7 +34,10 @@ export const useDeferredDestructiveAction = <TId extends string = string>(input:
   const pendingIdRef = useRef<TId | null>(null);
   const committedRef = useRef(false);
   const onCommitRef = useRef(input.onCommit);
-  onCommitRef.current = input.onCommit;
+
+  useEffect(() => {
+    onCommitRef.current = input.onCommit;
+  }, [input.onCommit]);
 
   const clearTimer = useCallback(() => {
     if (timerRef.current !== null) {

@@ -56,7 +56,16 @@ export const useHumanPeopleInvites = (input: {
   }, [copy.loadFailed, input.enabled, input.projectId]);
 
   useEffect(() => {
-    void reload();
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      if (!cancelled) {
+        void reload();
+      }
+    }, 0);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
   }, [reload]);
 
   const revokeCommit = useCallback(
