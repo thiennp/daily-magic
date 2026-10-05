@@ -1,5 +1,5 @@
 import { buildCheckProductUpdatesPayload } from "@/lib/agentAccess/buildCheckProductUpdatesPayload";
-import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
+import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
 import { parseCheckProductUpdatesArgs } from "@/lib/agentAccess/parseCheckProductUpdatesArgs";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 

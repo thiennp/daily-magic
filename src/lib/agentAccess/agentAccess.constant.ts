@@ -41,8 +41,6 @@ export const AGENT_ACCESS_MUTATING_TOOLS = [
   "issue_bot_claim_code",
 ] as const;
 
-export const AGENT_ACCESS_MCP_PROTOCOL_VERSION = "2025-03-26";
-
 export const AGENT_ACCESS_PROMPT_MAX_LENGTH = 8000;
 
 export const AGENT_ACCESS_DISPLAY_NAME_MAX_LENGTH = 80;

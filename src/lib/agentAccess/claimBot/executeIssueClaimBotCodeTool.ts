@@ -1,5 +1,5 @@
 import { issueClaimBotCode } from "@/lib/agentAccess/claimBot/issueClaimBotCode";
-import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
+import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
 import { hashAgentAccessToken } from "@/lib/agentAccess/hashAgentAccessToken";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 

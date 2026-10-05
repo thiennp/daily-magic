@@ -1,4 +1,4 @@
-import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
+import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
 import {
   AWC_GROK_WEBHOOK_OWNER_ENTRY,
   AWC_GROK_WEBHOOK_STATUS_FORBIDDEN,

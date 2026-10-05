@@ -1,5 +1,5 @@
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
-import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
+import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import { ackProjectMessage } from "@/lib/projects/acl/messaging/ackProjectMessage";
 import { listProjectInbox } from "@/lib/projects/acl/messaging/listProjectInbox";

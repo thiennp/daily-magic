@@ -7,7 +7,7 @@ import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import { installAgentAccessHarness } from "@/lib/agentAccess/installAgentAccessHarness";
 import { listAgentAccessWorkflowTemplates } from "@/lib/agentAccess/listAgentAccessWorkflowTemplates";
 import { runAgentAccessWorkflow } from "@/lib/agentAccess/runAgentAccessWorkflow";
-import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
+import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
 

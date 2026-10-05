@@ -1,11 +1,13 @@
 import { describe, expect, it } from "vitest";
 
+import { handleMcpJsonRpcRequest } from "@agent-witch/shared/mcp";
+
 import {
   coerceAgentAccessArguments,
   readAgentAccessInvokeBody,
 } from "@/lib/agentAccess/coerceAgentAccessArguments";
+import { createAgentAccessMcpServer } from "@/lib/agentAccess/createAgentAccessMcpServer";
 import { formatAgentAccessLlmsText } from "@/lib/agentAccess/formatAgentAccessLlmsText";
-import { handleAgentAccessMcpRequest } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
 
 describe("bot agent access calls", () => {
   it("accepts tool arguments sent as a JSON string", () => {
@@ -31,7 +33,13 @@ describe("bot agent access calls", () => {
 
   it("passes string MCP arguments through as an object", async () => {
     const seen: unknown[] = [];
-    await handleAgentAccessMcpRequest(
+    const server = createAgentAccessMcpServer({
+      callTool: async (_name, args) => {
+        seen.push(args);
+        return { isError: false, text: "{}" };
+      },
+    });
+    await handleMcpJsonRpcRequest(
       {
         jsonrpc: "2.0",
         id: 1,
@@ -41,13 +49,8 @@ describe("bot agent access calls", () => {
           arguments: "{}",
         },
       },
-      null,
-      {
-        callTool: async (_name, args) => {
-          seen.push(args);
-          return { isError: false, text: "{}" };
-        },
-      },
+      server,
+      { authorization: null },
     );
 
     expect(seen).toEqual([{}]);

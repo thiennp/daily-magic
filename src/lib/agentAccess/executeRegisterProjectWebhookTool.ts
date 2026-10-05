@@ -1,4 +1,4 @@
-import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
+import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
 import { registerProjectWebhook } from "@/lib/projects/acl/webhooks/registerProjectWebhook";

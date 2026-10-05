@@ -1,4 +1,4 @@
-import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
+import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import { isProjectApiKeyMcpTool } from "@/lib/projects/acl/projectApiKeys/projectApiKeyMcpAllowlist.constant";
 import type { ProjectApiKeyAuth } from "@/lib/projects/acl/projectApiKeys/resolveProjectApiKeyActor";

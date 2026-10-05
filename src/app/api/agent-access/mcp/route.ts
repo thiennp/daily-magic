@@ -1,8 +1,10 @@
+import { handleMcpJsonRpcRequest } from "@agent-witch/shared/mcp";
+
 import { executeProjectSkillShareTool } from "@/features/project-skill-share/public-api/infrastructure";
 import { buildWebMcpDocument } from "@/lib/agentAccess/buildWebMcpDocument";
+import { createAgentAccessMcpServer } from "@/lib/agentAccess/createAgentAccessMcpServer";
 import { executeAgentAccessTool } from "@/lib/agentAccess/executeAgentAccessTool";
 import { guardAgentAccessPost } from "@/lib/agentAccess/guardAgentAccessPost";
-import { handleAgentAccessMcpRequest } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
 import { readBoundedAgentAccessBody } from "@/lib/agentAccess/readBoundedAgentAccessBody";
 import { readClientIp } from "@/lib/agentAccess/readClientIp";
 
@@ -39,20 +41,20 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const body: unknown = payload;
-  const result = await handleAgentAccessMcpRequest(
-    body,
-    request.headers.get("authorization"),
-    {
-      callTool: (name, args, authorization) =>
-        executeAgentAccessTool({
-          name,
-          args,
-          authorization,
-          ip: readClientIp(request),
-          featureToolExecutors: [executeProjectSkillShareTool],
-        }),
-    },
-  );
+  const ip = readClientIp(request);
+  const server = createAgentAccessMcpServer({
+    callTool: (name, args, authorization) =>
+      executeAgentAccessTool({
+        name,
+        args,
+        authorization,
+        ip,
+        featureToolExecutors: [executeProjectSkillShareTool],
+      }),
+  });
+  const result = await handleMcpJsonRpcRequest(body, server, {
+    authorization: request.headers.get("authorization"),
+  });
 
   return Response.json(result);
 }

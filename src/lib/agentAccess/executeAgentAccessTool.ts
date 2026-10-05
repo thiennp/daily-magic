@@ -9,7 +9,7 @@ import { executeAgentAccessSendTask } from "@/lib/agentAccess/executeAgentAccess
 import { executeAgentAccessWorkflowTool } from "@/lib/agentAccess/executeAgentAccessWorkflowTool";
 import { guardAgentAccessToolUse } from "@/lib/agentAccess/guardAgentAccessToolUse";
 import { guardProjectApiKeyToolUse } from "@/lib/agentAccess/guardProjectApiKeyToolUse";
-import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
+import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
 import {
   isMcpBearerAuth,
   resolveMcpBearerAuth,

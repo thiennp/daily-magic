@@ -1,5 +1,5 @@
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
-import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
+import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import { normalizeProjectInviteTokenArg } from "@/lib/projects/acl/invites/extractProjectInviteTokenFromUrl";
 import { redeemProjectInvite } from "@/lib/projects/acl/invites/redeemProjectInvite";
