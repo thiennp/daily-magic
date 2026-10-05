@@ -25,9 +25,12 @@ vi.mock("@/lib/agentWitch/createAgentWitchInstallTokenForUser", () => ({
     createInstallToken(...args),
 }));
 
-vi.mock("@/lib/agentWitch/macBootstrap/computeMacBootstrapScriptSha256", () => ({
-  computeMacBootstrapScriptSha256: () => "a".repeat(64),
-}));
+vi.mock(
+  "@/lib/agentWitch/macBootstrap/computeMacBootstrapScriptSha256",
+  () => ({
+    computeMacBootstrapScriptSha256: () => "a".repeat(64),
+  }),
+);
 
 describe("exchangeMacBootstrapCode success", () => {
   beforeEach(() => {

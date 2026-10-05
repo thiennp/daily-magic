@@ -15,5 +15,4 @@ export type ExchangeMacBootstrapCodeFailure = {
 };
 
 export type ExchangeMacBootstrapCodeResult =
-  | ExchangeMacBootstrapCodeSuccess
-  | ExchangeMacBootstrapCodeFailure;
+  ExchangeMacBootstrapCodeSuccess | ExchangeMacBootstrapCodeFailure;

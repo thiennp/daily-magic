@@ -23,9 +23,12 @@ vi.mock("@/lib/agentWitch/createAgentWitchInstallTokenForUser", () => ({
   createAgentWitchInstallTokenForUser: vi.fn(),
 }));
 
-vi.mock("@/lib/agentWitch/macBootstrap/computeMacBootstrapScriptSha256", () => ({
-  computeMacBootstrapScriptSha256: () => "a".repeat(64),
-}));
+vi.mock(
+  "@/lib/agentWitch/macBootstrap/computeMacBootstrapScriptSha256",
+  () => ({
+    computeMacBootstrapScriptSha256: () => "a".repeat(64),
+  }),
+);
 
 const mockPending = (row: Record<string, unknown> | null): void => {
   sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
