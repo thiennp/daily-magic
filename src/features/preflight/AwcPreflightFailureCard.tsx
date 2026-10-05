@@ -1,7 +1,5 @@
-import {
-  AwcPreflightFailureBlockedBody,
-  AwcPreflightFailureErroredBody,
-} from "@/features/preflight/AwcPreflightFailureBlockedBody";
+import { AwcPreflightFailureBlockedBody } from "@/features/preflight/AwcPreflightFailureBlockedBody";
+import { AwcPreflightFailureErroredBody } from "@/features/preflight/AwcPreflightFailureHints";
 import { AWC_PREFLIGHT_FAILURE_COPY } from "@/features/preflight/awcPreflightFailureCopy.constant";
 import type { AwcPreflightFailureView } from "@/features/preflight/buildAwcPreflightFailureView";
 
@@ -11,12 +9,14 @@ interface AwcPreflightFailureCardProps {
   readonly showFixOnMacHint?: boolean;
 }
 
-const alertClassName =
+const errorAlertClassName =
   "mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-900 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-100";
 
+const warnAlertClassName =
+  "mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-100";
+
 /**
- * AWC four-fact preflight card for run / project activity. Presentational only —
- * parent supplies the view (from a Mac-posted payload or explicit UI state).
+ * AWC preflight card for run / project activity. Presentational only.
  */
 export default function AwcPreflightFailureCard({
   view,
@@ -43,7 +43,7 @@ export default function AwcPreflightFailureCard({
       );
     case "errored":
       return (
-        <div className={alertClassName} role="alert">
+        <div className={errorAlertClassName} role="alert">
           <AwcPreflightFailureErroredBody
             safeMessage={view.safeMessage}
             showFixOnMacHint={showFixOnMacHint}
@@ -52,10 +52,20 @@ export default function AwcPreflightFailureCard({
       );
     case "blocked":
       return (
-        <div className={alertClassName} role="alert">
+        <div className={errorAlertClassName} role="alert">
           <AwcPreflightFailureBlockedBody
-            facts={view.facts}
+            presentation={view.presentation}
             showFixOnMacHint={showFixOnMacHint}
+          />
+        </div>
+      );
+    case "warned":
+      return (
+        <div className={warnAlertClassName} role="status">
+          <AwcPreflightFailureBlockedBody
+            presentation={view.presentation}
+            showFixOnMacHint={false}
+            soft
           />
         </div>
       );

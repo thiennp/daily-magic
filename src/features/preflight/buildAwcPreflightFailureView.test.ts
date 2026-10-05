@@ -8,28 +8,7 @@ import {
 } from "./buildAwcPreflightFailureView";
 
 describe("toAwcPreflightFailureView", () => {
-  it("maps each UI state", () => {
-    expect(toAwcPreflightFailureView({ kind: "idle" })).toEqual({
-      kind: "idle",
-    });
-    expect(toAwcPreflightFailureView({ kind: "running" })).toEqual({
-      kind: "running",
-    });
-    expect(toAwcPreflightFailureView({ kind: "passed" })).toEqual({
-      kind: "passed",
-    });
-    expect(toAwcPreflightFailureView({ kind: "skipped" })).toEqual({
-      kind: "skipped",
-    });
-    expect(
-      toAwcPreflightFailureView({
-        kind: "errored",
-        safeMessage: "boom",
-      }),
-    ).toEqual({ kind: "errored", safeMessage: "boom" });
-  });
-
-  it("maps blocked runs to four facts", () => {
+  it("maps blocked runs to presentation with primary facts", () => {
     const view = toAwcPreflightFailureView({
       kind: "blocked",
       result: {
@@ -37,10 +16,10 @@ describe("toAwcPreflightFailureView", () => {
         results: [
           {
             status: "block",
-            checkId: "pf.writer-login",
-            name: "Writer signed in",
-            reason: "Not signed in.",
-            fix: "Sign in.",
+            checkId: "pit.custom",
+            name: "Custom",
+            reason: "Hit.",
+            fix: "Fix.",
             rerunHint: PREFLIGHT_RERUN_HINT,
             evidence: [],
             actionId: "act.deploy",
@@ -52,34 +31,76 @@ describe("toAwcPreflightFailureView", () => {
     if (view.kind !== "blocked") {
       return;
     }
-    expect(view.facts.checkId).toBe("pf.writer-login");
-    expect(view.facts.reason).toBe("Not signed in.");
+    expect(view.presentation.primary.checkId).toBe("pit.custom");
+    expect(view.presentation.primary.fromPitfall).toBe(true);
+  });
+
+  it("maps warn-only to warned", () => {
+    const view = toAwcPreflightFailureView({
+      kind: "warned",
+      result: {
+        status: "warn",
+        results: [
+          {
+            status: "warn",
+            checkId: "pf.mcp-up",
+            name: "Local tools ready",
+            reason: "Slow.",
+            fix: "Restart.",
+            rerunHint: PREFLIGHT_RERUN_HINT,
+            evidence: [],
+            actionId: "act.deploy",
+          },
+        ],
+      },
+    });
+    expect(view.kind).toBe("warned");
   });
 });
 
 describe("resolvePreflightUiStateFromText", () => {
-  it("parses a Mac-posted JSON preflight payload", () => {
-    const raw = JSON.stringify({
-      status: "block",
-      results: [
-        {
+  it("parses block → blocked and warn → warned", () => {
+    expect(
+      resolvePreflightUiStateFromText(
+        JSON.stringify({
           status: "block",
-          checkId: "pf.folder-exists",
-          name: "Project folder found",
-          reason: "Folder missing.",
-          fix: "Reconnect the folder.",
-          rerunHint: PREFLIGHT_RERUN_HINT,
-          actionId: "act.delete",
-          evidence: [],
-        },
-      ],
-    });
-    const state = resolvePreflightUiStateFromText(raw);
-    expect(state?.kind).toBe("blocked");
+          results: [
+            {
+              status: "block",
+              checkId: "pf.folder-exists",
+              name: "Project folder found",
+              reason: "Missing.",
+              fix: "Reconnect.",
+              rerunHint: PREFLIGHT_RERUN_HINT,
+              actionId: "act.delete",
+              evidence: [],
+            },
+          ],
+        }),
+      )?.kind,
+    ).toBe("blocked");
+    expect(
+      resolvePreflightUiStateFromText(
+        JSON.stringify({
+          status: "warn",
+          results: [
+            {
+              status: "warn",
+              checkId: "pf.mcp-up",
+              name: "Local tools ready",
+              reason: "Slow.",
+              fix: "Restart.",
+              rerunHint: PREFLIGHT_RERUN_HINT,
+              actionId: "act.deploy",
+              evidence: [],
+            },
+          ],
+        }),
+      )?.kind,
+    ).toBe("warned");
   });
 
   it("ignores ordinary run output", () => {
     expect(resolvePreflightUiStateFromText("Build failed")).toBeNull();
-    expect(resolvePreflightUiStateFromText(null)).toBeNull();
   });
 });

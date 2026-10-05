@@ -1,17 +1,10 @@
 import {
-  formatPreflightFailureFactsFromRun,
-  parsePreflightRunResult,
-  type PreflightFailureFacts,
+  formatPreflightFailurePresentation,
+  type PreflightFailurePresentation,
   type PreflightUiState,
 } from "@agent-witch/shared/preflight";
 
-const parseJsonObject = (raw: string): unknown | null => {
-  try {
-    return JSON.parse(raw) as unknown;
-  } catch {
-    return null;
-  }
-};
+import { resolvePreflightUiStateFromText } from "@/features/preflight/resolvePreflightUiStateFromText";
 
 export type AwcPreflightFailureView =
   | { readonly kind: "idle" }
@@ -20,12 +13,18 @@ export type AwcPreflightFailureView =
   | { readonly kind: "skipped" }
   | {
       readonly kind: "blocked";
-      readonly facts: PreflightFailureFacts;
+      readonly presentation: PreflightFailurePresentation;
+    }
+  | {
+      readonly kind: "warned";
+      readonly presentation: PreflightFailurePresentation;
     }
   | {
       readonly kind: "errored";
       readonly safeMessage: string;
     };
+
+export { resolvePreflightUiStateFromText };
 
 export const toAwcPreflightFailureView = (
   state: PreflightUiState,
@@ -38,57 +37,19 @@ export const toAwcPreflightFailureView = (
       return { kind: state.kind };
     case "errored":
       return { kind: "errored", safeMessage: state.safeMessage };
-    case "blocked": {
-      const facts = formatPreflightFailureFactsFromRun(state.result);
-      if (facts === null) {
+    case "blocked":
+    case "warned": {
+      const presentation = formatPreflightFailurePresentation(state.result);
+      if (presentation === null) {
         return { kind: "idle" };
       }
-      return { kind: "blocked", facts };
+      return state.kind === "warned"
+        ? { kind: "warned", presentation }
+        : { kind: "blocked", presentation };
     }
     default: {
       const _exhaustive: never = state;
       return _exhaustive;
     }
   }
-};
-
-/**
- * Best-effort: parse a Mac-posted preflight JSON blob from run output / denial.
- * Returns null when the text is not a preflight payload (ordinary run noise).
- */
-export const resolvePreflightUiStateFromText = (
-  raw: string | null | undefined,
-): PreflightUiState | null => {
-  if (raw === null || raw === undefined) {
-    return null;
-  }
-  const trimmed = raw.trim();
-  if (trimmed.length === 0 || trimmed[0] !== "{") {
-    return null;
-  }
-  const body = parseJsonObject(trimmed);
-  if (body === null) {
-    return null;
-  }
-  const parsed = parsePreflightRunResult(body);
-  if (parsed === null) {
-    return null;
-  }
-  if (parsed.status === "block" || parsed.status === "warn") {
-    return { kind: "blocked", result: parsed };
-  }
-  if (parsed.status === "errored") {
-    const facts = formatPreflightFailureFactsFromRun(parsed);
-    return {
-      kind: "errored",
-      safeMessage: facts?.reason ?? "Unknown preflight error",
-    };
-  }
-  if (parsed.status === "skipped") {
-    return { kind: "skipped" };
-  }
-  if (parsed.status === "pass") {
-    return { kind: "passed" };
-  }
-  return null;
 };

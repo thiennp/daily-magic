@@ -36,7 +36,7 @@ describe("formatPreflightFailureCliText", () => {
     );
   });
 
-  it("prints the four-line blocked block matching the design example shape", () => {
+  it("prints the blocked block with rerun", () => {
     const text = formatPreflightFailureCliText({
       kind: "blocked",
       result: blockedResult(),
@@ -47,11 +47,59 @@ describe("formatPreflightFailureCliText", () => {
       "Preflight blocked · pf.writer-login (Writer signed in)",
     );
     expect(lines[1]).toMatch(/^Reason:/);
-    expect(lines[2]).toMatch(/^Fix:/);
-    expect(lines[3]).toBe(`Rerun: ${PREFLIGHT_RERUN_HINT}`);
+    expect(text).toContain(`Rerun: ${PREFLIGHT_RERUN_HINT}`);
+    expect(text).not.toContain(PREFLIGHT_FAILURE_COPY.continueLabel);
   });
 
-  it("prints errored with safe message and rerun hint", () => {
+  it("prints warn-only with continue path and soft title", () => {
+    const text = formatPreflightFailureCliText({
+      kind: "warned",
+      result: {
+        status: "warn",
+        results: [
+          {
+            status: "warn",
+            checkId: "pf.mcp-up",
+            name: "Local tools ready",
+            reason: "Tools were slow.",
+            fix: "Restart Agent Witch Local.",
+            rerunHint: PREFLIGHT_RERUN_HINT,
+            evidence: [],
+            actionId: "act.deploy",
+          },
+        ],
+      },
+    });
+    expect(text).toContain(PREFLIGHT_FAILURE_COPY.warnTitle);
+    expect(text).toContain(PREFLIGHT_FAILURE_COPY.continueLabel);
+    expect(text).not.toContain("Run preflight again");
+    expect(text.split("\n").length).toBeLessThanOrEqual(6);
+  });
+
+  it("prints errored check as Couldn't check via blocked presentation", () => {
+    const text = formatPreflightFailureCliText({
+      kind: "blocked",
+      result: {
+        status: "errored",
+        results: [
+          {
+            status: "errored",
+            checkId: "pf.smoke",
+            name: "Smoke check passed",
+            reason: "Command exited 127.",
+            fix: "Install the smoke script.",
+            rerunHint: PREFLIGHT_RERUN_HINT,
+            evidence: [],
+            actionId: "act.deploy",
+          },
+        ],
+      },
+    });
+    expect(text).toContain(PREFLIGHT_FAILURE_COPY.couldntCheck);
+    expect(text.toLowerCase()).not.toContain("failed");
+  });
+
+  it("prints engine-level errored with safe message and rerun hint", () => {
     const text = formatPreflightFailureCliText({
       kind: "errored",
       safeMessage: "Disk full",

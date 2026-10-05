@@ -19,21 +19,32 @@ export const sanitizePreflightDisplayText = (value: string): string =>
 
 export type PreflightFailureFacts = {
   readonly reason: string;
-  /** Stable id + short name, e.g. `pf.writer-login · Writer signed in`. */
+  /** Stable id + short name from the payload (open set — never catalog-mapped). */
   readonly check: string;
   readonly checkId: string;
   readonly checkName: string;
   readonly fix: string;
   readonly rerunHint: string;
   readonly evidenceLines: readonly string[];
+  /** True when checkId starts with `pit.` (active block pitfall). */
+  readonly fromPitfall: boolean;
+  readonly status: PreflightCheckResult["status"];
 };
 
-const isFailureStatus = (status: PreflightCheckResult["status"]): boolean =>
-  status === "block" || status === "warn" || status === "errored";
+export type PreflightFailurePresentation = {
+  /**
+   * `blocked` — primary is block (hard).
+   * `errored_check` — primary is errored (Couldn't check).
+   * `warned` — warn-only run; soft continue path, no red block chrome.
+   */
+  readonly mode: "blocked" | "errored_check" | "warned";
+  readonly primary: PreflightFailureFacts;
+  /** Warn rows shown as softer notes under the primary (never the lead). */
+  readonly warnNotes: readonly PreflightFailureFacts[];
+};
 
 /**
- * Primary failure row: first block, else first errored, else first warn.
- * Returns null when nothing failed.
+ * Primary lead: first `block`, else first `errored`. Warn never leads.
  */
 export const pickPrimaryPreflightFailure = (
   result: PreflightRunResult,
@@ -43,12 +54,13 @@ export const pickPrimaryPreflightFailure = (
     return block;
   }
   const errored = result.results.find((row) => row.status === "errored");
-  if (errored !== undefined) {
-    return errored;
-  }
-  const warn = result.results.find((row) => row.status === "warn");
-  return warn ?? null;
+  return errored ?? null;
 };
+
+export const listPreflightWarnChecks = (
+  result: PreflightRunResult,
+): readonly PreflightCheckResult[] =>
+  result.results.filter((row) => row.status === "warn");
 
 const formatEvidenceLine = (item: PreflightEvidence): string => {
   const summary = sanitizePreflightDisplayText(item.summary).trim();
@@ -69,22 +81,31 @@ const formatEvidenceLine = (item: PreflightEvidence): string => {
 };
 
 /**
- * Turns a blocked/warn/errored check into the four facts (reason, check, fix,
- * rerun) plus optional safe evidence lines for Details.
+ * Renders name/reason/fix/rerunHint straight from the payload (open check
+ * id set). Errored checks use "Couldn't check: <name>" — never "failed".
  */
 export const formatPreflightFailureFacts = (
   check: PreflightCheckResult,
 ): PreflightFailureFacts => {
-  const reasonRaw = check.reason.trim();
-  const reason =
-    reasonRaw.length > 0
-      ? sanitizePreflightDisplayText(reasonRaw)
-      : check.status === "errored"
-        ? `${PREFLIGHT_FAILURE_COPY.erroredPrefix} check failed`
-        : PREFLIGHT_FAILURE_COPY.secretSafeFallback;
-
   const name = sanitizePreflightDisplayText(check.name.trim() || check.checkId);
   const checkId = check.checkId.trim();
+  const fromPitfall = checkId.startsWith("pit.");
+
+  const reason =
+    check.status === "errored"
+      ? (() => {
+          const detail = check.reason.trim();
+          return detail.length > 0
+            ? `${PREFLIGHT_FAILURE_COPY.couldntCheck}: ${name} — ${sanitizePreflightDisplayText(detail)}`
+            : `${PREFLIGHT_FAILURE_COPY.couldntCheck}: ${name}`;
+        })()
+      : (() => {
+          const reasonRaw = check.reason.trim();
+          return reasonRaw.length > 0
+            ? sanitizePreflightDisplayText(reasonRaw)
+            : PREFLIGHT_FAILURE_COPY.secretSafeFallback;
+        })();
+
   const fixRaw = check.fix.trim();
   const fix =
     fixRaw.length > 0
@@ -107,15 +128,42 @@ export const formatPreflightFailureFacts = (
     evidenceLines: safeEvidence
       .map(formatEvidenceLine)
       .filter((line) => line.length > 0),
+    fromPitfall,
+    status: check.status,
   };
 };
 
-export const formatPreflightFailureFactsFromRun = (
+/**
+ * Full presentation for a run: primary (block|errored) plus warn notes, or
+ * warn-only mode when there is no block/errored primary.
+ */
+export const formatPreflightFailurePresentation = (
   result: PreflightRunResult,
-): PreflightFailureFacts | null => {
-  const primary = pickPrimaryPreflightFailure(result);
-  if (primary === null || !isFailureStatus(primary.status)) {
+): PreflightFailurePresentation | null => {
+  const primaryCheck = pickPrimaryPreflightFailure(result);
+  const warnChecks = listPreflightWarnChecks(result);
+
+  if (primaryCheck !== null) {
+    return {
+      mode: primaryCheck.status === "errored" ? "errored_check" : "blocked",
+      primary: formatPreflightFailureFacts(primaryCheck),
+      warnNotes: warnChecks.map(formatPreflightFailureFacts),
+    };
+  }
+
+  if (warnChecks.length === 0) {
     return null;
   }
-  return formatPreflightFailureFacts(primary);
+
+  return {
+    mode: "warned",
+    primary: formatPreflightFailureFacts(warnChecks[0]!),
+    warnNotes: warnChecks.slice(1).map(formatPreflightFailureFacts),
+  };
 };
+
+/** @deprecated Prefer formatPreflightFailurePresentation — kept for call sites. */
+export const formatPreflightFailureFactsFromRun = (
+  result: PreflightRunResult,
+): PreflightFailureFacts | null =>
+  formatPreflightFailurePresentation(result)?.primary ?? null;

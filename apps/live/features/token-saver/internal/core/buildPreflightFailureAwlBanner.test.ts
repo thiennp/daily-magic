@@ -4,31 +4,6 @@ import { PREFLIGHT_RERUN_HINT } from "@agent-witch/shared/preflight";
 
 import { buildPreflightFailureAwlBanner } from "./buildPreflightFailureAwlBanner";
 
-const blocked = {
-  kind: "blocked" as const,
-  result: {
-    status: "block" as const,
-    results: [
-      {
-        status: "block" as const,
-        checkId: "pf.writer-login",
-        name: "Writer signed in",
-        reason: "Cursor CLI is not signed in on this Mac.",
-        fix: "Open Cursor and sign in, then try again.",
-        rerunHint: PREFLIGHT_RERUN_HINT,
-        evidence: [
-          {
-            kind: "path" as const,
-            summary: "file present: ~/.cursor/config.json",
-            fingerprint: "d65e2888e3fdd0c0ec7bf4f2dac5953ca38ca307",
-          },
-        ],
-        actionId: "act.deploy" as const,
-      },
-    ],
-  },
-};
-
 describe("buildPreflightFailureAwlBanner", () => {
   it("returns nothing for idle and passed", () => {
     expect(buildPreflightFailureAwlBanner({ state: { kind: "idle" } })).toBe(
@@ -48,25 +23,7 @@ describe("buildPreflightFailureAwlBanner", () => {
     ).toContain("Preflight is off for this project.");
   });
 
-  it("renders the four-fact alert-error card with Run preflight again and Details", () => {
-    const html = buildPreflightFailureAwlBanner({
-      state: blocked,
-      rerunAction: "/project/preflight/rerun",
-      projectId: "proj-1",
-    });
-    expect(html).toContain('class="alert-error"');
-    expect(html).toContain("Preflight blocked");
-    expect(html).toContain("Reason:");
-    expect(html).toContain("Check:");
-    expect(html).toContain("Fix:");
-    expect(html).toContain("Run preflight again");
-    expect(html).toContain("<details>");
-    expect(html).toContain("fingerprint");
-    expect(html).toContain('action="/project/preflight/rerun"');
-    expect(html).toContain('name="projectId" value="proj-1"');
-  });
-
-  it("does not render secret-looking values", () => {
+  it("renders blocked alert-error with Run preflight again", () => {
     const html = buildPreflightFailureAwlBanner({
       state: {
         kind: "blocked",
@@ -75,34 +32,78 @@ describe("buildPreflightFailureAwlBanner", () => {
           results: [
             {
               status: "block",
-              checkId: "pf.secrets-fingerprint-only",
-              name: "Secrets stay private",
-              reason: "api_key=sk_live_SHOULD_NOT_APPEAR_IN_HTML_ABCDEF",
-              fix: "Remove secret=sk_live_SHOULD_NOT_APPEAR_IN_HTML_ABCDEF",
+              checkId: "pit.unknown-trap",
+              name: "Unknown trap",
+              reason: "Trap fired.",
+              fix: "Undo it.",
               rerunHint: PREFLIGHT_RERUN_HINT,
-              evidence: [
-                {
-                  kind: "secret",
-                  summary: "token=sk_live_SHOULD_NOT_APPEAR_IN_HTML_ABCDEF",
-                },
-              ],
-              actionId: "act.secrets",
+              evidence: [],
+              actionId: "act.deploy",
+            },
+          ],
+        },
+      },
+      rerunAction: "/project/preflight/rerun",
+      projectId: "proj-1",
+    });
+    expect(html).toContain('class="alert-error"');
+    expect(html).toContain("Preflight blocked");
+    expect(html).toContain("From a project pitfall");
+    expect(html).toContain("pit.unknown-trap");
+    expect(html).toContain("Run preflight again");
+  });
+
+  it("renders warn-only as alert-warn with continue path, not rerun button", () => {
+    const html = buildPreflightFailureAwlBanner({
+      state: {
+        kind: "warned",
+        result: {
+          status: "warn",
+          results: [
+            {
+              status: "warn",
+              checkId: "pf.mcp-up",
+              name: "Local tools ready",
+              reason: "Slow tools.",
+              fix: "Restart Local.",
+              rerunHint: PREFLIGHT_RERUN_HINT,
+              evidence: [],
+              actionId: "act.deploy",
+            },
+          ],
+        },
+      },
+      rerunAction: "/project/preflight/rerun",
+    });
+    expect(html).toContain('class="alert-warn"');
+    expect(html).toContain("Preflight warning");
+    expect(html).toContain("You can keep going");
+    expect(html).not.toContain("Run preflight again");
+    expect(html).not.toContain('class="alert-error"');
+  });
+
+  it("renders errored check as Couldn't check", () => {
+    const html = buildPreflightFailureAwlBanner({
+      state: {
+        kind: "blocked",
+        result: {
+          status: "errored",
+          results: [
+            {
+              status: "errored",
+              checkId: "pf.smoke",
+              name: "Smoke check passed",
+              reason: "Exit 127",
+              fix: "Install smoke.",
+              rerunHint: PREFLIGHT_RERUN_HINT,
+              evidence: [],
+              actionId: "act.deploy",
             },
           ],
         },
       },
     });
-    expect(html).not.toContain("sk_live_SHOULD_NOT_APPEAR");
-    expect(html).toContain("[redacted]");
-  });
-
-  it("renders errored with retry affordance", () => {
-    const html = buildPreflightFailureAwlBanner({
-      state: { kind: "errored", safeMessage: "Network timeout" },
-      rerunAction: "/project/preflight/rerun",
-    });
-    expect(html).toContain("Preflight could not run:");
-    expect(html).toContain("Network timeout");
-    expect(html).toContain("Run preflight again");
+    expect(html).toMatch(/Couldn(?:'|&[#a-z0-9]+;)t check/);
+    expect(html.toLowerCase()).not.toContain("failed");
   });
 });

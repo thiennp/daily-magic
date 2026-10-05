@@ -39,8 +39,11 @@ export type { PreflightUiState } from "./PreflightUiState.type";
 export {
   formatPreflightFailureFacts,
   formatPreflightFailureFactsFromRun,
+  formatPreflightFailurePresentation,
+  listPreflightWarnChecks,
   pickPrimaryPreflightFailure,
   sanitizePreflightDisplayText,
   type PreflightFailureFacts,
+  type PreflightFailurePresentation,
 } from "./formatPreflightFailureFacts";
 export { formatPreflightFailureCliText } from "./formatPreflightFailureCliText";

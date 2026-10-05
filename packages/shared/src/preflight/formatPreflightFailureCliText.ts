@@ -1,8 +1,42 @@
 import type { PreflightUiState } from "./PreflightUiState.type";
 import { PREFLIGHT_FAILURE_COPY } from "./preflightFailureCopy.constant";
-import { formatPreflightFailureFactsFromRun } from "./formatPreflightFailureFacts";
+import {
+  formatPreflightFailurePresentation,
+  sanitizePreflightDisplayText,
+  type PreflightFailurePresentation,
+} from "./formatPreflightFailureFacts";
 import { PREFLIGHT_RERUN_HINT } from "./preflightAction.constant";
-import { sanitizePreflightDisplayText } from "./formatPreflightFailureFacts";
+
+const formatPresentationCli = (
+  presentation: PreflightFailurePresentation,
+): string => {
+  const { primary, warnNotes, mode } = presentation;
+  const title =
+    mode === "warned"
+      ? PREFLIGHT_FAILURE_COPY.warnTitle
+      : PREFLIGHT_FAILURE_COPY.title;
+  const lines: string[] = [
+    `${title} · ${primary.checkId} (${primary.checkName})`,
+  ];
+  if (primary.fromPitfall) {
+    lines.push(PREFLIGHT_FAILURE_COPY.fromPitfall);
+  }
+  lines.push(`${PREFLIGHT_FAILURE_COPY.reasonLabel}: ${primary.reason}`);
+  lines.push(`${PREFLIGHT_FAILURE_COPY.fixLabel}: ${primary.fix}`);
+  if (mode === "warned") {
+    lines.push(
+      `${PREFLIGHT_FAILURE_COPY.continueLabel}: ${PREFLIGHT_FAILURE_COPY.continueHint}`,
+    );
+  } else {
+    lines.push(`${PREFLIGHT_FAILURE_COPY.rerunLabel}: ${primary.rerunHint}`);
+  }
+  for (const note of warnNotes) {
+    lines.push(
+      `${PREFLIGHT_FAILURE_COPY.warningsLabel}: ${note.checkId} — ${note.reason}`,
+    );
+  }
+  return lines.slice(0, 6).join("\n");
+};
 
 /**
  * Plain CLI block (≤~6 lines). Empty string for idle/passed (quiet).
@@ -27,17 +61,13 @@ export const formatPreflightFailureCliText = (
         `${PREFLIGHT_FAILURE_COPY.rerunLabel}: ${PREFLIGHT_RERUN_HINT}`,
       ].join("\n");
     }
-    case "blocked": {
-      const facts = formatPreflightFailureFactsFromRun(state.result);
-      if (facts === null) {
+    case "blocked":
+    case "warned": {
+      const presentation = formatPreflightFailurePresentation(state.result);
+      if (presentation === null) {
         return "";
       }
-      return [
-        `${PREFLIGHT_FAILURE_COPY.title} · ${facts.checkId} (${facts.checkName})`,
-        `${PREFLIGHT_FAILURE_COPY.reasonLabel}: ${facts.reason}`,
-        `${PREFLIGHT_FAILURE_COPY.fixLabel}: ${facts.fix}`,
-        `${PREFLIGHT_FAILURE_COPY.rerunLabel}: ${facts.rerunHint}`,
-      ].join("\n");
+      return formatPresentationCli(presentation);
     }
     default: {
       const _exhaustive: never = state;
