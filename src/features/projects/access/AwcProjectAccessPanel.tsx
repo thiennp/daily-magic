@@ -3,23 +3,64 @@
 import { twMerge } from "tailwind-merge";
 
 import AwcProjectAccessPanelBody from "@/features/projects/access/AwcProjectAccessPanelBody";
+import AwcProjectInboxSection from "@/features/projects/access/inbox/AwcProjectInboxSection";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
+import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 import { ProjectSkillsSection } from "@/features/project-skill-share/public-api/presentation";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { APP_SURFACE_EYEBROW_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 
 interface AwcProjectAccessPanelProps {
   readonly projectId: string;
   readonly className?: string;
+  readonly pageActorRole?: ProjectPageActorRole;
+  readonly ownerEmail?: string | null;
+  readonly ownerDisplayName?: string | null;
 }
 
 export default function AwcProjectAccessPanel({
   projectId,
   className = "",
+  pageActorRole = "owner",
+  ownerEmail = null,
+  ownerDisplayName = null,
 }: AwcProjectAccessPanelProps) {
+  if (pageActorRole === "owner") {
+    return (
+      <OwnerAccessPanel
+        projectId={projectId}
+        className={className}
+        ownerEmail={ownerEmail}
+        ownerDisplayName={ownerDisplayName}
+      />
+    );
+  }
+
+  return (
+    <MemberViewerAccessPanel
+      projectId={projectId}
+      className={className}
+      pageActorRole={pageActorRole}
+    />
+  );
+}
+
+function OwnerAccessPanel({
+  projectId,
+  className,
+  ownerEmail,
+  ownerDisplayName,
+}: {
+  readonly projectId: string;
+  readonly className: string;
+  readonly ownerEmail: string | null;
+  readonly ownerDisplayName: string | null;
+}) {
   const access = useAwcProjectAccess(projectId);
   const copy = AWC_PROJECT_ACCESS_COPY;
+  const humanCopy = HUMAN_INVITE_UI_COPY;
   const ownerReady = !access.isLoading && !access.loadError;
 
   return (
@@ -32,9 +73,11 @@ export default function AwcProjectAccessPanel({
       <header className="space-y-1">
         <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>{copy.eyebrow}</p>
         <h2 className="text-base font-semibold text-gray-900 dark:text-white">
-          {copy.title}
+          {humanCopy.botsPeopleTitle}
         </h2>
-        <p className={`text-sm ${APP_SURFACE_BODY_TEXT_CLASS}`}>{copy.intro}</p>
+        <p className={`text-sm ${APP_SURFACE_BODY_TEXT_CLASS}`}>
+          {humanCopy.botsPeopleIntro}
+        </p>
       </header>
 
       {access.isLoading ? (
@@ -50,10 +93,14 @@ export default function AwcProjectAccessPanel({
       ) : null}
 
       {ownerReady ? (
-        <AwcProjectAccessPanelBody projectId={projectId} access={access} />
+        <AwcProjectAccessPanelBody
+          projectId={projectId}
+          access={access}
+          ownerEmail={ownerEmail}
+          ownerDisplayName={ownerDisplayName}
+        />
       ) : null}
 
-      {/* Owner + active members; self-hides when the skills API says forbidden. */}
       {!access.isLoading ? (
         <ProjectSkillsSection projectId={projectId} />
       ) : null}
@@ -63,6 +110,53 @@ export default function AwcProjectAccessPanel({
           {access.message}
         </p>
       ) : null}
+    </section>
+  );
+}
+
+function MemberViewerAccessPanel({
+  projectId,
+  className,
+  pageActorRole,
+}: {
+  readonly projectId: string;
+  readonly className: string;
+  readonly pageActorRole: Exclude<ProjectPageActorRole, "owner">;
+}) {
+  const copy = AWC_PROJECT_ACCESS_COPY;
+  const humanCopy = HUMAN_INVITE_UI_COPY;
+  const canCompose = pageActorRole === "member";
+
+  return (
+    <section
+      className={twMerge(
+        "space-y-4 rounded-2xl border border-gray-200/80 bg-white/80 p-4 shadow-sm dark:border-gray-800/80 dark:bg-gray-950/40",
+        className,
+      )}
+    >
+      <header className="space-y-1">
+        <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>{copy.eyebrow}</p>
+        <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+          {humanCopy.botsPeopleTitle}
+        </h2>
+        <p className={`text-sm ${APP_SURFACE_BODY_TEXT_CLASS}`}>
+          {pageActorRole === "viewer"
+            ? humanCopy.roleViewerOneLiner
+            : humanCopy.roleMemberOneLiner}
+        </p>
+      </header>
+
+      <AwcProjectInboxSection
+        projectId={projectId}
+        enabled
+        canCompose={canCompose}
+      />
+
+      {pageActorRole === "viewer" ? (
+        <p className="text-xs text-gray-500">{humanCopy.viewerConnectHint}</p>
+      ) : null}
+
+      <ProjectSkillsSection projectId={projectId} />
     </section>
   );
 }
