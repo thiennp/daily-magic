@@ -1,18 +1,24 @@
 import { asRowArray, getSql } from "@/lib/db";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
-import { toWebhookUrlHost } from "@/lib/projects/acl/webhooks/toWebhookUrlHost";
+import { STORED_GROK_WAKE_RESULT } from "@/lib/projects/acl/messaging/storedGrokWakeResult.constant";
+import {
+  projectGrokWebhookTargetId,
+  type ProjectGrokWebhookTarget,
+} from "@/lib/projects/acl/webhooks/projectGrokWebhookTarget";
 
 export type ProjectGrokRoutineWebhookStatus = {
-  readonly grokWebhookRegistered: boolean;
   readonly grokWebhookUrl: string | null;
-  readonly grokWebhookUrlHost: string | null;
   readonly lastGrokWakeResult: string | null;
 };
 
-/** Read shape: URL, host, last wake result. Never selects bearer_retained. */
-export const readProjectGrokRoutineWebhookStatus = async (input: {
-  readonly membershipId: string;
-}): Promise<ProjectGrokRoutineWebhookStatus> => {
+/**
+ * One SELECT scoped like the save step (project + active, role member for member_row).
+ * null = no such membership. Never selects bearer_retained.
+ */
+export const readProjectGrokRoutineWebhookStatus = async (
+  target: ProjectGrokWebhookTarget,
+): Promise<ProjectGrokRoutineWebhookStatus | null> => {
+  const targetId = projectGrokWebhookTargetId(target);
   await ensureProjectAclSchema();
   const sql = getSql();
   const rows = asRowArray(
@@ -22,26 +28,36 @@ export const readProjectGrokRoutineWebhookStatus = async (input: {
         (
           SELECT a.result
           FROM project_grok_routine_wake_attempts a
-          WHERE a.membership_id = ${input.membershipId}
+          WHERE a.membership_id = m.id
           ORDER BY a.created_at DESC
           LIMIT 1
         ) AS last_wake_result
-      FROM (SELECT 1) AS one
+      FROM project_memberships m
       LEFT JOIN project_membership_grok_routine_webhooks w
-        ON w.membership_id = ${input.membershipId}
+        ON w.membership_id = m.id
+      WHERE m.project_id = ${target.projectId}::text
+        AND m.status = 'active'
+        AND (
+          (${target.by}::text = 'member_row' AND m.id = ${targetId}::text AND m.role = 'member')
+          OR (${target.by}::text = 'own_membership' AND m.user_id = ${targetId}::text)
+        )
+      LIMIT 1
     `,
   );
-  const row = rows[0] ?? {};
+  const row = rows[0];
+  if (row === undefined) {
+    return null;
+  }
   const url =
     typeof row.webhook_url === "string" && row.webhook_url.length > 0
       ? row.webhook_url
       : null;
-  const last =
-    typeof row.last_wake_result === "string" ? row.last_wake_result : null;
+  const last = row.last_wake_result;
   return {
-    grokWebhookRegistered: url !== null,
     grokWebhookUrl: url,
-    grokWebhookUrlHost: url === null ? null : toWebhookUrlHost(url),
-    lastGrokWakeResult: last,
+    lastGrokWakeResult:
+      typeof last === "string" && STORED_GROK_WAKE_RESULT.test(last)
+        ? last
+        : null,
   };
 };

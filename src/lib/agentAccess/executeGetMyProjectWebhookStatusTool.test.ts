@@ -1,11 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const getActiveProjectMembership = vi.hoisted(() => vi.fn());
 const readStatus = vi.hoisted(() => vi.fn());
 
-vi.mock("@/lib/projects/acl/getActiveProjectMembership", () => ({
-  getActiveProjectMembership,
-}));
 vi.mock(
   "@/lib/projects/acl/webhooks/readProjectGrokRoutineWebhookStatus",
   () => ({
@@ -33,27 +29,21 @@ const call = async (args: unknown) => {
 
 describe("get_my_project_webhook_status", () => {
   beforeEach(() => {
-    getActiveProjectMembership.mockReset();
     readStatus.mockReset();
   });
 
   it("returns registration + host for the caller's own membership, never the key", async () => {
-    getActiveProjectMembership.mockResolvedValue({
-      id: "mem-1",
-      role: "member",
-    });
     readStatus.mockResolvedValue({
-      grokWebhookRegistered: true,
       grokWebhookUrl: "https://hooks.example.com/wake/abc",
-      grokWebhookUrlHost: "hooks.example.com",
       lastGrokWakeResult: "http_200",
     });
     const { result, text } = await call({ projectId: "proj-1" });
-    expect(getActiveProjectMembership).toHaveBeenCalledWith(
-      "proj-1",
-      "bot-user-1",
-    );
-    expect(readStatus).toHaveBeenCalledWith({ membershipId: "mem-1" });
+    expect(readStatus).toHaveBeenCalledWith({
+      projectId: "proj-1",
+      by: "own_membership",
+      userId: "bot-user-1",
+    });
+    expect(text).toMatch(/keySet\\":true/);
     expect(result?.isError).not.toBe(true);
     expect(text).toContain("grokWebhookRegistered");
     expect(text).toContain("hooks.example.com");
@@ -65,11 +55,11 @@ describe("get_my_project_webhook_status", () => {
     const missing = await call({});
     expect(missing.result?.isError).toBe(true);
     expect(missing.text).toContain("invalid_arguments");
-    getActiveProjectMembership.mockResolvedValue(null);
+    expect(readStatus).not.toHaveBeenCalled();
+    readStatus.mockResolvedValue(null);
     const outsider = await call({ projectId: "proj-1" });
     expect(outsider.result?.isError).toBe(true);
     expect(outsider.text).toContain("forbidden");
-    expect(readStatus).not.toHaveBeenCalled();
   });
 
   it("is listed in the catalog and guide as a read-only, agent-access tool", () => {

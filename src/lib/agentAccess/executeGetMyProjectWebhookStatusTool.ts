@@ -1,10 +1,10 @@
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
-import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
 import { readProjectGrokRoutineWebhookStatus } from "@/lib/projects/acl/webhooks/readProjectGrokRoutineWebhookStatus";
+import { toGrokWebhookStatusView } from "@/lib/projects/acl/webhooks/toGrokWebhookStatusView";
 
-/** get_my_project_webhook_status: caller's own membership only; host + flags, never the key. */
+/** get_my_project_webhook_status: caller's own active membership only; host + flags, never the key. */
 export const executeGetMyProjectWebhookStatusTool = async (input: {
   readonly actor: AgentAccessActor;
   readonly args: unknown;
@@ -21,28 +21,24 @@ export const executeGetMyProjectWebhookStatusTool = async (input: {
       true,
     );
   }
-  const membership = await getActiveProjectMembership(
+  const status = await readProjectGrokRoutineWebhookStatus({
     projectId,
-    input.actor.id,
-  );
-  if (membership === null || membership.role !== "member") {
+    by: "own_membership",
+    userId: input.actor.id,
+  });
+  if (status === null) {
     return agentAccessTextResult(
       { ok: false, error: "forbidden", code: "forbidden" },
       true,
     );
   }
-  const status = await readProjectGrokRoutineWebhookStatus({
-    membershipId: membership.id,
-  });
+  const view = toGrokWebhookStatusView(status.grokWebhookUrl);
   return agentAccessTextResult({
     ok: true,
     projectId,
-    membershipId: membership.id,
-    grokWebhookRegistered: status.grokWebhookRegistered,
-    grokWebhookUrlHost: status.grokWebhookUrlHost,
-    keySet: status.grokWebhookRegistered,
+    ...view,
     lastGrokWakeResult: status.lastGrokWakeResult,
-    note: status.grokWebhookRegistered
+    note: view.grokWebhookRegistered
       ? "Registered. The key is stored and never returned."
       : "Not registered. Ask the user to enter the routine POST URL and key in Project Access → Members → this bot → Grok webhook. Never ask for them in chat.",
   });

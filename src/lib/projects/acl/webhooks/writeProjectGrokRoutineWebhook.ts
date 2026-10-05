@@ -1,6 +1,11 @@
 import { asRowArray, getSql } from "@/lib/db";
-import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
+import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { assertSafeProjectWebhookUrl } from "@/lib/projects/acl/webhooks/assertSafeProjectWebhookUrl";
+import { explainProjectGrokWebhookWriteMiss } from "@/lib/projects/acl/webhooks/explainProjectGrokWebhookWriteMiss";
+import {
+  projectGrokWebhookTargetId,
+  type ProjectGrokWebhookTarget,
+} from "@/lib/projects/acl/webhooks/projectGrokWebhookTarget";
 import { toPublicGrokRoutineWebhook } from "@/lib/projects/acl/webhooks/projectGrokRoutineWebhookPublic";
 
 const MAX_GROK_WEBHOOK_BEARER_LENGTH = 2000;
@@ -10,21 +15,23 @@ export type WriteProjectGrokRoutineWebhookResult =
   | {
       readonly ok: false;
       readonly code:
-        | "forbidden"
+        | "not_found"
+        | "naming_required"
         | "invalid_url"
         | "https_only"
         | "blocked_host"
-        | "naming_required"
         | "invalid_bearer";
     };
 
 /**
- * Validate and store one membership's Grok routine webhook.
- * Bearer is stored, never returned. Caller resolves (and authorizes) the membership.
+ * Shared save step (owner form + register_project_webhook). Validates URL + key,
+ * then ONE guarded INSERT … SELECT: the row is written only if the target
+ * membership is active in this project (role 'member' for member_row) and has
+ * a nickname. Never decides permission; the caller passes the condition.
+ * Bearer is stored, never returned. Does not mutate its input.
  */
 export const writeProjectGrokRoutineWebhook = async (input: {
-  readonly projectId: string;
-  readonly membership: ProjectMembershipRecord | null;
+  readonly target: ProjectGrokWebhookTarget;
   readonly grokWebhookUrl: unknown;
   readonly grokWebhookBearer: unknown;
 }): Promise<WriteProjectGrokRoutineWebhookResult> => {
@@ -35,30 +42,30 @@ export const writeProjectGrokRoutineWebhook = async (input: {
   if (bearer.length === 0 || bearer.length > MAX_GROK_WEBHOOK_BEARER_LENGTH) {
     return { ok: false, code: "invalid_bearer" };
   }
-  const membership = input.membership;
-  if (membership === null) {
-    return { ok: false, code: "forbidden" };
-  }
-  if (!membership.projectDisplayName) {
-    return { ok: false, code: "naming_required" };
-  }
   const safe = await assertSafeProjectWebhookUrl(input.grokWebhookUrl);
   if (!safe.ok) {
     return { ok: false, code: safe.code };
   }
+  const { target } = input;
+  const targetId = projectGrokWebhookTargetId(target);
+  await ensureProjectAclSchema();
   const sql = getSql();
   const rows = asRowArray(
     await sql`
       INSERT INTO project_membership_grok_routine_webhooks (
         project_id, membership_id, user_id, webhook_url, bearer_retained
       )
-      VALUES (
-        ${input.projectId},
-        ${membership.id},
-        ${membership.userId},
-        ${safe.url.toString()},
-        ${bearer}
-      )
+      SELECT m.project_id, m.id, m.user_id, ${safe.url.toString()}::text, ${bearer}::text
+      FROM project_memberships m
+      WHERE m.project_id = ${target.projectId}::text
+        AND m.status = 'active'
+        AND m.project_display_name IS NOT NULL
+        AND btrim(m.project_display_name) <> ''
+        AND (
+          (${target.by}::text = 'member_row' AND m.id = ${targetId}::text AND m.role = 'member')
+          OR (${target.by}::text = 'own_membership' AND m.user_id = ${targetId}::text)
+        )
+      LIMIT 1
       ON CONFLICT (membership_id) DO UPDATE SET
         webhook_url = EXCLUDED.webhook_url,
         bearer_retained = EXCLUDED.bearer_retained,
@@ -71,7 +78,10 @@ export const writeProjectGrokRoutineWebhook = async (input: {
   const row = rows[0];
   const pub = row === undefined ? null : toPublicGrokRoutineWebhook(row);
   if (pub === null) {
-    return { ok: false, code: "forbidden" };
+    return {
+      ok: false,
+      code: await explainProjectGrokWebhookWriteMiss(target),
+    };
   }
   return { ok: true, grokWebhookUrl: pub.grokWebhookUrl };
 };
