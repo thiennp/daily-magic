@@ -59,10 +59,18 @@ describe("POST /api/cron/project-message-silence", () => {
     expect(insertMock).not.toHaveBeenCalled();
   });
 
-  it("refuses every call when the env secret is unset", async () => {
+  it("answers 503 disabled when the env secret is unset", async () => {
     vi.stubEnv(CRON_SECRET_ENV, "");
-    expect((await call("")).status).toBe(401);
-    expect((await call("cron-test-secret")).status).toBe(401);
+    for (const secret of [undefined, "", "cron-test-secret"]) {
+      const response = await call(secret);
+      expect(response.status).toBe(503);
+      expect(await response.json()).toEqual({
+        ok: false,
+        disabled: true,
+        reason: "AWC_CRON_SECRET not set",
+      });
+    }
+    expect(insertMock).not.toHaveBeenCalled();
   });
 
   it("does not double-notify across two calls", async () => {

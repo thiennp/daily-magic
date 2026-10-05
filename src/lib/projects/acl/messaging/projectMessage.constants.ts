@@ -40,6 +40,8 @@ export const PROJECT_MESSAGE_SYSTEM_SENDER_DISPLAY_NAME = "System";
 export const PROJECT_B2B_SILENCE_NOTIFY_MS = 5 * 60_000;
 /** No activity this long after the wake or its last activity: mark the delivery blocked. */
 export const PROJECT_B2B_SILENCE_BLOCK_MS = 10 * 60_000;
+/** In-process silence check interval on the long-running Node server. */
+export const PROJECT_B2B_SILENCE_TICK_MS = 60_000;
 
 /** Total JSON byte size of the refs object. */
 export const PROJECT_MESSAGE_REFS_MAX_BYTES = 768;
