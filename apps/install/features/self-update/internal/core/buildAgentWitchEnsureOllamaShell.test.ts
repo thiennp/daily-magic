@@ -42,4 +42,13 @@ describe("ensureAgentWitchOllamaInstalled", () => {
     expect(result.ok).toBe(false);
     expect(result.message).toBe("Could not install Ollama.");
   });
+
+  it("refuses the default shell runner under VITEST without opt-in", async () => {
+    const result = await ensureAgentWitchOllamaInstalled();
+
+    expect(result.ok).toBe(false);
+    expect(result.message).toContain(
+      "Refusing Ollama host side effects under VITEST",
+    );
+  });
 });

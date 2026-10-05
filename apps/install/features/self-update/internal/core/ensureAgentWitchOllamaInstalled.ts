@@ -15,6 +15,20 @@ export type AgentWitchOllamaShellRunner = (
 
 const runOllamaEnsureShell: AgentWitchOllamaShellRunner = (script) =>
   new Promise((resolve) => {
+    // Defense-in-depth: never brew/install/start Ollama while Vitest is driving
+    // the process unless an explicit opt-in is set (tests should inject runShell).
+    if (
+      process.env.VITEST &&
+      process.env.AGENT_WITCH_ALLOW_HOST_SIDE_EFFECTS !== "1"
+    ) {
+      resolve({
+        exitCode: 1,
+        output:
+          "Refusing Ollama host side effects under VITEST (set AGENT_WITCH_ALLOW_HOST_SIDE_EFFECTS=1 to override).",
+      });
+      return;
+    }
+
     const child = spawn("bash", ["-c", script], {
       env: {
         ...process.env,

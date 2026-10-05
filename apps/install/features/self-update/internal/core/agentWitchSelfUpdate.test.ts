@@ -3,6 +3,27 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+// runAgentWitchSelfUpdate always calls ensureAgentWitchOllamaInstalled (real
+// bash/brew/ollama) and on success kickstarts LaunchAgents. Labels are
+// production "com.agent-witch*" (basename-based, not AGENT_WITCH_HOME) and
+// plists write to ~/Library/LaunchAgents — temp AGENT_WITCH_HOME is not enough.
+vi.mock("./ensureAgentWitchOllamaInstalled", () => ({
+  ensureAgentWitchOllamaInstalled: vi.fn(async () => ({
+    ok: true,
+    message: "Ollama ensure skipped in test.",
+  })),
+}));
+
+vi.mock("@agent-witch/install-macos-launch", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("@agent-witch/install-macos-launch")>();
+  return {
+    ...actual,
+    bootoutAgentWitchAuxiliaryLaunchAgents: vi.fn(),
+    kickstartAgentWitchClientLaunchAgents: vi.fn(async () => []),
+  };
+});
+
 import { resolveAgentWitchLocalLayout } from "@agent-witch/install-layout";
 import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
 
