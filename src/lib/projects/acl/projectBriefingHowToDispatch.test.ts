@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 
 import { AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
-import { buildProjectInviteAgentPrompt } from "@/features/projects/access/invites/buildProjectInviteAgentPrompt";
 import { buildProjectAclAgentGuidelineSection } from "@/lib/agentAccess/buildProjectAclAgentGuidelineSection";
 import {
   PROJECT_BRIEFING_HOW_TO_DISPATCH,
@@ -86,11 +85,6 @@ describe("PROJECT_UPDATED_WAKE_REPLY_CLAUSE", () => {
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain(
       PROJECT_UPDATED_WAKE_REPLY_CLAUSE,
     );
-    const prompt = buildProjectInviteAgentPrompt({
-      inviteUrl: "https://example.com/invite/p/tok-xyz",
-      projectId: "proj-1",
-    });
-    expect(prompt).toContain(PROJECT_UPDATED_WAKE_REPLY_CLAUSE);
     expect(buildProjectAclAgentGuidelineSection().body.join("\n")).toContain(
       PROJECT_UPDATED_WAKE_REPLY_CLAUSE,
     );

@@ -1,8 +1,10 @@
 import {
   PROJECT_MESSAGE_SUMMARY_MAX_CHARS,
+} from "@/lib/projects/acl/messaging/projectMessage.constants";
+import {
   PROJECT_UPDATED_SUMMARY_FIELDS,
   type ProjectUpdatedSummaryField,
-} from "@/lib/projects/acl/messaging/projectMessage.constants";
+} from "@/lib/projects/acl/messaging/projectUpdated.constants";
 
 const ALLOWED: ReadonlySet<string> = new Set(PROJECT_UPDATED_SUMMARY_FIELDS);
 

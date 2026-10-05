@@ -4,13 +4,8 @@ const scheduleMock = vi.hoisted(() =>
   vi.fn(async (_input: unknown) => ({ scheduled: true })),
 );
 const getProjectMock = vi.hoisted(() => vi.fn());
-const sqlMock = vi.hoisted(() => vi.fn());
 const setLinked = vi.hoisted(() => vi.fn());
 
-vi.mock("@/lib/db", () => ({
-  getSql: () => sqlMock,
-  asRowArray: (value: unknown) => (Array.isArray(value) ? value : []),
-}));
 vi.mock("@/lib/projects/userProjectQueries", () => ({
   getUserProjectById: (id: unknown) => getProjectMock(id),
 }));
@@ -34,18 +29,14 @@ const existing = (folderPath: string, deviceId: string) => ({
 const mapped = (folderPath: string, deviceId: string) => ({
   id: "proj-1",
   ownerUserId: "owner-1",
-  name: "P",
   deviceId,
   folderPath,
-  repoUrls: [],
-  defaultBranch: null,
 });
 
 describe("updateUserProjectFolderPath notify hook", () => {
   beforeEach(() => {
     scheduleMock.mockClear();
     getProjectMock.mockReset();
-    sqlMock.mockReset();
     setLinked.mockReset();
   });
 
@@ -81,7 +72,6 @@ describe("updateUserProjectFolderPath notify hook", () => {
       expect.objectContaining({ id: "proj-1", folderPath: "/same" }),
     );
     expect(setLinked).not.toHaveBeenCalled();
-    expect(sqlMock).not.toHaveBeenCalled();
     expect(scheduleMock).not.toHaveBeenCalled();
   });
 

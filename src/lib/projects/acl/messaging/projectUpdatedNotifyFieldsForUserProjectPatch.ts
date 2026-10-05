@@ -1,4 +1,4 @@
-import type { ProjectUpdatedSummaryField } from "@/lib/projects/acl/messaging/projectMessage.constants";
+import type { ProjectUpdatedSummaryField } from "@/lib/projects/acl/messaging/projectUpdated.constants";
 
 /**
  * Map a successful user_projects patch input to project.updated summary tags.

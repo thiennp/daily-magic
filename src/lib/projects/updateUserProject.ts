@@ -49,18 +49,17 @@ export const updateUserProject = async (
     return null;
   }
 
-  let project: UserProjectRecord | null = mapUserProjectRow(rows[0]);
-
-  if (input.deviceId !== undefined) {
-    // Device bind/rebind/unbind goes through the sole device_id UPDATE choke.
-    project = await setUserProjectLinkedDevice({
-      ownerUserId,
-      projectId,
-      deviceId: input.deviceId,
-    });
-    if (project === null) {
-      return null;
-    }
+  // Device bind/rebind/unbind goes through the sole device_id UPDATE choke.
+  const project =
+    input.deviceId === undefined
+      ? mapUserProjectRow(rows[0])
+      : await setUserProjectLinkedDevice({
+          ownerUserId,
+          projectId,
+          deviceId: input.deviceId,
+        });
+  if (project === null) {
+    return null;
   }
 
   // Device-only writes skip notify (matches updateUserProjectFolderPath).

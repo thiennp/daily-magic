@@ -9,9 +9,11 @@ import {
   PROJECT_MESSAGE_KIND_PROJECT_UPDATED,
   PROJECT_MESSAGE_LIFECYCLE_KINDS,
   PROJECT_MESSAGE_SUMMARY_MAX_CHARS,
+} from "@/lib/projects/acl/messaging/projectMessage.constants";
+import {
   PROJECT_UPDATED_DEBOUNCE_MS,
   PROJECT_UPDATED_SUMMARY_FIELDS,
-} from "@/lib/projects/acl/messaging/projectMessage.constants";
+} from "@/lib/projects/acl/messaging/projectUpdated.constants";
 
 describe("project.updated summary + kind", () => {
   it("adds project.updated to lifecycle kinds (hourly-cap excluded)", () => {

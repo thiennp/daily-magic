@@ -1,7 +1,7 @@
 import { ensureProjectUpdatedNotifyPendingSchema } from "@/lib/projects/acl/messaging/ensureProjectUpdatedNotifyPendingSchema";
 import { filterProjectUpdatedSummaryFields } from "@/lib/projects/acl/messaging/buildProjectUpdatedSummary";
 import { upsertProjectUpdatedNotifyPending } from "@/lib/projects/acl/messaging/upsertProjectUpdatedNotifyPending";
-import { PROJECT_UPDATED_DEBOUNCE_MS } from "@/lib/projects/acl/messaging/projectMessage.constants";
+import { PROJECT_UPDATED_DEBOUNCE_MS } from "@/lib/projects/acl/messaging/projectUpdated.constants";
 
 /**
  * Schedule a debounced project.updated notify (trailing 5s per projectId).

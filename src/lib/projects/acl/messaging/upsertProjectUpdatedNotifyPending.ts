@@ -1,7 +1,9 @@
 import { nextProjectUpdatedNotifyState } from "@/lib/projects/acl/messaging/nextProjectUpdatedNotifyState";
 import { asRowArray, getSql } from "@/lib/db";
-import type { ProjectUpdatedSummaryField } from "@/lib/projects/acl/messaging/projectMessage.constants";
-import { PROJECT_UPDATED_DEBOUNCE_MS } from "@/lib/projects/acl/messaging/projectMessage.constants";
+import {
+  PROJECT_UPDATED_DEBOUNCE_MS,
+  type ProjectUpdatedSummaryField,
+} from "@/lib/projects/acl/messaging/projectUpdated.constants";
 
 /**
  * Insert or extend a pending notify row (trailing debounce).

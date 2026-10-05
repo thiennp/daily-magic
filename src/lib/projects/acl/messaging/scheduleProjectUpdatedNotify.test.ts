@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { createProjectUpdatedNotifyPendingFakeSql } from "@/lib/projects/acl/messaging/projectUpdatedNotifyPendingFakeSql.fixtures";
-import { PROJECT_UPDATED_DEBOUNCE_MS } from "@/lib/projects/acl/messaging/projectMessage.constants";
+import { PROJECT_UPDATED_DEBOUNCE_MS } from "@/lib/projects/acl/messaging/projectUpdated.constants";
 
 const fake = vi.hoisted(() => ({ sql: null as unknown }));
 const notifyMock = vi.hoisted(() =>
