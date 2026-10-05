@@ -3,6 +3,7 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { MARKETING_HEADER_NAV_ITEMS } from "@/features/marketing/marketingHeaderNavItems.constant";
 import { resolveMarketingFooterProductLinks } from "@/features/marketing/resolveMarketingFooterNav";
 import { isShowcaseTryNextAuthRequired } from "@/features/showcases/resolveShowcaseTryNextHref";
 import {
@@ -25,6 +26,7 @@ const RETARGETED_FILES = [
   "src/features/automations/AutomationCard.tsx",
   "src/features/automations/CreateAutomationForm.tsx",
   "src/features/marketing/resolveMarketingFooterNav.ts",
+  "src/features/marketing/marketingHeaderNavItems.constant.ts",
 ] as const;
 
 describe("library + reports links point into projects", () => {
@@ -45,6 +47,16 @@ describe("library + reports links point into projects", () => {
       (link) => link.label === "Reports",
     );
     expect(reports?.href).toBe(PROJECTS_REPORTS_INTENT_HREF);
+  });
+
+  it("marketing header Reports uses projects intent (login callback for signed-out)", () => {
+    const reports = MARKETING_HEADER_NAV_ITEMS.find(
+      (link) => link.label === "Reports",
+    );
+    expect(reports?.href).toBe(
+      `/login?callbackUrl=${encodeURIComponent(PROJECTS_REPORTS_INTENT_HREF)}`,
+    );
+    expect(reports?.href).not.toBe("/login?callbackUrl=%2Freports");
   });
 
   it("showcase try-next on /projects asks anonymous readers to sign in", () => {
