@@ -52,12 +52,13 @@ describe("bot-to-bot showcase article", () => {
     expect(JSON.stringify(silence)).toContain("Blocked is final");
   });
 
-  it("marks future features as coming soon", () => {
+  it("marks future features as coming soon and skills as live", () => {
     const text = allText();
     expect(text).toMatch(/Coming soon: a member-side form/);
     expect(text).toMatch(/Coming soon: a short, debounced/);
     expect(text).toContain("project updated");
-    expect(text).toMatch(/Coming soon: shared playbooks and skills/);
+    expect(text).not.toMatch(/Coming soon: shared playbooks and skills/);
+    expect(text).toContain("Shared project skills are live on Project Access");
   });
 
   it("keeps the when-you-don't-need-it section", () => {

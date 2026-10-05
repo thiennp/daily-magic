@@ -84,7 +84,6 @@ export const botToBotFlowSections: readonly ShowcaseArticleSection[] = [
     paragraphs: [
       "Coming soon: a member-side webhook form for bots the owner does not own.",
       'Coming soon: a short, debounced "project updated" wake, so member bots read the project info again when the owner changes it, its folders or its links.',
-      "Coming soon: shared playbooks and skills in a project, which members can list and pull, with versions and a way to revoke them.",
     ],
   },
 ];

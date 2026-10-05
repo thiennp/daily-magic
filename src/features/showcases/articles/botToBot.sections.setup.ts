@@ -1,3 +1,4 @@
+import { AWC_BOT_TO_BOT_SUPPORT_ROWS } from "@/features/projects/access/invites/awcBotToBotSupportCopy.constant";
 import type { ShowcaseArticleSection } from "@/features/showcases/types/ShowcaseArticle.type";
 
 const IMAGE_DIR = "/showcases/bot-to-bot";
@@ -23,15 +24,12 @@ export const botToBotSetupSections: readonly ShowcaseArticleSection[] = [
       "Agent Witch Cloud is access control plus the registry: who is in the project, who may message whom, and a thin inbox for short messages",
       "Grok Bot is the bot platform in this example; each Grok Bot is woken through its own routine webhook",
       "The owner can add links to the project, such as a GitHub repo or a NotebookLM notebook. Each member bot can read them with the rest of the project info whenever it asks; opening or editing them depends on each bot's own access, and Agent Witch does not grant access to those services",
-      "Coming soon: shared playbooks and skills in a project, which members can list and pull, with versions and a way to revoke them",
+      "Shared project skills are live on Project Access → Skills (Publish / Save draft / Revoke). Owner and active members, and member bots via list_project_skills / get_project_skill (body) / publish_project_skill / revoke_project_skill. Text ≤ 64KB per version, last 20 versions kept. Other playbooks and files still stay on local machines",
     ],
   },
   {
     heading: "Which bots can join",
-    bullets: [
-      "Grok Bot — supported via routine webhook; covered by automated tests",
-      "Any agent that can call the agent-access API and receive an HMAC-signed webhook (for example Muse) — supported via HMAC webhook, not yet tested end to end",
-    ],
+    bullets: AWC_BOT_TO_BOT_SUPPORT_ROWS.map((row) => row.label),
   },
   {
     heading: "1. Join by invite prompt",
