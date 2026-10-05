@@ -56,14 +56,14 @@ export const useHumanPeopleInvites = (input: {
   }, [copy.loadFailed, input.enabled, input.projectId]);
 
   useEffect(() => {
-    let cancelled = false;
+    const cancelled = { current: false };
     const timer = window.setTimeout(() => {
-      if (!cancelled) {
+      if (!cancelled.current) {
         void reload();
       }
     }, 0);
     return () => {
-      cancelled = true;
+      cancelled.current = true;
       window.clearTimeout(timer);
     };
   }, [reload]);

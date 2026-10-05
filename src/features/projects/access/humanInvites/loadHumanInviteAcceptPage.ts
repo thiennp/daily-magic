@@ -101,7 +101,6 @@ export const loadHumanInviteAcceptPage = async (
     readonly invitedEmailMasked?: string | null;
   };
   const requireEmailMatch = peekedLock.requireEmailMatch === true;
-  // Arch soft: render server invitedEmailMasked only — no client-side mask fallback.
   const invitedEmailMasked =
     typeof peekedLock.invitedEmailMasked === "string"
       ? peekedLock.invitedEmailMasked
