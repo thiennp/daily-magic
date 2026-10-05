@@ -1,0 +1,26 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "prompt-optimizer",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/prompt-optimizer/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 99,
+  "scoreOverall": 99,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "honesty-callout-density",
+      "pointsDeducted": 1,
+      "reason": "Honesty chrome paragraph packs outcome vocabulary (timeout, interrupt, no_reply) into one alert; accurate but dense for a first scan."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Dense honesty chrome copy"],
+  "mustFix": [],
+  "quickWins": [
+    "Split honesty chrome into short lead + bullet list in a future copy pass"
+  ]
+}
