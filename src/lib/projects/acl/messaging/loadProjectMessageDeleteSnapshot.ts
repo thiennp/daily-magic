@@ -1,4 +1,5 @@
 import { ensureProjectMessageDeleteOnReadSchema } from "@/lib/projects/acl/messaging/ensureProjectMessageDeleteOnReadSchema";
+import { toPostgresTimestamptz } from "@/lib/projects/acl/messaging/toPostgresTimestamptz";
 import { asRowArray, getSql } from "@/lib/db";
 
 export type ProjectMessageDeleteSnapshot = {
@@ -54,8 +55,8 @@ export const loadProjectMessageDeleteSnapshot = async (input: {
     projectId: String(row.project_id),
     recipientUserId: optionalString(row.to_user_id),
     recipientMembershipId: optionalString(row.to_membership_id),
-    messageCreatedAt: row.created_at ? String(row.created_at) : null,
-    readAt: row.read_at ? String(row.read_at) : null,
+    messageCreatedAt: toPostgresTimestamptz(row.created_at),
+    readAt: toPostgresTimestamptz(row.read_at),
     deliveryStates: deliveryRows.map((d) => optionalString(d.b2b_state)),
     grokWakeResult: optionalString(row.grok_wake_result),
   };

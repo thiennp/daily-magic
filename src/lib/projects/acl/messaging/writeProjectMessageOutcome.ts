@@ -1,4 +1,5 @@
 import { ensureProjectMessageDeleteOnReadSchema } from "@/lib/projects/acl/messaging/ensureProjectMessageDeleteOnReadSchema";
+import { toPostgresTimestamptz } from "@/lib/projects/acl/messaging/toPostgresTimestamptz";
 import { getSql } from "@/lib/db";
 
 export type ProjectMessageDeletedReason = "ack" | "delete_on_read";
@@ -23,12 +24,8 @@ export const writeProjectMessageOutcome = async (
 ): Promise<void> => {
   await ensureProjectMessageDeleteOnReadSchema();
   const sql = getSql();
-  const createdAt =
-    input.messageCreatedAt instanceof Date
-      ? input.messageCreatedAt.toISOString()
-      : input.messageCreatedAt;
-  const readAt =
-    input.readAt instanceof Date ? input.readAt.toISOString() : input.readAt;
+  const createdAt = toPostgresTimestamptz(input.messageCreatedAt);
+  const readAt = toPostgresTimestamptz(input.readAt);
   await sql`
     INSERT INTO project_message_outcomes (
       message_id, project_id, recipient_user_id, recipient_membership_id,
