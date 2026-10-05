@@ -13,6 +13,7 @@ export const useAwcProjectInviteActions = (input: {
   readonly setMessage: (message: string | null) => void;
   readonly setCreatedInviteUrl: (url: string | null) => void;
   readonly setCreatedInviteToken: (token: string | null) => void;
+  readonly setCreatedInviteId: (inviteId: string | null) => void;
 }) => {
   const createInvite = async () => {
     const result = await createProjectInviteApi(input.projectId, {});
@@ -23,13 +24,15 @@ export const useAwcProjectInviteActions = (input: {
           ? result.token
           : null,
       );
+      input.setCreatedInviteId(
+        typeof result.inviteId === "string" && result.inviteId.length > 0
+          ? result.inviteId
+          : null,
+      );
       input.setMessage("Invite created — copy the link or prompt now.");
     } else {
       input.setMessage(
-        mapProjectAccessError(
-          result.errorMessage,
-          "Failed to create invite.",
-        ),
+        mapProjectAccessError(result.errorMessage, "Failed to create invite."),
       );
     }
     await input.reload();

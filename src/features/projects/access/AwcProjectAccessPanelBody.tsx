@@ -73,10 +73,7 @@ export default function AwcProjectAccessPanelBody({
           hideChrome
           onCreate={() => void access.createInvite()}
           onRevoke={(id) => void access.revokeInvite(id)}
-          onClearCreatedUrl={() => {
-            access.setCreatedInviteUrl(null);
-            access.setCreatedInviteToken(null);
-          }}
+          onClearCreatedUrl={access.clearCreatedInviteBanner}
         />
       </AwcProjectAccessSection>
 

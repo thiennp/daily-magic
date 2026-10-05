@@ -1,13 +1,14 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import mapProjectInviteRow from "@/lib/projects/acl/invites/mapProjectInviteRow";
+import { selectUsableProjectInviteRows } from "@/lib/projects/acl/invites/selectUsableProjectInviteRows";
 import type ProjectInviteRecord from "@/lib/projects/acl/invites/types/ProjectInviteRecord.type";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
-import { asRowArray, getSql } from "@/lib/db";
 
 export type ListProjectInvitesResult =
   | { readonly ok: true; readonly invites: readonly ProjectInviteRecord[] }
   | { readonly ok: false; readonly code: "not_found" | "forbidden" };
 
+/** Owner-only invite list orchestrator: auth, then the usable-invite SELECT. */
 export const listProjectInvites = async (input: {
   readonly projectId: string;
   readonly ownerUserId: string;
@@ -20,15 +21,6 @@ export const listProjectInvites = async (input: {
     return { ok: false, code: "forbidden" };
   }
   await ensureProjectAclSchema();
-  const sql = getSql();
-  const rows = asRowArray(
-    await sql`
-      SELECT *
-      FROM project_invites
-      WHERE project_id = ${input.projectId}
-      ORDER BY created_at DESC
-      LIMIT 100
-    `,
-  );
+  const rows = await selectUsableProjectInviteRows(input.projectId);
   return { ok: true, invites: rows.map((row) => mapProjectInviteRow(row)) };
 };
