@@ -96,6 +96,7 @@ import { AGENT_WITCH_PAIRING_TOKEN_HEADER } from "../../../projects/internal/cor
 import fetchProjectCompositionFromCloud from "../../../projects/internal/core/fetchProjectCompositionFromCloud";
 import promoteAllProjectKnowledgeCandidatesFromCloud from "../../../projects/internal/core/knowledge/promoteAllProjectKnowledgeCandidatesFromCloud";
 import createCloudAgentWitchProjectPitfallsStore from "../../../projects/internal/core/pitfalls/createCloudAgentWitchProjectPitfallsStore";
+import createMacAgentWitchProjectPitfallsStore from "../../../projects/internal/core/pitfalls/createMacAgentWitchProjectPitfallsStore";
 import { listProjectPitfallsCached } from "../../../projects/internal/core/pitfalls/projectPitfallsListCache";
 import resolveProjectPitfallFlash from "../../../projects/internal/core/pitfalls/resolveProjectPitfallFlash";
 import {
@@ -1157,16 +1158,21 @@ export const startAgentWitchLocalApp = (input: {
           }
         }
         // Soft: fetch pitfalls only when that tab is active (then cache briefly).
+        // Mac store reads SQLite (and write-through syncs from cloud when paired).
         const pitfalls =
           activeTab !== "pitfalls"
             ? undefined
-            : cloudConfig === null
-              ? null
-              : await listProjectPitfallsCached({
-                  store: createCloudAgentWitchProjectPitfallsStore(cloudConfig),
-                  projectId: project.id,
-                  includeRetired: pitfallsShowRetired,
-                });
+            : await listProjectPitfallsCached({
+                store: createMacAgentWitchProjectPitfallsStore({
+                  layout: input.layout,
+                  cloud:
+                    cloudConfig === null
+                      ? null
+                      : createCloudAgentWitchProjectPitfallsStore(cloudConfig),
+                }),
+                projectId: project.id,
+                includeRetired: pitfallsShowRetired,
+              });
         sendHtml(
           response,
           await buildLocalAppShell({
@@ -1387,6 +1393,11 @@ export const startAgentWitchLocalApp = (input: {
           rawBody,
           action: pitfallAction,
           layout: input.layout,
+          createStore: (cloudConfig) =>
+            createMacAgentWitchProjectPitfallsStore({
+              layout: input.layout,
+              cloud: createCloudAgentWitchProjectPitfallsStore(cloudConfig),
+            }),
         });
         if (pitfallResult.kind === "not_found") {
           await sendLocalAppNotFound(response, "Project not found");

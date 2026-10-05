@@ -21,11 +21,10 @@ export type UpsertAgentWitchPitfallResult =
 /**
  * Adapter seam for the AWL Pitfalls tab.
  *
- * Today: `createCloudAgentWitchProjectPitfallsStore` (cloud is the source of
- * truth). AW Mac's SQLite cache (`feat/awl-pitfall-cache`: listPitfalls /
- * getPitfall / upsertPitfall / recordHit / matchPitfalls) can wrap this store
- * as write-through (upsert cloud, then refresh local) without changing the
- * tab or the POST handler — they depend on this interface only.
+ * - Cloud SoT client: `createCloudAgentWitchProjectPitfallsStore`
+ * - Mac SQLite cache: `createMacAgentWitchProjectPitfallsStore` (write-through
+ *   cloud → local via `createPitfallRegistry`; AWL tab reads SQLite hits)
+ * AWC keeps its own cloud list routes — this seam is AWL-only.
  */
 export interface AgentWitchProjectPitfallsStore {
   readonly listPitfalls: (

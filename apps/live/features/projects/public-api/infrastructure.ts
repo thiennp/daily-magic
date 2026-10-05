@@ -77,3 +77,5 @@ export {
   type AgentWitchHeartbeatResponse,
   type ClaimedCloudAgentRun,
 } from "../internal/core/agentWitchCloudApi";
+
+export { default as createMacAgentWitchProjectPitfallsStore } from "../internal/core/pitfalls/createMacAgentWitchProjectPitfallsStore";
