@@ -15,6 +15,19 @@ export type AssertComputerDispatchAssignableResult =
       readonly cause: ComputerNotAssignableCause;
     };
 
+const collectLiveLocalDeviceIdsSafely = async (
+  ownerUserId: string,
+): Promise<ReadonlySet<string>> => {
+  try {
+    return await collectLiveAgentWitchDeviceIdsForUser(
+      getAgentWitchHub(),
+      ownerUserId,
+    );
+  } catch {
+    return new Set<string>();
+  }
+};
+
 /**
  * Server-side assignability re-check for memberKind=computer.
  * Does not trust the client picker. Uses Mac helper
@@ -31,15 +44,7 @@ export const assertComputerDispatchAssignable = async (input: {
   }
 
   const registryIds = await listFreshRegistryDeviceIdsForUser(input.ownerUserId);
-  let liveLocal: ReadonlySet<string> = new Set<string>();
-  try {
-    liveLocal = await collectLiveAgentWitchDeviceIdsForUser(
-      getAgentWitchHub(),
-      input.ownerUserId,
-    );
-  } catch {
-    liveLocal = new Set();
-  }
+  const liveLocal = await collectLiveLocalDeviceIdsSafely(input.ownerUserId);
   const isLive = liveLocal.has(input.deviceId) || registryIds.has(input.deviceId);
   const isOnline =
     isLive || isAgentWitchDeviceRecentlySeen(device.lastSeenAt, Date.now());

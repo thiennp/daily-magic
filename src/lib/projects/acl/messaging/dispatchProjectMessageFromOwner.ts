@@ -1,10 +1,10 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { assertProjectMessageDispatchRateLimits } from "@/lib/projects/acl/messaging/assertProjectMessageDispatchRateLimits";
-import { completeOwnerProjectMessageInsert } from "@/lib/projects/acl/messaging/completeOwnerProjectMessageInsert";
-import { parseProjectDispatchPayload } from "@/lib/projects/acl/messaging/parseProjectDispatchPayload";
+import { dispatchResolvedOwnerPeerMessage } from "@/lib/projects/acl/messaging/dispatchResolvedOwnerPeerMessage";
+import { parseOwnerPeerDispatchPayload } from "@/lib/projects/acl/messaging/parseOwnerPeerDispatchPayload";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 import { resolveDispatchRecipients } from "@/lib/projects/acl/messaging/resolveDispatchRecipients";
-import { routeResolvedComputerDispatch } from "@/lib/projects/acl/messaging/routeResolvedComputerDispatch";
+import { routeComputerDispatchWithAudit } from "@/lib/projects/acl/messaging/routeComputerDispatchWithAudit";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 
 export type DispatchProjectMessageFromOwnerResult =
@@ -30,31 +30,9 @@ export const dispatchProjectMessageFromOwner = async (input: {
   readonly ownerUserId: string;
   readonly args: unknown;
 }): Promise<DispatchProjectMessageFromOwnerResult> => {
-  if (input.args === null || typeof input.args !== "object") {
-    return { ok: false, code: "invalid_arguments" };
-  }
-  const body = input.args as Record<string, unknown>;
-  const parsed = parseProjectDispatchPayload({
-    ...body,
-    kind:
-      typeof body.kind === "string" && body.kind.trim().length > 0
-        ? body.kind
-        : "task.assign",
-  });
-  // Owner → peer: exactly one of toMembershipId | toProjectDisplayName (no teamLabel / Owner).
-  if (
-    !parsed.ok ||
-    parsed.toTeamLabel !== null ||
-    (parsed.toMembershipId === null && parsed.toProjectDisplayName === null) ||
-    (parsed.toMembershipId !== null && parsed.toProjectDisplayName !== null)
-  ) {
-    return { ok: false, code: parsed.ok ? "peer_required" : parsed.code };
-  }
-  if (
-    parsed.toProjectDisplayName !== null &&
-    parsed.toProjectDisplayName.trim().toLowerCase() === "owner"
-  ) {
-    return { ok: false, code: "peer_required" };
+  const parsed = parseOwnerPeerDispatchPayload(input.args);
+  if (!parsed.ok) {
+    return { ok: false, code: parsed.code };
   }
 
   await ensureProjectAclSchema();
@@ -89,66 +67,40 @@ export const dispatchProjectMessageFromOwner = async (input: {
     return { ok: false, code: "recipient_not_found" };
   }
 
-  const computer = await routeResolvedComputerDispatch({
-    projectId: input.projectId,
-    actorUserId: input.ownerUserId,
-    senderMembershipId: null,
-    primary: resolvedRecipient,
-    parsed,
-  });
-  if (computer.ok) {
-    await writeProjectAccessAudit({
+  const computer = await routeComputerDispatchWithAudit({
+    route: {
       projectId: input.projectId,
       actorUserId: input.ownerUserId,
-      action: "msg.dispatch",
-      targetUserId: resolvedRecipient.user_id,
-      detail: {
-        messageId: computer.messageId,
-        kind: parsed.kind,
-        recipientCount: 1,
-        fromOwner: true,
-        agentRunId: computer.agentRunId,
-        memberKind: "computer",
-      },
-    });
-    return {
-      ok: true,
-      messageId: computer.messageId,
-      recipientCount: 1,
-      agentRunId: computer.agentRunId,
-    };
-  }
-  if (computer.code !== "not_computer") {
-    return { ok: false, code: computer.code, cause: computer.cause };
-  }
-
-  const recipient = {
-    id: resolvedRecipient.id,
-    user_id: resolvedRecipient.user_id,
-  };
-
-  const { messageId } = await completeOwnerProjectMessageInsert({
-    message: {
-      projectId: input.projectId,
       senderMembershipId: null,
-      senderUserId: input.ownerUserId,
-      toMembershipId: recipient.id,
-      toUserId: recipient.user_id,
-      toTeamLabel: null,
-      toProjectDisplayName: parsed.toProjectDisplayName,
-      kind: parsed.kind,
-      summary: parsed.summary,
-      refsJson: JSON.stringify(parsed.refs),
-      recipients: [recipient],
+      primary: resolvedRecipient,
+      parsed,
     },
+    audit: async ({ messageId, agentRunId }) => {
+      await writeProjectAccessAudit({
+        projectId: input.projectId,
+        actorUserId: input.ownerUserId,
+        action: "msg.dispatch",
+        targetUserId: resolvedRecipient.user_id,
+        detail: {
+          messageId,
+          kind: parsed.kind,
+          recipientCount: 1,
+          fromOwner: true,
+          agentRunId,
+          memberKind: "computer",
+        },
+      });
+    },
+  });
+  if (computer !== null) {
+    return computer;
+  }
+
+  return dispatchResolvedOwnerPeerMessage({
+    projectId: input.projectId,
+    ownerUserId: input.ownerUserId,
+    parsed,
+    recipient: { id: resolvedRecipient.id, user_id: resolvedRecipient.user_id },
     dispatchRecipients: resolved.recipients,
   });
-  await writeProjectAccessAudit({
-    projectId: input.projectId,
-    actorUserId: input.ownerUserId,
-    action: "msg.dispatch",
-    targetUserId: recipient.user_id,
-    detail: { messageId, kind: parsed.kind, recipientCount: 1, fromOwner: true },
-  });
-  return { ok: true, messageId, recipientCount: 1 };
 };

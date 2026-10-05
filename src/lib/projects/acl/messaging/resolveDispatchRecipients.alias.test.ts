@@ -12,6 +12,13 @@ vi.mock("@/lib/projects/userProjectQueries", () => ({
   getUserProjectById: vi.fn(async () => listProjectPeersBaseProject),
 }));
 
+const adaBotRecipient = {
+  id: "mem-ada",
+  user_id: "bot-ada",
+  memberKind: "bot",
+  deviceId: null,
+};
+
 describe("resolveDispatchRecipients membershipId + rename alias", () => {
   beforeEach(() => {
     sqlMock.mockReset();
@@ -32,17 +39,7 @@ describe("resolveDispatchRecipients membershipId + rename alias", () => {
       toProjectDisplayName: null,
       toTeamLabel: null,
     });
-    expect(result).toEqual({
-      ok: true,
-      recipients: [
-        {
-          id: "mem-ada",
-          user_id: "bot-ada",
-          memberKind: "bot",
-          deviceId: null,
-        },
-      ],
-    });
+    expect(result).toEqual({ ok: true, recipients: [adaBotRecipient] });
   });
 
   it("falls back to unexpired display-name alias when live name missing", async () => {
@@ -71,17 +68,7 @@ describe("resolveDispatchRecipients membershipId + rename alias", () => {
       toProjectDisplayName: "Ada",
       toTeamLabel: null,
     });
-    expect(result).toEqual({
-      ok: true,
-      recipients: [
-        {
-          id: "mem-ada",
-          user_id: "bot-ada",
-          memberKind: "bot",
-          deviceId: null,
-        },
-      ],
-    });
+    expect(result).toEqual({ ok: true, recipients: [adaBotRecipient] });
   });
 
   it("returns recipient_not_found when alias expired / absent", async () => {

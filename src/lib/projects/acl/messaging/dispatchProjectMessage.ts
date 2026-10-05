@@ -3,11 +3,11 @@ import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectM
 import { assertProjectMessageDispatchRateLimits } from "@/lib/projects/acl/messaging/assertProjectMessageDispatchRateLimits";
 import { checkProjectMessageSilence } from "@/lib/projects/acl/messaging/checkProjectMessageSilence";
 import { decideProjectMessagePostAccess } from "@/lib/projects/acl/messaging/decideProjectMessagePostAccess";
-import { orchestrateProjectBotToBotMessage } from "@/lib/projects/acl/messaging/orchestrateProjectBotToBotMessage";
+import { dispatchResolvedBotProjectMessage } from "@/lib/projects/acl/messaging/dispatchResolvedBotProjectMessage";
 import { parseProjectDispatchPayload } from "@/lib/projects/acl/messaging/parseProjectDispatchPayload";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 import { resolveDispatchRecipients } from "@/lib/projects/acl/messaging/resolveDispatchRecipients";
-import { routeResolvedComputerDispatch } from "@/lib/projects/acl/messaging/routeResolvedComputerDispatch";
+import { routeComputerDispatchWithAudit } from "@/lib/projects/acl/messaging/routeComputerDispatchWithAudit";
 import { writeProjectMessageDispatchAudit } from "@/lib/projects/acl/messaging/writeProjectMessageDispatchAudit";
 
 export type DispatchProjectMessageResult =
@@ -73,67 +73,34 @@ export const dispatchProjectMessage = async (input: {
     return { ok: false, code: resolved.code };
   }
 
-  const computer = await routeResolvedComputerDispatch({
+  const computer = await routeComputerDispatchWithAudit({
+    route: {
+      projectId: input.projectId,
+      actorUserId: input.actorUserId,
+      senderMembershipId: sender.id,
+      senderProjectDisplayName: access.projectDisplayName,
+      primary: resolved.recipients[0],
+      parsed,
+    },
+    audit: ({ messageId }) =>
+      writeProjectMessageDispatchAudit({
+        projectId: input.projectId,
+        actorUserId: input.actorUserId,
+        messageId,
+        recipientCount: 1,
+        parsed,
+      }),
+  });
+  if (computer !== null) {
+    return computer;
+  }
+
+  return dispatchResolvedBotProjectMessage({
     projectId: input.projectId,
     actorUserId: input.actorUserId,
     senderMembershipId: sender.id,
     senderProjectDisplayName: access.projectDisplayName,
-    primary: resolved.recipients[0],
     parsed,
+    recipients: resolved.recipients,
   });
-  if (computer.ok) {
-    await writeProjectMessageDispatchAudit({
-      projectId: input.projectId,
-      actorUserId: input.actorUserId,
-      messageId: computer.messageId,
-      recipientCount: 1,
-      parsed,
-    });
-    return {
-      ok: true,
-      messageId: computer.messageId,
-      recipientCount: 1,
-      agentRunId: computer.agentRunId,
-    };
-  }
-  if (computer.code !== "not_computer") {
-    return { ok: false, code: computer.code, cause: computer.cause };
-  }
-
-  const primary = resolved.recipients[0];
-  const addressedByMembershipOrName =
-    parsed.toMembershipId !== null || parsed.toProjectDisplayName !== null;
-  const inserted = await orchestrateProjectBotToBotMessage({
-    message: {
-      projectId: input.projectId,
-      senderMembershipId: sender.id,
-      senderProjectDisplayName: access.projectDisplayName,
-      senderUserId: input.actorUserId,
-      toMembershipId: addressedByMembershipOrName ? primary.id : null,
-      toUserId: addressedByMembershipOrName ? primary.user_id : null,
-      toTeamLabel: parsed.toTeamLabel,
-      toProjectDisplayName: parsed.toProjectDisplayName,
-      kind: parsed.kind,
-      summary: parsed.summary,
-      refsJson: JSON.stringify(parsed.refs),
-      recipients: resolved.recipients.filter(
-        (recipient): recipient is { id: string; user_id: string } =>
-          recipient.id !== null,
-      ),
-    },
-    dispatchRecipients: resolved.recipients,
-    now: new Date(),
-  });
-  await writeProjectMessageDispatchAudit({
-    projectId: input.projectId,
-    actorUserId: input.actorUserId,
-    messageId: inserted.messageId,
-    recipientCount: resolved.recipients.length,
-    parsed,
-  });
-  return {
-    ok: true,
-    messageId: inserted.messageId,
-    recipientCount: resolved.recipients.length,
-  };
 };
