@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 
 import { asRowArray, getSql } from "@/lib/db";
+import { scheduleProjectUpdatedNotify } from "@/lib/projects/acl/messaging/scheduleProjectUpdatedNotify";
 
 const createProjectKnowledgeCandidate = async (input: {
   readonly projectId: string;
@@ -45,6 +46,12 @@ const createProjectKnowledgeCandidate = async (input: {
       'candidate'
     )
   `;
+
+  await scheduleProjectUpdatedNotify({
+    projectId: input.projectId,
+    fields: ["knowledge"],
+    actorUserId: input.ownerUserId,
+  });
 
   return id;
 };

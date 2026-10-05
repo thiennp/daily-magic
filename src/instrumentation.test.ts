@@ -1,8 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-const startMock = vi.hoisted(() => vi.fn());
+const startSilenceMock = vi.hoisted(() => vi.fn());
+const startUpdatedMock = vi.hoisted(() => vi.fn());
 vi.mock("@/lib/cron/startProjectMessageSilenceTicker", () => ({
-  startProjectMessageSilenceTicker: () => startMock(),
+  startProjectMessageSilenceTicker: () => startSilenceMock(),
+}));
+vi.mock("@/lib/cron/startProjectUpdatedNotifyTicker", () => ({
+  startProjectUpdatedNotifyTicker: () => startUpdatedMock(),
 }));
 
 import { register } from "@/instrumentation";
@@ -10,18 +14,21 @@ import { register } from "@/instrumentation";
 describe("instrumentation register", () => {
   afterEach(() => {
     vi.unstubAllEnvs();
-    startMock.mockReset();
+    startSilenceMock.mockReset();
+    startUpdatedMock.mockReset();
   });
 
-  it("starts the silence ticker on the Node runtime", async () => {
+  it("starts silence + project.updated tickers on the Node runtime", async () => {
     vi.stubEnv("NEXT_RUNTIME", "nodejs");
     await register();
-    expect(startMock).toHaveBeenCalledTimes(1);
+    expect(startSilenceMock).toHaveBeenCalledTimes(1);
+    expect(startUpdatedMock).toHaveBeenCalledTimes(1);
   });
 
   it.each(["edge", ""])("does nothing on runtime %j", async (runtime) => {
     vi.stubEnv("NEXT_RUNTIME", runtime);
     await register();
-    expect(startMock).not.toHaveBeenCalled();
+    expect(startSilenceMock).not.toHaveBeenCalled();
+    expect(startUpdatedMock).not.toHaveBeenCalled();
   });
 });

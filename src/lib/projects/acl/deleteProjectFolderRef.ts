@@ -2,6 +2,7 @@ import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchem
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { asRowArray, getSql } from "@/lib/db";
+import { scheduleProjectUpdatedNotify } from "@/lib/projects/acl/messaging/scheduleProjectUpdatedNotify";
 
 export type DeleteProjectFolderRefResult =
   | { readonly ok: true }
@@ -38,6 +39,11 @@ export const deleteProjectFolderRef = async (input: {
     actorUserId: input.ownerUserId,
     action: "remove_folder_ref",
     detail: { folderRefId: input.refId },
+  });
+  await scheduleProjectUpdatedNotify({
+    projectId: input.projectId,
+    fields: ["folder_refs"],
+    actorUserId: input.ownerUserId,
   });
   return { ok: true };
 };

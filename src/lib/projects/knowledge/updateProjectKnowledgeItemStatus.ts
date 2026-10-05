@@ -1,4 +1,5 @@
 import { asRowArray, getSql } from "@/lib/db";
+import { scheduleProjectUpdatedNotify } from "@/lib/projects/acl/messaging/scheduleProjectUpdatedNotify";
 
 const updateProjectKnowledgeItemStatus = async (input: {
   readonly ownerUserId: string;
@@ -26,7 +27,17 @@ const updateProjectKnowledgeItemStatus = async (input: {
     `,
   );
 
-  return rows.length > 0;
+  if (rows.length === 0) {
+    return false;
+  }
+
+  await scheduleProjectUpdatedNotify({
+    projectId: input.projectId,
+    fields: ["knowledge"],
+    actorUserId: input.ownerUserId,
+  });
+
+  return true;
 };
 
 export default updateProjectKnowledgeItemStatus;

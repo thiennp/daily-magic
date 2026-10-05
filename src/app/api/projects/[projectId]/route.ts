@@ -1,6 +1,6 @@
 import mapDeleteProjectDbOnlyResultToResponse from "@/lib/projects/delete/mapDeleteProjectDbOnlyResultToResponse";
 import orchestrateDeleteProjectDbOnly from "@/lib/projects/delete/orchestrateDeleteProjectDbOnly";
-import { updateUserProject } from "@/lib/projects/userProjectMutations";
+import { updateUserProject } from "@/lib/projects/updateUserProject";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { parseUpdateUserProjectBody } from "@/lib/projects/parseUserProjectBody";
 import { requireAuth } from "@/lib/auth/requireAuth";

@@ -6,6 +6,7 @@ import type ProjectFolderRefRecord from "@/lib/projects/acl/types/ProjectFolderR
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { asRowArray, getSql } from "@/lib/db";
+import { scheduleProjectUpdatedNotify } from "@/lib/projects/acl/messaging/scheduleProjectUpdatedNotify";
 
 export type UpsertProjectFolderRefResult =
   | { readonly ok: true; readonly folderRef: ProjectFolderRefRecord }
@@ -53,7 +54,13 @@ export const upsertProjectFolderRef = async (input: {
         RETURNING *
       `,
     );
-    return { ok: true, folderRef: mapProjectFolderRefRow(updated[0]) };
+    const folderRef = mapProjectFolderRefRow(updated[0]);
+    await scheduleProjectUpdatedNotify({
+      projectId: input.projectId,
+      fields: ["folder_refs"],
+      actorUserId: input.ownerUserId,
+    });
+    return { ok: true, folderRef };
   }
 
   const rows = asRowArray(
@@ -76,6 +83,11 @@ export const upsertProjectFolderRef = async (input: {
     actorUserId: input.ownerUserId,
     action: "add_folder_ref",
     detail: { folderRefId: folderRef.id },
+  });
+  await scheduleProjectUpdatedNotify({
+    projectId: input.projectId,
+    fields: ["folder_refs"],
+    actorUserId: input.ownerUserId,
   });
   return { ok: true, folderRef };
 };

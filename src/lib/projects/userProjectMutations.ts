@@ -1,15 +1,13 @@
 import { randomUUID } from "node:crypto";
 
 import { syncProjectComputerMembership } from "@/lib/projects/acl/syncProjectComputerMembership";
-import { setUserProjectLinkedDevice } from "@/lib/projects/setUserProjectLinkedDevice";
-import {
-  getUserProjectById,
-  listUserProjectsForOwner,
-} from "@/lib/projects/userProjectQueries";
+import { listUserProjectsForOwner } from "@/lib/projects/userProjectQueries";
 import mapUserProjectRow from "@/lib/projects/mapUserProjectRow";
 import type { CreateUserProjectInput } from "@/lib/projects/parseUserProjectBody";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import { asRowArray, getSql } from "@/lib/db";
+
+export { updateUserProject } from "@/lib/projects/updateUserProject";
 
 export const createUserProject = async (
   ownerUserId: string,
@@ -50,60 +48,6 @@ export const createUserProject = async (
     nextDeviceId: linkedDeviceId,
   });
   return project;
-};
-
-export const updateUserProject = async (
-  ownerUserId: string,
-  projectId: string,
-  input: {
-    readonly name?: string;
-    readonly deviceId?: string | null;
-    readonly repoUrls?: readonly string[];
-    readonly defaultBranch?: string | null;
-  },
-): Promise<UserProjectRecord | null> => {
-  const existing = await getUserProjectById(projectId);
-
-  if (existing === null || existing.ownerUserId !== ownerUserId) {
-    return null;
-  }
-
-  const nextRepoUrls =
-    input.repoUrls !== undefined ? [...input.repoUrls] : [...existing.repoUrls];
-  const nextDefaultBranch =
-    input.defaultBranch !== undefined
-      ? input.defaultBranch
-      : existing.defaultBranch;
-
-  const sql = getSql();
-  const rows = asRowArray(
-    await sql`
-      UPDATE user_projects
-      SET
-        name = ${input.name ?? existing.name},
-        repo_urls = ${nextRepoUrls},
-        default_branch = ${nextDefaultBranch},
-        updated_at = NOW()
-      WHERE id = ${projectId}
-        AND owner_user_id = ${ownerUserId}
-      RETURNING *
-    `,
-  );
-
-  if (rows.length === 0) {
-    return null;
-  }
-
-  if (input.deviceId === undefined) {
-    return mapUserProjectRow(rows[0]);
-  }
-
-  // Device bind/rebind/unbind goes through the sole device_id UPDATE choke.
-  return setUserProjectLinkedDevice({
-    ownerUserId,
-    projectId,
-    deviceId: input.deviceId,
-  });
 };
 
 export const listProjectsForOwner = listUserProjectsForOwner;
