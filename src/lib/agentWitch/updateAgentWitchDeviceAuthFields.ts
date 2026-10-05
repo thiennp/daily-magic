@@ -1,4 +1,36 @@
-import { getSql } from "@/lib/db";
+import { asRowArray, getSql } from "@/lib/db";
+
+export const getAgentWitchDevicePublicKey = async (input: {
+  readonly deviceId: string;
+}): Promise<string | null> => {
+  const sql = getSql();
+  const rows = asRowArray(
+    await sql`
+      SELECT public_key
+      FROM agent_witch_devices
+      WHERE id = ${input.deviceId}
+        AND revoked_at IS NULL
+      LIMIT 1
+    `,
+  );
+  const raw = rows[0]?.public_key;
+  if (typeof raw !== "string") {
+    return null;
+  }
+  const trimmed = raw.trim();
+  return trimmed.length > 0 ? trimmed : null;
+};
+
+export const clearAgentWitchDevicePublicKey = async (input: {
+  readonly deviceId: string;
+}): Promise<void> => {
+  const sql = getSql();
+  await sql`
+    UPDATE agent_witch_devices
+    SET public_key = NULL
+    WHERE id = ${input.deviceId}
+  `;
+};
 
 export const updateAgentWitchDevicePublicKey = async (input: {
   readonly deviceId: string;

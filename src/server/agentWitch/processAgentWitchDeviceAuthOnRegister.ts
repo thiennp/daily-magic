@@ -4,7 +4,10 @@ import {
   verifyDeviceAuthHello,
 } from "@/lib/agentWitch/deviceAuth/verifyDeviceAuthHello";
 import { getAgentWitchServerPublicKeyRaw } from "@/lib/agentWitch/deviceAuth/agentWitchServerSigningKey";
-import { updateAgentWitchDevicePublicKey } from "@/lib/agentWitch/updateAgentWitchDeviceAuthFields";
+import {
+  getAgentWitchDevicePublicKey,
+  updateAgentWitchDevicePublicKey,
+} from "@/lib/agentWitch/updateAgentWitchDeviceAuthFields";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import type { AgentWitchConnectionState } from "@/server/agentWitch/processAgentWitchRegisterMessage";
@@ -17,6 +20,25 @@ const readString = (
 ): string => {
   const value = payload?.[key];
   return typeof value === "string" ? value.trim() : "";
+};
+
+const devicePublicKeysMatch = (pinned: string, presented: string): boolean =>
+  pinned.trim() === presented.trim();
+
+const rejectDeviceAuth = (
+  socket: WebSocket,
+  message: AgentWitchMessage,
+  errorMessage: string,
+): false => {
+  sendAgentWitchSocketMessage(socket, {
+    type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+    payload: {
+      errorMessage,
+    },
+    requestId: message.requestId,
+  });
+  socket.close();
+  return false;
 };
 
 export const processAgentWitchDeviceAuthOnRegister = async (
@@ -35,12 +57,25 @@ export const processAgentWitchDeviceAuthOnRegister = async (
   const signature = readString(payload, "signature");
   const origin = readString(payload, "origin");
 
-  if (
+  const helloMissing =
     devicePublicKey.length === 0 ||
     nonce.length === 0 ||
     signature.length === 0 ||
-    origin.length === 0
-  ) {
+    origin.length === 0;
+
+  if (helloMissing) {
+    if (connectionState.deviceId !== undefined) {
+      const pinnedKey = await getAgentWitchDevicePublicKey({
+        deviceId: connectionState.deviceId,
+      });
+      if (pinnedKey !== null) {
+        return rejectDeviceAuth(
+          socket,
+          message,
+          "Device authentication is required for this computer.",
+        );
+      }
+    }
     // Older clients without device auth still connect via pairingToken.
     return true;
   }
@@ -53,22 +88,35 @@ export const processAgentWitchDeviceAuthOnRegister = async (
   });
 
   if (!helloOk) {
-    sendAgentWitchSocketMessage(socket, {
-      type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-      payload: {
-        errorMessage: "Device authentication signature was invalid.",
-      },
-      requestId: message.requestId,
-    });
-    socket.close();
-    return false;
+    return rejectDeviceAuth(
+      socket,
+      message,
+      "Device authentication signature was invalid.",
+    );
   }
 
   if (connectionState.deviceId !== undefined) {
-    await updateAgentWitchDevicePublicKey({
+    const pinnedKey = await getAgentWitchDevicePublicKey({
       deviceId: connectionState.deviceId,
-      publicKey: devicePublicKey,
     });
+
+    if (pinnedKey === null) {
+      await updateAgentWitchDevicePublicKey({
+        deviceId: connectionState.deviceId,
+        publicKey: devicePublicKey,
+      });
+    } else if (devicePublicKeysMatch(pinnedKey, devicePublicKey)) {
+      await updateAgentWitchDevicePublicKey({
+        deviceId: connectionState.deviceId,
+        publicKey: devicePublicKey,
+      });
+    } else {
+      return rejectDeviceAuth(
+        socket,
+        message,
+        "Device public key does not match the pinned key for this computer. Re-pair to replace the key.",
+      );
+    }
   }
 
   const attestation = buildServerDeviceAuthAttestation({

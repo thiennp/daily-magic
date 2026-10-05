@@ -48,4 +48,21 @@ describe("revokePendingInstallDevicesForUser (HOME-059)", () => {
     expect(clearSeenSql).toContain("install_bundle_version IS NULL");
     expect(clearSeenSql).not.toContain("last_seen_at IS NULL");
   });
+
+  it("keeps live re-paired computers: SQL still requires empty label/handshake/bundle even when public_key is null", async () => {
+    await revokePendingInstallDevicesForUser({
+      userId: "user-1",
+      hasLiveMac: true,
+    });
+
+    const revokeSql = sqlTextOf(sqlMock.mock.calls[0] ?? []);
+    // A re-pair clears public_key but keeps label/handshake/bundle/display_name.
+    // Placeholder revoke must still require those to be empty, or a live Mac
+    // would be revoked after re-pair.
+    expect(revokeSql).toContain("public_key IS NULL");
+    expect(revokeSql).toContain("last_handshake_at IS NULL");
+    expect(revokeSql).toContain("install_bundle_version IS NULL");
+    expect(revokeSql).toContain("btrim(device.device_label)");
+    expect(revokeSql).toContain("btrim(device.display_name)");
+  });
 });

@@ -1,3 +1,4 @@
+import { clearAgentWitchDevicePublicKey } from "@/lib/agentWitch/updateAgentWitchDeviceAuthFields";
 import mapAgentWitchDeviceRow from "@/lib/agentWitch/mapAgentWitchDeviceRow";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
 import { asRowArray, getSql } from "@/lib/db";
@@ -19,11 +20,16 @@ export const rotatePairingTokenOnExistingDevice = async (input: {
       AND id <> ${input.deviceId}
   `;
 
+  // Re-pair clears the pinned device key (public_key = NULL) so the next
+  // successful register can pin a new one. Keep label, handshake, bundle, and
+  // display_name so placeholder cleanup does not treat this live computer as
+  // an unused install claim.
   const result = asRowArray(
     await sql`
       UPDATE agent_witch_devices
       SET
         token_hash = ${input.tokenHash},
+        public_key = NULL,
         last_seen_at = NOW(),
         device_label = COALESCE(${input.deviceLabel}, device_label),
         revoked_at = NULL
@@ -33,5 +39,13 @@ export const rotatePairingTokenOnExistingDevice = async (input: {
     `,
   );
 
-  return result[0] ? mapAgentWitchDeviceRow(result[0]) : null;
+  if (!result[0]) {
+    return null;
+  }
+
+  // Shared clear helper — idempotent after the UPDATE above; keeps re-pair
+  // clearing on one code path for any future call sites.
+  await clearAgentWitchDevicePublicKey({ deviceId: input.deviceId });
+
+  return mapAgentWitchDeviceRow(result[0]);
 };
