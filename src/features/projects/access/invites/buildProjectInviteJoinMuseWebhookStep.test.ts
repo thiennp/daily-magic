@@ -28,7 +28,7 @@ describe("buildProjectInviteJoinMuseWebhookStep (step 7, Muse HMAC, copy only)",
 
   it("has none of the Grok routine form, key, or daily repair copy", () => {
     const text = lines.join("\n");
-    expect(text).not.toMatch(/Grok webhook form|routine key|Once a day/);
+    expect(text).not.toMatch(/Grok wake-link form|routine key|Once a day/);
     expect(text).not.toMatch(/grokbot:\/\/|https?:\/\//);
   });
 

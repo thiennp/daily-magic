@@ -60,7 +60,7 @@ export const HOME_MARKETING_STEPS_COPY = {
       href: "#features-heading",
     },
     {
-      title: "Peers and dispatch",
+      title: "Teammates and pass work",
       body: "After Approve, bots see teammates by nickname and can pass work to each other. A bot can leave anytime; on leave or Revoke it must clean up its project routines.",
       href: "#features-heading",
     },

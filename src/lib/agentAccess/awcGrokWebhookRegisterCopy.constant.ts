@@ -1,16 +1,16 @@
-/** Where the owner enters a bot's routine webhook (Project Access → People → Members list). No href. */
+/** Where the owner enters a bot's wake link (Project Access → People → Members list). No href. */
 export const AWC_GROK_WEBHOOK_FORM_SCREEN =
-  "Agent Witch Cloud → Project Access → People → Members → <bot> → Grok webhook";
+  "Agent Witch Cloud → Project Access → People → Members → <bot> → Grok wake link";
 
-/** Where the user finds the routine POST URL + key. Verified Grok Bot UI path only. */
+/** Where the user finds the wake link + key. Verified Grok Bot UI path only. */
 const FIND_URL_AND_KEY =
-  "open this bot in the Grok Bot desktop app, open its info pane (click the bot's name in the chat header), find its webhook routine in Routines, and copy the POST URL and key.";
+  "open this bot in the Grok Bot desktop app, open its info pane (click the bot's name in the chat header), find its wake link in Routines, and copy the wake link and key.";
 
 /** Owner-only entry (there is no member form), for bot-facing copy. */
 export const AWC_GROK_WEBHOOK_OWNER_ENTRY =
-  "The project owner enters both in the Grok webhook form at " +
+  "The project owner enters both in the Grok wake-link form at " +
   AWC_GROK_WEBHOOK_FORM_SCREEN +
-  " (the key is stored and never shown again). If you are not the owner, give the URL and key to the owner outside chat. Never paste the key into a project message.";
+  " (the key is stored and never shown again). If you are not the owner, give the wake link and key to the owner outside chat. Never paste the key into a project message.";
 
 /** get_my_project_webhook_status forbidden: guardProjectApiKeyToolUse's awc_proj_ rejection vs inactive membership. */
 export const AWC_GROK_WEBHOOK_STATUS_FORBIDDEN =
@@ -20,9 +20,9 @@ export const AWC_GROK_WEBHOOK_STATUS_FORBIDDEN =
 export const AWC_GROK_WEBHOOK_STATUS_AUTH =
   "agent-access Bearer only; awc_proj_ keys are rejected for this tool";
 
-/** Grok Bot register steps. The bot never sees its own routine URL or key. */
+/** Grok Bot register steps. The bot never sees its own wake link or key. */
 export const AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS =
-  "Grok Bot only: you cannot see your own routine webhook POST URL or key, so never guess them and never ask the user to paste them into chat. Tell the user: " +
+  "Grok Bot only: you cannot see your own wake link or key, so never guess them and never ask the user to paste them into chat. Tell the user: " +
   FIND_URL_AND_KEY +
   " " +
   AWC_GROK_WEBHOOK_OWNER_ENTRY +
@@ -40,10 +40,10 @@ export const AWC_GROK_WEBHOOK_DAILY_REPAIR =
   AWC_GROK_WEBHOOK_STATUS_AUTH +
   "). " +
   AWC_GROK_WEBHOOK_STATUS_FORBIDDEN +
-  " Re-enter the POST URL and key only if grokWebhookRegistered is false or lastGrokWakeResult is http_401, http_403, http_404, not_postable, or fetch_failed on repeated checks; a single fetch_failed can just be the 3s wake timeout. To re-enter, the user copies them again from this bot's info pane and the project owner enters them in the Grok webhook form; never ask for them in chat.";
+  " Re-enter the wake link and key only if grokWebhookRegistered is false or lastGrokWakeResult is http_401, http_403, http_404, not_postable, or fetch_failed on repeated checks; a single fetch_failed can just be the 3s wake timeout. To re-enter, the user copies them again from this bot's info pane and the project owner enters them in the Grok wake-link form; never ask for them in chat.";
 
 /** Owner-facing invite connect screen. Same flow, no href. */
 export const AWC_GROK_WEBHOOK_SETUP_INSTRUCTION =
-  "The bot cannot see its own routine webhook POST URL or key. Open this bot in the Grok Bot desktop app, open its info pane (click the bot's name in the chat header), find its webhook routine in Routines, and copy the POST URL and key. The project owner enters both in the Grok webhook form at " +
+  "The bot cannot see its own wake link or key. Open this bot in the Grok Bot desktop app, open its info pane (click the bot's name in the chat header), find its wake link in Routines, and copy the wake link and key. The project owner enters both in the Grok wake-link form at " +
   AWC_GROK_WEBHOOK_FORM_SCREEN +
-  " (secret fields). If you are not the owner, give the URL and key to the owner outside chat. Do not paste them into chat, and never paste the key into a project message.";
+  " (secret fields). If you are not the owner, give the wake link and key to the owner outside chat. Do not paste them into chat, and never paste the key into a project message.";

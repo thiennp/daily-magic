@@ -32,7 +32,7 @@ export default function ProjectInviteInstructionsBody(input: {
         </li>
         <li>
           After access is active, the project owner enters the bot&apos;s wake link
-          under Project Access → People → Members → Grok webhook (the key is
+          under Project Access → People → Members → Grok wake link (the key is
           stored and never shown again).
         </li>
       </ol>

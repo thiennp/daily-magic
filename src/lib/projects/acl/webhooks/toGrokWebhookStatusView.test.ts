@@ -53,7 +53,7 @@ describe("toGrokWebhookStatusView", () => {
 
   it("daily repair copy reuses the status forbidden split, not re-entry", () => {
     expect(AWC_GROK_WEBHOOK_DAILY_REPAIR).toContain(
-      `(agent-access Bearer only; awc_proj_ keys are rejected for this tool). ${AWC_GROK_WEBHOOK_STATUS_FORBIDDEN} Re-enter the POST URL and key only if`,
+      `(agent-access Bearer only; awc_proj_ keys are rejected for this tool). ${AWC_GROK_WEBHOOK_STATUS_FORBIDDEN} Re-enter the wake link and key only if`,
     );
     expect(AWC_GROK_WEBHOOK_DAILY_REPAIR).not.toContain(
       "If it returns forbidden, your membership is not active",

@@ -11,7 +11,7 @@ export const buildProjectInviteJoinWakeWebhookStep = (): readonly string[] => {
   return [
     "7. Inbox delivery (webhook-first, Grok Bot only) — after peers summary:",
     `   MUST on connect (webhook-first): ${AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS}`,
-    "   Legacy: register_project_webhook still accepts webhookUrl, or both grokWebhookUrl and grokWebhookBearer (projectId alone is rejected). Prefer the Grok webhook form so the key never passes through chat.",
+    "   Legacy: register_project_webhook still accepts webhookUrl, or both grokWebhookUrl and grokWebhookBearer (projectId alone is rejected). Prefer the Grok wake-link form so the key never passes through chat.",
     `   ${AWC_GROK_WEBHOOK_KEY_NOTE}`,
     "   Inbox wake is webhook-only, via a Grok routine; do not poll list_project_inbox on a timer.",
     `   ${AWC_GROK_WEBHOOK_DAILY_REPAIR}`,

@@ -8,10 +8,10 @@ import { AWC_GROK_WEBHOOK_SETUP_COPY } from "@/features/projects/access/awcGrokW
 const readSrc = (relativePath: string): string =>
   readFileSync(join(process.cwd(), relativePath), "utf8");
 
-describe("Grok webhook setup copy", () => {
+describe("Grok wake-link setup copy", () => {
   it("points to the bot info pane and the owner secret form, not chat", () => {
     expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).toBe(
-      "The bot cannot see its own routine webhook POST URL or key. Open this bot in the Grok Bot desktop app, open its info pane (click the bot's name in the chat header), find its webhook routine in Routines, and copy the POST URL and key. The project owner enters both in the Grok webhook form at Agent Witch Cloud → Project Access → People → Members → <bot> → Grok webhook (secret fields). If you are not the owner, give the URL and key to the owner outside chat. Do not paste them into chat, and never paste the key into a project message.",
+      "The bot cannot see its own wake link or key. Open this bot in the Grok Bot desktop app, open its info pane (click the bot's name in the chat header), find its wake link in Routines, and copy the wake link and key. The project owner enters both in the Grok wake-link form at Agent Witch Cloud → Project Access → People → Members → <bot> → Grok wake link (secret fields). If you are not the owner, give the wake link and key to the owner outside chat. Do not paste them into chat, and never paste the key into a project message.",
     );
     expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).toMatch(/Grok Bot/);
     expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).not.toMatch(

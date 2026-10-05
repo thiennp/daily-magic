@@ -24,9 +24,9 @@ describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
     expect(prompt).toContain(AWC_GROK_WEBHOOK_KEY_NOTE);
     expect(prompt).toMatch(/Grok Bot desktop app/);
     expect(prompt).toContain("open its info pane (click the bot's name in the chat header)");
-    expect(prompt).toContain("find its webhook routine in Routines");
+    expect(prompt).toContain("find its wake link in Routines");
     expect(prompt).toContain(AWC_GROK_WEBHOOK_FORM_SCREEN);
-    expect(prompt).toMatch(/you cannot see your own routine webhook POST URL or key/);
+    expect(prompt).toMatch(/you cannot see your own wake link or key/);
     expect(prompt).toMatch(/never ask the user to paste them into chat/);
     expect(prompt).toContain("get_my_project_webhook_status");
     expect(prompt).not.toMatch(/routine status/);

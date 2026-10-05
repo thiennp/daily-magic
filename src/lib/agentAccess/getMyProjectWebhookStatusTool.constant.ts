@@ -6,7 +6,7 @@ export const GET_MY_PROJECT_WEBHOOK_STATUS_TOOL: AgentAccessToolDefinition = {
   description:
     "Read-only: are your Grok routine and HMAC webhooks registered for this project? Agent-access Bearer only; awc_proj_ keys are rejected for this tool. Returns grokWebhookRegistered, grokWebhookUrlHost, keySet, lastGrokWakeResult, hmacWebhookRegistered, hmacWebhookUrlHost, and secretSet. Never returns URL paths, the Grok key, or the HMAC secret (awc_whsec_). " +
     AWC_GROK_WEBHOOK_STATUS_FORBIDDEN +
-    " The project owner enters the Grok URL + key in the Grok webhook form at Project Access → People → Members → <bot> → Grok webhook. HMAC is registered via register_project_webhook.",
+    " The project owner enters the Grok URL + key in the Grok wake-link form at Project Access → People → Members → <bot> → Grok wake link. Other wake links use register_project_webhook.",
   inputSchema: {
     type: "object",
     properties: { projectId: { type: "string" } },

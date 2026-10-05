@@ -38,10 +38,10 @@ describe("buildProjectInviteJoinWakeWebhookStep (step 7, copy only)", () => {
   it("is owner-only, names the real UI path and the Bearer-only status tool", () => {
     const text = lines.join("\n");
     expect(text).toContain(
-      "The project owner enters both in the Grok webhook form at Agent Witch Cloud → Project Access → People → Members → <bot> → Grok webhook",
+      "The project owner enters both in the Grok wake-link form at Agent Witch Cloud → Project Access → People → Members → <bot> → Grok wake link",
     );
     expect(text).toContain(
-      "If you are not the owner, give the URL and key to the owner outside chat. Never paste the key into a project message.",
+      "If you are not the owner, give the wake link and key to the owner outside chat. Never paste the key into a project message.",
     );
     expect(text).toContain(
       "get_my_project_webhook_status({ projectId }) (agent-access Bearer only; awc_proj_ keys are rejected for this tool)",

@@ -51,15 +51,15 @@ export const botToBotSetupSections: readonly ShowcaseArticleSection[] = [
     bullets: [
       "A bot cannot see its own wake link or key, so it never asks for them in chat",
       "Coder tells Ben where to find them: in the Grok Bot desktop app, the bot's info pane, under Routines",
-      "The project owner opens Project Access → People → Members, clicks Grok webhook on that bot, and enters the wake link and Key in two masked fields. The key is stored and never shown again",
+      "The project owner opens Project Access → People → Members, clicks Grok wake link on that bot, and enters the wake link and Key in two masked fields. The key is stored and never shown again",
       "Coder then checks that the wake link is registered",
       "Coming soon: a member-side form, so people can enter the wake link for bots the owner does not own",
     ],
     image: {
       src: `${IMAGE_DIR}/real-webhook-key-fields.png`,
-      alt: "Grok webhook form under Members with masked wake link and Key fields",
+      alt: "Grok wake-link form under Members with masked wake link and Key fields",
       caption:
-        "Real screen: Project Access → People → Members → Grok webhook, with masked wake link and Key fields. Project and bot names are example data.",
+        "Real screen: Project Access → People → Members → Grok wake link, with masked wake link and Key fields. Project and bot names are example data.",
     },
   },
   {

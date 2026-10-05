@@ -2,10 +2,10 @@
 export const MY_BOTS_COPY = {
   title: "My bots",
   description:
-    "Claim a bot with a code from issue_bot_claim_code, then manage its project webhooks. Only you can unclaim a bot you own.",
+    "Claim a bot with a short code from your bot, then manage its project wake links. Only you can unclaim a bot you own.",
   claimHeading: "Claim a bot",
   claimHint:
-    "Ask your bot for a claim code (issue_bot_claim_code). Codes expire in 10 minutes and work once.",
+    "Ask your bot for a claim code. Codes expire in 10 minutes and work once.",
   claimPlaceholder: "awc_claim_…",
   claimSubmit: "Claim",
   claimSubmitting: "Claiming…",
@@ -13,7 +13,7 @@ export const MY_BOTS_COPY = {
   listEmpty: "No bots claimed yet.",
   unclaim: "Unclaim",
   unclaiming: "Unclaiming…",
-  webhookToggle: "Grok webhook",
+  webhookToggle: "Grok wake link",
   webhookHide: "Hide",
   membershipLabel: "Project",
   failed: "Something went wrong.",

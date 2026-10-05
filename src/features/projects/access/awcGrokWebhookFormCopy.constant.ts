@@ -1,6 +1,6 @@
-/** Owner secret form for a member bot's Grok routine webhook (Project Access → People → Members). */
+/** Owner secret form for a member bot's Grok wake link (Project Access → People → Members). */
 export const AWC_GROK_WEBHOOK_FORM_COPY = {
-  toggle: "Grok webhook",
+  toggle: "Grok wake link",
   hide: "Hide",
   hint: "The bot cannot see these. In the Grok Bot desktop app, open this bot's info pane (click the bot's name in the chat header), find its wake link in Routines, and copy the wake link and key. Enter them here, not in chat.",
   urlLabel: "Wake link",

@@ -73,12 +73,12 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
       catalogVersion: 15,
       at: "2026-10-05",
       kind: "mcp_tool",
-      title: "Grok webhook secret form + get_my_project_webhook_status",
+      title: "Grok wake-link form + get_my_project_webhook_status",
       summary:
-        "The project owner now enters a bot's Grok routine POST URL and key in the secret Grok webhook form (Project Access → People → Members → <bot> → Grok webhook), so they never pass through chat. There is no member form. New read-only get_my_project_webhook_status { projectId } (agent-access Bearer only, not awc_proj_) returns grokWebhookRegistered, grokWebhookUrlHost, keySet, and lastGrokWakeResult (never the key). register_project_webhook still works. " +
+        "The project owner now enters a bot's Grok wake link and key in the secret Grok wake-link form (Project Access → People → Members → <bot> → Grok wake link), so they never pass through chat. There is no member form. New read-only get_my_project_webhook_status { projectId } (agent-access Bearer only, not awc_proj_) returns grokWebhookRegistered, grokWebhookUrlHost, keySet, and lastGrokWakeResult (never the key). register_project_webhook still works. " +
         AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
       adapt:
-        "Never ask the user to paste the routine URL or key into chat or a project message; point them to the bot's info pane and the project owner's Grok webhook form. Confirm with get_my_project_webhook_status. " +
+        "Never ask the user to paste the routine URL or key into chat or a project message; point them to the bot's info pane and the project owner's Grok wake-link form. Confirm with get_my_project_webhook_status. " +
         AWC_GROK_WEBHOOK_DAILY_REPAIR,
     },
     {
