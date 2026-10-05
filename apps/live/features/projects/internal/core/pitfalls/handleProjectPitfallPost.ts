@@ -1,12 +1,12 @@
 import { randomBytes } from "node:crypto";
 
-import type {
-  AgentWitchProjectPitfall,
-  AgentWitchProjectPitfallUpsert,
-} from "./agentWitchProjectPitfall.type";
+import {
+  PROJECT_PITFALL_MAX_ACTIVE,
+  countActiveProjectPitfalls,
+  type ProjectPitfallUpsert,
+  type ProjectPitfallView,
+} from "@agent-witch/shared/pitfalls";
 import type { AgentWitchProjectPitfallsStore } from "./agentWitchProjectPitfallsStore.type";
-import { PITFALL_MAX_ACTIVE_PER_PROJECT } from "./agentWitchProjectPitfallLimits.constant";
-import { countActiveAgentWitchPitfalls } from "./parseAgentWitchProjectPitfalls";
 import parseProjectPitfallForm from "./parseProjectPitfallForm";
 import type { ProjectPitfallFlashCode } from "./resolveProjectPitfallFlash";
 
@@ -45,9 +45,9 @@ const buildLocation = (
 };
 
 const toUpsert = (
-  item: AgentWitchProjectPitfall,
-  source: AgentWitchProjectPitfallUpsert["source"],
-): AgentWitchProjectPitfallUpsert => ({
+  item: ProjectPitfallView,
+  source: ProjectPitfallUpsert["source"],
+): ProjectPitfallUpsert => ({
   id: item.id,
   symptom: item.symptom,
   cause: item.cause,
@@ -96,8 +96,7 @@ const handleProjectPitfallPost = async (input: {
     const addsActive = existing === undefined || existing.source === "retired";
     if (
       addsActive &&
-      countActiveAgentWitchPitfalls(listed.items) >=
-        PITFALL_MAX_ACTIVE_PER_PROJECT
+      countActiveProjectPitfalls(listed.items) >= PROJECT_PITFALL_MAX_ACTIVE
     ) {
       return buildLocation(projectId, "limit", keepRetired);
     }
@@ -122,8 +121,7 @@ const handleProjectPitfallPost = async (input: {
   if (input.action === "restore") {
     if (
       existing.source === "retired" &&
-      countActiveAgentWitchPitfalls(listed.items) >=
-        PITFALL_MAX_ACTIVE_PER_PROJECT
+      countActiveProjectPitfalls(listed.items) >= PROJECT_PITFALL_MAX_ACTIVE
     ) {
       return buildLocation(projectId, "limit", keepRetired);
     }

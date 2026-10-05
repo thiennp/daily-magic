@@ -8,6 +8,8 @@ export const AWC_PROJECT_PITFALLS_COPY = {
   triggersLabel: "Triggers",
   neverHit: "Never hit",
   lastHit: (relative: string) => `Last hit ${relative}`,
+  notUpdatedYet: "Not updated yet",
+  updated: (date: string) => `Updated ${date}`,
   activeCount: (active: number, max: number) => `${active} of ${max} active`,
   severity: {
     block: "Must fix",

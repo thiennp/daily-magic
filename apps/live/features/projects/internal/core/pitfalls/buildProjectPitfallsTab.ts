@@ -1,17 +1,12 @@
-import type {
-  AgentWitchPitfallSeverity,
-  AgentWitchProjectPitfall,
-} from "./agentWitchProjectPitfall.type";
-import type { ListAgentWitchPitfallsResult } from "./agentWitchProjectPitfallsStore.type";
 import {
-  PITFALL_AVOIDANCE_MAX_LENGTH,
-  PITFALL_CAUSE_MAX_LENGTH,
-  PITFALL_CHECK_VALUE_MAX_LENGTH,
-  PITFALL_MAX_ACTIVE_PER_PROJECT,
-  PITFALL_SYMPTOM_MAX_LENGTH,
-} from "./agentWitchProjectPitfallLimits.constant";
+  PROJECT_PITFALL_LIMITS,
+  PROJECT_PITFALL_MAX_ACTIVE,
+  countActiveProjectPitfalls,
+  type ProjectPitfallSeverity,
+  type ProjectPitfallView,
+} from "@agent-witch/shared/pitfalls";
+import type { ListAgentWitchPitfallsResult } from "./agentWitchProjectPitfallsStore.type";
 import { PROJECT_PITFALL_POST_PATHS } from "./handleProjectPitfallPost";
-import { countActiveAgentWitchPitfalls } from "./parseAgentWitchProjectPitfalls";
 
 export const PROJECT_PITFALL_NEW_EDIT_ID = "new";
 
@@ -23,15 +18,13 @@ const escapeHtml = (value: string): string =>
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 
-const SEVERITY_LABELS: Readonly<Record<AgentWitchPitfallSeverity, string>> = {
+const SEVERITY_LABELS: Readonly<Record<ProjectPitfallSeverity, string>> = {
   block: "Must fix",
   warn: "Warning",
   info: "Note",
 };
 
-const SOURCE_LABELS: Readonly<
-  Record<AgentWitchProjectPitfall["source"], string>
-> = {
+const SOURCE_LABELS: Readonly<Record<ProjectPitfallView["source"], string>> = {
   seed: "Built-in",
   project: "This project",
   retired: "Retired",
@@ -69,6 +62,18 @@ export const formatPitfallLastHit = (
   return `Last hit ${new Date(at).toISOString().slice(0, 10)}`;
 };
 
+/** Missing updatedAt (null) → plain "Not updated yet". */
+export const formatPitfallUpdatedAt = (updatedAt: string | null): string => {
+  if (updatedAt === null) {
+    return "Not updated yet";
+  }
+  const at = new Date(updatedAt).getTime();
+  if (Number.isNaN(at)) {
+    return "Not updated yet";
+  }
+  return `Updated ${new Date(at).toISOString().slice(0, 10)}`;
+};
+
 const tabHref = (
   projectId: string,
   params: Readonly<Record<string, string>>,
@@ -87,7 +92,7 @@ const retiredParam = (
 
 const buildPitfallForm = (input: {
   readonly projectId: string;
-  readonly item: AgentWitchProjectPitfall | null;
+  readonly item: ProjectPitfallView | null;
   readonly showRetired: boolean;
 }): string => {
   const { item } = input;
@@ -98,7 +103,7 @@ const buildPitfallForm = (input: {
     item?.source === "seed"
       ? `<p class="muted">This is a built-in pitfall. Your changes apply to this project only.</p>`
       : "";
-  const option = (value: AgentWitchPitfallSeverity): string =>
+  const option = (value: ProjectPitfallSeverity): string =>
     `<option value="${value}"${severity === value ? " selected" : ""}>${SEVERITY_LABELS[value]}</option>`;
 
   return `<form method="POST" action="${PROJECT_PITFALL_POST_PATHS.save}" class="stack pitfall-form" aria-label="${heading}">
@@ -110,15 +115,15 @@ const buildPitfallForm = (input: {
       ${input.showRetired ? `<input type="hidden" name="showRetired" value="1" />` : ""}
       <label class="stack">
         <span>Title</span>
-        <input type="text" name="symptom" required maxlength="${PITFALL_SYMPTOM_MAX_LENGTH}" value="${escapeHtml(item?.symptom ?? "")}" placeholder="What goes wrong, in one line" />
+        <input type="text" name="symptom" required maxlength="${PROJECT_PITFALL_LIMITS.symptom}" value="${escapeHtml(item?.symptom ?? "")}" placeholder="What goes wrong, in one line" />
       </label>
       <label class="stack">
         <span>Fix</span>
-        <textarea name="avoidance" required maxlength="${PITFALL_AVOIDANCE_MAX_LENGTH}" rows="3" placeholder="What to do instead">${escapeHtml(item?.avoidance ?? "")}</textarea>
+        <textarea name="avoidance" required maxlength="${PROJECT_PITFALL_LIMITS.avoidance}" rows="3" placeholder="What to do instead">${escapeHtml(item?.avoidance ?? "")}</textarea>
       </label>
       <label class="stack">
         <span>Why it happens</span>
-        <textarea name="cause" required maxlength="${PITFALL_CAUSE_MAX_LENGTH}" rows="2" placeholder="What leads to this trap">${escapeHtml(item?.cause ?? "")}</textarea>
+        <textarea name="cause" required maxlength="${PROJECT_PITFALL_LIMITS.cause}" rows="2" placeholder="What leads to this trap">${escapeHtml(item?.cause ?? "")}</textarea>
       </label>
       <label class="stack">
         <span>Triggers</span>
@@ -126,7 +131,7 @@ const buildPitfallForm = (input: {
       </label>
       <label class="stack">
         <span>How to check <span class="muted">(optional)</span></span>
-        <input type="text" name="checkCommand" class="mono" maxlength="${PITFALL_CHECK_VALUE_MAX_LENGTH}" value="${escapeHtml(checkCommand)}" placeholder="A command that shows the trap, like npm run lint" />
+        <input type="text" name="checkCommand" class="mono" maxlength="${PROJECT_PITFALL_LIMITS.checkValue}" value="${escapeHtml(checkCommand)}" placeholder="A command that shows the trap, like npm run lint" />
       </label>
       <label class="stack">
         <span>How serious</span>
@@ -141,7 +146,7 @@ const buildPitfallForm = (input: {
 
 const buildPitfallRow = (input: {
   readonly projectId: string;
-  readonly item: AgentWitchProjectPitfall;
+  readonly item: ProjectPitfallView;
   readonly showRetired: boolean;
   readonly nowMs: number;
 }): string => {
@@ -170,6 +175,7 @@ const buildPitfallRow = (input: {
         <p>Fix: ${escapeHtml(item.avoidance)}</p>
         ${triggers}
         <p class="muted">${escapeHtml(formatPitfallLastHit(item.lastSeenAt, input.nowMs))}</p>
+        <p class="muted">${escapeHtml(formatPitfallUpdatedAt(item.updatedAt))}</p>
         <div class="actions">${actions}</div>
       </li>`;
 };
@@ -191,8 +197,8 @@ const buildProjectPitfallsTab = (input: {
 
   const nowMs = input.nowMs ?? Date.now();
   const items = input.list.items;
-  const activeCount = countActiveAgentWitchPitfalls(items);
-  const atLimit = activeCount >= PITFALL_MAX_ACTIVE_PER_PROJECT;
+  const activeCount = countActiveProjectPitfalls(items);
+  const atLimit = activeCount >= PROJECT_PITFALL_MAX_ACTIVE;
   const visible = input.showRetired
     ? items
     : items.filter((item) => item.source !== "retired");
@@ -221,7 +227,7 @@ const buildProjectPitfallsTab = (input: {
         });
 
   const addControl = atLimit
-    ? `<p class="muted">${PITFALL_MAX_ACTIVE_PER_PROJECT} of ${PITFALL_MAX_ACTIVE_PER_PROJECT} active. Retire one to add another.</p>`
+    ? `<p class="muted">${PROJECT_PITFALL_MAX_ACTIVE} of ${PROJECT_PITFALL_MAX_ACTIVE} active. Retire one to add another.</p>`
     : `<a class="btn btn-primary" href="${escapeHtml(tabHref(input.projectId, { ...retiredParam(input.showRetired), edit: PROJECT_PITFALL_NEW_EDIT_ID }))}">Add pitfall</a>`;
   const retiredToggle = input.showRetired
     ? `<a class="btn btn-secondary" href="${escapeHtml(tabHref(input.projectId, {}))}">Hide retired</a>`
@@ -243,7 +249,7 @@ const buildProjectPitfallsTab = (input: {
 
   return `<section class="stack">
       <p class="lede">Pitfalls are known traps in this project. Each one says what goes wrong and how to avoid it.</p>
-      <p class="muted">${activeCount} of ${PITFALL_MAX_ACTIVE_PER_PROJECT} active</p>
+      <p class="muted">${activeCount} of ${PROJECT_PITFALL_MAX_ACTIVE} active</p>
       <div class="actions">${editing === null ? addControl : ""}${retiredToggle}</div>
       ${form}
       ${list}

@@ -1,12 +1,12 @@
 import type {
-  AgentWitchProjectPitfall,
-  AgentWitchProjectPitfallUpsert,
-} from "./agentWitchProjectPitfall.type";
+  ProjectPitfallUpsert,
+  ProjectPitfallView,
+} from "@agent-witch/shared/pitfalls";
 
 export type ListAgentWitchPitfallsResult =
   | {
       readonly ok: true;
-      readonly items: readonly AgentWitchProjectPitfall[];
+      readonly items: readonly ProjectPitfallView[];
       readonly syncedAt: string | null;
     }
   | { readonly ok: false; readonly reason: "unavailable" };
@@ -34,6 +34,6 @@ export interface AgentWitchProjectPitfallsStore {
   ) => Promise<ListAgentWitchPitfallsResult>;
   readonly upsertPitfall: (
     projectId: string,
-    pitfall: AgentWitchProjectPitfallUpsert,
+    pitfall: ProjectPitfallUpsert,
   ) => Promise<UpsertAgentWitchPitfallResult>;
 }

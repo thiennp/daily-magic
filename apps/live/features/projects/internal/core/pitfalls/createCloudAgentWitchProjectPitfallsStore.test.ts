@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 
 import type {
-  AgentWitchProjectPitfall,
-  AgentWitchProjectPitfallUpsert,
-} from "./agentWitchProjectPitfall.type";
+  ProjectPitfallUpsert,
+  ProjectPitfallView,
+} from "@agent-witch/shared/pitfalls";
 import createCloudAgentWitchProjectPitfallsStore, {
   buildAgentWitchProjectPitfallsUrl,
 } from "./createCloudAgentWitchProjectPitfallsStore";
@@ -14,9 +14,7 @@ const config = {
   pairingToken: "test-pairing-token",
 } as Parameters<typeof createCloudAgentWitchProjectPitfallsStore>[0];
 
-const toUpsertBody = (
-  pitfall: AgentWitchProjectPitfall,
-): AgentWitchProjectPitfallUpsert => {
+const toUpsertBody = (pitfall: ProjectPitfallView): ProjectPitfallUpsert => {
   const {
     projectId,
     overridesSeed,

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import buildProjectPitfallsTab, {
   formatPitfallLastHit,
+  formatPitfallUpdatedAt,
 } from "./buildProjectPitfallsTab";
 import { buildPitfallFixture } from "./projectPitfallFixtures.testUtil";
 
@@ -15,6 +16,7 @@ const projectItem = buildPitfallFixture({
   source: "project",
   severity: "block",
   lastSeenAt: null,
+  updatedAt: null,
 });
 const retired = buildPitfallFixture({
   id: "seed-old-node",
@@ -43,6 +45,8 @@ describe("buildProjectPitfallsTab", () => {
     expect(html).toContain("Triggers: vitest, watch");
     expect(html).toContain("Last hit 2h ago");
     expect(html).toContain("Never hit");
+    expect(html).toContain("Updated 2026-10-05");
+    expect(html).toContain("Not updated yet");
     expect(html).toContain("Built-in");
     expect(html).toContain("Must fix");
     expect(html).not.toContain("Wrong Node version");
@@ -118,6 +122,16 @@ describe("buildProjectPitfallsTab", () => {
     ].join("\n");
     expect(html).not.toMatch(
       /\b(API|endpoint|JSON|HMAC|beta|experimental|unverified|not yet)\b/i,
+    );
+  });
+});
+
+describe("formatPitfallUpdatedAt", () => {
+  it('shows "Not updated yet" for null or invalid', () => {
+    expect(formatPitfallUpdatedAt(null)).toBe("Not updated yet");
+    expect(formatPitfallUpdatedAt("bad")).toBe("Not updated yet");
+    expect(formatPitfallUpdatedAt("2026-10-05T09:00:00.000Z")).toBe(
+      "Updated 2026-10-05",
     );
   });
 });

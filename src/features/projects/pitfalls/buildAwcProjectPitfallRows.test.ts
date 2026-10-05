@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import buildAwcProjectPitfallRows from "@/features/projects/pitfalls/buildAwcProjectPitfallRows";
-import type { ProjectPitfallView } from "@/lib/projects/pitfalls/ProjectPitfall.type";
+import type { ProjectPitfallView } from "@agent-witch/shared/pitfalls";
 
 const nowMs = Date.parse("2026-10-05T12:00:00.000Z");
 
@@ -66,6 +66,7 @@ describe("buildAwcProjectPitfallRows", () => {
       severityLabel: "Must fix",
       sourceLabel: "Built-in",
       lastHitLabel: "Last hit 30 mins ago",
+      updatedLabel: "Updated 2026-10-05",
     });
     expect(rows[2]?.lastHitLabel).toBe("Last hit 1h ago");
   });
@@ -75,5 +76,14 @@ describe("buildAwcProjectPitfallRows", () => {
       buildAwcProjectPitfallRows([pitfall({ id: "a", symptom: "A" })], nowMs)[0]
         ?.lastHitLabel,
     ).toBe("Never hit");
+  });
+
+  it('labels "Not updated yet" when updatedAt is null', () => {
+    expect(
+      buildAwcProjectPitfallRows(
+        [pitfall({ id: "a", symptom: "A", updatedAt: null })],
+        nowMs,
+      )[0]?.updatedLabel,
+    ).toBe("Not updated yet");
   });
 });

@@ -2,9 +2,9 @@ import type AgentWitchProjectView from "./agentWitchProjectView.type";
 import type { InstalledLocalHarnessSnapshot } from "../../../harness/internal/core/readInstalledLocalHarnessSnapshot";
 import type { CloudProjectComposition } from "./fetchProjectCompositionFromCloud";
 import isDefaultAgentWitchProjectName from "./isDefaultAgentWitchProjectName";
+import { countActiveProjectPitfalls } from "@agent-witch/shared/pitfalls";
 import type { ListAgentWitchPitfallsResult } from "./pitfalls/agentWitchProjectPitfallsStore.type";
 import buildProjectPitfallsTab from "./pitfalls/buildProjectPitfallsTab";
-import { countActiveAgentWitchPitfalls } from "./pitfalls/parseAgentWitchProjectPitfalls";
 
 export type ProjectEditorTab =
   "harness" | "workflows" | "agents" | "knowledge" | "pitfalls";
@@ -273,7 +273,7 @@ export const buildAgentWitchLocalProjectEditorPageBody = (input: {
 
   const pitfallsTabLabel =
     input.pitfalls !== undefined && input.pitfalls !== null && input.pitfalls.ok
-      ? `Pitfalls (${countActiveAgentWitchPitfalls(input.pitfalls.items)})`
+      ? `Pitfalls (${countActiveProjectPitfalls(input.pitfalls.items)})`
       : "Pitfalls";
 
   const cloudProjectHref = `${input.cloudAppOrigin.replace(/\/$/, "")}/projects/${encodeURIComponent(input.project.id)}`;

@@ -1,21 +1,11 @@
-import type {
-  AgentWitchPitfallSeverity,
-  AgentWitchProjectPitfallUpsert,
-} from "./agentWitchProjectPitfall.type";
 import {
-  PITFALL_AVOIDANCE_MAX_LENGTH,
-  PITFALL_CAUSE_MAX_LENGTH,
-  PITFALL_CHECK_VALUE_MAX_LENGTH,
-  PITFALL_ID_MAX_LENGTH,
-  PITFALL_KEYWORD_MAX_COUNT,
-  PITFALL_KEYWORD_MAX_LENGTH,
-  PITFALL_SYMPTOM_MAX_LENGTH,
-  PITFALL_TAG_MAX_COUNT,
-  PITFALL_TAG_MAX_LENGTH,
-} from "./agentWitchProjectPitfallLimits.constant";
+  PROJECT_PITFALL_LIMITS,
+  type ProjectPitfallSeverity,
+  type ProjectPitfallUpsert,
+} from "@agent-witch/shared/pitfalls";
 
 export type ParseProjectPitfallFormResult =
-  | { readonly ok: true; readonly pitfall: AgentWitchProjectPitfallUpsert }
+  | { readonly ok: true; readonly pitfall: ProjectPitfallUpsert }
   | { readonly ok: false };
 
 const collapseSpaces = (value: string): string =>
@@ -53,10 +43,10 @@ export const buildNewProjectPitfallId = (
 ): string => {
   const slug = slugify(symptom);
   const base = `project-${slug.length > 0 ? slug : "pitfall"}-${randomSuffix}`;
-  return base.slice(0, PITFALL_ID_MAX_LENGTH).replace(/-+$/g, "");
+  return base.slice(0, PROJECT_PITFALL_LIMITS.id).replace(/-+$/g, "");
 };
 
-const readSeverity = (value: string | null): AgentWitchPitfallSeverity =>
+const readSeverity = (value: string | null): ProjectPitfallSeverity =>
   value === "block" || value === "info" ? value : "warn";
 
 /**
@@ -79,10 +69,10 @@ const parseProjectPitfallForm = (input: {
     symptom.length === 0 ||
     avoidance.length === 0 ||
     cause.length === 0 ||
-    symptom.length > PITFALL_SYMPTOM_MAX_LENGTH ||
-    avoidance.length > PITFALL_AVOIDANCE_MAX_LENGTH ||
-    cause.length > PITFALL_CAUSE_MAX_LENGTH ||
-    checkCommand.length > PITFALL_CHECK_VALUE_MAX_LENGTH
+    symptom.length > PROJECT_PITFALL_LIMITS.symptom ||
+    avoidance.length > PROJECT_PITFALL_LIMITS.avoidance ||
+    cause.length > PROJECT_PITFALL_LIMITS.cause ||
+    checkCommand.length > PROJECT_PITFALL_LIMITS.checkValue
   ) {
     return { ok: false };
   }
@@ -106,13 +96,13 @@ const parseProjectPitfallForm = (input: {
           : { kind: "id", value: id },
       keywords: splitPitfallList(
         form.get("keywords") ?? "",
-        PITFALL_KEYWORD_MAX_COUNT,
-        PITFALL_KEYWORD_MAX_LENGTH,
+        PROJECT_PITFALL_LIMITS.keywords,
+        PROJECT_PITFALL_LIMITS.keyword,
       ),
       tags: splitPitfallList(
         form.get("tags") ?? "",
-        PITFALL_TAG_MAX_COUNT,
-        PITFALL_TAG_MAX_LENGTH,
+        PROJECT_PITFALL_LIMITS.tags,
+        PROJECT_PITFALL_LIMITS.tag,
       ),
       source: "project",
       severity: readSeverity(form.get("severity")),

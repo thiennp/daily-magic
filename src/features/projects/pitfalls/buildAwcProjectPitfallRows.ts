@@ -1,5 +1,6 @@
+import type { ProjectPitfallView } from "@agent-witch/shared/pitfalls";
+
 import { AWC_PROJECT_PITFALLS_COPY } from "@/features/projects/pitfalls/awcProjectPitfallsCopy.constant";
-import type { ProjectPitfallView } from "@/lib/projects/pitfalls/ProjectPitfall.type";
 import { formatRelativeTimeAgo } from "@/lib/time/formatRelativeTimeAgo";
 
 export interface AwcProjectPitfallRow {
@@ -11,6 +12,7 @@ export interface AwcProjectPitfallRow {
   readonly severity: ProjectPitfallView["severity"];
   readonly sourceLabel: string;
   readonly lastHitLabel: string;
+  readonly updatedLabel: string;
 }
 
 const SEVERITY_RANK: Readonly<Record<ProjectPitfallView["severity"], number>> =
@@ -23,6 +25,19 @@ const SEVERITY_RANK: Readonly<Record<ProjectPitfallView["severity"], number>> =
 const lastSeenMs = (value: string | null): number => {
   const ms = value === null ? Number.NaN : Date.parse(value);
   return Number.isNaN(ms) ? 0 : ms;
+};
+
+export const formatAwcPitfallUpdatedAt = (updatedAt: string | null): string => {
+  if (updatedAt === null) {
+    return AWC_PROJECT_PITFALLS_COPY.notUpdatedYet;
+  }
+  const at = Date.parse(updatedAt);
+  if (Number.isNaN(at)) {
+    return AWC_PROJECT_PITFALLS_COPY.notUpdatedYet;
+  }
+  return AWC_PROJECT_PITFALLS_COPY.updated(
+    new Date(at).toISOString().slice(0, 10),
+  );
 };
 
 /**
@@ -55,6 +70,7 @@ const buildAwcProjectPitfallRows = (
           relative === null
             ? AWC_PROJECT_PITFALLS_COPY.neverHit
             : AWC_PROJECT_PITFALLS_COPY.lastHit(relative),
+        updatedLabel: formatAwcPitfallUpdatedAt(item.updatedAt),
       };
     });
 

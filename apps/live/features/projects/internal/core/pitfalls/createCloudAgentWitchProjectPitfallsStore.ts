@@ -1,7 +1,8 @@
+import { parseProjectPitfallList } from "@agent-witch/shared/pitfalls";
+
 import { AGENT_WITCH_PAIRING_TOKEN_HEADER } from "../agentWitchDeviceAuth.constant";
 import type { AgentWitchCloudApiConfig } from "../agentWitchCloudApi";
 import type { AgentWitchProjectPitfallsStore } from "./agentWitchProjectPitfallsStore.type";
-import { parseAgentWitchProjectPitfallList } from "./parseAgentWitchProjectPitfalls";
 
 const LIST_TIMEOUT_MS = 10_000;
 const UPSERT_TIMEOUT_MS = 15_000;
@@ -52,7 +53,7 @@ const createCloudAgentWitchProjectPitfallsStore = (
       if (!response.ok) {
         return { ok: false, reason: "unavailable" };
       }
-      const parsed = parseAgentWitchProjectPitfallList(await response.json());
+      const parsed = parseProjectPitfallList(await response.json());
       return parsed === null
         ? { ok: false, reason: "unavailable" }
         : { ok: true, items: parsed.items, syncedAt: parsed.syncedAt };

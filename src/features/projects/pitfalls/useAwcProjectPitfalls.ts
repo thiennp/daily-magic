@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 
+import {
+  parseProjectPitfallList,
+  type ProjectPitfallView,
+} from "@agent-witch/shared/pitfalls";
 import buildProjectPitfallsPath from "@/lib/projects/pitfalls/buildProjectPitfallsPath";
-import parseProjectPitfallList from "@/lib/projects/pitfalls/parseProjectPitfallList";
-import type { ProjectPitfallView } from "@/lib/projects/pitfalls/ProjectPitfall.type";
 
 export type AwcProjectPitfallsState =
   | { readonly status: "loading" }

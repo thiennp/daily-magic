@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import type {
-  AgentWitchProjectPitfall,
-  AgentWitchProjectPitfallUpsert,
-} from "./agentWitchProjectPitfall.type";
+  ProjectPitfallUpsert,
+  ProjectPitfallView,
+} from "@agent-witch/shared/pitfalls";
 import type {
   AgentWitchProjectPitfallsStore,
   UpsertAgentWitchPitfallResult,
@@ -14,15 +14,15 @@ import handleProjectPitfallPost, {
 import { buildPitfallFixture } from "./projectPitfallFixtures.testUtil";
 
 const createFakeStore = (
-  items: readonly AgentWitchProjectPitfall[] | null,
+  items: readonly ProjectPitfallView[] | null,
   upsertResult: UpsertAgentWitchPitfallResult = { ok: true },
 ) => {
-  const upserts: AgentWitchProjectPitfallUpsert[] = [];
+  const upserts: ProjectPitfallUpsert[] = [];
   const store: AgentWitchProjectPitfallsStore = {
     listPitfalls: async () =>
       items === null
         ? { ok: false, reason: "unavailable" }
-        : { ok: true, items },
+        : { ok: true, items, syncedAt: null },
     upsertPitfall: async (_projectId, pitfall) => {
       upserts.push(pitfall);
       return upsertResult;

@@ -1,8 +1,8 @@
-import type { AgentWitchProjectPitfall } from "./agentWitchProjectPitfall.type";
+import type { ProjectPitfallView } from "@agent-witch/shared/pitfalls";
 
 export const buildPitfallFixture = (
-  overrides: Partial<AgentWitchProjectPitfall> = {},
-): AgentWitchProjectPitfall => ({
+  overrides: Partial<ProjectPitfallView> = {},
+): ProjectPitfallView => ({
   id: "seed-stale-lockfile",
   projectId: null,
   symptom: "Install fails after a branch switch",
