@@ -9,8 +9,8 @@ public struct RunBootstrapSetupFlowResult: Equatable, Sendable {
 }
 
 /// Setting up: poll local health until *this user's* AWL answers or timeout → Connected / Error.
-/// Port 43347 is shared by all macOS users: a `.foreign` responder fails fast (our AWL cannot
-/// bind while it holds the port); `.unverified` (no identity) keeps polling and never connects.
+/// Port 43347 is shared by all macOS users: a `.foreign` or `.unverified` (old AWL without
+/// identity) responder fails fast — do not wait out the timeout with a vague message.
 public func runBootstrapSetupFlow(
     current: MacAppBootstrapState,
     probeHealth: () async -> LocalHealthOwnership,
@@ -39,7 +39,9 @@ public func runBootstrapSetupFlow(
             return finish(.connected)
         case .foreign:
             return fail(MacAppConstants.foreignLocalHealthReason)
-        case .unverified, .unhealthy:
+        case .unverified:
+            return fail(MacAppConstants.unverifiedLocalHealthReason)
+        case .unhealthy:
             break
         }
         guard now() < deadline else {
@@ -49,8 +51,5 @@ public func runBootstrapSetupFlow(
         last = await probeHealth()
     }
 
-    if last == .unverified {
-        return fail(MacAppConstants.unverifiedLocalHealthReason)
-    }
     return fail("Timed out waiting for local Agent Witch health.")
 }

@@ -40,7 +40,8 @@ final class MacAppMenuController: ObservableObject {
 
     func refreshInstallAndHealth() {
         Task {
-            let healthy = await probeHealth().isHealthy
+            let ownership = await probeHealth()
+            let healthy = ownership.isHealthy
             let installed = isAgentWitchCoreInstalled(
                 installDir: resolveAgentWitchInstallDir(),
                 plistPath: resolveAgentWitchLaunchAgentPlistPath(),
@@ -57,7 +58,10 @@ final class MacAppMenuController: ObservableObject {
                     isHealthy: healthy
                 )
                 state = next
-                statusMessage = statusLabel(for: next)
+                statusMessage = resolveLocalHealthStatusMessage(
+                    ownership: ownership,
+                    runtimeLabel: statusLabel(for: next)
+                )
                 return
             }
 
@@ -355,9 +359,10 @@ final class MacAppMenuController: ObservableObject {
             let ownership = await probeHealth()
             do {
                 state = try pollHealthFlow(current: state, isHealthy: ownership.isHealthy)
-                statusMessage = ownership == .foreign
-                    ? MacAppConstants.foreignLocalHealthReason
-                    : statusLabel(for: state)
+                statusMessage = resolveLocalHealthStatusMessage(
+                    ownership: ownership,
+                    runtimeLabel: statusLabel(for: state)
+                )
             } catch {
                 // Keep current state when transition is disallowed mid-flight.
             }

@@ -38,7 +38,8 @@ public enum MacAppConstants {
         + "Quit it there, then Retry."
     /// Shown when `/health` answers without identity (AWL bundle older than this app).
     public static let unverifiedLocalHealthReason =
-        "Timed out: the Agent Witch answering on port 43347 did not identify as this user's install."
+        "Agent Witch Local needs an update to finish connecting. "
+        + "Keep it running so it can self-update, or use Copy install command / Connect this Mac."
     /// Generic copyable fallback (no token). Token-bearing command requires signed-in Home.
     public static let bootstrapFallbackInstallCommand =
         "curl -fsSL https://www.agentwitch.com/install/agent-witch.sh | bash"

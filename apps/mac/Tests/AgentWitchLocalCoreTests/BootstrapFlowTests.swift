@@ -215,21 +215,26 @@ final class BootstrapFlowTests: XCTestCase {
         XCTAssertEqual(slept, 0)
     }
 
-    func testSetupNeverConnectsOnUnverifiedOldServer() async {
-        let start = Date(timeIntervalSince1970: 0)
-        var tick = 0
+    func testSetupFailsFastWhenOldServerLacksIdentity() async {
+        var probes = 0
+        var slept = 0
         let result = await runBootstrapSetupFlow(
             current: .settingUp,
-            probeHealth: { .unverified },
-            sleep: { _ in tick += 1 },
-            now: { start.addingTimeInterval(TimeInterval(tick * 10)) },
-            timeoutSeconds: 25,
+            probeHealth: {
+                probes += 1
+                return .unverified
+            },
+            sleep: { _ in slept += 1 },
+            now: { Date(timeIntervalSince1970: 0) },
+            timeoutSeconds: 60,
             pollIntervalSeconds: 1
         )
         guard case .error(let reason) = result.state else {
-            return XCTFail("expected unverified timeout error, got \(result.state)")
+            return XCTFail("expected unverified update error, got \(result.state)")
         }
-        XCTAssertTrue(reason.contains("did not identify"))
+        XCTAssertTrue(reason.lowercased().contains("needs an update"))
+        XCTAssertEqual(probes, 1)
+        XCTAssertEqual(slept, 0)
         XCTAssertNotEqual(result.state, .connected)
     }
 

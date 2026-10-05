@@ -89,4 +89,32 @@ final class HealthAndStateTests: XCTestCase {
             .notInstalled
         )
     }
+
+    func testResolveLocalHealthStatusMessage() {
+        XCTAssertEqual(
+            resolveLocalHealthStatusMessage(ownership: .ours, runtimeLabel: "Running"),
+            "Running"
+        )
+        XCTAssertEqual(
+            resolveLocalHealthStatusMessage(ownership: .unhealthy, runtimeLabel: "Stopped"),
+            "Stopped"
+        )
+        XCTAssertEqual(
+            resolveLocalHealthStatusMessage(ownership: .foreign, runtimeLabel: "Stopped"),
+            MacAppConstants.foreignLocalHealthReason
+        )
+        let unverified = resolveLocalHealthStatusMessage(
+            ownership: .unverified,
+            runtimeLabel: "Stopped"
+        )
+        XCTAssertEqual(unverified, MacAppConstants.unverifiedLocalHealthReason)
+        XCTAssertTrue(unverified.lowercased().contains("needs an update"))
+        XCTAssertFalse(unverified.lowercased().contains("stopped"))
+        XCTAssertFalse(unverified.lowercased().contains("timed out"))
+        XCTAssertNotEqual(
+            MacAppConstants.foreignLocalHealthReason,
+            MacAppConstants.unverifiedLocalHealthReason
+        )
+    }
+
 }
