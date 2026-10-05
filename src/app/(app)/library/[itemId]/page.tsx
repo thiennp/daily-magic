@@ -1,4 +1,4 @@
-import { permanentRedirect } from "next/navigation";
+import { permanentRedirect, redirect } from "next/navigation";
 
 import { getAuthActor } from "@/lib/auth/auth";
 import { lookupLibraryItemProjectId } from "@/lib/library/lookupLibraryItemProjectId";
@@ -19,15 +19,21 @@ export default async function LibraryItemPage({
   const { itemId } = await params;
   const query = await searchParams;
   const actor = await getAuthActor();
+  const actorUserId = actor?.id ?? null;
 
-  permanentRedirect(
-    await resolveLegacyItemRedirectPath({
-      intent: "library",
-      legacyPath: `/library/${encodeURIComponent(itemId.trim())}`,
-      itemId,
-      searchParams: query,
-      actorUserId: actor?.id ?? null,
-      lookupProjectId: lookupLibraryItemProjectId,
-    }),
-  );
+  const destination = await resolveLegacyItemRedirectPath({
+    intent: "library",
+    legacyPath: `/library/${encodeURIComponent(itemId.trim())}`,
+    itemId,
+    searchParams: query,
+    actorUserId,
+    lookupProjectId: lookupLibraryItemProjectId,
+  });
+
+  // Signed-out goes to login with callback = this legacy URL. A 308 would be
+  // cached and loop after sign-in; use 307 for session-dependent hops.
+  if (actorUserId === null) {
+    redirect(destination);
+  }
+  permanentRedirect(destination);
 }

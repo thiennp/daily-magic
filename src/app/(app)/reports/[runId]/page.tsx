@@ -1,4 +1,4 @@
-import { permanentRedirect } from "next/navigation";
+import { permanentRedirect, redirect } from "next/navigation";
 
 import { getAuthActor } from "@/lib/auth/auth";
 import { lookupAgentRunProjectId } from "@/lib/dispatch/lookupAgentRunProjectId";
@@ -22,15 +22,21 @@ export default async function ReportsRunPage({
   const { runId } = await params;
   const query = await searchParams;
   const actor = await getAuthActor();
+  const actorUserId = actor?.id ?? null;
 
-  permanentRedirect(
-    await resolveLegacyItemRedirectPath({
-      intent: "reports",
-      legacyPath: `/reports/${encodeURIComponent(runId.trim())}`,
-      itemId: runId,
-      searchParams: query,
-      actorUserId: actor?.id ?? null,
-      lookupProjectId: lookupAgentRunProjectId,
-    }),
-  );
+  const destination = await resolveLegacyItemRedirectPath({
+    intent: "reports",
+    legacyPath: `/reports/${encodeURIComponent(runId.trim())}`,
+    itemId: runId,
+    searchParams: query,
+    actorUserId,
+    lookupProjectId: lookupAgentRunProjectId,
+  });
+
+  // Signed-out goes to login with callback = this legacy URL. A 308 would be
+  // cached and loop after sign-in; use 307 for session-dependent hops.
+  if (actorUserId === null) {
+    redirect(destination);
+  }
+  permanentRedirect(destination);
 }
