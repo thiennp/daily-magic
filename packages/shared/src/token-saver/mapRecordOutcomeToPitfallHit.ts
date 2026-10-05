@@ -1,3 +1,4 @@
+import { buildProjectPitfallHitPath } from "@agent-witch/shared/pitfalls";
 import type {
   PitfallHitFromOutcome,
   RecordOutcomeInput,
@@ -5,8 +6,7 @@ import type {
 
 /**
  * Maps a pitfall record_outcome onto the existing cloud hit route.
- * Path: POST /api/agent-witch/projects/:projectId/pitfalls/:pitfallId/hit
- * Returns null when kind is not pitfall or ids are missing.
+ * Returns null when kind is not pitfall, ids are missing, or ids are unsafe.
  */
 export const mapRecordOutcomeToPitfallHit = (
   input: RecordOutcomeInput,
@@ -16,12 +16,9 @@ export const mapRecordOutcomeToPitfallHit = (
   }
   const projectId = input.projectId.trim();
   const pitfallId = input.pitfallId?.trim() ?? "";
-  if (projectId.length === 0 || pitfallId.length === 0) {
+  const path = buildProjectPitfallHitPath(projectId, pitfallId);
+  if (path === null) {
     return null;
   }
-  return {
-    projectId,
-    pitfallId,
-    path: `/api/agent-witch/projects/${projectId}/pitfalls/${pitfallId}/hit`,
-  };
+  return { projectId, pitfallId, path };
 };

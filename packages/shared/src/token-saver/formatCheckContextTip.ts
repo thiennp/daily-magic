@@ -1,31 +1,39 @@
 import {
+  estimateTokenCount,
+  formatPitfallBotLine,
+  truncateTextToTokenBudget,
+} from "@agent-witch/shared/pitfalls";
+import {
   CHECK_CONTEXT_TIP_MAX_LINES,
   CHECK_CONTEXT_TIP_MAX_TOKENS,
-  estimateTipTokenCount,
 } from "./checkContextStatus.constant";
 import type { CheckContextPitfallLine } from "./tokenSaverTool.types";
 
-export const formatPitfallBotLine = (pitfall: CheckContextPitfallLine): string =>
-  `${pitfall.id} | ${pitfall.avoidance}`;
-
 /**
  * Human tip for a hit: header + id|fix lines, capped to ≤~120 tokens / 4 lines.
- * Pure. Does not match — Mac owns matching until moved to shared.
+ * If the header alone exceeds the budget, it is truncated to fit.
  */
 export const formatCheckContextTip = (
   pitfalls: readonly CheckContextPitfallLine[],
 ): string => {
-  const header = "Agent Witch tip · check_context";
+  const header = truncateTextToTokenBudget(
+    "Agent Witch tip · check_context",
+    CHECK_CONTEXT_TIP_MAX_TOKENS,
+  );
+  if (estimateTokenCount(header) >= CHECK_CONTEXT_TIP_MAX_TOKENS) {
+    return header;
+  }
+
   const lines: string[] = [header];
-  let tokens = estimateTipTokenCount(header);
+  let tokens = estimateTokenCount(header);
 
   for (const pitfall of pitfalls) {
     if (lines.length - 1 >= CHECK_CONTEXT_TIP_MAX_LINES) {
       break;
     }
     const line = formatPitfallBotLine(pitfall);
-    const lineTokens = estimateTipTokenCount(line);
-    if (lines.length > 1 && tokens + lineTokens > CHECK_CONTEXT_TIP_MAX_TOKENS) {
+    const lineTokens = estimateTokenCount(line);
+    if (tokens + lineTokens > CHECK_CONTEXT_TIP_MAX_TOKENS) {
       break;
     }
     lines.push(line);

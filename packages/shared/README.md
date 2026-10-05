@@ -10,9 +10,10 @@ packages/shared/src/
 ├── deployables/          # AWC | AWL | AWB | AWI ids and AWB ports
 ├── network/              # Origins, WS path, AWL :43347
 ├── protocol/             # WebSocket frame shape + message type strings
+├── projects/             # Project feature flags (token-saver defaults)
 ├── pitfalls/             # Project pitfalls enums, limits, wire parser
 ├── preflight/            # Risky-action check catalog + result model
-└── token-saver/          # Local MCP tool schemas, flags, tip format
+└── token-saver/          # Local MCP tool schemas + tip format
 ```
 
 ## Import (today)

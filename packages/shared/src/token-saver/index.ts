@@ -2,21 +2,8 @@ export {
   CHECK_CONTEXT_STATUSES,
   CHECK_CONTEXT_TIP_MAX_LINES,
   CHECK_CONTEXT_TIP_MAX_TOKENS,
-  estimateTipTokenCount,
   type CheckContextStatus,
 } from "./checkContextStatus.constant";
-export {
-  PROJECT_FEATURE_FLAG_DEFAULTS,
-  PROJECT_FEATURE_FLAG_KEYS,
-  PROJECT_FEATURE_FLAG_STATES,
-  buildDefaultProjectFlags,
-} from "./projectFlags.constant";
-export type {
-  ProjectFeatureFlagKey,
-  ProjectFeatureFlagState,
-  ProjectFeatureFlags,
-} from "./projectFlags.type";
-export { parseProjectFlags } from "./parseProjectFlags";
 export type {
   CheckContextInput,
   CheckContextPitfallLine,
@@ -39,8 +26,5 @@ export {
   TOKEN_SAVER_TOOL_SCHEMAS,
   type TokenSaverToolName,
 } from "./tokenSaverToolSchemas.constant";
-export {
-  formatCheckContextTip,
-  formatPitfallBotLine,
-} from "./formatCheckContextTip";
+export { formatCheckContextTip } from "./formatCheckContextTip";
 export { mapRecordOutcomeToPitfallHit } from "./mapRecordOutcomeToPitfallHit";

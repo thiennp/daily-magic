@@ -11,6 +11,7 @@
     "./network": "./src/network/index.ts",
     "./ui": "./src/ui/index.ts",
     "./dispatch": "./src/dispatch/index.ts",
+    "./projects": "./src/projects/index.ts",
     "./pitfalls": "./src/pitfalls/index.ts",
     "./preflight": "./src/preflight/index.ts",
     "./token-saver": "./src/token-saver/index.ts"

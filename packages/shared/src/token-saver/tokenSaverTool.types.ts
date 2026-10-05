@@ -29,7 +29,7 @@ export type GetContextInput = {
 export type GetContextResult = {
   readonly projectId: string;
   readonly folderPath: string | null;
-  readonly flags: import("./projectFlags.type").ProjectFeatureFlags;
+  readonly flags: import("@agent-witch/shared/projects").ProjectFeatureFlags;
 };
 
 export type GetPitfallsInput = {
