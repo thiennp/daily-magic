@@ -6,6 +6,8 @@ import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupport
 import ConnectThisComputerInstallBody from "@/features/home/ConnectThisComputerInstallBody";
 import ConnectThisLinuxDownloadArea from "@/features/home/ConnectThisLinuxDownloadArea";
 import ConnectThisMacDownloadArea from "@/features/home/ConnectThisMacDownloadArea";
+import ConnectThisMacModalNotice from "@/features/home/ConnectThisMacModalNotice";
+import type { ConnectThisMacModalNotice as ConnectThisMacModalNoticeValue } from "@/features/home/utils/ConnectThisMacModalNotice.type";
 import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
 import DownloadNonMacNote from "@/features/download/DownloadNonMacNote";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
@@ -19,6 +21,10 @@ interface ConnectThisMacModalProps {
   readonly host: string;
   readonly onClose: () => void;
   readonly onInstallEngaged: () => void;
+  /** version-too-old / not running / retry; null → download + install only. */
+  readonly notice?: ConnectThisMacModalNoticeValue | null;
+  readonly isRetrying?: boolean;
+  readonly onRetry?: () => void;
 }
 
 const CONNECT_MODAL_COPY: Partial<Record<BrowserOperatingSystem, string>> = {
@@ -38,6 +44,9 @@ export default function ConnectThisMacModal({
   host,
   onClose,
   onInstallEngaged,
+  notice = null,
+  isRetrying = false,
+  onRetry = () => undefined,
 }: ConnectThisMacModalProps) {
   const installDescription = CONNECT_MODAL_COPY[operatingSystem];
 
@@ -48,6 +57,14 @@ export default function ConnectThisMacModal({
           ? "Connect this computer"
           : "Connect this Mac"}
       </h2>
+
+      {notice !== null ? (
+        <ConnectThisMacModalNotice
+          notice={notice}
+          isRetrying={isRetrying}
+          onRetry={onRetry}
+        />
+      ) : null}
 
       {!isWebSocketSupported ? (
         <div className="mt-4">

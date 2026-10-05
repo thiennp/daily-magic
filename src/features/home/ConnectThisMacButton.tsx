@@ -5,6 +5,7 @@ import { useSyncExternalStore } from "react";
 import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
 import ConnectThisMacModal from "@/features/home/ConnectThisMacModal";
+import useConnectThisMacModalNotice from "@/features/home/hooks/useConnectThisMacModalNotice";
 import useConnectThisMacRowFlow from "@/features/home/hooks/useConnectThisMacRowFlow";
 import usePersonalizedAgentWitchInstallCommand from "@/features/home/hooks/usePersonalizedAgentWitchInstallCommand";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
@@ -41,6 +42,9 @@ export default function ConnectThisMacButton({
     isModalOpen,
     isPasteModalOpen,
   } = useConnectThisMacRowFlow({ operatingSystem });
+  const { notice, isRetrying, retry } = useConnectThisMacModalNotice({
+    isModalOpen,
+  });
   const {
     installCommand: personalizedInstallCommand,
     isLoading: isInstallCommandLoading,
@@ -59,13 +63,14 @@ export default function ConnectThisMacButton({
             : "flex w-full flex-col gap-2 sm:w-auto"
         }
       >
+        {/* Never disabled: Connect this Mac always opens the modal (loading shows inside). */}
         <button
           type="button"
           className={className}
-          disabled={isInstallCommandLoading}
+          aria-haspopup="dialog"
           onClick={handleOpenModal}
         >
-          {isInstallCommandLoading ? "Preparing…" : "Connect this Mac"}
+          Connect this Mac
         </button>
         {installCommandError !== null ? (
           <p className="text-xs text-red-600 dark:text-red-400">
@@ -82,6 +87,9 @@ export default function ConnectThisMacButton({
         host={host}
         onClose={handleCloseModal}
         onInstallEngaged={handleInstallEngaged}
+        notice={notice}
+        isRetrying={isRetrying}
+        onRetry={retry}
       />
       <ConnectInstallPasteModal
         isOpen={isPasteModalOpen}

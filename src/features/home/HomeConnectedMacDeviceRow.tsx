@@ -1,13 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, type ReactNode } from "react";
 
 import MacDeviceRow from "@/features/agent-witch/macDevices/MacDeviceRow";
 import buildAgentWitchLocalLogHref from "@/features/agent-witch/macDevices/utils/buildAgentWitchLocalLogHref";
 import { buildMacDeviceDetailText } from "@/features/agent-witch/macDevices/utils/buildMacDeviceDetailText";
 import { canWakeMacDeviceFromBrowser } from "@/features/agent-witch/online-wake";
-import { resolveHomeMacDeviceIsThisMac } from "@/features/home/utils/resolveHomeMacDeviceIsThisMac";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import useThisMacLocalInstallActions from "@/features/home/hooks/useThisMacLocalInstallActions";
 import DeleteLocalMacModal from "@/features/home/DeleteLocalMacModal";
@@ -18,8 +17,10 @@ interface HomeConnectedMacDeviceRowProps {
   readonly displayName: string;
   readonly serverInstallBundleVersion: string | null;
   readonly localHostname: string | null;
-  readonly localTokenHash: string | null;
+  /** Resolved once per list (single This Mac row — see resolveHomeThisMacDeviceIdentity). */
+  readonly isThisMac: boolean;
   readonly isWakeServerReachable: boolean;
+  readonly footer?: ReactNode;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
   readonly onDelegateTask: (deviceId: string) => void;
   readonly onOpenShell: (deviceId: string) => void;
@@ -46,10 +47,7 @@ export default function HomeConnectedMacDeviceRow(
     device: props.device,
     serverInstallBundleVersion: props.serverInstallBundleVersion,
   });
-  const isThisMac = resolveHomeMacDeviceIsThisMac({
-    localTokenHash: props.localTokenHash,
-    device: props.device,
-  });
+  const isThisMac = props.isThisMac;
   const router = useRouter();
   const onSeeLocalLog = useCallback(() => {
     const wakePort = props.device.wakePort;
@@ -92,6 +90,7 @@ export default function HomeConnectedMacDeviceRow(
         onDelegateTask={props.onDelegateTask}
         onOpenShell={props.onOpenShell}
         onDelete={props.onDelete}
+        footer={props.footer}
       />
       <UpdateLocalMacModal
         isOpen={isUpdateLocalModalOpen}

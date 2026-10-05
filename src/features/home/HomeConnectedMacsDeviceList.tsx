@@ -1,7 +1,12 @@
 "use client";
 
+import { APP_SURFACE_CTA_PRIMARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import ConnectThisMacButton from "@/features/home/ConnectThisMacButton";
 import ConnectThisMacRow from "@/features/home/ConnectThisMacRow";
 import HomeConnectedMacDeviceRow from "@/features/home/HomeConnectedMacDeviceRow";
+import HomeMacDeviceTooOldNote from "@/features/home/HomeMacDeviceTooOldNote";
+import { resolveHomeMacDeviceRowConnectFooter } from "@/features/home/utils/resolveHomeMacDeviceRowConnectFooter";
+import { resolveHomeThisMacDeviceIdentity } from "@/features/home/utils/resolveHomeThisMacDeviceIdentity";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 
 interface HomeConnectedMacsDeviceListProps {
@@ -35,6 +40,38 @@ export default function HomeConnectedMacsDeviceList({
   onOpenShell,
   onDelete,
 }: HomeConnectedMacsDeviceListProps) {
+  const thisMacIdentity = resolveHomeThisMacDeviceIdentity({
+    localTokenHash,
+    devices,
+  });
+  const renderFooter = (device: MyMacDevice) => {
+    const footer = resolveHomeMacDeviceRowConnectFooter({
+      isThisMac: device.id === thisMacIdentity.thisMacDeviceId,
+      isThisMacReachable: thisMacIdentity.isReachable,
+      connectVersionStatus: device.connectVersionStatus,
+    });
+    if (footer === "connect_this_mac") {
+      return (
+        <div className="mt-2 px-3">
+          {device.connectVersionStatus === "too_old" ? (
+            <HomeMacDeviceTooOldNote />
+          ) : null}
+          <div className="mt-2">
+            <ConnectThisMacButton
+              installCommand={installCommand}
+              isWebSocketSupported={isWebSocketSupported}
+              host={host}
+              fullWidth
+              className={`${APP_SURFACE_CTA_PRIMARY_SM_CLASS} w-full`}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    return footer === "too_old_note" ? <HomeMacDeviceTooOldNote /> : undefined;
+  };
+
   return (
     <ul className="mt-4 list-none space-y-4 p-0">
       {devices.map((device) => (
@@ -44,15 +81,17 @@ export default function HomeConnectedMacsDeviceList({
           displayName={displayNameById.get(device.id) ?? "Your Mac"}
           serverInstallBundleVersion={serverInstallBundleVersion}
           localHostname={localHostname}
-          localTokenHash={localTokenHash}
+          isThisMac={device.id === thisMacIdentity.thisMacDeviceId}
           isWakeServerReachable={localHostname !== null}
+          footer={renderFooter(device)}
           onRenamed={onRenamed}
           onDelegateTask={onDelegateTask}
           onOpenShell={onOpenShell}
           onDelete={onDelete}
         />
       ))}
-      {shouldShowConnectThisMac ? (
+      {/* Dedupe: when a device row is already This Mac, it owns the Connect CTA. */}
+      {shouldShowConnectThisMac && thisMacIdentity.thisMacDeviceId === null ? (
         <ConnectThisMacRow
           installCommand={installCommand}
           isWebSocketSupported={isWebSocketSupported}

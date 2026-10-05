@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
 import {
@@ -28,6 +28,8 @@ interface MacDeviceRowProps {
   readonly onDelegateTask?: (deviceId: string) => void;
   readonly onOpenShell?: (deviceId: string) => void;
   readonly onDelete?: (deviceId: string) => void | Promise<void>;
+  /** Extra content under the row (e.g. Connect this Mac / AWL too old). */
+  readonly footer?: ReactNode;
 }
 
 export default function MacDeviceRow({
@@ -49,6 +51,7 @@ export default function MacDeviceRow({
   onDelegateTask,
   onOpenShell,
   onDelete,
+  footer,
 }: MacDeviceRowProps) {
   const [isEditing, setIsEditing] = useState(false);
 
@@ -98,8 +101,20 @@ export default function MacDeviceRow({
   );
 
   if (onSelect !== undefined) {
-    return wrappedRow;
+    return footer === undefined ? (
+      wrappedRow
+    ) : (
+      <>
+        {wrappedRow}
+        {footer}
+      </>
+    );
   }
 
-  return <li>{wrappedRow}</li>;
+  return (
+    <li>
+      {wrappedRow}
+      {footer}
+    </li>
+  );
 }
