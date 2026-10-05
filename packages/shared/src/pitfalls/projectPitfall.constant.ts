@@ -18,6 +18,7 @@ export const PROJECT_PITFALL_LIMITS = {
   keywords: 24,
   tag: 32,
   tags: 12,
+  id: 64,
 } as const;
 
 /** Lowercase slug, e.g. arch-max-lines. */

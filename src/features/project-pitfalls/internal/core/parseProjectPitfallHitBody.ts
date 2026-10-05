@@ -1,4 +1,4 @@
-import { PROJECT_PITFALL_MAX_HIT_BATCH } from "@/features/project-pitfalls/internal/core/projectPitfall.constant";
+import { PROJECT_PITFALL_MAX_HIT_BATCH } from "@agent-witch/shared/pitfalls";
 import type {
   ProjectPitfallFailure,
   ProjectPitfallHitInput,

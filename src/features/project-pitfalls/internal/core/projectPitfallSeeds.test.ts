@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { PROJECT_PITFALL_LIMITS } from "@/features/project-pitfalls/internal/core/projectPitfall.constant";
+import { PROJECT_PITFALL_LIMITS } from "@agent-witch/shared/pitfalls";
 import { PROJECT_PITFALL_SEEDS } from "@/features/project-pitfalls/internal/core/projectPitfallSeeds.constant";
 import { validateProjectPitfallUpsert } from "@/features/project-pitfalls/internal/core/validateProjectPitfallUpsert";
 

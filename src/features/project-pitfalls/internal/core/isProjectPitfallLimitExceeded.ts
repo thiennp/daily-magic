@@ -1,4 +1,4 @@
-import { PROJECT_PITFALL_MAX_ACTIVE } from "@/features/project-pitfalls/internal/core/projectPitfall.constant";
+import { PROJECT_PITFALL_MAX_ACTIVE } from "@agent-witch/shared/pitfalls";
 import type { ProjectPitfallView } from "@/features/project-pitfalls/internal/core/projectPitfall.type";
 
 /**

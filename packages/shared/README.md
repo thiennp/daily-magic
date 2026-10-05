@@ -9,7 +9,8 @@ packages/shared/src/
 ├── index.ts              # Barrel (deployables + network + protocol types)
 ├── deployables/          # AWC | AWL | AWB | AWI ids and AWB ports
 ├── network/              # Origins, WS path, AWL :43347
-└── protocol/             # WebSocket frame shape + message type strings
+├── protocol/             # WebSocket frame shape + message type strings
+└── pitfalls/             # Project pitfalls enums, limits, wire parser
 ```
 
 ## Import (today)

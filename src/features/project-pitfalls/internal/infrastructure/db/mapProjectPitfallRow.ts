@@ -33,7 +33,7 @@ export const mapProjectPitfallRow = (
   tags: toStringList(row.tags),
   source: String(row.source) as ProjectPitfallSource,
   severity: String(row.severity) as ProjectPitfallSeverity,
-  updatedAt: toIso(row.updated_at) ?? "",
+  updatedAt: toIso(row.updated_at),
 });
 
 export const mapProjectPitfallHitRow = (

@@ -1,10 +1,12 @@
 export type {
   ProjectPitfallCheck,
   ProjectPitfallContent,
-  ProjectPitfallErrorCode,
-  ProjectPitfallHitRecord,
   ProjectPitfallSeverity,
   ProjectPitfallSource,
-  ProjectPitfallUpsertInput,
+  ProjectPitfallUpsert,
   ProjectPitfallView,
+} from "@agent-witch/shared/pitfalls";
+export type {
+  ProjectPitfallErrorCode,
+  ProjectPitfallHitRecord,
 } from "@/features/project-pitfalls/internal/core/projectPitfall.type";

@@ -4,7 +4,7 @@ import {
   PROJECT_PITFALL_DEFAULT_SEVERITY,
   PROJECT_PITFALL_LIMITS as LIMITS,
   PROJECT_PITFALL_SEVERITIES,
-} from "@/features/project-pitfalls/internal/core/projectPitfall.constant";
+} from "@agent-witch/shared/pitfalls";
 import type {
   ProjectPitfallFailure,
   ProjectPitfallUpsertInput,
