@@ -34,7 +34,7 @@ export default function AwcProjectDetailPanel({
   const [renameInSettings, setRenameInSettings] = useState(
     startRename && isOwner,
   );
-  const { presence, editCta } = useAwcProjectDevicePresentation({
+  const { deviceDisplayName, presence, editCta } = useAwcProjectDevicePresentation({
     project,
     devices,
     displayNameById,
@@ -78,6 +78,9 @@ export default function AwcProjectDetailPanel({
         project={project}
         startRename={renameInSettings}
         pageActorRole={pageActorRole}
+        deviceDisplayName={deviceDisplayName}
+        editCta={editCta}
+        onGotoTab={setActiveTab}
       />
     </div>
   );

@@ -18,7 +18,7 @@ const headerSource = readFileSync(
   "utf8",
 );
 
-describe("AwcProjectDetailPanel layout S1 shell", () => {
+describe("AwcProjectDetailPanel layout S1/S2 shell", () => {
   it("uses shell header + tab bar (no purple proposal banner)", () => {
     expect(detailPanelSource).toContain("AwcProjectDetailHeader");
     expect(detailPanelSource).toContain("AwcProjectDetailTabBar");
@@ -37,5 +37,27 @@ describe("AwcProjectDetailPanel layout S1 shell", () => {
     expect(headerSource).toContain("min-w-0");
     expect(headerSource).toContain("AwcProjectPathDisplay");
     expect(headerSource).not.toMatch(/direction\s*:\s*rtl/);
+  });
+});
+
+const overviewPanelSource = readFileSync(
+  path.join(
+    process.cwd(),
+    "src/features/projects/overview/AwcProjectOverviewPanel.tsx",
+  ),
+  "utf8",
+);
+
+const tabPanelsSource = readFileSync(
+  path.join(process.cwd(), "src/features/projects/AwcProjectDetailTabPanels.tsx"),
+  "utf8",
+);
+
+describe("AwcProjectDetailPanel layout S2 overview", () => {
+  it("wires Overview panel and keeps gray-only chrome (no indigo/purple)", () => {
+    expect(tabPanelsSource).toContain("AwcProjectOverviewPanel");
+    expect(overviewPanelSource).toContain("AwcProjectOverviewStatsStrip");
+    expect(overviewPanelSource).not.toMatch(/indigo|purple|#6366f1/i);
+    expect(detailPanelSource).toContain("onGotoTab={setActiveTab}");
   });
 });
