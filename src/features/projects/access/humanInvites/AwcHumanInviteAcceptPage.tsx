@@ -1,5 +1,6 @@
 "use client";
 
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 
@@ -13,6 +14,7 @@ import {
   initialHumanAcceptNickname,
   isHumanAcceptNamingError,
 } from "@/features/projects/access/humanInvites/utils/resolveHumanAcceptNickname";
+import { mapHumanAcceptEmailErrorView } from "@/features/projects/access/humanInvites/utils/mapHumanAcceptEmailError";
 import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
 
 export type AwcHumanInviteAcceptPageProps = {
@@ -24,8 +26,9 @@ export type AwcHumanInviteAcceptPageProps = {
   readonly role: HumanInviteRole;
   readonly expiresAt: string | null;
   readonly signedInEmail: string | null;
-  /** Account name (users.name) — prefills the project nickname. */
   readonly accountName?: string | null;
+  readonly requireEmailMatch?: boolean;
+  readonly invitedEmailMasked?: string | null;
 };
 
 const expiresInLabel = (expiresAt: string | null): string => {
@@ -40,6 +43,8 @@ const mapAcceptError = (
   status: number,
   code?: string,
 ): HumanInviteAcceptViewState => {
+  const emailView = mapHumanAcceptEmailErrorView(code);
+  if (emailView) return emailView;
   if (status === 401) return "signed_out";
   if (code === "expired") return "expired";
   if (code === "revoked") return "revoked";
@@ -62,6 +67,8 @@ export default function AwcHumanInviteAcceptPage({
   expiresAt,
   signedInEmail,
   accountName = null,
+  requireEmailMatch = false,
+  invitedEmailMasked = null,
 }: AwcHumanInviteAcceptPageProps) {
   const router = useRouter();
   const [viewState, setViewState] =
@@ -71,15 +78,26 @@ export default function AwcHumanInviteAcceptPage({
     initialHumanAcceptNickname(accountName),
   );
   const [nicknameError, setNicknameError] = useState<string | null>(null);
+  const [maskedEmail, setMaskedEmail] = useState<string | null>(
+    invitedEmailMasked,
+  );
 
-  const authReturn = useMemo(() => {
-    const path = `/invite/h/${encodeURIComponent(token)}`;
-    return `/login?callbackUrl=${encodeURIComponent(path)}`;
-  }, [token]);
+  const invitePath = useMemo(
+    () => `/invite/h/${encodeURIComponent(token)}`,
+    [token],
+  );
+  const authReturn = useMemo(
+    () => `/login?callbackUrl=${encodeURIComponent(invitePath)}`,
+    [invitePath],
+  );
 
   const goAuth = useCallback(() => {
     router.push(authReturn);
   }, [authReturn, router]);
+
+  const onSwitchAccount = useCallback(() => {
+    void signOut({ callbackUrl: authReturn });
+  }, [authReturn]);
 
   const onAccept = useCallback(() => {
     const checked = checkHumanAcceptNickname(nickname);
@@ -98,7 +116,6 @@ export default function AwcHumanInviteAcceptPage({
         return;
       }
       if (isHumanAcceptNamingError(result.code)) {
-        // Invite not consumed: show error, prefill, let the user retry.
         setNicknameError(
           result.errorMessage ?? mapProjectAccessError(result.code),
         );
@@ -106,6 +123,9 @@ export default function AwcHumanInviteAcceptPage({
           setNickname(result.suggestedProjectDisplayName);
         }
         return;
+      }
+      if (result.invitedEmailMasked) {
+        setMaskedEmail(result.invitedEmailMasked);
       }
       setViewState(mapAcceptError(result.status, result.code));
     });
@@ -140,6 +160,9 @@ export default function AwcHumanInviteAcceptPage({
       onSignUp={goAuth}
       onLogIn={goAuth}
       onOpenProject={onOpenProject}
+      requireEmailMatch={requireEmailMatch}
+      invitedEmailMasked={maskedEmail}
+      onSwitchAccount={onSwitchAccount}
     />
   );
 }

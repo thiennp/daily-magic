@@ -18,6 +18,8 @@ export type HumanInviteListItem = {
   readonly inviteId: string;
   readonly role: HumanInviteRole | string;
   readonly email: string | null;
+  /** true = only the invited email may accept (open link when false). */
+  readonly requireEmailMatch: boolean;
   readonly createdAt: string;
   readonly expiresAt: string;
   readonly revokedAt: string | null;
@@ -29,6 +31,8 @@ export type HumanInviteListItem = {
 export type CreateHumanInviteBody = {
   readonly role?: HumanInviteRole;
   readonly email?: string | null;
+  /** When true, email is required (server 400 EMAIL_REQUIRED_FOR_LOCK). */
+  readonly requireEmailMatch?: boolean;
   readonly expiresInDays?: number;
 };
 
@@ -39,6 +43,7 @@ export type CreateHumanInviteResponse = {
   readonly token: string;
   readonly role: HumanInviteRole | string;
   readonly email: string | null;
+  readonly requireEmailMatch?: boolean;
   readonly expiresAt: string;
   readonly maxUses: number;
   readonly usesRemaining: number;
@@ -71,6 +76,11 @@ export type AcceptHumanInviteNamingErrorCode =
   | "DISPLAY_NAME_REQUIRED";
 
 /** Accept error codes from S0 (envelope: ok:false, code, errorMessage). */
+export type AcceptHumanInviteEmailErrorCode =
+  | "INVITE_EMAIL_MISMATCH"
+  | "INVITE_EMAIL_UNVERIFIED"
+  | "EMAIL_REQUIRED_FOR_LOCK";
+
 export type AcceptHumanInviteErrorCode =
   | "already_owner"
   | "already_member"
@@ -78,7 +88,8 @@ export type AcceptHumanInviteErrorCode =
   | "revoked"
   | "already_redeemed"
   | "invalid_token"
-  | AcceptHumanInviteNamingErrorCode;
+  | AcceptHumanInviteNamingErrorCode
+  | AcceptHumanInviteEmailErrorCode;
 
 /** Non-2xx accept result from acceptHumanInviteApi. */
 export type AcceptHumanInviteFailure = {
@@ -88,6 +99,8 @@ export type AcceptHumanInviteFailure = {
   readonly errorMessage?: string;
   /** Present on naming errors; prefill the nickname input for retry. */
   readonly suggestedProjectDisplayName?: string | null;
+  /** Present on INVITE_EMAIL_MISMATCH (invite stays usable). */
+  readonly invitedEmailMasked?: string | null;
 };
 
 /** POST .../human-members/{membershipId}/remove → 200 */

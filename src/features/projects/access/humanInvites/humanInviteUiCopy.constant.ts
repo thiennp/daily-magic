@@ -72,9 +72,25 @@ export const HUMAN_INVITE_UI_COPY = {
     "Viewers can't invite bots. Ask the owner for Member access if you need that.",
   roleChipMember: "Your role · Member",
   roleChipViewer: "Your role · Viewer",
+  emailLockCheckbox: "Only this email can join",
+  emailRequiredForLock: "Enter an email to lock this invite to one person.",
+  pendingEmailLocked: "Only this email",
+  emailMismatchTitle: "Wrong account for this invite",
+  emailMismatchBody:
+    "This invite is locked to {masked}. You're signed in as a different account. Sign out and switch to that email — the invite still works.",
+  emailUnverifiedTitle: "Verify your email to join",
+  emailUnverifiedBody:
+    "This invite is locked to {masked}. Verify that email on your account, then try again. The invite still works.",
+  switchAccount: "Switch account",
+  signOutCta: "Sign out",
+  emailLockSignedOutHint:
+    "This invite is locked to {masked}. Sign in with that email to join.",
   invalidInviteTitle: "This invite link is not valid",
   invalidInviteBody: "Ask for a fresh invite link from the project owner.",
 } as const;
 
 export const withProjectName = (template: string, projectName: string): string =>
   template.replaceAll("{projectName}", projectName);
+
+export const withMaskedEmail = (template: string, masked: string): string =>
+  template.replaceAll("{masked}", masked);

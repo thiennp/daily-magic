@@ -28,8 +28,9 @@ const missToView = (
 };
 
 /**
- * Open-link v1: anyone signed in can accept.
+ * Human invite accept: open link or email-locked.
  * Signed-out → Sign up / Log in with return to this URL.
+ * Email mismatch → switch account (invite stays usable).
  */
 export default async function HumanInviteAcceptRoutePage({
   params,
@@ -68,6 +69,8 @@ export default async function HumanInviteAcceptRoutePage({
       expiresAt={loaded.expiresAt}
       signedInEmail={actor?.email ?? null}
       accountName={actor?.name ?? null}
+      requireEmailMatch={loaded.requireEmailMatch}
+      invitedEmailMasked={loaded.invitedEmailMasked}
     />
   );
 }

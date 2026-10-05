@@ -3,9 +3,11 @@
 import type { FormEvent, ReactNode } from "react";
 
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
+import AwcHumanInviteEmailLockAcceptPanel from "@/features/projects/access/humanInvites/AwcHumanInviteEmailLockAcceptPanel";
 import AwcHumanInviteNicknameField from "@/features/projects/access/humanInvites/AwcHumanInviteNicknameField";
 import {
   HUMAN_INVITE_UI_COPY,
+  withMaskedEmail,
   withProjectName,
 } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
 import type { HumanInviteRole } from "@/features/projects/access/humanInvites/types/humanInviteUiContract.type";
@@ -17,7 +19,9 @@ export type HumanInviteAcceptViewState =
   | "used"
   | "revoked"
   | "already_member"
-  | "invalid";
+  | "invalid"
+  | "email_mismatch"
+  | "email_unverified";
 
 export type AwcHumanInviteAcceptViewProps = {
   readonly viewState: HumanInviteAcceptViewState;
@@ -27,7 +31,6 @@ export type AwcHumanInviteAcceptViewProps = {
   readonly expiresInLabel?: string;
   readonly signedInEmail?: string | null;
   readonly busy?: boolean;
-  /** Project nickname (required for humans; prefilled from account name). */
   readonly nickname?: string;
   readonly nicknameError?: string | null;
   readonly onNicknameChange?: (value: string) => void;
@@ -35,6 +38,10 @@ export type AwcHumanInviteAcceptViewProps = {
   readonly onSignUp?: () => void;
   readonly onLogIn?: () => void;
   readonly onOpenProject?: () => void;
+  /** Peek/preview: locked invite warning before sign-in. */
+  readonly requireEmailMatch?: boolean;
+  readonly invitedEmailMasked?: string | null;
+  readonly onSwitchAccount?: () => void;
 };
 
 /** Presentational accept states — Product copy; wired by AwcHumanInviteAcceptPage. */
@@ -53,11 +60,26 @@ export default function AwcHumanInviteAcceptView({
   onSignUp,
   onLogIn,
   onOpenProject,
+  requireEmailMatch = false,
+  invitedEmailMasked = null,
+  onSwitchAccount,
 }: AwcHumanInviteAcceptViewProps) {
   const copy = HUMAN_INVITE_UI_COPY;
   const roleLabel = role === "member" ? copy.roleMember : copy.roleViewer;
   const roleOneLiner =
     role === "member" ? copy.roleMemberOneLiner : copy.roleViewerOneLiner;
+  const masked = invitedEmailMasked?.trim() || "the invited email";
+
+  if (viewState === "email_mismatch" || viewState === "email_unverified") {
+    return (
+      <AwcHumanInviteEmailLockAcceptPanel
+        kind={viewState}
+        projectName={projectName}
+        invitedEmailMasked={masked}
+        onSwitchAccount={onSwitchAccount}
+      />
+    );
+  }
 
   if (viewState === "invalid") {
     return (
@@ -138,6 +160,12 @@ export default function AwcHumanInviteAcceptView({
       <p className="mt-2 text-xs text-gray-500">
         Invited by {inviterDisplayName} · {expiresInLabel}
       </p>
+
+      {requireEmailMatch ? (
+        <p className="mt-3 rounded-lg border border-amber-200/80 bg-amber-50/80 px-3 py-2 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100">
+          {withMaskedEmail(copy.emailLockSignedOutHint, masked)}
+        </p>
+      ) : null}
 
       {viewState === "signed_out" ? (
         <>

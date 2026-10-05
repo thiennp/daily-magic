@@ -1,6 +1,7 @@
 import { classifyHumanInviteMiss } from "@/lib/projects/acl/humanInvites/classifyHumanInviteMiss";
 import { peekHumanInviteByToken } from "@/lib/projects/acl/humanInvites/peekHumanInviteByToken";
 import type { HumanInviteRole } from "@/features/projects/access/humanInvites/types/humanInviteUiContract.type";
+import { maskHumanInviteEmail } from "@/features/projects/access/humanInvites/utils/maskHumanInviteEmail";
 import { getUserById } from "@/lib/auth/userRepository";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
@@ -14,6 +15,9 @@ export type HumanInviteAcceptLoad =
       readonly role: HumanInviteRole;
       readonly expiresAt: string;
       readonly email: string | null;
+      /** From peek when API exposes requireEmailMatch (UI-ready ahead of merge). */
+      readonly requireEmailMatch: boolean;
+      readonly invitedEmailMasked: string | null;
     }
   | {
       readonly ok: false;
@@ -93,6 +97,18 @@ export const loadHumanInviteAcceptPage = async (
     };
   }
 
+  const peekedLock = peeked as typeof peeked & {
+    readonly requireEmailMatch?: boolean;
+    readonly invitedEmailMasked?: string | null;
+  };
+  const requireEmailMatch = peekedLock.requireEmailMatch === true;
+  const invitedEmailMasked =
+    typeof peekedLock.invitedEmailMasked === "string"
+      ? peekedLock.invitedEmailMasked
+      : requireEmailMatch
+        ? maskHumanInviteEmail(peeked.email)
+        : null;
+
   return {
     ok: true,
     token,
@@ -102,5 +118,7 @@ export const loadHumanInviteAcceptPage = async (
     role: peeked.role,
     expiresAt: peeked.expiresAt,
     email: peeked.email,
+    requireEmailMatch,
+    invitedEmailMasked,
   };
 };

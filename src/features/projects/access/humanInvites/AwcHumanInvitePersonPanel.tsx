@@ -3,10 +3,12 @@
 import { useState } from "react";
 
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
+import AwcHumanInviteEmailLockField from "@/features/projects/access/humanInvites/AwcHumanInviteEmailLockField";
 import {
   HUMAN_INVITE_UI_COPY,
   withProjectName,
 } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
+import { buildHumanInviteCreateBody } from "@/features/projects/access/humanInvites/utils/buildHumanInviteCreateBody";
 import type {
   CreateHumanInviteBody,
   CreateHumanInviteResponse,
@@ -25,7 +27,7 @@ export type AwcHumanInvitePersonPanelProps = {
 };
 
 /**
- * Owner Invite person — role picker + Copy link (POST create).
+ * Owner Invite person — role picker + optional email lock + Copy link.
  * Send email = Later (S3). Created url shown once like bot invites.
  */
 export default function AwcHumanInvitePersonPanel({
@@ -41,9 +43,26 @@ export default function AwcHumanInvitePersonPanel({
   const copy = HUMAN_INVITE_UI_COPY;
   const [role, setRole] = useState<HumanInviteRole>("member");
   const [email, setEmail] = useState("");
+  const [requireEmailMatch, setRequireEmailMatch] = useState(false);
+  const [localError, setLocalError] = useState<string | null>(null);
 
   const roleOneLiner =
     role === "member" ? copy.roleMemberOneLiner : copy.roleViewerOneLiner;
+  const shownError = localError ?? errorMessage;
+
+  const onSubmitCreate = () => {
+    const built = buildHumanInviteCreateBody({
+      role,
+      email,
+      requireEmailMatch,
+    });
+    if (!built.ok) {
+      setLocalError(built.errorMessage);
+      return;
+    }
+    setLocalError(null);
+    onCreate?.(built.body);
+  };
 
   return (
     <div className="space-y-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950/40">
@@ -90,9 +109,21 @@ export default function AwcHumanInvitePersonPanel({
           disabled={busy}
           placeholder={copy.emailPlaceholder}
           className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-transparent"
-          onChange={(event) => setEmail(event.target.value)}
+          onChange={(event) => {
+            setEmail(event.target.value);
+            setLocalError(null);
+          }}
         />
       </label>
+
+      <AwcHumanInviteEmailLockField
+        checked={requireEmailMatch}
+        disabled={busy}
+        onChange={(checked) => {
+          setRequireEmailMatch(checked);
+          setLocalError(null);
+        }}
+      />
 
       {createdInvite ? (
         <div className="rounded-lg border border-amber-300/80 bg-amber-50/80 p-3 text-xs dark:border-amber-700/60 dark:bg-amber-950/30">
@@ -102,6 +133,7 @@ export default function AwcHumanInvitePersonPanel({
           <p className="mt-1 text-amber-900 dark:text-amber-200">
             Role · {createdInvite.role} · exp{" "}
             {new Date(createdInvite.expiresAt).toLocaleDateString()}
+            {createdInvite.requireEmailMatch ? ` · ${copy.pendingEmailLocked}` : ""}
           </p>
           <p className="mt-1 break-all text-amber-900/90 dark:text-amber-100/90">
             {createdInvite.url}
@@ -125,8 +157,8 @@ export default function AwcHumanInvitePersonPanel({
         </div>
       ) : null}
 
-      {errorMessage ? (
-        <p className="text-xs text-red-600 dark:text-red-300">{errorMessage}</p>
+      {shownError ? (
+        <p className="text-xs text-red-600 dark:text-red-300">{shownError}</p>
       ) : null}
 
       <div className="flex flex-wrap items-center gap-2">
@@ -134,12 +166,7 @@ export default function AwcHumanInvitePersonPanel({
           type="button"
           className={AWC_PROJECT_ACCESS_CTA.primary}
           disabled={busy}
-          onClick={() =>
-            onCreate?.({
-              role,
-              email: email.trim() ? email.trim() : null,
-            })
-          }
+          onClick={onSubmitCreate}
         >
           {copy.copyLink}
         </button>

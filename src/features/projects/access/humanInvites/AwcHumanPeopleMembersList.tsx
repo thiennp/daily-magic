@@ -85,6 +85,11 @@ export default function AwcHumanPeopleMembersList({
                 <div>
                   <div className="font-medium text-gray-900 dark:text-white/90">
                     {invite.email ?? "Invite link · no email"}
+                    {invite.requireEmailMatch ? (
+                      <span className="ml-2 inline-flex rounded-full bg-amber-200/80 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-900 dark:bg-amber-900/60 dark:text-amber-100">
+                        {copy.pendingEmailLocked}
+                      </span>
+                    ) : null}
                   </div>
                   <div className="text-xs text-gray-500">
                     Role · {invite.role}

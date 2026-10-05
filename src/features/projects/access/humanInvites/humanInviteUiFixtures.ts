@@ -18,6 +18,7 @@ export const FIXTURE_PENDING_INVITES: readonly HumanInviteListItem[] = [
     inviteId: "invite-pending-ben",
     role: "member",
     email: "ben@example.com",
+    requireEmailMatch: true,
     createdAt: "2026-10-03T10:00:00.000Z",
     expiresAt: "2026-10-10T10:00:00.000Z",
     revokedAt: null,
@@ -28,6 +29,7 @@ export const FIXTURE_PENDING_INVITES: readonly HumanInviteListItem[] = [
     inviteId: "invite-pending-viewer",
     role: "viewer",
     email: null,
+    requireEmailMatch: false,
     createdAt: "2026-10-04T12:00:00.000Z",
     expiresAt: "2026-10-11T12:00:00.000Z",
     revokedAt: null,
@@ -35,6 +37,19 @@ export const FIXTURE_PENDING_INVITES: readonly HumanInviteListItem[] = [
     usesRemaining: 1,
   },
 ];
+
+/** Open-link pending invite (checkbox off). */
+export const FIXTURE_PENDING_OPEN: HumanInviteListItem = {
+  inviteId: "invite-pending-open",
+  role: "member",
+  email: "casey@example.com",
+  requireEmailMatch: false,
+  createdAt: "2026-10-04T09:00:00.000Z",
+  expiresAt: "2026-10-11T09:00:00.000Z",
+  revokedAt: null,
+  maxUses: 1,
+  usesRemaining: 1,
+};
 
 export const FIXTURE_JOINED_HUMANS: readonly HumanJoinedMemberRow[] = [
   {
@@ -66,10 +81,13 @@ export const FIXTURE_CREATE_201: CreateHumanInviteResponse = {
   token: "storytoken01234567",
   role: "member",
   email: "ben@example.com",
+  requireEmailMatch: true,
   expiresAt: "2026-10-12T10:00:00.000Z",
   maxUses: 1,
   usesRemaining: 1,
 };
+
+export const FIXTURE_INVITED_EMAIL_MASKED = "b***@e***.com";
 
 /** POST accept 200 shape. */
 export const FIXTURE_ACCEPT_200: AcceptHumanInviteResponse = {

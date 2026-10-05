@@ -44,7 +44,11 @@ export const fetchHumanInvites = async (
       errorMessage: body.errorMessage ?? "Could not load people invites.",
     };
   }
-  return { ok: true, invites: body.invites ?? [] };
+  const invites = (body.invites ?? []).map((invite) => ({
+    ...invite,
+    requireEmailMatch: invite.requireEmailMatch === true,
+  }));
+  return { ok: true, invites };
 };
 
 export const createHumanInviteApi = async (
@@ -62,7 +66,7 @@ export const createHumanInviteApi = async (
   const payload = (await response.json().catch(() => ({}))) as Partial<
     CreateHumanInviteResponse
   > &
-    ErrorEnvelope;
+    ErrorEnvelope & { readonly requireEmailMatch?: boolean };
   if (!response.ok) {
     return {
       ok: false,
@@ -77,6 +81,7 @@ export const createHumanInviteApi = async (
     token: String(payload.token ?? ""),
     role: payload.role ?? "member",
     email: payload.email ?? null,
+    requireEmailMatch: payload.requireEmailMatch === true,
     expiresAt: String(payload.expiresAt ?? ""),
     maxUses: Number(payload.maxUses ?? 1),
     usesRemaining: Number(payload.usesRemaining ?? 1),
@@ -158,7 +163,10 @@ export const acceptHumanInviteApi = async (
   const payload = (await response.json().catch(() => ({}))) as Partial<
     AcceptHumanInviteResponse
   > &
-    ErrorEnvelope & { readonly suggestedProjectDisplayName?: string | null };
+    ErrorEnvelope & {
+      readonly suggestedProjectDisplayName?: string | null;
+      readonly invitedEmailMasked?: string | null;
+    };
   if (!response.ok) {
     return {
       ok: false,
@@ -168,6 +176,10 @@ export const acceptHumanInviteApi = async (
       suggestedProjectDisplayName:
         typeof payload.suggestedProjectDisplayName === "string"
           ? payload.suggestedProjectDisplayName
+          : null,
+      invitedEmailMasked:
+        typeof payload.invitedEmailMasked === "string"
+          ? payload.invitedEmailMasked
           : null,
     };
   }

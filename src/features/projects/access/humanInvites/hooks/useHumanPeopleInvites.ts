@@ -8,6 +8,7 @@ import {
   removeHumanMemberApi,
   revokeHumanInviteApi,
 } from "@/features/projects/access/humanInvites/humanInviteApi";
+import { mapCreateHumanInviteError } from "@/features/projects/access/humanInvites/utils/buildHumanInviteCreateBody";
 import { useDeferredDestructiveAction } from "@/features/projects/access/humanInvites/hooks/useDeferredDestructiveAction";
 import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
 import { filterJoinedHumanMembers } from "@/features/projects/access/humanInvites/utils/filterJoinedHumanMembers";
@@ -153,7 +154,9 @@ export const useHumanPeopleInvites = (input: {
       const result = await createHumanInviteApi(input.projectId, body);
       setCreateBusy(false);
       if (!result.ok) {
-        setCreateError(result.errorMessage);
+        setCreateError(
+          mapCreateHumanInviteError(result.code, result.errorMessage),
+        );
         return;
       }
       const created: CreateHumanInviteResponse = {
@@ -162,6 +165,7 @@ export const useHumanPeopleInvites = (input: {
         token: result.token,
         role: result.role,
         email: result.email,
+        requireEmailMatch: result.requireEmailMatch,
         expiresAt: result.expiresAt,
         maxUses: result.maxUses,
         usesRemaining: result.usesRemaining,
