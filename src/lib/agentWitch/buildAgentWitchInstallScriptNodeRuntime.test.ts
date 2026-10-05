@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+import { spawn, type ChildProcess } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -37,11 +37,12 @@ const runWithoutTerminal = (
   env: Record<string, string>,
 ): Promise<{ code: number | null; stdout: string; stderr: string }> =>
   new Promise((resolve, reject) => {
+    // Cast: Node's spawn overloads collapse to `never` when detached + typed stdio tuple.
     const child = spawn("/bin/bash", ["-c", script], {
       env,
       detached: true,
       stdio: ["ignore", "pipe", "pipe"],
-    });
+    }) as ChildProcess;
     let stdout = "";
     let stderr = "";
     child.stdout.on("data", (chunk: Buffer) => {
@@ -55,7 +56,7 @@ const runWithoutTerminal = (
       reject(new Error("install node runtime block hung"));
     }, 10_000);
     child.on("error", reject);
-    child.on("close", (code) => {
+    child.on("close", (code: number | null) => {
       clearTimeout(timer);
       resolve({ code, stdout, stderr });
     });
