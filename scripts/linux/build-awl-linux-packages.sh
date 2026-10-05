@@ -34,6 +34,39 @@ if ! command -v dpkg-deb >/dev/null 2>&1; then
   exit 1
 fi
 
+# appimagetool needs file(1). Provide a tiny ELF/shebang shim when missing.
+if ! command -v file >/dev/null 2>&1; then
+  FILE_SHIM_DIR="$(mktemp -d)"
+  cat > "${FILE_SHIM_DIR}/file" <<'FILESHIM'
+#!/bin/sh
+target="$1"
+while [ $# -gt 1 ]; do shift; done
+target="$1"
+[ -e "$target" ] || { echo "$target: cannot open"; exit 1; }
+magic=$(head -c 4 "$target" 2>/dev/null | od -An -tx1 | tr -d " \n")
+case "$magic" in
+  7f454c46)
+    cls=$(od -An -tx1 -N1 -j4 "$target" 2>/dev/null | tr -d " \n")
+    if [ "$cls" = "02" ]; then
+      echo "$target: ELF 64-bit LSB executable, x86-64"
+    else
+      echo "$target: ELF 32-bit LSB executable"
+    fi
+    ;;
+  *)
+    if head -c 2 "$target" 2>/dev/null | grep -q "^#!"; then
+      echo "$target: POSIX shell script, ASCII text executable"
+    else
+      echo "$target: data"
+    fi
+    ;;
+esac
+FILESHIM
+  chmod +x "${FILE_SHIM_DIR}/file"
+  export PATH="${FILE_SHIM_DIR}:$PATH"
+  echo "Note: system file(1) missing — using a packaging shim for appimagetool."
+fi
+
 echo "Building ${DISPLAY_NAME} ${VERSION} (linux/amd64, CGO_ENABLED=0)…"
 rm -rf "${DIST_DIR}"
 mkdir -p "${DIST_DIR}/bin" "${CACHE_DIR}"
