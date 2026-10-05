@@ -1,3 +1,4 @@
+import { revokeProjectComputerMembershipsForDevice } from "@/lib/projects/acl/revokeProjectComputerMembershipsForDevice";
 import { asRowArray, getSql } from "@/lib/db";
 
 export async function revokeAgentWitchDevice(input: {
@@ -16,5 +17,12 @@ export async function revokeAgentWitchDevice(input: {
     `,
   );
 
-  return result.length > 0;
+  if (result.length === 0) {
+    return false;
+  }
+
+  await revokeProjectComputerMembershipsForDevice({
+    deviceId: input.deviceId,
+  });
+  return true;
 }

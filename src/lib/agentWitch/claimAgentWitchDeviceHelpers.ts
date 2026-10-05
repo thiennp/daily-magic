@@ -1,5 +1,6 @@
 import mapAgentWitchDeviceRow from "@/lib/agentWitch/mapAgentWitchDeviceRow";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
+import { revokeProjectComputerMembershipsForDevice } from "@/lib/projects/acl/revokeProjectComputerMembershipsForDevice";
 import { asRowArray, getSql } from "@/lib/db";
 
 export const isUniqueTokenHashViolation = (error: unknown): boolean => {
@@ -65,13 +66,21 @@ export const revokeSiblingDevicesWithSameLabel = async (input: {
   }
 
   const sql = getSql();
-  await sql`
-    UPDATE agent_witch_devices
-    SET revoked_at = NOW(),
-        superseded_by_device_id = ${input.keepDeviceId}
-    WHERE user_id = ${input.userId}
-      AND revoked_at IS NULL
-      AND device_label = ANY(${matchedLabels}::text[])
-      AND id <> ${input.keepDeviceId}
-  `;
+  const revoked = asRowArray(
+    await sql`
+      UPDATE agent_witch_devices
+      SET revoked_at = NOW(),
+          superseded_by_device_id = ${input.keepDeviceId}
+      WHERE user_id = ${input.userId}
+        AND revoked_at IS NULL
+        AND device_label = ANY(${matchedLabels}::text[])
+        AND id <> ${input.keepDeviceId}
+      RETURNING id
+    `,
+  );
+  for (const row of revoked) {
+    await revokeProjectComputerMembershipsForDevice({
+      deviceId: String(row.id),
+    });
+  }
 };

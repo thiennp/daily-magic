@@ -2,7 +2,7 @@ import type { ProjectAclScope } from "@/lib/projects/acl/projectAclScopes.consta
 
 export type ProjectMembershipRole = "owner" | "member" | "viewer";
 export type ProjectMembershipStatus = "active" | "revoked" | "naming_required";
-export type ProjectMemberKind = "human" | "bot";
+export type ProjectMemberKind = "human" | "bot" | "computer";
 
 export default interface ProjectMembershipRecord {
   readonly id: string;
@@ -15,6 +15,8 @@ export default interface ProjectMembershipRecord {
   readonly teamLabel: string | null;
   readonly scopes: readonly ProjectAclScope[];
   readonly projectDisplayName: string | null;
+  /** Set for memberKind=computer; null otherwise. */
+  readonly deviceId?: string | null;
   readonly createdAt: string;
   readonly revokedAt: string | null;
 }

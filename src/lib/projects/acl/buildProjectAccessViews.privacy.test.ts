@@ -7,7 +7,7 @@ const read = (rel: string): string =>
   readFileSync(join(process.cwd(), rel), "utf8");
 
 describe("project access privacy: no member-bot owner identity", () => {
-  it("MembershipView / PendingRequestView / briefing never carry bot owner_user_id", () => {
+  it("MembershipView never carries bot-owner leak fields", () => {
     const views = read("src/lib/projects/acl/buildProjectAccessViews.ts");
     const briefing = read("src/lib/projects/acl/getProjectBriefing.ts");
     const briefingText = read(
@@ -21,7 +21,9 @@ describe("project access privacy: no member-bot owner identity", () => {
     );
 
     expect(views).toMatch(/export type MembershipView/);
-    expect(views).not.toMatch(/botOwner|linkedOwner|ownerUserId/);
+    // Computer seats expose ownerUserId (device owner) for Team sub-line —
+    // still forbid bot-owner leak aliases.
+    expect(views).not.toMatch(/botOwner|linkedOwner/);
     expect(views).not.toContain("owner_user_id");
     expect(briefing).not.toMatch(/owner_user_id|botOwner|linkedOwner/);
     expect(briefingText).not.toMatch(/owner_user_id|botOwner|linkedOwner/);

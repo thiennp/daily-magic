@@ -1,13 +1,14 @@
 import { loadUserProfilesByIds } from "@/lib/projects/acl/isAgentUser";
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
+import type { AgentWitchLocalConnectVersionStatus } from "@/lib/agentWitch/types/AgentWitchLocalConnectVersionStatus.type";
 
-/** UI-contract MembershipView */
+/** UI-contract MembershipView (computer fields filled by enrich). */
 export type MembershipView = {
   readonly id: string;
   readonly userId: string;
   readonly role: "owner" | "member" | "viewer";
-  readonly memberKind: "human" | "bot";
+  readonly memberKind: "human" | "bot" | "computer";
   readonly status: "active" | "revoked" | "naming_required";
   readonly teamLabel: string | null;
   readonly scopes: readonly string[];
@@ -18,6 +19,14 @@ export type MembershipView = {
   readonly image: string | null;
   readonly createdAt: string;
   readonly revokedAt: string | null;
+  readonly deviceId?: string | null;
+  readonly ownerUserId?: string;
+  readonly ownerDisplayName?: string | null;
+  readonly isOnline?: boolean;
+  readonly isDispatchReady?: boolean;
+  readonly installBundleVersion?: string | null;
+  readonly connectVersionStatus?: AgentWitchLocalConnectVersionStatus;
+  readonly assignable?: boolean;
 };
 
 /** UI-contract PendingRequestView */
@@ -31,7 +40,6 @@ export type PendingRequestView = {
   readonly reason: string | null;
   readonly createdAt: string;
   readonly expiresAt: string | null;
-  /** Agent redeem suggestion for Approve UI prefill; owner may override. */
   readonly suggestedProjectDisplayName: string | null;
 };
 
@@ -56,6 +64,7 @@ export const buildMembershipViews = async (
       image: profile?.image ?? null,
       createdAt: m.createdAt,
       revokedAt: m.revokedAt,
+      deviceId: m.deviceId ?? null,
     };
   });
 };

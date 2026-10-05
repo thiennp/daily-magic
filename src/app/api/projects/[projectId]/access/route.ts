@@ -4,11 +4,13 @@ import {
   buildPendingRequestViews,
 } from "@/lib/projects/acl/buildProjectAccessViews";
 import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
+import { enrichProjectAccessComputerMembers } from "@/lib/projects/acl/enrichProjectAccessComputerMembers";
 import { listPendingProjectAccessRequests } from "@/lib/projects/acl/listPendingProjectAccessRequests";
 import { listProjectMembershipsForProject } from "@/lib/projects/acl/listProjectMembershipsForProject";
 import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import { PROJECT_ACL_FIRST_CONNECT } from "@/lib/projects/acl/projectAclFirstConnect.constant";
 import { resolveOwnerOrActiveHumanSeat } from "@/lib/projects/acl/resolveOwnerOrActiveHumanSeat";
+import { resolveAccessComputerLiveDeviceIds } from "@/lib/projects/acl/resolveAccessComputerLiveDeviceIds";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -40,8 +42,12 @@ export async function GET(
   }
 
   const memberRows = await listProjectMembershipsForProject(projectId);
-  const members = await buildMembershipViews(memberRows);
-  // Pending + firstConnect admin meta stay owner-only; humans get roster for inbox.
+  const baseMembers = await buildMembershipViews(memberRows);
+  const liveDeviceIds = await resolveAccessComputerLiveDeviceIds(baseMembers);
+  const members = await enrichProjectAccessComputerMembers(
+    baseMembers,
+    liveDeviceIds,
+  );
   const pendingRequests =
     access.kind === "owner"
       ? await buildPendingRequestViews(

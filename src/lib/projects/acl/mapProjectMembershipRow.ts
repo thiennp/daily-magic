@@ -28,8 +28,11 @@ const parseRole = (value: unknown): ProjectMembershipRecord["role"] => {
 
 const parseMemberKind = (
   value: unknown,
-): ProjectMembershipRecord["memberKind"] =>
-  value === "human" ? "human" : "bot";
+): ProjectMembershipRecord["memberKind"] => {
+  if (value === "human") return "human";
+  if (value === "computer") return "computer";
+  return "bot";
+};
 
 export default function mapProjectMembershipRow(
   row: Record<string, unknown>,
@@ -46,6 +49,7 @@ export default function mapProjectMembershipRow(
     projectDisplayName: row.project_display_name
       ? String(row.project_display_name)
       : null,
+    deviceId: row.device_id ? String(row.device_id) : null,
     createdAt: String(row.created_at),
     revokedAt: row.revoked_at ? String(row.revoked_at) : null,
   };

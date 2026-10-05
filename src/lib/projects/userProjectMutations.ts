@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 
+import { syncProjectComputerMembership } from "@/lib/projects/acl/syncProjectComputerMembership";
 import {
   getUserProjectById,
   listUserProjectsForOwner,
@@ -26,22 +27,11 @@ export const createUserProject = async (
   const rows = asRowArray(
     await sql`
       INSERT INTO user_projects (
-        id,
-        owner_user_id,
-        device_id,
-        name,
-        folder_path,
-        repo_urls,
-        default_branch
+        id, owner_user_id, device_id, name, folder_path, repo_urls, default_branch
       )
       VALUES (
-        ${projectId},
-        ${ownerUserId},
-        ${linkedDeviceId},
-        ${input.name},
-        ${input.folderPath},
-        ${repoUrls},
-        ${defaultBranch}
+        ${projectId}, ${ownerUserId}, ${linkedDeviceId},
+        ${input.name}, ${input.folderPath}, ${repoUrls}, ${defaultBranch}
       )
       RETURNING *
     `,
@@ -51,7 +41,14 @@ export const createUserProject = async (
     return null;
   }
 
-  return mapUserProjectRow(rows[0]);
+  const project = mapUserProjectRow(rows[0]);
+  await syncProjectComputerMembership({
+    projectId: project.id,
+    ownerUserId,
+    previousDeviceId: null,
+    nextDeviceId: linkedDeviceId,
+  });
+  return project;
 };
 
 export const updateUserProject = async (
@@ -76,6 +73,8 @@ export const updateUserProject = async (
     input.defaultBranch !== undefined
       ? input.defaultBranch
       : existing.defaultBranch;
+  const nextDeviceId =
+    input.deviceId !== undefined ? input.deviceId : existing.deviceId;
 
   const sql = getSql();
   const rows = asRowArray(
@@ -83,9 +82,7 @@ export const updateUserProject = async (
       UPDATE user_projects
       SET
         name = ${input.name ?? existing.name},
-        device_id = ${
-          input.deviceId !== undefined ? input.deviceId : existing.deviceId
-        },
+        device_id = ${nextDeviceId},
         repo_urls = ${nextRepoUrls},
         default_branch = ${nextDefaultBranch},
         updated_at = NOW()
@@ -99,7 +96,16 @@ export const updateUserProject = async (
     return null;
   }
 
-  return mapUserProjectRow(rows[0]);
+  const project = mapUserProjectRow(rows[0]);
+  if (input.deviceId !== undefined) {
+    await syncProjectComputerMembership({
+      projectId,
+      ownerUserId,
+      previousDeviceId: existing.deviceId,
+      nextDeviceId: project.deviceId,
+    });
+  }
+  return project;
 };
 
 export const listProjectsForOwner = listUserProjectsForOwner;

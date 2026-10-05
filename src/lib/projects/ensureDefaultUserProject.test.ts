@@ -6,6 +6,9 @@ vi.mock("@/lib/db", () => ({
   asRowArray: (value: unknown) => (Array.isArray(value) ? value : []),
   getSql: () => sqlMock,
 }));
+vi.mock("@/lib/projects/acl/syncProjectComputerMembership", () => ({
+  syncProjectComputerMembership: vi.fn(async () => undefined),
+}));
 
 import { ensureDefaultUserProject } from "@/lib/projects/ensureDefaultUserProject";
 import { createUserProject } from "@/lib/projects/userProjectMutations";

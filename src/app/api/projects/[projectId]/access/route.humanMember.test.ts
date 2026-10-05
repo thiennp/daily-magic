@@ -6,6 +6,8 @@ const listMemberships = vi.hoisted(() => vi.fn());
 const buildViews = vi.hoisted(() => vi.fn());
 const listPending = vi.hoisted(() => vi.fn());
 const buildPending = vi.hoisted(() => vi.fn());
+const enrichComputers = vi.hoisted(() => vi.fn());
+const liveDeviceIds = vi.hoisted(() => vi.fn());
 
 vi.mock("@/lib/auth/requireAuth", () => ({ requireAuth }));
 vi.mock("@/lib/projects/acl/resolveOwnerOrActiveHumanSeat", () => ({
@@ -21,6 +23,12 @@ vi.mock("@/lib/projects/acl/buildProjectAccessViews", () => ({
 vi.mock("@/lib/projects/acl/listPendingProjectAccessRequests", () => ({
   listPendingProjectAccessRequests: listPending,
 }));
+vi.mock("@/lib/projects/acl/enrichProjectAccessComputerMembers", () => ({
+  enrichProjectAccessComputerMembers: enrichComputers,
+}));
+vi.mock("@/lib/projects/acl/resolveAccessComputerLiveDeviceIds", () => ({
+  resolveAccessComputerLiveDeviceIds: liveDeviceIds,
+}));
 vi.mock("@/app/api/projects/[projectId]/access/patchAccessAction", () => ({
   handleProjectAccessPatch: vi.fn(),
 }));
@@ -35,11 +43,16 @@ describe("GET /api/projects/:projectId/access for human seats", () => {
     buildViews.mockReset();
     listPending.mockReset();
     buildPending.mockReset();
+    enrichComputers.mockReset();
+    liveDeviceIds.mockReset();
     requireAuth.mockResolvedValue({ actor: { id: "user-1" }, error: null });
     listMemberships.mockResolvedValue([]);
-    buildViews.mockResolvedValue([
+    const members = [
       { id: "mem-1", role: "member", memberKind: "bot", isAgent: true },
-    ]);
+    ];
+    buildViews.mockResolvedValue(members);
+    liveDeviceIds.mockResolvedValue(new Set());
+    enrichComputers.mockImplementation(async (rows: unknown) => rows);
   });
 
   it("human member gets roster without pending/firstConnect admin", async () => {
@@ -62,6 +75,7 @@ describe("GET /api/projects/:projectId/access for human seats", () => {
     });
     expect(body.members).toHaveLength(1);
     expect(listPending).not.toHaveBeenCalled();
+    expect(enrichComputers).toHaveBeenCalled();
   });
 
   it("viewer gets read roster (actorRole viewer)", async () => {
