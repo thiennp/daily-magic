@@ -29,13 +29,29 @@ export const ensureHarnessWriterCli = (
   return new Promise((resolve, reject) => {
     const child = spawn("bash", [scriptPath, writerAgent], {
       stdio: ["ignore", "pipe", "pipe"],
+      detached: process.platform !== "win32",
     });
 
     child.stdout?.resume();
     child.stderr?.resume();
 
+    const killProcessGroup = (): void => {
+      if (child.pid === undefined) {
+        return;
+      }
+      if (process.platform === "win32") {
+        child.kill("SIGTERM");
+        return;
+      }
+      try {
+        process.kill(-child.pid, "SIGTERM");
+      } catch {
+        child.kill("SIGTERM");
+      }
+    };
+
     const timeout = setTimeout(() => {
-      child.kill("SIGTERM");
+      killProcessGroup();
       reject(
         new Error(
           `ensure-writer.sh timed out after ${String(ENSURE_WRITER_SCRIPT_TIMEOUT_MS / 1000)}s`,

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { resolveAgentRunDetailOutcomeMessage } from "@/features/reports/utils/resolveAgentRunDetailOutcomeMessage";
+import { CLAUDE_LOGIN_EXPIRED_LOCKED_REASON } from "@/lib/dispatch/agentRunHonestyCopy.constant";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 
 describe("resolveAgentRunDetailOutcomeMessage (REPORTS-008)", () => {
@@ -24,6 +25,20 @@ describe("resolveAgentRunDetailOutcomeMessage (REPORTS-008)", () => {
         reportSummary: null,
       }),
     ).toContain("failed on your Mac");
+  });
+
+  it("shows locked honesty summary when result output exists (ensure-writer timeout)", () => {
+    const output =
+      "Failed to prepare claude-cli: ensure-writer.sh timed out after 120s";
+
+    expect(
+      resolveAgentRunDetailOutcomeMessage({
+        status: AgentRunStatus.FAILED,
+        resultOutput: output,
+        denialReason: null,
+        reportSummary: null,
+      }),
+    ).toContain(CLAUDE_LOGIN_EXPIRED_LOCKED_REASON);
   });
 
   it("uses report summary for failed runs when present", () => {

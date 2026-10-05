@@ -1,17 +1,28 @@
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
+import { resolveAgentRunHonestyOutcomeFromRecord } from "@/lib/dispatch/resolveAgentRunHonestyOutcomeFromRecord";
 
 export const resolveAgentRunDetailOutcomeMessage = (input: {
   readonly status: AgentRunStatusValue;
   readonly resultOutput: string | null;
   readonly denialReason: string | null;
   readonly reportSummary: string | null | undefined;
+  readonly resultOutcomeCode?: string | null;
 }): string | null => {
   if (input.denialReason !== null && input.denialReason.trim().length > 0) {
     return input.denialReason.trim();
   }
 
   if (input.resultOutput !== null && input.resultOutput.trim().length > 0) {
+    const honestySummary =
+      resolveAgentRunHonestyOutcomeFromRecord({
+        status: input.status,
+        resultOutput: input.resultOutput,
+        resultOutcomeCode: input.resultOutcomeCode ?? null,
+      }).summaryLines[0]?.trim() ?? "";
+    if (honestySummary.length > 0) {
+      return honestySummary;
+    }
     return null;
   }
 

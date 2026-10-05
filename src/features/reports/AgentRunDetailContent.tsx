@@ -26,6 +26,7 @@ export default function AgentRunDetailContent({
     resultOutput: run.resultOutput,
     denialReason: run.denialReason,
     reportSummary: run.reportSummary,
+    resultOutcomeCode: run.resultOutcomeCode,
   });
 
   return (
@@ -92,9 +93,8 @@ export default function AgentRunDetailContent({
         <AgentRunResultOutput run={run} resultOutput={run.resultOutput} />
       ) : null}
       <AgentRunKeepInProjectButton runId={run.id} projectId={run.projectId} />
-      {outcomeMessage !== null &&
-      (run.resultOutput === null || run.resultOutput.trim().length === 0) ? (
-        <p className="mt-4 text-sm text-rose-600 dark:text-rose-400">
+      {outcomeMessage !== null ? (
+        <p className="mt-4 text-sm text-gray-800 dark:text-white/90">
           {outcomeMessage}
         </p>
       ) : null}

@@ -12,6 +12,7 @@ import {
 import type { AgentRunHonestyOutcome } from "@/lib/dispatch/agentRunHonestyOutcome.type";
 import { buildClaudeLoginExpiredWaitingYouOutcome } from "@/lib/dispatch/buildClaudeLoginExpiredWaitingYouOutcome";
 import { isClaudeCliAuthBlockerInOutput } from "@/lib/dispatch/isClaudeCliAuthBlockerInOutput";
+import { resolveAgentRunHonestyCompletedTerminalOutcome } from "@/lib/dispatch/resolveAgentRunHonestyCompletedTerminalOutcome";
 import { tryResolveWriterApiMissingCliFallbackTerminalOutcome } from "@/lib/dispatch/tryResolveWriterApiMissingCliFallbackTerminalOutcome";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
@@ -102,20 +103,7 @@ export const resolveAgentRunHonestyTerminalOutcome = (input: {
     input.runStatus === null ||
     input.runStatus === undefined
   ) {
-    if (input.output.trim().length === 0) {
-      return {
-        kind: "failed",
-        chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.failed,
-        summaryLines: [
-          formatAgentRunHonestyFailedSummary("No agent output was captured"),
-        ],
-      };
-    }
-    return {
-      kind: "passed",
-      chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.passed,
-      summaryLines: [],
-    };
+    return resolveAgentRunHonestyCompletedTerminalOutcome(input.output);
   }
 
   return null;
