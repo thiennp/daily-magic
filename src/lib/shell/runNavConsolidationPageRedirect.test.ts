@@ -9,21 +9,9 @@ vi.mock("@/lib/shell/resolveNavConsolidationRedirect", () => ({
 }));
 
 import { getAuthActor } from "@/lib/auth/auth";
+import { readNextRedirectStatus } from "@/lib/shell/readNextRedirectStatus";
 import { runNavConsolidationPageRedirect } from "@/lib/shell/runNavConsolidationPageRedirect";
 import { resolveNavConsolidationRedirectPath } from "@/lib/shell/resolveNavConsolidationRedirect";
-
-/** Next `redirect()` / `permanentRedirect()` encode status in error.digest. */
-const readRedirectStatus = (error: unknown): number | null => {
-  if (typeof error !== "object" || error === null || !("digest" in error)) {
-    return null;
-  }
-  const digest = (error as { digest: unknown }).digest;
-  if (typeof digest !== "string" || !digest.startsWith("NEXT_REDIRECT;")) {
-    return null;
-  }
-  const status = Number(digest.split(";").at(-2));
-  return Number.isFinite(status) ? status : null;
-};
 
 describe("runNavConsolidationPageRedirect", () => {
   beforeEach(() => {
@@ -44,7 +32,7 @@ describe("runNavConsolidationPageRedirect", () => {
       });
       expect.unreachable("expected redirect");
     } catch (error) {
-      expect(readRedirectStatus(error)).toBe(307);
+      expect(readNextRedirectStatus(error)).toBe(307);
     }
   });
 
@@ -61,7 +49,7 @@ describe("runNavConsolidationPageRedirect", () => {
       });
       expect.unreachable("expected redirect");
     } catch (error) {
-      expect(readRedirectStatus(error)).toBe(308);
+      expect(readNextRedirectStatus(error)).toBe(308);
     }
   });
 });

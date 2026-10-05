@@ -1,6 +1,5 @@
-import { permanentRedirect, redirect } from "next/navigation";
-
 import { getAuthActor } from "@/lib/auth/auth";
+import { redirectForSession } from "@/lib/shell/redirectForSession";
 import { resolveNavConsolidationRedirectPath } from "@/lib/shell/resolveNavConsolidationRedirect";
 import type { NavConsolidationIntent } from "@/lib/shell/navConsolidationIntent.constant";
 
@@ -24,8 +23,5 @@ export const runNavConsolidationPageRedirect = async (input: {
     actorUserId,
     hashQuery: input.hashQuery,
   });
-  if (actorUserId === null) {
-    redirect(destination);
-  }
-  permanentRedirect(destination);
+  return redirectForSession(destination, actorUserId);
 };
