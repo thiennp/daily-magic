@@ -20,7 +20,7 @@ Sources: `.husky/pre-commit`, `.husky/commit-msg`, `.husky/pre-push`.
 
 | Step      | When       | Command / script                                                                                   |
 | --------- | ---------- | -------------------------------------------------------------------------------------------------- |
-| CI parity | every push | npm run ci (test, ci:architecture, typecheck, build — matches .github/workflows/ci.yml verify job) |
+| CI parity | every push | npm run ci (test, ci:architecture, typecheck, build — local suite; no GitHub Actions CI) |
 
 ## commit-msg
 

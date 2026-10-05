@@ -14,9 +14,8 @@ Product wording must match [docs/product/philosophy-and-copy-guideline.md](../..
 From repo root (requires **push** access to `thiennp/thiennp.github.io`):
 
 ```bash
-npm run portfolio:push-github-io
+bash .agents/scripts/pushThiennpGithubIo.sh
+# or: npm run portfolio:push-github-io
 ```
 
-Or GitHub Actions: **Sync thiennp.github.io** workflow (needs secret `THIENNP_GITHUB_IO_DEPLOY_TOKEN` with `contents: write` on that repo).
-
-Cloud agents on `thiennp/daily-magic` alone cannot push this remote unless the token secret is configured.
+Needs a token with `contents: write` on `thiennp/thiennp.github.io` (`THIENNP_GITHUB_IO_DEPLOY_TOKEN` or `GITHUB_TOKEN`). Portfolio no longer auto-syncs via CI — run the script manually when the portfolio changes.

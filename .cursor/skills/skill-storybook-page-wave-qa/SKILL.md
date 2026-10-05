@@ -93,9 +93,9 @@ When 34/34 pages have ux–product recorded:
 
 Program **not complete** until audit passes or exceptions are logged in `docs/storybook/wave-qa/audit-exceptions.md` (human-approved).
 
-## Weekly CI
+## Weekly capture (local)
 
-`.github/workflows/storybook-wave-qa-weekly.yml` — capture + validate. **Agent** still runs ux→product loops from `progress.json`.
+Not scheduled in CI. Run `npm run storybook:wave:weekly` locally when needed. **Agent** still runs ux→product loops from `progress.json`.
 
 ## Reporting
 

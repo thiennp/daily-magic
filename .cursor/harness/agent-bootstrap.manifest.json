@@ -196,7 +196,7 @@
       {
         "step": "CI parity",
         "when": "every push",
-        "run": "npm run ci (test, ci:architecture, typecheck, build — matches .github/workflows/ci.yml verify job)"
+        "run": "npm run ci (test, ci:architecture, typecheck, build — local suite; no GitHub Actions CI)"
       }
     ],
     "commitMsg": {

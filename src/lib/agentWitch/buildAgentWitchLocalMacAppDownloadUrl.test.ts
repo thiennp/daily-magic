@@ -17,7 +17,7 @@ describe("buildAgentWitchLocalMacAppDownloadUrl", () => {
     expect(buildAgentWitchLocalMacAppDownloadUrl()).not.toContain("/releases/latest/");
   });
 
-  it("keeps the fixed asset name and an awl-mac-v tag for CI release uploads", () => {
+  it("keeps the fixed asset name and an awl-mac-v tag for release uploads", () => {
     expect(AGENT_WITCH_LOCAL_MAC_APP_DMG_ASSET_NAME).toBe("AgentWitchLocal.dmg");
     expect(AGENT_WITCH_LOCAL_MAC_APP_RELEASE_TAG).toMatch(/^awl-mac-v\d+\.\d+\.\d+$/);
   });

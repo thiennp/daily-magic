@@ -20,7 +20,7 @@
 
 **Fix:** `onboardingShowcaseArticles.test.ts` (article images use `screenId`) and `e2e/showcases-onboarding.spec.ts` (Playwright checks figure `img` SVG src loads on showcase pages).
 
-**Run:** `npm run test:e2e:install` once, then `npm run test:e2e`. CI: `.github/workflows/ci.yml`.
+**Run:** `npm run test:e2e:install` once, then `npm run test:e2e`. There is no GitHub Actions CI; local suite (`npm run ci`) is the gate before `main`.
 
 ---
 
