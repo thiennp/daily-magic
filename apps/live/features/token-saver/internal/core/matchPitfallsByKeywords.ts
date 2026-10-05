@@ -1,5 +1,6 @@
+import { CHECK_CONTEXT_TIP_MAX_LINES } from "@agent-witch/shared/token-saver";
+
 import type { Pitfall } from "../../public-api/types";
-import { capPitfallsForBot } from "./formatPitfallsForBot";
 
 const normalizeHaystack = (text: string): string => text.toLowerCase();
 
@@ -19,7 +20,8 @@ export const scorePitfallKeywords = (
 };
 
 /**
- * Pure keyword match (no Ollama). Miss → []. Hit → capped bot list.
+ * Pure keyword match (no Ollama). Miss → []. Hit → top
+ * `CHECK_CONTEXT_TIP_MAX_LINES` rows; the token budget lives in the shared tip.
  */
 export const matchPitfallsByKeywords = (input: {
   readonly pitfalls: readonly Pitfall[];
@@ -37,5 +39,7 @@ export const matchPitfallsByKeywords = (input: {
     return [];
   }
 
-  return capPitfallsForBot(scored.map((row) => row.pitfall));
+  return scored
+    .slice(0, CHECK_CONTEXT_TIP_MAX_LINES)
+    .map((row) => row.pitfall);
 };

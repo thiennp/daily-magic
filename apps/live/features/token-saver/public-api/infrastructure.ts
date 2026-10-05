@@ -7,10 +7,6 @@ export type { PitfallRegistry } from "../internal/core/createPitfallRegistry";
 export { resolveTokenSaverDbPath } from "../internal/core/resolveTokenSaverDbPath";
 export { matchPitfallsByKeywords } from "../internal/core/matchPitfallsByKeywords";
 export { shadowPitfalls } from "../internal/core/shadowPitfalls";
-export {
-  capPitfallsForBot,
-  formatPitfallBotLine,
-} from "../internal/core/formatPitfallsForBot";
 export { listBundledSeedPitfalls } from "../internal/core/pitfallSeedRows";
 export { checkContext } from "../internal/core/checkContext";
 export type {

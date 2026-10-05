@@ -1,4 +1,5 @@
 export { handleMcpJsonRpcRequest } from "./handleMcpJsonRpcRequest";
+export { toMcpTextResult } from "./toMcpTextResult";
 export {
   AGENT_WITCH_MCP_SERVER_INFO,
   MCP_PROTOCOL_VERSION,

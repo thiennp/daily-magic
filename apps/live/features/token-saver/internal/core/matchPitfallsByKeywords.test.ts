@@ -3,16 +3,15 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
+import { estimateTokenCount } from "@agent-witch/shared/pitfalls";
 import {
-  PITFALL_MATCH_MAX_LINES,
-  PITFALL_MATCH_MAX_TOKENS,
-} from "../../public-api/types";
+  CHECK_CONTEXT_TIP_MAX_LINES,
+  CHECK_CONTEXT_TIP_MAX_TOKENS,
+  formatCheckContextTip,
+} from "@agent-witch/shared/token-saver";
+
 import { createPitfallRegistry } from "./createPitfallRegistry";
-import {
-  formatPitfallBotLine,
-  capPitfallsForBot,
-} from "./formatPitfallsForBot";
-import { estimateTokenCount } from "./pitfall.constants";
+import { toPitfallBotLines } from "./formatPitfallsForBot";
 import { matchPitfallsByKeywords } from "./matchPitfallsByKeywords";
 import type { Pitfall } from "../../public-api/types";
 
@@ -72,7 +71,7 @@ describe("matchPitfallsByKeywords", () => {
     expect(hits.map((row) => row.id)).toEqual(["main-moved-rebase"]);
   });
 
-  it("caps bot payload to 4 lines and ~200 tokens", () => {
+  it("caps matches to the shared tip line limit; the tip stays ≤~120 tokens", () => {
     const longFix = "x".repeat(200);
     const many = Array.from({ length: 8 }, (_, index) =>
       samplePitfall({
@@ -85,14 +84,10 @@ describe("matchPitfallsByKeywords", () => {
       pitfalls: many,
       text: "match-all please",
     });
-    expect(capped.length).toBeLessThanOrEqual(PITFALL_MATCH_MAX_LINES);
-    const tokenSum = capped.reduce(
-      (sum, row) => sum + estimateTokenCount(formatPitfallBotLine(row)),
-      0,
-    );
-    expect(tokenSum).toBeLessThanOrEqual(PITFALL_MATCH_MAX_TOKENS);
-    expect(capPitfallsForBot(many).length).toBeLessThanOrEqual(
-      PITFALL_MATCH_MAX_LINES,
+    expect(capped).toHaveLength(CHECK_CONTEXT_TIP_MAX_LINES);
+    const tip = formatCheckContextTip(toPitfallBotLines(capped));
+    expect(estimateTokenCount(tip)).toBeLessThanOrEqual(
+      CHECK_CONTEXT_TIP_MAX_TOKENS,
     );
   });
 
@@ -111,7 +106,7 @@ describe("matchPitfallsByKeywords", () => {
     const elapsedMs = performance.now() - started;
 
     expect(hits.some((row) => row.id === "arch-max-lines")).toBe(true);
-    expect(hits.length).toBeLessThanOrEqual(PITFALL_MATCH_MAX_LINES);
+    expect(hits.length).toBeLessThanOrEqual(CHECK_CONTEXT_TIP_MAX_LINES);
     expect(elapsedMs).toBeLessThan(50);
 
     const miss = registry.matchPitfalls({

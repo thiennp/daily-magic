@@ -1,28 +1,9 @@
-/** Local AWL MCP tool definition: check_context (status hit|miss|none). */
-export const AWL_CHECK_CONTEXT_TOOL = {
-  name: "check_context",
-  description:
-    "Match the current prompt against the local pitfall registry. Call on the first user message. Returns status hit|miss|none; miss is silent (0 tokens).",
-  inputSchema: {
-    type: "object" as const,
-    properties: {
-      cwd: {
-        type: "string",
-        description: "Absolute working directory for the current session.",
-      },
-      message: {
-        type: "string",
-        description: "User prompt or task text to keyword-match.",
-      },
-      sessionId: {
-        type: "string",
-        description: "Optional CLI session id (first-message tracking).",
-      },
-      projectId: {
-        type: "string",
-        description: "Optional Agent Witch project id when already known.",
-      },
-    },
-    additionalProperties: false as const,
-  },
-} as const;
+import type { McpToolDefinition } from "@agent-witch/shared/mcp";
+import { CHECK_CONTEXT_TOOL_SCHEMA } from "@agent-witch/shared/token-saver";
+
+/** Local AWL MCP tool definition: shared check_context schema (hit|miss|none). */
+export const AWL_CHECK_CONTEXT_TOOL: McpToolDefinition = {
+  name: CHECK_CONTEXT_TOOL_SCHEMA.name,
+  description: CHECK_CONTEXT_TOOL_SCHEMA.description,
+  inputSchema: CHECK_CONTEXT_TOOL_SCHEMA.inputSchema,
+};

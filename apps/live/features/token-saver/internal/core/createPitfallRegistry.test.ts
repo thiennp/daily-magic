@@ -160,7 +160,7 @@ describe("createPitfallRegistry", () => {
     registry.close();
   });
 
-  it("bot format returns id | avoidance only", () => {
+  it("bot format returns shared id|avoidance lines", () => {
     const { registry } = openTempRegistry();
     const bot = registry.listPitfalls({ format: "bot" });
     expect(bot.format).toBe("bot");
@@ -168,7 +168,7 @@ describe("createPitfallRegistry", () => {
       return;
     }
     expect(bot.lines.length).toBe(11);
-    expect(bot.lines[0]).toMatch(/^[a-z0-9-]+ \| /);
+    expect(bot.lines[0]).toMatch(/^[a-z0-9-]+\|[^|]/);
     expect(bot.items[0]).toEqual({
       id: expect.any(String),
       avoidance: expect.any(String),

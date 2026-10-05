@@ -1,12 +1,11 @@
+import { formatPitfallBotLine } from "@agent-witch/shared/pitfalls";
+
 import type {
   ListPitfallsInput,
   Pitfall,
   PitfallBotLine,
 } from "../../public-api/types";
-import {
-  formatPitfallBotLine,
-  toPitfallBotLines,
-} from "./formatPitfallsForBot";
+import { toPitfallBotLines } from "./formatPitfallsForBot";
 import type { PitfallDatabase } from "./openPitfallDb";
 import { selectPitfallsByProjectId } from "./pitfallDbStatements";
 import { shadowPitfalls } from "./shadowPitfalls";
@@ -48,7 +47,7 @@ export const listPitfallsFromDb = (
     return {
       format: "bot",
       items: toPitfallBotLines(items),
-      lines: items.map(formatPitfallBotLine),
+      lines: items.map((item) => formatPitfallBotLine(item)),
     };
   }
 

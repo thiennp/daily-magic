@@ -1,3 +1,9 @@
+import { estimateTokenCount } from "@agent-witch/shared/pitfalls";
+import {
+  CHECK_CONTEXT_STATUSES,
+  CHECK_CONTEXT_TIP_MAX_TOKENS,
+  formatCheckContextTip,
+} from "@agent-witch/shared/token-saver";
 import { describe, expect, it, vi } from "vitest";
 
 import type { Pitfall } from "../../public-api/types";
@@ -26,7 +32,7 @@ const makeRegistry = (
 });
 
 describe("checkContext", () => {
-  it("returns hit, records each match, and caps bot lines", () => {
+  it("returns hit with the shared tip and records each match", () => {
     const matched = [
       samplePitfall("missing-lock", ["npm install"]),
       samplePitfall("stale-node", ["node"]),
@@ -43,6 +49,7 @@ describe("checkContext", () => {
         { id: "missing-lock", avoidance: "Fix missing-lock" },
         { id: "stale-node", avoidance: "Fix stale-node" },
       ],
+      tip: "Agent Witch tip · check_context\nmissing-lock|Fix missing-lock\nstale-node|Fix stale-node",
     });
     expect(registry.recordHit).toHaveBeenCalledTimes(2);
     expect(registry.recordHit).toHaveBeenCalledWith({
@@ -113,6 +120,9 @@ describe("checkContext", () => {
       status: "hit",
       projectId: "proj-1",
       pitfalls: [{ id: "missing-lock", avoidance: "Fix missing-lock" }],
+      tip: formatCheckContextTip([
+        { id: "missing-lock", avoidance: "Fix missing-lock" },
+      ]),
     });
     expect(logError).toHaveBeenCalledOnce();
   });
@@ -151,5 +161,34 @@ describe("checkContext", () => {
     );
     expect(result).toEqual({ status: "miss", projectId: "proj-2" });
     expect(calls).toEqual(["isDeclined", "resolveProjectId"]);
+  });
+
+  it("keeps the tip within the shared token budget and status vocab", () => {
+    const longFix = "y".repeat(600);
+    const matched = [1, 2, 3, 4].map((index) => ({
+      ...samplePitfall(`long-${index}`, ["npm"]),
+      avoidance: `${longFix} ${index}`,
+    }));
+    const result = checkContext(
+      { registry: makeRegistry(matched) },
+      { projectId: "proj-1", message: "npm install" },
+    );
+    expect(CHECK_CONTEXT_STATUSES).toContain(result.status);
+    expect(result.status).toBe("hit");
+    expect(result.tip).toBeDefined();
+    expect(estimateTokenCount(result.tip ?? "")).toBeLessThanOrEqual(
+      CHECK_CONTEXT_TIP_MAX_TOKENS,
+    );
+  });
+
+  it("collapses whitespace in bot lines (shared oneLine)", () => {
+    const matched = [
+      { ...samplePitfall("ws", ["npm"]), avoidance: "  Fix\n  the   lock  " },
+    ];
+    const result = checkContext(
+      { registry: makeRegistry(matched) },
+      { projectId: "proj-1", message: "npm" },
+    );
+    expect(result.pitfalls).toEqual([{ id: "ws", avoidance: "Fix the lock" }]);
   });
 });

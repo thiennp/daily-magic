@@ -3,21 +3,14 @@ import { describe, expect, it, vi } from "vitest";
 import { handleMcpJsonRpcRequest } from "./handleMcpJsonRpcRequest";
 import { MCP_PROTOCOL_VERSION } from "./mcpProtocol.constant";
 import type { McpServerDefinition, McpToolResult } from "./McpServer.type";
-
-const textResult = (
-  value: unknown,
-  isError?: boolean,
-): McpToolResult => ({
-  content: [{ type: "text", text: JSON.stringify(value) }],
-  ...(isError === undefined ? {} : { isError }),
-});
+import { toMcpTextResult } from "./toMcpTextResult";
 
 const makeServer = <TContext = undefined>(
   call: (
     args: unknown,
     context: TContext,
   ) => McpToolResult | Promise<McpToolResult> = () =>
-    textResult({ status: "miss" }, false),
+    toMcpTextResult(JSON.stringify({ status: "miss" })),
 ): McpServerDefinition<TContext> => ({
   serverInfo: { name: "agent-witch", version: "1.0.0" },
   tools: [
@@ -82,7 +75,7 @@ describe("handleMcpJsonRpcRequest", () => {
 
   it("calls a tool with raw arguments and returns MCP text content", async () => {
     const call = vi.fn(() =>
-      textResult({ status: "miss", projectId: "p1" }, false),
+      toMcpTextResult(JSON.stringify({ status: "miss", projectId: "p1" })),
     );
     const response = await handleMcpJsonRpcRequest(
       {
@@ -99,7 +92,6 @@ describe("handleMcpJsonRpcRequest", () => {
       jsonrpc: "2.0",
       id: 4,
       result: {
-        isError: false,
         content: [
           {
             type: "text",
@@ -118,19 +110,19 @@ describe("handleMcpJsonRpcRequest", () => {
         method: "tools/call",
         params: { name: "check_context", arguments: { x: 1 } },
       },
-      makeServer(async () => textResult({ ok: true }, false)),
+      makeServer(async () => toMcpTextResult(JSON.stringify({ ok: true }))),
       undefined,
     );
     expect(response).toEqual({
       jsonrpc: "2.0",
       id: 10,
-      result: textResult({ ok: true }, false),
+      result: toMcpTextResult(JSON.stringify({ ok: true })),
     });
   });
 
   it("passes per-call context through to the tool", async () => {
     const call = vi.fn((_: unknown, context: { authorization: string }) =>
-      textResult({ auth: context.authorization }, false),
+      toMcpTextResult(JSON.stringify({ auth: context.authorization })),
     );
     const response = await handleMcpJsonRpcRequest(
       {
@@ -160,10 +152,7 @@ describe("handleMcpJsonRpcRequest", () => {
         method: "tools/call",
         params: { name: "check_context" },
       },
-      makeServer(() => ({
-        content: [{ type: "text", text: "denied" }],
-        isError: true,
-      })),
+      makeServer(() => toMcpTextResult("denied", true)),
       undefined,
     );
     expect(response).toEqual({

@@ -1,9 +1,11 @@
 /**
  * AWL slice `token-saver` — pitfall registry + check_context types.
  * Enums/limits align with `@agent-witch/shared/pitfalls` (step 2 / d65e2888).
- * check_context status stays hit|miss|none (Arch lock; not preflight statuses).
+ * check_context status/types and tip budget come from
+ * `@agent-witch/shared/token-saver` (hit|miss|none; ≤~120-token tip).
  */
 import type {
+  PitfallBotLineInput,
   ProjectPitfallCheck,
   ProjectPitfallCheckKind,
   ProjectPitfallSeverity,
@@ -73,22 +75,19 @@ export interface MatchPitfallsInput {
   readonly text: string;
 }
 
-export interface PitfallBotLine {
-  readonly id: string;
-  readonly avoidance: string;
-}
+/** Bot row shape owned by `@agent-witch/shared/pitfalls` (`id|avoidance`). */
+export type PitfallBotLine = PitfallBotLineInput;
 
 export const PITFALL_SYMPTOM_MAX_CHARS = PROJECT_PITFALL_LIMITS.symptom;
 export const PITFALL_CAUSE_MAX_CHARS = PROJECT_PITFALL_LIMITS.cause;
 export const PITFALL_AVOIDANCE_MAX_CHARS = PROJECT_PITFALL_LIMITS.avoidance;
 export const PITFALL_MAX_ACTIVE_PER_PROJECT = PROJECT_PITFALL_MAX_ACTIVE;
-export const PITFALL_MATCH_MAX_LINES = 4;
-export const PITFALL_MATCH_MAX_TOKENS = 200;
 export const TOKEN_SAVER_DB_FILE_NAME = "token-saver.db";
 export const PITFALL_SCHEMA_VERSION = 1;
 
 export type {
   CheckContextInput,
+  CheckContextPitfallLine,
   CheckContextResult,
   CheckContextStatus,
 } from "./checkContext.types";

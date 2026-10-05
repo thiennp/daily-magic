@@ -3,7 +3,10 @@ import {
   AWL_CHECK_CONTEXT_TOOL,
   createCheckContextRunner,
 } from "@agent-witch/live-token-saver";
-import { AGENT_WITCH_MCP_SERVER_INFO } from "@agent-witch/shared/mcp";
+import {
+  AGENT_WITCH_MCP_SERVER_INFO,
+  toMcpTextResult,
+} from "@agent-witch/shared/mcp";
 
 import type { McpServerDefinition } from "../../public-api/types";
 
@@ -25,12 +28,7 @@ export const createAwlMcpServer = (
     tools: [
       {
         definition: AWL_CHECK_CONTEXT_TOOL,
-        call: (args) => ({
-          content: [
-            { type: "text", text: JSON.stringify(runCheckContext(args)) },
-          ],
-          isError: false,
-        }),
+        call: (args) => toMcpTextResult(JSON.stringify(runCheckContext(args))),
       },
     ],
   };

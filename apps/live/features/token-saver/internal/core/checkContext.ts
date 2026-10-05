@@ -1,3 +1,5 @@
+import { formatCheckContextTip } from "@agent-witch/shared/token-saver";
+
 import type {
   CheckContextInput,
   CheckContextResult,
@@ -56,6 +58,7 @@ const recordHitsBestEffort = (
 
 /**
  * Keyword check_context: hit|miss|none. Never throws to the caller.
+ * A hit carries the shared ≤~120-token `tip` (`formatCheckContextTip`).
  * Declined cwd → none without promptCreate (terminal), checked before any
  * project resolution or pitfall lookup.
  */
@@ -84,10 +87,12 @@ export const checkContext = (
     }
 
     recordHitsBestEffort(deps, deps.registry, projectId, matched);
+    const pitfalls = toPitfallBotLines(matched);
     return {
       status: "hit",
       projectId,
-      pitfalls: toPitfallBotLines(matched),
+      pitfalls,
+      tip: formatCheckContextTip(pitfalls),
     };
   } catch (error) {
     deps.logError?.(error);

@@ -1,5 +1,8 @@
 import type http from "node:http";
-import { handleMcpJsonRpcRequest } from "@agent-witch/shared/mcp";
+import {
+  handleMcpJsonRpcRequest,
+  toMcpTextResult,
+} from "@agent-witch/shared/mcp";
 import { describe, expect, it, vi } from "vitest";
 
 import type { McpServerDefinition } from "../../public-api/types";
@@ -15,15 +18,8 @@ const server: McpServerDefinition = {
         description: "d",
         inputSchema: { type: "object" },
       },
-      call: () => ({
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify({ status: "miss", projectId: "p1" }),
-          },
-        ],
-        isError: false,
-      }),
+      call: () =>
+        toMcpTextResult(JSON.stringify({ status: "miss", projectId: "p1" })),
     },
   ],
 };

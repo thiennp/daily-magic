@@ -13,7 +13,10 @@ Local pitfall registry cache + `check_context` MCP for Agent Witch Local.
 
 ## Aligns with (step 2)
 
-- Enums/limits from `@agent-witch/shared/pitfalls` (branch tip includes `d65e2888`)
+- Enums/limits, `oneLine`, `formatPitfallBotLine` (`id|avoidance`) from `@agent-witch/shared/pitfalls`
+- check_context statuses/types, `CHECK_CONTEXT_TOOL_SCHEMA` and the ≤~120-token hit `tip`
+  (`formatCheckContextTip`, ≤4 lines) from `@agent-witch/shared/token-saver`
+- MCP tool results via `toMcpTextResult` from `@agent-witch/shared/mcp`
 - Does **not** reuse preflight statuses (`pass|warn|block|…`); check_context stays `hit|miss|none`
 
 ## Does not own (later)
@@ -25,4 +28,4 @@ Local pitfall registry cache + `check_context` MCP for Agent Witch Local.
 ## Public API
 
 - `@agent-witch/live-token-saver` — registry, `checkContext`, `createCheckContextRunner`, `AWL_CHECK_CONTEXT_TOOL`, HTTP tryHandle
-- `@agent-witch/live-token-saver/types` — DTOs, caps, `CheckContextResult`
+- `@agent-witch/live-token-saver/types` — DTOs, limits, `CheckContextResult` (re-exported shared type)
