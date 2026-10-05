@@ -6,6 +6,7 @@ import AwcProjectTabStub from "@/features/projects/AwcProjectTabStub";
 import AwcProjectOverviewPanel from "@/features/projects/overview/AwcProjectOverviewPanel";
 import AwcProjectPitfallsPanel from "@/features/projects/pitfalls/AwcProjectPitfallsPanel";
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
+import AwcProjectResourcesPanel from "@/features/projects/resources/AwcProjectResourcesPanel";
 import {
   PROJECT_PAGE_TAB_IDS,
   PROJECT_PAGE_TAB_LABELS,
@@ -33,7 +34,6 @@ const STUB_TABS: readonly ProjectPageTabId[] = [
   "reports",
   "team",
   "library",
-  "resources",
 ];
 
 export default function AwcProjectDetailTabPanels({
@@ -85,6 +85,12 @@ export default function AwcProjectDetailTabPanels({
                 projectId={project.id}
                 initialThreadKey={activityInitialThreadKey}
                 onUnreadMaybeChanged={onActivityUnreadMaybeChanged}
+              />
+            ) : null}
+            {tabId === "resources" ? (
+              <AwcProjectResourcesPanel
+                project={project}
+                pageActorRole={pageActorRole}
               />
             ) : null}
             {tabId === "settings" ? (

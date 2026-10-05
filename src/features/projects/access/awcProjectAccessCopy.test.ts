@@ -21,7 +21,7 @@ describe("project ACL surface copy", () => {
     ].join("\n");
 
     expect(blobs).toMatch(/name/i);
-    expect(blobs).toMatch(/folder refs/i);
+    expect(blobs).toMatch(/folders on computers|folder/i);
     expect(blobs).toMatch(/local/i);
     expect(blobs).toMatch(/Revoke/i);
     expect(blobs.toLowerCase()).toMatch(/token/);
@@ -74,15 +74,15 @@ describe("project ACL surface copy", () => {
 
   it("folder refs empty state and field labels guide owners past bare zero", () => {
     expect(AWC_PROJECT_ACCESS_COPY.folderRefsEmpty).toMatch(
-      /No folder refs yet/i,
+      /No folders yet/i,
     );
     expect(AWC_PROJECT_ACCESS_COPY.folderRefsEmpty.toLowerCase()).not.toBe("0");
-    expect(AWC_PROJECT_ACCESS_COPY.machineRefLabel).toMatch(/Machine/i);
+    expect(AWC_PROJECT_ACCESS_COPY.machineRefLabel).toMatch(/Computer/i);
     expect(AWC_PROJECT_ACCESS_COPY.folderPathLabel).toMatch(/Folder path/i);
     expect(AWC_PROJECT_ACCESS_COPY.folderRefsFormHint).toMatch(
       /mapping|registry|paths/i,
     );
-    expect(AWC_PROJECT_ACCESS_COPY.addFolderRef).toMatch(/Add folder ref/i);
+    expect(AWC_PROJECT_ACCESS_COPY.addFolderRef).toMatch(/Add folder/i);
     expect(AWC_PROJECT_ACCESS_COPY.machineRefPlaceholder).toMatch(/e\.g\./i);
     expect(AWC_PROJECT_ACCESS_COPY.folderPathPlaceholder).toMatch(/e\.g\./i);
   });
