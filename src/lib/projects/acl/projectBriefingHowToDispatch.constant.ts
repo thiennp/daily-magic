@@ -2,10 +2,27 @@ import {
   AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
   AWC_GROK_WEBHOOK_DAILY_REPAIR,
 } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
+import {
+  PROJECT_B2B_SILENCE_BLOCK_MS,
+  PROJECT_B2B_SILENCE_NOTIFY_MS,
+  PROJECT_MESSAGE_KIND_TASK_BLOCKED,
+  PROJECT_MESSAGE_KIND_TASK_DONE,
+  PROJECT_MESSAGE_KIND_TASK_PROCESSING,
+  PROJECT_MESSAGE_KIND_TASK_STATUS,
+} from "@/lib/projects/acl/messaging/projectMessage.constants";
+
+const SILENCE_NOTIFY_MINUTES = PROJECT_B2B_SILENCE_NOTIFY_MS / 60_000;
+const SILENCE_BLOCK_MINUTES = PROJECT_B2B_SILENCE_BLOCK_MS / 60_000;
 
 /** Shared reply clause for briefing, invite prompt, and agent guideline. */
 export const PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE =
-  "On a wake, the first action is one short line in your own window that the message was received, before the task and before ack. Then do the task. On each delivery: one short line in your own window that the message was received, before the task. Then do the task, project_dispatch the reply to that sender, post the same reply in your own window, then ack. Do not ack only. When the sender is the owner, toProjectDisplayName is \"Owner\".";
+  "On a wake, the first action is one short line in your own window that the message was received, before the task and before ack. Then do the task. " +
+  "On each delivery: one short line in your own window that the message was received, before the task. " +
+  `Then do the task: first project_dispatch kind "${PROJECT_MESSAGE_KIND_TASK_PROCESSING}" to that sender with summary "processing <messageId>" (refs cannot carry the message id), ` +
+  `then kind "${PROJECT_MESSAGE_KIND_TASK_STATUS}" with summary "status <messageId>: <progress>" every ${SILENCE_NOTIFY_MINUTES} minutes while working, ` +
+  `then kind "${PROJECT_MESSAGE_KIND_TASK_DONE}" or "${PROJECT_MESSAGE_KIND_TASK_BLOCKED}" with summary "<messageId>: <result>" as the reply to that sender, post the same reply in your own window, then ack. ` +
+  `If you are silent for ${SILENCE_NOTIFY_MINUTES} minutes the server tells the sender; after ${SILENCE_BLOCK_MINUTES} minutes the delivery is blocked. ` +
+  'Do not ack only. When the sender is the owner, toProjectDisplayName is "Owner".';
 
 /** One paragraph: how active members address peers via project_dispatch. */
 export const PROJECT_BRIEFING_HOW_TO_DISPATCH =
