@@ -1,13 +1,18 @@
 /**
- * Owner invite-list filter. Must stay identical to the claim UPDATE WHERE in
- * claimProjectInviteToken (revoked_at IS NULL, expires_at > NOW(),
- * uses_remaining > 0). Redeem decrements uses_remaining whether the bot ends
- * pending or active, so a redeemed invite drops out of the list. Expired and
- * revoked rows are excluded too. Multi-use invites stay visible while
- * uses_remaining > 0.
+ * Shared with claimProjectInviteToken's UPDATE WHERE (revoked_at IS NULL,
+ * expires_at > NOW(), uses_remaining > 0). Claim/redeem still accepts until
+ * uses run out. The owner LIST adds one extra fragment (never-redeemed) on top.
  */
 export const PROJECT_INVITE_USABLE_WHERE_FRAGMENTS = [
   "revoked_at IS NULL",
   "expires_at > NOW()",
   "uses_remaining > 0",
 ] as const;
+
+/**
+ * List-only: hide an invite once ANY bot has redeemed it, even when
+ * uses_remaining > 0. Redeem only decrements uses_remaining from max_uses, so
+ * equality means "never redeemed". Not applied to claim/redeem.
+ */
+export const PROJECT_INVITE_LIST_NEVER_REDEEMED_FRAGMENT =
+  "uses_remaining = max_uses" as const;

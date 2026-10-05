@@ -23,4 +23,15 @@ describe("shouldKeepCreatedInviteBanner", () => {
       }),
     ).toBe(false);
   });
+
+  it("clears the banner after the first redeem (invite drops from the never-redeemed list)", () => {
+    // Multi-use invite: after one redeem it is gone from listProjectInvites
+    // (uses_remaining < max_uses), so the Copy-prompt banner clears too.
+    expect(
+      shouldKeepCreatedInviteBanner({
+        createdInviteId: "inv-multi",
+        invites: [],
+      }),
+    ).toBe(false);
+  });
 });
