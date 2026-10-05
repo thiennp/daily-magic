@@ -245,6 +245,17 @@
       ],
       "dependsOn": ["auth", "agent-access"],
       "migrationStatus": "in_progress"
+    },
+    {
+      "slug": "project-pitfalls",
+      "title": "Project pitfalls",
+      "purpose": "Per-project pitfall registry (seed templates + project overrides, max 64 active) with list/get/upsert/record_hit APIs. AWC is the source of truth that local caches sync from.",
+      "featurePath": "src/features/project-pitfalls",
+      "libPath": null,
+      "routePaths": [],
+      "apiPaths": ["/api/agent-witch/projects/[projectId]/pitfalls"],
+      "dependsOn": ["auth", "agent-witch"],
+      "migrationStatus": "in_progress"
     }
   ]
 }
