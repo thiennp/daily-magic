@@ -10,7 +10,8 @@ packages/shared/src/
 ├── deployables/          # AWC | AWL | AWB | AWI ids and AWB ports
 ├── network/              # Origins, WS path, AWL :43347
 ├── protocol/             # WebSocket frame shape + message type strings
-└── pitfalls/             # Project pitfalls enums, limits, wire parser
+├── pitfalls/             # Project pitfalls enums, limits, wire parser
+└── preflight/            # Risky-action check catalog + result model
 ```
 
 ## Import (today)
