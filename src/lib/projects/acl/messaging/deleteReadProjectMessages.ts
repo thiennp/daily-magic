@@ -1,6 +1,5 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
-import { deleteProjectMessageWithOutcome } from "@/lib/projects/acl/messaging/deleteProjectMessageWithOutcome";
-import { isProjectMessageReadyForDeleteOnRead } from "@/lib/projects/acl/messaging/isProjectMessageReadyForDeleteOnRead";
+import { deleteProjectMessageThroughLifecycle } from "@/lib/projects/acl/messaging/lifecycle/deleteProjectMessageThroughLifecycle";
 import { loadProjectMessageDeleteSnapshot } from "@/lib/projects/acl/messaging/loadProjectMessageDeleteSnapshot";
 import { asRowArray, getSql } from "@/lib/db";
 
@@ -9,9 +8,11 @@ import { asRowArray, getSql } from "@/lib/db";
  * terminal; actionable/task.*: terminal only — listing does not ack). Cron/ticker.
  * Never throws.
  *
- * History ON (gated): deleteProjectMessageWithOutcome → gateProjectMessageDelete
- * deletes only after the folder-save computerAck. Un-acked overdue messages are
- * never age-purged here (flag + wake elsewhere). History OFF: normal DOR.
+ * History ON (gated): lifecycle deleteFromCloud → deleteProjectMessageWithOutcome
+ * → gateProjectMessageDelete deletes only after the folder-save computerAck.
+ * Un-acked overdue messages are never age-purged here (flag + wake elsewhere).
+ * History OFF: normal DOR. Ordering lives in
+ * lifecycle/deleteProjectMessageThroughLifecycle.
  */
 export const deleteReadProjectMessages = async (): Promise<number> => {
   try {
@@ -33,17 +34,9 @@ export const deleteReadProjectMessages = async (): Promise<number> => {
       if (snapshot === null) {
         continue;
       }
-      if (
-        !isProjectMessageReadyForDeleteOnRead({
-          readAt: snapshot.readAt,
-          deliveryStates: snapshot.deliveryStates,
-          kind: snapshot.kind,
-        })
-      ) {
-        continue;
-      }
-      const result = await deleteProjectMessageWithOutcome({
-        messageId,
+      // Lifecycle deleteFromCloud: DOR readiness → History gate → delete.
+      const result = await deleteProjectMessageThroughLifecycle({
+        snapshot,
         deletedReason: "delete_on_read",
       });
       if (result.ok) {
