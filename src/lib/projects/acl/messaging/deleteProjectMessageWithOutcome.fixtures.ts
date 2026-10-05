@@ -2,6 +2,7 @@
 export const DELETE_ON_READ_MESSAGE_ROW = {
   id: "msg-1",
   project_id: "proj-1",
+  kind: "task.assign",
   to_user_id: "bot-1",
   to_membership_id: "mem-1",
   created_at: "2026-10-05T07:00:00.000Z",

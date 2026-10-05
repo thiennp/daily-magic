@@ -3,7 +3,11 @@
  * See projectMessage.constants for retention / caps.
  */
 
-/** Delivery states that allow delete-on-read once read_at is set. */
+/**
+ * Delivery states that allow delete-on-read once read_at is set.
+ * Kept for silence-tracked deliveries (actionable and notices).
+ * Actionable kinds still need these (or explicit ack) — unwatched alone is not enough.
+ */
 export const PROJECT_B2B_DELETE_ON_READ_TERMINAL_STATES = [
   "done",
   "blocked",

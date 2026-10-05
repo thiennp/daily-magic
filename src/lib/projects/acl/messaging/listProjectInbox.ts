@@ -70,7 +70,7 @@ export const listProjectInbox = async (input: {
     `,
   );
   const messages = rows.map(mapProjectInboxRow);
-  // Fetch stamps read_at only; hard-delete waits for terminal/unwatched (ticker).
+  // Fetch stamps read_at only; delete-on-read tick needs notice/terminal (not listing alone).
   await stampProjectInboxReadAt({
     messageIds: messages.map((message) => message.messageId),
   });

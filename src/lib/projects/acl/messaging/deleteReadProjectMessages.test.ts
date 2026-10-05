@@ -57,16 +57,19 @@ describe("deleteReadProjectMessages", () => {
     ]);
     snapshots.set("msg-done", {
       messageId: "msg-done",
+      kind: "task.assign",
       readAt: "2026-10-05T08:00:00.000Z",
       deliveryStates: ["done"],
     });
     snapshots.set("msg-watch", {
       messageId: "msg-watch",
+      kind: "task.assign",
       readAt: "2026-10-05T08:00:00.000Z",
       deliveryStates: ["processing"],
     });
     snapshots.set("msg-unread", {
       messageId: "msg-unread",
+      kind: "task.assign",
       readAt: null,
       deliveryStates: ["done"],
     });
@@ -75,14 +78,21 @@ describe("deleteReadProjectMessages", () => {
     expect(deleted).toEqual(["msg-done:delete_on_read"]);
   });
 
-  it("deletes read + unwatched", async () => {
-    sqlMock.mockResolvedValue([{ id: "msg-plain" }]);
-    snapshots.set("msg-plain", {
-      messageId: "msg-plain",
+  it("deletes notice read + unwatched but not listed-unacked task.*", async () => {
+    sqlMock.mockResolvedValue([{ id: "msg-notice" }, { id: "msg-task" }]);
+    snapshots.set("msg-notice", {
+      messageId: "msg-notice",
+      kind: "peer.joined",
       readAt: "2026-10-05T08:00:00.000Z",
       deliveryStates: [],
     });
+    snapshots.set("msg-task", {
+      messageId: "msg-task",
+      kind: "task.assign",
+      readAt: "2026-10-05T08:00:00.000Z",
+      deliveryStates: [null],
+    });
     await expect(deleteReadProjectMessages()).resolves.toBe(1);
-    expect(deleted).toEqual(["msg-plain:delete_on_read"]);
+    expect(deleted).toEqual(["msg-notice:delete_on_read"]);
   });
 });

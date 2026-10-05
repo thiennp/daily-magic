@@ -4,6 +4,7 @@ import { asRowArray, getSql } from "@/lib/db";
 export type ProjectMessageDeleteSnapshot = {
   readonly messageId: string;
   readonly projectId: string;
+  readonly kind: string;
   readonly recipientUserId: string | null;
   readonly recipientMembershipId: string | null;
   readonly messageCreatedAt: string | null;
@@ -25,7 +26,7 @@ export const loadProjectMessageDeleteSnapshot = async (input: {
   const sql = getSql();
   const rows = asRowArray(
     await sql`
-      SELECT m.id, m.project_id, m.to_user_id, m.to_membership_id,
+      SELECT m.id, m.project_id, m.kind, m.to_user_id, m.to_membership_id,
         m.created_at, m.read_at,
         (
           SELECT a.result
@@ -52,6 +53,7 @@ export const loadProjectMessageDeleteSnapshot = async (input: {
   return {
     messageId: String(row.id),
     projectId: String(row.project_id),
+    kind: String(row.kind),
     recipientUserId: optionalString(row.to_user_id),
     recipientMembershipId: optionalString(row.to_membership_id),
     messageCreatedAt: toPostgresTimestamptz(row.created_at),

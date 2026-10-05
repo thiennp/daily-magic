@@ -5,8 +5,9 @@ import { loadProjectMessageDeleteSnapshot } from "@/lib/projects/acl/messaging/l
 import { asRowArray, getSql } from "@/lib/db";
 
 /**
- * Hard-delete messages that are already read and whose deliveries are terminal
- * or unwatched. Invoked from the silence ticker / cron. Never throws.
+ * Hard-delete read messages eligible for delete-on-read (notices: unwatched or
+ * terminal; actionable/task.*: terminal only — listing does not ack). Cron/ticker.
+ * Never throws.
  *
  * computerAck composition (History 551bf17d): when that feature is off, the
  * delete path is unchanged. When ready/degraded, deleteProjectMessageWithOutcome
@@ -36,6 +37,7 @@ export const deleteReadProjectMessages = async (): Promise<number> => {
         !isProjectMessageReadyForDeleteOnRead({
           readAt: snapshot.readAt,
           deliveryStates: snapshot.deliveryStates,
+          kind: snapshot.kind,
         })
       ) {
         continue;
