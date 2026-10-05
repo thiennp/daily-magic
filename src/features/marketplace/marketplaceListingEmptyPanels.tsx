@@ -5,7 +5,7 @@ import {
   marketplaceFreeStartersSectionHref,
 } from "@/features/empty-states/buildGuestAuthHrefs";
 import { MARKETPLACE_TEAMMATES_GUEST_EMPTY_COPY } from "@/features/empty-states/signedOutPageEmptyCopy.constant";
-import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+import { buildNavConsolidationNewTaskHref } from "@/lib/shell/buildNavConsolidationNewTaskHref";
 
 export function MarketplaceFreeStartersGuestEmptyPanel() {
   return (
@@ -30,7 +30,7 @@ export function MarketplaceFreeStartersSignedInEmptyPanel() {
       body="Check back soon, or build your own from New task."
       primaryCta={{
         label: "New task",
-        href: buildAgentComposerHref({ customTask: true }),
+        href: buildNavConsolidationNewTaskHref(),
       }}
       secondaryCta={{ label: "See showcases", href: "/showcases" }}
     />
@@ -67,7 +67,7 @@ export function MarketplaceTeammatesTeamEmptyPanel() {
       }}
       secondaryCta={{
         label: "New task",
-        href: buildAgentComposerHref({ customTask: true }),
+        href: buildNavConsolidationNewTaskHref(),
       }}
     />
   );
@@ -85,7 +85,7 @@ export function MarketplaceTeammatesSoloUpsellPanel() {
       }}
       secondaryCta={{
         label: "New task",
-        href: buildAgentComposerHref({ customTask: true }),
+        href: buildNavConsolidationNewTaskHref(),
       }}
     />
   );

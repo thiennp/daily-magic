@@ -38,7 +38,7 @@ export const AWC_PROJECT_ACCESS_COPY = {
   remove: "Remove",
   firstConnectRole: PROJECT_ACL_FIRST_CONNECT.role,
   firstConnectNote: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
-  invitesHeading: "Bot invites",
+  invitesHeading: "Bots and computers",
   invitesIntro:
     "Invite a bot with a copied prompt. Redeem may join immediately for bots you own; strangers stay Pending until you Approve with a nickname.",
   invitesEmpty: "No invites yet.",

@@ -1,4 +1,4 @@
-import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+import { buildNavConsolidationNewTaskHref } from "@/lib/shell/buildNavConsolidationNewTaskHref";
 
 export type OnboardingStep = {
   readonly id: string;
@@ -28,7 +28,7 @@ export const buildOnboardingSteps = (
     id: "task",
     label: "Send your first task",
     done: input.hasSentTask,
-    href: buildAgentComposerHref({ customTask: true }),
+    href: buildNavConsolidationNewTaskHref(),
   },
   {
     id: "workflow",

@@ -25,9 +25,7 @@ describe("AppShell mobile nav layout (SHELL-005)", () => {
     expect(header).toMatch(
       /AppShellMobileNavMenu[\s\S]*UserDropdown|UserDropdown[\s\S]*AppShellMobileNavMenu/,
     );
-    expect(header).toMatch(
-      /New task[\s\S]*hidden md:inline-flex|hidden md:inline-flex[\s\S]*New task/,
-    );
+    expect(header).not.toMatch(/aria-label="New task"|buildAgentComposerHref/);
     expect(header).toMatch(/ThemeToggleButton[\s\S]*hidden md:block|hidden md:block[\s\S]*ThemeToggleButton/);
     expect(menu).toContain("md:hidden");
     expect(menu).toContain('aria-label="Menu"');

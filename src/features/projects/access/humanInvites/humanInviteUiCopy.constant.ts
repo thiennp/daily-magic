@@ -22,7 +22,7 @@ export const HUMAN_INVITE_UI_COPY = {
   cancel: "Cancel",
   peopleHeading: "People",
   peopleHint:
-    "Pending invites and people who joined. Bot members stay under Bot invites.",
+    "Pending invites and people who joined. Bot members stay under Bots and computers.",
   botsPeopleTitle: "Bots & people",
   botsPeopleIntro:
     "People and bots in this project. Pending invites, then who's joined.",

@@ -1,8 +1,11 @@
 "use client";
 
+import Link from "next/link";
+
 import AwcProjectComputerHistorySection from "@/features/projects/computerHistory/AwcProjectComputerHistorySection";
 import AwcProjectDetailSection from "@/features/projects/AwcProjectDetailSection";
 import AwcProjectEditOnMacActions from "@/features/projects/AwcProjectEditOnMacActions";
+import { PROJECT_ACTIVITY_TASK_HASH_WITH_POUND } from "@/features/projects/utils/projectActivityTaskDeepLink.constant";
 import AwcProjectNameEditor from "@/features/projects/AwcProjectNameEditor";
 import AwcProjectPresenceBadge from "@/features/projects/AwcProjectPresenceBadge";
 import AwcProjectReadOnlyCompositionSections from "@/features/projects/AwcProjectReadOnlyCompositionSections";
@@ -62,12 +65,20 @@ export default function AwcProjectDetailPrimaryColumn({
           statusIcon={presence.statusIcon}
           text={presence.text}
         />
-        <AwcProjectEditOnMacActions
-          editCta={editCta}
-          size="compact"
-          layout="buttonOnly"
-          fullWidthOnMobile
-        />
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
+          <Link
+            href={PROJECT_ACTIVITY_TASK_HASH_WITH_POUND}
+            className="inline-flex w-full items-center justify-center rounded-xl bg-gray-900 px-3 py-2 text-xs font-semibold text-white transition hover:bg-black sm:w-auto dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200"
+          >
+            New task
+          </Link>
+          <AwcProjectEditOnMacActions
+            editCta={editCta}
+            size="compact"
+            layout="buttonOnly"
+            fullWidthOnMobile
+          />
+        </div>
       </div>
       {editCta.helperText !== null &&
       shouldShowProjectEditOnMacHelperText(editCta.state) ? (

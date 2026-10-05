@@ -11,7 +11,7 @@ import {
   APP_SURFACE_TEXT_LINK_CLASS,
   APP_SURFACE_TEXT_LINK_MUTED_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
-import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+import { buildNavConsolidationNewTaskHref } from "@/lib/shell/buildNavConsolidationNewTaskHref";
 
 interface HomeOnboardingSetupCompletePanelProps {
   readonly onDismiss: () => void;
@@ -33,7 +33,7 @@ export default function HomeOnboardingSetupCompletePanel({
       </p>
       <div className="mt-6 flex flex-wrap gap-3">
         <Link
-          href={buildAgentComposerHref()}
+          href={buildNavConsolidationNewTaskHref()}
           className={APP_SURFACE_CTA_PRIMARY_CLASS}
           onClick={onDismiss}
         >

@@ -7,7 +7,7 @@ import LibraryPlaybookCard from "@/features/library/LibraryPlaybookCard";
 import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
 import { resolveLibrarySignedInEmptyBody } from "@/lib/copy/resolveSoloTeamSurfaceCopy";
 import { useLibraryCapabilities } from "@/features/library/hooks/useLibraryCapabilities";
-import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+import { buildNavConsolidationNewTaskHref } from "@/lib/shell/buildNavConsolidationNewTaskHref";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import AppPanel from "@/components/surfaces/AppPanel";
 import Button from "@/components/ui/button/Button";
@@ -75,7 +75,7 @@ export default function LibraryPanel({
         primaryCta={{ label: "Browse Marketplace", href: "/marketplace" }}
         secondaryCta={{
           label: "New task",
-          href: buildAgentComposerHref({ customTask: true }),
+          href: buildNavConsolidationNewTaskHref(),
         }}
       />
     );

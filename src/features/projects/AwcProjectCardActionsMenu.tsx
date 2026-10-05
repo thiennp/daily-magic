@@ -1,7 +1,6 @@
 "use client";
 
 import { useId, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
 
 import { Dropdown } from "@/components/ui/dropdown/Dropdown";
 import AppIcon from "@/components/ui/icon/AppIcon";
@@ -9,7 +8,7 @@ import AwcProjectCardActionsMenuItems from "@/features/projects/AwcProjectCardAc
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import isDefaultUserProject from "@/lib/projects/isDefaultUserProject";
 import { MoreDotIcon } from "@/icons";
-import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+import { buildNavConsolidationNewTaskHref } from "@/lib/shell/buildNavConsolidationNewTaskHref";
 
 interface AwcProjectCardActionsMenuProps {
   readonly projectId: string;
@@ -29,7 +28,6 @@ export default function AwcProjectCardActionsMenu({
   canDelete,
 }: AwcProjectCardActionsMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname();
   const menuId = useId();
   const toggleRef = useRef<HTMLButtonElement>(null);
 
@@ -37,11 +35,7 @@ export default function AwcProjectCardActionsMenu({
     setIsOpen(false);
   };
 
-  const assignTasksHref = buildAgentComposerHref({
-    pathname,
-    projectId,
-    customTask: true,
-  });
+  const assignTasksHref = buildNavConsolidationNewTaskHref({ projectId });
 
   return (
     <div className="relative shrink-0">

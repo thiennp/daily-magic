@@ -9,6 +9,7 @@ import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import { pickDefaultMacDeviceId } from "@/features/agent-witch/online-wake";
 import AwcProjectsListBody from "@/features/projects/AwcProjectsListBody";
 import AwcProjectsToolbar from "@/features/projects/AwcProjectsToolbar";
+import MyBotsPanel from "@/features/my-bots/MyBotsPanel";
 import AwcProjectsIntentNotice from "@/features/projects/navConsolidation/AwcProjectsIntentNotice";
 import { parseProjectsNavIntent } from "@/features/projects/navConsolidation/parseProjectsNavIntent";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
@@ -65,6 +66,11 @@ export default function AwcProjectsPanel({
           projectCount={projects.length}
           isLoading={isLoading}
         />
+      ) : null}
+      {intent === "bots" ? (
+        <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.02]">
+          <MyBotsPanel />
+        </div>
       ) : null}
       {showManageControls && !isLoading && projects.length > 0 ? (
         <AwcProjectsToolbar

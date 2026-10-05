@@ -13,6 +13,13 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        // Retired My bots — path-level 308. ?project= keeps page redirect → #team.
+        source: "/my-bots",
+        missing: [{ type: "query", key: "project" }],
+        destination: "/projects?intent=bots",
+        permanent: true,
+      },
+      {
         source: "/prompt-sdlc",
         destination: "/prompt-optimizer",
         permanent: true,

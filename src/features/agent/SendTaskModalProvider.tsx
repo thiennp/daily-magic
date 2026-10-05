@@ -4,6 +4,7 @@ import { createContext, Suspense, useContext, type ReactNode } from "react";
 
 import SendTaskModal from "@/features/agent/SendTaskModal";
 import { useSendTaskModalController } from "@/features/agent/hooks/useSendTaskModalController";
+import { useRedirectPlainSendTaskToProjects } from "@/features/agent/hooks/useRedirectPlainSendTaskToProjects";
 
 interface SendTaskModalContextValue {
   readonly isOpen: boolean;
@@ -33,6 +34,7 @@ function SendTaskModalController({
 }: {
   readonly children: ReactNode;
 }) {
+  useRedirectPlainSendTaskToProjects();
   const controller = useSendTaskModalController();
 
   return (

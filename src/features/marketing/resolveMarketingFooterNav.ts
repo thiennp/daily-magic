@@ -1,5 +1,5 @@
 import { COMPANIES_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
-import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+import { buildNavConsolidationNewTaskHref } from "@/lib/shell/buildNavConsolidationNewTaskHref";
 
 export interface MarketingFooterLink {
   readonly label: string;
@@ -9,7 +9,7 @@ export interface MarketingFooterLink {
 const FOOTER_PUBLIC_PRODUCT_LINKS: readonly MarketingFooterLink[] = [
   { label: "Real examples", href: "/showcases" },
   { label: "For agents", href: "/for-agents" },
-  { label: "New task", href: buildAgentComposerHref() },
+  { label: "New task", href: buildNavConsolidationNewTaskHref() },
   { label: "Reports", href: "/reports" },
   { label: "Prompt optimizer", href: "/prompt-optimizer" },
 ];

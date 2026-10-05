@@ -7,6 +7,7 @@ import { AWC_PROJECT_INBOX_COPY } from "@/features/projects/access/inbox/awcProj
 import AwcProjectInboxClearBar from "@/features/projects/access/inbox/AwcProjectInboxClearBar";
 import AwcProjectInboxClearConfirmModal from "@/features/projects/access/inbox/AwcProjectInboxClearConfirmModal";
 import AwcProjectInboxDispatchForm from "@/features/projects/access/inbox/AwcProjectInboxDispatchForm";
+import { PROJECT_ACTIVITY_TASK_ANCHOR_ID } from "@/features/projects/utils/projectActivityTaskDeepLink.constant";
 import AwcProjectInboxMessageList from "@/features/projects/access/inbox/AwcProjectInboxMessageList";
 import { useAwcProjectInbox } from "@/features/projects/access/inbox/hooks/useAwcProjectInbox";
 import { useAwcProjectInboxLivePoll } from "@/features/projects/access/inbox/hooks/useAwcProjectInboxLivePoll";
@@ -65,11 +66,13 @@ export default function AwcProjectInboxSection({
         <AwcProjectInboxMessageList messages={inbox.messages} />
       ) : null}
       {canCompose ? (
-        <AwcProjectInboxDispatchForm
-          projectId={projectId}
-          members={inbox.members}
-          messages={inbox.messages}
-        />
+        <div id={PROJECT_ACTIVITY_TASK_ANCHOR_ID}>
+          <AwcProjectInboxDispatchForm
+            projectId={projectId}
+            members={inbox.members}
+            messages={inbox.messages}
+          />
+        </div>
       ) : (
         <p className="mt-2 text-xs text-gray-500">
           Viewers can&apos;t send messages.

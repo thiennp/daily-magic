@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import AppHero from "@/components/surfaces/AppHero";
 import AppIcon from "@/components/ui/icon/AppIcon";
 import {
@@ -8,7 +10,7 @@ import {
   APP_SURFACE_CTA_SECONDARY_CLASS,
   APP_SURFACE_EYEBROW_TEXT_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
-import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
+import { buildNavConsolidationNewTaskHref } from "@/lib/shell/buildNavConsolidationNewTaskHref";
 import ConnectThisMacButton from "@/features/home/ConnectThisMacButton";
 import HomeMacSettingsLink from "@/features/home/HomeMacSettingsLink";
 import HomeMacStatusBanner from "@/features/home/HomeMacStatusBanner";
@@ -36,7 +38,6 @@ export default function HomeDashboardHero({
   host,
 }: HomeDashboardHeroProps) {
   const displayName = user.name ?? user.email;
-  const { openSendTaskModal } = useSendTaskModal();
   const shouldShowConnectThisMac = useShouldShowConnectThisMac();
 
   return (
@@ -62,11 +63,8 @@ export default function HomeDashboardHero({
               className={APP_SURFACE_CTA_PRIMARY_LG_CLASS}
             />
           ) : null}
-          <button
-            type="button"
-            onClick={() => {
-              openSendTaskModal();
-            }}
+          <Link
+            href={buildNavConsolidationNewTaskHref()}
             className={
               shouldShowConnectThisMac
                 ? APP_SURFACE_CTA_SECONDARY_CLASS
@@ -77,7 +75,7 @@ export default function HomeDashboardHero({
               <AppIcon icon={BoltIcon} size="lg" />
             )}
             New task
-          </button>
+          </Link>
           <HomeMacSettingsLink />
         </div>
         <HomeRunningJobsPanel />

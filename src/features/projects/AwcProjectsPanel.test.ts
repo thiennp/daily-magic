@@ -12,4 +12,16 @@ describe("AwcProjectsPanel", () => {
     expect(source).toContain("loadFailed");
     expect(source).toContain("!isLoading");
   });
+
+  it("hosts Claim / owned bots on intent=bots without dropping /api/me/bots", () => {
+    const source = readSource("src/features/projects/AwcProjectsPanel.tsx");
+    expect(source).toContain("MyBotsPanel");
+    expect(source).toContain('intent === "bots"');
+    expect(
+      readSource("src/app/api/me/bots/route.ts").length,
+    ).toBeGreaterThan(0);
+    expect(
+      readSource("src/app/api/me/bots/[tokenId]/unclaim/route.ts").length,
+    ).toBeGreaterThan(0);
+  });
 });

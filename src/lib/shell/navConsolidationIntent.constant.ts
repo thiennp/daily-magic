@@ -34,7 +34,7 @@ export const NAV_CONSOLIDATION_INTENT_NOTICE: Readonly<
   Record<NavConsolidationIntent, string>
 > = {
   "new-task": "Pick a project to give a task.",
-  bots: "Bots now live inside each project. Open a project and go to Team.",
+  bots: "Bots now live inside each project. Claim or remove a bot here.",
   library:
     "Your library now lives inside each project. Open a project and go to Library.",
   reports:

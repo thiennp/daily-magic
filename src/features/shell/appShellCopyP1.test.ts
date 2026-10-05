@@ -38,7 +38,7 @@ describe("COPY-P1 shell and auth labels", () => {
   it("uses New task in marketing footer product links", () => {
     const productLinks = resolveMarketingFooterProductLinks(false);
     const sendLink = productLinks.find((link) => link.label === "New task");
-    expect(sendLink?.href).toContain("sendTask");
+    expect(sendLink?.href).toBe("/projects?intent=new-task");
     expect(productLinks.some((link) => link.label === "Send a task")).toBe(
       false,
     );
@@ -49,12 +49,13 @@ describe("COPY-P1 shell and auth labels", () => {
     expect(LOGIN_PAGE_COPY.title.includes("autopilot")).toBe(false);
   });
 
-  it("uses New task aria on app shell header CTA", () => {
+  it("drops New task from the app shell header CTA", () => {
     const source = readFileSync(
       join(process.cwd(), "src/features/shell/AppShellHeader.tsx"),
       "utf8",
     );
-    expect(source.includes('aria-label="New task"')).toBe(true);
+    expect(source.includes('aria-label="New task"')).toBe(false);
+    expect(source.includes("buildAgentComposerHref")).toBe(false);
     expect(source.includes("Send a task")).toBe(false);
   });
 

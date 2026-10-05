@@ -9,6 +9,7 @@ import AwcProjectDeleteControl from "@/features/projects/AwcProjectDeleteControl
 import AwcProjectDetailPrimaryColumn from "@/features/projects/AwcProjectDetailPrimaryColumn";
 import useAwcProjectComposition from "@/features/projects/hooks/useAwcProjectComposition";
 import useAwcProjectDevicePresentation from "@/features/projects/hooks/useAwcProjectDevicePresentation";
+import { useProjectActivityTaskDeepLink } from "@/features/projects/hooks/useProjectActivityTaskDeepLink";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import AppPanel from "@/components/surfaces/AppPanel";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
@@ -30,6 +31,7 @@ export default function AwcProjectDetailPanel({
   actorEmail = null,
   actorDisplayName = null,
 }: AwcProjectDetailPanelProps) {
+  useProjectActivityTaskDeepLink();
   const { localTokenHash } = useLocalMacBrowserContext();
   const { devices, displayNameById } = useMyMacDevices();
   const isOwner = pageActorRole === "owner";

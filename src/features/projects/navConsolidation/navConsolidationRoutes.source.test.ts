@@ -37,3 +37,25 @@ describe("nav consolidation routes (scope 1)", () => {
     );
   });
 });
+
+  it("308s /my-bots to projects intent=bots in next.config", () => {
+    const source = readApp("next.config.ts");
+    expect(source).toContain('source: "/my-bots"');
+    expect(source).toContain("/projects?intent=bots");
+    expect(source).toContain("permanent: true");
+  });
+
+  it("hosts Claim/owned bots on projects intent=bots", () => {
+    const source = readApp("src/features/projects/AwcProjectsPanel.tsx");
+    expect(source).toContain("MyBotsPanel");
+    expect(source).toContain('intent === "bots"');
+    expect(
+      readApp("src/lib/shell/navConsolidationIntent.constant.ts"),
+    ).toContain("Claim or remove a bot here.");
+  });
+
+  it("retargets /agent plain entry to projects new-task intent", () => {
+    const source = readApp("src/app/(app)/agent/page.tsx");
+    expect(source).toContain("buildNavConsolidationNewTaskHref");
+  });
+

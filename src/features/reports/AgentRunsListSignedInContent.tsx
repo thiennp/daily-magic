@@ -10,7 +10,7 @@ import AgentRunsListLoadErrorPanel from "@/features/reports/AgentRunsListLoadErr
 import { useAgentRunsList } from "@/features/reports/hooks/useAgentRunsList";
 import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
 import { clearAgentRunHistory } from "@/features/reports/utils/deleteAgentRunHistory";
-import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+import { buildNavConsolidationNewTaskHref } from "@/lib/shell/buildNavConsolidationNewTaskHref";
 import { resolveReportsSignedInEmptyBody } from "@/lib/copy/resolveSoloTeamSurfaceCopy";
 import {
   AgentRunScope,
@@ -94,7 +94,7 @@ export default function AgentRunsListSignedInContent({
           body={resolveReportsSignedInEmptyBody({ teamNavEnabled })}
           primaryCta={{
             label: "New task",
-            href: buildAgentComposerHref({ customTask: true }),
+            href: buildNavConsolidationNewTaskHref(),
           }}
           secondaryCta={{ label: "Browse Marketplace", href: "/marketplace" }}
         />
