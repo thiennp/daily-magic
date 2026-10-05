@@ -21,43 +21,51 @@ describe("resolveOrphanProjectTarget", () => {
     expect(target).toEqual({ kind: "existing", projectId: "p-old" });
   });
 
-  it("uses Personal when the oldest project has other active members", () => {
+  it("uses solo Default when the oldest project is shared", () => {
     const target = resolveOrphanProjectTarget({
       ownerUserId: "u1",
       projects: [
         project("p-shared", "u1", "Team", "2026-01-01T00:00:00.000Z"),
-        project("p-solo-newer", "u1", "Solo", "2026-06-01T00:00:00.000Z"),
+        project("p-default", "u1", "Default", "2026-03-01T00:00:00.000Z"),
       ],
       activeMemberships: [member("p-shared", "bot-1")],
     });
 
-    expect(target).toEqual({ kind: "personal", reuseProjectId: null });
+    expect(target).toEqual({ kind: "existing", projectId: "p-default" });
   });
 
-  it("reuses an existing Personal project when oldest is shared", () => {
-    const target = resolveOrphanProjectTarget({
-      ownerUserId: "u1",
-      projects: [
-        project("p-shared", "u1", "Team", "2026-01-01T00:00:00.000Z"),
-        project("p-personal", "u1", "Personal", "2026-03-01T00:00:00.000Z"),
-      ],
-      activeMemberships: [member("p-shared", "human-2")],
-    });
-
-    expect(target).toEqual({
-      kind: "personal",
-      reuseProjectId: "p-personal",
-    });
-  });
-
-  it("uses Personal when the owner has no project", () => {
+  it("creates Default when the owner has no project", () => {
     const target = resolveOrphanProjectTarget({
       ownerUserId: "u1",
       projects: [project("other", "u2", "Other", "2026-01-01T00:00:00.000Z")],
       activeMemberships: [],
     });
 
-    expect(target).toEqual({ kind: "personal", reuseProjectId: null });
+    expect(target).toEqual({
+      kind: "private_fallback",
+      name: "Default",
+      reuseProjectId: null,
+    });
+  });
+
+  it("creates Personal when Default exists but is shared", () => {
+    const target = resolveOrphanProjectTarget({
+      ownerUserId: "u1",
+      projects: [
+        project("p-shared", "u1", "Team", "2026-01-01T00:00:00.000Z"),
+        project("p-default", "u1", "Default", "2026-02-01T00:00:00.000Z"),
+      ],
+      activeMemberships: [
+        member("p-shared", "bot-1"),
+        member("p-default", "human-2"),
+      ],
+    });
+
+    expect(target).toEqual({
+      kind: "private_fallback",
+      name: "Personal",
+      reuseProjectId: null,
+    });
   });
 
   it("skips projects the owner no longer has (deleted / absent)", () => {
@@ -68,14 +76,5 @@ describe("resolveOrphanProjectTarget", () => {
     });
 
     expect(target).toEqual({ kind: "existing", projectId: "p-live" });
-  });
-
-  it("treats a project with only active memberships omitted as solo", () => {
-    const target = resolveOrphanProjectTarget({
-      ownerUserId: "u1",
-      projects: [project("p1", "u1", "Solo", "2026-01-01T00:00:00.000Z")],
-      activeMemberships: [],
-    });
-    expect(target).toEqual({ kind: "existing", projectId: "p1" });
   });
 });

@@ -3,10 +3,14 @@
 -- Orphan rule:
 --   1) owner's oldest project by created_at ASC, id ASC
 --   2) if that project has any other active member (human or bot, status=active,
---      user_id <> owner_user_id), OR the owner has no project, use/create one
---      "Personal" project (owner-only; device_id NULL; one per owner)
--- Never DELETE rows. Idempotent: safe to re-run (only fills NULL project_id;
--- Personal insert is guarded by partial unique index + NOT EXISTS).
+--      user_id <> owner_user_id), OR the owner has no project:
+--        prefer the owner's solo "Default" project (DEFAULT_USER_PROJECT_NAME;
+--        isDefaultUserProject / resolveDefaultUserProject / ensureDefaultUserProject);
+--        create one Default (device_id NULL) if missing;
+--        only if every Default for the owner is shared, create one "Personal"
+--        (Default can receive invites, so it is not always owner-only).
+-- Never DELETE rows. Idempotent: only fills NULL project_id; Default/Personal
+-- inserts are guarded by NOT EXISTS.
 --
 -- Dry-run counts (ops; do not run from agents against prod):
 --   SELECT 'capabilities_null' AS k, COUNT(*) FROM published_capabilities WHERE project_id IS NULL
@@ -19,19 +23,22 @@
 --   SELECT id, 'agent_run' FROM agent_runs WHERE project_id IS NULL;
 --
 -- Rollback: DROP NOT NULL on both columns; restore agent_runs FK ON DELETE SET NULL
--- if needed. Do not delete Personal projects or null out assigned ids.
+-- if needed. Do not delete Default/Personal projects or null out assigned ids.
 
 -- 1) Library: add nullable project_id (filled below, then NOT NULL).
 ALTER TABLE published_capabilities
   ADD COLUMN IF NOT EXISTS project_id TEXT;
 
--- 2) One Personal project per owner (name match, case-insensitive).
+-- 2) At most one cloud Default / Personal without a Mac binding per owner.
+CREATE UNIQUE INDEX IF NOT EXISTS user_projects_owner_default_null_device_idx
+  ON user_projects (owner_user_id)
+  WHERE lower(name) = 'default' AND device_id IS NULL;
+
 CREATE UNIQUE INDEX IF NOT EXISTS user_projects_owner_personal_idx
   ON user_projects (owner_user_id)
   WHERE lower(name) = 'personal';
 
--- 3) Owners who still have orphans and need a Personal project.
---    Need Personal when: no projects at all, OR oldest project is shared.
+-- 3) Owners who still have orphans and need a private fallback project.
 WITH orphan_owners AS (
   SELECT owner_user_id AS owner_user_id
   FROM published_capabilities
@@ -60,7 +67,7 @@ oldest_shared AS (
       AND m.user_id <> o.owner_user_id
   )
 ),
-needs_personal AS (
+needs_private AS (
   SELECT o.owner_user_id
   FROM orphan_owners o
   WHERE NOT EXISTS (
@@ -68,24 +75,60 @@ needs_personal AS (
   )
   UNION
   SELECT owner_user_id FROM oldest_shared
+),
+-- Solo Default already present for this owner?
+has_solo_default AS (
+  SELECT DISTINCT p.owner_user_id
+  FROM user_projects p
+  INNER JOIN needs_private n ON n.owner_user_id = p.owner_user_id
+  WHERE lower(p.name) = 'default'
+    AND NOT EXISTS (
+      SELECT 1
+      FROM project_memberships m
+      WHERE m.project_id = p.id
+        AND m.status = 'active'
+        AND m.user_id <> p.owner_user_id
+    )
+),
+needs_default_create AS (
+  SELECT n.owner_user_id
+  FROM needs_private n
+  WHERE NOT EXISTS (
+    SELECT 1 FROM has_solo_default d WHERE d.owner_user_id = n.owner_user_id
+  )
+  AND NOT EXISTS (
+    SELECT 1
+    FROM user_projects p
+    WHERE p.owner_user_id = n.owner_user_id
+      AND lower(p.name) = 'default'
+  )
+),
+needs_personal_create AS (
+  -- Default exists but every Default is shared → Personal escape hatch.
+  SELECT n.owner_user_id
+  FROM needs_private n
+  WHERE NOT EXISTS (
+    SELECT 1 FROM has_solo_default d WHERE d.owner_user_id = n.owner_user_id
+  )
+  AND EXISTS (
+    SELECT 1
+    FROM user_projects p
+    WHERE p.owner_user_id = n.owner_user_id
+      AND lower(p.name) = 'default'
+  )
+  AND NOT EXISTS (
+    SELECT 1
+    FROM user_projects p
+    WHERE p.owner_user_id = n.owner_user_id
+      AND lower(p.name) = 'personal'
+  )
 )
 INSERT INTO user_projects (id, owner_user_id, device_id, name, folder_path)
-SELECT
-  gen_random_uuid()::text,
-  n.owner_user_id,
-  NULL,
-  'Personal',
-  NULL
-FROM needs_personal n
-WHERE NOT EXISTS (
-  SELECT 1
-  FROM user_projects p
-  WHERE p.owner_user_id = n.owner_user_id
-    AND lower(p.name) = 'personal'
-);
-
--- 4) Resolve target project per owner (solo oldest, else Personal).
---    Materialized as a temp view via CTE reused in both UPDATEs.
+SELECT gen_random_uuid()::text, owner_user_id, NULL, 'Default', NULL
+FROM needs_default_create
+UNION ALL
+SELECT gen_random_uuid()::text, owner_user_id, NULL, 'Personal', NULL
+FROM needs_personal_create;
 
 -- 4a) Backfill published_capabilities
 WITH orphan_owners AS (
@@ -112,6 +155,22 @@ oldest_is_solo AS (
       AND m.user_id <> o.owner_user_id
   )
 ),
+solo_default AS (
+  SELECT DISTINCT ON (p.owner_user_id)
+    p.owner_user_id,
+    p.id AS project_id
+  FROM user_projects p
+  INNER JOIN orphan_owners o ON o.owner_user_id = p.owner_user_id
+  WHERE lower(p.name) = 'default'
+    AND NOT EXISTS (
+      SELECT 1
+      FROM project_memberships m
+      WHERE m.project_id = p.id
+        AND m.status = 'active'
+        AND m.user_id <> p.owner_user_id
+    )
+  ORDER BY p.owner_user_id, p.created_at ASC, p.id ASC
+),
 personal AS (
   SELECT DISTINCT ON (p.owner_user_id)
     p.owner_user_id,
@@ -124,10 +183,19 @@ personal AS (
 target AS (
   SELECT owner_user_id, project_id FROM oldest_is_solo
   UNION ALL
+  SELECT d.owner_user_id, d.project_id
+  FROM solo_default d
+  WHERE NOT EXISTS (
+    SELECT 1 FROM oldest_is_solo s WHERE s.owner_user_id = d.owner_user_id
+  )
+  UNION ALL
   SELECT p.owner_user_id, p.project_id
   FROM personal p
   WHERE NOT EXISTS (
     SELECT 1 FROM oldest_is_solo s WHERE s.owner_user_id = p.owner_user_id
+  )
+  AND NOT EXISTS (
+    SELECT 1 FROM solo_default d WHERE d.owner_user_id = p.owner_user_id
   )
 )
 UPDATE published_capabilities c
@@ -162,6 +230,22 @@ oldest_is_solo AS (
       AND m.user_id <> o.owner_user_id
   )
 ),
+solo_default AS (
+  SELECT DISTINCT ON (p.owner_user_id)
+    p.owner_user_id,
+    p.id AS project_id
+  FROM user_projects p
+  INNER JOIN orphan_owners o ON o.owner_user_id = p.owner_user_id
+  WHERE lower(p.name) = 'default'
+    AND NOT EXISTS (
+      SELECT 1
+      FROM project_memberships m
+      WHERE m.project_id = p.id
+        AND m.status = 'active'
+        AND m.user_id <> p.owner_user_id
+    )
+  ORDER BY p.owner_user_id, p.created_at ASC, p.id ASC
+),
 personal AS (
   SELECT DISTINCT ON (p.owner_user_id)
     p.owner_user_id,
@@ -174,10 +258,19 @@ personal AS (
 target AS (
   SELECT owner_user_id, project_id FROM oldest_is_solo
   UNION ALL
+  SELECT d.owner_user_id, d.project_id
+  FROM solo_default d
+  WHERE NOT EXISTS (
+    SELECT 1 FROM oldest_is_solo s WHERE s.owner_user_id = d.owner_user_id
+  )
+  UNION ALL
   SELECT p.owner_user_id, p.project_id
   FROM personal p
   WHERE NOT EXISTS (
     SELECT 1 FROM oldest_is_solo s WHERE s.owner_user_id = p.owner_user_id
+  )
+  AND NOT EXISTS (
+    SELECT 1 FROM solo_default d WHERE d.owner_user_id = p.owner_user_id
   )
 )
 UPDATE agent_runs r

@@ -12,33 +12,40 @@ export interface AssignOrphansInput {
   }[];
   readonly projects: readonly MigrationProject[];
   readonly activeMemberships: readonly MigrationMembership[];
-  readonly ensurePersonalProjectId: (ownerUserId: string) => string;
+  readonly ensurePrivateProjectId: (
+    ownerUserId: string,
+    name: "Default" | "Personal",
+  ) => string;
 }
 
 export interface AssignOrphansResult {
   readonly assignments: ReadonlyMap<string, string>;
-  readonly createdPersonalOwnerIds: readonly string[];
+  readonly createdPrivate: readonly {
+    readonly ownerUserId: string;
+    readonly name: "Default" | "Personal";
+  }[];
 }
 
-const personalProject = (
+const privateProject = (
   id: string,
   ownerUserId: string,
+  name: "Default" | "Personal",
 ): MigrationProject => ({
   id,
   ownerUserId,
-  name: "Personal",
+  name,
   createdAt: "9999-01-01T00:00:00.000Z",
 });
 
-/**
- * Idempotent assignment: items with projectId are untouched.
- * Personal is created once per owner via ensurePersonalProjectId.
- */
+/** Idempotent assignment; items with projectId are untouched. */
 export const assignOrphansToProjects = (
   input: AssignOrphansInput,
 ): AssignOrphansResult => {
   const projects = [...input.projects];
-  const createdPersonalOwnerIds: string[] = [];
+  const createdPrivate: {
+    readonly ownerUserId: string;
+    readonly name: "Default" | "Personal";
+  }[] = [];
   const assignments = new Map<string, string>();
 
   for (const orphan of input.orphans) {
@@ -57,17 +64,23 @@ export const assignOrphansToProjects = (
       continue;
     }
 
-    const personalId =
+    const projectId =
       target.reuseProjectId ??
       (() => {
-        const id = input.ensurePersonalProjectId(orphan.ownerUserId);
-        projects.push(personalProject(id, orphan.ownerUserId));
-        createdPersonalOwnerIds.push(orphan.ownerUserId);
+        const id = input.ensurePrivateProjectId(
+          orphan.ownerUserId,
+          target.name,
+        );
+        projects.push(privateProject(id, orphan.ownerUserId, target.name));
+        createdPrivate.push({
+          ownerUserId: orphan.ownerUserId,
+          name: target.name,
+        });
         return id;
       })();
 
-    assignments.set(orphan.id, personalId);
+    assignments.set(orphan.id, projectId);
   }
 
-  return { assignments, createdPersonalOwnerIds };
+  return { assignments, createdPrivate };
 };

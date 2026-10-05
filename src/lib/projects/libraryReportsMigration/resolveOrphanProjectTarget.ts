@@ -1,6 +1,10 @@
 /**
  * Pure decision helper mirroring db/migrations/068-library-reports-require-project.sql.
+ * Private fallback prefers the owner's Default project
+ * (DEFAULT_USER_PROJECT_NAME / isDefaultUserProject / resolveDefaultUserProject).
  */
+
+import { DEFAULT_USER_PROJECT_NAME } from "@/lib/projects/defaultUserProject.constants";
 
 export interface MigrationProject {
   readonly id: string;
@@ -12,13 +16,16 @@ export interface MigrationProject {
 export interface MigrationMembership {
   readonly projectId: string;
   readonly userId: string;
-  /** Only "active" rows are considered; pass only active members. */
   readonly status: "active";
 }
 
 export type OrphanProjectTarget =
   | { readonly kind: "existing"; readonly projectId: string }
-  | { readonly kind: "personal"; readonly reuseProjectId: string | null };
+  | {
+      readonly kind: "private_fallback";
+      readonly name: "Default" | "Personal";
+      readonly reuseProjectId: string | null;
+    };
 
 const compareOldest = (a: MigrationProject, b: MigrationProject): number => {
   if (a.createdAt < b.createdAt) return -1;
@@ -39,22 +46,22 @@ const isSharedProject = (
       m.userId !== project.ownerUserId,
   );
 
-const findPersonal = (
+const namedProjects = (
   ownerUserId: string,
+  name: string,
   projects: readonly MigrationProject[],
-): MigrationProject | null => {
-  const personal = projects
+): MigrationProject[] =>
+  projects
     .filter(
       (p) =>
-        p.ownerUserId === ownerUserId && p.name.toLowerCase() === "personal",
+        p.ownerUserId === ownerUserId &&
+        p.name.trim().toLowerCase() === name.toLowerCase(),
     )
     .sort(compareOldest);
-  return personal[0] ?? null;
-};
 
 /**
- * Oldest existing project (created_at, then id) if solo; else Personal.
- * Deleted projects are absent from `projects` and are skipped.
+ * Oldest solo project, else solo Default, else create Default,
+ * else Personal when every Default is shared.
  */
 export const resolveOrphanProjectTarget = (input: {
   readonly ownerUserId: string;
@@ -66,14 +73,34 @@ export const resolveOrphanProjectTarget = (input: {
     .sort(compareOldest);
 
   const oldest = owned[0] ?? null;
-
   if (oldest !== null && !isSharedProject(oldest, input.activeMemberships)) {
     return { kind: "existing", projectId: oldest.id };
   }
 
-  const personal = findPersonal(input.ownerUserId, input.projects);
+  const defaults = namedProjects(
+    input.ownerUserId,
+    DEFAULT_USER_PROJECT_NAME,
+    input.projects,
+  );
+  const soloDefault = defaults.find(
+    (p) => !isSharedProject(p, input.activeMemberships),
+  );
+  if (soloDefault !== undefined) {
+    return { kind: "existing", projectId: soloDefault.id };
+  }
+
+  if (defaults.length === 0) {
+    return {
+      kind: "private_fallback",
+      name: "Default",
+      reuseProjectId: null,
+    };
+  }
+
+  const personal = namedProjects(input.ownerUserId, "Personal", input.projects);
   return {
-    kind: "personal",
-    reuseProjectId: personal?.id ?? null,
+    kind: "private_fallback",
+    name: "Personal",
+    reuseProjectId: personal[0]?.id ?? null,
   };
 };
