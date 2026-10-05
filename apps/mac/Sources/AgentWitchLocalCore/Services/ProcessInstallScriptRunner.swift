@@ -9,6 +9,11 @@ public struct ProcessInstallScriptRunner: InstallScriptRunning {
         process.executableURL = URL(fileURLWithPath: "/bin/bash")
         process.arguments = [scriptPath.path]
         var env = ProcessInfo.processInfo.environment
+        env["PATH"] = buildInstallScriptPath(
+            inheritedPath: env["PATH"],
+            homeDirectory: FileManager.default.homeDirectoryForCurrentUser.path,
+            loginShellNodeDirectory: resolveLoginShellNodeDirectory()
+        )
         for (key, value) in environment {
             env[key] = value
         }

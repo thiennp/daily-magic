@@ -6,31 +6,13 @@ import {
   AGENT_WITCH_NODE_INSTALL_HINT,
 } from "@/lib/agentWitch/agentWitchNodeRuntime.constant";
 import { buildAgentWitchInstallScriptNodeRuntimeHomebrew } from "@/lib/agentWitch/buildAgentWitchInstallScriptNodeRuntimeHomebrew";
+import { buildAgentWitchInstallScriptNodeRuntimePrompt } from "@/lib/agentWitch/buildAgentWitchInstallScriptNodeRuntimePrompt";
 
 /** Resolves NODE_BIN and enforces supported Node (install / update scripts). */
 export const buildAgentWitchInstallScriptNodeRuntime = (): string => `
 ${buildAgentWitchInstallScriptLinuxNodeRuntime()}
 ${buildAgentWitchInstallScriptNodeRuntimeHomebrew()}
-agent_witch_install_is_noninteractive() {
-  if [[ -n "\${CI:-}" || -n "\${AGENT_WITCH_INSTALL_NONINTERACTIVE:-}" ]]; then
-    return 0
-  fi
-  return 1
-}
-
-agent_witch_read_yes_no() {
-  local prompt="\$1"
-  local answer=""
-  if agent_witch_install_is_noninteractive; then
-    return 1
-  fi
-  read -r -p "\${prompt} [y/N] " answer || true
-  case "\${answer}" in
-    y|Y|yes|YES) return 0 ;;
-    *) return 1 ;;
-  esac
-}
-
+${buildAgentWitchInstallScriptNodeRuntimePrompt()}
 agent_witch_node_major() {
   local bin="\$1"
   "\${bin}" -e "process.stdout.write(String(Number.parseInt(process.version.slice(1).split('.')[0] ?? '', 10)))"
@@ -50,10 +32,11 @@ agent_witch_node_is_supported() {
 }
 
 agent_witch_ensure_node_runtime() {
+  agent_witch_add_node_search_paths
   NODE_BIN="\$(command -v node || true)"
 
   if [[ -z "\${NODE_BIN}" ]]; then
-    echo "Node.js is required for Agent Witch (minimum ${AGENT_WITCH_MIN_NODE_VERSION_LABEL})." >&2
+    echo "Node.js is required for Agent Witch (minimum ${AGENT_WITCH_MIN_NODE_VERSION_LABEL}); not found on PATH, /opt/homebrew/bin, /usr/local/bin or ~/.local/bin." >&2
     if [[ "\$(uname -s)" == "Linux" ]] && agent_witch_try_install_node_via_linux_tarball; then
       return 0
     fi
