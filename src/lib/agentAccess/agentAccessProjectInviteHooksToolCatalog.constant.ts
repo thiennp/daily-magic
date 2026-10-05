@@ -1,5 +1,6 @@
 import type { AgentAccessToolDefinition } from "@/lib/agentAccess/agentAccessToolCatalog.constant";
 import { GET_MY_PROJECT_WEBHOOK_STATUS_TOOL } from "@/lib/agentAccess/getMyProjectWebhookStatusTool.constant";
+import { PROJECT_MESSENGER_REPLY_TOOL } from "@/lib/agentAccess/projectMessengerReplyTool.constant";
 import { REGISTER_PROJECT_WEBHOOK_TOOL } from "@/lib/agentAccess/registerProjectWebhookTool.constant";
 
 export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDefinition[] =
@@ -29,6 +30,7 @@ export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDe
         additionalProperties: false,
       },
     },
+    PROJECT_MESSENGER_REPLY_TOOL,
     {
       name: "list_project_inbox",
       description:

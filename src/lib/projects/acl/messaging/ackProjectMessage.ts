@@ -1,6 +1,8 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
 import { deleteProjectMessageWithOutcome } from "@/lib/projects/acl/messaging/deleteProjectMessageWithOutcome";
+import { ackProjectWholeMessageDelivery } from "@/lib/projects/acl/messaging/messenger/ackProjectWholeMessageDelivery";
+import { isProjectMessengerWholeAddress } from "@/lib/projects/acl/messaging/messenger/isProjectMessengerWholeAddress";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { asRowArray, getSql } from "@/lib/db";
@@ -38,6 +40,24 @@ export const ackProjectMessage = async (input: {
   }
   const toUserId = rows[0].to_user_id ? String(rows[0].to_user_id) : null;
   const toTeam = rows[0].to_team_label ? String(rows[0].to_team_label) : null;
+  const toMembershipId = rows[0].to_membership_id
+    ? String(rows[0].to_membership_id)
+    : null;
+  if (
+    membership !== null &&
+    isProjectMessengerWholeAddress({
+      toMembershipId,
+      toUserId,
+      toTeamLabel: toTeam,
+    })
+  ) {
+    // Whole project: ack moves only this bot's delivery; the shared row stays.
+    const acked = await ackProjectWholeMessageDelivery({
+      messageId: input.messageId,
+      membershipId: membership.id,
+    });
+    return acked.ok ? { ok: true, messageId: input.messageId } : acked;
+  }
   const addressed =
     toUserId === input.actorUserId ||
     (toTeam !== null && membership !== null && toTeam === membership.teamLabel);

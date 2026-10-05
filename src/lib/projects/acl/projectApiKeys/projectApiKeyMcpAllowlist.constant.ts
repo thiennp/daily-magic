@@ -4,6 +4,7 @@ export const PROJECT_API_KEY_MCP_TOOLS = [
   "get_project_acl",
   "get_my_project_access",
   "project_dispatch",
+  "project_messenger_reply",
   "list_project_inbox",
   "register_project_webhook",
   "ack_project_message",

@@ -60,6 +60,11 @@ export const listProjectInbox = async (input: {
             m.to_team_label IS NOT NULL
             AND m.to_team_label = ${teamLabel}
           )
+          OR EXISTS (
+            SELECT 1 FROM project_message_deliveries own
+            WHERE own.message_id = m.id
+              AND own.membership_id = ${membershipId}
+          )
         )
         AND (
           ${since}::timestamptz IS NULL

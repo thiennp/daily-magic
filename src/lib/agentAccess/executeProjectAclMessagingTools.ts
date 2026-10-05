@@ -1,6 +1,7 @@
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
 import { executeProjectAclInboxPeerTools } from "@/lib/agentAccess/executeProjectAclInboxPeerTools";
+import { executeProjectMessengerTools } from "@/lib/agentAccess/executeProjectMessengerTools";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import { dispatchProjectMessage } from "@/lib/projects/acl/messaging/dispatchProjectMessage";
 
@@ -47,6 +48,10 @@ export const executeProjectAclMessagingTools = async (input: {
       messageId: result.messageId,
       recipientCount: result.recipientCount,
     });
+  }
+  const messenger = await executeProjectMessengerTools(input);
+  if (messenger !== null) {
+    return messenger;
   }
   return executeProjectAclInboxPeerTools(input);
 };

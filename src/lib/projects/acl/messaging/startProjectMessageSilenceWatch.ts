@@ -7,10 +7,11 @@ import type { ProjectGrokRoutineWakeResult } from "@/lib/projects/acl/webhooks/w
  * clock, on each delivery whose wake was accepted (HTTP 200).
  * Only touches unwatched rows, so a stored message is never watched twice.
  * Skips viewer seats: they are read-only and can never send the reply.
+ * senderMembershipId is null for owner sends (messenger "Needs a reply").
  */
 export const startProjectMessageSilenceWatch = async (input: {
   readonly messageId: string;
-  readonly senderMembershipId: string;
+  readonly senderMembershipId: string | null;
   readonly wakeResults: readonly ProjectGrokRoutineWakeResult[];
   readonly now: Date;
 }): Promise<number> => {

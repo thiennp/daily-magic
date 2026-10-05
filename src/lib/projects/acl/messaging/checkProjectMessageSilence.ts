@@ -18,6 +18,8 @@ const toMs = (value: unknown): number =>
  * At most one timeout per delivery per call. `now` comes from the caller;
  * no clock is read and no timer state is kept here. Never throws: callers are
  * the dispatch and inbox paths (and any cron), which must not fail on it.
+ * Owner sends (no sender membership) time out the same way; the owner sees
+ * the state on the message, so no inbox notice is stored for them.
  */
 export const checkProjectMessageSilence = async (input: {
   readonly now: Date;
@@ -41,10 +43,9 @@ export const checkProjectMessageSilence = async (input: {
         WHERE d.b2b_state = ANY(${watchedStates}::text[])
           AND d.last_activity_at <=
             ${nowIso}::timestamptz - make_interval(secs => ${notifyAfterSecs})
-          AND m.sender_membership_id IS NOT NULL
       `,
     );
-    let notified = 0;
+    const moved: string[] = [];
     for (const row of rows) {
       const from = parseProjectB2bState(row.b2b_state);
       const event =
@@ -67,6 +68,13 @@ export const checkProjectMessageSilence = async (input: {
       if (!applied) {
         continue;
       }
+      moved.push(String(row.id));
+      if (
+        row.sender_membership_id === null ||
+        row.sender_membership_id === undefined
+      ) {
+        continue;
+      }
       await notifyProjectSenderOfPeerSilence({
         event,
         projectId: String(row.project_id),
@@ -76,9 +84,8 @@ export const checkProjectMessageSilence = async (input: {
         senderDisplayName: optionalString(row.sender_display_name),
         peerDisplayName: optionalString(row.peer_display_name),
       });
-      notified += 1;
     }
-    return notified;
+    return moved.length;
   } catch (error: unknown) {
     console.error("project message silence check failed", {
       error: error instanceof Error ? error.message : "silence_check_failed",
