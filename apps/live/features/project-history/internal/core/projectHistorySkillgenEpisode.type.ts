@@ -28,5 +28,8 @@ export type ProjectHistorySkillgenBudgetRecord = {
 
 export type ProjectHistorySkillgenEpisodesFile = {
   readonly episodes: readonly ProjectHistorySkillgenEpisodeRecord[];
+  /** Last history message fully consumed by a finished/mining-paused episode. */
+  readonly cursorMessageId: string | null;
+  readonly cursorSavedAtMs: number | null;
   readonly updatedAt: string;
 };
