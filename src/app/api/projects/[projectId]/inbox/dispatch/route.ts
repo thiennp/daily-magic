@@ -57,6 +57,7 @@ export async function POST(
         detail: result.detail,
         retryAfterSeconds: result.retryAfterSeconds,
         retryAfterAt: result.retryAfterAt,
+        message: result.message,
       },
       { status },
     );
