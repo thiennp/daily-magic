@@ -3,6 +3,7 @@ import { resolveWriterApiMissingCliFallbackFromWriterExecutionOutput } from "@ag
 import { isCliFallbackMarketplacePlanEstimateBackend } from "@/lib/dispatch/agentRunHonestyCopy.constant";
 import { hasRealAgentRunTerminalWork } from "@/lib/dispatch/hasRealAgentRunTerminalWork";
 import { isAgentRunSpawnFailureInOutput } from "@/lib/dispatch/isAgentRunSpawnFailureInOutput";
+import { isAntigravityCliRunHonestyContextInOutput } from "@/lib/dispatch/isAntigravityCliRunHonestyContextInOutput";
 import { parseMarketplacePlanEstimateFromOutput } from "@/lib/dispatch/parseMarketplacePlanEstimateFromOutput";
 
 export type WriterApiMissingCliFallbackHonesty = {
@@ -12,6 +13,10 @@ export type WriterApiMissingCliFallbackHonesty = {
 export const resolveWriterApiMissingCliFallbackHonesty = (
   output: string,
 ): WriterApiMissingCliFallbackHonesty | null => {
+  if (isAntigravityCliRunHonestyContextInOutput(output)) {
+    return null;
+  }
+
   const planEstimate = parseMarketplacePlanEstimateFromOutput(output);
   if (
     isCliFallbackMarketplacePlanEstimateBackend(planEstimate?.backend ?? null)
