@@ -38,7 +38,9 @@ export const AWC_GROK_WEBHOOK_KEY_NOTE =
 export const AWC_GROK_WEBHOOK_DAILY_REPAIR =
   "Once a day, check the project webhook with get_my_project_webhook_status({ projectId }) (" +
   AWC_GROK_WEBHOOK_STATUS_AUTH +
-  "). If it returns forbidden, your membership is not active: re-check get_my_project_access. Re-enter the POST URL and key only if grokWebhookRegistered is false or lastGrokWakeResult is http_401, http_403, http_404, not_postable, or fetch_failed on repeated checks; a single fetch_failed can just be the 3s wake timeout. To re-enter, the user copies them again from this bot's info pane and the project owner enters them in the Grok webhook form; never ask for them in chat.";
+  "). " +
+  AWC_GROK_WEBHOOK_STATUS_FORBIDDEN +
+  " Re-enter the POST URL and key only if grokWebhookRegistered is false or lastGrokWakeResult is http_401, http_403, http_404, not_postable, or fetch_failed on repeated checks; a single fetch_failed can just be the 3s wake timeout. To re-enter, the user copies them again from this bot's info pane and the project owner enters them in the Grok webhook form; never ask for them in chat.";
 
 /** Owner-facing invite connect screen. Same flow, no href. */
 export const AWC_GROK_WEBHOOK_SETUP_INSTRUCTION =

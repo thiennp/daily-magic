@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { AWC_GROK_WEBHOOK_DAILY_REPAIR } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
+import {
+  AWC_GROK_WEBHOOK_DAILY_REPAIR,
+  AWC_GROK_WEBHOOK_STATUS_FORBIDDEN,
+} from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
 import { STORED_GROK_WAKE_RESULT } from "@/lib/projects/acl/messaging/storedGrokWakeResult.constant";
 import { toGrokWebhookStatusView } from "@/lib/projects/acl/webhooks/toGrokWebhookStatusView";
 
@@ -48,9 +51,12 @@ describe("toGrokWebhookStatusView", () => {
     expect(STORED_GROK_WAKE_RESULT.test("forbidden")).toBe(false);
   });
 
-  it("daily repair copy sends forbidden to get_my_project_access, not re-entry", () => {
+  it("daily repair copy reuses the status forbidden split, not re-entry", () => {
     expect(AWC_GROK_WEBHOOK_DAILY_REPAIR).toContain(
-      "If it returns forbidden, your membership is not active: re-check get_my_project_access.",
+      `(agent-access Bearer only; awc_proj_ keys are rejected for this tool). ${AWC_GROK_WEBHOOK_STATUS_FORBIDDEN} Re-enter the POST URL and key only if`,
+    );
+    expect(AWC_GROK_WEBHOOK_DAILY_REPAIR).not.toContain(
+      "If it returns forbidden, your membership is not active",
     );
   });
 });
