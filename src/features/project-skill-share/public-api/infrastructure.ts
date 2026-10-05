@@ -9,6 +9,9 @@ export { mapProjectSkillShareErrorStatus } from "@/features/project-skill-share/
 export { resolveProjectDataDir } from "@/features/project-skill-share/internal/infrastructure/history/resolveProjectDataDir";
 export { writeProjectSkillVersion } from "@/features/project-skill-share/internal/infrastructure/history/writeProjectSkillVersion";
 export { readProjectSkillVersion } from "@/features/project-skill-share/internal/infrastructure/history/readProjectSkillVersion";
+export { tombstoneProjectSkill } from "@/features/project-skill-share/internal/infrastructure/history/tombstoneProjectSkill";
+export { readProjectSkillTombstone } from "@/features/project-skill-share/internal/infrastructure/history/readProjectSkillTombstone";
+export { listProjectSkillIds } from "@/features/project-skill-share/internal/infrastructure/history/listProjectSkillIds";
 export { PROJECT_SKILL_HISTORY_STUB_PORT } from "@/features/project-skill-share/internal/infrastructure/history/projectSkillHistoryStubPort.constant";
 export { pullPublishedProjectSkillsToMirror } from "@/features/project-skill-share/internal/infrastructure/orchestrators/pullPublishedProjectSkillsToMirror";
 export { createDbProjectSkillAwcPublishedSource } from "@/features/project-skill-share/internal/infrastructure/awc/createDbProjectSkillAwcPublishedSource";

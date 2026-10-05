@@ -45,4 +45,7 @@ export const projectSkillHistoryPortFixture = (
   resolveProjectDataDir: () => "/profile/project-data/proj-1",
   writeProjectSkillVersion: () => ({ path: "", contentHash: "" }),
   readProjectSkillVersion: () => local,
+  tombstoneProjectSkill: async () => ({ removed: false }),
+  readProjectSkillTombstone: async () => null,
+  listProjectSkillIds: async () => [],
 });

@@ -2,16 +2,19 @@ import type { ProjectSkillPullRow } from "@/features/project-skill-share/interna
 import type { PullPublishedProjectSkillsToMirrorResult } from "@/features/project-skill-share/internal/core/projectSkillResults.type";
 import { createDbProjectSkillAwcPublishedSource } from "@/features/project-skill-share/internal/infrastructure/awc/createDbProjectSkillAwcPublishedSource";
 import { isProjectHistoryEnabled } from "@/features/project-skill-share/internal/infrastructure/history/isProjectHistoryEnabled";
+import { listProjectSkillIds } from "@/features/project-skill-share/internal/infrastructure/history/listProjectSkillIds";
 import { PROJECT_SKILL_HISTORY_STUB_PORT } from "@/features/project-skill-share/internal/infrastructure/history/projectSkillHistoryStubPort.constant";
+import { listPublishedProjectSkillsForPull } from "@/features/project-skill-share/internal/infrastructure/orchestrators/listPublishedProjectSkillsForPull";
 import type { ProjectSkillShareDeps } from "@/features/project-skill-share/internal/infrastructure/orchestrators/projectSkillShareDeps.type";
 import { pullOnePublishedProjectSkillToMirror } from "@/features/project-skill-share/internal/infrastructure/orchestrators/pullOnePublishedProjectSkillToMirror";
+import { tombstoneOrphanMirroredProjectSkill } from "@/features/project-skill-share/internal/infrastructure/orchestrators/tombstoneOrphanMirroredProjectSkill";
 
 const LOG_PREFIX = "[project-skill-pull-mirror]";
 
 /**
- * Share-owned pull-on-AWL-tick: list published from AWC, compare local meta,
- * fetch missing/changed, write only via History helpers. Failures log + surface
- * for next-tick retry; never throws into ack/delete paths.
+ * Share-owned pull-on-AWL-tick: listPublished first; on list fail → early
+ * return with zero History disk helpers. Else decide skip|fetch_write|remove;
+ * write/tombstone only via History. Failures log + retry next tick.
  */
 export const pullPublishedProjectSkillsToMirror = async (input: {
   readonly projectId: string;
@@ -28,9 +31,17 @@ export const pullPublishedProjectSkillsToMirror = async (input: {
     if (!enabled) {
       return { ok: true, skipped: true, skills: [] };
     }
-    const published = await awc.listPublished(input.projectId);
+    const listed = await listPublishedProjectSkillsForPull({
+      awc,
+      projectId: input.projectId,
+    });
+    if (!listed.ok) {
+      console.warn(LOG_PREFIX, "list_failed", input.projectId);
+      return { ok: false, skipped: false, skills: [] };
+    }
+    const publishedIds = new Set(listed.published.map((meta) => meta.skillId));
     const skills: ProjectSkillPullRow[] = [];
-    for (const meta of published) {
+    for (const meta of listed.published) {
       try {
         skills.push(
           await pullOnePublishedProjectSkillToMirror({
@@ -47,6 +58,28 @@ export const pullPublishedProjectSkillsToMirror = async (input: {
           version: meta.publishedVersion,
           action: "unavailable",
         });
+      }
+    }
+    const locals = await listProjectSkillIds({
+      port,
+      projectId: input.projectId,
+    });
+    for (const local of locals) {
+      if (publishedIds.has(local.skillId)) {
+        continue;
+      }
+      try {
+        skills.push(
+          await tombstoneOrphanMirroredProjectSkill({
+            projectId: input.projectId,
+            skillId: local.skillId,
+            lastContentHash: local.contentHash,
+            port,
+          }),
+        );
+      } catch (error) {
+        console.warn(LOG_PREFIX, "orphan_tombstone_failed", local.skillId, error);
+        skills.push({ skillId: local.skillId, version: 0, action: "unavailable" });
       }
     }
     const failed = skills.some(

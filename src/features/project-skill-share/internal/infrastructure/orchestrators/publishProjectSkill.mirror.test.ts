@@ -54,6 +54,9 @@ describe("publishProjectSkill mirror + conflicts", () => {
       resolveProjectDataDir: () => "/p",
       writeProjectSkillVersion: write,
       readProjectSkillVersion: () => null,
+      tombstoneProjectSkill: async () => ({ removed: false }),
+      readProjectSkillTombstone: async () => null,
+      listProjectSkillIds: async () => [],
     };
     const result = await publishProjectSkill({
       actorUserId: "m1",

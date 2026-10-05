@@ -8,7 +8,20 @@ import { pullPublishedProjectSkillsToMirror } from "@/features/project-skill-sha
 const body = "# Deploy\nsteps";
 const hash = computeProjectSkillContentHash(body);
 
-const awcFixture = (
+const pullMirrorHistoryFixture = (
+  overrides: Partial<ProjectSkillHistoryPort> = {},
+): ProjectSkillHistoryPort => ({
+  isHistoryEnabled: () => true,
+  resolveProjectDataDir: () => "/p",
+  writeProjectSkillVersion: () => ({ path: "", contentHash: hash }),
+  readProjectSkillVersion: () => null,
+  tombstoneProjectSkill: async () => ({ removed: false }),
+  readProjectSkillTombstone: async () => null,
+  listProjectSkillIds: async () => [],
+  ...overrides,
+});
+
+const pullMirrorAwcFixture = (
   overrides: Partial<ProjectSkillAwcPublishedSource> = {},
 ): ProjectSkillAwcPublishedSource => ({
   listPublished: async () => [
@@ -30,15 +43,15 @@ describe("pullPublishedProjectSkillsToMirror", () => {
 
   it("History OFF → skipped, no writes", async () => {
     const write = vi.fn();
-    const history: ProjectSkillHistoryPort = {
-      isHistoryEnabled: () => false,
-      resolveProjectDataDir: () => "/p",
-      writeProjectSkillVersion: write,
-      readProjectSkillVersion: () => null,
-    };
     const result = await pullPublishedProjectSkillsToMirror({
       projectId: "proj-1",
-      deps: { history, awcPublished: awcFixture() },
+      deps: {
+        history: pullMirrorHistoryFixture({
+          isHistoryEnabled: () => false,
+          writeProjectSkillVersion: write,
+        }),
+        awcPublished: pullMirrorAwcFixture(),
+      },
     });
     expect(result).toEqual({ ok: true, skipped: true, skills: [] });
     expect(write).not.toHaveBeenCalled();
@@ -46,15 +59,15 @@ describe("pullPublishedProjectSkillsToMirror", () => {
 
   it("skips when local meta hash already matches", async () => {
     const write = vi.fn();
-    const history: ProjectSkillHistoryPort = {
-      isHistoryEnabled: () => true,
-      resolveProjectDataDir: () => "/p",
-      writeProjectSkillVersion: write,
-      readProjectSkillVersion: () => ({ body, contentHash: hash }),
-    };
     const result = await pullPublishedProjectSkillsToMirror({
       projectId: "proj-1",
-      deps: { history, awcPublished: awcFixture() },
+      deps: {
+        history: pullMirrorHistoryFixture({
+          writeProjectSkillVersion: write,
+          readProjectSkillVersion: () => ({ body, contentHash: hash }),
+        }),
+        awcPublished: pullMirrorAwcFixture(),
+      },
     });
     expect(result).toMatchObject({
       ok: true,
@@ -69,40 +82,53 @@ describe("pullPublishedProjectSkillsToMirror", () => {
       path: "/p/skills/deploy/v0001.md",
       contentHash: hash,
     });
-    const history: ProjectSkillHistoryPort = {
-      isHistoryEnabled: () => true,
-      resolveProjectDataDir: () => "/p",
-      writeProjectSkillVersion: write,
-      readProjectSkillVersion: () => null,
-    };
     const result = await pullPublishedProjectSkillsToMirror({
       projectId: "proj-1",
-      deps: { history, awcPublished: awcFixture() },
+      deps: {
+        history: pullMirrorHistoryFixture({ writeProjectSkillVersion: write }),
+        awcPublished: pullMirrorAwcFixture(),
+      },
     });
-    expect(result).toMatchObject({
-      ok: true,
-      skills: [{ action: "mirrored" }],
-    });
+    expect(result).toMatchObject({ ok: true, skills: [{ action: "mirrored" }] });
     expect(write).toHaveBeenCalledWith({
-      projectId: "proj-1",
-      skillId: "deploy",
-      version: 1,
-      body,
+      projectId: "proj-1", skillId: "deploy", version: 1, body,
     });
   });
 
-  it("logs and continues on per-skill failure (never throws)", async () => {
-    const history: ProjectSkillHistoryPort = {
-      isHistoryEnabled: () => true,
-      resolveProjectDataDir: () => "/p",
-      writeProjectSkillVersion: () => {
-        throw new Error("disk full");
-      },
-      readProjectSkillVersion: () => null,
-    };
+  it("list hit still fetch_writes even when a tombstone exists", async () => {
+    const write = vi.fn().mockResolvedValue({
+      path: "/p/skills/deploy/v0001.md",
+      contentHash: hash,
+    });
     const result = await pullPublishedProjectSkillsToMirror({
       projectId: "proj-1",
-      deps: { history, awcPublished: awcFixture() },
+      deps: {
+        history: pullMirrorHistoryFixture({
+          writeProjectSkillVersion: write,
+          readProjectSkillTombstone: async () => ({
+            skillId: "deploy",
+            revokedAt: "2026-10-01T00:00:00.000Z",
+            lastContentHash: "sha256:old",
+          }),
+        }),
+        awcPublished: pullMirrorAwcFixture(),
+      },
+    });
+    expect(result).toMatchObject({ ok: true, skills: [{ action: "mirrored" }] });
+    expect(write).toHaveBeenCalled();
+  });
+
+  it("logs and continues on per-skill failure (never throws)", async () => {
+    const result = await pullPublishedProjectSkillsToMirror({
+      projectId: "proj-1",
+      deps: {
+        history: pullMirrorHistoryFixture({
+          writeProjectSkillVersion: () => {
+            throw new Error("disk full");
+          },
+        }),
+        awcPublished: pullMirrorAwcFixture(),
+      },
     });
     expect(result.ok).toBe(false);
     expect(result.skills[0]?.action).toBe("unavailable");

@@ -22,6 +22,10 @@ export type {
 export type { ProjectSkillAwcPublishedSource } from "@/features/project-skill-share/internal/infrastructure/awc/projectSkillAwcPublishedSource.type";
 export type {
   ProjectSkillHistoryPort,
+  ProjectSkillLocalMirrorRef,
+  ProjectSkillTombstoneInput,
+  ProjectSkillTombstoneRecord,
+  ProjectSkillTombstoneResult,
   ProjectSkillVersionReadInput,
   ProjectSkillVersionReadResult,
   ProjectSkillVersionWriteInput,

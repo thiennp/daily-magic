@@ -28,6 +28,7 @@ export const pullOnePublishedProjectSkillToMirror = async (input: {
     version: meta.publishedVersion,
   });
   const action = decideProjectSkillPullAction({
+    onPublishedSet: true,
     expectedHash: meta.contentHash,
     localContentHash: local?.contentHash ?? null,
   });

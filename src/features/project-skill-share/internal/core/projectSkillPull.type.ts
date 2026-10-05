@@ -1,8 +1,13 @@
 /** Outcome of one skill in pullPublishedProjectSkillsToMirror. */
-export type ProjectSkillPullAction = "skip" | "fetch_write";
+export type ProjectSkillPullAction = "skip" | "fetch_write" | "remove";
 
 export type ProjectSkillPullRowAction =
-  "skipped" | "mirrored" | "hash_mismatch" | "unavailable" | "missing_awc";
+  | "skipped"
+  | "mirrored"
+  | "removed"
+  | "hash_mismatch"
+  | "unavailable"
+  | "missing_awc";
 
 export interface ProjectSkillPullRow {
   readonly skillId: string;

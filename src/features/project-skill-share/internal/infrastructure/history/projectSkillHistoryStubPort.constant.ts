@@ -13,4 +13,7 @@ export const PROJECT_SKILL_HISTORY_STUB_PORT: ProjectSkillHistoryPort = {
   resolveProjectDataDir: unavailable,
   writeProjectSkillVersion: unavailable,
   readProjectSkillVersion: unavailable,
+  tombstoneProjectSkill: async () => ({ removed: false }),
+  readProjectSkillTombstone: async () => null,
+  listProjectSkillIds: async () => [],
 };
