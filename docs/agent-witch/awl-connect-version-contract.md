@@ -21,7 +21,9 @@ version already stored on the device record.
 
 ## Server refusal (Connect / dispatch)
 
-`POST /api/agent-witch/devices/:deviceId/restart` and Mac-targeted
+`GET /api/agent-witch/install-connection` (Connect modal probe),
+`POST /api/agent-witch/register-install` (after storing the reported version),
+`POST /api/agent-witch/devices/:deviceId/restart`, and Mac-targeted
 `POST /api/agent-runs/dispatch` return **HTTP 409** via
 `buildAgentWitchLocalTooOldRefusalResponse`:
 

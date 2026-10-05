@@ -1,3 +1,5 @@
+import { buildAgentWitchLocalTooOldRefusalResponse } from "@/lib/agentWitch/buildAgentWitchLocalTooOldRefusalResponse";
+import { classifyAgentWitchLocalConnectVersion } from "@/lib/agentWitch/classifyAgentWitchLocalConnectVersion";
 import { parseRegisterInstallBody } from "@/lib/agentWitch/parseRegisterInstallBody";
 import { registerAgentWitchInstallFromMac } from "@/lib/agentWitch/registerAgentWitchInstallFromMac";
 
@@ -19,6 +21,11 @@ export async function POST(request: Request): Promise<Response> {
       { error: "Install token is not valid." },
       { status: 404 },
     );
+  }
+
+  const installBundleVersion = parsed.installBundleVersion ?? null;
+  if (classifyAgentWitchLocalConnectVersion(installBundleVersion) === "too_old") {
+    return buildAgentWitchLocalTooOldRefusalResponse(installBundleVersion);
   }
 
   return Response.json({
