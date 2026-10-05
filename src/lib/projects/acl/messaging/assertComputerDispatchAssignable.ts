@@ -31,7 +31,7 @@ export const assertComputerDispatchAssignable = async (input: {
   }
 
   const registryIds = await listFreshRegistryDeviceIdsForUser(input.ownerUserId);
-  let liveLocal = new Set<string>();
+  let liveLocal: ReadonlySet<string> = new Set<string>();
   try {
     liveLocal = await collectLiveAgentWitchDeviceIdsForUser(
       getAgentWitchHub(),

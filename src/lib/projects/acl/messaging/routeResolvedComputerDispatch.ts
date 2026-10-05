@@ -17,7 +17,7 @@ export type RouteResolvedComputerDispatchResult =
       readonly code: string;
       readonly cause?: "offline" | "too_old";
     }
-  | { readonly ok: false; readonly code: "not_computer" };
+  | { readonly ok: false; readonly code: "not_computer"; readonly cause?: undefined };
 
 const isComputerRecipient = (
   recipient: DispatchRecipient | undefined,
