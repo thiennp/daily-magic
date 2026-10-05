@@ -482,9 +482,9 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 **Root cause:** Reused `SendTaskComposerProjectPickerStep` meant for the task composer wizard.
 
-**Fix:** `HomeProjectListRow` shows name + **Edit** only; create/manage on `/projects`.
+**Fix:** Home reuses `AwcProjectsPanel` for the top 4 recent projects (cards link to `/projects/[id]`; **View all** → `/projects`). No Edit on home cards; create/manage on `/projects`.
 
-**Regression test:** `HomeProjectListRow.test.ts`, `HomeProjectsPanel.test.ts` (HOME-049).
+**Regression test:** `HomeProjectsPanel.test.ts`, `HomeProjectsPanel.render.test.ts` (HOME-048 / HOME-049).
 
 ---
 

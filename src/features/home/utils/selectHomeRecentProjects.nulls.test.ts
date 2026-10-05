@@ -39,10 +39,11 @@ describe("selectHomeRecentProjects missing data and small lists", () => {
       "used-long-ago",
       "never-used",
       "garbage",
+      "empty",
     ]);
   });
 
-  it("returns every project when there are fewer than 3", () => {
+  it("returns every project when there are fewer than 4", () => {
     const projects = [
       buildProject("a", { lastUsedAt: "2026-01-01T00:00:00.000Z" }),
       buildProject("b", { lastUsedAt: "2026-02-01T00:00:00.000Z" }),

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { HOME_RECENT_PROJECTS_LIMIT } from "@/features/home/constants/homeRecentProjectsLimit.constant";
 import selectHomeRecentProjects from "@/features/home/utils/selectHomeRecentProjects";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
@@ -24,7 +25,11 @@ const ids = (projects: readonly UserProjectRecord[]): string[] =>
   projects.map((project) => project.id);
 
 describe("selectHomeRecentProjects", () => {
-  it("returns the 3 projects with the newest lastUsedAt, newest first", () => {
+  it("uses a home limit of 4", () => {
+    expect(HOME_RECENT_PROJECTS_LIMIT).toBe(4);
+  });
+
+  it("returns the 4 projects with the newest lastUsedAt, newest first", () => {
     const projects = [
       buildProject("a", { lastUsedAt: "2026-09-01T10:00:00.000Z" }),
       buildProject("b", { lastUsedAt: "2026-10-04T10:00:00.000Z" }),
@@ -33,7 +38,7 @@ describe("selectHomeRecentProjects", () => {
       buildProject("e", { lastUsedAt: "2026-10-01T10:00:00.000Z" }),
     ];
 
-    expect(ids(selectHomeRecentProjects(projects))).toEqual(["d", "b", "e"]);
+    expect(ids(selectHomeRecentProjects(projects))).toEqual(["d", "b", "e", "a"]);
   });
 
   it("ranks lastUsedAt above a newer updatedAt (activity beats edits)", () => {
@@ -77,17 +82,19 @@ describe("selectHomeRecentProjects", () => {
       "y-new-update",
       "m",
       "b-tie",
+      "z-old-update",
     ]);
   });
 
   it("is deterministic regardless of input order for full ties", () => {
     const projects = ["c", "a", "b", "d"].map((id) => buildProject(id));
 
-    expect(ids(selectHomeRecentProjects(projects))).toEqual(["a", "b", "c"]);
+    expect(ids(selectHomeRecentProjects(projects))).toEqual(["a", "b", "c", "d"]);
     expect(ids(selectHomeRecentProjects([...projects].reverse()))).toEqual([
       "a",
       "b",
       "c",
+      "d",
     ]);
   });
 });
