@@ -33,7 +33,7 @@ export const runSaveCapabilityToLibrary = async (input: {
     if (!result.ok) {
       return {
         status: "error",
-        message: result.errorMessage,
+        message: result.errorMessage ?? "Could not save this starter.",
         savedName: null,
       };
     }
