@@ -1,6 +1,10 @@
 import { spawn } from "node:child_process";
 
 import { resolveAgentWitchInstallDir } from "@agent-witch/install-layout";
+import {
+  buildHostSideEffectRefusalMessage,
+  isHostSideEffectAllowed,
+} from "@agent-witch/shared/host-side-effects";
 
 import { buildAgentWitchEnsureOllamaShell } from "./buildAgentWitchEnsureOllamaShell";
 
@@ -17,14 +21,10 @@ const runOllamaEnsureShell: AgentWitchOllamaShellRunner = (script) =>
   new Promise((resolve) => {
     // Defense-in-depth: never brew/install/start Ollama while Vitest is driving
     // the process unless an explicit opt-in is set (tests should inject runShell).
-    if (
-      process.env.VITEST &&
-      process.env.AGENT_WITCH_ALLOW_HOST_SIDE_EFFECTS !== "1"
-    ) {
+    if (!isHostSideEffectAllowed()) {
       resolve({
         exitCode: 1,
-        output:
-          "Refusing Ollama host side effects under VITEST (set AGENT_WITCH_ALLOW_HOST_SIDE_EFFECTS=1 to override).",
+        output: buildHostSideEffectRefusalMessage("Ollama"),
       });
       return;
     }

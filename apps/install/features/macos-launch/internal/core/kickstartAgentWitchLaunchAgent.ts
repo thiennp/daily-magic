@@ -3,6 +3,10 @@ import fs from "node:fs";
 import { promisify } from "node:util";
 
 import { resolveAgentWitchInstallDir } from "@agent-witch/install-layout";
+import {
+  buildHostSideEffectRefusalMessage,
+  isHostSideEffectAllowed,
+} from "@agent-witch/shared/host-side-effects";
 
 import type { KickstartLaunchAgentResult } from "../../public-api/types";
 
@@ -54,6 +58,16 @@ export const kickstartAgentWitchLaunchAgent = async (
     return {
       ok: false,
       errorMessage: "launchctl kickstart is only supported on macOS.",
+    };
+  }
+
+  // Fail closed under Vitest before touching ~/Library/LaunchAgents or launchctl
+  // (print/bootout/bootstrap/enable/kickstart -k). Production labels mean a
+  // test would otherwise SIGTERM the user's live AWL.
+  if (!isHostSideEffectAllowed()) {
+    return {
+      ok: false,
+      errorMessage: buildHostSideEffectRefusalMessage("launchctl"),
     };
   }
 

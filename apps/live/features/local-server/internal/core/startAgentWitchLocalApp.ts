@@ -3,6 +3,7 @@ import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
+import { isHostSideEffectAllowed } from "@agent-witch/shared/host-side-effects";
 import {
   AGENT_WITCH_LOCAL_APP_ORIGIN,
   AGENT_WITCH_LOCAL_APP_PORT,
@@ -1846,6 +1847,10 @@ export const startAgentWitchLocalApp = (input: {
 };
 
 export const reviveAgentWitchProcessViaLaunchctl = (label: string): void => {
+  if (!isHostSideEffectAllowed()) {
+    return;
+  }
+
   spawn(
     "launchctl",
     ["kickstart", "-k", `gui/${process.getuid?.() ?? 501}/${label}`],

@@ -6,6 +6,7 @@ import { promisify } from "node:util";
 
 import { collectAgentWitchLaunchAgentLabels } from "@agent-witch/install-macos-launch";
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
+import { isHostSideEffectAllowed } from "@agent-witch/shared/host-side-effects";
 
 const execFileAsync = promisify(execFile);
 
@@ -36,6 +37,10 @@ const removeFileIfPresent = (filePath: string): void => {
 };
 
 const bootoutLaunchAgent = async (launchAgentLabel: string): Promise<void> => {
+  if (!isHostSideEffectAllowed()) {
+    return;
+  }
+
   const uid = process.getuid?.();
   if (uid === undefined || process.platform !== "darwin") {
     return;

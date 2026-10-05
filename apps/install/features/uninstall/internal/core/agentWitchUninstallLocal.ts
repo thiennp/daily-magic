@@ -6,6 +6,7 @@ import { promisify } from "node:util";
 
 import { collectAgentWitchLaunchAgentLabels } from "@agent-witch/install-macos-launch";
 import { resolveAgentWitchInstallDir } from "@agent-witch/install-layout";
+import { isHostSideEffectAllowed } from "@agent-witch/shared/host-side-effects";
 
 const execFileAsync = promisify(execFile);
 
@@ -19,6 +20,10 @@ const resolveLaunchAgentsDir = (): string =>
   path.join(os.homedir(), "Library", "LaunchAgents");
 
 const bootoutLaunchAgent = async (launchAgentLabel: string): Promise<void> => {
+  if (!isHostSideEffectAllowed()) {
+    return;
+  }
+
   const uid = process.getuid?.();
   if (uid === undefined) {
     return;

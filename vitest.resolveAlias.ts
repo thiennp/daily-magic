@@ -49,6 +49,10 @@ export const vitestResolveAlias: Record<string, string> = {
     ROOT,
     "./packages/shared/src/projectSkills/index.ts",
   ),
+  "@agent-witch/shared/host-side-effects": path.resolve(
+    ROOT,
+    "./packages/shared/src/host-side-effects/index.ts",
+  ),
   "@agent-witch/shared": path.resolve(ROOT, "./packages/shared/src/index.ts"),
   "@agent-witch/install-layout/types": path.resolve(
     ROOT,

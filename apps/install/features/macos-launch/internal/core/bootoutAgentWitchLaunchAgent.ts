@@ -1,9 +1,16 @@
 import { execFileSync } from "node:child_process";
 
+import { isHostSideEffectAllowed } from "@agent-witch/shared/host-side-effects";
+
 export const bootoutAgentWitchLaunchAgentSync = (
   launchAgentLabel: string,
 ): void => {
   if (process.platform !== "darwin") {
+    return;
+  }
+
+  // Fail closed under Vitest: labels are production, so this would unload the live AWL.
+  if (!isHostSideEffectAllowed()) {
     return;
   }
 
