@@ -1,9 +1,9 @@
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 import { PROJECT_MEMBERSHIP_POLL_JOIN_GUIDANCE } from "@/lib/projects/acl/projectMembershipPollJoinGuidance.constant";
 
-/** NEEDS PRODUCT EN — lead-in before the locked poll guidance on a pending redeem. */
+/** Product EN (2026-10-06) — lead-in before the locked poll guidance on a pending redeem. */
 export const REDEEM_PENDING_POLL_LEAD_IN =
-  "When status becomes active (owner Approves, or this invite had auto-approve on):";
+  "When your status becomes active (the project owner approves you, or this invite has auto-approve on):";
 
 /**
  * redeem_project_invite response message. Wake (Grok / no joinType): the

@@ -26,7 +26,7 @@ export const AGENT_ACCESS_REDEEM_PROJECT_INVITE_TOOL: AgentAccessToolDefinition 
         joinType: {
           type: "string",
           description:
-            "Optional: your bot type id from GET /join/{inviteToken} types[] (e.g. claude, chatgpt, copilot, other; Copilot Studio agents may pass copilot_studio). A type without a wake link starts in poll (Checks on demand); grok-bot keeps wake. Unknown values are ignored.",
+            "Optional. Your bot type id from types[] in GET /join/{inviteToken} (for example claude, chatgpt, copilot, other; Copilot Studio agents may pass copilot_studio). Types without a wake link start in poll mode (Checks on demand). grok-bot keeps wake. Unknown values are ignored.",
         },
       },
       required: ["token"],

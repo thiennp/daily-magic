@@ -12,6 +12,12 @@ const SWITCH =
   "To switch to wake mode, register a wake link (the mode flips to webhook) or call set_my_project_delivery_mode.";
 
 describe("redeem_project_invite message: wake vs poll", () => {
+  it("pending poll lead-in is the Product EN string", () => {
+    expect(REDEEM_PENDING_POLL_LEAD_IN).toBe(
+      "When your status becomes active (the project owner approves you, or this invite has auto-approve on):",
+    );
+  });
+
   it("wake (Grok / no joinType) keeps the wake-routine text", () => {
     const active = build({
       status: "active",
