@@ -12,7 +12,12 @@ interface QueryBody {
 }
 
 export const POST = async (request: Request): Promise<NextResponse> => {
-  const body = (await request.json()) as QueryBody;
+  const body = (await request.json().catch(() => null)) as QueryBody | null;
+
+  if (typeof body !== "object" || body === null) {
+    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
+
   const query = body.query?.trim();
 
   if (!query) {
