@@ -18,11 +18,11 @@ describe("selectMessengerThreadMeta", () => {
       ],
       canSend: true,
     };
-    expect(
-      selectMessengerThreadMeta({ selectedKey: "whole", threads }).title,
-    ).toBe("Whole project");
-    expect(
-      selectMessengerThreadMeta({ selectedKey: "m1", threads }).title,
-    ).toBe("WB Wake");
+    expect(selectMessengerThreadMeta({ selectedKey: "whole", threads }).title).toBe(
+      "Whole project",
+    );
+    expect(selectMessengerThreadMeta({ selectedKey: "m1", threads }).title).toBe(
+      "WB Wake",
+    );
   });
 });
