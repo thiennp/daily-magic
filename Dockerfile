@@ -28,6 +28,7 @@ COPY --from=builder /app/apps ./apps
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/scripts ./scripts
 COPY --from=builder /app/db ./db
+COPY --from=builder /app/.feature-knowledge ./.feature-knowledge
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
 EXPOSE 8080
 CMD ["npm", "start"]
