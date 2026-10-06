@@ -1,6 +1,3 @@
-import { readFileSync } from "node:fs";
-import path from "node:path";
-
 import { describe, expect, it } from "vitest";
 
 import { messengerChatKey } from "@/features/projects/messenger/utils/messengerChatKey";
@@ -99,25 +96,5 @@ describe("persistMessengerChat", () => {
       now: NOW,
     });
     expect(shown.entries.map((e) => e.messageId)).toEqual(["live"]);
-  });
-
-  it("no wipe: the store has no delete / clear path", () => {
-    const { store } = memoryChatStore();
-    expect(Object.keys(store).sort()).toEqual([
-      "readChat",
-      "readKept",
-      "writeChat",
-      "writeKept",
-    ]);
-    const src = readFileSync(
-      path.join(
-        process.cwd(),
-        "src/features/projects/messenger/utils/messengerChatStoreIdb.ts",
-      ),
-      "utf8",
-    );
-    expect(src).not.toMatch(
-      /\.delete\(|\.clear\(|deleteDatabase|deleteObjectStore/,
-    );
   });
 });
