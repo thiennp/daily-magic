@@ -27,7 +27,7 @@ const openTempRegistry = () => {
 };
 
 describe("createPitfallRegistry", () => {
-  it("seeds 11 rows idempotently without rewriting existing seed content", () => {
+  it("seeds the bundled rows idempotently without rewriting existing seed content", () => {
     const { registry, dbPath } = openTempRegistry();
     const first = registry.listPitfalls();
     expect(first.format).toBe("full");
@@ -39,7 +39,7 @@ describe("createPitfallRegistry", () => {
     registry.close();
 
     const db = openPitfallDb(dbPath);
-    const before = selectPitfall(db, null, "arch-max-lines");
+    const before = selectPitfall(db, null, "secrets-in-logs");
     expect(before).not.toBeNull();
     if (before === null) {
       return;
@@ -47,7 +47,7 @@ describe("createPitfallRegistry", () => {
     // mutate seed avoidance directly to prove re-seed does not overwrite
     db.prepare(
       `UPDATE pitfalls SET avoidance = ? WHERE project_id = '' AND id = ?`,
-    ).run("KEEP-ME", "arch-max-lines");
+    ).run("KEEP-ME", "secrets-in-logs");
     closePitfallDb(db);
 
     const again = createPitfallRegistry({ dbPath });
@@ -56,8 +56,8 @@ describe("createPitfallRegistry", () => {
     if (listed.format !== "full") {
       return;
     }
-    expect(listed.items).toHaveLength(11);
-    const kept = listed.items.find((row) => row.id === "arch-max-lines");
+    expect(listed.items).toHaveLength(listBundledSeedPitfalls().length);
+    const kept = listed.items.find((row) => row.id === "secrets-in-logs");
     expect(kept?.avoidance).toBe("KEEP-ME");
     again.close();
   });
@@ -65,7 +65,7 @@ describe("createPitfallRegistry", () => {
   it("project override shadows seed and never rewrites the seed row", () => {
     const { registry, dbPath } = openTempRegistry();
     const result = registry.upsertPitfall({
-      id: "arch-max-lines",
+      id: "secrets-in-logs",
       projectId: "proj-1",
       symptom: "Override symptom",
       cause: "Override cause",
@@ -77,19 +77,19 @@ describe("createPitfallRegistry", () => {
 
     const shadowed = registry.getPitfall({
       projectId: "proj-1",
-      id: "arch-max-lines",
+      id: "secrets-in-logs",
     });
     expect(shadowed?.avoidance).toBe("Use project-specific fix");
     expect(shadowed?.source).toBe("project");
     expect(shadowed?.projectId).toBe("proj-1");
 
-    const seed = registry.getPitfall({ id: "arch-max-lines" });
+    const seed = registry.getPitfall({ id: "secrets-in-logs" });
     expect(seed?.source).toBe("seed");
     expect(seed?.avoidance).not.toBe("Use project-specific fix");
 
     const db = openPitfallDb(dbPath);
-    expect(selectPitfall(db, null, "arch-max-lines")?.source).toBe("seed");
-    expect(selectPitfall(db, "proj-1", "arch-max-lines")?.source).toBe(
+    expect(selectPitfall(db, null, "secrets-in-logs")?.source).toBe("seed");
+    expect(selectPitfall(db, "proj-1", "secrets-in-logs")?.source).toBe(
       "project",
     );
     closePitfallDb(db);
@@ -136,7 +136,7 @@ describe("createPitfallRegistry", () => {
     const nowIso = "2026-10-05T12:00:00.000Z";
     const hit = registry.recordHit({
       projectId: "proj-1",
-      id: "health-lag",
+      id: "secrets-in-logs",
       nowIso,
     });
     expect(hit.ok).toBe(true);
@@ -149,7 +149,7 @@ describe("createPitfallRegistry", () => {
 
     const again = registry.recordHit({
       projectId: "proj-1",
-      id: "health-lag",
+      id: "secrets-in-logs",
       nowIso: "2026-10-05T13:00:00.000Z",
     });
     expect(again.ok).toBe(true);
@@ -167,7 +167,7 @@ describe("createPitfallRegistry", () => {
     if (bot.format !== "bot") {
       return;
     }
-    expect(bot.lines.length).toBe(11);
+    expect(bot.lines.length).toBe(listBundledSeedPitfalls().length);
     expect(bot.lines[0]).toMatch(/^[a-z0-9-]+\|[^|]/);
     expect(bot.items[0]).toEqual({
       id: expect.any(String),

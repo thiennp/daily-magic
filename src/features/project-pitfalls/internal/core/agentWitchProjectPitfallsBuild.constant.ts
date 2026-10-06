@@ -1,7 +1,10 @@
 import type { ProjectPitfallContent } from "@/features/project-pitfalls/internal/core/projectPitfall.type";
 
-/** Seeds 1-4: checks and builds. Plain-language copy; exact commands only in check.value. */
-export const PROJECT_PITFALL_SEEDS_BUILD: readonly ProjectPitfallContent[] = [
+/**
+ * AgentWitch (daily-magic) project rules: checks and builds. Project-scoped
+ * since 094 (were platform seeds 1-4). Exact commands only in check.value.
+ */
+export const AGENTWITCH_PROJECT_PITFALLS_BUILD: readonly ProjectPitfallContent[] = [
   {
     id: "arch-max-lines",
     symptom:

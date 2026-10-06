@@ -1,7 +1,7 @@
 import type { ProjectPitfallContent } from "@/features/project-pitfalls/internal/core/projectPitfall.type";
 
-/** Seeds: pushing work and updating main. */
-export const PROJECT_PITFALL_SEEDS_SHIP: readonly ProjectPitfallContent[] = [
+/** AgentWitch (daily-magic) project rules: pushing work and updating main (project-scoped since 094). */
+export const AGENTWITCH_PROJECT_PITFALLS_SHIP: readonly ProjectPitfallContent[] = [
   {
     id: "main-moved-rebase",
     symptom:

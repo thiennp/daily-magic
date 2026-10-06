@@ -39,7 +39,7 @@ const render = (
 describe("buildProjectPitfallsTab", () => {
   it("lists active pitfalls with Title, Fix, Triggers, Last hit, and hides retired", () => {
     const html = render();
-    expect(html).toContain("2 of 64 active");
+    expect(html).toContain("2 of 3 active");
     expect(html).toContain("Install fails after a branch switch");
     expect(html).toContain("Fix: Run a clean install before you start.");
     expect(html).toContain("Triggers: vitest, watch");

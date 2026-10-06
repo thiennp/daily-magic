@@ -55,17 +55,17 @@ describe("recordHit uses the pitfall_hits table (must-fix a)", () => {
 
   it("keys counters per project + pitfall id and leaves pitfall rows untouched", () => {
     const { registry, dbPath } = openTemp();
-    registry.recordHit({ projectId: "proj-1", id: "health-lag" });
-    registry.recordHit({ projectId: "proj-1", id: "health-lag" });
-    registry.recordHit({ projectId: "proj-2", id: "health-lag" });
+    registry.recordHit({ projectId: "proj-1", id: "secrets-in-logs" });
+    registry.recordHit({ projectId: "proj-1", id: "secrets-in-logs" });
+    registry.recordHit({ projectId: "proj-2", id: "secrets-in-logs" });
 
     expect(readHits(dbPath)).toEqual([
-      { project_id: "proj-1", pitfall_id: "health-lag", hit_count: 2 },
-      { project_id: "proj-2", pitfall_id: "health-lag", hit_count: 1 },
+      { project_id: "proj-1", pitfall_id: "secrets-in-logs", hit_count: 2 },
+      { project_id: "proj-2", pitfall_id: "secrets-in-logs", hit_count: 1 },
     ]);
-    expect(registry.getPitfall({ projectId: "proj-1", id: "health-lag" })?.hitCount).toBe(2);
-    expect(registry.getPitfall({ projectId: "proj-2", id: "health-lag" })?.hitCount).toBe(1);
-    expect(registry.getPitfall({ id: "health-lag" })?.hitCount).toBe(0);
+    expect(registry.getPitfall({ projectId: "proj-1", id: "secrets-in-logs" })?.hitCount).toBe(2);
+    expect(registry.getPitfall({ projectId: "proj-2", id: "secrets-in-logs" })?.hitCount).toBe(1);
+    expect(registry.getPitfall({ id: "secrets-in-logs" })?.hitCount).toBe(0);
 
     const db = openPitfallDb(dbPath);
     const columns = db
@@ -83,12 +83,12 @@ describe("recordHit uses the pitfall_hits table (must-fix a)", () => {
     const db = openPitfallDb(dbPath);
     db.prepare(
       `INSERT INTO pitfall_hits (project_id, pitfall_id, hit_count, last_seen_at)
-       VALUES ('proj-1', 'health-lag', 41, NULL)`,
+       VALUES ('proj-1', 'secrets-in-logs', 41, NULL)`,
     ).run();
     closePitfallDb(db);
 
     const nowIso = "2026-10-05T12:00:00.000Z";
-    const hit = registry.recordHit({ projectId: "proj-1", id: "health-lag", nowIso });
+    const hit = registry.recordHit({ projectId: "proj-1", id: "secrets-in-logs", nowIso });
     expect(hit.ok).toBe(true);
     if (!hit.ok) {
       return;

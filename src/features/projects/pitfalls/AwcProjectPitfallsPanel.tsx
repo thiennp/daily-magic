@@ -15,7 +15,6 @@ import { PITFALL_EMPTY_CLASS } from "@/features/projects/pitfalls/pitfallsChrome
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import withProjectEditOnMacTab from "@/features/projects/utils/withProjectEditOnMacTab";
-import { PROJECT_PITFALL_MAX_ACTIVE } from "@agent-witch/shared/pitfalls";
 
 interface AwcProjectPitfallsPanelProps {
   readonly projectId: string;
@@ -70,7 +69,10 @@ export default function AwcProjectPitfallsPanel({
             onQueryChange={setQuery}
           />
           <p className="text-[13px] text-gray-500 dark:text-gray-400">
-            {C.panelHint(rows.length, PROJECT_PITFALL_MAX_ACTIVE)}{" "}
+            {C.panelHint(
+              rows.length,
+              pitfalls.status === "ready" ? pitfalls.items.length : 0,
+            )}{" "}
             {anyHit ? C.panelHintHasHits : C.panelHintNoHits}{" "}
             <AwcProjectPitfallsManageButton editCta={manageCta} />
           </p>

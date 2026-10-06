@@ -15,18 +15,12 @@ const BANNED_COPY =
   /\bFF\b|HMAC|agent-access|signed webhook|experimental|unverified/i;
 
 describe("PROJECT_PITFALL_SEEDS", () => {
-  it("ships the 11 seeds with unique ids", () => {
+  it("ships only generic platform seeds (shown on every project)", () => {
     const ids = PROJECT_PITFALL_SEEDS.map((seed) => seed.id);
-    expect(ids).toHaveLength(11);
-    expect(new Set(ids).size).toBe(11);
-    expect(ids).toEqual(
-      expect.arrayContaining([
-        "arch-max-lines",
-        "health-lag",
-        "dirty-home-checkout",
-        "secrets-in-logs",
-      ]),
-    );
+    expect(ids).toEqual(["secrets-in-logs"]);
+    PROJECT_PITFALL_SEEDS.forEach((seed) => {
+      expect(JSON.stringify(seed)).not.toMatch(/daily-magic|agent-witch|~\//i);
+    });
   });
 
   it("every seed passes upsert validation and the length limits", () => {
@@ -58,12 +52,7 @@ describe("PROJECT_PITFALL_SEEDS", () => {
     )
       .map((seed) => seed.id)
       .sort();
-    expect(blocking).toEqual([
-      "arch-max-lines",
-      "dirty-home-checkout",
-      "health-lag",
-      "secrets-in-logs",
-    ]);
+    expect(blocking).toEqual(["secrets-in-logs"]);
   });
 
   it("migration 067 inserts the same seed text as the code constant", () => {

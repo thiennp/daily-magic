@@ -5,8 +5,8 @@ export const AWC_PROJECT_PITFALLS_COPY = {
   title: "Safety rules",
   hint: (deviceDisplayName: string) =>
     `The assistant avoids these traps while working. Turn them on, off, or edit them on ${deviceDisplayName}.`,
-  panelHint: (active: number, max: number) =>
-    `${active} of ${max} rules are on. The assistant avoids these traps while working.`,
+  panelHint: (active: number, total: number) =>
+    `${active} of ${total} rules are on. The assistant avoids these traps while working.`,
   panelHintNoHits: "No rule has been hit yet.",
   panelHintHasHits: "Some rules have been hit.",
   manageOnThisComputer: "Turn on, off, or edit on this computer",
@@ -34,7 +34,7 @@ export const AWC_PROJECT_PITFALLS_COPY = {
   notUpdatedYet: "not updated yet",
   updated: (date: string) => `updated ${date}`,
   availableMeta: "Available",
-  activeCount: (active: number, max: number) => `${active} of ${max} on`,
+  activeCount: (active: number, total: number) => `${active} of ${total} on`,
   severity: {
     block: "Important",
     warn: "Warning",

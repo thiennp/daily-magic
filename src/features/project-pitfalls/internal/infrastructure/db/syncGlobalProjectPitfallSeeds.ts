@@ -1,23 +1,17 @@
 import { PROJECT_PITFALL_SEEDS } from "@/features/project-pitfalls/internal/core/projectPitfallSeeds.constant";
+import { toProjectPitfallSqlRows } from "@/features/project-pitfalls/internal/core/toProjectPitfallSqlRows";
 import { getSql } from "@/lib/db";
 
 /**
- * Upserts the platform seed templates (project_id NULL) from code. Only seed
- * rows are touched; project overrides live in their own rows. updated_at only
- * moves when content changes, so sync clients see no churn.
+ * Upserts the platform seed templates (project_id NULL) from code, then
+ * retires (deletes) any other global seed row, so removed seeds never come
+ * back. Only platform-owned rows (project_id NULL, source 'seed') are touched;
+ * project rows and overrides live in their own rows. updated_at only moves
+ * when content changes, so sync clients see no churn. Idempotent.
  */
 export const syncGlobalProjectPitfallSeeds = async (): Promise<void> => {
-  const rows = PROJECT_PITFALL_SEEDS.map((seed) => ({
-    id: seed.id,
-    symptom: seed.symptom,
-    cause: seed.cause,
-    avoidance: seed.avoidance,
-    check_kind: seed.check.kind,
-    check_value: seed.check.value,
-    keywords: seed.keywords,
-    tags: seed.tags,
-    severity: seed.severity,
-  }));
+  const rows = toProjectPitfallSqlRows(PROJECT_PITFALL_SEEDS);
+  const seedIds = PROJECT_PITFALL_SEEDS.map((seed) => seed.id);
   const sql = getSql();
   await sql`
     INSERT INTO project_pitfalls (project_id, pitfall_id, symptom, cause,
@@ -39,5 +33,10 @@ export const syncGlobalProjectPitfallSeeds = async (): Promise<void> => {
       IS DISTINCT FROM (EXCLUDED.symptom, EXCLUDED.cause, EXCLUDED.avoidance,
       EXCLUDED.check_kind, EXCLUDED.check_value, EXCLUDED.keywords,
       EXCLUDED.tags, EXCLUDED.severity)
+  `;
+  await sql`
+    DELETE FROM project_pitfalls
+    WHERE project_id IS NULL AND source = 'seed'
+      AND NOT (pitfall_id = ANY(${seedIds}::text[]))
   `;
 };

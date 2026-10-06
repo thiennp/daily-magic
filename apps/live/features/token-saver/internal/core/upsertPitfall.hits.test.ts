@@ -23,7 +23,7 @@ const openTempRegistry = () => {
 const override = (
   patch: Partial<UpsertPitfallInput> = {},
 ): UpsertPitfallInput => ({
-  id: "health-lag",
+  id: "secrets-in-logs",
   projectId: "proj-1",
   symptom: "Override symptom",
   cause: "Override cause",
@@ -37,8 +37,8 @@ describe("upsertPitfall never rewrites counters (must-fix b)", () => {
   it("keeps hitCount + lastSeenAt across override creation and edits", () => {
     const registry = openTempRegistry();
     const seenAt = "2026-10-05T10:00:00.000Z";
-    registry.recordHit({ projectId: "proj-1", id: "health-lag" });
-    registry.recordHit({ projectId: "proj-1", id: "health-lag", nowIso: seenAt });
+    registry.recordHit({ projectId: "proj-1", id: "secrets-in-logs" });
+    registry.recordHit({ projectId: "proj-1", id: "secrets-in-logs", nowIso: seenAt });
 
     const created = registry.upsertPitfall(override());
     expect(created.ok && created.pitfall.hitCount).toBe(2);
@@ -47,12 +47,12 @@ describe("upsertPitfall never rewrites counters (must-fix b)", () => {
     const edited = registry.upsertPitfall(override({ avoidance: "Edited" }));
     expect(edited.ok && edited.pitfall.hitCount).toBe(2);
 
-    const read = registry.getPitfall({ projectId: "proj-1", id: "health-lag" });
+    const read = registry.getPitfall({ projectId: "proj-1", id: "secrets-in-logs" });
     expect(read?.avoidance).toBe("Edited");
     expect(read?.hitCount).toBe(2);
     expect(read?.lastSeenAt).toBe(seenAt);
 
-    const bumped = registry.recordHit({ projectId: "proj-1", id: "health-lag" });
+    const bumped = registry.recordHit({ projectId: "proj-1", id: "secrets-in-logs" });
     expect(bumped.ok && bumped.pitfall.hitCount).toBe(3);
     expect(bumped.ok && bumped.pitfall.source).toBe("project");
     registry.close();
@@ -63,11 +63,11 @@ describe("upsertPitfall never rewrites counters (must-fix b)", () => {
     tempDirs.push(tempDir);
     const dbPath = path.join(tempDir, "token-saver.db");
     const first = createPitfallRegistry({ dbPath });
-    first.recordHit({ projectId: "proj-1", id: "health-lag" });
+    first.recordHit({ projectId: "proj-1", id: "secrets-in-logs" });
     first.close();
 
     const second = createPitfallRegistry({ dbPath });
-    expect(second.getPitfall({ projectId: "proj-1", id: "health-lag" })?.hitCount).toBe(1);
+    expect(second.getPitfall({ projectId: "proj-1", id: "secrets-in-logs" })?.hitCount).toBe(1);
     second.close();
   });
 });
@@ -75,13 +75,13 @@ describe("upsertPitfall never rewrites counters (must-fix b)", () => {
 describe("id inputs are trimmed (must-fix c)", () => {
   it("getPitfall, recordHit and upsertPitfall all resolve the trimmed id", () => {
     const registry = openTempRegistry();
-    expect(registry.getPitfall({ id: "  health-lag \n" })?.id).toBe("health-lag");
+    expect(registry.getPitfall({ id: "  secrets-in-logs \n" })?.id).toBe("secrets-in-logs");
     expect(
-      registry.getPitfall({ projectId: "proj-1", id: "\thealth-lag " })?.id,
-    ).toBe("health-lag");
+      registry.getPitfall({ projectId: "proj-1", id: "\tsecrets-in-logs " })?.id,
+    ).toBe("secrets-in-logs");
 
-    const hit = registry.recordHit({ projectId: "proj-1", id: " health-lag  " });
-    expect(hit.ok && hit.pitfall.id).toBe("health-lag");
+    const hit = registry.recordHit({ projectId: "proj-1", id: " secrets-in-logs  " });
+    expect(hit.ok && hit.pitfall.id).toBe("secrets-in-logs");
 
     const upserted = registry.upsertPitfall(override({ id: "  my-pit  " }));
     expect(upserted.ok && upserted.pitfall.id).toBe("my-pit");

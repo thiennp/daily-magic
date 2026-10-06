@@ -8,7 +8,6 @@ import buildAwcProjectPitfallRows from "@/features/projects/pitfalls/buildAwcPro
 import useAwcProjectPitfalls from "@/features/projects/pitfalls/useAwcProjectPitfalls";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import withProjectEditOnMacTab from "@/features/projects/utils/withProjectEditOnMacTab";
-import { PROJECT_PITFALL_MAX_ACTIVE } from "@agent-witch/shared/pitfalls";
 
 interface AwcProjectPitfallsSectionProps {
   readonly projectId: string;
@@ -50,7 +49,7 @@ export default function AwcProjectPitfallsSection({
             ? AWC_PROJECT_PITFALLS_COPY.loading
             : AWC_PROJECT_PITFALLS_COPY.activeCount(
                 rows.length,
-                PROJECT_PITFALL_MAX_ACTIVE,
+                state.status === "ready" ? state.items.length : 0,
               )}
         </p>
         <AwcProjectEditOnMacActions

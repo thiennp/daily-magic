@@ -101,11 +101,11 @@ describe("matchPitfallsByKeywords", () => {
     const started = performance.now();
     const hits = registry.matchPitfalls({
       projectId: "proj-1",
-      text: "architecture land before tipping Arch with ci:architecture",
+      text: "never dump env secrets or a token in logs",
     });
     const elapsedMs = performance.now() - started;
 
-    expect(hits.some((row) => row.id === "arch-max-lines")).toBe(true);
+    expect(hits.some((row) => row.id === "secrets-in-logs")).toBe(true);
     expect(hits.length).toBeLessThanOrEqual(CHECK_CONTEXT_TIP_MAX_LINES);
     expect(elapsedMs).toBeLessThan(50);
 

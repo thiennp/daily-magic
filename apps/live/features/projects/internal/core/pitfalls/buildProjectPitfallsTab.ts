@@ -259,7 +259,7 @@ const buildProjectPitfallsTab = (input: {
 
   return `<section class="stack">
       <p class="lede">Pitfalls are known traps in this project. Each one says what goes wrong and how to avoid it.</p>
-      <p class="muted">${activeCount} of ${PROJECT_PITFALL_MAX_ACTIVE} active</p>
+      <p class="muted">${activeCount} of ${items.length} active</p>
       <div class="actions">${editing === null ? addControl : ""}${retiredToggle}</div>
       ${form}
       ${list}
