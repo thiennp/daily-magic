@@ -24,12 +24,12 @@ describe("/join page content", () => {
     const order = [
       '# Join "Demo Project" on AgentWitch',
       "## 1. Terms",
-      "Show your user the terms and get a clear yes before you continue.",
+      "Show your user the Terms (https://www.agentwitch.com/terms) and Privacy Policy (https://www.agentwitch.com/privacy) and get a clear yes before you continue. Joining accepts both.",
       "## 2. Find your bot type",
       "## Grok Bot {#grok-bot}",
       "## Other {#other}",
       "## 3. Owner approval",
-      "The project owner approves every assistant before it gets access. Never approve yourself. Tell your user you're waiting.",
+      "The project owner approves each assistant before it gets access, unless they turned on auto-approve for this invite. Never approve yourself. Until your status is active, tell your user you're waiting for approval.",
       "## 4. Next steps",
     ].map((text) => markdown.indexOf(text));
     expect(order.every((index) => index >= 0)).toBe(true);
@@ -37,6 +37,17 @@ describe("/join page content", () => {
     expect(markdown.startsWith('# Join "Demo Project" on AgentWitch')).toBe(
       true,
     );
+  });
+
+  it("puts the Terms and Privacy URLs inline in the terms intro, not as a separate list", () => {
+    const lines = markdown.split("\n");
+    const termsAt = lines.indexOf("## 1. Terms");
+    expect(lines[termsAt + 1]).toBe(
+      "Show your user the Terms (https://www.agentwitch.com/terms) and Privacy Policy (https://www.agentwitch.com/privacy) and get a clear yes before you continue. Joining accepts both.",
+    );
+    expect(lines[termsAt + 2]).toBe("");
+    expect(lines).not.toContain("https://www.agentwitch.com/terms");
+    expect(lines).not.toContain("https://www.agentwitch.com/privacy");
   });
 
   it("lists every type in the index, as its own section, and in JSON types[] (match order)", () => {
@@ -67,6 +78,10 @@ describe("/join page content", () => {
     );
     expect(page.project).toBe("Demo Project");
     expect(page.terms.url).toBe("https://www.agentwitch.com/terms");
+    expect(page.terms.privacyUrl).toBe("https://www.agentwitch.com/privacy");
+    expect(page.terms.rule).toBe(
+      "Show your user the Terms and Privacy Policy and get a clear yes before you continue. Joining accepts both.",
+    );
   });
 
   it("takes shared steps from the same builder as the full prompt (no second copy)", () => {

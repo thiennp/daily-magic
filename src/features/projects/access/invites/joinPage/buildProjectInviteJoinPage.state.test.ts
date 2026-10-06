@@ -20,7 +20,7 @@ describe("/join page: per-invite state and title", () => {
   it("shows this invite's auto-approve state only when known", () => {
     const on = buildProjectInviteJoinPage({ ...INPUT, autoApprove: true });
     expect(renderProjectInviteJoinPageMarkdown(on)).toContain(
-      "The project owner turned on auto-approve for this invite. Your assistant gets access as soon as it joins.",
+      "The project owner turned on auto-approve for this invite. You get access once you finish registering.",
     );
     const off = buildProjectInviteJoinPage({ ...INPUT, autoApprove: false });
     expect(off.approval.autoApprove).toBe(false);

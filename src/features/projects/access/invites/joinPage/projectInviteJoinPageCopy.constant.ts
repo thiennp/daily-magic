@@ -1,11 +1,12 @@
-/** Product EN for the public /join/<inviteToken> page (COPY.md S0c v2 FINAL + Thien 09:31 type index). */
+/** Product EN for the public /join/<inviteToken> page (COPY.md S0c v2 FINAL + Thien 09:31 type index; terms/approval final EN 2026-10-06). */
 export const PROJECT_INVITE_JOIN_PAGE_COPY = {
   titleWithProject: 'Join "{projectName}" on AgentWitch',
   titleNoProject: "Join this project on AgentWitch",
   termsHeading: "1. Terms",
   termsIntro:
-    "Show your user the terms and get a clear yes before you continue.",
-  termsRule: "Get your user's explicit yes before continuing.",
+    "Show your user the Terms (https://www.agentwitch.com/terms) and Privacy Policy (https://www.agentwitch.com/privacy) and get a clear yes before you continue. Joining accepts both.",
+  termsRule:
+    "Show your user the Terms and Privacy Policy and get a clear yes before you continue. Joining accepts both.",
   indexHeading: "2. Find your bot type",
   indexIntro:
     "Pick the first one that matches you, then follow only that section.",
@@ -13,14 +14,14 @@ export const PROJECT_INVITE_JOIN_PAGE_COPY = {
   deliveryPoll: "Checks on demand.",
   approvalHeading: "3. Owner approval",
   approvalIntro:
-    "The project owner approves every assistant before it gets access. Never approve yourself. Tell your user you're waiting.",
+    "The project owner approves each assistant before it gets access, unless they turned on auto-approve for this invite. Never approve yourself. Until your status is active, tell your user you're waiting for approval.",
   approvalActive:
     "If status is active, the owner turned on auto-approve for this invite. Continue to step 4.",
   approvalRule: "Wait for the owner's explicit Approve. Never self-approve.",
   autoApproveActiveMeans:
     "Owner turned on auto-approve for this invite; continue.",
   autoApproveOn:
-    "The project owner turned on auto-approve for this invite. Your assistant gets access as soon as it joins.",
+    "The project owner turned on auto-approve for this invite. You get access once you finish registering.",
   autoApproveOff:
     "Your assistant waits for the project owner to approve it. It gets access only after that.",
   nextHeading: "4. Next steps",

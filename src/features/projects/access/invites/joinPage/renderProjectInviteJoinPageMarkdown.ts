@@ -30,8 +30,6 @@ export const renderProjectInviteJoinPageMarkdown = (
     "",
     `## ${COPY.termsHeading}`,
     COPY.termsIntro,
-    page.terms.url,
-    page.terms.privacyUrl,
     "",
     `## ${COPY.indexHeading}`,
     COPY.indexIntro,
