@@ -81,6 +81,22 @@ export const ensureAgentAccessSchema = async (): Promise<void> => {
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
     `;
+    await sql`
+      ALTER TABLE agent_access_tokens
+      ADD COLUMN IF NOT EXISTS expires_at TIMESTAMPTZ
+    `;
+    await sql`
+      ALTER TABLE agent_access_tokens
+      ADD COLUMN IF NOT EXISTS revoked_at TIMESTAMPTZ
+    `;
+    await sql`
+      ALTER TABLE agent_access_tokens
+      ADD COLUMN IF NOT EXISTS refresh_token_hash TEXT
+    `;
+    await sql`
+      ALTER TABLE agent_access_tokens
+      ADD COLUMN IF NOT EXISTS refresh_expires_at TIMESTAMPTZ
+    `;
     schemaEnsureState.ensured = true;
   })();
 

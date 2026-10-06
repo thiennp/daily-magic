@@ -23,7 +23,9 @@ export const resolveAgentAccessActor = async (
   const rows = asRowArray(
     await sql`
       SELECT users.id, users.email, users.name, users.image, users.global_role,
-             agent_access_tokens.registration_method
+             agent_access_tokens.registration_method,
+             agent_access_tokens.expires_at,
+             agent_access_tokens.revoked_at
       FROM agent_access_tokens
       JOIN users ON users.id = agent_access_tokens.user_id
       WHERE agent_access_tokens.token_hash = ${tokenHash}
@@ -37,6 +39,21 @@ export const resolveAgentAccessActor = async (
     typeof row.email !== "string" ||
     typeof row.id !== "string"
   ) {
+    return null;
+  }
+
+  if (row.revoked_at !== null && row.revoked_at !== undefined) {
+    return null;
+  }
+
+  const expiresAt =
+    typeof row.expires_at === "string"
+      ? Date.parse(row.expires_at)
+      : row.expires_at instanceof Date
+        ? row.expires_at.getTime()
+        : null;
+  // NULL expires_at = non-expiring legacy token (untouched).
+  if (expiresAt !== null && !Number.isNaN(expiresAt) && expiresAt <= Date.now()) {
     return null;
   }
 
