@@ -55,7 +55,7 @@ describe("POST /api/agent-access/oauth/consent", () => {
 
     expect(response.status).toBe(303);
     expect(response.headers.get("location")).toBe(
-      "http://localhost/oauth/consent?pending=p-1",
+      "http://localhost:3000/oauth/consent?pending=p-1",
     );
   });
 });

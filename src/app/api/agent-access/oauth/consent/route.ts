@@ -1,6 +1,7 @@
 import { parseOauthConsentBody } from "@/app/api/agent-access/oauth/consent/parseOauthConsentBody";
 import { completeOauthConsent } from "@/lib/agentAccess/oauth/completeOauthConsent";
 import { isAllowedAppHttpOrigin } from "@/lib/app/isAllowedAppHttpOrigin";
+import { resolveAppBaseUrl } from "@/lib/app/resolveAppBaseUrl";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -17,7 +18,7 @@ export async function POST(request: Request): Promise<Response> {
       // Session expired: the consent page sends the browser to /login and back.
       const { pendingId } = await parseOauthConsentBody(request);
       return Response.redirect(
-        new URL(`/oauth/consent?pending=${encodeURIComponent(pendingId)}`, request.url),
+        new URL(`/oauth/consent?pending=${encodeURIComponent(pendingId)}`, resolveAppBaseUrl()),
         303,
       );
     }
@@ -38,7 +39,7 @@ export async function POST(request: Request): Promise<Response> {
       return Response.redirect(
         new URL(
           `/oauth/consent?pending=${encodeURIComponent(body.pendingId)}&error=${encodeURIComponent(outcome.code)}`,
-          request.url,
+          resolveAppBaseUrl(),
         ),
         303,
       );

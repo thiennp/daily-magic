@@ -61,7 +61,7 @@ describe("POST /api/agent-access/oauth/device/confirm", () => {
 
     expect(response.status).toBe(303);
     expect(response.headers.get("location")).toBe(
-      "http://localhost/device/verify?code=BCDF-GHJK",
+      "http://localhost:3000/device/verify?code=BCDF-GHJK",
     );
   });
 });

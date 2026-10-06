@@ -1,4 +1,5 @@
 import { createOauthAuthorizationPending } from "@/lib/agentAccess/oauth/createOauthAuthorizationPending";
+import { resolveAppBaseUrl } from "@/lib/app/resolveAppBaseUrl";
 import { auth } from "@/lib/auth/auth";
 
 export const dynamic = "force-dynamic";
@@ -61,9 +62,12 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   const session = await auth();
-  const consentUrl = new URL(pending.consentPath, url.origin);
+  // Public origin, never url.origin: behind Railway's proxy that is the
+  // internal host (e.g. https://<container>:8080).
+  const publicOrigin = resolveAppBaseUrl();
+  const consentUrl = new URL(pending.consentPath, publicOrigin);
   if (!session?.user?.id) {
-    const login = new URL("/login", url.origin);
+    const login = new URL("/login", publicOrigin);
     login.searchParams.set("callbackUrl", consentUrl.pathname + consentUrl.search);
     return Response.redirect(login.toString(), 302);
   }
