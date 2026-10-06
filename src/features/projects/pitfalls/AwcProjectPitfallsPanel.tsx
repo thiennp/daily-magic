@@ -57,8 +57,10 @@ export default function AwcProjectPitfallsPanel({
         <p className="text-sm text-gray-500 dark:text-gray-400">{C.loading}</p>
       ) : pitfalls.status === "hidden" ? (
         <p className={PITFALL_EMPTY_CLASS}>{C.unavailable}</p>
-      ) : rows.length === 0 ? (
+      ) : pitfalls.status === "ready" && pitfalls.items.length === 0 ? (
         <p className={PITFALL_EMPTY_CLASS}>{C.empty}</p>
+      ) : rows.length === 0 ? (
+        <p className={PITFALL_EMPTY_CLASS}>{C.allOff}</p>
       ) : (
         <>
           <AwcProjectPitfallsToolbar

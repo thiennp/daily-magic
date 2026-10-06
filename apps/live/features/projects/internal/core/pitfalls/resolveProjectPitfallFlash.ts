@@ -1,3 +1,5 @@
+import { PROJECT_PITFALL_MAX_ACTIVE } from "@agent-witch/shared/pitfalls";
+
 export type ProjectPitfallFlashCode =
   | "saved"
   | "retired"
@@ -28,7 +30,7 @@ const MESSAGES: Readonly<Record<ProjectPitfallFlashCode, ProjectPitfallFlash>> =
     },
     limit: {
       message: null,
-      error: "This project has 64 active pitfalls. Retire one, then try again.",
+      error: `This project already has ${PROJECT_PITFALL_MAX_ACTIVE} active pitfalls, the most allowed. Retire one, then try again.`,
     },
     missing: {
       message: null,

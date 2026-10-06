@@ -47,10 +47,12 @@ export default function AwcProjectPitfallsSection({
         <p className="text-xs text-gray-500 dark:text-gray-400">
           {state.status === "loading"
             ? AWC_PROJECT_PITFALLS_COPY.loading
-            : AWC_PROJECT_PITFALLS_COPY.activeCount(
-                rows.length,
-                state.status === "ready" ? state.items.length : 0,
-              )}
+            : state.status === "ready" && state.items.length > 0
+              ? AWC_PROJECT_PITFALLS_COPY.activeCount(
+                  rows.length,
+                  state.items.length,
+                )
+              : null}
         </p>
         <AwcProjectEditOnMacActions
           editCta={pitfallsEditCta}
@@ -61,7 +63,9 @@ export default function AwcProjectPitfallsSection({
       </div>
       {state.status === "ready" && rows.length === 0 ? (
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          {AWC_PROJECT_PITFALLS_COPY.empty}
+          {state.items.length === 0
+            ? AWC_PROJECT_PITFALLS_COPY.empty
+            : AWC_PROJECT_PITFALLS_COPY.allOff}
         </p>
       ) : null}
       {rows.length > 0 ? (

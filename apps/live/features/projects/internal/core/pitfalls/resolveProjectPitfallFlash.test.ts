@@ -9,7 +9,7 @@ describe("resolveProjectPitfallFlash", () => {
       error: null,
     });
     expect(resolveProjectPitfallFlash("limit")?.error).toContain(
-      "64 active pitfalls",
+      "already has 64 active pitfalls, the most allowed",
     );
     expect(resolveProjectPitfallFlash("toString")).toBeNull();
     expect(resolveProjectPitfallFlash(null)).toBeNull();

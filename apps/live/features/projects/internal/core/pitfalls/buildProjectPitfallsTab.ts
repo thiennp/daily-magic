@@ -236,15 +236,19 @@ const buildProjectPitfallsTab = (input: {
         });
 
   const addControl = atLimit
-    ? `<p class="muted">${PROJECT_PITFALL_MAX_ACTIVE} of ${PROJECT_PITFALL_MAX_ACTIVE} active. Retire one to add another.</p>`
+    ? `<p class="muted">Limit reached: ${PROJECT_PITFALL_MAX_ACTIVE} active pitfalls. Retire one to add another.</p>`
     : `<a class="btn btn-primary" href="${escapeHtml(tabHref(input.projectId, { ...retiredParam(input.showRetired), edit: PROJECT_PITFALL_NEW_EDIT_ID }))}">Add pitfall</a>`;
   const retiredToggle = input.showRetired
     ? `<a class="btn btn-secondary" href="${escapeHtml(tabHref(input.projectId, {}))}">Hide retired</a>`
     : `<a class="btn btn-secondary" href="${escapeHtml(tabHref(input.projectId, { retired: "1" }))}">Show retired</a>`;
 
+  const emptyListMessage =
+    items.length > 0
+      ? "No active pitfalls. Turn on Show retired to see retired ones."
+      : "No pitfalls for this project. Add one when you spot a mistake that keeps coming back.";
   const list =
     visible.length === 0
-      ? `<p class="empty">No pitfalls for this project. Add one when you spot a mistake that keeps coming back.</p>`
+      ? `<p class="empty">${emptyListMessage}</p>`
       : `<ul class="harness-installed-set-list">${visible
           .map((item) =>
             buildPitfallRow({
@@ -259,7 +263,7 @@ const buildProjectPitfallsTab = (input: {
 
   return `<section class="stack">
       <p class="lede">Pitfalls are known traps in this project. Each one says what goes wrong and how to avoid it.</p>
-      <p class="muted">${activeCount} of ${items.length} active</p>
+      ${items.length === 0 ? "" : `<p class="muted">${activeCount} of ${items.length} active</p>`}
       <div class="actions">${editing === null ? addControl : ""}${retiredToggle}</div>
       ${form}
       ${list}

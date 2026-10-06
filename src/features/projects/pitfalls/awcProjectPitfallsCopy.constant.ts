@@ -6,7 +6,7 @@ export const AWC_PROJECT_PITFALLS_COPY = {
   hint: (deviceDisplayName: string) =>
     `The assistant avoids these traps while working. Turn them on, off, or edit them on ${deviceDisplayName}.`,
   panelHint: (active: number, total: number) =>
-    `${active} of ${total} rules are on. The assistant avoids these traps while working.`,
+    `${active} of ${total} ${total === 1 ? "rule" : "rules"} on. The assistant avoids these traps while working.`,
   panelHintNoHits: "No rule has been hit yet.",
   panelHintHasHits: "Some rules have been hit.",
   manageOnThisComputer: "Turn on, off, or edit on this computer",
@@ -14,6 +14,7 @@ export const AWC_PROJECT_PITFALLS_COPY = {
   manageOnMac: "Turn on, off, or edit on this computer",
   loading: "Loading…",
   empty: "No rules for this project.",
+  allOff: "All rules for this project are off.",
   unavailable: "Safety rules are unavailable for this project right now.",
   limitReached: `Limit reached: ${PROJECT_PITFALL_MAX_ACTIVE} active pitfalls. Retire one to add another.`,
   noMatch: "No rules match.",

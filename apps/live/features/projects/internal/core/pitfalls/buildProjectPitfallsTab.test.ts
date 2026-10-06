@@ -99,19 +99,33 @@ describe("buildProjectPitfallsTab", () => {
       list: { ok: true, items: full, syncedAt: null },
       editId: "new",
     });
-    expect(html).toContain("64 of 64 active. Retire one to add another.");
+    expect(html).toContain("Limit reached: 64 active pitfalls. Retire one to add another.");
     expect(html).not.toContain(">Add pitfall</a>");
     expect(html).not.toContain(">Save pitfall</button>");
   });
 
   it("shows plain empty and error states", () => {
-    expect(render({ list: { ok: true, items: [], syncedAt: null } })).toContain(
+    const empty = render({ list: { ok: true, items: [], syncedAt: null } });
+    expect(empty).toContain(
       "No pitfalls for this project.",
     );
+    expect(empty).not.toContain(" of ");
+    expect(empty).not.toContain(" active</p>");
     expect(render({ list: { ok: false, reason: "unavailable" } })).toContain(
       "Could not load pitfalls.",
     );
     expect(render({ list: null })).toContain("Could not load pitfalls.");
+  });
+
+  it("when only retired are hidden, hints to Show retired", () => {
+    const html = render({
+      list: { ok: true, items: [retired], syncedAt: null },
+      showRetired: false,
+    });
+    expect(html).toContain(
+      "No active pitfalls. Turn on Show retired to see retired ones.",
+    );
+    expect(html).not.toContain("Wrong Node version");
   });
 
   it("avoids jargon and weak words in visible copy", () => {
