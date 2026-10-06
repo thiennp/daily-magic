@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { resolveAgentLinkedOwnerUserId } from "@/lib/agentAccess/resolveAgentLinkedOwnerUserId";
@@ -41,38 +44,7 @@ vi.mock("@/lib/projects/acl/writeProjectAccessAudit", () => ({
 
 const approveMock = vi.mocked(approveProjectAccessRequest);
 
-const wrapStub = (autoApprove: boolean) => {
-  stubRedeemAutoApproveSql(sqlMock, autoApprove);
-  const inner = sqlMock.getMockImplementation();
-  sqlMock.mockImplementation(
-    async (strings: TemplateStringsArray, ...values: unknown[]) => {
-      const q = String(strings);
-      if (q.includes("INSERT INTO project_invite_auto_approve_events")) {
-        eventRows.push({
-          id: String(values[0]),
-          project_id: String(values[1]),
-          invite_id: String(values[2]),
-          invite_label: String(values[3]),
-          event: String(values[4]),
-          actor_user_id: values[5] ?? null,
-          membership_id: values[6] ?? null,
-          member_display_name: values[7] ?? null,
-          created_at: "2026-10-06T12:00:00.000Z",
-        });
-        return [];
-      }
-      if (q.includes("FROM project_invite_auto_approve_events")) {
-        return eventRows.filter((r) => r.project_id === values[0]);
-      }
-      if (typeof inner === "function") {
-        return inner(strings, ...values);
-      }
-      return [];
-    },
-  );
-};
-
-describe("redeem invite auto-approve writes member_auto_approved", () => {
+describe("test-flag / manual Approve skip auto-approve events", () => {
   beforeEach(() => {
     sqlMock.mockReset();
     eventRows.length = 0;
@@ -84,8 +56,26 @@ describe("redeem invite auto-approve writes member_auto_approved", () => {
     delete process.env.AWC_TEST_AUTO_APPROVE_JOINS;
   });
 
-  it("invite auto-approve redeem writes member_auto_approved with label + member", async () => {
-    wrapStub(true);
+  it("test-flag-only activation does not write member_auto_approved", async () => {
+    process.env.AWC_TEST_AUTO_APPROVE_JOINS = "1";
+    stubRedeemAutoApproveSql(sqlMock, false);
+    const inner = sqlMock.getMockImplementation();
+    sqlMock.mockImplementation(
+      async (strings: TemplateStringsArray, ...values: unknown[]) => {
+        const q = String(strings);
+        if (q.includes("INSERT INTO project_invite_auto_approve_events")) {
+          eventRows.push({ project_id: String(values[1]) });
+          return [];
+        }
+        if (q.includes("FROM project_invite_auto_approve_events")) {
+          return eventRows.filter((r) => r.project_id === values[0]);
+        }
+        if (typeof inner === "function") {
+          return inner(strings, ...values);
+        }
+        return [];
+      },
+    );
     approveMock.mockResolvedValue(redeemAutoApproveApprovedPayload);
     const result = await redeemProjectInvite({
       token: "a".repeat(22),
@@ -95,11 +85,19 @@ describe("redeem invite auto-approve writes member_auto_approved", () => {
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.status).toBe("active");
-    const events = await listProjectInviteAutoApproveEvents("proj-1");
-    expect(events).toHaveLength(1);
-    expect(events[0]?.event).toBe("member_auto_approved");
-    expect(events[0]?.inviteLabel).toBe("inv-1".slice(0, 8));
-    expect(events[0]?.membershipId).toBe("mem-1");
-    expect(events[0]?.memberDisplayName).toBe("Soft Vale");
+    expect(await listProjectInviteAutoApproveEvents("proj-1")).toEqual([]);
+  });
+
+  it("manual Approve path does not call the event writer", () => {
+    const approveSrc = readFileSync(
+      join(process.cwd(), "src/lib/projects/acl/approveProjectAccessRequest.ts"),
+      "utf8",
+    );
+    const insertSrc = readFileSync(
+      join(process.cwd(), "src/lib/projects/acl/insertApprovedMembership.ts"),
+      "utf8",
+    );
+    expect(approveSrc).not.toContain("recordProjectInviteAutoApproveEvent");
+    expect(insertSrc).not.toContain("recordProjectInviteAutoApproveEvent");
   });
 });
