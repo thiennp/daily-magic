@@ -24,8 +24,9 @@ describe("fetchProjectComputerHistoryCloudState", () => {
       projectId: "p1",
     });
     expect(read).toEqual({ kind: "known", state: "off" });
-    expect(String(fetchMock.mock.calls[0]![0])).toBe(
+    expect(fetchMock).toHaveBeenCalledWith(
       "https://example.test/api/agent-witch/projects/p1/computer-history",
+      expect.objectContaining({ method: "GET" }),
     );
   });
 
