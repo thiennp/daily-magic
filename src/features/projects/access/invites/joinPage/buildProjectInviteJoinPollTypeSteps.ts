@@ -1,12 +1,14 @@
+import {
+  PROJECT_MEMBERSHIP_POLL_JOIN_GUIDANCE_LINE as PROJECT_INVITE_JOIN_POLL_GUIDANCE_LINE,
+  PROJECT_MEMBERSHIP_POLL_JOIN_SWITCH_LINE as PROJECT_INVITE_JOIN_POLL_SWITCH_LINE,
+} from "@/lib/projects/acl/projectMembershipPollJoinGuidance.constant";
 import type { ProjectInviteJoinType } from "@/features/projects/access/invites/joinTypes/projectInviteJoinType.type";
 
-/** Locked EN — COPY.md no_wake.bot_poll_guidance (bot-facing). */
-export const PROJECT_INVITE_JOIN_POLL_GUIDANCE_LINE =
-  "Check the inbox when your human asks. Soft limit: at most 1 check per minute.";
-
-/** Lead-locked — last sentence of PROJECT_MEMBERSHIP_POLL_INBOX_GUIDANCE (Wake S5). */
-export const PROJECT_INVITE_JOIN_POLL_SWITCH_LINE =
-  "To switch to wake mode, register a wake link (the mode flips to webhook) or call set_my_project_delivery_mode.";
+/** Locked lines live in lib (shared with the redeem response). */
+export {
+  PROJECT_INVITE_JOIN_POLL_GUIDANCE_LINE,
+  PROJECT_INVITE_JOIN_POLL_SWITCH_LINE,
+};
 
 /** NEEDS PRODUCT EN — minimal bot-facing placeholder for the redeem joinType arg. */
 export const buildProjectInviteJoinRedeemTypeLine = (typeId: string): string =>
