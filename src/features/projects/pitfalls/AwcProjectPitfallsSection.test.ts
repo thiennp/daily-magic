@@ -52,5 +52,7 @@ describe("AwcProjectPitfallsSection wiring", () => {
     expect(copySource).toContain("How to do it:");
     expect(copySource).toContain("Turn on, off, or edit on this computer");
     expect(copySource).toContain("No rules match.");
+    expect(copySource).toContain("Limit reached:");
+    expect(copySource).toContain("PROJECT_PITFALL_MAX_ACTIVE");
   });
 });

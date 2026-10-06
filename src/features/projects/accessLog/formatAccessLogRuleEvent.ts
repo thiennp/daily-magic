@@ -8,7 +8,7 @@ export const formatAccessLogRuleEvent = (
 ): AccessLogRendered => {
   const title = event.detail.label?.trim() ?? "";
   const dropped = event.type === "rule.dropped";
-  if (title.length === 0) {
+  if (title.length === 0 || title.includes("@")) {
     return {
       line: dropped ? C.ruleDroppedNoTitle : C.ruleRestoredNoTitle,
       detail: null,

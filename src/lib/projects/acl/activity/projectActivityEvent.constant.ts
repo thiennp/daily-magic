@@ -33,13 +33,18 @@ export const PROJECT_ACTIVITY_ACTOR_KINDS = ["owner", "member", "system"] as con
 export type ProjectActivityActorKind =
   (typeof PROJECT_ACTIVITY_ACTOR_KINDS)[number];
 
-export const PROJECT_ACTIVITY_CATEGORIES = ["access", "wake"] as const;
+export const PROJECT_ACTIVITY_CATEGORIES = ["access", "wake", "safety"] as const;
 
 export type ProjectActivityCategory =
   (typeof PROJECT_ACTIVITY_CATEGORIES)[number];
 
 export const PROJECT_ACTIVITY_WAKE_TYPES: readonly ProjectActivityEventType[] = [
   "member.delivery_mode_changed",
+];
+
+export const PROJECT_ACTIVITY_SAFETY_TYPES: readonly ProjectActivityEventType[] = [
+  "rule.dropped",
+  "rule.restored",
 ];
 
 /** How a join was approved. Only "owner" ever produces request.approved. */
@@ -67,8 +72,11 @@ export const isProjectActivityEventType = (
 
 export const projectActivityCategoryOf = (
   type: ProjectActivityEventType,
-): ProjectActivityCategory =>
-  PROJECT_ACTIVITY_WAKE_TYPES.includes(type) ? "wake" : "access";
+): ProjectActivityCategory => {
+  if (PROJECT_ACTIVITY_WAKE_TYPES.includes(type)) return "wake";
+  if (PROJECT_ACTIVITY_SAFETY_TYPES.includes(type)) return "safety";
+  return "access";
+};
 
 export const projectActivityTypesForCategory = (
   category: ProjectActivityCategory,

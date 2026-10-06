@@ -36,7 +36,7 @@ const clampLimit = (raw: unknown): number => {
 const blank = (value: string | null | undefined): boolean =>
   value === null || value === undefined || value.trim().length === 0;
 
-/** limit 1–100 (default 50), opaque cursor, category access|wake, since ISO. */
+/** limit 1–100 (default 50), opaque cursor, category access|wake|safety, since ISO. */
 export const parseProjectActivityQuery = (
   input: ProjectActivityQueryInput,
 ):

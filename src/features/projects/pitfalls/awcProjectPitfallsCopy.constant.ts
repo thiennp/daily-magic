@@ -1,3 +1,5 @@
+import { PROJECT_PITFALL_MAX_ACTIVE } from "@agent-witch/shared/pitfalls";
+
 /** Safety rules tab — Product EN (artifact ARTIFACT-STRINGS Center · Safety rules). */
 export const AWC_PROJECT_PITFALLS_COPY = {
   title: "Safety rules",
@@ -13,6 +15,7 @@ export const AWC_PROJECT_PITFALLS_COPY = {
   loading: "Loading…",
   empty: "No rules for this project.",
   unavailable: "Safety rules are unavailable for this project right now.",
+  limitReached: `Limit reached: ${PROJECT_PITFALL_MAX_ACTIVE} active pitfalls. Retire one to add another.`,
   noMatch: "No rules match.",
   filterGroupLabel: "Filter rules",
   filterAll: "All",

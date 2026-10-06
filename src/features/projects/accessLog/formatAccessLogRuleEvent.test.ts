@@ -9,7 +9,7 @@ const event = (
 ): ProjectActivityLogEvent => ({
   id: "e1",
   type,
-  category: "access",
+  category: "safety",
   at: "2026-10-06T13:00:00.000Z",
   actor: { kind: "owner", userId: "u1", displayName: null },
   target: null,
@@ -17,22 +17,32 @@ const event = (
 });
 
 describe("formatAccessLogEvent rule.*", () => {
-  it("names the Safety rule by its title", () => {
+  it("names the safety rule by its title (lowercase noun, trailing period)", () => {
     expect(
       formatAccessLogEvent(event("rule.dropped", { ruleId: "a", label: "Secrets in logs" })),
-    ).toEqual({ line: 'You dropped the Safety rule "Secrets in logs"', detail: null });
+    ).toEqual({
+      line: 'You dropped the safety rule "Secrets in logs".',
+      detail: null,
+    });
     expect(
       formatAccessLogEvent(event("rule.restored", { ruleId: "a", label: "Secrets in logs" }))
         ?.line,
-    ).toBe('You restored the Safety rule "Secrets in logs"');
+    ).toBe('You restored the safety rule "Secrets in logs".');
   });
 
-  it("falls back to a title-less line when the label was not stored", () => {
+  it("falls back when the label is missing or looks like an email", () => {
     expect(formatAccessLogEvent(event("rule.dropped", { ruleId: "a" }))?.line).toBe(
-      "You dropped a Safety rule",
+      "You dropped a safety rule.",
     );
     expect(formatAccessLogEvent(event("rule.restored", {}))?.line).toBe(
-      "You restored a Safety rule",
+      "You restored a safety rule.",
     );
+    expect(
+      formatAccessLogEvent(event("rule.dropped", { ruleId: "a", label: "bot@example.com" }))
+        ?.line,
+    ).toBe("You dropped a safety rule.");
+    expect(
+      formatAccessLogEvent(event("rule.restored", { label: "x@y" }))?.line,
+    ).toBe("You restored a safety rule.");
   });
 });

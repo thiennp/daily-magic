@@ -7,6 +7,7 @@ const CHIPS: readonly { readonly id: AccessLogCategoryFilter; readonly label: st
   { id: "all", label: C.filterAll },
   { id: "access", label: C.filterAccess },
   { id: "wake", label: C.filterWake },
+  { id: "safety", label: C.filterSafety },
 ];
 
 const CHIP =
