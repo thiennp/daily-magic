@@ -39,7 +39,7 @@ export const HOME_MARKETING_POPULAR_PRESET_DIALOG_COPY = {
 
 export const HOME_MARKETING_FEATURES_COPY = {
   eyebrow: "What it does",
-  title: "What Agent Witch does",
+  title: `What ${AGENT_WITCH_PRODUCT_NAME} does`,
   description: "Stop explaining the same job to your AI again and again.",
   footerPrefix: "Ready to start?",
   footerLink: "Create free account",
@@ -74,7 +74,7 @@ export const HOME_MARKETING_STEPS_COPY = {
 
 export const HOME_MARKETING_SECURITY_COPY = {
   title: "Your files and secrets stay on your computer.",
-  body: "Built for everyday company work, with the assistants you already have. Agent Witch Local runs on your computer. Files, tokens and run history are not uploaded.",
+  body: `Built for everyday company work, with the assistants you already have. ${AGENT_WITCH_PRODUCT_NAME} Local runs on your computer. Files, tokens and run history are not uploaded.`,
 } as const;
 
 export const HOME_MARKETING_CTA_BAND_COPY = {

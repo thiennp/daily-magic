@@ -1,20 +1,12 @@
 "use client";
 
-import Link from "next/link";
-
-import AppIcon from "@/components/ui/icon/AppIcon";
-import {
-  APP_SURFACE_CTA_PRIMARY_LG_CLASS,
-  APP_SURFACE_CTA_SECONDARY_CLASS,
-} from "@/components/surfaces/appSurfaceStyles.constant";
-import { buildNavConsolidationNewTaskHref } from "@/lib/shell/buildNavConsolidationNewTaskHref";
+import { APP_SURFACE_CTA_PRIMARY_LG_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectThisMacButton from "@/features/home/ConnectThisMacButton";
 import HomeMacSettingsLink from "@/features/home/HomeMacSettingsLink";
 import HomeMacStatusBanner from "@/features/home/HomeMacStatusBanner";
 import useShouldShowConnectThisMac from "@/features/home/hooks/useShouldShowConnectThisMac";
 import HomeRunningJobsPanel from "@/features/home/HomeRunningJobsPanel";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
-import { BoltIcon } from "@/icons";
 
 interface HomeDashboardHeroProps {
   readonly user: {
@@ -29,7 +21,7 @@ interface HomeDashboardHeroProps {
 
 /**
  * Post-greeting actions + status (design keeps title in HomePageHead).
- * Preserves Connect this computer, New task, settings link, running jobs.
+ * Preserves Connect this computer, settings link, running jobs.
  */
 export default function HomeDashboardHero({
   installCommand,
@@ -52,19 +44,6 @@ export default function HomeDashboardHero({
             className={APP_SURFACE_CTA_PRIMARY_LG_CLASS}
           />
         ) : null}
-        <Link
-          href={buildNavConsolidationNewTaskHref()}
-          className={
-            shouldShowConnectThisMac
-              ? APP_SURFACE_CTA_SECONDARY_CLASS
-              : `${APP_SURFACE_CTA_PRIMARY_LG_CLASS} gap-2`
-          }
-        >
-          {shouldShowConnectThisMac ? null : (
-            <AppIcon icon={BoltIcon} size="lg" />
-          )}
-          New task
-        </Link>
         <HomeMacSettingsLink />
       </div>
       <HomeRunningJobsPanel />
