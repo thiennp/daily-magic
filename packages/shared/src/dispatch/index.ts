@@ -21,3 +21,24 @@ export {
   resolveWriterApiMissingCliFallbackFromWriterExecutionOutput,
   type WriterApiMissingCliFallbackHonesty,
 } from "./resolveWriterApiMissingCliFallbackFromOutput";
+export {
+  LocalCodingToolRefusalCode,
+  type LocalCodingToolRefusalCodeValue,
+} from "./localCodingToolRefusal.constant";
+export { LOCAL_CODING_TOOL_SAFETY_COPY } from "./localCodingToolSafetyCopy.constant";
+export {
+  formatLocalCodingToolRefusal,
+  formatLocalCodingToolSafetyCopy,
+} from "./formatLocalCodingToolRefusal";
+export {
+  OUTBOUND_PRIVATE_KEY_REDACTED,
+  OUTBOUND_SECRET_REDACTED,
+  OUTBOUND_SECRET_RULES,
+  type OutboundSecretRule,
+} from "./outboundSecretPatterns.constant";
+export {
+  hasResidualOutboundSecret,
+  scrubOutboundSecrets,
+  toOutboundRunText,
+  type ScrubOutboundSecretsResult,
+} from "./scrubOutboundSecrets";

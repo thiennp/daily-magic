@@ -1,5 +1,6 @@
 import { AGENT_WITCH_PAIRING_TOKEN_HEADER } from "../agentWitchDeviceAuth.constant";
 import type { AgentWitchCloudApiConfig } from "../agentWitchCloudApi";
+import redactTextForProjectKnowledge from "./redactTextForProjectKnowledge";
 
 const syncProjectKnowledgeCandidateToCloud = async (
   config: AgentWitchCloudApiConfig,
@@ -20,7 +21,8 @@ const syncProjectKnowledgeCandidateToCloud = async (
         },
         body: JSON.stringify({
           sourceRunId: input.sourceRunId,
-          lesson: input.lesson,
+          // S0-8: never post a secret-shaped lesson to the cloud.
+          lesson: redactTextForProjectKnowledge(input.lesson),
         }),
         signal: AbortSignal.timeout(15_000),
       },
