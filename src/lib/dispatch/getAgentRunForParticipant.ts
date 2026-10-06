@@ -3,8 +3,9 @@ import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import { authorizeProjectPageActor } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 
 /**
- * Detail read: requester/executor, or any project page actor (owner |
+ * Detail READ: requester/executor, or any project page actor (owner |
  * member | viewer) when the run is bound to a project.
+ * DELETE / terminal subscribe use getAgentRunForStrictParticipant instead.
  */
 export async function getAgentRunForParticipant(
   runId: string,

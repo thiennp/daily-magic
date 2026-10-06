@@ -55,7 +55,7 @@ export default function AwcProjectAccessMemberViewerPanel({
         <p className="text-xs text-gray-500">{humanCopy.viewerConnectHint}</p>
       ) : null}
 
-      <ProjectSkillsSection projectId={projectId} />
+      <ProjectSkillsSection projectId={projectId} canEdit={false} />
     </section>
   );
 }

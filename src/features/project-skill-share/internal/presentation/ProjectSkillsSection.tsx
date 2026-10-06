@@ -14,11 +14,14 @@ import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPag
 
 interface ProjectSkillsSectionProps {
   readonly projectId: string;
+  /** Owner-only mutate; member/viewer get disabled controls + Product EN reasons. */
+  readonly canEdit: boolean;
 }
 
-/** Project Access → Skills (owner + active members). Hidden when the API says forbidden. */
+/** Resources Shared skills — owner mutates; others read published with disabled CTAs. */
 export default function ProjectSkillsSection({
   projectId,
+  canEdit,
 }: ProjectSkillsSectionProps) {
   const copy = PROJECT_SKILLS_COPY;
   const skills = useProjectSkills(projectId);
@@ -42,7 +45,9 @@ export default function ProjectSkillsSection({
         <p className={PROJECT_SKILLS_HINT_CLASS}>{copy.hint}</p>
       </header>
       {skills.isLoading ? (
-        <p className={`text-xs ${PROJECT_PAGE_METADATA_TEXT_CLASS}`}>{copy.loading}</p>
+        <p className={`text-xs ${PROJECT_PAGE_METADATA_TEXT_CLASS}`}>
+          {copy.loading}
+        </p>
       ) : null}
       {!skills.isLoading && skills.skills.length === 0 ? (
         <p className="text-xs text-gray-500">{copy.empty}</p>
@@ -53,12 +58,17 @@ export default function ProjectSkillsSection({
             key={skill.skillId}
             skill={skill}
             busy={skills.busy}
+            canEdit={canEdit}
             onRevoke={(skillId) => void skills.revoke(skillId)}
             onPublishDraft={(skillId) => void skills.publish({ skillId })}
           />
         ))}
       </ul>
-      <ProjectSkillPublishForm busy={skills.busy} onSubmit={skills.publish} />
+      <ProjectSkillPublishForm
+        busy={skills.busy}
+        canEdit={canEdit}
+        onSubmit={skills.publish}
+      />
       {skills.message ? (
         <p role="status" className="text-xs text-gray-600 dark:text-gray-300">
           {skills.message}

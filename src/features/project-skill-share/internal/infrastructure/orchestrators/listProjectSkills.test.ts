@@ -48,13 +48,17 @@ describe("listProjectSkills", () => {
     });
   });
 
-  it("owner sees all drafts and can revoke", async () => {
+  it("owner sees all drafts (incl. member-created) and can revoke", async () => {
     vi.mocked(resolveProjectSkillActorRole).mockResolvedValue("owner");
     const result = await listProjectSkills({
       actorUserId: "o",
       args: { projectId: "proj-1" },
     });
-    expect(result.ok && result.skills).toHaveLength(3);
+    expect(result.ok && result.skills.map((s) => s.skillId)).toEqual([
+      "pub",
+      "mine",
+      "theirs",
+    ]);
     expect(result.ok && result.skills.every((s) => s.canRevoke)).toBe(true);
   });
 

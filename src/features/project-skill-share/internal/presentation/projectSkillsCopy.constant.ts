@@ -1,6 +1,6 @@
 export const PROJECT_SKILLS_COPY = {
   title: "Skills",
-  hint: "Skills shared with this project. Members and viewers see published skills; drafts stay with you and the owner. Text up to 64KB, last 20 versions kept.",
+  hint: "Skills shared with this project. Members and viewers see published skills; drafts stay with the owner. Text up to 64KB, last 20 versions kept.",
   loading: "Loading skills…",
   empty: "No skills shared yet.",
   publishHeading: "Share a skill",
@@ -23,4 +23,9 @@ export const PROJECT_SKILLS_COPY = {
   published: "Skill published.",
   draftSaved: "Draft saved.",
   revoked: "Skill revoked.",
+  /** Product Shared visibility — exact EN (same as Library disabled.*). */
+  disabledAdd: "Only the project owner can add items.",
+  disabledEdit: "Only the project owner can edit this.",
+  disabledPublish: "Only the project owner can publish.",
+  disabledDelete: "Only the project owner can delete this.",
 } as const;

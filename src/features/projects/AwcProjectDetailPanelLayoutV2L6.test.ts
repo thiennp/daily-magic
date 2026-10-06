@@ -75,10 +75,9 @@ describe("project layout v2 L6 Reports + Library", () => {
     }
   });
 
-  it("keeps Resources Shared skills mounted (Resources drop deferred, Q11)", () => {
+  it("keeps Resources Shared skills mounted; mutate owner-only", () => {
     const resources = read(`${P}/resources/AwcProjectResourcesPanel.tsx`);
-    expect(resources).toContain(
-      "<ProjectSkillsSection projectId={project.id} />",
-    );
+    expect(resources).toContain("ProjectSkillsSection");
+    expect(resources).toContain('canEdit={pageActorRole === "owner"}');
   });
 });

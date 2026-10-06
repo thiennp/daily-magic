@@ -1,16 +1,15 @@
 "use client";
 
 import type { ProjectSkillView } from "@/features/project-skill-share/internal/core/projectSkill.type";
+import ProjectSkillRowActions from "@/features/project-skill-share/internal/presentation/ProjectSkillRowActions";
 import { PROJECT_SKILLS_COPY } from "@/features/project-skill-share/internal/presentation/projectSkillsCopy.constant";
-import {
-  PROJECT_SKILLS_BADGE_CLASS,
-  PROJECT_SKILLS_CTA,
-} from "@/features/project-skill-share/internal/presentation/projectSkillsSection.constant";
+import { PROJECT_SKILLS_BADGE_CLASS } from "@/features/project-skill-share/internal/presentation/projectSkillsSection.constant";
 import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPageMetadataText.constant";
 
 interface ProjectSkillRowProps {
   readonly skill: ProjectSkillView;
   readonly busy: boolean;
+  readonly canEdit: boolean;
   readonly onRevoke: (skillId: string) => void;
   readonly onPublishDraft: (skillId: string) => void;
 }
@@ -18,13 +17,14 @@ interface ProjectSkillRowProps {
 export default function ProjectSkillRow({
   skill,
   busy,
+  canEdit,
   onRevoke,
   onPublishDraft,
 }: ProjectSkillRowProps) {
   const copy = PROJECT_SKILLS_COPY;
   const shownVersion = skill.publishedVersion ?? skill.latestVersion;
-  const hasPendingDraft =
-    skill.isPublisher && skill.latestVersion !== skill.publishedVersion;
+  /** Owner (and publisher) can publish any pending draft — not publisher-only. */
+  const hasPendingDraft = skill.latestVersion !== skill.publishedVersion;
 
   return (
     <li
@@ -50,30 +50,20 @@ export default function ProjectSkillRow({
             {skill.description}
           </span>
         ) : null}
-        <span className={`block text-[11px] ${PROJECT_PAGE_METADATA_TEXT_CLASS}`}>{skill.skillId}</span>
+        <span
+          className={`block text-[11px] ${PROJECT_PAGE_METADATA_TEXT_CLASS}`}
+        >
+          {skill.skillId}
+        </span>
       </span>
-      <span className="flex flex-wrap gap-2">
-        {hasPendingDraft ? (
-          <button
-            type="button"
-            disabled={busy}
-            className={PROJECT_SKILLS_CTA.secondary}
-            onClick={() => onPublishDraft(skill.skillId)}
-          >
-            {copy.publishDraft}
-          </button>
-        ) : null}
-        {skill.canRevoke ? (
-          <button
-            type="button"
-            disabled={busy}
-            className={PROJECT_SKILLS_CTA.danger}
-            onClick={() => onRevoke(skill.skillId)}
-          >
-            {busy ? (skill.state === "draft" ? copy.discarding : copy.revoking) : skill.state === "draft" ? copy.discardDraft : copy.revoke}
-          </button>
-        ) : null}
-      </span>
+      <ProjectSkillRowActions
+        skill={skill}
+        busy={busy}
+        canEdit={canEdit}
+        hasPendingDraft={hasPendingDraft}
+        onRevoke={onRevoke}
+        onPublishDraft={onPublishDraft}
+      />
     </li>
   );
 }

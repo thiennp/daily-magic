@@ -70,7 +70,7 @@ export default function AwcProjectAccessOwnerPanel({
       ) : null}
 
       {!access.isLoading ? (
-        <ProjectSkillsSection projectId={projectId} />
+        <ProjectSkillsSection projectId={projectId} canEdit />
       ) : null}
 
       {access.message ? (

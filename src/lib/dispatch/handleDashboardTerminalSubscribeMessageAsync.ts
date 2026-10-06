@@ -9,7 +9,7 @@ import {
   buildWriterSessionTerminalSubscriptionKey,
   subscribeDashboardTerminal,
 } from "@/lib/dispatch/dashboardTerminalSubscriptionRegistry";
-import { getAgentRunForParticipant } from "@/lib/dispatch/getAgentRunForParticipant";
+import { getAgentRunForStrictParticipant } from "@/lib/dispatch/getAgentRunForStrictParticipant";
 import { getWriterSession } from "@/lib/dispatch/writerSessionRegistry";
 
 export const handleDashboardTerminalSubscribeMessageAsync = async (
@@ -30,7 +30,7 @@ export const handleDashboardTerminalSubscribeMessageAsync = async (
     typeof payload.writerSessionId === "string" ? payload.writerSessionId : "";
 
   if (runId.length > 0) {
-    const run = await getAgentRunForParticipant(runId, sender.userId);
+    const run = await getAgentRunForStrictParticipant(runId, sender.userId);
     if (run === null) {
       return buildDispatchError(
         "Agent run is not available for this dashboard client.",

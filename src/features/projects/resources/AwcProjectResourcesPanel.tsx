@@ -44,7 +44,10 @@ export default function AwcProjectResourcesPanel({
           isActiveMember={isActiveMember}
         />
       </div>
-      <ProjectSkillsSection projectId={project.id} />
+      <ProjectSkillsSection
+        projectId={project.id}
+        canEdit={pageActorRole === "owner"}
+      />
     </div>
   );
 }
