@@ -59,15 +59,13 @@ describe("COPY-P1 shell and auth labels", () => {
     expect(source.includes("Send a task")).toBe(false);
   });
 
-  it("shows compatible AWL install bundle version in the app shell header brand", () => {
+  it("V5-2: app shell header brand has no AWL / bundle pill (I12)", () => {
     const source = readFileSync(
       join(process.cwd(), "src/features/shell/AppShellHeader.tsx"),
       "utf8",
     );
     expect(source.includes('aria-label="Agent Witch home"')).toBe(true);
-    expect(source.includes("AGENT_WITCH_INSTALL_BUNDLE_VERSION")).toBe(true);
-    expect(source.includes("AWL {AGENT_WITCH_INSTALL_BUNDLE_VERSION}")).toBe(
-      true,
-    );
+    expect(source.includes("AGENT_WITCH_INSTALL_BUNDLE_VERSION")).toBe(false);
+    expect(source.includes("AWL")).toBe(false);
   });
 });

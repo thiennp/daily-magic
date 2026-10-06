@@ -4,6 +4,7 @@ import { APP_SURFACE_CTA_PRIMARY_SM_CLASS } from "@/components/surfaces/appSurfa
 import MacDeviceIcon from "@/features/agent-witch/macDevices/MacDeviceIcon";
 import { resolveMacDeviceIconClassName } from "@/features/agent-witch/macDevices/utils/resolveMacDeviceIconClassName";
 import ConnectThisMacButton from "@/features/home/ConnectThisMacButton";
+import { APP_SHELL_DEVICES_COPY } from "@/features/shell/v5/appShellDevicesCopy.constant";
 
 interface ConnectThisMacRowProps {
   readonly installCommand: string;
@@ -29,7 +30,7 @@ export default function ConnectThisMacRow({
             />
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium text-gray-900 dark:text-white/90">
-                This computer
+                {APP_SHELL_DEVICES_COPY.thisComputer}
               </p>
               <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
                 Link the computer you are using now to your account.

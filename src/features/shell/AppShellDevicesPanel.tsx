@@ -13,7 +13,14 @@ const getHostSnapshot = (): string =>
 
 const getServerHostSnapshot = (): string => "";
 
-export default function AppShellDevicesPanel() {
+interface AppShellDevicesPanelProps {
+  /** True inside the desktop sidebar panel (no nested card). */
+  readonly embedded?: boolean;
+}
+
+export default function AppShellDevicesPanel({
+  embedded = false,
+}: AppShellDevicesPanelProps) {
   const { data: session, status } = useSession();
   const host = useSyncExternalStore(
     subscribeHost,
@@ -36,6 +43,7 @@ export default function AppShellDevicesPanel() {
       installCommand=""
       isWebSocketSupported={isWebSocketSupported}
       host={host}
+      embedded={embedded}
     />
   );
 }

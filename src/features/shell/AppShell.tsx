@@ -42,7 +42,8 @@ export default function AppShell({
     <AppShellSidebar showDevicesRail={showDevicesRail} />
   ) : null;
 
-  /** Mobile: devices sit below main content (artifact order), not above. */
+  /** Mobile: devices sit below main content (artifact order), not above.
+   *  Sidebar column is one width at every breakpoint: `--awc-side-w` (I3). */
   const mobileDevicesRail =
     renderPrimaryNav && showDevicesRail ? (
       <div className="mx-auto w-full max-w-[1600px] px-4 pb-6 pt-2 md:hidden sm:px-6 lg:px-6">
@@ -55,8 +56,8 @@ export default function AppShell({
       <div
         className={`grid gap-6 ${
           renderPrimaryNav
-            ? "md:grid-cols-[15rem_15rem_minmax(0,1fr)] lg:grid-cols-[16rem_240px_minmax(0,1fr)]"
-            : "md:grid-cols-[15rem_minmax(0,1fr)] lg:grid-cols-[16rem_minmax(0,1fr)]"
+            ? "md:grid-cols-[var(--awc-side-w)_15rem_minmax(0,1fr)] lg:grid-cols-[var(--awc-side-w)_240px_minmax(0,1fr)]"
+            : "md:grid-cols-[var(--awc-side-w)_minmax(0,1fr)]"
         }`}
       >
         {primaryNavAside}
@@ -66,7 +67,7 @@ export default function AppShell({
     </div>
   ) : renderPrimaryNav ? (
     <div className="mx-auto w-full max-w-[1600px] px-4 pb-6 pt-6 sm:px-6 lg:px-6">
-      <div className="grid gap-6 md:grid-cols-[15rem_minmax(0,1fr)] lg:grid-cols-[16rem_minmax(0,1fr)]">
+      <div className="grid gap-6 md:grid-cols-[var(--awc-side-w)_minmax(0,1fr)]">
         {primaryNavAside}
         <main className={mainColumnClassName}>{children}</main>
       </div>

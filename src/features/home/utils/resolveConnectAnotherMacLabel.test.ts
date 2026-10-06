@@ -7,7 +7,9 @@ describe("resolveConnectAnotherMacLabel", () => {
     expect(resolveConnectAnotherMacLabel(false)).toBe("Add a computer");
   });
 
-  it('says "Add another computer" when devices already exist (HOME-004)', () => {
-    expect(resolveConnectAnotherMacLabel(true)).toBe("Add another computer");
+  it('says "Connect another computer" when devices already exist (HOME-004, V5-2)', () => {
+    expect(resolveConnectAnotherMacLabel(true)).toBe(
+      "Connect another computer",
+    );
   });
 });

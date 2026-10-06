@@ -1,16 +1,20 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useCallback, type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import MacDeviceRow from "@/features/agent-witch/macDevices/MacDeviceRow";
-import buildAgentWitchLocalLogHref from "@/features/agent-witch/macDevices/utils/buildAgentWitchLocalLogHref";
 import { buildMacDeviceDetailText } from "@/features/agent-witch/macDevices/utils/buildMacDeviceDetailText";
-import { canWakeMacDeviceFromBrowser } from "@/features/agent-witch/online-wake";
+import {
+  canWakeMacDeviceFromBrowser,
+  isMacPresenceTierHardOffline,
+  resolveMacPresenceTier,
+} from "@/features/agent-witch/online-wake";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import HomeConnectedMacDeviceRowModals from "@/features/home/HomeConnectedMacDeviceRowModals";
+import useMacDeviceSeeLocalLog from "@/features/home/hooks/useMacDeviceSeeLocalLog";
 import useThisMacLocalInstallActions from "@/features/home/hooks/useThisMacLocalInstallActions";
-import DeleteLocalMacModal from "@/features/home/DeleteLocalMacModal";
-import UpdateLocalMacModal from "@/features/home/UpdateLocalMacModal";
+import DeviceUpdateButton from "@/features/shell/v5/DeviceUpdateButton";
+import { resolveDeviceUpdateAction } from "@/features/shell/v5/resolveDeviceUpdateAction";
 
 interface HomeConnectedMacDeviceRowProps {
   readonly device: MyMacDevice;
@@ -30,81 +34,62 @@ interface HomeConnectedMacDeviceRowProps {
 export default function HomeConnectedMacDeviceRow(
   props: HomeConnectedMacDeviceRowProps,
 ) {
-  const {
-    onUpdateLocal,
-    onDeleteLocalScript,
-    isUpdateLocalModalOpen,
-    isDeleteLocalModalOpen,
-    updateLocalCommand,
-    isUpdateLocalCommandLoading,
-    updateLocalCommandError,
-    deleteLocalCommand,
-    wakePort,
-    closeUpdateLocalModal,
-    closeDeleteLocalModal,
-  } = useThisMacLocalInstallActions({ wakePort: props.device.wakePort });
+  const { device, displayName, isThisMac } = props;
+  const localActions = useThisMacLocalInstallActions({
+    wakePort: device.wakePort,
+  });
   const detail = buildMacDeviceDetailText({
-    device: props.device,
+    device,
     serverInstallBundleVersion: props.serverInstallBundleVersion,
   });
-  const isThisMac = props.isThisMac;
-  const router = useRouter();
-  const onSeeLocalLog = useCallback(() => {
-    const wakePort = props.device.wakePort;
-    if (wakePort === null || wakePort === undefined) {
-      return;
-    }
-
-    router.push(
-      buildAgentWitchLocalLogHref({
-        wakePort,
-        displayName: props.displayName,
-      }),
-    );
-  }, [props.device.wakePort, props.displayName, router]);
+  const updateAction = resolveDeviceUpdateAction({
+    needsUpdate: detail?.isMismatch === true,
+    isOffline: isMacPresenceTierHardOffline(resolveMacPresenceTier(device)),
+    canUpdateHere: isThisMac,
+  });
+  const onSeeLocalLog = useMacDeviceSeeLocalLog({
+    wakePort: device.wakePort,
+    displayName,
+  });
 
   return (
     <>
       <MacDeviceRow
-        deviceId={props.device.id}
-        displayName={props.displayName}
-        isOnline={props.device.isOnline}
-        isConnected={props.device.isConnected}
-        presenceTier={props.device.presenceTier}
+        deviceId={device.id}
+        displayName={displayName}
+        isOnline={device.isOnline}
+        isConnected={device.isConnected}
+        presenceTier={device.presenceTier}
         detailText={detail?.text}
         detailWarning={detail?.isMismatch === true}
         isThisMac={isThisMac}
         isWakeServerReachable={canWakeMacDeviceFromBrowser({
-          deviceLabel: props.device.deviceLabel,
+          deviceLabel: device.deviceLabel,
           localHostname: props.localHostname,
           isWakeServerReachable: props.isWakeServerReachable,
         })}
         onRenamed={props.onRenamed}
         onSeeLocalLog={
-          isThisMac && props.device.wakePort !== null
-            ? onSeeLocalLog
-            : undefined
+          isThisMac && device.wakePort !== null ? onSeeLocalLog : undefined
         }
-        onUpdateLocal={isThisMac ? onUpdateLocal : undefined}
-        onDeleteLocalScript={isThisMac ? onDeleteLocalScript : undefined}
+        onUpdateLocal={isThisMac ? localActions.onUpdateLocal : undefined}
+        onDeleteLocalScript={
+          isThisMac ? localActions.onDeleteLocalScript : undefined
+        }
         onDelegateTask={props.onDelegateTask}
         onOpenShell={props.onOpenShell}
         onDelete={props.onDelete}
-        footer={props.footer}
+        footer={
+          <>
+            {props.footer}
+            <DeviceUpdateButton
+              action={updateAction}
+              onUpdate={localActions.onUpdateLocal}
+            />
+          </>
+        }
       />
-      <UpdateLocalMacModal
-        isOpen={isUpdateLocalModalOpen}
-        updateCommand={updateLocalCommand}
-        isUpdateCommandLoading={isUpdateLocalCommandLoading}
-        updateCommandError={updateLocalCommandError}
-        onClose={closeUpdateLocalModal}
-      />
-      <DeleteLocalMacModal
-        isOpen={isDeleteLocalModalOpen}
-        deleteCommand={deleteLocalCommand}
-        wakePort={wakePort}
-        onClose={closeDeleteLocalModal}
-      />
+      <HomeConnectedMacDeviceRowModals actions={localActions} />
     </>
   );
 }

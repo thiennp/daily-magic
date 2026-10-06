@@ -1,7 +1,5 @@
 "use client";
 
-import AppPanel from "@/components/surfaces/AppPanel";
-import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
 import ConnectCursorCloudCard from "@/features/home/ConnectCursorCloudCard";
 import HomeConnectedMacsDeviceList from "@/features/home/HomeConnectedMacsDeviceList";
@@ -10,6 +8,13 @@ import useHomeConnectedMacDeviceActions from "@/features/home/hooks/useHomeConne
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import useShouldShowConnectThisMac from "@/features/home/hooks/useShouldShowConnectThisMac";
+import AppShellDevicesHeading from "@/features/shell/v5/AppShellDevicesHeading";
+import AppShellDevicesSurface from "@/features/shell/v5/AppShellDevicesSurface";
+import {
+  APP_SHELL_V5_META_CLASS,
+  APP_SHELL_V5_SECTION_CLASS,
+  APP_SHELL_V5_PILL_BUTTON_CLASS,
+} from "@/features/shell/v5/appShellV5Classes.constant";
 import {
   buildMacDevicesStatusLine,
   countMacPresenceTiers,
@@ -19,12 +24,15 @@ interface HomeConnectedMacsPanelProps {
   readonly installCommand: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
+  readonly embedded?: boolean;
 }
 
+/** Shell Devices + Cursor Cloud (V5-2). Live actions unchanged. */
 export default function HomeConnectedMacsPanel({
   installCommand,
   isWebSocketSupported,
   host,
+  embedded = false,
 }: HomeConnectedMacsPanelProps) {
   const { onDelegateTask, onOpenShell, onDelete } =
     useHomeConnectedMacDeviceActions();
@@ -37,37 +45,25 @@ export default function HomeConnectedMacsPanel({
   } = useHomeConnectedMacs();
   const { localHostname, localTokenHash } = useLocalMacBrowserContext();
   const shouldShowConnectThisMac = useShouldShowConnectThisMac();
-  const presenceCounts = countMacPresenceTiers(devices);
-  const statusLine = buildMacDevicesStatusLine(presenceCounts);
+  const statusLine = buildMacDevicesStatusLine(countMacPresenceTiers(devices));
   const hasExistingDevices = devices.length > 0;
+  const connectProps = { installCommand, isWebSocketSupported, host };
 
   return (
-    <AppPanel padding="compact">
-      <h2 className="text-sm font-semibold text-gray-900 dark:text-white/90">
-        Your Devices
-      </h2>
-      <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
-        {statusLine}
-        {serverInstallBundleVersion !== null
-          ? ` · Cloud bundle ${serverInstallBundleVersion}`
-          : ""}
-      </p>
-
+    <AppShellDevicesSurface embedded={embedded}>
+      <AppShellDevicesHeading
+        statusLine={statusLine}
+        serverInstallBundleVersion={serverInstallBundleVersion}
+      />
       {isLoading ? (
-        <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+        <p className={`mt-4 ${APP_SHELL_V5_META_CLASS}`}>
           Checking connected computers…
         </p>
       ) : devices.length === 0 ? (
-        <HomeConnectedMacsEmptyState
-          installCommand={installCommand}
-          isWebSocketSupported={isWebSocketSupported}
-          host={host}
-        />
+        <HomeConnectedMacsEmptyState {...connectProps} />
       ) : (
         <HomeConnectedMacsDeviceList
-          installCommand={installCommand}
-          isWebSocketSupported={isWebSocketSupported}
-          host={host}
+          {...connectProps}
           devices={devices}
           displayNameById={displayNameById}
           serverInstallBundleVersion={serverInstallBundleVersion}
@@ -80,22 +76,18 @@ export default function HomeConnectedMacsPanel({
           onDelete={onDelete}
         />
       )}
-
       {!isLoading && hasExistingDevices ? (
-        <div className="mt-4 border-t border-gray-200 pt-4 dark:border-gray-700">
+        <div className={`mt-4 ${APP_SHELL_V5_SECTION_CLASS}`}>
           <ConnectAnotherMacButton
-            installCommand={installCommand}
-            isWebSocketSupported={isWebSocketSupported}
-            host={host}
+            {...connectProps}
             hasExistingDevices={hasExistingDevices}
-            className={APP_SURFACE_CTA_SECONDARY_SM_CLASS}
+            className={APP_SHELL_V5_PILL_BUTTON_CLASS}
           />
         </div>
       ) : null}
-
-      <div className="mt-4 border-t border-gray-200 pt-4 dark:border-gray-700">
+      <div className={`mt-4 ${APP_SHELL_V5_SECTION_CLASS}`}>
         <ConnectCursorCloudCard />
       </div>
-    </AppPanel>
+    </AppShellDevicesSurface>
   );
 }

@@ -9,6 +9,8 @@ import AppIcon from "@/components/ui/icon/AppIcon";
 import { useTheme } from "@/context/ThemeContext";
 import { BOTTOM_NAV } from "@/features/shell/appBottomNav.constant";
 import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
+import AppShellBrand from "@/features/shell/v5/AppShellBrand";
+import { APP_SHELL_V5_FONT_CLASS } from "@/features/shell/v5/appShellV5Classes.constant";
 import { ListIcon } from "@/icons";
 import { filterAppNavForShellContext } from "@/lib/shell/filterAppNavForShellContext";
 
@@ -49,8 +51,12 @@ export default function AppShellMobileNavMenu() {
         isOpen={isOpen}
         onClose={closeMenu}
         toggleRef={toggleRef}
-        className="w-56 py-1 dark:bg-gray-dark"
+        className={`w-56 py-1 ${APP_SHELL_V5_FONT_CLASS} dark:bg-gray-dark`}
       >
+        {/* I19: drawer carries logo + wordmark, not an unlabeled list. */}
+        <div className="border-b border-awc-border px-4 pb-2.5 pt-2 dark:border-gray-800">
+          <AppShellBrand />
+        </div>
         <ul id={menuId} role="menu" aria-label="Menu">
           {navItems.map((item) => {
             const isActive = item.isActive(pathname);
@@ -63,8 +69,8 @@ export default function AppShellMobileNavMenu() {
                   aria-current={isActive ? "page" : undefined}
                   className={`block w-full px-4 py-2.5 text-sm font-medium ${
                     isActive
-                      ? "bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300"
-                      : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5"
+                      ? "bg-awc-accent-soft text-awc-blue-700 dark:bg-brand-500/10 dark:text-brand-300"
+                      : "text-awc-fg-muted hover:bg-awc-tile dark:text-gray-300 dark:hover:bg-white/5"
                   }`}
                   onClick={closeMenu}
                 >

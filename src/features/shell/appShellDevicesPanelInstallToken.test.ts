@@ -33,8 +33,9 @@ describe("AppShellDevicesPanel install-token side effect", () => {
   });
 
   it("still renders the devices rail in both desktop and mobile slots", () => {
+    // V5-2: desktop slot is embedded in the sidebar panel (no nested card).
     expect(read("src/features/shell/AppShellSidebar.tsx")).toContain(
-      "<AppShellDevicesPanel />",
+      "<AppShellDevicesPanel embedded />",
     );
     expect(read("src/features/shell/AppShell.tsx")).toContain(
       "<AppShellDevicesPanel />",
