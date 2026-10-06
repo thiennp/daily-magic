@@ -1,10 +1,11 @@
 import { resolveAgentLinkedOwnerUserId } from "@/lib/agentAccess/resolveAgentLinkedOwnerUserId";
-import { isAwcTestAutoApproveJoinsEnabled } from "@/lib/projects/acl/invites/isAwcTestAutoApproveJoinsEnabled";
+import { isAwcTestAutoConnectEnabled } from "@/lib/projects/acl/invites/isAwcTestAutoConnectEnabled";
 import { isAgentUserId } from "@/lib/projects/acl/isAgentUser";
 
 /**
  * Invite autoApprove applies only to claimed bots (linked owner_user_id).
- * Test flag may override outside production. Agents still need a display name.
+ * Test auto-connect may override outside production (invite-redeem only).
+ * Agents still need a display name.
  */
 export const shouldAutoApproveInviteRedeem = async (input: {
   readonly actorUserId: string;
@@ -13,7 +14,7 @@ export const shouldAutoApproveInviteRedeem = async (input: {
 }): Promise<boolean> => {
   const requesterIsAgent = await isAgentUserId(input.actorUserId);
   const hasName = input.suggestedDisplayName !== null;
-  const testOverride = isAwcTestAutoApproveJoinsEnabled();
+  const testOverride = isAwcTestAutoConnectEnabled();
   const linkedOwnerId = requesterIsAgent
     ? await resolveAgentLinkedOwnerUserId(input.actorUserId)
     : input.actorUserId;
