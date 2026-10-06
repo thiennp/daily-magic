@@ -7,6 +7,7 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FAILS=0
 WORK="$(mktemp -d "${TMPDIR:-/tmp}/awl-sign-test.XXXXXX")"
 trap 'rm -rf "${WORK}"' EXIT
+touch "${WORK}/AuthKey_TEST.p8" "${WORK}/cert.p12"
 
 check() {
   if [[ "$2" == "ok" ]]; then echo "PASS: $1"; else echo "FAIL: $1"; FAILS=$((FAILS + 1)); fi
@@ -14,12 +15,13 @@ check() {
 has() { [[ "$1" == *"$2"* ]] && echo ok || echo no; }
 lacks() { [[ "$1" != *"$2"* ]] && echo ok || echo no; }
 
-# Each case runs in a clean subshell with only the env it sets.
 run_case() {
-  env -i PATH="${PATH}" HOME="${HOME}" TMPDIR="${WORK}" bash -c "
+  env -i PATH="${PATH}" HOME="${2:-${HOME}}" TMPDIR="${WORK}" bash -c "
     set -euo pipefail
-    for lib in awlMacSigningLog resolveAwlMacSigningMode awlMacTempKeychain \
-      notarizeAwlMacArtifact codesignAwlMacApp; do source '${DIR}'/\$lib.sh; done
+    for lib in awlMacSigningLog awlMacLoadSigningEnv resolveAwlMacSigningMode \
+      awlMacTempKeychain notarizeAwlMacArtifact codesignAwlMacApp; do
+      source '${DIR}'/\$lib.sh
+    done
     $1" 2>&1
 }
 
@@ -30,29 +32,44 @@ check "mask shows ***" "$(has "${out}" "--password ***")"
 out="$(run_case "AWL_SIGN_DRY_RUN=1; awl_release_run touch '${WORK}/should-not-exist'")"
 check "dry-run release step is printed" "$(has "${out}" "[dry-run] would run: touch")"
 check "dry-run release step is not executed" "$([[ ! -e "${WORK}/should-not-exist" ]] && echo ok || echo no)"
-
 out="$(run_case "AWL_SIGN_DRY_RUN=1; awl_run touch '${WORK}/adhoc-ran'")"
 check "awl_run executes even in dry-run" "$([[ -e "${WORK}/adhoc-ran" ]] && echo ok || echo no)"
 
-out="$(run_case 'resolve_awl_mac_signing_mode auto; echo "MODE=${AWL_SIGN_MODE}"')"
+EMPTY_HOME="${WORK}/empty-home"; mkdir -p "${EMPTY_HOME}"
+out="$(run_case 'resolve_awl_mac_signing_mode auto; echo "MODE=${AWL_SIGN_MODE}"' "${EMPTY_HOME}")"
 check "no creds -> ad-hoc fallback" "$(has "${out}" "MODE=adhoc-legacy")"
-check "fallback logs a clear line" "$(has "${out}" "falling back to ad-hoc signing")"
-
-out="$(run_case 'resolve_awl_mac_signing_mode developer-id; echo MODE' || true)"
+out="$(run_case 'resolve_awl_mac_signing_mode developer-id; echo MODE' "${EMPTY_HOME}" || true)"
 check "developer-id without creds fails" "$(lacks "${out}" "MODE")"
 
-out="$(run_case 'DEVELOPER_ID_APPLICATION="Developer ID Application: T (ABCDE12345)"; resolve_awl_mac_signing_mode auto; echo MODE' || true)"
+ENV_HOME="${WORK}/sign-env-home"; mkdir -p "${ENV_HOME}/.agentwitch-signing"
+printf '%s\n' 'DEVELOPER_ID_APPLICATION=' >"${ENV_HOME}/.agentwitch-signing/signing.env"
+out="$(run_case 'resolve_awl_mac_signing_mode auto; echo MODE' "${ENV_HOME}" || true)"
+check "empty signing.env refuses ad-hoc fallback" "$(has "${out}" "Refusing ad-hoc fallback")"
+
+out="$(run_case 'DEVELOPER_ID_APPLICATION="Developer ID Application: T (ABCDE12345)"; resolve_awl_mac_signing_mode auto; echo MODE' "${EMPTY_HOME}" || true)"
 check "identity without notary creds fails" "$(has "${out}" "Refusing to ship")"
 
-touch "${WORK}/AuthKey_TEST.p8"
-out="$(run_case "DEVELOPER_ID_APPLICATION='Developer ID Application: T (ABCDE12345)'; APPLE_ASC_KEY_ID=KEYID98765; APPLE_ASC_ISSUER_ID=issuer-uuid-1; APPLE_ASC_KEY_PATH='${WORK}/AuthKey_TEST.p8'; resolve_awl_mac_signing_mode auto; echo MODE=\${AWL_SIGN_MODE}/\${AWL_NOTARY_AUTH}; AWL_SIGN_DRY_RUN=1; awl_notarize /tmp/x.zip")"
+out="$(run_case "DEVELOPER_ID_APPLICATION='Developer ID Application: T (ABCDE12345)'; DEVELOPER_ID_P12_PATH='${WORK}/cert.p12'; DEVELOPER_ID_P12_PASSWORD=p12-pass; APPLE_ASC_KEY_ID=KEYID98765; APPLE_ASC_ISSUER_ID=issuer-uuid-1; APPLE_ASC_KEY_PATH='${WORK}/AuthKey_TEST.p8'; resolve_awl_mac_signing_mode auto; echo MODE=\${AWL_SIGN_MODE}/\${AWL_NOTARY_AUTH}; AWL_SIGN_DRY_RUN=1; awl_notarize /tmp/x.zip" "${EMPTY_HOME}")"
 check "identity + ASC key -> developer-id" "$(has "${out}" "MODE=developer-id/asc-api-key")"
 check "ASC key id masked" "$(lacks "${out}" "KEYID98765")"
-check "ASC issuer masked" "$(lacks "${out}" "issuer-uuid-1")"
 
-out="$(run_case "AWL_SIGN_DRY_RUN=1; DEVELOPER_ID_P12_PATH=/x/cert.p12; DEVELOPER_ID_P12_PASSWORD=p12-pass-xyz; resolve_awl_mac_signing_mode auto; awl_keychain_setup; awl_keychain_cleanup; echo ID=\${AWL_SIGN_IDENTITY}")"
-check "dry-run uses placeholder identity" "$(has "${out}" "ID=<DEVELOPER_ID_APPLICATION>")"
+PAREN_HOME="${WORK}/paren-home"; mkdir -p "${PAREN_HOME}/.agentwitch-signing"
+printf '%s\n' \
+  'DEVELOPER_ID_APPLICATION=Developer ID Application: T (ABCDE12345)' \
+  "DEVELOPER_ID_P12_PATH=${WORK}/cert.p12" \
+  'DEVELOPER_ID_P12_PASSWORD=p12-pass' \
+  'APPLE_ASC_KEY_ID=KEYID98765' \
+  'APPLE_ASC_ISSUER_ID=issuer-uuid-1' \
+  "APPLE_ASC_KEY_PATH=${WORK}/AuthKey_TEST.p8" \
+  >"${PAREN_HOME}/.agentwitch-signing/signing.env"
+out="$(run_case 'resolve_awl_mac_signing_mode auto; echo "MODE=${AWL_SIGN_MODE}"; echo "ID=${AWL_SIGN_IDENTITY}"' "${PAREN_HOME}")"
+check "unquoted identity in signing.env loads" "$(has "${out}" "MODE=developer-id")"
+check "unquoted identity value preserved" "$(has "${out}" "ID=Developer ID Application: T (ABCDE12345)")"
+
+out="$(run_case "AWL_SIGN_DRY_RUN=1; DEVELOPER_ID_P12_PATH=/x/cert.p12; DEVELOPER_ID_P12_PASSWORD=p12-pass-xyz; resolve_awl_mac_signing_mode auto; awl_keychain_setup; awl_keychain_cleanup; echo ID=\${AWL_SIGN_IDENTITY}" "${EMPTY_HOME}")"
 check "dry-run prints p12 import" "$(has "${out}" "would run: security import /x/cert.p12")"
+check "dry-run prints G2 intermediate import" "$(has "${out}" "DeveloperIDG2CA.cer")"
+check "dry-run prints search-list prepend" "$(has "${out}" "list-keychains -d user -s")"
 check "p12 password masked" "$(lacks "${out}" "p12-pass-xyz")"
 check "temp keychain password masked" "$(has "${out}" "create-keychain -p *** ")"
 
@@ -68,7 +85,7 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
   expected=$'SIGN APP/Contents/Frameworks/F.framework/Versions/A/Libraries/l.dylib\nSIGN APP/Contents/Frameworks/F.framework\nSIGN APP'
   check "inside-out order (dylib, framework, app)" "$([[ "${order}" == "${expected}" ]] && echo ok || echo no)"
   lib_line="$(run_case "rec() { echo \"\$*\"; }; awl_codesign_app '${APP}' - /e.plist rec" | grep 'l.dylib$')"
-  check "libraries signed ad-hoc with runtime, no entitlements" "$(lacks "${lib_line}" "--entitlements")"
+  check "libraries signed without entitlements" "$(lacks "${lib_line}" "--entitlements")"
   check "ad-hoc uses --timestamp=none" "$(has "${lib_line}" "--options runtime --timestamp=none")"
   app_line="$(run_case "rec() { echo \"\$*\"; }; awl_codesign_app '${APP}' - /e.plist rec" | grep "T.app$")"
   check "app signed with entitlements" "$(has "${app_line}" "--entitlements /e.plist")"

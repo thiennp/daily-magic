@@ -86,23 +86,29 @@ Common rules:
 
 ### AWL Mac
 
-Host: macOS with Swift (universal arm64 + x86_64).
+Host: macOS with Swift (universal arm64 + x86_64). **First Developer ID + notarize + staple run
+must be on a VM or a new macOS user** (temp keychain only; never import the `.p12` into the
+primary account login keychain). Details:
+[awl-mac-signing-notarization.md](awl-mac-signing-notarization.md#first-signed-run-vm-or-new-user).
 
 1. `swift test --package-path apps/mac`
 2. `bash scripts/mac/build-awl-mac-dmg.sh` → `dist/mac/AgentWitchLocal.dmg` + `.sha256` (and
    `AgentWitchLocal.zip{,.sha256}` for Developer ID). Modes
    ([awl-mac-signing-notarization.md](awl-mac-signing-notarization.md)):
-   - default `AWL_MAC_SIGNING=auto`: Developer ID if credentials are set, else logged ad-hoc fallback
-   - `--adhoc` / `AWL_MAC_SIGNING=adhoc`: ad-hoc (the unsigned path `awl-mac-v0.1.0` shipped with)
+   - default `AWL_MAC_SIGNING=auto`: loads `~/.agentwitch-signing/signing.env` when present;
+     Developer ID + notarize + staple when creds (identity, `.p12`, notary) are set; **fails** if
+     `signing.env` loaded but incomplete; else logged ad-hoc fallback
+   - `--adhoc` / `AWL_MAC_SIGNING=adhoc`: ad-hoc for local dev only
    - `--dry-run`: ad-hoc hardened-runtime build + local verify, prints masked signing commands
-   - `AWL_MAC_SIGNING=developer-id`: fails unless `DEVELOPER_ID_APPLICATION` and notary
-     credentials (`NOTARYTOOL_KEYCHAIN_PROFILE`, or `APPLE_ASC_KEY_ID` / `APPLE_ASC_ISSUER_ID` /
-     `APPLE_ASC_KEY_PATH`, or `APPLE_ID` / `APPLE_APP_SPECIFIC_PASSWORD` / `APPLE_TEAM_ID`;
-     optional `DEVELOPER_ID_P12_PATH` / `DEVELOPER_ID_P12_PASSWORD`) are set. Use for releases.
-     The script verifies with `codesign --verify`, `spctl` and `stapler validate`.
+   - `AWL_MAC_SIGNING=developer-id`: fails unless identity, `DEVELOPER_ID_P12_PATH` /
+     `DEVELOPER_ID_P12_PASSWORD`, and notary credentials (`NOTARYTOOL_KEYCHAIN_PROFILE`, or
+     `APPLE_ASC_KEY_ID` / `APPLE_ASC_ISSUER_ID` / `APPLE_ASC_KEY_PATH`, or `APPLE_ID` /
+     `APPLE_APP_SPECIFIC_PASSWORD` / `APPLE_TEAM_ID`) are set. Verifies with
+     `codesign --verify --deep --strict`, `spctl -a -vv -t exec`, and `stapler validate`.
 3. Version: `CFBundleShortVersionString` = root `package.json` `version` (now `0.1.0`). The tag
    must be higher than what users run, or the update notice will not offer it.
-4. Publish: `gh release create awl-mac-vX.Y.Z dist/mac/AgentWitchLocal.dmg dist/mac/AgentWitchLocal.dmg.sha256`.
+4. Publish: `gh release create awl-mac-vX.Y.Z dist/mac/AgentWitchLocal.dmg dist/mac/AgentWitchLocal.dmg.sha256`
+   (and the zip pair for Developer ID builds).
 5. Land on `main`: bump `package.json` `version` (if not already) and
    `AGENT_WITCH_LOCAL_MAC_APP_RELEASE_TAG` in `src/lib/agentWitch/buildAgentWitchLocalMacAppDownloadUrl.ts`
    (+ its test). No install bundle bump.

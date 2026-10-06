@@ -20,11 +20,14 @@ awl_detect_notary_auth() {
 }
 
 awl_check_credential_files() {
-  if [[ -n "${DEVELOPER_ID_P12_PATH:-}" && ! -f "${DEVELOPER_ID_P12_PATH}" ]]; then
+  if [[ -z "${DEVELOPER_ID_P12_PATH:-}" ]]; then
+    awl_fail "DEVELOPER_ID_P12_PATH is required (temp keychain only; login keychain is never used)."
+  fi
+  if [[ ! -f "${DEVELOPER_ID_P12_PATH}" ]]; then
     awl_fail "DEVELOPER_ID_P12_PATH is set but no file exists at that path."
   fi
-  if [[ -n "${DEVELOPER_ID_P12_PATH:-}" && -z "${DEVELOPER_ID_P12_PASSWORD:-}" ]]; then
-    awl_fail "DEVELOPER_ID_P12_PATH is set but DEVELOPER_ID_P12_PASSWORD is empty."
+  if [[ -z "${DEVELOPER_ID_P12_PASSWORD:-}" ]]; then
+    awl_fail "DEVELOPER_ID_P12_PASSWORD is empty."
   fi
   if [[ "${AWL_NOTARY_AUTH}" == "asc-api-key" && ! -f "${APPLE_ASC_KEY_PATH}" ]]; then
     awl_fail "APPLE_ASC_KEY_PATH is set but no .p8 file exists at that path."
@@ -33,6 +36,7 @@ awl_check_credential_files() {
 
 resolve_awl_mac_signing_mode() {
   local requested="${1:-auto}"
+  awl_load_signing_env
   AWL_NOTARY_AUTH="$(awl_detect_notary_auth)"
   case "${requested}" in
     auto | adhoc | developer-id) ;;
@@ -51,8 +55,8 @@ resolve_awl_mac_signing_mode() {
     return 0
   fi
   if [[ -z "${DEVELOPER_ID_APPLICATION:-}" ]]; then
-    if [[ "${requested}" == "developer-id" ]]; then
-      awl_fail "AWL_MAC_SIGNING=developer-id but DEVELOPER_ID_APPLICATION is unset."
+    if [[ "${requested}" == "developer-id" || "${AWL_SIGNING_ENV_LOADED}" == "1" ]]; then
+      awl_fail "Developer ID requested (AWL_MAC_SIGNING=${requested}; signing.env loaded=${AWL_SIGNING_ENV_LOADED}) but DEVELOPER_ID_APPLICATION is unset. Refusing ad-hoc fallback."
     fi
     AWL_SIGN_MODE="adhoc-legacy"
     awl_log "Developer ID credentials absent (DEVELOPER_ID_APPLICATION unset): falling back to ad-hoc signing. This DMG is NOT notarized; Gatekeeper will block it on other Macs."

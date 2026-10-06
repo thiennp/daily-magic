@@ -2,10 +2,11 @@
 # Reproducible AgentWitchLocal.app + UDZO dmg (macOS only).
 #
 # Signing (scripts/mac/signing/, docs/agent-witch/awl-mac-signing-notarization.md):
-#   default / AWL_MAC_SIGNING=auto  Developer ID + notarize + staple when
-#                                   DEVELOPER_ID_APPLICATION + notary creds are
-#                                   set; otherwise ad-hoc fallback (logged).
-#   --adhoc  / AWL_MAC_SIGNING=adhoc         force today's ad-hoc build.
+#   default / AWL_MAC_SIGNING=auto  Loads ~/.agentwitch-signing/signing.env when
+#                                   present; Developer ID + notarize + staple when
+#                                   creds exist; otherwise logged ad-hoc fallback.
+#                                   If signing.env loaded but incomplete: fail.
+#   --adhoc  / AWL_MAC_SIGNING=adhoc         force ad-hoc (local dev only).
 #   AWL_MAC_SIGNING=developer-id             fail unless credentials exist.
 #   --dry-run  real ad-hoc build + hardened-runtime ad-hoc sign + local verify;
 #              prints the Developer ID / notarytool / stapler commands (masked).

@@ -3,13 +3,14 @@
 #   awl_sign_init <repo-root> <auto|adhoc|developer-id>
 #   awl_sign_stage_app <app-dir> <dist-dir>   (before the DMG is created)
 #   awl_sign_dmg <dmg-path>                    (after the DMG is created)
-# Secrets come only from env / keychain profile at runtime; see
+# Secrets come from env, optional ~/.agentwitch-signing/signing.env, or a
+# keychain profile at runtime; see
 # docs/agent-witch/awl-mac-signing-notarization.md.
 
 AWL_SIGNING_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=/dev/null
-for awl_lib in awlMacSigningLog resolveAwlMacSigningMode awlMacTempKeychain \
-  codesignAwlMacApp notarizeAwlMacArtifact verifyAwlMacArtifacts; do
+for awl_lib in awlMacSigningLog awlMacLoadSigningEnv resolveAwlMacSigningMode \
+  awlMacTempKeychain codesignAwlMacApp notarizeAwlMacArtifact verifyAwlMacArtifacts; do
   source "${AWL_SIGNING_LIB_DIR}/${awl_lib}.sh"
 done
 unset awl_lib

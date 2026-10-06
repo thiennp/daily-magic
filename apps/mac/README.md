@@ -22,11 +22,11 @@ bash scripts/mac/build-awl-mac-dmg.sh
 
 Produces `dist/mac/AgentWitchLocal.dmg` + `.sha256` (macOS only). The DMG build registers `CFBundleURLTypes` for `agentwitch-local`.
 
-Signing: with `DEVELOPER_ID_APPLICATION` + notary credentials in env the build is Developer ID signed (hardened runtime, `AgentWitchLocal.entitlements`), notarized and stapled (DMG + `AgentWitchLocal.zip`); without them it falls back to ad-hoc and logs it. `--dry-run` runs the real ad-hoc build + local verify and prints the Developer ID / notary commands with secrets masked. See [docs/agent-witch/awl-mac-signing-notarization.md](../../docs/agent-witch/awl-mac-signing-notarization.md) and [KNOWN_ISSUES.md](KNOWN_ISSUES.md).
+Signing: default auto-loads `~/.agentwitch-signing/signing.env` when present. With Developer ID + `.p12` + notary credentials the build is Developer ID signed (hardened runtime, temp keychain + G2 intermediate, `AgentWitchLocal.entitlements`), notarized and stapled (DMG + `AgentWitchLocal.zip`); without creds it falls back to ad-hoc and logs it; incomplete `signing.env` or `AWL_MAC_SIGNING=developer-id` without creds fails loudly. `--adhoc` forces local-dev ad-hoc. `--dry-run` runs the real ad-hoc build + local verify and prints the Developer ID / notary commands with secrets masked. First real signed run: VM or new macOS user. See [docs/agent-witch/awl-mac-signing-notarization.md](../../docs/agent-witch/awl-mac-signing-notarization.md) and [KNOWN_ISSUES.md](KNOWN_ISSUES.md).
 
 ## Release
 
-Manual only (no GitHub Actions): build with `AWL_MAC_SIGNING=developer-id`, `gh release create awl-mac-vX.Y.Z`, then bump `AGENT_WITCH_LOCAL_MAC_APP_RELEASE_TAG` on `main`. Steps: [docs/agent-witch/local-release-path.md](../../docs/agent-witch/local-release-path.md#awl-mac).
+Manual only (no GitHub Actions): on a VM/new user, build with default auto (creds present) or `AWL_MAC_SIGNING=developer-id`, `gh release create awl-mac-vX.Y.Z`, then bump `AGENT_WITCH_LOCAL_MAC_APP_RELEASE_TAG` on `main`. Steps: [docs/agent-witch/local-release-path.md](../../docs/agent-witch/local-release-path.md#awl-mac).
 
 ## Note
 
