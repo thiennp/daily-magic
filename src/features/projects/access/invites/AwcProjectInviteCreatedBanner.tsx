@@ -16,8 +16,8 @@ interface AwcProjectInviteCreatedBannerProps {
   readonly createdInviteToken: string | null;
   readonly projectId: string;
   readonly projectName: string | null;
-  /** Which Copy prompt to build (step 7 differs). */
-  readonly platform?: ProjectInvitePlatform;
+  /** Which Copy prompt to build (step 7 differs); null = no type picked. */
+  readonly platform?: ProjectInvitePlatform | null;
   /** Picked types[] id; null = any assistant; undefined = platform line. */
   readonly joinTypeId?: string | null;
   readonly onClearCreatedUrl: () => void;
@@ -28,7 +28,7 @@ export default function AwcProjectInviteCreatedBanner({
   createdInviteToken,
   projectId,
   projectName,
-  platform = "grok",
+  platform = null,
   joinTypeId,
   onClearCreatedUrl,
 }: AwcProjectInviteCreatedBannerProps) {
@@ -41,7 +41,7 @@ export default function AwcProjectInviteCreatedBanner({
       token: createdInviteToken,
       projectId,
       projectName,
-      platform,
+      platform: platform ?? undefined,
     });
   const [toast, setToast] = useState<string | null>(null);
   const showToast = (message: string) => {
@@ -56,7 +56,7 @@ export default function AwcProjectInviteCreatedBanner({
       </p>
       <p
         className="mt-1 text-amber-900 dark:text-amber-200"
-        data-invite-platform={platform}
+        data-invite-platform={platform ?? "any"}
       >
         {resolveProjectInviteCreatedForLine({ platform, joinTypeId })}
       </p>

@@ -71,7 +71,7 @@ describe("Create invite: shared Add assistant", () => {
     expect(render("grok", "claude")).toContain(
       "Claude invite — this Copy prompt is for Claude.",
     );
-    expect(render()).toContain('data-invite-platform="grok"');
+    expect(render("grok")).toContain('data-invite-platform="grok"');
     expect(render("muse")).toContain("Copy prompt");
   });
 });

@@ -17,7 +17,7 @@ interface AwcProjectMembersInviteBotsSectionProps {
   readonly invites: readonly AwcProjectAccessInvite[];
   readonly createdInviteUrl: string | null;
   readonly createdInviteToken: string | null;
-  readonly createdInvitePlatform: ProjectInvitePlatform;
+  readonly createdInvitePlatform: ProjectInvitePlatform | null;
   /** Picked types[] id; null = any assistant. */
   readonly createdInviteJoinTypeId: string | null;
   readonly onCreate: (selection: AwcProjectInviteAddSelection) => void;

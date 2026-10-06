@@ -20,7 +20,7 @@ export const useAwcProjectInviteActions = (input: {
   /** Writes inviteId and platform in one state update (success only). */
   readonly setCreatedInviteId: (
     inviteId: string | null,
-    platform: ProjectInvitePlatform,
+    platform: ProjectInvitePlatform | null,
     joinTypeId?: string | null,
   ) => void;
 }) => {
@@ -45,7 +45,7 @@ export const useAwcProjectInviteActions = (input: {
         typeof result.inviteId === "string" && result.inviteId.length > 0
           ? result.inviteId
           : null,
-        platform ?? "grok",
+        platform,
         joinTypeId,
       );
       input.setMessage("Invite created — copy the link or prompt now.");

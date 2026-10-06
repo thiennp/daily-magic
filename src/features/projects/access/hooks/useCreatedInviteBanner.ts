@@ -8,14 +8,15 @@ import { shouldKeepCreatedInviteBanner } from "@/features/projects/access/invite
 
 type CreatedInviteSelection = {
   readonly inviteId: string | null;
-  readonly platform: ProjectInvitePlatform;
+  /** null = no type picked (any assistant). */
+  readonly platform: ProjectInvitePlatform | null;
   /** Picked types[] id; null = any assistant. */
   readonly joinTypeId: string | null;
 };
 
 const NO_CREATED_INVITE: CreatedInviteSelection = {
   inviteId: null,
-  platform: "grok",
+  platform: null,
   joinTypeId: null,
 };
 
@@ -40,7 +41,7 @@ export const useCreatedInviteBanner = () => {
   const setCreatedInviteIdTracked = useCallback(
     (
       inviteId: string | null,
-      platform: ProjectInvitePlatform = "grok",
+      platform: ProjectInvitePlatform | null,
       joinTypeId: string | null = joinTypeIdForInvitePlatform(platform),
     ) => {
       createdInviteIdRef.current = inviteId;

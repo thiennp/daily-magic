@@ -13,7 +13,7 @@ interface AwcProjectInvitesPanelProps {
   readonly createdInviteUrl: string | null;
   readonly createdInviteToken?: string | null;
   /** Set with createdInviteId on create success; labels the banner Copy prompt. */
-  readonly createdInvitePlatform?: ProjectInvitePlatform;
+  readonly createdInvitePlatform?: ProjectInvitePlatform | null;
   /** Picked types[] id for the banner line; null = any assistant. */
   readonly createdInviteJoinTypeId?: string | null;
   readonly projectId: string;
@@ -34,7 +34,7 @@ export default function AwcProjectInvitesPanel({
   invites,
   createdInviteUrl,
   createdInviteToken = null,
-  createdInvitePlatform = "grok",
+  createdInvitePlatform = null,
   createdInviteJoinTypeId,
   projectId,
   projectName = null,

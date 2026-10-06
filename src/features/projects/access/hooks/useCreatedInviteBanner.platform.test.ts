@@ -88,7 +88,7 @@ describe("created invite banner: platform is set with createdInviteId", () => {
     renderBanner().clearCreatedInviteBanner();
     const state = renderBanner();
     expect(state.createdInviteId).toBeNull();
-    expect(state.createdInvitePlatform).toBe("grok");
+    expect(state.createdInvitePlatform).toBeNull();
     expect(state.createdInviteUrl).toBeNull();
   });
 });

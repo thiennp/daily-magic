@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   actionsFor,
+  panelHtml,
   renderBanner,
 } from "@/features/projects/access/hooks/createdInviteBanner.testUtils";
 import { reactHookRunner as runner } from "@/features/projects/access/hooks/reactHookRunner.testUtils";
@@ -44,7 +45,14 @@ describe("Add assistant: one shared invite with an optional type", () => {
     expect(createProjectInviteApi).toHaveBeenCalledWith("p1", {
       autoApprove: false,
     });
-    expect(renderBanner().createdInviteJoinTypeId).toBeNull();
+    const state = renderBanner();
+    expect(state.createdInviteJoinTypeId).toBeNull();
+    expect(state.createdInvitePlatform).toBeNull();
+    const html = panelHtml(state);
+    expect(html).toContain('data-invite-platform="any"');
+    expect(html).toContain("this Copy prompt works for any assistant");
+    expect(html).not.toContain('data-invite-platform="grok"');
+    expect(html).not.toContain("this Copy prompt is for a Grok Bot");
   });
 
   it("Grok Bot through the shared button still creates a grok invite", async () => {

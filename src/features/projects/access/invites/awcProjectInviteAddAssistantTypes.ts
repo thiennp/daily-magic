@@ -17,13 +17,14 @@ export type AwcProjectInviteAddSelection = {
 export const AWC_PROJECT_INVITE_TYPE_OPTIONS: readonly AwcProjectInviteTypeOption[] =
   PROJECT_INVITE_JOIN_TYPES.map((type) => ({ id: type.id, label: type.label }));
 
-/** Types[] ids the invite create call stores as its platform (server allowlist grok | muse). */
-const JOIN_TYPE_TO_INVITE_PLATFORM: Readonly<
-  Record<string, ProjectInvitePlatform>
-> = {
-  "grok-bot": "grok",
-  muse: "muse",
-};
+/** Single source: each stored invite platform (server allowlist grok | muse) and its types[] id. Both lookups below derive from it. */
+const INVITE_PLATFORM_JOIN_TYPES: readonly {
+  readonly platform: ProjectInvitePlatform;
+  readonly joinTypeId: string;
+}[] = [
+  { platform: "grok", joinTypeId: "grok-bot" },
+  { platform: "muse", joinTypeId: "muse" },
+];
 
 export const toAwcProjectInviteAddSelection = (
   joinTypeId: string | null,
@@ -33,7 +34,9 @@ export const toAwcProjectInviteAddSelection = (
   );
   const id = known ? joinTypeId : null;
   return {
-    platform: id === null ? null : (JOIN_TYPE_TO_INVITE_PLATFORM[id] ?? null),
+    platform:
+      INVITE_PLATFORM_JOIN_TYPES.find((p) => p.joinTypeId === id)?.platform ??
+      null,
     joinTypeId: id,
   };
 };
@@ -42,7 +45,8 @@ export const toAwcProjectInviteAddSelection = (
 export const joinTypeIdForInvitePlatform = (
   platform: ProjectInvitePlatform | null,
 ): string | null =>
-  platform === "grok" ? "grok-bot" : platform === "muse" ? "muse" : null;
+  INVITE_PLATFORM_JOIN_TYPES.find((p) => p.platform === platform)?.joinTypeId ??
+  null;
 
 export const awcProjectInviteTypeLabel = (
   joinTypeId: string | null,

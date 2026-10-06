@@ -25,7 +25,7 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   inviteBotHeading: "Invite a new assistant",
   invitePrompt: (kind: string | null) =>
     kind === null
-      ? "Prompt for your assistant. Paste it into your assistant. The prompt shows once, so copy it now."
+      ? "Paste this prompt into your assistant. It shows once, so copy it now."
       : `Prompt for the ${kind} assistant. Paste it into your assistant. The prompt shows once, so copy it now.`,
   invitePendingSubOff:
     "Waiting to join · you approve each assistant before it gets access",
