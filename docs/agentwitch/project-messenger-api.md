@@ -85,5 +85,16 @@ replies to Owner with the id in the summary link the same way. Allowed on
   and the 3-day TTL remove message text (outcome rows keep no summary). Until
   the DOR ack-required tip lands, a read unwatched message can be deleted on
   the next tick. Durable chat history needs a product call (see tip report).
+- **Browser copy (IndexedDB `awc-chat`)**: Human UI writes every opened
+  thread through to IndexedDB (store `messengerChats`, key
+  `projectId:threadKey`, `projectId` index) and paints it first on open, so
+  rows the server already removed stay visible in that browser. A message
+  leaves the browser only when it is BOTH older than 1 week AND outside the
+  newest 1000 for that chat AND confirmed stored on a computer (no such
+  per-message signal on the wire yet, so nothing trims today). Projects with
+  no owner computer (`deviceId` null) never trim and show an (i) hint that
+  adding a computer is safer. There is no delete / clear path: chats are
+  never wiped. Store `keptRecipients` (per project chat per member) caches
+  the composer kept recipient; server value wins once Dispatch persists it.
 - Live updates: poll the thread list / open thread (same as the Inbox); no
   websocket.

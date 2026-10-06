@@ -5,6 +5,7 @@ import { useCallback, useMemo, useState } from "react";
 import AwcProjectMessengerGateView, {
   resolveMessengerGate,
 } from "@/features/projects/messenger/AwcProjectMessengerGate";
+import AwcMessengerNoComputerHint from "@/features/projects/messenger/AwcMessengerNoComputerHint";
 import AwcProjectMessengerInboxClearBar from "@/features/projects/messenger/AwcProjectMessengerInboxClearBar";
 import AwcProjectMessengerInboxClearModals from "@/features/projects/messenger/AwcProjectMessengerInboxClearModals";
 import AwcProjectMessengerHeading from "@/features/projects/messenger/AwcProjectMessengerHeading";
@@ -19,6 +20,8 @@ import { sumMessengerUnreadCount } from "@/features/projects/messenger/utils/sum
 
 interface AwcProjectMessengerSectionProps {
   readonly projectId: string;
+  /** False → browser chat copy is long-term (no trim) + (i) hint. */
+  readonly hasOwnerComputer: boolean;
   /** Overview attention / hash deep-link into a bot thread (membershipId or "whole"). */
   readonly initialThreadKey?: string | null;
   /** Parent tab badge: refresh after open/send marks read or changes unread. */
@@ -31,6 +34,7 @@ const WHOLE_KEY = "whole";
 
 export default function AwcProjectMessengerSection({
   projectId,
+  hasOwnerComputer,
   initialThreadKey = null,
   onUnreadMaybeChanged,
   isOwner = false,
@@ -54,6 +58,7 @@ export default function AwcProjectMessengerSection({
   const open = useAwcProjectMessengerThread({
     projectId,
     threadKey: selectedKey,
+    hasOwnerComputer,
     onOpened,
   });
   const selectedMeta = useMemo(
@@ -85,6 +90,7 @@ export default function AwcProjectMessengerSection({
         message={open.message}
       />
       {clearBar ? <div className="md:hidden">{clearBar}</div> : null}
+      {!hasOwnerComputer ? <AwcMessengerNoComputerHint /> : null}
       <AwcProjectMessengerPanels
         threads={gate.threads}
         headerAction={clearBar}

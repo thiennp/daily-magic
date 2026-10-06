@@ -54,4 +54,8 @@ export const AWC_PROJECT_MESSENGER_COPY = {
     "Messenger is not available on this deploy yet. Stay on this page — it will open when ready.",
   sendFailed: "Could not send that message. Try again.",
   pinned: "Pinned",
+  /** (i) no owner computer — browser keeps the long-term chat copy. EN: Product may refine. */
+  noComputerHintLabel: "About chat history",
+  noComputerHint:
+    "This project has no computer yet, so this browser keeps the chat history. Adding a computer is safer.",
 } as const;

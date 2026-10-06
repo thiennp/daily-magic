@@ -12,6 +12,7 @@ import type {
   ProjectPageNavTarget,
   ProjectPageTabId,
 } from "@/features/projects/projectPageTabs.constant";
+import { projectHasOwnerComputer } from "@/features/projects/utils/projectHasOwnerComputer";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
@@ -64,6 +65,7 @@ export default function AwcProjectDetailTabPanelBody(
       <AwcProjectMessengerSection
         key={p.activityRefreshKey}
         projectId={proj.id}
+        hasOwnerComputer={projectHasOwnerComputer(proj)}
         initialThreadKey={p.activityInitialThreadKey}
         isOwner={p.pageActorRole === "owner"}
         onUnreadMaybeChanged={p.onActivityUnreadMaybeChanged}

@@ -1,0 +1,52 @@
+import type { AwcMessengerTimelineEntry } from "@/features/projects/messenger/types/awcProjectMessenger.type";
+
+/**
+ * One browser (IndexedDB) copy of a project chat. Keyed by `chatKey`
+ * (`projectId:threadKey`) with a `projectId` index so a later one-window
+ * timeline can read every chat of a project. Never deleted outright.
+ */
+export type MessengerChatStoreRecord = {
+  readonly chatKey: string;
+  readonly projectId: string;
+  readonly threadKey: string;
+  /** Oldest-first, merged by messageId (server row wins). */
+  readonly entries: readonly AwcMessengerTimelineEntry[];
+  readonly canSend: boolean;
+  readonly updatedAt: string;
+  readonly schemaVersion: 1;
+};
+
+/**
+ * Kept recipient (COMPOSER-LOCK `KEPT(r)`): `null` = EVERYONE (nothing kept).
+ * Only a checked "Keep sending" is ever stored; a one-shot never is.
+ */
+export type MessengerKeptRecipient =
+  | { readonly kind: "everyone" }
+  | { readonly kind: "assistants"; readonly membershipIds: readonly string[] };
+
+/** Per project chat per member. Cache only — server value wins on load (later). */
+export type MessengerKeptRecipientRecord = {
+  readonly keptKey: string;
+  readonly projectId: string;
+  readonly memberKey: string;
+  readonly recipient: MessengerKeptRecipient | null;
+  readonly updatedAt: string;
+  readonly schemaVersion: 1;
+};
+
+/**
+ * Read/write only. There is deliberately no delete / clear: chats are never
+ * wiped from the browser; prune drops old message bodies inside a record.
+ */
+export type MessengerChatStoreAdapter = {
+  readonly readChat: (
+    chatKey: string,
+  ) => Promise<MessengerChatStoreRecord | null>;
+  readonly writeChat: (record: MessengerChatStoreRecord) => Promise<boolean>;
+  readonly readKept: (
+    keptKey: string,
+  ) => Promise<MessengerKeptRecipientRecord | null>;
+  readonly writeKept: (
+    record: MessengerKeptRecipientRecord,
+  ) => Promise<boolean>;
+};
