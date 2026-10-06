@@ -1,3 +1,4 @@
+import { parseProjectMembershipDeliveryMode } from "@/lib/projects/acl/membershipDeliveryMode.constant";
 import type { ProjectAclScope } from "@/lib/projects/acl/projectAclScopes.constant";
 import { isProjectAclScope } from "@/lib/projects/acl/projectAclScopes.constant";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
@@ -50,6 +51,7 @@ export default function mapProjectMembershipRow(
       ? String(row.project_display_name)
       : null,
     deviceId: row.device_id ? String(row.device_id) : null,
+    deliveryMode: parseProjectMembershipDeliveryMode(row.delivery_mode),
     createdAt: String(row.created_at),
     revokedAt: row.revoked_at ? String(row.revoked_at) : null,
     autoApprovedViaInviteLabel: row.auto_approved_via_invite_label

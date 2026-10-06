@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
+import { flipProjectMembershipToWebhookOnWakeLink } from "@/lib/projects/acl/setProjectMembershipDeliveryMode";
 import { assertSafeProjectWebhookUrl } from "@/lib/projects/acl/webhooks/assertSafeProjectWebhookUrl";
 import {
   createProjectWebhookSecret,
@@ -86,6 +87,10 @@ export const registerProjectWebhook = async (input: {
   if (rows.length === 0) {
     return { ok: false, code: "forbidden" };
   }
+  await flipProjectMembershipToWebhookOnWakeLink({
+    projectId: input.projectId,
+    membershipId: membership.id,
+  });
   await writeProjectAccessAudit({
     projectId: input.projectId,
     actorUserId: input.actorUserId,

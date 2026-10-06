@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 
 import { getSql } from "@/lib/db";
 import { buildProjectComputerHistoryMessage } from "@/lib/projects/acl/messaging/buildProjectComputerHistoryMessage";
+import { filterProjectWakeRecipientIds } from "@/lib/projects/acl/messaging/loadProjectPollDeliveryMembershipIds";
 import { notifyProjectComputerOfMessage } from "@/lib/projects/acl/messaging/notifyProjectComputerOfMessage";
 import { parseProjectMessageRefsJson } from "@/lib/projects/acl/messaging/parseProjectMessageRefsJson";
 import { wakeProjectMessageGrokRoutines } from "@/lib/projects/acl/messaging/wakeProjectMessageGrokRoutines";
@@ -68,10 +69,12 @@ export const insertProjectMessageWithDeliveries = async (input: {
     `;
   }
   // Accept = row stored. HMAC push stays best-effort. Grok wake is recorded first.
+  // delivery_mode=poll recipients keep their pending row but get no wake.
   const refs = parseProjectMessageRefsJson(input.refsJson);
-  const recipientMembershipIds = input.recipients.map(
-    (recipient) => recipient.id,
-  );
+  const recipientMembershipIds = await filterProjectWakeRecipientIds({
+    projectId: input.projectId,
+    membershipIds: input.recipients.map((recipient) => recipient.id),
+  });
   scheduleProjectMessageWebhookDelivery({
     payload: {
       projectId: input.projectId,

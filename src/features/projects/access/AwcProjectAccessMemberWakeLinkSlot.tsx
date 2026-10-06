@@ -1,5 +1,6 @@
 "use client";
 
+import AwcProjectAccessMemberDeliveryModeControl from "@/features/projects/access/AwcProjectAccessMemberDeliveryModeControl";
 import AwcProjectAccessMemberGrokWebhookForm from "@/features/projects/access/AwcProjectAccessMemberGrokWebhookForm";
 import type { AwcMemberWakeLinksListProps } from "@/features/projects/access/hooks/useAwcProjectAccessWakeLinks";
 import { resolveMemberWakeLinkState } from "@/features/projects/access/utils/resolveMemberWakeLinkState";
@@ -11,6 +12,7 @@ interface AwcProjectAccessMemberWakeLinkSlotProps {
     readonly isAgent: boolean;
     readonly projectDisplayName: string | null;
     readonly wakeLinkSet?: boolean;
+    readonly deliveryMode?: string;
   };
   readonly wakeLinks?: AwcMemberWakeLinksListProps;
 }
@@ -26,14 +28,28 @@ export default function AwcProjectAccessMemberWakeLinkSlot({
   }
   const request = wakeLinks?.request ?? null;
   const state = resolveMemberWakeLinkState(member, wakeLinks?.savedIds);
+  const savedNow = wakeLinks?.savedIds.has(member.id) === true;
   return (
-    <AwcProjectAccessMemberGrokWebhookForm
-      projectId={projectId}
-      membershipId={member.id}
-      memberName={member.projectDisplayName}
-      wakeLinkSet={state === "set"}
-      openRequest={request?.membershipId === member.id ? request.nonce : 0}
-      onSaved={wakeLinks?.onSaved}
-    />
+    <>
+      {state === null ? null : (
+        <AwcProjectAccessMemberDeliveryModeControl
+          projectId={projectId}
+          membershipId={member.id}
+          memberName={member.projectDisplayName}
+          deliveryMode={
+            !savedNow && member.deliveryMode === "poll" ? "poll" : "webhook"
+          }
+          wakeLinkSet={state === "set"}
+        />
+      )}
+      <AwcProjectAccessMemberGrokWebhookForm
+        projectId={projectId}
+        membershipId={member.id}
+        memberName={member.projectDisplayName}
+        wakeLinkSet={state === "set"}
+        openRequest={request?.membershipId === member.id ? request.nonce : 0}
+        onSaved={wakeLinks?.onSaved}
+      />
+    </>
   );
 }

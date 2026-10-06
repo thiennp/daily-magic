@@ -26,7 +26,8 @@ export type ProjectAccessAuditAction =
   | "msg.ack"
   | "msg.clear"
   | "membership.set_display_name"
-  | "membership.rename_display";
+  | "membership.rename_display"
+  | "membership.delivery_mode";
 
 export default interface ProjectAccessAuditRecord {
   readonly id: string;

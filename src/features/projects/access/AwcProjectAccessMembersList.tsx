@@ -19,6 +19,8 @@ interface MemberRow {
   readonly isAgent: boolean;
   /** Owner snapshot only (active member bots). */
   readonly wakeLinkSet?: boolean;
+  /** webhook | poll (Checks on demand). Absent → webhook. */
+  readonly deliveryMode?: string;
 }
 
 interface AwcProjectAccessMembersListProps {

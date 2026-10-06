@@ -52,7 +52,10 @@ export const getProjectBriefing = async (input: {
       teamLabel: access.membership?.teamLabel ?? null,
     },
     peers,
-    howToDispatch: selectProjectBriefingHowToDispatch(access.membership?.role),
+    howToDispatch: selectProjectBriefingHowToDispatch(
+      access.membership?.role,
+      access.membership?.deliveryMode,
+    ),
     playbooks: {
       boundHarnessSetSlugs,
       note:

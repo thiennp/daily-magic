@@ -49,6 +49,7 @@ describe("upsertProjectGrokRoutineWebhook (register_project_webhook path)", () =
     expect(result).toEqual({
       ok: true,
       grokWebhookUrl: "https://example.com/wake",
+      deliveryModeFlipped: false,
     });
     expect(JSON.stringify(result)).not.toContain("stored-bearer");
     const [strings, ...values] = inserts()[0] ?? [];

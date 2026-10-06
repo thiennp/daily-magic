@@ -108,5 +108,6 @@ export async function PUT(
     ok: true,
     ...toGrokWebhookStatusView(result.grokWebhookUrl),
     ...toHmacWebhookStatusView(hmac),
+    deliveryModeFlipped: result.deliveryModeFlipped,
   });
 }

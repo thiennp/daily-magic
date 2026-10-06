@@ -48,6 +48,7 @@ describe("writeProjectGrokRoutineWebhook (shared save step)", () => {
     expect(result).toEqual({
       ok: true,
       grokWebhookUrl: "https://example.com/wake",
+      deliveryModeFlipped: false,
     });
     expect(JSON.stringify(input)).toBe(snapshot);
     expect(inserts()).toHaveLength(1);

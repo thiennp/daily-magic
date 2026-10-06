@@ -25,6 +25,8 @@ export type AccessMembershipView = {
   readonly wakeLinkSet?: boolean;
   /** Invite id prefix when admitted via invite auto-approve; else null/absent. */
   readonly autoApprovedViaInviteLabel?: string | null;
+  /** webhook = wakes up on its own; poll = Checks on demand. Absent → webhook. */
+  readonly deliveryMode?: "webhook" | "poll" | string;
 };
 
 export type AccessPendingView = {

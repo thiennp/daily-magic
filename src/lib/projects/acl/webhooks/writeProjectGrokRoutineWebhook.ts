@@ -1,5 +1,6 @@
 import { asRowArray, getSql } from "@/lib/db";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
+import { flipProjectMembershipToWebhookOnWakeLink } from "@/lib/projects/acl/setProjectMembershipDeliveryMode";
 import { assertSafeProjectWebhookUrl } from "@/lib/projects/acl/webhooks/assertSafeProjectWebhookUrl";
 import { explainProjectGrokWebhookWriteMiss } from "@/lib/projects/acl/webhooks/explainProjectGrokWebhookWriteMiss";
 import {
@@ -12,7 +13,12 @@ import { toPublicGrokRoutineWebhook } from "@/lib/projects/acl/webhooks/projectG
 const MAX_GROK_WEBHOOK_BEARER_LENGTH = 2000;
 
 export type WriteProjectGrokRoutineWebhookResult =
-  | { readonly ok: true; readonly grokWebhookUrl: string }
+  | {
+      readonly ok: true;
+      readonly grokWebhookUrl: string;
+      /** True when this save moved delivery_mode poll → webhook. */
+      readonly deliveryModeFlipped: boolean;
+    }
   | {
       readonly ok: false;
       readonly code:
@@ -27,6 +33,7 @@ export type WriteProjectGrokRoutineWebhookResult =
 /**
  * Shared save step (owner form + register_project_webhook + owned-bot form).
  * ONE guarded INSERT … SELECT. Bearer stored, never returned.
+ * A saved wake link flips delivery_mode to webhook.
  */
 export const writeProjectGrokRoutineWebhook = async (input: {
   readonly target: ProjectGrokWebhookTarget;
@@ -80,7 +87,7 @@ export const writeProjectGrokRoutineWebhook = async (input: {
         project_id = EXCLUDED.project_id,
         user_id = EXCLUDED.user_id,
         updated_at = NOW()
-      RETURNING webhook_url
+      RETURNING webhook_url, membership_id
     `,
   );
   const row = rows[0];
@@ -91,5 +98,12 @@ export const writeProjectGrokRoutineWebhook = async (input: {
       code: await explainProjectGrokWebhookWriteMiss(target),
     };
   }
-  return { ok: true, grokWebhookUrl: pub.grokWebhookUrl };
+  const deliveryModeFlipped =
+    typeof row?.membership_id === "string"
+      ? await flipProjectMembershipToWebhookOnWakeLink({
+          projectId: target.projectId,
+          membershipId: row.membership_id,
+        })
+      : false;
+  return { ok: true, grokWebhookUrl: pub.grokWebhookUrl, deliveryModeFlipped };
 };

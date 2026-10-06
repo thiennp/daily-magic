@@ -1,3 +1,4 @@
+import type { ProjectMembershipDeliveryMode } from "@/lib/projects/acl/membershipDeliveryMode.constant";
 import type { ProjectAclScope } from "@/lib/projects/acl/projectAclScopes.constant";
 
 export type ProjectMembershipRole = "owner" | "member" | "viewer";
@@ -17,6 +18,8 @@ export default interface ProjectMembershipRecord {
   readonly projectDisplayName: string | null;
   /** Set for memberKind=computer; null otherwise. */
   readonly deviceId?: string | null;
+  /** webhook (wake) | poll (Checks on demand). Mig 071; default webhook. */
+  readonly deliveryMode?: ProjectMembershipDeliveryMode;
   readonly createdAt: string;
   readonly revokedAt: string | null;
   /** Set when admit was invite auto-approve; invite id prefix (8). */

@@ -3,6 +3,7 @@ import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToo
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import { executeGetMyProjectWebhookStatusTool } from "@/lib/agentAccess/executeGetMyProjectWebhookStatusTool";
 import { executeRegisterProjectWebhookTool } from "@/lib/agentAccess/executeRegisterProjectWebhookTool";
+import { executeSetMyProjectDeliveryModeTool } from "@/lib/agentAccess/executeSetMyProjectDeliveryModeTool";
 import { rotateOwnProjectApiKey } from "@/lib/projects/acl/projectApiKeys/rotateOwnProjectApiKey";
 
 const readProjectId = (args: unknown): string | null => {
@@ -30,6 +31,13 @@ export const executeProjectAclWebhookAndKeyTools = async (input: {
 
   if (input.name === "get_my_project_webhook_status") {
     return executeGetMyProjectWebhookStatusTool({
+      actor: input.actor,
+      args: input.args,
+    });
+  }
+
+  if (input.name === "set_my_project_delivery_mode") {
+    return executeSetMyProjectDeliveryModeTool({
       actor: input.actor,
       args: input.args,
     });

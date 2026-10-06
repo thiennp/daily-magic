@@ -7,6 +7,8 @@ export type ProjectGrokWebhookStatusView = {
   readonly hmacWebhookUrlHost?: string | null;
   readonly secretSet?: boolean;
   readonly errorMessage?: string;
+  /** PUT only: this save flipped delivery_mode poll → webhook. */
+  readonly deliveryModeFlipped?: boolean;
 };
 
 const grokWebhookPath = (projectId: string, membershipId: string): string =>

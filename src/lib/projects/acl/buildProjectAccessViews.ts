@@ -1,4 +1,5 @@
 import { loadUserProfilesByIds } from "@/lib/projects/acl/isAgentUser";
+import type { ProjectMembershipDeliveryMode } from "@/lib/projects/acl/membershipDeliveryMode.constant";
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
 import type { AgentWitchLocalConnectVersionStatus } from "@/lib/agentWitch/types/AgentWitchLocalConnectVersionStatus.type";
@@ -31,6 +32,8 @@ export type MembershipView = {
   readonly wakeLinkSet?: boolean;
   /** Invite id prefix when admitted via invite auto-approve; else null/absent. */
   readonly autoApprovedViaInviteLabel?: string | null;
+  /** webhook = wakes up on its own; poll = Checks on demand (no wake). */
+  readonly deliveryMode?: ProjectMembershipDeliveryMode;
 };
 
 /** UI-contract PendingRequestView */
@@ -70,6 +73,7 @@ export const buildMembershipViews = async (
       revokedAt: m.revokedAt,
       deviceId: m.deviceId ?? null,
       autoApprovedViaInviteLabel: m.autoApprovedViaInviteLabel ?? null,
+      deliveryMode: m.deliveryMode ?? "webhook",
     };
   });
 };

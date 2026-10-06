@@ -1,5 +1,9 @@
 import { ensureProjectInviteHooksSchema } from "@/lib/projects/acl/ensureProjectInviteHooksSchema";
 import {
+  ensureProjectMembershipDeliveryModeSchema,
+  resetProjectMembershipDeliveryModeSchemaEnsureForTests,
+} from "@/lib/projects/acl/ensureProjectMembershipDeliveryModeSchema";
+import {
   ensureProjectMessageDeleteOnReadSchema,
   resetProjectMessageDeleteOnReadSchemaForTests,
 } from "@/lib/projects/acl/messaging/ensureProjectMessageDeleteOnReadSchema";
@@ -14,6 +18,7 @@ export const resetProjectAclSchemaEnsureForTests = (): void => {
   state.ensured = false;
   state.promise = null;
   resetProjectMessageDeleteOnReadSchemaForTests();
+  resetProjectMembershipDeliveryModeSchemaEnsureForTests();
 };
 
 /** Idempotent CREATE for ACL tables (full DDL in migrations; audit table dropped 049). */
@@ -60,6 +65,7 @@ export const ensureProjectAclSchema = async (): Promise<void> => {
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
     await ensureProjectInviteHooksSchema();
+    await ensureProjectMembershipDeliveryModeSchema();
     // Single entry for delete-on-read / ack outcome tables (needs project_messages).
     await ensureProjectMessageDeleteOnReadSchema();
     await sql`ALTER TABLE project_memberships

@@ -6,6 +6,7 @@ import {
   formatAwcGrokWakeCopy,
 } from "@/features/projects/access/awcGrokWakeAwaitingCopy.constant";
 import { AWC_GROK_WEBHOOK_FORM_COPY } from "@/features/projects/access/awcGrokWebhookFormCopy.constant";
+import { AWC_DELIVERY_MODE_COPY } from "@/features/projects/access/awcDeliveryModeCopy.constant";
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
 import type { useMemberGrokWebhookForm } from "@/features/projects/access/hooks/useMemberGrokWebhookForm";
 import type { ProjectGrokWebhookStatusView } from "@/features/projects/access/utils/projectGrokWebhookApi";
@@ -79,6 +80,9 @@ export default function AwcProjectAccessMemberGrokWakeLinkFields({
           className="text-xs text-emerald-800 dark:text-emerald-200"
         >
           {formatAwcGrokWakeCopy(wake.toastSaved, memberName)}
+          {form.status?.deliveryModeFlipped === true
+            ? AWC_DELIVERY_MODE_COPY.toastSavedAutoFlipSuffix
+            : null}
         </p>
       ) : null}
       {form.error ? <p className="text-xs text-red-600">{form.error}</p> : null}
