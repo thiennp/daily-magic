@@ -17,14 +17,14 @@ export const PROJECT_PAGE_OVERVIEW_COPY = {
   unreadStat: (n: number) => `${n} unread`,
   safetyRulesStat: (active: number, max: number) =>
     `${active} of ${max} safety rules on`,
+  /** `agents` = Library agent definitions attached to the project (not assistants). */
   compositionStat: (playbooks: number, workflows: number, agents: number) =>
     `${playbooks} playbooks · ${workflows} workflows · ${agents} agents`,
 
   attentionTitle: "Needs your attention",
   attentionOpen: "Open conversation",
-  /** Tip — Product pass */
   attentionWaiting: (name: string) =>
-    `${name} finished and is waiting for you to confirm`,
+    `${name} finished a task and is waiting for you to confirm.`,
 
   setupTitle: "Set up",
   setupBarProgress: (done: number, total: number) =>
@@ -42,19 +42,19 @@ export const PROJECT_PAGE_OVERVIEW_COPY = {
   setupInviteAssistantHint: (names: string) =>
     names.length > 0 ? `${names} joined` : "No assistants in this project yet.",
   setupPlaybook: "Attach a playbook",
-  setupPlaybookHint: `No playbook bound yet. Edit on ${THIS_MAC_DEVICE_BADGE_LABEL.toLowerCase()}.`,
+  setupPlaybookHint: "No playbook attached yet. Add one on this computer.",
   setupPlaybookDoneHint: (count: number) =>
-    count === 1 ? "1 playbook bound" : `${count} playbooks bound`,
-  setupFolder: "Add a computer folder",
+    count === 1 ? "1 playbook attached" : `${count} playbooks attached`,
+  setupFolder: "Add a folder",
   setupFolderHint: "Where the project files live.",
   setupFolderDoneHint: (count: number) =>
     count === 1 ? "1 folder linked" : `${count} folders linked`,
-  setupGit: "Add a git remote",
-  setupGitHint: "Optional. Lets assistants clone and push.",
+  setupGit: "Add a code repository",
+  setupGitHint: "Optional. Lets assistants get and save the code.",
   setupGitDoneHint: (count: number) =>
-    count === 1 ? "1 remote saved" : `${count} remotes saved`,
+    count === 1 ? "1 repository saved" : `${count} repositories saved`,
   setupInvitePeople: "Invite a teammate",
-  setupInvitePeopleHint: "Right now it is only you.",
+  setupInvitePeopleHint: "Right now it's only you.",
   setupInvitePeopleDoneHint: "People can join this project.",
   setupOpenOnComputer: `Open on ${THIS_MAC_DEVICE_BADGE_LABEL.toLowerCase()}`,
   setupAdd: "Add",
@@ -65,14 +65,13 @@ export const PROJECT_PAGE_OVERVIEW_COPY = {
   assistantsMessage: "Message",
   assistantsEmpty: "No assistants yet.",
   assistantsInvite: "Invite an assistant",
-  /** Tip — Product pass */
+  /** `when` from formatOverviewWhen mid-sentence (e.g. `yesterday 15:15`). */
   assistantsLastTask: (when: string) => `Last task ${when}`,
   assistantsNoTasks: "No tasks yet",
-  assistantsSilent: "Has not answered yet",
+  assistantsSilent: "Hasn't answered yet",
 
   recentTitle: "Recent activity",
   recentViewAll: "Open Activity",
-  /** Tip — Product pass */
   recentEmpty: "Nothing yet. Messages show up here.",
   recentOpen: "Open",
 
@@ -87,9 +86,10 @@ export const PROJECT_PAGE_OVERVIEW_COPY = {
     hitsLine: string,
   ) =>
     `${important} ${AWC_PROJECT_PITFALLS_COPY.severity.block} · ${warning} ${AWC_PROJECT_PITFALLS_COPY.severity.warn} · ${note} ${AWC_PROJECT_PITFALLS_COPY.severity.info} · ${active} of ${max} on · ${hitsLine}`,
-  safetyHitsNone: "no hits in 30 days",
+  /** All-time: summary.totalHits sums hitCount (no 30-day window). */
+  safetyHitsNone: "no hits yet",
   safetyHitsSome: (n: number) =>
-    n === 1 ? "1 hit in the last 30 days" : `${n} hits in the last 30 days`,
+    n === 1 ? "1 hit logged" : `${n} hits logged`,
   safetyLoading: AWC_PROJECT_PITFALLS_COPY.loading,
   safetyEmpty: AWC_PROJECT_PITFALLS_COPY.empty,
 } as const;
