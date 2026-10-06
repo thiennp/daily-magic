@@ -51,7 +51,7 @@ export default function AwcProjectLibrarySkillForm({
     setFailed(!ok);
     if (ok)
       onDone(
-        asDraft ? A["library.save_draft.toast"] : A["library.new.toast.skill"],
+        asDraft ? A["library.save_draft.toast"] : A["library.publish.toast"],
       );
   };
 

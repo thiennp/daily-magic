@@ -26,7 +26,7 @@ export const PROJECT_PAGE_LIBRARY_ACTIONS_COPY = {
   "library.add_from.cancel": "Cancel",
   "library.add_from.toast": "Copy added to {project}.",
   "library.share.note":
-    "Members see published items. Drafts are visible only to you and the owner.",
+    "Members see published skills. Drafts are visible only to you and the owner.",
   "library.publish": "Publish",
   "library.publish.toast": "Published. Members can use this now.",
   "library.save_draft": "Save draft",

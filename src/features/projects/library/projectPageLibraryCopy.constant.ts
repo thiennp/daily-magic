@@ -6,8 +6,8 @@
 export const PROJECT_PAGE_LIBRARY_COPY = {
   "tabs.library": "Library",
   "library.heading": "Library",
-  "library.intro": "Playbooks, workflows, and skills for this project.",
-  "library.aria": "Library for this project",
+  "library.intro": "Your playbooks and workflows, plus this project's skills.",
+  "library.aria": "Your library for this project",
   "library.kind.playbook": "Playbook",
   "library.kind.playbooks": "Playbooks",
   "library.kind.workflow": "Workflow",
@@ -30,7 +30,7 @@ export const PROJECT_PAGE_LIBRARY_COPY = {
   "library.search.placeholder": "Search by name",
   "library.filter.empty": "No items match.",
   "library.empty":
-    "No playbooks or skills yet. Create one, or add one from another project.",
+    "Nothing here for you yet. Create a skill, or add one from another project.",
   "library.loading": "Loading library…",
   "library.error": "Could not load the library. Try again.",
   "library.error.retry": "Try again",

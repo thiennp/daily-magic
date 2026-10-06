@@ -7,7 +7,7 @@ export const PROJECT_PAGE_REPORTS_COPY = {
   "reports.heading": "Reports",
   "reports.intro":
     "Finished work from assistants and this computer lands here.",
-  "reports.aria": "Reports for this project",
+  "reports.aria": "Your reports for this project",
   "reports.col.title": "Title",
   "reports.col.from": "From",
   "reports.col.date": "Date",
@@ -23,7 +23,7 @@ export const PROJECT_PAGE_REPORTS_COPY = {
   "reports.search.placeholder": "Search by title or who ran it",
   "reports.filter.empty": "No reports match.",
   "reports.empty":
-    "No reports yet. Reports from assistants and your computer show up here.",
+    "You don't have any reports in this project yet. Finished work from your assistants and this computer shows up here.",
   "reports.loading": "Loading reports…",
   "reports.error": "Could not load reports. Try again.",
   "reports.error.retry": "Try again",

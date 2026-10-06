@@ -81,13 +81,26 @@ describe("project layout v2 L6 Reports + Library", () => {
       "Finished work from assistants and this computer lands here.",
     );
     expect(R["reports.empty"]).toBe(
-      "No reports yet. Reports from assistants and your computer show up here.",
+      "You don't have any reports in this project yet. Finished work from your assistants and this computer shows up here.",
     );
+    expect(R["reports.aria"]).toBe("Your reports for this project");
     expect(L["library.intro"]).toBe(
-      "Playbooks, workflows, and skills for this project.",
+      "Your playbooks and workflows, plus this project's skills.",
     );
+    expect(L["library.aria"]).toBe("Your library for this project");
     expect(L["library.empty"]).toBe(
-      "No playbooks or skills yet. Create one, or add one from another project.",
+      "Nothing here for you yet. Create a skill, or add one from another project.",
+    );
+    expect(A["library.share.note"]).toBe(
+      "Members see published skills. Drafts are visible only to you and the owner.",
+    );
+    expect(A["library.publish.toast"]).toBe(
+      "Published. Members can use this now.",
+    );
+    const skillForm = read(`${P}/library/AwcProjectLibrarySkillForm.tsx`);
+    expect(skillForm).toContain('A["library.publish.toast"]');
+    expect(skillForm).not.toContain(
+      'asDraft ? A["library.save_draft.toast"] : A["library.new.toast.skill"]',
     );
     expect(A["library.new"]).toBe("New");
     expect(A["library.add_from"]).toBe("Add from another project");
