@@ -3,20 +3,14 @@
 import { useCallback, useEffect, useState } from "react";
 
 import useIsMobileClient from "@/hooks/useIsMobileClient";
-import { refreshLocalAgentWitchIdentity } from "@/features/agent-witch/localAgentWitchIdentityResource";
-import { setLocalMacTokenHash } from "@/features/home/utils/localMacTokenHashStore";
+import useDeferredInstallTokenIdentityCommit from "@/features/home/hooks/useDeferredInstallTokenIdentityCommit";
 import { fetchAgentWitchInstallToken } from "@/lib/agentWitch/fetchAgentWitchInstallToken";
-
-const rememberInstallTokenHash = (tokenHash: string | undefined): void => {
-  if (tokenHash !== undefined && tokenHash.length > 0) {
-    setLocalMacTokenHash(tokenHash);
-    void refreshLocalAgentWitchIdentity();
-  }
-};
 
 const usePersonalizedAgentWitchInstallCommand = (input: {
   readonly enabled: boolean;
   readonly fallbackInstallCommand: string;
+  /** HOME-066: commit mint hash only after enabled becomes false (modal close). */
+  readonly commitIdentityWhenDisabled?: boolean;
 }): {
   readonly installCommand: string;
   readonly isLoading: boolean;
@@ -30,6 +24,10 @@ const usePersonalizedAgentWitchInstallCommand = (input: {
   const [error, setError] = useState<string | null>(null);
   const isMobileClient = useIsMobileClient();
   const enabled = input.enabled && !isMobileClient;
+  const { applyMintedTokenHash } = useDeferredInstallTokenIdentityCommit({
+    enabled,
+    commitIdentityWhenDisabled: input.commitIdentityWhenDisabled === true,
+  });
 
   const refresh = useCallback(async (): Promise<void> => {
     if (isMobileClient) {
@@ -42,7 +40,7 @@ const usePersonalizedAgentWitchInstallCommand = (input: {
     const result = await fetchAgentWitchInstallToken();
     if (result.ok && result.installCommand !== undefined) {
       setInstallCommand(result.installCommand);
-      rememberInstallTokenHash(result.tokenHash);
+      applyMintedTokenHash(result.tokenHash);
     } else {
       setError(
         result.errorMessage ?? "Could not create a computer install link.",
@@ -50,7 +48,7 @@ const usePersonalizedAgentWitchInstallCommand = (input: {
     }
 
     setIsLoading(false);
-  }, [isMobileClient]);
+  }, [applyMintedTokenHash, isMobileClient]);
 
   useEffect(() => {
     if (!enabled) {
@@ -70,7 +68,7 @@ const usePersonalizedAgentWitchInstallCommand = (input: {
 
       if (result.ok && result.installCommand !== undefined) {
         setInstallCommand(result.installCommand);
-        rememberInstallTokenHash(result.tokenHash);
+        applyMintedTokenHash(result.tokenHash);
       } else {
         setError(
           result.errorMessage ?? "Could not create a computer install link.",
@@ -85,7 +83,7 @@ const usePersonalizedAgentWitchInstallCommand = (input: {
     return () => {
       cancelledRef.current = true;
     };
-  }, [enabled]);
+  }, [applyMintedTokenHash, enabled]);
 
   return { installCommand, isLoading, error, refresh };
 };

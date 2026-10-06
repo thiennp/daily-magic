@@ -696,6 +696,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-066 — Connect this computer modal closes after install-token mint
+
+**Symptom:** On desktop, **Connect this computer** opened “Preparing your install command…”, `POST /api/agent-witch/install-token` returned 200, then the window closed itself (~600ms) before the command appeared. A second open from the new **This computer** row could close the same way.
+
+**Root cause:** After SHELL-006 stopped page-load minting, the first mint ran when the modal opened. `usePersonalizedAgentWitchInstallCommand` immediately called `setLocalMacTokenHash` + `refreshLocalAgentWitchIdentity`. The hash no longer matched the offline device row that owned the Connect button (so that row’s footer unmounted the open modal), and/or the wake-identity refresh set `isCheckingLocalHostname`, which hid `ConnectThisMacRow` and unmounted its modal.
+
+**Fix:** Modal callers pass `commitIdentityWhenDisabled: true`. The hook holds the minted hash until `enabled` becomes false (modal close), then commits identity. Guide / non-modal callers keep immediate commit.
+
+**Regression tests:** `shouldHoldInstallTokenIdentityCommit.test.ts`, `usePersonalizedAgentWitchInstallCommand.home066.test.ts`, `ConnectThisMacButton.test.ts`, `appShellDevicesPanelInstallToken.test.ts` (HOME-066).
+
+---
+
 ## Adding issues
 
-Use the next ID (`HOME-065`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-067`, …). Include symptom, root cause, fix paths, and test file.

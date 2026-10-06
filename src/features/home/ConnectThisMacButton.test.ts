@@ -27,4 +27,13 @@ describe("ConnectThisMacButton", () => {
       "shouldShowConnectThisMac && thisMacIdentity.thisMacDeviceId === null",
     );
   });
+
+  it("HOME-066: defers install-token identity until the Connect modal closes", () => {
+    const source = readSibling("ConnectThisMacButton.tsx");
+    expect(source).toContain("commitIdentityWhenDisabled: true");
+    expect(source).toMatch(
+      /usePersonalizedAgentWitchInstallCommand\(\{\s*enabled: isModalOpen,/,
+    );
+  });
+
 });

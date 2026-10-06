@@ -42,6 +42,7 @@ export default function ConnectAnotherMacButton({
   } = usePersonalizedAgentWitchInstallCommand({
     enabled: isModalOpen,
     fallbackInstallCommand: installCommand,
+    commitIdentityWhenDisabled: true,
   });
   const { isCheckingLocalApp, isLocalAppInstalled } =
     useLocalMacBrowserContext();

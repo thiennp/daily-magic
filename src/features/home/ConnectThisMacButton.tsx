@@ -53,6 +53,7 @@ export default function ConnectThisMacButton({
   } = usePersonalizedAgentWitchInstallCommand({
     enabled: isModalOpen,
     fallbackInstallCommand: installCommand,
+    commitIdentityWhenDisabled: true,
   });
   const isMobileClient = useIsMobileClient();
 

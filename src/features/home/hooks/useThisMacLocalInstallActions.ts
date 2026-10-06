@@ -38,6 +38,7 @@ const useThisMacLocalInstallActions = (input?: {
   } = usePersonalizedAgentWitchInstallCommand({
     enabled: isUpdateLocalModalOpen,
     fallbackInstallCommand: fallbackUpdateLocalCommand,
+    commitIdentityWhenDisabled: true,
   });
   const updateLocalCommand = isUpdateLocalModalOpen
     ? personalizedUpdateLocalCommand

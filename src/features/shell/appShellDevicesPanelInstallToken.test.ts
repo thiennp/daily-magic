@@ -28,6 +28,7 @@ describe("AppShellDevicesPanel install-token side effect", () => {
       expect(source).toMatch(
         /usePersonalizedAgentWitchInstallCommand\(\{\s*enabled: isModalOpen,/,
       );
+      expect(source).toContain("commitIdentityWhenDisabled: true");
     }
   });
 
