@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
+import { buildAssistantOwnerLoginPath } from "@/features/agent-access/buildAssistantOwnerLoginPath";
 import DeviceVerifyPageView from "@/features/agent-access/device-verify/DeviceVerifyPageView";
 import { DEVICE_VERIFY_COPY } from "@/features/agent-access/device-verify/deviceVerifyCopy.constant";
 import { readDeviceVerifySearchParam } from "@/features/agent-access/device-verify/readDeviceVerifySearchParam";
@@ -48,9 +49,8 @@ export default async function DeviceVerifyPage({ searchParams }: PageProps) {
         ? `?code=${encodeURIComponent(userCodeDisplay)}`
         : "";
     const callback = `/device/verify${q}`;
-    // Soft: loginRequired is the human reason for this redirect.
     redirect(
-      `/login?callbackUrl=${encodeURIComponent(callback)}&notice=${encodeURIComponent(DEVICE_VERIFY_COPY.loginRequired)}`,
+      buildAssistantOwnerLoginPath(callback),
     );
   }
 

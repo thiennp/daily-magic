@@ -41,4 +41,27 @@ describe("POST /api/agent-access/oauth/device/confirm", () => {
 
     expect(response.status).toBe(401);
   });
+
+  it("browser form post with expired session goes back to verify (then /login)", async () => {
+    vi.mocked(requireAuth).mockResolvedValue({
+      error: Response.json({ error: "Unauthorized" }, { status: 401 }),
+      actor: null,
+    });
+
+    const response = await POST(
+      new Request("http://localhost/api/agent-access/oauth/device/confirm", {
+        method: "POST",
+        headers: {
+          accept: "text/html",
+          "content-type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({ user_code: "BCDF-GHJK" }).toString(),
+      }),
+    );
+
+    expect(response.status).toBe(303);
+    expect(response.headers.get("location")).toBe(
+      "http://localhost/device/verify?code=BCDF-GHJK",
+    );
+  });
 });

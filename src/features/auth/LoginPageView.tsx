@@ -6,7 +6,12 @@ import MarketingCard from "@/features/marketing/MarketingCard";
 import MarketingShell from "@/features/marketing/MarketingShell";
 
 /** Dedicated sign-in layout (not the home marketing hero). */
-export default function LoginPageView() {
+type LoginPageViewProps = {
+  /** Allowlisted reason for this sign-in (e.g. assistant owner). */
+  readonly notice?: string | null;
+};
+
+export default function LoginPageView({ notice = null }: LoginPageViewProps) {
   return (
     <MarketingShell showSignIn={false} showFooter={false}>
       <div className="mx-auto grid max-w-5xl gap-10 lg:grid-cols-2 lg:items-center">
@@ -21,6 +26,11 @@ export default function LoginPageView() {
 
         <MarketingCard>
           <h2 className="text-xl font-semibold text-gray-900">Sign in</h2>
+          {notice !== null ? (
+            <p role="status" className="mt-2 text-sm font-medium text-gray-900">
+              {notice}
+            </p>
+          ) : null}
           <p className="mt-2 text-sm text-gray-600">
             Use your email link or Google account to continue.
           </p>

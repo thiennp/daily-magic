@@ -34,8 +34,17 @@ export async function POST(request: Request): Promise<Response> {
     return Response.json({ ok: false, error: "Forbidden" }, { status: 403 });
   }
 
+  const wantsHtml = (request.headers.get("accept") ?? "").includes("text/html");
   const { actor, error } = await requireAuth();
   if (error || !actor) {
+    if (wantsHtml) {
+      // Session expired: the verify page sends the browser to /login and back.
+      const code = await readUserCode(request);
+      return Response.redirect(
+        new URL(`/device/verify?code=${encodeURIComponent(code)}`, request.url),
+        303,
+      );
+    }
     return error ?? Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -46,7 +55,6 @@ export async function POST(request: Request): Promise<Response> {
     ipHash: hashAgentAccessClientIp(readClientIp(request)),
   });
 
-  const wantsHtml = (request.headers.get("accept") ?? "").includes("text/html");
   if (!outcome.ok) {
     if (wantsHtml) {
       return Response.redirect(

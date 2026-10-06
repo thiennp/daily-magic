@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
+import { buildAssistantOwnerLoginPath } from "@/features/agent-access/buildAssistantOwnerLoginPath";
 import OauthConsentPageView from "@/features/agent-access/oauth-consent/OauthConsentPageView";
 import { OAUTH_CONSENT_COPY } from "@/features/agent-access/oauth-consent/oauthConsentCopy.constant";
 import { readOauthConsentSearchParam } from "@/features/agent-access/oauth-consent/readOauthConsentSearchParam";
@@ -30,7 +31,7 @@ export default async function OauthConsentPage({ searchParams }: PageProps) {
   if (!session?.user?.id) {
     const callback = `/oauth/consent${pendingId.length > 0 ? `?pending=${encodeURIComponent(pendingId)}` : ""}`;
     redirect(
-      `/login?callbackUrl=${encodeURIComponent(callback)}&notice=${encodeURIComponent(OAUTH_CONSENT_COPY.loginRequired)}`,
+      buildAssistantOwnerLoginPath(callback),
     );
   }
 
