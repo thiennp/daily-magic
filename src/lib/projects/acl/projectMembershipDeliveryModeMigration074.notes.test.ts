@@ -55,6 +55,15 @@ describe("074 project membership delivery_mode DDL", () => {
     );
     expect(src).toContain("ADD COLUMN IF NOT EXISTS platform TEXT");
   });
+
+  it("soft ensure never re-runs the 074 poll backfill (runs once via schema_migrations)", () => {
+    const src = read(
+      "src/lib/projects/acl/ensureProjectMembershipDeliveryModeSchema.ts",
+    );
+    // A boot-time re-run would move new linkless Grok seats (webhook) to poll.
+    expect(src).not.toMatch(/\bUPDATE\b/i);
+    expect(src).not.toContain("'poll'");
+  });
 });
 
 describe("resolveInitialProjectMembershipDeliveryMode", () => {

@@ -34,12 +34,11 @@ export const useMemberDeliveryMode = (input: {
     void saveMemberDeliveryMode(input.projectId, input.membershipId, next)
       .then((result) => {
         if (result.ok !== true) {
-          setError(
-            formatAwcGrokWakeCopy(
-              result.errorMessage ?? copy.error,
-              input.memberName,
-            ),
-          );
+          const template =
+            result.code === "invalid_delivery_mode"
+              ? copy.invalidMode
+              : (result.errorMessage ?? copy.error);
+          setError(formatAwcGrokWakeCopy(template, input.memberName));
           return;
         }
         setMode(next);

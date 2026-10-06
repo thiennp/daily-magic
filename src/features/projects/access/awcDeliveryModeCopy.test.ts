@@ -28,6 +28,7 @@ describe("delivery_mode owner copy + row state", () => {
       toastSavedAutoFlip:
         "Wake link saved. {name} now wakes up on its own when the project needs it.",
       error: "Couldn't switch how {name} gets messages. Try again.",
+      invalidMode: "Choose how {name} gets messages.",
     });
   });
 

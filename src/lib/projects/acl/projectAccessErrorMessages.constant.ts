@@ -41,7 +41,7 @@ export const PROJECT_ACCESS_ERROR_MESSAGES: Readonly<Record<string, string>> = {
   invalid_bearer: "Enter the key from the bot's webhook routine (up to 2000 characters).",
   naming_required: "Give this bot a project nickname first.",
   wake_link_required: "Needs a wake link. Add one to switch.",
-  invalid_delivery_mode: "Choose how {name} gets messages.",
+  invalid_delivery_mode: "Choose how this assistant gets messages.",
   folder_ref_device_not_member:
     "Pick a computer that is an active member of this project.",
 };

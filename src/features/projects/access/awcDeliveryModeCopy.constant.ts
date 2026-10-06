@@ -17,4 +17,6 @@ export const AWC_DELIVERY_MODE_COPY = {
   toastSavedAutoFlip:
     "Wake link saved. {name} now wakes up on its own when the project needs it.",
   error: "Couldn't switch how {name} gets messages. Try again.",
+  /** Owner UI fill for code invalid_delivery_mode (raw API copy has no name). */
+  invalidMode: "Choose how {name} gets messages.",
 } as const;
