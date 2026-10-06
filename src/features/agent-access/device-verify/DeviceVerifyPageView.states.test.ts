@@ -31,7 +31,7 @@ describe("/device/verify states (S4 a11y + layout)", () => {
     });
     expect(html).toMatch(/role="status"[^>]*aria-live="polite"/);
     expect(text(html)).toContain(
-      "Next step Your assistant asks to join a project with its invite. The project owner approves it in Access › People.",
+      "Next step Your assistant asks to join a project with its invite. The project owner approves it in the project's Members list.",
     );
     expect(text(html).toLowerCase()).not.toMatch(/\bbots?\b/);
   });

@@ -9,5 +9,5 @@ export const DEVICE_VERIFY_STATE_COPY = {
   nextStepLabel: "Next step",
   /** Points at the project owner's Approve (ownership is not project access). */
   nextStep:
-    "Your assistant asks to join a project with its invite. The project owner approves it in Access › People.",
+    "Your assistant asks to join a project with its invite. The project owner approves it in the project's Members list.",
 } as const;

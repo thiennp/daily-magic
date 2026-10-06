@@ -82,7 +82,7 @@ describe("resolveDeviceVerifyView (S4 guards + copy)", () => {
       alreadyOwner: "You're already this assistant's owner.",
       nextStepLabel: "Next step",
       nextStep:
-        "Your assistant asks to join a project with its invite. The project owner approves it in Access › People.",
+        "Your assistant asks to join a project with its invite. The project owner approves it in the project's Members list.",
     });
     expect(Object.values(DEVICE_VERIFY_STATE_COPY).join(" ")).not.toMatch(
       /\bbots?\b/i,
