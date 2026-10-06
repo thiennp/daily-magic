@@ -6,8 +6,9 @@ import { useAwcProjectInbox } from "@/features/projects/access/inbox/hooks/useAw
 
 /**
  * One inbox fetch per Messages tab — enabled only for owners (no requests
- * otherwise). Bar shows with >=1 message, while a toast (6s Undo) is up, or
- * while the Archived view is on so Undo / Restore stay reachable.
+ * otherwise). Bar shows with >=1 message, while a toast (6s Undo) is up,
+ * while the Archived view is on, or when archivedCount > 0 so Clear / Restore
+ * stay reachable.
  */
 export const useAwcProjectMessengerInboxClear = (
   projectId: string,
@@ -20,7 +21,10 @@ export const useAwcProjectMessengerInboxClear = (
     isOwner &&
     !inbox.forbidden &&
     !inbox.unavailable &&
-    (inbox.messages.length >= 1 || inbox.toast !== null || inbox.showArchived);
+    (inbox.messages.length >= 1 ||
+      inbox.toast !== null ||
+      inbox.showArchived ||
+      inbox.archivedCount > 0);
 
   return {
     inbox,
