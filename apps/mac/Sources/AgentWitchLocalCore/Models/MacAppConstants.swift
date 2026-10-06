@@ -50,7 +50,7 @@ public enum MacAppConstants {
     /// Shown when `/health` answers without identity (AWL bundle older than this app).
     public static let unverifiedLocalHealthReason =
         "AgentWitch Local needs an update to finish connecting. "
-        + "Keep it running so it can self-update, or use Copy install command / Connect this Mac."
+        + "Keep it running so it can self-update, or use Copy install command / Connect this computer."
     /// Menu-bar notice when web opens agentwitch-local:// with a path this app cannot handle.
     public static let unsupportedConnectDeepLinkReason =
         "This AgentWitch Local cannot handle that Connect link. "
