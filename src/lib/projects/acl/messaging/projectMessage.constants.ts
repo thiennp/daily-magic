@@ -31,6 +31,9 @@ export const PROJECT_MESSAGE_KIND_TASK_BLOCKED = "task.blocked";
 export const PROJECT_MESSAGE_KIND_PEER_SILENT = "peer.silent";
 /** System notice to the sender: still silent at 10 min, delivery blocked. */
 export const PROJECT_MESSAGE_KIND_PEER_SILENT_BLOCKED = "peer.silent_blocked";
+/** Sticky recipient left/removed — composer resets to default all. */
+export const PROJECT_MESSAGE_KIND_COMPOSER_RECIPIENT_STICKY_CLEARED =
+  "composer.recipient_sticky_cleared";
 
 /** Project knowledge / folder / repo / info changed — fan-out to members + owner. */
 export const PROJECT_MESSAGE_KIND_PROJECT_UPDATED = "project.updated";
@@ -39,6 +42,7 @@ export const PROJECT_MESSAGE_KIND_PROJECT_UPDATED = "project.updated";
 export const PROJECT_MESSAGE_SYSTEM_NOTICE_KINDS = [
   PROJECT_MESSAGE_KIND_PEER_SILENT,
   PROJECT_MESSAGE_KIND_PEER_SILENT_BLOCKED,
+  PROJECT_MESSAGE_KIND_COMPOSER_RECIPIENT_STICKY_CLEARED,
 ] as const;
 /** Inbox / log sender name for system notices (not "Owner", not the peer). */
 export const PROJECT_MESSAGE_SYSTEM_SENDER_DISPLAY_NAME = "System";

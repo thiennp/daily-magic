@@ -1,3 +1,4 @@
+import { clearStickyOnMembershipLeave } from "@/lib/projects/acl/composer/clearStickyOnMembershipLeave";
 import { ensureProjectComputerMembershipSchema } from "@/lib/projects/acl/ensureProjectComputerMembershipSchema";
 import { asRowArray, getSql } from "@/lib/db";
 
@@ -18,7 +19,7 @@ export const revokeProjectComputerMembershipsForDevice = async (input: {
               AND project_id = ${input.projectId}
               AND member_kind = 'computer'
               AND status = 'active'
-            RETURNING id
+            RETURNING id, project_id, project_display_name
           `,
         )
       : asRowArray(
@@ -28,10 +29,23 @@ export const revokeProjectComputerMembershipsForDevice = async (input: {
             WHERE device_id = ${input.deviceId}
               AND member_kind = 'computer'
               AND status = 'active'
-            RETURNING id
+            RETURNING id, project_id, project_display_name
           `,
         );
-  return rows
-    .map((row) => row.id)
-    .filter((id): id is string => typeof id === "string" && id.length > 0);
+  const ids: string[] = [];
+  for (const row of rows) {
+    const id = typeof row.id === "string" ? row.id : null;
+    const projectId = typeof row.project_id === "string" ? row.project_id : null;
+    if (id === null || projectId === null) continue;
+    ids.push(id);
+    await clearStickyOnMembershipLeave({
+      projectId,
+      membershipId: id,
+      displayName:
+        typeof row.project_display_name === "string"
+          ? row.project_display_name
+          : null,
+    });
+  }
+  return ids;
 };

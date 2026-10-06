@@ -1,3 +1,4 @@
+import { clearStickyOnMembershipLeave } from "@/lib/projects/acl/composer/clearStickyOnMembershipLeave";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import mapProjectMembershipRow from "@/lib/projects/acl/mapProjectMembershipRow";
 import { purgeProjectMembershipData } from "@/lib/projects/acl/purgeProjectMembershipData";
@@ -47,6 +48,11 @@ export const revokeProjectMembership = async (input: {
   await purgeProjectMembershipData({
     projectId: input.projectId,
     membership,
+  });
+  await clearStickyOnMembershipLeave({
+    projectId: input.projectId,
+    membershipId: membership.id,
+    displayName: membership.projectDisplayName,
   });
   await writeProjectAccessAudit({
     projectId: input.projectId,

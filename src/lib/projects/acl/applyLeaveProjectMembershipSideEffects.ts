@@ -1,3 +1,4 @@
+import { clearStickyOnMembershipLeave } from "@/lib/projects/acl/composer/clearStickyOnMembershipLeave";
 import { purgeProjectMembershipData } from "@/lib/projects/acl/purgeProjectMembershipData";
 import { revokeProjectApiKeysForMembership } from "@/lib/projects/acl/projectApiKeys/revokeProjectApiKeysForMembership";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
@@ -16,6 +17,11 @@ export const applyLeaveProjectMembershipSideEffects = async (input: {
   await purgeProjectMembershipData({
     projectId: input.projectId,
     membership: input.membership,
+  });
+  await clearStickyOnMembershipLeave({
+    projectId: input.projectId,
+    membershipId: input.membership.id,
+    displayName: input.membership.projectDisplayName,
   });
   await writeProjectAccessAudit({
     projectId: input.projectId,

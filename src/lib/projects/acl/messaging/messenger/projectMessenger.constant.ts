@@ -40,6 +40,7 @@ export const PROJECT_MESSENGER_HIDDEN_KINDS: readonly string[] = [
   "peer.joined",
   "peer.left",
   "peer.renamed",
+  "composer.recipient_sticky_cleared",
 ];
 
 /** Rows loaded per view. Equals the project-wide unread cap, so nothing live is cut. */
