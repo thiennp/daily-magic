@@ -38,7 +38,7 @@ describe("APP_SHELL_COMPUTERS_COPY (V5-2 locked EN)", () => {
 
   it("uses the locked Cursor Cloud helper", () => {
     expect(APP_SHELL_COMPUTERS_COPY.cursorCloudHelper).toBe(
-      "To have Cursor Cloud do a task, pick it when you send the task.",
+      "To have Cursor Cloud do a task, choose it under Where should this run? when you send the task.",
     );
   });
 });

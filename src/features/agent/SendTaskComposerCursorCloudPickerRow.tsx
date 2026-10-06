@@ -19,7 +19,7 @@ export default function SendTaskComposerCursorCloudPickerRow({
         Cursor Cloud
       </span>
       <span className="mt-0.5 block text-xs text-gray-500 dark:text-gray-400">
-        Run in Cursor&apos;s cloud VM (no Mac required)
+        Runs in Cursor&apos;s cloud. No computer needed.
       </span>
     </button>
   );

@@ -17,7 +17,7 @@ export const APP_SHELL_COMPUTERS_COPY = {
   updateDisabledOffline: "Offline — update when it's back.",
   updateDisabledRemote: "Update it from that computer.",
   cursorCloudHelper:
-    "To have Cursor Cloud do a task, pick it when you send the task.",
+    "To have Cursor Cloud do a task, choose it under Where should this run? when you send the task.",
 } as const;
 
 /** `computers.latest` → "Latest v{n}"; null when the server version is unknown. */
