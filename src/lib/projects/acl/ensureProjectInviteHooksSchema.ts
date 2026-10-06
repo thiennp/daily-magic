@@ -1,4 +1,5 @@
 import { ensureProjectComputerHistorySchema } from "@/lib/projects/acl/ensureProjectComputerHistorySchema";
+import { ensureProjectInviteAutoApproveEventsSchema } from "@/lib/projects/acl/invites/ensureProjectInviteAutoApproveEventsSchema";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 import { getSql } from "@/lib/db";
 
@@ -18,6 +19,7 @@ export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
   await sql`ALTER TABLE project_invites
     ADD COLUMN IF NOT EXISTS auto_approve BOOLEAN NOT NULL DEFAULT FALSE`;
+  await ensureProjectInviteAutoApproveEventsSchema();
   await sql`CREATE TABLE IF NOT EXISTS project_api_keys (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
     project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,

@@ -96,6 +96,7 @@ export const redeemProjectInvite = async (input: {
     projectId: invite.projectId,
     actorUserId: input.actorUserId,
     inviteId: invite.id,
+    inviteAutoApprove: invite.autoApprove,
     teamLabel: invite.teamLabel,
     scopes,
     suggestedName: nameResult.name,

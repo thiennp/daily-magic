@@ -85,6 +85,10 @@ export const stubRedeemAutoApproveSql = (
       return [redeemSuggestPendingRow("Soft Vale")];
     }
     if (q.includes("INSERT INTO project_access_audit")) return [];
+    if (q.includes("INSERT INTO project_invite_auto_approve_events")) return [];
+    if (q.includes("UPDATE project_memberships")
+      && q.includes("auto_approved_via_invite_label")) return [];
+    if (q.includes("CREATE INDEX")) return [];
     return [];
   });
 };

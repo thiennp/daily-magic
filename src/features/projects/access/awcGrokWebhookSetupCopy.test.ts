@@ -11,7 +11,7 @@ const readSrc = (relativePath: string): string =>
 describe("Grok wake-link setup copy", () => {
   it("points to assistant wake-routine links and the owner form, not chat", () => {
     expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).toBe(
-      "After access is active, it creates its wake routine and posts the wake link and key links in its user's chat so they can copy both. The project owner clicks Add wake link at Access › People › Members › your assistant › Grok wake link and pastes them there, never into chat.",
+      "After access is active, the assistant creates its wake routine and posts links to its wake link and key in its user's chat so they can copy both. The project owner clicks Add wake link at Access › People › Members › your assistant › Grok wake link and pastes them there, never into chat.",
     );
     expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).toMatch(/wake routine/);
     expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).not.toMatch(

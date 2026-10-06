@@ -59,6 +59,6 @@ export const AWC_GROK_WEBHOOK_DAILY_REPAIR =
 
 /** Owner-facing invite connect screen. Same flow, no href. */
 export const AWC_GROK_WEBHOOK_SETUP_INSTRUCTION =
-  "After access is active, it creates its wake routine and posts the wake link and key links in its user's chat so they can copy both. The project owner clicks Add wake link at " +
+  "After access is active, the assistant creates its wake routine and posts links to its wake link and key in its user's chat so they can copy both. The project owner clicks Add wake link at " +
   AWC_GROK_WEBHOOK_FORM_SCREEN_HUMAN +
   " and pastes them there, never into chat.";

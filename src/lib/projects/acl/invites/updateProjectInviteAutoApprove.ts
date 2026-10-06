@@ -1,5 +1,6 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import mapProjectInviteRow from "@/lib/projects/acl/invites/mapProjectInviteRow";
+import { recordProjectInviteAutoApproveEvent } from "@/lib/projects/acl/invites/recordProjectInviteAutoApproveEvent";
 import type ProjectInviteRecord from "@/lib/projects/acl/invites/types/ProjectInviteRecord.type";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
@@ -12,7 +13,7 @@ export type UpdateProjectInviteAutoApproveResult =
       readonly code: "not_found" | "forbidden" | "revoked";
     };
 
-/** Owner-only toggle. Affects future redeems only. */
+/** Owner-only toggle. Affects future redeems only. Writes history only on change. */
 export const updateProjectInviteAutoApprove = async (input: {
   readonly projectId: string;
   readonly inviteId: string;
@@ -29,13 +30,15 @@ export const updateProjectInviteAutoApprove = async (input: {
 
   await ensureProjectAclSchema();
   const sql = getSql();
+  const next = input.autoApprove === true;
   const rows = asRowArray(
     await sql`
       UPDATE project_invites
-      SET auto_approve = ${input.autoApprove === true}
+      SET auto_approve = ${next}
       WHERE id = ${input.inviteId}
         AND project_id = ${input.projectId}
         AND revoked_at IS NULL
+        AND auto_approve IS DISTINCT FROM ${next}
       RETURNING *
     `,
   );
@@ -49,17 +52,27 @@ export const updateProjectInviteAutoApprove = async (input: {
     if (existing.length === 0) {
       return { ok: false, code: "not_found" };
     }
-    return { ok: false, code: "revoked" };
+    const current = mapProjectInviteRow(existing[0]);
+    if (current.revokedAt !== null) {
+      return { ok: false, code: "revoked" };
+    }
+    // Same value — no history row.
+    return { ok: true, invite: current };
   }
   const invite = mapProjectInviteRow(rows[0]);
   const label = invite.id.slice(0, 8);
+  const event = next ? ("enabled" as const) : ("disabled" as const);
   await writeProjectAccessAudit({
     projectId: input.projectId,
     actorUserId: input.ownerUserId,
-    action: input.autoApprove
-      ? "invite.auto_approve_on"
-      : "invite.auto_approve_off",
+    action: next ? "invite.auto_approve_on" : "invite.auto_approve_off",
     detail: { inviteId: invite.id, label },
+  });
+  await recordProjectInviteAutoApproveEvent({
+    projectId: input.projectId,
+    inviteId: invite.id,
+    event,
+    actorUserId: input.ownerUserId,
   });
   return { ok: true, invite };
 };

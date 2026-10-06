@@ -2,6 +2,7 @@ import { approveProjectAccessRequest } from "@/lib/projects/acl/approveProjectAc
 import type { RedeemProjectInviteResult } from "@/lib/projects/acl/invites/types/RedeemProjectInviteResult.type";
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
 import { markMembershipAutoApprovedViaInvite } from "@/lib/projects/acl/invites/markMembershipAutoApprovedViaInvite";
+import { recordProjectInviteAutoApproveEvent } from "@/lib/projects/acl/invites/recordProjectInviteAutoApproveEvent";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
@@ -18,6 +19,8 @@ export const tryAutoApproveInviteRedeem = async (input: {
   readonly projectId: string;
   readonly actorUserId: string;
   readonly inviteId: string;
+  /** True only when the invite itself had autoApprove on (not test-flag-only). */
+  readonly inviteAutoApprove: boolean;
   readonly teamLabel: string | null;
   readonly scopes: readonly string[];
   readonly suggestedName: string | null;
@@ -50,6 +53,17 @@ export const tryAutoApproveInviteRedeem = async (input: {
     approved.membership.projectDisplayName ??
     input.suggestedName ??
     "Assistant";
+  // Test-flag-only activations do not write member_auto_approved history.
+  if (input.inviteAutoApprove) {
+    await recordProjectInviteAutoApproveEvent({
+      projectId: input.projectId,
+      inviteId: input.inviteId,
+      event: "member_auto_approved",
+      actorUserId: project.ownerUserId,
+      membershipId: approved.membership.id,
+      memberDisplayName: displayName,
+    });
+  }
   await writeProjectAccessAudit({
     projectId: input.projectId,
     actorUserId: project.ownerUserId,
