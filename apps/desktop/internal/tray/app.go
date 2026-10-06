@@ -36,8 +36,8 @@ func (a *App) Run() {
 }
 
 func (a *App) onReady() {
-	systray.SetTitle("Agent Witch Local")
-	systray.SetTooltip("Agent Witch Local " + core.Version)
+	systray.SetTitle("AgentWitch Local")
+	systray.SetTooltip("AgentWitch Local " + core.Version)
 	if len(a.IconPNG) > 0 {
 		systray.SetIcon(a.IconPNG)
 	}
@@ -49,9 +49,9 @@ func (a *App) onReady() {
 	a.openConnect = systray.AddMenuItem("Open Connect this computer…", "Open Connect this computer")
 	a.installHint = systray.AddMenuItem("Install hint", "Install via terminal")
 	a.installHint.Disable()
-	a.startItem = systray.AddMenuItem("Start Agent Witch", "Start Agent Witch")
+	a.startItem = systray.AddMenuItem("Start AgentWitch", "Start AgentWitch")
 	a.openStatus = systray.AddMenuItem("Open AgentWitch Local", "Open AgentWitch Local")
-	a.stopItem = systray.AddMenuItem("Stop Agent Witch", "Stop Agent Witch")
+	a.stopItem = systray.AddMenuItem("Stop AgentWitch", "Stop AgentWitch")
 	a.viewLogs = systray.AddMenuItem("View logs", "View logs")
 	a.updateItem = systray.AddMenuItem("Update available", "Open release page")
 	a.updateItem.Hide()

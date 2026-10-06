@@ -33,7 +33,7 @@ const buildCompositionList = (
     .map(
       (item) => `<li class="harness-installed-set">
         <p><strong>${escapeHtml(item.name)}</strong>${item.versionLabel ? ` <span class="muted mono">v${escapeHtml(item.versionLabel)}</span>` : ""}</p>
-        <p class="muted">Bound in Agent Witch Cloud — materialize from the Playbooks tab or pull into repo (coming soon).</p>
+        <p class="muted">Bound in AgentWitch Cloud — materialize from the Playbooks tab or pull into repo (coming soon).</p>
       </li>`,
     )
     .join("")}</ul>`;
@@ -52,8 +52,8 @@ const buildBoundHarnessPullTab = (input: {
   readonly alreadyInRepo: boolean;
 }): string => {
   const lede = input.alreadyInRepo
-    ? `This repo already has playbook files in <code>.cursor</code> (tracked in <code>.agent-witch/materialization.json</code>). Pull again only if you want to refresh them from Agent Witch Cloud.`
-    : `This project’s playbook is linked in Agent Witch Cloud. Pull writes those files into this repo’s <code>.cursor</code> tree.`;
+    ? `This repo already has playbook files in <code>.cursor</code> (tracked in <code>.agent-witch/materialization.json</code>). Pull again only if you want to refresh them from AgentWitch Cloud.`
+    : `This project’s playbook is linked in AgentWitch Cloud. Pull writes those files into this repo’s <code>.cursor</code> tree.`;
   const buttonLabel = input.alreadyInRepo
     ? "Refresh in repo…"
     : "Pull into repo";
@@ -91,7 +91,7 @@ const buildAlreadyMaterializedWithoutProfileTab = (input: {
   if (input.boundHarnessCount > 0) {
     return `<div class="stack">
         <p class="field-label">In this repo</p>
-        <p class="lede">This project’s playbook is already in this repo’s <code>.cursor</code> tree. Nothing is installed in the profile harness on this computer — refresh from Agent Witch Cloud only if you need an update.</p>
+        <p class="lede">This project’s playbook is already in this repo’s <code>.cursor</code> tree. Nothing is installed in the profile harness on this computer — refresh from AgentWitch Cloud only if you need an update.</p>
         ${setList}
         <form method="POST" action="/projects/pull-bound-harness" class="actions">
           <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
@@ -193,7 +193,7 @@ const buildKnowledgeTab = (input: {
       : `${input.candidateCount} lessons ready to promote`;
 
   return `<section class="stack">
-      <p class="lede">${escapeHtml(label)} from recent runs. Review in Agent Witch Cloud or promote below.</p>
+      <p class="lede">${escapeHtml(label)} from recent runs. Review in AgentWitch Cloud or promote below.</p>
       <form method="POST" action="/project/knowledge/promote-all" class="actions">
         <input type="hidden" name="projectId" value="${escapeHtml(input.projectId)}" />
         <button class="btn btn-secondary" type="submit">Mark all as promoted (metadata)</button>
@@ -285,7 +285,7 @@ export const buildAgentWitchLocalProjectEditorPageBody = (input: {
   const cloudProjectHref = `${input.cloudAppOrigin.replace(/\/$/, "")}/projects/${encodeURIComponent(input.project.id)}`;
   const renameHref = `${cloudProjectHref}?rename=1`;
   const cloudManageActions = `<div class="actions project-cloud-actions">
-      <a class="btn btn-secondary" href="${escapeHtml(cloudProjectHref)}" target="_blank" rel="noopener noreferrer">Open in Agent Witch Cloud</a>
+      <a class="btn btn-secondary" href="${escapeHtml(cloudProjectHref)}" target="_blank" rel="noopener noreferrer">Open in AgentWitch Cloud</a>
       <a class="btn btn-secondary btn-compact" href="${escapeHtml(renameHref)}" target="_blank" rel="noopener noreferrer">Rename…</a>
     </div>`;
 
@@ -293,8 +293,8 @@ export const buildAgentWitchLocalProjectEditorPageBody = (input: {
     ? ""
     : `<section class="danger-zone stack">
         <p class="field-label">Danger zone</p>
-        <p class="muted">Removes this project from Agent Witch Cloud only. The folder on this computer is not deleted.</p>
-        <form method="POST" action="/projects/delete" class="actions" onsubmit="return confirm('Delete this project from Agent Witch Cloud? Your repo folder on this computer will stay.');">
+        <p class="muted">Removes this project from AgentWitch Cloud only. The folder on this computer is not deleted.</p>
+        <form method="POST" action="/projects/delete" class="actions" onsubmit="return confirm('Delete this project from AgentWitch Cloud? Your repo folder on this computer will stay.');">
           <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
           <button class="btn btn-danger" type="submit">Delete project</button>
         </form>

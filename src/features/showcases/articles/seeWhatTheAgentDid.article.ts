@@ -9,7 +9,7 @@ const seeWhatTheAgentDid: ShowcaseArticle = {
   supportLevel: "partial",
   readMinutes: 3,
   whatYouNeed: [
-    "At least one job sent through Agent Witch",
+    "At least one job sent through AgentWitch",
     "The same browser where you sent or watched the run",
   ],
   tryNext: {

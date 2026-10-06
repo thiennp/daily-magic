@@ -52,7 +52,7 @@ const buildBrandLink = (
   className: string,
   installBundleVersionLabel: string,
 ): string =>
-  `<a class="${className}" href="/" aria-label="Agent Witch Local home, install bundle ${installBundleVersionLabel}">${LOGO_MARK_SVG}<span class="brand-text">Agent Witch<span class="brand-sub">Local(${installBundleVersionLabel})</span></span></a>`;
+  `<a class="${className}" href="/" aria-label="AgentWitch Local home, install bundle ${installBundleVersionLabel}">${LOGO_MARK_SVG}<span class="brand-text">AgentWitch<span class="brand-sub">Local(${installBundleVersionLabel})</span></span></a>`;
 
 export const buildAgentWitchLocalAppShell = (input: {
   readonly title: string;
@@ -88,7 +88,7 @@ export const buildAgentWitchLocalAppShell = (input: {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <title>${escapeHtml(input.title)} · Agent Witch Local</title>
+  <title>${escapeHtml(input.title)} · AgentWitch Local</title>
   <style>${AGENT_WITCH_LOCAL_APP_STYLES}</style>
 </head>
 <body>
@@ -102,7 +102,7 @@ export const buildAgentWitchLocalAppShell = (input: {
       <div class="site-header-actions">
         <nav class="site-nav site-nav-header" aria-label="Local bridge">${nav}</nav>
         ${headerUpdateButtonHtml}
-        <a class="btn btn-secondary cloud-open-link" href="${cloudOrigin}" target="_blank" rel="noopener noreferrer" aria-label="Open Agent Witch cloud at ${cloudOrigin}">Open cloud ↗</a>
+        <a class="btn btn-secondary cloud-open-link" href="${cloudOrigin}" target="_blank" rel="noopener noreferrer" aria-label="Open AgentWitch cloud at ${cloudOrigin}">Open cloud ↗</a>
       </div>
     </div>
   </header>

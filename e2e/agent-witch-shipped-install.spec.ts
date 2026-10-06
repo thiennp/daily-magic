@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 import { runShippedAgentWitchInstallBlackbox } from "../src/lib/agentWitch/runShippedAgentWitchInstallBlackbox";
 
-test.describe("Agent Witch shipped install blackbox", () => {
+test.describe("AgentWitch shipped install blackbox", () => {
   test("serves bundled install artifacts that load under node", async ({
     baseURL,
   }) => {

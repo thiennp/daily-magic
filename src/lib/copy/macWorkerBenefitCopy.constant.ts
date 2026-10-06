@@ -8,16 +8,16 @@ export const MAC_WORKER_BENEFIT_COPY = {
   setupDescription:
     "One install command links this computer to the account you are signed in with. Other accounts on the same computer stay separate — Connect does not replace them.",
   setupDescriptionAppReady:
-    "Agent Witch is already installed on this computer. Connect this computer adds or refreshes your account’s profile without replacing another account on the same computer.",
+    "AgentWitch is already installed on this computer. Connect this computer adds or refreshes your account’s profile without replacing another account on the same computer.",
   setupModalIntro:
     "On the computer that will run your workflows, open Terminal, paste this command, and press Return.",
   connectThisMacModalIntro:
     "On this computer, open Terminal, paste this command, and press Return.",
   connectThisMacMobileModalIntro:
-    "Agent Witch installs on macOS. Use your MacBook to finish connecting this computer.",
+    "AgentWitch installs on macOS. Use your MacBook to finish connecting this computer.",
   connectThisMacMobileSteps: [
     "Open your MacBook.",
-    "Sign in to Agent Witch in the browser on that Mac.",
+    "Sign in to AgentWitch in the browser on that Mac.",
     "On Home, choose Connect this computer and follow the Terminal steps there.",
   ],
   setupAnotherModalIntro:
@@ -35,7 +35,7 @@ export const MAC_WORKER_BENEFIT_COPY = {
   setupMacToSeeLocalRules:
     "Nothing synced yet. Set up your computer on Home, then refresh here.",
   runAgentWitchToInstallBundle:
-    "Open Agent Witch on your computer to install this rules bundle.",
+    "Open AgentWitch on your computer to install this rules bundle.",
   teammateNeedsMacOnline:
     "Owner must be online with a computer ready to run jobs to export files.",
   freeStartersDescription:
@@ -52,7 +52,7 @@ export const MAC_WORKER_BENEFIT_COPY = {
   savedInstallRequested:
     "Saved to your library. Install requested on your computer.",
   savedSetupMacForRules:
-    "Saved to your library. Open Agent Witch on your computer to install the rules bundle.",
+    "Saved to your library. Open AgentWitch on your computer to install the rules bundle.",
   sharedSetupsNeedMac:
     "No shared setups available yet. Teammates must set sharing to group or public and have a computer online ready to run jobs.",
   macReadyBadge: "Computer ready",

@@ -42,7 +42,7 @@ export const insertAgentWitchDeviceClaim = async (input: {
   );
 
   if (!insertResult[0]) {
-    throw new Error("Failed to claim Agent Witch device.");
+    throw new Error("Failed to claim AgentWitch device.");
   }
 
   return mapAgentWitchDeviceRow(insertResult[0]);

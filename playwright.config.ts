@@ -11,7 +11,7 @@ export default defineConfig({
   retries: isCi ? 2 : 0,
   workers: isCi ? 1 : undefined,
   reporter: "list",
-  // CI has no Agent Witch Mac / Neon secrets — keep GitHub e2e on static pages.
+  // CI has no AgentWitch Mac / Neon secrets — keep GitHub e2e on static pages.
   // Local `npm run test:e2e` still runs the full suite (except capture helpers).
   testMatch: isCi ? ["**/showcases-*.spec.ts"] : undefined,
   testIgnore: ["**/capture-*.spec.ts"],
@@ -26,7 +26,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    // Custom server.ts (npm run start) is required for Agent Witch WebSocket upgrades.
+    // Custom server.ts (npm run start) is required for AgentWitch WebSocket upgrades.
     // Plain `next start` serves HTTP only and leaves agent-witch disconnected.
     // `.env.local` is optional so CI can boot without a checked-in secrets file.
     command:

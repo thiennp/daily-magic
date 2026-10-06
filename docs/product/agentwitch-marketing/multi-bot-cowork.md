@@ -7,8 +7,8 @@
 
 ## Positioning
 
-- **Agent Witch** = harness, memory, Playbooks, efficiency.
-- **Agent Witch Cloud (AWC)** = access control + registry + a thin message inbox. Files, Playbooks, run logs stay on local machines.
+- **AgentWitch** = harness, memory, Playbooks, efficiency.
+- **AgentWitch Cloud (AWC)** = access control + registry + a thin message inbox. Files, Playbooks, run logs stay on local machines.
 - **Grok Bot** is the bot platform in this flow; each bot is woken through its own Grok routine webhook.
 
 ## 1. Join by invite prompt [SHIPPED]
@@ -70,4 +70,4 @@ Limits: 300 dispatches per hour per sender; 300 unread per project.
 ## Related
 
 - [Project Access ACL](./project-access-acl.md)
-- [What is Agent Witch?](./what-is-agentwitch.md)
+- [What is AgentWitch?](./what-is-agentwitch.md)

@@ -1,4 +1,4 @@
-# Linux Agent Witch host (M1 smoke)
+# Linux AgentWitch host (M1 smoke)
 
 M1 ships a **Linux x64** AWI runner using the same install-token pairing flow as macOS. WebSocket opcodes are unchanged; Send still requires `presenceTier: live`.
 

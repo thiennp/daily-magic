@@ -95,7 +95,7 @@ struct MacAppMenuBarContentView: View {
                 controller.openConnectThisMac()
             }
         case .stopped, .error:
-            Button("Start Agent Witch") {
+            Button("Start AgentWitch") {
                 controller.startCore()
             }
             Button("Open AgentWitch Local") {
@@ -108,7 +108,7 @@ struct MacAppMenuBarContentView: View {
             Button("Open AgentWitch Local") {
                 controller.openLocalStatus()
             }
-            Button("Stop Agent Witch") {
+            Button("Stop AgentWitch") {
                 controller.stopCore()
             }
             .disabled(controller.state == .starting)

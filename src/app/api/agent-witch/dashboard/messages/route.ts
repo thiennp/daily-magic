@@ -17,7 +17,7 @@ export async function POST(request: Request): Promise<Response> {
 
   if (!isAgentWitchMessage(body)) {
     return Response.json(
-      { ok: false, error: "Invalid Agent Witch message." },
+      { ok: false, error: "Invalid AgentWitch message." },
       { status: 400 },
     );
   }

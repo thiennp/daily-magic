@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Stage Agent Witch Local Windows/WSL packaging into dist/windows/*.zip.
+# Stage AgentWitch Local Windows/WSL packaging into dist/windows/*.zip.
 # Mirrors scripts/linux/build-awl-linux-packages.sh (manual release only).
 #
 # apps/desktop now has a Windows/WSL backend (platform_windows.go +
@@ -26,7 +26,7 @@ DESKTOP_DIR="${ROOT_DIR}/apps/desktop"
 DIST_DIR="${ROOT_DIR}/dist/windows"
 VERSION="0.1.0"
 APP_NAME="agent-witch-local"
-DISPLAY_NAME="Agent Witch Local"
+DISPLAY_NAME="AgentWitch Local"
 EXE_NAME="AgentWitchLocal.exe"
 ZIP_NAME="AgentWitchLocal-windows-amd64-v${VERSION}.zip"
 STAGE_DIR="${DIST_DIR}/stage"
@@ -103,7 +103,7 @@ distro via wsl.exe; health uses the same localhost ports as Linux.
 
 Intended use
 ------------
-1. Install Agent Witch Local inside WSL2 (Ubuntu recommended):
+1. Install AgentWitch Local inside WSL2 (Ubuntu recommended):
      curl -fsSL https://www.agentwitch.com/install/agent-witch.sh | bash
 2. Keep WSL running.
 3. Run AgentWitchLocal.exe on the Windows host (unsigned; SmartScreen may warn).

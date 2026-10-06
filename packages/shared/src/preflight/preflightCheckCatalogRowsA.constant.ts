@@ -29,7 +29,7 @@ export const PREFLIGHT_CHECK_ROWS_A: readonly PreflightCatalogRow[] = [
     "Local tools ready",
     "warn",
     "The local tools service on this computer answers a simple list request.",
-    "Restart Agent Witch Local, wait a few seconds, then try again.",
+    "Restart AgentWitch Local, wait a few seconds, then try again.",
   ],
   [
     "pf.git-fetch-fresh",

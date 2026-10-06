@@ -13,7 +13,7 @@ const WORKSPACE = process.env.AWL_DEMO_FOLDER ?? "/workspace";
 const SKILL = process.env.AWL_DEMO_SKILL ?? "skill-post-change-verification";
 const GOAL =
   process.env.AWL_DEMO_GOAL ??
-  "Improve this Agent Witch skill so post-change verification steps are clear, actionable, and easy for cloud agents to follow.";
+  "Improve this AgentWitch skill so post-change verification steps are clear, actionable, and easy for cloud agents to follow.";
 const MAX_GATE_STEPS = Number(process.env.AWL_DEMO_MAX_GATES ?? "24");
 const GATE_TIMEOUT_MS = Number(
   process.env.AWL_DEMO_GATE_TIMEOUT_MS ?? "900000",

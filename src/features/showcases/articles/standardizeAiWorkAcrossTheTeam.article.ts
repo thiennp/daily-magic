@@ -34,7 +34,7 @@ const standardizeAiWorkAcrossTheTeam: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Letting everyone freestyle in separate chat tabs does not scale. Leadership needs the same prompt structure for weekly reports, the same checkpoints before code touches a repo, and a visible catalog so new hires do not invent prompts from scratch. Agent Witch is built for that pattern—not for replacing Slack or building a custom AI platform.",
+        "Letting everyone freestyle in separate chat tabs does not scale. Leadership needs the same prompt structure for weekly reports, the same checkpoints before code touches a repo, and a visible catalog so new hires do not invent prompts from scratch. AgentWitch is built for that pattern—not for replacing Slack or building a custom AI platform.",
       ],
     },
     {

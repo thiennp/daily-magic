@@ -12,7 +12,7 @@ AGENT_WITCH_INSTALL_STEP=0
 AGENT_WITCH_INSTALL_TOTAL=${AGENT_WITCH_INSTALL_PROGRESS_TOTAL}
 
 agent_witch_install_begin() {
-  echo "${progressLabel} Agent Witch…"
+  echo "${progressLabel} AgentWitch…"
 }
 
 agent_witch_install_step() {

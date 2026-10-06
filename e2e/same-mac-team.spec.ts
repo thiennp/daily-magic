@@ -4,7 +4,7 @@ import { signInTestAccount } from "./helpers/signInTestAccount";
 
 /**
  * Same-Mac multi-account team: admin + executor + requester share one computer.
- * Agent Witch profile for the executor owns the Mac; teammates are separate users.
+ * AgentWitch profile for the executor owns the Mac; teammates are separate users.
  */
 const ADMIN = "test-team-admin-1@agentwitch.com";
 const EXECUTOR = "test-team-executor-1@agentwitch.com";

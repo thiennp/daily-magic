@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Reproducible unsigned Agent Witch Local Linux packages (.deb + AppImage).
+# Reproducible unsigned AgentWitch Local Linux packages (.deb + AppImage).
 # linux/amd64 only (matches the Linux installer). Memory-friendly defaults.
 set -euo pipefail
 
@@ -8,7 +8,7 @@ DESKTOP_DIR="${ROOT_DIR}/apps/desktop"
 DIST_DIR="${ROOT_DIR}/dist/linux"
 VERSION="0.1.0"
 APP_NAME="agent-witch-local"
-DISPLAY_NAME="Agent Witch Local"
+DISPLAY_NAME="AgentWitch Local"
 DEB_NAME="${APP_NAME}_${VERSION}_amd64.deb"
 APPIMAGE_NAME="AgentWitchLocal-x86_64.AppImage"
 CACHE_DIR="${HOME}/.cache/agent-witch-desktop"
@@ -96,7 +96,7 @@ DESKTOP_FILE_CONTENT=$(cat <<DESKTOP
 [Desktop Entry]
 Type=Application
 Name=${DISPLAY_NAME}
-Comment=Menu tray companion for Agent Witch Local
+Comment=Menu tray companion for AgentWitch Local
 Exec=${APP_NAME}
 Icon=${APP_NAME}
 Terminal=false
@@ -128,17 +128,17 @@ Version: ${VERSION}
 Section: utils
 Priority: optional
 Architecture: amd64
-Maintainer: Agent Witch <hello@agentwitch.com>
-Description: Tray companion for Agent Witch Local on Linux
- Starts and stops the same Agent Witch install from the system tray.
+Maintainer: AgentWitch <hello@agentwitch.com>
+Description: Tray companion for AgentWitch Local on Linux
+ Starts and stops the same AgentWitch install from the system tray.
  Requires the terminal install first, and AppIndicator on stock GNOME.
 Recommends: xdg-utils
 CONTROL
 
 cat > "${DEB_ROOT}/usr/share/doc/${APP_NAME}/README" <<'README'
-Agent Witch Local (Linux tray)
+AgentWitch Local (Linux tray)
 
-1. Install Agent Witch via:
+1. Install AgentWitch via:
    curl -fsSL https://www.agentwitch.com/install/agent-witch.sh | bash
 2. Install this package, then start agent-witch-local from the app menu.
 3. On stock GNOME, enable the AppIndicator extension so the tray icon appears.

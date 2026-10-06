@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Ensures a dedicated Agent Witch profile for localhost E2E test accounts.
+ * Ensures a dedicated AgentWitch profile for localhost E2E test accounts.
  *
  * Localhost E2E uses the local app home ~/.local-agent-witch (separate from
  * production ~/.agent-witch) with ws://localhost:3000.

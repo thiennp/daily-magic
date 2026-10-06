@@ -12,7 +12,7 @@ describe("shouldShowAgentWitchAppDownloadCta", () => {
     ).toBe(false);
   });
 
-  it("HOME-019: hides download when local Agent Witch app is already installed", () => {
+  it("HOME-019: hides download when local AgentWitch app is already installed", () => {
     expect(
       shouldShowAgentWitchAppDownloadCta({
         isCheckingLocalApp: false,

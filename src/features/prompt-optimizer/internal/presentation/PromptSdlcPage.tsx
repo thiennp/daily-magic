@@ -18,13 +18,13 @@ export default function PromptSdlcPage(): ReactElement {
     <div className="space-y-6">
       <AppPageHeader
         title="Prompt optimizer"
-        description="Run the four-step prompt optimizer wizard in Agent Witch Local on this computer. A judge scores your prompt; a runner executes module trials; writers use your Playbook (team standards) and project code in the folder you choose."
+        description="Run the four-step prompt optimizer wizard in AgentWitch Local on this computer. A judge scores your prompt; a runner executes module trials; writers use your Playbook (team standards) and project code in the folder you choose."
       />
       <ol
         className={`${APP_SURFACE_BODY_TEXT_CLASS} max-w-xl list-decimal space-y-4 pl-5`}
       >
-        <li>Install Agent Witch on your computer if you have not already.</li>
-        <li>Open Agent Witch Local and open Prompt optimizer.</li>
+        <li>Install AgentWitch on your computer if you have not already.</li>
+        <li>Open AgentWitch Local and open Prompt optimizer.</li>
         <li>
           Paste the prompt and goal, choose the project folder, then pick judge
           and improver models.
@@ -47,11 +47,11 @@ export default function PromptSdlcPage(): ReactElement {
           href={PROMPT_SDLC_AWL_PAGE_HREF}
           className={APP_SURFACE_TEXT_LINK_CLASS}
         >
-          Open in Agent Witch Local
+          Open in AgentWitch Local
         </a>
       </div>
       <p className={APP_SURFACE_BODY_TEXT_CLASS}>
-        Agent Witch Local is the Mac app for Apple Silicon (
+        AgentWitch Local is the Mac app for Apple Silicon (
         {PROMPT_SDLC_AWL_PAGE_HREF}). Need the installer? Open{" "}
         <Link href="/download" className={APP_SURFACE_TEXT_LINK_CLASS}>
           Download
@@ -70,7 +70,7 @@ export default function PromptSdlcPage(): ReactElement {
           href={PROMPT_SDLC_AWL_GUIDE_HREF}
           className={APP_SURFACE_TEXT_LINK_CLASS}
         >
-          Instructions in Agent Witch Local
+          Instructions in AgentWitch Local
         </a>
       </p>
     </div>

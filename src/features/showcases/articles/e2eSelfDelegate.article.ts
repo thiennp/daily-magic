@@ -17,7 +17,7 @@ const e2eSelfDelegate: ShowcaseArticle = {
   sections: [
     {
       bullets: [
-        "Home auto-links the local Agent Witch profile to Your Devices",
+        "Home auto-links the local AgentWitch profile to Your Devices",
         "Custom task + Claude opens a live terminal on your computer",
         "Send feedback dispatches a real agent run (wait for /api/agent-runs/dispatch)",
         "The same prompt appears in Reports for that browser session",

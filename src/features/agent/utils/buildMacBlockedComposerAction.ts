@@ -50,8 +50,8 @@ export const buildMacBlockedComposerAction = (
     ? "This computer is reconnecting on another server (common right after deploy). Wait a few seconds, then try New task again."
     : selectedHardOffline
       ? hasAlternate
-        ? "The selected computer is offline. Switch to a connected computer or start Agent Witch on this computer."
-        : "The selected computer is offline. Start Agent Witch on your computer to run a New task."
+        ? "The selected computer is offline. Switch to a connected computer or start AgentWitch on this computer."
+        : "The selected computer is offline. Start AgentWitch on your computer to run a New task."
       : selectedTier === "recent"
         ? hasAlternate
           ? "The selected computer was seen recently and may reconnect on the next check-in. Switch to a connected computer or wait."

@@ -1,10 +1,10 @@
-# Portfolio site — Agent Witch copy (thiennp.github.io)
+# Portfolio site — AgentWitch copy (thiennp.github.io)
 
 Use this when updating [https://thiennp.github.io/](https://thiennp.github.io/) to match [product-pillars.md](product-pillars.md) and [philosophy-and-copy-guideline.md](philosophy-and-copy-guideline.md).
 
 Cloud agents on **`thiennp/daily-magic`** cannot push **`thiennp/thiennp.github.io`** until a PAT is configured. Canonical HTML lives in [`external/thiennp.github.io/`](../../external/thiennp.github.io/). Portfolio no longer auto-syncs via CI — run `bash .agents/scripts/pushThiennpGithubIo.sh` manually with the token (`THIENNP_GITHUB_IO_DEPLOY_TOKEN` or `GITHUB_TOKEN`) when the portfolio changes (or `npm run portfolio:push-github-io`).
 
-## `index.html` — Featured Projects → Agent Witch card
+## `index.html` — Featured Projects → AgentWitch card
 
 Replace the card body with:
 

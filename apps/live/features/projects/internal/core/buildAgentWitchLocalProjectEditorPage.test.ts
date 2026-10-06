@@ -185,7 +185,7 @@ describe("buildAgentWitchLocalProjectEditorPageBody", () => {
     expect(html).not.toContain('action="/projects/remove-harness-set"');
   });
 
-  it("offers Open in Agent Witch Cloud and labels the composition tab Playbooks", () => {
+  it("offers Open in AgentWitch Cloud and labels the composition tab Playbooks", () => {
     const html = buildAgentWitchLocalProjectEditorPageBody({
       project,
       cloudAppOrigin,
@@ -196,7 +196,7 @@ describe("buildAgentWitchLocalProjectEditorPageBody", () => {
       activeTab: "harness",
     });
 
-    expect(html).toContain(">Open in Agent Witch Cloud</a>");
+    expect(html).toContain(">Open in AgentWitch Cloud</a>");
     expect(html).toContain('href="https://www.agentwitch.com/projects/proj-1"');
     expect(html).toContain(">Rename…</a>");
     expect(html).toContain("Playbooks (0)");

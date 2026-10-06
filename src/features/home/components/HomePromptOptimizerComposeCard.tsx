@@ -80,10 +80,10 @@ export default function HomePromptOptimizerComposeCard({
           href={PROMPT_SDLC_AWL_PAGE_HREF}
           className={`inline-flex ${APP_SURFACE_CTA_PRIMARY_SM_CLASS}`}
         >
-          Open in Agent Witch Local
+          Open in AgentWitch Local
         </a>
         <p className={APP_SURFACE_TEXT_LINK_CLASS}>
-          The wizard runs in Agent Witch Local on your computer—not in this
+          The wizard runs in AgentWitch Local on your computer—not in this
           browser tab.
         </p>
       </form>

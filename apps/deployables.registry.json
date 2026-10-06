@@ -4,7 +4,7 @@
   "deployables": [
     {
       "id": "AWC",
-      "name": "Agent Witch Cloud",
+      "name": "AgentWitch Cloud",
       "slug": "console",
       "folder": "apps/console",
       "description": "Cloud control plane: Next.js App Router, APIs, WebSocket hub",
@@ -13,7 +13,7 @@
     },
     {
       "id": "AWL",
-      "name": "Agent Witch Local",
+      "name": "AgentWitch Local",
       "slug": "live",
       "folder": "apps/live",
       "description": "Mac-local web app: tasks, projects, playbooks, memory, Mac health",
@@ -26,7 +26,7 @@
     },
     {
       "id": "AWB",
-      "name": "Agent Witch Bridge",
+      "name": "AgentWitch Bridge",
       "slug": "bridge",
       "folder": "apps/bridge",
       "description": "Mac loopback HTTP for browser-on-same-Mac integration",
@@ -39,7 +39,7 @@
     },
     {
       "id": "AWI",
-      "name": "Agent Witch Install",
+      "name": "AgentWitch Install",
       "slug": "install",
       "folder": "apps/install",
       "description": "Mac install bundle, runtime process, LaunchAgents, self-update",

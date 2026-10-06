@@ -11,7 +11,7 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
   supportLevel: "full",
   readMinutes: 5,
   whatYouNeed: [
-    "A free account and a computer with Agent Witch installed",
+    "A free account and a computer with AgentWitch installed",
     "One workflow saved to Library (start from a marketplace preset)",
     "A few minutes to create your first automation in /automations",
   ],
@@ -61,7 +61,7 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
         "Open Automations → New automation",
         "Choose the saved workflow and fill its fields once",
         "Pick Schedule (hourly, daily, weekdays) or Webhook for external triggers",
-        "Agent Witch syncs the job to your computer; the local scheduler runs it",
+        "AgentWitch syncs the job to your computer; the local scheduler runs it",
       ],
       image: buildShowcaseAutomationArticleImage(
         AUTOMATION_SHOWCASE_SCREEN.NEW_AUTOMATION,
@@ -93,7 +93,7 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
       bullets: [
         "Schedules run on your computer so jobs use your local files and tools",
         "Webhook triggers reach the server; your computer runs the work when it is ready",
-        "After an Agent Witch update, open Automations once so the computer stays in sync",
+        "After an AgentWitch update, open Automations once so the computer stays in sync",
       ],
     },
   ],

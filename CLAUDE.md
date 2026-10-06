@@ -6,7 +6,7 @@ Project guidance for Claude and other AI agents. Rules live in **`.cursor/rules/
 
 ## Project Overview
 
-**daily-magic** (this repo) is the codebase for **Agent Witch** (`https://www.agentwitch.com`) — four deployables **AWC** (Cloud), **AWL** (Local Mac app), **AWB** (Bridge), **AWI** (Install); see `docs/product/agent-witch-deployables.md`. The git name is historical; production is **not** `daily-magic.d.energie.check24.de` unless you explicitly deploy there. See **`docs/product/repo-name-and-hosting.md`**. Product overview: root **`README.md`**. Documentation map: **`docs/README.md`**; agent context order: **`docs/conventions/agent-context.md`** (indexed via `npm run feature-knowledge:query`).
+**daily-magic** (this repo) is the codebase for **AgentWitch** (`https://www.agentwitch.com`) — four deployables **AWC** (Cloud), **AWL** (Local Mac app), **AWB** (Bridge), **AWI** (Install); see `docs/product/agent-witch-deployables.md`. The git name is historical; production is **not** `daily-magic.d.energie.check24.de` unless you explicitly deploy there. See **`docs/product/repo-name-and-hosting.md`**. Product overview: root **`README.md`**. Documentation map: **`docs/README.md`**; agent context order: **`docs/conventions/agent-context.md`** (indexed via `npm run feature-knowledge:query`).
 
 Stack: Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Neon PostgreSQL, Vercel.
 
@@ -18,7 +18,7 @@ Stack: Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Neon Postgre
 | ---------------- | ------------------------------ |
 | `/`              | Home                           |
 | `/styleguide`    | TailAdmin component styleguide |
-| `/ws-test`       | Agent Witch send-task test UI  |
+| `/ws-test`       | AgentWitch send-task test UI  |
 | `/api/db/health` | Neon connection health check   |
 
 **Top-level structure:**
@@ -88,7 +88,7 @@ Set `DATABASE_URL` in `.env.local` (Neon connection string). Apply schema with `
 
 ---
 
-## Agent Witch (local HTTP bridge)
+## AgentWitch (local HTTP bridge)
 
 Runs writer CLIs on your computer when the app dispatches a task. The computer client heartbeats and long-polls over HTTP; the browser receives live updates over SSE. Live Mac output uses a PTY shell session (`shell.*` messages; owner can type, requesters get a read-only view and answer `[[AWAITING_INPUT]]` checkpoints).
 

@@ -37,15 +37,15 @@ const collectShowcaseStrings = (source: string): readonly string[] => {
 
 /** Product philosophy — user-visible strings must not use legacy product labels. */
 describe("philosophy user-facing copy", () => {
-  it("README titles Agent Witch not Daily Magic as product name", () => {
+  it("README titles AgentWitch not Daily Magic as product name", () => {
     const source = readFileSync(README_PATH, "utf8");
-    expect(source.startsWith("# Agent Witch")).toBe(true);
+    expect(source.startsWith("# AgentWitch")).toBe(true);
     expect(source).not.toMatch(/^# Daily Magic/m);
   });
 
-  it("server startup logs say Agent Witch", () => {
+  it("server startup logs say AgentWitch", () => {
     const source = readFileSync(SERVER_PATH, "utf8");
-    expect(source).toContain("Agent Witch");
+    expect(source).toContain("AgentWitch");
     expect(source).not.toMatch(/Daily Magic listening/);
   });
 

@@ -9,7 +9,7 @@ const whenExecutorMacIsOffline: ShowcaseArticle = {
   supportLevel: "partial",
   readMinutes: 3,
   whatYouNeed: [
-    "A Mac connected with Agent Witch",
+    "A Mac connected with AgentWitch",
     "Browser tab connected to the app to send a job",
   ],
   tryNext: {
@@ -19,14 +19,14 @@ const whenExecutorMacIsOffline: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Agent Witch runs on a real Mac, not a shared server farm. That keeps local files and trust close to you—and jobs start when the executor Mac is awake and connected.",
+        "AgentWitch runs on a real Mac, not a shared server farm. That keeps local files and trust close to you—and jobs start when the executor Mac is awake and connected.",
       ],
     },
     {
       heading: "What you will see",
       bullets: [
         "Send waits until your browser is connected",
-        "Jobs need Agent Witch running on the target Mac",
+        "Jobs need AgentWitch running on the target Mac",
         "Approval flows continue once an approver and executor are available",
       ],
     },

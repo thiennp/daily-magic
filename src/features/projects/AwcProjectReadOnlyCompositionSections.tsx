@@ -34,7 +34,7 @@ export default function AwcProjectReadOnlyCompositionSections({
               <p className="text-xs text-gray-500 dark:text-gray-400">Loading…</p>
             ) : sectionItems.length === 0 ? (
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                None bound yet — open Agent Witch Local on {deviceDisplayName}.
+                None bound yet — open AgentWitch Local on {deviceDisplayName}.
               </p>
             ) : (
               <ul className="space-y-1.5 text-sm text-gray-800 dark:text-gray-100">

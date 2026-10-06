@@ -40,7 +40,7 @@ export default function HomeOnboardingTemplateStep({
         Build your own in a project&apos;s Library — no template required. Or
         browse presets below; each includes a rules bundle (skills, shortcuts,
         instructions, and a specialist assistant) that installs to your computer
-        when Agent Witch is online.
+        when AgentWitch is online.
       </p>
       <div className="mt-5 flex flex-wrap gap-3">
         <Link

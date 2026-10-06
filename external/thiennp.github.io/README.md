@@ -1,10 +1,10 @@
-# thiennp.github.io — Agent Witch copy sync
+# thiennp.github.io — AgentWitch copy sync
 
-Canonical **Agent Witch** sections for [thiennp.github.io](https://thiennp.github.io/) (branch **`master`**).
+Canonical **AgentWitch** sections for [thiennp.github.io](https://thiennp.github.io/) (branch **`master`**).
 
 | File                             | Purpose                                                       |
 | -------------------------------- | ------------------------------------------------------------- |
-| `patches/agent-witch-2026.patch` | Applies Agent Witch card + case study updates via `git apply` |
+| `patches/agent-witch-2026.patch` | Applies AgentWitch card + case study updates via `git apply` |
 | `agent-witch-case-study.html`    | Reference copy after patch (for review)                       |
 
 Product wording must match [docs/product/philosophy-and-copy-guideline.md](../../docs/product/philosophy-and-copy-guideline.md).

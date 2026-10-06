@@ -98,7 +98,7 @@ export const runWriterEnsure = async (input: {
       ...(loggedIn
         ? {}
         : {
-            errorMessage: `Add a ${provider} API key in Agent Witch Local → Writer API.`,
+            errorMessage: `Add a ${provider} API key in AgentWitch Local → Writer API.`,
           }),
     };
   }

@@ -10,7 +10,7 @@ import (
 // FormatWSLMissing returns the user-facing error when WSL is absent or empty.
 func FormatWSLMissing(detail string) error {
 	base := "WSL is not available. Install Windows Subsystem for Linux (WSL2) " +
-		"and a Linux distro, then install Agent Witch inside WSL:\n  " +
+		"and a Linux distro, then install AgentWitch inside WSL:\n  " +
 		"curl -fsSL https://www.agentwitch.com/install/agent-witch.sh | bash"
 	detail = strings.TrimSpace(detail)
 	if detail == "" {

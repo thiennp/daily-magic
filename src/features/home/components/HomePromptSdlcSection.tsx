@@ -34,7 +34,7 @@ export default function HomePromptSdlcSection({
         this project. {AGENT_WITCH_PRODUCT_NAME} runs the judge and the improver
         in the folder you choose. They can read the harness and the code there,
         so the score belongs to that context. Open the prompt optimizer in the
-        console. That page tells you to run it in Agent Witch Local.
+        console. That page tells you to run it in AgentWitch Local.
       </p>
       <p className="mt-4 flex flex-wrap gap-4">
         <Link

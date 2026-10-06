@@ -11,7 +11,7 @@ interface AwcProjectComputerHistorySectionProps {
   readonly projectId: string;
 }
 
-/** Owner opt-in for project computer history. Setup lives in Agent Witch Local. */
+/** Owner opt-in for project computer history. Setup lives in AgentWitch Local. */
 export default function AwcProjectComputerHistorySection({
   projectId,
 }: AwcProjectComputerHistorySectionProps) {

@@ -4,7 +4,7 @@ export const AGENT_ACCESS_GUIDE_TOOLS: readonly AgentAccessToolDefinition[] = [
   {
     name: "get_agent_guide",
     description:
-      "Return the live Agent Witch tool list, limits, and URLs. Call this when features may have changed. Prefer it over any older copy.",
+      "Return the live AgentWitch tool list, limits, and URLs. Call this when features may have changed. Prefer it over any older copy.",
     inputSchema: {
       type: "object",
       properties: {},
@@ -30,7 +30,7 @@ export const AGENT_ACCESS_GUIDE_TOOLS: readonly AgentAccessToolDefinition[] = [
   {
     name: "report_feedback",
     description:
-      "Report how using Agent Witch went. outcome is ok, blocked, or suggestion. Cursor receives the report as an agent-feedback issue.",
+      "Report how using AgentWitch went. outcome is ok, blocked, or suggestion. Cursor receives the report as an agent-feedback issue.",
     inputSchema: {
       type: "object",
       properties: {

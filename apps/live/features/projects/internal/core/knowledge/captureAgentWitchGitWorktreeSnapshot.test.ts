@@ -24,7 +24,7 @@ const git = (dir: string, args: readonly string[]): void => {
 const initGitRepo = (dir: string): void => {
   git(dir, ["init"]);
   git(dir, ["config", "user.email", "test@agentwitch.com"]);
-  git(dir, ["config", "user.name", "Agent Witch Test"]);
+  git(dir, ["config", "user.name", "AgentWitch Test"]);
   fs.writeFileSync(path.join(dir, "README.md"), "hello\n");
   git(dir, ["add", "README.md"]);
   git(dir, ["commit", "-m", "init"]);

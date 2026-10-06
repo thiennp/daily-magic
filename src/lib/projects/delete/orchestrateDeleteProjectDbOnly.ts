@@ -5,7 +5,7 @@ import type ProjectDeleteTarget from "@/lib/projects/delete/types/ProjectDeleteT
 
 /**
  * Owner-only project delete that touches the database only.
- * Never reads or writes files, never runs processes, never calls Agent Witch
+ * Never reads or writes files, never runs processes, never calls AgentWitch
  * Local or a wake port. Steps: check owner → one guarded DELETE (cascades).
  */
 const orchestrateDeleteProjectDbOnly = async (

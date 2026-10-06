@@ -2,7 +2,7 @@ import { AGENT_WITCH_PUBLIC_UI_TOKENS } from "@agent-witch/shared/ui";
 
 const t = AGENT_WITCH_PUBLIC_UI_TOKENS;
 
-/** Inline CSS mirroring Agent Witch marketing surfaces (Inter + brand gray). */
+/** Inline CSS mirroring AgentWitch marketing surfaces (Inter + brand gray). */
 export const AGENT_WITCH_LOCAL_APP_STYLES = `
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
 

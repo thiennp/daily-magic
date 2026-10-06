@@ -23,7 +23,7 @@ export default function MacConnectBootstrapClient({
       </h1>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
         {errorSlug
-          ? `Returning to Agent Witch Local (${errorSlug}).`
+          ? `Returning to AgentWitch Local (${errorSlug}).`
           : "Finishing computer setup and returning to the app."}
       </p>
       <p className="mt-6 text-xs text-gray-500 dark:text-gray-500">

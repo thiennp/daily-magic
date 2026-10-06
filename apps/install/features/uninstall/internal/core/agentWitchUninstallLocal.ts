@@ -72,7 +72,7 @@ export const runAgentWitchUninstallLocal =
     if (!fs.existsSync(installDir)) {
       return {
         ok: false,
-        message: "No local Agent Witch install directory was found.",
+        message: "No local AgentWitch install directory was found.",
         removedLaunchAgentLabels: [],
       };
     }
@@ -90,7 +90,7 @@ export const runAgentWitchUninstallLocal =
     return {
       ok: true,
       message:
-        "Local Agent Witch uninstall started. LaunchAgents were stopped and the install folder will be removed shortly.",
+        "Local AgentWitch uninstall started. LaunchAgents were stopped and the install folder will be removed shortly.",
       removedLaunchAgentLabels,
     };
   };

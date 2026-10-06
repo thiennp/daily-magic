@@ -1,6 +1,6 @@
 # Chapter 7 — Capabilities, library, and playbooks
 
-This chapter explains how Agent Witch turns “something that worked once” into something you can **run again**, share with a team, or install on a **Mac**—without treating library, marketplace, and harness as three different products.
+This chapter explains how AgentWitch turns “something that worked once” into something you can **run again**, share with a team, or install on a **Mac**—without treating library, marketplace, and harness as three different products.
 
 Vocabulary: [Chapter 0](00-philosophy-and-vocabulary.md). One runtime, many surfaces: [Product concepts](../../product/concepts.md).
 
@@ -13,7 +13,7 @@ Vocabulary: [Chapter 0](00-philosophy-and-vocabulary.md). One runtime, many surf
 | User-facing idea | What it is                                                        | Where it lives                                                  |
 | ---------------- | ----------------------------------------------------------------- | --------------------------------------------------------------- |
 | **Playbook**     | Saved behavior: prompts, rules, templates                         | **Library**, marketplace listings, harness files on the **Mac** |
-| **Capability**   | A published **agent offering** (metadata, version, policy)        | Cloud (Agent Witch Cloud)                                       |
+| **Capability**   | A published **agent offering** (metadata, version, policy)        | Cloud (AgentWitch Cloud)                                       |
 | **Workflow**     | A capability shape with a **form** (and sometimes a step graph)   | Cloud                                                           |
 | **Harness**      | Rules/skills/commands **on disk** under `~/.agent-witch/harness/` | Your **Mac**                                                    |
 
@@ -25,7 +25,7 @@ Engineering detail: [Mac harness, workflow, and agent dispatch](../../qa/mac-har
 
 ## Capabilities (what can run)
 
-A **capability** answers: _which agent profile, which form fields, and which policies apply_ before Agent Witch creates a **Run**.
+A **capability** answers: _which agent profile, which form fields, and which policies apply_ before AgentWitch creates a **Run**.
 
 You encounter capabilities when you:
 
@@ -70,7 +70,7 @@ Marketplace **Install** always asks for a **project** and a **Mac**. The listing
 
 **Start a task** on the install success screen opens New task on that same project, not on Default.
 
-On the computer, open the same **project** in Agent Witch Local. **Pull into repo** writes the linked playbook into that folder’s `.cursor` tree. If the playbook is already on the computer, you confirm the sets and pull. If it is only linked in Console, the same button still writes the official playbook files. The project folder must sit under your home directory.
+On the computer, open the same **project** in AgentWitch Local. **Pull into repo** writes the linked playbook into that folder’s `.cursor` tree. If the playbook is already on the computer, you confirm the sets and pull. If it is only linked in Console, the same button still writes the official playbook files. The project folder must sit under your home directory.
 
 Each marketplace card includes a **How to use** section (steps, prerequisites, supported writers: Anthropic, OpenAI, Cursor, Google).
 
@@ -104,7 +104,7 @@ When you save a workflow to library, you are saving a **playbook** you can rerun
 
 The console cannot browse your computer’s disk directly. Set **repository / project folder** via:
 
-- **Agent Witch Local** on the computer (`127.0.0.1:43347`), or
+- **AgentWitch Local** on the computer (`127.0.0.1:43347`), or
 - Local **bridge** folder picker when the browser runs on that **Mac**.
 
 See [AWC project folder picker](../../qa/awc-project-folder-path-picker.md) and [AWC vs AWL projects source of truth](../../qa/awc-awl-projects-source-of-truth.md).
@@ -117,7 +117,7 @@ Wrong folder → failed or misleading **Runs**; fix the path in settings or the 
 
 | Surface                                                  | What it does                                                                                | You approve?                                                         |
 | -------------------------------------------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| **Agent Witch on this computer → Knowledge** suggestions | Counts how often snippets or errors repeat; may suggest a **Playbook** step or harness rule | Yes—nothing installs until you act on the computer or in the Console |
+| **AgentWitch on this computer → Knowledge** suggestions | Counts how often snippets or errors repeat; may suggest a **Playbook** step or harness rule | Yes—nothing installs until you act on the computer or in the Console |
 | **Capabilities → improvements** (Console)                | Proposed new capability version from feedback                                               | Yes—accept or reject before publish                                  |
 
 Saving a **Playbook** from a **Run** is separate from both: you name what worked; the computer does not silently rewrite harness files when a suggestion appears ([Chapter 4](04-mac-connect-and-bridge.md#local-knowledge-mac-app--efficient-memory), [Chapter 10 dev — memory loop](../developer-guide/10-learning-memory-and-improvements.md)).
@@ -146,12 +146,12 @@ Solo makers: library + one installed playbook + [Chapter 5](05-tasks-dispatch-an
 
 ## Query aliases
 
-- Agent Witch library playbooks capabilities marketplace
+- AgentWitch library playbooks capabilities marketplace
 - save to library run again fork workflow
 - install playbook on computer harness
 - guest library localStorage sign in sync
 - capability vs workflow vs playbook user guide
-- thu vien Agent Witch, playbook luu lai chay lai
+- thu vien AgentWitch, playbook luu lai chay lai
 - cai dat harness len Mac tu marketplace
 - khach luu workflow tren trinh duyet chua dang nhap
 - capability workflow khac nhau the nao

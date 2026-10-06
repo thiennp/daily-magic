@@ -4,7 +4,7 @@ import { signInTestAccount } from "./helpers/signInTestAccount";
 
 /**
  * Single-person self-delegate: pair Mac → send task to own Mac → Job history.
- * Requires Agent Witch profile for SELF email connected to localhost WS.
+ * Requires AgentWitch profile for SELF email connected to localhost WS.
  */
 const SELF = "test-self-1@agentwitch.com";
 const TASK_MARKER = `E2E self-delegate ${Date.now()}`;

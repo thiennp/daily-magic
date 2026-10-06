@@ -64,7 +64,7 @@ describe("runLocalInstallBundleUpdate", () => {
     vi.mocked(runAgentWitchSelfUpdate).mockResolvedValue({
       ok: true,
       updated: true,
-      message: "Updated Agent Witch bundle 36 -> 38.",
+      message: "Updated AgentWitch bundle 36 -> 38.",
       localBundleVersion: "36",
       remoteBundleVersion: "38",
     });

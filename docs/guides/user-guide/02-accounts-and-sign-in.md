@@ -1,6 +1,6 @@
 # Chapter 2 — Accounts and sign-in
 
-Agent Witch is a **signed-in** product: your **Tasks**, **Runs**, paired **Macs**, and saved **Playbooks** belong to your user (and optionally your team). This chapter covers how you get in, what an account controls, and how sign-in relates to **Connect this computer**.
+AgentWitch is a **signed-in** product: your **Tasks**, **Runs**, paired **Macs**, and saved **Playbooks** belong to your user (and optionally your team). This chapter covers how you get in, what an account controls, and how sign-in relates to **Connect this computer**.
 
 For vocabulary (**Mac**, **Task**, **Run**, **Playbook**), see [Chapter 0](00-philosophy-and-vocabulary.md).
 
@@ -21,7 +21,7 @@ After sign-in, you land in the **Console** (Home, Projects, Runs). Marketing pag
 
 ### Google OAuth
 
-When enabled, **Continue with Google** creates or links a user record in Agent Witch’s database (NextAuth + Neon). Use the Google account your organization expects—team features and admin roles may depend on email domain or manual promotion.
+When enabled, **Continue with Google** creates or links a user record in AgentWitch’s database (NextAuth + Neon). Use the Google account your organization expects—team features and admin roles may depend on email domain or manual promotion.
 
 ### Email magic link
 
@@ -59,7 +59,7 @@ Signing out of the browser **does not** uninstall the computer helper. Uninstall
 
 ## Solo vs company (same account, different chrome)
 
-Agent Witch uses one codebase with **persona gates** in navigation:
+AgentWitch uses one codebase with **persona gates** in navigation:
 
 | Mode               | What you typically see                                                                                                                                       |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -121,7 +121,7 @@ After you sign in, guest drafts can sync to your cloud library (newer `updatedAt
 - Treat magic links like passwords—do not paste them in public chats.
 - Pairing tokens on disk prove your computer to the cloud; protect your computer login and disk encryption.
 - The Console never receives your raw pairing token in the device list—only a **hash** ([Q&A](../../qa/awc-how-browser-knows-this-computer.md)).
-- Loopback **identity** is allowed only from Agent Witch origins to **your** `127.0.0.1` on the same computer—not from random websites ([CORS Q&A](../../qa/awb-localhost-identity-and-cors.md)).
+- Loopback **identity** is allowed only from AgentWitch origins to **your** `127.0.0.1` on the same computer—not from random websites ([CORS Q&A](../../qa/awb-localhost-identity-and-cors.md)).
 
 Threat model for engineers: [security/threat-model.md](../../security/threat-model.md).
 
@@ -131,7 +131,7 @@ Threat model for engineers: [security/threat-model.md](../../security/threat-mod
 
 | Symptom                             | Try                                                                                                                                  |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Google error / redirect loop        | Confirm `AUTH_SECRET` and OAuth URLs on custom deployments; production uses Agent Witch’s configured Google app.                     |
+| Google error / redirect loop        | Confirm `AUTH_SECRET` and OAuth URLs on custom deployments; production uses AgentWitch’s configured Google app.                     |
 | No magic email                      | Spam folder; resend once; verify Resend/domain on self-hosted envs.                                                                  |
 | Signed in but no computer badge     | Must be **macOS browser on same computer as bridge**; refresh tab; check helper running ([Chapter 4](04-mac-connect-and-bridge.md)). |
 | Test account rejected on production | Expected—use real auth on `www.agentwitch.com`.                                                                                      |
@@ -140,7 +140,7 @@ Threat model for engineers: [security/threat-model.md](../../security/threat-mod
 
 ## AI self-registration (no email, or Agent Mail)
 
-On the homepage, copy the short prompt under **For your AI**. Your bot follows that prompt (and the public guide at `/for-agents`) to create its own Agent Witch account. There is no directory of other people's bots. Agent Witch does not publish an account, email, or token for you to share.
+On the homepage, copy the short prompt under **For your AI**. Your bot follows that prompt (and the public guide at `/for-agents`) to create its own AgentWitch account. There is no directory of other people's bots. AgentWitch does not publish an account, email, or token for you to share.
 
 An AI can sign itself up with no mailbox, or with an Agent Mail inbox when the server supports it. After signup it can install on its computer, save a Playbook, and run work on computers it owns. Calls are rate limited. A bot token cannot attach to an existing human account. If the bot is told to wait (busy or rate limited), it should wait instead of retrying in a loop. Details for engineers: [AI self-registration Q&A](../../qa/ai-self-registration-webmcp.md).
 
@@ -157,10 +157,10 @@ An AI can sign itself up with no mailbox, or with an Agent Mail inbox when the s
 
 ## Query aliases
 
-- Agent Witch sign in, login, Google OAuth, magic link
+- AgentWitch sign in, login, Google OAuth, magic link
 - account pairing Mac, connect this computer, this computer badge
-- dang nhap Agent Witch, tai khoan, lien ket Mac
+- dang nhap AgentWitch, tai khoan, lien ket Mac
 - AI tu dang ky khong email, Agent Mail, WebMCP prompt trang chu
-- email magic link Agent Witch, test auth localhost
-- team nav solo marketplace Agent Witch account
+- email magic link AgentWitch, test auth localhost
+- team nav solo marketplace AgentWitch account
 - team learning shared runs library account, team chia se kinh nghiem tai khoan

@@ -19,7 +19,7 @@ export const formatCheckContextTip = (
   pitfalls: readonly CheckContextPitfallLine[],
 ): string => {
   const header = truncateTextToTokenBudget(
-    "Agent Witch tip · check_context",
+    "AgentWitch tip · check_context",
     CHECK_CONTEXT_TIP_MAX_TOKENS,
   );
   if (estimateTokenCount(header) >= CHECK_CONTEXT_TIP_MAX_TOKENS) {

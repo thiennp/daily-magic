@@ -1,4 +1,4 @@
-# Agent Witch — agent instructions
+# AgentWitch — agent instructions
 
 1. Device list is the source of truth for “Mac connected” UI — see `pairedDevicesApi.ts` and `online-wake/` (barrel) for presence tiers, wake, and restart.
 2. Localhost and production are separate Mac apps (`~/.local-agent-witch` vs `~/.agent-witch`). Query `npm run feature-knowledge:query -- "..." --feature=agent-witch` before API/client changes.

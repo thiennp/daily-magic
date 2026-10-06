@@ -5,7 +5,7 @@ const DAY_MS = 86_400_000;
 const pluralize = (count: number, singular: string, plural: string): string =>
   count === 1 ? singular : plural;
 
-/** Human relative age for Agent Witch local UI timestamps (status / traffic / knowledge). */
+/** Human relative age for AgentWitch local UI timestamps (status / traffic / knowledge). */
 export const formatAgentWitchRelativeTimeAgo = (
   value: string | null,
   nowMs: number = Date.now(),

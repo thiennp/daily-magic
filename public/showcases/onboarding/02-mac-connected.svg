@@ -15,7 +15,7 @@
   <rect x="76" y="190" width="808" height="72" rx="10" fill="#f0fdf4" stroke="#bbf7d0"/>
   <circle cx="108" cy="226" r="8" fill="#22c55e"/>
   <text x="130" y="222" font-family="ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600" fill="#14532d">Thienâs MacBook Pro</text>
-  <text x="130" y="244" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#166534">Connected  -  Agent Witch online</text>
+  <text x="130" y="244" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#166534">Connected  -  AgentWitch online</text>
   <text x="76" y="310" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#6b7280">Checklist: Mac worker ready â</text>
 
 </svg>

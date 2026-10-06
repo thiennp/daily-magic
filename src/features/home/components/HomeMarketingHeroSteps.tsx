@@ -9,7 +9,7 @@ export default function HomeMarketingHeroSteps() {
         "mt-4 list-none space-y-2.5 text-base leading-relaxed",
         MARKETING_TEXT_SECONDARY_CLASSES,
       )}
-      aria-label="How Agent Witch works in three steps"
+      aria-label="How AgentWitch works in three steps"
     >
       {HOME_MARKETING_HERO_COPY.steps.map((step, index) => (
         <li key={step} className="flex gap-3">

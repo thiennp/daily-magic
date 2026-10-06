@@ -1,4 +1,4 @@
-# What is Agent Witch?
+# What is AgentWitch?
 
 **Status:** [SHIPPED positioning]  
 **Slug:** `what-is-agentwitch`  
@@ -6,7 +6,7 @@
 
 ## Definition
 
-Agent Witch is the **harness, memory, and Playbook playground** for multi-bot teams. Turn agent work into scored, reusable workflows — with Project Access ACL you control.
+AgentWitch is the **harness, memory, and Playbook playground** for multi-bot teams. Turn agent work into scored, reusable workflows — with Project Access ACL you control.
 
 It is **not** your Slack triage bot or your Outlook inbox bot. Those stay specialist.
 
@@ -34,4 +34,4 @@ Multi-bot / multi-machine agent teams that need:
 
 - [Project Access ACL](./project-access-acl.md)
 - [Prompt Optimizer guide](./prompt-optimizer-guide.md)
-- [Agent Witch vs specialist bots](./aw-vs-specialist-bots.md)
+- [AgentWitch vs specialist bots](./aw-vs-specialist-bots.md)

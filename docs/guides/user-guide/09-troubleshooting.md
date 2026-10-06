@@ -2,7 +2,7 @@
 
 Start here when **Send** is blocked, the **Mac** looks wrong in Home, a **Run** never attaches, or updates fail. This chapter uses user words (**Mac**, **Task**, **Run**, **Playbook**) and points to deeper [System Q&A](../../qa/README.md) and open [KNOWN_ISSUES](../../../src/features/agent-witch/KNOWN_ISSUES.md) entries.
 
-Most fixes are **learn from usage** in practice: read the honest banner, adjust **Mac** health or DNS, **Run again** or **Try again** on one workflow step—then **Save as playbook** when you have a stable pattern ([four pillars — learn from usage](00-philosophy-and-vocabulary.md#four-pillars)). Agent Witch does not auto-rewrite your **Playbooks** because a run failed; you stay in control.
+Most fixes are **learn from usage** in practice: read the honest banner, adjust **Mac** health or DNS, **Run again** or **Try again** on one workflow step—then **Save as playbook** when you have a stable pattern ([four pillars — learn from usage](00-philosophy-and-vocabulary.md#four-pillars)). AgentWitch does not auto-rewrite your **Playbooks** because a run failed; you stay in control.
 
 Quick wins first, then themed sections for DNS, reconnecting, and bundle update.
 
@@ -20,7 +20,7 @@ Try this order (most issues resolve without a fresh install):
 
 1. **Refresh** the Home page or Mac device list (tab focus retries local identity on macOS).
 2. Read the **Send** banner on **New task**—it names one primary reason ([send readiness codes](../../agent-witch/send-readiness-reason-codes.md)).
-3. On the **Mac**, open **Agent Witch Local** (`http://127.0.0.1:43347`) → Status / Traffic: is the WebSocket connected?
+3. On the **Mac**, open **AgentWitch Local** (`http://127.0.0.1:43347`) → Status / Traffic: is the WebSocket connected?
 4. **Retry** the **Task** after ~10–30 seconds (common after console deploys).
 5. Only then: **Update local** or self-update (see [Install bundle update](#install-bundle-update-stale-or-blocked-send) below).
 
@@ -32,7 +32,7 @@ If the menu bar app is not installed, open [/download](https://www.agentwitch.co
 
 ---
 
-## Agent Witch Local not responding (`:43347`)
+## AgentWitch Local not responding (`:43347`)
 
 **Symptoms**
 
@@ -47,7 +47,7 @@ If the menu bar app is not installed, open [/download](https://www.agentwitch.co
 
 **Fix**
 
-1. On Home: **Status & settings on this computer** (opens `http://127.0.0.1:43347/status`). The **Revive Agent Witch Local** modal appears when health is down—copy the Terminal block from the modal.
+1. On Home: **Status & settings on this computer** (opens `http://127.0.0.1:43347/status`). The **Revive AgentWitch Local** modal appears when health is down—copy the Terminal block from the modal.
 2. If `http://127.0.0.1:43347/status` still loads, use the **Revive local app** section on that page.
 3. Otherwise paste the revive script from the modal, then read `"$AW_HOME/agent-witch.error.log"` if health stays down after `launchctl kickstart`.
 
@@ -90,7 +90,7 @@ Client or network **DNS**, firewall, or VPN—not something you fix by editing `
 
 **Deep dive**
 
-- [Agent Witch KNOWN_ISSUES — OPEN-001](../../../src/features/agent-witch/KNOWN_ISSUES.md)
+- [AgentWitch KNOWN_ISSUES — OPEN-001](../../../src/features/agent-witch/KNOWN_ISSUES.md)
 - [Repository hosting — production WebSocket](../../product/repo-name-and-hosting.md)
 
 Do **not** point a production Mac at CHECK24 `daily-magic.*` URLs unless your organization explicitly deploys there.
@@ -102,7 +102,7 @@ Do **not** point a production Mac at CHECK24 `daily-magic.*` URLs unless your or
 **Symptoms**
 
 - Message like: _The selected computer is reconnecting. Your task will send when it checks in._
-- **Agent Witch Local** or local bridge looks fine, but **New task** still blocks **Send**.
+- **AgentWitch Local** or local bridge looks fine, but **New task** still blocks **Send**.
 - Picker shows **Reconnecting (another server)** or **Seen recently**.
 
 **Cause**
@@ -188,13 +188,13 @@ Invalid `com.agent-witch.plist` (install script once embedded bash inside XML). 
 | **This computer** badge       | Cloud device hash matches local bridge `/identity`                                                                             |
 | **Mac offline**               | That paired row has no live socket and has not checked in lately. AWL **Connected** can still be a different device or origin. |
 
-If no row says **This computer**, use **Connect this computer** in the hero or under **Your Devices**. That links the computer you are using now. The button stays hidden only after this browser’s pairing token already matches a listed device. **Mac settings & connect** only opens **Your setup**. When a row is already **This computer** and **Offline**, start Agent Witch on that computer. Click the offline row for wake steps.
+If no row says **This computer**, use **Connect this computer** in the hero or under **Your Devices**. That links the computer you are using now. The button stays hidden only after this browser’s pairing token already matches a listed device. **Mac settings & connect** only opens **Your setup**. When a row is already **This computer** and **Offline**, start AgentWitch on that computer. Click the offline row for wake steps.
 
 If **This computer** sits on an Offline **Your computer** while another named computer shows **Online**, the badge is on a stale claim (HOME-061)—not proof that the live helper is down. Refresh Home after the Console fix; you can also remove the unused Offline row.
 
 Clicking **Connect this computer** more than once does not add another computer. Home keeps the latest unused link and drops the extras (rows named **Your computer** or **Computer 2** with **Version unknown**). Reload Home if those extras are still listed. A computer with a real name, such as a serial or hostname, stays.
 
-If Agent Witch is already open on this computer, the click does not restart it. Paste the command to relink. After you remove that Mac in the Console, a current install stops and deletes the connection and the app code. Projects, reports, runs, and Ollama remain, so **Connect this computer** can link the computer again. **Update local** does not. An install from before that behavior only disconnects until it updates. See [Deleting a Mac](../../qa/awc-delete-mac-forgets-local-connection.md).
+If AgentWitch is already open on this computer, the click does not restart it. Paste the command to relink. After you remove that Mac in the Console, a current install stops and deletes the connection and the app code. Projects, reports, runs, and Ollama remain, so **Connect this computer** can link the computer again. **Update local** does not. An install from before that behavior only disconnects until it updates. See [Deleting a Mac](../../qa/awc-delete-mac-forgets-local-connection.md).
 
 If you do not see **This computer** on macOS: bridge not running, wrong port, or signed-out page (no probe). Not a DNS issue by itself.
 
@@ -231,7 +231,7 @@ If you do not see **This computer** on macOS: bridge not running, wrong port, or
 
 ## Project folder wrong or missing
 
-Console cannot pick Mac folders remotely. Use **Agent Witch Local** or local folder picker.
+Console cannot pick Mac folders remotely. Use **AgentWitch Local** or local folder picker.
 
 [AWC project folder picker](../../qa/awc-project-folder-path-picker.md) · [AWC vs AWL projects](../../qa/awc-awl-projects-source-of-truth.md).
 
@@ -253,7 +253,7 @@ Console cannot pick Mac folders remotely. Use **Agent Witch Local** or local fol
 
 **Symptoms**
 
-- **Agent Witch on this computer → Knowledge** shows no chunks after successful **Runs** on a linked project folder, or search always returns empty.
+- **AgentWitch on this computer → Knowledge** shows no chunks after successful **Runs** on a linked project folder, or search always returns empty.
 
 **Checks**
 
@@ -287,16 +287,16 @@ npm run feature-knowledge:query -- "Mac reconnecting DNS update bundle" --featur
 
 ## Query aliases
 
-- Agent Witch troubleshooting Mac offline reconnecting
+- AgentWitch troubleshooting Mac offline reconnecting
 - Send blocked update needed DNS ENOTFOUND
 - install bundle mismatch update local LaunchAgent
 - workflow retry checkpoint not now banner
 - this computer identity connect bridge 47892
-- sua loi Agent Witch Mac reconnecting
+- sua loi AgentWitch Mac reconnecting
 - khong gui duoc task vi Mac offline
-- Linux cannot access Agent Witch, Linux host vs Mac app
+- Linux cannot access AgentWitch, Linux host vs Mac app
 - loi DNS www.agentwitch.com tren Mac
-- cap nhat bundle Agent Witch update needed
+- cap nhat bundle AgentWitch update needed
 - sau update local van reconnecting plist
 - hoc tu loi troubleshooting, run lai sau khi sua loi Mac
 - bon tru cot learn from usage sua loi agent

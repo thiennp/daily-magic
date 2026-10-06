@@ -19,7 +19,7 @@ if (fs.existsSync(path.join(installDir, 'config.json')) && profileEmail.length >
   other.push('(legacy install)');
 }
 if (other.length > 0) {
-  console.error('Note: other Agent Witch account(s) already on this computer: ' + other.join(', ') + '.');
+  console.error('Note: other AgentWitch account(s) already on this computer: ' + other.join(', ') + '.');
   console.error('Your account is added as a separate profile and will not replace theirs.');
 }
 " "\${INSTALL_DIR}" "\${PROFILE_EMAIL}" || true

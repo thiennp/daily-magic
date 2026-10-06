@@ -12,7 +12,7 @@ Implement **mustFix** items in priority order. Prefer a single fix in `AppShell`
 
 ## Constraints
 
-- Repo: daily-magic / Agent Witch AWC, Tailwind 4, `src/features/shell/`.
+- Repo: daily-magic / AgentWitch AWC, Tailwind 4, `src/features/shell/`.
 - Keep mobile bottom nav behavior unless audit explicitly requires change.
 - Add/adjust tests only where repo already tests shell or projects layout.
 - Run targeted tests + `npm run lint` on touched files.

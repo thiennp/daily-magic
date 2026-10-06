@@ -17,7 +17,7 @@ export const readAgentWitchLocalProjectsRegistry = (
 };
 
 /**
- * @deprecated Create projects in Agent Witch Cloud (`/projects`).
+ * @deprecated Create projects in AgentWitch Cloud (`/projects`).
  */
 export const addAgentWitchLocalProjectToRegistry = (
   layout: AgentWitchLocalLayout,
@@ -29,7 +29,7 @@ export const addAgentWitchLocalProjectToRegistry = (
   void layout;
   void input;
   throw new Error(
-    "Local-only project registry was removed. Create the project in Agent Witch Cloud.",
+    "Local-only project registry was removed. Create the project in AgentWitch Cloud.",
   );
 };
 

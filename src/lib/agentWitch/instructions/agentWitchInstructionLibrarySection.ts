@@ -29,7 +29,7 @@ export const AGENT_WITCH_INSTRUCTION_LIBRARY_SECTION: AgentWitchInstructionSecti
       {
         id: "copy-prompt",
         title: "Copy for other AI",
-        body: "Some items expose a copyable prompt so you can reuse the recipe outside Agent Witch when needed.",
+        body: "Some items expose a copyable prompt so you can reuse the recipe outside AgentWitch when needed.",
       },
       {
         id: "my-offerings",

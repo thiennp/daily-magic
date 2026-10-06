@@ -383,7 +383,7 @@ final class MacAppMenuController: ObservableObject {
         case .signingIn:
             return "Sign in to connect this Mac…"
         case .installing:
-            return "Installing Agent Witch…"
+            return "Installing AgentWitch…"
         case .settingUp:
             return "Setting up…"
         case .connected:

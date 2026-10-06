@@ -1,6 +1,6 @@
 # Chapter 8 — Production and trust
 
-This chapter answers: **what runs where**, **what Agent Witch can see**, and **what honest limits** you should expect in production at [https://www.agentwitch.com](https://www.agentwitch.com).
+This chapter answers: **what runs where**, **what AgentWitch can see**, and **what honest limits** you should expect in production at [https://www.agentwitch.com](https://www.agentwitch.com).
 
 It is written for team leads, security reviewers, and solo makers who want clarity before they pair a **Mac** or save a **Playbook**. Vocabulary: [Chapter 0](00-philosophy-and-vocabulary.md).
 
@@ -12,10 +12,10 @@ Trust boundaries below enable all [four pillars](00-philosophy-and-vocabulary.md
 
 | Name                              | Meaning                                                             |
 | --------------------------------- | ------------------------------------------------------------------- |
-| **Agent Witch**                   | The product you use in the browser and on your computer             |
+| **AgentWitch**                   | The product you use in the browser and on your computer             |
 | **daily-magic**                   | Historical git repository name only—same codebase                   |
 | **www.agentwitch.com**            | Production **console** (AWC) and APIs                               |
-| **CHECK24 `daily-magic.*` hosts** | Not Agent Witch production unless your org explicitly deploys there |
+| **CHECK24 `daily-magic.*` hosts** | Not AgentWitch production unless your org explicitly deploys there |
 
 Canonical hosting: [Repository name and hosting](../../product/repo-name-and-hosting.md).
 
@@ -34,14 +34,14 @@ Users mostly see **Mac** and **Runs**. Under the hood:
 | **Live (AWL)**    | Mac-local UI, projects, status                    | `http://127.0.0.1:43347`                           |
 | **Bridge (AWB)**  | Browser-on-same-Mac glue (identity, wake, update) | `127.0.0.1:47892` (prod) / `47893` (localhost dev) |
 
-Full table: [Agent Witch deployables](../../product/agent-witch-deployables.md).
+Full table: [AgentWitch deployables](../../product/agent-witch-deployables.md).
 
 ---
 
 ## Trust boundary: cloud vs Mac
 
 ```text
-Browser (you)  ──HTTPS──►  Agent Witch Cloud + Postgres (runs, workflows, accounts)
+Browser (you)  ──HTTPS──►  AgentWitch Cloud + Postgres (runs, workflows, accounts)
                               │
                               │ WebSocket hub (paired computer only)
                               ▼
@@ -50,9 +50,9 @@ Mac (AWI)  ──►  real shell / writer CLI in folders YOU chose
               ──►  local bridge (AWB) only on loopback — not exposed to the internet
 ```
 
-**On the cloud**, Agent Witch stores account data, **Run** metadata, workflow graphs, your checkpoint answers, and dispatch queue state (see ADR 0005 in [architecture index](../../adr/README.md)).
+**On the cloud**, AgentWitch stores account data, **Run** metadata, workflow graphs, your checkpoint answers, and dispatch queue state (see ADR 0005 in [architecture index](../../adr/README.md)).
 
-**On the Mac**, Agent Witch executes **Tasks** and workflow agent steps: shell sessions, CLI tools, and file writes implied by the agent (including harness install). The console streams terminal output to your browser; it does not silently substitute cloud compute for Mac work unless you configure **Cursor Cloud** as an explicit target.
+**On the Mac**, AgentWitch executes **Tasks** and workflow agent steps: shell sessions, CLI tools, and file writes implied by the agent (including harness install). The console streams terminal output to your browser; it does not silently substitute cloud compute for Mac work unless you configure **Cursor Cloud** as an explicit target.
 
 Dispatch overview: [Mac harness, workflow, and agent dispatch](../../qa/mac-harness-workflow-agent-dispatch.md).
 
@@ -71,7 +71,7 @@ Claiming a **Mac** creates a **pairing token** on the machine. The cloud stores 
 
 ## Honest run UX (no fake success)
 
-Agent Witch commits to **honest** progress labels on live **Runs**:
+AgentWitch commits to **honest** progress labels on live **Runs**:
 
 - **Connecting** / **In progress** / **Waiting on you** while work is not finished.
 - Terminal outcome chips (**Success**, **Failed**, **Stopped**, etc.) only after a real end state.
@@ -86,7 +86,7 @@ The **New task** composer uses the same honesty for **Mac** readiness: if the co
 
 ## Mid-run input (`[[AWAITING_INPUT]]`)
 
-During a **Run**, the agent may pause and ask a question in the terminal. The browser prompts you; the **Mac** waits for your answer over the hub protocol. Agent Witch does not invent answers on your behalf.
+During a **Run**, the agent may pause and ask a question in the terminal. The browser prompts you; the **Mac** waits for your answer over the hub protocol. AgentWitch does not invent answers on your behalf.
 
 Workflow **checkpoints** (Chapter 6) are a higher-level version of the same idea—planned human nodes instead of ad hoc terminal gates.
 
@@ -105,9 +105,9 @@ Writer routing (continuation vs memory limits): [Writer dispatch cascade routing
 - **Pairing tokens** and Mac install directories (`~/.agent-witch`, dev `~/.local-agent-witch`).
 - **Project folders** you attach to **Tasks** (source code, secrets in `.env` if the agent reads them).
 - **Workflow uploads** (PDFs/images) stored server-side for a bounded time with signed agent download URLs ([workflow file upload](../../qa/workflow-file-upload-and-semantic-output.md)).
-- **Session cookies** for your Agent Witch account—same as any SaaS console.
+- **Session cookies** for your AgentWitch account—same as any SaaS console.
 
-Agent Witch is built for teams who accept that **running an agent on a computer is equivalent to giving a developer shell access in the chosen folder**, mediated by your prompts and playbooks.
+AgentWitch is built for teams who accept that **running an agent on a computer is equivalent to giving a developer shell access in the chosen folder**, mediated by your prompts and playbooks.
 
 ### Pillars and data (honest summary)
 
@@ -122,9 +122,9 @@ Agent Witch is built for teams who accept that **running an agent on a computer 
 
 ## Multi-instance production (brief)
 
-Agent Witch Cloud may run on more than one server replica. **Writer dispatch** requires the live Mac WebSocket on the node handling your send request. During deploys or load balancing, you may briefly see **Reconnecting** even when AWI on the computer is healthy. The product fails closed rather than dropping **Tasks** on the wrong node. A second deploy that starts while the first is still applying database updates waits and continues, instead of failing because that update was already saved.
+AgentWitch Cloud may run on more than one server replica. **Writer dispatch** requires the live Mac WebSocket on the node handling your send request. During deploys or load balancing, you may briefly see **Reconnecting** even when AWI on the computer is healthy. The product fails closed rather than dropping **Tasks** on the wrong node. A second deploy that starts while the first is still applying database updates waits and continues, instead of failing because that update was already saved.
 
-User impact and mitigations: [AWC Mac reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md) · OPEN-002 in [Agent Witch KNOWN_ISSUES](../../../src/features/agent-witch/KNOWN_ISSUES.md).
+User impact and mitigations: [AWC Mac reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md) · OPEN-002 in [AgentWitch KNOWN_ISSUES](../../../src/features/agent-witch/KNOWN_ISSUES.md).
 
 ---
 
@@ -146,11 +146,11 @@ Update flows use the local bridge and LaunchAgents; a bad update historically co
 
 ## Query aliases
 
-- Agent Witch production trust what runs on computer vs cloud
+- AgentWitch production trust what runs on computer vs cloud
 - www.agentwitch.com security pairing token harness
 - honest run UX send blocked Mac offline
-- Cursor Cloud vs Mac dispatch Agent Witch
-- tin cay Agent Witch, du lieu o dau may Mac hay cloud
+- Cursor Cloud vs Mac dispatch AgentWitch
+- tin cay AgentWitch, du lieu o dau may Mac hay cloud
 - agentwitch.com production khac daily-magic repo
 - Mac pairing tokenHash this computer trust
 - chan Send khi Mac reconnecting update needed

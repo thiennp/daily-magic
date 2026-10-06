@@ -35,7 +35,7 @@ const runWakeCli = async (): Promise<void> => {
 
   const result = await wakeAgentWitchLaunchAgents();
   if (result.ok) {
-    process.stdout.write("Agent Witch is waking up.\n");
+    process.stdout.write("AgentWitch is waking up.\n");
     return;
   }
 
@@ -44,7 +44,7 @@ const runWakeCli = async (): Promise<void> => {
     .map((entry) => entry.errorMessage ?? entry.launchAgentLabel)
     .join("; ");
 
-  process.stderr.write(`Could not wake Agent Witch. ${failure}\n`);
+  process.stderr.write(`Could not wake AgentWitch. ${failure}\n`);
   process.exit(1);
 };
 

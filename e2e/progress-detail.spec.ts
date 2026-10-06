@@ -5,7 +5,7 @@ import { signInTestAccount } from "./helpers/signInTestAccount";
 /**
  * Verifies Send-a-task shows agent-authored [[PROGRESS]] detail and
  * [[NEXT_ACTIONS]] chips after finish.
- * Requires Agent Witch profile for SELF email on localhost WS.
+ * Requires AgentWitch profile for SELF email on localhost WS.
  */
 const SELF = "test-self-1@agentwitch.com";
 const NEXT_ACTION_ONE = "Run another progress demo";

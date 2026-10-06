@@ -164,7 +164,7 @@ func TestBackendAutostartAndNotify(t *testing.T) {
 	if err := b.DisableAutostart(context.Background()); err != nil {
 		t.Fatal(err)
 	}
-	if err := b.Notify(context.Background(), "Agent Witch Local", "Started"); err != nil {
+	if err := b.Notify(context.Background(), "AgentWitch Local", "Started"); err != nil {
 		t.Fatal(err)
 	}
 	if fake.Calls[0][0] != RegExe || fake.Calls[0][1] != "add" {

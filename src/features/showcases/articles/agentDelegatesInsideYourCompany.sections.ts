@@ -6,7 +6,7 @@ export const agentDelegatesInsideYourCompanySections: readonly ShowcaseArticleSe
   [
     {
       paragraphs: [
-        "Agent Witch is not one cloud bot everyone shares. Each person keeps an agent on their computer. Inside a company group, you become the requester and pick a teammate plus their published workflow — Claude runs on their machine with their repo paths and files.",
+        "AgentWitch is not one cloud bot everyone shares. Each person keeps an agent on their computer. Inside a company group, you become the requester and pick a teammate plus their published workflow — Claude runs on their machine with their repo paths and files.",
       ],
     },
     {
@@ -54,7 +54,7 @@ export const agentDelegatesInsideYourCompanySections: readonly ShowcaseArticleSe
     {
       heading: "3. Their computer runs; you watch the terminal",
       bullets: [
-        "After dispatch (or approval), command.claude.run reaches their Agent Witch client",
+        "After dispatch (or approval), command.claude.run reaches their AgentWitch client",
         "With session continuation, Claude reuses the warmed writer session",
         "Terminal stream chunks appear in your browser while they work locally",
         "Result lands in Reports for both requester and executor views",

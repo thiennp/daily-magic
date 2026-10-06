@@ -37,12 +37,12 @@ const MESSAGES: Readonly<Record<ProjectPitfallFlashCode, ProjectPitfallFlash>> =
     rejected: {
       message: null,
       error:
-        "Agent Witch Cloud did not accept this change. Check the fields and try again.",
+        "AgentWitch Cloud did not accept this change. Check the fields and try again.",
     },
     unavailable: {
       message: null,
       error:
-        "Could not reach Agent Witch Cloud. Check this computer on Status, then try again.",
+        "Could not reach AgentWitch Cloud. Check this computer on Status, then try again.",
     },
   };
 

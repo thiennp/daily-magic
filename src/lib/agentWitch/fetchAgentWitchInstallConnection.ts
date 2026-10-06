@@ -58,7 +58,7 @@ export const fetchAgentWitchInstallConnection =
     if (tooOldRefusal !== null) {
       return {
         ok: false,
-        error: "Agent Witch Local is too old to connect. Download the update.",
+        error: "AgentWitch Local is too old to connect. Download the update.",
         tooOldRefusal,
       };
     }

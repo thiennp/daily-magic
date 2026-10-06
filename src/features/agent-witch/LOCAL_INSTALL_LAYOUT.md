@@ -1,6 +1,6 @@
-# Agent Witch local install layout
+# AgentWitch local install layout
 
-Complete on-disk layout for the computer Agent Witch install folder after bundle **v74** (profile-scoped storage, bundled client, no local `npm install`).
+Complete on-disk layout for the computer AgentWitch install folder after bundle **v74** (profile-scoped storage, bundled client, no local `npm install`).
 
 Paths below use production defaults (`~/.agent-witch`). Local development against `localhost` uses the same tree under `~/.local-agent-witch` with different LaunchAgent labels and wake port — see [Local vs production](#local-vs-production).
 
@@ -272,7 +272,7 @@ Legacy per-email LaunchAgent labels (`com.agent-witch.<email>`) are retired; ins
 
 Override install root with `AGENT_WITCH_HOME`. Override profile with `AGENT_WITCH_PROFILE` or `AGENT_WITCH_EMAIL`.
 
-**AWL** (Agent Witch Local; not inside install dir): `http://127.0.0.1:43347`. See [agent-witch-deployables.md](../../../docs/product/agent-witch-deployables.md).
+**AWL** (AgentWitch Local; not inside install dir): `http://127.0.0.1:43347`. See [agent-witch-deployables.md](../../../docs/product/agent-witch-deployables.md).
 
 ---
 

@@ -1,6 +1,6 @@
 # AWB — Fractal Slice Architecture
 
-Agent Witch **Bridge** loopback HTTP (`127.0.0.1:47892` / `47893`). Registry: [`features.registry.json`](./features.registry.json).
+AgentWitch **Bridge** loopback HTTP (`127.0.0.1:47892` / `47893`). Registry: [`features.registry.json`](./features.registry.json).
 
 ## Hierarchy
 

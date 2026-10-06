@@ -1,10 +1,10 @@
 ---
-description: Catalog of binding ADRs for daily-magic (Agent Witch)
+description: Catalog of binding ADRs for daily-magic (AgentWitch)
 globs:
 alwaysApply: true
 ---
 
-# Architecture decision records (daily-magic / Agent Witch)
+# Architecture decision records (daily-magic / AgentWitch)
 
 Canonical index: [docs/adr/README.md](docs/adr/README.md). Full text lives in `docs/adr/NNNN-*.md`.
 

@@ -7,7 +7,7 @@ import { AGENT_WITCH_DEFAULT_ORIGIN } from "@/lib/agentWitch/constants";
 
 const title = `Download | ${AGENT_WITCH_PRODUCT_NAME}`;
 const description =
-  "Download the Agent Witch menu bar app for Mac on Apple Silicon.";
+  "Download the AgentWitch menu bar app for Mac on Apple Silicon.";
 
 export const metadata: Metadata = {
   title,

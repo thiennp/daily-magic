@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: `Project invite | ${AGENT_WITCH_PRODUCT_NAME}`,
-  description: "Accept a human invite to join an Agent Witch project.",
+  description: "Accept a human invite to join an AgentWitch project.",
   robots: { index: false, follow: false },
 };
 

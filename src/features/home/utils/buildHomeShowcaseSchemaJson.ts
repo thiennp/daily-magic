@@ -6,7 +6,7 @@ export function buildHomeShowcaseSchemaJson(
   return JSON.stringify({
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "Agent Witch real examples",
+    name: "AgentWitch real examples",
     itemListElement: articles.map((article, index) => ({
       "@type": "ListItem",
       position: index + 1,

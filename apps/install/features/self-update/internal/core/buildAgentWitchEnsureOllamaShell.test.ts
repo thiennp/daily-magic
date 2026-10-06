@@ -28,7 +28,7 @@ describe("buildAgentWitchEnsureOllamaShell", () => {
     const script = buildAgentWitchInstallScriptOllama();
 
     expect(script).toContain("agent_witch_ensure_ollama || echo");
-    expect(script).toContain("Agent Witch will continue without it.");
+    expect(script).toContain("AgentWitch will continue without it.");
   });
 });
 

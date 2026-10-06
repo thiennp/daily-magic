@@ -56,7 +56,7 @@ export const resolveAgentRunDispatchProject = async (input: {
     return {
       ok: false,
       errorMessage:
-        "This project is stored on a different Mac. Open Agent Witch on that Mac to run tasks in this repository.",
+        "This project is stored on a different Mac. Open AgentWitch on that Mac to run tasks in this repository.",
       code: "invalid_project",
       status: 400,
     };

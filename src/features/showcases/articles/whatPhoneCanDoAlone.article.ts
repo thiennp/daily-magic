@@ -9,7 +9,7 @@ const whatPhoneCanDoAlone: ShowcaseArticle = {
   supportLevel: "partial",
   readMinutes: 4,
   whatYouNeed: [
-    "Mobile browser on the Agent Witch app",
+    "Mobile browser on the AgentWitch app",
     "To send: browser connected to the app + a computer online to run the job",
     "For team dispatch: a teammate's computer as executor",
   ],

@@ -18,7 +18,7 @@ export const PROMPT_SDLC_GOAL_SUGGESTION_EVAL_CASES_EN: readonly PromptSdlcGoalS
     {
       id: "en-docs-only",
       prompt:
-        "Document the Agent Witch WebSocket URL in docs/qa for Mac clients.",
+        "Document the AgentWitch WebSocket URL in docs/qa for Mac clients.",
       writerReply: JSON.stringify({
         options: [
           "docs/qa/agent-witch-ws.md mentions wss://www.agentwitch.com/api/agent-witch/ws.",

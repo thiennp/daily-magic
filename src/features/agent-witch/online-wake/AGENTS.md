@@ -1,6 +1,6 @@
 # Online wake — agent instructions
 
-Presence and cloud restart for Agent Witch Macs.
+Presence and cloud restart for AgentWitch Macs.
 
 ## Public API
 

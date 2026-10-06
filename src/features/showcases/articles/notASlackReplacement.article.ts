@@ -2,17 +2,17 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 
 const notASlackReplacement: ShowcaseArticle = {
   slug: "not-a-slack-replacement",
-  title: "Agent Witch is not a Slack replacement",
-  subtitle: "Keep Slack for chat. Use Agent Witch for repeat AI work.",
+  title: "AgentWitch is not a Slack replacement",
+  subtitle: "Keep Slack for chat. Use AgentWitch for repeat AI work.",
   category: "Common questions",
   supportLevel: "full",
   readMinutes: 3,
-  whatYouNeed: ["Nothing — this clarifies where Agent Witch fits"],
+  whatYouNeed: ["Nothing — this clarifies where AgentWitch fits"],
   tryNext: { label: "See what it does instead", href: "/showcases" },
   sections: [
     {
       paragraphs: [
-        "If you are looking for fewer channels, better threads, or async standups, keep Slack. Agent Witch is for when the same AI task happens every week — research briefs, report drafts, folder summaries — and prompts keep getting lost in chat.",
+        "If you are looking for fewer channels, better threads, or async standups, keep Slack. AgentWitch is for when the same AI task happens every week — research briefs, report drafts, folder summaries — and prompts keep getting lost in chat.",
       ],
     },
     {
@@ -24,7 +24,7 @@ const notASlackReplacement: ShowcaseArticle = {
       ],
     },
     {
-      heading: "What Agent Witch adds",
+      heading: "What AgentWitch adds",
       bullets: [
         "Saved playbooks in a library — not buried in #random",
         "Dispatch to a real Mac with files and tools",
@@ -34,7 +34,7 @@ const notASlackReplacement: ShowcaseArticle = {
     {
       heading: "Use both",
       paragraphs: [
-        'Slack for "can you take this?" Agent Witch for "run the weekly client summary again." Many teams keep Slack and add a playbook layer so AI work is repeatable, not another scrollback search.',
+        'Slack for "can you take this?" AgentWitch for "run the weekly client summary again." Many teams keep Slack and add a playbook layer so AI work is repeatable, not another scrollback search.',
       ],
     },
   ],

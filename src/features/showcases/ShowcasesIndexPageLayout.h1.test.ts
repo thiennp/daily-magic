@@ -13,6 +13,6 @@ describe("ShowcasesIndexPageLayout headings", () => {
     const html = renderToStaticMarkup(createElement(ShowcasesIndexPageLayout));
     const h1s = html.match(/<h1[\s>][\s\S]*?<\/h1>/gu) ?? [];
     expect(h1s).toHaveLength(1);
-    expect(h1s[0]).toContain("See how teams use Agent Witch");
+    expect(h1s[0]).toContain("See how teams use AgentWitch");
   });
 });

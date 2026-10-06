@@ -23,7 +23,7 @@ export const buildPromptSdlcWizardSeparatePipeline = (input: {
   return [
     pipelineStep(
       "awl",
-      "Connected on this computer (Agent Witch Local)",
+      "Connected on this computer (AgentWitch Local)",
       "done",
       "Local app",
       "<p>Separate keeps <code>{{placeholders}}</code> in module text.</p>",

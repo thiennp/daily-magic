@@ -22,7 +22,7 @@ describe("buildAgentWitchLocalAppShell", () => {
     expect(html).toContain('class="site-nav site-nav-header"');
     expect(html).toContain("padding-left: 14rem");
     expect(html).toContain('aria-current="page"');
-    expect(html).toContain("Agent Witch");
+    expect(html).toContain("AgentWitch");
     expect(html).toContain('href="/"');
     expect(html).toContain('href="/task"');
     expect(html).toContain('href="/status"');

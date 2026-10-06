@@ -31,7 +31,7 @@ const COMPLEX_VARIABLES = [
   {
     name: "brand",
     description: "Product name shown to the customer",
-    sampleValue: "Agent Witch Cloud",
+    sampleValue: "AgentWitch Cloud",
   },
   {
     name: "tier",

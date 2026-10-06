@@ -137,7 +137,7 @@ Touch points (same change set): builder row, run-time `WorkflowTaskFields`, mobi
 
 Three viable designs. Pick **one** before UI:
 
-| Design                               | How it works                                                    | Fit for Agent Witch                                                                                           |
+| Design                               | How it works                                                    | Fit for AgentWitch                                                                                           |
 | ------------------------------------ | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | **A. Extract text in AWC**           | Upload PDF/image → extract / OCR → store text in `field_values` | Best first file type: “attach a brief, agent reads it.” No computer path problem.                             |
 | **B. Cloud blob + URL in prompt**    | Store in object storage; prompt gets a signed URL               | Agent on computer must be able to fetch the URL. Extra secrets, retention, size limits.                       |

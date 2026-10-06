@@ -5,7 +5,7 @@ export const resolveAgentLiveProgressStallDetail = (input: {
   readonly fallbackDetail: string | null;
 }): string | null => {
   if (input.stallState === "stuck") {
-    return "No updates from your computer yet. Check that Agent Witch is running, wake your computer from Home, or try sending the task again.";
+    return "No updates from your computer yet. Check that AgentWitch is running, wake your computer from Home, or try sending the task again.";
   }
 
   if (input.stallState === "warning") {

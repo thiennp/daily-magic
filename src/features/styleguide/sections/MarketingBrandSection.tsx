@@ -8,7 +8,7 @@ export default function MarketingBrandSection() {
         Marketing brand ({MARKETING_DESIGN_SYSTEM_VERSION})
       </h2>
       <p className="mb-5 max-w-3xl text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-        Public-site tokens for Agent Witch landing (AWC), login, legal, and AWL
+        Public-site tokens for AgentWitch landing (AWC), login, legal, and AWL
         inline CSS. Logo lockup stays unchanged; surfaces use border-first
         cards, brand blue CTAs, navy announcement + security bands, and metric
         dividers. Canonical doc: docs/design/agent-witch-public-ui.md

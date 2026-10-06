@@ -19,7 +19,7 @@ export const resolveHomeMacStatusSummary = (
       tone: "none",
       label: "No computer connected",
       detail:
-        "Install Agent Witch on your computer to run tasks from the browser.",
+        "Install AgentWitch on your computer to run tasks from the browser.",
     };
   }
 
@@ -51,13 +51,13 @@ export const resolveHomeMacStatusSummary = (
       tone: "sleeping",
       label: "Mac reconnecting",
       detail:
-        "Agent Witch was seen recently and may reconnect on the next check-in. Start it on your computer with wake.sh if it stays offline.",
+        "AgentWitch was seen recently and may reconnect on the next check-in. Start it on your computer with wake.sh if it stays offline.",
     };
   }
 
   return {
     tone: "offline",
     label: "Mac offline",
-    detail: "Start Agent Witch on your computer to run new tasks.",
+    detail: "Start AgentWitch on your computer to run new tasks.",
   };
 };

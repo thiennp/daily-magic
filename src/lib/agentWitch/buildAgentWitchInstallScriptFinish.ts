@@ -7,7 +7,7 @@ export const buildAgentWitchInstallScriptFinish = (input: {
 ${buildAgentWitchInstallScriptVersionStamp(input.appOrigin)}
 ${buildAgentWitchInstallScriptRegisterInstall(input)}
 agent_witch_install_finish_progress
-echo "Agent Witch is ready."
+echo "AgentWitch is ready."
 
 if [[ "\$(uname -s)" == "Darwin" ]]; then
   launchctl kickstart -k "gui/\$(id -u)/\${LAUNCH_AGENT_LABEL}" 2>/dev/null || true

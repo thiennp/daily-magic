@@ -30,7 +30,7 @@ export const AGENT_A1_PART1: readonly PresetHarnessSeed[] = [
         "Produce structured brief.",
         "Cite sources when available.",
       ],
-      instructionAddendum: "Mac-local research via Agent Witch.",
+      instructionAddendum: "Mac-local research via AgentWitch.",
       subagentMission:
         "You are the research subagent. Maximize depth and source discipline for open-ended research.",
       subagentExpertise: ["Literature synthesis", "Source triangulation"],

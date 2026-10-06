@@ -10,25 +10,25 @@ export interface DeployableMeta {
 export const DEPLOYABLE_META: Readonly<Record<DeployableId, DeployableMeta>> = {
   AWC: {
     id: "AWC",
-    name: "Agent Witch Cloud",
+    name: "AgentWitch Cloud",
     slug: "console",
     targetFolder: "apps/console",
   },
   AWL: {
     id: "AWL",
-    name: "Agent Witch Local",
+    name: "AgentWitch Local",
     slug: "live",
     targetFolder: "apps/live",
   },
   AWB: {
     id: "AWB",
-    name: "Agent Witch Bridge",
+    name: "AgentWitch Bridge",
     slug: "bridge",
     targetFolder: "apps/bridge",
   },
   AWI: {
     id: "AWI",
-    name: "Agent Witch Install",
+    name: "AgentWitch Install",
     slug: "install",
     targetFolder: "apps/install",
   },

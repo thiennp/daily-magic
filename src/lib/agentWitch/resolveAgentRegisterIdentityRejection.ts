@@ -18,7 +18,7 @@ export const resolveAgentRegisterIdentityRejection = (input: {
   if (input.device === null) {
     return {
       errorCode: AGENT_WITCH_UNKNOWN_IDENTITY_ERROR_CODE,
-      errorMessage: "Agent Witch does not know this computer identity.",
+      errorMessage: "AgentWitch does not know this computer identity.",
     };
   }
 

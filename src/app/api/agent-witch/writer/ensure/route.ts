@@ -37,7 +37,7 @@ export async function POST(request: Request): Promise<Response> {
   if (agent === undefined) {
     return NextResponse.json(
       {
-        error: "Your computer is offline. Open Agent Witch on that computer and retry.",
+        error: "Your computer is offline. Open AgentWitch on that computer and retry.",
       },
       { status: 409 },
     );

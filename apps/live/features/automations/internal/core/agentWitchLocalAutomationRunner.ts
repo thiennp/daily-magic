@@ -30,7 +30,7 @@ export const runLocalScheduledAutomationById = async (
   const config = readAgentWitchRunConfig();
 
   if (config === null) {
-    return { ok: false, errorMessage: "Agent Witch is not configured." };
+    return { ok: false, errorMessage: "AgentWitch is not configured." };
   }
 
   const cloudApi = resolveAgentWitchCloudApiConfig({

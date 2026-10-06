@@ -43,7 +43,7 @@ const resolveExistingInstallArtifactPath = (
   const filePath = AGENT_WITCH_INSTALL_SCRIPT_ALLOWLIST[scriptName];
   if (!fs.existsSync(filePath)) {
     throw new Error(
-      `Agent Witch bundle is missing at ${filePath}. Run npm run build:agent-witch.`,
+      `AgentWitch bundle is missing at ${filePath}. Run npm run build:agent-witch.`,
     );
   }
 

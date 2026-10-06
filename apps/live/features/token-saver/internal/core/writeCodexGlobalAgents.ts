@@ -11,7 +11,7 @@ import {
 import { writeTextFileAtomic } from "./writeTextFileAtomic";
 
 const AGENTS_BODY = [
-  "On the first user message of a session, call the Agent Witch MCP tool",
+  "On the first user message of a session, call the AgentWitch MCP tool",
   "`check_context` with the current cwd.",
   "If status is miss or none (declined), stay silent. If hit, follow the tip.",
 ].join("\n");

@@ -43,7 +43,7 @@ describe("buildAgentWitchInstallScriptNodeFeatureNote", () => {
     expect(result.stdout).toBe("CONTINUED\n");
     const lines = result.stderr.trim().split("\n");
     expect(lines).toHaveLength(1);
-    expect(lines[0]).toContain("Node.js v20.19.2 runs Agent Witch");
+    expect(lines[0]).toContain("Node.js v20.19.2 runs AgentWitch");
     expect(lines[0]).toContain(
       `needs Node.js ${AGENT_WITCH_FULL_FEATURE_NODE_VERSION_LABEL} or newer`,
     );

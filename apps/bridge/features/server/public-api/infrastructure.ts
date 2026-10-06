@@ -17,7 +17,7 @@ export const startBridgeServer = async (): Promise<http.Server> => {
   });
 
   process.stdout.write(
-    `Agent Witch wake server listening on http://127.0.0.1:${port}\n`,
+    `AgentWitch wake server listening on http://127.0.0.1:${port}\n`,
   );
 
   return server;

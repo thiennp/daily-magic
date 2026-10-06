@@ -26,7 +26,7 @@ export const probeLocalAgentWitchWakePorts = async (input: {
   readonly portsToProbe: readonly number[];
   readonly onPortAttempted: (wakePort: number) => void;
 }): Promise<LocalAgentWitchIdentity | null> => {
-  // Mobile browsers never talk to Agent Witch Local (no loopback probes).
+  // Mobile browsers never talk to AgentWitch Local (no loopback probes).
   if (detectMobileClient()) {
     return null;
   }

@@ -4,7 +4,7 @@ export interface BrandLogoMeaningItem {
 }
 
 export const BRAND_LOGO_INTRO =
-  "The logo reflects the core premise of Agent Witch: secure, local AI automation that feels like magic but is grounded in strict rules.";
+  "The logo reflects the core premise of AgentWitch: secure, local AI automation that feels like magic but is grounded in strict rules.";
 
 export const BRAND_LOGO_MEANING_ITEMS: readonly BrandLogoMeaningItem[] = [
   {

@@ -1,4 +1,4 @@
-# Agent Witch marketing knowledge pages
+# AgentWitch marketing knowledge pages
 
 Concise in-product / docs pages aligned to the Thien-confirmed marketing pack (2026-10-01).  
 Markings: **[SHIPPED]** / **[PROPOSED]** / **[PARTIAL]**.

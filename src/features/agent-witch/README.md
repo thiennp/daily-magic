@@ -1,4 +1,4 @@
-# Agent Witch bridge (AWC cloud ↔ AWI / AWL / AWB on computer)
+# AgentWitch bridge (AWC cloud ↔ AWI / AWL / AWB on computer)
 
 Mac pairing, install (**AWI**), mutual WebSocket to **AWC**, **AWL** Mac app (`:43347`), **AWB** loopback API, and paired-device API client.
 

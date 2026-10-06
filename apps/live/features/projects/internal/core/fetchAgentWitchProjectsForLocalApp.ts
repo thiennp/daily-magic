@@ -44,7 +44,7 @@ export const fetchAgentWitchProjectsForLocalApp = async (
       ok: false,
       projects: [],
       message:
-        "Could not reach Agent Witch Cloud. Check the computer connection and try again.",
+        "Could not reach AgentWitch Cloud. Check the computer connection and try again.",
     };
   }
 
@@ -55,7 +55,7 @@ export const fetchAgentWitchProjectsForLocalApp = async (
     projects,
     message:
       projects.length === 0
-        ? "No projects yet — create one in Agent Witch Cloud, then refresh this page."
-        : `Loaded ${projects.length} project${projects.length === 1 ? "" : "s"} from Agent Witch Cloud.`,
+        ? "No projects yet — create one in AgentWitch Cloud, then refresh this page."
+        : `Loaded ${projects.length} project${projects.length === 1 ? "" : "s"} from AgentWitch Cloud.`,
   };
 };

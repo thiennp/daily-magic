@@ -33,7 +33,7 @@ export const deleteAgentWitchCloudProject = async (
   } catch {
     return {
       ok: false,
-      errorMessage: "Could not reach Agent Witch Cloud.",
+      errorMessage: "Could not reach AgentWitch Cloud.",
     };
   }
 };

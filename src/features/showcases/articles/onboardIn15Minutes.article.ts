@@ -12,7 +12,7 @@ const onboardIn15Minutes: ShowcaseArticle = {
   readMinutes: 5,
   whatYouNeed: [
     "About 15 minutes and a computer you control",
-    "Agent Witch install command from Home → Your setup",
+    "AgentWitch install command from Home → Your setup",
     'Seeded Library playbook: "Weekly status update"',
   ],
   tryNext: { label: "Sign in and open Home", href: "/login" },

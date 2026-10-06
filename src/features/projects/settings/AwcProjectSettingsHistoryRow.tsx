@@ -11,7 +11,7 @@ interface AwcProjectSettingsHistoryRowProps {
 
 /**
  * Message history — read-only switch. Cloud shows Local preference;
- * toggle is configured in Agent Witch Local (toast on click).
+ * toggle is configured in AgentWitch Local (toast on click).
  */
 export default function AwcProjectSettingsHistoryRow({
   projectId,

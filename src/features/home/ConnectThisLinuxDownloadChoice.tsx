@@ -31,7 +31,7 @@ export default function ConnectThisLinuxDownloadChoice({
           .deb
         </a>
         {" — "}
-        starts and stops the same Agent Witch install from the tray.
+        starts and stops the same AgentWitch install from the tray.
       </p>
       <p className="text-xs text-gray-500 dark:text-gray-400">
         Run the terminal install first. AppImage:{" "}

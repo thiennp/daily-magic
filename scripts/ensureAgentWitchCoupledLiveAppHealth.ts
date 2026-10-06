@@ -33,7 +33,7 @@ export const isAgentWitchLiveAppHttpReachable = async (
 };
 
 /**
- * When AWL (`:43347`) is down but the install bundle exists, kickstart Agent Witch
+ * When AWL (`:43347`) is down but the install bundle exists, kickstart AgentWitch
  * LaunchAgents so the in-process or coupled runtime brings Live back.
  */
 export const ensureAgentWitchCoupledLiveAppHealth = async (

@@ -1,19 +1,19 @@
-# Agent Witch deployables (AWC, AWL, AWB, AWI)
+# AgentWitch deployables (AWC, AWL, AWB, AWI)
 
 Four **named deployables** share one git repo (`daily-magic`). Use the **abbreviations** in issues, PRs, and agent chat for speed.
 
 | Abbr    | Name                  | Folder (target) | Primary origin / port                                                        |
 | ------- | --------------------- | --------------- | ---------------------------------------------------------------------------- |
-| **AWC** | **Agent Witch Cloud** | `apps/console/` | `https://www.agentwitch.com` · local `http://localhost:3000`                 |
-| **AWL** | Agent Witch Local     | `apps/live/`    | `http://127.0.0.1:43347`                                                     |
-| **AWB** | Agent Witch Bridge    | `apps/bridge/`  | `http://127.0.0.1:47892` (prod install) · `47893` (localhost-origin install) |
-| **AWI** | Agent Witch Install   | `apps/install/` | Mac bundle (`curl \| bash`), `~/.agent-witch` / `~/.local-agent-witch`       |
+| **AWC** | **AgentWitch Cloud** | `apps/console/` | `https://www.agentwitch.com` · local `http://localhost:3000`                 |
+| **AWL** | AgentWitch Local     | `apps/live/`    | `http://127.0.0.1:43347`                                                     |
+| **AWB** | AgentWitch Bridge    | `apps/bridge/`  | `http://127.0.0.1:47892` (prod install) · `47893` (localhost-origin install) |
+| **AWI** | AgentWitch Install   | `apps/install/` | Mac bundle (`curl \| bash`), `~/.agent-witch` / `~/.local-agent-witch`       |
 
 Machine-readable registry: [`apps/deployables.registry.json`](../../apps/deployables.registry.json).
 
-**Naming:** **AWC** always expands to **Agent Witch Cloud**. The folder slug `console` and path `apps/console/` are legacy identifiers only — not the product name. See [Q&A: AWC Cloud vs Console](../qa/awc-agent-witch-cloud-naming.md).
+**Naming:** **AWC** always expands to **AgentWitch Cloud**. The folder slug `console` and path `apps/console/` are legacy identifiers only — not the product name. See [Q&A: AWC Cloud vs Console](../qa/awc-agent-witch-cloud-naming.md).
 
-**Naming:** **AWL** always expands to **Agent Witch Local**. The folder slug `live` and path `apps/live/` are legacy identifiers only. See [Q&A: AWL Local vs Live](../qa/awl-agent-witch-local-naming.md).
+**Naming:** **AWL** always expands to **AgentWitch Local**. The folder slug `live` and path `apps/live/` are legacy identifiers only. See [Q&A: AWL Local vs Live](../qa/awl-agent-witch-local-naming.md).
 
 Shared types and protocol: **`@agent-witch/shared`** (`packages/shared/`) — deployables, network constants, WebSocket message types.
 
@@ -23,14 +23,14 @@ Shared types and protocol: **`@agent-witch/shared`** (`packages/shared/`) — de
 
 ### AWC — Cloud
 
-**Agent Witch Cloud** — hosted **control plane**: signed-in browser UI, REST APIs, WebSocket hub (`/api/agent-witch/ws`), auth, dispatch, runs, playbooks, admin.
+**AgentWitch Cloud** — hosted **control plane**: signed-in browser UI, REST APIs, WebSocket hub (`/api/agent-witch/ws`), auth, dispatch, runs, playbooks, admin.
 
 - **Today:** `src/app/`, `server.ts`, `src/features/*`, `src/lib/*`
 - **Not:** Mac loopback HTTP (that is AWL / AWB)
 
 ### AWL — Local
 
-**Agent Witch Local** — Mac-local web app (first-class product surface): home, local tasks, projects/repos, playbook (harness) sync, memory/knowledge, writer settings, connection and install health.
+**AgentWitch Local** — Mac-local web app (first-class product surface): home, local tasks, projects/repos, playbook (harness) sync, memory/knowledge, writer settings, connection and install health.
 
 - **Today:** `scripts/agentWitchLocalApp.ts` and `buildAgentWitchLocal*` pages; constant `AGENT_WITCH_LOCAL_APP_PORT` (`43347`)
 - **Binds:** `127.0.0.1` only (see AGENT-021 — the public website does not fetch AWL)

@@ -18,7 +18,7 @@ interface AwcProjectPitfallsSectionProps {
 
 /**
  * Read-only pitfall registry on the AWC project page. Editing happens in
- * Agent Witch Local (Pitfalls tab); Cloud is the source of truth.
+ * AgentWitch Local (Pitfalls tab); Cloud is the source of truth.
  */
 export default function AwcProjectPitfallsSection({
   projectId,

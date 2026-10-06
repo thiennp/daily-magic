@@ -49,7 +49,7 @@ describe("checkContext", () => {
         { id: "missing-lock", avoidance: "Fix missing-lock" },
         { id: "stale-node", avoidance: "Fix stale-node" },
       ],
-      tip: "Agent Witch tip · check_context\nmissing-lock|Fix missing-lock\nstale-node|Fix stale-node",
+      tip: "AgentWitch tip · check_context\nmissing-lock|Fix missing-lock\nstale-node|Fix stale-node",
     });
     expect(registry.recordHit).toHaveBeenCalledTimes(2);
     expect(registry.recordHit).toHaveBeenCalledWith({

@@ -33,11 +33,11 @@ const LocalLogFrame = () => {
         </h1>
         <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
           Loaded from 127.0.0.1:{wakePort}. This view only works on the computer
-          that runs Agent Witch.
+          that runs AgentWitch.
         </p>
       </div>
       <iframe
-        title={`Agent Witch local logs for ${deviceName}`}
+        title={`AgentWitch local logs for ${deviceName}`}
         src={buildLocalLogFrameSrc(wakePort)}
         className="min-h-[calc(100vh-8rem)] w-full flex-1 border-0 bg-[#0b1020]"
         sandbox="allow-same-origin"

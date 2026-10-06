@@ -27,7 +27,7 @@ Expand **More options** when you need more than Mac + prompt:
 
 | Option                       | User meaning                                     | Honest limits                                                                                                                                                                                                        |
 | ---------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Repository / code folder** | Where the writer CLI runs on the computer        | Browser cannot pick a real POSIX path via native dialog—type a path you know, use defaults, or set folder in **Agent Witch on this computer** ([folder picker Q&A](../../qa/awc-project-folder-path-picker.md)).     |
+| **Repository / code folder** | Where the writer CLI runs on the computer        | Browser cannot pick a real POSIX path via native dialog—type a path you know, use defaults, or set folder in **AgentWitch on this computer** ([folder picker Q&A](../../qa/awc-project-folder-path-picker.md)).     |
 | **Playbook**                 | Rules/skills/templates installed on the computer | Files live under `~/.agent-witch/harness/`; installing from Marketplace is a separate flow ([dispatch Q&A](../../qa/mac-harness-workflow-agent-dispatch.md)).                                                        |
 | **Writer**                   | Which local CLI (Cursor, Claude Code, …)         | Must exist on the computer. A missing writer API key that still runs the CLI shows **Completed with fallback**. If the CLI cannot start, the run shows **Failed** — Writer API key missing and Claude CLI can’t run. |
 
@@ -39,7 +39,7 @@ Company-only hints (run on behalf, policy) appear when org rules exist—not on 
 
 1. Console creates an **agent run** record in the cloud.
 2. It builds a **prompt payload** (plus optional folder, playbook/capability id, writer).
-3. It delivers **`command.claude.run`** (name is historical) to your computer over the Agent Witch WebSocket—or **queues** it in the outbox if the computer is fresh but not live on this server ([ADR 0005](../../adr/0005-shared-mac-presence-and-dispatch-outbox.md)).
+3. It delivers **`command.claude.run`** (name is historical) to your computer over the AgentWitch WebSocket—or **queues** it in the outbox if the computer is fresh but not live on this server ([ADR 0005](../../adr/0005-shared-mac-presence-and-dispatch-outbox.md)).
 4. Your computer runs the writer in a **real shell**; output streams to the browser.
 5. Terminal outcome is stored for **Runs** / reports.
 
@@ -107,7 +107,7 @@ Open **Runs** to:
 
 **Search past runs** (when offered) pulls useful context from earlier **Runs** (**efficient memory**)—UI avoids the word “Knowledge.” Not every prior run is replayed automatically; scope improves over time ([north star vs today](00-philosophy-and-vocabulary.md#north-star-vs-today)).
 
-On the **Mac**, the writer may also receive project snippets and “avoid repeating” notes from past failures before it runs—the **Knowledge** page on **Agent Witch on this computer** shows what was saved and how often it was reused ([Chapter 4 — Local knowledge](04-mac-connect-and-bridge.md#local-knowledge-mac-app--efficient-memory)). That stays on your machine until you explicitly promote or publish something in the Console.
+On the **Mac**, the writer may also receive project snippets and “avoid repeating” notes from past failures before it runs—the **Knowledge** page on **AgentWitch on this computer** shows what was saved and how often it was reused ([Chapter 4 — Local knowledge](04-mac-connect-and-bridge.md#local-knowledge-mac-app--efficient-memory)). That stays on your machine until you explicitly promote or publish something in the Console.
 
 Team filters (who, which Mac, playbook, date) support audit—not required for solo makers.
 
@@ -168,9 +168,9 @@ After the AI opens `/for-agents` from the homepage prompt and registers (method 
 
 ## Query aliases
 
-- send task Agent Witch, dispatch run, composer Send blocked
+- send task AgentWitch, dispatch run, composer Send blocked
 - run again continue conversation, waiting on you AWAITING_INPUT
-- gui task Agent Witch, xem run, terminal honesty Connecting In progress
+- gui task AgentWitch, xem run, terminal honesty Connecting In progress
 - thuc thi task tren Mac, dispatch outbox reconnecting
 - git verdict run report details Mac repository dirty paths
 - project folder playbook writer more options New task

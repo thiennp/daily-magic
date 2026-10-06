@@ -1,6 +1,6 @@
 # E2E user scenarios (Gherkin)
 
-Human-readable end-to-end scenarios for real-user flows in Agent Witch. These specs are documentation-first; Playwright/Cucumber wiring is not required yet.
+Human-readable end-to-end scenarios for real-user flows in AgentWitch. These specs are documentation-first; Playwright/Cucumber wiring is not required yet.
 
 ## Conventions
 

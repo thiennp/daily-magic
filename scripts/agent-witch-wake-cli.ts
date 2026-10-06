@@ -12,12 +12,12 @@ const main = async (): Promise<void> => {
   const result = await wakeAgentWitchLaunchAgents();
 
   if (result.ok) {
-    process.stdout.write("Agent Witch is waking up.\n");
+    process.stdout.write("AgentWitch is waking up.\n");
     return;
   }
 
   process.stderr.write(
-    `Could not wake Agent Witch. ${formatWakeFailure(result.kicked)}\n`,
+    `Could not wake AgentWitch. ${formatWakeFailure(result.kicked)}\n`,
   );
   process.exit(1);
 };

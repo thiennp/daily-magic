@@ -1,4 +1,4 @@
-# AWC — Agent Witch Cloud
+# AWC — AgentWitch Cloud
 
 Cloud control plane (`www.agentwitch.com`, `localhost:3000`).
 

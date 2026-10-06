@@ -50,7 +50,7 @@ export const buildAgentWitchInstructionDocument = (
     privacyNote:
       "This document describes product behavior only. It intentionally excludes source-code metadata, implementation secrets, credentials, and personal account data.",
     purpose:
-      "Help a local Mac agent or assistant answer end-user questions about how Agent Witch works.",
+      "Help a local Mac agent or assistant answer end-user questions about how AgentWitch works.",
     sections: AGENT_WITCH_INSTRUCTION_SECTIONS,
     communication: buildAgentWitchInstructionCommunicationGuide(websocketPath),
     api: {

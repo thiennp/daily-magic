@@ -22,11 +22,11 @@ describe("buildAgentWitchLocalHarnessInstalledSection", () => {
     expect(html).toContain("Demo");
     expect(html).not.toContain('action="/harness/apply-to-project"');
     expect(html).toContain('href="/projects"');
-    expect(html).toContain("installed from Agent Witch Cloud");
-    expect(html).not.toContain("from Agent Witch Local");
-    expect(html).toContain("Browse playbooks in Agent Witch Cloud");
+    expect(html).toContain("installed from AgentWitch Cloud");
+    expect(html).not.toContain("from AgentWitch Local");
+    expect(html).toContain("Browse playbooks in AgentWitch Cloud");
     expect(html).toContain('href="https://www.agentwitch.com/marketplace"');
-    expect(html).not.toContain("Browse playbooks on Agent Witch Local");
+    expect(html).not.toContain("Browse playbooks on AgentWitch Local");
   });
 
   it("points the empty state at Console marketplace", () => {
@@ -36,10 +36,10 @@ describe("buildAgentWitchLocalHarnessInstalledSection", () => {
     });
 
     expect(html).toContain(
-      "Install playbooks in Agent Witch Cloud — files land in your profile harness on this computer.",
+      "Install playbooks in AgentWitch Cloud — files land in your profile harness on this computer.",
     );
-    expect(html).toContain("Browse playbooks in Agent Witch Cloud");
+    expect(html).toContain("Browse playbooks in AgentWitch Cloud");
     expect(html).toContain('href="https://www.agentwitch.com/marketplace"');
-    expect(html).not.toContain("Agent Witch Local");
+    expect(html).not.toContain("AgentWitch Local");
   });
 });

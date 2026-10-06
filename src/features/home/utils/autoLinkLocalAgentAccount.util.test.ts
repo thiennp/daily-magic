@@ -16,7 +16,7 @@ describe("shouldStopAutoLinkAfterFailure", () => {
 
   it("keeps retrying for transient failures", () => {
     expect(
-      shouldStopAutoLinkAfterFailure("Could not reach Agent Witch site."),
+      shouldStopAutoLinkAfterFailure("Could not reach AgentWitch site."),
     ).toBe(false);
   });
 });

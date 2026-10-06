@@ -8,7 +8,7 @@ const firstAgentTaskIn5Minutes: ShowcaseArticle = {
   supportLevel: "full",
   readMinutes: 3,
   whatYouNeed: [
-    "A Mac with Agent Witch set up and ready to run jobs",
+    "A Mac with AgentWitch set up and ready to run jobs",
     "Sign-in so the browser can send work to your computer live",
     "A short task description — one sentence is enough",
   ],

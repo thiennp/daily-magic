@@ -9,7 +9,7 @@ const whyLocalMacNotCloud: ShowcaseArticle = {
   readMinutes: 4,
   whatYouNeed: [
     "A Mac you control (or a teammate's, with policy)",
-    "Agent Witch installed and Mac connected",
+    "AgentWitch installed and Mac connected",
   ],
   tryNext: {
     label: "See one employee, one agent",
@@ -18,7 +18,7 @@ const whyLocalMacNotCloud: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Uploading client folders to a random SaaS sandbox makes security teams nervous — often for good reason. Agent Witch dispatches to a known machine: yours or a colleague's, with rules about what the agent can touch.",
+        "Uploading client folders to a random SaaS sandbox makes security teams nervous — often for good reason. AgentWitch dispatches to a known machine: yours or a colleague's, with rules about what the agent can touch.",
       ],
     },
     {

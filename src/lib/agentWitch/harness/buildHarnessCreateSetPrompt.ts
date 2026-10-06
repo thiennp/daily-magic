@@ -8,7 +8,7 @@ const buildHarnessCreateSetPrompt = (
   const manifestPath = getHarnessManifestPath();
 
   return [
-    "You are creating a new Agent Witch harness set on the local machine.",
+    "You are creating a new AgentWitch harness set on the local machine.",
     "Do not modify project repositories or replace existing personal agent root harness files.",
     "",
     "Harness set:",

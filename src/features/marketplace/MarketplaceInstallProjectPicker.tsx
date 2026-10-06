@@ -34,7 +34,7 @@ export default function MarketplaceInstallProjectPicker({
       </p>
       <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
         Workflow and agent installs link to this project. Pull playbook files
-        into the repo from Agent Witch on your computer.
+        into the repo from AgentWitch on your computer.
       </p>
       {isProjectsLoading ? (
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">

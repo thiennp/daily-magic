@@ -8,7 +8,7 @@ import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProje
 const LINK_CLASS =
   "font-medium text-gray-900 underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400/40 dark:text-white";
 
-/** Deep link into Agent Witch Local Pitfalls — artifact note-line link. */
+/** Deep link into AgentWitch Local Pitfalls — artifact note-line link. */
 export default function AwcProjectPitfallsManageButton({
   editCta,
 }: {

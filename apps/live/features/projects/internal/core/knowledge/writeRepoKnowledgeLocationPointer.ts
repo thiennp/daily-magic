@@ -16,7 +16,7 @@ const writeRepoKnowledgeLocationPointer = (input: {
     schemaVersion: 1,
     projectId: input.projectId,
     message:
-      "Project knowledge (RAG + memory) is stored under your Agent Witch profile, keyed by projectId.",
+      "Project knowledge (RAG + memory) is stored under your AgentWitch profile, keyed by projectId.",
     profileKnowledgePath: `projects/${input.projectId}/knowledge`,
   };
 

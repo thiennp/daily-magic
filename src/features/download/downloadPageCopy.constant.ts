@@ -2,7 +2,7 @@
 export const DOWNLOAD_PAGE_COPY = {
   title: "Download the Mac app",
   intro:
-    "Get the Agent Witch menu bar app for Mac. Use it to start, stop, and check Agent Witch on this computer.",
+    "Get the AgentWitch menu bar app for Mac. Use it to start, stop, and check AgentWitch on this computer.",
   downloadCta: "Download for Mac",
   siliconNote: "Built for Mac on Apple Silicon (M1, M2, M3, and later).",
   unsignedNote:

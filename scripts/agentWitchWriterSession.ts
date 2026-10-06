@@ -186,7 +186,7 @@ export const runWriterSessionStart = async (input: {
     if (secret === null) {
       return {
         exitCode: -1,
-        output: `Add a ${provider} API key in Agent Witch Local → Writer API.\n`,
+        output: `Add a ${provider} API key in AgentWitch Local → Writer API.\n`,
       };
     }
     input.onChunk?.(`Using ${provider} API on this computer (no local CLI).\n`);

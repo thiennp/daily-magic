@@ -4,7 +4,7 @@ This chapter walks you from zero to **one completed Run** with live terminal out
 
 That path is the **easy authoring** pillar in practice: open a project, give one prompt with **New task**, no workflow builder required. Team templates and structured **Workflows** come later when you need them ([Chapter 6](06-workflows-and-checkpoints.md)).
 
-**Production URL:** [https://www.agentwitch.com](https://www.agentwitch.com) (Agent Witch Cloud). The git repo is named `daily-magic`; the product you use in the browser is **Agent Witch**, not CHECK24 `daily-magic.*` hosts unless your organization says otherwise ([repo name & hosting](../../product/repo-name-and-hosting.md)).
+**Production URL:** [https://www.agentwitch.com](https://www.agentwitch.com) (AgentWitch Cloud). The git repo is named `daily-magic`; the product you use in the browser is **AgentWitch**, not CHECK24 `daily-magic.*` hosts unless your organization says otherwise ([repo name & hosting](../../product/repo-name-and-hosting.md)).
 
 ---
 
@@ -21,13 +21,13 @@ You do **not** need to understand harnesses, WebSockets, or deployable abbreviat
 
 ---
 
-## Step 1 — Open Agent Witch and sign in
+## Step 1 — Open AgentWitch and sign in
 
 1. Go to [https://www.agentwitch.com](https://www.agentwitch.com).
 2. Choose **Sign in** (or follow your org’s invite link).
 3. Complete sign-in with **Google** or **email magic link**, depending on what your workspace enables.
 
-**Honest UX:** If email login is configured, check spam; magic links expire. If Google is required and you use another provider, ask your admin—Agent Witch does not invent a second account system in the UI.
+**Honest UX:** If email login is configured, check spam; magic links expire. If Google is required and you use another provider, ask your admin—AgentWitch does not invent a second account system in the UI.
 
 For local development only (engineers/QA), test accounts like `test-qa-1@agentwitch.com` work on `localhost` without sending email—see [development setup](../../development/setup.md#test-auth-no-google--magic-link). That path is **disabled on production** `www.agentwitch.com`.
 
@@ -39,7 +39,7 @@ More detail: [Chapter 2 — Accounts and sign-in](02-accounts-and-sign-in.md).
 
 On the **same computer** where you want agents to run:
 
-1. Stay signed in to Agent Witch in the browser on that Mac.
+1. Stay signed in to AgentWitch in the browser on that Mac.
 2. From **Home**, follow **Connect your computer** / **Install the helper** (wording may say “this computer”).
 3. Run the install command shown in the UI. Production install is typically:
 
@@ -53,10 +53,10 @@ What you installed (user-facing names):
 
 | You see                                           | It does                                                                                                                                                                                    |
 | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Mac helper** / **Agent Witch on this computer** | Background runtime that keeps a secure link to the Console and runs writer CLIs in your projects.                                                                                          |
+| **Mac helper** / **AgentWitch on this computer** | Background runtime that keeps a secure link to the Console and runs writer CLIs in your projects.                                                                                          |
 | **Mac app** (optional)                            | Menu bar app for Apple Silicon — get it from [/download](https://www.agentwitch.com/download). Opens the local UI at `http://127.0.0.1:43347` for folders, playbooks, and troubleshooting. |
 
-Technical map: [Agent Witch deployables](../../product/agent-witch-deployables.md) · [Local bridge](../../agent-witch/local-bridge.md).
+Technical map: [AgentWitch deployables](../../product/agent-witch-deployables.md) · [Local bridge](../../agent-witch/local-bridge.md).
 
 ---
 
@@ -64,7 +64,7 @@ Technical map: [Agent Witch deployables](../../product/agent-witch-deployables.m
 
 Pairing means: **your account** knows **this install**, and the browser on this computer can show **This computer** actions.
 
-1. After install, return to Agent Witch **Home** (refresh if needed).
+1. After install, return to AgentWitch **Home** (refresh if needed).
 2. Complete any **Connect this computer** checklist step the UI shows.
 3. Confirm **Mac status** moves toward **Online** (or **Seen recently** / **Reconnecting** briefly after deploys—see below).
 
@@ -73,7 +73,7 @@ Pairing means: **your account** knows **this install**, and the browser on this 
 **Honest UX:**
 
 - **“This computer”** on the connect row means “the computer where you opened the browser,” not a magic server guess.
-- If you open Agent Witch on an iPhone or a PC, you will **not** get a “This computer” badge; you can still dispatch to a **paired computer** you select in the task composer.
+- If you open AgentWitch on an iPhone or a PC, you will **not** get a “This computer” badge; you can still dispatch to a **paired computer** you select in the task composer.
 - Right after a **production deploy**, status may show **Reconnecting** for a few seconds even though the helper is running locally. Refresh Home, open your project, and retry **New task**—do not reinstall. [Reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md).
 
 ---
@@ -135,17 +135,17 @@ The Console **blocks Send** with a clear reason rather than failing silently ([r
 2. **Expecting folder pickers in the browser** — Real Mac paths are chosen on the computer ([folder picker Q&A](../../qa/awc-project-folder-path-picker.md)).
 3. **Calling local helper “offline” when only Console says reconnecting** — Local bridge can be up while cloud dispatch waits for a live socket; refresh and retry ([Q&A](../../qa/awc-mac-reconnecting-vs-local-live.md)).
 4. **Skipping install autostart** — If the helper is not running, Mac status stays **Offline** until you start it from Mac settings.
-5. **Asking an AI to use Agent Witch without the homepage prompt** — Copy **For your AI** on the homepage. The prompt points at `/for-agents`, a static page with the steps and no site header or footer. Method `none` needs no email; Agent Mail needs the server key. A Task still needs a paired host ([Q&A](../../qa/ai-self-registration-webmcp.md)).
-6. **Hearing “Linux cannot use Agent Witch”** — The Console works in a Linux browser. Desktop Linux Home offers the install command for this computer. An x86_64 Linux machine can host Tasks. The Mac app and “this computer” badge stay on macOS ([Q&A](../../qa/linux-browser-vs-linux-host.md)).
+5. **Asking an AI to use AgentWitch without the homepage prompt** — Copy **For your AI** on the homepage. The prompt points at `/for-agents`, a static page with the steps and no site header or footer. Method `none` needs no email; Agent Mail needs the server key. A Task still needs a paired host ([Q&A](../../qa/ai-self-registration-webmcp.md)).
+6. **Hearing “Linux cannot use AgentWitch”** — The Console works in a Linux browser. Desktop Linux Home offers the install command for this computer. An x86_64 Linux machine can host Tasks. The Mac app and “this computer” badge stay on macOS ([Q&A](../../qa/linux-browser-vs-linux-host.md)).
 
 ---
 
 ## Query aliases
 
-- Agent Witch getting started, first run, onboarding
+- AgentWitch getting started, first run, onboarding
 - how to install Mac helper, connect this computer, first task
-- bat dau Agent Witch, cai dat Mac, ket noi may, gui task dau tien
-- Agent Witch beginner guide chapter 1
-- huong dan su dung Agent Witch tu dau, chay agent tren Mac lan dau
-- de tao task dau tien, bon tru cot de tao workflow, bat dau don gian Agent Witch
-- Linux cannot use Agent Witch, Linux browser console, Linux host
+- bat dau AgentWitch, cai dat Mac, ket noi may, gui task dau tien
+- AgentWitch beginner guide chapter 1
+- huong dan su dung AgentWitch tu dau, chay agent tren Mac lan dau
+- de tao task dau tien, bon tru cot de tao workflow, bat dau don gian AgentWitch
+- Linux cannot use AgentWitch, Linux browser console, Linux host

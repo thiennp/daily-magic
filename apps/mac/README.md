@@ -1,4 +1,4 @@
-# Agent Witch Local — macOS menu bar app
+# AgentWitch Local — macOS menu bar app
 
 SwiftUI `MenuBarExtra` companion for the existing AWI install (`~/.agent-witch`). Starts/stops the same LaunchAgent core; never rewrites the install bundle.
 
@@ -11,7 +11,7 @@ When core is **not** installed, the app runs a PKCE bootstrap against AWC:
 (or `Error` with Retry + a copyable generic `curl … | bash` fallback). Callback URL scheme: `agentwitch-local://install`.
 
 - **Install script PATH.** A Finder-launched app only has `/usr/bin:/bin:/usr/sbin:/sbin`. The script runs with `buildInstallScriptPath`: the login shell's `node` dir (`$SHELL -lc 'command -v node'`, 3 s cap), `/opt/homebrew/bin`, `/usr/local/bin`, `~/.local/bin`, then the inherited PATH.
-- **Health identity.** `127.0.0.1:43347` is shared by every macOS user, so a 2xx from `/health` is not enough. AWL's `/health` reports `osUid` and `installRootName` (non-secret). The app counts it as Connected / Running only when `osUid == getuid()` and `installRootName` (if present) is `.agent-witch`. If another user's or install's AWL answers, Setting up fails fast with a clear error. An older AWL without `osUid` is **unverified** and never shown as Connected: Setting up fails fast with "Agent Witch Local needs an update…", and the menu shows that same actionable message (not Stopped) until the bundle self-updates or is reinstalled.
+- **Health identity.** `127.0.0.1:43347` is shared by every macOS user, so a 2xx from `/health` is not enough. AWL's `/health` reports `osUid` and `installRootName` (non-secret). The app counts it as Connected / Running only when `osUid == getuid()` and `installRootName` (if present) is `.agent-witch`. If another user's or install's AWL answers, Setting up fails fast with a clear error. An older AWL without `osUid` is **unverified** and never shown as Connected: Setting up fails fast with "AgentWitch Local needs an update…", and the menu shows that same actionable message (not Stopped) until the bundle self-updates or is reinstalled.
 
 ## Build
 

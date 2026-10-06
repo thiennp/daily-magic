@@ -78,7 +78,7 @@ export const formatGuideReminder = (
       `- **${s.title}** — read/update \`${s.userGuide}\` and \`${s.developerGuide}\``,
   );
   return [
-    "## Agent Witch guides (required for this edit)",
+    "## AgentWitch guides (required for this edit)",
     "",
     "You touched code mapped to these chapters. Before finishing:",
     "",
@@ -118,7 +118,7 @@ export const guideMaintenanceStopMessage = (params: {
   return [
     "## Guide maintenance",
     "",
-    "Code changed under Agent Witch–mapped paths but **no** `docs/guides/**` file appears in this session diff.",
+    "Code changed under AgentWitch–mapped paths but **no** `docs/guides/**` file appears in this session diff.",
     "",
     "Confirm user/developer guide chapters and examples still match behavior—or update them now.",
     "",

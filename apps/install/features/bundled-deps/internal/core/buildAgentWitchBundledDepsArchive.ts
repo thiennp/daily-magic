@@ -38,7 +38,7 @@ const copyNodePtyForAgentWitchBundle = (input: {
 
   if (!fs.existsSync(sourceRoot)) {
     throw new Error(
-      "node-pty is missing. Run npm install before building the Agent Witch bundle.",
+      "node-pty is missing. Run npm install before building the AgentWitch bundle.",
     );
   }
 

@@ -22,7 +22,7 @@ export default function AgentRunLiveTerminal({
   const isLiveConnected = connectionStatus === "connected";
   const waitingLabel = isLiveConnected
     ? "Waiting for agent output…"
-    : "Reconnecting to your computer… Live output resumes when Agent Witch connects.";
+    : "Reconnecting to your computer… Live output resumes when AgentWitch connects.";
 
   return (
     <section className="mt-6">

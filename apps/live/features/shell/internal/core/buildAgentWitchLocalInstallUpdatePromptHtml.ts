@@ -21,7 +21,7 @@ export const buildAgentWitchLocalInstallUpdatePromptHtml = (
 
   return `<section class="card update-banner">
       <p class="eyebrow">Update available</p>
-      <h2 class="update-banner-title">A newer Agent Witch is ready</h2>
+      <h2 class="update-banner-title">A newer AgentWitch is ready</h2>
       <p class="lede">Install the latest Mac client from the cloud.</p>
       <div class="actions">
         <form method="POST" action="/api/update">
@@ -38,7 +38,7 @@ export const buildAgentWitchLocalInstallUpdateFlashHtml = (
   flash: AgentWitchLocalInstallUpdateFlash,
 ): string => {
   if (flash === "ok") {
-    return `<div class="alert-success">Update finished. This computer may restart the Agent Witch client.</div>`;
+    return `<div class="alert-success">Update finished. This computer may restart the AgentWitch client.</div>`;
   }
 
   if (flash === "started") {

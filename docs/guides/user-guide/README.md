@@ -1,4 +1,4 @@
-# Agent Witch — user guide
+# AgentWitch — user guide
 
 **Status:** Living book (2026). Chapters expand over time; [philosophy](00-philosophy-and-vocabulary.md) is the contract for tone and vocabulary.
 
@@ -10,7 +10,7 @@
 
 | Ch. | File                                                                         | What you learn                                                                                       |
 | --- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| 0   | [00-philosophy-and-vocabulary.md](00-philosophy-and-vocabulary.md)           | Why Agent Witch exists; four pillars; Mac, Task, Run, Playbook; solo vs company; north star vs today |
+| 0   | [00-philosophy-and-vocabulary.md](00-philosophy-and-vocabulary.md)           | Why AgentWitch exists; four pillars; Mac, Task, Run, Playbook; solo vs company; north star vs today |
 | 1   | [01-getting-started.md](01-getting-started.md)                               | First sign-in, install Mac client, first successful run                                              |
 | 2   | [02-accounts-and-sign-in.md](02-accounts-and-sign-in.md)                     | Accounts, teams, Mac pairing from the browser                                                        |
 | 3   | [03-home-and-navigation.md](03-home-and-navigation.md)                       | Home, Projects, Runs; New task inside a project; what computer status means                          |
@@ -23,11 +23,11 @@
 
 ## Query aliases (RAG)
 
-- Agent Witch user guide, huong dan su dung Agent Witch
+- AgentWitch user guide, huong dan su dung AgentWitch
 - how to connect Mac, first task, playbooks vs harness
-- Agent Witch philosophy solo company Mac Task Run
+- AgentWitch philosophy solo company Mac Task Run
 - four pillars user guide, easy authoring learn from usage efficient memory team learning
-- bon tru cot huong dan nguoi dung, gia tri san pham Agent Witch
+- bon tru cot huong dan nguoi dung, gia tri san pham AgentWitch
 
 ## Related
 

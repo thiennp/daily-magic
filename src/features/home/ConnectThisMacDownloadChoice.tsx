@@ -16,7 +16,7 @@ export default function ConnectThisMacDownloadChoice({
       </h3>
       <p className={APP_SURFACE_BODY_TEXT_CLASS}>
         Already ran the command above? Add the Mac menu bar app to start, stop,
-        and check Agent Witch.{" "}
+        and check AgentWitch.{" "}
         <a
           href={downloadUrl}
           className="font-medium text-violet-700 underline-offset-2 hover:underline dark:text-violet-300"

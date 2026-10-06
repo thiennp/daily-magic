@@ -1,4 +1,4 @@
-# Prompt optimizer (Agent Witch Local)
+# Prompt optimizer (AgentWitch Local)
 
 Optimize one prompt on this computer. You choose the judge and the improver. Each list includes I'll score it and I'll rewrite it. The next visit fills in the folder, judge, and improver you last chose. The first visit leaves those roles blank and uses your home directory. You also choose the folder they run in, so they can use that folder as context. A writer that has passed its check is not checked again until that writer returns an error. A score includes the reason for that score.
 

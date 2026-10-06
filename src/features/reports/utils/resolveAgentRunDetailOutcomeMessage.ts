@@ -45,7 +45,7 @@ export const resolveAgentRunDetailOutcomeMessage = (input: {
   if (input.status === AgentRunStatus.FAILED) {
     return (
       reportLine ??
-      "This run failed on your computer. Open Agent Witch on that computer or start a New task to try again."
+      "This run failed on your computer. Open AgentWitch on that computer or start a New task to try again."
     );
   }
 

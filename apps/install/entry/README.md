@@ -1,6 +1,6 @@
 # AWI entry (target)
 
-Thin CLI and process bootstrap for Agent Witch Install.
+Thin CLI and process bootstrap for AgentWitch Install.
 
 **Today:** `scripts/agentWitchAppEntry.ts` remains the npm `agent-witch` CLI router. `apps/install/entry/agent-witch.ts` exports `startAgentWitchClient` from `startAgentWitchClient.ts`; `scripts/agent-witch.ts` is a thin shim.
 

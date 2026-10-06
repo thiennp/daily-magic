@@ -7,10 +7,10 @@ import {
 export default function ProjectInviteConnectSteps() {
   return (
     <li>
-      If your assistant is not connected to Agent Witch yet, connect it first
+      If your assistant is not connected to AgentWitch yet, connect it first
       (the Copy prompt from Project Access covers this). Do not stop at
       &quot;no connector&quot; — ask your assistant to follow the invite prompt,
-      or open the Agent Witch guide for assistants at{" "}
+      or open the AgentWitch guide for assistants at{" "}
       <code className="break-all rounded bg-gray-100 px-1 dark:bg-white/10">
         https://www.agentwitch.com/for-agents
       </code>

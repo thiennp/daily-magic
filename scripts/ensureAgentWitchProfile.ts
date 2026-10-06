@@ -98,7 +98,7 @@ export const getOrCreateInstallPairingToken = (): {
   }
 
   throw new Error(
-    "Agent Witch is not linked. Run the install command from Home while signed in.",
+    "AgentWitch is not linked. Run the install command from Home while signed in.",
   );
 };
 
@@ -134,7 +134,7 @@ export const ensureAgentWitchProfile = (
 
   if (pairingToken.length === 0) {
     throw new Error(
-      "Agent Witch is not linked for this account. Run Connect this computer from Home while signed in — do not reuse another account's token.",
+      "AgentWitch is not linked for this account. Run Connect this computer from Home while signed in — do not reuse another account's token.",
     );
   }
 
@@ -151,7 +151,7 @@ export const ensureAgentWitchProfile = (
 
   if (wsUrl.trim().length === 0) {
     throw new Error(
-      "Agent Witch is not linked. Run the install command from Home while signed in.",
+      "AgentWitch is not linked. Run the install command from Home while signed in.",
     );
   }
 

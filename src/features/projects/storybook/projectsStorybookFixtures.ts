@@ -72,7 +72,7 @@ export const PROJECTS_STORYBOOK_COMPOSITION_ITEMS: readonly ProjectCompositionIt
       id: "item-h1",
       componentId: "comp-h1",
       kind: "harness",
-      name: "Agent Witch core harness",
+      name: "AgentWitch core harness",
       versionLabel: "12",
     },
     {

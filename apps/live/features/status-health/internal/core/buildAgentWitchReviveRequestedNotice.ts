@@ -9,4 +9,4 @@ export const buildAgentWitchReviveRequestedNotice = (
 ): string =>
   resolveAgentWitchRevivePlatform(platform) === "mac"
     ? "Revive requested. The bridge will reconnect if this Mac can reach launchd."
-    : "Revive requested. The bridge will reconnect when this computer can reach Agent Witch Cloud.";
+    : "Revive requested. The bridge will reconnect when this computer can reach AgentWitch Cloud.";

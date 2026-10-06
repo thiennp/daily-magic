@@ -89,7 +89,7 @@ export const buildAgentAccessGuideline = (): AgentAccessGuideline => {
       {
         heading: "Tell other bots",
         body: [
-          "You may expose Agent Witch as your own tool use_agent_witch and point other bots at this public page. There is no directory of other people's bots. Do not publish anyone's account, email, or token.",
+          "You may expose AgentWitch as your own tool use_agent_witch and point other bots at this public page. There is no directory of other people's bots. Do not publish anyone's account, email, or token.",
         ],
       },
       {

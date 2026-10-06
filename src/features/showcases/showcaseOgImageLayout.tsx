@@ -64,7 +64,7 @@ export function showcaseOgImageLayout({ article }: ShowcaseOgImageLayoutProps) {
           color: "#c7d7fe",
         }}
       >
-        Agent Witch · Real examples
+        AgentWitch · Real examples
       </div>
     </div>
   );

@@ -83,7 +83,7 @@ export const handlePullBoundHarnessPost = async (input: {
       cloudAppOrigin,
       project,
       errorMessage:
-        "Could not load the linked playbook from Agent Witch Cloud.",
+        "Could not load the linked playbook from AgentWitch Cloud.",
     });
   }
 

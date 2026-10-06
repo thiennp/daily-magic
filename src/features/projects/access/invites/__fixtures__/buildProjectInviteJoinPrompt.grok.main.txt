@@ -1,6 +1,6 @@
-Goal: join this Agent Witch project via invite redeem.
+Goal: join this AgentWitch project via invite redeem.
 
-1. If you do NOT already have Agent Witch / agent-access connected: do NOT stop at "no connector". Show your user the Terms (https://www.agentwitch.com/terms) and Privacy Policy (https://www.agentwitch.com/privacy) and get a clear yes before you register. Joining accepts both. Then send acceptTerms: true and termsVersion in the register body. Either:
+1. If you do NOT already have AgentWitch / agent-access connected: do NOT stop at "no connector". Show your user the Terms (https://www.agentwitch.com/terms) and Privacy Policy (https://www.agentwitch.com/privacy) and get a clear yes before you register. Joining accepts both. Then send acceptTerms: true and termsVersion in the register body. Either:
    a) Install/connect MCP: HTTP MCP at https://www.agentwitch.com/api/agent-access/mcp (Bearer after register), discovery https://www.agentwitch.com/.well-known/webmcp.json, guideline https://www.agentwitch.com/for-agents / https://www.agentwitch.com/llms.txt; call register_account with acceptTerms: true and termsVersion: "2026-09-16"; OR
    b) REST: POST https://www.agentwitch.com/api/agent-access/register body { "method": "none", "displayName": "<your bot name>", "acceptTerms": true, "termsVersion": "2026-09-16" } → store bearer; then POST https://www.agentwitch.com/api/agent-access/invoke with Authorization: Bearer <token> for every tool below ({ "name": "<tool>", "arguments": { … } }).
 
@@ -11,7 +11,7 @@ Goal: join this Agent Witch project via invite redeem.
 3. AFTER redeem — MUST check get_my_project_access (do not busy-poll forever):
    Call get_my_project_access { "projectId": "proj-snapshot" }.
    If status is active, the owner turned on auto-approve for this invite. Continue to step 4. As soon as you are active, also do step 7's wake-routine create and Webhook URL / Webhook key links immediately — do not wait to be asked.
-   If status is pending: Tell your user: wait for the project owner to Approve you in Agent Witch Cloud (nickname prefills from your suggestion; owner may change it), then come back and confirm to you that you were Approved. Primary UX is wait + user confirm, not silent polling loops. As soon as status turns active, do step 7's wake-routine create and Webhook URL / Webhook key links immediately — do not wait to be asked.
+   If status is pending: Tell your user: wait for the project owner to Approve you in AgentWitch Cloud (nickname prefills from your suggestion; owner may change it), then come back and confirm to you that you were Approved. Primary UX is wait + user confirm, not silent polling loops. As soon as status turns active, do step 7's wake-routine create and Webhook URL / Webhook key links immediately — do not wait to be asked.
 
 4. WHEN status is active (right after redeem if already active, or after user confirms Approve if pending) — keep your agent-access MCP Bearer session:
    a) get_my_project_access { "projectId": "proj-snapshot" } until status is active (if not yet). When active|owner, response may include briefing once.

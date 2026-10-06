@@ -60,7 +60,7 @@ export const requestLocalAgentWitchDeleteInstallFromWakeServer = async (
     return {
       ok: false,
       message:
-        "Could not reach the local Agent Witch wake server on this computer.",
+        "Could not reach the local AgentWitch wake server on this computer.",
     };
   }
 };

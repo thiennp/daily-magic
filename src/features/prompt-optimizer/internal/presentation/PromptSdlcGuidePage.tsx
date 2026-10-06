@@ -22,7 +22,7 @@ export default function PromptSdlcGuidePage(): ReactElement {
     <div className="space-y-8">
       <AppPageHeader
         title="How to use the prompt optimizer"
-        description="Paste a prompt and a goal in Agent Witch Local. A judge scores the prompt. If it misses, a second model rewrites it. Only passed outcomes count as success for reuse; timeouts and no-reply fail cleanly. This console page does not run the optimizer."
+        description="Paste a prompt and a goal in AgentWitch Local. A judge scores the prompt. If it misses, a second model rewrites it. Only passed outcomes count as success for reuse; timeouts and no-reply fail cleanly. This console page does not run the optimizer."
       />
       <p>
         <Link href="/prompt-optimizer" className={APP_SURFACE_TEXT_LINK_CLASS}>
@@ -53,11 +53,11 @@ export default function PromptSdlcGuidePage(): ReactElement {
             href={PROMPT_SDLC_AWL_SAMPLE_HREF}
             className={APP_SURFACE_CTA_PRIMARY_CLASS}
           >
-            Run this sample in Agent Witch Local
+            Run this sample in AgentWitch Local
           </a>
         </p>
         <p className={APP_SURFACE_BODY_TEXT_CLASS}>
-          Agent Witch Local fills the goal and the weak prompt. Choose a judge
+          AgentWitch Local fills the goal and the weak prompt. Choose a judge
           and an improver, then Run. That page shows each step while it is in
           progress, and keeps every run in History.
         </p>

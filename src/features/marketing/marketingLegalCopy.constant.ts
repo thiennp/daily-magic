@@ -3,7 +3,7 @@ import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName
 export const MARKETING_PRIVACY_COPY = {
   title: "Privacy Policy",
   lastUpdated: "September 16, 2026",
-  intro: `${AGENT_WITCH_PRODUCT_NAME} (“we”, “us”) operates the Agent Witch web application and related services at agentwitch.com. This policy describes how we handle information when you use our product.`,
+  intro: `${AGENT_WITCH_PRODUCT_NAME} (“we”, “us”) operates the ${AGENT_WITCH_PRODUCT_NAME} web application and related services at agentwitch.com. This policy describes how we handle information when you use our product.`,
   sections: [
     {
       heading: "Information we collect",
@@ -27,7 +27,7 @@ export const MARKETING_PRIVACY_COPY = {
     },
     {
       heading: "Contact",
-      body: "Questions about privacy: contact your organization’s Agent Witch administrator or reach us through the support channel provided in your account.",
+      body: "Questions about privacy: contact your organization’s AgentWitch administrator or reach us through the support channel provided in your account.",
     },
   ],
 } as const;
@@ -39,7 +39,7 @@ export const MARKETING_TERMS_COPY = {
   sections: [
     {
       heading: "Service",
-      body: "Agent Witch provides a control plane to dispatch AI agent tasks to Mac workers your team configures, including optional approval workflows and job history.",
+      body: "AgentWitch provides a control plane to dispatch AI agent tasks to Mac workers your team configures, including optional approval workflows and job history.",
     },
     {
       heading: "Accounts and acceptable use",

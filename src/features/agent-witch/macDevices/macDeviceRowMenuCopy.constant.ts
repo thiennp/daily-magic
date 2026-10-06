@@ -1,7 +1,7 @@
 /** Context menu: expandable group for actions that run on the computer you are using now. */
 export const MAC_DEVICE_ROW_THIS_MAC_SUBMENU_LABEL = "On this computer";
 
-/** Opens the small status page Agent Witch runs on this computer (updates, connection). */
+/** Opens the small status page AgentWitch runs on this computer (updates, connection). */
 export const MAC_DEVICE_LOCAL_STATUS_MENU_LABEL = "Status & settings";
 
 /** Opens the local troubleshooting log for this computer. */

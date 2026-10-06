@@ -19,7 +19,7 @@ const standupFromLocalBranch: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Engineers lose ten minutes every morning reconstructing what changed. ChatGPT cannot see your branch. Agent Witch runs on the computer that already has the checkout — you describe the scope, it reads local git state, and you paste the summary into standup or Slack.",
+        "Engineers lose ten minutes every morning reconstructing what changed. ChatGPT cannot see your branch. AgentWitch runs on the computer that already has the checkout — you describe the scope, it reads local git state, and you paste the summary into standup or Slack.",
       ],
     },
     {

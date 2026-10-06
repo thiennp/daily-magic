@@ -38,7 +38,7 @@ export const resolveAgentAccessAccountEmail = async (
   return client
     .createInbox({
       username,
-      displayName: body.displayName ?? "Agent Witch",
+      displayName: body.displayName ?? "AgentWitch",
     })
     .then((inbox) => inbox.email)
     .catch((error: unknown) =>

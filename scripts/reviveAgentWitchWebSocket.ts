@@ -112,12 +112,12 @@ const buildWatchdogLogMessage = (
 
   if (reinstall?.reinstallAttempted === true) {
     if (reinstall.reinstallOk === true) {
-      return "Reinstalled Agent Witch from install script and retried kickstart.";
+      return "Reinstalled AgentWitch from install script and retried kickstart.";
     }
 
     return (
       reinstall.reinstallErrorMessage ??
-      "Agent Witch reinstall from install script failed."
+      "AgentWitch reinstall from install script failed."
     );
   }
 
@@ -130,7 +130,7 @@ const buildWatchdogLogMessage = (
       .join("; ");
   }
 
-  return "All Agent Witch WebSocket connections are healthy.";
+  return "All AgentWitch WebSocket connections are healthy.";
 };
 
 const resolveWatchdogLogEvent = (
@@ -261,7 +261,7 @@ export const reviveAgentWitchWebSocket = async (input?: {
 
   if (results.some((entry) => entry.reason !== "healthy" && !entry.revived)) {
     // Dynamic import so a partial self-update (missing reinstall helper) cannot
-    // crash-loop the whole Agent Witch process on module load (AGENT-049).
+    // crash-loop the whole AgentWitch process on module load (AGENT-049).
     try {
       const { attemptAgentWitchWatchdogReinstall } =
         await import("./attemptAgentWitchWatchdogReinstall");

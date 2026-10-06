@@ -10,7 +10,7 @@ const AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS: readonly AgentAccessToolDefinition[] 
     {
       name: "request_project_access",
       description:
-        "Request membership on an Agent Witch project. Creates a pending request until the project owner Approves in the UI. After request MUST call get_my_project_access. AWC stores ACL only — no project content, except published project skills (publish_project_skill, text ≤ 64KB per version).",
+        "Request membership on an AgentWitch project. Creates a pending request until the project owner Approves in the UI. After request MUST call get_my_project_access. AWC stores ACL only — no project content, except published project skills (publish_project_skill, text ≤ 64KB per version).",
       inputSchema: {
         type: "object",
         properties: {

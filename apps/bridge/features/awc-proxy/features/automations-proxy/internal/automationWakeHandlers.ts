@@ -34,7 +34,7 @@ export const syncAutomationsFromWakeServer = (
   if (!isAgentWitchWakeServerAllowedOrigin(appOrigin)) {
     return {
       ok: false,
-      errorMessage: "appOrigin is not an allowed Agent Witch site.",
+      errorMessage: "appOrigin is not an allowed AgentWitch site.",
     };
   }
 
@@ -79,7 +79,7 @@ export const runAutomationFromWakeServer = async (
   if (!isAgentWitchWakeServerAllowedOrigin(appOrigin)) {
     return {
       ok: false,
-      errorMessage: "appOrigin is not an allowed Agent Witch site.",
+      errorMessage: "appOrigin is not an allowed AgentWitch site.",
     };
   }
 

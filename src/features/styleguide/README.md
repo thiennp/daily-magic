@@ -1,6 +1,6 @@
 # Styleguide
 
-Agent Witch design system reference for staff (components, surfaces, and brand).
+AgentWitch design system reference for staff (components, surfaces, and brand).
 
 ## Registry
 

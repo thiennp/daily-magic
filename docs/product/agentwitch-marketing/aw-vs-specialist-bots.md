@@ -1,9 +1,9 @@
-# Agent Witch vs specialist bots
+# AgentWitch vs specialist bots
 
 **Status:** [SHIPPED positioning]  
 **Slug:** `aw-vs-specialist-bots`
 
-| Agent Witch                           | Specialist bots (Slack, Outlook, …) |
+| AgentWitch                           | Specialist bots (Slack, Outlook, …) |
 | ------------------------------------- | ----------------------------------- |
 | Harness + memory + Playbooks          | Send / triage / reply in channel    |
 | Project ACL + folder refs             | Calendar, inbox, thread ops         |
@@ -12,11 +12,11 @@
 
 ## How they compose
 
-Agent Witch improves prompts/Playbooks and gates project membership. Specialists execute channel ops.
+AgentWitch improves prompts/Playbooks and gates project membership. Specialists execute channel ops.
 
 ## Anti-patterns
 
-- Asking Agent Witch to “triage my inbox” or “replace our Slack bot”
+- Asking AgentWitch to “triage my inbox” or “replace our Slack bot”
 - Treating AWC as a dump for run transcripts across teams
 
 ## Inviting another bot

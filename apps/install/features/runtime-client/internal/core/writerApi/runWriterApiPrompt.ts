@@ -46,7 +46,7 @@ export const runWriterApiPrompt = async (
     const saved = Object.keys(readWriterApiSecretsFile(profileDir));
     return {
       exitCode: -1,
-      output: `No API key saved for ${provider}. Add one in Agent Witch Local → Writer API (${saved.length === 0 ? "writer-api-secrets.json is empty" : `have keys for: ${saved.join(", ")}`}).`,
+      output: `No API key saved for ${provider}. Add one in AgentWitch Local → Writer API (${saved.length === 0 ? "writer-api-secrets.json is empty" : `have keys for: ${saved.join(", ")}`}).`,
     };
   }
 

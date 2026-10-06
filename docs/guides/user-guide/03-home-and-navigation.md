@@ -1,6 +1,6 @@
 # Chapter 3 — Home and navigation
 
-Once you are signed in, Agent Witch orients you around **Home**, **Projects**, and **Runs**. You give work with **New task** inside a project. This chapter explains what each area does, how computer status on Home should be read honestly, and what stays out of primary navigation on purpose.
+Once you are signed in, AgentWitch orients you around **Home**, **Projects**, and **Runs**. You give work with **New task** inside a project. This chapter explains what each area does, how computer status on Home should be read honestly, and what stays out of primary navigation on purpose.
 
 Vocabulary: [Chapter 0](00-philosophy-and-vocabulary.md) · Nav direction: [UX simplification](../../product/ux-simplification.md).
 
@@ -36,7 +36,7 @@ On desktop, primary nav links sit in the sticky **left sidebar**; **Your Devices
 
 **Not primary nav (by design):**
 
-- Deep **Knowledge / RAG** on the **Mac** → **Agent Witch on this computer** → **Knowledge** ([Chapter 4](04-mac-connect-and-bridge.md#local-knowledge-mac-app--efficient-memory)). In the Console, **Search past runs** under **Runs** reuses context without the “Knowledge” label.
+- Deep **Knowledge / RAG** on the **Mac** → **AgentWitch on this computer** → **Knowledge** ([Chapter 4](04-mac-connect-and-bridge.md#local-knowledge-mac-app--efficient-memory)). In the Console, **Search past runs** under **Runs** reuses context without the “Knowledge” label.
 - Raw traffic / developer logs → **Mac settings → Developer**.
 
 ---
@@ -129,7 +129,7 @@ From the profile menu:
 - **Mac & devices** — rename, see presence tier hints, bundle version behind cloud.
 - **Settings** — profile and product settings.
 
-**Agent Witch on this computer** (Mac app at `http://127.0.0.1:43347`) is linked when you work on the same machine—full local UI for projects, playbooks, memory, health. The Console does **not** duplicate that UI in primary nav; it **links** there ([deployables — two entry points](../../product/agent-witch-deployables.md)).
+**AgentWitch on this computer** (Mac app at `http://127.0.0.1:43347`) is linked when you work on the same machine—full local UI for projects, playbooks, memory, health. The Console does **not** duplicate that UI in primary nav; it **links** there ([deployables — two entry points](../../product/agent-witch-deployables.md)).
 
 ---
 
@@ -181,9 +181,9 @@ Exact paths may shift; trust nav labels over memorizing URLs.
 
 ## Query aliases
 
-- Agent Witch Home, navigation, Mac status Online Offline Reconnecting
+- AgentWitch Home, navigation, Mac status Online Offline Reconnecting
 - Runs New task Playbooks nav, solo vs team shell
-- trang chu Agent Witch, dieu huong, trang thai Mac
+- trang chu AgentWitch, dieu huong, trang thai Mac
 - where is New task, Mac status banner meaning
-- Agent Witch Cloud primary navigation marketplace library
+- AgentWitch Cloud primary navigation marketplace library
 - team learning Runs library nav, tiet kiem ngữ cảnh tim run cu

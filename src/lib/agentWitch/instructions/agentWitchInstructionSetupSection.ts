@@ -5,12 +5,12 @@ export const AGENT_WITCH_INSTRUCTION_SETUP_SECTION: AgentWitchInstructionSection
     id: "setup",
     title: "Mac setup",
     summary:
-      "Install Agent Witch on your computer and keep it connected so you can send tasks from the browser.",
+      "Install AgentWitch on your computer and keep it connected so you can send tasks from the browser.",
     topics: [
       {
         id: "install",
         title: "Installing on a Mac",
-        body: "Run the install script from Home. It creates your local Agent Witch profile, downloads the bridge, and can start automatically when you log in on macOS.",
+        body: "Run the install script from Home. It creates your local AgentWitch profile, downloads the bridge, and can start automatically when you log in on macOS.",
       },
       {
         id: "pairing",

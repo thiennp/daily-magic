@@ -65,7 +65,7 @@ const AwcProjectNameEditor = ({
     >
       {startInEditMode && isEditing ? (
         <p className="text-xs font-medium text-brand-600 dark:text-brand-400">
-          Rename mode — from Agent Witch Local or the card menu. Press Escape to
+          Rename mode — from AgentWitch Local or the card menu. Press Escape to
           cancel.
         </p>
       ) : null}

@@ -5,7 +5,7 @@ import { showcaseOgImageLayout } from "@/features/showcases/showcaseOgImageLayou
 import { getShowcaseArticleBySlug } from "@/features/showcases/showcaseArticleRegistry";
 import { isStaffPageViewer } from "@/lib/auth/requireStaffPageAccess";
 
-export const alt = "Agent Witch real example";
+export const alt = "AgentWitch real example";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

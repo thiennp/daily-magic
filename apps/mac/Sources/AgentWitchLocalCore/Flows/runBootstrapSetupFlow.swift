@@ -51,5 +51,5 @@ public func runBootstrapSetupFlow(
         last = await probeHealth()
     }
 
-    return fail("Timed out waiting for local Agent Witch health.")
+    return fail("Timed out waiting for local AgentWitch health.")
 }

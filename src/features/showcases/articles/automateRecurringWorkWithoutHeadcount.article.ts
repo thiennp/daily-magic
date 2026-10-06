@@ -34,7 +34,7 @@ const automateRecurringWorkWithoutHeadcount: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Most teams already pay for AI in tabs and subscriptions. The hidden cost is coordination: someone retypes context every Monday, hunts last week's chat, and forwards screenshots. Agent Witch turns repeat work into saved playbooks your computer runs on a schedule—so the same job costs minutes, not another headcount line item.",
+        "Most teams already pay for AI in tabs and subscriptions. The hidden cost is coordination: someone retypes context every Monday, hunts last week's chat, and forwards screenshots. AgentWitch turns repeat work into saved playbooks your computer runs on a schedule—so the same job costs minutes, not another headcount line item.",
       ],
     },
     {

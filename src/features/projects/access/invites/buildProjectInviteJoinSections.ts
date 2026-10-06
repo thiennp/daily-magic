@@ -13,7 +13,7 @@ import { selectProjectInviteJoinWakeStep } from "@/features/projects/access/invi
 
 /** Static join text (no input, not reused elsewhere): kept inline. */
 const GOAL_LINES: readonly string[] = [
-  "Goal: join this Agent Witch project via invite redeem.",
+  "Goal: join this AgentWitch project via invite redeem.",
 ];
 
 /** Step 5 — human summary before further work. */

@@ -26,7 +26,7 @@ interface AwcProjectPitfallsPanelProps {
 
 /**
  * Safety rules tab: filter chips, search, note + edit link, accordion rows.
- * On/off and edits stay in Agent Witch Local.
+ * On/off and edits stay in AgentWitch Local.
  */
 export default function AwcProjectPitfallsPanel({
   projectId,

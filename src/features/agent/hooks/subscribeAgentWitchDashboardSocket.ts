@@ -3,7 +3,7 @@ import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnec
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 /**
- * Subscribe to Agent Witch dashboard events over SSE (no WebSocket).
+ * Subscribe to AgentWitch dashboard events over SSE (no WebSocket).
  * Outbound sends use an HTTP shim exposed via onSocketChange.
  */
 export const subscribeAgentWitchDashboardSocket = (input: {

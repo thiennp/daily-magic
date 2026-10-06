@@ -53,7 +53,7 @@ export const buildAgentWitchLocalHomePageBody = (input: {
 
   return `${wakeError}<section class="card home-hero">
       <p class="eyebrow">This computer</p>
-      <h1>Agent Witch local</h1>
+      <h1>AgentWitch local</h1>
       <p class="lede">Your on-machine control panel: bridge health, harness, run memory, and traffic — only on this computer.</p>
       <div class="home-hero-badges">
         ${connectionBadge}

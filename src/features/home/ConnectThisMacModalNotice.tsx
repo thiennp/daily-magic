@@ -66,9 +66,9 @@ export default function ConnectThisMacModalNotice({
         className={NOTICE_CLASS}
         data-testid="connect-awl-not-running"
       >
-        <p className="font-semibold">Agent Witch Local is not running</p>
+        <p className="font-semibold">AgentWitch Local is not running</p>
         <p className="mt-1">
-          Open Agent Witch Local on this computer, then retry. Not installed?{" "}
+          Open AgentWitch Local on this computer, then retry. Not installed?{" "}
           <Link href={AGENT_WITCH_LOCAL_DOWNLOAD_URL} className={LINK_CLASS}>
             Download
           </Link>{" "}
@@ -83,7 +83,7 @@ export default function ConnectThisMacModalNotice({
     <div role="status" className={NOTICE_CLASS} data-testid="connect-awl-retry">
       <p className="font-semibold">This computer is not connected yet</p>
       <p className="mt-1">
-        Agent Witch Local is running but has not connected to your account.
+        AgentWitch Local is running but has not connected to your account.
         Retry, or re-run the command below.{" "}
         <Link href={AGENT_WITCH_LOCAL_DOWNLOAD_URL} className={LINK_CLASS}>
           Download

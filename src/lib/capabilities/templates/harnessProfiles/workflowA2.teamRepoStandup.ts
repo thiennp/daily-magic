@@ -39,7 +39,7 @@ export const TEAM_REPO_STANDUP_PRESET: PresetHarnessSeed = {
       "Draft paste-ready standup bullets; wait for review.",
     ],
     instructionAddendum:
-      "This preset runs on the owner's Mac via Agent Witch — summarize local git only.",
+      "This preset runs on the owner's Mac via AgentWitch — summarize local git only.",
     subagentMission:
       "You turn local branch activity into a concise standup update another teammate can paste into chat.",
     subagentExpertise: [

@@ -18,7 +18,7 @@ const notJustAnotherChatgpt: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Chat apps answer in a window. Agent Witch sends work to a machine — with your rules, local context, and a record you can open next Monday. That difference matters when tasks repeat and teammates delegate.",
+        "Chat apps answer in a window. AgentWitch sends work to a machine — with your rules, local context, and a record you can open next Monday. That difference matters when tasks repeat and teammates delegate.",
       ],
     },
     {
@@ -41,7 +41,7 @@ const notJustAnotherChatgpt: ShowcaseArticle = {
     {
       heading: "Still use chat when it fits",
       paragraphs: [
-        'Quick "how do I phrase this email?" stays in ChatGPT or Claude. Agent Witch earns its place when the same job shows up every week and you are tired of reconstructing the prompt from memory.',
+        'Quick "how do I phrase this email?" stays in ChatGPT or Claude. AgentWitch earns its place when the same job shows up every week and you are tired of reconstructing the prompt from memory.',
       ],
     },
   ],

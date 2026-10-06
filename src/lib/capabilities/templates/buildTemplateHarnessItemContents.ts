@@ -85,7 +85,7 @@ const buildTemplateHarnessItemContents = (
         "Harness set slug:",
         slug,
         "",
-        "Remind the agent that this preset is meant to run on the owner's Mac via Agent Witch.",
+        "Remind the agent that this preset is meant to run on the owner's Mac via AgentWitch.",
       ].join("\n"),
     },
     buildDefaultOperatorHarnessItem(input),

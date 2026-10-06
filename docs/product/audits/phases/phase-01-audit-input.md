@@ -4,7 +4,7 @@
 
 ## Product (AWC signed-in `/projects`)
 
-Agent Witch Console (AWC) at `https://www.agentwitch.com`. Signed-in user sees **Projects**: cloud-backed list of repos their Macs can run agents against. User can search, open a project, see online/offline Mac linkage, counts. Global signed-in chrome should feel like a **professional SaaS workspace**: clear brand anchor, predictable navigation, efficient use of desktop width for data-dense grids.
+AgentWitch Console (AWC) at `https://www.agentwitch.com`. Signed-in user sees **Projects**: cloud-backed list of repos their Macs can run agents against. User can search, open a project, see online/offline Mac linkage, counts. Global signed-in chrome should feel like a **professional SaaS workspace**: clear brand anchor, predictable navigation, efficient use of desktop width for data-dense grids.
 
 ## Evidence to review
 

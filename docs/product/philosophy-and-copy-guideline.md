@@ -1,4 +1,4 @@
-# Agent Witch — triết lý & guideline copy (đọc trước khi viết)
+# AgentWitch — triết lý & guideline copy (đọc trước khi viết)
 
 Tài liệu **một trang** cho PM, marketing, support, và bạn. Chi tiết kỹ thuật: [product-pillars.md](product-pillars.md) · user guide [ch.0](../guides/user-guide/00-philosophy-and-vocabulary.md).
 
@@ -27,7 +27,7 @@ Mọi tính năng khác (workflow, marketplace, cloud dispatch) phục vụ câu
 
 | Dùng         | Nghĩa                     | Tránh                                     |
 | ------------ | ------------------------- | ----------------------------------------- |
-| **Mac**      | Máy chạy agent            | “Agent Witch client”, wake, heartbeat     |
+| **Mac**      | Máy chạy agent            | “AgentWitch client”, wake, heartbeat     |
 | **Task**     | Việc cần làm (composer)   | “Dispatch payload”                        |
 | **Run**      | Lần chạy + output         | `agent_run`, SSE/WS                       |
 | **Playbook** | Chuẩn cách agent làm việc | harness (trên nav), “capability” với user |
@@ -40,8 +40,8 @@ Mọi tính năng khác (workflow, marketplace, cloud dispatch) phục vụ câu
 
 | Đúng                                                     | Sai                                                                 |
 | -------------------------------------------------------- | ------------------------------------------------------------------- |
-| **Agent Witch** · **www.agentwitch.com**                 | **Daily Magic** như tên sản phẩm                                    |
-| Git repo có thể tên `daily-magic` (chỉ nói với dev)      | CHECK24 `daily-magic.d.energie.check24.de` = production Agent Witch |
+| **AgentWitch** · **www.agentwitch.com**                 | **Daily Magic** như tên sản phẩm                                    |
+| Git repo có thể tên `daily-magic` (chỉ nói với dev)      | CHECK24 `daily-magic.d.energie.check24.de` = production AgentWitch |
 | Một pipeline dispatch (library + marketplace + playbook) | “Ba runtime khác nhau”                                              |
 
 ---
@@ -67,12 +67,12 @@ Docs và sales **không** viết như memory/improvements đã hoàn hảo. Bả
 
 ## English summary (for mixed teams)
 
-**Core job:** trusted agent on your computer → browser visibility → reuse. **Pillars:** easy authoring, learn-from-usage (human approval), efficient memory (user wording), team learning. **Terms:** Mac, Task, Run, Playbook, Reports, Library. **Brand:** Agent Witch @ agentwitch.com — not “Daily Magic” as product name.
+**Core job:** trusted agent on your computer → browser visibility → reuse. **Pillars:** easy authoring, learn-from-usage (human approval), efficient memory (user wording), team learning. **Terms:** Mac, Task, Run, Playbook, Reports, Library. **Brand:** AgentWitch @ agentwitch.com — not “Daily Magic” as product name.
 
 ---
 
 ## Query aliases
 
-- guideline copy Agent Witch, triet ly huong dan viet bai
+- guideline copy AgentWitch, triet ly huong dan viet bai
 - product vocabulary Reports Playbook Task Run Mac
 - philosophy violation Daily Magic Job history

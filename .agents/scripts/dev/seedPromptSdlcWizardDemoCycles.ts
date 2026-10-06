@@ -39,7 +39,7 @@ const complexVariables = [
   {
     name: "brand",
     description: "Product name shown to the customer",
-    sampleValue: "Agent Witch Cloud",
+    sampleValue: "AgentWitch Cloud",
   },
   {
     name: "tier",
@@ -113,7 +113,7 @@ const step2 = {
   revisions: [
     {
       roundNumber: 0,
-      promptText: `${complexTemplatedPrompt}\n\n(concrete: Agent Witch Cloud tier 2, de-DE, VAT invoice mismatch…)`,
+      promptText: `${complexTemplatedPrompt}\n\n(concrete: AgentWitch Cloud tier 2, de-DE, VAT invoice mismatch…)`,
       judgement: {
         score: 58,
         passed: false,

@@ -11,12 +11,13 @@ export const dynamic = "force-dynamic";
 
 const homeTitle = `${AGENT_WITCH_PRODUCT_NAME} — AI accounts, Tasks, and Mac Runs`;
 const homeDescription =
-  "Give an AI an Agent Witch account with no email. Copy the short homepage prompt. The agent opens the guideline and follows it.";
+  "Give an AI an AgentWitch account with no email. Copy the short homepage prompt. The agent opens the guideline and follows it.";
 
 export const metadata: Metadata = {
   title: homeTitle,
   description: homeDescription,
   keywords: [
+    "AgentWitch",
     "Agent Witch",
     "AI agent account",
     "Agent Mail",

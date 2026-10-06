@@ -26,7 +26,7 @@ export const fetchAgentWitchInstructions = async (input: {
 
   if (!response.ok) {
     throw new Error(
-      `Agent Witch instructions request failed (${response.status}).`,
+      `AgentWitch instructions request failed (${response.status}).`,
     );
   }
 
@@ -42,7 +42,7 @@ export const fetchAgentWitchInstructions = async (input: {
     !("ok" in payload) ||
     (payload as { ok: boolean }).ok !== true
   ) {
-    throw new Error("Agent Witch instructions response was invalid.");
+    throw new Error("AgentWitch instructions response was invalid.");
   }
 
   return payload as unknown as AgentWitchInstructionDocument;

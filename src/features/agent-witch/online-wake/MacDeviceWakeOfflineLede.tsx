@@ -24,7 +24,7 @@ export default function MacDeviceWakeOfflineLede({
 
   return (
     <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-      {displayName} is offline. Power it on and wait for Agent Witch to
+      {displayName} is offline. Power it on and wait for AgentWitch to
       reconnect at login. If the app is not installed yet, open{" "}
       <Link href="/download" className={APP_SURFACE_TEXT_LINK_CLASS}>
         Download

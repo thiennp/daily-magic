@@ -34,7 +34,7 @@ const buildHarnessWriteItemsPrompt = (
   const itemListing = buildHarnessItemListing(items);
 
   return [
-    "You are writing Agent Witch harness items on the local machine.",
+    "You are writing AgentWitch harness items on the local machine.",
     "Do not modify project repositories or replace existing personal agent root harness files.",
     "",
     "Shared item storage:",

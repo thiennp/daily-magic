@@ -19,7 +19,7 @@ describe("GET /api/agent-witch/local-identity mobile gate", () => {
     fetchLocalAgentWitchWakeJson.mockReset();
   });
 
-  it("never fetches Agent Witch Local for a mobile request", async () => {
+  it("never fetches AgentWitch Local for a mobile request", async () => {
     requireAuth.mockResolvedValue({
       actor: { id: "user-1" },
       error: null,
@@ -36,7 +36,7 @@ describe("GET /api/agent-witch/local-identity mobile gate", () => {
     expect(fetchLocalAgentWitchWakeJson).not.toHaveBeenCalled();
   });
 
-  it("still fetches Agent Witch Local for a desktop request", async () => {
+  it("still fetches AgentWitch Local for a desktop request", async () => {
     requireAuth.mockResolvedValue({
       actor: { id: "user-1" },
       error: null,

@@ -10,7 +10,7 @@ import {
 } from "@/lib/projects/validateProjectRepoUrls";
 
 export const CREATE_PROJECT_FOLDER_HINT =
-  "Leave this empty for the default folder. Change folders later in Agent Witch Live on your computer. RAG and memory are stored under";
+  "Leave this empty for the default folder. Change folders later in AgentWitch Live on your computer. RAG and memory are stored under";
 
 interface CreateComposerProjectFromFormFieldsInput {
   readonly name: string;

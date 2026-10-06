@@ -18,7 +18,7 @@ NODE_BIN="\$(command -v node)"
 APP_BUNDLE="\${APP_DIR}/${AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.fileName}"
 
 if [[ -z "\${NODE_BIN}" || ! -f "\${APP_BUNDLE}" ]]; then
-  echo "Agent Witch is not installed. Run the install command from Home first." >&2
+  echo "AgentWitch is not installed. Run the install command from Home first." >&2
   exit 1
 fi
 

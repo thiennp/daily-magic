@@ -10,7 +10,7 @@ Canonical Q&A lives in **`docs/qa/`**. It is indexed with all `docs/**/*.md` int
 
 ## Before answering
 
-When the user asks **how Agent Witch works** (architecture, identity, dispatch, hosting, deployables AWC/AWL/AWB/AWI, “why does the UI…”), **do not infer from code first**.
+When the user asks **how AgentWitch works** (architecture, identity, dispatch, hosting, deployables AWC/AWL/AWB/AWI, “why does the UI…”), **do not infer from code first**.
 
 1. Run:
    ```bash

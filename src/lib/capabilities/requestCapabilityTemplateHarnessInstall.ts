@@ -39,7 +39,7 @@ const requestCapabilityTemplateHarnessInstall = async (
       installed: false,
       errorMessage: deviceId
         ? await buildTemplateHarnessInstallOfflineMessage(deviceId)
-        : "Mac offline. Open Agent with Agent Witch running to install the rules bundle.",
+        : "Mac offline. Open Agent with AgentWitch running to install the rules bundle.",
     };
   }
 

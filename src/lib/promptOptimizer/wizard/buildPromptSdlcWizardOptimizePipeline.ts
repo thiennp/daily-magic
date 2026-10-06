@@ -18,7 +18,7 @@ export const buildPromptSdlcWizardOptimizePipeline = (input: {
   return [
     pipelineStep(
       "awl",
-      "Connected on this computer (Agent Witch Local)",
+      "Connected on this computer (AgentWitch Local)",
       "done",
       "Local app",
       "<p>Step 4 runs the module in your folder, then scores output.</p>",

@@ -11,7 +11,7 @@ const isShellCommand = (command: string): boolean =>
   /(^|\s)(zsh|bash|sh|fish|dash)(\s|$)/.test(command);
 
 /**
- * True when argv looks like node running the bundled Agent Witch app.
+ * True when argv looks like node running the bundled AgentWitch app.
  * Rejects shells whose -c script merely mentions the path (AGENT-059).
  */
 export const isAgentWitchClientProcessCommand = (
@@ -109,7 +109,7 @@ const parseAgentWitchClientPids = (
 };
 
 /**
- * Kill other Agent Witch client processes for this install home.
+ * Kill other AgentWitch client processes for this install home.
  * One macOS user / install dir should run a single bridge process.
  */
 export const terminateOtherAgentWitchClientProcesses = (input: {

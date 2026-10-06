@@ -131,7 +131,7 @@ test.describe("Marketplace workflow video @e2e-capture", () => {
       .locator("#agent-witch-workflow-notes")
       .fill(
         [
-          `Dry-run for Agent Witch video (marker ${TASK_MARKER}).`,
+          `Dry-run for AgentWitch video (marker ${TASK_MARKER}).`,
           "Read the portfolio folder and draft a complete client proposal.",
           "Do not send email or message the client.",
           `Put the marker ${TASK_MARKER} in the executive summary.`,

@@ -38,7 +38,7 @@ describe("triggerAgentWitchLocalInstallBundleUpdate", () => {
     vi.mocked(requestLocalAgentWitchSelfUpdate).mockResolvedValue({
       ok: true,
       reachable: true,
-      payload: { message: "Updated Agent Witch bundle 124 -> 125." },
+      payload: { message: "Updated AgentWitch bundle 124 -> 125." },
     });
 
     const result = await triggerAgentWitchLocalInstallBundleUpdate();
@@ -52,7 +52,7 @@ describe("triggerAgentWitchLocalInstallBundleUpdate", () => {
     });
     expect(result).toEqual({
       ok: true,
-      message: "Updated Agent Witch bundle 124 -> 125.",
+      message: "Updated AgentWitch bundle 124 -> 125.",
     });
   });
 
@@ -65,7 +65,7 @@ describe("triggerAgentWitchLocalInstallBundleUpdate", () => {
     vi.mocked(runAgentWitchSelfUpdate).mockResolvedValue({
       ok: true,
       updated: true,
-      message: "Updated Agent Witch bundle 124 -> 125.",
+      message: "Updated AgentWitch bundle 124 -> 125.",
       localBundleVersion: "124",
       remoteBundleVersion: "125",
     });

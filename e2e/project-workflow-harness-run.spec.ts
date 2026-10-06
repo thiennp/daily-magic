@@ -12,7 +12,7 @@ import { signInTestAccount } from "./helpers/signInTestAccount";
 
 /**
  * Create a project, install a marketplace workflow onto it, pull the harness
- * into that folder from Agent Witch Local, then run the workflow.
+ * into that folder from AgentWitch Local, then run the workflow.
  * Requires a live host on this machine (npm run agent-witch against localhost).
  */
 const SELF = "test-e2e-flow@agentwitch.com";

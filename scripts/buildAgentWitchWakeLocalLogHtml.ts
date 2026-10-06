@@ -41,7 +41,7 @@ export const buildAgentWitchWakeLocalLogHtml = (input: {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agent Witch local logs</title>
+  <title>AgentWitch local logs</title>
   <style>
     :root { color-scheme: light dark; font-family: ui-sans-serif, system-ui, sans-serif; }
     body { margin: 0; padding: 16px; background: #0b1020; color: #e8edf8; }
@@ -57,7 +57,7 @@ export const buildAgentWitchWakeLocalLogHtml = (input: {
   </style>
 </head>
 <body>
-  <h1>Agent Witch local logs</h1>
+  <h1>AgentWitch local logs</h1>
   <p class="meta">Wake server on 127.0.0.1:${input.port}</p>
   <section>
     <h2>Watchdog</h2>

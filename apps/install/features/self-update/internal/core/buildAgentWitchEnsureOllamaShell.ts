@@ -4,7 +4,7 @@ import {
   AGENT_WITCH_OLLAMA_ESTIMATE_MODEL,
 } from "./agentWitchOllamaInstall.constant";
 
-/** Bash that installs Ollama, starts it, and pulls the models Agent Witch calls. */
+/** Bash that installs Ollama, starts it, and pulls the models AgentWitch calls. */
 export const buildAgentWitchEnsureOllamaShell = (): string => `
 agent_witch_ollama_api_up() {
   curl -fsS --max-time 2 http://127.0.0.1:11434/api/tags >/dev/null 2>&1
@@ -104,8 +104,8 @@ agent_witch_ensure_ollama() {
 }
 `;
 
-/** Install-script fragment. A failed Ollama install does not abort Agent Witch. */
+/** Install-script fragment. A failed Ollama install does not abort AgentWitch. */
 export const buildAgentWitchInstallScriptOllama = (): string => `
 ${buildAgentWitchEnsureOllamaShell()}
-agent_witch_ensure_ollama || echo "Task time estimates need Ollama. Agent Witch will continue without it." >&2
+agent_witch_ensure_ollama || echo "Task time estimates need Ollama. AgentWitch will continue without it." >&2
 `;

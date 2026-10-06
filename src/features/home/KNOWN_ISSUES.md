@@ -218,9 +218,9 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-## HOME-019 — Install CTA shown when Mac already has Agent Witch
+## HOME-019 — Install CTA shown when Mac already has AgentWitch
 
-**Symptom:** Home still showed “Add a computer” / install steps on a computer where Agent Witch was already running.
+**Symptom:** Home still showed “Add a computer” / install steps on a computer where AgentWitch was already running.
 
 **Root cause:** Connect CTAs always rendered and did not consult device presence.
 
@@ -348,7 +348,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## HOME-030 — Connect this computer missing after uninstall with other devices listed
 
-**Symptom:** After Agent Witch was uninstalled (no local token identity), Your Devices no longer showed **this Mac**, but also hid **Connect this computer** whenever other cloud devices already existed.
+**Symptom:** After AgentWitch was uninstalled (no local token identity), Your Devices no longer showed **this Mac**, but also hid **Connect this computer** whenever other cloud devices already existed.
 
 **Root cause:** `resolveShouldShowConnectThisMac` treated `localTokenHash === null` like “identity unknown → hide Connect when `devices.length > 0`”, which was carried over from hostname matching.
 
@@ -372,7 +372,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## HOME-032 — Connect this computer replaced another account on the same computer
 
-**Symptom:** On a shared Mac, Your Devices correctly hid **this Mac** for a different Agent Witch account, but **Connect this computer** looked like it would take over the other account’s local install. Wake `/identity` could also overwrite the browser’s token hash with the active profile’s hash.
+**Symptom:** On a shared Mac, Your Devices correctly hid **this Mac** for a different AgentWitch account, but **Connect this computer** looked like it would take over the other account’s local install. Wake `/identity` could also overwrite the browser’s token hash with the active profile’s hash.
 
 **Root cause:** Install/profile helpers could inherit another account’s pairing token or flip `active-profile.json`, and the browser always adopted wake’s single `tokenHash`.
 
@@ -466,7 +466,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## HOME-040 — Update local showed tokenless repair curl
 
-**Symptom:** **Update local Agent Witch** copied `agent-witch-update.sh` without a pairing token; install failed when the computer had no local identity in config.
+**Symptom:** **Update local AgentWitch** copied `agent-witch-update.sh` without a pairing token; install failed when the computer had no local identity in config.
 
 **Root cause:** `useThisMacLocalInstallActions` used `buildAgentWitchUpdateInstallCommand` only; update scripts require a preset or on-disk pairing token.
 
@@ -490,7 +490,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## HOME-050 — this computer identity probe did not retry after AWB came back
 
-**Symptom:** On this computer, AWC never sent `GET http://127.0.0.1:{wakePort}/identity` after Agent Witch Bridge came back, so the **this Mac** badge stayed missing even though AWB `/identity` worked from curl.
+**Symptom:** On this computer, AWC never sent `GET http://127.0.0.1:{wakePort}/identity` after AgentWitch Bridge came back, so the **this Mac** badge stayed missing even though AWB `/identity` worked from curl.
 
 **Root cause:** The browser probed each wake port once per tab session and then suppressed retries. If AWB was down on first load (or only the page-origin port was tried), later focus on Home did not send identity again. Localhost AWC also skipped production port `47892`.
 
@@ -526,7 +526,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## HOME-053 — Linux browser told to install on a Mac
 
-**Symptom:** A desktop Linux browser on Home saw “Agent Witch installs on macOS” and, with no devices yet, hid Connect entirely.
+**Symptom:** A desktop Linux browser on Home saw “AgentWitch installs on macOS” and, with no devices yet, hid Connect entirely.
 
 **Root cause:** OS detection folded Linux into `other`, and Connect was hidden for every non-Mac browser until a device already existed.
 
@@ -550,7 +550,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## HOME-055 — Windows browser told to install on a Mac
 
-**Symptom:** A Windows browser on Home saw “Agent Witch installs on macOS” and hid Connect until a device already existed.
+**Symptom:** A Windows browser on Home saw “AgentWitch installs on macOS” and hid Connect until a device already existed.
 
 **Root cause:** Connect steps treated Windows as a phone, and Connect stayed hidden for every non-Mac, non-Linux browser with an empty device list.
 

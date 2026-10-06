@@ -10,4 +10,4 @@
 
 **Regression test:** `src/features/auth/utils/parseEmailSignInFeedback.test.ts`.
 
-**Ops:** On Railway, set `AUTH_RESEND_KEY` (or `RESEND_API_KEY`) and a verified `EMAIL_FROM` such as `Agent Witch <noreply@agentwitch.com>` after adding the domain in Resend.
+**Ops:** On Railway, set `AUTH_RESEND_KEY` (or `RESEND_API_KEY`) and a verified `EMAIL_FROM` such as `AgentWitch <noreply@agentwitch.com>` after adding the domain in Resend.

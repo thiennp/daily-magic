@@ -48,7 +48,7 @@ export default function MarketplaceInstallFormPanel({
       </h2>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
         Saves to your library and links this listing to the project you choose.
-        Pull playbook files into the repo from Agent Witch on your computer.
+        Pull playbook files into the repo from AgentWitch on your computer.
       </p>
 
       <MarketplaceInstallMacPicker
@@ -68,8 +68,8 @@ export default function MarketplaceInstallFormPanel({
 
       {needsLiveConnection ? (
         <p className="mt-4 text-sm text-amber-700 dark:text-amber-300">
-          This computer checked in recently but does not have a live Agent Witch
-          connection. Open Agent Witch on that Mac, then try Install again.
+          This computer checked in recently but does not have a live AgentWitch
+          connection. Open AgentWitch on that Mac, then try Install again.
         </p>
       ) : null}
 

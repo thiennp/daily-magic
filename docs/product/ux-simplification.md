@@ -1,6 +1,6 @@
 # UX simplification — personas, language, and onboarding
 
-Product and UX direction for **Agent Witch**. **Audience:** PM, design, and engineering when changing nav, copy, or onboarding. Technical storage (harness paths, RAG files) stays in [Agent Witch local layout](../../src/features/agent-witch/LOCAL_INSTALL_LAYOUT.md) and [product concepts](concepts.md). Copy rules: [philosophy-and-copy-guideline.md](philosophy-and-copy-guideline.md).
+Product and UX direction for **AgentWitch**. **Audience:** PM, design, and engineering when changing nav, copy, or onboarding. Technical storage (harness paths, RAG files) stays in [AgentWitch local layout](../../src/features/agent-witch/LOCAL_INSTALL_LAYOUT.md) and [product concepts](concepts.md). Copy rules: [philosophy-and-copy-guideline.md](philosophy-and-copy-guideline.md).
 
 **Status:** In progress (2026). Nav labels, onboarding, Home Mac status + Mac settings link, solo team-nav gating shipped; Playbooks merge UI and composer progressive disclosure still open.
 
@@ -23,7 +23,7 @@ That loop is expressed in four user-facing terms: **Mac** · **Task** · **Run**
 
 Shipped vs aspirational behavior per pillar: [product-pillars.md § North star vs today](product-pillars.md#north-star-vs-today).
 
-Implementation still introduces many nouns (Agent Witch, harness, knowledge, projects, registry, marketplace, library, capabilities, dispatch, wake, local app on another host). Power users need depth; most users need **one browser story** with advanced setup deferred.
+Implementation still introduces many nouns (AgentWitch, harness, knowledge, projects, registry, marketplace, library, capabilities, dispatch, wake, local app on another host). Power users need depth; most users need **one browser story** with advanced setup deferred.
 
 ---
 
@@ -44,7 +44,7 @@ Same core loop; company adds **visibility, templates, and policy**.
 
 | User term    | Meaning                                           | Hide internal names                          |
 | ------------ | ------------------------------------------------- | -------------------------------------------- |
-| **Mac**      | Machine that runs agents (mine or teammate’s)     | Agent Witch, wake, heartbeat, presence tiers |
+| **Mac**      | Machine that runs agents (mine or teammate’s)     | AgentWitch, wake, heartbeat, presence tiers |
 | **Task**     | What to do (composer / home)                      | Dispatch payload details                     |
 | **Run**      | What happened (history + live output)             | agent_run id, SSE vs WS                      |
 | **Playbook** | How agents should work (rules, skills, templates) | harness, capability (in UI), library item    |
@@ -56,7 +56,7 @@ Same core loop; company adds **visibility, templates, and policy**.
 | Knowledge / RAG     | **Memory from past runs** (automatic); optional **Search past runs**       |
 | Harness             | **Playbook** or **Team standards**                                         |
 | Projects / registry | **Repository** or **Code folder** (task attribute + settings)              |
-| **AWL** (`:43347`)  | **Agent Witch on this computer** (or “Mac app”) — link from Home / account |
+| **AWL** (`:43347`)  | **AgentWitch on this computer** (or “Mac app”) — link from Home / account |
 
 See [concepts.md](concepts.md) for engineer glossary; UI should prefer the table above.
 
@@ -136,7 +136,7 @@ On desktop, AWC primary nav is a card in the Home devices column (above Your Dev
 | ---------------------------------------------------------- | ----------------- |
 | Time to first successful run                               | Solo onboarding   |
 | % completing connect + first task without opening local UI | Simplicity signal |
-| Support themes: harness / Agent Witch / local app          | Should decrease   |
+| Support themes: harness / AgentWitch / local app          | Should decrease   |
 | % tasks using a named playbook                             | Company adoption  |
 
 ---
@@ -203,7 +203,7 @@ Use for Home / first-run design reviews. **Default path = solo.** “Team” var
 - [Product pillars](product-pillars.md)
 - [Product concepts (glossary)](concepts.md)
 - [Root README — routes](../../README.md)
-- [Agent Witch bridge](../../src/features/agent-witch/README.md)
+- [AgentWitch bridge](../../src/features/agent-witch/README.md)
 - [Home known issues](../../src/features/home/KNOWN_ISSUES.md) — onboarding persistence
 
 ---

@@ -12,7 +12,7 @@ describe("buildAgentWitchInstallScriptProgress", () => {
     expect(block).toContain(
       `AGENT_WITCH_INSTALL_TOTAL=${AGENT_WITCH_INSTALL_PROGRESS_TOTAL}`,
     );
-    expect(block).toContain('echo "Installing Agent Witch…"');
+    expect(block).toContain('echo "Installing AgentWitch…"');
     expect(block).toContain("printf '\\rInstalling… %d%%'");
   });
 
@@ -21,7 +21,7 @@ describe("buildAgentWitchInstallScriptProgress", () => {
       updateExistingInstall: true,
     });
 
-    expect(block).toContain('echo "Updating Agent Witch…"');
+    expect(block).toContain('echo "Updating AgentWitch…"');
     expect(block).toContain("printf '\\rUpdating… %d%%'");
     expect(block).not.toContain("Installing");
   });

@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: `Assistant invite | ${AGENT_WITCH_PRODUCT_NAME}`,
   description:
-    "Agent Witch project invites are for AI assistants. Give the Copy prompt to your assistant — this page is not a browser login.",
+    "AgentWitch project invites are for AI assistants. Give the Copy prompt to your assistant — this page is not a browser login.",
   robots: { index: false, follow: false },
 };
 

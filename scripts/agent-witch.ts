@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Agent Witch — legacy CLI path. Orchestration lives in AWI entry + runtime-client slice.
+ * AgentWitch — legacy CLI path. Orchestration lives in AWI entry + runtime-client slice.
  *
  * Run: npx tsx scripts/agent-witch.ts
  */

@@ -52,7 +52,7 @@ func DeriveMenu(state RuntimeState, errorMessage string) MenuModel {
 		)
 	case StateStopped:
 		model.Items = append(model.Items,
-			MenuItem{Action: ActionStart, Title: "Start Agent Witch", Enabled: true},
+			MenuItem{Action: ActionStart, Title: "Start AgentWitch", Enabled: true},
 			MenuItem{Action: ActionOpenStatus, Title: "Open AgentWitch Local", Enabled: true},
 			MenuItem{Action: ActionViewLogs, Title: "View logs", Enabled: true},
 		)
@@ -60,15 +60,15 @@ func DeriveMenu(state RuntimeState, errorMessage string) MenuModel {
 		// Error exits: Start again, or Stop (e.g. after a Stop timeout); the next
 		// healthy probe also moves to Running.
 		model.Items = append(model.Items,
-			MenuItem{Action: ActionStart, Title: "Start Agent Witch", Enabled: true},
-			MenuItem{Action: ActionStop, Title: "Stop Agent Witch", Enabled: true},
+			MenuItem{Action: ActionStart, Title: "Start AgentWitch", Enabled: true},
+			MenuItem{Action: ActionStop, Title: "Stop AgentWitch", Enabled: true},
 			MenuItem{Action: ActionOpenStatus, Title: "Open AgentWitch Local", Enabled: true},
 			MenuItem{Action: ActionViewLogs, Title: "View logs", Enabled: true},
 		)
 	case StateStarting, StateRunning:
 		model.Items = append(model.Items,
 			MenuItem{Action: ActionOpenStatus, Title: "Open AgentWitch Local", Enabled: true},
-			MenuItem{Action: ActionStop, Title: "Stop Agent Witch", Enabled: state != StateStarting},
+			MenuItem{Action: ActionStop, Title: "Stop AgentWitch", Enabled: state != StateStarting},
 			MenuItem{Action: ActionViewLogs, Title: "View logs", Enabled: true},
 		)
 	case StateStopping:

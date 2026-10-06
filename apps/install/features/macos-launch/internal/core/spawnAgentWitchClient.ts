@@ -22,7 +22,7 @@ export const spawnAgentWitchClient = (
   if (!fs.existsSync(bundlePath)) {
     return {
       ok: false,
-      errorMessage: "Agent Witch install not found.",
+      errorMessage: "AgentWitch install not found.",
     };
   }
 

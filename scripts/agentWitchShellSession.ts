@@ -166,7 +166,7 @@ export const openInteractiveShellPty = async (input: {
       payload: {
         shellSessionId: input.shellSessionId,
         chunk:
-          "node-pty is not available on this computer. Install Agent Witch deps again.\r\n",
+          "node-pty is not available on this computer. Install AgentWitch deps again.\r\n",
       },
       requestId: input.requestId,
     });

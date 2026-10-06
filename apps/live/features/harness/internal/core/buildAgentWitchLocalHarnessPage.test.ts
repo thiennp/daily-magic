@@ -9,7 +9,7 @@ import {
 import type { LocalHarnessRevealResult } from "./localHarness/revealLocalHarnessCandidates.types";
 
 const FOLDER_PICKER_UNAVAILABLE_MESSAGE =
-  "Folder picker is only available on the computer that runs Agent Witch. Type the folder path instead.";
+  "Folder picker is only available on the computer that runs AgentWitch. Type the folder path instead.";
 
 interface PickFolderResponse {
   readonly ok: boolean;
@@ -209,9 +209,9 @@ describe("buildAgentWitchLocalHarnessPageBody", () => {
       importSectionExpanded: false,
     });
 
-    expect(html).toContain("Install playbooks in Agent Witch Cloud");
+    expect(html).toContain("Install playbooks in AgentWitch Cloud");
     expect(html).toContain('href="https://www.agentwitch.com/marketplace"');
-    expect(html).not.toContain("Install playbooks on Agent Witch Local");
+    expect(html).not.toContain("Install playbooks on AgentWitch Local");
   });
 
   it("shows a status line under Choose folder when the picker cannot run", () => {

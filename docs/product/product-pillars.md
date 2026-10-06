@@ -1,4 +1,4 @@
-# Agent Witch — product pillars
+# AgentWitch — product pillars
 
 Canonical **value pillars** for UX, guides, and agent rules. The **core job** is unchanged; pillars describe how the product improves over time.
 
@@ -15,7 +15,7 @@ Canonical **value pillars** for UX, guides, and agent rules. The **core job** is
 | #     | Pillar (intent)      | User-facing promise                                                                                                                                                     | Engineering focus                                                                                                        |
 | ----- | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | **1** | **Easy authoring**   | Workflows and agents feel approachable—even if you are not an AI expert. Start with a plain **Task**; use forms and team **Workflows** when you need structure.         | Workflow builder, capability forms, official presets, progressive disclosure in composer                                 |
-| **2** | **Learn from usage** | Mistakes and rough runs become improvements—you stay in control. Agent Witch surfaces feedback and suggestions; you accept before playbooks or workflows change.        | `feedback`, `improvements`, run history, capability improvements (human-in-the-loop)                                     |
+| **2** | **Learn from usage** | Mistakes and rough runs become improvements—you stay in control. AgentWitch surfaces feedback and suggestions; you accept before playbooks or workflows change.        | `feedback`, `improvements`, run history, capability improvements (human-in-the-loop)                                     |
 | **3** | **Efficient memory** | Each new **Task** reuses useful context from past **Runs** so work stays focused—solo or on a team—without repeating the same setup. (Do not say “token” in user copy.) | Run memory injection, playbook scope, feature-knowledge for repo agents; team-shared library/harness where policy allows |
 | **4** | **Team learning**    | Teammates share **Runs**, **Playbooks**, and company templates so the org gets better together—not isolated one-off prompts.                                            | Library, marketplace, harness publish/install, team Runs visibility, dispatch policy                                     |
 
@@ -51,6 +51,6 @@ Use this table in guides so docs stay honest.
 
 ## Query aliases
 
-- Agent Witch product pillars, four pillars, product values
-- triet ly Agent Witch, bon tru cot, de tao workflow, hoc tu loi, tiet kiem ngữ cảnh, team chia se kinh nghiem
-- North star vs today Agent Witch memory improvements
+- AgentWitch product pillars, four pillars, product values
+- triet ly AgentWitch, bon tru cot, de tao workflow, hoc tu loi, tiet kiem ngữ cảnh, team chia se kinh nghiem
+- North star vs today AgentWitch memory improvements

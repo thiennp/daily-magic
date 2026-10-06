@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
@@ -46,7 +46,7 @@ describe("COPY-P1 shell and auth labels", () => {
   });
 
   it("polishes login page title away from autopilot line", () => {
-    expect(LOGIN_PAGE_COPY.title).toBe("Sign in to Agent Witch");
+    expect(LOGIN_PAGE_COPY.title).toBe("Sign in to AgentWitch");
     expect(LOGIN_PAGE_COPY.title.includes("autopilot")).toBe(false);
   });
 
@@ -72,5 +72,34 @@ describe("COPY-P1 shell and auth labels", () => {
     expect(source.includes("Agent Witch")).toBe(false);
     expect(source.includes("AGENT_WITCH_INSTALL_BUNDLE_VERSION")).toBe(false);
     expect(source.includes("AWL")).toBe(false);
+  });
+});
+
+describe("AgentWitch one-word brand guard", () => {
+  it('visible copy constants under src/features/**/**Copy*.ts contain no "Agent Witch"', () => {
+    const roots = [join(process.cwd(), "src/features")];
+    const offenders: string[] = [];
+
+    const walk = (dir: string): void => {
+      for (const name of readdirSync(dir)) {
+        const full = join(dir, name);
+        const st = statSync(full);
+        if (st.isDirectory()) {
+          walk(full);
+          continue;
+        }
+        if (!/Copy[^/]*\.ts$/.test(name)) continue;
+        if (name.endsWith(".test.ts")) continue;
+        const source = readFileSync(full, "utf8");
+        if (source.includes("Agent Witch")) {
+          offenders.push(full.replace(`${process.cwd()}/`, ""));
+        }
+      }
+    };
+
+    for (const root of roots) {
+      walk(root);
+    }
+    expect(offenders).toEqual([]);
   });
 });

@@ -12,7 +12,7 @@ const whatIsAnAiAgentSimple: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "An agent is not magic and not a replacement for your judgment. In Agent Witch it means: AI runs on a real Mac, with a prompt or workflow you chose, and a log of what happened.",
+        "An agent is not magic and not a replacement for your judgment. In AgentWitch it means: AI runs on a real Mac, with a prompt or workflow you chose, and a log of what happened.",
       ],
     },
     {

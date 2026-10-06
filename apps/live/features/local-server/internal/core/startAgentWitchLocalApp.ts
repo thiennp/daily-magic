@@ -188,7 +188,7 @@ const loadCloudProjectsForLocalApp = async (
       ok: false,
       projects: [],
       message:
-        "Client config missing — pair this computer in Agent Witch Cloud to load projects.",
+        "Client config missing — pair this computer in AgentWitch Cloud to load projects.",
     };
   }
 
@@ -317,7 +317,7 @@ const buildStatusBody = (input: {
   return `<section class="card">
       <p class="eyebrow">Local bridge</p>
       <h1>Status</h1>
-      <p class="lede">Connection and pairing details for Agent Witch on this computer.</p>
+      <p class="lede">Connection and pairing details for AgentWitch on this computer.</p>
       ${revivedNotice}
       <div class="meta-grid">
         <div class="meta-item"><span class="meta-label">WebSocket</span><span class="meta-value">${connectedBadge}</span></div>
@@ -940,13 +940,13 @@ export const startAgentWitchLocalApp = (input: {
         const cloudProjects = await loadCloudProjectsForLocalApp(input.layout);
         const flashError =
           url.searchParams.get("folderError") === "1"
-            ? "Could not save the selected folder to Agent Witch. Check the Mac connection and try again."
+            ? "Could not save the selected folder to AgentWitch. Check the Mac connection and try again."
             : url.searchParams.get("deleteError") === "1"
-              ? "Could not delete the project in Agent Witch Cloud. Check pairing on Status."
+              ? "Could not delete the project in AgentWitch Cloud. Check pairing on Status."
               : null;
         const flashMessage =
           url.searchParams.get("deleted") === "1"
-            ? "Project removed from Agent Witch Cloud. Folders on your computer were not deleted."
+            ? "Project removed from AgentWitch Cloud. Folders on your computer were not deleted."
             : null;
         const listRunConfig = readAgentWitchRunConfig();
         const listCloudConfig =
@@ -1098,13 +1098,13 @@ export const startAgentWitchLocalApp = (input: {
               ? `Harness linked locally (${url.searchParams.get("files") ?? "0"} file(s)). Cloud composition sync failed — check WS connection on Status.`
               : `Harness linked (${url.searchParams.get("files") ?? "0"} file(s) written) and composition synced to cloud.`
             : url.searchParams.get("folderUpdated") === "1"
-              ? "Project folder updated and synced with Agent Witch."
+              ? "Project folder updated and synced with AgentWitch."
               : null;
         const knowledgePromotedCount =
           url.searchParams.get("knowledgePromoted");
         const knowledgeFlashMessage =
           knowledgePromotedCount !== null
-            ? `Marked ${knowledgePromotedCount} lesson(s) as promoted in Agent Witch.`
+            ? `Marked ${knowledgePromotedCount} lesson(s) as promoted in AgentWitch.`
             : null;
         const knowledgeFlashError =
           url.searchParams.get("knowledgePromoteFailed") === "1"

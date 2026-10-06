@@ -27,7 +27,7 @@ const copyForReason = (
 
   return {
     title: "Connect a computer or Cursor Cloud to run workflows",
-    body: "Pair a computer with Agent Witch or save a Cursor Cloud API key in your account settings. Workflow runs need somewhere to execute.",
+    body: "Pair a computer with AgentWitch or save a Cursor Cloud API key in your account settings. Workflow runs need somewhere to execute.",
   };
 };
 

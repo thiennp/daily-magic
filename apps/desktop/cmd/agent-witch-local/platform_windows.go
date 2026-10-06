@@ -31,7 +31,7 @@ func newPlatform() (tray.Platform, error) {
 	// Best-effort tray autostart via HKCU Run (simplest documented option).
 	// Failures are non-fatal: the user can still use the tray this session.
 	if err := backend.EnableAutostart(ctx); err != nil {
-		_ = backend.Notify(ctx, "Agent Witch Local", fmt.Sprintf("Could not enable login autostart: %v", err))
+		_ = backend.Notify(ctx, "AgentWitch Local", fmt.Sprintf("Could not enable login autostart: %v", err))
 	}
 
 	return backend, nil

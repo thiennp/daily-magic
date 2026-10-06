@@ -19,7 +19,7 @@ const buildProject = (name: string, folderPath: string): UserProjectRecord => ({
 describe("filterAwcProjectsByQuery", () => {
   const projects = [
     buildProject("Daily Magic", "/Users/study/daily-magic"),
-    buildProject("Agent Witch", "/tmp/agent-witch"),
+    buildProject("AgentWitch", "/tmp/agent-witch"),
   ];
 
   it("returns all projects when the query is blank", () => {

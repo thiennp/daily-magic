@@ -42,7 +42,7 @@ export default function WriterSetupPage() {
         Choose an AI for your computer
       </h1>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-        Agent Witch will install and check login on the computer linked to your
+        AgentWitch will install and check login on the computer linked to your
         account. You can change this later from New task.
       </p>
       <ul className="mt-8 space-y-3">

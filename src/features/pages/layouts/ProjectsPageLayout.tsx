@@ -9,7 +9,7 @@ export default function ProjectsPageLayout() {
     <div className={APP_PAGE_STACK_CLASS}>
       <AppPageHeader
         title="Projects"
-        description="Cloud registry for membership and activity. Edit repos and composition in Agent Witch Local on your computer."
+        description="Cloud registry for membership and activity. Edit repos and composition in AgentWitch Local on your computer."
       />
       <Suspense
         fallback={

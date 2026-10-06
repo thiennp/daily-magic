@@ -10,7 +10,7 @@ export default function PromptSdlcGuideWizardSection(): ReactElement {
     <section className="space-y-3">
       <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>What Run does</h2>
       <p className={APP_SURFACE_BODY_TEXT_CLASS}>
-        <strong>Run</strong> starts the four-step wizard in Agent Witch Live:
+        <strong>Run</strong> starts the four-step wizard in AgentWitch Live:
         generalize placeholders, evaluate revisions (pass 70, up to five
         rounds), separate into modules (chain or parallel), then optimize each
         module with one runner trial and judge score per module.

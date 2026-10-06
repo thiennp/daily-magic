@@ -38,7 +38,7 @@ agent_witch_ensure_node_runtime() {
   NODE_BIN="\$(command -v node || true)"
 
   if [[ -z "\${NODE_BIN}" ]]; then
-    echo "Node.js is required for Agent Witch (minimum ${AGENT_WITCH_MIN_NODE_VERSION_LABEL}); not found on PATH, /opt/homebrew/bin, /usr/local/bin or ~/.local/bin." >&2
+    echo "Node.js is required for AgentWitch (minimum ${AGENT_WITCH_MIN_NODE_VERSION_LABEL}); not found on PATH, /opt/homebrew/bin, /usr/local/bin or ~/.local/bin." >&2
     if [[ "\$(uname -s)" == "Linux" ]] && agent_witch_try_install_node_via_linux_tarball; then
       return 0
     fi
@@ -66,7 +66,7 @@ agent_witch_ensure_node_runtime() {
   local found_version
   found_version="\$("\${NODE_BIN}" -v 2>/dev/null || echo 'unknown')"
   echo "Node.js ${AGENT_WITCH_MIN_NODE_VERSION_LABEL} or newer is required (found \${found_version})." >&2
-  echo "Your current Node version is not supported for Agent Witch." >&2
+  echo "Your current Node version is not supported for AgentWitch." >&2
 
   if [[ "\$(uname -s)" == "Linux" ]] && agent_witch_try_install_node_via_linux_tarball; then
     return 0

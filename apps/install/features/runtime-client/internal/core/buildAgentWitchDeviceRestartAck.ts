@@ -16,7 +16,7 @@ const MESSAGE_BY_STATUS: Record<AgentWitchDeviceRestartAckStatus, string> = {
   deferred_writer_busy:
     "Restart deferred until the active writer task finishes.",
   unsupported:
-    "This Agent Witch Local cannot handle Connect/restart. Update from /download.",
+    "This AgentWitch Local cannot handle Connect/restart. Update from /download.",
 };
 
 /**

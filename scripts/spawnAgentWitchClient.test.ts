@@ -22,12 +22,12 @@ afterEach(() => {
 });
 
 describe("spawnAgentWitchClient", () => {
-  it("fails when Agent Witch is not installed", () => {
+  it("fails when AgentWitch is not installed", () => {
     const installDir = createTempInstallDir();
 
     expect(spawnAgentWitchClient(installDir)).toEqual({
       ok: false,
-      errorMessage: "Agent Witch install not found.",
+      errorMessage: "AgentWitch install not found.",
     });
   });
 });

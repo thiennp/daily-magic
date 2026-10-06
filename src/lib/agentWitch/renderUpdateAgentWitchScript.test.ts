@@ -12,7 +12,7 @@ describe("renderUpdateAgentWitchScript", () => {
     expect(script).toContain("typeof parsed.pairingToken === 'string'");
     expect(script).toContain("agent_witch_resolve_local_pairing_token");
     expect(script).toContain(
-      "No linked computer identity found in your local Agent Witch config.",
+      "No linked computer identity found in your local AgentWitch config.",
     );
     expect(script).toContain('"${DEVICE_LABEL}" "${PAIRING_TOKEN}"');
   });
@@ -20,9 +20,9 @@ describe("renderUpdateAgentWitchScript", () => {
   it("AGENT-050: uses update wording in terminal progress output", () => {
     const script = renderUpdateAgentWitchScript("https://www.agentwitch.com");
 
-    expect(script).toContain('echo "Updating Agent Witch…"');
+    expect(script).toContain('echo "Updating AgentWitch…"');
     expect(script).toContain("printf '\\rUpdating… %d%%'");
-    expect(script).not.toContain('echo "Installing Agent Witch…"');
+    expect(script).not.toContain('echo "Installing AgentWitch…"');
   });
 
   it("AGENT-064: shows current and target bundle version in the terminal", () => {

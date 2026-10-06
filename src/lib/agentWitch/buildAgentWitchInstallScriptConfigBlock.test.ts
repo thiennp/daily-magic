@@ -51,7 +51,7 @@ describe("buildAgentWitchInstallScriptConfigBlock", () => {
     });
 
     expect(block).toContain(
-      "Connect this computer requires your Agent Witch account email",
+      "Connect this computer requires your AgentWitch account email",
     );
     expect(block).toContain(
       "Your account is added as a separate profile and will not replace theirs.",

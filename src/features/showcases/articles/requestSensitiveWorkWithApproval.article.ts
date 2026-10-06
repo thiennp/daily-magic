@@ -31,7 +31,7 @@ const requestSensitiveWorkWithApproval: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "You need research on a repo that lives on a senior engineer's laptop — not in a shared cloud drive. Agent Witch lets you request the job from the browser, but your company can require approval before anything runs on someone else's Mac.",
+        "You need research on a repo that lives on a senior engineer's laptop — not in a shared cloud drive. AgentWitch lets you request the job from the browser, but your company can require approval before anything runs on someone else's Mac.",
       ],
     },
     {

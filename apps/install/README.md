@@ -1,4 +1,4 @@
-# AWI — Agent Witch Install
+# AWI — AgentWitch Install
 
 Mac install bundle, runtime (`agent-witch.js`), LaunchAgents, and self-update.
 

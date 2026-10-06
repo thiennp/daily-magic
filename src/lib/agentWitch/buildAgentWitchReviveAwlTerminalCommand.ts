@@ -13,7 +13,7 @@ const resolveHostnameForReviveCommand = (): string => {
 };
 
 /**
- * Revive steps for Agent Witch Local (`:43347`) on the computer in front of the browser.
+ * Revive steps for AgentWitch Local (`:43347`) on the computer in front of the browser.
  * `operatingSystem` is the browser OS ("mac" | "windows" | "linux" | "other");
  * "other" lists the command for every OS. The current AWC hostname picks the
  * production vs localhost install dir and LaunchAgent prefix.

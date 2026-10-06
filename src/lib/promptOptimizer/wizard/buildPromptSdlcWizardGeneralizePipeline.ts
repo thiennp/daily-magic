@@ -32,7 +32,7 @@ export const buildPromptSdlcWizardGeneralizePipeline = (input: {
   return [
     pipelineStep(
       "awl",
-      "Connected on this computer (Agent Witch Local)",
+      "Connected on this computer (AgentWitch Local)",
       "done",
       "Local app",
       "<p>Your browser talks to AWL on <code>127.0.0.1:43347</code>. The run is stored on this computer.</p>",

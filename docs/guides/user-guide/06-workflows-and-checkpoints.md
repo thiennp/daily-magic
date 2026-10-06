@@ -25,12 +25,12 @@ Technical overview: [How harness, workflow, and agent runs reach the Mac](../../
 
 ## Official workflows (curated presets)
 
-**Official** workflows ship as fixed graphs: alternating **human** nodes (checkpoints) and **agent** nodes (Mac dispatches). When you start one, Agent Witch stores a **snapshot** of that graph on the workflow run so later edits to the template do not change an in-flight run.
+**Official** workflows ship as fixed graphs: alternating **human** nodes (checkpoints) and **agent** nodes (Mac dispatches). When you start one, AgentWitch stores a **snapshot** of that graph on the workflow run so later edits to the template do not change an in-flight run.
 
 Typical flow:
 
 1. You fill the workflow form (text fields, choices, optional file upload—see below). Each caption is the field’s label. A portfolio folder is a path you type; it is not replaced by the project folder.
-2. Agent Witch starts the workflow run and dispatches the first agent step to your **Mac**.
+2. AgentWitch starts the workflow run and dispatches the first agent step to your **Mac**.
 3. You watch the live **Run** terminal like any other task.
 4. When the graph hits a **human** node, the run pauses and the browser shows a **checkpoint sheet**.
 
@@ -82,7 +82,7 @@ Retry is available while the run is in a failed state; it clears the error and s
 
 ## File uploads and rich output
 
-Workflows can ask for **File (PDF or image)** fields. You upload in the browser; Agent Witch extracts text server-side and passes a secure download link into the prompt for the **Mac** agent to fetch when needed.
+Workflows can ask for **File (PDF or image)** fields. You upload in the browser; AgentWitch extracts text server-side and passes a secure download link into the prompt for the **Mac** agent to fetch when needed.
 
 Agents may also emit structured blocks such as `[[ARTIFACT]]…[[/ARTIFACT]]`. The live **Run** view can show a **Summary** tab in addition to the terminal. Published workflows may declare optional **output** fields for reporting.
 
@@ -128,12 +128,12 @@ Reason codes: [Send readiness contract](../../agent-witch/send-readiness-reason-
 
 ## Query aliases
 
-- Agent Witch workflows, human checkpoints, workflow retry step
+- AgentWitch workflows, human checkpoints, workflow retry step
 - official workflow pause continue not now skip
 - workflow run vs task run Mac dispatch
-- upload PDF workflow Agent Witch summary artifact
-- quy trinh workflow Agent Witch, diem dung checkpoint
+- upload PDF workflow AgentWitch summary artifact
+- quy trinh workflow AgentWitch, diem dung checkpoint
 - thu lai buoc agent bi loi workflow
 - workflow cho nguoi dung lam gi truoc khi agent chay tiep
-- tai file PDF trong workflow Agent Witch
+- tai file PDF trong workflow AgentWitch
 - de tao workflow, bon tru cot de tao workflow, form workflow de hieu

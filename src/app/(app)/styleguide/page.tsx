@@ -19,7 +19,7 @@ import TablesSection from "@/features/styleguide/sections/TablesSection";
 export const metadata: Metadata = {
   title: `Design system | ${AGENT_WITCH_PRODUCT_NAME}`,
   description:
-    "Agent Witch design system reference for staff — brand, surfaces, buttons, alerts, forms, tables, and charts.",
+    "AgentWitch design system reference for staff — brand, surfaces, buttons, alerts, forms, tables, and charts.",
 };
 
 export default async function StyleguidePage() {

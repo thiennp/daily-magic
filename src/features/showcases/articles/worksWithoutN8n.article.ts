@@ -9,7 +9,7 @@ const worksWithoutN8n: ShowcaseArticle = {
   supportLevel: "partial",
   readMinutes: 4,
   whatYouNeed: [
-    "A connected computer with Agent Witch",
+    "A connected computer with AgentWitch",
     "A published workflow capability (form fields + assembled prompt)",
     "No n8n account or webhook setup",
   ],
@@ -17,7 +17,7 @@ const worksWithoutN8n: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "n8n is excellent for connecting APIs, cron jobs, and multi-step automations across cloud services. Agent Witch targets a different job: repeatable AI tasks on a real Mac, with teammates who can request runs from the browser.",
+        "n8n is excellent for connecting APIs, cron jobs, and multi-step automations across cloud services. AgentWitch targets a different job: repeatable AI tasks on a real Mac, with teammates who can request runs from the browser.",
       ],
     },
     {
@@ -25,13 +25,13 @@ const worksWithoutN8n: ShowcaseArticle = {
       bullets: [
         "Form fields you fill in (client name, week, folder)",
         "Those values assemble into a prompt template",
-        "Agent Witch runs Claude on the executor Mac",
+        "AgentWitch runs Claude on the executor Mac",
       ],
     },
     {
-      heading: "How Agent Witch stays simple",
+      heading: "How AgentWitch stays simple",
       paragraphs: [
-        "Library workflows are a clear form: fields assemble into a prompt, then your computer runs the job. Keep n8n or Zapier for SaaS glue when you need it—use Agent Witch for Mac-side AI work your team can request from the browser.",
+        "Library workflows are a clear form: fields assemble into a prompt, then your computer runs the job. Keep n8n or Zapier for SaaS glue when you need it—use AgentWitch for Mac-side AI work your team can request from the browser.",
       ],
     },
     {

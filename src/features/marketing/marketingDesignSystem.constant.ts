@@ -1,5 +1,5 @@
 /**
- * Agent Witch marketing / public-site design system (v2026).
+ * AgentWitch marketing / public-site design system (v2026).
  * Enterprise landing reference: gray-50 canvas, brand blue accents, navy dark
  * bands, border-first cards, tight display headings. Shared with AWL inline CSS
  * via `@agent-witch/shared/ui`.

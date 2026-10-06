@@ -3,16 +3,16 @@ description: AWC AWL AWB AWI deployable names, folders, and abbreviations
 alwaysApply: true
 ---
 
-# Agent Witch deployables (AWC, AWL, AWB, AWI)
+# AgentWitch deployables (AWC, AWL, AWB, AWI)
 
 Four deployables in one repo. Use **abbreviations** in chat and tickets.
 
 | Abbr | Name | Folder | Port / origin |
 | ---- | ---- | ------ | ------------- |
-| **AWC** | **Agent Witch Cloud** (folder `apps/console/`) | `apps/console/` (target) · today `src/app/` + `server.ts` | `www.agentwitch.com`, `localhost:3000` |
-| **AWL** | Agent Witch Local | `apps/live/` · today `scripts/agentWitchLocalApp*` | `127.0.0.1:43347` |
-| **AWB** | Agent Witch Bridge | `apps/bridge/` · today `scripts/agent-witch-wake-server.ts` | `127.0.0.1:47892` / `47893` |
-| **AWI** | Agent Witch Install | `apps/install/` · today `public/install/agent-witch/`, `scripts/agent-witch.ts` | Mac install dirs `~/.agent-witch`, `~/.local-agent-witch` |
+| **AWC** | **AgentWitch Cloud** (folder `apps/console/`) | `apps/console/` (target) · today `src/app/` + `server.ts` | `www.agentwitch.com`, `localhost:3000` |
+| **AWL** | AgentWitch Local | `apps/live/` · today `scripts/agentWitchLocalApp*` | `127.0.0.1:43347` |
+| **AWB** | AgentWitch Bridge | `apps/bridge/` · today `scripts/agent-witch-wake-server.ts` | `127.0.0.1:47892` / `47893` |
+| **AWI** | AgentWitch Install | `apps/install/` · today `public/install/agent-witch/`, `scripts/agent-witch.ts` | Mac install dirs `~/.agent-witch`, `~/.local-agent-witch` |
 
 - **AWL** is a real Mac product app, not a debug-only surface.
 - **AWB** is browser-on-same-Mac glue for AWC; **AWL** is the dedicated Mac UI.

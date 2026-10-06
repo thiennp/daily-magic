@@ -109,14 +109,14 @@ export const pollAgentWitchCommand = async (
   );
 
   if (!response.ok) {
-    throw new Error(`Agent Witch command poll failed (${response.status})`);
+    throw new Error(`AgentWitch command poll failed (${response.status})`);
   }
 
   const body: unknown = await response.json();
   const parsed = parseAgentWitchPollResponse(body);
 
   if (!parsed.ok) {
-    throw new Error("Agent Witch command poll returned invalid payload");
+    throw new Error("AgentWitch command poll returned invalid payload");
   }
 
   return parsed.commandMessage;

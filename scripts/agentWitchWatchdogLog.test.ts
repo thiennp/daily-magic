@@ -28,7 +28,7 @@ describe("agentWitchWatchdogLog", () => {
       {
         event: "check_complete",
         ok: true,
-        message: "All Agent Witch WebSocket connections are healthy.",
+        message: "All AgentWitch WebSocket connections are healthy.",
         targets: [],
       },
       installDir,

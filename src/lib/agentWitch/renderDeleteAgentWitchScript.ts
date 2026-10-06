@@ -16,11 +16,11 @@ LAUNCH_AGENTS_DIR="\${HOME}/Library/LaunchAgents"
 UID_NUM="\$(id -u)"
 
 if [[ "\$(uname -s)" != "Darwin" ]]; then
-  echo "Agent Witch local uninstall is only supported on macOS." >&2
+  echo "AgentWitch local uninstall is only supported on macOS." >&2
   exit 1
 fi
 
-echo "Stopping Agent Witch processes…"
+echo "Stopping AgentWitch processes…"
 pkill -f "\${INSTALL_DIR}/${AGENT_WITCH_APP_DIR_NAME}/agent-witch.js" 2>/dev/null || true
 pkill -f "\${INSTALL_DIR}/agent-witch.ts" 2>/dev/null || true
 pkill -f "\${INSTALL_DIR}/${AGENT_WITCH_APP_DIR_NAME}/${AGENT_WITCH_COMMAND_DIR_NAME}/run.sh" 2>/dev/null || true
@@ -50,6 +50,6 @@ else
   echo "No install directory found at \${INSTALL_DIR}."
 fi
 
-echo "Agent Witch local install removed."
+echo "AgentWitch local install removed."
 `;
 };

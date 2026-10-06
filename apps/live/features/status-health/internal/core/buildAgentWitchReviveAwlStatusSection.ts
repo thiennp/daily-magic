@@ -55,9 +55,9 @@ export const buildAgentWitchReviveAwlStatusSection = (input: {
     : "";
 
   return `<section class="card">
-    <p class="eyebrow">Agent Witch Local</p>
+    <p class="eyebrow">AgentWitch Local</p>
     <h2>Revive local app (:${AGENT_WITCH_LIVE_APP_PORT})</h2>
-    <p class="lede muted">If this page loaded but the prompt optimizer or other Live pages fail, or if Agent Witch Cloud cannot open Status, restart the Agent Witch client on this computer.</p>${chooser}
+    <p class="lede muted">If this page loaded but the prompt optimizer or other Live pages fail, or if AgentWitch Cloud cannot open Status, restart the AgentWitch client on this computer.</p>${chooser}
     ${steps.map((step) => renderReviveStep(step, showLabels)).join("\n    ")}
   </section>`;
 };

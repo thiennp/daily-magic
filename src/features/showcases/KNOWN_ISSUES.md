@@ -52,7 +52,7 @@
 
 **Symptom:** `npm run e2e:capture-screenshots` timed out on authenticated pages (marketplace/home) even though the UI had rendered.
 
-**Root cause:** Live Agent Witch WebSocket / polling keeps the network busy, so Playwright `waitForLoadState("networkidle")` never settles. Default `playwright.config.ts` also ignored `capture-*.spec.ts`.
+**Root cause:** Live AgentWitch WebSocket / polling keeps the network busy, so Playwright `waitForLoadState("networkidle")` never settles. Default `playwright.config.ts` also ignored `capture-*.spec.ts`.
 
 **Fix:** Capture waits use `domcontentloaded`/`load` only; `playwright.capture.config.ts` runs capture specs; screenshots use `fullPage: true`. Related e2e helpers no longer wait for `networkidle` on app shell pages.
 
@@ -60,9 +60,9 @@
 
 ## SHOWCASES-006 — Self-delegate article screens need a live Mac for `test-self-*`
 
-**Symptom:** Regenerating `self-delegate-live-terminal.png` / `self-delegate-job-history.png` via `e2e/self-delegate.spec.ts` fails when Agent Witch is connected as a different profile (Mac shows “Last seen …” for `test-self-1`, not “connected”).
+**Symptom:** Regenerating `self-delegate-live-terminal.png` / `self-delegate-job-history.png` via `e2e/self-delegate.spec.ts` fails when AgentWitch is connected as a different profile (Mac shows “Last seen …” for `test-self-1`, not “connected”).
 
-**Workaround:** Capture those two article images from a signed-in admin session on localhost when the dedicated test Mac profile is unavailable; re-run self-delegate when `test-self-1@agentwitch.com` has a live Agent Witch link.
+**Workaround:** Capture those two article images from a signed-in admin session on localhost when the dedicated test Mac profile is unavailable; re-run self-delegate when `test-self-1@agentwitch.com` has a live AgentWitch link.
 
 ---
 
@@ -74,7 +74,7 @@
 
 ---
 
-## SHOWCASES-008 — Agent Witch restart crashed on `__dirname` in ESM
+## SHOWCASES-008 — AgentWitch restart crashed on `__dirname` in ESM
 
 **Symptom:** Manual restart via `npx tsx agent-witch.ts` / `run.sh` after profile edits threw `ReferenceError: __dirname is not defined in ES module scope` from `resolveAgentWitchLocalLayout.ts`.
 

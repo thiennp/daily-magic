@@ -31,7 +31,7 @@ export const requireAgentWitchDeviceAuth = async (
 
   if (pairingToken === null) {
     return Response.json(
-      { ok: false, error: "Agent Witch device token is required." },
+      { ok: false, error: "AgentWitch device token is required." },
       { status: 401 },
     );
   }
@@ -40,7 +40,7 @@ export const requireAgentWitchDeviceAuth = async (
 
   if (device === null || device.revokedAt !== null) {
     return Response.json(
-      { ok: false, error: "Unknown or revoked Agent Witch device." },
+      { ok: false, error: "Unknown or revoked AgentWitch device." },
       { status: 401 },
     );
   }

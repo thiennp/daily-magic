@@ -23,7 +23,7 @@ describe("join orchestrator", () => {
     });
     const lines = prompt.split(NL);
     expect(lines[0]).toBe(
-      "Goal: join this Agent Witch project via invite redeem.",
+      "Goal: join this AgentWitch project via invite redeem.",
     );
     const headings = lines
       .filter((line) => /^\d\. /.test(line))
@@ -41,7 +41,7 @@ describe("join orchestrator", () => {
       buildProjectInviteJoinPrompt({ inviteUrl: "not a url", projectId: "p" }),
     ).toBe(
       [
-        "Join this Agent Witch project via invite redeem.",
+        "Join this AgentWitch project via invite redeem.",
         "Could not parse invite token from the URL — ask the owner to create a new invite and Copy prompt again.",
         "Project id: p",
       ].join(NL),

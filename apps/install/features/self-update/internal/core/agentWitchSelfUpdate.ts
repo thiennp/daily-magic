@@ -195,7 +195,7 @@ export const runAgentWitchSelfUpdate = async (input?: {
       {
         ok: false,
         updated: false,
-        message: "Could not resolve the Agent Witch app origin for updates.",
+        message: "Could not resolve the AgentWitch app origin for updates.",
         remoteBundleVersion: null,
       },
       localBundleVersion,
@@ -216,7 +216,7 @@ export const runAgentWitchSelfUpdate = async (input?: {
       {
         ok: false,
         updated: false,
-        message: "Could not fetch the remote Agent Witch install bundle.",
+        message: "Could not fetch the remote AgentWitch install bundle.",
         remoteBundleVersion: null,
       },
       localBundleVersion,
@@ -310,7 +310,7 @@ export const runAgentWitchSelfUpdate = async (input?: {
       {
         ok: true,
         updated: true,
-        message: `Updated Agent Witch bundle ${localBundleVersion ?? "unknown"} -> ${manifest.bundleVersion}.`,
+        message: `Updated AgentWitch bundle ${localBundleVersion ?? "unknown"} -> ${manifest.bundleVersion}.`,
         remoteBundleVersion: manifest.bundleVersion,
       },
       manifest.bundleVersion,
@@ -327,7 +327,7 @@ export const runAgentWitchSelfUpdate = async (input?: {
     const message =
       error instanceof Error
         ? error.message
-        : "Agent Witch self-update failed.";
+        : "AgentWitch self-update failed.";
     const result = buildSelfUpdateResult(
       {
         ok: false,

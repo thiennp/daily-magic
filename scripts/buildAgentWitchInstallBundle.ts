@@ -49,14 +49,14 @@ var __agentWitchImportMetaUrl=require("url").pathToFileURL(__filename).href;`,
     workspaceRoot,
     appDir: outDir,
   });
-  process.stdout.write(`Built Agent Witch bundle -> ${outfile}\n`);
+  process.stdout.write(`Built AgentWitch bundle -> ${outfile}\n`);
   process.stdout.write(
-    `Built Agent Witch deps archive -> ${path.join(outDir, path.basename(depsArchiveRelativePath))}\n`,
+    `Built AgentWitch deps archive -> ${path.join(outDir, path.basename(depsArchiveRelativePath))}\n`,
   );
 };
 
 void buildAgentWitchInstallBundle().catch((error: unknown) => {
   const message = error instanceof Error ? error.message : String(error);
-  process.stderr.write(`Failed to build Agent Witch bundle: ${message}\n`);
+  process.stderr.write(`Failed to build AgentWitch bundle: ${message}\n`);
   process.exit(1);
 });

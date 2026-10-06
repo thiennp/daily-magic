@@ -25,7 +25,7 @@ const buildDefaultOperatorHarnessItem = (
           "3. Reply in the live terminal when the agent asks for confirmation.",
         ].join("\n")
       : [
-          "1. Confirm Agent Witch is running on your computer.",
+          "1. Confirm AgentWitch is running on your computer.",
           "2. Verify the computer is online in the task composer before sending.",
           "3. Reply in the live terminal when the agent asks for confirmation.",
         ].join("\n"),

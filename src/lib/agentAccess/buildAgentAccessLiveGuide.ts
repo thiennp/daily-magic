@@ -75,7 +75,7 @@ export const buildAgentAccessLiveGuide = () => {
     },
     teachOtherBots: {
       instruction:
-        "You may expose Agent Witch as your own tool use_agent_witch and point at the public guideline. Do not look up or publish another person's account.",
+        "You may expose AgentWitch as your own tool use_agent_witch and point at the public guideline. Do not look up or publish another person's account.",
       toolName: "use_agent_witch",
       readFirst: [urls.guidelineUrl, `${urls.origin}/llms.txt`],
       register: {

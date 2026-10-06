@@ -22,7 +22,7 @@ describe("project layout v2 L5 Settings + Members", () => {
     expect(panel).not.toMatch(/border border-gray|rounded-xl border/);
     expect(copy).toContain('nameSave: "Save name"');
     expect(copy).toContain(
-      "Rename here on Cloud. Pick the folder and playbook in Agent Witch Local.",
+      "Rename here on Cloud. Pick the folder and playbook in AgentWitch Local.",
     );
     expect(copy).toContain(
       'historyTitle: "Save message history on my computer"',
@@ -30,7 +30,7 @@ describe("project layout v2 L5 Settings + Members", () => {
     expect(copy).toContain('dangerHeading: "Danger zone"');
     expect(copy).toContain('deleteConfirmGo: "Delete permanently"');
     expect(copy).toContain(
-      "Toggle this in Agent Witch Local on this computer.",
+      "Toggle this in AgentWitch Local on this computer.",
     );
     expect(copy).toContain(
       "members, invites, wake links, keys, and messages",

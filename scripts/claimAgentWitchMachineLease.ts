@@ -65,7 +65,7 @@ const writeLease = (leasePath: string, lease: AgentWitchMachineLease): void => {
 };
 
 /**
- * One Agent Witch bridge process per macOS user on this host.
+ * One AgentWitch bridge process per macOS user on this host.
  * Rejects another live PID whether that owner is the same user or another.
  */
 export const claimAgentWitchMachineLease = (input?: {

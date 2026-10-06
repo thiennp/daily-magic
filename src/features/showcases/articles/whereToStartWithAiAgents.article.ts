@@ -11,7 +11,7 @@ const whereToStartWithAiAgents: ShowcaseArticle = {
   whatYouNeed: [
     "Curiosity — no technical background required",
     "A free account when you are ready to try",
-    "A Mac with Agent Witch when you want to run real jobs",
+    "A Mac with AgentWitch when you want to run real jobs",
   ],
   tryNext: {
     label: "Follow the honest 15-minute onboard",
@@ -21,7 +21,7 @@ const whereToStartWithAiAgents: ShowcaseArticle = {
     {
       paragraphs: [
         "You have used ChatGPT. You have bookmarked prompts. Someone said agents are the future, and you nodded — then went back to copy-pasting the same message on Monday.",
-        "That gap is normal. Chat is easy. Repeatable work on a real computer, with your team, is harder — and that is exactly what Agent Witch is for.",
+        "That gap is normal. Chat is easy. Repeatable work on a real computer, with your team, is harder — and that is exactly what AgentWitch is for.",
       ],
     },
     {

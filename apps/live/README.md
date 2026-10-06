@@ -1,4 +1,4 @@
-# AWL — Agent Witch Local
+# AWL — AgentWitch Local
 
 Mac-local web app at `http://127.0.0.1:43347`.
 

@@ -16,7 +16,7 @@ describe("buildSignInEmailHtml", () => {
     "https://www.agentwitch.com/api/auth/callback/resend?token=abc";
   const logoUrl = `https://www.agentwitch.com${SIGN_IN_EMAIL_LOGO_PATH}`;
 
-  it("includes Agent Witch branding, CTA, fallback link, and safety copy", () => {
+  it("includes AgentWitch branding, CTA, fallback link, and safety copy", () => {
     const html = buildSignInEmailHtml({
       url: signInUrl,
       host: "www.agentwitch.com",

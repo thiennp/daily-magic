@@ -54,5 +54,5 @@ export const wakeAgentWitchLaunchAgents =
 export const reviveAgentWitchWebSocketFromWakeServer =
   reviveAgentWitchWebSocket;
 
-/** Kickstart Agent Witch, verify WS health, and reinstall from install script when revive fails. */
+/** Kickstart AgentWitch, verify WS health, and reinstall from install script when revive fails. */
 export const restartAgentWitchFromWakeServer = reviveAgentWitchWebSocket;

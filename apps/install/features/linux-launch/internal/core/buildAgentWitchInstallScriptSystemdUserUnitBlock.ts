@@ -29,7 +29,7 @@ agent_witch_install_linux_systemd_user_unit() {
 
   cat > "\${unit_path}" <<EOF
 [Unit]
-Description=Agent Witch client
+Description=AgentWitch client
 After=network-online.target
 Wants=network-online.target
 

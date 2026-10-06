@@ -364,7 +364,7 @@ const dispatchWriterTask = async (
       payload: {
         exitCode: -1,
         output:
-          "This project has no folder on this computer yet. Open Agent Witch Local and set the project folder before running tasks.",
+          "This project has no folder on this computer yet. Open AgentWitch Local and set the project folder before running tasks.",
         ...(agentRunId !== undefined ? { agentRunId } : {}),
       },
       requestId,
@@ -1436,7 +1436,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
             payload: {
               exitCode: -1,
               output:
-                "This project has no folder on this computer yet. Open Agent Witch Local and set the project folder before running tasks.",
+                "This project has no folder on this computer yet. Open AgentWitch Local and set the project folder before running tasks.",
               ...(agentRunId !== undefined ? { agentRunId } : {}),
             },
             requestId,
@@ -2040,7 +2040,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         return {
           ok: false,
           errorMessage:
-            "Not connected to Agent Witch — manifest saved locally only.",
+            "Not connected to AgentWitch — manifest saved locally only.",
         };
       }
 
@@ -2061,11 +2061,11 @@ const main = async (): Promise<void> => {
     if (process.platform === "darwin") {
       await kickstartAgentWitchClientLaunchAgents(installDir);
       process.stdout.write(
-        "[agent-witch] Another Agent Witch process already owns this Mac user lease — kickstarted LaunchAgent and exiting.\n",
+        "[agent-witch] Another AgentWitch process already owns this Mac user lease — kickstarted LaunchAgent and exiting.\n",
       );
     } else {
       process.stdout.write(
-        "[agent-witch] Another Agent Witch process may already be running — exiting.\n",
+        "[agent-witch] Another AgentWitch process may already be running — exiting.\n",
       );
     }
     process.exit(0);

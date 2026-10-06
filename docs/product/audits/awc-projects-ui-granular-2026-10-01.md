@@ -108,7 +108,7 @@ Weighted score: **52** (dimension scores × weights, rounded).
     "title": "Align list metrics with product vocabulary",
     "severity": "medium",
     "rationale": "\"Harness\" on cards conflicts with philosophy (user-facing Playbook). Always-zero counts add noise.",
-    "suggestedDirection": "Rename to Playbook-aligned labels; hide the metrics row when all zero or replace with one line (e.g. \"Composition on computer — open in Agent Witch Local\")."
+    "suggestedDirection": "Rename to Playbook-aligned labels; hide the metrics row when all zero or replace with one line (e.g. \"Composition on computer — open in AgentWitch Local\")."
   },
   {
     "id": "MF-04",

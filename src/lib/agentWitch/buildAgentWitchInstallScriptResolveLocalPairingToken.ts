@@ -84,7 +84,7 @@ if [[ -z "\${PAIRING_TOKEN}" ]]; then
     if [[ "\${has_local_config}" == "1" ]]; then
       echo "Warning: no pairing token in local config — updating app files only. Reconnect this computer from Home if sync stops." >&2
     else
-      echo "No linked computer identity found in your local Agent Witch config. Connect this computer from Home first." >&2
+      echo "No linked computer identity found in your local AgentWitch config. Connect this computer from Home first." >&2
       exit 1
     fi
   else

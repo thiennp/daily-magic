@@ -29,7 +29,7 @@ const runAgainWithoutRetyping: ShowcaseArticle = {
     {
       heading: "Habit, not novelty",
       paragraphs: [
-        "Products stick when repetition is easy. One-tap rerun turns Agent Witch from experiment into the place you go every Monday — not another lost chat thread. History lives with this browser session, so keep using the same browser for the weekly habit.",
+        "Products stick when repetition is easy. One-tap rerun turns AgentWitch from experiment into the place you go every Monday — not another lost chat thread. History lives with this browser session, so keep using the same browser for the weekly habit.",
       ],
     },
   ],

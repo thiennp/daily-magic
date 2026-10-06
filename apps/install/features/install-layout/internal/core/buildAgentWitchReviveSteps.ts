@@ -88,7 +88,7 @@ const buildWindowsReviveStep = (): AgentWitchReviveStep => ({
     "On this computer, open PowerShell, paste these commands, and press Enter.",
   command: `wsl.exe -e bash -lc 'systemctl --user restart ${AGENT_WITCH_SYSTEMD_USER_UNIT_NAME}'
 wsl.exe -e bash -lc 'systemctl --user status ${AGENT_WITCH_SYSTEMD_USER_UNIT_NAME}'`,
-  note: "Agent Witch runs inside WSL on Windows. These commands use your default WSL distro; if you installed into another distro, add -d <distro name> after wsl.exe.",
+  note: "AgentWitch runs inside WSL on Windows. These commands use your default WSL distro; if you installed into another distro, add -d <distro name> after wsl.exe.",
 });
 
 const REVIVE_STEP_BUILDERS: Readonly<
@@ -109,7 +109,7 @@ const ALL_REVIVE_PLATFORMS: readonly AgentWitchReviveKnownPlatform[] = [
 ];
 
 /**
- * Revive / reconnect help for the Agent Witch client on this computer.
+ * Revive / reconnect help for the AgentWitch client on this computer.
  * Known OS → one step; unknown OS → one step per supported OS (neutral fallback).
  */
 export const buildAgentWitchReviveSteps = (

@@ -35,7 +35,7 @@ export default function MarketingProductPreview() {
 
       <aside
         aria-hidden
-        aria-label="Illustration of Agent Witch task queue on organization Macs"
+        aria-label="Illustration of AgentWitch task queue on organization Macs"
         className={MARKETING_MOCK_SHELL_CLASSES}
       >
         <header className="flex items-center justify-between gap-3 border-b border-gray-200 bg-white px-4 py-3">

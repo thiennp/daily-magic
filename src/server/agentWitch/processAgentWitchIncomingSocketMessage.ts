@@ -27,7 +27,7 @@ export const processAgentWitchIncomingSocketMessage = async (
     sendAgentWitchSocketMessage(socket, {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
-        errorMessage: "Invalid Agent Witch message payload.",
+        errorMessage: "Invalid AgentWitch message payload.",
       },
     });
     return;
@@ -51,7 +51,7 @@ export const processAgentWitchIncomingSocketMessage = async (
     sendAgentWitchSocketMessage(socket, {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
-        errorMessage: "Send agent.register before other Agent Witch messages.",
+        errorMessage: "Send agent.register before other AgentWitch messages.",
       },
       requestId: message.requestId,
     });

@@ -1,6 +1,6 @@
 # Task composer
 
-Compose and send tasks to Mac via Agent Witch.
+Compose and send tasks to Mac via AgentWitch.
 
 ## Registry
 

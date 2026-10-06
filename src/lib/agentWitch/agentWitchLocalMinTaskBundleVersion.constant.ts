@@ -1,5 +1,5 @@
 /**
- * Minimum Agent Witch Local install bundle that may take project tasks on a
+ * Minimum AgentWitch Local install bundle that may take project tasks on a
  * computer membership seat. Owned by AW Mac; Dispatch reuses this for the
  * assignability gate. Starts at the Connect floor; bump independently when a
  * project-task-specific AWL handler lands.

@@ -145,7 +145,7 @@ export const reinstallAgentWitchFromInstallScript = async (input?: {
       errorMessage:
         error instanceof Error
           ? error.message
-          : "Agent Witch reinstall script failed.",
+          : "AgentWitch reinstall script failed.",
     };
   } finally {
     if (fs.existsSync(tempScriptPath)) {

@@ -81,7 +81,7 @@ export const buildLocalHarnessRevealClientScript = (): string => `(() => {
   document.getElementById("pickFolder")?.addEventListener("click", async () => {
     const status = document.getElementById("pickFolderStatus");
     const unavailableMessage =
-      "Folder picker is only available on the computer that runs Agent Witch. Type the folder path instead.";
+      "Folder picker is only available on the computer that runs AgentWitch. Type the folder path instead.";
     const showPickerUnavailable = () => {
       if (status instanceof HTMLElement) {
         status.textContent = unavailableMessage;
@@ -253,7 +253,7 @@ export const buildAgentWitchLocalHarnessPageBody = (input: {
   const cloudBanner = buildAgentWitchLocalCloudBanner({
     cloudAppOrigin: input.cloudAppOrigin,
     manageHref: `${input.cloudAppOrigin}/marketplace`,
-    manageLabel: "Install playbooks in Agent Witch Cloud",
+    manageLabel: "Install playbooks in AgentWitch Cloud",
     body: "Install and update playbooks in the browser; this computer keeps a copy under your profile harness. Use Projects to link sets into a repo’s .cursor tree.",
   });
 
@@ -281,7 +281,7 @@ export const buildAgentWitchLocalHarnessPageBody = (input: {
   const importCollapsed = !input.importSectionExpanded;
   const importToggle = importCollapsed
     ? `<section class="card">
-        <p class="muted">Advanced: pull rules from an existing folder on disk (does not replace installing from Agent Witch Cloud).</p>
+        <p class="muted">Advanced: pull rules from an existing folder on disk (does not replace installing from AgentWitch Cloud).</p>
         <div class="actions">
           <a class="btn btn-secondary" href="/harness?import=1">Import from folder…</a>
         </div>
@@ -293,7 +293,7 @@ export const buildAgentWitchLocalHarnessPageBody = (input: {
     : `<section class="card">
       <p class="eyebrow">Advanced</p>
       <h1>Import from disk</h1>
-      <p class="lede">Scan a folder for existing <code>.cursor</code> rules and copy them into the profile harness on this computer. Prefer installing playbooks from Agent Witch Cloud when possible.</p>
+      <p class="lede">Scan a folder for existing <code>.cursor</code> rules and copy them into the profile harness on this computer. Prefer installing playbooks from AgentWitch Cloud when possible.</p>
       <div class="stack">
         <label class="field">
           <span class="field-label">Scan folder (required)</span>

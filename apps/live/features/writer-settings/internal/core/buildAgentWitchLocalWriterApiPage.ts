@@ -105,7 +105,7 @@ export const buildAgentWitchLocalWriterApiPageBody = (input: {
         <fieldset class="field">
           <span class="field-label">Execution</span>
           <label><input type="radio" name="writerExecutionBackend" value="cli"${cliChecked} /> Local CLI (default)</label>
-          <label><input type="radio" name="writerExecutionBackend" value="api"${apiChecked} /> API key + Agent Witch script</label>
+          <label><input type="radio" name="writerExecutionBackend" value="api"${apiChecked} /> API key + AgentWitch script</label>
         </fieldset>
         <p class="muted">Maps: Claude → Anthropic, Codex → OpenAI, Antigravity → Google Gemini. Cursor still requires CLI or Cursor Cloud on the website.</p>
         ${buildApiKeyField(input.secrets, "anthropic", "anthropicApiKey", "Anthropic", "sk-ant-…")}

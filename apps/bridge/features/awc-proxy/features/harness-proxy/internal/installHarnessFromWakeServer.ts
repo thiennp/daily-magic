@@ -26,7 +26,7 @@ export const installHarnessFromWakeServer = (
   if (!isAgentWitchWakeServerAllowedOrigin(appOrigin)) {
     return {
       ok: false,
-      errorMessage: "appOrigin is not an allowed Agent Witch site.",
+      errorMessage: "appOrigin is not an allowed AgentWitch site.",
     };
   }
 

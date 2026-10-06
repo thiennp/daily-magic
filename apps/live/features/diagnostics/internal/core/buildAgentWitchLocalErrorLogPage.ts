@@ -32,7 +32,7 @@ export const buildAgentWitchLocalErrorLogPageBody = (input: {
   return `${clearedAlert}<section class="card">
       <p class="eyebrow">Diagnostics</p>
       <h1>Error log</h1>
-      <p class="lede">Tail of the Agent Witch client stderr log on this computer (newest lines at the bottom). New entries are prefixed with a UTC timestamp (<code>YYYY-MM-DDTHH:MM:SSZ</code>).</p>
+      <p class="lede">Tail of the AgentWitch client stderr log on this computer (newest lines at the bottom). New entries are prefixed with a UTC timestamp (<code>YYYY-MM-DDTHH:MM:SSZ</code>).</p>
       <p class="muted mono">${escapeHtml(input.errorLogPath)} · ${input.byteSize.toLocaleString("en-US")} bytes</p>
       ${truncatedNote}
       ${body}

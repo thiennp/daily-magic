@@ -56,7 +56,7 @@ export default function AwcProjectDetailPrimaryColumn({
         />
         <p className={APP_SURFACE_BODY_TEXT_CLASS}>
           Rename here in Cloud. Choose folders and playbooks on{" "}
-          {deviceDisplayName} in Agent Witch Local.
+          {deviceDisplayName} in AgentWitch Local.
         </p>
       </header>
 
@@ -102,7 +102,7 @@ export default function AwcProjectDetailPrimaryColumn({
             <dt className={AWC_PROJECT_DETAIL_META_LABEL_CLASS}>Composition</dt>
             <dd className="mt-1 text-sm text-gray-800 dark:text-white/90">
               {formatProjectCompositionCountsLine(counts) ??
-                "Open in Agent Witch Local to bind playbooks"}
+                "Open in AgentWitch Local to bind playbooks"}
             </dd>
           </div>
         </dl>

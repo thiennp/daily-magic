@@ -37,7 +37,7 @@ export default function CreatePlaybookPanel({
             Create a Playbook
           </h2>
           <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-            A Playbook is how Agent Witch runs Tasks on your computer. Start
+            A Playbook is how AgentWitch runs Tasks on your computer. Start
             with a workflow or a single agent—questions become a typed form,
             then you add human steps and specialists.
           </p>

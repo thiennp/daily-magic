@@ -56,7 +56,7 @@ const reviveMac = async (
           platform: "mac",
           outcome: "failed",
           message:
-            "No Agent Witch LaunchAgent was kickstarted on this computer.",
+            "No AgentWitch LaunchAgent was kickstarted on this computer.",
           manualCommand,
         };
   } catch (error) {
@@ -104,7 +104,7 @@ const reviveLinux = async (
 };
 
 /**
- * Restart the Agent Witch client on this computer for its OS: launchctl only on macOS,
+ * Restart the AgentWitch client on this computer for its OS: launchctl only on macOS,
  * the systemd user unit on Linux (incl. WSL), and a clear unsupported result elsewhere.
  * Never throws; `platform` is passed in (e.g. `process.platform`).
  */
@@ -139,7 +139,7 @@ export const reviveAgentWitchClientProcess = async (input: {
       platform,
       outcome: "unsupported-platform",
       message:
-        "Agent Witch runs inside WSL on Windows. Restart it from PowerShell with the command below.",
+        "AgentWitch runs inside WSL on Windows. Restart it from PowerShell with the command below.",
       manualCommand: manualCommandFor("windows"),
     };
   }
@@ -147,7 +147,7 @@ export const reviveAgentWitchClientProcess = async (input: {
     ok: false,
     platform,
     outcome: "unsupported-platform",
-    message: `Restarting the Agent Witch client is not supported on ${input.platform || "this platform"}.`,
+    message: `Restarting the AgentWitch client is not supported on ${input.platform || "this platform"}.`,
     manualCommand: null,
   };
 };

@@ -7,7 +7,7 @@ agent_witch_try_install_node_via_linux_tarball() {
     return 1
   fi
   if [[ "\$(uname -m)" != "x86_64" ]]; then
-    echo "Agent Witch Linux host v1 supports x86_64 only." >&2
+    echo "AgentWitch Linux host v1 supports x86_64 only." >&2
     return 1
   fi
 

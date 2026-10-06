@@ -19,7 +19,7 @@
 | Area             | Production reference (1440)                                         | After-fix                                                               | Verdict                                              |
 | ---------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------- |
 | Primary nav      | Floating card panel above content; brand + “AWL …” inside nav card  | Left **column rail** in `md+` grid; links only in rail (no nested card) | **Improved** — matches P0-SHELL-01 workspace pattern |
-| Header (desktop) | Brand only inside nav card; header row is actions-only on the right | **Agent Witch** logo/wordmark in header left; actions right             | **Improved** — P0-SHELL-02; clearer global chrome    |
+| Header (desktop) | Brand only inside nav card; header row is actions-only on the right | **AgentWitch** logo/wordmark in header left; actions right             | **Improved** — P0-SHELL-02; clearer global chrome    |
 | Layout grid      | Nav card and main content feel stacked/disconnected                 | Sidebar + main in one `max-w-[1600px]` grid; sticky rail under header   | **Improved**                                         |
 | 1280px           | (not captured for prod)                                             | Rail + header brand remain stable; no overlap or collapse               | **Pass**                                             |
 

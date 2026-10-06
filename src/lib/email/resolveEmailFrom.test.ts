@@ -19,7 +19,7 @@ describe("resolveEmailFrom", () => {
   });
 
   it("returns a configured sender address", () => {
-    process.env.EMAIL_FROM = "Agent Witch <noreply@agentwitch.com>";
-    expect(resolveEmailFrom()).toBe("Agent Witch <noreply@agentwitch.com>");
+    process.env.EMAIL_FROM = "AgentWitch <noreply@agentwitch.com>";
+    expect(resolveEmailFrom()).toBe("AgentWitch <noreply@agentwitch.com>");
   });
 });

@@ -31,7 +31,7 @@ export const SEND_READINESS_BANNER_COPY: Record<
   },
   offline: {
     title: "Mac offline",
-    body: "Agent Witch can’t reach your computer right now.",
+    body: "AgentWitch can’t reach your computer right now.",
     severity: "danger",
     blocksSend: true,
     primaryCta: { label: "Retry", action: "retry" },

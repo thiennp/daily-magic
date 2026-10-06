@@ -29,7 +29,7 @@ export const AGENT_B1_PART3: readonly PresetHarnessSeed[] = [
         "Provide commands with comments.",
         "Flag destructive steps explicitly.",
       ],
-      instructionAddendum: "Agent Witch runs on owner's Mac.",
+      instructionAddendum: "AgentWitch runs on owner's Mac.",
       subagentMission:
         "You are the shell subagent. Suggest safe, explainable macOS commands.",
       subagentExpertise: ["macOS CLI", "Safety", "File operations"],

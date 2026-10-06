@@ -31,7 +31,7 @@ export async function GET(request: Request): Promise<Response> {
     return error;
   }
 
-  // Mobile clients never reach Agent Witch Local; skip the loopback fetch.
+  // Mobile clients never reach AgentWitch Local; skip the loopback fetch.
   if (isMobileRequest(request.headers)) {
     return new Response(null, { status: 503 });
   }

@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Agent Witch real examples";
+export const alt = "AgentWitch real examples";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -42,7 +42,7 @@ export default function Image() {
             maxWidth: 1000,
           }}
         >
-          See how teams use Agent Witch
+          See how teams use AgentWitch
         </div>
         <div
           style={{

@@ -56,7 +56,7 @@ describe("runCheckContextHook (Claude UserPromptSubmit)", () => {
       status: "hit",
       projectId: "p1",
       pitfalls: [{ id: "sqlite-busy", avoidance: "set busy_timeout" }],
-      tip: "Agent Witch tip · check_context\nsqlite-busy|set busy_timeout",
+      tip: "AgentWitch tip · check_context\nsqlite-busy|set busy_timeout",
     }));
     expect(out.code).toBe(0);
     expect(out.runCheckContext).toHaveBeenCalledWith({
@@ -67,7 +67,7 @@ describe("runCheckContextHook (Claude UserPromptSubmit)", () => {
     expect(parseContext(out.stdout)).toEqual({
       hookEventName: "UserPromptSubmit",
       additionalContext:
-        "Agent Witch tip · check_context\nsqlite-busy|set busy_timeout",
+        "AgentWitch tip · check_context\nsqlite-busy|set busy_timeout",
     });
     expect(out.stderr).toBe("");
   });

@@ -2,7 +2,7 @@
 
 Connecting a **Mac** means installing the helper, pairing it to your account, and keeping it healthy enough for **Tasks** to become **Runs**. This chapter uses user vocabulary from [UX simplification](../../product/ux-simplification.md); engineers map the same pieces to **AWI** (install/runtime), **AWB** (bridge), **AWL** (Mac app), and **AWC** (browser Console)—see [deployables](../../product/agent-witch-deployables.md).
 
-Pairing and honest **Mac status** are the trust foundation for every pillar: agents run on hardware you control, and the Console tells you when dispatch is not ready instead of faking success ([Chapter 8 — Production and trust](08-production-and-trust.md), [four pillars](00-philosophy-and-vocabulary.md#four-pillars)). **Efficient memory** also has a computer side—the **Agent Witch on this computer** app holds project folders and local run context ([Chapter 5](05-tasks-dispatch-and-runs.md)).
+Pairing and honest **Mac status** are the trust foundation for every pillar: agents run on hardware you control, and the Console tells you when dispatch is not ready instead of faking success ([Chapter 8 — Production and trust](08-production-and-trust.md), [four pillars](00-philosophy-and-vocabulary.md#four-pillars)). **Efficient memory** also has a computer side—the **AgentWitch on this computer** app holds project folders and local run context ([Chapter 5](05-tasks-dispatch-and-runs.md)).
 
 ---
 
@@ -31,7 +31,7 @@ On a computer with Apple Silicon, open [/download](https://www.agentwitch.com/do
 
 ### Production (most users)
 
-On macOS, from Agent Witch Home while signed in:
+On macOS, from AgentWitch Home while signed in:
 
 ```bash
 curl -fsSL https://www.agentwitch.com/install/agent-witch.sh | bash
@@ -39,7 +39,7 @@ curl -fsSL https://www.agentwitch.com/install/agent-witch.sh | bash
 
 Follow on-screen prompts. The bundle version on the server should match or exceed what Home expects; mismatches show **Update needed** on the composer ([send readiness — `update_needed`](../../agent-witch/send-readiness-reason-codes.md)).
 
-In the signed-in Console, the primary nav home link (“Agent Witch”) shows the **latest compatible Mac install version** this Console ships (for example `AWL 157`). That is the cloud’s expected install bundle—not the version on a particular paired computer. Each Mac row under **Mac & devices** still reports that Mac’s own version (or **Version unknown** when the helper has not reported one yet).
+In the signed-in Console, the primary nav home link (“AgentWitch”) shows the **latest compatible Mac install version** this Console ships (for example `AWL 157`). That is the cloud’s expected install bundle—not the version on a particular paired computer. Each Mac row under **Mac & devices** still reports that Mac’s own version (or **Version unknown** when the helper has not reported one yet).
 
 ### Local development (engineers)
 
@@ -59,7 +59,7 @@ Requires `npm run dev` (custom `server.ts`) so WebSocket upgrades work—not pla
 | User-facing name                           | URL / port                                                                    | Use it for                                                                                                       |
 | ------------------------------------------ | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | **Mac bridge** (wake server)               | `http://127.0.0.1:47892` (prod install) or `47893` (localhost-origin install) | Identity for **This computer** badge, watchdog, harness install proxy, self-update from browser on same computer |
-| **Agent Witch on this computer** (Mac app) | `http://127.0.0.1:43347`                                                      | Projects/folders, local tasks, playbooks, memory, connection health UI                                           |
+| **AgentWitch on this computer** (Mac app) | `http://127.0.0.1:43347`                                                      | Projects/folders, local tasks, playbooks, memory, connection health UI                                           |
 | **Console**                                | `https://www.agentwitch.com`                                                  | Daily **Tasks** and **Runs**                                                                                     |
 
 **Prompt optimizer** is in the console navigation. That page tells you to run the **prompt optimizer** in the Mac app at `http://127.0.0.1:43347/prompt-optimizer`. The console does not run the optimizer. Live picks up optimizer changes only after the computer updates its install. If the page still looks old, update the computer so its bundle matches the console. Instructions and a sample you can run are at `http://127.0.0.1:43347/prompt-optimizer/guide`. **Run** starts the four-step wizard (generalize → evaluate → separate → optimize modules). Wizard evaluate uses pass score **70** and up to **5** scored revisions; step 4 runs one runner trial per module. History shows a short title for each run, and Delete removes that run. Steps in a run are a timeline. Click a step to open the score, the feedback, and the prompt saved for that step. After you choose a folder, a skill list shows the skills in that folder. Choosing one fills the prompt. Type a measurable goal, choose judge, improver, and runner, then use the sticky **Run** bar. While a wizard is working, compose fields stay locked; use **End wizard** or **Skip module** during step 4. The folder, judge, improver, and runner you last chose are filled in the next time you open the page. The first visit uses your home directory and leaves those roles blank until you choose them. Each role has an optional instructions field. An info icon on each field shows a best practice and an example. Each list includes I'll score it and I'll rewrite it. A score needs a reason. When the wizard finishes, the page shows the best prompts per module. Save as a skill starts from that skill’s name, description, and file name. A writer that has already checked out stays ready until that writer returns an error.
@@ -87,7 +87,7 @@ Opening **Connect this computer** again replaces the unused link. It does not ad
 
 **Do not use hostname alone** to guess ownership—two accounts on one physical Mac used to both look local; matching uses **token hash** ([Q&A](../../qa/awc-how-browser-knows-this-computer.md)).
 
-If Agent Witch is already running on this computer, the click still only reserves a cloud link. Paste the command to write that link into this account, replace an outdated install, and restart the helper. Removing the computer in the Console deletes that cloud identity. A current install then stops the helper and the bridge and removes the connection and the shipped app code. Your projects, Playbooks, reports, runs, and Ollama stay. **Update local** does not create a new link after that removal. **Connect this computer** does ([Q&A](../../qa/awc-delete-mac-forgets-local-connection.md)).
+If AgentWitch is already running on this computer, the click still only reserves a cloud link. Paste the command to write that link into this account, replace an outdated install, and restart the helper. Removing the computer in the Console deletes that cloud identity. A current install then stops the helper and the bridge and removes the connection and the shipped app code. Your projects, Playbooks, reports, runs, and Ollama stay. **Update local** does not create a new link after that removal. **Connect this computer** does ([Q&A](../../qa/awc-delete-mac-forgets-local-connection.md)).
 
 ---
 
@@ -119,15 +119,15 @@ User word: **Playbook**. Internal word: harness.
 
 ## Repositories and folders (Mac-side)
 
-The Console cannot open a native folder picker for a real `/Users/...` path. Set or change project folders in **Agent Witch on this computer** or via bridge APIs used by the Mac app ([folder picker Q&A](../../qa/awc-project-folder-path-picker.md), [AWL vs AWC projects](../../qa/awc-awl-projects-source-of-truth.md)).
+The Console cannot open a native folder picker for a real `/Users/...` path. Set or change project folders in **AgentWitch on this computer** or via bridge APIs used by the Mac app ([folder picker Q&A](../../qa/awc-project-folder-path-picker.md), [AWL vs AWC projects](../../qa/awc-awl-projects-source-of-truth.md)).
 
-Sending a task starts the writer CLI in that project folder. Update **Agent Witch on this computer** when the Console offers a newer install, so an older Mac app does not keep starting tasks in the install workspace.
+Sending a task starts the writer CLI in that project folder. Update **AgentWitch on this computer** when the Console offers a newer install, so an older Mac app does not keep starting tasks in the install workspace.
 
 ---
 
 ## Local knowledge (Mac app — efficient memory)
 
-In **Agent Witch on this computer**, open **Knowledge** (`http://127.0.0.1:43347/knowledge`) to see text the computer saved from **finished Runs** on a linked project folder and how often each snippet was reused in later **Tasks** (**efficient memory**, pillar 3).
+In **AgentWitch on this computer**, open **Knowledge** (`http://127.0.0.1:43347/knowledge`) to see text the computer saved from **finished Runs** on a linked project folder and how often each snippet was reused in later **Tasks** (**efficient memory**, pillar 3).
 
 | What you see             | What it means                                                                                                |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------ |
@@ -188,9 +188,9 @@ Chapter 9 (troubleshooting guide) expands FAQ-style flows.
 
 ## Query aliases
 
-- connect Mac Agent Witch, install helper, bridge wake server
-- Agent Witch on this computer 43347, update local reconnecting
+- connect Mac AgentWitch, install helper, bridge wake server
+- AgentWitch on this computer 43347, update local reconnecting
 - ket noi Mac, cai dat agent tren Mac, cap nhat local
 - AWB identity this computer, pairing token hash
-- Mac offline reconnecting fix Agent Witch
-- tin cay ket noi Mac, pairing an toan, bo nho tren may Mac Agent Witch
+- Mac offline reconnecting fix AgentWitch
+- tin cay ket noi Mac, pairing an toan, bo nho tren may Mac AgentWitch

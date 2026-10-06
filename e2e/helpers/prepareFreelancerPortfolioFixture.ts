@@ -3,7 +3,7 @@ import path from "node:path";
 import os from "node:os";
 
 /**
- * Copies committed portfolio fixtures into a Mac-readable path for Agent Witch.
+ * Copies committed portfolio fixtures into a Mac-readable path for AgentWitch.
  * Returns the absolute portfolio folder used in workflow field values.
  */
 export const prepareFreelancerPortfolioFixture = (): string => {

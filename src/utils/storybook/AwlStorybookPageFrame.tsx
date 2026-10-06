@@ -7,7 +7,7 @@ export default function AwlStorybookPageFrame({
 }) {
   return (
     <iframe
-      title="Agent Witch Live page preview"
+      title="AgentWitch Live page preview"
       srcDoc={html}
       className="min-h-screen w-full border-0 bg-white"
       style={{ minHeight: "100vh" }}

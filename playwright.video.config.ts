@@ -16,6 +16,6 @@ export default defineConfig({
       use: { ...devices["Desktop Chrome"], video: "on" },
     },
   ],
-  // Reuse the already-running local server with Agent Witch WS.
+  // Reuse the already-running local server with AgentWitch WS.
   webServer: undefined,
 });

@@ -74,7 +74,7 @@ describe("runAgentWitchSelfUpdate origin resolution", () => {
       updated: false,
       localBundleVersion: null,
       remoteBundleVersion: null,
-      message: "Could not fetch the remote Agent Witch install bundle.",
+      message: "Could not fetch the remote AgentWitch install bundle.",
     });
     expect(fs.existsSync(resolveAgentWitchLocalLayout().errorLogPath)).toBe(
       false,
@@ -114,7 +114,7 @@ describe("runAgentWitchSelfUpdate origin resolution", () => {
       `${savedOrigin}/install/agent-witch/version`,
     );
     expect(result.message).toBe(
-      "Could not fetch the remote Agent Witch install bundle.",
+      "Could not fetch the remote AgentWitch install bundle.",
     );
     expect(result.localBundleVersion).toBe("4");
   });
@@ -141,7 +141,7 @@ describe("runAgentWitchSelfUpdate origin resolution", () => {
       updated: true,
       localBundleVersion: "9",
       remoteBundleVersion: "9",
-      message: "Updated Agent Witch bundle unknown -> 9.",
+      message: "Updated AgentWitch bundle unknown -> 9.",
     });
   });
 });

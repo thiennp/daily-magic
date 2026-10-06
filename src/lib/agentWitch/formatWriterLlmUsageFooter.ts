@@ -14,7 +14,7 @@ export const formatWriterLlmUsageFooter = (usage: WriterLlmUsage): string => {
 
   return [
     "",
-    "— Agent Witch usage —",
+    "— AgentWitch usage —",
     `Model: ${usage.model} (${usage.provider})`,
     `Tokens: ${formatTokenCount(usage.inputTokens)} in / ${formatTokenCount(usage.outputTokens)} out (${formatTokenCount(usage.totalTokens)} total)`,
     costLine,
@@ -30,7 +30,7 @@ export const appendWriterLlmUsageFooter = (
   }
 
   const footer = formatWriterLlmUsageFooter(usage);
-  if (output.includes("— Agent Witch usage —")) {
+  if (output.includes("— AgentWitch usage —")) {
     return output;
   }
 

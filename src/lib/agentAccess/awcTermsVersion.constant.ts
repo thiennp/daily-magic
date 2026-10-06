@@ -1,7 +1,7 @@
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 
 /**
- * Current Agent Witch Terms version required at agent-access registration.
+ * Current AgentWitch Terms version required at agent-access registration.
  * Aligns with the Terms page last-updated date (September 16, 2026).
  */
 export const AWC_TERMS_VERSION = "2026-09-16" as const;

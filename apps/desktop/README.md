@@ -1,6 +1,6 @@
-# Agent Witch Local — desktop tray
+# AgentWitch Local — desktop tray
 
-Go system-tray companion for the existing Agent Witch install (`~/.agent-witch` + systemd user unit `agent-witch.service`).
+Go system-tray companion for the existing AgentWitch install (`~/.agent-witch` + systemd user unit `agent-witch.service`).
 
 - **Linux:** starts/stops the local systemd user unit (`internal/linux`).
 - **Windows:** tray runs on Windows and drives the same install inside the default WSL distro via `wsl.exe` (`internal/windows`); health uses localhost (WSL2 forwards it).
@@ -39,7 +39,7 @@ Releases are **manual only**. Cut a GitHub release with the owner’s explicit g
 
 - Linux amd64 and Windows amd64 (WSL2 backend). macOS tray is not in this package yet.
 - Tray uses `fyne.io/systray` (DBus StatusNotifierItem on Linux; native on Windows). Stock GNOME needs the AppIndicator extension.
-- Install Agent Witch via the terminal command first (on Linux host or inside WSL), then run this tray app.
+- Install AgentWitch via the terminal command first (on Linux host or inside WSL), then run this tray app.
 - Start = `systemctl --user enable --now` (survives re-login / WSL restart). Stop = `systemctl --user disable --now`. No separate in-menu launch-at-login toggle; on Windows the tray also registers itself in the per-user Run key.
 - State machine: `internal/core/transition_table.go` (allowed edges) + `apply_state_transition.go` (the only state writer). Starting/Stopping time out to Error after 30s; Stopping completes on `systemctl --user is-active` = inactive. Poll results carry the generation they started at and are dropped if a newer transition happened.
 - Tray autostart (`~/.config/autostart`) is not wired yet.

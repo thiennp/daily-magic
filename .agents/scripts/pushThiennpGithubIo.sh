@@ -41,7 +41,7 @@ if git diff --quiet; then
 fi
 
 git add index.html agent-witch-case-study.html
-git commit -m "docs: sync Agent Witch intro from daily-magic external/thiennp.github.io"
+git commit -m "docs: sync AgentWitch intro from daily-magic external/thiennp.github.io"
 git push origin "$BRANCH"
 
 echo "Pushed to ${REMOTE_REPO} (${BRANCH})."

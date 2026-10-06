@@ -69,7 +69,7 @@ export const requestLocalHarnessInstall = async (input: {
     return {
       ok: false,
       errorMessage:
-        "Agent Witch on this computer is not running. Run install first.",
+        "AgentWitch on this computer is not running. Run install first.",
     };
   }
 };

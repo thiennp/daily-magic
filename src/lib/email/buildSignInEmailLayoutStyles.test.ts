@@ -8,7 +8,7 @@ import {
 import buildSignInEmailLayoutStyles from "./buildSignInEmailLayoutStyles";
 
 describe("buildSignInEmailLayoutStyles", () => {
-  it("uses Agent Witch zinc marketing palette", () => {
+  it("uses AgentWitch zinc marketing palette", () => {
     const styles = buildSignInEmailLayoutStyles();
 
     expect(styles.heading).toContain(SIGN_IN_EMAIL_BRAND_COLOR);

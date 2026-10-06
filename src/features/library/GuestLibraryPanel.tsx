@@ -29,7 +29,7 @@ export default function GuestLibraryPanel({
   return (
     <div className="space-y-8 pb-8 md:pb-0">
       <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-        Draft Playbooks here without an account. A Playbook is how Agent Witch
+        Draft Playbooks here without an account. A Playbook is how AgentWitch
         knows what to do on your computer. Saves stay on this browser until you{" "}
         <Link
           href={buildSignInHref("/library")}

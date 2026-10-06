@@ -1,5 +1,5 @@
 ---
-description: Agent Witch user & developer guides — read before edits; update with behavior changes
+description: AgentWitch user & developer guides — read before edits; update with behavior changes
 globs:
   - src/lib/agentWitch/**
   - src/features/agent-witch/**
@@ -22,7 +22,7 @@ globs:
   - docs/guides/**
 ---
 
-# Agent Witch guides (required reading)
+# AgentWitch guides (required reading)
 
 ## Before substantive edits
 
@@ -58,5 +58,5 @@ Cursor **postToolUse** injects chapter reminders when you edit mapped paths. **s
 ## Do not
 
 - Contradict [UX simplification](../../docs/product/ux-simplification.md) user terms in user-guide chapters.
-- Document CHECK24 hosts as default Agent Witch production.
+- Document CHECK24 hosts as default AgentWitch production.
 - Split harness / library / marketplace into separate “runtimes” in guide prose.

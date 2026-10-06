@@ -25,7 +25,7 @@ export default function AgentLiveProgressStuckBanner({
             rel="noreferrer"
             className="font-medium underline underline-offset-2 hover:text-amber-950 dark:hover:text-white"
           >
-            Open Agent Witch
+            Open AgentWitch
           </a>{" "}
           on this computer, or try sending the task again.
         </>
@@ -37,7 +37,7 @@ export default function AgentLiveProgressStuckBanner({
           >
             Open Home
           </Link>{" "}
-          to wake Agent Witch, or try sending the task again.
+          to wake AgentWitch, or try sending the task again.
         </>
       )}
     </p>

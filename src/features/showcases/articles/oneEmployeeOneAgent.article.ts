@@ -9,7 +9,7 @@ const oneEmployeeOneAgent: ShowcaseArticle = {
   supportLevel: "partial",
   readMinutes: 4,
   whatYouNeed: [
-    "Each teammate pairs their own Mac with Agent Witch",
+    "Each teammate pairs their own Mac with AgentWitch",
     "Published capabilities per person (assistants or workflows)",
     "Groups so colleagues can find who offers what",
   ],

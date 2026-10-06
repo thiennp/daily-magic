@@ -6,7 +6,7 @@ import {
 /** Body for `.cursor/rules/agent-witch-check-context.mdc` (alwaysApply). */
 export const buildCursorProjectRuleContent = (projectId: string): string => {
   const body = [
-    "On the first user message of a session, call the Agent Witch MCP tool",
+    "On the first user message of a session, call the AgentWitch MCP tool",
     "`check_context` with this folder's cwd.",
     `projectId: ${projectId}`,
     "If status is miss or none (already declined), stay silent.",
@@ -14,7 +14,7 @@ export const buildCursorProjectRuleContent = (projectId: string): string => {
   ].join("\n");
   return [
     "---",
-    "description: Agent Witch check_context (token-saver)",
+    "description: AgentWitch check_context (token-saver)",
     "alwaysApply: true",
     "---",
     "",

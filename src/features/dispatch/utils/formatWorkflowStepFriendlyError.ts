@@ -15,7 +15,7 @@ export const formatWorkflowStepFriendlyError = (
   if (NO_MAC_PATTERN.test(trimmed)) {
     return {
       headline: "Your computer is not connected right now.",
-      detail: "Open Agent Witch on this computer, then tap Try again.",
+      detail: "Open AgentWitch on this computer, then tap Try again.",
     };
   }
 

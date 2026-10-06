@@ -1,4 +1,4 @@
-/** Agent Witch marketing palette (zinc) for transactional email. */
+/** AgentWitch marketing palette (zinc) for transactional email. */
 export const SIGN_IN_EMAIL_BRAND_COLOR = "#18181b";
 
 export const SIGN_IN_EMAIL_BACKGROUND_COLOR = "#fafafa";

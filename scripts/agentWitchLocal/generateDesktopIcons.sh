@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Derive every Agent Witch Local desktop icon from the live-site logo SVG.
+# Derive every AgentWitch Local desktop icon from the live-site logo SVG.
 # Source of truth: src/app/icon.svg (matches https://www.agentwitch.com/icon.svg).
 # Full-color app icons use src/app/apple-icon.svg (same mark + existing light tile).
 # Menu-bar / tray glyphs use apps/desktop/assets/icon-mark-mono.svg

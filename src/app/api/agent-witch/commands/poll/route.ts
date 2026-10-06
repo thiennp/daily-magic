@@ -8,7 +8,7 @@ export async function POST(): Promise<Response> {
     {
       ok: false,
       error:
-        "Agent Witch Mac transport is WebSocket-only. Use wss://…/api/agent-witch/ws.",
+        "AgentWitch Mac transport is WebSocket-only. Use wss://…/api/agent-witch/ws.",
       deprecated: true,
     },
     { status: 410 },

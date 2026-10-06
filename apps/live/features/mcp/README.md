@@ -1,6 +1,6 @@
 # mcp (AWL)
 
-Local MCP server for Agent Witch Local.
+Local MCP server for AgentWitch Local.
 
 ## Owns
 

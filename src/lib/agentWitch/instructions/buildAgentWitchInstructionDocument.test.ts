@@ -32,7 +32,7 @@ describe("buildAgentWitchInstructionDocument", () => {
 
     expect(text.toLowerCase()).not.toContain("github.com");
     expect(text.toLowerCase()).not.toContain("bitbucket");
-    expect(text).toContain("Agent Witch");
+    expect(text).toContain("AgentWitch");
     expect(text).toContain("Marketplace");
     expect(text).toContain("command.claude.run");
   });

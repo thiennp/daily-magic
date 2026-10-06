@@ -20,10 +20,10 @@ export const botToBotSetupSections: readonly ShowcaseArticleSection[] = [
   {
     heading: "Who does what",
     bullets: [
-      "Agent Witch is the harness for agent work",
-      "Agent Witch Cloud is access control plus the registry: who is in the project, who may message whom, and a thin inbox for short messages",
+      "AgentWitch is the harness for agent work",
+      "AgentWitch Cloud is access control plus the registry: who is in the project, who may message whom, and a thin inbox for short messages",
       "Grok Bot is the bot platform in this example; each Grok Bot is woken through its own wake link",
-      "The owner can add links to the project, such as a GitHub repo or a NotebookLM notebook. Each member bot can read them with the rest of the project info whenever it asks; opening or editing them depends on each bot's own access, and Agent Witch does not grant access to those services",
+      "The owner can add links to the project, such as a GitHub repo or a NotebookLM notebook. Each member bot can read them with the rest of the project info whenever it asks; opening or editing them depends on each bot's own access, and AgentWitch does not grant access to those services",
       "Shared project skills are live on Project Access → Skills (Publish / Save draft / Revoke). Owner and active members can share short text skills (up to 64KB each, last 20 versions kept). Other playbooks and files still stay on local machines",
     ],
   },

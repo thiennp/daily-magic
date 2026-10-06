@@ -11,7 +11,7 @@ export default function WriterSetupPageFooter() {
         >
           Writer API
         </a>{" "}
-        in the local Agent Witch UI (
+        in the local AgentWitch UI (
         <span className="break-all">{AGENT_WITCH_LOCAL_APP_ORIGIN}</span>
         ). Keys stay on that machine only.
       </p>

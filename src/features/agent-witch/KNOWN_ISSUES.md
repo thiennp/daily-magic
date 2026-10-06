@@ -1,4 +1,4 @@
-# Agent Witch bridge — known issues
+# AgentWitch bridge — known issues
 
 This file lists **open** product risks and **operational** caveats only. Shipped regressions are removed here; they remain guarded by Vitest — search the repo for `AGENT-` in test names and descriptions (for example `macDevicePresence.test.ts`, `resolveWriterRunAgentClient.test.ts`, `agentWitchConnectionRegistry.test.ts`).
 
@@ -45,7 +45,7 @@ Architecture for multi-instance presence and the dispatch outbox: `docs/adr/0005
 
 ## OPEN-004 — AWL Status showed WebSocket connected after the socket closed
 
-**Symptom:** Agent Witch Local **Status** could show **Connected** for up to ~2 minutes after the computer client disconnected, while **agentwitch.com** already listed the computer as offline or reconnecting.
+**Symptom:** AgentWitch Local **Status** could show **Connected** for up to ~2 minutes after the computer client disconnected, while **agentwitch.com** already listed the computer as offline or reconnecting.
 
 **Cause:** `connection-health.json` kept a fresh `lastAckAt` until it aged out; AWL reads that file in a separate process from the WebSocket client.
 

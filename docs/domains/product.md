@@ -1,11 +1,11 @@
 # Domain: Product language
 
-**Scope:** Names users see, glossary for engineers, repo vs Agent Witch brand — **not** implementation.
+**Scope:** Names users see, glossary for engineers, repo vs AgentWitch brand — **not** implementation.
 
 ## Skim (L1)
 
-- Brand: **Agent Witch** at **agentwitch.com**; git folder **daily-magic**.
-- Do not conflate CHECK24 `daily-magic.*` URLs with production Agent Witch.
+- Brand: **AgentWitch** at **agentwitch.com**; git folder **daily-magic**.
+- Do not conflate CHECK24 `daily-magic.*` URLs with production AgentWitch.
 - **Core job + pillars:** connect Mac → Task → Run → Playbook; product improves via **easy authoring**, **learn from usage**, **efficient memory**, **team learning** — [product/product-pillars.md](../product/product-pillars.md).
 
 ## Read next if…

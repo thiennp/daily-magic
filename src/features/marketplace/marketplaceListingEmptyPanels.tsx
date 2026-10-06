@@ -78,7 +78,7 @@ export function MarketplaceTeammatesSoloUpsellPanel() {
     <EmptyStatePanel
       density="section"
       title="Working with a team?"
-      body="Shared listings show up here when you use Agent Witch with teammates — shared runners and named approvers. For now, browse free starters or build your own."
+      body="Shared listings show up here when you use AgentWitch with teammates — shared runners and named approvers. For now, browse free starters or build your own."
       primaryCta={{
         label: "Browse free starters",
         href: marketplaceFreeStartersSectionHref(),

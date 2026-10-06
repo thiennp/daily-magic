@@ -20,14 +20,14 @@ describe("renderInstallAgentWitchScript", () => {
     expect(script).toContain("deps.tar.gz");
     expect(script).toContain("register_agent_witch_launch_agent");
     expect(script).toContain('nohup "${RUN_PATH}"');
-    expect(script).toContain('echo "Installing Agent Witch…"');
+    expect(script).toContain('echo "Installing AgentWitch…"');
     expect(script).toContain("printf '\\rInstalling… %d%%'");
-    expect(script).toContain('echo "Agent Witch is ready."');
+    expect(script).toContain('echo "AgentWitch is ready."');
     expect(script).toContain(
       'open "https://www.agentwitch.com/?awLocalTokenHash=${LOCAL_TOKEN_HASH}"',
     );
     expect(script).toContain(`PRESET_PAIRING_TOKEN="${TEST_PAIRING_TOKEN}"`);
-    expect(script).not.toContain("Downloading Agent Witch wake server");
+    expect(script).not.toContain("Downloading AgentWitch wake server");
     expect(script).toContain("wss://www.agentwitch.com/api/agent-witch/ws");
     expect(script).toContain(
       `install/agent-witch/${AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.relativePath}`,

@@ -9,7 +9,7 @@ export default function AgentWitchUnsupportedHostNotice({
     <div className="rounded-lg border border-warning-200 bg-warning-50 p-4 text-sm text-warning-800 dark:border-warning-500/30 dark:bg-warning-500/10 dark:text-warning-100">
       <p className="font-medium">Live Mac connection is not available here</p>
       <p className="mt-2 text-warning-700 dark:text-warning-100/90">
-        This site cannot keep a live link to your computer. Agent Witch needs a
+        This site cannot keep a live link to your computer. AgentWitch needs a
         server that stays running — not a basic static deploy.
       </p>
       <p className="mt-2 text-warning-700 dark:text-warning-100/90">

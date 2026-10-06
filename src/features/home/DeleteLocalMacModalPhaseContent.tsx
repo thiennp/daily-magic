@@ -32,7 +32,7 @@ export default function DeleteLocalMacModalPhaseContent({
       <>
         <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
           This stops LaunchAgents on this computer, removes the local install
-          folder, and kills background Agent Witch processes. Your cloud device
+          folder, and kills background AgentWitch processes. Your cloud device
           entry stays until you choose Delete on the row.
         </p>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
@@ -84,8 +84,8 @@ export default function DeleteLocalMacModalPhaseContent({
     <>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         {resultMessage.length > 0
-          ? `${resultMessage} Run this command in Terminal on this computer to stop every Agent Witch process and remove the install files.`
-          : "Run this command in Terminal on this computer to stop every Agent Witch process and remove the install files."}
+          ? `${resultMessage} Run this command in Terminal on this computer to stop every AgentWitch process and remove the install files.`
+          : "Run this command in Terminal on this computer to stop every AgentWitch process and remove the install files."}
       </p>
       <CopyableBashCommand command={deleteCommand} variant="bash" />
       <div className="mt-6 flex justify-end">

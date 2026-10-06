@@ -1,4 +1,4 @@
-# Agent Witch public UI (marketing + AWL)
+# AgentWitch public UI (marketing + AWL)
 
 **Version:** `MARKETING_DESIGN_SYSTEM_VERSION` in `src/features/marketing/marketingDesignSystem.constant.ts` (styleguide: `/styleguide` → Marketing brand).
 

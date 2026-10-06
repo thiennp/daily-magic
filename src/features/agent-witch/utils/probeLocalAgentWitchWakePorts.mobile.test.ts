@@ -35,7 +35,7 @@ describe("probeLocalAgentWitchWakePorts mobile gate", () => {
   });
 
   it.each([true, false])(
-    "never probes Agent Witch Local on mobile (app-server path: %s)",
+    "never probes AgentWitch Local on mobile (app-server path: %s)",
     async (useAppServer) => {
       detectMobileClient.mockReturnValue(true);
       shouldUseAppServer.mockReturnValue(useAppServer);

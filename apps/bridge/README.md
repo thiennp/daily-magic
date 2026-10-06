@@ -1,4 +1,4 @@
-# AWB — Agent Witch Bridge
+# AWB — AgentWitch Bridge
 
 Loopback HTTP on `127.0.0.1:47892` (production install) or `47893` (localhost-origin install).
 

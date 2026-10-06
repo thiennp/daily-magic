@@ -17,7 +17,7 @@ export const buildPromptSdlcWizardEvaluatePipeline = (input: {
   return [
     pipelineStep(
       "awl",
-      "Connected on this computer (Agent Witch Local)",
+      "Connected on this computer (AgentWitch Local)",
       "done",
       "Local app",
       "<p>Step 2 scores prompt text only (no folder run).</p>",

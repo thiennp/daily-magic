@@ -13,7 +13,7 @@
     },
     {
       "slug": "agent-witch",
-      "title": "Agent Witch bridge",
+      "title": "AgentWitch bridge",
       "purpose": "Mac pairing, install, WebSocket bridge, device registry.",
       "featurePath": "src/features/agent-witch",
       "libPath": "src/lib/agentWitch",
@@ -223,7 +223,7 @@
     {
       "slug": "prompt-optimizer",
       "title": "Prompt optimizer",
-      "purpose": "Console pointer to the prompt optimizer on Agent Witch Local, which picks the best local reasoning writers.",
+      "purpose": "Console pointer to the prompt optimizer on AgentWitch Local, which picks the best local reasoning writers.",
       "featurePath": "src/features/prompt-optimizer",
       "libPath": "src/lib/promptOptimizer",
       "routePaths": ["/prompt-optimizer", "/prompt-optimizer/guide"],

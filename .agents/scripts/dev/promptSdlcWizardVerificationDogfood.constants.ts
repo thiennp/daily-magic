@@ -3,10 +3,10 @@ export const PROMPT_SDLC_WIZARD_VERIFICATION_EXAMPLE = "wizard-verification";
 /** Dogfood + QA scenario: improve this prompt with the Prompt SDLC wizard (Run). */
 
 export const PROMPT_SDLC_WIZARD_VERIFICATION_GOAL =
-  "Produce a reusable skill template that teaches how to verify Prompt SDLC wizard steps 1–4 on Agent Witch Local (bundle 172+): generalize with {{variables}}, evaluate scored revisions (no score 0 continue), separate into module chunks, optimize each module with runner+judge round logs visible at step 4.";
+  "Produce a reusable skill template that teaches how to verify Prompt SDLC wizard steps 1–4 on AgentWitch Local (bundle 172+): generalize with {{variables}}, evaluate scored revisions (no score 0 continue), separate into module chunks, optimize each module with runner+judge round logs visible at step 4.";
 
 /** Intentionally weak prompt — dogfood the wizard to improve it (see IMPROVED). */
-export const PROMPT_SDLC_WIZARD_VERIFICATION_SOURCE_PROMPT = `You help users test the prompt optimizer wizard on Agent Witch Local.
+export const PROMPT_SDLC_WIZARD_VERIFICATION_SOURCE_PROMPT = `You help users test the prompt optimizer wizard on AgentWitch Local.
 Explain the four steps when asked. Sometimes skip evaluate or separate.
 Mention round scores at step 4 only if you remember.
 Use placeholders like {{thing}} without defining them.
@@ -17,7 +17,7 @@ export const PROMPT_SDLC_WIZARD_VERIFICATION_IMPROVED_PROMPT = `This is the high
 
 Write \`.cursor/skills/verify-prompt-optimizer-wizard/SKILL.md\` only. Do not open or search \`runner\`, \`judge\`, or unrelated files.
 
-Skill teaches verifying Prompt SDLC wizard steps 1–4 on Agent Witch Local (bundle 172+). Cover every step; do not skip Evaluate or Separate:
+Skill teaches verifying Prompt SDLC wizard steps 1–4 on AgentWitch Local (bundle 172+). Cover every step; do not skip Evaluate or Separate:
 
 1. Generalize — pull concrete values into \`{{variableName}}\` (camelCase); define each placeholder (name, purpose, sample).
 2. Evaluate — scored revisions; stop when a revision scores 0.

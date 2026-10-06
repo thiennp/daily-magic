@@ -52,7 +52,7 @@ export const selectAgentWitchProjectFolderFromWakeServer = async (
   }
 
   const chosen = pickMacOsFolderDialog(
-    "Choose a folder for this Agent Witch project",
+    "Choose a folder for this AgentWitch project",
   );
   if (chosen === null) {
     return { ok: false, cancelled: true };
@@ -62,7 +62,7 @@ export const selectAgentWitchProjectFolderFromWakeServer = async (
   if (runConfig === null) {
     return {
       ok: false,
-      errorMessage: "Agent Witch is not configured on this computer.",
+      errorMessage: "AgentWitch is not configured on this computer.",
     };
   }
 
@@ -74,7 +74,7 @@ export const selectAgentWitchProjectFolderFromWakeServer = async (
   if (cloudConfig === null) {
     return {
       ok: false,
-      errorMessage: "Could not resolve Agent Witch cloud connection.",
+      errorMessage: "Could not resolve AgentWitch cloud connection.",
     };
   }
 
@@ -89,7 +89,7 @@ export const selectAgentWitchProjectFolderFromWakeServer = async (
   if (!updated) {
     return {
       ok: false,
-      errorMessage: "Could not save the folder to Agent Witch Cloud.",
+      errorMessage: "Could not save the folder to AgentWitch Cloud.",
     };
   }
 
