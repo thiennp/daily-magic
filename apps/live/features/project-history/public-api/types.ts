@@ -83,3 +83,19 @@ export type {
 
 export type { CreateDefaultProjectHistorySkillgenRunnerDeps } from "../internal/core/createDefaultProjectHistorySkillgenRunner";
 export type { LoadProjectHistorySkillgenMessagesSinceCursorInput } from "../internal/core/loadProjectHistorySkillgenMessagesSinceCursor";
+
+export type {
+  ProjectHistoryMessageRecordV2,
+  ProjectHistoryIndexableRecord,
+  ProjectHistoryIndexRow,
+  LocalChatAckRecord,
+} from "../internal/core/projectHistoryIndexRecord.type";
+export type { IngestHistoryMessageIntoIndexResult } from "../internal/core/ingestHistoryMessageIntoIndex";
+export type { RebuildProjectHistoryIndexResult } from "../internal/core/rebuildProjectHistoryIndex";
+export type {
+  ListLocalChatIndexPageInput,
+  ListLocalChatIndexPageResult,
+} from "../internal/core/listLocalChatIndexPage";
+export type { ListLocalChatThreadKeysResult } from "../internal/core/listLocalChatThreadKeys";
+export type { LocalChatReadRouteInput } from "../internal/core/tryHandleLocalChatReadRequest";
+export type { HistoryStoreRecordKind } from "../internal/core/historyStore.constants";

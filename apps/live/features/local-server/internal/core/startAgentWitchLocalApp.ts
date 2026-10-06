@@ -121,7 +121,10 @@ import {
 } from "@agent-witch/live-shell";
 import { readAgentWitchInstallVersion } from "@agent-witch/install-self-update";
 import { runLocalSelfDelegatedTask } from "@agent-witch/live-tasks";
-import { startProjectComputerHistoryTick } from "@agent-witch/live-project-history";
+import {
+  startProjectComputerHistoryTick,
+  tryHandleLocalChatReadRequest,
+} from "@agent-witch/live-project-history";
 import {
   applyWriterApiSettings,
   readAgentWitchRunConfig,
@@ -581,6 +584,18 @@ export const startAgentWitchLocalApp = (input: {
           response,
           layout: input.layout,
           readBody,
+          sendJson,
+        })
+      ) {
+        return;
+      }
+
+      if (
+        tryHandleLocalChatReadRequest({
+          method,
+          pathname,
+          requestUrl: request.url ?? "/",
+          response,
           sendJson,
         })
       ) {

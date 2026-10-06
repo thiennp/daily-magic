@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { atomicWriteFile0600 } from "./atomicWriteFile0600";
+import { ingestHistoryMessageIntoIndex } from "./ingestHistoryMessageIntoIndex";
 import {
   PROJECT_HISTORY_DIR_NAME,
 } from "./projectHistoryPaths.constant";
@@ -14,9 +15,27 @@ export type ProjectHistoryMessageRecord = {
   readonly savedAt: string;
 };
 
+const LOG_PREFIX = "[project-history-write]";
+
+const bestEffortIngest = (record: ProjectHistoryMessageRecord): void => {
+  try {
+    ingestHistoryMessageIntoIndex({ record });
+  } catch (error: unknown) {
+    console.error(
+      LOG_PREFIX,
+      "index_ingest_failed",
+      record.projectId,
+      record.messageId,
+      error,
+    );
+  }
+};
+
 /**
  * Stores one history message under `history/<messageId>.json` atomically,
  * idempotent by messageId, mode 0600.
+ * After a durable write (or idempotent hit), best-effort index ingest —
+ * never fails the durable write if the index is unavailable.
  */
 export const writeProjectHistoryMessage = (input: {
   readonly projectId: string;
@@ -39,6 +58,7 @@ export const writeProjectHistoryMessage = (input: {
         fs.readFileSync(filePath, "utf8"),
       ) as ProjectHistoryMessageRecord;
       if (existing.messageId === messageId) {
+        bestEffortIngest(existing);
         return existing;
       }
     } catch {
@@ -52,5 +72,6 @@ export const writeProjectHistoryMessage = (input: {
     savedAt: new Date().toISOString(),
   };
   atomicWriteFile0600(filePath, `${JSON.stringify(record)}\n`);
+  bestEffortIngest(record);
   return record;
 };

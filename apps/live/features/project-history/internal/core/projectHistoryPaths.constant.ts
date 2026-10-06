@@ -16,3 +16,5 @@ export const PROJECT_HISTORY_SKILL_DRAFT_META_FILE_NAME = "meta.json";
 export const PROJECT_HISTORY_SKILLGEN_LEARNED_PITFALLS_FILE_NAME =
   "learned-pitfalls.json";
 export const PROJECT_HISTORY_SKILLGEN_FLAGS_FILE_NAME = "flags.json";
+export const PROJECT_HISTORY_INDEX_DIR_NAME = "index";
+export const PROJECT_HISTORY_INDEX_STORE_DB_FILE_NAME = "store.db";

@@ -92,3 +92,16 @@ export {
   PROJECT_HISTORY_PITFALL_MAX_BULLET_CHARS,
   PROJECT_HISTORY_PITFALL_FLAG_KEY,
 } from "../internal/core/projectHistory.constants";
+
+export { ingestHistoryMessageIntoIndex } from "../internal/core/ingestHistoryMessageIntoIndex";
+export { rebuildProjectHistoryIndex } from "../internal/core/rebuildProjectHistoryIndex";
+export { listLocalChatIndexPage } from "../internal/core/listLocalChatIndexPage";
+export { getLocalChatMessage } from "../internal/core/getLocalChatMessage";
+export { listLocalChatThreadKeys } from "../internal/core/listLocalChatThreadKeys";
+export { tryHandleLocalChatReadRequest } from "../internal/core/tryHandleLocalChatReadRequest";
+export { openHistoryStoreDb, closeHistoryStoreDb } from "../internal/core/openHistoryStoreDb";
+export { extractHistoryIndexFields } from "../internal/core/extractHistoryIndexFields";
+export {
+  PROJECT_HISTORY_INDEX_DIR_NAME,
+  PROJECT_HISTORY_INDEX_STORE_DB_FILE_NAME,
+} from "../internal/core/projectHistoryPaths.constant";
