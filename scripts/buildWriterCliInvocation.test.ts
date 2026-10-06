@@ -9,6 +9,10 @@ import {
   isHarnessWriterAgentId,
   resolveWriterCliCommands,
 } from "./buildWriterCliInvocation";
+import {
+  LOCAL_CLI_CLAUDE_ALLOWED_TOOLS,
+  LOCAL_CLI_RUN_LIMITS,
+} from "./localCliRunLimits.constant";
 
 describe("buildWriterCliInvocation", () => {
   const commands = resolveWriterCliCommands({
@@ -16,7 +20,7 @@ describe("buildWriterCliInvocation", () => {
     cursorCommand: "/usr/bin/cursor",
   });
 
-  it("builds claude-cli invocation with full permissions", () => {
+  it("builds claude-cli invocation with the workspace-write profile and limits", () => {
     expect(
       buildWriterCliInvocation("claude-cli", "  run tests  ", commands),
     ).toEqual({
@@ -25,7 +29,14 @@ describe("buildWriterCliInvocation", () => {
         "-p",
         "--output-format",
         "json",
-        "--dangerously-skip-permissions",
+        "--permission-mode",
+        "dontAsk",
+        "--allowedTools",
+        "Read,Glob,Grep,Edit,Write,TodoWrite,Bash(git status *),Bash(git diff *),Bash(git log *),Bash(git show *)",
+        "--max-turns",
+        "30",
+        "--max-budget-usd",
+        "2.00",
         "run tests",
       ],
     });
@@ -43,7 +54,14 @@ describe("buildWriterCliInvocation", () => {
         "-p",
         "--output-format",
         "json",
-        "--dangerously-skip-permissions",
+        "--permission-mode",
+        "dontAsk",
+        "--allowedTools",
+        "Read,Glob,Grep,Edit,Write,TodoWrite,Bash(git status *),Bash(git diff *),Bash(git log *),Bash(git show *)",
+        "--max-turns",
+        "30",
+        "--max-budget-usd",
+        "2.00",
         "follow up",
       ],
     });
@@ -56,27 +74,33 @@ describe("buildWriterCliInvocation", () => {
       }),
     ).toEqual({
       command: "agy",
-      args: ["--continue", "--dangerously-skip-permissions", "-p", "follow up"],
+      args: ["--continue", "--sandbox", "-p", "follow up"],
     });
   });
 
-  it("builds codex exec with full filesystem access", () => {
+  it("builds codex exec with workspace-write sandbox and approval never", () => {
     expect(buildWriterCliInvocation("codex", "sync rules", commands)).toEqual({
       command: "codex",
-      args: ["exec", "-s", "danger-full-access", "sync rules"],
+      args: [
+        "exec",
+        "-s",
+        "workspace-write",
+        "-c",
+        'approval_policy="never"',
+        "sync rules",
+      ],
     });
   });
 
-  it("builds cursor agent without sandbox", () => {
+  it("builds cursor agent with the sandbox enabled and no --force", () => {
     expect(buildWriterCliInvocation("cursor", "write file", commands)).toEqual({
       command: "/usr/bin/cursor",
       args: [
         "agent",
         "-p",
-        "--force",
         "--trust",
         "--sandbox",
-        "disabled",
+        "enabled",
         "write file",
       ],
     });
@@ -93,10 +117,9 @@ describe("buildWriterCliInvocation", () => {
         "agent",
         "--continue",
         "-p",
-        "--force",
         "--trust",
         "--sandbox",
-        "disabled",
+        "enabled",
         "follow up",
       ],
     });
@@ -105,7 +128,7 @@ describe("buildWriterCliInvocation", () => {
   it("builds antigravity headless invocation", () => {
     expect(buildWriterCliInvocation("antigravity", "plan", commands)).toEqual({
       command: "agy",
-      args: ["--dangerously-skip-permissions", "-p", "plan"],
+      args: ["--sandbox", "-p", "plan"],
     });
   });
 
@@ -158,7 +181,7 @@ describe("buildWriterCliInvocation", () => {
     });
     expect(
       buildWriterCliInvocation("cursor", "task", standalone)?.args,
-    ).toEqual(["-p", "--force", "--trust", "--sandbox", "disabled", "task"]);
+    ).toEqual(["-p", "--trust", "--sandbox", "enabled", "task"]);
   });
 
   it("detects standalone cursor agent binaries by basename", () => {
@@ -185,6 +208,48 @@ describe("buildWriterCliInvocation", () => {
       command: "claude",
       args: ["-v"],
     });
+  });
+});
+
+describe("S0-4 workspace-write profile", () => {
+  const commands = resolveWriterCliCommands({ cursorCommand: "/usr/bin/cursor" });
+  const writers = ["claude-cli", "codex", "cursor", "antigravity"] as const;
+  const BYPASS = [
+    "--dangerously-skip-permissions",
+    "danger-full-access",
+    "--dangerously-bypass-approvals-and-sandbox",
+    "--yolo",
+    "--force",
+    "bypassPermissions",
+    "disabled",
+  ];
+
+  it.each(writers)("%s never gets a full-bypass flag (first and continue turns)", (writer) => {
+    for (const sessionTurn of ["first", "continue"] as const) {
+      const args = buildWriterCliInvocation(writer, "task", commands, { sessionTurn })?.args ?? [];
+      for (const flag of BYPASS) {
+        expect(args).not.toContain(flag);
+      }
+      expect(args[args.length - 1]).toBe("task");
+    }
+  });
+
+  it("takes claude limits from LOCAL_CLI_RUN_LIMITS (one place)", () => {
+    const args = buildWriterCliInvocation("claude-cli", "task", commands)?.args ?? [];
+    expect(args[args.indexOf("--max-turns") + 1]).toBe(String(LOCAL_CLI_RUN_LIMITS.maxTurns));
+    expect(args[args.indexOf("--max-budget-usd") + 1]).toBe(
+      LOCAL_CLI_RUN_LIMITS.maxBudgetUsd.toFixed(2),
+    );
+    expect(LOCAL_CLI_RUN_LIMITS).toEqual({ maxTurns: 30, maxMinutes: 30, maxBudgetUsd: 2 });
+  });
+
+  it("does not let the variadic --allowedTools swallow the prompt", () => {
+    const args = buildWriterCliInvocation("claude-cli", "task", commands)?.args ?? [];
+    const allowedIndex = args.indexOf("--allowedTools");
+    expect(args[allowedIndex + 1]).toBe(LOCAL_CLI_CLAUDE_ALLOWED_TOOLS.join(","));
+    expect(args[allowedIndex + 2]).toMatch(/^--/);
+    // No unscoped Bash: only read-only git prefixes.
+    expect([...LOCAL_CLI_CLAUDE_ALLOWED_TOOLS] as string[]).not.toContain("Bash");
   });
 });
 

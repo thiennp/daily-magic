@@ -44,6 +44,11 @@ export const ACCESS_LOG_COPY = {
   humanInviteRevokedNoRole: "You revoked an invite for a person",
   humanInviteAccepted: "{name} joined as a {roleLabel}",
   modeAutoWake: "{name} now wakes up on its own",
+  // S0-2 draft EN (pending Product copy lock).
+  runsWithoutApprovalOn:
+    "You let tasks run on this project's computer without approval",
+  runsWithoutApprovalOff:
+    "You turned approval back on for tasks on this project's computer",
   detailInvite: "Invite {inviteLabel}",
   detailExpires: "Expires {date}",
   detailKindBot: "Assistant",

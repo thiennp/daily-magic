@@ -5,7 +5,14 @@ import { resolveAgentWitchInstallBundleOutfile } from "@agent-witch/install-bund
 const CLAUDE_SHAPED_ANTIGRAVITY_ARGV_SNIPPET =
   '"-p","--dangerously-skip-permissions"';
 
+/**
+ * S0-4 argv is `--sandbox -p <prompt>`. The legacy bypass shape stays accepted
+ * until AW Mac rebuilds the shipped bundle (public/install/... is not rebuilt
+ * in the safety branch); either way -p is never followed by another flag.
+ */
 const CORRECT_ANTIGRAVITY_ARGV_SNIPPETS = [
+  '"--sandbox","-p"',
+  '"--sandbox", "-p"',
   '"--dangerously-skip-permissions","-p"',
   '"--dangerously-skip-permissions", "-p"',
 ] as const;
@@ -27,7 +34,7 @@ export const assertShippedInstallBundleAntigravityArgv = (
   );
   if (!hasCorrectArgv) {
     throw new Error(
-      "Shipped install bundle is missing expected antigravity argv (--dangerously-skip-permissions before -p).",
+      "Shipped install bundle is missing expected antigravity argv (--sandbox before -p).",
     );
   }
 };

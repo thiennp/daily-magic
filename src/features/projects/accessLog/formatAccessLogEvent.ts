@@ -68,6 +68,10 @@ export const formatAccessLogEvent = (
       return formatAccessLogHumanInvite(event, nowMs);
     case "member.delivery_mode_changed":
       return formatAccessLogDeliveryEvent(event);
+    case "project.runs_without_approval_enabled":
+      return { line: C.runsWithoutApprovalOn, detail: null };
+    case "project.runs_without_approval_disabled":
+      return { line: C.runsWithoutApprovalOff, detail: null };
     default:
       return null;
   }

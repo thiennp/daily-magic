@@ -2,6 +2,11 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
+import {
+  LOCAL_CLI_CLAUDE_ALLOWED_TOOLS,
+  LOCAL_CLI_RUN_LIMITS,
+} from "./localCliRunLimits.constant";
+
 export interface WriterCliInvocation {
   readonly command: string;
   readonly args: readonly string[];
@@ -124,6 +129,41 @@ export const buildWriterSessionStartInvocation = (
   return { command: commands.antigravityCommand, args: ["--version"] };
 };
 
+/**
+ * S0-4 workspace-write profile (replaces the old fixed full bypass; there is
+ * no "full" option). Limits come from localCliRunLimits.constant.ts.
+ * Claude: no permission prompts, only the allowlist runs; turn + budget caps.
+ */
+export const CLAUDE_WORKSPACE_WRITE_ARGS: readonly string[] = [
+  "--permission-mode",
+  "dontAsk",
+  "--allowedTools",
+  LOCAL_CLI_CLAUDE_ALLOWED_TOOLS.join(","),
+  "--max-turns",
+  String(LOCAL_CLI_RUN_LIMITS.maxTurns),
+  "--max-budget-usd",
+  LOCAL_CLI_RUN_LIMITS.maxBudgetUsd.toFixed(2),
+];
+
+/**
+ * Codex: writes only inside the workspace (no network). `codex exec` rejects
+ * `-a`; it already runs with approval_policy=never, so the config override
+ * states it explicitly and beats any ~/.codex/config.toml value.
+ */
+export const CODEX_WORKSPACE_WRITE_ARGS: readonly string[] = [
+  "-s",
+  "workspace-write",
+  "-c",
+  'approval_policy="never"',
+];
+
+/** Cursor: sandbox on, no --force (commands are not force-allowed). */
+export const CURSOR_WORKSPACE_WRITE_ARGS: readonly string[] = [
+  "--trust",
+  "--sandbox",
+  "enabled",
+];
+
 export const buildWriterCliInvocation = (
   writerAgent: HarnessWriterAgentId,
   instruction: string,
@@ -146,7 +186,7 @@ export const buildWriterCliInvocation = (
         "-p",
         "--output-format",
         "json",
-        "--dangerously-skip-permissions",
+        ...CLAUDE_WORKSPACE_WRITE_ARGS,
         prompt,
       ],
     };
@@ -155,7 +195,7 @@ export const buildWriterCliInvocation = (
   if (writerAgent === "codex") {
     return {
       command: commands.codexCommand,
-      args: ["exec", "-s", "danger-full-access", prompt],
+      args: ["exec", ...CODEX_WORKSPACE_WRITE_ARGS, prompt],
     };
   }
 
@@ -165,17 +205,17 @@ export const buildWriterCliInvocation = (
       args: cursorAgentSubcommandArgs(commands.cursorCommand, [
         ...continueArgs,
         "-p",
-        "--force",
-        "--trust",
-        "--sandbox",
-        "disabled",
+        ...CURSOR_WORKSPACE_WRITE_ARGS,
         prompt,
       ]),
     };
   }
 
+  // Antigravity: no permission bypass. Headless agy auto-allows file reads and
+  // writes inside the workspace and soft-denies other tools; --sandbox keeps
+  // any command it does run inside the terminal sandbox. No turn/budget flag.
   return {
     command: commands.antigravityCommand,
-    args: [...continueArgs, "--dangerously-skip-permissions", "-p", prompt],
+    args: [...continueArgs, "--sandbox", "-p", prompt],
   };
 };

@@ -7,6 +7,10 @@ import {
   approveDispatchApproval,
   denyDispatchApproval,
 } from "@/lib/dispatch/approveDispatchApproval";
+import {
+  claimPendingDispatchApprovalDecision,
+  releaseDispatchApprovalClaim,
+} from "@/lib/dispatch/claimPendingDispatchApprovalDecision";
 import { dispatchApprovalRegistry } from "@/lib/dispatch/dispatchApprovalRegistry";
 import { expireStaleDispatchApprovals } from "@/lib/dispatch/expireStaleDispatchApprovals";
 import { ensureDispatchApprovalsHydrated } from "@/lib/dispatch/restoreDispatchApprovalRegistry";
@@ -61,14 +65,26 @@ export const handleDispatchApprovalRespondAsync = async (
     };
   }
 
+  const denialReason =
+    typeof message.payload?.denialReason === "string"
+      ? message.payload.denialReason
+      : "Dispatch denied by target user.";
+
+  // S0-3: compare-and-set out of pending_approval. Two instances (or a double
+  // click) can both find the pending row; only one wins the UPDATE.
+  const claimed = await claimPendingDispatchApprovalDecision({
+    runId,
+    executorUserId: sender.userId,
+    decision,
+    denialReason: decision === "deny" ? denialReason : null,
+  });
   dispatchApprovalRegistry.remove(runId);
 
-  if (decision === "deny") {
-    const denialReason =
-      typeof message.payload?.denialReason === "string"
-        ? message.payload.denialReason
-        : "Dispatch denied by target user.";
+  if (!claimed) {
+    return buildDispatchApprovalAlreadyDecidedError(runId, message.requestId);
+  }
 
+  if (decision === "deny") {
     return denyDispatchApproval(
       runtime,
       pending,
@@ -78,5 +94,32 @@ export const handleDispatchApprovalRespondAsync = async (
     );
   }
 
-  return approveDispatchApproval(runtime, pending, runId, message.requestId);
+  const result = await approveDispatchApproval(
+    runtime,
+    pending,
+    runId,
+    message.requestId,
+  );
+  if (result.type === AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR) {
+    // Nothing was dispatched (no computer): keep it approvable until it expires.
+    await releaseDispatchApprovalClaim(runId);
+  }
+  return result;
 };
+
+export const DISPATCH_APPROVAL_ALREADY_DECIDED_CODE = "approval_already_decided";
+
+/** 409: someone (or another server) already approved/denied it, or it expired. */
+export const buildDispatchApprovalAlreadyDecidedError = (
+  runId: string,
+  requestId?: string,
+): AgentWitchMessage => ({
+  type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+  payload: {
+    errorMessage: "This request was already approved, denied, or expired.",
+    code: DISPATCH_APPROVAL_ALREADY_DECIDED_CODE,
+    status: 409,
+    runId,
+  },
+  requestId,
+});

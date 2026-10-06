@@ -4,31 +4,8 @@ agent_witch_ensure_codex_cli() {
   if ! agent_witch_has_command codex; then
     "\${CURL_BIN}" -fsSL https://chatgpt.com/codex/install.sh | sh
   fi
-  mkdir -p "\${HOME}/.codex"
-  "\${NODE_BIN}" - "\${HOME}/.codex/config.toml" <<'NODE'
-const fs = require("node:fs");
-const path = require("node:path");
-const configPath = process.argv[2];
-const updates = {
-  sandbox_mode: "danger-full-access",
-  approval_policy: "never",
-};
-const initialContent = fs.existsSync(configPath)
-  ? fs.readFileSync(configPath, "utf8")
-  : "";
-const content = Object.entries(updates).reduce((current, [key, value]) => {
-  const pattern = new RegExp(\`^\${key}\\\\s*=.*$\`, "m");
-  const line = \`\${key} = "\${value}"\`;
-  if (pattern.test(current)) {
-    return current.replace(pattern, line);
-  }
-  const separator =
-    current.length > 0 && !current.endsWith("\\n") ? "\\n" : "";
-  return \`\${current}\${separator}\${line}\\n\`;
-}, initialContent);
-fs.mkdirSync(path.dirname(configPath), { recursive: true });
-fs.writeFileSync(configPath, content);
-NODE
+  # S0-4: never write sandbox_mode / approval_policy into ~/.codex/config.toml.
+  # AgentWitch Local passes "exec -s workspace-write" per run instead.
   if codex login status >/dev/null 2>&1; then
     echo "  Codex CLI authenticated."
   else

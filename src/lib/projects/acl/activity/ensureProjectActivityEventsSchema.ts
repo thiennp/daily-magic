@@ -14,7 +14,9 @@ const runDdl = async (): Promise<void> => {
         'member.auto_approved', 'request.approved', 'request.denied',
         'member.removed', 'member.left', 'human_invite.created',
         'human_invite.revoked', 'human_invite.accepted',
-        'member.delivery_mode_changed')),
+        'member.delivery_mode_changed',
+        'project.runs_without_approval_enabled',
+        'project.runs_without_approval_disabled')),
       actor_kind TEXT NOT NULL CHECK (actor_kind IN ('owner', 'member', 'system')),
       actor_user_id TEXT REFERENCES users(id) ON DELETE SET NULL,
       actor_label TEXT CHECK (actor_label IS NULL OR char_length(actor_label) <= 120),
@@ -38,7 +40,7 @@ const runDdl = async (): Promise<void> => {
 };
 
 /**
- * DDL only (mirrors migration 092; the CHECK list must equal
+ * DDL only (mirrors migration 092 + the 095 CHECK; the CHECK list must equal
  * PROJECT_ACTIVITY_EVENT_TYPES, asserted in projectActivityMigration092.test.ts). Never runs the 073 backfill: that is
  * the migration and scripts/db-backfill-project-activity-073.ts.
  */

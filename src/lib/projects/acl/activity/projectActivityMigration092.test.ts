@@ -18,6 +18,11 @@ const SQL = readFileSync(
   "utf8",
 );
 
+const TYPES_ADDED_IN_095: readonly string[] = [
+  "project.runs_without_approval_enabled",
+  "project.runs_without_approval_disabled",
+];
+
 const checkListOf = (text: string): string[] => {
   const body = text.slice(text.indexOf("event_type IN ("), text.indexOf("actor_kind"));
   return [...body.matchAll(/'([a-z_.]+)'/g)].map((m) => m[1] ?? "");
@@ -25,7 +30,10 @@ const checkListOf = (text: string): string[] => {
 
 describe("migration 092 project_activity_events", () => {
   it("CHECK list (migration and ensure DDL) equals the TS event types", async () => {
-    expect(checkListOf(SQL)).toEqual([...PROJECT_ACTIVITY_EVENT_TYPES]);
+    // 095 extends the CHECK; 092's own list is the TS list minus those types.
+    expect(checkListOf(SQL)).toEqual(
+      PROJECT_ACTIVITY_EVENT_TYPES.filter((type) => !TYPES_ADDED_IN_095.includes(type)),
+    );
     resetProjectActivityEventsSchemaForTests();
     await ensureProjectActivityEventsSchema();
     const ddl = sqlMock.mock.calls.map((c) => String((c as unknown[])[0])).join("\n");

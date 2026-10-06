@@ -51,6 +51,13 @@ import {
   parseAwaitingInputFromOutput,
 } from "./agentWitchRunSessionsAwaitingInput";
 import { tryRunWriterTaskInPty } from "./agentWitchRunSessionsPty";
+import {
+  appendRunSessionLimitNotice,
+  armRunSessionLimit,
+  clearRunSessionLimit,
+  killChildProcessTree,
+} from "./agentWitchRunSessionLimit";
+import { LOCAL_CLI_SESSION_LIMIT_EXIT_CODE } from "./localCliRunLimits.constant";
 import { markWriterConversationStarted } from "./agentWitchWriterSession";
 import { persistFinishedAgentRun } from "./agentWitchRunFinish";
 import { appendWriterTranscriptTurn } from "./writerSessionTranscriptStore";
@@ -91,6 +98,8 @@ interface ActiveRunSession {
 const activeChildren = new Map<string, ChildProcess>();
 const runSessions = new Map<string, ActiveRunSession>();
 const runsStoppedByUser = new Set<string>();
+/** S0-6: runs stopped by the wall-clock session limit (not by the user). */
+const runsStoppedBySessionLimit = new Set<string>();
 const taskStartedAtMsByRunId = new Map<string, number>();
 
 const noteTaskStarted = (agentRunId: string | undefined): void => {
@@ -308,7 +317,18 @@ const finishRun = (
     }
   }
 
-  if (agentRunId !== undefined && runsStoppedByUser.has(agentRunId)) {
+  if (agentRunId !== undefined) {
+    clearRunSessionLimit(agentRunId);
+  }
+
+  if (agentRunId !== undefined && runsStoppedBySessionLimit.has(agentRunId)) {
+    runsStoppedBySessionLimit.delete(agentRunId);
+    runsStoppedByUser.delete(agentRunId);
+    resolvedExitCode = LOCAL_CLI_SESSION_LIMIT_EXIT_CODE;
+    resolvedOutput = appendRunSessionLimitNotice(
+      resolvedOutput.replace(/\n*Stopped by user\.$/, ""),
+    );
+  } else if (agentRunId !== undefined && runsStoppedByUser.has(agentRunId)) {
     runsStoppedByUser.delete(agentRunId);
     resolvedExitCode = STOPPED_EXIT_CODE;
     resolvedOutput =
@@ -424,6 +444,9 @@ const requestRunInput = (
 ): void => {
   const session = runSessions.get(agentRunId);
   const accumulatedOutput = session?.accumulatedOutput ?? partialOutput;
+  // The CLI has exited while we wait for a human answer; the continuation
+  // turn re-arms the session limit when it starts a new process.
+  clearRunSessionLimit(agentRunId);
 
   savePendingRunInputSession(config.layout, {
     agentRunId,
@@ -779,6 +802,8 @@ export const runWriterTask = (
       cwd,
       stdio: ["ignore", "pipe", "pipe"],
       env: processEnv ?? process.env,
+      // Own process group so a stop / session limit kills the whole tree.
+      detached: process.platform !== "win32",
     });
     attachChildHandlers(
       config,
@@ -796,6 +821,11 @@ export const runWriterTask = (
     startPipeChild();
     return;
   }
+
+  // S0-6: hard wall-clock limit; expiry goes through the stop-run path.
+  armRunSessionLimit(agentRunId, () => {
+    stopAgentRunForSessionLimit(config, socket, agentRunId, requestId);
+  });
 
   runSessions.set(agentRunId, {
     originalPrompt: prompt,
@@ -1029,10 +1059,11 @@ export const stopAgentRun = (
 
   runsStoppedByUser.add(agentRunId);
   stopRunHeartbeat(agentRunId);
+  clearRunSessionLimit(agentRunId);
 
   const child = activeChildren.get(agentRunId);
   if (child !== undefined) {
-    child.kill("SIGTERM");
+    killChildProcessTree(child);
     return true;
   }
 
@@ -1057,4 +1088,21 @@ export const stopAgentRun = (
   );
 
   return true;
+};
+
+/**
+ * S0-6: the session limit fired. Same kill path as a user stop (process tree
+ * for pipe runs, PTY kill otherwise); finishRun reports it as a session limit.
+ */
+export const stopAgentRunForSessionLimit = (
+  config: AgentWitchRunConfig,
+  socket: WebSocket,
+  agentRunId: string,
+  requestId?: string,
+): boolean => {
+  if (!runSessions.has(agentRunId)) {
+    return false;
+  }
+  runsStoppedBySessionLimit.add(agentRunId);
+  return stopAgentRun(config, socket, agentRunId, requestId);
 };

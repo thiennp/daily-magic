@@ -6,16 +6,27 @@ import {
 } from "@/lib/agentWitch/formatWriterCliDisplayCommand";
 
 describe("formatWriterCliDisplayCommand", () => {
-  it("shows the real claude invocation for claude-cli", () => {
+  it("shows the workspace-write claude invocation for claude-cli", () => {
     expect(formatWriterCliDisplayCommand("claude-cli", "run tests")).toBe(
-      'claude -p --dangerously-skip-permissions "run tests"',
+      'claude -p --permission-mode dontAsk --max-turns 30 "run tests"',
     );
+  });
+
+  it("never shows a full-bypass flag for any writer", () => {
+    for (const writer of ["claude-cli", "codex", "cursor", "antigravity"] as const) {
+      const shown = formatWriterCliDisplayCommand(writer, "task");
+      expect(shown).not.toMatch(
+        /dangerously-skip-permissions|danger-full-access|--force|sandbox disabled/,
+      );
+    }
   });
 
   it("shows --continue on claude follow-up turns", () => {
     expect(
       formatWriterCliDisplayCommand("claude-cli", "follow up", "continue"),
-    ).toBe('claude --continue -p --dangerously-skip-permissions "follow up"');
+    ).toBe(
+      'claude --continue -p --permission-mode dontAsk --max-turns 30 "follow up"',
+    );
   });
 
   it("shows the cursor agent session command without a prompt", () => {
@@ -32,7 +43,7 @@ describe("formatWriterCliDisplayCommand", () => {
 
   it("orders antigravity flags so -p is not followed by another flag", () => {
     expect(formatWriterCliDisplayCommand("antigravity", "plan")).toBe(
-      'agy --dangerously-skip-permissions -p "plan"',
+      'agy --sandbox -p "plan"',
     );
   });
 });

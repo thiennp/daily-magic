@@ -22,18 +22,20 @@ export const formatWriterCliDisplayCommand = (
   const continueFlag = sessionTurn === "continue" ? "--continue " : "";
 
   if (writerAgent === "claude-cli") {
-    return `claude ${continueFlag}-p --dangerously-skip-permissions "${escaped}"`;
+    // Display only: AWL also passes --allowedTools and --max-budget-usd
+    // (scripts/buildWriterCliInvocation.ts, S0-4 workspace-write profile).
+    return `claude ${continueFlag}-p --permission-mode dontAsk --max-turns 30 "${escaped}"`;
   }
 
   if (writerAgent === "codex") {
-    return `codex exec -s danger-full-access "${escaped}"`;
+    return `codex exec -s workspace-write "${escaped}"`;
   }
 
   if (writerAgent === "cursor") {
-    return `cursor agent ${continueFlag}-p --force --trust --sandbox disabled "${escaped}"`;
+    return `cursor agent ${continueFlag}-p --trust --sandbox enabled "${escaped}"`;
   }
 
-  return `agy ${continueFlag}--dangerously-skip-permissions -p "${escaped}"`;
+  return `agy ${continueFlag}--sandbox -p "${escaped}"`;
 };
 
 export const formatWriterSessionStartDisplayCommand = (
