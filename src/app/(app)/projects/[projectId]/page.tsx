@@ -7,6 +7,7 @@ import AppShell from "@/features/shell/AppShell";
 import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
 import { getAuthActor } from "@/lib/auth/auth";
 import { authorizeProjectPageActor } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
+import { buildLoginCallbackPath } from "@/lib/shell/buildLoginCallbackPath";
 
 export const dynamic = "force-dynamic";
 
@@ -37,14 +38,19 @@ export default async function ProjectDetailPage({
   params,
   searchParams,
 }: ProjectsDetailPageProps) {
+  const { projectId } = await params;
+  const query = await searchParams;
   const actor = await getAuthActor();
 
   if (!actor) {
-    redirect("/login?callbackUrl=/projects");
+    const trimmedId = projectId.trim();
+    const path =
+      trimmedId.length > 0
+        ? `/projects/${encodeURIComponent(trimmedId)}`
+        : "/projects";
+    redirect(buildLoginCallbackPath(path, query));
   }
 
-  const { projectId } = await params;
-  const query = await searchParams;
   const startRename = query.rename === "1" || query.rename === "true";
   const access = await authorizeProjectPageActor({
     projectId: projectId.trim(),

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import MarketingHeaderNavHamburgerButton from "@/features/marketing/MarketingHeaderNavHamburgerButton";
 import { MARKETING_HEADER_NAV_ITEMS } from "@/features/marketing/marketingHeaderNavItems.constant";
@@ -17,6 +17,39 @@ export default function MarketingHeaderNav({
   showSignIn,
 }: MarketingHeaderNavProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const rootRef = useRef<HTMLElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!mobileOpen) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent): void => {
+      if (event.key !== "Escape") {
+        return;
+      }
+      event.preventDefault();
+      setMobileOpen(false);
+      toggleRef.current?.focus();
+    };
+
+    const handlePointerDown = (event: MouseEvent): void => {
+      const target = event.target as Node;
+      if (rootRef.current?.contains(target)) {
+        return;
+      }
+      setMobileOpen(false);
+    };
+
+    // Capture phase so ancestor keydown stopPropagation cannot block Escape.
+    document.addEventListener("keydown", handleKeyDown, true);
+    document.addEventListener("mousedown", handlePointerDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown, true);
+      document.removeEventListener("mousedown", handlePointerDown);
+    };
+  }, [mobileOpen]);
 
   const navLinkClass = mergeMarketingClasses(
     MARKETING_HEADER_LINK_CLASSES,
@@ -24,7 +57,10 @@ export default function MarketingHeaderNav({
   );
 
   return (
-    <nav className="relative flex items-center gap-3 text-sm sm:gap-4">
+    <nav
+      ref={rootRef}
+      className="relative flex items-center gap-3 text-sm sm:gap-4"
+    >
       <div className="hidden items-center gap-1 lg:flex">
         {MARKETING_HEADER_NAV_ITEMS.map((item) => (
           <Link key={item.href} href={item.href} className={navLinkClass}>
@@ -33,6 +69,7 @@ export default function MarketingHeaderNav({
         ))}
       </div>
       <MarketingHeaderNavHamburgerButton
+        ref={toggleRef}
         mobileOpen={mobileOpen}
         onToggle={() => {
           setMobileOpen((open) => !open);

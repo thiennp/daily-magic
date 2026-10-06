@@ -18,4 +18,19 @@ describe("useAutomationsPageData", () => {
     expect(source).toMatch(/!capabilitiesResponse\.ok/);
     expect(source).toContain("loadGenerationRef");
   });
+
+
+  it("skips authed fetches when signed out", () => {
+    const source = readFileSync(
+      join(
+        process.cwd(),
+        "src/features/automations/hooks/useAutomationsPageData.ts",
+      ),
+      "utf8",
+    );
+
+    expect(source).toContain("useSession");
+    expect(source).toContain('status !== "authenticated"');
+    expect(source).toContain('fetch("/api/automations")');
+  });
 });

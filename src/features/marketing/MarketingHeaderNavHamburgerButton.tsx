@@ -1,3 +1,5 @@
+import { forwardRef } from "react";
+
 import { MARKETING_HEADER_LINK_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
@@ -6,12 +8,13 @@ interface MarketingHeaderNavHamburgerButtonProps {
   readonly onToggle: () => void;
 }
 
-export default function MarketingHeaderNavHamburgerButton({
-  mobileOpen,
-  onToggle,
-}: MarketingHeaderNavHamburgerButtonProps) {
+const MarketingHeaderNavHamburgerButton = forwardRef<
+  HTMLButtonElement,
+  MarketingHeaderNavHamburgerButtonProps
+>(function MarketingHeaderNavHamburgerButton({ mobileOpen, onToggle }, ref) {
   return (
     <button
+      ref={ref}
       type="button"
       className={mergeMarketingClasses(
         MARKETING_HEADER_LINK_CLASSES,
@@ -37,4 +40,6 @@ export default function MarketingHeaderNavHamburgerButton({
       </svg>
     </button>
   );
-}
+});
+
+export default MarketingHeaderNavHamburgerButton;

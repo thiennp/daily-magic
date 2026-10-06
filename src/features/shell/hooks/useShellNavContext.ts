@@ -18,44 +18,79 @@ const resolveFallbackContext = (
     isPrivilegedGlobalRole(globalRole),
 });
 
+/** Shared in-flight fetch so desktop nav + mobile menu do not double-hit the API. */
+let shellContextInflight: Promise<ShellNavFilterContext> | null = null;
+
+const loadShellNavContext = (
+  globalRole: string | undefined,
+): Promise<ShellNavFilterContext> => {
+  if (shellContextInflight !== null) {
+    return shellContextInflight;
+  }
+
+  shellContextInflight = (async (): Promise<ShellNavFilterContext> => {
+    try {
+      const response = await fetch(SHELL_CONTEXT_API_PATH);
+      if (!response.ok) {
+        return resolveFallbackContext(globalRole);
+      }
+
+      const data: unknown = await response.json();
+      if (typeof data !== "object" || data === null) {
+        return resolveFallbackContext(globalRole);
+      }
+
+      const record = data as Record<string, unknown>;
+      return {
+        teamNavEnabled: record.teamNavEnabled === true,
+        showAdminNav: record.showAdminNav === true,
+      };
+    } catch {
+      return resolveFallbackContext(globalRole);
+    } finally {
+      shellContextInflight = null;
+    }
+  })();
+
+  return shellContextInflight;
+};
+
 const useShellNavContext = (): ShellNavFilterContext & {
   readonly isLoading: boolean;
 } => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [context, setContext] = useState<ShellNavFilterContext>(() =>
     resolveFallbackContext(session?.user?.globalRole),
   );
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(status === "loading");
 
   useEffect(() => {
-    const load = async (): Promise<void> => {
-      try {
-        const response = await fetch(SHELL_CONTEXT_API_PATH);
-        if (!response.ok) {
-          setContext(resolveFallbackContext(session?.user?.globalRole));
-          return;
-        }
+    if (status === "loading") {
+      setIsLoading(true);
+      return;
+    }
 
-        const data: unknown = await response.json();
-        if (typeof data !== "object" || data === null) {
-          setContext(resolveFallbackContext(session?.user?.globalRole));
-          return;
-        }
+    if (status !== "authenticated" || session?.user == null) {
+      setContext(resolveFallbackContext(undefined));
+      setIsLoading(false);
+      return;
+    }
 
-        const record = data as Record<string, unknown>;
-        setContext({
-          teamNavEnabled: record.teamNavEnabled === true,
-          showAdminNav: record.showAdminNav === true,
-        });
-      } catch {
-        setContext(resolveFallbackContext(session?.user?.globalRole));
-      } finally {
-        setIsLoading(false);
+    let cancelled = false;
+    const globalRole = session.user.globalRole;
+    setIsLoading(true);
+    void loadShellNavContext(globalRole).then((next) => {
+      if (cancelled) {
+        return;
       }
-    };
+      setContext(next);
+      setIsLoading(false);
+    });
 
-    void load();
-  }, [session?.user?.globalRole]);
+    return () => {
+      cancelled = true;
+    };
+  }, [session?.user, session?.user?.globalRole, status]);
 
   return { ...context, isLoading };
 };

@@ -8,6 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useSession } from "next-auth/react";
 
 import { subscribeAgentWitchDashboardSocket } from "@/features/agent/hooks/subscribeAgentWitchDashboardSocket";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
@@ -23,12 +24,21 @@ export function AgentWitchDashboardProvider({
 }: {
   readonly children: ReactNode;
 }) {
+  const { status } = useSession();
   const busRef = useRef(createAgentWitchDashboardBus());
   const socketRef = useRef<WebSocket | null>(null);
   const [connectionStatus, setConnectionStatus] =
     useState<WsTestConnectionStatus>("connecting");
 
   useEffect(() => {
+    if (status !== "authenticated") {
+      socketRef.current = null;
+      setConnectionStatus(
+        status === "loading" ? "connecting" : "disconnected",
+      );
+      return;
+    }
+
     return subscribeAgentWitchDashboardSocket({
       onStatusChange: setConnectionStatus,
       onMessage: (raw) => {
@@ -41,7 +51,7 @@ export function AgentWitchDashboardProvider({
         socketRef.current = socket;
       },
     });
-  }, []);
+  }, [status]);
 
   const subscribe = useCallback(
     (listener: (raw: string) => void) => busRef.current.subscribe(listener),

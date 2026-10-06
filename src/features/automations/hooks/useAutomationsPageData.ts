@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import type AgentAutomationRecord from "@/lib/automations/types/AgentAutomationRecord.type";
@@ -13,6 +14,7 @@ export function useAutomationsPageData(refreshKey = 0): {
   readonly loadFailed: boolean;
   readonly reload: () => void;
 } {
+  const { status } = useSession();
   const [automations, setAutomations] = useState<
     readonly AgentAutomationRecord[]
   >([]);
@@ -30,6 +32,19 @@ export function useAutomationsPageData(refreshKey = 0): {
   const loadGenerationRef = useRef(0);
 
   useEffect(() => {
+    if (status === "loading") {
+      setIsLoading(true);
+      return;
+    }
+
+    if (status !== "authenticated") {
+      setAutomations([]);
+      setCapabilities([]);
+      setLoadFailed(false);
+      setIsLoading(false);
+      return;
+    }
+
     const generation = loadGenerationRef.current + 1;
     loadGenerationRef.current = generation;
 
@@ -104,7 +119,7 @@ export function useAutomationsPageData(refreshKey = 0): {
     };
 
     void loadPageData();
-  }, [refreshKey, reloadNonce]);
+  }, [refreshKey, reloadNonce, status]);
 
   return {
     automations,
