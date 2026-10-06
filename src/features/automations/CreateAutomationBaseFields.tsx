@@ -1,4 +1,5 @@
 import AutomationScheduleFields from "@/features/automations/AutomationScheduleFields";
+import CreateAutomationTriggerSelect from "@/features/automations/CreateAutomationTriggerSelect";
 import { AGENT_AUTOMATION_TRIGGER_TYPES } from "@/lib/automations/AgentAutomationTriggerType.constant";
 import type { AgentAutomationSchedulePresetValue } from "@/lib/automations/AgentAutomationSchedulePreset.constant";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
@@ -70,27 +71,10 @@ export default function CreateAutomationBaseFields({
           className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
         />
       </label>
-      <label className="block text-sm font-medium text-gray-800 dark:text-white/90">
-        Trigger
-        <select
-          value={triggerType}
-          onChange={(event) => {
-            onTriggerTypeChange(
-              event.target.value as
-                | typeof AGENT_AUTOMATION_TRIGGER_TYPES.SCHEDULE
-                | typeof AGENT_AUTOMATION_TRIGGER_TYPES.WEBHOOK,
-            );
-          }}
-          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
-        >
-          <option value={AGENT_AUTOMATION_TRIGGER_TYPES.SCHEDULE}>
-            Recurring schedule
-          </option>
-          <option value={AGENT_AUTOMATION_TRIGGER_TYPES.WEBHOOK}>
-            Webhook (HTTP POST)
-          </option>
-        </select>
-      </label>
+      <CreateAutomationTriggerSelect
+        triggerType={triggerType}
+        onTriggerTypeChange={onTriggerTypeChange}
+      />
       {triggerType === AGENT_AUTOMATION_TRIGGER_TYPES.SCHEDULE ? (
         <AutomationScheduleFields
           preset={preset}

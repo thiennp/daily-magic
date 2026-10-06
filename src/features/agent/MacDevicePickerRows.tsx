@@ -62,6 +62,7 @@ export default function MacDevicePickerRows({
             detailText={detail?.text}
             detailWarning={detail?.isMismatch === true}
             isThisMac={isThisMac}
+            showAnotherComputerBadge={!isThisMac}
             isSelected={device.id === selectedDeviceId}
             isWakeServerReachable={canWakeMacDeviceFromBrowser({
               deviceLabel: device.deviceLabel,

@@ -21,6 +21,20 @@ describe("MacDeviceRowMainContent", () => {
 
     expect(source).toContain("<MacDeviceThisMacBadge />");
     expect(source).toContain("{detailText ? (");
-    expect(source).toContain("{detailText && !isThisMac ? (");
+    expect(source).toContain("{detailText && !isThisMac && !showAnotherComputerBadge ? (");
+  });
+});
+
+describe("MacDeviceRowMainContent another-computer seat badge", () => {
+  it("can render Another computer badge when picker requests it", () => {
+    const source = readFileSync(
+      join(
+        process.cwd(),
+        "src/features/agent-witch/macDevices/MacDeviceRowMainContent.tsx",
+      ),
+      "utf8",
+    );
+    expect(source).toContain("showAnotherComputerBadge");
+    expect(source).toContain("MacDeviceAnotherComputerBadge");
   });
 });

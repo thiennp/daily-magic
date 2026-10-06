@@ -34,7 +34,10 @@ export default function AutomationsPageClient() {
         }}
       />
       {syncWarning ? (
-        <p className="text-sm text-amber-700 dark:text-amber-300">
+        <p
+          role="status"
+          className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200"
+        >
           {syncWarning}
         </p>
       ) : null}
@@ -43,9 +46,14 @@ export default function AutomationsPageClient() {
       ) : isLoading ? (
         <p className="text-sm text-gray-500 dark:text-gray-400">Loading…</p>
       ) : automations.length === 0 ? (
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          {AUTOMATIONS_PAGE_COPY.empty}
-        </p>
+        <div className="rounded-xl border border-dashed border-gray-300 px-4 py-8 text-center dark:border-gray-700">
+          <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+            {AUTOMATIONS_PAGE_COPY.emptyTitle}
+          </p>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            {AUTOMATIONS_PAGE_COPY.empty}
+          </p>
+        </div>
       ) : (
         <div className="grid gap-4">
           {automations.map((automation) => (

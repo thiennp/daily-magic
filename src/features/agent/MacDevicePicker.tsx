@@ -7,6 +7,7 @@ import { deviceMatchesLocalTokenHash } from "@/features/agent-witch/online-wake"
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import useThisMacLocalInstallActions from "@/features/home/hooks/useThisMacLocalInstallActions";
+import { MARKETPLACE_COMPUTER_PICKER_COPY } from "@/features/marketplace/marketplaceComputerPickerCopy.constant";
 
 interface MacDevicePickerProps {
   readonly devices: readonly MyMacDevice[];
@@ -61,7 +62,7 @@ export default function MacDevicePicker({
 
   return (
     <div>
-      <Label>Which Mac should run this?</Label>
+      <Label>{MARKETPLACE_COMPUTER_PICKER_COPY.question}</Label>
       <div className="mt-3 space-y-2">
         <MacDevicePickerRows
           devices={devices}

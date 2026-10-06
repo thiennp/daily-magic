@@ -1,5 +1,6 @@
 "use client";
 
+import { AUTOMATIONS_PAGE_COPY } from "@/features/automations/automationsPageCopy.constant";
 import { AGENT_AUTOMATION_SCHEDULE_PRESETS } from "@/lib/automations/AgentAutomationSchedulePreset.constant";
 import type { AgentAutomationSchedulePresetValue } from "@/lib/automations/AgentAutomationSchedulePreset.constant";
 
@@ -65,7 +66,7 @@ export default function AutomationScheduleFields({
         </label>
       ) : null}
       <label className="block text-sm font-medium text-gray-800 dark:text-white/90">
-        Timezone
+        {AUTOMATIONS_PAGE_COPY.timezone}
         <input
           type="text"
           value={scheduleTimezone}

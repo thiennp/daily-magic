@@ -1,4 +1,5 @@
 import MacDeviceIcon from "@/features/agent-witch/macDevices/MacDeviceIcon";
+import MacDeviceAnotherComputerBadge from "@/features/agent-witch/macDevices/MacDeviceAnotherComputerBadge";
 import MacDeviceThisMacBadge from "@/features/agent-witch/macDevices/MacDeviceThisMacBadge";
 import { resolveMacDeviceIconClassName } from "@/features/agent-witch/macDevices/utils/resolveMacDeviceIconClassName";
 import MacDeviceNameEditor from "@/features/agent-witch/macDevices/MacDeviceNameEditor";
@@ -10,6 +11,8 @@ interface MacDeviceRowMainContentProps {
   readonly detailText?: string;
   readonly detailWarning?: boolean;
   readonly isThisMac?: boolean;
+  /** When true (picker seats), non-this rows show an Another computer badge. */
+  readonly showAnotherComputerBadge?: boolean;
   readonly isEditing: boolean;
   readonly onEditingChange: (isEditing: boolean) => void;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
@@ -22,6 +25,7 @@ export default function MacDeviceRowMainContent({
   detailText,
   detailWarning = false,
   isThisMac = false,
+  showAnotherComputerBadge = false,
   isEditing,
   onEditingChange,
   onRenamed,
@@ -54,9 +58,17 @@ export default function MacDeviceRowMainContent({
               ) : null}
             </div>
           ) : null}
+          {!isThisMac && showAnotherComputerBadge ? (
+            <div className="mt-1 flex min-w-0 flex-wrap items-center gap-1.5">
+              <MacDeviceAnotherComputerBadge />
+              {detailText ? (
+                <span className={detailClassName}>{detailText}</span>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </div>
-      {detailText && !isThisMac ? (
+      {detailText && !isThisMac && !showAnotherComputerBadge ? (
         <p className={detailClassName}>{detailText}</p>
       ) : null}
     </div>

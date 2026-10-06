@@ -12,23 +12,14 @@ const navItem = (href: string, label: string): AppNavItem => ({
 describe("filterAppNavForShellContext", () => {
   const items = [
     navItem("/", "Home"),
-    navItem("/marketplace", "Team playbooks"),
+    navItem("/marketplace", "Marketplace"),
     navItem("/automations", "Automations"),
     navItem("/admin/groups", "Admin"),
   ];
 
-  it("hides team-only and admin items for solo users but keeps marketplace", () => {
+  it("keeps Marketplace and Automations for solo users; hides admin only", () => {
     const filtered = filterAppNavForShellContext(items, {
       teamNavEnabled: false,
-      showAdminNav: false,
-    });
-
-    expect(filtered.map((item) => item.href)).toEqual(["/", "/marketplace"]);
-  });
-
-  it("shows automations when the user has group membership", () => {
-    const filtered = filterAppNavForShellContext(items, {
-      teamNavEnabled: true,
       showAdminNav: false,
     });
 
@@ -36,6 +27,20 @@ describe("filterAppNavForShellContext", () => {
       "/",
       "/marketplace",
       "/automations",
+    ]);
+  });
+
+  it("shows admin when allowed", () => {
+    const filtered = filterAppNavForShellContext(items, {
+      teamNavEnabled: true,
+      showAdminNav: true,
+    });
+
+    expect(filtered.map((item) => item.href)).toEqual([
+      "/",
+      "/marketplace",
+      "/automations",
+      "/admin/groups",
     ]);
   });
 });

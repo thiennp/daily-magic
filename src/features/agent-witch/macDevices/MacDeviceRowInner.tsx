@@ -11,6 +11,7 @@ interface MacDeviceRowInnerProps {
   readonly detailText?: string;
   readonly detailWarning?: boolean;
   readonly isThisMac?: boolean;
+  readonly showAnotherComputerBadge?: boolean;
   readonly isSelected: boolean;
   readonly isEditing: boolean;
   readonly onSelect?: () => void;
@@ -31,6 +32,7 @@ export default function MacDeviceRowInner({
   detailText,
   detailWarning = false,
   isThisMac = false,
+  showAnotherComputerBadge = false,
   isSelected,
   isEditing,
   onSelect,
@@ -51,6 +53,7 @@ export default function MacDeviceRowInner({
       detailText={detailText}
       detailWarning={detailWarning}
       isThisMac={isThisMac}
+      showAnotherComputerBadge={showAnotherComputerBadge}
       isEditing={isEditing}
       onEditingChange={onEditingChange}
       onRenamed={onRenamed}
