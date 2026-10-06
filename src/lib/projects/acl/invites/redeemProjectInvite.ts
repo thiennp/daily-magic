@@ -84,6 +84,7 @@ export const redeemProjectInvite = async (input: {
     status: "pending" as const,
     namingRequired: true as const,
     suggestedProjectDisplayName: nameResult.name,
+    invitePlatform: invite.platform ?? null,
   };
 
   const mayAutoApprove = await shouldAutoApproveInviteRedeem({
@@ -95,7 +96,7 @@ export const redeemProjectInvite = async (input: {
     return pendingResult;
   }
 
-  return tryAutoApproveInviteRedeem({
+  const finished = await tryAutoApproveInviteRedeem({
     projectId: invite.projectId,
     actorUserId: input.actorUserId,
     inviteId: invite.id,
@@ -106,4 +107,7 @@ export const redeemProjectInvite = async (input: {
     request: inserted.request,
     pendingResult,
   });
+  return finished.ok
+    ? { ...finished, invitePlatform: invite.platform ?? null }
+    : finished;
 };

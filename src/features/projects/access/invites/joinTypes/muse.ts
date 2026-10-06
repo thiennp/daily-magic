@@ -6,7 +6,7 @@ import type { ProjectInviteJoinType } from "@/features/projects/access/invites/j
 const urls = buildAgentAccessUrls();
 
 /**
- * Muse — NEEDS PRODUCT EN (not yet in COPY.md §S0c-types). Wake step is the same
+ * Muse — Product EN PASS (2026-10-06: match hints, note, steps 1–4). Wake step is the same
  * HMAC register flow as the full Copy prompt's Muse step 7
  * (buildProjectInviteJoinMuseWebhookStep). Starts in poll; saving the wake link
  * (register_project_webhook) flips delivery_mode to webhook (Wake S5).

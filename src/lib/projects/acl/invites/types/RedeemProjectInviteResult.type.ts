@@ -9,6 +9,8 @@ type RedeemProjectInviteResult =
       readonly status: "pending";
       readonly namingRequired: true;
       readonly suggestedProjectDisplayName: string | null;
+      /** Invite platform (grok | muse); null = no type set at create. */
+      readonly invitePlatform?: string | null;
       readonly membership?: undefined;
       readonly projectApiKey?: undefined;
     }
@@ -19,6 +21,8 @@ type RedeemProjectInviteResult =
       readonly status: "active";
       readonly namingRequired: false;
       readonly suggestedProjectDisplayName: string | null;
+      /** Invite platform (grok | muse); null = no type set at create. */
+      readonly invitePlatform?: string | null;
       readonly membership: ProjectMembershipRecord;
       readonly projectApiKey: string | null;
     }

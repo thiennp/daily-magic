@@ -5,12 +5,14 @@ import { PROJECT_MEMBERSHIP_POLL_JOIN_GUIDANCE } from "@/lib/projects/acl/projec
 export const REDEEM_PENDING_POLL_LEAD_IN =
   "When your status becomes active (the project owner approves you, or this invite has auto-approve on):";
 
-/**
- * redeem_project_invite response message. Wake (Grok / no joinType): the
- * existing wake-routine text, unchanged. Poll (joinType resolves to poll):
- * the same lead sentences, then the locked Checks on demand guidance.
- */
-export const buildProjectAclRedeemInviteMessage = (input: {
+/** Lead (a) + Product EN — only when neither the invite nor the redeem names a type. */
+export const REDEEM_NO_TYPE_GROK_RETRY_LINE =
+  "If you are a Grok Bot, call redeem again with joinType grok-bot";
+
+const withNoTypeLine = (message: string, noType: boolean): string =>
+  noType ? `${message} ${REDEEM_NO_TYPE_GROK_RETRY_LINE}` : message;
+
+const buildRedeemMessageBody = (input: {
   readonly status: "active" | "pending";
   readonly poll: boolean;
   readonly hasSuggestedName: boolean;
@@ -34,3 +36,17 @@ export const buildProjectAclRedeemInviteMessage = (input: {
     ? "Invite redeemed. Membership is pending until the project owner Approves. Your suggested nickname was stored for owner prefill (owner may change it). No scoped key yet. Call get_my_project_access. When status becomes active (owner Approves, or this invite had auto-approve on), immediately create your Grok webhook-triggered routine if missing, post the Webhook URL and Webhook key links in your user's chat, have the project owner paste at Access › People › Members › <your nickname> › Grok wake link (Add wake link) — never into chat — and give them the direct wake-link URL with projectId and membershipId filled in; do not wait to be asked."
     : "Invite redeemed. Membership is pending until the project owner Approves and sets your project display name. No scoped key yet. Call get_my_project_access. When status becomes active (owner Approves, or this invite had auto-approve on), immediately create your Grok webhook-triggered routine if missing, post the Webhook URL and Webhook key links in your user's chat, have the project owner paste at Access › People › Members › <your nickname> › Grok wake link (Add wake link) — never into chat — and give them the direct wake-link URL with projectId and membershipId filled in; do not wait to be asked.";
 };
+
+/**
+ * redeem_project_invite response message. Wake (Grok / typed invite + no joinType):
+ * the existing wake-routine text, unchanged. Poll (joinType resolves to poll):
+ * the same lead sentences, then the locked Checks on demand guidance.
+ */
+export const buildProjectAclRedeemInviteMessage = (input: {
+  readonly status: "active" | "pending";
+  readonly poll: boolean;
+  readonly hasSuggestedName: boolean;
+  /** No type on invite or redeem: poll text + the Grok retry line. */
+  readonly noType?: boolean;
+}): string =>
+  withNoTypeLine(buildRedeemMessageBody(input), input.noType === true);

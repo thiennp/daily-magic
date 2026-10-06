@@ -5,8 +5,12 @@ import { normalizeProjectInviteTokenArg } from "@/lib/projects/acl/invites/extra
 import { redeemProjectInvite } from "@/lib/projects/acl/invites/redeemProjectInvite";
 import { toPublicAccessErrorCode } from "@/lib/projects/acl/mapProjectAccessError";
 import { buildProjectAclRedeemInviteMessage } from "@/lib/agentAccess/buildProjectAclRedeemInviteMessage";
-import { isProjectAclRedeemPollJoin } from "@/lib/agentAccess/isProjectAclRedeemPollJoin";
+import {
+  isProjectAclRedeemNoTypeJoin,
+  isProjectAclRedeemPollJoin,
+} from "@/lib/agentAccess/isProjectAclRedeemPollJoin";
 import { readProjectAclRedeemInviteArgs } from "@/lib/agentAccess/readProjectAclRedeemInviteArgs";
+import { retypeProjectAclRedeemInvite } from "@/lib/agentAccess/retypeProjectAclRedeemInvite";
 
 export const executeProjectAclRedeemInviteTool = async (input: {
   readonly actor: AgentAccessActor;
@@ -32,6 +36,16 @@ export const executeProjectAclRedeemInviteTool = async (input: {
     joinPlatform,
   });
   if (!result.ok) {
+    const retyped =
+      joinPlatform !== null &&
+      (result.code === "invalid_token" || result.code === "already_pending")
+        ? await retypeProjectAclRedeemInvite({
+            token: normalizeProjectInviteTokenArg(token),
+            actorUserId: input.actor.id,
+            joinPlatform,
+          })
+        : null;
+    if (retyped !== null) return retyped;
     if (
       result.code === "display_name_taken" ||
       result.code === "display_name_invalid" ||
@@ -48,8 +62,11 @@ export const executeProjectAclRedeemInviteTool = async (input: {
         : result.code;
     return agentAccessTextResult({ ok: false, error, code: error }, true);
   }
+  const invitePlatform = result.invitePlatform;
+  const noType = isProjectAclRedeemNoTypeJoin({ joinPlatform, invitePlatform });
   const poll = isProjectAclRedeemPollJoin({
     joinPlatform,
+    invitePlatform,
     membershipDeliveryMode:
       result.status === "active" ? result.membership.deliveryMode : undefined,
   });
@@ -68,6 +85,7 @@ export const executeProjectAclRedeemInviteTool = async (input: {
         status: "active",
         poll,
         hasSuggestedName: true,
+        noType,
       }),
     });
   }
@@ -82,6 +100,7 @@ export const executeProjectAclRedeemInviteTool = async (input: {
       status: "pending",
       poll,
       hasSuggestedName: result.suggestedProjectDisplayName !== null,
+      noType,
     }),
   });
 };

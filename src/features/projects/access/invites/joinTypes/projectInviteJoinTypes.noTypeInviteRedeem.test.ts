@@ -7,6 +7,7 @@ import {
   REDEEM_SUGGEST_INVITE_ROW,
   redeemSuggestPendingRow,
 } from "@/lib/projects/acl/invites/redeemSuggestedName.fixtures";
+import { REDEEM_NO_TYPE_GROK_RETRY_LINE } from "@/lib/agentAccess/buildProjectAclRedeemInviteMessage";
 import { PROJECT_MEMBERSHIP_POLL_JOIN_GUIDANCE } from "@/lib/projects/acl/projectMembershipPollJoinGuidance.constant";
 import { PROJECT_INVITE_JOIN_TYPES } from "@/features/projects/access/invites/joinTypes/projectInviteJoinTypes.constant";
 
@@ -82,13 +83,14 @@ describe("no-type (universal) invite redeem, per /join types[] id", () => {
   );
 
   it.each(CASES)(
-    "%s → reply guidance matches the type",
+    "%s → reply guidance matches the type (omitted/unknown: poll + Grok retry line)",
     async (_, joinType) => {
       const message = String((await redeemAs(joinType)).message);
-      const wakeText =
-        joinType === "grok-bot" ||
-        parseProjectInviteJoinPlatform(joinType) === null;
-      if (wakeText) {
+      const noType = parseProjectInviteJoinPlatform(joinType) === null;
+      expect(message.split(REDEEM_NO_TYPE_GROK_RETRY_LINE)).toHaveLength(
+        noType ? 2 : 1,
+      );
+      if (joinType === "grok-bot") {
         expect(message).toContain(GROK_ROUTINE);
         expect(message).not.toContain(PROJECT_MEMBERSHIP_POLL_JOIN_GUIDANCE);
       } else {

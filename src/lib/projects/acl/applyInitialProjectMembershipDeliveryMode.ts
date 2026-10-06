@@ -23,7 +23,7 @@ const loadInvitePlatform = async (
 
 /**
  * Join: pick the connect-time delivery_mode (redeem joinType, else invite
- * platform, + wake link) and
+ * platform, + wake link; an invite with no type and no joinType → poll) and
  * write it on the just-activated membership. Never throws — a failed write
  * must not fail the join; the row keeps the column default (webhook).
  */
@@ -48,6 +48,8 @@ export const applyInitialProjectMembershipDeliveryMode = async (input: {
     const deliveryMode = resolveInitialProjectMembershipDeliveryMode({
       platform,
       hasWakeLink: links.get(input.membershipId) === true,
+      // Lead (a): no type on the invite and none on redeem → Checks on demand.
+      noWakeChosen: input.inviteId !== null && platform === null,
     });
     await setProjectMembershipDeliveryMode({
       projectId: input.projectId,
