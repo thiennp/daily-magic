@@ -13,20 +13,21 @@ export const loadEnrichedProjectAccessMembers = async (input: {
   readonly ownerUserId: string;
   readonly projectDeviceId: string | null;
 }): Promise<readonly MembershipView[]> => {
-  let rows = await listProjectMembershipsForProject(input.projectId);
-  let base = await buildMembershipViews(rows);
-  if (input.isOwner) {
-    const wrote = await ensureProjectLinkedComputerSeat({
+  const initialRows = await listProjectMembershipsForProject(input.projectId);
+  const initialBase = await buildMembershipViews(initialRows);
+  const wrote =
+    input.isOwner &&
+    (await ensureProjectLinkedComputerSeat({
       projectId: input.projectId,
       ownerUserId: input.ownerUserId,
       deviceId: input.projectDeviceId,
-      members: base,
-    });
-    if (wrote) {
-      rows = await listProjectMembershipsForProject(input.projectId);
-      base = await buildMembershipViews(rows);
-    }
-  }
+      members: initialBase,
+    }));
+  const base = wrote
+    ? await buildMembershipViews(
+        await listProjectMembershipsForProject(input.projectId),
+      )
+    : initialBase;
   const live = await resolveAccessComputerLiveDeviceIds(base);
   const enriched = await enrichProjectAccessComputerMembers(base, live);
   return input.isOwner

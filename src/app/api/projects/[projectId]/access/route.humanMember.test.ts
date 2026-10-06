@@ -41,36 +41,43 @@ vi.mock("@/app/api/projects/[projectId]/access/patchAccessAction", () => ({
 
 import { GET } from "@/app/api/projects/[projectId]/access/route";
 
+const get = () =>
+  GET(new Request("http://local/access"), {
+    params: Promise.resolve({ projectId: "proj-1" }),
+  });
+
+const humanSeat = (role: "member" | "viewer") => ({
+  ok: true as const,
+  kind: "human" as const,
+  project: { id: "proj-1", name: "P", ownerUserId: "owner-1", deviceId: null },
+  membership: { role, memberKind: "human" },
+});
+
 describe("GET /api/projects/:projectId/access for human seats", () => {
   beforeEach(() => {
-    requireAuth.mockReset();
-    resolveSeat.mockReset();
-    listMemberships.mockReset();
-    buildViews.mockReset();
-    listPending.mockReset();
-    buildPending.mockReset();
-    enrichComputers.mockReset();
-    liveDeviceIds.mockReset();
+    for (const m of [
+      requireAuth,
+      resolveSeat,
+      listMemberships,
+      buildViews,
+      listPending,
+      buildPending,
+      enrichComputers,
+      liveDeviceIds,
+    ])
+      m.mockReset();
     requireAuth.mockResolvedValue({ actor: { id: "user-1" }, error: null });
     listMemberships.mockResolvedValue([]);
-    const members = [
+    buildViews.mockResolvedValue([
       { id: "mem-1", role: "member", memberKind: "bot", isAgent: true },
-    ];
-    buildViews.mockResolvedValue(members);
+    ]);
     liveDeviceIds.mockResolvedValue(new Set());
     enrichComputers.mockImplementation(async (rows: unknown) => rows);
   });
 
   it("human member gets roster without pending/firstConnect admin", async () => {
-    resolveSeat.mockResolvedValue({
-      ok: true,
-      kind: "human",
-      project: { id: "proj-1", name: "P", ownerUserId: "owner-1", deviceId: null },
-      membership: { role: "member", memberKind: "human" },
-    });
-    const response = await GET(new Request("http://local/access"), {
-      params: Promise.resolve({ projectId: "proj-1" }),
-    });
+    resolveSeat.mockResolvedValue(humanSeat("member"));
+    const response = await get();
     expect(response.status).toBe(200);
     const body = await response.json();
     expect(body).toMatchObject({
@@ -86,15 +93,8 @@ describe("GET /api/projects/:projectId/access for human seats", () => {
   });
 
   it("viewer gets read roster (actorRole viewer)", async () => {
-    resolveSeat.mockResolvedValue({
-      ok: true,
-      kind: "human",
-      project: { id: "proj-1", name: "P", ownerUserId: "owner-1", deviceId: null },
-      membership: { role: "viewer", memberKind: "human" },
-    });
-    const response = await GET(new Request("http://local/access"), {
-      params: Promise.resolve({ projectId: "proj-1" }),
-    });
+    resolveSeat.mockResolvedValue(humanSeat("viewer"));
+    const response = await get();
     expect(response.status).toBe(200);
     expect(await response.json()).toMatchObject({
       ok: true,
@@ -105,9 +105,6 @@ describe("GET /api/projects/:projectId/access for human seats", () => {
 
   it("stranger gets 403", async () => {
     resolveSeat.mockResolvedValue({ ok: false, code: "forbidden" });
-    const response = await GET(new Request("http://local/access"), {
-      params: Promise.resolve({ projectId: "proj-1" }),
-    });
-    expect(response.status).toBe(403);
+    expect((await get()).status).toBe(403);
   });
 });

@@ -46,3 +46,16 @@ export const wakeFlowBotStatus = async (): Promise<string> =>
       args: { projectId: WAKE_FLOW.projectId },
     }),
   );
+
+/** Owner or human seat shape for wake-link route tests. */
+export const wakeFlowSeat = (kind: "owner" | "human") => ({
+  ok: true as const,
+  kind,
+  project: {
+    id: WAKE_FLOW.projectId,
+    name: "P",
+    ownerUserId: WAKE_FLOW.ownerUserId,
+    deviceId: null as string | null,
+  },
+  membership: { role: "member" as const, memberKind: "human" as const },
+});

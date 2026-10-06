@@ -49,6 +49,7 @@ import {
   wakeFlowAccessSnapshot,
   wakeFlowBotStatus,
   wakeFlowOwnerPaste,
+  wakeFlowSeat,
 } from "@/app/api/projects/[projectId]/access/wakeLinkFlow.fixtures";
 import {
   buildAwcGrokWakeLinkHref,
@@ -61,18 +62,6 @@ import {
   wakeFlowSql,
 } from "@/lib/projects/acl/webhooks/wakeLinkFlow.fixtures";
 
-const seat = (kind: "owner" | "human") => ({
-  ok: true,
-  kind,
-  project: {
-    id: WAKE_FLOW.projectId,
-    name: "P",
-    ownerUserId: WAKE_FLOW.ownerUserId,
-    deviceId: null as string | null,
-  },
-  membership: { role: "member", memberKind: "human" },
-});
-
 beforeEach(() => {
   wakeFlowDb.grokUrl = null;
   sqlMock.mockReset();
@@ -81,7 +70,7 @@ beforeEach(() => {
     actor: { id: WAKE_FLOW.ownerUserId },
     error: null,
   });
-  resolveSeat.mockResolvedValue(seat("owner"));
+  resolveSeat.mockResolvedValue(wakeFlowSeat("owner"));
 });
 
 /** Redeemed bot → owner sees awaiting → deep link → owner paste → set. */
@@ -122,7 +111,7 @@ describe("invite → wake: owner paste path", () => {
   });
 
   it("human seats never get the wake-link flag or its query", async () => {
-    resolveSeat.mockResolvedValue(seat("human"));
+    resolveSeat.mockResolvedValue(wakeFlowSeat("human"));
     const snapshot = await wakeFlowAccessSnapshot();
     expect(snapshot.members[0]).not.toHaveProperty("wakeLinkSet");
     const queries = sqlMock.mock.calls.map((c) => (c[0] as string[]).join("?"));
