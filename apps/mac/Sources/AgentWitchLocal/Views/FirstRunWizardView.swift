@@ -24,7 +24,7 @@ struct FirstRunWizardView: View {
                     .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.surface))
                 agentToolsPreview
                 DownloadAwlLink(style: .prominent)
-                Text("Need the installer on another Mac? Download AWL stays available here.")
+                Text("Need the installer on another computer? Download AWL stays available here.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -72,7 +72,7 @@ struct FirstRunWizardView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(MacAppTheme.accent)
-                Button("Open Connect this Mac…") {
+                Button("Open Connect this computer…") {
                     controller.openConnectThisMac()
                 }
             case .error:
@@ -83,7 +83,7 @@ struct FirstRunWizardView: View {
                 Button("Copy install command") {
                     controller.copyBootstrapFallbackInstallCommand()
                 }
-                Button("Open Connect this Mac…") {
+                Button("Open Connect this computer…") {
                     controller.openConnectThisMac()
                 }
             case .connected:
@@ -91,7 +91,7 @@ struct FirstRunWizardView: View {
                     .foregroundStyle(MacAppTheme.success)
             }
         } else if controller.state == .notInstalled {
-            Button("Open Connect this Mac…") {
+            Button("Open Connect this computer…") {
                 controller.openConnectThisMac()
             }
             .buttonStyle(.borderedProminent)

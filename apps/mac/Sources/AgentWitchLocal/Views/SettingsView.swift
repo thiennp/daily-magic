@@ -127,13 +127,13 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(controller.bootstrapState == nil && controller.state != .notInstalled
                          ? "Signed in on this computer"
-                         : "Sign in to connect this Mac…")
+                         : "Sign in to connect this computer…")
                         .font(.subheadline)
                     Text(controller.statusMessage)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     HStack {
-                        Button("Open Connect this Mac…") {
+                        Button("Open Connect this computer…") {
                             controller.openConnectThisMac()
                         }
                         Button("Open AgentWitch") {
@@ -235,7 +235,7 @@ struct SettingsView: View {
                         .foregroundStyle(.secondary)
                     // HARD: always show Download AWL even when connected / running / update offer present.
                     DownloadAwlLink(style: .prominent)
-                    Text("Get AgentWitch Local for this or another Mac.")
+                    Text("Get AgentWitch Local for this or another computer.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

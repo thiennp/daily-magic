@@ -101,7 +101,7 @@ final class MacAppLocalUIStore: ObservableObject {
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-        let host = Host.current().localizedName ?? "This Mac"
+        let host = Host.current().localizedName ?? "This computer"
         self.computerName = defaults.string(forKey: Key.computerName) ?? host
         self.historyEnabled = defaults.object(forKey: Key.historyEnabled) as? Bool ?? true
         self.historyKeepDays = defaults.object(forKey: Key.historyKeepDays) as? Int ?? 30

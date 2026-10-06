@@ -212,7 +212,7 @@ struct MacAppMenuBarContentView: View {
                     controller.restartBootstrapSignIn()
                 }
             }
-            Button("Open Connect this Mac…") {
+            Button("Open Connect this computer…") {
                 controller.openConnectThisMac()
             }
         case .connected:
@@ -224,7 +224,7 @@ struct MacAppMenuBarContentView: View {
             Button("Copy install command") {
                 controller.copyBootstrapFallbackInstallCommand()
             }
-            Button("Open Connect this Mac…") {
+            Button("Open Connect this computer…") {
                 controller.openConnectThisMac()
             }
         }
@@ -244,7 +244,7 @@ struct MacAppMenuBarContentView: View {
     private var runtimeButtons: some View {
         switch controller.state {
         case .notInstalled:
-            Button("Open Connect this Mac…") {
+            Button("Open Connect this computer…") {
                 controller.openConnectThisMac()
             }
         case .stopped, .error:
