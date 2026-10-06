@@ -31,15 +31,18 @@ shipping a build that is signed but not notarized.
 2. Create a **temporary keychain** under `$TMPDIR/awl-sign.*`, unlock it, import Apple's
    public roots and Developer ID intermediates from `scripts/mac/signing/certs/` (Apple Root CA,
    Apple Root CA - G2, Developer ID Certification Authority G1 + G2; each pinned by SHA-256) into
-   the **temp keychain only**, import the `.p12`, set the key partition list
-   (`apple-tool:,apple:,codesign:`), and set the user search list to **temp + existing user
+   the **temp keychain only**, import the `.p12` (`-T /usr/bin/codesign -T /usr/bin/security`),
+   require the identity (cert + private key) in the temp keychain and record its SHA-1, set the key
+   partition list (`apple-tool:,apple:,codesign:`), and set the user search list to **temp + existing user
    keychains + `/Library/Keychains/System.keychain`** (existing entries are never dropped). The
    login keychain is never imported into and never used for the identity. No trust settings are
    written to the login/system/admin domains. An EXIT trap restores the original search list and
-   deletes the temp keychain. A preflight `security find-identity -v -p codesigning <tempkc>`
-   fails loudly if 0 valid identities match before codesign/notarytool.
-3. Inside-out `codesign --force --options runtime --timestamp --sign "$DEVELOPER_ID_APPLICATION"`
-   with `--keychain` pointing at the temp keychain:
+   deletes the temp keychain. A preflight **test signature** of a throwaway copy of `/usr/bin/true`
+   (same identity SHA-1, same temp keychain) must pass before anything real is signed. On macOS 26
+   this needs the leaf's Developer ID intermediate (G2) in a persistent keychain: see
+   [Troubleshooting](#unable-to-build-chain-to-self-signed-root--errsecinternalcomponent).
+3. Inside-out `codesign --force --options runtime --timestamp --sign <identity SHA-1>` (the
+   `$DEVELOPER_ID_APPLICATION` identity in the temp keychain) with `--keychain` pointing at it:
    - nested dylibs, frameworks and bundles first (no entitlements)
    - then helpers, XPC services and nested apps (with entitlements)
    - then `AgentWitchLocal.app` itself (with entitlements)
@@ -141,30 +144,72 @@ or signing user. Still never import the `.p12` into the primary account's login 
 
 ### `unable to build chain to self-signed root` / `errSecInternalComponent`
 
-codesign found the Developer ID identity but could not build a trust chain to an Apple root.
-Typical when the user keychain search list is only the temp keychain (System roots / System.keychain
-not visible) or the Apple Root / Developer ID intermediate is missing from the temp keychain.
+**Root cause on macOS 26 (seen 2026-10-06 on Thien's Mac, macOS 26.7.1):** codesign builds the
+signer chain itself, with no network fetch, and **does not use Developer ID intermediates that
+exist only in the temporary keychain**. The Developer ID Application leaf is issued by
+**Developer ID Certification Authority (G2)**. macOS ships only the G1 intermediate (in
+`SystemRootCertificates`), so if G2 is not in a persistent keychain (login or System), codesign
+prints the chain warning and then fails with `errSecInternalComponent`. The unified log shows the
+real error:
 
-What the pipeline does now:
+```
+trustd   [com.apple.securityd:policy] cert[0]: MissingIntermediate =(leaf)[force]> 0
+codesign [com.apple.securityd:SecError] Trust evaluate failure: [leaf MissingIntermediate]
+```
 
-1. Imports Apple Root CA, Apple Root CA - G2, and Developer ID CA (G1 + G2) from
-   `scripts/mac/signing/certs/` into the **temp** keychain (SHA-256 pinned; no sudo, no
-   login/system trust settings).
-2. Sets the user search list to temp + your existing user keychains +
-   `/Library/Keychains/System.keychain`, then restores the original list on EXIT.
-3. Passes `--keychain <tempkc>` to codesign and preflights with
-   `security find-identity -v -p codesigning <tempkc>` (fails if 0 valid identities).
+Things that are **not** the cause, although they look like it:
+
+- `security import devid.p12` printing nothing. Current macOS prints nothing for a `.p12` import
+  even on success. The pipeline now checks the result: it looks up the identity (certificate plus
+  private key) in the temp keychain and fails loudly if it is missing.
+- Key access. The same import, partition list and unlock steps sign fine with a self-signed
+  throwaway identity. Using the identity's SHA-1, dropping `--keychain`, waiting up to 150 s, or
+  putting the temp keychain under `~/Library/Keychains` all still fail the same way.
+- `security find-identity -v` saying "1 valid". trustd can fetch or cache the intermediate for
+  that check, while codesign cannot. So the preflight is now a **real test signature** of a
+  throwaway copy of `/usr/bin/true`, using the same identity (by SHA-1) and the same temp
+  keychain. It runs before anything in the app is signed.
+
+**One-time fix** (public Apple CA certificate only, no private key, no trust setting, no sudo):
+
+```bash
+security add-certificates -k "$HOME/Library/Keychains/login.keychain-db" \
+  scripts/mac/signing/certs/DeveloperIDG2CA.cer
+```
+
+Alternatively, an admin can add it to `/Library/Keychains/System.keychain` with `sudo`. If the
+preflight fails, it prints this exact command with the absolute path. Do **not** add trust
+settings ("Always Trust") to Apple or Developer ID certificates. A custom trust override
+causes this same error.
+
+What the pipeline does:
+
+1. Imports Apple Root CA, Apple Root CA - G2 and Developer ID CA (G1 + G2) from
+   `scripts/mac/signing/certs/` into the **temp** keychain (SHA-256 pinned). This is harmless,
+   and older macOS versions use them.
+2. Imports the `.p12` with `-T /usr/bin/codesign -T /usr/bin/security` and sets the partition
+   list `apple-tool:,apple:,codesign:`. It then requires the identity in the temp keychain and
+   records its SHA-1, which every `codesign --sign` uses.
+3. Sets the user search list to temp + your existing user keychains +
+   `/Library/Keychains/System.keychain`, then restores the original list on EXIT and deletes the
+   temp keychain.
+4. Preflight test signature. On a chain failure it checks whether the leaf's intermediate (G1 or
+   G2, picked by the leaf issuer) is in login, System or SystemRootCertificates, and prints the
+   one-time command above if it is not.
 
 Read-only checks (safe on the primary account; do not import the `.p12`):
 
 ```bash
 security dump-trust-settings          # user overrides
 security dump-trust-settings -d       # admin overrides
-# If you have a PUBLIC leaf .cer (not the .p12):
-security verify-cert -c ~/.agentwitch-signing/devid.cer -p codeSign \
-  -k /Library/Keychains/System.keychain
+openssl x509 -inform DER -in ~/.agentwitch-signing/devid.cer -noout -issuer   # OU=G2 => needs G2
+security find-certificate -a -c "Developer ID Certification Authority" -Z \
+  "$HOME/Library/Keychains/login.keychain-db" /Library/Keychains/System.keychain | grep SHA-1
+# G2 SHA-1 = 5B45F61068B29FCC8FFFF1A7E99B78DA9E9C4635, G1 SHA-1 = 3B166C3B7DC4B751C9FE2AFAB9135641E388E186
+/usr/bin/log show --last 10m --predicate 'process == "codesign" OR process == "trustd"' \
+  | grep -E 'MissingIntermediate|Trust evaluate'
 ```
 
-If admin/user trust settings show an Apple Root or Developer ID cert with a deny / unspecified
-override, that can break the chain independently of this script — remove that override in Keychain
-Access (or ask IT) rather than adding new trust settings from the build.
+Note: `security verify-cert` can report success here even when codesign fails, because it may use
+trustd's fetched or cached intermediate. Trust the preflight test signature and the unified log
+instead.

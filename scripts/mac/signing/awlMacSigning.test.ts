@@ -12,10 +12,14 @@ const SELF_TEST_TIMEOUT_MS = 60_000;
 
 describe("AWL Mac signing helpers", () => {
   it(
-    "mask secrets, gate dry-run steps and resolve the signing mode",
+    "mask secrets, gate dry-run steps, resolve the signing mode and gate signing on a test signature",
     () => {
       const output = execFileSync("bash", [SELF_TEST], { encoding: "utf8" });
       expect(output).toContain("ALL PASSED");
+      expect(output).not.toMatch(/^FAIL:/m);
+      expect(output).toContain(
+        "PASS: preflight prints the one-time login add-certificates command",
+      );
     },
     SELF_TEST_TIMEOUT_MS,
   );

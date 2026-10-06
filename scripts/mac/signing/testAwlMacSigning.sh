@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Self-test for the AWL Mac signing helpers: secret masking, dry-run gating,
-# mode resolution and inside-out order. Runs no codesign/notary/keychain command.
+# mode resolution, inside-out order and the test-signature preflight (stubbed).
+# Darwin only: creates + deletes an empty temp keychain and restores the search
+# list; read-only lookups in login/System. No .p12, no real codesign, no notary.
 set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -77,6 +79,50 @@ check "dry-run prints search-list -s" "$(has "${out}" "list-keychains -d user -s
 check "p12 password masked" "$(lacks "${out}" "p12-pass-xyz")"
 check "temp keychain password masked" "$(has "${out}" "create-keychain -p *** ")"
 
+check "dry-run p12 import grants codesign + security" "$(has "${out}" "-T /usr/bin/codesign -T /usr/bin/security")"
+
+# Developer ID intermediate selection by leaf issuer (OpenSSL 3 and LibreSSL formats).
+out="$(run_case 'awl_keychain_required_intermediate "issuer=CN=Developer ID Certification Authority, OU=G2, O=Apple Inc., C=US"')"
+check "G2 leaf issuer -> DeveloperIDG2CA.cer" "$([[ "${out}" == "DeveloperIDG2CA.cer" ]] && echo ok || echo no)"
+out="$(run_case 'awl_keychain_required_intermediate "issuer= /C=US/O=Apple Inc./OU=G2/CN=Developer ID Certification Authority"')"
+check "G2 leaf issuer (LibreSSL) -> DeveloperIDG2CA.cer" "$([[ "${out}" == "DeveloperIDG2CA.cer" ]] && echo ok || echo no)"
+out="$(run_case 'awl_keychain_required_intermediate "issuer=CN=Developer ID Certification Authority, OU=Apple Certification Authority, O=Apple Inc., C=US"')"
+check "G1 leaf issuer -> DeveloperIDCA.cer" "$([[ "${out}" == "DeveloperIDCA.cer" ]] && echo ok || echo no)"
+
+# codesign gets the temp-keychain SHA-1 when known (never a same-named login copy).
+out="$(run_case 'AWL_SIGN_IDENTITY="Developer ID Application: T (ABCDE12345)"; AWL_SIGN_IDENTITY_SHA1=0123456789ABCDEF0123456789ABCDEF01234567; echo "ID=$(awl_keychain_codesign_identity)"; AWL_SIGN_IDENTITY_SHA1=; echo "ID=$(awl_keychain_codesign_identity)"')"
+check "codesign identity is the SHA-1 when known" "$(has "${out}" "ID=0123456789ABCDEF0123456789ABCDEF01234567")"
+check "codesign identity falls back to the name" "$(has "${out}" "ID=Developer ID Application: T (ABCDE12345)")"
+
+# Preflight = real test signature. Chain failure + intermediate only in the temp
+# keychain must fail with the one-time persistent-intermediate command.
+PREFLIGHT_STUBS='AWL_SIGN_DRY_RUN=0; AWL_SIGN_IDENTITY="Developer ID Application: T (ABCDE12345)"
+  AWL_SIGN_IDENTITY_SHA1=0123456789ABCDEF0123456789ABCDEF01234567
+  AWL_TEMP_KEYCHAIN_DIR="$(mktemp -d "${TMPDIR%/}/awl-sign.XXXXXX")"; AWL_TEMP_KEYCHAIN="${AWL_TEMP_KEYCHAIN_DIR}/x.keychain-db"
+  awl_keychain_leaf_issuer() { echo "issuer=CN=Developer ID Certification Authority, OU=G2, O=Apple Inc., C=US"; }'
+out="$(run_case "${PREFLIGHT_STUBS}
+  awl_keychain_probe_sign() { echo 'Warning: unable to build chain to self-signed root' >&2; echo 'errSecInternalComponent' >&2; return 1; }
+  awl_keychain_intermediate_persisted() { return 1; }
+  awl_keychain_preflight_identity; echo PREFLIGHT_PASSED" || true)"
+check "preflight chain failure does not pass" "$(lacks "${out}" "PREFLIGHT_PASSED")"
+check "preflight shows codesign stderr" "$(has "${out}" "codesign: errSecInternalComponent")"
+check "preflight names the missing G2 intermediate" "$(has "${out}" "DeveloperIDG2CA.cer is only in the temp keychain")"
+check "preflight prints the one-time login add-certificates command" "$(has "${out}" "security add-certificates -k \"\$HOME/Library/Keychains/login.keychain-db\"")"
+out="$(run_case "${PREFLIGHT_STUBS}
+  awl_keychain_probe_sign() { echo 'errSecInternalComponent' >&2; return 1; }
+  awl_keychain_intermediate_persisted() { return 0; }
+  awl_keychain_preflight_identity; echo PREFLIGHT_PASSED" || true)"
+check "preflight failure with intermediate persisted points at trust/log" "$(has "${out}" "installed persistently")"
+out="$(run_case 'AWL_SIGN_DRY_RUN=0; AWL_SIGN_IDENTITY="Developer ID Application: T (ABCDE12345)"; AWL_SIGN_IDENTITY_SHA1=; awl_keychain_preflight_identity; echo PREFLIGHT_PASSED' || true)"
+check "preflight without imported identity fails" "$(has "${out}" "no codesigning identity")"
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  out="$(run_case "${PREFLIGHT_STUBS}
+    awl_keychain_probe_sign() { return 0; }
+    awl_keychain_preflight_identity; echo PREFLIGHT_PASSED")"
+  check "preflight passes when the test signature succeeds" "$(has "${out}" "PREFLIGHT_PASSED")"
+fi
+
+
 if [[ "$(uname -s)" == "Darwin" ]]; then
   APP="${WORK}/T.app"
   mkdir -p "${APP}/Contents/MacOS" "${APP}/Contents/Frameworks/F.framework/Versions/A/Libraries"
@@ -127,13 +173,15 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
         echo "PREFLIGHT=ok-unexpected"
       else
         echo "PREFLIGHT=fail"
-        if grep -q "0 valid codesigning identities" "${TMPDIR}/preflight.err" "${TMPDIR}/preflight.out"; then
+        if grep -q "no codesigning identity" "${TMPDIR}/preflight.err" "${TMPDIR}/preflight.out"; then
           echo "PREFLIGHT_MSG=ok"
         else
           echo "PREFLIGHT_MSG=bad"
           cat "${TMPDIR}/preflight.err" "${TMPDIR}/preflight.out" >&2 || true
         fi
       fi
+      if awl_keychain_intermediate_persisted DeveloperIDCA.cer; then echo "G1_PERSISTED=yes"; else echo "G1_PERSISTED=no"; fi
+      if awl_keychain_intermediate_persisted DeveloperIDG2CA.cer "${AWL_TEMP_KEYCHAIN}"; then echo "TEMP_ONLY_COUNTS=yes"; else echo "TEMP_ONLY_COUNTS=no"; fi
       awl_keychain_cleanup
       trap - EXIT
       RESTORED="$(security list-keychains -d user | tr "\n" "|")"
@@ -146,6 +194,8 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
   check "search list includes temp keychain after compose" "$(has "${out}" "awl-signing.keychain")"
   check "preflight fails with 0 valid identities (no p12)" "$(has "${out}" "PREFLIGHT=fail")"
   check "preflight message mentions 0 valid identities" "$(has "${out}" "PREFLIGHT_MSG=ok")"
+  check "G1 intermediate found persistently (SystemRootCertificates)" "$(has "${out}" "G1_PERSISTED=yes")"
+  check "intermediate only in temp keychain does not count" "$(has "${out}" "TEMP_ONLY_COUNTS=no")"
   check "temp keychain deleted on cleanup" "$(has "${out}" "KC_GONE=yes")"
   check "search list restored exactly" "$(has "${out}" "RESTORE_MATCH=yes")"
   restored_line="$(printf "%s\n" "${out}" | grep "^LIST_RESTORED=" || true)"

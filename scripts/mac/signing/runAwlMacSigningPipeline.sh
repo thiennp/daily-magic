@@ -51,7 +51,7 @@ awl_sign_stage_app() {
       ;;
     developer-id)
       awl_keychain_setup
-      awl_codesign_app "${app}" "${AWL_SIGN_IDENTITY}" "${AWL_ENTITLEMENTS}" awl_release_run
+      awl_codesign_app "${app}" "$(awl_keychain_codesign_identity)" "${AWL_ENTITLEMENTS}" awl_release_run
       awl_run codesign --verify --deep --strict --verbose=2 "${app}"
       awl_zip_app awl_run "${app}" "${notary_zip}"
       awl_notarize "${notary_zip}"
@@ -71,7 +71,7 @@ awl_sign_dmg() {
       awl_verify_dmg "${dmg}" adhoc
       ;;
     dry-run | developer-id)
-      awl_release_run codesign --force --sign "${AWL_SIGN_IDENTITY}" --timestamp \
+      awl_release_run codesign --force --sign "$(awl_keychain_codesign_identity)" --timestamp \
         ${AWL_CODESIGN_KEYCHAIN_ARGS[@]+"${AWL_CODESIGN_KEYCHAIN_ARGS[@]}"} "${dmg}"
       awl_notarize "${dmg}"
       awl_staple "${dmg}"
