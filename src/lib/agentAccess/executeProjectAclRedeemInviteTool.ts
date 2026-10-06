@@ -78,7 +78,7 @@ export const executeProjectAclRedeemInviteTool = async (input: {
       projectApiKey: result.projectApiKey,
       suggestedProjectDisplayName: result.suggestedProjectDisplayName,
       message:
-        "Invite redeemed and membership is active (invite auto-approve). Call get_my_project_access; skip wait for Approve. Prefer rotate_project_api_key if you need a fresh awc_proj_ key.",
+        "Invite redeemed and membership is active (invite auto-approve). Call get_my_project_access; skip wait for Approve. Immediately create your Grok webhook-triggered routine for this project if missing (if Grok Bot shows your user a confirm card, they approve it). Then post the routine's Webhook URL and Webhook key links in your user's chat so they can copy both; have the project owner click Add wake link at Access › People › Members › {name} › Grok wake link and paste them there, never into chat. You cannot see the key. Prefer rotate_project_api_key if you need a fresh awc_proj_ key.",
     });
   }
   return agentAccessTextResult({
@@ -90,7 +90,7 @@ export const executeProjectAclRedeemInviteTool = async (input: {
     suggestedProjectDisplayName: result.suggestedProjectDisplayName,
     message:
       result.suggestedProjectDisplayName !== null
-        ? "Invite redeemed. Membership is pending until the project owner Approves. Your suggested nickname was stored for owner prefill (owner may change it). No scoped key yet. Call get_my_project_access."
-        : "Invite redeemed. Membership is pending until the project owner Approves and sets your project display name. No scoped key yet. Call get_my_project_access.",
+        ? "Invite redeemed. Membership is pending until the project owner Approves. Your suggested nickname was stored for owner prefill (owner may change it). No scoped key yet. Call get_my_project_access. As soon as status is active, immediately create your Grok webhook-triggered routine if missing, post the Webhook URL and Webhook key links in your user's chat, and have the project owner paste at Access › People › Members › {name} › Grok wake link (Add wake link) — never into chat; do not wait to be asked."
+        : "Invite redeemed. Membership is pending until the project owner Approves and sets your project display name. No scoped key yet. Call get_my_project_access. As soon as status is active, immediately create your Grok webhook-triggered routine if missing, post the Webhook URL and Webhook key links in your user's chat, and have the project owner paste at Access › People › Members › {name} › Grok wake link (Add wake link) — never into chat; do not wait to be asked.",
   });
 };

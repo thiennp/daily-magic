@@ -31,9 +31,12 @@ export default function ProjectInviteInstructionsBody(input: {
           nickname.
         </li>
         <li>
-          After access is active, the project owner enters the bot&apos;s wake link
-          under Project Access → People → Members → Grok wake link (the key is
-          stored and never shown again).
+          After access is active, the assistant creates its wake routine and
+          posts the Webhook URL and Webhook key links in its user&apos;s chat
+          so they can copy both. The project owner then clicks{" "}
+          <strong>Add wake link</strong> at Access › People › Members ›{" "}
+          {"{name}"} › Grok wake link and pastes them there (the key is stored
+          and never shown again).
         </li>
       </ol>
       <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">

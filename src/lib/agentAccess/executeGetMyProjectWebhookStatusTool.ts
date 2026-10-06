@@ -56,7 +56,7 @@ export const executeGetMyProjectWebhookStatusTool = async (input: {
     noteParts.push("Grok registered. The key is stored and never returned.");
   } else {
     noteParts.push(
-      `Grok not registered. ${AWC_GROK_WEBHOOK_OWNER_ENTRY} Never ask for them in chat.`,
+      `Grok not registered. ${AWC_GROK_WEBHOOK_OWNER_ENTRY}`,
     );
   }
   if (hmacView.hmacWebhookRegistered) {

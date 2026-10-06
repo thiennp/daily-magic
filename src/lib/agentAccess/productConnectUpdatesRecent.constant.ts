@@ -75,10 +75,10 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
       kind: "mcp_tool",
       title: "Grok wake-link form + get_my_project_webhook_status",
       summary:
-        "The project owner now enters a bot's Grok wake link and key in the secret Grok wake-link form (Project Access → People → Members → <bot> → Grok wake link), so they never pass through chat. There is no member form. New read-only get_my_project_webhook_status { projectId } (agent-access Bearer only, not awc_proj_) returns grokWebhookRegistered, grokWebhookUrlHost, keySet, and lastGrokWakeResult (never the key). register_project_webhook still works. " +
+        "The project owner enters a bot's Grok wake link and key in the secret Grok wake-link form (Access › People › Members › {name} › Grok wake link / Add wake link). The joining bot creates its wake routine and posts Webhook URL + Webhook key links in its user's chat so they can copy both (the bot cannot see the values). There is no member form. New read-only get_my_project_webhook_status { projectId } (agent-access Bearer only, not awc_proj_) returns grokWebhookRegistered, grokWebhookUrlHost, keySet, and lastGrokWakeResult (never the key). register_project_webhook still works. " +
         AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
       adapt:
-        "Never ask the user to paste the routine URL or key into chat or a project message; point them to the bot's info pane and the project owner's Grok wake-link form. Confirm with get_my_project_webhook_status. " +
+        "Create the Grok webhook routine when membership is active, post Webhook URL + Webhook key links in your user's chat so they can copy both, and have the project owner click Add wake link at Access › People › Members › {name} › Grok wake link and paste them there — never into chat. You cannot see the key. Confirm with get_my_project_webhook_status. " +
         AWC_GROK_WEBHOOK_DAILY_REPAIR,
     },
     {
@@ -91,5 +91,18 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
         "New issue_bot_claim_code (agent-access Bearer only) returns a 10-minute single-use claim code for this bot. A signed-in human redeems it on Projects (Claim) to set owner_user_id. Issuing supersedes unused codes; already_claimed while owned. Same-owner project access auto-approves when the bot's owner_user_id matches the project owner.",
       adapt:
         "After register_account, call issue_bot_claim_code and give the code to your human once. They claim on Projects (Claim). Prefer claiming before request_project_access so same-owner auto-approve can run.",
+    },
+    {
+      id: "grok-wake-routine-on-active-membership",
+      catalogVersion: 17,
+      at: "2026-10-06",
+      kind: "connect",
+      title: "Create Grok wake routine when membership is active",
+      summary:
+        "After redeem_project_invite / get_my_project_access, when membership is active (or the moment pending turns active), MUST create a Grok webhook-triggered routine for this project if missing (user may only approve a confirm card), post the Webhook URL and Webhook key links in your user's chat so they can copy both, and have the project owner click Add wake link at Access › People › Members › {name} › Grok wake link and paste them there — never into chat. You cannot see the key. Do not wait to be asked. " +
+        AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
+      adapt:
+        "On active membership, create the wake routine immediately if missing, post Webhook URL + Webhook key links in your user's chat so they can copy both, have the project owner paste at Access › People › Members › {name} › Grok wake link (Add wake link) — never into chat — then confirm with get_my_project_webhook_status. You cannot see the key. " +
+        AWC_GROK_WEBHOOK_DAILY_REPAIR,
     },
   ];

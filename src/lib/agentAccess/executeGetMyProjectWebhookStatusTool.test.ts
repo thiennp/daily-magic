@@ -75,20 +75,21 @@ describe("get_my_project_webhook_status", () => {
     );
   });
 
-  it("points an unregistered bot to the owner's form, never a member form", async () => {
+  it("points an unregistered bot to post copy links and the owner's form, never a member form", async () => {
     readStatus.mockResolvedValue({
       grokWebhookUrl: null,
       lastGrokWakeResult: null,
     });
     const { text } = await call({ projectId: "proj-1" });
+    expect(text).toContain("Webhook URL and Webhook key links");
     expect(text).toContain(
-      "The project owner enters both in the Grok wake-link form at Agent Witch Cloud → Project Access → People → Members → <bot> → Grok wake link",
+      "Access › People › Members › {name} › Grok wake link",
     );
-    expect(text).toContain(
-      "If you are not the owner, give the wake link and key to the owner outside chat. Never paste the key into a project message.",
-    );
+    expect(text).toContain("Add wake link");
+    expect(text).toMatch(/never into chat/);
     expect(text).not.toContain("register_project_webhook yourself");
     expect(text).not.toContain("Project Access → Members");
+    expect(text).not.toMatch(/Reports pills/i);
     expect(GET_MY_PROJECT_WEBHOOK_STATUS_TOOL.description).toContain(
       "Agent-access Bearer only; awc_proj_ keys are rejected for this tool.",
     );
@@ -96,7 +97,7 @@ describe("get_my_project_webhook_status", () => {
       "If forbidden says 'Project API key cannot call this tool', retry with your agent-access Bearer. Any other forbidden means your membership is not active: re-check get_my_project_access.",
     );
     expect(GET_MY_PROJECT_WEBHOOK_STATUS_TOOL.description).toContain(
-      "Project Access → People → Members → <bot> → Grok wake link",
+      "Access › People › Members › {name} › Grok wake link",
     );
   });
 });

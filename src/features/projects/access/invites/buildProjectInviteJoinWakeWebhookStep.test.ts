@@ -33,26 +33,31 @@ describe("buildProjectInviteJoinWakeWebhookStep (step 7, copy only)", () => {
     );
   });
 
-  it("keeps the bans and never asks for the URL or key in chat", () => {
+  it("keeps the bans, cannot-see-key rule, and never asks anyone to paste secrets into chat", () => {
     const text = lines.join("\n");
     expect(text).not.toMatch(/grokbot:\/\/|https?:\/\/|sidebar|<a\b/i);
-    expect(text).toMatch(/never ask the user to paste them into chat/);
+    expect(text).not.toMatch(/Reports pills/i);
+    expect(text).toMatch(/cannot see your own wake link or key/);
+    expect(text).toMatch(/never ask anyone to paste them into chat/);
   });
 
-  it("is owner-only, names the real UI path and the Bearer-only status tool", () => {
+  it("creates the routine on active membership, posts copy links, and names the locked UI path", () => {
     const text = lines.join("\n");
+    expect(text).toContain("if this project has no webhook routine yet, create one yourself");
+    expect(text).toContain("Webhook URL and Webhook key links");
+    expect(text).toContain("Add wake link");
     expect(text).toContain(
-      "The project owner enters both in the Grok wake-link form at Agent Witch Cloud → Project Access → People → Members → <bot> → Grok wake link",
-    );
-    expect(text).toContain(
-      "If you are not the owner, give the wake link and key to the owner outside chat. Never paste the key into a project message.",
+      "Access › People › Members › {name} › Grok wake link",
     );
     expect(text).toContain(
       "get_my_project_webhook_status({ projectId }) (agent-access Bearer only; awc_proj_ keys are rejected for this tool)",
     );
+    expect(text).toMatch(/until grokWebhookRegistered is true/);
     expect(text).not.toContain("Project Access → Members");
     expect(text).not.toContain("register_project_webhook yourself");
     expect(text).not.toMatch(/member (enters|form)/i);
+    expect(text).toMatch(/nobody has to open Routines/);
+    expect(text).not.toMatch(/find its wake link in Routines/);
   });
 
   it("returns the same lines every call (pure, no runtime imports)", () => {
