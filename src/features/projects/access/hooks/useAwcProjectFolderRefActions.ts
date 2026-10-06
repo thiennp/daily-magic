@@ -14,7 +14,7 @@ export const resolveAddFolderRefError = (result: {
 }): string =>
   result.code === "folder_ref_device_not_member"
     ? C.foldersDeviceNotMember
-    : mapProjectAccessError(result.errorMessage, "Failed.");
+    : mapProjectAccessError(result.errorMessage, C.foldersAddFailed);
 
 /** Single owner for folder-ref add/remove mutations (Access + Resources). */
 export const useAwcProjectFolderRefActions = (input: {
@@ -29,7 +29,7 @@ export const useAwcProjectFolderRefActions = (input: {
     folderPath: string,
   ): Promise<boolean> => {
     const result = await addProjectFolderRef({ projectId, deviceId, folderPath });
-    onMessage(result.ok ? "Folder ref added." : resolveAddFolderRefError(result));
+    onMessage(result.ok ? C.foldersAdded : resolveAddFolderRefError(result));
     if (result.ok) await onReload();
     return result.ok;
   };

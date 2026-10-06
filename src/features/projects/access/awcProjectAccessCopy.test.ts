@@ -79,8 +79,11 @@ describe("project ACL surface copy", () => {
     expect(AWC_PROJECT_ACCESS_COPY.folderRefsEmpty.toLowerCase()).not.toBe("0");
     expect(AWC_PROJECT_ACCESS_COPY.machineRefLabel).toMatch(/Computer/i);
     expect(AWC_PROJECT_ACCESS_COPY.folderPathLabel).toMatch(/Folder path/i);
-    expect(AWC_PROJECT_ACCESS_COPY.folderRefsFormHint).toMatch(
-      /mapping|registry|paths/i,
+    expect(AWC_PROJECT_ACCESS_COPY.folderRefsFormHint).toBe(
+      "Pick a computer and type where the folder is on it. AgentWitch saves the location, not the files.",
+    );
+    expect(AWC_PROJECT_ACCESS_COPY.folderRefsEmpty).toBe(
+      "No folders yet. Pick a computer and add a folder path below.",
     );
     expect(AWC_PROJECT_ACCESS_COPY.addFolderRef).toMatch(/Add folder/i);
     expect(AWC_PROJECT_ACCESS_COPY.machineRefPlaceholder).toBe("Choose a computer");

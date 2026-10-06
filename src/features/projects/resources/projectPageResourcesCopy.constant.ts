@@ -23,8 +23,9 @@ export const PROJECT_PAGE_RESOURCES_COPY = {
   foldersMachineNone:
     "No computers connected yet. Connect this computer first.",
   foldersChooseComputerFirst: "Choose a computer first.",
-  foldersDeviceNotMember:
-    "Pick a computer that is an active member of this project.",
+  foldersDeviceNotMember: "Pick a computer that's part of this project.",
+  foldersAdded: "Folder added.",
+  foldersAddFailed: "Could not add the folder. Try again.",
   foldersPathLabel: "Folder path",
   /** Row: "{deviceName} · {path}". */
   foldersRow: (deviceName: string, path: string) => `${deviceName} · ${path}`,

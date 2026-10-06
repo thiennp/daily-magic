@@ -19,9 +19,9 @@ export const AWC_PROJECT_ACCESS_COPY = {
   folderRefsHint:
     "Map computers to local folders (many × many). Registry only — files stay on those computers.",
   folderRefsEmpty:
-    "No folders yet. Add a computer and a local folder path below.",
+    "No folders yet. Pick a computer and add a folder path below.",
   folderRefsFormHint:
-    "Each ref is a computer label + path string. Cloud stores the mapping, not the files.",
+    "Pick a computer and type where the folder is on it. AgentWitch saves the location, not the files.",
   machineRefLabel: PROJECT_PAGE_RESOURCES_COPY.foldersMachineLabel,
   machineRefPlaceholder: PROJECT_PAGE_RESOURCES_COPY.foldersMachinePlaceholder,
   machineRefHelp: "Which computer holds the folder.",

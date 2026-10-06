@@ -30,7 +30,10 @@ describe("folder ref POST contract (computer picker)", () => {
   it("maps 403 folder_ref_device_not_member to Product copy", () => {
     expect(
       resolveAddFolderRefError({ code: "folder_ref_device_not_member" }),
-    ).toBe("Pick a computer that is an active member of this project.");
+    ).toBe("Pick a computer that's part of this project.");
     expect(resolveAddFolderRefError({ errorMessage: "Nope." })).toBe("Nope.");
+    expect(resolveAddFolderRefError({})).toBe(
+      "Could not add the folder. Try again.",
+    );
   });
 });
