@@ -87,7 +87,7 @@ BEGIN
   FROM agent_automations
   WHERE project_id IS NULL;
   IF automations_left > 0 THEN
-    RAISE NOTICE '097: % agent_automations still NULL project_id (owner has no project yet); resolved to Default at dispatch, left as-is',
+    RAISE NOTICE '100: % agent_automations still NULL project_id (owner has no project yet); resolved to Default at dispatch, left as-is',
       automations_left;
   END IF;
 END
