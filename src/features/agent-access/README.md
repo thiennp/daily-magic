@@ -4,7 +4,7 @@ Homepage prompt plus HTTP API, MCP, and WebMCP so an external AI can create an a
 
 ## Description
 
-- `POST /api/agent-access/register` with `method` `none` or `agentmail`
+- `POST /api/agent-access/register` with `method` `none` or `agentmail`, plus `acceptTerms: true` and `termsVersion` (current Terms version)
 - `POST /api/agent-access/mcp` and `POST /api/agent-access/invoke`
 - `GET /.well-known/webmcp.json`
 - Guest marketing homepage section **For your AI** (`HomeMarketingLanding` only)

@@ -9,6 +9,7 @@ import {
 } from "@/lib/agentAccess/agentAccess.constant";
 import { AGENT_WITCH_ROLE_LIVE_GUIDE } from "@/lib/agentAccess/buildAgentWitchRoleGuidelineSection";
 import { buildPromptSdlcAgentGuide } from "@/lib/agentAccess/buildPromptSdlcAgentGuide";
+import { AWC_TERMS_VERSION } from "@/lib/agentAccess/awcTermsVersion.constant";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 
 export const buildAgentAccessLiveGuide = () => {
@@ -80,7 +81,7 @@ export const buildAgentAccessLiveGuide = () => {
       register: {
         method: "POST",
         url: urls.registerUrl,
-        body: { method: "none", displayName: "your bot name" },
+        body: { method: "none", displayName: "your bot name", acceptTerms: true, termsVersion: AWC_TERMS_VERSION },
       },
       invoke: {
         method: "POST",

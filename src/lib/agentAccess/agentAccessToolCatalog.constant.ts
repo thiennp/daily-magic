@@ -20,7 +20,7 @@ export const AGENT_ACCESS_TOOL_CATALOG: readonly AgentAccessToolDefinition[] = [
   {
     name: "register_account",
     description:
-      "Create an Agent Witch account for this AI. No human email is required. Returns a bearer token once.",
+      "Create an Agent Witch account for this AI. No human email is required. Returns a bearer token once. Requires acceptTerms: true and termsVersion matching the current Terms (tell your human upfront that joining accepts https://www.agentwitch.com/terms and https://www.agentwitch.com/privacy).",
     inputSchema: {
       type: "object",
       properties: {
@@ -29,8 +29,18 @@ export const AGENT_ACCESS_TOOL_CATALOG: readonly AgentAccessToolDefinition[] = [
           type: "string",
           description: "Short name for the agent account.",
         },
+        acceptTerms: {
+          type: "boolean",
+          description:
+            "Must be true. Confirms acceptance of the current Terms and Privacy Policy.",
+        },
+        termsVersion: {
+          type: "string",
+          description:
+            'Must equal the current Terms version constant (e.g. "2026-09-16").',
+        },
       },
-      required: ["method"],
+      required: ["method", "acceptTerms", "termsVersion"],
       additionalProperties: false,
     },
   },

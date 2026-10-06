@@ -85,14 +85,17 @@ export const registerAgentAccessAccount = async (input: {
   const token = createAgentAccessToken();
   await sql`
     INSERT INTO agent_access_tokens (
-      user_id, token_hash, token_prefix, registration_method, agentmail_inbox
+      user_id, token_hash, token_prefix, registration_method, agentmail_inbox,
+      terms_version, terms_accepted_at
     )
     VALUES (
       ${userId},
       ${hashAgentAccessToken(token)},
       ${token.slice(0, 10)},
       ${input.body.method},
-      ${input.body.method === "agentmail" ? email : null}
+      ${input.body.method === "agentmail" ? email : null},
+      ${input.body.termsVersion},
+      NOW()
     )
   `;
 

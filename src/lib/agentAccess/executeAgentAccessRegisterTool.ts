@@ -8,21 +8,21 @@ export const executeAgentAccessRegisterTool = async (
   args: unknown,
   ip: string,
 ): Promise<AgentAccessToolCallResult> => {
-  const body = parseAgentAccessRegisterBody(args);
+  const parsed = parseAgentAccessRegisterBody(args);
 
-  if (body === null) {
+  if (!parsed.ok) {
     return agentAccessTextResult(
       {
         ok: false,
-        error: 'method must be "none" or "agentmail".',
-        code: "invalid_arguments",
+        error: parsed.error,
+        code: parsed.code,
       },
       true,
     );
   }
 
   const outcome = await registerAgentAccessAccount({
-    body,
+    body: parsed.body,
     ipHash: hashAgentAccessClientIp(ip),
   });
 

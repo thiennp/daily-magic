@@ -19,6 +19,9 @@ describe("join steps with input", () => {
     expect(text.startsWith("1. ")).toBe(true);
     expect(text).toContain(urls.mcpUrl);
     expect(text).toContain(urls.registerUrl);
+    expect(text).toContain("acceptTerms");
+    expect(text).toContain("termsVersion");
+    expect(text).toContain("https://www.agentwitch.com/terms");
   });
 
   it("redeem step embeds the token in the JSON", () => {

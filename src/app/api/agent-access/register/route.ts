@@ -25,21 +25,21 @@ export async function POST(request: Request): Promise<Response> {
     return agentAccessTooLargeResponse();
   }
 
-  const body = parseAgentAccessRegisterBody(payload);
+  const parsed = parseAgentAccessRegisterBody(payload);
 
-  if (body === null) {
+  if (!parsed.ok) {
     return Response.json(
       {
         ok: false,
-        error: 'method must be "none" or "agentmail".',
-        code: "invalid_arguments",
+        error: parsed.error,
+        code: parsed.code,
       },
       { status: 400 },
     );
   }
 
   const outcome = await registerAgentAccessAccount({
-    body,
+    body: parsed.body,
     ipHash: hashAgentAccessClientIp(readClientIp(request)),
   });
 

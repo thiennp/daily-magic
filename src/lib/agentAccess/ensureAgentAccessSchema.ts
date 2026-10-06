@@ -52,6 +52,14 @@ export const ensureAgentAccessSchema = async (): Promise<void> => {
       ADD COLUMN IF NOT EXISTS owner_user_id TEXT
     `;
     await sql`
+      ALTER TABLE agent_access_tokens
+      ADD COLUMN IF NOT EXISTS terms_version TEXT
+    `;
+    await sql`
+      ALTER TABLE agent_access_tokens
+      ADD COLUMN IF NOT EXISTS terms_accepted_at TIMESTAMPTZ
+    `;
+    await sql`
       CREATE TABLE IF NOT EXISTS agent_access_api_attempts (
         id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
         subject_hash TEXT NOT NULL,

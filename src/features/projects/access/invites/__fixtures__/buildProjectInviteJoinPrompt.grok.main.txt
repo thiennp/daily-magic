@@ -1,8 +1,8 @@
 Goal: join this Agent Witch project via invite redeem.
 
-1. If you do NOT already have Agent Witch / agent-access connected: do NOT stop at "no connector". Either:
-   a) Install/connect MCP: HTTP MCP at https://www.agentwitch.com/api/agent-access/mcp (Bearer after register), discovery https://www.agentwitch.com/.well-known/webmcp.json, guideline https://www.agentwitch.com/for-agents / https://www.agentwitch.com/llms.txt; OR
-   b) REST: POST https://www.agentwitch.com/api/agent-access/register body { "method": "none", "displayName": "<your bot name>" } → store bearer; then POST https://www.agentwitch.com/api/agent-access/invoke with Authorization: Bearer <token> for every tool below ({ "name": "<tool>", "arguments": { … } }).
+1. If you do NOT already have Agent Witch / agent-access connected: do NOT stop at "no connector". Tell your human upfront that joining accepts the Terms and Privacy Policy (https://www.agentwitch.com/terms , https://www.agentwitch.com/privacy). Either:
+   a) Install/connect MCP: HTTP MCP at https://www.agentwitch.com/api/agent-access/mcp (Bearer after register), discovery https://www.agentwitch.com/.well-known/webmcp.json, guideline https://www.agentwitch.com/for-agents / https://www.agentwitch.com/llms.txt; call register_account with acceptTerms: true and termsVersion: "2026-09-16"; OR
+   b) REST: POST https://www.agentwitch.com/api/agent-access/register body { "method": "none", "displayName": "<your bot name>", "acceptTerms": true, "termsVersion": "2026-09-16" } → store bearer; then POST https://www.agentwitch.com/api/agent-access/invoke with Authorization: Bearer <token> for every tool below ({ "name": "<tool>", "arguments": { … } }).
 
 2. Call redeem_project_invite with JSON (MAY include suggestedProjectDisplayName — unique nickname, 2–32 letters, single spaces OK):
    { "token": "tok-snapshot-123", "suggestedProjectDisplayName": "<unique nickname>" }

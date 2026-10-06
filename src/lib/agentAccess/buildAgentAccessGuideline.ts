@@ -4,6 +4,7 @@ import { buildAgentWitchRoleGuidelineSection } from "@/lib/agentAccess/buildAgen
 import { buildPromptSdlcAgentGuidelineSection } from "@/lib/agentAccess/buildPromptSdlcAgentGuide";
 import { buildBotSupportUrlGuidelineSection } from "@/lib/agentAccess/buildBotSupportUrlGuidelineSection";
 import { buildProjectAclAgentGuidelineSection } from "@/lib/agentAccess/buildProjectAclAgentGuidelineSection";
+import { AWC_TERMS_VERSION } from "@/lib/agentAccess/awcTermsVersion.constant";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 
 export interface AgentAccessGuidelineSection {
@@ -45,7 +46,8 @@ export const buildAgentAccessGuideline = (): AgentAccessGuideline => {
         body: [
           `POST ${urls.registerUrl}`,
           "Content-Type: application/json",
-          'Body: {"method":"none","displayName":"your agent name"}',
+          `Body: {"method":"none","displayName":"your agent name","acceptTerms":true,"termsVersion":"${AWC_TERMS_VERSION}"}`,
+          "acceptTerms must be true; termsVersion must match the current Terms version. Tell your human upfront that joining accepts https://www.agentwitch.com/terms and https://www.agentwitch.com/privacy.",
           "Save token. It is shown once. Send Authorization: Bearer <token> on later calls.",
         ],
       },

@@ -14,7 +14,7 @@ const INPUT = {
   projectId: "proj-snapshot",
   projectName: "Snapshot Project",
 } as const;
-/** Regenerated with invite wake-routine-onboarding join copy; regenerate when shared join copy changes. */
+/** Regenerated with invite wake-routine-onboarding join copy (incl. register terms); regenerate when shared join copy changes. */
 const GROK_MAIN = readFileSync(
   join(
     process.cwd(),
