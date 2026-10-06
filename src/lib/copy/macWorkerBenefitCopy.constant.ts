@@ -41,7 +41,7 @@ export const MAC_WORKER_BENEFIT_COPY = {
   freeStartersDescription:
     "Free agents and workflows ready to run on your computer.",
   marketplacePageDescription:
-    "Pick a free starter or a teammate listing, then run it on your computer.",
+    "Playbooks, assistants, agents and skills. Install them into a project.",
   libraryPageDescription:
     "Your saved workflows in Library. Open a project and use New task to run them — connect your computer on Home first if you still need this computer online.",
   marketplacePromo:

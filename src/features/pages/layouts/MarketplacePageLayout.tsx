@@ -1,14 +1,24 @@
-import AppPageHeader from "@/components/surfaces/AppPageHeader";
 import MarketplacePanel from "@/features/marketplace/MarketplacePanel";
+import {
+  MK_DESC_CLASS,
+  MK_HEAD_ROW_CLASS,
+  MK_TITLE_CLASS,
+} from "@/features/marketplace/marketplaceBrowseClasses.constant";
+import {
+  MARKETPLACE_PAGE_DESCRIPTION,
+  MARKETPLACE_PAGE_TITLE,
+} from "@/features/marketplace/marketplaceCopy.constant";
 import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
 
 export default function MarketplacePageLayout() {
   return (
     <div className={APP_PAGE_STACK_CLASS}>
-      <AppPageHeader
-        title="Marketplace"
-        description="Pick a free starter or a teammate listing, then run it on your computer."
-      />
+      <div className={MK_HEAD_ROW_CLASS}>
+        <header className="min-w-0 flex-1">
+          <h1 className={MK_TITLE_CLASS}>{MARKETPLACE_PAGE_TITLE}</h1>
+          <p className={MK_DESC_CLASS}>{MARKETPLACE_PAGE_DESCRIPTION}</p>
+        </header>
+      </div>
       <MarketplacePanel variant="page" />
     </div>
   );

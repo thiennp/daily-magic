@@ -1,21 +1,28 @@
 "use client";
 
-import {
-  APP_SURFACE_BODY_TEXT_CLASS,
-  APP_SURFACE_SECTION_TITLE_CLASS,
-} from "@/components/surfaces/appSurfaceStyles.constant";
 import { MARKETPLACE_FREE_STARTERS_SECTION_ID } from "@/features/empty-states/buildGuestAuthHrefs";
 import { useGuestSessionState } from "@/features/empty-states/useGuestSessionState";
 import {
   MarketplaceFreeStartersSectionBody,
   MarketplaceTeammatesSectionBody,
 } from "@/features/marketplace/MarketplaceListingSectionBodies";
+import {
+  MARKETPLACE_FREE_STARTERS_TITLE,
+  MARKETPLACE_TEAMMATES_DESCRIPTION,
+  MARKETPLACE_TEAMMATES_TITLE,
+} from "@/features/marketplace/marketplaceCopy.constant";
+import {
+  MK_SECTION_BODY_CLASS,
+  MK_SECTION_TITLE_CLASS,
+} from "@/features/marketplace/marketplaceBrowseClasses.constant";
 import { resolveTeammatesMarketplaceView } from "@/features/marketplace/resolveTeammatesMarketplaceView";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
 
 type MarketplaceSectionVisibility =
-  "all" | "teammatesOnly" | "freeStartersOnly";
+  | "all"
+  | "teammatesOnly"
+  | "freeStartersOnly";
 
 interface MarketplaceListingSectionsProps {
   readonly officialListings: readonly HarnessMarketplaceListing[];
@@ -64,8 +71,10 @@ export default function MarketplaceListingSections({
     <>
       {showFreeStarters ? (
         <section id={MARKETPLACE_FREE_STARTERS_SECTION_ID}>
-          <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Free starters</h2>
-          <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
+          <h2 className={MK_SECTION_TITLE_CLASS}>
+            {MARKETPLACE_FREE_STARTERS_TITLE}
+          </h2>
+          <p className={MK_SECTION_BODY_CLASS}>
             {MAC_WORKER_BENEFIT_COPY.freeStartersDescription}
           </p>
           <MarketplaceFreeStartersSectionBody {...sectionBodyProps} />
@@ -73,9 +82,11 @@ export default function MarketplaceListingSections({
       ) : null}
       {showTeammates ? (
         <section className={variant === "page" ? "mt-8" : "mt-6"}>
-          <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>From teammates</h2>
-          <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-            Agents and workflows your teammates shared.
+          <h2 className={MK_SECTION_TITLE_CLASS}>
+            {MARKETPLACE_TEAMMATES_TITLE}
+          </h2>
+          <p className={MK_SECTION_BODY_CLASS}>
+            {MARKETPLACE_TEAMMATES_DESCRIPTION}
           </p>
           <MarketplaceTeammatesSectionBody {...sectionBodyProps} />
         </section>

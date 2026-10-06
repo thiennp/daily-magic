@@ -6,7 +6,10 @@ import { describe, expect, it } from "vitest";
 describe("MarketplaceListCard", () => {
   it("uses line-clamp-4 on starter blurbs (HOME-038 parity)", () => {
     const source = readFileSync(
-      join(process.cwd(), "src/features/marketplace/MarketplaceListCard.tsx"),
+      join(
+        process.cwd(),
+        "src/features/marketplace/marketplaceBrowseClasses.constant.ts",
+      ),
       "utf8",
     );
 

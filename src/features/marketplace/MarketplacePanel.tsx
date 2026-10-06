@@ -1,15 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
+import { useGuestSessionState } from "@/features/empty-states/useGuestSessionState";
 import MarketplaceInstallModal from "@/features/marketplace/MarketplaceInstallModal";
-import MarketplaceListingSections from "@/features/marketplace/MarketplaceListingSections";
-import MarketplaceVisitorEmptyState from "@/features/marketplace/MarketplaceVisitorEmptyState";
-import { shouldShowMarketplaceVisitorEmptyState } from "@/features/marketplace/shouldShowMarketplaceVisitorEmptyState";
+import MarketplacePanelBody from "@/features/marketplace/MarketplacePanelBody";
 import { useMarketplaceInstallFromCapabilityIdQuery } from "@/features/marketplace/hooks/useMarketplaceInstallFromCapabilityIdQuery";
 import { useMarketplaceState } from "@/features/marketplace/hooks/useMarketplaceState";
-import { useGuestSessionState } from "@/features/empty-states/useGuestSessionState";
+import { shouldShowMarketplaceVisitorEmptyState } from "@/features/marketplace/shouldShowMarketplaceVisitorEmptyState";
+import {
+  type MarketplaceBrowseFilters,
+  filterSortMarketplaceListings,
+} from "@/features/marketplace/utils/filterSortMarketplaceListings";
+import { splitMarketplaceOfficialTeammateListings } from "@/features/marketplace/utils/splitMarketplaceOfficialTeammateListings";
 import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
 
@@ -18,6 +22,12 @@ type MarketplacePanelVariant = "embedded" | "page";
 interface MarketplacePanelProps {
   readonly variant?: MarketplacePanelVariant;
 }
+
+const DEFAULT_FILTERS: MarketplaceBrowseFilters = {
+  query: "",
+  type: "all",
+  sort: "officialFirst",
+};
 
 export default function MarketplacePanel({
   variant = "embedded",
@@ -28,6 +38,8 @@ export default function MarketplacePanel({
   const isGuest = sessionState !== "signed_in";
   const [installListing, setInstallListing] =
     useState<HarnessMarketplaceListing | null>(null);
+  const [filters, setFilters] =
+    useState<MarketplaceBrowseFilters>(DEFAULT_FILTERS);
 
   useMarketplaceInstallFromCapabilityIdQuery(
     listings,
@@ -35,68 +47,46 @@ export default function MarketplacePanel({
     setInstallListing,
   );
 
-  const officialListings = listings.filter(
-    (listing) => listing.isOfficialPreset === true,
+  const filtered = useMemo(
+    () => filterSortMarketplaceListings(listings, filters),
+    [listings, filters],
   );
-  const teammateListings = listings.filter(
-    (listing) => listing.isOfficialPreset !== true,
-  );
+  const { officialListings, teammateListings } =
+    splitMarketplaceOfficialTeammateListings(filtered);
+  const rawSplit = splitMarketplaceOfficialTeammateListings(listings);
 
   const showVisitorEmptyState = shouldShowMarketplaceVisitorEmptyState(
     variant,
     isLoading,
     {
-      officialCount: officialListings.length,
-      teammateCount: teammateListings.length,
+      officialCount: rawSplit.officialListings.length,
+      teammateCount: rawSplit.teammateListings.length,
     },
     isGuest,
   );
 
-  const listingSections = (
-    <MarketplaceListingSections
+  const stack = (
+    <MarketplacePanelBody
+      variant={variant}
+      showVisitorEmptyState={showVisitorEmptyState}
+      filters={filters}
+      listings={listings}
+      onFiltersChange={setFilters}
       officialListings={officialListings}
       teammateListings={teammateListings}
       isLoading={isLoading}
       onInstall={setInstallListing}
-      variant={variant}
       teamNavEnabled={teamNavEnabled}
     />
-  );
-
-  const teammatesOnlySections = (
-    <MarketplaceListingSections
-      officialListings={officialListings}
-      teammateListings={teammateListings}
-      isLoading={isLoading}
-      onInstall={setInstallListing}
-      variant={variant}
-      teamNavEnabled={teamNavEnabled}
-      sectionVisibility="teammatesOnly"
-    />
-  );
-
-  const panelBody = showVisitorEmptyState ? (
-    <>
-      <MarketplaceVisitorEmptyState />
-      {teammatesOnlySections}
-    </>
-  ) : (
-    listingSections
   );
 
   return (
     <>
-      {variant === "page" ? (
-        <div className="space-y-8">{panelBody}</div>
-      ) : (
-        <AppPanel>{panelBody}</AppPanel>
-      )}
+      {variant === "page" ? stack : <AppPanel>{stack}</AppPanel>}
       <MarketplaceInstallModal
         key={installListing?.capabilityId ?? "closed"}
         listing={installListing}
-        onClose={() => {
-          setInstallListing(null);
-        }}
+        onClose={() => setInstallListing(null)}
       />
     </>
   );
