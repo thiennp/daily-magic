@@ -9,6 +9,9 @@ const read = (relative: string): string =>
 const tabPanelsSource = read(
   "src/features/projects/AwcProjectDetailTabPanels.tsx",
 );
+const tabBodySource = read(
+  "src/features/projects/AwcProjectDetailTabPanelBody.tsx",
+);
 const resourcesPanelSource = read(
   "src/features/projects/resources/AwcProjectResourcesPanel.tsx",
 );
@@ -27,27 +30,29 @@ describe("AwcProjectDetailPanel layout S6 resources", () => {
     expect(tabsConstantSource).toMatch(
       /"activity",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
     );
-    expect(tabPanelsSource).toContain("AwcProjectResourcesPanel");
-    expect(tabPanelsSource).toMatch(
+    expect(tabBodySource).toContain("AwcProjectResourcesPanel");
+    expect(tabBodySource).toMatch(
       /const STUB_TABS[\s\S]*?"reports"[\s\S]*?"library"[\s\S]*?\];/,
     );
-    expect(tabPanelsSource).not.toMatch(
+    expect(tabBodySource).not.toMatch(
       /const STUB_TABS[\s\S]*?= \[[^\]]*"resources"[^\]]*\];/,
     );
+    expect(tabPanelsSource).toContain("AwcProjectDetailTabPanelBody");
   });
 
-  it("Resources is Folders + Git only (no shared skills list)", () => {
+  it("Resources is single-column PWA + Folders + Git + Shared skills", () => {
+    expect(resourcesPanelSource).toContain(
+      "AwcProjectResourcesCompositionSection",
+    );
     expect(resourcesPanelSource).toContain("AwcProjectResourcesFoldersCard");
     expect(resourcesFoldersCardSource).toContain("AwcProjectAccessFolderRefs");
     expect(resourcesPanelSource).toContain("AwcProjectRepoUrlsSection");
-    expect(resourcesPanelSource).not.toMatch(
-      /ProjectSkillsSection|skill-share|Skills/,
-    );
-    expect(resourcesFoldersCardSource).not.toMatch(
-      /ProjectSkillsSection|skill-share|Skills/,
-    );
-    expect(resourcesCopySource).toContain("Folders on computers");
-    expect(resourcesCopySource).toContain("Git remotes");
+    expect(resourcesPanelSource).toContain("ProjectSkillsSection");
+    expect(resourcesPanelSource).not.toContain("OVERVIEW_GRID2_CLASS");
+    expect(resourcesCopySource).toContain("Folders on this computer");
+    expect(resourcesCopySource).toContain("Git remotes (optional)");
+    expect(resourcesCopySource).toContain("Attach on this computer");
+    expect(resourcesCopySource).toContain("Shared skills");
   });
 
   it("keeps gray-only Resources chrome and computer wording", () => {
@@ -56,6 +61,6 @@ describe("AwcProjectDetailPanel layout S6 resources", () => {
       /indigo|purple|brand-|#6366f1/i,
     );
     expect(resourcesCopySource).toMatch(/computer/i);
-    expect(resourcesCopySource).not.toMatch(/\bdevice\b|\bAWL\b|\bagent\b/i);
+    expect(resourcesCopySource).not.toMatch(/\bMac\b|\bdevice\b|\bAWL\b/i);
   });
 });

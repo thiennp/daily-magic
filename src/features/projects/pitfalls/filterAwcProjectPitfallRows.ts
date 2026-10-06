@@ -9,10 +9,11 @@ export type AwcPitfallSeverityCounts = Readonly<
 const matchesQuery = (row: AwcProjectPitfallRow, needle: string): boolean =>
   needle === "" ||
   row.title.toLowerCase().includes(needle) ||
+  row.situation.toLowerCase().includes(needle) ||
   row.fix.toLowerCase().includes(needle) ||
   row.triggers.some((trigger) => trigger.toLowerCase().includes(needle));
 
-/** Chip filter + keyword search over title, fix and trigger words. */
+/** Chip filter + keyword search over title, situation, fix and triggers. */
 const filterAwcProjectPitfallRows = (
   rows: readonly AwcProjectPitfallRow[],
   filter: AwcPitfallSeverityFilter,

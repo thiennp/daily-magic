@@ -42,13 +42,15 @@ describe("AwcProjectPitfallsSection wiring", () => {
     );
   });
 
-  it("uses Product English without weak admissions or protocol jargon", () => {
+  it("uses Product English Safety rules chrome strings", () => {
     const combined = `${sectionSource}\n${copySource}`;
     expect(combined).not.toMatch(
       /\b(API|endpoint|JSON|HMAC|beta|experimental|unverified|not yet)\b/i,
     );
-    expect(copySource).toContain("Known traps in this project");
-    expect(copySource).toContain("Fix");
-    expect(copySource).toContain("Triggers");
+    expect(copySource).toContain("Safety rules");
+    expect(copySource).toContain("Important");
+    expect(copySource).toContain("How to do it:");
+    expect(copySource).toContain("Turn on, off, or edit on this computer");
+    expect(copySource).toContain("No rules match.");
   });
 });

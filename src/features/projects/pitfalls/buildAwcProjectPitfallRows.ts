@@ -6,6 +6,8 @@ import { formatRelativeTimeAgo } from "@/lib/time/formatRelativeTimeAgo";
 export interface AwcProjectPitfallRow {
   readonly id: string;
   readonly title: string;
+  /** Situation to avoid (cause). */
+  readonly situation: string;
   readonly fix: string;
   readonly triggers: readonly string[];
   readonly severityLabel: string;
@@ -13,6 +15,7 @@ export interface AwcProjectPitfallRow {
   readonly sourceLabel: string;
   readonly lastHitLabel: string;
   readonly updatedLabel: string;
+  readonly hitCount: number;
 }
 
 const SEVERITY_RANK: Readonly<Record<ProjectPitfallView["severity"], number>> =
@@ -61,6 +64,7 @@ const buildAwcProjectPitfallRows = (
       return {
         id: item.id,
         title: item.symptom,
+        situation: item.cause,
         fix: item.avoidance,
         triggers: item.keywords,
         severity: item.severity,
@@ -71,6 +75,7 @@ const buildAwcProjectPitfallRows = (
             ? AWC_PROJECT_PITFALLS_COPY.neverHit
             : AWC_PROJECT_PITFALLS_COPY.lastHit(relative),
         updatedLabel: formatAwcPitfallUpdatedAt(item.updatedAt),
+        hitCount: item.hitCount,
       };
     });
 

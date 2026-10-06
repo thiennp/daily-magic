@@ -53,6 +53,11 @@ const tabPanelsSource = readFileSync(
   "utf8",
 );
 
+const tabBodySource = readFileSync(
+  path.join(process.cwd(), "src/features/projects/AwcProjectDetailTabPanelBody.tsx"),
+  "utf8",
+);
+
 describe("AwcProjectDetailPanel layout S2 overview", () => {
   it("drops Overview tab; parks Members as right rail; gray-only chrome", () => {
     expect(tabPanelsSource).not.toContain("AwcProjectOverviewPanel");
@@ -81,8 +86,9 @@ const messengerComposerSource = readFileSync(
 
 describe("AwcProjectDetailPanel layout S3 activity", () => {
   it("mounts messenger Activity panel with dual-mode composer", () => {
-    expect(tabPanelsSource).toContain("AwcProjectMessengerSection");
-    expect(tabPanelsSource).not.toMatch(
+    expect(tabPanelsSource).toContain("AwcProjectDetailTabPanelBody");
+    expect(tabBodySource).toContain("AwcProjectMessengerSection");
+    expect(tabBodySource).not.toMatch(
       /const STUB_TABS[\s\S]*?= \[[^\]]*"(?:activity|team)"[^\]]*\];/,
     );
     expect(messengerSectionSource).toContain("AwcProjectMessengerPanels");

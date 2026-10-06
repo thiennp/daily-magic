@@ -21,11 +21,11 @@ interface AwcProjectPitfallsToolbarProps {
   readonly onQueryChange: (query: string) => void;
 }
 
+/** Artifact chips: All / Important / Warning (info rows stay under All). */
 const CHIP_ORDER: readonly AwcPitfallSeverityFilter[] = [
   "all",
   "block",
   "warn",
-  "info",
 ];
 
 const chipLabel = (filter: AwcPitfallSeverityFilter): string =>
@@ -39,7 +39,6 @@ export default function AwcProjectPitfallsToolbar({
   onQueryChange,
 }: AwcProjectPitfallsToolbarProps) {
   const searchId = useId();
-  const chips = CHIP_ORDER.filter((chip) => chip !== "info" || counts.info > 0);
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -48,12 +47,14 @@ export default function AwcProjectPitfallsToolbar({
         aria-label={C.filterGroupLabel}
         className="flex flex-wrap items-center gap-2"
       >
-        {chips.map((chip) => (
+        {CHIP_ORDER.map((chip) => (
           <button
             key={chip}
             type="button"
             aria-pressed={filter === chip}
-            className={filter === chip ? PITFALL_CHIP_ACTIVE_CLASS : PITFALL_CHIP_IDLE_CLASS}
+            className={
+              filter === chip ? PITFALL_CHIP_ACTIVE_CLASS : PITFALL_CHIP_IDLE_CLASS
+            }
             onClick={() => {
               onFilterChange(chip);
             }}

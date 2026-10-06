@@ -8,6 +8,9 @@ const read = (relative: string): string =>
 
 const detailPanelSource = read("src/features/projects/AwcProjectDetailPanel.tsx");
 const tabPanelsSource = read("src/features/projects/AwcProjectDetailTabPanels.tsx");
+const tabBodySource = read(
+  "src/features/projects/AwcProjectDetailTabPanelBody.tsx",
+);
 const overviewPanelSource = read(
   "src/features/projects/overview/AwcProjectOverviewPanel.tsx",
 );
@@ -30,19 +33,22 @@ describe("AwcProjectDetailPanel layout S5 pitfalls", () => {
     expect(tabsConstantSource).toMatch(
       /"activity",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
     );
-    expect(tabPanelsSource).toMatch(
+    expect(tabBodySource).toMatch(
       /const STUB_TABS[\s\S]*?"reports"[\s\S]*?"library"[\s\S]*?\];/,
     );
-    expect(tabPanelsSource).not.toMatch(
+    expect(tabBodySource).not.toMatch(
       /const STUB_TABS[\s\S]*?= \[[^\]]*"pitfalls"[^\]]*\];/,
     );
+    expect(tabPanelsSource).toContain("AwcProjectDetailTabPanelBody");
     expect(tabPanelsSource).not.toContain("AwcProjectOverviewPanel");
     expect(tabsConstantSource).toContain('pitfalls: "Safety rules"');
-    expect(tabsConstantSource).toContain('DEFAULT_PROJECT_PAGE_TAB: ProjectPageTabId = "activity"');
+    expect(tabsConstantSource).toContain(
+      'DEFAULT_PROJECT_PAGE_TAB: ProjectPageTabId = "activity"',
+    );
   });
 
   it("mounts the Pitfalls panel from one shared page-level load", () => {
-    expect(tabPanelsSource).toContain("AwcProjectPitfallsPanel");
+    expect(tabBodySource).toContain("AwcProjectPitfallsPanel");
     expect(detailPanelSource).toContain("useAwcProjectPitfalls(project.id)");
     expect(detailPanelSource).toContain("pitfallsCount={pitfallsCount}");
     expect(overviewPanelSource).not.toContain("useAwcProjectPitfalls(");

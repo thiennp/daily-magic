@@ -61,21 +61,22 @@ describe("buildAwcProjectPitfallRows", () => {
     ]);
     expect(rows[0]).toMatchObject({
       title: "Block newer",
+      situation: "Because of a reason.",
       fix: "Do the safe thing.",
       triggers: ["crash"],
-      severityLabel: "Must fix",
+      severityLabel: "Important",
       sourceLabel: "Built-in",
-      lastHitLabel: "Last hit 30 mins ago",
-      updatedLabel: "Updated 2026-10-05",
+      lastHitLabel: "last hit 30 mins ago",
+      updatedLabel: "updated 2026-10-05",
     });
-    expect(rows[2]?.lastHitLabel).toBe("Last hit 1h ago");
+    expect(rows[2]?.lastHitLabel).toBe("last hit 1h ago");
   });
 
   it("labels never-hit when lastSeenAt is missing", () => {
     expect(
       buildAwcProjectPitfallRows([pitfall({ id: "a", symptom: "A" })], nowMs)[0]
         ?.lastHitLabel,
-    ).toBe("Never hit");
+    ).toBe("not hit yet");
   });
 
   it('labels "Not updated yet" when updatedAt is null', () => {
@@ -84,6 +85,6 @@ describe("buildAwcProjectPitfallRows", () => {
         [pitfall({ id: "a", symptom: "A", updatedAt: null })],
         nowMs,
       )[0]?.updatedLabel,
-    ).toBe("Not updated yet");
+    ).toBe("not updated yet");
   });
 });

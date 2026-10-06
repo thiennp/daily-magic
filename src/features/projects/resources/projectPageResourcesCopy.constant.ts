@@ -1,12 +1,24 @@
-/** English production copy for project-page Resources (S6). Folders + Git only. */
+/** Resources tab — Product EN (ARTIFACT-STRINGS Center · Resources). */
 export const PROJECT_PAGE_RESOURCES_COPY = {
-  foldersTitle: "Folders on computers",
+  pwaHeading: "Playbooks, Workflows, Agents",
+  pwaAttach: "Attach on this computer",
+  playbooksTitle: "Playbooks",
+  workflowsTitle: "Workflows",
+  agentsTitle: "Agents",
+  pwaEmptySub: (computerName: string) =>
+    `None attached. View here, edit on ${computerName}.`,
+  foldersTitle: "Folders on this computer",
+  foldersEmpty:
+    "No folders yet. Only the folder location is stored; files stay on your computer.",
   foldersHint:
-    "Record which computer holds which folder. Only paths are stored — files stay on that computer.",
+    "Only the folder location is stored; files stay on your computer.",
   foldersOwnerOnly:
     "Only the project owner can add and remove folder paths for this project.",
   foldersLoading: "Loading folders…",
-  gitTitle: "Git remotes",
+  foldersAdd: "Add",
+  foldersRemove: "Remove",
+  gitTitle: "Git remotes (optional)",
   gitHint:
-    "Optional. Up to 20 HTTPS or SSH URLs, with no credentials in the URL.",
+    "HTTPS or SSH, with no login details. Clear every URL and leave the branch empty, then save to remove the config.",
+  skillsHeading: "Shared skills",
 } as const;

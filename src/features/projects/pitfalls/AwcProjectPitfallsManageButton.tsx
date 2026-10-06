@@ -2,11 +2,13 @@
 
 import { useId } from "react";
 
-import { OVERVIEW_CTA_SECONDARY_SM_CLASS } from "@/features/projects/overview/overviewChrome.constant";
 import { AWC_PROJECT_PITFALLS_COPY as C } from "@/features/projects/pitfalls/awcProjectPitfallsCopy.constant";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 
-/** Gray secondary deep link into the Agent Witch Local Pitfalls tab. */
+const LINK_CLASS =
+  "font-medium text-gray-900 underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400/40 dark:text-white";
+
+/** Deep link into Agent Witch Local Pitfalls — artifact note-line link. */
 export default function AwcProjectPitfallsManageButton({
   editCta,
 }: {
@@ -19,27 +21,30 @@ export default function AwcProjectPitfallsManageButton({
         href={editCta.href}
         target="_blank"
         rel="noopener noreferrer"
-        className={OVERVIEW_CTA_SECONDARY_SM_CLASS}
+        className={LINK_CLASS}
       >
-        {C.manageOnMac}
+        {C.manageOnThisComputer}
       </a>
     );
   }
   return (
-    <div className="flex flex-col items-start gap-1 sm:items-end">
+    <span className="inline-flex flex-col items-start gap-0.5">
       <button
         type="button"
         disabled
         aria-describedby={editCta.helperText !== null ? helperId : undefined}
-        className={`${OVERVIEW_CTA_SECONDARY_SM_CLASS} cursor-not-allowed opacity-50`}
+        className={`${LINK_CLASS} cursor-not-allowed opacity-50`}
       >
-        {C.manageOnMac}
+        {C.manageOnThisComputer}
       </button>
       {editCta.helperText !== null ? (
-        <p id={helperId} className="max-w-xs text-xs text-gray-500 dark:text-gray-400 sm:text-right">
+        <span
+          id={helperId}
+          className="max-w-xs text-xs text-gray-500 dark:text-gray-400"
+        >
           {editCta.helperText}
-        </p>
+        </span>
       ) : null}
-    </div>
+    </span>
   );
 }

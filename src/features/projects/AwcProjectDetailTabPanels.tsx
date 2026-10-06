@@ -1,14 +1,9 @@
 "use client";
 
-import AwcProjectDetailSettingsPanel from "@/features/projects/AwcProjectDetailSettingsPanel";
-import AwcProjectMessengerSection from "@/features/projects/messenger/AwcProjectMessengerSection";
-import AwcProjectTabStub from "@/features/projects/AwcProjectTabStub";
-import AwcProjectPitfallsPanel from "@/features/projects/pitfalls/AwcProjectPitfallsPanel";
+import AwcProjectDetailTabPanelBody from "@/features/projects/AwcProjectDetailTabPanelBody";
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
-import AwcProjectResourcesPanel from "@/features/projects/resources/AwcProjectResourcesPanel";
 import {
   PROJECT_PAGE_TAB_IDS,
-  PROJECT_PAGE_TAB_LABELS,
   type ProjectPageNavTarget,
   type ProjectPageTabId,
 } from "@/features/projects/projectPageTabs.constant";
@@ -31,9 +26,6 @@ interface AwcProjectDetailTabPanelsProps {
   readonly activityRefreshKey?: number;
   readonly onActivityUnreadMaybeChanged?: () => void;
 }
-
-/** Not landed yet: dashed placeholder (Team moved to the Members rail). */
-const STUB_TABS: readonly ProjectPageTabId[] = ["reports", "library"];
 
 export default function AwcProjectDetailTabPanels({
   activeTab,
@@ -60,38 +52,19 @@ export default function AwcProjectDetailTabPanels({
             hidden={!selected}
             className={selected ? "min-w-0 pt-5" : undefined}
           >
-            {tabId === "pitfalls" ? (
-              <AwcProjectPitfallsPanel
-                projectId={project.id}
-                pitfalls={pitfalls}
-                deviceDisplayName={deviceDisplayName}
-                editCta={editCta}
-              />
-            ) : null}
-            {tabId === "activity" && selected ? (
-              <AwcProjectMessengerSection
-                key={activityRefreshKey}
-                projectId={project.id}
-                initialThreadKey={activityInitialThreadKey}
-                onUnreadMaybeChanged={onActivityUnreadMaybeChanged}
-              />
-            ) : null}
-            {tabId === "resources" ? (
-              <AwcProjectResourcesPanel
-                project={project}
-                pageActorRole={pageActorRole}
-              />
-            ) : null}
-            {tabId === "settings" ? (
-              <AwcProjectDetailSettingsPanel
-                project={project}
-                startRename={startRename}
-                pageActorRole={pageActorRole}
-              />
-            ) : null}
-            {STUB_TABS.includes(tabId) ? (
-              <AwcProjectTabStub label={PROJECT_PAGE_TAB_LABELS[tabId]} />
-            ) : null}
+            <AwcProjectDetailTabPanelBody
+              tabId={tabId}
+              selected={selected}
+              project={project}
+              startRename={startRename}
+              pageActorRole={pageActorRole}
+              deviceDisplayName={deviceDisplayName}
+              editCta={editCta}
+              pitfalls={pitfalls}
+              activityInitialThreadKey={activityInitialThreadKey}
+              activityRefreshKey={activityRefreshKey}
+              onActivityUnreadMaybeChanged={onActivityUnreadMaybeChanged}
+            />
           </div>
         );
       })}

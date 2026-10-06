@@ -9,20 +9,33 @@ const row = (
   overrides: Partial<AwcProjectPitfallRow> & Pick<AwcProjectPitfallRow, "id">,
 ): AwcProjectPitfallRow => ({
   title: "Title",
+  situation: "A bad situation.",
   fix: "Fix it.",
   triggers: [],
   severity: "warn",
   severityLabel: "Warning",
   sourceLabel: "Built-in",
-  lastHitLabel: "Never hit",
-  updatedLabel: "Updated 2026-10-05",
+  lastHitLabel: "not hit yet",
+  updatedLabel: "updated 2026-10-05",
+  hitCount: 0,
   ...overrides,
 });
 
 const rows = [
-  row({ id: "secret", title: "Secrets leak into logs", severity: "block", triggers: ["token", "env"] }),
+  row({
+    id: "secret",
+    title: "Secrets leak into logs",
+    severity: "block",
+    triggers: ["token", "env"],
+  }),
   row({ id: "push", title: "Push rejected", fix: "Rebase on main first." }),
-  row({ id: "build", title: "Build breaks", severity: "info", triggers: ["Deps"] }),
+  row({
+    id: "build",
+    title: "Build breaks",
+    severity: "info",
+    triggers: ["Deps"],
+    situation: "Symlink node_modules across folders.",
+  }),
 ];
 
 describe("filterAwcProjectPitfallRows", () => {
@@ -39,16 +52,29 @@ describe("filterAwcProjectPitfallRows", () => {
     ).toEqual(["push"]);
   });
 
-  it("searches title, fix and triggers case-insensitively", () => {
-    expect(filterAwcProjectPitfallRows(rows, "all", "LOGS")[0]?.id).toBe("secret");
-    expect(filterAwcProjectPitfallRows(rows, "all", "rebase")[0]?.id).toBe("push");
-    expect(filterAwcProjectPitfallRows(rows, "all", "deps")[0]?.id).toBe("build");
-    expect(filterAwcProjectPitfallRows(rows, "all", "env")[0]?.id).toBe("secret");
+  it("searches title, situation, fix and triggers case-insensitively", () => {
+    expect(filterAwcProjectPitfallRows(rows, "all", "LOGS")[0]?.id).toBe(
+      "secret",
+    );
+    expect(filterAwcProjectPitfallRows(rows, "all", "rebase")[0]?.id).toBe(
+      "push",
+    );
+    expect(filterAwcProjectPitfallRows(rows, "all", "deps")[0]?.id).toBe(
+      "build",
+    );
+    expect(filterAwcProjectPitfallRows(rows, "all", "env")[0]?.id).toBe(
+      "secret",
+    );
+    expect(filterAwcProjectPitfallRows(rows, "all", "symlink")[0]?.id).toBe(
+      "build",
+    );
   });
 
   it("combines chip and query, empty when nothing matches", () => {
     expect(filterAwcProjectPitfallRows(rows, "warn", "token")).toEqual([]);
-    expect(filterAwcProjectPitfallRows(rows, "all", "nothing-here")).toEqual([]);
+    expect(filterAwcProjectPitfallRows(rows, "all", "nothing-here")).toEqual(
+      [],
+    );
   });
 });
 
