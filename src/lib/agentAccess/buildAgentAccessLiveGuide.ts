@@ -65,6 +65,10 @@ export const buildAgentAccessLiveGuide = () => {
         "list_project_inbox",
         "ack_project_message",
         "rotate_project_api_key",
+        "publish_project_skill",
+        "list_project_skills",
+        "get_project_skill",
+        "revoke_project_skill",
       ],
     },
     productUpdates: {

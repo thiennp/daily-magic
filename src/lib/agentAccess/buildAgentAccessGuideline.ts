@@ -4,6 +4,10 @@ import { buildAgentWitchRoleGuidelineSection } from "@/lib/agentAccess/buildAgen
 import { buildPromptSdlcAgentGuidelineSection } from "@/lib/agentAccess/buildPromptSdlcAgentGuide";
 import { buildBotSupportUrlGuidelineSection } from "@/lib/agentAccess/buildBotSupportUrlGuidelineSection";
 import { buildProjectAclAgentGuidelineSection } from "@/lib/agentAccess/buildProjectAclAgentGuidelineSection";
+import {
+  AGENT_ACCESS_LOCAL_FIRST_INTRO,
+  AGENT_ACCESS_LOCAL_FIRST_STEPS,
+} from "@/lib/agentAccess/agentAccessLocalFirstCopy.constant";
 import { AWC_TERMS_VERSION } from "@/lib/agentAccess/awcTermsVersion.constant";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 import { AGENT_ACCESS_PAIR_THIS_COMPUTER_GUIDELINE_SECTION } from "@/lib/agentAccess/agentAccessPairThisComputerGuidelineSection.constant";
@@ -66,6 +70,10 @@ export const buildAgentAccessGuideline = (): AgentAccessGuideline => {
           "create_workflow with { templateId, targetDeviceId } saves the workflow and writes Playbook files to ~/.agent-witch/harness/ on that computer.",
           "If harnessInstalled is false, call install_harness with { capabilityId, targetDeviceId } after list_macs shows the computer.",
         ],
+      },
+      {
+        heading: "Local-first before you ask a model",
+        body: [AGENT_ACCESS_LOCAL_FIRST_INTRO, ...AGENT_ACCESS_LOCAL_FIRST_STEPS],
       },
       buildPromptSdlcAgentGuidelineSection(),
       {

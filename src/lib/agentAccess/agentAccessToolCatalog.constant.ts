@@ -1,3 +1,4 @@
+import { AGENT_ACCESS_LOCAL_FIRST_BEFORE_CLAUSE } from "@/lib/agentAccess/agentAccessLocalFirstCopy.constant";
 import { REGISTER_ACCOUNT_TOOL } from "@/lib/agentAccess/registerAccountTool.constant";
 import type { AgentAccessToolDefinition } from "@/lib/agentAccess/agentAccessToolDefinition.type";
 
@@ -26,8 +27,7 @@ export const AGENT_ACCESS_TOOL_CATALOG: readonly AgentAccessToolDefinition[] = [
   },
   {
     name: "send_task",
-    description:
-      "Send a Task to a paired computer in a project (Reports). Requires project_id. The computer must already be connected. Returns the Run id.",
+    description: `Send a Task to a paired computer in a project (Reports). Requires project_id. The computer must already be connected. Returns the Run id. ${AGENT_ACCESS_LOCAL_FIRST_BEFORE_CLAUSE}`,
     inputSchema: {
       type: "object",
       properties: {

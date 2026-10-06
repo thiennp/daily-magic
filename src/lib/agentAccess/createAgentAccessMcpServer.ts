@@ -6,6 +6,7 @@ import {
 } from "@agent-witch/shared/mcp";
 
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
+import { AGENT_ACCESS_MCP_INSTRUCTIONS } from "@/lib/agentAccess/agentAccessLocalFirstCopy.constant";
 import { AGENT_ACCESS_TOOLS } from "@/lib/agentAccess/agentAccessTools.constant";
 import { coerceAgentAccessArguments } from "@/lib/agentAccess/coerceAgentAccessArguments";
 
@@ -28,6 +29,7 @@ export const createAgentAccessMcpServer = (input: {
   readonly callTool: AgentAccessMcpCallTool;
 }): McpServerDefinition<AgentAccessMcpContext> => ({
   serverInfo: AGENT_WITCH_MCP_SERVER_INFO,
+  instructions: AGENT_ACCESS_MCP_INSTRUCTIONS,
   tools: AGENT_ACCESS_TOOLS.map(
     (definition): McpTool<AgentAccessMcpContext> => ({
       definition,

@@ -30,7 +30,7 @@ export const PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE =
 
 /** Shared project.updated wake clause for briefing, invite prompt, and agent guideline. */
 export const PROJECT_UPDATED_WAKE_REPLY_CLAUSE =
-  `On kind "${PROJECT_MESSAGE_KIND_PROJECT_UPDATED}": re-pull get_project_acl and get_project_briefing (and knowledge list if relevant), tell the user in one short line that project info changed, then ack. Do not ack only.`;
+  `On kind "${PROJECT_MESSAGE_KIND_PROJECT_UPDATED}": re-pull get_project_acl and get_project_briefing (and list_project_skills if skills changed), tell the user in one short line that project info changed, then ack. Do not ack only.`;
 
 /** Addressing rules shared by the wake (webhook) and poll briefings. */
 export const PROJECT_BRIEFING_DISPATCH_ADDRESSING =

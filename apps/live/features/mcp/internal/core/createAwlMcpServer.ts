@@ -9,6 +9,7 @@ import {
 } from "@agent-witch/shared/mcp";
 
 import type { McpServerDefinition } from "../../public-api/types";
+import { AWL_MCP_INSTRUCTIONS } from "./awlMcpInstructions.constant";
 
 export interface CreateAwlMcpServerInput {
   readonly layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">;
@@ -32,6 +33,7 @@ export const createAwlMcpServer = (
   });
   return {
     serverInfo: AGENT_WITCH_MCP_SERVER_INFO,
+    instructions: AWL_MCP_INSTRUCTIONS,
     tools: [
       {
         definition: AWL_CHECK_CONTEXT_TOOL,

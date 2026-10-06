@@ -78,6 +78,9 @@ export const handleMcpJsonRpcRequest = async <TContext = undefined>(
       protocolVersion: MCP_PROTOCOL_VERSION,
       capabilities: { tools: { listChanged: false } },
       serverInfo: server.serverInfo,
+      ...(server.instructions === undefined
+        ? {}
+        : { instructions: server.instructions }),
     });
   }
   if (method === "ping" || method === "notifications/initialized") {

@@ -7,6 +7,7 @@ import {
   toMcpTextResult,
 } from "@agent-witch/shared/mcp";
 
+import { AGENT_ACCESS_MCP_INSTRUCTIONS } from "@/lib/agentAccess/agentAccessLocalFirstCopy.constant";
 import { buildWebMcpDocument } from "@/lib/agentAccess/buildWebMcpDocument";
 import { createAgentAccessMcpServer } from "@/lib/agentAccess/createAgentAccessMcpServer";
 
@@ -43,6 +44,7 @@ describe("agent access WebMCP", () => {
         protocolVersion: MCP_PROTOCOL_VERSION,
         capabilities: { tools: { listChanged: false } },
         serverInfo: AGENT_WITCH_MCP_SERVER_INFO,
+        instructions: AGENT_ACCESS_MCP_INSTRUCTIONS,
       },
     });
     expect(MCP_PROTOCOL_VERSION).toBe("2025-03-26");

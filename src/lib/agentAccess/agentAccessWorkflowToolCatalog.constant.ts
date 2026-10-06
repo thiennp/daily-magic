@@ -1,4 +1,5 @@
 import type { AgentAccessToolDefinition } from "@/lib/agentAccess/agentAccessToolCatalog.constant";
+import { AGENT_ACCESS_LOCAL_FIRST_BEFORE_CLAUSE } from "@/lib/agentAccess/agentAccessLocalFirstCopy.constant";
 import { AWL_REPAIR_THIS_COMPUTER_POINTER_COPY } from "@/lib/agentAccess/awlRepairThisComputerPointerCopy.constant";
 
 const deviceIdSchema = {
@@ -71,8 +72,7 @@ export const AGENT_ACCESS_WORKFLOW_TOOLS: readonly AgentAccessToolDefinition[] =
     },
     {
       name: "run_workflow",
-      description:
-        "Start a saved workflow on the paired computer. fieldValues keys come from list_workflow_templates.",
+      description: `Start a saved workflow on the paired computer. fieldValues keys come from list_workflow_templates. ${AGENT_ACCESS_LOCAL_FIRST_BEFORE_CLAUSE}`,
       inputSchema: {
         type: "object",
         properties: {

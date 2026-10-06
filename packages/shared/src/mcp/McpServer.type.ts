@@ -35,6 +35,8 @@ export interface McpTool<TContext = undefined> {
 export interface McpServerDefinition<TContext = undefined> {
   readonly serverInfo: McpServerInfo;
   readonly tools: readonly McpTool<TContext>[];
+  /** Optional MCP `initialize` → `instructions` (short how-to for the client). */
+  readonly instructions?: string;
   /**
    * Host-side log for a throwing tool (e.g. stderr). The JSON-RPC -32603
    * response itself only carries a generic message (no error text / stack).

@@ -1,3 +1,4 @@
+import { PROJECT_BRIEFING_LOCAL_FIRST_LINE } from "@/lib/agentAccess/agentAccessLocalFirstCopy.constant";
 import type { ProjectBriefing } from "@/lib/projects/acl/types/ProjectBriefing.type";
 
 const formatPeer = (peer: {
@@ -26,5 +27,6 @@ export const formatProjectBriefingText = (
     peerLine,
     briefing.howToDispatch,
     playbookLine,
+    PROJECT_BRIEFING_LOCAL_FIRST_LINE,
   ].join(" ");
 };

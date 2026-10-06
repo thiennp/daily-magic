@@ -16,7 +16,7 @@ export const PROJECT_PEER_SYNC_GUIDELINE = {
     "handoff bodies or summaries",
     "run indexes for sharing",
     "composition digests as a shared bus",
-    "skills, memory, or knowledge for cowork",
+    "memory or knowledge for cowork (except published project skills: list_project_skills / get_project_skill)",
   ],
   ownerControls:
     "Owner Approves and Revokes others in the AWC UI only (v1). Members may leave_project (confirm:true) to self-disconnect with no owner approval. Revoke/leave → immediate AuthZ deny. No token sharing.",

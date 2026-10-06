@@ -10,7 +10,7 @@ export const buildAgentWitchRoleGuidelineSection = (): {
     `${AGENT_WITCH_PRODUCT_NAME} is an agent-support playground: harness setup, memory and playbooks, Project Access ACL, and Prompt Optimizer tooling for scored, reusable prompts.`,
     `It is not a concrete ops executor. Do not treat it as Slack, Outlook, ticket queues, or day-to-day business workflow automation. Specialist bots keep those jobs.`,
     "Use it to install and shape how agents work on a computer (harness, playbooks, reuse). Keep chat, mail, and ticket execution in those products.",
-    "AgentWitch Cloud stays an ACL + registry (project name, folder refs, members, approve/revoke audit) — not a content bus for handoffs, run dumps, or skill bodies.",
+    "AgentWitch Cloud stays an ACL + registry (project name, folder refs, members, approve/revoke audit) — not a content bus for handoffs or run dumps. One exception: published project skills (≤ 64KB per version) are stored so members can read them with list_project_skills and get_project_skill.",
   ],
 });
 

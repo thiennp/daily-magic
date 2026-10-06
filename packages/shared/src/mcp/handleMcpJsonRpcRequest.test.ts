@@ -45,6 +45,24 @@ describe("handleMcpJsonRpcRequest", () => {
     });
   });
 
+  it("adds instructions to initialize only when the server defines them", async () => {
+    const response = await handleMcpJsonRpcRequest(
+      { jsonrpc: "2.0", id: 9, method: "initialize" },
+      { ...makeServer(), instructions: "Local-first: check_context first." },
+      undefined,
+    );
+    expect(response).toEqual({
+      jsonrpc: "2.0",
+      id: 9,
+      result: {
+        protocolVersion: MCP_PROTOCOL_VERSION,
+        capabilities: { tools: { listChanged: false } },
+        serverInfo: { name: "agent-witch", version: "1.0.0" },
+        instructions: "Local-first: check_context first.",
+      },
+    });
+  });
+
   it("acks ping and notifications/initialized with an empty result", async () => {
     const server = makeServer();
     expect(
