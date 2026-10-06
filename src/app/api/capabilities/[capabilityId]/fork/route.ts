@@ -34,12 +34,7 @@ export async function POST(
     );
   }
 
-  let body: unknown = {};
-  try {
-    body = await request.json();
-  } catch {
-    body = {};
-  }
+  const body: unknown = await request.json().catch(() => ({}));
 
   const project = await requireProjectIdForCreate({
     actorUserId: actor.id,
@@ -60,6 +55,13 @@ export async function POST(
   );
 
   if (!result.ok) {
+    if (result.reason === "project_required") {
+      return Response.json(
+        { error: "project_id is required.", code: "project_required" },
+        { status: 400 },
+      );
+    }
+
     if (result.reason === "own_capability") {
       return Response.json(
         { error: "This assistant is already in your library." },

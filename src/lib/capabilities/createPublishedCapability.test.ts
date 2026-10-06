@@ -45,11 +45,21 @@ describe("createPublishedCapability", () => {
 
     expect(sqlMock).toHaveBeenCalled();
     const call = sqlMock.mock.calls[0];
-    // neon tagged template: strings + values
     const strings = call[0] as TemplateStringsArray;
     const sqlText = Array.from(strings).join("?");
     expect(sqlText).toContain("project_id");
     const values = call.slice(1);
     expect(values).toContain("proj-1");
+  });
+
+  it("rejects a missing projectId before INSERT", async () => {
+    await expect(
+      createPublishedCapability({
+        ownerUserId: "user-1",
+        projectId: "   ",
+        name: "Probe",
+      }),
+    ).rejects.toThrow("project_id is required.");
+    expect(sqlMock).not.toHaveBeenCalled();
   });
 });

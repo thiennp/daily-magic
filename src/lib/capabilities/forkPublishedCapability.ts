@@ -18,6 +18,11 @@ export async function forkPublishedCapability(
   actorUserId: string,
   projectId: string,
 ): Promise<ForkPublishedCapabilityResult> {
+  const trimmedProjectId = projectId.trim();
+  if (trimmedProjectId.length === 0) {
+    return { ok: false, reason: "project_required" };
+  }
+
   const source = await getPublishedCapabilityById(sourceCapabilityId);
 
   if (source === null) {
@@ -68,7 +73,7 @@ export async function forkPublishedCapability(
       VALUES (
         ${capabilityId},
         ${actorUserId},
-        ${projectId},
+        ${trimmedProjectId},
         NULL,
         ${source.type},
         ${buildForkedCapabilityName(source.name)},

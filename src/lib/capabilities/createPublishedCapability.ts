@@ -35,6 +35,11 @@ export interface CreatePublishedCapabilityResult {
 export async function createPublishedCapability(
   input: CreatePublishedCapabilityInput,
 ): Promise<CreatePublishedCapabilityResult> {
+  const projectId = input.projectId.trim();
+  if (projectId.length === 0) {
+    throw new Error("project_id is required.");
+  }
+
   await ensurePublishedCapabilityWorkflowOutputFieldsSchema();
   const sql = getSql();
   const capabilityId = randomUUID();
@@ -64,7 +69,7 @@ export async function createPublishedCapability(
       VALUES (
         ${capabilityId},
         ${input.ownerUserId},
-        ${input.projectId},
+        ${projectId},
         ${input.groupId ?? null},
         ${capabilityType},
         ${input.name},
