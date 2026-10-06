@@ -1,20 +1,21 @@
 "use client";
 
+import AwcProjectBreadcrumb from "@/features/projects/AwcProjectBreadcrumb";
 import AwcProjectDetailHeaderActions from "@/features/projects/AwcProjectDetailHeaderActions";
 import AwcProjectDetailHeaderStatus from "@/features/projects/AwcProjectDetailHeaderStatus";
-import AwcProjectEditOnMacActions from "@/features/projects/AwcProjectEditOnMacActions";
+import AwcProjectHeaderEditAction from "@/features/projects/AwcProjectHeaderEditAction";
 import AwcProjectMobileMembersChip from "@/features/projects/AwcProjectMobileMembersChip";
-import AwcProjectPathDisplay from "@/features/projects/AwcProjectPathDisplay";
-import { PROJECT_PAGE_LAYOUT_V2_COPY } from "@/features/projects/projectPageLayoutV2Copy.constant";
-import type { ProjectDevicePresenceLabel } from "@/features/projects/utils/buildProjectDevicePresenceLabel";
+import AwcProjectRoleChip from "@/features/projects/AwcProjectRoleChip";
+import { PROJECT_V5_H1_CLASS } from "@/features/projects/projectPageV5ChromeClasses.constant";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
+import type { ProjectHeaderStatus } from "@/features/projects/utils/resolveProjectHeaderStatus";
+import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 
 interface AwcProjectDetailHeaderProps {
   readonly projectId: string;
   readonly projectName: string;
-  readonly folderPath: string;
-  readonly presence: ProjectDevicePresenceLabel;
-  readonly deviceDisplayName: string;
+  readonly status: ProjectHeaderStatus;
+  readonly pageActorRole: ProjectPageActorRole;
   readonly editCta: ProjectEditOnMacCta;
   readonly canRename: boolean;
   readonly canApprove: boolean;
@@ -23,12 +24,16 @@ interface AwcProjectDetailHeaderProps {
   readonly onDelete: () => void;
 }
 
+/**
+ * V5-3 project chrome: breadcrumb · H1 · status chip · role chip (non-owner)
+ * · ONE action "Edit on this computer" · "More actions" menu. Project path
+ * moved to Settings (I27). Mobile Members chip stays (live rail entry).
+ */
 export default function AwcProjectDetailHeader({
   projectId,
   projectName,
-  folderPath,
-  presence,
-  deviceDisplayName,
+  status,
+  pageActorRole,
   editCta,
   canRename,
   canApprove,
@@ -36,30 +41,20 @@ export default function AwcProjectDetailHeader({
   onInvite,
   onDelete,
 }: AwcProjectDetailHeaderProps) {
-  const editCtaEn = {
-    ...editCta,
-    buttonLabel: PROJECT_PAGE_LAYOUT_V2_COPY.editOnThisComputer,
-  };
-
   return (
-    <header className="flex min-w-0 flex-col gap-4">
+    <header className="flex min-w-0 flex-col gap-2">
+      <AwcProjectBreadcrumb projectName={projectName} />
       <div className="relative flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 space-y-2">
-          <h1 className="text-[clamp(2rem,4vw,2.75rem)] font-bold tracking-[-0.03em] text-gray-900 dark:text-white">
-            {projectName}
-          </h1>
-          <AwcProjectDetailHeaderStatus
-            presence={presence}
-            deviceDisplayName={deviceDisplayName}
-          >
-            <span className="min-w-0 max-w-[min(30ch,50vw)] overflow-hidden">
-              <AwcProjectPathDisplay folderPath={folderPath} />
-            </span>
-          </AwcProjectDetailHeaderStatus>
-          <AwcProjectMobileMembersChip
-            projectId={projectId}
-            canApprove={canApprove}
-          />
+          <h1 className={PROJECT_V5_H1_CLASS}>{projectName}</h1>
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <AwcProjectDetailHeaderStatus status={status} />
+            <AwcProjectRoleChip pageActorRole={pageActorRole} />
+            <AwcProjectMobileMembersChip
+              projectId={projectId}
+              canApprove={canApprove}
+            />
+          </div>
         </div>
         <AwcProjectDetailHeaderActions
           canRename={canRename}
@@ -67,12 +62,7 @@ export default function AwcProjectDetailHeader({
           onInvite={onInvite}
           onDelete={onDelete}
         >
-          <AwcProjectEditOnMacActions
-            editCta={editCtaEn}
-            size="compact"
-            layout="buttonOnly"
-            fullWidthOnMobile
-          />
+          <AwcProjectHeaderEditAction editCta={editCta} />
         </AwcProjectDetailHeaderActions>
       </div>
     </header>

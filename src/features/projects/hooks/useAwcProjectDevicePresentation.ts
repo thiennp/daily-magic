@@ -47,6 +47,8 @@ const useAwcProjectDevicePresentation = (input: {
 
     return {
       deviceDisplayName,
+      isThisMac,
+      hasLinkedDevice: device !== null,
       presence,
       editCta,
       statusPrefix,

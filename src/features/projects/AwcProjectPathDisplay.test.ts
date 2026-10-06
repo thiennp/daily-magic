@@ -17,7 +17,7 @@ const pathDisplaySource = stripComments(
 
 const headerSource = stripComments(
   readFileSync(
-    path.join(process.cwd(), "src/features/projects/AwcProjectDetailHeader.tsx"),
+    path.join(process.cwd(), "src/features/projects/settings/AwcProjectSettingsFolderRow.tsx"),
     "utf8",
   ),
 );
@@ -34,7 +34,7 @@ describe("AwcProjectPathDisplay", () => {
     expect(pathDisplaySource).toContain("text-ellipsis");
   });
 
-  it("header meta row keeps min-w-0 so mobile path can shrink", () => {
+  it("Settings folder row (V5-3 home) keeps min-w-0 so mobile path can shrink", () => {
     expect(headerSource).toContain("AwcProjectPathDisplay");
     expect(headerSource).toMatch(/min-w-0/);
     expect(headerSource).toMatch(/overflow-hidden|min-w-0 max-w-full/);

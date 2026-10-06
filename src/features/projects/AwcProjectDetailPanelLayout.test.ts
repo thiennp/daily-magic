@@ -33,9 +33,9 @@ describe("AwcProjectDetailPanel layout S1/S2 shell", () => {
     expect(detailPageSource).not.toContain("AppPageHeader");
   });
 
-  it("header path area uses min-w-0 for mobile overflow", () => {
+  it("header keeps min-w-0 for mobile overflow (path moved to Settings, V5-3)", () => {
     expect(headerSource).toContain("min-w-0");
-    expect(headerSource).toContain("AwcProjectPathDisplay");
+    expect(headerSource).not.toContain("AwcProjectPathDisplay");
     expect(headerSource).not.toMatch(/direction\s*:\s*rtl/);
   });
 });

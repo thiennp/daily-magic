@@ -46,7 +46,9 @@ describe("AwcProjectDetailPanel layout S5 pitfalls", () => {
   it("mounts the Pitfalls panel from one shared page-level load", () => {
     expect(tabBodySource).toContain("AwcProjectPitfallsPanel");
     expect(detailPanelSource).toContain("useAwcProjectPitfalls(project.id)");
-    expect(detailPanelSource).toContain("pitfallsCount={pitfallsCount}");
+    expect(detailPanelSource).toContain(
+      "rulesImportantCount={rulesImportantCount}",
+    );
     expect(overviewPanelSource).not.toContain("useAwcProjectPitfalls(");
     expect(pitfallsPanelSource).toContain("AwcProjectPitfallsToolbar");
     expect(pitfallsPanelSource).toContain("AwcProjectPitfallAccordionRow");

@@ -1,11 +1,6 @@
 "use client";
 
 import AwcProjectLibraryOwnerActions from "@/features/projects/library/AwcProjectLibraryOwnerActions";
-import { PROJECT_PAGE_LIBRARY_COPY as C } from "@/features/projects/library/projectPageLibraryCopy.constant";
-import {
-  PANEL_HEADING_CLASS,
-  PANEL_INTRO_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
 
 interface AwcProjectLibraryHeaderProps {
   readonly canEdit: boolean;
@@ -14,7 +9,10 @@ interface AwcProjectLibraryHeaderProps {
   readonly onAddFrom: () => void;
 }
 
-/** Heading + intro + New / Add from (owner-only; disabled-with-reason else). */
+/**
+ * New / Add from (owner-only; disabled-with-reason else). V5-3: heading +
+ * intro live in the tab panel subtitle (`AwcProjectTabPanelIntro`).
+ */
 export default function AwcProjectLibraryHeader({
   canEdit,
   canCreateSkill,
@@ -22,11 +20,7 @@ export default function AwcProjectLibraryHeader({
   onAddFrom,
 }: AwcProjectLibraryHeaderProps) {
   return (
-    <header className="flex flex-wrap items-start justify-between gap-3 px-1">
-      <div className="min-w-0 space-y-0.5">
-        <h3 className={PANEL_HEADING_CLASS}>{C["library.heading"]}</h3>
-        <p className={PANEL_INTRO_CLASS}>{C["library.intro"]}</p>
-      </div>
+    <header className="flex flex-wrap items-start justify-end gap-3 px-1">
       <AwcProjectLibraryOwnerActions
         canEdit={canEdit}
         canCreateSkill={canCreateSkill}

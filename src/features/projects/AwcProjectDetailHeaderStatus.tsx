@@ -1,72 +1,36 @@
-import type { ReactNode } from "react";
+import { PROJECT_V5_CHIP_BASE_CLASS } from "@/features/projects/projectPageV5ChromeClasses.constant";
+import type {
+  ProjectHeaderStatus,
+  ProjectHeaderStatusTone,
+} from "@/features/projects/utils/resolveProjectHeaderStatus";
 
-import { PROJECT_PAGE_LAYOUT_V2_COPY } from "@/features/projects/projectPageLayoutV2Copy.constant";
-import type { ProjectDevicePresenceLabel } from "@/features/projects/utils/buildProjectDevicePresenceLabel";
-
-interface AwcProjectDetailHeaderStatusProps {
-  readonly presence: ProjectDevicePresenceLabel;
-  readonly deviceDisplayName: string;
-  /** Trailing slot (folder path) rendered after the last separator. */
-  readonly children: ReactNode;
-}
-
-const DOT_BY_STATUS: Record<
-  ProjectDevicePresenceLabel["statusIcon"],
-  string
-> = {
-  online: "bg-success-500",
-  offline: "bg-gray-300 dark:bg-gray-600",
-  reconnecting: "bg-warning-500",
+const CHIP_BY_TONE: Record<ProjectHeaderStatusTone, string> = {
+  ok: `${PROJECT_V5_CHIP_BASE_CLASS} bg-awc-ok-soft text-awc-ok dark:bg-success-500/15 dark:text-success-400`,
+  warn: `${PROJECT_V5_CHIP_BASE_CLASS} bg-awc-warn-soft text-awc-warn dark:bg-warning-500/15 dark:text-warning-400`,
+  // Neutral states (offline): no box — muted dot + text (PLAN §1.3).
+  neutral:
+    "inline-flex w-fit items-center gap-1.5 text-[length:var(--awc-fs-chip)] font-semibold text-awc-fg-muted dark:text-gray-400",
 };
 
-function statusHeadline(
-  presence: ProjectDevicePresenceLabel,
-  copy: typeof PROJECT_PAGE_LAYOUT_V2_COPY,
-): string {
-  if (presence.statusIcon === "reconnecting") {
-    return copy.statusReconnecting;
-  }
-  if (presence.statusIcon === "offline") {
-    return copy.statusOffline;
-  }
-  return copy.statusAllGood;
-}
+const DOT_BY_TONE: Record<ProjectHeaderStatusTone, string> = {
+  ok: "bg-awc-ok-dot",
+  warn: "bg-awc-warn-dot",
+  neutral: "bg-awc-fg-subtle dark:bg-gray-500",
+};
 
-function statusOnlineClause(
-  presence: ProjectDevicePresenceLabel,
-  deviceDisplayName: string,
-  copy: typeof PROJECT_PAGE_LAYOUT_V2_COPY,
-): string {
-  const device = deviceDisplayName.trim() || "Mac";
-  if (presence.statusIcon === "offline") {
-    return copy.offlineOn(device);
-  }
-  return copy.onlineOn(device);
-}
-
-/** Project header status line: dot · headline · online clause · path slot. */
+/** V5-3 header status chip (online / reconnecting tinted; offline neutral). */
 export default function AwcProjectDetailHeaderStatus({
-  presence,
-  deviceDisplayName,
-  children,
-}: AwcProjectDetailHeaderStatusProps) {
-  const copy = PROJECT_PAGE_LAYOUT_V2_COPY;
+  status,
+}: {
+  readonly status: ProjectHeaderStatus;
+}) {
   return (
-    <p
-      role="status"
-      className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-500 dark:text-gray-400"
-    >
+    <p role="status" className={CHIP_BY_TONE[status.tone]}>
       <span
         aria-hidden="true"
-        className={`inline-block h-1.5 w-1.5 shrink-0 rounded-full ${DOT_BY_STATUS[presence.statusIcon]}`}
+        className={`inline-block size-1.5 shrink-0 rounded-full ${DOT_BY_TONE[status.tone]}`}
       />
-      <span className="text-gray-700 dark:text-gray-200">
-        {statusHeadline(presence, copy)}
-      </span>
-      <span aria-hidden="true">·</span>
-      <span>{statusOnlineClause(presence, deviceDisplayName, copy)}</span>
-      <span aria-hidden="true">·</span>
-      {children}
+      <span>{status.text}</span>
     </p>
   );
 }

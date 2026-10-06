@@ -4,6 +4,7 @@ import isDefaultUserProject from "@/lib/projects/isDefaultUserProject";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import AwcProjectSettingsDangerZone from "@/features/projects/settings/AwcProjectSettingsDangerZone";
+import AwcProjectSettingsFolderRow from "@/features/projects/settings/AwcProjectSettingsFolderRow";
 import AwcProjectSettingsHistoryRow from "@/features/projects/settings/AwcProjectSettingsHistoryRow";
 import AwcProjectSettingsNameSection from "@/features/projects/settings/AwcProjectSettingsNameSection";
 
@@ -13,7 +14,7 @@ interface AwcProjectDetailSettingsPanelProps {
   readonly pageActorRole: ProjectPageActorRole;
 }
 
-/** Layout v2 L5 Settings (p-set): name · message history · danger zone. */
+/** Layout v2 L5 Settings (p-set): name · project path (V5-3) · message history · danger zone. */
 export default function AwcProjectDetailSettingsPanel({
   project,
   startRename,
@@ -34,6 +35,7 @@ export default function AwcProjectDetailSettingsPanel({
         startInEditMode={startRename}
         canEdit={isOwner}
       />
+      <AwcProjectSettingsFolderRow folderPath={project.folderPath} />
       {isOwner ? (
         <AwcProjectSettingsHistoryRow projectId={project.id} />
       ) : null}

@@ -36,12 +36,16 @@ describe("project layout v2 L1 shell", () => {
     expect(tabLabelsBlock).not.toMatch(/\boverview\b/);
   });
 
-  it("segmented tab bar is gray track + selected surface (no underline, no blue)", () => {
+  it("V5-3 tab bar: white pill track, tonal blue selected via --awc tokens", () => {
     const bar = read("src/features/projects/AwcProjectDetailTabBar.tsx");
-    expect(bar).toContain("bg-gray-100");
-    expect(bar).toContain("rounded-xl");
+    const classes = read(
+      "src/features/projects/projectPageV5ChromeClasses.constant.ts",
+    );
+    expect(bar).toContain("PROJECT_V5_TABLIST_CLASS");
+    expect(classes).toContain("rounded-awc-pill bg-awc-surface");
+    expect(classes).toContain("bg-awc-accent-soft text-awc-blue-700");
     expect(bar).not.toContain("border-b-2");
-    expect(bar).not.toMatch(/blue-|indigo|#0a6cf5|#4a97ff/i);
+    expect(bar).not.toMatch(/indigo|#0a6cf5|#4a97ff/i);
     expect(bar).toContain('role="tablist"');
   });
 

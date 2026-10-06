@@ -1,6 +1,7 @@
 "use client";
 
 import AwcProjectDetailTabPanelBody from "@/features/projects/AwcProjectDetailTabPanelBody";
+import AwcProjectTabPanelIntro from "@/features/projects/AwcProjectTabPanelIntro";
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
 import {
   PROJECT_PAGE_TAB_IDS,
@@ -50,8 +51,9 @@ export default function AwcProjectDetailTabPanels({
             id={`project-tabpanel-${tabId}`}
             aria-labelledby={`project-tab-${tabId}`}
             hidden={!selected}
-            className={selected ? "min-w-0 pt-5" : undefined}
+            className={selected ? "flex min-w-0 flex-col gap-4 pt-1" : undefined}
           >
+            <AwcProjectTabPanelIntro tabId={tabId} />
             <AwcProjectDetailTabPanelBody
               tabId={tabId}
               selected={selected}
