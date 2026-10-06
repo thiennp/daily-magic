@@ -210,6 +210,11 @@ final class MacAppMenuController: ObservableObject {
         NSWorkspace.shared.open(resolveConnectThisMacUrl())
     }
 
+    /// HARD: always available — never gated on connected / installed / running.
+    func openDownloadAwl() {
+        NSWorkspace.shared.open(resolveDownloadAwlUrl())
+    }
+
     func openLogs() {
         let result = openLogsFlow(fileManager: fileManager)
         guard let logPath = result.logPath else {

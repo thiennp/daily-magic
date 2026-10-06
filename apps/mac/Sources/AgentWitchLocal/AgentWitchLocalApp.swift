@@ -8,7 +8,10 @@ struct AgentWitchLocalApp: App {
 
     var body: some Scene {
         MenuBarExtra {
-            MacAppMenuBarContentView(controller: appDelegate.controller)
+            MacAppMenuBarContentView(
+                controller: appDelegate.controller,
+                store: appDelegate.uiStore
+            )
         } label: {
             if let template = MenuBarTemplateImage.load() {
                 Image(nsImage: template)
@@ -17,6 +20,30 @@ struct AgentWitchLocalApp: App {
             }
         }
         .menuBarExtraStyle(.window)
+
+        Window("Computer", id: MacAppWindowID.computer.rawValue) {
+            ComputerView(controller: appDelegate.controller, store: appDelegate.uiStore)
+                .awlWindowOpener()
+        }
+        .defaultSize(width: 480, height: 560)
+
+        Window("History", id: MacAppWindowID.history.rawValue) {
+            HistoryView(store: appDelegate.uiStore)
+                .awlWindowOpener()
+        }
+        .defaultSize(width: 500, height: 560)
+
+        Window("Settings", id: MacAppWindowID.settings.rawValue) {
+            SettingsView(controller: appDelegate.controller, store: appDelegate.uiStore)
+                .awlWindowOpener()
+        }
+        .defaultSize(width: 500, height: 640)
+
+        Window("First run", id: MacAppWindowID.firstRun.rawValue) {
+            FirstRunWizardView(controller: appDelegate.controller, store: appDelegate.uiStore)
+                .awlWindowOpener()
+        }
+        .defaultSize(width: 480, height: 560)
     }
 }
 
@@ -25,6 +52,7 @@ struct AgentWitchLocalApp: App {
 @MainActor
 final class MacAppAppDelegate: NSObject, NSApplicationDelegate {
     let controller = MacAppMenuController()
+    let uiStore = MacAppLocalUIStore.shared
 
     func application(_ application: NSApplication, open urls: [URL]) {
         for url in urls {
