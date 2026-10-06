@@ -22,6 +22,7 @@ import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type"
 interface AwcProjectDetailPanelProps {
   readonly project: UserProjectRecord;
   readonly startRename?: boolean;
+  readonly startChatOpen?: boolean;
   readonly pageActorRole?: ProjectPageActorRole;
   readonly actorEmail?: string | null;
   readonly actorDisplayName?: string | null;
@@ -30,7 +31,7 @@ interface AwcProjectDetailPanelProps {
 
 export default function AwcProjectDetailPanel({
   project,
-  startRename = false,
+  startRename = false, startChatOpen = false,
   pageActorRole = "owner",
   actorEmail = null,
   actorDisplayName = null,
@@ -111,6 +112,7 @@ export default function AwcProjectDetailPanel({
         onMessageHelper={onGotoActivity}
       />
       <AwcProjectChatDock
+        startOpen={startChatOpen}
         projectId={project.id}
         threads={messengerThreads.threads}
         onSent={onAskSent}

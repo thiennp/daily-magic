@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 
 /** Open / full-screen state for the floating Chat dock (UI expand only). */
-export const useAwcProjectChatDock = () => {
-  const [open, setOpen] = useState(false);
+export const useAwcProjectChatDock = (initialOpen = false) => {
+  const [open, setOpen] = useState(initialOpen);
   const [full, setFull] = useState(false);
 
   const openDock = useCallback(() => {

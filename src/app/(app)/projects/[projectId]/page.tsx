@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 
 interface ProjectsDetailPageProps {
   readonly params: Promise<{ projectId: string }>;
-  readonly searchParams: Promise<{ rename?: string }>;
+  readonly searchParams: Promise<{ rename?: string; chat?: string }>;
 }
 
 export async function generateMetadata({
@@ -52,6 +52,7 @@ export default async function ProjectDetailPage({
   }
 
   const startRename = query.rename === "1" || query.rename === "true";
+  const startChatOpen = query.chat === "1" || query.chat === "true";
   const access = await authorizeProjectPageActor({
     projectId: projectId.trim(),
     actorUserId: actor.id,
@@ -67,6 +68,7 @@ export default async function ProjectDetailPage({
         <AwcProjectDetailPanel
           project={access.project}
           startRename={startRename && access.role === "owner"}
+          startChatOpen={startChatOpen}
           pageActorRole={access.role}
           actorEmail={actor.email}
           actorDisplayName={actor.name}

@@ -256,6 +256,17 @@
       "apiPaths": ["/api/agent-witch/projects/[projectId]/pitfalls"],
       "dependsOn": ["auth", "agent-witch"],
       "migrationStatus": "in_progress"
+    },
+    {
+      "slug": "onboarding",
+      "title": "AWC onboarding",
+      "purpose": "Focused first-run flow: create project, connect computer, add assistant, first task via project chat.",
+      "featurePath": "src/features/onboarding",
+      "libPath": null,
+      "routePaths": ["/onboarding/project", "/onboarding/machine", "/onboarding/bot", "/onboarding/task"],
+      "apiPaths": [],
+      "dependsOn": ["home", "projects", "download", "agent"],
+      "migrationStatus": "in_progress"
     }
   ]
 }

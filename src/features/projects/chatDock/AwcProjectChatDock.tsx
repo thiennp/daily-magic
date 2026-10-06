@@ -19,6 +19,8 @@ interface AwcProjectChatDockProps {
   readonly projectId: string;
   readonly threads: AwcMessengerThreadList | null;
   readonly onSent: (threadKey: string) => void;
+  /** Onboarding first-task handoff: open dock from ?chat=1. */
+  readonly startOpen?: boolean;
 }
 
 /**
@@ -29,8 +31,9 @@ export default function AwcProjectChatDock({
   projectId,
   threads,
   onSent,
+  startOpen = false,
 }: AwcProjectChatDockProps) {
-  const dock = useAwcProjectChatDock();
+  const dock = useAwcProjectChatDock(startOpen);
   const access = useAwcProjectAccess(projectId);
   const computers = useMemo(
     () =>
