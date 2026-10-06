@@ -1,3 +1,4 @@
+import { executeProjectSkillShareTool } from "@/features/project-skill-share/public-api/infrastructure";
 import {
   handleAgentAccessMcpGet,
   handleAgentAccessMcpPost,
@@ -10,5 +11,7 @@ export async function GET(request: Request): Promise<Response> {
 }
 
 export async function POST(request: Request): Promise<Response> {
-  return handleAgentAccessMcpPost(request);
+  return handleAgentAccessMcpPost(request, {
+    featureToolExecutors: [executeProjectSkillShareTool],
+  });
 }

@@ -30,7 +30,7 @@ export const OAUTH_PKCE_METHOD = "S256" as const;
 
 export const OAUTH_SCOPES_SUPPORTED = ["agent_access"] as const;
 
-/** v1 redirect policy (decided): any https + localhost/127.0.0.1/[::1] loopback. */
+/** v1 redirect policy (decided): https hosts + localhost/127.0.0.1/[::1] loopback. */
 export const OAUTH_LOCALHOST_HOSTS = new Set([
   "localhost",
   "127.0.0.1",

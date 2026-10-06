@@ -1,3 +1,4 @@
+import { AWC_TERMS_VERSION } from "@/lib/agentAccess/awcTermsVersion.constant";
 import { buildSyntheticAgentEmail } from "@/lib/agentAccess/buildSyntheticAgentEmail";
 import {
   DEVICE_ACCESS_TOKEN_TTL_MS,
@@ -38,11 +39,16 @@ export type IssueOwnedAgentAccessCredentialResult =
 export const issueOwnedAgentAccessCredential = async (input: {
   readonly ownerUserId: string;
   readonly displayName?: string | null;
+  readonly termsVersion?: string;
+  readonly termsAcceptedAt?: string;
   readonly nowMs?: number;
 }): Promise<IssueOwnedAgentAccessCredentialResult> => {
   await ensureDeviceCodeSchema();
   const nowMs = input.nowMs ?? Date.now();
+  const nowIso = new Date(nowMs).toISOString();
   const displayName = input.displayName ?? null;
+  const termsVersion = input.termsVersion ?? AWC_TERMS_VERSION;
+  const termsAcceptedAt = input.termsAcceptedAt ?? nowIso;
   const email = buildSyntheticAgentEmail();
   const userId = await resolveAgentAccessRegisterUser({
     email,
@@ -71,7 +77,8 @@ export const issueOwnedAgentAccessCredential = async (input: {
     await sql`
       INSERT INTO agent_access_tokens (
         user_id, token_hash, token_prefix, registration_method, agentmail_inbox,
-        owner_user_id, expires_at, refresh_token_hash, refresh_expires_at
+        owner_user_id, expires_at, refresh_token_hash, refresh_expires_at,
+        terms_version, terms_accepted_at
       )
       VALUES (
         ${userId},
@@ -82,7 +89,9 @@ export const issueOwnedAgentAccessCredential = async (input: {
         ${input.ownerUserId},
         ${accessExpires.toISOString()},
         ${hashRefreshToken(refreshToken)},
-        ${refreshExpires.toISOString()}
+        ${refreshExpires.toISOString()},
+        ${termsVersion},
+        ${termsAcceptedAt}
       )
       RETURNING id
     `,

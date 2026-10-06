@@ -1,27 +1,12 @@
-import { randomUUID } from "node:crypto";
-
 import { issueOwnedAgentAccessCredential } from "@/lib/agentAccess/issueOwnedAgentAccessCredential";
+import type { CompleteOauthConsentResult } from "@/lib/agentAccess/oauth/CompleteOauthConsentResult.type";
 import { ensureOauthSchema } from "@/lib/agentAccess/oauth/ensureOauthSchema";
-import {
-  createOauthAuthorizationCode,
-  hashOauthSecret,
-} from "@/lib/agentAccess/oauth/hashOauthSecrets";
+import { issueOauthAuthCodeAfterConsent } from "@/lib/agentAccess/oauth/issueOauthAuthCodeAfterConsent";
 import { loadOauthPending } from "@/lib/agentAccess/oauth/loadOauthPending";
-import { OAUTH_CODE_TTL_MS } from "@/lib/agentAccess/oauth/oauth.constants";
 import { requireAwcTermsAcceptance } from "@/lib/agentAccess/requireAwcTermsAcceptance";
 import { getSql } from "@/lib/db";
 
-export type CompleteOauthConsentResult =
-  | {
-      readonly ok: true;
-      readonly redirectUrl: string;
-    }
-  | {
-      readonly ok: false;
-      readonly status: number;
-      readonly code: string;
-      readonly error: string;
-    };
+export type { CompleteOauthConsentResult };
 
 /**
  * Consent Approve: creates ACCOUNT + owner_user_id ONLY, issues one-time auth code.
@@ -75,9 +60,12 @@ export const completeOauthConsent = async (input: {
   }
 
   await ensureOauthSchema();
+  const nowIso = new Date(nowMs).toISOString();
   const issued = await issueOwnedAgentAccessCredential({
     ownerUserId: input.ownerUserId,
     displayName: pending.clientDisplayName,
+    termsVersion: terms.termsVersion,
+    termsAcceptedAt: nowIso,
     nowMs,
   });
   if (!issued.ok) {
@@ -89,48 +77,15 @@ export const completeOauthConsent = async (input: {
     };
   }
 
-  const code = createOauthAuthorizationCode();
-  const authCodeId = randomUUID();
-  const nowIso = new Date(nowMs).toISOString();
-
-  await sql`
-    INSERT INTO agent_access_oauth_auth_codes (
-      id, code_hash, client_id, redirect_uri, code_challenge,
-      code_challenge_method, owner_user_id, token_id, terms_version,
-      client_display_name, expires_at, created_at
-    )
-    VALUES (
-      ${authCodeId},
-      ${hashOauthSecret(code)},
-      ${pending.clientId},
-      ${pending.redirectUri},
-      ${pending.codeChallenge},
-      ${pending.codeChallengeMethod},
-      ${input.ownerUserId},
-      ${issued.tokenId},
-      ${terms.termsVersion},
-      ${pending.clientDisplayName},
-      ${new Date(nowMs + OAUTH_CODE_TTL_MS).toISOString()},
-      ${nowIso}
-    )
-  `;
-  await sql`
-    INSERT INTO agent_access_oauth_token_delivery (
-      auth_code_id, access_token, refresh_token, created_at
-    )
-    VALUES (
-      ${authCodeId},
-      ${issued.accessToken},
-      ${issued.refreshToken},
-      ${nowIso}
-    )
-  `;
-  await sql`DELETE FROM agent_access_oauth_pending WHERE id = ${pending.id}`;
-
-  const url = new URL(pending.redirectUri);
-  url.searchParams.set("code", code);
-  if (pending.state !== null) {
-    url.searchParams.set("state", pending.state);
-  }
-  return { ok: true, redirectUrl: url.toString() };
+  const redirectUrl = await issueOauthAuthCodeAfterConsent({
+    pending,
+    ownerUserId: input.ownerUserId,
+    tokenId: issued.tokenId,
+    accessToken: issued.accessToken,
+    refreshToken: issued.refreshToken,
+    termsVersion: terms.termsVersion,
+    nowMs,
+    nowIso,
+  });
+  return { ok: true, redirectUrl };
 };

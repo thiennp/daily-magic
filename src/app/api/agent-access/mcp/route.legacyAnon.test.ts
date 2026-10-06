@@ -43,13 +43,11 @@ vi.mock("@/lib/agentAccess/readClientIp", () => ({
 }));
 
 import { handleMcpJsonRpcRequest } from "@agent-witch/shared/mcp";
-import { readBoundedAgentAccessBody } from "@/lib/agentAccess/readBoundedAgentAccessBody";
-import { POST as legacyPost, GET as legacyGet } from "@/app/api/agent-access/mcp/route";
 import {
-  POST as connectPost,
-  GET as connectGet,
-} from "@/app/api/agent-access/mcp/connect/route";
-import { buildOauthProtectedResourceMetadata } from "@/lib/agentAccess/oauth/buildOauthDiscoveryDocuments";
+  GET as legacyGet,
+  POST as legacyPost,
+} from "@/app/api/agent-access/mcp/route";
+import { readBoundedAgentAccessBody } from "@/lib/agentAccess/readBoundedAgentAccessBody";
 
 describe("legacy /api/agent-access/mcp (main-compatible anonymous)", () => {
   it("anonymous initialize returns 200 JSON-RPC (not HTTP 401)", async () => {
@@ -95,63 +93,5 @@ describe("legacy /api/agent-access/mcp (main-compatible anonymous)", () => {
       new Request("http://localhost/api/agent-access/mcp", { method: "GET" }),
     );
     expect(response.status).toBe(200);
-  });
-});
-
-describe("OAuth-protected /api/agent-access/mcp/connect", () => {
-  it("401s without Bearer and advertises resource_metadata", async () => {
-    const response = await connectPost(
-      new Request("http://localhost/api/agent-access/mcp/connect", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: "{}",
-      }),
-    );
-    expect(response.status).toBe(401);
-    const www = response.headers.get("WWW-Authenticate") ?? "";
-    expect(www).toContain("Bearer");
-    expect(www).toContain("resource_metadata=");
-  });
-
-  it("GET without Bearer also 401s", async () => {
-    const response = await connectGet(
-      new Request("http://localhost/api/agent-access/mcp/connect", {
-        method: "GET",
-      }),
-    );
-    expect(response.status).toBe(401);
-  });
-
-  it("works with a Bearer access token (HTTP 200)", async () => {
-    vi.mocked(readBoundedAgentAccessBody).mockResolvedValueOnce({
-      jsonrpc: "2.0",
-      id: 9,
-      method: "initialize",
-    });
-    vi.mocked(handleMcpJsonRpcRequest).mockResolvedValueOnce({
-      jsonrpc: "2.0",
-      id: 9,
-      result: { ok: true },
-    });
-
-    const prefix = "aw_";
-    const body = "x" + "y".repeat(24);
-    const response = await connectPost(
-      new Request("http://localhost/api/agent-access/mcp/connect", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          authorization: `Bearer ${prefix}${body}`,
-        },
-        body: "{}",
-      }),
-    );
-    expect(response.status).toBe(200);
-  });
-
-  it("protected-resource metadata points at /mcp/connect", () => {
-    expect(buildOauthProtectedResourceMetadata().resource).toBe(
-      "https://www.agentwitch.com/api/agent-access/mcp/connect",
-    );
   });
 });

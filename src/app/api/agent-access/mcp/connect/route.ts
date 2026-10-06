@@ -1,3 +1,4 @@
+import { executeProjectSkillShareTool } from "@/features/project-skill-share/public-api/infrastructure";
 import {
   handleAgentAccessMcpGet,
   handleAgentAccessMcpPost,
@@ -40,5 +41,7 @@ export async function POST(request: Request): Promise<Response> {
   if (!hasMcpBearer(request.headers.get("authorization"))) {
     return unauthorizedMcpChallenge();
   }
-  return handleAgentAccessMcpPost(request);
+  return handleAgentAccessMcpPost(request, {
+    featureToolExecutors: [executeProjectSkillShareTool],
+  });
 }

@@ -21,23 +21,27 @@ export const isAllowedOauthRedirectUri = (value: string): boolean => {
     return false;
   }
 
-  let url: URL;
-  try {
-    url = new URL(trimmed);
-  } catch {
+  const parsed = ((): URL | null => {
+    try {
+      return new URL(trimmed);
+    } catch {
+      return null;
+    }
+  })();
+  if (parsed === null) {
     return false;
   }
 
-  if (url.username !== "" || url.password !== "") {
+  if (parsed.username !== "" || parsed.password !== "") {
     return false;
   }
 
-  if (url.protocol === "https:") {
-    return url.hostname.length > 0;
+  if (parsed.protocol === "https:") {
+    return parsed.hostname.length > 0;
   }
 
-  if (url.protocol === "http:") {
-    return OAUTH_LOCALHOST_HOSTS.has(url.hostname.toLowerCase());
+  if (parsed.protocol === "http:") {
+    return OAUTH_LOCALHOST_HOSTS.has(parsed.hostname.toLowerCase());
   }
 
   return false;

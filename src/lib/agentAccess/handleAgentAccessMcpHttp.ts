@@ -1,6 +1,6 @@
 import { handleMcpJsonRpcRequest } from "@agent-witch/shared/mcp";
 
-import { executeProjectSkillShareTool } from "@/features/project-skill-share/public-api/infrastructure";
+import type { AgentAccessFeatureToolExecutor } from "@/lib/agentAccess/agentAccessFeatureToolExecutor.type";
 import { buildWebMcpDocument } from "@/lib/agentAccess/buildWebMcpDocument";
 import { createAgentAccessMcpServer } from "@/lib/agentAccess/createAgentAccessMcpServer";
 import { executeAgentAccessTool } from "@/lib/agentAccess/executeAgentAccessTool";
@@ -19,13 +19,19 @@ export const handleAgentAccessMcpGet = async (
   return Response.json(buildWebMcpDocument());
 };
 
+export type HandleAgentAccessMcpPostOptions = {
+  readonly featureToolExecutors?: readonly AgentAccessFeatureToolExecutor[];
+};
+
 /**
  * POST JSON-RPC MCP (same as main): no HTTP 401 gate.
  * Anonymous initialize / tools/list / register_account work; other tools
  * return unauthorized inside the JSON-RPC result when Bearer is missing.
+ * Feature tool executors are injected by the route (lib must not import features).
  */
 export const handleAgentAccessMcpPost = async (
   request: Request,
+  options: HandleAgentAccessMcpPostOptions = {},
 ): Promise<Response> => {
   const limited = await guardAgentAccessPost(request);
   if (limited !== null) {
@@ -46,6 +52,7 @@ export const handleAgentAccessMcpPost = async (
 
   const authorization = request.headers.get("authorization");
   const ip = readClientIp(request);
+  const featureToolExecutors = options.featureToolExecutors ?? [];
   const server = createAgentAccessMcpServer({
     callTool: (name, args, authHeader) =>
       executeAgentAccessTool({
@@ -53,7 +60,7 @@ export const handleAgentAccessMcpPost = async (
         args,
         authorization: authHeader,
         ip,
-        featureToolExecutors: [executeProjectSkillShareTool],
+        featureToolExecutors,
       }),
   });
   const result = await handleMcpJsonRpcRequest(payload, server, {
