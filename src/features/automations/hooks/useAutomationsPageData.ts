@@ -7,6 +7,12 @@ import type AgentAutomationRecord from "@/lib/automations/types/AgentAutomationR
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 
+const NO_AUTOMATIONS: readonly AgentAutomationRecord[] = [];
+const NO_CAPABILITIES: readonly PublishedCapabilityRecord[] = [];
+
+const toRequestKey = (refreshKey: number, reloadNonce: number): string =>
+  `${refreshKey}:${reloadNonce}`;
+
 export function useAutomationsPageData(refreshKey = 0): {
   readonly automations: readonly AgentAutomationRecord[];
   readonly capabilities: readonly PublishedCapabilityRecord[];
@@ -15,14 +21,13 @@ export function useAutomationsPageData(refreshKey = 0): {
   readonly reload: () => void;
 } {
   const { status } = useSession();
-  const [automations, setAutomations] = useState<
-    readonly AgentAutomationRecord[]
-  >([]);
-  const [capabilities, setCapabilities] = useState<
-    readonly PublishedCapabilityRecord[]
-  >([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [automations, setAutomations] =
+    useState<readonly AgentAutomationRecord[]>(NO_AUTOMATIONS);
+  const [capabilities, setCapabilities] =
+    useState<readonly PublishedCapabilityRecord[]>(NO_CAPABILITIES);
   const [loadFailed, setLoadFailed] = useState(false);
+  /** Request key of the last settled authenticated load (set only after await). */
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
   const [reloadNonce, setReloadNonce] = useState(0);
 
   const reload = useCallback((): void => {
@@ -32,27 +37,17 @@ export function useAutomationsPageData(refreshKey = 0): {
   const loadGenerationRef = useRef(0);
 
   useEffect(() => {
-    if (status === "loading") {
-      setIsLoading(true);
-      return;
-    }
-
     if (status !== "authenticated") {
-      setAutomations([]);
-      setCapabilities([]);
-      setLoadFailed(false);
-      setIsLoading(false);
       return;
     }
 
+    const requestKey = toRequestKey(refreshKey, reloadNonce);
     const generation = loadGenerationRef.current + 1;
     loadGenerationRef.current = generation;
 
     const isStale = (): boolean => loadGenerationRef.current !== generation;
 
     const loadPageData = async (): Promise<void> => {
-      setIsLoading(true);
-      setLoadFailed(false);
       try {
         const [automationsResponse, capabilitiesResponse] = await Promise.all([
           fetch("/api/automations"),
@@ -84,7 +79,7 @@ export function useAutomationsPageData(refreshKey = 0): {
             (automationsData as { automations: AgentAutomationRecord[] })
               .automations,
           );
-        } else if (!isStale()) {
+        } else {
           setLoadFailed(true);
           return;
         }
@@ -104,7 +99,8 @@ export function useAutomationsPageData(refreshKey = 0): {
               (item) => item.type === CapabilityType.WORKFLOW,
             ),
           );
-        } else if (!isStale()) {
+          setLoadFailed(false);
+        } else {
           setLoadFailed(true);
         }
       } catch {
@@ -113,7 +109,7 @@ export function useAutomationsPageData(refreshKey = 0): {
         }
       } finally {
         if (!isStale()) {
-          setIsLoading(false);
+          setLoadedKey(requestKey);
         }
       }
     };
@@ -121,11 +117,15 @@ export function useAutomationsPageData(refreshKey = 0): {
     void loadPageData();
   }, [refreshKey, reloadNonce, status]);
 
+  const isAuthenticated = status === "authenticated";
+  const hasSettled =
+    isAuthenticated && loadedKey === toRequestKey(refreshKey, reloadNonce);
+
   return {
-    automations,
-    capabilities,
-    isLoading,
-    loadFailed,
+    automations: isAuthenticated ? automations : NO_AUTOMATIONS,
+    capabilities: isAuthenticated ? capabilities : NO_CAPABILITIES,
+    isLoading: status === "loading" || (isAuthenticated && !hasSettled),
+    loadFailed: hasSettled && loadFailed,
     reload,
   };
 }

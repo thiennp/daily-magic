@@ -7,33 +7,33 @@ import type { BorrowedMarketplaceListingState } from "@/features/marketplace/hoo
 import fetchBorrowedMarketplaceListing from "@/features/marketplace/hooks/fetchBorrowedMarketplaceListing";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
 
+const AUTHED_KEY = "authed";
+
+const NO_LISTINGS: readonly HarnessMarketplaceListing[] = [];
+
 export function useMarketplaceState() {
   const { status } = useSession();
   const [remoteListings, setRemoteListings] = useState<
     readonly HarnessMarketplaceListing[]
-  >([]);
+  >(NO_LISTINGS);
   const [borrowed, setBorrowed] =
     useState<BorrowedMarketplaceListingState | null>(null);
-  const [isLoadingRemote, setIsLoadingRemote] = useState(true);
+  /** Set only after the authenticated fetch settles (never synchronously in the effect). */
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
 
-  const listings = remoteListings;
-  const isLoading = status === "loading" || isLoadingRemote;
+  const authKey = status === "authenticated" ? AUTHED_KEY : status;
+  const listings = status === "authenticated" ? remoteListings : NO_LISTINGS;
+  const isLoading =
+    status === "loading" ||
+    (status === "authenticated" && loadedKey !== authKey);
 
   useEffect(() => {
-    if (status === "loading") {
-      setIsLoadingRemote(true);
-      return;
-    }
-
     if (status !== "authenticated") {
-      setRemoteListings([]);
-      setIsLoadingRemote(false);
       return;
     }
 
     let cancelled = false;
     void (async () => {
-      setIsLoadingRemote(true);
       try {
         const response = await fetch("/api/harness/marketplace");
         if (!response.ok || cancelled) {
@@ -41,6 +41,10 @@ export function useMarketplaceState() {
         }
 
         const data: unknown = await response.json();
+        if (cancelled) {
+          return;
+        }
+
         if (
           typeof data === "object" &&
           data !== null &&
@@ -53,7 +57,7 @@ export function useMarketplaceState() {
         }
       } finally {
         if (!cancelled) {
-          setIsLoadingRemote(false);
+          setLoadedKey(AUTHED_KEY);
         }
       }
     })();

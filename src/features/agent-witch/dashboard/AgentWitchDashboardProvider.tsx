@@ -33,9 +33,6 @@ export function AgentWitchDashboardProvider({
   useEffect(() => {
     if (status !== "authenticated") {
       socketRef.current = null;
-      setConnectionStatus(
-        status === "loading" ? "connecting" : "disconnected",
-      );
       return;
     }
 
@@ -53,6 +50,13 @@ export function AgentWitchDashboardProvider({
     });
   }, [status]);
 
+  const resolvedStatus: WsTestConnectionStatus =
+    status === "authenticated"
+      ? connectionStatus
+      : status === "loading"
+        ? "connecting"
+        : "disconnected";
+
   const subscribe = useCallback(
     (listener: (raw: string) => void) => busRef.current.subscribe(listener),
     [],
@@ -66,12 +70,12 @@ export function AgentWitchDashboardProvider({
 
   const value = useMemo<AgentWitchDashboardContextValue>(
     () => ({
-      connectionStatus,
+      connectionStatus: resolvedStatus,
       subscribe,
       getSocket,
       send,
     }),
-    [connectionStatus, getSocket, send, subscribe],
+    [getSocket, resolvedStatus, send, subscribe],
   );
 
   return (

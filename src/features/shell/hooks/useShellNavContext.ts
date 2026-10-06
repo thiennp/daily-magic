@@ -59,40 +59,43 @@ const useShellNavContext = (): ShellNavFilterContext & {
   readonly isLoading: boolean;
 } => {
   const { data: session, status } = useSession();
+  const hasUser = session?.user != null;
+  const globalRole = session?.user?.globalRole;
+  const isAuthenticated = status === "authenticated" && hasUser;
+  const authKey = isAuthenticated ? `authed:${globalRole ?? ""}` : status;
+
   const [context, setContext] = useState<ShellNavFilterContext>(() =>
-    resolveFallbackContext(session?.user?.globalRole),
+    resolveFallbackContext(globalRole),
   );
-  const [isLoading, setIsLoading] = useState(status === "loading");
+  /** Set only in the async completion of the authenticated fetch. */
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
 
   useEffect(() => {
-    if (status === "loading") {
-      setIsLoading(true);
-      return;
-    }
-
-    if (status !== "authenticated" || session?.user == null) {
-      setContext(resolveFallbackContext(undefined));
-      setIsLoading(false);
+    if (status !== "authenticated" || !hasUser) {
       return;
     }
 
     let cancelled = false;
-    const globalRole = session.user.globalRole;
-    setIsLoading(true);
     void loadShellNavContext(globalRole).then((next) => {
       if (cancelled) {
         return;
       }
       setContext(next);
-      setIsLoading(false);
+      setLoadedKey(authKey);
     });
 
     return () => {
       cancelled = true;
     };
-  }, [session?.user, session?.user?.globalRole, status]);
+  }, [authKey, globalRole, hasUser, status]);
 
-  return { ...context, isLoading };
+  const resolvedContext = isAuthenticated
+    ? context
+    : resolveFallbackContext(undefined);
+  const isLoading =
+    status === "loading" || (isAuthenticated && loadedKey !== authKey);
+
+  return { ...resolvedContext, isLoading };
 };
 
 export default useShellNavContext;
