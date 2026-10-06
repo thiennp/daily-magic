@@ -1,5 +1,6 @@
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
+import { formatAgentRunTimedOutLine } from "@/features/reports/utils/formatAgentRunTimedOutLine";
 import { resolveAgentRunHonestyOutcomeFromRecord } from "@/lib/dispatch/resolveAgentRunHonestyOutcomeFromRecord";
 
 export const resolveAgentRunDetailOutcomeMessage = (input: {
@@ -11,6 +12,11 @@ export const resolveAgentRunDetailOutcomeMessage = (input: {
   /** Terminal output when `resultOutput` was not persisted (e.g. fast Failed can't-run). */
   readonly supplementalResultOutput?: string | null;
 }): string | null => {
+  // S0: an expired approval never ran; its stored reason is internal text.
+  if (input.status === AgentRunStatus.EXPIRED) {
+    return formatAgentRunTimedOutLine();
+  }
+
   if (input.denialReason !== null && input.denialReason.trim().length > 0) {
     return input.denialReason.trim();
   }
@@ -47,10 +53,6 @@ export const resolveAgentRunDetailOutcomeMessage = (input: {
       reportLine ??
       "This run failed on your computer. Open AgentWitch on that computer or start a New task to try again."
     );
-  }
-
-  if (input.status === AgentRunStatus.EXPIRED) {
-    return "Approval for this run expired before your computer could finish.";
   }
 
   if (input.status === AgentRunStatus.DENIED) {

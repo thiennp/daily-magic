@@ -14,6 +14,8 @@ export const parseDispatchApprovalSocketMessage = (
       readonly runId: string;
       readonly requesterEmail: string;
       readonly prompt: string;
+      /** S0: ISO time the 15-minute approval window ends; null on old servers. */
+      readonly approvalExpiresAt: string | null;
     }) => void;
     readonly onInputRequired?: (payload: AgentRunInputRequest) => void;
   },
@@ -31,9 +33,18 @@ export const parseDispatchApprovalSocketMessage = (
       typeof payload.requesterEmail === "string"
         ? payload.requesterEmail
         : "Teammate";
+    const approvalExpiresAt =
+      typeof payload.approvalExpiresAt === "string"
+        ? payload.approvalExpiresAt
+        : null;
 
     if (runId.length > 0 && prompt.length > 0) {
-      handlers.onApprovalRequired({ runId, prompt, requesterEmail });
+      handlers.onApprovalRequired({
+        runId,
+        prompt,
+        requesterEmail,
+        approvalExpiresAt,
+      });
     }
   }
 

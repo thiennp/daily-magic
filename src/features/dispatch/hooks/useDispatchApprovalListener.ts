@@ -16,6 +16,7 @@ export interface DispatchApprovalRequest {
   readonly runId: string;
   readonly requesterEmail: string;
   readonly prompt: string;
+  readonly approvalExpiresAt: string | null;
 }
 
 export function useDispatchApprovalListener(): {
