@@ -1,117 +1,99 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import { applyAwcProjectAccessSnapshot } from "@/features/projects/access/hooks/applyAwcProjectAccessSnapshot";
-import { loadAwcProjectAccess } from "@/features/projects/access/hooks/loadAwcProjectAccess";
-import { useAwcProjectAccessInitialLoad } from "@/features/projects/access/hooks/useAwcProjectAccessInitialLoad";
-import { useAwcProjectAccessLivePoll } from "@/features/projects/access/hooks/useAwcProjectAccessLivePoll";
-import { useAwcProjectAccessModel } from "@/features/projects/access/hooks/useAwcProjectAccessModel";
-import { useAwcProjectAccessMutations } from "@/features/projects/access/hooks/useAwcProjectAccessMutations";
-import { useAwcProjectInviteActions } from "@/features/projects/access/hooks/useAwcProjectInviteActions";
-import { useCreatedInviteBanner } from "@/features/projects/access/hooks/useCreatedInviteBanner";
-import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
+import {
+  loadAwcProjectAccess,
+  type AwcProjectAccessFolderRef,
+  type AwcProjectAccessMember,
+  type AwcProjectAccessPending,
+} from "@/features/projects/access/hooks/loadAwcProjectAccess";
+import { postProjectAccessAction } from "@/features/projects/access/utils/projectAccessApi";
 
 export const useAwcProjectAccess = (projectId: string) => {
-  const model = useAwcProjectAccessModel();
-  const banner = useCreatedInviteBanner();
-  const syncBanner = banner.syncBannerWithUsableInvites;
-  const {
-    knownMemberIdsRef,
-    skipAutoApproveDetectRef,
-    bannerTimerRef,
-    snapshotSetters,
-    setIsLoading,
-    setMessage,
-    setFolderRefs,
-    markSkipAutoApproveDetect,
-  } = model;
-
-  const applySnapshot = useCallback(
-    (snapshot: Awaited<ReturnType<typeof loadAwcProjectAccess>>) => {
-      applyAwcProjectAccessSnapshot({
-        snapshot,
-        knownMemberIdsRef,
-        skipAutoApproveDetectRef,
-        bannerTimerRef,
-        syncBannerWithUsableInvites: syncBanner,
-        setters: snapshotSetters,
-      });
-    },
-    [
-      syncBanner,
-      knownMemberIdsRef,
-      skipAutoApproveDetectRef,
-      bannerTimerRef,
-      snapshotSetters,
-    ],
+  const [members, setMembers] = useState<readonly AwcProjectAccessMember[]>([]);
+  const [pending, setPending] = useState<readonly AwcProjectAccessPending[]>(
+    [],
   );
+  const [folderRefs, setFolderRefs] = useState<
+    readonly AwcProjectAccessFolderRef[]
+  >([]);
+  const [message, setMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const reload = useCallback(async () => {
     setIsLoading(true);
     try {
-      applySnapshot(await loadAwcProjectAccess(projectId));
+      const snapshot = await loadAwcProjectAccess(projectId);
+      setMembers(snapshot.members);
+      setPending(snapshot.pending);
+      setFolderRefs(snapshot.folderRefs);
     } finally {
       setIsLoading(false);
     }
-  }, [projectId, applySnapshot, setIsLoading]);
+  }, [projectId]);
 
-  useAwcProjectAccessInitialLoad({
-    projectId,
-    onSnapshot: applySnapshot,
-    setIsLoading,
-  });
-  useAwcProjectAccessLivePoll({ projectId, onSnapshot: applySnapshot });
+  useEffect(() => {
+    const controller = new AbortController();
 
-  const setFriendlyMessage = useCallback(
-    (value: string | null) => {
-      setMessage(value === null ? null : mapProjectAccessError(value, value));
-    },
-    [setMessage],
-  );
+    const load = async (): Promise<void> => {
+      setIsLoading(true);
+      try {
+        const snapshot = await loadAwcProjectAccess(projectId);
+        if (!controller.signal.aborted) {
+          setMembers(snapshot.members);
+          setPending(snapshot.pending);
+          setFolderRefs(snapshot.folderRefs);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoading(false);
+        }
+      }
+    };
 
-  const inviteActions = useAwcProjectInviteActions({
-    projectId,
-    reload,
-    setMessage: setFriendlyMessage,
-    setCreatedInviteUrl: banner.setCreatedInviteUrl,
-    setCreatedInviteToken: banner.setCreatedInviteToken,
-    setCreatedInviteId: banner.setCreatedInviteId,
-  });
-  const mutations = useAwcProjectAccessMutations({
-    projectId,
-    reload,
-    setMessage: setFriendlyMessage,
-  });
+    void load();
 
-  const approve = useCallback(
-    async (requestId: string, projectDisplayName?: string) => {
-      markSkipAutoApproveDetect();
-      return mutations.approve(requestId, projectDisplayName);
-    },
-    [mutations, markSkipAutoApproveDetect],
-  );
+    return () => {
+      controller.abort();
+    };
+  }, [projectId]);
+
+  const approve = async (requestId: string) => {
+    const result = await postProjectAccessAction(
+      `/api/projects/${projectId}/access/requests/${requestId}/approve`,
+    );
+    setMessage(result.ok ? "Approved." : (result.errorMessage ?? "Failed."));
+    await reload();
+  };
+
+  const deny = async (requestId: string) => {
+    const result = await postProjectAccessAction(
+      `/api/projects/${projectId}/access/requests/${requestId}/deny`,
+    );
+    setMessage(result.ok ? "Denied." : (result.errorMessage ?? "Failed."));
+    await reload();
+  };
+
+  const revoke = async (membershipId: string) => {
+    const result = await postProjectAccessAction(
+      `/api/projects/${projectId}/access/members/${membershipId}/revoke`,
+    );
+    setMessage(result.ok ? "Revoked." : (result.errorMessage ?? "Failed."));
+    await reload();
+  };
 
   return {
-    members: model.members,
-    pending: model.pending,
-    folderRefs: model.folderRefs,
-    invites: model.invites,
-    projectName: model.projectName,
-    message: model.message,
-    loadError: model.loadError,
-    createdInviteUrl: banner.createdInviteUrl,
-    createdInviteToken: banner.createdInviteToken,
-    createdInvitePlatform: banner.createdInvitePlatform,
-    clearCreatedInviteBanner: banner.clearCreatedInviteBanner,
-    isLoading: model.isLoading,
+    members,
+    pending,
+    folderRefs,
+    message,
+    isLoading,
     reload,
-    ...mutations,
     approve,
-    ...inviteActions,
+    deny,
+    revoke,
     setFolderRefs,
-    setMessage: setFriendlyMessage,
-    autoApprovedBanner: model.autoApprovedBanner,
-    recentlyAutoApprovedIds: model.recentlyAutoApprovedIds,
+    setMessage,
   };
 };

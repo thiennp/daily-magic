@@ -54,7 +54,7 @@ What you installed (user-facing names):
 | You see                                      | It does                                                                                                                |
 | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | **Mac helper** / **Agent Witch on this Mac** | Background runtime that keeps a secure link to the Console and runs writer CLIs in your projects.                      |
-| **Mac app** (optional)                       | Menu bar app for Apple Silicon — get it from [/download](https://www.agentwitch.com/download). Opens the local UI at `http://127.0.0.1:43347` for folders, playbooks, and troubleshooting. |
+| **Mac app** (optional deep link)             | Full local UI at `http://127.0.0.1:43347` for folders, playbooks, and troubleshooting—not required for your first run. |
 
 Technical map: [Agent Witch deployables](../../product/agent-witch-deployables.md) · [Local bridge](../../agent-witch/local-bridge.md).
 

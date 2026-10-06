@@ -14,11 +14,6 @@ export const shouldEmitWriterApiMissingCliFallbackHonesty = (
     return false;
   }
 
-  // Antigravity runs on CLI OAuth (agy); missing Google Writer API profile keys are not a CLI fallback signal.
-  if (writerAgent === "antigravity") {
-    return false;
-  }
-
   const provider = resolveWriterApiProvider(writerAgent);
   if (provider === null) {
     return false;

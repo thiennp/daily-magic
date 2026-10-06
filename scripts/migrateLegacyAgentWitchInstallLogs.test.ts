@@ -38,7 +38,6 @@ const createProfileLayout = (
     harnessManifestPath: path.join(profileDir, "harness", "manifest.json"),
     harnessSetsDir: path.join(profileDir, "harness", "sets"),
     projectsDir: path.join(profileDir, "projects"),
-    projectDataDir: path.join(profileDir, "project-data"),
     logsDir: path.join(profileDir, "logs"),
     mainLogPath: path.join(profileDir, "logs", "agent-witch.log"),
     errorLogPath: path.join(profileDir, "logs", "agent-witch.error.log"),

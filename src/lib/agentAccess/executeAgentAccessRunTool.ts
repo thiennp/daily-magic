@@ -3,7 +3,7 @@ import { isNonEmptyString, isType } from "guardz";
 import { getAgentRunForParticipant } from "@/lib/dispatch/getAgentRunForParticipant";
 import { listAgentRunsForUser } from "@/lib/dispatch/listAgentRunsForUser";
 
-import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
+import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
 import { summarizeAgentAccessRun } from "@/lib/agentAccess/summarizeAgentAccessRun";

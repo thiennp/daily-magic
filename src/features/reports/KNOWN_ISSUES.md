@@ -81,11 +81,3 @@
 **Cause:** Detail/list UI ignored `reportSummary` / `reportStatus`; live terminal did not surface connection state; product vocab still said “job history”.
 
 **Fix:** `AgentRunReportProgress`, report summary on list cards, `resolveAgentRunDetailOutcomeMessage`, reconnect copy + `ConnectionStatusBadge` on live terminal, Reports vocab on detail chrome. `resolveAgentRunDetailOutcomeMessage.test.ts`, `formatAgentRunReportSummaryLine.test.ts` (REPORTS-008).
-
-## REPORTS-011 — Failed can’t-run honesty missing on report detail
-
-**Symptom:** Floater showed **Failed** with the locked line “Writer API key missing and Claude CLI can’t run.” while `/reports/[runId]` only showed generic “This run failed on your Mac…”.
-
-**Cause:** `resolveAgentRunDetailOutcomeMessage` only mapped honesty when `resultOutput` was persisted; fast writer-missing + ENOENT failures often leave `resultOutput` empty while the browser still holds terminal stream output.
-
-**Fix:** Merge persisted output with `loadAgentRunTerminalOutput` before honesty resolution and accept `supplementalResultOutput` for parity tests. `resolveAgentRunDetailOutcomeMessage.test.ts`, `resolveAgentRunDetailResultOutputForHonesty.test.ts` (REPORTS-011).

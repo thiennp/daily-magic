@@ -2,8 +2,6 @@ import { resolveAgentWitchDevicePresenceTier } from "@/lib/agentWitch/resolveAge
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
 import type AgentWitchPresenceTier from "@/lib/agentWitch/types/AgentWitchPresenceTier.type";
 import { isAgentWitchDeviceRecentlySeen } from "@/lib/agentWitch/agentWitchHeartbeat.constant";
-import { classifyAgentWitchLocalConnectVersion } from "@/lib/agentWitch/classifyAgentWitchLocalConnectVersion";
-import type { AgentWitchLocalConnectVersionStatus } from "@/lib/agentWitch/types/AgentWitchLocalConnectVersionStatus.type";
 
 export interface AgentWitchDeviceWithOnlineStatus {
   readonly id: string;
@@ -23,8 +21,6 @@ export interface AgentWitchDeviceWithOnlineStatus {
   readonly lastHeartbeatAt: string | null;
   readonly lastWakeError?: string | null;
   readonly installBundleVersion: string | null;
-  /** Hard connect gate (`too_old` = AWL must update before Connect). */
-  readonly connectVersionStatus: AgentWitchLocalConnectVersionStatus;
   readonly wakePort: number | null;
 }
 
@@ -75,9 +71,6 @@ const buildAgentWitchDevicesWithOnlineStatus = (
       lastHeartbeatAt: isOnline ? device.lastSeenAt : null,
       lastWakeError: device.lastWakeError ?? null,
       installBundleVersion: device.installBundleVersion ?? null,
-      connectVersionStatus: classifyAgentWitchLocalConnectVersion(
-        device.installBundleVersion ?? null,
-      ),
       wakePort: device.wakePort ?? null,
     };
   });

@@ -50,7 +50,6 @@ const createTempLayout = (): AgentWitchLocalLayout => {
       "sets",
     ),
     projectsDir: path.join(installDir, "profiles", profileEmail, "projects"),
-    projectDataDir: path.join(installDir, "profiles", profileEmail, "project-data"),
     logsDir: path.join(installDir, "profiles", profileEmail, "logs"),
     reportsDir: path.join(installDir, "profiles", profileEmail, "reports"),
     deviceKeypairPath: path.join(

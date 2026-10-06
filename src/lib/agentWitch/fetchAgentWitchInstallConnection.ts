@@ -1,14 +1,9 @@
-import { parseAgentWitchLocalTooOldRefusal } from "@/lib/agentWitch/parseAgentWitchLocalTooOldRefusal";
-import type { AgentWitchLocalTooOldRefusal } from "@/lib/agentWitch/types/AgentWitchLocalTooOldRefusal.type";
-
 export interface AgentWitchInstallConnectionResponse {
   readonly ok: boolean;
   readonly finished?: boolean;
   readonly connectedDeviceCount?: number;
   readonly claimedDeviceCount?: number;
   readonly error?: string;
-  /** Set when the server refused Connect (HTTP 409 `agent_witch_local_too_old`). */
-  readonly tooOldRefusal?: AgentWitchLocalTooOldRefusal;
 }
 
 const parseInstallConnectionResponse = (
@@ -54,15 +49,6 @@ export const fetchAgentWitchInstallConnection =
   async (): Promise<AgentWitchInstallConnectionResponse> => {
     const response = await fetch("/api/agent-witch/install-connection");
     const payload: unknown = await response.json().catch(() => null);
-    const tooOldRefusal = parseAgentWitchLocalTooOldRefusal(payload);
-    if (tooOldRefusal !== null) {
-      return {
-        ok: false,
-        error: "Agent Witch Local is too old to connect. Download the update.",
-        tooOldRefusal,
-      };
-    }
-
     const parsed = parseInstallConnectionResponse(payload);
 
     if (parsed === null) {

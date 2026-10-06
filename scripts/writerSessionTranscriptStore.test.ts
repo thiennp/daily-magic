@@ -43,7 +43,6 @@ const buildTempLayout = (): AgentWitchLocalLayout => {
     harnessManifestPath: path.join(installDir, "harness", "manifest.json"),
     harnessSetsDir: path.join(installDir, "harness", "sets"),
     projectsDir: path.join(installDir, "projects"),
-    projectDataDir: path.join(installDir, "project-data"),
     logsDir: path.join(installDir, "logs"),
     reportsDir: path.join(installDir, "reports"),
     deviceKeypairPath: path.join(installDir, "device-keypair.json"),

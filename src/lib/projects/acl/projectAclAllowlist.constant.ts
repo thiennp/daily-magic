@@ -7,6 +7,7 @@ export const PROJECT_ACL_AWC_ALLOWLIST_TABLES = [
   "project_folder_refs",
   "project_memberships",
   "project_access_requests",
+  "project_access_audit",
 ] as const;
 
 export const PROJECT_ACL_USER_PROJECT_FIELDS = [

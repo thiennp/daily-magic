@@ -51,15 +51,12 @@ export const AGENT_WITCH_MESSAGE_TYPES = {
   DEVICE_AUTH_ATTESTATION: "device.auth.attestation",
   DEVICE_HEALTH_LOG: "device.health.log",
   DEVICE_RESTART: "device.restart",
-  DEVICE_RESTART_ACK: "device.restart.ack",
   INSTALL_BUNDLE_UPDATE: "install.bundle.update",
   ACCOUNT_LINK: "account.link",
   AUTOMATIONS_SYNC: "automations.sync",
   AUTOMATIONS_RUN: "automations.run",
   WRITER_ENSURE: "writer.ensure",
   WRITER_STATUS: "writer.status",
-  /** AWC → owner's project computer: one project message to save locally (history on). */
-  PROJECT_MESSAGE_HISTORY: "project.message.history",
 } as const;
 
 export type AgentWitchMessageType =

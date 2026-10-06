@@ -1,5 +1,6 @@
 "use client";
 
+import AppShellBottomNav from "@/features/shell/AppShellBottomNav";
 import AppShellDevicesPanel from "@/features/shell/AppShellDevicesPanel";
 import AppShellHeader from "@/features/shell/AppShellHeader";
 import AppShellSidebar from "@/features/shell/AppShellSidebar";
@@ -50,21 +51,15 @@ export default function AppShell({
     ) : null;
 
   const pageBody = sidebar ? (
-    <div className="mx-auto w-full max-w-[1600px] px-4 pb-6 pt-6 sm:px-6 lg:px-6">
-      <div
-        className={`grid gap-6 ${
-          renderPrimaryNav
-            ? "md:grid-cols-[15rem_15rem_minmax(0,1fr)] lg:grid-cols-[16rem_240px_minmax(0,1fr)]"
-            : "md:grid-cols-[15rem_minmax(0,1fr)] lg:grid-cols-[16rem_minmax(0,1fr)]"
-        }`}
-      >
+    <div className="mx-auto w-full max-w-[1600px] px-4 pb-24 pt-6 sm:px-6 md:pb-6 lg:px-6">
+      <div className="grid gap-6 md:grid-cols-[15rem_15rem_minmax(0,1fr)] lg:grid-cols-[16rem_240px_minmax(0,1fr)]">
         {primaryNavAside}
         {sidebar}
         <main className={mainColumnClassName}>{children}</main>
       </div>
     </div>
   ) : renderPrimaryNav ? (
-    <div className="mx-auto w-full max-w-[1600px] px-4 pb-6 pt-6 sm:px-6 lg:px-6">
+    <div className="mx-auto w-full max-w-[1600px] px-4 pb-24 pt-6 sm:px-6 md:pb-6 lg:px-6">
       <div className="grid gap-6 md:grid-cols-[15rem_minmax(0,1fr)] lg:grid-cols-[16rem_minmax(0,1fr)]">
         {primaryNavAside}
         <main className={mainColumnClassName}>{children}</main>
@@ -77,7 +72,7 @@ export default function AppShell({
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 pb-16 md:pb-0 dark:bg-gray-900">
       <AppShellHeader showDesktopBrand={showHeaderBrand} />
       <WorkflowAttentionBanner />
       <DispatchApprovalListener />
@@ -85,6 +80,7 @@ export default function AppShell({
       <GuestLibraryDraftSyncListener />
       {mobileDevicesRail}
       {pageBody}
+      <AppShellBottomNav />
     </div>
   );
 }

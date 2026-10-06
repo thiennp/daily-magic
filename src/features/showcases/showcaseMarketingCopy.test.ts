@@ -49,18 +49,12 @@ const collectMarketingStrings = (
   return strings;
 };
 
-/** No exception strings — caveated Muse/HMAC wording was removed. */
-const ALLOWED_EXACT_STRINGS: ReadonlySet<string> = new Set([]);
-
 describe("showcase marketing copy (SHOWCASES-011)", () => {
   it("avoids limit/demo/sample/apology phrasing in all articles", () => {
     const offenders: string[] = [];
 
     for (const article of SHOWCASE_ARTICLES) {
       for (const text of collectMarketingStrings(article)) {
-        if (ALLOWED_EXACT_STRINGS.has(text)) {
-          continue;
-        }
         for (const pattern of BANNED_MARKETING_PHRASE_PATTERNS) {
           if (pattern.test(text)) {
             offenders.push(`${article.slug}: "${text}" (~${pattern})`);

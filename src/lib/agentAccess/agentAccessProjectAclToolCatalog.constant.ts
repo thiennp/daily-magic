@@ -1,16 +1,11 @@
 import type { AgentAccessToolDefinition } from "@/lib/agentAccess/agentAccessToolCatalog.constant";
-import { AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS } from "@/lib/agentAccess/agentAccessProjectInviteHooksToolCatalog.constant";
-import { AGENT_ACCESS_PROJECT_SKILL_SHARE_TOOLS } from "@/lib/agentAccess/agentAccessProjectSkillShareToolCatalog.constant";
-import { AGENT_ACCESS_PROJECT_LEAVE_TOOL } from "@/lib/agentAccess/agentAccessProjectLeaveTool.constant";
-import { AGENT_ACCESS_REDEEM_PROJECT_INVITE_TOOL } from "@/lib/agentAccess/agentAccessRedeemProjectInviteTool.constant";
 
-const AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS: readonly AgentAccessToolDefinition[] =
+export const AGENT_ACCESS_PROJECT_ACL_TOOLS: readonly AgentAccessToolDefinition[] =
   [
-    AGENT_ACCESS_REDEEM_PROJECT_INVITE_TOOL,
     {
       name: "request_project_access",
       description:
-        "Request membership on an Agent Witch project. May return status active when same-owner linked; otherwise pending until owner Approves in the UI. After request MUST call get_my_project_access. AWC stores ACL only — no project content, except published project skills (publish_project_skill, text ≤ 64KB per version).",
+        "Request membership on an Agent Witch project. Owner Approves in the UI. AWC stores ACL only — no project content.",
       inputSchema: {
         type: "object",
         properties: {
@@ -23,11 +18,6 @@ const AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS: readonly AgentAccessToolDefinition[] 
             type: "string",
             description: "Optional team label for the owner UI.",
           },
-          suggestedProjectDisplayName: {
-            type: "string",
-            description:
-              "Optional nickname (required for same-owner auto-approve of agent bots).",
-          },
         },
         required: ["projectId"],
         additionalProperties: false,
@@ -36,7 +26,7 @@ const AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS: readonly AgentAccessToolDefinition[] 
     {
       name: "get_my_project_access",
       description:
-        "Return your membership status for a project: none | pending | active | revoked | owner. When active|owner, includes onboard briefing once (same shape as get_project_briefing).",
+        "Return your membership status for a project: none | pending | active | revoked | owner.",
       inputSchema: {
         type: "object",
         properties: {
@@ -59,7 +49,7 @@ const AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS: readonly AgentAccessToolDefinition[] 
     {
       name: "get_project_acl",
       description:
-        "Read project name, folder refs, repoUrls, defaultBranch, your scopes, and peers/self roster (owner included for members). Denied if not owner or active member. No content.",
+        "Read project name, folder refs, repoUrls, defaultBranch, and your scopes. Denied if not owner or active member. No content.",
       inputSchema: {
         type: "object",
         properties: {
@@ -87,11 +77,3 @@ const AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS: readonly AgentAccessToolDefinition[] 
       },
     },
   ] as const;
-
-export const AGENT_ACCESS_PROJECT_ACL_TOOLS: readonly AgentAccessToolDefinition[] =
-  [
-    ...AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS,
-    AGENT_ACCESS_PROJECT_LEAVE_TOOL,
-    ...AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS,
-    ...AGENT_ACCESS_PROJECT_SKILL_SHARE_TOOLS,
-  ];

@@ -57,16 +57,14 @@ export default function HomeMarketingFeatures() {
         </Link>
         .
       </p>
-      {HOME_MARKETING_HONESTY_FOOTNOTE ? (
-        <p
-          className={mergeMarketingClasses(
-            "mt-3 text-xs",
-            MARKETING_TEXT_SECONDARY_CLASSES,
-          )}
-        >
-          {HOME_MARKETING_HONESTY_FOOTNOTE}
-        </p>
-      ) : null}
+      <p
+        className={mergeMarketingClasses(
+          "mt-3 text-xs",
+          MARKETING_TEXT_SECONDARY_CLASSES,
+        )}
+      >
+        {HOME_MARKETING_HONESTY_FOOTNOTE}
+      </p>
     </section>
   );
 }

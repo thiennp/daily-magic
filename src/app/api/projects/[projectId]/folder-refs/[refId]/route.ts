@@ -1,5 +1,4 @@
 import { deleteProjectFolderRef } from "@/lib/projects/acl/deleteProjectFolderRef";
-import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -24,7 +23,7 @@ export async function DELETE(
 
   if (!result.ok) {
     const status = result.code === "forbidden" ? 403 : 404;
-    return projectAccessErrorJson(result.code, status);
+    return Response.json({ ok: false, errorMessage: result.code }, { status });
   }
 
   return Response.json({ ok: true });

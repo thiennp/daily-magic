@@ -55,13 +55,6 @@ describe("hasRealAgentRunTerminalWork", () => {
     expect(hasRealAgentRunTerminalWork(output)).toBe(false);
   });
 
-  it("returns false when only ensure-writer auth timeout remains", () => {
-    const output =
-      "Failed to prepare claude-cli: ensure-writer.sh timed out after 120s";
-
-    expect(hasRealAgentRunTerminalWork(output)).toBe(false);
-  });
-
   it("returns true when CLI output exists beyond diagnostics", () => {
     const output = [
       AGENT_RUN_WRITER_EXECUTION_HONESTY_MARKER,

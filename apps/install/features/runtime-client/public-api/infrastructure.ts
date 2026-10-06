@@ -71,9 +71,3 @@ export {
   waitForAgentWitchClientConfigsWithDeps,
   type WaitForAgentWitchClientConfigsDeps,
 } from "../internal/core/waitForAgentWitchClientConfigs";
-
-export {
-  buildAgentWitchDeviceRestartAckPayload,
-  type AgentWitchDeviceRestartAckPayload,
-  type AgentWitchDeviceRestartAckStatus,
-} from "../internal/core/buildAgentWitchDeviceRestartAck";

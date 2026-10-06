@@ -51,10 +51,6 @@ Wire: live terminal `starting` → Connecting; `streaming` → In progress.
 
 That chip is only for a CLI that actually produced output. If the writer API key is missing and the CLI cannot start (`execvp`, `ENOENT`, “No such file or directory”), the chip is **Failed** and the summary is **Writer API key missing and Claude CLI can’t run.**
 
-## Claude login / ensure-writer (locked)
-
-When Claude auth prep never completes (CLI `Not logged in`, OAuth 401/expired, or `ensure-writer.sh` timing out during login), floater and Reports both show **Waiting on you** with **Claude login expired — sign in again to continue.** Reports detail shows the same locked summary line above raw terminal output.
-
 ## Query aliases
 
 - Pimi run UX honesty strings

@@ -57,11 +57,24 @@ describe("agent-access list_project_activity", () => {
     resetProjectAclSchemaEnsureForTests();
   });
 
-  it("returns empty activity list for the project owner bot", async () => {
+  it("lists allowlisted activity for the project owner bot", async () => {
     sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
       const q = String(strings);
       if (q.includes("FROM agent_access_tokens")) return [ownerTokenRow];
       if (q.includes("CREATE TABLE")) return [];
+      if (q.includes("FROM project_access_audit")) {
+        return [
+          {
+            id: "evt-1",
+            project_id: "proj-1",
+            actor_user_id: "owner-1",
+            action: "allow_claim_ok",
+            target_user_id: "owner-1",
+            at: "2026-10-01T03:00:00.000Z",
+            detail: { outcome: "ok", allowClaim: "secret" },
+          },
+        ];
+      }
       return [];
     });
 
@@ -74,11 +87,10 @@ describe("agent-access list_project_activity", () => {
     expect(result.isError).toBeFalsy();
     const body = JSON.parse(result.text) as {
       ok: boolean;
-      events: readonly unknown[];
-      nextCursor: string | null;
+      events: readonly { action: string; detail: Record<string, unknown> }[];
     };
     expect(body.ok).toBe(true);
-    expect(body.events).toEqual([]);
-    expect(body.nextCursor ?? null).toBeNull();
+    expect(body.events[0].action).toBe("allow_claim_ok");
+    expect(body.events[0].detail).toEqual({ outcome: "ok" });
   });
 });

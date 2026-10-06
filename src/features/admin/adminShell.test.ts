@@ -23,9 +23,9 @@ describe("Admin production shell", () => {
     expect(adminLayoutSource).toMatch(/<AdminShell>/);
   });
 
-  it("uses the admin sidebar without duplicating the primary nav", () => {
+  it("uses AppShell with admin sidebar and default primary nav", () => {
     expect(adminShellSource).toMatch(/<AppShell[\s\S]*sidebar=/);
-    expect(adminShellSource).toMatch(/renderPrimaryNav=\{false\}/);
+    expect(adminShellSource).not.toMatch(/renderPrimaryNav=\{false\}/);
     expect(adminShellSource).toContain("showDevicesRail={false}");
   });
 

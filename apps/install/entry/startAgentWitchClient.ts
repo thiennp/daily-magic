@@ -41,9 +41,7 @@ import {
   verifyProjectCompositionSnapshotBlobs,
   waitForAgentWitchClientConfigs as waitForConfigs,
 } from "@agent-witch/install-runtime-client";
-import { handleProjectMessageHistoryDispatch } from "@agent-witch/live-project-history";
 import type { AgentWitchClientConfig as AgentWitchConfig } from "@agent-witch/install-runtime-client/types";
-import { buildAgentWitchDeviceRestartAckPayload } from "@agent-witch/install-runtime-client";
 import {
   ensureAgentWitchInstallVersionRecorded,
   resolveAgentWitchAppOriginFromWsUrl,
@@ -973,11 +971,9 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     selfUpdateInFlight: false,
   };
 
-  const runLocalRestart = (
-    reason: string,
-  ): "accepted" | "already_in_progress" | "deferred_writer_busy" => {
+  const runLocalRestart = (reason: string): void => {
     if (state.restartInFlight) {
-      return "already_in_progress";
+      return;
     }
 
     if (isAgentWitchWriterWorkInProgress(config.layout)) {
@@ -985,7 +981,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       console.log(
         `[agent-witch] Deferring local restart (${reason}) until the active writer task finishes.`,
       );
-      return "deferred_writer_busy";
+      return;
     }
 
     state.restartInFlight = true;
@@ -1012,25 +1008,6 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       .finally(() => {
         state.restartInFlight = false;
       });
-
-    return "accepted";
-  };
-
-  const acknowledgeDeviceRestart = (
-    socket: AgentWitchOutboundSocket,
-    reason: string,
-    status: "accepted" | "already_in_progress" | "deferred_writer_busy",
-    requestId: string | undefined,
-  ): void => {
-    sendMessage(
-      socket,
-      {
-        type: "device.restart.ack",
-        payload: buildAgentWitchDeviceRestartAckPayload({ status, reason }),
-        ...(requestId !== undefined ? { requestId } : {}),
-      },
-      config.layout,
-    );
   };
 
   const runLocalSelfUpdateFromHeartbeat = (
@@ -1314,22 +1291,11 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     }
 
     if (parsed.type === "device.restart") {
-      const restartStatus = runLocalRestart("cloud-device-restart");
-      acknowledgeDeviceRestart(
-        socket,
-        "cloud-device-restart",
-        restartStatus,
-        requestId,
-      );
+      runLocalRestart("cloud-device-restart");
     }
 
     if (parsed.type === "automations.sync" && isRecord(parsed.payload)) {
       applyAutomationsSyncFromCloud(parsed.payload);
-    }
-
-    if (parsed.type === "project.message.history" && isRecord(parsed.payload)) {
-      void handleProjectMessageHistoryDispatch({ payload: parsed.payload });
-      return;
     }
 
     if (parsed.type === "automations.run" && isRecord(parsed.payload)) {

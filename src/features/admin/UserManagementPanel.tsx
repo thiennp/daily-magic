@@ -1,18 +1,12 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
-import UsersKindFilter from "@/features/admin/components/UsersKindFilter";
 import UsersTable, {
   type UserItem,
 } from "@/features/admin/components/UsersTable";
-import {
-  ADMIN_USER_KIND_FILTER_ALL,
-  type AdminUserKindFilter,
-} from "@/features/admin/utils/adminUserKindLabels.constant";
-import filterAdminUsersByKind from "@/features/admin/utils/filterAdminUsersByKind";
 import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import { isPrivilegedGlobalRole } from "@/lib/auth/roles";
@@ -29,16 +23,9 @@ export default function UserManagementPanel({
     session?.user?.globalRole &&
     isPrivilegedGlobalRole(session.user.globalRole);
   const [users, setUsers] = useState<readonly UserItem[]>(initialUsers);
-  const [kindFilter, setKindFilter] = useState<AdminUserKindFilter>(
-    ADMIN_USER_KIND_FILTER_ALL,
-  );
   const [message, setMessage] = useState<string | null>(null);
   const [pendingUserId, setPendingUserId] = useState<string | null>(null);
   const pendingUser = users.find((user) => user.id === pendingUserId);
-  const visibleUsers = useMemo(
-    () => filterAdminUsersByKind(users, kindFilter),
-    [users, kindFilter],
-  );
 
   const loadUsers = async () => {
     const response = await fetch("/api/admin/users");
@@ -83,14 +70,11 @@ export default function UserManagementPanel({
   return (
     <div className="space-y-4">
       <AppPanel padding="compact">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            Users
-          </h2>
-          <UsersKindFilter value={kindFilter} onChange={setKindFilter} />
-        </div>
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+          Users
+        </h2>
         <UsersTable
-          users={visibleUsers}
+          users={users}
           currentUserId={session?.user?.id}
           onRemoveRequest={setPendingUserId}
         />

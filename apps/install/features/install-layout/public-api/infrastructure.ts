@@ -26,5 +26,3 @@ export {
   readAgentWitchWakePortFromFile,
   resolveAgentWitchRuntimeWakePort,
 } from "../internal/core/resolveAgentWitchRuntimeWakePort";
-
-export { resolveAgentWitchWakePortFromSources } from "../internal/core/resolveAgentWitchWakePortFromSources";

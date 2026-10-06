@@ -20,7 +20,6 @@ describe("applyHarnessInstallLocally", () => {
       configPath: path.join(root, "config.json"),
       logsDir: path.join(root, "logs"),
       projectsDir: path.join(root, "projects"),
-      projectDataDir: path.join(root, "project-data"),
       reportsDir: path.join(root, "reports"),
       deviceKeypairPath: path.join(root, "device.json"),
       mainLogPath: path.join(root, "logs", "main.log"),

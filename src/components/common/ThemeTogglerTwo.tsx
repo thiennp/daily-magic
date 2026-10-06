@@ -1,17 +1,12 @@
 "use client";
 import { useTheme } from "@/context/ThemeContext";
-import themeToggleLabel from "@/components/common/themeToggleLabel";
 import React from "react";
 
 export default function ThemeTogglerTwo() {
-  const { theme, toggleTheme } = useTheme();
-  const label = themeToggleLabel(theme);
+  const { toggleTheme } = useTheme();
   return (
     <button
-      type="button"
       onClick={toggleTheme}
-      aria-label={label}
-      aria-pressed={theme === "dark"}
       className="inline-flex size-14 items-center justify-center rounded-full bg-brand-500 text-white transition-colors hover:bg-brand-600"
     >
       <svg

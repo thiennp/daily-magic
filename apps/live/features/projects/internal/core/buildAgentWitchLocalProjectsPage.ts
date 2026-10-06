@@ -18,7 +18,7 @@ export interface AgentWitchProjectCompositionCounts {
 const formatCompositionCountsLine = (
   counts: AgentWitchProjectCompositionCounts,
 ): string =>
-  `${counts.harness} ${counts.harness === 1 ? "Playbook" : "Playbooks"} · ${counts.workflow} ${counts.workflow === 1 ? "Workflow" : "Workflows"} · ${counts.agent} ${counts.agent === 1 ? "Agent" : "Agents"}`;
+  `${counts.harness} Harness · ${counts.workflow} Workflows · ${counts.agent} Agents`;
 
 export const buildAgentWitchLocalProjectsPageBody = (input: {
   readonly projects: readonly AgentWitchProjectView[];
@@ -80,7 +80,7 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
   return `${flash}${cloudBanner}<section class="card">
       <p class="eyebrow">Repositories</p>
       <h1>Projects on this Mac</h1>
-      <p class="lede">Synced from Agent Witch Cloud for this paired Mac only. Choose a folder per project, then pull playbooks into each repo’s <code>.cursor</code> tree (tracked in <code>.agent-witch/materialization.json</code>).</p>
+      <p class="lede">Synced from Agent Witch Cloud for this paired Mac only. Choose a folder per project, then link harness sets into each repo’s <code>.cursor</code> tree (tracked in <code>.agent-witch/materialization.json</code>).</p>
       ${projectRows}
     </section>`;
 };

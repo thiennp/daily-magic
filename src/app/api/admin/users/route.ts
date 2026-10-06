@@ -3,17 +3,13 @@ import {
   canManageAllUsers,
   isGlobalAdmin,
 } from "@/lib/auth/globalRolePermissions";
-import listAdminUsers from "@/lib/auth/listAdminUsers";
 import { requireAuth } from "@/lib/auth/requireAuth";
-import { deleteUserById, getUserById } from "@/lib/auth/userRepository";
+import {
+  deleteUserById,
+  getUserById,
+  listUsers,
+} from "@/lib/auth/userRepository";
 
-/**
- * GET /api/admin/users → { users: AdminUserRecord[] }
- * Each user keeps id/email/name/image/globalRole/createdAt and adds:
- * - kind: "real" | "bot" | "test" (bot = agent synthetic email; test = test*@agentwitch.com)
- * - lastActivityAt: ISO | null (max of agent_access_tokens / project_api_keys /
- *   user_projects last_used_at; never createdAt; sessions.expires skipped)
- */
 export async function GET() {
   const { actor, error } = await requireAuth();
 
@@ -25,7 +21,7 @@ export async function GET() {
     return Response.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const users = await listAdminUsers();
+  const users = await listUsers();
 
   return Response.json({ users });
 }

@@ -1,4 +1,4 @@
-import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
+import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
 import { readBearerAgentAccessToken } from "@/lib/agentAccess/hashAgentAccessToken";
 import {
   resolveAgentAccessActor,

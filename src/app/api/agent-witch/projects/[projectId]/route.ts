@@ -1,11 +1,12 @@
 import { isNonNullObject } from "guardz";
 
 import { requireAgentWitchDeviceAuth } from "@/lib/agentWitch/requireAgentWitchDeviceAuth";
-import mapDeleteProjectDbOnlyResultToResponse from "@/lib/projects/delete/mapDeleteProjectDbOnlyResultToResponse";
-import orchestrateDeleteProjectDbOnly from "@/lib/projects/delete/orchestrateDeleteProjectDbOnly";
 import { applyAgentWitchDeviceProjectPatch } from "@/lib/projects/applyAgentWitchDeviceProjectPatch";
+import isDefaultUserProject from "@/lib/projects/isDefaultUserProject";
 import { parseAgentWitchDeviceProjectPatchBody } from "@/lib/projects/parseAgentWitchDeviceProjectPatchBody";
 import { summarizeDeviceUserProject } from "@/lib/projects/summarizeDeviceUserProject";
+import { getUserProjectById } from "@/lib/projects/userProjectQueries";
+import { deleteUserProject } from "@/lib/projects/userProjectMutations";
 
 export const dynamic = "force-dynamic";
 
@@ -74,17 +75,30 @@ export async function DELETE(
   }
 
   const { projectId } = await context.params;
+  const project = await getUserProjectById(projectId.trim());
 
-  try {
-    const result = await orchestrateDeleteProjectDbOnly({
-      projectId,
-      ownerUserId: auth.device.userId,
-    });
-    return mapDeleteProjectDbOnlyResultToResponse(result);
-  } catch {
+  if (project === null || project.ownerUserId !== auth.device.userId) {
     return Response.json(
-      { ok: false, errorMessage: "Could not delete project." },
-      { status: 500 },
+      { ok: false, errorMessage: "Project not found." },
+      { status: 404 },
     );
   }
+
+  if (isDefaultUserProject(project)) {
+    return Response.json(
+      { ok: false, errorMessage: "The Default project cannot be deleted." },
+      { status: 400 },
+    );
+  }
+
+  const deleted = await deleteUserProject(auth.device.userId, projectId);
+
+  if (!deleted) {
+    return Response.json(
+      { ok: false, errorMessage: "Project not found." },
+      { status: 404 },
+    );
+  }
+
+  return Response.json({ ok: true });
 }

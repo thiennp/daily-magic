@@ -4,14 +4,10 @@ import {
   verifyDeviceAuthHello,
 } from "@/lib/agentWitch/deviceAuth/verifyDeviceAuthHello";
 import { getAgentWitchServerPublicKeyRaw } from "@/lib/agentWitch/deviceAuth/agentWitchServerSigningKey";
-import {
-  getAgentWitchDevicePublicKey,
-  updateAgentWitchDevicePublicKey,
-} from "@/lib/agentWitch/updateAgentWitchDeviceAuthFields";
+import { updateAgentWitchDevicePublicKey } from "@/lib/agentWitch/updateAgentWitchDeviceAuthFields";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import type { AgentWitchConnectionState } from "@/server/agentWitch/processAgentWitchRegisterMessage";
-import { resolveAgentWitchDeviceKeyPin } from "@/server/agentWitch/resolveAgentWitchDeviceKeyPin";
 import { sendAgentWitchSocketMessage } from "@/server/agentWitch/sendAgentWitchSocketMessage";
 import type { WebSocket } from "ws";
 
@@ -21,20 +17,6 @@ const readString = (
 ): string => {
   const value = payload?.[key];
   return typeof value === "string" ? value.trim() : "";
-};
-
-const rejectDeviceAuth = (
-  socket: WebSocket,
-  message: AgentWitchMessage,
-  errorMessage: string,
-): false => {
-  sendAgentWitchSocketMessage(socket, {
-    type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-    payload: { errorMessage },
-    requestId: message.requestId,
-  });
-  socket.close();
-  return false;
 };
 
 export const processAgentWitchDeviceAuthOnRegister = async (
@@ -52,55 +34,40 @@ export const processAgentWitchDeviceAuthOnRegister = async (
   const nonce = readString(payload, "nonce");
   const signature = readString(payload, "signature");
   const origin = readString(payload, "origin");
-  const helloMissing =
+
+  if (
     devicePublicKey.length === 0 ||
     nonce.length === 0 ||
     signature.length === 0 ||
-    origin.length === 0;
-
-  const deviceId = connectionState.deviceId;
-  const pinnedPublicKey =
-    deviceId !== undefined
-      ? await getAgentWitchDevicePublicKey({ deviceId })
-      : null;
-
-  if (helloMissing) {
-    const decision = resolveAgentWitchDeviceKeyPin({
-      deviceId,
-      pinnedPublicKey,
-      presentedPublicKey: devicePublicKey,
-      helloMissing: true,
-    });
-    if (decision.outcome === "reject") {
-      return rejectDeviceAuth(socket, message, decision.errorMessage);
-    }
+    origin.length === 0
+  ) {
     // Older clients without device auth still connect via pairingToken.
     return true;
   }
 
-  if (
-    !verifyDeviceAuthHello({ devicePublicKey, nonce, signature, origin })
-  ) {
-    return rejectDeviceAuth(
-      socket,
-      message,
-      "Device authentication signature was invalid.",
-    );
+  const helloOk = verifyDeviceAuthHello({
+    devicePublicKey,
+    nonce,
+    signature,
+    origin,
+  });
+
+  if (!helloOk) {
+    sendAgentWitchSocketMessage(socket, {
+      type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+      payload: {
+        errorMessage: "Device authentication signature was invalid.",
+      },
+      requestId: message.requestId,
+    });
+    socket.close();
+    return false;
   }
 
-  const decision = resolveAgentWitchDeviceKeyPin({
-    deviceId,
-    pinnedPublicKey,
-    presentedPublicKey: devicePublicKey,
-    helloMissing: false,
-  });
-  if (decision.outcome === "reject") {
-    return rejectDeviceAuth(socket, message, decision.errorMessage);
-  }
-  if (decision.outcome === "write-pin" && deviceId !== undefined) {
+  if (connectionState.deviceId !== undefined) {
     await updateAgentWitchDevicePublicKey({
-      deviceId,
-      publicKey: decision.publicKey,
+      deviceId: connectionState.deviceId,
+      publicKey: devicePublicKey,
     });
   }
 
@@ -109,10 +76,15 @@ export const processAgentWitchDeviceAuthOnRegister = async (
     devicePublicKey,
     serverPublicKey: getAgentWitchServerPublicKeyRaw(),
   });
+
   sendAgentWitchSocketMessage(socket, {
     type: AGENT_WITCH_MESSAGE_TYPES.DEVICE_AUTH_ATTESTATION,
-    payload: { ...attestation, devicePublicKey },
+    payload: {
+      ...attestation,
+      devicePublicKey,
+    },
     requestId: message.requestId,
   });
+
   return true;
 };

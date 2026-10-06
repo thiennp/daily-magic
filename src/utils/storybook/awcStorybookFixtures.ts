@@ -55,21 +55,13 @@ export const AWC_STORYBOOK_SAMPLE_ADMIN_USERS = [
     id: "user-storybook",
     email: AWC_STORYBOOK_USER.email,
     name: AWC_STORYBOOK_USER.name,
-    image: null,
     globalRole: AWC_STORYBOOK_USER.globalRole,
-    createdAt: "2026-01-01T00:00:00.000Z",
-    kind: "real" as const,
-    lastActivityAt: "2026-06-01T12:00:00.000Z",
   },
   {
     id: "user-storybook-2",
     email: "teammate@agentwitch.com",
     name: "Teammate",
-    image: null,
     globalRole: GlobalRole.USER,
-    createdAt: "2026-02-01T00:00:00.000Z",
-    kind: "bot" as const,
-    lastActivityAt: null,
   },
 ] as const;
 

@@ -9,14 +9,14 @@ export interface MarketingFeatureItem {
 
 export const MARKETING_FEATURE_ITEMS: readonly MarketingFeatureItem[] = [
   {
-    title: "Bot-to-bot project connect",
-    body: "Invite with a Copy prompt, wait for owner Approve, then bots see teammates and pass work by nickname. A bot can leave on its own; on leave or Revoke it cleans up its project routines.",
+    title: "Mac Tasks and Playbooks",
+    body: "Connect Macs you control, run Tasks, and turn winning prompts into reusable Playbooks—most teams complete a first Run the same day.",
     preview: "dispatch",
     emphasized: true,
   },
   {
     title: "Project Access you control",
-    body: "Approve, Deny, or Revoke who may join. Folder refs stay as labels only—no shared tokens, no cloud content bus. Members updates on leave / Left project when a bot disconnects itself.",
+    body: "Approve, Deny, or Revoke who may join a project. Folder refs stay registry-only—no shared tokens, no cloud content bus.",
     preview: "approve",
     emphasized: true,
   },

@@ -15,9 +15,6 @@ describe("PROJECT_ACL_FIRST_CONNECT (G5)", () => {
     const guideline = buildProjectAclAgentGuidelineSection().body.join(" ");
     expect(guideline).toMatch(/first bot/i);
     expect(guideline).toMatch(/member role/i);
-    expect(guideline).toMatch(/list_project_peers/);
-    expect(guideline).toMatch(/Members \+ Pending|get_project_acl/);
-    expect(guideline).not.toMatch(/list_project_activity for/);
-    expect(guideline).toMatch(/do not rely on list_project_activity/);
+    expect(guideline).toMatch(/list_project_activity/);
   });
 });

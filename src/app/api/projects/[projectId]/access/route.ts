@@ -1,14 +1,7 @@
-import { handleProjectAccessPatch } from "@/app/api/projects/[projectId]/access/patchAccessAction";
-import {
-  buildMembershipViews,
-  buildPendingRequestViews,
-} from "@/lib/projects/acl/buildProjectAccessViews";
-import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
 import { listPendingProjectAccessRequests } from "@/lib/projects/acl/listPendingProjectAccessRequests";
 import { listProjectMembershipsForProject } from "@/lib/projects/acl/listProjectMembershipsForProject";
-import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
+import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { PROJECT_ACL_FIRST_CONNECT } from "@/lib/projects/acl/projectAclFirstConnect.constant";
-import { resolveOwnerOrActiveHumanSeat } from "@/lib/projects/acl/resolveOwnerOrActiveHumanSeat";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -23,74 +16,28 @@ export async function GET(
   }
 
   const { projectId } = await context.params;
-  const access = await resolveOwnerOrActiveHumanSeat({
-    projectId,
-    actorUserId: actor.id,
-  });
-  if (!access.ok) {
-    const status = access.code === "not_found" ? 404 : 403;
+  const project = await getUserProjectById(projectId);
+  if (project === null || project.ownerUserId !== actor.id) {
     return Response.json(
-      {
-        ok: false,
-        errorMessage:
-          access.code === "not_found" ? "Project not found." : "forbidden",
-      },
-      { status },
+      { ok: false, errorMessage: "Project not found." },
+      { status: 404 },
     );
   }
 
-  const memberRows = await listProjectMembershipsForProject(projectId);
-  const members = await buildMembershipViews(memberRows);
-  // Pending + firstConnect admin meta stay owner-only; humans get roster for inbox.
-  const pendingRequests =
-    access.kind === "owner"
-      ? await buildPendingRequestViews(
-          await listPendingProjectAccessRequests(projectId),
-        )
-      : [];
+  const [members, pendingRequests] = await Promise.all([
+    listProjectMembershipsForProject(projectId),
+    listPendingProjectAccessRequests(projectId),
+  ]);
 
   return Response.json({
     ok: true,
-    project: { id: access.project.id, name: access.project.name },
+    project: { id: project.id, name: project.name },
     members,
     pendingRequests,
-    firstConnect:
-      access.kind === "owner"
-        ? {
-            role: PROJECT_ACL_FIRST_CONNECT.role,
-            scopes: PROJECT_ACL_FIRST_CONNECT.scopes,
-            note: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
-          }
-        : null,
-    actorRole: access.kind === "owner" ? "owner" : access.membership.role,
-  });
-}
-
-export async function PATCH(
-  request: Request,
-  context: { params: Promise<{ readonly projectId: string }> },
-): Promise<Response> {
-  const { actor, error } = await requireAuth();
-  if (error || !actor) {
-    return error;
-  }
-  const { projectId } = await context.params;
-  const decision = await authorizeProjectOwner({
-    projectId,
-    actorUserId: actor.id,
-  });
-  if (!decision.allow) {
-    const status = decision.reason === "not_found" ? 404 : 403;
-    return projectAccessErrorJson(decision.reason, status);
-  }
-  const body: unknown = await request.json().catch(() => ({}));
-  const payload =
-    body !== null && typeof body === "object"
-      ? (body as Record<string, unknown>)
-      : {};
-  return handleProjectAccessPatch({
-    projectId,
-    ownerUserId: actor.id,
-    body: payload,
+    firstConnect: {
+      role: PROJECT_ACL_FIRST_CONNECT.role,
+      scopes: PROJECT_ACL_FIRST_CONNECT.scopes,
+      note: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
+    },
   });
 }

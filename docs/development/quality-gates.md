@@ -22,15 +22,9 @@ npm run test:e2e
 
 **Refactor / FSA moves:** [refactoring-safety-tests.md](refactoring-safety-tests.md) (`test:safety`, `test:refactor-gate`, `test:safety:full`).
 
-## Gate before pushing `main`
+## CI
 
-There is **no GitHub Actions CI**. The only gate before pushing `main` is:
-
-1. Architecture review **SHIP**
-2. Full local suite on the **exact tip**: typecheck (incl. eslint), vitest, `ci:architecture`, build (`npm run ci`)
-3. Fast-forward `main`, then confirm production health `commitSha == main` and a smoke test
-
-Mac DMG releases are built locally (`scripts/mac/build-awl-mac-dmg.sh`) and published with `gh release create` after owner go. Portfolio site (`thiennp.github.io`) no longer auto-syncs — run `bash .agents/scripts/pushThiennpGithubIo.sh` manually with the token when the portfolio changes.
+GitHub Actions (`.github/workflows/ci.yml`) runs unit tests, architecture checks, typecheck, Playwright E2E, and shipped Agent Witch install blackbox on push/PR to `main`.
 
 ## Agent docs
 

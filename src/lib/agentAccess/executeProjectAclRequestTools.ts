@@ -1,11 +1,11 @@
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
-import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
+import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import {
   parseProjectIdArgs,
   parseRequestProjectAccessArgs,
 } from "@/lib/agentAccess/parseAgentAccessProjectAclArgs";
-import { buildMyProjectAccessPayload } from "@/lib/projects/acl/buildMyProjectAccessPayload";
+import { checkProjectMembershipStatus } from "@/lib/projects/acl/checkProjectMembershipStatus";
 import { createProjectAccessRequest } from "@/lib/projects/acl/createProjectAccessRequest";
 import { listProjectsForAclActor } from "@/lib/projects/acl/listProjectsForAclActor";
 
@@ -27,7 +27,6 @@ export const executeProjectAclRequestTools = async (input: {
       requesterUserId: input.actor.id,
       reason: parsed.reason,
       teamLabel: parsed.teamLabel,
-      suggestedProjectDisplayName: parsed.suggestedProjectDisplayName,
     });
     if (!result.ok) {
       return agentAccessTextResult(
@@ -35,26 +34,11 @@ export const executeProjectAclRequestTools = async (input: {
         true,
       );
     }
-    if (result.status === "active") {
-      return agentAccessTextResult({
-        ok: true,
-        status: "active",
-        requestId: result.request.id,
-        projectId: result.request.projectId,
-        membershipId: result.membership.id,
-        projectDisplayName: result.membership.projectDisplayName,
-        projectApiKey: result.projectApiKey,
-        message:
-          "Access granted (same-owner auto-approve). Call get_my_project_access; skip wait for Approve.",
-      });
-    }
     return agentAccessTextResult({
       ok: true,
       status: "pending",
       requestId: result.request.id,
       projectId: result.request.projectId,
-      message:
-        "Access request pending. Call get_my_project_access; wait for owner Approve unless status becomes active.",
     });
   }
 
@@ -66,11 +50,15 @@ export const executeProjectAclRequestTools = async (input: {
         true,
       );
     }
-    const payload = await buildMyProjectAccessPayload({
+    const status = await checkProjectMembershipStatus(
+      parsed.projectId,
+      input.actor.id,
+    );
+    return agentAccessTextResult({
+      ok: true,
       projectId: parsed.projectId,
-      actorUserId: input.actor.id,
+      status,
     });
-    return agentAccessTextResult(payload);
   }
 
   if (input.name === "list_projects") {

@@ -47,36 +47,57 @@ vi.mock("@/lib/projects/acl/getActiveProjectMembership", () => ({
   ),
 }));
 
-describe("listProjectActivity auth + empty feed", () => {
+describe("listProjectActivity auth + list", () => {
   beforeEach(() => {
     sqlMock.mockReset();
     resetProjectAclSchemaEnsureForTests();
   });
 
-  it("returns empty events for owner after Neon activity drop", async () => {
+  it("returns reverse-chrono events for owner and strips unsafe detail", async () => {
+    sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
+      const q = String(strings);
+      if (q.includes("CREATE TABLE")) return [];
+      if (q.includes("FROM project_access_audit")) {
+        return [
+          {
+            id: "evt-2",
+            project_id: "proj-1",
+            actor_user_id: "owner-1",
+            action: "approve",
+            target_user_id: "bot-1",
+            at: "2026-10-01T02:00:00.000Z",
+            detail: { requestId: "req-1", membershipId: "mem-1", reason: "x" },
+          },
+        ];
+      }
+      return [];
+    });
     const result = await listProjectActivity({
       projectId: "proj-1",
       actorUserId: "owner-1",
     });
-    expect(result).toEqual({ ok: true, events: [], nextCursor: null });
-    const auditReads = sqlMock.mock.calls.filter((call) =>
-      String(call[0]).includes("project_access_audit"),
-    );
-    expect(auditReads).toHaveLength(0);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.events[0]).toMatchObject({
+      action: "approve",
+      detail: { requestId: "req-1", membershipId: "mem-1" },
+    });
+    expect(result.events[0].detail).not.toHaveProperty("reason");
   });
 
-  it("denies non-member and allows active member empty list", async () => {
+  it("denies non-member and allows active member", async () => {
     expect(
       await listProjectActivity({
         projectId: "proj-1",
         actorUserId: "stranger-1",
       }),
     ).toEqual({ ok: false, code: "forbidden" });
+    sqlMock.mockImplementation(async () => []);
     const member = await listProjectActivity({
       projectId: "proj-1",
       actorUserId: "member-1",
     });
-    expect(member).toEqual({ ok: true, events: [], nextCursor: null });
+    expect(member.ok).toBe(true);
   });
 
   it("returns not_found for missing project", async () => {

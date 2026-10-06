@@ -1,4 +1,3 @@
-import AwcProjectDetailSection from "@/features/projects/AwcProjectDetailSection";
 import type ProjectCompositionItem from "@/lib/projects/types/ProjectCompositionItem.type";
 
 interface AwcProjectReadOnlyCompositionSectionsProps {
@@ -10,7 +9,7 @@ interface AwcProjectReadOnlyCompositionSectionsProps {
 const SECTION_ORDER = ["harness", "workflow", "agent"] as const;
 
 const SECTION_TITLES: Record<(typeof SECTION_ORDER)[number], string> = {
-  harness: "Playbooks",
+  harness: "Harness",
   workflow: "Workflows",
   agent: "Agents",
 };
@@ -21,28 +20,27 @@ export default function AwcProjectReadOnlyCompositionSections({
   isLoading,
 }: AwcProjectReadOnlyCompositionSectionsProps) {
   return (
-    <div className="space-y-3">
+    <section className="mt-6 space-y-4">
       {SECTION_ORDER.map((kind) => {
         const sectionItems = items.filter((item) => item.kind === kind);
+
         return (
-          <AwcProjectDetailSection
-            key={kind}
-            title={SECTION_TITLES[kind]}
-            hint={`View-only here — edit on ${deviceDisplayName}.`}
-          >
+          <div key={kind}>
+            <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
+              {SECTION_TITLES[kind]}
+            </h3>
             {isLoading ? (
-              <p className="text-xs text-gray-500 dark:text-gray-400">Loading…</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Loading…
+              </p>
             ) : sectionItems.length === 0 ? (
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                None bound yet — open Agent Witch Local on {deviceDisplayName}.
+                None bound yet — edit on {deviceDisplayName}.
               </p>
             ) : (
-              <ul className="space-y-1.5 text-sm text-gray-800 dark:text-gray-100">
+              <ul className="mt-1 space-y-1 text-xs text-gray-700 dark:text-gray-200">
                 {sectionItems.map((item) => (
-                  <li
-                    key={item.id}
-                    className="rounded-lg border border-gray-200/70 bg-white/70 px-3 py-1.5 dark:border-gray-800/70 dark:bg-white/[0.03]"
-                  >
+                  <li key={item.id}>
                     {item.name}
                     {item.versionLabel !== null
                       ? ` · v${item.versionLabel}`
@@ -51,9 +49,12 @@ export default function AwcProjectReadOnlyCompositionSections({
                 ))}
               </ul>
             )}
-          </AwcProjectDetailSection>
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              View-only here — edit on {deviceDisplayName}.
+            </p>
+          </div>
         );
       })}
-    </div>
+    </section>
   );
 }

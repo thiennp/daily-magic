@@ -1,16 +1,19 @@
 import {
   fetchProjectAccess,
   fetchProjectFolderRefs,
-  fetchProjectInvites,
-  type AccessMembershipView,
-  type AccessPendingView,
-  type InviteListItem,
 } from "@/features/projects/access/utils/projectAccessApi";
-import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
 
-export type AwcProjectAccessMember = AccessMembershipView;
-export type AwcProjectAccessPending = AccessPendingView;
-export type AwcProjectAccessInvite = InviteListItem;
+export type AwcProjectAccessMember = {
+  readonly id: string;
+  readonly userId: string;
+  readonly teamLabel: string | null;
+};
+
+export type AwcProjectAccessPending = {
+  readonly id: string;
+  readonly requesterUserId: string;
+  readonly reason: string | null;
+};
 
 export type AwcProjectAccessFolderRef = {
   readonly id: string;
@@ -18,62 +21,23 @@ export type AwcProjectAccessFolderRef = {
   readonly folderPath: string;
 };
 
-export type AwcProjectAccessSnapshot =
-  | {
-      readonly ok: true;
-      readonly members: readonly AwcProjectAccessMember[];
-      readonly pending: readonly AwcProjectAccessPending[];
-      readonly folderRefs: readonly AwcProjectAccessFolderRef[];
-      readonly invites: readonly AwcProjectAccessInvite[];
-      readonly projectName: string | null;
-    }
-  | {
-      readonly ok: false;
-      readonly errorMessage: string;
-      readonly members: readonly [];
-      readonly pending: readonly [];
-      readonly folderRefs: readonly [];
-      readonly invites: readonly [];
-      readonly projectName: null;
-    };
+export type AwcProjectAccessSnapshot = {
+  readonly members: readonly AwcProjectAccessMember[];
+  readonly pending: readonly AwcProjectAccessPending[];
+  readonly folderRefs: readonly AwcProjectAccessFolderRef[];
+};
 
 export const loadAwcProjectAccess = async (
   projectId: string,
 ): Promise<AwcProjectAccessSnapshot> => {
-  const [access, folders, invites] = await Promise.all([
+  const [access, folders] = await Promise.all([
     fetchProjectAccess(projectId),
     fetchProjectFolderRefs(projectId),
-    fetchProjectInvites(projectId),
   ]);
 
-  if (!access.ok) {
-    return {
-      ok: false,
-      errorMessage: mapProjectAccessError(
-        access.errorMessage,
-        "Could not load Project Access.",
-      ),
-      members: [],
-      pending: [],
-      folderRefs: [],
-      invites: [],
-      projectName: null,
-    };
-  }
-
-  const projectName =
-    access.project &&
-    typeof access.project === "object" &&
-    typeof (access.project as { name?: unknown }).name === "string"
-      ? (access.project as { name: string }).name
-      : null;
-
   return {
-    ok: true,
-    members: access.members ?? [],
-    pending: access.pendingRequests ?? [],
+    members: access.ok ? (access.members ?? []) : [],
+    pending: access.ok ? (access.pendingRequests ?? []) : [],
     folderRefs: folders.ok ? (folders.folderRefs ?? []) : [],
-    invites: invites.invites ?? [],
-    projectName,
   };
 };

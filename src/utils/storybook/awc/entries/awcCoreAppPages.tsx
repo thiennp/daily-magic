@@ -44,7 +44,7 @@ export const AWC_CORE_APP_PAGE_ENTRIES: readonly AwcStorybookPageEntry[] = [
     id: "project-detail",
     title: "Project detail",
     path: "/projects/:projectId",
-    shell: "app",
+    shell: "app-narrow",
     statuses: signedInStatuses,
     renderBody: (status) => <AwcProjectDetailStoryView status={status} />,
   },

@@ -84,9 +84,3 @@ export const readAgentWitchWakePortFromFile = (): number | null => null;
 
 export const resolveAgentWitchRuntimeWakePort = (): number =>
   AGENT_WITCH_PROD_WAKE_PORT;
-
-export const resolveAgentWitchWakePortFromSources = (input: {
-  readonly filePort: number | null;
-  readonly envValue: string | undefined;
-  readonly defaultPort: number;
-}): number => input.filePort ?? input.defaultPort;

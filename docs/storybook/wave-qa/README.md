@@ -38,13 +38,9 @@ After first-pass **34/34**: nine catalog waves — UX, UI, copy, product, perfor
 
 Progress: `progress.json` in this folder.
 
-## Weekly capture (local)
-
-Weekly capture is **not** scheduled in CI. When needed, run locally:
-
-```bash
-npm run storybook:wave:weekly
-```
+## Weekly (Saturday)
 
 - Skill: `.cursor/skills/skill-storybook-page-wave-qa/SKILL.md`
 - Command: `.cursor/commands/command-storybook-wave-qa-weekly.md`
+- CI: `.github/workflows/storybook-wave-qa-weekly.yml`
+- `npm run storybook:wave:weekly`

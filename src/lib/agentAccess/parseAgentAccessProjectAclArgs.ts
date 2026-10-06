@@ -17,7 +17,6 @@ export const parseRequestProjectAccessArgs = (
   readonly projectId: string;
   readonly reason: string | null;
   readonly teamLabel: string | null;
-  readonly suggestedProjectDisplayName: string | null;
 } | null => {
   const base = parseProjectIdArgs(args);
   if (base === null || args === null || typeof args !== "object") {
@@ -26,16 +25,11 @@ export const parseRequestProjectAccessArgs = (
   const record = args as {
     reason?: unknown;
     teamLabel?: unknown;
-    suggestedProjectDisplayName?: unknown;
-    projectDisplayName?: unknown;
   };
   return {
     projectId: base.projectId,
     reason: readString(record.reason),
     teamLabel: readString(record.teamLabel),
-    suggestedProjectDisplayName:
-      readString(record.suggestedProjectDisplayName) ??
-      readString(record.projectDisplayName),
   };
 };
 
@@ -82,15 +76,4 @@ export const parseListProjectActivityArgs = (
     cursor: readString(record.cursor),
     limit: limit !== undefined && Number.isFinite(limit) ? limit : undefined,
   };
-};
-
-export const parseLeaveProjectArgs = (
-  args: unknown,
-): { readonly projectId: string; readonly confirm: boolean } | null => {
-  const base = parseProjectIdArgs(args);
-  if (base === null || args === null || typeof args !== "object") {
-    return null;
-  }
-  const confirm = (args as { confirm?: unknown }).confirm === true;
-  return { projectId: base.projectId, confirm };
 };

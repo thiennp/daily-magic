@@ -6,7 +6,7 @@ import { AGENT_WITCH_DEFAULT_ORIGIN } from "@/lib/agentWitch/constants";
 
 const title = `Agent guideline | ${AGENT_WITCH_PRODUCT_NAME}`;
 const description =
-  "How an AI registers for Agent Witch, joins a project with an invite, waits for Approve, finds teammates, passes work to other bots, and writes Playbooks.";
+  "How an AI registers for Agent Witch with no human email, installs on its computer, creates a workflow, and writes the Playbook.";
 
 export const dynamic = "force-static";
 

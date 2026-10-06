@@ -1,5 +1,5 @@
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
-import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
+import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
 import { parseProjectIdArgs } from "@/lib/agentAccess/parseAgentAccessProjectAclArgs";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import { getProjectAclPayload } from "@/lib/projects/acl/getProjectAclPayload";
@@ -38,8 +38,6 @@ export const executeProjectAclGetTool = async (input: {
     defaultBranch: payload.defaultBranch,
     scopes: payload.scopes,
     relation: payload.relation,
-    self: payload.self,
-    peers: payload.peers,
     firstConnect: {
       role: PROJECT_ACL_FIRST_CONNECT.role,
       scopes: PROJECT_ACL_FIRST_CONNECT.scopes,

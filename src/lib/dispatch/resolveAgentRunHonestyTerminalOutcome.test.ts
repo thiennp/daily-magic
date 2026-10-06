@@ -65,6 +65,24 @@ describe("resolveAgentRunHonestyTerminalOutcome", () => {
     );
   });
 
+  it("maps stop-after-cli-work with writer honesty marker to degraded", () => {
+    const output = [
+      "[[AGENT_RUN_WRITER_EXECUTION]]",
+      "agentRunWriterExecutionBackend=cli-writer-api-key-missing",
+      `agentRunWriterExecutionReasonCode=${MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY}`,
+      "partial output",
+      "Stopped by user.",
+    ].join("\n");
+
+    const outcome = resolveAgentRunHonestyTerminalOutcome({
+      output,
+      runStatus: AgentRunStatus.COMPLETED,
+    });
+
+    expect(outcome?.kind).toBe("degraded");
+    expect(outcome?.chipLabel).toBe("Completed with fallback");
+  });
+
   it("maps a missing CLI binary to Failed with the locked can’t-run sentence (AGENT-129)", () => {
     const output = [
       "[[AGENT_RUN_WRITER_EXECUTION]]",

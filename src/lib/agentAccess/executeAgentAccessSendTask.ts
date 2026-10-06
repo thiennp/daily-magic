@@ -5,7 +5,7 @@ import { dispatchClaudeRunForDashboardUser } from "@/lib/dispatch/dispatchWriter
 import { parseAgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
 
 import { AGENT_ACCESS_PROMPT_MAX_LENGTH } from "@/lib/agentAccess/agentAccess.constant";
-import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
+import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
 

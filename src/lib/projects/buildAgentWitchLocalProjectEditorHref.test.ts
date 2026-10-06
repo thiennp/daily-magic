@@ -8,9 +8,4 @@ describe("buildAgentWitchLocalProjectEditorHref", () => {
       "http://127.0.0.1:43347/project?id=abc-123",
     );
   });
-  it("deep-links to the Pitfalls tab", () => {
-    expect(
-      buildAgentWitchLocalProjectEditorHref(" abc-123 ", "pitfalls"),
-    ).toMatch(/\/project\?id=abc-123&tab=pitfalls$/);
-  });
 });

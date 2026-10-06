@@ -55,7 +55,15 @@ export default function SendTaskComposerProjectPickerStep({
               <SendTaskComposerProjectRow
                 project={project}
                 onSelect={onSelect}
-                onDeleted={onProjectDeleted}
+                onDelete={async (projectId) => {
+                  const response = await fetch(`/api/projects/${projectId}`, {
+                    method: "DELETE",
+                  });
+
+                  if (response.ok) {
+                    onProjectDeleted(projectId);
+                  }
+                }}
               />
             </li>
           ))}

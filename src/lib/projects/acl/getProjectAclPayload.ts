@@ -1,10 +1,4 @@
 import { listProjectFolderRefs } from "@/lib/projects/acl/listProjectFolderRefs";
-import {
-  listProjectPeers,
-  listProjectPeersForOwnerActor,
-  type ProjectPeer,
-  type ProjectPeerSelf,
-} from "@/lib/projects/acl/messaging/listProjectPeers";
 import { resolveProjectAclAccess } from "@/lib/projects/acl/resolveProjectAclAccess";
 import type { ProjectAclScope } from "@/lib/projects/acl/projectAclScopes.constant";
 import type ProjectFolderRefRecord from "@/lib/projects/acl/types/ProjectFolderRefRecord.type";
@@ -22,8 +16,6 @@ export type GetProjectAclPayloadResult =
       readonly defaultBranch: string | null;
       readonly scopes: readonly ProjectAclScope[];
       readonly relation: "owner" | "member";
-      readonly self: ProjectPeerSelf;
-      readonly peers: readonly ProjectPeer[];
     }
   | { readonly ok: false; readonly code: "not_found" | "forbidden" };
 
@@ -33,7 +25,7 @@ const summarizeFolderRef = (ref: ProjectFolderRefRecord) => ({
   folderPath: ref.folderPath,
 });
 
-/** name + folder refs + repo URLs + self scopes + peers — no content. */
+/** name + folder refs + repo URLs + self scopes only — no content. */
 export const getProjectAclPayload = async (input: {
   readonly projectId: string;
   readonly actorUserId: string;
@@ -50,19 +42,6 @@ export const getProjectAclPayload = async (input: {
     };
   }
 
-  const roster = access.isOwner
-    ? await listProjectPeersForOwnerActor({
-        projectId: input.projectId,
-        ownerUserId: input.actorUserId,
-      })
-    : await listProjectPeers({
-        projectId: input.projectId,
-        actorUserId: input.actorUserId,
-      });
-  if (!roster.ok) {
-    return { ok: false, code: "forbidden" };
-  }
-
   const folderRefs = await listProjectFolderRefs(input.projectId);
   return {
     ok: true,
@@ -72,7 +51,5 @@ export const getProjectAclPayload = async (input: {
     defaultBranch: access.project.defaultBranch,
     scopes: access.scopes,
     relation: access.isOwner ? "owner" : "member",
-    self: roster.self,
-    peers: roster.peers,
   };
 };

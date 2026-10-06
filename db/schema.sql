@@ -770,6 +770,21 @@ CREATE UNIQUE INDEX IF NOT EXISTS project_access_requests_pending_unique_idx
 CREATE INDEX IF NOT EXISTS project_access_requests_project_status_idx
   ON project_access_requests (project_id, status, created_at DESC);
 
+CREATE TABLE IF NOT EXISTS project_access_audit (
+  id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
+  actor_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  action TEXT NOT NULL CHECK (action IN (
+    'request', 'approve', 'deny', 'revoke', 'add_folder_ref', 'remove_folder_ref'
+  )),
+  target_user_id TEXT REFERENCES users(id) ON DELETE SET NULL,
+  at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  detail JSONB NOT NULL DEFAULT '{}'::jsonb
+);
+
+CREATE INDEX IF NOT EXISTS project_access_audit_project_at_idx
+  ON project_access_audit (project_id, at DESC);
+
 CREATE TABLE IF NOT EXISTS project_folder_refs (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
   project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,

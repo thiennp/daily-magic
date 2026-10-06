@@ -1,5 +1,3 @@
-import type { AgentAccessFeatureToolExecutor } from "@/lib/agentAccess/agentAccessFeatureToolExecutor.type";
-import { executeIssueClaimBotCodeTool } from "@/lib/agentAccess/claimBot/executeIssueClaimBotCodeTool";
 import { executeAgentAccessAccountTools } from "@/lib/agentAccess/executeAgentAccessAccountTools";
 import { executeAgentAccessGuideTool } from "@/lib/agentAccess/executeAgentAccessGuideTool";
 import { executeAgentAccessProjectAclTool } from "@/lib/agentAccess/executeAgentAccessProjectAclTool";
@@ -8,54 +6,41 @@ import { executeAgentAccessRunTool } from "@/lib/agentAccess/executeAgentAccessR
 import { executeAgentAccessSendTask } from "@/lib/agentAccess/executeAgentAccessSendTask";
 import { executeAgentAccessWorkflowTool } from "@/lib/agentAccess/executeAgentAccessWorkflowTool";
 import { guardAgentAccessToolUse } from "@/lib/agentAccess/guardAgentAccessToolUse";
-import { guardProjectApiKeyToolUse } from "@/lib/agentAccess/guardProjectApiKeyToolUse";
-import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
+import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
+import { readBearerAgentAccessToken } from "@/lib/agentAccess/hashAgentAccessToken";
 import {
-  isMcpBearerAuth,
-  resolveMcpBearerAuth,
-} from "@/lib/agentAccess/resolveMcpBearerAuth";
-import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
-import { runAgentAccessFeatureToolExecutors } from "@/lib/agentAccess/runAgentAccessFeatureToolExecutors";
+  agentAccessTextResult,
+  agentAccessUnauthorized,
+  isAgentAccessActor,
+  requireAgentAccessActor,
+} from "@/lib/agentAccess/requireAgentAccessActor";
 
 export const executeAgentAccessTool = async (input: {
   readonly name: string;
   readonly args: unknown;
   readonly authorization: string | null;
   readonly ip: string;
-  /** FSA feature tools (e.g. project skill share), injected by route handlers. */
-  readonly featureToolExecutors?: readonly AgentAccessFeatureToolExecutor[];
 }): Promise<AgentAccessToolCallResult> => {
   if (input.name === "register_account") {
     return executeAgentAccessRegisterTool(input.args, input.ip);
   }
 
-  const auth = await resolveMcpBearerAuth(input.authorization);
-  if (!isMcpBearerAuth(auth)) {
-    return auth;
+  const actor = await requireAgentAccessActor(input.authorization);
+  if (!isAgentAccessActor(actor)) {
+    return actor;
   }
 
-  if (auth.kind === "project_api_key") {
-    const projectGate = guardProjectApiKeyToolUse({
-      name: input.name,
-      args: input.args,
-      projectAuth: auth.projectAuth,
-    });
-    if (projectGate !== null) {
-      return projectGate;
-    }
-  }
+  const token = readBearerAgentAccessToken(input.authorization);
+  if (token === null) return agentAccessUnauthorized();
 
   const gated = await guardAgentAccessToolUse({
     name: input.name,
-    token: auth.token,
-    userId: auth.actor.id,
+    token,
+    userId: actor.id,
   });
   if (gated !== null) {
     return gated;
   }
-
-  const actor = auth.actor;
-  const token = auth.token;
 
   const accountResult = await executeAgentAccessAccountTools({
     actor,
@@ -63,10 +48,6 @@ export const executeAgentAccessTool = async (input: {
   });
   if (accountResult !== null) {
     return accountResult;
-  }
-
-  if (input.name === "issue_bot_claim_code") {
-    return executeIssueClaimBotCodeTool({ token });
   }
 
   if (input.name === "send_task") {
@@ -80,16 +61,6 @@ export const executeAgentAccessTool = async (input: {
   });
   if (projectAclResult !== null) {
     return projectAclResult;
-  }
-
-  const featureResult = await runAgentAccessFeatureToolExecutors({
-    executors: input.featureToolExecutors ?? [],
-    actor,
-    name: input.name,
-    args: input.args,
-  });
-  if (featureResult !== null) {
-    return featureResult;
   }
 
   const guideResult = await executeAgentAccessGuideTool({

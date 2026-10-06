@@ -43,10 +43,5 @@ export default function mapProjectAccessRequestRow(
     decidedAt: row.decided_at ? String(row.decided_at) : null,
     createdAt: String(row.created_at),
     expiresAt: String(row.expires_at),
-    inviteId: row.invite_id ? String(row.invite_id) : null,
-    teamLabel: row.team_label ? String(row.team_label) : null,
-    suggestedProjectDisplayName: row.suggested_project_display_name
-      ? String(row.suggested_project_display_name)
-      : null,
   };
 }

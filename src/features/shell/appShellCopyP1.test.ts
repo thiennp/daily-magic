@@ -12,7 +12,6 @@ describe("COPY-P1 shell and auth labels", () => {
   it("uses Projects, Library, Reports, Marketplace, and New task in primary nav", () => {
     const labels = PRIMARY_NAV.map((item) => item.label);
     expect(labels).toContain("Projects");
-    expect(labels).toContain("My bots");
     expect(labels).toContain("Library");
     expect(labels).toContain("Reports");
     expect(labels).toContain("New task");
@@ -24,7 +23,7 @@ describe("COPY-P1 shell and auth labels", () => {
     expect(labels).not.toContain("Runs");
   });
 
-  it("uses aligned labels in mobile nav destinations (header Menu)", () => {
+  it("uses aligned labels in mobile bottom nav", () => {
     const labels = BOTTOM_NAV.map((item) => item.label);
     expect(labels).toEqual([
       "Home",
@@ -33,7 +32,6 @@ describe("COPY-P1 shell and auth labels", () => {
       "Marketplace",
       "New task",
       "Reports",
-      "Prompt optimizer",
     ]);
   });
 

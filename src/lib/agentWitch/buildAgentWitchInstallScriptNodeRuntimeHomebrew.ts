@@ -18,15 +18,4 @@ agent_witch_try_install_node_via_homebrew() {
     export PATH="\${node_prefix}/bin:\${PATH}"
   fi
 }
-
-# Finder-launched apps get PATH=/usr/bin:/bin:/usr/sbin:/sbin; also look where Homebrew / user installs put node.
-agent_witch_add_node_search_paths() {
-  local dir
-  for dir in /opt/homebrew/bin /usr/local/bin "\${HOME}/.local/bin"; do
-    if [[ -d "\${dir}" && ":\${PATH}:" != *":\${dir}:"* ]]; then
-      PATH="\${PATH}:\${dir}"
-    fi
-  done
-  export PATH
-}
 `;

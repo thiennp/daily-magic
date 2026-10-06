@@ -9,7 +9,6 @@ import {
 } from "@/features/agent-witch/pairedDevicesResource";
 import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
 import type { AgentWitchDevicePlatform } from "@/lib/agentWitch/types/AgentWitchDevicePlatform.type";
-import type { AgentWitchLocalConnectVersionStatus } from "@/lib/agentWitch/types/AgentWitchLocalConnectVersionStatus.type";
 import useSubscribeMacDeviceRevoked from "@/features/agent-witch/macDevices/hooks/useSubscribeMacDeviceRevoked";
 import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
 import { useConnectionLab } from "@/features/agent-witch/connection-lab/ConnectionLabContext";
@@ -28,8 +27,6 @@ export interface MyMacDevice {
   readonly isDispatchReady?: boolean;
   readonly lastHeartbeatAt: string | null;
   readonly installBundleVersion: string | null;
-  /** From devices API; `too_old` = server refuses Connect until AWL updates. */
-  readonly connectVersionStatus?: AgentWitchLocalConnectVersionStatus;
   readonly wakePort: number | null;
 }
 

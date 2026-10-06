@@ -18,11 +18,6 @@ export const PRIMARY_NAV: readonly AppNavItem[] = [
     isActive: (pathname) => pathname.startsWith("/projects"),
   },
   {
-    href: "/my-bots",
-    label: "My bots",
-    isActive: (pathname) => pathname.startsWith("/my-bots"),
-  },
-  {
     href: NEW_TASK_HREF,
     label: "New task",
     isActive: () => false,

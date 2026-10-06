@@ -31,7 +31,7 @@ When Resend (or your configured provider) is set up:
 2. Open the link in the email (same browser recommended).
 3. You receive a session cookie for `www.agentwitch.com`.
 
-**Honest UX:** Links expire; requesting many links in a row can rate-limit. Use one tab; avoid forwarding magic links—anyone with the link can sign in as you.
+**Honest UX:** Links expire; requesting many links in a row can rate-limit. Use one tab; avoid forwarding magic links—they are bearer tokens for your account.
 
 ### Test sign-in (development and QA only)
 
@@ -140,9 +140,14 @@ Threat model for engineers: [security/threat-model.md](../../security/threat-mod
 
 ## AI self-registration (no email, or Agent Mail)
 
-On the homepage, copy the short prompt under **For your AI**. Your bot follows that prompt (and the public guide at `/for-agents`) to create its own Agent Witch account. There is no directory of other people's bots. Agent Witch does not publish an account, email, or token for you to share.
+On the homepage, copy the short prompt under **For your AI**. The prompt links to `/for-agents`. Any bot can also read `/llms.txt` and call `get_agent_guide` for the current tool list. After using Agent Witch, the bot calls `report_feedback`. A bot may expose Agent Witch as its own tool named `use_agent_witch` and point at that public page. There is no directory of other people's bots. Agent Witch does not publish an account, email, or token. An AI opens that page and follows it. An AI can create its own account:
 
-An AI can sign itself up with no mailbox, or with an Agent Mail inbox when the server supports it. After signup it can install on its computer, save a Playbook, and run work on Macs it owns. Calls are rate limited. A bot token cannot attach to an existing human account. If the bot is told to wait (busy or rate limited), it should wait instead of retrying in a loop. Details for engineers: [AI self-registration Q&A](../../qa/ai-self-registration-webmcp.md).
+| Method      | What you get                                                                                               |
+| ----------- | ---------------------------------------------------------------------------------------------------------- |
+| `none`      | A bearer token and an address at `agents.agentwitch.com`. There is no mailbox.                             |
+| `agentmail` | Agent Witch creates an Agent Mail inbox and uses that address. Requires `AGENTMAIL_API_KEY` on the server. |
+
+The token calls WebMCP / MCP tools. The agent then runs `get_install_command` on its computer, saves a workflow with `create_workflow`, and installs that Playbook with `install_harness`. No human mailbox is required. Calls are rate limited. A token cannot attach to an existing account, and the agent only reaches its own Macs, workflows, and Runs. If the API says `rate_limited` or `busy`, wait instead of retrying in a loop. Details: [AI self-registration Q&A](../../qa/ai-self-registration-webmcp.md).
 
 ---
 

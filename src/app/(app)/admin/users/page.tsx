@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import UserManagementPanel from "@/features/admin/UserManagementPanel";
 import { getAuthActor } from "@/lib/auth/auth";
 import { isGlobalAdmin } from "@/lib/auth/globalRolePermissions";
-import listAdminUsers from "@/lib/auth/listAdminUsers";
+import { listUsers } from "@/lib/auth/userRepository";
 
 export default async function AdminUsersPage() {
   const actor = await getAuthActor();
@@ -12,7 +12,7 @@ export default async function AdminUsersPage() {
     redirect("/login?callbackUrl=/admin/users");
   }
 
-  const users = isGlobalAdmin(actor) ? await listAdminUsers() : [];
+  const users = isGlobalAdmin(actor) ? await listUsers() : [];
 
   return <UserManagementPanel initialUsers={users} />;
 }

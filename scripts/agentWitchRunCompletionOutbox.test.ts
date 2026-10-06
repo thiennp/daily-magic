@@ -61,7 +61,6 @@ const layout: AgentWitchLocalLayout = {
     "sets",
   ),
   projectsDir: path.join(tempRoot, "profiles", "test@example.com", "projects"),
-  projectDataDir: path.join(tempRoot, "profiles", "test@example.com", "project-data"),
   logsDir: path.join(tempRoot, "profiles", "test@example.com", "logs"),
   reportsDir: path.join(tempRoot, "profiles", "test@example.com", "reports"),
   deviceKeypairPath: path.join(

@@ -33,7 +33,7 @@ export const formatWriterCliDisplayCommand = (
     return `cursor agent ${continueFlag}-p --force --trust --sandbox disabled "${escaped}"`;
   }
 
-  return `agy ${continueFlag}--dangerously-skip-permissions -p "${escaped}"`;
+  return `agy ${continueFlag}-p --dangerously-skip-permissions "${escaped}"`;
 };
 
 export const formatWriterSessionStartDisplayCommand = (

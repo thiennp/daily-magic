@@ -1,11 +1,8 @@
-import buildAgentWitchDevicesWithOnlineStatus from "@/lib/agentWitch/buildAgentWitchDevicesWithOnlineStatus";
-import { buildAgentWitchLocalTooOldRefusalResponse } from "@/lib/agentWitch/buildAgentWitchLocalTooOldRefusalResponse";
 import { collectLiveAgentWitchDeviceIdsForUser } from "@/lib/agentWitch/collectLiveAgentWitchDeviceIdsForUser";
 import { ensureAgentWitchDeviceSchema } from "@/lib/agentWitch/ensureAgentWitchDeviceSchema";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { listAgentWitchDevicesForUser } from "@/lib/agentWitch/listAgentWitchDevicesForUser";
 import { resolveAgentWitchInstallConnectionStatus } from "@/lib/agentWitch/resolveAgentWitchInstallConnectionStatus";
-
 export const handleAgentWitchInstallConnectionGet = async (actor: {
   readonly id: string;
 }): Promise<Response> => {
@@ -16,20 +13,6 @@ export const handleAgentWitchInstallConnectionGet = async (actor: {
       getAgentWitchHub(),
       actor.id,
     );
-    const devicesWithStatus = buildAgentWitchDevicesWithOnlineStatus(
-      devices,
-      liveDeviceIds,
-    );
-    const tooOldLive = devicesWithStatus.find(
-      (device) =>
-        device.isConnected && device.connectVersionStatus === "too_old",
-    );
-    if (tooOldLive !== undefined) {
-      return buildAgentWitchLocalTooOldRefusalResponse(
-        tooOldLive.installBundleVersion,
-      );
-    }
-
     const status = resolveAgentWitchInstallConnectionStatus({
       devices,
       liveDeviceIds,

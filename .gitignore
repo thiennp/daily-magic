@@ -60,11 +60,3 @@ next-env.d.ts
 
 # Local marketing pack import (do not commit)
 .marketing-pack-import/
-
-# Mac app packaging output
-dist/mac/
-apps/mac/.build/
-
-# Desktop tray packaging output
-dist/linux/
-dist/windows/

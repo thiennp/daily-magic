@@ -2,7 +2,6 @@ import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName
 
 import { buildAgentWitchRoleGuidelineSection } from "@/lib/agentAccess/buildAgentWitchRoleGuidelineSection";
 import { buildPromptSdlcAgentGuidelineSection } from "@/lib/agentAccess/buildPromptSdlcAgentGuide";
-import { buildBotSupportUrlGuidelineSection } from "@/lib/agentAccess/buildBotSupportUrlGuidelineSection";
 import { buildProjectAclAgentGuidelineSection } from "@/lib/agentAccess/buildProjectAclAgentGuidelineSection";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 
@@ -85,11 +84,9 @@ export const buildAgentAccessGuideline = (): AgentAccessGuideline => {
         heading: "Live tool list",
         body: [
           "Call get_agent_guide. It returns the current tools, limits, and URLs. Prefer that over any older copy when features change.",
-          "Call check_product_updates with sinceCatalogVersion (start 0, then last seen catalogVersion) after active membership and periodically. Adapt from entries[].adapt; use agent-access Bearer (catalog-wide — awc_proj_ alone 401s; dual-auth: awc_proj_ OK only for project-scoped tools).",
         ],
       },
       buildProjectAclAgentGuidelineSection(),
-      buildBotSupportUrlGuidelineSection(),
       {
         heading: "Tell other bots",
         body: [

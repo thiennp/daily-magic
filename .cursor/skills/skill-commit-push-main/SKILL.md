@@ -8,13 +8,13 @@ description: >-
 
 # Commit and push to main (CI-safe)
 
-Ship intentional changes on `main` only after the local suite gate (no GitHub Actions CI) so Railway deploys stay healthy.
+Ship intentional changes on `main` without breaking GitHub CI or Railway deploys.
 
 ## References
 
 - Husky steps: **`.cursor/harness/git-hooks.md`**
 - Agent commit workflow: **`npm run harness:bootstrap -- --workflow=commit`**
-- Local suite gate: **`npm run ci`** (same verify path as `.husky/pre-push`; there is no GitHub Actions CI)
+- CI parity command: **`npm run ci`** (same verify path as `.husky/pre-push` and `.github/workflows/ci.yml`)
 
 ## Prerequisites
 

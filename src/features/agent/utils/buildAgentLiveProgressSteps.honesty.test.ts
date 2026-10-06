@@ -2,8 +2,6 @@ import { describe, expect, it } from "vitest";
 
 import { MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY } from "@/lib/marketplace/runRecipe/marketplacePlanEstimateReasonCode.constant";
 
-import { CLAUDE_LOGIN_EXPIRED_LOCKED_REASON } from "@/lib/dispatch/agentRunHonestyCopy.constant";
-
 import { buildAgentLiveProgressSteps } from "@/features/agent/utils/buildAgentLiveProgressSteps";
 
 describe("buildAgentLiveProgressSteps run UX honesty", () => {
@@ -57,22 +55,6 @@ describe("buildAgentLiveProgressSteps run UX honesty", () => {
     expect(result.outcome.kind).toBe("connecting");
     expect(result.outcome.chipLabel).toBe("Connecting");
     expect(result.steps.some((step) => step.id === "finish")).toBe(false);
-  });
-
-  it("maps ensure-writer timeout to Waiting on you on the floater (Testi state 3)", () => {
-    const output =
-      "Failed to prepare claude-cli: ensure-writer.sh timed out after 120s";
-
-    const result = buildAgentLiveProgressSteps({
-      status: "finished",
-      output,
-      pendingCommandLine: 'claude -p "demo"',
-      estimateSeconds: 120,
-    });
-
-    expect(result.outcome.kind).toBe("waiting_you");
-    expect(result.outcome.chipLabel).toBe("Waiting on you");
-    expect(result.humanSummary).toContain(CLAUDE_LOGIN_EXPIRED_LOCKED_REASON);
   });
 
   it("shows Waiting for output… while streaming with empty work body", () => {

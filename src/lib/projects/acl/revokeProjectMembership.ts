@@ -1,7 +1,5 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import mapProjectMembershipRow from "@/lib/projects/acl/mapProjectMembershipRow";
-import { purgeProjectMembershipData } from "@/lib/projects/acl/purgeProjectMembershipData";
-import { revokeProjectApiKeysForMembership } from "@/lib/projects/acl/projectApiKeys/revokeProjectApiKeysForMembership";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
@@ -35,7 +33,7 @@ export const revokeProjectMembership = async (input: {
       SET status = 'revoked', revoked_at = NOW()
       WHERE id = ${input.membershipId}
         AND project_id = ${input.projectId}
-        AND status IN ('active', 'naming_required')
+        AND status = 'active'
         AND role = 'member'
       RETURNING *
     `,
@@ -44,23 +42,6 @@ export const revokeProjectMembership = async (input: {
     return { ok: false, code: "not_active" };
   }
   const membership = mapProjectMembershipRow(rows[0]);
-  await purgeProjectMembershipData({
-    projectId: input.projectId,
-    membership,
-  });
-  await writeProjectAccessAudit({
-    projectId: input.projectId,
-    actorUserId: input.ownerUserId,
-    action: "webhook.disable",
-    targetUserId: membership.userId,
-    detail: { membershipId: membership.id },
-  });
-  await revokeProjectApiKeysForMembership({
-    projectId: input.projectId,
-    membershipId: membership.id,
-    actorUserId: input.ownerUserId,
-    targetUserId: membership.userId,
-  });
   await writeProjectAccessAudit({
     projectId: input.projectId,
     actorUserId: input.ownerUserId,

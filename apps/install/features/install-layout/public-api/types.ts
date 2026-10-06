@@ -55,7 +55,6 @@ export interface AgentWitchProfileRelativePaths {
   readonly reportsDir: "reports";
   readonly runsDir: "runs";
   readonly projectsDir: "projects";
-  readonly projectDataDir: "project-data";
   readonly harnessDir: "harness";
 }
 
@@ -72,7 +71,6 @@ export const AGENT_WITCH_PROFILE_RELATIVE_PATHS: AgentWitchProfileRelativePaths 
     reportsDir: "reports",
     runsDir: "runs",
     projectsDir: "projects",
-    projectDataDir: "project-data",
     harnessDir: "harness",
   };
 
@@ -142,7 +140,6 @@ export interface AgentWitchLocalLayout {
   readonly appDir: string;
   readonly appBundlePath: string;
   readonly projectsDir: string;
-  readonly projectDataDir: string;
   readonly logsDir: string;
   readonly mainLogPath: string;
   readonly errorLogPath: string;

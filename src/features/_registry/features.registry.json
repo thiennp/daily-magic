@@ -230,32 +230,6 @@
       "apiPaths": ["/api/prompt-optimizer"],
       "dependsOn": ["dispatch", "agent-witch"],
       "migrationStatus": "migrated"
-    },
-    {
-      "slug": "project-skill-share",
-      "title": "Project skill share",
-      "purpose": "Project owners and active members publish, list, get, and revoke project playbooks/skills (draft → published → revoked) over MCP and the Project Access panel. AWC stores the capped body; History ON also mirrors published versions to AWL project-data.",
-      "featurePath": "src/features/project-skill-share",
-      "libPath": null,
-      "routePaths": [],
-      "apiPaths": [
-        "/api/projects/[projectId]/skills",
-        "/api/agent-access/mcp",
-        "/api/agent-access/invoke"
-      ],
-      "dependsOn": ["auth", "agent-access"],
-      "migrationStatus": "in_progress"
-    },
-    {
-      "slug": "project-pitfalls",
-      "title": "Project pitfalls",
-      "purpose": "Per-project pitfall registry (seed templates + project overrides, max 64 active) with list/get/upsert/record_hit APIs. AWC is the source of truth that local caches sync from.",
-      "featurePath": "src/features/project-pitfalls",
-      "libPath": null,
-      "routePaths": [],
-      "apiPaths": ["/api/agent-witch/projects/[projectId]/pitfalls"],
-      "dependsOn": ["auth", "agent-witch"],
-      "migrationStatus": "in_progress"
     }
   ]
 }

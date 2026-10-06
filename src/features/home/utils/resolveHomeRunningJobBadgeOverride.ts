@@ -12,7 +12,6 @@ export const resolveHomeRunningJobBadgeOverride = (input: {
     status: input.run.status,
     resultOutput: input.run.resultOutput,
     resultOutcomeCode: input.run.resultOutcomeCode,
-    resultExitCode: input.run.resultExitCode,
     approvalWaitingLabel: input.approvalWaitingLabel,
   });
   if (outcome.kind === "waiting_you") {
@@ -40,7 +39,6 @@ export const resolveHomeRunningJobBadgeClassName = (input: {
     status: input.run.status,
     resultOutput: input.run.resultOutput,
     resultOutcomeCode: input.run.resultOutcomeCode,
-    resultExitCode: input.run.resultExitCode,
     approvalWaitingLabel: input.approvalWaitingLabel,
   });
   if (

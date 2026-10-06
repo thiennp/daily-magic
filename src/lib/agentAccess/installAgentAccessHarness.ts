@@ -3,7 +3,7 @@ import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabil
 import requestCapabilityTemplateHarnessInstall from "@/lib/capabilities/requestCapabilityTemplateHarnessInstall";
 import { resolveTemplateIdFromHarnessSetSlug } from "@/lib/workflowOrchestration/resolveTemplateIdFromHarnessSetSlug";
 
-import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
+import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
 

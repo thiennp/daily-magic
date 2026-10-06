@@ -1,26 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  AGENT_WITCH_MCP_SERVER_INFO,
-  handleMcpJsonRpcRequest,
-  MCP_PROTOCOL_VERSION,
-  toMcpTextResult,
-} from "@agent-witch/shared/mcp";
-
 import { buildWebMcpDocument } from "@/lib/agentAccess/buildWebMcpDocument";
-import { createAgentAccessMcpServer } from "@/lib/agentAccess/createAgentAccessMcpServer";
-
-const makeServer = (
-  callTool: (
-    name: string,
-    args: unknown,
-    authorization: string | null,
-  ) => Promise<{ readonly isError: boolean; readonly text: string }>,
-) => createAgentAccessMcpServer({ callTool });
+import { handleAgentAccessMcpRequest } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
 
 describe("agent access WebMCP", () => {
   it("publishes tools and the production MCP url", () => {
     const document = buildWebMcpDocument();
+
     expect(document.tools.map((tool) => tool.name)).toContain("send_task");
     expect(document.mcp.url).toBe(
       "https://www.agentwitch.com/api/agent-access/mcp",
@@ -29,55 +15,73 @@ describe("agent access WebMCP", () => {
     expect(document.guidelineUrl).toBe("https://www.agentwitch.com/for-agents");
   });
 
-  it("answers initialize with shared protocol and server info", async () => {
-    const server = makeServer(async () => ({ isError: false, text: "{}" }));
-    const initialize = await handleMcpJsonRpcRequest(
+  it("answers initialize, tools/list, and tools/call", async () => {
+    const initialize = await handleAgentAccessMcpRequest(
       { jsonrpc: "2.0", id: 1, method: "initialize" },
-      server,
-      { authorization: null },
+      null,
+      { callTool: async () => ({ isError: false, text: "{}" }) },
     );
-    expect(initialize).toEqual({
-      jsonrpc: "2.0",
-      id: 1,
-      result: {
-        protocolVersion: MCP_PROTOCOL_VERSION,
-        capabilities: { tools: { listChanged: false } },
-        serverInfo: AGENT_WITCH_MCP_SERVER_INFO,
-      },
-    });
-    expect(MCP_PROTOCOL_VERSION).toBe("2025-03-26");
-  });
-
-  it("answers tools/list and tools/call success with auth context", async () => {
-    const seenAuth: Array<string | null> = [];
-    const server = makeServer(async (name, _args, authorization) => {
-      seenAuth.push(authorization);
-      return {
-        isError: name !== "whoami",
-        text: JSON.stringify({ ok: name === "whoami" }),
-      };
-    });
-    const listed = await handleMcpJsonRpcRequest(
+    const listed = await handleAgentAccessMcpRequest(
       { jsonrpc: "2.0", id: 2, method: "tools/list" },
-      server,
-      { authorization: null },
+      null,
+      { callTool: async () => ({ isError: false, text: "{}" }) },
     );
-    const called = await handleMcpJsonRpcRequest(
+    const called = await handleAgentAccessMcpRequest(
       {
         jsonrpc: "2.0",
         id: 3,
         method: "tools/call",
         params: { name: "whoami", arguments: {} },
       },
-      server,
-      { authorization: "Bearer aw_testtokenvalue000000000" },
+      "Bearer aw_testtokenvalue000000000",
+      {
+        callTool: async (name) => ({
+          isError: name !== "whoami",
+          text: "{}",
+        }),
+      },
     );
-    expect(JSON.stringify(listed)).toContain("register_account");
-    expect(called).toEqual({
-      jsonrpc: "2.0",
-      id: 3,
-      result: toMcpTextResult(JSON.stringify({ ok: true })),
+    const invalid = await handleAgentAccessMcpRequest("nope", null, {
+      callTool: async () => ({ isError: false, text: "{}" }),
     });
-    expect(seenAuth).toEqual(["Bearer aw_testtokenvalue000000000"]);
+    const missingName = await handleAgentAccessMcpRequest(
+      { jsonrpc: "2.0", id: 4, method: "tools/call", params: {} },
+      null,
+      { callTool: async () => ({ isError: false, text: "{}" }) },
+    );
+
+    expect(initialize).toMatchObject({
+      result: { serverInfo: { name: "agent-witch" } },
+    });
+    expect(JSON.stringify(listed)).toContain("register_account");
+    expect(called).toMatchObject({ result: { isError: false } });
+    expect(invalid).toMatchObject({ error: { code: -32700 } });
+    expect(missingName).toMatchObject({ error: { code: -32602 } });
+  });
+
+  it("rejects unknown methods and missing method names", async () => {
+    const unknown = await handleAgentAccessMcpRequest(
+      { jsonrpc: "2.0", id: 5, method: "nope" },
+      null,
+      { callTool: async () => ({ isError: false, text: "{}" }) },
+    );
+    const ping = await handleAgentAccessMcpRequest(
+      { jsonrpc: "2.0", id: 6, method: "ping" },
+      null,
+      { callTool: async () => ({ isError: false, text: "{}" }) },
+    );
+
+    expect(unknown).toMatchObject({ error: { code: -32601 } });
+    expect(ping).toMatchObject({ result: {} });
+  });
+
+  it("rejects a JSON-RPC batch so one request cannot fan out", async () => {
+    const batched = await handleAgentAccessMcpRequest(
+      [{ jsonrpc: "2.0", id: 1, method: "tools/list" }],
+      null,
+      { callTool: async () => ({ isError: false, text: "{}" }) },
+    );
+
+    expect(batched).toMatchObject({ error: { code: -32700 } });
   });
 });

@@ -9,7 +9,6 @@ import AgentRunKeepInProjectButton from "@/features/reports/AgentRunKeepInProjec
 import AgentRunReportProgress from "@/features/reports/AgentRunReportProgress";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
 import { resolveAgentRunDetailOutcomeMessage } from "@/features/reports/utils/resolveAgentRunDetailOutcomeMessage";
-import { resolveAgentRunDetailResultOutputForHonesty } from "@/features/reports/utils/resolveAgentRunDetailResultOutputForHonesty";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { resolveAgentRunHistoryOutcomeBadge } from "@/features/reports/utils/resolveAgentRunHistoryOutcomeBadge";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
@@ -22,18 +21,11 @@ export default function AgentRunDetailContent({
   run,
 }: AgentRunDetailContentProps) {
   const outcomeBadge = resolveAgentRunHistoryOutcomeBadge(run);
-  const supplementalResultOutput = resolveAgentRunDetailResultOutputForHonesty(
-    run.id,
-    run.resultOutput,
-  );
   const outcomeMessage = resolveAgentRunDetailOutcomeMessage({
     status: run.status,
     resultOutput: run.resultOutput,
     denialReason: run.denialReason,
     reportSummary: run.reportSummary,
-    resultOutcomeCode: run.resultOutcomeCode,
-    supplementalResultOutput:
-      supplementalResultOutput.length > 0 ? supplementalResultOutput : null,
   });
 
   return (
@@ -100,8 +92,9 @@ export default function AgentRunDetailContent({
         <AgentRunResultOutput run={run} resultOutput={run.resultOutput} />
       ) : null}
       <AgentRunKeepInProjectButton runId={run.id} projectId={run.projectId} />
-      {outcomeMessage !== null ? (
-        <p className="mt-4 text-sm text-gray-800 dark:text-white/90">
+      {outcomeMessage !== null &&
+      (run.resultOutput === null || run.resultOutput.trim().length === 0) ? (
+        <p className="mt-4 text-sm text-rose-600 dark:text-rose-400">
           {outcomeMessage}
         </p>
       ) : null}

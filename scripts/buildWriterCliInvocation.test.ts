@@ -56,7 +56,7 @@ describe("buildWriterCliInvocation", () => {
       }),
     ).toEqual({
       command: "agy",
-      args: ["--continue", "--dangerously-skip-permissions", "-p", "follow up"],
+      args: ["--continue", "-p", "--dangerously-skip-permissions", "follow up"],
     });
   });
 
@@ -105,22 +105,8 @@ describe("buildWriterCliInvocation", () => {
   it("builds antigravity headless invocation", () => {
     expect(buildWriterCliInvocation("antigravity", "plan", commands)).toEqual({
       command: "agy",
-      args: ["--dangerously-skip-permissions", "-p", "plan"],
+      args: ["-p", "--dangerously-skip-permissions", "plan"],
     });
-  });
-
-  it("never places another flag immediately after antigravity -p", () => {
-    const invocation = buildWriterCliInvocation(
-      "antigravity",
-      "plan",
-      commands,
-    );
-    expect(invocation).not.toBeNull();
-    const promptFlagIndex = invocation?.args.indexOf("-p") ?? -1;
-    expect(promptFlagIndex).toBeGreaterThanOrEqual(0);
-    const valueAfterPromptFlag = invocation?.args[promptFlagIndex + 1];
-    expect(valueAfterPromptFlag).not.toMatch(/^--/);
-    expect(valueAfterPromptFlag).toBe("plan");
   });
 
   it("uses custom command paths from config", () => {

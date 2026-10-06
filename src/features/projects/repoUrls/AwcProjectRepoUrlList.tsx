@@ -1,6 +1,5 @@
 "use client";
 
-import AwcBotSupportUrlKindLabel from "@/features/projects/botSupportUrl/AwcBotSupportUrlKindLabel";
 import { awcProjectRepoUrlFieldError } from "@/features/projects/repoUrls/awcProjectRepoUrlFieldError";
 import { AWC_PROJECT_REPO_URLS_COPY } from "@/features/projects/repoUrls/awcProjectRepoUrlsCopy.constant";
 
@@ -28,7 +27,6 @@ export default function AwcProjectRepoUrlList({
           fieldErrors?.[String(index)] ?? awcProjectRepoUrlFieldError(url);
         return (
           <li key={`repo-url-${index}`} className="space-y-1">
-            <AwcBotSupportUrlKindLabel url={url} />
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <label className="sr-only" htmlFor={`repo-url-input-${index}`}>
                 {copy.urlLabel} {index + 1}

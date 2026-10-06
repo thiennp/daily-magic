@@ -35,7 +35,6 @@ export const buildMockDevicesApiResponse = (
       revokedAt: null,
       dispatchPolicy: null,
       installBundleVersion: null,
-      connectVersionStatus: "too_old" as const,
       wakePort: null,
     })),
   };

@@ -25,30 +25,6 @@ export const vitestResolveAlias: Record<string, string> = {
     ROOT,
     "./packages/shared/src/dispatch/index.ts",
   ),
-  "@agent-witch/shared/projects": path.resolve(
-    ROOT,
-    "./packages/shared/src/projects/index.ts",
-  ),
-  "@agent-witch/shared/pitfalls": path.resolve(
-    ROOT,
-    "./packages/shared/src/pitfalls/index.ts",
-  ),
-  "@agent-witch/shared/preflight": path.resolve(
-    ROOT,
-    "./packages/shared/src/preflight/index.ts",
-  ),
-  "@agent-witch/shared/token-saver": path.resolve(
-    ROOT,
-    "./packages/shared/src/token-saver/index.ts",
-  ),
-  "@agent-witch/shared/mcp": path.resolve(
-    ROOT,
-    "./packages/shared/src/mcp/index.ts",
-  ),
-  "@agent-witch/shared/projectSkills": path.resolve(
-    ROOT,
-    "./packages/shared/src/projectSkills/index.ts",
-  ),
   "@agent-witch/shared": path.resolve(ROOT, "./packages/shared/src/index.ts"),
   "@agent-witch/install-layout/types": path.resolve(
     ROOT,
@@ -301,42 +277,6 @@ export const vitestResolveAlias: Record<string, string> = {
   "@agent-witch/live-automations": path.resolve(
     ROOT,
     "./apps/live/features/automations/public-api/infrastructure.ts",
-  ),
-  "@agent-witch/live-token-saver/types": path.resolve(
-    ROOT,
-    "./apps/live/features/token-saver/public-api/types.ts",
-  ),
-  "@agent-witch/live-token-saver/presentation": path.resolve(
-    ROOT,
-    "./apps/live/features/token-saver/public-api/presentation.ts",
-  ),
-  "@agent-witch/live-token-saver": path.resolve(
-    ROOT,
-    "./apps/live/features/token-saver/public-api/infrastructure.ts",
-  ),
-  "@agent-witch/live-mcp/types": path.resolve(
-    ROOT,
-    "./apps/live/features/mcp/public-api/types.ts",
-  ),
-  "@agent-witch/live-mcp/presentation": path.resolve(
-    ROOT,
-    "./apps/live/features/mcp/public-api/presentation.ts",
-  ),
-  "@agent-witch/live-mcp": path.resolve(
-    ROOT,
-    "./apps/live/features/mcp/public-api/infrastructure.ts",
-  ),
-  "@agent-witch/live-project-history/types": path.resolve(
-    ROOT,
-    "./apps/live/features/project-history/public-api/types.ts",
-  ),
-  "@agent-witch/live-project-history/presentation": path.resolve(
-    ROOT,
-    "./apps/live/features/project-history/public-api/presentation.ts",
-  ),
-  "@agent-witch/live-project-history": path.resolve(
-    ROOT,
-    "./apps/live/features/project-history/public-api/infrastructure.ts",
   ),
   "@": path.resolve(ROOT, "./src"),
 };

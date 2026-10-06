@@ -41,7 +41,6 @@ const createLayout = (input: {
     harnessManifestPath: path.join(profileDir, "harness", "manifest.json"),
     harnessSetsDir: path.join(profileDir, "harness", "sets"),
     projectsDir: path.join(profileDir, "projects"),
-    projectDataDir: path.join(profileDir, "project-data"),
     logsDir: path.join(profileDir, "logs"),
     reportsDir: path.join(profileDir, "reports"),
     deviceKeypairPath: path.join(profileDir, "device-keypair.json"),

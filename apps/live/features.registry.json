@@ -8,9 +8,7 @@
       "title": "Local HTTP server and routing",
       "fsaStatus": "fsa",
       "featurePath": "apps/live/features/local-server",
-      "legacyPaths": [
-        "scripts/agentWitchLocalApp.ts"
-      ],
+      "legacyPaths": ["scripts/agentWitchLocalApp.ts"],
       "notes": "Router in startAgentWitchLocalApp; scripts/agentWitchLocalApp.ts shims apps/live/entry/."
     },
     {
@@ -28,9 +26,7 @@
       "title": "Home dashboard",
       "fsaStatus": "fsa",
       "featurePath": "apps/live/features/home",
-      "legacyPaths": [
-        "scripts/buildAgentWitchLocalHomePage.ts"
-      ]
+      "legacyPaths": ["scripts/buildAgentWitchLocalHomePage.ts"]
     },
     {
       "slug": "tasks",
@@ -68,27 +64,21 @@
       "title": "RAG knowledge browse",
       "fsaStatus": "fsa",
       "featurePath": "apps/live/features/knowledge",
-      "legacyPaths": [
-        "scripts/agentWitchLocalRag.ts"
-      ]
+      "legacyPaths": ["scripts/agentWitchLocalRag.ts"]
     },
     {
       "slug": "memory",
       "title": "Local memory",
       "fsaStatus": "fsa",
       "featurePath": "apps/live/features/memory",
-      "legacyPaths": [
-        "scripts/agentWitchLocalMemory.ts"
-      ]
+      "legacyPaths": ["scripts/agentWitchLocalMemory.ts"]
     },
     {
       "slug": "writer-settings",
       "title": "Writer API and execution backend settings",
       "fsaStatus": "fsa",
       "featurePath": "apps/live/features/writer-settings",
-      "legacyPaths": [
-        "scripts/buildAgentWitchLocalWriterApiPage.ts"
-      ]
+      "legacyPaths": ["scripts/buildAgentWitchLocalWriterApiPage.ts"]
     },
     {
       "slug": "status-health",
@@ -128,27 +118,6 @@
       "fsaStatus": "fsa",
       "featurePath": "apps/live/features/prompt-optimizer",
       "notes": "Local prompt judge and improver loop. Picks the best installed reasoning writers."
-    },
-    {
-      "slug": "token-saver",
-      "title": "Token-saver pitfall registry cache",
-      "fsaStatus": "fsa",
-      "featurePath": "apps/live/features/token-saver",
-      "notes": "Local SQLite pitfall cache + check_context domain/tool handler (HTTP /api/local/check-context) + setup_project writers (decline store, global triggers, Cursor project rule). MCP transport lives in mcp."
-    },
-    {
-      "slug": "mcp",
-      "title": "Local MCP server (stdio + HTTP /mcp)",
-      "fsaStatus": "fsa",
-      "featurePath": "apps/live/features/mcp",
-      "notes": "Shared JSON-RPC core for stdio `agent-witch mcp` and local app POST /mcp; tools come from owning features (token-saver check_context)."
-    },
-    {
-      "slug": "project-history",
-      "title": "Project computer history (local)",
-      "fsaStatus": "fsa",
-      "featurePath": "apps/live/features/project-history",
-      "notes": "Opt-in project.message.history durable store, skill mirror FS, History tick + Share pull."
     }
   ]
 }

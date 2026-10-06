@@ -2,14 +2,44 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-import { AWI_BUNDLED_COMMAND_DIR } from "@agent-witch/install-layout/types";
 import {
+  AWI_BUNDLED_COMMAND_DIR,
+  AWI_INSTALL_ROOT_FILES,
+} from "@agent-witch/install-layout/types";
+import {
+  resolveAgentWitchDefaultWakePort,
   resolveAgentWitchInstallDir,
-  resolveAgentWitchRuntimeWakePort,
 } from "@agent-witch/install-layout";
 
 import { buildAgentWitchLaunchAgentPlistXml } from "./buildAgentWitchLaunchAgentPlistXml";
 import { isAgentWitchLaunchAgentPlistXmlValid } from "./isAgentWitchLaunchAgentPlistXmlValid";
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+const isValidWakePort = (value: unknown): value is number =>
+  typeof value === "number" &&
+  Number.isInteger(value) &&
+  value > 0 &&
+  value <= 65535;
+
+const readWakePortFromInstallDir = (installDir: string): number => {
+  const portFilePath = path.join(installDir, AWI_INSTALL_ROOT_FILES.wakePort);
+  if (!fs.existsSync(portFilePath)) {
+    return resolveAgentWitchDefaultWakePort(installDir);
+  }
+
+  try {
+    const parsed: unknown = JSON.parse(fs.readFileSync(portFilePath, "utf8"));
+    if (isRecord(parsed) && isValidWakePort(parsed.wakePort)) {
+      return parsed.wakePort;
+    }
+  } catch {
+    return resolveAgentWitchDefaultWakePort(installDir);
+  }
+
+  return resolveAgentWitchDefaultWakePort(installDir);
+};
 
 export interface EnsureAgentWitchLaunchAgentPlistInput {
   readonly launchAgentLabel: string;
@@ -54,7 +84,7 @@ export const ensureAgentWitchLaunchAgentPlist = (
     runPath: path.join(installDir, AWI_BUNDLED_COMMAND_DIR, "run.sh"),
     installDir,
     homeDir,
-    wakePort: input.wakePort ?? resolveAgentWitchRuntimeWakePort(installDir),
+    wakePort: input.wakePort ?? readWakePortFromInstallDir(installDir),
   });
 
   if (!isAgentWitchLaunchAgentPlistXmlValid(xml)) {

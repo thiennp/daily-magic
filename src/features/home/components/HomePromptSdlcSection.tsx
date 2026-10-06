@@ -49,12 +49,6 @@ export default function HomePromptSdlcSection({
         >
           Why this score is reliable
         </Link>
-        <Link
-          href="/download"
-          className="text-sm font-medium text-gray-900 underline dark:text-white"
-        >
-          Download the Mac app
-        </Link>
       </p>
       {showComposeForm ? (
         <HomePromptOptimizerComposeCard storybookPreview={storybookPreview} />

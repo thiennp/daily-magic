@@ -1,6 +1,9 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { buildAgentAccessLiveGuide } from "@/lib/agentAccess/buildAgentAccessLiveGuide";
+import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
+import { parseAgentAccessFeedback } from "@/lib/agentAccess/parseAgentAccessFeedback";
+import { openAgentFeedbackGitHubIssue } from "@/lib/agentAccess/openAgentFeedbackGitHubIssue";
 
 describe("live agent guide", () => {
   it("lists current tools and how to teach other bots", () => {
@@ -8,23 +11,11 @@ describe("live agent guide", () => {
     const names = guide.tools.map((tool) => tool.name);
 
     expect(names).toContain("get_agent_guide");
-    expect(names).toContain("check_product_updates");
     expect(names).toContain("report_feedback");
-    expect(guide.productUpdates.tool).toBe("check_product_updates");
-    expect(guide.productUpdates.startSince).toBe(0);
     expect(names).toContain("create_workflow");
     expect(names).toContain("request_project_access");
     expect(names).toContain("mint_allow_claim");
     expect(guide.projectCowork.noTokenSharing).toBe(true);
-    expect(guide.projectCowork.tools).toContain("list_project_peers");
-    expect(guide.projectCowork.tools).toContain("project_dispatch");
-    expect(guide.projectCowork.tools).toContain("register_project_webhook");
-    expect(guide.projectCowork.tools).toContain("list_project_inbox");
-    expect(guide.projectCowork.tools).toContain("ack_project_message");
-    expect(guide.projectCowork.tools).toContain("rotate_project_api_key");
-    expect(guide.projectCowork.tools.indexOf("register_project_webhook")).toBeLessThan(
-      guide.projectCowork.tools.indexOf("list_project_inbox"),
-    );
     expect(guide.whatAgentWitchIs.role).toBe("agent_support_playground");
     expect(guide.whatAgentWitchIs.summary).toContain(
       "agent-support playground",
@@ -52,5 +43,74 @@ describe("live agent guide", () => {
       "http://127.0.0.1:43347/prompt-optimizer/agent",
     );
     expect(guide.promptSdlc.context).toContain("harness");
+  });
+
+  it("returns the tool payload without a forwarding note", () => {
+    const ok = JSON.parse(agentAccessTextResult({ ok: true }).text) as {
+      ok: boolean;
+    };
+
+    expect(ok).toEqual({ ok: true });
+    expect(agentAccessTextResult({ ok: true }).text).not.toContain("passAlong");
+  });
+
+  it("accepts a short feedback report and rejects a blank one", () => {
+    expect(
+      parseAgentAccessFeedback({
+        outcome: "blocked",
+        summary: "list_macs stayed empty",
+      })?.outcome,
+    ).toBe("blocked");
+    expect(parseAgentAccessFeedback({ outcome: "ok", summary: "no" })).toBe(
+      null,
+    );
+  });
+
+  it("skips GitHub when no token is configured", async () => {
+    vi.stubEnv("AGENT_WITCH_FEEDBACK_GITHUB_TOKEN", "");
+
+    const url = await openAgentFeedbackGitHubIssue({
+      feedback: {
+        outcome: "suggestion",
+        summary: "Add a folder field",
+        detail: null,
+      },
+      feedbackId: "fb-1",
+    });
+
+    vi.unstubAllEnvs();
+
+    expect(url).toBeNull();
+  });
+
+  it("opens a GitHub issue without an account email", async () => {
+    vi.stubEnv("AGENT_WITCH_FEEDBACK_GITHUB_TOKEN", "ghtoken");
+    const postedBodies: string[] = [];
+    vi.stubGlobal(
+      "fetch",
+      async (input: RequestInfo | URL, init?: RequestInit) => {
+        void input;
+        postedBodies.push(typeof init?.body === "string" ? init.body : "");
+
+        return new Response(
+          JSON.stringify({ html_url: "https://github.com/x/issues/1" }),
+          { status: 201 },
+        );
+      },
+    );
+
+    await openAgentFeedbackGitHubIssue({
+      feedback: { outcome: "ok", summary: "The run finished", detail: null },
+      feedbackId: "fb-1",
+    });
+
+    const posted = JSON.parse(postedBodies[0] ?? "{}") as { body?: string };
+
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+
+    expect(posted.body).toContain("Feedback id: fb-1");
+    expect(posted.body).not.toContain("@");
+    expect(posted.body).not.toContain("Account");
   });
 });

@@ -2,7 +2,7 @@ import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { parseOfficialWorkflowRunStartBody } from "@/lib/workflowOrchestration/parseOfficialWorkflowRunStartBody";
 import { startOfficialWorkflowRun } from "@/lib/workflowOrchestration/startOfficialWorkflowRun";
 
-import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
+import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
 

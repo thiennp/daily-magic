@@ -48,11 +48,6 @@ import {
 } from "@agent-witch/live-shell/presentation";
 import { buildAgentWitchLocalHomePageBody } from "@agent-witch/live-home/presentation";
 import { tryHandlePromptSdlcLocalRequest } from "../../../prompt-optimizer/public-api/infrastructure";
-import {
-  tryHandleTokenSaverLocalRequest,
-  writeGlobalTriggers,
-} from "@agent-witch/live-token-saver";
-import { tryHandleAwlMcpHttpRequest } from "@agent-witch/live-mcp";
 import { resolvePromptOptimizerCyclesPath } from "../../../prompt-optimizer/internal/core/promptOptimizerLocalStorePaths";
 import {
   buildAgentWitchLocalEstimateHistoryPageBody,
@@ -82,7 +77,6 @@ import {
   fetchAgentWitchProjectsForLocalApp,
   findAgentWitchProjectById,
   handlePullBoundHarnessPost,
-  handleRemoveHarnessSetPost,
   listLinkedHarnessSetSlugsFromProjectFolder,
   pickMacOsFolderDialog,
   resolveAgentWitchCloudApiConfig,
@@ -93,11 +87,6 @@ import {
 import { AGENT_WITCH_PAIRING_TOKEN_HEADER } from "../../../projects/internal/core/agentWitchDeviceAuth.constant";
 import fetchProjectCompositionFromCloud from "../../../projects/internal/core/fetchProjectCompositionFromCloud";
 import promoteAllProjectKnowledgeCandidatesFromCloud from "../../../projects/internal/core/knowledge/promoteAllProjectKnowledgeCandidatesFromCloud";
-import createCloudAgentWitchProjectPitfallsStore from "../../../projects/internal/core/pitfalls/createCloudAgentWitchProjectPitfallsStore";
-import handleProjectPitfallPost, {
-  resolveProjectPitfallPostAction,
-} from "../../../projects/internal/core/pitfalls/handleProjectPitfallPost";
-import resolveProjectPitfallFlash from "../../../projects/internal/core/pitfalls/resolveProjectPitfallFlash";
 import {
   buildAgentWitchLocalProjectEditorPageBody,
   buildAgentWitchLocalProjectsPageBody,
@@ -112,7 +101,6 @@ import {
 } from "@agent-witch/live-shell";
 import { readAgentWitchInstallVersion } from "@agent-witch/install-self-update";
 import { runLocalSelfDelegatedTask } from "@agent-witch/live-tasks";
-import { startProjectComputerHistoryTick } from "@agent-witch/live-project-history";
 import {
   applyWriterApiSettings,
   readAgentWitchRunConfig,
@@ -124,8 +112,6 @@ import type { WriterExecutionBackend } from "@agent-witch/install-runtime-client
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 import { loadOrCreateAgentWitchDeviceKeypair } from "@agent-witch/install-device-identity";
 import type { LocalHarnessRevealResult } from "@agent-witch/live-harness/types";
-
-import { buildAgentWitchLocalHealthIdentity } from "./buildAgentWitchLocalHealthIdentity";
 
 const formatLocalAppTimestamp = (value: string | null): string =>
   formatAgentWitchRelativeTimeAgo(value) ?? "never";
@@ -548,34 +534,6 @@ export const startAgentWitchLocalApp = (input: {
         return;
       }
 
-      if (
-        await tryHandleTokenSaverLocalRequest({
-          method,
-          pathname,
-          request,
-          response,
-          layout: input.layout,
-          readBody,
-          sendJson,
-        })
-      ) {
-        return;
-      }
-
-      if (
-        await tryHandleAwlMcpHttpRequest({
-          method,
-          pathname,
-          request,
-          response,
-          layout: input.layout,
-          readBody,
-          sendJson,
-        })
-      ) {
-        return;
-      }
-
       if (method === "GET" && pathname === "/health") {
         const status = input.controllers.getStatus();
         const installBundle = buildInstallBundleStatus();
@@ -584,10 +542,6 @@ export const startAgentWitchLocalApp = (input: {
           ...status,
           installBundleVersion: installBundle.installBundleVersion,
           installBundleUpdatedAt: installBundle.installBundleUpdatedAt,
-          ...buildAgentWitchLocalHealthIdentity({
-            uid: process.getuid?.(),
-            installDir: input.layout.installDir,
-          }),
         });
         return;
       }
@@ -1105,15 +1059,9 @@ export const startAgentWitchLocalApp = (input: {
         const activeTab: ProjectEditorTab =
           tabParam === "workflows" ||
           tabParam === "agents" ||
-          tabParam === "knowledge" ||
-          tabParam === "pitfalls"
+          tabParam === "knowledge"
             ? tabParam
             : "harness";
-        const pitfallsShowRetired = url.searchParams.get("retired") === "1";
-        const pitfallsEditId = url.searchParams.get("edit")?.trim() || null;
-        const pitfallFlash = resolveProjectPitfallFlash(
-          url.searchParams.get("pitfall"),
-        );
         const runConfig = readAgentWitchRunConfig();
         const cloudConfig =
           runConfig === null
@@ -1156,14 +1104,6 @@ export const startAgentWitchLocalApp = (input: {
             knowledgeCandidateCount = 0;
           }
         }
-        const pitfalls =
-          cloudConfig === null
-            ? null
-            : await createCloudAgentWitchProjectPitfallsStore(
-                cloudConfig,
-              ).listPitfalls(project.id, {
-                includeRetired: pitfallsShowRetired || activeTab === "pitfalls",
-              });
         sendHtml(
           response,
           await buildLocalAppShell({
@@ -1179,16 +1119,9 @@ export const startAgentWitchLocalApp = (input: {
               ),
               composition,
               knowledgeCandidateCount,
-              pitfalls,
-              pitfallsShowRetired,
-              pitfallsEditId,
               activeTab,
-              flashMessage:
-                linkedFlash ??
-                knowledgeFlashMessage ??
-                pitfallFlash?.message ??
-                null,
-              flashError: knowledgeFlashError ?? pitfallFlash?.error ?? null,
+              flashMessage: linkedFlash ?? knowledgeFlashMessage,
+              flashError: knowledgeFlashError,
             }),
           }),
         );
@@ -1302,34 +1235,6 @@ export const startAgentWitchLocalApp = (input: {
         return;
       }
 
-      if (method === "POST" && pathname === "/projects/remove-harness-set") {
-        const rawBody = await readBody(request);
-        const removeResult = await handleRemoveHarnessSetPost({
-          rawBody,
-          layout: input.layout,
-        });
-        if (removeResult.kind === "not_found") {
-          await sendLocalAppNotFound(response, "Project not found");
-          return;
-        }
-        if (removeResult.kind === "redirect") {
-          response.writeHead(303, { Location: removeResult.location });
-          response.end();
-          return;
-        }
-        const installBundle = buildInstallBundleStatus();
-        sendHtml(
-          response,
-          await buildLocalAppShell({
-            title: removeResult.title,
-            activePath: "/projects",
-            installVersion: installBundle.installVersion,
-            body: removeResult.body,
-          }),
-        );
-        return;
-      }
-
       if (method === "POST" && pathname === "/project/knowledge/promote-all") {
         const rawBody = await readBody(request);
         const form = new URLSearchParams(rawBody);
@@ -1373,45 +1278,6 @@ export const startAgentWitchLocalApp = (input: {
         response.writeHead(303, {
           Location: `/project?id=${encodeURIComponent(project.id)}&${redirectQuery.toString()}`,
         });
-        response.end();
-        return;
-      }
-
-      const pitfallAction = resolveProjectPitfallPostAction(pathname);
-      if (method === "POST" && pitfallAction !== null) {
-        const rawBody = await readBody(request);
-        const form = new URLSearchParams(rawBody);
-        const projectId = form.get("projectId")?.trim() ?? "";
-        const cloudProjects = await loadCloudProjectsForLocalApp(input.layout);
-        const project = findAgentWitchProjectById(
-          cloudProjects.projects,
-          projectId,
-        );
-        if (project === null) {
-          await sendLocalAppNotFound(response, "Project not found");
-          return;
-        }
-
-        const runConfig = readAgentWitchRunConfig();
-        const cloudConfig =
-          runConfig === null
-            ? null
-            : resolveAgentWitchCloudApiConfig({
-                wsUrl: runConfig.wsUrl,
-                pairingToken: runConfig.pairingToken,
-              });
-        const store =
-          cloudConfig === null
-            ? null
-            : createCloudAgentWitchProjectPitfallsStore(cloudConfig);
-
-        const location = await handleProjectPitfallPost({
-          action: pitfallAction,
-          form,
-          projectId: project.id,
-          store,
-        });
-        response.writeHead(303, { Location: location });
         response.end();
         return;
       }
@@ -1834,19 +1700,7 @@ export const startAgentWitchLocalApp = (input: {
     console.error("[agent-witch] Local app server error:", error);
   });
 
-  const historyTick = startProjectComputerHistoryTick();
-  server.on("close", () => {
-    historyTick.stop();
-  });
-
   server.listen(AGENT_WITCH_LOCAL_APP_PORT, "127.0.0.1", () => {
-    // GlobalTriggersWritten: idempotent MCP/hook writers (injectable in unit tests).
-    try {
-      writeGlobalTriggers();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      console.error(`[agent-witch] writeGlobalTriggers failed: ${message}`);
-    }
     console.log(`[agent-witch] Local app ${AGENT_WITCH_LOCAL_APP_ORIGIN}`);
   });
 

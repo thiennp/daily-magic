@@ -10,7 +10,3 @@ export const MAC_DEVICE_LOCAL_LOG_MENU_LABEL = "Activity log";
 /** Hero / standalone link when the cloud shows this Mac as connected. */
 export const MAC_DEVICE_LOCAL_STATUS_LINK_LABEL =
   "Status & settings on this Mac";
-
-/** Opens the cloud Download page for the Mac menu bar app. */
-export const MAC_DEVICE_DOWNLOAD_MAC_APP_MENU_LABEL =
-  "Download Mac app";

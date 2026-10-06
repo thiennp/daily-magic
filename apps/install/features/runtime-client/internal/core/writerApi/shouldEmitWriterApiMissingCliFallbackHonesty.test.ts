@@ -49,15 +49,4 @@ describe("shouldEmitWriterApiMissingCliFallbackHonesty", () => {
       ),
     ).toBe(true);
   });
-
-  it("returns false for antigravity CLI (no Writer API fallback marker)", () => {
-    mocks.readWriterApiProviderSecret.mockReturnValue(null);
-
-    expect(
-      shouldEmitWriterApiMissingCliFallbackHonesty(
-        baseConfig("cli"),
-        "antigravity",
-      ),
-    ).toBe(false);
-  });
 });

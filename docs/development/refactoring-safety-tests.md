@@ -46,9 +46,9 @@ Not run by default gates — use when you change install, wake, or self-delegate
 - `npm run test:shipped-install-blackbox` (install bundle against built app)
 - Playwright paths listed under `optionalLocal` in the manifest
 
-## Gate today
+## CI today
 
-There is no GitHub Actions CI. Before `main`: architecture review SHIP plus the full local suite (`npm run ci`) on the exact tip. During refactors, the **standard** gate (`test:refactor-gate` / related) is the intentional **local** shortcut; still run full `npm run ci` before shipping `main`.
+GitHub Actions already runs `npm test`, architecture, typecheck, build, E2E (showcases), and shipped-install blackbox on `main`. The **standard** gate is the intentional **local** shortcut during refactors.
 
 ## Related
 

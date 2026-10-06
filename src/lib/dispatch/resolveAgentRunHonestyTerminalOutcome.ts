@@ -7,10 +7,11 @@ import {
 import {
   AGENT_RUN_HONESTY_CHIP_LABEL,
   formatAgentRunHonestyFailedSummary,
+  isStoppedByUserOutput,
 } from "@/lib/dispatch/agentRunHonestyCopy.constant";
 import type { AgentRunHonestyOutcome } from "@/lib/dispatch/agentRunHonestyOutcome.type";
-import { resolveAgentRunHonestyCompletedTerminalOutcome } from "@/lib/dispatch/resolveAgentRunHonestyCompletedTerminalOutcome";
-import { tryResolveAgentRunHonestyAuthStopTerminalOutcome } from "@/lib/dispatch/tryResolveAgentRunHonestyAuthStopTerminalOutcome";
+import { buildClaudeLoginExpiredWaitingYouOutcome } from "@/lib/dispatch/buildClaudeLoginExpiredWaitingYouOutcome";
+import { isClaudeCliAuthBlockerInOutput } from "@/lib/dispatch/isClaudeCliAuthBlockerInOutput";
 import { tryResolveWriterApiMissingCliFallbackTerminalOutcome } from "@/lib/dispatch/tryResolveWriterApiMissingCliFallbackTerminalOutcome";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
@@ -19,7 +20,6 @@ export const resolveAgentRunHonestyTerminalOutcome = (input: {
   readonly output: string;
   readonly runStatus?: AgentRunStatusValue | null;
   readonly resultOutcomeCode?: string | null;
-  readonly resultExitCode?: number | null;
 }): AgentRunHonestyOutcome | null => {
   if (input.runStatus === AgentRunStatus.EXPIRED) {
     return {
@@ -29,12 +29,8 @@ export const resolveAgentRunHonestyTerminalOutcome = (input: {
     };
   }
 
-  const authOrStopOutcome = tryResolveAgentRunHonestyAuthStopTerminalOutcome({
-    output: input.output,
-    resultExitCode: input.resultExitCode,
-  });
-  if (authOrStopOutcome !== null) {
-    return authOrStopOutcome;
+  if (isClaudeCliAuthBlockerInOutput(input.output)) {
+    return buildClaudeLoginExpiredWaitingYouOutcome();
   }
 
   const writerApiCliFallbackOutcome =
@@ -44,6 +40,14 @@ export const resolveAgentRunHonestyTerminalOutcome = (input: {
     });
   if (writerApiCliFallbackOutcome !== null) {
     return writerApiCliFallbackOutcome;
+  }
+
+  if (isStoppedByUserOutput(input.output)) {
+    return {
+      kind: "stopped",
+      chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.stopped,
+      summaryLines: ["Stopped — run ended from the console."],
+    };
   }
 
   const codedOutcome =
@@ -98,7 +102,20 @@ export const resolveAgentRunHonestyTerminalOutcome = (input: {
     input.runStatus === null ||
     input.runStatus === undefined
   ) {
-    return resolveAgentRunHonestyCompletedTerminalOutcome(input.output);
+    if (input.output.trim().length === 0) {
+      return {
+        kind: "failed",
+        chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.failed,
+        summaryLines: [
+          formatAgentRunHonestyFailedSummary("No agent output was captured"),
+        ],
+      };
+    }
+    return {
+      kind: "passed",
+      chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.passed,
+      summaryLines: [],
+    };
   }
 
   return null;
