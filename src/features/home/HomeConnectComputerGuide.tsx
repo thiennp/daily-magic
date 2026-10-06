@@ -17,8 +17,7 @@ import usePersonalizedAgentWitchInstallCommand from "@/features/home/hooks/usePe
 import { buildConnectInstallConnectionStatusClassName } from "@/features/home/utils/buildConnectInstallConnectionStatus";
 import { shouldShowAgentWitchAppDownloadCta } from "@/features/home/utils/shouldShowAgentWitchAppDownloadCta";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
-import DownloadNonMacNote from "@/features/download/DownloadNonMacNote";
-import ComputersDownloadLink from "@/features/home/ComputersDownloadLink";
+import HomeConnectGuideDownloadExtras from "@/features/home/HomeConnectGuideDownloadExtras";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 interface HomeConnectComputerGuideProps {
@@ -116,13 +115,11 @@ export default function HomeConnectComputerGuide({
         </p>
       ) : null}
 
-      {operatingSystem !== "mac" ? <DownloadNonMacNote /> : null}
-
-      {isWebSocketSupported && !showInstallCta && operatingSystem === "mac" ? (
-        <p className={`mt-4 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-          <ComputersDownloadLink />
-        </p>
-      ) : null}
+      <HomeConnectGuideDownloadExtras
+        operatingSystem={operatingSystem}
+        isWebSocketSupported={isWebSocketSupported}
+        showInstallCta={showInstallCta}
+      />
 
       <ConnectInstallPasteModal
         isOpen={isPasteModalOpen}
