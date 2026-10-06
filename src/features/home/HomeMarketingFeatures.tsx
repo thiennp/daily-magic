@@ -3,6 +3,7 @@ import Link from "next/link";
 import {
   HOME_MARKETING_FEATURES_COPY,
   HOME_MARKETING_HONESTY_FOOTNOTE,
+  HOME_MARKETING_SECURITY_COPY,
 } from "@/features/home/constants/homeMarketingLandingCopy.constant";
 import MarketingDarkBand from "@/features/marketing/MarketingDarkBand";
 import MarketingFeatureCard from "@/features/marketing/MarketingFeatureCard";
@@ -15,9 +16,6 @@ import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasse
 
 export default function HomeMarketingFeatures() {
   const copy = HOME_MARKETING_FEATURES_COPY;
-  const securityFeature = MARKETING_FEATURE_ITEMS.find(
-    (item) => item.preview === "approve",
-  );
 
   return (
     <section className="mt-16" aria-labelledby="features-heading">
@@ -38,13 +36,11 @@ export default function HomeMarketingFeatures() {
           <MarketingFeatureCard key={item.title} item={item} grouped />
         ))}
       </div>
-      {securityFeature !== undefined ? (
-        <MarketingDarkBand
-          eyebrow="Security & governance"
-          title={securityFeature.title}
-          description={securityFeature.body}
-        />
-      ) : null}
+      <MarketingDarkBand
+        eyebrow="Your files"
+        title={HOME_MARKETING_SECURITY_COPY.title}
+        description={HOME_MARKETING_SECURITY_COPY.body}
+      />
       <p
         className={mergeMarketingClasses(
           "mt-6 text-sm",

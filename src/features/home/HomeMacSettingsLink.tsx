@@ -31,7 +31,7 @@ export default function HomeMacSettingsLink() {
 
   return (
     <Link href="/#your-setup" className={APP_SURFACE_CTA_SECONDARY_CLASS}>
-      Mac settings & connect
+      This computer settings & connect
     </Link>
   );
 }

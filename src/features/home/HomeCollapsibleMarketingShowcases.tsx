@@ -4,13 +4,13 @@ import { useState } from "react";
 
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import HomeMarketingShowcases from "@/features/home/HomeMarketingShowcases";
-import { APP_SURFACE_CTA_SECONDARY_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import {
+  APP_SURFACE_CTA_SECONDARY_CLASS,
+  APP_SURFACE_SECTION_TITLE_CLASS,
+} from "@/components/surfaces/appSurfaceStyles.constant";
 
 /**
- * The full showcase section is five sections of onboarding/marketing story
- * cards — useful on a first visit, but it buries the actual dashboard for a
- * returning user with a computer already paired. Collapse it by default once the
- * user has connected at least one Mac. A manual toggle reopens it.
+ * Design "What you can do" — collapsed by default once a computer is paired.
  */
 export default function HomeCollapsibleMarketingShowcases() {
   const { devices, isLoading } = useMyMacDevices();
@@ -23,38 +23,37 @@ export default function HomeCollapsibleMarketingShowcases() {
 
   if (!hasDevices || isExpanded) {
     return (
-      <div>
-        {hasDevices ? (
-          <p className="mt-16 text-center">
+      <div className="space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>What you can do</h2>
+          {hasDevices ? (
             <button
               type="button"
               onClick={() => setIsExpanded(false)}
               className={APP_SURFACE_CTA_SECONDARY_CLASS}
             >
-              Hide onboarding examples
+              Hide
             </button>
-          </p>
-        ) : null}
+          ) : null}
+        </div>
         <HomeMarketingShowcases />
       </div>
     );
   }
 
   return (
-    <div className="mt-16 flex flex-col items-center gap-2 text-center">
-      <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-        New to AI agents?
-      </p>
+    <div className="mt-8 flex flex-col gap-2">
+      <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>What you can do</h2>
       <p className="max-w-md text-sm text-gray-500 dark:text-gray-400">
-        See short stories with real product screens — presets, automations, Mac
-        setup, and team workflows.
+        Short stories with real product screens — presets, automations, this
+        computer setup, and team workflows.
       </p>
       <button
         type="button"
         onClick={() => setIsExpanded(true)}
-        className={APP_SURFACE_CTA_SECONDARY_CLASS}
+        className={`self-start ${APP_SURFACE_CTA_SECONDARY_CLASS}`}
       >
-        Show onboarding examples
+        Show
       </button>
     </div>
   );

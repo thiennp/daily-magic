@@ -25,14 +25,14 @@ export default function HomeProjectsPanel() {
           <div className="min-w-0">
             <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Your projects</h2>
             <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-              Your 4 most recently active projects. Open a card for details.
+              Your most recent projects. Open a card for details.
             </p>
           </div>
           <Link
             href="/projects"
             className={`shrink-0 text-sm ${APP_SURFACE_TEXT_LINK_CLASS}`}
           >
-            View all
+            All projects
           </Link>
         </div>
       }

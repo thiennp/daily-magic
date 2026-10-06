@@ -4,12 +4,16 @@ import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
 import ImprovementReviewPanel from "@/features/improvements/ImprovementReviewPanel";
 import MarketplaceHomePromo from "@/features/marketplace/MarketplaceHomePromo";
-import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
-import HomeProjectsPanel from "@/features/home/HomeProjectsPanel";
-import HomeLinkAccountGate from "@/features/home/HomeLinkAccountGate";
+import HomeAttentionPanel from "@/features/home/HomeAttentionPanel";
 import HomeCollapsibleMarketingShowcases from "@/features/home/HomeCollapsibleMarketingShowcases";
+import HomeCursorCloudPanel from "@/features/home/HomeCursorCloudPanel";
+import HomeDashboardBoard from "@/features/home/HomeDashboardBoard";
 import HomeDashboardGrid from "@/features/home/HomeDashboardGrid";
 import HomeDashboardLowerSection from "@/features/home/HomeDashboardLowerSection";
+import HomeLinkAccountGate from "@/features/home/HomeLinkAccountGate";
+import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
+import HomePageHead from "@/features/home/HomePageHead";
+import HomeProjectsPanel from "@/features/home/HomeProjectsPanel";
 import HomeSetupSection from "@/features/home/HomeSetupSection";
 import { buildAppOriginFromHeaders } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
 import { buildLocalAgentInstallUrlsFromHeaders } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
@@ -35,6 +39,7 @@ export default async function HomeAuthenticatedView({
   const host =
     requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "";
   const isWebSocketSupported = isAgentWitchWebSocketAvailableForHost(host);
+  const displayName = user.name ?? user.email;
 
   return (
     <HomeLinkAccountGate
@@ -44,32 +49,41 @@ export default async function HomeAuthenticatedView({
       host={host}
       below={
         <HomeDashboardLowerSection>
-          <HomePromptOptimizerCtaBox />
           <HomeCollapsibleMarketingShowcases />
         </HomeDashboardLowerSection>
       }
     >
-      <HomeDashboardGrid
-        main={
-          <>
-            <HomeOnboardingMainPanel
-              user={user}
-              installCommand={installCommand}
-              isWebSocketSupported={isWebSocketSupported}
-              host={host}
-            />
-            <HomeProjectsPanel />
-            <MyOfferingsPanel />
-            <TeamDirectoryPanel />
-          </>
+      <HomeDashboardBoard
+        head={<HomePageHead displayName={displayName} />}
+        lead={
+          <HomeOnboardingMainPanel
+            user={user}
+            installCommand={installCommand}
+            isWebSocketSupported={isWebSocketSupported}
+            host={host}
+          />
         }
-        right={
-          <>
-            <FeedbackInboxPanel />
-            <ImprovementReviewPanel />
-            <MarketplaceHomePromo />
-            <HomeSetupSection />
-          </>
+        grid={
+          <HomeDashboardGrid
+            main={
+              <>
+                <HomeAttentionPanel />
+                <HomeProjectsPanel />
+                <MyOfferingsPanel />
+                <TeamDirectoryPanel />
+                <ImprovementReviewPanel />
+              </>
+            }
+            right={
+              <>
+                <HomeCursorCloudPanel />
+                <FeedbackInboxPanel />
+                <MarketplaceHomePromo />
+                <HomePromptOptimizerCtaBox />
+                <HomeSetupSection />
+              </>
+            }
+          />
         }
       />
     </HomeLinkAccountGate>

@@ -3,7 +3,7 @@ import Link from "next/link";
 import HomeMarketingAuthSection from "./HomeMarketingAuthSection";
 import HomeMarketingHeroSteps from "./HomeMarketingHeroSteps";
 import { HOME_MARKETING_HERO_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
-import MarketingProductPreview from "@/features/marketing/MarketingProductPreview";
+import HomeMarketingStatusPreview from "@/features/home/components/HomeMarketingStatusPreview";
 import MarketingTrustStrip from "@/features/marketing/MarketingTrustStrip";
 import { MARKETING_DISPLAY_HEADING_CLASSES } from "@/features/marketing/marketingDesignSystem.constant";
 import {
@@ -75,7 +75,7 @@ export default function HomeMarketingHero() {
 
         <aside aria-label="Sign in and product preview" className="space-y-5">
           <HomeMarketingAuthSection />
-          <MarketingProductPreview />
+          <HomeMarketingStatusPreview />
         </aside>
       </header>
 

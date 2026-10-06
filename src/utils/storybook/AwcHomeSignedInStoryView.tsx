@@ -6,12 +6,16 @@ import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
 import ImprovementReviewPanel from "@/features/improvements/ImprovementReviewPanel";
 import MarketplaceHomePromo from "@/features/marketplace/MarketplaceHomePromo";
-import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
-import HomeProjectsPanel from "@/features/home/HomeProjectsPanel";
-import HomeLinkAccountGate from "@/features/home/HomeLinkAccountGate";
+import HomeAttentionPanel from "@/features/home/HomeAttentionPanel";
 import HomeCollapsibleMarketingShowcases from "@/features/home/HomeCollapsibleMarketingShowcases";
+import HomeCursorCloudPanel from "@/features/home/HomeCursorCloudPanel";
+import HomeDashboardBoard from "@/features/home/HomeDashboardBoard";
 import HomeDashboardGrid from "@/features/home/HomeDashboardGrid";
 import HomeDashboardLowerSection from "@/features/home/HomeDashboardLowerSection";
+import HomeLinkAccountGate from "@/features/home/HomeLinkAccountGate";
+import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
+import HomePageHead from "@/features/home/HomePageHead";
+import HomeProjectsPanel from "@/features/home/HomeProjectsPanel";
 import HomeSetupSection from "@/features/home/HomeSetupSection";
 import {
   AWC_STORYBOOK_INSTALL_COMMAND,
@@ -21,44 +25,53 @@ import {
 const STORY_HOST = "localhost:3000";
 
 export default function AwcHomeSignedInStoryView() {
+  const displayName = AWC_STORYBOOK_USER.name ?? AWC_STORYBOOK_USER.email;
+
   return (
-    <>
-      <HomeLinkAccountGate
-        appOrigin="http://localhost:3000"
-        installCommand={AWC_STORYBOOK_INSTALL_COMMAND}
-        isWebSocketSupported={true}
-        host={STORY_HOST}
-        below={
-          <HomeDashboardLowerSection>
-            <HomePromptOptimizerCtaBox />
-            <HomeCollapsibleMarketingShowcases />
-          </HomeDashboardLowerSection>
+    <HomeLinkAccountGate
+      appOrigin="http://localhost:3000"
+      installCommand={AWC_STORYBOOK_INSTALL_COMMAND}
+      isWebSocketSupported={true}
+      host={STORY_HOST}
+      below={
+        <HomeDashboardLowerSection>
+          <HomeCollapsibleMarketingShowcases />
+        </HomeDashboardLowerSection>
+      }
+    >
+      <HomeDashboardBoard
+        head={<HomePageHead displayName={displayName} />}
+        lead={
+          <HomeOnboardingMainPanel
+            user={AWC_STORYBOOK_USER}
+            installCommand={AWC_STORYBOOK_INSTALL_COMMAND}
+            isWebSocketSupported={true}
+            host={STORY_HOST}
+          />
         }
-      >
-        <HomeDashboardGrid
-          main={
-            <>
-              <HomeOnboardingMainPanel
-                user={AWC_STORYBOOK_USER}
-                installCommand={AWC_STORYBOOK_INSTALL_COMMAND}
-                isWebSocketSupported={true}
-                host={STORY_HOST}
-              />
-              <HomeProjectsPanel />
-              <MyOfferingsPanel />
-              <TeamDirectoryPanel />
-            </>
-          }
-          right={
-            <>
-              <FeedbackInboxPanel />
-              <ImprovementReviewPanel />
-              <MarketplaceHomePromo />
-              <HomeSetupSection />
-            </>
-          }
-        />
-      </HomeLinkAccountGate>
-    </>
+        grid={
+          <HomeDashboardGrid
+            main={
+              <>
+                <HomeAttentionPanel />
+                <HomeProjectsPanel />
+                <MyOfferingsPanel />
+                <TeamDirectoryPanel />
+                <ImprovementReviewPanel />
+              </>
+            }
+            right={
+              <>
+                <HomeCursorCloudPanel />
+                <FeedbackInboxPanel />
+                <MarketplaceHomePromo />
+                <HomePromptOptimizerCtaBox />
+                <HomeSetupSection />
+              </>
+            }
+          />
+        }
+      />
+    </HomeLinkAccountGate>
   );
 }

@@ -16,7 +16,7 @@ describe("resolveHomeDashboardLayoutClasses", () => {
     expect(withRail.gridClassName).toBe(HOME_DASHBOARD_GRID_CLASS);
     expect(withRail.mainColumnClassName).toBe(HOME_MAIN_COLUMN_CLASS);
     expect(withRail.gridClassName).toContain(
-      "xl:grid-cols-[minmax(17.5rem,20rem)_minmax(0,1fr)]",
+      "xl:grid-cols-[minmax(17.5rem,20rem)_minmax(0,1.6fr)_minmax(0,1fr)]",
     );
   });
 
@@ -38,6 +38,9 @@ describe("resolveHomeDashboardLayoutClasses", () => {
     );
     expect(withoutRail.rightRailClassName.split(" ")).not.toContain(
       "xl:col-start-2",
+    );
+    expect(withoutRail.gridClassName).toContain(
+      "lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]",
     );
   });
 });
