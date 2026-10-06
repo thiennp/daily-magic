@@ -1,3 +1,4 @@
+import { AWC_TERMS_VERSION } from "@/lib/agentAccess/awcTermsVersion.constant";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 import { PROJECT_INVITE_JOIN_SIGNIN_CONNECTOR_STEPS } from "@/features/projects/access/invites/joinTypes/projectInviteJoinPendingPaths.constant";
 import type { ProjectInviteJoinType } from "@/features/projects/access/invites/joinTypes/projectInviteJoinType.type";
@@ -14,7 +15,7 @@ export const joinType: ProjectInviteJoinType = {
   note: "Owner badge: Checks on demand.",
   steps: [
     ...PROJECT_INVITE_JOIN_SIGNIN_CONNECTOR_STEPS,
-    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "2026-09-16" }. Store the bearer via OpenClaw secret/header settings — never as a chat literal.`,
+    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "${AWC_TERMS_VERSION}" }. Store the bearer via OpenClaw secret/header settings — never as a chat literal.`,
     `Add Streamable HTTP MCP: URL ${urls.mcpUrl}; set Authorization bearer in the scoped header/secret editor.`,
     "Run openclaw mcp doctor <name> --probe.",
     "After Approve, use those tools for project work.",

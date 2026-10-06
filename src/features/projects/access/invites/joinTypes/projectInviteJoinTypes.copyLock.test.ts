@@ -3,6 +3,7 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { AWC_TERMS_VERSION } from "@/lib/agentAccess/awcTermsVersion.constant";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 import { AGENT_ACCESS_TOOLS } from "@/lib/agentAccess/agentAccessTools.constant";
 import { PROJECT_INVITE_JOIN_TYPES } from "@/features/projects/access/invites/joinTypes/projectInviteJoinTypes.constant";
@@ -21,9 +22,12 @@ type FixtureType = {
   readonly steps: readonly string[];
   readonly note?: string;
 };
-/** Verbatim JSON `types[]` from COPY.md §S0c-types (Product EN lock). */
+/** Verbatim JSON `types[]` from COPY.md §S0c-types (Product EN lock). termsVersion is the `{{AWC_TERMS_VERSION}}` placeholder, filled from the constant. */
 const FIXTURE = JSON.parse(
-  readFileSync(join(DIR, "__fixtures__/copyS0cTypes.json"), "utf8"),
+  readFileSync(join(DIR, "__fixtures__/copyS0cTypes.json"), "utf8").replaceAll(
+    "{{AWC_TERMS_VERSION}}",
+    AWC_TERMS_VERSION,
+  ),
 ) as readonly FixtureType[];
 
 describe("join type registry vs Product EN lock", () => {
@@ -70,13 +74,14 @@ describe("join type registry vs Product EN lock", () => {
   });
 
   it("every register body carries acceptTerms + termsVersion (Grok's REST mention too)", () => {
+    expect(AWC_TERMS_VERSION).toBe("2026-09-16");
     const body =
-      '{ "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "2026-09-16" }';
+      `{ "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "${AWC_TERMS_VERSION}" }`;
     for (const type of PROJECT_INVITE_JOIN_TYPES) {
       const text = type.steps.join(" ");
       if (type.connectPath === "grok-wake") {
         expect(text, type.id).toContain(
-          '"acceptTerms": true, "termsVersion": "2026-09-16"',
+          `"acceptTerms": true, "termsVersion": "${AWC_TERMS_VERSION}"`,
         );
       } else {
         expect(text, type.id).toContain(body);

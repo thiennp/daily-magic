@@ -1,3 +1,4 @@
+import { AWC_TERMS_VERSION } from "@/lib/agentAccess/awcTermsVersion.constant";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 import { PROJECT_INVITE_JOIN_SIGNIN_CONNECTOR_STEPS } from "@/features/projects/access/invites/joinTypes/projectInviteJoinPendingPaths.constant";
 import type { ProjectInviteJoinType } from "@/features/projects/access/invites/joinTypes/projectInviteJoinType.type";
@@ -14,7 +15,7 @@ export const joinType: ProjectInviteJoinType = {
   note: "Owner badge: Checks on demand.",
   steps: [
     ...PROJECT_INVITE_JOIN_SIGNIN_CONNECTOR_STEPS,
-    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "2026-09-16" }. Store the bearer in connector credentials — never in chat.`,
+    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "${AWC_TERMS_VERSION}" }. Store the bearer in connector credentials — never in chat.`,
     `Admin: Connectors → Add Connector → Custom MCP Connector → Server URL ${urls.mcpUrl}.`,
     "Use HTTP Bearer auth with Bearer <token>.",
     "After Approve, use AgentWitch tools through that connector.",

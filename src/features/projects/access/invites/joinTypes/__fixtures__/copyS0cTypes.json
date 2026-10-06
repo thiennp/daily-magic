@@ -7,7 +7,7 @@
     "connectPath": "grok-wake",
     "deliveryMode": "webhook",
     "steps": [
-      "Connect agent-access: MCP at https://www.agentwitch.com/api/agent-access/mcp with Authorization: Bearer <token>, or REST register (body includes \"acceptTerms\": true, \"termsVersion\": \"2026-09-16\") then invoke. Store the bearer in secret settings — never in chat or a URL.",
+      "Connect agent-access: MCP at https://www.agentwitch.com/api/agent-access/mcp with Authorization: Bearer <token>, or REST register (body includes \"acceptTerms\": true, \"termsVersion\": \"{{AWC_TERMS_VERSION}}\") then invoke. Store the bearer in secret settings — never in chat or a URL.",
       "After Approve: tell your user to open this bot in the Grok Bot desktop app → info pane (bot name in chat header) → Routines → copy the wake link and key.",
       "Tell the project owner to paste both under Add wake link / Grok wake link (Access › People › Members › you). Never paste the key into chat or a project message.",
       "Call get_my_project_webhook_status with your projectId (agent-access Bearer only). Confirm grokWebhookRegistered is true.",
@@ -23,7 +23,7 @@
     "deliveryMode": "poll",
     "note": "Owner badge: Checks on demand.",
     "steps": [
-      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"2026-09-16\" }. Store the bearer in Claude connector secret/header settings — never in chat.",
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"{{AWC_TERMS_VERSION}}\" }. Store the bearer in Claude connector secret/header settings — never in chat.",
       "Add a custom remote MCP connector to https://www.agentwitch.com/api/agent-access/mcp.",
       "In Request headers, set Authorization to Bearer <token> (include the Bearer scheme in the value).",
       "After Approve, call project tools over that MCP session.",
@@ -39,7 +39,7 @@
     "deliveryMode": "poll",
     "note": "Owner badge: Checks on demand. Prefer Codex if you share Codex config.toml MCP on ChatGPT desktop.",
     "steps": [
-      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"2026-09-16\" }. Store the bearer privately — never in chat or a URL.",
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"{{AWC_TERMS_VERSION}}\" }. Store the bearer privately — never in chat or a URL.",
       "Call tools with POST https://www.agentwitch.com/api/agent-access/invoke, header Authorization: Bearer <token>, body { \"name\": \"<tool>\", \"arguments\": { … } }.",
       "After Approve, redeem/access via those invoke calls (shared steps).",
       "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
@@ -54,7 +54,7 @@
     "deliveryMode": "poll",
     "note": "Owner badge: Checks on demand.",
     "steps": [
-      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"2026-09-16\" }. Store the bearer in an env secret — never in chat.",
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"{{AWC_TERMS_VERSION}}\" }. Store the bearer in an env secret — never in chat.",
       "Add a remote server in mcp.json: url https://www.agentwitch.com/api/agent-access/mcp, headers.Authorization Bearer ${env:AGENTWITCH_TOKEN}.",
       "After Approve, use AgentWitch tools from that MCP session.",
       "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
@@ -69,7 +69,7 @@
     "deliveryMode": "poll",
     "note": "Owner badge: Checks on demand.",
     "steps": [
-      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"2026-09-16\" }. Put the bearer in an environment variable — never in chat.",
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"{{AWC_TERMS_VERSION}}\" }. Put the bearer in an environment variable — never in chat.",
       "In config.toml: url = \"https://www.agentwitch.com/api/agent-access/mcp\" and bearer_token_env_var = \"<YOUR_ENV_NAME>\".",
       "After Approve, call project tools through that MCP server.",
       "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
@@ -84,7 +84,7 @@
     "deliveryMode": "poll",
     "note": "Owner badge: Checks on demand.",
     "steps": [
-      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"2026-09-16\" }. Store the bearer in settings/env — never in chat.",
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"{{AWC_TERMS_VERSION}}\" }. Store the bearer in settings/env — never in chat.",
       "Add HTTP MCP with httpUrl https://www.agentwitch.com/api/agent-access/mcp and headers.Authorization Bearer <token>.",
       "After Approve, use AgentWitch tools over MCP.",
       "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
@@ -109,7 +109,7 @@
     "deliveryMode": "poll",
     "note": "Bearer only in COPILOT_MCP_* secrets. Copilot Studio = poll (Checks on demand). No GPT Actions.",
     "steps": [
-      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"2026-09-16\" }. Store the bearer only in an Agents secret named COPILOT_MCP_* — never in chat.",
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"{{AWC_TERMS_VERSION}}\" }. Store the bearer only in an Agents secret named COPILOT_MCP_* — never in chat.",
       "In Copilot MCP JSON: type http, url https://www.agentwitch.com/api/agent-access/mcp, headers.Authorization Bearer $COPILOT_MCP_<NAME>.",
       "Copilot Studio agents: no wake link — use poll. Owner badge Checks on demand. Check list_project_inbox only when your user asks (at most once a minute).",
       "After Approve, call tools over that MCP session (or Studio HTTPS using the same bearer).",
@@ -125,7 +125,7 @@
     "deliveryMode": "poll",
     "note": "Owner badge: Checks on demand.",
     "steps": [
-      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"2026-09-16\" }. Store the bearer in connector credentials — never in chat.",
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"{{AWC_TERMS_VERSION}}\" }. Store the bearer in connector credentials — never in chat.",
       "Admin: Connectors → Add Connector → Custom MCP Connector → Server URL https://www.agentwitch.com/api/agent-access/mcp.",
       "Use HTTP Bearer auth with Bearer <token>.",
       "After Approve, use AgentWitch tools through that connector.",
@@ -141,7 +141,7 @@
     "deliveryMode": "poll",
     "note": "Owner badge: Checks on demand.",
     "steps": [
-      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"2026-09-16\" }. Store the bearer via OpenClaw secret/header settings — never as a chat literal.",
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"{{AWC_TERMS_VERSION}}\" }. Store the bearer via OpenClaw secret/header settings — never as a chat literal.",
       "Add Streamable HTTP MCP: URL https://www.agentwitch.com/api/agent-access/mcp; set Authorization bearer in the scoped header/secret editor.",
       "Run openclaw mcp doctor <name> --probe.",
       "After Approve, use those tools for project work.",
@@ -157,7 +157,7 @@
     "deliveryMode": "poll",
     "note": "Owner badge: Checks on demand. n8n may use MCP Client Bearer to the same MCP URL.",
     "steps": [
-      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"2026-09-16\" }. Store the bearer in the workflow credential vault — never in chat.",
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"{{AWC_TERMS_VERSION}}\" }. Store the bearer in the workflow credential vault — never in chat.",
       "Call tools with POST https://www.agentwitch.com/api/agent-access/invoke and Authorization: Bearer <token>.",
       "n8n optional: MCP Client → HTTP → https://www.agentwitch.com/api/agent-access/mcp → Bearer auth with the same token.",
       "After Approve, redeem and work through invoke or MCP Client tools.",
@@ -178,7 +178,7 @@
     "deliveryMode": "poll",
     "note": "Owner badge: Checks on demand.",
     "steps": [
-      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"2026-09-16\" }. Store the bearer in bot secret/env — never in chat or a webhook URL.",
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"{{AWC_TERMS_VERSION}}\" }. Store the bearer in bot secret/env — never in chat or a webhook URL.",
       "Call tools with POST https://www.agentwitch.com/api/agent-access/invoke and Authorization: Bearer <token>.",
       "After Approve, use invoke for redeem, access, and messaging tools from the shared steps.",
       "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
@@ -193,7 +193,7 @@
     "deliveryMode": "poll",
     "note": "Owner badge: Checks on demand.",
     "steps": [
-      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"2026-09-16\" }. Persist the bearer in your secret store — never print it.",
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"{{AWC_TERMS_VERSION}}\" }. Persist the bearer in your secret store — never print it.",
       "Prefer MCP POST https://www.agentwitch.com/api/agent-access/mcp with Authorization: Bearer <token>; or REST POST …/invoke with the same header.",
       "After Approve, follow shared redeem/access tools.",
       "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute. Optional later: register_project_webhook with an HTTPS wake URL if you can receive POSTs."
@@ -208,7 +208,7 @@
     "deliveryMode": "poll",
     "note": "Owner badge: Checks on demand. Catch-all — last in match order.",
     "steps": [
-      "If you can make HTTPS calls: POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"2026-09-16\" }, store the bearer privately, then use /api/agent-access/invoke or /api/agent-access/mcp.",
+      "If you can make HTTPS calls: POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"{{AWC_TERMS_VERSION}}\" }, store the bearer privately, then use /api/agent-access/invoke or /api/agent-access/mcp.",
       "If you cannot keep a durable secret or call HTTPS yet: tell your user you need a host that can register and store a bearer.",
       "After Approve, follow shared steps for redeem and briefing.",
       "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
