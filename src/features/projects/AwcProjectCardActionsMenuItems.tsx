@@ -1,13 +1,9 @@
 import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
 import AwcProjectDeleteMenuItem from "@/features/projects/AwcProjectDeleteMenuItem";
+import AwcProjectsMenuDisabledItem from "@/features/projects/AwcProjectsMenuDisabledItem";
+import { PROJECTS_V5_MENU_ITEM_CLASS as MENU_ITEM_CLASS } from "@/features/projects/projectsPageV5Classes.constant";
 import buildAwcProjectDetailHref from "@/lib/projects/buildAwcProjectDetailHref";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
-
-const MENU_ITEM_CLASS =
-  "block min-h-11 w-full px-3 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5 sm:min-h-0 sm:py-2";
-
-const MENU_ITEM_DISABLED_CLASS =
-  "block w-full cursor-not-allowed px-3 py-2 text-left text-sm text-gray-400 dark:text-gray-500";
 
 interface AwcProjectCardActionsMenuItemsProps {
   readonly projectId: string;
@@ -64,8 +60,8 @@ export default function AwcProjectCardActionsMenuItems({
           Assign tasks
         </DropdownItem>
       </li>
-      <li role="none">
-        {editCta.href !== null ? (
+      {editCta.href !== null ? (
+        <li role="none">
           <a
             role="menuitem"
             href={editCta.href}
@@ -76,18 +72,14 @@ export default function AwcProjectCardActionsMenuItems({
           >
             Edit on Mac
           </a>
-        ) : (
-          <button
-            type="button"
-            role="menuitem"
-            disabled
-            aria-describedby={editHelperId}
-            className={MENU_ITEM_DISABLED_CLASS}
-          >
-            Edit on Mac
-          </button>
-        )}
-      </li>
+        </li>
+      ) : (
+        <AwcProjectsMenuDisabledItem
+          label="Edit on Mac"
+          reason={editCta.helperText}
+          fallbackDescribedById={editHelperId}
+        />
+      )}
       {canDelete && !isDefaultProject ? (
         <AwcProjectDeleteMenuItem
           projectId={projectId}

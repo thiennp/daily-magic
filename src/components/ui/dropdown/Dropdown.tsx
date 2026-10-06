@@ -14,6 +14,7 @@ interface DropdownProps {
   className?: string;
   /** When set, only this control is treated as inside the dropdown (not every `.dropdown-toggle`). */
   toggleRef?: React.RefObject<HTMLElement | null>;
+  panelBaseClassName?: string;
 }
 
 const DROPDOWN_PANEL_BASE_CLASS =
@@ -25,6 +26,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   children,
   className = "",
   toggleRef,
+  panelBaseClassName = DROPDOWN_PANEL_BASE_CLASS,
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [canPortal, setCanPortal] = useState(false);
@@ -73,8 +75,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
   if (!isOpen) return null;
 
   const panelClassName = useFixedPortal
-    ? `fixed z-[200] ${DROPDOWN_PANEL_BASE_CLASS} ${className}`
-    : `absolute z-40 right-0 mt-2 ${DROPDOWN_PANEL_BASE_CLASS} ${className}`;
+    ? `fixed z-[200] ${panelBaseClassName} ${className}`
+    : `absolute z-40 right-0 mt-2 ${panelBaseClassName} ${className}`;
 
   const panel = (
     <div

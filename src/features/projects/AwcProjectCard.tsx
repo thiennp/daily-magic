@@ -9,7 +9,13 @@ import AwcProjectPresenceBadge from "@/features/projects/AwcProjectPresenceBadge
 import useAwcProjectDevicePresentation from "@/features/projects/hooks/useAwcProjectDevicePresentation";
 import useCanDeleteOwnedProject from "@/features/projects/hooks/useCanDeleteOwnedProject";
 import { shouldShowProjectEditOnMacHelperText } from "@/features/projects/utils/resolveProjectEditOnMacCta";
-import { APP_SURFACE_NESTED_CARD_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import {
+  PROJECTS_V5_CARD_CLASS,
+  PROJECTS_V5_CARD_LINK_CLASS,
+  PROJECTS_V5_CARD_META_CLASS,
+  PROJECTS_V5_CARD_TITLE_CLASS,
+  PROJECTS_V5_DEFAULT_CHIP_CLASS,
+} from "@/features/projects/projectsPageV5Classes.constant";
 import formatProjectCompositionCountsLine from "@/lib/projects/formatProjectCompositionCountsLine";
 import formatProjectFolderPathForList from "@/features/projects/utils/formatProjectFolderPathForList";
 import resolveProjectListCardTitle from "@/features/projects/utils/resolveProjectListCardTitle";
@@ -55,29 +61,26 @@ export default function AwcProjectCard({
 
   return (
     <article
-      className={`relative flex h-full flex-col ${APP_SURFACE_NESTED_CARD_CLASS}`}
+      className={`relative flex h-full flex-col ${PROJECTS_V5_CARD_CLASS}`}
     >
       <Link
         href={detailHref}
-        className="absolute inset-0 z-0 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40"
+        className={PROJECTS_V5_CARD_LINK_CLASS}
         aria-label={`Open project ${listTitle.primary}`}
       />
       <div className="relative z-10 flex min-w-0 flex-col pointer-events-none">
         <div className="flex min-w-0 items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
-            <h3
-              className="truncate text-sm font-medium text-gray-800 dark:text-white/90"
-              title={listTitle.primary}
-            >
+            <h3 className={PROJECTS_V5_CARD_TITLE_CLASS} title={listTitle.primary}>
               {listTitle.primary}
             </h3>
             {listTitle.secondaryLabel !== null ? (
-              <p className="text-[11px] font-medium uppercase tracking-wide text-gray-400 dark:text-gray-500">
+              <p className={`mt-1 ${PROJECTS_V5_DEFAULT_CHIP_CLASS}`}>
                 {listTitle.secondaryLabel}
               </p>
             ) : null}
             <p
-              className="mt-0.5 line-clamp-2 break-all text-xs text-gray-500 dark:text-gray-400"
+              className={`mt-1 line-clamp-2 break-all ${PROJECTS_V5_CARD_META_CLASS}`}
               title={folderPathDisplay.full}
             >
               {folderPathDisplay.display}
@@ -100,7 +103,7 @@ export default function AwcProjectCard({
             text={presence.text}
           />
           {compositionLine !== null ? (
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className={PROJECTS_V5_CARD_META_CLASS}>
               {compositionLine}
             </p>
           ) : null}
@@ -108,7 +111,7 @@ export default function AwcProjectCard({
         {showHelperText ? (
           <p
             id={editHelperId}
-            className="mt-auto pt-3 text-xs text-gray-500 dark:text-gray-400"
+            className={`mt-auto pt-3 ${PROJECTS_V5_CARD_META_CLASS}`}
           >
             {editCta.helperText}
           </p>

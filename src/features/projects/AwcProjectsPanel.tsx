@@ -15,6 +15,12 @@ import { parseProjectsNavIntent } from "@/features/projects/navConsolidation/par
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import { filterAwcProjectsByQuery } from "@/features/projects/utils/filterAwcProjectsByQuery";
 import AppPanel from "@/components/surfaces/AppPanel";
+import {
+  PROJECTS_V5_DIVIDER_CLASS,
+  PROJECTS_V5_HEADING_CLASS,
+  PROJECTS_V5_INSET_CLASS,
+  PROJECTS_V5_PANEL_CLASS,
+} from "@/features/projects/projectsPageV5Classes.constant";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import { NAV_CONSOLIDATION_INTENT_QUERY_PARAM } from "@/lib/shell/navConsolidationIntent.constant";
 
@@ -58,7 +64,7 @@ export default function AwcProjectsPanel({
   }, [projects, searchQuery, selectProjects]);
 
   return (
-    <AppPanel padding="compact">
+    <AppPanel embedded className={PROJECTS_V5_PANEL_CLASS}>
       {header}
       {intent !== null ? (
         <AwcProjectsIntentNotice
@@ -68,7 +74,7 @@ export default function AwcProjectsPanel({
         />
       ) : null}
       {intent === "bots" ? (
-        <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.02]">
+        <div className={`mb-6 ${PROJECTS_V5_INSET_CLASS}`}>
           <MyBotsPanel />
         </div>
       ) : null}
@@ -100,8 +106,8 @@ export default function AwcProjectsPanel({
         }}
       />
       {showManageControls && !isLoading ? (
-        <div className="mt-6 border-t border-gray-200 pt-4 pb-2 max-md:mb-4 dark:border-gray-800">
-          <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <div className={`mt-6 pt-4 pb-2 max-md:mb-4 ${PROJECTS_V5_DIVIDER_CLASS}`}>
+          <h3 className={PROJECTS_V5_HEADING_CLASS}>
             New project
           </h3>
           <SendTaskComposerCreateProjectForm

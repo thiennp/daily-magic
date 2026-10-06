@@ -7,6 +7,10 @@ import AwcProjectCard from "@/features/projects/AwcProjectCard";
 import AwcProjectsListLoadErrorPanel from "@/features/projects/AwcProjectsListLoadErrorPanel";
 import { AWC_PROJECTS_PAGE_COPY } from "@/features/projects/awcProjectsPageCopy.constant";
 import { APP_SURFACE_TEXT_LINK_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import {
+  PROJECTS_V5_HEADING_CLASS,
+  PROJECTS_V5_MUTED_TEXT_CLASS,
+} from "@/features/projects/projectsPageV5Classes.constant";
 import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import type { NavConsolidationIntent } from "@/lib/shell/navConsolidationIntent.constant";
@@ -50,7 +54,7 @@ export default function AwcProjectsListBody({
 }: AwcProjectsListBodyProps) {
   if (isLoading) {
     return (
-      <p className="py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+      <p className={`py-6 text-center ${PROJECTS_V5_MUTED_TEXT_CLASS}`}>
         Loading projects…
       </p>
     );
@@ -69,10 +73,10 @@ export default function AwcProjectsListBody({
   if (projects.length === 0) {
     return (
       <div className="flex flex-col items-center gap-3 py-6 text-center">
-        <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <p className={PROJECTS_V5_HEADING_CLASS}>
           {AWC_PROJECTS_PAGE_COPY.emptyTitle}
         </p>
-        <p className="max-w-sm text-sm text-gray-500 dark:text-gray-400">
+        <p className={`max-w-sm ${PROJECTS_V5_MUTED_TEXT_CLASS}`}>
           {AWC_PROJECTS_PAGE_COPY.emptyBody}
         </p>
         <Link href="/" className={APP_SURFACE_TEXT_LINK_CLASS}>
@@ -84,7 +88,7 @@ export default function AwcProjectsListBody({
 
   if (visibleProjects.length === 0) {
     return (
-      <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+      <p className={`mt-4 ${PROJECTS_V5_MUTED_TEXT_CLASS}`}>
         No projects match &ldquo;{searchQuery.trim()}&rdquo;.
       </p>
     );

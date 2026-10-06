@@ -2,18 +2,21 @@ import { Suspense } from "react";
 
 import AppPageHeader from "@/components/surfaces/AppPageHeader";
 import AwcProjectsPanel from "@/features/projects/AwcProjectsPanel";
-import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
+import {
+  PROJECTS_V5_MUTED_TEXT_CLASS,
+  PROJECTS_V5_PAGE_CLASS,
+} from "@/features/projects/projectsPageV5Classes.constant";
 
 export default function ProjectsPageLayout() {
   return (
-    <div className={APP_PAGE_STACK_CLASS}>
+    <div className={PROJECTS_V5_PAGE_CLASS}>
       <AppPageHeader
         title="Projects"
         description="Cloud registry for membership and activity. Edit repos and composition in AgentWitch Local on your computer."
       />
       <Suspense
         fallback={
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className={PROJECTS_V5_MUTED_TEXT_CLASS}>
             Loading projects…
           </p>
         }

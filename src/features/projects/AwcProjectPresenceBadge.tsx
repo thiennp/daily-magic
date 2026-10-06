@@ -9,7 +9,7 @@ const DOT_CLASS_BY_STATUS: Record<
   string
 > = {
   online: "bg-success-500",
-  offline: "bg-gray-300 dark:bg-gray-600",
+  offline: "bg-awc-border-strong dark:bg-gray-600",
   reconnecting: "bg-warning-500",
 };
 
@@ -17,9 +17,9 @@ const TEXT_CLASS_BY_STATUS: Record<
   AwcProjectPresenceBadgeProps["statusIcon"],
   string
 > = {
-  online: "text-gray-700 dark:text-gray-200",
-  offline: "text-gray-500 dark:text-gray-400",
-  reconnecting: "text-gray-700 dark:text-gray-200",
+  online: "text-awc-fg dark:text-gray-200",
+  offline: "text-awc-fg-muted dark:text-gray-400",
+  reconnecting: "text-awc-fg dark:text-gray-200",
 };
 
 const PILL_CLASS_BY_STATUS: Record<
@@ -27,11 +27,11 @@ const PILL_CLASS_BY_STATUS: Record<
   string
 > = {
   online:
-    "bg-gray-100 text-gray-800 ring-1 ring-gray-200 dark:bg-white/10 dark:text-gray-100 dark:ring-white/15",
+    "bg-awc-tile-2 text-awc-fg ring-1 ring-awc-border dark:bg-white/10 dark:text-gray-100 dark:ring-white/15",
   offline:
-    "bg-gray-50 text-gray-500 ring-1 ring-gray-200 dark:bg-white/5 dark:text-gray-400 dark:ring-white/10",
+    "bg-awc-tile text-awc-fg-muted ring-1 ring-awc-border dark:bg-white/5 dark:text-gray-400 dark:ring-white/10",
   reconnecting:
-    "bg-gray-100 text-gray-800 ring-1 ring-gray-200 dark:bg-white/10 dark:text-gray-100 dark:ring-white/15",
+    "bg-awc-tile-2 text-awc-fg ring-1 ring-awc-border dark:bg-white/10 dark:text-gray-100 dark:ring-white/15",
 };
 
 export default function AwcProjectPresenceBadge({

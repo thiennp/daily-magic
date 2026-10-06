@@ -22,7 +22,7 @@ describe("Awc projects card view", () => {
     expect(listBody).toContain("AwcProjectCard");
     expect(listBody).toContain("grid grid-cols-1 gap-3 sm:grid-cols-2");
     expect(card).toContain("AwcProjectCardActionsMenu");
-    expect(card).toContain("APP_SURFACE_NESTED_CARD_CLASS");
+    expect(card).toContain("PROJECTS_V5_CARD_CLASS");
     expect(card).toContain("shouldShowProjectEditOnMacHelperText");
     expect(menu).toContain('aria-label="Project actions"');
     expect(menu).toContain("buildNavConsolidationNewTaskHref");

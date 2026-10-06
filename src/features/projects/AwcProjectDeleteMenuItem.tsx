@@ -5,6 +5,10 @@ import { useState } from "react";
 import AwcProjectDeleteConfirmForm from "@/features/projects/AwcProjectDeleteConfirmForm";
 import { AWC_PROJECT_DELETE_COPY } from "@/features/projects/awcProjectDeleteCopy.constant";
 import useDeleteProject from "@/features/projects/hooks/useDeleteProject";
+import {
+  PROJECTS_V5_DIVIDER_CLASS,
+  PROJECTS_V5_MENU_ITEM_DANGER_CLASS,
+} from "@/features/projects/projectsPageV5Classes.constant";
 
 interface AwcProjectDeleteMenuItemProps {
   readonly projectId: string;
@@ -32,11 +36,11 @@ const AwcProjectDeleteMenuItem = ({
 
   return (
     <>
-      <li role="none" className="border-t border-gray-100 dark:border-gray-800">
+      <li role="none" className={`mt-1 pt-1 ${PROJECTS_V5_DIVIDER_CLASS}`}>
         <button
           type="button"
           role="menuitem"
-          className="block min-h-11 w-full px-3 py-2.5 text-left text-sm text-error-600 hover:bg-error-50 dark:text-error-400 dark:hover:bg-error-950/30 sm:min-h-0"
+          className={PROJECTS_V5_MENU_ITEM_DANGER_CLASS}
           onClick={() => {
             clearError();
             setConfirmOpen(true);
