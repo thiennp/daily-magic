@@ -44,6 +44,7 @@ export const attachPendingApprovalCards = async (input: {
         origin,
         ownerPersonName:
           ownerId === null ? null : (owners.get(ownerId)?.name ?? null),
+        joinPlatform: record?.joinPlatform ?? null,
         invitePlatform:
           inviteId === null ? null : (platforms.get(inviteId) ?? null),
         expiresAt: view.expiresAt,

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { buildPendingApprovalCardMeta } from "@/lib/projects/acl/approvalCard/buildPendingApprovalCardMeta";
+import { parseProjectInviteJoinPlatform } from "@/lib/projects/acl/invites/projectInviteJoinPlatform.constant";
 
 const NOW = Date.parse("2026-10-06T10:00:00.000Z");
 
@@ -13,6 +14,7 @@ describe("buildPendingApprovalCardMeta", () => {
         connectVia: "device_code",
       },
       ownerPersonName: "Thien",
+      joinPlatform: null,
       invitePlatform: null,
       expiresAt: "2026-10-06T10:05:00.000Z",
       nowMs: NOW,
@@ -32,6 +34,7 @@ describe("buildPendingApprovalCardMeta", () => {
     const meta = buildPendingApprovalCardMeta({
       origin: { ownerUserId: null, assistantKind: null, connectVia: null },
       ownerPersonName: "Leaked",
+      joinPlatform: null,
       invitePlatform: "grok",
       expiresAt: "2026-10-06T10:05:00.000Z",
       nowMs: NOW,
@@ -45,6 +48,7 @@ describe("buildPendingApprovalCardMeta", () => {
     const meta = buildPendingApprovalCardMeta({
       origin: undefined,
       ownerPersonName: null,
+      joinPlatform: null,
       invitePlatform: "muse",
       expiresAt: null,
       nowMs: NOW,
@@ -58,10 +62,44 @@ describe("buildPendingApprovalCardMeta", () => {
     const meta = buildPendingApprovalCardMeta({
       origin: undefined,
       ownerPersonName: null,
+      joinPlatform: null,
       invitePlatform: null,
       expiresAt: "2026-10-06T10:00:00.000Z",
       nowMs: NOW,
     });
     expect(meta.isExpired).toBe(true);
+  });
+
+  describe("mode from join_platform (093) then invite platform", () => {
+    const mode = (joinPlatform: string | null, invitePlatform: string | null) =>
+      buildPendingApprovalCardMeta({
+        origin: undefined,
+        ownerPersonName: null,
+        joinPlatform,
+        invitePlatform,
+        expiresAt: null,
+        nowMs: NOW,
+      });
+
+    it("join_platform claude, no wake link → Checks on demand (poll)", () => {
+      const meta = mode(parseProjectInviteJoinPlatform("claude"), null);
+      expect(meta.expectedDeliveryMode).toBe("poll");
+      expect(meta.modeKnown).toBe(true);
+    });
+
+    it("join type grok-bot → wakes up on its own (webhook)", () => {
+      const meta = mode(parseProjectInviteJoinPlatform("grok-bot"), null);
+      expect(meta.expectedDeliveryMode).toBe("webhook");
+      expect(meta.modeKnown).toBe(true);
+    });
+
+    it("join_platform beats the invite platform", () => {
+      expect(mode("claude", "grok").expectedDeliveryMode).toBe("poll");
+      expect(mode("grok", "muse").expectedDeliveryMode).toBe("webhook");
+    });
+
+    it("neither present → mode unknown", () => {
+      expect(mode(null, null).modeKnown).toBe(false);
+    });
   });
 });

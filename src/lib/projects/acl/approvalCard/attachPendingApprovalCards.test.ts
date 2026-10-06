@@ -35,8 +35,11 @@ const view = (
   expiresAt: "2026-10-07T09:00:00.000Z",
   suggestedProjectDisplayName: null,
 });
-const record = (id: string, inviteId: string | null) =>
-  ({ id, inviteId }) as unknown as ProjectAccessRequestRecord;
+const record = (
+  id: string,
+  inviteId: string | null,
+  joinPlatform: string | null = null,
+) => ({ id, inviteId, joinPlatform }) as unknown as ProjectAccessRequestRecord;
 
 describe("attachPendingApprovalCards", () => {
   beforeEach(() => sqlMock.mockReset());
@@ -56,7 +59,8 @@ describe("attachPendingApprovalCards", () => {
       .mockResolvedValueOnce([{ id: "inv-1", platform: "muse" }]);
     const out = await attachPendingApprovalCards({
       views: [view("r1", "bot-1", true), view("r2", "human-1", false)],
-      records: [record("r1", "inv-1"), record("r2", null)],
+      // invite says muse (poll) but the request's own join type is grok → wake
+      records: [record("r1", "inv-1", "grok"), record("r2", null)],
       nowMs: Date.parse("2026-10-06T10:00:00.000Z"),
     });
     expect(out[0].approvalCard).toEqual({
@@ -64,7 +68,7 @@ describe("attachPendingApprovalCards", () => {
       ownerClaimed: true,
       ownerPersonName: "Name person-1",
       connectVia: "device_code",
-      expectedDeliveryMode: "poll",
+      expectedDeliveryMode: "webhook",
       modeKnown: true,
       isExpired: false,
     });
