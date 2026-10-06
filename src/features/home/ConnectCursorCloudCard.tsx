@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import ConnectCursorCloudModal from "@/features/home/ConnectCursorCloudModal";
 import useCursorCloudConnection from "@/features/home/hooks/useCursorCloudConnection";
+import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/appShellComputersCopy.constant";
 import {
   APP_SHELL_V5_HEADING_CLASS,
   APP_SHELL_V5_META_CLASS,
@@ -25,8 +26,8 @@ export default function ConnectCursorCloudCard() {
       <div>
         <p className={APP_SHELL_V5_HEADING_CLASS}>Cursor Cloud connected</p>
         <p className={`mt-1 break-words ${APP_SHELL_V5_META_CLASS}`}>
-          {summary.cursorUserEmail ?? summary.apiKeyName ?? "API key saved"}.
-          Send tasks to Cursor Cloud from Agent when you pick it as the worker.
+          {summary.cursorUserEmail ?? summary.apiKeyName ?? "API key saved"}.{" "}
+          {APP_SHELL_COMPUTERS_COPY.cursorCloudHelper}
         </p>
         <button
           type="button"

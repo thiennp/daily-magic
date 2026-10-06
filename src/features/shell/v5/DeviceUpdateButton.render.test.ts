@@ -22,6 +22,21 @@ describe("DeviceUpdateButton (#29 disabled + reason)", () => {
     const describedBy = /aria-describedby="([^"]+)"/.exec(html)?.[1];
     expect(describedBy).toBeTruthy();
     expect(html).toContain(`id="${describedBy}"`);
+    expect(html).toContain('title="Offline — update when it&#x27;s back."');
+  });
+
+  it("renders remote Update disabled with Update it from that computer.", () => {
+    const html = render({
+      kind: "disabled",
+      reason: "Update it from that computer.",
+    });
+    expect(html).toContain(">Update</button>");
+    expect(html).toContain('aria-disabled="true"');
+    expect(html).toContain('title="Update it from that computer."');
+    const describedBy = /aria-describedby="([^"]+)"/.exec(html)?.[1];
+    expect(describedBy).toBeTruthy();
+    expect(html).toContain(`id="${describedBy}" class=`);
+    expect(html).toContain(">Update it from that computer.</p>");
   });
 
   it("renders an enabled Update without a reason", () => {
@@ -29,6 +44,7 @@ describe("DeviceUpdateButton (#29 disabled + reason)", () => {
     expect(html).toContain(">Update</button>");
     expect(html).not.toContain("disabled");
     expect(html).not.toContain("aria-describedby");
+    expect(html).not.toContain("title=");
   });
 
   it("renders nothing when hidden", () => {

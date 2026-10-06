@@ -1,4 +1,4 @@
-import { APP_SHELL_DEVICES_COPY } from "@/features/shell/v5/appShellDevicesCopy.constant";
+import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/appShellComputersCopy.constant";
 
 export type DeviceUpdateAction =
   | { readonly kind: "hidden" }
@@ -6,10 +6,10 @@ export type DeviceUpdateAction =
   | { readonly kind: "disabled"; readonly reason: string };
 
 /**
- * Devices row Update control (V5-2). Shown only when the device is behind the
- * latest version. Offline → disabled with a reason that is always visible
- * (#29). Online → enabled only where an update path exists today (this
- * computer); otherwise hidden rather than a dead button.
+ * Computers row Update control (V5-2). Shown whenever the computer is behind
+ * the latest version. Offline → disabled + offline reason. Online elsewhere
+ * (not this computer) → disabled + "Update it from that computer." (never
+ * hidden). Online this computer → enabled. Reasons always visible (#29).
  */
 export const resolveDeviceUpdateAction = (input: {
   readonly needsUpdate: boolean;
@@ -23,9 +23,14 @@ export const resolveDeviceUpdateAction = (input: {
   if (input.isOffline) {
     return {
       kind: "disabled",
-      reason: APP_SHELL_DEVICES_COPY.updateDisabledOffline,
+      reason: APP_SHELL_COMPUTERS_COPY.updateDisabledOffline,
     };
   }
 
-  return input.canUpdateHere ? { kind: "enabled" } : { kind: "hidden" };
+  return input.canUpdateHere
+    ? { kind: "enabled" }
+    : {
+        kind: "disabled",
+        reason: APP_SHELL_COMPUTERS_COPY.updateDisabledRemote,
+      };
 };

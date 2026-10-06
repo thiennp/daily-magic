@@ -3,8 +3,9 @@ import { describe, expect, it } from "vitest";
 import { resolveConnectAnotherMacLabel } from "@/features/home/utils/resolveConnectAnotherMacLabel";
 
 describe("resolveConnectAnotherMacLabel", () => {
-  it('says "Add a computer" when there are no devices (HOME-004)', () => {
-    expect(resolveConnectAnotherMacLabel(false)).toBe("Add a computer");
+  it('says "Connect this computer" when there are no computers (HOME-004, V5-2)', () => {
+    expect(resolveConnectAnotherMacLabel(false)).toBe("Connect this computer");
+    expect(resolveConnectAnotherMacLabel(false)).not.toMatch(/Add a computer/);
   });
 
   it('says "Connect another computer" when devices already exist (HOME-004, V5-2)', () => {

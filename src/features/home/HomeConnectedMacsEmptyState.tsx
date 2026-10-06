@@ -1,6 +1,7 @@
 "use client";
 
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
+import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/appShellComputersCopy.constant";
 
 interface HomeConnectedMacsEmptyStateProps {
   readonly installCommand: string;
@@ -15,7 +16,7 @@ export default function HomeConnectedMacsEmptyState({
 }: HomeConnectedMacsEmptyStateProps) {
   return (
     <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-      No Macs connected yet.{" "}
+      {APP_SHELL_COMPUTERS_COPY.empty}{" "}
       <ConnectAnotherMacButton
         installCommand={installCommand}
         isWebSocketSupported={isWebSocketSupported}

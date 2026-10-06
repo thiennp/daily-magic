@@ -8,7 +8,7 @@ import useHomeConnectedMacDeviceActions from "@/features/home/hooks/useHomeConne
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import useShouldShowConnectThisMac from "@/features/home/hooks/useShouldShowConnectThisMac";
-import AppShellDevicesHeading from "@/features/shell/v5/AppShellDevicesHeading";
+import AppShellComputersHeading from "@/features/shell/v5/AppShellComputersHeading";
 import AppShellDevicesSurface from "@/features/shell/v5/AppShellDevicesSurface";
 import {
   APP_SHELL_V5_META_CLASS,
@@ -27,7 +27,7 @@ interface HomeConnectedMacsPanelProps {
   readonly embedded?: boolean;
 }
 
-/** Shell Devices + Cursor Cloud (V5-2). Live actions unchanged. */
+/** Shell Computers + Cursor Cloud (V5-2). Live actions unchanged. */
 export default function HomeConnectedMacsPanel({
   installCommand,
   isWebSocketSupported,
@@ -51,7 +51,7 @@ export default function HomeConnectedMacsPanel({
 
   return (
     <AppShellDevicesSurface embedded={embedded}>
-      <AppShellDevicesHeading
+      <AppShellComputersHeading
         statusLine={statusLine}
         serverInstallBundleVersion={serverInstallBundleVersion}
       />

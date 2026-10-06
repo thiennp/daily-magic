@@ -6,7 +6,7 @@ import {
   APP_SHELL_V5_PILL_BUTTON_CLASS,
   APP_SHELL_V5_REASON_CLASS,
 } from "@/features/shell/v5/appShellV5Classes.constant";
-import { APP_SHELL_DEVICES_COPY } from "@/features/shell/v5/appShellDevicesCopy.constant";
+import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/appShellComputersCopy.constant";
 import type { DeviceUpdateAction } from "@/features/shell/v5/resolveDeviceUpdateAction";
 
 interface DeviceUpdateButtonProps {
@@ -15,9 +15,9 @@ interface DeviceUpdateButtonProps {
 }
 
 /**
- * Devices row Update (V5-2). Disabled uses the V5-1 `.awc-disabled`
+ * Computers row Update (V5-2). Disabled uses the V5-1 `.awc-disabled`
  * primitive and keeps its reason visible (not hover-only) via
- * aria-describedby (#29).
+ * aria-describedby + title (#29).
  */
 export default function DeviceUpdateButton({
   action,
@@ -38,10 +38,11 @@ export default function DeviceUpdateButton({
         disabled={isDisabled}
         aria-disabled={isDisabled ? true : undefined}
         aria-describedby={isDisabled ? reasonId : undefined}
+        title={isDisabled ? action.reason : undefined}
         className={`${APP_SHELL_V5_PILL_BUTTON_CLASS}${isDisabled ? " awc-disabled" : ""}`}
         onClick={isDisabled ? undefined : onUpdate}
       >
-        {APP_SHELL_DEVICES_COPY.update}
+        {APP_SHELL_COMPUTERS_COPY.update}
       </button>
       {isDisabled ? (
         <p id={reasonId} className={APP_SHELL_V5_REASON_CLASS}>

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { resolveDeviceUpdateAction } from "@/features/shell/v5/resolveDeviceUpdateAction";
 
-describe("resolveDeviceUpdateAction (V5-2 Devices Update)", () => {
+describe("resolveDeviceUpdateAction (V5-2 Computers Update)", () => {
   it("hides Update when the device is current", () => {
     expect(
       resolveDeviceUpdateAction({
@@ -38,13 +38,16 @@ describe("resolveDeviceUpdateAction (V5-2 Devices Update)", () => {
     ).toEqual({ kind: "enabled" });
   });
 
-  it("does not render a dead button for an online remote device", () => {
+  it("disables (never hides) Update with a reason for an online remote computer", () => {
     expect(
       resolveDeviceUpdateAction({
         needsUpdate: true,
         isOffline: false,
         canUpdateHere: false,
       }),
-    ).toEqual({ kind: "hidden" });
+    ).toEqual({
+      kind: "disabled",
+      reason: "Update it from that computer.",
+    });
   });
 });

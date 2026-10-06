@@ -1,10 +1,13 @@
-import { APP_SHELL_DEVICES_COPY } from "@/features/shell/v5/appShellDevicesCopy.constant";
-import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
+import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/appShellComputersCopy.constant";
 
-/** With devices: locked v5 `devices.connectAnother` (button + modal title). */
+/**
+ * Locked v5 EN (button + modal title): zero computers → "Connect this
+ * computer" (same verb as Home Connect); with computers → "Connect another
+ * computer". Never "Add a computer".
+ */
 export const resolveConnectAnotherMacLabel = (
   hasExistingDevices: boolean,
 ): string =>
   hasExistingDevices
-    ? APP_SHELL_DEVICES_COPY.connectAnother
-    : MAC_WORKER_BENEFIT_COPY.addMac;
+    ? APP_SHELL_COMPUTERS_COPY.connectAnother
+    : APP_SHELL_COMPUTERS_COPY.connectThis;

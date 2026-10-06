@@ -4,7 +4,7 @@ import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName
 
 /**
  * Logo + wordmark (V5-2 topbar + mobile drawer, I19). No build/version pill:
- * the version lives next to Devices as "Latest v{n}".
+ * the version lives next to Computers as "Latest v{n}".
  */
 export default function AppShellBrand() {
   return (
