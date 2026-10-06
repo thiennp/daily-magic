@@ -7,12 +7,10 @@ import { APP_SURFACE_TEXT_LINK_CLASS } from "@/components/surfaces/appSurfaceSty
 import ConnectAnotherMacModal from "@/features/home/ConnectAnotherMacModal";
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
 import useConnectInstallPasteModalDismissal from "@/features/home/hooks/useConnectInstallPasteModalDismissal";
-import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import usePersonalizedAgentWitchInstallCommand from "@/features/home/hooks/usePersonalizedAgentWitchInstallCommand";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 import { resolveConnectAnotherMacLabel } from "@/features/home/utils/resolveConnectAnotherMacLabel";
 import { shouldOpenConnectInstallPasteModal } from "@/features/home/utils/shouldOpenConnectInstallPasteModal";
-import { shouldShowAgentWitchAppDownloadCta } from "@/features/home/utils/shouldShowAgentWitchAppDownloadCta";
 
 interface ConnectAnotherMacButtonProps {
   readonly installCommand: string;
@@ -26,6 +24,12 @@ const subscribeToOperatingSystem = () => () => undefined;
 
 const getServerOperatingSystemSnapshot = () => "other" as const;
 
+/**
+ * Connect this / another computer entry.
+ * Stays visible when a computer is already connected (HARD: never hide Download/
+ * Connect-another just because connected). Mobile still hides — paste/install
+ * is desktop-oriented; Download remains via ComputersDownloadLink.
+ */
 export default function ConnectAnotherMacButton({
   installCommand,
   isWebSocketSupported,
@@ -44,15 +48,7 @@ export default function ConnectAnotherMacButton({
     fallbackInstallCommand: installCommand,
     commitIdentityWhenDisabled: true,
   });
-  const { isCheckingLocalApp, isLocalAppInstalled } =
-    useLocalMacBrowserContext();
   const isMobileClient = useIsMobileClient();
-  const showInstallCta =
-    !isMobileClient &&
-    shouldShowAgentWitchAppDownloadCta({
-      isCheckingLocalApp,
-      isLocalAppInstalled,
-    });
   const operatingSystem = useSyncExternalStore(
     subscribeToOperatingSystem,
     detectBrowserOperatingSystem,
@@ -75,7 +71,7 @@ export default function ConnectAnotherMacButton({
     onClose: handleClosePasteModal,
   });
 
-  if (!showInstallCta) {
+  if (isMobileClient) {
     return null;
   }
 

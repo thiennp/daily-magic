@@ -1,5 +1,6 @@
 "use client";
 
+import ComputersDownloadLink from "@/features/home/ComputersDownloadLink";
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
 import ConnectCursorCloudCard from "@/features/home/ConnectCursorCloudCard";
 import HomeConnectedMacsDeviceList from "@/features/home/HomeConnectedMacsDeviceList";
@@ -77,12 +78,13 @@ export default function HomeConnectedMacsPanel({
         />
       )}
       {!isLoading && hasExistingDevices ? (
-        <div className={`mt-4 ${APP_SHELL_V5_SECTION_CLASS}`}>
+        <div className={`mt-4 flex flex-wrap items-center gap-3 ${APP_SHELL_V5_SECTION_CLASS}`}>
           <ConnectAnotherMacButton
             {...connectProps}
             hasExistingDevices={hasExistingDevices}
             className={APP_SHELL_V5_PILL_BUTTON_CLASS}
           />
+          <ComputersDownloadLink className={APP_SHELL_V5_PILL_BUTTON_CLASS} />
         </div>
       ) : null}
       <div className={`mt-4 ${APP_SHELL_V5_SECTION_CLASS}`}>

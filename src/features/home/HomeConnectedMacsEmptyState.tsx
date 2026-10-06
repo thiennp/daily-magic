@@ -1,5 +1,6 @@
 "use client";
 
+import ComputersDownloadLink from "@/features/home/ComputersDownloadLink";
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
 import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/appShellComputersCopy.constant";
 
@@ -15,15 +16,20 @@ export default function HomeConnectedMacsEmptyState({
   host,
 }: HomeConnectedMacsEmptyStateProps) {
   return (
-    <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-      {APP_SHELL_COMPUTERS_COPY.empty}{" "}
-      <ConnectAnotherMacButton
-        installCommand={installCommand}
-        isWebSocketSupported={isWebSocketSupported}
-        host={host}
-        hasExistingDevices={false}
-        className="font-medium text-brand-700 hover:underline dark:text-brand-300"
-      />
-    </p>
+    <div className="mt-4 space-y-2">
+      <p className="text-sm text-gray-500 dark:text-gray-400">
+        {APP_SHELL_COMPUTERS_COPY.empty}{" "}
+        <ConnectAnotherMacButton
+          installCommand={installCommand}
+          isWebSocketSupported={isWebSocketSupported}
+          host={host}
+          hasExistingDevices={false}
+          className="font-medium text-brand-700 hover:underline dark:text-brand-300"
+        />
+      </p>
+      <p className="text-sm text-gray-500 dark:text-gray-400">
+        <ComputersDownloadLink className="font-medium text-brand-700 hover:underline dark:text-brand-300" />
+      </p>
+    </div>
   );
 }

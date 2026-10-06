@@ -1,6 +1,7 @@
 "use client";
 
 import { Modal } from "@/components/ui/modal";
+import ComputersDownloadLink from "@/features/home/ComputersDownloadLink";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import CopyableBashCommand from "@/features/home/CopyableBashCommand";
@@ -66,6 +67,10 @@ export default function ConnectAnotherMacModal({
           onEngaged={onInstallEngaged}
         />
       )}
+
+      <p className={`mt-4 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
+        Not installed yet? <ComputersDownloadLink />
+      </p>
     </Modal>
   );
 }
