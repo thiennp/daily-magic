@@ -5,14 +5,12 @@ import { useSyncExternalStore } from "react";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
-import isMobileBrowser from "@/features/home/utils/isMobileBrowser";
 import { resolveShouldShowConnectThisMac } from "@/features/home/utils/resolveShouldShowConnectThisMac";
+import useIsMobileClient from "@/hooks/useIsMobileClient";
 
 const subscribeToOperatingSystem = () => () => undefined;
 
 const getServerOperatingSystemSnapshot = () => "other" as const;
-
-const getServerMobileBrowserSnapshot = () => false;
 
 const useShouldShowConnectThisMac = (): boolean => {
   const { devices } = useHomeConnectedMacs();
@@ -23,11 +21,7 @@ const useShouldShowConnectThisMac = (): boolean => {
     detectBrowserOperatingSystem,
     getServerOperatingSystemSnapshot,
   );
-  const mobileBrowser = useSyncExternalStore(
-    subscribeToOperatingSystem,
-    isMobileBrowser,
-    getServerMobileBrowserSnapshot,
-  );
+  const mobileBrowser = useIsMobileClient();
 
   return resolveShouldShowConnectThisMac({
     operatingSystem,

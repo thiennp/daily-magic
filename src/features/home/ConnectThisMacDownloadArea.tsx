@@ -1,11 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
-
 import ConnectThisMacDownloadChoice from "@/features/home/ConnectThisMacDownloadChoice";
 import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
-import isMobileBrowser from "@/features/home/utils/isMobileBrowser";
 import { shouldShowConnectThisMacDownloadChoice } from "@/features/home/utils/shouldShowConnectThisMacDownloadChoice";
+import useIsMobileClient from "@/hooks/useIsMobileClient";
 import { buildAgentWitchLocalMacAppDownloadUrl } from "@/lib/agentWitch/buildAgentWitchLocalMacAppDownloadUrl";
 
 interface ConnectThisMacDownloadAreaProps {
@@ -16,7 +14,7 @@ interface ConnectThisMacDownloadAreaProps {
 export default function ConnectThisMacDownloadArea({
   operatingSystem,
 }: ConnectThisMacDownloadAreaProps) {
-  const isMobile = useMemo(() => isMobileBrowser(), []);
+  const isMobile = useIsMobileClient();
   const shouldShow = shouldShowConnectThisMacDownloadChoice({
     operatingSystem,
     isMobile,

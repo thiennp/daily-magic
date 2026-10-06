@@ -1,11 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
-
 import ConnectThisLinuxDownloadChoice from "@/features/home/ConnectThisLinuxDownloadChoice";
 import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
-import isMobileBrowser from "@/features/home/utils/isMobileBrowser";
 import { shouldShowConnectThisLinuxDownloadChoice } from "@/features/home/utils/shouldShowConnectThisLinuxDownloadChoice";
+import useIsMobileClient from "@/hooks/useIsMobileClient";
 import {
   buildAgentWitchLocalLinuxAppImageDownloadUrl,
   buildAgentWitchLocalLinuxDebDownloadUrl,
@@ -20,7 +18,7 @@ interface ConnectThisLinuxDownloadAreaProps {
 export default function ConnectThisLinuxDownloadArea({
   operatingSystem,
 }: ConnectThisLinuxDownloadAreaProps) {
-  const isMobile = useMemo(() => isMobileBrowser(), []);
+  const isMobile = useIsMobileClient();
   const shouldShow = shouldShowConnectThisLinuxDownloadChoice({
     operatingSystem,
     isMobile,

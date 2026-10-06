@@ -328,9 +328,9 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 **Symptom:** Mobile browsers saw a **Connect this computer** row in Your Devices even though the phone is not the computer being linked.
 
-**Fix:** Detect mobile user agents (`isMobileBrowser`) and hide the Connect this computer row via `resolveShouldShowConnectThisMac`.
+**Fix:** Detect mobile clients (`useIsMobileClient` / `detectMobileClient`) and hide the Connect this computer row via `resolveShouldShowConnectThisMac`.
 
-**Regression tests:** `isMobileBrowser.test.ts`, `resolveShouldShowConnectThisMac.test.ts` (HOME-028).
+**Regression tests:** `detectMobileClient.test.ts`, `resolveShouldShowConnectThisMac.test.ts` (HOME-028).
 
 ---
 
