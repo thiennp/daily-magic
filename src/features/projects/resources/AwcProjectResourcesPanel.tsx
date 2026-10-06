@@ -37,6 +37,8 @@ export default function AwcProjectResourcesPanel({
       <AwcProjectResourcesFoldersCard
         projectId={project.id}
         isOwner={pageActorRole === "owner"}
+        projectDeviceId={project.deviceId}
+        deviceDisplayName={deviceDisplayName}
       />
       <div className="min-w-0 [&>section]:mt-0">
         <AwcProjectRepoUrlsSection

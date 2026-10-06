@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 import AwcProjectAccessFolderRefs from "@/features/projects/access/AwcProjectAccessFolderRefs";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
@@ -11,12 +13,17 @@ import { resolveProjectAccessLoadError } from "@/lib/projects/acl/mapProjectAcce
 interface AwcProjectResourcesFoldersCardProps {
   readonly projectId: string;
   readonly isOwner: boolean;
+  /** user_projects.device_id — picker fallback when no computer seat. */
+  readonly projectDeviceId: string | null;
+  readonly deviceDisplayName: string;
 }
 
 /** Folders on this computer — live folder-refs API (owner mutate). */
 export default function AwcProjectResourcesFoldersCard({
   projectId,
   isOwner,
+  projectDeviceId,
+  deviceDisplayName,
 }: AwcProjectResourcesFoldersCardProps) {
   const access = useAwcProjectAccess(projectId);
   const accessCopy = AWC_PROJECT_ACCESS_COPY;
@@ -25,6 +32,11 @@ export default function AwcProjectResourcesFoldersCard({
     onMessage: access.setMessage,
     onReload: access.reload,
   });
+  const projectDevice = useMemo(() => {
+    const id = projectDeviceId?.trim() ?? "";
+    if (!id) return null;
+    return { deviceId: id, deviceName: deviceDisplayName };
+  }, [projectDeviceId, deviceDisplayName]);
 
   return (
     <section className="flex min-w-0 flex-col gap-2" aria-labelledby="res-folders-h">
@@ -54,6 +66,7 @@ export default function AwcProjectResourcesFoldersCard({
           <AwcProjectAccessFolderRefs
             folderRefs={access.folderRefs}
             computerMembers={access.members.filter(isComputerAccessMember)}
+            projectDevice={projectDevice}
             hideChrome
             onAdd={onAdd}
             onRemove={onRemove}

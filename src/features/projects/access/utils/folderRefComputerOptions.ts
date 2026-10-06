@@ -17,20 +17,36 @@ export type FolderRefComputerOption = {
   readonly label: string;
 };
 
+/** Project-bound owner device (user_projects.device_id) when no computer seat exists. */
+export type FolderRefProjectDevice = {
+  readonly deviceId: string;
+  readonly deviceName: string;
+};
+
 const resolveDeviceName = (member: FolderRefComputerMember): string =>
   member.projectDisplayName?.trim() || AWC_PROJECT_COMPUTER_MEMBER_COPY.fallbackName;
 
 /** Computer seats with a deviceId → picker options (offline stays selectable). */
 export const buildFolderRefComputerOptions = (
   members: readonly FolderRefComputerMember[],
-): readonly FolderRefComputerOption[] =>
-  members.flatMap((member) => {
+  projectDevice?: FolderRefProjectDevice | null,
+): readonly FolderRefComputerOption[] => {
+  const fromSeats = members.flatMap((member) => {
     const deviceId = member.deviceId?.trim() ?? "";
     if (!isComputerAccessMember(member) || !deviceId) return [];
     const deviceName = resolveDeviceName(member);
     const suffix = member.isOnline === true ? "" : C.foldersMachineOfflineSuffix;
     return [{ deviceId, deviceName, label: `${deviceName}${suffix}` }];
   });
+  const linkedId = projectDevice?.deviceId?.trim() ?? "";
+  if (!linkedId || fromSeats.some((o) => o.deviceId === linkedId)) {
+    return fromSeats;
+  }
+  const deviceName =
+    projectDevice?.deviceName.trim() ||
+    AWC_PROJECT_COMPUTER_MEMBER_COPY.fallbackName;
+  return [...fromSeats, { deviceId: linkedId, deviceName, label: deviceName }];
+};
 
 /** `"{deviceName} · {path}"` — legacy free-text refs fall back to the raw value. */
 export const formatFolderRefRow = (

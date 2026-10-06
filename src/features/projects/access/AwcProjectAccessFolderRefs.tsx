@@ -10,6 +10,7 @@ import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAc
 import {
   buildFolderRefComputerOptions,
   type FolderRefComputerMember,
+  type FolderRefProjectDevice,
   resolveFolderRefAddError,
 } from "@/features/projects/access/utils/folderRefComputerOptions";
 
@@ -17,6 +18,8 @@ interface AwcProjectAccessFolderRefsProps {
   readonly folderRefs: readonly FolderRefRow[];
   /** Access roster computer seats (filtered again by memberKind). */
   readonly computerMembers: readonly FolderRefComputerMember[];
+  /** Project-bound device when no computer seat exists (pre-068 owners). */
+  readonly projectDevice?: FolderRefProjectDevice | null;
   /** Receives the selected computer's deviceId (POSTed as `deviceId`). */
   readonly onAdd: (
     deviceId: string,
@@ -29,14 +32,15 @@ interface AwcProjectAccessFolderRefsProps {
 export default function AwcProjectAccessFolderRefs({
   folderRefs,
   computerMembers,
+  projectDevice = null,
   onAdd,
   onRemove,
   hideChrome = false,
 }: AwcProjectAccessFolderRefsProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
   const computers = useMemo(
-    () => buildFolderRefComputerOptions(computerMembers),
-    [computerMembers],
+    () => buildFolderRefComputerOptions(computerMembers, projectDevice),
+    [computerMembers, projectDevice],
   );
   const [machineRef, setMachineRef] = useState("");
   const [folderPath, setFolderPath] = useState("");

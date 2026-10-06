@@ -51,6 +51,27 @@ describe("folder refs computer picker", () => {
     expect(html.match(/disabled=""/g)).toHaveLength(2);
   });
 
+  it("project linked device fills picker when roster has no computer seats", () => {
+    const linked = buildFolderRefComputerOptions([], {
+      deviceId: "linked-1",
+      deviceName: "Owner Mac",
+    });
+    expect(linked).toEqual([
+      { deviceId: "linked-1", deviceName: "Owner Mac", label: "Owner Mac" },
+    ]);
+    expect(resolveFolderRefAddError("linked-1", linked)).toBeNull();
+    const html = renderForm(linked);
+    expect(html).toContain('<option value="linked-1">Owner Mac</option>');
+    expect(html).not.toContain('disabled=""');
+    // Already in seats → no duplicate
+    expect(
+      buildFolderRefComputerOptions(MEMBERS, {
+        deviceId: "dev-1",
+        deviceName: "Studio Mac",
+      }),
+    ).toEqual(OPTIONS);
+  });
+
   it("formats rows as deviceName · path, legacy raw label fallback", () => {
     const ref = { machineOrDeviceRef: "dev-2", folderPath: "~/code/x" };
     expect(formatFolderRefRow(ref, OPTIONS)).toBe("Laptop · ~/code/x");
