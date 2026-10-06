@@ -1,8 +1,8 @@
 /**
- * Access log (owner-only project_activity_events, migrations 092 + 095 + 097).
- * Access, wake and owner Safety-rule drop/restore changes only: no msg.*,
- * key.*, webhook.*, tool-call or claim/check rows. The DB CHECK (097) must
- * list exactly these types.
+ * Access log (owner-only project_activity_events, migrations 092 + 095 + 097 + 098).
+ * Access, wake, Safety-rule drop/restore, and Inbox Clear-all archive/restore
+ * only: no msg.*, key.*, webhook.*, tool-call or claim/check rows. The DB CHECK
+ * (098) must list exactly these types (union of every prior migration).
  */
 export const PROJECT_ACTIVITY_EVENT_TYPES = [
   "invite.created",
@@ -23,32 +23,41 @@ export const PROJECT_ACTIVITY_EVENT_TYPES = [
   "project.runs_without_approval_disabled",
   "rule.dropped",
   "rule.restored",
+  // 098: Inbox Clear all → archive / Restore (count-only Access log rows).
+  "messages.archived",
+  "messages.restored",
 ] as const;
 
 export type ProjectActivityEventType =
   (typeof PROJECT_ACTIVITY_EVENT_TYPES)[number];
 
-export const PROJECT_ACTIVITY_ACTOR_KINDS = ["owner", "member", "system"] as const;
+export const PROJECT_ACTIVITY_ACTOR_KINDS = [
+  "owner",
+  "member",
+  "system",
+] as const;
 
 export type ProjectActivityActorKind =
   (typeof PROJECT_ACTIVITY_ACTOR_KINDS)[number];
 
-export const PROJECT_ACTIVITY_CATEGORIES = ["access", "wake", "safety"] as const;
+export const PROJECT_ACTIVITY_CATEGORIES = [
+  "access",
+  "wake",
+  "safety",
+] as const;
 
 export type ProjectActivityCategory =
   (typeof PROJECT_ACTIVITY_CATEGORIES)[number];
 
-export const PROJECT_ACTIVITY_WAKE_TYPES: readonly ProjectActivityEventType[] = [
-  "member.delivery_mode_changed",
-];
+export const PROJECT_ACTIVITY_WAKE_TYPES: readonly ProjectActivityEventType[] =
+  ["member.delivery_mode_changed"];
 
-export const PROJECT_ACTIVITY_SAFETY_TYPES: readonly ProjectActivityEventType[] = [
-  "rule.dropped",
-  "rule.restored",
-];
+export const PROJECT_ACTIVITY_SAFETY_TYPES: readonly ProjectActivityEventType[] =
+  ["rule.dropped", "rule.restored"];
 
 /** How a join was approved. Only "owner" ever produces request.approved. */
-export type ProjectApprovalSource = "owner" | "invite_auto_approve" | "test_auto_connect";
+export type ProjectApprovalSource =
+  "owner" | "invite_auto_approve" | "test_auto_connect";
 
 /** Write-time trim: newest N per project, nothing older than D days. */
 export const PROJECT_ACTIVITY_RETENTION = {

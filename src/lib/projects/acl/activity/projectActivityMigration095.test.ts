@@ -26,9 +26,11 @@ describe("migration 095 project runs without approval", () => {
     expect(SQL).toMatch(
       /DROP CONSTRAINT IF EXISTS project_activity_events_event_type_check/,
     );
-    // 097 adds rule.*; 095's own list is the TS list minus those types.
+    // 097 adds rule.*; 098 adds messages.*; 095's list is TS minus those.
     expect(checkListOf(SQL)).toEqual(
-      PROJECT_ACTIVITY_EVENT_TYPES.filter((type) => !type.startsWith("rule.")),
+      PROJECT_ACTIVITY_EVENT_TYPES.filter(
+        (type) => !type.startsWith("rule.") && !type.startsWith("messages."),
+      ),
     );
   });
 

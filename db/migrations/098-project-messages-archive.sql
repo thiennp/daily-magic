@@ -2,6 +2,9 @@
 -- docs/design/chat-retention/CLEAR-ALL-LOCK.md). Clear all sets
 -- archived_at/archived_by on project_messages; it never deletes rows and never
 -- touches project_message_deliveries. Restore (owner only) clears both columns.
+-- Numbered 098: main/sticky owns 094 (composer recipient sticky); do not clobber.
+-- CHECK is the UNION of every type already on main (092 + 095 + 097) plus
+-- messages.archived / messages.restored. Do not drop another's types.
 ALTER TABLE project_messages ADD COLUMN IF NOT EXISTS archived_at TIMESTAMPTZ;
 ALTER TABLE project_messages ADD COLUMN IF NOT EXISTS archived_by TEXT;
 
@@ -26,6 +29,10 @@ ALTER TABLE project_activity_events
     'human_invite.revoked',
     'human_invite.accepted',
     'member.delivery_mode_changed',
+    'project.runs_without_approval_enabled',
+    'project.runs_without_approval_disabled',
+    'rule.dropped',
+    'rule.restored',
     'messages.archived',
     'messages.restored'
   )) NOT VALID;

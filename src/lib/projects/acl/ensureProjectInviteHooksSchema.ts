@@ -91,7 +91,7 @@ export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
   // DOR DDL (read_at, outcomes): ensureProjectMessageDeleteOnReadSchema
   // (called once from ensureProjectAclSchema after this function).
   await ensureProjectComputerHistorySchema();
-  // Archive columns before the purge below reads archived_at (migration 094).
+  // Archive columns before the purge below reads archived_at (migration 098).
   await ensureProjectMessageArchiveSchema();
 
   await purgeExpiredProjectMessages();

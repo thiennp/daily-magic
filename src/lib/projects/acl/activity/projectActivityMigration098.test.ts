@@ -13,7 +13,7 @@ const sqlMock = vi.fn(async () => []);
 vi.mock("@/lib/db", () => ({ getSql: () => sqlMock }));
 
 const SQL = readFileSync(
-  join(process.cwd(), "db/migrations/097-project-activity-rule-events.sql"),
+  join(process.cwd(), "db/migrations/098-project-messages-archive.sql"),
   "utf8",
 );
 
@@ -23,21 +23,28 @@ const checkListAfter = (text: string, marker: string): string[] => {
   return [...body.matchAll(/'([a-z_.]+)'/g)].map((m) => m[1] ?? "");
 };
 
-describe("migration 097 project_activity_events rule.* types", () => {
-  it("widens the CHECK to the pre-098 TS event types", () => {
-    // 098 adds messages.*; 097's own list is the TS list minus those types.
-    expect(checkListAfter(SQL, "CHECK (event_type IN (")).toEqual(
-      PROJECT_ACTIVITY_EVENT_TYPES.filter(
-        (type) => !type.startsWith("messages."),
-      ),
-    );
+describe("migration 098 project_messages archive + activity CHECK union", () => {
+  it("widens the CHECK to exactly the TS event types (full main ∪ messages.*)", () => {
+    expect(checkListAfter(SQL, "CHECK (event_type IN (")).toEqual([
+      ...PROJECT_ACTIVITY_EVENT_TYPES,
+    ]);
     expect(SQL).toMatch(
       /DROP CONSTRAINT IF EXISTS project_activity_events_event_type_check/,
     );
+    expect(SQL).toMatch(/messages\.archived/);
+    expect(SQL).toMatch(/messages\.restored/);
+    expect(SQL).toMatch(/rule\.dropped/);
+    expect(SQL).toMatch(/project\.runs_without_approval_enabled/);
     expect(SQL).not.toMatch(/DROP TABLE|DELETE FROM|UPDATE /);
   });
 
-  it("runtime ensure widens a 092-era CHECK with the full TS list", async () => {
+  it("adds archive columns + index without deleting rows", () => {
+    expect(SQL).toMatch(/ADD COLUMN IF NOT EXISTS archived_at TIMESTAMPTZ/);
+    expect(SQL).toMatch(/ADD COLUMN IF NOT EXISTS archived_by TEXT/);
+    expect(SQL).toMatch(/project_messages_project_archived_idx/);
+  });
+
+  it("runtime ensure CHECK list equals the same full TS union", async () => {
     sqlMock.mockClear();
     resetProjectActivityEventsSchemaForTests();
     await ensureProjectActivityEventsSchema();

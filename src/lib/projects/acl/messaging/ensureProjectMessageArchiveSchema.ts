@@ -11,7 +11,7 @@ export const resetProjectMessageArchiveSchemaForTests = (): void => {
 };
 
 /**
- * Idempotent DDL for Inbox Clear all → archive (migration 094).
+ * Idempotent DDL for Inbox Clear all → archive (migration 098).
  * Two nullable columns + (project_id, archived_at) index. Never deletes.
  * Called once from ensureProjectAclSchema.
  */

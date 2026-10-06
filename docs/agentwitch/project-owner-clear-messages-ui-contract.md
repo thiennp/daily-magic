@@ -79,7 +79,7 @@ Success (idempotent — second call archives 0 and returns `archiveBatch: null`)
 
 Scope:
 
-- Sets `archived_at` + `archived_by` on every not-yet-archived `project_messages` row for `projectId` (migration 094; index `(project_id, archived_at)`). **No DELETE, no CASCADE**; `project_message_deliveries`, memberships and webhook registrations are untouched. Row count is unchanged.
+- Sets `archived_at` + `archived_by` on every not-yet-archived `project_messages` row for `projectId` (migration 098; index `(project_id, archived_at)`). **No DELETE, no CASCADE**; `project_message_deliveries`, memberships and webhook registrations are untouched. Row count is unchanged.
 - Project-wide: archived rows leave the Inbox for everyone and stay readable under the **Archived** filter by anyone who could read them before (`GET …/inbox?scope=project&archived=1`). Both list responses carry `archivedCount` and `canRestore` (owner only).
 - Assistants: archived rows are excluded from the actor inbox (unread/pending delivery). Already-delivered stays delivered; archive never re-sends.
 - Unread cap (`AWC_PROJECT_MESSAGE_UNREAD_CAP`, default 300) counts **not-archived** rows, so Clear all frees unread slots. Hourly cap unchanged.

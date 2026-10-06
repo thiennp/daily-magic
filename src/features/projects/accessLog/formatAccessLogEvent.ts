@@ -10,6 +10,7 @@ import {
 import { ACCESS_LOG_COPY as C } from "@/features/projects/accessLog/accessLogCopy.constant";
 import { formatAccessLogDeliveryEvent } from "@/features/projects/accessLog/formatAccessLogDeliveryEvent";
 import { formatAccessLogHumanInvite } from "@/features/projects/accessLog/formatAccessLogHumanInvite";
+import { formatAccessLogMessagesEvent } from "@/features/projects/accessLog/formatAccessLogMessagesEvent";
 import { formatAccessLogRuleEvent } from "@/features/projects/accessLog/formatAccessLogRuleEvent";
 import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/projectAccessLog.type";
 import { isProjectActivityEventType } from "@/lib/projects/acl/activity/projectActivityEvent.constant";
@@ -76,6 +77,9 @@ export const formatAccessLogEvent = (
     case "rule.dropped":
     case "rule.restored":
       return formatAccessLogRuleEvent(event);
+    case "messages.archived":
+    case "messages.restored":
+      return formatAccessLogMessagesEvent(event);
     default:
       return null;
   }
