@@ -708,6 +708,19 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+
+## HOME-067 — Connect guide disappears after install-token mint (computer missing)
+
+**Symptom:** With no linked computer, Home showed **Connect this computer** / the connect guide, but after (or during) minting the terminal install command the guide vanished or the command stopped appearing. Running a copied command often did not finish connect. AWL v267 still offered Connect / Copy install command.
+
+**Root cause:** `POST /api/agent-witch/install-token` inserts an unlabeled placeholder device (HOME-059). `hasPairedDevice` / `resolveHomeDashboardMode` / `isLocalAppInstalled` treated `devices.length > 0` as linked, so Home left connect mode and `shouldShowAgentWitchAppDownloadCta` hid the guide install CTA — so the token-bearing terminal command was suppressed. Tokenless AWL fallback install cannot pair.
+
+**Fix:** Count only non-placeholder devices as linked (`isAgentWitchConnectInstallPlaceholderDevice` / `countLinkedAgentWitchComputers`). Hard: Connect guide always mints/shows the install command on desktop (`resolveHomeConnectGuideCtas`), separate from the Download CTA. Empty install commands stay on “Preparing…” (`ConnectThisComputerInstallBody`).
+
+**Regression tests:** `isAgentWitchConnectInstallPlaceholderDevice.test.ts`, `resolveHomeConnectGuideCtas.test.ts`.
+
+---
+
 ## Adding issues
 
-Use the next ID (`HOME-067`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-068`, …). Include symptom, root cause, fix paths, and test file.

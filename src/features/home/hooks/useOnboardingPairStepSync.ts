@@ -2,6 +2,7 @@ import { useEffect, type Dispatch, type SetStateAction } from "react";
 
 import { pairedDevicesResource } from "@/features/agent-witch/pairedDevicesResource";
 import type { OnboardingStep } from "@/features/home/loadOnboardingSteps";
+import { countLinkedAgentWitchComputers } from "@/features/home/utils/isAgentWitchConnectInstallPlaceholderDevice";
 
 const useOnboardingPairStepSync = (input: {
   readonly isConnectStepDone: boolean;
@@ -20,7 +21,7 @@ const useOnboardingPairStepSync = (input: {
         return;
       }
 
-      const paired = snapshot.devices.length > 0;
+      const paired = countLinkedAgentWitchComputers(snapshot.devices) > 0;
       setSteps((current) =>
         current.map((step) =>
           step.id === "pair" ? { ...step, done: paired } : step,

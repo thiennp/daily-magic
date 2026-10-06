@@ -8,6 +8,7 @@ import {
   refreshPairedDevices,
 } from "@/features/agent-witch/pairedDevicesResource";
 import useSubscribeMacDeviceRevoked from "@/features/agent-witch/macDevices/hooks/useSubscribeMacDeviceRevoked";
+import { countLinkedAgentWitchComputers } from "@/features/home/utils/isAgentWitchConnectInstallPlaceholderDevice";
 
 interface UseHasPairedDeviceResult {
   readonly hasPairedDevice: boolean;
@@ -23,7 +24,8 @@ export function useHasPairedDevice(): UseHasPairedDeviceResult {
     () => null,
   );
   const resolvedSnapshot = snapshot ?? getPairedDevicesSnapshotOrEmpty();
-  const hasPairedDevice = resolvedSnapshot.devices.length > 0;
+  const hasPairedDevice =
+    countLinkedAgentWitchComputers(resolvedSnapshot.devices) > 0;
   const isLoading = snapshot === null;
 
   const refresh = useCallback(async (): Promise<void> => {

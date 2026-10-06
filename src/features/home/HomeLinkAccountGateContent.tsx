@@ -9,6 +9,7 @@ import { HomeLeftRailVisibilityProvider } from "@/features/home/HomeLeftRailVisi
 import useCursorCloudConnection from "@/features/home/hooks/useCursorCloudConnection";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import { usePairedDeviceContext } from "@/features/home/PairedDeviceContext";
+import { countLinkedAgentWitchComputers } from "@/features/home/utils/isAgentWitchConnectInstallPlaceholderDevice";
 import { resolveHomeDashboardMode } from "@/features/home/utils/resolveHomeDashboardMode";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
@@ -35,7 +36,7 @@ export default function HomeLinkAccountGateContent({
     useCursorCloudConnection();
   const dashboardMode = resolveHomeDashboardMode({
     isLoading: isLoading || isCursorCloudLoading,
-    deviceCount: devices.length,
+    deviceCount: countLinkedAgentWitchComputers(devices),
     hasCursorCloudConnection: cursorCloudSummary.connected,
   });
   const handleLinked = useCallback(() => {

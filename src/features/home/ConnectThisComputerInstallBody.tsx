@@ -19,7 +19,7 @@ export default function ConnectThisComputerInstallBody({
   return (
     <>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>{description}</p>
-      {isInstallCommandLoading ? (
+      {isInstallCommandLoading || installCommand.trim().length === 0 ? (
         <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
           Preparing your install command…
         </p>

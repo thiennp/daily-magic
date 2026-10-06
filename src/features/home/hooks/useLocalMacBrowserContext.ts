@@ -7,6 +7,7 @@ import {
   pairedDevicesResource,
 } from "@/features/agent-witch/pairedDevicesResource";
 import useLocalMacHostname from "@/features/home/hooks/useLocalMacHostname";
+import { countLinkedAgentWitchComputers } from "@/features/home/utils/isAgentWitchConnectInstallPlaceholderDevice";
 
 /**
  * Browser context for this computer install identity.
@@ -36,7 +37,8 @@ const useLocalMacBrowserContext = (): {
   const isBridgeConnected = resolved.devices.some(
     (device) => device.isConnected,
   );
-  const hasClaimedDevice = resolved.devices.length > 0;
+  const hasClaimedDevice =
+    countLinkedAgentWitchComputers(resolved.devices) > 0;
 
   return {
     localHostname,

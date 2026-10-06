@@ -4,10 +4,6 @@ import { useSyncExternalStore } from "react";
 
 import useIsMobileClient from "@/hooks/useIsMobileClient";
 import AppHero from "@/components/surfaces/AppHero";
-import {
-  APP_SURFACE_BODY_TEXT_CLASS,
-  APP_SURFACE_EYEBROW_TEXT_CLASS,
-} from "@/components/surfaces/appSurfaceStyles.constant";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import ConnectComputerGuideSteps from "@/features/home/ConnectComputerGuideSteps";
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
@@ -15,10 +11,10 @@ import useHomeConnectComputerGuideFlow from "@/features/home/hooks/useHomeConnec
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import usePersonalizedAgentWitchInstallCommand from "@/features/home/hooks/usePersonalizedAgentWitchInstallCommand";
 import { buildConnectInstallConnectionStatusClassName } from "@/features/home/utils/buildConnectInstallConnectionStatus";
-import { shouldShowAgentWitchAppDownloadCta } from "@/features/home/utils/shouldShowAgentWitchAppDownloadCta";
+import { resolveHomeConnectGuideCtas } from "@/features/home/utils/resolveHomeConnectGuideCtas";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 import HomeConnectGuideDownloadExtras from "@/features/home/HomeConnectGuideDownloadExtras";
-import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
+import HomeConnectGuideHeroCopy from "@/features/home/HomeConnectGuideHeroCopy";
 
 interface HomeConnectComputerGuideProps {
   readonly appOrigin: string;
@@ -41,9 +37,9 @@ export default function HomeConnectComputerGuide({
   const { isCheckingLocalApp, isLocalAppInstalled } =
     useLocalMacBrowserContext();
   const isMobileClient = useIsMobileClient();
-  const showInstallCta =
-    !isMobileClient &&
-    shouldShowAgentWitchAppDownloadCta({
+  const { showConnectInstallCommand: showInstallCta, showAppDownloadCta } =
+    resolveHomeConnectGuideCtas({
+      isMobileClient,
       isCheckingLocalApp,
       isLocalAppInstalled,
     });
@@ -72,19 +68,7 @@ export default function HomeConnectComputerGuide({
 
   return (
     <AppHero variant="plain">
-      <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>
-        {MAC_WORKER_BENEFIT_COPY.setupEyebrow}
-      </p>
-      <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-gray-900 dark:text-white/90">
-        {isLocalAppInstalled
-          ? MAC_WORKER_BENEFIT_COPY.setupTitleAppReady
-          : MAC_WORKER_BENEFIT_COPY.setupTitle}
-      </h1>
-      <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        {isLocalAppInstalled
-          ? MAC_WORKER_BENEFIT_COPY.setupDescriptionAppReady
-          : MAC_WORKER_BENEFIT_COPY.setupDescription}
-      </p>
+      <HomeConnectGuideHeroCopy isLocalAppInstalled={isLocalAppInstalled} />
 
       {!isWebSocketSupported ? (
         <div className="mt-6">
@@ -118,7 +102,7 @@ export default function HomeConnectComputerGuide({
       <HomeConnectGuideDownloadExtras
         operatingSystem={operatingSystem}
         isWebSocketSupported={isWebSocketSupported}
-        showInstallCta={showInstallCta}
+        showInstallCta={showAppDownloadCta}
       />
 
       <ConnectInstallPasteModal
