@@ -12,7 +12,8 @@ export const parseDispatchApprovalSocketMessage = (
   handlers: {
     readonly onApprovalRequired: (payload: {
       readonly runId: string;
-      readonly requesterEmail: string;
+      /** Requester name, label or email; null when the server sent none. */
+      readonly requesterEmail: string | null;
       readonly prompt: string;
       /** S0: ISO time the 15-minute approval window ends; null on old servers. */
       readonly approvalExpiresAt: string | null;
@@ -30,9 +31,10 @@ export const parseDispatchApprovalSocketMessage = (
     const runId = typeof payload.runId === "string" ? payload.runId : "";
     const prompt = typeof payload.prompt === "string" ? payload.prompt : "";
     const requesterEmail =
-      typeof payload.requesterEmail === "string"
-        ? payload.requesterEmail
-        : "Teammate";
+      typeof payload.requesterEmail === "string" &&
+      payload.requesterEmail.trim().length > 0
+        ? payload.requesterEmail.trim()
+        : null;
     const approvalExpiresAt =
       typeof payload.approvalExpiresAt === "string"
         ? payload.approvalExpiresAt

@@ -12,6 +12,11 @@ vi.mock("@/lib/projects/userProjectQueries", () => ({
     id === "proj-1" ? { id: "proj-1", ownerUserId: "owner-1" } : null,
   ),
 }));
+vi.mock("@/lib/projects/acl/getActiveProjectMembership", () => ({
+  getActiveProjectMembership: vi.fn(async (_p: string, userId: string) =>
+    userId === "bot-user-1" ? { memberKind: "bot", role: "member" } : null,
+  ),
+}));
 vi.mock(
   "@/lib/projects/acl/runsWithoutApproval/setProjectRunsWithoutApproval",
   () => ({ setProjectRunsWithoutApproval: (i: unknown) => setMock(i) }),
@@ -37,7 +42,7 @@ const put = (projectId: string, body: unknown) =>
     ctx(projectId),
   );
 
-describe("/api/projects/[id]/access/runs-without-approval (owner only)", () => {
+describe("/api/projects/[id]/access/runs-without-approval (owner writes)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     setMock.mockResolvedValue({ ok: true, allowRunsWithoutApproval: true, changed: true });

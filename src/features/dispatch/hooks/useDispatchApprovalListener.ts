@@ -14,7 +14,7 @@ import { isAgentRunLiveTerminalActive } from "@/features/reports/utils/registerA
 
 export interface DispatchApprovalRequest {
   readonly runId: string;
-  readonly requesterEmail: string;
+  readonly requesterEmail: string | null;
   readonly prompt: string;
   readonly approvalExpiresAt: string | null;
 }

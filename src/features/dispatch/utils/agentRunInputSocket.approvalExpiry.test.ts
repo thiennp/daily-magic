@@ -31,3 +31,15 @@ describe("parseDispatchApprovalSocketMessage approval expiry (S0)", () => {
     );
   });
 });
+
+describe("parseDispatchApprovalSocketMessage requester (S0 card)", () => {
+  it("uses null, not a made-up name, when no requester is sent", () => {
+    const onApprovalRequired = vi.fn();
+    parseDispatchApprovalSocketMessage(message({ requesterEmail: " " }), {
+      onApprovalRequired,
+    });
+    expect(onApprovalRequired).toHaveBeenCalledWith(
+      expect.objectContaining({ requesterEmail: null }),
+    );
+  });
+});

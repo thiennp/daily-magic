@@ -15,7 +15,7 @@ interface AwcProjectDetailSettingsPanelProps {
   readonly pageActorRole: ProjectPageActorRole;
 }
 
-/** Layout v2 L5 Settings (p-set): name · project path (V5-3) · message history · runs without approval (S0-2, owner) · danger zone. */
+/** Layout v2 L5 Settings (p-set): name · project path (V5-3) · message history · runs without approval (S0-2; owner edits, others read) · danger zone. */
 export default function AwcProjectDetailSettingsPanel({
   project,
   startRename,
@@ -40,9 +40,10 @@ export default function AwcProjectDetailSettingsPanel({
       {isOwner ? (
         <AwcProjectSettingsHistoryRow projectId={project.id} />
       ) : null}
-      {isOwner ? (
-        <AwcProjectSettingsRunsWithoutApprovalRow projectId={project.id} />
-      ) : null}
+      <AwcProjectSettingsRunsWithoutApprovalRow
+        projectId={project.id}
+        canEdit={isOwner}
+      />
       {canDelete ? (
         <AwcProjectSettingsDangerZone
           projectId={project.id}

@@ -13,6 +13,8 @@ export type RunsWithoutApprovalLoadState = "loading" | "ready" | "error";
 
 /** Props for the presentational switch row. */
 export type RunsWithoutApprovalSwitchView = {
+  /** Owner only. Others see the state, switch off, with the reason. */
+  readonly canEdit: boolean;
   readonly loadState: RunsWithoutApprovalLoadState;
   readonly enabled: boolean;
   readonly saving: boolean;

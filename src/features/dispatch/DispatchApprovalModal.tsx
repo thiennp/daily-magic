@@ -6,6 +6,8 @@ import DispatchApprovalExpiryNote from "@/features/dispatch/DispatchApprovalExpi
 import type { DispatchApprovalRequest } from "@/features/dispatch/hooks/useDispatchApprovalListener";
 import { useNowMsEvery } from "@/features/dispatch/hooks/useNowMsEvery";
 import { resolveDispatchApprovalExpiry } from "@/features/dispatch/utils/resolveDispatchApprovalExpiry";
+import { formatDispatchApprovalCardBody } from "@/features/dispatch/utils/formatDispatchApprovalCardBody";
+import { DISPATCH_APPROVAL_CARD_COPY } from "@/features/dispatch/dispatchApprovalCardCopy.constant";
 import { AWC_PENDING_APPROVAL_CARD_COPY } from "@/features/projects/access/approvalCard/awcPendingApprovalCardCopy.constant";
 
 interface DispatchApprovalModalProps {
@@ -39,11 +41,10 @@ export default function DispatchApprovalModal({
       className="max-w-lg p-6"
     >
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-        Approve agent dispatch?
+        {DISPATCH_APPROVAL_CARD_COPY.title}
       </h2>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        {request.requesterEmail} wants to run a task on your machine. You can
-        approve in the browser; your computer also gets a notification.
+        {formatDispatchApprovalCardBody(request.requesterEmail)}
       </p>
       <pre className="mt-4 max-h-40 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
         {request.prompt}

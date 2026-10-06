@@ -9,7 +9,7 @@ interface AwcRunsWithoutApprovalSwitchProps extends RunsWithoutApprovalSwitchVie
 
 const REASON_ID = "p-set-rwa-reason";
 
-/** Presentational S0-2 switch row (owner only; the caller hides it for others). */
+/** Presentational S0-2 switch row. Non-owners see the state, switch off, with the reason. */
 export default function AwcRunsWithoutApprovalSwitch({
   onToggle,
   onRetry,

@@ -7,6 +7,7 @@ export const resolveRunsWithoutApprovalDisabledReason = (
 ): string | null => {
   if (view.loadState === "loading") return C.loading;
   if (view.loadState === "error") return C.loadError;
+  if (!view.canEdit) return C.ownerOnlyReason;
   if (view.saving) return C.saving;
   return null;
 };

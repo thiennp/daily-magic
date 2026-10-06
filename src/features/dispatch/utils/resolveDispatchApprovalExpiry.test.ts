@@ -52,3 +52,17 @@ describe("resolveDispatchApprovalExpiry (S0 approval card)", () => {
     }
   });
 });
+
+describe("resolveDispatchApprovalExpiry with no requester", () => {
+  it("uses the fallback name in the ended body", () => {
+    expect(
+      resolveDispatchApprovalExpiry({
+        approvalExpiresAt: at(-1),
+        requester: null,
+        nowMs: NOW,
+      }),
+    ).toMatchObject({
+      body: "Nothing ran. Someone in this project can send the task again.",
+    });
+  });
+});

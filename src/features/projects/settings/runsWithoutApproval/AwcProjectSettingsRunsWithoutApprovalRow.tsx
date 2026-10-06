@@ -10,14 +10,18 @@ import { useProjectRunsWithoutApproval } from "@/features/projects/settings/runs
 
 interface AwcProjectSettingsRunsWithoutApprovalRowProps {
   readonly projectId: string;
+  /** Owner only; everyone else sees the state with the switch off. */
+  readonly canEdit: boolean;
 }
 
 /**
- * Settings · S0-2 "Allow runs without approval" (owner only, default off).
+ * Settings · S0-2 "Allow runs without approval" (default off). Owner changes it;
+ * members and viewers see the state with the switch off and the reason.
  * ON asks first; OFF saves right away. The server writes the Access log row.
  */
 export default function AwcProjectSettingsRunsWithoutApprovalRow({
   projectId,
+  canEdit,
 }: AwcProjectSettingsRunsWithoutApprovalRowProps) {
   const setting = useProjectRunsWithoutApproval(projectId);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -25,7 +29,7 @@ export default function AwcProjectSettingsRunsWithoutApprovalRow({
   const onToggle = (): void => {
     const step = resolveRunsWithoutApprovalToggle({
       enabled: setting.enabled,
-      busy: setting.saving || setting.loadState !== "ready",
+      busy: !canEdit || setting.saving || setting.loadState !== "ready",
     });
     if (step.kind === "confirm") setConfirmOpen(true);
     if (step.kind === "save") void setting.save(step.value);
@@ -40,6 +44,7 @@ export default function AwcProjectSettingsRunsWithoutApprovalRow({
         {C.heading}
       </h3>
       <AwcRunsWithoutApprovalSwitch
+        canEdit={canEdit}
         loadState={setting.loadState}
         enabled={setting.enabled}
         saving={setting.saving}

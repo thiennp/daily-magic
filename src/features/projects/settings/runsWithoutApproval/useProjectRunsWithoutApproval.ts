@@ -11,7 +11,7 @@ import type {
 /** Owner-only S0-2 setting: load once, save on demand (server is the truth). */
 export const useProjectRunsWithoutApproval = (
   projectId: string,
-): RunsWithoutApprovalSwitchView & {
+): Omit<RunsWithoutApprovalSwitchView, "canEdit"> & {
   readonly save: (value: boolean) => Promise<void>;
   readonly reload: () => void;
 } => {

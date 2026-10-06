@@ -4,6 +4,7 @@ import { RUNS_WITHOUT_APPROVAL_COPY as C } from "@/features/projects/settings/ru
 import { resolveRunsWithoutApprovalDisabledReason } from "@/features/projects/settings/runsWithoutApproval/resolveRunsWithoutApprovalDisabledReason";
 
 const base = {
+  canEdit: true,
   loadState: "ready" as const,
   enabled: false,
   saving: false,
@@ -25,5 +26,18 @@ describe("resolveRunsWithoutApprovalDisabledReason (S0-2)", () => {
     expect(
       resolveRunsWithoutApprovalDisabledReason({ ...base, saving: true }),
     ).toBe(C.saving);
+  });
+
+  it("tells non-owners why the switch is off", () => {
+    expect(
+      resolveRunsWithoutApprovalDisabledReason({ ...base, canEdit: false }),
+    ).toBe(C.ownerOnlyReason);
+    expect(
+      resolveRunsWithoutApprovalDisabledReason({
+        ...base,
+        canEdit: false,
+        loadState: "loading",
+      }),
+    ).toBe(C.loading);
   });
 });

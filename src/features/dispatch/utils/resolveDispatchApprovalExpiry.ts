@@ -1,4 +1,4 @@
-import { DISPATCH_APPROVAL_EXPIRY_COPY as C } from "@/features/dispatch/dispatchApprovalExpiryCopy.constant";
+import { DISPATCH_APPROVAL_CARD_COPY as C } from "@/features/dispatch/dispatchApprovalCardCopy.constant";
 import type { DispatchApprovalExpiryView } from "@/features/dispatch/dispatchApprovalExpiry.type";
 
 const MINUTE_MS = 60_000;
@@ -9,7 +9,7 @@ const MINUTE_MS = 60_000;
  */
 export const resolveDispatchApprovalExpiry = (input: {
   readonly approvalExpiresAt: string | null;
-  readonly requester: string;
+  readonly requester: string | null;
   readonly nowMs: number;
 }): DispatchApprovalExpiryView => {
   if (input.approvalExpiresAt === null) return { kind: "none" };
@@ -20,7 +20,10 @@ export const resolveDispatchApprovalExpiry = (input: {
     return {
       kind: "ended",
       title: C.expiredTitle,
-      body: C.expiredBody.replace("{requester}", input.requester),
+      body: C.expiredBody.replace(
+        "{requester}",
+        input.requester?.trim() || C.requesterFallback,
+      ),
     };
   }
   const minutes = Math.ceil(leftMs / MINUTE_MS);
