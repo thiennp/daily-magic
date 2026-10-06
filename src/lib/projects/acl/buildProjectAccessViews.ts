@@ -27,6 +27,8 @@ export type MembershipView = {
   readonly installBundleVersion?: string | null;
   readonly connectVersionStatus?: AgentWitchLocalConnectVersionStatus;
   readonly assignable?: boolean;
+  /** Owner snapshot, active member bots only: false = waiting for wake link. */
+  readonly wakeLinkSet?: boolean;
 };
 
 /** UI-contract PendingRequestView */

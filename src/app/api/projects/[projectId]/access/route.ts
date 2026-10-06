@@ -4,6 +4,7 @@ import {
   buildPendingRequestViews,
 } from "@/lib/projects/acl/buildProjectAccessViews";
 import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
+import { enrichProjectAccessBotWakeLinks } from "@/lib/projects/acl/enrichProjectAccessBotWakeLinks";
 import { enrichProjectAccessComputerMembers } from "@/lib/projects/acl/enrichProjectAccessComputerMembers";
 import { listPendingProjectAccessRequests } from "@/lib/projects/acl/listPendingProjectAccessRequests";
 import { listProjectMembershipsForProject } from "@/lib/projects/acl/listProjectMembershipsForProject";
@@ -44,10 +45,14 @@ export async function GET(
   const memberRows = await listProjectMembershipsForProject(projectId);
   const baseMembers = await buildMembershipViews(memberRows);
   const liveDeviceIds = await resolveAccessComputerLiveDeviceIds(baseMembers);
-  const members = await enrichProjectAccessComputerMembers(
+  const computerMembers = await enrichProjectAccessComputerMembers(
     baseMembers,
     liveDeviceIds,
   );
+  const members =
+    access.kind === "owner"
+      ? await enrichProjectAccessBotWakeLinks(projectId, computerMembers)
+      : computerMembers;
   const pendingRequests =
     access.kind === "owner"
       ? await buildPendingRequestViews(

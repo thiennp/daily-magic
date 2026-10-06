@@ -5,6 +5,8 @@ import { useState } from "react";
 import AwcProjectAccessMemberGrokWebhookForm from "@/features/projects/access/AwcProjectAccessMemberGrokWebhookForm";
 import AwcProjectAccessMemberRow from "@/features/projects/access/AwcProjectAccessMemberRow";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
+import type { AwcGrokWakeLinkFocusRequest } from "@/features/projects/access/hooks/useAwcGrokWakeLinkFocus";
+import { resolveMemberWakeLinkState } from "@/features/projects/access/utils/resolveMemberWakeLinkState";
 import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
 
 export { awcProjectAccessMemberAnchorId } from "@/features/projects/access/awcProjectAccessMemberAnchor";
@@ -15,6 +17,8 @@ interface MemberRow {
   readonly teamLabel: string | null;
   readonly projectDisplayName: string | null;
   readonly isAgent: boolean;
+  /** Owner snapshot only (active member bots). */
+  readonly wakeLinkSet?: boolean;
 }
 
 interface AwcProjectAccessMembersListProps {
@@ -26,6 +30,11 @@ interface AwcProjectAccessMembersListProps {
     membershipId: string,
     projectDisplayName: string,
   ) => Promise<{ readonly ok: boolean; readonly errorMessage?: string }>;
+  /** Deep link / "Add wake link" target: expands that row's Grok wake-link form. */
+  readonly wakeLinkFocus?: AwcGrokWakeLinkFocusRequest | null;
+  /** Saved in this session (pill flips before the next poll). */
+  readonly wakeLinkSavedIds?: ReadonlySet<string>;
+  readonly onWakeLinkSaved?: (membershipId: string) => void;
 }
 
 export default function AwcProjectAccessMembersList({
@@ -34,6 +43,9 @@ export default function AwcProjectAccessMembersList({
   recentlyAutoApprovedIds = [],
   onRevoke,
   onRename,
+  wakeLinkFocus = null,
+  wakeLinkSavedIds,
+  onWakeLinkSaved,
 }: AwcProjectAccessMembersListProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -85,11 +97,26 @@ export default function AwcProjectAccessMembersList({
                 });
               }}
               onRevoke={() => onRevoke(member.id)}
+              wakeLinkState={resolveMemberWakeLinkState(
+                member,
+                wakeLinkSavedIds,
+              )}
               grokWebhook={
                 member.isAgent && projectId ? (
                   <AwcProjectAccessMemberGrokWebhookForm
                     projectId={projectId}
                     membershipId={member.id}
+                    memberName={member.projectDisplayName}
+                    wakeLinkSet={
+                      resolveMemberWakeLinkState(member, wakeLinkSavedIds) ===
+                      "set"
+                    }
+                    openRequest={
+                      wakeLinkFocus?.membershipId === member.id
+                        ? wakeLinkFocus.nonce
+                        : 0
+                    }
+                    onSaved={onWakeLinkSaved}
                   />
                 ) : null
               }

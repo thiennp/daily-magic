@@ -21,6 +21,8 @@ export type AccessMembershipView = {
   readonly installBundleVersion?: string | null;
   readonly connectVersionStatus?: "ok" | "too_old" | string;
   readonly assignable?: boolean;
+  /** Owner snapshot, active member bots only: false = waiting for wake link. */
+  readonly wakeLinkSet?: boolean;
 };
 
 export type AccessPendingView = {

@@ -3,7 +3,9 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { AWC_GROK_WAKE_AWAITING_COPY } from "@/features/projects/access/awcGrokWakeAwaitingCopy.constant";
 import { AWC_GROK_WEBHOOK_FORM_COPY } from "@/features/projects/access/awcGrokWebhookFormCopy.constant";
+import { mapWakeLinkSaveError } from "@/features/projects/access/hooks/useMemberGrokWebhookForm";
 
 const read = (path: string): string =>
   readFileSync(join(process.cwd(), path), "utf8");
@@ -42,7 +44,39 @@ describe("member Grok webhook secret form", () => {
     expect(`${src}${hook}`).not.toMatch(/awc_whsec_/);
   });
 
-  it("points to the bot info pane, not chat or a link", () => {
+  it("Access form uses Product EN: title, help with {name}, save, toast", () => {
+    expect(src).toContain("wake.formTitle");
+    expect(src).toContain("wake.formHelp");
+    expect(src).toContain("wake.save");
+    expect(src).toContain("wake.toastSaved");
+    expect(src).toContain("wake.rowAction");
+    expect(AWC_GROK_WAKE_AWAITING_COPY.save).toBe("Save wake link");
+  });
+
+  it("maps a rejected paste to the Product 'copy it again' line", () => {
+    const error = AWC_GROK_WAKE_AWAITING_COPY.error;
+    for (const code of [
+      "invalid_url",
+      "https_only",
+      "blocked_host",
+      "invalid_bearer",
+    ]) {
+      expect(mapWakeLinkSaveError(code)).toBe(error);
+    }
+    expect(mapWakeLinkSaveError(undefined)).toBe(error);
+    expect(mapWakeLinkSaveError("naming_required")).toBe(
+      "Give this bot a project nickname first.",
+    );
+  });
+
+  it("deep link expands the form and focuses the wake link field", () => {
+    expect(src).toContain("openRequest");
+    expect(src).toContain("openForm()");
+    expect(src).toContain('input[name="grok-webhook-url"]');
+    expect(src).toContain("awcGrokWakeLinkHash(membershipId)");
+  });
+
+  it("My bots keeps the shared form hint (points to the bot info pane, not chat or a link)", () => {
     expect(AWC_GROK_WEBHOOK_FORM_COPY.hint).toContain(
       "click the bot's name in the chat header",
     );

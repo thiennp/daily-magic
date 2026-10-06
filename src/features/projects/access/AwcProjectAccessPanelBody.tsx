@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import AwcProjectAccessAutoApprovedBanner from "@/features/projects/access/AwcProjectAccessAutoApprovedBanner";
 import AwcProjectAccessComputerMembersSection from "@/features/projects/access/AwcProjectAccessComputerMembersSection";
@@ -8,12 +8,15 @@ import AwcProjectAccessFoldersSection from "@/features/projects/access/AwcProjec
 import AwcProjectAccessMembersList from "@/features/projects/access/AwcProjectAccessMembersList";
 import AwcProjectAccessPendingList from "@/features/projects/access/AwcProjectAccessPendingList";
 import AwcProjectAccessSection from "@/features/projects/access/AwcProjectAccessSection";
+import AwcProjectAccessWakeLinkAwaitingBanner from "@/features/projects/access/AwcProjectAccessWakeLinkAwaitingBanner";
 import AwcProjectInvitesPanel from "@/features/projects/access/invites/AwcProjectInvitesPanel";
 import AwcProjectInboxSection from "@/features/projects/access/inbox/AwcProjectInboxSection";
 import AwcHumanPeopleSection from "@/features/projects/access/humanInvites/AwcHumanPeopleSection";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { isComputerAccessMember } from "@/features/projects/access/utils/isComputerAccessMember";
 import type { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
+import { useAwcGrokWakeLinkFocus } from "@/features/projects/access/hooks/useAwcGrokWakeLinkFocus";
+import { listMembersAwaitingWakeLink } from "@/features/projects/access/utils/resolveMemberWakeLinkState";
 
 type AccessApi = ReturnType<typeof useAwcProjectAccess>;
 
@@ -42,10 +45,25 @@ export default function AwcProjectAccessPanelBody({
     () => access.members.filter(isComputerAccessMember),
     [access.members],
   );
+  const [wakeLinkSavedIds, setWakeLinkSavedIds] = useState<ReadonlySet<string>>(
+    () => new Set(),
+  );
+  const onWakeLinkSaved = useCallback((membershipId: string) => {
+    setWakeLinkSavedIds((previous) => new Set([...previous, membershipId]));
+  }, []);
+  const awaitingWakeLink = useMemo(
+    () => listMembersAwaitingWakeLink(botMembers, wakeLinkSavedIds),
+    [botMembers, wakeLinkSavedIds],
+  );
+  const wakeLinkFocus = useAwcGrokWakeLinkFocus();
 
   return (
     <div className="space-y-3">
       <AwcProjectAccessAutoApprovedBanner message={access.autoApprovedBanner} />
+      <AwcProjectAccessWakeLinkAwaitingBanner
+        members={awaitingWakeLink}
+        onAddWakeLink={wakeLinkFocus.focus}
+      />
 
       <AwcHumanPeopleSection
         projectId={projectId}
@@ -78,6 +96,9 @@ export default function AwcProjectAccessPanelBody({
             onRename={async (membershipId, projectDisplayName) =>
               access.renameMember(membershipId, projectDisplayName)
             }
+            wakeLinkFocus={wakeLinkFocus.request}
+            wakeLinkSavedIds={wakeLinkSavedIds}
+            onWakeLinkSaved={onWakeLinkSaved}
           />
         </div>
       </AwcProjectAccessSection>
