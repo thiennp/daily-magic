@@ -19,6 +19,7 @@ export {
   runWriterTask,
   publishAgentRunEstimateComparison,
   stopAgentRun,
+  stopAllAgentRuns,
 } from "../../../scripts/agentWitchRunSessions";
 export { ensureHarnessWriterCli } from "../../../scripts/ensureHarnessWriterCli";
 export {

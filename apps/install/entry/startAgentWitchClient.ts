@@ -34,14 +34,19 @@ import {
 } from "@agent-witch/install-device-identity";
 import { resolveAgentWitchProcessHost } from "@agent-witch/install-process-host";
 import {
+  buildLocalCodingToolRefusalResult,
+  createBoundedRunIdLedger,
+  isCodingToolsPaused,
   materializeRunScopedCompositionOverlay,
   parseProjectCompositionSnapshotWire,
   removeRunCompositionOverlay,
   resolveRunProjectFolderPath,
   readAgentWitchRunConfig,
   resolveWriterSpawnEnv,
+  scrubOutboundRunFrame,
   verifyProjectCompositionSnapshotBlobs,
   waitForAgentWitchClientConfigs as waitForConfigs,
+  watchCodingToolsPause,
 } from "@agent-witch/install-runtime-client";
 import { handleProjectMessageHistoryDispatch } from "@agent-witch/live-project-history";
 import type { AgentWitchClientConfig as AgentWitchConfig } from "@agent-witch/install-runtime-client/types";
@@ -99,6 +104,9 @@ import {
   isUnknownAgentWitchIdentityError,
 } from "@agent-witch/install-uninstall";
 import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
+import { LocalCodingToolRefusalCode } from "@agent-witch/shared/dispatch";
+
+import { admitLocalCodingToolRun } from "./admitLocalCodingToolRun";
 
 import {
   acceptTerminalStream,
@@ -159,6 +167,7 @@ import {
   seedAgentRunReportFile,
   startAgentWitchInProcessServices,
   stopAgentRun,
+  stopAllAgentRuns,
   subscribeAgentWitchWriterWorkIdle,
   supportsWriterSessionContinuation,
   takeDeferredAgentWitchInstallBundleUpdate,
@@ -181,6 +190,9 @@ const gitSnapshotBeforeByRunId = new Map<
   Awaited<ReturnType<typeof captureAgentWitchGitWorktreeSnapshot>>
 >();
 const runScopedOverlayByRunId = new Map<string, boolean>();
+/** S0-7c: agentRunIds accepted for a run (a redelivered command never runs twice). */
+const acceptedRunIds = createBoundedRunIdLedger();
+const admittingRunIds = new Set<string>();
 
 interface AgentWitchOutboundSocket {
   readonly readyState: number;
@@ -196,14 +208,16 @@ const sendMessage = (
   layout?: AgentWitchLocalLayout,
 ): void => {
   if (socket.readyState === WebSocket.OPEN) {
-    socket.send(JSON.stringify(message));
+    // S0-8: scrub run output before it leaves the machine or hits the trace.
+    const outbound = scrubOutboundRunFrame(message);
+    socket.send(JSON.stringify(outbound));
     if (layout !== undefined) {
       appendAgentWitchLocalTraffic(layout, {
         direction: "out",
         type: String(message.type ?? "unknown"),
         summary: "outbound WS frame",
       });
-      recordAgentWitchWsTraceFromObject(layout, "out", message);
+      recordAgentWitchWsTraceFromObject(layout, "out", outbound);
     }
   }
 };
@@ -359,16 +373,14 @@ const dispatchWriterTask = async (
     projectId,
   );
   if (resolvedProjectFolderPath === null) {
-    sendMessage(socket, {
-      type: "command.claude.result",
-      payload: {
-        exitCode: -1,
-        output:
-          "This project has no folder on this computer yet. Open AgentWitch Local and set the project folder before running tasks.",
+    sendMessage(
+      socket,
+      buildLocalCodingToolRefusalResult({
+        code: LocalCodingToolRefusalCode.FOLDER_REQUIRED,
         ...(agentRunId !== undefined ? { agentRunId } : {}),
-      },
-      requestId,
-    });
+        ...(requestId !== undefined ? { requestId } : {}),
+      }),
+    );
     return;
   }
   ensureAgentWitchProjectFolder({
@@ -917,6 +929,23 @@ const runHarnessRequest = async (
     return;
   }
 
+  if (isCodingToolsPaused(config.layout.configPath)) {
+    // S0-7a: harness requests run a local CLI too.
+    sendMessage(socket, {
+      type: "harness.request.result",
+      payload: {
+        success: false,
+        writerAgent,
+        errorCode: LocalCodingToolRefusalCode.CODING_TOOLS_PAUSED,
+        errorMessage: buildLocalCodingToolRefusalResult({
+          code: LocalCodingToolRefusalCode.CODING_TOOLS_PAUSED,
+        }).payload.output,
+      },
+      requestId,
+    });
+    return;
+  }
+
   beginAgentWitchWriterWork(config.layout);
   const result = await (async () => {
     try {
@@ -1430,52 +1459,41 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         console.log(
           `[agent-witch] Running ${writerAgent} task (${sessionContinuation ? "continue" : "first"})…`,
         );
-        if (projectFolderPath === null) {
-          sendMessage(socket, {
-            type: "command.claude.result",
-            payload: {
-              exitCode: -1,
-              output:
-                "This project has no folder on this computer yet. Open AgentWitch Local and set the project folder before running tasks.",
-              ...(agentRunId !== undefined ? { agentRunId } : {}),
-            },
-            requestId,
-          });
+        if (
+          agentRunId !== undefined &&
+          (acceptedRunIds.has(agentRunId) ||
+            admittingRunIds.has(agentRunId) ||
+            loadAgentRunLocal(config.layout, agentRunId) !== null)
+        ) {
+          // S0-7c: redelivered run command; never start the same run twice.
+          console.log(`[agent-witch] Ignoring duplicate run ${agentRunId}.`);
           return;
         }
-
-        if (compositionSnapshot !== null) {
-          const blobError = verifyProjectCompositionSnapshotBlobs(
-            config.layout,
-            compositionSnapshot,
+        const refuseRun = (
+          code: Parameters<typeof buildLocalCodingToolRefusalResult>[0]["code"],
+        ): void => {
+          sendMessage(
+            socket,
+            buildLocalCodingToolRefusalResult({
+              code,
+              ...(agentRunId !== undefined ? { agentRunId } : {}),
+              ...(requestId !== undefined ? { requestId } : {}),
+            }),
           );
-
-          if (blobError !== null) {
-            sendMessage(socket, {
-              type: "command.claude.result",
-              payload: {
-                exitCode: -1,
-                output: blobError,
-                ...(agentRunId !== undefined ? { agentRunId } : {}),
-              },
-              requestId,
-            });
-            return;
-          }
-
-          if (agentRunId !== undefined) {
-            const overlayResult = materializeRunScopedCompositionOverlay(
+        };
+        const startAdmittedRun = (admittedFolderPath: string): void => {
+          if (compositionSnapshot !== null) {
+            const blobError = verifyProjectCompositionSnapshotBlobs(
               config.layout,
-              agentRunId,
               compositionSnapshot,
             );
 
-            if (!overlayResult.ok) {
+            if (blobError !== null) {
               sendMessage(socket, {
                 type: "command.claude.result",
                 payload: {
                   exitCode: -1,
-                  output: overlayResult.errorMessage,
+                  output: blobError,
                   ...(agentRunId !== undefined ? { agentRunId } : {}),
                 },
                 requestId,
@@ -1483,45 +1501,99 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
               return;
             }
 
-            runScopedOverlayByRunId.set(
-              agentRunId,
-              compositionSnapshot.entries.some(
-                (entry) => entry.scope === "run",
-              ),
-            );
-          }
-        }
+            if (agentRunId !== undefined) {
+              const overlayResult = materializeRunScopedCompositionOverlay(
+                config.layout,
+                agentRunId,
+                compositionSnapshot,
+              );
 
-        if (agentRunId !== undefined && shellSessionId !== undefined) {
-          shellSessionIdByRunId.set(agentRunId, shellSessionId);
-        }
-        if (agentRunId !== undefined) {
-          projectFolderPathByRunId.set(agentRunId, projectFolderPath);
-          if (projectId !== undefined && projectId.trim().length > 0) {
-            projectIdByRunId.set(agentRunId, projectId.trim());
+              if (!overlayResult.ok) {
+                sendMessage(socket, {
+                  type: "command.claude.result",
+                  payload: {
+                    exitCode: -1,
+                    output: overlayResult.errorMessage,
+                    ...(agentRunId !== undefined ? { agentRunId } : {}),
+                  },
+                  requestId,
+                });
+                return;
+              }
+
+              runScopedOverlayByRunId.set(
+                agentRunId,
+                compositionSnapshot.entries.some(
+                  (entry) => entry.scope === "run",
+                ),
+              );
+            }
           }
-          promptByRunId.set(agentRunId, prompt.trim());
-          ensureAgentWitchProjectFolder({
-            projectFolderPath,
-            ...(projectId !== undefined && projectId.trim().length > 0
-              ? { projectId: projectId.trim() }
-              : {}),
-          });
+
+          if (agentRunId !== undefined && shellSessionId !== undefined) {
+            shellSessionIdByRunId.set(agentRunId, shellSessionId);
+          }
+          if (agentRunId !== undefined) {
+            projectFolderPathByRunId.set(agentRunId, admittedFolderPath);
+            if (projectId !== undefined && projectId.trim().length > 0) {
+              projectIdByRunId.set(agentRunId, projectId.trim());
+            }
+            promptByRunId.set(agentRunId, prompt.trim());
+            ensureAgentWitchProjectFolder({
+              projectFolderPath: admittedFolderPath,
+              ...(projectId !== undefined && projectId.trim().length > 0
+                ? { projectId: projectId.trim() }
+                : {}),
+            });
+          }
+          void dispatchWriterTask(
+            config,
+            writerAgent,
+            prompt.trim(),
+            requestId,
+            socket,
+            agentRunId,
+            sessionContinuation,
+            shellSessionId,
+            sourceRunId,
+            admittedFolderPath,
+            reportKey,
+            projectId,
+          );
+        };
+        if (agentRunId !== undefined) {
+          admittingRunIds.add(agentRunId);
         }
-        void dispatchWriterTask(
+        // S0-7a pause + S0-5 folder allowlist, before any folder is created.
+        void admitLocalCodingToolRun({
           config,
-          writerAgent,
-          prompt.trim(),
-          requestId,
-          socket,
-          agentRunId,
-          sessionContinuation,
-          shellSessionId,
-          sourceRunId,
-          projectFolderPath,
-          reportKey,
-          projectId,
-        );
+          ...(projectId !== undefined ? { projectId } : {}),
+          requestedFolderPath: projectFolderPath,
+          defaultFolderPath: buildDefaultUserProjectFolderPath(),
+        })
+          .catch(() => ({
+            ok: false as const,
+            code: LocalCodingToolRefusalCode.FOLDER_CHECK_UNAVAILABLE,
+          }))
+          .then((admission) => {
+            if (agentRunId !== undefined) {
+              admittingRunIds.delete(agentRunId);
+            }
+            if (!admission.ok) {
+              refuseRun(admission.code);
+              return;
+            }
+            if (agentRunId !== undefined) {
+              acceptedRunIds.add(agentRunId);
+            }
+            startAdmittedRun(admission.folderRealPath);
+          })
+          .catch((error: unknown) => {
+            console.error(
+              "[agent-witch] Run start failed:",
+              error instanceof Error ? error.message : error,
+            );
+          });
       }
     }
 
@@ -1986,8 +2058,24 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     });
   };
 
+  // S0-7a: turning "Pause all coding tools" on stops every active run.
+  const unwatchCodingToolsPause = watchCodingToolsPause(
+    config.layout.configPath,
+    (paused) => {
+      if (!paused) {
+        return;
+      }
+      const stopped = stopAllAgentRuns(
+        config,
+        asLegacyWebSocket(state.socket ?? { readyState: WebSocket.CLOSED, send: () => undefined }),
+      );
+      console.log(`[agent-witch] Coding tools paused; stopped ${stopped} run(s).`);
+    },
+  );
+
   const stop = (): void => {
     state.stopped = true;
+    unwatchCodingToolsPause();
     clearHeartbeat();
     clearLocalHealthCheck();
     clearReconnectTimer();

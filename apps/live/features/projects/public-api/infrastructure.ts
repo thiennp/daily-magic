@@ -81,3 +81,11 @@ export {
 } from "../internal/core/agentWitchCloudApi";
 
 export { default as createMacAgentWitchProjectPitfallsStore } from "../internal/core/pitfalls/createMacAgentWitchProjectPitfallsStore";
+
+export { resolveAllowedRunFolder } from "../internal/core/runFolderAllowlist/resolveAllowedRunFolder";
+
+export { loadRegisteredRunFolders } from "../internal/core/runFolderAllowlist/loadRegisteredRunFolders";
+
+export type { RegisteredRunFolder } from "../internal/core/runFolderAllowlist/registeredRunFolder.type";
+
+export type { RunFolderDecision } from "../internal/core/runFolderAllowlist/decideRunFolder";

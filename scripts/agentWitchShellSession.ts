@@ -6,6 +6,7 @@ import { pathToFileURL } from "node:url";
 import type { IPty } from "node-pty";
 
 import { isProcessAlive } from "./isProcessAlive";
+import { LOCAL_CLI_KILL_GRACE_MS } from "./agentWitchRunSessionLimit";
 import { isAgentWitchBundled } from "./agentWitchBundled.constant";
 import { resolveAgentWitchBundleAppDir } from "./resolveAgentWitchBundleAppDir";
 
@@ -139,11 +140,24 @@ export const killAgentPtyByRunId = (runId: string): boolean => {
     }
 
     sessions.delete(shellSessionId);
+    const pid = session.pty.pid;
     try {
       session.pty.kill();
     } catch {
       // already exited
     }
+    // S0-7b: escalate to SIGKILL (same grace as S0-6 pipe stops) when the
+    // writer ignores the first signal.
+    setTimeout(() => {
+      if (!isProcessAlive(pid)) {
+        return;
+      }
+      try {
+        process.kill(pid, "SIGKILL");
+      } catch {
+        // exited between the probe and the kill
+      }
+    }, LOCAL_CLI_KILL_GRACE_MS).unref();
 
     return true;
   }

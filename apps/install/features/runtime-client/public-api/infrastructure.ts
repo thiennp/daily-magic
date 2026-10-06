@@ -77,3 +77,24 @@ export {
   type AgentWitchDeviceRestartAckPayload,
   type AgentWitchDeviceRestartAckStatus,
 } from "../internal/core/buildAgentWitchDeviceRestartAck";
+
+export { scrubOutboundRunFrame } from "../internal/core/safety/scrubOutboundRunFrame";
+
+export {
+  isCodingToolsPaused,
+  readCodingToolsPause,
+  resolveCodingToolsPausePath,
+  writeCodingToolsPause,
+} from "../internal/core/safety/codingToolsPauseStore";
+
+export type { CodingToolsPauseState } from "../internal/core/safety/parseCodingToolsPauseFile";
+
+export { watchCodingToolsPause } from "../internal/core/safety/watchCodingToolsPause";
+
+export {
+  createBoundedRunIdLedger,
+  rememberRunId,
+  type RunIdLedger,
+} from "../internal/core/safety/boundedRunIdLedger";
+
+export { buildLocalCodingToolRefusalResult } from "../internal/core/safety/buildLocalCodingToolRefusalResult";

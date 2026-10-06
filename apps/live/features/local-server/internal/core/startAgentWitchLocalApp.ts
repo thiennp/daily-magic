@@ -48,6 +48,7 @@ import {
 } from "@agent-witch/live-shell/presentation";
 import { buildAgentWitchLocalHomePageBody } from "@agent-witch/live-home/presentation";
 import { tryHandlePromptSdlcLocalRequest } from "../../../prompt-optimizer/public-api/infrastructure";
+import { tryHandleCodingToolsPauseLocalRequest } from "./tryHandleCodingToolsPauseLocalRequest";
 import {
   describePitfallCacheAvailability,
   tryHandleTokenSaverLocalRequest,
@@ -553,6 +554,20 @@ export const startAgentWitchLocalApp = (input: {
           readBody,
           sendHtml,
           renderShell: buildLocalAppShell,
+        })
+      ) {
+        return;
+      }
+
+      if (
+        await tryHandleCodingToolsPauseLocalRequest({
+          method,
+          pathname,
+          request,
+          response,
+          configPath: input.layout.configPath,
+          readBody,
+          sendJson,
         })
       ) {
         return;

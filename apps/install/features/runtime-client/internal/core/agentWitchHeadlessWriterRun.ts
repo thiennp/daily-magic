@@ -1,6 +1,11 @@
 import { spawn } from "node:child_process";
 
 import {
+  formatLocalCodingToolRefusal,
+  LocalCodingToolRefusalCode,
+} from "@agent-witch/shared/dispatch";
+
+import {
   buildWriterCliInvocation,
   isHarnessWriterAgentId,
   resolveWriterCliCommands,
@@ -10,6 +15,7 @@ import { resolveClaudeCliPrintOutput } from "../../../../../../scripts/dispatch/
 import { runWriterApiPrompt } from "./writerApi/runWriterApiPrompt";
 import { shouldUseWriterApi } from "./writerApi/shouldUseWriterApi";
 import type { AgentWitchRunConfig } from "./readAgentWitchRunConfig";
+import { isCodingToolsPaused } from "./safety/codingToolsPauseStore";
 
 export type AgentWitchHeadlessWriterConfig = AgentWitchRunConfig;
 
@@ -23,6 +29,17 @@ export const runHeadlessWriter = (
       resolve({
         exitCode: -1,
         output: `Unsupported writer agent: ${writerAgent}`,
+      });
+      return;
+    }
+
+    // S0-7a: local "Pause all coding tools" refuses new headless runs too.
+    if (isCodingToolsPaused(config.layout.configPath)) {
+      resolve({
+        exitCode: -1,
+        output: formatLocalCodingToolRefusal(
+          LocalCodingToolRefusalCode.CODING_TOOLS_PAUSED,
+        ),
       });
       return;
     }

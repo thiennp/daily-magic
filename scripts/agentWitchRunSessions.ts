@@ -1,9 +1,18 @@
 import { spawn, type ChildProcess } from "node:child_process";
 
 import {
+  createBoundedRunIdLedger,
+  isCodingToolsPaused,
   removeRunCompositionOverlay,
+  scrubOutboundRunFrame,
   shouldEmitWriterApiMissingCliFallbackHonesty,
 } from "@agent-witch/install-runtime-client";
+import {
+  formatLocalCodingToolRefusal,
+  LocalCodingToolRefusalCode,
+  scrubOutboundSecrets,
+  type LocalCodingToolRefusalCodeValue,
+} from "@agent-witch/shared/dispatch";
 
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import {
@@ -101,6 +110,8 @@ const runsStoppedByUser = new Set<string>();
 /** S0-6: runs stopped by the wall-clock session limit (not by the user). */
 const runsStoppedBySessionLimit = new Set<string>();
 const taskStartedAtMsByRunId = new Map<string, number>();
+/** S0-7c: a run result is finished (and posted) at most once per process. */
+const finishedRunIds = createBoundedRunIdLedger();
 
 const noteTaskStarted = (agentRunId: string | undefined): void => {
   if (agentRunId !== undefined && !taskStartedAtMsByRunId.has(agentRunId)) {
@@ -226,7 +237,8 @@ const sendMessage = (
   message: Record<string, unknown>,
 ): void => {
   if (socket.readyState === 1) {
-    socket.send(JSON.stringify(message));
+    // S0-8: scrub run output before it leaves the machine.
+    socket.send(JSON.stringify(scrubOutboundRunFrame(message)));
   }
 };
 
@@ -282,7 +294,15 @@ const finishRun = (
   output: string,
   originalPrompt: string,
   llmUsage?: WriterLlmUsage,
+  errorCode?: LocalCodingToolRefusalCodeValue,
 ): void => {
+  if (agentRunId !== undefined) {
+    // Heartbeat tick and child close can both finish a run; only the first wins.
+    if (finishedRunIds.has(agentRunId)) {
+      return;
+    }
+    finishedRunIds.add(agentRunId);
+  }
   const printed = resolveClaudeCliPrintOutput(output, llmUsage);
   let resolvedExitCode = exitCode;
   let resolvedOutput = appendWriterLlmUsageFooter(
@@ -337,6 +357,11 @@ const finishRun = (
         ? `${resolvedOutput.trim()}${STOPPED_OUTPUT_SUFFIX}`
         : "Stopped by user.";
   }
+
+  // S0-8: redact secrets before the output is stored locally (transcript,
+  // run history = the report). Outbound copies (outbox, result frame) are
+  // scrubbed again and hidden entirely when a secret shape survives.
+  resolvedOutput = scrubOutboundSecrets(resolvedOutput).scrubbed;
 
   const comparison =
     agentRunId !== undefined
@@ -426,6 +451,7 @@ const finishRun = (
         ? { actualSeconds: comparison.actualSeconds }
         : {}),
       ...(llmUsage !== undefined ? { llmUsage } : {}),
+      ...(errorCode !== undefined ? { errorCode } : {}),
     },
     requestId,
   });
@@ -754,6 +780,26 @@ export const runWriterTask = (
 
   beginAgentWitchWriterWork(config.layout);
 
+  const refuse = (code: LocalCodingToolRefusalCodeValue): void => {
+    finishRun(
+      config,
+      socket,
+      agentRunId,
+      requestId,
+      -1,
+      formatLocalCodingToolRefusal(code),
+      prompt,
+      undefined,
+      code,
+    );
+  };
+
+  // S0-7a: last-line pause gate (also covers checkpoint continuations).
+  if (isCodingToolsPaused(config.layout.configPath)) {
+    refuse(LocalCodingToolRefusalCode.CODING_TOOLS_PAUSED);
+    return;
+  }
+
   if (shouldUseWriterApi(config, writerAgent)) {
     noteTaskStarted(agentRunId);
     runWriterApiTask(
@@ -787,6 +833,13 @@ export const runWriterTask = (
       "Writer instruction must be a non-empty string.",
       prompt,
     );
+    return;
+  }
+
+  // S0-5: a local CLI never falls back to the AWL workspace; the handler
+  // already checked the folder against the project's registered folders.
+  if (projectFolderPath === undefined || projectFolderPath.trim().length === 0) {
+    refuse(LocalCodingToolRefusalCode.FOLDER_REQUIRED);
     return;
   }
 
@@ -1106,3 +1159,15 @@ export const stopAgentRunForSessionLimit = (
   runsStoppedBySessionLimit.add(agentRunId);
   return stopAgentRun(config, socket, agentRunId, requestId);
 };
+
+/**
+ * S0-7a: stop every active run in this process (pause switch). Runs of other
+ * profiles in the same process are included; see the S0 safety doc.
+ */
+export const stopAllAgentRuns = (
+  config: AgentWitchRunConfig,
+  socket: WebSocket,
+): number =>
+  [...runSessions.keys()].filter((agentRunId) =>
+    stopAgentRun(config, socket, agentRunId),
+  ).length;
