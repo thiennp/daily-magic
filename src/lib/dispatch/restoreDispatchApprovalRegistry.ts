@@ -27,7 +27,9 @@ export const ensureDispatchApprovalsHydrated = async (): Promise<void> => {
       writerAgent: isHarnessWriterAgent(run.writerAgent)
         ? run.writerAgent
         : DEFAULT_DELEGATED_WRITER_AGENT,
+      deviceId: run.deviceId,
       approvalExpiresAt: run.approvalExpiresAt,
+      projectId: run.projectId,
     });
   }
 };

@@ -37,5 +37,7 @@ export async function getPendingDispatchApprovalFromDb(
       ? run.writerAgent
       : DEFAULT_DELEGATED_WRITER_AGENT,
     deviceId: run.deviceId,
+    approvalExpiresAt: run.approvalExpiresAt,
+    projectId: run.projectId,
   };
 }

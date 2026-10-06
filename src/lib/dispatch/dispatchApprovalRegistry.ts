@@ -8,6 +8,7 @@ export interface PendingDispatchApproval {
   readonly deviceId?: string | null;
   readonly requestId?: string;
   readonly approvalExpiresAt?: string | null;
+  readonly projectId?: string | null;
 }
 
 export class DispatchApprovalRegistry {
