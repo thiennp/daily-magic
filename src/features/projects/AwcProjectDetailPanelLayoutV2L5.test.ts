@@ -97,10 +97,10 @@ describe("project layout v2 L5 Settings + Members", () => {
     }
   });
 
-  it("keeps Reports/Library stubs; does not mount L3 Activity redesign", () => {
+  it("Reports/Library are L6 panels (stubs gone); no L3 Activity redesign", () => {
     const body = read(`${P}/AwcProjectDetailTabPanelBody.tsx`);
-    expect(body).toContain("AwcProjectTabStub");
-    expect(body).toMatch(/STUB_TABS[\s\S]*"reports"[\s\S]*"library"/);
+    expect(body).not.toContain("AwcProjectTabStub");
+    expect(body).not.toContain("STUB_TABS");
     expect(body).toContain("AwcProjectDetailSettingsPanel");
     expect(body).not.toContain("AwcProjectActivity");
     expect(body).not.toMatch(/0fd0078b|layout-v2-l3/i);

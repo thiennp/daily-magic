@@ -2,20 +2,15 @@
 
 import AwcProjectDetailSettingsPanel from "@/features/projects/AwcProjectDetailSettingsPanel";
 import AwcProjectMessengerSection from "@/features/projects/messenger/AwcProjectMessengerSection";
-import AwcProjectTabStub from "@/features/projects/AwcProjectTabStub";
+import AwcProjectLibraryPanel from "@/features/projects/library/AwcProjectLibraryPanel";
 import AwcProjectPitfallsPanel from "@/features/projects/pitfalls/AwcProjectPitfallsPanel";
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
+import AwcProjectReportsPanel from "@/features/projects/reports/AwcProjectReportsPanel";
 import AwcProjectResourcesPanel from "@/features/projects/resources/AwcProjectResourcesPanel";
-import {
-  PROJECT_PAGE_TAB_LABELS,
-  type ProjectPageTabId,
-} from "@/features/projects/projectPageTabs.constant";
+import type { ProjectPageTabId } from "@/features/projects/projectPageTabs.constant";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
-
-/** Not landed yet: dashed placeholder (Team moved to the Members rail). */
-const STUB_TABS: readonly ProjectPageTabId[] = ["reports", "library"];
 
 interface AwcProjectDetailTabPanelBodyProps {
   readonly tabId: ProjectPageTabId;
@@ -31,7 +26,10 @@ interface AwcProjectDetailTabPanelBodyProps {
   readonly onActivityUnreadMaybeChanged?: () => void;
 }
 
-/** One tab's panel contents (L4 Safety rules + Resources live; Reports/Library stubs). */
+/**
+ * One tab's panel contents. L6: Reports + Library are full panels (stubs
+ * gone); they mount only while selected, like Activity.
+ */
 export default function AwcProjectDetailTabPanelBody({
   tabId,
   selected,
@@ -84,8 +82,16 @@ export default function AwcProjectDetailTabPanelBody({
       />
     );
   }
-  if (STUB_TABS.includes(tabId)) {
-    return <AwcProjectTabStub label={PROJECT_PAGE_TAB_LABELS[tabId]} />;
+  if (tabId === "reports" && selected) {
+    return <AwcProjectReportsPanel projectId={project.id} />;
+  }
+  if (tabId === "library" && selected) {
+    return (
+      <AwcProjectLibraryPanel
+        project={project}
+        canEdit={pageActorRole !== "viewer"}
+      />
+    );
   }
   return null;
 }

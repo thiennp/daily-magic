@@ -31,12 +31,7 @@ describe("AwcProjectDetailPanel layout S6 resources", () => {
       /"activity",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
     );
     expect(tabBodySource).toContain("AwcProjectResourcesPanel");
-    expect(tabBodySource).toMatch(
-      /const STUB_TABS[\s\S]*?"reports"[\s\S]*?"library"[\s\S]*?\];/,
-    );
-    expect(tabBodySource).not.toMatch(
-      /const STUB_TABS[\s\S]*?= \[[^\]]*"resources"[^\]]*\];/,
-    );
+    expect(tabBodySource).not.toContain("STUB_TABS");
     expect(tabPanelsSource).toContain("AwcProjectDetailTabPanelBody");
   });
 

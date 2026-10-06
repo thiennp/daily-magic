@@ -7,7 +7,6 @@ export const PROJECT_PAGE_SHELL_COPY = {
   copiedPath: "Copied",
   copyPathFailed: "Could not copy path",
   pathLabel: "Project path",
-  tabStubBody: "This section will land in a later update.",
   settingsNameHint:
     "Rename the project in Cloud. Folders and playbooks stay on the computer.",
   overviewStubHint: "Overview stats and setup checklist will land here next.",

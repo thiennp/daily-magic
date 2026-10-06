@@ -59,14 +59,15 @@ describe("project layout v2 L4 Safety rules + Resources", () => {
     expect(copy).toContain('gitTitle: "Git remotes (optional)"');
     expect(copy).toContain('skillsHeading: "Shared skills"');
     expect(body).toContain("AwcProjectResourcesPanel");
-    expect(body).toMatch(/STUB_TABS[\s\S]*"reports"[\s\S]*"library"/);
+    expect(body).toContain("AwcProjectReportsPanel");
+    expect(body).toContain("AwcProjectLibraryPanel");
     expect(panel).not.toMatch(/blue-|indigo-|#0a6cf5|#4a97ff/i);
     expect(composition).not.toMatch(/blue-|indigo-|#0a6cf5|#4a97ff/i);
   });
 
-  it("keeps Reports/Library stubs; does not mount L3 Activity chrome or L5 Settings content rewrite", () => {
+  it("Reports/Library are L6 panels (stubs gone); no L3 Activity chrome", () => {
     const body = read("src/features/projects/AwcProjectDetailTabPanelBody.tsx");
-    expect(body).toContain("AwcProjectTabStub");
+    expect(body).not.toContain("AwcProjectTabStub");
     expect(body).toContain("AwcProjectDetailSettingsPanel");
     expect(body).not.toContain("AwcProjectActivity");
     expect(body).not.toMatch(/0fd0078b|layout-v2-l3/i);

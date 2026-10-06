@@ -7,13 +7,15 @@ import {
   isProjectPageTabId,
   type ProjectPageTabId,
 } from "@/features/projects/projectPageTabs.constant";
+import { parseProjectPageHash } from "@/features/projects/utils/parseProjectPageHash";
 
 const readHashTab = (): ProjectPageTabId => {
   if (typeof window === "undefined") {
     return DEFAULT_PROJECT_PAGE_TAB;
   }
-  const raw = window.location.hash.replace(/^#/, "");
-  return isProjectPageTabId(raw) ? raw : DEFAULT_PROJECT_PAGE_TAB;
+  // `#library?item=…` / `#reports?report=…`: tab is the part before `?`.
+  const { tab } = parseProjectPageHash(window.location.hash);
+  return isProjectPageTabId(tab) ? tab : DEFAULT_PROJECT_PAGE_TAB;
 };
 
 const useAwcProjectDetailTab = (input: {
@@ -47,6 +49,10 @@ const useAwcProjectDetailTab = (input: {
 
   const setActiveTab = useCallback((tab: ProjectPageTabId) => {
     setActiveTabState(tab);
+    // Same tab: keep any `?item=` / `?report=` deep link already in the hash.
+    if (parseProjectPageHash(window.location.hash).tab === tab) {
+      return;
+    }
     window.history.replaceState(null, "", `#${tab}`);
   }, []);
 

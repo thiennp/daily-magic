@@ -1,0 +1,47 @@
+/**
+ * Project layout v2 L6 — Library list / filters / detail EN (Product
+ * `L6-REPORTS-LIBRARY-COPY.md` §3 JSON; keys and strings exact).
+ * Add / share / skills form keys: `projectPageLibraryActionsCopy.constant.ts`.
+ */
+export const PROJECT_PAGE_LIBRARY_COPY = {
+  "tabs.library": "Library",
+  "library.heading": "Library",
+  "library.intro": "Playbooks, workflows, and skills for this project.",
+  "library.aria": "Library for this project",
+  "library.kind.playbook": "Playbook",
+  "library.kind.playbooks": "Playbooks",
+  "library.kind.workflow": "Workflow",
+  "library.kind.workflows": "Workflows",
+  "library.kind.skill": "Skill",
+  "library.kind.skills": "Skills",
+  "library.state.draft": "Draft",
+  "library.state.published": "Published",
+  "library.col.name": "Name",
+  "library.col.kind": "Kind",
+  "library.col.state": "State",
+  "library.col.updated": "Updated",
+  "library.row.open": "Open",
+  "library.filter.aria": "Filter library",
+  "library.filter.all": "All",
+  "library.filter.playbooks": "Playbooks",
+  "library.filter.workflows": "Workflows",
+  "library.filter.skills": "Skills",
+  "library.search.sr": "Search library",
+  "library.search.placeholder": "Search by name",
+  "library.filter.empty": "No items match.",
+  "library.empty":
+    "No playbooks or skills yet. Create one, or add one from another project.",
+  "library.loading": "Loading library…",
+  "library.error": "Could not load the library. Try again.",
+  "library.error.retry": "Try again",
+  "library.detail.back": "Back to library",
+  "library.detail.heading": "Item",
+  "library.detail.name": "Name",
+  "library.detail.kind": "Kind",
+  "library.detail.state": "State",
+  "library.detail.updated": "Updated",
+  "library.detail.body": "Content",
+  "library.detail.missing": "This item is not in this project.",
+  "library.detail.loading": "Loading item…",
+  "library.detail.error": "Could not load this item. Try again.",
+} as const;

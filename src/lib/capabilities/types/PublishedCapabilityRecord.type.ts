@@ -23,6 +23,8 @@ export default interface PublishedCapabilityRecord {
   readonly workflowOutputFields: readonly WorkflowOutputFieldDefinition[];
   readonly operatorSteps: readonly OperatorStepDefinition[];
   readonly forkedFromCapabilityId: string | null;
+  /** Owning project (069 backfill; nullable column). Optional for older callers. */
+  readonly projectId?: string | null;
   readonly createdAt: string;
   readonly updatedAt: string;
 }
