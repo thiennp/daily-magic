@@ -19,16 +19,18 @@ const resolveFallbackContext = (
 });
 
 /** Shared in-flight fetch so desktop nav + mobile menu do not double-hit the API. */
-let shellContextInflight: Promise<ShellNavFilterContext> | null = null;
+const shellContextInflightRef: {
+  current: Promise<ShellNavFilterContext> | null;
+} = { current: null };
 
 const loadShellNavContext = (
   globalRole: string | undefined,
 ): Promise<ShellNavFilterContext> => {
-  if (shellContextInflight !== null) {
-    return shellContextInflight;
+  if (shellContextInflightRef.current !== null) {
+    return shellContextInflightRef.current;
   }
 
-  shellContextInflight = (async (): Promise<ShellNavFilterContext> => {
+  shellContextInflightRef.current = (async (): Promise<ShellNavFilterContext> => {
     try {
       const response = await fetch(SHELL_CONTEXT_API_PATH);
       if (!response.ok) {
@@ -48,11 +50,11 @@ const loadShellNavContext = (
     } catch {
       return resolveFallbackContext(globalRole);
     } finally {
-      shellContextInflight = null;
+      shellContextInflightRef.current = null;
     }
   })();
 
-  return shellContextInflight;
+  return shellContextInflightRef.current;
 };
 
 const useShellNavContext = (): ShellNavFilterContext & {
@@ -75,9 +77,9 @@ const useShellNavContext = (): ShellNavFilterContext & {
       return;
     }
 
-    let cancelled = false;
+    const cancelledRef = { current: false };
     void loadShellNavContext(globalRole).then((next) => {
-      if (cancelled) {
+      if (cancelledRef.current) {
         return;
       }
       setContext(next);
@@ -85,7 +87,7 @@ const useShellNavContext = (): ShellNavFilterContext & {
     });
 
     return () => {
-      cancelled = true;
+      cancelledRef.current = true;
     };
   }, [authKey, globalRole, hasUser, status]);
 

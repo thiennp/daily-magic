@@ -3,9 +3,12 @@
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import {
+  parseAutomationsPayload,
+  parseWorkflowCapabilitiesPayload,
+} from "@/features/automations/hooks/parseAutomationsPagePayloads";
 import type AgentAutomationRecord from "@/lib/automations/types/AgentAutomationRecord.type";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
-import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 
 const NO_AUTOMATIONS: readonly AgentAutomationRecord[] = [];
 const NO_CAPABILITIES: readonly PublishedCapabilityRecord[] = [];
@@ -68,41 +71,21 @@ export function useAutomationsPageData(refreshKey = 0): {
           return;
         }
 
-        if (
-          typeof automationsData === "object" &&
-          automationsData !== null &&
-          Array.isArray(
-            (automationsData as { automations?: unknown }).automations,
-          )
-        ) {
-          setAutomations(
-            (automationsData as { automations: AgentAutomationRecord[] })
-              .automations,
-          );
-        } else {
+        const nextAutomations = parseAutomationsPayload(automationsData);
+        if (nextAutomations === null) {
           setLoadFailed(true);
           return;
         }
+        setAutomations(nextAutomations);
 
-        if (
-          typeof capabilitiesData === "object" &&
-          capabilitiesData !== null &&
-          Array.isArray(
-            (capabilitiesData as { capabilities?: unknown }).capabilities,
-          )
-        ) {
-          const allCapabilities = (
-            capabilitiesData as { capabilities: PublishedCapabilityRecord[] }
-          ).capabilities;
-          setCapabilities(
-            allCapabilities.filter(
-              (item) => item.type === CapabilityType.WORKFLOW,
-            ),
-          );
-          setLoadFailed(false);
-        } else {
+        const nextCapabilities =
+          parseWorkflowCapabilitiesPayload(capabilitiesData);
+        if (nextCapabilities === null) {
           setLoadFailed(true);
+          return;
         }
+        setCapabilities(nextCapabilities);
+        setLoadFailed(false);
       } catch {
         if (!isStale()) {
           setLoadFailed(true);

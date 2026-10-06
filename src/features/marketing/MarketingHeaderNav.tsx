@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import MarketingHeaderDesktopNavLinks from "@/features/marketing/MarketingHeaderDesktopNavLinks";
 import MarketingHeaderNavHamburgerButton from "@/features/marketing/MarketingHeaderNavHamburgerButton";
 import { MARKETING_HEADER_NAV_ITEMS } from "@/features/marketing/marketingHeaderNavItems.constant";
 import { MARKETING_CTA_PRIMARY_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
@@ -42,7 +43,6 @@ export default function MarketingHeaderNav({
       setMobileOpen(false);
     };
 
-    // Capture phase so ancestor keydown stopPropagation cannot block Escape.
     document.addEventListener("keydown", handleKeyDown, true);
     document.addEventListener("mousedown", handlePointerDown);
     return () => {
@@ -61,13 +61,7 @@ export default function MarketingHeaderNav({
       ref={rootRef}
       className="relative flex items-center gap-3 text-sm sm:gap-4"
     >
-      <div className="hidden items-center gap-1 lg:flex">
-        {MARKETING_HEADER_NAV_ITEMS.map((item) => (
-          <Link key={item.href} href={item.href} className={navLinkClass}>
-            {item.label}
-          </Link>
-        ))}
-      </div>
+      <MarketingHeaderDesktopNavLinks navLinkClass={navLinkClass} />
       <MarketingHeaderNavHamburgerButton
         ref={toggleRef}
         mobileOpen={mobileOpen}

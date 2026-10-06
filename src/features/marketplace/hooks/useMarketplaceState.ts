@@ -32,16 +32,16 @@ export function useMarketplaceState() {
       return;
     }
 
-    let cancelled = false;
+    const cancelledRef = { current: false };
     void (async () => {
       try {
         const response = await fetch("/api/harness/marketplace");
-        if (!response.ok || cancelled) {
+        if (!response.ok || cancelledRef.current) {
           return;
         }
 
         const data: unknown = await response.json();
-        if (cancelled) {
+        if (cancelledRef.current) {
           return;
         }
 
@@ -56,14 +56,14 @@ export function useMarketplaceState() {
           );
         }
       } finally {
-        if (!cancelled) {
+        if (!cancelledRef.current) {
           setLoadedKey(AUTHED_KEY);
         }
       }
     })();
 
     return () => {
-      cancelled = true;
+      cancelledRef.current = true;
     };
   }, [status]);
 
