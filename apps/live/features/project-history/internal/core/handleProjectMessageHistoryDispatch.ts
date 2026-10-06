@@ -6,6 +6,7 @@ import { readAgentWitchRunConfig } from "@agent-witch/install-runtime-client";
 
 import { writeLocalProjectHistoryState } from "./localProjectHistoryState";
 import { postProjectMessageComputerAck } from "./postProjectMessageComputerAck";
+import { writeLocalChatAckRecord } from "./writeLocalChatAckRecord";
 import { writeProjectHistoryMessage } from "./writeProjectHistoryMessage";
 
 const LOG_PREFIX = "[project-history-dispatch]";
@@ -32,10 +33,13 @@ const resolveCloudApi = (): AgentWitchCloudApiConfig | null => {
  * AWL inbound handler for `project.message.history`.
  * Sends computerAck only after the durable write succeeds.
  * On write failure: no ack; marks the project degraded.
+ * Optional `deviceId` (from AWL device auth/pairing) records a local per-device
+ * ack; cloud POST body stays `{ messageId }` (deviceId already from auth).
  */
 export const handleProjectMessageHistoryDispatch = async (input: {
   readonly payload: unknown;
   readonly cloudApi?: AgentWitchCloudApiConfig | null;
+  readonly deviceId?: string | null;
 }): Promise<HandleProjectMessageHistoryDispatchResult> => {
   if (!isRecord(input.payload)) {
     return { ok: false, reason: "invalid_payload" };
@@ -61,6 +65,15 @@ export const handleProjectMessageHistoryDispatch = async (input: {
       message: messageRaw,
     });
     writeLocalProjectHistoryState({ projectId, state: "on_ready" });
+    const deviceId =
+      typeof input.deviceId === "string" ? input.deviceId.trim() : "";
+    if (deviceId.length > 0) {
+      try {
+        writeLocalChatAckRecord({ projectId, deviceId, messageId });
+      } catch (ackError: unknown) {
+        console.error(LOG_PREFIX, "local_ack_failed", projectId, messageId, ackError);
+      }
+    }
   } catch (error: unknown) {
     console.error(LOG_PREFIX, "write_failed", projectId, messageId, error);
     try {

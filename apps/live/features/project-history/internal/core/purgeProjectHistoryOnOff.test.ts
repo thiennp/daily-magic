@@ -90,6 +90,21 @@ describe("purgeProjectHistoryOnOff", () => {
     expect(fs.existsSync(path.join(root, "skillgen"))).toBe(false);
   });
 
+  it("keeps history/acks on an OFF purge", () => {
+    const root = ensureProjectDataTree("p1");
+    ensureDir0700(path.join(root, "history", "acks"));
+    atomicWriteFile0600(
+      path.join(root, "history", "acks", "m1.json"),
+      '{"deviceId":"d1","messageId":"m1","ackedAt":"t","lastSeenAt":"t"}\n',
+    );
+    atomicWriteFile0600(path.join(root, "skillgen", "budget.json"), "{}\n");
+    purgeProjectHistoryOnOff({ projectId: "p1" });
+    expect(fs.existsSync(path.join(root, "history", "acks", "m1.json"))).toBe(
+      true,
+    );
+    expect(fs.existsSync(path.join(root, "skillgen"))).toBe(false);
+  });
+
   it("is a no-op when only the message archive exists", () => {
     const root = path.join(tempRoot, "p2");
     ensureDir0700(path.join(root, "history"));

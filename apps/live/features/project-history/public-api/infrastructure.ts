@@ -104,4 +104,10 @@ export { extractHistoryIndexFields } from "../internal/core/extractHistoryIndexF
 export {
   PROJECT_HISTORY_INDEX_DIR_NAME,
   PROJECT_HISTORY_INDEX_STORE_DB_FILE_NAME,
+  PROJECT_HISTORY_ACKS_DIR_NAME,
 } from "../internal/core/projectHistoryPaths.constant";
+export { buildProjectHistoryMessageRecordV2 } from "../internal/core/buildProjectHistoryMessageRecordV2";
+export { deriveProjectHistoryThreadKey } from "../internal/core/deriveProjectHistoryThreadKey";
+export { deriveProjectHistorySenderLabel } from "../internal/core/deriveProjectHistorySenderLabel";
+export { buildLocalChatAckRecord } from "../internal/core/buildLocalChatAckRecord";
+export { writeLocalChatAckRecord } from "../internal/core/writeLocalChatAckRecord";

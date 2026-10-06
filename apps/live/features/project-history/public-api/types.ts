@@ -84,11 +84,11 @@ export type {
 export type { CreateDefaultProjectHistorySkillgenRunnerDeps } from "../internal/core/createDefaultProjectHistorySkillgenRunner";
 export type { LoadProjectHistorySkillgenMessagesSinceCursorInput } from "../internal/core/loadProjectHistorySkillgenMessagesSinceCursor";
 
+export type { ProjectHistoryMessageRecordV2 } from "../internal/core/buildProjectHistoryMessageRecordV2";
+export type { LocalChatAckRecord } from "../internal/core/localChatAckRecord.type";
 export type {
-  ProjectHistoryMessageRecordV2,
   ProjectHistoryIndexableRecord,
   ProjectHistoryIndexRow,
-  LocalChatAckRecord,
 } from "../internal/core/projectHistoryIndexRecord.type";
 export type { IngestHistoryMessageIntoIndexResult } from "../internal/core/ingestHistoryMessageIntoIndex";
 export type { RebuildProjectHistoryIndexResult } from "../internal/core/rebuildProjectHistoryIndex";
