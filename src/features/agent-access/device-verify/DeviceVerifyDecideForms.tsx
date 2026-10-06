@@ -11,16 +11,16 @@ export default function DeviceVerifyDecideForms({
 }: DeviceVerifyDecideFormsProps) {
   return (
     <>
-      <div className="mt-8 flex gap-3">
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <form
           method="POST"
           action="/api/agent-access/oauth/device/confirm"
-          className="inline"
+          className="w-full sm:w-auto"
         >
           <input type="hidden" name="user_code" value={codeForForms} />
           <button
             type="submit"
-            className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500"
+            className="min-h-11 w-full rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700"
           >
             {DEVICE_VERIFY_COPY.confirm}
           </button>
@@ -28,12 +28,12 @@ export default function DeviceVerifyDecideForms({
         <form
           method="POST"
           action="/api/agent-access/oauth/device/deny"
-          className="inline"
+          className="w-full sm:w-auto"
         >
           <input type="hidden" name="user_code" value={codeForForms} />
           <button
             type="submit"
-            className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900"
+            className="min-h-11 w-full rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900"
           >
             {DEVICE_VERIFY_COPY.deny}
           </button>

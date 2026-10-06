@@ -5,7 +5,8 @@ import { buildAssistantOwnerLoginPath } from "@/features/agent-access/buildAssis
 import DeviceVerifyPageView from "@/features/agent-access/device-verify/DeviceVerifyPageView";
 import { DEVICE_VERIFY_COPY } from "@/features/agent-access/device-verify/deviceVerifyCopy.constant";
 import { readDeviceVerifySearchParam } from "@/features/agent-access/device-verify/readDeviceVerifySearchParam";
-import { resolveDeviceVerifyStatusMessage } from "@/features/agent-access/device-verify/resolveDeviceVerifyStatusMessage";
+import { resolveDeviceVerifyView } from "@/features/agent-access/device-verify/resolveDeviceVerifyView";
+import { consumeDeviceVerifyLookup } from "@/lib/agentAccess/deviceCode/consumeDeviceVerifyLookup";
 import {
   formatUserCodeDisplay,
   normalizeUserCode,
@@ -21,9 +22,7 @@ export const metadata: Metadata = {
 };
 
 type PageProps = {
-  readonly searchParams: Promise<
-    Record<string, string | string[] | undefined>
-  >;
+  readonly searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export default async function DeviceVerifyPage({ searchParams }: PageProps) {
@@ -43,19 +42,21 @@ export default async function DeviceVerifyPage({ searchParams }: PageProps) {
   const done = readDeviceVerifySearchParam(params, "done");
   const errorCode = readDeviceVerifySearchParam(params, "error");
 
-  if (!session?.user?.id) {
+  const viewerUserId = session?.user?.id;
+  if (!viewerUserId) {
     const q =
       userCodeDisplay.length > 0
         ? `?code=${encodeURIComponent(userCodeDisplay)}`
         : "";
     const callback = `/device/verify${q}`;
-    redirect(
-      buildAssistantOwnerLoginPath(callback),
-    );
+    redirect(buildAssistantOwnerLoginPath(callback));
   }
 
+  // Each well-formed lookup counts toward a per-person hourly cap (S4).
+  const rateLimited =
+    normalized.length === 8 && !(await consumeDeviceVerifyLookup(viewerUserId));
   const requestRow =
-    normalized.length === 8
+    normalized.length === 8 && !rateLimited
       ? await loadDeviceRequestByUserCode({ userCode: normalized })
       : null;
 
@@ -64,23 +65,22 @@ export default async function DeviceVerifyPage({ searchParams }: PageProps) {
     requestRow?.clientName ??
     DEVICE_VERIFY_COPY.clientFallback;
 
-  const statusMessage = resolveDeviceVerifyStatusMessage({
+  const view = resolveDeviceVerifyView({
     done,
     errorCode,
-    normalizedLength: normalized.length,
-    requestRow,
+    rawCode,
+    row: requestRow,
+    viewerUserId,
+    rateLimited,
   });
-
-  const canDecide = requestRow !== null && requestRow.status === "pending";
   const codeForForms = requestRow?.userCodeDisplay ?? userCodeDisplay;
 
   return (
     <DeviceVerifyPageView
       assistantName={assistantName}
-      canDecide={canDecide}
       codeForForms={codeForForms}
       showClient={requestRow !== null}
-      statusMessage={statusMessage}
+      view={view}
     />
   );
 }

@@ -34,3 +34,7 @@ export const DEVICE_VERIFY_PER_HOUR = 30;
 
 export const DEVICE_CLIENT_NAME_MAX = 80;
 export const DEVICE_DISPLAY_NAME_MAX = 80;
+
+/** Signed-in /device/verify code lookups (S4): per person, per hour. */
+export const DEVICE_VERIFY_LOOKUP_BUCKET = "device_verify_lookup";
+export const DEVICE_VERIFY_LOOKUP_PER_HOUR = 60;

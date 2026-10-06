@@ -19,10 +19,9 @@ const renderDeviceVerify = (canDecide: boolean): string =>
   renderToStaticMarkup(
     createElement(DeviceVerifyPageView, {
       assistantName: "Claude",
-      canDecide,
       codeForForms: "BCDF-GHJK",
       showClient: canDecide,
-      statusMessage: null,
+      view: { message: null, tone: "info", canDecide, showNextStep: false },
     }),
   );
 
