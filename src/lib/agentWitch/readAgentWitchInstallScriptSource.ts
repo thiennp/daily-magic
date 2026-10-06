@@ -37,7 +37,7 @@ export const isAgentWitchInstallScriptName = (
     value,
   );
 
-export const readAgentWitchInstallScriptSource = (
+const resolveExistingInstallArtifactPath = (
   scriptName: AgentWitchInstallScriptName,
 ): string => {
   const filePath = AGENT_WITCH_INSTALL_SCRIPT_ALLOWLIST[scriptName];
@@ -47,8 +47,25 @@ export const readAgentWitchInstallScriptSource = (
     );
   }
 
-  return fs.readFileSync(filePath, "utf8");
+  return filePath;
 };
+
+export const readAgentWitchInstallScriptSource = (
+  scriptName: AgentWitchInstallScriptName,
+): string =>
+  fs.readFileSync(resolveExistingInstallArtifactPath(scriptName), "utf8");
+
+/** Archives (deps.tar.gz) ship as raw bytes; only text bundles are minified. */
+export const isAgentWitchInstallBinaryArtifactName = (
+  scriptName: AgentWitchInstallScriptName,
+): boolean => scriptName.endsWith(".tar.gz");
+
+export const readAgentWitchInstallArtifactBytes = (
+  scriptName: AgentWitchInstallScriptName,
+): Uint8Array<ArrayBuffer> =>
+  new Uint8Array(
+    fs.readFileSync(resolveExistingInstallArtifactPath(scriptName)),
+  );
 
 export const readAgentWitchClientSource = (): string =>
   readAgentWitchInstallScriptSource(

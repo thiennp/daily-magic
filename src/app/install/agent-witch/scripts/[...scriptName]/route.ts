@@ -1,6 +1,8 @@
 import { prepareAgentWitchInstallScriptForShipping } from "@/lib/agentWitch/prepareAgentWitchInstallScriptForShipping";
 import {
+  isAgentWitchInstallBinaryArtifactName,
   isAgentWitchInstallScriptName,
+  readAgentWitchInstallArtifactBytes,
   readAgentWitchInstallScriptSource,
 } from "@/lib/agentWitch/readAgentWitchInstallScriptSource";
 
@@ -17,6 +19,15 @@ export async function GET(
 
   if (!isAgentWitchInstallScriptName(scriptPath)) {
     return new Response("Not found", { status: 404 });
+  }
+
+  if (isAgentWitchInstallBinaryArtifactName(scriptPath)) {
+    return new Response(readAgentWitchInstallArtifactBytes(scriptPath), {
+      headers: {
+        "Content-Type": "application/gzip",
+        "Cache-Control": "no-store",
+      },
+    });
   }
 
   const source = readAgentWitchInstallScriptSource(scriptPath);
