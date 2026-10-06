@@ -35,7 +35,7 @@ describe("AwlRepairManuallyPanel render", () => {
       "Reconnect this computer",
       "Only if step 2 didn't help. On Home, choose Connect this computer and run the command it shows.",
       "Check it works",
-      "If you see a reply, AgentWitch Local is running. Then refresh Home.",
+      'If you see a line that starts with {"ok":true, AgentWitch Local is running. Then refresh Home. Don\'t share this output, because it can include a private link code.',
       "launchctl kickstart",
       "curl -fsSL https://www.agentwitch.com/install/agent-witch-update.sh | bash",
       "curl -sS -m 5 http://127.0.0.1:43347/health",

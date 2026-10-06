@@ -21,7 +21,7 @@ describe("AWL_REPAIR_MANUALLY_COPY (COPY.md §6 lock)", () => {
         "Only if step 2 didn't help. On Home, choose Connect this computer and run the command it shows.",
       checkTitle: "Check it works",
       checkHelper:
-        "If you see a reply, AgentWitch Local is running. Then refresh Home.",
+        'If you see a line that starts with {"ok":true, AgentWitch Local is running. Then refresh Home. Don\'t share this output, because it can include a private link code.',
       copy: "Copy",
       copied: "Copied",
     });
