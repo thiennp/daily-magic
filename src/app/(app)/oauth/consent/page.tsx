@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 import { OAUTH_CONSENT_COPY } from "@/features/agent-access/oauth-consent/oauthConsentCopy.constant";
 import { AWC_TERMS_VERSION } from "@/lib/agentAccess/awcTermsVersion.constant";
+import { formatOauthRedirectHost } from "@/lib/agentAccess/oauth/formatOauthRedirectHost";
 import { loadOauthPending } from "@/lib/agentAccess/oauth/loadOauthPending";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import { auth } from "@/lib/auth/auth";
@@ -46,11 +47,17 @@ export default async function OauthConsentPage({ searchParams }: PageProps) {
 
   const assistantName =
     pending?.clientDisplayName ?? OAUTH_CONSENT_COPY.clientFallback;
+  const continueHost =
+    pending !== null
+      ? (formatOauthRedirectHost(pending.redirectUri) ??
+        OAUTH_CONSENT_COPY.continueAtFallback)
+      : null;
 
   const statusMessage =
     errorCode === "terms_acceptance_required"
       ? OAUTH_CONSENT_COPY.termsRequired
-      : errorCode === "invalid_request" || (pendingId.length > 0 && pending === null)
+      : errorCode === "invalid_request" ||
+          (pendingId.length > 0 && pending === null)
         ? OAUTH_CONSENT_COPY.expired
         : null;
 
@@ -71,12 +78,24 @@ export default async function OauthConsentPage({ searchParams }: PageProps) {
             </dt>
             <dd className="font-medium">{assistantName}</dd>
           </div>
+          <div>
+            <dt className="text-gray-500 dark:text-gray-400">
+              {OAUTH_CONSENT_COPY.continueAtLabel}
+            </dt>
+            <dd className="font-medium">{continueHost}</dd>
+          </div>
         </dl>
       ) : (
         <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-          Open the connect link from your assistant to continue.
+          {OAUTH_CONSENT_COPY.openLinkHint}
         </p>
       )}
+
+      {pending !== null ? (
+        <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+          {OAUTH_CONSENT_COPY.continueHint}
+        </p>
+      ) : null}
 
       {statusMessage !== null ? (
         <p className="mt-6 text-sm text-gray-700 dark:text-gray-300">

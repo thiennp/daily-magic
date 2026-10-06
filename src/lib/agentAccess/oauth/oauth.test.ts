@@ -258,7 +258,7 @@ beforeEach(() => {
 describe("OAuth discovery docs", () => {
   it("exposes protected-resource and authorization-server metadata", () => {
     const resource = buildOauthProtectedResourceMetadata();
-    expect(resource.resource).toContain("/api/agent-access/mcp");
+    expect(resource.resource).toContain("/api/agent-access/mcp/connect");
     expect(resource.authorization_servers).toContain(
       "https://www.agentwitch.com",
     );
@@ -475,12 +475,29 @@ describe("OAuth ownership flow", () => {
 });
 
 describe("consent copy", () => {
-  it("has owner line and never says bot", () => {
+  it("has owner line, name+continue-at host labels, and never says bot", () => {
     expect(OAUTH_CONSENT_COPY.ownerLine).toBe(
       "You'll be this assistant's owner",
     );
+    expect(OAUTH_CONSENT_COPY.continueAtLabel).toBe("Continues at");
+    expect(OAUTH_CONSENT_COPY.continueHint).toContain("assistant");
     const joined = Object.values(OAUTH_CONSENT_COPY).join(" ");
     expect(joined.toLowerCase()).not.toMatch(/\bbot\b/);
+    expect(joined.toLowerCase()).not.toMatch(/\boauth\b/);
+  });
+});
+
+describe("formatOauthRedirectHost", () => {
+  it("shows registered redirect host for the human (e.g. claude.ai)", async () => {
+    const { formatOauthRedirectHost } = await import(
+      "@/lib/agentAccess/oauth/formatOauthRedirectHost"
+    );
+    expect(formatOauthRedirectHost("https://claude.ai/callback")).toBe(
+      "claude.ai",
+    );
+    expect(formatOauthRedirectHost("http://localhost:8787/cb")).toBe(
+      "localhost:8787",
+    );
   });
 });
 

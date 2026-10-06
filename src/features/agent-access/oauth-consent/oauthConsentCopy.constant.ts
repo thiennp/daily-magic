@@ -6,6 +6,12 @@ export const OAUTH_CONSENT_COPY = {
   ownerLine: DEVICE_VERIFY_COPY.ownerLine,
   clientLabel: DEVICE_VERIFY_COPY.clientLabel,
   clientFallback: DEVICE_VERIFY_COPY.clientFallback,
+  /** Where the sign-in continues after Confirm (redirect host, plain words). */
+  continueAtLabel: "Continues at",
+  continueAtFallback: "this app",
+  /** Shown under name + host so the human knows what Confirm does. */
+  continueHint:
+    "After you confirm, you'll return to that place to finish connecting this assistant.",
   confirm: DEVICE_VERIFY_COPY.confirm,
   deny: DEVICE_VERIFY_COPY.deny,
   confirmed: DEVICE_VERIFY_COPY.confirmed,
@@ -13,4 +19,5 @@ export const OAUTH_CONSENT_COPY = {
   expired: "This connect request expired. Start again from your assistant.",
   termsLabel: "I accept the Terms and Privacy Policy for this assistant",
   termsRequired: "Accept the Terms to continue.",
+  openLinkHint: "Open the connect link from your assistant to continue.",
 } as const;

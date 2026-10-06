@@ -3,7 +3,7 @@
 export const OAUTH_ISSUER = "https://www.agentwitch.com";
 
 export const OAUTH_MCP_RESOURCE =
-  "https://www.agentwitch.com/api/agent-access/mcp";
+  "https://www.agentwitch.com/api/agent-access/mcp/connect";
 
 export const OAUTH_PROTECTED_RESOURCE_METADATA_URL =
   `${OAUTH_ISSUER}/.well-known/oauth-protected-resource`;
@@ -30,7 +30,7 @@ export const OAUTH_PKCE_METHOD = "S256" as const;
 
 export const OAUTH_SCOPES_SUPPORTED = ["agent_access"] as const;
 
-/** v1 redirect policy: https + localhost loopback. Host allowlist TBD (open Q). */
+/** v1 redirect policy (decided): any https + localhost/127.0.0.1/[::1] loopback. */
 export const OAUTH_LOCALHOST_HOSTS = new Set([
   "localhost",
   "127.0.0.1",
