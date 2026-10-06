@@ -38,7 +38,7 @@ const installTeammateListing = async (
     return installFailure("You cannot install this listing.");
   }
 
-  const forkResult = await forkPublishedCapability(capabilityId, actorUserId);
+  const forkResult = await forkPublishedCapability(capabilityId, actorUserId, projectId);
 
   if (!forkResult.ok) {
     return installFailure(

@@ -46,6 +46,7 @@ const publishCapabilityWithHarness = async (
 
   const created = await createPublishedCapability({
     ownerUserId,
+    projectId: project.projectId,
     name: parsed.name,
     description: parsed.description,
     exampleRequest: parsed.exampleRequest,

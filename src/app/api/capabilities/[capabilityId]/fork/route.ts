@@ -4,6 +4,8 @@ import {
   isCapabilityForkRateLimited,
 } from "@/lib/capabilities/capabilityForkAudit";
 import { requireAuth } from "@/lib/auth/requireAuth";
+import { readProjectIdFromUnknown } from "@/lib/projects/readProjectIdFromUnknown";
+import { requireProjectIdForCreate } from "@/lib/projects/requireProjectIdForCreate";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +16,7 @@ interface RouteContext {
 }
 
 export async function POST(
-  _request: Request,
+  request: Request,
   context: RouteContext,
 ): Promise<Response> {
   const { actor, error } = await requireAuth();
@@ -32,8 +34,30 @@ export async function POST(
     );
   }
 
+  let body: unknown = {};
+  try {
+    body = await request.json();
+  } catch {
+    body = {};
+  }
+
+  const project = await requireProjectIdForCreate({
+    actorUserId: actor.id,
+    projectId: readProjectIdFromUnknown(body),
+  });
+  if (!project.ok) {
+    return Response.json(
+      { error: project.error, code: project.code },
+      { status: project.status },
+    );
+  }
+
   const { capabilityId } = await context.params;
-  const result = await forkPublishedCapability(capabilityId, actor.id);
+  const result = await forkPublishedCapability(
+    capabilityId,
+    actor.id,
+    project.projectId,
+  );
 
   if (!result.ok) {
     if (result.reason === "own_capability") {

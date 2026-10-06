@@ -11,9 +11,10 @@ const schemaEnsureState: {
 /**
  * Production Neon has repeatedly drifted behind capability INSERT columns
  * (see #125 for workflow_output_fields / 014-workflow-field-uploads).
- * `createPublishedCapability` also writes `operator_steps` (014-operator-steps).
- * Ensure both jsonb columns before any capability write so onboarding bootstrap
- * seeding and library creates cannot 500 on a missing column.
+ * `createPublishedCapability` also writes `operator_steps` (014-operator-steps)
+ * and `project_id` (069-library-reports-require-project; CHECK requires non-null
+ * on new rows). Ensure those columns before any capability write so onboarding
+ * bootstrap seeding and library creates cannot 500 on a missing column.
  */
 export const ensurePublishedCapabilityWorkflowOutputFieldsSchema =
   async (): Promise<void> => {
@@ -34,6 +35,12 @@ export const ensurePublishedCapabilityWorkflowOutputFieldsSchema =
       await sql`
         ALTER TABLE published_capabilities
         ADD COLUMN IF NOT EXISTS operator_steps JSONB NOT NULL DEFAULT '[]'::jsonb
+      `;
+      // 069: required on INSERT via CHECK (... NOT VALID) which still enforces
+      // new rows. Column-only ensure; do not add the CHECK here.
+      await sql`
+        ALTER TABLE published_capabilities
+        ADD COLUMN IF NOT EXISTS project_id TEXT
       `;
       schemaEnsureState.ensured = true;
     })();

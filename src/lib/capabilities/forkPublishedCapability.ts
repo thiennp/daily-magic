@@ -16,6 +16,7 @@ const buildForkedCapabilityName = (sourceName: string): string =>
 export async function forkPublishedCapability(
   sourceCapabilityId: string,
   actorUserId: string,
+  projectId: string,
 ): Promise<ForkPublishedCapabilityResult> {
   const source = await getPublishedCapabilityById(sourceCapabilityId);
 
@@ -52,6 +53,7 @@ export async function forkPublishedCapability(
       INSERT INTO published_capabilities (
         id,
         owner_user_id,
+        project_id,
         group_id,
         type,
         name,
@@ -66,6 +68,7 @@ export async function forkPublishedCapability(
       VALUES (
         ${capabilityId},
         ${actorUserId},
+        ${projectId},
         NULL,
         ${source.type},
         ${buildForkedCapabilityName(source.name)},

@@ -15,6 +15,7 @@ import { asRowArray, getSql } from "@/lib/db";
 
 export interface CreatePublishedCapabilityInput {
   readonly ownerUserId: string;
+  readonly projectId: string;
   readonly name: string;
   readonly description?: string;
   readonly exampleRequest?: string;
@@ -48,6 +49,7 @@ export async function createPublishedCapability(
       INSERT INTO published_capabilities (
         id,
         owner_user_id,
+        project_id,
         group_id,
         type,
         name,
@@ -62,6 +64,7 @@ export async function createPublishedCapability(
       VALUES (
         ${capabilityId},
         ${input.ownerUserId},
+        ${input.projectId},
         ${input.groupId ?? null},
         ${capabilityType},
         ${input.name},

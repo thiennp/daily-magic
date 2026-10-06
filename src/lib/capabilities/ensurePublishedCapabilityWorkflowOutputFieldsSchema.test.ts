@@ -17,10 +17,10 @@ describe("ensurePublishedCapabilityWorkflowOutputFieldsSchema", () => {
     resetPublishedCapabilityWorkflowOutputFieldsSchemaEnsureForTests();
   });
 
-  it("adds workflow_output_fields and operator_steps only once per process", async () => {
+  it("adds workflow_output_fields, operator_steps, and project_id only once per process", async () => {
     await ensurePublishedCapabilityWorkflowOutputFieldsSchema();
     await ensurePublishedCapabilityWorkflowOutputFieldsSchema();
 
-    expect(sqlMock).toHaveBeenCalledTimes(2);
+    expect(sqlMock).toHaveBeenCalledTimes(3);
   });
 });

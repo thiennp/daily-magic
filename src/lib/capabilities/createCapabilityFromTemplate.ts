@@ -56,6 +56,7 @@ const createCapabilityFromTemplate = async (
 
   const created = await createPublishedCapability({
     ownerUserId: input.ownerUserId,
+    projectId: project.projectId,
     name: template.name,
     description: template.description,
     exampleRequest: template.exampleRequest,

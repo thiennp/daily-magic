@@ -6,6 +6,12 @@ import { readProjectIdFromUnknown } from "@/lib/projects/readProjectIdFromUnknow
 
 export const dynamic = "force-dynamic";
 
+const logCapabilityCreateFailure = (error: unknown): void => {
+  const name = error instanceof Error ? error.name : "Error";
+  const message = error instanceof Error ? error.message : "unknown";
+  console.error("capabilities.mine.create_failed", { name, message });
+};
+
 export async function GET(): Promise<Response> {
   const { actor, error } = await requireAuth();
 
@@ -35,25 +41,36 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  const result = await publishCapabilityWithHarness(
-    actor.id,
-    parsed,
-    parsed.harnessItems,
-    readProjectIdFromUnknown(body) ?? "",
-  );
+  try {
+    const result = await publishCapabilityWithHarness(
+      actor.id,
+      parsed,
+      parsed.harnessItems,
+      readProjectIdFromUnknown(body) ?? "",
+    );
 
-  if (!result.ok) {
+    if (!result.ok) {
+      return Response.json(
+        { error: result.error, code: result.code },
+        { status: result.status },
+      );
+    }
+
+    return Response.json({
+      ok: true,
+      capability: result.capability,
+      harnessInstalled: result.harnessInstalled,
+      harnessInstallMessage: result.harnessInstallMessage,
+      projectId: result.projectId,
+    });
+  } catch (createError: unknown) {
+    logCapabilityCreateFailure(createError);
     return Response.json(
-      { error: result.error, code: result.code },
-      { status: result.status },
+      {
+        error: "Could not create assistant offering.",
+        code: "capability_create_failed",
+      },
+      { status: 500 },
     );
   }
-
-  return Response.json({
-    ok: true,
-    capability: result.capability,
-    harnessInstalled: result.harnessInstalled,
-    harnessInstallMessage: result.harnessInstallMessage,
-    projectId: result.projectId,
-  });
 }

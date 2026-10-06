@@ -15,8 +15,10 @@ export async function GET(): Promise<Response> {
   // Best-effort: a seed failure must not block onboarding flags (Home shell).
   try {
     await ensureSampleWorkflowCapability(actor.id);
-  } catch (seedError) {
-    console.error("onboarding.bootstrap.sample_seed_failed", seedError);
+  } catch (seedError: unknown) {
+    const name = seedError instanceof Error ? seedError.name : "Error";
+    const message = seedError instanceof Error ? seedError.message : "unknown";
+    console.error("onboarding.bootstrap.sample_seed_failed", { name, message });
   }
 
   const flags = await loadOnboardingBootstrapFlags(actor.id);
