@@ -1,123 +1,75 @@
 "use client";
 
-import { useMemo } from "react";
-
-import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
-import { useAwcProjectMessengerThreads } from "@/features/projects/messenger/hooks/useAwcProjectMessengerThreads";
-import useAwcProjectComposition from "@/features/projects/hooks/useAwcProjectComposition";
-import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
+import AwcProjectOverviewAssistantsCard from "@/features/projects/overview/AwcProjectOverviewAssistantsCard";
 import AwcProjectOverviewAttentionBanner from "@/features/projects/overview/AwcProjectOverviewAttentionBanner";
 import AwcProjectOverviewPitfallsCard from "@/features/projects/overview/AwcProjectOverviewPitfallsCard";
 import AwcProjectOverviewRecentCard from "@/features/projects/overview/AwcProjectOverviewRecentCard";
 import AwcProjectOverviewSetupCard from "@/features/projects/overview/AwcProjectOverviewSetupCard";
 import AwcProjectOverviewStatsStrip from "@/features/projects/overview/AwcProjectOverviewStatsStrip";
-import buildOverviewAttention from "@/features/projects/overview/buildOverviewAttention";
-import buildOverviewRecentActivity from "@/features/projects/overview/buildOverviewRecentActivity";
-import buildOverviewSetupSteps from "@/features/projects/overview/buildOverviewSetupSteps";
 import { OVERVIEW_GRID2_CLASS } from "@/features/projects/overview/overviewChrome.constant";
-import summarizeOverviewPitfalls from "@/features/projects/overview/summarizeOverviewPitfalls";
-import sumMessengerUnread from "@/features/projects/overview/sumMessengerUnread";
+import useOverviewPanelData from "@/features/projects/overview/useOverviewPanelData";
+import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import type { ProjectPageNavTarget } from "@/features/projects/projectPageTabs.constant";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
-import { PROJECT_PITFALL_MAX_ACTIVE } from "@agent-witch/shared/pitfalls";
 
-interface AwcProjectOverviewPanelProps {
+interface Props {
   readonly project: UserProjectRecord;
-  readonly deviceDisplayName: string;
   readonly editCta: ProjectEditOnMacCta;
-  /** Loaded once by the page so Overview, the tab badge and Pitfalls share it. */
   readonly pitfalls: AwcProjectPitfallsState;
+  readonly computerStatus: string | null;
   readonly onGotoTab: (tab: ProjectPageNavTarget) => void;
   readonly onGotoActivity: (threadKey: string | null) => void;
 }
 
 export default function AwcProjectOverviewPanel({
   project,
-  deviceDisplayName,
   editCta,
   pitfalls,
+  computerStatus,
   onGotoTab,
   onGotoActivity,
-}: AwcProjectOverviewPanelProps) {
-  const access = useAwcProjectAccess(project.id);
-  const { threads } = useAwcProjectMessengerThreads(project.id);
-  const { counts, isLoading: compositionLoading } = useAwcProjectComposition(
-    project.id,
-  );
-
-  const unreadCount = sumMessengerUnread(threads);
-  const attention = useMemo(() => buildOverviewAttention(threads), [threads]);
-  const recent = useMemo(() => buildOverviewRecentActivity(threads), [threads]);
-  const pitSummary =
-    pitfalls.status === "ready"
-      ? summarizeOverviewPitfalls(pitfalls.items)
-      : null;
-  const steps = useMemo(() => {
-    const members = access.loadError ? [] : access.members;
-    const folderRefs = access.loadError ? [] : access.folderRefs;
-    return buildOverviewSetupSteps({
-      members,
-      folderRefs,
-      repoUrlCount: project.repoUrls.length,
-      composition: counts,
-      deviceDisplayName,
-    });
-  }, [
-    access.loadError,
-    access.members,
-    access.folderRefs,
-    project.repoUrls.length,
-    counts,
-    deviceDisplayName,
-  ]);
-  const memberCount = access.loadError ? 0 : access.members.length;
-
+}: Props) {
+  const d = useOverviewPanelData({ project, pitfalls, computerStatus });
   return (
     <div className="flex min-w-0 flex-col gap-4">
       <AwcProjectOverviewStatsStrip
-        stats={{
-          memberCount,
-          unreadCount,
-          pitfallsActive: pitSummary?.active ?? 0,
-          pitfallsMax: PROJECT_PITFALL_MAX_ACTIVE,
-          compositionTotal: counts.harness + counts.workflow + counts.agent,
-          showComposition: !compositionLoading,
-        }}
+        stats={d.stats}
         onGoto={onGotoTab}
+        onShowSetup={d.showSetup}
+      />
+      {d.attention ? (
+        <AwcProjectOverviewAttentionBanner
+          attention={d.attention}
+          onOpen={() => onGotoActivity(d.attention!.membershipId)}
+        />
+      ) : null}
+      <AwcProjectOverviewSetupCard
+        steps={d.steps}
+        editCta={editCta}
+        onGoto={onGotoTab}
+        hidden={d.setupHidden}
+        onHide={d.hideSetup}
       />
       <div className={OVERVIEW_GRID2_CLASS}>
         <div className="flex min-w-0 flex-col gap-4">
-          {attention ? (
-            <AwcProjectOverviewAttentionBanner
-              attention={attention}
-              onOpen={() => {
-                onGotoActivity(attention.membershipId);
-              }}
-            />
-          ) : null}
-          <AwcProjectOverviewSetupCard
-            steps={steps}
-            deviceDisplayName={deviceDisplayName}
-            editCta={editCta}
-            onGoto={onGotoTab}
-          />
-        </div>
-        <div className="flex min-w-0 flex-col gap-4">
-          <AwcProjectOverviewRecentCard
-            items={recent}
-            onViewAll={() => {
-              onGotoActivity(null);
-            }}
+          <AwcProjectOverviewAssistantsCard
+            assistants={d.assistants}
+            canSend={d.canSend}
+            onMessage={(id) => onGotoActivity(id)}
+            onGotoTeam={() => onGotoTab("team")}
           />
           <AwcProjectOverviewPitfallsCard
-            summary={pitSummary}
-            isLoading={pitfalls.status === "loading"}
-            onView={() => {
-              onGotoTab("pitfalls");
-            }}
+            summary={d.pitSummary}
+            isLoading={d.pitfallsLoading}
+            onView={() => onGotoTab("pitfalls")}
           />
         </div>
+        <AwcProjectOverviewRecentCard
+          items={d.recent}
+          onViewAll={() => onGotoActivity(null)}
+          onOpen={(id) => onGotoActivity(id === "whole" ? null : id)}
+        />
       </div>
     </div>
   );

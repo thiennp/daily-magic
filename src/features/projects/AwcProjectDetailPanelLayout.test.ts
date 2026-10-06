@@ -59,8 +59,8 @@ const tabBodySource = readFileSync(
 );
 
 describe("AwcProjectDetailPanel layout S2 overview", () => {
-  it("drops Overview tab; parks Members as right rail; gray-only chrome", () => {
-    expect(tabPanelsSource).not.toContain("AwcProjectOverviewPanel");
+  it("V5-5 mounts Overview body; Members rail stays live; no indigo chrome", () => {
+    expect(tabBodySource).toContain("AwcProjectOverviewPanel");
     expect(detailPanelSource).toContain("AwcProjectMembersColumn");
     expect(detailPanelSource).toMatch(/lg:grid-cols-\[minmax\(0,1fr\)_20rem\]/);
     expect(overviewPanelSource).not.toMatch(/indigo|purple|#6366f1/i);

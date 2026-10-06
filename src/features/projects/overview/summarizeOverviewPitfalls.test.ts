@@ -4,7 +4,8 @@ import summarizeOverviewPitfalls from "@/features/projects/overview/summarizeOve
 import type { ProjectPitfallView } from "@agent-witch/shared/pitfalls";
 
 const pit = (
-  partial: Partial<ProjectPitfallView> & Pick<ProjectPitfallView, "id" | "severity">,
+  partial: Partial<ProjectPitfallView> &
+    Pick<ProjectPitfallView, "id" | "severity">,
 ): ProjectPitfallView => ({
   projectId: "p1",
   symptom: partial.id,
@@ -22,7 +23,7 @@ const pit = (
 });
 
 describe("summarizeOverviewPitfalls", () => {
-  it("counts active severities and hits; ignores retired", () => {
+  it("counts Important/Warning/Note; ignores retired; never must-fix", () => {
     const summary = summarizeOverviewPitfalls([
       pit({ id: "a", severity: "block", hitCount: 2 }),
       pit({ id: "b", severity: "warn", hitCount: 1 }),
@@ -31,9 +32,11 @@ describe("summarizeOverviewPitfalls", () => {
     ]);
     expect(summary).toEqual({
       active: 3,
-      mustFix: 1,
+      important: 1,
       warning: 1,
+      note: 1,
       totalHits: 3,
     });
+    expect(JSON.stringify(summary)).not.toMatch(/mustFix|must fix/i);
   });
 });

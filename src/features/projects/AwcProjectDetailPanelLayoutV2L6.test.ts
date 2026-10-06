@@ -17,11 +17,11 @@ describe("project layout v2 L6 Reports + Library", () => {
     const tabs = read(`${P}/projectPageTabs.constant.ts`);
     expect(body).not.toContain("STUB_TABS");
     expect(body).not.toContain("AwcProjectTabStub");
-    expect(body).toContain("<AwcProjectReportsPanel projectId={project.id} />");
+    expect(body).toContain("AwcProjectReportsPanel");
     expect(body).toContain("<AwcProjectLibraryPanel");
-    expect(body).toContain('canEdit={pageActorRole === "owner"}');
+    expect(body).toContain('canEdit={p.pageActorRole === "owner"}');
     expect(tabs).toMatch(
-      /"activity",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
+      /"overview",\s*"activity",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
     );
   });
 

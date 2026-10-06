@@ -1,66 +1,70 @@
 "use client";
 
 import type { OverviewRecentItem } from "@/features/projects/overview/buildOverviewRecentActivity";
+import formatOverviewWhen from "@/features/projects/overview/formatOverviewWhen";
 import {
   OVERVIEW_CARD_CLASS,
+  OVERVIEW_CTA_GHOST_SM_CLASS,
   OVERVIEW_CTA_SECONDARY_SM_CLASS,
 } from "@/features/projects/overview/overviewChrome.constant";
 import { PROJECT_PAGE_OVERVIEW_COPY as C } from "@/features/projects/overview/projectPageOverviewCopy.constant";
-import { formatRelativeTimeAgo } from "@/lib/time/formatRelativeTimeAgo";
 
-interface AwcProjectOverviewRecentCardProps {
+interface Props {
   readonly items: readonly OverviewRecentItem[];
   readonly onViewAll: () => void;
+  readonly onOpen: (id: string) => void;
 }
 
 export default function AwcProjectOverviewRecentCard({
   items,
   onViewAll,
-}: AwcProjectOverviewRecentCardProps) {
+  onOpen,
+}: Props) {
   return (
-    <section className={OVERVIEW_CARD_CLASS} aria-labelledby="overview-recent-title">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <h2
-          id="overview-recent-title"
-          className="text-[17px] font-semibold tracking-tight text-gray-900 dark:text-white"
+    <section className={OVERVIEW_CARD_CLASS} aria-labelledby="overview-recent-h">
+      <div className="flex items-center justify-between gap-2">
+        <h3
+          id="overview-recent-h"
+          className="text-[15.5px] font-semibold text-awc-fg dark:text-white"
         >
           {C.recentTitle}
-        </h2>
-        <button
-          type="button"
-          className={OVERVIEW_CTA_SECONDARY_SM_CLASS}
-          onClick={onViewAll}
-        >
+        </h3>
+        <button type="button" className={OVERVIEW_CTA_GHOST_SM_CLASS} onClick={onViewAll}>
           {C.recentViewAll}
         </button>
       </div>
       {items.length === 0 ? (
-        <p className="text-sm text-gray-500 dark:text-gray-400">{C.recentEmpty}</p>
+        <p className="text-[13px] text-awc-fg-muted">{C.recentEmpty}</p>
       ) : (
-        <ul className="flex flex-col gap-3">
-          {items.map((item) => {
-            const when = formatRelativeTimeAgo(item.at);
+        <ul className="flex flex-col">
+          {items.map((item, index) => {
+            const when = formatOverviewWhen(item.at, { lineStart: true });
             return (
-              <li key={item.id} className="flex items-start gap-3">
-                <span
-                  className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gray-100 text-[11px] font-semibold text-gray-700 dark:bg-white/10 dark:text-gray-200"
-                  aria-hidden
-                >
+              <li
+                key={item.id}
+                className={`flex items-start gap-3 py-2.5 ${
+                  index === 0 ? "" : "border-t border-awc-border dark:border-gray-800"
+                }`}
+              >
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-awc-tile text-xs font-semibold text-awc-fg dark:bg-white/15">
                   {item.initials}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <b className="block text-sm font-medium text-gray-900 dark:text-white">
+                  <div className="truncate text-sm font-medium text-awc-fg dark:text-white">
                     {item.name}
-                  </b>
-                  <small className="block truncate text-[12.5px] text-gray-500 dark:text-gray-400">
-                    {item.preview}
-                  </small>
+                  </div>
+                  <div className="truncate text-[12.5px] text-awc-fg-muted">{item.preview}</div>
+                  {when ? (
+                    <div className="text-[12px] text-awc-fg-subtle">{when}</div>
+                  ) : null}
                 </div>
-                {when ? (
-                  <span className="shrink-0 text-xs text-gray-500 dark:text-gray-400">
-                    {when}
-                  </span>
-                ) : null}
+                <button
+                  type="button"
+                  className={OVERVIEW_CTA_SECONDARY_SM_CLASS}
+                  onClick={() => onOpen(item.id === "whole" ? "whole" : item.id)}
+                >
+                  {C.recentOpen}
+                </button>
               </li>
             );
           })}

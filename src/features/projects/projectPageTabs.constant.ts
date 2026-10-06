@@ -1,8 +1,9 @@
 /**
- * Project layout v2 L1 — artifact tab order (English labels; wire ids stable).
- * Reports/Library stay visible as centre stubs until they land.
+ * Project page live tab track. V5 order with Overview (V5-5) mounted;
+ * Team stays a section until V5-8 (Members rail remains live).
  */
 export const PROJECT_PAGE_TAB_IDS = [
+  "overview",
   "activity",
   "reports",
   "library",
@@ -14,16 +15,16 @@ export const PROJECT_PAGE_TAB_IDS = [
 export type ProjectPageTabId = (typeof PROJECT_PAGE_TAB_IDS)[number];
 
 /**
- * Former tabs now living as the right Team column or dropped sections.
- * Kept for Overview setup goto targets / deep-link soft fallbacks.
+ * Nav targets that are not centre tabs yet. Team → scroll Members rail.
  */
-export const PROJECT_PAGE_SECTION_IDS = ["team", "overview"] as const;
+export const PROJECT_PAGE_SECTION_IDS = ["team"] as const;
 
 export type ProjectPageNavTarget =
   | ProjectPageTabId
   | (typeof PROJECT_PAGE_SECTION_IDS)[number];
 
 export const PROJECT_PAGE_TAB_LABELS: Record<ProjectPageTabId, string> = {
+  overview: "Overview",
   activity: "Activity",
   reports: "Reports",
   library: "Library",
@@ -32,7 +33,7 @@ export const PROJECT_PAGE_TAB_LABELS: Record<ProjectPageTabId, string> = {
   settings: "Settings",
 };
 
-export const DEFAULT_PROJECT_PAGE_TAB: ProjectPageTabId = "activity";
+export const DEFAULT_PROJECT_PAGE_TAB: ProjectPageTabId = "overview";
 
 export const isProjectPageTabId = (value: string): value is ProjectPageTabId =>
   (PROJECT_PAGE_TAB_IDS as readonly string[]).includes(value);

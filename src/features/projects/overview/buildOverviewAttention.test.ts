@@ -20,7 +20,7 @@ describe("buildOverviewAttention", () => {
     expect(buildOverviewAttention(threads({}))).toBeNull();
   });
 
-  it("prefers a bot with unread over whole-project", () => {
+  it("prefers an assistant with unread over whole-project", () => {
     const result = buildOverviewAttention(
       threads({
         wholeProject: {
@@ -40,7 +40,10 @@ describe("buildOverviewAttention", () => {
         ],
       }),
     );
-    expect(result).toEqual({ botName: "WB Wake", membershipId: "m1" });
+    expect(result).toEqual({
+      assistantName: "WB Wake",
+      membershipId: "m1",
+    });
   });
 
   it("falls back to whole project when only that is unread", () => {
@@ -54,6 +57,6 @@ describe("buildOverviewAttention", () => {
           },
         }),
       ),
-    ).toEqual({ botName: "Whole project", membershipId: null });
+    ).toEqual({ assistantName: "Whole project", membershipId: null });
   });
 });

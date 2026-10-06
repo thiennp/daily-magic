@@ -23,10 +23,10 @@ const initialsFrom = (name: string): string => {
 const truncate = (text: string, max: number): string =>
   text.length > max ? `${text.slice(0, max)}…` : text;
 
-/** Newest thread previews across whole-project + bots (max 2). */
+/** Newest thread previews across whole-project + assistants (max 3). */
 const buildOverviewRecentActivity = (
   threads: AwcMessengerThreadList | null,
-  limit: number = 2,
+  limit: number = 3,
 ): readonly OverviewRecentItem[] => {
   if (threads === null) {
     return [];
@@ -45,7 +45,7 @@ const buildOverviewRecentActivity = (
     if (bot.lastPreview === null) {
       continue;
     }
-    const name = bot.displayName?.trim() || "Bot";
+    const name = bot.displayName?.trim() || "Assistant";
     rows.push({
       id: bot.membershipId,
       name,

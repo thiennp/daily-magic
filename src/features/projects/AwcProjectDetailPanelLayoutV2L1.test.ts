@@ -7,10 +7,10 @@ const read = (relative: string): string =>
   readFileSync(path.join(process.cwd(), relative), "utf8");
 
 describe("project layout v2 L1 shell", () => {
-  it("uses EN tabs with Safety rules label, Reports/Library stubs, Activity default", () => {
+  it("uses EN tabs with Overview first, Safety rules label, Overview default", () => {
     const tabs = read("src/features/projects/projectPageTabs.constant.ts");
     expect(tabs).toMatch(
-      /"activity",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
+      /"overview",\s*"activity",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
     );
     expect(tabs).toContain('activity: "Activity"');
     expect(tabs).toContain('reports: "Reports"');
@@ -19,21 +19,19 @@ describe("project layout v2 L1 shell", () => {
     expect(tabs).toContain('resources: "Resources"');
     expect(tabs).toContain('settings: "Settings"');
     expect(tabs).toContain(
-      'DEFAULT_PROJECT_PAGE_TAB: ProjectPageTabId = "activity"',
+      'DEFAULT_PROJECT_PAGE_TAB: ProjectPageTabId = "overview"',
     );
-    // overview remains in PROJECT_PAGE_SECTION_IDS; assert tabs only.
+    // Team stays in PROJECT_PAGE_SECTION_IDS (Members rail) until V5-8.
     const tabIdsBlock =
       tabs.match(
         /export const PROJECT_PAGE_TAB_IDS = \[[\s\S]*?\] as const/,
       )?.[0] ?? "";
     expect(tabIdsBlock).toMatch(
-      /^export const PROJECT_PAGE_TAB_IDS = \[\s*"activity",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings",\s*\] as const$/,
+      /^export const PROJECT_PAGE_TAB_IDS = \[\s*"overview",\s*"activity",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings",\s*\] as const$/,
     );
-    expect(tabIdsBlock).not.toContain('"overview"');
+    expect(tabIdsBlock).toContain('"overview"');
     expect(tabIdsBlock).not.toContain('"team"');
-    const tabLabelsBlock =
-      tabs.match(/export const PROJECT_PAGE_TAB_LABELS[\s\S]*?\};/)?.[0] ?? "";
-    expect(tabLabelsBlock).not.toMatch(/\boverview\b/);
+    expect(tabs).toContain('overview: "Overview"');
   });
 
   it("V5-3 tab bar: white pill track, tonal blue selected via --awc tokens", () => {

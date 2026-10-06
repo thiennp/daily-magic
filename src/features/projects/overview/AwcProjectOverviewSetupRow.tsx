@@ -6,46 +6,50 @@ import {
   OVERVIEW_CTA_SECONDARY_SM_CLASS,
   OVERVIEW_PILL_DONE_CLASS,
 } from "@/features/projects/overview/overviewChrome.constant";
+import { PROJECT_PAGE_OVERVIEW_COPY as C } from "@/features/projects/overview/projectPageOverviewCopy.constant";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import type { ProjectPageNavTarget } from "@/features/projects/projectPageTabs.constant";
 
-interface AwcProjectOverviewSetupRowProps {
+interface Props {
   readonly step: OverviewSetupStep;
   readonly isFirst: boolean;
   readonly editCta: ProjectEditOnMacCta;
   readonly onGoto: (tab: ProjectPageNavTarget) => void;
 }
 
-const CheckIcon = () => (
-  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden>
-    <path
-      d="M2.5 6.2 5 8.6l4.5-5"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
+function CheckIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden>
+      <path
+        d="M2.5 6.2 5 8.7 9.5 3.5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 export default function AwcProjectOverviewSetupRow({
   step,
   isFirst,
   editCta,
   onGoto,
-}: AwcProjectOverviewSetupRowProps) {
+}: Props) {
   const action = step.action;
   return (
     <li
       className={`grid grid-cols-[22px_minmax(0,1fr)_auto] items-center gap-3 py-2.5 ${
-        isFirst ? "" : "border-t border-gray-200 dark:border-gray-800"
+        isFirst ? "" : "border-t border-awc-border dark:border-gray-800"
       }`}
     >
       <span
         className={`grid h-5 w-5 place-items-center rounded-full border ${
           step.done
-            ? "border-gray-900 bg-gray-900 text-white dark:border-white dark:bg-white dark:text-gray-900"
-            : "border-gray-300 dark:border-gray-600"
+            ? "border-awc-fg bg-awc-fg text-awc-surface dark:border-white dark:bg-white dark:text-gray-900"
+            : "border-awc-border-strong dark:border-gray-600"
         }`}
         aria-hidden
       >
@@ -55,14 +59,19 @@ export default function AwcProjectOverviewSetupRow({
         <b
           className={`block text-sm font-medium ${
             step.done
-              ? "text-gray-500 line-through decoration-gray-400/50 dark:text-gray-400"
-              : "text-gray-900 dark:text-white"
+              ? "text-awc-fg-muted line-through decoration-awc-border dark:text-gray-400"
+              : "text-awc-fg dark:text-white"
           }`}
         >
           {step.title}
+          {step.optional && !step.done ? (
+            <span className="ml-1.5 text-[11px] font-medium text-awc-fg-subtle">
+              {C.setupOptional}
+            </span>
+          ) : null}
         </b>
         {step.hint ? (
-          <small className="text-[12.5px] text-gray-500 dark:text-gray-400">
+          <small className="text-[12.5px] text-awc-fg-muted dark:text-gray-400">
             {step.hint}
           </small>
         ) : null}
@@ -79,9 +88,7 @@ export default function AwcProjectOverviewSetupRow({
         <button
           type="button"
           className={OVERVIEW_CTA_SECONDARY_SM_CLASS}
-          onClick={() => {
-            onGoto(action.tab);
-          }}
+          onClick={() => onGoto(action.tab)}
         >
           {action.label}
         </button>

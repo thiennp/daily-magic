@@ -36,7 +36,7 @@ describe("L3 V5-3 project chrome — Product EN lock", () => {
 
   it("panel subtitles are the locked EN (Reports/Library reuse L6 intros)", () => {
     expect(PROJECT_PAGE_V5_TAB_SUBTITLES).toMatchObject({
-      overview: "Chat with your assistants and this computer.",
+      overview: "What's happening in this project and what needs you.",
       activity: "Every conversation, newest first.",
       team: "People, assistants, and computers in this project.",
       pitfalls: "Things your assistants must avoid.",

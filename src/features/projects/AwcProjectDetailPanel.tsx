@@ -94,6 +94,7 @@ export default function AwcProjectDetailPanel({
           deviceDisplayName={deviceDisplayName}
           editCta={editCta}
           pitfalls={pitfalls}
+          computerStatus={headerStatus.text}
           onGotoTab={onGotoTab}
           onGotoActivity={onGotoActivity}
           activityInitialThreadKey={nav.activityThreadKey}

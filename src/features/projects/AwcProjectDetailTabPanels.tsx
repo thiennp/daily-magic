@@ -12,7 +12,7 @@ import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProje
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
-interface AwcProjectDetailTabPanelsProps {
+interface Props {
   readonly activeTab: ProjectPageTabId;
   readonly project: UserProjectRecord;
   readonly startRename: boolean;
@@ -20,10 +20,10 @@ interface AwcProjectDetailTabPanelsProps {
   readonly deviceDisplayName: string;
   readonly editCta: ProjectEditOnMacCta;
   readonly pitfalls: AwcProjectPitfallsState;
+  readonly computerStatus: string | null;
   readonly onGotoTab: (tab: ProjectPageNavTarget) => void;
   readonly onGotoActivity: (threadKey: string | null) => void;
   readonly activityInitialThreadKey?: string | null;
-  /** Bumped by the ask box after a send: remount Activity on the sent thread. */
   readonly activityRefreshKey?: number;
   readonly onActivityUnreadMaybeChanged?: () => void;
 }
@@ -36,10 +36,13 @@ export default function AwcProjectDetailTabPanels({
   deviceDisplayName,
   editCta,
   pitfalls,
+  computerStatus,
+  onGotoTab,
+  onGotoActivity,
   activityInitialThreadKey = null,
   activityRefreshKey = 0,
   onActivityUnreadMaybeChanged,
-}: AwcProjectDetailTabPanelsProps) {
+}: Props) {
   return (
     <>
       {PROJECT_PAGE_TAB_IDS.map((tabId) => {
@@ -63,9 +66,12 @@ export default function AwcProjectDetailTabPanels({
               deviceDisplayName={deviceDisplayName}
               editCta={editCta}
               pitfalls={pitfalls}
+              computerStatus={computerStatus}
               activityInitialThreadKey={activityInitialThreadKey}
               activityRefreshKey={activityRefreshKey}
               onActivityUnreadMaybeChanged={onActivityUnreadMaybeChanged}
+              onGotoTab={onGotoTab}
+              onGotoActivity={onGotoActivity}
             />
           </div>
         );

@@ -3,16 +3,20 @@
 import AwcProjectDetailSettingsPanel from "@/features/projects/AwcProjectDetailSettingsPanel";
 import AwcProjectMessengerSection from "@/features/projects/messenger/AwcProjectMessengerSection";
 import AwcProjectLibraryPanel from "@/features/projects/library/AwcProjectLibraryPanel";
+import AwcProjectOverviewPanel from "@/features/projects/overview/AwcProjectOverviewPanel";
 import AwcProjectPitfallsPanel from "@/features/projects/pitfalls/AwcProjectPitfallsPanel";
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
 import AwcProjectReportsPanel from "@/features/projects/reports/AwcProjectReportsPanel";
 import AwcProjectResourcesPanel from "@/features/projects/resources/AwcProjectResourcesPanel";
-import type { ProjectPageTabId } from "@/features/projects/projectPageTabs.constant";
+import type {
+  ProjectPageNavTarget,
+  ProjectPageTabId,
+} from "@/features/projects/projectPageTabs.constant";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
-interface AwcProjectDetailTabPanelBodyProps {
+export type AwcProjectDetailTabPanelBodyProps = {
   readonly tabId: ProjectPageTabId;
   readonly selected: boolean;
   readonly project: UserProjectRecord;
@@ -21,75 +25,77 @@ interface AwcProjectDetailTabPanelBodyProps {
   readonly deviceDisplayName: string;
   readonly editCta: ProjectEditOnMacCta;
   readonly pitfalls: AwcProjectPitfallsState;
+  readonly computerStatus: string | null;
   readonly activityInitialThreadKey: string | null;
   readonly activityRefreshKey: number;
   readonly onActivityUnreadMaybeChanged?: () => void;
-}
+  readonly onGotoTab: (tab: ProjectPageNavTarget) => void;
+  readonly onGotoActivity: (threadKey: string | null) => void;
+};
 
-/**
- * One tab's panel contents. L6: Reports + Library are full panels (stubs
- * gone); they mount only while selected, like Activity.
- */
-export default function AwcProjectDetailTabPanelBody({
-  tabId,
-  selected,
-  project,
-  startRename,
-  pageActorRole,
-  deviceDisplayName,
-  editCta,
-  pitfalls,
-  activityInitialThreadKey,
-  activityRefreshKey,
-  onActivityUnreadMaybeChanged,
-}: AwcProjectDetailTabPanelBodyProps) {
-  if (tabId === "pitfalls") {
+export default function AwcProjectDetailTabPanelBody(
+  p: AwcProjectDetailTabPanelBodyProps,
+) {
+  const { tabId: t, selected: sel, project: proj } = p;
+  if (t === "overview" && sel) {
+    return (
+      <AwcProjectOverviewPanel
+        project={proj}
+        editCta={p.editCta}
+        pitfalls={p.pitfalls}
+        computerStatus={p.computerStatus}
+        onGotoTab={p.onGotoTab}
+        onGotoActivity={p.onGotoActivity}
+      />
+    );
+  }
+  if (t === "pitfalls") {
     return (
       <AwcProjectPitfallsPanel
-        projectId={project.id}
-        pitfalls={pitfalls}
-        deviceDisplayName={deviceDisplayName}
-        editCta={editCta}
+        projectId={proj.id}
+        pitfalls={p.pitfalls}
+        deviceDisplayName={p.deviceDisplayName}
+        editCta={p.editCta}
       />
     );
   }
-  if (tabId === "activity" && selected) {
+  if (t === "activity" && sel) {
     return (
       <AwcProjectMessengerSection
-        key={activityRefreshKey}
-        projectId={project.id}
-        initialThreadKey={activityInitialThreadKey}
-        onUnreadMaybeChanged={onActivityUnreadMaybeChanged}
+        key={p.activityRefreshKey}
+        projectId={proj.id}
+        initialThreadKey={p.activityInitialThreadKey}
+        onUnreadMaybeChanged={p.onActivityUnreadMaybeChanged}
       />
     );
   }
-  if (tabId === "resources") {
+  if (t === "resources") {
     return (
       <AwcProjectResourcesPanel
-        project={project}
-        pageActorRole={pageActorRole}
-        deviceDisplayName={deviceDisplayName}
-        editCta={editCta}
+        project={proj}
+        pageActorRole={p.pageActorRole}
+        deviceDisplayName={p.deviceDisplayName}
+        editCta={p.editCta}
       />
     );
   }
-  if (tabId === "settings") {
+  if (t === "settings") {
     return (
       <AwcProjectDetailSettingsPanel
-        project={project}
-        startRename={startRename}
-        pageActorRole={pageActorRole}
+        project={proj}
+        startRename={p.startRename}
+        pageActorRole={p.pageActorRole}
       />
     );
   }
-  if (tabId === "reports" && selected) {
-    return <AwcProjectReportsPanel projectId={project.id} />;
+  if (t === "reports" && sel) {
+    return <AwcProjectReportsPanel projectId={proj.id} />;
   }
-  if (tabId === "library" && selected) {
+  if (t === "library" && sel) {
     return (
       <AwcProjectLibraryPanel
-        project={project}
-        canEdit={pageActorRole === "owner"}
+        project={proj}
+        canEdit={p.pageActorRole === "owner"}
       />
     );
   }

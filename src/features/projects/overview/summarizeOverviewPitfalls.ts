@@ -5,8 +5,9 @@ import {
 
 export type OverviewPitfallsSummary = {
   readonly active: number;
-  readonly mustFix: number;
+  readonly important: number;
   readonly warning: number;
+  readonly note: number;
   readonly totalHits: number;
 };
 
@@ -16,8 +17,9 @@ const summarizeOverviewPitfalls = (
   const activeItems = items.filter((item) => item.source !== "retired");
   return {
     active: countActiveProjectPitfalls(items),
-    mustFix: activeItems.filter((item) => item.severity === "block").length,
+    important: activeItems.filter((item) => item.severity === "block").length,
     warning: activeItems.filter((item) => item.severity === "warn").length,
+    note: activeItems.filter((item) => item.severity === "info").length,
     totalHits: activeItems.reduce((sum, item) => sum + item.hitCount, 0),
   };
 };

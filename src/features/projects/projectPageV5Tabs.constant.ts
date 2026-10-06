@@ -3,9 +3,8 @@ import { PROJECT_PAGE_TAB_LABELS } from "@/features/projects/projectPageTabs.con
 import { PROJECT_PAGE_REPORTS_COPY } from "@/features/projects/reports/projectPageReportsCopy.constant";
 
 /**
- * L3 V5-3 — the full v5 tab track order (8). `PROJECT_PAGE_TAB_IDS` is the
- * live subset in this order: Overview lands with its body in V5-5 and Team
- * in V5-8 (Members rail stays live until then). No placeholder panels.
+ * L3 V5-3 — the full v5 tab track order (8). Live tabs keep this order.
+ * Team lands in V5-8 (Members rail stays live until then). No placeholders.
  */
 export const PROJECT_PAGE_V5_TAB_ORDER = [
   "overview",
@@ -29,7 +28,7 @@ export const PROJECT_PAGE_V5_TAB_LABELS: Record<ProjectPageV5TabId, string> = {
 /** One-line panel subtitle under the tab track (panel H2 is sr-only). */
 export const PROJECT_PAGE_V5_TAB_SUBTITLES: Record<ProjectPageV5TabId, string> =
   {
-    overview: "Chat with your assistants and this computer.",
+    overview: "What's happening in this project and what needs you.",
     activity: "Every conversation, newest first.",
     reports: PROJECT_PAGE_REPORTS_COPY["reports.intro"],
     team: "People, assistants, and computers in this project.",
