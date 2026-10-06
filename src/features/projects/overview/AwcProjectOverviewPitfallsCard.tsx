@@ -6,7 +6,6 @@ import {
   OVERVIEW_CTA_GHOST_SM_CLASS,
 } from "@/features/projects/overview/overviewChrome.constant";
 import { PROJECT_PAGE_OVERVIEW_COPY as C } from "@/features/projects/overview/projectPageOverviewCopy.constant";
-import { PROJECT_PITFALL_MAX_ACTIVE } from "@agent-witch/shared/pitfalls";
 
 interface Props {
   readonly summary: OverviewPitfallsSummary | null;
@@ -23,8 +22,11 @@ export default function AwcProjectOverviewPitfallsCard({
     if (isLoading) {
       return C.safetyLoading;
     }
-    if (summary === null || summary.active === 0) {
+    if (summary === null || summary.total === 0) {
       return C.safetyEmpty;
+    }
+    if (summary.active === 0) {
+      return C.safetyAllOff;
     }
     const hits =
       summary.totalHits === 0
@@ -35,7 +37,7 @@ export default function AwcProjectOverviewPitfallsCard({
       summary.warning,
       summary.note,
       summary.active,
-      PROJECT_PITFALL_MAX_ACTIVE,
+      summary.total,
       hits,
     );
   })();

@@ -92,4 +92,5 @@ export const PROJECT_PAGE_OVERVIEW_COPY = {
     n === 1 ? "1 hit logged" : `${n} hits logged`,
   safetyLoading: AWC_PROJECT_PITFALLS_COPY.loading,
   safetyEmpty: AWC_PROJECT_PITFALLS_COPY.empty,
+  safetyAllOff: AWC_PROJECT_PITFALLS_COPY.allOff,
 } as const;

@@ -36,6 +36,7 @@ describe("summarizeOverviewPitfalls", () => {
       warning: 1,
       note: 1,
       totalHits: 3,
+      total: 4,
     });
     expect(JSON.stringify(summary)).not.toMatch(/mustFix|must fix/i);
   });

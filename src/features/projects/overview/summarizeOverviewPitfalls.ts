@@ -9,6 +9,8 @@ export type OverviewPitfallsSummary = {
   readonly warning: number;
   readonly note: number;
   readonly totalHits: number;
+  /** Live project rule count (active + off), same denominator as Safety rules tab/section. */
+  readonly total: number;
 };
 
 const summarizeOverviewPitfalls = (
@@ -21,6 +23,7 @@ const summarizeOverviewPitfalls = (
     warning: activeItems.filter((item) => item.severity === "warn").length,
     note: activeItems.filter((item) => item.severity === "info").length,
     totalHits: activeItems.reduce((sum, item) => sum + item.hitCount, 0),
+    total: items.length,
   };
 };
 

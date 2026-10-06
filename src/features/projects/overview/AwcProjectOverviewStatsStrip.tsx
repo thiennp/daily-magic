@@ -45,10 +45,12 @@ export default function AwcProjectOverviewStatsStrip({
       <button type="button" className={unreadCls} onClick={() => onGoto("activity")}>
         <b className="font-semibold tabular-nums">{s.unreadCount}</b> unread
       </button>
-      <button type="button" className={OVERVIEW_FACT_CLASS} onClick={() => onGoto("pitfalls")}>
-        <b className="font-semibold tabular-nums text-awc-fg dark:text-white">{s.pitfallsActive}</b>{" "}
-        of {s.pitfallsMax} safety rules on
-      </button>
+      {s.pitfallsMax === 0 ? null : (
+        <button type="button" className={OVERVIEW_FACT_CLASS} onClick={() => onGoto("pitfalls")}>
+          <b className="font-semibold tabular-nums text-awc-fg dark:text-white">{s.pitfallsActive}</b>{" "}
+          of {s.pitfallsMax} safety rules on
+        </button>
+      )}
       {s.showComposition ? (
         <button type="button" className={OVERVIEW_FACT_CLASS} onClick={() => onGoto("library")}>
           {C.compositionStat(s.playbooks, s.workflows, s.agents)}

@@ -13,8 +13,6 @@ import summarizeOverviewPitfalls from "@/features/projects/overview/summarizeOve
 import sumMessengerUnread from "@/features/projects/overview/sumMessengerUnread";
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
-import { PROJECT_PITFALL_MAX_ACTIVE } from "@agent-witch/shared/pitfalls";
-
 const useOverviewPanelData = (input: {
   readonly project: UserProjectRecord;
   readonly pitfalls: AwcProjectPitfallsState;
@@ -67,7 +65,7 @@ const useOverviewPanelData = (input: {
       pendingCount,
       unreadCount: sumMessengerUnread(threads),
       pitfallsActive: pitSummary?.active ?? 0,
-      pitfallsMax: PROJECT_PITFALL_MAX_ACTIVE,
+      pitfallsMax: pitSummary?.total ?? 0,
       playbooks: counts.harness,
       workflows: counts.workflow,
       agents: counts.agent,
