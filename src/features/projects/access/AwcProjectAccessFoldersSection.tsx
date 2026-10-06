@@ -4,11 +4,7 @@ import AwcProjectAccessFolderRefs from "@/features/projects/access/AwcProjectAcc
 import AwcProjectAccessSection from "@/features/projects/access/AwcProjectAccessSection";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import type { AwcProjectAccessFolderRef } from "@/features/projects/access/hooks/loadAwcProjectAccess";
-import {
-  addProjectFolderRef,
-  removeProjectFolderRef,
-} from "@/features/projects/access/utils/mutateProjectFolderRefs";
-import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
+import { useAwcProjectFolderRefActions } from "@/features/projects/access/hooks/useAwcProjectFolderRefActions";
 
 interface AwcProjectAccessFoldersSectionProps {
   readonly projectId: string;
@@ -24,6 +20,11 @@ export default function AwcProjectAccessFoldersSection({
   onReload,
 }: AwcProjectAccessFoldersSectionProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
+  const { onAdd, onRemove } = useAwcProjectFolderRefActions({
+    projectId,
+    onMessage,
+    onReload,
+  });
   return (
     <AwcProjectAccessSection
       id="project-access-folders"
@@ -34,32 +35,8 @@ export default function AwcProjectAccessFoldersSection({
       <AwcProjectAccessFolderRefs
         folderRefs={folderRefs}
         hideChrome
-        onAdd={async (machineOrDeviceRef, folderPath) => {
-          const result = await addProjectFolderRef({
-            projectId,
-            machineOrDeviceRef,
-            folderPath,
-          });
-          onMessage(
-            result.ok
-              ? "Folder ref added."
-              : mapProjectAccessError(result.errorMessage, "Failed."),
-          );
-          if (result.ok) await onReload();
-          return result.ok;
-        }}
-        onRemove={(refId) => {
-          void removeProjectFolderRef({ projectId, refId }).then(
-            async (result) => {
-              onMessage(
-                result.ok
-                  ? "Folder ref removed."
-                  : mapProjectAccessError(result.errorMessage, "Failed."),
-              );
-              await onReload();
-            },
-          );
-        }}
+        onAdd={onAdd}
+        onRemove={onRemove}
       />
     </AwcProjectAccessSection>
   );

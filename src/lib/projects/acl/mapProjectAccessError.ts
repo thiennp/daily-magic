@@ -20,6 +20,17 @@ const humanizeUnknownCode = (code: string): string => {
   return spaced.charAt(0).toUpperCase() + spaced.slice(1) + ".";
 };
 
+/** True when ACL load failed because the viewer is not the project owner. */
+export const isProjectAccessForbiddenError = (message: string): boolean =>
+  /owner|forbidden/i.test(message);
+
+/** Map load errors to forbidden copy when the ACL rejects non-owners. */
+export const resolveProjectAccessLoadError = (
+  loadError: string,
+  forbiddenCopy: string,
+): string =>
+  isProjectAccessForbiddenError(loadError) ? forbiddenCopy : loadError;
+
 /** Prefer friendly copy; pass through already-human strings; never leave snake_case. */
 export const mapProjectAccessError = (
   codeOrMessage: string | null | undefined,

@@ -9,6 +9,7 @@ import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProj
 import { ProjectSkillsSection } from "@/features/project-skill-share/public-api/presentation";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { APP_SURFACE_EYEBROW_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import { resolveProjectAccessLoadError } from "@/lib/projects/acl/mapProjectAccessError";
 
 export type AwcProjectAccessOwnerPanelProps = {
   readonly projectId: string;
@@ -52,9 +53,7 @@ export default function AwcProjectAccessOwnerPanel({
 
       {access.loadError ? (
         <p className="rounded-md border border-amber-200/80 bg-amber-50/80 px-3 py-2 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100">
-          {/owner|forbidden/i.test(access.loadError)
-            ? copy.forbidden
-            : access.loadError}
+          {resolveProjectAccessLoadError(access.loadError, copy.forbidden)}
         </p>
       ) : null}
 
