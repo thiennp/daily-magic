@@ -5,14 +5,13 @@ import {
   accessLogTargetName,
   capAccessLogLine,
   joinAccessLogDetails,
+  type AccessLogRendered,
 } from "@/features/projects/accessLog/accessLogEventHelpers";
 import { ACCESS_LOG_COPY as C } from "@/features/projects/accessLog/accessLogCopy.constant";
 import { formatAccessLogDeliveryEvent } from "@/features/projects/accessLog/formatAccessLogDeliveryEvent";
 import { formatAccessLogHumanInvite } from "@/features/projects/accessLog/formatAccessLogHumanInvite";
 import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/projectAccessLog.type";
 import { isProjectActivityEventType } from "@/lib/projects/acl/activity/projectActivityEvent.constant";
-
-export type { AccessLogRendered } from "@/features/projects/accessLog/accessLogEventHelpers";
 
 /** Map one API event to EN line + optional detail. Unknown types → null (skip). */
 export const formatAccessLogEvent = (
