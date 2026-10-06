@@ -22,6 +22,8 @@ bash scripts/mac/build-awl-mac-dmg.sh
 
 Produces `dist/mac/AgentWitchLocal.dmg` + `.sha256` (macOS only). The DMG build registers `CFBundleURLTypes` for `agentwitch-local`.
 
+Signing: with `DEVELOPER_ID_APPLICATION` + notary credentials in env the build is Developer ID signed (hardened runtime, `AgentWitchLocal.entitlements`), notarized and stapled (DMG + `AgentWitchLocal.zip`); without them it falls back to ad-hoc and logs it. `--dry-run` runs the real ad-hoc build + local verify and prints the Developer ID / notary commands with secrets masked. See [docs/agent-witch/awl-mac-signing-notarization.md](../../docs/agent-witch/awl-mac-signing-notarization.md) and [KNOWN_ISSUES.md](KNOWN_ISSUES.md).
+
 ## Note
 
 This folder is **not** a separate deployable in `deployables.registry.json` (schema is fixed to AWC/AWL/AWB/AWI). It is a packaging surface for AWL/AWI.
@@ -33,4 +35,3 @@ This folder is **not** a separate deployable in `deployables.registry.json` (sch
   `Contents/Resources` by `scripts/mac/build-awl-mac-dmg.sh` and loaded via
   `Bundle.main` (not SPM `Bundle.module`).
 - Regenerate all desktop icons: `bash scripts/agentWitchLocal/generateDesktopIcons.sh` then on macOS `iconutil -c icns -o apps/mac/AppIcon.icns apps/mac/AppIcon.iconset`.
-

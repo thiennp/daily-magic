@@ -1,6 +1,34 @@
 #!/usr/bin/env bash
-# Reproducible unsigned AgentWitchLocal.app + UDZO dmg (macOS only).
+# Reproducible AgentWitchLocal.app + UDZO dmg (macOS only).
+#
+# Signing (scripts/mac/signing/, docs/agent-witch/awl-mac-signing-notarization.md):
+#   default / AWL_MAC_SIGNING=auto  Developer ID + notarize + staple when
+#                                   DEVELOPER_ID_APPLICATION + notary creds are
+#                                   set; otherwise ad-hoc fallback (logged).
+#   --adhoc  / AWL_MAC_SIGNING=adhoc         force today's ad-hoc build.
+#   AWL_MAC_SIGNING=developer-id             fail unless credentials exist.
+#   --dry-run  real ad-hoc build + hardened-runtime ad-hoc sign + local verify;
+#              prints the Developer ID / notarytool / stapler commands (masked).
 set -euo pipefail
+set +x
+
+AWL_MAC_SIGNING_REQUESTED="${AWL_MAC_SIGNING:-auto}"
+AWL_SIGN_DRY_RUN=0
+for arg in "$@"; do
+  case "${arg}" in
+    --dry-run) AWL_SIGN_DRY_RUN=1 ;;
+    --adhoc) AWL_MAC_SIGNING_REQUESTED="adhoc" ;;
+    -h | --help)
+      sed -n '2,12p' "${BASH_SOURCE[0]}"
+      exit 0
+      ;;
+    *)
+      echo "Unknown argument: ${arg} (use --dry-run, --adhoc or --help)." >&2
+      exit 1
+      ;;
+  esac
+done
+export AWL_SIGN_DRY_RUN
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PACKAGE_DIR="${ROOT_DIR}/apps/mac"
@@ -23,6 +51,10 @@ if ! command -v swift >/dev/null 2>&1; then
   echo "swift is required." >&2
   exit 1
 fi
+
+# shellcheck source=signing/runAwlMacSigningPipeline.sh
+source "${ROOT_DIR}/scripts/mac/signing/runAwlMacSigningPipeline.sh"
+awl_sign_init "${ROOT_DIR}" "${AWL_MAC_SIGNING_REQUESTED}"
 
 VERSION="$(node -p "require('${ROOT_DIR}/package.json').version" 2>/dev/null || echo "0.1.0")"
 BUILD_NUMBER="${GITHUB_RUN_NUMBER:-1}"
@@ -118,8 +150,9 @@ cat > "${CONTENTS_DIR}/Info.plist" <<EOF
 </plist>
 EOF
 
-# Ad-hoc sign (no Developer ID).
-codesign --force --deep --sign - "${APP_DIR}"
+# Ad-hoc (legacy) or Developer ID inside-out sign; Developer ID also
+# notarizes + staples the app before it goes into the DMG.
+awl_sign_stage_app "${APP_DIR}" "${DIST_DIR}"
 
 DMG_PATH="${DIST_DIR}/${DMG_NAME}"
 rm -f "${DMG_PATH}" "${DMG_PATH}.sha256"
@@ -131,12 +164,26 @@ hdiutil create \
   -format UDZO \
   "${DMG_PATH}"
 
-# Deterministic checksum file next to the dmg.
+# Developer ID: sign + notarize + staple the DMG (dry-run prints these steps).
+awl_sign_dmg "${DMG_PATH}"
+
+# Deterministic checksum files next to the artifacts (after stapling).
 (
   cd "${DIST_DIR}"
   shasum -a 256 "${DMG_NAME}" | awk '{print $1 "  " $2}' > "${DMG_NAME}.sha256"
+  if [[ -f AgentWitchLocal.zip ]]; then
+    shasum -a 256 AgentWitchLocal.zip | awk '{print $1 "  " $2}' > AgentWitchLocal.zip.sha256
+  fi
 )
 
 echo "Wrote ${DMG_PATH}"
 echo "Wrote ${DMG_PATH}.sha256"
 cat "${DMG_PATH}.sha256"
+if [[ -f "${DIST_DIR}/AgentWitchLocal.zip" ]]; then
+  echo "Wrote ${DIST_DIR}/AgentWitchLocal.zip"
+  cat "${DIST_DIR}/AgentWitchLocal.zip.sha256"
+fi
+awl_log "Signing mode used: ${AWL_SIGN_MODE}."
+if [[ "${AWL_SIGN_MODE}" == "dry-run" ]]; then
+  awl_log "Dry-run artifacts are ad-hoc signed and NOT notarized: do not publish them."
+fi
