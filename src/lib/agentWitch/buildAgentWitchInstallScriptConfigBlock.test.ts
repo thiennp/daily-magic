@@ -51,13 +51,13 @@ describe("buildAgentWitchInstallScriptConfigBlock", () => {
     });
 
     expect(block).toContain(
-      "Connect this Mac requires your Agent Witch account email",
+      "Connect this computer requires your Agent Witch account email",
     );
     expect(block).toContain(
       "Your account is added as a separate profile and will not replace theirs.",
     );
     expect(block).toContain(
-      "Leaving active-profile unchanged so another account on this Mac keeps wake identity.",
+      "Leaving active-profile unchanged so another account on this computer keeps wake identity.",
     );
     expect(block).toContain("Refusing to overwrite pairing token for");
   });

@@ -7,7 +7,7 @@ export const AGENT_WITCH_DISPATCH_ERROR_CODES = {
 
 /** The targeted device row was superseded by a re-pair of the same Mac. */
 export const MAC_REPLACED_ERROR =
-  "This Mac was re-paired. Reselect it and try again.";
+  "This computer was re-paired. Reselect it and try again.";
 
 /** Interactive work cannot wait, so the caller is asked to retry shortly. */
 export const MAC_RECONNECTING_RETRY_ERROR =

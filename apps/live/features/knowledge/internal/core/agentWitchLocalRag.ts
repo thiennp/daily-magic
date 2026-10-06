@@ -207,5 +207,5 @@ export const formatRagContextForPrompt = (
   const body = chunks
     .map((chunk, index) => `[${index + 1}] ${chunk.text}`)
     .join("\n\n");
-  return `Local knowledge (from this Mac):\n\n${body}\n\n---\n\n`;
+  return `Local knowledge (from this computer):\n\n${body}\n\n---\n\n`;
 };

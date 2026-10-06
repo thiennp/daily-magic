@@ -124,7 +124,7 @@ describe("buildAgentWitchLocalProjectEditorPageBody", () => {
       'class="btn btn-danger btn-compact" type="submit">Remove from repo</button>',
     );
     expect(html).toContain(
-      "return confirm('Remove this playbook from the repo? Files stay installed on this Mac.')",
+      "return confirm('Remove this playbook from the repo? Files stay installed on this computer.')",
     );
   });
 
@@ -201,7 +201,7 @@ describe("buildAgentWitchLocalProjectEditorPageBody", () => {
     expect(html).toContain(">Rename…</a>");
     expect(html).toContain("Playbooks (0)");
     expect(html).not.toContain("Harness (0)");
-    expect(html).toContain("No playbook on this Mac yet");
+    expect(html).toContain("No playbook on this computer yet");
   });
 
   it("adds a Pitfalls tab next to Knowledge with the active count", () => {

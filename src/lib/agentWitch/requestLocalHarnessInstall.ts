@@ -55,21 +55,21 @@ export const requestLocalHarnessInstall = async (input: {
       "errorMessage" in data &&
       typeof (data as { errorMessage: unknown }).errorMessage === "string"
         ? (data as { errorMessage: string }).errorMessage
-        : "Could not install harness on this Mac.";
+        : "Could not install harness on this computer.";
 
     return { ok: false, errorMessage };
   } catch (error) {
     if (error instanceof DOMException && error.name === "TimeoutError") {
       return {
         ok: false,
-        errorMessage: "Harness install timed out on this Mac.",
+        errorMessage: "Harness install timed out on this computer.",
       };
     }
 
     return {
       ok: false,
       errorMessage:
-        "Agent Witch on this Mac is not running. Run install first.",
+        "Agent Witch on this computer is not running. Run install first.",
     };
   }
 };

@@ -100,7 +100,7 @@ export const buildAgentWitchLocalWriterApiPageBody = (input: {
   return `${flash}<section class="card">
       <p class="eyebrow">Writer</p>
       <h1>API keys (optional)</h1>
-      <p class="lede">Run Claude, Codex, or Antigravity tasks with provider HTTP APIs instead of installing their CLIs on this Mac. Keys stay in <span class="mono">writer-api-secrets.json</span> on this machine only.</p>
+      <p class="lede">Run Claude, Codex, or Antigravity tasks with provider HTTP APIs instead of installing their CLIs on this computer. Keys stay in <span class="mono">writer-api-secrets.json</span> on this machine only.</p>
       <form class="task-form" method="POST" action="/writer-api">
         <fieldset class="field">
           <span class="field-label">Execution</span>

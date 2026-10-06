@@ -125,7 +125,7 @@ export const formatAgentRunEstimateHistoryTable = (
   }
 
   const lines = [
-    "Latest finished tasks on this Mac. Use estimated vs actual seconds to calibrate:",
+    "Latest finished tasks on this computer. Use estimated vs actual seconds to calibrate:",
     "| Task | Writer | Estimated seconds | Actual seconds |",
     "| --- | --- | --- | --- |",
     ...finished.map(

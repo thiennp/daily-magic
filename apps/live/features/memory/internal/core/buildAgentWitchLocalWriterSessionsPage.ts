@@ -53,7 +53,7 @@ export const buildAgentWitchLocalWriterSessionsPageBody = (input: {
   const body =
     input.sessions.length > 0
       ? input.sessions.map(formatSessionBlock).join("")
-      : `<section class="card"><p class="muted">No writer sessions stored on this Mac yet. Delegate tasks from the cloud or run a task locally — full transcripts appear here after each finished turn.</p></section>`;
+      : `<section class="card"><p class="muted">No writer sessions stored on this computer yet. Delegate tasks from the cloud or run a task locally — full transcripts appear here after each finished turn.</p></section>`;
 
   return `<section class="card">
       <p class="eyebrow">Memory</p>

@@ -35,13 +35,13 @@ export const resolvePromptSdlcLocalFolder = (
     if (!fs.statSync(absolute).isDirectory()) {
       return {
         ok: false,
-        errorMessage: "Choose a folder that exists on this Mac.",
+        errorMessage: "Choose a folder that exists on this computer.",
       };
     }
   } catch {
     return {
       ok: false,
-      errorMessage: "Choose a folder that exists on this Mac.",
+      errorMessage: "Choose a folder that exists on this computer.",
     };
   }
 

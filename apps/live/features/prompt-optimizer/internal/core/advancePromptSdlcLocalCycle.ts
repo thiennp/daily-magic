@@ -91,7 +91,7 @@ export const advancePromptSdlcLocalCycle = async (
   if (cycle.status !== "improving") {
     return failCycle(
       cycle,
-      "This cycle is waiting on a step this Mac cannot run.",
+      "This cycle is waiting on a step this computer cannot run.",
     );
   }
 

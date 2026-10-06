@@ -20,12 +20,12 @@ export const AGENT_WITCH_INSTRUCTION_MARKETPLACE_SECTION: AgentWitchInstructionS
       {
         id: "save-to-library",
         title: "Save a copy to Library",
-        body: "Fork or save a marketplace item into your personal Library so you can edit fields, run on your Mac, or publish your own variant later.",
+        body: "Fork or save a marketplace item into your personal Library so you can edit fields, run on your computer, or publish your own variant later.",
       },
       {
         id: "install-bundle",
         title: "Install the rules bundle",
-        body: "When a listing includes rules and your Mac is online, install copies them so tasks follow the same standards as the publisher.",
+        body: "When a listing includes rules and your computer is online, install copies them so tasks follow the same standards as the publisher.",
       },
       {
         id: "presets",

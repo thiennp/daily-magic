@@ -20,7 +20,7 @@ export async function GET(request: Request): Promise<Response> {
 
   if (hasToken && !isValidAgentWitchPairingToken(rawToken)) {
     return new Response(
-      "Install token is required. Open Home while signed in and copy the Connect this Mac install command.",
+      "Install token is required. Open Home while signed in and copy the Connect this computer install command.",
       { status: 400 },
     );
   }

@@ -41,14 +41,14 @@ export const runLocalScheduledAutomationById = async (
   if (cloudApi === null) {
     return {
       ok: false,
-      errorMessage: "Pairing token is missing. Re-link this Mac.",
+      errorMessage: "Pairing token is missing. Re-link this computer.",
     };
   }
 
   const automation = findLocalScheduledAutomation(config.layout, automationId);
 
   if (automation === null) {
-    return { ok: false, errorMessage: "Automation not found on this Mac." };
+    return { ok: false, errorMessage: "Automation not found on this computer." };
   }
 
   if (!automation.enabled) {

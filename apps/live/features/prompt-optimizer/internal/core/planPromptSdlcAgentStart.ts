@@ -58,7 +58,7 @@ export const planPromptSdlcAgentStart = (input: {
       ok: false,
       error:
         installed.length === 0
-          ? "No reasoning writer is installed on this Mac."
+          ? "No reasoning writer is installed on this computer."
           : `Set judge and improver to installed writer ids: ${installed}.`,
       installedWriters: selection.writers,
     };

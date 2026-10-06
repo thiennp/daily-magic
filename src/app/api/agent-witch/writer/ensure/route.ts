@@ -37,7 +37,7 @@ export async function POST(request: Request): Promise<Response> {
   if (agent === undefined) {
     return NextResponse.json(
       {
-        error: "Your Mac is offline. Open Agent Witch on the Mac and retry.",
+        error: "Your computer is offline. Open Agent Witch on that computer and retry.",
       },
       { status: 409 },
     );
@@ -54,6 +54,6 @@ export async function POST(request: Request): Promise<Response> {
     writerAgent,
     installed: false,
     loggedIn: false,
-    message: "Ensure command sent to your Mac over WebSocket.",
+    message: "Ensure command sent to your computer over WebSocket.",
   });
 }

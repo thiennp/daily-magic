@@ -62,7 +62,7 @@ export const selectAgentWitchProjectFolderFromWakeServer = async (
   if (runConfig === null) {
     return {
       ok: false,
-      errorMessage: "Agent Witch is not configured on this Mac.",
+      errorMessage: "Agent Witch is not configured on this computer.",
     };
   }
 

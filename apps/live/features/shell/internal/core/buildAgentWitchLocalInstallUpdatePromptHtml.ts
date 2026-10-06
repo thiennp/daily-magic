@@ -38,7 +38,7 @@ export const buildAgentWitchLocalInstallUpdateFlashHtml = (
   flash: AgentWitchLocalInstallUpdateFlash,
 ): string => {
   if (flash === "ok") {
-    return `<div class="alert-success">Update finished. This Mac may restart the Agent Witch client.</div>`;
+    return `<div class="alert-success">Update finished. This computer may restart the Agent Witch client.</div>`;
   }
 
   if (flash === "started") {

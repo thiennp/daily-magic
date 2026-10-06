@@ -254,7 +254,7 @@ export const buildAgentWitchLocalHarnessPageBody = (input: {
     cloudAppOrigin: input.cloudAppOrigin,
     manageHref: `${input.cloudAppOrigin}/marketplace`,
     manageLabel: "Install playbooks in Agent Witch Cloud",
-    body: "Install and update playbooks in the browser; this Mac keeps a copy under your profile harness. Use Projects to link sets into a repo’s .cursor tree.",
+    body: "Install and update playbooks in the browser; this computer keeps a copy under your profile harness. Use Projects to link sets into a repo’s .cursor tree.",
   });
 
   const installedSection = buildAgentWitchLocalHarnessInstalledSection({
@@ -293,7 +293,7 @@ export const buildAgentWitchLocalHarnessPageBody = (input: {
     : `<section class="card">
       <p class="eyebrow">Advanced</p>
       <h1>Import from disk</h1>
-      <p class="lede">Scan a folder for existing <code>.cursor</code> rules and copy them into the profile harness on this Mac. Prefer installing playbooks from Agent Witch Cloud when possible.</p>
+      <p class="lede">Scan a folder for existing <code>.cursor</code> rules and copy them into the profile harness on this computer. Prefer installing playbooks from Agent Witch Cloud when possible.</p>
       <div class="stack">
         <label class="field">
           <span class="field-label">Scan folder (required)</span>

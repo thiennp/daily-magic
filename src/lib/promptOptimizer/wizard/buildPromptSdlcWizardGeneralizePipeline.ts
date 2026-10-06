@@ -32,10 +32,10 @@ export const buildPromptSdlcWizardGeneralizePipeline = (input: {
   return [
     pipelineStep(
       "awl",
-      "Connected on this Mac (Agent Witch Local)",
+      "Connected on this computer (Agent Witch Local)",
       "done",
       "Local app",
-      "<p>Your browser talks to AWL on <code>127.0.0.1:43347</code>. The run is stored on this Mac.</p>",
+      "<p>Your browser talks to AWL on <code>127.0.0.1:43347</code>. The run is stored on this computer.</p>",
     ),
     pipelineStep(
       "folder",
@@ -48,7 +48,7 @@ export const buildPromptSdlcWizardGeneralizePipeline = (input: {
       "cli",
       `${input.writerLabel} CLI — generalize`,
       cliState,
-      "Writer on this Mac",
+      "Writer on this computer",
       pipelineTerminalSample(input.writerLabel, input.folder),
     ),
     pipelineStep(

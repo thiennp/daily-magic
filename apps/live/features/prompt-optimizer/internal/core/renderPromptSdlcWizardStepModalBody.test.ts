@@ -75,7 +75,7 @@ describe("wizard step timeline modal", () => {
         detail: null,
       }),
     );
-    expect(html).toContain("Sub-steps on this Mac");
+    expect(html).toContain("Sub-steps on this computer");
     expect(html).toContain("What is being evaluated");
     expect(html).toContain("Reply for billing");
     expect(html).toContain("score round");

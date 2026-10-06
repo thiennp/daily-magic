@@ -70,7 +70,7 @@ export const wrapPromptWithAgentRunReportInstruction = (
     reportKey: input.reportKey,
     agentRunId: input.agentRunId,
     status: AGENT_RUN_REPORT_STATUSES.IN_PROGRESS,
-    summary: "Task started on your Mac.",
+    summary: "Task started on your computer.",
   });
 
   return `${prompt.trim()}\n\n---\n${buildAgentRunReportInstruction({

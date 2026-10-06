@@ -29,7 +29,7 @@ export const buildAgentWitchLocalTaskPageBody = (input: {
 
   const connectionNote = input.wsConnected
     ? `<p class="muted">Bridge is connected — cloud job history will show run status when the task finishes.</p>`
-    : `<div class="alert-error">Not connected to cloud. Link this Mac on the cloud dashboard before delegating.</div>`;
+    : `<div class="alert-error">Not connected to cloud. Link this computer on the cloud dashboard before delegating.</div>`;
 
   const flashMessage =
     input.flashMessage !== undefined &&
@@ -54,7 +54,7 @@ export const buildAgentWitchLocalTaskPageBody = (input: {
 
   return `${flashMessage}${flashError}<section class="card">
       <p class="eyebrow">Delegate</p>
-      <h1>Run a task on this Mac</h1>
+      <h1>Run a task on this computer</h1>
       <p class="lede">Dispatch work locally and report status to cloud when finished — no live terminal stream required.</p>
       ${connectionNote}
       <form class="task-form" method="POST" action="/task/dispatch">
@@ -68,7 +68,7 @@ export const buildAgentWitchLocalTaskPageBody = (input: {
         </label>
         <label class="field">
           <span class="field-label">Task</span>
-          <textarea class="input textarea" name="prompt" rows="8" required placeholder="What should the writer do on this Mac?"></textarea>
+          <textarea class="input textarea" name="prompt" rows="8" required placeholder="What should the writer do on this computer?"></textarea>
         </label>
         <div class="actions">
           <button class="btn btn-primary" type="submit" ${input.wsConnected ? "" : "disabled"}>Delegate task</button>

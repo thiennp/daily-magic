@@ -10,7 +10,7 @@ const resolvePrepareFailureReasonLine = (output: string): string =>
     .split("\n")
     .map((line) => line.trim())
     .find((line) => /failed to prepare\s+[\w-]+:/i.test(line)) ??
-  "This run failed on your Mac.";
+  "This run failed on your computer.";
 
 export const tryResolveAgentRunWriterPrepareFailureTerminalOutcome = (
   output: string,

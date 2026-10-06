@@ -105,7 +105,7 @@ export const describePromptSdlcLocalActivity = (
     const writer = cycle.judgeModel;
     return liveActivity(
       `${labelPromptSdlcLocalModel(writer)} is suggesting module splits.`,
-      "This panel keeps updating while the writer works on this Mac.",
+      "This panel keeps updating while the writer works on this computer.",
     );
   }
   if (
@@ -117,7 +117,7 @@ export const describePromptSdlcLocalActivity = (
     const writer = cycle.judgeModel;
     return liveActivity(
       `${labelPromptSdlcLocalModel(writer)} is generalizing your prompt.`,
-      "This panel keeps updating while the writer works on this Mac.",
+      "This panel keeps updating while the writer works on this computer.",
     );
   }
   if (cycle.status === "judging" && cycle.judgePromptTextOnly === true) {
@@ -157,7 +157,7 @@ export const describePromptSdlcLocalActivity = (
       `Score the changes from round ${cycle.currentRound + 1}.`,
       ran
         ? "Score the changes below. Weigh the tokens and the delay."
-        : "Choose a writer as the judge so this Mac can run the prompt.",
+        : "Choose a writer as the judge so this computer can run the prompt.",
     );
   }
   if (cycle.status === "judging" && cycle.judgePhase === "reviewing") {
@@ -228,7 +228,7 @@ export const describePromptSdlcLocalActivity = (
   if (cycle.status === "improving") {
     return liveActivity(
       `${labelPromptSdlcLocalModel(cycle.improverModel)} is rewriting the prompt.`,
-      "That writer is working on this Mac. This panel keeps updating, so the page is not stuck.",
+      "That writer is working on this computer. This panel keeps updating, so the page is not stuck.",
     );
   }
   if (cycle.status === "passed") {
@@ -323,7 +323,7 @@ export const describePromptSdlcLocalActivity = (
     });
   }
   return {
-    title: "Working on this Mac.",
+    title: "Working on this computer.",
     detail: "This panel keeps updating.",
     replyPreview: null,
   };

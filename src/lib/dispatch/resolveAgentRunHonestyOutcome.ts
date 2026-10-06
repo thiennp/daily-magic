@@ -83,7 +83,7 @@ export const resolveAgentRunHonestyOutcome = (input: {
         chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.failed,
         summaryLines: [
           formatAgentRunHonestyFailedSummary(
-            "Something went wrong while running on your Mac.",
+            "Something went wrong while running on your computer.",
           ),
         ],
       }

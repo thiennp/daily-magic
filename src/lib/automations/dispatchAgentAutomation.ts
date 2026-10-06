@@ -35,7 +35,7 @@ export const dispatchAgentAutomation = async (input: {
         status: AGENT_AUTOMATION_LAST_RUN_STATUSES.FAILED,
         errorMessage:
           pushed.errorMessage ??
-          "Scheduled automation could not reach your Mac.",
+          "Scheduled automation could not reach your computer.",
       });
     }
 

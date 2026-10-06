@@ -12,7 +12,7 @@ describe("resolveAgentRegisterIdentityRejection", () => {
       }),
     ).toEqual({
       errorCode: AGENT_WITCH_UNKNOWN_IDENTITY_ERROR_CODE,
-      errorMessage: "Agent Witch does not know this Mac identity.",
+      errorMessage: "Agent Witch does not know this computer identity.",
     });
   });
 

@@ -25,7 +25,7 @@ export const buildAgentWitchLocalProjectDetailPageBody = (input: {
 
   const setRows =
     input.installed.sets.length === 0
-      ? `<p class="empty">No playbook on this Mac yet. Use <a href="/harness?import=1">Harness → Import</a> first.</p>`
+      ? `<p class="empty">No playbook on this computer yet. Use <a href="/harness?import=1">Harness → Import</a> first.</p>`
       : `<ul class="harness-installed-set-list">${input.installed.sets
           .map(
             (set) => `<li class="harness-installed-set">

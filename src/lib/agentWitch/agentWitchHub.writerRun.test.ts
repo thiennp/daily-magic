@@ -70,7 +70,7 @@ describe("AgentWitchHub Claude commands", () => {
 
     expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR);
     expect(response?.payload?.errorMessage).toBe(
-      "Your Mac is offline. Open Agent Witch on your Mac — it checks in about every 30 seconds.",
+      "Your computer is offline. Open Agent Witch on your computer — it checks in about every 30 seconds.",
     );
   });
 

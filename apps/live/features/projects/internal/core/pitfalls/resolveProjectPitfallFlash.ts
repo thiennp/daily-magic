@@ -42,7 +42,7 @@ const MESSAGES: Readonly<Record<ProjectPitfallFlashCode, ProjectPitfallFlash>> =
     unavailable: {
       message: null,
       error:
-        "Could not reach Agent Witch Cloud. Check this Mac on Status, then try again.",
+        "Could not reach Agent Witch Cloud. Check this computer on Status, then try again.",
     },
   };
 

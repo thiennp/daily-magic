@@ -82,7 +82,7 @@ const assertHubRelaysChunksToTerminalReducer = async (): Promise<void> => {
       writerAgent: WRITER_AGENT,
       writerSessionId,
       output:
-        "Claude is ready on your Mac.\nSend a task from the box below when you are ready.\n",
+        "Claude is ready on your computer.\nSend a task from the box below when you are ready.\n",
       exitCode: 0,
     },
     requestId: "local-writer-session-ready",
@@ -109,7 +109,7 @@ const assertHubRelaysChunksToTerminalReducer = async (): Promise<void> => {
     );
   }
 
-  if (!terminalState.output.includes("Claude is ready on your Mac.")) {
+  if (!terminalState.output.includes("Claude is ready on your computer.")) {
     throw new Error("Terminal reducer did not include ready message output.");
   }
 };

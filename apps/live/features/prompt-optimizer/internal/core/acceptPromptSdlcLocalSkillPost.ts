@@ -20,13 +20,13 @@ export const readPromptSdlcSkillNotice = (
     return "The run is still working.";
   }
   if (params.get("skillError") === "missing") {
-    return "That run is not on this Mac.";
+    return "That run is not on this computer.";
   }
   if (params.get("skillError") === "empty") {
     return "This run has no scored prompt to save.";
   }
   if (params.get("skillError") === "folder") {
-    return "The selected folder is not on this Mac.";
+    return "The selected folder is not on this computer.";
   }
   if (params.get("skillError") === "name") {
     return "Use a name with letters or numbers.";

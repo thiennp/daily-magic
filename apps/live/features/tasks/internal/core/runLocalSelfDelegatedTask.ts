@@ -53,7 +53,7 @@ export const runLocalSelfDelegatedTask = async (input: {
   if (cloudApi === null) {
     return {
       ok: false,
-      errorMessage: "Pairing token is missing. Re-link this Mac.",
+      errorMessage: "Pairing token is missing. Re-link this computer.",
     };
   }
 

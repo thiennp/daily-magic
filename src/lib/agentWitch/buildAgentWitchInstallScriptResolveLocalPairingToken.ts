@@ -82,13 +82,13 @@ if [[ -z "\${PAIRING_TOKEN}" ]]; then
       has_local_config=1
     fi
     if [[ "\${has_local_config}" == "1" ]]; then
-      echo "Warning: no pairing token in local config — updating app files only. Reconnect this Mac from Home if sync stops." >&2
+      echo "Warning: no pairing token in local config — updating app files only. Reconnect this computer from Home if sync stops." >&2
     else
-      echo "No linked Mac identity found in your local Agent Witch config. Connect this Mac from Home first." >&2
+      echo "No linked computer identity found in your local Agent Witch config. Connect this computer from Home first." >&2
       exit 1
     fi
   else
-    echo "Install token is required. Open Home, choose Connect this Mac, and copy the install command from there." >&2
+    echo "Install token is required. Open Home, choose Connect this computer, and copy the install command from there." >&2
     exit 1
   fi
 fi

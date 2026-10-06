@@ -75,7 +75,7 @@ describe("AgentWitchHub writer session chunk", () => {
       payload: {
         writerAgent: "claude-cli",
         writerSessionId,
-        chunk: "Preparing claude-cli CLI on your Mac…\n",
+        chunk: "Preparing claude-cli CLI on your computer…\n",
       },
       requestId: "req-writer-chunk-deviceless-agent",
     });

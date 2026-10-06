@@ -21,7 +21,7 @@ EOF
 }
 EOF
   else
-    echo "Leaving active-profile unchanged so another account on this Mac keeps wake identity."
+    echo "Leaving active-profile unchanged so another account on this computer keeps wake identity."
   fi
 else
   cat > "\${CONFIG_PATH}" <<EOF

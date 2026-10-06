@@ -24,7 +24,7 @@ export const buildPromptSdlcAgentCatalog = (
       body: {
         goal: "what a good result is",
         prompt: "the prompt to score and rewrite",
-        workingDirectory: "absolute project folder on this Mac",
+        workingDirectory: "absolute project folder on this computer",
         judge: sole ?? "installed writer id",
         improver: sole ?? "installed writer id",
         passScore: PROMPT_SDLC_WIZARD_PASS_SCORE,

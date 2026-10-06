@@ -91,7 +91,7 @@ const WRITER_SESSION_READY_LABELS: Record<HarnessWriterAgentId, string> = {
 export const buildWriterSessionReadyMessage = (
   writerAgent: HarnessWriterAgentId,
 ): string =>
-  `${WRITER_SESSION_READY_LABELS[writerAgent]} is ready on your Mac.\nSend a task from the box below when you are ready.\n`;
+  `${WRITER_SESSION_READY_LABELS[writerAgent]} is ready on your computer.\nSend a task from the box below when you are ready.\n`;
 
 export interface WriterSessionStartResult {
   readonly exitCode: number;
@@ -189,7 +189,7 @@ export const runWriterSessionStart = async (input: {
         output: `Add a ${provider} API key in Agent Witch Local → Writer API.\n`,
       };
     }
-    input.onChunk?.(`Using ${provider} API on this Mac (no local CLI).\n`);
+    input.onChunk?.(`Using ${provider} API on this computer (no local CLI).\n`);
     markWriterSessionWarmed(input.writerAgent);
     return {
       exitCode: 0,
@@ -198,7 +198,7 @@ export const runWriterSessionStart = async (input: {
   }
 
   try {
-    input.onChunk?.(`Preparing ${input.writerAgent} CLI on your Mac…\n`);
+    input.onChunk?.(`Preparing ${input.writerAgent} CLI on your computer…\n`);
     await ensureHarnessWriterCli(input.installDir, input.writerAgent);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

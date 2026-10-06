@@ -28,7 +28,7 @@ const verifyProjectCompositionSnapshotBlobs = (
     return null;
   }
 
-  return `Missing ${missing.length} component blob(s) on this Mac. Open Harness to sync, then retry.`;
+  return `Missing ${missing.length} component blob(s) on this computer. Open Harness to sync, then retry.`;
 };
 
 export default verifyProjectCompositionSnapshotBlobs;

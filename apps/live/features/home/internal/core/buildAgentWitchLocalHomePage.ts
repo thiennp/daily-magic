@@ -25,12 +25,12 @@ export const buildAgentWitchLocalHomePageBody = (input: {
   const harnessMeta =
     input.harnessSetCount > 0
       ? `${input.harnessSetCount} set(s) installed — apply to a project or import more`
-      : "Scan local .cursor folders and install rules on this Mac";
+      : "Scan local .cursor folders and install rules on this computer";
 
   const knowledgeMeta =
     input.knowledgeChunkCount > 0
       ? `${input.knowledgeChunkCount} embedded chunk(s) from past runs`
-      : "Search what your agents remembered on this Mac";
+      : "Search what your agents remembered on this computer";
 
   const trafficMeta =
     input.trafficEntryCount > 0
@@ -52,9 +52,9 @@ export const buildAgentWitchLocalHomePageBody = (input: {
   );
 
   return `${wakeError}<section class="card home-hero">
-      <p class="eyebrow">This Mac</p>
+      <p class="eyebrow">This computer</p>
       <h1>Agent Witch local</h1>
-      <p class="lede">Your on-machine control panel: bridge health, harness, run memory, and traffic — only on this Mac.</p>
+      <p class="lede">Your on-machine control panel: bridge health, harness, run memory, and traffic — only on this computer.</p>
       <div class="home-hero-badges">
         ${connectionBadge}
         <span class="muted">Install bundle <code>${escapeHtml(input.installBundleVersion)}</code></span>
@@ -65,7 +65,7 @@ export const buildAgentWitchLocalHomePageBody = (input: {
       <a class="home-card" href="/task">
         <p class="home-card-eyebrow">Delegate</p>
         <h2 class="home-card-title">Task</h2>
-        <p class="home-card-lede">Run a writer on this Mac and report status to cloud when done.</p>
+        <p class="home-card-lede">Run a writer on this computer and report status to cloud when done.</p>
         <p class="home-card-meta">${input.wsConnected ? "Bridge connected — ready to delegate" : "Connect bridge on Status first"}</p>
       </a>
       <a class="home-card" href="/status">
@@ -83,7 +83,7 @@ export const buildAgentWitchLocalHomePageBody = (input: {
       <a class="home-card" href="/knowledge">
         <p class="home-card-eyebrow">Memory</p>
         <h2 class="home-card-title">Knowledge</h2>
-        <p class="home-card-lede">Browse and search local RAG chunks written after agent runs on this Mac.</p>
+        <p class="home-card-lede">Browse and search local RAG chunks written after agent runs on this computer.</p>
         <p class="home-card-meta">${escapeHtml(knowledgeMeta)}</p>
       </a>
       <a class="home-card" href="/writer-sessions">
@@ -95,13 +95,13 @@ export const buildAgentWitchLocalHomePageBody = (input: {
       <a class="home-card" href="/errors">
         <p class="home-card-eyebrow">Diagnostics</p>
         <h2 class="home-card-title">Error log</h2>
-        <p class="home-card-lede">Tail of client stderr — crashes, module errors, and bridge failures on this Mac.</p>
+        <p class="home-card-lede">Tail of client stderr — crashes, module errors, and bridge failures on this computer.</p>
         <p class="home-card-meta">${escapeHtml(errorLogMeta)}</p>
       </a>
       <a class="home-card" href="/traffic">
         <p class="home-card-eyebrow">Debug</p>
         <h2 class="home-card-title">Traffic</h2>
-        <p class="home-card-lede">See frames sent and received between this Mac and the cloud bridge.</p>
+        <p class="home-card-lede">See frames sent and received between this computer and the cloud bridge.</p>
         <p class="home-card-meta">${escapeHtml(trafficMeta)}</p>
       </a>
     </div>`;

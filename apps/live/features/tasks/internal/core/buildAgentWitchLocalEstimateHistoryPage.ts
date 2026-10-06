@@ -164,9 +164,9 @@ export const buildAgentWitchLocalEstimateHistoryPageBody = (input: {
         <script>${HISTORY_DETAIL_SCRIPT}</script>`;
 
   return `<section class="card">
-      <p class="eyebrow">This Mac</p>
+      <p class="eyebrow">This computer</p>
       <h1>History</h1>
-      <p class="lede">Every prompt on this Mac. Select a row to read the input, output, and estimate.</p>
+      <p class="lede">Every prompt on this computer. Select a row to read the input, output, and estimate.</p>
       ${table}
     </section>`;
 };

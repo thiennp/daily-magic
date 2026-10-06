@@ -54,14 +54,14 @@ export const requestEnsureAgentWitchProjectFolder = async (input: {
       "errorMessage" in data &&
       typeof (data as { errorMessage: unknown }).errorMessage === "string"
         ? (data as { errorMessage: string }).errorMessage
-        : "Could not prepare the project folder on this Mac.";
+        : "Could not prepare the project folder on this computer.";
 
     return { ok: false, errorMessage };
   } catch {
     return {
       ok: false,
       errorMessage:
-        "Agent Witch on this Mac is not running. Run install first.",
+        "Agent Witch on this computer is not running. Run install first.",
     };
   }
 };

@@ -41,21 +41,21 @@ export const requestLocalAutomationRun = async (input: {
       data !== null &&
       typeof (data as { errorMessage?: string }).errorMessage === "string"
         ? (data as { errorMessage: string }).errorMessage
-        : "Automation run failed on this Mac.";
+        : "Automation run failed on this computer.";
 
     return { ok: false, errorMessage };
   } catch (error) {
     if (error instanceof DOMException && error.name === "TimeoutError") {
       return {
         ok: false,
-        errorMessage: "Automation run timed out on this Mac.",
+        errorMessage: "Automation run timed out on this computer.",
       };
     }
 
     return {
       ok: false,
       errorMessage:
-        "Agent Witch on this Mac is not running. Run install first.",
+        "Agent Witch on this computer is not running. Run install first.",
     };
   }
 };

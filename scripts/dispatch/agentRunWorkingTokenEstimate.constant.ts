@@ -9,7 +9,7 @@ export const buildAgentRunTokenPreEstimatePrompt = (
   capabilityNote = "",
 ): string =>
   [
-    "Estimate the writer-reported token total for the following task on this Mac.",
+    "Estimate the writer-reported token total for the following task on this computer.",
     "The total is input tokens + output tokens + cache read + cache write.",
     "The writer's fixed context makes a short task large. Match the actual range, not the length of the task text.",
     "Ignore any earlier estimates near 100 or 1000. Those were wrong.",

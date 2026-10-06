@@ -188,7 +188,7 @@ const loadCloudProjectsForLocalApp = async (
       ok: false,
       projects: [],
       message:
-        "Mac client config missing — pair this Mac in Agent Witch Cloud to load projects.",
+        "Client config missing — pair this computer in Agent Witch Cloud to load projects.",
     };
   }
 
@@ -317,7 +317,7 @@ const buildStatusBody = (input: {
   return `<section class="card">
       <p class="eyebrow">Local bridge</p>
       <h1>Status</h1>
-      <p class="lede">Connection and pairing details for Agent Witch on this Mac.</p>
+      <p class="lede">Connection and pairing details for Agent Witch on this computer.</p>
       ${revivedNotice}
       <div class="meta-grid">
         <div class="meta-item"><span class="meta-label">WebSocket</span><span class="meta-value">${connectedBadge}</span></div>
@@ -497,8 +497,8 @@ export const startAgentWitchLocalApp = (input: {
   ): Promise<void> => {
     const sentence =
       heading === "Project not found"
-        ? "That project is not available on this Mac."
-        : "That page does not exist on this Mac.";
+        ? "That project is not available on this computer."
+        : "That page does not exist on this computer.";
     const installBundle = buildInstallBundleStatus();
     const html = await buildLocalAppShell({
       title: heading,
@@ -945,7 +945,7 @@ export const startAgentWitchLocalApp = (input: {
               : null;
         const flashMessage =
           url.searchParams.get("deleted") === "1"
-            ? "Project removed from Agent Witch Cloud. Your Mac folders were not deleted."
+            ? "Project removed from Agent Witch Cloud. Folders on your computer were not deleted."
             : null;
         const listRunConfig = readAgentWitchRunConfig();
         const listCloudConfig =
@@ -1687,7 +1687,7 @@ export const startAgentWitchLocalApp = (input: {
         const secrets = readWriterApiSecretsFile(profileDir);
         const flashMessage =
           url.searchParams.get("saved") === "1"
-            ? "Writer API settings saved on this Mac."
+            ? "Writer API settings saved on this computer."
             : null;
         const installBundle = buildInstallBundleStatus();
         sendHtml(
@@ -1788,7 +1788,7 @@ export const startAgentWitchLocalApp = (input: {
                 )
                 .join(
                   "",
-                )}</ul><p class="muted">Accepting a cloud capability improvement still requires review in AWC — these hints are local on your Mac.</p></section>`
+                )}</ul><p class="muted">Accepting a cloud capability improvement still requires review in AWC — these hints are local on your computer.</p></section>`
             : "";
         sendHtml(
           response,
@@ -1799,7 +1799,7 @@ export const startAgentWitchLocalApp = (input: {
             body: `<section class="card stack">
               <p class="eyebrow">Local RAG</p>
               <h1>Knowledge</h1>
-              <p class="lede">Indexed chunks from finished agent turns on this Mac. Retrieval counts update when dispatch injects a chunk into the next writer prompt.</p>
+              <p class="lede">Indexed chunks from finished agent turns on this computer. Retrieval counts update when dispatch injects a chunk into the next writer prompt.</p>
               <form class="search-row" method="GET" action="/knowledge">
                 <input class="input" name="q" value="${escapeHtml(q)}" placeholder="Search local knowledge" aria-label="Search local knowledge" />
                 <button class="btn btn-primary" type="submit">Search</button>

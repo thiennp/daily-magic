@@ -38,7 +38,7 @@ export const assembleAgentLiveProgressBaseSteps = (input: {
     input.status === "waiting_approval";
   const isFinished = input.status === "finished";
   const needsInput = (input.pendingQuestion ?? "").trim().length > 0;
-  const isReadyBanner = /is ready on your Mac/i.test(input.output);
+  const isReadyBanner = /is ready on your (?:Mac|computer)/i.test(input.output);
   const hasEstimate =
     input.estimateSeconds !== null &&
     input.estimateSeconds !== undefined &&

@@ -5,7 +5,7 @@ export const AGENT_WITCH_INSTRUCTION_LIBRARY_SECTION: AgentWitchInstructionSecti
     id: "library",
     title: "Library",
     summary:
-      "Library holds your workflows and agents — publish them, run them on your Mac, or share them with your company.",
+      "Library holds your workflows and agents — publish them, run them on your computer, or share them with your company.",
     topics: [
       {
         id: "capability-types",

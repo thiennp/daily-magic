@@ -36,7 +36,7 @@ describe("buildAgentWitchLocalHarnessInstalledSection", () => {
     });
 
     expect(html).toContain(
-      "Install playbooks in Agent Witch Cloud — files land in your profile harness on this Mac.",
+      "Install playbooks in Agent Witch Cloud — files land in your profile harness on this computer.",
     );
     expect(html).toContain("Browse playbooks in Agent Witch Cloud");
     expect(html).toContain('href="https://www.agentwitch.com/marketplace"');

@@ -15,7 +15,7 @@ export const AGENT_WITCH_INSTRUCTION_TASKS_SECTION: AgentWitchInstructionSection
       {
         id: "writer-agents",
         title: "Which AI runs the job",
-        body: "Pick which tool on your Mac should run the job: Claude, Codex, Cursor, or Antigravity. During an active session the choice stays locked until you finish.",
+        body: "Pick which tool on your computer should run the job: Claude, Codex, Cursor, or Antigravity. During an active session the choice stays locked until you finish.",
         bullets: [
           "Claude — Anthropic Claude in the terminal",
           "Codex — OpenAI Codex",
@@ -30,13 +30,13 @@ export const AGENT_WITCH_INSTRUCTION_TASKS_SECTION: AgentWitchInstructionSection
       },
       {
         id: "self-vs-teammate",
-        title: "Your Mac vs teammate dispatch",
+        title: "Your computer vs teammate dispatch",
         body: "Send to your own Mac for direct execution. Send to a teammate when you choose a company member and workflow — company dispatch policies decide whether approval is required first.",
       },
       {
         id: "offline-queue",
         title: "Offline queue",
-        body: "When your Mac is not connected, tasks can be queued in the browser and send automatically when the connection returns.",
+        body: "When your computer is not connected, tasks can be queued in the browser and send automatically when the connection returns.",
       },
       {
         id: "operator-steps",
@@ -45,13 +45,13 @@ export const AGENT_WITCH_INSTRUCTION_TASKS_SECTION: AgentWitchInstructionSection
       },
       {
         id: "prompt-optimizer",
-        title: "Optimize the prompt on this Mac",
+        title: "Optimize the prompt on this computer",
         body: "Before you send or save a prompt, run the prompt optimizer yourself at http://127.0.0.1:43347/prompt-optimizer/agent. POST goal, prompt, and workingDirectory for the project folder. The judge and improver run in that folder, so they can read the harness and the code. Do not ask the human to paste the prompt into a different optimizer. Poll GET ?cycle= until done is true. Use bestPrompt when status is passed (useThisPrompt). Do not use the prompt when status is stopped or failed. totalTokens is the reported writer tokens so far.",
       },
       {
         id: "mid-run-input",
         title: "Answering questions mid-run",
-        body: "If the AI needs input, the live terminal shows a prompt. Reply in the browser; the response goes to your Mac and the run continues.",
+        body: "If the AI needs input, the live terminal shows a prompt. Reply in the browser; the response goes to your computer and the run continues.",
       },
       {
         id: "job-history",

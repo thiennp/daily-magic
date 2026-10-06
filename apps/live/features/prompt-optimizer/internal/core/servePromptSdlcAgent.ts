@@ -98,7 +98,7 @@ export const servePromptSdlcAgent = async (input: {
     return cycle === null
       ? {
           status: 404,
-          body: { ok: false, error: "That run is not on this Mac." },
+          body: { ok: false, error: "That run is not on this computer." },
         }
       : { status: 200, body: buildPromptSdlcAgentSnapshot(cycle) };
   }
@@ -135,7 +135,7 @@ export const servePromptSdlcAgent = async (input: {
     if (existing === null) {
       return {
         status: 404,
-        body: { ok: false, error: "That run is not on this Mac." },
+        body: { ok: false, error: "That run is not on this computer." },
       };
     }
     const applied = applyPromptSdlcAgentBudgetConfirm(

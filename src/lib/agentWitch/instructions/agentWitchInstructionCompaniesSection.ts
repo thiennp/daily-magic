@@ -28,7 +28,7 @@ export const AGENT_WITCH_INSTRUCTION_COMPANIES_SECTION: AgentWitchInstructionSec
       },
       {
         id: "dispatch-policy",
-        title: "Who can send tasks to your Mac",
+        title: "Who can send tasks to your computer",
         body: "Dispatch policy controls whether teammates can run tasks on your computer immediately or must wait for your approval.",
         bullets: [
           "open — company members can dispatch without asking",

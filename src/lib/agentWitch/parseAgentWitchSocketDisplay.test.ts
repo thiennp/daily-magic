@@ -27,7 +27,7 @@ describe("parseAgentWitchSocketDisplay", () => {
     });
 
     expect(parseAgentWitchSocketDisplay(raw)).toEqual({
-      text: "Task sent to your Mac.",
+      text: "Task sent to your computer.",
       isError: false,
     });
   });

@@ -200,7 +200,7 @@ const buildProjectPitfallsTab = (input: {
 }): string => {
   const postPaths = input.postPaths ?? PROJECT_PITFALL_POST_PATHS;
   if (input.list === null || !input.list.ok) {
-    return `<p class="empty">Could not load pitfalls. Check this Mac on Status, then reload.</p>`;
+    return `<p class="empty">Could not load pitfalls. Check this computer on Status, then reload.</p>`;
   }
 
   const nowMs = input.nowMs ?? Date.now();

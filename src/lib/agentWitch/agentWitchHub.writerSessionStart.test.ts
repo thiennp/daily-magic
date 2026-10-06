@@ -62,7 +62,7 @@ describe("AgentWitchHub writer session start", () => {
       payload: {
         writerAgent: "cursor",
         writerSessionId,
-        output: "Cursor is ready on your Mac.\n",
+        output: "Cursor is ready on your computer.\n",
         exitCode: 0,
       },
       requestId: "req-writer-ready-1",

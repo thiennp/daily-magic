@@ -24,7 +24,7 @@ describe("isUnknownAgentWitchIdentityError", () => {
         type: "system.error",
         payload: {
           errorMessage:
-            "This Mac identity is not linked. Run the install command from Home while signed in.",
+            "This computer identity is not linked. Run the install command from Home while signed in.",
         },
       }),
     ).toBe(false);

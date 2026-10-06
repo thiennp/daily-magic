@@ -77,7 +77,7 @@ export const AGENT_WITCH_INSTRUCTION_MESSAGE_TYPES: readonly AgentWitchInstructi
     {
       type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_BORROW_EXPORT,
       direction: "browser_to_mac",
-      purpose: "Request import of a teammate's shared bundle to this Mac.",
+      purpose: "Request import of a teammate's shared bundle to this computer.",
     },
     {
       type: AGENT_WITCH_MESSAGE_TYPES.AGENT_RUN_RECORD,

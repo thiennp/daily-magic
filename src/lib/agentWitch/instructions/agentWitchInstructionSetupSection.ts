@@ -5,7 +5,7 @@ export const AGENT_WITCH_INSTRUCTION_SETUP_SECTION: AgentWitchInstructionSection
     id: "setup",
     title: "Mac setup",
     summary:
-      "Install Agent Witch on your Mac and keep it connected so you can send tasks from the browser.",
+      "Install Agent Witch on your computer and keep it connected so you can send tasks from the browser.",
     topics: [
       {
         id: "install",
@@ -14,8 +14,8 @@ export const AGENT_WITCH_INSTRUCTION_SETUP_SECTION: AgentWitchInstructionSection
       },
       {
         id: "pairing",
-        title: "Connecting your Mac",
-        body: "After install, sign in on the same Mac and finish setup from Home → Your Devices. That links this Mac to your account so only you can run tasks on it.",
+        title: "Connecting your computer",
+        body: "After install, sign in on the same computer and finish setup from Home → Your Devices. That links this computer to your account so only you can run tasks on it.",
       },
       {
         id: "multiple-macs",
@@ -40,7 +40,7 @@ export const AGENT_WITCH_INSTRUCTION_SETUP_SECTION: AgentWitchInstructionSection
       {
         id: "your-setup-panel",
         title: "Your setup in the app",
-        body: "Your setup on Home covers rule sharing, publishing your catalog, dispatch preferences, and editing rules that sync to your Mac.",
+        body: "Your setup on Home covers rule sharing, publishing your catalog, dispatch preferences, and editing rules that sync to your computer.",
       },
     ],
   };

@@ -77,21 +77,21 @@ export const requestLocalAutomationSync = async (input: {
       "errorMessage" in data &&
       typeof (data as { errorMessage: unknown }).errorMessage === "string"
         ? (data as { errorMessage: string }).errorMessage
-        : "Could not sync automations on this Mac.";
+        : "Could not sync automations on this computer.";
 
     return { ok: false, errorMessage };
   } catch (error) {
     if (error instanceof DOMException && error.name === "TimeoutError") {
       return {
         ok: false,
-        errorMessage: "Automation sync timed out on this Mac.",
+        errorMessage: "Automation sync timed out on this computer.",
       };
     }
 
     return {
       ok: false,
       errorMessage:
-        "Agent Witch on this Mac is not running. Run install first.",
+        "Agent Witch on this computer is not running. Run install first.",
     };
   }
 };

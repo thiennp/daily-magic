@@ -31,7 +31,7 @@ const staleRow = {
   dispatch_policy: "open",
   result_output: null,
   result_exit_code: null,
-  denial_reason: "No run heartbeat from your Mac — the job was marked stale.",
+  denial_reason: "No run heartbeat from your computer — the job was marked stale.",
   created_at: "2026-07-19T10:00:00.000Z",
   updated_at: "2026-07-19T10:05:00.000Z",
   started_at: "2026-07-19T10:00:00.000Z",

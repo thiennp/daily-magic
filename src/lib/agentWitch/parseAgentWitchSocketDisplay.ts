@@ -18,7 +18,7 @@ const formatSystemAck = (
   }
 
   if (payload.dispatched === true) {
-    return "Task sent to your Mac.";
+    return "Task sent to your computer.";
   }
 
   if (payload.dispatched === false) {
@@ -26,7 +26,7 @@ const formatSystemAck = (
   }
 
   if (payload.relayed === true) {
-    return "Request relayed to your Mac.";
+    return "Request relayed to your computer.";
   }
 
   return "Request accepted.";
@@ -45,7 +45,7 @@ const formatClaudeResult = (
     return errorMessage;
   }
 
-  return "Task finished on your Mac.";
+  return "Task finished on your computer.";
 };
 
 const parseAgentWitchSocketDisplay = (raw: string): AgentWitchSocketDisplay => {

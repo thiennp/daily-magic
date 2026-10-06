@@ -259,7 +259,7 @@ describe("servePromptSdlcAgent", () => {
       status: 400,
       body: {
         ok: false,
-        error: "No reasoning writer is installed on this Mac.",
+        error: "No reasoning writer is installed on this computer.",
       },
     });
     expect(missingFolder.status).toBe(400);

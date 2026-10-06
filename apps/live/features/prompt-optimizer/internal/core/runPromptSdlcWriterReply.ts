@@ -156,7 +156,7 @@ export const runPromptSdlcWriterReply = (input: {
     if (!isLocalWriter(input.writerAgent)) {
       resolve({
         ok: false,
-        errorMessage: "The writer is not supported on this Mac.",
+        errorMessage: "The writer is not supported on this computer.",
       });
       return;
     }
@@ -178,7 +178,7 @@ export const runPromptSdlcWriterReply = (input: {
     if (!fs.existsSync(input.workingDirectory)) {
       resolve({
         ok: false,
-        errorMessage: "Choose a folder that exists on this Mac.",
+        errorMessage: "Choose a folder that exists on this computer.",
       });
       return;
     }

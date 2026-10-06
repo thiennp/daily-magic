@@ -15,7 +15,7 @@ export const pushAutomationsSyncToUserMac = async (
   if (deviceId === undefined) {
     return {
       ok: false,
-      errorMessage: "Mac offline. Open Agent Witch on your Mac and try again.",
+      errorMessage: "Computer offline. Open Agent Witch on your computer and try again.",
     };
   }
 
@@ -48,7 +48,7 @@ export const pushAutomationRunToUserMac = async (input: {
   if (input.deviceId === undefined) {
     return {
       ok: false,
-      errorMessage: "Mac offline. Open Agent Witch on your Mac and try again.",
+      errorMessage: "Computer offline. Open Agent Witch on your computer and try again.",
     };
   }
 

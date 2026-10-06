@@ -43,7 +43,7 @@ const materializeRunScopedCompositionOverlay = (
         return {
           ok: false,
           errorMessage:
-            "Run overlay materialization failed — component blob missing on this Mac.",
+            "Run overlay materialization failed — component blob missing on this computer.",
         };
       }
 

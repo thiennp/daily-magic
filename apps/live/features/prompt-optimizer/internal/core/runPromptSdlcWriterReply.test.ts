@@ -174,7 +174,7 @@ describe("runPromptSdlcWriterReply", () => {
     });
     expect(reply).toEqual({
       ok: false,
-      errorMessage: "The writer is not supported on this Mac.",
+      errorMessage: "The writer is not supported on this computer.",
     });
   });
 

@@ -12,8 +12,8 @@ export const AGENT_WITCH_INSTRUCTION_OVERVIEW_SECTION: AgentWitchInstructionSect
         title: "Purpose",
         body: "Agent Witch is for individuals and company teams who want browser-initiated AI work to run on a real Mac with local files, local CLIs, and company-approved rules.",
         bullets: [
-          "Sign in to the web app, install the local bridge on your Mac, and pair the computer.",
-          "Send tasks from Home to your Mac or to a teammate in your company.",
+          "Sign in to the web app, install the local bridge on your computer, and pair it.",
+          "Send tasks from Home to your computer or to a teammate in your company.",
           "Read outputs and statuses in Reports.",
         ],
       },

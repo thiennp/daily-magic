@@ -14,18 +14,18 @@ export const AGENT_WITCH_INSTRUCTION_HARNESS_SECTION: AgentWitchInstructionSecti
       },
       {
         id: "local-manifest",
-        title: "What your Mac reports",
-        body: "When connected, your Mac sends its installed rules to the app. Your setup shows what is installed and which AI tool wrote it.",
+        title: "What your computer reports",
+        body: "When connected, your computer sends its installed rules to the app. Your setup shows what is installed and which AI tool wrote it.",
       },
       {
         id: "install-sources",
         title: "How bundles arrive on a Mac",
-        body: "Install from Marketplace or Library when your Mac is online, borrow from teammates, or add items from Your setup in the browser.",
+        body: "Install from Marketplace or Library when your computer is online, borrow from teammates, or add items from Your setup in the browser.",
       },
       {
         id: "catalog-publish",
         title: "Sharing your setup",
-        body: "From Your setup, publish while your Mac is online so teammates can borrow the bundles you choose to share.",
+        body: "From Your setup, publish while your computer is online so teammates can borrow the bundles you choose to share.",
       },
       {
         id: "sharing-visibility",
@@ -40,7 +40,7 @@ export const AGENT_WITCH_INSTRUCTION_HARNESS_SECTION: AgentWitchInstructionSecti
       {
         id: "writer-sync",
         title: "Saving rules from the browser",
-        body: "Your setup can compose items in the browser and save them to your Mac. The Mac stores them for the AI tool you selected.",
+        body: "Your setup can compose items in the browser and save them to your computer. The computer stores them for the AI tool you selected.",
       },
     ],
   };

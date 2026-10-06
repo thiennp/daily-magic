@@ -49,7 +49,7 @@ export async function PATCH(
       {
         ok: false,
         errorMessage:
-          "Folder path cannot be changed from the browser. Set it in Agent Witch Local on your Mac.",
+          "Folder path cannot be changed from the browser. Set it in Agent Witch Local on your computer.",
       },
       { status: 400 },
     );

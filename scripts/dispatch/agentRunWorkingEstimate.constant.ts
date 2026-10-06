@@ -8,7 +8,7 @@ export const buildAgentRunPreEstimatePrompt = (
   capabilityNote = "",
 ): string =>
   [
-    "Estimate how long the following task will take on this Mac, in seconds.",
+    "Estimate how long the following task will take on this computer, in seconds.",
     `The task is already starting in parallel on this writer: ${writerLabel}.`,
     ...(capabilityNote.trim().length > 0 ? [capabilityNote.trim()] : []),
     "Factor in that writer's typical speed and the latest finished tasks below.",

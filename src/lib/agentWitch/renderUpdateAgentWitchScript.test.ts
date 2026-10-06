@@ -12,7 +12,7 @@ describe("renderUpdateAgentWitchScript", () => {
     expect(script).toContain("typeof parsed.pairingToken === 'string'");
     expect(script).toContain("agent_witch_resolve_local_pairing_token");
     expect(script).toContain(
-      "No linked Mac identity found in your local Agent Witch config.",
+      "No linked computer identity found in your local Agent Witch config.",
     );
     expect(script).toContain('"${DEVICE_LABEL}" "${PAIRING_TOKEN}"');
   });

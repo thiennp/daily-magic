@@ -143,5 +143,5 @@ export const formatErrorKnowledgeContextForPrompt = (
     .map((chunk, index) => `[${index + 1}] ${chunk.text}`)
     .join("\n\n");
 
-  return `Past failures on this Mac (avoid repeating):\n\n${body}\n\n---\n\n`;
+  return `Past failures on this computer (avoid repeating):\n\n${body}\n\n---\n\n`;
 };

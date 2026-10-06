@@ -823,7 +823,7 @@ export const runWriterTask = (
     seedAgentRunReportFile({
       reportKey,
       agentRunId,
-      userSummary: "Task started on your Mac.",
+      userSummary: "Task started on your computer.",
     });
   }
 

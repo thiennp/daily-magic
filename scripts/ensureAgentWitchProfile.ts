@@ -134,7 +134,7 @@ export const ensureAgentWitchProfile = (
 
   if (pairingToken.length === 0) {
     throw new Error(
-      "Agent Witch is not linked for this account. Run Connect this Mac from Home while signed in — do not reuse another account's token.",
+      "Agent Witch is not linked for this account. Run Connect this computer from Home while signed in — do not reuse another account's token.",
     );
   }
 

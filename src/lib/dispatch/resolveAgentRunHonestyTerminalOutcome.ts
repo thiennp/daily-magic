@@ -58,7 +58,7 @@ export const resolveAgentRunHonestyTerminalOutcome = (input: {
       kind: "timed_out",
       chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.timed_out,
       summaryLines: [
-        "Timed out — this run hit the hard session limit on your Mac.",
+        "Timed out — this run hit the hard session limit on your computer.",
       ],
     };
   }
@@ -70,7 +70,7 @@ export const resolveAgentRunHonestyTerminalOutcome = (input: {
       chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.timed_out,
       summaryLines: [
         writerOutcome.matchedLine ??
-          "Timed out — this run hit the hard session limit on your Mac.",
+          "Timed out — this run hit the hard session limit on your computer.",
       ],
     };
   }
@@ -85,7 +85,7 @@ export const resolveAgentRunHonestyTerminalOutcome = (input: {
       writerOutcome?.matchedLine ??
       (input.runStatus === AgentRunStatus.DENIED
         ? "This run was not approved."
-        : "This run failed on your Mac.");
+        : "This run failed on your computer.");
     return {
       kind: "failed",
       chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.failed,

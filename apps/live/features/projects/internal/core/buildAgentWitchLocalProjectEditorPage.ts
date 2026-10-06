@@ -41,7 +41,7 @@ const buildCompositionList = (
 
 const buildEmptyHarnessTab = (): string => `<div class="stack">
         <p class="field-label">Installed</p>
-        <p class="empty" id="harness-empty">No playbook on this Mac yet. Install from the Harness page, then return here to write it into this repo.</p>
+        <p class="empty" id="harness-empty">No playbook on this computer yet. Install from the Harness page, then return here to write it into this repo.</p>
         <div class="actions">
           <a class="btn btn-primary" href="/harness" aria-describedby="harness-empty">Pull into repo</a>
         </div>
@@ -79,7 +79,7 @@ const buildAlreadyMaterializedWithoutProfileTab = (input: {
     .map(
       (slug) => `<li class="harness-installed-set">
         <p><strong>${escapeHtml(slug)}</strong> <span class="muted">already in this repo</span></p>
-        <form method="POST" action="/projects/remove-harness-set" class="inline-form" onsubmit="return confirm('Remove this playbook from the repo? Files stay installed on this Mac.');">
+        <form method="POST" action="/projects/remove-harness-set" class="inline-form" onsubmit="return confirm('Remove this playbook from the repo? Files stay installed on this computer.');">
           <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
           <input type="hidden" name="setSlug" value="${escapeHtml(slug)}" />
           <button class="btn btn-danger btn-compact" type="submit">Remove from repo</button>
@@ -102,7 +102,7 @@ const buildAlreadyMaterializedWithoutProfileTab = (input: {
 
   return `<div class="stack">
         <p class="field-label">In this repo</p>
-        <p class="lede">This project’s playbook is already in this repo’s <code>.cursor</code> tree. Open Harness to install playbooks on this Mac if you want to change them.</p>
+        <p class="lede">This project’s playbook is already in this repo’s <code>.cursor</code> tree. Open Harness to install playbooks on this computer if you want to change them.</p>
         ${setList}
         <div class="actions">
           <a class="btn btn-secondary" href="/harness">Open Harness</a>
@@ -149,7 +149,7 @@ const buildHarnessTab = (input: {
     .map((set) => {
       const inRepo = linked.has(set.slug);
       const removeControl = inRepo
-        ? `<form method="POST" action="/projects/remove-harness-set" class="inline-form" onsubmit="return confirm('Remove this playbook from the repo? Files stay installed on this Mac.');">
+        ? `<form method="POST" action="/projects/remove-harness-set" class="inline-form" onsubmit="return confirm('Remove this playbook from the repo? Files stay installed on this computer.');">
             <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
             <input type="hidden" name="setSlug" value="${escapeHtml(set.slug)}" />
             <button class="btn btn-danger btn-compact" type="submit">Remove from repo</button>
@@ -293,8 +293,8 @@ export const buildAgentWitchLocalProjectEditorPageBody = (input: {
     ? ""
     : `<section class="danger-zone stack">
         <p class="field-label">Danger zone</p>
-        <p class="muted">Removes this project from Agent Witch Cloud only. The folder on this Mac is not deleted.</p>
-        <form method="POST" action="/projects/delete" class="actions" onsubmit="return confirm('Delete this project from Agent Witch Cloud? Your repo folder on this Mac will stay.');">
+        <p class="muted">Removes this project from Agent Witch Cloud only. The folder on this computer is not deleted.</p>
+        <form method="POST" action="/projects/delete" class="actions" onsubmit="return confirm('Delete this project from Agent Witch Cloud? Your repo folder on this computer will stay.');">
           <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
           <button class="btn btn-danger" type="submit">Delete project</button>
         </form>

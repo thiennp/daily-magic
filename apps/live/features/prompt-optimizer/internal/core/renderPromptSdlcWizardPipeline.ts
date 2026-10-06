@@ -58,7 +58,7 @@ export const renderPromptSdlcWizardPipeline = (
   if (steps.length === 0) {
     return "";
   }
-  return `<ol class="sdlc-pipeline" aria-label="What is happening on this Mac">${steps.map(renderPipelineStep).join("")}</ol>`;
+  return `<ol class="sdlc-pipeline" aria-label="What is happening on this computer">${steps.map(renderPipelineStep).join("")}</ol>`;
 };
 
 export const renderPromptSdlcWizardPipelineModalSummary = (
@@ -92,5 +92,5 @@ export const renderPromptSdlcWizardPipelineModalSummary = (
       return `<li class="sdlc-pipeline-step sdlc-pipeline-step-${step.state}"><div class="sdlc-pipeline-row">${renderPipelineStepMark(step.state)}<span class="sdlc-pipeline-label">${escapeHtml(step.label)}${now}</span></div></li>`;
     })
     .join("");
-  return `<h2>Sub-steps on this Mac</h2><ol class="sdlc-pipeline sdlc-pipeline-modal" aria-label="Pipeline sub-steps">${items}</ol>`;
+  return `<h2>Sub-steps on this computer</h2><ol class="sdlc-pipeline sdlc-pipeline-modal" aria-label="Pipeline sub-steps">${items}</ol>`;
 };
