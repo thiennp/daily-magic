@@ -1,9 +1,15 @@
-import { createElement } from "react";
+import { createElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@/features/dispatch/hooks/useNowMsEvery", () => ({
   useNowMsEvery: () => Date.parse("2026-10-06T14:00:00.000Z"),
+}));
+
+// Soft HOLD portal Modal returns null under renderToStaticMarkup (canPortal +
+// createPortal). Stub Modal so this card-copy unit test still sees children.
+vi.mock("@/components/ui/modal", () => ({
+  Modal: ({ children }: { children: ReactNode }) => children,
 }));
 
 import DispatchApprovalModal from "@/features/dispatch/DispatchApprovalModal";

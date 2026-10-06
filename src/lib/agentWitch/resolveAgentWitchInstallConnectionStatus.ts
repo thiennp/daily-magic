@@ -22,14 +22,14 @@ export const resolveAgentWitchInstallConnectionStatus = (input: {
   ).length;
 
   const expectedTokenHash = input.expectedTokenHash?.trim().toLowerCase() ?? "";
-  let finished = connectedDeviceCount > 0;
-  if (expectedTokenHash.length > 0) {
-    finished = devicesWithStatus.some(
-      (device) =>
-        device.isConnected &&
-        (device.tokenHash?.trim().toLowerCase() ?? "") === expectedTokenHash,
-    );
-  }
+  const finished =
+    expectedTokenHash.length > 0
+      ? devicesWithStatus.some(
+          (device) =>
+            device.isConnected &&
+            (device.tokenHash?.trim().toLowerCase() ?? "") === expectedTokenHash,
+        )
+      : connectedDeviceCount > 0;
 
   return {
     finished,
