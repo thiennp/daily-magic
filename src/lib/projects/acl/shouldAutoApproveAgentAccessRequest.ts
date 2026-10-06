@@ -1,7 +1,7 @@
 /**
  * Silent same-owner / member-owner auto-approve is removed.
  * Joins stay pending until the project owner Approves, unless the invite
- * has autoApprove on (handled in redeemProjectInvite) or the test flag is set.
+ * has autoApprove on or test auto-connect is enabled (both invite-redeem only).
  */
 export type AgentAccessAutoApproveDecision =
   | { readonly autoApprove: false }
