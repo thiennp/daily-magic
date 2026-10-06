@@ -31,6 +31,7 @@ export default function ShowcasesIndexPageLayout() {
     <MarketingShell>
       <MarketingSectionHeader
         eyebrow="Real examples"
+        headingLevel="h1"
         title="See how teams use Agent Witch"
         description="Short stories — no jargon. Each article explains one problem, what you need, and what to try next."
       />

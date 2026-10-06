@@ -12,6 +12,7 @@ interface MarketingSectionHeaderProps {
   readonly align?: "left" | "center";
   readonly width?: "default" | "full";
   readonly headingId?: string;
+  readonly headingLevel?: "h1" | "h2";
 }
 
 export default function MarketingSectionHeader({
@@ -21,7 +22,9 @@ export default function MarketingSectionHeader({
   align = "left",
   width = "default",
   headingId,
+  headingLevel = "h2",
 }: MarketingSectionHeaderProps) {
+  const Heading = headingLevel;
   const alignment =
     align === "center"
       ? "mx-auto max-w-2xl text-center"
@@ -41,7 +44,7 @@ export default function MarketingSectionHeader({
           {eyebrow}
         </p>
       ) : null}
-      <h2
+      <Heading
         id={headingId}
         className={mergeMarketingClasses(
           "mt-2 text-2xl sm:text-3xl",
@@ -49,7 +52,7 @@ export default function MarketingSectionHeader({
         )}
       >
         {title}
-      </h2>
+      </Heading>
       {description !== undefined && description.length > 0 ? (
         <p
           className={mergeMarketingClasses(

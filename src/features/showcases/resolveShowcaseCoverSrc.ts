@@ -4,6 +4,11 @@ import { buildShowcaseTopicSvgPath } from "@/features/showcases/showcaseTopicScr
 import { buildTeamDispatchShowcaseSvgPath } from "@/features/showcases/teamDispatchShowcaseScreens.constant";
 import type { ShowcaseArticleImage } from "@/features/showcases/types/ShowcaseArticle.type";
 
+const PNG_ONLY_SHOWCASE_DIRS: readonly string[] = [
+  "/showcases/e2e/",
+  "/showcases/bot-to-bot/",
+];
+
 /**
  * Card/cover src: always use curated SVGs when a screen id exists.
  * Full-page PNGs are illegible at card size and often mismatch the story.
@@ -27,8 +32,8 @@ export const resolveShowcaseCoverSrc = (
     return buildTeamDispatchShowcaseSvgPath(image.teamDispatchScreenId);
   }
 
-  // E2E verified articles ship viewport PNGs only (no curated SVG pair).
-  if (image.src.startsWith("/showcases/e2e/")) {
+  // E2E verified and bot-to-bot articles ship PNGs only (no curated SVG pair).
+  if (PNG_ONLY_SHOWCASE_DIRS.some((dir) => image.src.startsWith(dir))) {
     return image.src;
   }
 
