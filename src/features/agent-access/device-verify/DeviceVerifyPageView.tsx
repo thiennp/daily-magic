@@ -1,4 +1,5 @@
 import { DEVICE_VERIFY_COPY } from "@/features/agent-access/device-verify/deviceVerifyCopy.constant";
+import AwcTermsLinksSentence from "@/features/agent-access/terms/AwcTermsLinksSentence";
 
 type DeviceVerifyPageViewProps = {
   readonly assistantName: string;
@@ -100,6 +101,14 @@ export default function DeviceVerifyPageView({
             </button>
           </form>
         </div>
+      ) : null}
+      {canDecide ? (
+        <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">
+          <AwcTermsLinksSentence
+            prefix={DEVICE_VERIFY_COPY.termsNoticePrefix}
+            suffix={DEVICE_VERIFY_COPY.termsNoticeSuffix}
+          />
+        </p>
       ) : null}
     </main>
   );

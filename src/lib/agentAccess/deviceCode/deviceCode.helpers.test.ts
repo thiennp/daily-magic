@@ -35,9 +35,15 @@ describe("device-code user_code helpers", () => {
     );
     expect(DEVICE_VERIFY_COPY.codeLabel).toBe("Code");
     expect(DEVICE_VERIFY_COPY.lookUp).toBe("Continue");
-    expect(DEVICE_VERIFY_COPY.confirmed).toContain(
-      "project owner's approval",
+    expect(DEVICE_VERIFY_COPY.confirmed).toBe(
+      "Confirmed. You're this assistant's owner. A project still needs the project owner's approval before the assistant can join. You can close this page.",
     );
+    expect(DEVICE_VERIFY_COPY.termsNotice).toBe(
+      "By confirming, you accept the Terms and Privacy Policy for this assistant.",
+    );
+    expect(
+      `${DEVICE_VERIFY_COPY.termsNoticePrefix}Terms and Privacy Policy${DEVICE_VERIFY_COPY.termsNoticeSuffix}`,
+    ).toBe(DEVICE_VERIFY_COPY.termsNotice);
     expect(DEVICE_VERIFY_COPY.denied).toBe(
       "Denied. The assistant was not linked to you.",
     );

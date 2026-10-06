@@ -60,6 +60,17 @@ describe("/device/verify view", () => {
   });
 });
 
+describe("/device/verify view (decide)", () => {
+  it("links Terms + Privacy Policy under Confirm/Deny", () => {
+    const html = renderDeviceVerify(true);
+    expectLinkedTerms(html);
+    expect(textOf(html)).toContain(
+      "By confirming, you accept the Terms and Privacy Policy for this assistant.",
+    );
+    expect(html.indexOf(">Deny<")).toBeLessThan(html.indexOf(">Terms<"));
+  });
+});
+
 describe("/oauth/consent view", () => {
   it("shows stop under sub and links Terms + Privacy Policy on the checkbox", () => {
     const html = renderConsent();

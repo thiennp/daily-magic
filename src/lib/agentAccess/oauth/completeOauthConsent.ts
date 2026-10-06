@@ -29,7 +29,7 @@ export const completeOauthConsent = async (input: {
       ok: false,
       status: 400,
       code: "invalid_request",
-      error: "This connect request expired. Start again from your assistant.",
+      error: "This link expired. Start again from your assistant.",
     };
   }
 

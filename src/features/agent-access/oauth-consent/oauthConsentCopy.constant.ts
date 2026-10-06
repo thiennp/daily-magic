@@ -23,12 +23,12 @@ export const OAUTH_CONSENT_COPY = {
   deny: DEVICE_VERIFY_COPY.deny,
   confirmed: DEVICE_VERIFY_COPY.confirmed,
   denied: DEVICE_VERIFY_COPY.denied,
-  expired: "This connect request expired. Start again from your assistant.",
+  expired: "This link expired. Start again from your assistant.",
   termsLabel: "I accept the Terms and Privacy Policy for this assistant.",
   /** termsLabel split around the linked "Terms and Privacy Policy". */
   termsLabelPrefix: "I accept the ",
   termsLabelSuffix: " for this assistant.",
-  termsRequired: "Accept the Terms to continue.",
+  termsRequired: "Accept the Terms and Privacy Policy to continue.",
   openLinkHint: "Open the link your assistant gave you to continue.",
   loginRequired: DEVICE_VERIFY_COPY.loginRequired,
 } as const;

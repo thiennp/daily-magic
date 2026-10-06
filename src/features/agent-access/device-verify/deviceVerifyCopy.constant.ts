@@ -15,10 +15,15 @@ export const DEVICE_VERIFY_COPY = {
   codeHelper: "Enter the code your assistant gave you.",
   clientLabel: "Assistant",
   clientFallback: "this assistant",
+  /** Under Confirm/Deny; "Terms" and "Privacy Policy" are linked. */
+  termsNotice:
+    "By confirming, you accept the Terms and Privacy Policy for this assistant.",
+  termsNoticePrefix: "By confirming, you accept the ",
+  termsNoticeSuffix: " for this assistant.",
   confirm: "Confirm",
   deny: "Deny",
   confirmed:
-    "Confirmed. You're this assistant's owner. A project still needs the project owner's approval before the assistant can join.",
+    "Confirmed. You're this assistant's owner. A project still needs the project owner's approval before the assistant can join. You can close this page.",
   denied: "Denied. The assistant was not linked to you.",
   expired: "This code expired. Ask your assistant for a new code.",
   notFound:

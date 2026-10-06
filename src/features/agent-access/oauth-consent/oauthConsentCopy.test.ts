@@ -30,6 +30,12 @@ describe("OAuth consent copy", () => {
     expect(OAUTH_CONSENT_COPY.continueHint).toBe(
       "After you confirm, you'll go back there to finish setting up this assistant.",
     );
+    expect(OAUTH_CONSENT_COPY.expired).toBe(
+      "This link expired. Start again from your assistant.",
+    );
+    expect(OAUTH_CONSENT_COPY.termsRequired).toBe(
+      "Accept the Terms and Privacy Policy to continue.",
+    );
     expect(OAUTH_CONSENT_COPY.openLinkHint).toBe(
       "Open the link your assistant gave you to continue.",
     );
