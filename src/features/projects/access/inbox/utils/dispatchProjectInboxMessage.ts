@@ -2,6 +2,7 @@ import type {
   AwcProjectInboxRefs,
   DispatchProjectInboxResult,
 } from "@/features/projects/access/inbox/types/awcProjectInboxMessage.type";
+import { parseDispatchInboxFailureMeta } from "@/features/projects/access/inbox/utils/parseDispatchInboxFailureMeta";
 
 const readJson = async (response: Response): Promise<unknown | null> => {
   try {
@@ -76,40 +77,12 @@ export const dispatchProjectInboxMessage = async (input: {
     };
   }
 
-  const reason =
-    body.reason === "hourly" || body.reason === "unread_cap"
-      ? body.reason
-      : undefined;
-  const detail =
-    body.detail === "rate_limited_hourly" || body.detail === "unread_cap"
-      ? body.detail
-      : undefined;
-  const retryAfterSeconds =
-    typeof body.retryAfterSeconds === "number"
-      ? body.retryAfterSeconds
-      : body.retryAfterSeconds === null
-        ? null
-        : undefined;
-  const retryAfterAt =
-    typeof body.retryAfterAt === "string"
-      ? body.retryAfterAt
-      : body.retryAfterAt === null
-        ? null
-        : undefined;
-
-  const cause =
-    body.cause === "offline" || body.cause === "too_old"
-      ? body.cause
-      : undefined;
+  const failureMeta = parseDispatchInboxFailureMeta(body);
 
   return {
     ok: false,
     code,
     errorMessage: errorMessage ?? "Could not send task.",
-    cause,
-    reason,
-    detail,
-    retryAfterSeconds,
-    retryAfterAt,
+    ...failureMeta,
   };
 };

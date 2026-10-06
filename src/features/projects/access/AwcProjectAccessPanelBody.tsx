@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 
+import AwcProjectAccessAutoApprovedBanner from "@/features/projects/access/AwcProjectAccessAutoApprovedBanner";
 import AwcProjectAccessComputerMembersSection from "@/features/projects/access/AwcProjectAccessComputerMembersSection";
 import AwcProjectAccessFoldersSection from "@/features/projects/access/AwcProjectAccessFoldersSection";
 import AwcProjectAccessMembersList from "@/features/projects/access/AwcProjectAccessMembersList";
@@ -44,14 +45,7 @@ export default function AwcProjectAccessPanelBody({
 
   return (
     <div className="space-y-3">
-      {access.autoApprovedBanner ? (
-        <p
-          role="status"
-          className="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1.5 text-xs font-medium text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-200"
-        >
-          {access.autoApprovedBanner}
-        </p>
-      ) : null}
+      <AwcProjectAccessAutoApprovedBanner message={access.autoApprovedBanner} />
 
       <AwcHumanPeopleSection
         projectId={projectId}
