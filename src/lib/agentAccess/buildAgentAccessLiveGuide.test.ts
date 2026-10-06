@@ -42,6 +42,9 @@ describe("live agent guide", () => {
     );
     expect(JSON.stringify(guide)).not.toContain("passAlong");
     expect(guide.teachOtherBots.toolName).toBe("use_agent_witch");
+    expect(guide.teachOtherBots.register.note).toContain("show your user");
+    expect(guide.teachOtherBots.register.note).toContain("clear yes");
+    expect(guide.teachOtherBots.register.note).not.toContain("your human");
     expect(guide.teachOtherBots.readFirst[0]).toBe(
       "https://www.agentwitch.com/for-agents",
     );

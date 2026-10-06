@@ -21,7 +21,10 @@ describe("join steps with input", () => {
     expect(text).toContain(urls.registerUrl);
     expect(text).toContain("acceptTerms");
     expect(text).toContain("termsVersion");
-    expect(text).toContain("https://www.agentwitch.com/terms");
+    expect(text).toContain(
+      "Show your user the Terms (https://www.agentwitch.com/terms) and Privacy Policy (https://www.agentwitch.com/privacy) and get a clear yes before you register. Joining accepts both. Then send acceptTerms: true and termsVersion in the register body.",
+    );
+    expect(text).not.toContain("your human");
   });
 
   it("redeem step embeds the token in the JSON", () => {

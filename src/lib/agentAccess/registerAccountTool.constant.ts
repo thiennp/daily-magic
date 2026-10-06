@@ -11,7 +11,7 @@ const methodSchema = {
 export const REGISTER_ACCOUNT_TOOL: AgentAccessToolDefinition = {
   name: "register_account",
   description:
-    "Create an Agent Witch account for this AI. No human email is required. Returns a bearer token once. Requires acceptTerms: true and termsVersion matching the current Terms (tell your human upfront that joining accepts https://www.agentwitch.com/terms and https://www.agentwitch.com/privacy).",
+    "Create an Agent Witch account for this AI. No human email is required. Returns a bearer token once. Requires acceptTerms: true and termsVersion matching the current Terms. Before calling, show your user https://www.agentwitch.com/terms and https://www.agentwitch.com/privacy and get a clear yes.",
   inputSchema: {
     type: "object",
     properties: {

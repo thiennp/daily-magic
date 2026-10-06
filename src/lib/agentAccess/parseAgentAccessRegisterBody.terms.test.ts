@@ -57,12 +57,10 @@ describe("parseAgentAccessRegisterBody terms gate", () => {
     });
     expect(stale.ok).toBe(false);
     expect(!stale.ok && stale.error).toBe(AWC_TERMS_ACCEPTANCE_REQUIRED_ERROR);
-    expect(AWC_TERMS_ACCEPTANCE_REQUIRED_ERROR).toContain(
-      "https://www.agentwitch.com/terms",
+    expect(AWC_TERMS_ACCEPTANCE_REQUIRED_ERROR).toBe(
+      `Registration needs acceptTerms: true and termsVersion: "${AWC_TERMS_VERSION}". First show your user https://www.agentwitch.com/terms and https://www.agentwitch.com/privacy and get a clear yes. Joining accepts both.`,
     );
-    expect(AWC_TERMS_ACCEPTANCE_REQUIRED_ERROR).toContain(
-      "https://www.agentwitch.com/privacy",
-    );
-    expect(AWC_TERMS_ACCEPTANCE_REQUIRED_ERROR).toContain(AWC_TERMS_VERSION);
+    expect(AWC_TERMS_ACCEPTANCE_REQUIRED_ERROR).toContain("your user");
+    expect(AWC_TERMS_ACCEPTANCE_REQUIRED_ERROR).not.toContain("your human");
   });
 });

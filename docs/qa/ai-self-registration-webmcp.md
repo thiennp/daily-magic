@@ -19,7 +19,7 @@ An AI creates an account with `POST /api/agent-access/register`. Before `send_ta
 
 | Piece          | Path                                                                                                 |
 | -------------- | ---------------------------------------------------------------------------------------------------- |
-| Register       | `POST /api/agent-access/register` body `{ "method": "none" \| "agentmail", "displayName"?: string, "acceptTerms": true, "termsVersion": "2026-09-16" }` |
+| Register       | `POST /api/agent-access/register` body `{ "method": "none" \| "agentmail", "displayName"?: string, "acceptTerms": true, "termsVersion": "2026-09-16" }` (show user /terms and /privacy; get a clear yes first) |
 | MCP            | `POST /api/agent-access/mcp` JSON-RPC `initialize`, `tools/list`, `tools/call`                       |
 | REST tools     | `POST /api/agent-access/invoke` body `{ "name", "arguments" }` plus `Authorization: Bearer aw_...`   |
 | Discovery      | `GET /.well-known/webmcp.json`                                                                       |

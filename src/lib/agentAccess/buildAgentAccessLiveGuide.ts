@@ -82,6 +82,7 @@ export const buildAgentAccessLiveGuide = () => {
         method: "POST",
         url: urls.registerUrl,
         body: { method: "none", displayName: "your bot name", acceptTerms: true, termsVersion: AWC_TERMS_VERSION },
+        note: `Before calling, show your user ${urls.origin}/terms and ${urls.origin}/privacy and get a clear yes.`,
       },
       invoke: {
         method: "POST",

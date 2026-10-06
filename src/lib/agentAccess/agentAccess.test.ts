@@ -49,6 +49,8 @@ describe("agent access registration", () => {
     expect(text).toContain('method "none"');
     expect(text).toContain('acceptTerms');
     expect(text).toContain(AWC_TERMS_VERSION);
+    expect(text).toContain("Get your user's clear yes to the Terms and Privacy Policy first");
+    expect(text).not.toContain("Tell your human");
     expect(text).toContain('method "agentmail"');
     expect(text).toContain("get_install_command");
     expect(text).toContain("create_workflow");
