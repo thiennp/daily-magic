@@ -95,6 +95,7 @@ export const useAwcProjectAccess = (projectId: string) => {
   return {
     members: model.members,
     pending: model.pending,
+    expired: model.expired,
     folderRefs: model.folderRefs,
     invites: model.invites,
     projectName: model.projectName,

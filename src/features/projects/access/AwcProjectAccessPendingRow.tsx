@@ -1,15 +1,16 @@
 "use client";
 
+import AwcPendingApprovalDetails from "@/features/projects/access/approvalCard/AwcPendingApprovalDetails";
+import { pendingAssistantName } from "@/features/projects/access/approvalCard/formatPendingApprovalCard";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
+import type { AwcProjectAccessPending } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 
-interface PendingRequest {
-  readonly id: string;
-  readonly requesterUserId: string;
-  readonly reason: string | null;
-  readonly requesterIsAgent?: boolean;
-  readonly requesterLabel?: string | null;
-}
+type PendingRequest = Pick<
+  AwcProjectAccessPending,
+  "id" | "requesterUserId" | "reason" | "requesterIsAgent" | "requesterLabel"
+> &
+  Pick<AwcProjectAccessPending, "approvalCard" | "suggestedProjectDisplayName">;
 
 interface AwcProjectAccessPendingRowProps {
   readonly req: PendingRequest;
@@ -44,6 +45,12 @@ export default function AwcProjectAccessPendingRow({
           <span className="mt-0.5 block text-[12px] font-normal text-gray-500 dark:text-gray-400">
             {copy.requestWaitingApproval}
           </span>
+          {req.approvalCard ? (
+            <AwcPendingApprovalDetails
+              assistantName={pendingAssistantName(req)}
+              card={req.approvalCard}
+            />
+          ) : null}
         </span>
         <span className="flex gap-2">
           <button

@@ -23,6 +23,7 @@ export type AwcProjectAccessSnapshot =
       readonly ok: true;
       readonly members: readonly AwcProjectAccessMember[];
       readonly pending: readonly AwcProjectAccessPending[];
+      readonly expired: readonly AwcProjectAccessPending[];
       readonly folderRefs: readonly AwcProjectAccessFolderRef[];
       readonly invites: readonly AwcProjectAccessInvite[];
       readonly projectName: string | null;
@@ -32,6 +33,7 @@ export type AwcProjectAccessSnapshot =
       readonly errorMessage: string;
       readonly members: readonly [];
       readonly pending: readonly [];
+      readonly expired: readonly [];
       readonly folderRefs: readonly [];
       readonly invites: readonly [];
       readonly projectName: null;
@@ -55,6 +57,7 @@ export const loadAwcProjectAccess = async (
       ),
       members: [],
       pending: [],
+      expired: [],
       folderRefs: [],
       invites: [],
       projectName: null,
@@ -72,6 +75,7 @@ export const loadAwcProjectAccess = async (
     ok: true,
     members: access.members ?? [],
     pending: access.pendingRequests ?? [],
+    expired: access.expiredRequests ?? [],
     folderRefs: folders.ok ? (folders.folderRefs ?? []) : [],
     invites: invites.invites ?? [],
     projectName,

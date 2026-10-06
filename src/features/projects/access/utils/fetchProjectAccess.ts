@@ -12,6 +12,7 @@ export const fetchProjectAccess = async (projectId: string) => {
     readonly project?: { readonly id: string; readonly name: string };
     readonly members?: readonly AccessMembershipView[];
     readonly pendingRequests?: readonly AccessPendingView[];
+    readonly expiredRequests?: readonly AccessPendingView[];
     readonly errorMessage?: string;
   }>;
 };

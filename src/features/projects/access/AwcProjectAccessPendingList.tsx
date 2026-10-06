@@ -2,19 +2,15 @@
 
 import { useEffect, useState } from "react";
 
+import { pendingAssistantName } from "@/features/projects/access/approvalCard/formatPendingApprovalCard";
+import { usePendingDecisionNote } from "@/features/projects/access/approvalCard/usePendingDecisionNote";
 import AwcProjectAccessPendingRow from "@/features/projects/access/AwcProjectAccessPendingRow";
+import type { AwcProjectAccessPending } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { runPendingApprove } from "@/features/projects/access/runPendingApprove";
 import { fetchDisplayNamePresets } from "@/features/projects/access/utils/projectAccessApi";
 
-interface PendingRequest {
-  readonly id: string;
-  readonly requesterUserId: string;
-  readonly reason: string | null;
-  readonly requesterIsAgent?: boolean;
-  readonly requesterLabel?: string | null;
-  readonly suggestedProjectDisplayName?: string | null;
-}
+type PendingRequest = AwcProjectAccessPending;
 
 interface AwcProjectAccessPendingListProps {
   readonly projectId: string;
@@ -23,7 +19,8 @@ interface AwcProjectAccessPendingListProps {
     requestId: string,
     projectDisplayName?: string,
   ) => Promise<{ readonly ok: boolean; readonly errorMessage?: string }>;
-  readonly onDeny: (requestId: string) => void;
+  /** Resolve true on success to show the COPY.md denied toast. */
+  readonly onDeny: (requestId: string) => void | Promise<boolean>;
 }
 
 export default function AwcProjectAccessPendingList({
@@ -37,6 +34,7 @@ export default function AwcProjectAccessPendingList({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [suggested, setSuggested] = useState<string>("");
   const [available, setAvailable] = useState<readonly string[]>([]);
+  const decision = usePendingDecisionNote();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -62,6 +60,14 @@ export default function AwcProjectAccessPendingList({
       <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
         {copy.pendingHeading}
       </h4>
+      {decision.note !== null ? (
+        <p
+          role="status"
+          className="mt-1 text-[12px] text-gray-600 dark:text-gray-300"
+        >
+          {decision.note}
+        </p>
+      ) : null}
       {pending.length === 0 ? (
         <p className="mt-1 text-sm text-gray-500">{copy.pendingEmpty}</p>
       ) : (
@@ -76,14 +82,17 @@ export default function AwcProjectAccessPendingList({
               onNameChange={(value) =>
                 setNames((n) => ({ ...n, [req.id]: value }))
               }
-              onDeny={() => onDeny(req.id)}
+              onDeny={() => decision.deny(req, () => onDeny(req.id))}
               onApprove={() => {
                 void runPendingApprove({
                   requestId: req.id,
                   needsName: req.requesterIsAgent !== false,
                   nameValue: nameFor(req),
                   available,
-                  onApprove,
+                  onApprove: (id, name) =>
+                    decision.approve(name ?? pendingAssistantName(req), () =>
+                      onApprove(id, name),
+                    ),
                   setError: (message) => {
                     setErrors((e) => {
                       if (message === null) {

@@ -1,34 +1,12 @@
-import type { Dispatch, MutableRefObject, SetStateAction } from "react";
+import type { MutableRefObject } from "react";
 
 import type {
-  AwcProjectAccessFolderRef,
   AwcProjectAccessInvite,
   AwcProjectAccessMember,
-  AwcProjectAccessPending,
   AwcProjectAccessSnapshot,
 } from "@/features/projects/access/hooks/loadAwcProjectAccess";
+import type { SnapshotSetters } from "@/features/projects/access/hooks/awcProjectAccessSnapshotSetters.type";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
-
-type SnapshotSetters = {
-  readonly setMembers: Dispatch<
-    SetStateAction<readonly AwcProjectAccessMember[]>
-  >;
-  readonly setPending: Dispatch<
-    SetStateAction<readonly AwcProjectAccessPending[]>
-  >;
-  readonly setFolderRefs: Dispatch<
-    SetStateAction<readonly AwcProjectAccessFolderRef[]>
-  >;
-  readonly setInvites: Dispatch<
-    SetStateAction<readonly AwcProjectAccessInvite[]>
-  >;
-  readonly setProjectName: Dispatch<SetStateAction<string | null>>;
-  readonly setLoadError: Dispatch<SetStateAction<string | null>>;
-  readonly setAutoApprovedBanner: Dispatch<SetStateAction<string | null>>;
-  readonly setRecentlyAutoApprovedIds: Dispatch<
-    SetStateAction<readonly string[]>
-  >;
-};
 
 /** Newly appeared members that came in through invite auto-approve only. */
 export const detectInviteAutoApprovedMembers = (input: {
@@ -104,6 +82,7 @@ export const applyAwcProjectAccessSnapshot = (input: {
   input.skipAutoApproveDetectRef.current = false;
   setters.setMembers(snapshot.members);
   setters.setPending(snapshot.pending);
+  setters.setExpired(snapshot.expired);
   setters.setFolderRefs(snapshot.folderRefs);
   setters.setInvites(snapshot.invites);
   input.syncBannerWithUsableInvites(snapshot.invites);

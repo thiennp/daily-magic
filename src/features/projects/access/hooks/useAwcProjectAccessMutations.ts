@@ -39,6 +39,7 @@ export const useAwcProjectAccessMutations = (input: {
         : mapProjectAccessError(result.errorMessage, "Failed."),
     );
     await reload();
+    return result.ok;
   };
 
   const revoke = async (membershipId: string) => {

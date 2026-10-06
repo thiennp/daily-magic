@@ -3,6 +3,7 @@
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 import AwcProjectMembersHelpersSection from "@/features/projects/members/AwcProjectMembersHelpersSection";
 import AwcAccessLogRailFooter from "@/features/projects/accessLog/AwcAccessLogRailFooter";
+import AwcProjectMembersJoinRequestsSection from "@/features/projects/members/AwcProjectMembersJoinRequestsSection";
 import AwcProjectMembersInviteBotsSection from "@/features/projects/members/AwcProjectMembersInviteBotsSection";
 import AwcProjectMembersPeopleSection from "@/features/projects/members/AwcProjectMembersPeopleSection";
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
@@ -43,6 +44,13 @@ export default function AwcProjectMembersOwnerContent({
             ownerEmail={ownerEmail}
             ownerDisplayName={ownerDisplayName}
             accessMembers={access.members}
+          />
+          <AwcProjectMembersJoinRequestsSection
+            projectId={projectId}
+            pending={access.pending}
+            expired={access.expired}
+            onApprove={access.approve}
+            onDeny={access.deny}
           />
           <AwcProjectMembersHelpersSection
             projectId={projectId}

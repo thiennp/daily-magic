@@ -1,3 +1,5 @@
+import type { PendingApprovalCardMeta } from "@/lib/projects/acl/approvalCard/PendingApprovalCardMeta.type";
+
 export type AccessMembershipView = {
   readonly id: string;
   readonly userId: string;
@@ -40,6 +42,8 @@ export type AccessPendingView = {
   readonly requestedScopes?: readonly string[];
   readonly expiresAt?: string | null;
   readonly suggestedProjectDisplayName?: string | null;
+  /** Non-Grok S3 owner card (assistants only); absent on older servers. */
+  readonly approvalCard?: PendingApprovalCardMeta | null;
 };
 
 export type InviteListItem = {

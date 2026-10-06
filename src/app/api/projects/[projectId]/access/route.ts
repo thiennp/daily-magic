@@ -1,12 +1,9 @@
 import { handleProjectAccessPatch } from "@/app/api/projects/[projectId]/access/patchAccessAction";
-import {
-  buildMembershipViews,
-  buildPendingRequestViews,
-} from "@/lib/projects/acl/buildProjectAccessViews";
+import { buildOwnerPendingAccessViews } from "@/lib/projects/acl/approvalCard/buildOwnerPendingAccessViews";
+import { buildMembershipViews } from "@/lib/projects/acl/buildProjectAccessViews";
 import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
 import { enrichProjectAccessBotWakeLinks } from "@/lib/projects/acl/enrichProjectAccessBotWakeLinks";
 import { enrichProjectAccessComputerMembers } from "@/lib/projects/acl/enrichProjectAccessComputerMembers";
-import { listPendingProjectAccessRequests } from "@/lib/projects/acl/listPendingProjectAccessRequests";
 import { listProjectMembershipsForProject } from "@/lib/projects/acl/listProjectMembershipsForProject";
 import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import { PROJECT_ACL_FIRST_CONNECT } from "@/lib/projects/acl/projectAclFirstConnect.constant";
@@ -53,18 +50,17 @@ export async function GET(
     access.kind === "owner"
       ? await enrichProjectAccessBotWakeLinks(projectId, computerMembers)
       : computerMembers;
-  const pendingRequests =
+  const { pendingRequests, expiredRequests } =
     access.kind === "owner"
-      ? await buildPendingRequestViews(
-          await listPendingProjectAccessRequests(projectId),
-        )
-      : [];
+      ? await buildOwnerPendingAccessViews(projectId)
+      : { pendingRequests: [], expiredRequests: [] };
 
   return Response.json({
     ok: true,
     project: { id: access.project.id, name: access.project.name },
     members,
     pendingRequests,
+    expiredRequests,
     firstConnect:
       access.kind === "owner"
         ? {

@@ -15,6 +15,9 @@ export const useAwcProjectAccessModel = () => {
   const [pending, setPending] = useState<readonly AwcProjectAccessPending[]>(
     [],
   );
+  const [expired, setExpired] = useState<readonly AwcProjectAccessPending[]>(
+    [],
+  );
   const [folderRefs, setFolderRefs] = useState<
     readonly AwcProjectAccessFolderRef[]
   >([]);
@@ -40,6 +43,7 @@ export const useAwcProjectAccessModel = () => {
     () => ({
       setMembers,
       setPending,
+      setExpired,
       setFolderRefs,
       setInvites,
       setProjectName,
@@ -53,6 +57,7 @@ export const useAwcProjectAccessModel = () => {
   return {
     members,
     pending,
+    expired,
     folderRefs,
     invites,
     projectName,
