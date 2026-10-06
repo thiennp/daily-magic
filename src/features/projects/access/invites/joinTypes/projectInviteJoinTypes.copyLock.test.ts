@@ -68,4 +68,20 @@ describe("join type registry vs Product EN lock", () => {
       expect(knownTools.has(tool), tool).toBe(true);
     }
   });
+
+  it("every register body carries acceptTerms + termsVersion (Grok's REST mention too)", () => {
+    const body =
+      '{ "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "2026-09-16" }';
+    for (const type of PROJECT_INVITE_JOIN_TYPES) {
+      const text = type.steps.join(" ");
+      if (type.connectPath === "grok-wake") {
+        expect(text, type.id).toContain(
+          '"acceptTerms": true, "termsVersion": "2026-09-16"',
+        );
+      } else {
+        expect(text, type.id).toContain(body);
+      }
+      expect(text, type.id).not.toMatch(/"displayName": "<your name>" \}/);
+    }
+  });
 });

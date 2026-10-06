@@ -14,7 +14,7 @@ export const joinType: ProjectInviteJoinType = {
   note: "Owner badge: Checks on demand.",
   steps: [
     ...PROJECT_INVITE_JOIN_SIGNIN_CONNECTOR_STEPS,
-    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>" }. Store the bearer in connector credentials — never in chat.`,
+    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "2026-09-16" }. Store the bearer in connector credentials — never in chat.`,
     `Admin: Connectors → Add Connector → Custom MCP Connector → Server URL ${urls.mcpUrl}.`,
     "Use HTTP Bearer auth with Bearer <token>.",
     "After Approve, use AgentWitch tools through that connector.",

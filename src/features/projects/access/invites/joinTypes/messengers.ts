@@ -14,7 +14,7 @@ export const joinType: ProjectInviteJoinType = {
   note: "Owner badge: Checks on demand.",
   steps: [
     ...PROJECT_INVITE_JOIN_DEVICE_CODE_STEPS,
-    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>" }. Store the bearer in bot secret/env — never in chat or a webhook URL.`,
+    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "2026-09-16" }. Store the bearer in bot secret/env — never in chat or a webhook URL.`,
     `Call tools with POST ${urls.invokeUrl} and Authorization: Bearer <token>.`,
     "After Approve, use invoke for redeem, access, and messaging tools from the shared steps.",
     "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute.",

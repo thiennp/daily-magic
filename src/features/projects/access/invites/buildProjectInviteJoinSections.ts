@@ -83,7 +83,7 @@ export const buildProjectInviteJoinSections = (
     summary: SUMMARY_LINES,
     dispatch: buildProjectInviteJoinDispatchStep({ projectIdHint }),
     wake: selectProjectInviteJoinWakeStep(input.platform ?? "grok")(),
-    poll: buildProjectInviteJoinPollStep({ projectIdHint }),
+    poll: buildProjectInviteJoinPollStep(),
     leave: buildProjectInviteJoinLeaveStep({ projectIdHint }),
     productUpdates: PRODUCT_UPDATES_LINES,
     projectLine: buildProjectInviteJoinProjectLine(input),

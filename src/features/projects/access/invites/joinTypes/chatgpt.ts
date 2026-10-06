@@ -14,7 +14,7 @@ export const joinType: ProjectInviteJoinType = {
   note: "Owner badge: Checks on demand. Prefer Codex if you share Codex config.toml MCP on ChatGPT desktop.",
   steps: [
     ...PROJECT_INVITE_JOIN_DEVICE_CODE_STEPS,
-    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>" }. Store the bearer privately — never in chat or a URL.`,
+    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "2026-09-16" }. Store the bearer privately — never in chat or a URL.`,
     `Call tools with POST ${urls.invokeUrl}, header Authorization: Bearer <token>, body { "name": "<tool>", "arguments": { … } }.`,
     "After Approve, redeem/access via those invoke calls (shared steps).",
     "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute.",

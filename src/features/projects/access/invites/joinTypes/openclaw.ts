@@ -14,7 +14,7 @@ export const joinType: ProjectInviteJoinType = {
   note: "Owner badge: Checks on demand.",
   steps: [
     ...PROJECT_INVITE_JOIN_SIGNIN_CONNECTOR_STEPS,
-    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>" }. Store the bearer via OpenClaw secret/header settings — never as a chat literal.`,
+    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "2026-09-16" }. Store the bearer via OpenClaw secret/header settings — never as a chat literal.`,
     `Add Streamable HTTP MCP: URL ${urls.mcpUrl}; set Authorization bearer in the scoped header/secret editor.`,
     "Run openclaw mcp doctor <name> --probe.",
     "After Approve, use those tools for project work.",

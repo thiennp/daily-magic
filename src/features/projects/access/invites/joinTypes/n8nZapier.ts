@@ -14,7 +14,7 @@ export const joinType: ProjectInviteJoinType = {
   note: "Owner badge: Checks on demand. n8n may use MCP Client Bearer to the same MCP URL.",
   steps: [
     ...PROJECT_INVITE_JOIN_DEVICE_CODE_STEPS,
-    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>" }. Store the bearer in the workflow credential vault — never in chat.`,
+    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "2026-09-16" }. Store the bearer in the workflow credential vault — never in chat.`,
     `Call tools with POST ${urls.invokeUrl} and Authorization: Bearer <token>.`,
     `n8n optional: MCP Client → HTTP → ${urls.mcpUrl} → Bearer auth with the same token.`,
     "After Approve, redeem and work through invoke or MCP Client tools.",

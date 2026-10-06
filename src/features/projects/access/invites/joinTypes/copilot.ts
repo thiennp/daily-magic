@@ -19,7 +19,7 @@ export const joinType: ProjectInviteJoinType = {
   note: "Bearer only in COPILOT_MCP_* secrets. Copilot Studio = poll (Checks on demand). No GPT Actions.",
   steps: [
     ...PROJECT_INVITE_JOIN_SIGNIN_CONNECTOR_STEPS,
-    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>" }. Store the bearer only in an Agents secret named COPILOT_MCP_* — never in chat.`,
+    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "2026-09-16" }. Store the bearer only in an Agents secret named COPILOT_MCP_* — never in chat.`,
     `In Copilot MCP JSON: type http, url ${urls.mcpUrl}, headers.Authorization Bearer $COPILOT_MCP_<NAME>.`,
     "Copilot Studio agents: no wake link — use poll. Owner badge Checks on demand. Check list_project_inbox only when your user asks (at most once a minute).",
     "After Approve, call tools over that MCP session (or Studio HTTPS using the same bearer).",

@@ -14,7 +14,7 @@ export const joinType: ProjectInviteJoinType = {
   note: "Owner badge: Checks on demand.",
   steps: [
     ...PROJECT_INVITE_JOIN_DEVICE_CODE_STEPS,
-    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>" }. Persist the bearer in your secret store — never print it.`,
+    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "2026-09-16" }. Persist the bearer in your secret store — never print it.`,
     `Prefer MCP POST ${urls.mcpUrl} with Authorization: Bearer <token>; or REST POST …/invoke with the same header.`,
     "After Approve, follow shared redeem/access tools.",
     "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute. Optional later: register_project_webhook with an HTTPS wake URL if you can receive POSTs.",
