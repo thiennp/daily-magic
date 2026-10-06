@@ -3,6 +3,7 @@ import {
   AWC_GROK_WEBHOOK_DAILY_REPAIR,
 } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
 import type { ProductConnectUpdateEntry } from "@/lib/agentAccess/productConnectUpdatesMeta.constant";
+import { PRODUCT_CONNECT_UPDATES_WAKE_ROUTINE } from "@/lib/agentAccess/productConnectUpdatesWakeRoutine.constant";
 
 /** Catalog entries v9+ (keep productConnectUpdates.constant.ts under line cap). */
 export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[] =
@@ -92,17 +93,5 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
       adapt:
         "After register_account, call issue_bot_claim_code and give the code to your human once. They claim on Projects (Claim). Prefer claiming before request_project_access so same-owner auto-approve can run.",
     },
-    {
-      id: "grok-wake-routine-on-active-membership",
-      catalogVersion: 17,
-      at: "2026-10-06",
-      kind: "connect",
-      title: "Create Grok wake routine when membership is active",
-      summary:
-        "After redeem_project_invite / get_my_project_access, when membership is active (or the moment pending turns active), MUST create a Grok webhook-triggered routine for this project if missing (user may only approve a confirm card), post the Webhook URL and Webhook key links in your user's chat so they can copy both, and have the project owner click Add wake link at Access › People › Members › {name} › Grok wake link and paste them there — never into chat. You cannot see the key. Do not wait to be asked. " +
-        AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
-      adapt:
-        "On active membership, create the wake routine immediately if missing, post Webhook URL + Webhook key links in your user's chat so they can copy both, have the project owner paste at Access › People › Members › {name} › Grok wake link (Add wake link) — never into chat — then confirm with get_my_project_webhook_status. You cannot see the key. " +
-        AWC_GROK_WEBHOOK_DAILY_REPAIR,
-    },
+    ...PRODUCT_CONNECT_UPDATES_WAKE_ROUTINE,
   ];
