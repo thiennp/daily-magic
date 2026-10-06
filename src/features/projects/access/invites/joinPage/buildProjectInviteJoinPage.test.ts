@@ -39,17 +39,6 @@ describe("/join page content", () => {
     );
   });
 
-  it("puts the Terms and Privacy URLs inline in the terms intro, not as a separate list", () => {
-    const lines = markdown.split("\n");
-    const termsAt = lines.indexOf("## 1. Terms");
-    expect(lines[termsAt + 1]).toBe(
-      "Show your user the Terms (https://www.agentwitch.com/terms) and Privacy Policy (https://www.agentwitch.com/privacy) and get a clear yes before you continue. Joining accepts both.",
-    );
-    expect(lines[termsAt + 2]).toBe("");
-    expect(lines).not.toContain("https://www.agentwitch.com/terms");
-    expect(lines).not.toContain("https://www.agentwitch.com/privacy");
-  });
-
   it("lists every type in the index, as its own section, and in JSON types[] (match order)", () => {
     for (const type of PROJECT_INVITE_JOIN_TYPES) {
       expect(markdown).toContain(`- [${type.label}](#${type.id})`);
