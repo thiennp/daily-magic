@@ -4,7 +4,7 @@
 -- are not the computer's owner; the workspace-write sandbox and the
 -- turn/minute/budget limits in AgentWitch Local always apply.
 -- Re-runnable: ADD COLUMN IF NOT EXISTS + DROP/ADD of the named CHECK.
--- (094 is taken by fix/awc-pitfall-seeds-project-scoped.)
+-- (094 is composer sticky on main; pitfall-seeds is 099.)
 
 ALTER TABLE user_projects
   ADD COLUMN IF NOT EXISTS allow_runs_without_approval BOOLEAN NOT NULL DEFAULT FALSE;

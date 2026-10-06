@@ -8,9 +8,9 @@ import { PROJECT_PITFALL_AGENTWITCH_PROJECT_ID } from "@agent-witch/shared/pitfa
 export const AGENTWITCH_PROJECT_ID = PROJECT_PITFALL_AGENTWITCH_PROJECT_ID;
 
 /**
- * Former platform seeds that only make sense for daily-magic. Since 094 they
+ * Former platform seeds that only make sense for daily-magic. Since 099 they
  * live as source='project' rows on AGENTWITCH_PROJECT_ID; the global seed rows
- * are retired. Mirrored by db/migrations/094-project-pitfall-seeds-project-scoped.sql.
+ * are retired. Mirrored by db/migrations/099-project-pitfall-seeds-project-scoped.sql.
  */
 export const AGENTWITCH_PROJECT_PITFALLS: readonly ProjectPitfallContent[] = [
   ...AGENTWITCH_PROJECT_PITFALLS_BUILD,

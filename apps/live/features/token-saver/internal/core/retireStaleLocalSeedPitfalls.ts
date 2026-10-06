@@ -6,7 +6,7 @@ const PITFALL_COLUMNS =
   "id, symptom, cause, avoidance, check_kind, check_value, keywords_json, tags_json";
 
 /**
- * Local twin of cloud migration 094. Seed rows no longer bundled are copied,
+ * Local twin of cloud migration 099. Seed rows no longer bundled are copied,
  * same id, onto the AgentWitch project (only when this DB already knows that
  * project, and never over an existing row), then the stale seed rows are
  * deleted. Only `project_id = '' AND source = 'seed'` rows are deleted; user

@@ -12,7 +12,7 @@ import { validateProjectPitfallUpsert } from "@/features/project-pitfalls/intern
 
 const readMigration = (name: string): string =>
   fs.readFileSync(path.join(process.cwd(), "db/migrations", name), "utf8");
-const sql094 = readMigration("094-project-pitfall-seeds-project-scoped.sql");
+const sql099 = readMigration("099-project-pitfall-seeds-project-scoped.sql");
 const sql067 = readMigration("067-project-pitfalls.sql");
 const quoted = (text: string): string => `'${text.replace(/'/g, "''")}'`;
 const MOVED_IDS = [
@@ -47,10 +47,10 @@ describe("AGENTWITCH_PROJECT_PITFALLS (former daily-magic seeds)", () => {
     });
   });
 
-  it("094 copies the same text onto the AgentWitch project as source project", () => {
-    expect(sql094).toContain(`ON p.id = ${quoted(AGENTWITCH_PROJECT_ID)}`);
-    expect(sql094).toContain("'project', v.severity");
-    expect(sql094).toContain("DO NOTHING");
+  it("099 copies the same text onto the AgentWitch project as source project", () => {
+    expect(sql099).toContain(`ON p.id = ${quoted(AGENTWITCH_PROJECT_ID)}`);
+    expect(sql099).toContain("'project', v.severity");
+    expect(sql099).toContain("DO NOTHING");
     AGENTWITCH_PROJECT_PITFALLS.forEach((pitfall) => {
       [
         pitfall.id,
@@ -60,13 +60,13 @@ describe("AGENTWITCH_PROJECT_PITFALLS (former daily-magic seeds)", () => {
         pitfall.check.value,
         pitfall.severity,
       ].forEach((text) => {
-        expect(sql094).toContain(quoted(text));
+        expect(sql099).toContain(quoted(text));
       });
     });
   });
 
-  it("094 only deletes the global seed rows it moved", () => {
-    const code = sql094.replace(/--.*$/gm, "");
+  it("099 only deletes the global seed rows it moved", () => {
+    const code = sql099.replace(/--.*$/gm, "");
     const deletes = code.match(/DELETE FROM[\s\S]*?;/g) ?? [];
     expect(deletes).toHaveLength(1);
     expect(deletes[0]).toContain("project_id IS NULL");

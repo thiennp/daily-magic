@@ -11,7 +11,7 @@ export const PROJECT_PITFALL_DEFAULT_SEVERITY = "warn";
 
 /**
  * The AgentWitch (daily-magic) project. Former daily-magic-only platform seeds
- * live here as project rows (same ids) since cloud migration 094; local
+ * live here as project rows (same ids) since cloud migration 099; local
  * registries re-key their stale seed rows onto it the same way.
  */
 export const PROJECT_PITFALL_AGENTWITCH_PROJECT_ID =

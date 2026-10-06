@@ -35,12 +35,12 @@ const createTables = async (): Promise<void> => {
     last_seen_at TIMESTAMPTZ,
     PRIMARY KEY (project_id, pitfall_id))`;
   // Copy former daily-magic seeds onto their project before the sync retires
-  // the global rows (mirrors 094; both steps idempotent).
+  // the global rows (mirrors 099; both steps idempotent).
   await moveAgentWitchProjectPitfalls();
   await syncGlobalProjectPitfallSeeds();
 };
 
-/** Idempotent CREATE + seed move/sync (DDL in 067, seed scope in 094). */
+/** Idempotent CREATE + seed move/sync (DDL in 067, seed scope in 099). */
 export const ensureProjectPitfallsSchema = async (): Promise<void> => {
   if (state.promise === null) {
     state.promise = createTables().catch((error: unknown) => {
