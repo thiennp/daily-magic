@@ -19,10 +19,12 @@ describe("L3 V5-4 Chat dock — shell contract", () => {
     expect(read("AwcProjectChatDockMessageGlyph.tsx")).toContain("M4 6.5");
   });
 
-  it("Expand / Minimise aria match locked verbs; full-screen is UI-only", () => {
+  it("Full screen / Exit full screen / Minimise aria match locked verbs; full-screen is UI-only", () => {
     const head = read("AwcProjectChatDockHead.tsx");
     expect(head).toContain('C["dock.expand"]');
+    expect(head).toContain('C["dock.exitFull"]');
     expect(head).toContain('C["dock.minimise"]');
+    expect(head).not.toContain("collapse");
     expect(read("AwcProjectChatDock.tsx")).toContain("AwcProjectAskBox");
     expect(read("AwcProjectChatDock.tsx")).not.toContain("fetch(");
   });

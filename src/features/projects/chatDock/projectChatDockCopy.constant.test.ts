@@ -3,9 +3,10 @@ import { describe, expect, it } from "vitest";
 import { PROJECT_CHAT_DOCK_COPY as C } from "@/features/projects/chatDock/projectChatDockCopy.constant";
 
 describe("L3 V5-4 Chat dock — Product EN lock", () => {
-  it("locks dock title / expand / minimise / All assistants / oneRecipient", () => {
+  it("locks dock title / expand / exitFull / minimise / All assistants / oneRecipient", () => {
     expect(C["dock.title"]).toBe("New message");
     expect(C["dock.expand"]).toBe("Full screen");
+    expect(C["dock.exitFull"]).toBe("Exit full screen");
     expect(C["dock.minimise"]).toBe("Minimise");
     expect(C["dock.sendTo.allAssistants"]).toBe("All assistants");
     expect(C["dock.task.oneRecipient"]).toBe(

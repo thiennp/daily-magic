@@ -8,11 +8,11 @@ import { PROJECT_ASK_BOX_COPY } from "@/features/projects/askBox/projectAskBoxCo
 export const PROJECT_CHAT_DOCK_COPY = {
   "dock.title": "New message",
   "dock.expand": "Full screen",
+  "dock.exitFull": "Exit full screen",
   "dock.minimise": "Minimise",
   "dock.sendTo.allAssistants": "All assistants",
   "dock.task.oneRecipient":
     "A task needs one recipient. Pick one assistant or This computer.",
   "disabled.viewerMessage": HUMAN_INVITE_UI_COPY.viewerMessagesHint,
   sendTo: PROJECT_ASK_BOX_COPY.sendTo,
-  collapse: "Collapse",
 } as const;

@@ -12,13 +12,13 @@ interface AwcProjectChatDockHeadProps {
   readonly onClose: () => void;
 }
 
-/** Dock title + Full screen / Minimise + Collapse. */
+/** Dock title + Full screen / Exit full screen + Minimise. */
 export default function AwcProjectChatDockHead({
   full,
   onToggleFull,
   onClose,
 }: AwcProjectChatDockHeadProps) {
-  const sizeLabel = full ? C["dock.minimise"] : C["dock.expand"];
+  const sizeLabel = full ? C["dock.exitFull"] : C["dock.expand"];
   return (
     <header className={CHAT_DOCK_HEAD_CLASS}>
       <h3 className="m-0 text-[15px] font-semibold text-white">{C["dock.title"]}</h3>
@@ -42,7 +42,7 @@ export default function AwcProjectChatDockHead({
         <button
           type="button"
           className={CHAT_DOCK_HEAD_BTN_CLASS}
-          aria-label={C.collapse}
+          aria-label={C["dock.minimise"]}
           onClick={onClose}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
