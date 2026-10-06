@@ -8,7 +8,7 @@ Homepage prompt plus HTTP API, MCP, and WebMCP so an external AI can create an a
 - `POST /api/agent-access/mcp` and `POST /api/agent-access/invoke`
 - `GET /.well-known/webmcp.json`
 - Guest marketing homepage section **For your AI** (`HomeMarketingLanding` only)
-- Public guideline `/for-agents` (static document: no header, footer, or app chrome)
+- Public guideline `/for-agents` (plain `text/markdown`; no header, footer, CSS, or app chrome)
 
 Server logic lives in `src/lib/agentAccess/`.
 

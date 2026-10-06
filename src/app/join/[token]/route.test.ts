@@ -62,6 +62,7 @@ describe("GET /join/[token]", () => {
     ).toBe(true);
     expect(body).toContain("## 2. Find your bot type");
     expect(body).not.toMatch(SECRET);
+    expect(body).not.toMatch(/AppShell|MarketingHeader|MarketingFooter|<html|<nav|className=/);
     expect(readState).toHaveBeenCalledWith(TOKEN);
   });
 

@@ -1,6 +1,6 @@
 import LoginPageView from "@/features/auth/LoginPageView";
-import ForAgentsPage from "@/app/for-agents/page";
 import HomeMarketingLanding from "@/features/home/HomeMarketingLanding";
+import { formatAgentAccessGuidelineMarkdown } from "@/lib/agentAccess/formatAgentAccessGuidelineMarkdown";
 import MarketingLegalPageLayout from "@/features/marketing/MarketingLegalPageLayout";
 import {
   MARKETING_PRIVACY_COPY,
@@ -29,8 +29,10 @@ export const AWC_MARKETING_AND_AUTH_PAGE_ENTRIES: readonly AwcStorybookPageEntry
       <HomeMarketingLanding />
     )),
     onlyReady("login", "Login", "/login", "none", () => <LoginPageView />),
-    onlyReady("for-agents", "For agents", "/for-agents", "marketing", () => (
-      <ForAgentsPage />
+    onlyReady("for-agents", "For agents", "/for-agents", "none", () => (
+      <pre style={{ whiteSpace: "pre-wrap", margin: 0, padding: 16 }}>
+        {formatAgentAccessGuidelineMarkdown()}
+      </pre>
     )),
     onlyReady("setup-writer", "Setup writer", "/setup/writer", "app", () => (
       <SetupWriterRoutePage />
