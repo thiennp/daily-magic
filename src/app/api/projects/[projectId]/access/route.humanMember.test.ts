@@ -29,6 +29,12 @@ vi.mock("@/lib/projects/acl/enrichProjectAccessComputerMembers", () => ({
 vi.mock("@/lib/projects/acl/resolveAccessComputerLiveDeviceIds", () => ({
   resolveAccessComputerLiveDeviceIds: liveDeviceIds,
 }));
+vi.mock("@/lib/projects/acl/ensureProjectLinkedComputerSeat", () => ({
+  ensureProjectLinkedComputerSeat: vi.fn(async () => false),
+}));
+vi.mock("@/lib/projects/acl/enrichProjectAccessBotWakeLinks", () => ({
+  enrichProjectAccessBotWakeLinks: async (_id: string, rows: unknown) => rows,
+}));
 vi.mock("@/app/api/projects/[projectId]/access/patchAccessAction", () => ({
   handleProjectAccessPatch: vi.fn(),
 }));
@@ -59,7 +65,7 @@ describe("GET /api/projects/:projectId/access for human seats", () => {
     resolveSeat.mockResolvedValue({
       ok: true,
       kind: "human",
-      project: { id: "proj-1", name: "P" },
+      project: { id: "proj-1", name: "P", ownerUserId: "owner-1", deviceId: null },
       membership: { role: "member", memberKind: "human" },
     });
     const response = await GET(new Request("http://local/access"), {
@@ -83,7 +89,7 @@ describe("GET /api/projects/:projectId/access for human seats", () => {
     resolveSeat.mockResolvedValue({
       ok: true,
       kind: "human",
-      project: { id: "proj-1", name: "P" },
+      project: { id: "proj-1", name: "P", ownerUserId: "owner-1", deviceId: null },
       membership: { role: "viewer", memberKind: "human" },
     });
     const response = await GET(new Request("http://local/access"), {

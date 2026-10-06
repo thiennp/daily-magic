@@ -35,6 +35,9 @@ vi.mock("@/lib/projects/acl/enrichProjectAccessComputerMembers", () =>
 vi.mock("@/lib/projects/acl/resolveAccessComputerLiveDeviceIds", () =>
   fx("liveDevices"),
 );
+vi.mock("@/lib/projects/acl/ensureProjectLinkedComputerSeat", () => ({
+  ensureProjectLinkedComputerSeat: async () => false,
+}));
 vi.mock("@/app/api/projects/[projectId]/access/patchAccessAction", () =>
   fx("patch"),
 );
@@ -61,7 +64,12 @@ import {
 const seat = (kind: "owner" | "human") => ({
   ok: true,
   kind,
-  project: { id: WAKE_FLOW.projectId, name: "P" },
+  project: {
+    id: WAKE_FLOW.projectId,
+    name: "P",
+    ownerUserId: WAKE_FLOW.ownerUserId,
+    deviceId: null as string | null,
+  },
   membership: { role: "member", memberKind: "human" },
 });
 

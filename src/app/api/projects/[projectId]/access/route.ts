@@ -1,14 +1,10 @@
 import { handleProjectAccessPatch } from "@/app/api/projects/[projectId]/access/patchAccessAction";
 import { buildOwnerPendingAccessViews } from "@/lib/projects/acl/approvalCard/buildOwnerPendingAccessViews";
-import { buildMembershipViews } from "@/lib/projects/acl/buildProjectAccessViews";
 import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
-import { enrichProjectAccessBotWakeLinks } from "@/lib/projects/acl/enrichProjectAccessBotWakeLinks";
-import { enrichProjectAccessComputerMembers } from "@/lib/projects/acl/enrichProjectAccessComputerMembers";
-import { listProjectMembershipsForProject } from "@/lib/projects/acl/listProjectMembershipsForProject";
+import { loadEnrichedProjectAccessMembers } from "@/lib/projects/acl/loadEnrichedProjectAccessMembers";
 import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import { PROJECT_ACL_FIRST_CONNECT } from "@/lib/projects/acl/projectAclFirstConnect.constant";
 import { resolveOwnerOrActiveHumanSeat } from "@/lib/projects/acl/resolveOwnerOrActiveHumanSeat";
-import { resolveAccessComputerLiveDeviceIds } from "@/lib/projects/acl/resolveAccessComputerLiveDeviceIds";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -39,21 +35,16 @@ export async function GET(
     );
   }
 
-  const memberRows = await listProjectMembershipsForProject(projectId);
-  const baseMembers = await buildMembershipViews(memberRows);
-  const liveDeviceIds = await resolveAccessComputerLiveDeviceIds(baseMembers);
-  const computerMembers = await enrichProjectAccessComputerMembers(
-    baseMembers,
-    liveDeviceIds,
-  );
-  const members =
-    access.kind === "owner"
-      ? await enrichProjectAccessBotWakeLinks(projectId, computerMembers)
-      : computerMembers;
-  const { pendingRequests, expiredRequests } =
-    access.kind === "owner"
-      ? await buildOwnerPendingAccessViews(projectId)
-      : { pendingRequests: [], expiredRequests: [] };
+  const isOwner = access.kind === "owner";
+  const members = await loadEnrichedProjectAccessMembers({
+    projectId,
+    isOwner,
+    ownerUserId: access.project.ownerUserId,
+    projectDeviceId: access.project.deviceId,
+  });
+  const { pendingRequests, expiredRequests } = isOwner
+    ? await buildOwnerPendingAccessViews(projectId)
+    : { pendingRequests: [], expiredRequests: [] };
 
   return Response.json({
     ok: true,
@@ -61,15 +52,14 @@ export async function GET(
     members,
     pendingRequests,
     expiredRequests,
-    firstConnect:
-      access.kind === "owner"
-        ? {
-            role: PROJECT_ACL_FIRST_CONNECT.role,
-            scopes: PROJECT_ACL_FIRST_CONNECT.scopes,
-            note: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
-          }
-        : null,
-    actorRole: access.kind === "owner" ? "owner" : access.membership.role,
+    firstConnect: isOwner
+      ? {
+          role: PROJECT_ACL_FIRST_CONNECT.role,
+          scopes: PROJECT_ACL_FIRST_CONNECT.scopes,
+          note: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
+        }
+      : null,
+    actorRole: isOwner ? "owner" : access.membership.role,
   });
 }
 
