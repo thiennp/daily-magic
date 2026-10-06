@@ -7,7 +7,7 @@ vi.mock("@/features/marketing/MarketingShell", () => ({
   default: ({ children }: { children: unknown }) => children,
 }));
 
-import { resolveLoginNotice } from "@/app/(app)/login/resolveLoginNotice";
+import { resolveLoginNotice } from "@/features/agent-access/resolveLoginNotice";
 import { buildAssistantOwnerLoginPath } from "@/features/agent-access/buildAssistantOwnerLoginPath";
 import LoginPageView from "@/features/auth/LoginPageView";
 

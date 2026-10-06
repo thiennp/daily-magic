@@ -1,10 +1,9 @@
 import { redirect } from "next/navigation";
 
+import { resolveLoginNotice } from "@/features/agent-access/resolveLoginNotice";
 import LoginPageView from "@/features/auth/LoginPageView";
 import { auth } from "@/lib/auth/auth";
 import { resolvePostAuthReturnFromSearchParams } from "@/lib/auth/resolvePostAuthReturnFromSearchParams";
-
-import { resolveLoginNotice } from "./resolveLoginNotice";
 
 interface LoginPageProps {
   readonly searchParams: Promise<Record<string, string | string[] | undefined>>;

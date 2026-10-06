@@ -1,5 +1,5 @@
 import { DEVICE_VERIFY_COPY } from "@/features/agent-access/device-verify/deviceVerifyCopy.constant";
-import AwcTermsLinksSentence from "@/features/agent-access/terms/AwcTermsLinksSentence";
+import DeviceVerifyDecideForms from "@/features/agent-access/device-verify/DeviceVerifyDecideForms";
 
 type DeviceVerifyPageViewProps = {
   readonly assistantName: string;
@@ -73,42 +73,7 @@ export default function DeviceVerifyPageView({
       ) : null}
 
       {canDecide ? (
-        <div className="mt-8 flex gap-3">
-          <form
-            method="POST"
-            action="/api/agent-access/oauth/device/confirm"
-            className="inline"
-          >
-            <input type="hidden" name="user_code" value={codeForForms} />
-            <button
-              type="submit"
-              className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500"
-            >
-              {DEVICE_VERIFY_COPY.confirm}
-            </button>
-          </form>
-          <form
-            method="POST"
-            action="/api/agent-access/oauth/device/deny"
-            className="inline"
-          >
-            <input type="hidden" name="user_code" value={codeForForms} />
-            <button
-              type="submit"
-              className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900"
-            >
-              {DEVICE_VERIFY_COPY.deny}
-            </button>
-          </form>
-        </div>
-      ) : null}
-      {canDecide ? (
-        <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">
-          <AwcTermsLinksSentence
-            prefix={DEVICE_VERIFY_COPY.termsNoticePrefix}
-            suffix={DEVICE_VERIFY_COPY.termsNoticeSuffix}
-          />
-        </p>
+        <DeviceVerifyDecideForms codeForForms={codeForForms} />
       ) : null}
     </main>
   );
