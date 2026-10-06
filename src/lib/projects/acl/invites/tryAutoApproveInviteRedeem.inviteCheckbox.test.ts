@@ -1,13 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const approve = vi.hoisted(() =>
-  vi.fn(async () => ({ ok: false, code: "not_pending" })),
-);
 vi.mock("@/lib/projects/acl/activity/writeProjectActivityEvent", () => ({
   writeProjectActivityEvent: vi.fn(async () => undefined),
 }));
 vi.mock("@/lib/projects/acl/approveProjectAccessRequest", () => ({
-  approveProjectAccessRequest: approve,
+  approveProjectAccessRequest: vi.fn(),
 }));
 vi.mock("@/lib/projects/acl/invites/markMembershipAutoApprovedViaInvite", () => ({
   markMembershipAutoApprovedViaInvite: vi.fn(async () => undefined),
@@ -22,9 +19,12 @@ vi.mock("@/lib/projects/userProjectQueries", () => ({
   getUserProjectById: vi.fn(async () => ({ id: "proj-1", ownerUserId: "owner-1" })),
 }));
 
+import { approveProjectAccessRequest } from "@/lib/projects/acl/approveProjectAccessRequest";
 import { tryAutoApproveInviteRedeem } from "@/lib/projects/acl/invites/tryAutoApproveInviteRedeem";
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
+
+const approve = vi.mocked(approveProjectAccessRequest);
 
 const request = { id: "req-1", requesterUserId: "bot-1" } as ProjectAccessRequestRecord;
 const membership = {

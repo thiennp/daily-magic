@@ -1,14 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const writer = vi.hoisted(() => vi.fn(async () => undefined));
-const approve = vi.hoisted(() =>
-  vi.fn(async () => ({ ok: false, code: "not_pending" })),
-);
 vi.mock("@/lib/projects/acl/activity/writeProjectActivityEvent", () => ({
   writeProjectActivityEvent: writer,
 }));
 vi.mock("@/lib/projects/acl/approveProjectAccessRequest", () => ({
-  approveProjectAccessRequest: approve,
+  approveProjectAccessRequest: vi.fn(),
 }));
 vi.mock("@/lib/projects/acl/invites/markMembershipAutoApprovedViaInvite", () => ({
   markMembershipAutoApprovedViaInvite: vi.fn(async () => undefined),
@@ -23,9 +20,12 @@ vi.mock("@/lib/projects/userProjectQueries", () => ({
   getUserProjectById: vi.fn(async () => ({ id: "proj-1", ownerUserId: "owner-1" })),
 }));
 
+import { approveProjectAccessRequest } from "@/lib/projects/acl/approveProjectAccessRequest";
 import { tryAutoApproveInviteRedeem } from "@/lib/projects/acl/invites/tryAutoApproveInviteRedeem";
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
+
+const approve = vi.mocked(approveProjectAccessRequest);
 
 const request = { id: "req-1", requesterUserId: "bot-1" } as ProjectAccessRequestRecord;
 const membership = {
@@ -51,7 +51,9 @@ describe("tryAutoApproveInviteRedeem flag-only Access log", () => {
     expect(approve).toHaveBeenCalledWith(
       expect.objectContaining({ approvalSource: "test_auto_connect" }),
     );
-    const source = approve.mock.calls[0]?.[0].approvalSource;
+    const firstCall = approve.mock.calls[0];
+    expect(firstCall).toBeDefined();
+    const source = firstCall![0].approvalSource;
     expect(source).not.toBe("invite_auto_approve");
     expect(source).not.toBe("owner");
     expect(writer).toHaveBeenCalledWith(
