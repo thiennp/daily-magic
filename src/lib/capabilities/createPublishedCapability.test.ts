@@ -62,4 +62,27 @@ describe("createPublishedCapability", () => {
     ).rejects.toThrow("project_id is required.");
     expect(sqlMock).not.toHaveBeenCalled();
   });
+
+  it("stores requested private visibility instead of the group default", async () => {
+    await createPublishedCapability({
+      ownerUserId: "user-1",
+      projectId: "proj-1",
+      name: "Probe",
+      visibility: "private",
+    });
+
+    const values = sqlMock.mock.calls[0].slice(1);
+    expect(values).toContain("private");
+  });
+
+  it("keeps the group default when visibility is absent", async () => {
+    await createPublishedCapability({
+      ownerUserId: "user-1",
+      projectId: "proj-1",
+      name: "Probe",
+    });
+
+    const values = sqlMock.mock.calls[0].slice(1);
+    expect(values).toContain("group");
+  });
 });

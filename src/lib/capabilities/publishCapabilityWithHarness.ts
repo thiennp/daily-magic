@@ -50,6 +50,7 @@ const publishCapabilityWithHarness = async (
     name: parsed.name,
     description: parsed.description,
     exampleRequest: parsed.exampleRequest,
+    visibility: parsed.visibility,
     groupId: parsed.groupId,
     type: parsed.type,
     workflowFields: parsed.workflowFields,

@@ -23,6 +23,46 @@ export interface ParsedCapabilityBody {
   readonly harnessItems: readonly ParsedCapabilityHarnessItem[];
 }
 
+export type ParseOptionalCapabilityVisibilityResult =
+  | {
+      readonly ok: true;
+      readonly visibility: CapabilityVisibilityValue | undefined;
+    }
+  | {
+      readonly ok: false;
+      readonly code: "invalid_visibility";
+      readonly error: string;
+    };
+
+/** Absent / null → default later. Present non-enum → invalid. */
+export const parseOptionalCapabilityVisibility = (
+  body: unknown,
+): ParseOptionalCapabilityVisibilityResult => {
+  if (typeof body !== "object" || body === null) {
+    return { ok: true, visibility: undefined };
+  }
+
+  const record = body as Record<string, unknown>;
+  if (!("visibility" in record)) {
+    return { ok: true, visibility: undefined };
+  }
+
+  const value = record.visibility;
+  if (value === undefined || value === null) {
+    return { ok: true, visibility: undefined };
+  }
+
+  if (typeof value === "string" && isCapabilityVisibility(value)) {
+    return { ok: true, visibility: value };
+  }
+
+  return {
+    ok: false,
+    code: "invalid_visibility",
+    error: "visibility must be private, group, or public.",
+  };
+};
+
 export function parseCreateCapabilityBody(
   body: unknown,
 ): ParsedCapabilityBody | undefined {
@@ -59,6 +99,11 @@ export function parseCreateCapabilityBody(
     return undefined;
   }
 
+  const visibilityResult = parseOptionalCapabilityVisibility(body);
+  if (!visibilityResult.ok) {
+    return undefined;
+  }
+
   const harnessItems = parseCapabilityHarnessItems(record.harnessItems);
 
   return {
@@ -67,11 +112,7 @@ export function parseCreateCapabilityBody(
       typeof record.description === "string" ? record.description : "",
     exampleRequest:
       typeof record.exampleRequest === "string" ? record.exampleRequest : "",
-    visibility:
-      typeof record.visibility === "string" &&
-      isCapabilityVisibility(record.visibility)
-        ? record.visibility
-        : undefined,
+    visibility: visibilityResult.visibility,
     groupId:
       typeof record.groupId === "string" && record.groupId.length > 0
         ? record.groupId

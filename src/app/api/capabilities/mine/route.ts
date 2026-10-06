@@ -1,6 +1,9 @@
 import { listPublishedCapabilitiesForOwner } from "@/lib/capabilities/capabilityQueries";
 import publishCapabilityWithHarness from "@/lib/capabilities/publishCapabilityWithHarness";
-import { parseCreateCapabilityBody } from "@/lib/capabilities/parseCapabilityBody";
+import {
+  parseCreateCapabilityBody,
+  parseOptionalCapabilityVisibility,
+} from "@/lib/capabilities/parseCapabilityBody";
 import { requireAuth } from "@/lib/auth/requireAuth";
 import { readProjectIdFromUnknown } from "@/lib/projects/readProjectIdFromUnknown";
 
@@ -32,6 +35,15 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const body: unknown = await request.json();
+
+  const visibilityResult = parseOptionalCapabilityVisibility(body);
+  if (!visibilityResult.ok) {
+    return Response.json(
+      { error: visibilityResult.error, code: visibilityResult.code },
+      { status: 400 },
+    );
+  }
+
   const parsed = parseCreateCapabilityBody(body);
 
   if (!parsed?.name) {

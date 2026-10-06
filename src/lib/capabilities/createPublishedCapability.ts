@@ -3,7 +3,10 @@ import { randomUUID } from "node:crypto";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type { CapabilityTypeValue } from "@/lib/capabilities/CapabilityType.constant";
-import { DEFAULT_CAPABILITY_VISIBILITY } from "@/lib/capabilities/CapabilityVisibility.constant";
+import {
+  DEFAULT_CAPABILITY_VISIBILITY,
+  type CapabilityVisibilityValue,
+} from "@/lib/capabilities/CapabilityVisibility.constant";
 import ensureAgentComponentForPublishedCapability from "@/lib/capabilities/ensureAgentComponentForPublishedCapability";
 import { ensurePublishedCapabilityWorkflowOutputFieldsSchema } from "@/lib/capabilities/ensurePublishedCapabilityWorkflowOutputFieldsSchema";
 import mapPublishedCapabilityRow from "@/lib/capabilities/mapPublishedCapabilityRow";
@@ -19,6 +22,7 @@ export interface CreatePublishedCapabilityInput {
   readonly name: string;
   readonly description?: string;
   readonly exampleRequest?: string;
+  readonly visibility?: CapabilityVisibilityValue;
   readonly groupId?: string | null;
   readonly type?: CapabilityTypeValue;
   readonly workflowFields?: readonly WorkflowFieldDefinition[];
@@ -49,6 +53,7 @@ export async function createPublishedCapability(
     input.workflowOutputFields ?? [],
   );
   const operatorStepsJson = JSON.stringify(input.operatorSteps ?? []);
+  const visibility = input.visibility ?? DEFAULT_CAPABILITY_VISIBILITY;
   const rows = asRowArray(
     await sql`
       INSERT INTO published_capabilities (
@@ -75,7 +80,7 @@ export async function createPublishedCapability(
         ${input.name},
         ${input.description ?? ""},
         ${input.exampleRequest ?? ""},
-        ${DEFAULT_CAPABILITY_VISIBILITY},
+        ${visibility},
         ${CapabilityStatus.DRAFT},
         ${workflowFieldsJson}::jsonb,
         ${workflowOutputFieldsJson}::jsonb,
@@ -90,7 +95,7 @@ export async function createPublishedCapability(
     ownerUserId: input.ownerUserId,
     name: input.name,
     description: input.description ?? "",
-    visibility: DEFAULT_CAPABILITY_VISIBILITY,
+    visibility,
     capabilityType,
     harnessSetSlug: input.harnessSetSlug ?? null,
   });
