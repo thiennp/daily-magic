@@ -11,9 +11,9 @@
 
 ## After this page
 
-**Completed:** AWC `privacy` round 1 (`allRolesPassed: true` on `main`, PR #222). In progress: AWC `terms` on `cursor/wave-qa-awc-terms-b63b`.
+**Completed:** AWC `privacy` round 1 (`allRolesPassed: true` on `main`). In progress: AWC `terms` on `cursor/wave-qa-awc-terms-b63b`.
 
 ## Coordinator
 
 - Single cloud subagent on this page only.
-- Merge to `main` when CI green + six roles pass (or PR if integration requires).
+- Land on `main` via feature branch → Arch SHIP → full local suite → FF push (see `docs/agent-witch/local-release-path.md`); no PRs.
