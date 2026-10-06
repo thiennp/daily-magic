@@ -18,4 +18,20 @@ describe("buildAgentWitchInstallScriptRegisterInstall", () => {
     expect(script).toContain("REGISTER_PLATFORM");
     expect(script).toContain("platformRaw === 'linux'");
   });
+
+  it("HOME-065 Soft HOLD: fails loud on register-install 404/409 (no || true mask)", () => {
+    const script = buildAgentWitchInstallScriptRegisterInstall({
+      appOrigin: "https://www.agentwitch.com",
+    });
+
+    expect(script).toContain("REGISTER_HTTP_CODE=");
+    expect(script).toContain('"%{http_code}"');
+    expect(script).toContain('"${REGISTER_HTTP_CODE}" == "404"');
+    expect(script).toContain('"${REGISTER_HTTP_CODE}" == "409"');
+    expect(script).toContain("exit 1");
+    expect(script).not.toContain(">/dev/null 2>&1 || true");
+    expect(script).toContain(
+      "This install token is invalid or revoked. Open Home → Connect this computer for a fresh command.",
+    );
+  });
 });

@@ -38,6 +38,7 @@ describe("createAgentWitchInstallTokenForUser (HOME-059)", () => {
     });
     expect(revokePendingInstallDevicesForUser).toHaveBeenCalledWith({
       userId: "user-1",
+      protectTokenHash: result.tokenHash,
     });
     expect(claimAgentWitchDevice.mock.invocationCallOrder[0]).toBeLessThan(
       revokePendingInstallDevicesForUser.mock.invocationCallOrder[0] ?? 0,

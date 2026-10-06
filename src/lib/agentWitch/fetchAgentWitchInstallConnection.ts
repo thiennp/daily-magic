@@ -50,27 +50,33 @@ const parseInstallConnectionResponse = (
   };
 };
 
-export const fetchAgentWitchInstallConnection =
-  async (): Promise<AgentWitchInstallConnectionResponse> => {
-    const response = await fetch("/api/agent-witch/install-connection");
-    const payload: unknown = await response.json().catch(() => null);
-    const tooOldRefusal = parseAgentWitchLocalTooOldRefusal(payload);
-    if (tooOldRefusal !== null) {
-      return {
-        ok: false,
-        error: "AgentWitch Local is too old to connect. Download the update.",
-        tooOldRefusal,
-      };
-    }
+export const fetchAgentWitchInstallConnection = async (input?: {
+  readonly tokenHash?: string | null;
+}): Promise<AgentWitchInstallConnectionResponse> => {
+  const tokenHash = input?.tokenHash?.trim() ?? "";
+  const url =
+    tokenHash.length > 0
+      ? `/api/agent-witch/install-connection?tokenHash=${encodeURIComponent(tokenHash)}`
+      : "/api/agent-witch/install-connection";
+  const response = await fetch(url);
+  const payload: unknown = await response.json().catch(() => null);
+  const tooOldRefusal = parseAgentWitchLocalTooOldRefusal(payload);
+  if (tooOldRefusal !== null) {
+    return {
+      ok: false,
+      error: "AgentWitch Local is too old to connect. Download the update.",
+      tooOldRefusal,
+    };
+  }
 
-    const parsed = parseInstallConnectionResponse(payload);
+  const parsed = parseInstallConnectionResponse(payload);
 
-    if (parsed === null) {
-      return {
-        ok: false,
-        error: "Could not verify Mac connection.",
-      };
-    }
+  if (parsed === null) {
+    return {
+      ok: false,
+      error: "Could not verify Mac connection.",
+    };
+  }
 
-    return parsed;
-  };
+  return parsed;
+};

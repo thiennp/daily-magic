@@ -303,7 +303,10 @@ const buildStatusBody = (input: {
 }): string => {
   const connectedBadge = input.status.wsConnected
     ? `<span class="badge badge-online">Connected</span>`
-    : `<span class="badge badge-offline">Disconnected</span>`;
+    : `<span class="badge badge-offline">Not linked</span>`;
+  const notLinkedHint = input.status.wsConnected
+    ? ""
+    : `<p class="status-hint">This computer is not linked to AgentWitch cloud (token missing or revoked). Open Home → Connect this computer for a fresh install command — do not reuse an old one.</p>`;
   const healthBadge = buildLocalAppHealthFileBadgeHtml(input.healthBadge);
   const wakeError = input.status.wakeError
     ? `<div class="alert-error">${escapeHtml(input.status.wakeError)}</div>`
@@ -327,7 +330,7 @@ const buildStatusBody = (input: {
       <p class="lede">Connection and pairing details for AgentWitch on this computer.</p>
       ${revivedNotice}
       <div class="meta-grid">
-        <div class="meta-item"><span class="meta-label">WebSocket</span><span class="meta-value">${connectedBadge}</span></div>
+        <div class="meta-item"><span class="meta-label">WebSocket</span><span class="meta-value">${connectedBadge}</span></div>${notLinkedHint}
         <div class="meta-item"><span class="meta-label">Last heartbeat</span><span class="meta-value">${buildAgentWitchLocalHeartbeatElapsedMarkup(input.status.lastHeartbeatAt)}</span></div>
         <div class="meta-item"><span class="meta-label">Health file</span><span class="meta-value">${healthBadge}</span></div>
         <div class="meta-item"><span class="meta-label">Link code</span><span class="meta-value"><code>${escapeHtml(input.linkCode)}</code></span></div>

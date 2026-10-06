@@ -87,3 +87,51 @@ describe("handleAgentWitchInstallConnectionGet", () => {
     });
   });
 });
+
+  it("HOME-065 Soft HOLD: finished is false when only another account Mac is live", async () => {
+    vi.mocked(listAgentWitchDevicesForUser).mockResolvedValue([
+      {
+        id: "other",
+        userId: "user-1",
+        tokenHash: "hash-other",
+        deviceLabel: "Other#user",
+        displayName: "Other Mac",
+        dispatchPolicy: null,
+        claimedAt: "2026-01-01T00:00:00.000Z",
+        lastSeenAt: "2026-01-01T00:00:00.000Z",
+        revokedAt: null,
+        lastWakeError: null,
+        installBundleVersion: "267",
+      },
+      {
+        id: "minted",
+        userId: "user-1",
+        tokenHash: "hash-minted",
+        deviceLabel: null,
+        displayName: null,
+        dispatchPolicy: null,
+        claimedAt: "2026-01-02T00:00:00.000Z",
+        lastSeenAt: null,
+        revokedAt: null,
+        lastWakeError: null,
+        installBundleVersion: null,
+      },
+    ]);
+    vi.mocked(collectLiveAgentWitchDeviceIdsForUser).mockResolvedValue(
+      new Set(["other"]),
+    );
+
+    const response = await handleAgentWitchInstallConnectionGet(
+      { id: "user-1" },
+      { expectedTokenHash: "hash-minted" },
+    );
+    const payload: unknown = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload).toEqual({
+      ok: true,
+      finished: false,
+      connectedDeviceCount: 1,
+      claimedDeviceCount: 2,
+    });
+  });

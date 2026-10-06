@@ -6,9 +6,14 @@ import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { listAgentWitchDevicesForUser } from "@/lib/agentWitch/listAgentWitchDevicesForUser";
 import { resolveAgentWitchInstallConnectionStatus } from "@/lib/agentWitch/resolveAgentWitchInstallConnectionStatus";
 
-export const handleAgentWitchInstallConnectionGet = async (actor: {
-  readonly id: string;
-}): Promise<Response> => {
+export const handleAgentWitchInstallConnectionGet = async (
+  actor: {
+    readonly id: string;
+  },
+  options: {
+    readonly expectedTokenHash?: string | null;
+  } = {},
+): Promise<Response> => {
   try {
     await ensureAgentWitchDeviceSchema();
     const devices = await listAgentWitchDevicesForUser(actor.id);
@@ -33,6 +38,7 @@ export const handleAgentWitchInstallConnectionGet = async (actor: {
     const status = resolveAgentWitchInstallConnectionStatus({
       devices,
       liveDeviceIds,
+      expectedTokenHash: options.expectedTokenHash,
     });
 
     return Response.json({

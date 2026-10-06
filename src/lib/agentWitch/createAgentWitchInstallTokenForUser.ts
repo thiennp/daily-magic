@@ -25,6 +25,7 @@ export const createAgentWitchInstallTokenForUser = async (input: {
   });
   await revokePendingInstallDevicesForUser({
     userId: input.userId,
+    protectTokenHash: tokenHash,
   });
 
   return {

@@ -10,6 +10,8 @@ export interface AgentWitchInstallConnectionStatus {
 export const resolveAgentWitchInstallConnectionStatus = (input: {
   readonly devices: readonly AgentWitchDeviceRecord[];
   readonly liveDeviceIds: ReadonlySet<string>;
+  /** HOME-065 Soft HOLD: finished only when THIS minted token is live. */
+  readonly expectedTokenHash?: string | null;
 }): AgentWitchInstallConnectionStatus => {
   const devicesWithStatus = buildAgentWitchDevicesWithOnlineStatus(
     input.devices,
@@ -19,8 +21,18 @@ export const resolveAgentWitchInstallConnectionStatus = (input: {
     (device) => device.isConnected,
   ).length;
 
+  const expectedTokenHash = input.expectedTokenHash?.trim().toLowerCase() ?? "";
+  let finished = connectedDeviceCount > 0;
+  if (expectedTokenHash.length > 0) {
+    finished = devicesWithStatus.some(
+      (device) =>
+        device.isConnected &&
+        (device.tokenHash?.trim().toLowerCase() ?? "") === expectedTokenHash,
+    );
+  }
+
   return {
-    finished: connectedDeviceCount > 0,
+    finished,
     connectedDeviceCount,
     claimedDeviceCount: devicesWithStatus.length,
   };

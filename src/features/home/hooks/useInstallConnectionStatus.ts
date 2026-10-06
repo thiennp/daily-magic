@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { fetchAgentWitchInstallConnection } from "@/lib/agentWitch/fetchAgentWitchInstallConnection";
 import { CONNECT_INSTALL_PASTE_MODAL_WAKE_POLL_MS } from "@/features/home/constants/connectInstallPasteModal.constant";
+import { getLocalMacTokenHashSnapshot } from "@/features/home/utils/localMacTokenHashStore";
 
 const useInstallConnectionStatus = (input: {
   readonly enabled: boolean;
@@ -26,7 +27,9 @@ const useInstallConnectionStatus = (input: {
         return;
       }
 
-      const status = await fetchAgentWitchInstallConnection().catch(() => ({
+      const status = await fetchAgentWitchInstallConnection({
+        tokenHash: getLocalMacTokenHashSnapshot(),
+      }).catch(() => ({
         ok: false as const,
         error: "Could not verify Mac connection.",
       }));

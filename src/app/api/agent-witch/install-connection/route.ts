@@ -3,12 +3,21 @@ import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(): Promise<Response> {
+export async function GET(request: Request): Promise<Response> {
   const { actor, error } = await requireAuth();
 
   if (error || !actor) {
     return error;
   }
 
-  return handleAgentWitchInstallConnectionGet(actor);
+  const expectedTokenHash = new URL(request.url).searchParams
+    .get("tokenHash")
+    ?.trim();
+
+  return handleAgentWitchInstallConnectionGet(actor, {
+    expectedTokenHash:
+      expectedTokenHash !== undefined && expectedTokenHash.length > 0
+        ? expectedTokenHash
+        : null,
+  });
 }

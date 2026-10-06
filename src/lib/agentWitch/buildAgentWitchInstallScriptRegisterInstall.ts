@@ -46,7 +46,24 @@ if (wakePortRaw.length > 0) {
 }
 process.stdout.write(JSON.stringify(payload));
 " "\${DEVICE_LABEL}" "\${PAIRING_TOKEN}" "\${INSTALL_BUNDLE_VERSION}" "\${AGENT_WITCH_WAKE_PORT}" "\${REGISTER_PLATFORM}" )"
-"\${CURL_BIN}" -fsS -X POST "${input.appOrigin}/api/agent-witch/register-install" \\
-  -H "Content-Type: application/json" \\
-  -d "\${REGISTER_PAYLOAD}" >/dev/null 2>&1 || true
+REGISTER_BODY_FILE="\$(mktemp "\${TMPDIR:-/tmp}/agent-witch-register.XXXXXX")"
+REGISTER_HTTP_CODE="\$(
+  "\${CURL_BIN}" -sS -o "\${REGISTER_BODY_FILE}" -w "%{http_code}" -X POST "${input.appOrigin}/api/agent-witch/register-install" \\
+    -H "Content-Type: application/json" \\
+    -d "\${REGISTER_PAYLOAD}"
+)"
+# HOME-065 Soft HOLD: never mask cloud 404/409 (revoked/invalid install token).
+if [[ "\${REGISTER_HTTP_CODE}" == "404" || "\${REGISTER_HTTP_CODE}" == "409" ]]; then
+  echo "Connect failed: register-install returned HTTP \${REGISTER_HTTP_CODE}." >&2
+  echo "This install token is invalid or revoked. Open Home → Connect this computer for a fresh command." >&2
+  rm -f "\${REGISTER_BODY_FILE}"
+  exit 1
+fi
+if [[ "\${REGISTER_HTTP_CODE}" != "200" && "\${REGISTER_HTTP_CODE}" != "201" ]]; then
+  echo "Connect failed: register-install returned HTTP \${REGISTER_HTTP_CODE:-000}." >&2
+  echo "Open Home → Connect this computer and run the command again." >&2
+  rm -f "\${REGISTER_BODY_FILE}"
+  exit 1
+fi
+rm -f "\${REGISTER_BODY_FILE}"
 `;

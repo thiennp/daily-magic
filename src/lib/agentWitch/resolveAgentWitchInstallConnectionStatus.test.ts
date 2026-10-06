@@ -59,4 +59,36 @@ describe("resolveAgentWitchInstallConnectionStatus", () => {
       claimedDeviceCount: 0,
     });
   });
+
+  it("HOME-065 Soft HOLD: finished requires the minted tokenHash to be live, not any account Mac", () => {
+    expect(
+      resolveAgentWitchInstallConnectionStatus({
+        devices: [
+          device({ id: "other-live", tokenHash: "hash-other" }),
+          device({ id: "minted", tokenHash: "hash-minted", installBundleVersion: null }),
+        ],
+        liveDeviceIds: new Set(["other-live"]),
+        expectedTokenHash: "hash-minted",
+      }),
+    ).toEqual({
+      finished: false,
+      connectedDeviceCount: 1,
+      claimedDeviceCount: 2,
+    });
+
+    expect(
+      resolveAgentWitchInstallConnectionStatus({
+        devices: [
+          device({ id: "other-live", tokenHash: "hash-other" }),
+          device({ id: "minted", tokenHash: "HASH-MINTED" }),
+        ],
+        liveDeviceIds: new Set(["other-live", "minted"]),
+        expectedTokenHash: "hash-minted",
+      }),
+    ).toEqual({
+      finished: true,
+      connectedDeviceCount: 2,
+      claimedDeviceCount: 2,
+    });
+  });
 });

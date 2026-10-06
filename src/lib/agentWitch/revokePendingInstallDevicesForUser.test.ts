@@ -13,21 +13,23 @@ const sqlTextOf = (call: readonly unknown[]): string => {
   return Array.isArray(strings) ? strings.join(" ") : String(strings);
 };
 
-describe("revokePendingInstallDevicesForUser (HOME-059)", () => {
+describe("revokePendingInstallDevicesForUser (HOME-059 / HOME-065 Soft HOLD)", () => {
   beforeEach(() => {
     sqlMock.mockClear();
   });
 
-  it("HOME-065: revokes all placeholders when the account already has a live Mac", async () => {
+  it("HOME-065 Soft HOLD: keeps newest placeholder even when the account already has a live Mac", async () => {
     await revokePendingInstallDevicesForUser({
       userId: "user-1",
       hasLiveMac: true,
     });
 
-    expect(sqlMock).toHaveBeenCalledTimes(1);
+    expect(sqlMock).toHaveBeenCalledTimes(2);
     const revokeSql = sqlTextOf(sqlMock.mock.calls[0] ?? []);
     expect(revokeSql).toContain("SET revoked_at = NOW()");
-    expect(revokeSql).not.toContain("ORDER BY newest.claimed_at DESC");
+    expect(revokeSql).toContain("ORDER BY newest.claimed_at DESC");
+    expect(revokeSql).toContain("INTERVAL '30 minutes'");
+    expect(sqlMock.mock.calls[0]?.[1]).toBe("user-1");
   });
 
   it("revokes extra unlabeled install placeholders and keeps the newest", async () => {
@@ -56,13 +58,22 @@ describe("revokePendingInstallDevicesForUser (HOME-059)", () => {
     });
 
     const revokeSql = sqlTextOf(sqlMock.mock.calls[0] ?? []);
-    // A re-pair clears public_key but keeps label/handshake/bundle/display_name.
-    // Placeholder revoke must still require those to be empty, or a live Mac
-    // would be revoked after re-pair.
     expect(revokeSql).toContain("public_key IS NULL");
     expect(revokeSql).toContain("last_handshake_at IS NULL");
     expect(revokeSql).toContain("install_bundle_version IS NULL");
     expect(revokeSql).toContain("btrim(device.device_label)");
     expect(revokeSql).toContain("btrim(device.display_name)");
+  });
+
+  it("HOME-065 Soft HOLD: protectTokenHash is never revoked while cleaning extras", async () => {
+    await revokePendingInstallDevicesForUser({
+      userId: "user-1",
+      hasLiveMac: true,
+      protectTokenHash: "ABC123",
+    });
+
+    const revokeSql = sqlTextOf(sqlMock.mock.calls[0] ?? []);
+    expect(revokeSql).toContain("lower(coalesce(device.token_hash, ''))");
+    expect(sqlMock.mock.calls[0]?.[2]).toBe("abc123");
   });
 });
