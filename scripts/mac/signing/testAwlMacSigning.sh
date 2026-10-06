@@ -68,8 +68,12 @@ check "unquoted identity value preserved" "$(has "${out}" "ID=Developer ID Appli
 
 out="$(run_case "AWL_SIGN_DRY_RUN=1; DEVELOPER_ID_P12_PATH=/x/cert.p12; DEVELOPER_ID_P12_PASSWORD=p12-pass-xyz; resolve_awl_mac_signing_mode auto; awl_keychain_setup; awl_keychain_cleanup; echo ID=\${AWL_SIGN_IDENTITY}" "${EMPTY_HOME}")"
 check "dry-run prints p12 import" "$(has "${out}" "would run: security import /x/cert.p12")"
-check "dry-run prints G2 intermediate import" "$(has "${out}" "DeveloperIDG2CA.cer")"
-check "dry-run prints search-list prepend" "$(has "${out}" "list-keychains -d user -s")"
+check "dry-run prints Apple Root CA import" "$(has "${out}" "AppleIncRootCertificate.cer")"
+check "dry-run prints Apple Root CA G2 import" "$(has "${out}" "AppleRootCA-G2.cer")"
+check "dry-run prints Developer ID G1 CA import" "$(has "${out}" "DeveloperIDCA.cer")"
+check "dry-run prints Developer ID G2 CA import" "$(has "${out}" "DeveloperIDG2CA.cer")"
+check "dry-run prints search-list with System.keychain" "$(has "${out}" "/Library/Keychains/System.keychain")"
+check "dry-run prints search-list -s" "$(has "${out}" "list-keychains -d user -s")"
 check "p12 password masked" "$(lacks "${out}" "p12-pass-xyz")"
 check "temp keychain password masked" "$(has "${out}" "create-keychain -p *** ")"
 
@@ -89,6 +93,63 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
   check "ad-hoc uses --timestamp=none" "$(has "${lib_line}" "--options runtime --timestamp=none")"
   app_line="$(run_case "rec() { echo \"\$*\"; }; awl_codesign_app '${APP}' - /e.plist rec" | grep "T.app$")"
   check "app signed with entitlements" "$(has "${app_line}" "--entitlements /e.plist")"
+fi
+
+# Search-list composition + restore (Darwin only; mutates then restores the
+# real user search list — use the real HOME so list-keychains is non-empty).
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  out="$(
+    env -i PATH="${PATH}" HOME="${HOME}" TMPDIR="${WORK}" bash -c '
+      set -euo pipefail
+      source "'"${DIR}"'/awlMacSigningLog.sh"
+      source "'"${DIR}"'/awlMacTempKeychain.sh"
+      AWL_SIGN_DRY_RUN=0
+      AWL_SIGN_IDENTITY="Developer ID Application: T (ABCDE12345)"
+      AWL_TEMP_KEYCHAIN_DIR="$(mktemp -d "${TMPDIR%/}/awl-sign.XXXXXX")"
+      AWL_TEMP_KEYCHAIN="${AWL_TEMP_KEYCHAIN_DIR}/awl-signing.keychain-db"
+      AWL_TEMP_KEYCHAIN_PASSWORD="test-temp-kc-pass"
+      trap awl_keychain_cleanup EXIT
+      BEFORE="$(security list-keychains -d user | tr "\n" "|")"
+      echo "LIST_BEFORE=${BEFORE}"
+      security create-keychain -p "${AWL_TEMP_KEYCHAIN_PASSWORD}" "${AWL_TEMP_KEYCHAIN}" >/dev/null
+      security set-keychain-settings -lut 3600 "${AWL_TEMP_KEYCHAIN}" >/dev/null
+      security unlock-keychain -p "${AWL_TEMP_KEYCHAIN_PASSWORD}" "${AWL_TEMP_KEYCHAIN}" >/dev/null
+      awl_keychain_import_apple_cas
+      awl_keychain_add_to_search_list
+      AFTER="$(security list-keychains -d user | tr "\n" "|")"
+      echo "LIST_AFTER=${AFTER}"
+      # awl_fail uses exit (not return); run preflight in a subshell.
+      set +e
+      ( awl_keychain_preflight_identity ) >"${TMPDIR}/preflight.out" 2>"${TMPDIR}/preflight.err"
+      pf_rc=$?
+      set -e
+      if [[ "${pf_rc}" -eq 0 ]]; then
+        echo "PREFLIGHT=ok-unexpected"
+      else
+        echo "PREFLIGHT=fail"
+        if grep -q "0 valid codesigning identities" "${TMPDIR}/preflight.err" "${TMPDIR}/preflight.out"; then
+          echo "PREFLIGHT_MSG=ok"
+        else
+          echo "PREFLIGHT_MSG=bad"
+          cat "${TMPDIR}/preflight.err" "${TMPDIR}/preflight.out" >&2 || true
+        fi
+      fi
+      awl_keychain_cleanup
+      trap - EXIT
+      RESTORED="$(security list-keychains -d user | tr "\n" "|")"
+      echo "LIST_RESTORED=${RESTORED}"
+      if [[ -f "${AWL_TEMP_KEYCHAIN:-/nonexistent}" ]]; then echo "KC_GONE=no"; else echo "KC_GONE=yes"; fi
+      if [[ "${RESTORED}" == "${BEFORE}" ]]; then echo "RESTORE_MATCH=yes"; else echo "RESTORE_MATCH=no"; fi
+    ' 2>&1
+  )" || out="${out:-}"$'\n'"INNER_FAILED=1"
+  check "search list includes System.keychain after compose" "$(has "${out}" "/Library/Keychains/System.keychain")"
+  check "search list includes temp keychain after compose" "$(has "${out}" "awl-signing.keychain")"
+  check "preflight fails with 0 valid identities (no p12)" "$(has "${out}" "PREFLIGHT=fail")"
+  check "preflight message mentions 0 valid identities" "$(has "${out}" "PREFLIGHT_MSG=ok")"
+  check "temp keychain deleted on cleanup" "$(has "${out}" "KC_GONE=yes")"
+  check "search list restored exactly" "$(has "${out}" "RESTORE_MATCH=yes")"
+  restored_line="$(printf "%s\n" "${out}" | grep "^LIST_RESTORED=" || true)"
+  check "restored list has no awl-signing keychain" "$(lacks "${restored_line}" "awl-signing")"
 fi
 
 if [[ "${FAILS}" -gt 0 ]]; then

@@ -20,7 +20,7 @@ swift test --package-path apps/mac
 bash scripts/mac/build-awl-mac-dmg.sh
 ```
 
-Produces `dist/mac/AgentWitchLocal.dmg` + `.sha256` (macOS only). The DMG build registers `CFBundleURLTypes` for `agentwitch-local`.
+Produces `dist/mac/AgentWitchLocal.dmg` + `.sha256` (macOS only). Developer ID builds also write `AgentWitchLocal.zip` + `.sha256` (see signing docs). The DMG build registers `CFBundleURLTypes` for `agentwitch-local`.
 
 Signing: default auto-loads `~/.agentwitch-signing/signing.env` when present. With Developer ID + `.p12` + notary credentials the build is Developer ID signed (hardened runtime, temp keychain + G2 intermediate, `AgentWitchLocal.entitlements`), notarized and stapled (DMG + `AgentWitchLocal.zip`); without creds it falls back to ad-hoc and logs it; incomplete `signing.env` or `AWL_MAC_SIGNING=developer-id` without creds fails loudly. `--adhoc` forces local-dev ad-hoc. `--dry-run` runs the real ad-hoc build + local verify and prints the Developer ID / notary commands with secrets masked. First real signed run: VM or new macOS user. See [docs/agent-witch/awl-mac-signing-notarization.md](../../docs/agent-witch/awl-mac-signing-notarization.md) and [KNOWN_ISSUES.md](KNOWN_ISSUES.md).
 

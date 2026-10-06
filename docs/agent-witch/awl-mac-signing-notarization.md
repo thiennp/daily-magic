@@ -14,12 +14,12 @@ no live `notarytool` / `stapler` there). See [First signed run](#first-signed-ru
 
 ## Modes
 
-| Command                                                                   | What happens                                                                                                                                                                                                                                                                                                       |
-| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Command                                                                   | What happens                                                                                                                                                                                                                                                                                                                          |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `bash scripts/mac/build-awl-mac-dmg.sh` (`AWL_MAC_SIGNING=auto`, default) | Loads `~/.agentwitch-signing/signing.env` when present (values never logged). If `DEVELOPER_ID_APPLICATION` + notary + `.p12` creds are set: Developer ID. If `signing.env` was loaded but incomplete: **fail**. Otherwise: ad-hoc fallback, logged as `[awl-sign] Developer ID credentials absent … falling back to ad-hoc signing`. |
-| `--adhoc` or `AWL_MAC_SIGNING=adhoc`                                      | Forces the legacy ad-hoc path (`codesign --force --deep --sign -`) for local dev only.                                                                                                                                                                                                                              |
-| `AWL_MAC_SIGNING=developer-id`                                            | Exits early with an error unless all credentials are present. Use this for releases.                                                                                                                                                                                                                               |
-| `--dry-run`                                                               | Does a real build and an ad-hoc **hardened-runtime** sign (same inside-out order and entitlements as Developer ID), then runs the local verify steps. It only **prints** the keychain, Developer ID codesign, `notarytool` and `stapler` commands, with secrets masked. Dry-run artifacts must never be published. |
+| `--adhoc` or `AWL_MAC_SIGNING=adhoc`                                      | Forces the legacy ad-hoc path (`codesign --force --deep --sign -`) for local dev only.                                                                                                                                                                                                                                                |
+| `AWL_MAC_SIGNING=developer-id`                                            | Exits early with an error unless all credentials are present. Use this for releases.                                                                                                                                                                                                                                                  |
+| `--dry-run`                                                               | Does a real build and an ad-hoc **hardened-runtime** sign (same inside-out order and entitlements as Developer ID), then runs the local verify steps. It only **prints** the keychain, Developer ID codesign, `notarytool` and `stapler` commands, with secrets masked. Dry-run artifacts must never be published.                    |
 
 If `DEVELOPER_ID_APPLICATION` is set but no notary credentials are, the script exits instead of
 shipping a build that is signed but not notarized.
@@ -29,12 +29,15 @@ shipping a build that is signed but not notarized.
 1. Load credentials from the environment, or from `~/.agentwitch-signing/signing.env` when the
    identity is not already set (`AWL_SIGNING_ENV_FILE` overrides the path).
 2. Create a **temporary keychain** under `$TMPDIR/awl-sign.*`, unlock it, import Apple's
-   **Developer ID Certification Authority G2** intermediate (from
-   `~/.agentwitch-signing/DeveloperIDG2CA.cer` if cached, else
-   `https://www.apple.com/certificateauthority/DeveloperIDG2CA.cer`), import the `.p12`, set the
-   key partition list, and **prepend the temp keychain to the user search list**. The login
-   keychain is never imported into and never used for the identity. An EXIT trap restores the
-   search list and deletes the temp keychain.
+   public roots and Developer ID intermediates from `scripts/mac/signing/certs/` (Apple Root CA,
+   Apple Root CA - G2, Developer ID Certification Authority G1 + G2; each pinned by SHA-256) into
+   the **temp keychain only**, import the `.p12`, set the key partition list
+   (`apple-tool:,apple:,codesign:`), and set the user search list to **temp + existing user
+   keychains + `/Library/Keychains/System.keychain`** (existing entries are never dropped). The
+   login keychain is never imported into and never used for the identity. No trust settings are
+   written to the login/system/admin domains. An EXIT trap restores the original search list and
+   deletes the temp keychain. A preflight `security find-identity -v -p codesigning <tempkc>`
+   fails loudly if 0 valid identities match before codesign/notarytool.
 3. Inside-out `codesign --force --options runtime --timestamp --sign "$DEVELOPER_ID_APPLICATION"`
    with `--keychain` pointing at the temp keychain:
    - nested dylibs, frameworks and bundles first (no entitlements)
@@ -58,15 +61,15 @@ Preferred local layout (dir `700`, files `600`):
 - `~/.agentwitch-signing/signing.env` — exports the env vars below (never committed).
 - `~/.agentwitch-signing/devid.p12` (+ password) and `AuthKey_<KEYID>.p8`.
 
-| Env var                                                          | What                                                                                                                              | Where to get it                                                                                                                                     |
-| ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `DEVELOPER_ID_APPLICATION`                                       | Codesign identity name, e.g. `Developer ID Application: Thien Nguyen (8RA9UZU3Y3)`                                                | Name of the Developer ID Application certificate (Apple Developer, Certificates; created by the Account Holder)                                     |
-| `APPLE_TEAM_ID`                                                  | 10-character Team ID                                                                                                              | developer.apple.com, Membership details. Only required for the Apple ID notary path.                                                                |
-| `DEVELOPER_ID_P12_PATH`                                          | Path to the exported Developer ID Application cert **with private key** (.p12). **Required** for Developer ID mode.             | Keychain Access, then Export, on the Mac that created the CSR.                                                                                      |
-| `DEVELOPER_ID_P12_PASSWORD`                                      | Export password of the .p12                                                                                                       | Set when exporting                                                                                                                                  |
-| `NOTARYTOOL_KEYCHAIN_PROFILE` (+ optional `NOTARYTOOL_KEYCHAIN`) | Name of a profile created once with `xcrun notarytool store-credentials`                                                          | Created on the build host from the ASC key or Apple ID below                                                                                        |
-| `APPLE_ASC_KEY_ID`, `APPLE_ASC_ISSUER_ID`, `APPLE_ASC_KEY_PATH`  | **Preferred for notary.** App Store Connect API key: Key ID, Issuer ID (UUID), path to `AuthKey_<KEYID>.p8`                       | App Store Connect, Users and Access, Integrations, App Store Connect API (Team key, Developer role or higher). The .p8 can be downloaded only once. |
-| `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD` (+ `APPLE_TEAM_ID`)    | Fallback: Apple ID email and an app-specific password                                                                             | appleid.apple.com, Sign-In and Security, App-Specific Passwords                                                                                     |
+| Env var                                                          | What                                                                                                                | Where to get it                                                                                                                                     |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DEVELOPER_ID_APPLICATION`                                       | Codesign identity name, e.g. `Developer ID Application: Thien Nguyen (8RA9UZU3Y3)`                                  | Name of the Developer ID Application certificate (Apple Developer, Certificates; created by the Account Holder)                                     |
+| `APPLE_TEAM_ID`                                                  | 10-character Team ID                                                                                                | developer.apple.com, Membership details. Only required for the Apple ID notary path.                                                                |
+| `DEVELOPER_ID_P12_PATH`                                          | Path to the exported Developer ID Application cert **with private key** (.p12). **Required** for Developer ID mode. | Keychain Access, then Export, on the Mac that created the CSR.                                                                                      |
+| `DEVELOPER_ID_P12_PASSWORD`                                      | Export password of the .p12                                                                                         | Set when exporting                                                                                                                                  |
+| `NOTARYTOOL_KEYCHAIN_PROFILE` (+ optional `NOTARYTOOL_KEYCHAIN`) | Name of a profile created once with `xcrun notarytool store-credentials`                                            | Created on the build host from the ASC key or Apple ID below                                                                                        |
+| `APPLE_ASC_KEY_ID`, `APPLE_ASC_ISSUER_ID`, `APPLE_ASC_KEY_PATH`  | **Preferred for notary.** App Store Connect API key: Key ID, Issuer ID (UUID), path to `AuthKey_<KEYID>.p8`         | App Store Connect, Users and Access, Integrations, App Store Connect API (Team key, Developer role or higher). The .p8 can be downloaded only once. |
+| `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD` (+ `APPLE_TEAM_ID`)    | Fallback: Apple ID email and an app-specific password                                                               | appleid.apple.com, Sign-In and Security, App-Specific Passwords                                                                                     |
 
 Notary auth is chosen in this order: keychain profile, then ASC API key, then Apple ID.
 Optional settings:
@@ -133,3 +136,35 @@ or signing user. Still never import the `.p12` into the primary account's login 
 - To ship a signed build that existing users get offered: cut a new `awl-mac-v*` tag with a
   higher version than the installed `CFBundleShortVersionString`, and bump
   `AGENT_WITCH_LOCAL_MAC_APP_RELEASE_TAG` (plus its tests) so the site links to it.
+
+## Troubleshooting
+
+### `unable to build chain to self-signed root` / `errSecInternalComponent`
+
+codesign found the Developer ID identity but could not build a trust chain to an Apple root.
+Typical when the user keychain search list is only the temp keychain (System roots / System.keychain
+not visible) or the Apple Root / Developer ID intermediate is missing from the temp keychain.
+
+What the pipeline does now:
+
+1. Imports Apple Root CA, Apple Root CA - G2, and Developer ID CA (G1 + G2) from
+   `scripts/mac/signing/certs/` into the **temp** keychain (SHA-256 pinned; no sudo, no
+   login/system trust settings).
+2. Sets the user search list to temp + your existing user keychains +
+   `/Library/Keychains/System.keychain`, then restores the original list on EXIT.
+3. Passes `--keychain <tempkc>` to codesign and preflights with
+   `security find-identity -v -p codesigning <tempkc>` (fails if 0 valid identities).
+
+Read-only checks (safe on the primary account; do not import the `.p12`):
+
+```bash
+security dump-trust-settings          # user overrides
+security dump-trust-settings -d       # admin overrides
+# If you have a PUBLIC leaf .cer (not the .p12):
+security verify-cert -c ~/.agentwitch-signing/devid.cer -p codeSign \
+  -k /Library/Keychains/System.keychain
+```
+
+If admin/user trust settings show an Apple Root or Developer ID cert with a deny / unspecified
+override, that can break the chain independently of this script — remove that override in Keychain
+Access (or ask IT) rather than adding new trust settings from the build.

@@ -105,7 +105,7 @@ primary account login keychain). Details:
      `APPLE_ASC_KEY_ID` / `APPLE_ASC_ISSUER_ID` / `APPLE_ASC_KEY_PATH`, or `APPLE_ID` /
      `APPLE_APP_SPECIFIC_PASSWORD` / `APPLE_TEAM_ID`) are set. Verifies with
      `codesign --verify --deep --strict`, `spctl -a -vv -t exec`, and `stapler validate`.
-3. Version: `CFBundleShortVersionString` = root `package.json` `version` (now `0.1.0`). The tag
+3. Version: `CFBundleShortVersionString` = root `package.json` `version` (now `0.2.0`). The tag
    must be higher than what users run, or the update notice will not offer it.
 4. Publish: `gh release create awl-mac-vX.Y.Z dist/mac/AgentWitchLocal.dmg dist/mac/AgentWitchLocal.dmg.sha256`
    (and the zip pair for Developer ID builds).
