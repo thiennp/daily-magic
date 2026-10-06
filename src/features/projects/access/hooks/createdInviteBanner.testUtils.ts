@@ -33,6 +33,7 @@ export const panelHtml = (banner: CreatedInviteBannerState): string =>
       createdInviteUrl: banner.createdInviteUrl,
       createdInviteToken: banner.createdInviteToken,
       createdInvitePlatform: banner.createdInvitePlatform,
+      createdInviteJoinTypeId: banner.createdInviteJoinTypeId,
       projectId: "p1",
       onCreate: () => undefined,
       onRevoke: () => undefined,

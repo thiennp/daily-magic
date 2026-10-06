@@ -5,20 +5,17 @@ import { useState } from "react";
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
 import AwcBotToBotSupportList from "@/features/projects/access/invites/AwcBotToBotSupportList";
 import { AWC_PROJECT_INVITE_AUTO_APPROVE_COPY } from "@/features/projects/access/invites/awcProjectInviteAutoApproveCopy.constant";
-import {
-  AWC_PROJECT_INVITE_PLATFORM_COPY,
-  AWC_PROJECT_INVITE_PLATFORMS,
-} from "@/features/projects/access/invites/awcProjectInvitePlatformCopy.constant";
-import type { ProjectInvitePlatform } from "@/features/projects/access/invites/projectInvitePlatform.type";
+import AwcProjectInviteAddAssistantControl from "@/features/projects/access/invites/AwcProjectInviteAddAssistantControl";
+import type { AwcProjectInviteAddSelection } from "@/features/projects/access/invites/awcProjectInviteAddAssistantTypes";
 
 interface AwcProjectInviteCreateControlsProps {
   readonly onCreate: (
-    platform: ProjectInvitePlatform,
+    selection: AwcProjectInviteAddSelection,
     autoApprove: boolean,
   ) => void;
 }
 
-/** Create invite: platform buttons + optional auto-approve (owner-only, default off). */
+/** Create invite: shared "Add assistant" + optional type + auto-approve (owner-only, default off). */
 export default function AwcProjectInviteCreateControls({
   onCreate,
 }: AwcProjectInviteCreateControlsProps) {
@@ -42,19 +39,10 @@ export default function AwcProjectInviteCreateControls({
           </span>
         </span>
       </label>
-      <div className="flex flex-wrap gap-2">
-        {AWC_PROJECT_INVITE_PLATFORMS.map((platform) => (
-          <button
-            key={platform}
-            type="button"
-            data-invite-platform={platform}
-            className={AWC_PROJECT_ACCESS_CTA.primary}
-            onClick={() => onCreate(platform, autoApprove)}
-          >
-            {AWC_PROJECT_INVITE_PLATFORM_COPY[platform].create}
-          </button>
-        ))}
-      </div>
+      <AwcProjectInviteAddAssistantControl
+        buttonClassName={AWC_PROJECT_ACCESS_CTA.primary}
+        onCreate={(selection) => onCreate(selection, autoApprove)}
+      />
       <AwcBotToBotSupportList />
     </div>
   );

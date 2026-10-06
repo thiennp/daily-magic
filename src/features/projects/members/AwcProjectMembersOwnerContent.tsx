@@ -68,8 +68,13 @@ export default function AwcProjectMembersOwnerContent({
             createdInviteUrl={access.createdInviteUrl}
             createdInviteToken={access.createdInviteToken}
             createdInvitePlatform={access.createdInvitePlatform}
-            onCreate={(platform) => {
-              void access.createInvite(platform);
+            createdInviteJoinTypeId={access.createdInviteJoinTypeId}
+            onCreate={(selection) => {
+              void access.createInvite(
+                selection.platform,
+                false,
+                selection.joinTypeId,
+              );
             }}
             onRevoke={(id) => {
               void access.revokeInvite(id);

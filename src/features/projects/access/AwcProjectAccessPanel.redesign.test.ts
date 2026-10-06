@@ -15,7 +15,16 @@ describe("AwcProjectAccessPanel redesign", () => {
       "utf8",
     );
     expect(body).toContain("peopleHeading");
-    expect(body).toContain("invitesHeading");
+    expect(body).toContain("AwcProjectAccessInvitesSection");
+    expect(
+      readFileSync(
+        join(
+          process.cwd(),
+          "src/features/projects/access/AwcProjectAccessInvitesSection.tsx",
+        ),
+        "utf8",
+      ),
+    ).toContain("invitesHeading");
     expect(body).toContain("AwcProjectInboxSection");
     expect(body).toContain("AwcProjectAccessFoldersSection");
     expect(AWC_PROJECT_ACCESS_COPY.peopleHeading).toBe("People");
@@ -24,7 +33,10 @@ describe("AwcProjectAccessPanel redesign", () => {
 
   it("does not mount Access Activity feed", () => {
     const panel = readFileSync(
-      join(process.cwd(), "src/features/projects/access/AwcProjectAccessPanel.tsx"),
+      join(
+        process.cwd(),
+        "src/features/projects/access/AwcProjectAccessPanel.tsx",
+      ),
       "utf8",
     );
     const body = readFileSync(

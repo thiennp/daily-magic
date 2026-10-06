@@ -23,31 +23,32 @@ const panelHtml = () =>
     }),
   );
 
-describe("Create invite: Grok choice", () => {
-  it("panel shows the Grok create button and the support list", () => {
+describe("Create invite: shared Add assistant", () => {
+  it("panel shows one Add assistant button, the type picker and the support list", () => {
     const html = panelHtml();
-    expect(html).toContain("Invite a Grok Bot");
+    expect(html).toContain(">Add assistant<");
+    expect(html).toContain("Assistant type (optional)");
     expect(html).toContain("Auto-approve assistants that use this invite");
-    expect(html).not.toContain("Invite a Muse bot");
+    expect(html).not.toContain("Invite a Grok Bot");
+    expect(html).not.toMatch(/Muse bot/i);
     expect(html).not.toContain(">Create invite<");
     expect(html).toContain(AWC_BOT_TO_BOT_SUPPORT_HEADING);
   });
 
-  it("the Grok button creates a grok invite", () => {
+  it("auto-approve stays off by default next to Add assistant", () => {
     const onCreate = vi.fn();
     const html = renderToStaticMarkup(
       createElement(AwcProjectInviteCreateControls, { onCreate }),
     );
-    expect(html).toContain("Invite a Grok Bot");
-    expect(html).toContain("data-invite-platform=\"grok\"");
-    expect(html).toContain("data-invite-auto-approve=\"\"");
-    // Default: auto-approve checkbox off (no checked attr).
+    expect(html).toContain('data-invite-create=""');
+    expect(html).toContain('data-invite-auto-approve=""');
     expect(html).not.toMatch(/data-invite-auto-approve=""[^>]*checked/);
+    expect(html).not.toMatch(/data-invite-create=""[^>]*\sdisabled=""/);
     expect(onCreate).not.toHaveBeenCalled();
   });
 
-  it("banner names the chosen platform for its Copy prompt", () => {
-    const render = (platform?: "grok" | "muse") =>
+  it("banner names the chosen type for its Copy prompt", () => {
+    const render = (platform?: "grok" | "muse", joinTypeId?: string | null) =>
       renderToStaticMarkup(
         createElement(AwcProjectInviteCreatedBanner, {
           createdInviteUrl: "https://example.com/invite/p/tok",
@@ -55,11 +56,21 @@ describe("Create invite: Grok choice", () => {
           projectId: "p1",
           projectName: null,
           platform,
+          joinTypeId,
           onClearCreatedUrl: () => undefined,
         }),
       );
-    expect(render("muse")).toContain("this Copy prompt is for a Muse bot");
+    expect(render("muse")).toContain("this Copy prompt is for Muse.");
     expect(render("grok")).toContain("this Copy prompt is for a Grok Bot");
+    expect(render("grok", "grok-bot")).toContain(
+      "this Copy prompt is for a Grok Bot",
+    );
+    expect(render("grok", null)).toContain(
+      "Assistant invite — this Copy prompt works for any assistant.",
+    );
+    expect(render("grok", "claude")).toContain(
+      "Claude invite — this Copy prompt is for Claude.",
+    );
     expect(render()).toContain('data-invite-platform="grok"');
     expect(render("muse")).toContain("Copy prompt");
   });

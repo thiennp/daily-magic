@@ -29,12 +29,8 @@ describe("project layout v2 L5 Settings + Members", () => {
     );
     expect(copy).toContain('dangerHeading: "Danger zone"');
     expect(copy).toContain('deleteConfirmGo: "Delete permanently"');
-    expect(copy).toContain(
-      "Toggle this in AgentWitch Local on this computer.",
-    );
-    expect(copy).toContain(
-      "members, invites, wake links, keys, and messages",
-    );
+    expect(copy).toContain("Toggle this in AgentWitch Local on this computer.");
+    expect(copy).toContain("members, invites, wake links, keys, and messages");
     expect(copy).toContain("aren't touched.");
     expect(history).toContain('role="switch"');
     expect(history).toContain("C.historyToast");
@@ -46,11 +42,13 @@ describe("project layout v2 L5 Settings + Members", () => {
     expect(danger).toContain("useDeleteProject");
     expect(danger).toContain("AwcProjectDeleteConfirmForm");
     for (const file of [panel, history, name, danger]) {
-      expect(file).not.toMatch(/blue-|indigo-|#0a6cf5|#4a97ff|#e5effe|#0d2749/i);
+      expect(file).not.toMatch(
+        /blue-|indigo-|#0a6cf5|#4a97ff|#e5effe|#0d2749/i,
+      );
     }
   });
 
-  it("Members column: flat people + helpers + invite Grok/Muse (no AccessPanel cards)", () => {
+  it("Members column: flat people + helpers + shared Add assistant invite (no AccessPanel cards)", () => {
     const column = read(`${P}/AwcProjectMembersColumn.tsx`);
     const owner = read(`${P}/members/AwcProjectMembersOwnerContent.tsx`);
     const helpers = read(`${P}/members/AwcProjectMembersHelpersSection.tsx`);
@@ -73,12 +71,12 @@ describe("project layout v2 L5 Settings + Members", () => {
     expect(row).toContain("C.menuWebhook");
     expect(row).toContain("C.menuRemove");
     expect(row).toContain("AwcProjectAccessMemberGrokWebhookForm");
-    expect(invite).toContain('onCreate("grok")');
-    expect(invite).toContain('onCreate("muse")');
+    expect(invite).toContain("AwcProjectInviteAddAssistantControl");
+    expect(invite).not.toContain('onCreate("grok")');
     expect(invite).toContain("AwcProjectInviteCreatedBanner");
     expect(copy).toContain('columnLabel: "Members"');
-    expect(copy).toContain('inviteGrok: "Invite Grok assistant"');
-    expect(copy).toContain('inviteMuse: "Invite Muse assistant"');
+    expect(copy).not.toContain("inviteGrok");
+    expect(copy).not.toContain("inviteMuse");
     expect(copy).toContain('peopleInvite: "Invite people"');
     expect(copy).toContain('menuWebhook: "Grok wake link"');
     expect(copy).toContain(
@@ -93,7 +91,9 @@ describe("project layout v2 L5 Settings + Members", () => {
     expect(layoutCopy).toContain('membersColumnLabel: "Members"');
     expect(panel).toContain("onMessageHelper={onGotoActivity}");
     for (const file of [column, owner, helpers, row, invite]) {
-      expect(file).not.toMatch(/blue-|indigo-|#0a6cf5|#4a97ff|#e5effe|#0d2749/i);
+      expect(file).not.toMatch(
+        /blue-|indigo-|#0a6cf5|#4a97ff|#e5effe|#0d2749/i,
+      );
     }
   });
 

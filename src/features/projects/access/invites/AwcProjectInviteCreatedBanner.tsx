@@ -4,10 +4,10 @@ import { useState } from "react";
 
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
-import { AWC_PROJECT_INVITE_PLATFORM_COPY } from "@/features/projects/access/invites/awcProjectInvitePlatformCopy.constant";
 import { AWC_PROJECT_INVITE_SHORT_PROMPT_COPY } from "@/features/projects/access/invites/awcProjectInviteShortPromptCopy.constant";
 import { buildProjectInviteAgentPrompt } from "@/features/projects/access/invites/buildProjectInviteAgentPrompt";
 import { buildProjectInviteShortPrompt } from "@/features/projects/access/invites/buildProjectInviteShortPrompt";
+import { resolveProjectInviteCreatedForLine } from "@/features/projects/access/invites/resolveProjectInviteCreatedForLine";
 import { resolveProjectInviteJoinToken } from "@/features/projects/access/invites/resolveProjectInviteJoinToken";
 import type { ProjectInvitePlatform } from "@/features/projects/access/invites/projectInvitePlatform.type";
 
@@ -18,6 +18,8 @@ interface AwcProjectInviteCreatedBannerProps {
   readonly projectName: string | null;
   /** Which Copy prompt to build (step 7 differs). */
   readonly platform?: ProjectInvitePlatform;
+  /** Picked types[] id; null = any assistant; undefined = platform line. */
+  readonly joinTypeId?: string | null;
   readonly onClearCreatedUrl: () => void;
 }
 
@@ -27,6 +29,7 @@ export default function AwcProjectInviteCreatedBanner({
   projectId,
   projectName,
   platform = "grok",
+  joinTypeId,
   onClearCreatedUrl,
 }: AwcProjectInviteCreatedBannerProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
@@ -55,7 +58,7 @@ export default function AwcProjectInviteCreatedBanner({
         className="mt-1 text-amber-900 dark:text-amber-200"
         data-invite-platform={platform}
       >
-        {AWC_PROJECT_INVITE_PLATFORM_COPY[platform].createdFor}
+        {resolveProjectInviteCreatedForLine({ platform, joinTypeId })}
       </p>
       <div className="mt-2 flex flex-wrap gap-2">
         <button

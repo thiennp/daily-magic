@@ -39,6 +39,7 @@ describe("created invite banner: platform is set with createdInviteId", () => {
     expect(runner.slots).toContainEqual({
       inviteId: "inv-grok",
       platform: "grok",
+      joinTypeId: "grok-bot",
     });
     expect(panelHtml(afterGrok)).toContain(
       "this Copy prompt is for a Grok Bot",
@@ -57,7 +58,7 @@ describe("created invite banner: platform is set with createdInviteId", () => {
     );
     const html = panelHtml(afterMuseFail);
     expect(html).toContain("this Copy prompt is for a Grok Bot");
-    expect(html).not.toContain("this Copy prompt is for a Muse bot");
+    expect(html).not.toContain("this Copy prompt is for Muse");
   });
 
   it("a failed Grok create does not relabel an open Muse banner", async () => {
@@ -74,7 +75,7 @@ describe("created invite banner: platform is set with createdInviteId", () => {
     const state = renderBanner();
     expect(state.createdInviteId).toBe("inv-muse");
     expect(state.createdInvitePlatform).toBe("muse");
-    expect(panelHtml(state)).toContain("this Copy prompt is for a Muse bot");
+    expect(panelHtml(state)).toContain("this Copy prompt is for Muse");
   });
 
   it("dismiss clears inviteId and resets the platform together", async () => {

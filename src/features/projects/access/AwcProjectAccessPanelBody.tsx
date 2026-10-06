@@ -9,7 +9,7 @@ import AwcProjectAccessMembersList from "@/features/projects/access/AwcProjectAc
 import AwcProjectAccessPendingList from "@/features/projects/access/AwcProjectAccessPendingList";
 import AwcProjectAccessSection from "@/features/projects/access/AwcProjectAccessSection";
 import AwcProjectAccessWakeLinkAwaitingBanner from "@/features/projects/access/AwcProjectAccessWakeLinkAwaitingBanner";
-import AwcProjectInvitesPanel from "@/features/projects/access/invites/AwcProjectInvitesPanel";
+import AwcProjectAccessInvitesSection from "@/features/projects/access/AwcProjectAccessInvitesSection";
 import AwcProjectInboxSection from "@/features/projects/access/inbox/AwcProjectInboxSection";
 import AwcHumanPeopleSection from "@/features/projects/access/humanInvites/AwcHumanPeopleSection";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
@@ -92,26 +92,7 @@ export default function AwcProjectAccessPanelBody({
         viewerUserId={viewerUserId}
       />
 
-      <AwcProjectAccessSection
-        id="project-access-invites"
-        title={copy.invitesHeading}
-        hint={copy.invitesIntro}
-        count={access.invites.length}
-      >
-        <AwcProjectInvitesPanel
-          invites={access.invites}
-          createdInviteUrl={access.createdInviteUrl}
-          createdInviteToken={access.createdInviteToken}
-          createdInvitePlatform={access.createdInvitePlatform}
-          projectId={projectId}
-          projectName={access.projectName}
-          hideChrome
-          onCreate={(platform, autoApprove) => void access.createInvite(platform, autoApprove)}
-          onRevoke={(id) => void access.revokeInvite(id)}
-          onTurnOffAutoApprove={(id) => void access.turnOffAutoApprove(id)}
-          onClearCreatedUrl={access.clearCreatedInviteBanner}
-        />
-      </AwcProjectAccessSection>
+      <AwcProjectAccessInvitesSection projectId={projectId} access={access} />
 
       <AwcProjectInboxSection projectId={projectId} enabled canCompose />
 

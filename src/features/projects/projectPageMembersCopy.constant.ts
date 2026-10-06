@@ -23,10 +23,10 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   revokeConfirm: (name: string) => `Remove ${name}`,
   revokeCancel: "Cancel",
   inviteBotHeading: "Invite a new assistant",
-  inviteGrok: "Invite Grok assistant",
-  inviteMuse: "Invite Muse assistant",
-  invitePrompt: (kind: string) =>
-    `Prompt for the ${kind} assistant. Paste it into your assistant. The prompt shows once, so copy it now.`,
+  invitePrompt: (kind: string | null) =>
+    kind === null
+      ? "Prompt for your assistant. Paste it into your assistant. The prompt shows once, so copy it now."
+      : `Prompt for the ${kind} assistant. Paste it into your assistant. The prompt shows once, so copy it now.`,
   invitePendingSubOff:
     "Waiting to join · you approve each assistant before it gets access",
   invitePendingSubOn: "Waiting to join · auto-approve is on",

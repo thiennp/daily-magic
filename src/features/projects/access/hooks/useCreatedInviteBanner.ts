@@ -2,17 +2,21 @@
 
 import { useCallback, useRef, useState } from "react";
 
+import { joinTypeIdForInvitePlatform } from "@/features/projects/access/invites/awcProjectInviteAddAssistantTypes";
 import type { ProjectInvitePlatform } from "@/features/projects/access/invites/projectInvitePlatform.type";
 import { shouldKeepCreatedInviteBanner } from "@/features/projects/access/invites/shouldKeepCreatedInviteBanner";
 
 type CreatedInviteSelection = {
   readonly inviteId: string | null;
   readonly platform: ProjectInvitePlatform;
+  /** Picked types[] id; null = any assistant. */
+  readonly joinTypeId: string | null;
 };
 
 const NO_CREATED_INVITE: CreatedInviteSelection = {
   inviteId: null,
   platform: "grok",
+  joinTypeId: null,
 };
 
 /** Local Copy-prompt banner: set on create, cleared on dismiss or when the invite leaves the usable list. */
@@ -34,9 +38,13 @@ export const useCreatedInviteBanner = () => {
   }, []);
 
   const setCreatedInviteIdTracked = useCallback(
-    (inviteId: string | null, platform: ProjectInvitePlatform = "grok") => {
+    (
+      inviteId: string | null,
+      platform: ProjectInvitePlatform = "grok",
+      joinTypeId: string | null = joinTypeIdForInvitePlatform(platform),
+    ) => {
       createdInviteIdRef.current = inviteId;
-      setCreatedInvite({ inviteId, platform });
+      setCreatedInvite({ inviteId, platform, joinTypeId });
     },
     [],
   );
@@ -61,6 +69,7 @@ export const useCreatedInviteBanner = () => {
     createdInviteToken,
     createdInviteId: createdInvite.inviteId,
     createdInvitePlatform: createdInvite.platform,
+    createdInviteJoinTypeId: createdInvite.joinTypeId,
     setCreatedInviteUrl,
     setCreatedInviteToken,
     setCreatedInviteId: setCreatedInviteIdTracked,

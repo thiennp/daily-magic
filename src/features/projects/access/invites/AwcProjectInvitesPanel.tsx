@@ -4,6 +4,7 @@ import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAc
 import AwcProjectInviteCreateControls from "@/features/projects/access/invites/AwcProjectInviteCreateControls";
 import AwcProjectInviteCreatedBanner from "@/features/projects/access/invites/AwcProjectInviteCreatedBanner";
 import AwcProjectInviteListSections from "@/features/projects/access/invites/AwcProjectInviteListSections";
+import type { AwcProjectInviteAddSelection } from "@/features/projects/access/invites/awcProjectInviteAddAssistantTypes";
 import type { ProjectInvitePlatform } from "@/features/projects/access/invites/projectInvitePlatform.type";
 import type { AwcProjectAccessInvite } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 
@@ -13,10 +14,12 @@ interface AwcProjectInvitesPanelProps {
   readonly createdInviteToken?: string | null;
   /** Set with createdInviteId on create success; labels the banner Copy prompt. */
   readonly createdInvitePlatform?: ProjectInvitePlatform;
+  /** Picked types[] id for the banner line; null = any assistant. */
+  readonly createdInviteJoinTypeId?: string | null;
   readonly projectId: string;
   readonly projectName?: string | null;
   readonly onCreate: (
-    platform: ProjectInvitePlatform,
+    selection: AwcProjectInviteAddSelection,
     autoApprove: boolean,
   ) => void;
   readonly onRevoke: (inviteId: string) => void;
@@ -32,6 +35,7 @@ export default function AwcProjectInvitesPanel({
   createdInviteUrl,
   createdInviteToken = null,
   createdInvitePlatform = "grok",
+  createdInviteJoinTypeId,
   projectId,
   projectName = null,
   onCreate,
@@ -64,6 +68,7 @@ export default function AwcProjectInvitesPanel({
           projectId={projectId}
           projectName={projectName}
           platform={createdInvitePlatform}
+          joinTypeId={createdInviteJoinTypeId}
           onClearCreatedUrl={onClearCreatedUrl}
         />
       ) : null}

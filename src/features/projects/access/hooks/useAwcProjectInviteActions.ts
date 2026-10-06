@@ -7,6 +7,7 @@ import {
   updateProjectInviteAutoApproveApi,
 } from "@/features/projects/access/utils/projectAccessApi";
 import { AWC_PROJECT_INVITE_AUTO_APPROVE_COPY } from "@/features/projects/access/invites/awcProjectInviteAutoApproveCopy.constant";
+import { joinTypeIdForInvitePlatform } from "@/features/projects/access/invites/awcProjectInviteAddAssistantTypes";
 import type { ProjectInvitePlatform } from "@/features/projects/access/invites/projectInvitePlatform.type";
 import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
 
@@ -20,15 +21,18 @@ export const useAwcProjectInviteActions = (input: {
   readonly setCreatedInviteId: (
     inviteId: string | null,
     platform: ProjectInvitePlatform,
+    joinTypeId?: string | null,
   ) => void;
 }) => {
+  /** platform null = any assistant: the invite stores no platform; the assistant names its type at join. */
   const createInvite = async (
-    platform: ProjectInvitePlatform = "grok",
+    platform: ProjectInvitePlatform | null = "grok",
     autoApprove = false,
+    joinTypeId: string | null = joinTypeIdForInvitePlatform(platform),
   ) => {
     const result = await createProjectInviteApi(input.projectId, {
       autoApprove: autoApprove === true,
-      platform,
+      ...(platform === null ? {} : { platform }),
     });
     if (result.url) {
       input.setCreatedInviteUrl(result.url);
@@ -41,7 +45,8 @@ export const useAwcProjectInviteActions = (input: {
         typeof result.inviteId === "string" && result.inviteId.length > 0
           ? result.inviteId
           : null,
-        platform,
+        platform ?? "grok",
+        joinTypeId,
       );
       input.setMessage("Invite created — copy the link or prompt now.");
     } else {
