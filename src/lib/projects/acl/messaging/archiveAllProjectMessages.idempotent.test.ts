@@ -75,7 +75,7 @@ const run = () =>
     confirm: true,
   });
 
-describe("archiveAllProjectMessages (Clear all → archive)", () => {
+describe("archiveAllProjectMessages activity + idempotent", () => {
   beforeEach(() => {
     sqlMock.mockReset();
     sqlMock.mockImplementation(fakeSql);
@@ -89,29 +89,27 @@ describe("archiveAllProjectMessages (Clear all → archive)", () => {
     seed();
   });
 
-  it("archives every not-yet-archived row; row count unchanged; no DELETE", async () => {
-    const before = store.rows.length;
-    const result = await run();
-    expect(result).toEqual({
-      ok: true,
-      archivedMessages: 2,
-      archiveBatch: BATCH,
-    });
-    expect(store.rows.length).toBe(before);
-    expect(store.rows.find((r) => r.id === "m1")).toMatchObject({
-      archived_at: BATCH,
-      archived_by: "owner-1",
-    });
-    expect(store.rows.find((r) => r.id === "m0")?.archived_at).toBe(
-      "2026-10-01 08:00:00+00",
+  it("writes one Access log row per Clear all (count only)", async () => {
+    await run();
+    expect(writeProjectActivityEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        projectId: "proj-1",
+        type: "messages.archived",
+        actor: { kind: "owner", userId: "owner-1" },
+        detail: { count: 2 },
+      }),
     );
-    expect(store.rows.find((r) => r.id === "x1")?.archived_at).toBeNull();
-    const writes = store.queries.filter((q) => !q.includes("make_interval"));
-    expect(writes.some((q) => /DELETE FROM project_messages\b/.test(q))).toBe(false);
-    expect(
-      writes.some((q) => q.includes("DELETE FROM project_message_deliveries")),
-    ).toBe(false);
-    const dml = writes.filter((q) => !/^\s*(CREATE|ALTER)\b/.test(q));
-    expect(dml.some((q) => q.includes("CASCADE"))).toBe(false);
+  });
+
+  it("is idempotent: second Clear all archives 0, rows still all there", async () => {
+    await run();
+    const second = await run();
+    expect(second).toEqual({
+      ok: true,
+      archivedMessages: 0,
+      archiveBatch: null,
+    });
+    expect(store.rows.length).toBe(4);
+    expect(writeProjectActivityEvent).toHaveBeenCalledTimes(2);
   });
 });
