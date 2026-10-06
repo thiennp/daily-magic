@@ -44,6 +44,8 @@ export const PROJECT_ACCESS_ERROR_MESSAGES: Readonly<Record<string, string>> = {
   invalid_delivery_mode: "Choose how this assistant gets messages.",
   folder_ref_device_not_member:
     "Pick a computer that is an active member of this project.",
+  invalid_transition: "That approval was already decided or timed out.",
+  invalid_arguments: "Check the request and try again.",
 };
 
 /** Stable public codes Product can switch on (HTTP status still authoritative). */
