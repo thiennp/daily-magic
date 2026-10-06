@@ -8,6 +8,10 @@ import {
   buildAgentWitchHealthPayload,
   buildAgentWitchHealthPayloadSync,
 } from "./src/lib/release/buildAgentWitchHealthPayload";
+import {
+  AGENT_WITCH_HEALTH_ALLOWED_METHODS,
+  isAgentWitchHealthRequestMethodAllowed,
+} from "./src/lib/release/isAgentWitchHealthRequestMethodAllowed";
 import { getAgentWitchHub } from "./src/lib/agentWitch/getAgentWitchHub";
 import {
   isAllowedAgentWitchOrigin,
@@ -37,6 +41,15 @@ const server = createServer((request, response) => {
   const parsedUrl = parse(request.url ?? "", true);
 
   if (parsedUrl.pathname === healthPath) {
+    if (!isAgentWitchHealthRequestMethodAllowed(request.method)) {
+      response.writeHead(405, {
+        Allow: AGENT_WITCH_HEALTH_ALLOWED_METHODS.join(", "),
+        "Content-Type": "application/json",
+      });
+      response.end(JSON.stringify({ ok: false, error: "Method not allowed" }));
+      return;
+    }
+
     const sendHealthJson = (payload: unknown): void => {
       if (response.writableEnded) {
         return;
