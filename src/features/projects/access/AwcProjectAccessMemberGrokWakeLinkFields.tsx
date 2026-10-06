@@ -79,10 +79,12 @@ export default function AwcProjectAccessMemberGrokWakeLinkFields({
           role="status"
           className="text-xs text-emerald-800 dark:text-emerald-200"
         >
-          {formatAwcGrokWakeCopy(wake.toastSaved, memberName)}
-          {form.status?.deliveryModeFlipped === true
-            ? AWC_DELIVERY_MODE_COPY.toastSavedAutoFlipSuffix
-            : null}
+          {formatAwcGrokWakeCopy(
+            form.status?.deliveryModeFlipped === true
+              ? AWC_DELIVERY_MODE_COPY.toastSavedAutoFlip
+              : wake.toastSaved,
+            memberName,
+          )}
         </p>
       ) : null}
       {form.error ? <p className="text-xs text-red-600">{form.error}</p> : null}

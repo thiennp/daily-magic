@@ -34,7 +34,12 @@ export const useMemberDeliveryMode = (input: {
     void saveMemberDeliveryMode(input.projectId, input.membershipId, next)
       .then((result) => {
         if (result.ok !== true) {
-          setError(result.errorMessage ?? copy.error);
+          setError(
+            formatAwcGrokWakeCopy(
+              result.errorMessage ?? copy.error,
+              input.memberName,
+            ),
+          );
           return;
         }
         setMode(next);
@@ -45,7 +50,9 @@ export const useMemberDeliveryMode = (input: {
           ),
         );
       })
-      .catch(() => setError(copy.error))
+      .catch(() =>
+        setError(formatAwcGrokWakeCopy(copy.error, input.memberName)),
+      )
       .finally(() => setSaving(false));
   };
   return { mode, saving, toast, error, choose };

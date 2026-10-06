@@ -3,7 +3,11 @@
 import AwcProjectAccessMemberDeliveryModeControl from "@/features/projects/access/AwcProjectAccessMemberDeliveryModeControl";
 import AwcProjectAccessMemberGrokWebhookForm from "@/features/projects/access/AwcProjectAccessMemberGrokWebhookForm";
 import type { AwcMemberWakeLinksListProps } from "@/features/projects/access/hooks/useAwcProjectAccessWakeLinks";
-import { resolveMemberWakeLinkState } from "@/features/projects/access/utils/resolveMemberWakeLinkState";
+import {
+  hasMemberWakeLink,
+  resolveMemberDeliveryModeDisplay,
+  resolveMemberWakeLinkState,
+} from "@/features/projects/access/utils/resolveMemberWakeLinkState";
 
 interface AwcProjectAccessMemberWakeLinkSlotProps {
   readonly projectId?: string;
@@ -27,8 +31,9 @@ export default function AwcProjectAccessMemberWakeLinkSlot({
     return null;
   }
   const request = wakeLinks?.request ?? null;
-  const state = resolveMemberWakeLinkState(member, wakeLinks?.savedIds);
-  const savedNow = wakeLinks?.savedIds.has(member.id) === true;
+  const savedIds = wakeLinks?.savedIds;
+  const state = resolveMemberWakeLinkState(member, savedIds);
+  const linkSet = hasMemberWakeLink(member, savedIds);
   return (
     <>
       {state === null ? null : (
@@ -36,17 +41,15 @@ export default function AwcProjectAccessMemberWakeLinkSlot({
           projectId={projectId}
           membershipId={member.id}
           memberName={member.projectDisplayName}
-          deliveryMode={
-            !savedNow && member.deliveryMode === "poll" ? "poll" : "webhook"
-          }
-          wakeLinkSet={state === "set"}
+          deliveryMode={resolveMemberDeliveryModeDisplay(member, savedIds)}
+          wakeLinkSet={linkSet}
         />
       )}
       <AwcProjectAccessMemberGrokWebhookForm
         projectId={projectId}
         membershipId={member.id}
         memberName={member.projectDisplayName}
-        wakeLinkSet={state === "set"}
+        wakeLinkSet={linkSet}
         openRequest={request?.membershipId === member.id ? request.nonce : 0}
         onSaved={wakeLinks?.onSaved}
       />

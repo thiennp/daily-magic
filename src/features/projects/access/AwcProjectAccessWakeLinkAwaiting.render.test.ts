@@ -39,9 +39,10 @@ describe("owner awaiting-wake-link UI", () => {
     expect(html).toContain(">Grok wake link<");
     expect(html).toContain('id="wake-link-mem-1"');
     expect(html).not.toContain("Wake link set");
+    expect(html).not.toContain(">Wakes up on its own</span>");
   });
 
-  it("member row: 'Wake link set' + 'Change wake link' once set (or saved this session)", () => {
+  it("member row: 'Wakes up on its own' pill + 'Change wake link' once set (or saved this session)", () => {
     const fromSnapshot = renderList([
       { ...base, id: "mem-1", projectDisplayName: "Coder", wakeLinkSet: true },
     ]);
@@ -57,7 +58,8 @@ describe("owner awaiting-wake-link UI", () => {
       new Set(["mem-1"]),
     );
     for (const html of [fromSnapshot, fromSession]) {
-      expect(html).toContain("Wake link set");
+      expect(html).toContain(">Wakes up on its own</span>");
+      expect(html).not.toContain("Wake link set");
       expect(html).toContain(">Change wake link<");
       expect(html).not.toContain("Waiting for wake link");
       expect(html).not.toContain("joined. Add its Grok wake link");
@@ -69,7 +71,7 @@ describe("owner awaiting-wake-link UI", () => {
       { ...base, id: "mem-1", projectDisplayName: "Coder" },
     ]);
     expect(html).not.toContain("Waiting for wake link");
-    expect(html).not.toContain("Wake link set");
+    expect(html).not.toContain(">Wakes up on its own</span>");
     expect(html).toContain(">Grok wake link<");
   });
 

@@ -5,7 +5,7 @@ import { signInTestAccount } from "./helpers/signInTestAccount";
 /**
  * Invite → wake owner UI: a redeemed bot is waiting for its wake link; the
  * owner follows the deep link, the Grok wake-link form expands, they paste,
- * and the row flips to "Wake link set".
+ * and the row pill flips to "Wakes up on its own".
  *
  * Needs a running app (playwright.config webServer) + a project owned by the
  * test account. Access + wake-link APIs are stubbed per test so no real bot
@@ -128,7 +128,10 @@ test.describe("Invite → wake link owner path", () => {
         "Wake link saved. Coder will now wake up when the project needs it.",
       ),
     ).toBeVisible();
-    await expect(page.getByText("Wake link set")).toBeVisible();
+    // Row pill (span), not the "How it gets messages" radio label.
+    await expect(
+      page.locator("span", { hasText: /^Wakes up on its own$/ }),
+    ).toBeVisible();
     await expect(page.getByText("Waiting for wake link")).toHaveCount(0);
     await expect(banner).toHaveCount(0);
   });

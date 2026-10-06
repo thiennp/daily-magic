@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 
+import { applyInitialProjectMembershipDeliveryMode } from "@/lib/projects/acl/applyInitialProjectMembershipDeliveryMode";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { notifyProjectPeersOfMembershipJoin } from "@/lib/projects/acl/messaging/notifyProjectPeersOfMembershipJoin";
 import { finalizeApprovedMembership } from "@/lib/projects/acl/finalizeApprovedMembership";
@@ -88,12 +89,23 @@ export const approveProjectAccessRequest = async (input: {
     scopes: effectiveScopes,
   });
   if (!inserted.ok) return { ok: false, code: inserted.code };
+  // Every bot join (redeem, owner approve, auto-approve) lands here.
+  const membership = requesterIsAgent
+    ? {
+        ...inserted.membership,
+        deliveryMode: await applyInitialProjectMembershipDeliveryMode({
+          projectId: input.projectId,
+          membershipId: inserted.membership.id,
+          inviteId: inserted.request.inviteId,
+        }),
+      }
+    : inserted.membership;
 
   const projectApiKey = await finalizeApprovedMembership({
     projectId: input.projectId,
     ownerUserId: input.ownerUserId,
     request: inserted.request,
-    membership: inserted.membership,
+    membership,
     displayName: nameResult.displayName,
     mintKey: requesterIsAgent,
   });
@@ -107,7 +119,7 @@ export const approveProjectAccessRequest = async (input: {
   return {
     ok: true,
     request: inserted.request,
-    membership: inserted.membership,
+    membership,
     projectApiKey,
   };
 };

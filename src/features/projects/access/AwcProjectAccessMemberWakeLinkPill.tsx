@@ -12,7 +12,11 @@ import type { AwcMemberWakeLinkState } from "@/features/projects/access/utils/re
 const DONE_PILL_CLASS =
   "ml-2 rounded-full bg-emerald-100 px-1.5 py-0.5 text-[10px] font-medium text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200";
 
-/** Member row pill: "Waiting for wake link" (amber), "Wake link set", or "Checks on demand". */
+/**
+ * Member row pill, by delivery mode first: "Checks on demand" (poll, even with
+ * a link), "Wakes up on its own" (webhook + link), or "Waiting for wake link"
+ * (webhook, no link; amber).
+ */
 export default function AwcProjectAccessMemberWakeLinkPill({
   state,
 }: {
@@ -26,7 +30,7 @@ export default function AwcProjectAccessMemberWakeLinkPill({
       </span>
     );
   }
-  if (state === "set") {
+  if (state === "wakes") {
     return <span className={DONE_PILL_CLASS}>{copy.donePill}</span>;
   }
   if (state === "on_demand") {

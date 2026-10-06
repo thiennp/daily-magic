@@ -5,7 +5,7 @@ export const PROJECT_DELIVERY_MODE_ACTIVITY_COPY = {
   ownerToPoll: "You switched {name} to checks on demand",
   ownerToWebhook: "You switched {name} to wakes up on its own",
   memberToPoll: "{name} switched to checks on demand",
-  memberToWebhook: "{name} switched to wakes up on its own",
+  memberToWebhook: "{name} now wakes up on its own",
   nameFallback: "this assistant",
 } as const;
 

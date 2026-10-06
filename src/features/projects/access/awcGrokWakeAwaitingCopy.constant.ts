@@ -18,7 +18,8 @@ export const AWC_GROK_WAKE_AWAITING_COPY = {
     "Wake link saved. {name} will now wake up when the project needs it.",
   error:
     "That link didn't work. Copy it again from Grok Bot and paste it here.",
-  donePill: "Wake link set",
+  /** Webhook + link row pill (replaces "Wake link set"; Product EN S5). */
+  donePill: "Wakes up on its own",
   rowAction: "Change wake link",
   /** `{name}` fallback when the bot has no project nickname yet. */
   nameFallback: "this assistant",

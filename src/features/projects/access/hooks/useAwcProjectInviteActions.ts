@@ -28,6 +28,7 @@ export const useAwcProjectInviteActions = (input: {
   ) => {
     const result = await createProjectInviteApi(input.projectId, {
       autoApprove: autoApprove === true,
+      platform,
     });
     if (result.url) {
       input.setCreatedInviteUrl(result.url);

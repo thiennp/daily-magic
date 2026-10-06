@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { buildProjectInviteUrl } from "@/lib/projects/acl/invites/buildProjectInviteUrl";
+import { parseProjectInvitePlatform } from "@/lib/projects/acl/invites/projectInvitePlatform.constant";
 import {
   createProjectInviteToken,
   hashProjectInviteToken,
@@ -36,6 +37,8 @@ export const createProjectInvite = async (input: {
   readonly expiresInDays?: unknown;
   /** Owner opt-in; default false. Only the project owner can set this. */
   readonly autoApprove?: boolean;
+  /** grok | muse; unknown → NULL. Drives the join-time delivery_mode. */
+  readonly platform?: unknown;
 }): Promise<CreateProjectInviteResult> => {
   const project = await getUserProjectById(input.projectId);
   if (project === null) {
@@ -53,6 +56,7 @@ export const createProjectInvite = async (input: {
     typeof input.teamLabel === "string" && input.teamLabel.trim().length > 0
       ? input.teamLabel.trim().slice(0, 64)
       : null;
+  const platform = parseProjectInvitePlatform(input.platform);
 
   const token = createProjectInviteToken();
   const tokenHash = hashProjectInviteToken(token);
@@ -67,7 +71,7 @@ export const createProjectInvite = async (input: {
     await sql`
       INSERT INTO project_invites (
         id, project_id, created_by_user_id, token_hash, team_label, scopes,
-        max_uses, uses_remaining, expires_at, auto_approve
+        max_uses, uses_remaining, expires_at, auto_approve, platform
       )
       VALUES (
         ${inviteId},
@@ -79,7 +83,8 @@ export const createProjectInvite = async (input: {
         ${maxUses},
         ${maxUses},
         ${expiresAt}::timestamptz,
-        ${autoApprove}
+        ${autoApprove},
+        ${platform}
       )
       RETURNING *
     `,
@@ -98,6 +103,7 @@ export const createProjectInvite = async (input: {
       expiresAt: invite.expiresAt,
       teamLabel: invite.teamLabel,
       autoApprove: invite.autoApprove,
+      platform: invite.platform,
     },
   });
   if (autoApprove) {

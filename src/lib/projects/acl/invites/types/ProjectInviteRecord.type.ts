@@ -1,3 +1,4 @@
+import type { ProjectInvitePlatformValue } from "@/lib/projects/acl/invites/projectInvitePlatform.constant";
 import type { ProjectAclScope } from "@/lib/projects/acl/projectAclScopes.constant";
 
 export default interface ProjectInviteRecord {
@@ -13,4 +14,6 @@ export default interface ProjectInviteRecord {
   readonly expiresAt: string;
   readonly revokedAt: string | null;
   readonly createdAt: string;
+  /** grok | muse; null = legacy / unknown (071). Optional on fixtures. */
+  readonly platform?: ProjectInvitePlatformValue | null;
 }

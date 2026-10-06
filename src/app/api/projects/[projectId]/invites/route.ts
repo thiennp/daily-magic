@@ -52,6 +52,7 @@ export async function POST(
     maxUses: payload.maxUses,
     expiresInDays: payload.expiresInDays,
     autoApprove: payload.autoApprove === true,
+    platform: payload.platform,
   });
   if (!result.ok) {
     const status =

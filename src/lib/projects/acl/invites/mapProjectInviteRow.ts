@@ -1,6 +1,7 @@
 import type { ProjectAclScope } from "@/lib/projects/acl/projectAclScopes.constant";
 import { isProjectAclScope } from "@/lib/projects/acl/projectAclScopes.constant";
 import type ProjectInviteRecord from "@/lib/projects/acl/invites/types/ProjectInviteRecord.type";
+import { parseProjectInvitePlatform } from "@/lib/projects/acl/invites/projectInvitePlatform.constant";
 
 const parseScopes = (value: unknown): readonly ProjectAclScope[] => {
   if (!Array.isArray(value)) {
@@ -27,5 +28,6 @@ export default function mapProjectInviteRow(
     expiresAt: String(row.expires_at),
     revokedAt: row.revoked_at ? String(row.revoked_at) : null,
     createdAt: String(row.created_at),
+    platform: parseProjectInvitePlatform(row.platform),
   };
 }

@@ -10,7 +10,12 @@ export const PROJECT_MEMBERSHIP_POLL_INBOX_GUIDANCE =
   "For each delivery you read: project_dispatch task.received, then task.done or task.blocked to that sender, then ack_project_message. " +
   "To switch to wake mode, register a wake link (the mode flips to webhook) or call set_my_project_delivery_mode.";
 
-/** Copilot Studio wake support is unknown → start in poll (Lead S5). */
-export const PROJECT_MEMBERSHIP_POLL_DEFAULT_PLATFORMS: readonly string[] = [
-  "copilot_studio",
+/**
+ * Platforms whose join flow ends with an owner-saved wake link (Grok routine):
+ * a linkless seat stays webhook so the owner sees "Waiting for wake link".
+ * Any other named platform (Muse, Copilot Studio, …) starts in poll until it
+ * stores a wake link (the save flips it to webhook).
+ */
+export const PROJECT_MEMBERSHIP_WAKE_DEFAULT_PLATFORMS: readonly string[] = [
+  "grok",
 ];

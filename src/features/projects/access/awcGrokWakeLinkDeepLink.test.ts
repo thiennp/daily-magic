@@ -73,9 +73,9 @@ describe("resolveMemberWakeLinkState", () => {
   it("awaiting until set; session save wins; absent flag = no pill", () => {
     expect(resolveMemberWakeLinkState(bot)).toBe("awaiting");
     expect(resolveMemberWakeLinkState({ ...bot, wakeLinkSet: true })).toBe(
-      "set",
+      "wakes",
     );
-    expect(resolveMemberWakeLinkState(bot, new Set(["m1"]))).toBe("set");
+    expect(resolveMemberWakeLinkState(bot, new Set(["m1"]))).toBe("wakes");
     expect(resolveMemberWakeLinkState({ id: "m2", isAgent: true })).toBeNull();
     expect(
       resolveMemberWakeLinkState({

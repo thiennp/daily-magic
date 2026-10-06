@@ -13,7 +13,8 @@ export const AWC_DELIVERY_MODE_COPY = {
   toastPoll:
     "{name} now checks on demand. It reads messages when its person asks.",
   toastWebhook: "{name} now wakes up on its own.",
-  /** Appended to the wake-link saved toast when the save flipped poll → webhook. */
-  toastSavedAutoFlipSuffix: " It now wakes up on its own.",
-  error: "Could not switch how it gets messages. Try again.",
+  /** Replaces the whole wake-link saved toast when the save flipped poll → webhook. */
+  toastSavedAutoFlip:
+    "Wake link saved. {name} now wakes up on its own when the project needs it.",
+  error: "Couldn't switch how {name} gets messages. Try again.",
 } as const;

@@ -9,8 +9,9 @@ interface AwcProjectAccessMemberDeliveryModeControlProps {
   readonly projectId: string;
   readonly membershipId: string;
   readonly memberName: string | null;
+  /** Display mode: webhook only with a wake link (never claim wake without one). */
   readonly deliveryMode: "webhook" | "poll";
-  /** False → "Wakes up on its own" is disabled with an "Add wake link" CTA. */
+  /** False → "Wakes up on its own" is disabled; "Add wake link" under the help line. */
   readonly wakeLinkSet: boolean;
 }
 
@@ -54,20 +55,20 @@ export default function AwcProjectAccessMemberDeliveryModeControl({
       </legend>
       <div className="flex flex-wrap items-center gap-3">
         {option("webhook", copy.optionWebhook, !wakeLinkSet)}
-        {wakeLinkSet ? null : (
+        {option("poll", copy.optionPoll, false)}
+      </div>
+      {wakeLinkSet ? null : (
+        <div className="space-y-1">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            {copy.webhookNeedsLink}
+          </p>
           <a
             href={`#${awcGrokWakeLinkHash(membershipId)}`}
             className={AWC_PROJECT_ACCESS_CTA.secondary}
           >
             {copy.addWakeLink}
           </a>
-        )}
-        {option("poll", copy.optionPoll, false)}
-      </div>
-      {wakeLinkSet ? null : (
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          {copy.webhookNeedsLink}
-        </p>
+        </div>
       )}
       {state.toast ? (
         <p

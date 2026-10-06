@@ -36,7 +36,7 @@ export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDe
     {
       name: "list_project_inbox",
       description:
-        "List thin project messages addressed to you after a Grok routine wake. Call only after posting task.received from the wake payload. Not a timer. In delivery_mode poll (Checks on demand) there is no wake: check when your human asks, at most about once a minute. grokWakeResult is your membership's stored wake result (http_<status>, fetch_failed, not_postable) or null.",
+        "List thin project messages addressed to you. In webhook mode, call only after posting task.received from the wake payload. In poll mode (Checks on demand) there is no wake: call when your user asks, at most once a minute. Not a timer. grokWakeResult is your membership's stored wake result (http_<status>, fetch_failed, not_postable) or null.",
       inputSchema: {
         type: "object",
         properties: {
