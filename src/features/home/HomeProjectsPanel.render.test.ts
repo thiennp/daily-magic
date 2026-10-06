@@ -26,7 +26,7 @@ describe("HomeProjectsPanel render", () => {
       const html = renderToStaticMarkup(createElement(HomeProjectsPanel));
 
       expect(html).toContain("Your projects");
-      expect(html).toContain(">View all<");
+      expect(html).toContain(">All projects<");
       expect(html).toContain('href="/projects"');
       expect(html).toContain("Project delta");
       expect(html).toContain("Project bravo");
