@@ -11,6 +11,7 @@ const DIR = join(
 );
 const THIEN_ORDER = [
   "grok-bot",
+  "muse",
   "claude",
   "chatgpt",
   "cursor",
@@ -26,7 +27,7 @@ const THIEN_ORDER = [
 ];
 
 describe("join type registry", () => {
-  it("lists Thien's 13 types in match order with Other last", () => {
+  it("lists Thien's 13 types plus Muse in match order with Other last", () => {
     expect(PROJECT_INVITE_JOIN_TYPES.map((t) => t.id)).toEqual(THIEN_ORDER);
   });
 
@@ -65,7 +66,13 @@ describe("join type registry", () => {
     ]) {
       expect(byId[id]?.connectPath, id).toBe("mcp-bearer");
     }
-    for (const id of ["chatgpt", "n8n-zapier", "messengers", "custom-https"]) {
+    for (const id of [
+      "muse",
+      "chatgpt",
+      "n8n-zapier",
+      "messengers",
+      "custom-https",
+    ]) {
       expect(byId[id]?.connectPath, id).toBe("rest-register");
     }
     expect(byId.other?.connectPath).toBe("poll");

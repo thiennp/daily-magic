@@ -8,6 +8,7 @@ import { joinType as gemini } from "@/features/projects/access/invites/joinTypes
 import { joinType as grokBot } from "@/features/projects/access/invites/joinTypes/grokBot";
 import { joinType as messengers } from "@/features/projects/access/invites/joinTypes/messengers";
 import { joinType as mistral } from "@/features/projects/access/invites/joinTypes/mistral";
+import { joinType as muse } from "@/features/projects/access/invites/joinTypes/muse";
 import { joinType as n8nZapier } from "@/features/projects/access/invites/joinTypes/n8nZapier";
 import { joinType as openclaw } from "@/features/projects/access/invites/joinTypes/openclaw";
 import { joinType as other } from "@/features/projects/access/invites/joinTypes/other";
@@ -19,6 +20,7 @@ import type { ProjectInviteJoinType } from "@/features/projects/access/invites/j
  */
 export const PROJECT_INVITE_JOIN_TYPES: readonly ProjectInviteJoinType[] = [
   grokBot,
+  muse,
   claude,
   chatgpt,
   cursor,

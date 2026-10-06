@@ -80,7 +80,7 @@ describe("GET /join/[token]", () => {
         project: string;
       };
       expect(body.project).toBe("Demo Project");
-      expect(body.types.length).toBe(13);
+      expect(body.types.length).toBe(14);
       expect(JSON.stringify(body)).not.toMatch(SECRET);
     }
     expect(readState).toHaveBeenNthCalledWith(1, TOKEN);

@@ -3,6 +3,7 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { AWC_MUSE_HMAC_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcMuseHmacWebhookRegisterCopy.constant";
 import { AWC_TERMS_VERSION } from "@/lib/agentAccess/awcTermsVersion.constant";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 import { AGENT_ACCESS_TOOLS } from "@/lib/agentAccess/agentAccessTools.constant";
@@ -22,12 +23,14 @@ type FixtureType = {
   readonly steps: readonly string[];
   readonly note?: string;
 };
-/** Verbatim JSON `types[]` from COPY.md §S0c-types (Product EN lock). termsVersion is the `{{AWC_TERMS_VERSION}}` placeholder, filled from the constant. */
+/** Verbatim JSON `types[]` from COPY.md §S0c-types (Product EN lock). termsVersion is the `{{AWC_TERMS_VERSION}}` placeholder, filled from the constant; Muse's HMAC register text is `{{AWC_MUSE_HMAC_WEBHOOK_REGISTER_STEPS}}` (single source). */
 const FIXTURE = JSON.parse(
-  readFileSync(join(DIR, "__fixtures__/copyS0cTypes.json"), "utf8").replaceAll(
-    "{{AWC_TERMS_VERSION}}",
-    AWC_TERMS_VERSION,
-  ),
+  readFileSync(join(DIR, "__fixtures__/copyS0cTypes.json"), "utf8")
+    .replaceAll("{{AWC_TERMS_VERSION}}", AWC_TERMS_VERSION)
+    .replaceAll(
+      "{{AWC_MUSE_HMAC_WEBHOOK_REGISTER_STEPS}}",
+      JSON.stringify(AWC_MUSE_HMAC_WEBHOOK_REGISTER_STEPS).slice(1, -1),
+    ),
 ) as readonly FixtureType[];
 
 describe("join type registry vs Product EN lock", () => {
@@ -75,8 +78,7 @@ describe("join type registry vs Product EN lock", () => {
 
   it("every register body carries acceptTerms + termsVersion (Grok's REST mention too)", () => {
     expect(AWC_TERMS_VERSION).toBe("2026-09-16");
-    const body =
-      `{ "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "${AWC_TERMS_VERSION}" }`;
+    const body = `{ "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "${AWC_TERMS_VERSION}" }`;
     for (const type of PROJECT_INVITE_JOIN_TYPES) {
       const text = type.steps.join(" ");
       if (type.connectPath === "grok-wake") {

@@ -10,6 +10,7 @@ const JOIN_TYPE_TO_PLATFORM: ReadonlyMap<string, string> = new Map(
   Object.entries({
     "grok-bot": "grok",
     grok: "grok",
+    muse: "muse",
     claude: "claude",
     chatgpt: "chatgpt",
     cursor: "cursor",

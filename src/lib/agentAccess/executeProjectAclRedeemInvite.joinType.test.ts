@@ -56,7 +56,7 @@ describe("redeem_project_invite joinType → join platform", () => {
       (schema.properties as Record<string, { description?: string }>).joinType
         ?.description,
     ).toBe(
-      "Optional. Your bot type id from types[] in GET /join/{inviteToken} (for example claude, chatgpt, copilot, other; Copilot Studio agents may pass copilot_studio). Types without a wake link start in poll mode (Checks on demand). grok-bot keeps wake. Unknown values are ignored.",
+      "Optional. Your bot type id from types[] in GET /join/{inviteToken} (for example claude, chatgpt, copilot, muse, other; Copilot Studio agents may pass copilot_studio). Types without a wake link start in poll mode (Checks on demand); muse switches to webhook once register_project_webhook saves its wake link. grok-bot keeps wake. Unknown values are ignored.",
     );
     expect(schema.additionalProperties).toBe(false);
   });
