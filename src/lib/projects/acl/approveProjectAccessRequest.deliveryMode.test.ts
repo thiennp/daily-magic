@@ -23,13 +23,10 @@ vi.mock("@/lib/projects/acl/isAgentUser", () => ({
   isAgentUserId: () => isAgent(),
   loadUserProfilesByIds: vi.fn(async () => new Map()),
 }));
-vi.mock(
-  "@/lib/projects/acl/applyInitialProjectMembershipDeliveryMode",
-  () => ({
-    applyInitialProjectMembershipDeliveryMode: (input: unknown) =>
-      applyMode(input),
-  }),
-);
+vi.mock("@/lib/projects/acl/applyInitialProjectMembershipDeliveryMode", () => ({
+  applyInitialProjectMembershipDeliveryMode: (input: unknown) =>
+    applyMode(input),
+}));
 vi.mock("@/lib/projects/acl/projectApiKeys/mintProjectApiKey", () => ({
   mintProjectApiKey: vi.fn(async () => APPROVE_DELIVERY_MODE_API_KEY),
 }));
@@ -61,8 +58,23 @@ describe("join calls resolveInitialProjectMembershipDeliveryMode", () => {
       projectId: "proj-1",
       membershipId: String(ACL_APPROVE_MEMBER_ROW.id),
       inviteId: "inv-9",
+      joinPlatform: null,
     });
     expect(approved.membership.deliveryMode).toBe("poll");
+  });
+
+  it("passes the redeem joinType (join_platform) to the connect-time mode", async () => {
+    stubApproveDeliveryModeSql(sqlMock, "copilot_studio");
+    const approved = await approveProjectAccessRequest({
+      projectId: "proj-1",
+      requestId: "req-1",
+      ownerUserId: "owner-1",
+      projectDisplayName: "Coder",
+    });
+    expect(approved.ok).toBe(true);
+    expect(applyMode).toHaveBeenCalledWith(
+      expect.objectContaining({ joinPlatform: "copilot_studio" }),
+    );
   });
 
   it("human requester: no delivery_mode write", async () => {

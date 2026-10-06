@@ -48,5 +48,6 @@ export default function mapProjectAccessRequestRow(
     suggestedProjectDisplayName: row.suggested_project_display_name
       ? String(row.suggested_project_display_name)
       : null,
+    joinPlatform: row.join_platform ? String(row.join_platform) : null,
   };
 }

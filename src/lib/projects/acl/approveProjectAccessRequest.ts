@@ -82,6 +82,7 @@ export const approveProjectAccessRequest = async (input: {
           projectId: input.projectId,
           membershipId: inserted.membership.id,
           inviteId: inserted.request.inviteId,
+          joinPlatform: pending.joinPlatform ?? null,
         }),
       }
     : inserted.membership;

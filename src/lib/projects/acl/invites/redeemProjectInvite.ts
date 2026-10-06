@@ -23,6 +23,8 @@ export const redeemProjectInvite = async (input: {
   readonly token: string;
   readonly actorUserId: string;
   readonly suggestedProjectDisplayName?: string | null;
+  /** Parsed joinType platform; feeds the join-time delivery_mode on approve. */
+  readonly joinPlatform?: string | null;
 }): Promise<RedeemProjectInviteResult> => {
   const claimed = await claimProjectInviteToken(input.token);
   if (!claimed.ok) {
@@ -68,6 +70,7 @@ export const redeemProjectInvite = async (input: {
     scopes,
     suggestedName: nameResult.name,
     usesRemaining: invite.usesRemaining,
+    joinPlatform: input.joinPlatform ?? null,
   });
   if (!inserted.ok) {
     await restoreProjectInviteUse(invite.id);

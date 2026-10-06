@@ -23,6 +23,11 @@ export const AGENT_ACCESS_REDEEM_PROJECT_INVITE_TOOL: AgentAccessToolDefinition 
           description:
             "Alias for suggestedProjectDisplayName (prefer suggestedProjectDisplayName).",
         },
+        joinType: {
+          type: "string",
+          description:
+            "Optional: your bot type id from GET /join/{inviteToken} types[] (e.g. claude, chatgpt, copilot, other; Copilot Studio agents may pass copilot_studio). A type without a wake link starts in poll (Checks on demand); grok-bot keeps wake. Unknown values are ignored.",
+        },
       },
       required: ["token"],
       additionalProperties: false,

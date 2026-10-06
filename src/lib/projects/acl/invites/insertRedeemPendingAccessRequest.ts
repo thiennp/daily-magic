@@ -22,6 +22,8 @@ export const insertRedeemPendingAccessRequest = async (input: {
   readonly scopes: readonly ProjectAclScope[];
   readonly suggestedName: string | null;
   readonly usesRemaining: number;
+  /** Parsed redeem joinType (see projectInviteJoinPlatform.constant); null = not given. */
+  readonly joinPlatform?: string | null;
 }): Promise<InsertRedeemPendingResult> => {
   const sql = getSql();
   try {
@@ -30,7 +32,7 @@ export const insertRedeemPendingAccessRequest = async (input: {
         INSERT INTO project_access_requests (
           id, project_id, requester_user_id, invited_by_user_id, reason,
           requested_scopes, status, invite_id, team_label,
-          suggested_project_display_name
+          suggested_project_display_name, join_platform
         )
         VALUES (
           ${randomUUID()},
@@ -42,7 +44,8 @@ export const insertRedeemPendingAccessRequest = async (input: {
           'pending',
           ${input.inviteId},
           ${input.teamLabel},
-          ${input.suggestedName}
+          ${input.suggestedName},
+          ${input.joinPlatform ?? null}
         )
         RETURNING *
       `,
@@ -61,6 +64,7 @@ export const insertRedeemPendingAccessRequest = async (input: {
         requestId: request.id,
         usesRemaining: input.usesRemaining,
         suggestedProjectDisplayName: input.suggestedName,
+        joinPlatform: input.joinPlatform ?? null,
       },
     });
     return { ok: true, request };

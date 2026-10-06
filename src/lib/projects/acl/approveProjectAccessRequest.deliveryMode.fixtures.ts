@@ -30,7 +30,10 @@ type SqlMock = {
 };
 
 /** Pending approve SQL stub that returns an invite_id for join delivery_mode. */
-export const stubApproveDeliveryModeSql = (sqlMock: SqlMock): void => {
+export const stubApproveDeliveryModeSql = (
+  sqlMock: SqlMock,
+  joinPlatform: string | null = null,
+): void => {
   sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
     const q = String(strings);
     if (q.includes("FROM project_access_requests") && q.includes("pending")) {
@@ -39,6 +42,7 @@ export const stubApproveDeliveryModeSql = (sqlMock: SqlMock): void => {
           ...ACL_APPROVE_REQUEST_ROW,
           status: "pending",
           invite_id: "inv-9",
+          join_platform: joinPlatform,
         },
       ];
     }

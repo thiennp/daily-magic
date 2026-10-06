@@ -1,6 +1,7 @@
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 import { buildProjectInviteUrl } from "@/lib/projects/acl/invites/buildProjectInviteUrl";
 import { buildProjectInviteJoinSections } from "@/features/projects/access/invites/buildProjectInviteJoinSections";
+import { buildProjectInviteJoinPollTypeSteps } from "@/features/projects/access/invites/joinPage/buildProjectInviteJoinPollTypeSteps";
 import {
   PROJECT_INVITE_JOIN_PAGE_COPY as COPY,
   PROJECT_INVITE_JOIN_POLL_LIMIT_PER_MINUTE,
@@ -30,7 +31,7 @@ const toPageType = (
   matchHints: type.match,
   deliveryMode: type.deliveryMode,
   connectPath: type.connectPath,
-  steps: type.steps,
+  steps: [...type.steps, ...buildProjectInviteJoinPollTypeSteps(type)],
   ...(type.note ? { note: type.note } : {}),
 });
 

@@ -22,7 +22,8 @@ const loadInvitePlatform = async (
 };
 
 /**
- * Join: pick the connect-time delivery_mode (invite platform + wake link) and
+ * Join: pick the connect-time delivery_mode (redeem joinType, else invite
+ * platform, + wake link) and
  * write it on the just-activated membership. Never throws — a failed write
  * must not fail the join; the row keeps the column default (webhook).
  */
@@ -30,11 +31,15 @@ export const applyInitialProjectMembershipDeliveryMode = async (input: {
   readonly projectId: string;
   readonly membershipId: string;
   readonly inviteId: string | null;
+  /** Redeeming assistant's own join type (076); wins over the invite platform. */
+  readonly joinPlatform?: string | null;
 }): Promise<ProjectMembershipDeliveryMode> => {
   try {
     await ensureProjectMembershipDeliveryModeSchema();
     const [platform, links] = await Promise.all([
-      loadInvitePlatform(input.inviteId),
+      input.joinPlatform
+        ? Promise.resolve(input.joinPlatform)
+        : loadInvitePlatform(input.inviteId),
       loadProjectMemberWakeLinkSet({
         projectId: input.projectId,
         membershipIds: [input.membershipId],

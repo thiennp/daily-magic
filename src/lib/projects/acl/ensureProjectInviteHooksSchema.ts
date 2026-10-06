@@ -19,6 +19,9 @@ export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
   await sql`ALTER TABLE project_invites
     ADD COLUMN IF NOT EXISTS auto_approve BOOLEAN NOT NULL DEFAULT FALSE`;
+  // 076: the redeeming assistant's join type → join-time delivery_mode.
+  await sql`ALTER TABLE IF EXISTS project_access_requests
+    ADD COLUMN IF NOT EXISTS join_platform TEXT`;
   await ensureProjectInviteAutoApproveEventsSchema();
   await sql`CREATE TABLE IF NOT EXISTS project_api_keys (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
