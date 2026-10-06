@@ -6,11 +6,17 @@ export const formatMessengerStateLabel = (
   displayName: string | null,
 ): string => {
   const copy = AWC_PROJECT_MESSENGER_COPY;
+  if (state === "checks_on_demand") {
+    return copy.stateChecksOnDemand;
+  }
   if (state === "waiting") {
     const name = displayName?.trim() || "the bot";
     return copy.stateWaiting.replace("{name}", name);
   }
-  const map: Record<Exclude<AwcMessengerMessageState, "waiting">, string> = {
+  const map: Record<
+    Exclude<AwcMessengerMessageState, "waiting" | "checks_on_demand">,
+    string
+  > = {
     received: copy.stateReceived,
     got_it: copy.stateGotIt,
     working: copy.stateWorking,

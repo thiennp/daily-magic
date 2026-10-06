@@ -20,6 +20,7 @@ const STATES: ReadonlySet<string> = new Set([
   "blocked",
   "waiting",
   "no_answer",
+  "checks_on_demand",
 ]);
 
 const parseChip = (value: unknown): AwcMessengerStateChip | null => {

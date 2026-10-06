@@ -27,6 +27,7 @@ export const buildProjectMessengerStateChips = (input: {
       b2bState: delivery.b2bState,
       latestReplyKind: reply === null ? null : reply.kind,
       needsReply: input.needsReply,
+      deliveryMode: bot.deliveryMode,
     });
     return [
       {

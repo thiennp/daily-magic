@@ -5,6 +5,8 @@ import {
   PROJECT_MESSAGE_KIND_TASK_RECEIVED,
   PROJECT_MESSAGE_KIND_TASK_STATUS,
 } from "@/lib/projects/acl/messaging/projectMessage.constants";
+import type { ProjectMembershipDeliveryMode } from "@/lib/projects/acl/membershipDeliveryMode.constant";
+import { isProjectMembershipPollDeliveryMode } from "@/lib/projects/acl/membershipDeliveryMode.constant";
 import type { ProjectB2bState } from "@/lib/projects/acl/messaging/projectB2bStateMachine";
 import type { ProjectMessengerMessageState } from "@/lib/projects/acl/messaging/messenger/projectMessenger.type";
 
@@ -32,16 +34,7 @@ const BY_REPLY_KIND: Readonly<Record<string, ProjectMessengerMessageState>> = {
   [PROJECT_MESSAGE_KIND_TASK_BLOCKED]: "blocked",
 };
 
-/**
- * One bot's state for one owner/member message.
- * - blocked_silent_10m is final ("No answer — blocked"); a late reply is a
- *   new bubble and never reopens it (the machine has no edge out either).
- * - task.received folds into the processing state in the machine; the linked
- *   reply kind tells "Got it" apart from "Working on it".
- * - Unwatched rows (no wake accepted, or Needs a reply off) follow the linked
- *   reply; with no reply they read "waiting" when actionable, else "received".
- */
-export const mapProjectMessengerDeliveryState = (input: {
+const mapBase = (input: {
   readonly b2bState: string | null;
   readonly latestReplyKind: string | null;
   readonly needsReply: boolean;
@@ -66,4 +59,24 @@ export const mapProjectMessengerDeliveryState = (input: {
     return fromState;
   }
   return fromReply ?? (input.needsReply ? "waiting" : "received");
+};
+
+/**
+ * One bot's state for one owner/member message.
+ * Poll-mode (delivery_mode=poll): waiting / no_answer honesty → Checks on demand.
+ */
+export const mapProjectMessengerDeliveryState = (input: {
+  readonly b2bState: string | null;
+  readonly latestReplyKind: string | null;
+  readonly needsReply: boolean;
+  readonly deliveryMode?: ProjectMembershipDeliveryMode;
+}): ProjectMessengerMessageState => {
+  const state = mapBase(input);
+  if (
+    isProjectMembershipPollDeliveryMode(input.deliveryMode) &&
+    (state === "waiting" || state === "no_answer")
+  ) {
+    return "checks_on_demand";
+  }
+  return state;
 };

@@ -27,7 +27,12 @@ const parseSummary = (value: unknown): AwcMessengerThreadSummary | null => {
 };
 
 const parseStatus = (value: unknown): AwcMessengerBotStatus => {
-  if (value === "working" || value === "silent" || value === "idle") {
+  if (
+    value === "working" ||
+    value === "silent" ||
+    value === "idle" ||
+    value === "checks_on_demand"
+  ) {
     return value;
   }
   return "idle";

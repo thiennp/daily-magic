@@ -41,4 +41,38 @@ describe("deriveProjectMessengerBotStatus", () => {
       deriveProjectMessengerBotStatus({ states: [], latestWakeResult: null }),
     ).toBe("idle");
   });
+
+  it("poll-mode waiting deliveries show Checks on demand (no silent)", () => {
+    expect(
+      deriveProjectMessengerBotStatus({
+        states: ["awaiting_first_activity"],
+        latestWakeResult: "fetch_failed",
+        deliveryMode: "poll",
+      }),
+    ).toBe("checks_on_demand");
+    expect(
+      deriveProjectMessengerBotStatus({
+        states: ["blocked_silent_10m"],
+        latestWakeResult: "http_500",
+        deliveryMode: "poll",
+      }),
+    ).toBe("checks_on_demand");
+    expect(
+      deriveProjectMessengerBotStatus({
+        states: ["done"],
+        latestWakeResult: "http_500",
+        deliveryMode: "poll",
+      }),
+    ).toBe("idle");
+  });
+
+  it("webhook-mode silence path unchanged", () => {
+    expect(
+      deriveProjectMessengerBotStatus({
+        states: ["blocked_silent_10m"],
+        latestWakeResult: "http_200",
+        deliveryMode: "webhook",
+      }),
+    ).toBe("silent");
+  });
 });

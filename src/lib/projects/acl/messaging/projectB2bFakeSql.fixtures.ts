@@ -5,6 +5,8 @@ export type FakeB2bDelivery = {
   membership_id: string;
   b2b_state: string;
   last_activity_at: Date;
+  /** Wake S4 contract; default webhook keeps silence path. */
+  delivery_mode?: "webhook" | "poll";
 };
 
 export const createProjectB2bFakeSql = () => {
@@ -32,6 +34,7 @@ export const createProjectB2bFakeSql = () => {
           sender_user_id: "user-a",
           sender_display_name: "Bot A",
           peer_display_name: "Bot B",
+          peer_delivery_mode: d.delivery_mode ?? "webhook",
         }));
     }
     if (query.includes("SELECT d.id, d.b2b_state")) {

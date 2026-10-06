@@ -41,6 +41,7 @@ export const buildProjectMessengerThreadList = (input: {
         ),
         latestWakeResult:
           input.latestWakeByMembership.get(bot.membershipId) ?? null,
+        deliveryMode: bot.deliveryMode,
       }),
       ...summarize(bot.membershipId),
     })),

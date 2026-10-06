@@ -1,7 +1,7 @@
 /** "whole" or a bot membership id. People are not threads in v1. */
 export type ProjectMessengerThreadKey = string;
 
-/** Per-message bot state codes; copy lives in the UI (spec.md States table). */
+/** Per-message bot state codes; UI owns copy. */
 export type ProjectMessengerMessageState =
   | "received"
   | "got_it"
@@ -9,18 +9,24 @@ export type ProjectMessengerMessageState =
   | "done"
   | "blocked"
   | "waiting"
-  | "no_answer";
+  | "no_answer"
+  | "checks_on_demand";
 
-export type ProjectMessengerBotStatus = "working" | "idle" | "silent";
+export type ProjectMessengerBotStatus =
+  | "working"
+  | "idle"
+  | "silent"
+  | "checks_on_demand";
 
 export type ProjectMessengerPartyKind = "owner" | "member" | "bot" | "system";
 
 export type ProjectMessengerBot = {
   readonly membershipId: string;
   readonly displayName: string | null;
+  readonly deliveryMode: "webhook" | "poll";
 };
 
-/** One live project_messages row, classified for the messenger. */
+/** One live project_messages row for the messenger. */
 export type ProjectMessengerRow = {
   readonly messageId: string;
   readonly kind: string;
@@ -36,13 +42,13 @@ export type ProjectMessengerRow = {
   readonly toTeamLabel: string | null;
 };
 
-/** Row placed in a thread. inReplyTo/text are read from bot reply summaries. */
+/** Thread row; inReplyTo/text from bot reply summaries. */
 export type ProjectMessengerKeyedRow = {
   readonly threadKey: ProjectMessengerThreadKey;
   readonly row: ProjectMessengerRow;
   readonly inReplyTo: string | null;
   readonly text: string;
-  /** False for state-only kinds (task.received / task.processing). */
+  /** False for state-only kinds. */
   readonly visible: boolean;
 };
 
@@ -61,7 +67,7 @@ export type ProjectMessengerStateChip = {
   readonly membershipId: string;
   readonly displayName: string | null;
   readonly state: ProjectMessengerMessageState;
-  /** Set only for blocked (bot's task.blocked reply text when linked). */
+  /** Set only for blocked (linked task.blocked text). */
   readonly reason: string | null;
 };
 
@@ -77,7 +83,7 @@ export type ProjectMessengerTimelineEntry = {
   readonly text: string;
   readonly needsReply: boolean;
   readonly inReplyTo: string | null;
-  /** Under owner/member messages: one chip per bot delivery. Empty for bot replies. */
+  /** Owner/member messages: one chip per bot delivery. */
   readonly states: readonly ProjectMessengerStateChip[];
 };
 

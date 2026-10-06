@@ -52,11 +52,13 @@ export const loadProjectMessengerBots = async () => [
     membershipId: "mem-planner",
     userId: "user-planner",
     displayName: "Planner bot",
+    deliveryMode: "webhook" as const,
   },
   {
     membershipId: "mem-research",
     userId: "user-research",
     displayName: "Research bot",
+    deliveryMode: "webhook" as const,
   },
 ];
 export const scheduleProjectMessageWebhookDelivery = () => undefined;

@@ -7,5 +7,6 @@ export const formatMessengerBotStatusLabel = (
   const copy = AWC_PROJECT_MESSENGER_COPY;
   if (status === "working") return copy.statusWorking;
   if (status === "silent") return copy.statusSilent;
+  if (status === "checks_on_demand") return copy.statusChecksOnDemand;
   return copy.statusIdle;
 };

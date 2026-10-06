@@ -1,3 +1,5 @@
+import { PROJECT_MEMBERSHIP_POLL_SILENCE_STATUS } from "@/lib/projects/acl/membershipDeliveryMode.constant";
+
 /** Activity messenger copy — matches design spec.md strings. */
 export const AWC_PROJECT_MESSENGER_COPY = {
   tab: "Activity",
@@ -8,6 +10,7 @@ export const AWC_PROJECT_MESSENGER_COPY = {
   statusWorking: "Working",
   statusIdle: "Idle",
   statusSilent: "Silent",
+  statusChecksOnDemand: PROJECT_MEMBERSHIP_POLL_SILENCE_STATUS,
   stateReceived: "Received",
   stateGotIt: "Got it",
   stateWorking: "Working on it",
@@ -15,6 +18,7 @@ export const AWC_PROJECT_MESSENGER_COPY = {
   stateBlocked: "Blocked",
   stateWaiting: "Waiting for {name} to confirm",
   stateNoAnswer: "No answer — blocked",
+  stateChecksOnDemand: PROJECT_MEMBERSHIP_POLL_SILENCE_STATUS,
   composerLabel: "Message",
   composerPlaceholder: "Write a message…",
   composerNeedsReply: "Needs a reply",

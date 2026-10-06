@@ -1,4 +1,5 @@
 import { asRowArray, getSql } from "@/lib/db";
+import { isProjectMembershipPollDeliveryMode } from "@/lib/projects/acl/membershipDeliveryMode.constant";
 import { applyProjectB2bTransition } from "@/lib/projects/acl/messaging/applyProjectB2bTransition";
 import { dueProjectSilenceEvent } from "@/lib/projects/acl/messaging/dueProjectSilenceEvent";
 import { notifyProjectSenderOfPeerSilence } from "@/lib/projects/acl/messaging/notifyProjectSenderOfPeerSilence";
@@ -13,13 +14,9 @@ const toMs = (value: unknown): number =>
   value instanceof Date ? value.getTime() : Date.parse(String(value));
 
 /**
- * Apply due 5 and 10 minute timeouts and notify sender A once per timeout.
- * Idempotent: the notice only goes out when the conditional claim lands.
- * At most one timeout per delivery per call. `now` comes from the caller;
- * no clock is read and no timer state is kept here. Never throws: callers are
- * the dispatch and inbox paths (and any cron), which must not fail on it.
- * Owner sends (no sender membership) time out the same way; the owner sees
- * the state on the message, so no inbox notice is stored for them.
+ * Apply due 5/10m silence timeouts; notify sender A once per timeout claim.
+ * Idempotent; `now` from caller; never throws. Owner sends time out with no
+ * inbox notice. Poll-mode peers (delivery_mode=poll): skip 5m/10m entirely.
  */
 export const checkProjectMessageSilence = async (input: {
   readonly now: Date;
@@ -35,7 +32,8 @@ export const checkProjectMessageSilence = async (input: {
         SELECT d.id, d.message_id, d.b2b_state, d.last_activity_at,
           m.project_id, m.sender_membership_id, m.sender_user_id,
           a.project_display_name AS sender_display_name,
-          b.project_display_name AS peer_display_name
+          b.project_display_name AS peer_display_name,
+          b.delivery_mode AS peer_delivery_mode
         FROM project_message_deliveries d
         JOIN project_messages m ON m.id = d.message_id
         JOIN project_memberships b ON b.id = d.membership_id
@@ -47,6 +45,9 @@ export const checkProjectMessageSilence = async (input: {
     );
     const moved: string[] = [];
     for (const row of rows) {
+      if (isProjectMembershipPollDeliveryMode(row.peer_delivery_mode)) {
+        continue;
+      }
       const from = parseProjectB2bState(row.b2b_state);
       const event =
         from === null

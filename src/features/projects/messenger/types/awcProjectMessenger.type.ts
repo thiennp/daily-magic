@@ -1,4 +1,8 @@
-export type AwcMessengerBotStatus = "working" | "idle" | "silent";
+export type AwcMessengerBotStatus =
+  | "working"
+  | "idle"
+  | "silent"
+  | "checks_on_demand";
 
 export type AwcMessengerMessageState =
   | "received"
@@ -7,7 +11,8 @@ export type AwcMessengerMessageState =
   | "done"
   | "blocked"
   | "waiting"
-  | "no_answer";
+  | "no_answer"
+  | "checks_on_demand";
 
 export type AwcMessengerThreadSummary = {
   readonly lastMessageAt: string | null;

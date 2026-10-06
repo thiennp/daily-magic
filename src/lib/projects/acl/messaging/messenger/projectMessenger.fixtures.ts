@@ -8,8 +8,16 @@ export const MESSENGER_OWNER = "user-jordan";
 export const MESSENGER_PLANNER = "11111111-1111-4111-8111-111111111111";
 export const MESSENGER_RESEARCH = "22222222-2222-4222-8222-222222222222";
 export const MESSENGER_BOTS: readonly ProjectMessengerBot[] = [
-  { membershipId: MESSENGER_PLANNER, displayName: "Planner bot" },
-  { membershipId: MESSENGER_RESEARCH, displayName: "Research bot" },
+  {
+    membershipId: MESSENGER_PLANNER,
+    displayName: "Planner bot",
+    deliveryMode: "webhook",
+  },
+  {
+    membershipId: MESSENGER_RESEARCH,
+    displayName: "Research bot",
+    deliveryMode: "webhook",
+  },
 ];
 export const MESSENGER_BOT_IDS = new Set([
   MESSENGER_PLANNER,

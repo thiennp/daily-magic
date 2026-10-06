@@ -12,7 +12,7 @@ export default function AwcMessengerStatusDot({
   const dotClass =
     status === "working"
       ? "bg-emerald-600"
-      : status === "silent"
+      : status === "silent" || status === "checks_on_demand"
         ? "bg-amber-600"
         : "bg-gray-200 shadow-[inset_0_0_0_2px_#667085]";
   return (

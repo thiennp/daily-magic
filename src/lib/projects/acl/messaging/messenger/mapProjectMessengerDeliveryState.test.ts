@@ -6,8 +6,14 @@ const map = (
   b2bState: string | null,
   latestReplyKind: string | null = null,
   needsReply = true,
+  deliveryMode: "webhook" | "poll" = "webhook",
 ) =>
-  mapProjectMessengerDeliveryState({ b2bState, latestReplyKind, needsReply });
+  mapProjectMessengerDeliveryState({
+    b2bState,
+    latestReplyKind,
+    needsReply,
+    deliveryMode,
+  });
 
 describe("mapProjectMessengerDeliveryState", () => {
   it.each([
@@ -39,5 +45,25 @@ describe("mapProjectMessengerDeliveryState", () => {
     expect(map(null, null, false)).toBe("received");
     expect(map("dispatched", "task.received")).toBe("got_it");
     expect(map("dispatched", null, true)).toBe("waiting");
+  });
+
+  it("poll-mode maps waiting/no_answer to Checks on demand", () => {
+    expect(map("awaiting_first_activity", null, true, "poll")).toBe(
+      "checks_on_demand",
+    );
+    expect(map("silent_5m_notified", null, true, "poll")).toBe(
+      "checks_on_demand",
+    );
+    expect(map("blocked_silent_10m", null, true, "poll")).toBe(
+      "checks_on_demand",
+    );
+    expect(map("processing", "task.status", true, "poll")).toBe("working");
+  });
+
+  it("webhook-mode keeps waiting and no_answer", () => {
+    expect(map("awaiting_first_activity", null, true, "webhook")).toBe(
+      "waiting",
+    );
+    expect(map("blocked_silent_10m", null, true, "webhook")).toBe("no_answer");
   });
 });
