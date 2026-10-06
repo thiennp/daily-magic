@@ -1,10 +1,7 @@
-import { buildAgentWitchReviveAwlSteps } from "@/lib/agentWitch/buildAgentWitchReviveAwlTerminalCommand";
-import {
-  buildAgentWitchUpdateInstallCommand,
-  buildAgentWitchUpdateInstallScriptUrl,
-} from "@/lib/agentWitch/buildAgentWitchUpdateInstallCommand";
-import { AGENT_WITCH_DEFAULT_ORIGIN } from "@/lib/agentWitch/constants";
 import { AGENT_WITCH_LOCAL_APP_PORT } from "@/lib/agentWitch/agentWitchLocalAppPort.constant";
+import { buildAgentWitchReviveAwlSteps } from "@/lib/agentWitch/buildAgentWitchReviveAwlTerminalCommand";
+import { AGENT_WITCH_DEFAULT_ORIGIN } from "@/lib/agentWitch/constants";
+import { buildAgentWitchRepairCommands } from "@/lib/agentWitch/repair/buildAgentWitchRepairCommands";
 
 const productionHostname = new URL(AGENT_WITCH_DEFAULT_ORIGIN).hostname;
 
@@ -19,9 +16,7 @@ export interface RepairThisComputerCommands {
 /** Production commands for the public repair docs page. */
 export const resolveRepairThisComputerCommands =
   (): RepairThisComputerCommands => {
-    const scriptUrl = buildAgentWitchUpdateInstallScriptUrl(
-      AGENT_WITCH_DEFAULT_ORIGIN,
-    );
+    const repair = buildAgentWitchRepairCommands(AGENT_WITCH_DEFAULT_ORIGIN);
     const macRestart = buildAgentWitchReviveAwlSteps({
       operatingSystem: "mac",
       hostname: productionHostname,
@@ -36,8 +31,8 @@ export const resolveRepairThisComputerCommands =
     }
 
     return {
-      updateUnix: buildAgentWitchUpdateInstallCommand(AGENT_WITCH_DEFAULT_ORIGIN),
-      updateWindows: `wsl.exe -e bash -lc "set -o pipefail; curl -fsSL ${scriptUrl} | bash"`,
+      updateUnix: repair.macos,
+      updateWindows: repair.windows,
       restartMacos: macRestart,
       restartLinux: linuxRestart,
       healthCheck: `curl -sS -m 5 "http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}/health"`,
