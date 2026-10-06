@@ -476,8 +476,15 @@ describe("OAuth ownership flow", () => {
 
 describe("consent copy", () => {
   it("has owner line, name+continue-at host labels, and never says bot", () => {
-    expect(OAUTH_CONSENT_COPY.ownerLine).toBe(
+    expect(OAUTH_CONSENT_COPY.title).toBe(
       "You'll be this assistant's owner",
+    );
+    expect(OAUTH_CONSENT_COPY.sub).toContain(
+      "does not give the assistant access",
+    );
+    expect(OAUTH_CONSENT_COPY.confirmed).toContain("project owner's approval");
+    expect(OAUTH_CONSENT_COPY.denied).toBe(
+      "Denied. The assistant was not linked to you.",
     );
     expect(OAUTH_CONSENT_COPY.continueAtLabel).toBe("Continues at");
     expect(OAUTH_CONSENT_COPY.continueHint).toContain("assistant");

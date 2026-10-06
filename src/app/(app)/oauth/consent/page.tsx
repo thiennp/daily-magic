@@ -5,13 +5,12 @@ import { OAUTH_CONSENT_COPY } from "@/features/agent-access/oauth-consent/oauthC
 import { AWC_TERMS_VERSION } from "@/lib/agentAccess/awcTermsVersion.constant";
 import { formatOauthRedirectHost } from "@/lib/agentAccess/oauth/formatOauthRedirectHost";
 import { loadOauthPending } from "@/lib/agentAccess/oauth/loadOauthPending";
-import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import { auth } from "@/lib/auth/auth";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: `Approve assistant | ${AGENT_WITCH_PRODUCT_NAME}`,
+  title: OAUTH_CONSENT_COPY.pageTitle,
   robots: { index: false, follow: false },
 };
 
@@ -39,7 +38,9 @@ export default async function OauthConsentPage({ searchParams }: PageProps) {
 
   if (!session?.user?.id) {
     const callback = `/oauth/consent${pendingId.length > 0 ? `?pending=${encodeURIComponent(pendingId)}` : ""}`;
-    redirect(`/login?callbackUrl=${encodeURIComponent(callback)}`);
+    redirect(
+      `/login?callbackUrl=${encodeURIComponent(callback)}&notice=${encodeURIComponent(OAUTH_CONSENT_COPY.loginRequired)}`,
+    );
   }
 
   const pending =
@@ -66,8 +67,8 @@ export default async function OauthConsentPage({ searchParams }: PageProps) {
   return (
     <main className="mx-auto flex min-h-[50vh] max-w-lg flex-col justify-center px-4 py-12 text-gray-900 dark:text-white">
       <h1 className="text-xl font-semibold">{OAUTH_CONSENT_COPY.title}</h1>
-      <p className="mt-3 text-sm font-medium text-gray-900 dark:text-white">
-        {OAUTH_CONSENT_COPY.ownerLine}
+      <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+        {OAUTH_CONSENT_COPY.sub}
       </p>
 
       {pending !== null ? (
