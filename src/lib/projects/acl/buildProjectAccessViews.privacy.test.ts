@@ -35,7 +35,9 @@ describe("project access privacy: no member-bot owner identity", () => {
     const accessRoute = read(
       "src/app/api/projects/[projectId]/access/route.ts",
     );
-    expect(accessRoute).toContain("buildMembershipViews");
+    // Soft HOLD: route delegates list/enrich (+ linked-device seat backfill) —
+    // buildMembershipViews lives in loadEnrichedProjectAccessMembers.
+    expect(accessRoute).toContain("loadEnrichedProjectAccessMembers");
     expect(accessRoute).not.toContain("agent_access_tokens");
     expect(accessRoute).not.toContain("owner_user_id");
   });
