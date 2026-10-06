@@ -15,9 +15,9 @@ describe("ConnectThisMacButton", () => {
     expect(source).toContain("notice={notice}");
   });
 
-  it("renders the AWL too old copy with a /download link", () => {
+  it("renders the Update AgentWitch Local too-old copy with a download link", () => {
     const source = readSibling("ConnectThisMacModalNotice.tsx");
-    expect(source).toContain("AWL too old — download update");
+    expect(source).toContain("AGENT_WITCH_LOCAL_TOO_OLD_COPY");
     expect(source).toContain("href={notice.downloadUrl}");
   });
 
@@ -35,5 +35,4 @@ describe("ConnectThisMacButton", () => {
       /usePersonalizedAgentWitchInstallCommand\(\{\s*enabled: isModalOpen,/,
     );
   });
-
 });

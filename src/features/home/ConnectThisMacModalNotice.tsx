@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { AGENT_WITCH_LOCAL_TOO_OLD_COPY as TOO_OLD } from "@/features/home/agentWitchLocalTooOldCopy.constant";
 import type { ConnectThisMacModalNotice as ConnectThisMacModalNoticeValue } from "@/features/home/utils/ConnectThisMacModalNotice.type";
 import { AGENT_WITCH_LOCAL_DOWNLOAD_URL } from "@/lib/agentWitch/agentWitchLocalTooOld.constant";
 
@@ -39,20 +40,20 @@ export default function ConnectThisMacModalNotice({
         className={NOTICE_CLASS}
         data-testid="connect-awl-too-old"
       >
-        <p className="font-semibold">AWL too old — download update</p>
-        <p className="mt-1">
-          Agent Witch Local on this computer
-          {notice.installBundleVersion !== null
-            ? ` (bundle ${notice.installBundleVersion})`
-            : ""}{" "}
-          is older than the minimum this server accepts (bundle{" "}
-          {notice.minBundleVersion}), so Connect was refused.
-        </p>
+        <p className="font-semibold">{TOO_OLD.title}</p>
+        <p className="mt-1">{TOO_OLD.body}</p>
         <p className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
           <Link href={notice.downloadUrl} className={LINK_CLASS}>
-            Download update
+            {TOO_OLD.primary}
           </Link>
-          {retryButton}
+          <button
+            type="button"
+            className={LINK_CLASS}
+            disabled={isRetrying}
+            onClick={onRetry}
+          >
+            {isRetrying ? "Checking…" : TOO_OLD.secondary}
+          </button>
         </p>
       </div>
     );

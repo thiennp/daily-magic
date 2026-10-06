@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import AwlRepairManuallyInfoButton from "@/features/agent-witch/macDevices/repairManually/AwlRepairManuallyInfoButton";
 import { AWC_PROJECT_COMPUTER_MEMBER_COPY } from "@/features/projects/access/awcProjectComputerMemberCopy.constant";
 import {
   describeComputerAccessMember,
@@ -11,14 +12,14 @@ import {
 import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPageMetadataText.constant";
 
 /** Black / white / gray only (no brand or status hues). */
-const STATUS_CHIP_CLASS: Readonly<Record<ComputerAccessMemberStatus, string>> = {
-  online:
-    "border-gray-900 text-gray-900 dark:border-white dark:text-white",
-  offline:
-    "border-gray-300 text-gray-500 dark:border-gray-700 dark:text-gray-400",
-  needs_update:
-    "border-gray-900 bg-gray-900 text-white dark:border-white dark:bg-white dark:text-gray-900",
-};
+const STATUS_CHIP_CLASS: Readonly<Record<ComputerAccessMemberStatus, string>> =
+  {
+    online: "border-gray-900 text-gray-900 dark:border-white dark:text-white",
+    offline:
+      "border-gray-300 text-gray-500 dark:border-gray-700 dark:text-gray-400",
+    needs_update:
+      "border-gray-900 bg-gray-900 text-white dark:border-white dark:bg-white dark:text-gray-900",
+  };
 
 interface AwcProjectAccessComputerMemberRowProps {
   readonly member: ComputerAccessMemberFields & { readonly id: string };
@@ -56,6 +57,11 @@ export default function AwcProjectAccessComputerMemberRow({
           >
             {copy.updateLink}
           </Link>
+        ) : null}
+        {view.status === "needs_update" &&
+        viewerUserId !== null &&
+        member.ownerUserId === viewerUserId ? (
+          <AwlRepairManuallyInfoButton />
         ) : null}
       </span>
     </li>

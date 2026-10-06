@@ -5,6 +5,7 @@ import { useState } from "react";
 import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
 import { MAC_DEVICE_ROW_THIS_MAC_SUBMENU_LABEL } from "@/features/agent-witch/macDevices/macDeviceRowMenuCopy.constant";
 import MacDeviceRowThisMacMenuItems from "@/features/agent-witch/macDevices/MacDeviceRowThisMacMenuItems";
+import AwlRepairManuallyModal from "@/features/agent-witch/macDevices/repairManually/AwlRepairManuallyModal";
 import ReviveAwlMacModal from "@/features/agent-witch/macDevices/ReviveAwlMacModal";
 import { openAgentWitchLocalStatus } from "@/features/agent-witch/macDevices/openAgentWitchLocalStatus";
 import AppIcon from "@/components/ui/icon/AppIcon";
@@ -25,6 +26,7 @@ export default function MacDeviceRowThisMacMenuSection({
 }: MacDeviceRowThisMacMenuSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [reviveAwlOpen, setReviveAwlOpen] = useState(false);
+  const [repairManuallyOpen, setRepairManuallyOpen] = useState(false);
 
   const openLocalStatus = (): void => {
     void openAgentWitchLocalStatus().then((result) => {
@@ -40,6 +42,12 @@ export default function MacDeviceRowThisMacMenuSection({
         isOpen={reviveAwlOpen}
         onClose={() => {
           setReviveAwlOpen(false);
+        }}
+      />
+      <AwlRepairManuallyModal
+        isOpen={repairManuallyOpen}
+        onClose={() => {
+          setRepairManuallyOpen(false);
         }}
       />
       <DropdownItem
@@ -61,6 +69,9 @@ export default function MacDeviceRowThisMacMenuSection({
         <MacDeviceRowThisMacMenuItems
           closeMenu={closeMenu}
           openLocalStatus={openLocalStatus}
+          openRepairManually={() => {
+            setRepairManuallyOpen(true);
+          }}
           onSeeLocalLog={onSeeLocalLog}
           onUpdateLocal={onUpdateLocal}
           onDeleteLocalScript={onDeleteLocalScript}

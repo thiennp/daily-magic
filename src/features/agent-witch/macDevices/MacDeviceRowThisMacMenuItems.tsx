@@ -8,6 +8,7 @@ import {
   MAC_DEVICE_LOCAL_LOG_MENU_LABEL,
   MAC_DEVICE_LOCAL_STATUS_MENU_LABEL,
 } from "@/features/agent-witch/macDevices/macDeviceRowMenuCopy.constant";
+import { AWL_REPAIR_MANUALLY_COPY } from "@/features/agent-witch/macDevices/repairManually/awlRepairManuallyCopy.constant";
 import { renderMacDeviceRowMenuItem } from "@/features/agent-witch/macDevices/utils/renderMacDeviceRowMenuItem";
 import { runMacDeviceRowMenuAction } from "@/features/agent-witch/macDevices/utils/runMacDeviceRowMenuAction";
 import AppIcon from "@/components/ui/icon/AppIcon";
@@ -16,6 +17,7 @@ import { ArrowUpIcon, TrashBinIcon } from "@/icons";
 interface MacDeviceRowThisMacMenuItemsProps {
   readonly closeMenu: () => void;
   readonly openLocalStatus: () => void;
+  readonly openRepairManually: () => void;
   readonly onSeeLocalLog?: () => void;
   readonly onUpdateLocal?: () => void;
   readonly onDeleteLocalScript?: () => void;
@@ -27,6 +29,7 @@ const nestedItemClassName =
 export default function MacDeviceRowThisMacMenuItems({
   closeMenu,
   openLocalStatus,
+  openRepairManually,
   onSeeLocalLog,
   onUpdateLocal,
   onDeleteLocalScript,
@@ -68,6 +71,13 @@ export default function MacDeviceRowThisMacMenuItems({
             true,
           )
         : null}
+      {renderMacDeviceRowMenuItem(
+        runMacDeviceRowMenuAction(closeMenu, openRepairManually),
+        <span className="inline-flex h-4 w-4 shrink-0" />,
+        AWL_REPAIR_MANUALLY_COPY.title,
+        false,
+        true,
+      )}
       {onDeleteLocalScript
         ? renderMacDeviceRowMenuItem(
             runMacDeviceRowMenuAction(closeMenu, onDeleteLocalScript),
