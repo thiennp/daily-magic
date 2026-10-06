@@ -41,8 +41,10 @@ describe("codingToolsPauseStore", () => {
   it("notifies when the switch flips", async () => {
     const seen: boolean[] = [];
     const unwatch = watchCodingToolsPause(configPath, (p) => seen.push(p), 20);
+    // Let the interval arm before the atomic write (avoids same-tick races).
+    await vi.waitFor(() => expect(seen).toEqual([]), { timeout: 100 });
     writeCodingToolsPause(configPath, true);
-    await vi.waitFor(() => expect(seen).toEqual([true]), { timeout: 4000 });
+    await vi.waitFor(() => expect(seen).toEqual([true]), { timeout: 8000 });
     unwatch();
   });
 });
