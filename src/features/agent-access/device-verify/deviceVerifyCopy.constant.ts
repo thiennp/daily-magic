@@ -1,16 +1,51 @@
-/** Locked EN for the device-code verify page (S1 minimal; S4 polishes). */
+/** Locked EN for the device-code verify page (Product EN MUST pass). */
 export const DEVICE_VERIFY_COPY = {
-  title: "Approve this assistant",
+  /** Page H1 — ownership bind (Approve is the project owner's verb). */
+  title: "You'll be this assistant's owner",
+  /** Alias of title — kept for S2 consent reuse. */
   ownerLine: "You'll be this assistant's owner",
+  /** Document / metadata title (verbatim AgentWitch). */
+  pageTitle: "Become this assistant's owner | AgentWitch",
+  sub: "This links the assistant to your AgentWitch account. It does not give the assistant access to a project yet.",
   codeLabel: "Code",
+  codeHelper: "Enter the code your assistant gave you.",
   clientLabel: "Assistant",
   clientFallback: "this assistant",
   confirm: "Confirm",
   deny: "Deny",
-  confirmed: "Confirmed. The assistant can finish connecting now.",
-  denied: "You denied this request. It did not get access.",
-  expired: "This code expired. The assistant must start again.",
-  notFound: "That code was not found.",
-  alreadyDecided: "This code was already used.",
-  loginRequired: "Sign in to confirm ownership of this assistant.",
+  confirmed:
+    "Confirmed. You're this assistant's owner. A project still needs the project owner's approval before the assistant can join.",
+  denied: "Denied. The assistant was not linked to you.",
+  expired: "This code expired. Ask your assistant for a new code.",
+  notFound:
+    "That code was not found. Check the code with your assistant and try again.",
+  alreadyDecided:
+    "This code was already used. Ask your assistant for a new code.",
+  rateLimited: "Too many tries. Wait a bit, then try again.",
+  failed: "Something went wrong. Try again.",
+  loginRequired: "Sign in to become this assistant's owner.",
 } as const;
+
+/** Map API / query error codes to human copy. Every code must resolve. */
+export const deviceVerifyMessageForErrorCode = (
+  code: string,
+): string => {
+  switch (code) {
+    case "expired":
+      return DEVICE_VERIFY_COPY.expired;
+    case "invalid_code":
+      return DEVICE_VERIFY_COPY.notFound;
+    case "already_decided":
+      return DEVICE_VERIFY_COPY.alreadyDecided;
+    case "rate_limited":
+      return DEVICE_VERIFY_COPY.rateLimited;
+    case "not_pending":
+    case "token_create_failed":
+    case "account_exists":
+    case "account_create_failed":
+    case "agentmail_unavailable":
+      return DEVICE_VERIFY_COPY.failed;
+    default:
+      return DEVICE_VERIFY_COPY.failed;
+  }
+};

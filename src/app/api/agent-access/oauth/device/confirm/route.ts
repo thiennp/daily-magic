@@ -1,3 +1,6 @@
+import {
+  deviceVerifyMessageForErrorCode,
+} from "@/features/agent-access/device-verify/deviceVerifyCopy.constant";
 import { isAllowedAppHttpOrigin } from "@/lib/app/isAllowedAppHttpOrigin";
 import { requireAuth } from "@/lib/auth/requireAuth";
 import { confirmDeviceAuthorization } from "@/lib/agentAccess/deviceCode/confirmDeviceAuthorization";
@@ -48,14 +51,14 @@ export async function POST(request: Request): Promise<Response> {
     if (wantsHtml) {
       return Response.redirect(
         new URL(
-          `/device/verify?user_code=${encodeURIComponent(userCode)}&error=${encodeURIComponent(outcome.code)}`,
+          `/device/verify?code=${encodeURIComponent(userCode)}&error=${encodeURIComponent(outcome.code)}`,
           request.url,
         ),
         303,
       );
     }
     return Response.json(
-      { ok: false, error: outcome.error, code: outcome.code },
+      { ok: false, error: deviceVerifyMessageForErrorCode(outcome.code), code: outcome.code, detail: outcome.error },
       { status: outcome.status },
     );
   }
@@ -63,7 +66,7 @@ export async function POST(request: Request): Promise<Response> {
   if (wantsHtml) {
     return Response.redirect(
       new URL(
-        `/device/verify?user_code=${encodeURIComponent(outcome.userCodeDisplay)}&done=confirmed`,
+        `/device/verify?code=${encodeURIComponent(outcome.userCodeDisplay)}&done=confirmed`,
         request.url,
       ),
       303,
