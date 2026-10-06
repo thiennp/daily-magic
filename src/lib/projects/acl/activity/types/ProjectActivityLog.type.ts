@@ -28,6 +28,8 @@ export type ProjectActivityEventDetail = {
   readonly previousDeliveryMode?: "webhook" | "poll";
   readonly trigger?: ProjectActivityDeliveryTrigger;
   readonly approvalSource?: ProjectApprovalSource;
+  /** rule.dropped / rule.restored: the Safety rule (pitfall) id. */
+  readonly ruleId?: string;
 };
 
 export type ProjectActivityLogActor = {

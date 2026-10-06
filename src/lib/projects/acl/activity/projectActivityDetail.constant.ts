@@ -15,6 +15,7 @@ export const PROJECT_ACTIVITY_DETAIL_STRING_KEYS = [
   "previousDeliveryMode",
   "trigger",
   "approvalSource",
+  "ruleId",
 ] as const;
 
 export const PROJECT_ACTIVITY_DETAIL_BOOLEAN_KEYS = ["autoApprove"] as const;

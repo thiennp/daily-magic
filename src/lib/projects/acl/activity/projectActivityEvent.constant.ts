@@ -1,7 +1,8 @@
 /**
- * Access log (owner-only project_activity_events, migration 092).
- * Access + wake changes only: no msg.*, key.*, webhook.*, tool-call or
- * claim/check rows. The DB CHECK (092, extended by 095) must list exactly these types.
+ * Access log (owner-only project_activity_events, migrations 092 + 095 + 096).
+ * Access, wake and owner Safety-rule drop/restore changes only: no msg.*,
+ * key.*, webhook.*, tool-call or claim/check rows. The DB CHECK (096) must
+ * list exactly these types.
  */
 export const PROJECT_ACTIVITY_EVENT_TYPES = [
   "invite.created",
@@ -20,6 +21,8 @@ export const PROJECT_ACTIVITY_EVENT_TYPES = [
   // 095 (S0-2): owner toggles "Allow runs without approval" for project computers.
   "project.runs_without_approval_enabled",
   "project.runs_without_approval_disabled",
+  "rule.dropped",
+  "rule.restored",
 ] as const;
 
 export type ProjectActivityEventType =

@@ -10,6 +10,7 @@ import {
 import { ACCESS_LOG_COPY as C } from "@/features/projects/accessLog/accessLogCopy.constant";
 import { formatAccessLogDeliveryEvent } from "@/features/projects/accessLog/formatAccessLogDeliveryEvent";
 import { formatAccessLogHumanInvite } from "@/features/projects/accessLog/formatAccessLogHumanInvite";
+import { formatAccessLogRuleEvent } from "@/features/projects/accessLog/formatAccessLogRuleEvent";
 import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/projectAccessLog.type";
 import { isProjectActivityEventType } from "@/lib/projects/acl/activity/projectActivityEvent.constant";
 
@@ -72,6 +73,9 @@ export const formatAccessLogEvent = (
       return { line: C.runsWithoutApprovalOn, detail: null };
     case "project.runs_without_approval_disabled":
       return { line: C.runsWithoutApprovalOff, detail: null };
+    case "rule.dropped":
+    case "rule.restored":
+      return formatAccessLogRuleEvent(event);
     default:
       return null;
   }

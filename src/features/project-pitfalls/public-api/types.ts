@@ -11,6 +11,7 @@ export type {
   ProjectPitfallHitRecord,
 } from "@/features/project-pitfalls/internal/core/projectPitfall.type";
 export type {
+  ProjectRuleChangeResult,
   ProjectRuleUsageResult,
   RuleCompareOverlap,
   RuleCompareOverlapReason,

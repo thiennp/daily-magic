@@ -49,6 +49,10 @@ export const ACCESS_LOG_COPY = {
     "You allowed tasks to run on this project's computer without approval",
   runsWithoutApprovalOff:
     "You turned approval back on for tasks on this project's computer",
+  ruleDropped: 'You dropped the Safety rule "{title}"',
+  ruleDroppedNoTitle: "You dropped a Safety rule",
+  ruleRestored: 'You restored the Safety rule "{title}"',
+  ruleRestoredNoTitle: "You restored a Safety rule",
   detailInvite: "Invite {inviteLabel}",
   detailExpires: "Expires {date}",
   detailKindBot: "Assistant",

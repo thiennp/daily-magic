@@ -29,10 +29,12 @@ const checkListOf = (text: string): string[] => {
 };
 
 describe("migration 092 project_activity_events", () => {
-  it("CHECK list (migration and ensure DDL) equals the TS event types", async () => {
-    // 095 extends the CHECK; 092's own list is the TS list minus those types.
+  it("CHECK list (092 = base types; ensure DDL = all TS event types)", async () => {
+    // 095 + 096 extend the CHECK; 092's own list is the TS list minus those types.
     expect(checkListOf(SQL)).toEqual(
-      PROJECT_ACTIVITY_EVENT_TYPES.filter((type) => !TYPES_ADDED_IN_095.includes(type)),
+      PROJECT_ACTIVITY_EVENT_TYPES.filter(
+        (type) => !TYPES_ADDED_IN_095.includes(type) && !type.startsWith("rule."),
+      ),
     );
     resetProjectActivityEventsSchemaForTests();
     await ensureProjectActivityEventsSchema();

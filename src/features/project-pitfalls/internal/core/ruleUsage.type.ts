@@ -26,3 +26,12 @@ export interface ProjectRuleUsageResult {
   readonly rules: readonly RuleUsageRow[];
   readonly overlaps: readonly RuleCompareOverlap[];
 }
+
+/** Owner drop (retire) / restore result for the rule-compare Drop + Undo. */
+export interface ProjectRuleChangeResult {
+  readonly ok: true;
+  readonly projectId: string;
+  readonly rule: RuleUsageRow;
+  /** false = already in the requested state (idempotent, nothing written). */
+  readonly changed: boolean;
+}
