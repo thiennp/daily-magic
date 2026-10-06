@@ -27,7 +27,14 @@ describe("device-code user_code helpers", () => {
     expect(DEVICE_VERIFY_COPY.pageTitle).toBe(
       "Become this assistant's owner | AgentWitch",
     );
-    expect(DEVICE_VERIFY_COPY.sub).toContain("does not give the assistant access");
+    expect(DEVICE_VERIFY_COPY.sub).toBe(
+      "This gives the assistant its own AgentWitch account, linked to you. It can ask to join a project when it has an invite. It sees nothing in a project until the project owner approves it.",
+    );
+    expect(DEVICE_VERIFY_COPY.stop).toBe(
+      "The project owner can remove it from the project's Members at any time.",
+    );
+    expect(DEVICE_VERIFY_COPY.codeLabel).toBe("Code");
+    expect(DEVICE_VERIFY_COPY.lookUp).toBe("Continue");
     expect(DEVICE_VERIFY_COPY.confirmed).toContain(
       "project owner's approval",
     );

@@ -7,9 +7,18 @@ describe("OAuth consent copy", () => {
     expect(OAUTH_CONSENT_COPY.title).toBe(
       "You'll be this assistant's owner",
     );
-    expect(OAUTH_CONSENT_COPY.sub).toContain(
-      "does not give the assistant access",
+    expect(OAUTH_CONSENT_COPY.sub).toBe(
+      "This gives the assistant its own AgentWitch account, linked to you. It can ask to join a project when it has an invite. It sees nothing in a project until the project owner approves it.",
     );
+    expect(OAUTH_CONSENT_COPY.stop).toBe(
+      "The project owner can remove it from the project's Members at any time.",
+    );
+    expect(OAUTH_CONSENT_COPY.termsLabel).toBe(
+      "I accept the Terms and Privacy Policy for this assistant.",
+    );
+    expect(
+      `${OAUTH_CONSENT_COPY.termsLabelPrefix}Terms and Privacy Policy${OAUTH_CONSENT_COPY.termsLabelSuffix}`,
+    ).toBe(OAUTH_CONSENT_COPY.termsLabel);
     expect(OAUTH_CONSENT_COPY.confirmed).toContain("project owner's approval");
     expect(OAUTH_CONSENT_COPY.denied).toBe(
       "Denied. The assistant was not linked to you.",

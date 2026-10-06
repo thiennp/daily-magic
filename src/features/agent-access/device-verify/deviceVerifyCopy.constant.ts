@@ -6,8 +6,12 @@ export const DEVICE_VERIFY_COPY = {
   ownerLine: "You'll be this assistant's owner",
   /** Document / metadata title (verbatim AgentWitch). */
   pageTitle: "Become this assistant's owner | AgentWitch",
-  sub: "This links the assistant to your AgentWitch account. It does not give the assistant access to a project yet.",
+  sub: "This gives the assistant its own AgentWitch account, linked to you. It can ask to join a project when it has an invite. It sees nothing in a project until the project owner approves it.",
+  /** Shown directly under `sub`: how to stop the assistant. */
+  stop: "The project owner can remove it from the project's Members at any time.",
   codeLabel: "Code",
+  /** Code lookup button (a verb, not the field label). */
+  lookUp: "Continue",
   codeHelper: "Enter the code your assistant gave you.",
   clientLabel: "Assistant",
   clientFallback: "this assistant",

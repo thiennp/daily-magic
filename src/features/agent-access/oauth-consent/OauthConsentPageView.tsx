@@ -1,4 +1,5 @@
 import { OAUTH_CONSENT_COPY } from "@/features/agent-access/oauth-consent/oauthConsentCopy.constant";
+import AwcTermsLinksSentence from "@/features/agent-access/terms/AwcTermsLinksSentence";
 import { AWC_TERMS_VERSION } from "@/lib/agentAccess/awcTermsVersion.constant";
 
 type OauthConsentPageViewProps = {
@@ -23,6 +24,9 @@ export default function OauthConsentPageView({
       <h1 className="text-xl font-semibold">{OAUTH_CONSENT_COPY.title}</h1>
       <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
         {OAUTH_CONSENT_COPY.sub}
+      </p>
+      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        {OAUTH_CONSENT_COPY.stop}
       </p>
 
       {showPending ? (
@@ -80,7 +84,10 @@ export default function OauthConsentPageView({
                 required
                 className="mt-1"
               />
-              <span>{OAUTH_CONSENT_COPY.termsLabel}</span>
+              <AwcTermsLinksSentence
+                prefix={OAUTH_CONSENT_COPY.termsLabelPrefix}
+                suffix={OAUTH_CONSENT_COPY.termsLabelSuffix}
+              />
             </label>
             <div className="flex gap-3">
               <button

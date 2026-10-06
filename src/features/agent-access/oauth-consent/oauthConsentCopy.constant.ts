@@ -10,6 +10,7 @@ export const OAUTH_CONSENT_COPY = {
   ownerLine: DEVICE_VERIFY_COPY.ownerLine,
   pageTitle: DEVICE_VERIFY_COPY.pageTitle,
   sub: DEVICE_VERIFY_COPY.sub,
+  stop: DEVICE_VERIFY_COPY.stop,
   /** Reuse S1 "Assistant" label; fallback "this assistant" when unnamed. */
   clientLabel: DEVICE_VERIFY_COPY.clientLabel,
   clientFallback: DEVICE_VERIFY_COPY.clientFallback,
@@ -23,7 +24,10 @@ export const OAUTH_CONSENT_COPY = {
   confirmed: DEVICE_VERIFY_COPY.confirmed,
   denied: DEVICE_VERIFY_COPY.denied,
   expired: "This connect request expired. Start again from your assistant.",
-  termsLabel: "I accept the Terms and Privacy Policy for this assistant",
+  termsLabel: "I accept the Terms and Privacy Policy for this assistant.",
+  /** termsLabel split around the linked "Terms and Privacy Policy". */
+  termsLabelPrefix: "I accept the ",
+  termsLabelSuffix: " for this assistant.",
   termsRequired: "Accept the Terms to continue.",
   openLinkHint: "Open the link your assistant gave you to continue.",
   loginRequired: DEVICE_VERIFY_COPY.loginRequired,
