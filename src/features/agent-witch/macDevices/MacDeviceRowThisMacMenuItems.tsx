@@ -66,7 +66,7 @@ export default function MacDeviceRowThisMacMenuItems({
         ? renderMacDeviceRowMenuItem(
             runMacDeviceRowMenuAction(closeMenu, onUpdateLocal),
             <AppIcon icon={ArrowUpIcon} size="sm" />,
-            "Update Agent Witch",
+            "Update",
             false,
             true,
           )
