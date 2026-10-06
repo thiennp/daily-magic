@@ -12,7 +12,12 @@ export async function GET(): Promise<Response> {
   }
 
   // Seed the Sample: Weekly status update playbook for empty libraries.
-  await ensureSampleWorkflowCapability(actor.id);
+  // Best-effort: a seed failure must not block onboarding flags (Home shell).
+  try {
+    await ensureSampleWorkflowCapability(actor.id);
+  } catch (seedError) {
+    console.error("onboarding.bootstrap.sample_seed_failed", seedError);
+  }
 
   const flags = await loadOnboardingBootstrapFlags(actor.id);
 
