@@ -67,13 +67,3 @@ For QA and E2E on **localhost** (not `www.agentwitch.com`):
 3. `npm run test:auth:session -- test-qa-1@agentwitch.com` — prints session cookie values for DevTools.
 
 Playwright: `e2e/helpers/signInTestAccount.ts`. Details: `e2e/README.md`.
-
-## Sample notes API
-
-Legacy tutorial endpoint (optional):
-
-```bash
-curl -X POST http://localhost:3000/api/notes \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Hello","body":"Note"}'
-```

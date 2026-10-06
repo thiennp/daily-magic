@@ -20,7 +20,6 @@ Stack: Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Neon Postgre
 | `/styleguide`    | TailAdmin component styleguide |
 | `/ws-test`       | Agent Witch send-task test UI  |
 | `/api/db/health` | Neon connection health check   |
-| `/api/notes`     | Sample notes API               |
 
 **Top-level structure:**
 
