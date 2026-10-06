@@ -21,7 +21,7 @@ describe("PROJECT_PAGE_METADATA_TEXT_CLASS", () => {
       "src/features/project-skill-share/internal/presentation/ProjectSkillRow.tsx",
       "src/features/project-skill-share/internal/presentation/ProjectSkillPublishForm.tsx",
       "src/features/project-skill-share/internal/presentation/ProjectSkillsSection.tsx",
-      "src/features/projects/access/inbox/AwcProjectInboxSection.tsx",
+      "src/features/projects/access/inbox/AwcProjectInboxBody.tsx",
     ];
     for (const file of files) {
       const source = readSrc(file);
