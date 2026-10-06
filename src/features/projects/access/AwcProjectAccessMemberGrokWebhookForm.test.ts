@@ -9,9 +9,14 @@ import { mapWakeLinkSaveError } from "@/features/projects/access/hooks/useMember
 
 const read = (path: string): string =>
   readFileSync(join(process.cwd(), path), "utf8");
-const src = read(
+/** Toggle shell + expanded fields + deep-link open hook (split for file size). */
+const src = [
   "src/features/projects/access/AwcProjectAccessMemberGrokWebhookForm.tsx",
-);
+  "src/features/projects/access/AwcProjectAccessMemberGrokWakeLinkFields.tsx",
+  "src/features/projects/access/hooks/useWakeLinkOpenRequest.ts",
+]
+  .map(read)
+  .join("\n");
 const input = read(
   "src/features/projects/access/AwcProjectAccessSecretInput.tsx",
 );
@@ -74,6 +79,7 @@ describe("member Grok webhook secret form", () => {
     expect(src).toContain("openForm()");
     expect(src).toContain('input[name="grok-webhook-url"]');
     expect(src).toContain("awcGrokWakeLinkHash(membershipId)");
+    expect(src).toContain("history.replaceState");
   });
 
   it("My bots keeps the shared form hint (points to the bot info pane, not chat or a link)", () => {

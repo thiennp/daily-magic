@@ -12,16 +12,20 @@ interface AwaitingMember {
 }
 
 interface AwcProjectAccessWakeLinkAwaitingBannerProps {
-  readonly members: readonly AwaitingMember[];
-  readonly onAddWakeLink: (membershipId: string) => void;
+  readonly wakeLinks: {
+    /** Member bots still waiting for a wake link. */
+    readonly awaiting: readonly AwaitingMember[];
+    /** "Add wake link": expand + focus that member's Grok wake link form. */
+    readonly focus: (membershipId: string) => void;
+  };
 }
 
 /** Owner-only: one card per member bot still waiting for its Grok wake link. */
 export default function AwcProjectAccessWakeLinkAwaitingBanner({
-  members,
-  onAddWakeLink,
+  wakeLinks,
 }: AwcProjectAccessWakeLinkAwaitingBannerProps) {
   const copy = AWC_GROK_WAKE_AWAITING_COPY;
+  const members = wakeLinks.awaiting;
   if (members.length === 0) {
     return null;
   }
@@ -47,7 +51,7 @@ export default function AwcProjectAccessWakeLinkAwaitingBanner({
             <button
               type="button"
               className={AWC_PROJECT_ACCESS_CTA.primary}
-              onClick={() => onAddWakeLink(member.id)}
+              onClick={() => wakeLinks.focus(member.id)}
             >
               {copy.cta}
             </button>

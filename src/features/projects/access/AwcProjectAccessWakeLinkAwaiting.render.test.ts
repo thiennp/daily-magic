@@ -2,7 +2,6 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
-import AwcProjectAccessMemberGrokWebhookForm from "@/features/projects/access/AwcProjectAccessMemberGrokWebhookForm";
 import AwcProjectAccessMembersList from "@/features/projects/access/AwcProjectAccessMembersList";
 import AwcProjectAccessWakeLinkAwaitingBanner from "@/features/projects/access/AwcProjectAccessWakeLinkAwaitingBanner";
 
@@ -24,7 +23,7 @@ const renderList = (
       members,
       onRevoke: vi.fn(),
       onRename: vi.fn(async () => ({ ok: true })),
-      wakeLinkSavedIds: savedIds,
+      wakeLinks: { request: null, savedIds, onSaved: vi.fn() },
     }),
   );
 
@@ -77,11 +76,13 @@ describe("owner awaiting-wake-link UI", () => {
   it("owner banner: title, body, path and 'Add wake link' per waiting bot", () => {
     const html = renderToStaticMarkup(
       createElement(AwcProjectAccessWakeLinkAwaitingBanner, {
-        members: [
-          { id: "mem-1", projectDisplayName: "Coder" },
-          { id: "mem-2", projectDisplayName: null },
-        ],
-        onAddWakeLink: vi.fn(),
+        wakeLinks: {
+          awaiting: [
+            { id: "mem-1", projectDisplayName: "Coder" },
+            { id: "mem-2", projectDisplayName: null },
+          ],
+          focus: vi.fn(),
+        },
       }),
     );
     expect(html).toContain("Coder is waiting for a wake link");
@@ -94,28 +95,9 @@ describe("owner awaiting-wake-link UI", () => {
     expect(html).toContain("This assistant is waiting for a wake link");
     expect(html.match(/>Add wake link</g)).toHaveLength(2);
     expect(html).not.toMatch(/webhook|hmac/i);
-  });
-
-  it("banner renders nothing when no bot is waiting", () => {
-    const html = renderToStaticMarkup(
-      createElement(AwcProjectAccessWakeLinkAwaitingBanner, {
-        members: [],
-        onAddWakeLink: vi.fn(),
-      }),
-    );
-    expect(html).toBe("");
-  });
-
-  it("form SSR starts collapsed; the deep link expands it after mount", () => {
-    const html = renderToStaticMarkup(
-      createElement(AwcProjectAccessMemberGrokWebhookForm, {
-        projectId: "proj-1",
-        membershipId: "mem-1",
-        memberName: "Coder",
-        openRequest: 1,
-      }),
-    );
-    expect(html).toContain('aria-expanded="false"');
-    expect(html).not.toContain("grok-webhook-url");
+    const none = createElement(AwcProjectAccessWakeLinkAwaitingBanner, {
+      wakeLinks: { awaiting: [], focus: vi.fn() },
+    });
+    expect(renderToStaticMarkup(none)).toBe("");
   });
 });

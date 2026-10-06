@@ -74,6 +74,7 @@ describe("GET /api/projects/:projectId/access for human seats", () => {
       actorRole: "member",
     });
     expect(body.members).toHaveLength(1);
+    expect(body.members[0]).not.toHaveProperty("wakeLinkSet");
     expect(listPending).not.toHaveBeenCalled();
     expect(enrichComputers).toHaveBeenCalled();
   });
