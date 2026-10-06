@@ -70,6 +70,7 @@ describe("join calls resolveInitialProjectMembershipDeliveryMode", () => {
       requestId: "req-1",
       ownerUserId: "owner-1",
       projectDisplayName: "Coder",
+      approvalSource: "owner",
     });
     expect(approved.ok).toBe(true);
     expect(applyMode).toHaveBeenCalledWith(
