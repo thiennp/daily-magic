@@ -1,4 +1,5 @@
 import type { AgentAccessToolDefinition } from "@/lib/agentAccess/agentAccessToolCatalog.constant";
+import { AWL_REPAIR_THIS_COMPUTER_POINTER_COPY } from "@/lib/agentAccess/awlRepairThisComputerPointerCopy.constant";
 
 const deviceIdSchema = {
   type: "string",
@@ -10,8 +11,7 @@ export const AGENT_ACCESS_WORKFLOW_TOOLS: readonly AgentAccessToolDefinition[] =
   [
     {
       name: "get_install_command",
-      description:
-        "Return a shell command that installs Agent Witch on this computer and pairs it to the token account. Run it yourself. No human account is required.",
+      description: `Return a shell command that installs Agent Witch on this computer and pairs it to the token account. Run it yourself. No human account is required. ${AWL_REPAIR_THIS_COMPUTER_POINTER_COPY.installCommandTool}`,
       inputSchema: {
         type: "object",
         properties: {},

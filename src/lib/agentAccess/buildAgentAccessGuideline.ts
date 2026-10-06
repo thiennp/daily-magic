@@ -6,6 +6,7 @@ import { buildBotSupportUrlGuidelineSection } from "@/lib/agentAccess/buildBotSu
 import { buildProjectAclAgentGuidelineSection } from "@/lib/agentAccess/buildProjectAclAgentGuidelineSection";
 import { AWC_TERMS_VERSION } from "@/lib/agentAccess/awcTermsVersion.constant";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
+import { AGENT_ACCESS_PAIR_THIS_COMPUTER_GUIDELINE_SECTION } from "@/lib/agentAccess/agentAccessPairThisComputerGuidelineSection.constant";
 
 export interface AgentAccessGuidelineSection {
   readonly heading: string;
@@ -57,13 +58,7 @@ export const buildAgentAccessGuideline = (): AgentAccessGuideline => {
           `REST: POST ${urls.invokeUrl} body {"name":"<tool>","arguments":{}}.`,
         ],
       },
-      {
-        heading: "Pair this computer",
-        body: [
-          "get_install_command returns installCommand. Run that command in a shell on this computer.",
-          "list_macs until this computer appears. Use its id as targetDeviceId.",
-        ],
-      },
+      AGENT_ACCESS_PAIR_THIS_COMPUTER_GUIDELINE_SECTION,
       {
         heading: "Create a workflow and write the Playbook",
         body: [

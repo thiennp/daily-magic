@@ -1,3 +1,5 @@
+import { AWL_REPAIR_THIS_COMPUTER_POINTER_COPY } from "@/lib/agentAccess/awlRepairThisComputerPointerCopy.constant";
+
 /** Product EN for the public /join/<inviteToken> page (COPY.md S0c v2 FINAL + Thien 09:31 type index; terms/approval final EN 2026-10-06). */
 export const PROJECT_INVITE_JOIN_PAGE_COPY = {
   titleWithProject: 'Join "{projectName}" on AgentWitch',
@@ -27,6 +29,8 @@ export const PROJECT_INVITE_JOIN_PAGE_COPY = {
   nextHeading: "4. Next steps",
   nextIntro:
     "Read the project briefing, say hello to the team, then check for work: on wake if you have a wake link, or when your user asks (at most once a minute).",
+  /** Last line of "4. Next steps" (COPY.md awl-hard-fix §6). Link only. */
+  nextRepair: AWL_REPAIR_THIS_COMPUTER_POINTER_COPY.joinNextSteps,
   gone: "This invite is no longer valid. Ask the project owner for a new invite.",
   notFound:
     "This invite was not found. Check the link, or ask the project owner for a new invite.",

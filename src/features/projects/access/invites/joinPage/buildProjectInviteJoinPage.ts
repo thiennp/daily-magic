@@ -86,6 +86,7 @@ export const buildProjectInviteJoinPage = (
       ...sections.poll,
       ...sections.leave,
       ...sections.productUpdates,
+      COPY.nextRepair,
       ...(sections.projectLine ? [sections.projectLine] : []),
     ],
     pollLimitPerMinute: PROJECT_INVITE_JOIN_POLL_LIMIT_PER_MINUTE,
