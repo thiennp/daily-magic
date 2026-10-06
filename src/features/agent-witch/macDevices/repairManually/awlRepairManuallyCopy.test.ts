@@ -14,7 +14,8 @@ describe("AWL_REPAIR_MANUALLY_COPY (COPY.md §6 lock)", () => {
         "Run these steps in Terminal on this computer. Start at step 1 and stop once the check works.",
       restartTitle: "Restart AgentWitch Local",
       updateTitle: "Update AgentWitch Local",
-      updateHelper: "Keeps this computer linked to your account.",
+      updateHelper:
+        "Keeps this computer linked to your account. If it can't find the link, go to step 3.",
       reconnectTitle: "Reconnect this computer",
       reconnectHelper:
         "Only if step 2 didn't help. On Home, choose Connect this computer and run the command it shows.",

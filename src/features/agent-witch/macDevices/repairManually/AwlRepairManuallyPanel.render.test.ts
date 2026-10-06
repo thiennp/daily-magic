@@ -31,7 +31,7 @@ describe("AwlRepairManuallyPanel render", () => {
     for (const text of [
       "Restart AgentWitch Local",
       "Update AgentWitch Local",
-      "Keeps this computer linked to your account.",
+      "Keeps this computer linked to your account. If it can't find the link, go to step 3.",
       "Reconnect this computer",
       "Only if step 2 didn't help. On Home, choose Connect this computer and run the command it shows.",
       "Check it works",
