@@ -19,6 +19,9 @@ struct FirstRunWizardView: View {
                 stepList
                 statusCard
                 actions
+                openAtLoginRow
+                    .padding(12)
+                    .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.surface))
                 agentToolsPreview
                 DownloadAwlLink(style: .prominent)
                 Text("Need the installer on another Mac? Download AWL stays available here.")
@@ -53,7 +56,7 @@ struct FirstRunWizardView: View {
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 12).fill(MacAppTheme.heroGradient.opacity(0.15)))
+        .background(RoundedRectangle(cornerRadius: 12).fill(MacAppTheme.playSoft))
     }
 
     @ViewBuilder
@@ -105,6 +108,21 @@ struct FirstRunWizardView: View {
         }
     }
 
+    private var openAtLoginRow: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Toggle(
+                "Open at login",
+                isOn: Binding(
+                    get: { controller.launchesAtLogin },
+                    set: { controller.toggleLaunchAtLogin($0) }
+                )
+            )
+            Text(controller.launchesAtLogin ? "Opens at login" : "Will not open at login")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+    }
+
     private var agentToolsPreview: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Agent tools")
@@ -123,7 +141,7 @@ struct FirstRunWizardView: View {
             }
         }
         .padding(12)
-        .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
+        .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.surface))
     }
 
     private func wizardStep(_ n: String, _ title: String, _ detail: String, active: Bool) -> some View {

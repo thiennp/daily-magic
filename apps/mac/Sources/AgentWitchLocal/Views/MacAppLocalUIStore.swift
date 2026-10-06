@@ -1,23 +1,34 @@
 import Foundation
 import Combine
 
-/// Local-only UI preferences and v1 History stubs (S5 local store not on this base).
-/// Stub rows are clearly labeled; nothing here invents cloud history.
+/// Local-only UI preferences and stub data for Claude Mac windows.
+/// Product defaults: CLI Add-to-project OFF; History ON; no invented backend.
 @MainActor
 final class MacAppLocalUIStore: ObservableObject {
     static let shared = MacAppLocalUIStore()
 
     private let defaults: UserDefaults
+
     private enum Key {
         static let computerName = "awl.ui.computerName"
         static let historyEnabled = "awl.ui.historyEnabled"
         static let historyKeepDays = "awl.ui.historyKeepDays"
         static let autoUpdate = "awl.ui.autoUpdate"
-        static let cliPrefix = "awl.ui.cli.addToProject."
-        static let historyStubSeeded = "awl.ui.historyStubSeeded"
-        static let historyJSON = "awl.ui.historyStubJSON"
+        static let updateChannel = "awl.ui.updateChannel"
+        static let cliPrefix = "awl.ui.cliAdd."
+        static let cliInstalledPrefix = "awl.ui.cliInstalled."
         static let isOwner = "awl.ui.isOwner"
         static let hasConnectedProject = "awl.ui.hasConnectedProject"
+        static let historyJSON = "awl.ui.historyJSON.v2"
+        static let historyStubSeeded = "awl.ui.historyStubSeeded.v2"
+        static let notifyDone = "awl.ui.notifyDone"
+        static let notifyFail = "awl.ui.notifyFail"
+        static let notifyAsk = "awl.ui.notifyAsk"
+        static let askBeforeCommand = "awl.ui.askBeforeCommand"
+        static let askBeforeOutsideFolder = "awl.ui.askBeforeOutsideFolder"
+        static let showTrayIcon = "awl.ui.showTrayIcon"
+        static let keepRunningClosed = "awl.ui.keepRunningClosed"
+        static let autoStartCore = "awl.ui.autoStartCore"
     }
 
     @Published var computerName: String {
@@ -32,11 +43,23 @@ final class MacAppLocalUIStore: ObservableObject {
     @Published var autoUpdate: Bool {
         didSet { defaults.set(autoUpdate, forKey: Key.autoUpdate) }
     }
+    /// "stable" | "early"
+    @Published var updateChannel: String {
+        didSet { defaults.set(updateChannel, forKey: Key.updateChannel) }
+    }
     /// Product default: Add-to-project switches are OFF until the owner turns them on.
     @Published var cliAddToProject: [AgentCliKind: Bool] {
         didSet {
             for (kind, on) in cliAddToProject {
                 defaults.set(on, forKey: Key.cliPrefix + kind.rawValue)
+            }
+        }
+    }
+    /// UI-only install presence for Computer → Agent tools (stub scan).
+    @Published var cliInstalled: [AgentCliKind: Bool] {
+        didSet {
+            for (kind, on) in cliInstalled {
+                defaults.set(on, forKey: Key.cliInstalledPrefix + kind.rawValue)
             }
         }
     }
@@ -49,6 +72,32 @@ final class MacAppLocalUIStore: ObservableObject {
     @Published var historyItems: [LocalHistoryStubItem] {
         didSet { persistHistory() }
     }
+    @Published var notifyDone: Bool {
+        didSet { defaults.set(notifyDone, forKey: Key.notifyDone) }
+    }
+    @Published var notifyFail: Bool {
+        didSet { defaults.set(notifyFail, forKey: Key.notifyFail) }
+    }
+    @Published var notifyAsk: Bool {
+        didSet { defaults.set(notifyAsk, forKey: Key.notifyAsk) }
+    }
+    @Published var askBeforeCommand: Bool {
+        didSet { defaults.set(askBeforeCommand, forKey: Key.askBeforeCommand) }
+    }
+    @Published var askBeforeOutsideFolder: Bool {
+        didSet { defaults.set(askBeforeOutsideFolder, forKey: Key.askBeforeOutsideFolder) }
+    }
+    @Published var showTrayIcon: Bool {
+        didSet { defaults.set(showTrayIcon, forKey: Key.showTrayIcon) }
+    }
+    @Published var keepRunningClosed: Bool {
+        didSet { defaults.set(keepRunningClosed, forKey: Key.keepRunningClosed) }
+    }
+    @Published var autoStartCore: Bool {
+        didSet { defaults.set(autoStartCore, forKey: Key.autoStartCore) }
+    }
+    /// UI stub bot rows for Computer → Bots tab.
+    @Published var botStubs: [LocalBotStubItem]
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
@@ -57,14 +106,29 @@ final class MacAppLocalUIStore: ObservableObject {
         self.historyEnabled = defaults.object(forKey: Key.historyEnabled) as? Bool ?? true
         self.historyKeepDays = defaults.object(forKey: Key.historyKeepDays) as? Int ?? 30
         self.autoUpdate = defaults.object(forKey: Key.autoUpdate) as? Bool ?? true
+        self.updateChannel = defaults.string(forKey: Key.updateChannel) ?? "stable"
         self.isOwner = defaults.object(forKey: Key.isOwner) as? Bool ?? true
         self.hasConnectedProject = defaults.object(forKey: Key.hasConnectedProject) as? Bool ?? true
+        self.notifyDone = defaults.object(forKey: Key.notifyDone) as? Bool ?? true
+        self.notifyFail = defaults.object(forKey: Key.notifyFail) as? Bool ?? true
+        self.notifyAsk = defaults.object(forKey: Key.notifyAsk) as? Bool ?? true
+        self.askBeforeCommand = defaults.object(forKey: Key.askBeforeCommand) as? Bool ?? true
+        self.askBeforeOutsideFolder = defaults.object(forKey: Key.askBeforeOutsideFolder) as? Bool ?? true
+        self.showTrayIcon = defaults.object(forKey: Key.showTrayIcon) as? Bool ?? true
+        self.keepRunningClosed = defaults.object(forKey: Key.keepRunningClosed) as? Bool ?? true
+        self.autoStartCore = defaults.object(forKey: Key.autoStartCore) as? Bool ?? true
         var toggles: [AgentCliKind: Bool] = [:]
+        var installed: [AgentCliKind: Bool] = [:]
         for kind in AgentCliKind.allCases {
             // HARD default OFF — do not treat missing key as on.
             toggles[kind] = defaults.object(forKey: Key.cliPrefix + kind.rawValue) as? Bool ?? false
+            // Default: Claude + Cursor look installed; Codex/Gemini missing (matches HTML demo).
+            let defaultInstalled = (kind == .claude || kind == .cursor)
+            installed[kind] = defaults.object(forKey: Key.cliInstalledPrefix + kind.rawValue) as? Bool ?? defaultInstalled
         }
         self.cliAddToProject = toggles
+        self.cliInstalled = installed
+        self.botStubs = LocalBotStubItem.seedStubs()
         if let data = defaults.data(forKey: Key.historyJSON),
            let decoded = try? JSONDecoder().decode([LocalHistoryStubItem].self, from: data) {
             self.historyItems = decoded
@@ -96,11 +160,29 @@ final class MacAppLocalUIStore: ObservableObject {
         return nil
     }
 
+    var toolsReadyCount: Int {
+        AgentCliKind.allCases.filter { cliInstalled[$0] == true }.count
+    }
+
     /// Rough local stub for space-used display (not real disk metering).
     var historySpaceUsedLabel: String {
         let bytes = max(1, historyItems.count) * 128_000
-        if bytes < 1_000_000 { return String(format: "%.0f KB (stub)", Double(bytes) / 1000) }
-        return String(format: "%.1f MB (stub)", Double(bytes) / 1_000_000)
+        if bytes < 1_000_000 { return String(format: "%.0f KB (local stub)", Double(bytes) / 1000) }
+        return String(format: "%.1f MB (local stub)", Double(bytes) / 1_000_000)
+    }
+
+    func clearHistory(projectFilter: String?) {
+        if let projectFilter, projectFilter != "all" {
+            historyItems = historyItems.filter { $0.project != projectFilter }
+        } else {
+            historyItems = []
+        }
+    }
+
+    /// UI-only rescan stub — flips scanning flag in ComputerView; does not invent backend.
+    func markToolsRescanned() {
+        // Keep current install map; presence is local UI stub only.
+        objectWillChange.send()
     }
 
     private func persistHistory() {
@@ -135,6 +217,24 @@ enum AgentCliKind: String, CaseIterable, Identifiable, Codable {
         case .gemini: return "sparkles"
         }
     }
+
+    var installHint: String {
+        switch self {
+        case .claude: return "npm install -g @anthropic-ai/claude-code"
+        case .cursor: return "curl https://cursor.com/install -fsS | bash"
+        case .codex: return "codex login"
+        case .gemini: return "npm install -g @google/gemini-cli"
+        }
+    }
+
+    var installTitle: String {
+        switch self {
+        case .claude: return "Install Claude Code"
+        case .cursor: return "Install Cursor CLI"
+        case .codex: return "How to sign in"
+        case .gemini: return "Install Gemini CLI"
+        }
+    }
 }
 
 struct LocalHistoryStubItem: Identifiable, Codable, Equatable {
@@ -142,44 +242,39 @@ struct LocalHistoryStubItem: Identifiable, Codable, Equatable {
     var title: String
     var bot: String
     var project: String
+    var cli: String
     var summary: String
     var status: String
     var whenLabel: String
+    var errorDetail: String?
     /// Clear label so stubs are never mistaken for cloud history.
     var isStub: Bool
 
     static func seedStubs() -> [LocalHistoryStubItem] {
         [
-            .init(
-                id: "stub-1",
-                title: "Review pull request #482",
-                bot: "PR reviewer",
-                project: "infusion",
-                summary: "Left 6 comments. No blocking issues found.",
-                status: "done",
-                whenLabel: "Today",
-                isStub: true
-            ),
-            .init(
-                id: "stub-2",
-                title: "Morning brief for the team",
-                bot: "Morning brief",
-                project: "infusion",
-                summary: "Collected calendar, mail and open tasks into one page.",
-                status: "done",
-                whenLabel: "Yesterday",
-                isStub: true
-            ),
-            .init(
-                id: "stub-3",
-                title: "Check broken links",
-                bot: "Docs updater",
-                project: "Grey - Study",
-                summary: "Could not finish checking links. The tool lost its sign-in.",
-                status: "failed",
-                whenLabel: "2 days ago",
-                isStub: true
-            ),
+            .init(id: "stub-1", title: "Summarise yesterday's pull requests", bot: "Daily summary", project: "infusion", cli: "claude", summary: "Wrote a short summary of 9 pull requests and flagged 2 that need a second look.", status: "done", whenLabel: "Today", errorDetail: nil, isStub: true),
+            .init(id: "stub-2", title: "Review pull request #482", bot: "PR reviewer", project: "infusion", cli: "cursor", summary: "Left 6 comments. No blocking issues found.", status: "done", whenLabel: "Today", errorDetail: nil, isStub: true),
+            .init(id: "stub-3", title: "Morning brief for the team", bot: "Morning brief", project: "daily-magic", cli: "claude", summary: "Collected calendar, mail and open tasks into one page.", status: "done", whenLabel: "Yesterday", errorDetail: nil, isStub: true),
+            .init(id: "stub-4", title: "Update the onboarding docs", bot: "Docs updater", project: "northwind-docs", cli: "codex", summary: "Changed 4 pages to match the new sign-in flow.", status: "done", whenLabel: "2 days ago", errorDetail: nil, isStub: true),
+            .init(id: "stub-5", title: "Fix the failing build", bot: "PR reviewer", project: "infusion", cli: "cursor", summary: "The build still fails in the test step.", status: "failed", whenLabel: "2 days ago", errorDetail: "Tests did not finish in 10 minutes and were stopped.", isStub: true),
+            .init(id: "stub-6", title: "Draft the weekly update", bot: "Morning brief", project: "daily-magic", cli: "claude", summary: "Drafted 5 short paragraphs from this week's notes.", status: "done", whenLabel: "3 days ago", errorDetail: nil, isStub: true),
+            .init(id: "stub-7", title: "Check broken links", bot: "Docs updater", project: "northwind-docs", cli: "codex", summary: "Could not finish checking links.", status: "failed", whenLabel: "4 days ago", errorDetail: "The tool lost its sign-in. Sign in to Codex and run it again.", isStub: true),
+        ]
+    }
+}
+
+struct LocalBotStubItem: Identifiable, Equatable {
+    var id: String
+    var name: String
+    var project: String
+    var cli: String
+    var working: Bool
+
+    static func seedStubs() -> [LocalBotStubItem] {
+        [
+            .init(id: "bot-1", name: "PR reviewer", project: "infusion", cli: "cursor", working: false),
+            .init(id: "bot-2", name: "Morning brief", project: "daily-magic", cli: "claude", working: false),
+            .init(id: "bot-3", name: "Docs updater", project: "northwind-docs", cli: "codex", working: false),
         ]
     }
 }

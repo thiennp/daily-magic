@@ -6,6 +6,7 @@ struct MacAppMenuBarContentView: View {
     @ObservedObject var controller: MacAppMenuController
     @ObservedObject var store: MacAppLocalUIStore
     @Environment(\.openWindow) private var openWindow
+    @State private var showQuitConfirm = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -28,6 +29,16 @@ struct MacAppMenuBarContentView: View {
             controller.refreshInstallAndHealth()
         }
         .awlWindowOpener()
+        .alert("Quit AgentWitch Local?", isPresented: $showQuitConfirm) {
+            Button("Cancel", role: .cancel) {}
+            Button("Quit", role: .destructive) {
+                NSApplication.shared.terminate(nil)
+            }
+        } message: {
+            Text(controller.state == .running
+                 ? "Bots cannot use this computer until you open the app again. The menu bar icon goes away until you open the app again."
+                 : "The menu bar icon goes away until you open the app again.")
+        }
     }
 
     private var hero: some View {
@@ -87,12 +98,45 @@ struct MacAppMenuBarContentView: View {
             .buttonStyle(.borderless)
         } else {
             runtimeButtons
+            if store.hasConnectedProject {
+                Text("This computer is connected as \(store.computerName)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .padding(.top, 4)
+            } else if controller.state != .notInstalled {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("No project yet")
+                        .font(.subheadline.weight(.semibold))
+                    Text("Connect this computer to a project to let its bots work here.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Button("Connect a project") {
+                        controller.openConnectThisMac()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(MacAppTheme.accent)
+                    .controlSize(.small)
+                }
+                .padding(10)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.skillSoft.opacity(0.7)))
+            }
         }
-        Button {
-            openWindow(id: MacAppWindowID.computer.rawValue)
-        } label: {
-            Label("Computer", systemImage: "desktopcomputer")
+        HStack(spacing: 8) {
+            Button {
+                controller.openLocalStatus()
+            } label: {
+                Label("Open AgentWitch", systemImage: "safari")
+            }
+            .controlSize(.small)
+            Button {
+                openWindow(id: MacAppWindowID.computer.rawValue)
+            } label: {
+                Label("Open window", systemImage: "desktopcomputer")
+            }
+            .controlSize(.small)
         }
+        .padding(.top, 6)
     }
 
     private func updateStrip(_ offer: UpdateOffer) -> some View {
@@ -141,7 +185,7 @@ struct MacAppMenuBarContentView: View {
                 DownloadAwlLink(style: .compactFooter)
 
                 Button {
-                    NSApplication.shared.terminate(nil)
+                    showQuitConfirm = true
                 } label: {
                     Label("Quit", systemImage: "power")
                 }
@@ -154,7 +198,7 @@ struct MacAppMenuBarContentView: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
-        .background(Color.white.opacity(0.85))
+        .background(MacAppTheme.surface.opacity(0.95))
     }
 
     @ViewBuilder

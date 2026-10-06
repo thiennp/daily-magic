@@ -30,7 +30,7 @@ struct DownloadAwlLink: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
-            .tint(Color(red: 0.22, green: 0.55, blue: 0.95))
+            .tint(MacAppTheme.accent)
             .help("Open https://www.agentwitch.com/download")
         case .compactFooter:
             Button {
@@ -40,7 +40,7 @@ struct DownloadAwlLink: View {
                     .font(.caption.weight(.semibold))
             }
             .buttonStyle(.borderless)
-            .foregroundStyle(Color(red: 0.15, green: 0.45, blue: 0.95))
+            .foregroundStyle(MacAppTheme.accent)
             .help("Open https://www.agentwitch.com/download")
         }
     }
