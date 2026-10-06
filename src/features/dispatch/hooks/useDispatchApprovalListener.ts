@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/AgentWitchDashboardContext";
 import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/useAgentWitchDashboardSubscription";
+import type { DispatchApprovalRequest } from "@/features/dispatch/hooks/dispatchApprovalRequest.type";
 import {
   parseDispatchApprovalSocketMessage,
   sendAgentRunInputResponse,
@@ -12,12 +13,7 @@ import {
 } from "@/features/dispatch/utils/dispatchApprovalSocket";
 import { isAgentRunLiveTerminalActive } from "@/features/reports/utils/registerAgentRunLiveTerminal";
 
-export interface DispatchApprovalRequest {
-  readonly runId: string;
-  readonly requesterEmail: string | null;
-  readonly prompt: string;
-  readonly approvalExpiresAt: string | null;
-}
+export type { DispatchApprovalRequest };
 
 export function useDispatchApprovalListener(): {
   readonly pendingApproval: DispatchApprovalRequest | null;

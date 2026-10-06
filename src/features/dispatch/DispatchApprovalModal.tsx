@@ -7,7 +7,11 @@ import type { DispatchApprovalRequest } from "@/features/dispatch/hooks/useDispa
 import { useNowMsEvery } from "@/features/dispatch/hooks/useNowMsEvery";
 import { resolveDispatchApprovalExpiry } from "@/features/dispatch/utils/resolveDispatchApprovalExpiry";
 import { formatDispatchApprovalCardBody } from "@/features/dispatch/utils/formatDispatchApprovalCardBody";
-import { DISPATCH_APPROVAL_CARD_COPY } from "@/features/dispatch/dispatchApprovalCardCopy.constant";
+import {
+  formatDispatchApprovalCardTitle,
+  formatDispatchApprovalFolderLine,
+  hasRichDispatchApprovalCard,
+} from "@/features/dispatch/utils/formatDispatchApprovalCardTitle";
 import { AWC_PENDING_APPROVAL_CARD_COPY } from "@/features/projects/access/approvalCard/awcPendingApprovalCardCopy.constant";
 
 interface DispatchApprovalModalProps {
@@ -32,6 +36,14 @@ export default function DispatchApprovalModal({
     nowMs,
   });
   const ended = expiry.kind === "ended";
+  const cardFields = {
+    requester: request.requesterEmail,
+    tool: request.tool,
+    computerName: request.computerName,
+    projectFolder: request.projectFolder,
+  };
+  const rich = hasRichDispatchApprovalCard(cardFields);
+  const folderLine = formatDispatchApprovalFolderLine(request.projectFolder);
 
   return (
     <Modal
@@ -41,27 +53,27 @@ export default function DispatchApprovalModal({
       className="max-w-lg p-6"
     >
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-        {DISPATCH_APPROVAL_CARD_COPY.title}
+        {formatDispatchApprovalCardTitle(cardFields)}
       </h2>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        {formatDispatchApprovalCardBody(request.requesterEmail)}
-      </p>
+      {!rich ? (
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          {formatDispatchApprovalCardBody(request.requesterEmail)}
+        </p>
+      ) : null}
+      {folderLine !== null ? (
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          {folderLine}
+        </p>
+      ) : null}
       <pre className="mt-4 max-h-40 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
         {request.prompt}
       </pre>
       <DispatchApprovalExpiryNote id={EXPIRY_NOTE_ID} expiry={expiry} />
       <div className="mt-6 flex flex-wrap justify-end gap-3">
-        <Button
-          variant="outline"
-          onClick={onDeny}
-          disabled={ended}
-        >
+        <Button variant="outline" onClick={onDeny} disabled={ended}>
           {AWC_PENDING_APPROVAL_CARD_COPY.deny}
         </Button>
-        <Button
-          onClick={onApprove}
-          disabled={ended}
-        >
+        <Button onClick={onApprove} disabled={ended}>
           {AWC_PENDING_APPROVAL_CARD_COPY.approve}
         </Button>
       </div>

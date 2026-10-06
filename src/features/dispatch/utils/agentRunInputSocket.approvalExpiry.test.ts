@@ -20,6 +20,9 @@ describe("parseDispatchApprovalSocketMessage approval expiry (S0)", () => {
       prompt: "Fix it",
       requesterEmail: "sam",
       approvalExpiresAt: "2026-10-06T14:15:00.000Z",
+      tool: null,
+      computerName: null,
+      projectFolder: null,
     });
   });
 
@@ -40,6 +43,42 @@ describe("parseDispatchApprovalSocketMessage requester (S0 card)", () => {
     });
     expect(onApprovalRequired).toHaveBeenCalledWith(
       expect.objectContaining({ requesterEmail: null }),
+    );
+  });
+});
+
+describe("parseDispatchApprovalSocketMessage richer card fields", () => {
+  it("passes tool, computerName, and projectFolder when present", () => {
+    const onApprovalRequired = vi.fn();
+    parseDispatchApprovalSocketMessage(
+      message({
+        tool: "claude-cli",
+        computerName: "Studio Mac",
+        projectFolder: "/Users/me/app",
+      }),
+      { onApprovalRequired },
+    );
+    expect(onApprovalRequired).toHaveBeenCalledWith(
+      expect.objectContaining({
+        tool: "claude-cli",
+        computerName: "Studio Mac",
+        projectFolder: "/Users/me/app",
+      }),
+    );
+  });
+
+  it("treats blank rich fields as null so the card falls back", () => {
+    const onApprovalRequired = vi.fn();
+    parseDispatchApprovalSocketMessage(
+      message({ tool: "  ", computerName: "", projectFolder: " " }),
+      { onApprovalRequired },
+    );
+    expect(onApprovalRequired).toHaveBeenCalledWith(
+      expect.objectContaining({
+        tool: null,
+        computerName: null,
+        projectFolder: null,
+      }),
     );
   });
 });

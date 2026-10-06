@@ -7,17 +7,31 @@ export interface AgentRunInputRequest {
   readonly partialOutput: string;
 }
 
+export type DispatchApprovalRequiredPayload = {
+  readonly runId: string;
+  /** Requester name, label or email; null when the server sent none. */
+  readonly requesterEmail: string | null;
+  readonly prompt: string;
+  /** S0: ISO time the 15-minute approval window ends; null on old servers. */
+  readonly approvalExpiresAt: string | null;
+  /** Optional richer card fields (API tip d0832fdd). */
+  readonly tool: string | null;
+  readonly computerName: string | null;
+  readonly projectFolder: string | null;
+};
+
+const optionalTrimmedString = (value: unknown): string | null => {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+};
+
 export const parseDispatchApprovalSocketMessage = (
   parsed: Record<string, unknown>,
   handlers: {
-    readonly onApprovalRequired: (payload: {
-      readonly runId: string;
-      /** Requester name, label or email; null when the server sent none. */
-      readonly requesterEmail: string | null;
-      readonly prompt: string;
-      /** S0: ISO time the 15-minute approval window ends; null on old servers. */
-      readonly approvalExpiresAt: string | null;
-    }) => void;
+    readonly onApprovalRequired: (
+      payload: DispatchApprovalRequiredPayload,
+    ) => void;
     readonly onInputRequired?: (payload: AgentRunInputRequest) => void;
   },
 ): void => {
@@ -30,11 +44,7 @@ export const parseDispatchApprovalSocketMessage = (
     const payload = parsed.payload as Record<string, unknown>;
     const runId = typeof payload.runId === "string" ? payload.runId : "";
     const prompt = typeof payload.prompt === "string" ? payload.prompt : "";
-    const requesterEmail =
-      typeof payload.requesterEmail === "string" &&
-      payload.requesterEmail.trim().length > 0
-        ? payload.requesterEmail.trim()
-        : null;
+    const requesterEmail = optionalTrimmedString(payload.requesterEmail);
     const approvalExpiresAt =
       typeof payload.approvalExpiresAt === "string"
         ? payload.approvalExpiresAt
@@ -46,6 +56,9 @@ export const parseDispatchApprovalSocketMessage = (
         prompt,
         requesterEmail,
         approvalExpiresAt,
+        tool: optionalTrimmedString(payload.tool),
+        computerName: optionalTrimmedString(payload.computerName),
+        projectFolder: optionalTrimmedString(payload.projectFolder),
       });
     }
   }
