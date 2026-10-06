@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import AwcMessengerThreadListPanel from "@/features/projects/messenger/AwcMessengerThreadList";
 import { ACTIVITY_PANEL_GRID_CLASS } from "@/features/projects/messenger/activityChrome.constant";
 import AwcMessengerThreadPane from "@/features/projects/messenger/AwcMessengerThreadPane";
@@ -11,6 +13,8 @@ import type { MessengerTaskDraft } from "@/features/projects/messenger/utils/val
 
 interface AwcProjectMessengerPanelsProps {
   readonly threads: AwcMessengerThreadList;
+  /** Desktop list-header action (owner Clear all bar). */
+  readonly headerAction?: ReactNode;
   readonly selectedKey: string | null;
   readonly selectedMeta: MessengerThreadMeta;
   readonly thread: AwcMessengerOpenThread | null;
@@ -28,6 +32,7 @@ interface AwcProjectMessengerPanelsProps {
 
 export default function AwcProjectMessengerPanels({
   threads,
+  headerAction,
   selectedKey,
   selectedMeta,
   thread,
@@ -51,6 +56,7 @@ export default function AwcProjectMessengerPanels({
       >
         <AwcMessengerThreadListPanel
           threads={threads}
+          headerAction={headerAction}
           selectedKey={selectedKey}
           onSelect={onSelect}
         />

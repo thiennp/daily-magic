@@ -65,6 +65,7 @@ export default function AwcProjectDetailTabPanelBody(
         key={p.activityRefreshKey}
         projectId={proj.id}
         initialThreadKey={p.activityInitialThreadKey}
+        isOwner={p.pageActorRole === "owner"}
         onUnreadMaybeChanged={p.onActivityUnreadMaybeChanged}
       />
     );

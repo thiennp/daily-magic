@@ -5,8 +5,11 @@ import { useCallback, useMemo, useState } from "react";
 import AwcProjectMessengerGateView, {
   resolveMessengerGate,
 } from "@/features/projects/messenger/AwcProjectMessengerGate";
+import AwcProjectMessengerInboxClearBar from "@/features/projects/messenger/AwcProjectMessengerInboxClearBar";
+import AwcProjectMessengerInboxClearModals from "@/features/projects/messenger/AwcProjectMessengerInboxClearModals";
 import AwcProjectMessengerHeading from "@/features/projects/messenger/AwcProjectMessengerHeading";
 import AwcProjectMessengerPanels from "@/features/projects/messenger/AwcProjectMessengerPanels";
+import { useAwcProjectMessengerInboxClear } from "@/features/projects/messenger/hooks/useAwcProjectMessengerInboxClear";
 import { useAwcProjectMessengerThread } from "@/features/projects/messenger/hooks/useAwcProjectMessengerThread";
 import { useAwcProjectMessengerThreads } from "@/features/projects/messenger/hooks/useAwcProjectMessengerThreads";
 import { defaultMessengerTaskAssignee } from "@/features/projects/messenger/utils/defaultMessengerTaskAssignee";
@@ -20,6 +23,8 @@ interface AwcProjectMessengerSectionProps {
   readonly initialThreadKey?: string | null;
   /** Parent tab badge: refresh after open/send marks read or changes unread. */
   readonly onUnreadMaybeChanged?: () => void;
+  /** Owner-only Clear all bar; non-owners fetch nothing. */
+  readonly isOwner?: boolean;
 }
 
 const WHOLE_KEY = "whole";
@@ -28,8 +33,13 @@ export default function AwcProjectMessengerSection({
   projectId,
   initialThreadKey = null,
   onUnreadMaybeChanged,
+  isOwner = false,
 }: AwcProjectMessengerSectionProps) {
   const list = useAwcProjectMessengerThreads(projectId);
+  const inboxClear = useAwcProjectMessengerInboxClear(projectId, isOwner);
+  const clearBar = inboxClear.visible ? (
+    <AwcProjectMessengerInboxClearBar clear={inboxClear} />
+  ) : null;
   const reloadThreads = list.reload;
   const [selectedKey, setSelectedKey] = useState<string | null>(
     initialThreadKey ?? WHOLE_KEY,
@@ -74,8 +84,10 @@ export default function AwcProjectMessengerSection({
         unreadTotal={unreadTotal}
         message={open.message}
       />
+      {clearBar ? <div className="md:hidden">{clearBar}</div> : null}
       <AwcProjectMessengerPanels
         threads={gate.threads}
+        headerAction={clearBar}
         selectedKey={selectedKey}
         selectedMeta={selectedMeta}
         thread={open.thread}
@@ -97,6 +109,9 @@ export default function AwcProjectMessengerSection({
         }
         onSendTask={async (draft) => afterSend(await open.sendTask(draft))}
       />
+      {isOwner ? (
+        <AwcProjectMessengerInboxClearModals clear={inboxClear} />
+      ) : null}
     </div>
   );
 }
