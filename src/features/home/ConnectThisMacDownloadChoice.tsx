@@ -1,6 +1,7 @@
 "use client";
 
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import { DOWNLOAD_PAGE_COPY } from "@/features/download/downloadPageCopy.constant";
 
 interface ConnectThisMacDownloadChoiceProps {
   readonly downloadUrl: string;
@@ -25,8 +26,7 @@ export default function ConnectThisMacDownloadChoice({
         </a>
       </p>
       <p className="text-xs text-gray-500 dark:text-gray-400">
-        The app is unsigned. On first launch, right-click the app and choose Open,
-        or allow it under System Settings → Privacy &amp; Security → Open Anyway.
+        {DOWNLOAD_PAGE_COPY.signedNote}
       </p>
     </section>
   );

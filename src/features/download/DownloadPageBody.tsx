@@ -23,7 +23,7 @@ export default function DownloadPageBody() {
       </div>
       <ul className={`list-disc space-y-2 pl-5 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         <li>{copy.siliconNote}</li>
-        <li>{copy.unsignedNote}</li>
+        <li>{copy.signedNote}</li>
         <li>{copy.afterDownload}</li>
       </ul>
     </article>

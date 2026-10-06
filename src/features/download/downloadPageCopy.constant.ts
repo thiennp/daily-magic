@@ -5,8 +5,7 @@ export const DOWNLOAD_PAGE_COPY = {
     "Get the AgentWitch menu bar app for Mac. Use it to start, stop, and check AgentWitch on this computer.",
   downloadCta: "Download for Mac",
   siliconNote: "Built for Mac on Apple Silicon (M1, M2, M3, and later).",
-  unsignedNote:
-    "The app is unsigned. On first launch, right-click the app and choose Open, or allow it under System Settings → Privacy & Security → Open Anyway.",
+  signedNote: "Signed by Developer ID and notarized by Apple.",
   nonMacNote:
     "The menu bar app runs on Mac with Apple Silicon. On this device, open the Download page on your Mac to get the app.",
   nonMacLinkLabel: "Open the Download page",

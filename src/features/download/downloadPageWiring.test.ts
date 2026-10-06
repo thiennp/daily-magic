@@ -11,7 +11,7 @@ const root = process.cwd();
 describe("Download page wiring", () => {
   it("uses the same tag-pinned Mac release URL as Connect this computer", () => {
     expect(buildAgentWitchLocalMacAppDownloadUrl()).toContain(
-      "/releases/download/awl-mac-v0.1.0/AgentWitchLocal\.dmg",
+      "/releases/download/awl-mac-v0.2.0/AgentWitchLocal\.dmg",
     );
   });
 
@@ -33,6 +33,17 @@ describe("Download page wiring", () => {
     expect(DOWNLOAD_PAGE_COPY.nonMacNote.toLowerCase()).not.toContain("wsl");
     expect(DOWNLOAD_PAGE_COPY.nonMacNote.toLowerCase()).not.toContain(
       "windows via",
+    );
+  });
+
+  it("says the Mac app is Developer ID signed and notarized", () => {
+    expect(DOWNLOAD_PAGE_COPY.signedNote).toMatch(/Developer ID/i);
+    expect(DOWNLOAD_PAGE_COPY.signedNote).toMatch(/notarized/i);
+    expect(DOWNLOAD_PAGE_COPY.signedNote.toLowerCase()).not.toContain(
+      "unsigned",
+    );
+    expect(DOWNLOAD_PAGE_COPY.signedNote.toLowerCase()).not.toContain(
+      "right-click",
     );
   });
 });
