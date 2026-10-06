@@ -29,6 +29,8 @@ export type MembershipView = {
   readonly assignable?: boolean;
   /** Owner snapshot, active member bots only: false = waiting for wake link. */
   readonly wakeLinkSet?: boolean;
+  /** Invite id prefix when admitted via invite auto-approve; else null/absent. */
+  readonly autoApprovedViaInviteLabel?: string | null;
 };
 
 /** UI-contract PendingRequestView */
@@ -67,6 +69,7 @@ export const buildMembershipViews = async (
       createdAt: m.createdAt,
       revokedAt: m.revokedAt,
       deviceId: m.deviceId ?? null,
+      autoApprovedViaInviteLabel: m.autoApprovedViaInviteLabel ?? null,
     };
   });
 };

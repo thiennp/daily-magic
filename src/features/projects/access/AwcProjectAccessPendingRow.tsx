@@ -38,7 +38,7 @@ export default function AwcProjectAccessPendingRow({
         <span className="min-w-0 text-gray-800 dark:text-white/90">
           <span className="block">
             {req.requesterLabel ?? req.requesterUserId}
-            {req.requesterIsAgent ? " (agent)" : ""}
+            {req.requesterIsAgent ? " (assistant)" : ""}
             {req.reason ? ` — ${req.reason}` : ""}
           </span>
           <span className="mt-0.5 block text-[12px] font-normal text-gray-500 dark:text-gray-400">

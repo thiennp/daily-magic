@@ -83,7 +83,7 @@ describe("get_my_project_webhook_status", () => {
     const { text } = await call({ projectId: "proj-1" });
     expect(text).toContain("Webhook URL and Webhook key links");
     expect(text).toContain(
-      "Access › People › Members › {name} › Grok wake link",
+      "Access › People › Members › <your nickname> › Grok wake link",
     );
     expect(text).toContain("Add wake link");
     expect(text).toContain("#wake-link-{membershipId}");
@@ -98,7 +98,7 @@ describe("get_my_project_webhook_status", () => {
       "If forbidden says 'Project API key cannot call this tool', retry with your agent-access Bearer. Any other forbidden means your membership is not active: re-check get_my_project_access.",
     );
     expect(GET_MY_PROJECT_WEBHOOK_STATUS_TOOL.description).toContain(
-      "Access › People › Members › {name} › Grok wake link",
+      "Access › People › Members › <your nickname> › Grok wake link",
     );
   });
 });

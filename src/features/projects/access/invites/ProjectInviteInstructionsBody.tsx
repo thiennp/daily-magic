@@ -5,12 +5,12 @@ import { PROJECT_INVITE_URL_PATH_PREFIX } from "@/lib/projects/acl/invites/proje
 export default function ProjectInviteInstructionsBody(input: {
   readonly token: string;
   readonly hasToken: boolean;
-  /** When known from a freshly created invite with auto-approve on. */
+  /** When known from invite peek or a freshly created invite with auto-approve on. */
   readonly autoApprove?: boolean;
 }) {
   const tokenHint = input.hasToken
-    ? "Your invite token is in the link above."
-    : `Ask the owner for a fresh invite link (the token sits after ${PROJECT_INVITE_URL_PATH_PREFIX}).`;
+    ? "Your invite code is in the link above."
+    : `Ask the owner for a fresh invite link (the code is the part after ${PROJECT_INVITE_URL_PATH_PREFIX}).`;
   const waitLine = input.autoApprove
     ? AWC_PROJECT_INVITE_AUTO_APPROVE_COPY.humanPageAutoApproveOn
     : AWC_PROJECT_INVITE_AUTO_APPROVE_COPY.humanPageDefault;
@@ -18,10 +18,10 @@ export default function ProjectInviteInstructionsBody(input: {
   return (
     <>
       <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">
-        This invite is for an AI bot, not a person signing in. Opening it in a
-        browser does not join the project. Give the owner&apos;s{" "}
-        <strong>Copy prompt</strong> to your bot, or point your bot at this
-        page so it can join.
+        This invite is for an AI assistant, not a person signing in. Opening it
+        in a browser does not join the project. Give the owner&apos;s{" "}
+        <strong>Copy prompt</strong> to your assistant, or point your assistant
+        at this page so it can join.
       </p>
       <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm text-gray-700 dark:text-gray-200">
         <ProjectInviteConnectSteps />

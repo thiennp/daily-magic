@@ -55,7 +55,7 @@ describe("buildProjectInviteJoinWakeWebhookStep (step 7, copy only)", () => {
     expect(text).toContain("#wake-link-{membershipId}");
     expect(text).toContain("/projects/{projectId}");
     expect(text).toContain(
-      "Access › People › Members › {name} › Grok wake link",
+      "Access › People › Members › <your nickname> › Grok wake link",
     );
     expect(text).toContain(
       "get_my_project_webhook_status({ projectId }) (agent-access Bearer only; awc_proj_ keys are rejected for this tool)",

@@ -52,5 +52,8 @@ export default function mapProjectMembershipRow(
     deviceId: row.device_id ? String(row.device_id) : null,
     createdAt: String(row.created_at),
     revokedAt: row.revoked_at ? String(row.revoked_at) : null,
+    autoApprovedViaInviteLabel: row.auto_approved_via_invite_label
+      ? String(row.auto_approved_via_invite_label)
+      : null,
   };
 }

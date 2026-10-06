@@ -30,6 +30,39 @@ type SnapshotSetters = {
   >;
 };
 
+/** Newly appeared members that came in through invite auto-approve only. */
+export const detectInviteAutoApprovedMembers = (input: {
+  readonly members: readonly AwcProjectAccessMember[];
+  readonly addedIds: readonly string[];
+}): {
+  readonly banner: string | null;
+  readonly badgeIds: readonly string[];
+} => {
+  const autoJoined = input.addedIds
+    .map((id) => input.members.find((member) => member.id === id))
+    .filter(
+      (member): member is AwcProjectAccessMember =>
+        member !== undefined &&
+        typeof member.autoApprovedViaInviteLabel === "string" &&
+        member.autoApprovedViaInviteLabel.length > 0,
+    );
+  if (autoJoined.length === 0) {
+    return { banner: null, badgeIds: [] };
+  }
+  const first = autoJoined[0];
+  const name =
+    first.projectDisplayName?.trim() ||
+    first.displayName?.trim() ||
+    "Assistant";
+  const label = first.autoApprovedViaInviteLabel as string;
+  return {
+    banner: AWC_PROJECT_ACCESS_COPY.autoApprovedBanner
+      .replace("{name}", name)
+      .replace("{label}", label),
+    badgeIds: autoJoined.map((member) => member.id),
+  };
+};
+
 /** Apply one Access snapshot: members/pending/folders/invites + auto-approve banner. */
 export const applyAwcProjectAccessSnapshot = (input: {
   readonly snapshot: AwcProjectAccessSnapshot;
@@ -50,20 +83,13 @@ export const applyAwcProjectAccessSnapshot = (input: {
     snapshot.ok
   ) {
     const added = [...nextIds].filter((id) => !prevIds.has(id));
-    if (added.length > 0) {
-      const first = snapshot.members.find((member) => member.id === added[0]);
-      const name =
-        first?.projectDisplayName?.trim() ||
-        first?.displayName?.trim() ||
-        "Assistant";
-      const autoInvite = snapshot.invites.find((invite) => invite.autoApprove);
-      const label = autoInvite?.inviteId.slice(0, 8) ?? "invite";
-      setters.setAutoApprovedBanner(
-        AWC_PROJECT_ACCESS_COPY.autoApprovedBanner
-          .replace("{name}", name)
-          .replace("{label}", label),
-      );
-      setters.setRecentlyAutoApprovedIds(added);
+    const detected = detectInviteAutoApprovedMembers({
+      members: snapshot.members,
+      addedIds: added,
+    });
+    if (detected.banner !== null) {
+      setters.setAutoApprovedBanner(detected.banner);
+      setters.setRecentlyAutoApprovedIds(detected.badgeIds);
       if (input.bannerTimerRef.current !== null) {
         window.clearTimeout(input.bannerTimerRef.current);
       }

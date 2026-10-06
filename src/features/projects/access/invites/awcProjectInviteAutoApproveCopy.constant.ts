@@ -21,5 +21,5 @@ export const AWC_PROJECT_INVITE_AUTO_APPROVE_COPY = {
   humanPageAutoApproveOn:
     "The project owner turned on auto-approve for this invite. Your assistant gets access as soon as it joins.",
   humanPageWake:
-    "After access is active, the assistant creates its wake routine and posts links to its wake link and key in your chat. The project owner clicks Add wake link (Access › People › Members › {name} › Grok wake link) and pastes both there. The key is saved and never shown again.",
+    "After access is active, the assistant creates its wake routine and posts links to its wake link and key in your chat. The project owner clicks Add wake link (Access › People › Members › your assistant › Grok wake link) and pastes both there. The key is saved and never shown again.",
 } as const;

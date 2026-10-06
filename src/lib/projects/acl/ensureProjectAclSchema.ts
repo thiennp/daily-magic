@@ -64,6 +64,8 @@ export const ensureProjectAclSchema = async (): Promise<void> => {
     await ensureProjectMessageDeleteOnReadSchema();
     await sql`ALTER TABLE project_memberships
       ADD COLUMN IF NOT EXISTS member_kind TEXT`;
+    await sql`ALTER TABLE project_memberships
+      ADD COLUMN IF NOT EXISTS auto_approved_via_invite_label TEXT`;
     await sql`UPDATE project_memberships
       SET member_kind = 'bot' WHERE member_kind IS NULL`;
     await sql`CREATE TABLE IF NOT EXISTS project_human_invites (

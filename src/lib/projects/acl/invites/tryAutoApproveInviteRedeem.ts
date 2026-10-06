@@ -1,6 +1,7 @@
 import { approveProjectAccessRequest } from "@/lib/projects/acl/approveProjectAccessRequest";
 import type { RedeemProjectInviteResult } from "@/lib/projects/acl/invites/types/RedeemProjectInviteResult.type";
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
+import { markMembershipAutoApprovedViaInvite } from "@/lib/projects/acl/invites/markMembershipAutoApprovedViaInvite";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
@@ -41,6 +42,10 @@ export const tryAutoApproveInviteRedeem = async (input: {
   }
 
   const label = input.inviteId.slice(0, 8);
+  await markMembershipAutoApprovedViaInvite({
+    membershipId: approved.membership.id,
+    inviteLabel: label,
+  });
   const displayName =
     approved.membership.projectDisplayName ??
     input.suggestedName ??

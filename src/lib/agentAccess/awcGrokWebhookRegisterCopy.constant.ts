@@ -2,7 +2,11 @@ import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 
 /** Where the owner enters a bot's wake link (Access › People › Members). No href. */
 export const AWC_GROK_WEBHOOK_FORM_SCREEN =
-  "Access › People › Members › {name} › Grok wake link";
+  "Access › People › Members › <your nickname> › Grok wake link";
+
+/** Human-facing Members path (invite page / owner setup). */
+export const AWC_GROK_WEBHOOK_FORM_SCREEN_HUMAN =
+  "Access › People › Members › your assistant › Grok wake link";
 
 /** Owner form deep link (Wake hash; fill projectId + membershipId from redeem/status). */
 export const AWC_GROK_WAKE_LINK_DEEP =
@@ -55,6 +59,6 @@ export const AWC_GROK_WEBHOOK_DAILY_REPAIR =
 
 /** Owner-facing invite connect screen. Same flow, no href. */
 export const AWC_GROK_WEBHOOK_SETUP_INSTRUCTION =
-  "After the assistant joins, it creates its wake routine and posts the Webhook URL and Webhook key links in its user's chat so they can copy both. The project owner clicks Add wake link at " +
-  AWC_GROK_WEBHOOK_FORM_SCREEN +
+  "After access is active, it creates its wake routine and posts the wake link and key links in its user's chat so they can copy both. The project owner clicks Add wake link at " +
+  AWC_GROK_WEBHOOK_FORM_SCREEN_HUMAN +
   " and pastes them there, never into chat.";

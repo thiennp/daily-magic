@@ -19,4 +19,6 @@ export default interface ProjectMembershipRecord {
   readonly deviceId?: string | null;
   readonly createdAt: string;
   readonly revokedAt: string | null;
+  /** Set when admit was invite auto-approve; invite id prefix (8). */
+  readonly autoApprovedViaInviteLabel?: string | null;
 }

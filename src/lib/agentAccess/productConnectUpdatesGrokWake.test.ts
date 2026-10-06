@@ -25,7 +25,7 @@ describe("product connect grok wake copy", () => {
     expect(blob).not.toMatch(/MUST poll list_project_inbox/i);
     expect(blob).not.toMatch(/Grok auto-wake(?!, or faster)/i);
     expect(blob).toContain(
-      "Access › People › Members › {name} › Grok wake link",
+      "Access › People › Members › <your nickname> › Grok wake link",
     );
     expect(blob).not.toMatch(/Reports pills/i);
     expect(blob).toContain("#wake-link-{membershipId}");

@@ -30,9 +30,6 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   invitePendingSubOff:
     "Waiting to join · you approve each assistant before it gets access",
   invitePendingSubOn: "Waiting to join · auto-approve is on",
-  /** @deprecated Prefer invitePendingSubOff / On by invite.autoApprove. */
-  invitePendingSub:
-    "Waiting to join · you approve each assistant before it gets access",
   requestWaitingApproval: "Asked to join · waiting for your approval",
   invitePendingCancel: "Cancel",
   inviteEmpty:

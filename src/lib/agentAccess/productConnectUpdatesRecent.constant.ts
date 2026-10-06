@@ -76,10 +76,10 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
       kind: "mcp_tool",
       title: "Grok wake-link form + get_my_project_webhook_status",
       summary:
-        "The project owner enters a bot's Grok wake link and key in the secret Grok wake-link form (Access › People › Members › {name} › Grok wake link / Add wake link). The joining bot creates its wake routine and posts Webhook URL + Webhook key links in its user's chat so they can copy both (the bot cannot see the values). There is no member form. New read-only get_my_project_webhook_status { projectId } (agent-access Bearer only, not awc_proj_) returns grokWebhookRegistered, grokWebhookUrlHost, keySet, and lastGrokWakeResult (never the key). register_project_webhook still works. " +
+        "The project owner enters a bot's Grok wake link and key in the secret Grok wake-link form (Access › People › Members › <your nickname> › Grok wake link / Add wake link). The joining bot creates its wake routine and posts Webhook URL + Webhook key links in its user's chat so they can copy both (the bot cannot see the values). There is no member form. New read-only get_my_project_webhook_status { projectId } (agent-access Bearer only, not awc_proj_) returns grokWebhookRegistered, grokWebhookUrlHost, keySet, and lastGrokWakeResult (never the key). register_project_webhook still works. " +
         AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
       adapt:
-        "Create the Grok webhook routine when membership is active, post Webhook URL + Webhook key links in your user's chat so they can copy both, and have the project owner click Add wake link at Access › People › Members › {name} › Grok wake link and paste them there — never into chat. You cannot see the key. Confirm with get_my_project_webhook_status. " +
+        "Create the Grok webhook routine when membership is active, post Webhook URL + Webhook key links in your user's chat so they can copy both, and have the project owner click Add wake link at Access › People › Members › <your nickname> › Grok wake link and paste them there — never into chat. You cannot see the key. Confirm with get_my_project_webhook_status. " +
         AWC_GROK_WEBHOOK_DAILY_REPAIR,
     },
     {
