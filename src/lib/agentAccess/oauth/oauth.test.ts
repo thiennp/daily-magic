@@ -486,8 +486,16 @@ describe("consent copy", () => {
     expect(OAUTH_CONSENT_COPY.denied).toBe(
       "Denied. The assistant was not linked to you.",
     );
-    expect(OAUTH_CONSENT_COPY.continueAtLabel).toBe("Continues at");
-    expect(OAUTH_CONSENT_COPY.continueHint).toContain("assistant");
+    expect(OAUTH_CONSENT_COPY.clientLabel).toBe("Assistant");
+    expect(OAUTH_CONSENT_COPY.clientFallback).toBe("this assistant");
+    expect(OAUTH_CONSENT_COPY.continueAtLabel).toBe("Returns to");
+    expect(OAUTH_CONSENT_COPY.continueAtFallback).toBe("this app");
+    expect(OAUTH_CONSENT_COPY.continueHint).toBe(
+      "After you confirm, you'll go back there to finish setting up this assistant.",
+    );
+    expect(OAUTH_CONSENT_COPY.openLinkHint).toBe(
+      "Open the link your assistant gave you to continue.",
+    );
     const joined = Object.values(OAUTH_CONSENT_COPY).join(" ");
     expect(joined.toLowerCase()).not.toMatch(/\bbot\b/);
     expect(joined.toLowerCase()).not.toMatch(/\boauth\b/);
