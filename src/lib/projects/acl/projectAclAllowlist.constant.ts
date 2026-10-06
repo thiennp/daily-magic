@@ -7,6 +7,8 @@ export const PROJECT_ACL_AWC_ALLOWLIST_TABLES = [
   "project_folder_refs",
   "project_memberships",
   "project_access_requests",
+  // Owner-only Access log (092): structured access/wake changes, no content.
+  "project_activity_events",
 ] as const;
 
 export const PROJECT_ACL_USER_PROJECT_FIELDS = [

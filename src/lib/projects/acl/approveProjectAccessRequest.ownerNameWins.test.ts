@@ -83,6 +83,7 @@ describe("approve owner name wins over suggestion", () => {
       projectId: "proj-1",
       requestId: "req-1",
       ownerUserId: "owner-1",
+      approvalSource: "owner",
       projectDisplayName: "Owner Pick",
     });
     expect(approved.ok).toBe(true);

@@ -4,6 +4,7 @@ import mapHumanInviteRow from "@/lib/projects/acl/humanInvites/mapHumanInviteRow
 import type HumanInviteRecord from "@/lib/projects/acl/humanInvites/types/HumanInviteRecord.type";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { asRowArray, getSql } from "@/lib/db";
+import { logHumanInviteRevoked } from "@/lib/projects/acl/humanInvites/logHumanInviteActivity";
 
 export type RevokeHumanInviteResult =
   | { readonly ok: true; readonly invite: HumanInviteRecord }
@@ -58,5 +59,8 @@ export const revokeHumanProjectInvite = async (input: {
     }
     return { ok: false, code: "already_redeemed" };
   }
-  return { ok: true, invite: mapHumanInviteRow(rows[0]) };
+  const invite = mapHumanInviteRow(rows[0]);
+  // Undo already ran out client-side: this call is the commit (F8).
+  await logHumanInviteRevoked(invite, input.ownerUserId);
+  return { ok: true, invite };
 };

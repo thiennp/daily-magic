@@ -66,7 +66,8 @@ export const revokeProjectMembership = async (input: {
     actorUserId: input.ownerUserId,
     action: "revoke",
     targetUserId: membership.userId,
-    detail: { membershipId: membership.id },
+    targetLabel: membership.projectDisplayName,
+    detail: { membershipId: membership.id, memberKind: membership.memberKind ?? "bot" },
   });
   return { ok: true, membership };
 };

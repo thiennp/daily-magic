@@ -3,7 +3,7 @@ import type { AgentAccessToolDefinition } from "@/lib/agentAccess/agentAccessToo
 export const AGENT_ACCESS_PROJECT_ACTIVITY_TOOL: AgentAccessToolDefinition = {
   name: "list_project_activity",
   description:
-    "List allowlisted project membership/status activity (access request/approve/deny/revoke, folder refs, allow-claim and membership-check outcomes). Reverse-chrono. No content bodies.",
+    "Owner only: the project's Access log (invites, approvals, denials, removals, leaves, human invites, auto-approve, and how each assistant gets messages). Newest first, structured fields only, no message content. Non-owners get code owner_only. Keeps the last 500 changes from the past 180 days.",
   inputSchema: {
     type: "object",
     properties: {
@@ -14,7 +14,12 @@ export const AGENT_ACCESS_PROJECT_ACTIVITY_TOOL: AgentAccessToolDefinition = {
       },
       cursor: {
         type: "string",
-        description: "Optional opaque event id for the next older page.",
+        description: "Optional opaque nextCursor from the previous page.",
+      },
+      category: {
+        type: "string",
+        enum: ["access", "wake"],
+        description: "Optional filter: access (people and invites) or wake (delivery mode).",
       },
       limit: {
         type: "number",

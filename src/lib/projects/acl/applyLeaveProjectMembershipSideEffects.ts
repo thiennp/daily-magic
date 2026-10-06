@@ -35,6 +35,10 @@ export const applyLeaveProjectMembershipSideEffects = async (input: {
     actorUserId: input.actorUserId,
     action: "leave",
     targetUserId: input.membership.userId,
-    detail: { membershipId: input.membership.id },
+    targetLabel: input.membership.projectDisplayName,
+    detail: {
+      membershipId: input.membership.id,
+      memberKind: input.membership.memberKind ?? "bot",
+    },
   });
 };

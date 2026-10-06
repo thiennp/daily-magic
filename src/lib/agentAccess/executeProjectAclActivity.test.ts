@@ -57,7 +57,23 @@ describe("agent-access list_project_activity", () => {
     resetProjectAclSchemaEnsureForTests();
   });
 
-  it("returns empty activity list for the project owner bot", async () => {
+  it("returns owner_only for a member bot (not the project owner)", async () => {
+    sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
+      const q = String(strings);
+      if (q.includes("FROM agent_access_tokens")) return [{ ...ownerTokenRow, id: "bot-1" }];
+      return [];
+    });
+    const result = await executeAgentAccessTool({
+      name: "list_project_activity",
+      args: { projectId: "proj-1" },
+      authorization: "Bearer aw_testtokenvalue000000000",
+      ip: "127.0.0.1",
+    });
+    expect(result.isError).toBe(true);
+    expect(JSON.parse(result.text)).toMatchObject({ ok: false, code: "owner_only" });
+  });
+
+  it("returns the (empty) Access log for the project owner bot", async () => {
     sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
       const q = String(strings);
       if (q.includes("FROM agent_access_tokens")) return [ownerTokenRow];
@@ -80,5 +96,6 @@ describe("agent-access list_project_activity", () => {
     expect(body.ok).toBe(true);
     expect(body.events).toEqual([]);
     expect(body.nextCursor ?? null).toBeNull();
+    expect(body).toMatchObject({ retention: { maxEvents: 500, maxAgeDays: 180 } });
   });
 });

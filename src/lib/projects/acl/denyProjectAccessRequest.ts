@@ -2,6 +2,7 @@ import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchem
 import mapProjectAccessRequestRow from "@/lib/projects/acl/mapProjectAccessRequestRow";
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
+import { loadUserAccountName } from "@/lib/projects/acl/humanInvites/loadUserAccountName";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { asRowArray, getSql } from "@/lib/db";
 
@@ -48,6 +49,10 @@ export const denyProjectAccessRequest = async (input: {
     actorUserId: input.ownerUserId,
     action: "deny",
     targetUserId: request.requesterUserId,
+    // Access log snapshot (Product F2): account name the owner saw; never an email.
+    targetLabel:
+      (await loadUserAccountName(request.requesterUserId).catch(() => null)) ??
+      request.suggestedProjectDisplayName,
     detail: { requestId: request.id },
   });
   return { ok: true, request };

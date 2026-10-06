@@ -51,6 +51,7 @@ describe("join calls resolveInitialProjectMembershipDeliveryMode", () => {
       projectId: "proj-1",
       requestId: "req-1",
       ownerUserId: "owner-1",
+      approvalSource: "owner",
       projectDisplayName: "Coder",
     });
     expect(approved.ok).toBe(true);
@@ -71,6 +72,7 @@ describe("join calls resolveInitialProjectMembershipDeliveryMode", () => {
       projectId: "proj-1",
       requestId: "req-1",
       ownerUserId: "owner-1",
+      approvalSource: "owner",
       projectDisplayName: "Coder",
     });
     expect(approved.ok).toBe(true);

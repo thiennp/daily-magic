@@ -4,6 +4,7 @@ import mapProjectMembershipRow from "@/lib/projects/acl/mapProjectMembershipRow"
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { asRowArray, getSql } from "@/lib/db";
+import { logHumanMemberRemoved } from "@/lib/projects/acl/humanInvites/logHumanInviteActivity";
 
 export type RemoveHumanMembershipResult =
   | { readonly ok: true; readonly membership: ProjectMembershipRecord }
@@ -45,5 +46,8 @@ export const removeHumanProjectMembership = async (input: {
   if (rows.length === 0) {
     return { ok: false, code: "not_active" };
   }
-  return { ok: true, membership: mapProjectMembershipRow(rows[0]) };
+  const membership = mapProjectMembershipRow(rows[0]);
+  // Undo already ran out client-side: this call is the commit (F8).
+  await logHumanMemberRemoved(membership, input.ownerUserId);
+  return { ok: true, membership };
 };

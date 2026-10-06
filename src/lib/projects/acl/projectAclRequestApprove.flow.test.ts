@@ -88,6 +88,7 @@ describe("project ACL request→approve", () => {
       projectId: "proj-1",
       requestId: "req-1",
       ownerUserId: "owner-1",
+      approvalSource: "owner",
       projectDisplayName: "Buni",
     });
     expect(approved.ok).toBe(true);

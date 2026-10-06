@@ -53,6 +53,8 @@ export const tryAutoApproveCreatedAccessRequest = async (input: {
     teamLabel: input.teamLabel,
     projectDisplayName: input.suggestedName,
     scopes: input.scopes,
+    // Only the non-production test flag reaches here (see above).
+    approvalSource: "test_flag",
   });
   if (!approved.ok) {
     return { ok: true, status: "pending", request: input.request };

@@ -1,9 +1,22 @@
-import { listProjectActivity } from "@/lib/projects/acl/listProjectActivity";
-import { PROJECT_ACL_FIRST_CONNECT } from "@/lib/projects/acl/projectAclFirstConnect.constant";
+import { listProjectActivityEvents } from "@/lib/projects/acl/activity/listProjectActivityEvents";
+import type { ProjectActivityLogErrorCode } from "@/lib/projects/acl/activity/types/ProjectActivityLog.type";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
 
+const STATUS: Readonly<Record<ProjectActivityLogErrorCode, number>> = {
+  owner_only: 403,
+  not_found: 404,
+  invalid_cursor: 400,
+  invalid_query: 400,
+  unauthorized: 401,
+};
+
+/**
+ * Access log (owner only). Members and everyone else get 403 owner_only.
+ * Query: limit (1–100, default 50), cursor (opaque), category (access|wake), since (ISO).
+ * Contract: docs/agentwitch/project-access-log-contract.md
+ */
 export async function GET(
   request: Request,
   context: { params: Promise<{ readonly projectId: string }> },
@@ -12,39 +25,21 @@ export async function GET(
   if (error || !actor) {
     return error;
   }
-
   const { projectId } = await context.params;
-  const url = new URL(request.url);
-  const since = url.searchParams.get("since");
-  const cursor = url.searchParams.get("cursor");
-  const limitRaw = url.searchParams.get("limit");
-  const limit =
-    limitRaw !== null && limitRaw.trim().length > 0
-      ? Number(limitRaw)
-      : undefined;
-
-  const listed = await listProjectActivity({
+  const params = new URL(request.url).searchParams;
+  const listed = await listProjectActivityEvents({
     projectId,
     actorUserId: actor.id,
-    since,
-    cursor,
-    limit,
+    limit: params.get("limit") ?? undefined,
+    cursor: params.get("cursor"),
+    category: params.get("category"),
+    since: params.get("since"),
   });
-
   if (!listed.ok) {
-    const status = listed.code === "not_found" ? 404 : 403;
-    return Response.json({ ok: false, errorMessage: listed.code }, { status });
+    return Response.json(
+      { ok: false, error: listed.code },
+      { status: STATUS[listed.code] },
+    );
   }
-
-  return Response.json({
-    ok: true,
-    projectId,
-    events: listed.events,
-    nextCursor: listed.nextCursor,
-    firstConnect: {
-      role: PROJECT_ACL_FIRST_CONNECT.role,
-      scopes: PROJECT_ACL_FIRST_CONNECT.scopes,
-      note: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
-    },
-  });
+  return Response.json(listed);
 }

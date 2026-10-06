@@ -1,6 +1,6 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import mapProjectInviteRow from "@/lib/projects/acl/invites/mapProjectInviteRow";
-import { recordProjectInviteAutoApproveEvent } from "@/lib/projects/acl/invites/recordProjectInviteAutoApproveEvent";
+import { dualWriteProjectInviteAutoApproveEvent } from "@/lib/projects/acl/invites/dualWriteProjectInviteAutoApproveEvent";
 import type ProjectInviteRecord from "@/lib/projects/acl/invites/types/ProjectInviteRecord.type";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
@@ -68,7 +68,7 @@ export const updateProjectInviteAutoApprove = async (input: {
     action: next ? "invite.auto_approve_on" : "invite.auto_approve_off",
     detail: { inviteId: invite.id, label },
   });
-  await recordProjectInviteAutoApproveEvent({
+  await dualWriteProjectInviteAutoApproveEvent({
     projectId: input.projectId,
     inviteId: invite.id,
     event,

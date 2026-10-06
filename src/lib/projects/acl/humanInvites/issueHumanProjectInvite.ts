@@ -16,6 +16,7 @@ import mapHumanInviteRow from "@/lib/projects/acl/humanInvites/mapHumanInviteRow
 import type HumanInviteRecord from "@/lib/projects/acl/humanInvites/types/HumanInviteRecord.type";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { asRowArray, getSql } from "@/lib/db";
+import { logHumanInviteCreated } from "@/lib/projects/acl/humanInvites/logHumanInviteActivity";
 
 export type IssueHumanInviteResult =
   | {
@@ -91,9 +92,11 @@ export const issueHumanProjectInvite = async (input: {
   if (rows.length === 0) {
     return { ok: false, code: "invalid" };
   }
+  const invite = mapHumanInviteRow(rows[0]);
+  await logHumanInviteCreated(invite);
   return {
     ok: true,
-    invite: mapHumanInviteRow(rows[0]),
+    invite,
     url: buildHumanInviteUrl(token),
     token,
   };

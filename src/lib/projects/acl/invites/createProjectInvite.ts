@@ -14,7 +14,7 @@ import {
   clampInviteMaxUses,
   parseInviteScopes,
 } from "@/lib/projects/acl/invites/clampProjectInviteParams";
-import { recordProjectInviteAutoApproveEvent } from "@/lib/projects/acl/invites/recordProjectInviteAutoApproveEvent";
+import { dualWriteProjectInviteAutoApproveEvent } from "@/lib/projects/acl/invites/dualWriteProjectInviteAutoApproveEvent";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { asRowArray, getSql } from "@/lib/db";
@@ -106,7 +106,7 @@ export const createProjectInvite = async (input: {
       action: "invite.auto_approve_on",
       detail: { inviteId: invite.id, label: invite.id.slice(0, 8) },
     });
-    await recordProjectInviteAutoApproveEvent({
+    await dualWriteProjectInviteAutoApproveEvent({
       projectId: input.projectId,
       inviteId: invite.id,
       event: "enabled",

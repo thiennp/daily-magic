@@ -25,6 +25,7 @@ export const handleApproveAccessPatch = async (input: {
     scopes: Array.isArray(input.body.scopes)
       ? input.body.scopes.filter((s): s is string => typeof s === "string")
       : null,
+    approvalSource: "owner",
   });
   if (!result.ok) {
     const status =

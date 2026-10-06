@@ -40,6 +40,7 @@ export async function POST(
     teamLabel,
     projectDisplayName,
     scopes,
+    approvalSource: "owner",
   });
 
   if (!result.ok) {

@@ -1,0 +1,72 @@
+/**
+ * Access log (owner-only project_activity_events, migration 092).
+ * Access + wake changes only: no msg.*, key.*, webhook.*, tool-call or
+ * claim/check rows. The DB CHECK in 092 must list exactly these types.
+ */
+export const PROJECT_ACTIVITY_EVENT_TYPES = [
+  "invite.created",
+  "invite.revoked",
+  "invite.auto_approve_enabled",
+  "invite.auto_approve_disabled",
+  "member.auto_approved",
+  "request.approved",
+  "request.denied",
+  "member.removed",
+  "member.left",
+  "human_invite.created",
+  "human_invite.revoked",
+  "human_invite.accepted",
+  "member.delivery_mode_changed",
+] as const;
+
+export type ProjectActivityEventType =
+  (typeof PROJECT_ACTIVITY_EVENT_TYPES)[number];
+
+export const PROJECT_ACTIVITY_ACTOR_KINDS = ["owner", "member", "system"] as const;
+
+export type ProjectActivityActorKind =
+  (typeof PROJECT_ACTIVITY_ACTOR_KINDS)[number];
+
+export const PROJECT_ACTIVITY_CATEGORIES = ["access", "wake"] as const;
+
+export type ProjectActivityCategory =
+  (typeof PROJECT_ACTIVITY_CATEGORIES)[number];
+
+export const PROJECT_ACTIVITY_WAKE_TYPES: readonly ProjectActivityEventType[] = [
+  "member.delivery_mode_changed",
+];
+
+/** How a join was approved. Only "owner" ever produces request.approved. */
+export type ProjectApprovalSource = "owner" | "invite_auto_approve" | "test_flag";
+
+/** Write-time trim: newest N per project, nothing older than D days. */
+export const PROJECT_ACTIVITY_RETENTION = {
+  maxEvents: 500,
+  maxAgeDays: 180,
+} as const;
+
+export const PROJECT_ACTIVITY_PAGE_LIMIT = {
+  min: 1,
+  max: 100,
+  default: 50,
+} as const;
+
+export const PROJECT_ACTIVITY_LABEL_MAX_CHARS = 120;
+
+export const isProjectActivityEventType = (
+  value: unknown,
+): value is ProjectActivityEventType =>
+  typeof value === "string" &&
+  (PROJECT_ACTIVITY_EVENT_TYPES as readonly string[]).includes(value);
+
+export const projectActivityCategoryOf = (
+  type: ProjectActivityEventType,
+): ProjectActivityCategory =>
+  PROJECT_ACTIVITY_WAKE_TYPES.includes(type) ? "wake" : "access";
+
+export const projectActivityTypesForCategory = (
+  category: ProjectActivityCategory,
+): readonly ProjectActivityEventType[] =>
+  PROJECT_ACTIVITY_EVENT_TYPES.filter(
+    (type) => projectActivityCategoryOf(type) === category,
+  );

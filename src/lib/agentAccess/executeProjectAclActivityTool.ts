@@ -2,8 +2,17 @@ import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
 import { parseListProjectActivityArgs } from "@/lib/agentAccess/parseAgentAccessProjectAclArgs";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
-import { listProjectActivity } from "@/lib/projects/acl/listProjectActivity";
+import { listProjectActivityEvents } from "@/lib/projects/acl/activity/listProjectActivityEvents";
 
+const readCategory = (args: unknown): string | null => {
+  const value =
+    args !== null && typeof args === "object"
+      ? (args as { category?: unknown }).category
+      : undefined;
+  return typeof value === "string" ? value : null;
+};
+
+/** Owner-only Access log. A member bot (project key) gets owner_only. */
 export const executeProjectAclActivityTool = async (input: {
   readonly actor: AgentAccessActor;
   readonly name: string;
@@ -19,12 +28,13 @@ export const executeProjectAclActivityTool = async (input: {
       true,
     );
   }
-  const listed = await listProjectActivity({
+  const listed = await listProjectActivityEvents({
     projectId: parsed.projectId,
     actorUserId: input.actor.id,
     since: parsed.since,
     cursor: parsed.cursor,
     limit: parsed.limit,
+    category: readCategory(input.args),
   });
   if (!listed.ok) {
     return agentAccessTextResult(
@@ -32,10 +42,5 @@ export const executeProjectAclActivityTool = async (input: {
       true,
     );
   }
-  return agentAccessTextResult({
-    ok: true,
-    projectId: parsed.projectId,
-    events: listed.events,
-    nextCursor: listed.nextCursor,
-  });
+  return agentAccessTextResult(listed);
 };

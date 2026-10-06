@@ -83,6 +83,7 @@ describe("approve auto-applies pending suggestion", () => {
       projectId: "proj-1",
       requestId: "req-1",
       ownerUserId: "owner-1",
+      approvalSource: "owner",
     });
     expect(approved.ok).toBe(true);
     if (!approved.ok) return;

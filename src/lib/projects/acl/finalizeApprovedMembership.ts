@@ -2,6 +2,7 @@ import { mintProjectApiKey } from "@/lib/projects/acl/projectApiKeys/mintProject
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
+import type { ProjectApprovalSource } from "@/lib/projects/acl/activity/projectActivityEvent.constant";
 
 export const finalizeApprovedMembership = async (input: {
   readonly projectId: string;
@@ -10,6 +11,7 @@ export const finalizeApprovedMembership = async (input: {
   readonly membership: ProjectMembershipRecord;
   readonly displayName: string | null;
   readonly mintKey: boolean;
+  readonly approvalSource: ProjectApprovalSource;
 }): Promise<string | null> => {
   await writeProjectAccessAudit({
     projectId: input.projectId,
@@ -20,6 +22,7 @@ export const finalizeApprovedMembership = async (input: {
       requestId: input.request.id,
       membershipId: input.membership.id,
       projectDisplayName: input.displayName,
+      approvalSource: input.approvalSource,
     },
   });
   if (input.displayName !== null) {

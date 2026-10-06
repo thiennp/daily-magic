@@ -10,6 +10,7 @@ import { resolveHumanAcceptDisplayName } from "@/lib/projects/acl/humanInvites/r
 import type { RedeemHumanInviteResult } from "@/lib/projects/acl/humanInvites/types/RedeemHumanInviteResult.type";
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
+import { logHumanInviteAccepted } from "@/lib/projects/acl/humanInvites/logHumanInviteActivity";
 
 export type { RedeemHumanInviteResult };
 
@@ -102,6 +103,7 @@ export const redeemHumanProjectInvite = async (input: {
     }
     return { ok: false, code: "already_member", projectId: peeked.projectId };
   }
+  await logHumanInviteAccepted(settled);
   return {
     ok: true,
     membership: settled.membership,

@@ -13,6 +13,7 @@ import { resolveEffectiveApproveDisplayName } from "@/lib/projects/acl/resolveEf
 import type { ApproveProjectAccessResult } from "@/lib/projects/acl/types/ApproveProjectAccessResult.type";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { asRowArray, getSql } from "@/lib/db";
+import type { ProjectApprovalSource } from "@/lib/projects/acl/activity/projectActivityEvent.constant";
 
 export type { ApproveProjectAccessResult };
 
@@ -23,6 +24,8 @@ export const approveProjectAccessRequest = async (input: {
   readonly teamLabel?: string | null;
   readonly projectDisplayName?: string | null;
   readonly scopes?: readonly string[] | null;
+  /** Only "owner" logs request.approved in the Access log. */
+  readonly approvalSource: ProjectApprovalSource;
 }): Promise<ApproveProjectAccessResult> => {
   const project = await getUserProjectById(input.projectId);
   if (project === null) return { ok: false, code: "not_found" };
@@ -90,6 +93,7 @@ export const approveProjectAccessRequest = async (input: {
     membership,
     displayName: nameResult.displayName,
     mintKey: requesterIsAgent,
+    approvalSource: input.approvalSource,
   });
   await notifyProjectPeersOfMembershipJoin({
     projectId: input.projectId,

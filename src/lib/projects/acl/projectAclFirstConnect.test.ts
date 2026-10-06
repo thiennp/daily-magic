@@ -18,6 +18,6 @@ describe("PROJECT_ACL_FIRST_CONNECT (G5)", () => {
     expect(guideline).toMatch(/list_project_peers/);
     expect(guideline).toMatch(/Members \+ Pending|get_project_acl/);
     expect(guideline).not.toMatch(/list_project_activity for/);
-    expect(guideline).toMatch(/do not rely on list_project_activity/);
+    expect(guideline).toMatch(/list_project_activity is the owner-only access change log/);
   });
 });
