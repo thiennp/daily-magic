@@ -33,14 +33,20 @@ describe("upsertProjectFolderRef device ACL", () => {
 
   it("rejects a non-member deviceId before any folder-ref SQL", async () => {
     const isComputerMember = vi.fn(async () => false);
+    const isOwnerDevice = vi.fn(async () => false);
     const result = await upsertProjectFolderRef({
       ...base,
       machineOrDeviceRef: "",
       deviceId: DEVICE,
       isComputerMember,
+      isOwnerDevice,
     });
     expect(result).toEqual({ ok: false, code: "folder_ref_device_not_member" });
     expect(isComputerMember).toHaveBeenCalledWith({
+      projectId: "proj-1",
+      deviceId: DEVICE,
+    });
+    expect(isOwnerDevice).toHaveBeenCalledWith({
       projectId: "proj-1",
       deviceId: DEVICE,
     });

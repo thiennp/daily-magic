@@ -9,6 +9,7 @@ import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { asRowArray, getSql } from "@/lib/db";
 import { scheduleProjectUpdatedNotify } from "@/lib/projects/acl/messaging/scheduleProjectUpdatedNotify";
 import type { ProjectComputerMemberLookup } from "@/lib/projects/acl/types/ProjectComputerMemberLookup.type";
+import type { ProjectOwnerDeviceLookup } from "@/lib/projects/acl/types/ProjectOwnerDeviceLookup.type";
 
 export type UpsertProjectFolderRefResult =
   | { readonly ok: true; readonly folderRef: ProjectFolderRefRecord }
@@ -29,6 +30,7 @@ export const upsertProjectFolderRef = async (input: {
   /** Explicit picker deviceId; always membership-checked. */
   readonly deviceId?: string | null;
   readonly isComputerMember?: ProjectComputerMemberLookup;
+  readonly isOwnerDevice?: ProjectOwnerDeviceLookup;
 }): Promise<UpsertProjectFolderRefResult> => {
   const project = await getUserProjectById(input.projectId);
   if (project === null) {
