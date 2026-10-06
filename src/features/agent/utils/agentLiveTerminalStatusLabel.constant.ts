@@ -10,5 +10,6 @@ export const AGENT_LIVE_TERMINAL_STATUS_LABEL: Record<
   streaming: "Live",
   stopping: "Stopping…",
   error: "Needs retry",
+  timed_out: "Timed out",
   finished: "Finished",
 };

@@ -8,4 +8,5 @@ export const isRestorableAgentLiveTerminalStatus = (
   status === "streaming" ||
   status === "stopping" ||
   status === "error" ||
+  status === "timed_out" ||
   status === "finished";

@@ -21,4 +21,5 @@ export type AgentRunHonestyLiveStatus =
   | "streaming"
   | "stopping"
   | "error"
+  | "timed_out"
   | "finished";

@@ -12,8 +12,9 @@ export const mapAgentRunStatusToLiveTerminalStatus = (
       return "streaming";
     case AgentRunStatus.FAILED:
     case AgentRunStatus.DENIED:
-    case AgentRunStatus.EXPIRED:
       return "error";
+    case AgentRunStatus.EXPIRED:
+      return "timed_out";
     case AgentRunStatus.COMPLETED:
     default:
       return "finished";

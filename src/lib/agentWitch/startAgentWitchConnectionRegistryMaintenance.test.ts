@@ -24,6 +24,10 @@ vi.mock("@/lib/agentWitch/updateAgentWitchHubDispatchRelayStatus", () => ({
   expireStaleAgentWitchHubDispatchRelays: vi.fn().mockResolvedValue(undefined),
 }));
 
+vi.mock("@/lib/dispatch/expireStaleDispatchApprovals", () => ({
+  expireStaleDispatchApprovals: vi.fn().mockResolvedValue(0),
+}));
+
 vi.mock("@/lib/db", () => ({
   isDatabaseUrlConfigured: () => true,
 }));

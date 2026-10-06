@@ -12,6 +12,7 @@ export type AgentLiveTerminalStatus =
   | "streaming"
   | "stopping"
   | "error"
+  | "timed_out"
   | "finished";
 
 export interface AgentLiveTerminalState {

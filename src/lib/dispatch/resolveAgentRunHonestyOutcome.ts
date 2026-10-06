@@ -27,6 +27,8 @@ export const resolveAgentRunHonestyOutcome = (input: {
 }): AgentRunHonestyOutcome => {
   const needsInput = (input.pendingQuestion ?? "").trim().length > 0;
 
+
+
   if (
     input.runStatus === AgentRunStatus.PENDING_APPROVAL ||
     input.status === "waiting_approval" ||
@@ -70,10 +72,14 @@ export const resolveAgentRunHonestyOutcome = (input: {
     };
   }
 
-  if (input.status === "error") {
+  if (input.status === "error" || input.status === "timed_out") {
     const terminal = resolveAgentRunHonestyTerminalOutcome({
       output: input.output,
-      runStatus: input.runStatus ?? AgentRunStatus.FAILED,
+      runStatus:
+        input.runStatus ??
+        (input.status === "timed_out"
+          ? AgentRunStatus.EXPIRED
+          : AgentRunStatus.FAILED),
       resultOutcomeCode: input.resultOutcomeCode,
       resultExitCode: input.resultExitCode,
     });

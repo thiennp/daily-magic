@@ -26,7 +26,7 @@ export const buildAgentLiveTerminalDisplay = (input: {
       return buildAgentLiveTerminalCommandEntry(pendingCommandLine);
     }
 
-    if (input.status === "finished" || input.status === "error") {
+    if (input.status === "finished" || input.status === "error" || input.status === "timed_out") {
       return `${buildAgentLiveTerminalIdleLine()}No agent output was captured for this run.\n`;
     }
 
@@ -47,7 +47,7 @@ export const buildAgentLiveTerminalDisplay = (input: {
 
 export const shouldShowAgentLiveTerminalCursor = (
   status: AgentLiveTerminalStatus,
-): boolean => status === "idle" || status === "finished" || status === "error";
+): boolean => status === "idle" || status === "finished" || status === "error" || status === "timed_out";
 
 export const shouldShowAgentLiveTerminalLoadingIndicator = (
   status: AgentLiveTerminalStatus,

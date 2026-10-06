@@ -34,18 +34,22 @@ export const reduceAgentLiveTerminalApprovalMessage = (
     if (
       run.id === state.activeRunId &&
       (run.status === AgentRunStatus.COMPLETED ||
-        run.status === AgentRunStatus.FAILED) &&
+        run.status === AgentRunStatus.FAILED ||
+        run.status === AgentRunStatus.EXPIRED ||
+        run.status === AgentRunStatus.DENIED) &&
       state.status !== "finished" &&
-      state.status !== "idle"
+      state.status !== "idle" &&
+      state.status !== "timed_out"
     ) {
       const resultOutput =
         typeof run.resultOutput === "string" ? run.resultOutput : "";
+      const timedOut = run.status === AgentRunStatus.EXPIRED;
       return {
         ...state,
         output: appendAgentLiveTerminalPrompt(
           mergeTerminalResultOutput(state.output, resultOutput),
         ),
-        status: "finished",
+        status: timedOut ? "timed_out" : "finished",
         pendingInput: null,
         pendingCommandLine: null,
       };
@@ -65,6 +69,23 @@ export const reduceAgentLiveTerminalApprovalMessage = (
         ...state,
         status: "finished",
         output: `${state.output}${denialReason}\n`,
+        pendingInput: null,
+        pendingCommandLine: null,
+      };
+    }
+
+    if (
+      payload.status === AgentRunStatus.EXPIRED ||
+      payload.status === "timed_out"
+    ) {
+      const reason =
+        typeof payload.denialReason === "string"
+          ? payload.denialReason
+          : "Dispatch approval expired.";
+      return {
+        ...state,
+        status: "timed_out",
+        output: `${state.output}${reason}\n`,
         pendingInput: null,
         pendingCommandLine: null,
       };

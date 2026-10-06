@@ -10,6 +10,7 @@ import { processAgentWitchHubDispatchRelaysForHub } from "@/lib/agentWitch/proce
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { getAgentWitchHubInstanceId } from "@/lib/agentWitch/getAgentWitchHubInstanceId";
 import { isDatabaseUrlConfigured } from "@/lib/db";
+import { expireStaleDispatchApprovals } from "@/lib/dispatch/expireStaleDispatchApprovals";
 
 const maintenanceGlobalKey =
   "__dailyMagicAgentWitchConnectionRegistryMaintenance";
@@ -61,6 +62,9 @@ export const startAgentWitchConnectionRegistryMaintenance = (): void => {
       );
       void expireStaleAgentWitchHubDispatchRelays().catch((error: unknown) => {
         console.error("[agent-witch/relay] expire sweep failed", error);
+      });
+      void expireStaleDispatchApprovals().catch((error: unknown) => {
+        console.error("[agent-witch/approvals] expire sweep failed", error);
       });
     }, sweepIntervalMs);
   };
