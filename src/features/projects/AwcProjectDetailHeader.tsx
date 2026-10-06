@@ -3,30 +3,35 @@
 import AwcProjectDetailHeaderActions from "@/features/projects/AwcProjectDetailHeaderActions";
 import AwcProjectDetailHeaderStatus from "@/features/projects/AwcProjectDetailHeaderStatus";
 import AwcProjectEditOnMacActions from "@/features/projects/AwcProjectEditOnMacActions";
+import AwcProjectMobileMembersChip from "@/features/projects/AwcProjectMobileMembersChip";
 import AwcProjectPathDisplay from "@/features/projects/AwcProjectPathDisplay";
 import { PROJECT_PAGE_LAYOUT_V2_COPY } from "@/features/projects/projectPageLayoutV2Copy.constant";
 import type { ProjectDevicePresenceLabel } from "@/features/projects/utils/buildProjectDevicePresenceLabel";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 
 interface AwcProjectDetailHeaderProps {
+  readonly projectId: string;
   readonly projectName: string;
   readonly folderPath: string;
   readonly presence: ProjectDevicePresenceLabel;
   readonly deviceDisplayName: string;
   readonly editCta: ProjectEditOnMacCta;
   readonly canRename: boolean;
+  readonly canApprove: boolean;
   readonly onRename: () => void;
   readonly onInvite: () => void;
   readonly onDelete: () => void;
 }
 
 export default function AwcProjectDetailHeader({
+  projectId,
   projectName,
   folderPath,
   presence,
   deviceDisplayName,
   editCta,
   canRename,
+  canApprove,
   onRename,
   onInvite,
   onDelete,
@@ -51,6 +56,10 @@ export default function AwcProjectDetailHeader({
               <AwcProjectPathDisplay folderPath={folderPath} />
             </span>
           </AwcProjectDetailHeaderStatus>
+          <AwcProjectMobileMembersChip
+            projectId={projectId}
+            canApprove={canApprove}
+          />
         </div>
         <AwcProjectDetailHeaderActions
           canRename={canRename}

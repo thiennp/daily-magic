@@ -65,12 +65,14 @@ export default function AwcProjectDetailPanel({
       <div className="flex min-w-0 flex-col gap-5 lg:pr-5">
         <AwcProjectRoleChip pageActorRole={pageActorRole} />
         <AwcProjectDetailHeader
+          projectId={project.id}
           projectName={project.name}
           folderPath={project.folderPath}
           presence={presence}
           deviceDisplayName={deviceDisplayName}
           editCta={editCta}
           canRename={isOwner}
+          canApprove={isOwner}
           onRename={nav.onRename}
           onInvite={() => {
             onGotoTab("team");

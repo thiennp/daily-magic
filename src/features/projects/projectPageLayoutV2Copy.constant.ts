@@ -20,4 +20,9 @@ export const PROJECT_PAGE_LAYOUT_V2_COPY = {
   onlineOn: (device: string) => `Online on ${device}`,
   offlineOn: (device: string) => `Offline on ${device}`,
   tablistLabel: "Project sections",
+  mobileMembersChip: "Members",
+  mobileMembersChipPending: (n: number) => `Members · ${n} waiting`,
+  mobileMembersChipAria: "Go to members",
+  mobileMembersChipAriaPending: (n: number) =>
+    `Go to members, ${n} waiting for approval`,
 } as const;
