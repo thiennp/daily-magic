@@ -2,16 +2,14 @@ import { CURSOR_CLOUD_EXECUTOR_DEVICE_ID } from "@/lib/cursorCloud/cursorCloudEx
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { dispatchClaudeRunForDashboardUser } from "@/lib/dispatch/dispatchWriterRunForDashboardUser";
+import { readDispatchErrorMessageWithHint } from "@/lib/dispatch/readDispatchErrorMessageWithHint";
+import { resolveOrchestratorDispatchProjectId } from "@/lib/dispatch/resolveOrchestratorDispatchProjectId";
 import type { PromptSdlcContinuation } from "@/lib/promptOptimizer/continuePromptSdlc";
 import { savePromptSdlcCycleProgress } from "@/lib/promptOptimizer/promptSdlcCycleQueries";
 import type PromptSdlcCycleRecord from "@/lib/promptOptimizer/types/PromptSdlcCycleRecord.type";
 
-const readDispatchErrorMessage = (message: AgentWitchMessage): string => {
-  const errorMessage = message.payload?.errorMessage;
-  return typeof errorMessage === "string" && errorMessage.length > 0
-    ? errorMessage
-    : "Dispatch failed.";
-};
+const readDispatchErrorMessage = (message: AgentWitchMessage): string =>
+  readDispatchErrorMessageWithHint(message, "Dispatch failed.");
 
 const saveTerminal = (
   cycle: PromptSdlcCycleRecord,
@@ -72,6 +70,13 @@ export const placePromptSdlcContinuation = async (input: {
     });
   }
 
+  // Thien LOCK: cycles have no bound project; use the owner's Default.
+  const projectId = await resolveOrchestratorDispatchProjectId({
+    ownerUserId: input.cycle.ownerUserId,
+    ownerEmail: input.requesterEmail,
+    boundProjectIds: [],
+    deviceIds: [targetDeviceId, input.cycle.deviceId],
+  });
   const result = await dispatchClaudeRunForDashboardUser({
     runtime: getAgentWitchHub(),
     requesterUserId: input.cycle.ownerUserId,
@@ -80,6 +85,7 @@ export const placePromptSdlcContinuation = async (input: {
       prompt: input.continuation.prompt,
       writerAgent,
       targetDeviceId,
+      ...(projectId !== null ? { projectId } : {}),
     },
   });
 

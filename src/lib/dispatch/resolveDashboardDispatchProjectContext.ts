@@ -1,6 +1,7 @@
 import { buildClaudeDispatchPayloadFromBody } from "@/lib/dispatch/buildWriterDispatchPayloadFromBody";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
 import type { AgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
+import { PROJECT_REQUIRED_DISPATCH_HINT } from "@/lib/dispatch/projectRequiredDispatchHint.constant";
 import { resolveAgentRunDispatchProject } from "@/lib/dispatch/resolveAgentRunDispatchProject";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 
@@ -40,6 +41,9 @@ export const resolveDashboardDispatchProjectContext = async (input: {
         input.requestId,
         projectResolution.code,
         projectResolution.status,
+        projectResolution.code === "project_required"
+          ? PROJECT_REQUIRED_DISPATCH_HINT
+          : undefined,
       ),
     };
   }

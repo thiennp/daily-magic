@@ -38,6 +38,9 @@ export async function POST(request: Request): Promise<Response> {
       ...(parsed.targetDeviceId !== undefined
         ? { targetDeviceId: parsed.targetDeviceId }
         : {}),
+      ...(parsed.projectId !== undefined
+        ? { projectId: parsed.projectId }
+        : {}),
     },
   });
 

@@ -9,6 +9,7 @@ export interface OfficialWorkflowRunStartBody {
   readonly targetUserId?: string;
   readonly groupId?: string;
   readonly targetDeviceId?: string;
+  readonly projectId?: string;
 }
 
 const parseFieldValues = (
@@ -59,6 +60,9 @@ export const parseOfficialWorkflowRunStartBody = (
     ...(typeof body.targetDeviceId === "string" &&
     body.targetDeviceId.length > 0
       ? { targetDeviceId: body.targetDeviceId }
+      : {}),
+    ...(typeof body.projectId === "string" && body.projectId.trim().length > 0
+      ? { projectId: body.projectId.trim() }
       : {}),
   };
 };

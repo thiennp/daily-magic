@@ -6,12 +6,14 @@ export const buildDispatchError = (
   requestId?: string,
   errorCode?: string,
   httpStatus?: number,
+  hint?: string,
 ): AgentWitchMessage => ({
   type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
   payload: {
     errorMessage,
     ...(errorCode !== undefined ? { errorCode } : {}),
     ...(httpStatus !== undefined ? { httpStatus } : {}),
+    ...(hint !== undefined && hint.length > 0 ? { hint } : {}),
   },
   requestId,
 });

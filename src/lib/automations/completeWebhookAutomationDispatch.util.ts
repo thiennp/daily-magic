@@ -9,13 +9,8 @@ import type DispatchAgentAutomationResult from "@/lib/automations/types/Dispatch
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { dispatchClaudeRunForDashboardUser } from "@/lib/dispatch/dispatchWriterRunForDashboardUser";
-
-const readDispatchErrorMessage = (
-  payload: Readonly<Record<string, unknown>> | undefined,
-): string =>
-  typeof payload?.errorMessage === "string" && payload.errorMessage.length > 0
-    ? payload.errorMessage
-    : "Automation dispatch failed.";
+import { readDispatchErrorMessageWithHint } from "@/lib/dispatch/readDispatchErrorMessageWithHint";
+import { resolveOrchestratorDispatchProjectId } from "@/lib/dispatch/resolveOrchestratorDispatchProjectId";
 
 export const completeWebhookAutomationDispatch = async (input: {
   readonly automation: AgentAutomationRecord;
@@ -27,12 +22,19 @@ export const completeWebhookAutomationDispatch = async (input: {
     input.capability,
     input.fieldValues,
   );
+  // Thien LOCK: automation project -> capability project -> owner Default.
+  const projectId = await resolveOrchestratorDispatchProjectId({
+    ownerUserId: input.automation.ownerUserId,
+    boundProjectIds: [input.automation.projectId, input.capability.projectId],
+    deviceIds: [input.automation.deviceId],
+  });
   const dispatchResult = await dispatchClaudeRunForDashboardUser({
     runtime: input.runtime,
     requesterUserId: input.automation.ownerUserId,
     body: {
       prompt,
       capabilityId: input.automation.capabilityId,
+      ...(projectId !== null ? { projectId } : {}),
       ...(input.automation.deviceId !== null
         ? { targetDeviceId: input.automation.deviceId }
         : {}),
@@ -41,8 +43,9 @@ export const completeWebhookAutomationDispatch = async (input: {
   });
 
   if (!dispatchResult.ok) {
-    const errorMessage = readDispatchErrorMessage(
-      dispatchResult.message.payload,
+    const errorMessage = readDispatchErrorMessageWithHint(
+      dispatchResult.message,
+      "Automation dispatch failed.",
     );
     const automation = await recordAgentAutomationRun({
       automationId: input.automation.id,

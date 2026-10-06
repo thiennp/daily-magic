@@ -11,6 +11,7 @@ import { collectPriorHumanResponsesFromWorkflowRun } from "@/lib/workflowOrchest
 import { buildWorkflowRunStepResponse } from "@/lib/workflowOrchestration/buildWorkflowRunStepResponse";
 import { readDispatchErrorMessageFromAgentWitchMessage } from "@/lib/workflowOrchestration/readDispatchErrorMessageFromAgentWitchMessage";
 import { renderOfficialWorkflowAgentPrompt } from "@/lib/workflowOrchestration/renderOfficialWorkflowAgentPrompt";
+import { resolveWorkflowRunDispatchProjectId } from "@/lib/workflowOrchestration/resolveWorkflowRunDispatchProjectId";
 import type OfficialWorkflowDefinition from "@/lib/workflowOrchestration/types/OfficialWorkflowDefinition.type";
 import type { OfficialWorkflowAgentNode } from "@/lib/workflowOrchestration/types/OfficialWorkflowDefinition.type";
 import type WorkflowRunRecord from "@/lib/workflowOrchestration/types/WorkflowRunRecord.type";
@@ -57,6 +58,7 @@ export const runOfficialWorkflowAgentStep = async (input: {
     priorHumanResponses: collectPriorHumanResponsesFromWorkflowRun(input.run),
   });
 
+  const projectId = await resolveWorkflowRunDispatchProjectId(input);
   const dispatchResult = await dispatchClaudeRunForDashboardUser({
     runtime: input.runtime,
     requesterUserId: input.requesterUserId,
@@ -65,6 +67,7 @@ export const runOfficialWorkflowAgentStep = async (input: {
       ...input.dispatchBodyBase,
       prompt,
       capabilityId: input.run.capabilityId,
+      ...(projectId !== null ? { projectId } : {}),
     },
   });
 
