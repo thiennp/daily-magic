@@ -23,11 +23,24 @@ const draft = (patch: Partial<AskBoxDraft>): AskBoxDraft => ({
   ...patch,
 });
 
-const targets = askBoxSendTargets([bot("m-wake", "WB Wake"), bot("m-x", "  ")]);
+const bots = [bot("m-wake", "WB Wake"), bot("m-x", "  ")];
+const targets = askBoxSendTargets(bots);
 
 describe("ask box send targets", () => {
   it("lists All assistants first and skips unnamed assistants", () => {
     expect(targets.map((t) => t.label)).toEqual(["All assistants", "WB Wake"]);
+  });
+
+  it("task mode drops All assistants and keeps This computer chips", () => {
+    expect(
+      askBoxSendTargets(bots, {
+        assignAsTask: true,
+        computers: [{ key: "mc1", label: "This computer" }],
+      }).map((t) => ({ key: t.key, label: t.label, kind: t.kind })),
+    ).toEqual([
+      { key: "m-wake", label: "WB Wake", kind: "assistant" },
+      { key: "mc1", label: "This computer", kind: "computer" },
+    ]);
   });
 });
 
@@ -54,19 +67,29 @@ describe("resolveAskBoxSend", () => {
     );
   });
 
-  it("task needs one assistant", () => {
+  it("task to All assistants shows oneRecipient error (I21)", () => {
     expect(resolveAskBoxSend(draft({ assignAsTask: true }), targets)).toEqual({
       kind: "error",
-      message: "A specific task can only go to one assistant",
+      message: "A task needs one recipient. Pick one assistant or This computer.",
     });
-    expect(resolveAskBoxSend(draft({ assignAsTask: true }), askBoxSendTargets([]))).toEqual({
+    expect(
+      resolveAskBoxSend(
+        draft({ assignAsTask: true }),
+        askBoxSendTargets([], { assignAsTask: true }),
+      ),
+    ).toEqual({
       kind: "error",
       message: "Invite an assistant first",
     });
   });
 
   it("task maps to inbox dispatch draft with kind + refs", () => {
-    const refs = { prUrl: "https://example.com/pr/1", commitSha: "abc1234", localPath: "", allowClaimId: "" };
+    const refs = {
+      prUrl: "https://example.com/pr/1",
+      commitSha: "abc1234",
+      localPath: "",
+      allowClaimId: "",
+    };
     const plan = resolveAskBoxSend(
       draft({ assignAsTask: true, to: "m-wake", kind: "review", refs }),
       targets,
@@ -74,7 +97,12 @@ describe("resolveAskBoxSend", () => {
     expect(plan).toEqual({
       kind: "task",
       threadKey: "m-wake",
-      draft: { assigneeMembershipId: "m-wake", summary: "Check the build", kind: "review", refs },
+      draft: {
+        assigneeMembershipId: "m-wake",
+        summary: "Check the build",
+        kind: "review",
+        refs,
+      },
       successMessage: "You assigned a task to WB Wake",
     });
   });

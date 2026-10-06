@@ -1,7 +1,7 @@
 "use client";
 
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
-import AwcProjectAskBox from "@/features/projects/askBox/AwcProjectAskBox";
+import AwcProjectChatDock from "@/features/projects/chatDock/AwcProjectChatDock";
 import { useAskBoxActivitySync } from "@/features/projects/askBox/useAskBoxActivitySync";
 import AwcProjectDetailHeader from "@/features/projects/AwcProjectDetailHeader";
 import AwcProjectDetailTabBar from "@/features/projects/AwcProjectDetailTabBar";
@@ -80,11 +80,6 @@ export default function AwcProjectDetailPanel({
             setActiveTab("settings");
           }}
         />
-        <AwcProjectAskBox
-          projectId={project.id}
-          threads={messengerThreads.threads}
-          onSent={onAskSent}
-        />
         <AwcProjectDetailTabBar
           activeTab={activeTab}
           onTabChange={setActiveTab}
@@ -113,6 +108,11 @@ export default function AwcProjectDetailPanel({
         ownerDisplayName={actorDisplayName}
         viewerUserId={actorUserId}
         onMessageHelper={onGotoActivity}
+      />
+      <AwcProjectChatDock
+        projectId={project.id}
+        threads={messengerThreads.threads}
+        onSent={onAskSent}
       />
     </div>
   );

@@ -70,10 +70,11 @@ describe("L3 V5-3 project chrome — Product EN lock", () => {
     expect(edit).toContain('C["header.edit"]');
   });
 
-  it("keeps the live Members rail + mobile Members chip + ask box mounted", () => {
+  it("keeps the live Members rail + mobile Members chip; Chat dock replaces ask box", () => {
     const panel = read("AwcProjectDetailPanel.tsx");
     expect(panel).toContain("<AwcProjectMembersColumn");
-    expect(panel).toContain("<AwcProjectAskBox");
+    expect(panel).toContain("<AwcProjectChatDock");
+    expect(panel).not.toMatch(/<AwcProjectAskBox[\s>]/);
     expect(read("AwcProjectDetailHeader.tsx")).toContain("<AwcProjectMobileMembersChip");
     expect(read("AwcProjectMembersColumn.tsx")).toContain("AwcProjectMembersOwnerContent");
   });

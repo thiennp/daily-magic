@@ -15,9 +15,11 @@ interface AwcProjectAskBoxBarProps {
   readonly to: string;
   readonly targets: readonly AskBoxSendTarget[];
   readonly onTo: (to: string) => void;
+  /** Dock owns Send-to chips — hide the inline select. */
+  readonly hideSendTo?: boolean;
 }
 
-/** Send to pill + 0/200 counter (task mode) + round send button. */
+/** Optional Send to pill + 0/200 counter (task mode) + round send button. */
 export default function AwcProjectAskBoxBar({
   disabled,
   canSend,
@@ -26,29 +28,32 @@ export default function AwcProjectAskBoxBar({
   to,
   targets,
   onTo,
+  hideSendTo = false,
 }: AwcProjectAskBoxBarProps) {
   const copy = PROJECT_ASK_BOX_COPY;
   return (
     <div className="flex flex-wrap items-center justify-between gap-2.5">
       <div className="flex min-w-0 flex-wrap items-center gap-2.5">
-        <label className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 py-1 pl-3 pr-2 text-sm text-gray-500 dark:bg-white/10 dark:text-gray-400">
-          {copy.sendTo}
-          <select
-            aria-label={copy.sendTo}
-            value={to}
-            disabled={disabled}
-            onChange={(event) => {
-              onTo(event.target.value);
-            }}
-            className={`cursor-pointer appearance-none border-0 bg-transparent py-0.5 pl-0 pr-[18px] text-sm font-medium text-gray-900 focus:outline-none dark:text-white ${SELECT_CHEVRON}`}
-          >
-            {targets.map((target) => (
-              <option key={target.key} value={target.key} className="bg-white text-gray-900">
-                {target.label}
-              </option>
-            ))}
-          </select>
-        </label>
+        {hideSendTo ? null : (
+          <label className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 py-1 pl-3 pr-2 text-sm text-gray-500 dark:bg-white/10 dark:text-gray-400">
+            {copy.sendTo}
+            <select
+              aria-label={copy.sendTo}
+              value={to}
+              disabled={disabled}
+              onChange={(event) => {
+                onTo(event.target.value);
+              }}
+              className={`cursor-pointer appearance-none border-0 bg-transparent py-0.5 pl-0 pr-[18px] text-sm font-medium text-gray-900 focus:outline-none dark:text-white ${SELECT_CHEVRON}`}
+            >
+              {targets.map((target) => (
+                <option key={target.key} value={target.key} className="bg-white text-gray-900">
+                  {target.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         {showCounter ? (
           <span className="text-[12.5px] tabular-nums text-gray-500 dark:text-gray-400">
             {copy.counter(textLength, PROJECT_MESSAGE_SUMMARY_MAX_CHARS)}

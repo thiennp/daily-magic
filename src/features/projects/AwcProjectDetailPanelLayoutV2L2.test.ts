@@ -7,16 +7,14 @@ const read = (relative: string): string =>
   readFileSync(path.join(process.cwd(), relative), "utf8");
 
 const ASK_DIR = "src/features/projects/askBox";
+const DOCK_DIR = "src/features/projects/chatDock";
 
-describe("project layout v2 L2 ask box", () => {
-  it("sits in the main column between header and tabs", () => {
+describe("project layout v2 L2 ask box → V5-4 Chat dock", () => {
+  it("mounts the Chat dock on the project panel (ask chrome lives inside)", () => {
     const panel = read("src/features/projects/AwcProjectDetailPanel.tsx");
-    const header = panel.indexOf("<AwcProjectDetailHeader");
-    const ask = panel.indexOf("<AwcProjectAskBox");
-    const tabs = panel.indexOf("<AwcProjectDetailTabBar");
-    expect(header).toBeGreaterThan(-1);
-    expect(ask).toBeGreaterThan(header);
-    expect(tabs).toBeGreaterThan(ask);
+    expect(panel).toContain("<AwcProjectChatDock");
+    expect(panel).toContain("<AwcProjectMembersColumn");
+    expect(panel).not.toMatch(/<AwcProjectAskBox[\s>]/);
   });
 
   it("reuses messenger send + inbox dispatch (no new API)", () => {
@@ -25,6 +23,7 @@ describe("project layout v2 L2 ask box", () => {
     expect(hook).toContain("sendMessengerTask");
     expect(hook).not.toContain("fetch(");
     expect(hook).toContain("needsReply: true");
+    expect(read(`${DOCK_DIR}/AwcProjectChatDock.tsx`)).toContain("AwcProjectAskBox");
   });
 
   it("uses Product artifact EN strings", () => {
@@ -43,9 +42,15 @@ describe("project layout v2 L2 ask box", () => {
     expect(copy).not.toMatch(/trợ lý|Gửi cho|\bbot\b|This Mac/);
   });
 
-  it("is B/W/gray only (no Apple blue)", () => {
-    for (const file of ["AwcProjectAskBox.tsx", "AwcProjectAskBoxBar.tsx", "AwcProjectAskBoxOptions.tsx", "AwcProjectAskBoxTaskFields.tsx"]) {
-      expect(read(`${ASK_DIR}/${file}`)).not.toMatch(/blue-|indigo-|sky-|#0a6cf5|#4a97ff|#e5effe|#0d2749/i);
+  it("is B/W/gray only in legacy ask pieces (no Apple blue)", () => {
+    for (const file of [
+      "AwcProjectAskBoxBar.tsx",
+      "AwcProjectAskBoxOptions.tsx",
+      "AwcProjectAskBoxTaskFields.tsx",
+    ]) {
+      expect(read(`${ASK_DIR}/${file}`)).not.toMatch(
+        /blue-|indigo-|sky-|#0a6cf5|#4a97ff|#e5effe|#0d2749/i,
+      );
     }
   });
 });

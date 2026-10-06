@@ -4,6 +4,7 @@ import {
   type AskBoxSendTarget,
 } from "@/features/projects/askBox/askBoxSendTarget";
 import { PROJECT_ASK_BOX_COPY } from "@/features/projects/askBox/projectAskBoxCopy.constant";
+import { PROJECT_CHAT_DOCK_COPY } from "@/features/projects/chatDock/projectChatDockCopy.constant";
 import type { MessengerTaskRefsDraft } from "@/features/projects/messenger/AwcMessengerTaskRefsPanel";
 import type { MessengerTaskDraft } from "@/features/projects/messenger/utils/validateMessengerTaskDraft";
 
@@ -33,7 +34,7 @@ export type AskBoxSendPlan =
       readonly successMessage: string;
     };
 
-/** Ask box → messenger message (any thread) or inbox dispatch task (one assistant). */
+/** Ask box → messenger message (any thread) or inbox dispatch task (one recipient). */
 export const resolveAskBoxSend = (
   draft: AskBoxDraft,
   targets: readonly AskBoxSendTarget[],
@@ -51,14 +52,22 @@ export const resolveAskBoxSend = (
       successMessage: draft.needsReply ? copy.sentTo(label) : copy.sentQuiet(label),
     };
   }
-  if (targets.length <= 1) return { kind: "error", message: copy.inviteFirst };
+  if (targets.length === 0) return { kind: "error", message: copy.inviteFirst };
   if (draft.to === ASK_BOX_ALL_KEY) {
-    return { kind: "error", message: copy.taskOneAssistant };
+    return {
+      kind: "error",
+      message: PROJECT_CHAT_DOCK_COPY["dock.task.oneRecipient"],
+    };
   }
   return {
     kind: "task",
     threadKey: draft.to,
-    draft: { assigneeMembershipId: draft.to, summary: text, kind: draft.kind, refs: draft.refs },
+    draft: {
+      assigneeMembershipId: draft.to,
+      summary: text,
+      kind: draft.kind,
+      refs: draft.refs,
+    },
     successMessage: copy.assignedTo(label),
   };
 };
