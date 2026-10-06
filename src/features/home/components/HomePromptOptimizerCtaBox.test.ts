@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs";
-import path from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
@@ -9,9 +7,10 @@ import {
   HOME_PROMPT_OPTIMIZER_CTA_COPY,
   HOME_PROMPT_OPTIMIZER_CTA_HREF,
 } from "@/features/home/constants/homePromptOptimizerCta.constant";
+import { PROMPT_SDLC_AWL_PAGE_HREF } from "@/features/prompt-optimizer/internal/presentation/promptSdlcAwlHref.constant";
 
 describe("HomePromptOptimizerCtaBox", () => {
-  it("renders one box with a line of copy and a link to the optimizer, no form", () => {
+  it("renders one box with a line of copy and a Local link, no form", () => {
     const html = renderToStaticMarkup(createElement(HomePromptOptimizerCtaBox));
 
     expect(html).toContain(HOME_PROMPT_OPTIMIZER_CTA_COPY.body);
@@ -23,13 +22,12 @@ describe("HomePromptOptimizerCtaBox", () => {
     expect(html.match(/<a /g)).toHaveLength(1);
   });
 
-  it("links to the existing App Router prompt optimizer page", () => {
-    expect(HOME_PROMPT_OPTIMIZER_CTA_HREF).toBe("/prompt-optimizer");
-    expect(() =>
-      readFileSync(
-        path.join(process.cwd(), "src/app/(app)/prompt-optimizer/page.tsx"),
-        "utf8",
-      ),
-    ).not.toThrow();
+  it("opens AgentWitch Local on this computer", () => {
+    expect(HOME_PROMPT_OPTIMIZER_CTA_HREF).toBe(PROMPT_SDLC_AWL_PAGE_HREF);
+    expect(HOME_PROMPT_OPTIMIZER_CTA_HREF).toContain(
+      "127.0.0.1:43347/prompt-optimizer",
+    );
+    expect(HOME_PROMPT_OPTIMIZER_CTA_COPY.cta).toBe("Open in AgentWitch Local");
+    expect(HOME_PROMPT_OPTIMIZER_CTA_COPY.eyebrow).toBe("Prompt optimizer");
   });
 });

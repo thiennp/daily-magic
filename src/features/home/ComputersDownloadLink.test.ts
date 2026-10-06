@@ -12,7 +12,7 @@ describe("ComputersDownloadLink", () => {
     const html = renderToStaticMarkup(createElement(ComputersDownloadLink));
     expect(html).toContain('href="/download"');
     expect(html).toContain(APP_SHELL_COMPUTERS_COPY.download);
-    expect(APP_SHELL_COMPUTERS_COPY.download).toBe("Download AgentWitch");
+    expect(APP_SHELL_COMPUTERS_COPY.download).toBe("Download AgentWitch Local");
   });
 
   it("HARD: HomeConnectedMacsPanel mounts Download when devices exist", () => {

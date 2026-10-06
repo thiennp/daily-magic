@@ -55,7 +55,7 @@ describe("Automations must-keeps + picker copy", () => {
 
   it("keeps Connect reachable and Download AgentWitch when connected", () => {
     expect(APP_SHELL_COMPUTERS_COPY.connectThis).toBe("Connect this computer");
-    expect(APP_SHELL_COMPUTERS_COPY.download).toBe("Download AgentWitch");
+    expect(APP_SHELL_COMPUTERS_COPY.download).toBe("Download AgentWitch Local");
     const panel = read("src/features/home/HomeConnectedMacsPanel.tsx");
     expect(panel).toContain("ComputersDownloadLink");
     expect(panel).toContain("ConnectAnotherMacButton");

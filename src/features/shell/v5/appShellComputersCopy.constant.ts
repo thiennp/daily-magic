@@ -13,8 +13,8 @@ export const APP_SHELL_COMPUTERS_COPY = {
   empty: "No computers connected yet.",
   connectThis: "Connect this computer",
   connectAnother: "Connect another computer",
-  /** Design Computers/Connect HTML — Download AgentWitch (HARD: always visible). */
-  download: "Download AgentWitch",
+  /** Design Computers/Connect HTML — Download AgentWitch Local (HARD: always visible). */
+  download: "Download AgentWitch Local",
   update: "Update",
   updateDisabledOffline: "Offline — update when it's back.",
   updateDisabledRemote: "Update it from that computer.",

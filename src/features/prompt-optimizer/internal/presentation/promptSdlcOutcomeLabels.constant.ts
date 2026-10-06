@@ -88,7 +88,7 @@ export const labelPromptSdlcCycleOutcome = (input: {
   if (input.status === "improving") {
     return { label: "Improving", tone: "live", errorKindLabel: null };
   }
-  return { label: "Waiting on the Mac", tone: "live", errorKindLabel: null };
+  return { label: "Waiting on this computer", tone: "live", errorKindLabel: null };
 };
 
 export const canUseThisPromptSdlcOutcome = (

@@ -8,25 +8,23 @@ import {
 export default function PromptSdlcGuideWizardSection(): ReactElement {
   return (
     <section className="space-y-3">
-      <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>What Run does</h2>
+      <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Four compose steps</h2>
       <p className={APP_SURFACE_BODY_TEXT_CLASS}>
-        <strong>Run</strong> starts the four-step wizard in AgentWitch Live:
-        generalize placeholders, evaluate revisions (pass 70, up to five
-        rounds), separate into modules (chain or parallel), then optimize each
-        module with one runner trial and judge score per module.
+        In <strong>AgentWitch Local</strong> the wizard is{" "}
+        <strong>Project → Prompt and goal → CLI → Summary</strong>, then{" "}
+        <strong>Run</strong>. Project picks the folder writers use. Prompt and
+        goal accepts Quick fill chips and cost estimates (estimates, not
+        invoices). CLI picks judge, improver, and runner. Summary starts the run.
       </p>
       <p className={APP_SURFACE_BODY_TEXT_CLASS}>
-        Choose a <strong>runner</strong> for wizard step 4; it defaults to the
-        same writer as the judge when you leave runner blank. The wizard
-        finishes as <strong>passed</strong> only when every module reaches the
-        wizard pass score; otherwise it ends as <strong>stopped</strong> but
-        still shows the best prompts per module.
+        <strong>Run</strong> starts generalize → evaluate → separate → optimize.
+        The run finishes as <strong>passed</strong> only when every module
+        reaches the pass score. Use this prompt / save as skill only when status
+        is <strong>passed</strong>. Timeout, interrupt, and no_reply fail cleanly.
       </p>
       <p className={APP_SURFACE_BODY_TEXT_CLASS}>
-        While writers run, use <strong>End wizard</strong> or{" "}
-        <strong>Skip module</strong> during step 4. Pause at each gate to
-        continue or rerun with feedback. Click a timeline step to open the
-        score, feedback, and saved prompt for that step.
+        While writers run, use Continue / Rerun with feedback at each gate, or
+        Download report (.md). This console guide does not run the optimizer.
       </p>
     </section>
   );

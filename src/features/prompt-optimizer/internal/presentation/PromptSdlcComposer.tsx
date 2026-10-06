@@ -54,18 +54,18 @@ export default function PromptSdlcComposer(
           onChange={(event) => props.onSourcePromptChange(event.target.value)}
         />
       </PromptSdlcField>
-      <PromptSdlcField id="prompt-sdlc-mac" label="Mac">
+      <PromptSdlcField id="prompt-sdlc-computer" label="Computer">
         <select
-          id="prompt-sdlc-mac"
+          id="prompt-sdlc-computer"
           className={PROMPT_SDLC_FIELD_CLASS}
           value={props.deviceId}
           onChange={(event) => props.onDeviceIdChange(event.target.value)}
         >
-          <option value="">Select a Mac</option>
-          {props.macs.map((mac) => (
-            <option key={mac.id} value={mac.id}>
-              {mac.label}
-              {mac.isDispatchReady ? "" : " (offline)"}
+          <option value="">Select a computer</option>
+          {props.macs.map((computer) => (
+            <option key={computer.id} value={computer.id}>
+              {computer.label}
+              {computer.isDispatchReady ? "" : " (offline)"}
             </option>
           ))}
         </select>

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { ReactElement } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
@@ -11,7 +10,7 @@ import {
   HOME_PROMPT_OPTIMIZER_CTA_HREF,
 } from "@/features/home/constants/homePromptOptimizerCta.constant";
 
-/** Signed-in home: one box, one line of copy, one link. No compose form. */
+/** Signed-in home: one box, one line of copy, one link to Local. No compose form. */
 export default function HomePromptOptimizerCtaBox(): ReactElement {
   return (
     <AppPanel
@@ -30,12 +29,12 @@ export default function HomePromptOptimizerCtaBox(): ReactElement {
         <p className={APP_SURFACE_BODY_TEXT_CLASS}>
           {HOME_PROMPT_OPTIMIZER_CTA_COPY.body}
         </p>
-        <Link
+        <a
           href={HOME_PROMPT_OPTIMIZER_CTA_HREF}
           className={APP_SURFACE_CTA_PRIMARY_SM_CLASS}
         >
           {HOME_PROMPT_OPTIMIZER_CTA_COPY.cta}
-        </Link>
+        </a>
       </div>
     </AppPanel>
   );

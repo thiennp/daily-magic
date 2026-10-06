@@ -11,7 +11,7 @@ describe("APP_SHELL_COMPUTERS_COPY (V5-2 locked EN)", () => {
   it("titles the section Computers (shell.computers.title, never Devices)", () => {
     expect(SHELL_COMPUTERS_TITLE).toBe("Computers");
     expect(APP_SHELL_COMPUTERS_COPY.heading).toBe("Computers");
-    expect(APP_SHELL_COMPUTERS_COPY.download).toBe("Download AgentWitch");
+    expect(APP_SHELL_COMPUTERS_COPY.download).toBe("Download AgentWitch Local");
   });
 
   it("names the user's computer This computer (never This Mac)", () => {

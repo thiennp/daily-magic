@@ -53,7 +53,7 @@ export default function HomePromptSdlcSection({
           href="/download"
           className="text-sm font-medium text-gray-900 underline dark:text-white"
         >
-          Download the Mac app
+          Download AgentWitch Local
         </Link>
       </p>
       {showComposeForm ? (
