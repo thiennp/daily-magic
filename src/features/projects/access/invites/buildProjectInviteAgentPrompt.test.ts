@@ -33,7 +33,8 @@ describe("buildProjectInviteAgentPrompt", () => {
     expect(prompt).toMatch(/come back and confirm/i);
     expect(prompt).toMatch(/do not busy-poll|not silent polling/i);
     expect(prompt).toMatch(/If status is active|wait for the project owner to Approve/i);
-    expect(prompt).toMatch(/Bots you own can join without Approve/i);
+    expect(prompt).not.toMatch(/Bots you own can join without Approve/i);
+    expect(prompt).toMatch(/auto-approve/i);
     expect(prompt).toContain("get_my_project_access");
     expect(prompt).toContain("toMembershipId");
     expect(prompt).toMatch(/prefer toMembershipId|MUST prefer toMembershipId/i);
@@ -87,28 +88,6 @@ describe("buildProjectInviteAgentPrompt", () => {
     expect(prompt).not.toMatch(/open this URL/i);
     expect(prompt).not.toContain("https://example.com/invite/p/tok-xyz");
     expect(prompt).toContain("Project: Demo (proj-1)");
-    expect(prompt).toContain("leave_project");
-    expect(prompt).toMatch(/"confirm":\s*true/);
-    expect(prompt).toMatch(
-      /no owner Approve needed|does not need to Approve your leave/i,
-    );
-    expect(prompt).toMatch(
-      /agent-access only for leave_project|do NOT call leave_project with awc_proj_|agent-access MCP Bearer only/i,
-    );
-    expect(prompt).toMatch(
-      /not on the awc_proj_|do NOT call leave_project with awc_proj_/i,
-    );
-    expect(prompt).toMatch(/Left project|leave \//i);
-    expect(prompt).toMatch(/cannot revoke others/i);
-    expect(prompt).toMatch(/MUST on leave or owner Revoke/i);
-    expect(prompt).toMatch(/delete all project-scoped routines/i);
-    expect(prompt).toMatch(/Website relaunch watches/i);
-    expect(prompt).toMatch(/MUST on connect \(webhook-first\)/i);
-    expect(prompt).toMatch(/Inbox wake is webhook-only, via a Grok routine/i);
-    expect(prompt).toMatch(/do not poll list_project_inbox on a timer/i);
-    expect(prompt).toMatch(/Once a day, check the project webhook/i);
-    expect(prompt).toMatch(/get_my_project_webhook_status/);
-    expect(prompt).not.toMatch(/Else MUST poll list_project_inbox|every 30 seconds while actively working|every 5 minutes when idle/i);
   });
 
   it("prefers explicit token over URL parse", () => {

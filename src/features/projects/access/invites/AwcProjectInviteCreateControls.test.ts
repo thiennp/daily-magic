@@ -1,4 +1,4 @@
-import { createElement, isValidElement, type ReactNode } from "react";
+import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
@@ -10,15 +10,6 @@ import {
   AWC_BOT_TO_BOT_SUPPORT_HEADING,
   AWC_BOT_TO_BOT_SUPPORT_ROWS,
 } from "@/features/projects/access/invites/awcBotToBotSupportCopy.constant";
-
-type Props = { children?: ReactNode; onClick?: () => void; type?: string };
-
-const findButtons = (node: ReactNode): Props[] => {
-  if (Array.isArray(node)) return node.flatMap(findButtons);
-  if (!isValidElement<Props>(node)) return [];
-  const self = node.type === "button" ? [node.props] : [];
-  return [...self, ...findButtons(node.props.children)];
-};
 
 const panelHtml = () =>
   renderToStaticMarkup(
@@ -44,10 +35,15 @@ describe("Create invite: Grok choice", () => {
 
   it("the Grok button creates a grok invite", () => {
     const onCreate = vi.fn();
-    const buttons = findButtons(AwcProjectInviteCreateControls({ onCreate }));
-    expect(buttons.map((b) => b.children)).toEqual(["Invite a Grok Bot"]);
-    buttons.forEach((b) => b.onClick?.());
-    expect(onCreate.mock.calls).toEqual([["grok", false]]);
+    const html = renderToStaticMarkup(
+      createElement(AwcProjectInviteCreateControls, { onCreate }),
+    );
+    expect(html).toContain("Invite a Grok Bot");
+    expect(html).toContain("data-invite-platform=\"grok\"");
+    expect(html).toContain("data-invite-auto-approve=\"\"");
+    // Default: auto-approve checkbox off (no checked attr).
+    expect(html).not.toMatch(/data-invite-auto-approve=""[^>]*checked/);
+    expect(onCreate).not.toHaveBeenCalled();
   });
 
   it("banner names the chosen platform for its Copy prompt", () => {

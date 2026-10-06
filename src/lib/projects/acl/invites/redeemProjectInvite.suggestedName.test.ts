@@ -60,39 +60,6 @@ describe("redeemProjectInvite suggestedProjectDisplayName", () => {
       if (q.includes("INSERT INTO project_access_audit")) return [];
       return [];
     });
-    approveMock.mockResolvedValue({
-      ok: true,
-      request: {
-        ...redeemSuggestPendingRow("Soft Vale"),
-        status: "approved",
-        id: "req-1",
-        projectId: "proj-1",
-        requesterUserId: "bot-1",
-        invitedByUserId: "owner-1",
-        reason: "invite_redeem",
-        requestedScopes: ["acl:self", "project:meta", "peer_sync"],
-        decidedByUserId: "owner-1",
-        decidedAt: "2026-10-02T00:00:00.000Z",
-        createdAt: "2026-10-02T00:00:00.000Z",
-        expiresAt: "2026-10-16T00:00:00.000Z",
-        inviteId: "inv-1",
-        teamLabel: null,
-        suggestedProjectDisplayName: "Soft Vale",
-      },
-      membership: {
-        id: "mem-1",
-        projectId: "proj-1",
-        userId: "bot-1",
-        role: "member",
-        status: "active",
-        teamLabel: null,
-        scopes: ["acl:self", "project:meta", "peer_sync", "msg:dispatch"],
-        projectDisplayName: "Soft Vale",
-        createdAt: "2026-10-02T00:00:00.000Z",
-        revokedAt: null,
-      },
-      projectApiKey: "awc_proj_test",
-    });
     const result = await redeemProjectInvite({
       token: "a".repeat(22),
       actorUserId: "bot-1",

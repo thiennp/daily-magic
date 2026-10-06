@@ -68,38 +68,6 @@ describe("createProjectAccessRequest same-owner (silent auto-approve removed)", 
 
   it("stays pending when same-owner linked and display name present", async () => {
     sameOwnerMock.mockResolvedValue(true);
-    approveMock.mockResolvedValue({
-      ok: true,
-      request: {
-        id: "req-1",
-        projectId: "proj-1",
-        requesterUserId: "bot-1",
-        invitedByUserId: null,
-        reason: null,
-        requestedScopes: ["acl:self"],
-        status: "approved",
-        decidedByUserId: "owner-1",
-        decidedAt: "2026-10-02T00:00:00.000Z",
-        createdAt: "2026-10-02T00:00:00.000Z",
-        expiresAt: "2026-10-16T00:00:00.000Z",
-        inviteId: null,
-        teamLabel: null,
-        suggestedProjectDisplayName: "Dark C",
-      },
-      membership: {
-        id: "mem-1",
-        projectId: "proj-1",
-        userId: "bot-1",
-        role: "member",
-        status: "active",
-        teamLabel: null,
-        scopes: ["acl:self", "project:meta", "peer_sync", "msg:dispatch"],
-        projectDisplayName: "Dark C",
-        createdAt: "2026-10-02T00:00:00.000Z",
-        revokedAt: null,
-      },
-      projectApiKey: "awc_proj_x",
-    });
     const result = await createProjectAccessRequest({
       projectId: "proj-1",
       requesterUserId: "bot-1",

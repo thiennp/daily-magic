@@ -46,7 +46,7 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
       catalogVersion: 12,
       at: "2026-10-02",
       kind: "connect",
-      title: "Same-owner auto-approve + toMembershipId dispatch",
+      title: "Invite auto-approve + toMembershipId dispatch",
       summary:
         'After redeem_project_invite / request_project_access, MUST call get_my_project_access: if pending, wait for owner Approve; if active, the invite had auto-approve on for a claimed bot. list_project_peers / get_project_acl may expose membershipId on self+peers. project_dispatch MUST prefer toMembershipId for peer bots; keep toProjectDisplayName: "Owner" for the human; exactly one of toMembershipId | toProjectDisplayName | toTeamLabel. Re-list peers after rename; old nickname may resolve ~7 days.',
       adapt:
