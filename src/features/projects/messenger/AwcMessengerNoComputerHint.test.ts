@@ -18,7 +18,9 @@ describe("AwcMessengerNoComputerHint", () => {
     );
     expect(html).toContain('role="note"');
     expect(html).toContain(AWC_PROJECT_MESSENGER_COPY.noComputerHintLabel);
-    expect(html).toContain("Adding a computer is safer.");
+    expect(html).toContain(
+      "Add a computer to keep a lasting copy.",
+    );
   });
 
   it("messenger shows it only when the project has no owner computer", () => {
