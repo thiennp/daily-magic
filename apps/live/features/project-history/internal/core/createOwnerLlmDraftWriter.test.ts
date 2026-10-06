@@ -36,7 +36,11 @@ describe("createOwnerLlmDraftWriter", () => {
   it("one write call uses Cursor then succeeds", async () => {
     const runCli: OwnerLlmCliRunner = vi.fn(async (input) => {
       expect(input.writerAgent).toBe("cursor");
-      return { ok: true, text: `\`\`\`markdown\n${skillMd}\n\`\`\``, tokensUsed: 10 };
+      return {
+        ok: true as const,
+        text: `\`\`\`markdown\n${skillMd}\n\`\`\``,
+        tokensUsed: 10,
+      };
     });
     const writer = createOwnerLlmDraftWriter({ runCli, dryRun: false });
     const result = await writer({
@@ -55,9 +59,13 @@ describe("createOwnerLlmDraftWriter", () => {
   it("falls back to Codex when Cursor fails", async () => {
     const runCli: OwnerLlmCliRunner = vi.fn(async (input) => {
       if (input.writerAgent === "cursor") {
-        return { ok: false, reason: "writer_start_failed", tokensUsed: 1 };
+        return {
+          ok: false as const,
+          reason: "writer_start_failed",
+          tokensUsed: 1,
+        };
       }
-      return { ok: true, text: skillMd, tokensUsed: 5 };
+      return { ok: true as const, text: skillMd, tokensUsed: 5 };
     });
     const writer = createOwnerLlmDraftWriter({ runCli, dryRun: false });
     const result = await writer({
@@ -75,11 +83,11 @@ describe("createOwnerLlmDraftWriter", () => {
       calls.push(`${input.writerAgent}:${input.prompt.slice(0, 20)}`);
       if (input.prompt.includes("Do NOT invent secrets")) {
         if (input.writerAgent === "cursor") {
-          return { ok: false, reason: "usage_limit", tokensUsed: 2 };
+          return { ok: false as const, reason: "usage_limit", tokensUsed: 2 };
         }
-        return { ok: true, text: "reflection outline", tokensUsed: 3 };
+        return { ok: true as const, text: "reflection outline", tokensUsed: 3 };
       }
-      return { ok: true, text: skillMd, tokensUsed: 7 };
+      return { ok: true as const, text: skillMd, tokensUsed: 7 };
     });
     const writer = createOwnerLlmDraftWriter({ runCli, dryRun: false });
     const result = await writer({
@@ -97,7 +105,7 @@ describe("createOwnerLlmDraftWriter", () => {
 
   it("returns failure when both writers fail", async () => {
     const runCli: OwnerLlmCliRunner = vi.fn(async () => ({
-      ok: false,
+      ok: false as const,
       reason: "writer_timeout",
       tokensUsed: 0,
     }));
@@ -116,7 +124,7 @@ describe("createOwnerLlmDraftWriter", () => {
 
   it("returns failure when output is unparseable", async () => {
     const runCli: OwnerLlmCliRunner = vi.fn(async () => ({
-      ok: true,
+      ok: true as const,
       text: "no skill here",
       tokensUsed: 4,
     }));
@@ -134,7 +142,7 @@ describe("createOwnerLlmDraftWriter", () => {
 
   it("fails reflect_then_write when reflect fails on both agents", async () => {
     const runCli: OwnerLlmCliRunner = vi.fn(async () => ({
-      ok: false,
+      ok: false as const,
       reason: "writer_start_failed",
       tokensUsed: 1,
     }));
