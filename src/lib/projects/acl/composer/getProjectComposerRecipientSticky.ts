@@ -1,10 +1,10 @@
+import {
+  clearInactiveComposerRecipientStickyOnGet,
+  clearLeftoverComposerRecipientStickyForSingleAssistant,
+} from "@/lib/projects/acl/composer/clearComposerRecipientStickyOnGet";
 import { ensureProjectComposerRecipientStickySchema } from "@/lib/projects/acl/composer/ensureProjectComposerRecipientStickySchema";
 import { loadActiveComposerRecipientAssistants } from "@/lib/projects/acl/composer/loadActiveComposerRecipientAssistants";
-import { notifyComposerRecipientStickyCleared } from "@/lib/projects/acl/composer/notifyComposerRecipientStickyCleared";
-import {
-  deleteProjectComposerRecipientStickyRow,
-  loadProjectComposerRecipientStickyRow,
-} from "@/lib/projects/acl/composer/projectComposerRecipientStickyRepo";
+import { loadProjectComposerRecipientStickyRow } from "@/lib/projects/acl/composer/projectComposerRecipientStickyRepo";
 import type { ProjectComposerRecipientStickyGetResult } from "@/lib/projects/acl/composer/projectComposerRecipientSticky.types";
 import { resolveComposerRecipientStickyActor } from "@/lib/projects/acl/composer/resolveComposerRecipientStickyActor";
 
@@ -29,50 +29,25 @@ export const getProjectComposerRecipientSticky = async (input: {
         }
       : null;
 
-  let sticky = await loadProjectComposerRecipientStickyRow(input);
-  let cleared = false;
-  let clearedReason: "membership_inactive" | "single_assistant" | null = null;
-
-  if (sticky !== null && sticky.mode === "membership" && sticky.membershipId) {
-    const stillActive = assistants.some(
-      (seat) => seat.membershipId === sticky!.membershipId,
-    );
-    if (!stillActive) {
-      const leftId = sticky.membershipId;
-      await deleteProjectComposerRecipientStickyRow(input);
-      try {
-        await notifyComposerRecipientStickyCleared({
-          projectId: input.projectId,
-          actorUserId: input.actorUserId,
-          leftMembershipId: leftId,
-          leftDisplayName: null,
-        });
-      } catch (error) {
-        console.error("composer sticky cleared notice failed on GET", {
-          projectId: input.projectId,
-          membershipId: leftId,
-          error,
-        });
-      }
-      sticky = null;
-      cleared = true;
-      clearedReason = "membership_inactive";
-    }
-  }
-
-  // One-assistant: no routing chrome — drop any leftover sticky row.
-  if (singleAssistant !== null && sticky !== null) {
-    await deleteProjectComposerRecipientStickyRow(input);
-    sticky = null;
-    cleared = true;
-    clearedReason = "single_assistant";
-  }
+  const loaded = await loadProjectComposerRecipientStickyRow(input);
+  const afterInactive = await clearInactiveComposerRecipientStickyOnGet({
+    ...input,
+    sticky: loaded,
+    assistants,
+  });
+  const afterSingle =
+    await clearLeftoverComposerRecipientStickyForSingleAssistant({
+      ...input,
+      sticky: afterInactive.sticky,
+      singleAssistant,
+      prior: afterInactive,
+    });
 
   return {
     ok: true,
-    sticky,
-    cleared,
-    clearedReason,
+    sticky: afterSingle.sticky,
+    cleared: afterSingle.cleared,
+    clearedReason: afterSingle.clearedReason,
     singleAssistant,
   };
 };

@@ -26,6 +26,11 @@ import {
 } from "@/app/api/projects/[projectId]/composer/recipient-sticky/route";
 
 const ctx = { params: Promise.resolve({ projectId: "proj-1" }) };
+const putReq = (body: unknown) =>
+  new Request("http://local/sticky", {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
 
 describe("composer recipient-sticky route", () => {
   beforeEach(() => {
@@ -62,53 +67,20 @@ describe("composer recipient-sticky route", () => {
       ok: true,
       sticky: { mode: "all", membershipId: null, updatedAt: "t" },
     });
-    const ok = await PUT(
-      new Request("http://local/sticky", {
-        method: "PUT",
-        body: JSON.stringify({ mode: "all" }),
-      }),
-      ctx,
-    );
-    expect(ok.status).toBe(200);
+    expect((await PUT(putReq({ mode: "all" }), ctx)).status).toBe(200);
 
     putSticky.mockResolvedValue({ ok: false, code: "invalid_body" });
-    expect(
-      (
-        await PUT(
-          new Request("http://local/sticky", {
-            method: "PUT",
-            body: JSON.stringify({}),
-          }),
-          ctx,
-        )
-      ).status,
-    ).toBe(400);
+    expect((await PUT(putReq({}), ctx)).status).toBe(400);
 
     putSticky.mockResolvedValue({ ok: false, code: "membership_inactive" });
     expect(
       (
-        await PUT(
-          new Request("http://local/sticky", {
-            method: "PUT",
-            body: JSON.stringify({ mode: "membership", membershipId: "x" }),
-          }),
-          ctx,
-        )
+        await PUT(putReq({ mode: "membership", membershipId: "x" }), ctx)
       ).status,
     ).toBe(409);
 
     putSticky.mockResolvedValue({ ok: false, code: "single_assistant" });
-    expect(
-      (
-        await PUT(
-          new Request("http://local/sticky", {
-            method: "PUT",
-            body: JSON.stringify({ mode: "all" }),
-          }),
-          ctx,
-        )
-      ).status,
-    ).toBe(409);
+    expect((await PUT(putReq({ mode: "all" }), ctx)).status).toBe(409);
   });
 
   it("DELETE clears", async () => {
