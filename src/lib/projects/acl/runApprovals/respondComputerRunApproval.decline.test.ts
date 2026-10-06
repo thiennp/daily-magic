@@ -5,9 +5,7 @@ const expire = vi.fn();
 const hydrate = vi.fn();
 const resolvePending = vi.fn();
 const claim = vi.fn();
-const approve = vi.fn();
 const deny = vi.fn();
-const remove = vi.fn();
 
 vi.mock("@/lib/dispatch/agentRunQueries", () => ({
   getAgentRunById: (id: string) => getRun(id),
@@ -26,11 +24,11 @@ vi.mock("@/lib/dispatch/claimPendingDispatchApprovalDecision", () => ({
   releaseDispatchApprovalClaim: vi.fn(),
 }));
 vi.mock("@/lib/dispatch/approveDispatchApproval", () => ({
-  approveDispatchApproval: (...a: unknown[]) => approve(...a),
+  approveDispatchApproval: vi.fn(),
   denyDispatchApproval: (...a: unknown[]) => deny(...a),
 }));
 vi.mock("@/lib/dispatch/dispatchApprovalRegistry", () => ({
-  dispatchApprovalRegistry: { remove: (id: string) => remove(id) },
+  dispatchApprovalRegistry: { remove: vi.fn() },
 }));
 vi.mock("@/lib/agentWitch/getAgentWitchHub", () => ({
   getAgentWitchHub: () => ({}),
@@ -51,7 +49,7 @@ const pendingRun = {
   status: "pending_approval",
 };
 
-describe("respondComputerRunApproval (approve)", () => {
+describe("respondComputerRunApproval (decline / errors)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     expire.mockResolvedValue(0);
@@ -67,30 +65,41 @@ describe("respondComputerRunApproval (approve)", () => {
       deviceId: "dev-1",
     });
     claim.mockResolvedValue(true);
-    approve.mockResolvedValue({ type: "system.ack", payload: {} });
+    deny.mockResolvedValue({ type: "system.ack", payload: {} });
   });
 
-  it("approves via the same claim path; second call is invalid_transition", async () => {
-    const first = await respondComputerRunApproval({
-      projectId: "proj-1",
-      runId: "run-1",
-      actorUserId: "owner-1",
-      decision: "approve",
-    });
-    expect(first).toEqual({ ok: true, state: "approved", runId: "run-1" });
-    expect(claim).toHaveBeenCalledWith({
-      runId: "run-1",
-      executorUserId: "owner-1",
-      decision: "approve",
-      denialReason: null,
-    });
-    getRun.mockResolvedValue({ ...pendingRun, status: "running" });
-    const second = await respondComputerRunApproval({
-      projectId: "proj-1",
-      runId: "run-1",
-      actorUserId: "owner-1",
-      decision: "decline",
-    });
-    expect(second).toEqual({ ok: false, code: "invalid_transition" });
+  it("declines pending; forbidden when actor is not the executor", async () => {
+    await expect(
+      respondComputerRunApproval({
+        projectId: "proj-1",
+        runId: "run-1",
+        actorUserId: "owner-1",
+        decision: "decline",
+      }),
+    ).resolves.toEqual({ ok: true, state: "declined", runId: "run-1" });
+    expect(deny).toHaveBeenCalled();
+    await expect(
+      respondComputerRunApproval({
+        projectId: "proj-1",
+        runId: "run-1",
+        actorUserId: "other",
+        decision: "approve",
+      }),
+    ).resolves.toEqual({ ok: false, code: "forbidden" });
+  });
+
+  it("404 when run is missing or on another project", async () => {
+    getRun.mockResolvedValue(null);
+    await expect(
+      respondComputerRunApproval({
+        projectId: "proj-1", runId: "missing", actorUserId: "owner-1", decision: "approve",
+      }),
+    ).resolves.toEqual({ ok: false, code: "not_found" });
+    getRun.mockResolvedValue({ ...pendingRun, projectId: "other" });
+    await expect(
+      respondComputerRunApproval({
+        projectId: "proj-1", runId: "run-1", actorUserId: "owner-1", decision: "approve",
+      }),
+    ).resolves.toEqual({ ok: false, code: "not_found" });
   });
 });
