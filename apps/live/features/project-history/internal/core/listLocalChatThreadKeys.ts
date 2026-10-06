@@ -1,3 +1,4 @@
+import type { SQLOutputValue } from "node:sqlite";
 import { listLocalChatIndexPage } from "./listLocalChatIndexPage";
 import { loadNodeSqlite } from "@agent-witch/live-token-saver";
 import {
@@ -24,19 +25,24 @@ export const listLocalChatThreadKeys = (input: {
     const opened = openHistoryStoreDb(input.projectId);
     if (opened.ok) {
       try {
-        const rows = opened.db
+        const rawRows = opened.db
           .prepare(
             `SELECT DISTINCT thread_key AS threadKey
              FROM records
              WHERE project_id = ? AND kind = ? AND thread_key IS NOT NULL
              ORDER BY thread_key ASC`,
           )
-          .all(input.projectId, HISTORY_STORE_KIND_MESSAGE) as readonly {
-          readonly threadKey: string;
-        }[];
+          .all(input.projectId, HISTORY_STORE_KIND_MESSAGE);
+        const threadKeys: string[] = [];
+        for (const raw of rawRows) {
+          const value: SQLOutputValue | undefined = raw.threadKey;
+          if (typeof value === "string" && value.length > 0) {
+            threadKeys.push(value);
+          }
+        }
         return {
           available: true,
-          threadKeys: rows.map((row) => row.threadKey),
+          threadKeys,
         };
       } catch {
         // fall through to file scan

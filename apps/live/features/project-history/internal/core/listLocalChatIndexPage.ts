@@ -1,3 +1,4 @@
+import type { SQLInputValue, SQLOutputValue } from "node:sqlite";
 import { HISTORY_STORE_KIND_MESSAGE } from "./historyStore.constants";
 import { extractHistoryIndexFields } from "./extractHistoryIndexFields";
 import { listProjectHistoryMessages } from "./listProjectHistoryMessages";
@@ -20,6 +21,51 @@ export type ListLocalChatIndexPageResult = {
   readonly available: boolean;
   readonly rows: readonly ProjectHistoryIndexRow[];
   readonly reason?: string;
+};
+
+const readSqlText = (
+  row: Record<string, SQLOutputValue>,
+  key: string,
+): string | null => {
+  const value = row[key];
+  return typeof value === "string" ? value : null;
+};
+
+const mapChatIndexSqlRow = (
+  row: Record<string, SQLOutputValue>,
+): ProjectHistoryIndexRow | null => {
+  const messageId = readSqlText(row, "messageId");
+  const projectId = readSqlText(row, "projectId");
+  const kindRaw = readSqlText(row, "kind");
+  const createdAt = readSqlText(row, "createdAt");
+  const savedAt = readSqlText(row, "savedAt");
+  if (
+    messageId === null ||
+    projectId === null ||
+    kindRaw === null ||
+    createdAt === null ||
+    savedAt === null
+  ) {
+    return null;
+  }
+  const threadKeyValue = row.threadKey;
+  const threadKey =
+    threadKeyValue === null || threadKeyValue === undefined
+      ? null
+      : typeof threadKeyValue === "string"
+        ? threadKeyValue
+        : null;
+  return {
+    messageId,
+    projectId,
+    kind:
+      kindRaw === "summary"
+        ? "summary"
+        : HISTORY_STORE_KIND_MESSAGE,
+    threadKey,
+    createdAt,
+    savedAt,
+  };
 };
 
 const DEFAULT_LIMIT = 50;
@@ -123,7 +169,7 @@ export const listLocalChatIndexPage = (
   }
 
   try {
-    const params: unknown[] = [input.projectId, HISTORY_STORE_KIND_MESSAGE];
+    const params: SQLInputValue[] = [input.projectId, HISTORY_STORE_KIND_MESSAGE];
     let sql =
       `SELECT message_id AS messageId, project_id AS projectId, kind,
               thread_key AS threadKey, created_at AS createdAt, saved_at AS savedAt
@@ -158,26 +204,14 @@ export const listLocalChatIndexPage = (
     sql += " ORDER BY created_at DESC, message_id DESC LIMIT ?";
     params.push(limit);
 
-    const rawRows = opened.db.prepare(sql).all(...params) as readonly {
-      readonly messageId: string;
-      readonly projectId: string;
-      readonly kind: string;
-      readonly threadKey: string | null;
-      readonly createdAt: string;
-      readonly savedAt: string;
-    }[];
-
-    const rows: ProjectHistoryIndexRow[] = rawRows.map((row) => ({
-      messageId: row.messageId,
-      projectId: row.projectId,
-      kind:
-        row.kind === "summary"
-          ? "summary"
-          : HISTORY_STORE_KIND_MESSAGE,
-      threadKey: row.threadKey,
-      createdAt: row.createdAt,
-      savedAt: row.savedAt,
-    }));
+    const rawRows = opened.db.prepare(sql).all(...params);
+    const rows: ProjectHistoryIndexRow[] = [];
+    for (const raw of rawRows) {
+      const mapped = mapChatIndexSqlRow(raw);
+      if (mapped !== null) {
+        rows.push(mapped);
+      }
+    }
     return { available: true, rows };
   } catch {
     return listFromFiles(input, limit);
