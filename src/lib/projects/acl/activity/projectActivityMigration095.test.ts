@@ -22,11 +22,14 @@ describe("migration 095 project runs without approval", () => {
     );
   });
 
-  it("re-creates the Access log CHECK with exactly the TS event types", () => {
+  it("re-creates the Access log CHECK with the pre-097 TS event types", () => {
     expect(SQL).toMatch(
       /DROP CONSTRAINT IF EXISTS project_activity_events_event_type_check/,
     );
-    expect(checkListOf(SQL)).toEqual([...PROJECT_ACTIVITY_EVENT_TYPES]);
+    // 097 adds rule.*; 095's own list is the TS list minus those types.
+    expect(checkListOf(SQL)).toEqual(
+      PROJECT_ACTIVITY_EVENT_TYPES.filter((type) => !type.startsWith("rule.")),
+    );
   });
 
   it("never touches rows or drops tables", () => {

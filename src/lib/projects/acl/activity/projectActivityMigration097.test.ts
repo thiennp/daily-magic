@@ -13,7 +13,7 @@ const sqlMock = vi.fn(async () => []);
 vi.mock("@/lib/db", () => ({ getSql: () => sqlMock }));
 
 const SQL = readFileSync(
-  join(process.cwd(), "db/migrations/096-project-activity-rule-events.sql"),
+  join(process.cwd(), "db/migrations/097-project-activity-rule-events.sql"),
   "utf8",
 );
 
@@ -23,7 +23,7 @@ const checkListAfter = (text: string, marker: string): string[] => {
   return [...body.matchAll(/'([a-z_.]+)'/g)].map((m) => m[1] ?? "");
 };
 
-describe("migration 096 project_activity_events rule.* types", () => {
+describe("migration 097 project_activity_events rule.* types", () => {
   it("widens the CHECK to exactly the TS event types", () => {
     expect(checkListAfter(SQL, "CHECK (event_type IN (")).toEqual([
       ...PROJECT_ACTIVITY_EVENT_TYPES,

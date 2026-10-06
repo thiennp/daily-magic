@@ -27,6 +27,6 @@ Per-project registry of known pitfalls (symptom → cause → avoidance + a chec
 - `GET /[pitfallId]` — one merged pitfall (retired included)
 - `POST /[pitfallId]/hit` — record_hit; optional `{ count, seenAt }` for batched local hits
 - `GET /../rules/usage` — rule-compare: all-time hitCount + lastHitAt + duplicate/overlap pairs (`?days=1..90`, `windowDays` null until per-hit events exist)
-- `POST /../rules/[ruleId]/drop` · `POST /../rules/[ruleId]/restore` — rule-compare Drop + Undo. **Owner only** (member 403). Drop = retire (same full-content upsert as the AWL Pitfalls tab, `source: "retired"`); restore = `source: "project"`, 409 `limit_exceeded` past the cap. Seeds are retired per project via an override row. Idempotent (`changed: false`, no write). Each real change writes one Access log line (`rule.dropped` / `rule.restored`, migration 096).
+- `POST /../rules/[ruleId]/drop` · `POST /../rules/[ruleId]/restore` — rule-compare Drop + Undo. **Owner only** (member 403). Drop = retire (same full-content upsert as the AWL Pitfalls tab, `source: "retired"`); restore = `source: "project"`, 409 `limit_exceeded` past the cap. Seeds are retired per project via an override row. Idempotent (`changed: false`, no write). Each real change writes one Access log line (`rule.dropped` / `rule.restored`, migration 097).
 
 Matching inside check_context, preflight, and local MCP tools are later items and are not in this module.

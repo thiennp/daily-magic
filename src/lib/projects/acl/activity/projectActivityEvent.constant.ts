@@ -1,7 +1,7 @@
 /**
- * Access log (owner-only project_activity_events, migrations 092 + 095 + 096).
+ * Access log (owner-only project_activity_events, migrations 092 + 095 + 097).
  * Access, wake and owner Safety-rule drop/restore changes only: no msg.*,
- * key.*, webhook.*, tool-call or claim/check rows. The DB CHECK (096) must
+ * key.*, webhook.*, tool-call or claim/check rows. The DB CHECK (097) must
  * list exactly these types.
  */
 export const PROJECT_ACTIVITY_EVENT_TYPES = [

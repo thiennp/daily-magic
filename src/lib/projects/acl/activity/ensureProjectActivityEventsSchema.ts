@@ -38,7 +38,7 @@ const runDdl = async (): Promise<void> => {
     CREATE UNIQUE INDEX IF NOT EXISTS project_activity_events_source_ref_uidx
     ON project_activity_events (source_ref) WHERE source_ref IS NOT NULL
   `;
-  // Mirrors migration 096 on a 092-era table; no-op once rule.* is allowed.
+  // Mirrors migration 097 on a 092-era table; no-op once rule.* is allowed.
   await sql`
     DO $$
     BEGIN
@@ -67,9 +67,9 @@ const runDdl = async (): Promise<void> => {
 };
 
 /**
- * DDL only (mirrors migrations 092 + 095 + 096; every CHECK list must equal
+ * DDL only (mirrors migrations 092 + 095 + 097; every CHECK list must equal
  * PROJECT_ACTIVITY_EVENT_TYPES, asserted in projectActivityMigration092.test.ts
- * and projectActivityMigration096.test.ts). Never runs the 073 backfill: that is
+ * and projectActivityMigration097.test.ts). Never runs the 073 backfill: that is
  * the migration and scripts/db-backfill-project-activity-073.ts.
  */
 export const ensureProjectActivityEventsSchema = async (): Promise<void> => {
