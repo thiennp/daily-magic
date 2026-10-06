@@ -52,6 +52,9 @@ describe("owner approval card (S3)", () => {
     expect(html).toMatch(/>Approve<\/button>/);
     expect(html).toMatch(/>Deny<\/button>/);
     expect(t).toContain("Assistant nickname");
+    expect(t).toContain(
+      "Required. Each assistant in a project needs a different name (2–32 letters, single spaces OK). We fill in a free one for you.",
+    );
     expect(t.toLowerCase()).not.toMatch(/\bbots?\b/);
   });
 

@@ -61,7 +61,7 @@ export const AWC_PROJECT_ACCESS_COPY = {
     "Copy the invite prompt now. It is shown once and includes a secret the bot needs to join.",
   displayNameLabel: "Assistant nickname",
   displayNameHint:
-    "Required for agents. Unique per project (case-insensitive). 2–32 letters, single spaces OK. Prefills a free preset.",
+    "Required. Each assistant in a project needs a different name (2–32 letters, single spaces OK). We fill in a free one for you.",
   displayNameRequired: "Enter a project nickname before Approve.",
   displayNameTaken: "That project nickname is already taken.",
   rename: "Rename",
