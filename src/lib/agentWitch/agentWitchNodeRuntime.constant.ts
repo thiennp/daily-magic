@@ -5,3 +5,6 @@ export const AGENT_WITCH_MIN_NODE_VERSION_LABEL = "20.x";
 
 export const AGENT_WITCH_NODE_INSTALL_HINT =
   "Install Node.js from https://nodejs.org/en/download or, on macOS with Homebrew: brew install node@22";
+
+/** Node with `node:sqlite` unflagged. Older Node (20+) runs AWL without the pitfall cache. */
+export const AGENT_WITCH_FULL_FEATURE_NODE_VERSION_LABEL = "22.13";

@@ -49,6 +49,7 @@ import {
 import { buildAgentWitchLocalHomePageBody } from "@agent-witch/live-home/presentation";
 import { tryHandlePromptSdlcLocalRequest } from "../../../prompt-optimizer/public-api/infrastructure";
 import {
+  describePitfallCacheAvailability,
   tryHandleTokenSaverLocalRequest,
   writeGlobalTriggers,
 } from "@agent-witch/live-token-saver";
@@ -1847,6 +1848,10 @@ export const startAgentWitchLocalApp = (input: {
       console.error(`[agent-witch] writeGlobalTriggers failed: ${message}`);
     }
     console.log(`[agent-witch] Local app ${AGENT_WITCH_LOCAL_APP_ORIGIN}`);
+    const pitfallCacheNote = describePitfallCacheAvailability();
+    if (pitfallCacheNote !== null) {
+      console.warn(pitfallCacheNote);
+    }
   });
 
   return server;

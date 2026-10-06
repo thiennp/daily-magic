@@ -73,7 +73,7 @@ awl_repair_fingerprint() {
 
 awl_repair_node() {
   local candidate
-  for candidate in "\${INSTALL_DIR}/.node/bin/node" "$(command -v node 2>/dev/null || true)" /opt/homebrew/bin/node /usr/local/bin/node; do
+  for candidate in "\${INSTALL_DIR}/.node/bin/node" "$(command -v node 2>/dev/null || true)" /opt/homebrew/bin/node /usr/local/bin/node "\${HOME}/.local/bin/node"; do
     if [[ -n "\${candidate}" && -x "\${candidate}" ]] && "\${candidate}" -e '' >/dev/null 2>&1; then
       printf '%s' "\${candidate}"
       return 0

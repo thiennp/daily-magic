@@ -1,7 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
-import { DatabaseSync } from "node:sqlite";
+import type { DatabaseSync } from "node:sqlite";
 
+import { requireNodeSqlite } from "./loadNodeSqlite";
 import {
   PITFALL_DB_BUSY_TIMEOUT_MS,
   PITFALL_SCHEMA_VERSION,
@@ -34,7 +35,8 @@ const writeSchemaVersion = (db: DatabaseSync, version: number): void => {
 /** Open (or create) the pitfall SQLite DB and apply schema migrations. */
 export const openPitfallDb = (dbPath: string): PitfallDatabase => {
   fs.mkdirSync(path.dirname(dbPath), { recursive: true });
-  const db = new DatabaseSync(dbPath);
+  const { DatabaseSync: Database } = requireNodeSqlite();
+  const db = new Database(dbPath);
   // Concurrent AWL processes (HTTP + stdio MCP) may share the file: wait on locks.
   db.exec(`PRAGMA busy_timeout = ${PITFALL_DB_BUSY_TIMEOUT_MS}`);
   db.exec(PITFALL_SCHEMA_SQL);

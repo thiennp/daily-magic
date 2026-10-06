@@ -24,7 +24,7 @@ const createTempHome = (): string => {
 /** Node runtime helpers without the trailing auto-run, so tests can stub `uname`. */
 const buildNodeRuntimeFunctions = (): string =>
   buildAgentWitchInstallScriptNodeRuntime().replace(
-    /\nagent_witch_ensure_node_runtime\n\s*$/,
+    /\nagent_witch_ensure_node_runtime\nagent_witch_note_node_feature_gaps "\$\{NODE_BIN\}"\n\s*$/,
     "\n",
   );
 

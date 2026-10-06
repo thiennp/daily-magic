@@ -5,6 +5,7 @@ import {
   AGENT_WITCH_MIN_NODE_VERSION_LABEL,
   AGENT_WITCH_NODE_INSTALL_HINT,
 } from "@/lib/agentWitch/agentWitchNodeRuntime.constant";
+import { buildAgentWitchInstallScriptNodeFeatureNote } from "@/lib/agentWitch/buildAgentWitchInstallScriptNodeFeatureNote";
 import { buildAgentWitchInstallScriptNodeRuntimeHomebrew } from "@/lib/agentWitch/buildAgentWitchInstallScriptNodeRuntimeHomebrew";
 import { buildAgentWitchInstallScriptNodeRuntimePrompt } from "@/lib/agentWitch/buildAgentWitchInstallScriptNodeRuntimePrompt";
 
@@ -13,6 +14,7 @@ export const buildAgentWitchInstallScriptNodeRuntime = (): string => `
 ${buildAgentWitchInstallScriptLinuxNodeRuntime()}
 ${buildAgentWitchInstallScriptNodeRuntimeHomebrew()}
 ${buildAgentWitchInstallScriptNodeRuntimePrompt()}
+${buildAgentWitchInstallScriptNodeFeatureNote()}
 agent_witch_node_major() {
   local bin="\$1"
   "\${bin}" -e "process.stdout.write(String(Number.parseInt(process.version.slice(1).split('.')[0] ?? '', 10)))"
@@ -88,4 +90,5 @@ agent_witch_ensure_node_runtime() {
 }
 
 agent_witch_ensure_node_runtime
+agent_witch_note_node_feature_gaps "\${NODE_BIN}"
 `;

@@ -67,10 +67,23 @@ old `app/command/run.sh` then runs `node app/agent-witch.js`.
   `/health` returned `ok:true, installBundleVersion:"265"`. A 75 bundle can only be updated by
   hand (`self-update.sh`), not automatically.
 
-## AWLR-OPEN-006 — Bundle 265 needs Node 22.13+ (`node:sqlite`); install gate still allows 20
+## AWLR-OPEN-006 — Resolved in bundle 266: AWL starts on Node 20+ without `node:sqlite`
 
-Since `8f827e3c` the local app imports `node:sqlite` at start. On Node 20 / 22.12 the 265 bundle
-exits with `ERR_UNKNOWN_BUILTIN_MODULE: node:sqlite` (box repro). It runs on 22.13.
-`AGENT_WITCH_MIN_NODE_MAJOR` is still `20`. So any install (76+ or a fresh repair) on older Node
-self-updates or reinstalls to a bundle that cannot start. The repair's `/health` check then fails.
-Owner: AW Mac (raise the Node gate or make SQLite lazy). Not changed here (install bundle change).
+Bundle 265 imported `node:sqlite` at load (`openPitfallDb`, since `8f827e3c`). On Node 20 and
+22.12 it exited with `ERR_UNKNOWN_BUILTIN_MODULE`. Installs and repairs only required Node 20.
+
+Bundle 266 loads it at first use (`loadNodeSqlite`: `process.getBuiltinModule("node:sqlite")`,
+cached). Without it, only the pitfall cache is off: `check_context` (MCP tool, HTTP
+`/api/local/check-context`, Claude hook) answers `none`. The AWL Projects pitfalls tab falls
+back to cloud only (no local cache or hit counts). The local app logs one line at start:
+`Pitfall cache (check_context) is off: Node vX has no node:sqlite (needs Node 22.13+)`.
+
+Install / update / repair:
+
+- Hard gate is unchanged: Node 20.
+- The repair checks Node in preflight, before stopping or removing anything. If Node is missing
+  or older than 20, it stops with one line ("needs Node.js 20 or newer … Nothing was changed").
+- The installer prints one note when Node runs AWL but lacks `node:sqlite` (Node 22.13+ for
+  every feature). It does not auto-upgrade Node on macOS (no Homebrew without a prompt).
+- The Linux Node tarball URL now has the `v` prefix. `nodejs.org/dist/22.14.0/` was a 404, so
+  Linux auto-provisioning never worked before.

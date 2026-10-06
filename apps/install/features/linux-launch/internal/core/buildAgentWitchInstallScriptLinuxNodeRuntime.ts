@@ -19,7 +19,7 @@ agent_witch_try_install_node_via_linux_tarball() {
     return 0
   fi
 
-  local version="${AGENT_WITCH_LINUX_NODE_LTS_VERSION}"
+  local version="v${AGENT_WITCH_LINUX_NODE_LTS_VERSION}"
   local dist="node-\${version}-linux-x64"
   local tarball="\${dist}.tar.xz"
   local url="https://nodejs.org/dist/\${version}/\${tarball}"

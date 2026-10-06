@@ -38,6 +38,7 @@ awl_repair_preflight() {
   if [[ -z "$(awl_repair_identity_files)" ]]; then
     awl_repair_die "No paired identity in \${INSTALL_DIR}. Use Connect this computer on Home to install and pair."
   fi
+  awl_repair_check_node
   VERSION_BEFORE="$(awl_repair_installed_version)"
   VERSION_BEFORE="\${VERSION_BEFORE:-unknown}"
   VERSION_AFTER="\${VERSION_BEFORE}"

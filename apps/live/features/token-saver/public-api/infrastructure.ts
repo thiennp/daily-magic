@@ -3,6 +3,10 @@
  * MCP JSON-RPC transport lives in `@agent-witch/live-mcp`.
  */
 export { createPitfallRegistry } from "../internal/core/createPitfallRegistry";
+export {
+  describePitfallCacheAvailability,
+  loadNodeSqlite,
+} from "../internal/core/loadNodeSqlite";
 export type { PitfallRegistry } from "../internal/core/createPitfallRegistry";
 export { resolveTokenSaverDbPath } from "../internal/core/resolveTokenSaverDbPath";
 export { matchPitfallsByKeywords } from "../internal/core/matchPitfallsByKeywords";
@@ -35,4 +39,7 @@ export {
   transitionSetupProject,
   isDeclinedTerminal,
 } from "../internal/core/setupProjectTransition";
-export { createNodeCliIo, createTempCliIo } from "../internal/core/createNodeCliFs";
+export {
+  createNodeCliIo,
+  createTempCliIo,
+} from "../internal/core/createNodeCliFs";
