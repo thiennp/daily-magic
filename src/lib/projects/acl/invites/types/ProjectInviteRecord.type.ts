@@ -14,6 +14,6 @@ export default interface ProjectInviteRecord {
   readonly expiresAt: string;
   readonly revokedAt: string | null;
   readonly createdAt: string;
-  /** grok | muse; null = legacy / unknown (074). Optional on fixtures. */
+  /** grok | muse; null = legacy / unknown (075). Optional on fixtures. */
   readonly platform?: ProjectInvitePlatformValue | null;
 }

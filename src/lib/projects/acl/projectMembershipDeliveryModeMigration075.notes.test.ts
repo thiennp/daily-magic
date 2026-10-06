@@ -9,9 +9,9 @@ import { resolveInitialProjectMembershipDeliveryMode } from "@/lib/projects/acl/
 const read = (...parts: string[]) =>
   fs.readFileSync(path.join(process.cwd(), ...parts), "utf8");
 
-const MIG = "db/migrations/074-project-membership-delivery-mode.sql";
+const MIG = "db/migrations/075-project-membership-delivery-mode.sql";
 
-describe("074 project membership delivery_mode DDL", () => {
+describe("075 project membership delivery_mode DDL", () => {
   it("adds the column (default webhook) and allows only webhook|poll", () => {
     const sql = read(MIG);
     expect(sql).toContain(
@@ -56,7 +56,7 @@ describe("074 project membership delivery_mode DDL", () => {
     expect(src).toContain("ADD COLUMN IF NOT EXISTS platform TEXT");
   });
 
-  it("soft ensure never re-runs the 074 poll backfill (runs once via schema_migrations)", () => {
+  it("soft ensure never re-runs the 075 poll backfill (runs once via schema_migrations)", () => {
     const src = read(
       "src/lib/projects/acl/ensureProjectMembershipDeliveryModeSchema.ts",
     );
