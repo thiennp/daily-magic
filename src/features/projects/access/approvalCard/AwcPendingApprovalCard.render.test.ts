@@ -51,8 +51,8 @@ describe("owner approval card (S3)", () => {
     expect(t).toContain("Checks on demand (no wake link)");
     expect(html).toMatch(/>Approve<\/button>/);
     expect(html).toMatch(/>Deny<\/button>/);
-    const cardHtml = html.slice(0, html.indexOf("</dl>"));
-    expect(text(cardHtml).toLowerCase()).not.toMatch(/\bbots?\b/);
+    expect(t).toContain("Assistant nickname");
+    expect(t.toLowerCase()).not.toMatch(/\bbots?\b/);
   });
 
   it("rail section: nothing when empty; expired card has no actions", () => {

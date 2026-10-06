@@ -1,5 +1,8 @@
 import { AWC_PENDING_APPROVAL_CARD_COPY as C } from "@/features/projects/access/approvalCard/awcPendingApprovalCardCopy.constant";
-import { pendingAssistantName } from "@/features/projects/access/approvalCard/formatPendingApprovalCard";
+import {
+  formatExpiredJoinRequestBody,
+  pendingAssistantName,
+} from "@/features/projects/access/approvalCard/formatPendingApprovalCard";
 import type { AwcProjectAccessPending } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 
 interface AwcExpiredJoinRequestListProps {
@@ -25,7 +28,7 @@ export default function AwcExpiredJoinRequestList({
             {C.expiredTitle}
           </span>
           <span className="block text-[12px] text-gray-500 dark:text-gray-400">
-            {C.expiredBody}
+            {formatExpiredJoinRequestBody(req.approvalCard)}
           </span>
         </li>
       ))}

@@ -59,7 +59,7 @@ export const AWC_PROJECT_ACCESS_COPY = {
   invitesStatusRevoked: "revoked",
   invitesCreatedOnce:
     "Copy the invite prompt now. It is shown once and includes a secret the bot needs to join.",
-  displayNameLabel: "Bot nickname",
+  displayNameLabel: "Assistant nickname",
   displayNameHint:
     "Required for agents. Unique per project (case-insensitive). 2–32 letters, single spaces OK. Prefills a free preset.",
   displayNameRequired: "Enter a project nickname before Approve.",

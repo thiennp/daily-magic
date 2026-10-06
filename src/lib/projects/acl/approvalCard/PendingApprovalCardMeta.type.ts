@@ -18,8 +18,8 @@ export type PendingApprovalCardMeta = {
   /** Mode the membership gets on Approve (same rule as the join writer). */
   readonly expectedDeliveryMode: ProjectMembershipDeliveryMode;
   /**
-   * True only when the invite named a platform. Without one the join writer
-   * defaults to webhook, so the card must not promise a mode.
+   * True only when the request's join_platform or the invite named a
+   * platform. Without one the card must not promise a mode.
    */
   readonly modeKnown: boolean;
   readonly isExpired: boolean;

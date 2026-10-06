@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  AWC_PENDING_APPROVAL_CARD_COPY as C,
-  AWC_PENDING_APPROVAL_CARD_DRAFT_COPY as D,
-} from "@/features/projects/access/approvalCard/awcPendingApprovalCardCopy.constant";
+import { AWC_PENDING_APPROVAL_CARD_COPY as C } from "@/features/projects/access/approvalCard/awcPendingApprovalCardCopy.constant";
 import {
   formatPendingApprovalMode,
   formatPendingApprovalWhoLine,
@@ -40,13 +37,16 @@ describe("pending approval card copy (COPY.md pending_card.* verbatim)", () => {
     expect(C.expiredBody).toBe(
       "The assistant must start again with a new code.",
     );
-    const all = [...Object.values(C), ...Object.values(D)]
-      .join(" ")
-      .toLowerCase();
-    expect(all).not.toMatch(/\bbots?\b|oauth|device_code|awc_proj_|token/);
+    expect(C.expiredBodyInvite).toBe(
+      "The assistant must ask to join again with the invite.",
+    );
+    const all = Object.values(C).join(" ").toLowerCase();
+    expect(all).not.toMatch(
+      /\bbots?\b|oauth|device_code|awc_proj_|token|its person|@/,
+    );
   });
 
-  it("who line: claimed, unclaimed, and kind-less drafts", () => {
+  it("who line: claimed, unclaimed, no kind, no person name", () => {
     expect(
       formatPendingApprovalWhoLine({ assistantName: "Scout", card: card() }),
     ).toBe("Scout · Claude · belongs to Thien");
@@ -59,9 +59,27 @@ describe("pending approval card copy (COPY.md pending_card.* verbatim)", () => {
     expect(
       formatPendingApprovalWhoLine({
         assistantName: "Scout",
+        card: card({ ownerPersonName: null }),
+      }),
+    ).toBe("Scout · Claude · belongs to a person with no name set");
+    expect(
+      formatPendingApprovalWhoLine({
+        assistantName: "Scout",
         card: card({ assistantKind: null, ownerPersonName: null }),
       }),
-    ).toBe("Scout · belongs to its person");
+    ).toBe("Scout · belongs to a person with no name set");
+    expect(
+      formatPendingApprovalWhoLine({
+        assistantName: "Scout",
+        card: card({ assistantKind: null }),
+      }),
+    ).toBe("Scout · belongs to Thien");
+    expect(
+      formatPendingApprovalWhoLine({
+        assistantName: "Scout",
+        card: card({ assistantKind: null, ownerClaimed: false }),
+      }),
+    ).toBe("Scout · person not claimed yet");
   });
 
   it("mode only when known; toasts; name fallback", () => {

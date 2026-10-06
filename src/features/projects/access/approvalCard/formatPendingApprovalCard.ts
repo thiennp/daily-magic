@@ -1,7 +1,4 @@
-import {
-  AWC_PENDING_APPROVAL_CARD_COPY as C,
-  AWC_PENDING_APPROVAL_CARD_DRAFT_COPY as D,
-} from "@/features/projects/access/approvalCard/awcPendingApprovalCardCopy.constant";
+import { AWC_PENDING_APPROVAL_CARD_COPY as C } from "@/features/projects/access/approvalCard/awcPendingApprovalCardCopy.constant";
 import type { PendingApprovalCardMeta } from "@/lib/projects/acl/approvalCard/PendingApprovalCardMeta.type";
 
 type NamedRequest = {
@@ -18,16 +15,16 @@ export const pendingAssistantName = (req: NamedRequest): string =>
   clean(req.suggestedProjectDisplayName) ??
   C.assistantFallback;
 
-/** "Who is asking" line: locked COPY.md template; drafts only when {kind} is unknown. */
+/** "Who is asking" line; the no-kind variants drop the "· {kind}" part. */
 export const formatPendingApprovalWhoLine = (input: {
   readonly assistantName: string;
   readonly card: PendingApprovalCardMeta;
 }): string => {
   const kind = clean(input.card.assistantKind);
-  const person = clean(input.card.ownerPersonName) ?? D.personFallback;
+  const person = clean(input.card.ownerPersonName) ?? C.personFallback;
   const claimed = input.card.ownerClaimed;
   const withKind = claimed ? C.whoLine : C.whoUnknownPerson;
-  const noKind = claimed ? D.whoLineNoKind : D.whoUnknownPersonNoKind;
+  const noKind = claimed ? C.whoLineNoKind : C.whoUnknownPersonNoKind;
   const template = kind === null ? noKind : withKind;
   return template
     .replace("{assistantName}", input.assistantName)
@@ -42,6 +39,12 @@ export const formatPendingApprovalMode = (
   if (!card.modeKnown) return null;
   return card.expectedDeliveryMode === "poll" ? C.modeNoWake : C.modeWake;
 };
+
+/** Expired body by how the request came in: code / sign-in vs invite only. */
+export const formatExpiredJoinRequestBody = (
+  card: PendingApprovalCardMeta | null | undefined,
+): string =>
+  (card?.connectVia ?? null) === null ? C.expiredBodyInvite : C.expiredBody;
 
 export const formatPendingDecisionToast = (
   decision: "approved" | "denied",
