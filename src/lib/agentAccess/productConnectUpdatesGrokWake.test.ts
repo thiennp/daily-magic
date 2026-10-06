@@ -28,6 +28,7 @@ describe("product connect grok wake copy", () => {
       "Access › People › Members › {name} › Grok wake link",
     );
     expect(blob).not.toMatch(/Reports pills/i);
+    expect(blob).toContain("#wake-link-{membershipId}");
     expect(blob).not.toContain("Project Access → Members");
     expect(blob).toMatch(/agent-access Bearer only, not awc_proj_/);
   });

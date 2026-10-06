@@ -86,6 +86,7 @@ describe("get_my_project_webhook_status", () => {
       "Access › People › Members › {name} › Grok wake link",
     );
     expect(text).toContain("Add wake link");
+    expect(text).toContain("#wake-link-{membershipId}");
     expect(text).toMatch(/never into chat/);
     expect(text).not.toContain("register_project_webhook yourself");
     expect(text).not.toContain("Project Access → Members");

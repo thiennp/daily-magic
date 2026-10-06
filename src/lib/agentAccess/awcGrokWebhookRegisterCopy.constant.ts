@@ -1,6 +1,13 @@
+import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
+
 /** Where the owner enters a bot's wake link (Access › People › Members). No href. */
 export const AWC_GROK_WEBHOOK_FORM_SCREEN =
   "Access › People › Members › {name} › Grok wake link";
+
+/** Owner form deep link (Wake hash; fill projectId + membershipId from redeem/status). */
+export const AWC_GROK_WAKE_LINK_DEEP =
+  buildAgentAccessUrls().origin +
+  "/projects/{projectId}#wake-link-{membershipId}";
 
 /**
  * After the bot creates its webhook routine, it posts the routine's Webhook URL
@@ -10,7 +17,9 @@ export const AWC_GROK_WEBHOOK_FORM_SCREEN =
 export const AWC_GROK_WEBHOOK_OWNER_ENTRY =
   "Post the routine's Webhook URL and Webhook key links in your user's chat (clicking a link opens that field in the routine panel so they can copy it — you cannot see the values). Tell them to copy both and have the project owner click Add wake link at " +
   AWC_GROK_WEBHOOK_FORM_SCREEN +
-  " and paste them there, never into chat. The key is stored and never shown again.";
+  " and paste them there, never into chat. Also give your user this direct link filled with your own projectId and membershipId from redeem or get_my_project_access / list_project_peers (self): " +
+  AWC_GROK_WAKE_LINK_DEEP +
+  ". The key is stored and never shown again.";
 
 /** get_my_project_webhook_status forbidden: guardProjectApiKeyToolUse's awc_proj_ rejection vs inactive membership. */
 export const AWC_GROK_WEBHOOK_STATUS_FORBIDDEN =
@@ -40,7 +49,9 @@ export const AWC_GROK_WEBHOOK_DAILY_REPAIR =
   AWC_GROK_WEBHOOK_STATUS_FORBIDDEN +
   " Recreate the wake routine and post the Webhook URL and Webhook key links again in your user's chat only if grokWebhookRegistered is false or lastGrokWakeResult is http_401, http_403, http_404, not_postable, or fetch_failed on repeated checks; a single fetch_failed can just be the 3s wake timeout. Tell them to copy both and have the project owner paste at " +
   AWC_GROK_WEBHOOK_FORM_SCREEN +
-  " (Add wake link), never into chat. You cannot see the key value.";
+  " (Add wake link), never into chat. Also give the direct link " +
+  AWC_GROK_WAKE_LINK_DEEP +
+  " with your projectId and membershipId filled in. You cannot see the key value.";
 
 /** Owner-facing invite connect screen. Same flow, no href. */
 export const AWC_GROK_WEBHOOK_SETUP_INSTRUCTION =

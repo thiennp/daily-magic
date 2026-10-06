@@ -29,6 +29,7 @@ describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
     expect(prompt).toContain("Webhook URL and Webhook key links");
     expect(prompt).toContain(AWC_GROK_WEBHOOK_FORM_SCREEN);
     expect(prompt).toContain("Add wake link");
+    expect(prompt).toContain("#wake-link-{membershipId}");
     expect(prompt).toMatch(/you cannot see your own wake link or key/i);
     expect(prompt).toMatch(/never ask anyone to paste them into chat/);
     expect(prompt).not.toMatch(/Reports pills/i);
@@ -38,7 +39,9 @@ describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
     expect(prompt).not.toMatch(/The pasted key/);
     expect(prompt).not.toMatch(/re-registering register_project_webhook/);
     expect(prompt).not.toMatch(/if you can host a public HTTPS endpoint/i);
-    expect(prompt).not.toMatch(/grokbot:\/\/|https?:\/\/[^\s]*webhook|sidebar|Slack|Discord/i);
+    expect(prompt).not.toMatch(/grokbot:\/\/|sidebar|Slack|Discord/i);
+    expect(prompt).toContain("#wake-link-{membershipId}");
+    expect(prompt.replace(/https:\/\/www\.agentwitch\.com\/projects\/\{projectId\}#wake-link-\{membershipId\}/g, "")).not.toMatch(/https?:\/\/[^\s]*webhook/i);
     expect(prompt).toMatch(
       /Prefer agent-access Bearer for register_project_webhook and ack_project_message/i,
     );

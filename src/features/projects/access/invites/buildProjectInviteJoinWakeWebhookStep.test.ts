@@ -35,7 +35,13 @@ describe("buildProjectInviteJoinWakeWebhookStep (step 7, copy only)", () => {
 
   it("keeps the bans, cannot-see-key rule, and never asks anyone to paste secrets into chat", () => {
     const text = lines.join("\n");
-    expect(text).not.toMatch(/grokbot:\/\/|https?:\/\/|sidebar|<a\b/i);
+    expect(text).not.toMatch(/grokbot:\/\/|sidebar|<a\b/i);
+    // Deep link to owner form is required; strip it before the generic URL ban.
+    const withoutWakeDeep = text.replace(
+      /https:\/\/www\.agentwitch\.com\/projects\/\{projectId\}#wake-link-\{membershipId\}/g,
+      "",
+    );
+    expect(withoutWakeDeep).not.toMatch(/https?:\/\//i);
     expect(text).not.toMatch(/Reports pills/i);
     expect(text).toMatch(/cannot see your own wake link or key/);
     expect(text).toMatch(/never ask anyone to paste them into chat/);
@@ -46,6 +52,8 @@ describe("buildProjectInviteJoinWakeWebhookStep (step 7, copy only)", () => {
     expect(text).toContain("if this project has no webhook routine yet, create one yourself");
     expect(text).toContain("Webhook URL and Webhook key links");
     expect(text).toContain("Add wake link");
+    expect(text).toContain("#wake-link-{membershipId}");
+    expect(text).toContain("/projects/{projectId}");
     expect(text).toContain(
       "Access › People › Members › {name} › Grok wake link",
     );
