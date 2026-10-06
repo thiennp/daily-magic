@@ -1,6 +1,8 @@
 "use client";
 
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
+import AwcProjectAskBox from "@/features/projects/askBox/AwcProjectAskBox";
+import { useAskBoxActivitySync } from "@/features/projects/askBox/useAskBoxActivitySync";
 import AwcProjectDetailHeader from "@/features/projects/AwcProjectDetailHeader";
 import AwcProjectDetailTabBar from "@/features/projects/AwcProjectDetailTabBar";
 import AwcProjectDetailTabPanels from "@/features/projects/AwcProjectDetailTabPanels";
@@ -48,10 +50,15 @@ export default function AwcProjectDetailPanel({
       localTokenHash,
     });
   const messengerThreads = useAwcProjectMessengerThreads(project.id);
+  const reloadThreads = messengerThreads.reload;
   const activityUnreadCount = sumMessengerUnread(messengerThreads.threads);
   const pitfalls = useAwcProjectPitfalls(project.id);
   const pitfallsCount =
     pitfalls.status === "ready" ? countActiveProjectPitfalls(pitfalls.items) : 0;
+  const { activityRefreshKey, onAskSent } = useAskBoxActivitySync({
+    reloadThreads,
+    onGotoActivity,
+  });
 
   return (
     <div className="grid min-w-0 grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-0 xl:grid-cols-[minmax(0,1fr)_21.25rem]">
@@ -72,6 +79,11 @@ export default function AwcProjectDetailPanel({
             setActiveTab("settings");
           }}
         />
+        <AwcProjectAskBox
+          projectId={project.id}
+          threads={messengerThreads.threads}
+          onSent={onAskSent}
+        />
         <AwcProjectDetailTabBar
           activeTab={activeTab}
           onTabChange={setActiveTab}
@@ -89,7 +101,8 @@ export default function AwcProjectDetailPanel({
           onGotoTab={onGotoTab}
           onGotoActivity={onGotoActivity}
           activityInitialThreadKey={nav.activityThreadKey}
-          onActivityUnreadMaybeChanged={messengerThreads.reload}
+          activityRefreshKey={activityRefreshKey}
+          onActivityUnreadMaybeChanged={reloadThreads}
         />
       </div>
       <AwcProjectMembersColumn

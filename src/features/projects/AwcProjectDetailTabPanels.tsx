@@ -27,6 +27,8 @@ interface AwcProjectDetailTabPanelsProps {
   readonly onGotoTab: (tab: ProjectPageNavTarget) => void;
   readonly onGotoActivity: (threadKey: string | null) => void;
   readonly activityInitialThreadKey?: string | null;
+  /** Bumped by the ask box after a send: remount Activity on the sent thread. */
+  readonly activityRefreshKey?: number;
   readonly onActivityUnreadMaybeChanged?: () => void;
 }
 
@@ -42,6 +44,7 @@ export default function AwcProjectDetailTabPanels({
   editCta,
   pitfalls,
   activityInitialThreadKey = null,
+  activityRefreshKey = 0,
   onActivityUnreadMaybeChanged,
 }: AwcProjectDetailTabPanelsProps) {
   return (
@@ -67,6 +70,7 @@ export default function AwcProjectDetailTabPanels({
             ) : null}
             {tabId === "activity" && selected ? (
               <AwcProjectMessengerSection
+                key={activityRefreshKey}
                 projectId={project.id}
                 initialThreadKey={activityInitialThreadKey}
                 onUnreadMaybeChanged={onActivityUnreadMaybeChanged}
