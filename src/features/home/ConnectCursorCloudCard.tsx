@@ -26,7 +26,7 @@ export default function ConnectCursorCloudCard() {
       <div>
         <p className={APP_SHELL_V5_HEADING_CLASS}>Cursor Cloud connected</p>
         <p className={`mt-1 break-words ${APP_SHELL_V5_META_CLASS}`}>
-          {summary.cursorUserEmail ?? summary.apiKeyName ?? "API key saved"}.{" "}
+          {summary.cursorUserEmail ?? summary.apiKeyName ?? "Cursor key saved"}.{" "}
           {APP_SHELL_COMPUTERS_COPY.cursorCloudHelper}
         </p>
         <button

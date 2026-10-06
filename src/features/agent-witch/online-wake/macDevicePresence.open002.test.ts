@@ -15,7 +15,7 @@ describe("macDevicePresence OPEN-002", () => {
         isOnline: false,
         presenceTier: "live_other_instance",
       }),
-    ).toBe("Reconnecting (another server)");
+    ).toBe("Reconnecting");
     expect(
       shouldOfferMacOfflineWakeHint({
         isConnected: false,

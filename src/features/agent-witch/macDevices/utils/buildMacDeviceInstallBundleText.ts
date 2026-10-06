@@ -6,6 +6,7 @@ export const buildMacDeviceInstallBundleText = (input: {
 }): { readonly text: string; readonly isMismatch: boolean } | null => {
   const serverVersion = input.serverInstallBundleVersion?.trim() ?? "";
   const localVersion = input.installBundleVersion?.trim() ?? "";
+  const latestLabel = `Latest v${serverVersion.replace(/^v/i, "")}`;
 
   if (serverVersion.length === 0 && localVersion.length === 0) {
     return null;
@@ -13,7 +14,7 @@ export const buildMacDeviceInstallBundleText = (input: {
 
   if (localVersion.length === 0) {
     return {
-      text: `Version unknown${serverVersion.length > 0 ? ` · latest ${serverVersion}` : ""}`,
+      text: `Version unknown${serverVersion.length > 0 ? ` · ${latestLabel}` : ""}`,
       isMismatch: serverVersion.length > 0,
     };
   }
@@ -33,7 +34,7 @@ export const buildMacDeviceInstallBundleText = (input: {
   return {
     text:
       serverVersion.length > 0
-        ? `Version ${localVersion} · update available (latest ${serverVersion})`
+        ? `Version ${localVersion} · Update available (${latestLabel})`
         : `Version ${localVersion}`,
     isMismatch: true,
   };

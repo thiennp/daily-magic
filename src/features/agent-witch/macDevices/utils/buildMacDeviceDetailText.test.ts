@@ -49,7 +49,7 @@ describe("buildMacDeviceDetailText", () => {
         serverInstallBundleVersion: "34",
       }),
     ).toEqual({
-      text: "Reconnecting (another server) · Version 34",
+      text: "Reconnecting · Version 34",
       isMismatch: false,
     });
   });
@@ -66,7 +66,7 @@ describe("buildMacDeviceDetailText", () => {
         serverInstallBundleVersion: "34",
       }),
     ).toEqual({
-      text: "Online · Version 33 · update available (latest 34)",
+      text: "Online · Version 33 · Update available (Latest v34)",
       isMismatch: true,
     });
   });

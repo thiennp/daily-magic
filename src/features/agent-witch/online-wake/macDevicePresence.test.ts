@@ -66,7 +66,7 @@ describe("macDevicePresence", () => {
         recent: 1,
         offline: 0,
       }),
-    ).toBe("1 connected · 1 seen recently · checks in every ~30s");
+    ).toBe("1 connected · 1 seen recently · checks in every 30 seconds");
     expect(
       buildMacDevicesStatusLine({
         live: 0,

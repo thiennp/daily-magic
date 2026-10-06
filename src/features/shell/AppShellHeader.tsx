@@ -8,6 +8,7 @@ import useStyleguideNavAccess from "@/features/auth/hooks/useStyleguideNavAccess
 import AppShellMobileNavMenu from "@/features/shell/AppShellMobileNavMenu";
 import AppShellBrand from "@/features/shell/v5/AppShellBrand";
 import { APP_SHELL_V5_TOPBAR_CLASS } from "@/features/shell/v5/appShellV5Classes.constant";
+import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
 interface AppShellHeaderProps {
   readonly showDesktopBrand?: boolean;
@@ -27,7 +28,7 @@ export default function AppShellHeader({
         >
           <Link
             href="/"
-            aria-label="Agent Witch home"
+            aria-label={`${AGENT_WITCH_PRODUCT_NAME} home`}
             className="awc-focus-ring flex min-w-0 items-center rounded-awc-chip"
           >
             <AppShellBrand />

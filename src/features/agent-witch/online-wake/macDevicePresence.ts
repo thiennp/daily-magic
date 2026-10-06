@@ -43,7 +43,7 @@ export const formatMacPresenceStatusLabel = (
     return "Online";
   }
   if (tier === "live_other_instance") {
-    return "Reconnecting (another server)";
+    return "Reconnecting";
   }
   if (tier === "recent") {
     return "Seen recently";

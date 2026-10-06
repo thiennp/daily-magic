@@ -41,8 +41,8 @@ export default function ConnectAnotherMacModal({
         {title}
       </h2>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        {intro} You can close this page after copying—the command links that Mac
-        to your account when you run it in Terminal.
+        {intro} You can close this page after copying—the command links that
+        computer to your account when you run it in Terminal.
       </p>
 
       {installCommandError !== null ? (

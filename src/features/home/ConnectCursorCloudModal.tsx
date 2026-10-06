@@ -4,10 +4,10 @@ import { useState } from "react";
 
 import {
   APP_SURFACE_BODY_TEXT_CLASS,
-  APP_SURFACE_CTA_SECONDARY_CLASS,
   APP_SURFACE_FIELD_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import { Modal } from "@/components/ui/modal";
+import ConnectCursorCloudSubmitButton from "@/features/home/ConnectCursorCloudSubmitButton";
 
 interface ConnectCursorCloudModalProps {
   readonly isOpen: boolean;
@@ -39,8 +39,8 @@ export default function ConnectCursorCloudModal({
         Connect Cursor Cloud
       </h2>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Run tasks in Cursor cloud VMs when no Mac is online. Follow the steps,
-        then paste your API key.
+        Cursor Cloud runs tasks when no computer is online. Follow the steps,
+        then paste your Cursor key.
       </p>
 
       <ol
@@ -65,7 +65,7 @@ export default function ConnectCursorCloudModal({
           </code>
           ).
         </li>
-        <li>Paste it below and connect. Disconnect anytime from Home.</li>
+        <li>Paste it below and connect. Disconnect anytime under Computers.</li>
       </ol>
 
       <label className="mt-5 block text-sm font-medium text-gray-800 dark:text-white/90">
@@ -89,11 +89,10 @@ export default function ConnectCursorCloudModal({
         </p>
       ) : null}
 
-      <button
-        type="button"
-        disabled={isSubmitting || apiKey.trim().length === 0}
-        className={`mt-5 w-full ${APP_SURFACE_CTA_SECONDARY_CLASS}`}
-        onClick={() => {
+      <ConnectCursorCloudSubmitButton
+        isSubmitting={isSubmitting}
+        isKeyEmpty={apiKey.trim().length === 0}
+        onSubmit={() => {
           setIsSubmitting(true);
           setLocalError(null);
           void onConnect(apiKey.trim()).then((message) => {
@@ -106,9 +105,7 @@ export default function ConnectCursorCloudModal({
             onClose();
           });
         }}
-      >
-        {isSubmitting ? "Connecting…" : "Connect Cursor Cloud"}
-      </button>
+      />
     </Modal>
   );
 }

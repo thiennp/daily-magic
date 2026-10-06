@@ -34,7 +34,7 @@ export default function MacDeviceRowLocalMenuItems({
         ? renderMacDeviceRowMenuItem(
             runMacDeviceRowMenuAction(closeMenu, onUpdateLocal),
             <AppIcon icon={ArrowUpIcon} size="sm" />,
-            "Update local",
+            "Update",
           )
         : null}
       {onDeleteLocalScript

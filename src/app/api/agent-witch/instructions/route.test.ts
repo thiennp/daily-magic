@@ -13,7 +13,7 @@ describe("handleAgentWitchInstructionsGet", () => {
     expect(response.status).toBe(200);
     expect(payload).toMatchObject({
       ok: true,
-      productName: "Agent Witch",
+      productName: "AgentWitch",
       schemaVersion: 1,
     });
   });

@@ -7,6 +7,7 @@ import { BOTTOM_NAV } from "@/features/shell/appBottomNav.constant";
 import { PRIMARY_NAV } from "@/features/shell/appNav.constant";
 import { resolveMarketingFooterProductLinks } from "@/features/marketing/resolveMarketingFooterNav";
 import { LOGIN_PAGE_COPY } from "@/features/auth/loginPageCopy.constant";
+import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
 describe("COPY-P1 shell and auth labels", () => {
   it("keeps Projects and Marketplace in primary nav without retired top-level entries", () => {
@@ -64,7 +65,11 @@ describe("COPY-P1 shell and auth labels", () => {
       join(process.cwd(), "src/features/shell/AppShellHeader.tsx"),
       "utf8",
     );
-    expect(source.includes('aria-label="Agent Witch home"')).toBe(true);
+    expect(AGENT_WITCH_PRODUCT_NAME).toBe("AgentWitch");
+    expect(
+      source.includes("aria-label={`${AGENT_WITCH_PRODUCT_NAME} home`}"),
+    ).toBe(true);
+    expect(source.includes("Agent Witch")).toBe(false);
     expect(source.includes("AGENT_WITCH_INSTALL_BUNDLE_VERSION")).toBe(false);
     expect(source.includes("AWL")).toBe(false);
   });
