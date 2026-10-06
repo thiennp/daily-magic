@@ -27,6 +27,12 @@ vi.mock("./createHttpProjectSkillAwcPublishedSource", () => ({
     getPublishedBody: vi.fn(),
   }),
 }));
+vi.mock("./fetchProjectComputerHistoryCloudState", () => ({
+  fetchProjectComputerHistoryCloudState: async () => ({
+    kind: "known",
+    state: "on_ready",
+  }),
+}));
 vi.mock("./createProjectSkillHistoryPort", () => ({
   createProjectSkillHistoryPort: () => ({ tag: "port" }),
 }));
