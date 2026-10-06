@@ -21,13 +21,13 @@ const baseDevice = (
 describe("buildAgentWitchDevicesWithOnlineStatus connectVersionStatus", () => {
   it("sets connectVersionStatus from installBundleVersion", () => {
     const ok = buildAgentWitchDevicesWithOnlineStatus([
-      baseDevice({ installBundleVersion: "35" }),
+      baseDevice({ installBundleVersion: "76" }),
     ]);
     const tooOld = buildAgentWitchDevicesWithOnlineStatus([
       baseDevice({ installBundleVersion: null }),
     ]);
     const behind = buildAgentWitchDevicesWithOnlineStatus([
-      baseDevice({ installBundleVersion: "34" }),
+      baseDevice({ installBundleVersion: "75" }),
     ]);
 
     expect(ok[0]?.connectVersionStatus).toBe("ok");

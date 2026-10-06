@@ -15,11 +15,13 @@ describe("classifyAgentWitchLocalConnectVersion", () => {
     ["12.5", "too_old"],
     ["-1", "too_old"],
     ["0", "too_old"],
-    ["34", "too_old"],
+    ["35", "too_old"],
+    ["75", "too_old"],
     [AGENT_WITCH_LOCAL_MIN_CONNECT_BUNDLE_VERSION, "ok"],
-    ["36", "ok"],
+    ["76", "ok"],
+    ["77", "ok"],
     ["260", "ok"],
-    [" 35 ", "ok"],
+    [" 76 ", "ok"],
   ] as const)("classifies %j as %s (default min)", (version, expected) => {
     expect(classifyAgentWitchLocalConnectVersion(version)).toBe(expected);
   });

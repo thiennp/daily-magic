@@ -12,11 +12,14 @@ describe("isAgentWitchBelowMinVersion", () => {
     expect(isAgentWitchBelowMinVersion(String(min - 1))).toBe(true);
     expect(isAgentWitchBelowMinVersion(String(min))).toBe(false);
     expect(isAgentWitchBelowMinVersion(String(min + 1))).toBe(false);
+    expect(min).toBe(76);
+    expect(isAgentWitchBelowMinVersion("75")).toBe(true);
+    expect(isAgentWitchBelowMinVersion("35")).toBe(true);
   });
 
   it("AWLR-001: compares numerically, not as strings", () => {
-    expect(isAgentWitchBelowMinVersion("9", "35")).toBe(true);
-    expect(isAgentWitchBelowMinVersion("100", "35")).toBe(false);
+    expect(isAgentWitchBelowMinVersion("9", "76")).toBe(true);
+    expect(isAgentWitchBelowMinVersion("100", "76")).toBe(false);
     expect(isAgentWitchBelowMinVersion("265", "76")).toBe(false);
     expect(isAgentWitchBelowMinVersion("75", "76")).toBe(true);
   });
@@ -31,6 +34,6 @@ describe("isAgentWitchBelowMinVersion", () => {
   });
 
   it("AWLR-001: trims whitespace around a valid version", () => {
-    expect(isAgentWitchBelowMinVersion(" 265 ", "35")).toBe(false);
+    expect(isAgentWitchBelowMinVersion(" 265 ", "76")).toBe(false);
   });
 });

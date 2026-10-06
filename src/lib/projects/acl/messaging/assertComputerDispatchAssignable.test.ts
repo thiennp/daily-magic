@@ -48,7 +48,7 @@ describe("assertComputerDispatchAssignable", () => {
       id: "dev-1",
       revokedAt: null,
       lastSeenAt: "2020-01-01T00:00:00.000Z",
-      installBundleVersion: "35",
+      installBundleVersion: "76",
     });
     await expect(
       assertComputerDispatchAssignable({
@@ -87,7 +87,7 @@ describe("assertComputerDispatchAssignable", () => {
       id: "dev-1",
       revokedAt: null,
       lastSeenAt: new Date().toISOString(),
-      installBundleVersion: "35",
+      installBundleVersion: "76",
     });
     collectLive.mockResolvedValue(new Set(["dev-1"]));
     await expect(

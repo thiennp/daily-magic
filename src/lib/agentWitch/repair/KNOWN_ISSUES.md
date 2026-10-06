@@ -42,3 +42,35 @@ new file and warns (the old copy stays in `repair-backups/`). Only missing files
 
 Each repair that removes files adds `INSTALL_DIR/repair-backups/<UTC>-<pid>/` (top-level config
 files only, mode 700). No-op runs add none. Nothing deletes old backups yet.
+
+## AWLR-FLOOR-001 — Connect floor is bundle 76 (lowest that self-updates reliably)
+
+`AGENT_WITCH_LOCAL_MIN_CONNECT_BUNDLE_VERSION` is `"76"` (was `"35"`). Below 76 the server
+answers Connect / restart / dispatch / `register-install` with the 409 `agent_witch_local_too_old`,
+and the fix is the repair one-liner (`/install/agent-witch-update.sh`; Windows:
+`AGENT_WITCH_REPAIR_WINDOWS_COMMAND`).
+
+Why 76. A running AWL updates itself in-process (`runAgentWitchSelfUpdate`). It is triggered
+over its WebSocket (heartbeat ACK, bundle 32+; `install.bundle.update` push, 38+). It downloads
+the manifest's `app/agent-witch.js` and `app/deps.tar.gz`, unpacks the deps, and restarts. The
+old `app/command/run.sh` then runs `node app/agent-witch.js`.
+
+- 67–70 (`ab25ac7a`…): the ESM bundle needs the npm `node_modules`. Install root
+  `package.json` is `"type": "module"`, so the new CommonJS bundle would load as ESM. Self-update
+  writes downloads as UTF-8 text (breaks `deps.tar.gz`) and never unpacks it.
+- 71–75 (`1bbbccf3`…`c87e1a5e`): the ESM bundle crashes on start with
+  `Dynamic require of "events" is not supported`, from bundled `ws`. So the WebSocket never
+  opens, and no update trigger arrives. Fixed in 76 (`8ce0fcb6`, CommonJS bundle + Node gate).
+- Before 67: the multi-file `tsx` layout, run from `command/`, not `app/`.
+- 76: verified on a box. Bundle 76 ran `self-update` against a local copy of 265. It updated
+  76 → 265, unpacked deps and wrote `install-version.json` = 265. Started the way `run.sh` does,
+  `/health` returned `ok:true, installBundleVersion:"265"`. A 75 bundle can only be updated by
+  hand (`self-update.sh`), not automatically.
+
+## AWLR-OPEN-006 — Bundle 265 needs Node 22.13+ (`node:sqlite`); install gate still allows 20
+
+Since `8f827e3c` the local app imports `node:sqlite` at start. On Node 20 / 22.12 the 265 bundle
+exits with `ERR_UNKNOWN_BUILTIN_MODULE: node:sqlite` (box repro). It runs on 22.13.
+`AGENT_WITCH_MIN_NODE_MAJOR` is still `20`. So any install (76+ or a fresh repair) on older Node
+self-updates or reinstalls to a bundle that cannot start. The repair's `/health` check then fails.
+Owner: AW Mac (raise the Node gate or make SQLite lazy). Not changed here (install bundle change).

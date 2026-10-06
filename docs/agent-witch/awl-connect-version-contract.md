@@ -15,7 +15,8 @@ version already stored on the device record.
 
 - Import: `@/lib/agentWitch/classifyAgentWitchLocalConnectVersion`
 - Constant: `AGENT_WITCH_LOCAL_MIN_CONNECT_BUNDLE_VERSION` in
-  `@/lib/agentWitch/agentWitchLocalMinConnectBundleVersion.constant` (currently `"35"`).
+  `@/lib/agentWitch/agentWitchLocalMinConnectBundleVersion.constant` (currently `"76"`: the lowest bundle that self-updates reliably; see
+  `src/lib/agentWitch/repair/KNOWN_ISSUES.md` AWLR-FLOOR-001).
 - Returns: `"ok"` \| `"too_old"` (`AgentWitchLocalConnectVersionStatus`).
 - Missing / empty / non-numeric reported version → `"too_old"` (route to `/download`).
 
@@ -31,8 +32,9 @@ version already stored on the device record.
 {
   "error": "agent_witch_local_too_old",
   "installBundleVersion": null,
-  "minBundleVersion": "35",
-  "downloadUrl": "/download"
+  "minBundleVersion": "76",
+  "downloadUrl": "/download",
+  "message": "AgentWitch Local is too old to connect. Update it, then try again."
 }
 ```
 

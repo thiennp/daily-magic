@@ -34,7 +34,7 @@ describe("handleAgentWitchInstallConnectionGet", () => {
         lastSeenAt: "2026-01-01T00:00:00.000Z",
         revokedAt: null,
         lastWakeError: null,
-        installBundleVersion: "36",
+        installBundleVersion: "76",
       },
     ]);
     vi.mocked(collectLiveAgentWitchDeviceIdsForUser).mockResolvedValue(
@@ -54,7 +54,6 @@ describe("handleAgentWitchInstallConnectionGet", () => {
       claimedDeviceCount: 1,
     });
   });
-
 
   it("returns HTTP 409 when a live Mac is too old for Connect", async () => {
     vi.mocked(listAgentWitchDevicesForUser).mockResolvedValue([
@@ -87,5 +86,4 @@ describe("handleAgentWitchInstallConnectionGet", () => {
       installBundleVersion: null,
     });
   });
-
 });
