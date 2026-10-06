@@ -26,6 +26,11 @@ export default defineConfig({
     },
   ],
   webServer: {
+    // Invite test auto-connect (AWC_TEST_AUTO_APPROVE_JOINS): e2e must use `next
+    // dev` (NODE_ENV≠production), e.g. reuseExistingServer against a local
+    // `next dev`. Do not add AWC_APP_BASE_URL to resolveAppBaseUrl — any future
+    // `next start` carve-out needs separate Arch review (loopback-only
+    // allowlist or playwright-only inject), never a free-form prod base URL.
     // Custom server.ts (npm run start) is required for AgentWitch WebSocket upgrades.
     // Plain `next start` serves HTTP only and leaves agent-witch disconnected.
     // `.env.local` is optional so CI can boot without a checked-in secrets file.

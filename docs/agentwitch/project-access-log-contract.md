@@ -64,7 +64,7 @@ Rules:
 | `invite.revoked` | owner | `revokeProjectInvite` (`invite.revoke`) | `inviteId`, `label` (F3) |
 | `invite.auto_approve_enabled` | owner | `createProjectInvite` (box ticked) / `updateProjectInviteAutoApprove`, linked to the 073 row | `inviteId`, `label` |
 | `invite.auto_approve_disabled` | owner | `updateProjectInviteAutoApprove`, linked to the 073 row | `inviteId`, `label` |
-| `member.auto_approved` | **system** | `tryAutoApproveInviteRedeem`, linked to the 073 row | `inviteId`, `label`, `membershipId`, `approvalSource: "invite_auto_approve"` |
+| `member.auto_approved` | **system** | Invite checkbox: `tryAutoApproveInviteRedeem` via 073 dual-write (`approvalSource: "invite_auto_approve"`). Test-only flag: same function writes Access log directly with `approvalSource: "test_auto_connect"` (no 073). Never `request.approved`. | `inviteId`, `label`, `membershipId`, `approvalSource`: `"invite_auto_approve"` \| `"test_auto_connect"` |
 | `request.approved` | owner | `finalizeApprovedMembership`, **only** when `approvalSource = "owner"` | `requestId`, `membershipId`, `approvalSource: "owner"` |
 | `request.denied` | owner | `denyProjectAccessRequest` | `requestId`. `target.displayName` = the requester's account name snapshot (F2), else null → `.noName` |
 | `member.removed` | owner | `revokeProjectMembership` (assistants/computers) and `removeHumanProjectMembership` (people) | `membershipId`, `memberKind` (F5: `bot` / `human` / `computer`), `role` (people only) |
