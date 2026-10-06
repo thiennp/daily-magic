@@ -1,0 +1,46 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
+import { describe, expect, it } from "vitest";
+
+const read = (relative: string): string =>
+  readFileSync(path.join(process.cwd(), relative), "utf8");
+
+describe("project layout v2 L1 shell", () => {
+  it("uses four EN tabs with Safety rules label and Activity default", () => {
+    const tabs = read("src/features/projects/projectPageTabs.constant.ts");
+    expect(tabs).toMatch(
+      /"activity",\s*"pitfalls",\s*"resources",\s*"settings"/,
+    );
+    expect(tabs).toContain('activity: "Activity"');
+    expect(tabs).toContain('pitfalls: "Safety rules"');
+    expect(tabs).toContain('resources: "Resources"');
+    expect(tabs).toContain('settings: "Settings"');
+    expect(tabs).toContain('DEFAULT_PROJECT_PAGE_TAB: ProjectPageTabId = "activity"');
+    expect(tabs).not.toContain('"overview"');
+  });
+
+  it("segmented tab bar is gray track + selected surface (no underline, no blue)", () => {
+    const bar = read("src/features/projects/AwcProjectDetailTabBar.tsx");
+    expect(bar).toContain("bg-gray-100");
+    expect(bar).toContain("rounded-xl");
+    expect(bar).not.toContain("border-b-2");
+    expect(bar).not.toMatch(/blue-|indigo|#0a6cf5|#4a97ff/i);
+    expect(bar).toContain('role="tablist"');
+  });
+
+  it("3-col shell with flat Team rail (tone/divider, no own cards)", () => {
+    const panel = read("src/features/projects/AwcProjectDetailPanel.tsx");
+    const members = read("src/features/projects/AwcProjectMembersColumn.tsx");
+    const copy = read("src/features/projects/projectPageLayoutV2Copy.constant.ts");
+    expect(panel).toContain("AwcProjectMembersColumn");
+    expect(panel).toMatch(/lg:grid-cols-\[minmax\(0,1fr\)_20rem\]/);
+    expect(members).toContain("border-l");
+    expect(members).toContain("bg-gray-50/70");
+    expect(members).toContain("!border-0");
+    expect(members).toContain("!shadow-none");
+    expect(copy).toContain('editOnThisComputer: "Edit on this computer"');
+    expect(copy).toContain('membersColumnLabel: "Team"');
+    expect(copy).not.toMatch(/Hoạt động|Thành viên|Sửa trên/);
+  });
+});

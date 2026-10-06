@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 
 import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import { PROJECT_PAGE_SHELL_COPY } from "@/features/projects/projectPageShellCopy.constant";
+import { PROJECT_PAGE_LAYOUT_V2_COPY } from "@/features/projects/projectPageLayoutV2Copy.constant";
 import copyProjectPathToClipboard from "@/features/projects/utils/copyProjectPathToClipboard";
 import formatProjectPathTruncation from "@/features/projects/utils/formatProjectPathTruncation";
 
@@ -18,7 +18,7 @@ interface AwcProjectPathDisplayProps {
 export default function AwcProjectPathDisplay({
   folderPath,
 }: AwcProjectPathDisplayProps) {
-  const copy = PROJECT_PAGE_SHELL_COPY;
+  const copy = PROJECT_PAGE_LAYOUT_V2_COPY;
   const { display, full } = formatProjectPathTruncation(folderPath);
   const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
 

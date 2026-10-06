@@ -1,0 +1,23 @@
+/** Project layout v2 L1 chrome — English (artifact structure; This computer glossary). */
+export const PROJECT_PAGE_LAYOUT_V2_COPY = {
+  membersColumnLabel: "Team",
+  peopleHeading: "People",
+  assistantsHeading: "Assistants in this project",
+  inviteAssistantHeading: "Invite an assistant",
+  editOnThisComputer: "Edit on this computer",
+  moreOptions: "More options",
+  menuRename: "Rename project",
+  menuInvite: "Invite people or add an assistant",
+  menuDelete: "Delete project",
+  copyPath: "Copy",
+  copiedPath: "Copied",
+  copyPathFailed: "Could not copy",
+  pathLabel: "Project path",
+  statusAllGood: "Everything is running",
+  statusWorking: "Assistant is working",
+  statusOffline: "Offline",
+  statusReconnecting: "Reconnecting",
+  onlineOn: (device: string) => `Online on ${device}`,
+  offlineOn: (device: string) => `Offline on ${device}`,
+  tablistLabel: "Project sections",
+} as const;

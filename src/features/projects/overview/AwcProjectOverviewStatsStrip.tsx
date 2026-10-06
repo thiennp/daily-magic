@@ -1,6 +1,6 @@
 "use client";
 
-import type { ProjectPageTabId } from "@/features/projects/projectPageTabs.constant";
+import type { ProjectPageNavTarget } from "@/features/projects/projectPageTabs.constant";
 import { PROJECT_PAGE_OVERVIEW_COPY as C } from "@/features/projects/overview/projectPageOverviewCopy.constant";
 
 export type OverviewStats = {
@@ -14,7 +14,7 @@ export type OverviewStats = {
 
 interface AwcProjectOverviewStatsStripProps {
   readonly stats: OverviewStats;
-  readonly onGoto: (tab: ProjectPageTabId) => void;
+  readonly onGoto: (tab: ProjectPageNavTarget) => void;
 }
 
 const STAT_CELL =

@@ -2,14 +2,12 @@
 
 import AwcProjectDetailSettingsPanel from "@/features/projects/AwcProjectDetailSettingsPanel";
 import AwcProjectMessengerSection from "@/features/projects/messenger/AwcProjectMessengerSection";
-import AwcProjectTabStub from "@/features/projects/AwcProjectTabStub";
-import AwcProjectOverviewPanel from "@/features/projects/overview/AwcProjectOverviewPanel";
 import AwcProjectPitfallsPanel from "@/features/projects/pitfalls/AwcProjectPitfallsPanel";
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
 import AwcProjectResourcesPanel from "@/features/projects/resources/AwcProjectResourcesPanel";
 import {
   PROJECT_PAGE_TAB_IDS,
-  PROJECT_PAGE_TAB_LABELS,
+  type ProjectPageNavTarget,
   type ProjectPageTabId,
 } from "@/features/projects/projectPageTabs.constant";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
@@ -24,17 +22,11 @@ interface AwcProjectDetailTabPanelsProps {
   readonly deviceDisplayName: string;
   readonly editCta: ProjectEditOnMacCta;
   readonly pitfalls: AwcProjectPitfallsState;
-  readonly onGotoTab: (tab: ProjectPageTabId) => void;
+  readonly onGotoTab: (tab: ProjectPageNavTarget) => void;
   readonly onGotoActivity: (threadKey: string | null) => void;
   readonly activityInitialThreadKey?: string | null;
   readonly onActivityUnreadMaybeChanged?: () => void;
 }
-
-const STUB_TABS: readonly ProjectPageTabId[] = [
-  "reports",
-  "team",
-  "library",
-];
 
 export default function AwcProjectDetailTabPanels({
   activeTab,
@@ -44,8 +36,6 @@ export default function AwcProjectDetailTabPanels({
   deviceDisplayName,
   editCta,
   pitfalls,
-  onGotoTab,
-  onGotoActivity,
   activityInitialThreadKey = null,
   onActivityUnreadMaybeChanged,
 }: AwcProjectDetailTabPanelsProps) {
@@ -62,16 +52,6 @@ export default function AwcProjectDetailTabPanels({
             hidden={!selected}
             className={selected ? "min-w-0 pt-5" : undefined}
           >
-            {tabId === "overview" ? (
-              <AwcProjectOverviewPanel
-                project={project}
-                deviceDisplayName={deviceDisplayName}
-                editCta={editCta}
-                pitfalls={pitfalls}
-                onGotoTab={onGotoTab}
-                onGotoActivity={onGotoActivity}
-              />
-            ) : null}
             {tabId === "pitfalls" ? (
               <AwcProjectPitfallsPanel
                 projectId={project.id}
@@ -99,9 +79,6 @@ export default function AwcProjectDetailTabPanels({
                 startRename={startRename}
                 pageActorRole={pageActorRole}
               />
-            ) : null}
-            {STUB_TABS.includes(tabId) ? (
-              <AwcProjectTabStub label={PROJECT_PAGE_TAB_LABELS[tabId]} />
             ) : null}
           </div>
         );

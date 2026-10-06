@@ -18,7 +18,7 @@ import { OVERVIEW_GRID2_CLASS } from "@/features/projects/overview/overviewChrom
 import summarizeOverviewPitfalls from "@/features/projects/overview/summarizeOverviewPitfalls";
 import sumMessengerUnread from "@/features/projects/overview/sumMessengerUnread";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
-import type { ProjectPageTabId } from "@/features/projects/projectPageTabs.constant";
+import type { ProjectPageNavTarget } from "@/features/projects/projectPageTabs.constant";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import { PROJECT_PITFALL_MAX_ACTIVE } from "@agent-witch/shared/pitfalls";
 
@@ -28,7 +28,7 @@ interface AwcProjectOverviewPanelProps {
   readonly editCta: ProjectEditOnMacCta;
   /** Loaded once by the page so Overview, the tab badge and Pitfalls share it. */
   readonly pitfalls: AwcProjectPitfallsState;
-  readonly onGotoTab: (tab: ProjectPageTabId) => void;
+  readonly onGotoTab: (tab: ProjectPageNavTarget) => void;
   readonly onGotoActivity: (threadKey: string | null) => void;
 }
 

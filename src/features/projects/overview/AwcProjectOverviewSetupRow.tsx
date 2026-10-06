@@ -7,13 +7,13 @@ import {
   OVERVIEW_PILL_DONE_CLASS,
 } from "@/features/projects/overview/overviewChrome.constant";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
-import type { ProjectPageTabId } from "@/features/projects/projectPageTabs.constant";
+import type { ProjectPageNavTarget } from "@/features/projects/projectPageTabs.constant";
 
 interface AwcProjectOverviewSetupRowProps {
   readonly step: OverviewSetupStep;
   readonly isFirst: boolean;
   readonly editCta: ProjectEditOnMacCta;
-  readonly onGoto: (tab: ProjectPageTabId) => void;
+  readonly onGoto: (tab: ProjectPageNavTarget) => void;
 }
 
 const CheckIcon = () => (

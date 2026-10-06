@@ -25,15 +25,11 @@ const tabsConstantSource = read(
 describe("AwcProjectDetailPanel layout S6 resources", () => {
   it("mounts Resources panel and drops it from STUB_TABS", () => {
     expect(tabsConstantSource).toMatch(
-      /"overview",\s*"activity",\s*"reports",\s*"team",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
+      /"activity",\s*"pitfalls",\s*"resources",\s*"settings"/,
     );
     expect(tabPanelsSource).toContain("AwcProjectResourcesPanel");
-    expect(tabPanelsSource).toMatch(
-      /const STUB_TABS[\s\S]*?"reports"[\s\S]*?"team"[\s\S]*?"library"[\s\S]*?\];/,
-    );
-    expect(tabPanelsSource).not.toMatch(
-      /const STUB_TABS[\s\S]*?= \[[^\]]*"resources"[^\]]*\];/,
-    );
+    expect(tabPanelsSource).not.toMatch(/STUB_TABS/);
+    expect(tabPanelsSource).not.toContain('"reports"');
   });
 
   it("Resources is Folders + Git only (no shared skills list)", () => {

@@ -54,11 +54,11 @@ const tabPanelsSource = readFileSync(
 );
 
 describe("AwcProjectDetailPanel layout S2 overview", () => {
-  it("wires Overview panel and keeps gray-only chrome (no indigo/purple)", () => {
-    expect(tabPanelsSource).toContain("AwcProjectOverviewPanel");
-    expect(overviewPanelSource).toContain("AwcProjectOverviewStatsStrip");
+  it("drops Overview tab; parks Members as right rail; gray-only chrome", () => {
+    expect(tabPanelsSource).not.toContain("AwcProjectOverviewPanel");
+    expect(detailPanelSource).toContain("AwcProjectMembersColumn");
+    expect(detailPanelSource).toMatch(/lg:grid-cols-\[minmax\(0,1fr\)_20rem\]/);
     expect(overviewPanelSource).not.toMatch(/indigo|purple|#6366f1/i);
-    expect(detailPanelSource).toContain("onGotoTab={setActiveTab}");
   });
 });
 
@@ -82,12 +82,7 @@ const messengerComposerSource = readFileSync(
 describe("AwcProjectDetailPanel layout S3 activity", () => {
   it("mounts messenger Activity panel with dual-mode composer", () => {
     expect(tabPanelsSource).toContain("AwcProjectMessengerSection");
-    expect(tabPanelsSource).toMatch(
-      /const STUB_TABS[\s\S]*?= \[[\s\S]*?"team"[\s\S]*?\];/,
-    );
-    expect(tabPanelsSource).not.toMatch(
-      /const STUB_TABS[\s\S]*?= \[[\s\S]*?"activity"[\s\S]*?\];/,
-    );
+    expect(tabPanelsSource).not.toMatch(/STUB_TABS/);
     expect(messengerSectionSource).toContain("AwcProjectMessengerPanels");
     expect(messengerComposerSource).toContain("AwcMessengerMessageComposer");
     expect(messengerComposerSource).toContain("AwcMessengerTaskComposer");

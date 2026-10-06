@@ -1,7 +1,7 @@
-import type { ProjectPageTabId } from "@/features/projects/projectPageTabs.constant";
+import type { ProjectPageNavTarget } from "@/features/projects/projectPageTabs.constant";
 
 export type OverviewSetupAction =
-  | { readonly kind: "tab"; readonly tab: ProjectPageTabId; readonly label: string }
+  | { readonly kind: "tab"; readonly tab: ProjectPageNavTarget; readonly label: string }
   | { readonly kind: "mac"; readonly label: string }
   | { readonly kind: "none"; readonly label: string };
 

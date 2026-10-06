@@ -28,14 +28,12 @@ const tabsConstantSource = readFileSync(
 describe("AwcProjectDetailPanel layout S5 pitfalls", () => {
   it("uses Product tab order with Reports/Library stubs", () => {
     expect(tabsConstantSource).toMatch(
-      /"overview",\s*"activity",\s*"reports",\s*"team",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
+      /"activity",\s*"pitfalls",\s*"resources",\s*"settings"/,
     );
-    expect(tabPanelsSource).toMatch(
-      /const STUB_TABS[\s\S]*?"reports"[\s\S]*?"library"[\s\S]*?\];/,
-    );
-    expect(tabPanelsSource).not.toMatch(
-      /const STUB_TABS[\s\S]*?= \[[^\]]*"pitfalls"[^\]]*\];/,
-    );
+    expect(tabPanelsSource).not.toMatch(/STUB_TABS/);
+    expect(tabPanelsSource).not.toContain("AwcProjectOverviewPanel");
+    expect(tabsConstantSource).toContain('pitfalls: "Safety rules"');
+    expect(tabsConstantSource).toContain('DEFAULT_PROJECT_PAGE_TAB: ProjectPageTabId = "activity"');
   });
 
   it("mounts the Pitfalls panel from one shared page-level load", () => {

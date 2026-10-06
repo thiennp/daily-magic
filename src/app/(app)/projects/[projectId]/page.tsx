@@ -70,6 +70,7 @@ export default async function ProjectDetailPage({
           pageActorRole={access.role}
           actorEmail={actor.email}
           actorDisplayName={actor.name}
+          actorUserId={actor.id}
         />
       </div>
     </AppShell>
