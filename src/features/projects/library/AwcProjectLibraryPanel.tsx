@@ -21,9 +21,8 @@ interface AwcProjectLibraryPanelProps {
 }
 
 /**
- * Library tab (layout v2 L6): playbooks, workflows, and skills for this
- * project. `#library?item=<id>` (legacy `/library/<id>`) opens the item.
- * No remove / unpublish here (Product open Qs 5 + 6).
+ * Library tab: project-scoped playbooks/workflows/skills. Mutate: owner only
+ * (disabled-with-reason for member/viewer). No remove / unpublish (open Qs).
  */
 export default function AwcProjectLibraryPanel({
   project,
@@ -60,12 +59,12 @@ export default function AwcProjectLibraryPanel({
           {toast}
         </p>
       ) : null}
-      {mode === "new-skill" ? (
+      {mode === "new-skill" && canEdit ? (
         <AwcProjectLibrarySkillForm skills={library.skills} onDone={done} />
-      ) : mode === "add-from" ? (
+      ) : mode === "add-from" && canEdit ? (
         <AwcProjectLibraryAddFrom
           project={project}
-          library={library}
+          onAdded={() => library.reload()}
           onDone={done}
         />
       ) : itemId !== null ? (
@@ -79,7 +78,11 @@ export default function AwcProjectLibraryPanel({
           }}
         />
       ) : (
-        <AwcProjectLibraryList library={library} onOpen={setItemId} />
+        <AwcProjectLibraryList
+          library={library}
+          canEdit={canEdit}
+          onOpen={setItemId}
+        />
       )}
     </section>
   );

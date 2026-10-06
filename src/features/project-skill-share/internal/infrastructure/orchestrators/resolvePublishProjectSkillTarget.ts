@@ -29,7 +29,7 @@ const fail = (code: ProjectSkillFailure["code"]): ProjectSkillFailure => ({
   code,
 });
 
-/** Parse args, resolve role + skill, apply publish access (owner | active member). */
+/** Parse args, resolve role + skill, apply publish access (project owner only). */
 export const resolvePublishProjectSkillTarget = async (input: {
   readonly actorUserId: string;
   readonly args: unknown;

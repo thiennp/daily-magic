@@ -48,7 +48,9 @@ describe("publishProjectSkill real resolver viewer gate", () => {
     vi.mocked(insertProjectSkillVersionWithSkill).mockReset();
     vi.mocked(selectProjectSkillVersionNumbers).mockReset();
     vi.mocked(deleteProjectSkillVersionRows).mockReset();
-    vi.mocked(getUserProjectById).mockResolvedValue(skillActorRoleProjectFixture);
+    vi.mocked(getUserProjectById).mockResolvedValue(
+      skillActorRoleProjectFixture,
+    );
     vi.mocked(selectProjectSkillRow).mockResolvedValue(null);
     vi.mocked(insertProjectSkillVersionWithSkill).mockResolvedValue(
       projectSkillRecordFixture({
@@ -72,12 +74,23 @@ describe("publishProjectSkill real resolver viewer gate", () => {
     expect(insertProjectSkillVersionWithSkill).not.toHaveBeenCalled();
   });
 
-  it("allows member to publish a new skill", async () => {
+  it("forbids member from publishing a new skill", async () => {
     vi.mocked(getActiveProjectMembership).mockResolvedValue(
       skillActorRoleSeatFixture("member", "human"),
     );
     const result = await publishProjectSkill({
       actorUserId: "actor-1",
+      args: { projectId: "proj-1", name: "Deploy", body },
+    });
+    expect(result).toEqual({ ok: false, code: "forbidden" });
+    expect(insertProjectSkillVersionWithSkill).not.toHaveBeenCalled();
+  });
+
+  it("allows owner to publish a new skill", async () => {
+    vi.mocked(getActiveProjectMembership).mockResolvedValue(null);
+    // actor is project owner via fixture ownerUserId
+    const result = await publishProjectSkill({
+      actorUserId: skillActorRoleProjectFixture.ownerUserId,
       args: { projectId: "proj-1", name: "Deploy", body },
     });
     expect(result.ok).toBe(true);

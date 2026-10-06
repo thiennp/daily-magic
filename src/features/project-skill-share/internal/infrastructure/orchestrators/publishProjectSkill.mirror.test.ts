@@ -36,7 +36,7 @@ const hash = computeProjectSkillContentHash(body);
 
 describe("publishProjectSkill mirror + conflicts", () => {
   beforeEach(() => {
-    vi.mocked(resolveProjectSkillActorRole).mockResolvedValue("member");
+    vi.mocked(resolveProjectSkillActorRole).mockResolvedValue("owner");
     vi.mocked(selectProjectSkillRow).mockResolvedValue(null);
     vi.mocked(insertProjectSkillVersionWithSkill).mockResolvedValue(
       projectSkillRecordFixture({ publisherUserId: "m1", contentHash: hash }),

@@ -12,14 +12,14 @@ const panelSources = (dir: string): readonly string[] =>
     .map((name) => read(`${P}/${dir}/${name}`));
 
 describe("project layout v2 L6 Reports + Library", () => {
-  it("replaces the Reports/Library stubs with full panels; tabs stay", () => {
+  it("wires full panels; canEdit is owner-only", () => {
     const body = read(`${P}/AwcProjectDetailTabPanelBody.tsx`);
     const tabs = read(`${P}/projectPageTabs.constant.ts`);
     expect(body).not.toContain("STUB_TABS");
     expect(body).not.toContain("AwcProjectTabStub");
     expect(body).toContain("<AwcProjectReportsPanel projectId={project.id} />");
     expect(body).toContain("<AwcProjectLibraryPanel");
-    expect(body).toContain('canEdit={pageActorRole !== "viewer"}');
+    expect(body).toContain('canEdit={pageActorRole === "owner"}');
     expect(tabs).toMatch(
       /"activity",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
     );
@@ -38,15 +38,25 @@ describe("project layout v2 L6 Reports + Library", () => {
     expect(tabHook).toContain("parseProjectPageHash(window.location.hash)");
   });
 
-  it("scopes data to this project via existing report / library / skills APIs", () => {
+  it("scopes data via project library/reports APIs + skills", () => {
     const reports = read(`${P}/reports/useAwcProjectReports.ts`);
     const library = read(`${P}/library/useAwcProjectLibrary.ts`);
     const addFrom = read(`${P}/library/AwcProjectLibraryAddFrom.tsx`);
-    expect(reports).toContain("useAgentRunsList");
-    expect(reports).toContain("run.projectId === projectId");
-    expect(library).toContain("useLibraryCapabilities");
+    expect(reports).toContain("/reports");
+    expect(reports).toContain("encodeURIComponent(projectId)");
+    expect(library).toContain("/library");
     expect(library).toContain("useProjectSkills(projectId)");
     expect(addFrom).toContain("forkCapabilityToLibrary(itemId, project.id)");
+    expect(addFrom).toContain("useLibraryCapabilities");
+  });
+
+  it("shows disabled New/Add with owner-only reason for non-owners", () => {
+    const disabled = read(`${P}/library/AwcProjectLibraryDisabledActions.tsx`);
+    expect(disabled).toContain("aria-describedby");
+    expect(disabled).toContain('C["disabled.new"]');
+    expect(disabled).toContain('A["library.new"]');
+    expect(disabled).toContain('A["library.add_from"]');
+    expect(disabled).toContain("disabled");
   });
 
   it("ships no remove / delete / unpublish / New report controls (open Qs)", () => {

@@ -1,8 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { useLibraryCapabilities } from "@/features/library/hooks/useLibraryCapabilities";
 import { useProjectSkills } from "@/features/project-skill-share/public-api/presentation";
 import {
   mapProjectLibraryCapabilities,
@@ -13,39 +12,85 @@ import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCa
 
 export interface AwcProjectLibraryState {
   readonly items: readonly ProjectLibraryItem[];
-  /** All of my library items (any project) — source for Add from another project. */
-  readonly capabilities: readonly PublishedCapabilityRecord[];
   readonly skills: ReturnType<typeof useProjectSkills>;
   readonly isLoading: boolean;
   readonly loadFailed: boolean;
   readonly reload: () => void;
 }
 
-/**
- * Library for one project: my library items scoped by `projectId` + this
- * project's shared skills (owner / member ACL from the skills API).
- */
+/** Project-scoped capabilities + skills. Add-from uses /mine separately. */
 const useAwcProjectLibrary = (projectId: string): AwcProjectLibraryState => {
-  const library = useLibraryCapabilities();
   const skills = useProjectSkills(projectId);
+  const [capabilities, setCapabilities] = useState<
+    readonly PublishedCapabilityRecord[]
+  >([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [reloadNonce, setReloadNonce] = useState(0);
+  const reload = useCallback((): void => {
+    setReloadNonce((nonce) => nonce + 1);
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const load = async (): Promise<void> => {
+      setIsLoading(true);
+      setLoadFailed(false);
+      try {
+        const response = await fetch(
+          `/api/projects/${encodeURIComponent(projectId)}/library`,
+          { signal: controller.signal },
+        );
+        if (!response.ok) {
+          setLoadFailed(true);
+          return;
+        }
+        const data: unknown = await response.json();
+        const list =
+          typeof data === "object" &&
+          data !== null &&
+          "capabilities" in data &&
+          Array.isArray((data as { capabilities: unknown }).capabilities)
+            ? (data as { capabilities: PublishedCapabilityRecord[] })
+                .capabilities
+            : null;
+        if (list === null) {
+          setLoadFailed(true);
+          return;
+        }
+        setCapabilities(list);
+      } catch (error: unknown) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+        setLoadFailed(true);
+      } finally {
+        if (!controller.signal.aborted) setIsLoading(false);
+      }
+    };
+    void load();
+    return () => {
+      controller.abort();
+    };
+  }, [projectId, reloadNonce]);
+
   const items = useMemo(
     () =>
       [
-        ...mapProjectLibraryCapabilities(library.capabilities, projectId),
+        ...mapProjectLibraryCapabilities(capabilities, projectId),
         ...mapProjectLibrarySkills(skills.skills),
       ].toSorted(
         (left, right) =>
           Date.parse(right.updatedAt) - Date.parse(left.updatedAt),
       ),
-    [library.capabilities, projectId, skills.skills],
+    [capabilities, projectId, skills.skills],
   );
   return {
     items,
-    capabilities: library.capabilities,
     skills,
-    isLoading: library.isLoading || skills.isLoading,
-    loadFailed: library.loadFailed,
-    reload: library.reload,
+    isLoading: isLoading || skills.isLoading,
+    loadFailed,
+    reload,
   };
 };
 

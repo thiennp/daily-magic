@@ -1,5 +1,7 @@
 "use client";
 
+import { useId } from "react";
+
 import AwcProjectLibraryDetailFields from "@/features/projects/library/AwcProjectLibraryDetailFields";
 import { PROJECT_PAGE_LIBRARY_ACTIONS_COPY as A } from "@/features/projects/library/projectPageLibraryActionsCopy.constant";
 import { PROJECT_PAGE_LIBRARY_COPY as C } from "@/features/projects/library/projectPageLibraryCopy.constant";
@@ -18,10 +20,7 @@ interface AwcProjectLibraryDetailProps {
   readonly onBack: () => void;
 }
 
-/**
- * Item detail. A draft skill can be published (existing skills API); no
- * remove / unpublish (Product open Qs 5 + 6).
- */
+/** Item detail. Draft publish: owner only; non-owners see disabled Publish. */
 export default function AwcProjectLibraryDetail({
   itemId,
   library,
@@ -29,10 +28,12 @@ export default function AwcProjectLibraryDetail({
   onToast,
   onBack,
 }: AwcProjectLibraryDetailProps) {
+  const reasonId = useId();
   const item =
     library.items.find((candidate) => candidate.id === itemId) ?? null;
   const skillId = item?.state === "draft" ? item.skillId : null;
-  const canPublish = canEdit && skillId !== null && !library.skills.forbidden;
+  const showPublish = skillId !== null;
+  const canPublish = canEdit && showPublish && !library.skills.forbidden;
 
   return (
     <div className="flex min-w-0 flex-col gap-3">
@@ -46,19 +47,31 @@ export default function AwcProjectLibraryDetail({
       {item !== null ? (
         <>
           <AwcProjectLibraryDetailFields item={item} />
-          {canPublish ? (
-            <button
-              type="button"
-              disabled={library.skills.busy}
-              className={`self-start ${PANEL_BUTTON_PRIMARY_CLASS}`}
-              onClick={() => {
-                void library.skills.publish({ skillId }).then((ok) => {
-                  if (ok) onToast(A["library.publish.toast"]);
-                });
-              }}
-            >
-              {A["library.publish"]}
-            </button>
+          {showPublish ? (
+            <span className="flex flex-col items-start gap-0.5">
+              <button
+                type="button"
+                disabled={!canPublish || library.skills.busy}
+                aria-describedby={!canEdit ? reasonId : undefined}
+                className={`${PANEL_BUTTON_PRIMARY_CLASS} ${!canEdit ? "cursor-not-allowed" : ""}`}
+                onClick={() => {
+                  if (!canPublish || skillId === null) return;
+                  void library.skills.publish({ skillId }).then((ok) => {
+                    if (ok) onToast(A["library.publish.toast"]);
+                  });
+                }}
+              >
+                {A["library.publish"]}
+              </button>
+              {!canEdit ? (
+                <span
+                  id={reasonId}
+                  className="text-xs text-gray-500 dark:text-gray-400"
+                >
+                  {C["disabled.publish"]}
+                </span>
+              ) : null}
+            </span>
           ) : null}
         </>
       ) : library.isLoading ? (

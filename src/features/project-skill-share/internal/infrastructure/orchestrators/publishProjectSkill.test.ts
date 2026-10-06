@@ -35,7 +35,7 @@ const hash = computeProjectSkillContentHash(body);
 
 describe("publishProjectSkill", () => {
   beforeEach(() => {
-    vi.mocked(resolveProjectSkillActorRole).mockResolvedValue("member");
+    vi.mocked(resolveProjectSkillActorRole).mockResolvedValue("owner");
     vi.mocked(selectProjectSkillRow).mockResolvedValue(null);
     vi.mocked(insertProjectSkillVersionWithSkill).mockResolvedValue(
       projectSkillRecordFixture({ publisherUserId: "m1", contentHash: hash }),
@@ -87,14 +87,13 @@ describe("publishProjectSkill", () => {
     );
   });
 
-  it("members cannot overwrite another publisher's skill", async () => {
-    vi.mocked(selectProjectSkillRow).mockResolvedValue(
-      projectSkillRecordFixture({ publisherUserId: "other" }),
-    );
+  it("forbids members from publishing", async () => {
+    vi.mocked(resolveProjectSkillActorRole).mockResolvedValue("member");
     const result = await publishProjectSkill({
       actorUserId: "m1",
-      args: { projectId: "proj-1", skillId: "deploy", body },
+      args: { projectId: "proj-1", name: "Deploy", body },
     });
     expect(result).toEqual({ ok: false, code: "forbidden" });
+    expect(insertProjectSkillVersionWithSkill).not.toHaveBeenCalled();
   });
 });

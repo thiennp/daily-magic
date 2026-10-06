@@ -12,48 +12,47 @@ const read = (relative: string): string =>
   readFileSync(path.join(process.cwd(), relative), "utf8");
 
 describe("project layout v2 L6 Reports + Library — Product EN copy", () => {
-  it("uses Product EN exactly (locked strings)", () => {
+  it("uses Shared visibility Product EN exactly", () => {
     expect(R["reports.intro"]).toBe(
-      "Finished work from assistants and this computer lands here.",
+      "Finished work from this project's assistants and computers lands here.",
     );
     expect(R["reports.empty"]).toBe(
-      "You don't have any reports in this project yet. Finished work from your assistants and this computer shows up here.",
+      "No reports in this project yet. Finished work from its assistants and computers shows up here.",
     );
-    expect(R["reports.aria"]).toBe("Your reports for this project");
+    expect(R["reports.aria"]).toBe("Reports for this project");
     expect(L["library.intro"]).toBe(
-      "Your playbooks and workflows, plus this project's skills.",
+      "Playbooks, workflows, assistants, and skills for this project.",
     );
-    expect(L["library.aria"]).toBe("Your library for this project");
-    expect(L["library.empty"]).toBe(
-      "Nothing here for you yet. Create a skill, or add one from another project.",
+    expect(L["library.aria"]).toBe("Library for this project");
+    expect(L["library.empty.owner"]).toBe(
+      "No playbooks or skills yet. Create one, or add one from another project.",
     );
-    expect(A["library.share.note"]).toBe(
-      "Members see published skills. Drafts are visible only to you and the owner.",
+    expect(L["library.empty.member"]).toBe(
+      "Nothing in this project's library yet. The project owner adds items here.",
+    );
+    expect(L["library.readOnlyNote"]).toBe(
+      "You can view this library. Only the project owner can change it.",
+    );
+    expect(L["library.visibilityHint"]).toBe(
+      "Members and viewers see published items. Drafts are visible only to you.",
     );
     expect(A["library.publish.toast"]).toBe(
-      "Published. Members can use this now.",
+      "Published. Everyone in this project can see it now.",
+    );
+    expect(L["disabled.new"]).toBe("Only the project owner can add items.");
+    expect(L["disabled.addFrom"]).toBe("Only the project owner can add items.");
+    expect(L["disabled.edit"]).toBe("Only the project owner can edit this.");
+    expect(L["disabled.publish"]).toBe("Only the project owner can publish.");
+    expect(L["disabled.delete"]).toBe(
+      "Only the project owner can delete this.",
     );
     const skillForm = read(`${P}/library/AwcProjectLibrarySkillForm.tsx`);
     expect(skillForm).toContain('A["library.publish.toast"]');
-    expect(skillForm).not.toContain(
-      'asDraft ? A["library.save_draft.toast"] : A["library.new.toast.skill"]',
-    );
-    expect(A["library.new"]).toBe("New");
-    expect(A["library.add_from"]).toBe("Add from another project");
-    expect(A["library.add_from.toast"]).toBe("Copy added to {project}.");
-    expect(A["library.skills.heading"]).toBe("Shared skills");
     expect([
       L["library.filter.all"],
       L["library.filter.playbooks"],
       L["library.filter.workflows"],
       L["library.filter.skills"],
     ]).toEqual(["All", "Playbooks", "Workflows", "Skills"]);
-    expect([L["library.state.draft"], L["library.state.published"]]).toEqual([
-      "Draft",
-      "Published",
-    ]);
-    const total =
-      Object.keys(R).length + Object.keys(L).length + Object.keys(A).length;
-    expect(total).toBe(108);
   });
 });

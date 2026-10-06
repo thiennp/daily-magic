@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 
 import AwcProjectLibraryRow from "@/features/projects/library/AwcProjectLibraryRow";
 import AwcProjectLibraryToolbar from "@/features/projects/library/AwcProjectLibraryToolbar";
-import { PROJECT_PAGE_LIBRARY_ACTIONS_COPY as A } from "@/features/projects/library/projectPageLibraryActionsCopy.constant";
 import { PROJECT_PAGE_LIBRARY_COPY as C } from "@/features/projects/library/projectPageLibraryCopy.constant";
 import type { AwcProjectLibraryState } from "@/features/projects/library/useAwcProjectLibrary";
 import {
@@ -21,12 +20,14 @@ import {
 
 interface AwcProjectLibraryListProps {
   readonly library: AwcProjectLibraryState;
+  readonly canEdit: boolean;
   readonly onOpen: (itemId: string) => void;
 }
 
-/** Chips (All / Playbooks / Workflows / Skills) + search + rows + share note. */
+/** Chips + search + rows; role-aware empty + visibility / read-only note. */
 export default function AwcProjectLibraryList({
   library,
+  canEdit,
   onOpen,
 }: AwcProjectLibraryListProps) {
   const [filter, setFilter] = useState<ProjectLibraryFilter>("all");
@@ -39,6 +40,9 @@ export default function AwcProjectLibraryList({
     () => filterProjectLibraryItems(library.items, filter, query),
     [library.items, filter, query],
   );
+  const note = canEdit
+    ? C["library.visibilityHint"]
+    : C["library.readOnlyNote"];
 
   if (library.loadFailed && library.items.length === 0) {
     return (
@@ -58,7 +62,14 @@ export default function AwcProjectLibraryList({
     return <p className={PANEL_STATUS_CLASS}>{C["library.loading"]}</p>;
   }
   if (library.items.length === 0) {
-    return <p className={PANEL_STATUS_CLASS}>{C["library.empty"]}</p>;
+    return (
+      <>
+        <p className={PANEL_STATUS_CLASS}>
+          {canEdit ? C["library.empty.owner"] : C["library.empty.member"]}
+        </p>
+        <p className={`px-1 ${PANEL_INTRO_CLASS}`}>{note}</p>
+      </>
+    );
   }
 
   return (
@@ -79,7 +90,7 @@ export default function AwcProjectLibraryList({
           ))}
         </ul>
       )}
-      <p className={`px-1 ${PANEL_INTRO_CLASS}`}>{A["library.share.note"]}</p>
+      <p className={`px-1 ${PANEL_INTRO_CLASS}`}>{note}</p>
     </>
   );
 }

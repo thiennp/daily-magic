@@ -89,7 +89,7 @@ export default function AwcProjectDetailTabPanelBody({
     return (
       <AwcProjectLibraryPanel
         project={project}
-        canEdit={pageActorRole !== "viewer"}
+        canEdit={pageActorRole === "owner"}
       />
     );
   }

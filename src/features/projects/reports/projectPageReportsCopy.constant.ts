@@ -1,13 +1,13 @@
 /**
  * Project layout v2 L6 — Reports panel EN (Product
- * `L6-REPORTS-LIBRARY-COPY.md` §3 JSON; keys and strings exact).
+ * `L6-REPORTS-LIBRARY-COPY.md` §3 + §Shared visibility; keys and strings exact).
  */
 export const PROJECT_PAGE_REPORTS_COPY = {
   "tabs.reports": "Reports",
   "reports.heading": "Reports",
   "reports.intro":
-    "Finished work from assistants and this computer lands here.",
-  "reports.aria": "Your reports for this project",
+    "Finished work from this project's assistants and computers lands here.",
+  "reports.aria": "Reports for this project",
   "reports.col.title": "Title",
   "reports.col.from": "From",
   "reports.col.date": "Date",
@@ -23,7 +23,7 @@ export const PROJECT_PAGE_REPORTS_COPY = {
   "reports.search.placeholder": "Search by title or who ran it",
   "reports.filter.empty": "No reports match.",
   "reports.empty":
-    "You don't have any reports in this project yet. Finished work from your assistants and this computer shows up here.",
+    "No reports in this project yet. Finished work from its assistants and computers shows up here.",
   "reports.loading": "Loading reports…",
   "reports.error": "Could not load reports. Try again.",
   "reports.error.retry": "Try again",
