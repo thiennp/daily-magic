@@ -83,7 +83,7 @@ describe("project ACL surface copy", () => {
       /mapping|registry|paths/i,
     );
     expect(AWC_PROJECT_ACCESS_COPY.addFolderRef).toMatch(/Add folder/i);
-    expect(AWC_PROJECT_ACCESS_COPY.machineRefPlaceholder).toMatch(/e\.g\./i);
+    expect(AWC_PROJECT_ACCESS_COPY.machineRefPlaceholder).toBe("Choose a computer");
     expect(AWC_PROJECT_ACCESS_COPY.folderPathPlaceholder).toMatch(/e\.g\./i);
   });
 });

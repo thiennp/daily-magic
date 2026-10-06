@@ -4,7 +4,17 @@ import {
   addProjectFolderRef,
   removeProjectFolderRef,
 } from "@/features/projects/access/utils/mutateProjectFolderRefs";
+import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/projectPageResourcesCopy.constant";
 import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
+
+/** 403 from the folder-ref device ACL (picked computer not an active seat). */
+export const resolveAddFolderRefError = (result: {
+  readonly code?: string;
+  readonly errorMessage?: string;
+}): string =>
+  result.code === "folder_ref_device_not_member"
+    ? C.foldersDeviceNotMember
+    : mapProjectAccessError(result.errorMessage, "Failed.");
 
 /** Single owner for folder-ref add/remove mutations (Access + Resources). */
 export const useAwcProjectFolderRefActions = (input: {
@@ -15,19 +25,11 @@ export const useAwcProjectFolderRefActions = (input: {
   const { projectId, onMessage, onReload } = input;
 
   const onAdd = async (
-    machineOrDeviceRef: string,
+    deviceId: string,
     folderPath: string,
   ): Promise<boolean> => {
-    const result = await addProjectFolderRef({
-      projectId,
-      machineOrDeviceRef,
-      folderPath,
-    });
-    onMessage(
-      result.ok
-        ? "Folder ref added."
-        : mapProjectAccessError(result.errorMessage, "Failed."),
-    );
+    const result = await addProjectFolderRef({ projectId, deviceId, folderPath });
+    onMessage(result.ok ? "Folder ref added." : resolveAddFolderRefError(result));
     if (result.ok) await onReload();
     return result.ok;
   };

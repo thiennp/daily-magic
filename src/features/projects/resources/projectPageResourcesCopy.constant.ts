@@ -17,6 +17,17 @@ export const PROJECT_PAGE_RESOURCES_COPY = {
   foldersLoading: "Loading folders…",
   foldersAdd: "Add",
   foldersRemove: "Remove",
+  foldersMachineLabel: "Computer",
+  foldersMachinePlaceholder: "Choose a computer",
+  foldersMachineOfflineSuffix: " · offline",
+  foldersMachineNone:
+    "No computers connected yet. Connect this computer first.",
+  foldersChooseComputerFirst: "Choose a computer first.",
+  foldersDeviceNotMember:
+    "Pick a computer that is an active member of this project.",
+  foldersPathLabel: "Folder path",
+  /** Row: "{deviceName} · {path}". */
+  foldersRow: (deviceName: string, path: string) => `${deviceName} · ${path}`,
   gitTitle: "Git remotes (optional)",
   gitHint:
     "HTTPS or SSH, with no login details. Clear every URL and leave the branch empty, then save to remove the config.",

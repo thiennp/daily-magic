@@ -4,6 +4,7 @@ import AwcProjectAccessFolderRefs from "@/features/projects/access/AwcProjectAcc
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 import { useAwcProjectFolderRefActions } from "@/features/projects/access/hooks/useAwcProjectFolderRefActions";
+import { isComputerAccessMember } from "@/features/projects/access/utils/isComputerAccessMember";
 import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/projectPageResourcesCopy.constant";
 import { resolveProjectAccessLoadError } from "@/lib/projects/acl/mapProjectAccessError";
 
@@ -52,6 +53,7 @@ export default function AwcProjectResourcesFoldersCard({
         ) : (
           <AwcProjectAccessFolderRefs
             folderRefs={access.folderRefs}
+            computerMembers={access.members.filter(isComputerAccessMember)}
             hideChrome
             onAdd={onAdd}
             onRemove={onRemove}

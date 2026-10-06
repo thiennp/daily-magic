@@ -1,0 +1,51 @@
+import { AWC_PROJECT_COMPUTER_MEMBER_COPY } from "@/features/projects/access/awcProjectComputerMemberCopy.constant";
+import { isComputerAccessMember } from "@/features/projects/access/utils/isComputerAccessMember";
+import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/projectPageResourcesCopy.constant";
+
+/** Access roster fields the folder-ref computer picker reads. */
+export type FolderRefComputerMember = {
+  readonly memberKind?: "human" | "bot" | "computer" | string;
+  readonly deviceId?: string | null;
+  readonly projectDisplayName: string | null;
+  readonly isOnline?: boolean;
+};
+
+/** One `<option>`: value is the stable deviceId, label the device name. */
+export type FolderRefComputerOption = {
+  readonly deviceId: string;
+  readonly deviceName: string;
+  readonly label: string;
+};
+
+const resolveDeviceName = (member: FolderRefComputerMember): string =>
+  member.projectDisplayName?.trim() || AWC_PROJECT_COMPUTER_MEMBER_COPY.fallbackName;
+
+/** Computer seats with a deviceId → picker options (offline stays selectable). */
+export const buildFolderRefComputerOptions = (
+  members: readonly FolderRefComputerMember[],
+): readonly FolderRefComputerOption[] =>
+  members.flatMap((member) => {
+    const deviceId = member.deviceId?.trim() ?? "";
+    if (!isComputerAccessMember(member) || !deviceId) return [];
+    const deviceName = resolveDeviceName(member);
+    const suffix = member.isOnline === true ? "" : C.foldersMachineOfflineSuffix;
+    return [{ deviceId, deviceName, label: `${deviceName}${suffix}` }];
+  });
+
+/** `"{deviceName} · {path}"` — legacy free-text refs fall back to the raw value. */
+export const formatFolderRefRow = (
+  ref: { readonly machineOrDeviceRef: string; readonly folderPath: string },
+  options: readonly FolderRefComputerOption[],
+): string => {
+  const match = options.find((o) => o.deviceId === ref.machineOrDeviceRef);
+  return C.foldersRow(match?.deviceName ?? ref.machineOrDeviceRef, ref.folderPath);
+};
+
+/** Client-side Add guard; null when the selection is a known computer. */
+export const resolveFolderRefAddError = (
+  machineRef: string,
+  options: readonly FolderRefComputerOption[],
+): string | null =>
+  options.some((o) => o.deviceId === machineRef)
+    ? null
+    : C.foldersChooseComputerFirst;

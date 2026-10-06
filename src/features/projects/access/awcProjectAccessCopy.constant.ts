@@ -1,3 +1,4 @@
+import { PROJECT_PAGE_RESOURCES_COPY } from "@/features/projects/resources/projectPageResourcesCopy.constant";
 import { PROJECT_ACL_FIRST_CONNECT } from "@/lib/projects/acl/projectAclFirstConnect.constant";
 
 export const AWC_PROJECT_ACCESS_COPY = {
@@ -21,10 +22,10 @@ export const AWC_PROJECT_ACCESS_COPY = {
     "No folders yet. Add a computer and a local folder path below.",
   folderRefsFormHint:
     "Each ref is a computer label + path string. Cloud stores the mapping, not the files.",
-  machineRefLabel: "Computer",
-  machineRefPlaceholder: "e.g. MacBook Pro",
-  machineRefHelp: "Which computer holds the folder — a short label is fine.",
-  folderPathLabel: "Folder path",
+  machineRefLabel: PROJECT_PAGE_RESOURCES_COPY.foldersMachineLabel,
+  machineRefPlaceholder: PROJECT_PAGE_RESOURCES_COPY.foldersMachinePlaceholder,
+  machineRefHelp: "Which computer holds the folder.",
+  folderPathLabel: PROJECT_PAGE_RESOURCES_COPY.foldersPathLabel,
   folderPathPlaceholder: "e.g. ~/code/daily-magic",
   folderPathHelp: "Absolute or ~ path on that computer.",
   approve: "Approve",

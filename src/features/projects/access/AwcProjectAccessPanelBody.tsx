@@ -112,6 +112,7 @@ export default function AwcProjectAccessPanelBody({
       <AwcProjectAccessFoldersSection
         projectId={projectId}
         folderRefs={access.folderRefs}
+        computerMembers={computerMembers}
         onMessage={access.setMessage}
         onReload={access.reload}
       />

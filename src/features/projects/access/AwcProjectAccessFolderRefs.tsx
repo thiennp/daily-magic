@@ -1,20 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import AwcProjectAccessFolderRefsForm from "@/features/projects/access/AwcProjectAccessFolderRefsForm";
+import AwcProjectAccessFolderRefsList, {
+  type FolderRefRow,
+} from "@/features/projects/access/AwcProjectAccessFolderRefsList";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
-
-interface FolderRefRow {
-  readonly id: string;
-  readonly machineOrDeviceRef: string;
-  readonly folderPath: string;
-}
+import {
+  buildFolderRefComputerOptions,
+  type FolderRefComputerMember,
+  resolveFolderRefAddError,
+} from "@/features/projects/access/utils/folderRefComputerOptions";
 
 interface AwcProjectAccessFolderRefsProps {
   readonly folderRefs: readonly FolderRefRow[];
+  /** Access roster computer seats (filtered again by memberKind). */
+  readonly computerMembers: readonly FolderRefComputerMember[];
+  /** Receives the selected computer's deviceId (POSTed as `deviceId`). */
   readonly onAdd: (
-    machineOrDeviceRef: string,
+    deviceId: string,
     folderPath: string,
   ) => Promise<boolean> | boolean;
   readonly onRemove: (refId: string) => void;
@@ -23,13 +28,29 @@ interface AwcProjectAccessFolderRefsProps {
 
 export default function AwcProjectAccessFolderRefs({
   folderRefs,
+  computerMembers,
   onAdd,
   onRemove,
   hideChrome = false,
 }: AwcProjectAccessFolderRefsProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
+  const computers = useMemo(
+    () => buildFolderRefComputerOptions(computerMembers),
+    [computerMembers],
+  );
   const [machineRef, setMachineRef] = useState("");
   const [folderPath, setFolderPath] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  const handleAdd = async (): Promise<void> => {
+    const blocked = resolveFolderRefAddError(machineRef, computers);
+    setError(blocked);
+    if (blocked) return;
+    if (await onAdd(machineRef, folderPath)) {
+      setMachineRef("");
+      setFolderPath("");
+    }
+  };
 
   return (
     <div className="space-y-3">
@@ -41,45 +62,22 @@ export default function AwcProjectAccessFolderRefs({
           <p className="mt-1 text-xs text-gray-500">{copy.folderRefsHint}</p>
         </>
       )}
-      {folderRefs.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-gray-200 bg-gray-50/60 px-3 py-2.5 text-sm text-gray-600 dark:border-gray-800 dark:bg-white/[0.02] dark:text-gray-400">
-          {copy.folderRefsEmpty}
-        </p>
-      ) : (
-        <ul className="space-y-2">
-          {folderRefs.map((ref) => (
-            <li
-              key={ref.id}
-              className="flex flex-wrap items-center justify-between gap-2 text-sm"
-            >
-              <span className="font-mono text-xs text-gray-800 dark:text-white/90">
-                {ref.machineOrDeviceRef} → {ref.folderPath}
-              </span>
-              <button
-                type="button"
-                className="rounded-md border px-2 py-1 text-xs"
-                onClick={() => onRemove(ref.id)}
-              >
-                {copy.remove}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+      <AwcProjectAccessFolderRefsList
+        folderRefs={folderRefs}
+        computers={computers}
+        onRemove={onRemove}
+      />
       <AwcProjectAccessFolderRefsForm
+        computers={computers}
+        error={error}
         machineRef={machineRef}
         folderPath={folderPath}
-        onMachineRef={setMachineRef}
-        onFolderPath={setFolderPath}
-        onAdd={() => {
-          void (async () => {
-            const added = await onAdd(machineRef, folderPath);
-            if (added) {
-              setMachineRef("");
-              setFolderPath("");
-            }
-          })();
+        onMachineRef={(value) => {
+          setMachineRef(value);
+          if (value) setError(null);
         }}
+        onFolderPath={setFolderPath}
+        onAdd={() => void handleAdd()}
       />
     </div>
   );
