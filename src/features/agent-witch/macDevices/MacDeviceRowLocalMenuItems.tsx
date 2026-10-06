@@ -12,7 +12,7 @@ interface MacDeviceRowLocalMenuItemsProps {
   readonly onDeleteLocalScript?: () => void;
 }
 
-/** Flat fallback for rows that are not the Mac in front of the user. */
+/** Flat fallback for rows that are not the computer in front of the user. */
 export default function MacDeviceRowLocalMenuItems({
   closeMenu,
   onSeeLocalLog,

@@ -83,8 +83,8 @@ export default function HomePromptOptimizerComposeCard({
           Open in Agent Witch Local
         </a>
         <p className={APP_SURFACE_TEXT_LINK_CLASS}>
-          The wizard runs in Agent Witch Local on your Mac—not in this browser
-          tab.
+          The wizard runs in Agent Witch Local on your computer—not in this
+          browser tab.
         </p>
       </form>
     </div>

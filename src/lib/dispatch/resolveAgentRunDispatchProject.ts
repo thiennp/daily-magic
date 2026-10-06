@@ -13,10 +13,7 @@ export type ResolvedAgentRunDispatchProject =
       readonly ok: false;
       readonly errorMessage: string;
       readonly code:
-        | "project_required"
-        | "not_found"
-        | "forbidden"
-        | "invalid_project";
+        "project_required" | "not_found" | "forbidden" | "invalid_project";
       readonly status: 400 | 403 | 404;
     };
 
@@ -70,7 +67,7 @@ export const resolveAgentRunDispatchProject = async (input: {
     return {
       ok: false,
       errorMessage:
-        "This project has no folder set yet. Choose a folder on the Mac that stores this project.",
+        "This project has no folder set yet. Choose a folder on the computer that stores this project.",
       code: "invalid_project",
       status: 400,
     };

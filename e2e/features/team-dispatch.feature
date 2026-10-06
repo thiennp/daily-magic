@@ -1,12 +1,12 @@
 @dispatch @multi-user @requires-mac
 Feature: Team dispatch
   Delegate tasks to self, a colleague, or through approval.
-  Multiple accounts on the same Mac count as a team — each account is a
+  Multiple accounts on the same computer count as a team — each account is a
   separate user; the executor account owns the paired agent-witch profile.
 
   Background:
     Given the app is running at "http://localhost:3000"
-    And agent-witch is running with the executor profile on this Mac
+    And agent-witch is running with the executor profile on this computer
     And admin, executor, and requester are distinct test*@agentwitch.com accounts
 
   Scenario: Delegate task to own Mac

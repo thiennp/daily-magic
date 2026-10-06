@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { resolveAgentSessionTargets } from "@/features/agent/utils/resolveAgentSessionTargets";
 
 describe("resolveAgentSessionTargets", () => {
-  it("uses the selected Mac before a session starts", () => {
+  it("uses the selected computer before a session starts", () => {
     expect(
       resolveAgentSessionTargets({
         sessionWriterAgent: null,
@@ -19,7 +19,7 @@ describe("resolveAgentSessionTargets", () => {
     });
   });
 
-  it("locks the Mac and AI during an open session", () => {
+  it("locks the computer and AI during an open session", () => {
     expect(
       resolveAgentSessionTargets({
         sessionWriterAgent: "cursor",

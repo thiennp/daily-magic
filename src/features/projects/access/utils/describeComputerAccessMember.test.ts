@@ -62,7 +62,7 @@ describe("describeComputerAccessMember", () => {
     ).toBe("needs_update");
   });
 
-  it("empty name falls back to This Mac; copy never says AWL/agent/device", () => {
+  it("empty name falls back to This computer; copy never says AWL/agent/device", () => {
     expect(
       describeComputerAccessMember({ ...base, projectDisplayName: " " }, null)
         .name,

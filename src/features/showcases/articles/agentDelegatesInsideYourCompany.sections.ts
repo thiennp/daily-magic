@@ -6,14 +6,14 @@ export const agentDelegatesInsideYourCompanySections: readonly ShowcaseArticleSe
   [
     {
       paragraphs: [
-        "Agent Witch is not one cloud bot everyone shares. Each person keeps an agent on their Mac. Inside a company group, you become the requester and pick a teammate plus their published workflow — Claude runs on their machine with their repo paths and files.",
+        "Agent Witch is not one cloud bot everyone shares. Each person keeps an agent on their computer. Inside a company group, you become the requester and pick a teammate plus their published workflow — Claude runs on their machine with their repo paths and files.",
       ],
     },
     {
       heading: "Featured workflow: Repo branch standup",
       bullets: [
         "Template in Marketplace: Repo branch standup (teammate Mac)",
-        "Fields: repo path on their Mac, branch name, optional since date",
+        "Fields: repo path on their computer, branch name, optional since date",
         "Teammate publishes it to Library; you pick it under their assistant when sending",
         "Try this prompt: summarize commits on feature/checkout for yesterday's standup",
       ],
@@ -23,7 +23,7 @@ export const agentDelegatesInsideYourCompanySections: readonly ShowcaseArticleSe
       bullets: [
         "Projects → open a project → New task (or /projects?intent=new-task)",
         "Under Who receives this task, pick your company — not My Mac (self)",
-        "Select the teammate who owns the repo on their Mac",
+        "Select the teammate who owns the repo on their computer",
         "Pick their published workflow (e.g. Repo branch standup)",
       ],
       image: buildShowcaseTeamDispatchArticleImage(
@@ -52,7 +52,7 @@ export const agentDelegatesInsideYourCompanySections: readonly ShowcaseArticleSe
       ),
     },
     {
-      heading: "3. Their Mac runs; you watch the terminal",
+      heading: "3. Their computer runs; you watch the terminal",
       bullets: [
         "After dispatch (or approval), command.claude.run reaches their Agent Witch client",
         "With session continuation, Claude reuses the warmed writer session",

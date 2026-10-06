@@ -22,11 +22,11 @@ export const resolveCapabilityTemplateSaveHarnessMessage = (
   }
 
   if (result.harnessInstalled) {
-    return "Install requested on your Mac.";
+    return "Install requested on your computer.";
   }
 
   return (
     result.harnessInstallMessage ??
-    "Saved to Library. Open Agent when your Mac is online to finish install."
+    "Saved to Library. Open Agent when your computer is online to finish install."
   );
 };

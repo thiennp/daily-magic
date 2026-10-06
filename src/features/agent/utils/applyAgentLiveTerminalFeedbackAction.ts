@@ -43,7 +43,9 @@ export const applyAgentLiveTerminalFeedbackAction = (input: {
     )
     .then((queued) => {
       if (queued) {
-        input.setQueueNotice("Queued — will send when your Mac is connected.");
+        input.setQueueNotice(
+          "Queued — will send when your computer is connected.",
+        );
       }
     })
     .finally(() => {

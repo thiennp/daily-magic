@@ -8,7 +8,7 @@ alwaysApply: false
 
 Product skills for Prompt Optimizer / AgentWitch Live live under the chosen **workingDirectory** as `.cursor/skills/*/SKILL.md` (filesystem), not Account Library and not `.feature-knowledge`.
 
-Before inventing a new skill or playbook on a Mac running AWL:
+Before inventing a new skill or playbook on a computer running AWL:
 
 1. **Query** folder skills:
    ```bash

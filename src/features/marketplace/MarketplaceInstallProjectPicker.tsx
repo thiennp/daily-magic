@@ -34,7 +34,7 @@ export default function MarketplaceInstallProjectPicker({
       </p>
       <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
         Workflow and agent installs link to this project. Pull playbook files
-        into the repo from Agent Witch on your Mac.
+        into the repo from Agent Witch on your computer.
       </p>
       {isProjectsLoading ? (
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
@@ -42,8 +42,8 @@ export default function MarketplaceInstallProjectPicker({
         </p>
       ) : deviceProjects.length === 0 ? (
         <p className="mt-2 text-sm text-amber-700 dark:text-amber-300">
-          No projects for this Mac yet. Create a project under Home → Projects,
-          then try again.
+          No projects for this computer yet. Create a project under Home →
+          Projects, then try again.
         </p>
       ) : (
         <ul className="mt-2 space-y-2">
@@ -72,7 +72,8 @@ export default function MarketplaceInstallProjectPicker({
                     </span>
                   ) : (
                     <span className="mt-0.5 block text-xs text-amber-700 dark:text-amber-300">
-                      No folder set — set folder on Mac before pull into repo.
+                      No folder set — set folder on computer before pull into
+                      repo.
                     </span>
                   )}
                 </button>

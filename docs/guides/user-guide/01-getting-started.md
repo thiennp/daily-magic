@@ -35,12 +35,12 @@ More detail: [Chapter 2 — Accounts and sign-in](02-accounts-and-sign-in.md).
 
 ---
 
-## Step 2 — Install the Mac helper on your Mac
+## Step 2 — Install the computer helper on your computer
 
-On the **same Mac** where you want agents to run:
+On the **same computer** where you want agents to run:
 
 1. Stay signed in to Agent Witch in the browser on that Mac.
-2. From **Home**, follow **Connect your Mac** / **Install the helper** (wording may say “this computer”).
+2. From **Home**, follow **Connect your computer** / **Install the helper** (wording may say “this computer”).
 3. Run the install command shown in the UI. Production install is typically:
 
    ```bash
@@ -51,10 +51,10 @@ On the **same Mac** where you want agents to run:
 
 What you installed (user-facing names):
 
-| You see                                      | It does                                                                                                                                                                                    |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Mac helper** / **Agent Witch on this Mac** | Background runtime that keeps a secure link to the Console and runs writer CLIs in your projects.                                                                                          |
-| **Mac app** (optional)                       | Menu bar app for Apple Silicon — get it from [/download](https://www.agentwitch.com/download). Opens the local UI at `http://127.0.0.1:43347` for folders, playbooks, and troubleshooting. |
+| You see                                           | It does                                                                                                                                                                                    |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Mac helper** / **Agent Witch on this computer** | Background runtime that keeps a secure link to the Console and runs writer CLIs in your projects.                                                                                          |
+| **Mac app** (optional)                            | Menu bar app for Apple Silicon — get it from [/download](https://www.agentwitch.com/download). Opens the local UI at `http://127.0.0.1:43347` for folders, playbooks, and troubleshooting. |
 
 Technical map: [Agent Witch deployables](../../product/agent-witch-deployables.md) · [Local bridge](../../agent-witch/local-bridge.md).
 
@@ -62,18 +62,18 @@ Technical map: [Agent Witch deployables](../../product/agent-witch-deployables.m
 
 ## Step 3 — Pair this browser with this Mac
 
-Pairing means: **your account** knows **this install**, and the browser on this Mac can show **this Mac** actions.
+Pairing means: **your account** knows **this install**, and the browser on this computer can show **this Mac** actions.
 
 1. After install, return to Agent Witch **Home** (refresh if needed).
-2. Complete any **Connect this Mac** checklist step the UI shows.
+2. Complete any **Connect this computer** checklist step the UI shows.
 3. Confirm **Mac status** moves toward **Online** (or **Seen recently** / **Reconnecting** briefly after deploys—see below).
 
-**How pairing works (short):** The browser on macOS reads a **local identity** from the Mac bridge and matches it to your claimed devices in the cloud—it does not guess your laptop from IP alone. Details: [How does the Console know which Mac is “this computer”?](../../qa/awc-how-browser-knows-this-computer.md).
+**How pairing works (short):** The browser on macOS reads a **local identity** from the computer bridge and matches it to your claimed devices in the cloud—it does not guess your laptop from IP alone. Details: [How does the Console know which Mac is “this computer”?](../../qa/awc-how-browser-knows-this-computer.md).
 
 **Honest UX:**
 
-- **“This computer”** on the connect row means “the Mac where you opened the browser,” not a magic server guess.
-- If you open Agent Witch on an iPhone or a PC, you will **not** get a “this Mac” badge; you can still dispatch to a **paired Mac** you select in the task composer.
+- **“This computer”** on the connect row means “the computer where you opened the browser,” not a magic server guess.
+- If you open Agent Witch on an iPhone or a PC, you will **not** get a “this Mac” badge; you can still dispatch to a **paired computer** you select in the task composer.
 - Right after a **production deploy**, status may show **Reconnecting** for a few seconds even though the helper is running locally. Refresh Home, open your project, and retry **New task**—do not reinstall. [Reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md).
 
 ---
@@ -123,7 +123,7 @@ The Console **blocks Send** with a clear reason rather than failing silently ([r
 | Teams, invites, account menu             | [Chapter 2](02-accounts-and-sign-in.md)    |
 | Home layout and Mac status banner        | [Chapter 3](03-home-and-navigation.md)     |
 | Updates, wake, Mac app on `:43347`       | [Chapter 4](04-mac-connect-and-bridge.md)  |
-| Prompt optimizer on this Mac             | [Chapter 4](04-mac-connect-and-bridge.md)  |
+| Prompt optimizer on this computer        | [Chapter 4](04-mac-connect-and-bridge.md)  |
 | Composer, folders, continue conversation | [Chapter 5](05-tasks-dispatch-and-runs.md) |
 | Short targeted Q&A                       | [System Q&A index](../../qa/README.md)     |
 
@@ -131,8 +131,8 @@ The Console **blocks Send** with a clear reason rather than failing silently ([r
 
 ## Common first-day mistakes
 
-1. **Signed in on Mac A, installed on Mac B** — Select the correct Mac in the composer or install on the Mac where the browser runs.
-2. **Expecting folder pickers in the browser** — Real Mac paths are chosen on the Mac ([folder picker Q&A](../../qa/awc-project-folder-path-picker.md)).
+1. **Signed in on computer A, installed on computer B** — Select the correct Mac in the composer or install on the computer where the browser runs.
+2. **Expecting folder pickers in the browser** — Real Mac paths are chosen on the computer ([folder picker Q&A](../../qa/awc-project-folder-path-picker.md)).
 3. **Calling local helper “offline” when only Console says reconnecting** — Local bridge can be up while cloud dispatch waits for a live socket; refresh and retry ([Q&A](../../qa/awc-mac-reconnecting-vs-local-live.md)).
 4. **Skipping install autostart** — If the helper is not running, Mac status stays **Offline** until you start it from Mac settings.
 5. **Asking an AI to use Agent Witch without the homepage prompt** — Copy **For your AI** on the homepage. The prompt points at `/for-agents`, a static page with the steps and no site header or footer. Method `none` needs no email; Agent Mail needs the server key. A Task still needs a paired host ([Q&A](../../qa/ai-self-registration-webmcp.md)).
@@ -143,7 +143,7 @@ The Console **blocks Send** with a clear reason rather than failing silently ([r
 ## Query aliases
 
 - Agent Witch getting started, first run, onboarding
-- how to install Mac helper, connect this Mac, first task
+- how to install Mac helper, connect this computer, first task
 - bat dau Agent Witch, cai dat Mac, ket noi may, gui task dau tien
 - Agent Witch beginner guide chapter 1
 - huong dan su dung Agent Witch tu dau, chay agent tren Mac lan dau

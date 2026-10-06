@@ -2,9 +2,9 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 
 const humanCheckpointsBeforeMacRuns: ShowcaseArticle = {
   slug: "human-checkpoints-before-mac-runs",
-  title: "Human checkpoints before the Mac runs",
+  title: "Human checkpoints before the computer runs",
   subtitle:
-    "You approve, upload, and send. The Mac agent only sees a short summary.",
+    "You approve, upload, and send. The computer agent only sees a short summary.",
   category: "Workflows",
   supportLevel: "full",
   readMinutes: 4,
@@ -24,7 +24,7 @@ const humanCheckpointsBeforeMacRuns: ShowcaseArticle = {
     },
     {
       slug: "schedule-workflow-on-your-mac",
-      label: "Schedule the Mac portion on a timer",
+      label: "Schedule the computer portion on a timer",
     },
     {
       slug: "see-what-the-agent-did",
@@ -34,7 +34,7 @@ const humanCheckpointsBeforeMacRuns: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Some work must stay human: approving a client proposal, uploading to a portal, or confirming budget before anything sends. Operator steps live in the browser checklist — not as files copied onto your Mac — while Claude still runs locally for research and drafting.",
+        "Some work must stay human: approving a client proposal, uploading to a portal, or confirming budget before anything sends. Operator steps live in the browser checklist — not as files copied onto your computer — while Claude still runs locally for research and drafting.",
       ],
     },
     {
@@ -42,7 +42,7 @@ const humanCheckpointsBeforeMacRuns: ShowcaseArticle = {
       bullets: [
         "An amber “Your steps” panel lists each checkpoint with full instructions",
         "Workflow fields still collect names, dates, and paths as usual",
-        "Only checkpoint titles are appended to the Mac prompt as a short summary",
+        "Only checkpoint titles are appended to the computer prompt as a short summary",
         "Playbook files install to ~/.agent-witch; operator rules stay in the app",
       ],
     },

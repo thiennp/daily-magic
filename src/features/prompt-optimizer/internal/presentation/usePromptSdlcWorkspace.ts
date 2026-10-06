@@ -59,7 +59,7 @@ export const usePromptSdlcWorkspace = (fillExample: boolean) => {
       return;
     }
     if (needsMac && deviceId.length === 0) {
-      setErrorMessage("Choose a Mac for the writer.");
+      setErrorMessage("Choose a computer for the writer.");
       return;
     }
 

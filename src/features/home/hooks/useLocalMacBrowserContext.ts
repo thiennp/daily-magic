@@ -9,7 +9,7 @@ import {
 import useLocalMacHostname from "@/features/home/hooks/useLocalMacHostname";
 
 /**
- * Browser context for this Mac install identity.
+ * Browser context for this computer install identity.
  * Hostname/tokenHash come from the wake-server identity endpoint on macOS.
  */
 const useLocalMacBrowserContext = (): {

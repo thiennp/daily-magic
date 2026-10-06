@@ -26,13 +26,13 @@ const weeklyReportInFiveMinutes: ShowcaseArticle = {
     },
     {
       slug: "schedule-workflow-on-your-mac",
-      label: "Schedule the same workflow on your Mac",
+      label: "Schedule the same workflow on your computer",
     },
   ],
   sections: [
     {
       paragraphs: [
-        'Instead of writing a novel each Friday, you fill "Week of" and "Highlights". The app assembles the full instruction and sends it to a Mac — yours or a teammate\'s.',
+        'Instead of writing a novel each Friday, you fill "Week of" and "Highlights". The app assembles the full instruction and sends it to a computer — yours or a teammate\'s.',
       ],
     },
     {

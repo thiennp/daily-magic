@@ -42,7 +42,7 @@ The Projects list is visually consistent with the rest of AWC (TailAdmin surface
     "dimension": "Task completion & CTAs",
     "score": 63,
     "weight": 0.2,
-    "notes": "Search and project count present. \"New project\" lives at bottom of panel after scroll; no header-level primary action. \"Connect a Mac to edit\" only on some cards — easy to miss linkage for offline/no-Mac rows."
+    "notes": "Search and project count present. \"New project\" lives at bottom of panel after scroll; no header-level primary action. \"Connect a computer to edit\" only on some cards — easy to miss linkage for offline/no-Mac rows."
   },
   {
     "dimension": "Accessibility & interaction",
@@ -76,7 +76,7 @@ Weighted score: **52** (dimension scores × weights, rounded).
 | P07 | User vocabulary (Playbook vs Harness)      | fail    | Cards show "0 Harness · 0 Workflows · 0 Agents"                           |
 | P08 | Cloud vs Mac responsibility clear          | partial | `listHint` ACL copy correct but dense; competes with cards                |
 | P09 | Clear path to add project                  | partial | "New project" section at panel bottom (`AwcProjectsPanel`)                |
-| P10 | Clear path when no Mac linked              | partial | Helper "Connect a Mac to edit this project." on some cards only           |
+| P10 | Clear path when no computer linked         | partial | Helper "Connect a computer to edit this project." on some cards only      |
 | P11 | Card actions discoverable                  | pass    | Overflow menu on each card                                                |
 | P12 | Empty / loading / no-match states          | pass    | Implemented in `AwcProjectsListBody` (not exercised in capture)           |
 | P13 | Keyboard / SR basics on search & cards     | pass    | `aria-label` on search; card `aria-label` "Open project {name}"           |
@@ -108,7 +108,7 @@ Weighted score: **52** (dimension scores × weights, rounded).
     "title": "Align list metrics with product vocabulary",
     "severity": "medium",
     "rationale": "\"Harness\" on cards conflicts with philosophy (user-facing Playbook). Always-zero counts add noise.",
-    "suggestedDirection": "Rename to Playbook-aligned labels; hide the metrics row when all zero or replace with one line (e.g. \"Composition on Mac — open in Agent Witch Local\")."
+    "suggestedDirection": "Rename to Playbook-aligned labels; hide the metrics row when all zero or replace with one line (e.g. \"Composition on computer — open in Agent Witch Local\")."
   },
   {
     "id": "MF-04",
@@ -137,8 +137,8 @@ Weighted score: **52** (dimension scores × weights, rounded).
     "id": "NH-01",
     "title": "Sort and filter controls",
     "severity": "low",
-    "rationale": "Search alone does not help prioritize online Macs or recently used repos.",
-    "suggestedDirection": "Filter chips: Online / Offline / No Mac; sort by last activity or name."
+    "rationale": "Search alone does not help prioritize online computers or recently used repos.",
+    "suggestedDirection": "Filter chips: Online / Offline / No computer; sort by last activity or name."
   },
   {
     "id": "NH-02",
@@ -183,7 +183,7 @@ Weighted score: **52** (dimension scores × weights, rounded).
 ## Observations tied to implementation (read-only)
 
 - List composition: `ProjectsPageLayout` → `AwcProjectsPanel` → toolbar, grid (`AwcProjectsListBody`), bottom `SendTaskComposerCreateProjectForm`.
-- Presence copy built in `buildProjectDevicePresenceLabel.ts` (`Online here —`, `Offline —`, `No Mac linked`).
+- Presence copy built in `buildProjectDevicePresenceLabel.ts` (`Online here —`, `Offline —`, `No computer linked`).
 - Count line: `formatProjectCompositionCountsLine.ts` (Harness / Workflows / Agents).
 - Cowork hint: `AWC_PROJECT_COWORK_HELP_COPY.listHint` in panel.
 

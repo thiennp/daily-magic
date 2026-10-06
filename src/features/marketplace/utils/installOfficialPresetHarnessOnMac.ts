@@ -53,6 +53,6 @@ export const installOfficialPresetHarnessOnMac = async (input: {
 
   input.setBorrowImportStatus("done");
   input.setBorrowImportMessage(
-    `Requested install of ${detail.harness.name} on your Mac.`,
+    `Requested install of ${detail.harness.name} on your computer.`,
   );
 };

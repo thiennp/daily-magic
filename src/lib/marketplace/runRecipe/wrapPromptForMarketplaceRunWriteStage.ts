@@ -19,7 +19,7 @@ export const wrapPromptForMarketplaceRunWriteStage = (
     "",
     "---",
     "Marketplace vibe-coding run — write/implement stage.",
-    "Implement the feature slice on this Mac. Update the job report file as you work.",
+    "Implement the feature slice on this computer. Update the job report file as you work.",
     "Finish with one capability outcome for Library/Reports — not open-ended chat or quota UX.",
     "Do not emit [[NEXT_ACTIONS]]; the operator continues from Reports when needed.",
   ].join("\n");

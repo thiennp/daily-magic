@@ -2,7 +2,7 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 
 const whatPhoneCanDoAlone: ShowcaseArticle = {
   slug: "what-phone-can-do-alone",
-  title: "What your phone can do without your Mac",
+  title: "What your phone can do without your computer",
   subtitle:
     "Library, copy prompt, and team dispatch—right from a small screen.",
   category: "Common questions",
@@ -10,18 +10,18 @@ const whatPhoneCanDoAlone: ShowcaseArticle = {
   readMinutes: 4,
   whatYouNeed: [
     "Mobile browser on the Agent Witch app",
-    "To send: browser connected to the app + a Mac online to run the job",
-    "For team dispatch: a teammate's Mac as executor",
+    "To send: browser connected to the app + a computer online to run the job",
+    "For team dispatch: a teammate's computer as executor",
   ],
   tryNext: { label: "Library", href: "/projects?intent=library" },
   relatedShowcases: [
     {
       slug: "control-mac-from-phone",
-      label: "Control your Mac from your phone",
+      label: "Control your computer from your phone",
     },
     {
       slug: "phone-asks-coworker-mac-runs",
-      label: "When your Mac is offline — use a teammate's",
+      label: "When your computer is offline — use a teammate's",
     },
     {
       slug: "when-executor-mac-is-offline",
@@ -31,7 +31,7 @@ const whatPhoneCanDoAlone: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Mobile-first does not mean your phone runs Claude on your laptop files while you are on the train. It means the app is usable on a small screen — and you can prep, copy, or ask a teammate's Mac to run work when yours is closed.",
+        "Mobile-first does not mean your phone runs Claude on your laptop files while you are on the train. It means the app is usable on a small screen — and you can prep, copy, or ask a teammate's computer to run work when yours is closed.",
       ],
     },
     {
@@ -40,13 +40,13 @@ const whatPhoneCanDoAlone: ShowcaseArticle = {
         "Browse library and marketplace playbooks",
         "Copy a prompt to paste elsewhere",
         "Save a marketplace capability to your library",
-        "Queue a task for when your Mac reconnects",
+        "Queue a task for when your computer reconnects",
         "Request a job via team dispatch to someone online",
         "Review history and run again when executor is available",
       ],
     },
     {
-      heading: "Needs a Mac online somewhere",
+      heading: "Needs a computer online somewhere",
       bullets: [
         "Send to your own Mac — it must be connected and awake",
         "Tasks that read local folders or repos",

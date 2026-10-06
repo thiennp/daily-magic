@@ -78,7 +78,7 @@ export default function HomeConnectedMacsDeviceList({
         <HomeConnectedMacDeviceRow
           key={device.id}
           device={device}
-          displayName={displayNameById.get(device.id) ?? "Your Mac"}
+          displayName={displayNameById.get(device.id) ?? "Your computer"}
           serverInstallBundleVersion={serverInstallBundleVersion}
           localHostname={localHostname}
           isThisMac={device.id === thisMacIdentity.thisMacDeviceId}
@@ -90,7 +90,7 @@ export default function HomeConnectedMacsDeviceList({
           onDelete={onDelete}
         />
       ))}
-      {/* Dedupe: when a device row is already This Mac, it owns the Connect CTA. */}
+      {/* Dedupe: when a device row is already This computer, it owns the Connect CTA. */}
       {shouldShowConnectThisMac && thisMacIdentity.thisMacDeviceId === null ? (
         <ConnectThisMacRow
           installCommand={installCommand}

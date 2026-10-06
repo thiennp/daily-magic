@@ -67,7 +67,7 @@ Docs và sales **không** viết như memory/improvements đã hoàn hảo. Bả
 
 ## English summary (for mixed teams)
 
-**Core job:** trusted agent on your Mac → browser visibility → reuse. **Pillars:** easy authoring, learn-from-usage (human approval), efficient memory (user wording), team learning. **Terms:** Mac, Task, Run, Playbook, Reports, Library. **Brand:** Agent Witch @ agentwitch.com — not “Daily Magic” as product name.
+**Core job:** trusted agent on your computer → browser visibility → reuse. **Pillars:** easy authoring, learn-from-usage (human approval), efficient memory (user wording), team learning. **Terms:** Mac, Task, Run, Playbook, Reports, Library. **Brand:** Agent Witch @ agentwitch.com — not “Daily Magic” as product name.
 
 ---
 

@@ -28,7 +28,7 @@ describe("resolveAgentRunDetailOutcomeMessage (REPORTS-008)", () => {
         denialReason: null,
         reportSummary: null,
       }),
-    ).toContain("failed on your Mac");
+    ).toContain("failed on your computer");
   });
 
   it("shows locked honesty summary when result output exists (ensure-writer timeout)", () => {

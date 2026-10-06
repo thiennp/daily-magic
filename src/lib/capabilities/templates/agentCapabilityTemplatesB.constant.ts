@@ -28,7 +28,7 @@ export const AGENT_CAPABILITY_TEMPLATES_B: readonly AgentCapabilityTemplate[] =
       "file-organizer",
       "Personal",
       "File organizer",
-      "Plan folder cleanup and renaming on your Mac.",
+      "Plan folder cleanup and renaming on your computer.",
       "Propose a file organization plan for this folder situation on my Mac.",
     ),
     buildAgentTemplate(

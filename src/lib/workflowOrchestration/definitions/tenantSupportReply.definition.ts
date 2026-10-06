@@ -9,7 +9,7 @@ const TRIAGE_AND_DRAFT_REPLY = `Continue from the operator’s context checkpoin
 Read tenantMessage, propertyName, issueType, leaseNotesPath, replyTone, and tenantLogPath from the workflow form.
 
 ## Triage and draft (this step only)
-Open leaseNotesPath on this Mac and read policies relevant to issueType.
+Open leaseNotesPath on this computer and read policies relevant to issueType.
 Classify urgency (emergency vs routine). List verified facts and missing information from the tenant.
 Draft a send-ready reply that matches replyTone (default: professional, calm).
 Ground rights and timelines only in lease notes — no liability admissions or illegal promises.
@@ -21,7 +21,7 @@ const REVISE_AND_PREPARE_LOG = `Continue from the approval checkpoint response a
 
 ## Revise or prepare log (this step only)
 If the operator asked for edits, revise the draft and show the updated version in [[PROGRESS]].
-If the operator approved, prepare a concise log line for tenantLogPath (read or append on this Mac when the path is set).
+If the operator approved, prepare a concise log line for tenantLogPath (read or append on this computer when the path is set).
 Do not send through email or tenant portals; the operator sends manually at the final checkpoint.`;
 
 export const OFFICIAL_WORKFLOW_DEFINITION: OfficialWorkflowDefinition = {

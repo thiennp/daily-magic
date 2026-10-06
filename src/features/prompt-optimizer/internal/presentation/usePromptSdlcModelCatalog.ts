@@ -62,9 +62,9 @@ export const usePromptSdlcModelCatalog = (): {
       setMacs(readPromptSdlcMacOptions(deviceResult));
       const modelNote =
         localResponse === null
-          ? "This Mac's bridge is not reachable, so installed writers are hidden."
+          ? "This computer's bridge is not reachable, so installed writers are hidden."
           : localResult === null
-            ? "This Mac's bridge does not list prompt optimizer models yet, so installed writers are hidden."
+            ? "This computer's bridge does not list prompt optimizer models yet, so installed writers are hidden."
             : "";
       setModelNote(modelNote);
       if (defaults !== null) {

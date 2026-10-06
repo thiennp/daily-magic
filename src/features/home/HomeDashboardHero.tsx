@@ -47,7 +47,7 @@ export default function HomeDashboardHero({
         Welcome back, {displayName}
       </h1>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Run agents on your Mac from here. Signed in as {user.email} (
+        Run agents on your computer from here. Signed in as {user.email} (
         {formatGlobalRole(user.globalRole)}).
       </p>
       <HomeMacStatusBanner
@@ -81,7 +81,7 @@ export default function HomeDashboardHero({
         <HomeRunningJobsPanel />
         <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
           {shouldShowConnectThisMac
-            ? "Connect this Mac links the computer you are using now."
+            ? "Connect this computer links the computer you are using now."
             : "Having trouble? Expand Your setup below, or open Mac settings above."}
         </p>
       </div>

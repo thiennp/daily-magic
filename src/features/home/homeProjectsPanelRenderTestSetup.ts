@@ -59,10 +59,10 @@ vi.mock("@/features/home/hooks/useLocalMacBrowserContext", () => ({
 
 vi.mock("@/features/projects/hooks/useAwcProjectDevicePresentation", () => ({
   default: () => ({
-    presence: { statusIcon: "offline" as const, text: "No Mac linked" },
+    presence: { statusIcon: "offline" as const, text: "No computer linked" },
     editCta: {
       state: "unknown_device" as const,
-      buttonLabel: "Edit on this Mac",
+      buttonLabel: "Edit on this computer",
       href: null,
       helperText: null,
     },

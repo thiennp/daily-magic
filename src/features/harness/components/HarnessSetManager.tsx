@@ -29,7 +29,7 @@ export default function HarnessSetManager({
     <div className="mt-5 space-y-4">
       <label className="block max-w-sm text-sm">
         <span className="font-medium text-gray-800 dark:text-white/90">
-          Which AI runs on your Mac?
+          Which AI runs on your computer?
         </span>
         <select
           value={writerAgent}
@@ -72,7 +72,8 @@ export default function HarnessSetManager({
         </>
       ) : (
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          No bundles on this Mac yet. Install one from Library or Marketplace.
+          No bundles on this computer yet. Install one from Library or
+          Marketplace.
         </p>
       )}
     </div>

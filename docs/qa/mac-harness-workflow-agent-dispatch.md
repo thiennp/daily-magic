@@ -3,14 +3,14 @@
 ## Query aliases
 
 - harness workflow agent gui xuong mac bang cach nao
-- how is harness installed on Mac
+- how is harness installed on computer
 - marketplace install vs save to library Mac
 - command.claude.run WebSocket dispatch
 - HARNESS_REQUEST harness.request
 
 ## Short answer
 
-**Harness** (rules/skills/commands under `~/.agent-witch/harness/`) is pushed over the **Agent Witch WebSocket** as `harness.request` messages; the Mac client (**AWI**) runs a writer CLI to create the set and write files. **Agent runs** and **workflow agent steps** do not copy the whole workflow to the Mac: metadata stays in **AWC** (Neon); each run sends a **`command.claude.run`** with a built **prompt** (and optional `projectFolderPath`, `capabilityId`, `agentRunId`). If the Mac is offline but recently seen, queueable messages go to the **dispatch outbox** and flush when the socket reconnects (ADR 0005).
+**Harness** (rules/skills/commands under `~/.agent-witch/harness/`) is pushed over the **Agent Witch WebSocket** as `harness.request` messages; the computer client (**AWI**) runs a writer CLI to create the set and write files. **Agent runs** and **workflow agent steps** do not copy the whole workflow to the Mac: metadata stays in **AWC** (Neon); each run sends a **`command.claude.run`** with a built **prompt** (and optional `projectFolderPath`, `capabilityId`, `agentRunId`). If the computer is offline but recently seen, queueable messages go to the **dispatch outbox** and flush when the socket reconnects (ADR 0005).
 
 ## Details
 
@@ -27,23 +27,23 @@ See `src/features/agent-witch/README.md` and ADR **0002** (WebSocket), **0005** 
 
 ### Harness — what moves and when
 
-| User action                                        | Cloud                                                                                                     | Mac                                                                                     |
-| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| **Marketplace → Install** (device + **projectId**) | `installOfficialPresetListing` → `bindMarketplaceInstallToProject` (`project_components`)                 | Pull playbook into repo on Mac; no global `harness.request` bundle for official presets |
-| **Save to my library** (template fork)             | `createCapabilityFromTemplate` → `requestCapabilityTemplateHarnessInstall` (unless `deferHarnessInstall`) | Same bundle push when a target device is chosen                                         |
-| **Run on your Mac** (harness catalog)              | Local wake API `POST …/harness/install` on **AWB** when browser and Mac share the machine                 | Bridge forwards harness install without cloud WS                                        |
+| User action                                        | Cloud                                                                                                     | Mac                                                                                          |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| **Marketplace → Install** (device + **projectId**) | `installOfficialPresetListing` → `bindMarketplaceInstallToProject` (`project_components`)                 | Pull playbook into repo on computer; no global `harness.request` bundle for official presets |
+| **Save to my library** (template fork)             | `createCapabilityFromTemplate` → `requestCapabilityTemplateHarnessInstall` (unless `deferHarnessInstall`) | Same bundle push when a target device is chosen                                              |
+| **Run on your computer** (harness catalog)         | Local wake API `POST …/harness/install` on **AWB** when browser and Mac share the machine                 | Bridge forwards harness install without cloud WS                                             |
 
 Cloud push: `buildHarnessInstallDispatchMessage` sends **`installMethod: "deterministic-bundle"`** with inline `bundle` or `bundleFetch` (HTTPS gzip artifact when the JSON exceeds ~96 KiB). Mac: `runDeterministicHarnessInstall` → `applyHarnessInstallLocally` (no writer CLI). Legacy dashboard harness UI still uses `instruction` + writer CLI.
 
 Harness is **files on disk**, not the execution graph.
 
-### Workflow — what stays in cloud vs what runs on Mac
+### Workflow — what stays in cloud vs what runs on computer
 
-| Stored in AWC (Postgres)                                 | Sent per agent step                                                 |
-| -------------------------------------------------------- | ------------------------------------------------------------------- |
-| Capability + form values                                 | One **prompt** from `renderOfficialWorkflowAgentPrompt`             |
-| Official graph (`officialWorkflowDefinition` on the run) | `dispatchClaudeRunForDashboardUser` → **`command.claude.run`**      |
-| Human checkpoints                                        | **No Mac dispatch** — browser modal; responses persisted on the run |
+| Stored in AWC (Postgres)                                 | Sent per agent step                                                      |
+| -------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Capability + form values                                 | One **prompt** from `renderOfficialWorkflowAgentPrompt`                  |
+| Official graph (`officialWorkflowDefinition` on the run) | `dispatchClaudeRunForDashboardUser` → **`command.claude.run`**           |
+| Human checkpoints                                        | **No computer dispatch** — browser modal; responses persisted on the run |
 
 Orchestration: `src/lib/workflowOrchestration/` (`startOfficialWorkflowRun`, `runOfficialWorkflowAgentStep`, `continueOfficialWorkflowRun`). User-built workflows without an official graph still dispatch as **one** agent run with operator steps embedded in the prompt (see `docs/product/workflow-builder-form-and-graph.md`).
 

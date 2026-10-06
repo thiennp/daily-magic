@@ -1,15 +1,15 @@
 # Agent Witch Local — Connect version contract
 
-Human UI classifies each paired Mac for Connect using the install bundle
+Human UI classifies each paired computer for Connect using the install bundle
 version already stored on the device record.
 
 ## Fields
 
-| Field | Where | Meaning |
-| --- | --- | --- |
-| `installBundleVersion` | Heartbeat / `register-install` → `agent_witch_devices.install_bundle_version` → `GET /api/agent-witch/devices` per device | Bundle string the Local reported (integer string). Old installs omit it. |
-| `serverInstallBundleVersion` | Top-level on `GET /api/agent-witch/devices` | Current cloud-shipped bundle. |
-| `connectVersionStatus` | Per device on `GET /api/agent-witch/devices` | `"ok"` \| `"too_old"` from the shared classifier (server-computed). |
+| Field                        | Where                                                                                                                     | Meaning                                                                  |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `installBundleVersion`       | Heartbeat / `register-install` → `agent_witch_devices.install_bundle_version` → `GET /api/agent-witch/devices` per device | Bundle string the Local reported (integer string). Old installs omit it. |
+| `serverInstallBundleVersion` | Top-level on `GET /api/agent-witch/devices`                                                                               | Current cloud-shipped bundle.                                            |
+| `connectVersionStatus`       | Per device on `GET /api/agent-witch/devices`                                                                              | `"ok"` \| `"too_old"` from the shared classifier (server-computed).      |
 
 ## Shared classifier
 

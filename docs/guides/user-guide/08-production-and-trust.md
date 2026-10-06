@@ -12,7 +12,7 @@ Trust boundaries below enable all [four pillars](00-philosophy-and-vocabulary.md
 
 | Name                              | Meaning                                                             |
 | --------------------------------- | ------------------------------------------------------------------- |
-| **Agent Witch**                   | The product you use in the browser and on your Mac                  |
+| **Agent Witch**                   | The product you use in the browser and on your computer             |
 | **daily-magic**                   | Historical git repository name only—same codebase                   |
 | **www.agentwitch.com**            | Production **console** (AWC) and APIs                               |
 | **CHECK24 `daily-magic.*` hosts** | Not Agent Witch production unless your org explicitly deploys there |
@@ -43,7 +43,7 @@ Full table: [Agent Witch deployables](../../product/agent-witch-deployables.md).
 ```text
 Browser (you)  ──HTTPS──►  Agent Witch Cloud + Postgres (runs, workflows, accounts)
                               │
-                              │ WebSocket hub (paired Mac only)
+                              │ WebSocket hub (paired computer only)
                               ▼
 Mac (AWI)  ──►  real shell / writer CLI in folders YOU chose
               ──►  harness files under ~/.agent-witch/harness/
@@ -62,7 +62,7 @@ Dispatch overview: [Mac harness, workflow, and agent dispatch](../../qa/mac-harn
 
 Claiming a **Mac** creates a **pairing token** on the machine. The cloud stores a **hash** only. The browser learns “this computer” by comparing that hash to the local **bridge** `/identity` probe—not by guessing from IP or hostname.
 
-- You must run **Connect this Mac** while signed in to link an install to your account.
+- You must run **Connect this computer** while signed in to link an install to your account.
 - Another person’s account on the same physical Mac gets a different token; hostname alone is not proof of ownership.
 
 [How AWC knows this computer](../../qa/awc-how-browser-knows-this-computer.md) · [AWB localhost identity and CORS](../../qa/awb-localhost-identity-and-cors.md).
@@ -78,7 +78,7 @@ Agent Witch commits to **honest** progress labels on live **Runs**:
 
 Locked product strings: [Run UX honesty](../../qa/run-ux-honesty-strings.md).
 
-The **New task** composer uses the same honesty for **Mac** readiness: if the Mac is offline, reconnecting, needs an update, or unreachable (DNS), **Send** is blocked with a clear reason—not a silent queue failure.
+The **New task** composer uses the same honesty for **Mac** readiness: if the computer is offline, reconnecting, needs an update, or unreachable (DNS), **Send** is blocked with a clear reason—not a silent queue failure.
 
 [Send readiness reason codes](../../agent-witch/send-readiness-reason-codes.md).
 
@@ -107,7 +107,7 @@ Writer routing (continuation vs memory limits): [Writer dispatch cascade routing
 - **Workflow uploads** (PDFs/images) stored server-side for a bounded time with signed agent download URLs ([workflow file upload](../../qa/workflow-file-upload-and-semantic-output.md)).
 - **Session cookies** for your Agent Witch account—same as any SaaS console.
 
-Agent Witch is built for teams who accept that **running an agent on a Mac is equivalent to giving a developer shell access in the chosen folder**, mediated by your prompts and playbooks.
+Agent Witch is built for teams who accept that **running an agent on a computer is equivalent to giving a developer shell access in the chosen folder**, mediated by your prompts and playbooks.
 
 ### Pillars and data (honest summary)
 
@@ -122,7 +122,7 @@ Agent Witch is built for teams who accept that **running an agent on a Mac is eq
 
 ## Multi-instance production (brief)
 
-Agent Witch Cloud may run on more than one server replica. **Writer dispatch** requires the live Mac WebSocket on the node handling your send request. During deploys or load balancing, you may briefly see **Reconnecting** even when AWI on the Mac is healthy. The product fails closed rather than dropping **Tasks** on the wrong node. A second deploy that starts while the first is still applying database updates waits and continues, instead of failing because that update was already saved.
+Agent Witch Cloud may run on more than one server replica. **Writer dispatch** requires the live Mac WebSocket on the node handling your send request. During deploys or load balancing, you may briefly see **Reconnecting** even when AWI on the computer is healthy. The product fails closed rather than dropping **Tasks** on the wrong node. A second deploy that starts while the first is still applying database updates waits and continues, instead of failing because that update was already saved.
 
 User impact and mitigations: [AWC Mac reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md) · OPEN-002 in [Agent Witch KNOWN_ISSUES](../../../src/features/agent-witch/KNOWN_ISSUES.md).
 
@@ -130,7 +130,7 @@ User impact and mitigations: [AWC Mac reconnecting vs local live](../../qa/awc-m
 
 ## Install bundle updates (trust + safety)
 
-The cloud publishes an **install bundle version**; your **Mac** reports what it runs. When the Mac is behind, the composer blocks **Send** with **Update needed** until you update—so you are not dispatching with known-fixed client bugs.
+The cloud publishes an **install bundle version**; your **Mac** reports what it runs. When the computer is behind, the composer blocks **Send** with **Update needed** until you update—so you are not dispatching with known-fixed client bugs.
 
 Update flows use the local bridge and LaunchAgents; a bad update historically could break the plist (AGENT-067)—modern bundles heal on start. See [Update local and LaunchAgent plist](../../qa/awi-update-local-launchagent-plist.md).
 
@@ -146,7 +146,7 @@ Update flows use the local bridge and LaunchAgents; a bad update historically co
 
 ## Query aliases
 
-- Agent Witch production trust what runs on Mac vs cloud
+- Agent Witch production trust what runs on computer vs cloud
 - www.agentwitch.com security pairing token harness
 - honest run UX send blocked Mac offline
 - Cursor Cloud vs Mac dispatch Agent Witch

@@ -4,7 +4,7 @@
 
 **Agent Witch production** runs as a **long-lived Node process** with the custom WebSocket server (`npm start` → `tsx server.ts`), typically on **Railway** using the repo `Dockerfile` and `railway.toml` (migrations in `preDeployCommand`, health check `/api/health`). The production image must include `apps/` and `packages/` so `tsx` can resolve `@agent-witch/*` path aliases at runtime (see `tsconfig.json` `paths`).
 
-See **ADR 0006** (`docs/adr/0006-production-hosting-and-neon.md`) and **ADR 0002** for why serverless-only deploys do not host the Mac bridge on `wss://www.agentwitch.com/api/agent-witch/ws`.
+See **ADR 0006** (`docs/adr/0006-production-hosting-and-neon.md`) and **ADR 0002** for why serverless-only deploys do not host the computer bridge on `wss://www.agentwitch.com/api/agent-witch/ws`.
 
 Canonical origin: `https://www.agentwitch.com` (`docs/product/repo-name-and-hosting.md`).
 
@@ -17,7 +17,7 @@ Railway probes `GET /api/health` (`healthcheckPath` in `railway.toml`, timeout 3
 - `release.commitSha` is the first non-empty of `RAILWAY_GIT_COMMIT_SHA`, `VERCEL_GIT_COMMIT_SHA`, and `GITHUB_SHA`.
 - `deviceSupersessionMigrationApplied` is true when `schema_migrations` contains `026-agent-witch-device-supersession.sql`. The result is cached for 60 seconds. A lookup error is reported as `false`.
 
-A 200 does not mean Next or the Mac WebSocket is ready. Other routes return **503** `Service starting` until `next.prepare()` finishes, and WebSocket upgrades are dropped until then. Neon connectivity is `GET /api/db/health`, which is a Next route and can 503 during startup.
+A 200 does not mean Next or the computer WebSocket is ready. Other routes return **503** `Service starting` until `next.prepare()` finishes, and WebSocket upgrades are dropped until then. Neon connectivity is `GET /api/db/health`, which is a Next route and can 503 during startup.
 
 ```bash
 curl -sS https://www.agentwitch.com/api/health
@@ -53,7 +53,7 @@ Set `DATABASE_URL` in the provider’s environment settings, then redeploy.
 
 ## Vercel (optional / previews)
 
-`vercel.json` is a minimal Next.js config. **Vercel alone does not replace** `server.ts` for Mac WebSocket upgrades unless you run an equivalent long-lived Node entry on the same origin the Mac uses.
+`vercel.json` is a minimal Next.js config. **Vercel alone does not replace** `server.ts` for Mac WebSocket upgrades unless you run an equivalent long-lived Node entry on the same origin the computer uses.
 
 For Vercel + Neon integration (preview UI, env pull):
 

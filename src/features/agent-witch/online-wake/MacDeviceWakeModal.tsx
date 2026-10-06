@@ -50,7 +50,7 @@ export default function MacDeviceWakeModal({
       if (!result.reachable) {
         setShowWakeCommandAfterFailedRestart(true);
         setLocalRestartMessage(
-          "The local wake server is not running (the Mac client process may have stopped). Run wake.sh in Terminal on this Mac.",
+          "The local wake server is not running (the computer client process may have stopped). Run wake.sh in Terminal on this computer.",
         );
         return;
       }
@@ -67,7 +67,9 @@ export default function MacDeviceWakeModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-md p-6">
       <h2 className="pr-10 text-lg font-semibold text-gray-900 dark:text-white/90">
-        {isThisMac ? "Start Agent Witch on this Mac" : "Turn on this Mac"}
+        {isThisMac
+          ? "Start Agent Witch on this computer"
+          : "Turn on this computer"}
       </h2>
       <MacDeviceWakeOfflineLede
         displayName={displayName}
@@ -84,7 +86,7 @@ export default function MacDeviceWakeModal({
           >
             {isRestartingLocally
               ? "Restarting…"
-              : "Restart Agent Witch on this Mac"}
+              : "Restart Agent Witch on this computer"}
           </Button>
           {localRestartMessage !== null ? (
             <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
@@ -101,7 +103,7 @@ export default function MacDeviceWakeModal({
           }}
           className="mt-4 text-sm font-medium text-brand-700 hover:underline dark:text-brand-300"
         >
-          Request restart when this Mac reconnects
+          Request restart when this computer reconnects
         </button>
       ) : null}
     </Modal>

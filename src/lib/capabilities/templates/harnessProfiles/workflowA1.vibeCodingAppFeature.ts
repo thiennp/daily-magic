@@ -7,7 +7,7 @@ export const VIBE_CODING_APP_FEATURE_PRESET: PresetHarnessSeed = {
   name: "Add vibe coding app feature",
   category: "Engineering",
   description:
-    "Turn a vibe brief into a small app feature on your Mac — clarify first, decide architecture in plain language, then ship with knowledge and tests.",
+    "Turn a vibe brief into a small app feature on your computer — clarify first, decide architecture in plain language, then ship with knowledge and tests.",
   exampleRequest: VIBE_CODING_APP_FEATURE_EXAMPLE_REQUEST,
   operatorSteps: VIBE_CODING_APP_FEATURE_OPERATOR_STEPS,
   profile: {

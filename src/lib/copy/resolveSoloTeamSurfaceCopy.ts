@@ -5,7 +5,7 @@ export interface SoloTeamCopyInput {
 export const resolveLibraryPageSubtitle = (input: SoloTeamCopyInput): string =>
   input.teamNavEnabled
     ? "Shared workflows your team can run — multi-user ownership."
-    : "Your saved workflows — for you alone. Then run them on your Mac.";
+    : "Your saved workflows — for you alone. Then run them on your computer.";
 
 export const resolveLibrarySignedInEmptyBody = (
   input: SoloTeamCopyInput,
@@ -17,7 +17,7 @@ export const resolveLibrarySignedInEmptyBody = (
 export const resolveReportsPageSubtitle = (input: SoloTeamCopyInput): string =>
   input.teamNavEnabled
     ? "Jobs across shared runners — status, named approvals, and results."
-    : "History of jobs you sent to your Mac — status, approvals, and results.";
+    : "History of jobs you sent to your computer — status, approvals, and results.";
 
 export const resolveReportsSignedInEmptyBody = (
   input: SoloTeamCopyInput,

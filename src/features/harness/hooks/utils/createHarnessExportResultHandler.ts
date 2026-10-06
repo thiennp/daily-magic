@@ -74,7 +74,7 @@ export const createHarnessExportResultHandler = (input: {
 
     input.setBorrowImportStatus("done");
     input.setBorrowImportMessage(
-      `Requested import of ${payload.sets.length} bundle(s) to your Mac.`,
+      `Requested import of ${payload.sets.length} bundle(s) to your computer.`,
     );
   };
 };

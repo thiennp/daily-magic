@@ -33,7 +33,7 @@ You encounter capabilities when you:
 - Publish or edit a workflow (create/edit forms, optional outputs).
 - Browse team directory or admin tooling (company setups).
 
-Capabilities are **cloud** objects. They do not execute code on the Mac by themselves—they describe what the next **Task** or workflow step will send.
+Capabilities are **cloud** objects. They do not execute code on the computer by themselves—they describe what the next **Task** or workflow step will send.
 
 ---
 
@@ -70,7 +70,7 @@ Marketplace **Install** always asks for a **project** and a **Mac**. The listing
 
 **Start a task** on the install success screen opens New task on that same project, not on Default.
 
-On the Mac, open the same **project** in Agent Witch Local. **Pull into repo** writes the linked playbook into that folder’s `.cursor` tree. If the playbook is already on the Mac, you confirm the sets and pull. If it is only linked in Console, the same button still writes the official playbook files. The project folder must sit under your home directory.
+On the computer, open the same **project** in Agent Witch Local. **Pull into repo** writes the linked playbook into that folder’s `.cursor` tree. If the playbook is already on the computer, you confirm the sets and pull. If it is only linked in Console, the same button still writes the official playbook files. The project folder must sit under your home directory.
 
 Each marketplace card includes a **How to use** section (steps, prerequisites, supported writers: Anthropic, OpenAI, Cursor, Google).
 
@@ -104,7 +104,7 @@ When you save a workflow to library, you are saving a **playbook** you can rerun
 
 The console cannot browse your Mac’s disk directly. Set **repository / project folder** via:
 
-- **Agent Witch Local** on the Mac (`127.0.0.1:43347`), or
+- **Agent Witch Local** on the computer (`127.0.0.1:43347`), or
 - Local **bridge** folder picker when the browser runs on that **Mac**.
 
 See [AWC project folder picker](../../qa/awc-project-folder-path-picker.md) and [AWC vs AWL projects source of truth](../../qa/awc-awl-projects-source-of-truth.md).
@@ -115,22 +115,22 @@ Wrong folder → failed or misleading **Runs**; fix the path in settings or the 
 
 ## Local hints vs cloud improvements (pillar 2 vs 3)
 
-| Surface                                             | What it does                                                                                | You approve?                                                    |
-| --------------------------------------------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| **Agent Witch on this Mac → Knowledge** suggestions | Counts how often snippets or errors repeat; may suggest a **Playbook** step or harness rule | Yes—nothing installs until you act on the Mac or in the Console |
-| **Capabilities → improvements** (Console)           | Proposed new capability version from feedback                                               | Yes—accept or reject before publish                             |
+| Surface                                                  | What it does                                                                                | You approve?                                                         |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| **Agent Witch on this computer → Knowledge** suggestions | Counts how often snippets or errors repeat; may suggest a **Playbook** step or harness rule | Yes—nothing installs until you act on the computer or in the Console |
+| **Capabilities → improvements** (Console)                | Proposed new capability version from feedback                                               | Yes—accept or reject before publish                                  |
 
-Saving a **Playbook** from a **Run** is separate from both: you name what worked; the Mac does not silently rewrite harness files when a suggestion appears ([Chapter 4](04-mac-connect-and-bridge.md#local-knowledge-mac-app--efficient-memory), [Chapter 10 dev — memory loop](../developer-guide/10-learning-memory-and-improvements.md)).
+Saving a **Playbook** from a **Run** is separate from both: you name what worked; the computer does not silently rewrite harness files when a suggestion appears ([Chapter 4](04-mac-connect-and-bridge.md#local-knowledge-mac-app--efficient-memory), [Chapter 10 dev — memory loop](../developer-guide/10-learning-memory-and-improvements.md)).
 
 ---
 
 ## What to defer until you need it
 
-| Defer                          | Reach for when                    |
-| ------------------------------ | --------------------------------- |
-| Authoring marketplace listings | You own team standards            |
-| Deep harness file editing      | You outgrow UI install            |
-| Cursor Cloud dispatch          | No Mac available (explicit setup) |
+| Defer                          | Reach for when                         |
+| ------------------------------ | -------------------------------------- |
+| Authoring marketplace listings | You own team standards                 |
+| Deep harness file editing      | You outgrow UI install                 |
+| Cursor Cloud dispatch          | No computer available (explicit setup) |
 
 Solo makers: library + one installed playbook + [Chapter 5](05-tasks-dispatch-and-runs.md) covers most weeks.
 
@@ -148,7 +148,7 @@ Solo makers: library + one installed playbook + [Chapter 5](05-tasks-dispatch-an
 
 - Agent Witch library playbooks capabilities marketplace
 - save to library run again fork workflow
-- install playbook on Mac harness
+- install playbook on computer harness
 - guest library localStorage sign in sync
 - capability vs workflow vs playbook user guide
 - thu vien Agent Witch, playbook luu lai chay lai

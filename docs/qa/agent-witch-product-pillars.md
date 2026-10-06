@@ -11,7 +11,7 @@
 
 ## Short answer
 
-Agent Witch’s **core job** is unchanged: run a trusted agent on a Mac you control (or a teammate’s), see what happened in the browser, and reuse what worked (**Mac** · **Task** · **Run** · **Playbook**). **Four pillars** describe how the product gets better over time: (1) **easy authoring**, (2) **learn from usage**, (3) **efficient memory**, (4) **team learning**. They stack on the core loop—they do not replace it. Full table, engineering focus, and honest “shipped vs north star” notes live in [product/product-pillars.md](../product/product-pillars.md).
+Agent Witch’s **core job** is unchanged: run a trusted agent on a computer you control (or a teammate’s), see what happened in the browser, and reuse what worked (**Mac** · **Task** · **Run** · **Playbook**). **Four pillars** describe how the product gets better over time: (1) **easy authoring**, (2) **learn from usage**, (3) **efficient memory**, (4) **team learning**. They stack on the core loop—they do not replace it. Full table, engineering focus, and honest “shipped vs north star” notes live in [product/product-pillars.md](../product/product-pillars.md).
 
 ## Details
 

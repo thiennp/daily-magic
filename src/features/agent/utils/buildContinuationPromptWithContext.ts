@@ -43,7 +43,7 @@ export const buildContinuationPromptWithContext = (input: {
     .join("\n\n");
 
   return [
-    "Continue the same task on this Mac using the prior conversation as context.",
+    "Continue the same task on this computer using the prior conversation as context.",
     "",
     "<prior_context>",
     transcript,

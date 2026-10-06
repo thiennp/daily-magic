@@ -7,7 +7,7 @@ export const LOCAL_BUSINESS_GOOGLE_POST_WORKFLOW: WorkflowCapabilityTemplate =
     "local-business-google-post",
     "Local",
     "Local business Google post",
-    "Draft a Google Business Profile post for hours, offers, or events — dedupe against your Mac history file, approve copy, then you publish.",
+    "Draft a Google Business Profile post for hours, offers, or events — dedupe against your computer history file, approve copy, then you publish.",
     LOCAL_BUSINESS_GOOGLE_POST_EXAMPLE_REQUEST,
     [
       ["businessName", "Business name", "text"],
@@ -16,7 +16,7 @@ export const LOCAL_BUSINESS_GOOGLE_POST_WORKFLOW: WorkflowCapabilityTemplate =
       ["hoursOrOffer", "Hours change, offer, or event dates", "textarea"],
       [
         "postHistoryPath",
-        "Post history file on your Mac (JSON or markdown)",
+        "Post history file on your computer (JSON or markdown)",
         "text",
       ],
     ],

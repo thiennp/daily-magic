@@ -3,7 +3,7 @@ export const LOCAL_BUSINESS_GOOGLE_POST_EXAMPLE_REQUEST = `Draft a Google Busine
 Read businessName, businessType, postTopic, hoursOrOffer, and postHistoryPath from the workflow form.
 
 ## Load history and dedupe (this step only)
-Load postHistoryPath on this Mac if it exists; if missing, note that you will help create the first entry after publish.
+Load postHistoryPath on this computer if it exists; if missing, note that you will help create the first entry after publish.
 Scan recent entries and avoid reusing hooks, offers, or angles from the last few posts.
 Summarize dedupe notes in [[PROGRESS]].
 

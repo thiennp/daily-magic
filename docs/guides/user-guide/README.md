@@ -14,11 +14,11 @@
 | 1   | [01-getting-started.md](01-getting-started.md)                               | First sign-in, install Mac client, first successful run                                              |
 | 2   | [02-accounts-and-sign-in.md](02-accounts-and-sign-in.md)                     | Accounts, teams, Mac pairing from the browser                                                        |
 | 3   | [03-home-and-navigation.md](03-home-and-navigation.md)                       | Home, Projects, Runs; New task inside a project; what computer status means                          |
-| 4   | [04-mac-connect-and-bridge.md](04-mac-connect-and-bridge.md)                 | Connect this Mac, AWL on `:43347`, updates, wake/bridge                                              |
+| 4   | [04-mac-connect-and-bridge.md](04-mac-connect-and-bridge.md)                 | Connect this computer, AWL on `:43347`, updates, wake/bridge                                         |
 | 5   | [05-tasks-dispatch-and-runs.md](05-tasks-dispatch-and-runs.md)               | Composer, folder picker, live terminal, run again                                                    |
 | 6   | [06-workflows-and-checkpoints.md](06-workflows-and-checkpoints.md)           | Official workflows, human checkpoints, retries                                                       |
 | 7   | [07-capabilities-library-playbooks.md](07-capabilities-library-playbooks.md) | Capabilities, saved playbooks, team templates                                                        |
-| 8   | [08-production-and-trust.md](08-production-and-trust.md)                     | What runs on your Mac vs cloud; trust boundaries                                                     |
+| 8   | [08-production-and-trust.md](08-production-and-trust.md)                     | What runs on your computer vs cloud; trust boundaries                                                |
 | 9   | [09-troubleshooting.md](09-troubleshooting.md)                               | Offline Mac, reconnecting, DNS, bundle update, FAQ links                                             |
 
 ## Query aliases (RAG)

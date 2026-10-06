@@ -6,7 +6,7 @@ export const AGENT_WITCH_ACTIVE_THRESHOLD_MS =
 
 /**
  * How long a heartbeat still counts. 6× the 30s interval (180s) is double the
- * old 3× window so one delayed check-in does not flip the Mac to offline.
+ * old 3× window so one delayed check-in does not flip the computer to offline.
  */
 export const AGENT_WITCH_ONLINE_THRESHOLD_MS =
   AGENT_WITCH_HEARTBEAT_INTERVAL_MS * 6;

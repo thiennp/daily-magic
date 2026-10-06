@@ -7,7 +7,7 @@ import type OfficialWorkflowDefinition from "@/lib/workflowOrchestration/types/O
 const GROUND_AND_DRAFT = `Read shopName, inboxFocus, ordersFolderPath, policiesFolderPath, and replyTone (when set) from the workflow form.
 
 ## Ground truth and drafts (this step only)
-- Load shipping, refund, and replacement rules from policiesFolderPath on this Mac.
+- Load shipping, refund, and replacement rules from policiesFolderPath on this computer.
 - Scope work to threads described in inboxFocus (WISMO, refunds, general support).
 - Match each thread to orders under ordersFolderPath (email, order ID, fulfillment, carrier, tracking, last scan).
 - For every thread that needs a reply, draft one customer-facing message in [[PROGRESS]]:

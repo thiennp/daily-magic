@@ -46,7 +46,7 @@ export default function AwcMessengerTaskComposerFields({
             {assignees.map((assignee) => (
               <option key={assignee.membershipId} value={assignee.membershipId}>
                 {assignee.kind === "computer"
-                  ? `${assignee.displayName} (This Mac)`
+                  ? `${assignee.displayName} (This computer)`
                   : assignee.displayName}
               </option>
             ))}

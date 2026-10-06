@@ -30,7 +30,7 @@ describe("resolveSoloTeamSurfaceCopy", () => {
 
   it("uses solo vs team reports copy", () => {
     expect(resolveReportsPageSubtitle({ teamNavEnabled: false })).toContain(
-      "you sent to your Mac",
+      "you sent to your computer",
     );
     expect(resolveReportsPageSubtitle({ teamNavEnabled: true })).toContain(
       "shared runners",

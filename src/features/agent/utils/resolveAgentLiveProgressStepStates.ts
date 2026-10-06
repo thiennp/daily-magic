@@ -18,7 +18,7 @@ export const resolveAgentLiveProgressStepStates = (input: {
   readonly estimateState: AgentLiveProgressStepState;
   readonly workState: AgentLiveProgressStepState;
 } => {
-  // Failed before the Mac confirmed ready — do not mark "Agent started".
+  // Failed before the computer confirmed ready — do not mark "Agent started".
   if (input.status === "error" && !input.isReadyBanner) {
     return {
       prepareState: "done",

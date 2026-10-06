@@ -27,25 +27,25 @@ describe("HomeMacSettingsLink", () => {
     isMobileClient.value = false;
   });
 
-  it("labels the local status button Status & settings on this Mac and links Download", () => {
+  it("labels the local status button Status & settings on this computer and links Download", () => {
     const source = readFileSync(
       path.join(process.cwd(), "src/features/home/HomeMacSettingsLink.tsx"),
       "utf8",
     );
 
-    expect(source).toContain("Status & settings on this Mac");
+    expect(source).toContain("Status & settings on this computer");
     expect(source).toContain('href="/download"');
     expect(source).toContain("<HomeOpenLocalStatusButton>");
     expect(MAC_DEVICE_LOCAL_STATUS_LINK_LABEL).toBe(
-      "Status & settings on this Mac",
+      "Status & settings on this computer",
     );
     const html = renderToStaticMarkup(createElement(HomeMacSettingsLink));
     // renderToStaticMarkup escapes & in text nodes
-    expect(html).toContain("Status &amp; settings on this Mac");
+    expect(html).toContain("Status &amp; settings on this computer");
     expect(html).toContain('href="/download"');
   });
 
-  it("hides the Mac settings links on mobile", () => {
+  it("hides the computer settings links on mobile", () => {
     isMobileClient.value = true;
 
     expect(renderToStaticMarkup(createElement(HomeMacSettingsLink))).toBe("");

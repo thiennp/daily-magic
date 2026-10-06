@@ -69,7 +69,7 @@ export default function DispatchPolicyPreview({
   }
 
   const rows = [
-    { label: "This Mac", value: breakdown.devicePolicy, key: "device" },
+    { label: "This computer", value: breakdown.devicePolicy, key: "device" },
     { label: "Your default", value: breakdown.userPolicy, key: "user" },
     {
       label: `${COMPANY_ENTITY_LABEL} rule`,

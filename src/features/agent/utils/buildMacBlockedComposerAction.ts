@@ -24,7 +24,7 @@ export const buildMacBlockedComposerAction = (
       {
         stateId,
         helperMessage: MAC_OFFLINE_FOR_ACCOUNT_ERROR,
-        helperLinkLabel: "Connect or manage Macs",
+        helperLinkLabel: "Connect or manage computers",
         helperLinkHref: input.manageMacsHref,
         primaryManualAction,
         showQueue: input.canCopyPrompt,
@@ -47,18 +47,18 @@ export const buildMacBlockedComposerAction = (
   const selectedOnOtherInstance = selectedTier === "live_other_instance";
   const selectedHardOffline = isMacPresenceTierHardOffline(selectedTier);
   const helperMessage = selectedOnOtherInstance
-    ? "This Mac is reconnecting on another server (common right after deploy). Wait a few seconds, then try New task again."
+    ? "This computer is reconnecting on another server (common right after deploy). Wait a few seconds, then try New task again."
     : selectedHardOffline
       ? hasAlternate
-        ? "The selected Mac is offline. Switch to a connected Mac or start Agent Witch on this Mac."
-        : "The selected Mac is offline. Start Agent Witch on your Mac to run a New task."
+        ? "The selected computer is offline. Switch to a connected computer or start Agent Witch on this computer."
+        : "The selected computer is offline. Start Agent Witch on your computer to run a New task."
       : selectedTier === "recent"
         ? hasAlternate
-          ? "The selected Mac was seen recently and may reconnect on the next check-in. Switch to a connected Mac or wait."
-          : "The selected Mac was seen recently and may reconnect on the next check-in."
+          ? "The selected computer was seen recently and may reconnect on the next check-in. Switch to a connected computer or wait."
+          : "The selected computer was seen recently and may reconnect on the next check-in."
         : hasAlternate
-          ? "The selected Mac is not connected. Switch to a connected Mac or wait for it to reconnect."
-          : "The selected Mac is not connected. Wait for it to reconnect.";
+          ? "The selected computer is not connected. Switch to a connected computer or wait for it to reconnect."
+          : "The selected computer is not connected. Wait for it to reconnect.";
 
   return withComposerCopyFlag(
     {

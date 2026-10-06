@@ -1,6 +1,6 @@
 # Agent run input protocol
 
-When a dispatched Claude task on a paired Mac needs a human decision mid-run, use the WebSocket protocol — not database columns.
+When a dispatched Claude task on a paired computer needs a human decision mid-run, use the WebSocket protocol — not database columns.
 
 ## Marker (required in model output)
 

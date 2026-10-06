@@ -50,7 +50,7 @@ export const useAgentLiveTerminalFeedbackQueue = (input: {
 
   const queueMessage = useCallback((message: string) => {
     setQueuedMessages((current) => [...current, message.trim()]);
-    setQueueNotice("Queued — will send when your Mac agent is ready.");
+    setQueueNotice("Queued — will send when your computer agent is ready.");
   }, []);
 
   return {

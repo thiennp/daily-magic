@@ -3,35 +3,35 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 const firstAgentTaskIn5Minutes: ShowcaseArticle = {
   slug: "first-agent-task-in-5-minutes",
   title: "Your first agent task in 5 minutes",
-  subtitle: "Set up your Mac, send one job, and see it in history.",
+  subtitle: "Set up your computer, send one job, and see it in history.",
   category: "Start here",
   supportLevel: "full",
   readMinutes: 3,
   whatYouNeed: [
     "A Mac with Agent Witch set up and ready to run jobs",
-    "Sign-in so the browser can send work to your Mac live",
+    "Sign-in so the browser can send work to your computer live",
     "A short task description — one sentence is enough",
   ],
   tryNext: { label: "Open projects", href: "/projects?intent=new-task" },
   sections: [
     {
       paragraphs: [
-        "Your first win is small: describe a task, send it to your Mac, see a record of the job. No marketplace tour required — just proof that the loop works.",
+        "Your first win is small: describe a task, send it to your computer, see a record of the job. No marketplace tour required — just proof that the loop works.",
       ],
     },
     {
       heading: "Step by step",
       bullets: [
-        "Sign in and open Home → Your setup to add your Mac as a worker",
+        "Sign in and open Home → Your setup to add your computer as a worker",
         "Open a project, choose New task, and write what you want done",
-        "Press send — your Mac runs the agent with your local context",
+        "Press send — your computer runs the agent with your local context",
         "Open Reports in this browser to see status and output",
       ],
     },
     {
       heading: "If New task is blocked",
       paragraphs: [
-        "The button stays off until this page is connected and your Mac is online. That is intentional: we run on real machines, not a faceless cloud tab.",
+        "The button stays off until this page is connected and your computer is online. That is intentional: we run on real machines, not a faceless cloud tab.",
       ],
     },
   ],

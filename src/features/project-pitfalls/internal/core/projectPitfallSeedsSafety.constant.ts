@@ -20,7 +20,7 @@ export const PROJECT_PITFALL_SEEDS_SAFETY: readonly ProjectPitfallContent[] = [
       "Pushing to GitHub from the box fails with a login or permission error.",
     cause: "The box has no GitHub login for this repo.",
     avoidance:
-      "Push from the Mac instead. Never copy GitHub keys or tokens onto the box.",
+      "Push from the computer instead. Never copy GitHub keys or tokens onto the box.",
     check: { kind: "id", value: "pit.box-no-gh-auth" },
     keywords: ["push", "ship", "box", "github", "auth", "permission denied"],
     tags: ["git", "machines"],

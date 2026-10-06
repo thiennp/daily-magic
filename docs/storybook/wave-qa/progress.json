@@ -3261,7 +3261,7 @@
           "round": 1,
           "reviewerA": 99,
           "reviewerB": 98,
-          "notes": "Agent A=99 B=98 (round 1).\nA deductions: error-fixture-fidelity -1: Error state does not surface a failed marketplace fetch UI; fixtures still show full starter catalog like ready.\nB deductions: guest-vs-signed-in -1: Guest teammate gate correctly hides org listings; signed-in empty still shows team upsell — believable but not demonstrating a populated teammate row. | mac-run-promise -1: Header promises run on your Mac; starter cards do not restate Mac writer requirement in the grid (acceptable given global nav context).",
+          "notes": "Agent A=99 B=98 (round 1).\nA deductions: error-fixture-fidelity -1: Error state does not surface a failed marketplace fetch UI; fixtures still show full starter catalog like ready.\nB deductions: guest-vs-signed-in -1: Guest teammate gate correctly hides org listings; signed-in empty still shows team upsell — believable but not demonstrating a populated teammate row. | mac-run-promise -1: Header promises run on your computer; starter cards do not restate Mac writer requirement in the grid (acceptable given global nav context).",
           "agentFeedback": {
             "reviewerA": {
               "reviewMethod": "agent",
@@ -3310,7 +3310,7 @@
                 {
                   "area": "mac-run-promise",
                   "pointsDeducted": 1,
-                  "reason": "Header promises run on your Mac; starter cards do not restate Mac writer requirement in the grid (acceptable given global nav context)."
+                  "reason": "Header promises run on your computer; starter cards do not restate Mac writer requirement in the grid (acceptable given global nav context)."
                 }
               ],
               "whyBelowThreshold": "",

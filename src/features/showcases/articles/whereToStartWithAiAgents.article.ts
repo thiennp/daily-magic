@@ -4,7 +4,7 @@ const whereToStartWithAiAgents: ShowcaseArticle = {
   slug: "where-to-start-with-ai-agents",
   title: "You love AI. You're not sure where to start.",
   subtitle:
-    "A plain map from ChatGPT tabs to saved playbooks and real tasks on your Mac.",
+    "A plain map from ChatGPT tabs to saved playbooks and real tasks on your computer.",
   category: "Start here",
   supportLevel: "full",
   readMinutes: 4,
@@ -35,7 +35,7 @@ const whereToStartWithAiAgents: ShowcaseArticle = {
     {
       heading: "A simpler mental model",
       paragraphs: [
-        "Think in three layers: save how you ask (library), send the job (to your Mac or a teammate), and see what happened (job history). You do not need to memorize prompts or lose work in chat scrollback.",
+        "Think in three layers: save how you ask (library), send the job (to your computer or a teammate), and see what happened (job history). You do not need to memorize prompts or lose work in chat scrollback.",
       ],
     },
     {

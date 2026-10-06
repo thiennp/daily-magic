@@ -10,7 +10,7 @@
 
 ## Short answer
 
-**AWL** means **Agent Witch Local** — the Mac-local web app at `http://127.0.0.1:43347`: projects on this Mac, folder pickers, harness pull into repos, prompt optimizer, local health/status. It runs on the same machine as **AWI** / **AWB**, not in the cloud.
+**AWL** means **Agent Witch Local** — the Mac-local web app at `http://127.0.0.1:43347`: projects on this computer, folder pickers, harness pull into repos, prompt optimizer, local health/status. It runs on the same machine as **AWI** / **AWB**, not in the cloud.
 
 Older docs and strings said **Agent Witch Live**; that was the same deployable. The git folder `apps/live/` and slug `live` are **legacy code paths** only — do not expand AWL as “Live” in new copy or agent replies.
 
@@ -18,7 +18,7 @@ Older docs and strings said **Agent Witch Live**; that was the same deployable. 
 
 | Term         | Meaning                                                       |
 | ------------ | ------------------------------------------------------------- |
-| **AWL**      | **Agent Witch Local** (loopback UI on the Mac)                |
+| **AWL**      | **Agent Witch Local** (loopback UI on the computer)           |
 | `apps/live/` | Target package folder name (unchanged in git)                 |
 | Port         | `43347` (`AGENT_WITCH_LOCAL_APP_PORT`), bind `127.0.0.1` only |
 

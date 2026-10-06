@@ -2,7 +2,7 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 
 const whyLocalMacNotCloud: ShowcaseArticle = {
   slug: "why-local-mac-not-cloud",
-  title: "Why runs happen on a Mac, not mystery cloud VMs",
+  title: "Why runs happen on a computer, not mystery cloud VMs",
   subtitle: "Local files, your rules, and clearer ownership for companies.",
   category: "Common questions",
   supportLevel: "full",
@@ -24,7 +24,7 @@ const whyLocalMacNotCloud: ShowcaseArticle = {
     {
       heading: "What local execution gives you",
       bullets: [
-        "Files stay on the Mac that already has access",
+        "Files stay on the computer that already has access",
         'Clear executor in job history — not "the platform"',
         "Company can set group dispatch and approval policies",
         "Run log in Reports: requester, prompt, result, timestamp (local-first in that browser)",

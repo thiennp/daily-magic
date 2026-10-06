@@ -3,7 +3,7 @@ import type MarketingTrustItem from "@/features/marketing/types/MarketingTrustIt
 export const MARKETING_TRUST_ITEMS: readonly MarketingTrustItem[] = [
   {
     metric: "~15 min",
-    description: "to connect a Mac and run a first job",
+    description: "to connect a computer and run a first job",
     icon: "mac",
   },
   {
@@ -19,7 +19,7 @@ export const MARKETING_TRUST_ITEMS: readonly MarketingTrustItem[] = [
   {
     metric: "0",
     description:
-      "company secrets stored on vendor servers—runs stay on your Macs",
+      "company secrets stored on vendor servers—runs stay on your computers",
     icon: "connect",
   },
 ] as const;

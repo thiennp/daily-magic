@@ -18,7 +18,7 @@ Historical docs described “Vercel + Neon” only. The shipped production path 
 - **Database:** Neon PostgreSQL via `DATABASE_URL` (shared across environments that point at the same project DB).
 - **Canonical browser origin:** `https://www.agentwitch.com` (`AGENT_WITCH_DEFAULT_ORIGIN`). OAuth, cookies, and Cursor Cloud origin checks use `resolveAppBaseUrl()`.
 - **Mac WebSocket:** `wss://www.agentwitch.com/api/agent-witch/ws` for production installs (install bundle **103+**). Local dev: `npm run dev` on `http://localhost:3000` with the same upgrade path.
-- **Vercel:** Acceptable for experiments, previews, or UI-only work **without** expecting Mac bridge or writer dispatch to work unless the deployment runs `server.ts` with WebSocket support on the same origin the Mac uses. Do not document CHECK24 hosts (`daily-magic.d.energie.check24.de`) as Agent Witch production unless explicitly deployed there.
+- **Vercel:** Acceptable for experiments, previews, or UI-only work **without** expecting Mac bridge or writer dispatch to work unless the deployment runs `server.ts` with WebSocket support on the same origin the computer uses. Do not document CHECK24 hosts (`daily-magic.d.energie.check24.de`) as Agent Witch production unless explicitly deployed there.
 
 ## Consequences
 

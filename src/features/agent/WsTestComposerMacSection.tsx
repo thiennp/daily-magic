@@ -44,7 +44,7 @@ export default function WsTestComposerMacSection({
     >
       {isLibraryPlaybook ? (
         <p className="text-sm text-gray-700 dark:text-gray-300">
-          Running a playbook from your library on your Mac.
+          Running a playbook from your library on your computer.
         </p>
       ) : null}
       <div className={isLibraryPlaybook ? "mt-4" : undefined}>

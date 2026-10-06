@@ -10,7 +10,7 @@
 
 ## Short answer
 
-**AWC** means **Agent Witch Cloud** — the hosted control plane you use in the browser at `https://www.agentwitch.com` (and `http://localhost:3000` in dev): sign-in, Tasks, Runs, dispatch hub, projects metadata, marketplace, admin APIs, and WebSocket hub for paired Macs.
+**AWC** means **Agent Witch Cloud** — the hosted control plane you use in the browser at `https://www.agentwitch.com` (and `http://localhost:3000` in dev): sign-in, Tasks, Runs, dispatch hub, projects metadata, marketplace, admin APIs, and WebSocket hub for paired computers.
 
 Older docs and strings said **Agent Witch Console**; that was the same deployable, not a separate product. The git folder `apps/console/` and slug `console` are **legacy code paths** only — do not expand AWC as “Console” in new copy or agent replies.
 

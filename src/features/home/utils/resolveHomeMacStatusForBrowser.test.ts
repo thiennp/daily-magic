@@ -9,14 +9,14 @@ const offlineDevice = {
 };
 
 describe("resolveHomeMacStatusForBrowser (HOME-057)", () => {
-  it("tells the user to connect when listed Macs are offline and this computer is not linked", () => {
+  it("tells the user to connect when listed computers are offline and this computer is not linked", () => {
     const summary = resolveHomeMacStatusForBrowser({
       devices: [offlineDevice],
       shouldShowConnectThisMac: true,
     });
 
     expect(summary.label).toBe("This computer is not linked");
-    expect(summary.detail).toContain("Connect this Mac");
+    expect(summary.detail).toContain("Connect this computer");
   });
 
   it("keeps the offline start-helper copy when this computer is already linked", () => {
@@ -28,7 +28,7 @@ describe("resolveHomeMacStatusForBrowser (HOME-057)", () => {
     expect(summary.label).toBe("Mac offline");
   });
 
-  it("keeps an online summary when another Mac is live", () => {
+  it("keeps an online summary when another computer is live", () => {
     const summary = resolveHomeMacStatusForBrowser({
       devices: [{ isConnected: true, isOnline: true, presenceTier: "live" }],
       shouldShowConnectThisMac: true,
@@ -37,13 +37,13 @@ describe("resolveHomeMacStatusForBrowser (HOME-057)", () => {
     expect(summary.label).toBe("Mac online");
   });
 
-  it("HOME-058: uses not-linked copy when another Mac is only seen recently", () => {
+  it("HOME-058: uses not-linked copy when another computer is only seen recently", () => {
     const summary = resolveHomeMacStatusForBrowser({
       devices: [{ isConnected: false, isOnline: true, presenceTier: "recent" }],
       shouldShowConnectThisMac: true,
     });
 
     expect(summary.label).toBe("This computer is not linked");
-    expect(summary.detail).toContain("Connect this Mac");
+    expect(summary.detail).toContain("Connect this computer");
   });
 });

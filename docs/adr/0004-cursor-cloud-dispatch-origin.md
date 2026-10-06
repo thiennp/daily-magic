@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-`POST /api/agent-runs/dispatch` runs with the user’s session cookie. A malicious site could attempt cross-site POSTs (CSRF) to trigger **Cursor Cloud** runs, which spend API quota and run prompts without a paired Mac.
+`POST /api/agent-runs/dispatch` runs with the user’s session cookie. A malicious site could attempt cross-site POSTs (CSRF) to trigger **Cursor Cloud** runs, which spend API quota and run prompts without a paired computer.
 
 ## Decision
 

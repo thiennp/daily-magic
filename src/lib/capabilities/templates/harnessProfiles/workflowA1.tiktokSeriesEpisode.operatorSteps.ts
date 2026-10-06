@@ -7,7 +7,7 @@ export const TIKTOK_SERIES_EPISODE_OPERATOR_STEPS: readonly OperatorStepDefiniti
       title: "Confirm the series brief and past episodes",
       content: [
         "1. Read seriesName and seriesTopics so this episode fits the arc.",
-        "2. Open seriesHistoryPath on your Mac if set and skim recent hooks and angles.",
+        "2. Open seriesHistoryPath on your computer if set and skim recent hooks and angles.",
         "3. Reply ready when episodeAngle and targetLength are final enough to script.",
       ].join("\n"),
     },

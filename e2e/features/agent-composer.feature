@@ -25,15 +25,15 @@ Feature: Send a task (agent composer)
     And I should see live terminal or status feedback
 
   Scenario: Multi-Mac user picks device
-    Given I have two paired Macs
+    Given I have two paired computers
     When I open the send-task composer
-    Then I should see a Mac picker step
+    Then I should see a computer picker step
     When I select the second Mac
     And I send the task
     Then the run should target the selected device
 
   Scenario: Composer shows blocked state without dispatch-ready Mac
-    Given I have a paired Mac that is not dispatch-ready
+    Given I have a paired computer that is not dispatch-ready
     When I open the send-task composer
     Then I should see blocked-action guidance
 

@@ -21,7 +21,7 @@ const device = (
 });
 
 describe("resolveAgentWitchInstallConnectionStatus", () => {
-  it("HOME-025: install is unfinished until a Mac has a live WebSocket", () => {
+  it("HOME-025: install is unfinished until a computer has a live WebSocket", () => {
     expect(
       resolveAgentWitchInstallConnectionStatus({
         devices: [device()],
@@ -47,7 +47,7 @@ describe("resolveAgentWitchInstallConnectionStatus", () => {
     });
   });
 
-  it("HOME-025: returns zero counts when no Mac is claimed", () => {
+  it("HOME-025: returns zero counts when no computer is claimed", () => {
     expect(
       resolveAgentWitchInstallConnectionStatus({
         devices: [],

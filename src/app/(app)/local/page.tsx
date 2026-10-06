@@ -10,7 +10,7 @@ const LocalLogFrame = () => {
   const searchParams = useSearchParams();
   const wakePortRaw = searchParams.get("port")?.trim() ?? "";
   const wakePort = Number.parseInt(wakePortRaw, 10);
-  const deviceName = searchParams.get("name")?.trim() ?? "This Mac";
+  const deviceName = searchParams.get("name")?.trim() ?? "This computer";
 
   if (!Number.isFinite(wakePort) || wakePort <= 0 || wakePort > 65535) {
     return (
@@ -19,7 +19,7 @@ const LocalLogFrame = () => {
           Local logs unavailable
         </h1>
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          Open this page from your Mac device menu after install completes.
+          Open this page from your computer device menu after install completes.
         </p>
       </div>
     );
@@ -32,8 +32,8 @@ const LocalLogFrame = () => {
           Local logs — {deviceName}
         </h1>
         <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-          Loaded from 127.0.0.1:{wakePort}. This view only works on the Mac that
-          runs Agent Witch.
+          Loaded from 127.0.0.1:{wakePort}. This view only works on the computer
+          that runs Agent Witch.
         </p>
       </div>
       <iframe

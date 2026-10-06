@@ -10,7 +10,7 @@ Product and UX direction for **Agent Witch**. **Audience:** PM, design, and engi
 
 The product delivers a simple job (same wording as [product pillars](product-pillars.md)):
 
-> Run a trusted agent on a Mac you control (or a teammate’s), see what happened in the browser, and reuse what worked.
+> Run a trusted agent on a computer you control (or a teammate’s), see what happened in the browser, and reuse what worked.
 
 That loop is expressed in four user-facing terms: **Mac** · **Task** · **Run** · **Playbook** (see [User-facing mental model](#user-facing-mental-model-four-ideas)). UX work should keep those four words primary while the product grows along **four pillars**—each pillar stacks on the core loop without replacing it:
 
@@ -33,7 +33,7 @@ Implementation still introduces many nouns (Agent Witch, harness, knowledge, pro
 | --------------------- | ------------------------------------------- | ------------------------------------------------- |
 | **Job**               | Connect Mac → send task → watch output      | Same + who ran what, shared playbooks, guardrails |
 | **Fear**              | Break machine / leak code                   | Compliance, approval, reuse                       |
-| **10-minute success** | One completed run with live terminal        | One run on a Mac + visible in team history        |
+| **10-minute success** | One completed run with live terminal        | One run on a computer + visible in team history   |
 | **Defer by default**  | Marketplace, harness authoring, automations | Admin policy screens                              |
 
 Same core loop; company adds **visibility, templates, and policy**.
@@ -51,12 +51,12 @@ Same core loop; company adds **visibility, templates, and policy**.
 
 **Deferred or secondary language**
 
-| Internal            | User-facing                                                           |
-| ------------------- | --------------------------------------------------------------------- |
-| Knowledge / RAG     | **Memory from past runs** (automatic); optional **Search past runs**  |
-| Harness             | **Playbook** or **Team standards**                                    |
-| Projects / registry | **Repository** or **Code folder** (task attribute + settings)         |
-| **AWL** (`:43347`)  | **Agent Witch on this Mac** (or “Mac app”) — link from Home / account |
+| Internal            | User-facing                                                                |
+| ------------------- | -------------------------------------------------------------------------- |
+| Knowledge / RAG     | **Memory from past runs** (automatic); optional **Search past runs**       |
+| Harness             | **Playbook** or **Team standards**                                         |
+| Projects / registry | **Repository** or **Code folder** (task attribute + settings)              |
+| **AWL** (`:43347`)  | **Agent Witch on this computer** (or “Mac app”) — link from Home / account |
 
 See [concepts.md](concepts.md) for engineer glossary; UI should prefer the table above.
 
@@ -101,7 +101,7 @@ See [concepts.md](concepts.md) for engineer glossary; UI should prefer the table
 - Knowledge → Runs (“Search past runs”) or Mac settings
 - Traffic / errors → Mac settings → Developer
 
-**AWL** (`http://127.0.0.1:43347`): full Mac app (tasks, projects, playbooks, memory, health). Not duplicated in AWC primary nav; AWC links here when the user works on this Mac.
+**AWL** (`http://127.0.0.1:43347`): full Mac app (tasks, projects, playbooks, memory, health). Not duplicated in AWC primary nav; AWC links here when the user works on this computer.
 
 On desktop, AWC primary nav is a card in the Home devices column (above Your Devices), not a full-height fixed left rail; other Console routes show the same card above page content. AWL keeps a left sidebar. Smaller screens keep AWC’s bottom bar and AWL’s header links.
 
@@ -147,11 +147,11 @@ Use for Home / first-run design reviews. **Default path = solo.** “Team” var
 
 ### Copy (one sentence per step)
 
-| Step           | User sees                                                        | Done when                                           |
-| -------------- | ---------------------------------------------------------------- | --------------------------------------------------- |
-| 1              | **Connect your Mac** — Install the helper and pair this browser. | Device paired (DB-backed; see home onboarding APIs) |
-| 2              | **Send your first task** — Describe work; watch the terminal.    | First run acknowledged / in Runs                    |
-| 3 _(optional)_ | **Save a playbook** — Reuse how you work.                        | User saves from a run or skips                      |
+| Step           | User sees                                                             | Done when                                           |
+| -------------- | --------------------------------------------------------------------- | --------------------------------------------------- |
+| 1              | **Connect your computer** — Install the helper and pair this browser. | Device paired (DB-backed; see home onboarding APIs) |
+| 2              | **Send your first task** — Describe work; watch the terminal.         | First run acknowledged / in Runs                    |
+| 3 _(optional)_ | **Save a playbook** — Reuse how you work.                             | User saves from a run or skips                      |
 
 **Do not show by default on step 1–2:** create workflow, automation, marketplace browse, harness import, projects registry.
 
@@ -167,7 +167,7 @@ Use for Home / first-run design reviews. **Default path = solo.** “Team” var
 
 - [ ] Above fold: Mac selector, prompt, **Send**
 - [ ] Collapsed **More options**: repository folder, playbook, writer
-- [ ] Empty state: “Connect a Mac to send tasks” with install CTA
+- [ ] Empty state: “Connect a computer to send tasks” with install CTA
 - [ ] Company: optional “Run on behalf of” / policy hint only when org rules exist
 
 ### Runs (wireframe)

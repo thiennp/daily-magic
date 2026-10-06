@@ -32,7 +32,7 @@ import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 describe("handleAgentHeartbeatMessageAsync install bundle push (AGENT-043)", () => {
-  it("asks the Mac to update when its bundle is behind cloud", async () => {
+  it("asks the computer to update when its bundle is behind cloud", async () => {
     const runtime = createAgentHeartbeatTestRuntime();
     const sender: AgentWitchHubClient = {
       id: "agent-1",

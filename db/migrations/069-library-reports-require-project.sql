@@ -34,9 +34,9 @@
 ALTER TABLE published_capabilities
   ADD COLUMN IF NOT EXISTS project_id TEXT;
 
--- 2) At most one cloud Default / Personal without a Mac binding per owner.
+-- 2) At most one cloud Default / Personal without a computer binding per owner.
 -- Deploy-safe: prod can already hold duplicates (user_projects.device_id is
--- ON DELETE SET NULL, so removing a Mac turns its "Default"/"Personal" into a
+-- ON DELETE SET NULL, so removing a computer turns its "Default"/"Personal" into a
 -- second NULL-device row; the 031 index treats NULLs as distinct). Extras are
 -- KEPT: this migration never deletes or re-points projects or their children
 -- (members, library, reports, messages, history). A plain

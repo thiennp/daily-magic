@@ -18,7 +18,7 @@ const buildProjectDevicePresenceLabel = (input: {
   if (input.device === null) {
     return {
       statusIcon: "offline",
-      text: "No Mac linked",
+      text: "No computer linked",
     };
   }
 

@@ -36,7 +36,7 @@ const formatWorkflowStepDetail = (
       : "Your checkpoint";
   }
   if (step.status === "running") {
-    return "Agent running on your Mac";
+    return "Agent running on your computer";
   }
   if (step.status === "completed") {
     return "Finished";

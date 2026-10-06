@@ -59,7 +59,8 @@ export const requestLocalAgentWitchDeleteInstallFromWakeServer = async (
   } catch {
     return {
       ok: false,
-      message: "Could not reach the local Agent Witch wake server on this Mac.",
+      message:
+        "Could not reach the local Agent Witch wake server on this computer.",
     };
   }
 };

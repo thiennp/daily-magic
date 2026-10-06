@@ -34,7 +34,7 @@ This is the only item on the list that is also a security fix — see [docs/secu
 
 _AgentCore layer: evaluations (the ground truth an evaluator needs)._
 
-**Status (2026-09-24):** **Partially shipped** — AWI captures before/after git snapshots and appends a verdict line to the Mac run report `details` (`captureAgentWitchGitWorktreeSnapshot`, `formatAgentWitchGitWorktreeVerdict` under `apps/live/features/projects/internal/core/knowledge/`). Not yet wired into cloud scorecards or memory gating.
+**Status (2026-09-24):** **Partially shipped** — AWI captures before/after git snapshots and appends a verdict line to the computer run report `details` (`captureAgentWitchGitWorktreeSnapshot`, `formatAgentWitchGitWorktreeVerdict` under `apps/live/features/projects/internal/core/knowledge/`). Not yet wired into cloud scorecards or memory gating.
 
 **Why it is free:** git is already installed, the repository is already on disk, and the run is already executing in that directory. `git status --porcelain` plus `git diff --shortstat` before and after a run cost milliseconds of local CPU and zero tokens.
 
@@ -64,7 +64,7 @@ Dispatch already pins `capability_version_id` on every run (`executeWriterRunDis
 
 _AgentCore layer: CloudWatch traces._
 
-`agent_run_events` is already append-only with `seq`, `kind`, `payload`, and `created_at`, emitting `status.running`, `terminal.end`, and `status.completed` / `status.failed` (`src/lib/dispatch/dispatchWriterRunToAgent.ts`). `workflow_step_runs` carries per-step timestamps and its linked `agent_run_id`. The Mac report file carries `history[].at`.
+`agent_run_events` is already append-only with `seq`, `kind`, `payload`, and `created_at`, emitting `status.running`, `terminal.end`, and `status.completed` / `status.failed` (`src/lib/dispatch/dispatchWriterRunToAgent.ts`). `workflow_step_runs` carries per-step timestamps and its linked `agent_run_id`. The computer report file carries `history[].at`.
 
 **Why it is free:** that is already a span tree. Rendering it as a waterfall in Reports is a read, not a collection pipeline — no OTel collector, no vendor, no retention bill, no new rows.
 

@@ -16,7 +16,7 @@ Four deployables in one repo. Use **abbreviations** in chat and tickets.
 
 - **AWL** is a real Mac product app, not a debug-only surface.
 - **AWB** is browser-on-same-Mac glue for AWC; **AWL** is the dedicated Mac UI.
-- **AWI** ships and runs the Mac runtime (often one process hosting AWL + AWB today).
+- **AWI** ships and runs the computer runtime (often one process hosting AWL + AWB today).
 - Shared contracts: **`@agent-witch/shared`** (`packages/shared/`). Registry: `apps/deployables.registry.json`.
 - Cross-app types/constants go in `packages/shared/src/` first; no `@/` imports inside that package.
 - Full doc: `docs/product/agent-witch-deployables.md`. Do not conflate CHECK24 `daily-magic` URLs with AWC production.

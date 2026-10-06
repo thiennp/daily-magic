@@ -1,6 +1,6 @@
 # Chapter 9 — Known issues and regressions
 
-Canonical **open product risks** for the Mac bridge live in [`src/features/agent-witch/KNOWN_ISSUES.md`](../../../src/features/agent-witch/KNOWN_ISSUES.md). Shipped fixes are **removed** from that file; behavior stays guarded by Vitest. Search the repo for **`AGENT-`** in test names and descriptions.
+Canonical **open product risks** for the computer bridge live in [`src/features/agent-witch/KNOWN_ISSUES.md`](../../../src/features/agent-witch/KNOWN_ISSUES.md). Shipped fixes are **removed** from that file; behavior stays guarded by Vitest. Search the repo for **`AGENT-`** in test names and descriptions.
 
 Architecture context: ADR **0005** (presence, dispatch outbox, multi-instance relay). Dispatch chapter: [05-dispatch-presence-and-runs.md](05-dispatch-presence-and-runs.md) when present.
 
@@ -28,7 +28,7 @@ Do not point production Mac troubleshooting at CHECK24 hosts unless the user con
 
 |                         |                                                                                                                                                                                                             |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Symptom**             | Mac picker shows **Online (another server)** (`live_other_instance`); **New task** fails or briefly shows `mac_reconnecting` while the Mac process is healthy.                                              |
+| **Symptom**             | Mac picker shows **Online (another server)** (`live_other_instance`); **New task** fails or briefly shows `mac_reconnecting` while the computer process is healthy.                                         |
 | **Cause**               | Dispatch HTTP hit a replica without the Mac’s live hub WebSocket.                                                                                                                                           |
 | **Shipped mitigations** | Hub **dispatch relay** (AGENT-022); **`aw_hub_instance`** affinity cookie from `GET /api/agent-witch/devices`; fail-closed `mac_reconnecting` / `mac_offline`; auto-pick live Mac when preference is stale. |
 | **Residual risk**       | Registry lag during deploy; relay timeout or sticky mismatch → brief `mac_reconnecting` until reconnect + devices refresh.                                                                                  |
@@ -59,7 +59,7 @@ Documented in KNOWN_ISSUES because **every future install bundle** must preserve
 | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Symptom**     | After **Update local**, AWC stuck on **Mac reconnecting** (`presenceTier: recent`); `wake.sh` / default AWB `:47892` down.                                                                                      |
 | **Fix surface** | Plist heredoc closed before env keys; `register_agent_witch_launch_agent` XML lint; `ensureAgentWitchLaunchAgentPlist` on start/update (bundle **125+**); `resolveAgentWitchRuntimeWakePort` for `/update/run`. |
-| **Recovery**    | Self-update to bundle **125+** or restart AWI; **Connect this Mac** if identity unlinked.                                                                                                                       |
+| **Recovery**    | Self-update to bundle **125+** or restart AWI; **Connect this computer** if identity unlinked.                                                                                                                  |
 
 **Regression tests:**
 
@@ -79,29 +79,29 @@ Documented in KNOWN_ISSUES because **every future install bundle** must preserve
 
 ## Offline devices and a missing Connect button
 
-Home **Mac offline** means claimed devices have no live socket and no check-in within 180s. **Connect this Mac** still shows when no row matches this browser (`resolveShouldShowConnectThisMac`). It hides only while a wake probe is actually pending (`resolveIsCheckingLocalMacIdentity`), on a phone, or after the local token hash matches a device. A skipped probe must not leave identity status `idle` looking like an in-flight check (HOME-057). **Mac settings & connect** (`HomeMacSettingsLink`) only navigates to `/#your-setup`.
+Home **Mac offline** means claimed devices have no live socket and no check-in within 180s. **Connect this computer** still shows when no row matches this browser (`resolveShouldShowConnectThisMac`). It hides only while a wake probe is actually pending (`resolveIsCheckingLocalMacIdentity`), on a phone, or after the local token hash matches a device. A skipped probe must not leave identity status `idle` looking like an in-flight check (HOME-057). **Mac settings & connect** (`HomeMacSettingsLink`) only navigates to `/#your-setup`.
 
 **Q&A:** [awc-offline-devices-hide-connect-button.md](../../qa/awc-offline-devices-hide-connect-button.md).
 
-AWL Status **Connected** is the Mac client’s socket-open flag (`wsConnected` on `open`). It stays true when that socket is bound to a different device id, account, or `wsUrl` origin than the row Home renders as **Mac offline**. A browser `dashboard` upgrade and `system.ack` do not set `presenceTier`. See [awc-offline-while-awl-connected.md](../../qa/awc-offline-while-awl-connected.md).
+AWL Status **Connected** is the computer client’s socket-open flag (`wsConnected` on `open`). It stays true when that socket is bound to a different device id, account, or `wsUrl` origin than the row Home renders as **Mac offline**. A browser `dashboard` upgrade and `system.ack` do not set `presenceTier`. See [awc-offline-while-awl-connected.md](../../qa/awc-offline-while-awl-connected.md).
 
 ---
 
 ## Repeated Connect clicks cloned devices
 
-Each **Connect this Mac** click used to insert a device with `last_seen_at = NOW()` and a null label. `revokePendingInstallDevicesForUser` only deleted rows where `last_seen_at IS NULL`, so the new rows stayed and Home showed **Your Mac**, **Mac 2**, **Mac 3** as **seen recently** with **Version unknown** (HOME-059). Install-token claims now leave `last_seen_at` null. The newest unlabeled placeholder is kept, a false `last_seen_at` on that row is cleared, and older ones are revoked on the next install token and on `GET /api/agent-witch/devices`.
+Each **Connect this computer** click used to insert a device with `last_seen_at = NOW()` and a null label. `revokePendingInstallDevicesForUser` only deleted rows where `last_seen_at IS NULL`, so the new rows stayed and Home showed **Your Mac**, **Mac 2**, **Mac 3** as **seen recently** with **Version unknown** (HOME-059). Install-token claims now leave `last_seen_at` null. The newest unlabeled placeholder is kept, a false `last_seen_at` on that row is cleared, and older ones are revoked on the next install token and on `GET /api/agent-witch/devices`.
 
 **Q&A:** [awc-connect-click-creates-duplicate-macs.md](../../qa/awc-connect-click-creates-duplicate-macs.md).
 
 ---
 
-## Deleting a Mac removes the identity
+## Deleting a computer removes the identity
 
-`DELETE /api/agent-witch/devices/:id` deletes the device row after clearing in-flight runs and queued dispatch (HOME-060). It does not set `revoked_at`. `findAgentWitchDeviceByToken` looks up `token_hash` with no user filter. A missing row is `unknown_identity`. A row that still exists with `revoked_at` set stays “not linked” and must not wipe the Mac. Bundle 148+ handles that code in `startAgentWitchClient` by stopping reconnect, calling `forgetAgentWitchLocalConnection`, releasing the machine lease, and exiting. Forget removes LaunchAgents, connection files, and `app/`. It leaves projects, harness, reports, runs, rag, memory, and Ollama. There is no local Redis.
+`DELETE /api/agent-witch/devices/:id` deletes the device row after clearing in-flight runs and queued dispatch (HOME-060). It does not set `revoked_at`. `findAgentWitchDeviceByToken` looks up `token_hash` with no user filter. A missing row is `unknown_identity`. A row that still exists with `revoked_at` set stays “not linked” and must not wipe the computer. Bundle 148+ handles that code in `startAgentWitchClient` by stopping reconnect, calling `forgetAgentWitchLocalConnection`, releasing the machine lease, and exiting. Forget removes LaunchAgents, connection files, and `app/`. It leaves projects, harness, reports, runs, rag, memory, and Ollama. There is no local Redis.
 
 **Q&A:** [awc-delete-mac-forgets-local-connection.md](../../qa/awc-delete-mac-forgets-local-connection.md).
 
-## this Mac badge on an offline placeholder (HOME-061)
+## this computer badge on an offline placeholder (HOME-061)
 
 A cookie `agent_witch_local_token_hash` can match an old never-seen **Your Mac** row while a different device is `live`. HOME-052 skipped wake probes whenever any hash was set; `listAgentWitchDevicesForUser` also omitted `wake_port`, so non-default AWB ports were invisible to the browser. Fix: re-probe when the cookie does not match a reachable device; adopt the sole wake hash; select `wake_port` on devices.
 

@@ -40,7 +40,7 @@ export default function MarketplaceVisitorEmptyState() {
           className={`mt-2 max-w-2xl leading-relaxed ${APP_SURFACE_BODY_TEXT_CLASS}`}
         >
           Pick a ready-made starter below. Sign in to save it to your Library
-          and run it as a Task on your Mac.
+          and run it as a Task on your computer.
         </p>
       </div>
       <HomeMarketingPopularPresetsGrid presets={presets} />

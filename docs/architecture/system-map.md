@@ -27,7 +27,7 @@ Production and local dev use **`tsx server.ts`** (`npm run dev` / `npm start`):
 - Terminates **WebSocket** upgrades on **`/api/agent-witch/ws`** (path configurable via `AGENT_WITCH_WS_PATH`).
 - Hosts the in-memory **Agent Witch hub** (`getAgentWitchHub`) and connection registry maintenance.
 
-Plain `next dev` (`npm run dev:next`) does **not** provide the Mac bridge. See [ADR 0002](../adr/0002-custom-server-for-agent-witch-websocket.md).
+Plain `next dev` (`npm run dev:next`) does **not** provide the computer bridge. See [ADR 0002](../adr/0002-custom-server-for-agent-witch-websocket.md).
 
 ## Origins and trust
 

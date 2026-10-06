@@ -48,8 +48,8 @@ export default function WsTestPanelStatusSection({
     <AppPanel>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <p className="text-sm text-gray-600 dark:text-gray-400">
-          Dispatch a New task to your Mac or to a teammate on your team. Every
-          job is saved in Reports. {approvalHelper}
+          Dispatch a New task to your computer or to a teammate on your team.
+          Every job is saved in Reports. {approvalHelper}
         </p>
         <ConnectionStatusBadge status={connectionStatus} />
       </div>

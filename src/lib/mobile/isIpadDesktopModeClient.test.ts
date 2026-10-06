@@ -4,7 +4,7 @@ import isIpadDesktopModeClient from "@/lib/mobile/isIpadDesktopModeClient";
 import { MOBILE_UA_FIXTURES as UA } from "@/lib/mobile/mobileUserAgentFixtures.constant";
 
 describe("isIpadDesktopModeClient", () => {
-  it("flags a Mac UA with multi-touch (iPadOS desktop mode)", () => {
+  it("flags a computer UA with multi-touch (iPadOS desktop mode)", () => {
     expect(
       isIpadDesktopModeClient({
         platform: "MacIntel",

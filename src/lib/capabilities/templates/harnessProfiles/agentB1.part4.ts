@@ -5,7 +5,7 @@ export const AGENT_B1_PART4: readonly PresetHarnessSeed[] = [
     id: "file-organizer",
     name: "File organizer",
     category: "Personal",
-    description: "Plan folder cleanup and renaming on your Mac.",
+    description: "Plan folder cleanup and renaming on your computer.",
     exampleRequest:
       "Propose a file organization plan for this folder situation on my Mac.",
     profile: {

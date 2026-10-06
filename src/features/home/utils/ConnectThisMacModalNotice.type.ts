@@ -1,4 +1,4 @@
-/** Status block shown at the top of the Connect this Mac modal. */
+/** Status block shown at the top of the Connect this computer modal. */
 export type ConnectThisMacModalNotice =
   | {
       readonly kind: "version_too_old";

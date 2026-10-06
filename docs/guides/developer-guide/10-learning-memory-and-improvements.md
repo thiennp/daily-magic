@@ -38,7 +38,7 @@ flowchart LR
 
 Feature slices: `src/features/feedback/`, `src/features/improvements/` · lib: `src/lib/feedback/`, `src/lib/improvements/`.
 
-**Human-in-the-loop:** accepting an improvement calls `publishCapabilityVersion` — it does **not** silently rewrite harness files on the Mac. Install/sync paths stay [Chapter 7](07-capabilities-library-harness.md).
+**Human-in-the-loop:** accepting an improvement calls `publishCapabilityVersion` — it does **not** silently rewrite harness files on the computer. Install/sync paths stay [Chapter 7](07-capabilities-library-harness.md).
 
 **Run UX honesty** (fallback CLI, missing writer key): [run-ux-honesty-strings.md](../../qa/run-ux-honesty-strings.md) — pillar 2 includes honest status copy, not only the improvements table.
 
@@ -46,7 +46,7 @@ Feature slices: `src/features/feedback/`, `src/features/improvements/` · lib: `
 
 ## Pillar 3 — Efficient memory (Mac injection)
 
-After a writer run, the Mac client may append context for the **same project folder** (and optional `projectId`):
+After a writer run, the computer client may append context for the **same project folder** (and optional `projectId`):
 
 | Step               | Module                         | Behavior                                                 |
 | ------------------ | ------------------------------ | -------------------------------------------------------- |

@@ -23,7 +23,7 @@
 | Origin constant | `AGENT_WITCH_LIVE_APP_ORIGIN` in `@agent-witch/shared`     |
 | Port 80         | Not proxied; other local servers can keep `:80`            |
 
-Open AWL in the browser as `http://127.0.0.1:43347` (Status, projects, knowledge, writer API). AWC “Open on this Mac” links use the same origin.
+Open AWL in the browser as `http://127.0.0.1:43347` (Status, projects, knowledge, writer API). AWC “Open on this computer” links use the same origin.
 
 ## Related
 

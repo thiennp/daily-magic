@@ -9,7 +9,7 @@
   <text x="76" y="172" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#4b5563">Used 24 times  -  company approved</text>
   <rect x="56" y="208" width="400" height="72" rx="10" fill="#fff" stroke="#18181b" stroke-width="2"/>
   <text x="76" y="240" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="600" fill="#111827">Onboarding checklist  -  team</text>
-  <text x="76" y="260" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#4b5563">One tap to run on your Mac</text>
+  <text x="76" y="260" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#4b5563">One tap to run on your computer</text>
   <rect x="480" y="120" width="424" height="280" rx="12" fill="#f9fafb" stroke="#e5e7eb"/>
   <text x="500" y="156" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="600" fill="#374151">Preview</text>
   <text x="500" y="190" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6b7280">Shared prompt + steps for new hires</text>

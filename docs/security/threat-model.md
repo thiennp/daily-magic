@@ -12,15 +12,15 @@ Related: [ADR 0004 — Cursor Cloud dispatch origin](../adr/0004-cursor-cloud-di
 
 ## Assets
 
-| Asset                                              | Why it matters                                    |
-| -------------------------------------------------- | ------------------------------------------------- |
-| User session (NextAuth, DB strategy)               | Impersonation, dispatch, admin actions            |
-| Cursor Cloud API key (encrypted at rest)           | Spends quota; runs cloud agents as the user       |
-| Agent Witch device pairing / device keys           | Mac acts as execution endpoint for the account    |
-| Agent run content (prompts, logs, terminal output) | Sensitive code, secrets in prompts, business data |
-| Harness files on Mac (`~/.agent-witch/harness/`)   | Rules/skills that steer agent behavior            |
-| Group membership and dispatch policies             | Who may run tasks on whose Mac                    |
-| Published capabilities and marketplace borrows     | Team-wide agent definitions                       |
+| Asset                                                 | Why it matters                                    |
+| ----------------------------------------------------- | ------------------------------------------------- |
+| User session (NextAuth, DB strategy)                  | Impersonation, dispatch, admin actions            |
+| Cursor Cloud API key (encrypted at rest)              | Spends quota; runs cloud agents as the user       |
+| Agent Witch device pairing / device keys              | Mac acts as execution endpoint for the account    |
+| Agent run content (prompts, logs, terminal output)    | Sensitive code, secrets in prompts, business data |
+| Harness files on computer (`~/.agent-witch/harness/`) | Rules/skills that steer agent behavior            |
+| Group membership and dispatch policies                | Who may run tasks on whose Mac                    |
+| Published capabilities and marketplace borrows        | Team-wide agent definitions                       |
 
 Never store secrets in this doc or in feature-knowledge chunks.
 
@@ -41,7 +41,7 @@ Never store secrets in this doc or in feature-knowledge chunks.
 ```
 
 - **In scope for cloud:** session auth, dispatch authorization, origin checks for browser-initiated cloud runs, WebSocket upgrade rules.
-- **On the Mac:** Agent Witch runs with the Mac user’s OS privileges; cloud policy cannot fully constrain arbitrary shell commands once dispatched.
+- **On the Mac:** Agent Witch runs with the computer user’s OS privileges; cloud policy cannot fully constrain arbitrary shell commands once dispatched.
 
 ---
 
@@ -55,7 +55,7 @@ Never store secrets in this doc or in feature-knowledge chunks.
 | External website (attacker)                      | Trigger authenticated actions via victim’s browser (CSRF)               |
 | Bearer of stolen session cookie                  | Call APIs as the victim without using the UI                            |
 | Malicious browser extension or XSS on app origin | Read DOM, exfiltrate cookies, trigger in-origin requests                |
-| Local attacker on Mac                            | Read harness, logs, or interfere with Agent Witch process               |
+| Local attacker on computer                       | Read harness, logs, or interfere with Agent Witch process               |
 
 ---
 
@@ -98,7 +98,7 @@ Never store secrets in this doc or in feature-knowledge chunks.
 | T2  | Stolen session cookie                                   | HTTPS, session storage in DB; no origin check on all endpoints | Full account actions until session revoked                |
 | T3  | User dispatches to wrong Mac / wrong teammate           | Dispatch policies, approvals, capability resolution            | Misconfiguration; social engineering                      |
 | T4  | Unpaired or spoofed Mac                                 | Pairing, device keys, lease semantics (Agent Witch)            | Compromised Mac user account                              |
-| T5  | Prompt injection → harmful shell on Mac                 | User trust model; harness rules                                | **Inherent** to running agents on real machines           |
+| T5  | Prompt injection → harmful shell on computer            | User trust model; harness rules                                | **Inherent** to running agents on real machines           |
 | T6  | Leak of Cursor Cloud API key from DB                    | Encryption with auth-derived key                               | DB breach + `AUTH_SECRET` compromise                      |
 | T7  | Dev dashboard left on in prod                           | Env-gated; production should not set flag                      | Operator error                                            |
 
@@ -118,7 +118,7 @@ Never store secrets in this doc or in feature-knowledge chunks.
 | Item                     | Purpose                                                              |
 | ------------------------ | -------------------------------------------------------------------- |
 | P0.3 Authz audit         | Verify every dispatch and agent-witch mutation checks actor + policy |
-| P0.4 Agent Witch runbook | Safe upgrade, rollback, incident response on Mac                     |
+| P0.4 Agent Witch runbook | Safe upgrade, rollback, incident response on computer                |
 | Rate limits / abuse      | Optional caps on dispatch per user (not implemented)                 |
 
 ---

@@ -37,7 +37,7 @@ export default function HarnessCatalogPublishPanel() {
       return;
     }
 
-    setMessage("Publish requested. Your Mac will update the shared list.");
+    setMessage("Publish requested. Your computer will update the shared list.");
     setStatus(await fetchHarnessCatalogStatus());
   };
 
@@ -59,7 +59,7 @@ export default function HarnessCatalogPublishPanel() {
         </p>
       ) : (
         <p className="mt-2 text-xs text-gray-600 dark:text-gray-400">
-          Nothing shared yet. Publish while your Mac is online.
+          Nothing shared yet. Publish while your computer is online.
         </p>
       )}
       <div className="mt-3">

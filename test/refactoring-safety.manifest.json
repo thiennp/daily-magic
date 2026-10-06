@@ -70,7 +70,7 @@
     }
   },
   "optionalLocal": {
-    "description": "Not part of default gates; run on a Mac with dev server + install when touching end-to-end flows",
+    "description": "Not part of default gates; run on a computer with dev server + install when touching end-to-end flows",
     "playwright": [
       "e2e/test-account-login.spec.ts",
       "e2e/self-delegate.spec.ts"

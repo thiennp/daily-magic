@@ -54,7 +54,7 @@ export const buildPresetCommandContent = (input: {
   [
     `# Run ${input.name}`,
     "",
-    "Use when this preset is selected from Library or Agent on a paired Mac.",
+    "Use when this preset is selected from Library or Agent on a paired computer.",
     "",
     "## Checklist",
     bulletBlock(input.profile.commandSteps),

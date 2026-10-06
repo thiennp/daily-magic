@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import resolveProjectEditOnMacCta from "@/features/projects/utils/resolveProjectEditOnMacCta";
 
 describe("resolveProjectEditOnMacCta", () => {
-  it("enables hand-off when this Mac is live", () => {
+  it("enables hand-off when this computer is live", () => {
     const cta = resolveProjectEditOnMacCta({
       projectId: "proj-1",
       deviceDisplayName: "Alex's MacBook Pro",
@@ -13,7 +13,7 @@ describe("resolveProjectEditOnMacCta", () => {
     });
 
     expect(cta.state).toBe("enabled");
-    expect(cta.buttonLabel).toBe("Edit on this Mac →");
+    expect(cta.buttonLabel).toBe("Edit on this computer →");
     expect(cta.href).toContain("/project?id=proj-1");
     expect(cta.helperText).toBeNull();
   });

@@ -18,7 +18,7 @@ const buildUsageGuideForTemplate = (
   return {
     summary: `Use this ${typeLabel} inside a project so playbook rules stay in the repo. ${template.description}`,
     prerequisites: [
-      "A paired Mac with Agent Witch running (or Cursor Cloud API key for cloud-only runs).",
+      "A paired computer with Agent Witch running (or Cursor Cloud API key for cloud-only runs).",
       "A project linked to that Mac with a folder path set before you pull playbook files into the repo.",
       "Sign in to Agent Witch Cloud — marketplace install saves to your library and links the listing to the project you pick.",
     ],
@@ -30,11 +30,11 @@ const buildUsageGuideForTemplate = (
           },
           {
             title: "Pull playbook into the repo (Mac)",
-            body: "On the Mac, open Agent Witch Local → the same project → **Pull into repo** so rules/skills copy into the project’s `.cursor/` tree and `project.json` updates.",
+            body: "On the computer, open Agent Witch Local → the same project → **Pull into repo** so rules/skills copy into the project’s `.cursor/` tree and `project.json` updates.",
           },
           {
             title: "Run the workflow",
-            body: "From Home or the workflow runner, select this workflow, fill the form, and choose a writer (Anthropic, OpenAI, Cursor, or Google). Human checkpoints pause in the browser; agent steps run on the Mac.",
+            body: "From Home or the workflow runner, select this workflow, fill the form, and choose a writer (Anthropic, OpenAI, Cursor, or Google). Human checkpoints pause in the browser; agent steps run on the computer.",
           },
           {
             title: "Review and reuse",
@@ -48,7 +48,7 @@ const buildUsageGuideForTemplate = (
           },
           {
             title: "Pull playbook when needed",
-            body: "If this agent ships specialist rules, pull the project playbook on the Mac before the first run.",
+            body: "If this agent ships specialist rules, pull the project playbook on the computer before the first run.",
           },
           {
             title: "Send a task",
@@ -57,7 +57,7 @@ const buildUsageGuideForTemplate = (
         ],
     whenToUse: template.outcomes[0] ?? template.detail,
     whenNotToUse:
-      "Skip when you have no project folder on the Mac yet — create or link a project first.",
+      "Skip when you have no project folder on the computer yet — create or link a project first.",
     estimatedMinutes: isWorkflow ? 15 : 5,
     supportedWriters: DEFAULT_WRITERS,
   };

@@ -9,9 +9,9 @@ import { DOWNLOAD_PAGE_COPY } from "@/features/download/downloadPageCopy.constan
 const root = process.cwd();
 
 describe("Download page wiring", () => {
-  it("uses the same tag-pinned Mac release URL as Connect this Mac", () => {
+  it("uses the same tag-pinned Mac release URL as Connect this computer", () => {
     expect(buildAgentWitchLocalMacAppDownloadUrl()).toContain(
-      "/releases/download/awl-mac-v0.1.0/AgentWitchLocal.dmg",
+      "/releases/download/awl-mac-v0.1.0/AgentWitchLocal\.dmg",
     );
   });
 

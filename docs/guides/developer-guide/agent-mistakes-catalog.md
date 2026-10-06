@@ -37,13 +37,13 @@ Living list of **repeat failures** by coding agents (and fast human edits). When
 
 ## Dispatch & presence
 
-| Mistake                                            | Why it hurts                                                    | Do instead                                                                                |
-| -------------------------------------------------- | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| Ignore `live_other_instance` / multi-replica       | Writer **New task** fails intermittently                        | ADR 0005 relay + sticky `aw_hub_instance`; read OPEN-002 in agent-witch `KNOWN_ISSUES.md` |
-| Create runs before hub client resolves             | Ghost runs, bad UX                                              | Fail closed with `mac_reconnecting` / structured errors                                   |
-| Skip device list as source of truth                | UI shows wrong “Mac connected”                                  | `pairedDevicesApi` + presence tiers                                                       |
-| Stamp `last_seen_at` when issuing an install token | Repeated **Connect this Mac** clicks clone “seen recently” Macs | `recordLastSeen: false`; revoke unlabeled placeholders (HOME-059)                         |
-| Revoke a deleted Mac and keep the row              | The Mac stays linked locally because the token is still known   | Delete the row; wipe locally only on `unknown_identity` (HOME-060)                        |
+| Mistake                                            | Why it hurts                                                              | Do instead                                                                                |
+| -------------------------------------------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Ignore `live_other_instance` / multi-replica       | Writer **New task** fails intermittently                                  | ADR 0005 relay + sticky `aw_hub_instance`; read OPEN-002 in agent-witch `KNOWN_ISSUES.md` |
+| Create runs before hub client resolves             | Ghost runs, bad UX                                                        | Fail closed with `mac_reconnecting` / structured errors                                   |
+| Skip device list as source of truth                | UI shows wrong “Mac connected”                                            | `pairedDevicesApi` + presence tiers                                                       |
+| Stamp `last_seen_at` when issuing an install token | Repeated **Connect this computer** clicks clone “seen recently” computers | `recordLastSeen: false`; revoke unlabeled placeholders (HOME-059)                         |
+| Revoke a deleted Mac and keep the row              | The computer stays linked locally because the token is still known        | Delete the row; wipe locally only on `unknown_identity` (HOME-060)                        |
 
 ---
 
@@ -88,7 +88,7 @@ Living list of **repeat failures** by coding agents (and fast human edits). When
 
 | Topic                          | Where detail lives                                                                                 |
 | ------------------------------ | -------------------------------------------------------------------------------------------------- |
-| DNS ENOTFOUND on Mac           | agent-witch `KNOWN_ISSUES` OPEN-001                                                                |
+| DNS ENOTFOUND on computer      | agent-witch `KNOWN_ISSUES` OPEN-001                                                                |
 | Multi-instance dispatch        | OPEN-002, [writer-dispatch-cascade-routing.md](../../qa/writer-dispatch-cascade-routing.md)        |
 | Stale install bundle           | OPEN-003, send-readiness `update_needed`                                                           |
 | Broken LaunchAgent plist       | AGENT-067, [awi-update-local-launchagent-plist.md](../../qa/awi-update-local-launchagent-plist.md) |

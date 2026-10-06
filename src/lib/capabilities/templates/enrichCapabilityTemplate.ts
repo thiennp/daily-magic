@@ -35,7 +35,7 @@ const defaultOutcomes = (
       "Entry-point form fields when someone starts the run",
       "Linear human and specialist steps with review checkpoints",
       "Official orchestration graph on marketplace presets",
-      "Rules bundle installs to your Mac for consistent runs",
+      "Rules bundle installs to your computer for consistent runs",
     ];
   }
 
@@ -43,7 +43,7 @@ const defaultOutcomes = (
     "Standing specialist — bring context in the task prompt",
     "Rules bundle: rule, skill, shortcut, instruction, and specialist",
     "Best for open-ended Mac work without a fixed intake form",
-    "Run from Agent on your Mac when connected",
+    "Run from Agent on your computer when connected",
   ];
 };
 
@@ -54,8 +54,8 @@ const defaultDetail = (seed: CapabilityTemplateSeedInput): string =>
     `This preset includes a full rules bundle (${seed.category}): behavior rules, a domain skill, a run shortcut, default instructions, and a specialist assistant.`,
     seed.type === CapabilityType.WORKFLOW
       ? "Workflows collect answers at the entry point, then run human checkpoints and Mac steps in order."
-      : "Agents are reusable specialists — save to Library and install the bundle to your Mac.",
-    "Save it to your Library, then install the bundle to your Mac so tasks follow the same standards every time.",
+      : "Agents are reusable specialists — save to Library and install the bundle to your computer.",
+    "Save it to your Library, then install the bundle to your computer so tasks follow the same standards every time.",
   ].join(" ");
 
 const enrichCapabilityTemplate = (

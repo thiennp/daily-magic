@@ -7,7 +7,10 @@ const e2eMarketplaceAndLibrary: ShowcaseArticle = {
   category: "E2E verified",
   supportLevel: "full",
   readMinutes: 3,
-  whatYouNeed: ["Signed-in test account", "Paired Mac for install actions"],
+  whatYouNeed: [
+    "Signed-in test account",
+    "Paired computer for install actions",
+  ],
   tryNext: { label: "Open Marketplace", href: "/marketplace" },
   sections: [
     {

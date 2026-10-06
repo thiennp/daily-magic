@@ -7,7 +7,7 @@ export const LOCAL_BUSINESS_GOOGLE_POST_PRESET: PresetHarnessSeed = {
   name: "Local business Google post",
   category: "Local",
   description:
-    "Draft a Google Business Profile post for hours, offers, or events — dedupe against your Mac history file, approve copy, then you publish.",
+    "Draft a Google Business Profile post for hours, offers, or events — dedupe against your computer history file, approve copy, then you publish.",
   exampleRequest: LOCAL_BUSINESS_GOOGLE_POST_EXAMPLE_REQUEST,
   operatorSteps: LOCAL_BUSINESS_GOOGLE_POST_OPERATOR_STEPS,
   profile: {

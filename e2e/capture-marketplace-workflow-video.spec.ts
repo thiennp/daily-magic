@@ -7,7 +7,7 @@ import {
 import { signInTestAccount } from "./helpers/signInTestAccount";
 
 /**
- * Full marketplace → install → fill inputs → run on Mac → progress video.
+ * Full marketplace → install → fill inputs → run on computer → progress video.
  */
 const SELF = "test-self-1@agentwitch.com";
 const WORKFLOW_NAME = "Freelancer client proposal";
@@ -95,7 +95,7 @@ test.describe("Marketplace workflow video @e2e-capture", () => {
     await pauseForVideo(page, 1200);
 
     const writerHeading = page.getByRole("heading", {
-      name: /Choose an AI on your Mac/i,
+      name: /Choose an AI on your computer/i,
     });
     if (await writerHeading.isVisible().catch(() => false)) {
       await pauseForVideo(page, 1000);
@@ -119,7 +119,7 @@ test.describe("Marketplace workflow video @e2e-capture", () => {
     );
     await fillLabeledField(
       page,
-      /Portfolio folder on your Mac/i,
+      /Portfolio folder on your computer/i,
       portfolioPath,
     );
     await fillLabeledField(
@@ -161,7 +161,7 @@ test.describe("Marketplace workflow video @e2e-capture", () => {
     const progressFeed = page
       .locator("div")
       .filter({
-        has: page.getByRole("heading", { name: "Progress on your Mac" }),
+        has: page.getByRole("heading", { name: "Progress on your computer" }),
       })
       .first();
     await expect(progressFeed).toBeVisible({ timeout: 60_000 });
@@ -181,9 +181,9 @@ test.describe("Marketplace workflow video @e2e-capture", () => {
     await expect(proposalSignal).toBeVisible({ timeout: 180_000 });
     await pauseForVideo(page, 2500);
 
-    const needsAnswer = page.getByText(/Your Mac agent needs input/i);
+    const needsAnswer = page.getByText(/Your computer agent needs input/i);
     if (await needsAnswer.isVisible().catch(() => false)) {
-      const answerBox = page.getByPlaceholder(/Reply to your Mac agent/i);
+      const answerBox = page.getByPlaceholder(/Reply to your computer agent/i);
       await answerBox.fill(
         "Approve the draft for review only. Do not send to the client.",
       );

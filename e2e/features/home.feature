@@ -15,7 +15,7 @@ Feature: Home dashboard
   Scenario: User with no Mac only sees connect guide
     Given I am signed in as a fresh test account "test-home-2@agentwitch.com"
     When I open "/"
-    Then I should see the connect-your-Mac guide
+    Then I should see the connect-your-computer guide
     And I should not see marketplace shortcuts in the main dashboard area
 
   Scenario: Copy install command opens paste modal

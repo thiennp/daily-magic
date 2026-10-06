@@ -2,8 +2,8 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 
 const e2eHomeAndOnboarding: ShowcaseArticle = {
   slug: "e2e-home-and-onboarding",
-  title: "E2E: Home dashboard and Mac setup",
-  subtitle: "Connect your Mac, then unlock the onboarding checklist.",
+  title: "E2E: Home dashboard and Computer setup",
+  subtitle: "Connect your computer, then unlock the onboarding checklist.",
   category: "E2E verified",
   supportLevel: "full",
   readMinutes: 3,

@@ -7,10 +7,10 @@ export const VIBE_CODING_APP_FEATURE_WORKFLOW: WorkflowCapabilityTemplate =
     "vibe-coding-app-feature",
     "Engineering",
     "Add vibe coding app feature",
-    "Turn a vibe brief into a small app feature on your Mac — clarify first, decide architecture in plain language, then ship with knowledge and tests.",
+    "Turn a vibe brief into a small app feature on your computer — clarify first, decide architecture in plain language, then ship with knowledge and tests.",
     VIBE_CODING_APP_FEATURE_EXAMPLE_REQUEST,
     [
-      ["appTarget", "App folder path on your Mac (git repo)", "text"],
+      ["appTarget", "App folder path on your computer (git repo)", "text"],
       ["featureBrief", "Feature vibe and outcome", "textarea"],
       ["targetSurface", "Where it lives (route, screen, or component)", "text"],
       [

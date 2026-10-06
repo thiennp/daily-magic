@@ -39,7 +39,7 @@ describe("inboxDispatchPeerOptions", () => {
     const options = inboxDispatchPeerOptions([
       {
         id: "comp-1",
-        projectDisplayName: "This Mac",
+        projectDisplayName: "This computer",
         isAgent: false,
         memberKind: "computer",
         assignable: true,
@@ -71,7 +71,7 @@ describe("inboxDispatchPeerOptions", () => {
     expect(options).toEqual([
       {
         membershipId: "comp-1",
-        projectDisplayName: "This Mac · computer",
+        projectDisplayName: "This computer · computer",
         memberKind: "computer",
       },
       {

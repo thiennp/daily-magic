@@ -6,12 +6,12 @@ const onboardIn15Minutes: ShowcaseArticle = {
   slug: "onboard-in-15-minutes",
   title: "Onboard in 15 minutes — walk through with real screens",
   subtitle:
-    "Sign in, set up your Mac to run jobs, run the seeded weekly status workflow, open Reports.",
+    "Sign in, set up your computer to run jobs, run the seeded weekly status workflow, open Reports.",
   category: "Start here",
   supportLevel: "full",
   readMinutes: 5,
   whatYouNeed: [
-    "About 15 minutes and a Mac you control",
+    "About 15 minutes and a computer you control",
     "Agent Witch install command from Home → Your setup",
     'Seeded Library playbook: "Weekly status update"',
   ],
@@ -31,23 +31,23 @@ const onboardIn15Minutes: ShowcaseArticle = {
       image: buildShowcaseOnboardingArticleImage(
         ONBOARDING_SHOWCASE_SCREEN.HOME_CHECKLIST,
         {
-          alt: "Home onboarding checklist before a Mac is connected",
+          alt: "Home onboarding checklist before a computer is connected",
           caption:
-            "Onboarding checklist with Add your Mac as a worker still open.",
+            "Onboarding checklist with Add your computer as a worker still open.",
         },
       ),
     },
     {
-      heading: "2. Set up your Mac to run workflows",
+      heading: "2. Set up your computer to run workflows",
       bullets: [
-        "Home → Your setup — copy the install command and run it on the Mac",
-        "What you should see: Your Devices lists the Mac as ready to run jobs",
-        "If send stays disabled later, check that the Mac is awake and the browser is connected",
+        "Home → Your setup — copy the install command and run it on the computer",
+        "What you should see: Your Devices lists the computer as ready to run jobs",
+        "If send stays disabled later, check that the computer is awake and the browser is connected",
       ],
       image: buildShowcaseOnboardingArticleImage(
         ONBOARDING_SHOWCASE_SCREEN.MAC_CONNECTED,
         {
-          alt: "Your Devices panel with a connected Mac",
+          alt: "Your Devices panel with a connected computer",
           caption: "Jamie's MacBook Pro connected and ready to run jobs.",
         },
       ),
@@ -73,14 +73,14 @@ const onboardIn15Minutes: ShowcaseArticle = {
         "Week of: Jul 7",
         "Highlights: Shipped the library weekly status workflow and onboarding guide.",
         "Blockers: Waiting on design review for the hero copy.",
-        "Use playbook → send to your Mac (or Copy prompt if you only want to inspect the assembled text)",
+        "Use playbook → send to your computer (or Copy prompt if you only want to inspect the assembled text)",
       ],
     },
     {
       heading: "5. Confirm in Reports",
       bullets: [
         "Reports — find the run you just sent",
-        "What you should see: prompt, status, and output when the Mac finishes",
+        "What you should see: prompt, status, and output when the computer finishes",
         "Tip: history stays in this browser — use the same browser next Monday for Run again",
       ],
       image: buildShowcaseOnboardingArticleImage(

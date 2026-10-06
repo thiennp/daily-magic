@@ -51,7 +51,7 @@ describe("agent access helpers", () => {
     await expect(failed).rejects.toBeInstanceOf(AgentMailUnavailableError);
   });
 
-  it("summarizes a Mac and clips a long Run prompt", () => {
+  it("summarizes a computer and clips a long Run prompt", () => {
     expect(
       summarizeAgentAccessMac({
         id: "mac-1",

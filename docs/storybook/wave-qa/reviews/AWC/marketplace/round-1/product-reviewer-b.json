@@ -19,7 +19,7 @@
     {
       "area": "mac-run-promise",
       "pointsDeducted": 1,
-      "reason": "Header promises run on your Mac; starter cards do not restate Mac writer requirement in the grid (acceptable given global nav context)."
+      "reason": "Header promises run on your computer; starter cards do not restate Mac writer requirement in the grid (acceptable given global nav context)."
     }
   ],
   "whyBelowThreshold": "",

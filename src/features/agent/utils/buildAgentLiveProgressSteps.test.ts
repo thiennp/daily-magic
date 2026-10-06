@@ -22,7 +22,7 @@ describe("buildAgentLiveProgressSteps", () => {
     const result = buildAgentLiveProgressSteps({
       status: "idle",
       output:
-        "Claude is ready on your Mac.\nUse New task below when you are ready.\n",
+        "Claude is ready on your computer.\nUse New task below when you are ready.\n",
     });
 
     expect(result.steps.map((step) => [step.label, step.state])).toEqual([

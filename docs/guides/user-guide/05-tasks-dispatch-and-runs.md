@@ -25,11 +25,11 @@ If **Send** is disabled, fix what the **Send readiness** banner says first—emp
 
 Expand **More options** when you need more than Mac + prompt:
 
-| Option                       | User meaning                                | Honest limits                                                                                                                                                                                                   |
-| ---------------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Repository / code folder** | Where the writer CLI runs on the Mac        | Browser cannot pick a real POSIX path via native dialog—type a path you know, use defaults, or set folder in **Agent Witch on this Mac** ([folder picker Q&A](../../qa/awc-project-folder-path-picker.md)).     |
-| **Playbook**                 | Rules/skills/templates installed on the Mac | Files live under `~/.agent-witch/harness/`; installing from Marketplace is a separate flow ([dispatch Q&A](../../qa/mac-harness-workflow-agent-dispatch.md)).                                                   |
-| **Writer**                   | Which local CLI (Cursor, Claude Code, …)    | Must exist on the Mac. A missing writer API key that still runs the CLI shows **Completed with fallback**. If the CLI cannot start, the run shows **Failed** — Writer API key missing and Claude CLI can’t run. |
+| Option                       | User meaning                                     | Honest limits                                                                                                                                                                                                        |
+| ---------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Repository / code folder** | Where the writer CLI runs on the computer        | Browser cannot pick a real POSIX path via native dialog—type a path you know, use defaults, or set folder in **Agent Witch on this computer** ([folder picker Q&A](../../qa/awc-project-folder-path-picker.md)).     |
+| **Playbook**                 | Rules/skills/templates installed on the computer | Files live under `~/.agent-witch/harness/`; installing from Marketplace is a separate flow ([dispatch Q&A](../../qa/mac-harness-workflow-agent-dispatch.md)).                                                        |
+| **Writer**                   | Which local CLI (Cursor, Claude Code, …)         | Must exist on the computer. A missing writer API key that still runs the CLI shows **Completed with fallback**. If the CLI cannot start, the run shows **Failed** — Writer API key missing and Claude CLI can’t run. |
 
 Company-only hints (run on behalf, policy) appear when org rules exist—not on every solo Home.
 
@@ -39,11 +39,11 @@ Company-only hints (run on behalf, policy) appear when org rules exist—not on 
 
 1. Console creates an **agent run** record in the cloud.
 2. It builds a **prompt payload** (plus optional folder, playbook/capability id, writer).
-3. It delivers **`command.claude.run`** (name is historical) to your Mac over the Agent Witch WebSocket—or **queues** it in the outbox if the Mac is fresh but not live on this server ([ADR 0005](../../adr/0005-shared-mac-presence-and-dispatch-outbox.md)).
-4. Your Mac runs the writer in a **real shell**; output streams to the browser.
+3. It delivers **`command.claude.run`** (name is historical) to your computer over the Agent Witch WebSocket—or **queues** it in the outbox if the computer is fresh but not live on this server ([ADR 0005](../../adr/0005-shared-mac-presence-and-dispatch-outbox.md)).
+4. Your computer runs the writer in a **real shell**; output streams to the browser.
 5. Terminal outcome is stored for **Runs** / reports.
 
-Workflows with multiple steps and human checkpoints reuse the same Mac path per agent step; checkpoints pause in the **browser**, not on the Mac ([official workflow checkpoints Q&A](../../qa/official-workflow-run-checkpoints-and-retry.md)).
+Workflows with multiple steps and human checkpoints reuse the same computer path per agent step; checkpoints pause in the **browser**, not on the computer ([official workflow checkpoints Q&A](../../qa/official-workflow-run-checkpoints-and-retry.md)).
 
 Optional **Cursor Cloud** dispatch (when configured) targets cloud agents instead of your Mac— not a hidden substitute for local execution ([Chapter 0 — misconceptions](00-philosophy-and-vocabulary.md)).
 
@@ -56,11 +56,11 @@ Optional **Cursor Cloud** dispatch (when configured) targets cloud agents instea
 | **Mac is reconnecting. Your task will send when it checks in.** | HTTP accepted; outbox will flush when hub socket is live—common right after Console deploy. |
 | **Try again in a few seconds.**                                 | Interactive retry path—not the same as queued writer ack.                                   |
 | Mac offline                                                     | No dispatch; fix connect chapter—not “wait silently forever.”                               |
-| **This computer is not linked**                                 | No row is **this Mac**. **Connect this Mac** on Home links the computer you are using.      |
+| **This computer is not linked**                                 | No row is **this Mac**. **Connect this computer** on Home links the computer you are using. |
 
-Details: [Reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md) · [No Connect button](../../qa/awc-offline-devices-hide-connect-button.md) · [Duplicate Macs from Connect](../../qa/awc-connect-click-creates-duplicate-macs.md) · [Deleting a Mac](../../qa/awc-delete-mac-forgets-local-connection.md).
+Details: [Reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md) · [No Connect button](../../qa/awc-offline-devices-hide-connect-button.md) · [Duplicate computers from Connect](../../qa/awc-connect-click-creates-duplicate-macs.md) · [Deleting a Mac](../../qa/awc-delete-mac-forgets-local-connection.md).
 
-**Seen recently** means that computer checked in within the last minute or so. Opening **Connect this Mac** does not count as a check-in. Clicking it again replaces the unused link instead of adding **Mac 2**.
+**Seen recently** means that computer checked in within the last minute or so. Opening **Connect this computer** does not count as a check-in. Clicking it again replaces the unused link instead of adding **Mac 2**.
 
 ---
 
@@ -79,9 +79,9 @@ Live UI uses **locked outcome chips**—do not show **Success** while still conn
 
 One primary log surface per run—avoid duplicate “success” chrome elsewhere.
 
-### Git check on the Mac (git repos only)
+### Git check on the computer (git repos only)
 
-When your **code folder** is a git repository, the Mac records a short **git verdict** after the writer finishes—before/after dirty paths and a summary of tracked changes vs `HEAD`. It is stored in the Mac run report **details** (alongside the agent’s own summary), not as a separate Console screen.
+When your **code folder** is a git repository, the computer records a short **git verdict** after the writer finishes—before/after dirty paths and a summary of tracked changes vs `HEAD`. It is stored in the computer run report **details** (alongside the agent’s own summary), not as a separate Console screen.
 
 | You might see in details               | Meaning                                                                               |
 | -------------------------------------- | ------------------------------------------------------------------------------------- |
@@ -107,7 +107,7 @@ Open **Runs** to:
 
 **Search past runs** (when offered) pulls useful context from earlier **Runs** (**efficient memory**)—UI avoids the word “Knowledge.” Not every prior run is replayed automatically; scope improves over time ([north star vs today](00-philosophy-and-vocabulary.md#north-star-vs-today)).
 
-On the **Mac**, the writer may also receive project snippets and “avoid repeating” notes from past failures before it runs—the **Knowledge** page on **Agent Witch on this Mac** shows what was saved and how often it was reused ([Chapter 4 — Local knowledge](04-mac-connect-and-bridge.md#local-knowledge-mac-app--efficient-memory)). That stays on your machine until you explicitly promote or publish something in the Console.
+On the **Mac**, the writer may also receive project snippets and “avoid repeating” notes from past failures before it runs—the **Knowledge** page on **Agent Witch on this computer** shows what was saved and how often it was reused ([Chapter 4 — Local knowledge](04-mac-connect-and-bridge.md#local-knowledge-mac-app--efficient-memory)). That stays on your machine until you explicitly promote or publish something in the Console.
 
 Team filters (who, which Mac, playbook, date) support audit—not required for solo makers.
 
@@ -122,19 +122,19 @@ Two paths users feel as “same chat”:
 | Second message while live panel still open | Hot **`--continue`** on supported writers when session is warm.                                                                                         |
 | Continue from job detail / history         | Cold start may inject truncated prior transcript from Mac storage (`~/.agent-witch/writer-sessions/`) or built continuation prompt from a prior run id. |
 
-Ending a writer session on the Mac clears hot continue until the next fresh dispatch. Details: [delegate local CLI Q&A](../../qa/delegate-local-cli-conversation-context.md).
+Ending a writer session on the computer clears hot continue until the next fresh dispatch. Details: [delegate local CLI Q&A](../../qa/delegate-local-cli-conversation-context.md).
 
 ---
 
 ## Mid-run input
 
-When output shows **Waiting on you**, respond in the Console—the Mac stores pending checkpoints and resumes the shell when you answer. Do not expect the agent to guess passwords or ambiguous choices. Engineers: mid-run input protocol in `.cursor/rules/agent-run-input-protocol.mdc` and `src/features/agent-witch/`.
+When output shows **Waiting on you**, respond in the Console—the computer stores pending checkpoints and resumes the shell when you answer. Do not expect the agent to guess passwords or ambiguous choices. Engineers: mid-run input protocol in `.cursor/rules/agent-run-input-protocol.mdc` and `src/features/agent-witch/`.
 
 ---
 
 ## Writer routing (advanced, still user-relevant)
 
-If your org configures cascade routing, the Console may pick among writers by policy—that affects **which CLI** runs, not whether work stays on the Mac. See [writer dispatch cascade Q&A](../../qa/writer-dispatch-cascade-routing.md) when troubleshooting “wrong tool ran.”
+If your org configures cascade routing, the Console may pick among writers by policy—that affects **which CLI** runs, not whether work stays on the computer. See [writer dispatch cascade Q&A](../../qa/writer-dispatch-cascade-routing.md) when troubleshooting “wrong tool ran.”
 
 ---
 
@@ -142,7 +142,7 @@ If your org configures cascade routing, the Console may pick among writers by po
 
 | Pattern            | Tip                                                                           |
 | ------------------ | ----------------------------------------------------------------------------- |
-| Repo work          | Set folder on Mac first; reference repo name in prompt.                       |
+| Repo work          | Set folder on computer first; reference repo name in prompt.                  |
 | Small verification | Short prompt + explicit “list only, do not delete.”                           |
 | Long jobs          | Watch **In progress**; session limits may **time out** with honest stop chip. |
 | Team visibility    | Same run appears in shared **Runs** once dispatched under team account.       |
@@ -153,7 +153,7 @@ Test dispatch without Home: developer `ws-test` UI ([local bridge](../../agent-w
 
 ## Sending a Task from an external AI
 
-After the AI opens `/for-agents` from the homepage prompt and registers (method `none` or `agentmail`), it runs `get_install_command` on its computer, saves a workflow with `create_workflow`, and installs the Playbook with `install_harness`. Before `send_task`, it runs the prompt optimizer on this Mac (`http://127.0.0.1:43347/prompt-optimizer/agent`) in the project folder, so the judge and improver can read the Playbook and the code. It does not ask you to paste the prompt into a different optimizer. `run_workflow` and `send_task` use the same Run pipeline as the composer. If `list_macs` is empty, the install command has not finished. Read status with `list_runs` and `get_run`. The home page section **Prompt optimizer** states why that local score is the one to trust. That section stays in the main Home column. The extra onboarding column is omitted once getting-started hints are hidden, so the welcome panel and this section use the full content width.
+After the AI opens `/for-agents` from the homepage prompt and registers (method `none` or `agentmail`), it runs `get_install_command` on its computer, saves a workflow with `create_workflow`, and installs the Playbook with `install_harness`. Before `send_task`, it runs the prompt optimizer on this computer (`http://127.0.0.1:43347/prompt-optimizer/agent`) in the project folder, so the judge and improver can read the Playbook and the code. It does not ask you to paste the prompt into a different optimizer. `run_workflow` and `send_task` use the same Run pipeline as the composer. If `list_macs` is empty, the install command has not finished. Read status with `list_runs` and `get_run`. The home page section **Prompt optimizer** states why that local score is the one to trust. That section stays in the main Home column. The extra onboarding column is omitted once getting-started hints are hidden, so the welcome panel and this section use the full content width.
 
 ---
 

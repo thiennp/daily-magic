@@ -9,7 +9,7 @@ const ALIGN_AND_DRAFT = `Read subject, gradeLevel, topicStandard, classDuration,
 ## Align objectives and pacing (this step only)
 Confirm objectives match topicStandard at a readable level for gradeLevel.
 Respect classDuration including transitions; note prerequisites students may need.
-If materialsPath is set, skim that folder on this Mac for rubrics or prior units; otherwise prefer low-prep activities.
+If materialsPath is set, skim that folder on this computer for rubrics or prior units; otherwise prefer low-prep activities.
 Summarize assumptions and any open questions in [[PROGRESS]] for the operator — do not use [[AWAITING_INPUT]]; the workflow pauses at human checkpoints.
 
 ## Draft timed agenda (this step only)
@@ -37,7 +37,7 @@ export const OFFICIAL_WORKFLOW_DEFINITION: OfficialWorkflowDefinition = {
       "Confirm standards and class constraints",
       [
         "1. Verify subject, gradeLevel, and topicStandard against your syllabus.",
-        "2. Open materialsPath on your Mac if you have prior units or rubrics.",
+        "2. Open materialsPath on your computer if you have prior units or rubrics.",
         "3. Reply ready when classDuration and classroom constraints are final.",
       ].join("\n"),
     ),

@@ -79,9 +79,9 @@ const buildConnectComputerGuideSteps = (
 
   return [
     {
-      title: "Use a Mac",
+      title: "Use a computer",
       description:
-        "Agent Witch installs on macOS. On your Mac, open Terminal and follow the steps below.",
+        "Agent Witch installs on macOS. On your computer, open Terminal and follow the steps below.",
     },
     ...MAC_TERMINAL_STEPS,
   ];

@@ -27,7 +27,7 @@ describe("isWsTestSendDisabled", () => {
     ).toBe(true);
   });
 
-  it("disables send when no Mac is dispatch-ready for self-dispatch", () => {
+  it("disables send when no computer is dispatch-ready for self-dispatch", () => {
     expect(
       isWsTestSendDisabled({
         ...baseInput,

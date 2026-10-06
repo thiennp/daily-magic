@@ -1,6 +1,6 @@
 # Chapter 5 — Dispatch, presence, and runs
 
-**Dispatch** routes work to a paired Mac or **Cursor Cloud**; an **agent run** is one execution with streamed events and Reports history. User flows: [user guide ch.5 — Tasks, dispatch, and runs](../user-guide/05-tasks-dispatch-and-runs.md).
+**Dispatch** routes work to a paired computer or **Cursor Cloud**; an **agent run** is one execution with streamed events and Reports history. User flows: [user guide ch.5 — Tasks, dispatch, and runs](../user-guide/05-tasks-dispatch-and-runs.md).
 
 Server core: `src/lib/dispatch/` · UI `src/features/dispatch/`, `src/features/agent/`, `src/features/reports/` · primary API **`POST /api/agent-runs/dispatch`**.
 
@@ -36,16 +36,16 @@ New task order is Mac → project → workflow or custom task → LLM CLI → pr
 
 ## Dispatch targets
 
-| Target       | Identifier                                       | Executes on                  |
-| ------------ | ------------------------------------------------ | ---------------------------- |
-| Paired Mac   | Device id from `/api/agent-witch/devices`        | Mac writer CLI / PTY via hub |
-| Cursor Cloud | `__cursor_cloud__` / `writerAgent: cursor-cloud` | Cloud executor (no Mac)      |
+| Target          | Identifier                                       | Executes on                  |
+| --------------- | ------------------------------------------------ | ---------------------------- |
+| Paired computer | Device id from `/api/agent-witch/devices`        | Mac writer CLI / PTY via hub |
+| Cursor Cloud    | `__cursor_cloud__` / `writerAgent: cursor-cloud` | Cloud executor (no computer) |
 
 Routing cascade (continuation vs memory budget): [docs/qa/writer-dispatch-cascade-routing.md](../../qa/writer-dispatch-cascade-routing.md).
 
-**Product pillars:** dispatch + Reports are the spine for **pillar 2** (feedback on runs, honest run status) and **pillar 3** (memory entry limits in cascade routing). On the Mac, `dispatchWriterTask` may prefix the writer prompt with run memory, project RAG chunks (with retrieval telemetry), and error-knowledge snippets—see [Chapter 10](10-learning-memory-and-improvements.md) and AWL `/knowledge` in [Chapter 4](04-mac-bridge-awl-awb-awi.md).
+**Product pillars:** dispatch + Reports are the spine for **pillar 2** (feedback on runs, honest run status) and **pillar 3** (memory entry limits in cascade routing). On the computer, `dispatchWriterTask` may prefix the writer prompt with run memory, project RAG chunks (with retrieval telemetry), and error-knowledge snippets—see [Chapter 10](10-learning-memory-and-improvements.md) and AWL `/knowledge` in [Chapter 4](04-mac-bridge-awl-awb-awi.md).
 
-**Mac post-run git verdict:** when `projectFolderPath` is a git repo, AWI snapshots the worktree before writer spawn and appends a one-line verdict to the Mac run report `details` after `command.claude.result` (user-facing copy: [user guide ch.5](../user-guide/05-tasks-dispatch-and-runs.md#git-check-on-the-mac-git-repos-only); code: [Chapter 4](04-mac-bridge-awl-awb-awi.md) step 4, [Chapter 10](10-learning-memory-and-improvements.md)).
+**Mac post-run git verdict:** when `projectFolderPath` is a git repo, AWI snapshots the worktree before writer spawn and appends a one-line verdict to the computer run report `details` after `command.claude.result` (user-facing copy: [user guide ch.5](../user-guide/05-tasks-dispatch-and-runs.md#git-check-on-the-mac-git-repos-only); code: [Chapter 4](04-mac-bridge-awl-awb-awi.md) step 4, [Chapter 10](10-learning-memory-and-improvements.md)).
 
 **Production Cursor Cloud:** request `Origin` or `Referer` host must match app base URL (ADR 0004). Local dev skips for ergonomics.
 
@@ -65,10 +65,10 @@ Routing cascade (continuation vs memory budget): [docs/qa/writer-dispatch-cascad
 - **`isOnline`** — visibility / wake hints (`live`, `live_other_instance`, or `recent`).
 - **`isDispatchReady`** — writer-ready; only **`live`** on this process (and relay path for other instance).
 - Home “Mac online” hero counts **`live`** on this process only — `live_other_instance` shows reconnecting UX.
-- **this Mac** is a browser token-hash match, not a presence tier. When no row matches, Home shows **Connect this Mac** (`resolveIsCheckingLocalMacIdentity`, HOME-057). A skipped wake probe must not leave that button hidden.
-- An install-token row is not a check-in. It stays `offline` until the Mac heartbeats. Repeated Connect clicks must not create extra `recent` rows (HOME-059). `GET /api/agent-witch/devices` revokes older unlabeled placeholders and keeps the newest.
-- AWL **Connected** is the Mac client’s socket-open flag. It can be true while the device row AWC renders stays `offline` when register bound a different device id or origin ([Q&A](../../qa/awc-offline-while-awl-connected.md)).
-- Deleting a Mac removes the device row after in-flight runs and queued outbox rows for that device are cleared (HOME-060). The Mac forgets its connection only when the token is unknown.
+- **this Mac** is a browser token-hash match, not a presence tier. When no row matches, Home shows **Connect this computer** (`resolveIsCheckingLocalMacIdentity`, HOME-057). A skipped wake probe must not leave that button hidden.
+- An install-token row is not a check-in. It stays `offline` until the computer heartbeats. Repeated Connect clicks must not create extra `recent` rows (HOME-059). `GET /api/agent-witch/devices` revokes older unlabeled placeholders and keeps the newest.
+- AWL **Connected** is the computer client’s socket-open flag. It can be true while the device row AWC renders stays `offline` when register bound a different device id or origin ([Q&A](../../qa/awc-offline-while-awl-connected.md)).
+- Deleting a computer removes the device row after in-flight runs and queued outbox rows for that device are cleared (HOME-060). The computer forgets its connection only when the token is unknown.
 
 Unified resolver (devices API + dispatch must match): `resolveLiveAgentClientsByDeviceIdForUser` (see ADR 0005 full text).
 
@@ -123,7 +123,7 @@ See [docs/qa/mac-harness-workflow-agent-dispatch.md](../../qa/mac-harness-workfl
 
 ## Agent access `send_task`
 
-`executeAgentAccessSendTask` requires `project_id` (also accepts `projectId`). Missing project returns MCP/tool error `project_required`. It then calls `dispatchClaudeRunForDashboardUser`, which resolves the project at `resolveAgentRunDispatchProject` / `resolveDashboardDispatchProjectContext` (400 `project_required` when absent; 403/404 on membership). Shared HTTP create seam: `POST /api/agent-runs/dispatch`. Tool catalog: `src/lib/agentAccess/agentAccessToolCatalog.constant.ts`. Before that call, the agent guideline tells the bot to optimize the prompt with AWL `POST /prompt-optimizer/agent` in the project folder. `get_agent_guide` returns `promptSdlc` with the same contract. The Mac instruction topic `prompt-sdlc` tells a writer on this computer to do the same.
+`executeAgentAccessSendTask` requires `project_id` (also accepts `projectId`). Missing project returns MCP/tool error `project_required`. It then calls `dispatchClaudeRunForDashboardUser`, which resolves the project at `resolveAgentRunDispatchProject` / `resolveDashboardDispatchProjectContext` (400 `project_required` when absent; 403/404 on membership). Shared HTTP create seam: `POST /api/agent-runs/dispatch`. Tool catalog: `src/lib/agentAccess/agentAccessToolCatalog.constant.ts`. Before that call, the agent guideline tells the bot to optimize the prompt with AWL `POST /prompt-optimizer/agent` in the project folder. `get_agent_guide` returns `promptSdlc` with the same contract. The computer instruction topic `prompt-sdlc` tells a writer on this computer to do the same.
 
 ---
 

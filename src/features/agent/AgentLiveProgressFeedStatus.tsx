@@ -64,7 +64,7 @@ export default function AgentLiveProgressFeedStatus({
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-w-0 flex-wrap items-center gap-2">
           <h3 className="text-sm font-medium text-gray-900 dark:text-white/90">
-            Progress on your Mac
+            Progress on your computer
           </h3>
           {outcome !== null ? (
             <AgentLiveRunOutcomeChip
@@ -108,7 +108,8 @@ export default function AgentLiveProgressFeedStatus({
           className="mt-3 text-sm text-gray-600 dark:text-gray-300"
           role="status"
         >
-          Still waiting for your Mac agent — this is taking longer than usual…
+          Still waiting for your computer agent — this is taking longer than
+          usual…
         </p>
       ) : null}
     </>

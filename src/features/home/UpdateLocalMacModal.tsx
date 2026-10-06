@@ -25,10 +25,11 @@ export default function UpdateLocalMacModal({
         Update local Agent Witch
       </h2>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        On this Mac, open Terminal, paste this command, and press Return. It
-        includes your account link (same as Connect this Mac), stops background
-        services, replaces your local install files with the latest version, and
-        restarts Agent Witch. You can close this page after copying.
+        On this computer, open Terminal, paste this command, and press Return.
+        It includes your account link (same as Connect this computer), stops
+        background services, replaces your local install files with the latest
+        version, and restarts Agent Witch. You can close this page after
+        copying.
       </p>
       {updateCommandError !== null ? (
         <p className="mt-3 text-sm text-red-600 dark:text-red-400">

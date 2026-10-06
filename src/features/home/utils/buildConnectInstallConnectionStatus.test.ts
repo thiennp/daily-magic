@@ -19,19 +19,19 @@ describe("buildConnectInstallConnectionStatus", () => {
         isInstallConnectionFinished: false,
       }),
     ).toEqual({
-      message: "Waiting for your Mac to connect…",
+      message: "Waiting for your computer to connect…",
       tone: "waiting",
     });
   });
 
-  it("HOME-025: returns success when the Mac WebSocket is live", () => {
+  it("HOME-025: returns success when the computer WebSocket is live", () => {
     expect(
       buildConnectInstallConnectionStatus({
         installEngaged: true,
         isInstallConnectionFinished: true,
       }),
     ).toEqual({
-      message: "Your Mac is connected.",
+      message: "Your computer is connected.",
       tone: "success",
     });
   });

@@ -79,7 +79,7 @@ test.describe("Self-delegate on own Mac", () => {
 
     // Writer agent — custom path starts a live CLI session immediately
     const writerHeading = page.getByRole("heading", {
-      name: /Choose an AI on your Mac/i,
+      name: /Choose an AI on your computer/i,
     });
     if (await writerHeading.isVisible().catch(() => false)) {
       await page.getByRole("button", { name: /Claude \(terminal\)/i }).click();
@@ -89,7 +89,7 @@ test.describe("Self-delegate on own Mac", () => {
       name: /Follow-up message for your agent/i,
     });
     await expect(followUp).toBeVisible({ timeout: 90_000 });
-    await expect(page.getByText("Progress on your Mac")).toBeVisible({
+    await expect(page.getByText("Progress on your computer")).toBeVisible({
       timeout: 90_000,
     });
     await expect(

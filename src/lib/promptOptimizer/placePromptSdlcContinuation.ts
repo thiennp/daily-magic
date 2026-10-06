@@ -68,7 +68,7 @@ export const placePromptSdlcContinuation = async (input: {
       pendingLocalPrompt: null,
       pendingLocalRole: null,
       currentRound: input.currentRound,
-      errorMessage: "Choose a Mac for the writer.",
+      errorMessage: "Choose a computer for the writer.",
     });
   }
 

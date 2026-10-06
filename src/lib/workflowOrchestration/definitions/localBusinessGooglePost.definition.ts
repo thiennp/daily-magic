@@ -7,7 +7,7 @@ import type OfficialWorkflowDefinition from "@/lib/workflowOrchestration/types/O
 const LOAD_HISTORY_AND_DRAFT = `Read businessName, businessType, postTopic, hoursOrOffer, and postHistoryPath from the workflow form.
 
 ## Load history and dedupe (this step only)
-Load postHistoryPath on the Mac if it exists; if missing, note that you will help create the first entry after publish.
+Load postHistoryPath on the computer if it exists; if missing, note that you will help create the first entry after publish.
 Scan recent entries and avoid reusing hooks, offers, or angles from the last few posts.
 Summarize dedupe notes in [[PROGRESS]].
 
@@ -66,7 +66,7 @@ export const OFFICIAL_WORKFLOW_DEFINITION: OfficialWorkflowDefinition = {
       "Publish on Google Business Profile",
       [
         "1. Create the post in Google Business Profile; the agent does not log in.",
-        "2. Attach photos from your Mac if the draft references them.",
+        "2. Attach photos from your computer if the draft references them.",
         "3. Ask the agent to append the post to postHistoryPath.",
       ].join("\n"),
     ),

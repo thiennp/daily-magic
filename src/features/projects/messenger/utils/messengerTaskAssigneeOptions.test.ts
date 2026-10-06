@@ -17,13 +17,13 @@ describe("messengerTaskAssigneeOptions", () => {
           },
         ],
         computers: [
-          { membershipId: "mc1", displayName: "This Mac" },
+          { membershipId: "mc1", displayName: "This computer" },
           { membershipId: "mc2", displayName: "  " },
         ],
       }),
     ).toEqual([
       { membershipId: "m1", displayName: "WB Wake", kind: "bot" },
-      { membershipId: "mc1", displayName: "This Mac", kind: "computer" },
+      { membershipId: "mc1", displayName: "This computer", kind: "computer" },
     ]);
   });
 });

@@ -1,7 +1,7 @@
 export const JOB_APPLICATION_PACK_EXAMPLE_REQUEST = `Build a truthful job application pack from the workflow form.
 
 Read targetRole, companyName, jobPostingUrl, and jobDescription (paste when URL is empty).
-Open resumeFolderPath on this Mac and use only facts found there — never invent employers, dates, or skills.
+Open resumeFolderPath on this computer and use only facts found there — never invent employers, dates, or skills.
 Mirror keywords from the posting without keyword stuffing; flag gaps honestly.
 
 ## Map requirements to resume evidence

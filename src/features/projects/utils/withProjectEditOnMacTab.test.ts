@@ -4,10 +4,10 @@ import withProjectEditOnMacTab from "@/features/projects/utils/withProjectEditOn
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 
 describe("withProjectEditOnMacTab", () => {
-  it("rewrites only the href when Edit on Mac is enabled", () => {
+  it("rewrites only the href when Edit on computer is enabled", () => {
     const enabled: ProjectEditOnMacCta = {
       state: "enabled",
-      buttonLabel: "Edit on this Mac →",
+      buttonLabel: "Edit on this computer →",
       helperText: null,
       href: "http://127.0.0.1:43347/project?id=proj-1",
     };
@@ -20,7 +20,7 @@ describe("withProjectEditOnMacTab", () => {
   it("leaves offline CTAs unchanged", () => {
     const offline: ProjectEditOnMacCta = {
       state: "offline",
-      buttonLabel: "Edit on this Mac",
+      buttonLabel: "Edit on this computer",
       helperText: "Office Mac is offline right now.",
       href: null,
     };

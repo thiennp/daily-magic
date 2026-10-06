@@ -231,7 +231,7 @@ test.describe("Create project, pull harness, run workflow", () => {
     }
 
     const writerHeading = page.getByRole("heading", {
-      name: /Choose an AI on your Mac/i,
+      name: /Choose an AI on your computer/i,
     });
     if (await writerHeading.isVisible().catch(() => false)) {
       await page.getByRole("button", { name: /Claude \(terminal\)/i }).click();

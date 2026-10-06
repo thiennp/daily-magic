@@ -14,13 +14,13 @@ export const FREELANCER_CLIENT_PROPOSAL_WORKFLOW: WorkflowCapabilityTemplate =
       ["projectBrief", "Project brief from the client", "textarea"],
       [
         "portfolioFolderPath",
-        "Portfolio folder on your Mac (case studies, samples)",
+        "Portfolio folder on your computer (case studies, samples)",
         "text",
       ],
       ["budgetRange", "Budget range or rate target", "text"],
       [
         "proposalHistoryPath",
-        "Proposal history file on your Mac (optional)",
+        "Proposal history file on your computer (optional)",
         "text",
         false,
       ],

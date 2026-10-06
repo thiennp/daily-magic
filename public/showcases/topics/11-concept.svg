@@ -3,7 +3,7 @@
   <rect width="960" height="560" fill="url(#bg)"/>
   <rect x="32" y="28" width="896" height="504" rx="16" fill="#fff" stroke="#e5e7eb"/>
   <text x="56" y="68" font-family="ui-sans-serif,system-ui,sans-serif" font-size="18" font-weight="600" fill="#111827">Not just another chat tab</text>
-  <text x="56" y="92" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6b7280">real work on your Mac</text>
+  <text x="56" y="92" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6b7280">real work on your computer</text>
   <rect x="56" y="130" width="400" height="280" rx="12" fill="#f9fafb" stroke="#e5e7eb"/>
   <text x="76" y="168" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="600" fill="#6b7280">Generic chat</text>
   <text x="76" y="200" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#4b5563">Copy-paste prompts</text>
@@ -11,7 +11,7 @@
   <text x="76" y="256" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#4b5563">No team library</text>
   <rect x="480" y="130" width="400" height="280" rx="12" fill="#f0fdf4" stroke="#86efac"/>
   <text x="500" y="168" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="600" fill="#166534">Agent Witch</text>
-  <text x="500" y="200" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#374151">Runs on your Mac with context</text>
+  <text x="500" y="200" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#374151">Runs on your computer with context</text>
   <text x="500" y="228" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#374151">Saved workflows + schedules</text>
   <text x="500" y="256" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#374151">History and approvals</text>
 </svg>

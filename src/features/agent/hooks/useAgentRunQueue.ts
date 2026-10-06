@@ -56,7 +56,7 @@ export function useAgentRunQueue(): {
       }
 
       await refreshCount();
-      setQueueMessage("Queued — will send when your Mac is connected.");
+      setQueueMessage("Queued — will send when your computer is connected.");
       return true;
     },
     [refreshCount],

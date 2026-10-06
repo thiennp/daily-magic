@@ -12,7 +12,7 @@ interface ConnectThisMacDownloadAreaProps {
   readonly operatingSystem: BrowserOperatingSystem;
 }
 
-/** Isolated Download for Mac block for the Connect this Mac modal (mobile-gated). */
+/** Isolated Download for Mac block for the Connect this computer modal (mobile-gated). */
 export default function ConnectThisMacDownloadArea({
   operatingSystem,
 }: ConnectThisMacDownloadAreaProps) {

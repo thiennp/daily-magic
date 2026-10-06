@@ -14,7 +14,7 @@ export const buildConnectionBlockedComposerAction = (
       {
         stateId,
         helperMessage:
-          "Connecting this page to Agent Witch in your browser. New task will unlock when the dashboard connection is ready (this is not your Mac’s presence status).",
+          "Connecting this page to Agent Witch in your browser. New task will unlock when the dashboard connection is ready (this is not your computer’s presence status).",
         helperLinkLabel: null,
         helperLinkHref: null,
         primaryManualAction: null,
@@ -32,7 +32,7 @@ export const buildConnectionBlockedComposerAction = (
       {
         stateId,
         helperMessage:
-          "Could not refresh your Mac list. The last known devices are still shown.",
+          "Could not refresh your computer list. The last known devices are still shown.",
         helperLinkLabel: null,
         helperLinkHref: null,
         primaryManualAction: "retry_devices",

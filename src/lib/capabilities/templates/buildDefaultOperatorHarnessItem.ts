@@ -16,7 +16,7 @@ const buildDefaultOperatorHarnessItem = (
   return {
     id: `${input.id}-operator-prep`,
     kind: "operator",
-    title: isWorkflow ? "Prepare workflow inputs" : "Prepare your Mac",
+    title: isWorkflow ? "Prepare workflow inputs" : "Prepare your computer",
     path: `operator/${input.id}-prep.md`,
     content: isWorkflow
       ? [
@@ -25,8 +25,8 @@ const buildDefaultOperatorHarnessItem = (
           "3. Reply in the live terminal when the agent asks for confirmation.",
         ].join("\n")
       : [
-          "1. Confirm Agent Witch is running on your Mac.",
-          "2. Verify the Mac is online in the task composer before sending.",
+          "1. Confirm Agent Witch is running on your computer.",
+          "2. Verify the computer is online in the task composer before sending.",
           "3. Reply in the live terminal when the agent asks for confirmation.",
         ].join("\n"),
   };

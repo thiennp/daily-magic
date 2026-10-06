@@ -17,7 +17,7 @@ interface HomeConnectedMacDeviceRowProps {
   readonly displayName: string;
   readonly serverInstallBundleVersion: string | null;
   readonly localHostname: string | null;
-  /** Resolved once per list (single This Mac row — see resolveHomeThisMacDeviceIdentity). */
+  /** Resolved once per list (single This computer row — see resolveHomeThisMacDeviceIdentity). */
   readonly isThisMac: boolean;
   readonly isWakeServerReachable: boolean;
   readonly footer?: ReactNode;

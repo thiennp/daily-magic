@@ -8,17 +8,17 @@ Let an **active project member** agent pull a **scoped** slice of project memory
 
 ## What exists today
 
-1. **Per-project folder meta** under the Mac project root: `.agent-witch/` (`AGENT_WITCH_PROJECT_META_DIR_NAME`), including `memory/` (`AGENT_WITCH_PROJECT_MEMORY_DIR_NAME`) and `runs.ndjson` (`AGENT_WITCH_PROJECT_MEMORY_RUNS_FILE_NAME`), plus `rag/` chunks.
+1. **Per-project folder meta** under the computer project root: `.agent-witch/` (`AGENT_WITCH_PROJECT_META_DIR_NAME`), including `memory/` (`AGENT_WITCH_PROJECT_MEMORY_DIR_NAME`) and `runs.ndjson` (`AGENT_WITCH_PROJECT_MEMORY_RUNS_FILE_NAME`), plus `rag/` chunks.
 2. **Install-scoped knowledge** (ADR 0008 direction): `~/.agent-witch/projects/<projectId>/knowledge/` keyed by `projectId` (not folder path).
 3. **Harness files** at `~/.agent-witch/harness/` (playbook install surface) — instructions, not a shared memory bus.
 4. **AWC ACL** stores name / folder refs / members / audit only — **no** memory bodies as a cloud bus (`PROJECT_PEER_SYNC_GUIDELINE`).
 
 ## Proposed MCP (future)
 
-| Tool | Purpose |
-|------|---------|
+| Tool                  | Purpose                                                                                                      |
+| --------------------- | ------------------------------------------------------------------------------------------------------------ |
 | `list_project_memory` | List allowlisted relative paths under the project memory root for `projectId` (names + sizes + mtimes only). |
-| `get_project_memory` | Read one allowlisted path’s contents (size-capped) after ACL. |
+| `get_project_memory`  | Read one allowlisted path’s contents (size-capped) after ACL.                                                |
 
 ### AuthZ / scope
 
@@ -47,4 +47,3 @@ Let an **active project member** agent pull a **scoped** slice of project memory
 3. **Implement list/get with realpath allowlist** under project `.agent-witch/memory` (+ optional projectId knowledge dir) only; hard size/time caps.
 4. **Confirm-before-main** on any PR that touches Mac store read or bridge path resolution.
 5. **Threat-model review** (path traversal, secrets, cross-project) before merge; no “convenient” profile-wide fallbacks.
-

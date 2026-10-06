@@ -18,20 +18,20 @@ const e2eSelfDelegate: ShowcaseArticle = {
     {
       bullets: [
         "Home auto-links the local Agent Witch profile to Your Devices",
-        "Custom task + Claude opens a live terminal on your Mac",
+        "Custom task + Claude opens a live terminal on your computer",
         "Send feedback dispatches a real agent run (wait for /api/agent-runs/dispatch)",
         "The same prompt appears in Reports for that browser session",
       ],
       image: {
         src: "/showcases/e2e/self-delegate-live-terminal.png",
         alt: "Project New task flow with a live run on this computer",
-        caption: "Self-delegate: Claude running on the paired Mac.",
+        caption: "Self-delegate: Claude running on the paired computer.",
       },
     },
     {
       bullets: [
         "Reports lists requester and executor as the same account",
-        "Status moves to completed when the Mac finishes the run",
+        "Status moves to completed when the computer finishes the run",
       ],
       image: {
         src: "/showcases/e2e/self-delegate-job-history.png",

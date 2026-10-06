@@ -39,7 +39,7 @@ const buildTemplateHarnessItemContents = (
         input.description,
         "",
         "## When to use",
-        `- ${input.category} work that matches this preset on a paired Mac.`,
+        `- ${input.category} work that matches this preset on a paired computer.`,
         "",
         "## Steps",
         "1. Read the user inputs and any referenced local files.",

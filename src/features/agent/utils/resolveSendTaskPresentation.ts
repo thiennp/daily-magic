@@ -22,7 +22,7 @@ export const shouldKeepSendTaskAliveOnNavigate = (input: {
   readonly keepAlive: boolean;
 }): boolean => input.wasUrlOpen || input.keepAlive;
 
-/** Closing the modal while a Mac run is live should dock, not unmount the panel. */
+/** Closing the modal while a computer run is live should dock, not unmount the panel. */
 export const resolveSendTaskCloseAction = (input: {
   readonly isSessionActive: boolean;
 }): "minimize" | "dismiss" => (input.isSessionActive ? "minimize" : "dismiss");

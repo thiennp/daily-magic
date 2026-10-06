@@ -20,12 +20,9 @@ export default function HomeMacSettingsLink() {
     return (
       <div className="flex flex-wrap items-center gap-3">
         <HomeOpenLocalStatusButton>
-          Status & settings on this Mac
+          Status & settings on this computer
         </HomeOpenLocalStatusButton>
-        <Link
-          href="/download"
-          className={APP_SURFACE_CTA_SECONDARY_CLASS}
-        >
+        <Link href="/download" className={APP_SURFACE_CTA_SECONDARY_CLASS}>
           {DOWNLOAD_PAGE_COPY.pairedLinkLabel}
         </Link>
       </div>

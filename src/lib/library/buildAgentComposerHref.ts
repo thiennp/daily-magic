@@ -6,7 +6,7 @@ interface BuildAgentComposerHrefInput {
   readonly writerAgent?: string;
   readonly sourceRunId?: string;
   readonly openShell?: boolean;
-  /** Resume the Mac CLI conversation with --continue. */
+  /** Resume the computer CLI conversation with --continue. */
   readonly continueSession?: boolean;
   /** Skip workflow picker with a blank custom task. */
   readonly customTask?: boolean;

@@ -12,13 +12,13 @@ const agentDelegatesInsideYourCompany: ShowcaseArticle = {
   whatYouNeed: [
     "Shared company group with at least one teammate",
     "Teammate published a workflow or assistant in Library",
-    "Their Mac agent online when the job runs (or after approval)",
+    "Their computer agent online when the job runs (or after approval)",
   ],
   tryNext: { label: "Open projects", href: "/projects?intent=new-task" },
   relatedShowcases: [
     {
       slug: "phone-asks-coworker-mac-runs",
-      label: "Mobile: your phone asks, their Mac runs",
+      label: "Mobile: your phone asks, their computer runs",
     },
     {
       slug: "manager-approves-before-run",

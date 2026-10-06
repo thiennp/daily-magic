@@ -14,7 +14,7 @@ vi.mock("@/lib/agentWitch/agentWitchConnectionRegistry", () => ({
 }));
 
 describe("buildHubDispatchAffinityCookie", () => {
-  it("prefers the local hub instance when a Mac is live on this Node", async () => {
+  it("prefers the local hub instance when a computer is live on this Node", async () => {
     const instanceId = await resolveHubDispatchAffinityInstanceId({
       userId: "user-1",
       devices: [

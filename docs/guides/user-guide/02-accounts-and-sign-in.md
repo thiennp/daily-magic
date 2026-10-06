@@ -1,6 +1,6 @@
 # Chapter 2 — Accounts and sign-in
 
-Agent Witch is a **signed-in** product: your **Tasks**, **Runs**, paired **Macs**, and saved **Playbooks** belong to your user (and optionally your team). This chapter covers how you get in, what an account controls, and how sign-in relates to **Connect this Mac**.
+Agent Witch is a **signed-in** product: your **Tasks**, **Runs**, paired **Macs**, and saved **Playbooks** belong to your user (and optionally your team). This chapter covers how you get in, what an account controls, and how sign-in relates to **Connect this computer**.
 
 For vocabulary (**Mac**, **Task**, **Run**, **Playbook**), see [Chapter 0](00-philosophy-and-vocabulary.md).
 
@@ -46,14 +46,14 @@ This bypass is **off on production** `www.agentwitch.com` for security. Details:
 
 ## What your account owns
 
-| Owned by you (cloud)                                                | Lives on the Mac                                                             |
+| Owned by you (cloud)                                                | Lives on the computer                                                        |
 | ------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | Paired **Mac** rows (device name, presence, pairing token **hash**) | Pairing token secret, harness/playbook **files**, writer session transcripts |
 | **Runs** / reports history                                          | Shell execution, project folders on disk                                     |
 | Saved capabilities, library drafts (after sync), workflow runs      | Installed playbook files under `~/.agent-witch/harness/`                     |
 | Optional Cursor Cloud API keys (if configured)                      | Local CLI binaries (Cursor, Claude Code, etc.)                               |
 
-Signing out of the browser **does not** uninstall the Mac helper. Uninstalling the Mac helper **does not** delete cloud run history—it may mark the Mac **Offline** until you remove or reclaim the device.
+Signing out of the browser **does not** uninstall the computer helper. Uninstalling the computer helper **does not** delete cloud run history—it may mark the computer **Offline** until you remove or reclaim the device.
 
 ---
 
@@ -74,23 +74,23 @@ Exact nav labels follow [UX simplification](../../product/ux-simplification.md).
 
 ---
 
-## Pairing a Mac to your account
+## Pairing a computer to your account
 
 Pairing is the bridge between **account** and **machine**:
 
 1. **Sign in** on the Mac’s browser (same machine as the install).
 2. Run the **install script** from Home ([Chapter 1](01-getting-started.md)).
-3. Complete **Connect this Mac** so the cloud stores a **claimed device** with a `tokenHash`.
+3. Complete **Connect this computer** so the cloud stores a **claimed device** with a `tokenHash`.
 4. On macOS, the browser reads `GET http://127.0.0.1:{wakePort}/identity` from the **Mac bridge** and matches hashes—see [Q&A: this computer](../../qa/awc-how-browser-knows-this-computer.md) and [localhost identity / CORS](../../qa/awb-localhost-identity-and-cors.md).
 
 **Two UI phrases (do not confuse them):**
 
-| Copy                               | Meaning                                                         |
-| ---------------------------------- | --------------------------------------------------------------- |
-| **“This computer”** (connect row)  | Product copy: link the Mac you’re sitting at now.               |
-| **“this Mac” badge / On this Mac** | Computed match: cloud device hash equals local bridge identity. |
+| Copy                                    | Meaning                                                         |
+| --------------------------------------- | --------------------------------------------------------------- |
+| **“This computer”** (connect row)       | Product copy: link the computer you’re sitting at now.          |
+| **“this Mac” badge / On this computer** | Computed match: cloud device hash equals local bridge identity. |
 
-If identity is not linked after install, run **Connect this Mac** again while signed in—pairing token under `~/.agent-witch` must match a claimed device ([update / reconnecting Q&A](../../qa/awi-update-local-launchagent-plist.md)).
+If identity is not linked after install, run **Connect this computer** again while signed in—pairing token under `~/.agent-witch` must match a claimed device ([update / reconnecting Q&A](../../qa/awi-update-local-launchagent-plist.md)).
 
 ---
 
@@ -98,11 +98,11 @@ If identity is not linked after install, run **Connect this Mac** again while si
 
 Open your profile / account menu (top bar) for:
 
-| Item              | Purpose                                                   |
-| ----------------- | --------------------------------------------------------- |
-| **Mac & devices** | List paired Macs, presence, install bundle version hints. |
-| **Settings**      | Profile, notifications, integrations (as shipped).        |
-| **Sign out**      | Ends browser session; Mac helper may keep running.        |
+| Item              | Purpose                                                        |
+| ----------------- | -------------------------------------------------------------- |
+| **Mac & devices** | List paired computers, presence, install bundle version hints. |
+| **Settings**      | Profile, notifications, integrations (as shipped).             |
+| **Sign out**      | Ends browser session; Mac helper may keep running.             |
 
 **Mac settings** links often open the **local helper** or `#your-setup` anchors for update, wake, and repositories—browser daily work stays on Home and **Projects** ([Chapter 4](04-mac-connect-and-bridge.md)).
 
@@ -119,9 +119,9 @@ After you sign in, guest drafts can sync to your cloud library (newer `updatedAt
 ## Security habits (plain language)
 
 - Treat magic links like passwords—do not paste them in public chats.
-- Pairing tokens on disk prove your Mac to the cloud; protect your Mac login and disk encryption.
+- Pairing tokens on disk prove your computer to the cloud; protect your computer login and disk encryption.
 - The Console never receives your raw pairing token in the device list—only a **hash** ([Q&A](../../qa/awc-how-browser-knows-this-computer.md)).
-- Loopback **identity** is allowed only from Agent Witch origins to **your** `127.0.0.1` on the same Mac—not from random websites ([CORS Q&A](../../qa/awb-localhost-identity-and-cors.md)).
+- Loopback **identity** is allowed only from Agent Witch origins to **your** `127.0.0.1` on the same computer—not from random websites ([CORS Q&A](../../qa/awb-localhost-identity-and-cors.md)).
 
 Threat model for engineers: [security/threat-model.md](../../security/threat-model.md).
 
@@ -129,12 +129,12 @@ Threat model for engineers: [security/threat-model.md](../../security/threat-mod
 
 ## Troubleshooting sign-in
 
-| Symptom                             | Try                                                                                                                             |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Google error / redirect loop        | Confirm `AUTH_SECRET` and OAuth URLs on custom deployments; production uses Agent Witch’s configured Google app.                |
-| No magic email                      | Spam folder; resend once; verify Resend/domain on self-hosted envs.                                                             |
-| Signed in but no Mac badge          | Must be **macOS browser on same Mac as bridge**; refresh tab; check helper running ([Chapter 4](04-mac-connect-and-bridge.md)). |
-| Test account rejected on production | Expected—use real auth on `www.agentwitch.com`.                                                                                 |
+| Symptom                             | Try                                                                                                                                  |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Google error / redirect loop        | Confirm `AUTH_SECRET` and OAuth URLs on custom deployments; production uses Agent Witch’s configured Google app.                     |
+| No magic email                      | Spam folder; resend once; verify Resend/domain on self-hosted envs.                                                                  |
+| Signed in but no computer badge     | Must be **macOS browser on same computer as bridge**; refresh tab; check helper running ([Chapter 4](04-mac-connect-and-bridge.md)). |
+| Test account rejected on production | Expected—use real auth on `www.agentwitch.com`.                                                                                      |
 
 ---
 
@@ -142,7 +142,7 @@ Threat model for engineers: [security/threat-model.md](../../security/threat-mod
 
 On the homepage, copy the short prompt under **For your AI**. Your bot follows that prompt (and the public guide at `/for-agents`) to create its own Agent Witch account. There is no directory of other people's bots. Agent Witch does not publish an account, email, or token for you to share.
 
-An AI can sign itself up with no mailbox, or with an Agent Mail inbox when the server supports it. After signup it can install on its computer, save a Playbook, and run work on Macs it owns. Calls are rate limited. A bot token cannot attach to an existing human account. If the bot is told to wait (busy or rate limited), it should wait instead of retrying in a loop. Details for engineers: [AI self-registration Q&A](../../qa/ai-self-registration-webmcp.md).
+An AI can sign itself up with no mailbox, or with an Agent Mail inbox when the server supports it. After signup it can install on its computer, save a Playbook, and run work on computers it owns. Calls are rate limited. A bot token cannot attach to an existing human account. If the bot is told to wait (busy or rate limited), it should wait instead of retrying in a loop. Details for engineers: [AI self-registration Q&A](../../qa/ai-self-registration-webmcp.md).
 
 ---
 
@@ -158,7 +158,7 @@ An AI can sign itself up with no mailbox, or with an Agent Mail inbox when the s
 ## Query aliases
 
 - Agent Witch sign in, login, Google OAuth, magic link
-- account pairing Mac, connect this Mac, this computer badge
+- account pairing Mac, connect this computer, this computer badge
 - dang nhap Agent Witch, tai khoan, lien ket Mac
 - AI tu dang ky khong email, Agent Mail, WebMCP prompt trang chu
 - email magic link Agent Witch, test auth localhost

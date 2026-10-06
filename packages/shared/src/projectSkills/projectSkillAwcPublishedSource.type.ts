@@ -4,7 +4,7 @@ import type {
 } from "./projectSkillPull.type";
 
 /**
- * AWC store-of-record reads for the Mac pull mirror.
+ * AWC store-of-record reads for the computer pull mirror.
  * History/AWL injects HTTP; same-process default uses Neon (createDb…).
  */
 export interface ProjectSkillAwcPublishedSource {

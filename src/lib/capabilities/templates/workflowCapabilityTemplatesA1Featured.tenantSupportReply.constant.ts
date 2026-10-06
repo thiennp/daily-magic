@@ -12,7 +12,11 @@ export const TENANT_SUPPORT_REPLY_WORKFLOW: WorkflowCapabilityTemplate =
     [
       ["propertyName", "Property or building name", "text"],
       ["tenantMessage", "Tenant message or situation summary", "textarea"],
-      ["leaseNotesPath", "Lease and policy notes folder on your Mac", "text"],
+      [
+        "leaseNotesPath",
+        "Lease and policy notes folder on your computer",
+        "text",
+      ],
       [
         "issueType",
         "Issue type (maintenance, rent, noise, lease, other)",
@@ -21,7 +25,7 @@ export const TENANT_SUPPORT_REPLY_WORKFLOW: WorkflowCapabilityTemplate =
       ["replyTone", "Reply tone (optional)", "text", false],
       [
         "tenantLogPath",
-        "Tenant thread log file on your Mac (optional)",
+        "Tenant thread log file on your computer (optional)",
         "text",
         false,
       ],

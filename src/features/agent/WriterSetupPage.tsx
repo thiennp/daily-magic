@@ -18,7 +18,7 @@ export default function WriterSetupPage() {
     setBusyWriter(writerAgent);
     setStatusByWriter((previous) => ({
       ...previous,
-      [writerAgent]: "Checking on your Mac…",
+      [writerAgent]: "Checking on your computer…",
     }));
     try {
       const message = await ensureWriterOnMac(writerAgent);
@@ -39,10 +39,10 @@ export default function WriterSetupPage() {
   return (
     <main className="mx-auto max-w-2xl px-4 py-10 pb-32 md:pb-10">
       <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
-        Choose an AI for your Mac
+        Choose an AI for your computer
       </h1>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-        Agent Witch will install and check login on the Mac linked to your
+        Agent Witch will install and check login on the computer linked to your
         account. You can change this later from New task.
       </p>
       <ul className="mt-8 space-y-3">

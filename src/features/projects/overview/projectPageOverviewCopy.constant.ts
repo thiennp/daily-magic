@@ -5,8 +5,7 @@ export const PROJECT_PAGE_OVERVIEW_COPY = {
   pitfallsStat: "Pitfalls on",
   compositionStat: "Playbooks · Workflows · Agents",
   attentionOpen: "Open conversation",
-  attentionWaitingSuffix:
-    "finished work and is waiting for your confirmation.",
+  attentionWaitingSuffix: "finished work and is waiting for your confirmation.",
   setupTitle: "Finish setup",
   setupSubtitle: (done: number, total: number, device: string) =>
     `${done} of ${total} steps done. Remaining steps open here or on ${device}.`,
@@ -22,7 +21,7 @@ export const PROJECT_PAGE_OVERVIEW_COPY = {
   setupPlaybookDoneHint: (count: number) =>
     count === 1 ? "1 playbook bound" : `${count} playbooks bound`,
   setupFolder: "Add a machine folder",
-  setupFolderHint: "Tell Cloud which folders this project uses on a Mac.",
+  setupFolderHint: "Tell Cloud which folders this project uses on a computer.",
   setupFolderDoneHint: (count: number) =>
     count === 1 ? "1 folder linked" : `${count} folders linked`,
   setupGit: "Add a git remote",
@@ -32,7 +31,7 @@ export const PROJECT_PAGE_OVERVIEW_COPY = {
   setupInvitePeople: "Invite a teammate",
   setupInvitePeopleHint: "Right now it is only you.",
   setupInvitePeopleDoneHint: "People can join this project.",
-  setupOpenOnMac: "Open on Mac",
+  setupOpenOnMac: "Open on this computer",
   setupAdd: "Add",
   setupInvite: "Invite",
   recentTitle: "Recent activity",
@@ -45,8 +44,7 @@ export const PROJECT_PAGE_OVERVIEW_COPY = {
   pitfallsWarn: (n: number) => `${n} Warning`,
   pitfallsNeverHit: "Never hit",
   pitfallsHit: (n: number) => (n === 1 ? "1 hit logged" : `${n} hits logged`),
-  pitfallsBlurb:
-    "Known traps bots should avoid while working in this project.",
+  pitfallsBlurb: "Known traps bots should avoid while working in this project.",
   pitfallsEmpty: "No active pitfalls yet.",
   pitfallsLoading: "Loading…",
 } as const;

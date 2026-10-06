@@ -4,7 +4,7 @@ const automateRecurringWorkWithoutHeadcount: ShowcaseArticle = {
   slug: "automate-recurring-work-without-headcount",
   title: "Automate recurring work without hiring another coordinator",
   subtitle:
-    "Weekly reports, standups, and repeat research on Macs you already own—less copy-paste, fewer chat threads to chase.",
+    "Weekly reports, standups, and repeat research on computers you already own—less copy-paste, fewer chat threads to chase.",
   category: "For leadership",
   supportLevel: "full",
   readMinutes: 4,
@@ -34,7 +34,7 @@ const automateRecurringWorkWithoutHeadcount: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Most teams already pay for AI in tabs and subscriptions. The hidden cost is coordination: someone retypes context every Monday, hunts last week's chat, and forwards screenshots. Agent Witch turns repeat work into saved playbooks your Mac runs on a schedule—so the same job costs minutes, not another headcount line item.",
+        "Most teams already pay for AI in tabs and subscriptions. The hidden cost is coordination: someone retypes context every Monday, hunts last week's chat, and forwards screenshots. Agent Witch turns repeat work into saved playbooks your computer runs on a schedule—so the same job costs minutes, not another headcount line item.",
       ],
     },
     {
@@ -43,7 +43,7 @@ const automateRecurringWorkWithoutHeadcount: ShowcaseArticle = {
         "Repeat outputs use the same fields every time—quality and compliance improve",
         "Champions publish once; requesters fill a short form instead of writing novels",
         "Runs stay in job history so you can spot what was sent and what came back",
-        "Work stays on company Macs you control—not another opaque cloud black box",
+        "Work stays on company computers you control—not another opaque cloud black box",
       ],
     },
     {

@@ -7,7 +7,7 @@ export type ProjectComputerAccessDecision =
 
 /**
  * Pure rule: only the project owner's project computer (user_projects.device_id,
- * the Mac the project is linked to) may post computerAcks or history reports.
+ * the computer the project is linked to) may post computerAcks or history reports.
  * A device of another user reads as not_found, like other device routes.
  */
 export const decideProjectComputerAccess = (input: {

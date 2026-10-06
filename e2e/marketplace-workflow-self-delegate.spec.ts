@@ -124,7 +124,7 @@ test.describe("Marketplace workflow self-delegate", () => {
     });
 
     const writerHeading = page.getByRole("heading", {
-      name: /Choose an AI on your Mac/i,
+      name: /Choose an AI on your computer/i,
     });
     if (await writerHeading.isVisible().catch(() => false)) {
       await page.getByRole("button", { name: /Claude \(terminal\)/i }).click();
@@ -146,7 +146,7 @@ test.describe("Marketplace workflow self-delegate", () => {
     );
     await fillLabeledField(
       page,
-      /Portfolio folder on your Mac/i,
+      /Portfolio folder on your computer/i,
       portfolioPath,
     );
     await fillLabeledField(
@@ -198,7 +198,7 @@ test.describe("Marketplace workflow self-delegate", () => {
     expect(firstBody.run?.prompt ?? "").toContain("Nordlicht Outdoor");
     expect(firstBody.run?.prompt ?? "").toContain(TASK_MARKER);
 
-    await expect(page.getByText("Progress on your Mac")).toBeVisible({
+    await expect(page.getByText("Progress on your computer")).toBeVisible({
       timeout: 60_000,
     });
     await expect(page.getByText("In progress")).toBeVisible({
@@ -225,9 +225,9 @@ test.describe("Marketplace workflow self-delegate", () => {
       .first();
     await expect(proposalSignal).toBeVisible({ timeout: 180_000 });
 
-    const needsAnswer = page.getByText(/Your Mac agent needs input/i);
+    const needsAnswer = page.getByText(/Your computer agent needs input/i);
     if (await needsAnswer.isVisible().catch(() => false)) {
-      const answerBox = page.getByPlaceholder(/Reply to your Mac agent/i);
+      const answerBox = page.getByPlaceholder(/Reply to your computer agent/i);
       await answerBox.fill(
         "Approve the draft for review only. Do not send to the client.",
       );

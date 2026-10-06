@@ -35,7 +35,7 @@ export default function AgentLiveProgressFeedStopControl({
             aria-live="polite"
           >
             <ConnectionStatusBadge status={connectionStatus} />
-            Stopping on your Mac…
+            Stopping on your computer…
           </span>
         ) : (
           <span

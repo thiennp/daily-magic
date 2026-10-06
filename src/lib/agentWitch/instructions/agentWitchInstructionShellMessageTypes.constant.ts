@@ -16,6 +16,6 @@ export const AGENT_WITCH_INSTRUCTION_SHELL_MESSAGE_TYPES: readonly AgentWitchIns
     {
       type: AGENT_WITCH_MESSAGE_TYPES.SHELL_INPUT,
       direction: "browser_to_mac",
-      purpose: "Owner keystrokes into the Mac PTY (owner-only).",
+      purpose: "Owner keystrokes into the computer PTY (owner-only).",
     },
   ];

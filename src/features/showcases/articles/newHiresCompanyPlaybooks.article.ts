@@ -25,7 +25,7 @@ const newHiresCompanyPlaybooks: ShowcaseArticle = {
     {
       heading: "Day-one checklist",
       bullets: [
-        "Pair your Mac from Home → Your setup",
+        "Pair your computer from Home → Your setup",
         "Browse Marketplace — save 2–3 playbooks to library",
         "Run one low-risk task and check Reports",
         "Ask who publishes updates when the process changes",

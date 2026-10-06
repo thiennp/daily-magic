@@ -9,7 +9,7 @@
 
 ## Short answer
 
-Ship **bundle 172+** on `https://www.agentwitch.com`, update the Mac install, open **AWL** `http://127.0.0.1:43347/prompt-optimizer`, choose **Run** (wizard), and walk gates 1–4. Use the verification source prompt below; the wizard should generalize variables, run evaluate rounds (cannot continue on score 0), show module chunks at separate, and show **Scored rounds** plus timeline judge entries at step 4.
+Ship **bundle 172+** on `https://www.agentwitch.com`, update the computer install, open **AWL** `http://127.0.0.1:43347/prompt-optimizer`, choose **Run** (wizard), and walk gates 1–4. Use the verification source prompt below; the wizard should generalize variables, run evaluate rounds (cannot continue on score 0), show module chunks at separate, and show **Scored rounds** plus timeline judge entries at step 4.
 
 ## Verification source prompt (improve this with the wizard)
 

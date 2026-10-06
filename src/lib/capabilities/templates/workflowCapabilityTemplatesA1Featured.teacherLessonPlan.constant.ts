@@ -16,7 +16,7 @@ export const TEACHER_LESSON_PLAN_WORKFLOW: WorkflowCapabilityTemplate =
       ["classDuration", "Class duration (e.g. 45 minutes)", "text"],
       [
         "materialsPath",
-        "Existing materials folder on your Mac (optional)",
+        "Existing materials folder on your computer (optional)",
         "text",
         false,
       ],

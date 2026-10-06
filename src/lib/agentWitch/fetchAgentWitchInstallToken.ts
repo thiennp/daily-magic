@@ -54,7 +54,7 @@ const parseInstallTokenPayload = (payload: unknown): InstallTokenResult => {
 
 export const fetchAgentWitchInstallToken =
   async (): Promise<InstallTokenResult> => {
-    // POST install-token reserves a Mac device row; never do that from mobile.
+    // POST install-token reserves a computer device row; never do that from mobile.
     if (detectMobileClient()) {
       return {
         ok: false,
@@ -71,7 +71,7 @@ export const fetchAgentWitchInstallToken =
       if (!response.ok) {
         return {
           ok: false,
-          errorMessage: "Could not create a Mac install link.",
+          errorMessage: "Could not create a computer install link.",
         };
       }
 
@@ -88,7 +88,7 @@ export const fetchAgentWitchInstallToken =
 
       return {
         ok: false,
-        errorMessage: "Could not create a Mac install link.",
+        errorMessage: "Could not create a computer install link.",
       };
     }
   };

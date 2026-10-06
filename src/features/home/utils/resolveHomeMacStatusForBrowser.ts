@@ -22,6 +22,6 @@ export const resolveHomeMacStatusForBrowser = (input: {
     tone: "offline",
     label: "This computer is not linked",
     detail:
-      "Connect this Mac to run tasks from the computer you are using now.",
+      "Connect this computer to run tasks from the computer you are using now.",
   };
 };

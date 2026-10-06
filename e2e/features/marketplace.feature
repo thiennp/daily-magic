@@ -26,7 +26,7 @@ Feature: Marketplace
 
   Scenario: Cannot install without live Mac when required
     Given I am signed in as "test-marketplace-2@agentwitch.com"
-    And I have no paired Mac
+    And I have no paired computer
     When I open "/marketplace"
     And I attempt to save a listing that requires a live connection
     Then install should be blocked with guidance to connect my Mac

@@ -10,7 +10,7 @@ interface MacDeviceWakeShellCommandBlockProps {
 }
 
 export default function MacDeviceWakeShellCommandBlock({
-  leadIn = "In Terminal on this Mac, run:",
+  leadIn = "In Terminal on this computer, run:",
 }: MacDeviceWakeShellCommandBlockProps) {
   const wakeTerminalCommand = useMemo(
     () => buildAgentWitchWakeTerminalCommand(),

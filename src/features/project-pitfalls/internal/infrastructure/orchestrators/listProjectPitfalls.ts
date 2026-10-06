@@ -8,7 +8,7 @@ import { selectProjectPitfallParts } from "@/features/project-pitfalls/internal/
 
 /**
  * list_pitfalls: merged seeds + project overrides with hit counters. Cloud is
- * the source of truth; local caches (e.g. a Mac SQLite mirror) sync from here.
+ * the source of truth; local caches (e.g. a computer SQLite mirror) sync from here.
  */
 export const listProjectPitfalls = async (input: {
   readonly actorUserId: string;

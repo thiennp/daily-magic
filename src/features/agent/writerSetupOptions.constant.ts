@@ -8,21 +8,21 @@ export const WRITER_SETUP_OPTIONS: ReadonlyArray<{
   {
     id: "cursor",
     label: "Cursor",
-    hint: "Install and sign in to Cursor on this Mac",
+    hint: "Install and sign in to Cursor on this computer",
   },
   {
     id: "claude-cli",
     label: "Claude",
-    hint: "Install and sign in to Claude on this Mac",
+    hint: "Install and sign in to Claude on this computer",
   },
   {
     id: "codex",
     label: "Codex",
-    hint: "Install and sign in to Codex on this Mac",
+    hint: "Install and sign in to Codex on this computer",
   },
   {
     id: "antigravity",
     label: "Antigravity",
-    hint: "Install and sign in to Antigravity on this Mac",
+    hint: "Install and sign in to Antigravity on this computer",
   },
 ];

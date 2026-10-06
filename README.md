@@ -1,10 +1,10 @@
 # Agent Witch
 
-This repository (`daily-magic`) is the codebase for **[Agent Witch](https://www.agentwitch.com)** — a web control plane for **running AI coding agents on your Mac** (and optional **Cursor Cloud**), with team dispatch, run history, and shared agent capabilities.
+This repository (`daily-magic`) is the codebase for **[Agent Witch](https://www.agentwitch.com)** — a web control plane for **running AI coding agents on your computer** (and optional **Cursor Cloud**), with team dispatch, run history, and shared agent capabilities.
 
 ## Product
 
-**Core job:** run a trusted agent on a Mac you control (or a teammate’s), see what happened in the browser, and reuse what worked. User terms: **Mac** · **Task** · **Run** · **Playbook**. Canonical pillars and roadmap honesty: [docs/product/product-pillars.md](docs/product/product-pillars.md).
+**Core job:** run a trusted agent on a computer you control (or a teammate’s), see what happened in the browser, and reuse what worked. User terms: **Mac** · **Task** · **Run** · **Playbook**. Canonical pillars and roadmap honesty: [docs/product/product-pillars.md](docs/product/product-pillars.md).
 
 | Pillar               | One line                                                                    |
 | -------------------- | --------------------------------------------------------------------------- |
@@ -55,7 +55,7 @@ Rebuild the index after doc changes: `npm run feature-knowledge:index` (commit `
 | `/marketplace` | Company-published agents                  |
 | `/login`       | Sign in                                   |
 
-## Agent Witch on your Mac
+## Agent Witch on your computer
 
 Install the local bridge (production or your deployed origin):
 

@@ -12,7 +12,7 @@ describe("buildOperatorCheckpointPromptSection", () => {
     expect(appendOperatorCheckpointsToPrompt("Run task", [])).toBe("Run task");
   });
 
-  it("appends checkpoint titles for the Mac agent", () => {
+  it("appends checkpoint titles for the computer agent", () => {
     const section = buildOperatorCheckpointPromptSection([
       {
         id: "op-1",

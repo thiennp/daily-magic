@@ -31,9 +31,9 @@ export default function HomeOnboardingSetupCompletePanel({
         You&apos;re set up
       </h1>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Your Mac is connected, you have a workflow in Library, and you&apos;ve
-        sent a first task. Send more work from the browser, schedule repeats on
-        your Mac, or browse guides for your team.
+        Your computer is connected, you have a workflow in Library, and
+        you&apos;ve sent a first task. Send more work from the browser, schedule
+        repeats on your computer, or browse guides for your team.
       </p>
       <div className="mt-6 flex flex-wrap gap-3">
         <Link

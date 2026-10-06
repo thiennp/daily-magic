@@ -63,7 +63,7 @@ export function useWorkflowStepFailureListener(): {
 
     if (!result.ok) {
       setRetryError(
-        result.errorMessage ?? "Could not try again. Check your Mac.",
+        result.errorMessage ?? "Could not try again. Check your computer.",
       );
       return;
     }

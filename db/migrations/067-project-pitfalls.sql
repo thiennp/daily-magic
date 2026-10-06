@@ -112,7 +112,7 @@ VALUES
   (NULL, 'box-no-gh-auth',
    'Pushing to GitHub from the box fails with a login or permission error.',
    'The box has no GitHub login for this repo.',
-   'Push from the Mac instead. Never copy GitHub keys or tokens onto the box.',
+   'Push from the computer instead. Never copy GitHub keys or tokens onto the box.',
    'id', 'pit.box-no-gh-auth',
    ARRAY['push', 'ship', 'box', 'github', 'auth', 'permission denied']::TEXT[],
    ARRAY['git', 'machines']::TEXT[], 'seed', 'warn'),

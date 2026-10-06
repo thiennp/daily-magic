@@ -25,12 +25,12 @@ describe("reduceAgentLiveTerminalWriterSessionReady", () => {
 
     const next = reduceAgentLiveTerminalWriterSessionReady(state, {
       writerAgent: "cursor",
-      output: "Cursor is ready on your Mac.\n",
+      output: "Cursor is ready on your computer.\n",
     });
 
     expect(next.status).toBe("finished");
     expect(next.output).toContain("cursor agent");
-    expect(next.output).toContain("Cursor is ready on your Mac.");
+    expect(next.output).toContain("Cursor is ready on your computer.");
   });
 
   it("does not duplicate the command line when it was already shown", () => {
@@ -42,7 +42,7 @@ describe("reduceAgentLiveTerminalWriterSessionReady", () => {
 
     const next = reduceAgentLiveTerminalWriterSessionReady(state, {
       writerAgent: "cursor",
-      output: "Cursor is ready on your Mac.\n",
+      output: "Cursor is ready on your computer.\n",
     });
 
     const commandOccurrences = next.output.split("cursor agent").length - 1;

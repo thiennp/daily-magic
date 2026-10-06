@@ -3,15 +3,15 @@ import type { MacDevicePresence } from "@/features/agent-witch/online-wake/macDe
 import { deviceMatchesReachableLocalTokenHash } from "@/features/agent-witch/utils/deviceMatchesReachableLocalTokenHash";
 
 export interface HomeThisMacDeviceIdentity {
-  /** The single device row that represents the Mac running this browser. */
+  /** The single device row that represents the computer running this browser. */
   readonly thisMacDeviceId: string | null;
   /** True when that row is live/recent (HOME-061). */
   readonly isReachable: boolean;
 }
 
 /**
- * One "This Mac" row (dedupe): a live/recent token match wins; otherwise the
- * first offline row whose token matches this Mac's wake identity is badged and
+ * One "This computer" row (dedupe): a live/recent token match wins; otherwise the
+ * first offline row whose token matches this computer's wake identity is badged and
  * carries the Connect CTA instead of a separate "This computer" row.
  */
 export const resolveHomeThisMacDeviceIdentity = (input: {

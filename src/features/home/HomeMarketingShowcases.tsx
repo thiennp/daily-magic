@@ -30,7 +30,7 @@ export default function HomeMarketingShowcases() {
         className="mt-0"
         eyebrow="New to AI agents?"
         title="Start here"
-        description="Pick a short story with real product screens—presets, automations, Mac setup, and team workflows."
+        description="Pick a short story with real product screens—presets, automations, computer setup, and team workflows."
         headingId="showcases-heading"
       >
         <HomeMarketingFeaturedShowcases articles={featured} />
@@ -38,7 +38,7 @@ export default function HomeMarketingShowcases() {
 
       <HomeMarketingShowcaseSection
         title="More examples"
-        description="Schedules, human checkpoints, standup from your Mac, and team workflows."
+        description="Schedules, human checkpoints, standup from your computer, and team workflows."
       >
         <div className="grid gap-6 md:grid-cols-3">
           {more.map((article) => (

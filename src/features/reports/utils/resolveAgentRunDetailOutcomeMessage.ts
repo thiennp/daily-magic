@@ -45,12 +45,12 @@ export const resolveAgentRunDetailOutcomeMessage = (input: {
   if (input.status === AgentRunStatus.FAILED) {
     return (
       reportLine ??
-      "This run failed on your Mac. Open Agent Witch on that Mac or start a New task to try again."
+      "This run failed on your computer. Open Agent Witch on that computer or start a New task to try again."
     );
   }
 
   if (input.status === AgentRunStatus.EXPIRED) {
-    return "Approval for this run expired before your Mac could finish.";
+    return "Approval for this run expired before your computer could finish.";
   }
 
   if (input.status === AgentRunStatus.DENIED) {

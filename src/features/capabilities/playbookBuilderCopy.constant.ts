@@ -1,7 +1,7 @@
 export const PLAYBOOK_HARNESS_SECTION = {
-  title: "Extra rules for your Mac (optional)",
+  title: "Extra rules for your computer (optional)",
   description:
-    "Add rules, skills, shortcuts, and instructions. They copy to your Mac when it is connected.",
+    "Add rules, skills, shortcuts, and instructions. They copy to your computer when it is connected.",
 } as const;
 
 export const AGENT_BUILDER_ABOUT_SECTION = {

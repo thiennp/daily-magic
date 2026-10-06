@@ -95,7 +95,9 @@ export const parseWorkflowStepFailedSocketMessage = (
     stepIndex,
     title,
     errorMessage:
-      errorMessage.length > 0 ? errorMessage : "Agent step failed on your Mac.",
+      errorMessage.length > 0
+        ? errorMessage
+        : "Agent step failed on your computer.",
     ...(readString(payload.workflowLabel).trim().length > 0
       ? { workflowLabel: readString(payload.workflowLabel) }
       : {}),

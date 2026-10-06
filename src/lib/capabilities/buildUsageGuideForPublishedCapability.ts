@@ -16,15 +16,15 @@ const buildUsageGuideForPublishedCapability = (
   const typeLabel = isWorkflow ? "workflow" : "agent";
 
   return {
-    summary: `Install this ${typeLabel} to a project on your Mac. ${capability.description}`,
+    summary: `Install this ${typeLabel} to a project on your computer. ${capability.description}`,
     prerequisites: [
-      "Paired Mac and a project with a repo folder.",
+      "Paired computer and a project with a repo folder.",
       "Permission to view this team listing.",
     ],
     steps: [
       {
         title: "Install to your project",
-        body: "Choose a project and Mac on install. Playbook files apply when you pull into the repo on the Mac.",
+        body: "Choose a project and Mac on install. Playbook files apply when you pull into the repo on the computer.",
       },
       {
         title: "Run",

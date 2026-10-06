@@ -28,9 +28,9 @@ const baseProps = {
   assignTasksHref: "/?projectId=p1",
   editCta: {
     state: "unknown_device" as const,
-    buttonLabel: "Edit on this Mac",
+    buttonLabel: "Edit on this computer",
     href: null,
-    helperText: "Connect a Mac to edit this project.",
+    helperText: "Connect a computer to edit this project.",
   },
   editHelperId: undefined as string | undefined,
   onClose: () => undefined,
@@ -38,9 +38,8 @@ const baseProps = {
 
 describe("AwcProjectCardActionsMenuItems delete visibility", () => {
   it("shows Delete only when canDelete is true and project is not Default", async () => {
-    const { default: Items } = await import(
-      "@/features/projects/AwcProjectCardActionsMenuItems"
-    );
+    const { default: Items } =
+      await import("@/features/projects/AwcProjectCardActionsMenuItems");
 
     const ownerHtml = renderToStaticMarkup(
       createElement(

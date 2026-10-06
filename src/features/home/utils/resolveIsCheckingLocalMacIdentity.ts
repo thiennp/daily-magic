@@ -2,7 +2,7 @@ import type { LocalAgentWitchIdentityLoadStatus } from "@/features/agent-witch/l
 
 /**
  * A skipped wake probe leaves identity status at "idle". That is not an
- * in-flight check — treating it as one hides Connect this Mac forever.
+ * in-flight check — treating it as one hides Connect this computer forever.
  */
 export const resolveIsCheckingLocalMacIdentity = (input: {
   readonly isMacBrowser: boolean;

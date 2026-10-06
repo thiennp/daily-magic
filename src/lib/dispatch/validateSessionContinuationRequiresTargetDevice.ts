@@ -18,7 +18,7 @@ export const validateSessionContinuationRequiresTargetDevice = (input: {
   }
 
   return buildDispatchError(
-    "Continue requires the same Mac that ran the original task. Select it from job history and try again.",
+    "Continue requires the same computer that ran the original task. Select it from job history and try again.",
     input.requestId,
   );
 };

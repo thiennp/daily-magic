@@ -25,7 +25,7 @@ export const LOCAL_BUSINESS_GOOGLE_POST_OPERATOR_STEPS: readonly OperatorStepDef
       title: "Publish on Google Business Profile",
       content: [
         "1. Create the post in Google Business Profile; the agent does not log in.",
-        "2. Attach photos from your Mac if the draft references them.",
+        "2. Attach photos from your computer if the draft references them.",
         "3. Ask the agent to append the post to postHistoryPath.",
       ].join("\n"),
     },

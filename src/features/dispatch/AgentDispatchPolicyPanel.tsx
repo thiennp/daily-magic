@@ -67,7 +67,7 @@ export default function AgentDispatchPolicyPanel() {
   return (
     <AppPanel embedded={embedded}>
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-        Who can send tasks to your Mac
+        Who can send tasks to your computer
       </h2>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
         Override your company default for tasks sent to your computer.

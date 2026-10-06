@@ -14,7 +14,7 @@ export const JOB_APPLICATION_PACK_WORKFLOW: WorkflowCapabilityTemplate =
       ["companyName", "Company name", "text"],
       ["jobPostingUrl", "Job posting URL", "text"],
       ["jobDescription", "Job description (paste if no URL)", "textarea"],
-      ["resumeFolderPath", "Resume and CV folder on your Mac", "project"],
+      ["resumeFolderPath", "Resume and CV folder on your computer", "project"],
       [
         "applicationHistoryPath",
         "Application log file (optional)",

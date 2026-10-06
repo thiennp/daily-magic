@@ -26,14 +26,14 @@ export const HOME_ONBOARDING_MAIN_STEP_CONTENT: Readonly<
     eyebrow: "Getting started",
     headline: "Send your first task",
     detail:
-      "Describe what you want done and your Mac runs the job. Watch live output and find the full log in Reports.",
+      "Describe what you want done and your computer runs the job. Watch live output and find the full log in Reports.",
     ctaLabel: "New task",
   },
   "send-task": {
     eyebrow: "Getting started",
     headline: "Send your first task",
     detail:
-      "Describe what you want done and your Mac runs the job. Watch live output and find the full log in Reports.",
+      "Describe what you want done and your computer runs the job. Watch live output and find the full log in Reports.",
     ctaLabel: "New task",
   },
 };

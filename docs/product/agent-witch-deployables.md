@@ -37,7 +37,7 @@ Shared types and protocol: **`@agent-witch/shared`** (`packages/shared/`) — de
 
 ### AWB — Bridge
 
-**Loopback HTTP API** so a **browser tab on the same Mac** can call the machine safely: identity, watchdog, harness install proxy, self-update/restart, cloud-proxied “local watchdog/update” routes.
+**Loopback HTTP API** so a **browser tab on the same computer** can call the machine safely: identity, watchdog, harness install proxy, self-update/restart, cloud-proxied “local watchdog/update” routes.
 
 - **Today:** `scripts/agent-witch-wake-server.ts` (often co-located in the same process as AWI runtime)
 - **Distinct from AWL:** AWB is an integration surface for AWC pages on that Mac; AWL is the dedicated **local** Mac app UI
@@ -52,12 +52,12 @@ Shared types and protocol: **`@agent-witch/shared`** (`packages/shared/`) — de
 
 ## Two entry points, one product
 
-| User job                                                       | Typical entry |
-| -------------------------------------------------------------- | ------------- |
-| Team dispatch, history, org playbooks                          | **AWC**       |
-| Work on this Mac (folders, local tasks, Mac playbooks, memory) | **AWL**       |
+| User job                                                            | Typical entry |
+| ------------------------------------------------------------------- | ------------- |
+| Team dispatch, history, org playbooks                               | **AWC**       |
+| Work on this computer (folders, local tasks, Mac playbooks, memory) | **AWL**       |
 
-AWC may link to AWL (“Open on this Mac”). That is navigation, not a downgrade of AWL to “debug only.”
+AWC may link to AWL (“Open on this computer”). That is navigation, not a downgrade of AWL to “debug only.”
 
 ---
 

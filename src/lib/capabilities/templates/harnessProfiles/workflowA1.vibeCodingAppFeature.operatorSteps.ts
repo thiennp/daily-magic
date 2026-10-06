@@ -7,7 +7,7 @@ export const VIBE_CODING_APP_FEATURE_OPERATOR_STEPS: readonly OperatorStepDefini
       title: "Confirm the vibe, screen, and app folder",
       content: [
         "1. Check featureBrief and targetSurface feel right.",
-        "2. Confirm appTarget points at the app folder you want changed on this Mac.",
+        "2. Confirm appTarget points at the app folder you want changed on this computer.",
         "3. Reply ready when the goal is clear enough to continue.",
       ].join("\n"),
     },

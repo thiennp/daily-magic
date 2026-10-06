@@ -1,4 +1,4 @@
-# Agent Witch bridge (AWC cloud ↔ AWI / AWL / AWB on Mac)
+# Agent Witch bridge (AWC cloud ↔ AWI / AWL / AWB on computer)
 
 Mac pairing, install (**AWI**), mutual WebSocket to **AWC**, **AWL** Mac app (`:43347`), **AWB** loopback API, and paired-device API client.
 
@@ -35,7 +35,7 @@ AWL binds only to `127.0.0.1:43347` (AGENT-021 — the website never fetches it)
 
 ## Writer setup
 
-Post-install AI picker: `/setup/writer` on agentwitch.com → WS `writer.ensure` / `writer.status`. When a Mac bundle is behind cloud, the server also pushes `install.bundle.update` on heartbeat so the Mac updates immediately (with direct self-update fallback if wake API is down). When Cursor CLI output reports authentication required, cloud pushes `writer.ensure` for Cursor over the live WebSocket.
+Post-install AI picker: `/setup/writer` on agentwitch.com → WS `writer.ensure` / `writer.status`. When a computer bundle is behind cloud, the server also pushes `install.bundle.update` on heartbeat so the computer updates immediately (with direct self-update fallback if wake API is down). When Cursor CLI output reports authentication required, cloud pushes `writer.ensure` for Cursor over the live WebSocket.
 
 ## Key modules
 
@@ -54,4 +54,4 @@ Browser presence uses `/api/agent-witch/devices` (AWC hub). **AWL** is Mac-only;
 
 Install from each origin separately so local and prod stay independent.
 
-Bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` when install scripts change (currently **62**). Heartbeat `system.ack` advertises that version so connected Macs auto-update when local `install-version.json` differs.
+Bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` when install scripts change (currently **62**). Heartbeat `system.ack` advertises that version so connected computers auto-update when local `install-version.json` differs.

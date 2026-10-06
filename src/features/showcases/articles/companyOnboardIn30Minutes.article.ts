@@ -82,7 +82,7 @@ const companyOnboardIn30Minutes: ShowcaseArticle = {
     {
       heading: "What success looks like on day one",
       paragraphs: [
-        "Groups, dispatch policy, shared playbooks, and visible offerings—champions pair their Macs and everyone starts from the same catalog. Say that clearly in your launch note and people know exactly what to expect.",
+        "Groups, dispatch policy, shared playbooks, and visible offerings—champions pair their computers and everyone starts from the same catalog. Say that clearly in your launch note and people know exactly what to expect.",
       ],
     },
   ],

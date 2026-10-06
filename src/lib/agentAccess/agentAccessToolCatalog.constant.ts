@@ -46,7 +46,7 @@ export const AGENT_ACCESS_TOOL_CATALOG: readonly AgentAccessToolDefinition[] = [
   },
   {
     name: "list_macs",
-    description: "List Macs paired to this account.",
+    description: "List computers paired to this account.",
     inputSchema: {
       type: "object",
       properties: {},
@@ -56,18 +56,18 @@ export const AGENT_ACCESS_TOOL_CATALOG: readonly AgentAccessToolDefinition[] = [
   {
     name: "send_task",
     description:
-      "Send a Task to a paired Mac in a project (Reports). Requires project_id. The Mac must already be connected. Returns the Run id.",
+      "Send a Task to a paired computer in a project (Reports). Requires project_id. The computer must already be connected. Returns the Run id.",
     inputSchema: {
       type: "object",
       properties: {
-        prompt: { type: "string", description: "What the Mac should do." },
+        prompt: { type: "string", description: "What the computer should do." },
         project_id: {
           type: "string",
           description: "Project id for this report/run.",
         },
         targetDeviceId: {
           type: "string",
-          description: "Optional Mac id from list_macs.",
+          description: "Optional computer id from list_macs.",
         },
       },
       required: ["prompt", "project_id"],

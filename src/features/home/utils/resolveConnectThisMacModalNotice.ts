@@ -8,7 +8,7 @@ import type { ConnectThisMacModalNotice } from "@/features/home/utils/ConnectThi
  * Connect modal state. `null` → plain download / install body.
  * - version_too_old: server refused (409 `agent_witch_local_too_old`) or the
  *   this-Mac device row reports `connectVersionStatus: "too_old"`.
- * - not_running: this Mac has a paired row but AWL's wake server is unreachable.
+ * - not_running: this computer has a paired row but AWL's wake server is unreachable.
  * - retry: AWL answers locally but the row is not live — retry the connection.
  */
 export const resolveConnectThisMacModalNotice = (input: {

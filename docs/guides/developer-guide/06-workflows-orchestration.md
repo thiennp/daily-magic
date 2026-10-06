@@ -1,6 +1,6 @@
 # Chapter 6 — Workflows and orchestration (developers)
 
-How **official marketplace workflow runs** are orchestrated in **AWC** (Postgres + APIs) while **bounded agent steps** dispatch to the Mac like any other writer run. User-facing vocabulary: [user guide ch.6](../user-guide/06-workflows-and-checkpoints.md) (when present) and [docs/product/concepts.md](../../product/concepts.md).
+How **official marketplace workflow runs** are orchestrated in **AWC** (Postgres + APIs) while **bounded agent steps** dispatch to the computer like any other writer run. User-facing vocabulary: [user guide ch.6](../user-guide/06-workflows-and-checkpoints.md) (when present) and [docs/product/concepts.md](../../product/concepts.md).
 
 **Product pillar 1** (easy authoring) lives here — forms, presets, and progressive orchestration. Closed-loop learning from workflow steps (pillar 2) is mostly cloud feedback/improvements today, not automatic graph edits: [Chapter 10](10-learning-memory-and-improvements.md).
 
@@ -8,7 +8,7 @@ How **official marketplace workflow runs** are orchestrated in **AWC** (Postgres
 
 ## Two workflow execution modes
 
-| Mode                       | When                                                                             | What runs on the Mac                                                                              |
+| Mode                       | When                                                                             | What runs on the computer                                                                         |
 | -------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
 | **User-created workflow**  | Capability type `workflow` without a registered `template-*` harness slug        | **One** `command.claude.run` with a composed prompt (operator steps embedded as text checkpoints) |
 | **Official orchestration** | Marketplace preset with curated graph (`shouldUseOfficialWorkflowOrchestration`) | **One agent node at a time** — each node is a separate dispatch + `agent_run`                     |
@@ -88,7 +88,7 @@ Checkpoint UI: `WorkflowHumanStepModal`, `WorkflowStepFailureModal`, `WorkflowAt
 
 Deep dive: [docs/qa/official-workflow-run-checkpoints-and-retry.md](../../qa/official-workflow-run-checkpoints-and-retry.md).
 
-Example preset with repo validation: `vibe-coding-app-feature` (`vibeCodingAppFeature.definition.ts`) fails fast when `appTarget` is missing or not a git repo on the Mac.
+Example preset with repo validation: `vibe-coding-app-feature` (`vibeCodingAppFeature.definition.ts`) fails fast when `appTarget` is missing or not a git repo on the computer.
 
 ---
 

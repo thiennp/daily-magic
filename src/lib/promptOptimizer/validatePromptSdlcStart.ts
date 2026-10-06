@@ -39,7 +39,7 @@ export const validatePromptSdlcStart = (
       promptSdlcChoiceNeedsMac(input.improver)) &&
     (input.deviceId === null || input.deviceId.trim().length === 0)
   ) {
-    return "Choose a Mac for the writer.";
+    return "Choose a computer for the writer.";
   }
 
   return null;

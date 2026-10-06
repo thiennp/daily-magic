@@ -1,6 +1,6 @@
 # feat/awc-team-this-mac-r2 — softs (defer)
 
-**Stacked on:** `e5656748` (This Mac Team display) + Dispatch computer task route.
+**Stacked on:** `e5656748` (This computer Team display) + Dispatch computer task route.
 
 ## Softs deferred (OK)
 

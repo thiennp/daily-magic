@@ -7,7 +7,7 @@ export const TIKTOK_SERIES_EPISODE_WORKFLOW: WorkflowCapabilityTemplate =
     "tiktok-series-episode",
     "Social",
     "TikTok series episode",
-    "Script one episode in a topic series on your Mac — dedupe against history, approve the script, then get shots, caption, and a history update after you post.",
+    "Script one episode in a topic series on your computer — dedupe against history, approve the script, then get shots, caption, and a history update after you post.",
     TIKTOK_SERIES_EPISODE_EXAMPLE_REQUEST,
     [
       ["seriesName", "Series name", "text"],
@@ -18,7 +18,7 @@ export const TIKTOK_SERIES_EPISODE_WORKFLOW: WorkflowCapabilityTemplate =
       ["toneStyle", "Tone or style (optional)", "text", false],
       [
         "seriesHistoryPath",
-        "Series history file on your Mac (JSON or markdown)",
+        "Series history file on your computer (JSON or markdown)",
         "text",
       ],
     ],

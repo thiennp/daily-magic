@@ -10,7 +10,7 @@
 
 One codebase: the repo folder name is not a separate product from Agent Witch. Do not treat CHECK24 `daily-magic.*` hosts as production Agent Witch unless a human says so. See [product/repo-name-and-hosting.md](product/repo-name-and-hosting.md).
 
-**Core job:** run a trusted agent on a Mac you control (or a teammate’s), see what happened in the browser, and reuse what worked. Day-to-day language: **Mac** · **Task** · **Run** · **Playbook** ([UX simplification](product/ux-simplification.md)).
+**Core job:** run a trusted agent on a computer you control (or a teammate’s), see what happened in the browser, and reuse what worked. Day-to-day language: **Mac** · **Task** · **Run** · **Playbook** ([UX simplification](product/ux-simplification.md)).
 
 **Four product pillars** (how the product improves over time; full table and north-star honesty in [product/product-pillars.md](product/product-pillars.md)):
 
@@ -22,7 +22,7 @@ One codebase: the repo folder name is not a separate product from Agent Witch. D
 ## What the system does (runtime)
 
 1. **Users** sign in (NextAuth + Neon), connect a **Mac** (install script + WebSocket to the same origin), compose tasks, and watch live terminal output.
-2. **`server.ts`** runs Next.js and upgrades **`/api/agent-witch/ws`** for the Mac bridge (not plain `next dev` in normal work).
+2. **`server.ts`** runs Next.js and upgrades **`/api/agent-witch/ws`** for the computer bridge (not plain `next dev` in normal work).
 3. **Dispatch** routes work to paired devices or **Cursor Cloud** (stored API keys); runs and events land in **Reports**.
 4. **Capabilities, workflows, library, harness, and marketplace** share one dispatch/runtime — see the [product glossary](product/concepts.md).
 

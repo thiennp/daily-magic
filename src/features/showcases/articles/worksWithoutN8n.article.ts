@@ -4,12 +4,12 @@ const worksWithoutN8n: ShowcaseArticle = {
   slug: "works-without-n8n",
   title: "You do not need n8n to start",
   subtitle:
-    "Workflows here are forms → prompt → your Mac. No node editor required.",
+    "Workflows here are forms → prompt → your computer. No node editor required.",
   category: "Common questions",
   supportLevel: "partial",
   readMinutes: 4,
   whatYouNeed: [
-    "A connected Mac with Agent Witch",
+    "A connected computer with Agent Witch",
     "A published workflow capability (form fields + assembled prompt)",
     "No n8n account or webhook setup",
   ],
@@ -31,7 +31,7 @@ const worksWithoutN8n: ShowcaseArticle = {
     {
       heading: "How Agent Witch stays simple",
       paragraphs: [
-        "Library workflows are a clear form: fields assemble into a prompt, then your Mac runs the job. Keep n8n or Zapier for SaaS glue when you need it—use Agent Witch for Mac-side AI work your team can request from the browser.",
+        "Library workflows are a clear form: fields assemble into a prompt, then your computer runs the job. Keep n8n or Zapier for SaaS glue when you need it—use Agent Witch for Mac-side AI work your team can request from the browser.",
       ],
     },
     {

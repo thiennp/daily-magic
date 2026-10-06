@@ -1,4 +1,4 @@
-/** Ollama task-estimate sidecar scripts shipped with the Mac client. */
+/** Ollama task-estimate sidecar scripts shipped with the computer client. */
 export const AGENT_WITCH_CLIENT_INSTALL_ESTIMATE_SCRIPT_NAMES = [
   "requestOllamaTaskEstimate.ts",
   "requestOllamaEmbedding.ts",

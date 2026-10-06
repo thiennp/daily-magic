@@ -1,6 +1,6 @@
 import { fetchLocalAgentWitchWakeJson } from "@/lib/agentWitch/fetchLocalAgentWitchWakeJson";
 
-/** Calls the Mac wake server POST /restart (revive + auto-reinstall). */
+/** Calls the computer wake server POST /restart (revive + auto-reinstall). */
 
 export const requestLocalAgentWitchRestartFromWakeServer = async (): Promise<{
   readonly reachable: boolean;

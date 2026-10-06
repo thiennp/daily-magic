@@ -90,7 +90,7 @@ Set `DATABASE_URL` in `.env.local` (Neon connection string). Apply schema with `
 
 ## Agent Witch (local HTTP bridge)
 
-Runs writer CLIs on your computer when the app dispatches a task. The Mac client heartbeats and long-polls over HTTP; the browser receives live updates over SSE. Live Mac output uses a PTY shell session (`shell.*` messages; owner can type, requesters get a read-only view and answer `[[AWAITING_INPUT]]` checkpoints).
+Runs writer CLIs on your computer when the app dispatches a task. The computer client heartbeats and long-polls over HTTP; the browser receives live updates over SSE. Live Mac output uses a PTY shell session (`shell.*` messages; owner can type, requesters get a read-only view and answer `[[AWAITING_INPUT]]` checkpoints).
 
 ```bash
 # Start app (custom server — not plain next dev)
@@ -114,7 +114,7 @@ npm run agent-witch:install
 - Local watchdog API (wake server): `GET http://127.0.0.1:47892/watchdog/status`, `GET /watchdog/logs`, `POST /watchdog/revive`
 - Local harness install API (wake server): `POST http://127.0.0.1:47892/harness/install` — browser sends `{ appOrigin, profileEmail?, bundle: { name, slug, items[] } }` for deterministic writes to `~/.agent-witch/harness/`
 - Local self-update API (wake server): `GET http://127.0.0.1:47892/update/status`, `GET /update/logs`, `POST /update/run`
-- Server proxy (same Mac as wake server): `GET /api/agent-witch/local-watchdog`, `POST /api/agent-witch/local-watchdog`, `GET /api/agent-witch/local-update`, `POST /api/agent-witch/local-update`
+- Server proxy (same computer as wake server): `GET /api/agent-witch/local-watchdog`, `POST /api/agent-witch/local-watchdog`, `GET /api/agent-witch/local-update`, `POST /api/agent-witch/local-update`
 - Mid-run input: agent outputs `[[AWAITING_INPUT]]` + question; browser answers over WS; Mac stores pending sessions in `pending-run-inputs.json` (see `.cursor/rules/agent-run-input-protocol.mdc`)
 
 ---

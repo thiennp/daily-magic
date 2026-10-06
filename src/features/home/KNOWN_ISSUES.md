@@ -38,9 +38,9 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-## HOME-004 — “Connect another Mac” with zero devices
+## HOME-004 — “Connect another computer” with zero devices
 
-**Symptom:** First-time users saw “Connect another Mac”.
+**Symptom:** First-time users saw “Connect another computer”.
 
 **Root cause:** Copy did not branch on `hasExistingDevices`.
 
@@ -112,7 +112,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## HOME-010 — Pair-Mac onboarding step stale across browsers
 
-**Symptom:** Home checklist still showed “Add your Mac as a worker” incomplete after pairing on another browser or tab, until a hard reload.
+**Symptom:** Home checklist still showed “Add your computer as a worker” incomplete after pairing on another browser or tab, until a hard reload.
 
 **Root cause:** Step completion trusted only the in-memory paired-devices cache or a live `/api/agent-witch/devices` fetch with no DB-backed onboarding signal; stale empty cache could win on the home tab.
 
@@ -220,7 +220,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## HOME-019 — Install CTA shown when Mac already has Agent Witch
 
-**Symptom:** Home still showed “Add a Mac” / install steps on a Mac where Agent Witch was already running.
+**Symptom:** Home still showed “Add a computer” / install steps on a computer where Agent Witch was already running.
 
 **Root cause:** Connect CTAs always rendered and did not consult device presence.
 
@@ -232,7 +232,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## HOME-020 — Home dashboard spammed link-session and devices APIs
 
-**Symptom:** With a Mac already connected, Home fired repeated `/api/agent-witch/link-session` and `/api/agent-witch/devices` requests.
+**Symptom:** With a computer already connected, Home fired repeated `/api/agent-witch/link-session` and `/api/agent-witch/devices` requests.
 
 **Root cause:** After removing localhost wake probes, dashboard `autoLink` treated “has devices” as a signal to start a new link session every few seconds.
 
@@ -292,7 +292,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## HOME-025 — Install finished before Mac WebSocket connected
 
-**Symptom:** After running the install command, Home advanced or showed success while the Mac was only claimed in the database (or recently seen) without a live agent WebSocket, so the device did not appear as connected on agentwitch.com.
+**Symptom:** After running the install command, Home advanced or showed success while the computer was only claimed in the database (or recently seen) without a live agent WebSocket, so the device did not appear as connected on agentwitch.com.
 
 **Root cause:** `waitForLinkedMacDevice` polled `/api/agent-witch/devices` for any claimed row (`devices.length > 0`) instead of requiring `isConnected` from the hub.
 
@@ -302,9 +302,9 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-## HOME-026 — Connect this Mac row skipped install modal
+## HOME-026 — Connect this computer row skipped install modal
 
-**Symptom:** Clicking **Connect this Mac** in Your Devices tried to link immediately instead of opening the install modal with the bash command and Terminal paste flow. On mobile, the row was hidden or offered no MacBook guidance.
+**Symptom:** Clicking **Connect this computer** in Your Devices tried to link immediately instead of opening the install modal with the bash command and Terminal paste flow. On mobile, the row was hidden or offered no MacBook guidance.
 
 **Fix:** Open `ConnectThisMacModal` from the row (bash + paste modal on macOS; MacBook steps on mobile/non-Mac). Show the row on non-Mac browsers when devices already exist.
 
@@ -312,9 +312,9 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-## HOME-027 — Connect this Mac monitor icon blew up on mobile
+## HOME-027 — Connect this computer monitor icon blew up on mobile
 
-**Symptom:** On the Home **Connect this Mac** row, the monitor SVG rendered at full flex width on narrow viewports, pushing copy off-screen and breaking the card layout.
+**Symptom:** On the Home **Connect this computer** row, the monitor SVG rendered at full flex width on narrow viewports, pushing copy off-screen and breaking the card layout.
 
 **Cause:** `MacDeviceIcon` is a dimensionless SVG; `ConnectThisMacRow` passed color classes but no `h-*` / `w-*` size utilities (other call sites use `resolveMacDeviceIconClassName`).
 
@@ -324,11 +324,11 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-## HOME-028 — Connect this Mac shown on phone Home
+## HOME-028 — Connect this computer shown on phone Home
 
-**Symptom:** Mobile browsers saw a **Connect this Mac** row in Your Devices even though the phone is not the Mac being linked.
+**Symptom:** Mobile browsers saw a **Connect this computer** row in Your Devices even though the phone is not the computer being linked.
 
-**Fix:** Detect mobile user agents (`isMobileBrowser`) and hide the Connect this Mac row via `resolveShouldShowConnectThisMac`.
+**Fix:** Detect mobile user agents (`isMobileBrowser`) and hide the Connect this computer row via `resolveShouldShowConnectThisMac`.
 
 **Regression tests:** `isMobileBrowser.test.ts`, `resolveShouldShowConnectThisMac.test.ts` (HOME-028).
 
@@ -346,33 +346,33 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-## HOME-030 — Connect this Mac missing after uninstall with other devices listed
+## HOME-030 — Connect this computer missing after uninstall with other devices listed
 
-**Symptom:** After Agent Witch was uninstalled (no local token identity), Your Devices no longer showed **this Mac**, but also hid **Connect this Mac** whenever other cloud devices already existed.
+**Symptom:** After Agent Witch was uninstalled (no local token identity), Your Devices no longer showed **this Mac**, but also hid **Connect this computer** whenever other cloud devices already existed.
 
 **Root cause:** `resolveShouldShowConnectThisMac` treated `localTokenHash === null` like “identity unknown → hide Connect when `devices.length > 0`”, which was carried over from hostname matching.
 
-**Fix:** On macOS, a missing local token hash means this machine is not linked yet, so always show **Connect this Mac**. Hide it only when a listed device matches the local token hash.
+**Fix:** On macOS, a missing local token hash means this machine is not linked yet, so always show **Connect this computer**. Hide it only when a listed device matches the local token hash.
 
 **Regression tests:** `resolveShouldShowConnectThisMac.test.ts`, `resolveShouldShowConnectThisMac.tokenIdentity.test.ts` (HOME-030).
 
 ---
 
-## HOME-031 — this Mac badge missing after Connect without wake identity
+## HOME-031 — this computer badge missing after Connect without wake identity
 
-**Symptom:** After linking a Mac, Your Devices showed the connected device (e.g. Mac Light C) but never the **this Mac** badge. Connect this Mac could still appear.
+**Symptom:** After linking a computer, Your Devices showed the connected device (e.g. Mac Light C) but never the **this Mac** badge. Connect this computer could still appear.
 
 **Root cause:** `localTokenHash` was only set from wake `/identity` (localhost). The install-token response returned `pairingToken` but the browser discarded it, so when wake was down or incomplete there was no token identity to match `device.tokenHash`.
 
-**Fix:** Install-token API returns `tokenHash`; Connect this Mac / install command hooks persist it via `localMacTokenHashStore` (cookie + live subscribers). Install finish opens Home with `?awLocalTokenHash=…` so the badge works even when wake `/identity` is unreachable. Wake still refreshes the hash when available.
+**Fix:** Install-token API returns `tokenHash`; Connect this computer / install command hooks persist it via `localMacTokenHashStore` (cookie + live subscribers). Install finish opens Home with `?awLocalTokenHash=…` so the badge works even when wake `/identity` is unreachable. Wake still refreshes the hash when available.
 
 **Regression tests:** `localMacTokenHashStore.test.ts`, `buildAgentWitchInstallScriptFinish.test.ts` (HOME-031).
 
 ---
 
-## HOME-032 — Connect this Mac replaced another account on the same Mac
+## HOME-032 — Connect this computer replaced another account on the same computer
 
-**Symptom:** On a shared Mac, Your Devices correctly hid **this Mac** for a different Agent Witch account, but **Connect this Mac** looked like it would take over the other account’s local install. Wake `/identity` could also overwrite the browser’s token hash with the active profile’s hash.
+**Symptom:** On a shared Mac, Your Devices correctly hid **this Mac** for a different Agent Witch account, but **Connect this computer** looked like it would take over the other account’s local install. Wake `/identity` could also overwrite the browser’s token hash with the active profile’s hash.
 
 **Root cause:** Install/profile helpers could inherit another account’s pairing token or flip `active-profile.json`, and the browser always adopted wake’s single `tokenHash`.
 
@@ -400,7 +400,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 **Root cause:** Live terminal localStorage was a single slot; Home only linked to full job history.
 
-**Fix:** Archive live sessions by `runId` when starting fresh; Home **Running on your Mac** lists `RUNNING` / `PENDING_APPROVAL` from the agent-runs cache; click expands **New task** with `sourceRunId` + `resumeLive`.
+**Fix:** Archive live sessions by `runId` when starting fresh; Home **Running on your computer** lists `RUNNING` / `PENDING_APPROVAL` from the agent-runs cache; click expands **New task** with `sourceRunId` + `resumeLive`.
 
 **Regression tests:** `listRunningAgentRunsLocalCache.test.ts`, `formatHomeRunningJobTitle.test.ts`, `restoreAgentLiveTerminalFromSourceRun.test.ts` (AGENT-053 / HOME-034).
 
@@ -408,7 +408,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## HOME-035 — Running list did not show Mac still alive
 
-**Symptom:** Home **Running on your Mac** only said “Click to expand”, so quiet jobs looked possibly crashed even when `run.heartbeat` was arriving.
+**Symptom:** Home **Running on your computer** only said “Click to expand”, so quiet jobs looked possibly crashed even when `run.heartbeat` was arriving.
 
 **Root cause:** Heartbeats did not patch `lastRunHeartbeatAt` in the local agent-runs cache, and the list never rendered that field.
 
@@ -420,9 +420,9 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## HOME-036 — Device row did not show “This Mac” or connect action
 
-**Symptom:** Home listed a connected Mac by hostname only (`L92KQX615Q`); no indication that the browser was on that machine, and no way to link the current Mac from the device panel when it was not listed.
+**Symptom:** Home listed a connected computer by hostname only (`L92KQX615Q`); no indication that the browser was on that machine, and no way to link the current Mac from the device panel when it was not listed.
 
-**Fix:** On macOS, read wake-server `/identity` once, cache hostname in `agent_witch_local_host` cookie, show a **This Mac** badge on the matching row, and render **Connect this Mac** when the current computer is not in the device list.
+**Fix:** On macOS, read wake-server `/identity` once, cache hostname in `agent_witch_local_host` cookie, show a **This Mac** badge on the matching row, and render **Connect this computer** when the current computer is not in the device list.
 
 **Regression tests:** `resolveShouldShowConnectThisMac.test.ts` (HOME-036).
 
@@ -466,7 +466,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## HOME-040 — Update local showed tokenless repair curl
 
-**Symptom:** **Update local Agent Witch** copied `agent-witch-update.sh` without a pairing token; install failed when the Mac had no local identity in config.
+**Symptom:** **Update local Agent Witch** copied `agent-witch-update.sh` without a pairing token; install failed when the computer had no local identity in config.
 
 **Root cause:** `useThisMacLocalInstallActions` used `buildAgentWitchUpdateInstallCommand` only; update scripts require a preset or on-disk pairing token.
 
@@ -488,9 +488,9 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-## HOME-050 — this Mac identity probe did not retry after AWB came back
+## HOME-050 — this computer identity probe did not retry after AWB came back
 
-**Symptom:** On this Mac, AWC never sent `GET http://127.0.0.1:{wakePort}/identity` after Agent Witch Bridge came back, so the **this Mac** badge stayed missing even though AWB `/identity` worked from curl.
+**Symptom:** On this computer, AWC never sent `GET http://127.0.0.1:{wakePort}/identity` after Agent Witch Bridge came back, so the **this Mac** badge stayed missing even though AWB `/identity` worked from curl.
 
 **Root cause:** The browser probed each wake port once per tab session and then suppressed retries. If AWB was down on first load (or only the page-origin port was tried), later focus on Home did not send identity again. Localhost AWC also skipped production port `47892`.
 
@@ -560,11 +560,11 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-## HOME-056 — Connect another Mac opened macOS paste modal on Windows
+## HOME-056 — Connect another computer opened macOS paste modal on Windows
 
-**Symptom:** On a Windows or Linux browser, copying the install command from **Connect another Mac** (empty device list or device panel footer) opened “Paste into Terminal” with Command (⌘) + V instructions.
+**Symptom:** On a Windows or Linux browser, copying the install command from **Connect another computer** (empty device list or device panel footer) opened “Paste into Terminal” with Command (⌘) + V instructions.
 
-**Root cause:** HOME-054 gated the paste modal in the connect guide and **Connect this Mac** row only; `ConnectAnotherMacButton` always called `setIsPasteModalOpen(true)` on copy.
+**Root cause:** HOME-054 gated the paste modal in the connect guide and **Connect this computer** row only; `ConnectAnotherMacButton` always called `setIsPasteModalOpen(true)` on copy.
 
 **Fix:** `ConnectAnotherMacButton` uses `shouldOpenConnectInstallPasteModal(operatingSystem)` like the other connect flows.
 
@@ -572,13 +572,13 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-## HOME-057 — No Connect button when this Mac is not in the list
+## HOME-057 — No Connect button when this computer is not in the list
 
-**Symptom:** Home listed other computers as offline, none marked **this Mac**, and there was no **Connect this Mac** button. **Mac settings & connect** only opened Your setup.
+**Symptom:** Home listed other computers as offline, none marked **this Mac**, and there was no **Connect this computer** button. **Mac settings & connect** only opened Your setup.
 
 **Root cause:** After a skipped wake-identity probe (token already stored, or a previous failed probe suppressed in sessionStorage), identity status stayed `idle`. `isCheckingLocalHostname` treated every `idle` state as still checking, so `resolveShouldShowConnectThisMac` hid the button even though no device matched this browser.
 
-**Fix:** `resolveIsCheckingLocalMacIdentity` is pending only while a probe will run or is loading. When this computer is not linked, Home shows **Connect this Mac** in the hero and under Your Devices, and the banner says **This computer is not linked**.
+**Fix:** `resolveIsCheckingLocalMacIdentity` is pending only while a probe will run or is loading. When this computer is not linked, Home shows **Connect this computer** in the hero and under Your Devices, and the banner says **This computer is not linked**.
 
 **Regression tests:** `resolveIsCheckingLocalMacIdentity.test.ts`, `resolveHomeMacStatusForBrowser.test.ts` (HOME-057).
 
@@ -586,7 +586,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## HOME-058 — Reconnecting banner when this computer is not linked
 
-**Symptom:** Home showed **Mac reconnecting** in the hero while **Connect this Mac** was visible because another account Mac was only `recent`, even though this browser was not linked yet.
+**Symptom:** Home showed **Mac reconnecting** in the hero while **Connect this computer** was visible because another account Mac was only `recent`, even though this browser was not linked yet.
 
 **Root cause:** `resolveHomeMacStatusForBrowser` rewrote the banner only when aggregate tone was `offline`, not `sleeping` (`recent` / `live_other_instance`).
 
@@ -596,9 +596,9 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-## HOME-059 — Connect this Mac cloned a device on every click
+## HOME-059 — Connect this computer cloned a device on every click
 
-**Symptom:** Clicking **Connect this Mac** more than once listed **Your Mac**, **Mac 2**, **Mac 3**, each **seen recently**, **Version unknown**, latest bundle. Only the newest row showed **this Mac**. Named computers that had already checked in stayed in the list.
+**Symptom:** Clicking **Connect this computer** more than once listed **Your Mac**, **Mac 2**, **Mac 3**, each **seen recently**, **Version unknown**, latest bundle. Only the newest row showed **this Mac**. Named computers that had already checked in stayed in the list.
 
 **Root cause:** `createAgentWitchInstallTokenForUser` inserted a new `agent_witch_devices` row on every click and `insertAgentWitchDeviceClaim` set `last_seen_at` to now. `revokePendingInstallDevicesForUser` only revoked rows with `last_seen_at IS NULL`, so the cleanup never matched. Failed `127.0.0.1` `/identity` calls are AWB being down; they do not insert rows.
 
@@ -608,11 +608,11 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-## HOME-060 — Deleting a Mac left the local install running
+## HOME-060 — Deleting a computer left the local install running
 
-**Symptom:** Removing a Mac in the Console set `revoked_at` and closed the socket. The Mac app kept the pairing token, retried, and stayed installed. Projects were not the only thing left behind; the helper and bridge kept their identity too.
+**Symptom:** Removing a computer in the Console set `revoked_at` and closed the socket. The Mac app kept the pairing token, retried, and stayed installed. Projects were not the only thing left behind; the helper and bridge kept their identity too.
 
-**Root cause:** Delete never removed the `agent_witch_devices` row, and the Mac client treated every `system.error` as ignorable. A revoked row is still a known identity, so the client had no signal to forget the connection.
+**Root cause:** Delete never removed the `agent_witch_devices` row, and the computer client treated every `system.error` as ignorable. A revoked row is still a known identity, so the client had no signal to forget the connection.
 
 **Fix:** Delete removes the row after cancelling in-flight runs and queued dispatch. Register and the live disconnect send `errorCode` `unknown_identity` only when the token hash is absent. Bundle 148 stops reconnecting and deletes connection files plus shipped app code. Projects, harness, reports, runs, rag, memory, and Ollama stay. Generic errors and revoked-but-present rows do not wipe.
 
@@ -622,7 +622,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## HOME-065 — Ghost “Your Mac” while a real Mac is live
 
-**Symptom:** **Grey - Check** (or another named Mac) was online and **this Mac** worked, but an offline **Your Mac** placeholder still appeared after repeated **Connect this Mac** clicks.
+**Symptom:** **Grey - Check** (or another named Mac) was online and **this Mac** worked, but an offline **Your Mac** placeholder still appeared after repeated **Connect this computer** clicks.
 
 **Root cause:** `revokePendingInstallDevicesForUser` (HOME-059) always kept the newest unlabeled placeholder so in-flight Connect flows had a claim row. That row stayed visible after the account already had a live agent connection.
 
@@ -634,7 +634,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## HOME-064 — Orphan install-token cookie vs live Grey - Check row
 
-**Symptom:** **Grey - Check** was online but **Connect this Mac** stayed visible; **Your Mac** was an offline placeholder. Cookie `agent_witch_local_token_hash` held an install-token claim hash not present under `~/.agent-witch/profiles`, while the live row used another local profile token. Wake `tokenHash` followed `active-profile.json` but the hub heartbeat used the connected profile.
+**Symptom:** **Grey - Check** was online but **Connect this computer** stayed visible; **Your Mac** was an offline placeholder. Cookie `agent_witch_local_token_hash` held an install-token claim hash not present under `~/.agent-witch/profiles`, while the live row used another local profile token. Wake `tokenHash` followed `active-profile.json` but the hub heartbeat used the connected profile.
 
 **Root cause:** HOME-063 only remapped cookies across **on-disk** profile hashes and preferred **active** wake `tokenHash` when reachable. Orphan claims and active-vs-connected profile drift were unchanged.
 
@@ -646,7 +646,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## HOME-063 — Multi-profile Mac: wake `/identity` primary hash ≠ live agent
 
-**Symptom:** Your Devices showed a live named Mac (e.g. **Grey - Check**, online, current bundle) plus offline **Your Mac** and **Connect this Mac**, while AWL Status proved the WebSocket used the **active** profile (`active-profile.json`). AWB `/identity` still advertised another profile’s `tokenHash` when a legacy profile folder remained on disk.
+**Symptom:** Your Devices showed a live named Mac (e.g. **Grey - Check**, online, current bundle) plus offline **Your Mac** and **Connect this computer**, while AWL Status proved the WebSocket used the **active** profile (`active-profile.json`). AWB `/identity` still advertised another profile’s `tokenHash` when a legacy profile folder remained on disk.
 
 **Root cause:** Wake `tokenHash` came from `readAgentWitchRunConfig()` without pinning `active-profile.json`. With two local pairing tokens, the browser cookie could match only the offline placeholder (HOME-062) even though the LaunchAgent heartbeated with the active profile hash.
 
@@ -656,21 +656,21 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-## HOME-062 — Duplicate this Mac: offline “Your Mac” badge + Connect this computer
+## HOME-062 — Duplicate this computer: offline “Your Mac” badge + Connect this computer
 
-**Symptom:** Your Devices showed a grey offline row and a separate **Your Mac** row with the **this Mac** badge, or **Connect this Mac** / **This computer** alongside a badged offline placeholder, while the live install on the same machine was running.
+**Symptom:** Your Devices showed a grey offline row and a separate **Your Mac** row with the **this Mac** badge, or **Connect this computer** / **This computer** alongside a badged offline placeholder, while the live install on the same machine was running.
 
 **Root cause:** The **this Mac** badge and Connect-this-Mac hide logic used token-hash match only. A stale `agent_witch_local_token_hash` cookie could still match an old offline cloud row (generic **Your Mac**, no bundle version) while the live AWB install used a different hash (HOME-061 wake refresh not applied yet to badge gating).
 
-**Fix:** Badge and “already linked” gating require a **reachable** device row (`live` / `recent` / bridge connected). Offline hash-only matches no longer get the badge; Connect this Mac stays visible until a reachable row matches the browser hash (wake probe can then refresh the cookie).
+**Fix:** Badge and “already linked” gating require a **reachable** device row (`live` / `recent` / bridge connected). Offline hash-only matches no longer get the badge; Connect this computer stays visible until a reachable row matches the browser hash (wake probe can then refresh the cookie).
 
 **Regression tests:** `resolveHomeMacDeviceIsThisMac.test.ts`, `deviceMatchesReachableLocalTokenHash.test.ts`, `resolveShouldShowConnectThisMac.tokenIdentity.test.ts` (HOME-062).
 
 ---
 
-## HOME-061 — this Mac badge stuck on an offline “Your Mac” while another Mac is Online
+## HOME-061 — this computer badge stuck on an offline “Your Mac” while another computer is Online
 
-**Symptom:** Your Devices showed **MKX52CMWN7 Online · Version 157** and a separate **Your Mac this Mac Offline · Version unknown · latest 157**. The browser was on the live Mac; AWL reported `wsConnected: true` and AWB `/identity` on the runtime wake port returned the live install’s `tokenHash`.
+**Symptom:** Your Devices showed **MKX52CMWN7 Online · Version 157** and a separate **Your computer this computer Offline · Version unknown · latest 157**. The browser was on the live Mac; AWL reported `wsConnected: true` and AWB `/identity` on the runtime wake port returned the live install’s `tokenHash`.
 
 **Root cause:**
 
@@ -678,7 +678,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 2. `resolveLocalMacTokenHashFromWakeIdentity` kept that stale cookie even after wake identity listed a different sole hash.
 3. `listAgentWitchDevicesForUser` omitted `wake_port`, so AWC never learned the runtime AWB port (e.g. `50199` when defaults `47892`/`47893` were free/unused) and could not re-probe identity on the live bridge.
 
-**Fix:** Re-probe when the cookie hash does not match any live/recent device; adopt the sole wake `tokenHashes` entry when the cookie is absent from this Mac; select and map `wake_port` on the devices API.
+**Fix:** Re-probe when the cookie hash does not match any live/recent device; adopt the sole wake `tokenHashes` entry when the cookie is absent from this computer; select and map `wake_port` on the devices API.
 
 **Regression tests:** `resolveShouldProbeWakeIdentityInBrowser.test.ts`, `resolveLocalMacTokenHashFromWakeIdentity.test.ts`, `resolveLocalTokenHashMatchesReachableDevice.test.ts`, `listAgentWitchDevicesForUser.test.ts`, `mapAgentWitchDeviceRow.test.ts`, `useProbeLocalMacWakeIdentity.test.ts`, `useLocalMacHostname.test.ts` (HOME-061).
 

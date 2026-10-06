@@ -49,7 +49,7 @@ export default function MarketingBrandSectionCards() {
               MARKETING_DISPLAY_HEADING_CLASSES,
             )}
           >
-            Delegate AI work on Macs you control
+            Delegate AI work on computers you control
           </p>
           <p className="max-w-xl text-base text-gray-600">
             Body copy uses relaxed leading and gray-600 for secondary text on
@@ -86,7 +86,7 @@ export default function MarketingBrandSectionCards() {
           <div className="lg:border-l lg:border-brand-200 lg:pl-6 first:lg:border-l-0">
             <p className={MARKETING_METRIC_VALUE_CLASSES}>~15 min</p>
             <p className={MARKETING_METRIC_DESCRIPTION_CLASSES}>
-              to connect a Mac and run a first job
+              to connect a computer and run a first job
             </p>
           </div>
           <div className="lg:border-l lg:border-brand-200 lg:pl-6">

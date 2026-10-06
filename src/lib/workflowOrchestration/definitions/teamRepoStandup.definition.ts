@@ -7,7 +7,7 @@ import type OfficialWorkflowDefinition from "@/lib/workflowOrchestration/types/O
 const RESOLVE_AND_COLLECT = `Read repoPath, branch, and since (optional) from the workflow form.
 
 ## Resolve repo (this step only)
-- Treat repoPath as the project folder on this Mac; expand ~ when present.
+- Treat repoPath as the project folder on this computer; expand ~ when present.
 - Verify it is a git repository and the named branch exists (local or sensible remote tracking).
 - If repoPath or branch is missing or ambiguous, list what you still need in [[PROGRESS]]; the operator confirms at the next checkpoint.
 - Do not draft standup bullets in this step.
@@ -36,7 +36,7 @@ export const OFFICIAL_WORKFLOW_DEFINITION: OfficialWorkflowDefinition = {
       0,
       "Prepare repo path and branch fields",
       [
-        "1. Set repoPath to the project folder on the teammate's Mac.",
+        "1. Set repoPath to the project folder on the teammate's computer.",
         "2. Set branch to the branch you want summarized.",
         "3. Add since only if you need a custom time window (optional).",
         "4. Reply ready when the form matches what the agent should inspect.",

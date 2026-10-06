@@ -36,7 +36,7 @@ On desktop, primary nav links sit in the sticky **left sidebar**; **Your Devices
 
 **Not primary nav (by design):**
 
-- Deep **Knowledge / RAG** on the **Mac** → **Agent Witch on this Mac** → **Knowledge** ([Chapter 4](04-mac-connect-and-bridge.md#local-knowledge-mac-app--efficient-memory)). In the Console, **Search past runs** under **Runs** reuses context without the “Knowledge” label.
+- Deep **Knowledge / RAG** on the **Mac** → **Agent Witch on this computer** → **Knowledge** ([Chapter 4](04-mac-connect-and-bridge.md#local-knowledge-mac-app--efficient-memory)). In the Console, **Search past runs** under **Runs** reuses context without the “Knowledge” label.
 - Raw traffic / developer logs → **Mac settings → Developer**.
 
 ---
@@ -51,11 +51,11 @@ Plain status language ([UX principles](../../product/ux-simplification.md)):
 
 | Status                               | What it means for you                                                                                                                              |
 | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Online**                           | Cloud has a **live** dispatch path to this Mac on the current server (you can send writer tasks when the composer agrees).                         |
+| **Online**                           | Cloud has a **live** dispatch path to this computer on the current server (you can send writer tasks when the composer agrees).                    |
 | **Reconnecting** / **Seen recently** | Helper may be running, but the Console is waiting for a **live WebSocket** on the hub handling your request—common for a few seconds after deploy. |
-| **This computer is not linked**      | Other computers may already be listed, but none is **this Mac**. Use **Connect this Mac** in the hero.                                             |
+| **This computer is not linked**      | Other computers may already be listed, but none is **this Mac**. Use **Connect this computer** in the hero.                                        |
 | **Offline**                          | A linked computer has no recent live socket—start the helper, or fix LaunchAgent/update issues.                                                    |
-| **None / not connected**             | No paired Mac yet—follow **Connect your Mac**.                                                                                                     |
+| **None / not connected**             | No paired computer yet—follow **Connect your computer**.                                                                                           |
 
 **Honest UX:** Home **reconnecting** is **not** the same as “Safari can reach google.com.” It reflects **dispatch readiness**, not just local bridge health. Read both Home and the composer banner before reinstalling ([Q&A: reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md)).
 
@@ -68,14 +68,14 @@ Picker labels on **New task** use related wording: **Online**, **Reconnecting (a
 ### Secondary panels
 
 - **Runs** snippet / running jobs panel — jump back into active work.
-- **Mac settings** — update, wake, repositories on the Mac.
+- **Mac settings** — update, wake, repositories on the computer.
 - **Having trouble?** — hints toward install and bridge docs.
 
 ### Onboarding checklist (max ~3 steps)
 
 Typical default path:
 
-1. **Connect your Mac** — install + pair.
+1. **Connect your computer** — install + pair.
 2. **Send your first task** — first **Run** acknowledged.
 3. _(Optional)_ **Save a playbook** — reuse; skippable.
 
@@ -129,7 +129,7 @@ From the profile menu:
 - **Mac & devices** — rename, see presence tier hints, bundle version behind cloud.
 - **Settings** — profile and product settings.
 
-**Agent Witch on this Mac** (Mac app at `http://127.0.0.1:43347`) is linked when you work on the same machine—full local UI for projects, playbooks, memory, health. The Console does **not** duplicate that UI in primary nav; it **links** there ([deployables — two entry points](../../product/agent-witch-deployables.md)).
+**Agent Witch on this computer** (Mac app at `http://127.0.0.1:43347`) is linked when you work on the same machine—full local UI for projects, playbooks, memory, health. The Console does **not** duplicate that UI in primary nav; it **links** there ([deployables — two entry points](../../product/agent-witch-deployables.md)).
 
 ---
 

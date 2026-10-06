@@ -41,4 +41,4 @@
 ## Box status
 
 - Go build/vet/test under RAM Guard caps (see agent notes)
-- No tag/release from this stage; branch push via Mac bundle path only
+- No tag/release from this stage; branch push via computer bundle path only

@@ -70,7 +70,7 @@ const installTeammateListing = async (
     projectId,
     harnessInstalled: false,
     harnessInstallMessage:
-      "Linked to your project. Pull playbook files into the repo from Agent Witch on your Mac.",
+      "Linked to your project. Pull playbook files into the repo from Agent Witch on your computer.",
     localHarnessBundle: null,
   };
 };

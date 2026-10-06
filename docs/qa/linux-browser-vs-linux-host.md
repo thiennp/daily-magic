@@ -13,7 +13,7 @@
 
 **The website can be used from Linux.** Agent Witch Cloud (AWC) at `https://www.agentwitch.com` is a normal browser app. A Linux desktop can sign in, read Runs, and send Tasks to a host that is already live.
 
-**Running the agent on that Linux machine is a separate, narrower path.** The install script can pair an **x86_64 Linux** host (AWI) with `platform: "linux"`, a systemd user unit, and the same WebSocket dispatch rules as a Mac. Desktop Linux Home shows that install command. The device picker labels the row **Linux device**. **Agent Witch Local (AWL)** and the loopback bridge (**AWB**, “this computer”) stay **Mac-only**. Many status lines still say “Your Mac”.
+**Running the agent on that Linux machine is a separate, narrower path.** The install script can pair an **x86_64 Linux** host (AWI) with `platform: "linux"`, a systemd user unit, and the same WebSocket dispatch rules as a computer. Desktop Linux Home shows that install command. The device picker labels the row **Linux device**. **Agent Witch Local (AWL)** and the loopback bridge (**AWB**, “this computer”) stay **Mac-only**. Many status lines still say “Your Mac”.
 
 ## Details
 
@@ -24,7 +24,7 @@
 | **AWL** (`http://127.0.0.1:43347`)             | No. Mac-local UI                                                                                                 | Projects, folders, local knowledge     |
 | **AWB** identity (`127.0.0.1:47892` / `47893`) | No. The browser probes identity only when the user agent is **macOS**                                            | “This computer” / “this Mac” badge     |
 
-Send still requires `presenceTier: live`. A Linux host that is paired but not live blocks Send the same way a Mac does. Readiness reason codes are still named `mac_*` even when the live row is Linux.
+Send still requires `presenceTier: live`. A Linux host that is paired but not live blocks Send the same way a computer does. Readiness reason codes are still named `mac_*` even when the live row is Linux.
 
 ### Why the answer sounds contradictory
 
@@ -35,13 +35,13 @@ Send still requires `presenceTier: live`. A Linux host that is paired but not li
 
 ### What to fix
 
-| Fix                                                                                                             | Why                                                                                      |
-| --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| Split the sentence in support, philosophy, and Home: console vs host vs Mac-only local app                      | Stops “can’t access via Linux”                                                           |
-| Detect desktop Linux in `detectBrowserOperatingSystem` and give Terminal + systemd steps instead of “Use a Mac” | Shipped. Desktop Linux gets the install command. Windows and phones still say use a Mac. |
-| Keep AWL and AWB Mac-only in that copy                                                                          | Do not promise the local Mac app on Linux                                                |
-| Status and error strings that say “Your Mac” need a host-neutral line when `platform` is `linux`                | Picker and banners currently disagree                                                    |
-| Leave `mac_*` reason codes, or rename them in one pass with tests                                               | Renaming without a pass will break readiness clients                                     |
+| Fix                                                                                                             | Why                                                                                           |
+| --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Split the sentence in support, philosophy, and Home: console vs host vs Mac-only local app                      | Stops “can’t access via Linux”                                                                |
+| Detect desktop Linux in `detectBrowserOperatingSystem` and give Terminal + systemd steps instead of “Use a Mac” | Shipped. Desktop Linux gets the install command. Windows and phones still say use a computer. |
+| Keep AWL and AWB Mac-only in that copy                                                                          | Do not promise the local Mac app on Linux                                                     |
+| Status and error strings that say “Your Mac” need a host-neutral line when `platform` is `linux`                | Picker and banners currently disagree                                                         |
+| Leave `mac_*` reason codes, or rename them in one pass with tests                                               | Renaming without a pass will break readiness clients                                          |
 
 Smoke checklist and install command: [linux-agent-host-smoke.md](../product/linux-agent-host-smoke.md).
 

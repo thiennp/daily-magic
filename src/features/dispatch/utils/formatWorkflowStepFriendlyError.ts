@@ -1,5 +1,5 @@
 const EXIT_CODE_PATTERN = /exit code (\d+)/i;
-const NO_MAC_PATTERN = /no mac|not connected|device/i;
+const NO_MAC_PATTERN = /no mac|no computer|not connected|device/i;
 
 export const formatWorkflowStepFriendlyError = (
   rawMessage: string,
@@ -7,21 +7,21 @@ export const formatWorkflowStepFriendlyError = (
   const trimmed = rawMessage.trim();
   if (trimmed.length === 0) {
     return {
-      headline: "Something went wrong on your Mac.",
+      headline: "Something went wrong on your computer.",
       detail: null,
     };
   }
 
   if (NO_MAC_PATTERN.test(trimmed)) {
     return {
-      headline: "Your Mac is not connected right now.",
+      headline: "Your computer is not connected right now.",
       detail: "Open Agent Witch on this computer, then tap Try again.",
     };
   }
 
   if (EXIT_CODE_PATTERN.test(trimmed)) {
     return {
-      headline: "This step could not finish on your Mac.",
+      headline: "This step could not finish on your computer.",
       detail: trimmed,
     };
   }

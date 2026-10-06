@@ -21,7 +21,7 @@ describe("ConnectThisMacButton", () => {
     expect(source).toContain("href={notice.downloadUrl}");
   });
 
-  it("device list hides the separate This computer row when a row is already This Mac", () => {
+  it("device list hides the separate This computer row when a row is already This computer", () => {
     const source = readSibling("HomeConnectedMacsDeviceList.tsx");
     expect(source).toContain(
       "shouldShowConnectThisMac && thisMacIdentity.thisMacDeviceId === null",

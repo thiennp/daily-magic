@@ -17,7 +17,7 @@ If you have not finished [Chapter 5 — Tasks, dispatch, and runs](05-tasks-disp
 | **Human pauses**  | Mid-run `[[AWAITING_INPUT]]` in the terminal                 | Built-in **checkpoints** between agent steps                                   |
 | **Best for**      | Ad hoc work, quick fixes (**easy authoring** — start simple) | Repeatable processes (e.g. “ship a feature in this repo”) when structure helps |
 
-Workflows still **dispatch** agent work to your **Mac** (or Cursor Cloud when configured). The browser keeps the graph, your answers, and history; the Mac runs each agent step in a real shell when it is your turn.
+Workflows still **dispatch** agent work to your **Mac** (or Cursor Cloud when configured). The browser keeps the graph, your answers, and history; the computer runs each agent step in a real shell when it is your turn.
 
 Technical overview: [How harness, workflow, and agent runs reach the Mac](../../qa/mac-harness-workflow-agent-dispatch.md).
 
@@ -43,7 +43,7 @@ Deep dive: [Official workflow run — checkpoints and retry](../../qa/official-w
 When a workflow needs you, status becomes something like **Waiting on you** (aligned with [run UX honesty](../../qa/run-ux-honesty-strings.md)). The checkpoint sheet includes:
 
 - **Workflow name** and a **progress** indicator (where you are in the graph).
-- **Workflow steps** — a checklist of every step in this run: finished steps, the one waiting on you (or running on your Mac), and what is still ahead. The same checklist appears on the failure sheet when a step needs **Try again**.
+- **Workflow steps** — a checklist of every step in this run: finished steps, the one waiting on you (or running on your computer), and what is still ahead. The same checklist appears on the failure sheet when a step needs **Try again**.
 - **What to do** — plain instructions for this step.
 - **From your assistant** — a short preview of what the last agent step produced (when available).
 - **Continue** — submit your answer and advance the graph.
@@ -76,7 +76,7 @@ That retry path is part of **learn from usage**: fix the cause, rerun the step, 
 
 Retry is available while the run is in a failed state; it clears the error and sends that node again. Details: [Official workflow run — checkpoints and retry](../../qa/official-workflow-run-checkpoints-and-retry.md).
 
-**Example:** The **vibe coding app feature** preset expects an **app target** folder on the Mac that is a git repository. If the folder is missing, the first agent step fails fast instead of editing the wrong directory.
+**Example:** The **vibe coding app feature** preset expects an **app target** folder on the computer that is a git repository. If the folder is missing, the first agent step fails fast instead of editing the wrong directory.
 
 ---
 
@@ -92,7 +92,7 @@ See [Workflow file upload and semantic output](../../qa/workflow-file-upload-and
 
 ## Playbooks and harness inside a workflow
 
-Installing a marketplace **Playbook** (rules under `~/.agent-witch/harness/`) is separate from each workflow agent step. A preset may install harness **specialist** files so the Mac CLI follows the right instructions; each step still runs as a normal dispatch (`command.claude.run`).
+Installing a marketplace **Playbook** (rules under `~/.agent-witch/harness/`) is separate from each workflow agent step. A preset may install harness **specialist** files so the computer CLI follows the right instructions; each step still runs as a normal dispatch (`command.claude.run`).
 
 User-facing name: **Playbook**. Engineers may say harness or capability slug—same idea for “how agents should behave on disk.”
 

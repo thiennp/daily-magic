@@ -4,7 +4,7 @@ const standupFromLocalBranch: ShowcaseArticle = {
   slug: "standup-from-local-branch",
   title: "Standup notes from your local branch — without pasting diffs",
   subtitle:
-    "Point the agent at the repo on your Mac; get yesterday's work in plain English.",
+    "Point the agent at the repo on your computer; get yesterday's work in plain English.",
   category: "Workflows",
   supportLevel: "full",
   readMinutes: 4,
@@ -19,7 +19,7 @@ const standupFromLocalBranch: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Engineers lose ten minutes every morning reconstructing what changed. ChatGPT cannot see your branch. Agent Witch runs on the Mac that already has the checkout — you describe the scope, it reads local git state, and you paste the summary into standup or Slack.",
+        "Engineers lose ten minutes every morning reconstructing what changed. ChatGPT cannot see your branch. Agent Witch runs on the computer that already has the checkout — you describe the scope, it reads local git state, and you paste the summary into standup or Slack.",
       ],
     },
     {
@@ -42,7 +42,7 @@ const standupFromLocalBranch: ShowcaseArticle = {
     {
       heading: "Best results",
       paragraphs: [
-        "Keep the Mac with the repo awake and connected. Run history stays in your browser so you can Run again from the same place next week.",
+        "Keep the computer with the repo awake and connected. Run history stays in your browser so you can Run again from the same place next week.",
       ],
     },
   ],

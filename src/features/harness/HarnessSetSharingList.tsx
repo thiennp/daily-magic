@@ -37,8 +37,8 @@ export default function HarnessSetSharingList({
   if (sets.length === 0) {
     return (
       <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-        Publish your shared setup first — your Mac sends its rule list when it
-        connects.
+        Publish your shared setup first — your computer sends its rule list when
+        it connects.
       </p>
     );
   }

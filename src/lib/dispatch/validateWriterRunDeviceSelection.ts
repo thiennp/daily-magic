@@ -21,7 +21,7 @@ export const validateWriterRunDeviceSelection = async (input: {
     return {
       ok: false,
       error: buildDispatchError(
-        "The selected Mac is not connected to your account.",
+        "The selected computer is not connected to your account.",
         input.requestId,
       ),
     };

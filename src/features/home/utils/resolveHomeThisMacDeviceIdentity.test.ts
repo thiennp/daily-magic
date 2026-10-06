@@ -14,7 +14,7 @@ const live = {
   presenceTier: "live" as const,
 };
 
-describe("resolveHomeThisMacDeviceIdentity (single This Mac row)", () => {
+describe("resolveHomeThisMacDeviceIdentity (single This computer row)", () => {
   it("badges the offline token-matched row instead of adding a second Connect row", () => {
     expect(
       resolveHomeThisMacDeviceIdentity({
@@ -50,7 +50,7 @@ describe("resolveHomeThisMacDeviceIdentity (single This Mac row)", () => {
 });
 
 describe("resolveHomeMacDeviceRowConnectFooter", () => {
-  it("puts Connect this Mac on an offline or too-old This Mac row", () => {
+  it("puts Connect this computer on an offline or too-old This computer row", () => {
     expect(
       resolveHomeMacDeviceRowConnectFooter({
         isThisMac: true,

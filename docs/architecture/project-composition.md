@@ -10,18 +10,18 @@ Companion docs: [projects UX v2 wireframes](../product/projects-view-wireframes-
 
 ## 0. What exists today (audited, not assumed)
 
-| Concern                | Where it lives now                                                                                        | Evidence                                                                             |
-| ---------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| Project record         | `user_projects` — 8 columns, no composition                                                               | `db/migrations/021-user-projects.sql`                                                |
-| Composition (harness)  | `harnessSetSlugs: string[]` inside the repo at `<repo>/.agent-witch/project.json`                         | `applyInstalledHarnessSetsToProjectCursor`, `readAgentWitchProjectHarnessSetSlugs`   |
-| Composition (workflow) | nowhere                                                                                                   | no project↔capability relation exists                                                |
-| Composition (agent)    | nowhere                                                                                                   | same                                                                                 |
-| Harness on the Mac     | `~/.agent-witch/harness/` with `manifest.json` → `sets[slug].items[]`, files in `shared/items/<itemId>/…` | `planHarnessInstallBundle`, `submitLocalHarnessSelection`                            |
-| Materialization        | `fs.copyFileSync` into `<repo>/.cursor/…`, no record of what was written                                  | `applyInstalledHarnessSetsToProjectCursor`                                           |
-| Cloud catalog          | `published_capabilities(type IN ('agent','workflow'), harness_set_slug TEXT)`                             | `db/schema.sql`                                                                      |
-| Dispatch binding       | `projectFolderPath?: string` (a raw path) in the dispatch payload                                         | `parseAgentRunDispatchBody`, `resolveRunProjectFolderPath`                           |
-| Run ↔ project          | **absent** — `agent_runs` has no `project_id` (only `agent_automations` does)                             | `db/schema.sql`, `db/migrations/022-agent-automations-project-id.sql`                |
-| Knowledge              | `<repo>/.agent-witch/rag/chunks.ndjson`, `<repo>/.agent-witch/memory/runs.ndjson`                         | `agentWitchLocalRag.ts`, `agentWitchLocalMemory.ts`, `ensureAgentWitchProjectFolder` |
+| Concern                 | Where it lives now                                                                                        | Evidence                                                                             |
+| ----------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Project record          | `user_projects` — 8 columns, no composition                                                               | `db/migrations/021-user-projects.sql`                                                |
+| Composition (harness)   | `harnessSetSlugs: string[]` inside the repo at `<repo>/.agent-witch/project.json`                         | `applyInstalledHarnessSetsToProjectCursor`, `readAgentWitchProjectHarnessSetSlugs`   |
+| Composition (workflow)  | nowhere                                                                                                   | no project↔capability relation exists                                                |
+| Composition (agent)     | nowhere                                                                                                   | same                                                                                 |
+| Harness on the computer | `~/.agent-witch/harness/` with `manifest.json` → `sets[slug].items[]`, files in `shared/items/<itemId>/…` | `planHarnessInstallBundle`, `submitLocalHarnessSelection`                            |
+| Materialization         | `fs.copyFileSync` into `<repo>/.cursor/…`, no record of what was written                                  | `applyInstalledHarnessSetsToProjectCursor`                                           |
+| Cloud catalog           | `published_capabilities(type IN ('agent','workflow'), harness_set_slug TEXT)`                             | `db/schema.sql`                                                                      |
+| Dispatch binding        | `projectFolderPath?: string` (a raw path) in the dispatch payload                                         | `parseAgentRunDispatchBody`, `resolveRunProjectFolderPath`                           |
+| Run ↔ project           | **absent** — `agent_runs` has no `project_id` (only `agent_automations` does)                             | `db/schema.sql`, `db/migrations/022-agent-automations-project-id.sql`                |
+| Knowledge               | `<repo>/.agent-witch/rag/chunks.ndjson`, `<repo>/.agent-witch/memory/runs.ndjson`                         | `agentWitchLocalRag.ts`, `agentWitchLocalMemory.ts`, `ensureAgentWitchProjectFolder` |
 
 Correction to the brief: **`agent_runs.project_id` does not exist.** Any plan that assumes runs are already attributable to a project is building on a column that was never added. That absence is the single largest blocker for both the AWC read-only detail page and knowledge roll-forward.
 
@@ -33,7 +33,7 @@ Correction to the brief: **`agent_runs.project_id` does not exist.** Any plan th
 
 The only durable record of "what is installed in this project" is `harnessSetSlugs` in `<repo>/.agent-witch/project.json` — a file on one Mac, inside a folder the cloud has never read. UX v2 asks AWC to render `3 Harness · 2 Workflows · 5 Agents` on a list card and named items with versions on the detail page. AWC cannot compute either number. It cannot even compute zero honestly, because absence of data is indistinguishable from an empty project.
 
-The workaround implied by the current shape — have AWC ask the Mac — fails the wireframe's own requirements: the list must render when the device is **offline** (there is an explicit offline card state), and it must render on a **phone** that is not the owning Mac. A read model that requires the writer to be online is not a read model.
+The workaround implied by the current shape — have AWC ask the computer — fails the wireframe's own requirements: the list must render when the device is **offline** (there is an explicit offline card state), and it must render on a **phone** that is not the owning Mac. A read model that requires the writer to be online is not a read model.
 
 ### 1.2 The composition key is a per-owner slug, so it means different things to different people
 
@@ -61,7 +61,7 @@ Manifest items carry `id`, `kind`, `title`, `path` — no hash, no version. `Har
 
 ### 1.7 Dispatch binds a run to a path string, not to a project
 
-The dispatch payload carries `projectFolderPath?: string`. On the Mac, `resolveRunProjectFolderPath` trims it and, when empty, **falls back to a default folder**. Nothing validates that the path belongs to a project, that the project belongs to the receiving device, or that the path still exists. Failure modes that are reachable today:
+The dispatch payload carries `projectFolderPath?: string`. On the computer, `resolveRunProjectFolderPath` trims it and, when empty, **falls back to a default folder**. Nothing validates that the path belongs to a project, that the project belongs to the receiving device, or that the path still exists. Failure modes that are reachable today:
 
 - **Change folder invalidates in-flight work.** A queued `agent_witch_dispatch_outbox` row holds the old absolute path in its JSONB payload. Rename the folder in AWL and the queued run executes in a directory that no longer matches the project.
 - **Cross-device dispatch silently degrades.** `/Users/alex/code/daily-magic` dispatched to Jamie's Mac does not error; `ensureAgentWitchProjectFolder` calls `mkdirSync(..., { recursive: true })` and **creates** the directory tree, then runs the agent in an empty folder.
@@ -81,7 +81,7 @@ The dispatch payload carries `projectFolderPath?: string`. On the Mac, `resolveR
 
 ### 1.10 "Roll-forward" today is recency injection, not learning
 
-`appendAgentWitchMemoryEntry` stores raw `prompt` + `output` pairs; `formatMemoryContextForPrompt` injects the last N **regardless of outcome**. A failed run's error output is injected into the next prompt with the same authority as a successful one. There is no distillation step, no success signal, no dedupe, and no path from "this run went well" to "make this a rule." `capability_improvements` exists in the cloud for exactly that purpose and is wired to nothing on the Mac. Separately, raw model output is re-injected verbatim, so a secret that appeared once in a transcript is replayed into every subsequent prompt — memory is an unaudited data-retention surface.
+`appendAgentWitchMemoryEntry` stores raw `prompt` + `output` pairs; `formatMemoryContextForPrompt` injects the last N **regardless of outcome**. A failed run's error output is injected into the next prompt with the same authority as a successful one. There is no distillation step, no success signal, no dedupe, and no path from "this run went well" to "make this a rule." `capability_improvements` exists in the cloud for exactly that purpose and is wired to nothing on the computer. Separately, raw model output is re-injected verbatim, so a secret that appeared once in a transcript is replayed into every subsequent prompt — memory is an unaudited data-retention surface.
 
 ### 1.11 The repo-side `.agent-witch/` directory is a privacy accident waiting to happen
 
@@ -90,8 +90,8 @@ The dispatch payload carries `projectFolderPath?: string`. On the Mac, `resolveR
 ### 1.12 The project table contradicts device-bound projects in three places
 
 - `folder_path TEXT NOT NULL` vs. the wireframe's explicit `No folder set yet` state and `[ Set folder → ]` CTA.
-- `UNIQUE (owner_user_id, lower(name))` forbids the same repo name on two Macs — the exact scenario device-binding exists to support.
-- `device_id ... ON DELETE SET NULL` plus `listUserProjectsForOwner`'s `device_id IS NULL OR device_id = $1` means unpaired projects appear on **every** Mac the user owns, and two Macs can both consider themselves the editor. Revoking a device orphans its projects into a state where AWL will not claim them and AWC, being read-only, cannot repair them.
+- `UNIQUE (owner_user_id, lower(name))` forbids the same repo name on two computers — the exact scenario device-binding exists to support.
+- `device_id ... ON DELETE SET NULL` plus `listUserProjectsForOwner`'s `device_id IS NULL OR device_id = $1` means unpaired projects appear on **every** Mac the user owns, and two computers can both consider themselves the editor. Revoking a device orphans its projects into a state where AWL will not claim them and AWC, being read-only, cannot repair them.
 
 ### 1.13 Summary judgment
 
@@ -106,7 +106,7 @@ Six layers, each with exactly one authority and one direction of dependency. A l
 ```mermaid
 flowchart TB
     C["1 · Catalog — cloud, immutable versions<br/>what exists and can be shared"]
-    I["2 · Installation — device profile<br/>which versions this Mac holds"]
+    I["2 · Installation — device profile<br/>which versions this computer holds"]
     B["3 · Binding — cloud, device-bound project<br/>what this project declares"]
     M["4 · Materialization — repo disk + run overlay<br/>what is actually written, with a ledger"]
     R["5 · Runtime — cloud snapshot + Mac execution<br/>what a given run used"]
@@ -146,7 +146,7 @@ flowchart TB
 - Version manifests at `components/versions/<componentId>/<versionId>.json` map `relativePath → sha256`.
 - `installed.json` lists installed `(componentId, versionId)` pairs. Multiple versions of one component may coexist.
 - Installing is idempotent and never touches a repo. **Installation is not composition.**
-- A `device_component_installs` row is written to the cloud on install, so AWC can show "installed on this Mac" and "update available" while the Mac is offline.
+- A `device_component_installs` row is written to the cloud on install, so AWC can show "installed on this computer" and "update available" while the computer is offline.
 
 ### Layer 3 — Binding (authority: cloud; sole writer: AWL)
 
@@ -157,7 +157,7 @@ flowchart TB
 - `project_components(project_id, component_id, kind, pinned_version_id, channel, enabled, materialize_target)` — one row per bound component, soft-deleted via `removed_at`.
 - `channel ∈ {pinned, latest}`: `pinned` freezes `pinned_version_id`; `latest` resolves at snapshot time and is what surfaces "update available."
 - **Binding does not require a folder.** A project with no folder can declare its composition; only materialization needs a path. This turns the wireframe's fully greyed-out tabs into a much better state: declare now, materialize when the folder is set.
-- Cloud is authoritative because AWC must read composition when the Mac is offline. AWL is the only writer, which preserves the "one editable source of truth" principle without making AWC blind.
+- Cloud is authoritative because AWC must read composition when the computer is offline. AWL is the only writer, which preserves the "one editable source of truth" principle without making AWC blind.
 - `folder_path` moves **out** of `user_projects` into `project_device_bindings(project_id, device_id, folder_path, folder_verified_at, is_primary)`. Path is device truth; the cloud copy is an advisory mirror with a verification timestamp.
 
 ### Layer 4 — Materialization (authority: disk; always reversible)
@@ -183,11 +183,11 @@ flowchart TB
 
 **Rules**
 
-- Dispatch carries `projectId` (authoritative) and `folderPathHint` (advisory). The Mac resolves the folder from its own registry by `projectId`; a hint that disagrees is a warning, not an instruction. A `projectId` the device does not own is a **hard failure**, not a default-folder fallback.
+- Dispatch carries `projectId` (authoritative) and `folderPathHint` (advisory). The computer resolves the folder from its own registry by `projectId`; a hint that disagrees is a warning, not an instruction. A `projectId` the device does not own is a **hard failure**, not a default-folder fallback.
 - At dispatch, the server resolves bindings into an immutable `project_composition_snapshots` row: the resolved `(componentId, versionId, sha256)` list plus a digest. `agent_runs.composition_snapshot_id` points at it.
 - Run-scoped components (pull into task) are appended to the snapshot with `scope: 'run'` and materialized to the overlay; they never create a binding.
 - `agent_runs.project_id` is added and required for every composer/automation dispatch.
-- The Mac verifies it holds every `sha256` in the snapshot before starting; missing blobs trigger a fetch, not a silent degradation.
+- The computer verifies it holds every `sha256` in the snapshot before starting; missing blobs trigger a fetch, not a silent degradation.
 
 ### Layer 6 — Knowledge (authority: device by default; promotion is explicit)
 
@@ -358,10 +358,10 @@ The rule is one authority per fact. Every other copy is a replica with a verific
 | Fact                                      | Authority                                            | Replica (and what it is for)                                                               | Reconciliation                                                                |
 | ----------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
 | Component exists, versions, content bytes | Cloud (`components`, `content_blobs`)                | Device store `~/.agent-witch/components/store/<sha256>` — offline execution                | Immutable; hash mismatch = corrupt cache, re-fetch                            |
-| Which versions a Mac holds                | Device (`installed.json`)                            | Cloud `device_component_installs` — AWC shows state while offline                          | Mac reports on install and on heartbeat                                       |
+| Which versions a computer holds           | Device (`installed.json`)                            | Cloud `device_component_installs` — AWC shows state while offline                          | Mac reports on install and on heartbeat                                       |
 | Project identity, name, device binding    | Cloud (`projects`)                                   | AWL `projects-registry.json` — offline project list                                        | Cloud wins; AWL merges on sync                                                |
 | Project composition (bindings)            | Cloud (`project_components`)                         | none — AWL reads it live, does not cache as truth                                          | AWL is sole writer; writes are transactional in cloud                         |
-| Folder path for a project on a Mac        | **Device**                                           | Cloud `project_device_bindings.folder_path` + `folder_verified_at` — so AWC can display it | Mac re-verifies existence on heartbeat; stale mirror is shown as "unverified" |
+| Folder path for a project on a computer   | **Device**                                           | Cloud `project_device_bindings.folder_path` + `folder_verified_at` — so AWC can display it | Mac re-verifies existence on heartbeat; stale mirror is shown as "unverified" |
 | Materialized files and the ledger         | **Disk** (`materialization.json`)                    | Cloud stores only a digest + counts for the AWC detail page                                | Drift = ledger hash ≠ file hash; AWL shows and offers repair                  |
 | Run record, status, snapshot              | Cloud (`agent_runs`)                                 | Local run report under `~/.agent-witch/reports/`                                           | Cloud wins; local report is evidence, not state                               |
 | Knowledge bodies (chunks, lessons)        | **Disk**, per `projectId`                            | Cloud only after explicit promotion                                                        | No implicit upload, ever                                                      |
@@ -409,24 +409,24 @@ Two deliberate removals from the repo tree: **`harnessSetSlugs` (composition mov
 
 Every affordance in the [v2 wireframes](../product/projects-view-wireframes-v2.md) checked against the current model. "Phase" refers to §7.
 
-| #   | UX v2 element                                                    | Conflict with today's model                                                                                       | Resolution                                                                                          | Phase |
-| --- | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ----- |
-| 1   | AWC list chip `3 Harness · 2 Workflows · 5 Agents`               | Composition exists only in a repo file on one Mac; workflows and agents are not bound anywhere at all             | `project_components` in the cloud; counts are a grouped count query                                 | P4    |
-| 2   | AWC detail rows with versions (`v2.1`, `v3.4`)                   | No version identity on either side — the manifest stores no hash, the repo stores a bare slug                     | Catalog `component_versions` plus `device_component_installs` for "installed version on this Mac"   | P2–P4 |
-| 3   | AWL `[ Update ]` and `(update available)`                        | Nothing to compare against; the only available write is an unconditional clobber                                  | Compare bound version against `current_version_id`; ledger-driven update with user-file backup      | P1–P2 |
-| 4   | AWL `[ Remove ]`                                                 | No record of which files were written; unchecking a set leaves every copied file behind                           | `materialization.json` ledger; remove deletes exactly its own paths and restores backups            | P1    |
-| 5   | AWL `[ Pull into repo ▾ ] from Marketplace or another project`   | Cross-owner and cross-project pull on a per-owner slug is ambiguous by construction                               | Pull by `componentId` + `versionId`; slug becomes display sugar                                     | P3    |
-| 6   | `legacy-tools — No folder set yet` card state                    | `user_projects.folder_path` is `TEXT NOT NULL` — the state is unrepresentable                                     | Path moves to `project_device_bindings.folder_path` (nullable); `user_projects.folder_path` dropped | P4    |
-| 7   | Tabs greyed out until a folder is set                            | Conflates declaring composition with writing files — a needless dead end                                          | Binding needs no folder; only materialization does. Tabs stay live, `Pull into repo` is disabled    | P4    |
-| 8   | AWL header "Projects on this Mac"                                | `listUserProjectsForOwner` returns `device_id IS NULL OR device_id = $1`, so unbound projects appear on every Mac | Require a device binding; drop the `IS NULL` branch                                                 | P4/P7 |
-| 9   | Same repo checked out on two Macs                                | `UNIQUE (owner_user_id, lower(name))` forbids it — the exact case device binding exists for                       | `UNIQUE (owner_user_id, device_id, lower(name))`                                                    | P4    |
-| 10  | AWL deep-link error "not registered on this Mac"                 | Dispatch does the opposite today: an unknown path falls back to a default folder and `mkdir -p` creates it        | `projectId` ownership check fails the run loudly; no default-folder fallback                        | P0    |
-| 11  | Delete modal: "The folder on disk is not deleted"                | True but incomplete — `.agent-witch/rag` and `memory` stay in the repo holding embeddings and transcripts         | Knowledge moves to the profile keyed by `projectId`; the modal states whether memory is purged      | P6    |
-| 12  | `[ Pull into repo ]` on a repo with hand-written `.cursor` rules | Silent overwrite: destination is derived by slugifying the item title, with no diff, prompt, or backup            | Slug-namespaced destinations, pre-write hashing, backup to `.agent-witch/backups/`                  | P1    |
-| 13  | AWC read-only detail rendered from a phone                       | Any Mac-querying read model fails here and in the explicit offline card state                                     | Cloud is the read model; the Mac is never on the read path                                          | P4    |
-| 14  | `Agents` label vs "agent run"                                    | A naming collision v2 flagged rather than renamed                                                                 | Schema uses `components.kind = 'agent'`; the fix belongs in copy, not in tables                     | —     |
+| #   | UX v2 element                                                    | Conflict with today's model                                                                                            | Resolution                                                                                             | Phase |
+| --- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ----- |
+| 1   | AWC list chip `3 Harness · 2 Workflows · 5 Agents`               | Composition exists only in a repo file on one Mac; workflows and agents are not bound anywhere at all                  | `project_components` in the cloud; counts are a grouped count query                                    | P4    |
+| 2   | AWC detail rows with versions (`v2.1`, `v3.4`)                   | No version identity on either side — the manifest stores no hash, the repo stores a bare slug                          | Catalog `component_versions` plus `device_component_installs` for "installed version on this computer" | P2–P4 |
+| 3   | AWL `[ Update ]` and `(update available)`                        | Nothing to compare against; the only available write is an unconditional clobber                                       | Compare bound version against `current_version_id`; ledger-driven update with user-file backup         | P1–P2 |
+| 4   | AWL `[ Remove ]`                                                 | No record of which files were written; unchecking a set leaves every copied file behind                                | `materialization.json` ledger; remove deletes exactly its own paths and restores backups               | P1    |
+| 5   | AWL `[ Pull into repo ▾ ] from Marketplace or another project`   | Cross-owner and cross-project pull on a per-owner slug is ambiguous by construction                                    | Pull by `componentId` + `versionId`; slug becomes display sugar                                        | P3    |
+| 6   | `legacy-tools — No folder set yet` card state                    | `user_projects.folder_path` is `TEXT NOT NULL` — the state is unrepresentable                                          | Path moves to `project_device_bindings.folder_path` (nullable); `user_projects.folder_path` dropped    | P4    |
+| 7   | Tabs greyed out until a folder is set                            | Conflates declaring composition with writing files — a needless dead end                                               | Binding needs no folder; only materialization does. Tabs stay live, `Pull into repo` is disabled       | P4    |
+| 8   | AWL header "Projects on this computer"                           | `listUserProjectsForOwner` returns `device_id IS NULL OR device_id = $1`, so unbound projects appear on every computer | Require a device binding; drop the `IS NULL` branch                                                    | P4/P7 |
+| 9   | Same repo checked out on two computers                           | `UNIQUE (owner_user_id, lower(name))` forbids it — the exact case device binding exists for                            | `UNIQUE (owner_user_id, device_id, lower(name))`                                                       | P4    |
+| 10  | AWL deep-link error "not registered on this computer"            | Dispatch does the opposite today: an unknown path falls back to a default folder and `mkdir -p` creates it             | `projectId` ownership check fails the run loudly; no default-folder fallback                           | P0    |
+| 11  | Delete modal: "The folder on disk is not deleted"                | True but incomplete — `.agent-witch/rag` and `memory` stay in the repo holding embeddings and transcripts              | Knowledge moves to the profile keyed by `projectId`; the modal states whether memory is purged         | P6    |
+| 12  | `[ Pull into repo ]` on a repo with hand-written `.cursor` rules | Silent overwrite: destination is derived by slugifying the item title, with no diff, prompt, or backup                 | Slug-namespaced destinations, pre-write hashing, backup to `.agent-witch/backups/`                     | P1    |
+| 13  | AWC read-only detail rendered from a phone                       | Any Mac-querying read model fails here and in the explicit offline card state                                          | Cloud is the read model; the computer is never on the read path                                        | P4    |
+| 14  | `Agents` label vs "agent run"                                    | A naming collision v2 flagged rather than renamed                                                                      | Schema uses `components.kind = 'agent'`; the fix belongs in copy, not in tables                        | —     |
 
-Two wireframe elements need **no** change: the three-state `Edit on this Mac` CTA and the device status chip already map onto the presence tiers from [ADR 0005](../adr/0005-shared-mac-presence-and-dispatch-outbox.md) (`live`, `live_other_instance`, `recent`, `offline`). Identity matching is a solved problem here; composition is not.
+Two wireframe elements need **no** change: the three-state `Edit on this computer` CTA and the device status chip already map onto the presence tiers from [ADR 0005](../adr/0005-shared-mac-presence-and-dispatch-outbox.md) (`live`, `live_other_instance`, `recent`, `offline`). Identity matching is a solved problem here; composition is not.
 
 ---
 
@@ -449,7 +449,7 @@ This is the distinction the current code cannot express, and the one that decide
 
 **Escalation is the product feature, not an afterthought.** A run report that used run-scoped components shows `[ Keep in project ]`. Accepting it creates a binding pinned to the exact version the run used — taken from the snapshot, not re-resolved. That is the safe, evidence-backed way composition grows: try it on one task, keep it if it worked.
 
-**Demotion exists too.** `[ Remove ]` on a bound component offers "remove from project" and "keep for this Mac only" (unbind but leave installed), so removing a rule from a repo never forces a re-download.
+**Demotion exists too.** `[ Remove ]` on a bound component offers "remove from project" and "keep for this computer only" (unbind but leave installed), so removing a rule from a repo never forces a re-download.
 
 Practical guidance for callers:
 
@@ -500,11 +500,11 @@ Each phase is independently shippable and independently revertible. Migration nu
 ### P4 — Binding table and the AWC read-only detail page
 
 - Migration `030`: `project_components`, `project_device_bindings`; make `user_projects.folder_path` nullable; replace `UNIQUE (owner_user_id, lower(name))` with `UNIQUE (owner_user_id, device_id, lower(name))`; stop returning `device_id IS NULL` projects on every device.
-- Backfill bindings from each Mac's `harnessSetSlugs` on first AWL sync after upgrade (the Mac is the only place this data exists; the cloud cannot backfill it alone).
+- Backfill bindings from each Mac's `harnessSetSlugs` on first AWL sync after upgrade (the computer is the only place this data exists; the cloud cannot backfill it alone).
 - AWL writes bindings; AWC `/projects` and `/projects/{id}` render counts, names, and versions from cloud only.
 - Allow binding without a folder; block only materialization.
-- Tests: AWC detail renders with the device offline; unbound project is not editable from two Macs; same repo name on two Macs is accepted.
-- Exit: the UX v2 AWC surfaces are implementable without asking the Mac anything.
+- Tests: AWC detail renders with the device offline; unbound project is not editable from two Macs; same repo name on two computers is accepted.
+- Exit: the UX v2 AWC surfaces are implementable without asking the computer anything.
 
 ### P5 — Composition snapshots and run-scoped pull
 
@@ -554,7 +554,7 @@ Each phase is independently shippable and independently revertible. Migration nu
 **What I would reject if proposed**
 
 - Storing composition in the repo "as well, for convenience." Two authorities for one fact is how the current design broke.
-- Having AWC read composition by calling the Mac. The offline and phone cases in the wireframes make this a non-starter, and it inverts the dependency direction.
+- Having AWC read composition by calling the computer. The offline and phone cases in the wireframes make this a non-starter, and it inverts the dependency direction.
 - Making `Agents` a separate table because the name collides with "agent run." The collision is a naming problem and should be solved in copy (`concepts.md`), not in the schema.
 
 **Open questions for product, not blocking**

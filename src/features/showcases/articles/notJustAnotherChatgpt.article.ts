@@ -33,8 +33,8 @@ const notJustAnotherChatgpt: ShowcaseArticle = {
       heading: "Agents are for repeat work",
       bullets: [
         "Saved prompts and workflows in a library",
-        "Runs on the Mac where files already live",
-        "Team dispatch — you ask, their Mac executes",
+        "Runs on the computer where files already live",
+        "Team dispatch — you ask, their computer executes",
         "Run again without retyping the whole prompt",
       ],
     },

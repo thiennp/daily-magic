@@ -95,19 +95,19 @@ describe("reduceAgentLiveTerminalMessage", () => {
     expect(finished.status).toBe("finished");
   });
 
-  it("keeps the Mac session on dispatch failure so the user can resume (AGENT-011)", () => {
+  it("keeps the computer session on dispatch failure so the user can resume (AGENT-011)", () => {
     const next = reduceAgentLiveTerminalMessage(
       beginAgentLiveTerminalSession("claude -p run lint", "claude-cli"),
       {
         type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
         payload: {
-          errorMessage: "No Mac agent connected.",
+          errorMessage: "No computer agent connected.",
         },
       },
     );
 
     expect(next.sessionWriterAgent).toBe("claude-cli");
     expect(next.status).toBe("error");
-    expect(next.output).toContain("No Mac agent connected.");
+    expect(next.output).toContain("No computer agent connected.");
   });
 });

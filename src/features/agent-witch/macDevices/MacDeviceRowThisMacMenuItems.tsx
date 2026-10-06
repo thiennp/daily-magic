@@ -72,7 +72,7 @@ export default function MacDeviceRowThisMacMenuItems({
         ? renderMacDeviceRowMenuItem(
             runMacDeviceRowMenuAction(closeMenu, onDeleteLocalScript),
             <AppIcon icon={TrashBinIcon} size="sm" />,
-            "Remove from this Mac",
+            "Remove from this computer",
             true,
             true,
           )

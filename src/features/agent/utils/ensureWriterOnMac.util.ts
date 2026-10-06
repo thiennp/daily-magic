@@ -18,7 +18,7 @@ export const ensureWriterOnMac = async (
     ) {
       return (body as { error: string }).error;
     }
-    return "Could not reach your Mac.";
+    return "Could not reach your computer.";
   }
-  return "Ensure command sent to your Mac over WebSocket.";
+  return "Ensure command sent to your computer over WebSocket.";
 };

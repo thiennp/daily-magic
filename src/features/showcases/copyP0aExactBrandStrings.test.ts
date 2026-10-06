@@ -22,13 +22,13 @@ describe("COPY-P0a exact brand strings", () => {
     const source = readFileSync(SCHEDULE_ARTICLE_PATH, "utf8");
 
     expect(source).toContain(
-      "Agent Witch stores the plan; your Mac runs it on time.",
+      "Agent Witch stores the plan; your computer runs it on time.",
     );
     expect(source).toContain(
-      "Create an automation in Agent Witch, pick hourly/daily/weekday schedule, and your Mac runs Claude on time.",
+      "Create an automation in Agent Witch, pick hourly/daily/weekday schedule, and your computer runs Claude on time.",
     );
     expect(source).toContain(
-      "Agent Witch syncs the job list to ~/.agent-witch on your Mac",
+      "Agent Witch syncs the job list to ~/.agent-witch on your computer",
     );
   });
 
@@ -36,7 +36,7 @@ describe("COPY-P0a exact brand strings", () => {
     const source = readFileSync(AUTOMATE_ARTICLE_PATH, "utf8");
 
     expect(source).toContain(
-      "Agent Witch syncs the job to your Mac; the local scheduler runs it",
+      "Agent Witch syncs the job to your computer; the local scheduler runs it",
     );
   });
 
@@ -44,7 +44,7 @@ describe("COPY-P0a exact brand strings", () => {
     const source = readFileSync(AUTOMATIONS_COPY_PATH, "utf8");
 
     expect(source).toContain(
-      "Saved in Agent Witch, but could not sync to this Mac. Re-run Agent Witch install or open Automations again.",
+      "Saved in Agent Witch, but could not sync to this computer. Re-run Agent Witch install or open Automations again.",
     );
   });
 });

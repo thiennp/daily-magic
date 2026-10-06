@@ -7,7 +7,7 @@ export const WORKFLOW_BUILDER_ABOUT_SECTION = {
 export const WORKFLOW_BUILDER_QUESTIONS_SECTION = {
   title: "What should Agent ask?",
   description:
-    "Each question becomes a form field when someone runs this workflow, and one line in the prompt sent to your Mac.",
+    "Each question becomes a form field when someone runs this workflow, and one line in the prompt sent to your computer.",
   addButton: "Add another question",
   untitledQuestion: "New question",
   questionLabel: "Question",
@@ -19,7 +19,7 @@ export const WORKFLOW_BUILDER_QUESTIONS_SECTION = {
 export const WORKFLOW_BUILDER_STEPS_SECTION = {
   title: "How this workflow runs",
   description:
-    "Human steps pause for the person running it. Specialists are extra instructions copied to the Mac.",
+    "Human steps pause for the person running it. Specialists are extra instructions copied to the computer.",
 } as const;
 
 export const WORKFLOW_BUILDER_FLOW_SECTION = {

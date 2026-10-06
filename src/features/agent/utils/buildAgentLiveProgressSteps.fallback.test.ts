@@ -13,7 +13,7 @@ describe("buildAgentLiveProgressSteps fallback work detail", () => {
     expect(result.steps.find((step) => step.id === "estimate")).toMatchObject({
       label: "Analyzing…",
       state: "active",
-      detail: "Reviewing your request on your Mac…",
+      detail: "Reviewing your request on your computer…",
     });
     expect(result.steps.find((step) => step.id === "work")?.state).toBe(
       "pending",

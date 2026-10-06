@@ -6,7 +6,7 @@
 - Update local Agent Witch owner
 - who owns self-update
 - POST /update/run AWI or AWB
-- Update local This Mac menu
+- Update local This computer menu
 - cap nhat local thuoc AWI
 
 ## Short answer
@@ -20,7 +20,7 @@
 | Piece                                                       | Deployable | Where                                                           |
 | ----------------------------------------------------------- | ---------- | --------------------------------------------------------------- |
 | Bundle pull, version file, LaunchAgent refresh              | **AWI**    | `apps/install/features/self-update` (`runAgentWitchSelfUpdate`) |
-| Menu label **Update local**                                 | **AWC**    | This Mac row (`MacDeviceRowLocalMenuItems`)                     |
+| Menu label **Update local**                                 | **AWC**    | This computer row (`MacDeviceRowLocalMenuItems`)                |
 | Wake routes `/update/status`, `/update/logs`, `/update/run` | **AWB**    | `apps/bridge` self-update API                                   |
 | Cloud proxy of that wake API                                | **AWC**    | `GET`/`POST /api/agent-witch/local-update`                      |
 | Mac-app update offer                                        | **AWL**    | Calls the AWI self-update module, or posts `/update/run`        |

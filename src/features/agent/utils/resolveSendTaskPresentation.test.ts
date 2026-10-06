@@ -39,7 +39,7 @@ describe("shouldKeepSendTaskAliveOnNavigate", () => {
 });
 
 describe("resolveSendTaskCloseAction", () => {
-  it("AGENT-037: minimizes instead of dismissing while a Mac run is active", () => {
+  it("AGENT-037: minimizes instead of dismissing while a computer run is active", () => {
     expect(resolveSendTaskCloseAction({ isSessionActive: true })).toBe(
       "minimize",
     );

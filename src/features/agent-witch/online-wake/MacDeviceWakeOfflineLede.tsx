@@ -15,7 +15,7 @@ export default function MacDeviceWakeOfflineLede({
   if (isThisMac) {
     return (
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        {displayName} is offline. Wake HTTP and the Mac client run in one
+        {displayName} is offline. Wake HTTP and the computer client run in one
         process — when nothing is listening locally, run wake.sh in Terminal (or
         Restart below when the wake server responds).
       </p>

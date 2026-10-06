@@ -19,7 +19,7 @@ export const handleShellSubscribeMessageAsync = async (
 ): Promise<AgentWitchMessage | null> => {
   if (sender?.role !== "dashboard" || !isNonEmptyString(sender.userId)) {
     return buildDispatchError(
-      "Only authenticated dashboard clients can subscribe to a Mac shell.",
+      "Only authenticated dashboard clients can subscribe to a computer shell.",
       message.requestId,
     );
   }

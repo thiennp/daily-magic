@@ -1,5 +1,5 @@
 /**
- * AGENT-028: picking a CLI must never auto-start the Mac session.
+ * AGENT-028: picking a CLI must never auto-start the computer session.
  * Custom task previously started immediately when `selectedLibraryCapabilityId`
  * was empty; Start on the form is the only begin path.
  */

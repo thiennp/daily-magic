@@ -6,7 +6,7 @@ import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 describe("deliverAgentWitchInstallBundleUpdateIfBehind", () => {
-  it("AGENT-043: pushes install.bundle.update when the Mac bundle is behind cloud", () => {
+  it("AGENT-043: pushes install.bundle.update when the computer bundle is behind cloud", () => {
     const send = vi.fn();
     const sender: AgentWitchHubClient = {
       id: "agent-1",
@@ -31,7 +31,7 @@ describe("deliverAgentWitchInstallBundleUpdateIfBehind", () => {
     });
   });
 
-  it("skips push when the Mac bundle already matches cloud", () => {
+  it("skips push when the computer bundle already matches cloud", () => {
     const send = vi.fn();
     const sender: AgentWitchHubClient = {
       id: "agent-1",

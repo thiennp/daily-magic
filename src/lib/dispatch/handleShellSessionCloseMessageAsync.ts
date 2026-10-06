@@ -16,7 +16,7 @@ export const handleShellSessionCloseMessageAsync = async (
 ): Promise<AgentWitchMessage | null> => {
   if (sender?.role !== "dashboard" || !isNonEmptyString(sender.userId)) {
     return buildDispatchError(
-      "Only authenticated dashboard clients can close a Mac shell.",
+      "Only authenticated dashboard clients can close a computer shell.",
       message.requestId,
     );
   }

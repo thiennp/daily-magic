@@ -13,11 +13,11 @@
 - AWC AWB choose folder without new tab
 - co the setup tu local app duoc khong khi muon thay doi bam vao se mo local app
 - AWC deep link 127.0.0.1:43347 projects choose folder
-- Choose on this Mac projects
+- Choose on this computer projects
 
 ## Short answer
 
-**Not from AWC.** The browser cannot verify a real Mac POSIX path, and AWC no longer exposes a **Choose on this Mac** control on Projects or Home. Set the optional folder when creating a project, or change folders in **Agent Witch Local (AWL)** on the Mac that stores the repo. AWB still exposes `POST /projects/select-folder` for AWL and direct Mac flows.
+**Not from AWC.** The browser cannot verify a real Mac POSIX path, and AWC no longer exposes a **Choose on this computer** control on Projects or Home. Set the optional folder when creating a project, or change folders in **Agent Witch Local (AWL)** on the computer that stores the repo. AWB still exposes `POST /projects/select-folder` for AWL and direct Mac flows.
 
 ## Details
 
@@ -31,7 +31,7 @@ A website cannot read the POSIX path of a folder the user selects in a file dial
 | -------------------------------- | ----------------------------------------------------------------------------------- |
 | Open **Projects** (`/projects`)  | List, view details, create with optional typed folder path; edit composition in AWL |
 | Create project → **Folder path** | Optional typed path; leaving it empty uses `buildDefaultProjectFolderPath`          |
-| Browser `PATCH folderPath`       | Rejected; use AWL on the paired Mac                                                 |
+| Browser `PATCH folderPath`       | Rejected; use AWL on the paired computer                                            |
 
 ### AWB (127.0.0.1:47892 / 47893)
 

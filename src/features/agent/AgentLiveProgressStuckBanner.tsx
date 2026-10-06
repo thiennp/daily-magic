@@ -16,7 +16,7 @@ export default function AgentLiveProgressStuckBanner({
       className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-100"
       role="status"
     >
-      Your Mac has not sent updates for a while.{" "}
+      Your computer has not sent updates for a while.{" "}
       {isThisMac ? (
         <>
           <a
@@ -27,7 +27,7 @@ export default function AgentLiveProgressStuckBanner({
           >
             Open Agent Witch
           </a>{" "}
-          on this Mac, or try sending the task again.
+          on this computer, or try sending the task again.
         </>
       ) : (
         <>

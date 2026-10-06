@@ -18,7 +18,7 @@ Canonical resolver: `resolveSendReadinessBanner` in `src/features/agent/send-rea
 
 ## Priority (first match wins)
 
-1. `update_needed` — install bundle on Mac behind cloud required (OPEN-003)
+1. `update_needed` — install bundle on computer behind cloud required (OPEN-003)
 2. `unreachable_dns` (or fold into `offline` if no distinct client signal)
 3. `offline`
 4. `recent`
@@ -26,7 +26,7 @@ Canonical resolver: `resolveSendReadinessBanner` in `src/features/agent/send-rea
 6. other `!isDispatchReady` on `live` → `not_dispatch_ready`
 7. form validation (`empty_prompt`, etc.) — outside Mac readiness, same banner component
 
-**No banner / `reasonCode: null`:** Mac readiness clear and form valid (`presenceTier === 'live'` && writer send-ready). Optional success chip: “Mac ready”.
+**No banner / `reasonCode: null`:** Mac readiness clear and form valid (`presenceTier === 'live'` && writer send-ready). Optional success chip: “Computer ready”.
 
 ## Enum + wire mapping
 

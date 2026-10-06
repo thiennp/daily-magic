@@ -26,14 +26,14 @@ export default function HomePromptSdlcSection({
         id="prompt-sdlc-heading"
         className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white"
       >
-        The prompt optimizer runs inside the project on your Mac.
+        The prompt optimizer runs inside the project on your computer.
       </h2>
       <p className="mt-3 max-w-3xl text-base leading-relaxed text-gray-600 dark:text-gray-300">
         Other prompt optimizers score a prompt somewhere else. They never see
-        the Playbook or the code on this Mac, so the score is not about this
-        project. {AGENT_WITCH_PRODUCT_NAME} runs the judge and the improver in
-        the folder you choose. They can read the harness and the code there, so
-        the score belongs to that context. Open the prompt optimizer in the
+        the Playbook or the code on this computer, so the score is not about
+        this project. {AGENT_WITCH_PRODUCT_NAME} runs the judge and the improver
+        in the folder you choose. They can read the harness and the code there,
+        so the score belongs to that context. Open the prompt optimizer in the
         console. That page tells you to run it in Agent Witch Local.
       </p>
       <p className="mt-4 flex flex-wrap gap-4">

@@ -105,7 +105,7 @@ export const syncAutomationsToLocalMac = async (
     data !== null &&
     typeof (data as { errorMessage?: string }).errorMessage === "string"
       ? (data as { errorMessage: string }).errorMessage
-      : "Could not sync automations to this Mac.";
+      : "Could not sync automations to this computer.";
 
   return { ok: false, errorMessage };
 };

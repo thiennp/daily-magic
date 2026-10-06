@@ -46,7 +46,7 @@ export default function AgentLiveTerminalFeedbackChat({
       {isAnswerMode ? (
         <>
           <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
-            Your Mac agent needs input
+            Your computer agent needs input
           </p>
           <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
             {pendingQuestion}
@@ -69,7 +69,7 @@ export default function AgentLiveTerminalFeedbackChat({
       {!isSimplifiedFollowUp && queuedCount > 0 ? (
         <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
           {queuedCount} follow-up{queuedCount === 1 ? "" : "s"} queued while
-          your Mac agent is working.
+          your computer agent is working.
         </p>
       ) : null}
       {!isSimplifiedFollowUp && queueNotice !== null ? (

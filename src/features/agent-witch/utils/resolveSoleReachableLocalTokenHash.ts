@@ -7,7 +7,7 @@ const normalizeTokenHash = (value: string): string =>
   value.trim().toLowerCase();
 
 /**
- * When exactly one cloud device is reachable on this Mac's install tokens,
+ * When exactly one cloud device is reachable on this computer's install tokens,
  * browsers can adopt that hash (orphan install-token cookies, active-profile drift).
  */
 export const resolveSoleReachableLocalTokenHash = (input: {

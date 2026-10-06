@@ -50,7 +50,7 @@ describe("handleWriterStopMessageAsync", () => {
     expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR);
   });
 
-  it("forwards stop to the paired Mac agent for an active run", async () => {
+  it("forwards stop to the paired computer agent for an active run", async () => {
     vi.mocked(getAgentRunById).mockResolvedValue(
       createRun(AgentRunStatus.RUNNING) as never,
     );

@@ -2,7 +2,8 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 
 const requestSensitiveWorkWithApproval: ShowcaseArticle = {
   slug: "request-sensitive-work-with-approval",
-  title: "Request sensitive work on a teammate's Mac — with approval first",
+  title:
+    "Request sensitive work on a teammate's computer — with approval first",
   subtitle:
     "Client drafts, private repos, and finance checks pause until a manager says yes.",
   category: "For teams",
@@ -24,7 +25,7 @@ const requestSensitiveWorkWithApproval: ShowcaseArticle = {
     },
     {
       slug: "human-checkpoints-before-mac-runs",
-      label: "Human steps you do before the Mac runs",
+      label: "Human steps you do before the computer runs",
     },
   ],
   sections: [

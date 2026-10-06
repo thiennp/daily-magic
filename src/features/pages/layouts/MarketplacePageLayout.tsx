@@ -7,7 +7,7 @@ export default function MarketplacePageLayout() {
     <div className={APP_PAGE_STACK_CLASS}>
       <AppPageHeader
         title="Marketplace"
-        description="Pick a free starter or a teammate listing, then run it on your Mac."
+        description="Pick a free starter or a teammate listing, then run it on your computer."
       />
       <MarketplacePanel variant="page" />
     </div>

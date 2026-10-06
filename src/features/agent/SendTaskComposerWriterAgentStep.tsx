@@ -16,7 +16,7 @@ export default function SendTaskComposerWriterAgentStep({
   return (
     <div>
       <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
-        Choose an AI on your Mac
+        Choose an AI on your computer
       </h2>
       <ul className="mt-3 space-y-2">
         {HARNESS_WRITER_OPTIONS.map((option) => (

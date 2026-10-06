@@ -18,7 +18,7 @@ export const resolveTeammateHarnessInstallBundle = async (input: {
     return {
       localHarnessBundle: null,
       harnessInstallMessage:
-        "Saved to your library. Owner must be online to install rules on your Mac.",
+        "Saved to your library. Owner must be online to install rules on your computer.",
     };
   }
 

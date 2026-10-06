@@ -76,7 +76,7 @@
 
 ## REPORTS-008 — Marketplace run → Reports detail felt empty while Mac was working
 
-**Symptom:** After installing a marketplace capability and running on Mac, `/reports/[runId]` showed only the prompt and terminal placeholder—no `reportSummary` from heartbeats, stale “Job not found” copy, and no reconnect hint when the dashboard WebSocket dropped.
+**Symptom:** After installing a marketplace capability and running on computer, `/reports/[runId]` showed only the prompt and terminal placeholder—no `reportSummary` from heartbeats, stale “Job not found” copy, and no reconnect hint when the dashboard WebSocket dropped.
 
 **Cause:** Detail/list UI ignored `reportSummary` / `reportStatus`; live terminal did not surface connection state; product vocab still said “job history”.
 
@@ -84,7 +84,7 @@
 
 ## REPORTS-011 — Failed can’t-run honesty missing on report detail
 
-**Symptom:** Floater showed **Failed** with the locked line “Writer API key missing and Claude CLI can’t run.” while `/reports/[runId]` only showed generic “This run failed on your Mac…”.
+**Symptom:** Floater showed **Failed** with the locked line “Writer API key missing and Claude CLI can’t run.” while `/reports/[runId]` only showed generic “This run failed on your computer…”.
 
 **Cause:** `resolveAgentRunDetailOutcomeMessage` only mapped honesty when `resultOutput` was persisted; fast writer-missing + ENOENT failures often leave `resultOutput` empty while the browser still holds terminal stream output.
 

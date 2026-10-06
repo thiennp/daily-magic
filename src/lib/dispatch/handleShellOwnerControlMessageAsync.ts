@@ -27,7 +27,7 @@ const forwardOwnerShellControl = (
   }
   if (session.ownerUserId !== sender.userId) {
     return buildDispatchError(
-      "Only the Mac owner can control this shell.",
+      "Only the computer owner can control this shell.",
       message.requestId,
     );
   }
@@ -38,7 +38,7 @@ const forwardOwnerShellControl = (
   );
   if (agentClient === undefined) {
     return buildDispatchError(
-      "The Mac for this shell is reconnecting. Try again in a few seconds.",
+      "The computer for this shell is reconnecting. Try again in a few seconds.",
       message.requestId,
     );
   }
@@ -63,7 +63,7 @@ export const handleShellInputMessageAsync = async (
 ): Promise<AgentWitchMessage | null> => {
   if (sender?.role !== "dashboard" || !isNonEmptyString(sender.userId)) {
     return buildDispatchError(
-      "Only authenticated dashboard clients can type into a Mac shell.",
+      "Only authenticated dashboard clients can type into a computer shell.",
       message.requestId,
     );
   }
@@ -90,7 +90,7 @@ export const handleShellResizeMessageAsync = async (
 ): Promise<AgentWitchMessage | null> => {
   if (sender?.role !== "dashboard" || !isNonEmptyString(sender.userId)) {
     return buildDispatchError(
-      "Only authenticated dashboard clients can resize a Mac shell.",
+      "Only authenticated dashboard clients can resize a computer shell.",
       message.requestId,
     );
   }

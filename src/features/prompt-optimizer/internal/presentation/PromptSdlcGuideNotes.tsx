@@ -14,10 +14,11 @@ export default function PromptSdlcGuideNotes(): ReactElement {
         <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Choose the models</h2>
         <p className={APP_SURFACE_BODY_TEXT_CLASS}>
           You choose the judge and the improver. Each list is the writers
-          installed on this Mac, plus a choice to score or rewrite it yourself.
-          The next visit fills in the judge and improver you last chose. The
-          first visit leaves them blank until you choose. One installed writer
-          can fill both roles. Local and small models are not listed.
+          installed on this computer, plus a choice to score or rewrite it
+          yourself. The next visit fills in the judge and improver you last
+          chose. The first visit leaves them blank until you choose. One
+          installed writer can fill both roles. Local and small models are not
+          listed.
         </p>
         <p className={APP_SURFACE_BODY_TEXT_CLASS}>
           The writers run in the folder you choose, so they can read the

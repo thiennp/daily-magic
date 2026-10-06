@@ -22,7 +22,7 @@ export const handleShellSessionOpenMessageAsync = async (
 ): Promise<AgentWitchMessage | null> => {
   if (sender?.role !== "dashboard" || !isNonEmptyString(sender.userId)) {
     return buildDispatchError(
-      "Only authenticated dashboard clients can open a Mac shell.",
+      "Only authenticated dashboard clients can open a computer shell.",
       message.requestId,
     );
   }
@@ -45,7 +45,7 @@ export const handleShellSessionOpenMessageAsync = async (
     const deviceId = agentResolution.deviceId;
     if (deviceId === null || deviceId.length === 0) {
       return buildDispatchError(
-        "The selected Mac is not online right now.",
+        "The selected computer is not online right now.",
         message.requestId,
       );
     }

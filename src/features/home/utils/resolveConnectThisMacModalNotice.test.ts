@@ -47,7 +47,7 @@ describe("resolveConnectThisMacModalNotice", () => {
     });
   });
 
-  it("shows not_running when this Mac is paired but AWL is unreachable", () => {
+  it("shows not_running when this computer is paired but AWL is unreachable", () => {
     expect(
       resolveConnectThisMacModalNotice({
         ...base,
@@ -72,7 +72,7 @@ describe("resolveConnectThisMacModalNotice", () => {
     ).toEqual({ kind: "retry" });
   });
 
-  it("falls back to the download/install body for an unpaired Mac", () => {
+  it("falls back to the download/install body for an unpaired computer", () => {
     expect(resolveConnectThisMacModalNotice(base)).toBeNull();
   });
 });

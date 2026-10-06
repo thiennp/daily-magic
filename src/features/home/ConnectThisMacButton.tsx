@@ -69,14 +69,14 @@ export default function ConnectThisMacButton({
             : "flex w-full flex-col gap-2 sm:w-auto"
         }
       >
-        {/* Never disabled: Connect this Mac always opens the modal (loading shows inside). */}
+        {/* Never disabled: Connect this computer always opens the modal (loading shows inside). */}
         <button
           type="button"
           className={className}
           aria-haspopup="dialog"
           onClick={handleOpenModal}
         >
-          Connect this Mac
+          Connect this computer
         </button>
         {installCommandError !== null ? (
           <p className="text-xs text-red-600 dark:text-red-400">

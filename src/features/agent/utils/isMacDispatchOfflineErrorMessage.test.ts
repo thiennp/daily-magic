@@ -17,7 +17,7 @@ describe("isMacDispatchOfflineErrorMessage", () => {
     ).toBe(true);
   });
 
-  it("matches a re-paired Mac so the device list refreshes", () => {
+  it("matches a re-paired computer so the device list refreshes", () => {
     expect(isMacDispatchOfflineErrorMessage(MAC_REPLACED_ERROR)).toBe(true);
   });
 

@@ -12,7 +12,7 @@
 
 ## DISPATCH-002 — Checkpoint modal showed raw `[[PROGRESS]]` partial output
 
-**Symptom:** When the Mac agent paused for operator input, the modal rendered `partialOutput` in a `<pre>` with literal `[[PROGRESS]]` markers instead of readable progress title/detail.
+**Symptom:** When the computer agent paused for operator input, the modal rendered `partialOutput` in a `<pre>` with literal `[[PROGRESS]]` markers instead of readable progress title/detail.
 
 **Fix:** Parse progress blocks with `formatAgentRunPartialOutputForDisplay` and render structured preview in `AgentRunPartialOutputPreview`.
 

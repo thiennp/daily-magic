@@ -9,7 +9,7 @@ import { APP_SURFACE_CTA_SECONDARY_CLASS } from "@/components/surfaces/appSurfac
 /**
  * The full showcase section is five sections of onboarding/marketing story
  * cards — useful on a first visit, but it buries the actual dashboard for a
- * returning user with a Mac already paired. Collapse it by default once the
+ * returning user with a computer already paired. Collapse it by default once the
  * user has connected at least one Mac. A manual toggle reopens it.
  */
 export default function HomeCollapsibleMarketingShowcases() {

@@ -21,7 +21,7 @@ Replace the card body with:
 
 ## Canonical wording (English)
 
-**Core job:** Run a trusted agent on a Mac you control, see what happened in the browser, reuse what worked.
+**Core job:** Run a trusted agent on a computer you control, see what happened in the browser, reuse what worked.
 
 **Pillars:** easy authoring · learn from usage (human approval) · efficient memory from past Runs · team learning via shared Playbooks and Reports.
 

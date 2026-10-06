@@ -23,7 +23,7 @@ Same product contract as the [user guide ch.0](../user-guide/00-philosophy-and-v
 
 Capabilities, workflows, library, harness, marketplace, and dispatch share **one** execution pipeline. Documentation must not describe them as separate backends.
 
-- **Dispatch** chooses target (paired Mac vs `__cursor_cloud__`).
+- **Dispatch** chooses target (paired computer vs `__cursor_cloud__`).
 - **Agent run** is one execution with events in Reports.
 - **Harness** is files under `~/.agent-witch/harness/`—not the run itself.
 

@@ -30,7 +30,7 @@ export default function GuestLibraryPanel({
     <div className="space-y-8 pb-8 md:pb-0">
       <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
         Draft Playbooks here without an account. A Playbook is how Agent Witch
-        knows what to do on your Mac. Saves stay on this browser until you{" "}
+        knows what to do on your computer. Saves stay on this browser until you{" "}
         <Link
           href={buildSignInHref("/library")}
           className="font-medium text-brand-600 hover:underline dark:text-brand-400"
@@ -78,7 +78,7 @@ export default function GuestLibraryPanel({
         >
           Create free account
         </Link>{" "}
-        to run tasks on your Mac and keep playbooks across devices.
+        to run tasks on your computer and keep playbooks across devices.
       </p>
     </div>
   );

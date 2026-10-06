@@ -16,7 +16,7 @@ export type PreflightActionId = (typeof PREFLIGHT_ACTION_IDS)[number];
  *
  * Defaults for design gaps:
  * - migrate: secrets scan only (`pf.backup-or-dry-run` not in the v1 catalog of 12)
- * - delete: folder exists (confirm-target is a Mac UI step, not a catalog id)
+ * - delete: folder exists (confirm-target is a computer UI step, not a catalog id)
  * - send: secrets scan (recipient confirm is Mac UI; body must stay secret-safe)
  */
 export const PREFLIGHT_ACTION_REQUIRED_CHECKS: Readonly<

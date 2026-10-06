@@ -3,8 +3,8 @@ import { homeMarketingSignInCallbackAutomationsHref } from "@/features/home/cons
 
 export const HOME_MARKETING_HERO_COPY = {
   eyebrow: "Harness, memory, and Playbooks",
-  title: "Turn agent work on your Mac into scored, reusable Playbooks.",
-  description: `${AGENT_WITCH_PRODUCT_NAME} is the playground for multi-bot teams: invite bots into a project, Approve who joins, so bots can pass work to each other, and harden prompts with evaluate scores. Tasks and Runs stay on Macs you control. Slack and Outlook ops stay with specialist bots.`,
+  title: "Turn agent work on your computer into scored, reusable Playbooks.",
+  description: `${AGENT_WITCH_PRODUCT_NAME} is the playground for multi-bot teams: invite bots into a project, Approve who joins, so bots can pass work to each other, and harden prompts with evaluate scores. Tasks and Runs stay on computers you control. Slack and Outlook ops stay with specialist bots.`,
   cta: "Create free account",
   secondaryCta: "See Access and Optimizer",
   secondaryCtaHref: "#features-heading",

@@ -14,7 +14,7 @@ describe("ConnectThisMacRow", () => {
     expect(source).toContain('"mt-0.5 h-4 w-4 shrink-0"');
   });
 
-  it("stacks description and a full-width primary Connect this Mac button", () => {
+  it("stacks description and a full-width primary Connect this computer button", () => {
     const source = readFileSync(
       join(dirname(fileURLToPath(import.meta.url)), "ConnectThisMacRow.tsx"),
       "utf8",

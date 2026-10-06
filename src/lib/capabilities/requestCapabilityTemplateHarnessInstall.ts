@@ -48,7 +48,8 @@ const requestCapabilityTemplateHarnessInstall = async (
   if (targetDeviceId === undefined || targetDeviceId.length === 0) {
     return {
       installed: false,
-      errorMessage: "Could not resolve a Mac device id for harness install.",
+      errorMessage:
+        "Could not resolve a computer device id for harness install.",
     };
   }
 

@@ -47,7 +47,7 @@ export default function WsTestMacDispatchSection({
     return (
       <section className="rounded-2xl border border-brand-200 bg-brand-50/40 p-4 dark:border-brand-900/40 dark:bg-brand-950/20">
         <p className="text-sm text-gray-700 dark:text-gray-300">
-          Running a playbook from your library on your Mac.
+          Running a playbook from your library on your computer.
         </p>
         <div className="mt-4">{picker}</div>
       </section>

@@ -14,7 +14,7 @@ interface AgentRunContinueButtonProps {
   >;
 }
 
-/** Opens New task scoped to this job on the same Mac/browser. */
+/** Opens New task scoped to this job on the same computer/browser. */
 export default function AgentRunContinueButton({
   run,
 }: AgentRunContinueButtonProps) {

@@ -26,8 +26,8 @@ const ProjectsStorybookCardStateStories = ({
 }: ProjectsStorybookCardStateStoriesProps) => (
   <>
     <ProjectsStorybookFrame
-      title="Project card · Mac online (this Mac)"
-      description="Actions menu: view, assign tasks, rename, edit on Mac, delete."
+      title="Project card · Mac online (this computer)"
+      description="Actions menu: view, assign tasks, rename, edit on computer, delete."
       viewport={viewport}
     >
       <AwcProjectCard
@@ -41,7 +41,7 @@ const ProjectsStorybookCardStateStories = ({
 
     <ProjectsStorybookFrame
       title="Project card · Mac offline"
-      description="Edit on Mac disabled with last-seen helper text. Delete project stays available (cloud record only)."
+      description="Edit on computer disabled with last-seen helper text. Delete project stays available (cloud record only)."
       viewport={viewport}
     >
       <AwcProjectCard

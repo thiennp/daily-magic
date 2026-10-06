@@ -54,7 +54,7 @@ export default function MacDevicePickerRows({
             deviceId={device.id}
             displayName={
               displayNameById.get(device.id) ??
-              (device.platform === "linux" ? "Linux device" : "Your Mac")
+              (device.platform === "linux" ? "Linux device" : "Your computer")
             }
             isOnline={device.isOnline}
             isConnected={device.isConnected}

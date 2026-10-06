@@ -22,7 +22,7 @@ const fromMyPromptToOurWorkflow: ShowcaseArticle = {
     {
       heading: "The champion path",
       bullets: [
-        "Start solo in Library — prove the prompt on your Mac",
+        "Start solo in Library — prove the prompt on your computer",
         "Add structure — workflow fields for dates, names, scope",
         "Publish with group visibility",
         "Teammates use or save a copy; you keep improving from feedback",

@@ -42,7 +42,7 @@ export default function WsTestComposerFooter({
       copyText={composer.resolvedPrompt}
       sendLabel={
         sendLabel ??
-        (composer.isTeamDispatch ? "Send to teammate" : "Send to your Mac")
+        (composer.isTeamDispatch ? "Send to teammate" : "Send to your computer")
       }
       isWorkflowTask={composer.isWorkflowTask}
       isTeamDispatch={composer.isTeamDispatch}

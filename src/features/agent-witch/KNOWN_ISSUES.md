@@ -12,24 +12,24 @@ Architecture for multi-instance presence and the dispatch outbox: `docs/adr/0005
 
 **Cause:** Client/network DNS or firewall — not fixed by app config alone. Production installs use hardcoded `wss://www.agentwitch.com/api/agent-witch/ws` (install bundle **103+**).
 
-**What to do:** Fix DNS/VPN/firewall on the Mac; confirm `dig www.agentwitch.com` or equivalent; reinstall or self-update to bundle **103+** if the client is older.
+**What to do:** Fix DNS/VPN/firewall on the computer; confirm `dig www.agentwitch.com` or equivalent; reinstall or self-update to bundle **103+** if the client is older.
 
 ---
 
 ## OPEN-002 — Writer New task dispatch across multi-instance replicas
 
-**Symptom:** After deploy or with multiple Railway replicas, the Mac picker could show **Online (another server)** (`live_other_instance`); **New task** dispatch failed or briefly showed `mac_reconnecting` even though the Mac process was healthy.
+**Symptom:** After deploy or with multiple Railway replicas, the computer picker could show **Online (another server)** (`live_other_instance`); **New task** dispatch failed or briefly showed `mac_reconnecting` even though the computer process was healthy.
 
 **Cause:** Writer dispatch needs the Mac’s live hub WebSocket on the Node that executes `POST /api/agent-runs/dispatch`. Round-robin HTTP routing landed dispatch on a replica without that socket.
 
 **Mitigations (shipped):**
 
-- **Hub dispatch relay:** when the registry shows the Mac live on another `instance_id`, the dispatch API enqueues a short-lived relay row for that owner instance, waits for the owner to run writer dispatch locally, and returns the result — without queueing writer runs as `running` (AGENT-022).
+- **Hub dispatch relay:** when the registry shows the computer live on another `instance_id`, the dispatch API enqueues a short-lived relay row for that owner instance, waits for the owner to run writer dispatch locally, and returns the result — without queueing writer runs as `running` (AGENT-022).
 - **Dispatch affinity cookie:** `GET /api/agent-witch/devices` sets `aw_hub_instance` so operators can enable load-balancer sticky sessions to the socket-owning replica when desired.
 - **Fail closed:** if neither local hub nor relay succeeds, dispatch returns structured `mac_reconnecting` / `mac_offline` (client retry on `mac_reconnecting` only); runs are created only after hub client resolution on the executing Node.
 - Existing: `presenceTier`, auto-pick a `live` Mac when preference is stale, composer copy for `live_other_instance`.
 
-**Residual risk:** During deploy handoff, registry rows can lag for a few seconds; relay wait timeout or sticky cookie mismatch can still surface `mac_reconnecting` until the Mac reconnects and devices refresh.
+**Residual risk:** During deploy handoff, registry rows can lag for a few seconds; relay wait timeout or sticky cookie mismatch can still surface `mac_reconnecting` until the computer reconnects and devices refresh.
 
 **What to do:** Refresh devices / retry **New task**; ensure install bundle **103+**; for multi-replica production, enable sticky routing on `aw_hub_instance` or accept brief handoff windows.
 
@@ -37,13 +37,13 @@ Architecture for multi-instance presence and the dispatch outbox: `docs/adr/0005
 
 ## OPEN-004 — AWL Status showed WebSocket connected after the socket closed
 
-**Symptom:** Agent Witch Local **Status** could show **Connected** for up to ~2 minutes after the Mac client disconnected, while **agentwitch.com** already listed the Mac as offline or reconnecting.
+**Symptom:** Agent Witch Local **Status** could show **Connected** for up to ~2 minutes after the computer client disconnected, while **agentwitch.com** already listed the computer as offline or reconnecting.
 
 **Cause:** `connection-health.json` kept a fresh `lastAckAt` until it aged out; AWL reads that file in a separate process from the WebSocket client.
 
 **Fix (bundle **162+**):** Clear `connection-health.json` on WebSocket `close` so AWL matches cloud presence immediately.
 
-**Fix (bundle **164+**):** Do not write `connection-health.json` on socket `open` (only on `system.ack`). AWL `wsConnected` requires a fresh health snapshot while the socket is open, so **Connected** no longer appears before the cloud has acked the Mac client.
+**Fix (bundle **164+**):** Do not write `connection-health.json` on socket `open` (only on `system.ack`). AWL `wsConnected` requires a fresh health snapshot while the socket is open, so **Connected** no longer appears before the cloud has acked the computer client.
 
 **Fix (bundle **165+**):** In-process watchdog / AWL Revive no longer force-reconnect every 60s while the socket is open but `connection-health.json` is still empty (waiting for first `system.ack`).
 
@@ -51,15 +51,15 @@ Architecture for multi-instance presence and the dispatch outbox: `docs/adr/0005
 
 ---
 
-## OPEN-003 — Stale install bundle on the Mac until update runs
+## OPEN-003 — Stale install bundle on the computer until update runs
 
-**Symptom:** Cloud shows a newer install bundle than the Mac; old client behavior (missing fixes) until update completes.
+**Symptom:** Cloud shows a newer install bundle than the computer; old client behavior (missing fixes) until update completes.
 
 **Cause:** Self-update depends on heartbeat push, wake `POST /update/run`, or hourly updater — can lag if wake API or network fails.
 
 **UI (shipped):** New task composer shows **`update_needed`** readiness (blocks Send, **Update agent** CTA). Home Mac rows flag bundle mismatch in device detail. Contract: `docs/agent-witch/send-readiness-reason-codes.md`.
 
-**What to do:** Run **Update local** / `npm run agent-witch:self-update` on the Mac; check `~/.agent-witch/install-version.json` vs `GET /install/agent-witch/version`.
+**What to do:** Run **Update local** / `npm run agent-witch:self-update` on the computer; check `~/.agent-witch/install-version.json` vs `GET /install/agent-witch/version`.
 
 ---
 
@@ -76,7 +76,7 @@ Architecture for multi-instance presence and the dispatch outbox: `docs/adr/0005
 - `ensureAgentWitchLaunchAgentPlist` rewrites a missing/invalid plist on client start, AWL **Update**, heartbeat self-update, and kickstart/self-update (bundle **125+**).
 - AWL `/update/run` uses `wake-port.json` when present (`resolveAgentWitchRuntimeWakePort`).
 
-**What to do on a Mac that already has the broken plist:** install bundle **125+** self-update, or restart AWI — the client rewrites the plist. If cloud says the Mac identity is not linked, run **Connect this Mac** from Home while signed in.
+**What to do on a computer that already has the broken plist:** install bundle **125+** self-update, or restart AWI — the client rewrites the plist. If cloud says the computer identity is not linked, run **Connect this computer** from Home while signed in.
 
 **Regression tests:** `buildAgentWitchInstallScriptLaunchAgent.test.ts`, `renderInstallAgentWitchScriptProcessHost.test.ts`, `buildAgentWitchInstallScriptProcessHostBash.test.ts`, `ensureAgentWitchLaunchAgentPlist.test.ts`, `isAgentWitchLaunchAgentPlistXmlValid.test.ts`, `buildAgentWitchInstallScriptRegisterLaunchAgent.test.ts`, `resolveAgentWitchRuntimeWakePort.test.ts`, `triggerAgentWitchLocalInstallBundleUpdate.test.ts`, `requestLocalAgentWitchSelfUpdate.test.ts` (AGENT-067).
 

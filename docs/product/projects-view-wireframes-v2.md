@@ -13,17 +13,17 @@ Design review of the Projects flow across **AWC** (`/projects`) and **AWL** (`/p
 
 ## 1. Critique of v1
 
-v1 (prior agent): AWC list = cards with name, path, "Stored on: MacBook Pro", composition counts, `[Edit]` only. AWC detail = read-only sections + `[Edit on this Mac]`. AWL list = synced projects + `Open editor`. AWL editor = rename, folder, delete, three sections with library/create/pull.
+v1 (prior agent): AWC list = cards with name, path, "Stored on: MacBook Pro", composition counts, `[Edit]` only. AWC detail = read-only sections + `[Edit on this computer]`. AWL list = synced projects + `Open editor`. AWL editor = rename, folder, delete, three sections with library/create/pull.
 
 | #   | Dimension             | Verdict | Problem                                                                                                                                                                                                | Fix in v2                                                                                                                                                                                           |
 | --- | --------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | Information hierarchy | `[x]`   | "Stored on: MacBook Pro" is static prose, not state. Two Macs can share a name; nothing tells you if it's _your_ current Mac.                                                                          | Device chip = status dot + name + "(this Mac)" suffix when the browser's pairing-token hash matches the device (same rule as `docs/qa/awc-how-browser-knows-this-computer.md`).                     |
+| 1   | Information hierarchy | `[x]`   | "Stored on: MacBook Pro" is static prose, not state. Two computers can share a name; nothing tells you if it's _your_ current Mac.                                                                     | Device chip = status dot + name + "(this computer)" suffix when the browser's pairing-token hash matches the device (same rule as `docs/qa/awc-how-browser-knows-this-computer.md`).                |
 | 2   | Cognitive load        | `[x]`   | Composition counts render on every row but aren't actionable from AWC (no drill-in editing allowed) — decoration that still costs scan time.                                                           | Keep counts as one compact chip line; never make them clickable in AWC; defer per-item detail to the read-only detail page.                                                                         |
 | 3   | Mobile                | `[x]`   | No responsive behavior specified; path text, device prose, and two buttons per row will collide on narrow screens.                                                                                     | Cards stack full-width `<640px`; primary/secondary actions become full-width stacked buttons; device chip wraps under the name, never beside it.                                                    |
-| 4   | Empty / error states  | `[x]`   | Zero-projects, zero-Mac, offline-device, and wrong-Mac states are entirely unaddressed.                                                                                                                | Explicit empty state (Connect a Mac / New project), explicit offline badge with "last seen", explicit wrong-Mac banner (see #8).                                                                    |
-| 5   | Naming                | `[x]`   | `[Edit]` alone hides that the click leaves AWC for a loopback URL on one physical machine. `Agents` (the third composition type) collides with existing "agent run" language elsewhere in the product. | `Edit on this Mac →` / `Edit on {deviceName}`; flag `Agents` naming collision to product (see § 3).                                                                                                 |
-| 6   | CTA clarity           | `[x]`   | `[Edit on this Mac]` is a single always-enabled button, even when the viewer isn't on that Mac — it will silently hang or fail against `127.0.0.1:43347`.                                              | Three-state CTA: enabled / disabled+reason / offline+reason (see § 3 table).                                                                                                                        |
-| 7   | Parity AWC vs AWL     | `[x]`   | AWL list says "synced projects" with no defined scope — could list every cloud project regardless of owning device, inviting edits of a repo that lives on someone else's Mac.                         | AWL list is scoped to `deviceId == this Mac` (plus unbound Mac-only projects); header states the scope explicitly: "Projects on this Mac."                                                          |
+| 4   | Empty / error states  | `[x]`   | Zero-projects, zero-Mac, offline-device, and wrong-Mac states are entirely unaddressed.                                                                                                                | Explicit empty state (Connect a computer / New project), explicit offline badge with "last seen", explicit wrong-Mac banner (see #8).                                                               |
+| 5   | Naming                | `[x]`   | `[Edit]` alone hides that the click leaves AWC for a loopback URL on one physical machine. `Agents` (the third composition type) collides with existing "agent run" language elsewhere in the product. | `Edit on this computer →` / `Edit on {deviceName}`; flag `Agents` naming collision to product (see § 3).                                                                                            |
+| 6   | CTA clarity           | `[x]`   | `[Edit on this computer]` is a single always-enabled button, even when the viewer isn't on that Mac — it will silently hang or fail against `127.0.0.1:43347`.                                         | Three-state CTA: enabled / disabled+reason / offline+reason (see § 3 table).                                                                                                                        |
+| 7   | Parity AWC vs AWL     | `[x]`   | AWL list says "synced projects" with no defined scope — could list every cloud project regardless of owning device, inviting edits of a repo that lives on someone else's Mac.                         | AWL list is scoped to `deviceId == this computer` (plus unbound Mac-only projects); header states the scope explicitly: "Projects on this computer."                                                |
 | 8   | Wrong Mac             | `[x]`   | Not handled at all — the single biggest gap, since every AWC "Edit" is a hand-off to a loopback URL reachable from exactly one physical machine.                                                       | Identity-match badge drives CTA state everywhere (list, detail); AWL itself rejects a deep-linked project id it doesn't own with a clear message instead of a blank/wrong render.                   |
 | 9   | Accessibility         | `[x]`   | Status implied by color dot alone; ambiguous whether "cards" are click targets (this repo's own a11y rule forbids `div role="button"`).                                                                | Status = icon + text, always; whole-card navigation uses a real `<a>`/`<button>`; disabled buttons carry `aria-describedby` pointing at the reason text; presence changes use `aria-live="polite"`. |
 | 10  | Delete/folder leakage | `[~]`   | Correctly omits delete/folder from AWC, but gives no reason why sections are inert — rows invite a "why can't I click this" dead click.                                                                | Every read-only section carries a persistent "View-only here — edit on {deviceName}" note; rows are plain text, not fake buttons.                                                                   |
@@ -42,13 +42,13 @@ v1 (prior agent): AWC list = cards with name, path, "Stored on: MacBook Pro", co
 
 ### Renamed labels
 
-| v1                          | v2                                                                                                                                         | Why                                                                                                                                                                                               |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Edit`                      | `Edit on this Mac →` (enabled) / `Edit on {deviceName}` (disabled)                                                                         | Names the hand-off and the destination device before the click, not after it fails.                                                                                                               |
-| `Stored on: MacBook Pro`    | `● Online here — {deviceName}` / `● Online — {deviceName}` / `○ Offline — {deviceName} · last seen …`                                      | State, not metadata; disambiguates duplicate device names via live status text.                                                                                                                   |
-| AWL `Open editor`           | `Open project →`                                                                                                                           | The whole AWL page _is_ the project; "editor" implies a separate mode that doesn't exist.                                                                                                         |
-| AWL "Library" (per section) | `Installed`                                                                                                                                | "Library" already means saved playbooks product-wide (`concepts.md`); reusing it inside a project for "what's currently installed" collides. `Installed` says exactly what the list shows.        |
-| `Agents` (composition type) | **Flagged, not renamed** — keep `Agents` pending a product decision, but always pair with the subtitle _"agent profiles you can dispatch"_ | `Agents` already names two other things in this product: an agent run (an execution) and "the Mac side" colloquially. Recommend aligning with `concepts.md`'s `Capability` if this ships broadly. |
+| v1                          | v2                                                                                                                                         | Why                                                                                                                                                                                                    |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Edit`                      | `Edit on this computer →` (enabled) / `Edit on {deviceName}` (disabled)                                                                    | Names the hand-off and the destination device before the click, not after it fails.                                                                                                                    |
+| `Stored on: MacBook Pro`    | `● Online here — {deviceName}` / `● Online — {deviceName}` / `○ Offline — {deviceName} · last seen …`                                      | State, not metadata; disambiguates duplicate device names via live status text.                                                                                                                        |
+| AWL `Open editor`           | `Open project →`                                                                                                                           | The whole AWL page _is_ the project; "editor" implies a separate mode that doesn't exist.                                                                                                              |
+| AWL "Library" (per section) | `Installed`                                                                                                                                | "Library" already means saved playbooks product-wide (`concepts.md`); reusing it inside a project for "what's currently installed" collides. `Installed` says exactly what the list shows.             |
+| `Agents` (composition type) | **Flagged, not renamed** — keep `Agents` pending a product decision, but always pair with the subtitle _"agent profiles you can dispatch"_ | `Agents` already names two other things in this product: an agent run (an execution) and "the computer side" colloquially. Recommend aligning with `concepts.md`'s `Capability` if this ships broadly. |
 
 ---
 
@@ -60,18 +60,18 @@ flowchart TD
     A -->|Edit CTA, isThisMac = true| C[AWL /project?id= — editor]
     B -->|Edit CTA, isThisMac = true| C
     A -->|Edit CTA, isThisMac = false, device online| D["Disabled: 'Open on {deviceName} to edit'"]
-    A -->|Edit CTA, device offline| E["Disabled: 'This Mac is offline right now'"]
+    A -->|Edit CTA, device offline| E["Disabled: 'This computer is offline right now'"]
     C -->|Rename / Change folder / Delete| F[(Cloud project record)]
     C -->|Harness / Workflows / Agents tabs| G[Installed · + Create new · Pull into repo]
-    C -->|deep-linked id not owned by this Mac| H["Error: 'Not registered on this Mac'"]
+    C -->|deep-linked id not owned by this Mac| H["Error: 'Not registered on this computer'"]
 ```
 
-| CTA state            | Condition                                                                                 | Label                                | Behavior                                                                          |
-| -------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------ | --------------------------------------------------------------------------------- |
-| Enabled              | `presenceTier` is `live` or `recent` **and** local pairing-token hash matches this device | `Edit on this Mac →`                 | Opens `http://127.0.0.1:43347/project?id={id}` in a new tab.                      |
-| Disabled — wrong Mac | Device is online/recent but the hash does **not** match                                   | `Edit on this Mac` (greyed)          | Tooltip / inline note: `Open this page on {deviceName} to edit.` No click action. |
-| Disabled — offline   | `presenceTier` is `offline`                                                               | `Edit on this Mac` (greyed)          | Inline note: `{deviceName} is offline right now · last seen {relative time}.`     |
-| Reconnecting         | `presenceTier` is `live_other_instance`                                                   | `Edit on this Mac` (greyed, spinner) | Inline note: `Reconnecting…` — re-check before treating as fully offline.         |
+| CTA state            | Condition                                                                                 | Label                                     | Behavior                                                                          |
+| -------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------- | --------------------------------------------------------------------------------- |
+| Enabled              | `presenceTier` is `live` or `recent` **and** local pairing-token hash matches this device | `Edit on this computer →`                 | Opens `http://127.0.0.1:43347/project?id={id}` in a new tab.                      |
+| Disabled — wrong Mac | Device is online/recent but the hash does **not** match                                   | `Edit on this computer` (greyed)          | Tooltip / inline note: `Open this page on {deviceName} to edit.` No click action. |
+| Disabled — offline   | `presenceTier` is `offline`                                                               | `Edit on this computer` (greyed)          | Inline note: `{deviceName} is offline right now · last seen {relative time}.`     |
+| Reconnecting         | `presenceTier` is `live_other_instance`                                                   | `Edit on this computer` (greyed, spinner) | Inline note: `Reconnecting…` — re-check before treating as fully offline.         |
 
 ### Composition hierarchy (Project > Harness/Workflows/Agents)
 
@@ -102,28 +102,28 @@ flowchart LR
 │ Agent Witch                                                 [Account ▾]  │
 ├──────────────────────────────────────────────────────────────────────────┤
 │ Projects                                                                  │
-│ Repos your Macs can run agents against.                 [ + New project ]│
+│ Repos your computers can run agents against.                 [ + New project ]│
 │                                                                            │
-│ 🔍 Search projects…             Mac: [ All Macs ▾ ]                      │
+│ 🔍 Search projects…             Mac: [ All computers ▾ ]                      │
 ├──────────────────────────────────────────────────────────────────────────┤
 │  daily-magic                                                             │
 │  ~/code/daily-magic                                                      │
 │  ● Online here — Alex's MacBook Pro                                      │
 │  3 Harness · 2 Workflows · 5 Agents                                      │
-│                                    [ View details ]  [ Edit on this Mac → ]│
+│                                    [ View details ]  [ Edit on this computer → ]│
 │  ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ──     │
 │  wishees-app                                                             │
 │  ~/code/wishees                                                          │
 │  ● Online — Jamie's Mac mini                                             │
 │  1 Harness · 0 Workflows · 2 Agents                                      │
-│                     [ View details ]   [ Edit on this Mac ]  (disabled)  │
+│                     [ View details ]   [ Edit on this computer ]  (disabled)  │
 │                     ⓘ Open this page on Jamie's Mac mini to edit         │
 │  ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ──     │
 │  legacy-tools                                                            │
 │  No folder set yet                                                      │
 │  ○ Offline — Alex's Mac Studio · last seen 3 days ago                   │
 │  0 Harness · 0 Workflows · 1 Agent                                      │
-│                     [ View details ]   [ Edit on this Mac ]  (disabled)  │
+│                     [ View details ]   [ Edit on this computer ]  (disabled)  │
 │                     ⓘ Alex's Mac Studio is offline right now             │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
@@ -135,9 +135,9 @@ flowchart LR
 │ Projects                                                                  │
 │                                                                            │
 │                        No projects yet.                                  │
-│         Connect a Mac, then add the first repo it should work on.       │
+│         Connect a computer, then add the first repo it should work on.       │
 │                                                                            │
-│                 [ Connect a Mac ]      [ + New project ]                │
+│                 [ Connect a computer ]      [ + New project ]                │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -161,7 +161,7 @@ flowchart LR
 │ │      View details       ││
 │ └─────────────────────────┘│
 │ ┌─────────────────────────┐│
-│ │   Edit on this Mac →    ││
+│ │   Edit on this computer →    ││
 │ └─────────────────────────┘│
 └───────────────────────────┘
 ```
@@ -174,18 +174,18 @@ flowchart LR
 ├──────────────────────────────────────────────────────────────────────────┤
 │ daily-magic                                                              │
 │ ~/code/daily-magic                                                       │
-│ ● Online here — Alex's MacBook Pro              [ Edit on this Mac → ]  │
+│ ● Online here — Alex's MacBook Pro              [ Edit on this computer → ]  │
 ├──────────────────────────────────────────────────────────────────────────┤
-│ Harness (3)                                     View-only — edit on Mac │
+│ Harness (3)                                     View-only — edit on computer │
 │  • check24-style-guide             v2.1                                 │
 │  • conventional-commits            v1.0                                 │
 │  • fsa-architecture                 v3.4                                │
 ├──────────────────────────────────────────────────────────────────────────┤
-│ Workflows (2)                                   View-only — edit on Mac │
+│ Workflows (2)                                   View-only — edit on computer │
 │  • Ship a feature                                                       │
 │  • Fix a bug from an issue                                              │
 ├──────────────────────────────────────────────────────────────────────────┤
-│ Agents (5) · profiles you can dispatch          View-only — edit on Mac │
+│ Agents (5) · profiles you can dispatch          View-only — edit on computer │
 │  • Release notes writer                                                 │
 │  • PR reviewer                                                          │
 │  • … +3 more                                                            │
@@ -206,18 +206,18 @@ flowchart LR
 **Empty section**
 
 ```
-│ Harness (0)                                     View-only — edit on Mac │
+│ Harness (0)                                     View-only — edit on computer │
 │  No Harness installed yet.                                              │
 ```
 
-### C. AWL `/projects` — list (this Mac)
+### C. AWL `/projects` — list (this computer)
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│ Agent Witch — this Mac (Alex's MacBook Pro)                              │
+│ Agent Witch — this computer (Alex's MacBook Pro)                              │
 ├──────────────────────────────────────────────────────────────────────────┤
-│ Projects on this Mac                                                     │
-│ Repos this Mac can run Harness, Workflows, and Agents against.          │
+│ Projects on this computer                                                     │
+│ Repos this computer can run Harness, Workflows, and Agents against.          │
 │                                                         [ + Add project ]│
 │ 🔍 Search…                                                                │
 ├──────────────────────────────────────────────────────────────────────────┤
@@ -237,23 +237,23 @@ flowchart LR
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│ Projects on this Mac                                                     │
+│ Projects on this computer                                                     │
 │                                                                            │
-│              No projects on this Mac yet.                                │
+│              No projects on this computer yet.                                │
 │    Add a folder here, or add one from Agent Witch Cloud and choose    │
-│                       this Mac to store it on.                           │
+│                       this computer to store it on.                           │
 │                                                                            │
 │                          [ + Add project ]                               │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
-**Deep-link error (project id not owned by this Mac)**
+**Deep-link error (project id not owned by this computer)**
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│ ⓘ This project isn't registered on this Mac.                           │
+│ ⓘ This project isn't registered on this computer.                           │
 │   It may belong to a different Mac, or the link is out of date.        │
-│                          [ Back to projects on this Mac ]              │
+│                          [ Back to projects on this computer ]              │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -303,7 +303,7 @@ flowchart LR
 │ Delete "daily-magic"?                       │
 │                                              │
 │ This removes it from Agent Witch Cloud    │
-│ and this Mac's project list. The folder on  │
+│ and this computer's project list. The folder on  │
 │ disk is not deleted.                        │
 │                                              │
 │ Type the project name to confirm:           │
@@ -317,10 +317,10 @@ flowchart LR
 
 ## 5. Sign-off — what changed from v1
 
-- Replaced static `Stored on: {device}` text with a live device chip (status + name + "this Mac" match) everywhere a device is shown.
+- Replaced static `Stored on: {device}` text with a live device chip (status + name + "this computer" match) everywhere a device is shown.
 - Made the `Edit` CTA three-state (enabled / wrong-Mac-disabled / offline-disabled) instead of a single always-enabled button — this was the missing "wrong Mac" handling.
-- Added an explicit ownership check on the AWL side: a project id this Mac doesn't own now renders an error, not a blank or mismatched page.
-- Scoped the AWL list to "Projects on this Mac" instead of an ambiguous "synced projects," so users can't accidentally believe they can edit a teammate's Mac's repo.
+- Added an explicit ownership check on the AWL side: a project id this computer doesn't own now renders an error, not a blank or mismatched page.
+- Scoped the AWL list to "Projects on this computer" instead of an ambiguous "synced projects," so users can't accidentally believe they can edit a teammate's computer's repo.
 - Added empty states for AWC list, AWL list, and empty composition sections — none existed in v1.
 - Added a persistent "View-only — edit on {deviceName}" note to every read-only section instead of leaving rows looking like dead click targets.
 - Compressed composition counts to a single glanceable line in the list view; kept item-level detail for the read-only detail page and editor only (progressive disclosure).

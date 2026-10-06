@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { resolveIsCheckingLocalMacIdentity } from "@/features/home/utils/resolveIsCheckingLocalMacIdentity";
 
 describe("resolveIsCheckingLocalMacIdentity (HOME-057)", () => {
-  it("keeps checking while a Mac wake probe is still going to run", () => {
+  it("keeps checking while a computer wake probe is still going to run", () => {
     expect(
       resolveIsCheckingLocalMacIdentity({
         isMacBrowser: true,

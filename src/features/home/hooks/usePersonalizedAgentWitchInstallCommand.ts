@@ -44,7 +44,9 @@ const usePersonalizedAgentWitchInstallCommand = (input: {
       setInstallCommand(result.installCommand);
       rememberInstallTokenHash(result.tokenHash);
     } else {
-      setError(result.errorMessage ?? "Could not create a Mac install link.");
+      setError(
+        result.errorMessage ?? "Could not create a computer install link.",
+      );
     }
 
     setIsLoading(false);
@@ -70,7 +72,9 @@ const usePersonalizedAgentWitchInstallCommand = (input: {
         setInstallCommand(result.installCommand);
         rememberInstallTokenHash(result.tokenHash);
       } else {
-        setError(result.errorMessage ?? "Could not create a Mac install link.");
+        setError(
+          result.errorMessage ?? "Could not create a computer install link.",
+        );
       }
 
       setIsLoading(false);

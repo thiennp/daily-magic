@@ -30,7 +30,7 @@ export default function HomeRunningJobsPanel() {
   return (
     <div className="mt-6">
       <h2 className="text-sm font-medium text-gray-900 dark:text-white/90">
-        Running on your Mac
+        Running on your computer
       </h2>
       <ul className="mt-3 space-y-2">
         {runningJobs.map((run) => (

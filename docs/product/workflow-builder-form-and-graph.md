@@ -1,6 +1,6 @@
 # Workflow / agent builder: form inputs, steps, and graph
 
-**Status:** Phase 1 shipped in AWC create/edit/run forms (typed questions + split Human/Specialist vs extra Mac rules). File upload and a runnable user graph are still later.  
+**Status:** Phase 1 shipped in AWC create/edit/run forms (typed questions + split Human/Specialist vs extra computer rules). File upload and a runnable user graph are still later.  
 **Audience:** PM, design, engineering deciding the next Create workflow / Create agent work  
 **Surfaces:** AWC create/edit playbook (`CreateWorkflowForm`, `CreateAgentForm`), run-time form (`WorkflowTaskFields`), official orchestration (`workflow_runs`)
 
@@ -12,7 +12,7 @@ This document answers: _Can “Answer length” become real input types? Can cre
 
 **Yes — input types instead of “Answer length” is the right next step, and it is mostly already modeled.** The builder already stores a `type` on each question; the UI only exposes two values (`text` / `textarea`) and labels them as answer length.
 
-**Yes — steps already exist, but they are hidden as “Extra rules for your Mac.”** Official marketplace workflows already run as a **linear human ↔ agent graph**. User-created workflows still collapse into **one Mac prompt**.
+**Yes — steps already exist, but they are hidden as “Extra rules for your computer.”** Official marketplace workflows already run as a **linear human ↔ agent graph**. User-created workflows still collapse into **one Mac prompt**.
 
 **A visual diagram is desirable and should be a later phase, not the first ship.** A full n8n-style canvas (freeform nodes, loops, branching, nested waves) is the wrong first product. A **linear graph** that reuses the official orchestration engine is the honest “looks like a workflow” target.
 
@@ -36,7 +36,7 @@ Copy on Create workflow still says _“No automation canvas or code required.”
 Each question becomes:
 
 1. A run-time form control when someone starts the workflow.
-2. One line in the prompt sent to the Mac (`- Label: value`).
+2. One line in the prompt sent to the computer (`- Label: value`).
 
 Schema (`published_capabilities.workflow_fields` JSONB):
 
@@ -56,12 +56,12 @@ The dropdown label is **Answer length** (`WORKFLOW_BUILDER_QUESTIONS_SECTION.inp
 
 ### 2.3 Steps already exist — three different meanings
 
-| Noun in code                          | User-facing label today                       | What it actually is                                                       |
-| ------------------------------------- | --------------------------------------------- | ------------------------------------------------------------------------- |
-| Harness `operator`                    | **Human step** (buried under extra Mac rules) | Checklist for the person running the workflow; stored as `operator_steps` |
-| Harness `agent`                       | **Specialist**                                | Subagent instructions copied onto the Mac under `~/.agent-witch/harness/` |
-| Official graph node `human` / `agent` | Not in create UI                              | Server-orchestrated run: pause for human, then bounded Mac dispatch       |
-| `[[WAVE_PLAN]]` / `[[WAVE_STATUS]]`   | Live run UI                                   | Writer-emitted work plan _during_ one agent step                          |
+| Noun in code                          | User-facing label today                            | What it actually is                                                            |
+| ------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------ |
+| Harness `operator`                    | **Human step** (buried under extra computer rules) | Checklist for the person running the workflow; stored as `operator_steps`      |
+| Harness `agent`                       | **Specialist**                                     | Subagent instructions copied onto the computer under `~/.agent-witch/harness/` |
+| Official graph node `human` / `agent` | Not in create UI                                   | Server-orchestrated run: pause for human, then bounded Mac dispatch            |
+| `[[WAVE_PLAN]]` / `[[WAVE_STATUS]]`   | Live run UI                                        | Writer-emitted work plan _during_ one agent step                               |
 
 Official presets (Research brief, Vibe coding, …) already alternate **human checkpoint → agent step → review**. That graph is **hand-authored TypeScript** under `src/lib/workflowOrchestration/definitions/`. `startOfficialWorkflowRun` **rejects** user-created workflows (`This workflow is not an official orchestrated preset.`).
 
@@ -85,7 +85,7 @@ flowchart LR
 
 ### 2.4 Upload / files
 
-There is **no** workflow file field, no blob table, and no dispatch path for an uploaded PDF/image. TailAdmin `DropZone` is a styleguide demo (`console.log`). The browser also cannot turn a file picker into a Mac POSIX path (same constraint as the project-folder picker).
+There is **no** workflow file field, no blob table, and no dispatch path for an uploaded PDF/image. TailAdmin `DropZone` is a styleguide demo (`console.log`). The browser also cannot turn a file picker into a computer POSIX path (same constraint as the project-folder picker).
 
 ---
 
@@ -129,7 +129,7 @@ Touch points (same change set): builder row, run-time `WorkflowTaskFields`, mobi
 
 | Type                              | Why it is a different project                                            |
 | --------------------------------- | ------------------------------------------------------------------------ |
-| `file` / `image` / `pdf`          | Needs storage + how the Mac sees the bytes                               |
+| `file` / `image` / `pdf`          | Needs storage + how the computer sees the bytes                          |
 | `project` as a generic question   | Already a special binding to the selected folder; keep it platform-owned |
 | Repeating groups / address blocks | Over-forms the builder; YAGNI until a real preset needs them             |
 
@@ -137,13 +137,13 @@ Touch points (same change set): builder row, run-time `WorkflowTaskFields`, mobi
 
 Three viable designs. Pick **one** before UI:
 
-| Design                            | How it works                                                    | Fit for Agent Witch                                                                                           |
-| --------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| **A. Extract text in AWC**        | Upload PDF/image → extract / OCR → store text in `field_values` | Best first file type: “attach a brief, agent reads it.” No Mac path problem.                                  |
-| **B. Cloud blob + URL in prompt** | Store in object storage; prompt gets a signed URL               | Agent on Mac must be able to fetch the URL. Extra secrets, retention, size limits.                            |
-| **C. Save onto the paired Mac**   | Browser → AWB → write under the project folder                  | True “here is the PDF on disk.” Only works when that Mac is online; same-machine constraint as folder picker. |
+| Design                               | How it works                                                    | Fit for Agent Witch                                                                                           |
+| ------------------------------------ | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| **A. Extract text in AWC**           | Upload PDF/image → extract / OCR → store text in `field_values` | Best first file type: “attach a brief, agent reads it.” No computer path problem.                             |
+| **B. Cloud blob + URL in prompt**    | Store in object storage; prompt gets a signed URL               | Agent on computer must be able to fetch the URL. Extra secrets, retention, size limits.                       |
+| **C. Save onto the paired computer** | Browser → AWB → write under the project folder                  | True “here is the PDF on disk.” Only works when that Mac is online; same-machine constraint as folder picker. |
 
-Recommendation: **A for v1 file fields** (PDF text + image caption/OCR or “image attached: filename, user must describe”). **C later** for “put this file in the repo.” Never pretend a browser `<input type="file">` is a Mac path.
+Recommendation: **A for v1 file fields** (PDF text + image caption/OCR or “image attached: filename, user must describe”). **C later** for “put this file in the repo.” Never pretend a browser `<input type="file">` is a computer path.
 
 ### 3.3 Steps in the create UI (can and should, after or with input types)
 
@@ -154,7 +154,7 @@ Re-label the buried harness kinds as **workflow steps**:
 | Add question (already there) | `workflow_fields` — input to the _start_ of the run                                     |
 | Add human step               | harness `operator` → `operator_steps`                                                   |
 | Add agent step               | a named prompt section (today: `exampleRequest` `##` headings) plus optional specialist |
-| Add specialist / subagent    | harness `agent` (instructions on the Mac)                                               |
+| Add specialist / subagent    | harness `agent` (instructions on the computer)                                          |
 | Add rule / skill / command   | keep as “playbook extras,” not graph nodes                                              |
 
 Minimum honest editor (no canvas):
@@ -195,7 +195,7 @@ Today only `template-*` harness slugs start `workflow_runs`. To make a user-auth
 2. Allow `startOfficialWorkflowRun` (or a renamed `startWorkflowRun`) for owner-created workflows, not only marketplace templates.
 3. Reuse human-step modal + agent-step dispatch already in AWC.
 
-Without this, a pretty canvas is decoration: the Mac still receives one blob prompt.
+Without this, a pretty canvas is decoration: the computer still receives one blob prompt.
 
 ---
 
@@ -221,7 +221,7 @@ Ship in this order. Each phase is useful alone.
 
 ### Phase 3 — Step editor for create workflow (and optionally create agent)
 
-- Section **How this run proceeds** above “extra Mac rules.”
+- Section **How this run proceeds** above “extra computer rules.”
 - Add Human step / Agent step; reorder.
 - Default graph: Confirm inputs → Do the work → Review.
 - Create agent can share the same step editor but skip the questions section (agent = standing specialist; workflow = form + steps).
@@ -264,7 +264,7 @@ Prefer user words from [UX simplification](ux-simplification.md):
 | WAVE_PLAN               | **Work plan** on the live run, not in the builder |
 | Automation canvas       | **Steps** / **How this workflow runs**            |
 
-Create workflow blurb should change from “no canvas required” to: _Define the questions people answer, then the steps a person and the Mac take._
+Create workflow blurb should change from “no canvas required” to: _Define the questions people answer, then the steps a person and the computer take._
 
 ---
 

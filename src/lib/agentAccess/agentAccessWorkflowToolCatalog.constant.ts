@@ -2,7 +2,8 @@ import type { AgentAccessToolDefinition } from "@/lib/agentAccess/agentAccessToo
 
 const deviceIdSchema = {
   type: "string",
-  description: "Mac id from list_macs. Omit to use the only paired machine.",
+  description:
+    "Computer id from list_macs. Omit to use the only paired machine.",
 };
 
 export const AGENT_ACCESS_WORKFLOW_TOOLS: readonly AgentAccessToolDefinition[] =

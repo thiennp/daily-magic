@@ -23,7 +23,7 @@ export const OFFICIAL_WORKFLOW_DEFINITION: OfficialWorkflowDefinition = {
       "Confirm the vibe, screen, and app folder",
       [
         "1. Check featureBrief and targetSurface feel right.",
-        "2. Confirm appTarget points at the app folder you want changed on this Mac.",
+        "2. Confirm appTarget points at the app folder you want changed on this computer.",
         "3. Reply ready when the goal is clear enough to continue.",
       ].join("\n"),
     ),

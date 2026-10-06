@@ -2,7 +2,7 @@ import { deviceMatchesReachableLocalTokenHash } from "@/features/agent-witch/uti
 import type { MacDevicePresence } from "@/features/agent-witch/online-wake/macDevicePresence";
 
 /**
- * this Mac badge in Your Devices — token match on a live/recent row only (HOME-061 / HOME-062).
+ * this computer badge in Your Devices — token match on a live/recent row only (HOME-061 / HOME-062).
  */
 export const resolveHomeMacDeviceIsThisMac = (input: {
   readonly localTokenHash: string | null;

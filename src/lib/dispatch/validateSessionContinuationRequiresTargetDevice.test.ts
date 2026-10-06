@@ -11,7 +11,7 @@ describe("validateSessionContinuationRequiresTargetDevice", () => {
     });
 
     expect(error?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR);
-    expect(error?.payload?.errorMessage).toContain("same Mac");
+    expect(error?.payload?.errorMessage).toContain("same computer");
     expect(error?.requestId).toBe("req-1");
   });
 

@@ -7,12 +7,16 @@ describe("formatWorkflowStepFriendlyError", () => {
     const result = formatWorkflowStepFriendlyError(
       "Agent step failed with exit code 1.",
     );
-    expect(result.headline).toBe("This step could not finish on your Mac.");
+    expect(result.headline).toBe(
+      "This step could not finish on your computer.",
+    );
     expect(result.detail).toContain("exit code 1");
   });
 
-  it("maps Mac connectivity errors", () => {
-    const result = formatWorkflowStepFriendlyError("No Mac connected.");
-    expect(result.headline).toBe("Your Mac is not connected right now.");
+  it("maps computer connectivity errors", () => {
+    const legacy = formatWorkflowStepFriendlyError("No Mac connected.");
+    expect(legacy.headline).toBe("Your computer is not connected right now.");
+    const current = formatWorkflowStepFriendlyError("No computer connected");
+    expect(current.headline).toBe("Your computer is not connected right now.");
   });
 });

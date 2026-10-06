@@ -27,9 +27,9 @@ export const PAIRING_STATUS_DISPLAY: Record<
   PairingStatusKey,
   StatusBadgeDisplay
 > = {
-  not_connected: { label: "No Mac ready yet", tone: "neutral" },
-  ready_to_pair: { label: "Waiting for your Mac", tone: "warning" },
-  paired: { label: "Mac ready", tone: "success" },
+  not_connected: { label: "No computer ready yet", tone: "neutral" },
+  ready_to_pair: { label: "Waiting for your computer", tone: "warning" },
+  paired: { label: "Computer ready", tone: "success" },
   pairing_failed: { label: MAC_WORKER_BENEFIT_COPY.setupFailed, tone: "error" },
 };
 

@@ -47,12 +47,12 @@ export const resolveMacDeviceDisplayName = (input: {
   }
 
   if (input.deviceCount === 1 || input.fallbackIndex === 0) {
-    return "Your Mac";
+    return "Your computer";
   }
 
   if (input.fallbackIndex !== undefined) {
-    return `Mac ${input.fallbackIndex + 1}`;
+    return `Computer ${input.fallbackIndex + 1}`;
   }
 
-  return "Your Mac";
+  return "Your computer";
 };

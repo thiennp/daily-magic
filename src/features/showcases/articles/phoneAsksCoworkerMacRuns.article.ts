@@ -9,24 +9,24 @@ const phoneAsksCoworkerMacRuns: ShowcaseArticle = {
   readMinutes: 4,
   whatYouNeed: [
     "A group with teammates and published capabilities",
-    "Their Mac agent online — not yours",
+    "Their computer agent online — not yours",
     "Approval policy if your company requires it",
   ],
   tryNext: { label: "Open projects", href: "/projects?intent=new-task" },
   relatedShowcases: [
     {
       slug: "control-mac-from-phone",
-      label: "Control AI on your Mac from your phone",
+      label: "Control AI on your computer from your phone",
     },
     {
       slug: "what-phone-can-do-alone",
-      label: "What your phone can do when your Mac is away",
+      label: "What your phone can do when your computer is away",
     },
   ],
   sections: [
     {
       paragraphs: [
-        "You do not always have the files. Your coworker does. Team dispatch lets you pick a group, a person, and their assistant or workflow — from your phone — while Claude runs on their Mac.",
+        "You do not always have the files. Your coworker does. Team dispatch lets you pick a group, a person, and their assistant or workflow — from your phone — while Claude runs on their computer.",
       ],
     },
     {
@@ -40,7 +40,7 @@ const phoneAsksCoworkerMacRuns: ShowcaseArticle = {
     {
       heading: "What makes the send smooth",
       paragraphs: [
-        "Keep your browser connected while you send. Their Mac should be awake to start the job. Prefer Copy prompt when you only need text, not local files on their machine.",
+        "Keep your browser connected while you send. Their computer should be awake to start the job. Prefer Copy prompt when you only need text, not local files on their machine.",
       ],
     },
   ],

@@ -2,7 +2,7 @@
 export const AWC_PROJECT_COMPUTER_MEMBER_COPY = {
   heading: "Computers",
   hint: "The computer linked to this project. It can take tasks while online.",
-  fallbackName: "This Mac",
+  fallbackName: "This computer",
   yourComputer: "Your computer",
   ownersComputerSuffix: "'s computer",
   genericOwner: "Computer",

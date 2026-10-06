@@ -7,7 +7,7 @@ export type AgentWitchDispatchUnavailability =
 /**
  * Only an active row can be "reconnecting": revoked rows stop receiving
  * `last_seen_at` touches, so their freshness is frozen at revocation time and
- * says nothing about whether the Mac is connected.
+ * says nothing about whether the computer is connected.
  */
 export const classifyAgentWitchDispatchUnavailability = async (
   deviceId: string,

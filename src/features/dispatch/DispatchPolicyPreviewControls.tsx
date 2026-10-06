@@ -60,7 +60,7 @@ export default function DispatchPolicyPreviewControls() {
             <option value="">Most recent device</option>
             {devices.map((device) => (
               <option key={device.id} value={device.id}>
-                {displayNameById.get(device.id) ?? "Your Mac"}
+                {displayNameById.get(device.id) ?? "Your computer"}
               </option>
             ))}
           </select>

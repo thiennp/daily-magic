@@ -15,8 +15,8 @@ export default function HomeLoginView() {
           Sign in to continue
         </h1>
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          Run workflows on your Mac, automate repeat jobs, and see what your
-          team is working on.
+          Run workflows on your computer, automate repeat jobs, and see what
+          your team is working on.
         </p>
       </div>
 

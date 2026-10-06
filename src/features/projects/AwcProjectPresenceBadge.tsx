@@ -43,7 +43,7 @@ export default function AwcProjectPresenceBadge({
   return (
     <p
       role="status"
-      aria-label={`Mac status: ${text}`}
+      aria-label={`Computer status: ${text}`}
       className={`inline-flex shrink-0 items-center gap-1.5 text-xs ${
         isPill
           ? `rounded-full px-2.5 py-1 font-medium ${PILL_CLASS_BY_STATUS[statusIcon]}`

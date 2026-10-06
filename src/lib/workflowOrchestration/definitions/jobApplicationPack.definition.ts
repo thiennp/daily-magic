@@ -7,7 +7,7 @@ import type OfficialWorkflowDefinition from "@/lib/workflowOrchestration/types/O
 const RESEARCH_AND_DRAFT = `Continue from the operator’s job posting confirmation (checkpoint responses above).
 
 Read targetRole, companyName, jobPostingUrl, and jobDescription from the workflow form.
-Open resumeFolderPath on this Mac and use only facts found there.
+Open resumeFolderPath on this computer and use only facts found there.
 
 ## Map requirements to resume evidence
 Load the job posting text (URL or pasted jobDescription).

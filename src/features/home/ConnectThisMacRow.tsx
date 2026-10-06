@@ -32,7 +32,7 @@ export default function ConnectThisMacRow({
                 This computer
               </p>
               <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
-                Link the Mac you are using now to your account.
+                Link the computer you are using now to your account.
               </p>
             </div>
           </div>

@@ -21,13 +21,13 @@ const copyForReason = (
   if (reason === WorkflowTrialRunBlockReason.SIGN_IN_REQUIRED) {
     return {
       title: "Sign in to run this workflow",
-      body: "You can browse and save playbooks without an account. To send a workflow or see live output, sign in and connect a Mac or Cursor Cloud API key.",
+      body: "You can browse and save playbooks without an account. To send a workflow or see live output, sign in and connect a computer or Cursor Cloud API key.",
     };
   }
 
   return {
-    title: "Connect a Mac or Cursor Cloud to run workflows",
-    body: "Pair a Mac with Agent Witch or save a Cursor Cloud API key in your account settings. Workflow runs need somewhere to execute.",
+    title: "Connect a computer or Cursor Cloud to run workflows",
+    body: "Pair a computer with Agent Witch or save a Cursor Cloud API key in your account settings. Workflow runs need somewhere to execute.",
   };
 };
 
@@ -67,7 +67,7 @@ export default function WorkflowTrialRunGatePanel({
               href={connectDevicesHref}
               className="inline-flex items-center justify-center rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 dark:bg-brand-500 dark:hover:bg-brand-400"
             >
-              Connect your Mac
+              Connect your computer
             </Link>
             <Link
               href={connectDevicesHref}

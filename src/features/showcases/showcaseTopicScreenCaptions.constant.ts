@@ -5,7 +5,7 @@ export const SHOWCASE_TOPIC_SCREEN_CAPTION: Readonly<
   Record<ShowcaseTopicScreenId, string>
 > = {
   [SHOWCASE_TOPIC_SCREEN.SEND_TASK]:
-    "Describe the task and send it to your Mac.",
+    "Describe the task and send it to your computer.",
   [SHOWCASE_TOPIC_SCREEN.JOB_HISTORY]:
     "Completed weekly status run in Reports.",
   [SHOWCASE_TOPIC_SCREEN.MARKETPLACE]:
@@ -21,7 +21,8 @@ export const SHOWCASE_TOPIC_SCREEN_CAPTION: Readonly<
   [SHOWCASE_TOPIC_SCREEN.COMPANY_ADMIN]:
     "Acme Product group with approval policy and seeded playbooks.",
   [SHOWCASE_TOPIC_SCREEN.LEADERSHIP]: "Shared automations across the team.",
-  [SHOWCASE_TOPIC_SCREEN.CONCEPT]: "Your Mac runs the agent on local files.",
+  [SHOWCASE_TOPIC_SCREEN.CONCEPT]:
+    "Your computer runs the agent on local files.",
   [SHOWCASE_TOPIC_SCREEN.MAC_STATUS]:
     "Mac offline — the job waits until it comes back.",
 };

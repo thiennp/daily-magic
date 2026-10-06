@@ -9,7 +9,7 @@ export default function MarketingIntegrationsRow() {
         align="center"
         eyebrow="What you get"
         title="Built for everyday company work"
-        description="Use the assistants you already have on your Mac, with a shared website your company can manage together."
+        description="Use the assistants you already have on your computer, with a shared website your company can manage together."
         headingId="integrations-heading"
       />
       <div className="mt-8 flex flex-wrap justify-center gap-3">

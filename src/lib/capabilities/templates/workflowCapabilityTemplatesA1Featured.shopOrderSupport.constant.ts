@@ -18,18 +18,18 @@ export const SHOP_ORDER_SUPPORT_WORKFLOW: WorkflowCapabilityTemplate =
       ],
       [
         "ordersFolderPath",
-        "Orders folder on your Mac (exports, CSV, notes)",
+        "Orders folder on your computer (exports, CSV, notes)",
         "text",
       ],
       [
         "policiesFolderPath",
-        "Policies folder on your Mac (shipping, refunds)",
+        "Policies folder on your computer (shipping, refunds)",
         "text",
       ],
       ["replyTone", "Reply tone (optional)", "text", false],
       [
         "supportLogPath",
-        "Support log file on your Mac (optional)",
+        "Support log file on your computer (optional)",
         "text",
         false,
       ],

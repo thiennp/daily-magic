@@ -7,7 +7,7 @@ export const TEACHER_LESSON_PLAN_OPERATOR_STEPS: readonly OperatorStepDefinition
       title: "Confirm standards and class constraints",
       content: [
         "1. Verify subject, gradeLevel, and topicStandard against your syllabus.",
-        "2. Open materialsPath on your Mac if you have prior units or rubrics.",
+        "2. Open materialsPath on your computer if you have prior units or rubrics.",
         "3. Reply ready when classDuration and classroom constraints are final.",
       ].join("\n"),
     },

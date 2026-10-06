@@ -44,7 +44,7 @@ export const fetchAgentWitchProjectsForLocalApp = async (
       ok: false,
       projects: [],
       message:
-        "Could not reach Agent Witch Cloud. Check the Mac connection and try again.",
+        "Could not reach Agent Witch Cloud. Check the computer connection and try again.",
     };
   }
 

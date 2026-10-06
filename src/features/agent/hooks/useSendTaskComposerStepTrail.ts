@@ -63,7 +63,7 @@ export const useSendTaskComposerStepTrail = (input: {
             input.wizard.hasCompletedMacSelectionStep,
       macDeviceName:
         input.composer.macDisplayNameById.get(input.macDispatchDeviceId) ??
-        "Your Mac",
+        "Your computer",
       showWorkflowTrail:
         currentStep === "session" ? true : input.wizard.hasCompletedPickerStep,
       workflowSelectionLabel: resolveSendTaskComposerWorkflowSelectionLabel(

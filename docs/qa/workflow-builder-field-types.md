@@ -14,7 +14,7 @@
 
 ## Short answer
 
-Create workflow questions use **Input type**: text, paragraph, number, phone, email, link, date, yes/no, and choice list. A hidden `project` type still exists for marketplace folder binding. There is no file upload yet. Human step and specialist sit under **How this workflow runs**; extra Mac rules stay optional. User-created workflows still dispatch as one Mac prompt; the official human↔agent graph remains marketplace-only.
+Create workflow questions use **Input type**: text, paragraph, number, phone, email, link, date, yes/no, and choice list. A hidden `project` type still exists for marketplace folder binding. There is no file upload yet. Human step and specialist sit under **How this workflow runs**; extra computer rules stay optional. User-created workflows still dispatch as one Mac prompt; the official human↔agent graph remains marketplace-only.
 
 ## Details
 
@@ -39,7 +39,7 @@ Values stay strings (`Record<string, string>`). Empty required fields fail; type
 
 Create **agent** still has no question list. Create **workflow** splits harness items: **How this workflow runs** (human step + specialist) vs **Extra rules for your Mac** (rule, skill, command, instruction).
 
-**Try before publish:** On the create form, answer sample questions and choose **Try on Mac** — no publish required. The draft lives in browser session storage until you publish or close the tab.
+**Try before publish:** On the create form, answer sample questions and choose **Try on computer** — no publish required. The draft lives in browser session storage until you publish or close the tab.
 
 ### Official vs user-created runs
 
@@ -52,7 +52,7 @@ Create **agent** still has no question list. Create **workflow** splits harness 
 
 ### Upload
 
-There is no workflow upload field. A browser file picker cannot supply a Mac POSIX path (see [awc-project-folder-path-picker.md](awc-project-folder-path-picker.md)).
+There is no workflow upload field. A browser file picker cannot supply a computer POSIX path (see [awc-project-folder-path-picker.md](awc-project-folder-path-picker.md)).
 
 ## Related
 

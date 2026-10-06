@@ -1,58 +1,59 @@
 export const MAC_WORKER_BENEFIT_COPY = {
-  addMac: "Add a Mac",
-  addAnotherMac: "Add another Mac",
-  onboardingChecklistLabel: "Add your Mac as a worker",
+  addMac: "Add a computer",
+  addAnotherMac: "Add another computer",
+  onboardingChecklistLabel: "Add your computer as a worker",
   setupEyebrow: "Where jobs run",
-  setupTitle: "Set up your Mac to run workflows",
-  setupTitleAppReady: "Linking this Mac to your account",
+  setupTitle: "Set up your computer to run workflows",
+  setupTitleAppReady: "Linking this computer to your account",
   setupDescription:
-    "One install command links this Mac to the account you are signed in with. Other accounts on the same Mac stay separate — Connect does not replace them.",
+    "One install command links this computer to the account you are signed in with. Other accounts on the same computer stay separate — Connect does not replace them.",
   setupDescriptionAppReady:
-    "Agent Witch is already installed on this Mac. Connect this Mac adds or refreshes your account’s profile without replacing another account on the same computer.",
+    "Agent Witch is already installed on this computer. Connect this computer adds or refreshes your account’s profile without replacing another account on the same computer.",
   setupModalIntro:
-    "On the Mac that will run your workflows, open Terminal, paste this command, and press Return.",
+    "On the computer that will run your workflows, open Terminal, paste this command, and press Return.",
   connectThisMacModalIntro:
-    "On this Mac, open Terminal, paste this command, and press Return.",
+    "On this computer, open Terminal, paste this command, and press Return.",
   connectThisMacMobileModalIntro:
     "Agent Witch installs on macOS. Use your MacBook to finish connecting this computer.",
   connectThisMacMobileSteps: [
     "Open your MacBook.",
     "Sign in to Agent Witch in the browser on that Mac.",
-    "On Home, choose Connect this Mac and follow the Terminal steps there.",
+    "On Home, choose Connect this computer and follow the Terminal steps there.",
   ],
   setupAnotherModalIntro:
-    "On the additional Mac, open Terminal, paste this command, and press Return.",
-  waitingForMac: "Waiting for your Mac to connect…",
-  linkingMac: "Getting your Mac ready…",
-  macConnected: "Your Mac is connected.",
-  checkingMacReady: "Checking whether your Mac is ready…",
-  setupFailed: "Mac setup did not finish",
-  setupMacOnHomeBeforeInstall: "Set up a Mac on Home before installing.",
+    "On the additional computer, open Terminal, paste this command, and press Return.",
+  waitingForMac: "Waiting for your computer to connect…",
+  linkingMac: "Getting your computer ready…",
+  macConnected: "Your computer is connected.",
+  checkingMacReady: "Checking whether your computer is ready…",
+  setupFailed: "Computer setup did not finish",
+  setupMacOnHomeBeforeInstall: "Set up a computer on Home before installing.",
   setupMacOnHomeBeforeBundles:
-    "Set up your Mac on Home before installing bundles.",
-  setupMacOnHomeBeforePublish: "Set up your Mac on Home before publishing.",
+    "Set up your computer on Home before installing bundles.",
+  setupMacOnHomeBeforePublish:
+    "Set up your computer on Home before publishing.",
   setupMacToSeeLocalRules:
-    "Nothing synced yet. Set up your Mac on Home, then refresh here.",
+    "Nothing synced yet. Set up your computer on Home, then refresh here.",
   runAgentWitchToInstallBundle:
-    "Open Agent Witch on your Mac to install this rules bundle.",
+    "Open Agent Witch on your computer to install this rules bundle.",
   teammateNeedsMacOnline:
-    "Owner must be online with a Mac ready to run jobs to export files.",
+    "Owner must be online with a computer ready to run jobs to export files.",
   freeStartersDescription:
-    "Free agents and workflows ready to run on your Mac.",
+    "Free agents and workflows ready to run on your computer.",
   marketplacePageDescription:
-    "Pick a free starter or a teammate listing, then run it on your Mac.",
+    "Pick a free starter or a teammate listing, then run it on your computer.",
   libraryPageDescription:
     "Your saved workflows in Library. Open a project and use New task to run them — connect your computer on Home first if you still need this computer online.",
   marketplacePromo:
-    "Install free starters or teammate listings so they run on your Mac.",
-  runsOnMacMeta: "runs on your Mac",
+    "Install free starters or teammate listings so they run on your computer.",
+  runsOnMacMeta: "runs on your computer",
   officialPresetHelper:
-    "Adds this starter to your library and installs rules when your Mac is ready.",
+    "Adds this starter to your library and installs rules when your computer is ready.",
   savedInstallRequested:
-    "Saved to your library. Install requested on your Mac.",
+    "Saved to your library. Install requested on your computer.",
   savedSetupMacForRules:
-    "Saved to your library. Open Agent Witch on your Mac to install the rules bundle.",
+    "Saved to your library. Open Agent Witch on your computer to install the rules bundle.",
   sharedSetupsNeedMac:
-    "No shared setups available yet. Teammates must set sharing to group or public and have a Mac online ready to run jobs.",
-  macReadyBadge: "Mac ready",
+    "No shared setups available yet. Teammates must set sharing to group or public and have a computer online ready to run jobs.",
+  macReadyBadge: "Computer ready",
 } as const;

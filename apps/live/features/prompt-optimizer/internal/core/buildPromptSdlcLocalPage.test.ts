@@ -13,7 +13,7 @@ import { PROMPT_SDLC_LOCAL_GUIDE_EXAMPLE } from "./promptSdlcLocalGuide.constant
 import { promptSdlcLocalHistoryTitle } from "./promptSdlcLocalHistoryTitle";
 
 describe("buildPromptSdlcLocalPageBody", () => {
-  it("shows the chosen models and does not ask for a Mac or a model", () => {
+  it("shows the chosen models and does not ask for a computer or a model", () => {
     const html = buildPromptSdlcLocalPageBody({
       goal: "",
       prompt: "",

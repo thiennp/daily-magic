@@ -1,8 +1,8 @@
-# Why does AWC say the Mac is reconnecting when Agent Witch is running locally?
+# Why does AWC say the computer is reconnecting when Agent Witch is running locally?
 
 ## Query aliases
 
-- The selected Mac is reconnecting. Your task will send when it checks in.
+- The selected computer is reconnecting. Your task will send when it checks in.
 - Mac reconnecting after deploy
 - identity probe live but still reconnecting
 - presenceTier recent live_other_instance
@@ -13,7 +13,7 @@
 
 ## Short answer
 
-**Local AWB/AWL being up (or the “this Mac” identity probe succeeding) does not mean Console can dispatch.** Writer send needs the Mac’s **live WebSocket on the same Railway Node** that handles `POST /api/agent-runs/dispatch`. The copy **“The selected Mac is reconnecting. Your task will send when it checks in.”** is `mac_queued` / outbox: cloud did not have that socket on this request, so queueable work waits for the next hub check-in. A deploy of AWC commonly drops the old socket for a few seconds even though AWI on the Mac is healthy.
+**Local AWB/AWL being up (or the “this Mac” identity probe succeeding) does not mean Console can dispatch.** Writer send needs the Mac’s **live WebSocket on the same Railway Node** that handles `POST /api/agent-runs/dispatch`. The copy **“The selected computer is reconnecting. Your task will send when it checks in.”** is `mac_queued` / outbox: cloud did not have that socket on this request, so queueable work waits for the next hub check-in. A deploy of AWC commonly drops the old socket for a few seconds even though AWI on the computer is healthy.
 
 ## Details
 
@@ -21,7 +21,7 @@
 
 | Signal                                                 | What it proves                                                  | What it does **not** prove                             |
 | ------------------------------------------------------ | --------------------------------------------------------------- | ------------------------------------------------------ |
-| AWB `GET /identity` / **this Mac** badge               | Browser on this Mac matched the pairing-token hash              | Cloud hub has a writer socket                          |
+| AWB `GET /identity` / **this Mac** badge               | Browser on this computer matched the pairing-token hash         | Cloud hub has a writer socket                          |
 | AWL Status `system.ack` / heartbeats                   | AWI is talking to `wss://www.agentwitch.com/api/agent-witch/ws` | The **HTTP** replica serving New task owns that socket |
 | `presenceTier: live` on `GET /api/agent-witch/devices` | Socket is on **this** Node                                      | —                                                      |
 | `live_other_instance` / `recent`                       | Registry or last_seen without a local hub socket                | Ready to send a writer task from this request          |

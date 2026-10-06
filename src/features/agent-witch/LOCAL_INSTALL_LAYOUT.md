@@ -1,6 +1,6 @@
 # Agent Witch local install layout
 
-Complete on-disk layout for the Mac Agent Witch install folder after bundle **v74** (profile-scoped storage, bundled client, no local `npm install`).
+Complete on-disk layout for the computer Agent Witch install folder after bundle **v74** (profile-scoped storage, bundled client, no local `npm install`).
 
 Paths below use production defaults (`~/.agent-witch`). Local development against `localhost` uses the same tree under `~/.local-agent-witch` with different LaunchAgent labels and wake port — see [Local vs production](#local-vs-production).
 
@@ -131,14 +131,14 @@ New installs should use a profile email so accounts stay isolated.
 
 ## Install root files (detail)
 
-| Path                            | Purpose                                                                                        |
-| ------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `active-profile.json`           | `{ "email": "user@example.com" }` — default profile when env is unset                          |
-| `install-version.json`          | `{ "bundleVersion", "appOrigin", "updatedAt" }` — compared to hub on heartbeat for auto-update |
+| Path                            | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `active-profile.json`           | `{ "email": "user@example.com" }` — default profile when env is unset                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `install-version.json`          | `{ "bundleVersion", "appOrigin", "updatedAt" }` — compared to hub on heartbeat for auto-update                                                                                                                                                                                                                                                                                                                                                                                            |
 | `wake-port.json`                | `{ "wakePort": 47892 }` — **source of truth** for the wake HTTP port. Resolution order: this file → `AGENT_WITCH_WAKE_PORT` (LaunchAgent / systemd) → 47892 / 47893. The installer writes the same value into both the file and every plist / unit; if the wake server has to move ports, it rewrites the file and the LaunchAgent plists together; on start the client also rewrites a drifted plist `AGENT_WITCH_WAKE_PORT` to the file value (that key only, via `plutil`, no reload). |
-| `link-code.txt`                 | Short code shown in local app linking UI                                                       |
-| `watchdog-reinstall-state.json` | `{ "lastAttemptAt" }` — rate-limits watchdog reinstall                                         |
-| `rag/chunks.ndjson`             | Global RAG embeddings when runs are not tied to a project folder                               |
+| `link-code.txt`                 | Short code shown in local app linking UI                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `watchdog-reinstall-state.json` | `{ "lastAttemptAt" }` — rate-limits watchdog reinstall                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `rag/chunks.ndjson`             | Global RAG embeddings when runs are not tied to a project folder                                                                                                                                                                                                                                                                                                                                                                                                                          |
 
 ---
 
@@ -257,9 +257,9 @@ Legacy per-email LaunchAgent labels (`com.agent-witch.<email>`) are retired; ins
 
 ## Runtime file outside install dir
 
-| Path                                         | Purpose                                                                                |
-| -------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `/tmp/com.agent-witch.<hostname>.lease.json` | Machine lease — prevents duplicate clients on same Mac (`claimAgentWitchMachineLease`) |
+| Path                                         | Purpose                                                                                     |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `/tmp/com.agent-witch.<hostname>.lease.json` | Machine lease — prevents duplicate clients on same computer (`claimAgentWitchMachineLease`) |
 
 ---
 

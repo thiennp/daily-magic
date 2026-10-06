@@ -1,11 +1,11 @@
 export const SHOP_ORDER_SUPPORT_EXAMPLE_REQUEST = `Handle customer support for shopName using inboxFocus.
 
-Read ordersFolderPath and policiesFolderPath on this Mac before drafting anything.
+Read ordersFolderPath and policiesFolderPath on this computer before drafting anything.
 Honor replyTone when set; otherwise use warm, concise, policy-safe language.
 Append resolutions to supportLogPath when set after the operator sends.
 
 ## Ground truth and drafts (this step only)
-Load shipping, refund, and replacement rules from policiesFolderPath on this Mac.
+Load shipping, refund, and replacement rules from policiesFolderPath on this computer.
 Scope work to threads described in inboxFocus (WISMO, refunds, general support).
 Match each thread to orders under ordersFolderPath (email, order ID, fulfillment, carrier, tracking, last scan).
 For every thread that needs a reply, draft one customer-facing message in [[PROGRESS]]:

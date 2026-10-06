@@ -6,12 +6,12 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
   slug: "automate-for-yourself-or-your-team",
   title: "Automate for yourself—or your whole team",
   subtitle:
-    "Pick a preset, save it, schedule it on your Mac, and share the same workflow with colleagues.",
+    "Pick a preset, save it, schedule it on your computer, and share the same workflow with colleagues.",
   category: "Automations",
   supportLevel: "full",
   readMinutes: 5,
   whatYouNeed: [
-    "A free account and a Mac with Agent Witch installed",
+    "A free account and a computer with Agent Witch installed",
     "One workflow saved to Library (start from a marketplace preset)",
     "A few minutes to create your first automation in /automations",
   ],
@@ -22,7 +22,7 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
   relatedShowcases: [
     {
       slug: "schedule-workflow-on-your-mac",
-      label: "How the Mac scheduler runs jobs on time",
+      label: "How the computer scheduler runs jobs on time",
     },
     {
       slug: "company-workflows-setup-once",
@@ -36,7 +36,7 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Automations are the payoff after you pick a workflow: your Mac runs the job on a schedule or when a webhook fires—for you alone or as a shared playbook the team reuses.",
+        "Automations are the payoff after you pick a workflow: your computer runs the job on a schedule or when a webhook fires—for you alone or as a shared playbook the team reuses.",
       ],
     },
     {
@@ -61,7 +61,7 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
         "Open Automations → New automation",
         "Choose the saved workflow and fill its fields once",
         "Pick Schedule (hourly, daily, weekdays) or Webhook for external triggers",
-        "Agent Witch syncs the job to your Mac; the local scheduler runs it",
+        "Agent Witch syncs the job to your computer; the local scheduler runs it",
       ],
       image: buildShowcaseAutomationArticleImage(
         AUTOMATION_SHOWCASE_SCREEN.NEW_AUTOMATION,
@@ -73,7 +73,7 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
       ),
     },
     {
-      heading: "3. Your Mac runs it; the team can reuse it",
+      heading: "3. Your computer runs it; the team can reuse it",
       bullets: [
         "Enabled automations show next run time and last status",
         "Results land in Reports like any manual send",
@@ -89,11 +89,11 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
       ),
     },
     {
-      heading: "Built around your Mac",
+      heading: "Built around your computer",
       bullets: [
-        "Schedules run on your Mac so jobs use your local files and tools",
-        "Webhook triggers reach the server; your Mac runs the work when it is ready",
-        "After an Agent Witch update, open Automations once so the Mac stays in sync",
+        "Schedules run on your computer so jobs use your local files and tools",
+        "Webhook triggers reach the server; your computer runs the work when it is ready",
+        "After an Agent Witch update, open Automations once so the computer stays in sync",
       ],
     },
   ],

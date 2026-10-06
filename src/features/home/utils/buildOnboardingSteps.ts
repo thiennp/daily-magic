@@ -21,7 +21,7 @@ export const buildOnboardingSteps = (
 ): readonly OnboardingStep[] => [
   {
     id: "pair",
-    label: "Connect your Mac",
+    label: "Connect your computer",
     done: input.hasPairedDevice,
     href: "/#your-setup",
   },

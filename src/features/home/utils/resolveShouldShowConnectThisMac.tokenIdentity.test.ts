@@ -59,7 +59,7 @@ describe("resolveShouldShowConnectThisMac token identity (HOME-029)", () => {
     ).toBe(true);
   });
 
-  it("does not treat same hostname with different token as this Mac", () => {
+  it("does not treat same hostname with different token as this computer", () => {
     expect(
       resolveShouldShowConnectThisMac({
         operatingSystem: "mac",

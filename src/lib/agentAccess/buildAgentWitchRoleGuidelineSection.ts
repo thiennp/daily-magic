@@ -9,7 +9,7 @@ export const buildAgentWitchRoleGuidelineSection = (): {
   body: [
     `${AGENT_WITCH_PRODUCT_NAME} is an agent-support playground: harness setup, memory and playbooks, Project Access ACL, and Prompt Optimizer tooling for scored, reusable prompts.`,
     `It is not a concrete ops executor. Do not treat it as Slack, Outlook, ticket queues, or day-to-day business workflow automation. Specialist bots keep those jobs.`,
-    "Use it to install and shape how agents work on a Mac (harness, playbooks, reuse). Keep chat, mail, and ticket execution in those products.",
+    "Use it to install and shape how agents work on a computer (harness, playbooks, reuse). Keep chat, mail, and ticket execution in those products.",
     "Agent Witch Cloud stays an ACL + registry (project name, folder refs, members, approve/revoke audit) — not a content bus for handoffs, run dumps, or skill bodies.",
   ],
 });

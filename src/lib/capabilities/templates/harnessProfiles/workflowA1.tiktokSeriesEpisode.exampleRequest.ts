@@ -3,7 +3,7 @@ export const TIKTOK_SERIES_EPISODE_EXAMPLE_REQUEST = `Prepare one TikTok episode
 Read seriesName, seriesTopics, episodeAngle, targetLength, toneStyle (when set), episodeNumber (when set), and seriesHistoryPath from the workflow form.
 
 ## 1. Series context and script draft (this step only)
-Load seriesHistoryPath on the Mac when provided. List hooks, premises, and CTAs to avoid from the last five history entries.
+Load seriesHistoryPath on the computer when provided. List hooks, premises, and CTAs to avoid from the last five history entries.
 State in one sentence how this episode advances the series arc. Summarize dedupe notes in [[PROGRESS]].
 
 Open with a 1–2 second pattern interrupt tied to episodeAngle.

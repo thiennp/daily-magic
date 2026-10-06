@@ -43,7 +43,7 @@ const openCustomClaudeComposer = async (page: Page): Promise<void> => {
   }
 
   const writerHeading = page.getByRole("heading", {
-    name: /Choose an AI on your Mac/i,
+    name: /Choose an AI on your computer/i,
   });
   if (await writerHeading.isVisible().catch(() => false)) {
     await page.getByRole("button", { name: /Claude \(terminal\)/i }).click();
@@ -63,7 +63,7 @@ test.describe("Progress detail on own Mac", () => {
       name: /Follow-up message for your agent/i,
     });
     await expect(followUp).toBeVisible({ timeout: 90_000 });
-    await expect(page.getByText("Progress on your Mac")).toBeVisible({
+    await expect(page.getByText("Progress on your computer")).toBeVisible({
       timeout: 90_000,
     });
 
@@ -113,7 +113,7 @@ test.describe("Progress detail on own Mac", () => {
     const progressFeed = page
       .locator("div")
       .filter({
-        has: page.getByRole("heading", { name: "Progress on your Mac" }),
+        has: page.getByRole("heading", { name: "Progress on your computer" }),
       })
       .first();
 

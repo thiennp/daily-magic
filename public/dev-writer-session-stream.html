@@ -108,7 +108,7 @@
       <div>
         <h1>Talk to Agent Witch (localhost)</h1>
         <p class="hint">
-          Dev chat page — delegates tasks to your Mac over WebSocket. Run
+          Dev chat page — delegates tasks to your computer over WebSocket. Run
           <code>AGENT_WITCH_DEV_DASHBOARD=1 npm run dev</code> and
           <code
             >AGENT_WITCH_WS_URL=ws://localhost:3000/api/agent-witch/ws npm run
@@ -121,7 +121,7 @@
       <div class="composer">
         <textarea
           id="prompt"
-          placeholder="Type a task for Claude on your Mac…"
+          placeholder="Type a task for Claude on your computer…"
         >What is 17 + 25? Reply with only the number.</textarea>
         <div class="composer-actions">
           <button id="send" type="button" disabled>Send task</button>
@@ -158,7 +158,7 @@
       const setWriterReady = (ready) => {
         writerReady = ready;
         sessionPillEl.textContent = ready
-          ? "Claude: ready on your Mac"
+          ? "Claude: ready on your computer"
           : "Claude: not ready";
         sessionPillEl.className = ready
           ? "session-pill ready"

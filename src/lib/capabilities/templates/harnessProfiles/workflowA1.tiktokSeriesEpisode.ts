@@ -7,7 +7,7 @@ export const TIKTOK_SERIES_EPISODE_PRESET: PresetHarnessSeed = {
   name: "TikTok series episode",
   category: "Social",
   description:
-    "Script one episode in a topic series on your Mac — dedupe against history, approve the script, then get shots, caption, and a history update after you post.",
+    "Script one episode in a topic series on your computer — dedupe against history, approve the script, then get shots, caption, and a history update after you post.",
   exampleRequest: TIKTOK_SERIES_EPISODE_EXAMPLE_REQUEST,
   operatorSteps: TIKTOK_SERIES_EPISODE_OPERATOR_STEPS,
   profile: {

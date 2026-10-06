@@ -40,7 +40,7 @@ export default function SendTaskComposerProjectPickerStep({
             Choose a project folder
           </h2>
           <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-            Saved under {projectsHomePath} on your Mac.
+            Saved under {projectsHomePath} on your computer.
           </p>
         </>
       ) : null}

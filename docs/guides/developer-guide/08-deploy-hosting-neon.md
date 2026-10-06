@@ -6,7 +6,7 @@ Production **Agent Witch** is **`https://www.agentwitch.com`** (repo folder **da
 
 ## Why Railway + custom server (not serverless-only)
 
-Writer dispatch and the Mac bridge need a **long-lived Node process** with `getAgentWitchHub()` on `globalThis` (ADR **0005**). The same process that accepts `POST /api/agent-runs/dispatch` must hold the live hub WebSocket for that Mac (or use hub dispatch relay).
+Writer dispatch and the computer bridge need a **long-lived Node process** with `getAgentWitchHub()` on `globalThis` (ADR **0005**). The same process that accepts `POST /api/agent-runs/dispatch` must hold the live hub WebSocket for that Mac (or use hub dispatch relay).
 
 | Requirement              | Implementation                                                                                                                                      |
 | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -18,7 +18,7 @@ Writer dispatch and the Mac bridge need a **long-lived Node process** with `getA
 
 Local dev: `npm run dev` (same upgrade path on `http://localhost:3000`). Use `npm run dev:next` only when you explicitly do not need the WebSocket bridge.
 
-`vercel.json` is a minimal Next.js stub — **Vercel alone does not replace** `server.ts` for Mac bridge testing unless you run an equivalent long-lived Node entry on the **same origin** the Mac uses.
+`vercel.json` is a minimal Next.js stub — **Vercel alone does not replace** `server.ts` for Mac bridge testing unless you run an equivalent long-lived Node entry on the **same origin** the computer uses.
 
 ---
 
@@ -48,7 +48,7 @@ Production image must include `apps/` and `packages/` so `tsx` resolves `@agent-
 
 ## Multi-instance production
 
-Railway (or any horizontal scale) may run **multiple replicas**. Writer dispatch must land on the replica that owns the Mac socket, or use **hub dispatch relay** and optional sticky cookie **`aw_hub_instance`** from `GET /api/agent-witch/devices`.
+Railway (or any horizontal scale) may run **multiple replicas**. Writer dispatch must land on the replica that owns the computer socket, or use **hub dispatch relay** and optional sticky cookie **`aw_hub_instance`** from `GET /api/agent-witch/devices`.
 
 Operational caveats: [Chapter 9](09-known-issues-and-regressions.md) (OPEN-002), ADR **0005**.
 
@@ -62,7 +62,7 @@ Acceptable for UI/DB experiments when you do not expect Mac `wsUrl` to match pre
 
 ---
 
-## Deployables on the Mac (not Railway)
+## Deployables on the computer (not Railway)
 
 | Abbr    | Role                           | Origin            |
 | ------- | ------------------------------ | ----------------- |

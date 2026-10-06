@@ -9,14 +9,14 @@ Feature: Onboarding checklist
   Scenario: Fresh user sees connect-Mac gate before dashboard
     Given I am signed in as a fresh test account "test-onboard-1@agentwitch.com"
     When I open "/"
-    Then I should see the connect-your-Mac setup guide
-    And the onboarding checklist should show "Connect your Mac" as incomplete
+    Then I should see the connect-your-computer setup guide
+    And the onboarding checklist should show "Connect your computer" as incomplete
 
   Scenario: Pairing Mac completes the first checklist step
     Given I am signed in as "test-onboard-2@agentwitch.com"
     And agent-witch is running with profile "test-onboard-2@agentwitch.com"
     When I complete Mac pairing from the home connect guide
-    Then the checklist step "Connect your Mac" should be marked done
+    Then the checklist step "Connect your computer" should be marked done
     And the home dashboard content should become visible
 
   Scenario: Create first workflow from library

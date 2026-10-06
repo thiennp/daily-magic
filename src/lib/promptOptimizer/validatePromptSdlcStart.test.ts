@@ -8,7 +8,7 @@ const cursor = { kind: "writer" as const, writerAgent: "cursor" as const };
 const cloud = { kind: "writer" as const, writerAgent: "cursor-cloud" as const };
 
 describe("validatePromptSdlcStart", () => {
-  it("requires text, a length cap, and a Mac only for a local writer", () => {
+  it("requires text, a length cap, and a computer only for a local writer", () => {
     expect(
       validatePromptSdlcStart({
         goal: "  ",
@@ -37,7 +37,7 @@ describe("validatePromptSdlcStart", () => {
         judge: cursor,
         improver: cursor,
       }),
-    ).toBe("Choose a Mac for the writer.");
+    ).toBe("Choose a computer for the writer.");
 
     expect(
       validatePromptSdlcStart({

@@ -1,7 +1,7 @@
 /**
  * Decide whether wake `/identity` may update the browser's local token hash.
  * Never replace an existing hash with a different account's active-profile hash
- * while that hash is still present on this Mac (HOME-032). Drop or remint when
+ * while that hash is still present on this computer (HOME-032). Drop or remint when
  * the cookie hash is no longer installed here (HOME-061). Prefer the sole
  * reachable cloud row that matches a local install token (HOME-064).
  */

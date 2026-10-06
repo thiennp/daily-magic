@@ -1,6 +1,6 @@
 # Prompt optimizer
 
-Console page for the prompt optimizer (**AWC**). `/prompt-optimizer` tells the person to run it in Agent Witch Live (`http://127.0.0.1:43347/prompt-optimizer`). The console does not run the wizard. You choose the folder and the writers on Live. **Run** starts the four-step wizard so writers can read the harness and the code in that folder. Bots on this Mac call `http://127.0.0.1:43347/prompt-optimizer/agent` (same wizard).
+Console page for the prompt optimizer (**AWC**). `/prompt-optimizer` tells the person to run it in Agent Witch Live (`http://127.0.0.1:43347/prompt-optimizer`). The console does not run the wizard. You choose the folder and the writers on Live. **Run** starts the four-step wizard so writers can read the harness and the code in that folder. Bots on this computer call `http://127.0.0.1:43347/prompt-optimizer/agent` (same wizard).
 
 ## Registry
 

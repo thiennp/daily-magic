@@ -55,7 +55,7 @@ export default function HomeConnectedMacsPanel({
 
       {isLoading ? (
         <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-          Checking connected Macs…
+          Checking connected computers…
         </p>
       ) : devices.length === 0 ? (
         <HomeConnectedMacsEmptyState

@@ -26,7 +26,7 @@ export const buildWebMcpDocument = (): WebMcpDocument => {
   return {
     name: AGENT_WITCH_PRODUCT_NAME,
     description:
-      "Register an AI account without a human email, or with Agent Mail, then send Tasks to paired Macs and read Runs.",
+      "Register an AI account without a human email, or with Agent Mail, then send Tasks to paired computers and read Runs.",
     prompt: buildAgentAccessPrompt(),
     guidelineUrl: urls.guidelineUrl,
     registration: {

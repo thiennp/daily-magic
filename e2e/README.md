@@ -15,12 +15,12 @@ Human-readable end-to-end scenarios for real-user flows in Agent Witch. These sp
 ## Same-Mac multi-account team
 
 You do **not** need multiple computers. Several `test*@agentwitch.com` accounts
-on this Mac form a team:
+on this computer form a team:
 
 1. Admin creates a company and invites executor + requester
 2. Run agent-witch as the **executor**:
    `npm run e2e:agent-witch:setup -- test-team-executor-1@agentwitch.com --start`
-3. Sign in as the executor so Home pairs this Mac
+3. Sign in as the executor so Home pairs this computer
 4. Requester dispatches to the executor (same machine, different user)
 
 Playwright coverage: `e2e/same-mac-team.spec.ts` (serial).

@@ -19,7 +19,7 @@ export default function SendTaskModalChrome({
     return (
       <div className="flex items-center justify-between gap-2 border-b border-gray-100 px-3 py-2 dark:border-gray-700">
         <p className="truncate text-sm font-medium text-gray-900 dark:text-white/90">
-          Task on your Mac
+          Task on your computer
         </p>
         <div className="flex shrink-0 items-center gap-1">
           <button
@@ -52,8 +52,8 @@ export default function SendTaskModalChrome({
           New task
         </h2>
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-          Choose a Mac, confirm the active project, pick a workflow or agent,
-          then describe what should run.
+          Choose a computer, confirm the active project, pick a workflow or
+          agent, then describe what should run.
         </p>
       </div>
       <div className="absolute right-3 top-3 z-20 flex items-center gap-1 sm:right-6 sm:top-6">

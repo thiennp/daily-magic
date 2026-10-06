@@ -22,7 +22,7 @@ export async function extractWorkflowUploadText(input: {
   }
 
   if (WORKFLOW_UPLOAD_IMAGE_MIMES.some((entry) => entry === mime)) {
-    return `[Image attached: ${input.fileName}. Vision models on the Mac cannot read this URL yet; use Design B or describe the image in another question.]`;
+    return `[Image attached: ${input.fileName}. Vision models on the computer cannot read this URL yet; use Design B or describe the image in another question.]`;
   }
 
   return `[File attached: ${input.fileName}]`;

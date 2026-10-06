@@ -7,7 +7,7 @@ import type OfficialWorkflowDefinition from "@/lib/workflowOrchestration/types/O
 const SERIES_FIT_AND_SCRIPT_DRAFT = `Read seriesName, seriesTopics, episodeAngle, targetLength, toneStyle (when set), episodeNumber (when set), and seriesHistoryPath from the workflow form.
 
 ## Series context (this step only)
-Load seriesHistoryPath on the Mac when provided. List hooks, premises, and CTAs to avoid from the last five history entries.
+Load seriesHistoryPath on the computer when provided. List hooks, premises, and CTAs to avoid from the last five history entries.
 State in one sentence how this episode advances the series arc. Summarize dedupe notes in [[PROGRESS]].
 
 ## Script draft (this step only)
@@ -44,7 +44,7 @@ export const OFFICIAL_WORKFLOW_DEFINITION: OfficialWorkflowDefinition = {
       "Confirm the series brief and past episodes",
       [
         "1. Read seriesName and seriesTopics so this episode fits the arc.",
-        "2. Open seriesHistoryPath on your Mac if set and skim recent hooks and angles.",
+        "2. Open seriesHistoryPath on your computer if set and skim recent hooks and angles.",
         "3. Reply ready when episodeAngle and targetLength are final enough to script.",
       ].join("\n"),
     ),

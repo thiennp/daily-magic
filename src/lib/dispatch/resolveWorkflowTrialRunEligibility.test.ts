@@ -19,7 +19,7 @@ describe("resolveWorkflowTrialRunEligibility", () => {
     });
   });
 
-  it("blocks signed-in users without a Mac or Cursor Cloud API key", () => {
+  it("blocks signed-in users without a computer or Cursor Cloud API key", () => {
     expect(
       resolveWorkflowTrialRunEligibility({
         isSignedIn: true,

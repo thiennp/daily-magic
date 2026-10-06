@@ -85,8 +85,8 @@ const installOfficialPresetListing = async (
     libraryCapabilityId: result.capability.id,
     harnessInstalled: pushed.installed,
     harnessInstallMessage: pushed.installed
-      ? "Linked to your project. On the Mac, open the project and pull playbook files into the repo."
-      : "Linked to your project. Open the project on the Mac and pull playbook files into the repo.",
+      ? "Linked to your project. On the computer, open the project and pull playbook files into the repo."
+      : "Linked to your project. Open the project on the computer and pull playbook files into the repo.",
     localHarnessBundle,
     projectId,
   };

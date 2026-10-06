@@ -5,7 +5,7 @@ export const validateMarketplaceInstallDeviceOwnership = async (
   deviceId: string,
 ): Promise<string | null> => {
   if (!(await isAgentWitchDeviceOwnedByUser(deviceId, actorUserId))) {
-    return "The selected Mac is not connected to your account.";
+    return "The selected computer is not connected to your account.";
   }
 
   return null;

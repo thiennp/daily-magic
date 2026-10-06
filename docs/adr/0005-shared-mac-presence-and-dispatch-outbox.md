@@ -8,12 +8,12 @@ Accepted
 
 "Mac online, dispatch-ready" is process-local state: the live WebSocket lives in an in-memory `Map` inside one Node process (`AgentWitchHubBase.clients`, held on `globalThis` by `getAgentWitchHub`). Dispatch fails closed when no live socket is found — HTTP command pull was retired in AGENT-022 because a fresh `last_seen_at` lied about readiness.
 
-The consequence is structural, not a bug in one function: any request handled by a process that does not hold the Mac's socket sees an empty hub and returns `The selected Mac is not online right now.` Two distinct failure classes produced that one message:
+The consequence is structural, not a bug in one function: any request handled by a process that does not hold the computer's socket sees an empty hub and returns `The selected computer is not online right now.` Two distinct failure classes produced that one message:
 
-| Class | Cause                                         | Examples                                                                                          |
-| ----- | --------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| A     | Request lands on a process without the socket | Multiple replicas, deploy or restart, browser origin whose backend differs from the Mac's `wsUrl` |
-| B     | Mac genuinely not connected at that instant   | Client reconnect window, install-bundle self-update restart, laptop asleep                        |
+| Class | Cause                                         | Examples                                                                                               |
+| ----- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| A     | Request lands on a process without the socket | Multiple replicas, deploy or restart, browser origin whose backend differs from the computer's `wsUrl` |
+| B     | Mac genuinely not connected at that instant   | Client reconnect window, install-bundle self-update restart, laptop asleep                             |
 
 Class A is a lie the system tells about its own state unless presence is classified. Class B is real, but surfacing it as a hard error is wrong for work that could simply wait.
 
@@ -50,7 +50,7 @@ Lifecycle hooks reuse existing call sites:
 
 Presence resolution checks the local hub first (unchanged fast path), then the registry for **other** instances. Cross-instance delivery for queueable work goes through the outbox rather than direct instance-to-instance RPC.
 
-**Writer / shell interactive dispatch** uses a short-lived **`agent_witch_hub_dispatch_relay`** table when the registry shows the Mac live on another `instance_id`: the HTTP handler that lacks the socket enqueues a relay row for the owner instance, polls for completion (≤ ~15s), and returns the owner’s result. The owner replica drains relay rows on a 1s poll (and on outbox drain). Writer runs are still created only after hub client resolution on the executing Node — never queued as `running` (AGENT-022).
+**Writer / shell interactive dispatch** uses a short-lived **`agent_witch_hub_dispatch_relay`** table when the registry shows the computer live on another `instance_id`: the HTTP handler that lacks the socket enqueues a relay row for the owner instance, polls for completion (≤ ~15s), and returns the owner’s result. The owner replica drains relay rows on a 1s poll (and on outbox drain). Writer runs are still created only after hub client resolution on the executing Node — never queued as `running` (AGENT-022).
 
 `GET /api/agent-witch/devices` sets an **`aw_hub_instance`** HttpOnly cookie (local hub id or registry owner) so operators can optionally configure load-balancer sticky routing to the socket-owning replica.
 
@@ -104,7 +104,7 @@ Devices API and writer dispatch must use the **same** hub matching rules:
 - `retargetWriterRunToSoleLiveMac` — when the requested `targetDeviceId` is stale but exactly one live agent exists on this hub, retarget to the canonical device id (token-resolved id preferred over stale hub `deviceId`).
 - `resolveDispatchTargetAgentClient` — the single entry point every dispatch caller uses. It applies, in order: exact live match, forward supersession resolution, sole-live-Mac retarget, and returns the live client plus the **resolved** device id. `resolveLiveWriterAgentForRun` delegates to it.
 
-Do not resolve live Macs via `findAgentClientForUser` + raw `client.deviceId` alone; that diverged from the devices API and caused “online in UI, offline on dispatch”.
+Do not resolve live computers via `findAgentClientForUser` + raw `client.deviceId` alone; that diverged from the devices API and caused “online in UI, offline on dispatch”.
 
 ### Device supersession
 
@@ -118,7 +118,7 @@ Structured `errorCode` on dispatch failures:
 
 - `mac_reconnecting` — registry or recent heartbeat suggests handoff / reconnect (client may retry writer dispatch).
 - `mac_offline` — the targeted row is active, has no live socket, and was not recently seen.
-- `mac_replaced` — the targeted row was revoked by a re-pair and no successor is live; the user must reselect the Mac.
+- `mac_replaced` — the targeted row was revoked by a re-pair and no successor is live; the user must reselect the computer.
 - `mac_queued` — outbox accepted queueable work.
 
 `buildTargetMacOfflineDispatchError` and `deliverOrQueueAgentWitchDispatchMessage` implement the split. New code branches on `errorCode`, not string equality on `errorMessage`.

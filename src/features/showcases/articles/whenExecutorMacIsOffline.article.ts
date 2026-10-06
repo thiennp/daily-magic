@@ -2,7 +2,7 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 
 const whenExecutorMacIsOffline: ShowcaseArticle = {
   slug: "when-executor-mac-is-offline",
-  title: "What happens when the Mac is asleep",
+  title: "What happens when the computer is asleep",
   subtitle:
     "Work runs on a real Mac you trust—here is how to keep jobs moving while it rests.",
   category: "Common questions",
@@ -35,13 +35,13 @@ const whenExecutorMacIsOffline: ShowcaseArticle = {
       bullets: [
         "Copy prompt from library — run later on any machine with Claude",
         "Pick another teammate as executor via team dispatch",
-        "Run again from history once the Mac is back online",
+        "Run again from history once the computer is back online",
       ],
     },
     {
       heading: "Always-on setups",
       paragraphs: [
-        "For recurring jobs, keep a Mac awake or schedule automations on a dedicated machine. Open Reports when you want the finished output.",
+        "For recurring jobs, keep a computer awake or schedule automations on a dedicated machine. Open Reports when you want the finished output.",
       ],
     },
     {

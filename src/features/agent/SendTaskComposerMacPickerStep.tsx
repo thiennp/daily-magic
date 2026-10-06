@@ -29,7 +29,7 @@ export default function SendTaskComposerMacPickerStep({
   if (isLoading) {
     return (
       <p className="text-sm text-gray-500 dark:text-gray-400">
-        Checking which Macs are online…
+        Checking which computers are online…
       </p>
     );
   }
@@ -53,7 +53,7 @@ export default function SendTaskComposerMacPickerStep({
         ) : (
           <>
             <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-              No Macs connected yet.
+              No computers connected yet.
             </p>
             <div className="mt-3">
               <SendTaskComposerConnectMacButton hasExistingDevices={false} />
@@ -83,7 +83,7 @@ export default function SendTaskComposerMacPickerStep({
           <li key={device.id}>
             <SendTaskComposerMacPickerRow
               deviceId={device.id}
-              displayName={displayNameById.get(device.id) ?? "Your Mac"}
+              displayName={displayNameById.get(device.id) ?? "Your computer"}
               isOnline={device.isOnline}
               isConnected={device.isConnected}
               canRequestRestart={canWakeMacDeviceFromBrowser({

@@ -27,13 +27,13 @@ export interface ResolveProjectEditOnMacCtaInput {
 const resolveProjectEditOnMacCta = (
   input: ResolveProjectEditOnMacCtaInput,
 ): ProjectEditOnMacCta => {
-  const deviceName = input.deviceDisplayName.trim() || "Mac";
+  const deviceName = input.deviceDisplayName.trim() || "computer";
 
   if (input.device === null) {
     return {
       state: "unknown_device",
-      buttonLabel: "Edit on this Mac",
-      helperText: "Connect a Mac to edit this project.",
+      buttonLabel: "Edit on this computer",
+      helperText: "Connect a computer to edit this project.",
       href: null,
     };
   }
@@ -43,7 +43,7 @@ const resolveProjectEditOnMacCta = (
   if (tier === "live_other_instance") {
     return {
       state: "reconnecting",
-      buttonLabel: "Edit on this Mac",
+      buttonLabel: "Edit on this computer",
       helperText: "Reconnecting…",
       href: null,
     };
@@ -54,7 +54,7 @@ const resolveProjectEditOnMacCta = (
     const lastSeenSuffix = lastSeen !== null ? ` · last seen ${lastSeen}` : "";
     return {
       state: "offline",
-      buttonLabel: "Edit on this Mac",
+      buttonLabel: "Edit on this computer",
       helperText: `${deviceName} is offline right now${lastSeenSuffix}.`,
       href: null,
     };
@@ -63,7 +63,7 @@ const resolveProjectEditOnMacCta = (
   if (input.isThisMac) {
     return {
       state: "enabled",
-      buttonLabel: "Edit on this Mac →",
+      buttonLabel: "Edit on this computer →",
       helperText: null,
       href: buildAgentWitchLocalProjectEditorHref(input.projectId),
     };
@@ -71,7 +71,7 @@ const resolveProjectEditOnMacCta = (
 
   return {
     state: "wrong_mac",
-    buttonLabel: "Edit on this Mac",
+    buttonLabel: "Edit on this computer",
     helperText: `Open this page on ${deviceName} to edit.`,
     href: null,
   };
@@ -80,7 +80,7 @@ const resolveProjectEditOnMacCta = (
 /**
  * "offline" and "reconnecting" helper text just restates the presence line
  * shown next to it — only show the helper text for states that add a reason
- * the presence line doesn't already say (wrong Mac, no Mac linked).
+ * the presence line doesn't already say (wrong Mac, no computer linked).
  */
 export const shouldShowProjectEditOnMacHelperText = (
   state: ProjectEditOnMacCtaState,

@@ -10,7 +10,7 @@ export type MessengerTaskAssigneeOption = {
 
 /**
  * Activity task-mode assignees. Today: messenger bot threads only.
- * Owner-computer / This Mac seats land when Mac/Connect exposes a project
+ * Owner-computer / This computer seats land when Mac/Connect exposes a project
  * membership (synthetic agent userId — not the owner human userId, because
  * resolveDispatchRecipients rejects actor===recipient). Until then computer[]
  * stays empty; Human UI can still render kind=computer when Mac fills it.

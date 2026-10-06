@@ -17,8 +17,9 @@ export const resolveHomeMacStatusSummary = (
   if (devices.length === 0) {
     return {
       tone: "none",
-      label: "No Mac connected",
-      detail: "Install Agent Witch on your Mac to run tasks from the browser.",
+      label: "No computer connected",
+      detail:
+        "Install Agent Witch on your computer to run tasks from the browser.",
     };
   }
 
@@ -27,7 +28,7 @@ export const resolveHomeMacStatusSummary = (
   if (counts.live > 0) {
     const suffix =
       counts.liveOtherInstance > 0
-        ? " Additional Macs are connected on another server."
+        ? " Additional computers are connected on another server."
         : "";
     return {
       tone: "online",
@@ -41,7 +42,7 @@ export const resolveHomeMacStatusSummary = (
       tone: "sleeping",
       label: "Mac reconnecting",
       detail:
-        "Your Mac is connected on another server. Wait a few seconds or refresh, then try again.",
+        "Your computer is connected on another server. Wait a few seconds or refresh, then try again.",
     };
   }
 
@@ -50,13 +51,13 @@ export const resolveHomeMacStatusSummary = (
       tone: "sleeping",
       label: "Mac reconnecting",
       detail:
-        "Agent Witch was seen recently and may reconnect on the next check-in. Start it on your Mac with wake.sh if it stays offline.",
+        "Agent Witch was seen recently and may reconnect on the next check-in. Start it on your computer with wake.sh if it stays offline.",
     };
   }
 
   return {
     tone: "offline",
     label: "Mac offline",
-    detail: "Start Agent Witch on your Mac to run new tasks.",
+    detail: "Start Agent Witch on your computer to run new tasks.",
   };
 };

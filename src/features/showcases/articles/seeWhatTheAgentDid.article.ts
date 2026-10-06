@@ -19,7 +19,7 @@ const seeWhatTheAgentDid: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Chat scrolls away. Slack threads sink. Reports keeps a run log for work you dispatch — especially useful when a teammate runs a task on their Mac and you both need the same record of what was asked.",
+        "Chat scrolls away. Slack threads sink. Reports keeps a run log for work you dispatch — especially useful when a teammate runs a task on their computer and you both need the same record of what was asked.",
       ],
     },
     {
@@ -28,7 +28,7 @@ const seeWhatTheAgentDid: ShowcaseArticle = {
         "Requester and executor when the run was dispatched",
         "Full prompt that was sent",
         "Status: pending approval, running, completed, failed",
-        "Result output when the Mac finishes",
+        "Result output when the computer finishes",
       ],
     },
     {

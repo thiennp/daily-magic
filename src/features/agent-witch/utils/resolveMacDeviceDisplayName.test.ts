@@ -15,23 +15,23 @@ describe("resolveMacDeviceDisplayName", () => {
     ).toBe("Studio-MacBook-Pro");
   });
 
-  it("falls back to Your Mac for a generic label", () => {
+  it("falls back to Your computer for a generic label", () => {
     expect(
       resolveMacDeviceDisplayName({
         deviceLabel: "Mac",
         deviceCount: 1,
       }),
-    ).toBe("Your Mac");
+    ).toBe("Your computer");
   });
 
-  it("numbers unnamed Macs when there are several", () => {
+  it("numbers unnamed computers when there are several", () => {
     const names = buildMacDeviceDisplayNameById([
       { id: "a", deviceLabel: "Mac" },
       { id: "b", deviceLabel: null },
     ]);
 
-    expect(names.get("a")).toBe("Your Mac");
-    expect(names.get("b")).toBe("Mac 2");
+    expect(names.get("a")).toBe("Your computer");
+    expect(names.get("b")).toBe("Computer 2");
   });
 
   it("treats Mac and Local agent as generic", () => {

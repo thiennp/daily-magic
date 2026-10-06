@@ -28,7 +28,7 @@ interface ConnectThisMacModalProps {
 }
 
 const CONNECT_MODAL_COPY: Partial<Record<BrowserOperatingSystem, string>> = {
-  mac: `${MAC_WORKER_BENEFIT_COPY.connectThisMacModalIntro} You can close this page after copying—the command adds your account on this Mac when you run it in Terminal, without replacing another account’s profile.`,
+  mac: `${MAC_WORKER_BENEFIT_COPY.connectThisMacModalIntro} You can close this page after copying—the command adds your account on this computer when you run it in Terminal, without replacing another account’s profile.`,
   linux:
     "On this Linux computer, open a terminal, paste this command, and press Enter. It installs the agent host for the account you are signed in with.",
   windows:
@@ -53,9 +53,7 @@ export default function ConnectThisMacModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-lg p-6">
       <h2 className="pr-10 text-lg font-semibold text-gray-900 dark:text-white/90">
-        {installDescription !== undefined && operatingSystem !== "mac"
-          ? "Connect this computer"
-          : "Connect this Mac"}
+        Connect this computer
       </h2>
 
       {notice !== null ? (

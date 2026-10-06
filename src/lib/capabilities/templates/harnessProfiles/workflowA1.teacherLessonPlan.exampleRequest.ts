@@ -1,12 +1,12 @@
 export const TEACHER_LESSON_PLAN_EXAMPLE_REQUEST = `Create a standards-aligned lesson plan a teacher can run in class.
 
 Read subject, gradeLevel, topicStandard, and classDuration from the workflow form.
-If materialsPath is set, read existing units or rubrics from that folder on this Mac; otherwise prefer low-prep activities that fit the time box.
+If materialsPath is set, read existing units or rubrics from that folder on this computer; otherwise prefer low-prep activities that fit the time box.
 
 ## Align objectives and pacing (this step only)
 Confirm objectives match topicStandard at a readable level for gradeLevel.
 Respect classDuration including transitions; note prerequisites students may need.
-If materialsPath is set, skim that folder on this Mac for rubrics or prior units; otherwise prefer low-prep activities.
+If materialsPath is set, skim that folder on this computer for rubrics or prior units; otherwise prefer low-prep activities.
 Summarize assumptions and any open questions in [[PROGRESS]] for the operator — rely on workflow human checkpoints instead of mid-run input stops.
 
 ## Draft timed agenda (this step only)

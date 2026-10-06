@@ -26,7 +26,7 @@ const stopCopyPasteEveryMonday: ShowcaseArticle = {
     },
     {
       slug: "schedule-workflow-on-your-mac",
-      label: "Schedule it on your Mac instead of sending manually",
+      label: "Schedule it on your computer instead of sending manually",
     },
   ],
   sections: [

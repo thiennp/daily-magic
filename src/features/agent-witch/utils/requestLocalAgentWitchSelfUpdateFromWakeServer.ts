@@ -53,7 +53,7 @@ export const requestLocalAgentWitchSelfUpdateFromWakeServer =
       return {
         ok: false,
         message:
-          "Could not reach the local Agent Witch wake server on this Mac.",
+          "Could not reach the local Agent Witch wake server on this computer.",
       };
     }
   };

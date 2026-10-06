@@ -4,7 +4,7 @@ export type HomeMacDeviceRowConnectFooter =
   "connect_this_mac" | "too_old_note" | null;
 
 /**
- * This Mac row (offline or too old) carries the Connect this Mac CTA so there is
+ * This computer row (offline or too old) carries the Connect this computer CTA so there is
  * never a second "This computer" row; other too-old rows get an inline note.
  */
 export const resolveHomeMacDeviceRowConnectFooter = (input: {

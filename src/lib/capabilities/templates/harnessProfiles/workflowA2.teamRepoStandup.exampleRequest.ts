@@ -1,6 +1,6 @@
-export const TEAM_REPO_STANDUP_EXAMPLE_REQUEST = `Summarize git activity on a teammate's Mac for a standup update.
+export const TEAM_REPO_STANDUP_EXAMPLE_REQUEST = `Summarize git activity on a teammate's computer for a standup update.
 
-Read repoPath (project folder on this Mac), branch, and since (optional) from the workflow form.
+Read repoPath (project folder on this computer), branch, and since (optional) from the workflow form.
 
 ## 1. Resolve repo and collect git facts
 - Expand ~ in repoPath; verify the directory is a git repository.
