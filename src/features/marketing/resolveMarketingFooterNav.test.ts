@@ -12,6 +12,7 @@ describe("resolveMarketingFooterNav (UX-P0c)", () => {
     const links = resolveMarketingFooterProductLinks(false);
     const labels = links.map((link) => link.label);
 
+    expect(labels).toContain("Pricing");
     expect(labels).toContain("Real examples");
     expect(links.find((link) => link.label === "Prompt optimizer")?.href).toBe(
       "/prompt-optimizer",

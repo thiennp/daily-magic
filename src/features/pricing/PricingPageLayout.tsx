@@ -1,0 +1,54 @@
+import Link from "next/link";
+
+import PricingBringYourOwn from "@/features/pricing/components/PricingBringYourOwn";
+import PricingCompareTable from "@/features/pricing/components/PricingCompareTable";
+import PricingFaq from "@/features/pricing/components/PricingFaq";
+import PricingHero from "@/features/pricing/components/PricingHero";
+import PricingHowAiNotes from "@/features/pricing/components/PricingHowAiNotes";
+import PricingOnDemand from "@/features/pricing/components/PricingOnDemand";
+import PricingPlanCards from "@/features/pricing/components/PricingPlanCards";
+import PricingTrustStrip from "@/features/pricing/components/PricingTrustStrip";
+import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
+
+interface PricingPageLayoutProps {
+  readonly signedIn: boolean;
+}
+
+export default function PricingPageLayout({
+  signedIn,
+}: PricingPageLayoutProps) {
+  return (
+    <div className="pb-16">
+      {signedIn ? (
+        <nav aria-label="Breadcrumb" className="mb-6 text-sm text-gray-500">
+          <ol className="flex flex-wrap items-center gap-2">
+            <li>
+              <Link href="/" className={MARKETING_TEXT_LINK_CLASSES}>
+                Account
+              </Link>
+            </li>
+            <li aria-hidden="true">›</li>
+            <li className="font-medium text-gray-800">Billing and plans</li>
+          </ol>
+        </nav>
+      ) : null}
+      <PricingHero />
+      <PricingPlanCards signedIn={signedIn} />
+      <PricingTrustStrip />
+      <PricingCompareTable />
+      <PricingBringYourOwn />
+      <PricingOnDemand signedIn={signedIn} />
+      <PricingHowAiNotes />
+      <PricingFaq />
+      <p className="mt-10 text-center text-sm text-gray-500">
+        <Link href="/terms" className={MARKETING_TEXT_LINK_CLASSES}>
+          Terms
+        </Link>
+        {" · "}
+        <Link href="/privacy" className={MARKETING_TEXT_LINK_CLASSES}>
+          Privacy
+        </Link>
+      </p>
+    </div>
+  );
+}

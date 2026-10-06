@@ -4,7 +4,6 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const PHANTOM_MARKETING_ROUTES: readonly string[] = [
-  "/pricing",
   "/faq",
   "/signup",
   "/stories",

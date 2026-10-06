@@ -7,6 +7,7 @@ export interface MarketingHeaderNavItem {
 
 /** In-page anchors on the public landing; auth routes for signed-in areas. */
 export const MARKETING_HEADER_NAV_ITEMS: readonly MarketingHeaderNavItem[] = [
+  { label: "Pricing", href: "/pricing" },
   { label: "Workflows", href: "/#popular-presets-heading" },
   { label: "Security", href: "/#features-heading" },
   { label: "Resources", href: "/showcases" },
