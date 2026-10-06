@@ -3,6 +3,7 @@ import { buildProjectInviteJoinAccessCheckStep } from "@/features/projects/acces
 import { buildProjectInviteJoinBriefingPeersStep } from "@/features/projects/access/invites/buildProjectInviteJoinBriefingPeersStep";
 import { buildProjectInviteJoinConnectStep } from "@/features/projects/access/invites/buildProjectInviteJoinConnectStep";
 import { buildProjectInviteJoinDispatchStep } from "@/features/projects/access/invites/buildProjectInviteJoinDispatchStep";
+import { buildProjectInviteJoinLocalFirstStep } from "@/features/projects/access/invites/buildProjectInviteJoinLocalFirstStep";
 import { buildProjectInviteJoinLeaveStep } from "@/features/projects/access/invites/buildProjectInviteJoinLeaveStep";
 import { buildProjectInviteJoinPollStep } from "@/features/projects/access/invites/buildProjectInviteJoinPollStep";
 import { buildProjectInviteJoinProjectLine } from "@/features/projects/access/invites/buildProjectInviteJoinProjectLine";
@@ -46,6 +47,8 @@ export type ProjectInviteJoinSections = {
   readonly goal: readonly string[];
   readonly connect: readonly string[];
   readonly redeem: readonly string[];
+  /** "Check this project first" — right after redeem, same for every type. */
+  readonly localFirst: readonly string[];
   readonly accessCheck: readonly string[];
   readonly briefingPeers: readonly string[];
   readonly summary: readonly string[];
@@ -78,6 +81,7 @@ export const buildProjectInviteJoinSections = (
       urls: buildAgentAccessUrls(),
     }),
     redeem: buildProjectInviteJoinRedeemStep({ token }),
+    localFirst: buildProjectInviteJoinLocalFirstStep(),
     accessCheck: buildProjectInviteJoinAccessCheckStep({ projectIdHint }),
     briefingPeers: buildProjectInviteJoinBriefingPeersStep({ projectIdHint }),
     summary: SUMMARY_LINES,

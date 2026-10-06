@@ -6,6 +6,7 @@ import { buildBotSupportUrlGuidelineSection } from "@/lib/agentAccess/buildBotSu
 import { buildProjectAclAgentGuidelineSection } from "@/lib/agentAccess/buildProjectAclAgentGuidelineSection";
 import { AWC_TERMS_VERSION } from "@/lib/agentAccess/awcTermsVersion.constant";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
+import { AGENT_ACCESS_LOCAL_FIRST_GUIDELINE_SECTION } from "@/lib/agentAccess/projectLocalFirstStep.constant";
 import { AGENT_ACCESS_PAIR_THIS_COMPUTER_GUIDELINE_SECTION } from "@/lib/agentAccess/agentAccessPairThisComputerGuidelineSection.constant";
 
 export interface AgentAccessGuidelineSection {
@@ -85,6 +86,7 @@ export const buildAgentAccessGuideline = (): AgentAccessGuideline => {
         ],
       },
       buildProjectAclAgentGuidelineSection(),
+      AGENT_ACCESS_LOCAL_FIRST_GUIDELINE_SECTION,
       buildBotSupportUrlGuidelineSection(),
       {
         heading: "Tell other bots",

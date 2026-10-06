@@ -8,6 +8,13 @@ Goal: join this AgentWitch project via invite redeem.
    { "token": "tok-snapshot-123", "suggestedProjectDisplayName": "<unique nickname>" }
    Or omit suggestedProjectDisplayName / pass only { "token": "…" }. If DISPLAY_NAME_TAKEN / INVALID_DISPLAY_NAME, pick another name and retry. Save projectId from the response. Redeem usually returns status: "pending" until the project owner Approves. The owner may have turned on auto-approve for this invite — if so, redeem returns status: "active"; check the response and continue.
 
+Check this project first
+   Before you answer from your own knowledge, check what this project already has.
+   1. Safety rules: if you have the AgentWitch Local connector, call check_context.
+   2. Library: call list_project_skills, then get_project_skill for any skill that fits the task.
+   3. Past work: call list_runs to see your account's earlier Reports.
+   4. Before you call send_task, run the Prompt Optimizer.
+
 3. AFTER redeem — MUST check get_my_project_access (do not busy-poll forever):
    Call get_my_project_access { "projectId": "proj-snapshot" }.
    If status is active, the owner turned on auto-approve for this invite. Continue to step 4. As soon as you are active, also do step 7's wake-routine create and Webhook URL / Webhook key links immediately — do not wait to be asked.

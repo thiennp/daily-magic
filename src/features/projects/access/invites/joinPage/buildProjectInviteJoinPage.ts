@@ -1,5 +1,6 @@
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 import { buildProjectInviteUrl } from "@/lib/projects/acl/invites/buildProjectInviteUrl";
+import { buildProjectInviteJoinLocalFirstStep } from "@/features/projects/access/invites/buildProjectInviteJoinLocalFirstStep";
 import { buildProjectInviteJoinSections } from "@/features/projects/access/invites/buildProjectInviteJoinSections";
 import { buildProjectInviteJoinPollTypeSteps } from "@/features/projects/access/invites/joinPage/buildProjectInviteJoinPollTypeSteps";
 import {
@@ -22,6 +23,11 @@ export type BuildProjectInviteJoinPageInput = {
   readonly types?: readonly ProjectInviteJoinType[];
 };
 
+/** "Check this project first" as one types[] step (nested list in markdown), last in every type. */
+const LOCAL_FIRST_TYPE_STEP = buildProjectInviteJoinLocalFirstStep().join(
+  String.fromCharCode(10),
+);
+
 const toPageType = (
   type: ProjectInviteJoinType,
 ): ProjectInviteJoinPageType => ({
@@ -31,7 +37,11 @@ const toPageType = (
   matchHints: type.match,
   deliveryMode: type.deliveryMode,
   connectPath: type.connectPath,
-  steps: [...type.steps, ...buildProjectInviteJoinPollTypeSteps(type)],
+  steps: [
+    ...type.steps,
+    ...buildProjectInviteJoinPollTypeSteps(type),
+    LOCAL_FIRST_TYPE_STEP,
+  ],
   ...(type.note ? { note: type.note } : {}),
 });
 

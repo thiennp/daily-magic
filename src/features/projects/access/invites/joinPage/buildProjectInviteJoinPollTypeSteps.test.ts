@@ -9,9 +9,11 @@ import {
 import { buildProjectInviteJoinPage } from "@/features/projects/access/invites/joinPage/buildProjectInviteJoinPage";
 import { renderProjectInviteJoinPageMarkdown } from "@/features/projects/access/invites/joinPage/renderProjectInviteJoinPageMarkdown";
 import { PROJECT_INVITE_JOIN_TYPES } from "@/features/projects/access/invites/joinTypes/projectInviteJoinTypes.constant";
+import { buildProjectInviteJoinLocalFirstStep } from "@/features/projects/access/invites/buildProjectInviteJoinLocalFirstStep";
 import { PROJECT_MEMBERSHIP_POLL_INBOX_GUIDANCE } from "@/lib/projects/acl/projectMembershipDeliveryModeGuidance.constant";
 import { parseProjectInviteJoinPlatform } from "@/lib/projects/acl/invites/projectInviteJoinPlatform.constant";
 
+const LOCAL_FIRST = buildProjectInviteJoinLocalFirstStep().join("\n");
 const page = buildProjectInviteJoinPage({
   token: "a".repeat(22),
   projectId: "proj-1",
@@ -29,22 +31,23 @@ describe("/join Checks on demand step for poll types", () => {
     );
   });
 
-  it("every poll type ends with its redeem joinType line + Checks on demand step", () => {
+  it("every poll type ends with its redeem joinType line + Checks on demand step, then Check this project first", () => {
     for (const type of page.types.filter((t) => t.deliveryMode === "poll")) {
       const source = PROJECT_INVITE_JOIN_TYPES.find((t) => t.id === type.id);
-      expect(type.steps.slice(0, -2), type.id).toEqual(source?.steps);
-      expect(type.steps.slice(-2), type.id).toEqual([
+      expect(type.steps.slice(0, -3), type.id).toEqual(source?.steps);
+      expect(type.steps.slice(-3), type.id).toEqual([
         buildProjectInviteJoinRedeemTypeLine(type.id),
         `${PROJECT_INVITE_JOIN_POLL_GUIDANCE_LINE} ${PROJECT_INVITE_JOIN_POLL_SWITCH_LINE}`,
+        LOCAL_FIRST,
       ]);
       expect(parseProjectInviteJoinPlatform(type.id), type.id).not.toBeNull();
     }
   });
 
-  it("Grok Bot (webhook) gets no extra step", () => {
+  it("Grok Bot (webhook) gets no poll step, only Check this project first", () => {
     const grok = page.types.find((t) => t.id === "grok-bot");
     const source = PROJECT_INVITE_JOIN_TYPES.find((t) => t.id === "grok-bot");
-    expect(grok?.steps).toEqual(source?.steps);
+    expect(grok?.steps).toEqual([...(source?.steps ?? []), LOCAL_FIRST]);
     expect(
       buildProjectInviteJoinPollTypeSteps({ id: "x", deliveryMode: "webhook" }),
     ).toEqual([]);

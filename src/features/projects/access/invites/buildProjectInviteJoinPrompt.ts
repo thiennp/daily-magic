@@ -8,11 +8,12 @@ import {
 
 export type { ProjectInviteJoinPromptInput };
 
-/** Full Copy prompt order: goal, then join steps 1–9. Poll (step 7 variant) is /join-only. */
+/** Full Copy prompt order: goal, then join steps 1–9 ("Check this project first" right after redeem). Poll (step 7 variant) is /join-only. */
 const FULL_PROMPT_ORDER = [
   "goal",
   "connect",
   "redeem",
+  "localFirst",
   "accessCheck",
   "briefingPeers",
   "summary",
