@@ -18,7 +18,7 @@ export default interface ProjectMembershipRecord {
   readonly projectDisplayName: string | null;
   /** Set for memberKind=computer; null otherwise. */
   readonly deviceId?: string | null;
-  /** webhook (wake) | poll (Checks on demand). Mig 071; default webhook. */
+  /** webhook (wake) | poll (Checks on demand). Mig 074; default webhook. */
   readonly deliveryMode?: ProjectMembershipDeliveryMode;
   readonly createdAt: string;
   readonly revokedAt: string | null;

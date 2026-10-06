@@ -11,7 +11,7 @@ export const resetProjectMembershipDeliveryModeSchemaEnsureForTests =
     state.promise = null;
   };
 
-/** Soft ensure: additive delivery_mode + invite platform (CHECK + backfill live in 071). */
+/** Soft ensure: additive delivery_mode + invite platform (CHECK + backfill live in 074). */
 export const ensureProjectMembershipDeliveryModeSchema =
   async (): Promise<void> => {
     if (state.ensured) {
@@ -24,7 +24,7 @@ export const ensureProjectMembershipDeliveryModeSchema =
       const sql = getSql();
       await sql`ALTER TABLE project_memberships
         ADD COLUMN IF NOT EXISTS delivery_mode TEXT NOT NULL DEFAULT 'webhook'`;
-      // Invite platform feeds the connect-time mode on join (071).
+      // Invite platform feeds the connect-time mode on join (074).
       await sql`ALTER TABLE IF EXISTS project_invites
         ADD COLUMN IF NOT EXISTS platform TEXT`;
       state.ensured = true;

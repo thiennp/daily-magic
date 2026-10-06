@@ -9,9 +9,9 @@ import { resolveInitialProjectMembershipDeliveryMode } from "@/lib/projects/acl/
 const read = (...parts: string[]) =>
   fs.readFileSync(path.join(process.cwd(), ...parts), "utf8");
 
-const MIG = "db/migrations/071-project-membership-delivery-mode.sql";
+const MIG = "db/migrations/074-project-membership-delivery-mode.sql";
 
-describe("071 project membership delivery_mode DDL", () => {
+describe("074 project membership delivery_mode DDL", () => {
   it("adds the column (default webhook) and allows only webhook|poll", () => {
     const sql = read(MIG);
     expect(sql).toContain(
