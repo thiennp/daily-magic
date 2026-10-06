@@ -66,7 +66,7 @@ describe("isAwcTestAutoConnectEnabled", () => {
       "utf8",
     );
     const prodIdx = src.indexOf('nodeEnv === "production"');
-    const hostIdx = src.indexOf("isProductionAgentWitchRequestHost");
+    const hostIdx = src.indexOf("isProductionAgentWitchRequestHost(host)");
     const trueIdx = src.indexOf('flag === "1"');
     expect(prodIdx).toBeGreaterThan(-1);
     expect(hostIdx).toBeGreaterThan(prodIdx);
