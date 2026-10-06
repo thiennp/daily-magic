@@ -35,10 +35,15 @@ export default function AwcProjectAccessPendingRow({
   return (
     <li className="rounded-md border border-gray-200/80 p-2 dark:border-gray-800/80">
       <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
-        <span className="text-gray-800 dark:text-white/90">
-          {req.requesterLabel ?? req.requesterUserId}
-          {req.requesterIsAgent ? " (agent)" : ""}
-          {req.reason ? ` — ${req.reason}` : ""}
+        <span className="min-w-0 text-gray-800 dark:text-white/90">
+          <span className="block">
+            {req.requesterLabel ?? req.requesterUserId}
+            {req.requesterIsAgent ? " (agent)" : ""}
+            {req.reason ? ` — ${req.reason}` : ""}
+          </span>
+          <span className="mt-0.5 block text-[12px] font-normal text-gray-500 dark:text-gray-400">
+            {copy.requestWaitingApproval}
+          </span>
         </span>
         <span className="flex gap-2">
           <button

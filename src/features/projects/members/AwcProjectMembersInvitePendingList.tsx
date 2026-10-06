@@ -31,7 +31,7 @@ export default function AwcProjectMembersInvitePendingList({
                   {invite.inviteId.slice(0, 8)}…
                 </span>
                 <span className="block text-[12px] text-gray-500 dark:text-gray-400">
-                  {C.invitePendingSub}
+                  {invite.autoApprove ? C.invitePendingSubOn : C.invitePendingSubOff}
                 </span>
               </span>
               <button

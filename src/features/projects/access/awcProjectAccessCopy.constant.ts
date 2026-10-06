@@ -11,7 +11,6 @@ export const AWC_PROJECT_ACCESS_COPY = {
     "Every assistant waits for your approval unless you turn on auto-approve for its invite.",
   pendingHeading: "Pending",
   pendingEmpty: "No pending access requests.",
-  /** L5 follow-up: Human UI may land invitePendingSub; r2 owns box-off/on strings via AWC_PROJECT_INVITE_AUTO_APPROVE_COPY. */
   invitePendingSubOff:
     "Waiting to join · you approve each assistant before it gets access",
   invitePendingSubOn: "Waiting to join · auto-approve is on",

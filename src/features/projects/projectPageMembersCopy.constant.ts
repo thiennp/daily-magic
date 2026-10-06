@@ -27,8 +27,13 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   inviteMuse: "Invite Muse assistant",
   invitePrompt: (kind: string) =>
     `Prompt for the ${kind} assistant. Paste it into your assistant. The prompt shows once, so copy it now.`,
+  invitePendingSubOff:
+    "Waiting to join · you approve each assistant before it gets access",
+  invitePendingSubOn: "Waiting to join · auto-approve is on",
+  /** @deprecated Prefer invitePendingSubOff / On by invite.autoApprove. */
   invitePendingSub:
-    "Waiting to join · your assistant joins right away, an unknown assistant waits for your approval",
+    "Waiting to join · you approve each assistant before it gets access",
+  requestWaitingApproval: "Asked to join · waiting for your approval",
   invitePendingCancel: "Cancel",
   inviteEmpty:
     "No assistant invites yet. The prompt shows only once when you create it.",
