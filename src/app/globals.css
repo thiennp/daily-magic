@@ -226,8 +226,9 @@
 
 /*
   L3 v5 project-page foundation (additive --awc-* names).
-  Effective light tokens from design/PLAN. Does not overwrite brand-* or
-  live semantic --bg/--surface/--radius-card. Later slices opt in.
+  TS (awcDesignTokens.constant.ts AWC_V5_*) is the source of truth — keep
+  every mirrored value identical. Does not overwrite brand-* or live
+  semantic --bg/--surface/--radius-card. Later slices opt in.
   Disabled primitive is .awc-disabled only (no global button:disabled restyle).
 */
 :root {
@@ -306,21 +307,18 @@
   --awc-radius-xl: 28px;
   --awc-radius-dock: 20px;
 
-  --awc-shadow-lift: 0 1px 2px rgba(16, 24, 40, 0.05),
-    0 1px 1px rgba(16, 24, 40, 0.03);
-  --awc-shadow-card: 0 0 0 1px rgba(16, 24, 40, 0.05),
-    0 1px 2px rgba(16, 24, 40, 0.05);
-  --awc-shadow-dock: 0 18px 48px rgba(16, 24, 40, 0.18);
-  --awc-shadow-overlay: 0 16px 48px rgba(16, 24, 40, 0.18);
-  --awc-shadow-focus-ring: 0 0 0 2px var(--awc-surface),
-    0 0 0 4px var(--awc-blue-600);
+  --awc-shadow-lift: 0 1px 2px rgba(16,24,40,.05), 0 1px 1px rgba(16,24,40,.03);
+  --awc-shadow-card: 0 0 0 1px rgba(16,24,40,.05), 0 1px 2px rgba(16,24,40,.05);
+  --awc-shadow-dock: 0 18px 48px rgba(16,24,40,.18);
+  --awc-shadow-overlay: 0 16px 48px rgba(16,24,40,.18);
+  --awc-shadow-focus-ring: 0 0 0 2px var(--awc-surface), 0 0 0 4px var(--awc-blue-600);
 
   --awc-side-w: 240px;
   --awc-top-h: 60px;
 
-  --awc-disabled-bg: var(--awc-tile-2);
-  --awc-disabled-fg: var(--awc-fg-subtle);
-  --awc-disabled-border: var(--awc-border-strong);
+  --awc-disabled-bg: #ebe9e4;
+  --awc-disabled-fg: #566073;
+  --awc-disabled-border: #c9c4bb;
 
   --awc-chip-h: 24px;
   --awc-chip-h-sm: 22px;
@@ -375,6 +373,7 @@
   --radius-awc-card: var(--awc-radius-card);
   --radius-awc-control: var(--awc-radius-control);
   --radius-awc-chip: var(--awc-radius-chip);
+  --radius-awc-chip-sm: var(--awc-radius-chip-sm);
   --radius-awc-pill: var(--awc-radius-pill);
   --radius-awc-lg: var(--awc-radius-lg);
   --radius-awc-xl: var(--awc-radius-xl);

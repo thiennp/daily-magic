@@ -7,6 +7,7 @@ import {
   AWC_SEMANTIC_COLOR_ALIASES_LIGHT,
   AWC_SEMANTIC_COLOR_TOKEN_NAMES,
   AWC_V5_BLUE_HEX,
+  AWC_V5_CHIP_HEIGHT_TOKENS,
   AWC_V5_DISABLED_TOKENS,
   AWC_V5_FONT_CSS_VARS,
   AWC_V5_LAYOUT_TOKENS,
@@ -15,7 +16,8 @@ import {
   AWC_V5_SHADOW_TOKENS,
   AWC_V5_SPACING_TOKENS,
   AWC_V5_STATUS_HEX,
-  AWC_V5_TYPE_TOKENS,
+  AWC_V5_TYPE_FACE_TOKENS,
+  AWC_V5_TYPE_SIZE_TOKENS,
   type AwcSemanticColorTokenName,
 } from "@/lib/theme/awcDesignTokens.constant";
 
@@ -84,12 +86,17 @@ describe("awcDesignTokens L3 v5 foundation", () => {
     expect(AWC_V5_RADIUS_TOKENS.card).toBe(20);
     expect(AWC_V5_RADIUS_TOKENS.control).toBe(12);
     expect(AWC_V5_RADIUS_TOKENS.chip).toBe(8);
+    expect(AWC_V5_RADIUS_TOKENS["chip-sm"]).toBe(7);
     expect(AWC_V5_SHADOW_TOKENS["focus-ring"]).toContain("var(--awc-blue-600)");
     expect(AWC_V5_LAYOUT_TOKENS["side-w"]).toBe("240px");
     expect(AWC_V5_LAYOUT_TOKENS["top-h"]).toBe("60px");
-    expect(AWC_V5_TYPE_TOKENS["fs-h1"]).toBe("32px");
+    expect(AWC_V5_TYPE_SIZE_TOKENS["fs-h1"]).toBe("32px");
+    expect(AWC_V5_TYPE_FACE_TOKENS["fw-h1"]).toBe(600);
+    expect(AWC_V5_TYPE_FACE_TOKENS["tracking-h1"]).toBe("-0.02em");
     expect(AWC_V5_SPACING_TOKENS["sp-1"]).toBe(4);
     expect(AWC_V5_SPACING_TOKENS["sp-12"]).toBe(48);
+    expect(AWC_V5_CHIP_HEIGHT_TOKENS.chip).toBe(24);
+    expect(AWC_V5_CHIP_HEIGHT_TOKENS["chip-sm"]).toBe(22);
     expect(AWC_V5_FONT_CSS_VARS).toEqual({
       sans: "--font-awc-sans",
       mono: "--font-awc-mono",
