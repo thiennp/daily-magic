@@ -1,22 +1,21 @@
-import {
-  CapabilityType,
-  type CapabilityTypeValue,
-} from "@/lib/capabilities/CapabilityType.constant";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
-import { resolveMarketplaceListingTypeChrome } from "@/features/marketplace/marketplaceListingTypeChrome.constant";
+import {
+  type MarketplaceBrowseFilters,
+  type MarketplaceBrowsePublisherFilter,
+  type MarketplaceBrowseSort,
+  type MarketplaceBrowseTypeFilter,
+} from "@/features/marketplace/utils/marketplaceBrowseFilterOptions";
 
-export type MarketplaceBrowseTypeFilter = "all" | CapabilityTypeValue;
-
-export type MarketplaceBrowsePublisherFilter = "all" | "official" | "team";
-
-export type MarketplaceBrowseSort = "name" | "officialFirst";
-
-export interface MarketplaceBrowseFilters {
-  readonly query: string;
-  readonly type: MarketplaceBrowseTypeFilter;
-  readonly publisher: MarketplaceBrowsePublisherFilter;
-  readonly sort: MarketplaceBrowseSort;
-}
+export type {
+  MarketplaceBrowseFilters,
+  MarketplaceBrowsePublisherFilter,
+  MarketplaceBrowseSort,
+  MarketplaceBrowseTypeFilter,
+} from "@/features/marketplace/utils/marketplaceBrowseFilterOptions";
+export {
+  MARKETPLACE_PUBLISHER_FILTER_OPTIONS,
+  MARKETPLACE_TYPE_FILTER_OPTIONS,
+} from "@/features/marketplace/utils/marketplaceBrowseFilterOptions";
 
 const matchesQuery = (
   listing: HarnessMarketplaceListing,
@@ -93,31 +92,8 @@ export const countMarketplaceListingsByType = (
 export const countMarketplaceListingsByPublisher = (
   listings: readonly HarnessMarketplaceListing[],
   publisher: MarketplaceBrowsePublisherFilter,
-): number => listings.filter((listing) => matchesPublisher(listing, publisher)).length;
-
-export const MARKETPLACE_TYPE_FILTER_OPTIONS: readonly {
-  readonly value: MarketplaceBrowseTypeFilter;
-  readonly label: string;
-}[] = [
-  { value: "all", label: "All" },
-  {
-    value: CapabilityType.WORKFLOW,
-    label: resolveMarketplaceListingTypeChrome(CapabilityType.WORKFLOW).plural,
-  },
-  {
-    value: CapabilityType.AGENT,
-    label: resolveMarketplaceListingTypeChrome(CapabilityType.AGENT).plural,
-  },
-] as const;
-
-export const MARKETPLACE_PUBLISHER_FILTER_OPTIONS: readonly {
-  readonly value: MarketplaceBrowsePublisherFilter;
-  readonly label: string;
-}[] = [
-  { value: "all", label: "All" },
-  { value: "official", label: "Official" },
-  { value: "team", label: "Teammates" },
-] as const;
+): number =>
+  listings.filter((listing) => matchesPublisher(listing, publisher)).length;
 
 export const marketplaceFiltersAreActive = (
   filters: MarketplaceBrowseFilters,
