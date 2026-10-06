@@ -51,7 +51,18 @@ export const applyAwcProjectAccessSnapshot = (input: {
   ) {
     const added = [...nextIds].filter((id) => !prevIds.has(id));
     if (added.length > 0) {
-      setters.setAutoApprovedBanner(AWC_PROJECT_ACCESS_COPY.autoApprovedBanner);
+      const first = snapshot.members.find((member) => member.id === added[0]);
+      const name =
+        first?.projectDisplayName?.trim() ||
+        first?.displayName?.trim() ||
+        "Assistant";
+      const autoInvite = snapshot.invites.find((invite) => invite.autoApprove);
+      const label = autoInvite?.inviteId.slice(0, 8) ?? "invite";
+      setters.setAutoApprovedBanner(
+        AWC_PROJECT_ACCESS_COPY.autoApprovedBanner
+          .replace("{name}", name)
+          .replace("{label}", label),
+      );
       setters.setRecentlyAutoApprovedIds(added);
       if (input.bannerTimerRef.current !== null) {
         window.clearTimeout(input.bannerTimerRef.current);

@@ -6,19 +6,13 @@ import {
 } from "@/lib/projects/acl/canAutoApproveBotForOwnerMembership";
 
 describe("canAutoApproveBotForOwnerMembership", () => {
-  it("allows member (editor-or-higher human seat)", () => {
-    expect(canAutoApproveBotForOwnerMembership("member")).toBe(true);
-  });
-
-  it("allows owner role on a membership row", () => {
-    expect(canAutoApproveBotForOwnerMembership("owner")).toBe(true);
-  });
-
-  it("denies viewer", () => {
+  it("always returns false — silent member-owner path removed", () => {
+    expect(canAutoApproveBotForOwnerMembership("member")).toBe(false);
+    expect(canAutoApproveBotForOwnerMembership("owner")).toBe(false);
     expect(canAutoApproveBotForOwnerMembership("viewer")).toBe(false);
   });
 
-  it("exports a stable FSA reason string", () => {
+  it("keeps the FSA reason string for audit stability", () => {
     expect(MEMBER_OWNER_BOT_AUTO_APPROVE_REASON).toBe(
       "member_owner_bot_auto_approve",
     );

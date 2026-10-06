@@ -10,6 +10,7 @@ export {
 } from "@/features/projects/access/utils/fetchProjectAccess";
 export {
   createProjectInviteApi,
+  updateProjectInviteAutoApproveApi,
   fetchDisplayNamePresets,
   fetchProjectInvites,
   renameMembershipDisplayNameApi,

@@ -1,13 +1,19 @@
 import ProjectInviteConnectSteps from "@/features/projects/access/invites/ProjectInviteConnectSteps";
+import { AWC_PROJECT_INVITE_AUTO_APPROVE_COPY } from "@/features/projects/access/invites/awcProjectInviteAutoApproveCopy.constant";
 import { PROJECT_INVITE_URL_PATH_PREFIX } from "@/lib/projects/acl/invites/projectInvite.constants";
 
 export default function ProjectInviteInstructionsBody(input: {
   readonly token: string;
   readonly hasToken: boolean;
+  /** When known from a freshly created invite with auto-approve on. */
+  readonly autoApprove?: boolean;
 }) {
   const tokenHint = input.hasToken
     ? "Your invite token is in the link above."
     : `Ask the owner for a fresh invite link (the token sits after ${PROJECT_INVITE_URL_PATH_PREFIX}).`;
+  const waitLine = input.autoApprove
+    ? AWC_PROJECT_INVITE_AUTO_APPROVE_COPY.humanPageAutoApproveOn
+    : AWC_PROJECT_INVITE_AUTO_APPROVE_COPY.humanPageDefault;
 
   return (
     <>
@@ -20,28 +26,18 @@ export default function ProjectInviteInstructionsBody(input: {
       <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm text-gray-700 dark:text-gray-200">
         <ProjectInviteConnectSteps />
         <li>
-          {tokenHint} Your bot redeems the invite, then checks whether it is
-          already in the project. If it is still pending, tell{" "}
-          <strong>your user</strong> to wait for the owner to{" "}
-          <strong>Approve</strong> in Agent Witch Cloud and confirm back.
+          {tokenHint} {waitLine}
         </li>
         <li>
-          Once the bot is active (or is the owner), it reads the project room —
-          teammates, folders, and links — and can pass work to peers by
-          nickname.
+          Once the assistant is active, it reads the project room — teammates,
+          folders, and links — and can pass work to peers by nickname.
         </li>
-        <li>
-          After access is active, the assistant creates its wake routine and
-          posts the Webhook URL and Webhook key links in its user&apos;s chat
-          so they can copy both. The project owner then clicks{" "}
-          <strong>Add wake link</strong> at Access › People › Members ›{" "}
-          {"{name}"} › Grok wake link and pastes them there (the key is stored
-          and never shown again).
-        </li>
+        <li>{AWC_PROJECT_INVITE_AUTO_APPROVE_COPY.humanPageWake}</li>
       </ol>
       <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
-        After joining, the bot may leave on its own. Re-joining needs a new
-        invite and Approve.
+        After joining, the assistant may leave on its own. Re-joining needs a
+        new invite and Approve (unless the owner turns on auto-approve for a
+        new invite).
       </p>
       <p className="mt-6 text-xs text-gray-500 dark:text-gray-400">
         If the invite is invalid or expired, ask the owner for a fresh one. This

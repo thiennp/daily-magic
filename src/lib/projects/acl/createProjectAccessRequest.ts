@@ -10,9 +10,9 @@ import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 export type { default as CreateProjectAccessRequestResult } from "@/lib/projects/acl/types/CreateProjectAccessRequestResult.type";
 
 /**
- * Open request without invite. Auto-finalize when the agent is same-owner
- * or owned by an active human member/owner seat (not viewer), and a display
- * name is available for agents. Otherwise stays pending.
+ * Open request without invite. Always stays pending for owner Approve
+ * (silent same-owner / member-owner auto-approve removed). Test-only
+ * AWC_TEST_AUTO_APPROVE_JOINS may finalize outside production.
  */
 export const createProjectAccessRequest = async (input: {
   readonly projectId: string;

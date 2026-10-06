@@ -45,7 +45,7 @@ const sameOwnerMock = vi.mocked(isAgentSameProjectOwner);
 const linkedOwnerMock = vi.mocked(resolveAgentLinkedOwnerUserId);
 const membershipMock = vi.mocked(getActiveProjectMembership);
 
-describe("createProjectAccessRequest member-owner auto-approve", () => {
+describe("createProjectAccessRequest member-owner (silent auto-approve removed)", () => {
   beforeEach(() => {
     sqlMock.mockReset();
     resetProjectAclSchemaEnsureForTests();
@@ -58,7 +58,7 @@ describe("createProjectAccessRequest member-owner auto-approve", () => {
     installMemberOwnerSqlMock(sqlMock);
   });
 
-  it("auto-approves when linked human owner is an active member seat", async () => {
+  it("stays pending when linked human owner is an active member seat", async () => {
     membershipMock.mockResolvedValue(memberOwnerHumanSeat("member"));
     approveMock.mockResolvedValue(memberOwnerActiveApproveResult);
     const result = await createProjectAccessRequest({
@@ -68,8 +68,8 @@ describe("createProjectAccessRequest member-owner auto-approve", () => {
     });
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.status).toBe("active");
-    expect(approveMock).toHaveBeenCalled();
+    expect(result.status).toBe("pending");
+    expect(approveMock).not.toHaveBeenCalled();
   });
 
   it("stays pending when linked human owner is a viewer seat", async () => {

@@ -41,7 +41,7 @@ describe("redeemProjectInvite suggestedProjectDisplayName", () => {
     vi.mocked(isAgentUserId).mockResolvedValue(true);
   });
 
-  it("auto-approves active when suggestion is unique and valid (invite-as-consent)", async () => {
+  it("stays pending when suggestion is unique and valid (no silent invite-as-consent)", async () => {
     let insertedSuggestion: unknown = undefined;
     sqlMock.mockImplementation(async (strings: TemplateStringsArray, ...values: unknown[]) => {
       const q = String(strings);
@@ -100,22 +100,11 @@ describe("redeemProjectInvite suggestedProjectDisplayName", () => {
     });
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.status).toBe("active");
-    expect(result.namingRequired).toBe(false);
+    expect(result.status).toBe("pending");
+    expect(result.namingRequired).toBe(true);
     expect(result.suggestedProjectDisplayName).toBe("Soft Vale");
     expect(insertedSuggestion).toBe("Soft Vale");
-    expect(approveMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        projectId: "proj-1",
-        requestId: "req-1",
-        ownerUserId: "owner-1",
-        projectDisplayName: "Soft Vale",
-      }),
-    );
-    if (result.status === "active") {
-      expect(result.membership.id).toBe("mem-1");
-      expect(result.projectApiKey).toBe("awc_proj_test");
-    }
+    expect(approveMock).not.toHaveBeenCalled();
   });
 
   it("omitting suggestion keeps pending for agents (naming required)", async () => {

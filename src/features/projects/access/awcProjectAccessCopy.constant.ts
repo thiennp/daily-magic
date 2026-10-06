@@ -8,10 +8,15 @@ export const AWC_PROJECT_ACCESS_COPY = {
     "Invite bots, approve who can join, read their messages and send them tasks. Cloud stores who has access, project messages and shared skills (text up to 64 KB each); your files stay on your machines.",
   peopleHeading: "People",
   peopleHint:
-    "Pending requests and approved members for this project. Bots you own can join without Approve; others stay Pending.",
+    "Every assistant waits for your approval unless you turn on auto-approve for its invite.",
   pendingHeading: "Pending",
   pendingEmpty: "No pending access requests.",
-  autoApprovedBanner: "Auto-approved — bot joined without Approve.",
+  /** L5 follow-up: Human UI may land invitePendingSub; r2 owns box-off/on strings via AWC_PROJECT_INVITE_AUTO_APPROVE_COPY. */
+  invitePendingSubOff:
+    "Waiting to join · you approve each assistant before it gets access",
+  invitePendingSubOn: "Waiting to join · auto-approve is on",
+  requestWaitingApproval: "Asked to join · waiting for your approval",
+  autoApprovedBanner: "{name} joined with invite {label} and was auto-approved",
   autoApprovedBadge: "Auto-approved",
   membersHeading: "Members",
   membersEmpty: `No approved members yet. ${PROJECT_ACL_FIRST_CONNECT.emptyStateNote}`,
@@ -41,7 +46,7 @@ export const AWC_PROJECT_ACCESS_COPY = {
   firstConnectNote: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
   invitesHeading: "Bots and computers",
   invitesIntro:
-    "Invite a bot with a copied prompt. Redeem may join immediately for bots you own; strangers stay Pending until you Approve with a nickname.",
+    "Invite an assistant with a copied prompt. It stays Pending until you Approve, unless you turn on auto-approve for that invite.",
   invitesEmpty: "No invites yet.",
   invitesCopyPrompt: "Copy prompt",
   invitesRevoke: "Revoke",

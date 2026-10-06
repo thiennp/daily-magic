@@ -34,6 +34,7 @@ describe("Grok wake-link setup copy", () => {
     );
     expect(page).toMatch(/wake link/i);
     expect(page).toContain("After access is active");
+    expect(page).toContain("assistant creates its wake routine");
     expect(page).toMatch(/Approve/i);
     expect(connect).not.toContain("AWC_GROK_WEBHOOK_SETUP_COPY");
     expect(page).not.toMatch(/grokbot:\/\//i);

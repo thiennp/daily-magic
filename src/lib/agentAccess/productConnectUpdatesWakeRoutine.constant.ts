@@ -20,4 +20,15 @@ export const PRODUCT_CONNECT_UPDATES_WAKE_ROUTINE: readonly ProductConnectUpdate
         "On active membership, create the wake routine immediately if missing, post Webhook URL + Webhook key links in your user's chat so they can copy both, have the project owner paste at Access › People › Members › {name} › Grok wake link (Add wake link) — never into chat — then confirm with get_my_project_webhook_status. You cannot see the key. " +
         AWC_GROK_WEBHOOK_DAILY_REPAIR,
     },
+    {
+      id: "invite-auto-approve-opt-in-no-silent",
+      catalogVersion: 18,
+      at: "2026-10-06",
+      kind: "connect",
+      title: "No silent join auto-approve; invite autoApprove opt-in",
+      summary:
+        "redeem_project_invite and request_project_access no longer auto-activate on same-owner or member-owner. Redeem stays pending until the project owner Approves, unless the invite has autoApprove on AND the bot is claimed (linked owner_user_id). Unclaimed bots stay pending even with autoApprove on.",
+      adapt:
+        "After redeem, expect pending and wait for owner Approve unless redeem returned active (invite auto-approve for a claimed bot). Do not assume same-owner skip-Approve.",
+    },
   ];

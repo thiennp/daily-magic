@@ -48,7 +48,7 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
       kind: "connect",
       title: "Same-owner auto-approve + toMembershipId dispatch",
       summary:
-        'After redeem_project_invite / request_project_access, MUST call get_my_project_access: if active, skip wait for Approve; if pending, wait as today. Bots you own can join without Approve; strangers stay Pending. list_project_peers / get_project_acl may expose membershipId on self+peers. project_dispatch MUST prefer toMembershipId for peer bots; keep toProjectDisplayName: "Owner" for the human; exactly one of toMembershipId | toProjectDisplayName | toTeamLabel. Re-list peers after rename; old nickname may resolve ~7 days.',
+        'After redeem_project_invite / request_project_access, MUST call get_my_project_access: if pending, wait for owner Approve; if active, the invite had auto-approve on for a claimed bot. list_project_peers / get_project_acl may expose membershipId on self+peers. project_dispatch MUST prefer toMembershipId for peer bots; keep toProjectDisplayName: "Owner" for the human; exactly one of toMembershipId | toProjectDisplayName | toTeamLabel. Re-list peers after rename; old nickname may resolve ~7 days.',
       adapt:
         "Check get_my_project_access after redeem/request. Prefer toMembershipId from list_project_peers for peer dispatch; re-list after rename. Do not promise Socket Mode, paid relay, hosted webhook, Grok auto-wake, or faster poll defaults.",
     },
@@ -89,9 +89,9 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
       kind: "mcp_tool",
       title: "issue_bot_claim_code + project claim ownership",
       summary:
-        "New issue_bot_claim_code (agent-access Bearer only) returns a 10-minute single-use claim code for this bot. A signed-in human redeems it on Projects (Claim) to set owner_user_id. Issuing supersedes unused codes; already_claimed while owned. Same-owner project access auto-approves when the bot's owner_user_id matches the project owner.",
+        "New issue_bot_claim_code (agent-access Bearer only) returns a 10-minute single-use claim code for this bot. A signed-in human redeems it on Projects (Claim) to set owner_user_id. Issuing supersedes unused codes; already_claimed while owned. Claim links owner_user_id; invite auto-approve only applies to claimed bots.",
       adapt:
-        "After register_account, call issue_bot_claim_code and give the code to your human once. They claim on Projects (Claim). Prefer claiming before request_project_access so same-owner auto-approve can run.",
+        "After register_account, call issue_bot_claim_code and give the code to your human once. They claim on Projects (Claim). Prefer claiming before redeem so invite auto-approve can apply when the owner turned it on.",
     },
     ...PRODUCT_CONNECT_UPDATES_WAKE_ROUTINE,
   ];

@@ -1,4 +1,5 @@
 import { approveProjectAccessRequest } from "@/lib/projects/acl/approveProjectAccessRequest";
+import { isAwcTestAutoApproveJoinsEnabled } from "@/lib/projects/acl/invites/isAwcTestAutoApproveJoinsEnabled";
 import { shouldAutoApproveAgentAccessRequest } from "@/lib/projects/acl/shouldAutoApproveAgentAccessRequest";
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
@@ -18,7 +19,11 @@ export type TryAutoApproveCreatedAccessRequestResult =
       readonly projectApiKey: string | null;
     };
 
-/** After a pending request insert: same-owner or member-owner bot auto-approve. */
+/**
+ * After a pending request insert: never silent same-owner/member-owner.
+ * Only AWC_TEST_AUTO_APPROVE_JOINS (non-production) may auto-approve here.
+ * Invite autoApprove is handled in redeemProjectInvite only.
+ */
 export const tryAutoApproveCreatedAccessRequest = async (input: {
   readonly project: UserProjectRecord;
   readonly request: ProjectAccessRequestRecord;
@@ -33,7 +38,11 @@ export const tryAutoApproveCreatedAccessRequest = async (input: {
     projectOwnerUserId: input.project.ownerUserId,
     suggestedDisplayName: input.suggestedName,
   });
-  if (!decision.autoApprove) {
+  const testOverride = isAwcTestAutoApproveJoinsEnabled();
+  if (!decision.autoApprove && !testOverride) {
+    return { ok: true, status: "pending", request: input.request };
+  }
+  if (testOverride && input.suggestedName === null) {
     return { ok: true, status: "pending", request: input.request };
   }
 

@@ -41,9 +41,32 @@ export const createProjectInviteApi = async (
     readonly usesRemaining?: number;
     readonly teamLabel?: string | null;
     readonly scopes?: readonly string[];
+    readonly autoApprove?: boolean;
     readonly ok?: boolean;
     readonly errorMessage?: string;
   }>;
+};
+
+export const updateProjectInviteAutoApproveApi = async (
+  projectId: string,
+  inviteId: string,
+  autoApprove: boolean,
+): Promise<{ readonly ok: boolean; readonly errorMessage?: string }> => {
+  const response = await fetch(
+    `/api/projects/${projectId}/invites/${inviteId}`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ autoApprove }),
+    },
+  );
+  if (!response.ok) {
+    return response.json() as Promise<{
+      readonly ok: boolean;
+      readonly errorMessage?: string;
+    }>;
+  }
+  return { ok: true };
 };
 
 export const revokeProjectInviteApi = async (

@@ -10,6 +10,7 @@ export type InviteListItem = {
   readonly usesRemaining: number;
   readonly teamLabel: string | null;
   readonly scopes: readonly string[];
+  readonly autoApprove: boolean;
 };
 
 export const toInviteListItem = (invite: ProjectInviteRecord): InviteListItem => ({
@@ -21,4 +22,5 @@ export const toInviteListItem = (invite: ProjectInviteRecord): InviteListItem =>
   usesRemaining: invite.usesRemaining,
   teamLabel: invite.teamLabel,
   scopes: [...invite.scopes],
+  autoApprove: invite.autoApprove,
 });

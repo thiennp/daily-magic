@@ -51,6 +51,7 @@ export async function POST(
     scopes: payload.scopes,
     maxUses: payload.maxUses,
     expiresInDays: payload.expiresInDays,
+    autoApprove: payload.autoApprove === true,
   });
   if (!result.ok) {
     const status =
@@ -67,6 +68,7 @@ export async function POST(
       usesRemaining: result.invite.usesRemaining,
       teamLabel: result.invite.teamLabel,
       scopes: [...result.invite.scopes],
+      autoApprove: result.invite.autoApprove,
     },
     { status: 201 },
   );

@@ -36,6 +36,7 @@ describe("Create invite: Grok choice", () => {
   it("panel shows the Grok create button and the support list", () => {
     const html = panelHtml();
     expect(html).toContain("Invite a Grok Bot");
+    expect(html).toContain("Auto-approve assistants that use this invite");
     expect(html).not.toContain("Invite a Muse bot");
     expect(html).not.toContain(">Create invite<");
     expect(html).toContain(AWC_BOT_TO_BOT_SUPPORT_HEADING);
@@ -46,7 +47,7 @@ describe("Create invite: Grok choice", () => {
     const buttons = findButtons(AwcProjectInviteCreateControls({ onCreate }));
     expect(buttons.map((b) => b.children)).toEqual(["Invite a Grok Bot"]);
     buttons.forEach((b) => b.onClick?.());
-    expect(onCreate.mock.calls).toEqual([["grok"]]);
+    expect(onCreate.mock.calls).toEqual([["grok", false]]);
   });
 
   it("banner names the chosen platform for its Copy prompt", () => {

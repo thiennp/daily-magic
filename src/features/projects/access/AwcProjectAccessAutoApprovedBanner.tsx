@@ -4,7 +4,7 @@ interface AwcProjectAccessAutoApprovedBannerProps {
   readonly message: string | null | undefined;
 }
 
-/** Emerald status line after a pending bot is auto-approved. */
+/** Emerald status line when an invite with auto-approve admitted a claimed bot. */
 export default function AwcProjectAccessAutoApprovedBanner({
   message,
 }: AwcProjectAccessAutoApprovedBannerProps) {

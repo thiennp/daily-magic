@@ -10,6 +10,7 @@ export const REDEEM_SUGGEST_INVITE_ROW = {
   expires_at: "2026-10-09T00:00:00.000Z",
   revoked_at: null,
   created_at: "2026-10-02T00:00:00.000Z",
+  auto_approve: false,
 };
 
 export const redeemSuggestPendingRow = (suggestion: string | null) => ({

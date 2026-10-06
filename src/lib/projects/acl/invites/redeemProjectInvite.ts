@@ -6,10 +6,13 @@ import {
   restoreProjectInviteUse,
 } from "@/lib/projects/acl/invites/claimProjectInviteToken";
 import { insertRedeemPendingAccessRequest } from "@/lib/projects/acl/invites/insertRedeemPendingAccessRequest";
+import { isAwcTestAutoApproveJoinsEnabled } from "@/lib/projects/acl/invites/isAwcTestAutoApproveJoinsEnabled";
+import { resolveAgentLinkedOwnerUserId } from "@/lib/agentAccess/resolveAgentLinkedOwnerUserId";
 import { resolveRedeemSuggestedDisplayName } from "@/lib/projects/acl/invites/resolveRedeemSuggestedDisplayName";
 import { PROJECT_ACL_DEFAULT_MEMBER_SCOPES } from "@/lib/projects/acl/projectAclScopes.constant";
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
+import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
 export type RedeemProjectInviteResult =
@@ -48,9 +51,11 @@ export type RedeemProjectInviteResult =
     };
 
 /**
- * Softvale-fast invite-as-consent: successful redeem with a usable display
- * name auto-finalizes active membership (owner issued the invite).
- * Agents without suggestedProjectDisplayName stay pending (naming required).
+ * Redeem always inserts a pending request first.
+ * Auto-approve only when the invite has autoApprove on (owner opt-in)
+ * AND the redeeming bot is claimed (linked owner_user_id), or when
+ * AWC_TEST_AUTO_APPROVE_JOINS is enabled outside production.
+ * Agents still need a suggested display name to auto-approve.
  */
 export const redeemProjectInvite = async (input: {
   readonly token: string;
@@ -107,30 +112,34 @@ export const redeemProjectInvite = async (input: {
     return { ok: false, code: "already_pending" };
   }
 
+  const pendingResult = {
+    ok: true as const,
+    projectId: invite.projectId,
+    request: inserted.request,
+    status: "pending" as const,
+    namingRequired: true as const,
+    suggestedProjectDisplayName: nameResult.name,
+  };
+
   const requesterIsAgent = await isAgentUserId(input.actorUserId);
-  const canAutoApprove =
-    !requesterIsAgent || nameResult.name !== null;
-  if (!canAutoApprove) {
-    return {
-      ok: true,
-      projectId: invite.projectId,
-      request: inserted.request,
-      status: "pending",
-      namingRequired: true,
-      suggestedProjectDisplayName: nameResult.name,
-    };
+  const hasName = nameResult.name !== null;
+  const testOverride = isAwcTestAutoApproveJoinsEnabled();
+  // Invite autoApprove applies only to claimed bots (linked owner_user_id).
+  const linkedOwnerId = requesterIsAgent
+    ? await resolveAgentLinkedOwnerUserId(input.actorUserId)
+    : input.actorUserId;
+  const inviteAutoApproveAllowed =
+    invite.autoApprove && linkedOwnerId !== null;
+  const mayAutoApprove =
+    (inviteAutoApproveAllowed || testOverride) &&
+    (!requesterIsAgent || hasName);
+  if (!mayAutoApprove) {
+    return pendingResult;
   }
 
   const project = await getUserProjectById(invite.projectId);
   if (project === null) {
-    return {
-      ok: true,
-      projectId: invite.projectId,
-      request: inserted.request,
-      status: "pending",
-      namingRequired: true,
-      suggestedProjectDisplayName: nameResult.name,
-    };
+    return pendingResult;
   }
 
   const approved = await approveProjectAccessRequest({
@@ -142,16 +151,24 @@ export const redeemProjectInvite = async (input: {
     scopes,
   });
   if (!approved.ok) {
-    // Leave pending for owner Approve (e.g. race on display name).
-    return {
-      ok: true,
-      projectId: invite.projectId,
-      request: inserted.request,
-      status: "pending",
-      namingRequired: true,
-      suggestedProjectDisplayName: nameResult.name,
-    };
+    return pendingResult;
   }
+
+  const label = invite.id.slice(0, 8);
+  const displayName =
+    approved.membership.projectDisplayName ?? nameResult.name ?? "Assistant";
+  await writeProjectAccessAudit({
+    projectId: invite.projectId,
+    actorUserId: project.ownerUserId,
+    targetUserId: input.actorUserId,
+    action: "invite.auto_approve_redeem",
+    detail: {
+      inviteId: invite.id,
+      label,
+      membershipId: approved.membership.id,
+      projectDisplayName: displayName,
+    },
+  });
 
   return {
     ok: true,

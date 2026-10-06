@@ -23,6 +23,7 @@ export default function mapProjectInviteRow(
     scopes: parseScopes(row.scopes),
     maxUses: Number(row.max_uses),
     usesRemaining: Number(row.uses_remaining),
+    autoApprove: row.auto_approve === true,
     expiresAt: String(row.expires_at),
     revokedAt: row.revoked_at ? String(row.revoked_at) : null,
     createdAt: String(row.created_at),

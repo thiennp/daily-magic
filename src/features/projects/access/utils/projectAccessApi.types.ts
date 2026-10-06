@@ -47,4 +47,5 @@ export type InviteListItem = {
   readonly usesRemaining: number;
   readonly teamLabel: string | null;
   readonly scopes: readonly string[];
+  readonly autoApprove: boolean;
 };

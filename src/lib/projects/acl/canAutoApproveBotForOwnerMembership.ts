@@ -1,18 +1,14 @@
 import type { ProjectMembershipRole } from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
 
 /**
- * FSA-friendly reason when a bot joins active because its linked human
- * owner holds an editor-or-higher human seat (not project owner).
- * Same-owner auto-approve stays a separate path.
+ * @deprecated Silent member-owner bot auto-approve was removed.
+ * Joins require explicit owner Approve or invite.autoApprove / test flag.
+ * Kept for FSA/audit reason string stability; always returns false.
  */
 export const MEMBER_OWNER_BOT_AUTO_APPROVE_REASON =
   "member_owner_bot_auto_approve" as const;
 
-/**
- * Human invite roles are member|viewer. "member" is editor-or-higher for
- * seat powers (Dispatch, connect-own-bots). DB also allows role "owner" on
- * memberships; treat that as qualifying. Viewer never auto-approves.
- */
+/** Always false — member-owner auto-approve path removed. */
 export const canAutoApproveBotForOwnerMembership = (
-  role: ProjectMembershipRole,
-): boolean => role === "member" || role === "owner";
+  _role: ProjectMembershipRole,
+): boolean => false;

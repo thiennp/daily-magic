@@ -32,7 +32,7 @@ vi.mock("@/lib/projects/acl/checkProjectMembershipStatus", () => ({
 const approveMock = vi.mocked(approveProjectAccessRequest);
 const sameOwnerMock = vi.mocked(isAgentSameProjectOwner);
 
-describe("createProjectAccessRequest same-owner auto-approve", () => {
+describe("createProjectAccessRequest same-owner (silent auto-approve removed)", () => {
   beforeEach(() => {
     sqlMock.mockReset();
     resetProjectAclSchemaEnsureForTests();
@@ -66,7 +66,7 @@ describe("createProjectAccessRequest same-owner auto-approve", () => {
     expect(approveMock).not.toHaveBeenCalled();
   });
 
-  it("auto-approves when same-owner linked and display name present", async () => {
+  it("stays pending when same-owner linked and display name present", async () => {
     sameOwnerMock.mockResolvedValue(true);
     approveMock.mockResolvedValue({
       ok: true,
@@ -107,11 +107,8 @@ describe("createProjectAccessRequest same-owner auto-approve", () => {
     });
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.status).toBe("active");
-    expect(approveMock).toHaveBeenCalled();
-    if (result.status === "active") {
-      expect(result.membership.id).toBe("mem-1");
-    }
+    expect(result.status).toBe("pending");
+    expect(approveMock).not.toHaveBeenCalled();
   });
 
   it("stays pending when same-owner but agent has no display name", async () => {

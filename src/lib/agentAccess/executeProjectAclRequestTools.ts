@@ -45,7 +45,7 @@ export const executeProjectAclRequestTools = async (input: {
         projectDisplayName: result.membership.projectDisplayName,
         projectApiKey: result.projectApiKey,
         message:
-          "Access granted (same-owner auto-approve). Call get_my_project_access; skip wait for Approve.",
+          "Access granted (test auto-approve only). Call get_my_project_access.",
       });
     }
     return agentAccessTextResult({
@@ -54,7 +54,7 @@ export const executeProjectAclRequestTools = async (input: {
       requestId: result.request.id,
       projectId: result.request.projectId,
       message:
-        "Access request pending. Call get_my_project_access; wait for owner Approve unless status becomes active.",
+        "Access request pending. Call get_my_project_access; wait for the project owner to Approve.",
     });
   }
 

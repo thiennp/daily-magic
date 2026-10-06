@@ -33,6 +33,8 @@ export const createProjectInvite = async (input: {
   readonly scopes?: unknown;
   readonly maxUses?: unknown;
   readonly expiresInDays?: unknown;
+  /** Owner opt-in; default false. Only the project owner can set this. */
+  readonly autoApprove?: boolean;
 }): Promise<CreateProjectInviteResult> => {
   const project = await getUserProjectById(input.projectId);
   if (project === null) {
@@ -45,6 +47,7 @@ export const createProjectInvite = async (input: {
   const maxUses = clampInviteMaxUses(input.maxUses);
   const expiresInDays = clampInviteExpiresDays(input.expiresInDays);
   const scopes = parseInviteScopes(input.scopes);
+  const autoApprove = input.autoApprove === true;
   const teamLabel =
     typeof input.teamLabel === "string" && input.teamLabel.trim().length > 0
       ? input.teamLabel.trim().slice(0, 64)
@@ -63,7 +66,7 @@ export const createProjectInvite = async (input: {
     await sql`
       INSERT INTO project_invites (
         id, project_id, created_by_user_id, token_hash, team_label, scopes,
-        max_uses, uses_remaining, expires_at
+        max_uses, uses_remaining, expires_at, auto_approve
       )
       VALUES (
         ${inviteId},
@@ -74,7 +77,8 @@ export const createProjectInvite = async (input: {
         ${[...scopes]},
         ${maxUses},
         ${maxUses},
-        ${expiresAt}::timestamptz
+        ${expiresAt}::timestamptz,
+        ${autoApprove}
       )
       RETURNING *
     `,
@@ -92,8 +96,17 @@ export const createProjectInvite = async (input: {
       maxUses: invite.maxUses,
       expiresAt: invite.expiresAt,
       teamLabel: invite.teamLabel,
+      autoApprove: invite.autoApprove,
     },
   });
+  if (autoApprove) {
+    await writeProjectAccessAudit({
+      projectId: input.projectId,
+      actorUserId: input.ownerUserId,
+      action: "invite.auto_approve_on",
+      detail: { inviteId: invite.id, label: invite.id.slice(0, 8) },
+    });
+  }
   return {
     ok: true,
     invite,

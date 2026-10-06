@@ -16,6 +16,8 @@ export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
     expires_at TIMESTAMPTZ NOT NULL,
     revoked_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
+  await sql`ALTER TABLE project_invites
+    ADD COLUMN IF NOT EXISTS auto_approve BOOLEAN NOT NULL DEFAULT FALSE`;
   await sql`CREATE TABLE IF NOT EXISTS project_api_keys (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
     project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,

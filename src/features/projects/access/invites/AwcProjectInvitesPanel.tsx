@@ -15,8 +15,12 @@ interface AwcProjectInvitesPanelProps {
   readonly createdInvitePlatform?: ProjectInvitePlatform;
   readonly projectId: string;
   readonly projectName?: string | null;
-  readonly onCreate: (platform: ProjectInvitePlatform) => void;
+  readonly onCreate: (
+    platform: ProjectInvitePlatform,
+    autoApprove: boolean,
+  ) => void;
   readonly onRevoke: (inviteId: string) => void;
+  readonly onTurnOffAutoApprove?: (inviteId: string) => void;
   readonly onClearCreatedUrl: () => void;
   /** When nested under AccessSection, skip local heading/intro. */
   readonly hideChrome?: boolean;
@@ -32,6 +36,7 @@ export default function AwcProjectInvitesPanel({
   projectName = null,
   onCreate,
   onRevoke,
+  onTurnOffAutoApprove,
   onClearCreatedUrl,
   hideChrome = false,
 }: AwcProjectInvitesPanelProps) {
@@ -66,7 +71,11 @@ export default function AwcProjectInvitesPanel({
       {invites.length === 0 ? (
         <p className="mt-2 text-sm text-gray-500">{copy.invitesEmpty}</p>
       ) : (
-        <AwcProjectInviteListSections invites={invites} onRevoke={onRevoke} />
+        <AwcProjectInviteListSections
+          invites={invites}
+          onRevoke={onRevoke}
+          onTurnOffAutoApprove={onTurnOffAutoApprove}
+        />
       )}
     </div>
   );

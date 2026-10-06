@@ -32,7 +32,7 @@ describe("buildProjectInviteAgentPrompt", () => {
     expect(prompt).toMatch(/wait for the project owner to Approve/i);
     expect(prompt).toMatch(/come back and confirm/i);
     expect(prompt).toMatch(/do not busy-poll|not silent polling/i);
-    expect(prompt).toMatch(/skip.*wait for Approve|If status is active/i);
+    expect(prompt).toMatch(/If status is active|wait for the project owner to Approve/i);
     expect(prompt).toMatch(/Bots you own can join without Approve/i);
     expect(prompt).toContain("get_my_project_access");
     expect(prompt).toContain("toMembershipId");

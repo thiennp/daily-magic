@@ -4,7 +4,9 @@ import {
   createProjectInviteApi,
   renameMembershipDisplayNameApi,
   revokeProjectInviteApi,
+  updateProjectInviteAutoApproveApi,
 } from "@/features/projects/access/utils/projectAccessApi";
+import { AWC_PROJECT_INVITE_AUTO_APPROVE_COPY } from "@/features/projects/access/invites/awcProjectInviteAutoApproveCopy.constant";
 import type { ProjectInvitePlatform } from "@/features/projects/access/invites/projectInvitePlatform.type";
 import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
 
@@ -20,8 +22,13 @@ export const useAwcProjectInviteActions = (input: {
     platform: ProjectInvitePlatform,
   ) => void;
 }) => {
-  const createInvite = async (platform: ProjectInvitePlatform = "grok") => {
-    const result = await createProjectInviteApi(input.projectId, {});
+  const createInvite = async (
+    platform: ProjectInvitePlatform = "grok",
+    autoApprove = false,
+  ) => {
+    const result = await createProjectInviteApi(input.projectId, {
+      autoApprove: autoApprove === true,
+    });
     if (result.url) {
       input.setCreatedInviteUrl(result.url);
       input.setCreatedInviteToken(
@@ -54,6 +61,20 @@ export const useAwcProjectInviteActions = (input: {
     await input.reload();
   };
 
+  const turnOffAutoApprove = async (inviteId: string) => {
+    const result = await updateProjectInviteAutoApproveApi(
+      input.projectId,
+      inviteId,
+      false,
+    );
+    input.setMessage(
+      result.ok
+        ? AWC_PROJECT_INVITE_AUTO_APPROVE_COPY.turnOffToast
+        : mapProjectAccessError(result.errorMessage, "Failed."),
+    );
+    await input.reload();
+  };
+
   const renameMember = async (
     membershipId: string,
     projectDisplayName: string,
@@ -71,5 +92,5 @@ export const useAwcProjectInviteActions = (input: {
     return { ok: result.ok, errorMessage };
   };
 
-  return { createInvite, revokeInvite, renameMember };
+  return { createInvite, revokeInvite, turnOffAutoApprove, renameMember };
 };
