@@ -4,6 +4,7 @@ import {
   hashUserCode,
   normalizeUserCode,
 } from "@/lib/agentAccess/deviceCode/hashDeviceCodes";
+import { parseSqlTimestamptz } from "@/lib/agentAccess/deviceCode/parseSqlTimestamptz";
 import { asRowArray, getSql } from "@/lib/db";
 
 export type DeviceRequestRow = {
@@ -40,16 +41,14 @@ export const loadDeviceRequestByUserCode = async (input: {
   if (row === undefined || typeof row.id !== "string") {
     return null;
   }
-  const expiresAt =
-    typeof row.expires_at === "string"
-      ? row.expires_at
-      : row.expires_at instanceof Date
-        ? row.expires_at.toISOString()
-        : "";
+  const expiresAt = parseSqlTimestamptz(row.expires_at);
   const nowMs = input.nowMs ?? Date.now();
-  let status = typeof row.status === "string" ? row.status : "pending";
-  if (status === "pending" && expiresAt.length > 0 && Date.parse(expiresAt) <= nowMs) {
-    status = "expired";
+  const rawStatus = typeof row.status === "string" ? row.status : "pending";
+  const expiredPending =
+    rawStatus === "pending" &&
+    expiresAt.length > 0 &&
+    Date.parse(expiresAt) <= nowMs;
+  if (expiredPending) {
     await sql`
       UPDATE agent_access_device_requests
       SET status = 'expired'
@@ -58,7 +57,7 @@ export const loadDeviceRequestByUserCode = async (input: {
   }
   return {
     id: row.id,
-    status,
+    status: expiredPending ? "expired" : rawStatus,
     clientName: typeof row.client_name === "string" ? row.client_name : null,
     displayName: typeof row.display_name === "string" ? row.display_name : null,
     expiresAt,

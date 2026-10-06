@@ -35,11 +35,9 @@ export const createDeviceCode = (): string =>
 export const createUserCode = (): string => {
   const alphabet = DEVICE_USER_CODE_ALPHABET;
   const bytes = randomBytes(DEVICE_USER_CODE_LENGTH);
-  let out = "";
-  for (let i = 0; i < DEVICE_USER_CODE_LENGTH; i += 1) {
-    out += alphabet[bytes[i]! % alphabet.length]!;
-  }
-  return out;
+  return Array.from({ length: DEVICE_USER_CODE_LENGTH }, (_, index) => {
+    return alphabet[bytes[index]! % alphabet.length]!;
+  }).join("");
 };
 
 export const createRefreshToken = (): string =>

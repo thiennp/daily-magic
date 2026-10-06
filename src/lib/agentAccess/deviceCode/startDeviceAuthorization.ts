@@ -18,48 +18,12 @@ import {
   hashDeviceCode,
   hashUserCode,
 } from "@/lib/agentAccess/deviceCode/hashDeviceCodes";
+import { readOptionalDeviceName } from "@/lib/agentAccess/deviceCode/readOptionalDeviceName";
+import type { StartDeviceAuthorizationResult } from "@/lib/agentAccess/deviceCode/StartDeviceAuthorizationResult.type";
 import { requireAwcTermsAcceptance } from "@/lib/agentAccess/requireAwcTermsAcceptance";
 import { getSql } from "@/lib/db";
 
-export type StartDeviceAuthorizationResult =
-  | {
-      readonly ok: true;
-      readonly status: 200;
-      readonly body: {
-        readonly device_code: string;
-        readonly user_code: string;
-        readonly verification_uri: string;
-        readonly verification_uri_complete: string;
-        readonly expires_in: number;
-        readonly interval: number;
-      };
-    }
-  | {
-      readonly ok: false;
-      readonly status: number;
-      readonly code: string;
-      readonly error: string;
-    };
-
-const readOptionalName = (
-  value: unknown,
-  max: number,
-): string | null | "invalid" => {
-  if (value === undefined || value === null) {
-    return null;
-  }
-  if (typeof value !== "string") {
-    return "invalid";
-  }
-  const trimmed = value.trim();
-  if (trimmed.length === 0) {
-    return null;
-  }
-  if (trimmed.length > max) {
-    return "invalid";
-  }
-  return trimmed;
-};
+export type { StartDeviceAuthorizationResult };
 
 export const startDeviceAuthorization = async (input: {
   readonly body: unknown;
@@ -103,8 +67,8 @@ export const startDeviceAuthorization = async (input: {
     };
   }
 
-  const clientName = readOptionalName(raw.clientName, DEVICE_CLIENT_NAME_MAX);
-  const displayName = readOptionalName(
+  const clientName = readOptionalDeviceName(raw.clientName, DEVICE_CLIENT_NAME_MAX);
+  const displayName = readOptionalDeviceName(
     raw.displayName,
     Math.min(DEVICE_CLIENT_NAME_MAX, AGENT_ACCESS_DISPLAY_NAME_MAX_LENGTH),
   );

@@ -8,31 +8,16 @@ import {
   hashRefreshToken,
   isAgentAccessRefreshToken,
 } from "@/lib/agentAccess/deviceCode/hashDeviceCodes";
+import { parseSqlTimestamptz } from "@/lib/agentAccess/deviceCode/parseSqlTimestamptz";
+import { refreshDeviceInvalidGrant } from "@/lib/agentAccess/deviceCode/refreshDeviceInvalidGrant";
+import type { RefreshDeviceAccessTokenResult } from "@/lib/agentAccess/deviceCode/RefreshDeviceAccessTokenResult.type";
 import {
   createAgentAccessToken,
   hashAgentAccessToken,
 } from "@/lib/agentAccess/hashAgentAccessToken";
 import { asRowArray, getSql } from "@/lib/db";
 
-export type RefreshDeviceAccessTokenResult =
-  | {
-      readonly ok: true;
-      readonly status: 200;
-      readonly body: {
-        readonly access_token: string;
-        readonly token_type: "Bearer";
-        readonly expires_in: number;
-        readonly refresh_token: string;
-      };
-    }
-  | {
-      readonly ok: false;
-      readonly status: number;
-      readonly body: {
-        readonly error: string;
-        readonly error_description?: string;
-      };
-    };
+export type { RefreshDeviceAccessTokenResult };
 
 /** Rotate refresh token on each use (RFC 8628 / best practice). */
 export const refreshDeviceAccessToken = async (input: {
@@ -41,14 +26,7 @@ export const refreshDeviceAccessToken = async (input: {
 }): Promise<RefreshDeviceAccessTokenResult> => {
   const refreshToken = input.refreshToken.trim();
   if (!isAgentAccessRefreshToken(refreshToken)) {
-    return {
-      ok: false,
-      status: 400,
-      body: {
-        error: "invalid_grant",
-        error_description: "refresh_token is invalid.",
-      },
-    };
+    return refreshDeviceInvalidGrant("refresh_token is invalid.");
   }
 
   await ensureDeviceCodeSchema();
@@ -67,46 +45,21 @@ export const refreshDeviceAccessToken = async (input: {
   )[0];
 
   if (row === undefined || typeof row.id !== "string") {
-    return {
-      ok: false,
-      status: 400,
-      body: {
-        error: "invalid_grant",
-        error_description: "refresh_token is unknown or already rotated.",
-      },
-    };
+    return refreshDeviceInvalidGrant(
+      "refresh_token is unknown or already rotated.",
+    );
   }
 
   if (row.revoked_at !== null && row.revoked_at !== undefined) {
-    return {
-      ok: false,
-      status: 400,
-      body: {
-        error: "invalid_grant",
-        error_description: "Token was revoked.",
-      },
-    };
+    return refreshDeviceInvalidGrant("Token was revoked.");
   }
 
-  const refreshExpiresAt =
-    typeof row.refresh_expires_at === "string"
-      ? row.refresh_expires_at
-      : row.refresh_expires_at instanceof Date
-        ? row.refresh_expires_at.toISOString()
-        : null;
-
+  const refreshExpiresAt = parseSqlTimestamptz(row.refresh_expires_at);
   if (
-    refreshExpiresAt === null ||
+    refreshExpiresAt.length === 0 ||
     Date.parse(refreshExpiresAt) <= nowMs
   ) {
-    return {
-      ok: false,
-      status: 400,
-      body: {
-        error: "invalid_grant",
-        error_description: "refresh_token expired.",
-      },
-    };
+    return refreshDeviceInvalidGrant("refresh_token expired.");
   }
 
   const nextAccess = createAgentAccessToken();
@@ -132,14 +85,7 @@ export const refreshDeviceAccessToken = async (input: {
   );
 
   if (rotated.length === 0) {
-    return {
-      ok: false,
-      status: 400,
-      body: {
-        error: "invalid_grant",
-        error_description: "refresh_token was already rotated.",
-      },
-    };
+    return refreshDeviceInvalidGrant("refresh_token was already rotated.");
   }
 
   return {
