@@ -18,7 +18,7 @@ struct ComputerView: View {
             switch self {
             case .projects: return "Projects"
             case .tools: return "Agent tools"
-            case .bots: return "Bots"
+            case .bots: return "Assistants"
             }
         }
         var systemImage: String {
@@ -193,7 +193,7 @@ struct ComputerView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("No project yet")
                         .font(.subheadline.weight(.semibold))
-                    Text("Connect this computer to a project to let its bots work here.")
+                    Text("Connect this computer to a project to let its assistants work here.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Button("Connect a project") {
@@ -229,7 +229,7 @@ struct ComputerView: View {
                 .disabled(isScanning)
                 .controlSize(.small)
             }
-            Text("Tools found on this computer. Add to project lets that project's bots use the tool here. It is off until the owner turns it on.")
+            Text("Tools found on this computer. Add to project lets that project's assistants use the tool here. It is off until the owner turns it on.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
             if let reason = store.cliToggleDisabledReason {
@@ -295,13 +295,13 @@ struct ComputerView: View {
 
     private var botsTab: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Bots")
+            Text("Assistants")
                 .font(.headline)
             if store.botStubs.isEmpty || !store.hasConnectedProject {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("No bots on this computer")
+                    Text("No assistants on this computer")
                         .font(.subheadline.weight(.semibold))
-                    Text("Bots from your connected projects show up here when they run.")
+                    Text("Assistants from your connected projects show up here when they run.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

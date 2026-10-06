@@ -96,7 +96,7 @@ final class MacAppLocalUIStore: ObservableObject {
     @Published var autoStartCore: Bool {
         didSet { defaults.set(autoStartCore, forKey: Key.autoStartCore) }
     }
-    /// UI stub bot rows for Computer → Bots tab.
+    /// UI stub bot rows for Computer → Assistants tab.
     @Published var botStubs: [LocalBotStubItem]
 
     init(defaults: UserDefaults = .standard) {
@@ -152,7 +152,7 @@ final class MacAppLocalUIStore: ObservableObject {
 
     var cliToggleDisabledReason: String? {
         if !hasConnectedProject {
-            return "Connect this computer to a project to let its bots work here."
+            return "Connect this computer to a project to let its assistants work here."
         }
         if !isOwner {
             return "Only the project owner can change this."

@@ -36,7 +36,7 @@ struct MacAppMenuBarContentView: View {
             }
         } message: {
             Text(controller.state == .running
-                 ? "Bots cannot use this computer until you open the app again. The menu bar icon goes away until you open the app again."
+                 ? "Assistants cannot use this computer until you open the app again. The menu bar icon goes away until you open the app again."
                  : "The menu bar icon goes away until you open the app again.")
         }
     }
@@ -107,7 +107,7 @@ struct MacAppMenuBarContentView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("No project yet")
                         .font(.subheadline.weight(.semibold))
-                    Text("Connect this computer to a project to let its bots work here.")
+                    Text("Connect this computer to a project to let its assistants work here.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Button("Connect a project") {

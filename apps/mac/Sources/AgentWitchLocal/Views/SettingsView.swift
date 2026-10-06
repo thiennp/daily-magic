@@ -179,7 +179,7 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Toggle("A task finishes", isOn: $store.notifyDone)
                     Toggle("A task fails", isOn: $store.notifyFail)
-                    Toggle("A bot needs my approval", isOn: $store.notifyAsk)
+                    Toggle("An assistant needs my approval", isOn: $store.notifyAsk)
                 }
             }
             settingsCard("Remove this computer") {
@@ -247,21 +247,21 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 14) {
             settingsCard("Ask me first") {
                 VStack(alignment: .leading, spacing: 8) {
-                    Toggle("Before a bot runs a command", isOn: $store.askBeforeCommand)
+                    Toggle("Before an assistant runs a command", isOn: $store.askBeforeCommand)
                     Text("You see what it wants to do and choose.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    Toggle("Before a bot changes files outside its folder", isOn: $store.askBeforeOutsideFolder)
+                    Toggle("Before an assistant changes files outside its folder", isOn: $store.askBeforeOutsideFolder)
                     Text("Recommended.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
             }
-            settingsCard("Folders bots can use") {
+            settingsCard("Folders assistants can use") {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("No folders yet")
                         .font(.subheadline.weight(.semibold))
-                    Text("Bots can only work inside folders you add. Add-folder wiring stays a UI stub — no invented backend.")
+                    Text("Assistants can only work inside folders you add. Add-folder wiring stays a UI stub — no invented backend.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Button("Add folder") {}
@@ -278,7 +278,7 @@ struct SettingsView: View {
                         .foregroundStyle(.secondary)
                     Text("Files and folders")
                         .font(.subheadline.weight(.semibold))
-                    Text("So bots can read and write in the folders above.")
+                    Text("So assistants can read and write in the folders above.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Button("Open system settings") {
@@ -308,7 +308,7 @@ struct SettingsView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Toggle("Start running when it opens", isOn: $store.autoStartCore)
-                    Text("Bots can use this computer right away.")
+                    Text("Assistants can use this computer right away.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
