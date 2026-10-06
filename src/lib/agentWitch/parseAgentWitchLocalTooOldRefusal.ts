@@ -21,6 +21,7 @@ export const parseAgentWitchLocalTooOldRefusal = (
     installBundleVersion?: unknown;
     minBundleVersion?: unknown;
     downloadUrl?: unknown;
+    message?: unknown;
   };
 
   if (record.error !== AGENT_WITCH_LOCAL_TOO_OLD_ERROR) {
@@ -49,5 +50,8 @@ export const parseAgentWitchLocalTooOldRefusal = (
           ? String(record.minBundleVersion)
           : AGENT_WITCH_LOCAL_MIN_CONNECT_BUNDLE_VERSION,
     downloadUrl,
+    ...(typeof record.message === "string" && record.message.trim().length > 0
+      ? { message: record.message.trim() }
+      : {}),
   };
 };

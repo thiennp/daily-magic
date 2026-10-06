@@ -35,6 +35,14 @@ Architecture for multi-instance presence and the dispatch outbox: `docs/adr/0005
 
 ---
 
+## OPEN-005 — AWL too old (or broken) to self-update
+
+**Symptom:** Device row shows too old (`connectVersionStatus: "too_old"`, below `AGENT_WITCH_LOCAL_MIN_CONNECT_BUNDLE_VERSION`) or AWL does not answer `/health`; self-update never lands.
+
+**What to do:** Run the update + repair one-liner (`/install/agent-witch-update.sh`, Windows: `AGENT_WITCH_REPAIR_WINDOWS_COMMAND`). It keeps the pairing link. Commands per OS: `GET /install/agent-witch/repair`. Open caveats: `src/lib/agentWitch/repair/KNOWN_ISSUES.md`.
+
+---
+
 ## OPEN-004 — AWL Status showed WebSocket connected after the socket closed
 
 **Symptom:** Agent Witch Local **Status** could show **Connected** for up to ~2 minutes after the computer client disconnected, while **agentwitch.com** already listed the computer as offline or reconnecting.

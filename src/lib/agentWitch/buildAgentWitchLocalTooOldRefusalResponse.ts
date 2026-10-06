@@ -1,3 +1,4 @@
+import { AGENT_WITCH_LOCAL_TOO_OLD_REFUSAL_COPY } from "@/lib/agentWitch/agentWitchLocalTooOldRefusalCopy.constant";
 import { AGENT_WITCH_LOCAL_MIN_CONNECT_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchLocalMinConnectBundleVersion.constant";
 import {
   AGENT_WITCH_LOCAL_DOWNLOAD_URL,
@@ -15,6 +16,7 @@ export const buildAgentWitchLocalTooOldRefusalResponse = (
     installBundleVersion,
     minBundleVersion: AGENT_WITCH_LOCAL_MIN_CONNECT_BUNDLE_VERSION,
     downloadUrl: AGENT_WITCH_LOCAL_DOWNLOAD_URL,
+    message: AGENT_WITCH_LOCAL_TOO_OLD_REFUSAL_COPY.connectRefusedMessage,
   };
 
   return Response.json(body, { status: AGENT_WITCH_LOCAL_TOO_OLD_HTTP_STATUS });

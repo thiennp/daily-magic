@@ -1,11 +1,12 @@
 import { buildAppOrigin } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
-import { renderUpdateAgentWitchScript } from "@/lib/agentWitch/renderUpdateAgentWitchScript";
+import { renderRepairAgentWitchScript } from "@/lib/agentWitch/repair/renderRepairAgentWitchScript";
 
 export const dynamic = "force-dynamic";
 
+/** Legacy alias of /install/agent-witch-update.sh (same update + repair script). */
 export async function GET(request: Request): Promise<Response> {
   const origin = buildAppOrigin(request);
-  const script = renderUpdateAgentWitchScript(origin);
+  const script = renderRepairAgentWitchScript(origin);
 
   return new Response(script, {
     headers: {

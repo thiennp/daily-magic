@@ -33,6 +33,13 @@ describe("renderUpdateAgentWitchScript", () => {
     expect(script).toContain('echo "Updating to: ${target_version}"');
   });
 
+  it("AWLR-007: tokenless update does not call local outside a function", () => {
+    const script = renderUpdateAgentWitchScript("https://www.agentwitch.com");
+
+    expect(script).toContain("    has_local_config=0");
+    expect(script).not.toContain("local has_local_config");
+  });
+
   it("AGENT-063: run.sh heredoc tolerates unset PRESET_PROFILE_EMAIL under set -u", () => {
     const script = renderUpdateAgentWitchScript("https://www.agentwitch.com");
 

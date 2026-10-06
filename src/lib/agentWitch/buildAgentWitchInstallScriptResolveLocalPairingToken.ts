@@ -74,7 +74,7 @@ export const buildAgentWitchInstallScriptPairingTokenRequiredCheck = (input: {
   return `
 if [[ -z "\${PAIRING_TOKEN}" ]]; then
   if [[ "${isUpdate ? "1" : "0"}" == "1" ]]; then
-    local has_local_config=0
+    has_local_config=0
     if [[ -f "\${CONFIG_PATH}" ]]; then
       has_local_config=1
     fi
