@@ -20,7 +20,6 @@ export const PROJECT_PAGE_V5_TAB_ORDER = [
 export type ProjectPageV5TabId = (typeof PROJECT_PAGE_V5_TAB_ORDER)[number];
 
 export const PROJECT_PAGE_V5_TAB_LABELS: Record<ProjectPageV5TabId, string> = {
-  overview: "Overview",
   team: "Team",
   ...PROJECT_PAGE_TAB_LABELS,
 };

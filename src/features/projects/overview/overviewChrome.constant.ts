@@ -22,3 +22,15 @@ export const OVERVIEW_FACT_CLASS =
 
 export const OVERVIEW_FACT_WARN_CLASS =
   "awc-focus-ring inline-flex items-center gap-1.5 rounded-awc-pill bg-awc-warn-soft px-3.5 py-1.5 text-[13.5px] text-awc-warn shadow-none transition";
+
+/** Neutral pill — shared with Pitfalls severity `info` (main export name). */
+export const OVERVIEW_PILL_NEUTRAL_CLASS =
+  "inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600 dark:bg-white/10 dark:text-gray-300";
+
+/** Severity block pill — shared with Pitfalls (main export name). */
+export const OVERVIEW_SEVERITY_BLOCK_CLASS =
+  "inline-flex items-center rounded-full border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-medium text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300";
+
+/** Severity warn pill — shared with Pitfalls (main export name; distinct from FACT_WARN). */
+export const OVERVIEW_SEVERITY_WARN_CLASS =
+  "inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-300";
