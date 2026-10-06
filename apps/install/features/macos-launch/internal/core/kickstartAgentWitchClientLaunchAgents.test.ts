@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("./kickstartAgentWitchLaunchAgent", () => ({
   kickstartAgentWitchLaunchAgent: vi.fn(),
@@ -15,10 +15,18 @@ import { kickstartAgentWitchClientLaunchAgents } from "./kickstartAgentWitchClie
 import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
 
 describe("kickstartAgentWitchClientLaunchAgents", () => {
+  beforeEach(() => {
+    vi.mocked(kickstartAgentWitchLaunchAgent).mockClear();
+    vi.mocked(listAgentWitchLaunchTargets).mockClear();
+  });
+
   it("kickstarts each client launch target", async () => {
     vi.mocked(kickstartAgentWitchLaunchAgent).mockResolvedValue({ ok: true });
 
-    const kicked = await kickstartAgentWitchClientLaunchAgents("/tmp/install");
+    const kicked = await kickstartAgentWitchClientLaunchAgents(
+      "/tmp/install",
+      "darwin",
+    );
 
     expect(listAgentWitchLaunchTargets).toHaveBeenCalledWith("/tmp/install");
     expect(kickstartAgentWitchLaunchAgent).toHaveBeenCalledWith(
@@ -27,4 +35,18 @@ describe("kickstartAgentWitchClientLaunchAgents", () => {
     );
     expect(kicked).toEqual(["com.agent-witch"]);
   });
+
+  it.each(["linux", "win32", "freebsd"])(
+    "never touches launchctl on %s",
+    async (platform) => {
+      const kicked = await kickstartAgentWitchClientLaunchAgents(
+        "/tmp/install",
+        platform,
+      );
+
+      expect(kicked).toEqual([]);
+      expect(listAgentWitchLaunchTargets).not.toHaveBeenCalled();
+      expect(kickstartAgentWitchLaunchAgent).not.toHaveBeenCalled();
+    },
+  );
 });

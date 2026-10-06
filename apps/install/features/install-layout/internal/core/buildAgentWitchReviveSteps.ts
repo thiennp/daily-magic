@@ -40,6 +40,12 @@ export const resolveAgentWitchRevivePlatform = (
 ): AgentWitchRevivePlatform =>
   REVIVE_PLATFORM_BY_NAME[(value ?? "").trim().toLowerCase()] ?? "unknown";
 
+/** Manual start the Linux install script documents when systemd is missing (`nohup "${RUN_PATH}"`). */
+export const buildAgentWitchLinuxManualStartCommand = (
+  installDirName: string,
+): string =>
+  `nohup "$HOME/${installDirName}/app/command/run.sh" >/dev/null 2>&1 &`;
+
 const healthCheckLine = (): string =>
   `curl -sS -m 5 "http://127.0.0.1:${AGENT_WITCH_LIVE_APP_PORT}/health" || echo "AWL still not responding — see logs:"`;
 
@@ -71,7 +77,7 @@ const buildLinuxReviveStep = (
 sleep 2
 ${healthCheckLine()}
 journalctl --user -u ${AGENT_WITCH_SYSTEMD_USER_UNIT_NAME} -n 50 --no-pager`,
-  note: `If systemctl is not available, the installer did not set up auto-start on this computer. Start the client by hand: nohup "$HOME/${input.installDirName}/app/command/run.sh" >/dev/null 2>&1 &`,
+  note: `If systemctl is not available, the installer did not set up auto-start on this computer. Start the client by hand: ${buildAgentWitchLinuxManualStartCommand(input.installDirName)}`,
 });
 
 /** Windows: AWL runs inside WSL; the tray drives it with `wsl.exe -e bash -lc` (apps/desktop). */

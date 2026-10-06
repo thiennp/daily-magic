@@ -11,6 +11,7 @@ export {
   resolveAgentWitchLaunchAgentPrefix,
 } from "../internal/core/resolveAgentWitchLaunchAgentPrefix.util";
 export {
+  buildAgentWitchLinuxManualStartCommand,
   buildAgentWitchReviveSteps,
   resolveAgentWitchRevivePlatform,
 } from "../internal/core/buildAgentWitchReviveSteps";
@@ -20,3 +21,9 @@ export type {
   AgentWitchReviveStep,
   AgentWitchReviveStepsInput,
 } from "../internal/core/buildAgentWitchReviveSteps";
+export {
+  reviveAgentWitchClientProcess,
+  type AgentWitchReviveProcessOutcome,
+  type AgentWitchReviveProcessResult,
+  type AgentWitchReviveProcessRunners,
+} from "../internal/core/reviveAgentWitchClientProcess";

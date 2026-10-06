@@ -9,6 +9,8 @@ import {
   resolveAgentWitchInstallDir,
   resolveAgentWitchLocalLayout,
 } from "@agent-witch/install-layout";
+import { reviveAgentWitchClientProcess } from "@agent-witch/install-layout/presentation";
+import { restartAgentWitchLinuxSystemdUserService } from "@agent-witch/install-linux-launch";
 import { kickstartAgentWitchClientLaunchAgents } from "@agent-witch/install-macos-launch";
 import {
   resolveLocalAppPublicKey,
@@ -51,7 +53,22 @@ export const runAgentWitchExternalLiveCli = (): void => {
         };
       },
       reviveWebSocket: () => {
-        void kickstartAgentWitchClientLaunchAgents(installDir);
+        void reviveAgentWitchClientProcess({
+          platform: process.platform,
+          installDir,
+          runners: {
+            kickstartLaunchAgents: () =>
+              kickstartAgentWitchClientLaunchAgents(
+                installDir,
+                process.platform,
+              ),
+            restartSystemdUserService: restartAgentWitchLinuxSystemdUserService,
+          },
+        }).then((result) => {
+          if (!result.ok) {
+            console.warn(`[agent-witch-live] Revive: ${result.message}`);
+          }
+        });
       },
     },
   });
