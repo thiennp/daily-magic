@@ -5,7 +5,10 @@ import { useState } from "react";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
 import { AWC_PROJECT_INVITE_PLATFORM_COPY } from "@/features/projects/access/invites/awcProjectInvitePlatformCopy.constant";
+import { AWC_PROJECT_INVITE_SHORT_PROMPT_COPY } from "@/features/projects/access/invites/awcProjectInviteShortPromptCopy.constant";
 import { buildProjectInviteAgentPrompt } from "@/features/projects/access/invites/buildProjectInviteAgentPrompt";
+import { buildProjectInviteShortPrompt } from "@/features/projects/access/invites/buildProjectInviteShortPrompt";
+import { resolveProjectInviteJoinToken } from "@/features/projects/access/invites/resolveProjectInviteJoinToken";
 import type { ProjectInvitePlatform } from "@/features/projects/access/invites/projectInvitePlatform.type";
 
 interface AwcProjectInviteCreatedBannerProps {
@@ -27,6 +30,16 @@ export default function AwcProjectInviteCreatedBanner({
   onClearCreatedUrl,
 }: AwcProjectInviteCreatedBannerProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
+  const shortCopy = AWC_PROJECT_INVITE_SHORT_PROMPT_COPY;
+  /** Today's full prompt, unchanged — the fallback for assistants that can't open links. */
+  const buildFullPrompt = () =>
+    buildProjectInviteAgentPrompt({
+      inviteUrl: createdInviteUrl,
+      token: createdInviteToken,
+      projectId,
+      projectName,
+      platform,
+    });
   const [toast, setToast] = useState<string | null>(null);
   const showToast = (message: string) => {
     setToast(message);
@@ -49,15 +62,15 @@ export default function AwcProjectInviteCreatedBanner({
           type="button"
           className={AWC_PROJECT_ACCESS_CTA.secondary}
           onClick={() => {
-            const prompt = buildProjectInviteAgentPrompt({
+            const joinToken = resolveProjectInviteJoinToken({
               inviteUrl: createdInviteUrl,
               token: createdInviteToken,
-              projectId,
-              projectName,
-              platform,
             });
+            const prompt = joinToken
+              ? buildProjectInviteShortPrompt({ token: joinToken, projectName })
+              : buildFullPrompt();
             void navigator.clipboard.writeText(prompt).then(() => {
-              showToast(copy.invitesPromptCopied);
+              showToast(shortCopy.copiedToast);
             });
           }}
         >
@@ -71,6 +84,17 @@ export default function AwcProjectInviteCreatedBanner({
           Dismiss
         </button>
       </div>
+      <button
+        type="button"
+        className="mt-2 text-[11px] font-medium text-amber-900 underline underline-offset-2 hover:no-underline dark:text-amber-200"
+        onClick={() => {
+          void navigator.clipboard.writeText(buildFullPrompt()).then(() => {
+            showToast(shortCopy.fullCopiedToast);
+          });
+        }}
+      >
+        {shortCopy.fallbackLink}
+      </button>
       {toast ? (
         <p className="mt-2 text-[11px] font-medium text-amber-900 dark:text-amber-100">
           {toast}

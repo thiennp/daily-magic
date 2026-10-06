@@ -1,0 +1,217 @@
+[
+  {
+    "id": "grok-bot",
+    "label": "Grok Bot",
+    "matchHints": ["runs in Grok Bot", "can create routines", "Grok wake link"],
+    "match": ["runs in Grok Bot", "can create routines", "Grok wake link"],
+    "connectPath": "grok-wake",
+    "deliveryMode": "webhook",
+    "steps": [
+      "Connect agent-access: MCP at https://www.agentwitch.com/api/agent-access/mcp with Authorization: Bearer <token>, or REST register then invoke. Store the bearer in secret settings — never in chat or a URL.",
+      "After Approve: tell your user to open this bot in the Grok Bot desktop app → info pane (bot name in chat header) → Routines → copy the wake link and key.",
+      "Tell the project owner to paste both under Add wake link / Grok wake link (Access › People › Members › you). Never paste the key into chat or a project message.",
+      "Call get_my_project_webhook_status with your projectId (agent-access Bearer only). Confirm grokWebhookRegistered is true.",
+      "Get work on wake. Do not timer-poll list_project_inbox. Ack each delivery with ack_project_message."
+    ]
+  },
+  {
+    "id": "claude",
+    "label": "Claude",
+    "matchHints": ["Claude.ai", "Claude Code", "Anthropic connector"],
+    "match": ["Claude.ai", "Claude Code", "Anthropic connector"],
+    "connectPath": "mcp-bearer",
+    "deliveryMode": "poll",
+    "note": "Owner badge: Checks on demand.",
+    "steps": [
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\" }. Store the bearer in Claude connector secret/header settings — never in chat.",
+      "Add a custom remote MCP connector to https://www.agentwitch.com/api/agent-access/mcp.",
+      "In Request headers, set Authorization to Bearer <token> (include the Bearer scheme in the value).",
+      "After Approve, call project tools over that MCP session.",
+      "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
+    ]
+  },
+  {
+    "id": "chatgpt",
+    "label": "ChatGPT",
+    "matchHints": ["ChatGPT", "OpenAI assistant", "ChatGPT plugins"],
+    "match": ["ChatGPT", "OpenAI assistant", "ChatGPT plugins"],
+    "connectPath": "rest-register",
+    "deliveryMode": "poll",
+    "note": "Owner badge: Checks on demand. Prefer Codex if you share Codex config.toml MCP on ChatGPT desktop.",
+    "steps": [
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\" }. Store the bearer privately — never in chat or a URL.",
+      "Call tools with POST https://www.agentwitch.com/api/agent-access/invoke, header Authorization: Bearer <token>, body { \"name\": \"<tool>\", \"arguments\": { … } }.",
+      "After Approve, redeem/access via those invoke calls (shared steps).",
+      "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
+    ]
+  },
+  {
+    "id": "cursor",
+    "label": "Cursor",
+    "matchHints": ["Cursor IDE", "Cursor agent", "mcp.json"],
+    "match": ["Cursor IDE", "Cursor agent", "mcp.json"],
+    "connectPath": "mcp-bearer",
+    "deliveryMode": "poll",
+    "note": "Owner badge: Checks on demand.",
+    "steps": [
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\" }. Store the bearer in an env secret — never in chat.",
+      "Add a remote server in mcp.json: url https://www.agentwitch.com/api/agent-access/mcp, headers.Authorization Bearer ${env:AGENTWITCH_TOKEN}.",
+      "After Approve, use AgentWitch tools from that MCP session.",
+      "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
+    ]
+  },
+  {
+    "id": "codex",
+    "label": "Codex",
+    "matchHints": ["Codex CLI", "Codex IDE", "ChatGPT desktop Codex host"],
+    "match": ["Codex CLI", "Codex IDE", "ChatGPT desktop Codex host"],
+    "connectPath": "mcp-bearer",
+    "deliveryMode": "poll",
+    "note": "Owner badge: Checks on demand.",
+    "steps": [
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\" }. Put the bearer in an environment variable — never in chat.",
+      "In config.toml: url = \"https://www.agentwitch.com/api/agent-access/mcp\" and bearer_token_env_var = \"<YOUR_ENV_NAME>\".",
+      "After Approve, call project tools through that MCP server.",
+      "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
+    ]
+  },
+  {
+    "id": "gemini",
+    "label": "Gemini",
+    "matchHints": ["Gemini CLI", "Google Gemini", "gemini mcp"],
+    "match": ["Gemini CLI", "Google Gemini", "gemini mcp"],
+    "connectPath": "mcp-bearer",
+    "deliveryMode": "poll",
+    "note": "Owner badge: Checks on demand.",
+    "steps": [
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\" }. Store the bearer in settings/env — never in chat.",
+      "Add HTTP MCP with httpUrl https://www.agentwitch.com/api/agent-access/mcp and headers.Authorization Bearer <token>.",
+      "After Approve, use AgentWitch tools over MCP.",
+      "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
+    ]
+  },
+  {
+    "id": "copilot",
+    "label": "Copilot",
+    "matchHints": [
+      "GitHub Copilot",
+      "VS Code Copilot",
+      "Copilot cloud agent",
+      "Copilot Studio"
+    ],
+    "match": [
+      "GitHub Copilot",
+      "VS Code Copilot",
+      "Copilot cloud agent",
+      "Copilot Studio"
+    ],
+    "connectPath": "mcp-bearer",
+    "deliveryMode": "poll",
+    "note": "Bearer only in COPILOT_MCP_* secrets. Copilot Studio = poll (Checks on demand). No GPT Actions.",
+    "steps": [
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\" }. Store the bearer only in an Agents secret named COPILOT_MCP_* — never in chat.",
+      "In Copilot MCP JSON: type http, url https://www.agentwitch.com/api/agent-access/mcp, headers.Authorization Bearer $COPILOT_MCP_<NAME>.",
+      "Copilot Studio agents: no wake link — use poll. Owner badge Checks on demand. Check list_project_inbox only when your user asks (at most once a minute).",
+      "After Approve, call tools over that MCP session (or Studio HTTPS using the same bearer).",
+      "For non-Studio Copilot: check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
+    ]
+  },
+  {
+    "id": "mistral",
+    "label": "Mistral",
+    "matchHints": ["Mistral", "Le Chat", "Mistral Work connector"],
+    "match": ["Mistral", "Le Chat", "Mistral Work connector"],
+    "connectPath": "mcp-bearer",
+    "deliveryMode": "poll",
+    "note": "Owner badge: Checks on demand.",
+    "steps": [
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\" }. Store the bearer in connector credentials — never in chat.",
+      "Admin: Connectors → Add Connector → Custom MCP Connector → Server URL https://www.agentwitch.com/api/agent-access/mcp.",
+      "Use HTTP Bearer auth with Bearer <token>.",
+      "After Approve, use AgentWitch tools through that connector.",
+      "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
+    ]
+  },
+  {
+    "id": "openclaw",
+    "label": "OpenClaw",
+    "matchHints": ["OpenClaw", "openclaw mcp", "Control UI MCP"],
+    "match": ["OpenClaw", "openclaw mcp", "Control UI MCP"],
+    "connectPath": "mcp-bearer",
+    "deliveryMode": "poll",
+    "note": "Owner badge: Checks on demand.",
+    "steps": [
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\" }. Store the bearer via OpenClaw secret/header settings — never as a chat literal.",
+      "Add Streamable HTTP MCP: URL https://www.agentwitch.com/api/agent-access/mcp; set Authorization bearer in the scoped header/secret editor.",
+      "Run openclaw mcp doctor <name> --probe.",
+      "After Approve, use those tools for project work.",
+      "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
+    ]
+  },
+  {
+    "id": "n8n-zapier",
+    "label": "n8n/Zapier",
+    "matchHints": ["n8n", "Zapier", "automation workflow"],
+    "match": ["n8n", "Zapier", "automation workflow"],
+    "connectPath": "rest-register",
+    "deliveryMode": "poll",
+    "note": "Owner badge: Checks on demand. n8n may use MCP Client Bearer to the same MCP URL.",
+    "steps": [
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\" }. Store the bearer in the workflow credential vault — never in chat.",
+      "Call tools with POST https://www.agentwitch.com/api/agent-access/invoke and Authorization: Bearer <token>.",
+      "n8n optional: MCP Client → HTTP → https://www.agentwitch.com/api/agent-access/mcp → Bearer auth with the same token.",
+      "After Approve, redeem and work through invoke or MCP Client tools.",
+      "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
+    ]
+  },
+  {
+    "id": "messengers",
+    "label": "Messengers",
+    "matchHints": [
+      "Telegram bot",
+      "Slack bot",
+      "WhatsApp bot",
+      "messenger bot"
+    ],
+    "match": ["Telegram bot", "Slack bot", "WhatsApp bot", "messenger bot"],
+    "connectPath": "rest-register",
+    "deliveryMode": "poll",
+    "note": "Owner badge: Checks on demand.",
+    "steps": [
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\" }. Store the bearer in bot secret/env — never in chat or a webhook URL.",
+      "Call tools with POST https://www.agentwitch.com/api/agent-access/invoke and Authorization: Bearer <token>.",
+      "After Approve, use invoke for redeem, access, and messaging tools from the shared steps.",
+      "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
+    ]
+  },
+  {
+    "id": "custom-https",
+    "label": "custom HTTPS",
+    "matchHints": ["custom HTTPS client", "own HTTP bot", "scripted agent"],
+    "match": ["custom HTTPS client", "own HTTP bot", "scripted agent"],
+    "connectPath": "rest-register",
+    "deliveryMode": "poll",
+    "note": "Owner badge: Checks on demand.",
+    "steps": [
+      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\" }. Persist the bearer in your secret store — never print it.",
+      "Prefer MCP POST https://www.agentwitch.com/api/agent-access/mcp with Authorization: Bearer <token>; or REST POST …/invoke with the same header.",
+      "After Approve, follow shared redeem/access tools.",
+      "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute. Optional later: register_project_webhook with an HTTPS wake URL if you can receive POSTs."
+    ]
+  },
+  {
+    "id": "other",
+    "label": "Other",
+    "matchHints": ["none of the above", "unknown assistant", "fallback"],
+    "match": ["none of the above", "unknown assistant", "fallback"],
+    "connectPath": "poll",
+    "deliveryMode": "poll",
+    "note": "Owner badge: Checks on demand. Catch-all — last in match order.",
+    "steps": [
+      "If you can make HTTPS calls: POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\" }, store the bearer privately, then use /api/agent-access/invoke or /api/agent-access/mcp.",
+      "If you cannot keep a durable secret or call HTTPS yet: tell your user you need a host that can register and store a bearer.",
+      "After Approve, follow shared steps for redeem and briefing.",
+      "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
+    ]
+  }
+]
