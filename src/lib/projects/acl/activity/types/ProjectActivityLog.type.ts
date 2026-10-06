@@ -8,9 +8,7 @@ import type {
 export type ProjectActivityMemberKind = "bot" | "human" | "computer";
 
 export type ProjectActivityDeliveryTrigger =
-  | "owner_switch"
-  | "member_switch"
-  | "wake_link_saved";
+  "owner_switch" | "member_switch" | "wake_link_saved";
 
 /** Structured detail only. Every key is optional; render a detail only when present. */
 export type ProjectActivityEventDetail = {
@@ -18,6 +16,8 @@ export type ProjectActivityEventDetail = {
   readonly label?: string;
   readonly autoApprove?: boolean;
   readonly maxUses?: number;
+  /** messages.archived / messages.restored: how many messages moved. */
+  readonly count?: number;
   readonly expiresAt?: string;
   readonly teamLabel?: string;
   readonly requestId?: string;

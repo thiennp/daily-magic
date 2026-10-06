@@ -24,6 +24,10 @@ export type FetchProjectInboxResult =
       readonly scope: "project";
       readonly messages: readonly AwcProjectInboxMessage[];
       readonly nextCursor: string | null;
+      /** Archived ({n}) — project-wide. */
+      readonly archivedCount: number;
+      /** Owner only; non-owners see Restore disabled with the reason. */
+      readonly canRestore: boolean;
     }
   | {
       readonly ok: false;
@@ -56,11 +60,22 @@ export type DispatchProjectInboxResult =
 export type ClearProjectInboxResult =
   | {
       readonly ok: true;
-      readonly deletedMessages: number;
-      readonly deletedDeliveries: number;
+      readonly archivedMessages: number;
+      /** Token for the toast Undo (restores this Clear all only). */
+      readonly archiveBatch: string | null;
     }
   | {
       readonly ok: false;
       readonly unavailable: boolean;
       readonly errorMessage: string;
     };
+
+/** One message, one Clear-all batch (Undo), or all archived. */
+export type AwcProjectInboxRestoreTarget =
+  | { readonly messageId: string }
+  | { readonly archiveBatch: string }
+  | { readonly all: true };
+
+export type RestoreProjectInboxResult =
+  | { readonly ok: true; readonly restoredMessages: number }
+  | { readonly ok: false; readonly errorMessage: string };

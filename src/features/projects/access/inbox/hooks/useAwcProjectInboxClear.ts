@@ -3,22 +3,18 @@
 import { useCallback, useState } from "react";
 
 import { AWC_PROJECT_INBOX_COPY } from "@/features/projects/access/inbox/awcProjectInboxCopy.constant";
+import type { ShowAwcProjectInboxToast } from "@/features/projects/access/inbox/hooks/useAwcProjectInboxToast";
 import { clearProjectInbox } from "@/features/projects/access/inbox/utils/clearProjectInbox";
 import { formatInboxClearToast } from "@/features/projects/access/inbox/utils/formatInboxClearToast";
 
-/** Owner Clear all + toast; pairs with scope=project reload. */
+/** Owner Clear all → archive + toast with Undo (that batch); pairs with reload. */
 export const useAwcProjectInboxClear = (input: {
   readonly projectId: string;
   readonly reloadSilent: () => Promise<void>;
+  readonly showToast: ShowAwcProjectInboxToast;
 }) => {
-  const { projectId, reloadSilent } = input;
+  const { projectId, reloadSilent, showToast } = input;
   const [clearing, setClearing] = useState(false);
-  const [clearToast, setClearToast] = useState<string | null>(null);
-
-  const showClearToast = useCallback((text: string) => {
-    setClearToast(text);
-    window.setTimeout(() => setClearToast(null), 2800);
-  }, []);
 
   const clearAll = useCallback(async (): Promise<boolean> => {
     if (clearing) {
@@ -28,17 +24,20 @@ export const useAwcProjectInboxClear = (input: {
     const result = await clearProjectInbox({ projectId });
     setClearing(false);
     if (!result.ok) {
-      showClearToast(
+      showToast(
         result.unavailable
           ? AWC_PROJECT_INBOX_COPY.clearUnavailable
           : result.errorMessage || AWC_PROJECT_INBOX_COPY.clearFailed,
       );
       return false;
     }
-    showClearToast(formatInboxClearToast(result));
+    showToast(
+      formatInboxClearToast(result),
+      result.archivedMessages > 0 ? result.archiveBatch : null,
+    );
     await reloadSilent();
     return true;
-  }, [clearing, projectId, reloadSilent, showClearToast]);
+  }, [clearing, projectId, reloadSilent, showToast]);
 
-  return { clearing, clearToast, clearAll };
+  return { clearing, clearAll };
 };

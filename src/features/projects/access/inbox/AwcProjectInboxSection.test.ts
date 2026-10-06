@@ -60,17 +60,18 @@ describe("AwcProjectInboxSection wiring", () => {
       "utf8",
     );
     expect(AWC_PROJECT_INBOX_COPY.title).toBe("Messages");
-    expect(AWC_PROJECT_INBOX_COPY.clearConfirmTitle).toBe(
-      "Clear all project messages?",
+    expect(AWC_PROJECT_INBOX_COPY.clearAll.confirmTitle).toBe(
+      "Clear all messages?",
     );
-    expect(AWC_PROJECT_INBOX_COPY.clearConfirmBody).toContain(
-      "This permanently deletes every message in this project",
+    expect(AWC_PROJECT_INBOX_COPY.clearAll.confirmBody).toBe(
+      "They move to Archived. You can restore them any time.",
     );
-    expect(AWC_PROJECT_INBOX_COPY.clearConfirmCta).toBe("Clear all");
+    expect(AWC_PROJECT_INBOX_COPY.clearAll.confirm).toBe("Clear all");
     expect(section).toContain("AwcProjectInboxClearConfirmModal");
     expect(section).toContain("AwcProjectInboxClearBar");
+    expect(section).toContain("AwcProjectInboxArchivedFilter");
     expect(section).not.toContain("window.confirm");
-    expect(modal).toContain("clearConfirmTitle");
+    expect(modal).toContain("confirmTitle");
     expect(fetchSource).toContain('params.set("scope", "project")');
   });
 });

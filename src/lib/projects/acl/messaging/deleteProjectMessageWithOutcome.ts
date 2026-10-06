@@ -8,7 +8,10 @@ import {
 
 export type DeleteProjectMessageWithOutcomeResult =
   | { readonly ok: true; readonly messageId: string }
-  | { readonly ok: false; readonly code: "not_found" | "computer_ack_required" };
+  | {
+      readonly ok: false;
+      readonly code: "not_found" | "computer_ack_required";
+    };
 
 /**
  * Write a thin outcome, then hard-delete through the History gate.
@@ -29,8 +32,7 @@ export const deleteProjectMessageWithOutcome = async (input: {
   if (snapshot === null) {
     return { ok: false, code: "not_found" };
   }
-  const createdAt =
-    snapshot.messageCreatedAt ?? new Date(0).toISOString();
+  const createdAt = snapshot.messageCreatedAt ?? new Date(0).toISOString();
   const gate = await gateProjectMessageDelete({
     projectId: snapshot.projectId,
     messageId: snapshot.messageId,
@@ -56,9 +58,11 @@ export const deleteProjectMessageWithOutcome = async (input: {
     readAt: snapshot.readAt,
   });
   const sql = getSql();
+  // Archived rows stay readable under Archived; ack never removes them.
   await sql`
     DELETE FROM project_messages
     WHERE id = ${input.messageId}
+      AND archived_at IS NULL
   `;
   return { ok: true, messageId: input.messageId };
 };

@@ -67,6 +67,7 @@ export const listProjectInbox = async (input: {
           )
         )
         AND m.acked_at IS NULL
+        AND m.archived_at IS NULL
         AND (
           ${since}::timestamptz IS NULL
           OR m.created_at > ${since}::timestamptz

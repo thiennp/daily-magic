@@ -18,8 +18,8 @@ const readJson = async (response: Response): Promise<unknown | null> => {
 };
 
 /**
- * Owner Clear all: POST …/inbox/clear with { confirm: true }.
- * Soft-degrades on 404 until eng clear/log PR is live.
+ * Owner Clear all → archive: POST …/inbox/clear with { confirm: true }.
+ * Messages move to Archived (nothing is removed). Soft-degrades on 404.
  */
 export const clearProjectInbox = async (input: {
   readonly projectId: string;
@@ -61,10 +61,12 @@ export const clearProjectInbox = async (input: {
     );
   }
 
-  const deletedMessages =
-    typeof body.deletedMessages === "number" ? body.deletedMessages : 0;
-  const deletedDeliveries =
-    typeof body.deletedDeliveries === "number" ? body.deletedDeliveries : 0;
+  const archivedMessages =
+    typeof body.archivedMessages === "number" ? body.archivedMessages : 0;
+  const archiveBatch =
+    typeof body.archiveBatch === "string" && body.archiveBatch.length > 0
+      ? body.archiveBatch
+      : null;
 
-  return { ok: true, deletedMessages, deletedDeliveries };
+  return { ok: true, archivedMessages, archiveBatch };
 };

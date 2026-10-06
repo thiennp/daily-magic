@@ -2,45 +2,20 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import {
-  loadAwcProjectInbox,
-  type AwcProjectInboxSnapshot,
-} from "@/features/projects/access/inbox/hooks/loadAwcProjectInbox";
+import { loadAwcProjectInbox } from "@/features/projects/access/inbox/hooks/loadAwcProjectInbox";
 import { useAwcProjectInboxClear } from "@/features/projects/access/inbox/hooks/useAwcProjectInboxClear";
-import type AwcProjectInboxMessage from "@/features/projects/access/inbox/types/awcProjectInboxMessage.type";
-import type { AccessMembershipView } from "@/features/projects/access/utils/projectAccessApi.types";
-
-const emptyMembers: readonly AccessMembershipView[] = [];
+import { useAwcProjectInboxRestore } from "@/features/projects/access/inbox/hooks/useAwcProjectInboxRestore";
+import { useAwcProjectInboxSnapshotState } from "@/features/projects/access/inbox/hooks/useAwcProjectInboxSnapshotState";
+import { useAwcProjectInboxToast } from "@/features/projects/access/inbox/hooks/useAwcProjectInboxToast";
 
 export const useAwcProjectInbox = (
   projectId: string,
   enabled: boolean = true,
 ) => {
-  const [messages, setMessages] = useState<readonly AwcProjectInboxMessage[]>(
-    [],
-  );
-  const [members, setMembers] =
-    useState<readonly AccessMembershipView[]>(emptyMembers);
-  const [isLoading, setIsLoading] = useState(enabled);
-  const [unavailable, setUnavailable] = useState(false);
-  const [forbidden, setForbidden] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const state = useAwcProjectInboxSnapshotState(enabled);
+  const { applySnapshot, setIsLoading } = state;
+  const [showArchived, setShowArchived] = useState(false);
   const generationRef = useRef(0);
-
-  const applySnapshot = useCallback((snapshot: AwcProjectInboxSnapshot) => {
-    setMembers(snapshot.members);
-    if (snapshot.ok) {
-      setMessages(snapshot.messages);
-      setUnavailable(false);
-      setForbidden(false);
-      setMessage(null);
-      return;
-    }
-    setMessages([]);
-    setUnavailable(snapshot.unavailable);
-    setForbidden(snapshot.forbidden);
-    setMessage(snapshot.errorMessage);
-  }, []);
 
   const reload = useCallback(
     async (silent: boolean = false) => {
@@ -50,13 +25,13 @@ export const useAwcProjectInbox = (
       if (!silent) {
         setIsLoading(true);
       }
-      const snapshot = await loadAwcProjectInbox(projectId);
+      const snapshot = await loadAwcProjectInbox(projectId, showArchived);
       applySnapshot(snapshot);
       if (!silent) {
         setIsLoading(false);
       }
     },
-    [projectId, enabled, applySnapshot],
+    [projectId, enabled, showArchived, applySnapshot, setIsLoading],
   );
 
   useEffect(() => {
@@ -67,7 +42,7 @@ export const useAwcProjectInbox = (
     generationRef.current = generation;
     const load = async (): Promise<void> => {
       setIsLoading(true);
-      const snapshot = await loadAwcProjectInbox(projectId);
+      const snapshot = await loadAwcProjectInbox(projectId, showArchived);
       if (generationRef.current !== generation) {
         return;
       }
@@ -75,23 +50,27 @@ export const useAwcProjectInbox = (
       setIsLoading(false);
     };
     void load();
-  }, [projectId, enabled, applySnapshot]);
+  }, [projectId, enabled, showArchived, applySnapshot, setIsLoading]);
 
   const reloadLoud = useCallback(() => reload(false), [reload]);
   const reloadSilent = useCallback(() => reload(true), [reload]);
-  const clear = useAwcProjectInboxClear({ projectId, reloadSilent });
+  const { toast, showToast } = useAwcProjectInboxToast();
+  const deps = { projectId, reloadSilent, showToast };
+  const clear = useAwcProjectInboxClear(deps);
+  const restore = useAwcProjectInboxRestore(deps);
 
   return {
-    messages,
-    members,
-    isLoading: enabled ? isLoading : false,
-    unavailable,
-    forbidden,
-    message,
+    ...state.view,
+    members: state.members,
+    isLoading: enabled ? state.isLoading : false,
+    showArchived,
+    setShowArchived,
+    toast,
     clearing: clear.clearing,
-    clearToast: clear.clearToast,
+    clearAll: clear.clearAll,
+    restoring: restore.restoring,
+    restore: restore.restore,
     reload: reloadLoud,
     reloadSilent,
-    clearAll: clear.clearAll,
   };
 };

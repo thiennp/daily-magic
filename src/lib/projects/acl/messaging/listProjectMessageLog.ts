@@ -1,4 +1,5 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
+import { countArchivedProjectMessages } from "@/lib/projects/acl/messaging/countArchivedProjectMessages";
 import { mapProjectMessageLogRow } from "@/lib/projects/acl/messaging/mapProjectMessageLogRow";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 import type { ListProjectMessageLogResult } from "@/lib/projects/acl/messaging/projectMessageLog.types";
@@ -24,6 +25,8 @@ const clampLimit = (limit: number | undefined): number => {
  * Full project message log (peer↔peer + Owner-addressed).
  * Owner, or active human member|viewer (read-only seats still may read).
  * Reverse-chrono with optional since + cursor pagination.
+ * Inbox (default) hides archived rows; archived=true lists only archived rows
+ * (Archived filter). Same read access either way; Restore is owner-only.
  */
 export const listProjectMessageLog = async (input: {
   readonly projectId: string;
@@ -31,6 +34,7 @@ export const listProjectMessageLog = async (input: {
   readonly since?: string | null;
   readonly cursor?: string | null;
   readonly limit?: number;
+  readonly archived?: boolean;
 }): Promise<ListProjectMessageLogResult> => {
   const access = await resolveOwnerOrActiveHumanSeat({
     projectId: input.projectId,
@@ -44,6 +48,7 @@ export const listProjectMessageLog = async (input: {
   await purgeExpiredProjectMessages();
   const sql = getSql();
   const limit = clampLimit(input.limit);
+  const archived = input.archived === true;
   const since =
     typeof input.since === "string" && input.since.trim().length > 0
       ? input.since.trim()
@@ -65,6 +70,7 @@ export const listProjectMessageLog = async (input: {
       LEFT JOIN project_memberships recipient
         ON recipient.id = m.to_membership_id
       WHERE m.project_id = ${input.projectId}
+        AND (m.archived_at IS NOT NULL) = ${archived}::boolean
         AND (${since}::timestamptz IS NULL OR m.created_at > ${since}::timestamptz)
         AND (
           ${cursor}::text IS NULL
@@ -91,5 +97,13 @@ export const listProjectMessageLog = async (input: {
       ? page[page.length - 1].messageId
       : null;
 
-  return { ok: true, messages: page, nextCursor, scope: "project" };
+  return {
+    ok: true,
+    messages: page,
+    nextCursor,
+    scope: "project",
+    archived,
+    archivedCount: await countArchivedProjectMessages(input.projectId),
+    canRestore: access.kind === "owner",
+  };
 };

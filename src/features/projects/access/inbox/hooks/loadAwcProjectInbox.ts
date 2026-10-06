@@ -7,6 +7,10 @@ export type AwcProjectInboxSnapshot =
   | {
       readonly ok: true;
       readonly messages: readonly AwcProjectInboxMessage[];
+      /** Filled only while the Archived filter is on. */
+      readonly archivedMessages: readonly AwcProjectInboxMessage[];
+      readonly archivedCount: number;
+      readonly canRestore: boolean;
       readonly members: readonly AccessMembershipView[];
     }
   | {
@@ -19,15 +23,26 @@ export type AwcProjectInboxSnapshot =
 
 export const loadAwcProjectInbox = async (
   projectId: string,
+  showArchived: boolean = false,
 ): Promise<AwcProjectInboxSnapshot> => {
-  const [inbox, access] = await Promise.all([
+  const [inbox, access, archived] = await Promise.all([
     fetchProjectInbox({ projectId }),
     fetchProjectAccess(projectId),
+    showArchived
+      ? fetchProjectInbox({ projectId, archived: true })
+      : Promise.resolve(null),
   ]);
   const members = access.ok ? (access.members ?? []) : [];
 
   if (inbox.ok) {
-    return { ok: true, messages: inbox.messages, members };
+    return {
+      ok: true,
+      messages: inbox.messages,
+      archivedMessages: archived?.ok ? archived.messages : [],
+      archivedCount: inbox.archivedCount,
+      canRestore: inbox.canRestore,
+      members,
+    };
   }
 
   return {

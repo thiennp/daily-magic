@@ -23,6 +23,7 @@ export const resetProjectMessagePurgeForTests = (): void => {
  * Projects with computer history on_configuring/on_ready/degraded are excluded: History ON
  * never deletes for age (only after computerAck). This path instead runs the
  * throttled unsaved-overdue wake.
+ * Archived rows (Inbox Clear all) are never age-purged: no purge timer.
  */
 export const purgeExpiredProjectMessages = async (input?: {
   readonly force?: boolean;
@@ -46,6 +47,7 @@ export const purgeExpiredProjectMessages = async (input?: {
       const result = await sql`
         DELETE FROM project_messages
         WHERE created_at < NOW() - make_interval(days => ${ttlDays})
+          AND archived_at IS NULL
           AND NOT EXISTS (
             SELECT 1 FROM project_computer_history_settings s
             WHERE s.project_id = project_messages.project_id

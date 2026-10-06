@@ -4,45 +4,43 @@ import { Modal } from "@/components/ui/modal";
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
 import { AWC_PROJECT_INBOX_COPY } from "@/features/projects/access/inbox/awcProjectInboxCopy.constant";
 
-interface AwcProjectInboxClearConfirmModalProps {
+interface AwcProjectInboxRestoreAllConfirmModalProps {
   readonly isOpen: boolean;
-  readonly clearing: boolean;
+  readonly restoring: boolean;
   readonly onClose: () => void;
   readonly onConfirm: () => void;
 }
 
-export default function AwcProjectInboxClearConfirmModal({
+/** Owner "Restore all" confirm (LOCK archived.restoreAllConfirm*). */
+export default function AwcProjectInboxRestoreAllConfirmModal({
   isOpen,
-  clearing,
+  restoring,
   onClose,
   onConfirm,
-}: AwcProjectInboxClearConfirmModalProps) {
-  const copy = AWC_PROJECT_INBOX_COPY.clearAll;
+}: AwcProjectInboxRestoreAllConfirmModalProps) {
+  const copy = AWC_PROJECT_INBOX_COPY;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-lg p-6">
       <h2 className="pr-10 text-lg font-semibold text-gray-900 dark:text-white/90">
-        {copy.confirmTitle}
+        {copy.archived.restoreAllConfirmTitle}
       </h2>
-      <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">
-        {copy.confirmBody}
-      </p>
       <div className="mt-5 flex flex-wrap justify-end gap-2">
         <button
           type="button"
           className={AWC_PROJECT_ACCESS_CTA.secondary}
-          disabled={clearing}
+          disabled={restoring}
           onClick={onClose}
         >
-          {copy.cancel}
+          {copy.clearAll.cancel}
         </button>
         <button
           type="button"
-          className={AWC_PROJECT_ACCESS_CTA.danger}
-          disabled={clearing}
+          className={AWC_PROJECT_ACCESS_CTA.primary}
+          disabled={restoring}
           onClick={onConfirm}
         >
-          {copy.confirm}
+          {copy.archived.restoreAllConfirm}
         </button>
       </div>
     </Modal>

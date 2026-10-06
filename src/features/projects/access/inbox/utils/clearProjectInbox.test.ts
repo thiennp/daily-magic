@@ -8,15 +8,15 @@ describe("clearProjectInbox", () => {
     vi.unstubAllGlobals();
   });
 
-  it("posts confirm:true and returns delete counts", async () => {
+  it("posts confirm:true and returns archived count + Undo batch", async () => {
     const fetchMock = vi.fn(async (_url: string, init?: RequestInit) => {
       expect(init?.method).toBe("POST");
       expect(JSON.parse(String(init?.body))).toEqual({ confirm: true });
       return new Response(
         JSON.stringify({
           ok: true,
-          deletedMessages: 12,
-          deletedDeliveries: 18,
+          archivedMessages: 12,
+          archiveBatch: "2026-10-06 11:48:12.123456+00",
         }),
         { status: 200, headers: { "Content-Type": "application/json" } },
       );
@@ -25,8 +25,8 @@ describe("clearProjectInbox", () => {
     const result = await clearProjectInbox({ projectId: "p1" });
     expect(result.ok).toBe(true);
     if (result.ok) {
-      expect(result.deletedMessages).toBe(12);
-      expect(result.deletedDeliveries).toBe(18);
+      expect(result.archivedMessages).toBe(12);
+      expect(result.archiveBatch).toBe("2026-10-06 11:48:12.123456+00");
     }
     expect(fetchMock).toHaveBeenCalledWith(
       expect.stringContaining("/inbox/clear"),
@@ -48,12 +48,15 @@ describe("clearProjectInbox", () => {
 });
 
 describe("formatInboxClearToast", () => {
-  it("reports cleared count and already-empty", () => {
-    expect(
-      formatInboxClearToast({ deletedMessages: 3, deletedDeliveries: 4 }),
-    ).toBe("Cleared 3 messages");
-    expect(
-      formatInboxClearToast({ deletedMessages: 0, deletedDeliveries: 0 }),
-    ).toBe("Inbox already empty");
+  it("reports LOCK toast / toastOne and already-empty", () => {
+    expect(formatInboxClearToast({ archivedMessages: 3 })).toBe(
+      "Cleared 3 messages. They're in Archived.",
+    );
+    expect(formatInboxClearToast({ archivedMessages: 1 })).toBe(
+      "Cleared 1 message. It's in Archived.",
+    );
+    expect(formatInboxClearToast({ archivedMessages: 0 })).toBe(
+      "Inbox already empty",
+    );
   });
 });

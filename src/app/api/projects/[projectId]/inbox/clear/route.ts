@@ -1,4 +1,4 @@
-import { clearAllProjectMessages } from "@/lib/projects/acl/messaging/clearAllProjectMessages";
+import { archiveAllProjectMessages } from "@/lib/projects/acl/messaging/archiveAllProjectMessages";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -17,8 +17,8 @@ const readConfirm = async (request: Request): Promise<boolean> => {
 };
 
 /**
- * Owner-only destructive wipe of all project messages + deliveries.
- * Body: { confirm: true } (leave_project style).
+ * Owner-only Inbox Clear all → archive. Never deletes messages or deliveries.
+ * Body: { confirm: true }. Returns the batch token the toast Undo restores.
  */
 export async function POST(
   request: Request,
@@ -28,7 +28,7 @@ export async function POST(
   if (error || !actor) return error;
   const { projectId } = await context.params;
   const confirm = await readConfirm(request);
-  const result = await clearAllProjectMessages({
+  const result = await archiveAllProjectMessages({
     projectId,
     actorUserId: actor.id,
     confirm,
@@ -44,7 +44,7 @@ export async function POST(
   }
   return Response.json({
     ok: true,
-    deletedMessages: result.deletedMessages,
-    deletedDeliveries: result.deletedDeliveries,
+    archivedMessages: result.archivedMessages,
+    archiveBatch: result.archiveBatch,
   });
 }

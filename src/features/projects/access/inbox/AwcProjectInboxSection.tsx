@@ -4,14 +4,14 @@ import { useCallback, useState } from "react";
 
 import AwcProjectAccessSection from "@/features/projects/access/AwcProjectAccessSection";
 import { AWC_PROJECT_INBOX_COPY } from "@/features/projects/access/inbox/awcProjectInboxCopy.constant";
+import AwcProjectInboxArchivedFilter from "@/features/projects/access/inbox/AwcProjectInboxArchivedFilter";
+import AwcProjectInboxBody from "@/features/projects/access/inbox/AwcProjectInboxBody";
 import AwcProjectInboxClearBar from "@/features/projects/access/inbox/AwcProjectInboxClearBar";
 import AwcProjectInboxClearConfirmModal from "@/features/projects/access/inbox/AwcProjectInboxClearConfirmModal";
 import AwcProjectInboxDispatchForm from "@/features/projects/access/inbox/AwcProjectInboxDispatchForm";
 import { PROJECT_ACTIVITY_TASK_ANCHOR_ID } from "@/features/projects/utils/projectActivityTaskDeepLink.constant";
-import AwcProjectInboxMessageList from "@/features/projects/access/inbox/AwcProjectInboxMessageList";
 import { useAwcProjectInbox } from "@/features/projects/access/inbox/hooks/useAwcProjectInbox";
 import { useAwcProjectInboxLivePoll } from "@/features/projects/access/inbox/hooks/useAwcProjectInboxLivePoll";
-import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPageMetadataText.constant";
 
 interface AwcProjectInboxSectionProps {
   readonly projectId: string;
@@ -50,21 +50,22 @@ export default function AwcProjectInboxSection({
       {canCompose ? (
         <AwcProjectInboxClearBar
           clearing={inbox.clearing}
-          toast={inbox.clearToast}
+          restoring={inbox.restoring}
+          toast={inbox.toast}
           onRequestClear={() => setConfirmOpen(true)}
+          onUndo={(archiveBatch) => {
+            void inbox.restore({ archiveBatch });
+          }}
         />
       ) : null}
-      {inbox.isLoading ? (
-        <p className={`text-xs ${PROJECT_PAGE_METADATA_TEXT_CLASS}`}>{copy.loading}</p>
-      ) : null}
-      {inbox.unavailable ? (
-        <p className="rounded-md border border-amber-200/80 bg-amber-50/80 px-3 py-2 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100">
-          {inbox.message ?? copy.unavailable}
-        </p>
-      ) : null}
-      {!inbox.isLoading && !inbox.unavailable ? (
-        <AwcProjectInboxMessageList messages={inbox.messages} />
-      ) : null}
+      {inbox.unavailable ? null : (
+        <AwcProjectInboxArchivedFilter
+          archivedCount={inbox.archivedCount}
+          pressed={inbox.showArchived}
+          onToggle={() => inbox.setShowArchived((shown) => !shown)}
+        />
+      )}
+      <AwcProjectInboxBody inbox={inbox} />
       {canCompose ? (
         <div id={PROJECT_ACTIVITY_TASK_ANCHOR_ID}>
           <AwcProjectInboxDispatchForm

@@ -22,17 +22,21 @@ const readJson = async (response: Response): Promise<unknown | null> => {
 };
 
 /**
- * Owner Messages panel: GET …/inbox?scope=project (full peer↔peer + Owner log).
- * Soft-degrades on 404 until eng clear/log PR is live.
+ * Messages panel: GET …/inbox?scope=project (full peer↔peer + Owner log).
+ * archived: true → the Archived filter. Soft-degrades on 404.
  */
 export const fetchProjectInbox = async (input: {
   readonly projectId: string;
   readonly since?: string;
   readonly cursor?: string;
   readonly limit?: number;
+  readonly archived?: boolean;
 }): Promise<FetchProjectInboxResult> => {
   const params = new URLSearchParams();
   params.set("scope", "project");
+  if (input.archived === true) {
+    params.set("archived", "1");
+  }
   if (input.since !== undefined && input.since.length > 0) {
     params.set("since", input.since);
   }
@@ -100,5 +104,8 @@ export const fetchProjectInbox = async (input: {
       typeof body.nextCursor === "string" && body.nextCursor.length > 0
         ? body.nextCursor
         : null,
+    archivedCount:
+      typeof body.archivedCount === "number" ? body.archivedCount : 0,
+    canRestore: body.canRestore === true,
   };
 };

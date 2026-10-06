@@ -7,6 +7,7 @@ import {
   ensureProjectMessageDeleteOnReadSchema,
   resetProjectMessageDeleteOnReadSchemaForTests,
 } from "@/lib/projects/acl/messaging/ensureProjectMessageDeleteOnReadSchema";
+import { resetProjectMessageArchiveSchemaForTests } from "@/lib/projects/acl/messaging/ensureProjectMessageArchiveSchema";
 import { getSql } from "@/lib/db";
 
 const state: { ensured: boolean; promise: Promise<void> | null } = {
@@ -18,6 +19,7 @@ export const resetProjectAclSchemaEnsureForTests = (): void => {
   state.ensured = false;
   state.promise = null;
   resetProjectMessageDeleteOnReadSchemaForTests();
+  resetProjectMessageArchiveSchemaForTests();
   resetProjectMembershipDeliveryModeSchemaEnsureForTests();
 };
 

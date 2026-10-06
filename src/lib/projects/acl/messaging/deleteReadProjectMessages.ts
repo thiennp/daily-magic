@@ -23,6 +23,7 @@ export const deleteReadProjectMessages = async (): Promise<number> => {
       await sql`
         SELECT id FROM project_messages
         WHERE read_at IS NOT NULL
+          AND archived_at IS NULL
         ORDER BY read_at ASC
         LIMIT 100
       `,

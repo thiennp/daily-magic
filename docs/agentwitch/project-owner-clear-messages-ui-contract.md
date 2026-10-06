@@ -10,11 +10,11 @@ Locked for Access Messages (eng tip). Owner-only session REST. No MCP bot tool i
 
 Optional query:
 
-| Param | Notes |
-| --- | --- |
-| `limit` | 1–100, default 50 |
-| `since` | ISO timestamptz — only rows with `createdAt > since` |
-| `cursor` | prior page’s last `messageId` (reverse-chrono) |
+| Param    | Notes                                                |
+| -------- | ---------------------------------------------------- |
+| `limit`  | 1–100, default 50                                    |
+| `since`  | ISO timestamptz — only rows with `createdAt > since` |
+| `cursor` | prior page’s last `messageId` (reverse-chrono)       |
 
 Auth: session cookie, **project owner only** → `403` otherwise (`errorMessage: "forbidden"`). Missing project → `404`.
 
@@ -51,7 +51,9 @@ Notes:
 - Full log includes peer↔peer and Owner-addressed rows for this `projectId`.
 - `ackedAt` is present when stored; delete-on-ack means many live rows have `ackedAt: null` until TTL purge.
 
-### 2) Clear all (destructive wipe)
+### 2) Clear all → archive (never deletes)
+
+Product LOCK: `docs/design/chat-retention/CLEAR-ALL-LOCK.md` (2026-10-06).
 
 `POST /api/projects/:projectId/inbox/clear`
 
@@ -65,44 +67,49 @@ Body (required):
 - Non-owner → `403` `forbidden`
 - Missing project → `404` `not_found`
 
-Success (idempotent — second call returns zeros):
+Success (idempotent — second call archives 0 and returns `archiveBatch: null`):
 
 ```json
 {
   "ok": true,
-  "deletedMessages": 12,
-  "deletedDeliveries": 18
+  "archivedMessages": 12,
+  "archiveBatch": "2026-10-06 11:48:12.123456+00"
 }
 ```
 
-Wipe scope:
+Scope:
 
-- Deletes **all** `project_messages` for `projectId` and their `project_message_deliveries` (webhook delivery outbox rows).
-- Does **not** revoke memberships or delete `project_membership_webhooks` registrations (bots stay connected).
-- Dispatch caps: **300/hour** (rolling, per sender membership / owner user, lifecycle kinds excluded) and **max 300 unread** (`COUNT(*)` of `project_messages` for this `projectId`). Env: `AWC_PROJECT_MESSAGE_HOURLY_CAP`, `AWC_PROJECT_MESSAGE_UNREAD_CAP` (defaults 300). Error codes: `rate_limited_hourly`, `unread_cap`. Clearing this project deletes those rows and **resets unread** (and frees hourly volume that lived here). Messaging tools do **not** share the agent-access mutation bucket.
+- Sets `archived_at` + `archived_by` on every not-yet-archived `project_messages` row for `projectId` (migration 094; index `(project_id, archived_at)`). **No DELETE, no CASCADE**; `project_message_deliveries`, memberships and webhook registrations are untouched. Row count is unchanged.
+- Project-wide: archived rows leave the Inbox for everyone and stay readable under the **Archived** filter by anyone who could read them before (`GET …/inbox?scope=project&archived=1`). Both list responses carry `archivedCount` and `canRestore` (owner only).
+- Assistants: archived rows are excluded from the actor inbox (unread/pending delivery). Already-delivered stays delivered; archive never re-sends.
+- Unread cap (`AWC_PROJECT_MESSAGE_UNREAD_CAP`, default 300) counts **not-archived** rows, so Clear all frees unread slots. Hourly cap unchanged.
+- Archived rows are never removed by the unacked TTL purge, delete-on-read, ack, or member revoke (revoked members' messages stay in Archived for the owner). No purge timer.
+- Access log (`project_activity_events`): every Clear all writes `messages.archived` with `detail.count`.
 
-Clearing messages is **not logged** anywhere the owner can see. `project_access_audit` was dropped in migration 049, and the owner-only **Access log** (migration 092, `project_activity_events`; see `docs/agentwitch/project-access-log-contract.md`) records access and wake changes only. `msg.clear` is not one of them.
+### 3) Restore (owner only)
 
-## Access Messages UI — Clear all
+`POST /api/projects/:projectId/inbox/restore`
 
-**When to enable the button**
+Body — exactly one of:
 
-- Viewer is project **owner** (session).
-- Section is the owner Access Messages / Project Inbox panel.
-- Prefer enable even when the full log is empty (clear is idempotent; still useful after spam + re-poll). Optionally disable while a clear request is in flight.
+- `{ "messageId": "<id>" }` — one message
+- `{ "archiveBatch": "<archiveBatch from clear>" }` — toast **Undo** (6s), restores that Clear all only
+- `{ "all": true }` — Restore all
 
-**Confirm dialog copy (suggestions)**
+Success: `{ "ok": true, "restoredMessages": 3 }`. Clears `archived_at`/`archived_by`. Non-owner → `403 forbidden`; bad body → `400 invalid_target`. Every Restore writes `messages.restored` with `detail.count` to the Access log.
 
-- Title: `Clear all project messages?`
-- Body: `This permanently deletes every message in this project — including messages agents sent each other — and their delivery records. Bot connections and memberships stay. Dispatch daily limits for this project’s traffic reset. This cannot be undone.`
-- Confirm CTA: `Clear all`
-- Cancel: `Cancel`
+## Access Messages UI — Clear all / Archived
 
-After success: toast `Cleared N messages` (use `deletedMessages`; if both counts are 0: `Inbox already empty`). Re-fetch `GET …/inbox?scope=project` (and default inbox if shown).
+Copy keys and EN live in `awcProjectInboxCopy.constant.ts` (`clearAll.*`, `archived.*`, `activity.*`) and must match the LOCK table. Never say "delete", "wipe" or "permanently" in this flow.
+
+- Clear all bar stays where it was (owner surface). Confirm: `Clear all messages?` / `They move to Archived. You can restore them any time.`
+- Toast: `Cleared {n} messages. They're in Archived.` (`toastOne` for 1) with **Undo** for 6s.
+- `Archived ({n})` toggle for every reader. Rows show **Restore**; header **Restore all** (confirm `Restore all archived messages?`). Non-owners see both disabled with `Only the project owner can restore messages.`
 
 ## Smoke
 
-1. Owner: `GET …/inbox?scope=project` → see peer↔peer + Owner rows with from/to names.
-2. Member session same URL → `403`.
-3. Owner: `POST …/inbox/clear` without confirm → `400 confirm_required`.
-4. Owner: `POST` with `{ confirm: true }` → counts; second clear → zeros; webhooks still registered; Messages list re-fetches empty. Nothing about the clear appears in the Access log or the Activity tab (no “Messages cleared” row).
+1. Owner: `GET …/inbox?scope=project` → peer↔peer + Owner rows, `archivedCount`, `canRestore: true`.
+2. Owner: `POST …/inbox/clear` without confirm → `400 confirm_required`.
+3. Owner: `POST` with `{ confirm: true }` → `archivedMessages` + `archiveBatch`; Inbox list empty; `?archived=1` lists the same rows; second clear → 0.
+4. Undo within 6s → rows back in Inbox; Access log shows "You cleared N messages to Archived" and "You restored N messages".
+5. Viewer/member: can open Archived; Restore disabled with the owner-only reason; `POST …/inbox/restore` → `403`.

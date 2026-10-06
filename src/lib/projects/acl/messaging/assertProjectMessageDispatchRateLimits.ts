@@ -23,8 +23,7 @@ export type ProjectMessageRateLimitFailure = {
 };
 
 export type ProjectMessageRateLimitResult =
-  | { readonly ok: true }
-  | ProjectMessageRateLimitFailure;
+  { readonly ok: true } | ProjectMessageRateLimitFailure;
 
 const unreadCapFailure = (): ProjectMessageRateLimitFailure => ({
   ok: false,
@@ -40,7 +39,8 @@ const unreadCapFailure = (): ProjectMessageRateLimitFailure => ({
 /**
  * Dispatch path caps (no 60/day; messaging tools skip agent-access mutate bucket):
  * 1) per-sender rolling 1h user/owner dispatches (lifecycle kinds excluded)
- * 2) project-wide unread = COUNT of project_messages rows (delete-on-ack)
+ * 2) project-wide unread = COUNT of not-archived project_messages rows
+ *    (delete-on-ack; Clear all archives, which frees unread slots)
  *
  * Failures always use code "rate_limited" with a reason and retry-after fields
  * so the sending bot can tell its user when to retry.
@@ -96,6 +96,7 @@ export const assertProjectMessageDispatchRateLimits = async (input: {
       SELECT COUNT(*)::int AS c
       FROM project_messages
       WHERE project_id = ${input.projectId}
+        AND archived_at IS NULL
     `,
   );
   const unreadCount = Number(unreadRows[0]?.c ?? 0);

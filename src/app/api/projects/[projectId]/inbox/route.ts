@@ -7,7 +7,8 @@ export const dynamic = "force-dynamic";
 /**
  * GET inbox:
  * - default: actor-addressed inbox (owner or member)
- * - ?scope=project: owner-only full project message log (peer↔peer + Owner)
+ * - ?scope=project: full project message log (peer↔peer + Owner)
+ * - ?scope=project&archived=1: the Archived filter (Clear all → archive)
  */
 export async function GET(
   request: Request,
@@ -29,10 +30,14 @@ export async function GET(
       since,
       cursor: url.searchParams.get("cursor"),
       limit,
+      archived: url.searchParams.get("archived") === "1",
     });
     if (!result.ok) {
       const status = result.code === "not_found" ? 404 : 403;
-      return Response.json({ ok: false, errorMessage: result.code }, { status });
+      return Response.json(
+        { ok: false, errorMessage: result.code },
+        { status },
+      );
     }
     return Response.json({
       ok: true,
@@ -40,6 +45,9 @@ export async function GET(
       scope: "project",
       messages: result.messages,
       nextCursor: result.nextCursor,
+      archived: result.archived,
+      archivedCount: result.archivedCount,
+      canRestore: result.canRestore,
     });
   }
 
@@ -50,7 +58,10 @@ export async function GET(
     limit,
   });
   if (!result.ok) {
-    return Response.json({ ok: false, errorMessage: result.code }, { status: 403 });
+    return Response.json(
+      { ok: false, errorMessage: result.code },
+      { status: 403 },
+    );
   }
   return Response.json({
     ok: true,

@@ -19,5 +19,11 @@ export type ListProjectMessageLogResult =
       readonly messages: readonly ProjectMessageLogEntry[];
       readonly nextCursor: string | null;
       readonly scope: "project";
+      /** True when this page is the Archived filter. */
+      readonly archived: boolean;
+      /** Archived ({n}) — project-wide count. */
+      readonly archivedCount: number;
+      /** Owner only; others see Restore disabled with the reason. */
+      readonly canRestore: boolean;
     }
   | { readonly ok: false; readonly code: "not_found" | "forbidden" };

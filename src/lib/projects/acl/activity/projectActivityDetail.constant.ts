@@ -20,7 +20,11 @@ export const PROJECT_ACTIVITY_DETAIL_STRING_KEYS = [
 
 export const PROJECT_ACTIVITY_DETAIL_BOOLEAN_KEYS = ["autoApprove"] as const;
 
-export const PROJECT_ACTIVITY_DETAIL_NUMBER_KEYS = ["maxUses"] as const;
+/** count: messages moved by Clear all / Restore (never ids or bodies). */
+export const PROJECT_ACTIVITY_DETAIL_NUMBER_KEYS = [
+  "maxUses",
+  "count",
+] as const;
 
 export const PROJECT_ACTIVITY_DETAIL_MAX_STRING_CHARS = 120;
 

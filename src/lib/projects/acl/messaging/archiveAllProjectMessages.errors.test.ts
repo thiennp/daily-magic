@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { clearAllProjectMessages } from "@/lib/projects/acl/messaging/clearAllProjectMessages";
+import { archiveAllProjectMessages } from "@/lib/projects/acl/messaging/archiveAllProjectMessages";
 import { resetProjectAclSchemaEnsureForTests } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
@@ -18,11 +18,11 @@ vi.mock("@/lib/projects/userProjectQueries", () => ({
   })),
 }));
 
-vi.mock("@/lib/projects/acl/writeProjectAccessAudit", () => ({
-  writeProjectAccessAudit: vi.fn(async () => undefined),
+vi.mock("@/lib/projects/acl/activity/writeProjectActivityEvent", () => ({
+  writeProjectActivityEvent: vi.fn(async () => undefined),
 }));
 
-describe("clearAllProjectMessages errors", () => {
+describe("archiveAllProjectMessages errors", () => {
   beforeEach(() => {
     sqlMock.mockReset();
     vi.mocked(getUserProjectById).mockResolvedValue({
@@ -33,7 +33,7 @@ describe("clearAllProjectMessages errors", () => {
   });
 
   it("requires confirm:true", async () => {
-    const result = await clearAllProjectMessages({
+    const result = await archiveAllProjectMessages({
       projectId: "proj-1",
       actorUserId: "owner-1",
       confirm: false,
@@ -43,7 +43,7 @@ describe("clearAllProjectMessages errors", () => {
   });
 
   it("forbids non-owners", async () => {
-    const result = await clearAllProjectMessages({
+    const result = await archiveAllProjectMessages({
       projectId: "proj-1",
       actorUserId: "member-1",
       confirm: true,
@@ -53,7 +53,7 @@ describe("clearAllProjectMessages errors", () => {
 
   it("returns not_found when project missing", async () => {
     vi.mocked(getUserProjectById).mockResolvedValueOnce(null);
-    const result = await clearAllProjectMessages({
+    const result = await archiveAllProjectMessages({
       projectId: "missing",
       actorUserId: "owner-1",
       confirm: true,
