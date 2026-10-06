@@ -29,9 +29,16 @@ describe("project layout v2 L5 Settings + Members", () => {
     );
     expect(copy).toContain('dangerHeading: "Danger zone"');
     expect(copy).toContain('deleteConfirmGo: "Delete permanently"');
+    expect(copy).toContain(
+      "Toggle this in Agent Witch Local on this computer.",
+    );
+    expect(copy).toContain(
+      "members, invites, wake links, keys, and messages",
+    );
+    expect(copy).toContain("aren't touched.");
     expect(history).toContain('role="switch"');
     expect(history).toContain("C.historyToast");
-        expect(history).not.toContain("useAwcProjectComputerHistory");
+    expect(history).not.toContain("useAwcProjectComputerHistory");
     expect(history).not.toContain("enabled: next");
     expect(history).toContain("requestProjectComputerHistory");
     expect(name).toContain("useAwcProjectRename");
@@ -73,6 +80,16 @@ describe("project layout v2 L5 Settings + Members", () => {
     expect(copy).toContain('inviteGrok: "Invite Grok assistant"');
     expect(copy).toContain('inviteMuse: "Invite Muse assistant"');
     expect(copy).toContain('peopleInvite: "Invite people"');
+    expect(copy).toContain('menuWebhook: "Grok wake link"');
+    expect(copy).toContain(
+      "Grok Bot joins with the prompt and wakes up through its own routine.",
+    );
+    expect(copy).toContain(
+      "Other assistants, such as Muse, can join with the same invite prompt.",
+    );
+    expect(copy).toContain(
+      "Remove takes the assistant out of the project. If it leaves on its own, you don't need to approve.",
+    );
     expect(layoutCopy).toContain('membersColumnLabel: "Members"');
     expect(panel).toContain("onMessageHelper={onGotoActivity}");
     for (const file of [column, owner, helpers, row, invite]) {

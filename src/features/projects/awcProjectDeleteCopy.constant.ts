@@ -4,7 +4,7 @@ export const AWC_PROJECT_DELETE_COPY = {
   trigger: "Delete project",
   /** What Cloud removes; local repos/files stay. */
   scope:
-    "Remove from Agent Witch Cloud: members, invites, webhooks, API keys, and messages. Repos and files on computers are not touched.",
+    "Remove from Agent Witch Cloud: members, invites, wake links, keys, and messages. Repos and files on computers aren't touched.",
   typeToConfirmPrefix: "Type the project name",
   typeToConfirmSuffix: "to confirm",
   confirm: "Delete permanently",

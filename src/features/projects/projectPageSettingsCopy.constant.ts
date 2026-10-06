@@ -11,11 +11,11 @@ export const PROJECT_PAGE_SETTINGS_COPY = {
   historySub: "Configure this in the Agent Witch Local app.",
   historyAria: "Save message history on this computer",
   historyToast:
-    "Toggle this in Agent Witch Local on this computer",
+    "Toggle this in Agent Witch Local on this computer.",
   dangerHeading: "Danger zone",
   deleteTitle: "Delete project",
   deleteSub:
-    "Remove from Agent Witch Cloud: members, invites, webhooks, API keys, and messages. Repos and files on computers are not touched.",
+    "Remove from Agent Witch Cloud: members, invites, wake links, keys, and messages. Repos and files on computers aren't touched.",
   deleteButton: "Delete project",
   deleteConfirmSr: "Type the project name to confirm",
   deleteConfirmPlaceholder: "Type the project name to confirm",

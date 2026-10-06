@@ -11,10 +11,10 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   helpersReady: "Ready",
   helpersWorking: "Working",
   helpersNote:
-    "Remove kicks the assistant out of the project. If the assistant leaves on its own, you do not need to approve.",
+    "Remove takes the assistant out of the project. If it leaves on its own, you don't need to approve.",
   menuChat: "Message privately",
   menuRename: "Rename",
-  menuWebhook: "Grok webhook",
+  menuWebhook: "Grok wake link",
   menuRemove: "Remove",
   renameAria: "New name",
   renameSave: "Save",
@@ -33,9 +33,9 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   inviteEmpty:
     "No assistant invites yet. The prompt shows only once when you create it.",
   compatGrok:
-    "Grok Bot is supported through a routine webhook, with automated tests already in place.",
+    "Grok Bot joins with the prompt and wakes up through its own routine.",
   compatOther:
-    "Other agents can call the agent-access API and receive HMAC-signed webhooks (for example Muse). Supported, but not end-to-end tested yet.",
+    "Other assistants, such as Muse, can join with the same invite prompt.",
   helperRemoved: (name: string) => `Removed ${name} from the project`,
   helperRenamed: "Assistant renamed",
   viewerHint: "Only the project owner can invite people and assistants.",
