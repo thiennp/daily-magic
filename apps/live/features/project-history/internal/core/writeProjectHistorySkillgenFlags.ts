@@ -20,7 +20,8 @@ export const writeProjectHistorySkillgenFlags = (input: {
     PROJECT_HISTORY_SKILLGEN_FLAGS_FILE_NAME,
   );
   const record: ProjectHistorySkillgenFlagsFile = {
-    ...input.file,
+    historyLearnedPitfalls: input.file.historyLearnedPitfalls,
+    skillgenDraftsReview: input.file.skillgenDraftsReview ?? null,
     updatedAt: new Date().toISOString(),
   };
   atomicWriteFile0600(filePath, `${JSON.stringify(record)}\n`);

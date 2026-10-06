@@ -38,6 +38,15 @@ export const PROJECT_HISTORY_PITFALL_MAX_BULLET_CHARS = 280;
 export const PROJECT_HISTORY_PITFALL_MAX_SYMPTOM_CHARS = 120;
 /** Cross-bot local flag key inside skillgen/flags.json. */
 export const PROJECT_HISTORY_PITFALL_FLAG_KEY = "historyLearnedPitfalls";
+/** Cross-bot local flag key for draft-cap / mining-paused owner notify. */
+export const PROJECT_HISTORY_SKILLGEN_DRAFTS_REVIEW_FLAG_KEY =
+  "skillgenDraftsReview";
+/** Env: set to "0" to disable default Cursor/Codex owner-LLM wiring. */
+export const PROJECT_HISTORY_SKILLGEN_OWNER_LLM_ENABLE_ENV =
+  "AGENT_WITCH_HISTORY_SKILLGEN_OWNER_LLM";
+/** Env: set to "1" to skip CLI spawn and return a stub SKILL.md (tests). */
+export const PROJECT_HISTORY_SKILLGEN_OWNER_LLM_DRY_RUN_ENV =
+  "AGENT_WITCH_HISTORY_SKILLGEN_OWNER_LLM_DRY_RUN";
 
 /** On-disk history message record version written by S5 v2 writers. */
 export const PROJECT_HISTORY_MESSAGE_RECORD_VERSION = 2;

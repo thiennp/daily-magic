@@ -1,6 +1,7 @@
 /**
  * Step 10 — owner LLM draft writer port.
- * Phase 1 injects a fake in tests; no real CLI/API call ships here.
+ * Production wiring: createOwnerLlmDraftWriter (Cursor → Codex fallback).
+ * Tests inject a fake; env AGENT_WITCH_HISTORY_SKILLGEN_OWNER_LLM=0 disables default.
  */
 export type OwnerLlmDraftWriterMode = "write" | "reflect_then_write";
 

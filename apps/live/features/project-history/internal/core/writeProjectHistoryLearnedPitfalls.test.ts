@@ -63,6 +63,7 @@ describe("learned pitfalls + flags IO", () => {
           updatedAt: "2026-10-05T12:00:00.000Z",
           summary: "1 recent pitfalls from project history (local)",
         },
+        skillgenDraftsReview: null,
         updatedAt: "2026-10-05T12:00:00.000Z",
       },
     });

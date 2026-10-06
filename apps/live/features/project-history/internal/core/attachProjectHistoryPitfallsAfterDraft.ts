@@ -15,6 +15,7 @@ import {
   type WriteProjectHistorySkillgenDraftResult,
 } from "./writeProjectHistorySkillgenDraft";
 import { writeProjectHistoryLearnedPitfalls } from "./writeProjectHistoryLearnedPitfalls";
+import { readProjectHistorySkillgenFlags } from "./readProjectHistorySkillgenFlags";
 import { writeProjectHistorySkillgenFlags } from "./writeProjectHistorySkillgenFlags";
 
 const LOG_PREFIX = "[project-history-skillgen]";
@@ -166,6 +167,7 @@ export const attachProjectHistoryPitfallsAfterDraft = (
         projectId: input.projectId,
         file: { items, updatedAt: nowIso },
       });
+      const existingFlags = readProjectHistorySkillgenFlags(input.projectId);
       writeProjectHistorySkillgenFlags({
         projectId: input.projectId,
         file: {
@@ -178,6 +180,7 @@ export const attachProjectHistoryPitfallsAfterDraft = (
                   updatedAt: nowIso,
                   summary: `${items.length} recent pitfalls from project history (local)`,
                 },
+          skillgenDraftsReview: existingFlags.skillgenDraftsReview,
           updatedAt: nowIso,
         },
       });

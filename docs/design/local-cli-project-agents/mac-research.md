@@ -289,7 +289,7 @@ Goal: after each task, keep a short prompt→outcome summary **on the machine th
 ### 6.2 Tie-in to History on/off + purge
 
 - Write only when local History is on: `isLocalProjectHistoryOn(state)` (`isLocalProjectHistoryOn.ts:4-7`; states `off/on_configuring/on_ready/degraded`, server table `project_computer_history_settings`, `db/migrations/059-project-computer-history-settings.sql:7-14`; owner toggles via `toggleProjectComputerHistory`, events `owner_enable/owner_disable`).
-- On History OFF, extend `purgeProjectHistoryOnOff` (`purgeProjectHistoryOnOff.ts:30-48`, today it removes `history/`, `skills/_drafts/`, `skillgen/`) to also remove `outcomes/`.
+- On History OFF, extend `purgeProjectHistoryOnOff` (`purgeProjectHistoryOnOff.ts:30-48`, today it removes derived only: `skills/_drafts/`, `skillgen/` (B0/Q1: never `history/` message records)) to also remove `outcomes/`.
 - **Owner-only delete:** a local AWL route (127.0.0.1, same uid, profile owner) `DELETE /api/local/projects/:projectId/outcomes[/:id]`, plus the server owner action that flips History off (which triggers the purge). Project members and other devices cannot read or delete it. It never leaves the machine unless the owner exports it.
 
 ### 6.3 Fast path

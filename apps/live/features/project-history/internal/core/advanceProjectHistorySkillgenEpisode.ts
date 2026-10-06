@@ -89,7 +89,7 @@ const withTransition = (
 /**
  * Advances one episode through as many legal FSM steps as possible until it
  * pauses (CAPTURING not ready, draft cap, AWAITING_REVIEW, or terminal).
- * Uses injected OwnerLlmDraftWriter (fake in tests). No real LLM in phase 1.
+ * Uses injected OwnerLlmDraftWriter (createOwnerLlmDraftWriter in production).
  */
 export const advanceProjectHistorySkillgenEpisode = async (
   input: AdvanceProjectHistorySkillgenEpisodeInput,

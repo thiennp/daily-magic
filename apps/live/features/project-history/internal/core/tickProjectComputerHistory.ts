@@ -35,7 +35,8 @@ export type TickProjectComputerHistoryDeps = {
   readonly runSkillgen?: (input: {
     readonly projectId: string;
   }) => void | Promise<void>;
-  /** Injected owner-LLM writer for the default skillgen runner (null = stop before EXTRACT). */
+  /** Injected owner-LLM writer for the default skillgen runner.
+   * Omit = Cursor→Codex default; explicit null = stop before EXTRACT. */
   readonly ownerLlm?: OwnerLlmDraftWriter | null;
   /** Projects with History data on disk (any local state); checked for cloud OFF. */
   readonly listPurgeCandidateIds?: () => readonly string[];
@@ -87,7 +88,8 @@ export const tickProjectComputerHistory = async (
   const runSkillgen =
     deps.runSkillgen ??
     createDefaultProjectHistorySkillgenRunner({
-      ownerLlm: deps.ownerLlm ?? null,
+      // omit ownerLlm → Cursor→Codex default; explicit null disables EXTRACT
+      ...(deps.ownerLlm !== undefined ? { ownerLlm: deps.ownerLlm } : {}),
     });
 
   const reconcileOffPurge =

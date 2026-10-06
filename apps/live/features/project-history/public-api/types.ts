@@ -43,6 +43,11 @@ export type {
   OwnerLlmDraftWriterResult,
   OwnerLlmDraftWriterMode,
 } from "../internal/core/ownerLlmDraftWriter.port";
+export type { OwnerLlmCliRunner } from "../internal/core/createOwnerLlmDraftWriter";
+export type {
+  ProjectHistorySkillgenDraftsReviewFlag,
+  ProjectHistorySkillgenFlagsFile,
+} from "../internal/core/projectHistoryLearnedPitfall.type";
 export type {
   ValidateProjectHistorySkillgenDraftInput,
   ValidateProjectHistorySkillgenDraftResult,

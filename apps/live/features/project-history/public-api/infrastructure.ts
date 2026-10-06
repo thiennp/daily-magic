@@ -45,6 +45,16 @@ export {
   resolveOwnerLlmDraftWriterMode,
 } from "../internal/core/ownerLlmDraftWriter.port";
 export {
+  createOwnerLlmDraftWriter,
+  runOwnerLlmCliTurn,
+} from "../internal/core/createOwnerLlmDraftWriter";
+export {
+  buildOwnerLlmSkillReflectPrompt,
+  buildOwnerLlmSkillWritePrompt,
+} from "../internal/core/buildOwnerLlmSkillDraftPrompt";
+export { extractOwnerLlmSkillMarkdown } from "../internal/core/extractOwnerLlmSkillMarkdown";
+export { persistProjectHistorySkillgenReviewFlag } from "../internal/core/persistProjectHistorySkillgenReviewFlag";
+export {
   validateProjectHistorySkillgenDraft,
   extractProjectHistorySkillgenStepLines,
 } from "../internal/core/validateProjectHistorySkillgenDraft";
@@ -91,6 +101,10 @@ export {
   PROJECT_HISTORY_PITFALL_MAX_STORED,
   PROJECT_HISTORY_PITFALL_MAX_BULLET_CHARS,
   PROJECT_HISTORY_PITFALL_FLAG_KEY,
+  PROJECT_HISTORY_SKILLGEN_DRAFTS_REVIEW_FLAG_KEY,
+  PROJECT_HISTORY_SKILLGEN_OWNER_LLM_ENABLE_ENV,
+  PROJECT_HISTORY_SKILLGEN_OWNER_LLM_DRY_RUN_ENV,
+  PROJECT_HISTORY_SKILL_OWNER_LLM_INPUT_TOKEN_CAP,
 } from "../internal/core/projectHistory.constants";
 
 export { ingestHistoryMessageIntoIndex } from "../internal/core/ingestHistoryMessageIntoIndex";
