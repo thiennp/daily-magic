@@ -10,13 +10,11 @@ import { buildOnboardingStepHref } from "@/features/onboarding/utils/buildOnboar
 interface OnboardingCreateDoneProps {
   readonly projectId: string;
   readonly projectName: string;
-  readonly description: string;
 }
 
 export default function OnboardingCreateDone({
   projectId,
   projectName,
-  description,
 }: OnboardingCreateDoneProps) {
   const machineHref = buildOnboardingStepHref("machine", projectId) ?? "/";
   return (
@@ -41,10 +39,7 @@ export default function OnboardingCreateDone({
         <div className="min-w-0">
           <b className="block break-words text-awc-fg">{projectName}</b>
           <span className="text-[length:var(--awc-fs-sm)] text-awc-fg-muted">
-            {description.trim().length > 0
-              ? description
-              : "No description yet"}{" "}
-            · You are the owner
+            {C.createdOwnerLine}
           </span>
         </div>
       </div>

@@ -39,15 +39,12 @@ export const ONBOARDING_COPY = {
   projectNameSavedAs: (slug: string) => `Saved as ${slug}`,
   nameIdeasLabel: "Ideas:",
   nameIdeas: ["my-first-project", "daily-helper", "team-notes"] as const,
-  descriptionLabel: "Short description",
-  descriptionOptional: "(optional)",
-  descriptionHint:
-    "Shown here for setup only — project description is not stored yet.",
   back: "Back",
   createProject: "Create project",
   creating: "Creating…",
   createdTitle: "Project created",
   createdLead: "Next, connect your computer so assistants can work.",
+  createdOwnerLine: "You are the owner",
   openProject: "Open project",
   connectComputer: "Connect your computer",
   createSkipText:

@@ -19,14 +19,12 @@ export default function OnboardingCreateProjectBody() {
         {state.view === "form" ? (
           <OnboardingCreateForm
             name={state.name}
-            description={state.description}
             busy={state.busy}
             error={state.error}
             onNameChange={(value) => {
               state.setError(null);
               state.setName(value);
             }}
-            onDescriptionChange={state.setDescription}
             onIdea={(idea) => {
               state.setError(null);
               state.setName(idea);
@@ -41,7 +39,6 @@ export default function OnboardingCreateProjectBody() {
           <OnboardingCreateDone
             projectId={state.created.id}
             projectName={state.created.name}
-            description={state.description}
           />
         ) : null}
       </section>

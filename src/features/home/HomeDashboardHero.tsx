@@ -1,7 +1,16 @@
 "use client";
 
-import { APP_SURFACE_CTA_PRIMARY_LG_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import Link from "next/link";
+
+import {
+  APP_SURFACE_CTA_PRIMARY_LG_CLASS,
+  APP_SURFACE_CTA_SECONDARY_CLASS,
+} from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectThisMacButton from "@/features/home/ConnectThisMacButton";
+import {
+  HOME_ONBOARDING_ENTRY_HREF,
+  HOME_ONBOARDING_ENTRY_LABEL,
+} from "@/features/home/constants/homeOnboardingEntryCta.constant";
 import HomeMacSettingsLink from "@/features/home/HomeMacSettingsLink";
 import HomeMacStatusBanner from "@/features/home/HomeMacStatusBanner";
 import useShouldShowConnectThisMac from "@/features/home/hooks/useShouldShowConnectThisMac";
@@ -22,6 +31,7 @@ interface HomeDashboardHeroProps {
 /**
  * Post-greeting actions + status (design keeps title in HomePageHead).
  * Preserves Connect this computer, settings link, running jobs.
+ * Parallel Get started → /onboarding/project (Product EN follow-up).
  */
 export default function HomeDashboardHero({
   installCommand,
@@ -44,6 +54,12 @@ export default function HomeDashboardHero({
             className={APP_SURFACE_CTA_PRIMARY_LG_CLASS}
           />
         ) : null}
+        <Link
+          href={HOME_ONBOARDING_ENTRY_HREF}
+          className={APP_SURFACE_CTA_SECONDARY_CLASS}
+        >
+          {HOME_ONBOARDING_ENTRY_LABEL}
+        </Link>
         <HomeMacSettingsLink />
       </div>
       <HomeRunningJobsPanel />

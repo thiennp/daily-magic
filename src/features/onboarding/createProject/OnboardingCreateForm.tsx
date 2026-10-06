@@ -10,11 +10,9 @@ import {
 
 interface OnboardingCreateFormProps {
   readonly name: string;
-  readonly description: string;
   readonly busy: boolean;
   readonly error: string | null;
   readonly onNameChange: (value: string) => void;
-  readonly onDescriptionChange: (value: string) => void;
   readonly onIdea: (idea: string) => void;
   readonly onBack: () => void;
   readonly onSubmit: () => void;
@@ -22,11 +20,9 @@ interface OnboardingCreateFormProps {
 
 export default function OnboardingCreateForm({
   name,
-  description,
   busy,
   error,
   onNameChange,
-  onDescriptionChange,
   onIdea,
   onBack,
   onSubmit,
@@ -46,11 +42,9 @@ export default function OnboardingCreateForm({
       <p className={OB_LEAD_CLASS}>{C.createLead}</p>
       <OnboardingCreateFormFields
         name={name}
-        description={description}
         busy={busy}
         error={error}
         onNameChange={onNameChange}
-        onDescriptionChange={onDescriptionChange}
         onIdea={onIdea}
       />
       <div className={OB_ACT_CLASS}>

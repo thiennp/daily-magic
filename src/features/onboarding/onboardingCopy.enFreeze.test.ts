@@ -34,4 +34,10 @@ describe("onboarding Product EN freeze", () => {
     expect(C.taskLead("demo").toLowerCase()).toContain("chat");
     expect(C.taskCta.toLowerCase()).not.toBe("new task");
   });
+
+  it("drops project description field copy until API persists it", () => {
+    expect(C).not.toHaveProperty("descriptionLabel");
+    expect(C).not.toHaveProperty("descriptionHint");
+    expect(C.createdOwnerLine).toBe("You are the owner");
+  });
 });

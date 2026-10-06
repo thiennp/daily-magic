@@ -4,21 +4,17 @@ import { slugifyOnboardingProjectName } from "@/features/onboarding/utils/slugif
 
 interface OnboardingCreateFormFieldsProps {
   readonly name: string;
-  readonly description: string;
   readonly busy: boolean;
   readonly error: string | null;
   readonly onNameChange: (value: string) => void;
-  readonly onDescriptionChange: (value: string) => void;
   readonly onIdea: (idea: string) => void;
 }
 
 export default function OnboardingCreateFormFields({
   name,
-  description,
   busy,
   error,
   onNameChange,
-  onDescriptionChange,
   onIdea,
 }: OnboardingCreateFormFieldsProps) {
   const slug = slugifyOnboardingProjectName(name);
@@ -66,26 +62,6 @@ export default function OnboardingCreateFormFields({
             {idea}
           </button>
         ))}
-      </div>
-      <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-awc-fg" htmlFor="ob-pd">
-          {C.descriptionLabel}{" "}
-          <span className="font-normal text-awc-fg-muted">
-            {C.descriptionOptional}
-          </span>
-        </label>
-        <textarea
-          id="ob-pd"
-          className={OB_FIELD_CLASS}
-          rows={2}
-          maxLength={140}
-          value={description}
-          disabled={busy}
-          onChange={(event) => onDescriptionChange(event.target.value)}
-        />
-        <p className="text-right text-[length:var(--awc-fs-chip)] text-awc-fg-muted">
-          {description.length} / 140 · {C.descriptionHint}
-        </p>
       </div>
     </>
   );

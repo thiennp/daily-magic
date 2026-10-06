@@ -10,7 +10,6 @@ export type OnboardingCreateView = "welcome" | "form" | "done";
 export const useOnboardingCreateProject = () => {
   const [view, setView] = useState<OnboardingCreateView>("welcome");
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [created, setCreated] = useState<{
@@ -53,8 +52,6 @@ export const useOnboardingCreateProject = () => {
     setView,
     name,
     setName,
-    description,
-    setDescription,
     busy,
     error,
     setError,
