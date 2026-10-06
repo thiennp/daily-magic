@@ -225,6 +225,195 @@
 }
 
 /*
+  L3 v5 project-page foundation (additive --awc-* names).
+  Effective light tokens from design/PLAN. Does not overwrite brand-* or
+  live semantic --bg/--surface/--radius-card. Later slices opt in.
+  Disabled primitive is .awc-disabled only (no global button:disabled restyle).
+*/
+:root {
+  --awc-blue-25: #f7f9fe;
+  --awc-blue-50: #eff4ff;
+  --awc-blue-100: #dbe6fe;
+  --awc-blue-200: #bdd1fd;
+  --awc-blue-300: #8fb0fa;
+  --awc-blue-400: #5b86f3;
+  --awc-blue-500: #3563e9;
+  --awc-blue-600: #2150d6;
+  --awc-blue-700: #1b3fae;
+  --awc-blue-800: #1a3589;
+  --awc-blue-900: #172e6b;
+  --awc-blue-950: #0f1c42;
+  --awc-primary: var(--awc-blue-600);
+
+  --awc-bg: #e8e6e1;
+  --awc-surface: #ffffff;
+  --awc-surface-2: #f7f6f4;
+  --awc-tile: #f4f3f0;
+  --awc-tile-2: #ebe9e4;
+  --awc-fill: #e9e7e2;
+  --awc-accent-soft: #e4ecff;
+  --awc-accent-soft-2: #d6e2ff;
+  --awc-border: #ddd9d2;
+  --awc-line: var(--awc-border);
+  --awc-border-strong: #c9c4bb;
+  --awc-control-border: #8a8478;
+  --awc-fg: #101828;
+  --awc-fg-muted: #4b5567;
+  --awc-muted: var(--awc-fg-muted);
+  --awc-fg-subtle: #566073;
+
+  --awc-ok-soft: #dff3e8;
+  --awc-ok: #0b6b3d;
+  --awc-ok-dot: #12804a;
+  --awc-warn-soft: #fdecc4;
+  --awc-warn: #7a4500;
+  --awc-warn-dot: #b86a00;
+  --awc-bad-soft: #fbdedb;
+  --awc-bad: #b42318;
+  --awc-bad-dot: #d92d20;
+  --awc-info-soft: #e1eaff;
+  --awc-info: var(--awc-blue-700);
+  --awc-attention-bg: #fbeccb;
+  --awc-bubble-own: #e8ecf3;
+  --awc-terminal-bg: #0f172a;
+  --awc-terminal-fg: #e6eaf2;
+  --awc-terminal-muted: #a3adc0;
+
+  --awc-fs-chip: 12px;
+  --awc-fs-row-sub: 12.5px;
+  --awc-fs-sm: 13px;
+  --awc-fs-body: 14px;
+  --awc-fs-card-title: 15.5px;
+  --awc-fs-md: 16px;
+  --awc-fs-h1: 32px;
+
+  --awc-sp-1: 4px;
+  --awc-sp-2: 8px;
+  --awc-sp-3: 12px;
+  --awc-sp-4: 16px;
+  --awc-sp-5: 20px;
+  --awc-sp-6: 24px;
+  --awc-sp-8: 32px;
+  --awc-sp-10: 40px;
+  --awc-sp-12: 48px;
+
+  --awc-radius-card: 20px;
+  --awc-radius-control: 12px;
+  --awc-radius-chip: 8px;
+  --awc-radius-chip-sm: 7px;
+  --awc-radius-pill: 999px;
+  --awc-radius-lg: 18px;
+  --awc-radius-xl: 28px;
+  --awc-radius-dock: 20px;
+
+  --awc-shadow-lift: 0 1px 2px rgba(16, 24, 40, 0.05),
+    0 1px 1px rgba(16, 24, 40, 0.03);
+  --awc-shadow-card: 0 0 0 1px rgba(16, 24, 40, 0.05),
+    0 1px 2px rgba(16, 24, 40, 0.05);
+  --awc-shadow-dock: 0 18px 48px rgba(16, 24, 40, 0.18);
+  --awc-shadow-overlay: 0 16px 48px rgba(16, 24, 40, 0.18);
+  --awc-shadow-focus-ring: 0 0 0 2px var(--awc-surface),
+    0 0 0 4px var(--awc-blue-600);
+
+  --awc-side-w: 240px;
+  --awc-top-h: 60px;
+
+  --awc-disabled-bg: var(--awc-tile-2);
+  --awc-disabled-fg: var(--awc-fg-subtle);
+  --awc-disabled-border: var(--awc-border-strong);
+
+  --awc-chip-h: 24px;
+  --awc-chip-h-sm: 22px;
+}
+
+@theme inline {
+  --color-awc-blue-25: var(--awc-blue-25);
+  --color-awc-blue-50: var(--awc-blue-50);
+  --color-awc-blue-100: var(--awc-blue-100);
+  --color-awc-blue-200: var(--awc-blue-200);
+  --color-awc-blue-300: var(--awc-blue-300);
+  --color-awc-blue-400: var(--awc-blue-400);
+  --color-awc-blue-500: var(--awc-blue-500);
+  --color-awc-blue-600: var(--awc-blue-600);
+  --color-awc-blue-700: var(--awc-blue-700);
+  --color-awc-blue-800: var(--awc-blue-800);
+  --color-awc-blue-900: var(--awc-blue-900);
+  --color-awc-blue-950: var(--awc-blue-950);
+  --color-awc-primary: var(--awc-primary);
+
+  --color-awc-bg: var(--awc-bg);
+  --color-awc-surface: var(--awc-surface);
+  --color-awc-surface-2: var(--awc-surface-2);
+  --color-awc-tile: var(--awc-tile);
+  --color-awc-tile-2: var(--awc-tile-2);
+  --color-awc-fill: var(--awc-fill);
+  --color-awc-accent-soft: var(--awc-accent-soft);
+  --color-awc-accent-soft-2: var(--awc-accent-soft-2);
+  --color-awc-border: var(--awc-border);
+  --color-awc-line: var(--awc-line);
+  --color-awc-border-strong: var(--awc-border-strong);
+  --color-awc-control-border: var(--awc-control-border);
+  --color-awc-fg: var(--awc-fg);
+  --color-awc-fg-muted: var(--awc-fg-muted);
+  --color-awc-muted: var(--awc-muted);
+  --color-awc-fg-subtle: var(--awc-fg-subtle);
+
+  --color-awc-ok: var(--awc-ok);
+  --color-awc-ok-soft: var(--awc-ok-soft);
+  --color-awc-ok-dot: var(--awc-ok-dot);
+  --color-awc-warn: var(--awc-warn);
+  --color-awc-warn-soft: var(--awc-warn-soft);
+  --color-awc-warn-dot: var(--awc-warn-dot);
+  --color-awc-bad: var(--awc-bad);
+  --color-awc-bad-soft: var(--awc-bad-soft);
+  --color-awc-bad-dot: var(--awc-bad-dot);
+  --color-awc-info: var(--awc-info);
+  --color-awc-info-soft: var(--awc-info-soft);
+  --color-awc-attention-bg: var(--awc-attention-bg);
+  --color-awc-bubble-own: var(--awc-bubble-own);
+
+  --radius-awc-card: var(--awc-radius-card);
+  --radius-awc-control: var(--awc-radius-control);
+  --radius-awc-chip: var(--awc-radius-chip);
+  --radius-awc-pill: var(--awc-radius-pill);
+  --radius-awc-lg: var(--awc-radius-lg);
+  --radius-awc-xl: var(--awc-radius-xl);
+  --radius-awc-dock: var(--awc-radius-dock);
+
+  --shadow-awc-lift: var(--awc-shadow-lift);
+  --shadow-awc-card: var(--awc-shadow-card);
+  --shadow-awc-dock: var(--awc-shadow-dock);
+  --shadow-awc-overlay: var(--awc-shadow-overlay);
+  --shadow-awc-focus-ring: var(--awc-shadow-focus-ring);
+}
+
+@layer utilities {
+  /*
+    Opt-in disabled look for v5 controls (#29). Specificity beats typical
+    .btn.solid when both classes are present. Do not apply to live chrome yet.
+  */
+  .awc-disabled,
+  .awc-disabled:disabled,
+  .awc-disabled[aria-disabled="true"],
+  button.awc-disabled:disabled,
+  .btn.awc-disabled:disabled,
+  .btn.awc-disabled[aria-disabled="true"] {
+    background: var(--awc-disabled-bg);
+    color: var(--awc-disabled-fg);
+    border: 1px dashed var(--awc-disabled-border);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 1;
+  }
+
+  .awc-focus-ring:focus-visible {
+    outline: none;
+    box-shadow: var(--awc-shadow-focus-ring);
+  }
+}
+
+
+/*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
   looks the same as it did with Tailwind CSS v3.
