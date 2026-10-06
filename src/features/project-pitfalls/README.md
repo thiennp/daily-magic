@@ -26,5 +26,6 @@ Per-project registry of known pitfalls (symptom → cause → avoidance + a chec
 - `PUT` / `POST` upsert — full content, no counters; 409 `limit_exceeded` past the cap
 - `GET /[pitfallId]` — one merged pitfall (retired included)
 - `POST /[pitfallId]/hit` — record_hit; optional `{ count, seenAt }` for batched local hits
+- `GET /../rules/usage` — rule-compare: all-time hitCount + lastHitAt + duplicate/overlap pairs (`?days=1..90`, `windowDays` null until per-hit events exist)
 
 Matching inside check_context, preflight, and local MCP tools are later items and are not in this module.

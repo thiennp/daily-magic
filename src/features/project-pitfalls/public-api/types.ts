@@ -10,3 +10,9 @@ export type {
   ProjectPitfallErrorCode,
   ProjectPitfallHitRecord,
 } from "@/features/project-pitfalls/internal/core/projectPitfall.type";
+export type {
+  ProjectRuleUsageResult,
+  RuleCompareOverlap,
+  RuleCompareOverlapReason,
+  RuleUsageRow,
+} from "@/features/project-pitfalls/internal/core/ruleUsage.type";
