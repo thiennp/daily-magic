@@ -16,8 +16,21 @@ describe("project layout v2 L1 shell", () => {
     expect(tabs).toContain('pitfalls: "Safety rules"');
     expect(tabs).toContain('resources: "Resources"');
     expect(tabs).toContain('settings: "Settings"');
-    expect(tabs).toContain('DEFAULT_PROJECT_PAGE_TAB: ProjectPageTabId = "activity"');
-    expect(tabs).not.toContain('"overview"');
+    expect(tabs).toContain(
+      'DEFAULT_PROJECT_PAGE_TAB: ProjectPageTabId = "activity"',
+    );
+    // overview remains in PROJECT_PAGE_SECTION_IDS; assert tabs only.
+    const tabIdsBlock =
+      tabs.match(
+        /export const PROJECT_PAGE_TAB_IDS = \[[\s\S]*?\] as const/,
+      )?.[0] ?? "";
+    expect(tabIdsBlock).toMatch(
+      /^export const PROJECT_PAGE_TAB_IDS = \[\s*"activity",\s*"pitfalls",\s*"resources",\s*"settings",\s*\] as const$/,
+    );
+    expect(tabIdsBlock).not.toContain('"overview"');
+    const tabLabelsBlock =
+      tabs.match(/export const PROJECT_PAGE_TAB_LABELS[\s\S]*?\};/)?.[0] ?? "";
+    expect(tabLabelsBlock).not.toMatch(/\boverview\b/);
   });
 
   it("segmented tab bar is gray track + selected surface (no underline, no blue)", () => {
@@ -32,7 +45,9 @@ describe("project layout v2 L1 shell", () => {
   it("3-col shell with flat Team rail (tone/divider, no own cards)", () => {
     const panel = read("src/features/projects/AwcProjectDetailPanel.tsx");
     const members = read("src/features/projects/AwcProjectMembersColumn.tsx");
-    const copy = read("src/features/projects/projectPageLayoutV2Copy.constant.ts");
+    const copy = read(
+      "src/features/projects/projectPageLayoutV2Copy.constant.ts",
+    );
     expect(panel).toContain("AwcProjectMembersColumn");
     expect(panel).toMatch(/lg:grid-cols-\[minmax\(0,1fr\)_20rem\]/);
     expect(members).toContain("border-l");
