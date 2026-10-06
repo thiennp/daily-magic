@@ -31,7 +31,7 @@ export const applyInitialProjectMembershipDeliveryMode = async (input: {
   readonly projectId: string;
   readonly membershipId: string;
   readonly inviteId: string | null;
-  /** Redeeming assistant's own join type (076); wins over the invite platform. */
+  /** Redeeming assistant's own join type (093); wins over the invite platform. */
   readonly joinPlatform?: string | null;
 }): Promise<ProjectMembershipDeliveryMode> => {
   try {

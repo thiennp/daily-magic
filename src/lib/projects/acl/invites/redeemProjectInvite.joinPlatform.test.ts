@@ -62,7 +62,7 @@ describe("redeem stores the assistant's joinType for the join-time mode", () => 
     expect(captured.values?.[9]).toBeNull();
   });
 
-  it("schema ensure adds the 076 column", async () => {
+  it("schema ensure adds the 093 column", async () => {
     stubRedeemSql({});
     await redeemProjectInvite({ token: "a".repeat(22), actorUserId: "bot-1" });
     const ddl = sqlMock.mock.calls.map((c) => String(c[0])).join("\n");

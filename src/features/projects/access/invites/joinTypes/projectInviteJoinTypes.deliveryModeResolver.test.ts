@@ -59,11 +59,11 @@ describe("redeem joinType → Wake S5 resolver, per /join type", () => {
     expect(parseProjectInviteJoinPlatform(42)).toBeNull();
   });
 
-  it("076 adds the nullable join_platform column", () => {
+  it("093 adds the nullable join_platform column", () => {
     const sql = fs.readFileSync(
       path.join(
         process.cwd(),
-        "db/migrations/076-project-access-request-join-platform.sql",
+        "db/migrations/093-project-access-request-join-platform.sql",
       ),
       "utf8",
     );

@@ -19,6 +19,6 @@ export default interface ProjectAccessRequestRecord {
   readonly teamLabel: string | null;
   /** Agent nickname suggestion from invite redeem; owner may override on Approve. */
   readonly suggestedProjectDisplayName: string | null;
-  /** Redeeming assistant's join type as a resolver platform (076); null = not given. */
+  /** Redeeming assistant's join type as a resolver platform (093); null = not given. */
   readonly joinPlatform?: string | null;
 }
