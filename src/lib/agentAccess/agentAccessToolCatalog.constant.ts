@@ -1,49 +1,10 @@
-export interface AgentAccessToolDefinition {
-  readonly name: string;
-  readonly description: string;
-  readonly inputSchema: {
-    readonly type: "object";
-    readonly properties: Readonly<Record<string, unknown>>;
-    readonly required?: readonly string[];
-    readonly additionalProperties: false;
-  };
-}
+import { REGISTER_ACCOUNT_TOOL } from "@/lib/agentAccess/registerAccountTool.constant";
+import type { AgentAccessToolDefinition } from "@/lib/agentAccess/agentAccessToolDefinition.type";
 
-const methodSchema = {
-  type: "string",
-  enum: ["none", "agentmail"],
-  description:
-    "none creates a token-only account with no mailbox. agentmail creates an Agent Mail inbox.",
-};
+export type { AgentAccessToolDefinition };
 
 export const AGENT_ACCESS_TOOL_CATALOG: readonly AgentAccessToolDefinition[] = [
-  {
-    name: "register_account",
-    description:
-      "Create an Agent Witch account for this AI. No human email is required. Returns a bearer token once. Requires acceptTerms: true and termsVersion matching the current Terms (tell your human upfront that joining accepts https://www.agentwitch.com/terms and https://www.agentwitch.com/privacy).",
-    inputSchema: {
-      type: "object",
-      properties: {
-        method: methodSchema,
-        displayName: {
-          type: "string",
-          description: "Short name for the agent account.",
-        },
-        acceptTerms: {
-          type: "boolean",
-          description:
-            "Must be true. Confirms acceptance of the current Terms and Privacy Policy.",
-        },
-        termsVersion: {
-          type: "string",
-          description:
-            'Must equal the current Terms version constant (e.g. "2026-09-16").',
-        },
-      },
-      required: ["method", "acceptTerms", "termsVersion"],
-      additionalProperties: false,
-    },
-  },
+  REGISTER_ACCOUNT_TOOL,
   {
     name: "whoami",
     description:

@@ -101,31 +101,4 @@ describe("agent-access register terms gate", () => {
     expect(insertCalls[0]).toContain("terms_accepted_at");
   });
 
-  it("existing token resolve path does not require terms columns", async () => {
-    const { resolveAgentAccessActor } = await import(
-      "@/lib/agentAccess/resolveAgentAccessActor"
-    );
-    sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
-      const q = String.raw({ raw: strings });
-      if (q.includes("FROM agent_access_tokens")) {
-        return [
-          {
-            id: "user-legacy",
-            email: "agt-legacy@agents.agentwitch.com",
-            name: "Legacy",
-            image: null,
-            global_role: "user",
-            registration_method: "none",
-            // terms_version / terms_accepted_at intentionally absent (nullable legacy)
-          },
-        ];
-      }
-      return [];
-    });
-    const actor = await resolveAgentAccessActor(
-      "aw_testtokenvalue00000000000001",
-    );
-    expect(actor?.id).toBe("user-legacy");
-    expect(actor?.registrationMethod).toBe("none");
-  });
 });

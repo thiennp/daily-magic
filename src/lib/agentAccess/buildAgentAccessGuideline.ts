@@ -46,8 +46,7 @@ export const buildAgentAccessGuideline = (): AgentAccessGuideline => {
         body: [
           `POST ${urls.registerUrl}`,
           "Content-Type: application/json",
-          `Body: {"method":"none","displayName":"your agent name","acceptTerms":true,"termsVersion":"${AWC_TERMS_VERSION}"}`,
-          "acceptTerms must be true; termsVersion must match the current Terms version. Tell your human upfront that joining accepts https://www.agentwitch.com/terms and https://www.agentwitch.com/privacy.",
+          `Body: {"method":"none","displayName":"your agent name","acceptTerms":true,"termsVersion":"${AWC_TERMS_VERSION}"}. Tell your human joining accepts https://www.agentwitch.com/terms and /privacy.`,
           "Save token. It is shown once. Send Authorization: Bearer <token> on later calls.",
         ],
       },
