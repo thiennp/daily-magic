@@ -10,29 +10,11 @@ import mapProjectAccessRequestRow from "@/lib/projects/acl/mapProjectAccessReque
 import { resolveApproveMembershipScopes } from "@/lib/projects/acl/resolveApproveMembershipScopes";
 import { resolveApproveDisplayName } from "@/lib/projects/acl/resolveApproveDisplayName";
 import { resolveEffectiveApproveDisplayName } from "@/lib/projects/acl/resolveEffectiveApproveDisplayName";
-import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
-import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
+import type { ApproveProjectAccessResult } from "@/lib/projects/acl/types/ApproveProjectAccessResult.type";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { asRowArray, getSql } from "@/lib/db";
 
-export type ApproveProjectAccessResult =
-  | {
-      readonly ok: true;
-      readonly request: ProjectAccessRequestRecord;
-      readonly membership: ProjectMembershipRecord;
-      readonly projectApiKey: string | null;
-    }
-  | {
-      readonly ok: false;
-      readonly code:
-        | "not_found"
-        | "forbidden"
-        | "not_pending"
-        | "display_name_required"
-        | "display_name_invalid"
-        | "display_name_reserved"
-        | "display_name_taken";
-    };
+export type { ApproveProjectAccessResult };
 
 export const approveProjectAccessRequest = async (input: {
   readonly projectId: string;

@@ -8,7 +8,7 @@ import {
   hashProjectInviteToken,
 } from "@/lib/projects/acl/invites/hashProjectInviteToken";
 import mapProjectInviteRow from "@/lib/projects/acl/invites/mapProjectInviteRow";
-import type ProjectInviteRecord from "@/lib/projects/acl/invites/types/ProjectInviteRecord.type";
+import type { CreateProjectInviteResult } from "@/lib/projects/acl/invites/types/CreateProjectInviteResult.type";
 import {
   clampInviteExpiresDays,
   clampInviteMaxUses,
@@ -19,14 +19,7 @@ import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAu
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { asRowArray, getSql } from "@/lib/db";
 
-export type CreateProjectInviteResult =
-  | {
-      readonly ok: true;
-      readonly invite: ProjectInviteRecord;
-      readonly url: string;
-      readonly token: string;
-    }
-  | { readonly ok: false; readonly code: "not_found" | "forbidden" | "invalid" };
+export type { CreateProjectInviteResult };
 
 export const createProjectInvite = async (input: {
   readonly projectId: string;
