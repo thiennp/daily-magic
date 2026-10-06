@@ -14,7 +14,7 @@ const ENUM_VALUES: Readonly<Record<string, readonly string[]>> = {
   deliveryMode: ["webhook", "poll"],
   previousDeliveryMode: ["webhook", "poll"],
   trigger: ["owner_switch", "member_switch", "wake_link_saved"],
-  approvalSource: ["owner", "invite_auto_approve", "test_flag"],
+  approvalSource: ["owner", "invite_auto_approve", "test_auto_connect"],
 };
 
 /** Anything that looks like an email never lands in the Access log. */

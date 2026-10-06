@@ -48,7 +48,7 @@ export const PROJECT_ACTIVITY_SAFETY_TYPES: readonly ProjectActivityEventType[] 
 ];
 
 /** How a join was approved. Only "owner" ever produces request.approved. */
-export type ProjectApprovalSource = "owner" | "invite_auto_approve" | "test_flag";
+export type ProjectApprovalSource = "owner" | "invite_auto_approve" | "test_auto_connect";
 
 /** Write-time trim: newest N per project, nothing older than D days. */
 export const PROJECT_ACTIVITY_RETENTION = {

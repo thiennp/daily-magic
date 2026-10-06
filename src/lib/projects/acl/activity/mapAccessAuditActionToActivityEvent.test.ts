@@ -15,7 +15,7 @@ describe("mapAccessAuditActionToActivityEvent (adapter mapping)", () => {
     expect(owner?.actor).toEqual({ kind: "owner", userId: "owner-1" });
     expect(owner?.target).toEqual({ membershipId: "mem-1", userId: "bot-1", label: "Buni" });
     expect(owner?.detail).toMatchObject({ approvalSource: "owner", requestId: "req-1" });
-    for (const approvalSource of ["invite_auto_approve", "test_flag", undefined]) {
+    for (const approvalSource of ["invite_auto_approve", "test_auto_connect", undefined]) {
       expect(map({ action: "approve", detail: { ...detail, approvalSource } })).toBeNull();
     }
   });
