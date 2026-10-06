@@ -7,12 +7,14 @@ const read = (relative: string): string =>
   readFileSync(path.join(process.cwd(), relative), "utf8");
 
 describe("project layout v2 L1 shell", () => {
-  it("uses four EN tabs with Safety rules label and Activity default", () => {
+  it("uses EN tabs with Safety rules label, Reports/Library stubs, Activity default", () => {
     const tabs = read("src/features/projects/projectPageTabs.constant.ts");
     expect(tabs).toMatch(
-      /"activity",\s*"pitfalls",\s*"resources",\s*"settings"/,
+      /"activity",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
     );
     expect(tabs).toContain('activity: "Activity"');
+    expect(tabs).toContain('reports: "Reports"');
+    expect(tabs).toContain('library: "Library"');
     expect(tabs).toContain('pitfalls: "Safety rules"');
     expect(tabs).toContain('resources: "Resources"');
     expect(tabs).toContain('settings: "Settings"');
@@ -25,9 +27,10 @@ describe("project layout v2 L1 shell", () => {
         /export const PROJECT_PAGE_TAB_IDS = \[[\s\S]*?\] as const/,
       )?.[0] ?? "";
     expect(tabIdsBlock).toMatch(
-      /^export const PROJECT_PAGE_TAB_IDS = \[\s*"activity",\s*"pitfalls",\s*"resources",\s*"settings",\s*\] as const$/,
+      /^export const PROJECT_PAGE_TAB_IDS = \[\s*"activity",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings",\s*\] as const$/,
     );
     expect(tabIdsBlock).not.toContain('"overview"');
+    expect(tabIdsBlock).not.toContain('"team"');
     const tabLabelsBlock =
       tabs.match(/export const PROJECT_PAGE_TAB_LABELS[\s\S]*?\};/)?.[0] ?? "";
     expect(tabLabelsBlock).not.toMatch(/\boverview\b/);

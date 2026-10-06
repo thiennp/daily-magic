@@ -82,7 +82,9 @@ const messengerComposerSource = readFileSync(
 describe("AwcProjectDetailPanel layout S3 activity", () => {
   it("mounts messenger Activity panel with dual-mode composer", () => {
     expect(tabPanelsSource).toContain("AwcProjectMessengerSection");
-    expect(tabPanelsSource).not.toMatch(/STUB_TABS/);
+    expect(tabPanelsSource).not.toMatch(
+      /const STUB_TABS[\s\S]*?= \[[^\]]*"(?:activity|team)"[^\]]*\];/,
+    );
     expect(messengerSectionSource).toContain("AwcProjectMessengerPanels");
     expect(messengerComposerSource).toContain("AwcMessengerMessageComposer");
     expect(messengerComposerSource).toContain("AwcMessengerTaskComposer");

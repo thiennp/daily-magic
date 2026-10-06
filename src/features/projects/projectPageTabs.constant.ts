@@ -1,6 +1,11 @@
-/** Project layout v2 L1 — artifact tab order (English labels; wire ids stable). */
+/**
+ * Project layout v2 L1 — artifact tab order (English labels; wire ids stable).
+ * Reports/Library stay visible as centre stubs until they land.
+ */
 export const PROJECT_PAGE_TAB_IDS = [
   "activity",
+  "reports",
+  "library",
   "pitfalls",
   "resources",
   "settings",
@@ -9,15 +14,10 @@ export const PROJECT_PAGE_TAB_IDS = [
 export type ProjectPageTabId = (typeof PROJECT_PAGE_TAB_IDS)[number];
 
 /**
- * Former tabs now living as the right Team column or deferred sections.
+ * Former tabs now living as the right Team column or dropped sections.
  * Kept for Overview setup goto targets / deep-link soft fallbacks.
  */
-export const PROJECT_PAGE_SECTION_IDS = [
-  "team",
-  "library",
-  "reports",
-  "overview",
-] as const;
+export const PROJECT_PAGE_SECTION_IDS = ["team", "overview"] as const;
 
 export type ProjectPageNavTarget =
   | ProjectPageTabId
@@ -25,6 +25,8 @@ export type ProjectPageNavTarget =
 
 export const PROJECT_PAGE_TAB_LABELS: Record<ProjectPageTabId, string> = {
   activity: "Activity",
+  reports: "Reports",
+  library: "Library",
   pitfalls: "Safety rules",
   resources: "Resources",
   settings: "Settings",

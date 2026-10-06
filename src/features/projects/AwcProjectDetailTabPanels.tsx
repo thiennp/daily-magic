@@ -2,11 +2,13 @@
 
 import AwcProjectDetailSettingsPanel from "@/features/projects/AwcProjectDetailSettingsPanel";
 import AwcProjectMessengerSection from "@/features/projects/messenger/AwcProjectMessengerSection";
+import AwcProjectTabStub from "@/features/projects/AwcProjectTabStub";
 import AwcProjectPitfallsPanel from "@/features/projects/pitfalls/AwcProjectPitfallsPanel";
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
 import AwcProjectResourcesPanel from "@/features/projects/resources/AwcProjectResourcesPanel";
 import {
   PROJECT_PAGE_TAB_IDS,
+  PROJECT_PAGE_TAB_LABELS,
   type ProjectPageNavTarget,
   type ProjectPageTabId,
 } from "@/features/projects/projectPageTabs.constant";
@@ -27,6 +29,9 @@ interface AwcProjectDetailTabPanelsProps {
   readonly activityInitialThreadKey?: string | null;
   readonly onActivityUnreadMaybeChanged?: () => void;
 }
+
+/** Not landed yet: dashed placeholder (Team moved to the Members rail). */
+const STUB_TABS: readonly ProjectPageTabId[] = ["reports", "library"];
 
 export default function AwcProjectDetailTabPanels({
   activeTab,
@@ -79,6 +84,9 @@ export default function AwcProjectDetailTabPanels({
                 startRename={startRename}
                 pageActorRole={pageActorRole}
               />
+            ) : null}
+            {STUB_TABS.includes(tabId) ? (
+              <AwcProjectTabStub label={PROJECT_PAGE_TAB_LABELS[tabId]} />
             ) : null}
           </div>
         );
