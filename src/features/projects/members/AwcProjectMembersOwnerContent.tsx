@@ -2,6 +2,7 @@
 
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 import AwcProjectMembersHelpersSection from "@/features/projects/members/AwcProjectMembersHelpersSection";
+import AwcAccessLogRailFooter from "@/features/projects/accessLog/AwcAccessLogRailFooter";
 import AwcProjectMembersInviteBotsSection from "@/features/projects/members/AwcProjectMembersInviteBotsSection";
 import AwcProjectMembersPeopleSection from "@/features/projects/members/AwcProjectMembersPeopleSection";
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
@@ -67,6 +68,7 @@ export default function AwcProjectMembersOwnerContent({
             }}
             onClearCreated={access.clearCreatedInviteBanner}
           />
+          <AwcAccessLogRailFooter projectId={projectId} />
         </>
       ) : null}
       {access.message ? (
