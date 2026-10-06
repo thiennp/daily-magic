@@ -16,7 +16,7 @@ export const PROJECT_PAGE_OVERVIEW_COPY = {
     pending > 0 ? `${n} members (${pending} pending)` : `${n} members`,
   unreadStat: (n: number) => `${n} unread`,
   safetyRulesStat: (active: number, max: number) =>
-    `${active} of ${max} safety rules on`,
+    `${active} of ${max} safety ${max === 1 ? "rule" : "rules"} on`,
   /** `agents` = Library agent definitions attached to the project (not assistants). */
   compositionStat: (playbooks: number, workflows: number, agents: number) =>
     `${playbooks} playbooks · ${workflows} workflows · ${agents} agents`,
@@ -85,7 +85,7 @@ export const PROJECT_PAGE_OVERVIEW_COPY = {
     max: number,
     hitsLine: string,
   ) =>
-    `${important} ${AWC_PROJECT_PITFALLS_COPY.severity.block} · ${warning} ${AWC_PROJECT_PITFALLS_COPY.severity.warn} · ${note} ${AWC_PROJECT_PITFALLS_COPY.severity.info} · ${active} of ${max} on · ${hitsLine}`,
+    `${important} ${AWC_PROJECT_PITFALLS_COPY.severity.block} · ${warning} ${AWC_PROJECT_PITFALLS_COPY.severity.warn} · ${note} ${AWC_PROJECT_PITFALLS_COPY.severity.info} · ${active} of ${max} ${max === 1 ? "rule" : "rules"} on · ${hitsLine}`,
   /** All-time: summary.totalHits sums hitCount (no 30-day window). */
   safetyHitsNone: "no hits yet",
   safetyHitsSome: (n: number) =>

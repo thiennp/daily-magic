@@ -10,6 +10,19 @@ describe("PROJECT_PAGE_OVERVIEW_COPY (V5-5 EN)", () => {
     expect(`${C.safetyHitsNone} ${C.safetyHitsSome(2)}`).not.toMatch(/30 days/);
   });
 
+
+  it("safety rules chip/summary use singular when total is 1", () => {
+    expect(C.safetyRulesStat(1, 1)).toBe("1 of 1 safety rule on");
+    expect(C.safetyRulesStat(2, 2)).toBe("2 of 2 safety rules on");
+    expect(C.safetyRulesStat(0, 3)).toBe("0 of 3 safety rules on");
+    expect(C.safetySummary(0, 0, 1, 1, 1, C.safetyHitsNone)).toBe(
+      "0 Important · 0 Warning · 1 Note · 1 of 1 rule on · no hits yet",
+    );
+    expect(C.safetySummary(1, 1, 1, 3, 3, C.safetyHitsNone)).toBe(
+      "1 Important · 1 Warning · 1 Note · 3 of 3 rules on · no hits yet",
+    );
+  });
+
   it("locked setup / attention / assistants / recent strings", () => {
     expect(C.attentionWaiting("Ava")).toBe(
       "Ava finished a task and is waiting for you to confirm.",

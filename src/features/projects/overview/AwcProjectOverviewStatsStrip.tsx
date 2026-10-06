@@ -48,7 +48,8 @@ export default function AwcProjectOverviewStatsStrip({
       {s.pitfallsMax === 0 ? null : (
         <button type="button" className={OVERVIEW_FACT_CLASS} onClick={() => onGoto("pitfalls")}>
           <b className="font-semibold tabular-nums text-awc-fg dark:text-white">{s.pitfallsActive}</b>{" "}
-          of {s.pitfallsMax} safety rules on
+          of {s.pitfallsMax} safety{" "}
+          {s.pitfallsMax === 1 ? "rule" : "rules"} on
         </button>
       )}
       {s.showComposition ? (
