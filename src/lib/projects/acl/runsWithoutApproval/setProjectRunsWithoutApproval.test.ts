@@ -40,6 +40,23 @@ const fakeSql = async (strings: TemplateStringsArray, ...values: unknown[]) => {
   throw new Error(`unexpected sql: ${q}`);
 };
 
+const set = (
+  actorUserId: string,
+  allowRunsWithoutApproval: unknown,
+  projectId = "proj-1",
+) =>
+  setProjectRunsWithoutApproval({
+    projectId,
+    actorUserId,
+    allowRunsWithoutApproval,
+  });
+
+const ok = (allowRunsWithoutApproval: boolean, changed: boolean) => ({
+  ok: true,
+  allowRunsWithoutApproval,
+  changed,
+});
+
 describe("setProjectRunsWithoutApproval (S0-2)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -49,32 +66,17 @@ describe("setProjectRunsWithoutApproval (S0-2)", () => {
     projects.set("proj-1", { owner: "owner-1", allow: false });
   });
 
-  it("defaults OFF", async () => {
+  it("defaults OFF; reads OFF when the query fails (fail closed)", async () => {
     expect(await readProjectRunsWithoutApproval("proj-1")).toBe(false);
     expect(await readProjectRunsWithoutApproval("missing")).toBe(false);
-  });
-
-  it("reads OFF when the query fails (fail closed)", async () => {
     sqlMock.mockRejectedValue(new Error("db down"));
     expect(await readProjectRunsWithoutApproval("proj-1")).toBe(false);
   });
 
   it("owner turns it ON then OFF; every change writes one Access log row", async () => {
-    expect(
-      await setProjectRunsWithoutApproval({
-        projectId: "proj-1",
-        actorUserId: "owner-1",
-        allowRunsWithoutApproval: true,
-      }),
-    ).toEqual({ ok: true, allowRunsWithoutApproval: true, changed: true });
+    expect(await set("owner-1", true)).toEqual(ok(true, true));
     expect(await readProjectRunsWithoutApproval("proj-1")).toBe(true);
-    expect(
-      await setProjectRunsWithoutApproval({
-        projectId: "proj-1",
-        actorUserId: "owner-1",
-        allowRunsWithoutApproval: false,
-      }),
-    ).toEqual({ ok: true, allowRunsWithoutApproval: false, changed: true });
+    expect(await set("owner-1", false)).toEqual(ok(false, true));
 
     expect(writeEventMock).toHaveBeenCalledTimes(2);
     expect(writeEventMock.mock.calls[0][0]).toEqual({
@@ -89,45 +91,27 @@ describe("setProjectRunsWithoutApproval (S0-2)", () => {
   });
 
   it("a no-op write changes nothing and logs nothing", async () => {
-    expect(
-      await setProjectRunsWithoutApproval({
-        projectId: "proj-1",
-        actorUserId: "owner-1",
-        allowRunsWithoutApproval: false,
-      }),
-    ).toEqual({ ok: true, allowRunsWithoutApproval: false, changed: false });
+    expect(await set("owner-1", false)).toEqual(ok(false, false));
     expect(writeEventMock).not.toHaveBeenCalled();
   });
 
   it("only the owner can toggle: members/bots get forbidden, flag and log untouched", async () => {
     for (const actor of ["member-1", "bot-user-1"]) {
-      expect(
-        await setProjectRunsWithoutApproval({
-          projectId: "proj-1",
-          actorUserId: actor,
-          allowRunsWithoutApproval: true,
-        }),
-      ).toEqual({ ok: false, code: "forbidden" });
+      expect(await set(actor, true)).toEqual({ ok: false, code: "forbidden" });
     }
     expect(projects.get("proj-1")?.allow).toBe(false);
     expect(writeEventMock).not.toHaveBeenCalled();
   });
 
   it("rejects non-boolean values and unknown projects", async () => {
-    expect(
-      await setProjectRunsWithoutApproval({
-        projectId: "proj-1",
-        actorUserId: "owner-1",
-        allowRunsWithoutApproval: "yes",
-      }),
-    ).toEqual({ ok: false, code: "invalid_value" });
-    expect(
-      await setProjectRunsWithoutApproval({
-        projectId: "nope",
-        actorUserId: "owner-1",
-        allowRunsWithoutApproval: true,
-      }),
-    ).toEqual({ ok: false, code: "not_found" });
+    expect(await set("owner-1", "yes")).toEqual({
+      ok: false,
+      code: "invalid_value",
+    });
+    expect(await set("owner-1", true, "nope")).toEqual({
+      ok: false,
+      code: "not_found",
+    });
     expect(writeEventMock).not.toHaveBeenCalled();
   });
 });

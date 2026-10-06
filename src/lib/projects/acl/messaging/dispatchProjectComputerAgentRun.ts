@@ -1,13 +1,9 @@
-import { deliverOrQueueAgentWitchDispatchMessage } from "@/lib/agentWitch/deliverOrQueueAgentWitchDispatchMessage";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
-import { buildCommandClaudeRunDispatchMessage } from "@/lib/dispatch/buildCommandClaudeRunDispatchMessage";
-import { buildDispatchApprovalExpiresAt } from "@/lib/dispatch/dispatchApprovalTtl.constant";
 import { persistAgentRun } from "@/lib/dispatch/persistAgentRun";
-import { resolveDispatchPolicyForExecutor } from "@/lib/dispatch/resolveDispatchPolicyForExecutor";
-import { decideComputerRunApproval } from "@/lib/projects/acl/messaging/decideComputerRunApproval";
+import { deliverProjectComputerAgentRun } from "@/lib/projects/acl/messaging/deliverProjectComputerAgentRun";
 import { insertProjectMessageWithDeliveries } from "@/lib/projects/acl/messaging/insertProjectMessageWithDeliveries";
 import { requestComputerRunApproval } from "@/lib/projects/acl/messaging/requestComputerRunApproval";
-import { readProjectRunsWithoutApproval } from "@/lib/projects/acl/runsWithoutApproval/readProjectRunsWithoutApproval";
+import { resolveComputerRunApprovalGate } from "@/lib/projects/acl/messaging/resolveComputerRunApprovalGate";
 
 export type DispatchProjectComputerAgentRunResult =
   | {
@@ -15,10 +11,7 @@ export type DispatchProjectComputerAgentRunResult =
       readonly messageId: string;
       readonly agentRunId: string;
       readonly delivery:
-        | "delivered"
-        | "queued"
-        | "unavailable"
-        | "pending_approval";
+        "delivered" | "queued" | "unavailable" | "pending_approval";
     }
   | { readonly ok: false; readonly code: string };
 
@@ -56,35 +49,26 @@ export const dispatchProjectComputerAgentRun = async (input: {
     kind: input.kind,
     summary: input.summary,
     refsJson: input.refsJson,
-    recipients: [
-      { id: input.membershipId, user_id: input.deviceOwnerUserId },
-    ],
+    recipients: [{ id: input.membershipId, user_id: input.deviceOwnerUserId }],
   });
 
-  const isComputerOwner = input.actorUserId === input.deviceOwnerUserId;
-  const decision = decideComputerRunApproval({
-    requesterUserId: input.actorUserId,
-    executorUserId: input.deviceOwnerUserId,
-    executorDispatchPolicy: await resolveDispatchPolicyForExecutor({
+  const { dispatchPolicy, approvalExpiresAt } =
+    await resolveComputerRunApprovalGate({
+      projectId: input.projectId,
+      requesterUserId: input.actorUserId,
       executorUserId: input.deviceOwnerUserId,
-    }),
-    projectAllowsRunsWithoutApproval: isComputerOwner
-      ? false
-      : await readProjectRunsWithoutApproval(input.projectId),
-  });
-  const approvalExpiresAt = decision.requiresApproval
-    ? buildDispatchApprovalExpiresAt()
-    : null;
+    });
 
   const run = await persistAgentRun({
     requesterUserId: input.actorUserId,
     executorUserId: input.deviceOwnerUserId,
     deviceId: input.deviceId,
     prompt: input.summary,
-    status: decision.requiresApproval
-      ? AgentRunStatus.PENDING_APPROVAL
-      : AgentRunStatus.RUNNING,
-    dispatchPolicy: decision.dispatchPolicy,
+    status:
+      approvalExpiresAt !== null
+        ? AgentRunStatus.PENDING_APPROVAL
+        : AgentRunStatus.RUNNING,
+    dispatchPolicy,
     writerAgent: "claude-cli",
     projectId: input.projectId,
     approvalExpiresAt,
@@ -110,30 +94,18 @@ export const dispatchProjectComputerAgentRun = async (input: {
     };
   }
 
-  const command = buildCommandClaudeRunDispatchMessage({
-    prompt: input.summary,
+  const delivery = await deliverProjectComputerAgentRun({
     agentRunId: run.id,
-    writerAgent: "claude-cli",
+    prompt: input.summary,
     projectId: input.projectId,
-    requestId: stored.messageId,
-  });
-
-  const delivery = await deliverOrQueueAgentWitchDispatchMessage({
-    userId: input.deviceOwnerUserId,
+    messageId: stored.messageId,
+    deviceOwnerUserId: input.deviceOwnerUserId,
     deviceId: input.deviceId,
-    idempotencyKey: `project-computer-task:${stored.messageId}`,
-    message: command,
   });
-
-  const deliveryKind =
-    delivery.kind === "delivered" || delivery.kind === "queued"
-      ? delivery.kind
-      : "unavailable";
-
   return {
     ok: true,
     messageId: stored.messageId,
     agentRunId: run.id,
-    delivery: deliveryKind,
+    delivery,
   };
 };

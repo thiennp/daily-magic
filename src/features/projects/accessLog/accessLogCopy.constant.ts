@@ -46,7 +46,7 @@ export const ACCESS_LOG_COPY = {
   modeAutoWake: "{name} now wakes up on its own",
   // S0-2 draft EN (pending Product copy lock).
   runsWithoutApprovalOn:
-    "You let tasks run on this project's computer without approval",
+    "You allowed tasks to run on this project's computer without approval",
   runsWithoutApprovalOff:
     "You turned approval back on for tasks on this project's computer",
   detailInvite: "Invite {inviteLabel}",
