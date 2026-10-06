@@ -1,0 +1,76 @@
+"use client";
+
+import { useMemo } from "react";
+
+import type { AwcProjectAccessMember } from "@/features/projects/access/hooks/loadAwcProjectAccess";
+import { isComputerAccessMember } from "@/features/projects/access/utils/isComputerAccessMember";
+import AwcProjectMembersHelperRow from "@/features/projects/members/AwcProjectMembersHelperRow";
+import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+
+interface AwcProjectMembersHelpersSectionProps {
+  readonly projectId: string;
+  readonly members: readonly AwcProjectAccessMember[];
+  readonly onMessage: (membershipId: string) => void;
+  readonly onRename: (
+    membershipId: string,
+    name: string,
+  ) => Promise<{ readonly ok: boolean }>;
+  readonly onRemove: (membershipId: string) => void;
+}
+
+/** Assistants in the project — flat expandable rows (no cards). */
+export default function AwcProjectMembersHelpersSection({
+  projectId,
+  members,
+  onMessage,
+  onRename,
+  onRemove,
+}: AwcProjectMembersHelpersSectionProps) {
+  const helpers = useMemo(
+    () =>
+      members.filter(
+        (member) => member.isAgent && !isComputerAccessMember(member),
+      ),
+    [members],
+  );
+
+  return (
+    <section className="flex flex-col gap-1" aria-labelledby="members-helpers-h">
+      <div className="flex items-baseline justify-between gap-2 px-3.5">
+        <h3
+          id="members-helpers-h"
+          className="text-[13px] font-semibold text-gray-500 dark:text-gray-400"
+        >
+          {C.helpersHeading}
+        </h3>
+        <span className="text-[12px] tabular-nums text-gray-500 dark:text-gray-400">
+          {helpers.length}
+        </span>
+      </div>
+      {helpers.length === 0 ? (
+        <p className="px-3.5 py-2 text-[13px] text-gray-500 dark:text-gray-400">
+          {C.helpersEmpty}
+        </p>
+      ) : (
+        <ul className="flex flex-col">
+          {helpers.map((member) => (
+            <AwcProjectMembersHelperRow
+              key={member.id}
+              projectId={projectId}
+              member={member}
+              onMessage={onMessage}
+              onRename={async (id, name) => {
+                const result = await onRename(id, name);
+                return result.ok;
+              }}
+              onRemove={onRemove}
+            />
+          ))}
+        </ul>
+      )}
+      <p className="px-3.5 pt-1 text-[12px] text-gray-500 dark:text-gray-400">
+        {C.helpersNote}
+      </p>
+    </section>
+  );
+}

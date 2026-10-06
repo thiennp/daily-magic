@@ -45,7 +45,7 @@ describe("project layout v2 L1 shell", () => {
     expect(bar).toContain('role="tablist"');
   });
 
-  it("3-col shell with flat Team rail (tone/divider, no own cards)", () => {
+  it("3-col shell with flat Members rail (tone/divider, no own cards)", () => {
     const panel = read("src/features/projects/AwcProjectDetailPanel.tsx");
     const members = read("src/features/projects/AwcProjectMembersColumn.tsx");
     const copy = read(
@@ -55,10 +55,10 @@ describe("project layout v2 L1 shell", () => {
     expect(panel).toMatch(/lg:grid-cols-\[minmax\(0,1fr\)_20rem\]/);
     expect(members).toContain("border-l");
     expect(members).toContain("bg-gray-50/70");
-    expect(members).toContain("!border-0");
-    expect(members).toContain("!shadow-none");
+    expect(members).toContain("AwcProjectMembersOwnerContent");
+    expect(members).not.toContain("AwcProjectAccessPanel");
     expect(copy).toContain('editOnThisComputer: "Edit on this computer"');
-    expect(copy).toContain('membersColumnLabel: "Team"');
+    expect(copy).toContain('membersColumnLabel: "Members"');
     expect(copy).not.toMatch(/Hoạt động|Thành viên|Sửa trên/);
   });
 });

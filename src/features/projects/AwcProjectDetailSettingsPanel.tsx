@@ -1,10 +1,11 @@
 "use client";
 
-import AwcProjectDeleteControl from "@/features/projects/AwcProjectDeleteControl";
-import AwcProjectNameEditor from "@/features/projects/AwcProjectNameEditor";
-import { PROJECT_PAGE_SHELL_COPY } from "@/features/projects/projectPageShellCopy.constant";
+import isDefaultUserProject from "@/lib/projects/isDefaultUserProject";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
+import AwcProjectSettingsDangerZone from "@/features/projects/settings/AwcProjectSettingsDangerZone";
+import AwcProjectSettingsHistoryRow from "@/features/projects/settings/AwcProjectSettingsHistoryRow";
+import AwcProjectSettingsNameSection from "@/features/projects/settings/AwcProjectSettingsNameSection";
 
 interface AwcProjectDetailSettingsPanelProps {
   readonly project: UserProjectRecord;
@@ -12,34 +13,35 @@ interface AwcProjectDetailSettingsPanelProps {
   readonly pageActorRole: ProjectPageActorRole;
 }
 
+/** Layout v2 L5 Settings (p-set): name · message history · danger zone. */
 export default function AwcProjectDetailSettingsPanel({
   project,
   startRename,
   pageActorRole,
 }: AwcProjectDetailSettingsPanelProps) {
-  const copy = PROJECT_PAGE_SHELL_COPY;
   const isOwner = pageActorRole === "owner";
+  const canDelete = isOwner && !isDefaultUserProject(project);
+
   return (
-    <div className="flex max-w-[760px] flex-col gap-6">
-      <section className="space-y-3 rounded-xl border border-gray-200/80 bg-white p-5 dark:border-gray-800/80 dark:bg-gray-900/40">
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
-          Project name
-        </h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          {copy.settingsNameHint}
-        </p>
-        {isOwner ? (
-          <AwcProjectNameEditor
-            projectId={project.id}
-            initialName={project.name}
-            startInEditMode={startRename}
-          />
-        ) : (
-          <p className="text-sm text-gray-700 dark:text-gray-200">{project.name}</p>
-        )}
-      </section>
+    <div
+      id="p-set"
+      className="flex max-w-[760px] flex-col gap-6"
+      data-layout-v2="l5-settings"
+    >
+      <AwcProjectSettingsNameSection
+        projectId={project.id}
+        initialName={project.name}
+        startInEditMode={startRename}
+        canEdit={isOwner}
+      />
       {isOwner ? (
-        <AwcProjectDeleteControl project={project} variant="detail" />
+        <AwcProjectSettingsHistoryRow projectId={project.id} />
+      ) : null}
+      {canDelete ? (
+        <AwcProjectSettingsDangerZone
+          projectId={project.id}
+          projectName={project.name}
+        />
       ) : null}
     </div>
   );

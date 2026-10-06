@@ -111,6 +111,7 @@ export default function AwcProjectDetailPanel({
         ownerEmail={actorEmail}
         ownerDisplayName={actorDisplayName}
         viewerUserId={actorUserId}
+        onMessageHelper={onGotoActivity}
       />
     </div>
   );

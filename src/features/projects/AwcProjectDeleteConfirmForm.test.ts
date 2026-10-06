@@ -35,7 +35,7 @@ vi.mock("@/components/ui/modal", () => ({
 }));
 
 describe("AwcProjectDeleteConfirmForm", () => {
-  it("inline: Delete forever stays disabled until the typed name matches", async () => {
+  it("inline: Delete permanently stays disabled until the typed name matches", async () => {
     const { default: Form } = await import(
       "@/features/projects/AwcProjectDeleteConfirmForm"
     );
@@ -55,12 +55,12 @@ describe("AwcProjectDeleteConfirmForm", () => {
     );
 
     expect(html).toContain(AWC_PROJECT_DELETE_COPY.scope);
-    expect(AWC_PROJECT_DELETE_COPY.scope).toContain("library items");
-    expect(AWC_PROJECT_DELETE_COPY.scope).toContain("reports");
+    expect(AWC_PROJECT_DELETE_COPY.scope).toContain("members, invites, webhooks");
+    expect(AWC_PROJECT_DELETE_COPY.scope).toContain("messages");
     expect(html).toContain(AWC_PROJECT_DELETE_COPY.typeToConfirmPrefix);
     expect(html).toContain("Client repo");
     expect(html).toContain(AWC_PROJECT_DELETE_COPY.confirm);
-    expect(html).toMatch(/disabled[^>]*>\s*Delete forever/);
+    expect(html).toMatch(/disabled[^>]*>\s*Delete permanently/);
     expect(html).not.toContain('data-testid="delete-dialog"');
     expect(html).not.toContain(AWC_PROJECT_DELETE_COPY.title);
   });
@@ -87,6 +87,6 @@ describe("AwcProjectDeleteConfirmForm", () => {
     expect(html).toContain('data-testid="delete-dialog"');
     expect(html).toContain(AWC_PROJECT_DELETE_COPY.title);
     expect(html).toContain(AWC_PROJECT_DELETE_COPY.confirm);
-    expect(html).toMatch(/disabled[^>]*>\s*Delete forever/);
+    expect(html).toMatch(/disabled[^>]*>\s*Delete permanently/);
   });
 });

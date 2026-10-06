@@ -1,0 +1,43 @@
+/** Layout v2 L5 Members rail — EN from ARTIFACT-STRINGS (this computer glossary). */
+export const PROJECT_PAGE_MEMBERS_COPY = {
+  columnLabel: "Members",
+  peopleHeading: "People",
+  peopleInvite: "Invite people",
+  peopleYouSuffix: "(you)",
+  peopleRoleOwner: "Owner",
+  peoplePendingEmpty: "No pending invites or access requests.",
+  helpersHeading: "Assistants in the project",
+  helpersEmpty: "No assistants yet. Invite an assistant below.",
+  helpersReady: "Ready",
+  helpersWorking: "Working",
+  helpersNote:
+    "Remove kicks the assistant out of the project. If the assistant leaves on its own, you do not need to approve.",
+  menuChat: "Message privately",
+  menuRename: "Rename",
+  menuWebhook: "Grok webhook",
+  menuRemove: "Remove",
+  renameAria: "New name",
+  renameSave: "Save",
+  renameCancel: "Cancel",
+  revokeText: (name: string) => `${name} will no longer see this project.`,
+  revokeConfirm: (name: string) => `Remove ${name}`,
+  revokeCancel: "Cancel",
+  inviteBotHeading: "Invite a new assistant",
+  inviteGrok: "Invite Grok assistant",
+  inviteMuse: "Invite Muse assistant",
+  invitePrompt: (kind: string) =>
+    `Prompt for the ${kind} assistant. Paste it into your assistant. The prompt shows once, so copy it now.`,
+  invitePendingSub:
+    "Waiting to join · your assistant joins right away, an unknown assistant waits for your approval",
+  invitePendingCancel: "Cancel",
+  inviteEmpty:
+    "No assistant invites yet. The prompt shows only once when you create it.",
+  compatGrok:
+    "Grok Bot is supported through a routine webhook, with automated tests already in place.",
+  compatOther:
+    "Other agents can call the agent-access API and receive HMAC-signed webhooks (for example Muse). Supported, but not end-to-end tested yet.",
+  helperRemoved: (name: string) => `Removed ${name} from the project`,
+  helperRenamed: "Assistant renamed",
+  viewerHint: "Only the project owner can invite people and assistants.",
+  loading: "Loading…",
+} as const;

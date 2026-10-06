@@ -32,6 +32,6 @@ describe("useDeleteProject", () => {
     expect(copy).toContain(
       'ownerOnlyError: "Only the owner can delete this project."',
     );
-    expect(copy).toContain('confirm: "Delete forever"');
+    expect(copy).toContain('confirm: "Delete permanently"');
   });
 });

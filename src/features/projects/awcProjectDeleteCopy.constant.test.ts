@@ -3,8 +3,13 @@ import { describe, expect, it } from "vitest";
 import { AWC_PROJECT_DELETE_COPY } from "@/features/projects/awcProjectDeleteCopy.constant";
 
 describe("AWC_PROJECT_DELETE_COPY", () => {
-  it("names library items and reports in the delete scope", () => {
-    expect(AWC_PROJECT_DELETE_COPY.scope).toContain("library items");
-    expect(AWC_PROJECT_DELETE_COPY.scope).toContain("reports");
+  it("matches layout v2 Settings danger-zone EN (ARTIFACT-STRINGS)", () => {
+    expect(AWC_PROJECT_DELETE_COPY.trigger).toBe("Delete project");
+    expect(AWC_PROJECT_DELETE_COPY.confirm).toBe("Delete permanently");
+    expect(AWC_PROJECT_DELETE_COPY.scope).toContain("members, invites, webhooks");
+    expect(AWC_PROJECT_DELETE_COPY.scope).toContain("messages");
+    expect(AWC_PROJECT_DELETE_COPY.scope).toContain(
+      "Repos and files on computers are not touched",
+    );
   });
 });

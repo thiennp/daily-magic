@@ -1,9 +1,9 @@
 /** Project layout v2 L1 chrome — English (artifact structure; This computer glossary). */
 export const PROJECT_PAGE_LAYOUT_V2_COPY = {
-  membersColumnLabel: "Team",
+  membersColumnLabel: "Members",
   peopleHeading: "People",
-  assistantsHeading: "Assistants in this project",
-  inviteAssistantHeading: "Invite an assistant",
+  assistantsHeading: "Assistants in the project",
+  inviteAssistantHeading: "Invite a new assistant",
   editOnThisComputer: "Edit on this computer",
   moreOptions: "More options",
   menuRename: "Rename project",
