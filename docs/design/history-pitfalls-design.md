@@ -122,7 +122,9 @@ If Lead prefers “cross-bot” = AWC pitfall registry visibility instead, that 
 
 ## 7. History OFF
 
-No change to `purgeProjectHistoryOnOff`: deleting `skillgen/` removes `learned-pitfalls.json` and `flags.json`. Mirror + tombstones unchanged.
+No change needed for Pitfalls: `purgeProjectHistoryOnOff` deletes `skillgen/`, which removes `learned-pitfalls.json` and `flags.json`. Mirror + tombstones unchanged.
+
+Chat-retention rule (AW Lead, 2026-10-06): the OFF purge removes history-**derived** data only (`skills/_drafts/`, `skillgen/`). The local message archive `history/` (message records + `state.json`) is never deleted. AWL runs the purge from the History tick on a confirmed cloud `off` only (`reconcileProjectHistoryOffPurge`).
 
 ---
 

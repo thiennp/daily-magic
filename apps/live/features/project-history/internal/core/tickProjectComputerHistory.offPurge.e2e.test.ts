@@ -32,7 +32,10 @@ vi.mock("./createProjectSkillHistoryPort", () => ({
 }));
 
 import { atomicWriteFile0600, ensureDir0700 } from "./atomicWriteFile0600";
-import { writeLocalProjectHistoryState } from "./localProjectHistoryState";
+import {
+  readLocalProjectHistoryState,
+  writeLocalProjectHistoryState,
+} from "./localProjectHistoryState";
 import { ensureProjectDataTree } from "./resolveProjectDataDir";
 import { tickProjectComputerHistory } from "./tickProjectComputerHistory";
 
@@ -87,7 +90,9 @@ describe("tickProjectComputerHistory History OFF purge e2e", () => {
 
     await tickProjectComputerHistory({ pullSkills: pullMock, runSkillgen });
 
-    expect(fs.existsSync(path.join(root, "history"))).toBe(false);
+    // Chat-retention rule: the message archive survives; only derived data goes.
+    expect(fs.existsSync(path.join(root, "history", "m1.json"))).toBe(true);
+    expect(readLocalProjectHistoryState("p1")?.state).toBe("off");
     expect(fs.existsSync(path.join(root, "skills", "_drafts"))).toBe(false);
     expect(fs.existsSync(path.join(root, "skillgen"))).toBe(false);
     expect(fs.existsSync(path.join(root, "skills", "keep-me", "meta.json"))).toBe(true);

@@ -12,6 +12,10 @@ vi.mock("@agent-witch/install-layout", () => ({
 
 import { atomicWriteFile0600, ensureDir0700 } from "./atomicWriteFile0600";
 import type { ProjectComputerHistoryCloudStateRead } from "./fetchProjectComputerHistoryCloudState";
+import {
+  readLocalProjectHistoryState,
+  writeLocalProjectHistoryState,
+} from "./localProjectHistoryState";
 import { reconcileProjectHistoryOffPurge } from "./reconcileProjectHistoryOffPurge";
 import { ensureProjectDataTree } from "./resolveProjectDataDir";
 
@@ -63,7 +67,8 @@ describe("reconcileProjectHistoryOffPurge", () => {
       deps: { fetchCloudState: cloud({ kind: "known", state: "off" }) },
     });
     expect(outcome).toBe("purged");
-    expect(fs.existsSync(path.join(root, "history"))).toBe(false);
+    // Chat-retention rule: message records survive the OFF purge.
+    expect(fs.existsSync(path.join(root, "history", "m1.json"))).toBe(true);
     expect(fs.existsSync(path.join(root, "skills", "_drafts"))).toBe(false);
     expect(fs.existsSync(path.join(root, "skillgen"))).toBe(false);
     expect(fs.existsSync(path.join(root, "skills", "keep-me", "meta.json"))).toBe(true);
@@ -155,5 +160,37 @@ describe("reconcileProjectHistoryOffPurge", () => {
       },
     });
     expect(outcome).toBe("purge_failed");
+  });
+
+  it("confirmed OFF on a locally-ON project marks local state off, keeps messages", async () => {
+    const root = seedProject("p1");
+    writeLocalProjectHistoryState({ projectId: "p1", state: "on_ready" });
+    const outcome = await reconcileProjectHistoryOffPurge({
+      projectId: "p1",
+      cloudApi,
+      deps: { fetchCloudState: cloud({ kind: "known", state: "off" }) },
+    });
+    expect(outcome).toBe("purged");
+    expect(readLocalProjectHistoryState("p1")?.state).toBe("off");
+    expect(fs.existsSync(path.join(root, "history", "m1.json"))).toBe(true);
+    // Marking off recreates empty derived dirs; the purge must still remove them.
+    expect(fs.existsSync(path.join(root, "skills", "_drafts"))).toBe(false);
+    expect(fs.existsSync(path.join(root, "skillgen"))).toBe(false);
+  });
+
+  it("never touches local state on an unknown read", async () => {
+    seedProject("p1");
+    writeLocalProjectHistoryState({ projectId: "p1", state: "on_ready" });
+    const markLocalOff = vi.fn();
+    await reconcileProjectHistoryOffPurge({
+      projectId: "p1",
+      cloudApi,
+      deps: {
+        fetchCloudState: cloud({ kind: "unknown", reason: "http_503" }),
+        markLocalOff,
+      },
+    });
+    expect(markLocalOff).not.toHaveBeenCalled();
+    expect(readLocalProjectHistoryState("p1")?.state).toBe("on_ready");
   });
 });

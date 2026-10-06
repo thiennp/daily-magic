@@ -48,9 +48,10 @@ export type TickProjectComputerHistoryDeps = {
 
 /**
  * One History tick, per project:
- * 1. OFF purge reconcile — AWL never gets an OFF push, so every project that
- *    still holds History data asks AWC; a confirmed `off` purges `history/`,
- *    `skills/_drafts/`, `skillgen/` (mirror + tombstones kept) and skips the rest.
+ * 1. OFF purge reconcile — AWL never gets an OFF push, so every ON project and
+ *    every project still holding derived data asks AWC; a confirmed `off`
+ *    marks local state off, purges `skills/_drafts/` + `skillgen/` (message
+ *    archive `history/`, mirror and tombstones kept) and skips the rest.
  *    Unknown/error reads never purge.
  * 2. Optional skillgen mining (DI), then shared published-skill pull — ON projects only.
  * Errors are caught, logged, retried next tick — never affect ack/delete.

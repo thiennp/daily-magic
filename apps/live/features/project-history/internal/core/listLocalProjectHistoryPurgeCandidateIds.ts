@@ -6,8 +6,8 @@ import { hasProjectHistoryPurgeTargets } from "./hasProjectHistoryPurgeTargets";
 import { isValidProjectComputerHistoryProjectId } from "./isValidProjectComputerHistoryProjectId";
 
 /**
- * Projects under project-data that still hold History data on disk, whatever
- * their local state says. The tick asks AWC about each so an OFF toggle is
+ * Projects under project-data that still hold history-derived data on disk
+ * (`skills/_drafts/`, `skillgen/`), whatever their local state says. The tick asks AWC about each so an OFF toggle is
  * seen even though AWL never receives an OFF push.
  */
 export const listLocalProjectHistoryPurgeCandidateIds = (): readonly string[] => {

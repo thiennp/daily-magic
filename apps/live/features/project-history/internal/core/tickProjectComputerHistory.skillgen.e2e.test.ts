@@ -72,7 +72,7 @@ describe("tickProjectComputerHistory skillgen e2e", () => {
     fs.rmSync(tempRoot, { recursive: true, force: true });
   });
 
-  it("mines a draft, skips a second identical run, and purges skillgen on OFF", async () => {
+  it("mines a draft, skips a second identical run, and purges skillgen (not messages) on OFF", async () => {
     writeLocalProjectHistoryState({ projectId: "p1", state: "on_ready" });
     writeProjectHistorySkillgenEpisodes({
       projectId: "p1",
@@ -173,6 +173,11 @@ describe("tickProjectComputerHistory skillgen e2e", () => {
     purgeProjectHistoryOnOff({ projectId: "p1" });
     expect(fs.existsSync(path.join(tempRoot, "p1", "skillgen"))).toBe(false);
     expect(fs.existsSync(draftsDir)).toBe(false);
+    // Chat-retention rule: OFF purges derived data only; messages survive.
+    const historyDir = path.join(tempRoot, "p1", "history");
+    expect(
+      fs.readdirSync(historyDir).filter((n) => n !== "state.json").length,
+    ).toBeGreaterThan(0);
   });
 
   it("does not merge new messages into a parked episode or move the cursor past them", async () => {

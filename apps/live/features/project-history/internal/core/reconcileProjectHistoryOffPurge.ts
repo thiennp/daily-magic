@@ -6,6 +6,11 @@ import {
   type ProjectComputerHistoryCloudStateRead,
 } from "./fetchProjectComputerHistoryCloudState";
 import { hasProjectHistoryPurgeTargets } from "./hasProjectHistoryPurgeTargets";
+import { isLocalProjectHistoryOn } from "./isLocalProjectHistoryOn";
+import {
+  readLocalProjectHistoryState,
+  writeLocalProjectHistoryState,
+} from "./localProjectHistoryState";
 import { purgeProjectHistoryOnOff } from "./purgeProjectHistoryOnOff";
 
 const LOG_PREFIX = "[project-history-off-purge]";
@@ -24,11 +29,17 @@ export type ReconcileProjectHistoryOffPurgeDeps = {
   }) => Promise<ProjectComputerHistoryCloudStateRead>;
   readonly hasPurgeTargets?: (projectId: string) => boolean;
   readonly purge?: typeof purgeProjectHistoryOnOff;
+  /** True when local state still says ON (default: reads `history/state.json`). */
+  readonly isLocalOn?: (projectId: string) => boolean;
+  /** Records the confirmed OFF locally (default: writes `state.json` = off). */
+  readonly markLocalOff?: (projectId: string) => void;
 };
 
 /**
  * IO edge: read cloud History state, decide, purge on confirmed OFF.
- * Idempotent (no state file). Never throws; logs one outcome line with no
+ * On confirmed OFF a local ON state is first rewritten to `off` (the message
+ * archive is kept, so state.json survives); that write recreates empty
+ * derived dirs, which the purge then removes. Idempotent, no extra state file. Never throws; logs one outcome line with no
  * message content. A failed purge is retried on the next tick.
  */
 export const reconcileProjectHistoryOffPurge = async (input: {
@@ -40,6 +51,15 @@ export const reconcileProjectHistoryOffPurge = async (input: {
     input.deps?.fetchCloudState ?? fetchProjectComputerHistoryCloudState;
   const hasTargets = input.deps?.hasPurgeTargets ?? hasProjectHistoryPurgeTargets;
   const purge = input.deps?.purge ?? purgeProjectHistoryOnOff;
+  const isLocalOn =
+    input.deps?.isLocalOn ??
+    ((projectId: string) =>
+      isLocalProjectHistoryOn(readLocalProjectHistoryState(projectId)?.state));
+  const markLocalOff =
+    input.deps?.markLocalOff ??
+    ((projectId: string) => {
+      writeLocalProjectHistoryState({ projectId, state: "off" });
+    });
 
   let outcome: ProjectHistoryOffPurgeOutcome;
   try {
@@ -50,17 +70,25 @@ export const reconcileProjectHistoryOffPurge = async (input: {
             cloudApi: input.cloudApi,
             projectId: input.projectId,
           });
+    const confirmedOff = cloudState.kind === "known" && cloudState.state === "off";
+    const hadTargets = confirmedOff ? hasTargets(input.projectId) : false;
     const decision = decideProjectHistoryOffPurge({
       cloudState,
-      hasPurgeTargets:
-        cloudState.kind === "known" && cloudState.state === "off"
-          ? hasTargets(input.projectId)
-          : false,
+      hasPurgeTargets: hadTargets,
     });
-    if (decision === "purge") {
+    let markedOff = false;
+    if (confirmedOff && isLocalOn(input.projectId)) {
+      try {
+        markLocalOff(input.projectId);
+        markedOff = true;
+      } catch (error: unknown) {
+        console.error(LOG_PREFIX, "mark_off_failed", input.projectId, error);
+      }
+    }
+    if (decision === "purge" || (decision === "nothing_to_purge" && markedOff)) {
       try {
         purge({ projectId: input.projectId });
-        outcome = "purged";
+        outcome = decision === "purge" ? "purged" : "nothing_to_purge";
       } catch (error: unknown) {
         console.error(LOG_PREFIX, "purge_failed", input.projectId, error);
         outcome = "purge_failed";
