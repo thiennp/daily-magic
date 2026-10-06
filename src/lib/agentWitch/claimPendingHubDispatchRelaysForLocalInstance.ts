@@ -1,7 +1,9 @@
 import { ensureAgentWitchPresenceSchema } from "@/lib/agentWitch/ensureAgentWitchPresenceSchema";
 import { getAgentWitchHubInstanceId } from "@/lib/agentWitch/getAgentWitchHubInstanceId";
-import type { HubDispatchRelayWorkItem } from "@/lib/agentWitch/types/HubDispatchRelayWorkItem.type";
-import type { AgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
+import type {
+  HubDispatchRelayBody,
+  HubDispatchRelayWorkItem,
+} from "@/lib/agentWitch/types/HubDispatchRelayWorkItem.type";
 import { asRowArray, getSql } from "@/lib/db";
 
 export const claimPendingHubDispatchRelaysForLocalInstance = async (): Promise<
@@ -59,8 +61,8 @@ export const claimPendingHubDispatchRelaysForLocalInstance = async (): Promise<
 
     const body =
       typeof bodyRaw === "string"
-        ? (JSON.parse(bodyRaw) as AgentRunDispatchBody)
-        : (bodyRaw as AgentRunDispatchBody);
+        ? (JSON.parse(bodyRaw) as HubDispatchRelayBody)
+        : (bodyRaw as HubDispatchRelayBody);
 
     return [
       {

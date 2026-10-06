@@ -37,6 +37,7 @@ export const updateAgentRunSession = (
       | "updatedAt"
       | "approvalExpiresAt"
       | "lastRunHeartbeatAt"
+      | "stopRequestedAt"
       | "estimateSeconds"
       | "actualSeconds"
     >

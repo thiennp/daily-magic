@@ -9,6 +9,7 @@ import type { AgentRunReportHistoryEntry } from "@/lib/dispatch/agentRunReportHi
 import { notifyDashboardUser } from "@/lib/dispatch/dispatchWriterRunToAgent";
 import { reconcileStaleAgentRuns } from "@/lib/dispatch/reconcileStaleAgentRuns";
 import { touchAgentRunHeartbeatAt } from "@/lib/dispatch/touchAgentRunHeartbeatAt";
+import { applyStoredAgentRunStopOnHeartbeat } from "@/lib/dispatch/applyStoredAgentRunStopOnHeartbeat";
 
 const reconcileGlobal = globalThis as typeof globalThis & {
   __dailyMagicLastStaleRunReconcileMs?: number;
@@ -70,7 +71,11 @@ export const handleAgentRunHeartbeatMessageAsync = async (
 
   const awaitingInput = message.payload?.awaitingInput === true;
 
-  await touchAgentRunHeartbeatAt(runtime, agentRunId);
+  const stopRequested = applyStoredAgentRunStopOnHeartbeat({
+    sender,
+    run: await touchAgentRunHeartbeatAt(runtime, agentRunId),
+    requestId: message.requestId,
+  });
 
   const reportHistory = Array.isArray(message.payload?.reportHistory)
     ? message.payload.reportHistory.filter(
@@ -115,6 +120,7 @@ export const handleAgentRunHeartbeatMessageAsync = async (
       agentRunId,
       heartbeat: true,
       ...(awaitingInput ? { awaitingInput: true } : {}),
+      ...(stopRequested ? { stopRequested: true } : {}),
     },
     requestId: message.requestId,
   };

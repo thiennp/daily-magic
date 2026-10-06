@@ -26,6 +26,8 @@ export default interface AgentRunRecord {
   readonly compositionSnapshotId: string | null;
   readonly writerAgent: string;
   readonly lastRunHeartbeatAt: string | null;
+  /** S0-7: set once by any instance; applied at the next run.heartbeat. */
+  readonly stopRequestedAt?: string | null;
   readonly reportStatus?: string | null;
   readonly reportSummary?: string | null;
   readonly reportHistory?: readonly AgentRunReportHistoryEntry[] | null;

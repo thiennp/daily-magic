@@ -61,6 +61,9 @@ export default function mapAgentRunRow(
     lastRunHeartbeatAt: row.last_run_heartbeat_at
       ? String(row.last_run_heartbeat_at)
       : null,
+    stopRequestedAt: row.stop_requested_at
+      ? String(row.stop_requested_at)
+      : null,
     estimateSeconds: readStoredSeconds(row.estimate_seconds),
     actualSeconds: readStoredSeconds(row.actual_seconds),
   };

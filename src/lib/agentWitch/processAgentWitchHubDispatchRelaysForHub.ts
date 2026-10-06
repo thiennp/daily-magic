@@ -1,5 +1,7 @@
 import type { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
 import { claimPendingHubDispatchRelaysForLocalInstance } from "@/lib/agentWitch/claimPendingHubDispatchRelaysForLocalInstance";
+import { isHubStopRelayBody } from "@/lib/agentWitch/isHubStopRelayBody";
+import { processHubStopRelayWorkItem } from "@/lib/agentWitch/processHubStopRelayWorkItem";
 import {
   completeAgentWitchHubDispatchRelay,
   releaseAgentWitchHubDispatchRelayToPending,
@@ -14,6 +16,12 @@ export const processAgentWitchHubDispatchRelaysForHub = async (
   const workItems = await claimPendingHubDispatchRelaysForLocalInstance();
 
   for (const workItem of workItems) {
+    const { body } = workItem;
+    if (isHubStopRelayBody(body)) {
+      await processHubStopRelayWorkItem(hub, workItem, body);
+      continue;
+    }
+
     const resolved = await resolveDispatchTargetAgentClient({
       runtime: hub,
       userId: workItem.executorUserId,
@@ -30,7 +38,7 @@ export const processAgentWitchHubDispatchRelaysForHub = async (
         runtime: hub,
         requesterUserId: workItem.requesterUserId,
         requesterEmail: workItem.requesterEmail,
-        body: workItem.body,
+        body,
         requestId: workItem.requestId,
         allowHubRelay: false,
       });
