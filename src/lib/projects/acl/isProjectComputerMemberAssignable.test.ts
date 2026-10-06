@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { AGENT_WITCH_LOCAL_MIN_TASK_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchLocalMinTaskBundleVersion.constant";
 import { isProjectComputerMemberAssignable } from "@/lib/projects/acl/isProjectComputerMemberAssignable";
 
 describe("isProjectComputerMemberAssignable", () => {
@@ -59,5 +60,16 @@ describe("isProjectComputerMemberAssignable", () => {
     expect(
       isProjectComputerMemberAssignable({ ...base, status: "revoked" }),
     ).toEqual({ connectVersionStatus: "ok", assignable: false });
+  });
+
+  it("defaults the task floor to the S0 safety bundle (267)", () => {
+    expect(AGENT_WITCH_LOCAL_MIN_TASK_BUNDLE_VERSION).toBe("267");
+    const live = { status: "active" as const, isOnline: true };
+    expect(
+      isProjectComputerMemberAssignable({ ...live, installBundleVersion: "266" }),
+    ).toEqual({ connectVersionStatus: "ok", assignable: false });
+    expect(
+      isProjectComputerMemberAssignable({ ...live, installBundleVersion: "267" }),
+    ).toEqual({ connectVersionStatus: "ok", assignable: true });
   });
 });

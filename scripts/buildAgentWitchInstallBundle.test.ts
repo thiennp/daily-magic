@@ -18,7 +18,7 @@ describe("buildAgentWitchInstallBundle output", () => {
     expect(source).toContain("127.0.0.1");
   });
 
-  it("ships antigravity argv with --dangerously-skip-permissions before -p (not Claude-shaped)", () => {
+  it("ships antigravity argv as --sandbox -p with no permission-bypass flag", () => {
     expect(() =>
       assertShippedInstallBundleAntigravityArgv(process.cwd()),
     ).not.toThrow();

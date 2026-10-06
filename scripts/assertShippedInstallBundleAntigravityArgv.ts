@@ -6,16 +6,17 @@ const CLAUDE_SHAPED_ANTIGRAVITY_ARGV_SNIPPET =
   '"-p","--dangerously-skip-permissions"';
 
 /**
- * S0-4 argv is `--sandbox -p <prompt>`. The legacy bypass shape stays accepted
- * until AW Mac rebuilds the shipped bundle (public/install/... is not rebuilt
- * in the safety branch); either way -p is never followed by another flag.
+ * S0-4 argv is `--sandbox -p <prompt>`. Bundle 267 ships it, so the legacy
+ * `--dangerously-skip-permissions` shape is no longer accepted: a stale
+ * shipped bundle fails here.
  */
 const CORRECT_ANTIGRAVITY_ARGV_SNIPPETS = [
   '"--sandbox","-p"',
   '"--sandbox", "-p"',
-  '"--dangerously-skip-permissions","-p"',
-  '"--dangerously-skip-permissions", "-p"',
 ] as const;
+
+/** Any permission-bypass flag in the shipped bundle means it is stale. */
+const LEGACY_PERMISSION_BYPASS_ARGV_SNIPPET = '"--dangerously-skip-permissions"';
 
 export const assertShippedInstallBundleAntigravityArgv = (
   workspaceRoot: string,
@@ -26,6 +27,12 @@ export const assertShippedInstallBundleAntigravityArgv = (
   if (source.includes(CLAUDE_SHAPED_ANTIGRAVITY_ARGV_SNIPPET)) {
     throw new Error(
       `Shipped install bundle still contains Claude-shaped antigravity argv (${CLAUDE_SHAPED_ANTIGRAVITY_ARGV_SNIPPET}). Rebuild with npm run build:agent-witch and bump AGENT_WITCH_INSTALL_BUNDLE_VERSION.`,
+    );
+  }
+
+  if (source.includes(LEGACY_PERMISSION_BYPASS_ARGV_SNIPPET)) {
+    throw new Error(
+      `Shipped install bundle still contains ${LEGACY_PERMISSION_BYPASS_ARGV_SNIPPET} argv. Rebuild with npm run build:agent-witch and bump AGENT_WITCH_INSTALL_BUNDLE_VERSION.`,
     );
   }
 

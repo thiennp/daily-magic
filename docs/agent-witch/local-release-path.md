@@ -56,7 +56,7 @@ The shipped-install blackbox also runs inside the Railway Docker build.
   `public/install/agent-witch/app/agent-witch.js` and `deps.tar.gz`, so each deploy serves the
   bundle built from that `main`. Do not commit that churn unless the commit is a bundle bump.
 - Existing installs self-update only when `AGENT_WITCH_INSTALL_BUNDLE_VERSION`
-  (`apps/install/features/bundle/public-api/types.ts`, currently `266`) increases.
+  (`apps/install/features/bundle/public-api/types.ts`, currently `267`) increases.
   - **Bump it** whenever anything shipped to the computer changes: install scripts, `agent-witch.js`
     (AWL/AWB code, prompt optimizer, …), or deps. A source change alone does not reach running
     installs.
@@ -69,6 +69,11 @@ The shipped-install blackbox also runs inside the Railway Docker build.
   never just because a new bundle shipped. See
   [awl-connect-version-contract.md](awl-connect-version-contract.md) and
   `src/lib/agentWitch/repair/KNOWN_ISSUES.md` AWLR-FLOOR-001.
+- Task floor `AGENT_WITCH_LOCAL_MIN_TASK_BUNDLE_VERSION`
+  (`src/lib/agentWitch/agentWitchLocalMinTaskBundleVersion.constant.ts`, currently `267`, the S0
+  local CLI safety bundle). Below it a computer seat stays connected but is not assignable for
+  project tasks (`computer_not_assignable`, cause `too_old`). Raise it only together with (or
+  after) the bundle bump that ships the required AWL behaviour.
 
 ## 3. AWL desktop apps
 
