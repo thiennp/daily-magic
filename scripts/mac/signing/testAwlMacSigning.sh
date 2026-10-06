@@ -3,6 +3,9 @@
 # mode resolution, inside-out order and the test-signature preflight (stubbed).
 # Darwin only: creates + deletes an empty temp keychain and restores the search
 # list; read-only lookups in login/System. No .p12, no real codesign, no notary.
+# Tolerates a concurrent real signing session (another awl-sign.*/awl-signing
+# keychain already on the user search list): restore must match BEFORE, and only
+# this test's temp keychain must disappear.
 set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -182,12 +185,17 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
       fi
       if awl_keychain_intermediate_persisted DeveloperIDCA.cer; then echo "G1_PERSISTED=yes"; else echo "G1_PERSISTED=no"; fi
       if awl_keychain_intermediate_persisted DeveloperIDG2CA.cer "${AWL_TEMP_KEYCHAIN}"; then echo "TEMP_ONLY_COUNTS=yes"; else echo "TEMP_ONLY_COUNTS=no"; fi
+      OUR_KC="${AWL_TEMP_KEYCHAIN}"
+      echo "OUR_KC=${OUR_KC}"
       awl_keychain_cleanup
       trap - EXIT
       RESTORED="$(security list-keychains -d user | tr "\n" "|")"
       echo "LIST_RESTORED=${RESTORED}"
-      if [[ -f "${AWL_TEMP_KEYCHAIN:-/nonexistent}" ]]; then echo "KC_GONE=no"; else echo "KC_GONE=yes"; fi
+      if [[ -f "${OUR_KC:-/nonexistent}" ]]; then echo "KC_GONE=no"; else echo "KC_GONE=yes"; fi
       if [[ "${RESTORED}" == "${BEFORE}" ]]; then echo "RESTORE_MATCH=yes"; else echo "RESTORE_MATCH=no"; fi
+      # Concurrent notarize/build may leave another awl-sign.*/awl-signing.keychain-db in
+      # the search list; only our temp path must be gone after cleanup.
+      if [[ "${RESTORED}" == *"${OUR_KC}"* ]]; then echo "OUR_KC_GONE=no"; else echo "OUR_KC_GONE=yes"; fi
     ' 2>&1
   )" || out="${out:-}"$'\n'"INNER_FAILED=1"
   check "search list includes System.keychain after compose" "$(has "${out}" "/Library/Keychains/System.keychain")"
@@ -198,8 +206,7 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
   check "intermediate only in temp keychain does not count" "$(has "${out}" "TEMP_ONLY_COUNTS=no")"
   check "temp keychain deleted on cleanup" "$(has "${out}" "KC_GONE=yes")"
   check "search list restored exactly" "$(has "${out}" "RESTORE_MATCH=yes")"
-  restored_line="$(printf "%s\n" "${out}" | grep "^LIST_RESTORED=" || true)"
-  check "restored list has no awl-signing keychain" "$(lacks "${restored_line}" "awl-signing")"
+  check "our temp keychain removed from restored list" "$(has "${out}" "OUR_KC_GONE=yes")"
 fi
 
 if [[ "${FAILS}" -gt 0 ]]; then
