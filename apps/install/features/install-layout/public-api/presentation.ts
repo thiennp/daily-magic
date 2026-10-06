@@ -10,3 +10,13 @@ export {
   isAgentWitchLocalInstallDir,
   resolveAgentWitchLaunchAgentPrefix,
 } from "../internal/core/resolveAgentWitchLaunchAgentPrefix.util";
+export {
+  buildAgentWitchReviveSteps,
+  resolveAgentWitchRevivePlatform,
+} from "../internal/core/buildAgentWitchReviveSteps";
+export type {
+  AgentWitchReviveKnownPlatform,
+  AgentWitchRevivePlatform,
+  AgentWitchReviveStep,
+  AgentWitchReviveStepsInput,
+} from "../internal/core/buildAgentWitchReviveSteps";

@@ -33,7 +33,7 @@ export const AWL_STATUS_WRITER_PAGE_ENTRIES: readonly AwlStorybookPageEntry[] =
         <h1>Status</h1>
         <p class="lede">${lede}</p>
         ${heartbeat}
-      </section>${buildAgentWitchReviveAwlStatusSection({ installDir: "/Users/storybook/.agent-witch" })}`;
+      </section>${buildAgentWitchReviveAwlStatusSection({ installDir: "/Users/storybook/.agent-witch", platform: "darwin" })}`;
       },
     }),
     withAwlStorybookShell({

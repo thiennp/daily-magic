@@ -1,4 +1,8 @@
-import { AGENT_WITCH_LIVE_APP_PORT } from "@agent-witch/shared/network";
+import {
+  type AgentWitchReviveStep,
+  buildAgentWitchReviveSteps,
+  resolveAgentWitchRevivePlatform,
+} from "@agent-witch/install-layout/presentation";
 import { resolveAgentWitchAppHome } from "@/lib/agentWitch/resolveAgentWitchAppHome";
 
 const resolveHostnameForReviveCommand = (): string => {
@@ -9,18 +13,28 @@ const resolveHostnameForReviveCommand = (): string => {
 };
 
 /**
- * Terminal steps to restart Agent Witch Local (`:43347`) on the Mac in front of the browser.
- * Uses the production vs localhost LaunchAgent prefix from the current AWC hostname.
+ * Revive steps for Agent Witch Local (`:43347`) on the computer in front of the browser.
+ * `operatingSystem` is the browser OS ("mac" | "windows" | "linux" | "other");
+ * "other" lists the command for every OS. The current AWC hostname picks the
+ * production vs localhost install dir and LaunchAgent prefix.
  */
+export const buildAgentWitchReviveAwlSteps = (input: {
+  readonly operatingSystem: string;
+  readonly hostname?: string;
+}): readonly AgentWitchReviveStep[] => {
+  const { launchAgentPrefix, installDirName } = resolveAgentWitchAppHome(
+    input.hostname ?? resolveHostnameForReviveCommand(),
+  );
+  return buildAgentWitchReviveSteps({
+    platform: resolveAgentWitchRevivePlatform(input.operatingSystem),
+    installDirName,
+    launchAgentPrefix,
+  });
+};
+
+/** macOS terminal steps (launchctl kickstart) for the current AWC hostname. */
 export const buildAgentWitchReviveAwlTerminalCommand = (
   hostname: string = resolveHostnameForReviveCommand(),
-): string => {
-  const { launchAgentPrefix, installDirName } =
-    resolveAgentWitchAppHome(hostname);
-  const livePort = AGENT_WITCH_LIVE_APP_PORT;
-  return `AW_HOME="$HOME/${installDirName}"
-launchctl kickstart -k "gui/$(id -u)/${launchAgentPrefix}"
-sleep 2
-curl -sS -m 5 "http://127.0.0.1:${livePort}/health" || echo "AWL still not responding — see logs:"
-tail -20 "$AW_HOME/agent-witch.error.log" 2>/dev/null || true`;
-};
+): string =>
+  buildAgentWitchReviveAwlSteps({ operatingSystem: "mac", hostname })[0]
+    ?.command ?? "";

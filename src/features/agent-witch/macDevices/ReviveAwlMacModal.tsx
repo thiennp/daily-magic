@@ -5,7 +5,8 @@ import { useMemo } from "react";
 import { Modal } from "@/components/ui/modal";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import CopyableBashCommand from "@/features/home/CopyableBashCommand";
-import { buildAgentWitchReviveAwlTerminalCommand } from "@/lib/agentWitch/buildAgentWitchReviveAwlTerminalCommand";
+import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
+import { buildAgentWitchReviveAwlSteps } from "@/lib/agentWitch/buildAgentWitchReviveAwlTerminalCommand";
 
 interface ReviveAwlMacModalProps {
   readonly isOpen: boolean;
@@ -16,7 +17,14 @@ export default function ReviveAwlMacModal({
   isOpen,
   onClose,
 }: ReviveAwlMacModalProps) {
-  const command = useMemo(() => buildAgentWitchReviveAwlTerminalCommand(), []);
+  const steps = useMemo(
+    () =>
+      buildAgentWitchReviveAwlSteps({
+        operatingSystem: detectBrowserOperatingSystem(),
+      }),
+    [],
+  );
+  const showLabels = steps.length > 1;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-lg p-6">
@@ -26,18 +34,29 @@ export default function ReviveAwlMacModal({
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         Agent Witch Local is not responding on{" "}
         <span className="font-mono text-sm">127.0.0.1:43347</span>. The cloud
-        can still show your Mac as online when the background client (AWI) and
-        bridge (AWB) are running. On this Mac, open Terminal, paste this
-        command, and press Return.
+        can still show this computer as online when the background client (AWI)
+        and bridge (AWB) are running. Restart the Agent Witch client on this
+        computer.
+        {showLabels
+          ? " Use the command for this computer's operating system."
+          : null}
       </p>
-      <p className={`mt-2 text-sm text-gray-500 dark:text-gray-400`}>
-        Paste and run the whole block so{" "}
-        <span className="font-mono">AW_HOME</span> is set before{" "}
-        <span className="font-mono">tail</span>. Ignore{" "}
-        <span className="font-mono">com.agent-witch-live</span> unless you
-        installed Live as a separate service.
-      </p>
-      <CopyableBashCommand command={command} variant="bash" />
+      {steps.map((step) => (
+        <div key={step.platform} className="mt-4">
+          {showLabels ? (
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white/90">
+              {step.label}
+            </h3>
+          ) : null}
+          <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
+            {step.instructions}
+          </p>
+          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            {step.note}
+          </p>
+          <CopyableBashCommand command={step.command} variant="bash" />
+        </div>
+      ))}
     </Modal>
   );
 }

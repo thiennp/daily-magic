@@ -26,6 +26,7 @@ import {
 import {
   buildAgentWitchLocalHeartbeatElapsedMarkup,
   buildAgentWitchReviveAwlStatusSection,
+  buildAgentWitchReviveRequestedNotice,
   buildAgentWitchLocalStatusTraceSection,
 } from "@agent-witch/live-status-health/presentation";
 import {
@@ -302,7 +303,7 @@ const buildStatusBody = (input: {
     ? `<div class="alert-error">${escapeHtml(input.status.wakeError)}</div>`
     : "";
   const revivedNotice = input.revived
-    ? `<div class="alert-success">Revive requested. The bridge will reconnect if this Mac can reach launchd.</div>`
+    ? `<div class="alert-success">${escapeHtml(buildAgentWitchReviveRequestedNotice(process.platform))}</div>`
     : "";
   const reviveActions = shouldShowAgentWitchLocalReviveButton(
     input.status.wsConnected,
@@ -877,6 +878,7 @@ export const startAgentWitchLocalApp = (input: {
               installBundleUpdatedAt: installBundle.installBundleUpdatedAt,
             })}${buildAgentWitchReviveAwlStatusSection({
               installDir: input.layout.installDir,
+              platform: process.platform,
             })}${buildAgentWitchLocalStatusTraceSection({
               entries: readAgentWitchLocalWsTrace(input.layout),
             })}`,

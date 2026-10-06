@@ -4,4 +4,6 @@ export { buildAgentWitchLocalStatusTraceSection } from "../internal/core/buildAg
 
 export { buildAgentWitchReviveAwlStatusSection } from "../internal/core/buildAgentWitchReviveAwlStatusSection";
 
+export { buildAgentWitchReviveRequestedNotice } from "../internal/core/buildAgentWitchReviveRequestedNotice";
+
 export { AGENT_WITCH_LOCAL_HEARTBEAT_ELAPSED_LIVE_SCRIPT } from "../internal/core/buildAgentWitchLocalHeartbeatElapsedMarkup";
