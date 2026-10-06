@@ -33,7 +33,7 @@ GOFLAGS=-p=1 GOMAXPROCS=2 GOMEMLIMIT=700MiB go test ./...
 
 ## Releases
 
-Releases are **manual only**. Cut a GitHub release with the owner’s explicit go via `gh release create` (tag `awl-linux-v0.1.0`, assets from `dist/linux/`). Do not add GitHub Actions workflows for this.
+Releases are **manual only**. Cut a GitHub release with the owner’s explicit go via `gh release create` (tag `awl-linux-vX.Y.Z`, assets from `dist/linux/`), then bump the pinned tag on `main`. Do not add GitHub Actions workflows for this. Steps: [docs/agent-witch/local-release-path.md](../../docs/agent-witch/local-release-path.md#awl-linux).
 
 ## Notes
 

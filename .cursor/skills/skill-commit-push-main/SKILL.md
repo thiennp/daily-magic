@@ -15,6 +15,7 @@ Ship intentional changes on `main` only after the local suite gate (no GitHub Ac
 - Husky steps: **`.cursor/harness/git-hooks.md`**
 - Agent commit workflow: **`npm run harness:bootstrap -- --workflow=commit`**
 - Local suite gate: **`npm run ci`** (same verify path as `.husky/pre-push`; there is no GitHub Actions CI)
+- Canonical release path (dedicated worktree, `--no-verify` fast-forward push, health `commitSha` check): **`docs/agent-witch/local-release-path.md`** — it wins where this skill differs
 
 ## Prerequisites
 

@@ -23,7 +23,7 @@ A 200 does not mean Next or the computer WebSocket is ready. Other routes return
 curl -sS https://www.agentwitch.com/api/health
 ```
 
-Full contract and pitfalls: [docs/qa/awc-process-health.md](../qa/awc-process-health.md).
+Full contract and pitfalls: [docs/qa/awc-process-health.md](../qa/awc-process-health.md). Release steps and post-push smoke: [local-release-path.md](../agent-witch/local-release-path.md).
 
 ## Database (Neon)
 

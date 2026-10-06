@@ -42,7 +42,7 @@ npm run test:safety -- --deployable=AWL
 
 Not run by default gates — use when you change install, wake, or self-delegate flows:
 
-- `npm run test:e2e` (full local Playwright; CI runs showcases subset only)
+- `npm run test:e2e` (full local Playwright; no CI runs it any more)
 - `npm run test:shipped-install-blackbox` (install bundle against built app)
 - Playwright paths listed under `optionalLocal` in the manifest
 

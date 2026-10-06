@@ -21,7 +21,7 @@ git log main..HEAD --oneline
 git diff main...HEAD
 ```
 
-2. Verify locally (same gate as GitHub CI verify job):
+2. Verify locally (the local suite gate; there is no GitHub Actions CI):
 
 ```bash
 npm run ci

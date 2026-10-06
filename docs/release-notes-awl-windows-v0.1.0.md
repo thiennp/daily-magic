@@ -30,7 +30,7 @@ Windows companion zip for Agent Witch Local, matching the Linux tray packaging p
 2. Windows VM e2e (WSL2 detect/start/stop/open/autostart) — still required before tag.
 3. Mac suite green under `/tmp/awl-ci.lock`; Arch SHIP; Lead GO for tag.
 4. Signing / SmartScreen / installer are out of scope for this draft.
-5. `gh release create awl-windows-v0.1.0` with the zip + sha256 (manual; no Actions workflow).
+5. `gh release create awl-windows-v0.1.0` with the zip + sha256 (manual; no Actions workflow; see [local-release-path.md](agent-witch/local-release-path.md#awl-windows-not-released-yet)).
 
 ## Interim (no .exe)
 

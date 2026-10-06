@@ -86,7 +86,7 @@ If a future change adds one of these, add only that key and a row here.
 
 ## Release wiring
 
-- Release flow (see `docs/development/quality-gates.md`): build locally with this script, then
+- Release flow (see [local-release-path.md](local-release-path.md#awl-mac); no GitHub Actions): build locally with this script, then
   `gh release create awl-mac-vX.Y.Z dist/mac/AgentWitchLocal.dmg …` after owner go. Site CTAs
   pin the tag in `src/lib/agentWitch/buildAgentWitchLocalMacAppDownloadUrl.ts`
   (`AGENT_WITCH_LOCAL_MAC_APP_RELEASE_TAG`). The menu bar app's update notice compares

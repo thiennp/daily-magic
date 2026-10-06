@@ -24,6 +24,10 @@ Produces `dist/mac/AgentWitchLocal.dmg` + `.sha256` (macOS only). The DMG build 
 
 Signing: with `DEVELOPER_ID_APPLICATION` + notary credentials in env the build is Developer ID signed (hardened runtime, `AgentWitchLocal.entitlements`), notarized and stapled (DMG + `AgentWitchLocal.zip`); without them it falls back to ad-hoc and logs it. `--dry-run` runs the real ad-hoc build + local verify and prints the Developer ID / notary commands with secrets masked. See [docs/agent-witch/awl-mac-signing-notarization.md](../../docs/agent-witch/awl-mac-signing-notarization.md) and [KNOWN_ISSUES.md](KNOWN_ISSUES.md).
 
+## Release
+
+Manual only (no GitHub Actions): build with `AWL_MAC_SIGNING=developer-id`, `gh release create awl-mac-vX.Y.Z`, then bump `AGENT_WITCH_LOCAL_MAC_APP_RELEASE_TAG` on `main`. Steps: [docs/agent-witch/local-release-path.md](../../docs/agent-witch/local-release-path.md#awl-mac).
+
 ## Note
 
 This folder is **not** a separate deployable in `deployables.registry.json` (schema is fixed to AWC/AWL/AWB/AWI). It is a packaging surface for AWL/AWI.

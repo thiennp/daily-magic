@@ -24,7 +24,8 @@ Model: [conventions/progressive-disclosure.md](conventions/progressive-disclosur
 
 - [Local setup](development/setup.md)
 - [Deploy to production + Neon](development/deployment.md)
-- [Quality gates and CI](development/quality-gates.md)
+- [Quality gates (local suite; no GitHub Actions)](development/quality-gates.md)
+- [Local release path (main push, install bundle, AWL desktop)](agent-witch/local-release-path.md)
 - [Refactoring safety tests](development/refactoring-safety-tests.md) (AWC / AWL / AWB / AWI moves)
 
 ## Domains (L1)

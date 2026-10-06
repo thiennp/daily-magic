@@ -30,7 +30,9 @@ There is **no GitHub Actions CI**. The only gate before pushing `main` is:
 2. Full local suite on the **exact tip**: typecheck (incl. eslint), vitest, `ci:architecture`, build (`npm run ci`)
 3. Fast-forward `main`, then confirm production health `commitSha == main` and a smoke test
 
-Mac DMG releases are built locally (`scripts/mac/build-awl-mac-dmg.sh`; use `AWL_MAC_SIGNING=developer-id` for Developer ID + notarization, see [awl-mac-signing-notarization.md](../agent-witch/awl-mac-signing-notarization.md)) and published with `gh release create` after owner go. Portfolio site (`thiennp.github.io`) no longer auto-syncs — run `bash .agents/scripts/pushThiennpGithubIo.sh` manually with the token when the portfolio changes.
+Full step-by-step (web app push, install bundle bumps, AWL desktop releases, what the deleted workflows did): [local-release-path.md](../agent-witch/local-release-path.md).
+
+Mac DMG releases are built locally (`scripts/mac/build-awl-mac-dmg.sh`; use `AWL_MAC_SIGNING=developer-id` for Developer ID + notarization, see [awl-mac-signing-notarization.md](../agent-witch/awl-mac-signing-notarization.md)) and published with `gh release create` after owner go (Linux/Windows: same pattern, see the release path doc). Portfolio site (`thiennp.github.io`) no longer auto-syncs — run `bash .agents/scripts/pushThiennpGithubIo.sh` manually with the token when the portfolio changes.
 
 ## Agent docs
 
