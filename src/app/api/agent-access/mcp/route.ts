@@ -5,10 +5,33 @@ import { buildWebMcpDocument } from "@/lib/agentAccess/buildWebMcpDocument";
 import { createAgentAccessMcpServer } from "@/lib/agentAccess/createAgentAccessMcpServer";
 import { executeAgentAccessTool } from "@/lib/agentAccess/executeAgentAccessTool";
 import { guardAgentAccessPost } from "@/lib/agentAccess/guardAgentAccessPost";
+import { buildMcpWwwAuthenticateHeader } from "@/lib/agentAccess/oauth/buildOauthDiscoveryDocuments";
 import { readBoundedAgentAccessBody } from "@/lib/agentAccess/readBoundedAgentAccessBody";
 import { readClientIp } from "@/lib/agentAccess/readClientIp";
+import { readBearerAgentAccessToken } from "@/lib/agentAccess/hashAgentAccessToken";
+import { readBearerProjectApiKey } from "@/lib/projects/acl/projectApiKeys/hashProjectApiKey";
 
 export const dynamic = "force-dynamic";
+
+const hasMcpBearer = (authorization: string | null): boolean =>
+  readBearerAgentAccessToken(authorization) !== null ||
+  readBearerProjectApiKey(authorization) !== null;
+
+const unauthorizedMcpChallenge = (): Response =>
+  new Response(
+    JSON.stringify({
+      jsonrpc: "2.0",
+      id: null,
+      error: { code: -32001, message: "Unauthorized" },
+    }),
+    {
+      status: 401,
+      headers: {
+        "Content-Type": "application/json",
+        "WWW-Authenticate": buildMcpWwwAuthenticateHeader(),
+      },
+    },
+  );
 
 export async function GET(request: Request): Promise<Response> {
   const limited = await guardAgentAccessPost(request);
@@ -17,6 +40,7 @@ export async function GET(request: Request): Promise<Response> {
     return limited;
   }
 
+  // Public discovery document stays available (Bearer clients unchanged on POST).
   return Response.json(buildWebMcpDocument());
 }
 
@@ -25,6 +49,11 @@ export async function POST(request: Request): Promise<Response> {
 
   if (limited !== null) {
     return limited;
+  }
+
+  const authorization = request.headers.get("authorization");
+  if (!hasMcpBearer(authorization)) {
+    return unauthorizedMcpChallenge();
   }
 
   const payload = await readBoundedAgentAccessBody(request);
@@ -43,17 +72,17 @@ export async function POST(request: Request): Promise<Response> {
   const body: unknown = payload;
   const ip = readClientIp(request);
   const server = createAgentAccessMcpServer({
-    callTool: (name, args, authorization) =>
+    callTool: (name, args, authHeader) =>
       executeAgentAccessTool({
         name,
         args,
-        authorization,
+        authorization: authHeader,
         ip,
         featureToolExecutors: [executeProjectSkillShareTool],
       }),
   });
   const result = await handleMcpJsonRpcRequest(body, server, {
-    authorization: request.headers.get("authorization"),
+    authorization,
   });
 
   return Response.json(result);
