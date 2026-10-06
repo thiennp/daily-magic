@@ -1,7 +1,12 @@
 "use client";
 
-import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
+import { HUMAN_INVITE_PERSON_FLOW_COPY } from "@/features/projects/access/humanInvites/humanInvitePersonFlowCopy.constant";
 import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
+import {
+  INV_ROLE_CARD_CLASS,
+  INV_ROLE_CARD_ON_CLASS,
+  INV_ROLE_GRID_CLASS,
+} from "@/features/projects/access/humanInvites/invitePersonChromeClasses.constant";
 import type { HumanInviteRole } from "@/features/projects/access/humanInvites/types/humanInviteUiContract.type";
 
 export type AwcHumanInvitePersonRolePickerProps = {
@@ -10,39 +15,49 @@ export type AwcHumanInvitePersonRolePickerProps = {
   readonly onRoleChange: (role: HumanInviteRole) => void;
 };
 
-/** Member / Viewer role picker for Invite person. */
+/** Member / Viewer role cards for Invite person — Claude HTML. */
 export default function AwcHumanInvitePersonRolePicker({
   role,
   busy,
   onRoleChange,
 }: AwcHumanInvitePersonRolePickerProps) {
   const copy = HUMAN_INVITE_UI_COPY;
-  const roleOneLiner =
-    role === "member" ? copy.roleMemberOneLiner : copy.roleViewerOneLiner;
-
+  const flow = HUMAN_INVITE_PERSON_FLOW_COPY;
   return (
     <fieldset className="space-y-2">
-      <legend className="text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
-        Role
+      <legend className="text-xs font-semibold text-awc-fg-muted" title={flow.roleTip}>
+        {flow.roleLegend}
       </legend>
-      <div className="flex flex-wrap gap-2">
-        {(["member", "viewer"] as const).map((value) => (
-          <button
-            key={value}
-            type="button"
-            disabled={busy}
-            className={
-              role === value
-                ? AWC_PROJECT_ACCESS_CTA.primary
-                : AWC_PROJECT_ACCESS_CTA.secondary
-            }
-            onClick={() => onRoleChange(value)}
-          >
-            {value === "member" ? copy.roleMember : copy.roleViewer}
-          </button>
-        ))}
+      <div className={INV_ROLE_GRID_CLASS}>
+        {(["member", "viewer"] as const).map((value) => {
+          const on = role === value;
+          const label = value === "member" ? copy.roleMember : copy.roleViewer;
+          const detail =
+            value === "member" ? copy.roleMemberOneLiner : copy.roleViewerOneLiner;
+          return (
+            <label
+              key={value}
+              className={on ? INV_ROLE_CARD_ON_CLASS : INV_ROLE_CARD_CLASS}
+            >
+              <input
+                type="radio"
+                className="mt-1"
+                name="inv-role"
+                value={value}
+                checked={on}
+                disabled={busy}
+                onChange={() => onRoleChange(value)}
+              />
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold text-awc-blue-950">
+                  {label}
+                </span>
+                <span className="mt-0.5 block text-xs text-awc-fg-muted">{detail}</span>
+              </span>
+            </label>
+          );
+        })}
       </div>
-      <p className="text-xs text-gray-500 dark:text-gray-400">{roleOneLiner}</p>
     </fieldset>
   );
 }
