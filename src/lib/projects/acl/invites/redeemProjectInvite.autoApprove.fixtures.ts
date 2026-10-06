@@ -3,6 +3,7 @@ import {
   redeemSuggestPendingRow,
 } from "@/lib/projects/acl/invites/redeemSuggestedName.fixtures";
 import { listProjectPeersBaseProject } from "@/lib/projects/acl/messaging/listProjectPeers.fixtures";
+import type { ApproveProjectAccessResult } from "@/lib/projects/acl/approveProjectAccessRequest";
 
 export const redeemAutoApproveInviteRow = (autoApprove: boolean) => ({
   ...REDEEM_SUGGEST_INVITE_ROW,
@@ -19,7 +20,11 @@ export const redeemAutoApproveApprovedPayload = {
     requesterUserId: "bot-1",
     invitedByUserId: "owner-1",
     reason: "invite_redeem",
-    requestedScopes: ["acl:self", "project:meta", "peer_sync"],
+    requestedScopes: [
+      "acl:self",
+      "project:meta",
+      "peer_sync",
+    ] as const,
     decidedByUserId: "owner-1",
     decidedAt: "2026-10-02T00:00:00.000Z",
     createdAt: "2026-10-02T00:00:00.000Z",
@@ -35,20 +40,29 @@ export const redeemAutoApproveApprovedPayload = {
     role: "member" as const,
     status: "active" as const,
     teamLabel: null,
-    scopes: ["acl:self", "project:meta", "peer_sync", "msg:dispatch"],
+    scopes: [
+      "acl:self",
+      "project:meta",
+      "peer_sync",
+      "msg:dispatch",
+    ] as const,
     projectDisplayName: "Soft Vale",
     createdAt: "2026-10-02T00:00:00.000Z",
     revokedAt: null,
   },
   projectApiKey: "awc_proj_test",
-};
+} satisfies ApproveProjectAccessResult;
 
 export const redeemAutoApproveBaseProject = listProjectPeersBaseProject;
 
 export const stubRedeemAutoApproveSql = (
-  sqlMock: { mockImplementation: (fn: unknown) => void },
+  sqlMock: {
+    mockImplementation: (
+      fn: (strings: TemplateStringsArray) => Promise<unknown>,
+    ) => unknown;
+  },
   autoApprove: boolean,
-) => {
+): void => {
   sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
     const q = String(strings);
     if (q.includes("CREATE TABLE") || q.includes("ALTER TABLE")) return [];

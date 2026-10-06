@@ -15,6 +15,7 @@ const base = (overrides: Partial<AwcProjectAccessInvite>): AwcProjectAccessInvit
   usesRemaining: 1,
   teamLabel: null,
   scopes: [],
+  autoApprove: false,
   ...overrides,
 });
 
