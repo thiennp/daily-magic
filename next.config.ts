@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+import { SECURITY_HEADERS } from "./src/lib/security/securityHeaders.constant";
+
 const svgrLoaderOptions = {
   dimensions: false,
   svgProps: {
@@ -10,6 +12,15 @@ const svgrLoaderOptions = {
 const nextConfig: NextConfig = {
   transpilePackages: ["@agent-witch/shared"],
   serverExternalPackages: ["esbuild"],
+  poweredByHeader: false,
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: SECURITY_HEADERS.map(({ key, value }) => ({ key, value })),
+      },
+    ];
+  },
   async redirects() {
     return [
       {

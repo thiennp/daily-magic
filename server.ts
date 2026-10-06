@@ -17,6 +17,7 @@ import resolveAuthActorFromCookieHeader from "./src/lib/auth/resolveAuthActorFro
 import { resolveDevDashboardActor } from "./src/lib/auth/resolveDevDashboardActor";
 import { startAgentWitchConnectionRegistryMaintenance } from "./src/lib/agentWitch/startAgentWitchConnectionRegistryMaintenance";
 import { attachAgentWitchWebSocket } from "./src/server/agentWitch/attachAgentWitchWebSocket";
+import { writeServerOwnedResponse } from "./src/server/http/writeServerOwnedResponse";
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = process.env.HOSTNAME ?? "localhost";
@@ -41,8 +42,11 @@ const server = createServer((request, response) => {
         return;
       }
 
-      response.writeHead(200, { "Content-Type": "application/json" });
-      response.end(JSON.stringify(payload));
+      writeServerOwnedResponse(response, {
+        statusCode: 200,
+        contentType: "application/json",
+        body: JSON.stringify(payload),
+      });
     };
 
     void buildAgentWitchHealthPayload()
@@ -56,8 +60,11 @@ const server = createServer((request, response) => {
   }
 
   if (!nextReady) {
-    response.writeHead(503, { "Content-Type": "text/plain" });
-    response.end("Service starting");
+    writeServerOwnedResponse(response, {
+      statusCode: 503,
+      contentType: "text/plain",
+      body: "Service starting",
+    });
     return;
   }
 
