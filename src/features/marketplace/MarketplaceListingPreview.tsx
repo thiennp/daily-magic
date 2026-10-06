@@ -7,8 +7,8 @@ import type CapabilityTemplateUsageGuide from "@/lib/capabilities/templates/type
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
 const TYPE_LABEL_MAP: Record<CapabilityTypeValue, string> = {
-  [CapabilityType.AGENT]: "Agent",
-  [CapabilityType.WORKFLOW]: "Workflow",
+  [CapabilityType.AGENT]: "Assistant",
+  [CapabilityType.WORKFLOW]: "Playbook",
 };
 
 interface MarketplaceListingPreviewProps {

@@ -26,6 +26,7 @@ interface MarketplacePanelProps {
 const DEFAULT_FILTERS: MarketplaceBrowseFilters = {
   query: "",
   type: "all",
+  publisher: "all",
   sort: "officialFirst",
 };
 
@@ -71,6 +72,7 @@ export default function MarketplacePanel({
       showVisitorEmptyState={showVisitorEmptyState}
       filters={filters}
       listings={listings}
+      resultCount={filtered.length}
       onFiltersChange={setFilters}
       officialListings={officialListings}
       teammateListings={teammateListings}

@@ -39,9 +39,9 @@ export const MAC_WORKER_BENEFIT_COPY = {
   teammateNeedsMacOnline:
     "Owner must be online with a computer ready to run jobs to export files.",
   freeStartersDescription:
-    "Free agents and workflows ready to run on your computer.",
+    "Official playbooks and assistants made and checked by AgentWitch.",
   marketplacePageDescription:
-    "Playbooks, assistants, agents and skills. Install them into a project.",
+    "Playbooks, assistants and harness sets for your project.",
   libraryPageDescription:
     "Your saved workflows in Library. Open a project and use New task to run them — connect your computer on Home first if you still need this computer online.",
   marketplacePromo:

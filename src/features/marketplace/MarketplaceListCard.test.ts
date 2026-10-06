@@ -16,4 +16,24 @@ describe("MarketplaceListCard", () => {
     expect(source).toContain("line-clamp-4");
     expect(source).not.toContain("line-clamp-2");
   });
+
+  it("uses type-colored top border and Official/Teammate chips", () => {
+    const card = readFileSync(
+      join(process.cwd(), "src/features/marketplace/MarketplaceListCard.tsx"),
+      "utf8",
+    );
+    const chrome = readFileSync(
+      join(
+        process.cwd(),
+        "src/features/marketplace/marketplaceListingTypeChrome.constant.ts",
+      ),
+      "utf8",
+    );
+    expect(chrome).toContain("border-t-[3px]");
+    expect(chrome).toContain("Playbook");
+    expect(chrome).toContain("Assistant");
+    expect(card).toContain("MARKETPLACE_OFFICIAL_CHIP_LABEL");
+    expect(card).toContain("MARKETPLACE_TEAMMATE_CHIP_LABEL");
+    expect(card).not.toContain(">Free<");
+  });
 });

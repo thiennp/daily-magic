@@ -1,8 +1,16 @@
 "use client";
 
 import MarketplaceListCard from "@/features/marketplace/MarketplaceListCard";
-import { MARKETING_TEXT_MUTED_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+import MarketplaceSectionSkeleton from "@/features/marketplace/MarketplaceSectionSkeleton";
+import {
+  MK_EMPTY_CLASS,
+  MK_EMPTY_TITLE_CLASS,
+  MK_GRID_CLASS,
+} from "@/features/marketplace/marketplaceBrowseClasses.constant";
+import {
+  MARKETPLACE_FILTERED_EMPTY_BODY,
+  MARKETPLACE_FILTERED_EMPTY_TITLE,
+} from "@/features/marketplace/marketplaceCopy.constant";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
 
 interface MarketplaceListProps {
@@ -10,6 +18,7 @@ interface MarketplaceListProps {
   readonly isLoading: boolean;
   readonly onInstall: (listing: HarnessMarketplaceListing) => void;
   readonly emptyMessage?: string;
+  readonly filteredEmpty?: boolean;
 }
 
 export default function MarketplaceList({
@@ -17,42 +26,35 @@ export default function MarketplaceList({
   isLoading,
   onInstall,
   emptyMessage = "No listings yet.",
+  filteredEmpty = false,
 }: MarketplaceListProps) {
   if (isLoading) {
-    return (
-      <p
-        className={mergeMarketingClasses(
-          "mt-4 text-sm",
-          MARKETING_TEXT_MUTED_CLASSES,
-        )}
-      >
-        Loading marketplace…
-      </p>
-    );
+    return <MarketplaceSectionSkeleton />;
   }
 
   if (listings.length === 0) {
+    if (filteredEmpty) {
+      return (
+        <div className={MK_EMPTY_CLASS} role="status">
+          <h4 className={MK_EMPTY_TITLE_CLASS}>
+            {MARKETPLACE_FILTERED_EMPTY_TITLE}
+          </h4>
+          <p className="max-w-[42ch] text-sm">{MARKETPLACE_FILTERED_EMPTY_BODY}</p>
+        </div>
+      );
+    }
     return (
-      <p
-        className={mergeMarketingClasses(
-          "mt-4 text-sm",
-          MARKETING_TEXT_MUTED_CLASSES,
-        )}
-      >
-        {emptyMessage}
-      </p>
+      <p className="mt-4 text-sm text-awc-fg-muted">{emptyMessage}</p>
     );
   }
 
   return (
-    <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <ul className={MK_GRID_CLASS}>
       {listings.map((listing) => (
-        <MarketplaceListCard
-          key={listing.capabilityId}
-          listing={listing}
-          onInstall={onInstall}
-        />
+        <li key={listing.capabilityId} className="min-w-0">
+          <MarketplaceListCard listing={listing} onInstall={onInstall} />
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
