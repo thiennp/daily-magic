@@ -37,11 +37,11 @@ export type AwcProjectDetailTabPanelBodyProps = {
 export default function AwcProjectDetailTabPanelBody(
   p: AwcProjectDetailTabPanelBodyProps,
 ) {
-  const { tabId: t, selected: sel, project: proj } = p;
+  const { tabId: t, selected: sel, project } = p;
   if (t === "overview" && sel) {
     return (
       <AwcProjectOverviewPanel
-        project={proj}
+        project={project}
         editCta={p.editCta}
         pitfalls={p.pitfalls}
         computerStatus={p.computerStatus}
@@ -53,7 +53,7 @@ export default function AwcProjectDetailTabPanelBody(
   if (t === "pitfalls") {
     return (
       <AwcProjectPitfallsPanel
-        projectId={proj.id}
+        projectId={project.id}
         pitfalls={p.pitfalls}
         deviceDisplayName={p.deviceDisplayName}
         editCta={p.editCta}
@@ -64,8 +64,8 @@ export default function AwcProjectDetailTabPanelBody(
     return (
       <AwcProjectMessengerSection
         key={p.activityRefreshKey}
-        projectId={proj.id}
-        hasOwnerComputer={projectHasOwnerComputer(proj)}
+        projectId={project.id}
+        hasOwnerComputer={projectHasOwnerComputer(project)}
         initialThreadKey={p.activityInitialThreadKey}
         isOwner={p.pageActorRole === "owner"}
         onUnreadMaybeChanged={p.onActivityUnreadMaybeChanged}
@@ -75,7 +75,7 @@ export default function AwcProjectDetailTabPanelBody(
   if (t === "resources") {
     return (
       <AwcProjectResourcesPanel
-        project={proj}
+        project={project}
         pageActorRole={p.pageActorRole}
         deviceDisplayName={p.deviceDisplayName}
         editCta={p.editCta}
@@ -85,19 +85,19 @@ export default function AwcProjectDetailTabPanelBody(
   if (t === "settings") {
     return (
       <AwcProjectDetailSettingsPanel
-        project={proj}
+        project={project}
         startRename={p.startRename}
         pageActorRole={p.pageActorRole}
       />
     );
   }
   if (t === "reports" && sel) {
-    return <AwcProjectReportsPanel projectId={proj.id} />;
+    return <AwcProjectReportsPanel projectId={project.id} />;
   }
   if (t === "library" && sel) {
     return (
       <AwcProjectLibraryPanel
-        project={proj}
+        project={project}
         canEdit={p.pageActorRole === "owner"}
       />
     );
