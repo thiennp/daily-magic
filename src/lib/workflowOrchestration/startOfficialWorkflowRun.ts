@@ -33,6 +33,7 @@ export const startOfficialWorkflowRun = async (input: {
     return buildWorkflowRunStepResponse({
       ok: false,
       message: "Workflow capability not found.",
+      code: "not_found",
     });
   }
 
@@ -65,6 +66,7 @@ export const startOfficialWorkflowRun = async (input: {
     return buildWorkflowRunStepResponse({
       ok: false,
       message: Object.values(fieldErrors).join(" "),
+      code: "invalid_arguments",
     });
   }
 

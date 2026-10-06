@@ -8,6 +8,7 @@ export const buildWorkflowRunStepResponse = (input: {
   readonly humanStep?: WorkflowHumanStepPayload;
   readonly agentRunId?: string;
   readonly message?: string;
+  readonly code?: string;
 }): WorkflowRunStepResponse => ({
   ok: input.ok,
   ...(input.workflowRunId !== undefined
@@ -19,6 +20,7 @@ export const buildWorkflowRunStepResponse = (input: {
   ...(input.humanStep !== undefined ? { humanStep: input.humanStep } : {}),
   ...(input.agentRunId !== undefined ? { agentRunId: input.agentRunId } : {}),
   ...(input.message !== undefined ? { message: input.message } : {}),
+  ...(input.code !== undefined ? { code: input.code } : {}),
 });
 
 export default buildWorkflowRunStepResponse;

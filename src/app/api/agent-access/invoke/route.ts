@@ -33,6 +33,10 @@ const statusForToolError = (parsed: unknown): number => {
     return 403;
   }
 
+  if (code === "not_found") {
+    return 404;
+  }
+
   if (code === "rate_limited" || code === "busy") {
     return 429;
   }

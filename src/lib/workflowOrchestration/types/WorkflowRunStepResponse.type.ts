@@ -7,4 +7,6 @@ export default interface WorkflowRunStepResponse {
   readonly humanStep?: WorkflowHumanStepPayload;
   readonly agentRunId?: string;
   readonly message?: unknown;
+  /** Machine-readable failure code (e.g. not_found) when ok is false. */
+  readonly code?: string;
 }
