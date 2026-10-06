@@ -7,6 +7,11 @@ import { AWC_MUSE_HMAC_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcMuseH
 import { AWC_TERMS_VERSION } from "@/lib/agentAccess/awcTermsVersion.constant";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 import { AGENT_ACCESS_TOOLS } from "@/lib/agentAccess/agentAccessTools.constant";
+import { DEVICE_VERIFICATION_URI } from "@/lib/agentAccess/deviceCode/deviceCode.constants";
+import {
+  PROJECT_INVITE_JOIN_DEVICE_START_URL,
+  PROJECT_INVITE_JOIN_DEVICE_TOKEN_URL,
+} from "@/features/projects/access/invites/joinTypes/projectInviteJoinPendingPaths.constant";
 import { PROJECT_INVITE_JOIN_TYPES } from "@/features/projects/access/invites/joinTypes/projectInviteJoinTypes.constant";
 
 const DIR = join(
@@ -56,14 +61,21 @@ describe("join type registry vs Product EN lock", () => {
 
   it("only names AgentWitch URLs and tools that exist", () => {
     const urls = buildAgentAccessUrls();
-    const knownUrls = new Set([urls.registerUrl, urls.mcpUrl, urls.invokeUrl]);
+    const knownUrls = new Set([
+      urls.registerUrl,
+      urls.mcpUrl,
+      urls.invokeUrl,
+      PROJECT_INVITE_JOIN_DEVICE_START_URL,
+      PROJECT_INVITE_JOIN_DEVICE_TOKEN_URL,
+      DEVICE_VERIFICATION_URI,
+    ]);
     const knownTools = new Set(AGENT_ACCESS_TOOLS.map((tool) => tool.name));
     const text = PROJECT_INVITE_JOIN_TYPES.flatMap((t) => t.steps).join(" ");
     for (const url of text.match(/https:\/\/www\.agentwitch\.com[^\s,;."]*/g) ??
       []) {
       expect(knownUrls.has(url), url).toBe(true);
     }
-    for (const path of text.match(/\/api\/agent-access\/[a-z]+/g) ?? []) {
+    for (const path of text.match(/\/api\/agent-access\/[a-z/]+/g) ?? []) {
       expect(knownUrls.has(`${urls.origin}${path}`), path).toBe(true);
     }
     const tools =

@@ -1,6 +1,5 @@
 import { AWC_TERMS_VERSION } from "@/lib/agentAccess/awcTermsVersion.constant";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
-import { PROJECT_INVITE_JOIN_DEVICE_CODE_STEPS } from "@/features/projects/access/invites/joinTypes/projectInviteJoinPendingPaths.constant";
 import type { ProjectInviteJoinType } from "@/features/projects/access/invites/joinTypes/projectInviteJoinType.type";
 
 const urls = buildAgentAccessUrls();
@@ -14,7 +13,6 @@ export const joinType: ProjectInviteJoinType = {
   deliveryMode: "poll",
   note: "Owner badge: Checks on demand.",
   steps: [
-    ...PROJECT_INVITE_JOIN_DEVICE_CODE_STEPS,
     `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "${AWC_TERMS_VERSION}" }. Persist the bearer in your secret store — never print it.`,
     `Prefer MCP POST ${urls.mcpUrl} with Authorization: Bearer <token>; or REST POST …/invoke with the same header.`,
     "After Approve, follow shared redeem/access tools.",

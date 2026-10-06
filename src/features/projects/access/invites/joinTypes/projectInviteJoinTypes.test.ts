@@ -66,15 +66,10 @@ describe("join type registry", () => {
     ]) {
       expect(byId[id]?.connectPath, id).toBe("mcp-bearer");
     }
-    for (const id of [
-      "muse",
-      "chatgpt",
-      "n8n-zapier",
-      "messengers",
-      "custom-https",
-    ]) {
+    for (const id of ["muse", "n8n-zapier", "messengers", "custom-https"]) {
       expect(byId[id]?.connectPath, id).toBe("rest-register");
     }
+    expect(byId.chatgpt?.connectPath).toBe("device-code");
     expect(byId.other?.connectPath).toBe("poll");
     for (const type of PROJECT_INVITE_JOIN_TYPES.filter(
       (t) => t.id !== "grok-bot",
