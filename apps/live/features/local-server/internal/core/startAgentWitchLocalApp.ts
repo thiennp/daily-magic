@@ -103,6 +103,9 @@ import createCloudAgentWitchProjectPitfallsStore from "../../../projects/interna
 import createMacAgentWitchProjectPitfallsStore from "../../../projects/internal/core/pitfalls/createMacAgentWitchProjectPitfallsStore";
 import { listProjectPitfallsCached } from "../../../projects/internal/core/pitfalls/projectPitfallsListCache";
 import resolveProjectPitfallFlash from "../../../projects/internal/core/pitfalls/resolveProjectPitfallFlash";
+import { buildProjectRuleCompareExtra } from "../../../projects/internal/core/buildProjectRuleCompareExtra";
+import { handleProjectRuleChangePost } from "../../../projects/internal/core/pitfalls/handleProjectRuleChangePost";
+import type { RuleChangeFetchResult } from "../../../prompt-optimizer/public-api/infrastructure";
 import {
   buildAgentWitchLocalProjectEditorPageBody,
   buildAgentWitchLocalProjectsPageBody,
@@ -1165,21 +1168,63 @@ export const startAgentWitchLocalApp = (input: {
             knowledgeCandidateCount = 0;
           }
         }
-        // Soft: fetch pitfalls only when that tab is active (then cache briefly).
-        // Mac store reads SQLite (and write-through syncs from cloud when paired).
-        const pitfalls =
-          activeTab !== "pitfalls"
+        const rulePromptRaw = url.searchParams.get("rulePrompt");
+        const rulePromptSubmitted = rulePromptRaw !== null;
+        const rulePrompt = rulePromptRaw?.trim() ?? "";
+        const ruleDroppedId = url.searchParams.get("ruleDropped")?.trim() || null;
+        const ruleDroppedTitle =
+          url.searchParams.get("ruleDroppedTitle")?.trim() || null;
+        const ruleChangeErrorRaw =
+          url.searchParams.get("ruleChangeError")?.trim() || null;
+        const ruleChangeActionRaw =
+          url.searchParams.get("ruleChangeAction")?.trim() || null;
+        const ruleChangeAction =
+          ruleChangeActionRaw === "restore" ? "restore" : "drop";
+        const changeError: RuleChangeFetchResult | null =
+          ruleChangeErrorRaw === null
+            ? null
+            : {
+                ok: false,
+                reason: ruleChangeErrorRaw as
+                  | "unauthorized"
+                  | "forbidden"
+                  | "not_found"
+                  | "limit_exceeded"
+                  | "unavailable",
+              };
+        // Soft: fetch pitfalls when Pitfalls tab is active, or when Compare ran
+        // on Playbooks (need active rules for keyword match).
+        const needPitfalls =
+          activeTab === "pitfalls" ||
+          (activeTab === "harness" && rulePromptSubmitted);
+        const pitfalls = !needPitfalls
+          ? undefined
+          : await listProjectPitfallsCached({
+              store: createMacAgentWitchProjectPitfallsStore({
+                layout: input.layout,
+                cloud:
+                  cloudConfig === null
+                    ? null
+                    : createCloudAgentWitchProjectPitfallsStore(cloudConfig),
+              }),
+              projectId: project.id,
+              includeRetired:
+                activeTab === "pitfalls" ? pitfallsShowRetired : false,
+            });
+        const harnessExtraHtml =
+          activeTab !== "harness"
             ? undefined
-            : await listProjectPitfallsCached({
-                store: createMacAgentWitchProjectPitfallsStore({
-                  layout: input.layout,
-                  cloud:
-                    cloudConfig === null
-                      ? null
-                      : createCloudAgentWitchProjectPitfallsStore(cloudConfig),
-                }),
+            : await buildProjectRuleCompareExtra({
                 projectId: project.id,
-                includeRetired: pitfallsShowRetired,
+                prompt: rulePromptSubmitted ? rulePrompt : null,
+                cloudConfig,
+                pitfalls,
+                dropFlash:
+                  ruleDroppedId !== null && ruleDroppedTitle !== null
+                    ? { ruleId: ruleDroppedId, title: ruleDroppedTitle }
+                    : null,
+                changeError,
+                changeAction: ruleChangeAction,
               });
         sendHtml(
           response,
@@ -1200,6 +1245,7 @@ export const startAgentWitchLocalApp = (input: {
               pitfallsShowRetired,
               pitfallsEditId,
               activeTab,
+              harnessExtraHtml,
               flashMessage:
                 linkedFlash ??
                 knowledgeFlashMessage ??
@@ -1209,6 +1255,34 @@ export const startAgentWitchLocalApp = (input: {
             }),
           }),
         );
+        return;
+      }
+
+      if (
+        method === "POST" &&
+        (pathname === "/project/rules/drop" ||
+          pathname === "/project/rules/restore")
+      ) {
+        const rawBody = await readBody(request);
+        const runConfigForRules = readAgentWitchRunConfig();
+        const cloudConfigForRules =
+          runConfigForRules === null
+            ? null
+            : resolveAgentWitchCloudApiConfig({
+                wsUrl: runConfigForRules.wsUrl,
+                pairingToken: runConfigForRules.pairingToken,
+              });
+        const changeResult = await handleProjectRuleChangePost({
+          action: pathname.endsWith("/drop") ? "drop" : "restore",
+          rawBody,
+          cloudConfig: cloudConfigForRules,
+        });
+        if (changeResult.kind === "not_found") {
+          await sendLocalAppNotFound(response, "Project not found");
+          return;
+        }
+        response.writeHead(303, { Location: changeResult.location });
+        response.end();
         return;
       }
 

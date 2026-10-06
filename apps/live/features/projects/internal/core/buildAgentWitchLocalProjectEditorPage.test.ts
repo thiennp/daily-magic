@@ -257,4 +257,20 @@ describe("buildAgentWitchLocalProjectEditorPageBody", () => {
 
     expect(html).toContain('tab=pitfalls">Pitfalls</a>');
   });
+
+  it("appends harnessExtraHtml under the Playbooks tab", () => {
+    const html = buildAgentWitchLocalProjectEditorPageBody({
+      project,
+      cloudAppOrigin,
+      installed: emptyInstalled,
+      linkedSetSlugs: [],
+      composition: null,
+      knowledgeCandidateCount: 0,
+      activeTab: "harness",
+      harnessExtraHtml: "<section data-rule-compare>Compare rules</section>",
+    });
+    expect(html).toContain("data-rule-compare");
+    expect(html).toContain("Compare rules");
+  });
+
 });

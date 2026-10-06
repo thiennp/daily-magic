@@ -15,3 +15,20 @@ describe("renderPromptSdlcLocalGoalPresets", () => {
     }
   });
 });
+
+describe("renderPromptSdlcLocalGoalPresets with options", () => {
+  it("renders submit chips with custom presets and labels", () => {
+    const html = renderPromptSdlcLocalGoalPresets({
+      presets: [{ label: "Haiku", goal: 'Write a "haiku"' }],
+      groupLabel: "Sample prompts",
+      leadLabel: "Try:",
+      submitName: "rulePrompt",
+    });
+    expect(html).toContain('aria-label="Sample prompts"');
+    expect(html).toContain(">Try:</span>");
+    expect(html).toContain(
+      'type="submit" class="sdlc-goal-preset-chip" name="rulePrompt" value="Write a &quot;haiku&quot;"',
+    );
+    expect(html).not.toContain("data-sdlc-goal-preset");
+  });
+});

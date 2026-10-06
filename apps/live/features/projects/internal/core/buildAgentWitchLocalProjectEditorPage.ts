@@ -216,6 +216,8 @@ export const buildAgentWitchLocalProjectEditorPageBody = (input: {
   readonly activeTab: ProjectEditorTab;
   readonly flashMessage?: string | null;
   readonly flashError?: string | null;
+  /** Optional HTML appended under the Playbooks (harness) tab body. */
+  readonly harnessExtraHtml?: string;
 }): string => {
   const flash = input.flashError
     ? `<div class="alert-error">${escapeHtml(input.flashError)}</div>`
@@ -241,13 +243,18 @@ export const buildAgentWitchLocalProjectEditorPageBody = (input: {
 
   const tabBody = ((): string => {
     switch (input.activeTab) {
-      case "harness":
-        return buildHarnessTab({
+      case "harness": {
+        const harnessBody = buildHarnessTab({
           project: input.project,
           installed: input.installed,
           linkedSetSlugs: input.linkedSetSlugs,
           boundHarnessCount: input.composition?.counts.harness ?? 0,
         });
+        const extra = input.harnessExtraHtml?.trim() ?? "";
+        return extra.length === 0
+          ? harnessBody
+          : `${harnessBody}${extra}`;
+      }
       case "workflows":
         return buildCompositionList(
           workflowItems,
