@@ -53,16 +53,25 @@ export async function POST(
       ? (body as { folderPath: string }).folderPath
       : "";
 
+  const deviceId =
+    body !== null &&
+    typeof body === "object" &&
+    typeof (body as { deviceId?: unknown }).deviceId === "string"
+      ? (body as { deviceId: string }).deviceId
+      : null;
+
   const result = await upsertProjectFolderRef({
     projectId,
     ownerUserId: actor.id,
     machineOrDeviceRef,
     folderPath,
+    deviceId,
   });
 
   if (!result.ok) {
     const status =
-      result.code === "forbidden"
+      result.code === "forbidden" ||
+      result.code === "folder_ref_device_not_member"
         ? 403
         : result.code === "not_found"
           ? 404

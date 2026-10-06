@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 
+import { checkFolderRefDeviceAcl } from "@/lib/projects/acl/checkFolderRefDeviceAcl";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import mapProjectFolderRefRow from "@/lib/projects/acl/mapProjectFolderRefRow";
 import type ProjectFolderRefRecord from "@/lib/projects/acl/types/ProjectFolderRefRecord.type";
@@ -7,12 +8,17 @@ import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAu
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { asRowArray, getSql } from "@/lib/db";
 import { scheduleProjectUpdatedNotify } from "@/lib/projects/acl/messaging/scheduleProjectUpdatedNotify";
+import type { ProjectComputerMemberLookup } from "@/lib/projects/acl/types/ProjectComputerMemberLookup.type";
 
 export type UpsertProjectFolderRefResult =
   | { readonly ok: true; readonly folderRef: ProjectFolderRefRecord }
   | {
       readonly ok: false;
-      readonly code: "not_found" | "forbidden" | "invalid";
+      readonly code:
+        | "not_found"
+        | "forbidden"
+        | "invalid"
+        | "folder_ref_device_not_member";
     };
 
 export const upsertProjectFolderRef = async (input: {
@@ -20,6 +26,9 @@ export const upsertProjectFolderRef = async (input: {
   readonly ownerUserId: string;
   readonly machineOrDeviceRef: string;
   readonly folderPath: string;
+  /** Explicit picker deviceId; always membership-checked. */
+  readonly deviceId?: string | null;
+  readonly isComputerMember?: ProjectComputerMemberLookup;
 }): Promise<UpsertProjectFolderRefResult> => {
   const project = await getUserProjectById(input.projectId);
   if (project === null) {
@@ -28,11 +37,15 @@ export const upsertProjectFolderRef = async (input: {
   if (project.ownerUserId !== input.ownerUserId) {
     return { ok: false, code: "forbidden" };
   }
-  const machine = input.machineOrDeviceRef.trim();
   const folder = input.folderPath.trim();
-  if (machine.length === 0 || folder.length === 0) {
+  if (folder.length === 0) {
     return { ok: false, code: "invalid" };
   }
+  const acl = await checkFolderRefDeviceAcl(input);
+  if (!acl.ok) {
+    return { ok: false, code: acl.code };
+  }
+  const machine = acl.ref;
 
   await ensureProjectAclSchema();
   const sql = getSql();
