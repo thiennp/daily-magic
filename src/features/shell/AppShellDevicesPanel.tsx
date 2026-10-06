@@ -4,7 +4,6 @@ import { useSession } from "next-auth/react";
 import { useSyncExternalStore } from "react";
 
 import HomeConnectedMacsPanel from "@/features/home/HomeConnectedMacsPanel";
-import usePersonalizedAgentWitchInstallCommand from "@/features/home/hooks/usePersonalizedAgentWitchInstallCommand";
 import { isAgentWitchWebSocketAvailableForHost } from "@/lib/agentWitch/isAgentWitchWebSocketAvailable";
 
 const subscribeHost = (): (() => void) => () => undefined;
@@ -22,19 +21,19 @@ export default function AppShellDevicesPanel() {
     getServerHostSnapshot,
   );
   const isAuthenticated = status === "authenticated" && session !== null;
-  const { installCommand } = usePersonalizedAgentWitchInstallCommand({
-    enabled: isAuthenticated,
-    fallbackInstallCommand: "",
-  });
   const isWebSocketSupported = isAgentWitchWebSocketAvailableForHost(host);
 
   if (!isAuthenticated) {
     return null;
   }
 
+  // No install-token on mount: this panel is mounted twice (desktop rail +
+  // md:hidden mobile rail) on every AppShell page, and each POST reserves a
+  // device row and revokes the previous placeholder token. Connect buttons
+  // mint their own token when their modal opens.
   return (
     <HomeConnectedMacsPanel
-      installCommand={installCommand}
+      installCommand=""
       isWebSocketSupported={isWebSocketSupported}
       host={host}
     />
