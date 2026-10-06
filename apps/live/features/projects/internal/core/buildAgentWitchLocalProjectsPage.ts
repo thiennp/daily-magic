@@ -80,7 +80,7 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
   return `${flash}${cloudBanner}<section class="card">
       <p class="eyebrow">Repositories</p>
       <h1>Projects on this computer</h1>
-      <p class="lede">Synced from Agent Witch Cloud for this paired Mac only. Choose a folder per project, then pull playbooks into each repo’s <code>.cursor</code> tree (tracked in <code>.agent-witch/materialization.json</code>).</p>
+      <p class="lede">Synced from Agent Witch Cloud for this paired computer only. Choose a folder per project, then pull playbooks into each repo’s <code>.cursor</code> tree (tracked in <code>.agent-witch/materialization.json</code>).</p>
       ${projectRows}
     </section>`;
 };

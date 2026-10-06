@@ -17,12 +17,12 @@
 
 ## Details
 
-| Surface                                        | Linux today                                                                                                      | What people mean by “access”           |
-| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| **AWC** Cloud (`www.agentwitch.com`)           | Yes, any desktop browser                                                                                         | Open the product, sign in, watch Runs  |
-| **AWI** host (runs Tasks in a real shell)      | Yes on **x86_64** with `curl`, `tar`, and a systemd **user** session (or foreground). Same pairing token as Mac. | “Install Agent Witch on this computer” |
-| **AWL** (`http://127.0.0.1:43347`)             | No. Mac-local UI                                                                                                 | Projects, folders, local knowledge     |
-| **AWB** identity (`127.0.0.1:47892` / `47893`) | No. The browser probes identity only when the user agent is **macOS**                                            | “This computer” / “this Mac” badge     |
+| Surface                                        | Linux today                                                                                                      | What people mean by “access”            |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| **AWC** Cloud (`www.agentwitch.com`)           | Yes, any desktop browser                                                                                         | Open the product, sign in, watch Runs   |
+| **AWI** host (runs Tasks in a real shell)      | Yes on **x86_64** with `curl`, `tar`, and a systemd **user** session (or foreground). Same pairing token as Mac. | “Install Agent Witch on this computer”  |
+| **AWL** (`http://127.0.0.1:43347`)             | No. Mac-local UI                                                                                                 | Projects, folders, local knowledge      |
+| **AWB** identity (`127.0.0.1:47892` / `47893`) | No. The browser probes identity only when the user agent is **macOS**                                            | “This computer” / “This computer” badge |
 
 Send still requires `presenceTier: live`. A Linux host that is paired but not live blocks Send the same way a computer does. Readiness reason codes are still named `mac_*` even when the live row is Linux.
 

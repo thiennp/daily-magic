@@ -81,7 +81,7 @@ export const buildLocalHarnessRevealClientScript = (): string => `(() => {
   document.getElementById("pickFolder")?.addEventListener("click", async () => {
     const status = document.getElementById("pickFolderStatus");
     const unavailableMessage =
-      "Folder picker is only available on the Mac that runs Agent Witch. Type the folder path instead.";
+      "Folder picker is only available on the computer that runs Agent Witch. Type the folder path instead.";
     const showPickerUnavailable = () => {
       if (status instanceof HTMLElement) {
         status.textContent = unavailableMessage;

@@ -91,7 +91,7 @@ const buildAlreadyMaterializedWithoutProfileTab = (input: {
   if (input.boundHarnessCount > 0) {
     return `<div class="stack">
         <p class="field-label">In this repo</p>
-        <p class="lede">This project’s playbook is already in this repo’s <code>.cursor</code> tree. Nothing is installed in the Mac profile — refresh from Agent Witch Cloud only if you need an update.</p>
+        <p class="lede">This project’s playbook is already in this repo’s <code>.cursor</code> tree. Nothing is installed in the profile harness on this computer — refresh from Agent Witch Cloud only if you need an update.</p>
         ${setList}
         <form method="POST" action="/projects/pull-bound-harness" class="actions">
           <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
@@ -209,7 +209,7 @@ export const buildAgentWitchLocalProjectEditorPageBody = (input: {
   readonly linkedSetSlugs: readonly string[];
   readonly composition: CloudProjectComposition | null;
   readonly knowledgeCandidateCount: number;
-  /** null = cloud not configured on this Mac. Omit on pages that do not load pitfalls. */
+  /** null = cloud not configured on this computer. Omit on pages that do not load pitfalls. */
   readonly pitfalls?: ListAgentWitchPitfallsResult | null;
   readonly pitfallsShowRetired?: boolean;
   readonly pitfallsEditId?: string | null;

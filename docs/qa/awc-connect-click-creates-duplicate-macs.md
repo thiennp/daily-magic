@@ -19,9 +19,9 @@ Each click on **Connect this computer** asks the cloud for a new install link. T
 
 | What you see                                                               | What it means                                                                                                                                                        |
 | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Your Mac** / **Mac 2** with **Version unknown**                          | Unused install link. No hostname and no bundle version yet.                                                                                                          |
+| **Your computer** / **Computer 2** with **Version unknown**                | Unused install link. No hostname and no bundle version yet.                                                                                                          |
 | **Seen recently** on that row                                              | The row was stamped at create time. It is not a live check-in.                                                                                                       |
-| **this Mac** on the newest of those rows                                   | This browser stored the latest pairing-token hash when Connect succeeded.                                                                                            |
+| **This computer** on the newest of those rows                              | This browser stored the latest pairing-token hash when Connect succeeded.                                                                                            |
 | A named computer (serial or hostname)                                      | A real paired computer. Cleanup does not remove it.                                                                                                                  |
 | Failed requests to `http://127.0.0.1:47892/identity` and `:47893/identity` | Agent Witch Bridge is not running on this computer. Those calls do not create the extra rows. `POST /api/agent-witch/install-token` returning 200 is the cloud link. |
 

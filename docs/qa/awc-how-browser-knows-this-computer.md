@@ -16,16 +16,16 @@
 
 ## Short answer
 
-**AWC (the browser app) does not infer your machine from cloud IP or hardware IDs.** It compares **pairing-token hashes**: each claimed Mac in `/api/agent-witch/devices` has a `tokenHash`, and on **macOS** the page reads the **local** hash from **AWB** at `GET http://127.0.0.1:{wakePort}/identity`. When they match, the UI marks that row as **this Mac** and shows local-only actions. The static label **“This computer”** on the Connect row is product copy (“the computer you’re using now”), not a server-side device match.
+**AWC (the browser app) does not infer your machine from cloud IP or hardware IDs.** It compares **pairing-token hashes**: each claimed Mac in `/api/agent-witch/devices` has a `tokenHash`, and on **macOS** the page reads the **local** hash from **AWB** at `GET http://127.0.0.1:{wakePort}/identity`. When they match, the UI marks that row as **This computer** and shows local-only actions. The static label **“This computer”** on the Connect row is product copy (“the computer you’re using now”), not a server-side device match.
 
 ## Details
 
 ### Two different UI strings
 
-| UI                                               | Meaning                                                                                                                                 |
-| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| **“This computer”** (`ConnectThisMacRow`)        | Fixed copy for the **Connect this computer** placeholder: link the computer where you opened the browser. Not computed from device IDs. |
-| **“this Mac”** badge / **On this computer** menu | Computed: `device.tokenHash` from cloud **equals** `localTokenHash` from the wake `/identity` probe.                                    |
+| UI                                                    | Meaning                                                                                                                                 |
+| ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **“This computer”** (`ConnectThisMacRow`)             | Fixed copy for the **Connect this computer** placeholder: link the computer where you opened the browser. Not computed from device IDs. |
+| **“This computer”** badge / **On this computer** menu | Computed: `device.tokenHash` from cloud **equals** `localTokenHash` from the wake `/identity` probe.                                    |
 
 ### Cloud side (AWC → API)
 
@@ -50,12 +50,12 @@
 
 ### What AWC cannot do
 
-- If the browser runs on **Windows, iPhone, or another computer without AWB reachable**, `localTokenHash` stays null → **no** “this Mac” badge; cloud devices still list normally.
+- If the browser runs on **Windows, iPhone, or another computer without AWB reachable**, `localTokenHash` stays null → **no** “This computer” badge; cloud devices still list normally.
 - The **production server** does not know which tab is on which laptop unless the **browser** successfully reads localhost identity.
 
 ### Notifications and live UI
 
-- Live progress and stuck banners use the same rule (`useIsAgentLiveSessionThisMac`: session `deviceId` → that device’s `tokenHash` vs local hash) to tailor copy for **this Mac** vs a remote Mac.
+- Live progress and stuck banners use the same rule (`useIsAgentLiveSessionThisMac`: session `deviceId` → that device’s `tokenHash` vs local hash) to tailor copy for **This computer** vs a remote Mac.
 
 ### Product wording
 

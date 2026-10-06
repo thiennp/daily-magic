@@ -71,7 +71,7 @@ describe("buildPromptSdlcCycleView", () => {
     expect(view.judgeModel).toBe("qwen2.5:7b");
   });
 
-  it("hides a local call unless the cycle is waiting on this Mac", () => {
+  it("hides a local call unless the cycle is waiting on this computer", () => {
     const view = buildPromptSdlcCycleView({
       cycle: { ...cycle, status: "judging", pendingLocalRole: null },
       revisions: [],

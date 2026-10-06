@@ -9,5 +9,5 @@ export {
   AGENT_WITCH_LIVE_APP_PORT,
 } from "@agent-witch/shared/network";
 
-/** Loopback bind address (AGENT-021 — never expose beyond this Mac). */
+/** Loopback bind address (AGENT-021 — never expose beyond this computer). */
 export const AWL_HTTP_BIND_HOST = "127.0.0.1";

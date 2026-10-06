@@ -33,7 +33,7 @@ The handshake and the device row are different checks.
 
 1. **The socket AWL counts is local.** Status stays **Connected** for as long as that process’s socket stays open. Cloud presence updates only after register resolves the pairing token to a non-revoked device.
 2. **The browser has its own socket.** A signed-in AWC tab registers role `dashboard`. That upgrade can succeed on every refresh and never makes a computer row live.
-3. **Register can land on a different row.** The token in `~/.agent-witch/config.json` (or `~/.local-agent-witch` for a localhost install) claims one device id. AWC may be showing an older row: a leftover Connect placeholder, a superseded Mac, or a row whose token hash is what the browser matched as **this Mac** while the running helper is using another profile.
+3. **Register can land on a different row.** The token in `~/.agent-witch/config.json` (or `~/.local-agent-witch` for a localhost install) claims one device id. AWC may be showing an older row: a leftover Connect placeholder, a superseded Mac, or a row whose token hash is what the browser matched as **This computer** while the running helper is using another profile.
 4. **Register can land on a different origin.** The Mac’s `wsUrl` might be `ws://localhost:3000/...` while the tab is `https://www.agentwitch.com`, or the reverse. Each origin has its own hub. The handshake you watched succeeded against the origin in `config.json`.
 5. **A rejected register does not refresh the row.** “This computer identity is not linked” or an invalid device-auth signature closes the socket and leaves `last_seen_at` unchanged, so the row stays **offline**. AWL then shows **Disconnected** and retries. A badge that stays **Connected** means the socket that process is tracking remained open — that open socket is bound to some other device, account, or origin than the offline row.
 
@@ -47,7 +47,7 @@ The handshake and the device row are different checks.
 ## Related
 
 - [awc-mac-reconnecting-vs-local-live.md](awc-mac-reconnecting-vs-local-live.md) — **Mac reconnecting** when the helper is up (`recent` / `live_other_instance`)
-- [awc-how-browser-knows-this-computer.md](awc-how-browser-knows-this-computer.md) — **this Mac** is a token-hash match
+- [awc-how-browser-knows-this-computer.md](awc-how-browser-knows-this-computer.md) — **This computer** is a token-hash match
 - [awc-connect-when-awl-already-running.md](awc-connect-when-awl-already-running.md) — deleted or replaced link while AWL stays open
 - ADR 0005 — presence tiers
 - Code: `resolveAgentWitchDevicePresenceTier`, `processAgentWitchRegisterMessage`, AWL `wsConnected` in `startAgentWitchClient`

@@ -38,7 +38,7 @@ Open the top `sourcePath` under `docs/qa/` when present.
 | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
 | [awl-agent-witch-local-naming.md](awl-agent-witch-local-naming.md)                         | AWL = Agent Witch Local (not “Live”; `apps/live/` is legacy slug)                                         |
 | [awc-agent-witch-cloud-naming.md](awc-agent-witch-cloud-naming.md)                         | AWC = Agent Witch Cloud (not “Console”; `apps/console/` is legacy slug)                                   |
-| [awc-how-browser-knows-this-computer.md](awc-how-browser-knows-this-computer.md)           | AWC “This computer” / “this Mac” vs cloud device list                                                     |
+| [awc-how-browser-knows-this-computer.md](awc-how-browser-knows-this-computer.md)           | AWC “This computer” / “This computer” vs cloud device list                                                |
 | [awb-localhost-identity-and-cors.md](awb-localhost-identity-and-cors.md)                   | AWB `/identity`, CORS, AWI config vs AWL                                                                  |
 | [delegate-local-cli-conversation-context.md](delegate-local-cli-conversation-context.md)   | Local CLI (Cursor, etc.) follow-up context / `--continue`                                                 |
 | [antigravity-cli-shipped-path.md](antigravity-cli-shipped-path.md)                         | agy argv order, OAuth token path, honesty chips (no Writer API fallback stamp)                            |

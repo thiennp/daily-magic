@@ -4,7 +4,7 @@ import { isReusableDeviceLabel } from "@/lib/agentWitch/findActiveAgentWitchDevi
 
 /**
  * Legacy installs stored the bare hostname; current installs store
- * `hostname#macosusername`. Both label shapes describe this Mac, so the
+ * `hostname#macosusername`. Both label shapes describe this computer, so the
  * bare-hostname row is a duplicate of the composite one and must be superseded
  * too — otherwise it stays active, visible, and undispatchable.
  */

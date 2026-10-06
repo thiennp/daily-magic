@@ -45,18 +45,18 @@ Company-only hints (run on behalf, policy) appear when org rules exist—not on 
 
 Workflows with multiple steps and human checkpoints reuse the same computer path per agent step; checkpoints pause in the **browser**, not on the computer ([official workflow checkpoints Q&A](../../qa/official-workflow-run-checkpoints-and-retry.md)).
 
-Optional **Cursor Cloud** dispatch (when configured) targets cloud agents instead of your Mac— not a hidden substitute for local execution ([Chapter 0 — misconceptions](00-philosophy-and-vocabulary.md)).
+Optional **Cursor Cloud** dispatch (when configured) targets cloud agents instead of your computer— not a hidden substitute for local execution ([Chapter 0 — misconceptions](00-philosophy-and-vocabulary.md)).
 
 ---
 
 ## Queued vs failed (honest copy)
 
-| Message theme                                                   | Meaning                                                                                     |
-| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| **Mac is reconnecting. Your task will send when it checks in.** | HTTP accepted; outbox will flush when hub socket is live—common right after Console deploy. |
-| **Try again in a few seconds.**                                 | Interactive retry path—not the same as queued writer ack.                                   |
-| Mac offline                                                     | No dispatch; fix connect chapter—not “wait silently forever.”                               |
-| **This computer is not linked**                                 | No row is **this Mac**. **Connect this computer** on Home links the computer you are using. |
+| Message theme                                                   | Meaning                                                                                          |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| **Mac is reconnecting. Your task will send when it checks in.** | HTTP accepted; outbox will flush when hub socket is live—common right after Console deploy.      |
+| **Try again in a few seconds.**                                 | Interactive retry path—not the same as queued writer ack.                                        |
+| Mac offline                                                     | No dispatch; fix connect chapter—not “wait silently forever.”                                    |
+| **This computer is not linked**                                 | No row is **This computer**. **Connect this computer** on Home links the computer you are using. |
 
 Details: [Reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md) · [No Connect button](../../qa/awc-offline-devices-hide-connect-button.md) · [Duplicate computers from Connect](../../qa/awc-connect-click-creates-duplicate-macs.md) · [Deleting a Mac](../../qa/awc-delete-mac-forgets-local-connection.md).
 

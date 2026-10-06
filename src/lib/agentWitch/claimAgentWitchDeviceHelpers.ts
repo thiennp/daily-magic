@@ -21,7 +21,7 @@ export const insertAgentWitchDeviceClaim = async (input: {
   readonly deviceLabel: string | null;
   /**
    * Real check-in (pairing / heartbeat path) records presence.
-   * Connect this Mac only reserves a token, so it must leave `last_seen_at` null
+   * Connect this computer only reserves a token, so it must leave `last_seen_at` null
    * until the Mac actually checks in (HOME-059).
    */
   readonly recordLastSeen?: boolean;

@@ -10,7 +10,7 @@ export interface AgentWitchWakeIdentityResponse {
   readonly port: number;
   /** sha256 of the active profile pairing token; never the raw token. */
   readonly tokenHash: string | null;
-  /** sha256 hashes for every local profile + legacy config on this Mac. */
+  /** sha256 hashes for every local profile + legacy config on this computer. */
   readonly tokenHashes: readonly string[];
   readonly profiles: readonly {
     readonly email: string | null;

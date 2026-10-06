@@ -102,7 +102,7 @@ When you save a workflow to library, you are saving a **playbook** you can rerun
 
 ## Project folder and Mac-only pickers
 
-The console cannot browse your Mac’s disk directly. Set **repository / project folder** via:
+The console cannot browse your computer’s disk directly. Set **repository / project folder** via:
 
 - **Agent Witch Local** on the computer (`127.0.0.1:43347`), or
 - Local **bridge** folder picker when the browser runs on that **Mac**.

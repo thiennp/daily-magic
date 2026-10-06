@@ -85,10 +85,10 @@ Pairing is the bridge between **account** and **machine**:
 
 **Two UI phrases (do not confuse them):**
 
-| Copy                                    | Meaning                                                         |
-| --------------------------------------- | --------------------------------------------------------------- |
-| **“This computer”** (connect row)       | Product copy: link the computer you’re sitting at now.          |
-| **“this Mac” badge / On this computer** | Computed match: cloud device hash equals local bridge identity. |
+| Copy                                         | Meaning                                                         |
+| -------------------------------------------- | --------------------------------------------------------------- |
+| **“This computer”** (connect row)            | Product copy: link the computer you’re sitting at now.          |
+| **“This computer” badge / On this computer** | Computed match: cloud device hash equals local bridge identity. |
 
 If identity is not linked after install, run **Connect this computer** again while signed in—pairing token under `~/.agent-witch` must match a claimed device ([update / reconnecting Q&A](../../qa/awi-update-local-launchagent-plist.md)).
 

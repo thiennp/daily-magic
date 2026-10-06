@@ -9,7 +9,7 @@ import {
 import type { LocalHarnessRevealResult } from "./localHarness/revealLocalHarnessCandidates.types";
 
 const FOLDER_PICKER_UNAVAILABLE_MESSAGE =
-  "Folder picker is only available on the Mac that runs Agent Witch. Type the folder path instead.";
+  "Folder picker is only available on the computer that runs Agent Witch. Type the folder path instead.";
 
 interface PickFolderResponse {
   readonly ok: boolean;
@@ -235,7 +235,7 @@ describe("buildAgentWitchLocalHarnessPageBody", () => {
 });
 
 describe("buildLocalHarnessRevealClientScript folder picker", () => {
-  it("writes the Mac-only message when the dialog is cancelled", async () => {
+  it("writes the unavailable message when the dialog is cancelled", async () => {
     const result = await runPickFolderClicks({
       responses: [{ ok: true, payload: { cancelled: true } }],
     });
@@ -246,7 +246,7 @@ describe("buildLocalHarnessRevealClientScript folder picker", () => {
     expect(result.alerts).toEqual([]);
   });
 
-  it("writes the Mac-only message when the response is not ok", async () => {
+  it("writes the unavailable message when the response is not ok", async () => {
     const result = await runPickFolderClicks({
       responses: [{ ok: false, payload: { path: "/Users/me/repo" } }],
     });
@@ -256,7 +256,7 @@ describe("buildLocalHarnessRevealClientScript folder picker", () => {
     expect(result.alerts).toEqual([]);
   });
 
-  it("writes the Mac-only message when the path is missing", async () => {
+  it("writes the unavailable message when the path is missing", async () => {
     const result = await runPickFolderClicks({
       responses: [{ ok: true, payload: {} }],
     });

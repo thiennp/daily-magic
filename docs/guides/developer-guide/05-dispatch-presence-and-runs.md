@@ -65,7 +65,7 @@ Routing cascade (continuation vs memory budget): [docs/qa/writer-dispatch-cascad
 - **`isOnline`** — visibility / wake hints (`live`, `live_other_instance`, or `recent`).
 - **`isDispatchReady`** — writer-ready; only **`live`** on this process (and relay path for other instance).
 - Home “Mac online” hero counts **`live`** on this process only — `live_other_instance` shows reconnecting UX.
-- **this Mac** is a browser token-hash match, not a presence tier. When no row matches, Home shows **Connect this computer** (`resolveIsCheckingLocalMacIdentity`, HOME-057). A skipped wake probe must not leave that button hidden.
+- **This computer** is a browser token-hash match, not a presence tier. When no row matches, Home shows **Connect this computer** (`resolveIsCheckingLocalMacIdentity`, HOME-057). A skipped wake probe must not leave that button hidden.
 - An install-token row is not a check-in. It stays `offline` until the computer heartbeats. Repeated Connect clicks must not create extra `recent` rows (HOME-059). `GET /api/agent-witch/devices` revokes older unlabeled placeholders and keeps the newest.
 - AWL **Connected** is the computer client’s socket-open flag. It can be true while the device row AWC renders stays `offline` when register bound a different device id or origin ([Q&A](../../qa/awc-offline-while-awl-connected.md)).
 - Deleting a computer removes the device row after in-flight runs and queued outbox rows for that device are cleared (HOME-060). The computer forgets its connection only when the token is unknown.

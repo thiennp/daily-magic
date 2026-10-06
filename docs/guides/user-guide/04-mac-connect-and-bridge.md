@@ -8,12 +8,12 @@ Pairing and honest **Mac status** are the trust foundation for every pillar: age
 
 ## What “connect a Mac” actually does
 
-| Step             | You do                                                | System does                                                                                                         |
-| ---------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Install          | Run the curl/bash installer from Home while signed in | Writes `~/.agent-witch`, LaunchAgents, local bridge ports, WebSocket client                                         |
-| Pair             | Complete **Connect this computer**                    | Stores a claimed device + pairing token **hash** in the cloud                                                       |
-| Stay running     | Login autostart + optional watchdog                   | Heartbeats and `wss://www.agentwitch.com/api/agent-witch/ws` (or local dev origin)                                  |
-| Prove “this Mac” | Use Console on **same computer** in Safari/Chrome     | Browser reads loopback **identity** and matches token hash ([Q&A](../../qa/awc-how-browser-knows-this-computer.md)) |
+| Step                  | You do                                                | System does                                                                                                         |
+| --------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Install               | Run the curl/bash installer from Home while signed in | Writes `~/.agent-witch`, LaunchAgents, local bridge ports, WebSocket client                                         |
+| Pair                  | Complete **Connect this computer**                    | Stores a claimed device + pairing token **hash** in the cloud                                                       |
+| Stay running          | Login autostart + optional watchdog                   | Heartbeats and `wss://www.agentwitch.com/api/agent-witch/ws` (or local dev origin)                                  |
+| Prove “This computer” | Use Console on **same computer** in Safari/Chrome     | Browser reads loopback **identity** and matches token hash ([Q&A](../../qa/awc-how-browser-knows-this-computer.md)) |
 
 The cloud **never** runs your shell jobs. It **dispatches** to your computer and streams results back ([overview](../../overview.md)).
 
@@ -56,11 +56,11 @@ Requires `npm run dev` (custom `server.ts`) so WebSocket upgrades work—not pla
 
 ## Three loopback surfaces (what users touch)
 
-| User-facing name                           | URL / port                                                                    | Use it for                                                                                                  |
-| ------------------------------------------ | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| **Mac bridge** (wake server)               | `http://127.0.0.1:47892` (prod install) or `47893` (localhost-origin install) | Identity for **this Mac** badge, watchdog, harness install proxy, self-update from browser on same computer |
-| **Agent Witch on this computer** (Mac app) | `http://127.0.0.1:43347`                                                      | Projects/folders, local tasks, playbooks, memory, connection health UI                                      |
-| **Console**                                | `https://www.agentwitch.com`                                                  | Daily **Tasks** and **Runs**                                                                                |
+| User-facing name                           | URL / port                                                                    | Use it for                                                                                                       |
+| ------------------------------------------ | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **Mac bridge** (wake server)               | `http://127.0.0.1:47892` (prod install) or `47893` (localhost-origin install) | Identity for **This computer** badge, watchdog, harness install proxy, self-update from browser on same computer |
+| **Agent Witch on this computer** (Mac app) | `http://127.0.0.1:43347`                                                      | Projects/folders, local tasks, playbooks, memory, connection health UI                                           |
+| **Console**                                | `https://www.agentwitch.com`                                                  | Daily **Tasks** and **Runs**                                                                                     |
 
 **Prompt optimizer** is in the console navigation. That page tells you to run the **prompt optimizer** in the Mac app at `http://127.0.0.1:43347/prompt-optimizer`. The console does not run the optimizer. Live picks up optimizer changes only after the computer updates its install. If the page still looks old, update the computer so its bundle matches the console. Instructions and a sample you can run are at `http://127.0.0.1:43347/prompt-optimizer/guide`. **Run** starts the four-step wizard (generalize → evaluate → separate → optimize modules). Wizard evaluate uses pass score **70** and up to **5** scored revisions; step 4 runs one runner trial per module. History shows a short title for each run, and Delete removes that run. Steps in a run are a timeline. Click a step to open the score, the feedback, and the prompt saved for that step. After you choose a folder, a skill list shows the skills in that folder. Choosing one fills the prompt. Type a measurable goal, choose judge, improver, and runner, then use the sticky **Run** bar. While a wizard is working, compose fields stay locked; use **End wizard** or **Skip module** during step 4. The folder, judge, improver, and runner you last chose are filled in the next time you open the page. The first visit uses your home directory and leaves those roles blank until you choose them. Each role has an optional instructions field. An info icon on each field shows a best practice and an example. Each list includes I'll score it and I'll rewrite it. A score needs a reason. When the wizard finishes, the page shows the best prompts per module. Save as a skill starts from that skill’s name, description, and file name. A writer that has already checked out stays ready until that writer returns an error.
 
@@ -74,16 +74,16 @@ Why the browser may call `127.0.0.1` from a public site: [AWB localhost identity
 
 ---
 
-## Pairing and “this Mac”
+## Pairing and “This computer”
 
 1. Install on the computer you want to run agents.
 2. Sign in to the Console **in a browser on that same computer**.
 3. Finish **Connect this computer** until the device appears under **Mac & devices**.
-4. Look for **this Mac** / **On this computer** when local identity matches.
+4. Look for **This computer** / **On this computer** when local identity matches.
 
 If install succeeded but identity is not linked, pairing token may not be claimed—repeat connect flow ([update plist Q&A — identity note](../../qa/awi-update-local-launchagent-plist.md)).
 
-Opening **Connect this computer** again replaces the unused link. It does not add another computer. A row counts as **seen recently** only after that Mac checks in, and that check-in stays fresh for about 3 minutes. Extra **Your Mac** / **Mac 2** rows from earlier clicks (version unknown, no hostname) disappear the next time Home loads the device list. A named computer that has already checked in stays.
+Opening **Connect this computer** again replaces the unused link. It does not add another computer. A row counts as **seen recently** only after that Mac checks in, and that check-in stays fresh for about 3 minutes. Extra **Your computer** / **Computer 2** rows from earlier clicks (version unknown, no hostname) disappear the next time Home loads the device list. A named computer that has already checked in stays.
 
 **Do not use hostname alone** to guess ownership—two accounts on one physical Mac used to both look local; matching uses **token hash** ([Q&A](../../qa/awc-how-browser-knows-this-computer.md)).
 
@@ -162,14 +162,14 @@ When dispatch queues because the hub socket is momentarily missing, you may see:
 
 ## Troubleshooting checklist
 
-| Symptom                                                      | Check                                                                                                                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| No **this Mac** badge                                        | macOS? Same Mac as install? Bridge port reachable? Refresh tab on focus.                                                                                      |
-| **this Mac** on Offline row while another computer is Online | Stale browser cookie (HOME-061/062). Badge only follows **live/recent** rows; refresh Home so wake identity can update the cookie, or remove the stale claim. |
-| **Offline** forever                                          | LaunchAgent loaded? Run install/start from Mac settings; see AGENT-067 plist heal doc.                                                                        |
-| **Reconnecting** after deploy                                | Wait ~seconds; refresh Home; retry Send—AWI reconnects WebSocket automatically.                                                                               |
-| **Update needed** stuck                                      | Run update on runtime wake port from `wake-port.json`, not only default 47892.                                                                                |
-| Dispatch works but wrong folder                              | Fix path in Mac app, not typed guess in Console.                                                                                                              |
+| Symptom                                                           | Check                                                                                                                                                         |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| No **This computer** badge                                        | macOS? Same Mac as install? Bridge port reachable? Refresh tab on focus.                                                                                      |
+| **This computer** on Offline row while another computer is Online | Stale browser cookie (HOME-061/062). Badge only follows **live/recent** rows; refresh Home so wake identity can update the cookie, or remove the stale claim. |
+| **Offline** forever                                               | LaunchAgent loaded? Run install/start from Mac settings; see AGENT-067 plist heal doc.                                                                        |
+| **Reconnecting** after deploy                                     | Wait ~seconds; refresh Home; retry Send—AWI reconnects WebSocket automatically.                                                                               |
+| **Update needed** stuck                                           | Run update on runtime wake port from `wake-port.json`, not only default 47892.                                                                                |
+| Dispatch works but wrong folder                                   | Fix path in Mac app, not typed guess in Console.                                                                                                              |
 
 Chapter 9 (troubleshooting guide) expands FAQ-style flows.
 

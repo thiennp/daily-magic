@@ -6,7 +6,7 @@ Most fixes are **learn from usage** in practice: read the honest banner, adjust 
 
 Quick wins first, then themed sections for DNS, reconnecting, and bundle update.
 
-A Linux browser can use the Console. Desktop Linux Home shows the host install command. An x86_64 Linux machine can host Tasks. It will not show “this Mac” ([Q&A](../../qa/linux-browser-vs-linux-host.md)). A host started with `npm run agent-witch` is listed as Linux when it runs on Linux.
+A Linux browser can use the Console. Desktop Linux Home shows the host install command. An x86_64 Linux machine can host Tasks. It will not show “This computer” ([Q&A](../../qa/linux-browser-vs-linux-host.md)). A host started with `npm run agent-witch` is listed as Linux when it runs on Linux.
 
 **Pull into repo** on a project writes the linked playbook into `.cursor`. The folder must be under your home directory.
 
@@ -180,23 +180,23 @@ Invalid `com.agent-witch.plist` (install script once embedded bash inside XML). 
 
 ---
 
-## “This Mac” / Connect this computer confusion
+## “This computer” / Connect this computer confusion
 
 | UI                            | Meaning                                                                                                                        |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | **Connect this computer** row | Link the computer where you opened the browser                                                                                 |
-| **this Mac** badge            | Cloud device hash matches local bridge `/identity`                                                                             |
+| **This computer** badge       | Cloud device hash matches local bridge `/identity`                                                                             |
 | **Mac offline**               | That paired row has no live socket and has not checked in lately. AWL **Connected** can still be a different device or origin. |
 
-If no row says **this Mac**, use **Connect this computer** in the hero or under **Your Devices**. That links the computer you are using now. The button stays hidden only after this browser’s pairing token already matches a listed device. **Mac settings & connect** only opens **Your setup**. When a row is already **this Mac** and **Offline**, start Agent Witch on that computer. Click the offline row for wake steps.
+If no row says **This computer**, use **Connect this computer** in the hero or under **Your Devices**. That links the computer you are using now. The button stays hidden only after this browser’s pairing token already matches a listed device. **Mac settings & connect** only opens **Your setup**. When a row is already **This computer** and **Offline**, start Agent Witch on that computer. Click the offline row for wake steps.
 
-If **this Mac** sits on an Offline **Your Mac** while another named Mac shows **Online**, the badge is on a stale claim (HOME-061)—not proof that the live helper is down. Refresh Home after the Console fix; you can also remove the unused Offline row.
+If **This computer** sits on an Offline **Your computer** while another named computer shows **Online**, the badge is on a stale claim (HOME-061)—not proof that the live helper is down. Refresh Home after the Console fix; you can also remove the unused Offline row.
 
-Clicking **Connect this computer** more than once does not add another computer. Home keeps the latest unused link and drops the extras (rows named **Your Mac** or **Mac 2** with **Version unknown**). Reload Home if those extras are still listed. A computer with a real name, such as a serial or hostname, stays.
+Clicking **Connect this computer** more than once does not add another computer. Home keeps the latest unused link and drops the extras (rows named **Your computer** or **Computer 2** with **Version unknown**). Reload Home if those extras are still listed. A computer with a real name, such as a serial or hostname, stays.
 
 If Agent Witch is already open on this computer, the click does not restart it. Paste the command to relink. After you remove that Mac in the Console, a current install stops and deletes the connection and the app code. Projects, reports, runs, and Ollama remain, so **Connect this computer** can link the computer again. **Update local** does not. An install from before that behavior only disconnects until it updates. See [Deleting a Mac](../../qa/awc-delete-mac-forgets-local-connection.md).
 
-If you do not see **this Mac** on macOS: bridge not running, wrong port, or signed-out page (no probe). Not a DNS issue by itself.
+If you do not see **This computer** on macOS: bridge not running, wrong port, or signed-out page (no probe). Not a DNS issue by itself.
 
 [Why there is no Connect button when devices are offline](../../qa/awc-offline-devices-hide-connect-button.md).
 

@@ -60,9 +60,9 @@ Technical map: [Agent Witch deployables](../../product/agent-witch-deployables.m
 
 ---
 
-## Step 3 — Pair this browser with this Mac
+## Step 3 — Pair this browser with this computer
 
-Pairing means: **your account** knows **this install**, and the browser on this computer can show **this Mac** actions.
+Pairing means: **your account** knows **this install**, and the browser on this computer can show **This computer** actions.
 
 1. After install, return to Agent Witch **Home** (refresh if needed).
 2. Complete any **Connect this computer** checklist step the UI shows.
@@ -73,7 +73,7 @@ Pairing means: **your account** knows **this install**, and the browser on this 
 **Honest UX:**
 
 - **“This computer”** on the connect row means “the computer where you opened the browser,” not a magic server guess.
-- If you open Agent Witch on an iPhone or a PC, you will **not** get a “this Mac” badge; you can still dispatch to a **paired computer** you select in the task composer.
+- If you open Agent Witch on an iPhone or a PC, you will **not** get a “This computer” badge; you can still dispatch to a **paired computer** you select in the task composer.
 - Right after a **production deploy**, status may show **Reconnecting** for a few seconds even though the helper is running locally. Refresh Home, open your project, and retry **New task**—do not reinstall. [Reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md).
 
 ---
@@ -81,7 +81,7 @@ Pairing means: **your account** knows **this install**, and the browser on this 
 ## Step 4 — Send your first Task
 
 1. Open a **project**, then click **New task** on that project.
-2. **Mac:** leave **your Mac** selected (default when paired).
+2. **Computer:** leave **your computer** selected (default when paired).
 3. **Prompt:** describe a small, safe job—for example: “List files in my home directory and summarize in three bullets.”
 4. Expand **More options** only if you need them (repository folder, **Playbook**, writer choice). For the first run, the default Mac + prompt is enough—that is intentional **progressive disclosure** so authoring stays approachable ([UX simplification](../../product/ux-simplification.md), [four pillars — easy authoring](00-philosophy-and-vocabulary.md#four-pillars)).
 5. Click **Send**.

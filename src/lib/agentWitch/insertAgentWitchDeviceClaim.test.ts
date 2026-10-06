@@ -32,7 +32,7 @@ describe("insertAgentWitchDeviceClaim (HOME-059)", () => {
     sqlMock.mockResolvedValue([claimedRow]);
   });
 
-  it("leaves last_seen_at unset for a Connect this Mac placeholder", async () => {
+  it("leaves last_seen_at unset for a Connect this computer placeholder", async () => {
     const device = await insertAgentWitchDeviceClaim({
       userId: "user-1",
       tokenHash: "hash-1",

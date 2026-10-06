@@ -7,7 +7,7 @@ import { rotatePairingTokenOnExistingDevice } from "@/lib/agentWitch/rotatePairi
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
 
 /**
- * If this Mac hostname already has a preferred named device row, move the
+ * If this computer hostname already has a preferred named device row, move the
  * pairing token onto that row and revoke unlabeled duplicates.
  */
 export const consolidateAgentWitchDeviceByHostname = async (input: {

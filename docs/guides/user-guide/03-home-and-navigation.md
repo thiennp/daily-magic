@@ -53,7 +53,7 @@ Plain status language ([UX principles](../../product/ux-simplification.md)):
 | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Online**                           | Cloud has a **live** dispatch path to this computer on the current server (you can send writer tasks when the composer agrees).                    |
 | **Reconnecting** / **Seen recently** | Helper may be running, but the Console is waiting for a **live WebSocket** on the hub handling your request—common for a few seconds after deploy. |
-| **This computer is not linked**      | Other computers may already be listed, but none is **this Mac**. Use **Connect this computer** in the hero.                                        |
+| **This computer is not linked**      | Other computers may already be listed, but none is **This computer**. Use **Connect this computer** in the hero.                                   |
 | **Offline**                          | A linked computer has no recent live socket—start the helper, or fix LaunchAgent/update issues.                                                    |
 | **None / not connected**             | No paired computer yet—follow **Connect your computer**.                                                                                           |
 

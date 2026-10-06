@@ -58,7 +58,7 @@ Dispatch overview: [Mac harness, workflow, and agent dispatch](../../qa/mac-harn
 
 ---
 
-## Pairing and “this Mac”
+## Pairing and “This computer”
 
 Claiming a **Mac** creates a **pairing token** on the machine. The cloud stores a **hash** only. The browser learns “this computer” by comparing that hash to the local **bridge** `/identity` probe—not by guessing from IP or hostname.
 
