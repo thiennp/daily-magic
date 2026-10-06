@@ -29,12 +29,16 @@ describe("Grok wake-link setup copy", () => {
     const page = readSrc(
       "src/features/projects/access/invites/ProjectInviteInstructionsBody.tsx",
     );
+    const copy = readSrc(
+      "src/features/projects/access/invites/awcProjectInviteAutoApproveCopy.constant.ts",
+    );
     const connect = readSrc(
       "src/features/projects/access/invites/ProjectInviteConnectSteps.tsx",
     );
-    expect(page).toMatch(/wake link/i);
-    expect(page).toContain("After access is active");
-    expect(page).toContain("assistant creates its wake routine");
+    expect(page).toContain("AWC_PROJECT_INVITE_AUTO_APPROVE_COPY.humanPageWake");
+    expect(copy).toMatch(/wake link/i);
+    expect(copy).toContain("After access is active");
+    expect(copy).toContain("assistant creates its wake routine");
     expect(page).toMatch(/Approve/i);
     expect(connect).not.toContain("AWC_GROK_WEBHOOK_SETUP_COPY");
     expect(page).not.toMatch(/grokbot:\/\//i);
