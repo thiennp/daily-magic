@@ -22,7 +22,7 @@ const decode = (html: string): string =>
     .replaceAll("&amp;", "&");
 
 describe("AwlRepairManuallyPanel render", () => {
-  it("renders the locked title, intro, four steps, Copy and footer link", () => {
+  it("renders the locked title, intro, four steps and Copy", () => {
     const html = decode(render("mac"));
     expect(html).toContain(">Repair manually<");
     expect(html).toContain(
@@ -43,10 +43,9 @@ describe("AwlRepairManuallyPanel render", () => {
       expect(html).toContain(text);
     }
     expect(html.match(/>Copy</g)).toHaveLength(3);
-    expect(html).toContain("Still stuck? Read");
-    expect(html).toContain('href="/setup/repair-this-computer"');
-    expect(html).toContain(">Repair this computer</a>.");
     expect(html.match(/data-repair-step=/g)).toHaveLength(4);
+    // Footer deferred until the Repair this computer page is live (no dead links).
+    expect(html).not.toMatch(/Still stuck|repair-this-computer|<a /);
   });
 
   it("shows the Linux revive block on a Linux browser", () => {

@@ -17,9 +17,6 @@ export const AWL_REPAIR_MANUALLY_COPY = {
     "If you see a reply, AgentWitch Local is running. Then refresh Home.",
   copy: "Copy",
   copied: "Copied",
-  footerLead: "Still stuck? Read",
-  footerLink: "Repair this computer",
-  footerHref: "/setup/repair-this-computer",
 } as const;
 
 /** Step 2 — Mac owns the script; the web only shows the command. */

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo } from "react";
 
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
@@ -63,16 +62,6 @@ export default function AwlRepairManuallyPanel({
           </li>
         ))}
       </ol>
-      <p className={`mt-4 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        {copy.footerLead}{" "}
-        <Link
-          href={copy.footerHref}
-          className="font-medium underline underline-offset-2"
-        >
-          {copy.footerLink}
-        </Link>
-        .
-      </p>
     </section>
   );
 }

@@ -23,9 +23,6 @@ describe("AWL_REPAIR_MANUALLY_COPY (COPY.md §6 lock)", () => {
         "If you see a reply, AgentWitch Local is running. Then refresh Home.",
       copy: "Copy",
       copied: "Copied",
-      footerLead: "Still stuck? Read",
-      footerLink: "Repair this computer",
-      footerHref: "/setup/repair-this-computer",
     });
   });
 
