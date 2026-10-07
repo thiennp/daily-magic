@@ -1,5 +1,6 @@
 import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
 import mapHumanInviteRow from "@/lib/projects/acl/humanInvites/mapHumanInviteRow";
+import { selectAwaitingApprovalHumanInviteRows } from "@/lib/projects/acl/humanInvites/selectAwaitingApprovalHumanInviteRows";
 import { selectUsableHumanInviteRows } from "@/lib/projects/acl/humanInvites/selectUsableHumanInviteRows";
 import type HumanInviteRecord from "@/lib/projects/acl/humanInvites/types/HumanInviteRecord.type";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
@@ -21,6 +22,13 @@ export const listHumanProjectInvites = async (input: {
     return { ok: false, code: access.reason };
   }
   await ensureProjectAclSchema();
-  const rows = await selectUsableHumanInviteRows(input.projectId);
-  return { ok: true, invites: rows.map((row) => mapHumanInviteRow(row)) };
+  // 108: "Wants to join" (status accepted) first, then unused pending invites.
+  const [awaiting, rows] = await Promise.all([
+    selectAwaitingApprovalHumanInviteRows(input.projectId),
+    selectUsableHumanInviteRows(input.projectId),
+  ]);
+  return {
+    ok: true,
+    invites: [...awaiting, ...rows].map((row) => mapHumanInviteRow(row)),
+  };
 };

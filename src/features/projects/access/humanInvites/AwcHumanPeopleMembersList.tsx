@@ -24,6 +24,10 @@ export type AwcHumanPeopleMembersListProps = {
   readonly onRemoveMember?: (membershipId: string) => void;
   /** Assistants + pending requests + invites (DF-036: not "Just you" when > 0). */
   readonly othersCount?: number;
+  /** 108: Wants to join rows (email invites that need owner Approve). */
+  readonly decidingId?: string | null;
+  readonly onApproveRequest?: (inviteId: string, name: string) => void;
+  readonly onDenyRequest?: (inviteId: string, name: string) => void;
 };
 
 /**
@@ -41,6 +45,9 @@ export default function AwcHumanPeopleMembersList({
   onRevokeInvite,
   onRemoveMember,
   othersCount = 0,
+  decidingId = null,
+  onApproveRequest,
+  onDenyRequest,
 }: AwcHumanPeopleMembersListProps) {
   const copy = HUMAN_INVITE_UI_COPY;
   const visiblePending = pendingInvites.filter(
@@ -49,8 +56,7 @@ export default function AwcHumanPeopleMembersList({
   const visibleJoined = joinedHumans.filter(
     (member) => !removedIdsHidden?.has(member.membershipId),
   );
-  const ownerLabel =
-    ownerDisplayName?.trim() || ownerEmail?.trim() || "you";
+  const ownerLabel = ownerDisplayName?.trim() || ownerEmail?.trim() || "you";
 
   return (
     <section className="space-y-4">
@@ -68,6 +74,9 @@ export default function AwcHumanPeopleMembersList({
       <AwcHumanPendingInvitesSection
         pendingInvites={visiblePending}
         onRevokeInvite={onRevokeInvite}
+        decidingId={decidingId}
+        onApproveRequest={onApproveRequest}
+        onDenyRequest={onDenyRequest}
       />
       <AwcHumanJoinedMembersSection
         joinedHumans={visibleJoined}

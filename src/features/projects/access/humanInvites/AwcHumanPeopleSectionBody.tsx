@@ -33,7 +33,9 @@ export default function AwcHumanPeopleSectionBody({
         />
       ) : null}
       {people.message ? (
-        <p className="text-xs text-awc-fg-muted dark:text-gray-300">{people.message}</p>
+        <p className="text-xs text-awc-fg-muted dark:text-gray-300">
+          {people.message}
+        </p>
       ) : null}
       {people.loadError ? (
         <p className="rounded-md border border-amber-200/80 bg-amber-50/80 px-3 py-2 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100">
@@ -51,8 +53,12 @@ export default function AwcHumanPeopleSectionBody({
           onCancel={() => {
             people.setPanelOpen(false);
             people.clearCreatedInvite();
+            people.clearSendError();
           }}
           onDismissCreated={people.clearCreatedInvite}
+          onSendEmails={people.sendEmails}
+          sendBusy={people.sendBusy}
+          sendErrorMessage={people.sendError}
         />
       ) : (
         <AwcHumanPeopleMembersList
@@ -66,6 +72,9 @@ export default function AwcHumanPeopleSectionBody({
           onInvitePerson={() => people.setPanelOpen(true)}
           onRevokeInvite={people.scheduleRevoke}
           onRemoveMember={people.scheduleRemove}
+          decidingId={people.decidingId}
+          onApproveRequest={people.approveRequest}
+          onDenyRequest={people.denyRequest}
         />
       )}
       {people.isLoading && people.invites.length === 0 ? (

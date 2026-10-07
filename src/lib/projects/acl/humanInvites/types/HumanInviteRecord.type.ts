@@ -1,4 +1,8 @@
 import type { HumanInviteRole } from "@/lib/projects/acl/humanInvites/humanInvite.constants";
+import type {
+  HumanInviteDelivery,
+  HumanInviteStatus,
+} from "@/lib/projects/acl/humanInvites/humanInviteEmail.constant";
 
 export default interface HumanInviteRecord {
   readonly id: string;
@@ -14,4 +18,13 @@ export default interface HumanInviteRecord {
   readonly redeemedAt: string | null;
   readonly redeemedByUserId: string | null;
   readonly createdAt: string;
+  /** 108: DB status (pending | accepted=waiting Approve | approved | revoked | expired). */
+  readonly status: HumanInviteStatus;
+  readonly delivery: HumanInviteDelivery;
+  readonly requiresApproval: boolean;
+  readonly emailSentAt: string | null;
+  readonly acceptedAt: string | null;
+  readonly acceptedByUserId: string | null;
+  readonly acceptedDisplayName: string | null;
+  readonly decidedAt: string | null;
 }

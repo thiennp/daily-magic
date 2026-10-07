@@ -1,5 +1,6 @@
 "use client";
 
+import AwcHumanInviteAwaitingApprovalView from "@/features/projects/access/humanInvites/AwcHumanInviteAwaitingApprovalView";
 import AwcHumanInviteAcceptView from "@/features/projects/access/humanInvites/AwcHumanInviteAcceptView";
 import { useHumanInviteAcceptFlow } from "@/features/projects/access/humanInvites/hooks/useHumanInviteAcceptFlow";
 import type { AwcHumanInviteAcceptPageProps } from "@/features/projects/access/humanInvites/types/awcHumanInviteAcceptPageProps.type";
@@ -19,6 +20,7 @@ export default function AwcHumanInviteAcceptPage({
   accountName = null,
   requireEmailMatch = false,
   invitedEmailMasked = null,
+  requiresApproval = false,
 }: AwcHumanInviteAcceptPageProps) {
   const flow = useHumanInviteAcceptFlow({
     token,
@@ -28,6 +30,15 @@ export default function AwcHumanInviteAcceptPage({
     accountName,
     invitedEmailMasked,
   });
+
+  if (flow.viewState === "awaiting_approval") {
+    return (
+      <AwcHumanInviteAwaitingApprovalView
+        projectName={projectName}
+        inviterDisplayName={inviterDisplayName}
+      />
+    );
+  }
 
   return (
     <AwcHumanInviteAcceptView
@@ -48,6 +59,7 @@ export default function AwcHumanInviteAcceptPage({
       requireEmailMatch={requireEmailMatch}
       invitedEmailMasked={flow.maskedEmail}
       onSwitchAccount={flow.onSwitchAccount}
+      requiresApproval={requiresApproval}
     />
   );
 }

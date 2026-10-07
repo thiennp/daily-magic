@@ -14,7 +14,13 @@ export const humanInviteAcceptStatusFor = (code: string): number => {
   ) {
     return displayNameErrorHttpStatus(code);
   }
-  if (code === "already_owner" || code === "already_member") return 409;
+  if (
+    code === "already_owner" ||
+    code === "already_member" ||
+    code === "already_requested"
+  ) {
+    return 409;
+  }
   if (code === "expired" || code === "revoked" || code === "already_redeemed") {
     return 410;
   }

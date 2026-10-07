@@ -25,9 +25,9 @@ export const acceptHumanInviteApi = async (
   if (response.status === 401) {
     return { ok: false, status: 401, code: "unauthorized" };
   }
-  const payload = (await response.json().catch(() => ({}))) as Partial<
-    AcceptHumanInviteResponse
-  > &
+  const payload = (await response
+    .json()
+    .catch(() => ({}))) as Partial<AcceptHumanInviteResponse> &
     ErrorEnvelope & {
       readonly suggestedProjectDisplayName?: string | null;
       readonly invitedEmailMasked?: string | null;
@@ -55,5 +55,6 @@ export const acceptHumanInviteApi = async (
     role: payload.role ?? "member",
     status: String(payload.status ?? "active"),
     projectDisplayName: String(payload.projectDisplayName ?? ""),
+    awaitingApproval: payload.awaitingApproval === true,
   };
 };

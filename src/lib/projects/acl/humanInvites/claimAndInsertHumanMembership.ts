@@ -48,9 +48,12 @@ export const claimAndInsertHumanMembership = async (input: {
           UPDATE project_human_invites
           SET uses_remaining = uses_remaining - 1,
               redeemed_at = NOW(),
-              redeemed_by_user_id = ${input.claimantUserId}
+              redeemed_by_user_id = ${input.claimantUserId},
+              status = 'approved',
+              updated_at = NOW()
           WHERE token_hash = ${tokenHash}
             AND ${sql.unsafe(HUMAN_INVITE_USABLE_WHERE_SQL)}
+            AND requires_approval IS NOT TRUE
             AND (
               require_email_match IS NOT TRUE
               OR lower(trim(email)) = ${claimantEmail}

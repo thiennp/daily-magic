@@ -11,6 +11,13 @@ export type HumanInviteListItem = {
   readonly revokedAt: string | null;
   readonly maxUses: number;
   readonly usesRemaining: number;
+  /** 108: pending | accepted (wants to join — owner Approve/Deny). */
+  readonly status: string;
+  readonly delivery: string;
+  readonly requiresApproval: boolean;
+  readonly emailSentAt: string | null;
+  readonly acceptedAt: string | null;
+  readonly acceptedDisplayName: string | null;
 };
 
 export const toHumanInviteListItem = (
@@ -25,4 +32,10 @@ export const toHumanInviteListItem = (
   revokedAt: invite.revokedAt,
   maxUses: invite.maxUses,
   usesRemaining: invite.usesRemaining,
+  status: invite.status,
+  delivery: invite.delivery,
+  requiresApproval: invite.requiresApproval,
+  emailSentAt: invite.emailSentAt,
+  acceptedAt: invite.acceptedAt,
+  acceptedDisplayName: invite.acceptedDisplayName,
 });

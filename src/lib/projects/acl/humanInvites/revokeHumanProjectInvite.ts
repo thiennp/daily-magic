@@ -10,7 +10,8 @@ export type RevokeHumanInviteResult =
   | { readonly ok: true; readonly invite: HumanInviteRecord }
   | {
       readonly ok: false;
-      readonly code: "not_found" | "forbidden" | "already_revoked" | "already_redeemed";
+      readonly code:
+        "not_found" | "forbidden" | "already_revoked" | "already_redeemed";
     };
 
 export const revokeHumanProjectInvite = async (input: {
@@ -25,7 +26,9 @@ export const revokeHumanProjectInvite = async (input: {
   if (!access.allow) {
     return { ok: false, code: access.reason };
   }
-  if (decideHumanInviteTransition({ from: "pending", event: "revoke" }) === null) {
+  if (
+    decideHumanInviteTransition({ from: "pending", event: "revoke" }) === null
+  ) {
     return { ok: false, code: "already_revoked" };
   }
   await ensureProjectAclSchema();
@@ -33,7 +36,7 @@ export const revokeHumanProjectInvite = async (input: {
   const rows = asRowArray(
     await sql`
       UPDATE project_human_invites
-      SET revoked_at = NOW()
+      SET revoked_at = NOW(), status = 'revoked', updated_at = NOW()
       WHERE id = ${input.inviteId}
         AND project_id = ${input.projectId}
         AND revoked_at IS NULL

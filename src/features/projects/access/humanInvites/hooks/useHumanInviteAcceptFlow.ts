@@ -59,6 +59,10 @@ export const useHumanInviteAcceptFlow = (input: {
       suggestedProjectDisplayName: checked.name,
     }).then((result) => {
       setBusy(false);
+      if (result.ok === true && result.awaitingApproval === true) {
+        setViewState("awaiting_approval");
+        return;
+      }
       if (result.ok === true) {
         router.push(`/projects/${result.projectId}`);
         return;

@@ -6,6 +6,7 @@ import { decideHumanMembershipTransition } from "@/lib/projects/acl/humanInvites
 import { loadUserAccountName } from "@/lib/projects/acl/humanInvites/loadUserAccountName";
 import { loadUserEmailVerified } from "@/lib/projects/acl/humanInvites/loadUserEmailVerified";
 import { peekHumanInviteByToken } from "@/lib/projects/acl/humanInvites/peekHumanInviteByToken";
+import { requestHumanInviteApproval } from "@/lib/projects/acl/humanInvites/requestHumanInviteApproval";
 import { resolveHumanAcceptDisplayName } from "@/lib/projects/acl/humanInvites/resolveHumanAcceptDisplayName";
 import type { RedeemHumanInviteResult } from "@/lib/projects/acl/humanInvites/types/RedeemHumanInviteResult.type";
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
@@ -74,6 +75,9 @@ export const redeemHumanProjectInvite = async (input: {
       suggestedProjectDisplayName: named.suggestedProjectDisplayName,
     };
   }
+
+  const ask = { ...input, claimantEmailNormalized, name: named.name };
+  if (peeked.requiresApproval) return requestHumanInviteApproval(peeked, ask);
 
   if (
     decideHumanMembershipTransition({ from: "none", event: "accept" }) !==

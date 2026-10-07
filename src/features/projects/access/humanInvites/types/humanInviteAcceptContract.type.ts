@@ -13,6 +13,8 @@ export type AcceptHumanInviteResponse = {
   readonly role: HumanInviteRole | string;
   readonly status: string;
   readonly projectDisplayName: string;
+  /** 108: accepted, waiting for owner Approve (membershipId empty). */
+  readonly awaitingApproval?: boolean;
 };
 
 /**

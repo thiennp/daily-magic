@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { fetchHumanInvites } from "@/features/projects/access/humanInvites/humanInviteApi";
+import { useHumanInviteEmailActions } from "@/features/projects/access/humanInvites/hooks/useHumanInviteEmailActions";
 import { useHumanInviteCreateActions } from "@/features/projects/access/humanInvites/hooks/useHumanInviteCreateActions";
 import { useHumanInviteDestructiveActions } from "@/features/projects/access/humanInvites/hooks/useHumanInviteDestructiveActions";
 import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
@@ -54,6 +55,11 @@ export const useHumanPeopleInvites = (input: {
     reload,
     setMessage,
   });
+  const email = useHumanInviteEmailActions({
+    projectId: input.projectId,
+    reload,
+    setMessage,
+  });
   const destructive = useHumanInviteDestructiveActions({
     projectId: input.projectId,
     reload,
@@ -80,6 +86,13 @@ export const useHumanPeopleInvites = (input: {
     createError: create.createError,
     createInvite: create.createInvite,
     copyCreatedLink: create.copyCreatedLink,
+    sendBusy: email.sendBusy,
+    sendError: email.sendError,
+    clearSendError: email.clearSendError,
+    sendEmails: email.sendEmails,
+    decidingId: email.decidingId,
+    approveRequest: email.approveRequest,
+    denyRequest: email.denyRequest,
     scheduleRevoke: destructive.scheduleRevoke,
     scheduleRemove: destructive.scheduleRemove,
     hiddenPending: destructive.hiddenPending,

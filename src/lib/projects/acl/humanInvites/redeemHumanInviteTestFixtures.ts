@@ -12,6 +12,14 @@ export const REDEEM_TEST_INVITE = {
   redeemedAt: null,
   redeemedByUserId: null,
   createdAt: "2026-10-05T09:00:00.000Z",
+  status: "pending" as const,
+  delivery: "link" as const,
+  requiresApproval: false,
+  emailSentAt: null,
+  acceptedAt: null,
+  acceptedByUserId: null,
+  acceptedDisplayName: null,
+  decidedAt: null,
 };
 
 export const REDEEM_TEST_MEMBERSHIP = {

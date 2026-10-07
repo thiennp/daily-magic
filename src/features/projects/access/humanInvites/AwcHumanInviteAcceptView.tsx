@@ -1,6 +1,7 @@
 "use client";
 
 import AwcHumanInviteAcceptJoinBody from "@/features/projects/access/humanInvites/AwcHumanInviteAcceptJoinBody";
+import { isHumanInviteAcceptTerminalState } from "@/features/projects/access/humanInvites/utils/isHumanInviteAcceptTerminalState";
 import AwcHumanInviteAcceptTerminalView from "@/features/projects/access/humanInvites/AwcHumanInviteAcceptTerminalView";
 import AwcHumanInviteEmailLockAcceptPanel from "@/features/projects/access/humanInvites/AwcHumanInviteEmailLockAcceptPanel";
 import type { HumanInviteRole } from "@/features/projects/access/humanInvites/types/humanInviteUiContract.type";
@@ -14,7 +15,9 @@ export type HumanInviteAcceptViewState =
   | "already_member"
   | "invalid"
   | "email_mismatch"
-  | "email_unverified";
+  | "email_unverified"
+  /** 108 — rendered by AwcHumanInviteAcceptPage (Request sent). */
+  | "awaiting_approval";
 
 export type AwcHumanInviteAcceptViewProps = {
   readonly viewState: HumanInviteAcceptViewState;
@@ -35,6 +38,7 @@ export type AwcHumanInviteAcceptViewProps = {
   readonly requireEmailMatch?: boolean;
   readonly invitedEmailMasked?: string | null;
   readonly onSwitchAccount?: () => void;
+  readonly requiresApproval?: boolean;
 };
 
 /** Presentational accept states — Product copy; wired by AwcHumanInviteAcceptPage. */
@@ -56,6 +60,7 @@ export default function AwcHumanInviteAcceptView({
   requireEmailMatch = false,
   invitedEmailMasked = null,
   onSwitchAccount,
+  requiresApproval = false,
 }: AwcHumanInviteAcceptViewProps) {
   const masked = invitedEmailMasked?.trim() || "the invited email";
 
@@ -70,13 +75,9 @@ export default function AwcHumanInviteAcceptView({
     );
   }
 
-  if (
-    viewState === "invalid" ||
-    viewState === "expired" ||
-    viewState === "used" ||
-    viewState === "revoked" ||
-    viewState === "already_member"
-  ) {
+  if (viewState === "awaiting_approval") return null; // page renders it
+
+  if (isHumanInviteAcceptTerminalState(viewState)) {
     return (
       <AwcHumanInviteAcceptTerminalView
         viewState={viewState}
@@ -104,6 +105,7 @@ export default function AwcHumanInviteAcceptView({
       onLogIn={onLogIn}
       requireEmailMatch={requireEmailMatch}
       invitedEmailMasked={masked}
+      requiresApproval={requiresApproval}
     />
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import AwcHumanInviteApprovalField from "@/features/projects/access/humanInvites/AwcHumanInviteApprovalField";
 import AwcHumanInviteEmailLockField from "@/features/projects/access/humanInvites/AwcHumanInviteEmailLockField";
 import { HUMAN_INVITE_PERSON_FLOW_COPY } from "@/features/projects/access/humanInvites/humanInvitePersonFlowCopy.constant";
 import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
@@ -15,6 +16,8 @@ export type AwcHumanInvitePersonFormBodyProps = {
   readonly roleLabel: string;
   readonly onEmailChange: (value: string) => void;
   readonly onRequireEmailMatchChange: (checked: boolean) => void;
+  readonly requiresApproval?: boolean;
+  readonly onRequiresApprovalChange?: (checked: boolean) => void;
 };
 
 /** Email or Link fields for Invite person — Claude HTML tabs. */
@@ -27,13 +30,18 @@ export default function AwcHumanInvitePersonFormBody({
   roleLabel,
   onEmailChange,
   onRequireEmailMatchChange,
+  requiresApproval = true,
+  onRequiresApprovalChange,
 }: AwcHumanInvitePersonFormBodyProps) {
   const copy = HUMAN_INVITE_UI_COPY;
   const flow = HUMAN_INVITE_PERSON_FLOW_COPY;
   if (tab === "link") {
     return (
       <div className="space-y-1">
-        <label className="block text-xs font-medium text-awc-fg-muted" htmlFor="inv-link">
+        <label
+          className="block text-xs font-medium text-awc-fg-muted"
+          htmlFor="inv-link"
+        >
           {flow.linkLabel}
         </label>
         <input
@@ -55,7 +63,10 @@ export default function AwcHumanInvitePersonFormBody({
   return (
     <div className="space-y-3">
       <label className="block space-y-1">
-        <span className="text-xs font-medium text-awc-fg-muted" title={flow.emailTip}>
+        <span
+          className="text-xs font-medium text-awc-fg-muted"
+          title={flow.emailTip}
+        >
           {copy.emailLabel}
         </span>
         <input
@@ -80,6 +91,13 @@ export default function AwcHumanInvitePersonFormBody({
         disabled={busy}
         onChange={onRequireEmailMatchChange}
       />
+      {onRequiresApprovalChange ? (
+        <AwcHumanInviteApprovalField
+          checked={requiresApproval}
+          disabled={busy}
+          onChange={onRequiresApprovalChange}
+        />
+      ) : null}
     </div>
   );
 }

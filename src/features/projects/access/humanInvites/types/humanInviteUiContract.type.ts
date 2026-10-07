@@ -25,6 +25,22 @@ export type HumanInviteListItem = {
   readonly revokedAt: string | null;
   readonly maxUses: number;
   readonly usesRemaining: number;
+  /** 108: pending | accepted (Wants to join — owner Approve/Deny). */
+  readonly status?: "pending" | "accepted" | string;
+  readonly delivery?: "link" | "email" | string;
+  readonly requiresApproval?: boolean;
+  readonly emailSentAt?: string | null;
+  readonly acceptedAt?: string | null;
+  readonly acceptedDisplayName?: string | null;
+};
+
+/** POST /api/projects/{projectId}/human-invites/email body (DF-025). */
+export type SendHumanInviteEmailBody = {
+  readonly email: string;
+  readonly role?: HumanInviteRole;
+  readonly requireEmailMatch?: boolean;
+  /** Default true server-side: invitee waits for owner Approve. */
+  readonly requiresApproval?: boolean;
 };
 
 /** POST /api/projects/{projectId}/human-invites body */

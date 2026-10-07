@@ -6,6 +6,7 @@ import AwcHumanInviteCreatedLinkBanner from "@/features/projects/access/humanInv
 import AwcHumanInvitePersonFormBody from "@/features/projects/access/humanInvites/AwcHumanInvitePersonFormBody";
 import AwcHumanInvitePersonPanelActions from "@/features/projects/access/humanInvites/AwcHumanInvitePersonPanelActions";
 import AwcHumanInvitePersonRolePicker from "@/features/projects/access/humanInvites/AwcHumanInvitePersonRolePicker";
+import { useHumanInviteSendForm } from "@/features/projects/access/humanInvites/hooks/useHumanInviteSendForm";
 import AwcHumanInvitePersonTabSeg, {
   type InvitePersonTab,
 } from "@/features/projects/access/humanInvites/AwcHumanInvitePersonTabSeg";
@@ -14,16 +15,7 @@ import type { AwcHumanInvitePersonPanelProps } from "@/features/projects/access/
 import { buildHumanInviteCreateBody } from "@/features/projects/access/humanInvites/utils/buildHumanInviteCreateBody";
 import type { HumanInviteRole } from "@/features/projects/access/humanInvites/types/humanInviteUiContract.type";
 
-type FormProps = Pick<
-  AwcHumanInvitePersonPanelProps,
-  | "createdInvite"
-  | "busy"
-  | "errorMessage"
-  | "onCreate"
-  | "onCopyLink"
-  | "onCancel"
-  | "onDismissCreated"
->;
+type FormProps = Omit<AwcHumanInvitePersonPanelProps, "projectName">;
 
 /** Email|Link form + role + actions for Invite person. */
 export default function AwcHumanInvitePersonForm({
@@ -34,6 +26,9 @@ export default function AwcHumanInvitePersonForm({
   onCopyLink,
   onCancel,
   onDismissCreated,
+  onSendEmails,
+  sendBusy = false,
+  sendErrorMessage = null,
 }: FormProps) {
   const copy = HUMAN_INVITE_UI_COPY;
   const [tab, setTab] = useState<InvitePersonTab>("email");
@@ -41,7 +36,15 @@ export default function AwcHumanInvitePersonForm({
   const [email, setEmail] = useState("");
   const [requireEmailMatch, setRequireEmailMatch] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
-  const shownError = localError ?? errorMessage;
+  const shownError = localError ?? sendErrorMessage ?? errorMessage;
+  const send = useHumanInviteSendForm({
+    email,
+    role,
+    requireEmailMatch,
+    setEmail,
+    setLocalError,
+    onSendEmails,
+  });
   const roleLabel = role === "member" ? copy.roleMember : copy.roleViewer;
 
   const onSubmitCreate = () => {
@@ -63,7 +66,7 @@ export default function AwcHumanInvitePersonForm({
       <AwcHumanInvitePersonTabSeg tab={tab} busy={busy} onTabChange={setTab} />
       <AwcHumanInvitePersonFormBody
         tab={tab}
-        busy={busy}
+        busy={busy || sendBusy}
         email={email}
         requireEmailMatch={requireEmailMatch}
         createdUrl={createdInvite?.url ?? null}
@@ -76,8 +79,14 @@ export default function AwcHumanInvitePersonForm({
           setRequireEmailMatch(checked);
           setLocalError(null);
         }}
+        requiresApproval={send.requiresApproval}
+        onRequiresApprovalChange={send.onRequiresApprovalChange}
       />
-      <AwcHumanInvitePersonRolePicker role={role} busy={busy} onRoleChange={setRole} />
+      <AwcHumanInvitePersonRolePicker
+        role={role}
+        busy={busy}
+        onRoleChange={setRole}
+      />
       {createdInvite ? (
         <AwcHumanInviteCreatedLinkBanner
           createdInvite={createdInvite}
@@ -92,6 +101,9 @@ export default function AwcHumanInvitePersonForm({
         busy={busy}
         onSubmitCreate={onSubmitCreate}
         onCancel={onCancel}
+        tab={tab}
+        sendBusy={sendBusy}
+        onSubmitSend={send.onSubmitSend}
       />
     </>
   );

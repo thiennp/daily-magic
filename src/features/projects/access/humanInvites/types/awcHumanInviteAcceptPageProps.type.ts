@@ -13,4 +13,5 @@ export type AwcHumanInviteAcceptPageProps = {
   readonly accountName?: string | null;
   readonly requireEmailMatch?: boolean;
   readonly invitedEmailMasked?: string | null;
+  readonly requiresApproval?: boolean;
 };

@@ -7,6 +7,16 @@ export type RedeemHumanInviteResult =
       readonly projectId: string;
       readonly role: string;
       readonly projectDisplayName: string;
+      readonly awaitingApproval?: false;
+    }
+  | {
+      /** 108: invite parked as 'accepted'; owner must Approve (no membership yet). */
+      readonly ok: true;
+      readonly awaitingApproval: true;
+      readonly inviteId: string;
+      readonly projectId: string;
+      readonly role: string;
+      readonly projectDisplayName: string;
     }
   | {
       readonly ok: false;
@@ -17,6 +27,7 @@ export type RedeemHumanInviteResult =
         | "already_redeemed"
         | "already_owner"
         | "already_member"
+        | "already_requested"
         | "invalid_transition"
         | "display_name_invalid"
         | "display_name_reserved"

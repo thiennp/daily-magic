@@ -62,6 +62,17 @@ export async function POST(
       humanInviteAcceptStatusFor(result.code),
     );
   }
+  if (result.awaitingApproval === true) {
+    // 108: accepted, waiting for the owner's Approve — no membership yet.
+    return Response.json({
+      ok: true,
+      awaitingApproval: true,
+      projectId: result.projectId,
+      role: result.role,
+      status: "awaiting_approval",
+      projectDisplayName: result.projectDisplayName,
+    });
+  }
   return Response.json({
     ok: true,
     projectId: result.projectId,

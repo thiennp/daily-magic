@@ -26,10 +26,13 @@ export type AwcHumanInviteAcceptJoinBodyProps = {
   readonly onLogIn?: () => void;
   readonly requireEmailMatch: boolean;
   readonly invitedEmailMasked: string;
+  readonly requiresApproval?: boolean;
 };
 
 /** Signed-out / signed-in join UI — Claude Join-project HTML. */
-export default function AwcHumanInviteAcceptJoinBody(props: AwcHumanInviteAcceptJoinBodyProps) {
+export default function AwcHumanInviteAcceptJoinBody(
+  props: AwcHumanInviteAcceptJoinBodyProps,
+) {
   const copy = HUMAN_INVITE_UI_COPY;
   const roleLabel = props.role === "member" ? copy.roleMember : copy.roleViewer;
   const roleOneLiner =
@@ -52,7 +55,10 @@ export default function AwcHumanInviteAcceptJoinBody(props: AwcHumanInviteAccept
       </p>
       {props.requireEmailMatch ? (
         <p className="mt-3 rounded-lg border border-amber-200/80 bg-amber-50/80 px-3 py-2 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100">
-          {withMaskedEmail(copy.emailLockSignedOutHint, props.invitedEmailMasked)}
+          {withMaskedEmail(
+            copy.emailLockSignedOutHint,
+            props.invitedEmailMasked,
+          )}
         </p>
       ) : null}
       {props.viewState === "signed_out" ? (
@@ -61,10 +67,18 @@ export default function AwcHumanInviteAcceptJoinBody(props: AwcHumanInviteAccept
             {copy.acceptSignedOutHint}
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
-            <button type="button" className={AWC_PROJECT_ACCESS_CTA.primary} onClick={props.onSignUp}>
+            <button
+              type="button"
+              className={AWC_PROJECT_ACCESS_CTA.primary}
+              onClick={props.onSignUp}
+            >
               {copy.signUp}
             </button>
-            <button type="button" className={AWC_PROJECT_ACCESS_CTA.secondary} onClick={props.onLogIn}>
+            <button
+              type="button"
+              className={AWC_PROJECT_ACCESS_CTA.secondary}
+              onClick={props.onLogIn}
+            >
               {copy.logIn}
             </button>
           </div>
@@ -79,6 +93,7 @@ export default function AwcHumanInviteAcceptJoinBody(props: AwcHumanInviteAccept
           nicknameError={props.nicknameError}
           onNicknameChange={props.onNicknameChange}
           onAccept={props.onAccept}
+          requiresApproval={props.requiresApproval === true}
         />
       )}
     </AwcHumanInviteAcceptShell>

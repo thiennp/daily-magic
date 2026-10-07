@@ -19,8 +19,14 @@ type PageProps = {
 };
 
 const missToView = (
-  miss: "invalid_token" | "expired" | "revoked" | "already_redeemed",
+  miss:
+    | "invalid_token"
+    | "expired"
+    | "revoked"
+    | "already_redeemed"
+    | "awaiting_approval",
 ): HumanInviteAcceptViewState => {
+  if (miss === "awaiting_approval") return "awaiting_approval";
   if (miss === "expired") return "expired";
   if (miss === "revoked") return "revoked";
   if (miss === "already_redeemed") return "used";
@@ -71,6 +77,7 @@ export default async function HumanInviteAcceptRoutePage({
       accountName={actor?.name ?? null}
       requireEmailMatch={loaded.requireEmailMatch}
       invitedEmailMasked={loaded.invitedEmailMasked}
+      requiresApproval={loaded.requiresApproval}
     />
   );
 }

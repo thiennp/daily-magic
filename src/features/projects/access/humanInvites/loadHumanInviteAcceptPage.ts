@@ -55,6 +55,15 @@ export const loadHumanInviteAcceptPage = async (
       inviterDisplayName,
     };
   }
+  if (peeked.status === "accepted") {
+    return {
+      ok: false,
+      token,
+      miss: "awaiting_approval",
+      projectName,
+      inviterDisplayName,
+    };
+  }
   if (peeked.redeemedAt || peeked.usesRemaining <= 0) {
     return {
       ok: false,
@@ -95,5 +104,6 @@ export const loadHumanInviteAcceptPage = async (
     email: peeked.email,
     requireEmailMatch,
     invitedEmailMasked,
+    requiresApproval: peeked.requiresApproval,
   };
 };

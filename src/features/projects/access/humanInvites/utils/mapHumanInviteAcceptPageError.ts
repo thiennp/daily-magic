@@ -22,6 +22,9 @@ export const mapAcceptError = (
   if (code === "already_member" || code === "already_owner") {
     return "already_member";
   }
+  if (code === "already_requested" || code === "ALREADY_REQUESTED") {
+    return "awaiting_approval";
+  }
   if (code === "invalid_token") return "invalid";
   return "invalid";
 };
