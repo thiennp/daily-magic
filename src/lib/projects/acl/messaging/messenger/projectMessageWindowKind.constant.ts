@@ -1,3 +1,4 @@
+import { PROJECT_MESSENGER_PEER_LIFECYCLE_KINDS } from "@/lib/projects/acl/messaging/messenger/projectMessenger.constant";
 import {
   PROJECT_MESSAGE_KIND_PEER_SILENT,
   PROJECT_MESSAGE_KIND_PEER_SILENT_BLOCKED,
@@ -41,7 +42,5 @@ export const PROJECT_MESSAGE_NOTICE_KINDS: readonly string[] = [
   PROJECT_MESSAGE_KIND_PEER_SILENT,
   PROJECT_MESSAGE_KIND_PEER_SILENT_BLOCKED,
   PROJECT_MESSAGE_KIND_COMPOSER_RECIPIENT_STICKY_CLEARED,
-  "peer.joined",
-  "peer.left",
-  "peer.renamed",
+  ...PROJECT_MESSENGER_PEER_LIFECYCLE_KINDS,
 ];

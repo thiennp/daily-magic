@@ -9,7 +9,12 @@ import type {
 import { formatMessengerStateLabel } from "@/features/projects/messenger/utils/formatMessengerStateLabel";
 import { messengerAiSessionStatusTone } from "@/features/projects/messenger/utils/messengerAiSessionStatusTone";
 import { messengerStateChipTone } from "@/features/projects/messenger/utils/messengerStateChipTone";
-import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
+import {
+  isProjectMessengerRunAwaitingApproval,
+  pickProjectMessengerLeadChip,
+  PROJECT_MESSENGER_SUBJECT_STATE_RANK,
+  projectMessengerSubjectStateFromDeliveries,
+} from "@/lib/projects/acl/messaging/messenger/projectMessengerSubjectStateRules";
 
 export const toStatusTone = (
   tone: ReturnType<typeof messengerStateChipTone>,
@@ -19,38 +24,23 @@ export const toStatusTone = (
   return "info";
 };
 
-/** Lower = shown first when recipients disagree (attention before progress). */
-export const STATE_RANK: Record<AwcMessengerMessageState, number> = {
-  blocked: 0,
-  no_answer: 1,
-  waiting: 2,
-  checks_on_demand: 3,
-  working: 4,
-  got_it: 5,
-  received: 6,
-  done: 7,
-};
+/** Lower = shown first (attention before progress). Shared with the server (OW9 F1). */
+export const STATE_RANK: Readonly<Record<AwcMessengerMessageState, number>> =
+  PROJECT_MESSENGER_SUBJECT_STATE_RANK;
 
-const NEEDS_YOU_STATES: ReadonlySet<AwcMessengerMessageState> = new Set([
-  "blocked",
-  "no_answer",
-]);
-
-/** Live PD delivery chips → one task status (worst first; done/of when > 1). */
+/** Live PD delivery chips → one task status (shared rules; done/of when > 1). */
 export const subjectStateFromDeliveries = (
   states: readonly AwcMessengerStateChip[],
 ): OneWindowSubjectState | null => {
-  if (states.length === 0) return null;
-  const lead = [...states].sort(
-    (a, b) => STATE_RANK[a.state] - STATE_RANK[b.state],
-  )[0];
-  const done = states.filter((chip) => chip.state === "done").length;
+  const lead = pickProjectMessengerLeadChip(states);
+  const codes = projectMessengerSubjectStateFromDeliveries(states);
+  if (lead === null || codes === null) return null;
   return {
     source: "deliveries",
     label: formatMessengerStateLabel(lead.state, lead.displayName),
     tone: toStatusTone(messengerStateChipTone(lead.state)),
-    ...(states.length > 1 ? { done, of: states.length } : {}),
-    needsYou: NEEDS_YOU_STATES.has(lead.state),
+    ...(states.length > 1 ? { done: codes.done, of: codes.of } : {}),
+    needsYou: codes.needsYou,
     awaitingApproval: false,
   };
 };
@@ -60,12 +50,11 @@ export const formatRunStatusLabel = (status: string): string => {
   return trimmed.length === 0 ? "Unknown" : trimmed.replaceAll("_", " ");
 };
 
-/** Live AR status on a session row → subject state. */
+/** Live AR status on a session row → subject state (shared approval rule). */
 export const subjectStateFromAgentRun = (
   status: string,
 ): OneWindowSubjectState => {
-  const awaitingApproval =
-    status.trim().toLowerCase() === AgentRunStatus.PENDING_APPROVAL;
+  const awaitingApproval = isProjectMessengerRunAwaitingApproval(status);
   return {
     source: "agent_run",
     label: formatRunStatusLabel(status),

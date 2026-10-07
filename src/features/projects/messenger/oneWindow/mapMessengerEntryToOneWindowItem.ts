@@ -12,13 +12,7 @@ import type {
   AwcMessengerWindowKind,
 } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 import { isMessengerAiSessionEntry } from "@/features/projects/messenger/utils/isMessengerAiSessionEntry";
-import {
-  PROJECT_MESSAGE_KIND_TASK_BLOCKED,
-  PROJECT_MESSAGE_KIND_TASK_DONE,
-  PROJECT_MESSAGE_KIND_TASK_PROCESSING,
-  PROJECT_MESSAGE_KIND_TASK_RECEIVED,
-  PROJECT_MESSAGE_KIND_TASK_STATUS,
-} from "@/lib/projects/acl/messaging/projectMessage.constants";
+import { classifyProjectMessageWindowKind } from "@/lib/projects/acl/messaging/messenger/classifyProjectMessageWindowKind";
 
 // Stable import path: types, subject-state readers and filters live in siblings.
 export type {
@@ -39,32 +33,21 @@ export {
   isOneWindowRowForViewer,
 } from "@/features/projects/messenger/oneWindow/oneWindowFeedFilters";
 
-const TASK_UPDATE_KINDS: ReadonlySet<string> = new Set([
-  PROJECT_MESSAGE_KIND_TASK_RECEIVED,
-  PROJECT_MESSAGE_KIND_TASK_PROCESSING,
-  PROJECT_MESSAGE_KIND_TASK_STATUS,
-  PROJECT_MESSAGE_KIND_TASK_DONE,
-  PROJECT_MESSAGE_KIND_TASK_BLOCKED,
-]);
-
-/** Human task row kind (owner/member dispatch, "Needs a reply" on). */
-const TASK_ASSIGN_KIND = "task.assign";
-
 /**
- * Fallback for rows without OW9 `windowKind` (pre-OW9 browser copy): DESIGN
- * §3.1 rules on the fields those rows carry. `notice`, `bot_to_bot` and
- * `approval_*` come only from the server's windowKind.
+ * Fallback for rows without OW9 `windowKind` (pre-OW9 browser copy): the
+ * server classifier (DESIGN §3.1, one source). AI session → task; DF-023
+ * `peer` rows → bot_to_bot. `approval_*` comes only from the server.
  */
 export const deriveOneWindowKind = (
   entry: AwcMessengerTimelineEntry,
 ): AwcMessengerWindowKind => {
   if (isMessengerAiSessionEntry(entry)) return "task";
-  // DF-023: owner-view bot↔bot rows carry `peer`.
   if (entry.peer !== undefined) return "bot_to_bot";
-  if (entry.author.kind === "bot") {
-    return TASK_UPDATE_KINDS.has(entry.kind) ? "task_update" : "chat";
-  }
-  return entry.kind === TASK_ASSIGN_KIND ? "task" : "chat";
+  return classifyProjectMessageWindowKind({
+    kind: entry.kind,
+    senderKind: entry.author.kind,
+    recipientKind: "none",
+  });
 };
 
 /**

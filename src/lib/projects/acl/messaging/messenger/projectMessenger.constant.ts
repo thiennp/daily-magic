@@ -44,11 +44,16 @@ export const PROJECT_MESSENGER_STATE_ONLY_KINDS: readonly string[] = [
   PROJECT_MESSAGE_KIND_TASK_PROCESSING,
 ];
 
-/** Lifecycle notices from bots that never become chat bubbles. */
-export const PROJECT_MESSENGER_HIDDEN_KINDS: readonly string[] = [
+/** Membership lifecycle kinds a seat fans out (one row per peer + owner). */
+export const PROJECT_MESSENGER_PEER_LIFECYCLE_KINDS: readonly string[] = [
   "peer.joined",
   "peer.left",
   "peer.renamed",
+];
+
+/** Lifecycle notices from bots that never become chat bubbles. */
+export const PROJECT_MESSENGER_HIDDEN_KINDS: readonly string[] = [
+  ...PROJECT_MESSENGER_PEER_LIFECYCLE_KINDS,
   "composer.recipient_sticky_cleared",
 ];
 
