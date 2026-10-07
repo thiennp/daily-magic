@@ -312,7 +312,7 @@ export const buildAgentWitchLocalProjectEditorPageBody = (input: {
       <h1>${escapeHtml(input.project.name)}</h1>
       <p class="muted mono">${escapeHtml(input.project.projectFolderPath)}</p>
       ${cloudManageActions}
-      <div class="actions"><a class="btn btn-secondary" href="/projects/select-folder?projectId=${encodeURIComponent(input.project.id)}">Change folder…</a></div>
+      <div class="actions"><a class="btn btn-secondary" href="/projects/select-folder?projectId=${encodeURIComponent(input.project.id)}">Change folder…</a><a class="btn btn-secondary" href="/project/skill-drafts?projectId=${encodeURIComponent(input.project.id)}">Skill drafts</a></div>
       <nav class="project-tabs" aria-label="Project composition">
         ${tabLink("harness", `Playbooks (${counts.harness})`)}
         ${tabLink("workflows", `Workflows (${counts.workflow})`)}

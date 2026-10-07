@@ -135,3 +135,12 @@ export {
   loadOlderProjectHistoryMessages,
 } from "../internal/core/readProjectHistoryMessagesPage";
 export { mapHistoryRecordToTimelineEntry } from "../internal/core/mapHistoryRecordToTimelineEntry";
+
+export {
+  listProjectHistorySkillgenDraftsForReview,
+  readProjectHistorySkillgenDraftForReview,
+} from "../internal/core/listProjectHistorySkillgenDraftsForReview";
+export { saveProjectHistorySkillgenDraftForReview } from "../internal/core/saveProjectHistorySkillgenDraftForReview";
+export { discardProjectHistorySkillgenDraftForReview } from "../internal/core/discardProjectHistorySkillgenDraftForReview";
+export { publishProjectHistorySkillgenDraftForReview } from "../internal/core/publishProjectHistorySkillgenDraftForReview";
+export { tryHandleLocalSkillDraftReviewRequest } from "../internal/core/tryHandleLocalSkillDraftReviewRequest";

@@ -124,6 +124,7 @@ import { runLocalSelfDelegatedTask } from "@agent-witch/live-tasks";
 import {
   startProjectComputerHistoryTick,
   tryHandleLocalChatReadRequest,
+  tryHandleLocalSkillDraftReviewRequest,
 } from "@agent-witch/live-project-history";
 import {
   applyWriterApiSettings,
@@ -599,6 +600,26 @@ export const startAgentWitchLocalApp = (input: {
           pathname,
           requestUrl: request.url ?? "/",
           response,
+          sendJson,
+        })
+      ) {
+        return;
+      }
+
+      if (
+        await tryHandleLocalSkillDraftReviewRequest({
+          method,
+          pathname,
+          requestUrl: request.url ?? "/",
+          request,
+          response,
+          online: input.controllers.getStatus().wsConnected,
+          resolveProjectName: (projectId) => {
+            // Best-effort sync name; page still works with id prefix.
+            return projectId.slice(0, 8);
+          },
+          readBody,
+          sendHtml,
           sendJson,
         })
       ) {

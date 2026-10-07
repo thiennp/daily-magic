@@ -111,3 +111,4 @@ export type {
   ReadProjectHistoryMessagesPageResult,
 } from "../internal/core/readProjectHistoryMessagesPage";
 export type { ProjectMessengerTimelineEntry as ProjectHistoryTimelineEntry } from "../../../adapters/projectHistorySharedMappers";
+export type { ProjectHistorySkillgenDraftReviewItem } from "../internal/core/projectHistorySkillgenDraftReview.type";

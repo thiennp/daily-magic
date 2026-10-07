@@ -92,6 +92,12 @@ export const buildAgentWitchLocalHomePageBody = (input: {
         <p class="home-card-lede">Full local writer conversation logs and cold-continue context bundles.</p>
         <p class="home-card-meta">Canonical turns stored under ~/.agent-witch</p>
       </a>
+      <a class="home-card" href="/projects">
+        <p class="home-card-eyebrow">Skills</p>
+        <h2 class="home-card-title">Skill drafts</h2>
+        <p class="home-card-lede">Review, edit, publish, or discard auto drafts under skills/_drafts on this computer.</p>
+        <p class="home-card-meta">Open a project → Skill drafts</p>
+      </a>
       <a class="home-card" href="/errors">
         <p class="home-card-eyebrow">Diagnostics</p>
         <h2 class="home-card-title">Error log</h2>
