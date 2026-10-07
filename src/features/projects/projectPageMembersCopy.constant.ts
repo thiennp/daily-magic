@@ -36,6 +36,9 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   /** State 2 — join request subtitle; Approve + Deny. */
   requestWaitingApproval: "Wants to join",
   invitePendingCancel: "Cancel",
+  /** DF-014 — copy the prompt again from an Invite sent row (this tab). */
+  invitePendingCopy: "Copy",
+  invitePendingCopied: "Copied",
   inviteEmpty:
     "No assistant invites yet. The prompt shows only once when you create it.",
   compatGrok:

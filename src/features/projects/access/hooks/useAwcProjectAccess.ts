@@ -14,7 +14,7 @@ import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError"
 
 export const useAwcProjectAccess = (projectId: string) => {
   const model = useAwcProjectAccessModel();
-  const banner = useCreatedInviteBanner();
+  const banner = useCreatedInviteBanner(projectId);
   const syncBanner = banner.syncBannerWithUsableInvites;
   const {
     knownMemberIdsRef,
@@ -77,6 +77,8 @@ export const useAwcProjectAccess = (projectId: string) => {
     setCreatedInviteUrl: banner.setCreatedInviteUrl,
     setCreatedInviteToken: banner.setCreatedInviteToken,
     setCreatedInviteId: banner.setCreatedInviteId,
+    rememberCreatedInvite: banner.rememberCreatedInvite,
+    forgetCreatedInvite: banner.forgetCreatedInvite,
   });
   const mutations = useAwcProjectAccessMutations({
     projectId,
@@ -105,6 +107,7 @@ export const useAwcProjectAccess = (projectId: string) => {
     createdInviteToken: banner.createdInviteToken,
     createdInvitePlatform: banner.createdInvitePlatform,
     createdInviteJoinTypeId: banner.createdInviteJoinTypeId,
+    createdInvitePrompts: banner.createdInvitePrompts,
     clearCreatedInviteBanner: banner.clearCreatedInviteBanner,
     isLoading: model.isLoading,
     reload,

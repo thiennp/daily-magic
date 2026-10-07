@@ -34,4 +34,24 @@ describe("shouldKeepCreatedInviteBanner", () => {
       }),
     ).toBe(false);
   });
+
+  it("DF-014: a stale snapshot right after create does not clear the banner", () => {
+    const createdAtMs = 1_000_000;
+    expect(
+      shouldKeepCreatedInviteBanner({
+        createdInviteId: "inv-new",
+        invites: [],
+        createdAtMs,
+        nowMs: createdAtMs + 2_000,
+      }),
+    ).toBe(true);
+    expect(
+      shouldKeepCreatedInviteBanner({
+        createdInviteId: "inv-new",
+        invites: [],
+        createdAtMs,
+        nowMs: createdAtMs + 60_000,
+      }),
+    ).toBe(false);
+  });
 });

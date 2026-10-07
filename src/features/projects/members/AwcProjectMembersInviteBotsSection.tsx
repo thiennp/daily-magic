@@ -10,6 +10,8 @@ import type { ProjectInvitePlatform } from "@/features/projects/access/invites/p
 import type { AwcProjectAccessInvite } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 import AwcProjectMembersInvitePendingList from "@/features/projects/members/AwcProjectMembersInvitePendingList";
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+import { buildCreatedInviteCopyPrompt } from "@/features/projects/access/invites/buildCreatedInviteCopyPrompt";
+import type { CreatedInvitePrompts } from "@/features/projects/access/invites/createdInvitePrompts";
 
 interface AwcProjectMembersInviteBotsSectionProps {
   readonly projectId: string;
@@ -20,6 +22,8 @@ interface AwcProjectMembersInviteBotsSectionProps {
   readonly createdInvitePlatform: ProjectInvitePlatform | null;
   /** Picked types[] id; null = any assistant. */
   readonly createdInviteJoinTypeId: string | null;
+  /** Invites this tab created (DF-014): pending rows can Copy again. */
+  readonly createdInvitePrompts?: CreatedInvitePrompts;
   readonly onCreate: (selection: AwcProjectInviteAddSelection) => void;
   readonly onRevoke: (inviteId: string) => void;
   readonly onTurnOffAutoApprove?: (inviteId: string) => void;
@@ -38,6 +42,7 @@ export default function AwcProjectMembersInviteBotsSection({
   createdInviteToken,
   createdInvitePlatform,
   createdInviteJoinTypeId,
+  createdInvitePrompts = {},
   onCreate,
   onRevoke,
   onTurnOffAutoApprove,
@@ -77,6 +82,12 @@ export default function AwcProjectMembersInviteBotsSection({
         invites={invites}
         onRevoke={onRevoke}
         onTurnOffAutoApprove={onTurnOffAutoApprove}
+        copyPromptFor={(inviteId) =>
+          buildCreatedInviteCopyPrompt({
+            prompt: createdInvitePrompts[inviteId],
+            projectName,
+          })
+        }
       />
     </section>
   );

@@ -69,6 +69,7 @@ export default function AwcProjectMembersOwnerContent({
             createdInviteToken={access.createdInviteToken}
             createdInvitePlatform={access.createdInvitePlatform}
             createdInviteJoinTypeId={access.createdInviteJoinTypeId}
+            createdInvitePrompts={access.createdInvitePrompts}
             onCreate={(selection) => {
               void access.createInvite(
                 selection.platform,

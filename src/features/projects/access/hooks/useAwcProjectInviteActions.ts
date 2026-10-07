@@ -23,6 +23,16 @@ export const useAwcProjectInviteActions = (input: {
     platform: ProjectInvitePlatform | null,
     joinTypeId?: string | null,
   ) => void;
+  /** DF-014: keep the created prompt so the pending row can Copy again. */
+  readonly rememberCreatedInvite?: (prompt: {
+    readonly inviteId: string;
+    readonly url: string;
+    readonly token: string | null;
+    readonly platform: ProjectInvitePlatform | null;
+    readonly joinTypeId: string | null;
+  }) => void;
+  /** Drop a cancelled invite's prompt right away. */
+  readonly forgetCreatedInvite?: (inviteId: string) => void;
 }) => {
   /** platform null = any assistant: the invite stores no platform; the assistant names its type at join. */
   const createInvite = async (
@@ -35,19 +45,26 @@ export const useAwcProjectInviteActions = (input: {
       ...(platform === null ? {} : { platform }),
     });
     if (result.url) {
-      input.setCreatedInviteUrl(result.url);
-      input.setCreatedInviteToken(
+      const token =
         typeof result.token === "string" && result.token.length > 0
           ? result.token
-          : null,
-      );
-      input.setCreatedInviteId(
+          : null;
+      const inviteId =
         typeof result.inviteId === "string" && result.inviteId.length > 0
           ? result.inviteId
-          : null,
-        platform,
-        joinTypeId,
-      );
+          : null;
+      input.setCreatedInviteUrl(result.url);
+      input.setCreatedInviteToken(token);
+      input.setCreatedInviteId(inviteId, platform, joinTypeId);
+      if (inviteId !== null) {
+        input.rememberCreatedInvite?.({
+          inviteId,
+          url: result.url,
+          token,
+          platform,
+          joinTypeId,
+        });
+      }
       input.setMessage("Invite created — copy the link or prompt now.");
     } else {
       input.setMessage(
@@ -59,6 +76,9 @@ export const useAwcProjectInviteActions = (input: {
 
   const revokeInvite = async (inviteId: string) => {
     const result = await revokeProjectInviteApi(input.projectId, inviteId);
+    if (result.ok) {
+      input.forgetCreatedInvite?.(inviteId);
+    }
     input.setMessage(
       result.ok
         ? "Invite revoked."

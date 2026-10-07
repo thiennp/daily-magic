@@ -23,6 +23,8 @@ export const actionsFor = (banner: CreatedInviteBannerState) =>
     setCreatedInviteUrl: banner.setCreatedInviteUrl,
     setCreatedInviteToken: banner.setCreatedInviteToken,
     setCreatedInviteId: banner.setCreatedInviteId,
+    rememberCreatedInvite: banner.rememberCreatedInvite,
+    forgetCreatedInvite: banner.forgetCreatedInvite,
   });
 
 /** Real panel markup for that banner state (shows the created banner label). */
