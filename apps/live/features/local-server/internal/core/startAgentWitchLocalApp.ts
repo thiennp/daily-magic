@@ -3,10 +3,9 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { AGENT_WITCH_LOCAL_BROWSER_UI_RETIRED_MESSAGE } from "./agentWitchLocalApp.constants";
+import { createAgentWitchLocalSendHtml } from "./writeAgentWitchLocalHtmlResponse";
 import { isRetiredAgentWitchLocalBrowserUiRequest } from "./isRetiredAgentWitchLocalBrowserUiRequest";
-import {
-  AGENT_WITCH_LOCAL_PORTS_IN_USE_MESSAGE,
-} from "./agentWitchLocalAppPortRange.constants";
+import { AGENT_WITCH_LOCAL_PORTS_IN_USE_MESSAGE } from "./agentWitchLocalAppPortRange.constants";
 import { allocateOrLoadAgentWitchLocalAppPortRange } from "./allocateOrLoadAgentWitchLocalAppPortRange";
 import {
   resolveAgentWitchLocalAppListenPort,
@@ -292,7 +291,11 @@ const sendJson = (
   response.end(JSON.stringify(payload));
 };
 
-/** AWL-H7: local web UI retired — Mac menu bar app is the user surface. */
+/**
+ * AWL-H7: local web UI retired — Mac menu bar app is the user surface.
+ * Prompt optimizer pages use `createAgentWitchLocalSendHtml` (DF-029) so the
+ * Mac webview gets real HTML; every other page keeps the retired text.
+ */
 const sendHtml = (response: http.ServerResponse, _html: string): void => {
   response.writeHead(200, {
     "Content-Type": "text/plain; charset=utf-8",
@@ -594,7 +597,12 @@ export const startAgentWitchLocalApp = (input: {
             path.dirname(input.layout.configPath),
           ),
           readBody,
-          sendHtml,
+          // DF-029: real HTML for the Mac webview on PO pages; retired text otherwise.
+          sendHtml: createAgentWitchLocalSendHtml({
+            pathname,
+            userAgent,
+            headers: LOCAL_APP_CORS_HEADERS,
+          }),
           renderShell: buildLocalAppShell,
         })
       ) {
@@ -1260,7 +1268,8 @@ export const startAgentWitchLocalApp = (input: {
         const rulePromptRaw = url.searchParams.get("rulePrompt");
         const rulePromptSubmitted = rulePromptRaw !== null;
         const rulePrompt = rulePromptRaw?.trim() ?? "";
-        const ruleDroppedId = url.searchParams.get("ruleDropped")?.trim() || null;
+        const ruleDroppedId =
+          url.searchParams.get("ruleDropped")?.trim() || null;
         const ruleDroppedTitle =
           url.searchParams.get("ruleDroppedTitle")?.trim() || null;
         const ruleChangeErrorRaw =
