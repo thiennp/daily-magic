@@ -52,6 +52,8 @@ export default function GroupTeamActivityPanel({
   }, [groupId]);
 
   useEffect(() => {
+    // Load company runs when selection/reload changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Soft Companies runs fetch-on-mount
     void loadRuns();
   }, [loadRuns, reloadKey]);
 

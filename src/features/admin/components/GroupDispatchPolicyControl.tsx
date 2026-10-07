@@ -25,8 +25,9 @@ export default function GroupDispatchPolicyControl({
   const [saveState, setSaveState] = useState<"idle" | "ok" | "fail">("idle");
 
   useEffect(() => {
-    setSaveState("idle");
     void (async () => {
+      await Promise.resolve();
+      setSaveState("idle");
       const response = await fetch(
         `/api/admin/groups/${groupId}/dispatch-policy`,
       );

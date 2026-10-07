@@ -32,7 +32,6 @@ export default function CompaniesRulesOrientationStrip({
 
   useEffect(() => {
     if (!groupId) {
-      setPolicy(null);
       return;
     }
 
@@ -81,7 +80,7 @@ export default function CompaniesRulesOrientationStrip({
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <CompaniesRulesOrientationDispatchCard
           groupId={groupId}
-          policy={policy}
+          policy={groupId ? policy : null}
           canConfigureDispatchPolicy={canConfigureDispatchPolicy}
           onOpenCompanySettings={onOpenCompanySettings}
         />

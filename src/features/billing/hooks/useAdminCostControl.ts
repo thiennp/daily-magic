@@ -33,6 +33,8 @@ export default function useAdminCostControl(): UseAdminCostControlResult {
   }, []);
 
   useEffect(() => {
+    // Mount/refresh bootstrap: load remote billing snapshot once per hook identity.
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Soft cost-control fetch-on-mount
     void refresh();
   }, [refresh]);
 
