@@ -24,10 +24,20 @@ Thread list shapes: `wholeProject { lastMessageAt, lastPreview, unreadCount }`,
 `bots[] { membershipId, displayName, status, lastMessageAt, lastPreview, unreadCount }`
 with `status` = `working | idle | silent`.
 
-Timeline entry: `{ messageId, createdAt, author { kind owner|member|bot, membershipId, displayName }, kind, text, needsReply, inReplyTo, states[] }`;
+Timeline entry: `{ messageId, createdAt, author { kind owner|member|bot, membershipId, displayName }, kind, text, needsReply, inReplyTo, states[], entryKind?, session? }`;
 `states[]` (owner/member messages only) = one chip per bot delivery
 `{ membershipId, displayName, state, reason }`, `state` ∈
 `received | got_it | working | done | blocked | waiting | no_answer`.
+
+**`entryKind` (additive):** omit or `"message"` = chat row (today). `"session"` = AI
+session from Neon `agent_runs` (Whole thread only). Do **not** overload `kind` —
+message subtypes stay on `kind` (`chat.note`, `task.assign`, …); sessions use
+`kind: "ai.session"`.
+
+**`session` (when `entryKind === "session"`):** `{ status, writerAgent, agentRunId }`.
+Neon rows always set `agentRunId` (= raw run id = `messageId`) so Human UI can
+show Open report. Cursor `id` is the raw run UUID (same UUID space as
+`project_messages.id`; no prefix). Cursor `t` = run `createdAt`.
 
 ### Thread open / load-older (Meta newest-first)
 
@@ -55,13 +65,18 @@ Response:
 }
 ```
 
-Opaque cursor encodes `{ t: createdAt, id: messageId }` (stable). Path: when
-`localLive` try History local read (`loadProjectMessengerOlderFromLocal`);
-else Neon rows with `created_at` older than the cursor. When load-older
+Opaque cursor encodes `{ t: createdAt, id: messageId }` (stable; for sessions
+`id` = raw `agent_runs.id`, `t` = run `createdAt`). Path: when `localLive` try
+History local read (`loadProjectMessengerOlderFromLocal`); **always** also load
+Neon. `resolveProjectMessengerLoadPage` merges local + Neon newest-first — so if
+the in-process local slice is empty (e.g. hosted Railway disk has no AWL
+`project-data`) Neon still fills the page (including sessions). Neon Whole
+thread merges `project_messages` + `agent_runs WHERE project_id` (sessions
+`entryKind: "session"`); bot threads stay messages-only. When load-older
 (`before` set) finds nothing in Neon and the project computer is offline →
-`error.code = project_computer_offline`. History owns the local reader (`readProjectHistoryMessagesPage` /
-`loadOlderProjectHistoryMessages`); Dispatch calls it via
-`loadProjectMessengerOlderFromLocal` when `localLive`.
+`error.code = project_computer_offline`. History owns the local reader
+(`readProjectHistoryMessagesPage` / `loadOlderProjectHistoryMessages`); Dispatch
+calls it via `loadProjectMessengerOlderFromLocal` when `localLive`.
 
 
 ## Bot tool (MCP)

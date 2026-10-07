@@ -346,6 +346,10 @@ CREATE INDEX IF NOT EXISTS agent_runs_project_idx
   ON agent_runs (project_id, created_at DESC)
   WHERE project_id IS NOT NULL;
 
+CREATE INDEX IF NOT EXISTS agent_runs_project_created_id_idx
+  ON agent_runs (project_id, created_at DESC, id DESC)
+  WHERE project_id IS NOT NULL;
+
 CREATE INDEX IF NOT EXISTS agent_runs_automation_idx
   ON agent_runs (automation_id, created_at DESC)
   WHERE automation_id IS NOT NULL;

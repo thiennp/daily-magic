@@ -6,9 +6,12 @@ import { groupProjectMessengerDeliveries } from "@/lib/projects/acl/messaging/me
 import { keyProjectMessengerRows } from "@/lib/projects/acl/messaging/messenger/keyProjectMessengerRows";
 import { loadProjectMessengerBots } from "@/lib/projects/acl/messaging/messenger/loadProjectMessengerBots";
 import { loadProjectMessengerDeliveries } from "@/lib/projects/acl/messaging/messenger/loadProjectMessengerDeliveries";
+import { loadProjectMessengerNeonAgentRunsPage } from "@/lib/projects/acl/messaging/messenger/loadProjectMessengerNeonAgentRunsPage";
 import { mapProjectMessengerRow } from "@/lib/projects/acl/messaging/messenger/mapProjectMessengerRow";
+import { mergeProjectMessengerNeonTimelinePage } from "@/lib/projects/acl/messaging/messenger/mergeProjectMessengerNeonTimelinePage";
 import {
   PROJECT_MESSENGER_ROW_LIMIT,
+  PROJECT_MESSENGER_WHOLE_THREAD_KEY,
 } from "@/lib/projects/acl/messaging/messenger/projectMessenger.constant";
 import type { ProjectMessengerCursor } from "@/lib/projects/acl/messaging/messenger/projectMessengerCursor";
 import type { ProjectMessengerTimelineEntry } from "@/lib/projects/acl/messaging/messenger/projectMessenger.type";
@@ -23,6 +26,7 @@ export type LoadProjectMessengerNeonThreadPageResult = {
  * Neon short-term window for one thread, newest-first.
  * Keyset: rows with (created_at, id) older than `before` (exclusive).
  * Over-fetches project-wide then filters to the thread (no chat_key column yet).
+ * On `whole`, also merges agent_runs session entries (v1 whole-only).
  */
 export const loadProjectMessengerNeonThreadPage = async (input: {
   readonly projectId: string;
@@ -89,10 +93,28 @@ export const loadProjectMessengerNeonThreadPage = async (input: {
     botsById,
   });
 
-  const hasMore =
+  const messageHasMore =
     timeline.length > input.limit || rows.length >= fetchLimit;
-  return {
-    entries: timeline.slice(0, input.limit),
-    hasMore,
-  };
+  const messageEntries = timeline.slice(0, input.limit);
+
+  if (input.threadKey !== PROJECT_MESSENGER_WHOLE_THREAD_KEY) {
+    return {
+      entries: messageEntries,
+      hasMore: messageHasMore,
+    };
+  }
+
+  const sessionPage = await loadProjectMessengerNeonAgentRunsPage({
+    projectId: input.projectId,
+    before: input.before,
+    limit: input.limit,
+  });
+
+  return mergeProjectMessengerNeonTimelinePage({
+    messageEntries,
+    messageHasMore,
+    sessionEntries: sessionPage.entries,
+    sessionHasMore: sessionPage.hasMore,
+    limit: input.limit,
+  });
 };
