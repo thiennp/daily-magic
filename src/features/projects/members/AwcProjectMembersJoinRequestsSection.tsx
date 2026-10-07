@@ -1,8 +1,14 @@
 "use client";
 
+import { useState } from "react";
+
 import AwcExpiredJoinRequestList from "@/features/projects/access/approvalCard/AwcExpiredJoinRequestList";
 import AwcProjectAccessPendingList from "@/features/projects/access/AwcProjectAccessPendingList";
 import type { AwcProjectAccessPending } from "@/features/projects/access/hooks/loadAwcProjectAccess";
+import {
+  nextJoinRequestsStickyProject,
+  shouldRenderJoinRequestsSection,
+} from "@/features/projects/members/joinRequestsSectionVisibility";
 
 interface AwcProjectMembersJoinRequestsSectionProps {
   readonly projectId: string;
@@ -27,7 +33,27 @@ export default function AwcProjectMembersJoinRequestsSection({
   onApprove,
   onDeny,
 }: AwcProjectMembersJoinRequestsSectionProps) {
-  if (pending.length === 0 && expired.length === 0) return null;
+  // DF-017: keep the list mounted once it showed a request, so the resolved
+  // row survives the post-approve/deny reload draining `pending`.
+  const [stickyProjectId, setStickyProjectId] = useState<string | null>(
+    pending.length > 0 ? projectId : null,
+  );
+  const nextSticky = nextJoinRequestsStickyProject({
+    projectId,
+    pendingCount: pending.length,
+    stickyProjectId,
+  });
+  if (nextSticky !== stickyProjectId) setStickyProjectId(nextSticky);
+  if (
+    !shouldRenderJoinRequestsSection({
+      projectId,
+      pendingCount: pending.length,
+      expiredCount: expired.length,
+      stickyProjectId: nextSticky,
+    })
+  ) {
+    return null;
+  }
   return (
     <section
       id="members-join-requests"
