@@ -1,3 +1,5 @@
+import { readProjectWakeRetryAfterSeconds } from "@/lib/projects/acl/webhooks/readProjectWakeRetryAfterSeconds";
+
 const GROK_ROUTINE_WAKE_TIMEOUT_MS = 3_000;
 
 const httpStatusResult = (status: number): string =>
@@ -5,12 +7,21 @@ const httpStatusResult = (status: number): string =>
     ? `http_${status}`
     : "fetch_failed";
 
-/** One POST. Do not retry: HTTP 200 starts another bot run. */
+export type ProjectGrokRoutineWebhookPostResult = {
+  readonly result: string;
+  /** Set on http_429 only: how long the endpoint asked us to wait. */
+  readonly retryAfterSeconds?: number;
+};
+
+/**
+ * One POST. Do not retry: HTTP 200 starts another bot run, and a 429 is
+ * honored by the caller (no immediate retry, later wakes deferred).
+ */
 export const postProjectGrokRoutineWebhook = async (input: {
   readonly webhookUrl: string;
   readonly bearer: string;
   readonly body: string;
-}): Promise<{ readonly result: string }> => {
+}): Promise<ProjectGrokRoutineWebhookPostResult> => {
   try {
     const response = await fetch(input.webhookUrl, {
       method: "POST",
@@ -21,6 +32,12 @@ export const postProjectGrokRoutineWebhook = async (input: {
       body: input.body,
       signal: AbortSignal.timeout(GROK_ROUTINE_WAKE_TIMEOUT_MS),
     });
+    if (response.status === 429) {
+      return {
+        result: "http_429",
+        retryAfterSeconds: await readProjectWakeRetryAfterSeconds(response),
+      };
+    }
     return { result: httpStatusResult(response.status) };
   } catch {
     return { result: "fetch_failed" };

@@ -29,9 +29,32 @@ describe("postSignedProjectMembershipWebhook", () => {
       webhookUrl: "https://example.com/hook",
       secret: "awc_whsec_abc",
       messageId: "msg-9",
-      body: "{\"messageId\":\"msg-9\"}",
+      body: '{"messageId":"msg-9"}',
     });
     expect(result).toEqual({ ok: true });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("returns http_429 with the Retry-After seconds and POSTs once", async () => {
+    const fetchMock = vi.fn(
+      async () =>
+        new Response("slow down", {
+          status: 429,
+          headers: { "retry-after": "45" },
+        }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    const result = await postSignedProjectMembershipWebhook({
+      webhookUrl: "https://example.com/hook",
+      secret: "awc_whsec_abc",
+      messageId: "msg-9",
+      body: "{}",
+    });
+    expect(result).toEqual({
+      ok: false,
+      error: "http_429",
+      retryAfterSeconds: 45,
+    });
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });

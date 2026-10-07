@@ -1,7 +1,8 @@
 import { asRowArray, getSql } from "@/lib/db";
 import { markProjectMessageDeliveryStatus } from "@/lib/projects/acl/webhooks/markProjectMessageDeliveryStatus";
 import { maybeInsertProjectHmacProcessingReceipt } from "@/lib/projects/acl/webhooks/maybeInsertProjectHmacProcessingReceipt";
-import { postSignedProjectMembershipWebhook } from "@/lib/projects/acl/webhooks/postSignedProjectMembershipWebhook";
+import { postProjectMembershipWebhookHonoringRetryAfter } from "@/lib/projects/acl/webhooks/postProjectMembershipWebhookHonoringRetryAfter";
+import { PROJECT_WEBHOOK_ERROR_RATE_LIMITED } from "@/lib/projects/acl/webhooks/projectWakeThrottle.constant";
 import { loadPostableGrokRoutineWebhookMembershipIds } from "@/lib/projects/acl/webhooks/wakeProjectGrokRoutineWebhooks";
 
 export type ProjectMessageWebhookPayload = {
@@ -19,6 +20,8 @@ export type ProjectMessageWebhookPayload = {
  * A missing HMAC URL is no_webhook only when no postable Grok webhook is stored.
  * That Grok wake is separate and must stay pending. Do not await from dispatch HTTP.
  * On HMAC 2xx, insert the same thin task.processing receipt the Grok path sends on http_200.
+ * DF-026: after a 429 no POST until Retry-After passes (delivery skipped with
+ * rate_limited_retry_after; the row stays in the inbox). Never retried here.
  */
 export const deliverProjectMessageWebhooks = async (input: {
   readonly payload: ProjectMessageWebhookPayload;
@@ -79,16 +82,19 @@ export const deliverProjectMessageWebhooks = async (input: {
       });
       continue;
     }
-    const result = await postSignedProjectMembershipWebhook({
+    const result = await postProjectMembershipWebhookHonoringRetryAfter({
+      membershipId,
       webhookUrl: hook.url,
       secret: hook.secret,
       messageId: input.payload.messageId,
       body,
     });
+    const deferred =
+      !result.ok && result.error === PROJECT_WEBHOOK_ERROR_RATE_LIMITED;
     await markProjectMessageDeliveryStatus({
       messageId: input.payload.messageId,
       membershipId,
-      status: result.ok ? "delivered" : "failed",
+      status: result.ok ? "delivered" : deferred ? "skipped" : "failed",
       lastError: result.ok ? null : result.error,
     });
     await maybeInsertProjectHmacProcessingReceipt({

@@ -1,6 +1,16 @@
 import { signProjectWebhookBody } from "@/lib/projects/acl/webhooks/projectWebhookSecret";
+import { readProjectWakeRetryAfterSeconds } from "@/lib/projects/acl/webhooks/readProjectWakeRetryAfterSeconds";
 
 const WEBHOOK_TIMEOUT_MS = 5_000;
+
+export type SignedProjectWebhookPostResult =
+  | { readonly ok: true }
+  | {
+      readonly ok: false;
+      readonly error: string;
+      /** Set on http_429 only. The caller defers later pushes; no retry. */
+      readonly retryAfterSeconds?: number;
+    };
 
 /** One signed POST. Caller must not block the dispatch HTTP response on this. */
 export const postSignedProjectMembershipWebhook = async (input: {
@@ -8,7 +18,7 @@ export const postSignedProjectMembershipWebhook = async (input: {
   readonly secret: string;
   readonly messageId: string;
   readonly body: string;
-}): Promise<{ readonly ok: true } | { readonly ok: false; readonly error: string }> => {
+}): Promise<SignedProjectWebhookPostResult> => {
   const timestamp = String(Math.floor(Date.now() / 1000));
   const signature = signProjectWebhookBody({
     secret: input.secret,
@@ -28,6 +38,13 @@ export const postSignedProjectMembershipWebhook = async (input: {
       body: input.body,
       signal: AbortSignal.timeout(WEBHOOK_TIMEOUT_MS),
     });
+    if (response.status === 429) {
+      return {
+        ok: false,
+        error: "http_429",
+        retryAfterSeconds: await readProjectWakeRetryAfterSeconds(response),
+      };
+    }
     if (!response.ok) {
       return { ok: false, error: `http_${response.status}` };
     }
