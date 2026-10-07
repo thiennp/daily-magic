@@ -7,6 +7,7 @@ interface AwcProjectLibraryHeaderProps {
   readonly canCreateSkill: boolean;
   readonly showActions: boolean;
   readonly onNewSkill: () => void;
+  readonly onNewPlaybook: () => void;
   readonly onAddFrom: () => void;
 }
 
@@ -19,6 +20,7 @@ export default function AwcProjectLibraryHeader({
   canCreateSkill,
   showActions,
   onNewSkill,
+  onNewPlaybook,
   onAddFrom,
 }: AwcProjectLibraryHeaderProps) {
   if (!showActions) {
@@ -30,6 +32,7 @@ export default function AwcProjectLibraryHeader({
         canEdit={canEdit}
         canCreateSkill={canCreateSkill}
         onNewSkill={onNewSkill}
+        onNewPlaybook={onNewPlaybook}
         onAddFrom={onAddFrom}
       />
     </header>

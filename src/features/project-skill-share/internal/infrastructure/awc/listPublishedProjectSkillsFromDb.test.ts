@@ -15,6 +15,7 @@ const record = (
   rowId: "row-1",
   projectId: "proj-1",
   skillId: "deploy",
+  kind: "skill",
   name: "Deploy",
   description: null,
   publisherUserId: "u1",
@@ -66,6 +67,7 @@ describe("listPublishedProjectSkillsFromDb", () => {
     await expect(listPublishedProjectSkillsFromDb("proj-1")).resolves.toEqual([
       {
         skillId: "deploy",
+        kind: "skill",
         publishedVersion: 2,
         contentHash: "sha256:abc",
         skillRowId: "row-1",

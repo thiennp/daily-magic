@@ -12,6 +12,7 @@ export const toProjectSkillView = (input: {
   readonly actorUserId: string;
 }): ProjectSkillView => ({
   skillId: input.record.skillId,
+  kind: input.record.kind,
   name: input.record.name,
   description: input.record.description,
   state: input.record.state,

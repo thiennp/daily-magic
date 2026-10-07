@@ -1,3 +1,5 @@
+import type { ProjectSkillKind } from "@/features/project-skill-share/internal/core/projectSkill.type";
+
 export interface PublishProjectSkillArgs {
   readonly projectId: string;
   readonly skillId?: string;
@@ -7,6 +9,8 @@ export interface PublishProjectSkillArgs {
   readonly body?: string;
   /** Save as a draft (publisher + owner only) instead of publishing. */
   readonly asDraft?: boolean;
+  /** "skill" (default for new rows) or "playbook"; omit to keep an existing row's kind. */
+  readonly kind?: ProjectSkillKind;
 }
 
 export interface ProjectSkillRefArgs {
@@ -17,4 +21,6 @@ export interface ProjectSkillRefArgs {
 
 export interface ListProjectSkillsArgs {
   readonly projectId: string;
+  /** Omit to list every kind. */
+  readonly kind?: ProjectSkillKind;
 }

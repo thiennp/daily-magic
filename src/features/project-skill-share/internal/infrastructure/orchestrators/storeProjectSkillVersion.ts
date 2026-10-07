@@ -35,6 +35,7 @@ export const storeProjectSkillVersion = async (input: {
   const record = await insertProjectSkillVersionWithSkill({
     projectId: target.args.projectId,
     skillId: target.skillId,
+    kind: target.kind,
     name: target.name,
     description:
       target.args.description ?? target.existing?.description ?? null,

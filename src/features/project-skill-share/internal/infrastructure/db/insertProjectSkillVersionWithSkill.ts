@@ -1,4 +1,7 @@
-import type { ProjectSkillRecord } from "@/features/project-skill-share/internal/core/projectSkill.type";
+import type {
+  ProjectSkillKind,
+  ProjectSkillRecord,
+} from "@/features/project-skill-share/internal/core/projectSkill.type";
 import type { ProjectSkillPublishTransition } from "@/features/project-skill-share/internal/core/decideProjectSkillPublishTransition";
 import { ensureProjectSkillShareSchema } from "@/features/project-skill-share/internal/infrastructure/db/ensureProjectSkillShareSchema";
 import { mapProjectSkillRow } from "@/features/project-skill-share/internal/infrastructure/db/mapProjectSkillRow";
@@ -11,6 +14,7 @@ import { asRowArray, getSql } from "@/lib/db";
 export const insertProjectSkillVersionWithSkill = async (input: {
   readonly projectId: string;
   readonly skillId: string;
+  readonly kind: ProjectSkillKind;
   readonly name: string;
   readonly description: string | null;
   readonly actorUserId: string;
@@ -28,12 +32,12 @@ export const insertProjectSkillVersionWithSkill = async (input: {
   const rows = asRowArray(
     await sql`
       WITH skill AS (
-        INSERT INTO project_skills (project_id, skill_id, name, description,
+        INSERT INTO project_skills (project_id, skill_id, kind, name, description,
           publisher_user_id, state, published_version, latest_version, content_hash)
-        VALUES (${input.projectId}, ${input.skillId}, ${input.name}, ${input.description},
+        VALUES (${input.projectId}, ${input.skillId}, ${input.kind}, ${input.name}, ${input.description},
           ${input.actorUserId}, ${t.state}, ${t.publishedVersion}, ${input.version}, ${t.contentHash})
         ON CONFLICT (project_id, skill_id) DO UPDATE SET
-          name = EXCLUDED.name, description = EXCLUDED.description,
+          kind = EXCLUDED.kind, name = EXCLUDED.name, description = EXCLUDED.description,
           state = EXCLUDED.state, published_version = EXCLUDED.published_version,
           latest_version = EXCLUDED.latest_version, content_hash = EXCLUDED.content_hash,
           revoked_at = NULL, revoked_by_user_id = NULL, updated_at = NOW()

@@ -5,10 +5,12 @@ import { isValidProjectSkillId } from "@/features/project-skill-share/internal/c
 import type {
   ProjectSkillActorRole,
   ProjectSkillFailure,
+  ProjectSkillKind,
   ProjectSkillRecord,
 } from "@/features/project-skill-share/internal/core/projectSkill.type";
 import type { PublishProjectSkillArgs } from "@/features/project-skill-share/internal/core/projectSkillArgs.type";
 import {
+  PROJECT_SKILL_DEFAULT_KIND,
   PROJECT_SKILL_DESCRIPTION_MAX_LENGTH,
   PROJECT_SKILL_NAME_MAX_LENGTH,
 } from "@/features/project-skill-share/internal/core/projectSkillShare.constant";
@@ -20,6 +22,7 @@ export type PublishProjectSkillTarget = {
   readonly args: PublishProjectSkillArgs;
   readonly role: ProjectSkillActorRole;
   readonly skillId: string;
+  readonly kind: ProjectSkillKind;
   readonly name: string;
   readonly existing: ProjectSkillRecord | null;
 };
@@ -66,5 +69,6 @@ export const resolvePublishProjectSkillTarget = async (input: {
   if (!allowed) return fail("forbidden");
   const name = args.name ?? existing?.name;
   if (name === undefined) return fail("invalid_arguments");
-  return { ok: true, args, role, skillId, name, existing };
+  const kind = args.kind ?? existing?.kind ?? PROJECT_SKILL_DEFAULT_KIND;
+  return { ok: true, args, role, skillId, kind, name, existing };
 };

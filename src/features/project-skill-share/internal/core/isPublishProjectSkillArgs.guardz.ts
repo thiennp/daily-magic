@@ -1,6 +1,7 @@
 import {
   isBoolean,
   isNonEmptyString,
+  isOneOf,
   isString,
   isType,
   isUndefinedOr,
@@ -15,4 +16,5 @@ export const isPublishProjectSkillArgs = isType<PublishProjectSkillArgs>({
   description: isUndefinedOr(isString),
   body: isUndefinedOr(isString),
   asDraft: isUndefinedOr(isBoolean),
+  kind: isUndefinedOr(isOneOf("skill", "playbook")),
 });

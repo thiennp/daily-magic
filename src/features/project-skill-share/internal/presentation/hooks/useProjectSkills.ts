@@ -2,7 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import type { ProjectSkillView } from "@/features/project-skill-share/internal/core/projectSkill.type";
+import type {
+  ProjectSkillKind,
+  ProjectSkillView,
+} from "@/features/project-skill-share/internal/core/projectSkill.type";
+import { PROJECT_PLAYBOOKS_COPY } from "@/features/project-skill-share/internal/presentation/projectPlaybooksCopy.constant";
 import { PROJECT_SKILLS_COPY } from "@/features/project-skill-share/internal/presentation/projectSkillsCopy.constant";
 import { fetchProjectSkills } from "@/features/project-skill-share/internal/presentation/utils/fetchProjectSkills";
 import { postProjectSkillMutation } from "@/features/project-skill-share/internal/presentation/utils/postProjectSkillMutation";
@@ -13,6 +17,8 @@ export interface PublishProjectSkillDraft {
   readonly description?: string;
   readonly body?: string;
   readonly asDraft?: boolean;
+  /** "playbook" authors a project playbook; omit for a skill / to keep the row's kind. */
+  readonly kind?: ProjectSkillKind;
 }
 
 /** Skills list + publish / revoke for the Project Access panel. */
@@ -74,7 +80,9 @@ export const useProjectSkills = (projectId: string) => {
         { ...draft },
         draft.asDraft === true
           ? PROJECT_SKILLS_COPY.draftSaved
-          : PROJECT_SKILLS_COPY.published,
+          : draft.kind === "playbook"
+            ? PROJECT_PLAYBOOKS_COPY.published
+            : PROJECT_SKILLS_COPY.published,
       ),
     [base, mutate],
   );

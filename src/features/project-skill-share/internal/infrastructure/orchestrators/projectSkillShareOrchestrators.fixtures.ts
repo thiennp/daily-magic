@@ -10,6 +10,7 @@ export const projectSkillRecordFixture = (
   rowId: "row-1",
   projectId: "proj-1",
   skillId: "deploy",
+  kind: "skill",
   name: "Deploy",
   description: null,
   publisherUserId: "pub",

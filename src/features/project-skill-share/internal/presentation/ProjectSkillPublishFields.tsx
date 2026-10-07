@@ -1,11 +1,14 @@
 "use client";
 
+import type { ProjectSkillKind } from "@/features/project-skill-share/internal/core/projectSkill.type";
+import { PROJECT_PLAYBOOKS_COPY } from "@/features/project-skill-share/internal/presentation/projectPlaybooksCopy.constant";
 import { PROJECT_SKILLS_COPY } from "@/features/project-skill-share/internal/presentation/projectSkillsCopy.constant";
 import { PROJECT_SKILLS_INPUT_CLASS } from "@/features/project-skill-share/internal/presentation/projectSkillsSection.constant";
 
 const LABEL_CLASS = "block text-xs text-awc-fg-muted dark:text-gray-400";
 
 interface ProjectSkillPublishFieldsProps {
+  readonly kind: ProjectSkillKind;
   readonly nameId: string;
   readonly descriptionId: string;
   readonly bodyId: string;
@@ -18,6 +21,7 @@ interface ProjectSkillPublishFieldsProps {
 }
 
 export default function ProjectSkillPublishFields({
+  kind,
   nameId,
   descriptionId,
   bodyId,
@@ -28,7 +32,10 @@ export default function ProjectSkillPublishFields({
   onDescription,
   onBody,
 }: ProjectSkillPublishFieldsProps) {
-  const copy = PROJECT_SKILLS_COPY;
+  const copy =
+    kind === "playbook"
+      ? { ...PROJECT_SKILLS_COPY, ...PROJECT_PLAYBOOKS_COPY }
+      : PROJECT_SKILLS_COPY;
   return (
     <>
       <label className={LABEL_CLASS} htmlFor={nameId}>

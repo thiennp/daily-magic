@@ -2,6 +2,7 @@
 
 import type { ProjectSkillView } from "@/features/project-skill-share/internal/core/projectSkill.type";
 import ProjectSkillRowActions from "@/features/project-skill-share/internal/presentation/ProjectSkillRowActions";
+import { PROJECT_PLAYBOOKS_COPY } from "@/features/project-skill-share/internal/presentation/projectPlaybooksCopy.constant";
 import { PROJECT_SKILLS_COPY } from "@/features/project-skill-share/internal/presentation/projectSkillsCopy.constant";
 import { PROJECT_SKILLS_BADGE_CLASS } from "@/features/project-skill-share/internal/presentation/projectSkillsSection.constant";
 import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPageMetadataText.constant";
@@ -39,6 +40,11 @@ export default function ProjectSkillRow({
           <span className={PROJECT_SKILLS_BADGE_CLASS}>
             {copy.versionLabel(shownVersion)}
           </span>
+          {skill.kind === "playbook" ? (
+            <span className={PROJECT_SKILLS_BADGE_CLASS}>
+              {PROJECT_PLAYBOOKS_COPY.playbookBadge}
+            </span>
+          ) : null}
           {skill.state === "draft" ? (
             <span className={PROJECT_SKILLS_BADGE_CLASS}>
               {copy.draftBadge}

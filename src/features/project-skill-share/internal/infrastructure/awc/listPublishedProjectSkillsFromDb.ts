@@ -22,6 +22,7 @@ export const listPublishedProjectSkillsFromDb = async (
     }
     return {
       skillId: record.skillId,
+      kind: record.kind,
       publishedVersion: record.publishedVersion,
       contentHash: record.contentHash,
       skillRowId: record.rowId,

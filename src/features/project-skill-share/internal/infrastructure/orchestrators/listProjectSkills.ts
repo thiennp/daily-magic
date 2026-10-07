@@ -7,7 +7,8 @@ import { resolveProjectSkillMemberRole } from "@/features/project-skill-share/in
 
 /**
  * Orchestrator: list_project_skills. Published for owner | member | viewer;
- * drafts owner-only. Revoked are not listed.
+ * drafts owner-only. Revoked are not listed. Optional `kind` filter
+ * ("skill" | "playbook"); omitted = every kind.
  */
 export const listProjectSkills = async (input: {
   readonly actorUserId: string;
@@ -28,7 +29,9 @@ export const listProjectSkills = async (input: {
     projectId,
     states: ["draft", "published"],
   });
+  const kind = input.args.kind;
   const skills = records
+    .filter((record) => kind === undefined || record.kind === kind)
     .filter((record) =>
       canViewProjectSkill({
         role: access.role,

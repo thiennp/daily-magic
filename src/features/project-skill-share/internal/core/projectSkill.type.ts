@@ -1,6 +1,12 @@
-import type { PROJECT_SKILL_STATES } from "@/features/project-skill-share/internal/core/projectSkillShare.constant";
+import type {
+  PROJECT_SKILL_KINDS,
+  PROJECT_SKILL_STATES,
+} from "@/features/project-skill-share/internal/core/projectSkillShare.constant";
 
 export type ProjectSkillState = (typeof PROJECT_SKILL_STATES)[number];
+
+/** "skill" (default) or "playbook" — same table, lifecycle, ACL and caps. */
+export type ProjectSkillKind = (typeof PROJECT_SKILL_KINDS)[number];
 
 /** owner = user_projects.owner_user_id; member = active membership; viewer = read-only list/get published. */
 export type ProjectSkillActorRole = "owner" | "member" | "viewer" | "none";
@@ -22,6 +28,7 @@ export interface ProjectSkillRecord {
   readonly rowId: string;
   readonly projectId: string;
   readonly skillId: string;
+  readonly kind: ProjectSkillKind;
   readonly name: string;
   readonly description: string | null;
   readonly publisherUserId: string;
@@ -48,6 +55,7 @@ export interface ProjectSkillVersionRecord {
 /** List row: meta only, never the body. */
 export interface ProjectSkillView {
   readonly skillId: string;
+  readonly kind: ProjectSkillKind;
   readonly name: string;
   readonly description: string | null;
   readonly state: ProjectSkillState;

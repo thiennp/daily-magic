@@ -9,17 +9,18 @@ export const dynamic = "force-dynamic";
 
 type RouteContext = { params: Promise<{ readonly projectId: string }> };
 
-/** GET: skills visible to the session user (owner | member | viewer). */
+/** GET: skills visible to the session user (owner | member | viewer); `?kind=skill|playbook` filters. */
 export async function GET(
-  _request: Request,
+  request: Request,
   context: RouteContext,
 ): Promise<Response> {
   const { actor, error } = await requireAuth();
   if (error || !actor) return error;
   const { projectId } = await context.params;
+  const kind = new URL(request.url).searchParams.get("kind");
   const result = await listProjectSkills({
     actorUserId: actor.id,
-    args: { projectId },
+    args: kind === null ? { projectId } : { projectId, kind },
   });
   if (!result.ok) {
     return Response.json(

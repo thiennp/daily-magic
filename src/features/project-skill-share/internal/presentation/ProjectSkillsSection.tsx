@@ -1,6 +1,10 @@
 "use client";
 
+import { useState } from "react";
+
+import type { ProjectSkillKind } from "@/features/project-skill-share/internal/core/projectSkill.type";
 import { useProjectSkills } from "@/features/project-skill-share/internal/presentation/hooks/useProjectSkills";
+import ProjectPlaybookAddButton from "@/features/project-skill-share/internal/presentation/ProjectPlaybookAddButton";
 import ProjectSkillPublishForm from "@/features/project-skill-share/internal/presentation/ProjectSkillPublishForm";
 import ProjectSkillRow from "@/features/project-skill-share/internal/presentation/ProjectSkillRow";
 import { PROJECT_SKILLS_COPY } from "@/features/project-skill-share/internal/presentation/projectSkillsCopy.constant";
@@ -25,6 +29,7 @@ export default function ProjectSkillsSection({
 }: ProjectSkillsSectionProps) {
   const copy = PROJECT_SKILLS_COPY;
   const skills = useProjectSkills(projectId);
+  const [kind, setKind] = useState<ProjectSkillKind>("skill");
 
   if (skills.forbidden) {
     return null;
@@ -41,6 +46,10 @@ export default function ProjectSkillsSection({
           <span className={PROJECT_SKILLS_BADGE_CLASS}>
             {skills.skills.length}
           </span>
+          <ProjectPlaybookAddButton
+            canEdit={canEdit}
+            onAdd={() => setKind("playbook")}
+          />
         </div>
         <p className={PROJECT_SKILLS_HINT_CLASS}>{copy.hint}</p>
       </header>
@@ -67,10 +76,15 @@ export default function ProjectSkillsSection({
       <ProjectSkillPublishForm
         busy={skills.busy}
         canEdit={canEdit}
+        kind={kind}
+        onKind={setKind}
         onSubmit={skills.publish}
       />
       {skills.message ? (
-        <p role="status" className="text-xs text-awc-fg-muted dark:text-gray-300">
+        <p
+          role="status"
+          className="text-xs text-awc-fg-muted dark:text-gray-300"
+        >
           {skills.message}
         </p>
       ) : null}

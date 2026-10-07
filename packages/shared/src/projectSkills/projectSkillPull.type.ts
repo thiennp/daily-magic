@@ -17,6 +17,8 @@ export interface ProjectSkillPullRow {
 
 export interface ProjectSkillPublishedMeta {
   readonly skillId: string;
+  /** "skill" | "playbook" (AWC project_skills.kind); absent from older sources = "skill". */
+  readonly kind?: "skill" | "playbook";
   readonly publishedVersion: number;
   readonly contentHash: string;
   /** Present when the AWC source can resolve the version row without a second lookup. */

@@ -44,7 +44,7 @@ export const mapProjectLibraryCapabilities = (
       skillId: null,
     }));
 
-/** Project skills (draft / published); revoked out. */
+/** Project skills + playbooks (kind "playbook") — draft / published; revoked out. */
 export const mapProjectLibrarySkills = (
   skills: readonly ProjectSkillView[],
 ): readonly ProjectLibraryItem[] =>
@@ -53,7 +53,7 @@ export const mapProjectLibrarySkills = (
     .map((skill) => ({
       id: `${PROJECT_LIBRARY_SKILL_ID_PREFIX}${skill.skillId}`,
       name: skill.name,
-      kind: "skill",
+      kind: skill.kind === "playbook" ? "playbook" : "skill",
       state: skill.state === "published" ? "published" : "draft",
       updatedAt: skill.updatedAt,
       body: skill.description ?? "",

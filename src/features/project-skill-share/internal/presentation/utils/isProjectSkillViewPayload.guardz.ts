@@ -12,6 +12,7 @@ import type { ProjectSkillView } from "@/features/project-skill-share/internal/c
 
 export const isProjectSkillViewPayload = isType<ProjectSkillView>({
   skillId: isNonEmptyString,
+  kind: isOneOf("skill", "playbook"),
   name: isString,
   description: isNullOr(isString),
   state: isOneOf("draft", "published", "revoked"),

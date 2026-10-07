@@ -1,6 +1,7 @@
 export type {
   ProjectSkillActorRole,
   ProjectSkillDetail,
+  ProjectSkillKind,
   ProjectSkillMirrorStatus,
   ProjectSkillShareErrorCode,
   ProjectSkillState,
@@ -31,3 +32,7 @@ export type {
   ProjectSkillVersionWriteInput,
   ProjectSkillVersionWriteResult,
 } from "@/features/project-skill-share/internal/infrastructure/history/projectSkillHistoryPort.type";
+export type {
+  ListProjectSkillsArgs,
+  PublishProjectSkillArgs,
+} from "@/features/project-skill-share/internal/core/projectSkillArgs.type";

@@ -4,22 +4,29 @@ import { useId, useState } from "react";
 
 import { measureProjectSkillBodyBytes } from "@/features/project-skill-share/internal/core/measureProjectSkillBodyBytes";
 import { PROJECT_SKILL_MAX_BODY_BYTES } from "@/features/project-skill-share/internal/core/projectSkillShare.constant";
+import type { ProjectSkillKind } from "@/features/project-skill-share/internal/core/projectSkill.type";
 import type { PublishProjectSkillDraft } from "@/features/project-skill-share/internal/presentation/hooks/useProjectSkills";
+import ProjectSkillKindToggle from "@/features/project-skill-share/internal/presentation/ProjectSkillKindToggle";
 import ProjectSkillOwnerOnlyActions from "@/features/project-skill-share/internal/presentation/ProjectSkillOwnerOnlyActions";
 import ProjectSkillPublishFields from "@/features/project-skill-share/internal/presentation/ProjectSkillPublishFields";
 import ProjectSkillPublishSubmitActions from "@/features/project-skill-share/internal/presentation/ProjectSkillPublishSubmitActions";
+import { PROJECT_PLAYBOOKS_COPY } from "@/features/project-skill-share/internal/presentation/projectPlaybooksCopy.constant";
 import { PROJECT_SKILLS_COPY } from "@/features/project-skill-share/internal/presentation/projectSkillsCopy.constant";
 import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPageMetadataText.constant";
 
 interface Props {
   readonly busy: boolean;
   readonly canEdit: boolean;
+  readonly kind: ProjectSkillKind;
+  readonly onKind: (kind: ProjectSkillKind) => void;
   readonly onSubmit: (draft: PublishProjectSkillDraft) => Promise<boolean>;
 }
 
 export default function ProjectSkillPublishForm({
   busy,
   canEdit,
+  kind,
+  onKind,
   onSubmit,
 }: Props) {
   const copy = PROJECT_SKILLS_COPY;
@@ -39,6 +46,7 @@ export default function ProjectSkillPublishForm({
       ...(description.trim() === "" ? {} : { description: description.trim() }),
       body,
       asDraft,
+      kind,
     });
     if (ok) {
       setName("");
@@ -55,10 +63,20 @@ export default function ProjectSkillPublishForm({
         void submit(false);
       }}
     >
-      <p className="text-xs font-semibold text-awc-fg dark:text-gray-200">
-        {copy.publishHeading}
-      </p>
+      <span className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-xs font-semibold text-awc-fg dark:text-gray-200">
+          {kind === "playbook"
+            ? PROJECT_PLAYBOOKS_COPY.publishHeading
+            : copy.publishHeading}
+        </p>
+        <ProjectSkillKindToggle
+          kind={kind}
+          disabled={!canEdit}
+          onKind={onKind}
+        />
+      </span>
       <ProjectSkillPublishFields
+        kind={kind}
         nameId={`${idBase}-name`}
         descriptionId={`${idBase}-description`}
         bodyId={`${idBase}-body`}

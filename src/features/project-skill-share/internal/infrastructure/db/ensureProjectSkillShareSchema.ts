@@ -31,9 +31,11 @@ const createTables = async (): Promise<void> => {
     UNIQUE (skill_row_id, version))`;
   await sql`CREATE INDEX IF NOT EXISTS project_skills_project_state_idx
     ON project_skills (project_id, state)`;
+  await sql`ALTER TABLE project_skills ADD COLUMN IF NOT EXISTS kind TEXT
+    NOT NULL DEFAULT 'skill' CHECK (kind IN ('skill', 'playbook'))`;
 };
 
-/** Idempotent CREATE (full DDL in db/migrations/058-project-skill-share.sql). */
+/** Idempotent CREATE (full DDL in db/migrations/058-project-skill-share.sql + 110 kind). */
 export const ensureProjectSkillShareSchema = async (): Promise<void> => {
   if (state.promise === null) {
     state.promise = createTables().catch((error: unknown) => {

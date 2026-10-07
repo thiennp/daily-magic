@@ -17,3 +17,7 @@ export const PROJECT_SKILL_AWL_VERSION_PAD = 4;
 export const PROJECT_SKILL_AWL_META_FILE = "meta.json";
 
 export const PROJECT_SKILL_STATES = ["draft", "published", "revoked"] as const;
+
+/** A playbook is a project skill with kind "playbook" (same lifecycle / ACL / caps). */
+export const PROJECT_SKILL_KINDS = ["skill", "playbook"] as const;
+export const PROJECT_SKILL_DEFAULT_KIND = "skill";

@@ -13,7 +13,7 @@ import useAwcProjectLibrary from "@/features/projects/library/useAwcProjectLibra
 import { PANEL_STATUS_CLASS } from "@/features/projects/projectPagePanelChrome.constant";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
-type LibraryMode = "list" | "new-skill" | "add-from";
+type LibraryMode = "list" | "new-skill" | "new-playbook" | "add-from";
 
 interface AwcProjectLibraryPanelProps {
   readonly project: UserProjectRecord;
@@ -40,6 +40,10 @@ export default function AwcProjectLibraryPanel({
     setItemId(null);
     setMode("new-skill");
   };
+  const startNewPlaybook = (): void => {
+    setItemId(null);
+    setMode("new-playbook");
+  };
   const startAddFrom = (): void => {
     setItemId(null);
     setMode("add-from");
@@ -57,6 +61,7 @@ export default function AwcProjectLibraryPanel({
         canCreateSkill={canEdit && !library.skills.forbidden}
         showActions={showHeaderActions}
         onNewSkill={startNewSkill}
+        onNewPlaybook={startNewPlaybook}
         onAddFrom={startAddFrom}
       />
       {toast !== null ? (
@@ -64,8 +69,13 @@ export default function AwcProjectLibraryPanel({
           {toast}
         </p>
       ) : null}
-      {mode === "new-skill" && canEdit ? (
-        <AwcProjectLibrarySkillForm skills={library.skills} onDone={done} />
+      {(mode === "new-skill" || mode === "new-playbook") && canEdit ? (
+        <AwcProjectLibrarySkillForm
+          key={mode}
+          skills={library.skills}
+          kind={mode === "new-playbook" ? "playbook" : "skill"}
+          onDone={done}
+        />
       ) : mode === "add-from" && canEdit ? (
         <AwcProjectLibraryAddFrom
           project={project}

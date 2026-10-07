@@ -5,6 +5,12 @@ const skillIdProp = {
   type: "string",
   description: "Lowercase slug (a-z 0-9 _ -), ≤ 64 chars, never _-prefixed.",
 } as const;
+const kindProp = {
+  type: "string",
+  enum: ["skill", "playbook"],
+  description:
+    'Item kind: "skill" (default) or "playbook" (how the team works). Same lifecycle, ACL and limits.',
+} as const;
 
 /** Executed by src/features/project-skill-share (injected in the MCP + invoke routes). */
 export const AGENT_ACCESS_PROJECT_SKILL_SHARE_TOOLS: readonly AgentAccessToolDefinition[] =
@@ -12,7 +18,7 @@ export const AGENT_ACCESS_PROJECT_SKILL_SHARE_TOOLS: readonly AgentAccessToolDef
     {
       name: "publish_project_skill",
       description:
-        "Publish a project playbook/skill (owner or active member). Text body ≤ 64KB per version; AWC keeps the last 20 versions (oldest dropped). New skill: pass name (skillId optional, derived from name). Existing skill: publisher or owner only. asDraft: true saves a draft only you and the owner see; publish without body promotes the latest draft.",
+        "Publish a project skill or playbook (kind: skill by default, or playbook; project owner only). Text body ≤ 64KB per version; AWC keeps the last 20 versions (oldest dropped). New skill: pass name (skillId optional, derived from name). Existing skill: publisher or owner only. asDraft: true saves a draft only you and the owner see; publish without body promotes the latest draft.",
       inputSchema: {
         type: "object",
         properties: {
@@ -22,6 +28,7 @@ export const AGENT_ACCESS_PROJECT_SKILL_SHARE_TOOLS: readonly AgentAccessToolDef
           description: { type: "string", description: "≤ 500 chars." },
           body: { type: "string", description: "Skill text, ≤ 64KB UTF-8." },
           asDraft: { type: "boolean" },
+          kind: kindProp,
         },
         required: ["projectId"],
         additionalProperties: false,
@@ -30,10 +37,10 @@ export const AGENT_ACCESS_PROJECT_SKILL_SHARE_TOOLS: readonly AgentAccessToolDef
     {
       name: "list_project_skills",
       description:
-        "List project skills (meta + contentHash, no body). Members and viewers see published skills; your own drafts (and all drafts for the owner) are included. Requires ownership, active membership, or viewer access.",
+        "List project skills and playbooks (meta + kind + contentHash, no body); pass kind to filter. Members and viewers see published skills; your own drafts (and all drafts for the owner) are included. Requires ownership, active membership, or viewer access.",
       inputSchema: {
         type: "object",
-        properties: { projectId: projectIdProp },
+        properties: { projectId: projectIdProp, kind: kindProp },
         required: ["projectId"],
         additionalProperties: false,
       },

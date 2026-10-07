@@ -1,4 +1,5 @@
 import type {
+  ProjectSkillKind,
   ProjectSkillRecord,
   ProjectSkillState,
 } from "@/features/project-skill-share/internal/core/projectSkill.type";
@@ -7,6 +8,9 @@ const parseState = (value: unknown): ProjectSkillState => {
   if (value === "published" || value === "revoked") return value;
   return "draft";
 };
+
+const parseKind = (value: unknown): ProjectSkillKind =>
+  value === "playbook" ? "playbook" : "skill";
 
 const nullableString = (value: unknown): string | null =>
   value === null || value === undefined ? null : String(value);
@@ -20,6 +24,7 @@ export const mapProjectSkillRow = (
   rowId: String(row.id),
   projectId: String(row.project_id),
   skillId: String(row.skill_id),
+  kind: parseKind(row.kind),
   name: String(row.name),
   description: nullableString(row.description),
   publisherUserId: String(row.publisher_user_id),

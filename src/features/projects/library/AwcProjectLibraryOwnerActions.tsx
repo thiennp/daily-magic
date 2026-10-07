@@ -1,6 +1,7 @@
 "use client";
 
 import useDismissibleMenu from "@/features/projects/hooks/useDismissibleMenu";
+import { PROJECT_LIBRARY_ADD_PLAYBOOK_LABEL } from "@/features/projects/library/projectLibraryAuthorCopy.constant";
 import AwcProjectLibraryDisabledActions from "@/features/projects/library/AwcProjectLibraryDisabledActions";
 import { PROJECT_PAGE_LIBRARY_ACTIONS_COPY as A } from "@/features/projects/library/projectPageLibraryActionsCopy.constant";
 import {
@@ -17,6 +18,7 @@ interface Props {
   readonly canEdit: boolean;
   readonly canCreateSkill: boolean;
   readonly onNewSkill: () => void;
+  readonly onNewPlaybook: () => void;
   readonly onAddFrom: () => void;
 }
 
@@ -28,6 +30,7 @@ export default function AwcProjectLibraryOwnerActions({
   canEdit,
   canCreateSkill,
   onNewSkill,
+  onNewPlaybook,
   onAddFrom,
 }: Props) {
   const { menuOpen, setMenuOpen, wrapRef } = useDismissibleMenu();
@@ -43,6 +46,15 @@ export default function AwcProjectLibraryOwnerActions({
       >
         {A["library.add_from"]}
       </button>
+      {canCreateSkill ? (
+        <button
+          type="button"
+          className={PANEL_BUTTON_SECONDARY_CLASS}
+          onClick={onNewPlaybook}
+        >
+          {PROJECT_LIBRARY_ADD_PLAYBOOK_LABEL}
+        </button>
+      ) : null}
       {canCreateSkill ? (
         <div ref={wrapRef} className="relative">
           <button
@@ -60,6 +72,17 @@ export default function AwcProjectLibraryOwnerActions({
               aria-label={A["library.new.menu.aria"]}
               className={MENU_CLASS}
             >
+              <button
+                type="button"
+                role="menuitem"
+                className={MENU_ITEM_CLASS}
+                onClick={() => {
+                  setMenuOpen(false);
+                  onNewPlaybook();
+                }}
+              >
+                {A["library.new.menu.playbook"]}
+              </button>
               <button
                 type="button"
                 role="menuitem"
