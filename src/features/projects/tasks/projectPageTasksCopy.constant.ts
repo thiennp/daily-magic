@@ -4,7 +4,9 @@ export const PROJECT_PAGE_TASKS_COPY = {
   intro: "Tasks assigned in this project.",
   aria: "Project tasks",
   empty: "No tasks yet",
+  emptyFiltered: "No matching tasks",
   emptyAssign: "Assign task",
+  clearFilters: "Clear filters",
   filterAllAssistants: "All assistants",
   filterAllStatus: "All status",
   statusQueued: "Queued",
@@ -12,20 +14,23 @@ export const PROJECT_PAGE_TASKS_COPY = {
   statusDone: "Done",
   statusFailed: "Failed",
   statusCancelled: "Cancelled",
-  offline: "Connection to the project computer was lost.",
+  /** Exact design EN — no trailing period. */
+  offline: "Connection to the project computer was lost",
   offlineRetry: "Retry",
   planCounts: (used: number, max: number) =>
     `${used} of ${max} tasks this plan`,
   planTip: "Plan limit for task records. Resets monthly.",
   taskInfo: "Task info",
   taskInfoTip: "Cloud keeps title, status and times only.",
-  statusTimeline: "Status timeline",
+  /** Design HTML heading (brief said Status timeline — tight equivalent). */
+  statusTimeline: "Status",
   openHistory: "Open history",
+  /** Stays in Chat (product rule) — not rendered on Tasks detail. */
   loadOlder: "Load older",
   openReport: "Open report",
   openTask: "Open task",
   openInTasks: "Open in Tasks",
-  backToList: "Back",
+  backToList: "← Tasks",
   assignTitle: "Assign task",
   assignAssistant: "Assistant",
   assignPrompt: "Task",
@@ -36,6 +41,7 @@ export const PROJECT_PAGE_TASKS_COPY = {
   createWorktree: "Create worktree",
   worktreeName: "Worktree name",
   worktreeNone: "None",
+  worktreeProjectFolder: "Project folder",
   chatSettingHint: "Where task chips appear.",
   compactHint: "One line with Open in Tasks.",
   chatSettingTitle: "Task updates in chat",
@@ -45,6 +51,11 @@ export const PROJECT_PAGE_TASKS_COPY = {
   fromComputer: "From this computer",
   loading: "Loading tasks…",
   loadError: "Could not load tasks. Try again.",
+  kvTask: "Task",
+  kvAssistant: "Assistant",
+  kvStatus: "Status",
+  kvCreated: "Created",
+  kvUpdated: "Updated",
 } as const;
 
 export const PROJECT_TASK_STATUS_LABEL = {

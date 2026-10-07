@@ -13,11 +13,11 @@ export const projectTaskStatusTone = (
   return "muted";
 };
 
+/** Design: locked tokens; shape/icon carries meaning — soft fills only. */
 export const PROJECT_TASK_TONE_CLASS: Record<ProjectTaskChipTone, string> = {
-  ok: "border-awc-border bg-awc-ok-soft text-awc-fg dark:border-gray-700 dark:bg-white/10 dark:text-gray-100",
-  info: "border-awc-border bg-awc-info-soft text-awc-fg dark:border-gray-700 dark:bg-white/10 dark:text-gray-100",
-  warn: "border-awc-border bg-awc-warn-soft text-awc-fg dark:border-gray-700 dark:bg-white/10 dark:text-gray-100",
-  err: "border-awc-border bg-awc-bad-soft text-awc-fg dark:border-gray-700 dark:bg-white/10 dark:text-gray-100",
-  muted:
-    "border-awc-border bg-awc-tile-2 text-awc-fg-muted dark:border-gray-700 dark:bg-white/5 dark:text-gray-300",
+  ok: "border-awc-border-strong bg-awc-surface text-awc-fg",
+  info: "border-awc-accent-soft-2 bg-awc-info-soft text-awc-fg",
+  warn: "border-awc-border-strong bg-awc-tile-2 text-awc-fg-muted",
+  err: "border-awc-control-border bg-awc-surface text-awc-fg",
+  muted: "border-awc-border bg-awc-tile text-awc-fg-subtle",
 };

@@ -3,11 +3,13 @@
 import { useState } from "react";
 
 import useAwcProjectHashDeepLink from "@/features/projects/hooks/useAwcProjectHashDeepLink";
-import { PANEL_STATUS_CLASS } from "@/features/projects/projectPagePanelChrome.constant";
-import { AWC_TASKS_PRIMARY_BUTTON_CLASS } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
+import {
+  AWC_TASKS_CARD_CLASS,
+  AWC_TASKS_PRIMARY_BUTTON_CLASS,
+  AWC_TASKS_STATUS_CLASS,
+} from "@/features/projects/tasks/awcProjectTasksChrome.constant";
 import AwcProjectTaskDetail from "@/features/projects/tasks/AwcProjectTaskDetail";
 import AwcProjectTasksAssignDialog from "@/features/projects/tasks/AwcProjectTasksAssignDialog";
-import AwcProjectTasksChatSettings from "@/features/projects/tasks/AwcProjectTasksChatSettings";
 import AwcProjectTasksFilters from "@/features/projects/tasks/AwcProjectTasksFilters";
 import AwcProjectTasksList from "@/features/projects/tasks/AwcProjectTasksList";
 import AwcProjectTasksOfflineBanner from "@/features/projects/tasks/AwcProjectTasksOfflineBanner";
@@ -17,9 +19,8 @@ import { projectHasOwnerComputer } from "@/features/projects/utils/projectHasOwn
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 /**
- * Tasks tab panel — screens A/B/D/E (EN PASS). No standalone New task page.
- * Presentation chrome only; data from agent_runs via Reports API + S1 status mapper.
- * Load older / full history stay Chat + project computer (no separate web History).
+ * Tasks tab panel — screens A/B/D (EN PASS). Screen E lives in project Settings.
+ * No standalone New task page. Load older stays in Chat (not Tasks).
  */
 export default function AwcProjectTasksPanel({
   project,
@@ -36,16 +37,13 @@ export default function AwcProjectTasksPanel({
     taskId === null
       ? null
       : (tasks.allTasks.find((t) => t.id === taskId) ?? null);
+  const hasActiveFilters =
+    tasks.assistantFilter !== "all" || tasks.statusFilter !== "all";
 
   return (
-    <section aria-label={C.aria} className="flex min-w-0 flex-col gap-3">
+    <section aria-label={C.aria} className="flex min-w-0 flex-col gap-3.5">
       {tasks.offlineMessage !== null ? (
         <AwcProjectTasksOfflineBanner onRetry={tasks.reload} />
-      ) : null}
-      {tasks.planCounts !== null ? (
-        <p className="text-[12px] text-awc-fg-muted dark:text-gray-400">
-          {C.planCounts(tasks.planCounts.used, tasks.planCounts.max)}
-        </p>
       ) : null}
       {selected !== null ? (
         <AwcProjectTaskDetail
@@ -56,11 +54,10 @@ export default function AwcProjectTasksPanel({
             setTaskId(null);
           }}
           onRetry={tasks.reload}
-          onLoadOlder={tasks.reload}
         />
       ) : (
-        <>
-          <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className={AWC_TASKS_CARD_CLASS}>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2.5 border-b border-awc-border px-3.5 py-3">
             <AwcProjectTasksFilters
               assistants={tasks.assistants}
               assistantId={tasks.assistantFilter}
@@ -68,6 +65,21 @@ export default function AwcProjectTasksPanel({
               onAssistantChange={tasks.setAssistantFilter}
               onStatusChange={tasks.setStatusFilter}
             />
+            <span className="min-w-0 flex-1" />
+            {tasks.planCounts !== null ? (
+              <span
+                className="inline-flex items-center gap-1.5 text-[12px] whitespace-nowrap text-awc-fg-subtle"
+                title={C.planTip}
+              >
+                {C.planCounts(tasks.planCounts.used, tasks.planCounts.max)}
+                <span
+                  className="inline-grid h-[18px] w-[18px] place-items-center rounded-full border border-awc-border-strong bg-awc-surface text-[11px] font-bold text-awc-fg-muted"
+                  aria-label={C.planTip}
+                >
+                  i
+                </span>
+              </span>
+            ) : null}
             <button
               type="button"
               className={AWC_TASKS_PRIMARY_BUTTON_CLASS}
@@ -78,34 +90,37 @@ export default function AwcProjectTasksPanel({
               {C.emptyAssign}
             </button>
           </div>
-          {tasks.loadFailed ? (
-            <div className="flex flex-col items-start gap-2 px-1">
-              <p className={PANEL_STATUS_CLASS}>{C.loadError}</p>
-              <button
-                type="button"
-                className={AWC_TASKS_PRIMARY_BUTTON_CLASS}
-                onClick={tasks.reload}
-              >
-                {C.offlineRetry}
-              </button>
-            </div>
-          ) : tasks.loading && tasks.allTasks.length === 0 ? (
-            <p className={PANEL_STATUS_CLASS}>{C.loading}</p>
-          ) : (
-            <AwcProjectTasksList
-              tasks={tasks.tasks}
-              hasGit={hasGit}
-              onOpen={setTaskId}
-              onAssign={() => {
-                setAssignOpen(true);
-              }}
-            />
-          )}
-          <AwcProjectTasksChatSettings
-            value={tasks.chatVisibility}
-            onChange={tasks.setChatVisibility}
-          />
-        </>
+          <div className="min-w-0">
+            {tasks.loadFailed ? (
+              <div className="flex flex-col items-start gap-2 px-3.5 py-3">
+                <p className={AWC_TASKS_STATUS_CLASS}>{C.loadError}</p>
+                <button
+                  type="button"
+                  className={AWC_TASKS_PRIMARY_BUTTON_CLASS}
+                  onClick={tasks.reload}
+                >
+                  {C.offlineRetry}
+                </button>
+              </div>
+            ) : tasks.loading && tasks.allTasks.length === 0 ? (
+              <p className={AWC_TASKS_STATUS_CLASS}>{C.loading}</p>
+            ) : (
+              <AwcProjectTasksList
+                tasks={tasks.tasks}
+                hasGit={hasGit}
+                hasActiveFilters={hasActiveFilters}
+                onOpen={setTaskId}
+                onAssign={() => {
+                  setAssignOpen(true);
+                }}
+                onClearFilters={() => {
+                  tasks.setAssistantFilter("all");
+                  tasks.setStatusFilter("all");
+                }}
+              />
+            )}
+          </div>
+        </div>
       )}
       <AwcProjectTasksAssignDialog
         open={assignOpen}

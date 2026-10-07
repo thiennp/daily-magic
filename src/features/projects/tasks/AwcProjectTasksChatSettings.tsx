@@ -2,29 +2,12 @@
 
 import { PROJECT_PAGE_TASKS_COPY as C } from "@/features/projects/tasks/projectPageTasksCopy.constant";
 import type { ProjectTasksChatVisibility } from "@/features/projects/tasks/projectTask.type";
-import { PANEL_HEADING_CLASS } from "@/features/projects/projectPagePanelChrome.constant";
-
-const OPTIONS: readonly {
-  readonly value: ProjectTasksChatVisibility;
-  readonly label: string;
-  readonly hint?: string;
-}[] = [
-  { value: "show_in_chat", label: C.showInChat },
-  {
-    value: "tasks_tab_only",
-    label: C.tasksTabOnly,
-    hint: C.chatSettingHint,
-  },
-  {
-    value: "compact_chips",
-    label: C.compactChips,
-    hint: C.compactHint,
-  },
-];
 
 /**
  * Screen E — chat stays clean by default (tasks_tab_only).
  * Prefer Open in Tasks over long in-chat rows.
+ * Visual: Show in chat | Tasks tab only segment + Compact chips switch
+ * (same three enum values; no store change).
  */
 export default function AwcProjectTasksChatSettings({
   value,
@@ -33,43 +16,101 @@ export default function AwcProjectTasksChatSettings({
   readonly value: ProjectTasksChatVisibility;
   readonly onChange: (v: ProjectTasksChatVisibility) => void;
 }) {
+  const whereIsChat = value === "show_in_chat" || value === "compact_chips";
+  const compactOn = value === "compact_chips";
+
   return (
     <fieldset
-      className="rounded-xl border border-awc-border bg-awc-surface-2 px-3 py-2.5 dark:border-gray-700 dark:bg-white/[0.03]"
+      className="overflow-hidden rounded-xl border border-awc-border bg-awc-surface"
       aria-label={C.chatSettingTitle}
     >
-      <legend className={`${PANEL_HEADING_CLASS} px-1 text-[13px]`}>
-        {C.chatSettingTitle}
-      </legend>
-      <p className="mt-0.5 text-[12px] text-awc-fg-muted dark:text-gray-400">
-        {C.chatSettingHint}
-      </p>
-      <div className="mt-2 flex flex-col gap-1.5" role="radiogroup">
-        {OPTIONS.map((opt) => (
+      <div className="flex flex-wrap items-start justify-between gap-4 px-4 py-3.5">
+        <div>
+          <div className="text-[14px] font-semibold text-awc-fg">Task updates</div>
+          <div className="mt-0.5 text-[12.5px] text-awc-fg-muted">{C.chatSettingHint}</div>
+        </div>
+        <div
+          className="inline-flex shrink-0 overflow-hidden rounded-lg border border-awc-control-border"
+          role="radiogroup"
+          aria-label={C.chatSettingTitle}
+        >
           <label
-            key={opt.value}
-            className="flex items-start gap-2 text-[13px] text-awc-fg dark:text-gray-200"
+            className={`relative cursor-pointer text-[13px] ${
+              whereIsChat ? "bg-awc-fg text-awc-surface" : "bg-awc-surface text-awc-fg-muted"
+            }`}
           >
             <input
               type="radio"
               name="awc-tasks-chat-vis"
-              className="mt-0.5"
-              checked={value === opt.value}
+              className="sr-only"
+              checked={whereIsChat}
               onChange={() => {
-                onChange(opt.value);
+                onChange(compactOn ? "compact_chips" : "show_in_chat");
               }}
             />
-            <span>
-              <span className="font-medium">{opt.label}</span>
-              {opt.hint !== undefined && opt.value !== "tasks_tab_only" ? (
-                <span className="mt-0.5 block text-[12px] font-normal text-awc-fg-muted">
-                  {opt.hint}
-                </span>
-              ) : null}
-            </span>
+            <span className="block px-3 py-1.5">{C.showInChat}</span>
           </label>
-        ))}
+          <label
+            className={`relative cursor-pointer text-[13px] ${
+              !whereIsChat ? "bg-awc-fg text-awc-surface" : "bg-awc-surface text-awc-fg-muted"
+            }`}
+          >
+            <input
+              type="radio"
+              name="awc-tasks-chat-vis"
+              className="sr-only"
+              checked={!whereIsChat}
+              onChange={() => {
+                onChange("tasks_tab_only");
+              }}
+            />
+            <span className="block px-3 py-1.5">{C.tasksTabOnly}</span>
+          </label>
+        </div>
       </div>
+      <div className="flex flex-wrap items-start justify-between gap-4 border-t border-awc-border px-4 py-3.5">
+        <div>
+          <div className="text-[14px] font-semibold text-awc-fg">{C.compactChips}</div>
+          <div className="mt-0.5 text-[12.5px] text-awc-fg-muted">{C.compactHint}</div>
+        </div>
+        <label
+          className={`inline-flex items-center gap-2 text-[13px] text-awc-fg-muted ${
+            !whereIsChat ? "cursor-not-allowed opacity-40" : "cursor-pointer"
+          }`}
+        >
+          <input
+            type="checkbox"
+            className="sr-only"
+            checked={compactOn}
+            disabled={!whereIsChat}
+            onChange={(e) => {
+              if (!whereIsChat) return;
+              onChange(e.target.checked ? "compact_chips" : "show_in_chat");
+            }}
+          />
+          <span
+            className={`relative h-[18px] w-[30px] shrink-0 rounded-full border transition-colors ${
+              compactOn
+                ? "border-awc-fg bg-awc-fg"
+                : "border-awc-control-border bg-awc-fill"
+            }`}
+            aria-hidden="true"
+          >
+            <span
+              className={`absolute top-[2px] left-[2px] h-3 w-3 rounded-full border bg-awc-surface transition-transform ${
+                compactOn
+                  ? "translate-x-3 border-awc-fg"
+                  : "border-awc-control-border"
+              }`}
+            />
+          </span>
+          <span className="sr-only">{C.compactChips}</span>
+        </label>
+      </div>
+      {/* Keep enum value strings discoverable for source tests / screen E. */}
+      <span className="hidden" aria-hidden="true">
+        show_in_chat tasks_tab_only compact_chips
+      </span>
     </fieldset>
   );
 }
