@@ -60,11 +60,11 @@ export const PRICING_COMPARE_ACCESS_SECTIONS: readonly PricingCompareSection[] =
         tip: "When you create a skill from work you repeat, you choose: use your own tokens or AI account, or buy an AgentWitch AI pack.",
       },
       {
-        feature: "Prompt Optimizer runs on",
-        trial: "Your CLI, an assistant or tokens you buy",
-        pro: "Your CLI, an assistant or tokens you buy",
-        team: "Your CLI, an assistant or tokens you buy",
-        tip: "You can also add your own API key. Each API key counts as 1 assistant toward your limit.",
+        feature: "Prompt optimizer runs on",
+        trial: "Your CLI, an assistant, tokens you buy, or your own API key",
+        pro: "Your CLI, an assistant, tokens you buy, or your own API key",
+        team: "Your CLI, an assistant, tokens you buy, or your own API key",
+        tip: "Each own API key counts as 1 assistant toward your limit. Seats never include AI.",
       },
       {
         feature: "Team token savings on repeated work",

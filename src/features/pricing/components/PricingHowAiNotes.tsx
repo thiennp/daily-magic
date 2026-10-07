@@ -1,6 +1,6 @@
 import { PRICING_HOW_AI_NOTES } from "@/features/pricing/pricingCopy.constant";
 
-/** Skill-from-repeat + Prompt Optimizer paths — outside package cards (rules 11–12). */
+/** Skill-from-repeat + Prompt optimizer paths — outside package cards (rules 11–12). */
 export default function PricingHowAiNotes() {
   const copy = PRICING_HOW_AI_NOTES;
   return (

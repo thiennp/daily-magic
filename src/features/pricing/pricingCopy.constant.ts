@@ -54,7 +54,7 @@ export const PRICING_ON_DEMAND = {
     {
       title: "AI credit",
       price: `${formatUsd(aiCreditPacksUsd[0])} / pack of ${formatUsd(aiCreditPacksUsd[0])} credit`,
-      body: `For skills from repeated work and the Prompt Optimizer, when you do not want to use your own AI. Packs of ${packList}.`,
+      body: `For skills from repeated work and the Prompt optimizer, when you do not want to use your own AI. Packs of ${packList}.`,
     },
     {
       title: "Cloud storage",
@@ -73,15 +73,16 @@ export const PRICING_HOW_AI_NOTES = {
     "Use my own tokens or AI — Free from AgentWitch. Your provider bills you.",
     `Buy an AgentWitch AI pack — Packs of ${packList}.`,
   ],
-  optimizerTitle: "Prompt Optimizer",
-  optimizerIntro: "Pick how the Prompt Optimizer runs.",
+  optimizerTitle: "Prompt optimizer",
+  optimizerIntro: "Pick how the Prompt optimizer runs.",
   optimizerOptions: [
     "My CLI",
     "An assistant",
     "Tokens I buy",
+    "Own API key (counts as 1 assistant)",
   ],
   optimizerHelp:
-    "You can also add your own API key. Each API key counts as 1 assistant toward your limit.",
+    "Not in any plan — seats never include AI. Each own API key counts as 1 assistant toward your connect limit.",
 } as const;
 
 export const PRICING_COMPARE_CAPTION = "Compare Trial, Pro and Team" as const;

@@ -55,8 +55,8 @@ export const PRICING_FAQ_ITEMS: readonly PricingFaqItem[] = [
       "When you create a skill from work you repeat, you choose: use your own tokens or AI account, or buy an AgentWitch AI pack. Seats never include AI.",
   },
   {
-    question: "How does the Prompt Optimizer run?",
-    answer: `Pick your CLI, an assistant, or tokens you buy. You can also add your own API key. Each API key counts as 1 assistant toward your limit (${pro.assistantsConnect} on Pro, ${team.assistantsConnect} on Team).`,
+    question: "How does the Prompt optimizer run?",
+    answer: `Pick your CLI, an assistant, tokens you buy, or your own API key. Each own API key counts as 1 assistant toward your limit (${pro.assistantsConnect} on Pro, ${team.assistantsConnect} on Team). Seats never include AI.`,
   },
   {
     question: "How many computers can I use?",

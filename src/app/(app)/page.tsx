@@ -18,7 +18,6 @@ export const metadata: Metadata = {
   description: homeDescription,
   keywords: [
     "AgentWitch",
-    "Agent Witch",
     "AI agent account",
     "Agent Mail",
     "WebMCP",

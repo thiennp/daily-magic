@@ -21,7 +21,7 @@ export const MARKETING_FEATURE_ITEMS: readonly MarketingFeatureItem[] = [
     emphasized: true,
   },
   {
-    title: "Prompt Optimizer with honest scores",
+    title: "Prompt optimizer with honest scores",
     body: "Evaluate scores, pass only on passed outcomes, and reuse winners as Playbooks. Timeout, interrupt, and no_reply fail cleanly—not silent success.",
     preview: "report",
   },

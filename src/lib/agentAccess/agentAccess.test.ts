@@ -61,7 +61,7 @@ describe("agent access registration", () => {
     expect(text).toContain("Do not ask the human to paste the prompt");
     expect(guideline.sections[0]?.heading).toBe("What AgentWitch is");
     expect(text).toContain("agent-support playground");
-    expect(text).toContain("Prompt Optimizer");
+    expect(text).toContain("Prompt optimizer");
     expect(text).toContain("not a concrete ops executor");
     expect(text).toContain("Slack");
     expect(
