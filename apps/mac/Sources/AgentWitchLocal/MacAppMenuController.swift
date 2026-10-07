@@ -252,9 +252,11 @@ final class MacAppMenuController: ObservableObject {
         do {
             try clearSignedInProfilePointer(fileManager: fileManager)
         } catch {
+            // Arch soft: do not clear email or overwrite the failure with success copy.
             statusMessage = sanitizeMacAppUserFacingStatus(
                 "Could not sign out: \(error.localizedDescription)"
             )
+            return
         }
         signedInEmail = nil
         // Design: files stay; assistants cannot use this computer until sign-in + Start.

@@ -219,4 +219,41 @@ final class SelfHealSetupFlowTests: XCTestCase {
         XCTAssertNil(resolveSignedInProfileEmail(installDir: root))
         XCTAssertFalse(FileManager.default.fileExists(atPath: profile.path))
     }
+
+    func testSelfHealHealthTimeoutMapsToGenericFailure() async {
+        let http = FakeHealHTTP()
+        let runner = FakeHealScriptRunner(status: 0)
+        let result = await runSelfHealSetupFlow(
+            isCoreInstalled: true,
+            http: http,
+            scriptRunner: runner,
+            probeHealth: { .unverified },
+            sleep: { _ in },
+            healthTimeoutSeconds: 0.05,
+            healthPollIntervalSeconds: 0
+        )
+        guard case .failed(let kind, _) = result.session else {
+            return XCTFail("expected failed session on health timeout, got \(result.session)")
+        }
+        XCTAssertEqual(kind, .generic)
+        XCTAssertEqual(result.runtimeState, .stopped)
+        XCTAssertTrue(runner.ran)
+    }
+
+    func testRedactInstallScriptLogStripsTokens() {
+        let raw = "PAIRING_TOKEN=abc123secret\ntoken=xyz\nFound 113 tools\n"
+        let cleaned = redactInstallScriptLog(raw)
+        XCTAssertFalse(cleaned.contains("abc123secret"))
+        XCTAssertFalse(cleaned.contains("xyz"))
+        XCTAssertTrue(cleaned.contains("<redacted>"))
+        XCTAssertTrue(cleaned.contains("Found 113 tools"))
+    }
+
+    func testResolveSetupLogPath() {
+        let root = URL(fileURLWithPath: "/tmp/fake-install", isDirectory: true)
+        let url = resolveAgentWitchSetupLogPath(installDir: root)
+        XCTAssertEqual(url.lastPathComponent, "setup.log")
+        XCTAssertTrue(url.path.hasSuffix("/logs/setup.log"))
+    }
+
 }
