@@ -3,7 +3,7 @@
 **Branch:** `feat/awc-computer-sync-relay-r1` (stacked on neon-prune-300-r1).
 
 ## Implemented (server)
-- Migration `102-project-computer-sync-relay.sql` + soft ensure
+- Migration `103-project-computer-sync-relay.sql` + soft ensure
 - Constants (1 MiB, store root, kinds, learning purge prefixes)
 - Path normalize + allowlist; secret re-scan; device ACL (computer ∈ project)
 - Owner enable/disable (`POST …/sync/devices`)

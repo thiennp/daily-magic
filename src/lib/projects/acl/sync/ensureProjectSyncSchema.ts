@@ -11,7 +11,7 @@ export const resetProjectSyncSchemaForTests = (): void => {
 };
 
 /**
- * Soft ensure for sync relay tables (migration 102). Additive CREATE IF NOT
+ * Soft ensure for sync relay tables (migration 103). Additive CREATE IF NOT
  * EXISTS only — mirrors numbered migration.
  */
 export const ensureProjectSyncSchema = async (): Promise<void> => {
