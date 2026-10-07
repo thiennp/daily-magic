@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-import isDefaultUserProject from "@/lib/projects/isDefaultUserProject";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import AwcProjectDeleteConfirmForm from "@/features/projects/AwcProjectDeleteConfirmForm";
 import AwcProjectDeleteDangerZone from "@/features/projects/AwcProjectDeleteDangerZone";
@@ -24,10 +23,6 @@ const AwcProjectDeleteControl = ({
     project.id,
   );
   const [confirmOpen, setConfirmOpen] = useState(false);
-
-  if (isDefaultUserProject(project)) {
-    return null;
-  }
 
   if (variant === "menu") {
     return (

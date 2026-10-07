@@ -83,7 +83,7 @@ export default function AwcProjectCardActionsMenuItems({
           fallbackDescribedById={editHelperId}
         />
       )}
-      {canDelete && !isDefaultProject ? (
+      {canDelete ? (
         <AwcProjectDeleteMenuItem
           onRequestConfirm={() => {
             onClose();

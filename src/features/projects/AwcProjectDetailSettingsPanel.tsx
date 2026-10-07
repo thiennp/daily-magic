@@ -1,6 +1,5 @@
 "use client";
 
-import isDefaultUserProject from "@/lib/projects/isDefaultUserProject";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import AwcProjectSettingsDangerZone from "@/features/projects/settings/AwcProjectSettingsDangerZone";
@@ -24,7 +23,7 @@ export default function AwcProjectDetailSettingsPanel({
   pageActorRole,
 }: AwcProjectDetailSettingsPanelProps) {
   const isOwner = pageActorRole === "owner";
-  const canDelete = isOwner && !isDefaultUserProject(project);
+  const canDelete = isOwner;
   const canLeave = !isOwner;
 
   return (

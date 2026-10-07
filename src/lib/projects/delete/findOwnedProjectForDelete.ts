@@ -1,11 +1,10 @@
-import isDefaultUserProject from "@/lib/projects/isDefaultUserProject";
 import type FindOwnedProjectForDeleteResult from "@/lib/projects/delete/types/FindOwnedProjectForDeleteResult.type";
 import type ProjectDeleteTarget from "@/lib/projects/delete/types/ProjectDeleteTarget.type";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
 /**
  * Ownership gate: unknown id → not_found; exists but other owner → not_owner
- * (403); Default project → default_project.
+ * (403). Default projects may be deleted by the owner.
  */
 const findOwnedProjectForDelete = async (
   target: ProjectDeleteTarget,
@@ -22,9 +21,6 @@ const findOwnedProjectForDelete = async (
   }
   if (project.ownerUserId !== ownerUserId) {
     return { kind: "not_owner" };
-  }
-  if (isDefaultUserProject(project)) {
-    return { kind: "default_project" };
   }
 
   return { kind: "owned", project };

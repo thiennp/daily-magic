@@ -21,7 +21,6 @@ import { useAwcProjectMessengerThreads } from "@/features/projects/messenger/hoo
 import sumMessengerUnread from "@/features/projects/overview/sumMessengerUnread";
 import resolveProjectHeaderStatus from "@/features/projects/utils/resolveProjectHeaderStatus";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
-import isDefaultUserProject from "@/lib/projects/isDefaultUserProject";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
@@ -49,7 +48,7 @@ export default function AwcProjectDetailPanel({
   const { localTokenHash } = useLocalMacBrowserContext();
   const { devices, displayNameById } = useMyMacDevices();
   const isOwner = pageActorRole === "owner";
-  const canDelete = isOwner && !isDefaultUserProject(project);
+  const canDelete = isOwner;
   const canLeave = !isOwner;
   const nav = useAwcProjectDetailNavigation({ startRename, isOwner });
   const { activeTab, setActiveTab, onGotoTab, onGotoActivity } = nav;
