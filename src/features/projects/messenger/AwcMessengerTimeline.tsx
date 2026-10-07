@@ -108,7 +108,7 @@ export default function AwcMessengerTimeline({
   return (
     <div
       ref={scrollerRef}
-      className="flex flex-1 flex-col gap-3.5 overflow-auto bg-gray-50 p-4 dark:bg-white/[0.02]"
+      className="flex flex-1 flex-col gap-3.5 overflow-auto bg-awc-bg p-4 dark:bg-white/[0.02]"
     >
       <AwcMessengerTimelineLoadHeader
         loadingOlder={loadingOlder}

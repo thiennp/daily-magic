@@ -33,7 +33,7 @@ export default function MarketingBrandSectionCards() {
         title="Logo on marketing canvas"
         desc="Unchanged AW mark + wordmark."
       >
-        <div className="rounded-xl bg-gray-50 p-6">
+        <div className="rounded-xl bg-awc-bg p-6">
           <AgentWitchLogo surface="light" />
         </div>
       </ComponentCard>
@@ -41,7 +41,7 @@ export default function MarketingBrandSectionCards() {
       <MarketingBrandColorSwatchesCard />
 
       <ComponentCard title="Typography" desc="Eyebrow, display heading, body.">
-        <div className="space-y-4 rounded-xl bg-gray-50 p-6">
+        <div className="space-y-4 rounded-xl bg-awc-bg p-6">
           <p className={MARKETING_EYEBROW_CLASSES}>Section eyebrow</p>
           <p
             className={mergeMarketingClasses(

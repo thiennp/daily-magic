@@ -22,7 +22,7 @@ export default function AwcProjectSettingsTasksChatRow({
     <section className="flex flex-col gap-2" aria-labelledby="p-set-tasks-chat-h">
       <h3
         id="p-set-tasks-chat-h"
-        className="text-[13px] font-semibold text-gray-500 dark:text-gray-400"
+        className="text-[13px] font-semibold text-awc-fg-muted dark:text-gray-400"
       >
         {C.chatSettingTitle}
       </h3>

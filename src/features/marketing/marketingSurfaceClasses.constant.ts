@@ -10,8 +10,8 @@ export const MARKETING_LIGHT_SURFACE_CLASS = "marketing-light-surface";
 export const MARKETING_INPUT_BASE_CLASSES = [
   "mt-2 w-full",
   `${MARKETING_CARD_RADIUS_CLASSES} border border-gray-200 px-3 py-2.5`,
-  "text-sm text-gray-900 dark:text-white/90",
-  "bg-white shadow-sm placeholder:text-gray-600",
+  "text-sm text-awc-fg dark:text-white/90",
+  "bg-white shadow-sm placeholder:text-awc-fg-muted",
   "dark:border-gray-700 dark:bg-gray-800 dark:placeholder:text-white/40",
 ].join(" ");
 
@@ -30,21 +30,21 @@ export const MARKETING_SURFACE_BASE_CLASSES = [
 ].join(" ");
 
 export const MARKETING_TEXT_PRIMARY_CLASSES =
-  "text-gray-900 dark:text-white/90";
+  "text-awc-fg dark:text-white/90";
 
 export const MARKETING_TEXT_SECONDARY_CLASSES = [
   MARKETING_BODY_CLASSES,
   "dark:text-gray-300",
 ].join(" ");
 
-/** Muted labels (card categories, helper copy) — WCAG AA on white / gray-50. */
-export const MARKETING_TEXT_MUTED_CLASSES = "text-gray-600 dark:text-gray-400";
+/** Muted labels (card categories, helper copy) — WCAG AA on white / sand. */
+export const MARKETING_TEXT_MUTED_CLASSES = "text-awc-fg-muted dark:text-gray-400";
 
-/** Uppercase section eyebrows — WCAG AA on marketing gray-50 / white surfaces. */
+/** Uppercase section eyebrows — WCAG AA on marketing sand / white surfaces. */
 export const MARKETING_EYEBROW_TEXT_CLASSES = [
   MARKETING_EYEBROW_CLASSES,
   "dark:text-brand-300",
 ].join(" ");
 
 export const MARKETING_HEADER_LINK_CLASSES =
-  "text-gray-700 transition hover:text-gray-900 dark:text-gray-300 dark:hover:text-white";
+  "text-awc-fg transition hover:text-awc-fg dark:text-gray-300 dark:hover:text-white";

@@ -79,7 +79,7 @@ export default function AppShell({
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-awc-bg dark:bg-gray-900">
       <AppShellHeader showDesktopBrand={showHeaderBrand} />
       <WorkflowAttentionBanner />
       <DispatchApprovalListener />

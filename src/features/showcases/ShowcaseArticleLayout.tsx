@@ -63,7 +63,7 @@ export default function ShowcaseArticleLayout({
       <AppPanel
         as="footer"
         padding="compact"
-        className="mt-12 bg-gray-50 dark:bg-white/[0.03]"
+        className="mt-12 bg-awc-bg dark:bg-white/[0.03]"
       >
         <p className="text-sm font-medium text-gray-800 dark:text-white/90">
           Try this next

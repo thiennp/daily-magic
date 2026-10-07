@@ -60,7 +60,7 @@ describe("project layout v2 L5 Settings + Members", () => {
     expect(column).toContain("AwcProjectMembersOwnerContent");
     expect(column).not.toContain("AwcProjectAccessPanel");
     expect(column).toContain("border-l");
-    expect(column).toContain("bg-gray-50/70");
+    expect(column).toContain("bg-awc-bg/70");
     expect(owner).toContain("AwcProjectMembersPeopleSection");
     expect(owner).toContain("AwcProjectMembersHelpersSection");
     expect(owner).toContain("AwcProjectMembersInviteBotsSection");

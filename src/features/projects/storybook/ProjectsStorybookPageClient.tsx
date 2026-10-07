@@ -14,7 +14,7 @@ const ProjectsStorybookPageClient = () => {
 
   return (
     <ProjectsStorybookMockFetchProvider>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen bg-awc-bg dark:bg-gray-900">
         <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-900/95">
           <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <div>

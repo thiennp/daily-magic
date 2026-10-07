@@ -1,6 +1,6 @@
 /**
  * AgentWitch marketing / public-site design system (v2026).
- * Enterprise landing reference: gray-50 canvas, brand blue accents, navy dark
+ * Enterprise landing reference: sand (awc-bg) canvas, brand blue accents, navy dark
  * bands, border-first cards, tight display headings. Shared with AWL inline CSS
  * via `@agent-witch/shared/ui`.
  */
@@ -12,7 +12,7 @@ export const MARKETING_ANNOUNCEMENT_BAR_CLASSES =
   "bg-gray-950 px-4 py-2.5 text-center text-xs font-medium text-gray-200 sm:text-sm";
 
 /** Page and section backgrounds */
-export const MARKETING_PAGE_BACKGROUND_CLASSES = "bg-gray-50";
+export const MARKETING_PAGE_BACKGROUND_CLASSES = "bg-awc-bg";
 
 export const MARKETING_DARK_SECTION_CLASSES = "bg-gray-950 text-white";
 
@@ -25,12 +25,12 @@ export const MARKETING_EYEBROW_CLASSES =
   "text-xs font-semibold uppercase tracking-[0.14em] text-brand-700";
 
 export const MARKETING_DISPLAY_HEADING_CLASSES =
-  "font-bold tracking-[-0.03em] text-gray-900";
+  "font-bold tracking-[-0.03em] text-awc-fg";
 
 export const MARKETING_SECTION_HEADING_CLASSES =
-  "font-bold tracking-[-0.02em] text-gray-900";
+  "font-bold tracking-[-0.02em] text-awc-fg";
 
-export const MARKETING_BODY_CLASSES = "text-gray-600 leading-relaxed";
+export const MARKETING_BODY_CLASSES = "text-awc-fg-muted leading-relaxed";
 
 export const MARKETING_META_LABEL_CLASSES = "font-mono text-sm text-brand-600";
 
@@ -67,10 +67,10 @@ export const MARKETING_METRIC_DIVIDER_CLASSES =
   "border-l border-brand-200/80 pl-6 first:border-l-0";
 
 export const MARKETING_METRIC_VALUE_CLASSES =
-  "text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl";
+  "text-2xl font-extrabold tracking-tight text-awc-fg sm:text-3xl";
 
 export const MARKETING_METRIC_DESCRIPTION_CLASSES =
-  "mt-1 text-sm font-medium leading-snug text-gray-600";
+  "mt-1 text-sm font-medium leading-snug text-awc-fg-muted";
 
 /** Primary & secondary actions on light surfaces */
 export const MARKETING_BUTTON_PRIMARY_CLASSES = [
@@ -89,7 +89,7 @@ export const MARKETING_BUTTON_SECONDARY_CLASSES = [
   "inline-flex items-center justify-center",
   "rounded-xl",
   "border border-gray-200/90 bg-white px-5 py-2.5",
-  "text-sm font-semibold text-gray-800",
+  "text-sm font-semibold text-awc-fg",
   "shadow-sm hover:border-gray-300 hover:bg-gray-50 hover:shadow hover:-translate-y-0.5 active:translate-y-0",
   "transition-all duration-200",
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300/60 focus-visible:ring-offset-2",

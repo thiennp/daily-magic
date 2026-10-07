@@ -2,7 +2,7 @@ import ComponentCard from "@/components/common/ComponentCard";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
 const SWATCHES = [
-  { label: "Canvas", className: "bg-gray-50" },
+  { label: "Canvas", className: "bg-awc-bg" },
   { label: "Brand 600", className: "bg-brand-600" },
   { label: "Brand 50", className: "bg-brand-50" },
   { label: "Navy band", className: "bg-gray-950" },
@@ -12,7 +12,7 @@ export default function MarketingBrandColorSwatchesCard() {
   return (
     <ComponentCard
       title="Color swatches"
-      desc="Tailwind tokens from @theme brand + gray."
+      desc="Tailwind tokens from @theme brand + awc sand."
     >
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {SWATCHES.map((swatch) => (

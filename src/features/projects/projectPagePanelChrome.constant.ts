@@ -2,19 +2,19 @@
 export const PANEL_HEADING_CLASS =
   "text-[15px] font-semibold text-gray-900 dark:text-white";
 
-export const PANEL_INTRO_CLASS = "text-[13px] text-gray-500 dark:text-gray-400";
+export const PANEL_INTRO_CLASS = "text-[13px] text-awc-fg-muted dark:text-gray-400";
 
 export const PANEL_LIST_CLASS =
-  "overflow-hidden rounded-2xl bg-gray-50/80 dark:bg-white/[0.03]";
+  "overflow-hidden rounded-2xl bg-awc-bg/80 dark:bg-white/[0.03]";
 
 export const PANEL_ROW_CLASS =
   "flex w-full items-center justify-between gap-3 border-t border-gray-200/80 px-3 py-3 text-left first:border-t-0 hover:bg-gray-100/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400/40 dark:border-gray-800/80 dark:hover:bg-white/[0.05]";
 
 export const PANEL_ROW_TITLE_CLASS =
-  "truncate text-[15px] font-medium text-gray-900 dark:text-gray-100";
+  "truncate text-[15px] font-medium text-awc-fg dark:text-gray-100";
 
 export const PANEL_ROW_META_CLASS =
-  "text-[13px] text-gray-500 dark:text-gray-400";
+  "text-[13px] text-awc-fg-muted dark:text-gray-400";
 
 export const PANEL_PILL_CLASS =
   "shrink-0 rounded-full bg-gray-200/80 px-2 py-0.5 text-[11.5px] font-medium text-gray-700 dark:bg-white/10 dark:text-gray-300";

@@ -14,7 +14,7 @@ describe("marketingDesignSystem.constant", () => {
   });
 
   it("MARKETING-006 uses brand-primary CTAs and blue eyebrows on light surfaces", () => {
-    expect(MARKETING_PAGE_BACKGROUND_CLASSES).toContain("bg-gray-50");
+    expect(MARKETING_PAGE_BACKGROUND_CLASSES).toContain("bg-awc-bg");
     expect(MARKETING_EYEBROW_CLASSES).toContain("text-brand-700");
     expect(MARKETING_BUTTON_PRIMARY_CLASSES).toContain("bg-brand-600");
   });

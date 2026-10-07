@@ -8,7 +8,7 @@ export default function DevWorkflowProgressPreviewPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 dark:bg-gray-900 sm:p-10">
+    <div className="min-h-screen bg-awc-bg p-6 dark:bg-gray-900 sm:p-10">
       <WorkflowProgressSection />
     </div>
   );

@@ -11,7 +11,7 @@ const readSrc = (relativePath: string): string =>
 describe("PROJECT_PAGE_METADATA_TEXT_CLASS", () => {
   it("pairs AA-safe light and dark gray tokens", () => {
     expect(PROJECT_PAGE_METADATA_TEXT_CLASS).toBe(
-      "text-gray-500 dark:text-gray-400",
+      "text-awc-fg-muted dark:text-gray-400",
     );
   });
 

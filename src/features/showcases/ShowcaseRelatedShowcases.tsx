@@ -19,7 +19,7 @@ export default function ShowcaseRelatedShowcases({
     <AppPanel
       as="aside"
       padding="compact"
-      className="mt-10 bg-gray-50 dark:bg-white/[0.03]"
+      className="mt-10 bg-awc-bg dark:bg-white/[0.03]"
     >
       <p className="text-sm font-medium text-gray-800 dark:text-white/90">
         Related guides

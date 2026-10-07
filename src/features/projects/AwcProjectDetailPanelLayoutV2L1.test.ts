@@ -57,7 +57,7 @@ describe("project layout v2 L1 shell", () => {
     expect(panel).toContain("AwcProjectMembersColumn");
     expect(panel).toMatch(/lg:grid-cols-\[minmax\(0,1fr\)_20rem\]/);
     expect(members).toContain("border-l");
-    expect(members).toContain("bg-gray-50/70");
+    expect(members).toContain("bg-awc-bg/70");
     expect(members).toContain("AwcProjectMembersOwnerContent");
     expect(members).not.toContain("AwcProjectAccessPanel");
     expect(copy).toContain('editOnThisComputer: "Edit on this computer"');
