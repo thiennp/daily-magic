@@ -15,6 +15,11 @@ vi.mock("@/lib/db", () => ({
   asRowArray: (rows: unknown) => (Array.isArray(rows) ? rows : []),
 }));
 
+/** Billing gate is covered in redeemClaimBotCode.entitlement.test.ts. */
+vi.mock("@/lib/billing/assertAssistantConnectEntitlement", () => ({
+  assertAssistantConnectEntitlement: async () => ({ ok: true }),
+}));
+
 describe("redeemClaimBotCode over owned bot", () => {
   beforeEach(() => {
     sqlMock.mockReset();

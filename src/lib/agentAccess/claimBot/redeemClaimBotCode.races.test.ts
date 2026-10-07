@@ -15,6 +15,11 @@ vi.mock("@/lib/db", () => ({
   asRowArray: (rows: unknown) => (Array.isArray(rows) ? rows : []),
 }));
 
+/** Billing gate is covered in redeemClaimBotCode.entitlement.test.ts. */
+vi.mock("@/lib/billing/assertAssistantConnectEntitlement", () => ({
+  assertAssistantConnectEntitlement: async () => ({ ok: true }),
+}));
+
 const openGate = (q: string) => {
   if (isClaimBotSchemaSql(q)) return [];
   if (q.includes("FROM agent_bot_claim_entry_locks")) return [];
