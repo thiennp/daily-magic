@@ -110,6 +110,7 @@ export default function AwcProjectTasksPanel({
       <AwcProjectTasksAssignDialog
         open={assignOpen}
         hasGit={hasGit}
+        defaultBranch={project.defaultBranch ?? null}
         assistants={
           tasks.assistants.length > 0
             ? tasks.assistants

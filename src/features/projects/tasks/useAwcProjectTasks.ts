@@ -30,6 +30,11 @@ import type {
   ProjectTaskPlanCounts,
   ProjectTasksChatVisibility,
 } from "@/features/projects/tasks/projectTask.type";
+import {
+  PROJECT_TASKS_CHAT_VISIBILITY_DEFAULT,
+  readProjectTasksChatVisibility,
+  writeProjectTasksChatVisibility,
+} from "@/features/projects/tasks/projectTasksChatVisibility";
 import { listProjectTasksIdbOrThrowSoft } from "@/features/projects/tasks/projectTasksIdb";
 import { mapAgentRunToProjectTaskMeta } from "@/features/projects/tasks/utils/mapAgentRunToProjectTaskMeta";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
@@ -106,8 +111,20 @@ export default function useAwcProjectTasks(
   const [statusFilter, setStatusFilter] = useState<ProjectTaskUiStatus | "all">(
     "all",
   );
-  const [chatVisibility, setChatVisibility] =
-    useState<ProjectTasksChatVisibility>("tasks_tab_only");
+  const [chatVisibility, setChatVisibilityState] =
+    useState<ProjectTasksChatVisibility>(PROJECT_TASKS_CHAT_VISIBILITY_DEFAULT);
+
+  useEffect(() => {
+    setChatVisibilityState(readProjectTasksChatVisibility(projectId));
+  }, [projectId]);
+
+  const setChatVisibility = useCallback(
+    (v: ProjectTasksChatVisibility) => {
+      setChatVisibilityState(v);
+      writeProjectTasksChatVisibility(projectId, v);
+    },
+    [projectId],
+  );
   const [loading, setLoading] = useState(true);
   const [loadFailed, setLoadFailed] = useState(false);
   const [tick, setTick] = useState(0);
@@ -181,9 +198,10 @@ export default function useAwcProjectTasks(
         read: () => listProjectTasksIdbOrThrowSoft(projectId),
       });
       const idbEntries = idbEntriesOrEmpty(idbSoft).map((row) => toMeta(row));
-      const neonEntries = (neonMetaOpt ?? reportEntries).map((r) =>
-        "assistantName" in r ? r : toMeta(r),
-      );
+      const neonEntries: readonly ProjectTaskMeta[] =
+        neonMetaOpt !== undefined
+          ? neonMetaOpt.map((r) => toMeta(r))
+          : reportEntries;
       const page = loadPage({
         idbEntries,
         localEntries: (localMetaOpt ?? []).map((r) => toMeta(r)),

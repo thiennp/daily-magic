@@ -5,6 +5,7 @@ import { useEffect, useLayoutEffect, useRef } from "react";
 import AwcMessengerTimelineEntryRow from "@/features/projects/messenger/AwcMessengerTimelineEntryRow";
 import AwcMessengerTimelineLoadHeader from "@/features/projects/messenger/AwcMessengerTimelineLoadHeader";
 import type { AwcMessengerTimelineEntry } from "@/features/projects/messenger/types/awcProjectMessenger.type";
+import type { ProjectTasksChatVisibility } from "@/features/projects/tasks/projectTask.type";
 import { restoreMessengerScrollAfterPrepend } from "@/features/projects/messenger/utils/restoreMessengerScrollAfterPrepend";
 import { scrollMessengerTimelineToBottom } from "@/features/projects/messenger/utils/scrollMessengerTimelineToBottom";
 
@@ -15,6 +16,7 @@ interface AwcMessengerTimelineProps {
   readonly reachedStart: boolean;
   readonly projectComputerOffline: boolean;
   readonly onLoadOlder: () => void;
+  readonly chatVisibility?: ProjectTasksChatVisibility;
 }
 
 const TOP_LOAD_THRESHOLD_PX = 48;
@@ -26,6 +28,7 @@ export default function AwcMessengerTimeline({
   reachedStart,
   projectComputerOffline,
   onLoadOlder,
+  chatVisibility,
 }: AwcMessengerTimelineProps) {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const stickToBottomRef = useRef(true);
@@ -119,6 +122,7 @@ export default function AwcMessengerTimeline({
           entry.author.kind === "owner" || entry.author.kind === "member";
         return (
           <AwcMessengerTimelineEntryRow
+            chatVisibility={chatVisibility}
             key={entry.messageId}
             entry={entry}
             isMine={isMine}

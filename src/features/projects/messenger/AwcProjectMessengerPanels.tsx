@@ -10,6 +10,7 @@ import type { AwcMessengerThreadList } from "@/features/projects/messenger/types
 import type { MessengerTaskAssigneeOption } from "@/features/projects/messenger/utils/messengerTaskAssigneeOptions";
 import type { MessengerThreadMeta } from "@/features/projects/messenger/utils/selectMessengerThreadMeta";
 import type { MessengerTaskDraft } from "@/features/projects/messenger/utils/validateMessengerTaskDraft";
+import type { ProjectTasksChatVisibility } from "@/features/projects/tasks/projectTask.type";
 
 interface AwcProjectMessengerPanelsProps {
   readonly threads: AwcMessengerThreadList;
@@ -33,6 +34,7 @@ interface AwcProjectMessengerPanelsProps {
   readonly onLoadOlder: () => void;
   readonly onSendMessage: (text: string, needsReply: boolean) => Promise<boolean>;
   readonly onSendTask: (draft: MessengerTaskDraft) => Promise<boolean>;
+  readonly chatVisibility?: ProjectTasksChatVisibility;
 }
 
 export default function AwcProjectMessengerPanels({
@@ -56,6 +58,7 @@ export default function AwcProjectMessengerPanels({
   onLoadOlder,
   onSendMessage,
   onSendTask,
+  chatVisibility,
 }: AwcProjectMessengerPanelsProps) {
   return (
     <div className={ACTIVITY_PANEL_GRID_CLASS}>
@@ -95,7 +98,8 @@ export default function AwcProjectMessengerPanels({
           onLoadOlder={onLoadOlder}
           onSendMessage={onSendMessage}
           onSendTask={onSendTask}
-        />
+        
+          chatVisibility={chatVisibility}/>
       </div>
     </div>
   );

@@ -6,9 +6,12 @@ import { AWC_MESSENGER_AI_SESSION_COPY as C } from "@/features/projects/messenge
 import type { AwcMessengerTimelineEntry } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 import { messengerAiSessionStatusTone } from "@/features/projects/messenger/utils/messengerAiSessionStatusTone";
 import { buildProjectTabHash } from "@/lib/shell/buildNavConsolidationRedirect";
+import type { ProjectTasksChatVisibility } from "@/features/projects/tasks/projectTask.type";
 
 interface AwcMessengerAiSessionRowProps {
   readonly entry: AwcMessengerTimelineEntry;
+  /** Screen E — default tasks_tab_only hides the row from chat. */
+  readonly chatVisibility?: ProjectTasksChatVisibility;
 }
 
 const TONE_CLASS: Record<string, string> = {
@@ -38,8 +41,13 @@ const formatStatusLabel = (status: string): string => {
  */
 export default function AwcMessengerAiSessionRow({
   entry,
+  chatVisibility = "tasks_tab_only",
 }: AwcMessengerAiSessionRowProps) {
   const [expanded, setExpanded] = useState(false);
+  if (chatVisibility === "tasks_tab_only") {
+    return null;
+  }
+  const compact = chatVisibility === "compact_chips";
   const session = entry.session;
   const writerLabel =
     session?.writerAgent?.trim() ||
@@ -60,8 +68,11 @@ export default function AwcMessengerAiSessionRow({
 
   return (
     <article
-      className="w-full max-w-xl self-stretch rounded-xl border border-awc-border bg-awc-surface-2 px-3 py-2.5 dark:border-gray-800 dark:bg-white/[0.03]"
+      className={`w-full max-w-xl self-stretch rounded-xl border border-awc-border bg-awc-surface-2 px-3 py-2.5 dark:border-gray-800 dark:bg-white/[0.03] ${
+        compact ? "py-1.5" : ""
+      }`}
       data-entry-kind="session"
+      data-tasks-visibility={chatVisibility}
     >
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm font-semibold text-awc-fg dark:text-white">
@@ -73,11 +84,21 @@ export default function AwcMessengerAiSessionRow({
         >
           {formatStatusLabel(status)}
         </span>
-        <span className="ml-auto text-[11px] text-awc-fg-subtle dark:text-gray-400">
-          {formatWhen(entry.createdAt)}
-        </span>
+        {!compact ? (
+          <span className="ml-auto text-[11px] text-awc-fg-subtle dark:text-gray-400">
+            {formatWhen(entry.createdAt)}
+          </span>
+        ) : null}
+        {compact && tasksHref !== null ? (
+          <a
+            href={tasksHref}
+            className="ml-auto text-xs font-medium text-awc-fg underline-offset-2 hover:underline dark:text-gray-200"
+          >
+            {C.openInTasks}
+          </a>
+        ) : null}
       </div>
-      {summary.length > 0 ? (
+      {!compact && summary.length > 0 ? (
         <p
           className={`mt-1.5 text-sm leading-5 text-awc-fg-muted dark:text-gray-300 ${
             expanded ? "whitespace-pre-wrap" : "line-clamp-2"
@@ -86,6 +107,7 @@ export default function AwcMessengerAiSessionRow({
           {summary}
         </p>
       ) : null}
+      {!compact ? (
       <div className="mt-2 flex flex-wrap gap-3">
         {tasksHref !== null ? (
           <a
@@ -115,6 +137,7 @@ export default function AwcMessengerAiSessionRow({
           </button>
         ) : null}
       </div>
+      ) : null}
     </article>
   );
 }

@@ -19,6 +19,7 @@ import { messengerTaskAssigneeOptions } from "@/features/projects/messenger/util
 import { selectMessengerThreadMeta } from "@/features/projects/messenger/utils/selectMessengerThreadMeta";
 import { sumMessengerUnreadCount } from "@/features/projects/messenger/utils/sumMessengerUnreadCount";
 import type { AwcProjectMessengerSectionProps } from "@/features/projects/messenger/AwcProjectMessengerSection.types";
+import useProjectTasksChatVisibility from "@/features/projects/tasks/useProjectTasksChatVisibility";
 
 const WHOLE_KEY = "whole";
 
@@ -30,6 +31,7 @@ export default function AwcProjectMessengerSection({
   isOwner = false,
 }: AwcProjectMessengerSectionProps) {
   const list = useAwcProjectMessengerThreads(projectId);
+  const chatVisibility = useProjectTasksChatVisibility(projectId);
   const inboxClear = useAwcProjectMessengerInboxClear(projectId, isOwner);
   const clearBar = inboxClear.visible ? (
     <AwcProjectMessengerInboxClearBar clear={inboxClear} />
@@ -121,6 +123,7 @@ export default function AwcProjectMessengerSection({
         onSendMessage={async (text, needsReply) =>
           afterSend(await open.send(text, needsReply))
         }
+        chatVisibility={chatVisibility}
         onSendTask={async (draft) => afterSend(await open.sendTask(draft))}
       />
       {isOwner ? (

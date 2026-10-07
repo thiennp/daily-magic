@@ -5,6 +5,7 @@ import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type"
 import AwcProjectSettingsDangerZone from "@/features/projects/settings/AwcProjectSettingsDangerZone";
 import AwcProjectSettingsFolderRow from "@/features/projects/settings/AwcProjectSettingsFolderRow";
 import AwcProjectSettingsHistoryRow from "@/features/projects/settings/AwcProjectSettingsHistoryRow";
+import AwcProjectSettingsTasksChatRow from "@/features/projects/settings/AwcProjectSettingsTasksChatRow";
 import AwcProjectSettingsLeaveZone from "@/features/projects/settings/AwcProjectSettingsLeaveZone";
 import AwcProjectSettingsNameSection from "@/features/projects/settings/AwcProjectSettingsNameSection";
 import AwcProjectConnectionsSection from "@/features/projects/settings/connections/AwcProjectConnectionsSection";
@@ -47,6 +48,7 @@ export default function AwcProjectDetailSettingsPanel({
       {isOwner ? (
         <AwcProjectSettingsHistoryRow projectId={project.id} />
       ) : null}
+      <AwcProjectSettingsTasksChatRow projectId={project.id} />
       <AwcProjectSettingsRunsWithoutApprovalRow
         projectId={project.id}
         canEdit={isOwner}

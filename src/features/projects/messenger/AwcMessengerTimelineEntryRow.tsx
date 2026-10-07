@@ -5,11 +5,13 @@ import {
 import AwcMessengerAiSessionRow from "@/features/projects/messenger/AwcMessengerAiSessionRow";
 import AwcMessengerStateChips from "@/features/projects/messenger/AwcMessengerStateChips";
 import type { AwcMessengerTimelineEntry } from "@/features/projects/messenger/types/awcProjectMessenger.type";
+import type { ProjectTasksChatVisibility } from "@/features/projects/tasks/projectTask.type";
 import { isMessengerAiSessionEntry } from "@/features/projects/messenger/utils/isMessengerAiSessionEntry";
 
 interface AwcMessengerTimelineEntryRowProps {
   readonly entry: AwcMessengerTimelineEntry;
   readonly isMine: boolean;
+  readonly chatVisibility?: ProjectTasksChatVisibility;
 }
 
 const formatWhen = (iso: string): string => {
@@ -21,9 +23,12 @@ const formatWhen = (iso: string): string => {
 export default function AwcMessengerTimelineEntryRow({
   entry,
   isMine,
+  chatVisibility,
 }: AwcMessengerTimelineEntryRowProps) {
   if (isMessengerAiSessionEntry(entry)) {
-    return <AwcMessengerAiSessionRow entry={entry} />;
+    return (
+      <AwcMessengerAiSessionRow entry={entry} chatVisibility={chatVisibility} />
+    );
   }
 
   const who = entry.author.displayName?.trim() || entry.author.kind;

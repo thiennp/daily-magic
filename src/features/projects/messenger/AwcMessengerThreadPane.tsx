@@ -9,6 +9,7 @@ import type { AwcMessengerBotStatus } from "@/features/projects/messenger/types/
 import type { AwcMessengerOpenThread } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 import type { MessengerTaskAssigneeOption } from "@/features/projects/messenger/utils/messengerTaskAssigneeOptions";
 import type { MessengerTaskDraft } from "@/features/projects/messenger/utils/validateMessengerTaskDraft";
+import type { ProjectTasksChatVisibility } from "@/features/projects/tasks/projectTask.type";
 
 interface AwcMessengerThreadPaneProps {
   readonly title: string;
@@ -29,6 +30,7 @@ interface AwcMessengerThreadPaneProps {
   readonly onLoadOlder: () => void;
   readonly onSendMessage: (text: string, needsReply: boolean) => Promise<boolean>;
   readonly onSendTask: (draft: MessengerTaskDraft) => Promise<boolean>;
+  readonly chatVisibility?: ProjectTasksChatVisibility;
 }
 
 export default function AwcMessengerThreadPane({
@@ -50,6 +52,7 @@ export default function AwcMessengerThreadPane({
   onLoadOlder,
   onSendMessage,
   onSendTask,
+  chatVisibility,
 }: AwcMessengerThreadPaneProps) {
   const copy = AWC_PROJECT_MESSENGER_COPY;
   return (
@@ -91,6 +94,7 @@ export default function AwcMessengerThreadPane({
           reachedStart={reachedStart}
           projectComputerOffline={projectComputerOffline}
           onLoadOlder={onLoadOlder}
+          chatVisibility={chatVisibility}
         />
       ) : null}
       {canSend ? (
