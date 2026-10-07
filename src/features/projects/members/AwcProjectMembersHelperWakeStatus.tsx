@@ -10,6 +10,10 @@ const DOT_CLASS: Record<RailAssistantWakeStatus, string> = {
   not_connected: "bg-awc-warn-dot",
 };
 
+/** DF-036: "Wake failed" reads in `--bad`; every other chip stays subtle. */
+const TEXT_CLASS = (status: RailAssistantWakeStatus): string =>
+  status === "cant_reach" ? "text-awc-bad" : "text-awc-fg-subtle";
+
 /** P1-S1b: assistant row wake status (replaces the hard-coded "Ready"). */
 export default function AwcProjectMembersHelperWakeStatus({
   status,
@@ -18,7 +22,7 @@ export default function AwcProjectMembersHelperWakeStatus({
 }) {
   return (
     <span
-      className="flex shrink-0 items-center gap-1.5 text-[12.5px] text-awc-fg-subtle"
+      className={`flex shrink-0 items-center gap-1.5 text-[12.5px] ${TEXT_CLASS(status)}`}
       data-wake-status={status}
     >
       <span

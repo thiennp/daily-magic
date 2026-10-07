@@ -29,6 +29,16 @@ describe("formatAssistantWakeHealth (P1-S1b, Product map)", () => {
       offerPaste: true,
     });
     expect(mapWakeFailureReason("HTTP 418")).toEqual({ text: "Something went wrong.", offerPaste: true });
+    expect(mapWakeFailureReason("HTTP 404")).toEqual({ text: "Something went wrong.", offerPaste: true });
+  });
+
+  it("every HTTP 5nn → server-problem line, no paste offer (DF-036 EN S1)", () => {
+    for (const code of ["HTTP 501", "HTTP 502", "HTTP 504", "HTTP 599", " HTTP 503 "]) {
+      expect(mapWakeFailureReason(code)).toEqual({ text: "Grok Bot had a problem on its side.", offerPaste: false });
+    }
+    const failed = health({ lastWakeAt: at(2), lastFailureReason: "HTTP 502", nowMs: NOW });
+    expect(failed).toMatchObject({ failed: true, offerPaste: false });
+    expect(failed.line).not.toMatch(/HTTP|502/);
   });
 
   it("failure line: Last wake failed {time}: {reason}", () => {
@@ -47,7 +57,9 @@ describe("formatAssistantWakeHealth (P1-S1b, Product map)", () => {
       line: "Registered ✓ · Last wake 5 min ago",
       offerPaste: false,
     });
-    expect(health({ lastWakeAt: null, lastFailureReason: null, nowMs: NOW }).line).toBe("No wakes yet");
+    expect(health({ lastWakeAt: null, lastFailureReason: null, nowMs: NOW }).line).toBe(
+      "Registered ✓ · No wakes yet",
+    );
   });
 
   it("formatWakeAgo buckets", () => {

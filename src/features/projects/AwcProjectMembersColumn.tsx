@@ -1,6 +1,7 @@
 "use client";
 
 import AwcProjectMembersOwnerContent from "@/features/projects/members/AwcProjectMembersOwnerContent";
+import AwcProjectMembersRailHeading from "@/features/projects/members/AwcProjectMembersRailHeading";
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
 import { PROJECT_PAGE_LAYOUT_V2_COPY } from "@/features/projects/projectPageLayoutV2Copy.constant";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
@@ -35,9 +36,6 @@ export default function AwcProjectMembersColumn({
       aria-label={label}
       className={RAIL_CLASS}
     >
-      <h2 className="mb-3 px-3.5 text-[13px] font-semibold text-awc-fg-muted dark:text-gray-400">
-        {label}
-      </h2>
       {pageActorRole === "owner" ? (
         <AwcProjectMembersOwnerContent
           projectId={projectId}
@@ -46,9 +44,12 @@ export default function AwcProjectMembersColumn({
           onMessageHelper={onMessageHelper ?? (() => undefined)}
         />
       ) : (
-        <p className="px-3.5 text-[13px] text-awc-fg-muted dark:text-gray-400">
-          {C.viewerHint}
-        </p>
+        <>
+          <AwcProjectMembersRailHeading count={null} />
+          <p className="px-3.5 text-[13px] text-awc-fg-muted dark:text-gray-400">
+            {C.viewerHint}
+          </p>
+        </>
       )}
     </aside>
   );

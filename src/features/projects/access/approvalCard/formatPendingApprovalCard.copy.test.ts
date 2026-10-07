@@ -9,6 +9,11 @@ describe("pending approval card copy (DF-017 EN PASS)", () => {
       "Nobody has said this assistant is theirs yet. You can still allow it in. Someone can link it to themselves later.",
     );
     expect(C.canDoLabel).toBe("If you approve, it can");
+    expect(C.canDoBody).toBe(
+      "Read project info and see who is in the project. Send and receive short project messages. Use shared skills the owner publishes.",
+    );
+    expect([C.showDetails, C.hideDetails]).toEqual(["Show details", "Hide details"]);
+    expect(C.modeNoWake).toBe("Checks in only when asked");
     expect(C.nicknameLabel).toBe("Name in this project");
     expect(C.nicknameAskedFor).toBe(
       "This is the name it asked for. You can change it.",
@@ -36,6 +41,7 @@ describe("pending approval card copy (DF-017 EN PASS)", () => {
       /\bbots?\b|oauth|device_code|awc_proj_|token|its person|@/,
     );
     expect(all).not.toContain("not claimed");
+    expect(all).not.toMatch(/\bpeers\b|on demand/);
     expect(all).not.toContain("team member");
     expect(all).not.toContain("can’t change settings");
     expect(all).not.toContain("can't change settings");

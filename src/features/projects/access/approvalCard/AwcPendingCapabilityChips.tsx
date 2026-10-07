@@ -14,13 +14,17 @@ const CHIP =
 const MORE =
   "awc-focus-ring rounded-full border border-dashed border-awc-border-strong bg-transparent px-2.5 py-1 text-[13px] font-semibold text-awc-primary transition hover:border-awc-primary";
 
-/** "If you approve, it can" — 4 chips, then "+N more" / "Show less". */
+const DETAILS =
+  "awc-focus-ring mt-2 text-[13px] font-semibold text-awc-primary underline-offset-2 hover:underline";
+
+/** "If you approve, it can" — 4 chips, "+N more" / "Show less", then Show details (full sentence). */
 export default function AwcPendingCapabilityChips({
   capabilities,
 }: {
   readonly capabilities: readonly PendingCapability[];
 }) {
   const [expanded, setExpanded] = useState(false);
+  const [details, setDetails] = useState(false);
   const hidden = capabilities.length - PENDING_CAPABILITIES_VISIBLE;
   const shown =
     expanded || hidden <= 0
@@ -53,6 +57,17 @@ export default function AwcPendingCapabilityChips({
           </li>
         ) : null}
       </ul>
+      <button
+        type="button"
+        className={DETAILS}
+        aria-expanded={details}
+        onClick={() => setDetails((v) => !v)}
+      >
+        {details ? C.hideDetails : C.showDetails}
+      </button>
+      <p className="mt-1.5 text-[13px] text-awc-fg-muted" hidden={!details} data-pending-details>
+        {C.canDoBody}
+      </p>
     </div>
   );
 }

@@ -1,6 +1,8 @@
 /** Layout v2 L5 Members rail — EN from ARTIFACT-STRINGS (this computer glossary). */
 export const PROJECT_PAGE_MEMBERS_COPY = {
   columnLabel: "Members",
+  /** DF-036 D1: you + joined people + assistants (no computers). */
+  columnLabelCount: (n: number) => `Members · ${n}`,
   peopleHeading: "People",
   peopleInvite: "Invite people",
   peopleYouSuffix: "(you)",
@@ -8,12 +10,12 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   peoplePendingEmpty: "No pending invites or access requests.",
   helpersHeading: "Assistants",
   helpersEmpty: "No assistants yet. Invite an assistant below.",
-  /** P1-S1b assistant row wake status (never a fake Ready). */
+  /** Assistant row wake chip (DF-036 EN PASS; never a fake Ready). */
   helpersWake: {
-    ready: "Ready",
-    checks_on_demand: "Checks on demand",
+    ready: "Wake link ✓",
+    checks_on_demand: "Checks in only when asked",
     checking: "Checking…",
-    cant_reach: "Can't reach it",
+    cant_reach: "Wake failed",
     not_connected: "Not connected",
   },
   helpersWorking: "Working",

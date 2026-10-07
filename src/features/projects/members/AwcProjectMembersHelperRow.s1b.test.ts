@@ -29,13 +29,18 @@ describe("P1-S1b assistant row — wake status + one-box connect", () => {
     );
   });
 
-  it("plain status words", () => {
+  it("plain status words (DF-036 EN PASS chips)", () => {
     expect(C.helpersWake).toEqual({
-      ready: "Ready",
-      checks_on_demand: "Checks on demand",
+      ready: "Wake link ✓",
+      checks_on_demand: "Checks in only when asked",
       checking: "Checking…",
-      cant_reach: "Can't reach it",
+      cant_reach: "Wake failed",
       not_connected: "Not connected",
     });
+    expect(read("members/AwcProjectMembersHelperWakeStatus.tsx")).toContain("text-awc-bad");
+  });
+
+  it("rename input caps the nickname at 32 (2–32 letters rule)", () => {
+    expect(read("members/AwcProjectMembersHelperRowMenu.tsx")).toContain("maxLength={32}");
   });
 });

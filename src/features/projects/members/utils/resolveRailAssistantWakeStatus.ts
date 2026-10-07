@@ -10,10 +10,10 @@ export type RailAssistantWakeStatus =
 
 /**
  * P1-S1b: honest wake status for a Members rail assistant row.
- * - poll (no wake save this session) → Checks on demand
+ * - poll (no wake save this session) → Checks in only when asked
  * - no stored wake link → Checking… right after a save, else Not connected
- * - stored link: health loading → Checking…; last wake failed → Can't reach it;
- *   health known and fine → Ready; health unknown (load failed) → Not connected
+ * - stored link: health loading → Checking…; last wake failed → Wake failed;
+ *   health known and fine → Wake link ✓; health unknown (load failed) → Not connected
  * Never a fake Ready.
  */
 export const resolveRailAssistantWakeStatus = (input: {

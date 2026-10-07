@@ -4,8 +4,8 @@ import { useMemo } from "react";
 
 import type { AwcProjectAccessMember } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 import { useAwcProjectAccessWakeLinks } from "@/features/projects/access/hooks/useAwcProjectAccessWakeLinks";
-import { isComputerAccessMember } from "@/features/projects/access/utils/isComputerAccessMember";
 import AwcProjectMembersHelperRow from "@/features/projects/members/AwcProjectMembersHelperRow";
+import { isRailAssistantMember } from "@/features/projects/members/utils/countRailMembers";
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
 
 interface AwcProjectMembersHelpersSectionProps {
@@ -32,9 +32,7 @@ export default function AwcProjectMembersHelpersSection({
 }: AwcProjectMembersHelpersSectionProps) {
   const helpers = useMemo(
     () =>
-      members.filter(
-        (member) => member.isAgent && !isComputerAccessMember(member),
-      ),
+      members.filter(isRailAssistantMember),
     [members],
   );
   const { list: wake } = useAwcProjectAccessWakeLinks(helpers);

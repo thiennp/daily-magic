@@ -10,28 +10,36 @@ const LABEL_PATTERN =
 const EDGE_PUNCTUATION = /^[\s"'`,;:()[\]{}]+|[\s"'`,;:()[\]{}]+$/g;
 const MIN_KEY_LENGTH = 8;
 
-const isHttpsUrl = (value: string): boolean => {
+/** Host of an https wake link, else null (http, broken or not a web address). */
+export const wakeLinkHost = (value: string): string | null => {
   try {
-    return new URL(value).protocol === "https:";
+    const url = new URL(value);
+    return url.protocol === "https:" ? url.hostname : null;
   } catch {
-    return false;
+    return null;
   }
 };
 
-/**
- * Accepts the wake link and key in any order, on one line or two, with or
- * without labels. The key is the longest leftover token (≥ 8 chars).
- */
-export const parseWakeConnectPaste = (text: string): WakeConnectPaste => {
-  const match = URL_PATTERN.exec(text);
-  const webhookUrl = match?.[0].replace(/[),.;]+$/, "") ?? "";
-  if (!isHttpsUrl(webhookUrl)) return { ok: false, error: "bad_link" };
-  const rest = text.replace(match?.[0] ?? "", " ").replace(LABEL_PATTERN, " ");
+/** The first web address in the paste (http or https), trailing punctuation trimmed; "" if none. */
+export const findWakeLinkCandidate = (text: string): string =>
+  URL_PATTERN.exec(text)?.[0].replace(/[),.;]+$/, "") ?? "";
+
+/** The key: the longest leftover token (≥ 8 chars) once the address and labels are gone. */
+export const findWakeKey = (text: string): string | undefined => {
+  const match = URL_PATTERN.exec(text)?.[0] ?? "";
+  const rest = text.replace(match, " ").replace(LABEL_PATTERN, " ");
   const tokens = rest
     .split(/\s+/)
     .map((token) => token.replace(EDGE_PUNCTUATION, ""))
     .filter((token) => token.length >= MIN_KEY_LENGTH);
-  const webhookKey = [...tokens].sort((a, b) => b.length - a.length)[0];
+  return [...tokens].sort((a, b) => b.length - a.length)[0];
+};
+
+/** Accepts the wake link and key in any order, on one line or two, with or without labels. */
+export const parseWakeConnectPaste = (text: string): WakeConnectPaste => {
+  const webhookUrl = findWakeLinkCandidate(text);
+  if (wakeLinkHost(webhookUrl) === null) return { ok: false, error: "bad_link" };
+  const webhookKey = findWakeKey(text);
   if (webhookKey === undefined) return { ok: false, error: "missing_key" };
   return { ok: true, webhookUrl, webhookKey };
 };

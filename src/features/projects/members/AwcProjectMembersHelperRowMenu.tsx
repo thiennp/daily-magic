@@ -38,7 +38,7 @@ export default function AwcProjectMembersHelperRowMenu(p: AwcProjectMembersHelpe
       {renaming ? (
         <form className="flex flex-wrap items-center gap-2" onSubmit={(e) => { e.preventDefault(); void p.onRename(member.id, draft).then((ok) => { if (ok) setRenaming(false); }); }}>
           <label className="sr-only" htmlFor={`rename-${member.id}`}>{C.renameAria}</label>
-          <input id={`rename-${member.id}`} value={draft} onChange={(e) => setDraft(e.target.value)} className="min-w-0 flex-1 rounded-lg border border-awc-border bg-white px-2 py-1 text-sm dark:border-gray-700 dark:bg-gray-950" />
+          <input id={`rename-${member.id}`} maxLength={32} value={draft} onChange={(e) => setDraft(e.target.value)} className="min-w-0 flex-1 rounded-lg border border-awc-border bg-white px-2 py-1 text-sm dark:border-gray-700 dark:bg-gray-950" />
           <button type="submit" className="text-[13px] font-semibold text-awc-fg dark:text-white">{C.renameSave}</button>
           <button type="button" className="text-[13px] text-awc-fg-muted" onClick={() => setRenaming(false)}>{C.renameCancel}</button>
         </form>

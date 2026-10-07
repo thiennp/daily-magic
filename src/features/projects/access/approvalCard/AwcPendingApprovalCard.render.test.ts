@@ -26,6 +26,9 @@ describe("pending join card (DF-017)", () => {
     expect(order.every((i) => i >= 0)).toBe(true);
     expect([...order].sort((a, b) => a - b)).toEqual(order);
     expect(t).toContain("+2 more");
+    expect(t).toContain("Show details");
+    expect(html).toMatch(/<p[^>]*hidden=""[^>]*>Read project info and see who is in the project\. Send and receive short project messages\. Use shared skills the owner publishes\.<\/p>/);
+    expect(t).not.toMatch(/\bpeers\b/);
     expect(t).not.toContain("Checks on demand (no wake link)");
     expect(html).toMatch(/>Approve<\/button>/);
     expect(html).toMatch(/>Deny<\/button>/);

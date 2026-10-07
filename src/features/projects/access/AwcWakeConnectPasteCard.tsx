@@ -2,6 +2,7 @@
 
 import { formatAwcGrokWakeCopy } from "@/features/projects/access/awcGrokWakeAwaitingCopy.constant";
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
+import AwcWakeConnectPasteChips from "@/features/projects/access/AwcWakeConnectPasteChips";
 import { AWC_WAKE_CONNECT_PASTE_COPY as C } from "@/features/projects/access/awcWakeConnectPasteCopy.constant";
 import { useWakeConnectPaste } from "@/features/projects/access/hooks/useWakeConnectPaste";
 
@@ -54,6 +55,7 @@ export default function AwcWakeConnectPasteCard({
           onChange={(event) => form.changeText(event.target.value)}
         />
       </label>
+      <AwcWakeConnectPasteChips text={form.text} />
       <button
         type="submit"
         className={AWC_PROJECT_ACCESS_CTA.primary}

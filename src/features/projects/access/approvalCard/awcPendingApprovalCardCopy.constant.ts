@@ -31,8 +31,13 @@ export const AWC_PENDING_APPROVAL_CARD_COPY = {
   canSend: "Send short messages",
   canReceive: "Receive messages",
   canUseSkills: "Use skills you publish",
+  /** DF-036 EN PASS: full sentence behind "Show details" ("peers" retired). */
+  canDoBody:
+    "Read project info and see who is in the project. Send and receive short project messages. Use shared skills the owner publishes.",
+  showDetails: "Show details",
+  hideDetails: "Hide details",
   modeWake: "Wakes up on its own when there is work",
-  modeNoWake: "Checks on demand (no wake link)",
+  modeNoWake: "Checks in only when asked",
   showMore: "+{count} more",
   showLess: "Show less",
   nicknameLabel: "Name in this project",

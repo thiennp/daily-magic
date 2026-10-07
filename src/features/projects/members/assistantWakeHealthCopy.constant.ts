@@ -5,7 +5,7 @@
 export const ASSISTANT_WAKE_HEALTH_COPY = {
   failedLine: "Last wake failed {time}: {reason}",
   okLine: "Registered ✓ · Last wake {ago}",
-  noWakes: "No wakes yet",
+  noWakes: "Registered ✓ · No wakes yet",
   pasteNew: "Paste a new wake link",
   busy: "Grok Bot was busy. Try again in a few minutes.",
   serverError: "Grok Bot had a problem on its side.",
