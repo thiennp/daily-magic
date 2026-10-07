@@ -108,8 +108,8 @@ describe("NRG HARD ungated Tasks tab", () => {
       path.join(process.cwd(), "src/features/projects/tasks/useAwcProjectTasks.ts"),
       "utf8",
     );
-    expect(flag).toContain("never hide the tab");
+    expect(flag).toContain("always mounts");
     expect(hook).toContain("isProjectSyncModuleEnabled");
-    expect(hook).toContain("flag gates sync/IDB only");
+    expect(hook).toContain("isProjectSyncModuleEnabled");
   });
 });

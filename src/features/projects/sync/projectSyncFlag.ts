@@ -1,8 +1,9 @@
 /**
  * Feature flag for project sync module S1 (IDB soft-read / loadPage / adapter).
  * Messenger always uses the extracted pager (behavior-identical).
- * Tasks *tab chrome* always mounts; this flag only gates the sync/IDB data path
- * (empty/offline UI when off or IDB soft-fails) — never hide the tab.
+ * Tasks *tab chrome* always mounts (NRG HARD / UI Box). This flag only gates
+ * the sync/IDB data path — default OFF. When off, chrome uses Reports
+ * presentation; when on, softRead IDB → loadPage (soft-degrade never hides tab).
  *
  * Env: AWC_PROJECT_SYNC_MODULE=1 enables; unset/other = off.
  */
