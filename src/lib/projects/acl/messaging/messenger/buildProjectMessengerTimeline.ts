@@ -13,9 +13,10 @@ import type {
 const NO_REPLIES: ReadonlyMap<string, ProjectMessengerLinkedReply> = new Map();
 
 /**
- * One thread's timeline (oldest first): owner/member bubbles with per-bot
- * state chips underneath, and bot reply bubbles. State-only bot rows feed the
- * chips but are not bubbles.
+ * One thread's timeline in the same order as `keyed` (callers pass
+ * newest-first for Meta-style open/load-older). Owner/member bubbles with
+ * per-bot state chips underneath, and bot reply bubbles. State-only bot rows
+ * feed the chips but are not bubbles.
  */
 export const buildProjectMessengerTimeline = (input: {
   readonly threadKey: ProjectMessengerThreadKey;

@@ -11,7 +11,7 @@ orchestrators are named `orchestrate*`, `list*`, `open*`, `mark*ForViewer`).
 | Method + path                                                         | Who                                               | What                                                           |
 | --------------------------------------------------------------------- | ------------------------------------------------- | -------------------------------------------------------------- |
 | `GET /api/projects/:projectId/messenger/threads`                      | owner, member, viewer                             | `{ wholeProject, bots[], canSend }`                            |
-| `GET /api/projects/:projectId/messenger/threads/:threadKey`           | owner, member, viewer                             | `{ threadKey, entries[], canSend }`; **marks the thread read** |
+| `GET /api/projects/:projectId/messenger/threads/:threadKey`           | owner, member, viewer                             | `{ threadKey, entries[] /* newest-first */, page, error?, canSend }`; query `before`/`limit`; **marks read** on first page |
 | `POST /api/projects/:projectId/messenger/threads/:threadKey/messages` | owner, member (viewer **403** `viewer_read_only`) | body `{ text, needsReply? }`                                   |
 | `POST /api/projects/:projectId/messenger/threads/:threadKey/read`     | owner, member, viewer                             | unread → 0 (now)                                               |
 
@@ -28,6 +28,40 @@ Timeline entry: `{ messageId, createdAt, author { kind owner|member|bot, members
 `states[]` (owner/member messages only) = one chip per bot delivery
 `{ membershipId, displayName, state, reason }`, `state` ∈
 `received | got_it | working | done | blocked | waiting | no_answer`.
+
+### Thread open / load-older (Meta newest-first)
+
+Query: `before` (opaque cursor) + `limit` (1–100, default 50). First page
+(no `before`) is the newest page and marks the thread read up to its newest
+visible message.
+
+Response:
+
+```json
+{
+  "threadKey": "whole",
+  "entries": [ /* TimelineEntry, newest-first */ ],
+  "page": {
+    "beforeCursor": "<opaque>|null",
+    "hasMore": true,
+    "source": "local|neon|mixed|exhausted",
+    "localLive": false
+  },
+  "error": {
+    "code": "project_computer_offline",
+    "message": "Connection to the project computer was lost."
+  },
+  "canSend": true
+}
+```
+
+Opaque cursor encodes `{ t: createdAt, id: messageId }` (stable). Path: when
+`localLive` try History local read (`loadProjectMessengerOlderFromLocal`);
+else Neon rows with `created_at` older than the cursor. When load-older
+(`before` set) finds nothing in Neon and the project computer is offline →
+`error.code = project_computer_offline`. History owns the local reader;
+Dispatch ships a stub that returns empty until that tip lands.
+
 
 ## Bot tool (MCP)
 

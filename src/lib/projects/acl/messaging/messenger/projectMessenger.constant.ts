@@ -48,3 +48,7 @@ export const PROJECT_MESSENGER_ROW_LIMIT = PROJECT_MESSAGE_UNREAD_CAP;
 
 /** Thread list preview length (characters). */
 export const PROJECT_MESSENGER_PREVIEW_MAX_CHARS = 80;
+
+/** Default / max page size for messenger thread GET (?limit=). */
+export const PROJECT_MESSENGER_PAGE_DEFAULT_LIMIT = 50;
+export const PROJECT_MESSENGER_PAGE_MAX_LIMIT = 100;
