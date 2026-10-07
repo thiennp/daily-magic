@@ -7,6 +7,10 @@ vi.mock("@/lib/db", () => ({
   asRowArray: (value: unknown) => (Array.isArray(value) ? value : []),
 }));
 
+vi.mock("@/lib/billing/assertComputerEntitlement", () => ({
+  assertComputerEntitlement: vi.fn(async () => ({ ok: true as const })),
+}));
+
 import { insertAgentWitchDeviceClaim } from "@/lib/agentWitch/claimAgentWitchDeviceHelpers";
 
 const claimedRow = {
@@ -26,6 +30,14 @@ const sqlTextOf = (call: readonly unknown[]): string => {
   return Array.isArray(strings) ? strings.join(" ") : String(strings);
 };
 
+const insertSqlText = (): string => {
+  const insertCall = sqlMock.mock.calls.find((call) =>
+    sqlTextOf(call).includes("INSERT INTO agent_witch_devices"),
+  );
+  expect(insertCall).toBeDefined();
+  return sqlTextOf(insertCall ?? []);
+};
+
 describe("insertAgentWitchDeviceClaim (HOME-059)", () => {
   beforeEach(() => {
     sqlMock.mockReset();
@@ -40,7 +52,7 @@ describe("insertAgentWitchDeviceClaim (HOME-059)", () => {
       recordLastSeen: false,
     });
 
-    const sqlText = sqlTextOf(sqlMock.mock.calls[0] ?? []);
+    const sqlText = insertSqlText();
     expect(sqlText).toContain(
       "INSERT INTO agent_witch_devices (user_id, token_hash, device_label, platform)",
     );
@@ -55,7 +67,7 @@ describe("insertAgentWitchDeviceClaim (HOME-059)", () => {
       deviceLabel: "MKX52CMWN7",
     });
 
-    const sqlText = sqlTextOf(sqlMock.mock.calls[0] ?? []);
+    const sqlText = insertSqlText();
     expect(sqlText).toContain("last_seen_at)");
     expect(sqlText).toContain("NOW()");
   });
