@@ -66,7 +66,11 @@ describe("openProjectMessengerThread notice / bot↔bot / grouped rows", () => {
       threadKey: "whole",
     });
     expect(neonPageMock).toHaveBeenCalledWith(
-      expect.objectContaining({ notices: "owner", includeBotToBot: true }),
+      expect.objectContaining({
+        notices: "owner",
+        includeBotToBot: true,
+        directInWhole: true,
+      }),
     );
     if (!result.ok) throw new Error("expected ok");
     const [notice, b2b, parent] = result.entries;

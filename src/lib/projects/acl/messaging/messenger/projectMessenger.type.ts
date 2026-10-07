@@ -1,4 +1,7 @@
-import type { ProjectMessengerPeerAddress } from "@/lib/projects/acl/messaging/messenger/projectMessengerPeerAddress.type";
+import type {
+  ProjectMessengerDirectRecipient,
+  ProjectMessengerPeerAddress,
+} from "@/lib/projects/acl/messaging/messenger/projectMessengerPeerAddress.type";
 import type {
   ProjectMessengerAiSessionMeta,
   ProjectMessengerArchiveMeta,
@@ -8,7 +11,7 @@ import type {
   ProjectMessengerTimelineSession,
 } from "@/lib/projects/acl/messaging/messenger/projectMessengerTimelineEntry.type";
 
-export type { ProjectMessengerPeerAddress };
+export type { ProjectMessengerDirectRecipient, ProjectMessengerPeerAddress };
 // Timeline entry types live in projectMessengerTimelineEntry.type (size cap).
 export type {
   ProjectMessengerAiSessionMeta,
@@ -78,6 +81,8 @@ export type ProjectMessengerKeyedRow = {
   readonly peer?: ProjectMessengerPeerAddress;
   /** Notice row (server notice / lifecycle), thread GET only. */
   readonly notice?: true;
+  /** Whole-project feed copy of a direct send: its recipient seat(s). */
+  readonly to?: readonly ProjectMessengerDirectRecipient[];
 };
 
 export type ProjectMessengerDelivery = {

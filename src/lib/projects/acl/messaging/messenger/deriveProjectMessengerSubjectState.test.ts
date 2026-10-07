@@ -62,7 +62,7 @@ describe("deriveProjectMessengerSubjectState (OW9)", () => {
     });
   });
 
-  it("task_update: done / blocked only", () => {
+  it("task_update: every reply kind (received queued … done / blocked)", () => {
     const bot = { kind: "bot" as const, membershipId: "b", displayName: null };
     expect(
       derive(entry({ author: bot, kind: "task.done" }), "task_update"),
@@ -78,8 +78,11 @@ describe("deriveProjectMessengerSubjectState (OW9)", () => {
       needsYou: true,
     });
     expect(
-      derive(entry({ author: bot, kind: "task.status" }), "task_update"),
-    ).toBeNull();
+      derive(
+        entry({ author: bot, kind: "task.status", text: "2/4 done" }),
+        "task_update",
+      ),
+    ).toMatchObject({ status: "running", done: 2, of: 4, needsYou: false });
   });
 
   it("chat rows have none", () => {

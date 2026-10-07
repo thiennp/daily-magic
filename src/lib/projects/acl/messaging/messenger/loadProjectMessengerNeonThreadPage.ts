@@ -8,6 +8,7 @@ import { loadProjectMessengerDeliveries } from "@/lib/projects/acl/messaging/mes
 import { loadProjectMessengerNeonAgentRunsPage } from "@/lib/projects/acl/messaging/messenger/loadProjectMessengerNeonAgentRunsPage";
 import type { ProjectMessengerNoticeViewer } from "@/lib/projects/acl/messaging/messenger/isProjectMessengerNoticeRow";
 import { mapProjectMessengerRow } from "@/lib/projects/acl/messaging/messenger/mapProjectMessengerRow";
+import { mirrorProjectMessengerDirectRows } from "@/lib/projects/acl/messaging/messenger/mirrorProjectMessengerDirectRows";
 import { mergeProjectMessengerNeonTimelinePage } from "@/lib/projects/acl/messaging/messenger/mergeProjectMessengerNeonTimelinePage";
 import {
   PROJECT_MESSENGER_ROW_LIMIT,
@@ -31,6 +32,7 @@ export type LoadProjectMessengerNeonThreadPageResult = {
  * `includeBotToBot` (owner only, DF-023): bot↔bot rows join `whole` as
  * compact `peer` entries. Default off (members / module callers unchanged).
  * `notices` (thread GET): notice rows for that viewer (see keyProjectMessengerRows).
+ * `directInWhole` (thread GET): direct sends also show in `whole` with `to`.
  */
 export const loadProjectMessengerNeonThreadPage = async (input: {
   readonly projectId: string;
@@ -40,6 +42,7 @@ export const loadProjectMessengerNeonThreadPage = async (input: {
   readonly limit: number;
   readonly includeBotToBot?: boolean;
   readonly notices?: ProjectMessengerNoticeViewer;
+  readonly directInWhole?: boolean;
 }): Promise<LoadProjectMessengerNeonThreadPageResult> => {
   await ensureProjectAclSchema();
   await purgeExpiredProjectMessages();
@@ -69,12 +72,16 @@ export const loadProjectMessengerNeonThreadPage = async (input: {
   const botsById = new Map(bots.map((bot) => [bot.membershipId, bot]));
   const deliveries = await loadProjectMessengerDeliveries(input.projectId);
   const grouped = groupProjectMessengerDeliveries(deliveries);
-  const keyed = keyProjectMessengerRows({
+  const baseKeyed = keyProjectMessengerRows({
     rows: mapped,
     botIds: new Set(bots.map((bot) => bot.membershipId)),
     includeBotToBot: input.includeBotToBot === true,
     ...(input.notices !== undefined ? { notices: input.notices } : {}),
   });
+  const keyed =
+    input.directInWhole === true
+      ? mirrorProjectMessengerDirectRows(baseKeyed)
+      : baseKeyed;
   const timeline = buildProjectMessengerTimeline({
     threadKey: input.threadKey,
     keyed,

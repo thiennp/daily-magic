@@ -169,6 +169,19 @@ toDisplayName, toTeamLabel }` field (state-only kinds included). UI renders
     does not load them). Bot↔bot rows stay owner only (item 9) and now
     classify as `windowKind: "bot_to_bot"`.
 
+11. **Feed copies of direct sends, task-update states, approval ids** (thread
+    GET only; additive, read time, no migration, no bodies to Neon).
+
+    | field                         | type                                      | meaning                                                                                                                                                                                                                                                                                                                                       |
+    | ----------------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | `toMembershipIds`, `toLabels` | `string[]` (optional, same order)         | Whole project only: a human message sent to specific assistant(s) (kept recipient, POST to that assistant's thread). It stays in the assistant thread and also shows in Whole project with these set; labels are seat names (fallback `"Assistant"`). Absent = sent to everyone. Same `messageId` and state chips as the assistant-thread row |
+    | `subjectState` (task_update)  | `source: "reply_kind"`                    | `task.received` → `status: "queued"`, `task.processing` → `"running"`, `task.status` → `"running"` (+ `done`/`of` when its summary states progress: `"3/5"` → 3/5, `"40%"` → 40/100), `task.done` → `"done"`, `task.blocked` → `"blocked"` (needsYou)                                                                                         |
+    | `windowKind` approval         | `"approval_request" \| "approval_result"` | AI session row whose run is `pending_approval` → request; `denied` / `expired` → result (an approved run is a plain `task` again). Reserved message kinds `approval.request` / `approval.result` (no writer yet) classify the same way                                                                                                        |
+    | `approvalId`                  | `string` (approval rows only)             | `agent_runs.id`: `POST /api/projects/:projectId/access/run-approvals/:approvalId/approve` \| `…/decline` (project owner = executor). For reserved `approval.*` message rows it is the first id in the summary (`"approval <runId>"`)                                                                                                          |
+
+    Bot replies to a direct send stay in the assistant's thread. Thread list,
+    unread counts and previews do not count the Whole project copies.
+
 ## Known limits (v1)
 
 - **Thin retention**: the timeline shows live rows only. Ack, delete-on-read

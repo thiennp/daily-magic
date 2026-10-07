@@ -92,6 +92,8 @@ export const openProjectMessengerThread = async (input: {
     includeBotToBot: viewer.isOwner,
     // Notice rows: owner gets all; others only lifecycle (one copy each).
     notices: viewer.isOwner ? "owner" : "member",
+    // Kept-recipient sends also show in Whole project ("To {name}").
+    directInWhole: true,
   });
 
   const resolved = resolveProjectMessengerLoadPage({

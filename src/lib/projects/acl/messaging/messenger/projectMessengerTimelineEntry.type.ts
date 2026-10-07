@@ -63,4 +63,11 @@ export type ProjectMessengerTimelineEntry = {
   readonly peer?: ProjectMessengerPeerAddress;
   /** Additive (thread rows): archive meta; Neon rows only. */
   readonly archived?: ProjectMessengerArchiveMeta | null;
+  /**
+   * Additive (Whole project thread GET): set when the row was sent to
+   * specific assistant(s) (kept recipient) rather than everyone. Same order;
+   * labels = seat display names (fallback "Assistant"). Absent = everyone.
+   */
+  readonly toMembershipIds?: readonly string[];
+  readonly toLabels?: readonly string[];
 };

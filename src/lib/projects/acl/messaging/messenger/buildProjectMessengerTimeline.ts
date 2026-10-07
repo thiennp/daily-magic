@@ -5,11 +5,23 @@ import { PROJECT_MESSENGER_KIND_NEEDS_REPLY } from "@/lib/projects/acl/messaging
 import type {
   ProjectMessengerBot,
   ProjectMessengerDelivery,
+  ProjectMessengerDirectRecipient,
   ProjectMessengerKeyedRow,
   ProjectMessengerLinkedReply,
   ProjectMessengerThreadKey,
   ProjectMessengerTimelineEntry,
 } from "@/lib/projects/acl/messaging/messenger/projectMessenger.type";
+
+const directFields = (
+  to: readonly ProjectMessengerDirectRecipient[],
+  botsById: ReadonlyMap<string, ProjectMessengerBot>,
+) => ({
+  toMembershipIds: to.map((r) => r.membershipId),
+  toLabels: to.map(
+    (r) =>
+      r.displayName ?? botsById.get(r.membershipId)?.displayName ?? "Assistant",
+  ),
+});
 
 const NO_REPLIES: ReadonlyMap<string, ProjectMessengerLinkedReply> = new Map();
 
@@ -19,7 +31,8 @@ const NO_REPLIES: ReadonlyMap<string, ProjectMessengerLinkedReply> = new Map();
  * per-bot state chips underneath, and bot reply bubbles. State-only bot rows
  * feed the chips but are not bubbles. Owner-view bot↔bot rows carry `peer`
  * (DF-023) and render as compact lines. System rows only appear as keyed
- * notice rows (thread GET). Archived rows carry `archived` meta.
+ * notice rows (thread GET). Archived rows carry `archived` meta; Whole
+ * project copies of direct sends carry toMembershipIds / toLabels.
  */
 export const buildProjectMessengerTimeline = (input: {
   readonly threadKey: ProjectMessengerThreadKey;
@@ -33,7 +46,7 @@ export const buildProjectMessengerTimeline = (input: {
   const replies = indexProjectMessengerReplies(input.keyed);
   return input.keyed
     .filter((keyed) => keyed.threadKey === input.threadKey && keyed.visible)
-    .flatMap(({ row, text, inReplyTo, peer, notice }) => {
+    .flatMap(({ row, text, inReplyTo, peer, notice, to }) => {
       if (row.senderKind === "system" && notice !== true) {
         return [];
       }
@@ -67,6 +80,7 @@ export const buildProjectMessengerTimeline = (input: {
             : [],
           ...peerField,
           ...(archived !== null ? { archived } : {}),
+          ...(to !== undefined ? directFields(to, input.botsById) : {}),
         },
       ];
     });

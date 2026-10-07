@@ -21,6 +21,8 @@ describe("classifyProjectMessageWindowKind (DESIGN §3.1, today's kinds)", () =>
     ["project.updated", "system", "member", "notice"],
     ["chat.note", "bot", "bot", "bot_to_bot"],
     ["task.done", "bot", "bot", "task_update"],
+    ["approval.request", "system", "owner", "approval_request"],
+    ["approval.result", "bot", "none", "approval_result"],
   ] as const)(
     "%s from %s to %s → %s",
     (kind, senderKind, recipientKind, expected) => {

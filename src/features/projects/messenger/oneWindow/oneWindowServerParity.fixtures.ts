@@ -58,6 +58,8 @@ export const RUN_TABLE = [
 export const REPLY_TABLE: readonly (readonly [string, string | null])[] = [
   ["task.done", "Done"],
   ["task.blocked", "Blocked"],
-  ["task.status", null],
+  ["task.received", "Queued"],
+  ["task.processing", "Running"],
+  ["task.status", "Running"],
   ["chat.note", null],
 ];

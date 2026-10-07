@@ -1,10 +1,6 @@
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type { ProjectMessengerMessageState } from "@/lib/projects/acl/messaging/messenger/projectMessenger.type";
 import type { ProjectMessengerSubjectState } from "@/lib/projects/acl/messaging/messenger/projectMessengerWindowFields.type";
-import {
-  PROJECT_MESSAGE_KIND_TASK_BLOCKED,
-  PROJECT_MESSAGE_KIND_TASK_DONE,
-} from "@/lib/projects/acl/messaging/projectMessage.constants";
 
 /**
  * OW9 / OW-H5 subject-state rules, codes only (no copy, no tone). The single
@@ -76,24 +72,5 @@ export const projectMessengerSubjectStateFromAgentRun = (
     status,
     needsYou: awaitingApproval,
     awaitingApproval,
-  };
-};
-
-/** Bot reply kind → terminal status only (task.done / task.blocked). */
-export const projectMessengerSubjectStateFromReplyKind = (
-  kind: string,
-): ProjectMessengerSubjectState | null => {
-  if (
-    kind !== PROJECT_MESSAGE_KIND_TASK_DONE &&
-    kind !== PROJECT_MESSAGE_KIND_TASK_BLOCKED
-  ) {
-    return null;
-  }
-  const blocked = kind === PROJECT_MESSAGE_KIND_TASK_BLOCKED;
-  return {
-    source: "reply_kind",
-    status: blocked ? "blocked" : "done",
-    needsYou: blocked,
-    awaitingApproval: false,
   };
 };

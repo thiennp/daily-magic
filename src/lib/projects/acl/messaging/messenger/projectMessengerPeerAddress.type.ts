@@ -7,3 +7,9 @@ export type ProjectMessengerPeerAddress = {
   readonly toDisplayName: string | null;
   readonly toTeamLabel: string | null;
 };
+
+/** Recipient seat of a direct (kept recipient) send, Whole project copy. */
+export type ProjectMessengerDirectRecipient = {
+  readonly membershipId: string;
+  readonly displayName: string | null;
+};

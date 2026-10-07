@@ -44,3 +44,12 @@ export const PROJECT_MESSAGE_NOTICE_KINDS: readonly string[] = [
   PROJECT_MESSAGE_KIND_COMPOSER_RECIPIENT_STICKY_CLEARED,
   ...PROJECT_MESSENGER_PEER_LIFECYCLE_KINDS,
 ];
+
+/**
+ * Reserved approval message kinds (no writer yet). Run approvals live on
+ * agent_runs (status pending_approval → running | denied | expired) and reach
+ * the feed as AI session rows; a future project_messages writer for approval
+ * cards would use these kinds with "approval <runId>" in the summary.
+ */
+export const PROJECT_MESSAGE_KIND_APPROVAL_REQUEST = "approval.request";
+export const PROJECT_MESSAGE_KIND_APPROVAL_RESULT = "approval.result";

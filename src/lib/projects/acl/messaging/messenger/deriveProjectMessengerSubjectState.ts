@@ -3,8 +3,8 @@ import type { ProjectMessengerTimelineEntry } from "@/lib/projects/acl/messaging
 import {
   projectMessengerSubjectStateFromAgentRun,
   projectMessengerSubjectStateFromDeliveries,
-  projectMessengerSubjectStateFromReplyKind,
 } from "@/lib/projects/acl/messaging/messenger/projectMessengerSubjectStateRules";
+import { projectMessengerSubjectStateFromReplyKind } from "@/lib/projects/acl/messaging/messenger/projectMessengerSubjectStateFromReplyKind";
 import type { ProjectMessengerSubjectState } from "@/lib/projects/acl/messaging/messenger/projectMessengerWindowFields.type";
 
 /**
@@ -12,7 +12,8 @@ import type { ProjectMessengerSubjectState } from "@/lib/projects/acl/messaging/
  * fields the row already carries. It is never stored (DESIGN L6):
  * - AI session row: agent_runs.status (pending_approval = awaitingApproval)
  * - task row: PD delivery chips, worst state first, done/of = recipients
- * - task_update row: task.done / task.blocked only
+ * - task_update row: received → queued, processing → running, status →
+ *   running (+ done/of progress read from the summary), done, blocked
  * Codes only (UI owns copy). No bodies. Rules: projectMessengerSubjectStateRules
  * (shared with the One window client).
  */
@@ -27,7 +28,7 @@ export const deriveProjectMessengerSubjectState = (
     return projectMessengerSubjectStateFromDeliveries(entry.states);
   }
   if (windowKind === "task_update") {
-    return projectMessengerSubjectStateFromReplyKind(entry.kind);
+    return projectMessengerSubjectStateFromReplyKind(entry.kind, entry.text);
   }
   return null;
 };

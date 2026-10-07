@@ -3,11 +3,11 @@ import type { ProjectMessengerTimelineEntry } from "@/lib/projects/acl/messaging
 
 /** OW9 live subject state (codes only; never stored, read at query time). */
 export type ProjectMessengerSubjectState = {
-  /** deliveries = PD chips; agent_run = agent_runs.status; reply_kind = task.done/blocked. */
+  /** deliveries = PD chips; agent_run = agent_runs.status; reply_kind = bot task reply kind. */
   readonly source: "deliveries" | "agent_run" | "reply_kind";
-  /** Lead delivery state (worst first), agent_runs.status, or "done" / "blocked". */
+  /** Lead delivery state (worst first), agent_runs.status, or reply_kind queued / running / done / blocked. */
   readonly status: string;
-  /** deliveries only: recipients done / total. */
+  /** deliveries: recipients done / total. reply_kind running: progress (of 100 = percent). */
   readonly done?: number;
   readonly of?: number;
   /** Human action wanted: blocked / no answer / run waiting for approval. */
@@ -29,4 +29,6 @@ export type ProjectMessengerWindowTimelineEntry =
     readonly windowKind: ProjectMessageWindowKind;
     /** Live subject state for task / task_update rows; null otherwise. */
     readonly subjectState: ProjectMessengerSubjectState | null;
+    /** approval_* rows only: agent_runs.id for run-approvals approve / decline. */
+    readonly approvalId?: string;
   };
