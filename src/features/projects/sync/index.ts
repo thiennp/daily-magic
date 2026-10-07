@@ -99,15 +99,21 @@ export {
 } from "@/features/projects/sync/adapters/neonMetaAdapter";
 
 export {
+  AGENT_RUN_SYNC_FORWARD_TRANSITIONS,
   PROJECT_TASK_NEON_BODY_FIELD_DENYLIST,
   PROJECT_TASK_NEON_META_ROW_CAP,
+  PROJECT_TASK_NEON_META_STATUS_TOKENS,
+  decideAgentRunSyncStatusWrite,
   mapAgentRunRowToTaskNeonMeta,
   mapProjectTaskUiStatusToAgentRun,
   pageNeonProjectTasks,
   pickProjectTaskNeonMetaAllowlist,
   projectTasksNeonMetaAdapter,
   purgeProjectTaskNeonMetaBeyondCap,
+  sanitizeNeonMetaRefName,
   scrubNeonMetaTitle,
+  type DecideAgentRunSyncStatusWriteInput,
+  type DecideAgentRunSyncStatusWriteResult,
 } from "@/features/projects/sync/adapters/projectTasksNeonMeta";
 
 export {

@@ -2,6 +2,7 @@
  * POST /api/projects/:projectId/sync/tasks-meta
  * Allowlisted Neon meta upsert for History reconcile (SPEC §3.2 / §7).
  * Behind AWC_PROJECT_SYNC_MODULE. Meta only — rejects body fields.
+ * Mutating: owner|member only; viewer → 403 viewer_read_only.
  */
 
 import { requireAuth } from "@/lib/auth/requireAuth";
@@ -49,6 +50,14 @@ export async function POST(
   if (!page.ok) {
     const status = page.reason === "not_found" ? 404 : 403;
     return projectAccessErrorJson(page.reason, status);
+  }
+
+  // Mutating route: viewers are read-only (match inbox/dispatch, sticky).
+  if (page.role === "viewer") {
+    return Response.json(
+      { ok: false, code: "viewer_read_only" },
+      { status: 403 },
+    );
   }
 
   let body: TasksMetaBody;

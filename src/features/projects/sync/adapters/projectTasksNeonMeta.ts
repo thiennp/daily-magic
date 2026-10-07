@@ -19,6 +19,11 @@ import {
   PROJECT_SYNC_NEON_SUMMARY_MAX_CHARS,
   type ProjectSyncCursor,
 } from "@/features/projects/sync/projectSync.types";
+import {
+  AgentRunStatus,
+  type AgentRunStatusValue,
+} from "@/lib/dispatch/AgentRunStatus.constant";
+import { isTerminalAgentRunStatus } from "@/lib/dispatch/isTerminalAgentRunStatus";
 
 /** Body / payload keys that MUST NEVER enter Neon meta. */
 export const PROJECT_TASK_NEON_BODY_FIELD_DENYLIST = [
@@ -42,24 +47,176 @@ const ALLOWLIST_SET = new Set<string>(PROJECT_TASK_NEON_FIELDS);
 /** Soft Neon meta row cap per project (purge oldest beyond this). */
 export const PROJECT_TASK_NEON_META_ROW_CAP = 500;
 
-/** Map UI chip → agent_runs status (interim upsert writeback). */
+/** Known status tokens accepted on Neon meta upsert (absent/unknown → 400). */
+export const PROJECT_TASK_NEON_META_STATUS_TOKENS = [
+  "working",
+  "running",
+  "assigned",
+  "pending_approval",
+  "queued",
+  "pending",
+  "done",
+  "completed",
+  "failed",
+  "error",
+  "cancelled",
+  "canceled",
+] as const;
+
+const KNOWN_STATUS_TOKENS = new Set<string>(
+  PROJECT_TASK_NEON_META_STATUS_TOKENS,
+);
+
+/**
+ * Map UI chip → agent_runs status for sync writeback.
+ * HARD: never returns pending_approval (queued → null = no status write).
+ */
 export const mapProjectTaskUiStatusToAgentRun = (
   status: ProjectTaskNeonMeta["status"],
-): string => {
+): AgentRunStatusValue | null => {
   switch (status) {
     case "queued":
-      return "pending_approval";
+      return null;
     case "running":
-      return "running";
+      return AgentRunStatus.RUNNING;
     case "done":
-      return "completed";
+      return AgentRunStatus.COMPLETED;
     case "failed":
-      return "failed";
+      return AgentRunStatus.FAILED;
     case "cancelled":
-      return "denied";
+      return AgentRunStatus.DENIED;
     default:
-      return "failed";
+      return null;
   }
+};
+
+/** Forward-only Neon status transitions allowed from sync (current → next). */
+export const AGENT_RUN_SYNC_FORWARD_TRANSITIONS: Readonly<
+  Record<string, ReadonlySet<AgentRunStatusValue>>
+> = {
+  [AgentRunStatus.PENDING_APPROVAL]: new Set([
+    AgentRunStatus.RUNNING,
+    AgentRunStatus.COMPLETED,
+    AgentRunStatus.FAILED,
+    AgentRunStatus.DENIED,
+    AgentRunStatus.EXPIRED,
+  ]),
+  [AgentRunStatus.RUNNING]: new Set([
+    AgentRunStatus.RUNNING,
+    AgentRunStatus.COMPLETED,
+    AgentRunStatus.FAILED,
+    AgentRunStatus.DENIED,
+    AgentRunStatus.EXPIRED,
+  ]),
+  [AgentRunStatus.COMPLETED]: new Set(),
+  [AgentRunStatus.FAILED]: new Set(),
+  [AgentRunStatus.DENIED]: new Set(),
+  [AgentRunStatus.EXPIRED]: new Set(),
+};
+
+export type DecideAgentRunSyncStatusWriteInput = {
+  readonly currentStatus: string;
+  readonly currentUpdatedAt: string | null;
+  readonly incomingUiStatus: ProjectTaskNeonMeta["status"];
+  readonly incomingUpdatedAt: string;
+  readonly currentVersion?: number;
+  readonly incomingVersion?: number;
+};
+
+export type DecideAgentRunSyncStatusWriteResult =
+  | { readonly action: "write"; readonly status: AgentRunStatusValue }
+  | {
+      readonly action: "skip";
+      readonly reason:
+        | "terminal"
+        | "no_status_write"
+        | "invalid_transition"
+        | "stale"
+        | "pending_approval_forbidden";
+    };
+
+const isAgentRunStatusLike = (value: string): value is AgentRunStatusValue =>
+  value === AgentRunStatus.PENDING_APPROVAL ||
+  value === AgentRunStatus.RUNNING ||
+  value === AgentRunStatus.COMPLETED ||
+  value === AgentRunStatus.FAILED ||
+  value === AgentRunStatus.DENIED ||
+  value === AgentRunStatus.EXPIRED;
+
+const isStaleSyncMeta = (
+  input: DecideAgentRunSyncStatusWriteInput,
+): boolean => {
+  if (
+    typeof input.currentVersion === "number" &&
+    typeof input.incomingVersion === "number" &&
+    input.incomingVersion < input.currentVersion
+  ) {
+    return true;
+  }
+  const currentAt = input.currentUpdatedAt?.trim() ?? "";
+  const incomingAt = input.incomingUpdatedAt.trim();
+  if (currentAt.length > 0 && incomingAt.length > 0 && incomingAt < currentAt) {
+    return true;
+  }
+  return false;
+};
+
+/**
+ * Pure FSM for interim agent_runs sync UPDATE.
+ * Terminal → no-op; never pending_approval; forward-only; staleness guard.
+ */
+export const decideAgentRunSyncStatusWrite = (
+  input: DecideAgentRunSyncStatusWriteInput,
+): DecideAgentRunSyncStatusWriteResult => {
+  const current = input.currentStatus.trim().toLowerCase();
+  if (
+    isAgentRunStatusLike(current) && isTerminalAgentRunStatus(current)
+  ) {
+    return { action: "skip", reason: "terminal" };
+  }
+
+  const next = mapProjectTaskUiStatusToAgentRun(input.incomingUiStatus);
+  if (next === null) {
+    return { action: "skip", reason: "no_status_write" };
+  }
+  if (next === AgentRunStatus.PENDING_APPROVAL) {
+    return { action: "skip", reason: "pending_approval_forbidden" };
+  }
+
+  const allowed = AGENT_RUN_SYNC_FORWARD_TRANSITIONS[current];
+  if (!allowed || !allowed.has(next)) {
+    return { action: "skip", reason: "invalid_transition" };
+  }
+
+  if (isStaleSyncMeta(input)) {
+    return { action: "skip", reason: "stale" };
+  }
+
+  return { action: "write", status: next };
+};
+
+/**
+ * Basename path-like worktree (and absolute branch) before project_tasks mig.
+ * worktree: strip values with / \ ~ or drive letter to basename.
+ * branch: keep feat/csv; only strip absolute / ~ / drive / backslash paths.
+ */
+export const sanitizeNeonMetaRefName = (
+  value: string,
+  kind: "worktree" | "branch",
+): string => {
+  const trimmed = value.trim();
+  if (trimmed.length === 0) return trimmed;
+  const backslash = "\\";
+  const pathLike =
+    trimmed.includes(backslash) ||
+    trimmed.startsWith("~") ||
+    trimmed.startsWith("/") ||
+    /^[A-Za-z]:[\\/]/.test(trimmed) ||
+    (kind === "worktree" && trimmed.includes("/"));
+  if (!pathLike) return trimmed;
+  const normalized = trimmed.split(backslash).join("/");
+  const base = normalized.split("/").filter((p) => p.length > 0).pop();
+  return base && base.length > 0 ? base : trimmed;
 };
 
 /**
@@ -97,8 +254,18 @@ export const pickProjectTaskNeonMetaAllowlist = (
   void ALLOWLIST_SET;
 
   const titleRaw = typeof input.title === "string" ? input.title : "";
-  const statusRaw =
-    typeof input.status === "string" ? input.status : "queued";
+  if (typeof input.status !== "string" || input.status.trim().length === 0) {
+    throw new Error("Neon meta reject: status required");
+  }
+  const statusRaw = input.status.trim();
+  if (!KNOWN_STATUS_TOKENS.has(statusRaw.toLowerCase())) {
+    throw new Error(
+      `Neon meta reject: unknown status (${statusRaw})`,
+    );
+  }
+  const branchRaw = typeof input.branch === "string" ? input.branch : null;
+  const worktreeRaw =
+    typeof input.worktree === "string" ? input.worktree : null;
   return {
     id: String(input.id ?? ""),
     projectId: String(input.projectId ?? ""),
@@ -118,8 +285,12 @@ export const pickProjectTaskNeonMetaAllowlist = (
       typeof input.sessionId === "string" ? input.sessionId : null,
     agentRunId:
       typeof input.agentRunId === "string" ? input.agentRunId : null,
-    branch: typeof input.branch === "string" ? input.branch : null,
-    worktree: typeof input.worktree === "string" ? input.worktree : null,
+    branch:
+      branchRaw === null ? null : sanitizeNeonMetaRefName(branchRaw, "branch"),
+    worktree:
+      worktreeRaw === null
+        ? null
+        : sanitizeNeonMetaRefName(worktreeRaw, "worktree"),
     localClaimedAt:
       typeof input.localClaimedAt === "string"
         ? input.localClaimedAt

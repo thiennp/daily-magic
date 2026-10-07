@@ -6,9 +6,12 @@ import { describe, expect, it } from "vitest";
 import { compareVersionProjectTask } from "@/features/projects/sync/adapters/projectTasksAdapter";
 import {
   assertProjectTaskNeonMetaAllowlist,
+  decideAgentRunSyncStatusWrite,
+  mapProjectTaskUiStatusToAgentRun,
   pickProjectTaskNeonMetaAllowlist,
   PROJECT_TASK_NEON_META_ROW_CAP,
   purgeProjectTaskNeonMetaBeyondCap,
+  sanitizeNeonMetaRefName,
   type ProjectTaskNeonMeta,
 } from "@/features/projects/sync/adapters/projectTasksNeonMeta";
 import { gateProjectTaskNeonMetaBatch } from "@/features/projects/sync/adapters/upsertProjectTaskNeonMeta";
@@ -372,7 +375,7 @@ describe("§11.2 conflict matrix — Neon meta adapter", () => {
     ).toThrow(/body fields not allowed/);
   });
 
-  it("T14: branch/worktree names meta; paths not on allowlist", () => {
+  it("T14: branch/worktree names meta; paths not on allowlist; basename worktree", () => {
     const row = meta({
       id: "git-1",
       createdAt: "2026-10-07T10:00:00.000000Z",
@@ -386,9 +389,26 @@ describe("§11.2 conflict matrix — Neon meta adapter", () => {
       worktreePath: "/Users/x/wt-csv",
     } as unknown as Record<string, unknown>);
     expect(offenders).toContain("worktreePath");
+    // Absolute worktree → basename before future project_tasks mig.
+    expect(sanitizeNeonMetaRefName("/Users/x/wt-csv", "worktree")).toBe(
+      "wt-csv",
+    );
+    const stripped = pickProjectTaskNeonMetaAllowlist({
+      id: "git-2",
+      projectId: "proj-1",
+      title: "t",
+      status: "queued",
+      createdAt: "2026-10-07T10:00:00.000000Z",
+      updatedAt: "2026-10-07T10:00:00.000000Z",
+      version: 1,
+      branch: "feat/csv",
+      worktree: "/Users/x/wt-csv",
+    });
+    expect(stripped.worktree).toBe("wt-csv");
+    expect(stripped.branch).toBe("feat/csv");
   });
 
-  it("T15: tombstone / cancelled — status cancelled; no body resurrection on upsert", () => {
+  it("T15: tombstone / cancelled — no body resurrection; terminal non-resurrection FSM", () => {
     const cancelled = meta({
       id: "tomb",
       createdAt: "2026-10-07T10:00:00.000000Z",
@@ -402,5 +422,67 @@ describe("§11.2 conflict matrix — Neon meta adapter", () => {
         body: "resurrect",
       } as unknown as Record<string, unknown>),
     ).toThrow(/body fields not allowed/);
+
+    // Non-resurrection: terminal Neon rows must not change on running/queued sync.
+    for (const terminal of [
+      "completed",
+      "failed",
+      "denied",
+      "expired",
+    ] as const) {
+      for (const incoming of ["running", "queued"] as const) {
+        const decision = decideAgentRunSyncStatusWrite({
+          currentStatus: terminal,
+          currentUpdatedAt: "2026-10-07T12:00:00.000000Z",
+          incomingUiStatus: incoming,
+          incomingUpdatedAt: "2026-10-07T13:00:00.000000Z",
+          incomingVersion: 9,
+        });
+        expect(decision).toEqual({ action: "skip", reason: "terminal" });
+      }
+    }
+
+    // queued must never map to pending_approval from sync.
+    expect(mapProjectTaskUiStatusToAgentRun("queued")).toBeNull();
+    expect(
+      decideAgentRunSyncStatusWrite({
+        currentStatus: "running",
+        currentUpdatedAt: "2026-10-07T12:00:00.000000Z",
+        incomingUiStatus: "queued",
+        incomingUpdatedAt: "2026-10-07T13:00:00.000000Z",
+      }),
+    ).toEqual({ action: "skip", reason: "no_status_write" });
+
+    // Missing status rejected (not defaulted to queued→pending_approval).
+    expect(() =>
+      pickProjectTaskNeonMetaAllowlist({
+        id: "no-status",
+        projectId: "proj-1",
+        title: "t",
+        createdAt: "2026-10-07T10:00:00.000000Z",
+        updatedAt: "2026-10-07T10:00:00.000000Z",
+        version: 1,
+      }),
+    ).toThrow(/status required/);
+
+    // Forward-only happy: running → completed writes.
+    expect(
+      decideAgentRunSyncStatusWrite({
+        currentStatus: "running",
+        currentUpdatedAt: "2026-10-07T12:00:00.000000Z",
+        incomingUiStatus: "done",
+        incomingUpdatedAt: "2026-10-07T13:00:00.000000Z",
+      }),
+    ).toEqual({ action: "write", status: "completed" });
+
+    // Stale push skipped.
+    expect(
+      decideAgentRunSyncStatusWrite({
+        currentStatus: "running",
+        currentUpdatedAt: "2026-10-07T14:00:00.000000Z",
+        incomingUiStatus: "done",
+        incomingUpdatedAt: "2026-10-07T13:00:00.000000Z",
+      }),
+    ).toEqual({ action: "skip", reason: "stale" });
   });
 });
