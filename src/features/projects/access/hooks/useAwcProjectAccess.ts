@@ -47,14 +47,13 @@ export const useAwcProjectAccess = (projectId: string) => {
     ],
   );
 
+  // DF-015: post-action refresh is silent (like the live poll). Flipping
+  // isLoading here made every rail/settings button unmount + remount the
+  // whole Members panel (consumers gate their body on !isLoading).
+  // Only the initial load (useAwcProjectAccessInitialLoad) shows the spinner.
   const reload = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      applySnapshot(await loadAwcProjectAccess(projectId));
-    } finally {
-      setIsLoading(false);
-    }
-  }, [projectId, applySnapshot, setIsLoading]);
+    applySnapshot(await loadAwcProjectAccess(projectId));
+  }, [projectId, applySnapshot]);
 
   useAwcProjectAccessInitialLoad({
     projectId,

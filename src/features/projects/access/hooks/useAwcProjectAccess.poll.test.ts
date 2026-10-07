@@ -36,6 +36,14 @@ describe("useAwcProjectAccess live Pending poll", () => {
     expect(pollSource).toContain("visibilitychange");
   });
 
+  it("DF-015: post-action reload is silent (no panel remount)", () => {
+    const reloadBlock =
+      accessSource.split("const reload = useCallback")[1]?.split("}, [")[0] ??
+      "";
+    expect(reloadBlock).toContain("loadAwcProjectAccess");
+    expect(reloadBlock).not.toContain("setIsLoading");
+  });
+
   it("clears the interval on unmount / projectId change", () => {
     expect(pollSource).toContain("clearInterval");
     expect(pollSource).toContain("cancelled = true");
