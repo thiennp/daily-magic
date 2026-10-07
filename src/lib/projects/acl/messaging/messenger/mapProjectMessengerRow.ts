@@ -59,5 +59,6 @@ export const mapProjectMessengerRow = (
     toMembershipId: optionalString(row.to_membership_id),
     toUserId: optionalString(row.to_user_id),
     toTeamLabel: optionalString(row.to_team_label),
+    toDisplayName: optionalString(row.recipient_display_name),
   };
 };

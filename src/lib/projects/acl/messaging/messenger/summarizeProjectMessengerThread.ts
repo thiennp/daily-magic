@@ -7,13 +7,16 @@ import type {
 /**
  * Visible rows of one thread (oldest first) → last message + unread count.
  * Unread = visible rows newer than the viewer's last read, not sent by the viewer.
+ * Bot↔bot rows (DF-023) show in the feed but never drive preview/unread.
  */
 export const summarizeProjectMessengerThread = (input: {
   readonly rows: readonly ProjectMessengerKeyedRow[];
   readonly lastReadAt: string | null;
   readonly viewerUserId: string;
 }): ProjectMessengerThreadSummary => {
-  const visible = input.rows.filter((keyed) => keyed.visible);
+  const visible = input.rows.filter(
+    (keyed) => keyed.visible && keyed.peer === undefined,
+  );
   const last = visible.at(-1) ?? null;
   const readAtMs =
     input.lastReadAt === null ? null : Date.parse(input.lastReadAt);

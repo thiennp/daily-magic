@@ -8,12 +8,12 @@ orchestrators are named `orchestrate*`, `list*`, `open*`, `mark*ForViewer`).
 
 ## Endpoints (session)
 
-| Method + path                                                         | Who                                               | What                                                           |
-| --------------------------------------------------------------------- | ------------------------------------------------- | -------------------------------------------------------------- |
-| `GET /api/projects/:projectId/messenger/threads`                      | owner, member, viewer                             | `{ wholeProject, bots[], canSend }`                            |
+| Method + path                                                         | Who                                               | What                                                                                                                       |
+| --------------------------------------------------------------------- | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `GET /api/projects/:projectId/messenger/threads`                      | owner, member, viewer                             | `{ wholeProject, bots[], canSend }`                                                                                        |
 | `GET /api/projects/:projectId/messenger/threads/:threadKey`           | owner, member, viewer                             | `{ threadKey, entries[] /* newest-first */, page, error?, canSend }`; query `before`/`limit`; **marks read** on first page |
-| `POST /api/projects/:projectId/messenger/threads/:threadKey/messages` | owner, member (viewer **403** `viewer_read_only`) | body `{ text, needsReply? }`                                   |
-| `POST /api/projects/:projectId/messenger/threads/:threadKey/read`     | owner, member, viewer                             | unread → 0 (now)                                               |
+| `POST /api/projects/:projectId/messenger/threads/:threadKey/messages` | owner, member (viewer **403** `viewer_read_only`) | body `{ text, needsReply? }`                                                                                               |
+| `POST /api/projects/:projectId/messenger/threads/:threadKey/read`     | owner, member, viewer                             | unread → 0 (now)                                                                                                           |
 
 `threadKey` = bot `membershipId` or `whole`. Unknown key → `404 thread_not_found`.
 Send errors: `400` invalid/`summary_too_large`/`forbidden_content`, `403`
@@ -50,7 +50,7 @@ Response:
 ```json
 {
   "threadKey": "whole",
-  "entries": [ /* TimelineEntry, newest-first */ ],
+  "entries": [/* TimelineEntry, newest-first */],
   "page": {
     "beforeCursor": "<opaque>|null",
     "hasMore": true,
@@ -77,7 +77,6 @@ thread merges `project_messages` + `agent_runs WHERE project_id` (sessions
 `error.code = project_computer_offline`. History owns the local reader
 (`readProjectHistoryMessagesPage` / `loadOlderProjectHistoryMessages`); Dispatch
 calls it via `loadProjectMessengerOlderFromLocal` when `localLive`.
-
 
 ## Bot tool (MCP)
 
@@ -127,7 +126,19 @@ replies to Owner with the id in the summary link the same way. Allowed on
    never count. Marking read never stamps `project_messages.read_at` and
    never acks: actionable rows still need the bot's ack (DOR rules unchanged).
 8. `task.received` / `task.processing` bot rows are state-only (no bubble);
-   `peer.*` notices and bot↔bot traffic stay out of the messenger.
+   `peer.*` / lifecycle notices stay out of the messenger.
+9. **Bot↔bot rows (DF-023, owner only)**: when the viewer is the project
+   owner, every bot→bot (or bot→team label) `project_dispatch` row joins the
+   Whole project timeline with an additive `peer: { toMembershipId,
+toDisplayName, toTeamLabel }` field (state-only kinds included). UI renders
+   a compact line "Kai → AW Lead · Status update · summary" with a
+   "Between assistants" show/hide chip (default shown). These rows never move
+   state chips and never count toward preview / unread. Members and viewers
+   get exactly what they got before (no bot↔bot rows). Read gate:
+   `resolveProjectMessengerViewer().isOwner` → `includeBotToBot` on the Neon
+   page. Live updates ride the same thread poll. Local History (AWL) indexes
+   bot↔bot records under the recipient bot's thread (heuristic) — not merged
+   into Whole yet (see DF-023 report).
 
 ## Known limits (v1)
 

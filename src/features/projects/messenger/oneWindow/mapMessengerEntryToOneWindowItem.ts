@@ -59,6 +59,8 @@ export const deriveOneWindowKind = (
   entry: AwcMessengerTimelineEntry,
 ): AwcMessengerWindowKind => {
   if (isMessengerAiSessionEntry(entry)) return "task";
+  // DF-023: owner-view bot↔bot rows carry `peer`.
+  if (entry.peer !== undefined) return "bot_to_bot";
   if (entry.author.kind === "bot") {
     return TASK_UPDATE_KINDS.has(entry.kind) ? "task_update" : "chat";
   }
@@ -85,7 +87,9 @@ const resolveSubjectState = (
       ? subjectStateFromAgentRun(entry.session.status)
       : null;
   }
-  return windowKind === "task" ? subjectStateFromDeliveries(entry.states) : null;
+  return windowKind === "task"
+    ? subjectStateFromDeliveries(entry.states)
+    : null;
 };
 
 /**

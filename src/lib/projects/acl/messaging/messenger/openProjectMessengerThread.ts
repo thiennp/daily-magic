@@ -87,6 +87,8 @@ export const openProjectMessengerThread = async (input: {
     threadKey: input.threadKey,
     before,
     limit,
+    // DF-023: owner sees every bot↔bot dispatch in Whole project; members don't.
+    includeBotToBot: viewer.isOwner,
   });
 
   const resolved = resolveProjectMessengerLoadPage({

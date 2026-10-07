@@ -1,3 +1,4 @@
+import type { AwcMessengerPeerAddress } from "@/features/projects/messenger/types/awcMessengerPeerAddress.type";
 import type { AwcMessengerSubjectStateWire } from "@/features/projects/messenger/types/awcMessengerSubjectStateWire.type";
 
 export type AwcMessengerBotStatus =
@@ -87,6 +88,7 @@ export type AwcMessengerTimelineEntry = {
   readonly windowKind?: AwcMessengerWindowKind;
   /** Additive (OW9): server live subject state (codes); null = none. */
   readonly subjectState?: AwcMessengerSubjectStateWire | null;
+  readonly peer?: AwcMessengerPeerAddress;
 };
 
 /** Dispatch load-older page meta (fd7764c0). Absent on today's main. */

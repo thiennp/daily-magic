@@ -27,6 +27,8 @@ export type LoadProjectMessengerNeonThreadPageResult = {
  * Keyset: rows with (created_at, id) older than `before` (exclusive).
  * Over-fetches project-wide then filters to the thread (no chat_key column yet).
  * On `whole`, also merges agent_runs session entries (v1 whole-only).
+ * `includeBotToBot` (owner only, DF-023): bot↔bot rows join `whole` as
+ * compact `peer` entries. Default off (members / module callers unchanged).
  */
 export const loadProjectMessengerNeonThreadPage = async (input: {
   readonly projectId: string;
@@ -34,6 +36,7 @@ export const loadProjectMessengerNeonThreadPage = async (input: {
   readonly threadKey: string;
   readonly before: ProjectMessengerCursor | null;
   readonly limit: number;
+  readonly includeBotToBot?: boolean;
 }): Promise<LoadProjectMessengerNeonThreadPageResult> => {
   await ensureProjectAclSchema();
   await purgeExpiredProjectMessages();
@@ -55,6 +58,7 @@ export const loadProjectMessengerNeonThreadPage = async (input: {
         sender.project_display_name AS sender_display_name,
         sender.member_kind AS sender_member_kind,
         recipient.member_kind AS recipient_member_kind,
+        recipient.project_display_name AS recipient_display_name,
         to_char(m.created_at AT TIME ZONE 'UTC',
           'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS cursor_at
       FROM project_messages m
@@ -85,6 +89,7 @@ export const loadProjectMessengerNeonThreadPage = async (input: {
   const keyed = keyProjectMessengerRows({
     rows: mapped,
     botIds: new Set(bots.map((bot) => bot.membershipId)),
+    includeBotToBot: input.includeBotToBot === true,
   });
   const timeline = buildProjectMessengerTimeline({
     threadKey: input.threadKey,

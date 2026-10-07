@@ -7,6 +7,7 @@ import {
   type AwcMessengerTimelineEntry,
   type AwcMessengerWindowKind,
 } from "@/features/projects/messenger/types/awcProjectMessenger.type";
+import { parseMessengerPeerAddress } from "@/features/projects/messenger/utils/parseMessengerPeerAddress";
 import { parseMessengerSubjectState } from "@/features/projects/messenger/utils/parseMessengerSubjectState";
 
 export const asRecord = (value: unknown): Record<string, unknown> | null => {
@@ -51,12 +52,12 @@ const isWindowKind = (value: unknown): value is AwcMessengerWindowKind =>
   (AWC_MESSENGER_WINDOW_KINDS as readonly string[]).includes(value);
 
 /** OW9 `windowKind` (DESIGN §3.1 enum) — feature-detected; unknown → omitted. */
-const parseWindowKind = (
-  value: unknown,
-): AwcMessengerWindowKind | undefined =>
+const parseWindowKind = (value: unknown): AwcMessengerWindowKind | undefined =>
   isWindowKind(value) ? value : undefined;
 
-const parseSession = (value: unknown): AwcMessengerAiSessionMeta | undefined => {
+const parseSession = (
+  value: unknown,
+): AwcMessengerAiSessionMeta | undefined => {
   const row = asRecord(value);
   if (row === null || typeof row.status !== "string") return undefined;
   return {
@@ -67,7 +68,9 @@ const parseSession = (value: unknown): AwcMessengerAiSessionMeta | undefined => 
 };
 
 /** One GET-thread timeline row; null when the wire shape is unusable. */
-export const parseMessengerTimelineEntry = (value: unknown): AwcMessengerTimelineEntry | null => {
+export const parseMessengerTimelineEntry = (
+  value: unknown,
+): AwcMessengerTimelineEntry | null => {
   const row = asRecord(value);
   if (row === null || typeof row.messageId !== "string") return null;
   const author = asRecord(row.author);
@@ -81,6 +84,7 @@ export const parseMessengerTimelineEntry = (value: unknown): AwcMessengerTimelin
   const entryKind = parseEntryKind(row.entryKind);
   const session = parseSession(row.session);
   const windowKind = parseWindowKind(row.windowKind);
+  const peer = parseMessengerPeerAddress(row.peer);
   const subjectState = parseMessengerSubjectState(row.subjectState);
   return {
     messageId: row.messageId,
@@ -102,6 +106,7 @@ export const parseMessengerTimelineEntry = (value: unknown): AwcMessengerTimelin
     ...(entryKind !== undefined ? { entryKind } : {}),
     ...(session !== undefined ? { session } : {}),
     ...(windowKind !== undefined ? { windowKind } : {}),
+    ...(peer !== undefined ? { peer } : {}),
     ...(subjectState !== undefined ? { subjectState } : {}),
   };
 };

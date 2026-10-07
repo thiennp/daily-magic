@@ -8,6 +8,8 @@ export type ProjectMessengerViewer =
       readonly ownerUserId: string;
       readonly viewerUserId: string;
       readonly canSend: boolean;
+      /** Project owner — the only viewer who also sees bot↔bot rows (DF-023). */
+      readonly isOwner: boolean;
     }
   | { readonly ok: false; readonly code: "not_found" | "forbidden" };
 
@@ -28,6 +30,7 @@ export const resolveProjectMessengerViewer = async (input: {
     projectId: input.projectId,
     ownerUserId: access.project.ownerUserId,
     viewerUserId: input.actorUserId,
+    isOwner: access.kind === "owner",
     canSend: decideProjectMessengerSender({
       isOwner: access.kind === "owner",
       seat: access.membership,

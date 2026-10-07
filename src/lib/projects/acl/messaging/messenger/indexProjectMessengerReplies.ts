@@ -6,6 +6,7 @@ import type {
 /**
  * Bot replies (oldest first) → parent message id → bot membership id → that
  * bot's latest linked reply. Later replies overwrite earlier ones.
+ * Bot↔bot rows (DF-023 owner view) never move chips on human messages.
  */
 export const indexProjectMessengerReplies = (
   rows: readonly ProjectMessengerKeyedRow[],
@@ -14,6 +15,7 @@ export const indexProjectMessengerReplies = (
   for (const keyed of rows) {
     const botId = keyed.row.senderMembershipId;
     if (
+      keyed.peer !== undefined ||
       keyed.row.senderKind !== "bot" ||
       keyed.inReplyTo === null ||
       botId === null

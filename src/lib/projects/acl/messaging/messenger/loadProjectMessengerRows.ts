@@ -20,7 +20,8 @@ export const loadProjectMessengerRows = async (input: {
         m.to_membership_id, m.to_user_id, m.to_team_label,
         sender.project_display_name AS sender_display_name,
         sender.member_kind AS sender_member_kind,
-        recipient.member_kind AS recipient_member_kind
+        recipient.member_kind AS recipient_member_kind,
+        recipient.project_display_name AS recipient_display_name
       FROM project_messages m
       LEFT JOIN project_memberships sender ON sender.id = m.sender_membership_id
       LEFT JOIN project_memberships recipient ON recipient.id = m.to_membership_id

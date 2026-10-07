@@ -1,6 +1,7 @@
 import AwcMessengerAiSessionRow from "@/features/projects/messenger/AwcMessengerAiSessionRow";
 import AwcMessengerStateChips from "@/features/projects/messenger/AwcMessengerStateChips";
 import AwcOneWindowMessageRow from "@/features/projects/messenger/oneWindow/AwcOneWindowMessageRow";
+import AwcOneWindowPeerRow from "@/features/projects/messenger/oneWindow/AwcOneWindowPeerRow";
 import AwcOneWindowSystemEntry, {
   isOneWindowSystemKind,
 } from "@/features/projects/messenger/oneWindow/AwcOneWindowSystemEntry";
@@ -15,6 +16,7 @@ import type {
   AwcMessengerTimelineEntry,
 } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 import type { ProjectTasksChatVisibility } from "@/features/projects/tasks/projectTask.type";
+import { formatOneWindowPeerLine } from "@/features/projects/messenger/utils/formatOneWindowPeerLine";
 import { isMessengerAiSessionEntry } from "@/features/projects/messenger/utils/isMessengerAiSessionEntry";
 
 interface AwcMessengerTimelineEntryRowProps {
@@ -53,6 +55,16 @@ export default function AwcMessengerTimelineEntryRow({
     );
   }
 
+  const peerLine = formatOneWindowPeerLine(entry);
+  if (peerLine !== null) {
+    return (
+      <AwcOneWindowPeerRow
+        line={peerLine}
+        timeLabel={formatWhen(entry.createdAt)}
+      />
+    );
+  }
+
   const who = entry.author.displayName?.trim() || entry.author.kind;
   const isAssistant = entry.author.kind === "bot";
   const timeLabel = formatWhen(entry.createdAt);
@@ -62,7 +74,9 @@ export default function AwcMessengerTimelineEntryRow({
     const from = isMine ? "You" : who;
     const to = formatRecipients(entry.states);
     return (
-      <div className={`flex flex-col gap-1.5 ${isMine ? "items-end" : "items-start"}`}>
+      <div
+        className={`flex flex-col gap-1.5 ${isMine ? "items-end" : "items-start"}`}
+      >
         <AwcOneWindowTaskCard
           title={entry.text}
           statusLabel={subjectState.label}
@@ -92,7 +106,9 @@ export default function AwcMessengerTimelineEntryRow({
   }
 
   return (
-    <div className={`flex flex-col gap-1.5 ${isMine ? "items-end" : "items-start"}`}>
+    <div
+      className={`flex flex-col gap-1.5 ${isMine ? "items-end" : "items-start"}`}
+    >
       <AwcOneWindowMessageRow
         who={isMine ? "You" : who}
         isSelf={isMine}

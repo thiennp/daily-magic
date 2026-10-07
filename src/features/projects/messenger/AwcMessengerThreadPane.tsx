@@ -6,10 +6,11 @@ import AwcMessengerTimeline from "@/features/projects/messenger/AwcMessengerTime
 import { AWC_PROJECT_MESSENGER_COPY } from "@/features/projects/messenger/awcProjectMessengerCopy.constant";
 import AwcOneWindowFeedEmpty from "@/features/projects/messenger/oneWindow/AwcOneWindowFeedEmpty";
 import AwcOneWindowFeedLoading from "@/features/projects/messenger/oneWindow/AwcOneWindowFeedLoading";
-import AwcOneWindowFilterBar from "@/features/projects/messenger/oneWindow/AwcOneWindowFilterBar";
+import AwcOneWindowFilterBarRow from "@/features/projects/messenger/oneWindow/AwcOneWindowFilterBarRow";
 import AwcOneWindowInFeedApprovals from "@/features/projects/messenger/oneWindow/AwcOneWindowInFeedApprovals";
 import { useOneWindowComposerRouting } from "@/features/projects/messenger/oneWindow/useOneWindowComposerRouting";
 import { useOneWindowFeedFilter } from "@/features/projects/messenger/oneWindow/useOneWindowFeedFilter";
+import { useOneWindowPeerToggle } from "@/features/projects/messenger/oneWindow/useOneWindowPeerToggle";
 import type { AwcMessengerThreadPaneProps } from "@/features/projects/messenger/types/awcMessengerThreadPane.type";
 
 export default function AwcMessengerThreadPane({
@@ -39,7 +40,6 @@ export default function AwcMessengerThreadPane({
   onSendTask,
   chatVisibility,
 }: AwcMessengerThreadPaneProps) {
-  const copy = AWC_PROJECT_MESSENGER_COPY;
   const routingAssistants = assignees.map((a) => ({
     membershipId: a.membershipId,
     displayName: a.displayName,
@@ -51,35 +51,41 @@ export default function AwcMessengerThreadPane({
   });
   const { entries, filter, setFilter, needsCount, approvalsCount, filtered } =
     useOneWindowFeedFilter({ thread, isOwner, chatVisibility });
-
-  const showFilter = !isLoading && thread !== null && entries.length > 0;
+  const peers = useOneWindowPeerToggle(entries, filtered);
 
   return (
-    <section className="flex min-h-0 min-w-0 flex-1 flex-col bg-awc-surface dark:bg-gray-950" aria-label={title}>
+    <section
+      className="flex min-h-0 min-w-0 flex-1 flex-col bg-awc-surface dark:bg-gray-950"
+      aria-label={title}
+    >
       {/* P1-S2: whole feed has no header; an assistant's private feed gets ← Whole project. */}
       {showBack ? (
-        <AwcMessengerThreadPaneHeader title={title} kindLabel={kindLabel} status={status} showBack onBack={onBack} />
+        <AwcMessengerThreadPaneHeader
+          title={title}
+          kindLabel={kindLabel}
+          status={status}
+          showBack
+          onBack={onBack}
+        />
       ) : null}
       <AwcOneWindowInFeedApprovals projectId={projectId} enabled={isOwner} />
-      {showFilter ? (
-        <AwcOneWindowFilterBar
-          filter={filter}
-          needsCount={needsCount}
-          approvalsCount={approvalsCount}
-          onFilter={setFilter}
-          clearAllSlot={clearAllSlot}
-        />
-      ) : clearAllSlot ? (
-        <div className="flex justify-end border-b border-awc-border px-4 py-2">{clearAllSlot}</div>
-      ) : null}
+      <AwcOneWindowFilterBarRow
+        show={!isLoading && thread !== null && entries.length > 0}
+        filter={filter}
+        needsCount={needsCount}
+        approvalsCount={approvalsCount}
+        onFilter={setFilter}
+        {...peers.barProps}
+        clearAllSlot={clearAllSlot}
+      />
       {!isLoading && filter === "all" ? noticesSlot : null}
       {isLoading ? <AwcOneWindowFeedLoading /> : null}
-      {!isLoading && thread !== null && filtered.length === 0 ? (
+      {!isLoading && thread !== null && peers.shown.length === 0 ? (
         <AwcOneWindowFeedEmpty />
       ) : null}
-      {!isLoading && thread !== null && filtered.length > 0 ? (
+      {!isLoading && thread !== null && peers.shown.length > 0 ? (
         <AwcMessengerTimeline
-          entries={filtered}
+          entries={peers.shown}
           loadingOlder={loadingOlder}
           canLoadOlder={canLoadOlder}
           reachedStart={reachedStart}
@@ -101,7 +107,7 @@ export default function AwcMessengerThreadPane({
         />
       ) : (
         <p className="border-t border-awc-border bg-awc-surface-2 px-4 py-3.5 text-center text-sm text-awc-fg dark:border-gray-800 dark:bg-white/[0.03] dark:text-gray-300">
-          {copy.viewerBanner}
+          {AWC_PROJECT_MESSENGER_COPY.viewerBanner}
         </p>
       )}
     </section>

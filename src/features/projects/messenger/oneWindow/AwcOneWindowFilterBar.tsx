@@ -15,6 +15,10 @@ interface AwcOneWindowFilterBarProps {
   readonly needsCount?: number;
   readonly approvalsCount?: number;
   readonly onFilter: (next: OneWindowFeedFilter) => void;
+  /** DF-023: bot↔bot lines in the feed (owner). Toggle shows only when > 0. */
+  readonly peersCount?: number;
+  readonly showPeers?: boolean;
+  readonly onTogglePeers?: () => void;
   /** Owner Clear all control (archive fiction) — passed from live clear bar. */
   readonly clearAllSlot?: ReactNode;
 }
@@ -25,6 +29,9 @@ export default function AwcOneWindowFilterBar({
   needsCount = 0,
   approvalsCount = 0,
   onFilter,
+  peersCount = 0,
+  showPeers = true,
+  onTogglePeers,
   clearAllSlot,
 }: AwcOneWindowFilterBarProps) {
   const copy = ONE_WINDOW_FEED_COPY;
@@ -59,6 +66,24 @@ export default function AwcOneWindowFilterBar({
       {chip("all", copy.filterAll)}
       {chip("needs", copy.filterNeedsYou, needsCount)}
       {chip("approvals", copy.filterApprovals, approvalsCount)}
+      {peersCount > 0 && onTogglePeers !== undefined ? (
+        <button
+          type="button"
+          className={
+            showPeers ? OW_FILTER_CHIP_ACTIVE_CLASS : OW_FILTER_CHIP_IDLE_CLASS
+          }
+          aria-pressed={showPeers}
+          aria-label={
+            showPeers ? copy.hideBetweenAssistants : copy.showBetweenAssistants
+          }
+          onClick={onTogglePeers}
+        >
+          {copy.betweenAssistants}
+          <span className="rounded-full bg-awc-tile-2 px-1.5 text-[11px] font-semibold text-awc-fg">
+            {peersCount}
+          </span>
+        </button>
+      ) : null}
       <span className="flex-1" />
       {clearAllSlot}
     </div>

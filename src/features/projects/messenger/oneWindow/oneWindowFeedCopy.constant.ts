@@ -14,6 +14,9 @@ export const ONE_WINDOW_FEED_COPY = {
   filterNeedsYou: "Needs you",
   filterApprovals: "Approvals",
   betweenAssistants: "Between assistants",
+  /** DF-023 filter toggle (owner): show/hide bot↔bot lines. Default shown. */
+  showBetweenAssistants: "Show between assistants",
+  hideBetweenAssistants: "Hide between assistants",
   kindTask: "Task",
   openTask: "Open task",
   newMark: "New",

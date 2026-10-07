@@ -16,7 +16,8 @@ const NO_REPLIES: ReadonlyMap<string, ProjectMessengerLinkedReply> = new Map();
  * One thread's timeline in the same order as `keyed` (callers pass
  * newest-first for Meta-style open/load-older). Owner/member bubbles with
  * per-bot state chips underneath, and bot reply bubbles. State-only bot rows
- * feed the chips but are not bubbles.
+ * feed the chips but are not bubbles. Owner-view bot↔bot rows carry `peer`
+ * (DF-023) and render as compact lines.
  */
 export const buildProjectMessengerTimeline = (input: {
   readonly threadKey: ProjectMessengerThreadKey;
@@ -30,11 +31,12 @@ export const buildProjectMessengerTimeline = (input: {
   const replies = indexProjectMessengerReplies(input.keyed);
   return input.keyed
     .filter((keyed) => keyed.threadKey === input.threadKey && keyed.visible)
-    .flatMap(({ row, text, inReplyTo }) => {
+    .flatMap(({ row, text, inReplyTo, peer }) => {
       if (row.senderKind === "system") {
         return [];
       }
       const fromHuman = row.senderKind !== "bot";
+      const peerField = peer !== undefined ? { peer } : {};
       const needsReply =
         fromHuman && row.kind === PROJECT_MESSENGER_KIND_NEEDS_REPLY;
       return [
@@ -58,6 +60,7 @@ export const buildProjectMessengerTimeline = (input: {
                 needsReply,
               })
             : [],
+          ...peerField,
         },
       ];
     });
