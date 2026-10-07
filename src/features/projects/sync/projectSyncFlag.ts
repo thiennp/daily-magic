@@ -1,7 +1,8 @@
 /**
- * Feature flag for project sync module S1.
+ * Feature flag for project sync module S1 (IDB soft-read / loadPage / adapter).
  * Messenger always uses the extracted pager (behavior-identical).
- * This flag gates Tasks adapter + reconcile hook consumers.
+ * Tasks *tab chrome* always mounts; this flag only gates the sync/IDB data path
+ * (empty/offline UI when off or IDB soft-fails) — never hide the tab.
  *
  * Env: AWC_PROJECT_SYNC_MODULE=1 enables; unset/other = off.
  */

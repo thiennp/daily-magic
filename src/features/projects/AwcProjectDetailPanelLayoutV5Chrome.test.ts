@@ -87,3 +87,29 @@ describe("L3 V5-3 project chrome — Product EN lock", () => {
     expect(read("library/AwcProjectLibraryHeader.tsx")).not.toContain('C["library.intro"]');
   });
 });
+
+describe("NRG HARD ungated Tasks tab", () => {
+  it("TabPanelBody mounts Tasks without isProjectSyncModuleEnabled", () => {
+    const body = readFileSync(
+      path.join(process.cwd(), "src/features/projects/AwcProjectDetailTabPanelBody.tsx"),
+      "utf8",
+    );
+    expect(body).toContain("AwcProjectTasksPanel");
+    expect(body).toMatch(/t === "tasks" && sel\)/);
+    expect(body).not.toContain("isProjectSyncModuleEnabled");
+  });
+
+  it("sync flag docs + hook gate IDB only", () => {
+    const flag = readFileSync(
+      path.join(process.cwd(), "src/features/projects/sync/projectSyncFlag.ts"),
+      "utf8",
+    );
+    const hook = readFileSync(
+      path.join(process.cwd(), "src/features/projects/tasks/useAwcProjectTasks.ts"),
+      "utf8",
+    );
+    expect(flag).toContain("never hide the tab");
+    expect(hook).toContain("isProjectSyncModuleEnabled");
+    expect(hook).toContain("flag gates sync/IDB only");
+  });
+});
