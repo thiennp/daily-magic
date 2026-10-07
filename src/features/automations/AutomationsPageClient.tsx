@@ -44,13 +44,13 @@ export default function AutomationsPageClient() {
       {loadFailed ? (
         <AutomationsListLoadErrorPanel onRetry={reload} />
       ) : isLoading ? (
-        <p className="text-sm text-gray-500 dark:text-gray-400">Loading…</p>
+        <p className="text-sm text-awc-fg-muted dark:text-gray-400">Loading…</p>
       ) : automations.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-300 px-4 py-8 text-center dark:border-gray-700">
-          <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <div className="rounded-xl border border-dashed border-awc-border-strong px-4 py-8 text-center dark:border-gray-700">
+          <p className="text-sm font-medium text-awc-fg dark:text-white/90">
             {AUTOMATIONS_PAGE_COPY.emptyTitle}
           </p>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
             {AUTOMATIONS_PAGE_COPY.empty}
           </p>
         </div>

@@ -34,7 +34,7 @@ export default function MacDeviceRowMainContent({
   const detailClassName = `text-left text-xs ${
     detailWarning
       ? "text-amber-700 dark:text-amber-300"
-      : "text-gray-500 dark:text-gray-400"
+      : "text-awc-fg-muted dark:text-gray-400"
   }`;
 
   return (

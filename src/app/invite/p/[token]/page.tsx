@@ -30,7 +30,7 @@ export default async function ProjectInviteInstructionsPage({
   const autoApprove = peeked.ok ? peeked.invite.autoApprove : false;
 
   return (
-    <main className="mx-auto max-w-xl px-4 py-12 text-gray-900 dark:text-white">
+    <main className="mx-auto max-w-xl px-4 py-12 text-awc-fg dark:text-white">
       <h1 className="text-xl font-semibold">Assistant project invite</h1>
       <ProjectInviteInstructionsBody
         token={token}

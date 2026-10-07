@@ -15,16 +15,16 @@ const ProjectsStorybookPageClient = () => {
   return (
     <ProjectsStorybookMockFetchProvider>
       <div className="min-h-screen bg-awc-bg dark:bg-gray-900">
-        <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-900/95">
+        <header className="sticky top-0 z-40 border-b border-awc-border bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-900/95">
           <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <div>
               <p className="text-xs font-medium uppercase tracking-wide text-brand-500">
                 Dev only · localhost:3000
               </p>
-              <h1 className="text-xl font-semibold text-gray-900 dark:text-white/90">
+              <h1 className="text-xl font-semibold text-awc-fg dark:text-white/90">
                 Projects UI storybook
               </h1>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              <p className="mt-1 text-sm text-awc-fg-muted dark:text-gray-400">
                 Mock API for UX review — toggle mobile/desktop, then sign in for
                 live{" "}
                 <Link href="/projects" className="text-brand-600">
@@ -35,7 +35,7 @@ const ProjectsStorybookPageClient = () => {
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <div
-                className="inline-flex rounded-lg border border-gray-200 p-0.5 dark:border-gray-700"
+                className="inline-flex rounded-lg border border-awc-border p-0.5 dark:border-gray-700"
                 role="group"
                 aria-label="Preview viewport"
               >
@@ -46,7 +46,7 @@ const ProjectsStorybookPageClient = () => {
                     className={`rounded-md px-3 py-1.5 text-sm capitalize transition ${
                       viewport === option
                         ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
-                        : "text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5"
+                        : "text-awc-fg-muted hover:bg-awc-tile dark:text-gray-300 dark:hover:bg-white/5"
                     }`}
                     onClick={() => {
                       setViewport(option);

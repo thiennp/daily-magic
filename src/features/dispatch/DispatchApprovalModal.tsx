@@ -52,20 +52,20 @@ export default function DispatchApprovalModal({
       showCloseButton={ended}
       className="max-w-lg p-6"
     >
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+      <h2 className="text-lg font-semibold text-awc-fg dark:text-white/90">
         {formatDispatchApprovalCardTitle(cardFields)}
       </h2>
       {!rich ? (
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
           {formatDispatchApprovalCardBody(request.requesterEmail)}
         </p>
       ) : null}
       {folderLine !== null ? (
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
           {folderLine}
         </p>
       ) : null}
-      <pre className="mt-4 max-h-40 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+      <pre className="mt-4 max-h-40 overflow-auto rounded-lg bg-awc-surface-2 p-3 text-xs text-awc-fg dark:bg-gray-800 dark:text-gray-300">
         {request.prompt}
       </pre>
       <DispatchApprovalExpiryNote id={EXPIRY_NOTE_ID} expiry={expiry} />

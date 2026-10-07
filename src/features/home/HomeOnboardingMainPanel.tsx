@@ -52,7 +52,7 @@ export default function HomeOnboardingMainPanel({
   if (isLoading || isLoadingSetupAcknowledged) {
     return (
       <AppHero variant="plain">
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-awc-fg-muted dark:text-gray-400">
           Loading your setup progress…
         </p>
       </AppHero>

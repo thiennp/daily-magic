@@ -19,7 +19,7 @@ export default function AwcHumanPendingInviteRow({
   return (
     <li className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-amber-200/80 bg-amber-50/60 px-3 py-2 text-sm dark:border-amber-900/50 dark:bg-amber-950/30">
       <div>
-        <div className="font-medium text-gray-900 dark:text-white/90">
+        <div className="font-medium text-awc-fg dark:text-white/90">
           {invite.email ?? "Invite link · no email"}
           {invite.requireEmailMatch ? (
             <span className="ml-2 inline-flex rounded-full bg-amber-200/80 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-900 dark:bg-amber-900/60 dark:text-amber-100">
@@ -27,7 +27,7 @@ export default function AwcHumanPendingInviteRow({
             </span>
           ) : null}
         </div>
-        <div className="text-xs text-gray-500">
+        <div className="text-xs text-awc-fg-muted">
           Role · {invite.role}
           {" · exp "}
           {new Date(invite.expiresAt).toLocaleDateString()}

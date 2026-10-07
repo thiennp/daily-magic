@@ -66,10 +66,10 @@ export default function AgentDispatchPolicyPanel() {
 
   return (
     <AppPanel embedded={embedded}>
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+      <h2 className="text-lg font-semibold text-awc-fg dark:text-white/90">
         Who can send tasks to your computer
       </h2>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
         Override your company default for tasks sent to your computer.
       </p>
       <select
@@ -77,7 +77,7 @@ export default function AgentDispatchPolicyPanel() {
         onChange={(event) => {
           setPolicy(event.target.value as DispatchPolicyValue | "inherit");
         }}
-        className="mt-4 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
+        className="mt-4 w-full rounded-lg border border-awc-border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
       >
         <option value="inherit">Use company default</option>
         <option value={DispatchPolicy.APPROVAL}>Ask me first</option>
@@ -89,7 +89,7 @@ export default function AgentDispatchPolicyPanel() {
         <Button onClick={() => void savePolicy()}>Save preference</Button>
       </div>
       {message ? (
-        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-xs text-awc-fg-muted dark:text-gray-400">
           {message}
         </p>
       ) : null}

@@ -60,7 +60,7 @@ export default function SendTaskRunScopedComponentsPanel({
 
   if (isLoading) {
     return (
-      <p className="text-xs text-gray-500 dark:text-gray-400">
+      <p className="text-xs text-awc-fg-muted dark:text-gray-400">
         Loading pull-into-task components…
       </p>
     );
@@ -71,11 +71,11 @@ export default function SendTaskRunScopedComponentsPanel({
   }
 
   return (
-    <div className="mb-4 rounded-lg border border-gray-200 p-3 dark:border-gray-700">
-      <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+    <div className="mb-4 rounded-lg border border-awc-border p-3 dark:border-gray-700">
+      <p className="text-sm font-medium text-awc-fg dark:text-white/90">
         Pull into this task only
       </p>
-      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-1 text-xs text-awc-fg-muted dark:text-gray-400">
         These components apply to this run without changing the project
         composition.
       </p>
@@ -92,10 +92,10 @@ export default function SendTaskRunScopedComponentsPanel({
                 }}
               />
               <span>
-                <span className="font-medium text-gray-800 dark:text-white/90">
+                <span className="font-medium text-awc-fg dark:text-white/90">
                   {component.name}
                 </span>
-                <span className="ml-1 text-xs uppercase text-gray-500 dark:text-gray-400">
+                <span className="ml-1 text-xs uppercase text-awc-fg-muted dark:text-gray-400">
                   {component.kind}
                 </span>
               </span>

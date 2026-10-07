@@ -32,11 +32,11 @@ export default function AwcHumanInviteAcceptSignedInForm({
 
   return (
     <>
-      <p className="mt-4 text-sm text-gray-700 dark:text-white/80">
+      <p className="mt-4 text-sm text-awc-fg dark:text-white/80">
         You&apos;re signed in as {signedInEmail ?? "you"}.{" "}
         {inviterDisplayName} invited you as a {roleLabel}.
       </p>
-      <p className="mt-1 text-xs text-gray-500">{copy.acceptSignedInHint}</p>
+      <p className="mt-1 text-xs text-awc-fg-muted">{copy.acceptSignedInHint}</p>
       <form
         onSubmit={(event: FormEvent<HTMLFormElement>) => {
           event.preventDefault();

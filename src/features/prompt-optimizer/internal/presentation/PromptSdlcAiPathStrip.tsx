@@ -24,7 +24,7 @@ export default function PromptSdlcAiPathStrip(): ReactElement {
       <ul className="grid gap-3 sm:grid-cols-2">
         {copy.paths.map((path) => (
           <li key={path.id} className={APP_SURFACE_NESTED_CARD_CLASS}>
-            <p className="text-sm font-semibold text-gray-900 dark:text-white">
+            <p className="text-sm font-semibold text-awc-fg dark:text-white">
               {path.label}
             </p>
             <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>{path.detail}</p>

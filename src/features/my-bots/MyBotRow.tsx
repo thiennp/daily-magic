@@ -18,13 +18,13 @@ export default function MyBotRow({
 }: MyBotRowProps) {
   const label = bot.displayName ?? bot.tokenPrefix;
   return (
-    <li className="rounded-lg border border-gray-200/80 p-3 dark:border-gray-800/80">
+    <li className="rounded-lg border border-awc-border/80 p-3 dark:border-gray-800/80">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <p className="text-sm font-medium text-gray-900 dark:text-white">
+          <p className="text-sm font-medium text-awc-fg dark:text-white">
             {label}
           </p>
-          <p className="text-[11px] text-gray-500 dark:text-gray-400">
+          <p className="text-[11px] text-awc-fg-muted dark:text-gray-400">
             {bot.tokenPrefix}… · {bot.botUserId.slice(0, 8)}…
           </p>
         </div>
@@ -41,7 +41,7 @@ export default function MyBotRow({
         <ul className="mt-2 space-y-2">
           {bot.memberships.map((membership) => (
             <li key={membership.membershipId} className="text-xs">
-              <p className="text-gray-700 dark:text-gray-300">
+              <p className="text-awc-fg dark:text-gray-300">
                 {MY_BOTS_COPY.membershipLabel}: {membership.projectName}
                 {membership.projectDisplayName
                   ? ` · ${membership.projectDisplayName}`

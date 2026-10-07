@@ -39,7 +39,7 @@ export default function AwcProjectSettingsRunsWithoutApprovalRow({
     <section className="flex flex-col gap-2" aria-labelledby="p-set-rwa-h">
       <h3
         id="p-set-rwa-h"
-        className="text-[13px] font-semibold text-gray-500 dark:text-gray-400"
+        className="text-[13px] font-semibold text-awc-fg-muted dark:text-gray-400"
       >
         {C.heading}
       </h3>

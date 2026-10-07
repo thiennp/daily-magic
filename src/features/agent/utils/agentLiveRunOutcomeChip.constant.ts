@@ -13,7 +13,7 @@ const AGENT_LIVE_RUN_OUTCOME_CHIP_CHROME_CLASS: Record<
   warning:
     "bg-amber-100 text-amber-950 dark:bg-amber-950/40 dark:text-amber-100",
   error: "bg-rose-100 text-rose-950 dark:bg-rose-950/40 dark:text-rose-100",
-  stop: "bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-gray-100",
+  stop: "bg-gray-200 text-awc-fg dark:bg-gray-800 dark:text-gray-100",
 };
 
 export const AGENT_LIVE_RUN_OUTCOME_CHIP_CLASS: Record<

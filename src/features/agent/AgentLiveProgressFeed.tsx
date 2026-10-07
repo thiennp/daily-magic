@@ -57,7 +57,7 @@ export default function AgentLiveProgressFeed({
 
   return (
     <div
-      className="mt-3 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.02]"
+      className="mt-3 rounded-xl border border-awc-border bg-white p-4 dark:border-gray-800 dark:bg-white/[0.02]"
       aria-busy={isWorking || isStopping}
     >
       <AgentLiveProgressFeedStatus
@@ -74,7 +74,7 @@ export default function AgentLiveProgressFeed({
         onDeleteRun={onDeleteRun}
       />
       {humanSummary !== null ? (
-        <p className="mt-3 whitespace-pre-line text-sm text-gray-700 dark:text-gray-200">
+        <p className="mt-3 whitespace-pre-line text-sm text-awc-fg dark:text-gray-200">
           {humanSummary}
         </p>
       ) : null}

@@ -60,10 +60,10 @@ export default function AwcProjectAccessFolderRefs({
     <div className="space-y-3">
       {hideChrome ? null : (
         <>
-          <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
+          <h3 className="text-sm font-medium text-awc-fg dark:text-white/90">
             {copy.folderRefsHeading}
           </h3>
-          <p className="mt-1 text-xs text-gray-500">{copy.folderRefsHint}</p>
+          <p className="mt-1 text-xs text-awc-fg-muted">{copy.folderRefsHint}</p>
         </>
       )}
       <AwcProjectAccessFolderRefsList

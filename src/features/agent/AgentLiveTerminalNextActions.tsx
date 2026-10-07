@@ -22,7 +22,7 @@ export default function AgentLiveTerminalNextActions({
 
   const content = (
     <>
-      <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+      <p className="text-xs font-medium uppercase tracking-wide text-awc-fg-muted dark:text-gray-400">
         Suggested next steps
       </p>
       <div className="mt-2 flex flex-wrap gap-2">
@@ -49,7 +49,7 @@ export default function AgentLiveTerminalNextActions({
   }
 
   return (
-    <div className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-800 dark:bg-gray-900/50">
+    <div className="mt-3 rounded-lg border border-awc-border bg-awc-surface-2 p-3 dark:border-gray-800 dark:bg-gray-900/50">
       {content}
     </div>
   );

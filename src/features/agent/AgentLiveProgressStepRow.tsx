@@ -20,12 +20,12 @@ const stepIconClass = (state: AgentLiveProgressStep["state"]): string => {
     return "border-rose-500 bg-rose-50 text-rose-800 dark:bg-rose-950/40 dark:text-rose-100";
   }
   if (state === "skipped") {
-    return "border-dashed border-gray-400 bg-white text-gray-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-400";
+    return "border-dashed border-gray-400 bg-white text-awc-fg-muted dark:border-gray-600 dark:bg-gray-900 dark:text-gray-400";
   }
   if (state === "active") {
     return "border-brand-500 bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-200";
   }
-  return "border-gray-300 bg-white text-gray-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-500";
+  return "border-awc-border-strong bg-white text-awc-fg-subtle dark:border-gray-700 dark:bg-gray-900 dark:text-gray-500";
 };
 
 const stepIconContent = (
@@ -76,13 +76,13 @@ export default function AgentLiveProgressStepRow({
         <span
           className={
             step.state === "pending"
-              ? "text-sm text-gray-400 dark:text-gray-500"
-              : "text-sm text-gray-800 dark:text-white/90"
+              ? "text-sm text-awc-fg-subtle dark:text-gray-500"
+              : "text-sm text-awc-fg dark:text-white/90"
           }
         >
           {step.label}
           {step.state === "skipped" ? (
-            <span className="ml-2 rounded-full border border-dashed border-gray-400 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-gray-500 dark:border-gray-600 dark:text-gray-400">
+            <span className="ml-2 rounded-full border border-dashed border-gray-400 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-awc-fg-muted dark:border-gray-600 dark:text-gray-400">
               Skipped
             </span>
           ) : null}
@@ -94,7 +94,7 @@ export default function AgentLiveProgressStepRow({
           {isActiveWorking ? workingEllipsis : null}
         </span>
         {step.detail !== null && step.state !== "pending" ? (
-          <p className="mt-1 text-xs whitespace-pre-wrap text-gray-600 dark:text-gray-300">
+          <p className="mt-1 text-xs whitespace-pre-wrap text-awc-fg-muted dark:text-gray-300">
             {step.detail}
           </p>
         ) : null}

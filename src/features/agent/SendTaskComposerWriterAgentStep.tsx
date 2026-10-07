@@ -15,7 +15,7 @@ export default function SendTaskComposerWriterAgentStep({
 }: SendTaskComposerWriterAgentStepProps) {
   return (
     <div>
-      <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
+      <h2 className="text-sm font-medium text-awc-fg dark:text-white/90">
         Choose an AI on your computer
       </h2>
       <ul className="mt-3 space-y-2">

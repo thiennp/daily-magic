@@ -30,7 +30,7 @@ export default function AwcMessengerComposer({
   const [mode, setMode] = useState<AwcMessengerComposerMode>("message");
 
   return (
-    <div className="flex flex-col gap-2 border-t border-gray-200 bg-white p-3 dark:border-gray-800 dark:bg-gray-950">
+    <div className="flex flex-col gap-2 border-t border-awc-border bg-white p-3 dark:border-gray-800 dark:bg-gray-950">
       <AwcMessengerComposerModeToggle
         mode={mode}
         disabled={disabled || sending}

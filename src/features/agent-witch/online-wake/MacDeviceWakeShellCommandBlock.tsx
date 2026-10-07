@@ -19,7 +19,7 @@ export default function MacDeviceWakeShellCommandBlock({
 
   return (
     <div className="mt-4 space-y-2">
-      <p className="text-sm text-gray-600 dark:text-gray-400">{leadIn}</p>
+      <p className="text-sm text-awc-fg-muted dark:text-gray-400">{leadIn}</p>
       <CopyableBashCommand command={wakeTerminalCommand} variant="bash" />
     </div>
   );

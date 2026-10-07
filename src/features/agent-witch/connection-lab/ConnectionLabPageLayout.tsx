@@ -9,10 +9,10 @@ export default function ConnectionLabPageLayout() {
   return (
     <div className={APP_PAGE_STACK_CLASS}>
       <AppPanel>
-        <h1 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+        <h1 className="text-lg font-semibold text-awc-fg dark:text-white/90">
           Connection lab
         </h1>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
           Mock Mac and connection states without a real Mac or database. Switch
           scenarios to verify send gating, offline hints, and home connect flow.
         </p>

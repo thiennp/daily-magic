@@ -30,7 +30,7 @@ export default function AwcMessengerTimelineLoadHeader({
         className="flex flex-col items-center gap-2 px-3 py-3 text-center"
         role="alert"
       >
-        <p className="max-w-sm text-xs text-gray-600 dark:text-gray-300">
+        <p className="max-w-sm text-xs text-awc-fg-muted dark:text-gray-300">
           {copy.projectComputerOffline}
         </p>
         <button
@@ -48,12 +48,12 @@ export default function AwcMessengerTimelineLoadHeader({
   if (loadingOlder) {
     return (
       <div
-        className="flex items-center justify-center gap-2 px-3 py-2 text-xs text-gray-500"
+        className="flex items-center justify-center gap-2 px-3 py-2 text-xs text-awc-fg-muted"
         role="status"
         aria-live="polite"
       >
         <span
-          className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-gray-300 border-t-gray-700 dark:border-gray-600 dark:border-t-gray-200"
+          className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-awc-border-strong border-t-gray-700 dark:border-gray-600 dark:border-t-gray-200"
           aria-hidden
         />
         <span>{copy.loadingOlder}</span>
@@ -63,7 +63,7 @@ export default function AwcMessengerTimelineLoadHeader({
 
   if (reachedStart) {
     return (
-      <p className="px-3 py-2 text-center text-[11px] font-medium uppercase tracking-wide text-gray-400">
+      <p className="px-3 py-2 text-center text-[11px] font-medium uppercase tracking-wide text-awc-fg-subtle">
         {copy.startOfConversation}
       </p>
     );
@@ -75,7 +75,7 @@ export default function AwcMessengerTimelineLoadHeader({
         <button
           type="button"
           onClick={onLoadOlder}
-          className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-white/[0.04]"
+          className="rounded-lg border border-awc-border bg-white px-3 py-1.5 text-xs font-medium text-awc-fg hover:bg-awc-surface-2 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-white/[0.04]"
         >
           {copy.loadOlder}
         </button>

@@ -39,16 +39,16 @@ export default function AwcProjectConnectionRow({
   const enabled = canMutate && action === "disconnect";
 
   return (
-    <li className="flex flex-wrap items-center gap-3 rounded-xl border border-gray-200/80 px-3 py-3 dark:border-gray-800/80">
+    <li className="flex flex-wrap items-center gap-3 rounded-xl border border-awc-border/80 px-3 py-3 dark:border-gray-800/80">
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-semibold text-gray-800 dark:text-white/90">
+          <p className="text-sm font-semibold text-awc-fg dark:text-white/90">
             {name}
           </p>
           <AwcProjectConnectionStatusPill status={item.status} />
         </div>
         {item.accountLabel !== null ? (
-          <p className="mt-1 text-[13px] text-gray-600 dark:text-gray-300">
+          <p className="mt-1 text-[13px] text-awc-fg-muted dark:text-gray-300">
             {item.accountLabel}
             {item.connectedAt !== null
               ? ` · ${formatConnectionConnectedOn(item.connectedAt)}`

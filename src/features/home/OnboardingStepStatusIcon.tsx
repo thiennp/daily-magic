@@ -19,7 +19,7 @@ export default function OnboardingStepStatusIcon({
     <AppIcon
       icon={HourglassIcon}
       size="md"
-      className="text-gray-400 dark:text-gray-500"
+      className="text-awc-fg-subtle dark:text-gray-500"
     />
   );
 }

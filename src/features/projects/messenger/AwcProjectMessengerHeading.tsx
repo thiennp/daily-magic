@@ -14,7 +14,7 @@ export default function AwcProjectMessengerHeading({
   return (
     <>
       <div className="flex items-center gap-2">
-        <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+        <h2 className="text-base font-semibold text-awc-fg dark:text-white">
           {copy.tab}
         </h2>
         {unreadTotal > 0 ? (

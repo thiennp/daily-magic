@@ -43,7 +43,7 @@ export default function ConnectComputerGuideSteps({
             {index + 1}
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-gray-900 dark:text-white/90">
+            <p className="text-sm font-semibold text-awc-fg dark:text-white/90">
               {step.title}
             </p>
             <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
@@ -59,7 +59,7 @@ export default function ConnectComputerGuideSteps({
                   </p>
                 ) : null}
                 {isInstallCommandLoading ? (
-                  <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+                  <p className="mt-3 text-sm text-awc-fg-muted dark:text-gray-400">
                     Preparing your install command…
                   </p>
                 ) : (

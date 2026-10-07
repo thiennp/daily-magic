@@ -37,7 +37,7 @@ export default function AwcProjectInboxMessageList({
   const copy = AWC_PROJECT_INBOX_COPY;
 
   if (messages.length === 0) {
-    return <p className="text-sm text-gray-500">{emptyText ?? copy.empty}</p>;
+    return <p className="text-sm text-awc-fg-muted">{emptyText ?? copy.empty}</p>;
   }
 
   return (
@@ -45,16 +45,16 @@ export default function AwcProjectInboxMessageList({
       {messages.map((row) => (
         <li
           key={row.messageId}
-          className="flex items-start justify-between gap-2 rounded-lg border border-gray-200/70 bg-gray-50/60 px-3 py-2 dark:border-gray-800/70 dark:bg-white/[0.03]"
+          className="flex items-start justify-between gap-2 rounded-lg border border-awc-border/70 bg-awc-surface-2/60 px-3 py-2 dark:border-gray-800/70 dark:bg-white/[0.03]"
         >
           <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-400">
               {formatProjectMessageKindLabel(row.kind)}
             </p>
             <p className={`mt-0.5 text-sm ${APP_SURFACE_BODY_TEXT_CLASS}`}>
               {row.summary}
             </p>
-            <p className="mt-1 text-[11px] text-gray-500 dark:text-gray-400">
+            <p className="mt-1 text-[11px] text-awc-fg-muted dark:text-gray-400">
               {routeLabel(row)} · {formatWhen(row.createdAt)} ·{" "}
               {row.ackedAt !== null ? copy.ackedLabel : copy.unackedLabel}
             </p>

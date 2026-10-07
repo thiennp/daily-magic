@@ -12,7 +12,7 @@ export default function MultiSelectChevronButton({
       <button
         type="button"
         onClick={onToggle}
-        className="w-5 h-5 text-gray-700 outline-hidden cursor-pointer focus:outline-hidden dark:text-gray-400"
+        className="w-5 h-5 text-awc-fg outline-hidden cursor-pointer focus:outline-hidden dark:text-gray-400"
       >
         <svg
           className={`stroke-current ${isOpen ? "rotate-180" : ""}`}

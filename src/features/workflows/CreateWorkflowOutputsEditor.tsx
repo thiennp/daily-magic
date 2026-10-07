@@ -25,17 +25,17 @@ export default function CreateWorkflowOutputsEditor({
 }: CreateWorkflowOutputsEditorProps) {
   const sectionClass =
     variant === "section"
-      ? "space-y-4 rounded-xl border border-gray-100 p-4 dark:border-gray-800"
+      ? "space-y-4 rounded-xl border border-awc-border p-4 dark:border-gray-800"
       : "space-y-4";
 
   return (
     <section className={sectionClass}>
       {variant === "section" ? (
         <div>
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white/90">
+          <h3 className="text-sm font-semibold text-awc-fg dark:text-white/90">
             {WORKFLOW_BUILDER_OUTPUTS_SECTION.title}
           </h3>
-          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+          <p className="mt-1 text-sm text-awc-fg-muted dark:text-gray-400">
             {WORKFLOW_BUILDER_OUTPUTS_SECTION.description}
           </p>
         </div>

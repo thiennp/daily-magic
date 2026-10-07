@@ -29,10 +29,10 @@ export default function ConfirmDestructiveModal({
       showCloseButton={false}
       className="max-w-md p-6"
     >
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+      <h2 className="text-lg font-semibold text-awc-fg dark:text-white/90">
         {title}
       </h2>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
         {description}
       </p>
       <div className="mt-6 flex flex-wrap justify-end gap-3">

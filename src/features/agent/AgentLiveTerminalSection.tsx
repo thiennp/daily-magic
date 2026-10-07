@@ -42,18 +42,18 @@ const AgentLiveTerminalSection = forwardRef<
   const content = (
     <>
       {!props.isSteppedComposer && props.activeRunId !== null ? (
-        <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mb-3 text-sm text-awc-fg-muted dark:text-gray-400">
           This job is saved locally in{" "}
           <Link
             href={PROJECTS_REPORTS_INTENT_HREF}
-            className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
+            className="font-medium text-brand-600 hover:text-awc-blue-700 dark:text-brand-400"
           >
             Reports
           </Link>
           .{" "}
           <Link
             href={`/reports/${props.activeRunId}`}
-            className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
+            className="font-medium text-brand-600 hover:text-awc-blue-700 dark:text-brand-400"
           >
             Open full report
           </Link>

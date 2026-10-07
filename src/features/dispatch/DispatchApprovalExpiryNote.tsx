@@ -16,17 +16,17 @@ export default function DispatchApprovalExpiryNote({
   if (expiry.kind === "none") return null;
   if (expiry.kind === "open") {
     return (
-      <p id={id} className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+      <p id={id} className="mt-3 text-sm text-awc-fg-muted dark:text-gray-400">
         {expiry.line}
       </p>
     );
   }
   return (
     <div id={id} role="status" className="mt-3 text-sm">
-      <p className="font-medium text-gray-800 dark:text-white/90">
+      <p className="font-medium text-awc-fg dark:text-white/90">
         {expiry.title}
       </p>
-      <p className="mt-0.5 text-gray-600 dark:text-gray-400">{expiry.body}</p>
+      <p className="mt-0.5 text-awc-fg-muted dark:text-gray-400">{expiry.body}</p>
     </div>
   );
 }

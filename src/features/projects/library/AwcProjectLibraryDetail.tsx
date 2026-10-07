@@ -66,7 +66,7 @@ export default function AwcProjectLibraryDetail({
               {!canEdit ? (
                 <span
                   id={reasonId}
-                  className="text-xs text-gray-500 dark:text-gray-400"
+                  className="text-xs text-awc-fg-muted dark:text-gray-400"
                 >
                   {C["disabled.publish"]}
                 </span>

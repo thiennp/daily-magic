@@ -34,7 +34,7 @@ export default function AwcProjectAccessComputerMembersSection({
       count={computers.length}
     >
       <div className="space-y-2">
-        <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <p className="text-sm font-medium text-awc-fg dark:text-white/90">
           Coding tools
         </p>
         <LaneCompareHelpTrigger

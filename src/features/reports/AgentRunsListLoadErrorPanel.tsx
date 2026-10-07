@@ -11,10 +11,10 @@ export default function AgentRunsListLoadErrorPanel({
   return (
     <AppPanel padding="compact" className="w-full">
       <div className="flex flex-col gap-3">
-        <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <p className="text-sm font-medium text-awc-fg dark:text-white/90">
           Could not load your reports
         </p>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-sm text-awc-fg-muted dark:text-gray-400">
           Something went wrong while fetching run history. Try again in a
           moment.
         </p>

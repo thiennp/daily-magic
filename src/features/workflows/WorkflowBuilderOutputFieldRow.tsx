@@ -19,7 +19,7 @@ interface WorkflowBuilderOutputFieldRowProps {
 }
 
 const inputClass =
-  "h-11 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm shadow-theme-xs focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800";
+  "h-11 w-full rounded-lg border border-awc-border-strong bg-transparent px-3 text-sm shadow-theme-xs focus:border-awc-blue-300 focus:outline-hidden focus:ring-3 focus:ring-awc-blue-600/10 dark:border-gray-700 dark:bg-gray-800";
 
 export default function WorkflowBuilderOutputFieldRow({
   field,
@@ -28,15 +28,15 @@ export default function WorkflowBuilderOutputFieldRow({
   onRemove,
 }: WorkflowBuilderOutputFieldRowProps) {
   return (
-    <div className="space-y-3 rounded-lg border border-gray-200 bg-gray-50/80 p-4 dark:border-gray-700 dark:bg-white/[0.04]">
+    <div className="space-y-3 rounded-lg border border-awc-border bg-awc-surface-2/80 p-4 dark:border-gray-700 dark:bg-white/[0.04]">
       <div className="flex items-center justify-between gap-2">
-        <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <p className="text-sm font-medium text-awc-fg dark:text-white/90">
           Output {index + 1}
         </p>
         <button
           type="button"
           onClick={() => onRemove(field.id)}
-          className="text-xs font-medium text-gray-500 hover:text-error-600"
+          className="text-xs font-medium text-awc-fg-muted hover:text-error-600"
         >
           Remove
         </button>
@@ -79,14 +79,14 @@ export default function WorkflowBuilderOutputFieldRow({
           </select>
         </div>
       </div>
-      <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+      <label className="flex items-center gap-2 text-sm text-awc-fg dark:text-gray-300">
         <input
           type="checkbox"
           checked={field.required}
           onChange={(event) => {
             onChange(field.id, { required: event.target.checked });
           }}
-          className="rounded border-gray-300"
+          className="rounded border-awc-border-strong"
         />
         {WORKFLOW_BUILDER_OUTPUTS_SECTION.requiredLabel}
       </label>

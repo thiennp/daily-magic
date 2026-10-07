@@ -22,7 +22,7 @@ export default function ConnectInstallPasteModal({
     >
       <h2
         id="connect-install-paste-modal-title"
-        className="text-lg font-semibold text-gray-900 dark:text-white/90"
+        className="text-lg font-semibold text-awc-fg dark:text-white/90"
       >
         Paste into Terminal
       </h2>

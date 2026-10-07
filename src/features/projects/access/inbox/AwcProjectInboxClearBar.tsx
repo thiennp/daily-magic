@@ -39,7 +39,7 @@ export default function AwcProjectInboxClearBar({
       {toast ? (
         <p
           role="status"
-          className="flex items-center gap-2 text-[11px] font-medium text-gray-700 dark:text-gray-200"
+          className="flex items-center gap-2 text-[11px] font-medium text-awc-fg dark:text-gray-200"
         >
           <span>{toast.text}</span>
           {undoBatch !== null ? (

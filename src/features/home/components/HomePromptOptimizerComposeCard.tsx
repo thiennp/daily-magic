@@ -37,9 +37,9 @@ export default function HomePromptOptimizerComposeCard({
   const lede = storybookPreview ? HOME_PROMPT_OPTIMIZER_STORYBOOK_LEDE : null;
 
   return (
-    <div className="mt-6 border-t border-gray-200 pt-6 dark:border-gray-800">
+    <div className="mt-6 border-t border-awc-border pt-6 dark:border-gray-800">
       {headline !== null ? (
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white/90">
+        <h3 className="text-lg font-semibold text-awc-fg dark:text-white/90">
           {headline}
         </h3>
       ) : null}

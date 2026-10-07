@@ -22,8 +22,8 @@ const statusLabel = (status: AgentLiveWavePlanViewItem["status"]): string => {
 const rowClassName = (item: AgentLiveWavePlanViewItem): string => {
   const indent =
     item.kind === "agent"
-      ? "ml-4 border-gray-100 dark:border-gray-800"
-      : "border-gray-200 dark:border-gray-700";
+      ? "ml-4 border-awc-border dark:border-gray-800"
+      : "border-awc-border dark:border-gray-700";
   const tone =
     item.status === "working"
       ? "bg-brand-50/50 dark:bg-brand-950/20"
@@ -51,10 +51,10 @@ export default function AgentLiveProgressWaveItemRow({
     <li className={rowClassName(item)}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-sm font-medium text-gray-900 dark:text-white/90">
+          <p className="text-sm font-medium text-awc-fg dark:text-white/90">
             {isAgent ? "Agent" : "Wave"} {item.id}: {item.title}
           </p>
-          <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+          <p className="mt-0.5 text-xs text-awc-fg-muted dark:text-gray-400">
             {statusLabel(item.status)} · {estimateLabel}
           </p>
         </div>
@@ -72,7 +72,7 @@ export default function AgentLiveProgressWaveItemRow({
               style={{ width: `${progress.percent}%` }}
             />
           </div>
-          <p className="mt-1 text-[11px] text-gray-500 dark:text-gray-400">
+          <p className="mt-1 text-[11px] text-awc-fg-muted dark:text-gray-400">
             {progress.percent}% of estimate
           </p>
         </div>

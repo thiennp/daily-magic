@@ -5,7 +5,7 @@ import type { MessengerTaskAssigneeOption } from "@/features/projects/messenger/
 import { PROJECT_MESSAGE_SUMMARY_MAX_CHARS } from "@/lib/projects/acl/messaging/projectMessage.constants";
 
 const FIELD =
-  "mt-1 w-full rounded-lg border border-gray-300 bg-white px-2.5 py-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-900 dark:text-white";
+  "mt-1 w-full rounded-lg border border-awc-border-strong bg-white px-2.5 py-2 text-sm text-awc-fg dark:border-gray-700 dark:bg-gray-900 dark:text-white";
 
 interface AwcMessengerTaskComposerFieldsProps {
   readonly disabled: boolean;
@@ -32,7 +32,7 @@ export default function AwcMessengerTaskComposerFields({
   return (
     <>
       <div className="grid gap-2 sm:grid-cols-2">
-        <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+        <label className="block text-xs font-medium text-awc-fg dark:text-gray-300">
           {copy.taskAssigneeLabel}
           <select
             className={FIELD}
@@ -52,7 +52,7 @@ export default function AwcMessengerTaskComposerFields({
             ))}
           </select>
         </label>
-        <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+        <label className="block text-xs font-medium text-awc-fg dark:text-gray-300">
           {copy.taskKindLabel}
           <input
             className={FIELD}
@@ -65,7 +65,7 @@ export default function AwcMessengerTaskComposerFields({
           />
         </label>
       </div>
-      <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+      <label className="block text-xs font-medium text-awc-fg dark:text-gray-300">
         {copy.taskSummaryLabel}
         <textarea
           rows={2}
@@ -79,7 +79,7 @@ export default function AwcMessengerTaskComposerFields({
           }}
         />
       </label>
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-awc-fg-muted">
         {copy.taskSummaryCounter.replace("{n}", String(summary.length))}
       </p>
     </>

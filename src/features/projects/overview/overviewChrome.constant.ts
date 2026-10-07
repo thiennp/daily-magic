@@ -25,7 +25,7 @@ export const OVERVIEW_FACT_WARN_CLASS =
 
 /** Neutral pill — shared with Pitfalls severity `info` (main export name). */
 export const OVERVIEW_PILL_NEUTRAL_CLASS =
-  "inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600 dark:bg-white/10 dark:text-gray-300";
+  "inline-flex items-center rounded-full bg-awc-fill px-2.5 py-0.5 text-xs font-medium text-awc-fg-muted dark:bg-white/10 dark:text-gray-300";
 
 /** Severity block pill — shared with Pitfalls (main export name). */
 export const OVERVIEW_SEVERITY_BLOCK_CLASS =

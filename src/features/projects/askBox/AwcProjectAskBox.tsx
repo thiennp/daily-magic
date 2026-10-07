@@ -20,7 +20,7 @@ interface AwcProjectAskBoxProps {
 }
 
 const FORM_INLINE =
-  "flex flex-col gap-2 rounded-[22px] bg-white px-4 pb-3 pt-4 ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-white/10";
+  "flex flex-col gap-2 rounded-[22px] bg-white px-4 pb-3 pt-4 ring-1 ring-awc-border dark:bg-gray-900 dark:ring-white/10";
 const FORM_DOCK = "flex flex-col gap-2 rounded-2xl bg-awc-tile px-2 pb-2 pt-2";
 
 /** Ask composer — messenger send / inbox dispatch (inline or Chat dock). */
@@ -76,7 +76,7 @@ export default function AwcProjectAskBox({
           event.preventDefault();
           event.currentTarget.form?.requestSubmit();
         }}
-        className="max-h-[220px] min-h-16 w-full resize-none border-0 bg-transparent p-0 text-lg leading-snug text-gray-900 outline-none placeholder:text-gray-400 focus:ring-0 dark:text-white dark:placeholder:text-gray-500 [field-sizing:content]"
+        className="max-h-[220px] min-h-16 w-full resize-none border-0 bg-transparent p-0 text-lg leading-snug text-awc-fg outline-none placeholder:text-awc-fg-muted focus:ring-0 dark:text-white dark:placeholder:text-gray-500 [field-sizing:content]"
       />
       <AwcProjectAskBoxBar
         disabled={busy}
@@ -99,7 +99,7 @@ export default function AwcProjectAskBox({
       {ask.notice !== null ? (
         <p
           role={ask.notice.tone === "error" ? "alert" : "status"}
-          className={`text-sm ${ask.notice.tone === "error" ? "font-medium text-gray-900 dark:text-white" : "text-gray-600 dark:text-gray-300"}`}
+          className={`text-sm ${ask.notice.tone === "error" ? "font-medium text-awc-fg dark:text-white" : "text-awc-fg-muted dark:text-gray-300"}`}
         >
           {ask.notice.text}
         </p>

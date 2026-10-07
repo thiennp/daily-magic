@@ -18,29 +18,29 @@ export default function MarketplaceListingUsageGuide({
   usageGuide,
 }: MarketplaceListingUsageGuideProps) {
   return (
-    <div className="mt-4 space-y-3 border-t border-gray-200 pt-4 dark:border-gray-700">
-      <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
+    <div className="mt-4 space-y-3 border-t border-awc-border pt-4 dark:border-gray-700">
+      <h3 className="text-sm font-medium text-awc-fg dark:text-white/90">
         How to use
       </h3>
-      <p className="text-sm text-gray-600 dark:text-gray-400">
+      <p className="text-sm text-awc-fg-muted dark:text-gray-400">
         {usageGuide.summary}
       </p>
       {usageGuide.prerequisites.length > 0 ? (
         <div>
-          <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
+          <p className="text-xs font-medium text-awc-fg dark:text-gray-300">
             Before you start
           </p>
-          <ul className="mt-1 list-disc space-y-1 pl-4 text-xs text-gray-600 dark:text-gray-400">
+          <ul className="mt-1 list-disc space-y-1 pl-4 text-xs text-awc-fg-muted dark:text-gray-400">
             {usageGuide.prerequisites.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
         </div>
       ) : null}
-      <ol className="list-decimal space-y-2 pl-4 text-xs text-gray-600 dark:text-gray-400">
+      <ol className="list-decimal space-y-2 pl-4 text-xs text-awc-fg-muted dark:text-gray-400">
         {usageGuide.steps.map((step) => (
           <li key={step.title}>
-            <span className="font-medium text-gray-700 dark:text-gray-300">
+            <span className="font-medium text-awc-fg dark:text-gray-300">
               {step.title}
             </span>
             {" — "}
@@ -48,7 +48,7 @@ export default function MarketplaceListingUsageGuide({
           </li>
         ))}
       </ol>
-      <p className="text-xs text-gray-500 dark:text-gray-400">
+      <p className="text-xs text-awc-fg-muted dark:text-gray-400">
         Writers:{" "}
         {usageGuide.supportedWriters
           .map((writer) => WRITER_LABELS[writer])

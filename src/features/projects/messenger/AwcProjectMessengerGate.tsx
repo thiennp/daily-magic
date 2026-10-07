@@ -34,7 +34,7 @@ export default function AwcProjectMessengerGateView({
 }) {
   const copy = AWC_PROJECT_MESSENGER_COPY;
   if (gate.kind === "loading") {
-    return <p className="text-xs text-gray-400">{copy.loading}</p>;
+    return <p className="text-xs text-awc-fg-subtle">{copy.loading}</p>;
   }
   if (gate.kind === "empty") {
     return <AwcMessengerEmptyState />;

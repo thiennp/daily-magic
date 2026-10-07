@@ -25,7 +25,7 @@ export default function AwcProjectMembersPeopleSection({
 }: AwcProjectMembersPeopleSectionProps) {
   return (
     <section
-      className="flex flex-col gap-1 [&_section]:rounded-none [&_section]:border-0 [&_section]:bg-transparent [&_section]:p-0 [&_section]:shadow-none [&_header]:px-3.5 [&_h3]:text-[13px] [&_h3]:font-semibold [&_h3]:text-gray-500 dark:[&_h3]:text-gray-400"
+      className="flex flex-col gap-1 [&_section]:rounded-none [&_section]:border-0 [&_section]:bg-transparent [&_section]:p-0 [&_section]:shadow-none [&_header]:px-3.5 [&_h3]:text-[13px] [&_h3]:font-semibold [&_h3]:text-awc-fg-muted dark:[&_h3]:text-awc-fg-subtle"
       aria-label={C.peopleHeading}
       data-members-people
     >

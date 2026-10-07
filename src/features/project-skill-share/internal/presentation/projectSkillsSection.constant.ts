@@ -5,19 +5,19 @@ import {
 
 /** Mirrors Project Access nested section cards (projects/access) without a cross-feature import. */
 export const PROJECT_SKILLS_SECTION_CLASS =
-  "space-y-3 rounded-xl border border-gray-200/80 bg-white/70 p-3 dark:border-gray-800/80 dark:bg-white/[0.02]";
+  "space-y-3 rounded-xl border border-awc-border/80 bg-white/70 p-3 dark:border-gray-800/80 dark:bg-white/[0.02]";
 
 export const PROJECT_SKILLS_TITLE_CLASS =
-  "text-sm font-semibold text-gray-900 dark:text-white";
+  "text-sm font-semibold text-awc-fg dark:text-white";
 
 export const PROJECT_SKILLS_HINT_CLASS =
-  "text-xs text-gray-500 dark:text-gray-400";
+  "text-xs text-awc-fg-muted dark:text-gray-400";
 
 export const PROJECT_SKILLS_BADGE_CLASS =
-  "inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] font-semibold text-gray-700 dark:bg-gray-800 dark:text-gray-200";
+  "inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-awc-fill px-1.5 py-0.5 text-[10px] font-semibold text-awc-fg dark:bg-gray-800 dark:text-gray-200";
 
 export const PROJECT_SKILLS_INPUT_CLASS =
-  "w-full rounded-md border border-gray-200 bg-white px-2 py-1.5 text-xs text-gray-900 dark:border-gray-700 dark:bg-gray-900 dark:text-white";
+  "w-full rounded-md border border-awc-border bg-white px-2 py-1.5 text-xs text-awc-fg dark:border-gray-700 dark:bg-gray-900 dark:text-white";
 
 export const PROJECT_SKILLS_CTA = {
   primary: APP_SURFACE_CTA_PRIMARY_SM_CLASS,

@@ -39,7 +39,7 @@ export default function DefaultInputs() {
               onChange={handleSelectChange}
               className="dark:bg-dark-900"
             />
-            <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
+            <span className="absolute text-awc-fg-muted -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
               <AppIcon icon={ChevronDownIcon} size="md" />
             </span>
           </div>
@@ -60,13 +60,13 @@ export default function DefaultInputs() {
                 <AppIcon
                   icon={EyeIcon}
                   size="md"
-                  className="text-gray-500 dark:text-gray-400"
+                  className="text-awc-fg-muted dark:text-gray-400"
                 />
               ) : (
                 <AppIcon
                   icon={EyeCloseIcon}
                   size="md"
-                  className="text-gray-500 dark:text-gray-400"
+                  className="text-awc-fg-muted dark:text-gray-400"
                 />
               )}
             </button>
@@ -93,7 +93,7 @@ export default function DefaultInputs() {
               name="tm"
               onChange={(e) => console.log(e.target.value)}
             />
-            <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
+            <span className="absolute text-awc-fg-muted -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
               <AppIcon icon={TimeIcon} size="md" />
             </span>
           </div>

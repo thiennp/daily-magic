@@ -13,7 +13,7 @@ export default function HomeConnectGuideHeroCopy(input: {
       <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>
         {MAC_WORKER_BENEFIT_COPY.setupEyebrow}
       </p>
-      <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-gray-900 dark:text-white/90">
+      <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-awc-fg dark:text-white/90">
         {input.isLocalAppInstalled
           ? MAC_WORKER_BENEFIT_COPY.setupTitleAppReady
           : MAC_WORKER_BENEFIT_COPY.setupTitle}

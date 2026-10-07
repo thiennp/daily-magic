@@ -38,21 +38,21 @@ export default function MarketingProductPreview() {
         aria-label="Illustration of AgentWitch task queue on organization Macs"
         className={MARKETING_MOCK_SHELL_CLASSES}
       >
-        <header className="flex items-center justify-between gap-3 border-b border-gray-200 bg-white px-4 py-3">
-          <p className="text-xs font-semibold text-gray-900">Macs online</p>
+        <header className="flex items-center justify-between gap-3 border-b border-awc-border bg-white px-4 py-3">
+          <p className="text-xs font-semibold text-awc-fg">Macs online</p>
           <MarketingStatusBadge tone="success">
             {MAC_WORKER_BENEFIT_COPY.macReadyBadge}
           </MarketingStatusBadge>
         </header>
 
-        <ul className="divide-y divide-gray-200 bg-white">
+        <ul className="divide-y divide-awc-border bg-white">
           {PREVIEW_TASKS.map((task) => (
             <li
               key={task.title}
               className="flex items-center justify-between gap-3 px-4 py-3"
             >
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-gray-900">
+                <p className="truncate text-sm font-semibold text-awc-fg">
                   {task.title}
                 </p>
                 <p className="font-mono text-[11px] text-brand-600">
@@ -63,7 +63,7 @@ export default function MarketingProductPreview() {
                 <MarketingStatusBadge tone={task.tone}>
                   {task.status}
                 </MarketingStatusBadge>
-                <span className="text-[10px] text-gray-500">{task.time}</span>
+                <span className="text-[10px] text-awc-fg-muted">{task.time}</span>
               </div>
             </li>
           ))}

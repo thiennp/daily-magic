@@ -103,7 +103,7 @@ export default function NotificationDropdownPanel({
       onClose={onClose}
       className="absolute -right-[240px] mt-[17px] flex max-h-[540px] w-[350px] flex-col rounded-2xl border border-awc-border bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark sm:w-[400px] lg:right-0"
     >
-      <div className="mb-3 flex items-center justify-between border-b border-gray-100 pb-3 dark:border-gray-700">
+      <div className="mb-3 flex items-center justify-between border-b border-awc-border pb-3 dark:border-gray-700">
         <h5 className="text-lg font-semibold text-awc-fg dark:text-gray-200">
           {NOTIFICATIONS_COPY.popoverTitle}
         </h5>
@@ -120,7 +120,7 @@ export default function NotificationDropdownPanel({
             type="button"
             aria-label="Close notifications"
             onClick={onToggle}
-            className="text-gray-500 transition dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+            className="text-awc-fg-muted transition dark:text-gray-400 hover:text-awc-fg dark:hover:text-gray-200"
           >
             <svg
               className="fill-current"
@@ -165,11 +165,11 @@ export default function NotificationDropdownPanel({
         )}
       </div>
 
-      <div className="mt-3 flex flex-col gap-2 border-t border-gray-100 pt-3 dark:border-gray-700">
+      <div className="mt-3 flex flex-col gap-2 border-t border-awc-border pt-3 dark:border-gray-700">
         <Link
           href={NOTIFICATIONS_COPY.seeAllHref}
           onClick={onClose}
-          className="block rounded-lg border border-awc-border bg-white px-4 py-2 text-center text-sm font-medium text-awc-fg hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+          className="block rounded-lg border border-awc-border bg-white px-4 py-2 text-center text-sm font-medium text-awc-fg hover:bg-awc-surface-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
         >
           {NOTIFICATIONS_COPY.seeAll}
         </Link>

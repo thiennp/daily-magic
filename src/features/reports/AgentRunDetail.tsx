@@ -22,7 +22,7 @@ export default function AgentRunDetail({ runId }: AgentRunDetailProps) {
 
   if (isLoading) {
     return (
-      <p className="text-sm text-gray-500 dark:text-gray-400">Loading run…</p>
+      <p className="text-sm text-awc-fg-muted dark:text-gray-400">Loading run…</p>
     );
   }
 
@@ -36,7 +36,7 @@ export default function AgentRunDetail({ runId }: AgentRunDetailProps) {
 
   if (run === null) {
     return (
-      <p className="text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-sm text-awc-fg-muted dark:text-gray-400">
         Run not found. It may have been deleted or never synced to this browser.
       </p>
     );
@@ -58,7 +58,7 @@ export default function AgentRunDetail({ runId }: AgentRunDetailProps) {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link
           href="/reports"
-          className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
+          className="text-sm font-medium text-brand-600 hover:text-awc-blue-700 dark:text-brand-400"
         >
           Back to Reports
         </Link>

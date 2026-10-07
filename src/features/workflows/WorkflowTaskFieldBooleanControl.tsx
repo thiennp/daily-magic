@@ -22,7 +22,7 @@ export default function WorkflowTaskFieldBooleanControl({
   onChange,
 }: WorkflowTaskFieldBooleanControlProps): ReactElement {
   return (
-    <div className="mt-2 flex gap-4 text-sm font-normal text-gray-700 dark:text-gray-300">
+    <div className="mt-2 flex gap-4 text-sm font-normal text-awc-fg dark:text-gray-300">
       <label className="flex items-center gap-2">
         <input
           id={controlId}

@@ -36,10 +36,10 @@ export default function WorkflowStepFailureModal({
           {request.workflowLabel}
         </p>
       ) : null}
-      <h2 className="mt-1 text-xl font-semibold text-gray-900 dark:text-white">
+      <h2 className="mt-1 text-xl font-semibold text-awc-fg dark:text-white">
         Something went wrong
       </h2>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
         Step &ldquo;{request.title}&rdquo; did not finish. Nothing you already
         did was lost — trying again picks up from this step.
       </p>
@@ -53,8 +53,8 @@ export default function WorkflowStepFailureModal({
         {friendly.headline}
       </p>
       {friendly.detail !== null ? (
-        <details className="mt-3 text-sm text-gray-600 dark:text-gray-400">
-          <summary className="cursor-pointer font-medium text-gray-700 dark:text-gray-300">
+        <details className="mt-3 text-sm text-awc-fg-muted dark:text-gray-400">
+          <summary className="cursor-pointer font-medium text-awc-fg dark:text-gray-300">
             Technical details
           </summary>
           <p className="mt-2 whitespace-pre-wrap">{friendly.detail}</p>
@@ -70,7 +70,7 @@ export default function WorkflowStepFailureModal({
           type="button"
           onClick={onDismiss}
           disabled={isRetrying}
-          className="text-sm font-medium text-gray-600 hover:text-gray-800 disabled:opacity-50 dark:text-gray-400 dark:hover:text-gray-200"
+          className="text-sm font-medium text-awc-fg-muted hover:text-awc-fg disabled:opacity-50 dark:text-gray-400 dark:hover:text-gray-200"
         >
           Not now
         </button>

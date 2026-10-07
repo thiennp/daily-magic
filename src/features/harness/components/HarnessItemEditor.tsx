@@ -10,7 +10,7 @@ import type { HarnessManifestSetSummary } from "@/lib/agentWitch/harness/listHar
 import type { HarnessItemKind } from "@/lib/agentWitch/harness/types/HarnessItemKind.constant";
 
 const ITEM_EDITOR_BOX_CLASS =
-  "rounded-lg border border-gray-200 p-4 dark:border-gray-700";
+  "rounded-lg border border-awc-border p-4 dark:border-gray-700";
 
 interface HarnessItemEditorProps {
   readonly item: HarnessItemDraft;
@@ -39,14 +39,14 @@ export default function HarnessItemEditor({
       )}
     >
       <div className="mb-3 flex items-center justify-between gap-3">
-        <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <p className="text-sm font-medium text-awc-fg dark:text-white/90">
           Item {index + 1}
         </p>
         {canRemove ? (
           <button
             type="button"
             onClick={onRemove}
-            className="text-xs font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            className="text-xs font-medium text-awc-fg-muted hover:text-awc-fg dark:text-gray-400 dark:hover:text-gray-200"
           >
             Remove
           </button>
@@ -55,7 +55,7 @@ export default function HarnessItemEditor({
 
       <div className="grid gap-3 md:grid-cols-2">
         <label className="block text-sm">
-          <span className="font-medium text-gray-800 dark:text-white/90">
+          <span className="font-medium text-awc-fg dark:text-white/90">
             Type
           </span>
           <select
@@ -66,7 +66,7 @@ export default function HarnessItemEditor({
                 kind: event.target.value as HarnessItemKind,
               });
             }}
-            className="mt-2 w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 shadow-theme-xs outline-none transition focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
+            className="mt-2 w-full rounded-lg border border-awc-border bg-white px-4 py-3 text-sm text-awc-fg shadow-theme-xs outline-none transition focus:border-awc-blue-300 focus:ring-3 focus:ring-awc-blue-600/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
           >
             {HARNESS_KIND_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -77,7 +77,7 @@ export default function HarnessItemEditor({
         </label>
 
         <label className="block text-sm">
-          <span className="font-medium text-gray-800 dark:text-white/90">
+          <span className="font-medium text-awc-fg dark:text-white/90">
             Title
           </span>
           <input
@@ -87,7 +87,7 @@ export default function HarnessItemEditor({
               onChange({ ...item, title: event.target.value });
             }}
             placeholder="Prefer const"
-            className="mt-2 w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 shadow-theme-xs outline-none transition focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
+            className="mt-2 w-full rounded-lg border border-awc-border bg-white px-4 py-3 text-sm text-awc-fg shadow-theme-xs outline-none transition focus:border-awc-blue-300 focus:ring-3 focus:ring-awc-blue-600/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
           />
         </label>
       </div>

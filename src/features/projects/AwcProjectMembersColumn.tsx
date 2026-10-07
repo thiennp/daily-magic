@@ -19,7 +19,7 @@ interface AwcProjectMembersColumnProps {
  * surface tone + left divider only. L5 content: people · assistants · invite.
  */
 const RAIL_CLASS =
-  "min-w-0 border-t border-gray-200/80 bg-awc-bg/70 px-1 py-4 dark:border-gray-800/80 dark:bg-white/[0.03] lg:border-l lg:border-t-0 lg:pl-2 lg:pr-1";
+  "min-w-0 border-t border-awc-border/80 bg-awc-bg/70 px-1 py-4 dark:border-gray-800/80 dark:bg-white/[0.03] lg:border-l lg:border-t-0 lg:pl-2 lg:pr-1";
 
 export default function AwcProjectMembersColumn({
   projectId,
@@ -35,7 +35,7 @@ export default function AwcProjectMembersColumn({
       aria-label={label}
       className={RAIL_CLASS}
     >
-      <h2 className="mb-3 px-3.5 text-[13px] font-semibold text-gray-500 dark:text-gray-400">
+      <h2 className="mb-3 px-3.5 text-[13px] font-semibold text-awc-fg-muted dark:text-gray-400">
         {label}
       </h2>
       {pageActorRole === "owner" ? (
@@ -46,7 +46,7 @@ export default function AwcProjectMembersColumn({
           onMessageHelper={onMessageHelper ?? (() => undefined)}
         />
       ) : (
-        <p className="px-3.5 text-[13px] text-gray-500 dark:text-gray-400">
+        <p className="px-3.5 text-[13px] text-awc-fg-muted dark:text-gray-400">
           {C.viewerHint}
         </p>
       )}

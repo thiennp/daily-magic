@@ -15,7 +15,7 @@ import { resolveAgentRunDetailResultOutputForHonesty } from "@/features/reports/
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
 const LABEL_CLASS =
-  "text-[12px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400";
+  "text-[12px] font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-400";
 
 /**
  * Title · From · Date + "What happened" (report summary, else run output).
@@ -51,7 +51,7 @@ export default function AwcProjectReportDetailFields({
         <section className="flex flex-col gap-1">
           <h5 className={LABEL_CLASS}>{C["reports.detail.body"]}</h5>
           <pre
-            className={`${PANEL_LIST_CLASS} max-h-96 overflow-auto whitespace-pre-wrap p-3 text-[13px] text-gray-800 dark:text-gray-200`}
+            className={`${PANEL_LIST_CLASS} max-h-96 overflow-auto whitespace-pre-wrap p-3 text-[13px] text-awc-fg dark:text-gray-200`}
           >
             {body}
           </pre>

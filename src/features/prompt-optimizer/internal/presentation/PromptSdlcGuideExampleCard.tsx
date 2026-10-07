@@ -24,13 +24,13 @@ export default function PromptSdlcGuideExampleCard({
     <article className={`${APP_SURFACE_NESTED_CARD_CLASS} space-y-3`}>
       <h3 className={APP_SURFACE_SECTION_TITLE_CLASS}>{title}</h3>
       <div className="space-y-1">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gray-500 dark:text-gray-400">
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-awc-fg-muted dark:text-gray-400">
           Goal
         </p>
         <p className={APP_SURFACE_BODY_TEXT_CLASS}>{goal}</p>
       </div>
       <div className="space-y-1">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gray-500 dark:text-gray-400">
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-awc-fg-muted dark:text-gray-400">
           Prompt
         </p>
         <pre className={APP_SURFACE_TERMINAL_PRE_CLASS}>{promptText}</pre>

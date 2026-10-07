@@ -19,10 +19,10 @@ export default function CreateWorkflowPanel({
     <AppPanel>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+          <h2 className="text-lg font-semibold text-awc-fg dark:text-white/90">
             Create workflow
           </h2>
-          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+          <p className="mt-1 text-sm text-awc-fg-muted dark:text-gray-400">
             Define the questions people answer, then the human and Mac steps.
           </p>
         </div>

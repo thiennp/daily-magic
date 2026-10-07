@@ -31,17 +31,17 @@ export default function AwcProjectReadOnlyCompositionSections({
             hint={`View-only here — edit on ${deviceDisplayName}.`}
           >
             {isLoading ? (
-              <p className="text-xs text-gray-500 dark:text-gray-400">Loading…</p>
+              <p className="text-xs text-awc-fg-muted dark:text-gray-400">Loading…</p>
             ) : sectionItems.length === 0 ? (
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-xs text-awc-fg-muted dark:text-gray-400">
                 None bound yet — open AgentWitch Local on {deviceDisplayName}.
               </p>
             ) : (
-              <ul className="space-y-1.5 text-sm text-gray-800 dark:text-gray-100">
+              <ul className="space-y-1.5 text-sm text-awc-fg dark:text-gray-100">
                 {sectionItems.map((item) => (
                   <li
                     key={item.id}
-                    className="rounded-lg border border-gray-200/70 bg-white/70 px-3 py-1.5 dark:border-gray-800/70 dark:bg-white/[0.03]"
+                    className="rounded-lg border border-awc-border/70 bg-white/70 px-3 py-1.5 dark:border-gray-800/70 dark:bg-white/[0.03]"
                   >
                     {item.name}
                     {item.versionLabel !== null

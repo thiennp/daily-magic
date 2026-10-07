@@ -28,7 +28,7 @@ export default function SendTaskComposerMacPickerStep({
 }: SendTaskComposerMacPickerStepProps) {
   if (isLoading) {
     return (
-      <p className="text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-sm text-awc-fg-muted dark:text-gray-400">
         Checking which computers are online…
       </p>
     );
@@ -37,7 +37,7 @@ export default function SendTaskComposerMacPickerStep({
   if (devices.length === 0) {
     return (
       <div>
-        <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <h2 className="text-sm font-medium text-awc-fg dark:text-white/90">
           Where should this run?
         </h2>
         {hasCursorCloudConnection ? (
@@ -52,7 +52,7 @@ export default function SendTaskComposerMacPickerStep({
           </ul>
         ) : (
           <>
-            <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+            <p className="mt-3 text-sm text-awc-fg-muted dark:text-gray-400">
               No computers connected yet.
             </p>
             <div className="mt-3">
@@ -66,7 +66,7 @@ export default function SendTaskComposerMacPickerStep({
 
   return (
     <div>
-      <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
+      <h2 className="text-sm font-medium text-awc-fg dark:text-white/90">
         Where should this run?
       </h2>
       <ul className="mt-3 space-y-2">

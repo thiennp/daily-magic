@@ -39,11 +39,11 @@ export default function AgentRunResultOutput({
 
   return (
     <>
-      <h2 className="mt-6 text-sm font-medium text-gray-800 dark:text-white/90">
+      <h2 className="mt-6 text-sm font-medium text-awc-fg dark:text-white/90">
         Result
       </h2>
       <AgentRunSemanticOutputView formatted={semantic} fallbackPlain={body} />
-      <div className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-800 dark:bg-gray-900/50">
+      <div className="mt-3 rounded-lg border border-awc-border bg-awc-surface-2 p-3 dark:border-gray-800 dark:bg-gray-900/50">
         {canContinue ? (
           <>
             {nextActions.length > 0 ? (
@@ -54,14 +54,14 @@ export default function AgentRunResultOutput({
                 onSelect={continueWithPrompt}
               />
             ) : (
-              <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+              <p className="text-xs font-medium uppercase tracking-wide text-awc-fg-muted dark:text-gray-400">
                 Continue conversation
               </p>
             )}
             <AgentRunContinueMessageField onSubmit={continueWithPrompt} />
           </>
         ) : (
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-awc-fg-muted dark:text-gray-400">
             Continue is unavailable because this job has no saved Mac.
           </p>
         )}

@@ -23,11 +23,11 @@ export default function ShowcaseArticleLayout({
     <article className="mx-auto max-w-3xl">
       <Link
         href="/showcases"
-        className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
+        className="text-sm font-medium text-brand-600 hover:text-awc-blue-700 dark:text-brand-400"
       >
         ← All examples
       </Link>
-      <header className="mt-8 border-b border-gray-200 pb-8 dark:border-gray-800">
+      <header className="mt-8 border-b border-awc-border pb-8 dark:border-gray-800">
         <p className="text-sm font-medium text-brand-600 dark:text-brand-400">
           {article.category} · {article.readMinutes} min read
         </p>
@@ -65,7 +65,7 @@ export default function ShowcaseArticleLayout({
         padding="compact"
         className="mt-12 bg-awc-bg dark:bg-white/[0.03]"
       >
-        <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <p className="text-sm font-medium text-awc-fg dark:text-white/90">
           Try this next
         </p>
         <ShowcaseTryNextLink

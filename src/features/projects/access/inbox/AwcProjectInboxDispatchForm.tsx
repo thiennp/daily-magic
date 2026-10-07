@@ -75,15 +75,15 @@ export default function AwcProjectInboxDispatchForm({
   };
 
   if (peers.length === 0) {
-    return <p className="text-xs text-gray-500">{copy.dispatchPeerEmpty}</p>;
+    return <p className="text-xs text-awc-fg-muted">{copy.dispatchPeerEmpty}</p>;
   }
 
   return (
-    <div className="space-y-2 border-t border-gray-200/70 pt-3 dark:border-gray-800/70">
-      <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
+    <div className="space-y-2 border-t border-awc-border/70 pt-3 dark:border-gray-800/70">
+      <h4 className="text-xs font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-300">
         {copy.dispatchHeading}
       </h4>
-      <p className="text-xs text-gray-500 dark:text-gray-400">{copy.dispatchIntro}</p>
+      <p className="text-xs text-awc-fg-muted dark:text-gray-400">{copy.dispatchIntro}</p>
       <AwcProjectInboxDispatchFields
         peers={peers}
         peerMembershipId={peerMembershipId}

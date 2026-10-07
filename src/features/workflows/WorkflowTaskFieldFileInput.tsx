@@ -80,7 +80,7 @@ export default function WorkflowTaskFieldFileInput({
             : "PDF or image, max 5 MB"}
       </div>
       {uploadId !== null ? (
-        <p className="text-xs text-gray-600 dark:text-gray-400">
+        <p className="text-xs text-awc-fg-muted dark:text-gray-400">
           Attached: {fileName.length > 0 ? fileName : uploadId}
           {" · "}
           <a

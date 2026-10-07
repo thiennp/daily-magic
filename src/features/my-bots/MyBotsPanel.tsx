@@ -19,14 +19,14 @@ export default function MyBotsPanel() {
       />
       <AssistantEntitlementLimitNote connectedCount={panel.bots.length} />
       <div>
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+        <h3 className="text-sm font-semibold text-awc-fg dark:text-white">
           {MY_BOTS_COPY.listHeading}
         </h3>
         {panel.listError ? (
           <p className="mt-1 text-xs text-red-600">{panel.listError}</p>
         ) : null}
         {panel.bots.length === 0 ? (
-          <p className="mt-1 text-sm text-gray-500">{MY_BOTS_COPY.listEmpty}</p>
+          <p className="mt-1 text-sm text-awc-fg-muted">{MY_BOTS_COPY.listEmpty}</p>
         ) : (
           <ul className="mt-2 space-y-2">
             {panel.bots.map((bot) => (

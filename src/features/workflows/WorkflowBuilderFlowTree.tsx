@@ -37,18 +37,18 @@ export default function WorkflowBuilderFlowTree({
   const tree = useWorkflowBuilderFlowTreeEditor({ fields, harnessItems });
 
   return (
-    <section className="space-y-3 rounded-xl border border-gray-100 p-4 dark:border-gray-800">
+    <section className="space-y-3 rounded-xl border border-awc-border p-4 dark:border-gray-800">
       <div>
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-white/90">
+        <h3 className="text-sm font-semibold text-awc-fg dark:text-white/90">
           {WORKFLOW_BUILDER_FLOW_SECTION.title}
         </h3>
-        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-1 text-sm text-awc-fg-muted dark:text-gray-400">
           {WORKFLOW_BUILDER_FLOW_SECTION.description}
         </p>
       </div>
 
       <div
-        className="space-y-2 border-l-2 border-gray-200 pl-4 dark:border-gray-700"
+        className="space-y-2 border-l-2 border-awc-border pl-4 dark:border-gray-700"
         role="tree"
         aria-label={WORKFLOW_BUILDER_FLOW_SECTION.title}
       >
@@ -81,7 +81,7 @@ export default function WorkflowBuilderFlowTree({
         <WorkflowBuilderFlowTreeAddStepActions onAddStep={onHarnessAdd} />
       </div>
 
-      <p className="text-xs text-gray-500 dark:text-gray-400">
+      <p className="text-xs text-awc-fg-muted dark:text-gray-400">
         {WORKFLOW_BUILDER_FLOW_SECTION.branchComingSoon}
       </p>
 

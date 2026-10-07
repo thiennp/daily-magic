@@ -12,7 +12,7 @@ const CONNECT_INSTALL_CONNECTION_TONE_CLASS_NAME: Record<
   ConnectInstallConnectionTone,
   string
 > = {
-  waiting: "text-gray-600 dark:text-gray-400",
+  waiting: "text-awc-fg-muted dark:text-gray-400",
   connecting: "text-zinc-700 dark:text-zinc-300",
   success: "text-success-600 dark:text-success-500",
   error: "text-error-600 dark:text-error-500",

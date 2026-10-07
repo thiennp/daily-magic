@@ -16,27 +16,27 @@ export default function LoginPageView({ notice = null }: LoginPageViewProps) {
     <MarketingShell showSignIn={false} showFooter={false}>
       <div className="mx-auto grid max-w-5xl gap-10 lg:grid-cols-2 lg:items-center">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
+          <h1 className="text-3xl font-semibold tracking-tight text-awc-fg sm:text-4xl">
             {LOGIN_PAGE_COPY.title}
           </h1>
-          <p className="mt-4 text-base text-gray-600">
+          <p className="mt-4 text-base text-awc-fg-muted">
             {LOGIN_PAGE_COPY.description}
           </p>
         </div>
 
         <MarketingCard>
-          <h2 className="text-xl font-semibold text-gray-900">Sign in</h2>
+          <h2 className="text-xl font-semibold text-awc-fg">Sign in</h2>
           {notice !== null ? (
-            <p role="status" className="mt-2 text-sm font-medium text-gray-900">
+            <p role="status" className="mt-2 text-sm font-medium text-awc-fg">
               {notice}
             </p>
           ) : null}
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-awc-fg-muted">
             Use your email link or Google account to continue.
           </p>
           <div className="mt-6">
             <Suspense
-              fallback={<div className="text-sm text-gray-500">Loading…</div>}
+              fallback={<div className="text-sm text-awc-fg-muted">Loading…</div>}
             >
               <LoginForm defaultCallbackUrl="/" appearance="marketing" />
             </Suspense>

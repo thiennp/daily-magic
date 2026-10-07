@@ -90,7 +90,7 @@ export default function AwcProjectRepoUrlsEditor({
         </p>
       ) : null}
       {successMessage !== null ? (
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-sm text-awc-fg-muted dark:text-gray-400">
           {successMessage}
         </p>
       ) : null}

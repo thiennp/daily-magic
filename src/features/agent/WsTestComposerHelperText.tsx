@@ -45,10 +45,10 @@ export default function WsTestComposerHelperText({
   const suffix = helperSuffix(blockedAction);
 
   return (
-    <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+    <p className="mt-3 text-sm text-awc-fg-muted dark:text-gray-400">
       {blockedAction.stateId === "ws_disconnected" ? (
         <>
-          <span className="font-medium text-gray-700 dark:text-gray-300">
+          <span className="font-medium text-awc-fg dark:text-gray-300">
             New task
           </span>{" "}
           {blockedAction.helperMessage}

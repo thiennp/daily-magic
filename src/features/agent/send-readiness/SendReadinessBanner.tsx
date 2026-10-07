@@ -34,7 +34,7 @@ const renderCta = (
   const baseClass =
     variant === "primary"
       ? "inline-flex h-9 items-center justify-center rounded-lg bg-brand-500 px-4 text-sm font-medium text-white hover:bg-brand-600"
-      : "inline-flex h-9 items-center justify-center rounded-lg border border-gray-200 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-white/5";
+      : "inline-flex h-9 items-center justify-center rounded-lg border border-awc-border px-4 text-sm font-medium text-awc-fg hover:bg-awc-surface-2 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-white/5";
 
   if (cta.href !== undefined && cta.href.length > 0) {
     return (

@@ -33,13 +33,13 @@ export default function DeviceVerifyDecideForms({
           <input type="hidden" name="user_code" value={codeForForms} />
           <button
             type="submit"
-            className="min-h-11 w-full rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900"
+            className="min-h-11 w-full rounded-md border border-awc-border-strong px-4 py-2 text-sm font-medium text-awc-fg hover:bg-awc-surface-2 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900"
           >
             {DEVICE_VERIFY_COPY.deny}
           </button>
         </form>
       </div>
-      <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-4 text-xs text-awc-fg-muted dark:text-gray-400">
         <AwcTermsLinksSentence
           prefix={DEVICE_VERIFY_COPY.termsNoticePrefix}
           suffix={DEVICE_VERIFY_COPY.termsNoticeSuffix}

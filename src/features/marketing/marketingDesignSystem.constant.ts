@@ -16,7 +16,7 @@ export const MARKETING_PAGE_BACKGROUND_CLASSES = "bg-awc-bg";
 
 export const MARKETING_DARK_SECTION_CLASSES = "bg-gray-950 text-white";
 
-export const MARKETING_DARK_SECTION_MUTED_TEXT_CLASSES = "text-gray-400";
+export const MARKETING_DARK_SECTION_MUTED_TEXT_CLASSES = "text-awc-fg-subtle";
 
 export const MARKETING_CTA_BAND_CLASSES = "bg-brand-600 text-white";
 
@@ -35,7 +35,7 @@ export const MARKETING_BODY_CLASSES = "text-awc-fg-muted leading-relaxed";
 export const MARKETING_META_LABEL_CLASSES = "font-mono text-sm text-brand-600";
 
 /** Surfaces */
-export const MARKETING_BORDER_SUBTLE_CLASSES = "border border-gray-200";
+export const MARKETING_BORDER_SUBTLE_CLASSES = "border border-awc-border";
 
 export const MARKETING_CARD_RADIUS_CLASSES = "rounded-2xl";
 
@@ -53,7 +53,7 @@ export const MARKETING_GROUPED_CARD_SHELL_CLASSES = [
   MARKETING_BORDER_SUBTLE_CLASSES,
   "bg-white",
   "shadow-[0_4px_20px_-2px_rgba(16,24,40,0.05)]",
-  "divide-y divide-gray-200/80 sm:divide-y-0 sm:divide-x",
+  "divide-y divide-awc-border/80 sm:divide-y-0 sm:divide-x",
 ].join(" ");
 
 /** Icon tiles (feature grid) */
@@ -78,21 +78,21 @@ export const MARKETING_BUTTON_PRIMARY_CLASSES = [
   "rounded-xl",
   "px-5 py-2.5",
   "text-sm font-semibold text-white",
-  "bg-brand-600 hover:bg-brand-700",
+  "bg-brand-600 hover:bg-awc-blue-700",
   "shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0",
   "transition-all duration-200",
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2",
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-awc-blue-600/40 focus-visible:ring-offset-2",
   "motion-reduce:transition-none motion-reduce:hover:translate-y-0",
 ].join(" ");
 
 export const MARKETING_BUTTON_SECONDARY_CLASSES = [
   "inline-flex items-center justify-center",
   "rounded-xl",
-  "border border-gray-200/90 bg-white px-5 py-2.5",
+  "border border-awc-border/90 bg-white px-5 py-2.5",
   "text-sm font-semibold text-awc-fg",
-  "shadow-sm hover:border-gray-300 hover:bg-gray-50 hover:shadow hover:-translate-y-0.5 active:translate-y-0",
+  "shadow-sm hover:border-awc-border-strong hover:bg-awc-surface-2 hover:shadow hover:-translate-y-0.5 active:translate-y-0",
   "transition-all duration-200",
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300/60 focus-visible:ring-offset-2",
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-awc-border-strong/60 focus-visible:ring-offset-2",
   "motion-reduce:transition-none motion-reduce:hover:translate-y-0",
 ].join(" ");
 
@@ -107,4 +107,4 @@ export const MARKETING_BUTTON_ON_BRAND_BAND_CLASSES = [
 ].join(" ");
 
 export const MARKETING_LINK_CLASSES =
-  "font-semibold text-brand-600 underline-offset-4 transition-colors hover:text-brand-700 hover:underline";
+  "font-semibold text-brand-600 underline-offset-4 transition-colors hover:text-awc-blue-700 hover:underline";

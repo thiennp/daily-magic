@@ -6,7 +6,7 @@ import type { ProjectSkillView } from "@/features/project-skill-share/internal/c
 import { PROJECT_SKILLS_COPY } from "@/features/project-skill-share/internal/presentation/projectSkillsCopy.constant";
 import { PROJECT_SKILLS_CTA } from "@/features/project-skill-share/internal/presentation/projectSkillsSection.constant";
 
-const HELPER = "text-[11px] text-gray-500 dark:text-gray-400";
+const HELPER = "text-[11px] text-awc-fg-muted dark:text-gray-400";
 
 interface Props {
   readonly skill: ProjectSkillView;

@@ -52,7 +52,7 @@ export default function AgentLiveProgressWavesPanel({
 
   return (
     <div className="mt-4" role="region" aria-label="Waves and subagents">
-      <h4 className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+      <h4 className="text-xs font-medium uppercase tracking-wide text-awc-fg-muted dark:text-gray-400">
         Waves & subagents
       </h4>
       <ul className="mt-2 space-y-2">

@@ -53,10 +53,10 @@ const DEMO_STEPS: readonly WorkflowStepRunRecord[] = [
 export default function WorkflowProgressSection() {
   return (
     <section id="workflow-progress" className="scroll-mt-28">
-      <h2 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
+      <h2 className="mb-2 text-2xl font-semibold text-awc-fg dark:text-white/90">
         Workflow progress
       </h2>
-      <p className="mb-5 max-w-2xl text-sm text-gray-600 dark:text-gray-400">
+      <p className="mb-5 max-w-2xl text-sm text-awc-fg-muted dark:text-gray-400">
         When a workflow or agent run is in flight, operators see which steps
         finished, which one needs them, and what is still ahead — same visual
         language as the live agent progress feed.
@@ -65,7 +65,7 @@ export default function WorkflowProgressSection() {
         <p className="text-sm font-medium text-brand-600 dark:text-brand-400">
           Release checklist (example)
         </p>
-        <h3 className="mt-1 text-lg font-semibold text-gray-900 dark:text-white">
+        <h3 className="mt-1 text-lg font-semibold text-awc-fg dark:text-white">
           Approve deploy
         </h3>
         <WorkflowRunStepProgress stepIndex={1} totalSteps={3} />

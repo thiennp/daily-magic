@@ -34,7 +34,7 @@ export default function AwcHumanInviteAcceptTerminalView({
     return (
       <AwcHumanInviteAcceptShell projectName={projectName}>
         <h1 className="text-xl font-semibold">{copy.invalidInviteTitle}</h1>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
           {copy.invalidInviteBody}
         </p>
       </AwcHumanInviteAcceptShell>
@@ -45,7 +45,7 @@ export default function AwcHumanInviteAcceptTerminalView({
     return (
       <AwcHumanInviteAcceptShell badge={copy.badgeExpired} projectName={projectName}>
         <h1 className="text-xl font-semibold">{copy.expiredTitle}</h1>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
           Ask {inviterDisplayName} for a new invite to {projectName}. Expired
           links cannot be reused.
         </p>
@@ -57,7 +57,7 @@ export default function AwcHumanInviteAcceptTerminalView({
     return (
       <AwcHumanInviteAcceptShell badge={copy.badgeUsed} projectName={projectName}>
         <h1 className="text-xl font-semibold">{copy.usedTitle}</h1>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
           Someone already joined with this link. Ask {inviterDisplayName} to
           send a fresh invite if you still need access.
         </p>
@@ -69,7 +69,7 @@ export default function AwcHumanInviteAcceptTerminalView({
     return (
       <AwcHumanInviteAcceptShell badge={copy.badgeRevoked} projectName={projectName}>
         <h1 className="text-xl font-semibold">{copy.revokedTitle}</h1>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
           {inviterDisplayName} revoked this invite. It no longer works. Ask for
           a new one if you still need to join.
         </p>

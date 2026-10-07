@@ -18,7 +18,7 @@ export default function WorkflowBuilderCollapsibleSection({
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
   return (
-    <section className="rounded-xl border border-gray-100 dark:border-gray-800">
+    <section className="rounded-xl border border-awc-border dark:border-gray-800">
       <button
         type="button"
         onClick={() => {
@@ -28,24 +28,24 @@ export default function WorkflowBuilderCollapsibleSection({
         aria-expanded={isExpanded}
       >
         <span className="min-w-0">
-          <span className="block text-sm font-semibold text-gray-900 dark:text-white/90">
+          <span className="block text-sm font-semibold text-awc-fg dark:text-white/90">
             {title}
           </span>
           {description !== undefined && description.length > 0 ? (
-            <span className="mt-1 block text-sm text-gray-600 dark:text-gray-400">
+            <span className="mt-1 block text-sm text-awc-fg-muted dark:text-gray-400">
               {description}
             </span>
           ) : null}
         </span>
         <span
-          className="shrink-0 text-lg leading-none text-gray-500 dark:text-gray-400"
+          className="shrink-0 text-lg leading-none text-awc-fg-muted dark:text-gray-400"
           aria-hidden
         >
           {isExpanded ? "−" : "+"}
         </span>
       </button>
       {isExpanded ? (
-        <div className="space-y-4 border-t border-gray-100 px-4 py-4 dark:border-gray-800">
+        <div className="space-y-4 border-t border-awc-border px-4 py-4 dark:border-gray-800">
           {children}
         </div>
       ) : null}

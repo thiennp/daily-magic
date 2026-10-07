@@ -23,11 +23,11 @@ export default function AwcMessengerThreadListPanel({
   const copy = AWC_PROJECT_MESSENGER_COPY;
   return (
     <aside
-      className="flex min-h-0 flex-col border-r border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950"
+      className="flex min-h-0 flex-col border-r border-awc-border bg-white dark:border-gray-800 dark:bg-gray-950"
       aria-label={copy.listHeading}
     >
       <div className="flex items-start justify-between gap-2">
-        <h2 className="px-3.5 pb-2 pt-3.5 text-[13px] font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300">
+        <h2 className="px-3.5 pb-2 pt-3.5 text-[13px] font-semibold uppercase tracking-wide text-awc-fg dark:text-gray-300">
           {copy.listHeading}
         </h2>
         {headerAction ? (

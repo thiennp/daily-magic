@@ -28,10 +28,10 @@ export default function MarketplaceInstallSuccessPanel({
           className="text-success-600 dark:text-success-400"
         />
       </div>
-      <h2 className="mt-5 text-lg font-semibold text-gray-900 dark:text-white/90">
+      <h2 className="mt-5 text-lg font-semibold text-awc-fg dark:text-white/90">
         {listingName} installed
       </h2>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{message}</p>
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">{message}</p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         {canStartTask ? (
           <Button onClick={onStartTask}>Start a task</Button>

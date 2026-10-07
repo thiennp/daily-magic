@@ -14,9 +14,9 @@ import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPag
 /** Black / white / gray only (no brand or status hues). */
 const STATUS_CHIP_CLASS: Readonly<Record<ComputerAccessMemberStatus, string>> =
   {
-    online: "border-gray-900 text-gray-900 dark:border-white dark:text-white",
+    online: "border-gray-900 text-awc-fg dark:border-white dark:text-white",
     offline:
-      "border-gray-300 text-gray-500 dark:border-gray-700 dark:text-gray-400",
+      "border-awc-border-strong text-awc-fg-muted dark:border-gray-700 dark:text-gray-400",
     needs_update:
       "border-gray-900 bg-gray-900 text-white dark:border-white dark:bg-white dark:text-gray-900",
   };
@@ -38,7 +38,7 @@ export default function AwcProjectAccessComputerMemberRow({
       data-computer-status={view.status}
       className="flex flex-wrap items-center justify-between gap-2 text-sm"
     >
-      <span className="min-w-0 text-gray-800 dark:text-white/90">
+      <span className="min-w-0 text-awc-fg dark:text-white/90">
         <span className="font-medium">{view.name}</span>
         <span className={`ml-2 text-xs ${PROJECT_PAGE_METADATA_TEXT_CLASS}`}>
           {view.ownerLine}
@@ -53,7 +53,7 @@ export default function AwcProjectAccessComputerMemberRow({
         {view.status === "needs_update" ? (
           <Link
             href={copy.updateHref}
-            className="text-xs font-medium text-gray-900 underline underline-offset-2 dark:text-white"
+            className="text-xs font-medium text-awc-fg underline underline-offset-2 dark:text-white"
           >
             {copy.updateLink}
           </Link>

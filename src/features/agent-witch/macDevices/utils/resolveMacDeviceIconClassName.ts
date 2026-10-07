@@ -4,4 +4,4 @@ export const resolveMacDeviceIconClassName = (
 ): string =>
   isOnline
     ? `${sizeClass} text-success-600 dark:text-success-500`
-    : `${sizeClass} text-gray-500 dark:text-gray-400`;
+    : `${sizeClass} text-awc-fg-muted dark:text-gray-400`;

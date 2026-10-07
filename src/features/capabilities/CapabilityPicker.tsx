@@ -17,7 +17,7 @@ export default function CapabilityPicker({
 }: CapabilityPickerProps) {
   if (capabilities.length === 0) {
     return (
-      <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
         This teammate has not published an assistant yet.
       </p>
     );
@@ -30,7 +30,7 @@ export default function CapabilityPicker({
       onChange={(event) => {
         onSelect(event.target.value);
       }}
-      className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+      className="mt-2 w-full rounded-lg border border-awc-border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
     >
       <option value="">Choose an assistant…</option>
       {capabilities.map((capability) => (

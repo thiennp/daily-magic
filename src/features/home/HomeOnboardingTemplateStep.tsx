@@ -28,9 +28,9 @@ export default function HomeOnboardingTemplateStep({
     <AppHero variant="neutral">
       <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>Getting started</p>
       <h1
-        className={`mt-3 text-3xl font-semibold tracking-tight text-gray-900 dark:text-white/90 ${
+        className={`mt-3 text-3xl font-semibold tracking-tight text-awc-fg dark:text-white/90 ${
           workflowStepDone
-            ? "text-gray-500 line-through dark:text-gray-400"
+            ? "text-awc-fg-muted line-through dark:text-gray-400"
             : ""
         }`}
       >

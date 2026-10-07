@@ -43,7 +43,7 @@ export default function WsTestComposerMacSection({
       }
     >
       {isLibraryPlaybook ? (
-        <p className="text-sm text-gray-700 dark:text-gray-300">
+        <p className="text-sm text-awc-fg dark:text-gray-300">
           Running a playbook from your library on your computer.
         </p>
       ) : null}

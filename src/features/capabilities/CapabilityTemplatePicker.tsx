@@ -29,12 +29,12 @@ export default function CapabilityTemplatePicker({
   if (picker.isLoading) {
     return (
       <p
-        className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"
+        className="flex items-center gap-2 text-sm text-awc-fg-muted dark:text-gray-400"
         role="status"
         aria-live="polite"
       >
         <span
-          className="inline-block size-4 animate-spin rounded-full border-2 border-gray-300 border-t-brand-500 dark:border-gray-600 dark:border-t-brand-400"
+          className="inline-block size-4 animate-spin rounded-full border-2 border-awc-border-strong border-t-brand-500 dark:border-gray-600 dark:border-t-brand-400"
           aria-hidden="true"
         />
         Loading starter templates…
@@ -44,7 +44,7 @@ export default function CapabilityTemplatePicker({
 
   if (picker.isTemplatesCatalogEmpty && picker.errorMessage === null) {
     return (
-      <p className="text-sm text-gray-600 dark:text-gray-400">
+      <p className="text-sm text-awc-fg-muted dark:text-gray-400">
         Starter templates are not available right now. Try again in a moment or
         create a Playbook with the form above.
       </p>

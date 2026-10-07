@@ -22,7 +22,7 @@ export default function AwcProjectsSearchBar({
           aria-hidden="true"
           viewBox="0 0 20 20"
           fill="none"
-          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-awc-fg-subtle"
         >
           <circle cx="9" cy="9" r="6" stroke="currentColor" strokeWidth="1.6" />
           <path
@@ -41,7 +41,7 @@ export default function AwcProjectsSearchBar({
           className={`${APP_SURFACE_FIELD_CLASS} pl-9`}
         />
       </div>
-      <p className="text-xs text-gray-500 dark:text-gray-400">
+      <p className="text-xs text-awc-fg-muted dark:text-gray-400">
         {isFiltering
           ? `${visibleCount} of ${totalCount} projects`
           : `${totalCount} ${totalCount === 1 ? "project" : "projects"}`}

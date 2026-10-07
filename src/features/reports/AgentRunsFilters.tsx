@@ -30,14 +30,14 @@ export default function AgentRunsFilters({
 }: AgentRunsFiltersProps) {
   return (
     <div className="flex flex-wrap gap-4">
-      <label className="flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+      <label className="flex flex-wrap items-center gap-2 text-sm text-awc-fg-muted dark:text-gray-400">
         Scope
         <select
           value={scopeFilter}
           onChange={(event) => {
             onScopeChange(event.target.value as AgentRunScopeValue);
           }}
-          className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-950"
+          className="rounded-lg border border-awc-border px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-950"
         >
           {SCOPE_FILTER_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
@@ -47,14 +47,14 @@ export default function AgentRunsFilters({
         </select>
       </label>
       {scopeFilter === AgentRunScope.GROUP ? (
-        <label className="flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+        <label className="flex flex-wrap items-center gap-2 text-sm text-awc-fg-muted dark:text-gray-400">
           Group
           <select
             value={groupFilter}
             onChange={(event) => {
               onGroupChange(event.target.value);
             }}
-            className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-950"
+            className="rounded-lg border border-awc-border px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-950"
           >
             <option value="">All groups</option>
             {groups.map((group) => (
@@ -65,14 +65,14 @@ export default function AgentRunsFilters({
           </select>
         </label>
       ) : null}
-      <label className="flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+      <label className="flex flex-wrap items-center gap-2 text-sm text-awc-fg-muted dark:text-gray-400">
         Status
         <select
           value={statusFilter}
           onChange={(event) => {
             onStatusChange(event.target.value as AgentRunStatusValue | "all");
           }}
-          className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-950"
+          className="rounded-lg border border-awc-border px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-950"
         >
           {STATUS_FILTER_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>

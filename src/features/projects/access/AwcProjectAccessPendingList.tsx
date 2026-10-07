@@ -57,19 +57,19 @@ export default function AwcProjectAccessPendingList({
 
   return (
     <div>
-      <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
+      <h4 className="text-xs font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-300">
         {copy.pendingHeading}
       </h4>
       {decision.note !== null ? (
         <p
           role="status"
-          className="mt-1 text-[12px] text-gray-600 dark:text-gray-300"
+          className="mt-1 text-[12px] text-awc-fg-muted dark:text-gray-300"
         >
           {decision.note}
         </p>
       ) : null}
       {pending.length === 0 ? (
-        <p className="mt-1 text-sm text-gray-500">{copy.pendingEmpty}</p>
+        <p className="mt-1 text-sm text-awc-fg-muted">{copy.pendingEmpty}</p>
       ) : (
         <ul className="mt-2 space-y-3">
           {pending.map((req) => (

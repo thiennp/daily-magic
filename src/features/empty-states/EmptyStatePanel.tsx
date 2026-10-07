@@ -44,8 +44,8 @@ export default function EmptyStatePanel({
   const panelPadding = density === "page" ? "default" : "compact";
   const titleClassName =
     density === "page"
-      ? "text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl"
-      : "text-lg font-semibold text-gray-800 dark:text-white/90";
+      ? "text-xl font-semibold text-awc-fg dark:text-white sm:text-2xl"
+      : "text-lg font-semibold text-awc-fg dark:text-white/90";
 
   return (
     <AppPanel padding={panelPadding} className={PANEL_WIDTH_CLASS[width]}>

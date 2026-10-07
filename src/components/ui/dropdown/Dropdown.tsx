@@ -18,7 +18,7 @@ interface DropdownProps {
 }
 
 const DROPDOWN_PANEL_BASE_CLASS =
-  "rounded-xl border border-gray-200 bg-white shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark";
+  "rounded-xl border border-awc-border bg-white shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark";
 
 export const Dropdown: React.FC<DropdownProps> = ({
   isOpen,

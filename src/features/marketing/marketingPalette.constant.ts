@@ -17,7 +17,7 @@ export const MARKETING_ACCENT_BRAND_CLASSES = {
 export const MARKETING_ACCENT_EMERALD_CLASSES = MARKETING_ACCENT_BRAND_CLASSES;
 
 export const MARKETING_CTA_INK_CLASSES = [
-  "bg-brand-600 text-white hover:bg-brand-700 focus-visible:ring-brand-500/40",
+  "bg-brand-600 text-white hover:bg-awc-blue-700 focus-visible:ring-awc-blue-600/40",
   "dark:bg-brand-500 dark:hover:bg-brand-400 dark:focus-visible:ring-brand-400/40 dark:focus-visible:ring-offset-gray-900",
 ].join(" ");
 
@@ -27,11 +27,11 @@ export const MARKETING_FORM_PRIMARY_BUTTON_CLASSES = [
   "inline-flex w-full items-center justify-center gap-2",
   `${MARKETING_CARD_RADIUS_CLASSES} px-5 py-3.5`,
   "text-sm font-semibold text-white",
-  "bg-brand-600 hover:bg-brand-700",
+  "bg-brand-600 hover:bg-awc-blue-700",
   "dark:bg-brand-500 dark:hover:bg-brand-400",
   "shadow-sm hover:shadow-md hover:shadow-brand-600/15",
   "transition-all duration-200 ease-out",
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2",
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-awc-blue-600/40 focus-visible:ring-offset-2",
   "dark:focus-visible:ring-brand-400/40 dark:focus-visible:ring-offset-gray-900",
   "disabled:cursor-not-allowed disabled:opacity-50",
   "motion-reduce:transition-none",
@@ -40,19 +40,19 @@ export const MARKETING_FORM_PRIMARY_BUTTON_CLASSES = [
 export const MARKETING_FORM_OUTLINE_BUTTON_CLASSES = [
   "inline-flex w-full items-center justify-center gap-2",
   `${MARKETING_CARD_RADIUS_CLASSES} px-5 py-3.5`,
-  "text-sm font-semibold text-gray-800",
+  "text-sm font-semibold text-awc-fg",
   MARKETING_BORDER_SUBTLE_CLASSES,
   "bg-white",
   "dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-white/[0.03]",
   "shadow-sm",
-  "transition-all duration-200 ease-out hover:border-gray-300 hover:bg-gray-50",
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300/60 focus-visible:ring-offset-2",
+  "transition-all duration-200 ease-out hover:border-awc-border-strong hover:bg-awc-surface-2",
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-awc-border-strong/60 focus-visible:ring-offset-2",
 ].join(" ");
 
 export const MARKETING_MOCK_SHELL_CLASSES = [
   "pointer-events-none select-none overflow-hidden",
   MARKETING_CARD_RADIUS_CLASSES,
-  "bg-gray-100 text-gray-700",
+  "bg-awc-fill text-awc-fg",
   MARKETING_BORDER_SUBTLE_CLASSES,
   "shadow-sm",
 ].join(" ");
@@ -60,7 +60,7 @@ export const MARKETING_MOCK_SHELL_CLASSES = [
 export const MARKETING_TRUST_CARD_CLASSES = [
   "flex w-full flex-col items-start gap-1",
   "border-l-2 border-brand-500 pl-4 py-1",
-  "text-sm leading-snug text-gray-800",
+  "text-sm leading-snug text-awc-fg",
   "dark:text-gray-200",
 ].join(" ");
 

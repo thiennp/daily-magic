@@ -14,7 +14,7 @@ interface WorkflowBuilderFieldRowInputsProps {
 }
 
 const inputClass =
-  "h-11 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm shadow-theme-xs focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800";
+  "h-11 w-full rounded-lg border border-awc-border-strong bg-transparent px-3 text-sm shadow-theme-xs focus:border-awc-blue-300 focus:outline-hidden focus:ring-3 focus:ring-awc-blue-600/10 dark:border-gray-700 dark:bg-gray-800";
 
 export default function WorkflowBuilderFieldRowInputs({
   field,
@@ -43,7 +43,7 @@ export default function WorkflowBuilderFieldRowInputs({
           {WORKFLOW_BUILDER_QUESTIONS_SECTION.inputTypeLabel}
         </Label>
         {isProjectField ? (
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
             Project folder (set when running)
           </p>
         ) : (

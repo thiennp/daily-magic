@@ -39,16 +39,16 @@ export default function LibraryPlaybookCard({
       <div className="flex flex-wrap items-center gap-2">
         <LibraryPlaybookTypeBadge type={capability.type} />
         <LibrarySampleWorkflowBadge capability={capability} />
-        <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <p className="text-sm font-medium text-awc-fg dark:text-white/90">
           {capability.name}
         </p>
       </div>
       {capability.description.length > 0 ? (
-        <p className="mt-2 line-clamp-3 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-2 line-clamp-3 text-sm text-awc-fg-muted dark:text-gray-400">
           {capability.description}
         </p>
       ) : null}
-      <p className="mt-2 text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+      <p className="mt-2 text-xs uppercase tracking-wide text-awc-fg-muted dark:text-gray-400">
         {capability.status}
         {capability.forkedFromCapabilityId !== null
           ? " · saved from teammate"
@@ -86,7 +86,7 @@ export default function LibraryPlaybookCard({
             }}
           />
         </div>
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className="text-xs text-awc-fg-muted dark:text-gray-400">
           {LIBRARY_PLAYBOOK_CARD_COPY.actionHint}
         </p>
       </div>

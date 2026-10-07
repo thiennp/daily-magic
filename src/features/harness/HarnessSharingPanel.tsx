@@ -11,10 +11,10 @@ export default function HarnessSharingPanel() {
 
   return (
     <AppPanel embedded={embedded}>
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+      <h2 className="text-lg font-semibold text-awc-fg dark:text-white/90">
         Sharing
       </h2>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
         Choose who can borrow each rules bundle from your published catalog. New
         bundles stay private until you change them.
       </p>

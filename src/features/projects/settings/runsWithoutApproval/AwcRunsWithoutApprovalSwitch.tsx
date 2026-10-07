@@ -28,13 +28,13 @@ export default function AwcRunsWithoutApprovalSwitch({
         aria-describedby={disabled ? REASON_ID : undefined}
         disabled={disabled}
         onClick={onToggle}
-        className="flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-left text-sm transition-all hover:bg-gray-100/70 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-white/10"
+        className="flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-left text-sm transition-all hover:bg-awc-tile/70 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-white/10"
       >
         <span className="min-w-0 flex-1">
-          <span className="block font-medium text-gray-800 dark:text-white/90">
+          <span className="block font-medium text-awc-fg dark:text-white/90">
             {C.label}
           </span>
-          <span className="mt-0.5 block text-[13px] text-gray-500 dark:text-gray-400">
+          <span className="mt-0.5 block text-[13px] text-awc-fg-muted dark:text-gray-400">
             {C.hint}
           </span>
         </span>
@@ -52,13 +52,13 @@ export default function AwcRunsWithoutApprovalSwitch({
         </span>
       </button>
       {reason !== null ? (
-        <p id={REASON_ID} className="px-3.5 text-[13px] text-gray-500 dark:text-gray-400">
+        <p id={REASON_ID} className="px-3.5 text-[13px] text-awc-fg-muted dark:text-gray-400">
           {reason}{" "}
           {view.loadState === "error" ? (
             <button
               type="button"
               onClick={onRetry}
-              className="font-medium text-gray-700 underline dark:text-gray-200"
+              className="font-medium text-awc-fg underline dark:text-gray-200"
             >
               {C.retry}
             </button>

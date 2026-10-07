@@ -29,7 +29,7 @@ export default function AwcProjectMembersOwnerContent({
   return (
     <div className="flex flex-col gap-5" data-layout-v2="l5-members">
       {access.isLoading ? (
-        <p className="px-3.5 text-sm text-gray-500">{C.loading}</p>
+        <p className="px-3.5 text-sm text-awc-fg-muted">{C.loading}</p>
       ) : null}
       {access.loadError ? (
         <p className="mx-3.5 rounded-md border border-amber-200/80 bg-amber-50/80 px-3 py-2 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100">
@@ -88,7 +88,7 @@ export default function AwcProjectMembersOwnerContent({
         </>
       ) : null}
       {access.message ? (
-        <p className="px-3.5 text-sm text-gray-600 dark:text-gray-300">
+        <p className="px-3.5 text-sm text-awc-fg-muted dark:text-gray-300">
           {access.message}
         </p>
       ) : null}

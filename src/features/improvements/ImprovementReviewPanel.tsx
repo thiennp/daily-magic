@@ -59,10 +59,10 @@ export default function ImprovementReviewPanel() {
       <ul className="mt-4 space-y-4">
         {items.map((item) => (
           <li key={item.id} className={APP_SURFACE_NESTED_CARD_CLASS}>
-            <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+            <p className="text-sm font-medium text-awc-fg dark:text-white/90">
               {item.capabilityName}
             </p>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
               {item.suggestion}
             </p>
             <div className="mt-3 flex flex-wrap gap-2">

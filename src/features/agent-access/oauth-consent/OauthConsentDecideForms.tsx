@@ -21,7 +21,7 @@ export default function OauthConsentDecideForms({
           <input type="hidden" name="pending" value={pendingId} />
           <input type="hidden" name="decision" value="approve" />
           <input type="hidden" name="termsVersion" value={AWC_TERMS_VERSION} />
-          <label className="flex items-start gap-2 text-sm text-gray-800 dark:text-gray-200">
+          <label className="flex items-start gap-2 text-sm text-awc-fg dark:text-gray-200">
             <input
               type="checkbox"
               name="acceptTerms"
@@ -48,7 +48,7 @@ export default function OauthConsentDecideForms({
           <input type="hidden" name="decision" value="deny" />
           <button
             type="submit"
-            className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900"
+            className="rounded-md border border-awc-border-strong px-4 py-2 text-sm font-medium text-awc-fg hover:bg-awc-surface-2 dark:border-gray-700 dark:text-gray-100 dark:hover:bg-gray-900"
           >
             {OAUTH_CONSENT_COPY.deny}
           </button>

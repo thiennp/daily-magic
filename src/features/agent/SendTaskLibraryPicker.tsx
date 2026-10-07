@@ -29,7 +29,7 @@ export default function SendTaskLibraryPicker({
 }: SendTaskLibraryPickerProps) {
   return (
     <div>
-      <label className="text-sm font-medium text-gray-800 dark:text-white/90">
+      <label className="text-sm font-medium text-awc-fg dark:text-white/90">
         Saved workflow or agent
         <select
           value={selectedCapabilityId}
@@ -37,7 +37,7 @@ export default function SendTaskLibraryPicker({
           onChange={(event) => {
             onSelect(event.target.value);
           }}
-          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+          className="mt-2 w-full rounded-lg border border-awc-border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
         >
           <option value="">Custom task</option>
           {capabilities.map((capability) => (
@@ -48,12 +48,12 @@ export default function SendTaskLibraryPicker({
         </select>
       </label>
       {isLoading ? (
-        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-xs text-awc-fg-muted dark:text-gray-400">
           Loading your library…
         </p>
       ) : null}
       {!isLoading && capabilities.length === 0 ? (
-        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-xs text-awc-fg-muted dark:text-gray-400">
           No saved items yet.{" "}
           <ProjectLibraryLink>Open a project&apos;s Library</ProjectLibraryLink>{" "}
           or save one from Marketplace.

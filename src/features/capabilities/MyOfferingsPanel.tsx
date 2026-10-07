@@ -76,15 +76,15 @@ export default function MyOfferingsPanel() {
       <ul className="mt-4 space-y-3">
         {userCreatedCapabilities.map((capability) => (
           <li key={capability.id} className={APP_SURFACE_NESTED_CARD_CLASS}>
-            <p className="font-medium text-gray-800 dark:text-white/90">
+            <p className="font-medium text-awc-fg dark:text-white/90">
               {capability.name}
             </p>
             {capability.description.length > 0 ? (
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              <p className="mt-1 text-sm text-awc-fg-muted dark:text-gray-400">
                 {capability.description}
               </p>
             ) : null}
-            <p className="mt-2 text-xs uppercase tracking-wide text-gray-500">
+            <p className="mt-2 text-xs uppercase tracking-wide text-awc-fg-muted">
               {capability.status}
               {capability.forkedFromCapabilityId !== null
                 ? " · saved from teammate"

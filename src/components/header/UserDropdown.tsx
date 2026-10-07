@@ -43,7 +43,7 @@ export default function UserDropdown({
     return (
       <Link
         href="/login"
-        className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5"
+        className="rounded-lg border border-awc-border px-3 py-2 text-sm text-awc-fg-muted transition hover:bg-awc-surface-2 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5"
       >
         Sign in
       </Link>
@@ -62,7 +62,7 @@ export default function UserDropdown({
         aria-expanded={isOpen}
         aria-haspopup="menu"
         aria-label={`${displayName} account menu`}
-        className="dropdown-toggle flex max-w-full items-center gap-2 text-gray-700 dark:text-gray-400"
+        className="dropdown-toggle flex max-w-full items-center gap-2 text-awc-fg dark:text-gray-400"
       >
         <span className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-100 text-sm font-semibold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
           {showImage ? (

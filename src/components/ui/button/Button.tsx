@@ -33,16 +33,16 @@ const Button: React.FC<ButtonProps> = ({
   const variantClasses = {
     primary: [
       "bg-brand-600 text-white shadow-sm",
-      "hover:bg-brand-700",
+      "hover:bg-awc-blue-700",
       "dark:bg-brand-500 dark:hover:bg-brand-400",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-awc-blue-600/40 focus-visible:ring-offset-2",
       "dark:focus-visible:ring-brand-400/40 dark:focus-visible:ring-offset-gray-900",
       "disabled:cursor-not-allowed disabled:opacity-50",
     ].join(" "),
     outline: [
-      "border border-gray-200 bg-white text-gray-800 shadow-sm",
-      "hover:border-gray-300 hover:bg-gray-50",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300/60 focus-visible:ring-offset-2",
+      "border border-awc-border bg-white text-awc-fg shadow-sm",
+      "hover:border-awc-border-strong hover:bg-awc-surface-2",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-awc-border-strong/60 focus-visible:ring-offset-2",
       "dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-white/[0.03]",
     ].join(" "),
   };

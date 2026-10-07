@@ -37,7 +37,7 @@ export default function MacDeviceRowThisMacMenuSection({
   };
 
   return (
-    <li className="border-t border-gray-100 dark:border-gray-800">
+    <li className="border-t border-awc-border dark:border-gray-800">
       <ReviveAwlMacModal
         isOpen={reviveAwlOpen}
         onClose={() => {
@@ -54,7 +54,7 @@ export default function MacDeviceRowThisMacMenuSection({
         onClick={() => {
           setIsExpanded((current) => !current);
         }}
-        baseClassName="flex w-full items-center gap-2 px-3 py-2 text-sm font-medium text-gray-800 hover:bg-gray-100 dark:text-white/90 dark:hover:bg-white/5"
+        baseClassName="flex w-full items-center gap-2 px-3 py-2 text-sm font-medium text-awc-fg hover:bg-awc-tile dark:text-white/90 dark:hover:bg-white/5"
       >
         <AppIcon
           icon={ChevronDownIcon}

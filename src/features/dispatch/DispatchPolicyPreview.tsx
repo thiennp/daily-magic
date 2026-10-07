@@ -8,7 +8,7 @@ import resolveHomeSetupNestedBoxClass from "@/features/home/resolveHomeSetupNest
 import type { EffectiveDispatchPolicyBreakdown } from "@/lib/dispatch/buildEffectiveDispatchPolicyBreakdown";
 
 const POLICY_PREVIEW_BOX_CLASS =
-  "mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-white/[0.04]";
+  "mt-4 rounded-lg border border-awc-border bg-awc-surface-2 p-4 dark:border-gray-700 dark:bg-white/[0.04]";
 
 interface DispatchPolicyPreviewProps {
   readonly deviceId: string;
@@ -87,19 +87,19 @@ export default function DispatchPolicyPreview({
         "mt-4",
       )}
     >
-      <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+      <p className="text-sm font-medium text-awc-fg dark:text-white/90">
         Effective policy:{" "}
         <span className="text-brand-600 dark:text-brand-400">
           {formatPolicyValue(breakdown.effective)}
         </span>
       </p>
-      <ul className="mt-3 space-y-1 text-xs text-gray-600 dark:text-gray-400">
+      <ul className="mt-3 space-y-1 text-xs text-awc-fg-muted dark:text-gray-400">
         {rows.map((row) => (
           <li
             key={row.key}
             className={
               breakdown.winningSource === row.key
-                ? "font-medium text-gray-800 dark:text-white/90"
+                ? "font-medium text-awc-fg dark:text-white/90"
                 : undefined
             }
           >

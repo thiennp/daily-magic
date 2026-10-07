@@ -60,7 +60,7 @@ export default function AwcProjectDetailPrimaryColumn({
         </p>
       </header>
 
-      <div className="flex flex-col gap-3 rounded-xl border border-gray-200/80 bg-gray-50/80 p-4 dark:border-gray-800/80 dark:bg-white/[0.03] sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 rounded-xl border border-awc-border/80 bg-awc-surface-2/80 p-4 dark:border-gray-800/80 dark:bg-white/[0.03] sm:flex-row sm:items-center sm:justify-between">
         <AwcProjectPresenceBadge
           statusIcon={presence.statusIcon}
           text={presence.text}
@@ -82,7 +82,7 @@ export default function AwcProjectDetailPrimaryColumn({
       </div>
       {editCta.helperText !== null &&
       shouldShowProjectEditOnMacHelperText(editCta.state) ? (
-        <p className="-mt-3 text-xs text-gray-500 dark:text-gray-400">
+        <p className="-mt-3 text-xs text-awc-fg-muted dark:text-gray-400">
           {editCta.helperText}
         </p>
       ) : null}
@@ -94,13 +94,13 @@ export default function AwcProjectDetailPrimaryColumn({
         <dl className="grid gap-3 sm:grid-cols-2">
           <div>
             <dt className={AWC_PROJECT_DETAIL_META_LABEL_CLASS}>Folder</dt>
-            <dd className="mt-1 break-all text-sm text-gray-800 dark:text-white/90">
+            <dd className="mt-1 break-all text-sm text-awc-fg dark:text-white/90">
               {project.folderPath}
             </dd>
           </div>
           <div>
             <dt className={AWC_PROJECT_DETAIL_META_LABEL_CLASS}>Composition</dt>
-            <dd className="mt-1 text-sm text-gray-800 dark:text-white/90">
+            <dd className="mt-1 text-sm text-awc-fg dark:text-white/90">
               {formatProjectCompositionCountsLine(counts) ??
                 "Open in AgentWitch Local to bind playbooks"}
             </dd>

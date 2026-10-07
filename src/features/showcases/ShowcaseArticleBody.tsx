@@ -24,7 +24,7 @@ export default function ShowcaseArticleBody({
           }
         >
           {section.heading ? (
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white/90">
+            <h2 className="text-xl font-semibold text-awc-fg dark:text-white/90">
               {section.heading}
             </h2>
           ) : null}
@@ -32,13 +32,13 @@ export default function ShowcaseArticleBody({
             {section.paragraphs?.map((paragraph) => (
               <p
                 key={paragraph}
-                className="text-lg leading-relaxed text-gray-700 dark:text-gray-300"
+                className="text-lg leading-relaxed text-awc-fg dark:text-gray-300"
               >
                 {paragraph}
               </p>
             ))}
             {section.bullets ? (
-              <ul className="list-disc space-y-2 pl-5 text-lg text-gray-700 dark:text-gray-300">
+              <ul className="list-disc space-y-2 pl-5 text-lg text-awc-fg dark:text-gray-300">
                 {section.bullets.map((bullet) => (
                   <li key={bullet}>{bullet}</li>
                 ))}

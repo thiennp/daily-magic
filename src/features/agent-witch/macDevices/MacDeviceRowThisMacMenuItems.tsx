@@ -24,7 +24,7 @@ interface MacDeviceRowThisMacMenuItemsProps {
 }
 
 const nestedItemClassName =
-  "flex w-full items-center gap-2 py-2 pl-9 pr-3 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5";
+  "flex w-full items-center gap-2 py-2 pl-9 pr-3 text-sm text-awc-fg hover:bg-awc-tile dark:text-gray-300 dark:hover:bg-white/5";
 
 export default function MacDeviceRowThisMacMenuItems({
   closeMenu,

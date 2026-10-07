@@ -13,7 +13,7 @@ import {
 } from "@/features/projects/projectPagePanelChrome.constant";
 
 const LABEL_CLASS =
-  "text-[12px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400";
+  "text-[12px] font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-400";
 
 /** Name heading · Kind · State · Updated + Content (description / example). */
 export default function AwcProjectLibraryDetailFields({
@@ -46,7 +46,7 @@ export default function AwcProjectLibraryDetailFields({
         <section className="flex flex-col gap-1">
           <h5 className={LABEL_CLASS}>{C["library.detail.body"]}</h5>
           <p
-            className={`${PANEL_LIST_CLASS} whitespace-pre-wrap p-3 text-[13px] text-gray-800 dark:text-gray-200`}
+            className={`${PANEL_LIST_CLASS} whitespace-pre-wrap p-3 text-[13px] text-awc-fg dark:text-gray-200`}
           >
             {item.body}
           </p>

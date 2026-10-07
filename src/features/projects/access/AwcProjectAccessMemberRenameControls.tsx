@@ -56,7 +56,7 @@ export default function AwcProjectAccessMemberRenameControls({
           {copy.renameCancel}
         </button>
       </span>
-      <span className="text-[11px] text-gray-500">{copy.renameHint}</span>
+      <span className="text-[11px] text-awc-fg-muted">{copy.renameHint}</span>
     </span>
   );
 }

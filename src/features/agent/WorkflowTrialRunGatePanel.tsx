@@ -47,17 +47,17 @@ export default function WorkflowTrialRunGatePanel({
 
   return (
     <AppPanel>
-      <h2 className="text-sm font-semibold text-gray-800 dark:text-white/90">
+      <h2 className="text-sm font-semibold text-awc-fg dark:text-white/90">
         {copy.title}
       </h2>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
         {copy.body}
       </p>
       <div className="mt-4 flex flex-wrap gap-2">
         {reason === WorkflowTrialRunBlockReason.SIGN_IN_REQUIRED ? (
           <Link
             href={signInHref}
-            className="inline-flex items-center justify-center rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 dark:bg-brand-500 dark:hover:bg-brand-400"
+            className="inline-flex items-center justify-center rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-awc-blue-700 dark:bg-brand-500 dark:hover:bg-brand-400"
           >
             Sign in
           </Link>
@@ -65,13 +65,13 @@ export default function WorkflowTrialRunGatePanel({
           <>
             <Link
               href={connectDevicesHref}
-              className="inline-flex items-center justify-center rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 dark:bg-brand-500 dark:hover:bg-brand-400"
+              className="inline-flex items-center justify-center rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-awc-blue-700 dark:bg-brand-500 dark:hover:bg-brand-400"
             >
               Connect your computer
             </Link>
             <Link
               href={connectDevicesHref}
-              className="inline-flex items-center justify-center rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-800 hover:bg-gray-50 dark:border-gray-600 dark:text-white/90 dark:hover:bg-white/5"
+              className="inline-flex items-center justify-center rounded-lg border border-awc-border-strong px-4 py-2.5 text-sm font-medium text-awc-fg hover:bg-awc-surface-2 dark:border-gray-600 dark:text-white/90 dark:hover:bg-white/5"
             >
               Add Cursor Cloud API key
             </Link>
@@ -79,7 +79,7 @@ export default function WorkflowTrialRunGatePanel({
         )}
         <Link
           href={PROJECTS_LIBRARY_INTENT_HREF}
-          className="inline-flex items-center justify-center rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-800 hover:bg-gray-50 dark:border-gray-600 dark:text-white/90 dark:hover:bg-white/5"
+          className="inline-flex items-center justify-center rounded-lg border border-awc-border-strong px-4 py-2.5 text-sm font-medium text-awc-fg hover:bg-awc-surface-2 dark:border-gray-600 dark:text-white/90 dark:hover:bg-white/5"
         >
           Back to Library
         </Link>

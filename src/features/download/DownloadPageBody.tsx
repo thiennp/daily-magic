@@ -11,7 +11,7 @@ export default function DownloadPageBody() {
     <article className="mx-auto max-w-2xl space-y-6 py-2 sm:py-4">
       <header className="space-y-2">
         <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>Mac app</p>
-        <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white">
+        <h1 className="text-3xl font-semibold tracking-tight text-awc-fg dark:text-white">
           {copy.title}
         </h1>
         <p className={`text-base ${APP_SURFACE_BODY_TEXT_CLASS}`}>

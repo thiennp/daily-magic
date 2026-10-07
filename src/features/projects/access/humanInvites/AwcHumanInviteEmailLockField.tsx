@@ -16,10 +16,10 @@ export default function AwcHumanInviteEmailLockField({
 }: AwcHumanInviteEmailLockFieldProps) {
   const copy = HUMAN_INVITE_UI_COPY;
   return (
-    <label className="flex cursor-pointer items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+    <label className="flex cursor-pointer items-start gap-2 text-sm text-awc-fg dark:text-gray-300">
       <input
         type="checkbox"
-        className="mt-0.5 h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+        className="mt-0.5 h-4 w-4 rounded border-awc-border-strong text-brand-600 focus:ring-brand-500"
         checked={checked}
         disabled={disabled}
         onChange={(event) => onChange(event.target.checked)}

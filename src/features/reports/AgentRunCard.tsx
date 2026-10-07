@@ -44,18 +44,18 @@ export default function AgentRunCard({ run }: AgentRunCardProps) {
           labelOverride={outcomeBadge.label}
           classNameOverride={outcomeBadge.className}
         />
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className="text-xs text-awc-fg-muted dark:text-gray-400">
           {new Date(run.createdAt).toLocaleString()}
         </p>
       </div>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
         Requester: {run.requesterEmail} · Executor: {run.executorEmail}
       </p>
-      <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-1 text-sm text-awc-fg-muted dark:text-gray-400">
         Policy: {run.dispatchPolicy}
       </p>
       {reportSummaryLine !== null ? (
-        <p className="mt-2 text-sm text-gray-800 dark:text-white/90">
+        <p className="mt-2 text-sm text-awc-fg dark:text-white/90">
           {reportSummaryLine}
         </p>
       ) : null}
@@ -63,13 +63,13 @@ export default function AgentRunCard({ run }: AgentRunCardProps) {
         estimateSeconds={run.estimateSeconds}
         actualSeconds={run.actualSeconds}
       />
-      <pre className="mt-3 max-h-32 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+      <pre className="mt-3 max-h-32 overflow-auto rounded-lg bg-awc-surface-2 p-3 text-xs text-awc-fg dark:bg-gray-800 dark:text-gray-300">
         {run.prompt}
       </pre>
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <Link
           href={`/reports/${run.id}`}
-          className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
+          className="text-sm font-medium text-brand-600 hover:text-awc-blue-700 dark:text-brand-400"
         >
           View full report
         </Link>
@@ -77,7 +77,7 @@ export default function AgentRunCard({ run }: AgentRunCardProps) {
           <>
             <Link
               href={buildAgentRunContinueHref({ run })}
-              className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
+              className="text-sm font-medium text-brand-600 hover:text-awc-blue-700 dark:text-brand-400"
             >
               Continue
             </Link>
@@ -90,7 +90,7 @@ export default function AgentRunCard({ run }: AgentRunCardProps) {
           onClick={() => {
             void handleDelete();
           }}
-          className="text-sm font-medium text-gray-500 transition hover:text-error-600 disabled:opacity-50 dark:text-gray-400 dark:hover:text-error-400"
+          className="text-sm font-medium text-awc-fg-muted transition hover:text-error-600 disabled:opacity-50 dark:text-gray-400 dark:hover:text-error-400"
         >
           {isDeleting ? "Deleting…" : "Delete"}
         </button>

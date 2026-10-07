@@ -5,7 +5,7 @@ import { useId } from "react";
 import { PROJECT_SKILLS_COPY } from "@/features/project-skill-share/internal/presentation/projectSkillsCopy.constant";
 import { PROJECT_SKILLS_CTA } from "@/features/project-skill-share/internal/presentation/projectSkillsSection.constant";
 
-const HELPER = "max-w-xs text-[11px] text-gray-500 dark:text-gray-400";
+const HELPER = "max-w-xs text-[11px] text-awc-fg-muted dark:text-gray-400";
 
 /** Publish + Save draft disabled with Product EN owner-only reason. */
 export default function ProjectSkillOwnerOnlyActions() {

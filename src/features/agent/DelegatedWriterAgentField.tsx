@@ -20,7 +20,7 @@ export default function DelegatedWriterAgentField({
   return (
     <AwcFormField id="delegated-writer-agent" label="Delegate tasks to">
       {disabled ? (
-        <p className="mb-2 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mb-2 text-xs text-awc-fg-muted dark:text-gray-400">
           Finish the current Mac session to switch AI.
         </p>
       ) : null}
@@ -31,7 +31,7 @@ export default function DelegatedWriterAgentField({
         onChange={(event) => {
           onWriterAgentChange(event.target.value as HarnessWriterAgent);
         }}
-        className={`${AWC_FORM_CONTROL_CLASS} disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 dark:disabled:bg-gray-950 dark:disabled:text-gray-500`}
+        className={`${AWC_FORM_CONTROL_CLASS} disabled:cursor-not-allowed disabled:bg-awc-surface-2 disabled:text-awc-fg-muted dark:disabled:bg-gray-950 dark:disabled:text-gray-500`}
       >
         {HARNESS_WRITER_OPTIONS.map((option) => (
           <option key={option.value} value={option.value}>

@@ -50,7 +50,7 @@ export default function ProjectSkillsSection({
         </p>
       ) : null}
       {!skills.isLoading && skills.skills.length === 0 ? (
-        <p className="text-xs text-gray-500">{copy.empty}</p>
+        <p className="text-xs text-awc-fg-muted">{copy.empty}</p>
       ) : null}
       <ul className="space-y-2">
         {skills.skills.map((skill) => (
@@ -70,7 +70,7 @@ export default function ProjectSkillsSection({
         onSubmit={skills.publish}
       />
       {skills.message ? (
-        <p role="status" className="text-xs text-gray-600 dark:text-gray-300">
+        <p role="status" className="text-xs text-awc-fg-muted dark:text-gray-300">
           {skills.message}
         </p>
       ) : null}

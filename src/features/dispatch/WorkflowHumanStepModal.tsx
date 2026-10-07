@@ -42,10 +42,10 @@ export default function WorkflowHumanStepModal({
           {request.workflowLabel}
         </p>
       ) : null}
-      <h2 className="mt-1 text-xl font-semibold text-gray-900 dark:text-white">
+      <h2 className="mt-1 text-xl font-semibold text-awc-fg dark:text-white">
         {request.title}
       </h2>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
         Your assistant paused here so you can review or answer. You can close
         this and come back anytime — we will keep your place.
       </p>
@@ -57,11 +57,11 @@ export default function WorkflowHumanStepModal({
         workflowRunId={request.workflowRunId}
         highlightStepIndex={request.stepIndex}
       />
-      <div className="mt-5 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900/30">
-        <p className="text-sm font-medium text-gray-900 dark:text-white">
+      <div className="mt-5 rounded-xl border border-awc-border bg-white p-4 dark:border-gray-700 dark:bg-gray-900/30">
+        <p className="text-sm font-medium text-awc-fg dark:text-white">
           What to do
         </p>
-        <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+        <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-awc-fg dark:text-gray-300">
           {request.instructions}
         </p>
       </div>
@@ -70,7 +70,7 @@ export default function WorkflowHumanStepModal({
           outputPreview={request.priorAgentOutputPreview}
         />
       ) : null}
-      <label className="mt-5 block text-sm font-medium text-gray-900 dark:text-white">
+      <label className="mt-5 block text-sm font-medium text-awc-fg dark:text-white">
         Your reply
         <textarea
           value={response}
@@ -79,7 +79,7 @@ export default function WorkflowHumanStepModal({
           }}
           rows={4}
           placeholder="Type your answer here…"
-          className="mt-2 w-full rounded-xl border border-gray-200 px-3 py-2.5 text-sm text-gray-900 shadow-sm focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+          className="mt-2 w-full rounded-xl border border-awc-border px-3 py-2.5 text-sm text-awc-fg shadow-sm focus:border-awc-blue-300 focus:outline-none focus:ring-2 focus:ring-awc-blue-600/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
         />
       </label>
       {submitError !== null ? (

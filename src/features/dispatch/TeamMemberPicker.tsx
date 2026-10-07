@@ -18,14 +18,14 @@ export default function TeamMemberPicker({
 }: TeamMemberPickerProps) {
   if (members.length === 0) {
     return (
-      <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
         No teammates in this group.
       </p>
     );
   }
 
   return (
-    <ul className="mt-2 max-h-48 space-y-2 overflow-y-auto rounded-lg border border-gray-200 p-2 dark:border-gray-700">
+    <ul className="mt-2 max-h-48 space-y-2 overflow-y-auto rounded-lg border border-awc-border p-2 dark:border-gray-700">
       {members.map((member) => {
         const isSelected = member.userId === selectedUserId;
 
@@ -40,7 +40,7 @@ export default function TeamMemberPicker({
               className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm transition ${
                 isSelected
                   ? "bg-brand-50 text-brand-700 dark:bg-brand-950/30 dark:text-brand-300"
-                  : "hover:bg-gray-50 dark:hover:bg-white/5"
+                  : "hover:bg-awc-surface-2 dark:hover:bg-white/5"
               }`}
             >
               <span>{member.name ?? member.email}</span>

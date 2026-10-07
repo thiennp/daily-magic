@@ -59,22 +59,22 @@ export default function DevWriterSessionStreamPageClient() {
   return (
     <main className="mx-auto flex min-h-screen max-w-3xl flex-col gap-4 p-6">
       <div>
-        <h1 className="text-lg font-semibold text-gray-900 dark:text-white/90">
+        <h1 className="text-lg font-semibold text-awc-fg dark:text-white/90">
           Writer session stream (localhost)
         </h1>
-        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-1 text-sm text-awc-fg-muted dark:text-gray-400">
           Dev-only page for verifying live terminal streaming over WebSocket.
           Start the computer client with{" "}
-          <code className="rounded bg-gray-100 px-1 dark:bg-gray-800">
+          <code className="rounded bg-awc-fill px-1 dark:bg-gray-800">
             AGENT_WITCH_WS_URL=ws://localhost:3000/api/agent-witch/ws npm run
             agent-witch
           </code>
           .
         </p>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
           Connection:{" "}
           <span
-            className="font-mono text-gray-900 dark:text-white/90"
+            className="font-mono text-awc-fg dark:text-white/90"
             data-testid="connection-status"
           >
             {connectionStatus}

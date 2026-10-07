@@ -23,11 +23,11 @@ export default function AwcAccessLogEventList({ log }: AwcAccessLogEventListProp
       : null;
 
   if (log.isLoading) {
-    return <p className="py-6 text-center text-sm text-gray-500">{C.loading}</p>;
+    return <p className="py-6 text-center text-sm text-awc-fg-muted">{C.loading}</p>;
   }
   if (log.ownerOnly) {
     return (
-      <p className="py-6 text-center text-sm text-gray-600 dark:text-gray-300">
+      <p className="py-6 text-center text-sm text-awc-fg-muted dark:text-gray-300">
         {C.ownerOnly}
       </p>
     );
@@ -35,10 +35,10 @@ export default function AwcAccessLogEventList({ log }: AwcAccessLogEventListProp
   if (log.error) {
     return (
       <div className="py-6 text-center">
-        <p className="text-sm text-gray-600 dark:text-gray-300">{C.error}</p>
+        <p className="text-sm text-awc-fg-muted dark:text-gray-300">{C.error}</p>
         <button
           type="button"
-          className="mt-2 text-sm font-medium text-gray-900 underline dark:text-white"
+          className="mt-2 text-sm font-medium text-awc-fg underline dark:text-white"
           onClick={log.reload}
         >
           {C.retry}
@@ -57,7 +57,7 @@ export default function AwcAccessLogEventList({ log }: AwcAccessLogEventListProp
         ))}
       </ul>
       {retentionLine ? (
-        <p className="mt-3 text-[12px] text-gray-500 dark:text-gray-400">
+        <p className="mt-3 text-[12px] text-awc-fg-muted dark:text-gray-400">
           {retentionLine}
         </p>
       ) : null}
@@ -65,7 +65,7 @@ export default function AwcAccessLogEventList({ log }: AwcAccessLogEventListProp
         <div className="mt-3 text-center">
           <button
             type="button"
-            className="text-sm font-medium text-gray-900 underline disabled:opacity-50 dark:text-white"
+            className="text-sm font-medium text-awc-fg underline disabled:opacity-50 dark:text-white"
             disabled={log.isLoadingMore}
             onClick={log.loadMore}
           >
@@ -81,7 +81,7 @@ export default function AwcAccessLogEventList({ log }: AwcAccessLogEventListProp
           ) : null}
         </div>
       ) : (
-        <p className="mt-3 text-center text-[12px] text-gray-500">{C.end}</p>
+        <p className="mt-3 text-center text-[12px] text-awc-fg-muted">{C.end}</p>
       )}
     </div>
   );

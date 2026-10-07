@@ -13,7 +13,7 @@ const CHIPS: readonly { readonly id: AccessLogCategoryFilter; readonly label: st
 const CHIP =
   "rounded-full px-2.5 py-1 text-[12px] font-medium transition";
 const ON = `${CHIP} bg-gray-900 text-white dark:bg-white dark:text-gray-900`;
-const OFF = `${CHIP} bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600`;
+const OFF = `${CHIP} bg-awc-fill text-awc-fg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600`;
 
 interface AwcAccessLogFilterChipsProps {
   readonly category: AccessLogCategoryFilter;

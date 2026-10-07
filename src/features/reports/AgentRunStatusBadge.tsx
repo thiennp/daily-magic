@@ -18,7 +18,7 @@ const STATUS_CLASS_MAP: Record<EnrichedAgentRunRecord["status"], string> = {
   [AgentRunStatus.FAILED]:
     "bg-rose-100 text-rose-800 dark:bg-rose-950/40 dark:text-rose-200",
   [AgentRunStatus.DENIED]:
-    "bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-200",
+    "bg-gray-200 text-awc-fg dark:bg-gray-800 dark:text-gray-200",
   [AgentRunStatus.EXPIRED]:
     "bg-orange-100 text-orange-800 dark:bg-orange-950/40 dark:text-orange-200",
 };

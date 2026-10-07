@@ -21,7 +21,7 @@ export default function ShowcaseRelatedShowcases({
       padding="compact"
       className="mt-10 bg-awc-bg dark:bg-white/[0.03]"
     >
-      <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+      <p className="text-sm font-medium text-awc-fg dark:text-white/90">
         Related guides
       </p>
       <ul className="mt-3 space-y-2">

@@ -49,13 +49,13 @@ export default function ProjectSkillPublishForm({
 
   return (
     <form
-      className="space-y-2 border-t border-gray-200/70 pt-3 dark:border-gray-800/70"
+      className="space-y-2 border-t border-awc-border/70 pt-3 dark:border-gray-800/70"
       onSubmit={(event) => {
         event.preventDefault();
         void submit(false);
       }}
     >
-      <p className="text-xs font-semibold text-gray-700 dark:text-gray-200">
+      <p className="text-xs font-semibold text-awc-fg dark:text-gray-200">
         {copy.publishHeading}
       </p>
       <ProjectSkillPublishFields

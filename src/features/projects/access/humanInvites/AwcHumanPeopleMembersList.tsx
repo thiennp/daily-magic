@@ -53,10 +53,10 @@ export default function AwcHumanPeopleMembersList({
     <section className="space-y-4">
       <header className="flex flex-wrap items-start justify-between gap-2">
         <div>
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white/90">
+          <h3 className="text-sm font-semibold text-awc-fg dark:text-white/90">
             {copy.peopleHeading}
           </h3>
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          <p className="mt-1 text-xs text-awc-fg-muted dark:text-gray-400">
             {copy.peopleHint}
           </p>
         </div>

@@ -39,17 +39,17 @@ export default function AgentRunPartialOutputPreview({
     : formatted.sections.slice(0, COLLAPSED_SECTION_COUNT);
 
   return (
-    <div className="mt-3 space-y-3 rounded-lg bg-gray-50 p-3 dark:bg-gray-800">
-      <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+    <div className="mt-3 space-y-3 rounded-lg bg-awc-surface-2 p-3 dark:bg-gray-800">
+      <p className="text-xs font-medium uppercase tracking-wide text-awc-fg-muted dark:text-gray-400">
         Context so far
       </p>
       {visibleProgress.map((update, index) => (
         <div key={`${update.title}-${index}`}>
-          <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+          <p className="text-sm font-medium text-awc-fg dark:text-white/90">
             {update.title}
           </p>
           {update.detail.length > 0 ? (
-            <p className="mt-1 text-xs whitespace-pre-wrap text-gray-600 dark:text-gray-300">
+            <p className="mt-1 text-xs whitespace-pre-wrap text-awc-fg-muted dark:text-gray-300">
               {update.detail}
             </p>
           ) : null}

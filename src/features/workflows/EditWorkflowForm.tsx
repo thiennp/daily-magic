@@ -23,7 +23,7 @@ export default function EditWorkflowForm({
   const form = useEditWorkflowForm({ capability, onSaved, onCancel });
 
   return (
-    <div className="mt-4 space-y-4 rounded-xl border border-gray-100 p-4 dark:border-gray-800">
+    <div className="mt-4 space-y-4 rounded-xl border border-awc-border p-4 dark:border-gray-800">
       <CreateWorkflowBasicsFields
         name={form.name}
         description={form.description}

@@ -43,10 +43,10 @@ export default function MarketplaceInstallFormPanel({
 }: MarketplaceInstallFormPanelProps) {
   return (
     <>
-      <h2 className="pr-10 text-lg font-semibold text-gray-900 dark:text-white/90">
+      <h2 className="pr-10 text-lg font-semibold text-awc-fg dark:text-white/90">
         Install {listingName}
       </h2>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
         Saves to your library and links this listing to the project you choose.
         Pull playbook files into the repo from AgentWitch on your computer.
       </p>
@@ -78,7 +78,7 @@ export default function MarketplaceInstallFormPanel({
           className={`mt-4 text-sm ${
             status === "error"
               ? "text-amber-700 dark:text-amber-300"
-              : "text-gray-600 dark:text-gray-400"
+              : "text-awc-fg-muted dark:text-gray-400"
           }`}
         >
           {message}

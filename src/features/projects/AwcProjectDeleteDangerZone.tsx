@@ -33,13 +33,13 @@ const AwcProjectDeleteDangerZone = ({
   };
 
   return (
-    <div className="mt-6 border-t border-gray-200 pt-4 dark:border-gray-800">
-      <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
+    <div className="mt-6 border-t border-awc-border pt-4 dark:border-gray-800">
+      <h3 className="text-sm font-medium text-awc-fg dark:text-white/90">
         Danger zone
       </h3>
       {!confirmOpen ? (
         <>
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          <p className="mt-1 text-xs text-awc-fg-muted dark:text-gray-400">
             {AWC_PROJECT_DELETE_COPY.scope}
           </p>
           <Button

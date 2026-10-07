@@ -18,11 +18,11 @@ export default function AwcHumanPendingInvitesSection({
 
   return (
     <div>
-      <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
+      <h4 className="text-xs font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-300">
         {copy.pendingSubhead}
       </h4>
       {pendingInvites.length === 0 ? (
-        <p className="mt-1 text-sm text-gray-500">{copy.pendingEmpty}</p>
+        <p className="mt-1 text-sm text-awc-fg-muted">{copy.pendingEmpty}</p>
       ) : (
         <ul className="mt-2 space-y-2">
           {pendingInvites.map((invite) => (

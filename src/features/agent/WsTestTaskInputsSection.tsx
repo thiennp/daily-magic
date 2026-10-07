@@ -30,7 +30,7 @@ export default function WsTestTaskInputsSection({
   if (isWorkflowTask) {
     return (
       <>
-        <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <h2 className="text-sm font-medium text-awc-fg dark:text-white/90">
           Workflow inputs
         </h2>
         {useMobileStepper ? (
@@ -51,7 +51,7 @@ export default function WsTestTaskInputsSection({
         </div>
         <label
           htmlFor="agent-witch-workflow-notes"
-          className="mt-4 block text-sm font-medium text-gray-800 dark:text-white/90"
+          className="mt-4 block text-sm font-medium text-awc-fg dark:text-white/90"
         >
           Additional instructions (optional)
         </label>
@@ -63,7 +63,7 @@ export default function WsTestTaskInputsSection({
             onPromptChange(event.target.value);
           }}
           rows={4}
-          className="mt-2 w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm dark:border-gray-700 dark:bg-gray-800"
+          className="mt-2 w-full rounded-lg border border-awc-border bg-white px-4 py-3 text-sm dark:border-gray-700 dark:bg-gray-800"
         />
       </>
     );
@@ -75,7 +75,7 @@ export default function WsTestTaskInputsSection({
     <>
       <label
         htmlFor="agent-witch-prompt"
-        className="mb-2 block text-sm font-medium text-gray-800 dark:text-white/90"
+        className="mb-2 block text-sm font-medium text-awc-fg dark:text-white/90"
       >
         Task instructions
       </label>
@@ -91,8 +91,8 @@ export default function WsTestTaskInputsSection({
         aria-invalid={hasPromptError}
         className={
           hasPromptError
-            ? "w-full rounded-lg border border-rose-500 bg-white px-4 py-3 text-sm text-gray-800 shadow-theme-xs outline-none transition focus:border-rose-500 focus:ring-3 focus:ring-rose-500/10 dark:border-rose-500 dark:bg-gray-800 dark:text-white/90"
-            : "w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 shadow-theme-xs outline-none transition focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
+            ? "w-full rounded-lg border border-rose-500 bg-white px-4 py-3 text-sm text-awc-fg shadow-theme-xs outline-none transition focus:border-rose-500 focus:ring-3 focus:ring-rose-500/10 dark:border-rose-500 dark:bg-gray-800 dark:text-white/90"
+            : "w-full rounded-lg border border-awc-border bg-white px-4 py-3 text-sm text-awc-fg shadow-theme-xs outline-none transition focus:border-awc-blue-300 focus:ring-3 focus:ring-awc-blue-600/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
         }
       />
       {hasPromptError ? (

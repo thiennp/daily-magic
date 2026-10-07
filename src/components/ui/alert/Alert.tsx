@@ -21,16 +21,16 @@ export default function Alert({
         </div>
 
         <div>
-          <h4 className="mb-1 text-sm font-semibold text-gray-800 dark:text-white/90">
+          <h4 className="mb-1 text-sm font-semibold text-awc-fg dark:text-white/90">
             {title}
           </h4>
 
-          <p className="text-sm text-gray-500 dark:text-gray-400">{message}</p>
+          <p className="text-sm text-awc-fg-muted dark:text-gray-400">{message}</p>
 
           {showLink && (
             <Link
               href={linkHref}
-              className="inline-block mt-3 text-sm font-medium text-gray-500 underline dark:text-gray-400"
+              className="inline-block mt-3 text-sm font-medium text-awc-fg-muted underline dark:text-gray-400"
             >
               {linkText}
             </Link>

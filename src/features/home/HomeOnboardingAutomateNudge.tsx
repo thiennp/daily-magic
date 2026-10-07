@@ -22,7 +22,7 @@ export default function HomeOnboardingAutomateNudge() {
   return (
     <AppAccentPanel className="mt-4">
       <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Optional next step</h2>
-      <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+      <p className="mt-2 text-sm text-awc-fg dark:text-gray-300">
         Run the same workflow on a schedule — hourly, daily, or weekdays — on
         your computer.
       </p>

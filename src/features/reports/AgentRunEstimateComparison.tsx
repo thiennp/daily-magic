@@ -10,6 +10,6 @@ export default function AgentRunEstimateComparison(input: {
   }
 
   return (
-    <p className="mt-3 text-sm text-gray-700 dark:text-gray-300">{label}</p>
+    <p className="mt-3 text-sm text-awc-fg dark:text-gray-300">{label}</p>
   );
 }

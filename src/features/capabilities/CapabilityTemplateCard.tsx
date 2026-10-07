@@ -33,14 +33,14 @@ export default function CapabilityTemplateCard({
       className={`rounded-xl border p-4 ${
         isSelected
           ? "border-brand-300 bg-brand-50/40 dark:border-brand-800 dark:bg-brand-950/20"
-          : "border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.04]"
+          : "border-awc-border bg-white dark:border-gray-800 dark:bg-white/[0.04]"
       }`}
     >
       <div className="flex flex-wrap items-center gap-2">
-        <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium uppercase tracking-wide text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+        <span className="rounded-full bg-awc-fill px-2 py-0.5 text-xs font-medium uppercase tracking-wide text-awc-fg-muted dark:bg-gray-800 dark:text-gray-300">
           {template.type === CapabilityType.WORKFLOW ? "Workflow" : "Agent"}
         </span>
-        <span className="text-xs text-gray-500 dark:text-gray-400">
+        <span className="text-xs text-awc-fg-muted dark:text-gray-400">
           {template.category}
         </span>
       </div>
@@ -51,14 +51,14 @@ export default function CapabilityTemplateCard({
           onSelect(template.id);
         }}
       >
-        <h3 className="text-sm font-medium text-gray-900 dark:text-white/90">
+        <h3 className="text-sm font-medium text-awc-fg dark:text-white/90">
           {template.name}
         </h3>
-        <p className="mt-1 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-1 line-clamp-2 text-sm text-awc-fg-muted dark:text-gray-400">
           {template.description}
         </p>
       </button>
-      <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-2 text-xs text-awc-fg-muted dark:text-gray-400">
         {template.type === CapabilityType.WORKFLOW
           ? `${template.fieldCount} inputs · `
           : ""}
@@ -66,14 +66,14 @@ export default function CapabilityTemplateCard({
       </p>
       {isSelected ? (
         <div className="mt-3 space-y-3">
-          <p className="text-sm text-gray-700 dark:text-gray-300">
+          <p className="text-sm text-awc-fg dark:text-gray-300">
             {template.detail}
           </p>
           <CapabilityTemplateHarnessPreview
             harnessName={template.harnessName}
             harnessItems={template.harnessItems}
           />
-          <ul className="list-disc space-y-1 pl-5 text-sm text-gray-600 dark:text-gray-400">
+          <ul className="list-disc space-y-1 pl-5 text-sm text-awc-fg-muted dark:text-gray-400">
             {template.outcomes.map((outcome) => (
               <li key={outcome}>{outcome}</li>
             ))}

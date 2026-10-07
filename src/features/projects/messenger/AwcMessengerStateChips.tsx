@@ -7,12 +7,12 @@ interface AwcMessengerStateChipsProps {
 }
 
 const TONE_CLASS: Record<string, string> = {
-  ok: "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-100",
-  info: "border-gray-200 bg-gray-50 text-gray-800 dark:border-gray-700 dark:bg-white/10 dark:text-gray-100",
-  warn: "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100",
-  err: "border-red-200 bg-red-50 text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-100",
+  ok: "border-awc-border bg-awc-ok-soft text-awc-ok dark:border-gray-700 dark:bg-white/10 dark:text-gray-100",
+  info: "border-awc-border bg-awc-info-soft text-awc-info dark:border-gray-700 dark:bg-white/10 dark:text-gray-100",
+  warn: "border-awc-border bg-awc-warn-soft text-awc-warn dark:border-gray-700 dark:bg-white/10 dark:text-gray-100",
+  err: "border-awc-border bg-awc-bad-soft text-awc-bad dark:border-gray-700 dark:bg-white/10 dark:text-gray-100",
   muted:
-    "border-gray-200 bg-gray-100 text-gray-700 dark:border-gray-700 dark:bg-white/5 dark:text-gray-300",
+    "border-awc-border bg-awc-tile-2 text-awc-fg-muted dark:border-gray-700 dark:bg-white/5 dark:text-gray-300",
 };
 
 export default function AwcMessengerStateChips({

@@ -1,7 +1,7 @@
 "use client";
 
 const FIELD =
-  "mt-1 w-full rounded-md border border-gray-300 bg-white px-2 py-1 text-xs dark:border-gray-700 dark:bg-gray-950";
+  "mt-1 w-full rounded-md border border-awc-border-strong bg-white px-2 py-1 text-xs dark:border-gray-700 dark:bg-gray-950";
 
 interface AwcProjectAccessSecretInputProps {
   readonly label: string;
@@ -18,7 +18,7 @@ export default function AwcProjectAccessSecretInput({
   onChange,
 }: AwcProjectAccessSecretInputProps) {
   return (
-    <label className="block text-xs text-gray-600 dark:text-gray-400">
+    <label className="block text-xs text-awc-fg-muted dark:text-gray-400">
       {label}
       <input
         className={FIELD}

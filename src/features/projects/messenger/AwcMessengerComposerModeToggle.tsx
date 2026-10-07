@@ -22,7 +22,7 @@ export default function AwcMessengerComposerModeToggle({
     active ? ACTIVITY_SEGMENT_ACTIVE_CLASS : ACTIVITY_SEGMENT_IDLE_CLASS;
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <div className="inline-flex gap-1 rounded-xl border border-gray-200 p-0.5 dark:border-gray-800">
+      <div className="inline-flex gap-1 rounded-xl border border-awc-border p-0.5 dark:border-gray-800">
         <button
           type="button"
           className={chip(mode === "message")}
@@ -46,7 +46,7 @@ export default function AwcMessengerComposerModeToggle({
           {copy.modeTask}
         </button>
       </div>
-      <span className="text-xs text-gray-500">
+      <span className="text-xs text-awc-fg-muted">
         {mode === "task" ? copy.modeTaskHint : copy.modeMessageHint}
       </span>
     </div>

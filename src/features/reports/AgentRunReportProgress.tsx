@@ -27,12 +27,12 @@ export default function AgentRunReportProgress({
         Run status
       </p>
       {summaryLine !== null ? (
-        <p className="mt-1 text-sm text-gray-800 dark:text-white/90">
+        <p className="mt-1 text-sm text-awc-fg dark:text-white/90">
           {summaryLine}
         </p>
       ) : null}
       {statusLabel !== null ? (
-        <p className="mt-0.5 text-xs capitalize text-gray-500 dark:text-gray-400">
+        <p className="mt-0.5 text-xs capitalize text-awc-fg-muted dark:text-gray-400">
           Report: {statusLabel}
         </p>
       ) : null}

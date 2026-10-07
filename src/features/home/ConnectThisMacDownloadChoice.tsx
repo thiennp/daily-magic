@@ -11,8 +11,8 @@ export default function ConnectThisMacDownloadChoice({
   downloadUrl,
 }: ConnectThisMacDownloadChoiceProps) {
   return (
-    <section className="mt-5 space-y-2 border-t border-gray-200 pt-4 dark:border-white/10">
-      <h3 className="text-sm font-semibold text-gray-900 dark:text-white/90">
+    <section className="mt-5 space-y-2 border-t border-awc-border pt-4 dark:border-white/10">
+      <h3 className="text-sm font-semibold text-awc-fg dark:text-white/90">
         Mac menu bar app
       </h3>
       <p className={APP_SURFACE_BODY_TEXT_CLASS}>
@@ -25,7 +25,7 @@ export default function ConnectThisMacDownloadChoice({
           Download for Mac
         </a>
       </p>
-      <p className="text-xs text-gray-500 dark:text-gray-400">
+      <p className="text-xs text-awc-fg-muted dark:text-gray-400">
         {DOWNLOAD_PAGE_COPY.signedNote}
       </p>
     </section>

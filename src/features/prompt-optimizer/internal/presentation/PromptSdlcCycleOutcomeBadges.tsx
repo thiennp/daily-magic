@@ -59,12 +59,12 @@ export default function PromptSdlcCycleOutcomeBadges({
           </span>
         ) : null}
         {score !== null && score !== undefined ? (
-          <span className="text-xs text-gray-600 dark:text-gray-400">
+          <span className="text-xs text-awc-fg-muted dark:text-gray-400">
             Score {score}
           </span>
         ) : null}
         <span
-          className="cursor-help text-xs text-gray-500 underline decoration-dotted underline-offset-2 dark:text-gray-400"
+          className="cursor-help text-xs text-awc-fg-muted underline decoration-dotted underline-offset-2 dark:text-gray-400"
           title={PROMPT_SDLC_OUTCOME_COPY.recommendTimeoutTip}
         >
           fail-clean timeout

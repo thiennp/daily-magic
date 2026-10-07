@@ -46,7 +46,7 @@ export default function MacDevicePicker({
 
   if (isLoading) {
     return (
-      <p className="text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-sm text-awc-fg-muted dark:text-gray-400">
         Checking which computers are online…
       </p>
     );
@@ -54,7 +54,7 @@ export default function MacDevicePicker({
 
   if (devices.length === 0) {
     return (
-      <p className="text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-sm text-awc-fg-muted dark:text-gray-400">
         No computers connected yet. Connect one from Home → Your Devices.
       </p>
     );

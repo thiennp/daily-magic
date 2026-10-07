@@ -40,7 +40,7 @@ export default function AwcProjectRepoUrlList({
                 value={url}
                 placeholder={copy.urlPlaceholder}
                 onChange={(event) => onChangeUrl(index, event.target.value)}
-                className="w-full flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 font-mono text-sm dark:border-gray-700 dark:bg-gray-800"
+                className="w-full flex-1 rounded-lg border border-awc-border bg-white px-3 py-2 font-mono text-sm dark:border-gray-700 dark:bg-gray-800"
               />
               <button
                 type="button"

@@ -21,7 +21,7 @@ export default function HomePromptOptimizerCtaBox(): ReactElement {
     >
       <h2
         id="home-prompt-optimizer-cta-heading"
-        className="text-sm font-medium uppercase tracking-wider text-gray-500"
+        className="text-sm font-medium uppercase tracking-wider text-awc-fg-muted"
       >
         {HOME_PROMPT_OPTIMIZER_CTA_COPY.eyebrow}
       </h2>

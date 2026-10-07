@@ -47,7 +47,7 @@ export default function HomeLinkAccountGateContent({
     dashboardMode === "loading" ? (
       <main className={HOME_MAIN_COLUMN_WITHOUT_LEFT_RAIL_CLASS}>
         <AppHero variant="plain">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-awc-fg-muted dark:text-gray-400">
             {MAC_WORKER_BENEFIT_COPY.checkingMacReady}
           </p>
         </AppHero>

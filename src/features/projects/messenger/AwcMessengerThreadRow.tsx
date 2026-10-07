@@ -34,19 +34,19 @@ export default function AwcMessengerThreadRow({
       className={`flex w-full items-start gap-2.5 border-l-4 px-3.5 py-2.5 text-left ${
         selected
           ? ACTIVITY_SELECTED_THREAD_CLASS
-          : "border-transparent hover:bg-gray-50 dark:hover:bg-white/[0.03]"
+          : "border-transparent hover:bg-awc-surface-2 dark:hover:bg-white/[0.03]"
       }`}
     >
       <span className="min-w-0 flex-1">
-        <span className="flex items-center gap-1.5 text-sm font-semibold text-gray-900 dark:text-white">
+        <span className="flex items-center gap-1.5 text-sm font-semibold text-awc-fg dark:text-white">
           {name}
           {pinned ? (
-            <span className="text-[11px] font-semibold text-gray-700 dark:text-gray-200">
+            <span className="text-[11px] font-semibold text-awc-fg dark:text-gray-200">
               {copy.pinned}
             </span>
           ) : null}
         </span>
-        <span className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-gray-500">
+        <span className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-awc-fg-muted">
           <span>{subtitle}</span>
           {status !== undefined ? (
             <>

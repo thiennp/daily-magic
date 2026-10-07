@@ -18,7 +18,7 @@ interface CreateWorkflowBasicsFieldsProps {
 }
 
 const inputClass =
-  "h-11 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm shadow-theme-xs focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800";
+  "h-11 w-full rounded-lg border border-awc-border-strong bg-transparent px-3 text-sm shadow-theme-xs focus:border-awc-blue-300 focus:outline-hidden focus:ring-3 focus:ring-awc-blue-600/10 dark:border-gray-700 dark:bg-gray-800";
 
 export default function CreateWorkflowBasicsFields({
   name,
@@ -31,10 +31,10 @@ export default function CreateWorkflowBasicsFields({
   return (
     <section className="space-y-4">
       <div>
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-white/90">
+        <h3 className="text-sm font-semibold text-awc-fg dark:text-white/90">
           {WORKFLOW_BUILDER_ABOUT_SECTION.title}
         </h3>
-        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-1 text-sm text-awc-fg-muted dark:text-gray-400">
           {WORKFLOW_BUILDER_ABOUT_SECTION.description}
         </p>
       </div>

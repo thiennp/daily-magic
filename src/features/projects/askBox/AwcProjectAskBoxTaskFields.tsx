@@ -4,7 +4,7 @@ import { PROJECT_ASK_BOX_COPY } from "@/features/projects/askBox/projectAskBoxCo
 import type { MessengerTaskRefsDraft } from "@/features/projects/messenger/AwcMessengerTaskRefsPanel";
 
 const FIELD =
-  "w-full rounded-[10px] border-0 bg-gray-100 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400/40 dark:bg-white/10 dark:text-white dark:placeholder:text-gray-400";
+  "w-full rounded-[10px] border-0 bg-awc-fill px-3 py-2 text-sm text-awc-fg placeholder:text-awc-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400/40 dark:bg-white/10 dark:text-white dark:placeholder:text-gray-400";
 
 type RefKey = keyof MessengerTaskRefsDraft;
 

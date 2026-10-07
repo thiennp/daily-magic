@@ -52,7 +52,7 @@ export default function ConnectThisMacModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-lg p-6">
-      <h2 className="pr-10 text-lg font-semibold text-gray-900 dark:text-white/90">
+      <h2 className="pr-10 text-lg font-semibold text-awc-fg dark:text-white/90">
         Connect this computer
       </h2>
 

@@ -35,7 +35,7 @@ export default function AgentRunDetailDeleteButton({
       type="button"
       disabled={isDeleting}
       onClick={handleDelete}
-      className="text-sm font-medium text-gray-500 transition hover:text-error-600 disabled:opacity-50 dark:text-gray-400 dark:hover:text-error-400"
+      className="text-sm font-medium text-awc-fg-muted transition hover:text-error-600 disabled:opacity-50 dark:text-gray-400 dark:hover:text-error-400"
     >
       {isDeleting ? "Deleting…" : "Delete"}
     </button>

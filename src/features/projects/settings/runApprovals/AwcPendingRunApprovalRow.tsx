@@ -45,16 +45,16 @@ export default function AwcPendingRunApprovalRow({
     item.prompt.trim().length > 0 ? item.prompt.trim() : C.promptFallback;
 
   return (
-    <li className="rounded-xl border border-gray-200/80 p-3 dark:border-gray-800/80">
-      <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+    <li className="rounded-xl border border-awc-border/80 p-3 dark:border-gray-800/80">
+      <p className="text-sm font-medium text-awc-fg dark:text-white/90">
         {title}
       </p>
       {folderLine !== null ? (
-        <p className="mt-1 text-[13px] text-gray-500 dark:text-gray-400">
+        <p className="mt-1 text-[13px] text-awc-fg-muted dark:text-gray-400">
           {folderLine}
         </p>
       ) : null}
-      <pre className="mt-2 max-h-24 overflow-auto rounded-lg bg-gray-50 p-2 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+      <pre className="mt-2 max-h-24 overflow-auto rounded-lg bg-awc-surface-2 p-2 text-xs text-awc-fg dark:bg-gray-800 dark:text-gray-300">
         {promptPreview}
       </pre>
       <div className="mt-3 flex flex-wrap justify-end gap-2">
@@ -71,7 +71,7 @@ export default function AwcPendingRunApprovalRow({
         </Button>
       </div>
       {reason !== null ? (
-        <p role="status" className="mt-2 text-[13px] text-gray-500 dark:text-gray-400">
+        <p role="status" className="mt-2 text-[13px] text-awc-fg-muted dark:text-gray-400">
           {reason}
         </p>
       ) : null}

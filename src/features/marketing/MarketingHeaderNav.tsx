@@ -72,7 +72,7 @@ export default function MarketingHeaderNav({
       {mobileOpen ? (
         <div
           id="marketing-header-mobile-nav"
-          className="absolute top-full right-0 z-30 mt-2 flex w-56 flex-col gap-1 rounded-xl border border-gray-200 bg-white p-2 shadow-lg lg:hidden"
+          className="absolute top-full right-0 z-30 mt-2 flex w-56 flex-col gap-1 rounded-xl border border-awc-border bg-white p-2 shadow-lg lg:hidden"
         >
           {MARKETING_HEADER_NAV_ITEMS.map((item) => (
             <Link

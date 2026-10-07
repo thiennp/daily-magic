@@ -21,7 +21,7 @@ export default function AgentLiveTerminalMirrorToggle({
         className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition ${
           isOpen
             ? "border-brand-500 bg-brand-50 text-brand-700 dark:border-brand-400 dark:bg-brand-500/10 dark:text-brand-300"
-            : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-transparent dark:text-gray-300 dark:hover:bg-white/5"
+            : "border-awc-border bg-white text-awc-fg hover:bg-awc-surface-2 dark:border-gray-700 dark:bg-transparent dark:text-gray-300 dark:hover:bg-white/5"
         }`}
       >
         <svg

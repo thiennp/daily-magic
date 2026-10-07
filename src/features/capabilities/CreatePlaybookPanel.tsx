@@ -33,10 +33,10 @@ export default function CreatePlaybookPanel({
     <AppPanel>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+          <h2 className="text-lg font-semibold text-awc-fg dark:text-white/90">
             Create a Playbook
           </h2>
-          <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          <p className="mt-1 text-sm leading-relaxed text-awc-fg-muted dark:text-gray-400">
             A Playbook is how AgentWitch runs Tasks on your computer. Start
             with a workflow or a single agent—questions become a typed form,
             then you add human steps and specialists.
@@ -53,7 +53,7 @@ export default function CreatePlaybookPanel({
       </div>
       {isOpen ? (
         <div className="mt-4">
-          <div className="inline-flex rounded-lg border border-gray-200 p-1 dark:border-gray-700">
+          <div className="inline-flex rounded-lg border border-awc-border p-1 dark:border-gray-700">
             <button
               type="button"
               onClick={() => {
@@ -62,7 +62,7 @@ export default function CreatePlaybookPanel({
               className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
                 activeTab === "workflow"
                   ? "bg-brand-500 text-white"
-                  : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                  : "text-awc-fg-muted hover:text-awc-fg dark:text-gray-400 dark:hover:text-white"
               }`}
             >
               Workflow
@@ -75,7 +75,7 @@ export default function CreatePlaybookPanel({
               className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
                 activeTab === "agent"
                   ? "bg-brand-500 text-white"
-                  : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                  : "text-awc-fg-muted hover:text-awc-fg dark:text-gray-400 dark:hover:text-white"
               }`}
             >
               Agent

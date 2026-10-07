@@ -42,17 +42,17 @@ export default function MyBotOwnedGrokWebhookForm({
       </button>
       {form.open ? (
         <form
-          className="mt-2 space-y-2 rounded-lg border border-gray-200/80 p-3 dark:border-gray-800/80"
+          className="mt-2 space-y-2 rounded-lg border border-awc-border/80 p-3 dark:border-gray-800/80"
           autoComplete="off"
           onSubmit={(event) => {
             event.preventDefault();
             form.save();
           }}
         >
-          <p className="text-[11px] text-gray-500 dark:text-gray-400">
+          <p className="text-[11px] text-awc-fg-muted dark:text-gray-400">
             {copy.hint}
           </p>
-          <p className="text-xs text-gray-700 dark:text-gray-300">
+          <p className="text-xs text-awc-fg dark:text-gray-300">
             {statusLine(form.status)}
           </p>
           <AwcProjectAccessSecretInput

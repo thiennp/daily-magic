@@ -21,8 +21,8 @@ export default function EmptyStatePanelSkeleton({
       aria-label="Loading"
     >
       <div className="h-5 w-2/3 animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
-      <div className="h-4 w-full animate-pulse rounded bg-gray-100 dark:bg-gray-800" />
-      <div className="h-4 w-5/6 animate-pulse rounded bg-gray-100 dark:bg-gray-800" />
+      <div className="h-4 w-full animate-pulse rounded bg-awc-fill dark:bg-gray-800" />
+      <div className="h-4 w-5/6 animate-pulse rounded bg-awc-fill dark:bg-gray-800" />
     </div>
   );
 }

@@ -23,8 +23,8 @@ export default function AgentLiveTerminalFeedbackMessageField({
 }: AgentLiveTerminalFeedbackMessageFieldProps) {
   const { textareaRef } = useAutoGrowTextarea(message);
   const textareaClassName = hasMessageError
-    ? "w-full rounded-lg border border-rose-500 bg-white px-3 py-2 text-sm text-gray-800 outline-none placeholder:text-gray-400 focus:border-rose-500 focus:ring-3 focus:ring-rose-500/10 dark:border-rose-500 dark:bg-gray-800 dark:text-white/90 dark:placeholder:text-white/40"
-    : "w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90 dark:placeholder:text-white/40";
+    ? "w-full rounded-lg border border-rose-500 bg-white px-3 py-2 text-sm text-awc-fg outline-none placeholder:text-awc-fg-muted focus:border-rose-500 focus:ring-3 focus:ring-rose-500/10 dark:border-rose-500 dark:bg-gray-800 dark:text-white/90 dark:placeholder:text-white/40"
+    : "w-full rounded-lg border border-awc-border bg-white px-3 py-2 text-sm text-awc-fg placeholder:text-awc-fg-muted dark:border-gray-700 dark:bg-gray-800 dark:text-white/90 dark:placeholder:text-white/40";
 
   const field = (
     <textarea
@@ -51,7 +51,7 @@ export default function AgentLiveTerminalFeedbackMessageField({
   return (
     <>
       {isAnswerMode ? (
-        <label className="mt-3 block text-sm text-gray-700 dark:text-gray-300">
+        <label className="mt-3 block text-sm text-awc-fg dark:text-gray-300">
           Your answer{field}
         </label>
       ) : (

@@ -23,7 +23,7 @@ export default function HomeSetupMiniBar({
   return (
     <AppPanel as="section" aria-label="Setup" className="!py-3">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm text-gray-800 dark:text-white/90">
+        <p className="text-sm text-awc-fg dark:text-white/90">
           <span className="font-semibold">Setup</span>{" "}
           {allDone ? (
             <span className="ml-2 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-100">

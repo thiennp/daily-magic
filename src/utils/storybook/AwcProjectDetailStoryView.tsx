@@ -32,7 +32,7 @@ export default function AwcProjectDetailStoryView({
     return (
       <ProjectDetailStoryStack>
         <AppPanel padding="compact">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-awc-fg-muted dark:text-gray-400">
             Loading project…
           </p>
         </AppPanel>
@@ -44,10 +44,10 @@ export default function AwcProjectDetailStoryView({
     return (
       <ProjectDetailStoryStack>
         <AppPanel padding="compact">
-          <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+          <p className="text-sm font-medium text-awc-fg dark:text-white/90">
             Project not found
           </p>
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
             This project was removed or you do not have access.
           </p>
           <p className="mt-4">
@@ -67,7 +67,7 @@ export default function AwcProjectDetailStoryView({
           <p className="text-sm font-medium text-error-600 dark:text-error-500">
             Could not load project
           </p>
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
             The project API returned an error. Open Projects and try again.
           </p>
           <p className="mt-4">

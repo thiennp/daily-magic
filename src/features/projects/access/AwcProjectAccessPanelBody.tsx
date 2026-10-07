@@ -73,7 +73,7 @@ export default function AwcProjectAccessPanelBody({
           onApprove={async (id, name) => access.approve(id, name)}
           onDeny={(id) => access.deny(id)}
         />
-        <div className="border-t border-gray-200/70 pt-3 dark:border-gray-800/70">
+        <div className="border-t border-awc-border/70 pt-3 dark:border-gray-800/70">
           <AwcProjectAccessMembersList
             projectId={projectId}
             members={botMembers}

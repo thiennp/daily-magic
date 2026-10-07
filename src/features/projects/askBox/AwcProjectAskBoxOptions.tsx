@@ -4,7 +4,7 @@ import AwcProjectAskBoxTaskFields from "@/features/projects/askBox/AwcProjectAsk
 import { PROJECT_ASK_BOX_COPY } from "@/features/projects/askBox/projectAskBoxCopy.constant";
 import type { AskBoxDraft } from "@/features/projects/askBox/resolveAskBoxSend";
 
-const CHECK_ROW = "flex items-center gap-2 text-sm text-gray-900 dark:text-gray-100";
+const CHECK_ROW = "flex items-center gap-2 text-sm text-awc-fg dark:text-gray-100";
 const CHECK_INPUT = "h-4 w-4 accent-gray-900 dark:accent-white";
 
 interface AwcProjectAskBoxOptionsProps {
@@ -23,8 +23,8 @@ export default function AwcProjectAskBoxOptions({
 }: AwcProjectAskBoxOptionsProps) {
   const copy = PROJECT_ASK_BOX_COPY;
   return (
-    <details className="group border-t border-gray-200 pt-2 dark:border-white/10">
-      <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-[13.5px] font-medium text-gray-500 dark:text-gray-400 [&::-webkit-details-marker]:hidden">
+    <details className="group border-t border-awc-border pt-2 dark:border-white/10">
+      <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-[13.5px] font-medium text-awc-fg-muted dark:text-gray-400 [&::-webkit-details-marker]:hidden">
         <span aria-hidden className="inline-block text-base leading-none transition-transform group-open:rotate-90">
           ›
         </span>
@@ -42,7 +42,7 @@ export default function AwcProjectAskBoxOptions({
             }}
           />
           {copy.needsReply}
-          <span className="text-gray-500 dark:text-gray-400">{copy.needsReplyHint}</span>
+          <span className="text-awc-fg-muted dark:text-gray-400">{copy.needsReplyHint}</span>
         </label>
         <label className={CHECK_ROW}>
           <input
@@ -55,7 +55,7 @@ export default function AwcProjectAskBoxOptions({
             }}
           />
           {copy.assignAsTask}
-          <span className="text-gray-500 dark:text-gray-400">{copy.assignAsTaskHint}</span>
+          <span className="text-awc-fg-muted dark:text-gray-400">{copy.assignAsTaskHint}</span>
         </label>
         {draft.assignAsTask ? (
           <AwcProjectAskBoxTaskFields

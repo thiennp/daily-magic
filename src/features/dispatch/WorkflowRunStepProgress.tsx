@@ -18,7 +18,7 @@ export default function WorkflowRunStepProgress({
 
   return (
     <div className="mt-3">
-      <div className="flex items-center justify-between gap-2 text-xs text-gray-500 dark:text-gray-400">
+      <div className="flex items-center justify-between gap-2 text-xs text-awc-fg-muted dark:text-gray-400">
         <span>
           {safeTotal === undefined
             ? `Step ${stepIndex + 1}`

@@ -18,11 +18,11 @@ export default function AwcAccessLogEmpty({
       : null;
   return (
     <div className="px-1 py-6 text-center">
-      <p className="text-sm text-gray-600 dark:text-gray-300">
+      <p className="text-sm text-awc-fg-muted dark:text-gray-300">
         {filtered ? C.emptyFiltered : C.empty}
       </p>
       {retentionLine ? (
-        <p className="mt-2 text-[12px] text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-[12px] text-awc-fg-muted dark:text-gray-400">
           {retentionLine}
         </p>
       ) : null}

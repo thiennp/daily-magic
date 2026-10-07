@@ -38,7 +38,7 @@ export default function AwcProjectAccessMemberGrokWakeLinkFields({
     form.webhookKey.trim() !== "";
   return (
     <form
-      className="mt-2 space-y-2 rounded-lg border border-gray-200/80 p-3 dark:border-gray-800/80"
+      className="mt-2 space-y-2 rounded-lg border border-awc-border/80 p-3 dark:border-gray-800/80"
       autoComplete="off"
       aria-label={wake.formTitle}
       onSubmit={(event) => {
@@ -46,13 +46,13 @@ export default function AwcProjectAccessMemberGrokWakeLinkFields({
         form.save();
       }}
     >
-      <p className="text-xs font-semibold text-gray-800 dark:text-white/90">
+      <p className="text-xs font-semibold text-awc-fg dark:text-white/90">
         {wake.formTitle}
       </p>
-      <p className="text-[11px] text-gray-500 dark:text-gray-400">
+      <p className="text-[11px] text-awc-fg-muted dark:text-gray-400">
         {formatAwcGrokWakeCopy(wake.formHelp, memberName)}
       </p>
-      <p className="text-xs text-gray-700 dark:text-gray-300">
+      <p className="text-xs text-awc-fg dark:text-gray-300">
         {grokStatusLine(form.status)}
       </p>
       <AwcProjectAccessSecretInput

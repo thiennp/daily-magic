@@ -56,14 +56,14 @@ export default function AgentRunFeedbackForm({
 
   return (
     <AppPanel as="section" padding="compact" className="mt-6">
-      <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
+      <h2 className="text-sm font-medium text-awc-fg dark:text-white/90">
         How did this job go?
       </h2>
       <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         Your note goes to the assistant owner. It does not change their setup
         automatically.
       </p>
-      <label className="mt-4 block text-sm text-gray-700 dark:text-gray-300">
+      <label className="mt-4 block text-sm text-awc-fg dark:text-gray-300">
         Rating (optional)
         <select
           value={rating ?? ""}
@@ -71,7 +71,7 @@ export default function AgentRunFeedbackForm({
             const value = event.target.value;
             setRating(value.length > 0 ? Number(value) : null);
           }}
-          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+          className="mt-2 w-full rounded-lg border border-awc-border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
         >
           <option value="">No rating</option>
           {[5, 4, 3, 2, 1].map((value) => (
@@ -81,7 +81,7 @@ export default function AgentRunFeedbackForm({
           ))}
         </select>
       </label>
-      <label className="mt-4 block text-sm text-gray-700 dark:text-gray-300">
+      <label className="mt-4 block text-sm text-awc-fg dark:text-gray-300">
         Comment
         <textarea
           value={comment}
@@ -89,7 +89,7 @@ export default function AgentRunFeedbackForm({
             setComment(event.target.value);
           }}
           rows={4}
-          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+          className="mt-2 w-full rounded-lg border border-awc-border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
           placeholder="What worked well or should improve next time?"
         />
       </label>

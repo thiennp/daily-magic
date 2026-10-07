@@ -73,7 +73,7 @@ export default function HarnessSetSharingPanel() {
         }}
       />
       {message ? (
-        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-xs text-awc-fg-muted dark:text-gray-400">
           {message}
         </p>
       ) : null}

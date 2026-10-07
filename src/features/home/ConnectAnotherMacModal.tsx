@@ -38,7 +38,7 @@ export default function ConnectAnotherMacModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-lg p-6">
-      <h2 className="pr-10 text-lg font-semibold text-gray-900 dark:text-white/90">
+      <h2 className="pr-10 text-lg font-semibold text-awc-fg dark:text-white/90">
         {title}
       </h2>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
@@ -57,7 +57,7 @@ export default function ConnectAnotherMacModal({
           <AgentWitchUnsupportedHostNotice host={host} />
         </div>
       ) : isInstallCommandLoading ? (
-        <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-4 text-sm text-awc-fg-muted dark:text-gray-400">
           Preparing your install command…
         </p>
       ) : (

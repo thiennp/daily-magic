@@ -40,7 +40,7 @@ export default function AwcProjectEditOnMacActions({
         type="button"
         disabled
         aria-describedby={editCta.helperText !== null ? helperId : undefined}
-        className={`${buttonClass} cursor-not-allowed border-gray-200 bg-gray-50 text-gray-400 dark:border-gray-800 dark:bg-gray-900/40 dark:text-gray-500`}
+        className={`${buttonClass} cursor-not-allowed border-awc-border bg-awc-surface-2 text-awc-fg-subtle dark:border-gray-800 dark:bg-gray-900/40 dark:text-gray-500`}
       >
         {editCta.buttonLabel}
       </button>
@@ -52,8 +52,8 @@ export default function AwcProjectEditOnMacActions({
         id={helperId}
         className={
           size === "compact"
-            ? "mt-2 text-xs text-gray-500 dark:text-gray-400"
-            : "mt-2 text-sm text-gray-500 dark:text-gray-400"
+            ? "mt-2 text-xs text-awc-fg-muted dark:text-gray-400"
+            : "mt-2 text-sm text-awc-fg-muted dark:text-gray-400"
         }
       >
         {editCta.helperText}

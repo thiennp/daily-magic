@@ -17,12 +17,12 @@ export default function AwcHumanJoinedMemberRow({
   const copy = HUMAN_INVITE_UI_COPY;
 
   return (
-    <li className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-gray-200/70 bg-white px-3 py-2 text-sm dark:border-gray-800 dark:bg-transparent">
+    <li className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-awc-border/70 bg-white px-3 py-2 text-sm dark:border-gray-800 dark:bg-transparent">
       <div>
-        <div className="font-medium text-gray-900 dark:text-white/90">
+        <div className="font-medium text-awc-fg dark:text-white/90">
           {member.displayName ?? member.email ?? member.userId}
         </div>
-        <div className="text-xs text-gray-500">
+        <div className="text-xs text-awc-fg-muted">
           {member.role}
           {member.email ? ` · ${member.email}` : ""}
           {member.joinedAt

@@ -60,8 +60,8 @@ export default function SendTaskComposerCreateProjectForm({
   };
 
   return (
-    <div className="mt-5 rounded-xl border border-dashed border-gray-200 p-4 dark:border-gray-800">
-      <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+    <div className="mt-5 rounded-xl border border-dashed border-awc-border p-4 dark:border-gray-800">
+      <p className="text-xs font-medium text-awc-fg-muted dark:text-gray-400">
         Save a new project
       </p>
       <SendTaskComposerCreateProjectFields
@@ -75,7 +75,7 @@ export default function SendTaskComposerCreateProjectForm({
           setFolderPath(event.target.value);
         }}
       />
-      <div className="mt-4 border-t border-gray-100 pt-4 dark:border-gray-800">
+      <div className="mt-4 border-t border-awc-border pt-4 dark:border-gray-800">
         <AwcProjectRepoUrlsFields
           value={repoFields}
           onChange={setRepoFields}

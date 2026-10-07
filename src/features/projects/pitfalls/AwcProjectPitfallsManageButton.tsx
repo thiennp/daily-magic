@@ -6,7 +6,7 @@ import { AWC_PROJECT_PITFALLS_COPY as C } from "@/features/projects/pitfalls/awc
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 
 const LINK_CLASS =
-  "font-medium text-gray-900 underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400/40 dark:text-white";
+  "font-medium text-awc-fg underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400/40 dark:text-white";
 
 /** Deep link into AgentWitch Local Pitfalls — artifact note-line link. */
 export default function AwcProjectPitfallsManageButton({
@@ -40,7 +40,7 @@ export default function AwcProjectPitfallsManageButton({
       {editCta.helperText !== null ? (
         <span
           id={helperId}
-          className="max-w-xs text-xs text-gray-500 dark:text-gray-400"
+          className="max-w-xs text-xs text-awc-fg-muted dark:text-gray-400"
         >
           {editCta.helperText}
         </span>

@@ -6,7 +6,7 @@ export default function AgentPageLayout() {
   return (
     <Suspense
       fallback={
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-awc-fg-muted dark:text-gray-400">
           Loading task composer…
         </p>
       }

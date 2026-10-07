@@ -75,7 +75,7 @@ export default function AwcProjectInboxSection({
           />
         </div>
       ) : (
-        <p className="mt-2 text-xs text-gray-500">
+        <p className="mt-2 text-xs text-awc-fg-muted">
           Viewers can&apos;t send messages.
         </p>
       )}

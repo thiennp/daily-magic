@@ -31,14 +31,14 @@ export default function AgentMacShellPanel({
   return (
     <section className="mt-4 space-y-2">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <p className="text-sm font-medium text-awc-fg dark:text-white/90">
           Mac shell
           {canWrite ? "" : " (view only)"}
           {status === "opening" ? " — connecting…" : ""}
         </p>
         <button
           type="button"
-          className="rounded-md px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5"
+          className="rounded-md px-2 py-1 text-xs text-awc-fg-muted hover:bg-awc-tile dark:text-gray-300 dark:hover:bg-white/5"
           onClick={onClose}
         >
           Close

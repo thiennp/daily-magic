@@ -47,14 +47,14 @@ export default function MultiSelect({
 
   return (
     <div className="w-full">
-      <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+      <label className="mb-1.5 block text-sm font-medium text-awc-fg dark:text-gray-400">
         {label}
       </label>
 
       <div className="relative z-20 inline-block w-full">
         <div className="relative flex flex-col items-center">
           <div onClick={toggleDropdown} className="w-full">
-            <div className="mb-2 flex h-11 rounded-lg border border-gray-300 py-1.5 pl-3 pr-3 shadow-theme-xs outline-hidden transition focus:border-brand-300 focus:shadow-focus-ring dark:border-gray-700 dark:bg-gray-800 dark:focus:border-brand-300">
+            <div className="mb-2 flex h-11 rounded-lg border border-awc-border-strong py-1.5 pl-3 pr-3 shadow-theme-xs outline-hidden transition focus:border-awc-blue-300 focus:shadow-focus-ring dark:border-gray-700 dark:bg-gray-800 dark:focus:border-brand-300">
               <div className="flex flex-wrap flex-auto gap-2">
                 <MultiSelectSelectedTags
                   selectedValuesText={selectedValuesText}

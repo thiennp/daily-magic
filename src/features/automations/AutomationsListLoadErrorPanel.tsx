@@ -10,10 +10,10 @@ export default function AutomationsListLoadErrorPanel({
   return (
     <AppPanel padding="compact" className="mx-auto w-full max-w-lg">
       <div className="flex flex-col gap-3">
-        <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <p className="text-sm font-medium text-awc-fg dark:text-white/90">
           {AUTOMATIONS_PAGE_COPY.loadFailedTitle}
         </p>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-sm text-awc-fg-muted dark:text-gray-400">
           {AUTOMATIONS_PAGE_COPY.loadFailedBody}
         </p>
         <div>

@@ -17,16 +17,16 @@ export default function MacConnectBootstrapClient({
   }, [redirectUrl]);
 
   return (
-    <main className="mx-auto flex min-h-[50vh] max-w-lg flex-col justify-center px-4 py-12 text-gray-900 dark:text-white">
+    <main className="mx-auto flex min-h-[50vh] max-w-lg flex-col justify-center px-4 py-12 text-awc-fg dark:text-white">
       <h1 className="text-xl font-semibold">
         {errorSlug ? "Could not connect Mac" : "Signing in…"}
       </h1>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
         {errorSlug
           ? `Returning to AgentWitch Local (${errorSlug}).`
           : "Finishing computer setup and returning to the app."}
       </p>
-      <p className="mt-6 text-xs text-gray-500 dark:text-gray-500">
+      <p className="mt-6 text-xs text-awc-fg-muted dark:text-gray-500">
         If the app does not open,{" "}
         <a className="underline" href={redirectUrl}>
           continue here

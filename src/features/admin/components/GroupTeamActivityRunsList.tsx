@@ -72,7 +72,7 @@ export default function GroupTeamActivityRunsList({
           </p>
           <Link
             href={`/reports/${run.id}`}
-            className="mt-2 inline-block text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
+            className="mt-2 inline-block text-sm font-medium text-brand-600 hover:text-awc-blue-700 dark:text-brand-400"
           >
             View report
           </Link>

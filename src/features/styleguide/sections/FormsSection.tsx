@@ -12,7 +12,7 @@ import ToggleSwitch from "@/components/form/form-elements/ToggleSwitch";
 export default function FormsSection() {
   return (
     <section id="forms" className="scroll-mt-28">
-      <h2 className="mb-5 text-2xl font-semibold text-gray-800 dark:text-white/90">
+      <h2 className="mb-5 text-2xl font-semibold text-awc-fg dark:text-white/90">
         Form elements
       </h2>
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">

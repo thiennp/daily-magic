@@ -7,7 +7,7 @@ import BadgesSectionIconGroups from "@/features/styleguide/sections/BadgesSectio
 export default function BadgesSection() {
   return (
     <section id="badges" className="scroll-mt-28">
-      <h2 className="mb-5 text-2xl font-semibold text-gray-800 dark:text-white/90">
+      <h2 className="mb-5 text-2xl font-semibold text-awc-fg dark:text-white/90">
         Badges
       </h2>
       <div className="space-y-5 sm:space-y-6">

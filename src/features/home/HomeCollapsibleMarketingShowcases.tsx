@@ -44,7 +44,7 @@ export default function HomeCollapsibleMarketingShowcases() {
   return (
     <div className="mt-8 flex flex-col gap-2">
       <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>What you can do</h2>
-      <p className="max-w-md text-sm text-gray-500 dark:text-gray-400">
+      <p className="max-w-md text-sm text-awc-fg-muted dark:text-gray-400">
         Short stories with real product screens — presets, automations, this
         computer setup, and team workflows.
       </p>

@@ -9,7 +9,7 @@ import type HarnessManifest from "@/lib/agentWitch/harness/types/HarnessManifest
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 const BUNDLES_BOX_CLASS =
-  "rounded-lg border border-gray-200 bg-gray-50/80 p-4 dark:border-gray-700 dark:bg-white/[0.02]";
+  "rounded-lg border border-awc-border bg-awc-surface-2/80 p-4 dark:border-gray-700 dark:bg-white/[0.02]";
 
 interface HarnessSetManagerProps {
   readonly localManifest: HarnessManifest | null;
@@ -28,7 +28,7 @@ export default function HarnessSetManager({
   return (
     <div className="mt-5 space-y-4">
       <label className="block max-w-sm text-sm">
-        <span className="font-medium text-gray-800 dark:text-white/90">
+        <span className="font-medium text-awc-fg dark:text-white/90">
           Which AI runs on your computer?
         </span>
         <select
@@ -36,7 +36,7 @@ export default function HarnessSetManager({
           onChange={(event) => {
             onWriterAgentChange(event.target.value as HarnessWriterAgent);
           }}
-          className="mt-2 w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 shadow-theme-xs outline-none transition focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
+          className="mt-2 w-full rounded-lg border border-awc-border bg-white px-4 py-3 text-sm text-awc-fg shadow-theme-xs outline-none transition focus:border-awc-blue-300 focus:ring-3 focus:ring-awc-blue-600/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
         >
           {HARNESS_WRITER_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
@@ -55,14 +55,14 @@ export default function HarnessSetManager({
               BUNDLES_BOX_CLASS,
             )}
           >
-            <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+            <p className="text-sm font-medium text-awc-fg dark:text-white/90">
               Your bundles
             </p>
             <ul className="mt-2 flex flex-wrap gap-2">
               {existingSets.map((set) => (
                 <li
                   key={set.slug}
-                  className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                  className="rounded-full border border-awc-border bg-white px-3 py-1 text-xs font-medium text-awc-fg dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
                 >
                   {set.name}
                 </li>
@@ -71,7 +71,7 @@ export default function HarnessSetManager({
           </div>
         </>
       ) : (
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-awc-fg-muted dark:text-gray-400">
           No bundles on this computer yet. Install one from Library or
           Marketplace.
         </p>

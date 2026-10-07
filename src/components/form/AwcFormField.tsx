@@ -3,7 +3,7 @@ import type { ReactElement, ReactNode } from "react";
 import Label from "@/components/form/Label";
 
 export const AWC_FORM_CONTROL_CLASS =
-  "w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm shadow-theme-xs outline-none transition focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90";
+  "w-full rounded-lg border border-awc-border bg-white px-4 py-3 text-sm shadow-theme-xs outline-none transition focus:border-awc-blue-300 focus:ring-3 focus:ring-awc-blue-600/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90";
 
 interface AwcFormFieldProps {
   readonly id: string;

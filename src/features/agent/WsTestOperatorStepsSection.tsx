@@ -20,10 +20,10 @@ export default function WsTestOperatorStepsSection({
       aria-label="Your steps before the computer agent runs"
       className="rounded-xl border border-amber-200 bg-amber-50/80 p-4 dark:border-amber-500/30 dark:bg-amber-950/20"
     >
-      <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+      <h3 className="text-sm font-semibold text-awc-fg dark:text-white">
         Your steps
       </h3>
-      <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+      <p className="mt-1 text-sm text-awc-fg-muted dark:text-gray-300">
         Complete these before or while the computer agent runs. The agent only
         gets a short checkpoint summary in its prompt.
       </p>
@@ -31,12 +31,12 @@ export default function WsTestOperatorStepsSection({
         {operatorSteps.map((step, index) => (
           <li
             key={step.id}
-            className="text-sm text-gray-800 dark:text-gray-200"
+            className="text-sm text-awc-fg dark:text-gray-200"
           >
-            <span className="font-medium text-gray-900 dark:text-white">
+            <span className="font-medium text-awc-fg dark:text-white">
               {index + 1}. {step.title}
             </span>
-            <p className="mt-1 whitespace-pre-wrap text-gray-600 dark:text-gray-300">
+            <p className="mt-1 whitespace-pre-wrap text-awc-fg-muted dark:text-gray-300">
               {step.content}
             </p>
           </li>

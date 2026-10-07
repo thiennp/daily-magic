@@ -32,10 +32,10 @@ export default function CreateAutomationForm({
 
   return (
     <AppPanel as="section" padding="compact">
-      <h2 className="text-base font-semibold text-gray-800 dark:text-white/90">
+      <h2 className="text-base font-semibold text-awc-fg dark:text-white/90">
         {AUTOMATIONS_PAGE_COPY.createTitle}
       </h2>
-      <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+      <p className="mt-2 text-sm leading-relaxed text-awc-fg-muted dark:text-gray-400">
         {AUTOMATIONS_PAGE_COPY.createIntro}
       </p>
       <div className="mt-4 space-y-6">

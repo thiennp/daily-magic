@@ -22,7 +22,7 @@ export default function AwcAccessLogRailFooter({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="px-3.5 text-left text-[13px] font-semibold text-gray-500 transition hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+        className="px-3.5 text-left text-[13px] font-semibold text-awc-fg-muted transition hover:text-awc-fg dark:text-gray-400 dark:hover:text-gray-200"
       >
         {C.title}
       </button>

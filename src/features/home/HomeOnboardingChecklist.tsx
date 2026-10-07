@@ -66,7 +66,7 @@ export default function HomeOnboardingChecklist() {
         </button>
       </div>
       <div
-        className="mt-3 h-1.5 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800"
+        className="mt-3 h-1.5 overflow-hidden rounded-full bg-awc-fill dark:bg-gray-800"
         role="progressbar"
         aria-label="Setup progress"
         aria-valuemin={0}
@@ -85,8 +85,8 @@ export default function HomeOnboardingChecklist() {
             <span
               className={
                 step.done
-                  ? "text-sm text-gray-500 line-through dark:text-gray-400"
-                  : "text-sm text-gray-800 dark:text-white/90"
+                  ? "text-sm text-awc-fg-muted line-through dark:text-gray-400"
+                  : "text-sm text-awc-fg dark:text-white/90"
               }
             >
               {step.label}

@@ -25,7 +25,7 @@ export default function WorkflowTaskFieldBlock({
   const errorId = `${controlId}-error`;
 
   return (
-    <div className="text-sm font-medium text-gray-800 dark:text-white/90">
+    <div className="text-sm font-medium text-awc-fg dark:text-white/90">
       <label htmlFor={controlId} className="block">
         {field.label}
         {field.required ? " *" : ""}

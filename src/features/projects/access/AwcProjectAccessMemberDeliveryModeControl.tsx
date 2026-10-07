@@ -36,7 +36,7 @@ export default function AwcProjectAccessMemberDeliveryModeControl({
     label: string,
     disabled: boolean,
   ) => (
-    <label className="inline-flex items-center gap-1.5 text-xs text-gray-700 dark:text-gray-200">
+    <label className="inline-flex items-center gap-1.5 text-xs text-awc-fg dark:text-gray-200">
       <input
         type="radio"
         name={name}
@@ -50,7 +50,7 @@ export default function AwcProjectAccessMemberDeliveryModeControl({
   );
   return (
     <fieldset className="basis-full space-y-1">
-      <legend className="text-xs font-medium text-gray-600 dark:text-gray-300">
+      <legend className="text-xs font-medium text-awc-fg-muted dark:text-gray-300">
         {copy.label}
       </legend>
       <div className="flex flex-wrap items-center gap-3">
@@ -59,7 +59,7 @@ export default function AwcProjectAccessMemberDeliveryModeControl({
       </div>
       {wakeLinkSet ? null : (
         <div className="space-y-1">
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-awc-fg-muted dark:text-gray-400">
             {copy.webhookNeedsLink}
           </p>
           <a

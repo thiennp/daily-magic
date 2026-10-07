@@ -25,7 +25,7 @@ export default function WorkflowHumanStepModalFooter({
         type="button"
         onClick={onDismiss}
         disabled={isSubmitting}
-        className="text-sm font-medium text-gray-600 hover:text-gray-800 disabled:opacity-50 dark:text-gray-400 dark:hover:text-gray-200"
+        className="text-sm font-medium text-awc-fg-muted hover:text-awc-fg disabled:opacity-50 dark:text-gray-400 dark:hover:text-gray-200"
       >
         Not now
       </button>
@@ -35,7 +35,7 @@ export default function WorkflowHumanStepModalFooter({
             type="button"
             onClick={onSkip}
             disabled={isSubmitting}
-            className="text-sm font-medium text-gray-600 hover:text-gray-800 disabled:opacity-50 dark:text-gray-400 dark:hover:text-gray-200"
+            className="text-sm font-medium text-awc-fg-muted hover:text-awc-fg disabled:opacity-50 dark:text-gray-400 dark:hover:text-gray-200"
           >
             Skip this step
           </button>

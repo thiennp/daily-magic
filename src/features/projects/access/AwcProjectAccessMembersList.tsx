@@ -52,14 +52,14 @@ export default function AwcProjectAccessMembersList({
 
   return (
     <div id="project-access-members">
-      <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
+      <h4 className="text-xs font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-300">
         {copy.membersHeading}
       </h4>
-      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-1 text-xs text-awc-fg-muted dark:text-gray-400">
         {copy.membersLeaveHint}
       </p>
       {members.length === 0 ? (
-        <p className="mt-1 text-sm text-gray-500">{copy.membersEmpty}</p>
+        <p className="mt-1 text-sm text-awc-fg-muted">{copy.membersEmpty}</p>
       ) : (
         <ul className="mt-2 space-y-2">
           {members.map((member) => (

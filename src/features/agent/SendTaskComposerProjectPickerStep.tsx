@@ -36,16 +36,16 @@ export default function SendTaskComposerProjectPickerStep({
     <div>
       {showHeader ? (
         <>
-          <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
+          <h2 className="text-sm font-medium text-awc-fg dark:text-white/90">
             Choose a project folder
           </h2>
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          <p className="mt-1 text-xs text-awc-fg-muted dark:text-gray-400">
             Saved under {projectsHomePath} on your computer.
           </p>
         </>
       ) : null}
       {isLoading ? (
-        <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-3 text-sm text-awc-fg-muted dark:text-gray-400">
           Loading projects…
         </p>
       ) : (

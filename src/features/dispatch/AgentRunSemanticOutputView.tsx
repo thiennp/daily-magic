@@ -18,9 +18,9 @@ const AgentRunArtifactList = ({ artifacts }: AgentRunArtifactListProps) => {
       {artifacts.map((artifact, index) => (
         <li
           key={`${artifact.title}-${index}`}
-          className="rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-900/40"
+          className="rounded-lg border border-awc-border bg-white p-3 dark:border-gray-700 dark:bg-gray-900/40"
         >
-          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+          <p className="text-xs font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-400">
             {artifact.kind}
             {artifact.title.length > 0 ? ` · ${artifact.title}` : ""}
           </p>
@@ -35,7 +35,7 @@ const AgentRunArtifactList = ({ artifacts }: AgentRunArtifactListProps) => {
             </a>
           ) : null}
           {artifact.body.length > 0 ? (
-            <pre className="mt-2 whitespace-pre-wrap text-sm text-gray-800 dark:text-gray-100">
+            <pre className="mt-2 whitespace-pre-wrap text-sm text-awc-fg dark:text-gray-100">
               {artifact.body}
             </pre>
           ) : null}
@@ -56,7 +56,7 @@ export default function AgentRunSemanticOutputView({
 }: AgentRunSemanticOutputViewProps) {
   if (!hasAgentRunSemanticOutput(formatted)) {
     return fallbackPlain !== undefined && fallbackPlain.length > 0 ? (
-      <pre className="mt-2 max-h-96 overflow-auto whitespace-pre-wrap rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+      <pre className="mt-2 max-h-96 overflow-auto whitespace-pre-wrap rounded-lg bg-awc-surface-2 p-3 text-xs text-awc-fg dark:bg-gray-800 dark:text-gray-300">
         {fallbackPlain}
       </pre>
     ) : null;
@@ -67,7 +67,7 @@ export default function AgentRunSemanticOutputView({
       <AgentRunArtifactList artifacts={formatted.artifacts} />
       <AgentRunPartialOutputSections sections={formatted.sections} />
       {formatted.plainText.length > 0 ? (
-        <pre className="max-h-64 overflow-auto whitespace-pre-wrap rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+        <pre className="max-h-64 overflow-auto whitespace-pre-wrap rounded-lg bg-awc-surface-2 p-3 text-xs text-awc-fg dark:bg-gray-800 dark:text-gray-300">
           {formatted.plainText}
         </pre>
       ) : null}

@@ -44,7 +44,7 @@ export default function AwcProjectPitfallsSection({
       hint={AWC_PROJECT_PITFALLS_COPY.hint(deviceDisplayName)}
     >
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className="text-xs text-awc-fg-muted dark:text-gray-400">
           {state.status === "loading"
             ? AWC_PROJECT_PITFALLS_COPY.loading
             : state.status === "ready" && state.items.length > 0
@@ -62,14 +62,14 @@ export default function AwcProjectPitfallsSection({
         />
       </div>
       {state.status === "ready" && rows.length === 0 ? (
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className="text-xs text-awc-fg-muted dark:text-gray-400">
           {state.items.length === 0
             ? AWC_PROJECT_PITFALLS_COPY.empty
             : AWC_PROJECT_PITFALLS_COPY.allOff}
         </p>
       ) : null}
       {rows.length > 0 ? (
-        <ul className="space-y-2 text-sm text-gray-800 dark:text-gray-100">
+        <ul className="space-y-2 text-sm text-awc-fg dark:text-gray-100">
           {rows.map((row) => (
             <AwcProjectPitfallRow key={row.id} row={row} />
           ))}

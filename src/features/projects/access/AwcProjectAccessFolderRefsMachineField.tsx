@@ -27,7 +27,7 @@ export default function AwcProjectAccessFolderRefsMachineField({
   return (
     <div className="min-w-0 flex-1">
       <label
-        className="block text-xs text-gray-600 dark:text-gray-400"
+        className="block text-xs text-awc-fg-muted dark:text-gray-400"
         htmlFor={id}
       >
         {copy.machineRefLabel}
@@ -49,7 +49,7 @@ export default function AwcProjectAccessFolderRefsMachineField({
       </label>
       <span
         id={helpId}
-        className="mt-0.5 block text-[11px] text-gray-500 dark:text-gray-400"
+        className="mt-0.5 block text-[11px] text-awc-fg-muted dark:text-gray-400"
       >
         {hasComputers ? copy.machineRefHelp : C.foldersMachineNone}
       </span>

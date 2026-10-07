@@ -57,7 +57,7 @@ export default function AwcMessengerThreadPane({
   const copy = AWC_PROJECT_MESSENGER_COPY;
   return (
     <section className="flex min-h-0 min-w-0 flex-col bg-white dark:bg-gray-950" aria-label={title}>
-      <div className="flex items-center justify-between gap-3 border-b border-gray-200 px-4 py-3 dark:border-gray-800">
+      <div className="flex items-center justify-between gap-3 border-b border-awc-border px-4 py-3 dark:border-gray-800">
         <div className="min-w-0">
           {showBack ? (
             <button
@@ -69,10 +69,10 @@ export default function AwcMessengerThreadPane({
               ← {copy.listHeading}
             </button>
           ) : null}
-          <h3 className="truncate text-base font-semibold text-gray-900 dark:text-white">
+          <h3 className="truncate text-base font-semibold text-awc-fg dark:text-white">
             {title}
           </h3>
-          <div className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-gray-500">
+          <div className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-awc-fg-muted">
             <span>{kindLabel}</span>
             {status !== undefined ? (
               <>
@@ -84,7 +84,7 @@ export default function AwcMessengerThreadPane({
         </div>
       </div>
       {isLoading ? (
-        <p className="p-4 text-xs text-gray-400">{copy.loadingThread}</p>
+        <p className="p-4 text-xs text-awc-fg-subtle">{copy.loadingThread}</p>
       ) : null}
       {thread !== null ? (
         <AwcMessengerTimeline
@@ -107,7 +107,7 @@ export default function AwcMessengerThreadPane({
           onSendTask={onSendTask}
         />
       ) : (
-        <p className="border-t border-gray-200 bg-gray-50 px-4 py-3.5 text-center text-sm text-gray-700 dark:border-gray-800 dark:bg-white/[0.03] dark:text-gray-300">
+        <p className="border-t border-awc-border bg-awc-surface-2 px-4 py-3.5 text-center text-sm text-awc-fg dark:border-gray-800 dark:bg-white/[0.03] dark:text-gray-300">
           {copy.viewerBanner}
         </p>
       )}

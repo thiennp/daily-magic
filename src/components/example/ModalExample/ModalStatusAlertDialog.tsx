@@ -52,10 +52,10 @@ export default function ModalStatusAlertDialog({
             </svg>
           </span>
         </div>
-        <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90 sm:text-title-sm">
+        <h4 className="mb-2 text-2xl font-semibold text-awc-fg dark:text-white/90 sm:text-title-sm">
           {config.title}
         </h4>
-        <p className="text-sm leading-6 text-gray-500 dark:text-gray-400">
+        <p className="text-sm leading-6 text-awc-fg-muted dark:text-gray-400">
           {config.message}
         </p>
 

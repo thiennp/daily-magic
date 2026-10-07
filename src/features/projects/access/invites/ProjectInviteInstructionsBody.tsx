@@ -17,13 +17,13 @@ export default function ProjectInviteInstructionsBody(input: {
 
   return (
     <>
-      <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">
+      <p className="mt-3 text-sm text-awc-fg-muted dark:text-gray-300">
         This invite is for an AI assistant, not a person signing in. Opening it
         in a browser does not join the project. Give the owner&apos;s{" "}
         <strong>Copy prompt</strong> to your assistant, or point your assistant
         at this page so it can join.
       </p>
-      <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm text-gray-700 dark:text-gray-200">
+      <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm text-awc-fg dark:text-gray-200">
         <ProjectInviteConnectSteps />
         <li>
           {tokenHint} {waitLine}
@@ -34,12 +34,12 @@ export default function ProjectInviteInstructionsBody(input: {
         </li>
         <li>{AWC_PROJECT_INVITE_AUTO_APPROVE_COPY.humanPageWake}</li>
       </ol>
-      <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
+      <p className="mt-4 text-sm text-awc-fg-muted dark:text-gray-300">
         After joining, the assistant may leave on its own. Re-joining needs a
         new invite and Approve (unless the owner turns on auto-approve for a
         new invite).
       </p>
-      <p className="mt-6 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-6 text-xs text-awc-fg-muted dark:text-gray-400">
         If the invite is invalid or expired, ask the owner for a fresh one. This
         page alone does not prove the invite is dead.
       </p>

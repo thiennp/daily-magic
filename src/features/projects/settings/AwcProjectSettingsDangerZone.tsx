@@ -41,10 +41,10 @@ export default function AwcProjectSettingsDangerZone({
       {!confirmOpen ? (
         <div className="flex flex-wrap items-start justify-between gap-3 rounded-xl px-3.5 py-2.5">
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+            <p className="text-sm font-medium text-awc-fg dark:text-white/90">
               {C.deleteTitle}
             </p>
-            <p className="mt-0.5 text-[13px] text-gray-500 dark:text-gray-400">
+            <p className="mt-0.5 text-[13px] text-awc-fg-muted dark:text-gray-400">
               {C.deleteSub}
             </p>
           </div>

@@ -34,9 +34,9 @@ const Input: FC<InputProps> = ({
   hint,
 }) => {
   const inputClasses = [
-    "h-11 w-full appearance-none rounded-lg border px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-hidden focus:ring-3",
+    "h-11 w-full appearance-none rounded-lg border px-4 py-2.5 text-sm placeholder:text-awc-fg-muted focus:outline-hidden focus:ring-3",
     disabled
-      ? "cursor-not-allowed border-dashed border-gray-400 bg-gray-100 text-gray-600 shadow-none dark:border-gray-600 dark:bg-gray-950 dark:text-gray-300"
+      ? "cursor-not-allowed border-dashed border-gray-400 bg-awc-fill text-awc-fg-muted shadow-none dark:border-gray-600 dark:bg-gray-950 dark:text-gray-300"
       : "shadow-theme-xs dark:placeholder:text-white/30",
     !disabled && error
       ? "border-error-500 text-error-800 focus:ring-3 focus:ring-error-500/10 dark:border-error-500 dark:bg-gray-800 dark:text-error-400"
@@ -45,7 +45,7 @@ const Input: FC<InputProps> = ({
       ? "border-success-400 text-success-500 focus:border-success-300 focus:ring-success-500/10 dark:border-success-500 dark:bg-gray-800 dark:text-success-400"
       : "",
     !disabled && !error && !success
-      ? "border-gray-300 bg-transparent text-gray-800 focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90 dark:focus:border-brand-800"
+      ? "border-awc-border-strong bg-transparent text-awc-fg focus:border-awc-blue-300 focus:ring-3 focus:ring-awc-blue-600/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90 dark:focus:border-brand-800"
       : "",
     className,
   ]
@@ -76,7 +76,7 @@ const Input: FC<InputProps> = ({
               ? "text-error-500"
               : success
                 ? "text-success-500"
-                : "text-gray-500"
+                : "text-awc-fg-muted"
           }`}
         >
           {hint}

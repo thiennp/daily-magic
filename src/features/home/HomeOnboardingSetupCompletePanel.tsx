@@ -27,7 +27,7 @@ export default function HomeOnboardingSetupCompletePanel({
   return (
     <AppHero variant="neutral">
       <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>Setup complete</p>
-      <h1 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 dark:text-white/90">
+      <h1 className="mt-3 text-3xl font-semibold tracking-tight text-awc-fg dark:text-white/90">
         You&apos;re set up
       </h1>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>

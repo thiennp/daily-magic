@@ -40,7 +40,7 @@ export default function AppShellMobileNavMenu() {
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-controls={isOpen ? menuId : undefined}
-        className="dropdown-toggle inline-flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+        className="dropdown-toggle inline-flex h-11 w-11 items-center justify-center rounded-full border border-awc-border bg-white text-awc-fg-muted transition-colors hover:bg-awc-tile hover:text-awc-fg dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
         onClick={() => {
           setIsOpen((current) => !current);
         }}
@@ -83,7 +83,7 @@ export default function AppShellMobileNavMenu() {
             <button
               type="button"
               role="menuitem"
-              className="block w-full px-4 py-2.5 text-left text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5"
+              className="block w-full px-4 py-2.5 text-left text-sm font-medium text-awc-fg hover:bg-awc-tile dark:text-gray-300 dark:hover:bg-white/5"
               onClick={() => {
                 toggleTheme();
                 closeMenu();

@@ -29,15 +29,15 @@ export default function MarketplaceInstallProjectPicker({
 
   return (
     <div className="mt-4">
-      <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+      <p className="text-sm font-medium text-awc-fg dark:text-white/90">
         Project
       </p>
-      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-1 text-xs text-awc-fg-muted dark:text-gray-400">
         Workflow and agent installs link to this project. Pull playbook files
         into the repo from AgentWitch on your computer.
       </p>
       {isProjectsLoading ? (
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
           Loading projects…
         </p>
       ) : deviceProjects.length === 0 ? (
@@ -57,17 +57,17 @@ export default function MarketplaceInstallProjectPicker({
                   className={`w-full rounded-lg border px-3 py-2 text-left text-sm transition ${
                     isSelected
                       ? "border-brand-500 bg-brand-50/60 dark:border-brand-400 dark:bg-brand-950/30"
-                      : "border-gray-200 dark:border-gray-700"
+                      : "border-awc-border dark:border-gray-700"
                   }`}
                   onClick={() => {
                     onSelectProjectId(project.id);
                   }}
                 >
-                  <span className="font-medium text-gray-900 dark:text-white/90">
+                  <span className="font-medium text-awc-fg dark:text-white/90">
                     {project.name}
                   </span>
                   {project.folderPath.trim().length > 0 ? (
-                    <span className="mt-0.5 block truncate text-xs text-gray-500 dark:text-gray-400">
+                    <span className="mt-0.5 block truncate text-xs text-awc-fg-muted dark:text-gray-400">
                       {project.folderPath}
                     </span>
                   ) : (

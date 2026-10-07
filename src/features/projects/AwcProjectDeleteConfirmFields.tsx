@@ -44,16 +44,16 @@ const AwcProjectDeleteConfirmFields = ({
       }}
     >
       {showTitle ? (
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
+        <h2 className="text-sm font-semibold text-awc-fg dark:text-white">
           {AWC_PROJECT_DELETE_COPY.title}
         </h2>
       ) : null}
-      <p className="text-xs text-gray-600 dark:text-gray-300">
+      <p className="text-xs text-awc-fg-muted dark:text-gray-300">
         {AWC_PROJECT_DELETE_COPY.scope}
       </p>
       <label
         htmlFor={inputId}
-        className="block text-xs font-medium text-gray-800 dark:text-white/90"
+        className="block text-xs font-medium text-awc-fg dark:text-white/90"
       >
         {AWC_PROJECT_DELETE_COPY.typeToConfirmPrefix}{" "}
         <span className="break-all font-semibold">{projectName}</span>{" "}

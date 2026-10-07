@@ -19,14 +19,14 @@ const LibrarySampleWorkflowPromptPreview = ({
 
   return (
     <div className={`mt-4 ${APP_SURFACE_NESTED_CARD_CLASS}`}>
-      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+      <p className="text-xs font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-400">
         How this prompt is built
       </p>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
         Each question below becomes a line under Inputs. Use Run on your
         computer to open Agent, or edit the questions here first.
       </p>
-      <pre className="mt-3 overflow-x-auto whitespace-pre-wrap rounded-lg border border-gray-200 bg-gray-50 p-3 font-mono text-xs text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
+      <pre className="mt-3 overflow-x-auto whitespace-pre-wrap rounded-lg border border-awc-border bg-awc-surface-2 p-3 font-mono text-xs text-awc-fg dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
         {prompt}
       </pre>
     </div>

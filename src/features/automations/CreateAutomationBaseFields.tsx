@@ -43,14 +43,14 @@ export default function CreateAutomationBaseFields({
 }: CreateAutomationBaseFieldsProps) {
   return (
     <>
-      <label className="block text-sm font-medium text-gray-800 dark:text-white/90">
+      <label className="block text-sm font-medium text-awc-fg dark:text-white/90">
         Workflow
         <select
           value={capabilityId}
           onChange={(event) => {
             onCapabilityChange(event.target.value);
           }}
-          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+          className="mt-2 w-full rounded-lg border border-awc-border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
         >
           <option value="">Select workflow</option>
           {capabilities.map((item) => (
@@ -60,7 +60,7 @@ export default function CreateAutomationBaseFields({
           ))}
         </select>
       </label>
-      <label className="block text-sm font-medium text-gray-800 dark:text-white/90">
+      <label className="block text-sm font-medium text-awc-fg dark:text-white/90">
         Name
         <input
           type="text"
@@ -68,7 +68,7 @@ export default function CreateAutomationBaseFields({
           onChange={(event) => {
             onNameChange(event.target.value);
           }}
-          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+          className="mt-2 w-full rounded-lg border border-awc-border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
         />
       </label>
       <CreateAutomationTriggerSelect

@@ -51,7 +51,7 @@ export default function MarketingBrandSectionCards() {
           >
             Delegate AI work on computers you control
           </p>
-          <p className="max-w-xl text-base text-gray-600">
+          <p className="max-w-xl text-base text-awc-fg-muted">
             Body copy uses relaxed leading and gray-600 for secondary text on
             light surfaces.
           </p>
@@ -105,8 +105,8 @@ export default function MarketingBrandSectionCards() {
             "p-6",
           )}
         >
-          <p className="text-sm font-semibold text-gray-900">Card title</p>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="text-sm font-semibold text-awc-fg">Card title</p>
+          <p className="mt-2 text-sm text-awc-fg-muted">
             White fill, gray-200 border, sm shadow — no heavy drop shadows.
           </p>
         </div>

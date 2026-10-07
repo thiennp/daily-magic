@@ -38,10 +38,10 @@ export default function WriterSetupPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10 pb-32 md:pb-10">
-      <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+      <h1 className="text-2xl font-semibold text-awc-fg dark:text-white">
         Choose an AI for your computer
       </h1>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-300">
         AgentWitch will install and check login on the computer linked to your
         account. You can change this later from New task.
       </p>
@@ -54,14 +54,14 @@ export default function WriterSetupPage() {
               onClick={() => {
                 void ensureWriter(writer.id);
               }}
-              className="flex w-full items-center gap-4 rounded-xl border border-gray-200 bg-white p-4 text-left transition hover:border-gray-400 disabled:opacity-60 dark:border-gray-700 dark:bg-gray-900"
+              className="flex w-full items-center gap-4 rounded-xl border border-awc-border bg-white p-4 text-left transition hover:border-gray-400 disabled:opacity-60 dark:border-gray-700 dark:bg-gray-900"
             >
               <HarnessWriterAgentMark writerAgent={writer.id} />
               <span className="flex-1">
-                <span className="block font-medium text-gray-900 dark:text-white">
+                <span className="block font-medium text-awc-fg dark:text-white">
                   {writer.label}
                 </span>
-                <span className="block text-sm text-gray-500 dark:text-gray-400">
+                <span className="block text-sm text-awc-fg-muted dark:text-gray-400">
                   {statusByWriter[writer.id] ?? writer.hint}
                 </span>
               </span>

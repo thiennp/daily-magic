@@ -9,14 +9,14 @@ export default function AgentRunPartialOutputSectionView({
 }: AgentRunPartialOutputSectionViewProps) {
   if (section.kind === "table") {
     return (
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+      <div className="overflow-x-auto rounded-lg border border-awc-border dark:border-gray-700">
         <table className="min-w-full text-left text-xs">
-          <thead className="bg-gray-100/80 dark:bg-gray-900/60">
+          <thead className="bg-awc-fill/80 dark:bg-gray-900/60">
             <tr>
               {section.table.headers.map((header) => (
                 <th
                   key={header}
-                  className="px-3 py-2 font-medium text-gray-700 dark:text-gray-200"
+                  className="px-3 py-2 font-medium text-awc-fg dark:text-gray-200"
                 >
                   {header}
                 </th>
@@ -27,12 +27,12 @@ export default function AgentRunPartialOutputSectionView({
             {section.table.rows.map((row, rowIndex) => (
               <tr
                 key={`row-${rowIndex}`}
-                className="border-t border-gray-200 dark:border-gray-700"
+                className="border-t border-awc-border dark:border-gray-700"
               >
                 {row.map((cell, cellIndex) => (
                   <td
                     key={`${rowIndex}-${cellIndex}`}
-                    className="px-3 py-2 align-top text-gray-700 dark:text-gray-300"
+                    className="px-3 py-2 align-top text-awc-fg dark:text-gray-300"
                   >
                     {cell}
                   </td>
@@ -47,7 +47,7 @@ export default function AgentRunPartialOutputSectionView({
 
   if (section.kind === "bullet-list") {
     return (
-      <ul className="list-disc space-y-1 pl-5 text-xs text-gray-700 dark:text-gray-300">
+      <ul className="list-disc space-y-1 pl-5 text-xs text-awc-fg dark:text-gray-300">
         {section.items.map((item) => (
           <li key={item}>{item}</li>
         ))}
@@ -64,7 +64,7 @@ export default function AgentRunPartialOutputSectionView({
   }
 
   return (
-    <p className="text-xs whitespace-pre-wrap text-gray-700 dark:text-gray-300">
+    <p className="text-xs whitespace-pre-wrap text-awc-fg dark:text-gray-300">
       {section.text}
     </p>
   );

@@ -5,7 +5,7 @@ import { twMerge } from "tailwind-merge";
 import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
 
 const HOME_SETUP_DIVIDER_CLASS =
-  "border-0 border-t border-gray-200 dark:border-gray-800";
+  "border-0 border-t border-awc-border dark:border-gray-800";
 
 interface HomeSetupDividerProps {
   readonly className?: string;

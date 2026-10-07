@@ -15,7 +15,7 @@ export default function AwcProjectSettingsFolderRow({
     <section className="flex min-w-0 flex-col gap-2" aria-labelledby="p-set-folder-h">
       <h3
         id="p-set-folder-h"
-        className="text-[13px] font-semibold text-gray-500 dark:text-gray-400"
+        className="text-[13px] font-semibold text-awc-fg-muted dark:text-gray-400"
       >
         {C.pathLabel}
       </h3>

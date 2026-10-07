@@ -50,7 +50,7 @@ export default function AgentLiveProgressFeedStatus({
   });
   const connectionHintTone =
     connectionStatus === "connected"
-      ? "text-gray-600 dark:text-gray-300"
+      ? "text-awc-fg-muted dark:text-gray-300"
       : "text-amber-800 dark:text-amber-200";
   const showEstimateProgress =
     isWorking && estimateProgress !== null && stallState !== "stuck";
@@ -63,7 +63,7 @@ export default function AgentLiveProgressFeedStatus({
     <>
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-w-0 flex-wrap items-center gap-2">
-          <h3 className="text-sm font-medium text-gray-900 dark:text-white/90">
+          <h3 className="text-sm font-medium text-awc-fg dark:text-white/90">
             Progress on your computer
           </h3>
           {outcome !== null ? (
@@ -105,7 +105,7 @@ export default function AgentLiveProgressFeedStatus({
         <AgentLiveProgressStuckBanner isThisMac={isThisMac} />
       ) : stallState === "warning" && !showEstimateProgress ? (
         <p
-          className="mt-3 text-sm text-gray-600 dark:text-gray-300"
+          className="mt-3 text-sm text-awc-fg-muted dark:text-gray-300"
           role="status"
         >
           Still waiting for your computer agent — this is taking longer than

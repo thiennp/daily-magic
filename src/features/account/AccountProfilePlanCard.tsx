@@ -39,7 +39,7 @@ export default function AccountProfilePlanCard({
       <p className={ACCOUNT_HINT_CLASS}>{copy.planHelp}</p>
       <Link
         href="/pricing"
-        className="inline-flex h-10 items-center justify-center rounded-xl bg-brand-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700"
+        className="inline-flex h-10 items-center justify-center rounded-xl bg-brand-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-awc-blue-700"
       >
         {hasPaidOrTrial ? copy.ctaManage : copy.ctaStart}
       </Link>

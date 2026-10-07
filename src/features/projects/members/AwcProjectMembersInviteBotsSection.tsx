@@ -47,7 +47,7 @@ export default function AwcProjectMembersInviteBotsSection({
     <section className="flex flex-col gap-2" aria-labelledby="members-invite-h">
       <h3
         id="members-invite-h"
-        className="px-3.5 text-[13px] font-semibold text-gray-500 dark:text-gray-400"
+        className="px-3.5 text-[13px] font-semibold text-awc-fg-muted dark:text-gray-400"
       >
         {C.inviteBotHeading}
       </h3>
@@ -59,7 +59,7 @@ export default function AwcProjectMembersInviteBotsSection({
       </div>
       {createdInviteUrl ? (
         <div className="px-3.5">
-          <p className="mb-1 text-[12px] text-gray-500 dark:text-gray-400">
+          <p className="mb-1 text-[12px] text-awc-fg-muted dark:text-gray-400">
             {C.invitePrompt(awcProjectInviteTypeLabel(createdInviteJoinTypeId))}
           </p>
           <AwcProjectInviteCreatedBanner

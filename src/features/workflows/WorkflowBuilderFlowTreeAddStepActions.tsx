@@ -13,7 +13,7 @@ export default function WorkflowBuilderFlowTreeAddStepActions({
 }: WorkflowBuilderFlowTreeAddStepActionsProps) {
   return (
     <div className="flex flex-wrap items-center gap-2 pt-1 pl-6">
-      <span className="text-xs text-gray-400">+</span>
+      <span className="text-xs text-awc-fg-subtle">+</span>
       <Button
         variant="outline"
         size="sm"

@@ -10,7 +10,7 @@ import { HarnessSharingVisibility } from "@/lib/harness/HarnessSharingVisibility
 import type { HarnessSetSharingVisibilityValue } from "@/lib/harness/harnessSetSharingQueries";
 
 const SHARING_ROW_BOX_CLASS =
-  "flex flex-wrap items-center gap-3 rounded-lg border border-gray-200 p-3 dark:border-gray-700";
+  "flex flex-wrap items-center gap-3 rounded-lg border border-awc-border p-3 dark:border-gray-700";
 
 interface HarnessSetSharingRow {
   readonly slug: string;
@@ -36,7 +36,7 @@ export default function HarnessSetSharingList({
 
   if (sets.length === 0) {
     return (
-      <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+      <p className="mt-4 text-sm text-awc-fg-muted dark:text-gray-400">
         Publish your shared setup first — your computer sends its rule list when
         it connects.
       </p>
@@ -60,10 +60,10 @@ export default function HarnessSetSharingList({
             )}
           >
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+              <p className="text-sm font-medium text-awc-fg dark:text-white/90">
                 {set.name}
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-xs text-awc-fg-muted dark:text-gray-400">
                 {set.slug}
               </p>
             </div>
@@ -75,7 +75,7 @@ export default function HarnessSetSharingList({
                   event.target.value as HarnessSetSharingVisibilityValue,
                 );
               }}
-              className="rounded-lg border border-gray-200 px-2 py-1 text-sm dark:border-gray-700 dark:bg-gray-950"
+              className="rounded-lg border border-awc-border px-2 py-1 text-sm dark:border-gray-700 dark:bg-gray-950"
             >
               <option value={HarnessSharingVisibility.PRIVATE}>Private</option>
               <option value={HarnessSharingVisibility.GROUP}>
@@ -90,7 +90,7 @@ export default function HarnessSetSharingList({
               onClick={() => {
                 onSave(set.slug);
               }}
-              className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
+              className="text-sm font-medium text-brand-600 hover:text-awc-blue-700 dark:text-brand-400"
             >
               Save
             </button>

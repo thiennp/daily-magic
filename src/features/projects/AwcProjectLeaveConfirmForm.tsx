@@ -21,10 +21,10 @@ const AwcProjectLeaveConfirmForm = ({
 }: AwcProjectLeaveConfirmFormProps) => {
   const fields = (
     <div className="space-y-2">
-      <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
+      <h2 className="text-sm font-semibold text-awc-fg dark:text-white">
         {AWC_PROJECT_LEAVE_COPY.title}
       </h2>
-      <p className="text-xs text-gray-600 dark:text-gray-300">
+      <p className="text-xs text-awc-fg-muted dark:text-gray-300">
         {AWC_PROJECT_LEAVE_COPY.body}
       </p>
       {errorMessage !== null ? (

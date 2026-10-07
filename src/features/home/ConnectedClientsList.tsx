@@ -53,7 +53,7 @@ export default function ConnectedClientsList({
 
   const body =
     clients.length === 0 ? (
-      <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+      <p className="mt-4 text-sm text-awc-fg-muted dark:text-gray-400">
         Nothing connected yet.
       </p>
     ) : (
@@ -66,7 +66,7 @@ export default function ConnectedClientsList({
     return (
       <>
         {message ? (
-          <p className="text-sm text-gray-600 dark:text-gray-400">{message}</p>
+          <p className="text-sm text-awc-fg-muted dark:text-gray-400">{message}</p>
         ) : null}
         {body}
       </>
@@ -77,10 +77,10 @@ export default function ConnectedClientsList({
     <AppPanel
       as="section"
       padding="compact"
-      className="bg-gray-50 text-left dark:border-gray-700 dark:bg-white/[0.05]"
+      className="bg-awc-surface-2 text-left dark:border-gray-700 dark:bg-white/[0.05]"
     >
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-sm font-semibold text-gray-800 dark:text-white/90">
+        <h2 className="text-sm font-semibold text-awc-fg dark:text-white/90">
           Active connections
         </h2>
         <button

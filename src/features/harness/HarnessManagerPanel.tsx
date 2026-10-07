@@ -82,7 +82,7 @@ export default function HarnessManagerPanel({
         <button
           type="button"
           onClick={form.addItem}
-          className="inline-flex h-10 items-center justify-center rounded-lg border border-gray-200 px-4 text-sm font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5"
+          className="inline-flex h-10 items-center justify-center rounded-lg border border-awc-border px-4 text-sm font-medium text-awc-fg transition hover:bg-awc-surface-2 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5"
         >
           Add item
         </button>

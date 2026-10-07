@@ -70,7 +70,7 @@ export default function AgentLiveTerminalDeveloperMirror({
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <h2 className="text-sm font-medium text-awc-fg dark:text-white/90">
           Local Mac terminal
         </h2>
         <span className="rounded-full bg-zinc-800 px-2.5 py-1 font-mono text-[11px] text-zinc-200">

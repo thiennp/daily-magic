@@ -20,7 +20,7 @@ export default function AgentRunContinueButton({
 }: AgentRunContinueButtonProps) {
   if (!canContinueAgentRunOnStoredMac(run.deviceId)) {
     return (
-      <p className="text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-sm text-awc-fg-muted dark:text-gray-400">
         Continue is unavailable because this job has no saved Mac.
       </p>
     );

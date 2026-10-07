@@ -21,7 +21,7 @@ export default function SurfacesSection() {
 
       <div className="grid gap-6 xl:grid-cols-2">
         <AppPanel>
-          <h3 className="text-base font-medium text-gray-800 dark:text-white/90">
+          <h3 className="text-base font-medium text-awc-fg dark:text-white/90">
             AppPanel
           </h3>
           <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
@@ -31,7 +31,7 @@ export default function SurfacesSection() {
         </AppPanel>
 
         <AppAccentPanel>
-          <h3 className="text-base font-medium text-gray-800 dark:text-white/90">
+          <h3 className="text-base font-medium text-awc-fg dark:text-white/90">
             AppAccentPanel
           </h3>
           <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
@@ -42,7 +42,7 @@ export default function SurfacesSection() {
 
       <AppHero variant="neutral">
         <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>AppHero neutral</p>
-        <h3 className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white/90">
+        <h3 className="mt-2 text-2xl font-semibold text-awc-fg dark:text-white/90">
           Welcome surfaces
         </h3>
         <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
@@ -52,7 +52,7 @@ export default function SurfacesSection() {
 
       <AppHero variant="brand">
         <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>AppHero brand</p>
-        <h3 className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white/90">
+        <h3 className="mt-2 text-2xl font-semibold text-awc-fg dark:text-white/90">
           {MAC_WORKER_BENEFIT_COPY.setupTitle}
         </h3>
         <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
@@ -62,7 +62,7 @@ export default function SurfacesSection() {
       </AppHero>
 
       <AppPanel>
-        <h3 className="text-base font-medium text-gray-800 dark:text-white/90">
+        <h3 className="text-base font-medium text-awc-fg dark:text-white/90">
           LocalTerminalPre
         </h3>
         <LocalTerminalPre className="mt-3">
@@ -71,7 +71,7 @@ export default function SurfacesSection() {
       </AppPanel>
 
       <AppPanel>
-        <h3 className="text-base font-medium text-gray-800 dark:text-white/90">
+        <h3 className="text-base font-medium text-awc-fg dark:text-white/90">
           App CTAs
         </h3>
         <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>

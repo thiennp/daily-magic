@@ -23,7 +23,7 @@ export default function AwcProjectInviteListSections({
   return (
     <div className="mt-3 space-y-3">
       <div>
-        <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+        <h4 className="text-xs font-semibold uppercase tracking-wide text-awc-fg-muted">
           {copy.invitesActiveHeading}
         </h4>
         <ul className="mt-1 space-y-2">
@@ -32,7 +32,7 @@ export default function AwcProjectInviteListSections({
               key={invite.inviteId}
               className="flex flex-wrap items-center justify-between gap-2 text-sm"
             >
-              <span className="text-gray-700 dark:text-white/80">
+              <span className="text-awc-fg dark:text-white/80">
                 {invite.inviteId.slice(0, 8)}… · uses {invite.usesRemaining}/
                 {invite.maxUses}
                 {invite.teamLabel ? ` · ${invite.teamLabel}` : ""}

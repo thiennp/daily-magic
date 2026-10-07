@@ -20,7 +20,7 @@ export default function ShowcaseArticleFigure({
   return (
     <figure
       className={mergeMarketingClasses(
-        "overflow-hidden rounded-xl border border-gray-200 bg-awc-surface-2 dark:border-gray-800 dark:bg-white/[0.03]",
+        "overflow-hidden rounded-xl border border-awc-border bg-awc-surface-2 dark:border-gray-800 dark:bg-white/[0.03]",
         SHOWCASE_FIGURE_PADDING_CLASS,
       )}
     >

@@ -47,7 +47,7 @@ export default function WsTestPanelStatusSection({
   return (
     <AppPanel>
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-sm text-awc-fg-muted dark:text-gray-400">
           Dispatch a New task to your computer or to a teammate on your team.
           Every job is saved in Reports. {approvalHelper}
         </p>
@@ -60,7 +60,7 @@ export default function WsTestPanelStatusSection({
         </p>
       ) : null}
       {queueMessage ? (
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
           {queueMessage}
         </p>
       ) : null}

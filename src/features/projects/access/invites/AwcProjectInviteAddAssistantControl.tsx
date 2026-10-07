@@ -15,7 +15,7 @@ interface AwcProjectInviteAddAssistantControlProps {
 }
 
 const SELECT =
-  "rounded-md border border-gray-300 bg-white px-2 py-1 text-xs text-gray-800 dark:border-white/20 dark:bg-gray-900 dark:text-white/90";
+  "rounded-md border border-awc-border-strong bg-white px-2 py-1 text-xs text-awc-fg dark:border-white/20 dark:bg-gray-900 dark:text-white/90";
 
 /** One shared create control: "Add assistant" + optional type picker (types[] labels). */
 export default function AwcProjectInviteAddAssistantControl({
@@ -37,7 +37,7 @@ export default function AwcProjectInviteAddAssistantControl({
         >
           {C.button}
         </button>
-        <label className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-white/70">
+        <label className="flex items-center gap-1.5 text-xs text-awc-fg-muted dark:text-white/70">
           <span>{C.typeLabel}</span>
           <select
             className={SELECT}
@@ -54,7 +54,7 @@ export default function AwcProjectInviteAddAssistantControl({
           </select>
         </label>
       </div>
-      <p className="text-[11px] text-gray-500 dark:text-gray-400">
+      <p className="text-[11px] text-awc-fg-muted dark:text-gray-400">
         {C.typeHelp}
       </p>
     </div>

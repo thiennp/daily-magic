@@ -37,13 +37,13 @@ export default function SendTaskComposerPickerStep({
 
   return (
     <div>
-      <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
+      <h2 className="text-sm font-medium text-awc-fg dark:text-white/90">
         Choose a workflow or continue
       </h2>
       {historyItems.length > 0 ? (
         <div className="mt-4">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            <h3 className="text-xs font-medium uppercase tracking-wide text-awc-fg-muted dark:text-gray-400">
               Continue from history
             </h3>
             <button
@@ -52,7 +52,7 @@ export default function SendTaskComposerPickerStep({
               onClick={() => {
                 void historyDelete.clearHistory();
               }}
-              className="text-xs font-medium text-gray-500 transition hover:text-error-600 disabled:opacity-50 dark:text-gray-400 dark:hover:text-error-400"
+              className="text-xs font-medium text-awc-fg-muted transition hover:text-error-600 disabled:opacity-50 dark:text-gray-400 dark:hover:text-error-400"
             >
               Clear history
             </button>
@@ -73,11 +73,11 @@ export default function SendTaskComposerPickerStep({
         </div>
       ) : null}
       <div className={historyItems.length > 0 ? "mt-5" : "mt-3"}>
-        <h3 className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+        <h3 className="text-xs font-medium uppercase tracking-wide text-awc-fg-muted dark:text-gray-400">
           Workflows and agents
         </h3>
         {isLoading ? (
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
             Loading your library…
           </p>
         ) : (
@@ -101,7 +101,7 @@ export default function SendTaskComposerPickerStep({
         )}
       </div>
       {!isLoading && capabilities.length === 0 ? (
-        <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-3 text-xs text-awc-fg-muted dark:text-gray-400">
           No saved workflows yet. Start a custom task, or{" "}
           <ProjectLibraryLink>open a project&apos;s Library</ProjectLibraryLink>
           .

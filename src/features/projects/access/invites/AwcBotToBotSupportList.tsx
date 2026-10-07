@@ -7,7 +7,7 @@ import {
 export default function AwcBotToBotSupportList() {
   return (
     <div className="mt-2 text-[11px]" data-testid="awc-bot-to-bot-support">
-      <p className="font-semibold text-gray-700 dark:text-white/80">
+      <p className="font-semibold text-awc-fg dark:text-white/80">
         {AWC_BOT_TO_BOT_SUPPORT_HEADING}
       </p>
       <ul className="mt-1 space-y-0.5">
@@ -15,7 +15,7 @@ export default function AwcBotToBotSupportList() {
           <li
             key={row.level}
             data-support-level={row.level}
-            className="flex gap-1.5 font-medium text-gray-800 dark:text-white/90"
+            className="flex gap-1.5 font-medium text-awc-fg dark:text-white/90"
           >
             <span aria-hidden="true">●</span>
             <span>{row.label}</span>

@@ -16,7 +16,7 @@ export default function HomeConnectedMacsEmptyState({
 }: HomeConnectedMacsEmptyStateProps) {
   return (
     <div className="mt-4 space-y-2">
-      <p className="text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-sm text-awc-fg-muted dark:text-gray-400">
         {APP_SHELL_COMPUTERS_COPY.empty}{" "}
         <ConnectAnotherMacButton
           installCommand={installCommand}

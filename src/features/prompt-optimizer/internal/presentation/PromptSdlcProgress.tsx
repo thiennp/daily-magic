@@ -18,7 +18,7 @@ export default function PromptSdlcProgress({
 
   return (
     <section className="space-y-3">
-      <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
+      <h2 className="text-sm font-medium text-awc-fg dark:text-white/90">
         This run
       </h2>
       <PromptSdlcCycleOutcomeBadges
@@ -32,7 +32,7 @@ export default function PromptSdlcProgress({
         {steps.map((step) => (
           <li
             key={step.id}
-            className="text-sm text-gray-700 dark:text-gray-200"
+            className="text-sm text-awc-fg dark:text-gray-200"
           >
             <span className="font-medium">
               {step.state === "active" ? "In progress" : "Done"}

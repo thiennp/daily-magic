@@ -40,7 +40,7 @@ export default function AwcMessengerMessageComposer({
       <div>
         <label
           htmlFor="awc-messenger-message"
-          className="mb-1 block text-xs font-medium text-gray-700 dark:text-gray-300"
+          className="mb-1 block text-xs font-medium text-awc-fg dark:text-gray-300"
         >
           {copy.composerLabel}
         </label>
@@ -54,14 +54,14 @@ export default function AwcMessengerMessageComposer({
           onChange={(event) => {
             setText(event.target.value);
           }}
-          className="w-full resize-y rounded-lg border border-gray-300 bg-white px-2.5 py-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+          className="w-full resize-y rounded-lg border border-awc-border-strong bg-white px-2.5 py-2 text-sm text-awc-fg dark:border-gray-700 dark:bg-gray-900 dark:text-white"
         />
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-1 text-xs text-awc-fg-muted">
           {copy.taskSummaryCounter.replace("{n}", String(text.length))}
         </p>
       </div>
       <div className="flex flex-wrap items-center gap-3">
-        <label className="inline-flex items-center gap-1.5 text-sm text-gray-700 dark:text-gray-300">
+        <label className="inline-flex items-center gap-1.5 text-sm text-awc-fg dark:text-gray-300">
           <input
             type="checkbox"
             checked={needsReply}

@@ -32,7 +32,7 @@ export default function AutomationScheduleFields({
 }: AutomationScheduleFieldsProps) {
   return (
     <div className="space-y-4">
-      <label className="block text-sm font-medium text-gray-800 dark:text-white/90">
+      <label className="block text-sm font-medium text-awc-fg dark:text-white/90">
         Schedule
         <select
           value={preset}
@@ -41,7 +41,7 @@ export default function AutomationScheduleFields({
               event.target.value as AgentAutomationSchedulePresetValue,
             );
           }}
-          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+          className="mt-2 w-full rounded-lg border border-awc-border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
         >
           {PRESET_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
@@ -51,7 +51,7 @@ export default function AutomationScheduleFields({
         </select>
       </label>
       {preset !== AGENT_AUTOMATION_SCHEDULE_PRESETS.HOURLY ? (
-        <label className="block text-sm font-medium text-gray-800 dark:text-white/90">
+        <label className="block text-sm font-medium text-awc-fg dark:text-white/90">
           Hour (0–23)
           <input
             type="number"
@@ -61,11 +61,11 @@ export default function AutomationScheduleFields({
             onChange={(event) => {
               onScheduleHourChange(Number(event.target.value));
             }}
-            className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+            className="mt-2 w-full rounded-lg border border-awc-border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
           />
         </label>
       ) : null}
-      <label className="block text-sm font-medium text-gray-800 dark:text-white/90">
+      <label className="block text-sm font-medium text-awc-fg dark:text-white/90">
         {AUTOMATIONS_PAGE_COPY.timezone}
         <input
           type="text"
@@ -73,7 +73,7 @@ export default function AutomationScheduleFields({
           onChange={(event) => {
             onScheduleTimezoneChange(event.target.value);
           }}
-          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+          className="mt-2 w-full rounded-lg border border-awc-border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
         />
       </label>
     </div>

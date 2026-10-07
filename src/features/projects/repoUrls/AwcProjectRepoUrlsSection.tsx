@@ -67,7 +67,7 @@ export default function AwcProjectRepoUrlsSection({
   }
 
   return (
-    <section className="mt-6 space-y-3 rounded-xl border border-gray-200/80 p-4 dark:border-gray-800/80">
+    <section className="mt-6 space-y-3 rounded-xl border border-awc-border/80 p-4 dark:border-gray-800/80">
       {canEdit ? (
         <AwcProjectRepoUrlsEditor
           key={project.id}

@@ -5,7 +5,7 @@ import AwcProjectInboxDispatchRefsFields from "@/features/projects/access/inbox/
 import type { InboxDispatchPeerOption } from "@/features/projects/access/inbox/utils/inboxDispatchPeerOptions";
 
 const FIELD =
-  "mt-1 w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-xs dark:border-gray-700 dark:bg-gray-950";
+  "mt-1 w-full rounded-md border border-awc-border-strong bg-white px-2 py-1.5 text-xs dark:border-gray-700 dark:bg-gray-950";
 
 interface AwcProjectInboxDispatchFieldsProps {
   readonly peers: readonly InboxDispatchPeerOption[];
@@ -45,7 +45,7 @@ export default function AwcProjectInboxDispatchFields({
   const copy = AWC_PROJECT_INBOX_COPY;
   return (
     <>
-      <label className="block text-xs text-gray-600 dark:text-gray-400">
+      <label className="block text-xs text-awc-fg-muted dark:text-gray-400">
         {copy.dispatchPeerLabel}
         <select
           className={FIELD}
@@ -60,7 +60,7 @@ export default function AwcProjectInboxDispatchFields({
           ))}
         </select>
       </label>
-      <label className="block text-xs text-gray-600 dark:text-gray-400">
+      <label className="block text-xs text-awc-fg-muted dark:text-gray-400">
         {copy.dispatchSummaryLabel}
         <textarea
           className={FIELD}
@@ -71,7 +71,7 @@ export default function AwcProjectInboxDispatchFields({
           onChange={(event) => onSummary(event.target.value)}
         />
       </label>
-      <label className="block text-xs text-gray-600 dark:text-gray-400">
+      <label className="block text-xs text-awc-fg-muted dark:text-gray-400">
         {copy.dispatchKindLabel}
         <input
           className={FIELD}

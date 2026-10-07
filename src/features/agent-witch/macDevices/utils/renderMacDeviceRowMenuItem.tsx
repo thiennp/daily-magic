@@ -8,7 +8,7 @@ const menuItemClassName = (danger: boolean, nested: boolean): string => {
     return `flex w-full items-center gap-2 ${padding} text-sm text-error-600 hover:bg-error-50 dark:text-error-400 dark:hover:bg-error-500/10`;
   }
 
-  return `flex w-full items-center gap-2 ${padding} text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5`;
+  return `flex w-full items-center gap-2 ${padding} text-sm text-awc-fg hover:bg-awc-tile dark:text-gray-300 dark:hover:bg-white/5`;
 };
 
 export const renderMacDeviceRowMenuItem = (

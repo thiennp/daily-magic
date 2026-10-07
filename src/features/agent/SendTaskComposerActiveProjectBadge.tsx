@@ -15,7 +15,7 @@ export default function SendTaskComposerActiveProjectBadge({
 }: SendTaskComposerActiveProjectBadgeProps) {
   if (isLoading) {
     return (
-      <p className="text-xs text-gray-500 dark:text-gray-400">
+      <p className="text-xs text-awc-fg-muted dark:text-gray-400">
         Loading project…
       </p>
     );
@@ -23,7 +23,7 @@ export default function SendTaskComposerActiveProjectBadge({
 
   if (project === null) {
     return (
-      <p className="text-xs text-gray-500 dark:text-gray-400">
+      <p className="text-xs text-awc-fg-muted dark:text-gray-400">
         No project selected.
       </p>
     );
@@ -42,10 +42,10 @@ export default function SendTaskComposerActiveProjectBadge({
         <span className="block text-[11px] font-medium uppercase tracking-wide text-brand-700 dark:text-brand-300">
           Current project
         </span>
-        <span className="mt-0.5 block truncate text-sm font-medium text-gray-800 dark:text-white/90">
+        <span className="mt-0.5 block truncate text-sm font-medium text-awc-fg dark:text-white/90">
           {project.name}
         </span>
-        <span className="mt-0.5 block truncate text-xs text-gray-500 dark:text-gray-400">
+        <span className="mt-0.5 block truncate text-xs text-awc-fg-muted dark:text-gray-400">
           {project.folderPath}
         </span>
       </span>

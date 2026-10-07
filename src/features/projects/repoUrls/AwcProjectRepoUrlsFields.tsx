@@ -50,10 +50,10 @@ export default function AwcProjectRepoUrlsFields({
   return (
     <div className="space-y-3">
       <div>
-        <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <h3 className="text-sm font-medium text-awc-fg dark:text-white/90">
           {copy.heading}
         </h3>
-        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-1 text-xs text-awc-fg-muted dark:text-gray-400">
           {copy.hint}
         </p>
       </div>
@@ -75,7 +75,7 @@ export default function AwcProjectRepoUrlsFields({
           ? ` (${copy.validationMax})`
           : ""}
       </button>
-      <label className="block text-sm font-medium text-gray-800 dark:text-white/90">
+      <label className="block text-sm font-medium text-awc-fg dark:text-white/90">
         {copy.defaultBranchLabel}
         <input
           type="text"
@@ -85,7 +85,7 @@ export default function AwcProjectRepoUrlsFields({
           onChange={(event) =>
             onChange({ ...value, defaultBranch: event.target.value })
           }
-          className="mt-2 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+          className="mt-2 w-full rounded-lg border border-awc-border bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
         />
       </label>
       {fieldErrors?.defaultBranch ? (
@@ -93,7 +93,7 @@ export default function AwcProjectRepoUrlsFields({
           {fieldErrors.defaultBranch}
         </p>
       ) : null}
-      <p className="text-xs text-gray-500 dark:text-gray-400">{copy.clearHint}</p>
+      <p className="text-xs text-awc-fg-muted dark:text-gray-400">{copy.clearHint}</p>
     </div>
   );
 }

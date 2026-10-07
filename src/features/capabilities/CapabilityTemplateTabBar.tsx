@@ -23,7 +23,7 @@ export default function CapabilityTemplateTabBar({
         className={
           activeTab === "workflow"
             ? "rounded-lg bg-brand-50 px-3 py-1.5 text-sm font-medium text-brand-700 dark:bg-brand-950/30 dark:text-brand-300"
-            : "rounded-lg px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5"
+            : "rounded-lg px-3 py-1.5 text-sm text-awc-fg-muted hover:bg-awc-tile dark:text-gray-400 dark:hover:bg-white/5"
         }
       >
         Workflows ({workflowCount})
@@ -36,7 +36,7 @@ export default function CapabilityTemplateTabBar({
         className={
           activeTab === "agent"
             ? "rounded-lg bg-brand-50 px-3 py-1.5 text-sm font-medium text-brand-700 dark:bg-brand-950/30 dark:text-brand-300"
-            : "rounded-lg px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5"
+            : "rounded-lg px-3 py-1.5 text-sm text-awc-fg-muted hover:bg-awc-tile dark:text-gray-400 dark:hover:bg-white/5"
         }
       >
         Agents ({agentCount})

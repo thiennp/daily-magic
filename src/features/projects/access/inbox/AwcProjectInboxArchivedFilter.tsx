@@ -20,7 +20,7 @@ export default function AwcProjectInboxArchivedFilter({
       <button
         type="button"
         aria-pressed={pressed}
-        className={`${AWC_PROJECT_ACCESS_CTA.secondary} ${pressed ? "bg-gray-100 dark:bg-white/[0.06]" : ""}`}
+        className={`${AWC_PROJECT_ACCESS_CTA.secondary} ${pressed ? "bg-awc-fill dark:bg-white/[0.06]" : ""}`}
         onClick={onToggle}
       >
         {formatInboxArchivedFilterLabel(archivedCount)}

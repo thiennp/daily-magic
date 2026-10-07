@@ -34,7 +34,7 @@ export default function MobileWorkflowStepper({
 
   return (
     <div className="md:hidden">
-      <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+      <p className="text-xs font-medium text-awc-fg-muted dark:text-gray-400">
         Step {stepIndex + 1} of {visibleFields.length}
       </p>
       <div className="mt-3">

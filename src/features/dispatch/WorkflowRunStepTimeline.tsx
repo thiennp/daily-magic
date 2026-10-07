@@ -26,7 +26,7 @@ export default function WorkflowRunStepTimeline({
 
   return (
     <div className="mt-3" aria-label="Workflow steps">
-      <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+      <p className="text-xs font-medium uppercase tracking-wide text-awc-fg-muted dark:text-gray-400">
         Workflow steps
       </p>
       <ol className="mt-2 space-y-2">

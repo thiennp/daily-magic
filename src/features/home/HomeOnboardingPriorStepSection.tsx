@@ -10,15 +10,15 @@ export default function HomeOnboardingPriorStepSection({
   step,
 }: HomeOnboardingPriorStepSectionProps) {
   return (
-    <div className="mt-8 border-t border-gray-200 pt-6 dark:border-gray-800">
+    <div className="mt-8 border-t border-awc-border pt-6 dark:border-gray-800">
       <div className="flex items-start gap-3">
         <OnboardingStepStatusIcon step={step} />
         <div>
           <p
             className={`text-sm font-medium ${
               step.done
-                ? "text-gray-500 line-through dark:text-gray-400"
-                : "text-gray-800 dark:text-white/90"
+                ? "text-awc-fg-muted line-through dark:text-gray-400"
+                : "text-awc-fg dark:text-white/90"
             }`}
           >
             {step.label}

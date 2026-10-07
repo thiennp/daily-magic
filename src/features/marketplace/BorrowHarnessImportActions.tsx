@@ -38,14 +38,14 @@ export default function BorrowHarnessImportActions({
             : "Install"}
       </Button>
       {!canInstall ? (
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className="text-xs text-awc-fg-muted dark:text-gray-400">
           {isOfficialPreset
             ? MAC_WORKER_BENEFIT_COPY.runAgentWitchToInstallBundle
             : MAC_WORKER_BENEFIT_COPY.teammateNeedsMacOnline}
         </p>
       ) : null}
       {importMessage ? (
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className="text-xs text-awc-fg-muted dark:text-gray-400">
           {importMessage}
         </p>
       ) : null}

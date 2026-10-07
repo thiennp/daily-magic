@@ -17,6 +17,7 @@ describe("marketingDesignSystem.constant", () => {
     expect(MARKETING_PAGE_BACKGROUND_CLASSES).toContain("bg-awc-bg");
     expect(MARKETING_EYEBROW_CLASSES).toContain("text-brand-700");
     expect(MARKETING_BUTTON_PRIMARY_CLASSES).toContain("bg-brand-600");
+    expect(MARKETING_BUTTON_PRIMARY_CLASSES).toContain("hover:bg-awc-blue-700");
   });
 
   it("MARKETING-007 exposes a navy announcement bar for enterprise landing", () => {

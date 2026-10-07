@@ -26,11 +26,11 @@ export default function AwcRunsWithoutApprovalConfirmModal({
       <div role="dialog" aria-modal="true" aria-labelledby="p-set-rwa-confirm-h">
         <h2
           id="p-set-rwa-confirm-h"
-          className="text-lg font-semibold text-gray-800 dark:text-white/90"
+          className="text-lg font-semibold text-awc-fg dark:text-white/90"
         >
           {C.confirmTitle}
         </h2>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
           {C.confirmBody}
         </p>
         <div className="mt-6 flex flex-wrap justify-end gap-3">

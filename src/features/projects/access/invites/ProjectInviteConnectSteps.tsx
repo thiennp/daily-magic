@@ -11,7 +11,7 @@ export default function ProjectInviteConnectSteps() {
       (the Copy prompt from Project Access covers this). Do not stop at
       &quot;no connector&quot; — ask your assistant to follow the invite prompt,
       or open the AgentWitch guide for assistants at{" "}
-      <code className="break-all rounded bg-gray-100 px-1 dark:bg-white/10">
+      <code className="break-all rounded bg-awc-fill px-1 dark:bg-white/10">
         https://www.agentwitch.com/for-agents
       </code>
       . {REPAIR.invitePagePrefix}{" "}

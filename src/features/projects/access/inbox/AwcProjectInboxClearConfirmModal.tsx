@@ -21,10 +21,10 @@ export default function AwcProjectInboxClearConfirmModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-lg p-6">
-      <h2 className="pr-10 text-lg font-semibold text-gray-900 dark:text-white/90">
+      <h2 className="pr-10 text-lg font-semibold text-awc-fg dark:text-white/90">
         {copy.confirmTitle}
       </h2>
-      <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">
+      <p className="mt-3 text-sm text-awc-fg-muted dark:text-gray-300">
         {copy.confirmBody}
       </p>
       <div className="mt-5 flex flex-wrap justify-end gap-2">

@@ -32,7 +32,7 @@ export default function TeamDispatchFields({
 
   if (isLoading) {
     return (
-      <p className="text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-sm text-awc-fg-muted dark:text-gray-400">
         Loading teammates…
       </p>
     );
@@ -40,7 +40,7 @@ export default function TeamDispatchFields({
 
   if (groups.length === 0) {
     return (
-      <p className="text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-sm text-awc-fg-muted dark:text-gray-400">
         Create a {COMPANY_ENTITY_LABEL.toLowerCase()} to send tasks to
         colleagues, or ask an admin to add you to theirs.
       </p>
@@ -50,14 +50,14 @@ export default function TeamDispatchFields({
   return (
     <div className="grid gap-4">
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <label className="text-sm font-medium text-awc-fg dark:text-white/90">
           {COMPANY_ENTITY_LABEL}
           <select
             value={selectedGroupId}
             onChange={(event) => {
               onGroupChange(event.target.value);
             }}
-            className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+            className="mt-2 w-full rounded-lg border border-awc-border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
           >
             <option value="">My Mac (self)</option>
             {groups.map((group) => (
@@ -68,7 +68,7 @@ export default function TeamDispatchFields({
           </select>
         </label>
 
-        <div className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <div className="text-sm font-medium text-awc-fg dark:text-white/90">
           Teammate
           <TeamMemberPicker
             members={selectedGroup?.members ?? []}
@@ -80,7 +80,7 @@ export default function TeamDispatchFields({
       </div>
 
       {selectedTargetUserId.length > 0 ? (
-        <label className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <label className="text-sm font-medium text-awc-fg dark:text-white/90">
           Assistant
           <CapabilityPicker
             capabilities={selectedMember?.capabilities ?? []}

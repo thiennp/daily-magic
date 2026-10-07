@@ -27,7 +27,7 @@ const TONE_CLASSES: Record<
     dark: "bg-gray-800 text-brand-200 ring-1 ring-gray-700/80",
   },
   neutral: {
-    light: "bg-gray-100 text-gray-600 ring-1 ring-gray-200",
+    light: "bg-awc-fill text-awc-fg-muted ring-1 ring-awc-border",
     dark: "bg-gray-800 text-gray-300 ring-1 ring-gray-700/80",
   },
 };

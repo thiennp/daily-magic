@@ -26,16 +26,16 @@ export default function GuestLibraryPlaybookCard({
         <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-900 dark:bg-amber-950/50 dark:text-amber-200">
           This browser only
         </span>
-        <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <p className="text-sm font-medium text-awc-fg dark:text-white/90">
           {draft.name}
         </p>
       </div>
       {draft.description.length > 0 ? (
-        <p className="mt-2 line-clamp-3 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-2 line-clamp-3 text-sm text-awc-fg-muted dark:text-gray-400">
           {draft.description}
         </p>
       ) : null}
-      <p className="mt-2 text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+      <p className="mt-2 text-xs uppercase tracking-wide text-awc-fg-muted dark:text-gray-400">
         {draft.type === CapabilityType.WORKFLOW
           ? `${draft.workflowFields.length} inputs`
           : "Agent"}
@@ -44,7 +44,7 @@ export default function GuestLibraryPlaybookCard({
       <div className="mt-4 flex flex-wrap gap-2">
         <Link
           href={buildSignInHref("/library")}
-          className="inline-flex items-center justify-center rounded-lg bg-brand-600 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-brand-700 dark:bg-brand-500 dark:hover:bg-brand-400"
+          className="inline-flex items-center justify-center rounded-lg bg-brand-600 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-awc-blue-700 dark:bg-brand-500 dark:hover:bg-brand-400"
         >
           Sign in to run
         </Link>

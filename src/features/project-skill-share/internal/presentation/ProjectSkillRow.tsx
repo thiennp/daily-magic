@@ -33,7 +33,7 @@ export default function ProjectSkillRow({
     >
       <span className="min-w-0 space-y-0.5">
         <span className="flex items-center gap-2">
-          <span className="font-medium text-gray-800 dark:text-white/90">
+          <span className="font-medium text-awc-fg dark:text-white/90">
             {skill.name}
           </span>
           <span className={PROJECT_SKILLS_BADGE_CLASS}>
@@ -46,7 +46,7 @@ export default function ProjectSkillRow({
           ) : null}
         </span>
         {skill.description ? (
-          <span className="block text-xs text-gray-500">
+          <span className="block text-xs text-awc-fg-muted">
             {skill.description}
           </span>
         ) : null}

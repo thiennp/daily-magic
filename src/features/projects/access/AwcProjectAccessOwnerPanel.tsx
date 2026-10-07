@@ -35,13 +35,13 @@ export default function AwcProjectAccessOwnerPanel({
   return (
     <section
       className={twMerge(
-        "space-y-4 rounded-2xl border border-gray-200/80 bg-white/80 p-4 shadow-sm dark:border-gray-800/80 dark:bg-gray-950/40",
+        "space-y-4 rounded-2xl border border-awc-border/80 bg-white/80 p-4 shadow-sm dark:border-gray-800/80 dark:bg-gray-950/40",
         className,
       )}
     >
       <header className="space-y-1">
         <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>{copy.eyebrow}</p>
-        <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+        <h2 className="text-base font-semibold text-awc-fg dark:text-white">
           {humanCopy.botsPeopleTitle}
         </h2>
         <p className={`text-sm ${APP_SURFACE_BODY_TEXT_CLASS}`}>
@@ -50,7 +50,7 @@ export default function AwcProjectAccessOwnerPanel({
       </header>
 
       {access.isLoading ? (
-        <p className="text-sm text-gray-500">{copy.loading}</p>
+        <p className="text-sm text-awc-fg-muted">{copy.loading}</p>
       ) : null}
 
       {access.loadError ? (
@@ -74,7 +74,7 @@ export default function AwcProjectAccessOwnerPanel({
       ) : null}
 
       {access.message ? (
-        <p className="text-sm text-gray-600 dark:text-gray-300">
+        <p className="text-sm text-awc-fg-muted dark:text-gray-300">
           {access.message}
         </p>
       ) : null}

@@ -17,7 +17,7 @@ export default function AwcProjectConnectionsLoadNotes({
   return (
     <>
       {loadState === "loading" ? (
-        <p className="text-sm text-gray-500 dark:text-gray-400">{C.loading}</p>
+        <p className="text-sm text-awc-fg-muted dark:text-gray-400">{C.loading}</p>
       ) : null}
       {loadState === "error" ? (
         <div className="flex flex-wrap items-center gap-2" role="alert">
@@ -30,12 +30,12 @@ export default function AwcProjectConnectionsLoadNotes({
         </div>
       ) : null}
       {loadState === "unavailable" ? (
-        <p className="text-[13px] text-gray-500 dark:text-gray-400" role="status">
+        <p className="text-[13px] text-awc-fg-muted dark:text-gray-400" role="status">
           {C.unavailable}
         </p>
       ) : null}
       {!isOwner ? (
-        <p className="text-[13px] text-gray-500 dark:text-gray-400">
+        <p className="text-[13px] text-awc-fg-muted dark:text-gray-400">
           {C.forbidden}
         </p>
       ) : null}

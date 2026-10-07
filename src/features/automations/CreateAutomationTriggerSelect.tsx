@@ -17,7 +17,7 @@ export default function CreateAutomationTriggerSelect({
   onTriggerTypeChange,
 }: CreateAutomationTriggerSelectProps) {
   return (
-    <label className="block text-sm font-medium text-gray-800 dark:text-white/90">
+    <label className="block text-sm font-medium text-awc-fg dark:text-white/90">
       Trigger
       <select
         value={triggerType}
@@ -28,7 +28,7 @@ export default function CreateAutomationTriggerSelect({
               | typeof AGENT_AUTOMATION_TRIGGER_TYPES.WEBHOOK,
           );
         }}
-        className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+        className="mt-2 w-full rounded-lg border border-awc-border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
       >
         <option value={AGENT_AUTOMATION_TRIGGER_TYPES.SCHEDULE}>
           {AUTOMATIONS_PAGE_COPY.triggerSchedule}

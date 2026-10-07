@@ -17,16 +17,16 @@ export default function AwcProjectRepoUrlsDisplay({
 
   return (
     <div>
-      <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
+      <h3 className="text-sm font-medium text-awc-fg dark:text-white/90">
         {copy.heading}
       </h3>
       {readOnlyNote ? (
-        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-1 text-xs text-awc-fg-muted dark:text-gray-400">
           {copy.readOnlyNote}
         </p>
       ) : null}
       {metadata.repoUrls.length === 0 ? (
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-1 text-sm text-awc-fg-muted dark:text-gray-400">
           {copy.empty}
         </p>
       ) : (
@@ -34,7 +34,7 @@ export default function AwcProjectRepoUrlsDisplay({
           {metadata.repoUrls.map((url) => (
             <li key={url} className="space-y-0.5">
               <AwcBotSupportUrlKindLabel url={url} />
-              <p className="break-all font-mono text-xs text-gray-800 dark:text-white/90">
+              <p className="break-all font-mono text-xs text-awc-fg dark:text-white/90">
                 {url}
               </p>
             </li>
@@ -43,10 +43,10 @@ export default function AwcProjectRepoUrlsDisplay({
       )}
       <dl className="mt-3 text-sm">
         <div>
-          <dt className="text-xs font-medium text-gray-500 dark:text-gray-400">
+          <dt className="text-xs font-medium text-awc-fg-muted dark:text-gray-400">
             {copy.defaultBranchLabel}
           </dt>
-          <dd className="mt-0.5 text-gray-800 dark:text-white/90">
+          <dd className="mt-0.5 text-awc-fg dark:text-white/90">
             {metadata.defaultBranch ?? "—"}
           </dd>
         </div>

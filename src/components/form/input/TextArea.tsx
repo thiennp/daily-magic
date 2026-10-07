@@ -30,13 +30,13 @@ const TextArea: React.FC<TextareaProps> = ({
   const textareaClasses = [
     "w-full rounded-lg border px-4 py-2.5 text-sm focus:outline-hidden",
     disabled
-      ? "cursor-not-allowed border-dashed border-gray-400 bg-gray-100 text-gray-600 shadow-none dark:border-gray-600 dark:bg-gray-950 dark:text-gray-300"
-      : "border-gray-300 bg-transparent text-gray-400 shadow-theme-xs focus:ring-3 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90",
+      ? "cursor-not-allowed border-dashed border-gray-400 bg-awc-fill text-awc-fg-muted shadow-none dark:border-gray-600 dark:bg-gray-950 dark:text-gray-300"
+      : "border-awc-border-strong bg-transparent text-awc-fg-subtle shadow-theme-xs focus:ring-3 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90",
     !disabled && error
       ? "focus:border-error-300 focus:ring-error-500/10 dark:focus:border-error-800"
       : "",
     !disabled && !error
-      ? "focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800"
+      ? "focus:border-awc-blue-300 focus:ring-awc-blue-600/10 dark:focus:border-brand-800"
       : "",
     className,
   ]
@@ -56,7 +56,7 @@ const TextArea: React.FC<TextareaProps> = ({
       {hint && (
         <p
           className={`mt-2 text-sm ${
-            error ? "text-error-500" : "text-gray-500 dark:text-gray-400"
+            error ? "text-error-500" : "text-awc-fg-muted dark:text-gray-400"
           }`}
         >
           {hint}

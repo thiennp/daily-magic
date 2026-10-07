@@ -28,10 +28,10 @@ export default function CreateWorkflowTrialRunSection(
   return (
     <section className={`space-y-4 ${APP_SURFACE_NESTED_CARD_CLASS}`}>
       <div>
-        <h3 className="text-sm font-semibold text-gray-800 dark:text-white/90">
+        <h3 className="text-sm font-semibold text-awc-fg dark:text-white/90">
           {WORKFLOW_TRIAL_RUN_SECTION.title}
         </h3>
-        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-1 text-sm text-awc-fg-muted dark:text-gray-400">
           {WORKFLOW_TRIAL_RUN_SECTION.description}
         </p>
       </div>

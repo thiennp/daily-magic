@@ -19,7 +19,7 @@ export default function AgentLiveProgressEstimateBar({
 
   return (
     <div className="mt-3" role="status" aria-live="polite">
-      <div className="flex items-center justify-between gap-3 text-xs text-gray-600 dark:text-gray-300">
+      <div className="flex items-center justify-between gap-3 text-xs text-awc-fg-muted dark:text-gray-300">
         <span>{label ?? "Progress"}</span>
         <span>{percent}%</span>
       </div>

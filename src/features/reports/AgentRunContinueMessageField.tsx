@@ -56,9 +56,9 @@ export default function AgentRunContinueMessageField({
         }}
         onKeyDown={handleKeyDown}
         placeholder="Continue the conversation…"
-        className="w-full resize-none overflow-hidden rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90 dark:focus:border-brand-800"
+        className="w-full resize-none overflow-hidden rounded-lg border border-awc-border bg-white px-3 py-2 text-sm text-awc-fg outline-none focus:border-awc-blue-300 focus:ring-3 focus:ring-awc-blue-600/10 disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90 dark:focus:border-brand-800"
       />
-      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-1 text-xs text-awc-fg-muted dark:text-gray-400">
         Press Enter to send · Shift+Enter for a new line
       </p>
     </div>

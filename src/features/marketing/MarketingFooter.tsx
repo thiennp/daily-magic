@@ -19,7 +19,7 @@ export default function MarketingFooter() {
   const showAdminLinks = shouldShowMarketingFooterAdmin(showStaffLinks);
 
   return (
-    <footer className="border-t border-gray-200 bg-white">
+    <footer className="border-t border-awc-border bg-white">
       <div className="mx-auto max-w-6xl space-y-10 px-6 py-12">
         {showAdminLinks ? (
           <div>

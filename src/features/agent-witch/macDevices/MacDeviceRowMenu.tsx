@@ -54,7 +54,7 @@ export default function MacDeviceRowMenu({
         type="button"
         aria-label="Mac actions"
         aria-expanded={isOpen}
-        className="dropdown-toggle inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+        className="dropdown-toggle inline-flex h-8 w-8 items-center justify-center rounded-md text-awc-fg-muted hover:bg-awc-tile hover:text-awc-fg dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
         onClick={(event) => {
           stopRowSelection(event);
           setIsOpen((current) => !current);

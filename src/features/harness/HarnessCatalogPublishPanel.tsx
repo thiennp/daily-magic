@@ -13,7 +13,7 @@ import resolveHomeSetupNestedBoxClass from "@/features/home/resolveHomeSetupNest
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 const CATALOG_PUBLISH_BOX_CLASS =
-  "mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-white/[0.04]";
+  "mt-4 rounded-lg border border-awc-border bg-awc-surface-2 p-4 dark:border-gray-700 dark:bg-white/[0.04]";
 
 export default function HarnessCatalogPublishPanel() {
   const embedded = useHomeSetupEmbedded();
@@ -49,16 +49,16 @@ export default function HarnessCatalogPublishPanel() {
         "mt-4",
       )}
     >
-      <h3 className="text-sm font-semibold text-gray-800 dark:text-white/90">
+      <h3 className="text-sm font-semibold text-awc-fg dark:text-white/90">
         Shared setup
       </h3>
       {status?.catalog ? (
-        <p className="mt-2 text-xs text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-xs text-awc-fg-muted dark:text-gray-400">
           Last published from {status.catalog.hostname} at{" "}
           {new Date(status.catalog.reportedAt).toLocaleString()}.
         </p>
       ) : (
-        <p className="mt-2 text-xs text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-xs text-awc-fg-muted dark:text-gray-400">
           Nothing shared yet. Publish while your computer is online.
         </p>
       )}
@@ -73,12 +73,12 @@ export default function HarnessCatalogPublishPanel() {
         </Button>
       </div>
       {!status?.isAgentOnline ? (
-        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-xs text-awc-fg-muted dark:text-gray-400">
           {MAC_WORKER_BENEFIT_COPY.setupMacOnHomeBeforePublish}
         </p>
       ) : null}
       {message ? (
-        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-xs text-awc-fg-muted dark:text-gray-400">
           {message}
         </p>
       ) : null}

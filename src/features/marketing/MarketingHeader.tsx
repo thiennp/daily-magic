@@ -11,7 +11,7 @@ export default function MarketingHeader({
   showSignIn = true,
 }: MarketingHeaderProps) {
   return (
-    <header className="sticky top-0 z-20 border-b border-gray-200 bg-white/95 backdrop-blur-md">
+    <header className="sticky top-0 z-20 border-b border-awc-border bg-white/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" aria-label="AgentWitch home">
           <AgentWitchLogo surface="light" />

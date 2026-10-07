@@ -30,13 +30,13 @@ export default function UserDropdownMenu({
     <Dropdown
       isOpen={isOpen}
       onClose={onClose}
-      className="shadow-theme-lg dark:bg-gray-dark absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 dark:border-gray-800"
+      className="shadow-theme-lg dark:bg-gray-dark absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-2xl border border-awc-border bg-white p-3 dark:border-gray-800"
     >
       <div>
-        <span className="text-theme-sm block font-medium text-gray-700 dark:text-gray-400">
+        <span className="text-theme-sm block font-medium text-awc-fg dark:text-gray-400">
           {displayName}
         </span>
-        <span className="text-theme-xs mt-0.5 block text-gray-500 dark:text-gray-400">
+        <span className="text-theme-xs mt-0.5 block text-awc-fg-muted dark:text-gray-400">
           {session.user.email}
         </span>
         <span className="text-theme-xs mt-1 block text-zinc-600 dark:text-zinc-400">
@@ -44,13 +44,13 @@ export default function UserDropdownMenu({
         </span>
       </div>
 
-      <ul className="flex flex-col gap-1 border-b border-gray-200 py-3 dark:border-gray-800">
+      <ul className="flex flex-col gap-1 border-b border-awc-border py-3 dark:border-gray-800">
         <li>
           <DropdownItem
             onItemClick={onClose}
             tag="a"
             href="/account"
-            className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+            className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-awc-fg hover:bg-awc-tile hover:text-awc-fg dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
           >
             Account
           </DropdownItem>
@@ -60,7 +60,7 @@ export default function UserDropdownMenu({
             onItemClick={onClose}
             tag="a"
             href="/pricing"
-            className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+            className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-awc-fg hover:bg-awc-tile hover:text-awc-fg dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
           >
             Billing and plans
           </DropdownItem>
@@ -70,7 +70,7 @@ export default function UserDropdownMenu({
             onItemClick={onClose}
             tag="a"
             href="/admin/groups"
-            className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+            className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-awc-fg hover:bg-awc-tile hover:text-awc-fg dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
           >
             {COMPANIES_ENTITY_LABEL} management
           </DropdownItem>
@@ -80,7 +80,7 @@ export default function UserDropdownMenu({
             onItemClick={onClose}
             tag="a"
             href="/admin/users"
-            className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+            className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-awc-fg hover:bg-awc-tile hover:text-awc-fg dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
           >
             User management
           </DropdownItem>
@@ -91,7 +91,7 @@ export default function UserDropdownMenu({
               onItemClick={onClose}
               tag="a"
               href="/styleguide"
-              className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+              className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-awc-fg hover:bg-awc-tile hover:text-awc-fg dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
               Styleguide
             </DropdownItem>
@@ -107,7 +107,7 @@ export default function UserDropdownMenu({
             void signOut({ callbackUrl: "/login" });
           });
         }}
-        className="group mt-3 flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+        className="group mt-3 flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-awc-fg hover:bg-awc-tile hover:text-awc-fg dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
       >
         Sign out
       </button>

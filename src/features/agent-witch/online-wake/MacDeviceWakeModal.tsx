@@ -66,7 +66,7 @@ export default function MacDeviceWakeModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-md p-6">
-      <h2 className="pr-10 text-lg font-semibold text-gray-900 dark:text-white/90">
+      <h2 className="pr-10 text-lg font-semibold text-awc-fg dark:text-white/90">
         {isThisMac
           ? "Start AgentWitch on this computer"
           : "Turn on this computer"}
@@ -89,7 +89,7 @@ export default function MacDeviceWakeModal({
               : "Restart AgentWitch on this computer"}
           </Button>
           {localRestartMessage !== null ? (
-            <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-3 text-sm text-awc-fg-muted dark:text-gray-400">
               {localRestartMessage}
             </p>
           ) : null}

@@ -54,7 +54,7 @@ export default function AwcProjectPitfallsPanel({
   return (
     <section className="flex min-w-0 flex-col gap-3" aria-label={C.title}>
       {pitfalls.status === "loading" ? (
-        <p className="text-sm text-gray-500 dark:text-gray-400">{C.loading}</p>
+        <p className="text-sm text-awc-fg-muted dark:text-gray-400">{C.loading}</p>
       ) : pitfalls.status === "hidden" ? (
         <p className={PITFALL_EMPTY_CLASS}>{C.unavailable}</p>
       ) : pitfalls.status === "ready" && pitfalls.items.length === 0 ? (
@@ -70,7 +70,7 @@ export default function AwcProjectPitfallsPanel({
             onFilterChange={setFilter}
             onQueryChange={setQuery}
           />
-          <p className="text-[13px] text-gray-500 dark:text-gray-400">
+          <p className="text-[13px] text-awc-fg-muted dark:text-gray-400">
             {C.panelHint(
               rows.length,
               pitfalls.status === "ready" ? pitfalls.items.length : 0,
@@ -81,7 +81,7 @@ export default function AwcProjectPitfallsPanel({
           {visible.length === 0 ? (
             <p className={PITFALL_EMPTY_CLASS}>{C.noMatch}</p>
           ) : (
-            <ul className="flex flex-col rounded-2xl bg-gray-50/80 dark:bg-white/[0.03]">
+            <ul className="flex flex-col rounded-2xl bg-awc-surface-2/80 dark:bg-white/[0.03]">
               {visible.map((row) => (
                 <AwcProjectPitfallAccordionRow key={row.id} row={row} />
               ))}

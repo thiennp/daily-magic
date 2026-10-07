@@ -4,7 +4,7 @@ import Avatar from "@/components/ui/avatar/Avatar";
 export default function AvatarsSection() {
   return (
     <section id="avatars" className="scroll-mt-28">
-      <h2 className="mb-5 text-2xl font-semibold text-gray-800 dark:text-white/90">
+      <h2 className="mb-5 text-2xl font-semibold text-awc-fg dark:text-white/90">
         Avatars
       </h2>
       <div className="space-y-5 sm:space-y-6">

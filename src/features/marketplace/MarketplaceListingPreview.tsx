@@ -40,27 +40,27 @@ export default function MarketplaceListingPreview({
         <span className="rounded-full bg-white px-2 py-0.5 text-xs font-medium text-brand-700 dark:bg-gray-800 dark:text-brand-300">
           {TYPE_LABEL_MAP[type]}
         </span>
-        <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <p className="text-sm font-medium text-awc-fg dark:text-white/90">
           {name}
         </p>
       </div>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
         {description}
       </p>
-      <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-3 text-xs text-awc-fg-muted dark:text-gray-400">
         Shared by {ownerName ?? ownerEmail} ({hostname})
       </p>
       {exampleRequest ? (
-        <p className="mt-3 text-sm text-gray-700 dark:text-gray-300">
+        <p className="mt-3 text-sm text-awc-fg dark:text-gray-300">
           <span className="font-medium">Example request:</span> {exampleRequest}
         </p>
       ) : null}
       {workflowFields.length > 0 ? (
         <div className="mt-3">
-          <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
+          <p className="text-xs font-medium text-awc-fg dark:text-gray-300">
             Workflow fields
           </p>
-          <ul className="mt-1 space-y-1 text-xs text-gray-600 dark:text-gray-400">
+          <ul className="mt-1 space-y-1 text-xs text-awc-fg-muted dark:text-gray-400">
             {workflowFields.map((field) => (
               <li key={field.key}>
                 {field.label}

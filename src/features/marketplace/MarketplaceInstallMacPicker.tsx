@@ -35,7 +35,7 @@ export default function MarketplaceInstallMacPicker({
         />
       </div>
       {macSelection.devices.length === 0 && !macSelection.isLoading ? (
-        <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-3 text-sm text-awc-fg-muted dark:text-gray-400">
           <Link href="/home" className="text-brand-700 dark:text-brand-300">
             {MAC_WORKER_BENEFIT_COPY.addMac}
           </Link>{" "}

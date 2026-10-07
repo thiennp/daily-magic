@@ -16,7 +16,7 @@ export default function AwcBotSupportUrlKindLabel({
   const kind = detectBotSupportUrlKind(trimmed);
   return (
     <span
-      className="text-[11px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400"
+      className="text-[11px] font-medium uppercase tracking-wide text-awc-fg-muted dark:text-gray-400"
       data-bot-support-url-kind={kind}
     >
       {BOT_SUPPORT_URL_LABEL[kind]}

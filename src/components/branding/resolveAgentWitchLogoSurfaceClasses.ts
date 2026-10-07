@@ -16,8 +16,8 @@ export function resolveAgentWitchLogoSurfaceClasses(
 ): AgentWitchLogoSurfaceClasses {
   if (surface === "light") {
     return {
-      root: `${DEFAULT_MARK_SIZE_CLASSES} text-gray-900`,
-      text: `${DEFAULT_TEXT_CLASSES} text-gray-900`,
+      root: `${DEFAULT_MARK_SIZE_CLASSES} text-awc-fg`,
+      text: `${DEFAULT_TEXT_CLASSES} text-awc-fg`,
       markFill: "fill-gray-900/5 stroke-none",
       markCross: "stroke-gray-900",
       markSlash: "stroke-gray-400",

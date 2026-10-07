@@ -48,12 +48,12 @@ export default function AgentLiveTerminalFeedbackChat({
           <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
             Your computer agent needs input
           </p>
-          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+          <p className="mt-2 text-sm text-awc-fg dark:text-gray-300">
             {pendingQuestion}
           </p>
         </>
       ) : isSimplifiedFollowUp ? null : (
-        <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <p className="text-sm font-medium text-awc-fg dark:text-white/90">
           Follow up with your agent
         </p>
       )}
@@ -67,7 +67,7 @@ export default function AgentLiveTerminalFeedbackChat({
         onMessageChange={deferredSubmit.handleMessageChange}
       />
       {!isSimplifiedFollowUp && queuedCount > 0 ? (
-        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-xs text-awc-fg-muted dark:text-gray-400">
           {queuedCount} follow-up{queuedCount === 1 ? "" : "s"} queued while
           your computer agent is working.
         </p>
@@ -78,7 +78,7 @@ export default function AgentLiveTerminalFeedbackChat({
         </p>
       ) : null}
       {isSimplifiedFollowUp && queuedCount > 0 ? (
-        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-xs text-awc-fg-muted dark:text-gray-400">
           {queuedCount} queued — will send when ready.
         </p>
       ) : null}
@@ -96,7 +96,7 @@ export default function AgentLiveTerminalFeedbackChat({
   return isSteppedComposer ? (
     <div className="mt-4">{content}</div>
   ) : (
-    <div className="mt-4 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900/40">
+    <div className="mt-4 rounded-lg border border-awc-border bg-white p-4 dark:border-gray-800 dark:bg-gray-900/40">
       {content}
     </div>
   );

@@ -21,7 +21,7 @@ export default function HomeAttentionPanel() {
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         Nothing needs you right now.
       </p>
-      <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-2 text-xs text-awc-fg-muted dark:text-gray-400">
         Bots waiting for confirmation, runs waiting for approval, and failed
         runs across all projects appear here.
       </p>

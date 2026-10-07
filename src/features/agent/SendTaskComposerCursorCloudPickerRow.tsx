@@ -15,10 +15,10 @@ export default function SendTaskComposerCursorCloudPickerRow({
       onClick={onSelect}
       className={`w-full text-left ${APP_SURFACE_CTA_SECONDARY_CLASS}`}
     >
-      <span className="block font-medium text-gray-900 dark:text-white/90">
+      <span className="block font-medium text-awc-fg dark:text-white/90">
         Cursor Cloud
       </span>
-      <span className="mt-0.5 block text-xs text-gray-500 dark:text-gray-400">
+      <span className="mt-0.5 block text-xs text-awc-fg-muted dark:text-gray-400">
         Runs in Cursor&apos;s cloud. No computer needed.
       </span>
     </button>

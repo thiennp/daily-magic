@@ -26,10 +26,10 @@ export default function AwcAccessLogPanel({
       className="mx-4 max-h-[85vh] max-w-lg overflow-hidden p-5 sm:p-6"
     >
       <div className="pr-8">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <h2 className="text-lg font-semibold text-awc-fg dark:text-white">
           {C.title}
         </h2>
-        <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">{C.intro}</p>
+        <p className="mt-1 text-sm text-awc-fg-muted dark:text-gray-300">{C.intro}</p>
         <div className="mt-4">
           <AwcAccessLogFilterChips
             category={log.category}

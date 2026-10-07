@@ -34,7 +34,7 @@ export default function AwcProjectLibraryDisabledActions() {
       </div>
       <span
         id={reasonId}
-        className="max-w-xs text-xs text-gray-500 dark:text-gray-400"
+        className="max-w-xs text-xs text-awc-fg-muted dark:text-gray-400"
       >
         {C["disabled.new"]}
       </span>

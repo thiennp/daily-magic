@@ -20,20 +20,20 @@ export default function MyBotsClaimForm({
 }: MyBotsClaimFormProps) {
   return (
     <form
-      className="space-y-2 rounded-lg border border-gray-200/80 p-3 dark:border-gray-800/80"
+      className="space-y-2 rounded-lg border border-awc-border/80 p-3 dark:border-gray-800/80"
       onSubmit={(event) => {
         event.preventDefault();
         onSubmit();
       }}
     >
-      <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+      <h3 className="text-sm font-semibold text-awc-fg dark:text-white">
         {MY_BOTS_COPY.claimHeading}
       </h3>
-      <p className="text-xs text-gray-500 dark:text-gray-400">
+      <p className="text-xs text-awc-fg-muted dark:text-gray-400">
         {MY_BOTS_COPY.claimHint}
       </p>
       <input
-        className="mt-1 w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-950"
+        className="mt-1 w-full rounded-md border border-awc-border-strong bg-white px-2 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-950"
         name="claim-code"
         autoComplete="off"
         spellCheck={false}

@@ -42,12 +42,12 @@ export default function AwcMessengerTimelineEntryRow({
         className={`rounded-xl px-3 py-2 text-sm leading-5 ${
           isMine
             ? ACTIVITY_OWN_BUBBLE_CLASS
-            : "rounded-bl-sm border border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+            : "rounded-bl-sm border border-awc-border bg-white text-awc-fg dark:border-gray-700 dark:bg-gray-950 dark:text-white"
         }`}
       >
         <div
           className={`mb-1 text-xs font-semibold ${
-            isMine ? ACTIVITY_OWN_META_CLASS : "text-gray-500"
+            isMine ? ACTIVITY_OWN_META_CLASS : "text-awc-fg-muted"
           }`}
         >
           {isMine ? "You" : who}
@@ -55,7 +55,7 @@ export default function AwcMessengerTimelineEntryRow({
         <p className="whitespace-pre-wrap">{entry.text}</p>
       </div>
       {isMine ? <AwcMessengerStateChips states={entry.states} /> : null}
-      <span className="text-xs text-gray-500">{formatWhen(entry.createdAt)}</span>
+      <span className="text-xs text-awc-fg-muted">{formatWhen(entry.createdAt)}</span>
     </div>
   );
 }

@@ -64,7 +64,7 @@ export default function MacDeviceNameEditor({
             setDraftName(event.target.value);
           }}
           onClick={stopRowSelection}
-          className="h-8 min-w-0 flex-1 rounded-md border border-gray-300 bg-white px-2 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
+          className="h-8 min-w-0 flex-1 rounded-md border border-awc-border-strong bg-white px-2 text-sm text-awc-fg dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
           maxLength={80}
           autoFocus
         />
@@ -79,7 +79,7 @@ export default function MacDeviceNameEditor({
         <button
           type="button"
           onClick={cancelEditing}
-          className="text-xs font-medium text-gray-500 hover:underline dark:text-gray-400"
+          className="text-xs font-medium text-awc-fg-muted hover:underline dark:text-gray-400"
         >
           Cancel
         </button>
@@ -88,7 +88,7 @@ export default function MacDeviceNameEditor({
   }
 
   return (
-    <p className="w-full truncate text-left text-sm font-medium text-gray-800 dark:text-white/90">
+    <p className="w-full truncate text-left text-sm font-medium text-awc-fg dark:text-white/90">
       {displayName}
     </p>
   );

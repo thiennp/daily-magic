@@ -9,10 +9,10 @@ import {
 export default function BrandLogoSection() {
   return (
     <section id="brand-logo" className="scroll-mt-28">
-      <h2 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
+      <h2 className="mb-2 text-2xl font-semibold text-awc-fg dark:text-white/90">
         Brand logo
       </h2>
-      <p className="mb-5 max-w-3xl text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+      <p className="mb-5 max-w-3xl text-sm leading-relaxed text-awc-fg-muted dark:text-gray-400">
         {BRAND_LOGO_INTRO}
       </p>
 
@@ -34,10 +34,10 @@ export default function BrandLogoSection() {
           <dl className="space-y-6">
             {BRAND_LOGO_MEANING_ITEMS.map((item) => (
               <div key={item.title}>
-                <dt className="text-sm font-semibold text-gray-900 dark:text-white/90">
+                <dt className="text-sm font-semibold text-awc-fg dark:text-white/90">
                   {item.title}
                 </dt>
-                <dd className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                <dd className="mt-2 text-sm leading-relaxed text-awc-fg-muted dark:text-gray-400">
                   {item.body}
                 </dd>
               </div>

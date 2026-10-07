@@ -17,7 +17,7 @@ export default function RepairThisComputerPageBody() {
     <article className="mx-auto max-w-2xl space-y-8 py-2 sm:py-4">
       <header className="space-y-2">
         <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>{copy.eyebrow}</p>
-        <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white">
+        <h1 className="text-3xl font-semibold tracking-tight text-awc-fg dark:text-white">
           {copy.title}
         </h1>
         <p className={`text-base ${APP_SURFACE_BODY_TEXT_CLASS}`}>{copy.intro}</p>
@@ -26,7 +26,7 @@ export default function RepairThisComputerPageBody() {
       <section className="space-y-3" aria-labelledby="repair-update">
         <h2
           id="repair-update"
-          className="text-xl font-semibold text-gray-900 dark:text-white"
+          className="text-xl font-semibold text-awc-fg dark:text-white"
         >
           {copy.updateHeading}
         </h2>
@@ -53,7 +53,7 @@ export default function RepairThisComputerPageBody() {
       <section className="space-y-3" aria-labelledby="repair-restart">
         <h2
           id="repair-restart"
-          className="text-xl font-semibold text-gray-900 dark:text-white"
+          className="text-xl font-semibold text-awc-fg dark:text-white"
         >
           {copy.restartHeading}
         </h2>
@@ -71,7 +71,7 @@ export default function RepairThisComputerPageBody() {
       <section className="space-y-3" aria-labelledby="repair-reconnect">
         <h2
           id="repair-reconnect"
-          className="text-xl font-semibold text-gray-900 dark:text-white"
+          className="text-xl font-semibold text-awc-fg dark:text-white"
         >
           {copy.reconnectHeading}
         </h2>
@@ -81,7 +81,7 @@ export default function RepairThisComputerPageBody() {
       <section className="space-y-3" aria-labelledby="repair-check">
         <h2
           id="repair-check"
-          className="text-xl font-semibold text-gray-900 dark:text-white"
+          className="text-xl font-semibold text-awc-fg dark:text-white"
         >
           {copy.checkHeading}
         </h2>

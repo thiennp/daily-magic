@@ -42,17 +42,17 @@ export default function AwcProjectResourcesFoldersCard({
     <section className="flex min-w-0 flex-col gap-2" aria-labelledby="res-folders-h">
       <h3
         id="res-folders-h"
-        className="px-1 text-[13px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400"
+        className="px-1 text-[13px] font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-400"
       >
         {C.foldersTitle}
       </h3>
-      <div className="overflow-hidden rounded-2xl bg-gray-50/80 p-3 dark:bg-white/[0.03]">
+      <div className="overflow-hidden rounded-2xl bg-awc-surface-2/80 p-3 dark:bg-white/[0.03]">
         {!isOwner ? (
-          <p className="px-1 py-2 text-[13px] text-gray-500 dark:text-gray-400">
+          <p className="px-1 py-2 text-[13px] text-awc-fg-muted dark:text-gray-400">
             {C.foldersOwnerOnly}
           </p>
         ) : access.isLoading ? (
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-awc-fg-muted dark:text-gray-400">
             {C.foldersLoading}
           </p>
         ) : access.loadError ? (
@@ -73,7 +73,7 @@ export default function AwcProjectResourcesFoldersCard({
           />
         )}
         {isOwner && access.message ? (
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-300" role="status">
+          <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-300" role="status">
             {access.message}
           </p>
         ) : null}

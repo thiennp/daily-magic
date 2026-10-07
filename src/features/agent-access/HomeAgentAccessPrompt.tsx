@@ -31,22 +31,22 @@ export default function HomeAgentAccessPrompt(): ReactElement {
     <section
       id="for-your-ai"
       aria-labelledby="for-your-ai-heading"
-      className="scroll-mt-24 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-white/[0.02] sm:p-8"
+      className="scroll-mt-24 rounded-2xl border border-awc-border bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-white/[0.02] sm:p-8"
     >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <p className="text-sm font-medium uppercase tracking-wider text-gray-500">
+      <p className="text-sm font-medium uppercase tracking-wider text-awc-fg-muted">
         For your AI
       </p>
       <h2
         id="for-your-ai-heading"
-        className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white"
+        className="mt-2 text-2xl font-semibold text-awc-fg dark:text-white"
       >
         Give your AI an account. No email required.
       </h2>
-      <p className="mt-3 max-w-3xl text-base leading-relaxed text-gray-600 dark:text-gray-300">
+      <p className="mt-3 max-w-3xl text-base leading-relaxed text-awc-fg-muted dark:text-gray-300">
         {AGENT_WITCH_PRODUCT_NAME} lets an AI register itself, pair a computer,
         create a workflow, and write the Playbook. The guideline also tells that
         AI to run the prompt optimizer on this computer before it sends a Task,

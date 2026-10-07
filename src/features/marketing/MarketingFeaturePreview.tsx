@@ -8,14 +8,14 @@ import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasse
 import { LockIcon } from "@/icons";
 
 const DISPATCH_PREVIEW = (): ReactElement => (
-  <div className="space-y-2 rounded-lg bg-gray-50 p-3 ring-1 ring-gray-200/80">
+  <div className="space-y-2 rounded-lg bg-awc-surface-2 p-3 ring-1 ring-awc-border/80">
     <div className="flex items-center justify-between text-xs">
-      <span className="font-medium text-gray-800">Organization setup</span>
+      <span className="font-medium text-awc-fg">Organization setup</span>
       <MarketingStatusBadge tone="success">
         4 agents connected
       </MarketingStatusBadge>
     </div>
-    <div className="rounded-lg bg-white px-3 py-2 text-xs text-gray-600 ring-1 ring-gray-200/80">
+    <div className="rounded-lg bg-white px-3 py-2 text-xs text-awc-fg-muted ring-1 ring-awc-border/80">
       Team workflows · ready to deploy
     </div>
   </div>
@@ -42,19 +42,19 @@ const APPROVE_PREVIEW = (): ReactElement => (
       />
       Organization policy
     </span>
-    <p className="text-xs leading-relaxed text-gray-600">
+    <p className="text-xs leading-relaxed text-awc-fg-muted">
       Managers approve before cross-Mac jobs run.
     </p>
   </div>
 );
 
 const REPORT_PREVIEW = (): ReactElement => (
-  <div className="space-y-2 rounded-lg bg-gray-50 p-3 ring-1 ring-gray-200/80">
+  <div className="space-y-2 rounded-lg bg-awc-surface-2 p-3 ring-1 ring-awc-border/80">
     <div className="flex items-center justify-between text-xs">
-      <span className="font-medium text-gray-800">Team workflow #1042</span>
+      <span className="font-medium text-awc-fg">Team workflow #1042</span>
       <MarketingStatusBadge tone="success">Finished</MarketingStatusBadge>
     </div>
-    <p className="truncate text-xs text-gray-500">
+    <p className="truncate text-xs text-awc-fg-muted">
       Visible to managers and teammates
     </p>
   </div>

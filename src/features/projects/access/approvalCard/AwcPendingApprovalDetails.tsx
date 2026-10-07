@@ -10,8 +10,8 @@ interface AwcPendingApprovalDetailsProps {
   readonly card: PendingApprovalCardMeta;
 }
 
-const labelClass = "text-[11px] font-semibold text-gray-500 dark:text-gray-400";
-const valueClass = "text-[12px] text-gray-700 dark:text-gray-200";
+const labelClass = "text-[11px] font-semibold text-awc-fg-muted dark:text-gray-400";
+const valueClass = "text-[12px] text-awc-fg dark:text-gray-200";
 
 /** Who is asking / What it can do / mode — read-only; never grants access. */
 export default function AwcPendingApprovalDetails({

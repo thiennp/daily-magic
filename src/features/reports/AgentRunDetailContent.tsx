@@ -44,35 +44,35 @@ export default function AgentRunDetailContent({
           labelOverride={outcomeBadge.label}
           classNameOverride={outcomeBadge.className}
         />
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className="text-xs text-awc-fg-muted dark:text-gray-400">
           Created {new Date(run.createdAt).toLocaleString()}
         </p>
       </div>
       <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
         <div>
-          <dt className="text-gray-500 dark:text-gray-400">Requester</dt>
-          <dd className="text-gray-800 dark:text-white/90">
+          <dt className="text-awc-fg-muted dark:text-gray-400">Requester</dt>
+          <dd className="text-awc-fg dark:text-white/90">
             {run.requesterEmail}
           </dd>
         </div>
         <div>
-          <dt className="text-gray-500 dark:text-gray-400">Executor</dt>
-          <dd className="text-gray-800 dark:text-white/90">
+          <dt className="text-awc-fg-muted dark:text-gray-400">Executor</dt>
+          <dd className="text-awc-fg dark:text-white/90">
             {run.executorEmail}
           </dd>
         </div>
         <div>
-          <dt className="text-gray-500 dark:text-gray-400">Policy</dt>
-          <dd className="capitalize text-gray-800 dark:text-white/90">
+          <dt className="text-awc-fg-muted dark:text-gray-400">Policy</dt>
+          <dd className="capitalize text-awc-fg dark:text-white/90">
             {run.dispatchPolicy}
           </dd>
         </div>
         {run.approvalExpiresAt ? (
           <div>
-            <dt className="text-gray-500 dark:text-gray-400">
+            <dt className="text-awc-fg-muted dark:text-gray-400">
               Approval expires
             </dt>
-            <dd className="text-gray-800 dark:text-white/90">
+            <dd className="text-awc-fg dark:text-white/90">
               {new Date(run.approvalExpiresAt).toLocaleString()}
             </dd>
           </div>
@@ -82,10 +82,10 @@ export default function AgentRunDetailContent({
         estimateSeconds={run.estimateSeconds}
         actualSeconds={run.actualSeconds}
       />
-      <h2 className="mt-6 text-sm font-medium text-gray-800 dark:text-white/90">
+      <h2 className="mt-6 text-sm font-medium text-awc-fg dark:text-white/90">
         Prompt
       </h2>
-      <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap break-words rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+      <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap break-words rounded-lg bg-awc-surface-2 p-3 text-xs text-awc-fg dark:bg-gray-800 dark:text-gray-300">
         {run.prompt}
       </pre>
       <AgentRunReportProgress
@@ -101,7 +101,7 @@ export default function AgentRunDetailContent({
       ) : null}
       <AgentRunKeepInProjectButton runId={run.id} projectId={run.projectId} />
       {outcomeMessage !== null ? (
-        <p className="mt-4 text-sm text-gray-800 dark:text-white/90">
+        <p className="mt-4 text-sm text-awc-fg dark:text-white/90">
           {outcomeMessage}
         </p>
       ) : null}

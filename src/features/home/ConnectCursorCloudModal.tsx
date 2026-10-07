@@ -35,7 +35,7 @@ export default function ConnectCursorCloudModal({
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} className="max-w-lg p-6">
-      <h2 className="pr-10 text-lg font-semibold text-gray-900 dark:text-white/90">
+      <h2 className="pr-10 text-lg font-semibold text-awc-fg dark:text-white/90">
         Connect Cursor Cloud
       </h2>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
@@ -60,7 +60,7 @@ export default function ConnectCursorCloudModal({
         </li>
         <li>
           Create or copy a Cloud Agents API key (starts with{" "}
-          <code className="rounded bg-gray-100 px-1 text-xs dark:bg-gray-800">
+          <code className="rounded bg-awc-fill px-1 text-xs dark:bg-gray-800">
             key_
           </code>
           ).
@@ -68,7 +68,7 @@ export default function ConnectCursorCloudModal({
         <li>Paste it below and connect. Disconnect anytime under Computers.</li>
       </ol>
 
-      <label className="mt-5 block text-sm font-medium text-gray-800 dark:text-white/90">
+      <label className="mt-5 block text-sm font-medium text-awc-fg dark:text-white/90">
         API key
         <input
           type="password"

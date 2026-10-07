@@ -43,11 +43,11 @@ export default function AwcHumanInviteAcceptJoinBody(props: AwcHumanInviteAccept
       <h1 className="mt-1 text-xl font-semibold">
         {withProjectName(copy.acceptJoinTitle, props.projectName)}
       </h1>
-      <p className="mt-2 text-sm text-gray-700 dark:text-white/80">
+      <p className="mt-2 text-sm text-awc-fg dark:text-white/80">
         {props.inviterDisplayName} invited you as a {roleLabel}.
       </p>
-      <p className="mt-1 text-xs text-gray-500">{roleOneLiner}</p>
-      <p className="mt-2 text-xs text-gray-500">
+      <p className="mt-1 text-xs text-awc-fg-muted">{roleOneLiner}</p>
+      <p className="mt-2 text-xs text-awc-fg-muted">
         Invited by {props.inviterDisplayName} · {props.expiresInLabel}
       </p>
       {props.requireEmailMatch ? (
@@ -57,7 +57,7 @@ export default function AwcHumanInviteAcceptJoinBody(props: AwcHumanInviteAccept
       ) : null}
       {props.viewState === "signed_out" ? (
         <>
-          <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+          <p className="mt-4 text-sm text-awc-fg-muted dark:text-gray-400">
             {copy.acceptSignedOutHint}
           </p>
           <div className="mt-4 flex flex-wrap gap-2">

@@ -10,7 +10,7 @@ const severityClassName = (
   severity: AgentLiveRunBudgetNotice["severity"],
 ): string => {
   if (severity === "info") {
-    return "border-gray-200 bg-gray-50 text-gray-800 dark:border-gray-700 dark:bg-white/[0.04] dark:text-gray-200";
+    return "border-awc-border bg-awc-surface-2 text-awc-fg dark:border-gray-700 dark:bg-white/[0.04] dark:text-gray-200";
   }
 
   return "border-amber-200 bg-amber-50 text-amber-950 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-100";

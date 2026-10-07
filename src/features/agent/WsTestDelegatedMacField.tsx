@@ -43,7 +43,7 @@ export default function WsTestDelegatedMacField({
         onDelete={onDeviceDeleted}
       />
       {disabled ? (
-        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-xs text-awc-fg-muted dark:text-gray-400">
           Finish the current Mac session to switch devices.
         </p>
       ) : null}

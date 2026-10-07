@@ -19,7 +19,7 @@ interface ComposerBlockedActionButtonsProps {
 const primaryButtonClass =
   "inline-flex h-11 items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50";
 const outlineButtonClass =
-  "inline-flex h-11 items-center justify-center rounded-lg border border-gray-200 px-5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5";
+  "inline-flex h-11 items-center justify-center rounded-lg border border-awc-border px-5 text-sm font-medium text-awc-fg transition hover:bg-awc-surface-2 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5";
 
 export default function ComposerBlockedActionButtons({
   blockedAction,

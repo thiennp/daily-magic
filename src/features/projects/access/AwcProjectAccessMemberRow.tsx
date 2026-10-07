@@ -57,7 +57,7 @@ export default function AwcProjectAccessMemberRow({
       id={awcProjectAccessMemberAnchorId(member.userId)}
       className="flex flex-wrap items-center justify-between gap-2 scroll-mt-20 rounded-md text-sm target:ring-2 target:ring-amber-400/80"
     >
-      <span className="text-gray-800 dark:text-white/90">
+      <span className="text-awc-fg dark:text-white/90">
         {member.isAgent ? (
           <>
             <span className="font-medium">
@@ -70,10 +70,10 @@ export default function AwcProjectAccessMemberRow({
             </span>
           </>
         ) : (
-          <span className="text-xs text-gray-500">{member.userId}</span>
+          <span className="text-xs text-awc-fg-muted">{member.userId}</span>
         )}
         {member.teamLabel ? (
-          <span className="ml-1 text-xs text-gray-500">({member.teamLabel})</span>
+          <span className="ml-1 text-xs text-awc-fg-muted">({member.teamLabel})</span>
         ) : null}
         {autoApproved ? (
           <span className="ml-2 rounded-full bg-emerald-100 px-1.5 py-0.5 text-[10px] font-medium text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200">
@@ -102,7 +102,7 @@ export default function AwcProjectAccessMemberRow({
         </button>
       </span>
       {wakeLinkState === "awaiting" ? (
-        <p className="basis-full text-xs text-gray-600 dark:text-gray-300">
+        <p className="basis-full text-xs text-awc-fg-muted dark:text-gray-300">
           {formatAwcGrokWakeCopy(
             AWC_GROK_WAKE_AWAITING_COPY.helper,
             member.projectDisplayName,

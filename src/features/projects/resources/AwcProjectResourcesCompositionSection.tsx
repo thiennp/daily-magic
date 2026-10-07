@@ -5,9 +5,9 @@ import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 
 const ROW_CLASS =
-  "flex items-center justify-between gap-3 border-t border-gray-200/80 px-3 py-3 first:border-t-0 dark:border-gray-800/80";
+  "flex items-center justify-between gap-3 border-t border-awc-border/80 px-3 py-3 first:border-t-0 dark:border-gray-800/80";
 const LINK_CLASS =
-  "shrink-0 text-[13px] font-medium text-gray-900 underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400/40 dark:text-white";
+  "shrink-0 text-[13px] font-medium text-awc-fg underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400/40 dark:text-white";
 
 const KINDS = [
   { kind: "harness", title: C.playbooksTitle },
@@ -35,7 +35,7 @@ export default function AwcProjectResourcesCompositionSection({
       <div className="flex items-baseline justify-between gap-3 px-1">
         <h3
           id="res-pwa-h"
-          className="text-[13px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400"
+          className="text-[13px] font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-400"
         >
           {C.pwaHeading}
         </h3>
@@ -54,20 +54,20 @@ export default function AwcProjectResourcesCompositionSection({
           </span>
         )}
       </div>
-      <div className="overflow-hidden rounded-2xl bg-gray-50/80 dark:bg-white/[0.03]">
+      <div className="overflow-hidden rounded-2xl bg-awc-surface-2/80 dark:bg-white/[0.03]">
         {KINDS.map(({ kind, title }) => {
           const count = isLoading ? 0 : counts[kind];
           return (
             <div key={kind} className={ROW_CLASS}>
               <div className="min-w-0">
-                <p className="text-[15px] font-medium text-gray-900 dark:text-gray-100">
+                <p className="text-[15px] font-medium text-awc-fg dark:text-gray-100">
                   {title}
                 </p>
-                <p className="text-[13px] text-gray-500 dark:text-gray-400">
+                <p className="text-[13px] text-awc-fg-muted dark:text-gray-400">
                   {count === 0 ? sub : `${count} attached. View here, edit on ${deviceDisplayName}.`}
                 </p>
               </div>
-              <span className="tabular-nums text-sm text-gray-500 dark:text-gray-400">
+              <span className="tabular-nums text-sm text-awc-fg-muted dark:text-gray-400">
                 {isLoading ? "…" : count}
               </span>
             </div>

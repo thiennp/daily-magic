@@ -7,7 +7,7 @@ import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAc
 import type { FolderRefComputerOption } from "@/features/projects/access/utils/folderRefComputerOptions";
 
 const FIELD =
-  "mt-1 w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-950";
+  "mt-1 w-full rounded-md border border-awc-border-strong bg-white px-2 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-950";
 
 interface AwcProjectAccessFolderRefsFormProps {
   readonly computers: readonly FolderRefComputerOption[];
@@ -36,8 +36,8 @@ export default function AwcProjectAccessFolderRefsForm({
   const pathHelpId = `${idBase}-path-help`;
 
   return (
-    <div className="space-y-2 rounded-lg border border-gray-200/80 p-3 dark:border-gray-800/80">
-      <p className="text-[11px] text-gray-500 dark:text-gray-400">
+    <div className="space-y-2 rounded-lg border border-awc-border/80 p-3 dark:border-gray-800/80">
+      <p className="text-[11px] text-awc-fg-muted dark:text-gray-400">
         {copy.folderRefsFormHint}
       </p>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start">
@@ -51,7 +51,7 @@ export default function AwcProjectAccessFolderRefsForm({
         />
         <div className="min-w-0 flex-1">
           <label
-            className="block text-xs text-gray-600 dark:text-gray-400"
+            className="block text-xs text-awc-fg-muted dark:text-gray-400"
             htmlFor={pathId}
           >
             {copy.folderPathLabel}
@@ -66,7 +66,7 @@ export default function AwcProjectAccessFolderRefsForm({
           </label>
           <span
             id={pathHelpId}
-            className="mt-0.5 block text-[11px] text-gray-500 dark:text-gray-400"
+            className="mt-0.5 block text-[11px] text-awc-fg-muted dark:text-gray-400"
           >
             {copy.folderPathHelp}
           </span>

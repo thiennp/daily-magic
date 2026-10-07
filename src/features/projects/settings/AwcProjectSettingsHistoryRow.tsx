@@ -41,21 +41,21 @@ export default function AwcProjectSettingsHistoryRow({
     <section className="flex flex-col gap-2" aria-labelledby="p-set-hist-h">
       <h3
         id="p-set-hist-h"
-        className="text-[13px] font-semibold text-gray-500 dark:text-gray-400"
+        className="text-[13px] font-semibold text-awc-fg-muted dark:text-gray-400"
       >
         {C.historyHeading}
       </h3>
       <button
         type="button"
-        className="flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-left text-sm transition-all hover:bg-gray-100/70 dark:hover:bg-white/10"
+        className="flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-left text-sm transition-all hover:bg-awc-tile/70 dark:hover:bg-white/10"
         aria-label={C.historyAria}
         onClick={onActivate}
       >
         <span className="min-w-0 flex-1">
-          <span className="block font-medium text-gray-800 dark:text-white/90">
+          <span className="block font-medium text-awc-fg dark:text-white/90">
             {C.historyTitle}
           </span>
-          <span className="mt-0.5 block text-[13px] text-gray-500 dark:text-gray-400">
+          <span className="mt-0.5 block text-[13px] text-awc-fg-muted dark:text-gray-400">
             {C.historySub}
           </span>
         </span>
@@ -78,7 +78,7 @@ export default function AwcProjectSettingsHistoryRow({
       </button>
       {toast ? (
         <p
-          className="px-3.5 text-[13px] font-medium text-gray-700 dark:text-gray-200"
+          className="px-3.5 text-[13px] font-medium text-awc-fg dark:text-gray-200"
           role="status"
         >
           {toast}

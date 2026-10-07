@@ -37,7 +37,7 @@ export default function ConnectCursorCloudSubmitButton({
       {showReason ? (
         <p
           id={reasonId}
-          className="mt-2 text-xs text-gray-500 dark:text-gray-400"
+          className="mt-2 text-xs text-awc-fg-muted dark:text-gray-400"
         >
           {CONNECT_CURSOR_CLOUD_EMPTY_KEY_REASON}
         </p>

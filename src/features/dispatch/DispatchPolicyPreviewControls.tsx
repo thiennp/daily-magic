@@ -44,18 +44,18 @@ export default function DispatchPolicyPreviewControls() {
 
   return (
     <div className="mt-4 space-y-3">
-      <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+      <p className="text-sm font-medium text-awc-fg dark:text-white/90">
         Effective policy preview
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
-        <label className="text-xs text-gray-600 dark:text-gray-400">
+        <label className="text-xs text-awc-fg-muted dark:text-gray-400">
           Device
           <select
             value={deviceId}
             onChange={(event) => {
               setPreferredDeviceId(event.target.value);
             }}
-            className="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
+            className="mt-1 w-full rounded-lg border border-awc-border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
           >
             <option value="">Most recent device</option>
             {devices.map((device) => (
@@ -65,14 +65,14 @@ export default function DispatchPolicyPreviewControls() {
             ))}
           </select>
         </label>
-        <label className="text-xs text-gray-600 dark:text-gray-400">
+        <label className="text-xs text-awc-fg-muted dark:text-gray-400">
           {COMPANY_ENTITY_LABEL} context
           <select
             value={groupId}
             onChange={(event) => {
               setGroupId(event.target.value);
             }}
-            className="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
+            className="mt-1 w-full rounded-lg border border-awc-border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
           >
             <option value="">No {COMPANY_ENTITY_LABEL.toLowerCase()}</option>
             {groups.map((group) => (

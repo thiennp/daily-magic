@@ -46,7 +46,7 @@ export default function DeleteLocalMacModal({
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} className="max-w-lg p-6">
-      <h2 className="pr-10 text-lg font-semibold text-gray-900 dark:text-white/90">
+      <h2 className="pr-10 text-lg font-semibold text-awc-fg dark:text-white/90">
         Delete local AgentWitch
       </h2>
       <DeleteLocalMacModalPhaseContent

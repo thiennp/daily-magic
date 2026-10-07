@@ -13,10 +13,10 @@ export default function FeedbackInboxItemRow({
 }: FeedbackInboxItemRowProps) {
   return (
     <li className={APP_SURFACE_NESTED_CARD_CLASS}>
-      <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+      <p className="text-sm font-medium text-awc-fg dark:text-white/90">
         {item.capabilityName ?? "Assistant"} · {item.reviewerEmail}
       </p>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
         {item.comment}
       </p>
       <FeedbackInboxItemActions item={item} onUpdated={onUpdated} />

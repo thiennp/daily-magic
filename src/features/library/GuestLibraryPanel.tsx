@@ -28,7 +28,7 @@ export default function GuestLibraryPanel({
 
   return (
     <div className="space-y-8 pb-8 md:pb-0">
-      <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+      <p className="text-sm leading-relaxed text-awc-fg-muted dark:text-gray-400">
         Draft Playbooks here without an account. A Playbook is how AgentWitch
         knows what to do on your computer. Saves stay on this browser until you{" "}
         <Link
@@ -42,7 +42,7 @@ export default function GuestLibraryPanel({
 
       {drafts.length > 0 ? (
         <section className="space-y-3">
-          <h2 className="text-base font-semibold text-gray-800 dark:text-white/90">
+          <h2 className="text-base font-semibold text-awc-fg dark:text-white/90">
             Saved on this browser
           </h2>
           {drafts.map((draft) => (
@@ -56,10 +56,10 @@ export default function GuestLibraryPanel({
       ) : null}
 
       <section>
-        <h2 className="text-base font-semibold text-gray-800 dark:text-white/90">
+        <h2 className="text-base font-semibold text-awc-fg dark:text-white/90">
           Starter templates
         </h2>
-        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-1 text-sm text-awc-fg-muted dark:text-gray-400">
           Add a preset to your browser library, then customize after you create
           an account.
         </p>
@@ -71,7 +71,7 @@ export default function GuestLibraryPanel({
         />
       </section>
 
-      <p className="text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-sm text-awc-fg-muted dark:text-gray-400">
         <Link
           href={CREATE_FREE_ACCOUNT_HREF}
           className="text-brand-600 hover:underline dark:text-brand-400"

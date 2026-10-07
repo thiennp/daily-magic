@@ -29,7 +29,7 @@ export default function HarnessCatalogList({
 }: HarnessCatalogListProps) {
   if (isLoading) {
     return (
-      <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+      <p className="mt-4 text-sm text-awc-fg-muted dark:text-gray-400">
         Loading shared setups…
       </p>
     );
@@ -37,7 +37,7 @@ export default function HarnessCatalogList({
 
   if (entries.length === 0) {
     return (
-      <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+      <p className="mt-4 text-sm text-awc-fg-muted dark:text-gray-400">
         {MAC_WORKER_BENEFIT_COPY.sharedSetupsNeedMac}
       </p>
     );
@@ -52,10 +52,10 @@ export default function HarnessCatalogList({
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+              <p className="text-sm font-medium text-awc-fg dark:text-white/90">
                 {entry.ownerName ?? entry.ownerEmail}
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-xs text-awc-fg-muted dark:text-gray-400">
                 {entry.hostname} · {entry.visibility}
                 {entry.isOnline ? " · online" : " · saved copy"}
               </p>
@@ -68,7 +68,7 @@ export default function HarnessCatalogList({
             </Button>
           </div>
           {entry.setNames.length > 0 ? (
-            <p className="mt-2 text-xs text-gray-600 dark:text-gray-400">
+            <p className="mt-2 text-xs text-awc-fg-muted dark:text-gray-400">
               Sets: {entry.setNames.join(", ")}
             </p>
           ) : null}

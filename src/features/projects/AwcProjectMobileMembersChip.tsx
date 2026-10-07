@@ -4,7 +4,7 @@ import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProj
 import { PROJECT_PAGE_LAYOUT_V2_COPY as C } from "@/features/projects/projectPageLayoutV2Copy.constant";
 
 const CHIP_CLASS =
-  "inline-flex w-fit rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700 ring-1 ring-gray-200 transition hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400/40 dark:bg-white/10 dark:text-gray-200 dark:ring-white/15 dark:hover:bg-white/15 lg:hidden";
+  "inline-flex w-fit rounded-full bg-awc-fill px-3 py-1 text-xs font-semibold text-awc-fg ring-1 ring-awc-border transition hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400/40 dark:bg-white/10 dark:text-gray-200 dark:ring-white/15 dark:hover:bg-white/15 lg:hidden";
 
 const scrollToMembersColumn = (): void => {
   document

@@ -3,7 +3,7 @@
 import { PROJECT_SKILLS_COPY } from "@/features/project-skill-share/internal/presentation/projectSkillsCopy.constant";
 import { PROJECT_SKILLS_INPUT_CLASS } from "@/features/project-skill-share/internal/presentation/projectSkillsSection.constant";
 
-const LABEL_CLASS = "block text-xs text-gray-600 dark:text-gray-400";
+const LABEL_CLASS = "block text-xs text-awc-fg-muted dark:text-gray-400";
 
 interface ProjectSkillPublishFieldsProps {
   readonly nameId: string;

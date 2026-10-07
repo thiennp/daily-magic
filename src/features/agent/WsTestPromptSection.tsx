@@ -71,7 +71,7 @@ export default function WsTestPromptSection({
 
       {shouldShowTeamDispatch ? (
         <AppPanel>
-          <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
+          <h2 className="text-sm font-medium text-awc-fg dark:text-white/90">
             Who receives this task
           </h2>
           <div className="mt-4">

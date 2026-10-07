@@ -40,25 +40,25 @@ export default function AgentRunInputModal({
       showCloseButton={false}
       className="max-w-xl p-6"
     >
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+      <h2 className="text-lg font-semibold text-awc-fg dark:text-white/90">
         Agent needs your input
       </h2>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
         Your computer paused this job until you answer. The run stays{" "}
         <span className="font-medium">running</span> in job history.
       </p>
-      <div className="mt-4 rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-900/40">
-        <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+      <div className="mt-4 rounded-lg border border-awc-border bg-white p-3 dark:border-gray-700 dark:bg-gray-900/40">
+        <p className="text-xs font-medium uppercase tracking-wide text-awc-fg-muted dark:text-gray-400">
           What we need from you
         </p>
         {questionParts.length > 1 ? (
-          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-gray-800 dark:text-white/90">
+          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-awc-fg dark:text-white/90">
             {questionParts.map((part) => (
               <li key={part}>{part}</li>
             ))}
           </ul>
         ) : (
-          <p className="mt-2 text-sm font-medium text-gray-800 dark:text-white/90">
+          <p className="mt-2 text-sm font-medium text-awc-fg dark:text-white/90">
             {request.question}
           </p>
         )}
@@ -71,7 +71,7 @@ export default function AgentRunInputModal({
         selectedResponse={canSubmit ? trimmedResponse : null}
         onSelect={setResponse}
       />
-      <label className="mt-4 block text-sm text-gray-700 dark:text-gray-300">
+      <label className="mt-4 block text-sm text-awc-fg dark:text-gray-300">
         Your answer
         <textarea
           value={response}
@@ -84,17 +84,17 @@ export default function AgentRunInputModal({
               ? "Pick a quick reply or type your own answer…"
               : "Type your answer…"
           }
-          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+          className="mt-2 w-full rounded-lg border border-awc-border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
         />
       </label>
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
         <button
           type="button"
           onClick={onDismiss}
-          className="text-left text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+          className="text-left text-sm text-awc-fg-muted hover:text-awc-fg dark:text-gray-400 dark:hover:text-gray-200"
         >
           <span className="font-medium">Remind me later</span>
-          <span className="mt-0.5 block text-xs text-gray-500 dark:text-gray-500">
+          <span className="mt-0.5 block text-xs text-awc-fg-muted dark:text-gray-500">
             Job stays paused — answer from job history anytime.
           </span>
         </button>

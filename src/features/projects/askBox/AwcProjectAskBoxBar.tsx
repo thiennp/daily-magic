@@ -35,7 +35,7 @@ export default function AwcProjectAskBoxBar({
     <div className="flex flex-wrap items-center justify-between gap-2.5">
       <div className="flex min-w-0 flex-wrap items-center gap-2.5">
         {hideSendTo ? null : (
-          <label className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 py-1 pl-3 pr-2 text-sm text-gray-500 dark:bg-white/10 dark:text-gray-400">
+          <label className="inline-flex items-center gap-1.5 rounded-full bg-awc-fill py-1 pl-3 pr-2 text-sm text-awc-fg-muted dark:bg-white/10 dark:text-gray-400">
             {copy.sendTo}
             <select
               aria-label={copy.sendTo}
@@ -44,10 +44,10 @@ export default function AwcProjectAskBoxBar({
               onChange={(event) => {
                 onTo(event.target.value);
               }}
-              className={`cursor-pointer appearance-none border-0 bg-transparent py-0.5 pl-0 pr-[18px] text-sm font-medium text-gray-900 focus:outline-none dark:text-white ${SELECT_CHEVRON}`}
+              className={`cursor-pointer appearance-none border-0 bg-transparent py-0.5 pl-0 pr-[18px] text-sm font-medium text-awc-fg focus:outline-none dark:text-white ${SELECT_CHEVRON}`}
             >
               {targets.map((target) => (
-                <option key={target.key} value={target.key} className="bg-white text-gray-900">
+                <option key={target.key} value={target.key} className="bg-white text-awc-fg">
                   {target.label}
                 </option>
               ))}
@@ -55,7 +55,7 @@ export default function AwcProjectAskBoxBar({
           </label>
         )}
         {showCounter ? (
-          <span className="text-[12.5px] tabular-nums text-gray-500 dark:text-gray-400">
+          <span className="text-[12.5px] tabular-nums text-awc-fg-muted dark:text-gray-400">
             {copy.counter(textLength, PROJECT_MESSAGE_SUMMARY_MAX_CHARS)}
           </span>
         ) : null}

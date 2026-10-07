@@ -69,7 +69,7 @@ const AwcProjectNameEditor = ({
           cancel.
         </p>
       ) : null}
-      <label htmlFor={inputId} className="text-xs font-medium text-gray-500">
+      <label htmlFor={inputId} className="text-xs font-medium text-awc-fg-muted">
         Project name
       </label>
       <input

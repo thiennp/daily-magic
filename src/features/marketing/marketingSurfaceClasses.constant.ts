@@ -9,7 +9,7 @@ export const MARKETING_LIGHT_SURFACE_CLASS = "marketing-light-surface";
 
 export const MARKETING_INPUT_BASE_CLASSES = [
   "mt-2 w-full",
-  `${MARKETING_CARD_RADIUS_CLASSES} border border-gray-200 px-3 py-2.5`,
+  `${MARKETING_CARD_RADIUS_CLASSES} border border-awc-border px-3 py-2.5`,
   "text-sm text-awc-fg dark:text-white/90",
   "bg-white shadow-sm placeholder:text-awc-fg-muted",
   "dark:border-gray-700 dark:bg-gray-800 dark:placeholder:text-white/40",
@@ -18,7 +18,7 @@ export const MARKETING_INPUT_BASE_CLASSES = [
 export const MARKETING_INPUT_FOCUS_CLASSES = [
   "outline-none",
   "transition-all duration-200 ease-out",
-  "focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500/30",
+  "focus:border-awc-blue-600 focus:outline-none focus:ring-2 focus:ring-awc-blue-600/30",
   "dark:focus:border-white/50 dark:focus:ring-white/30",
 ].join(" ");
 

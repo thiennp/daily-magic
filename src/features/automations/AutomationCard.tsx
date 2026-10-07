@@ -26,20 +26,20 @@ export default function AutomationCard({
   return (
     <AppPanel as="article" padding="compact">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <p className="text-sm font-medium text-awc-fg dark:text-white/90">
           {automation.name}
         </p>
-        <span className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+        <span className="text-xs uppercase tracking-wide text-awc-fg-muted dark:text-gray-400">
           {automation.enabled
             ? AUTOMATIONS_PAGE_COPY.enable
             : AUTOMATIONS_PAGE_COPY.disable}
         </span>
       </div>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
         {formatAutomationScheduleLabel(automation)}
       </p>
       {automation.nextRunAt !== null ? (
-        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-1 text-xs text-awc-fg-muted dark:text-gray-400">
           Next run: {new Date(automation.nextRunAt).toLocaleString()}
         </p>
       ) : null}

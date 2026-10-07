@@ -23,7 +23,7 @@ export default function AwcProjectDetailSection({
       <header className="space-y-0.5">
         <h3 className={AWC_PROJECT_DETAIL_SECTION_TITLE_CLASS}>{title}</h3>
         {hint ? (
-          <p className="text-xs text-gray-500 dark:text-gray-400">{hint}</p>
+          <p className="text-xs text-awc-fg-muted dark:text-gray-400">{hint}</p>
         ) : null}
       </header>
       {children}

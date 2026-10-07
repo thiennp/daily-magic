@@ -9,9 +9,9 @@ import {
 } from "@/features/projects/projectPagePanelChrome.constant";
 
 const MENU_CLASS =
-  "absolute right-0 z-20 mt-1 min-w-36 overflow-hidden rounded-xl border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-900";
+  "absolute right-0 z-20 mt-1 min-w-36 overflow-hidden rounded-xl border border-awc-border bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-900";
 const MENU_ITEM_CLASS =
-  "block w-full px-3 py-1.5 text-left text-sm text-gray-800 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-white/[0.06]";
+  "block w-full px-3 py-1.5 text-left text-sm text-awc-fg hover:bg-awc-surface-2 dark:text-gray-200 dark:hover:bg-white/[0.06]";
 
 interface Props {
   readonly canEdit: boolean;

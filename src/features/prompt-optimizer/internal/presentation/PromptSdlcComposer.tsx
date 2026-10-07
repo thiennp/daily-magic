@@ -78,7 +78,7 @@ export default function PromptSdlcComposer(
         onImproverIdChange={props.onImproverIdChange}
       />
       {props.modelNote.length > 0 ? (
-        <p className="text-sm text-gray-600 dark:text-gray-300">
+        <p className="text-sm text-awc-fg-muted dark:text-gray-300">
           {props.modelNote}
         </p>
       ) : null}

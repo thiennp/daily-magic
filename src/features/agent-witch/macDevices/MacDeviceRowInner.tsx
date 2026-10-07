@@ -44,7 +44,7 @@ export default function MacDeviceRowInner({
   const rowSurfaceClassName =
     onSelect !== undefined && isSelected
       ? "bg-brand-50/60 dark:bg-brand-950/20"
-      : "hover:bg-gray-50 dark:hover:bg-white/[0.03]";
+      : "hover:bg-awc-surface-2 dark:hover:bg-white/[0.03]";
 
   return (
     <div

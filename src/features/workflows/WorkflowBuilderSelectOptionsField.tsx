@@ -24,7 +24,7 @@ export default function WorkflowBuilderSelectOptionsField({
         onChange={(event) => {
           onChange(event.target.value.split("\n"));
         }}
-        className="mt-0 h-auto min-h-20 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm shadow-theme-xs focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800"
+        className="mt-0 h-auto min-h-20 w-full rounded-lg border border-awc-border-strong bg-transparent px-3 py-2 text-sm shadow-theme-xs focus:border-awc-blue-300 focus:outline-hidden focus:ring-3 focus:ring-awc-blue-600/10 dark:border-gray-700 dark:bg-gray-800"
       />
     </div>
   );

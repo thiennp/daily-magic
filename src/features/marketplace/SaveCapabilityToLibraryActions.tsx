@@ -70,7 +70,7 @@ export default function SaveCapabilityToLibraryActions({
             ? "Saved to my library"
             : "Save to my library"}
       </Button>
-      <p className="text-xs text-gray-500 dark:text-gray-400">
+      <p className="text-xs text-awc-fg-muted dark:text-gray-400">
         {isOfficialPreset
           ? MAC_WORKER_BENEFIT_COPY.officialPresetHelper
           : `Copies the prompt from ${sourceOwnerLabel}. Use Install for the rules bundle.`}
@@ -85,7 +85,7 @@ export default function SaveCapabilityToLibraryActions({
           className={`text-xs ${
             status === "error"
               ? "text-amber-700 dark:text-amber-300"
-              : "text-gray-500 dark:text-gray-400"
+              : "text-awc-fg-muted dark:text-gray-400"
           }`}
         >
           {message}

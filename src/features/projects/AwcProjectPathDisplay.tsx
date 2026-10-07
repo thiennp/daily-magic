@@ -40,7 +40,7 @@ export default function AwcProjectPathDisplay({
   return (
     <div className="flex min-w-0 max-w-full items-center gap-2">
       <p
-        className="min-w-0 max-w-full overflow-hidden text-ellipsis whitespace-nowrap font-mono text-[12.5px] text-gray-600 dark:text-gray-300"
+        className="min-w-0 max-w-full overflow-hidden text-ellipsis whitespace-nowrap font-mono text-[12.5px] text-awc-fg-muted dark:text-gray-300"
         title={full}
         aria-label={copy.pathLabel}
       >

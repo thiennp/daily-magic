@@ -11,7 +11,7 @@ export default function RepairThisComputerCommandBlock({
 }: RepairThisComputerCommandBlockProps) {
   return (
     <div className="space-y-2">
-      <p className="text-sm font-medium text-gray-900 dark:text-white/90">
+      <p className="text-sm font-medium text-awc-fg dark:text-white/90">
         {label}
       </p>
       <pre className={APP_SURFACE_BASH_TERMINAL_PRE_CLASS}>

@@ -38,12 +38,12 @@ export default function AwcProjectConnectionsSection({
     <section className="flex flex-col gap-2" aria-labelledby="p-set-conn-h">
       <h3
         id="p-set-conn-h"
-        className="text-[13px] font-semibold text-gray-500 dark:text-gray-400"
+        className="text-[13px] font-semibold text-awc-fg-muted dark:text-gray-400"
       >
         {C.heading}
       </h3>
-      <p className="text-[13px] text-gray-500 dark:text-gray-400">{C.intro}</p>
-      <p className="text-[12px] text-gray-500 dark:text-gray-400">
+      <p className="text-[13px] text-awc-fg-muted dark:text-gray-400">{C.intro}</p>
+      <p className="text-[12px] text-awc-fg-muted dark:text-gray-400">
         {C.vsConnectHint}
       </p>
       <AwcProjectConnectionsLoadNotes
@@ -54,11 +54,11 @@ export default function AwcProjectConnectionsSection({
       {showList ? (
         <>
           {allDisconnected ? (
-            <p className="text-[13px] text-gray-500 dark:text-gray-400">
+            <p className="text-[13px] text-awc-fg-muted dark:text-gray-400">
               {C.empty}
             </p>
           ) : null}
-          <p className="text-[13px] text-gray-500 dark:text-gray-400">
+          <p className="text-[13px] text-awc-fg-muted dark:text-gray-400">
             {C.vsResources}
           </p>
           <ul className="flex flex-col gap-2">

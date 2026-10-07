@@ -12,13 +12,13 @@ export default function AwcProjectInboxDispatchStatus({
       {statusText !== null ? (
         <p
           role="status"
-          className="text-[11px] font-medium text-gray-700 dark:text-gray-200"
+          className="text-[11px] font-medium text-awc-fg dark:text-gray-200"
         >
           {statusText}
         </p>
       ) : null}
       {toast ? (
-        <p className="text-[11px] font-medium text-gray-700 dark:text-gray-200">
+        <p className="text-[11px] font-medium text-awc-fg dark:text-gray-200">
           {toast}
         </p>
       ) : null}

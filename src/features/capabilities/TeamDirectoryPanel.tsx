@@ -16,7 +16,7 @@ export default function TeamDirectoryPanel() {
   if (isLoading) {
     return (
       <AppPanel>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-awc-fg-muted dark:text-gray-400">
           Loading {COMPANY_DIRECTORY_TITLE.toLowerCase()}…
         </p>
       </AppPanel>
@@ -38,7 +38,7 @@ export default function TeamDirectoryPanel() {
       <div className="mt-4 space-y-6">
         {groups.map((group) => (
           <div key={group.groupId}>
-            <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
+            <h3 className="text-sm font-medium text-awc-fg dark:text-white/90">
               {group.groupName}
             </h3>
             <ul className="mt-3 space-y-4">
@@ -52,11 +52,11 @@ export default function TeamDirectoryPanel() {
                     key={member.userId}
                     className={APP_SURFACE_NESTED_CARD_CLASS}
                   >
-                    <p className="font-medium text-gray-800 dark:text-white/90">
+                    <p className="font-medium text-awc-fg dark:text-white/90">
                       {member.name ?? member.email}
                     </p>
                     {visibleCapabilities.length === 0 ? (
-                      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                      <p className="mt-1 text-sm text-awc-fg-muted dark:text-gray-400">
                         No published assistants yet.
                       </p>
                     ) : (
@@ -64,9 +64,9 @@ export default function TeamDirectoryPanel() {
                         {visibleCapabilities.map((capability) => (
                           <li
                             key={capability.id}
-                            className="text-sm text-gray-600 dark:text-gray-400"
+                            className="text-sm text-awc-fg-muted dark:text-gray-400"
                           >
-                            <span className="font-medium text-gray-800 dark:text-white/90">
+                            <span className="font-medium text-awc-fg dark:text-white/90">
                               {capability.name}
                             </span>
                             {capability.description.length > 0

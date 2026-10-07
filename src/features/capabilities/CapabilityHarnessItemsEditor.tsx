@@ -34,10 +34,10 @@ export default function CapabilityHarnessItemsEditor({
   return (
     <section className="space-y-4">
       <div>
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-white/90">
+        <h3 className="text-sm font-semibold text-awc-fg dark:text-white/90">
           {title}
         </h3>
-        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-1 text-sm text-awc-fg-muted dark:text-gray-400">
           {description}
         </p>
       </div>

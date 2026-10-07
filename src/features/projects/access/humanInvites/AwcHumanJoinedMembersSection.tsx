@@ -20,20 +20,20 @@ export default function AwcHumanJoinedMembersSection({
 
   return (
     <div>
-      <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
+      <h4 className="text-xs font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-300">
         {copy.joinedSubhead}
       </h4>
       <ul className="mt-2 space-y-2">
-        <li className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-gray-200/70 bg-white px-3 py-2 text-sm dark:border-gray-800 dark:bg-transparent">
+        <li className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-awc-border/70 bg-white px-3 py-2 text-sm dark:border-gray-800 dark:bg-transparent">
           <div>
-            <div className="font-medium text-gray-900 dark:text-white/90">
+            <div className="font-medium text-awc-fg dark:text-white/90">
               {copy.youOwner}
             </div>
-            <div className="text-xs text-gray-500">Owner · {ownerLabel}</div>
+            <div className="text-xs text-awc-fg-muted">Owner · {ownerLabel}</div>
           </div>
         </li>
         {joinedHumans.length === 0 ? (
-          <li className="text-sm text-gray-500">{copy.joinedOwnerOnly}</li>
+          <li className="text-sm text-awc-fg-muted">{copy.joinedOwnerOnly}</li>
         ) : (
           joinedHumans.map((member) => (
             <AwcHumanJoinedMemberRow

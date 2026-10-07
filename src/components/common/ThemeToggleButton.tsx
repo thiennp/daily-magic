@@ -12,7 +12,7 @@ export const ThemeToggleButton: React.FC = () => {
       onClick={toggleTheme}
       aria-label={label}
       aria-pressed={theme === "dark"}
-      className="relative flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full hover:text-dark-900 h-11 w-11 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+      className="relative flex items-center justify-center text-awc-fg-muted transition-colors bg-white border border-awc-border rounded-full hover:text-dark-900 h-11 w-11 hover:bg-awc-tile hover:text-awc-fg dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
     >
       <svg
         className="hidden dark:block"

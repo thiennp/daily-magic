@@ -33,12 +33,12 @@ export default function AwcProjectSettingsNameSection({
     <section className="flex flex-col gap-2" aria-labelledby="p-set-name-h">
       <h3
         id="p-set-name-h"
-        className="text-[13px] font-semibold text-gray-500 dark:text-gray-400"
+        className="text-[13px] font-semibold text-awc-fg-muted dark:text-gray-400"
       >
         {C.nameHeading}
       </h3>
       {!canEdit ? (
-        <p className="px-3.5 py-2 text-sm text-gray-800 dark:text-white/90">
+        <p className="px-3.5 py-2 text-sm text-awc-fg dark:text-white/90">
           {name}
         </p>
       ) : (
@@ -79,7 +79,7 @@ export default function AwcProjectSettingsNameSection({
           ) : null}
         </form>
       )}
-      <p className="text-[13px] text-gray-500 dark:text-gray-400">
+      <p className="text-[13px] text-awc-fg-muted dark:text-gray-400">
         {C.nameNote}
       </p>
     </section>

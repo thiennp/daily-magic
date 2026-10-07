@@ -6,7 +6,7 @@ import {
 
 export const MARKETING_CARD_INTERACTIVE_CLASSES = [
   "transition-all duration-300 ease-out",
-  "hover:border-gray-300 hover:shadow-md",
+  "hover:border-awc-border-strong hover:shadow-md",
   "motion-reduce:transition-none motion-reduce:hover:translate-y-0",
 ].join(" ");
 
@@ -27,10 +27,10 @@ export const MARKETING_CTA_SECONDARY_CLASSES = [
 
 export const MARKETING_CTA_GHOST_CLASSES = [
   "inline-flex items-center",
-  "text-sm font-medium text-gray-700 underline-offset-4",
+  "text-sm font-medium text-awc-fg underline-offset-4",
   "rounded-sm",
   "dark:text-gray-400 dark:hover:text-white",
-  "transition-all duration-200 ease-out hover:text-gray-900 hover:underline",
+  "transition-all duration-200 ease-out hover:text-awc-fg hover:underline",
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400/50 focus-visible:ring-offset-2",
 ].join(" ");
 
@@ -38,14 +38,14 @@ export const MARKETING_TEXT_LINK_CLASSES = [
   MARKETING_LINK_CLASSES,
   "rounded-sm",
   "dark:text-brand-300 dark:hover:text-white",
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2",
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-awc-blue-600/40 focus-visible:ring-offset-2",
 ].join(" ");
 
 export const MARKETING_SHOWCASE_CARD_BASE_CLASSES = [
   "group rounded-xl p-6",
-  "bg-white shadow-sm ring-1 ring-gray-200/80",
+  "bg-white shadow-sm ring-1 ring-awc-border/80",
   "dark:bg-white/[0.02] dark:ring-gray-800",
-  "transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-md hover:ring-gray-300/80",
+  "transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-md hover:ring-awc-border-strong/80",
   "focus-within:ring-2 focus-within:ring-brand-500/25 focus-within:ring-offset-2",
   "dark:focus-within:ring-white/20 dark:focus-within:ring-offset-gray-900",
   "motion-reduce:transition-none motion-reduce:hover:translate-y-0",

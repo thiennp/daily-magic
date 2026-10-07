@@ -59,18 +59,18 @@ export default function HomeMarketingStatusPreview() {
           <span className={MARKETING_TEXT_SECONDARY_CLASSES}>
             Bots handing over work
           </span>
-          <span className="rounded-full bg-gray-100 px-2 py-0.5 font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200">
+          <span className="rounded-full bg-awc-fill px-2 py-0.5 font-medium text-awc-fg dark:bg-gray-800 dark:text-gray-200">
             WB
           </span>
           <span>→</span>
-          <span className="rounded-full bg-gray-100 px-2 py-0.5 font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200">
+          <span className="rounded-full bg-awc-fill px-2 py-0.5 font-medium text-awc-fg dark:bg-gray-800 dark:text-gray-200">
             MG
           </span>
-          <span className="rounded-full border border-gray-200 px-2 py-0.5 text-gray-600 dark:border-gray-700 dark:text-gray-300">
+          <span className="rounded-full border border-awc-border px-2 py-0.5 text-awc-fg-muted dark:border-gray-700 dark:text-gray-300">
             Approved by you
           </span>
         </div>
-        <dl className="grid grid-cols-3 gap-3 border-t border-gray-100 pt-3 text-sm dark:border-gray-800">
+        <dl className="grid grid-cols-3 gap-3 border-t border-awc-border pt-3 text-sm dark:border-gray-800">
           <div>
             <dt className={MARKETING_TEXT_SECONDARY_CLASSES}>Setup</dt>
             <dd className={MARKETING_TEXT_PRIMARY_CLASSES}>~15 min</dd>

@@ -46,10 +46,10 @@ export default function WorkflowBuilderFlowTreeModals({
         onClose={onCloseEntryForm}
         className="max-w-2xl p-6 sm:p-8"
       >
-        <h4 className="text-lg font-semibold text-gray-900 dark:text-white/90">
+        <h4 className="text-lg font-semibold text-awc-fg dark:text-white/90">
           {WORKFLOW_BUILDER_FLOW_SECTION.entryPointLabel}
         </h4>
-        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-1 text-sm text-awc-fg-muted dark:text-gray-400">
           {WORKFLOW_BUILDER_FLOW_SECTION.entryPointHint}
         </p>
         <div className="mt-6">
@@ -70,7 +70,7 @@ export default function WorkflowBuilderFlowTreeModals({
       >
         {activeRunStep !== undefined ? (
           <>
-            <h4 className="text-lg font-semibold text-gray-900 dark:text-white/90">
+            <h4 className="text-lg font-semibold text-awc-fg dark:text-white/90">
               {HARNESS_KIND_LABELS[activeRunStep.kind]}
             </h4>
             <div className="mt-6">

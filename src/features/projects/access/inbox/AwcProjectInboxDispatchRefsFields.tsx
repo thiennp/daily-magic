@@ -6,7 +6,7 @@ import { AWC_PROJECT_INBOX_COPY } from "@/features/projects/access/inbox/awcProj
 import AwcBotSupportUrlKindLabel from "@/features/projects/botSupportUrl/AwcBotSupportUrlKindLabel";
 
 const FIELD =
-  "mt-1 w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-xs dark:border-gray-700 dark:bg-gray-950";
+  "mt-1 w-full rounded-md border border-awc-border-strong bg-white px-2 py-1.5 text-xs dark:border-gray-700 dark:bg-gray-950";
 
 interface AwcProjectInboxDispatchRefsFieldsProps {
   readonly prUrl: string;
@@ -38,11 +38,11 @@ export default function AwcProjectInboxDispatchRefsFields({
 
   return (
     <div className="space-y-1.5">
-      <p className="text-[11px] font-medium text-gray-600 dark:text-gray-400">
+      <p className="text-[11px] font-medium text-awc-fg-muted dark:text-gray-400">
         {copy.dispatchRefsHeading}
       </p>
       <AwcBotSupportUrlKindLabel url={prUrl} />
-      <label className="block text-xs text-gray-600 dark:text-gray-400" htmlFor={prUrlId}>
+      <label className="block text-xs text-awc-fg-muted dark:text-gray-400" htmlFor={prUrlId}>
         {copy.dispatchPrUrlLabel}
         <input
           id={prUrlId}
@@ -52,7 +52,7 @@ export default function AwcProjectInboxDispatchRefsFields({
           onChange={(event) => onPrUrl(event.target.value)}
         />
       </label>
-      <label className="block text-xs text-gray-600 dark:text-gray-400" htmlFor={commitShaId}>
+      <label className="block text-xs text-awc-fg-muted dark:text-gray-400" htmlFor={commitShaId}>
         {copy.dispatchCommitShaLabel}
         <input
           id={commitShaId}
@@ -62,7 +62,7 @@ export default function AwcProjectInboxDispatchRefsFields({
           onChange={(event) => onCommitSha(event.target.value)}
         />
       </label>
-      <label className="block text-xs text-gray-600 dark:text-gray-400" htmlFor={localPathId}>
+      <label className="block text-xs text-awc-fg-muted dark:text-gray-400" htmlFor={localPathId}>
         {copy.dispatchLocalPathLabel}
         <input
           id={localPathId}
@@ -73,7 +73,7 @@ export default function AwcProjectInboxDispatchRefsFields({
         />
       </label>
       <label
-        className="block text-xs text-gray-600 dark:text-gray-400"
+        className="block text-xs text-awc-fg-muted dark:text-gray-400"
         htmlFor={allowClaimIdField}
       >
         {copy.dispatchAllowClaimIdLabel}

@@ -33,7 +33,7 @@ export default function AwcProjectInboxArchivedPanel({
         {canRestore ? (
           <span />
         ) : (
-          <p className="text-[11px] text-gray-500 dark:text-gray-400">
+          <p className="text-[11px] text-awc-fg-muted dark:text-gray-400">
             {copy.ownerOnlyReason}
           </p>
         )}

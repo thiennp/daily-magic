@@ -18,7 +18,7 @@ export default function AdminSidebar() {
 
   return (
     <AppPanel as="aside" padding="compact" className="h-fit">
-      <p className="mb-3 text-sm font-medium text-gray-800 dark:text-white/90">
+      <p className="mb-3 text-sm font-medium text-awc-fg dark:text-white/90">
         Management
       </p>
       <nav
@@ -40,8 +40,8 @@ export default function AdminSidebar() {
               aria-current={isActive ? "page" : undefined}
               className={`rounded-lg px-3 py-2 text-sm transition ${
                 isActive
-                  ? "bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-400"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-brand-600 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-brand-400"
+                  ? "bg-awc-accent-soft text-awc-blue-700 dark:bg-brand-500/10 dark:text-brand-400"
+                  : "text-awc-fg-muted hover:bg-awc-surface-2 hover:text-awc-blue-600 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-brand-400"
               }`}
             >
               {item.label}

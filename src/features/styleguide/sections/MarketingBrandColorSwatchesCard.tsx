@@ -19,11 +19,11 @@ export default function MarketingBrandColorSwatchesCard() {
           <div key={swatch.label} className="space-y-2">
             <div
               className={mergeMarketingClasses(
-                "h-14 rounded-lg ring-1 ring-gray-200",
+                "h-14 rounded-lg ring-1 ring-awc-border",
                 swatch.className,
               )}
             />
-            <p className="text-xs font-medium text-gray-600">{swatch.label}</p>
+            <p className="text-xs font-medium text-awc-fg-muted">{swatch.label}</p>
           </div>
         ))}
       </div>

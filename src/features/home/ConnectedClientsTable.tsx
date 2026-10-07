@@ -25,7 +25,7 @@ export default function ConnectedClientsTable({
     <div className="overflow-x-auto">
       <table className="min-w-full text-left text-sm">
         <thead>
-          <tr className="border-b border-gray-200 dark:border-gray-700">
+          <tr className="border-b border-awc-border dark:border-gray-700">
             <th className="px-3 py-2">Connection</th>
             <th className="px-3 py-2">Role</th>
             <th className="px-3 py-2">Connected at</th>
@@ -35,9 +35,9 @@ export default function ConnectedClientsTable({
           {clients.map((client) => (
             <tr
               key={client.id}
-              className="border-b border-gray-100 dark:border-gray-800/80"
+              className="border-b border-awc-border dark:border-gray-800/80"
             >
-              <td className="px-3 py-2 text-gray-700 dark:text-gray-300">
+              <td className="px-3 py-2 text-awc-fg dark:text-gray-300">
                 <span className="text-sm">{formatClientLabel(client)}</span>
                 {client.role === "agent" ? (
                   <span className="ml-2 inline-flex items-center rounded-full bg-green-800 px-2 py-0.5 text-xs font-medium text-white">
@@ -46,7 +46,7 @@ export default function ConnectedClientsTable({
                 ) : null}
               </td>
               <td className="px-3 py-2 capitalize">{client.role}</td>
-              <td className="px-3 py-2 text-gray-600 dark:text-gray-400">
+              <td className="px-3 py-2 text-awc-fg-muted dark:text-gray-400">
                 {formatConnectedAt(client.connectedAt)}
               </td>
             </tr>

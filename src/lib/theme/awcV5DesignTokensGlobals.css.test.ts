@@ -95,6 +95,7 @@ describe("globals.css L3 v5 foundation parity (TS source)", () => {
     }
     expect(globalsCss).toContain("--color-brand-500: #1e4fd8");
     expect(globalsCss).toContain("--color-brand-600: #2150d6");
+    expect(globalsCss).toContain("--color-brand-700: #1b3fae");
     expect(globalsCss).toContain("--radius-card: 14px");
     expect(globalsCss).toContain("--awc-radius-card: 20px");
   });

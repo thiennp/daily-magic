@@ -19,15 +19,15 @@ export default function AwcExpiredJoinRequestList({
       {expired.map((req) => (
         <li
           key={req.id}
-          className="rounded-md border border-gray-200/80 p-2 text-sm dark:border-gray-800/80"
+          className="rounded-md border border-awc-border/80 p-2 text-sm dark:border-gray-800/80"
         >
-          <span className="block text-gray-800 dark:text-white/90">
+          <span className="block text-awc-fg dark:text-white/90">
             {pendingAssistantName(req)}
           </span>
-          <span className="mt-0.5 block text-[12px] font-semibold text-gray-600 dark:text-gray-300">
+          <span className="mt-0.5 block text-[12px] font-semibold text-awc-fg-muted dark:text-gray-300">
             {C.expiredTitle}
           </span>
-          <span className="block text-[12px] text-gray-500 dark:text-gray-400">
+          <span className="block text-[12px] text-awc-fg-muted dark:text-gray-400">
             {formatExpiredJoinRequestBody(req.approvalCard)}
           </span>
         </li>

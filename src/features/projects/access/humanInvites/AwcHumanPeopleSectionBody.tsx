@@ -30,7 +30,7 @@ export default function AwcHumanPeopleSectionBody({
         />
       ) : null}
       {people.message ? (
-        <p className="text-xs text-gray-600 dark:text-gray-300">{people.message}</p>
+        <p className="text-xs text-awc-fg-muted dark:text-gray-300">{people.message}</p>
       ) : null}
       {people.loadError ? (
         <p className="rounded-md border border-amber-200/80 bg-amber-50/80 px-3 py-2 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100">
@@ -65,7 +65,7 @@ export default function AwcHumanPeopleSectionBody({
         />
       )}
       {people.isLoading && people.invites.length === 0 ? (
-        <p className="text-xs text-gray-500">Loading people…</p>
+        <p className="text-xs text-awc-fg-muted">Loading people…</p>
       ) : null}
     </>
   );

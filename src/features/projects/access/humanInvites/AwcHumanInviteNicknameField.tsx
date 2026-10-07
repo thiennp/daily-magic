@@ -18,10 +18,10 @@ export default function AwcHumanInviteNicknameField({
 }: AwcHumanInviteNicknameFieldProps) {
   const copy = HUMAN_INVITE_UI_COPY;
   return (
-    <label className="mt-4 block text-xs text-gray-600 dark:text-gray-300">
+    <label className="mt-4 block text-xs text-awc-fg-muted dark:text-gray-300">
       {copy.nicknameLabel}
       <input
-        className="mt-1 w-full rounded-md border border-gray-300 bg-white px-2 py-1 text-sm dark:border-gray-700 dark:bg-gray-950"
+        className="mt-1 w-full rounded-md border border-awc-border-strong bg-white px-2 py-1 text-sm dark:border-gray-700 dark:bg-gray-950"
         name="projectDisplayName"
         autoComplete="nickname"
         maxLength={32}
@@ -30,7 +30,7 @@ export default function AwcHumanInviteNicknameField({
         aria-invalid={error ? true : undefined}
         onChange={(event) => onChange?.(event.target.value)}
       />
-      <span className="mt-1 block text-[11px] text-gray-500">
+      <span className="mt-1 block text-[11px] text-awc-fg-muted">
         {copy.nicknameHint}
       </span>
       {error ? (

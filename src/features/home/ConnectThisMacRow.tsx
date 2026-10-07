@@ -19,7 +19,7 @@ export default function ConnectThisMacRow({
 }: ConnectThisMacRowProps) {
   return (
     <li>
-      <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50/80 px-3 py-3 dark:border-gray-700 dark:bg-white/[0.02]">
+      <div className="rounded-lg border border-dashed border-awc-border bg-awc-surface-2/80 px-3 py-3 dark:border-gray-700 dark:bg-white/[0.02]">
         <div className="flex flex-col gap-3">
           <div className="flex min-w-0 items-start gap-3">
             <MacDeviceIcon
@@ -29,10 +29,10 @@ export default function ConnectThisMacRow({
               )}
             />
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-gray-900 dark:text-white/90">
+              <p className="text-sm font-medium text-awc-fg dark:text-white/90">
                 {APP_SHELL_COMPUTERS_COPY.thisComputer}
               </p>
-              <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+              <p className="mt-0.5 text-xs text-awc-fg-muted dark:text-gray-400">
                 Link the computer you are using now to your account.
               </p>
             </div>

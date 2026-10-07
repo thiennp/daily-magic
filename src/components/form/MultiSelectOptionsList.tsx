@@ -20,7 +20,7 @@ export default function MultiSelectOptionsList({
         {options.map((option, index) => (
           <div key={index}>
             <div
-              className="hover:bg-primary/5 w-full cursor-pointer rounded-t border-b border-gray-200 dark:border-gray-800"
+              className="hover:bg-primary/5 w-full cursor-pointer rounded-t border-b border-awc-border dark:border-gray-800"
               onClick={() => onSelect(option.value)}
             >
               <div
@@ -28,7 +28,7 @@ export default function MultiSelectOptionsList({
                   selectedOptions.includes(option.value) ? "bg-primary/10" : ""
                 }`}
               >
-                <div className="mx-2 leading-6 text-gray-800 dark:text-white/90">
+                <div className="mx-2 leading-6 text-awc-fg dark:text-white/90">
                   {option.text}
                 </div>
               </div>

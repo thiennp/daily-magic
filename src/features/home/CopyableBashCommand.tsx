@@ -68,7 +68,7 @@ export default function CopyableBashCommand({
   const copyButtonClassName = iconOnly
     ? APP_SURFACE_TERMINAL_COPY_BUTTON_CLASS
     : twMerge(
-        "absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-md border border-gray-200 bg-gray-100 px-2.5 py-1.5 text-xs font-medium text-gray-600 shadow-sm transition hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700",
+        "absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-md border border-awc-border bg-awc-fill px-2.5 py-1.5 text-xs font-medium text-awc-fg-muted shadow-sm transition hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700",
       );
 
   return (

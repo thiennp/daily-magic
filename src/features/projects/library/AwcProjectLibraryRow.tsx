@@ -24,7 +24,7 @@ export default function AwcProjectLibraryRow({
   onOpen,
 }: AwcProjectLibraryRowProps) {
   return (
-    <li className="border-t border-gray-200/80 first:border-t-0 dark:border-gray-800/80">
+    <li className="border-t border-awc-border/80 first:border-t-0 dark:border-gray-800/80">
       <button
         type="button"
         aria-label={`${C["library.row.open"]}: ${item.name}`}
