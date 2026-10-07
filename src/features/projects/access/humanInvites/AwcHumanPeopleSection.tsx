@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import AwcHumanPeopleSectionBody from "@/features/projects/access/humanInvites/AwcHumanPeopleSectionBody";
 import { useHumanPeopleInvites } from "@/features/projects/access/humanInvites/hooks/useHumanPeopleInvites";
 import { countActiveAssistantMembers } from "@/features/projects/access/humanInvites/utils/countActiveAssistantMembers";
@@ -17,9 +19,16 @@ export type AwcHumanPeopleSectionProps = {
   readonly enabled: boolean;
   /** Open join requests (DF-036: counted so the rail never says "Just you"). */
   readonly pendingRequestCount?: number;
+  /** Unused assistant invites (DF-036 F6: an outstanding invite is pending too). */
+  readonly assistantInviteCount?: number;
+  /** DF-036 F5: waiting person invites, for the rail's "{k} waiting" pill. */
+  readonly onWaitingCountChange?: (count: number) => void;
 };
 
-/** People + Invite person inside Assistants & people (improve in place). */
+/**
+ * People + Invite person. DF-036 F5: the badge is everyone who can open the
+ * project now (you + joined people); waiting invites get "Waiting · {n}".
+ */
 export default function AwcHumanPeopleSection({
   projectId,
   projectName,
@@ -28,6 +37,8 @@ export default function AwcHumanPeopleSection({
   accessMembers,
   enabled,
   pendingRequestCount = 0,
+  assistantInviteCount = 0,
+  onWaitingCountChange,
 }: AwcHumanPeopleSectionProps) {
   const copy = HUMAN_INVITE_UI_COPY;
   const people = useHumanPeopleInvites({
@@ -36,13 +47,17 @@ export default function AwcHumanPeopleSection({
     accessMembers,
   });
 
+  const pendingCount = people.invites.filter(
+    (invite) => !people.hiddenPending.has(invite.inviteId),
+  ).length;
+  useEffect(() => {
+    onWaitingCountChange?.(enabled ? pendingCount : 0);
+  }, [enabled, onWaitingCountChange, pendingCount]);
+
   if (!enabled) {
     return null;
   }
 
-  const pendingCount = people.invites.filter(
-    (invite) => !people.hiddenPending.has(invite.inviteId),
-  ).length;
   const joinedCount = people.joinedHumans.filter(
     (member) => !people.hiddenRemoved.has(member.membershipId),
   ).length;
@@ -52,7 +67,7 @@ export default function AwcHumanPeopleSection({
       id="project-access-human-people"
       title={copy.peopleHeading}
       hint={copy.peopleHint}
-      count={pendingCount + joinedCount + 1}
+      count={joinedCount + 1}
       alertCount={pendingCount > 0}
     >
       <AwcHumanPeopleSectionBody
@@ -61,7 +76,10 @@ export default function AwcHumanPeopleSection({
         ownerDisplayName={ownerDisplayName}
         people={people}
         othersCount={
-          countActiveAssistantMembers(accessMembers) + pendingRequestCount + pendingCount
+          countActiveAssistantMembers(accessMembers) +
+          pendingRequestCount +
+          pendingCount +
+          assistantInviteCount
         }
       />
     </AwcProjectAccessSection>

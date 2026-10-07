@@ -14,3 +14,13 @@ export const isRailAssistantMember = (member: AccessMemberForHumanFilter): boole
  */
 export const countRailMembers = (members: readonly AccessMemberForHumanFilter[]): number =>
   1 + filterJoinedHumanMembers(members).length + members.filter(isRailAssistantMember).length;
+
+/**
+ * DF-036 F5 "{k} waiting": waiting person invites + open join requests +
+ * unused assistant invites. The rail header and the main chip use this.
+ */
+export const countRailWaiting = (input: {
+  readonly peopleInvites: number;
+  readonly joinRequests: number;
+  readonly assistantInvites: number;
+}): number => input.peopleInvites + input.joinRequests + input.assistantInvites;

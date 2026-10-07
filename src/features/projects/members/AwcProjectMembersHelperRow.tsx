@@ -1,12 +1,14 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useRef } from "react";
 
 import { awcGrokWakeLinkHash } from "@/features/projects/access/awcGrokWakeLinkDeepLink";
 import { useWakeLinkOpenRequest } from "@/features/projects/access/hooks/useWakeLinkOpenRequest";
 import AwcProjectMembersHelperRowMenu from "@/features/projects/members/AwcProjectMembersHelperRowMenu";
+import AwcProjectMembersHelperRowMoreMenu from "@/features/projects/members/AwcProjectMembersHelperRowMoreMenu";
 import AwcProjectMembersHelperWakeStatus from "@/features/projects/members/AwcProjectMembersHelperWakeStatus";
 import { useAssistantWakeHealth } from "@/features/projects/members/hooks/useAssistantWakeHealth";
+import { useHelperRowState } from "@/features/projects/members/hooks/useHelperRowState";
 import { resolveRailAssistantWakeStatus } from "@/features/projects/members/utils/resolveRailAssistantWakeStatus";
 import { ASSISTANT_WAKE_BLOCK_COPY as B } from "@/features/projects/members/assistantWakeBlockCopy.constant";
 import { ASSISTANT_WAKE_HEALTH_COPY as W } from "@/features/projects/members/assistantWakeHealthCopy.constant";
@@ -34,17 +36,12 @@ const ROW =
   "flex w-full items-center gap-2 rounded-[10px] border border-transparent px-3.5 py-2.5 text-sm transition-all hover:border-awc-line hover:bg-awc-surface-2";
 const LINK = "ml-[3.75rem] self-start text-[13px] font-medium text-awc-primary underline-offset-2 hover:underline";
 
-/** Flat nav-style assistant row: wake chip (opens the paste box) + expandable detail with the Wake link block. */
+/** Flat nav-style assistant row: wake chip (opens the paste box), ⋯ menu, expandable detail (DF-036 F3/F12). */
 export default function AwcProjectMembersHelperRow(p: AwcProjectMembersHelperRowProps) {
   const { member } = p;
-  const [open, setOpen] = useState(false);
-  const [wakeOpen, setWakeOpen] = useState(false);
+  const row = useHelperRowState();
   const containerRef = useRef<HTMLLIElement | null>(null);
-  const openWake = useCallback(() => {
-    setOpen(true);
-    setWakeOpen(true);
-  }, []);
-  useWakeLinkOpenRequest({ containerRef, openRequest: p.wakeOpenRequest, openForm: openWake, membershipId: member.id });
+  useWakeLinkOpenRequest({ containerRef, openRequest: p.wakeOpenRequest, openForm: row.openWake, membershipId: member.id });
   const name = member.projectDisplayName?.trim() || member.userId.slice(0, 8);
   const savedNow = p.savedIds.has(member.id);
   const wake = useAssistantWakeHealth({
@@ -56,12 +53,11 @@ export default function AwcProjectMembersHelperRow(p: AwcProjectMembersHelperRow
   const { health } = wake;
   const status = resolveRailAssistantWakeStatus({ member, savedIds: p.savedIds, health, loadFailed: wake.loadFailed });
   const showHealth = health && (status === "ready" || status === "cant_reach");
-  const toggle = () => setOpen((value) => !value);
 
   return (
     <li ref={containerRef} id={awcGrokWakeLinkHash(member.id)} className="flex scroll-mt-20 flex-col">
       <div className={ROW}>
-        <button type="button" className="flex min-w-0 flex-1 items-center gap-3 text-left" aria-expanded={open} onClick={toggle}>
+        <button type="button" className="flex min-w-0 flex-1 items-center gap-3 text-left" aria-expanded={row.open} onClick={row.toggle}>
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-awc-tile-2 text-[13px] font-semibold text-awc-fg-muted">
             {name.slice(0, 2).toUpperCase()}
           </span>
@@ -70,34 +66,33 @@ export default function AwcProjectMembersHelperRow(p: AwcProjectMembersHelperRow
             {showHealth ? <span className="block text-[12px] text-awc-fg-subtle">{health.line}</span> : null}
           </span>
         </button>
-        <AwcProjectMembersHelperWakeStatus status={status} onOpen={openWake} />
-        <button
-          type="button"
-          className="awc-focus-ring grid size-7 shrink-0 place-items-center rounded-lg text-[15px] font-semibold leading-none text-awc-fg-muted hover:bg-awc-fill"
-          aria-label={`More for ${name}`}
-          aria-expanded={open}
-          onClick={toggle}
-        >
-          ⋯
-        </button>
+        <AwcProjectMembersHelperWakeStatus status={status} onOpen={row.openWake} />
+        <AwcProjectMembersHelperRowMoreMenu
+          name={name}
+          onMessage={() => p.onMessage(member.id)}
+          onRename={row.startRename}
+          onWakeLink={row.openWake}
+          onRemove={row.startRemove}
+        />
       </div>
       {status === "cant_check" ? (
         <button type="button" className={LINK} onClick={wake.retry}>{B.retry}</button>
       ) : null}
-      {showHealth && health.offerPaste && !wakeOpen ? (
-        <button type="button" className={LINK} onClick={openWake}>{W.pasteNew}</button>
+      {showHealth && health.offerPaste && !row.wakeOpen ? (
+        <button type="button" className={LINK} onClick={row.openWake}>{W.pasteNew}</button>
       ) : null}
-      {open ? (
+      {row.open ? (
         <AwcProjectMembersHelperRowMenu
           projectId={p.projectId}
           member={member}
           name={name}
-          wake={{ status, health, pasteOpen: wakeOpen, onOpenPaste: () => setWakeOpen(true), onRetry: wake.retry }}
+          mode={row.mode}
+          onEndMode={row.endMode}
+          wake={{ status, health, pasteOpen: row.wakeOpen, onOpenPaste: row.openPaste, onRetry: wake.retry }}
           onWakeSaved={(id) => {
-            setWakeOpen(false);
+            row.closeWake();
             p.onWakeSaved(id);
           }}
-          onMessage={p.onMessage}
           onRename={p.onRename}
           onRemove={p.onRemove}
         />

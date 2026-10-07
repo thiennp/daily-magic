@@ -37,7 +37,8 @@ export default function AwcProjectOverviewStatsStrip({
   onOpenChat,
   onShowSetup,
 }: Props) {
-  const pending = s.pendingCount > 0 ? ` (${s.pendingCount} pending)` : "";
+  // DF-036 F5: "{k} waiting", the same k as the Members rail header.
+  const pending = s.pendingCount > 0 ? ` (${s.pendingCount} waiting)` : "";
   const unreadCls = s.unreadCount > 0 ? OVERVIEW_FACT_WARN_CLASS : OVERVIEW_FACT_CLASS;
   return (
     <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Overview facts">

@@ -1,22 +1,19 @@
-import { createElement } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   actionsFor,
   renderBanner,
 } from "@/features/projects/access/hooks/createdInviteBanner.testUtils";
+import { listed, membersHtml } from "@/features/projects/access/hooks/createdInviteMembersHtml.testUtils";
 import {
   reactHookRunner as runner,
   runWithHookSlots,
 } from "@/features/projects/access/hooks/reactHookRunner.testUtils";
 import { useCreatedInviteBanner } from "@/features/projects/access/hooks/useCreatedInviteBanner";
-import type { AwcProjectAccessInvite } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 import {
   createProjectInviteApi,
   revokeProjectInviteApi,
 } from "@/features/projects/access/utils/projectAccessApi";
-import AwcProjectMembersInviteBotsSection from "@/features/projects/members/AwcProjectMembersInviteBotsSection";
 
 vi.mock("react", async (importOriginal) => {
   const { mockReactWithHookRunner } =
@@ -32,39 +29,6 @@ vi.mock("@/features/projects/access/utils/projectAccessApi", () => ({
 }));
 
 const INVITE_URL = "https://www.agentwitch.com/invite/p/tok-df014";
-
-const listed = (inviteId: string): AwcProjectAccessInvite =>
-  ({
-    inviteId,
-    createdAt: "2026-10-07T18:00:00.000Z",
-    expiresAt: "2026-10-14T18:00:00.000Z",
-    revokedAt: null,
-    maxUses: 1,
-    usesRemaining: 1,
-    teamLabel: null,
-    scopes: [],
-    autoApprove: false,
-  }) as AwcProjectAccessInvite;
-
-const membersHtml = (
-  banner: ReturnType<typeof renderBanner>,
-  invites: readonly AwcProjectAccessInvite[],
-) =>
-  renderToStaticMarkup(
-    createElement(AwcProjectMembersInviteBotsSection, {
-      projectId: "p1",
-      projectName: "AgentWitch",
-      invites,
-      createdInviteUrl: banner.createdInviteUrl,
-      createdInviteToken: banner.createdInviteToken,
-      createdInvitePlatform: banner.createdInvitePlatform,
-      createdInviteJoinTypeId: banner.createdInviteJoinTypeId,
-      createdInvitePrompts: banner.createdInvitePrompts,
-      onCreate: () => undefined,
-      onRevoke: () => undefined,
-      onClearCreated: () => undefined,
-    }),
-  );
 
 const createOne = async () => {
   vi.mocked(createProjectInviteApi).mockResolvedValueOnce({
@@ -96,14 +60,14 @@ describe("DF-014 Members rail: Copy prompt after invite + Copy again", () => {
     expect(html).toContain("Dismiss");
   });
 
-  it("after Dismiss the pending Invite sent row still has Copy", async () => {
+  it("after Dismiss the unused invite row still has Copy again (DF-036 D4)", async () => {
     await createOne();
     renderBanner().syncBannerWithUsableInvites([listed("inv-new")]);
     renderBanner().clearCreatedInviteBanner();
     const state = renderBanner();
     expect(state.createdInviteUrl).toBeNull();
     const html = membersHtml(state, [listed("inv-new")]);
-    expect(html).toContain("Invite sent");
+    expect(html).toContain("Not used yet · for 1 assistant · expires");
     expect(html).toContain('data-invite-copy="inv-new"');
     expect(html).not.toContain("Dismiss");
   });

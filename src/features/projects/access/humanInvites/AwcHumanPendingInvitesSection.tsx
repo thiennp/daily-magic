@@ -30,33 +30,32 @@ export default function AwcHumanPendingInvitesSection({
     (invite) => invite.status !== "accepted",
   );
 
+  // DF-036 F5: "Waiting · {n}" only when someone is waiting.
+  if (pendingInvites.length === 0) return null;
+
   return (
-    <div>
-      <h4 className="text-xs font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-300">
-        {copy.pendingSubhead}
+    <div data-people-waiting={pendingInvites.length}>
+      <h4 className="text-xs font-semibold tracking-wide text-awc-fg-muted dark:text-gray-300">
+        {copy.pendingSubhead(pendingInvites.length)}
       </h4>
-      {pendingInvites.length === 0 ? (
-        <p className="mt-1 text-sm text-awc-fg-muted">{copy.pendingEmpty}</p>
-      ) : (
-        <ul className="mt-2 space-y-2">
-          {awaiting.map((invite) => (
-            <AwcHumanAwaitingApprovalRow
-              key={invite.inviteId}
-              invite={invite}
-              busy={decidingId === invite.inviteId}
-              onApprove={onApproveRequest}
-              onDeny={onDenyRequest}
-            />
-          ))}
-          {waiting.map((invite) => (
-            <AwcHumanPendingInviteRow
-              key={invite.inviteId}
-              invite={invite}
-              onRevokeInvite={onRevokeInvite}
-            />
-          ))}
-        </ul>
-      )}
+      <ul className="mt-2 space-y-2">
+        {awaiting.map((invite) => (
+          <AwcHumanAwaitingApprovalRow
+            key={invite.inviteId}
+            invite={invite}
+            busy={decidingId === invite.inviteId}
+            onApprove={onApproveRequest}
+            onDeny={onDenyRequest}
+          />
+        ))}
+        {waiting.map((invite) => (
+          <AwcHumanPendingInviteRow
+            key={invite.inviteId}
+            invite={invite}
+            onRevokeInvite={onRevokeInvite}
+          />
+        ))}
+      </ul>
     </div>
   );
 }

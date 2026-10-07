@@ -8,7 +8,10 @@ import {
   type AwcPendingListActions,
   type AwcPendingResolved,
 } from "@/features/projects/access/hooks/useAwcProjectAccessPendingListState";
-import { useCollapsedPendingResolved } from "@/features/projects/access/hooks/useCollapsedPendingResolved";
+import {
+  useNotifyPendingIdle,
+  usePendingResolvedCollapse,
+} from "@/features/projects/access/hooks/usePendingResolvedCollapse";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 
 interface AwcProjectAccessPendingListProps extends AwcPendingListActions {
@@ -16,13 +19,21 @@ interface AwcProjectAccessPendingListProps extends AwcPendingListActions {
   readonly pending: readonly AwcProjectAccessPending[];
   /** Members rail (DF-036): render nothing when no request is open or recently resolved. */
   readonly hideWhenIdle?: boolean;
+  /** DF-036 F11: called once nothing is open or resolved, so the rail can unmount the section. */
+  readonly onIdle?: () => void;
 }
 
-const ResolvedRow = ({ done }: { readonly done: AwcPendingResolved }) => (
+type ResolvedRowProps = {
+  readonly done: AwcPendingResolved;
+  readonly collapsing: boolean;
+};
+
+const ResolvedRow = ({ done, collapsing }: ResolvedRowProps) => (
   <AwcPendingResolvedRow
     decision={done.decision}
     nickname={done.nickname}
     requester={done.requester}
+    collapsing={collapsing}
   />
 );
 
@@ -32,6 +43,7 @@ export default function AwcProjectAccessPendingList({
   onApprove,
   onDeny,
   hideWhenIdle = false,
+  onIdle,
 }: AwcProjectAccessPendingListProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
   const list = useAwcProjectAccessPendingListState({
@@ -40,7 +52,7 @@ export default function AwcProjectAccessPendingList({
     onApprove,
     onDeny,
   });
-  const collapsed = useCollapsedPendingResolved(list.resolved);
+  const { collapsing, collapsed } = usePendingResolvedCollapse(list.resolved);
   const resolved = list.resolved.filter((r) => !collapsed.has(r.id));
   const shown = pending.filter((r) => !collapsed.has(r.id));
 
@@ -48,7 +60,9 @@ export default function AwcProjectAccessPendingList({
   const pendingIds = new Set(pending.map((r) => r.id));
   const openCount = shown.filter((r) => !resolvedById.has(r.id)).length;
   const goneResolved = resolved.filter((r) => !pendingIds.has(r.id));
-  if (hideWhenIdle && openCount === 0 && resolved.length === 0) return null;
+  const idle = openCount === 0 && resolved.length === 0;
+  useNotifyPendingIdle(hideWhenIdle && idle, onIdle);
+  if (hideWhenIdle && idle) return null;
 
   return (
     <div>
@@ -68,7 +82,14 @@ export default function AwcProjectAccessPendingList({
         <ul className="@container mt-2 space-y-3">
           {shown.map((req) => {
             const done = resolvedById.get(req.id);
-            if (done) return <ResolvedRow key={req.id} done={done} />;
+            if (done)
+              return (
+                <ResolvedRow
+                  key={req.id}
+                  done={done}
+                  collapsing={collapsing.has(req.id)}
+                />
+              );
             return (
               <AwcProjectAccessPendingRow
                 key={req.id}
@@ -84,7 +105,11 @@ export default function AwcProjectAccessPendingList({
             );
           })}
           {goneResolved.map((done) => (
-            <ResolvedRow key={done.id} done={done} />
+            <ResolvedRow
+              key={done.id}
+              done={done}
+              collapsing={collapsing.has(done.id)}
+            />
           ))}
         </ul>
       )}

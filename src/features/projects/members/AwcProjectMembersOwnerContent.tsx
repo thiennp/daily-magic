@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 import AwcProjectMembersHelpersSection from "@/features/projects/members/AwcProjectMembersHelpersSection";
 import AwcAccessLogRailFooter from "@/features/projects/accessLog/AwcAccessLogRailFooter";
@@ -7,8 +9,8 @@ import AwcProjectMembersJoinRequestsSection from "@/features/projects/members/Aw
 import AwcProjectMembersInviteBotsSection from "@/features/projects/members/AwcProjectMembersInviteBotsSection";
 import AwcProjectMembersPeopleSection from "@/features/projects/members/AwcProjectMembersPeopleSection";
 import AwcProjectMembersRailHeading from "@/features/projects/members/AwcProjectMembersRailHeading";
-import { countRailMembers } from "@/features/projects/members/utils/countRailMembers";
-import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+import AwcProjectMembersRailSkeleton from "@/features/projects/members/AwcProjectMembersRailSkeleton";
+import { countRailMembers, countRailWaiting } from "@/features/projects/members/utils/countRailMembers";
 import { resolveProjectAccessLoadError } from "@/lib/projects/acl/mapProjectAccessError";
 
 interface AwcProjectMembersOwnerContentProps {
@@ -27,16 +29,22 @@ export default function AwcProjectMembersOwnerContent({
 }: AwcProjectMembersOwnerContentProps) {
   const access = useAwcProjectAccess(projectId);
   const ready = !access.isLoading && !access.loadError;
+  // DF-036 F5: the People section owns the person-invite list; it reports its waiting count.
+  const [peopleWaiting, setPeopleWaiting] = useState(0);
+  const waiting = countRailWaiting({
+    peopleInvites: peopleWaiting,
+    joinRequests: access.pending.length,
+    assistantInvites: access.invites.length,
+  });
 
   return (
     <>
       <AwcProjectMembersRailHeading
         count={ready ? countRailMembers(access.members) : null}
+        waiting={ready ? waiting : 0}
       />
       <div className="flex flex-col gap-5" data-layout-v2="l5-members">
-        {access.isLoading ? (
-          <p className="px-3.5 text-sm text-awc-fg-muted">{C.loading}</p>
-        ) : null}
+        {access.isLoading ? <AwcProjectMembersRailSkeleton /> : null}
         {access.loadError ? (
           <p className="mx-3.5 rounded-md border border-awc-line bg-awc-surface-2 px-3 py-2 text-sm text-awc-bad">
             {resolveProjectAccessLoadError(access.loadError, "Could not load.")}
@@ -69,31 +77,10 @@ export default function AwcProjectMembersOwnerContent({
               ownerDisplayName={ownerDisplayName}
               accessMembers={access.members}
               pendingRequestCount={access.pending.length}
+              assistantInviteCount={access.invites.length}
+              onWaitingCountChange={setPeopleWaiting}
             />
-            <AwcProjectMembersInviteBotsSection
-              projectId={projectId}
-              projectName={access.projectName}
-              invites={access.invites}
-              createdInviteUrl={access.createdInviteUrl}
-              createdInviteToken={access.createdInviteToken}
-              createdInvitePlatform={access.createdInvitePlatform}
-              createdInviteJoinTypeId={access.createdInviteJoinTypeId}
-              createdInvitePrompts={access.createdInvitePrompts}
-              onCreate={(selection) => {
-                void access.createInvite(
-                  selection.platform,
-                  false,
-                  selection.joinTypeId,
-                );
-              }}
-              onRevoke={(id) => {
-                void access.revokeInvite(id);
-              }}
-              onTurnOffAutoApprove={(id) => {
-                void access.turnOffAutoApprove(id);
-              }}
-              onClearCreated={access.clearCreatedInviteBanner}
-            />
+            <AwcProjectMembersInviteBotsSection projectId={projectId} access={access} />
             <AwcAccessLogRailFooter projectId={projectId} />
           </>
         ) : null}

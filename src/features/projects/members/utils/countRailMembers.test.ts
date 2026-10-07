@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { countRailMembers } from "@/features/projects/members/utils/countRailMembers";
+import { countRailMembers, countRailWaiting } from "@/features/projects/members/utils/countRailMembers";
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
 
 const seat = (id: string, x: Record<string, unknown>) => ({ id, userId: `u-${id}`, isAgent: false, ...x });
@@ -30,5 +30,11 @@ describe("countRailMembers (DF-036 'Members · {n}')", () => {
 
   it("header copy reads 'Members · {n}'", () => {
     expect(C.columnLabelCount(3)).toBe("Members · 3");
+  });
+
+  it("F5 '{k} waiting' = person invites + join requests + unused assistant invites", () => {
+    expect(countRailWaiting({ peopleInvites: 1, joinRequests: 0, assistantInvites: 1 })).toBe(2);
+    expect(countRailWaiting({ peopleInvites: 0, joinRequests: 0, assistantInvites: 0 })).toBe(0);
+    expect(C.waitingPill(2)).toBe("2 waiting");
   });
 });

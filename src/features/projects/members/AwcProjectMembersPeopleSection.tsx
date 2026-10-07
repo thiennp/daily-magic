@@ -11,6 +11,8 @@ interface AwcProjectMembersPeopleSectionProps {
   readonly ownerDisplayName: string | null;
   readonly accessMembers: readonly AccessMemberForHumanFilter[];
   readonly pendingRequestCount: number;
+  readonly assistantInviteCount: number;
+  readonly onWaitingCountChange: (count: number) => void;
 }
 
 /**
@@ -24,6 +26,8 @@ export default function AwcProjectMembersPeopleSection({
   ownerDisplayName,
   accessMembers,
   pendingRequestCount,
+  assistantInviteCount,
+  onWaitingCountChange,
 }: AwcProjectMembersPeopleSectionProps) {
   return (
     <section
@@ -38,6 +42,8 @@ export default function AwcProjectMembersPeopleSection({
         ownerDisplayName={ownerDisplayName}
         accessMembers={accessMembers}
         pendingRequestCount={pendingRequestCount}
+        assistantInviteCount={assistantInviteCount}
+        onWaitingCountChange={onWaitingCountChange}
         enabled
       />
     </section>

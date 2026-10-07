@@ -10,20 +10,23 @@ interface AwcProjectMembersInvitePendingListProps {
   readonly invites: readonly AwcProjectAccessInvite[];
   readonly onRevoke: (inviteId: string) => void;
   readonly onTurnOffAutoApprove?: (inviteId: string) => void;
+  /** Setup-steps label this tab remembers for an invite (D4 "Invite for {type}"); null = unknown. */
+  readonly typeLabelFor?: (inviteId: string) => string | null;
   /** Short Copy prompt for an invite this tab created; null = cannot re-copy. */
   readonly copyPromptFor?: (inviteId: string) => string | null;
   /**
    * 107: fetch the prompt from the server on click (any device) for rows with
-   * copyAvailable. Rows without it show Copy disabled with a short hint.
+   * copyAvailable. Rows without it show the lost-copy line instead of Copy again.
    */
   readonly fetchCopyPrompt?: (inviteId: string) => Promise<PendingInviteCopyPromptResult>;
 }
 
-/** Unused assistant invites + one (i) tip (DF-036 F1: no "routine", no Muse footnote). */
+/** DF-036 D4: unused assistant invites, the Pending note and one (i) tip (F1: no "routine", no Muse). */
 export default function AwcProjectMembersInvitePendingList({
   invites,
   onRevoke,
   onTurnOffAutoApprove,
+  typeLabelFor,
   copyPromptFor,
   fetchCopyPrompt,
 }: AwcProjectMembersInvitePendingListProps) {
@@ -39,9 +42,8 @@ export default function AwcProjectMembersInvitePendingList({
             // Called as a function (pure row, no hooks) so the rendered tree stays walkable in tests.
             return AwcProjectMembersInvitePendingRow({
               invite,
-              prompt,
-              canFetch: fetchCopyPrompt !== undefined && invite.copyAvailable === true,
-              fetchable: fetchCopyPrompt !== undefined,
+              typeLabel: typeLabelFor?.(invite.inviteId) ?? null,
+              canCopy: prompt !== null || (fetchCopyPrompt !== undefined && invite.copyAvailable === true),
               rowState: copy.stateFor(invite.inviteId),
               onCopy: () => void copy.copyPrompt(invite.inviteId, prompt),
               onRevoke: () => onRevoke(invite.inviteId),
@@ -50,6 +52,9 @@ export default function AwcProjectMembersInvitePendingList({
           })
         )}
       </ul>
+      {invites.length > 0 ? (
+        <p className="px-3.5 text-[12px] text-awc-fg-muted" data-invite-note>{C.inviteListNote}</p>
+      ) : null}
       <p className="flex gap-1.5 px-3.5 text-[12px] text-awc-fg-muted" data-invite-tip>
         <span className="text-awc-fg-subtle" aria-hidden>ⓘ</span>
         <span>{C.compatGrok}</span>

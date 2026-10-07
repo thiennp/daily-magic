@@ -24,9 +24,9 @@ export const HUMAN_INVITE_UI_COPY = {
   botsPeopleTitle: "Assistants & people",
   botsPeopleIntro:
     "People and assistants in this project. Pending invites, then who joined.",
-  pendingSubhead: "Waiting",
+  /** DF-036 F5: waiting person invites get their own count (hidden at 0). */
+  pendingSubhead: (n: number) => `Waiting · ${n}`,
   joinedSubhead: "In the project",
-  pendingEmpty: "No pending people invites.",
   joinedEmpty:
     "No one else has joined yet. Invite a person to share this project.",
   joinedOwnerOnly:

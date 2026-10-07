@@ -3,6 +3,8 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   columnLabel: "Members",
   /** DF-036 D1: you + joined people + assistants (no computers). */
   columnLabelCount: (n: number) => `Members · ${n}`,
+  /** DF-036 F5: header pill (hidden at 0). */
+  waitingPill: (k: number) => `${k} waiting`,
   peopleHeading: "People",
   peopleInvite: "Invite people",
   peopleYouSuffix: "(you)",
@@ -33,32 +35,39 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   revokeText: (name: string) => `${name} will no longer see this project.`,
   revokeConfirm: (name: string) => `Remove ${name}`,
   revokeCancel: "Cancel",
-  inviteBotHeading: "Invite a new assistant",
+  /** DF-036 D4: say what the invite is. */
+  inviteBotHeading: "Invite an assistant",
+  inviteBotIntro: "Make a one-time invite and paste it into the assistant you want to add.",
   invitePrompt: (kind: string | null) =>
     kind === null
       ? "Paste this prompt into your assistant. You can copy it again until it's used."
       : `Prompt for the ${kind} assistant. Paste it into your assistant. You can copy it again until it's used.`,
-  /** State 1 — invite out; Cancel only (no Approve). */
-  invitePendingTitle: "Invite sent",
-  invitePendingSubOff: "Waiting for assistant",
+  /** Unused invite row (replaces "Invite sent / Waiting for assistant"); Cancel only, no Approve. */
+  invitePendingTitle: "Assistant invite",
+  invitePendingTitleFor: (type: string) => `Invite for ${type}`,
+  invitePendingSub: (uses: number, expires: string) =>
+    `Not used yet · for ${uses === 1 ? "1 assistant" : `${uses} assistants`} · expires ${expires}`,
   /** State 1b — chip label when auto-approve is on. */
   invitePendingSubOn: "Auto-approve on",
   invitePendingTurnOff: "Turn off",
   /** State 2 — join request subtitle; Approve + Deny. */
   requestWaitingApproval: "Wants to join",
-  invitePendingCancel: "Cancel",
-  /** DF-014 / 107 — copy the prompt again from an Invite sent row (any device). */
-  invitePendingCopy: "Copy",
+  invitePendingCancel: "Cancel invite",
+  /** DF-014 / 107 — copy the prompt again from an unused invite row (any device). */
+  invitePendingCopy: "Copy again",
   invitePendingCopied: "Copied",
   invitePendingCopying: "Copying…",
   invitePendingCopyFailed: "Couldn't copy. Try again.",
-  /** 107 — invite made before Copy-anywhere: no stored prompt. */
-  invitePendingCopyUnavailable: "Make a new invite to copy a prompt.",
+  /** 107 — no stored prompt (made before Copy-anywhere): the lost-copy line. */
+  invitePendingCopyUnavailable:
+    "The invite was shown once. Cancel it and make a new one if you lost it.",
+  inviteListNote: "When an assistant uses an invite, it appears under Pending for you to approve.",
   inviteEmpty: "No assistant invites yet.",
   /** DF-036 F1: the one (i) tip under the invite list (no "routine"; Muse footnote retired). */
   compatGrok: "Grok Bot sets up its wake link after it joins.",
   helperRemoved: (name: string) => `Removed ${name} from the project`,
   helperRenamed: "Assistant renamed",
   viewerHint: "Only the project owner can invite people and assistants.",
-  loading: "Loading…",
+  /** DF-016 rail skeleton status (screen readers). */
+  loading: "Loading members…",
 } as const;

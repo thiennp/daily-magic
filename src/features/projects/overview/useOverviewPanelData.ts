@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
+import { useHumanInviteWaitingCount } from "@/features/projects/access/humanInvites/hooks/useHumanInviteWaitingCount";
+import { countRailMembers, countRailWaiting } from "@/features/projects/members/utils/countRailMembers";
 import useAwcProjectComposition from "@/features/projects/hooks/useAwcProjectComposition";
 import { useAwcProjectMessengerThreads } from "@/features/projects/messenger/hooks/useAwcProjectMessengerThreads";
 import buildOverviewAssistants from "@/features/projects/overview/buildOverviewAssistants";
@@ -26,9 +28,16 @@ const useOverviewPanelData = (input: {
   const [setupHidden, setSetupHidden] = useState(false);
   const members = access.loadError ? [] : access.members;
   const folderRefs = access.loadError ? [] : access.folderRefs;
+  // DF-036 F5: same numbers as the Members rail header ("Members · {n}" + "{k} waiting").
+  const accessReady = !access.loadError && !access.isLoading;
+  const peopleInvites = useHumanInviteWaitingCount(input.project.id, accessReady);
   const pendingCount = access.loadError
     ? 0
-    : access.pending.length + access.invites.length;
+    : countRailWaiting({
+        peopleInvites,
+        joinRequests: access.pending.length,
+        assistantInvites: access.invites.length,
+      });
   const steps = useMemo(
     () =>
       buildOverviewSetupSteps({
@@ -61,7 +70,7 @@ const useOverviewPanelData = (input: {
     hideSetup: () => setSetupHidden(true),
     showSetup: () => setSetupHidden(false),
     stats: {
-      memberCount: members.length,
+      memberCount: accessReady ? countRailMembers(members) : 0,
       pendingCount,
       unreadCount: sumMessengerUnread(threads),
       pitfallsActive: pitSummary?.active ?? 0,

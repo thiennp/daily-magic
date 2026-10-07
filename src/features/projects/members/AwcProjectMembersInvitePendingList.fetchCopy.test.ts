@@ -1,19 +1,17 @@
-import {
-  createElement,
-  isValidElement,
-  type ReactElement,
-  type ReactNode,
-} from "react";
+import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { AwcProjectAccessInvite } from "@/features/projects/access/hooks/loadAwcProjectAccess";
-import {
-  reactHookRunner as runner,
-  runWithHookSlots,
-} from "@/features/projects/access/hooks/reactHookRunner.testUtils";
+import { reactHookRunner as runner } from "@/features/projects/access/hooks/reactHookRunner.testUtils";
 import type { PendingInviteCopyPromptResult } from "@/features/projects/access/invites/fetchPendingInviteCopyPrompt";
 import AwcProjectMembersInvitePendingList from "@/features/projects/members/AwcProjectMembersInvitePendingList";
+import {
+  findCopyButton,
+  flushPromises,
+  pendingInvite,
+  renderPendingListTree,
+  type InvitePendingListProps,
+} from "@/features/projects/members/invitePendingList.testUtils";
 
 vi.mock("react", async (importOriginal) => {
   const { mockReactWithHookRunner } =
@@ -21,52 +19,12 @@ vi.mock("react", async (importOriginal) => {
   return mockReactWithHookRunner(await importOriginal());
 });
 
-const invite = (
-  inviteId: string,
-  copyAvailable: boolean,
-): AwcProjectAccessInvite => ({
-  inviteId,
-  createdAt: "2026-10-07T18:00:00.000Z",
-  expiresAt: "2026-10-14T18:00:00.000Z",
-  revokedAt: null,
-  maxUses: 1,
-  usesRemaining: 1,
-  teamLabel: null,
-  scopes: [],
-  autoApprove: false,
-  copyAvailable,
-});
+const INVITES = [pendingInvite("inv-new", true), pendingInvite("inv-old", false)];
+const renderTree = renderPendingListTree;
+const flush = flushPromises;
+type Props = InvitePendingListProps;
 
-type Props = Parameters<typeof AwcProjectMembersInvitePendingList>[0];
-
-const INVITES = [invite("inv-new", true), invite("inv-old", false)];
-
-/** Plain-function render with hook slots (no DOM in this repo's vitest). */
-const renderTree = (props: Props): ReactElement =>
-  runWithHookSlots(() => AwcProjectMembersInvitePendingList(props));
-
-const findCopyButton = (
-  node: ReactNode,
-  inviteId: string,
-): ReactElement<{ onClick: () => void; children: ReactNode }> | null => {
-  if (Array.isArray(node)) {
-    for (const child of node) {
-      const hit = findCopyButton(child, inviteId);
-      if (hit) return hit;
-    }
-    return null;
-  }
-  if (!isValidElement(node)) return null;
-  const props = node.props as Record<string, unknown>;
-  if (props["data-invite-copy"] === inviteId) {
-    return node as ReactElement<{ onClick: () => void; children: ReactNode }>;
-  }
-  return findCopyButton(props.children as ReactNode, inviteId);
-};
-
-const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
-
-describe("107 pending Invite sent row: Copy from any device", () => {
+describe("107 unused invite row: Copy again from any device", () => {
   const writeText = vi.fn(async () => undefined);
 
   beforeEach(() => {
@@ -79,7 +37,7 @@ describe("107 pending Invite sent row: Copy from any device", () => {
     vi.unstubAllGlobals();
   });
 
-  it("shows Copy for rows with a stored prompt, disabled Copy + hint for old rows", () => {
+  it("shows Copy again for rows with a stored prompt, the lost-copy line for old rows", () => {
     const html = renderToStaticMarkup(
       createElement(AwcProjectMembersInvitePendingList, {
         invites: INVITES,
@@ -94,8 +52,8 @@ describe("107 pending Invite sent row: Copy from any device", () => {
     expect(html).toContain('data-invite-copy="inv-new"');
     expect(html).not.toContain('data-invite-copy="inv-old"');
     expect(html).toContain('data-invite-copy-unavailable="inv-old"');
-    expect(html).toContain("Make a new invite to copy a prompt.");
-    expect(html.match(/>Cancel</g)).toHaveLength(2);
+    expect(html).toContain("The invite was shown once. Cancel it and make a new one if you lost it.");
+    expect(html.match(/>Cancel invite</g)).toHaveLength(2);
     expect(html).not.toContain("Approve");
   });
 

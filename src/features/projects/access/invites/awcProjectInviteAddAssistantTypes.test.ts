@@ -35,7 +35,7 @@ describe("Add assistant: type picker", () => {
     );
     expect(html).toContain(">Add assistant<");
     expect(html).toContain(
-      '<option value="" selected="">Any assistant</option>',
+      '<option value="" selected="">Another assistant (general steps)</option>',
     );
     expect(html).toContain('<option value="muse">Muse</option>');
     const visible = html.replace(/<[^>]+>/g, " ");

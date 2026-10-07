@@ -27,7 +27,8 @@ describe("Create invite: shared Add assistant", () => {
   it("panel shows one Add assistant button, the type picker and the support list", () => {
     const html = panelHtml();
     expect(html).toContain(">Add assistant<");
-    expect(html).toContain("Assistant type (optional)");
+    expect(html).toContain("Setup steps for");
+    expect(html).toContain("Only changes the setup steps in the invite. Any assistant can use it.");
     expect(html).toContain("Auto-approve assistants that use this invite");
     expect(html).not.toContain("Invite a Grok Bot");
     expect(html).not.toMatch(/Muse bot/i);

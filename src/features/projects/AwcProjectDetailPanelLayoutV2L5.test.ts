@@ -52,7 +52,7 @@ describe("project layout v2 L5 Settings + Members", () => {
     const column = read(`${P}/AwcProjectMembersColumn.tsx`);
     const owner = read(`${P}/members/AwcProjectMembersOwnerContent.tsx`);
     const helpers = read(`${P}/members/AwcProjectMembersHelpersSection.tsx`);
-    const row = ["HelperRow", "HelperRowMenu", "HelperWakeBlock"].map((n) => read(`${P}/members/AwcProjectMembers${n}.tsx`)).join("\n");
+    const row = ["HelperRow", "HelperRowMenu", "HelperRowMoreMenu", "HelperWakeBlock"].map((n) => read(`${P}/members/AwcProjectMembers${n}.tsx`)).join("\n");
     const invite = read(`${P}/members/AwcProjectMembersInviteBotsSection.tsx`);
     const copy = read(`${P}/projectPageMembersCopy.constant.ts`);
     const layoutCopy = read(`${P}/projectPageLayoutV2Copy.constant.ts`);
