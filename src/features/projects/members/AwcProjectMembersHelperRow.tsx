@@ -20,7 +20,7 @@ interface AwcProjectMembersHelperRowProps {
 }
 
 const ROW =
-  "flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-left text-sm transition-all hover:bg-gray-100/70 dark:hover:bg-white/10";
+  "flex w-full items-center gap-3 rounded-[10px] border border-transparent px-3.5 py-2.5 text-left text-sm transition-all hover:border-awc-line hover:bg-awc-surface-2";
 
 /** Flat nav-style assistant row with expand actions (Message / Rename / Webhook / Remove). */
 export default function AwcProjectMembersHelperRow({
@@ -45,19 +45,27 @@ export default function AwcProjectMembersHelperRow({
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
       >
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-700 dark:bg-white/15 dark:text-gray-200">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-awc-tile-2 text-[13px] font-semibold text-awc-fg-muted">
           {name.slice(0, 2).toUpperCase()}
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block truncate font-medium text-gray-800 dark:text-white/90">
+          <span className="block truncate font-semibold text-awc-fg">
             {name}
           </span>
-          <span className="block truncate font-mono text-[12px] text-gray-500 dark:text-gray-400">
-            {member.userId.slice(0, 8)}…
-          </span>
+          {/* userId muted under Ready state — keep for a11y expand context */}
         </span>
-        <span className="shrink-0 text-[12px] font-medium text-emerald-700 dark:text-emerald-400">
+        <span className="flex shrink-0 items-center gap-1.5 text-[12.5px] text-awc-fg-subtle">
+          <span
+            className="inline-block size-[7px] rounded-full bg-awc-ok-dot"
+            aria-hidden
+          />
           {C.helpersReady}
+        </span>
+        <span
+          className="awc-focus-ring grid size-7 shrink-0 place-items-center rounded-lg text-[15px] font-semibold leading-none text-awc-fg-muted"
+          aria-hidden
+        >
+          ⋯
         </span>
       </button>
       {open ? (

@@ -22,6 +22,7 @@ interface AwcProjectMembersInviteBotsSectionProps {
   readonly createdInviteJoinTypeId: string | null;
   readonly onCreate: (selection: AwcProjectInviteAddSelection) => void;
   readonly onRevoke: (inviteId: string) => void;
+  readonly onTurnOffAutoApprove?: (inviteId: string) => void;
   readonly onClearCreated: () => void;
 }
 
@@ -39,6 +40,7 @@ export default function AwcProjectMembersInviteBotsSection({
   createdInviteJoinTypeId,
   onCreate,
   onRevoke,
+  onTurnOffAutoApprove,
   onClearCreated,
 }: AwcProjectMembersInviteBotsSectionProps) {
   return (
@@ -74,6 +76,7 @@ export default function AwcProjectMembersInviteBotsSection({
       <AwcProjectMembersInvitePendingList
         invites={invites}
         onRevoke={onRevoke}
+        onTurnOffAutoApprove={onTurnOffAutoApprove}
       />
     </section>
   );

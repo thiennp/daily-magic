@@ -79,6 +79,9 @@ export default function AwcProjectMembersOwnerContent({
             onRevoke={(id) => {
               void access.revokeInvite(id);
             }}
+            onTurnOffAutoApprove={(id) => {
+              void access.turnOffAutoApprove(id);
+            }}
             onClearCreated={access.clearCreatedInviteBanner}
           />
           <AwcAccessLogRailFooter projectId={projectId} />

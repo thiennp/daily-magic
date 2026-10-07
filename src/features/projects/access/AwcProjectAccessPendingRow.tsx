@@ -3,7 +3,6 @@
 import AwcPendingApprovalDetails from "@/features/projects/access/approvalCard/AwcPendingApprovalDetails";
 import { pendingAssistantName } from "@/features/projects/access/approvalCard/formatPendingApprovalCard";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
-import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
 import type { AwcProjectAccessPending } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 
 type PendingRequest = Pick<
@@ -22,6 +21,12 @@ interface AwcProjectAccessPendingRowProps {
   readonly onDeny: () => void;
 }
 
+const BTN_DENY =
+  "awc-focus-ring inline-flex items-center justify-center rounded-lg border border-awc-border-strong bg-awc-surface px-3 py-1.5 text-[13px] font-semibold text-awc-fg transition hover:bg-awc-tile";
+const BTN_APPROVE =
+  "awc-focus-ring inline-flex items-center justify-center rounded-lg border border-awc-blue-600 bg-awc-primary px-3 py-1.5 text-[13px] font-semibold text-white transition hover:opacity-90";
+
+/** State 2 — assistant name + Wants to join; Deny + Approve (server logic unchanged). */
 export default function AwcProjectAccessPendingRow({
   req,
   nameValue,
@@ -33,16 +38,24 @@ export default function AwcProjectAccessPendingRow({
 }: AwcProjectAccessPendingRowProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
   const needsName = req.requesterIsAgent !== false;
+  const title =
+    req.requesterLabel?.trim() ||
+    req.suggestedProjectDisplayName?.trim() ||
+    req.requesterUserId;
+  const initial = title.slice(0, 1).toUpperCase();
+
   return (
-    <li className="rounded-md border border-gray-200/80 p-2 dark:border-gray-800/80">
-      <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
-        <span className="min-w-0 text-gray-800 dark:text-white/90">
-          <span className="block">
-            {req.requesterLabel ?? req.requesterUserId}
-            {req.requesterIsAgent ? " (assistant)" : ""}
-            {req.reason ? ` — ${req.reason}` : ""}
-          </span>
-          <span className="mt-0.5 block text-[12px] font-normal text-gray-500 dark:text-gray-400">
+    <li className="rounded-[10px] border border-awc-accent-soft-2 bg-awc-accent-soft p-2.5">
+      <div className="flex flex-wrap items-center gap-2.5 text-sm">
+        <span
+          className="grid size-8 shrink-0 place-items-center rounded-full bg-awc-tile-2 text-[13px] font-semibold text-awc-fg-muted"
+          aria-hidden
+        >
+          {initial}
+        </span>
+        <span className="min-w-0 flex-1 text-awc-fg">
+          <span className="block truncate font-semibold">{title}</span>
+          <span className="mt-0.5 block text-[12.5px] font-normal text-awc-fg-subtle">
             {copy.requestWaitingApproval}
           </span>
           {req.approvalCard ? (
@@ -52,28 +65,20 @@ export default function AwcProjectAccessPendingRow({
             />
           ) : null}
         </span>
-        <span className="flex gap-2">
-          <button
-            type="button"
-            className={AWC_PROJECT_ACCESS_CTA.primary}
-            onClick={onApprove}
-          >
-            {copy.approve}
-          </button>
-          <button
-            type="button"
-            className={AWC_PROJECT_ACCESS_CTA.secondary}
-            onClick={onDeny}
-          >
+        <span className="flex shrink-0 gap-1.5">
+          <button type="button" className={BTN_DENY} onClick={onDeny}>
             {copy.deny}
+          </button>
+          <button type="button" className={BTN_APPROVE} onClick={onApprove}>
+            {copy.approve}
           </button>
         </span>
       </div>
       {needsName ? (
-        <label className="mt-2 block text-xs text-gray-600 dark:text-gray-300">
+        <label className="mt-2 block text-xs text-awc-fg-muted">
           {copy.displayNameLabel}
           <input
-            className="mt-1 w-full rounded-md border border-gray-300 bg-white px-2 py-1 text-sm dark:border-gray-700 dark:bg-gray-950"
+            className="mt-1 w-full rounded-md border border-awc-control-border bg-awc-surface px-2 py-1 text-sm text-awc-fg"
             value={nameValue}
             list={`display-name-presets-${req.id}`}
             onChange={(event) => onNameChange(event.target.value)}
@@ -83,11 +88,11 @@ export default function AwcProjectAccessPendingRow({
               <option key={name} value={name} />
             ))}
           </datalist>
-          <span className="mt-1 block text-[11px] text-gray-500">
+          <span className="mt-1 block text-[11px] text-awc-fg-subtle">
             {copy.displayNameHint}
           </span>
           {error ? (
-            <span className="mt-1 block text-[11px] text-red-600">{error}</span>
+            <span className="mt-1 block text-[11px] text-awc-bad">{error}</span>
           ) : null}
         </label>
       ) : null}

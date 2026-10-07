@@ -6,54 +6,80 @@ import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageM
 interface AwcProjectMembersInvitePendingListProps {
   readonly invites: readonly AwcProjectAccessInvite[];
   readonly onRevoke: (inviteId: string) => void;
+  readonly onTurnOffAutoApprove?: (inviteId: string) => void;
 }
 
-/** Pending assistant invites + compat footnotes (flat rows). */
+const ROW =
+  "flex items-center gap-2.5 rounded-[10px] border border-awc-line bg-awc-surface-2 px-2.5 py-2.5 text-sm";
+const AV =
+  "grid size-8 shrink-0 place-items-center rounded-full border-[1.5px] border-dashed border-awc-border-strong bg-transparent text-[13px] font-semibold text-awc-fg-muted";
+const GHOST =
+  "awc-focus-ring shrink-0 rounded-lg border border-transparent bg-transparent px-2 py-1.5 text-[13px] font-semibold text-awc-fg-muted transition hover:bg-awc-fill";
+const CHIP =
+  "inline-flex items-center rounded-full bg-awc-tile-2 px-2 py-px text-[11.5px] font-semibold text-awc-fg-muted";
+
+/** Pending assistant invites — Invite sent / Auto-approve chip / Cancel (+ Turn off). */
 export default function AwcProjectMembersInvitePendingList({
   invites,
   onRevoke,
+  onTurnOffAutoApprove,
 }: AwcProjectMembersInvitePendingListProps) {
   return (
     <>
-      <ul className="flex flex-col px-1">
+      <ul className="flex flex-col gap-2 px-1">
         {invites.length === 0 ? (
-          <li className="px-3.5 py-2 text-[13px] text-gray-500 dark:text-gray-400">
-            {C.inviteEmpty}
-          </li>
+          <li className="px-3.5 py-2 text-[13px] text-awc-fg-muted">{C.inviteEmpty}</li>
         ) : (
           invites.map((invite) => (
-            <li
-              key={invite.inviteId}
-              className="flex items-center justify-between gap-2 rounded-xl px-3.5 py-2 text-sm"
-            >
-              <span className="min-w-0">
-                <span className="block font-medium text-gray-800 dark:text-white/90">
-                  {invite.inviteId.slice(0, 8)}…
+            <li key={invite.inviteId} className={ROW}>
+              <span className={AV} aria-hidden>
+                +
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate font-semibold text-awc-fg">
+                  {C.invitePendingTitle}
                 </span>
-                <span className="block text-[12px] text-gray-500 dark:text-gray-400">
-                  {invite.autoApprove ? C.invitePendingSubOn : C.invitePendingSubOff}
+                <span className="mt-0.5 flex items-center gap-1.5 text-[12.5px] text-awc-fg-subtle">
+                  {invite.autoApprove ? (
+                    <span className={CHIP}>{C.invitePendingSubOn}</span>
+                  ) : (
+                    C.invitePendingSubOff
+                  )}
                 </span>
               </span>
-              <button
-                type="button"
-                className="shrink-0 text-[13px] font-medium text-error-600 dark:text-error-400"
-                onClick={() => onRevoke(invite.inviteId)}
-              >
-                {C.invitePendingCancel}
-              </button>
+              <span className="flex shrink-0 gap-1.5">
+                {invite.autoApprove && onTurnOffAutoApprove ? (
+                  <button
+                    type="button"
+                    className={GHOST}
+                    aria-label="Turn off auto-approve"
+                    onClick={() => onTurnOffAutoApprove(invite.inviteId)}
+                  >
+                    {C.invitePendingTurnOff}
+                  </button>
+                ) : null}
+                <button
+                  type="button"
+                  className={GHOST}
+                  aria-label="Cancel invite"
+                  onClick={() => onRevoke(invite.inviteId)}
+                >
+                  {C.invitePendingCancel}
+                </button>
+              </span>
             </li>
           ))
         )}
       </ul>
-      <ul className="space-y-1 px-3.5 text-[12px] text-gray-500 dark:text-gray-400">
+      <ul className="space-y-1 px-3.5 text-[12px] text-awc-fg-muted">
         <li className="flex gap-1.5">
-          <span className="text-emerald-600" aria-hidden>
+          <span className="text-awc-ok-dot" aria-hidden>
             ●
           </span>
           <span>{C.compatGrok}</span>
         </li>
         <li className="flex gap-1.5">
-          <span className="text-gray-400" aria-hidden>
+          <span className="text-awc-fg-subtle" aria-hidden>
             ○
           </span>
           <span>{C.compatOther}</span>

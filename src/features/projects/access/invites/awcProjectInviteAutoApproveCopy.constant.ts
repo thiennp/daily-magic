@@ -3,7 +3,7 @@ export const AWC_PROJECT_INVITE_AUTO_APPROVE_COPY = {
   checkboxLabel: "Auto-approve assistants that use this invite",
   checkboxHelp:
     "Off by default. When on, an assistant that joins with this invite gets access without waiting for you. You can turn it off any time.",
-  turnOffAction: "Turn off auto-approve",
+  turnOffAction: "Turn off",
   turnOffToast:
     "Auto-approve is off. You'll approve each assistant that joins with this invite.",
   activityJoined: (name: string, label: string) =>
@@ -12,10 +12,9 @@ export const AWC_PROJECT_INVITE_AUTO_APPROVE_COPY = {
     `You turned on auto-approve for invite ${label}`,
   activityOff: (label: string) =>
     `You turned off auto-approve for invite ${label}`,
-  invitePendingSubOff:
-    "Waiting to join · you approve each assistant before it gets access",
-  invitePendingSubOn: "Waiting to join · auto-approve is on",
-  requestWaiting: "Asked to join · waiting for your approval",
+  invitePendingSubOff: "Waiting for assistant",
+  invitePendingSubOn: "Auto-approve on",
+  requestWaiting: "Wants to join",
   humanPageDefault:
     "Your assistant waits for the project owner to approve it. It gets access only after that.",
   humanPageAutoApproveOn:

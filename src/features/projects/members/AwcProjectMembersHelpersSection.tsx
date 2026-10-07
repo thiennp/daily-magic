@@ -39,16 +39,16 @@ export default function AwcProjectMembersHelpersSection({
       <div className="flex items-baseline justify-between gap-2 px-3.5">
         <h3
           id="members-helpers-h"
-          className="text-[13px] font-semibold text-gray-500 dark:text-gray-400"
+          className="text-[13px] font-semibold text-awc-fg-subtle"
         >
           {C.helpersHeading}
         </h3>
-        <span className="text-[12px] tabular-nums text-gray-500 dark:text-gray-400">
+        <span className="text-[12px] tabular-nums text-awc-fg-subtle">
           {helpers.length}
         </span>
       </div>
       {helpers.length === 0 ? (
-        <p className="px-3.5 py-2 text-[13px] text-gray-500 dark:text-gray-400">
+        <p className="px-3.5 py-2 text-[13px] text-awc-fg-subtle">
           {C.helpersEmpty}
         </p>
       ) : (
@@ -68,7 +68,7 @@ export default function AwcProjectMembersHelpersSection({
           ))}
         </ul>
       )}
-      <p className="px-3.5 pt-1 text-[12px] text-gray-500 dark:text-gray-400">
+      <p className="px-3.5 pt-1 text-[12px] text-awc-fg-subtle">
         {C.helpersNote}
       </p>
     </section>

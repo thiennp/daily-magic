@@ -6,7 +6,7 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   peopleYouSuffix: "(you)",
   peopleRoleOwner: "Owner",
   peoplePendingEmpty: "No pending invites or access requests.",
-  helpersHeading: "Assistants in the project",
+  helpersHeading: "Assistants",
   helpersEmpty: "No assistants yet. Invite an assistant below.",
   helpersReady: "Ready",
   helpersWorking: "Working",
@@ -27,10 +27,14 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
     kind === null
       ? "Paste this prompt into your assistant. It shows once, so copy it now."
       : `Prompt for the ${kind} assistant. Paste it into your assistant. The prompt shows once, so copy it now.`,
-  invitePendingSubOff:
-    "Waiting to join · you approve each assistant before it gets access",
-  invitePendingSubOn: "Waiting to join · auto-approve is on",
-  requestWaitingApproval: "Asked to join · waiting for your approval",
+  /** State 1 — invite out; Cancel only (no Approve). */
+  invitePendingTitle: "Invite sent",
+  invitePendingSubOff: "Waiting for assistant",
+  /** State 1b — chip label when auto-approve is on. */
+  invitePendingSubOn: "Auto-approve on",
+  invitePendingTurnOff: "Turn off",
+  /** State 2 — join request subtitle; Approve + Deny. */
+  requestWaitingApproval: "Wants to join",
   invitePendingCancel: "Cancel",
   inviteEmpty:
     "No assistant invites yet. The prompt shows only once when you create it.",

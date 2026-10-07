@@ -24,7 +24,7 @@ const card = (
 
 describe("pending approval card copy (COPY.md pending_card.* verbatim)", () => {
   it("locks every COPY.md string", () => {
-    expect(C.title).toBe("Asked to join · waiting for your approval");
+    expect(C.title).toBe("Wants to join");
     expect(C.whoLabel).toBe("Who is asking");
     expect(C.canDoLabel).toBe("What it can do");
     expect(C.canDoBody).toBe(

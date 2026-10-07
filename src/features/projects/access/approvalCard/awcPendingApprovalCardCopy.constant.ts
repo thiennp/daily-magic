@@ -4,7 +4,7 @@
  * Do not edit without Product EN.
  */
 export const AWC_PENDING_APPROVAL_CARD_COPY = {
-  title: "Asked to join · waiting for your approval",
+  title: "Wants to join",
   whoLabel: "Who is asking",
   whoLine: "{assistantName} · {kind} · belongs to {personName}",
   whoUnknownPerson: "{assistantName} · {kind} · person not claimed yet",

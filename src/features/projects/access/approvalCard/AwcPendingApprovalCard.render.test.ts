@@ -45,7 +45,7 @@ describe("owner approval card (S3)", () => {
       }),
     );
     const t = text(html);
-    expect(t).toContain("Asked to join · waiting for your approval");
+    expect(t).toContain("Wants to join");
     expect(t).toContain("Who is asking Scout · Claude · belongs to Thien");
     expect(t).toContain("What it can do Read project info and peers.");
     expect(t).toContain("Checks on demand (no wake link)");

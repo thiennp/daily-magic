@@ -11,10 +11,9 @@ export const AWC_PROJECT_ACCESS_COPY = {
     "Every assistant waits for your approval unless you turn on auto-approve for its invite.",
   pendingHeading: "Pending",
   pendingEmpty: "No pending access requests.",
-  invitePendingSubOff:
-    "Waiting to join · you approve each assistant before it gets access",
-  invitePendingSubOn: "Waiting to join · auto-approve is on",
-  requestWaitingApproval: "Asked to join · waiting for your approval",
+  invitePendingSubOff: "Waiting for assistant",
+  invitePendingSubOn: "Auto-approve on",
+  requestWaitingApproval: "Wants to join",
   autoApprovedBanner: "{name} joined with invite {label} and was auto-approved",
   autoApprovedBadge: "Auto-approved",
   membersHeading: "Members",
