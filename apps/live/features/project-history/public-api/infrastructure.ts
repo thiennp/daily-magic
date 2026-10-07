@@ -154,3 +154,16 @@ export {
   PROJECT_HISTORY_AI_SESSION_KIND,
 } from "../internal/core/mapAiSessionRecordToTimelineEntry";
 export { PROJECT_HISTORY_TASKS_DIR_NAME } from "../internal/core/projectHistoryPaths.constant";
+
+export {
+  reconcileProjectSyncOnConnect,
+  claimPendingProjectTaskMeta,
+  stubPushNeonMetaPort,
+} from "../internal/core/reconcileProjectSyncOnConnect";
+export type {
+  PushNeonMetaPort,
+  ReconcileProjectSyncOnConnectInput,
+  ReconcileProjectSyncOnConnectResult,
+  ReconcileProjectSyncClaim,
+} from "../internal/core/reconcileProjectSyncOnConnect";
+

@@ -1,67 +1,26 @@
-import { encodeProjectMessengerCursor } from "@/lib/projects/acl/messaging/messenger/projectMessengerCursor";
+import { loadMessengerTimelinePage } from "@/features/projects/sync/adapters/messengerTimelineAdapter";
+import {
+  PROJECT_SYNC_COMPUTER_OFFLINE_ERROR,
+  type ProjectSyncOfflineError,
+  type ProjectSyncPageMeta,
+  type ProjectSyncPageSource,
+} from "@/features/projects/sync/projectSync.types";
 import type { ProjectMessengerTimelineEntry } from "@/lib/projects/acl/messaging/messenger/projectMessenger.type";
 
-export type ProjectMessengerPageSource =
-  | "local"
-  | "neon"
-  | "mixed"
-  | "exhausted";
+/** Live Messenger sources (+ additive "idb" from module pager). */
+export type ProjectMessengerPageSource = ProjectSyncPageSource;
 
-export type ProjectMessengerPageMeta = {
-  readonly beforeCursor: string | null;
-  readonly hasMore: boolean;
-  readonly source: ProjectMessengerPageSource;
-  readonly localLive: boolean;
-};
+export type ProjectMessengerPageMeta = ProjectSyncPageMeta;
 
-export type ProjectMessengerOfflineError = {
-  readonly code: "project_computer_offline";
-  readonly message: "Connection to the project computer was lost.";
-};
+export type ProjectMessengerOfflineError = ProjectSyncOfflineError;
 
+/** Exact offline constant — same code + EN as module / Dispatch LOCKED. */
 export const PROJECT_MESSENGER_COMPUTER_OFFLINE_ERROR: ProjectMessengerOfflineError =
-  {
-    code: "project_computer_offline",
-    message: "Connection to the project computer was lost.",
-  };
-
-const byNewestFirst = (
-  left: ProjectMessengerTimelineEntry,
-  right: ProjectMessengerTimelineEntry,
-): number => {
-  if (left.createdAt !== right.createdAt) {
-    return left.createdAt < right.createdAt ? 1 : -1;
-  }
-  return left.messageId < right.messageId ? 1 : -1;
-};
-
-const mergeNewestFirst = (
-  local: readonly ProjectMessengerTimelineEntry[],
-  neon: readonly ProjectMessengerTimelineEntry[],
-): ProjectMessengerTimelineEntry[] => {
-  const byId = new Map<string, ProjectMessengerTimelineEntry>();
-  for (const entry of neon) {
-    byId.set(entry.messageId, entry);
-  }
-  for (const entry of local) {
-    byId.set(entry.messageId, entry);
-  }
-  return [...byId.values()].sort(byNewestFirst);
-};
-
-const pageCursorOf = (
-  entries: readonly ProjectMessengerTimelineEntry[],
-): string | null => {
-  const oldest = entries.at(-1);
-  if (oldest === undefined) return null;
-  return encodeProjectMessengerCursor({
-    t: oldest.createdAt,
-    id: oldest.messageId,
-  });
-};
+  PROJECT_SYNC_COMPUTER_OFFLINE_ERROR;
 
 /**
  * Pick the load-older / open page from local + Neon slices (both newest-first).
+ * Thin re-export over project sync `loadPage` (idbEntries empty for live path).
  * Offline error only when `before` was requested, both empty, and !localLive.
  */
 export const resolveProjectMessengerLoadPage = (input: {
@@ -76,48 +35,14 @@ export const resolveProjectMessengerLoadPage = (input: {
   readonly entries: readonly ProjectMessengerTimelineEntry[];
   readonly page: ProjectMessengerPageMeta;
   readonly error?: ProjectMessengerOfflineError;
-} => {
-  const merged = mergeNewestFirst(input.localEntries, input.neonEntries);
-  const hasLocal = input.localEntries.length > 0;
-  const hasNeon = input.neonEntries.length > 0;
-
-  if (merged.length === 0) {
-    if (input.beforeRequested && !input.localLive) {
-      return {
-        entries: [],
-        page: {
-          beforeCursor: null,
-          hasMore: false,
-          source: "exhausted",
-          localLive: false,
-        },
-        error: PROJECT_MESSENGER_COMPUTER_OFFLINE_ERROR,
-      };
-    }
-    return {
-      entries: [],
-      page: {
-        beforeCursor: null,
-        hasMore: false,
-        source: "exhausted",
-        localLive: input.localLive,
-      },
-    };
-  }
-
-  const source: ProjectMessengerPageSource =
-    hasLocal && hasNeon ? "mixed" : hasLocal ? "local" : "neon";
-  const sliced = merged.slice(0, input.limit);
-  const hasMore =
-    merged.length > input.limit || input.localHasMore || input.neonHasMore;
-
-  return {
-    entries: sliced,
-    page: {
-      beforeCursor: pageCursorOf(sliced),
-      hasMore,
-      source,
-      localLive: input.localLive,
-    },
-  };
-};
+} =>
+  loadMessengerTimelinePage({
+    idbEntries: [],
+    localEntries: input.localEntries,
+    localHasMore: input.localHasMore,
+    neonEntries: input.neonEntries,
+    neonHasMore: input.neonHasMore,
+    localLive: input.localLive,
+    beforeRequested: input.beforeRequested,
+    limit: input.limit,
+  });
