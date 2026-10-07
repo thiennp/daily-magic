@@ -73,19 +73,31 @@ export default function AwcProjectTasksAssignDialog({
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Seed the form when the dialog opens (or its project changes while open):
+  // render-time reset instead of setState in the load effect.
+  const [seededFor, setSeededFor] = useState<{
+    readonly open: boolean;
+    readonly projectId: string;
+  }>({ open: false, projectId });
+  if (seededFor.open !== open || seededFor.projectId !== projectId) {
+    setSeededFor({ open, projectId });
+    if (open) {
+      setPrompt("");
+      setBranch(branchOptions[0]?.id ?? "");
+      setWorktree("");
+      setCreateWorktree(false);
+      setNewWorktreeName("");
+      setPending(false);
+      setError(null);
+      setPeersError(null);
+      setPeers([]);
+      setAssistantId("");
+      setPeersLoading(true);
+    }
+  }
+
   useEffect(() => {
     if (!open) return;
-    setPrompt("");
-    setBranch(branchOptions[0]?.id ?? "");
-    setWorktree("");
-    setCreateWorktree(false);
-    setNewWorktreeName("");
-    setPending(false);
-    setError(null);
-    setPeersError(null);
-    setPeers([]);
-    setAssistantId("");
-    setPeersLoading(true);
     let cancelled = false;
     void fetchProjectAccess(projectId)
       .then((access) => {
@@ -108,8 +120,6 @@ export default function AwcProjectTasksAssignDialog({
     return () => {
       cancelled = true;
     };
-    // branchOptions[0] only seeds the form when the dialog opens.
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- open/projectId gate the load
   }, [open, projectId]);
 
   if (!open) return null;

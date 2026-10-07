@@ -23,10 +23,15 @@ export const useProjectConnections = (
     mergeConnectionRows([]),
   );
   const [loadKey, setLoadKey] = useState(0);
+  // Back to "loading" when the project or reload key changes (render-time reset).
+  const [shownFor, setShownFor] = useState({ projectId, loadKey });
+  if (shownFor.projectId !== projectId || shownFor.loadKey !== loadKey) {
+    setShownFor({ projectId, loadKey });
+    setLoadState("loading");
+  }
 
   useEffect(() => {
     const controller = new AbortController();
-    setLoadState("loading");
     void requestProjectConnections({
       projectId,
       signal: controller.signal,

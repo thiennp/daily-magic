@@ -26,22 +26,29 @@ export default function AwcOneWindowInFeedApprovals({
 }: AwcOneWindowInFeedApprovalsProps) {
   const [pending, setPending] = useState<readonly AccessPendingView[]>([]);
 
-  const reload = useCallback(async () => {
-    if (!enabled) {
-      setPending([]);
-      return;
-    }
+  // Disabled → empty list (render-time reset; the effect only subscribes to the fetch).
+  const [wasEnabled, setWasEnabled] = useState(enabled);
+  if (wasEnabled !== enabled) {
+    setWasEnabled(enabled);
+    if (!enabled) setPending([]);
+  }
+
+  const loadPending = useCallback(async (): Promise<
+    readonly AccessPendingView[]
+  > => {
     const access = await fetchProjectAccess(projectId);
-    if (!access.ok) {
-      setPending([]);
-      return;
-    }
-    setPending(access.pendingRequests ?? []);
-  }, [enabled, projectId]);
+    return access.ok ? (access.pendingRequests ?? []) : [];
+  }, [projectId]);
+
+  const reload = useCallback(async () => {
+    if (!enabled) return;
+    setPending(await loadPending());
+  }, [enabled, loadPending]);
 
   useEffect(() => {
-    void reload();
-  }, [reload]);
+    if (!enabled) return;
+    void loadPending().then(setPending);
+  }, [enabled, loadPending]);
 
   if (!enabled || pending.length === 0) return null;
 

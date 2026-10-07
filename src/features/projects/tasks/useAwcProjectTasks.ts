@@ -30,12 +30,9 @@ import type {
   ProjectTaskPlanCounts,
   ProjectTasksChatVisibility,
 } from "@/features/projects/tasks/projectTask.type";
-import {
-  PROJECT_TASKS_CHAT_VISIBILITY_DEFAULT,
-  readProjectTasksChatVisibility,
-  writeProjectTasksChatVisibility,
-} from "@/features/projects/tasks/projectTasksChatVisibility";
+import { writeProjectTasksChatVisibility } from "@/features/projects/tasks/projectTasksChatVisibility";
 import { listProjectTasksIdbOrThrowSoft } from "@/features/projects/tasks/projectTasksIdb";
+import useProjectTasksChatVisibility from "@/features/projects/tasks/useProjectTasksChatVisibility";
 import { mapAgentRunToProjectTaskMeta } from "@/features/projects/tasks/utils/mapAgentRunToProjectTaskMeta";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
@@ -111,16 +108,21 @@ export default function useAwcProjectTasks(
   const [statusFilter, setStatusFilter] = useState<ProjectTaskUiStatus | "all">(
     "all",
   );
-  const [chatVisibility, setChatVisibilityState] =
-    useState<ProjectTasksChatVisibility>(PROJECT_TASKS_CHAT_VISIBILITY_DEFAULT);
-
-  useEffect(() => {
-    setChatVisibilityState(readProjectTasksChatVisibility(projectId));
-  }, [projectId]);
+  // Stored value (default on server/hydration, then localStorage). A pick in this
+  // view wins for its project even if the write fails (private mode / quota).
+  const storedChatVisibility = useProjectTasksChatVisibility(projectId);
+  const [pickedChatVisibility, setPickedChatVisibility] = useState<{
+    readonly projectId: string;
+    readonly value: ProjectTasksChatVisibility;
+  } | null>(null);
+  const chatVisibility =
+    pickedChatVisibility !== null && pickedChatVisibility.projectId === projectId
+      ? pickedChatVisibility.value
+      : storedChatVisibility;
 
   const setChatVisibility = useCallback(
     (v: ProjectTasksChatVisibility) => {
-      setChatVisibilityState(v);
+      setPickedChatVisibility({ projectId, value: v });
       writeProjectTasksChatVisibility(projectId, v);
     },
     [projectId],

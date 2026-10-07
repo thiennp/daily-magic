@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   deleteComposerRecipientSticky,
@@ -103,31 +103,37 @@ export const useOneWindowComposerRouting = (
     };
   }, [memberKey, nameById, projectId]);
 
+  // Kept recipient vs current assistants: state is reconciled during render
+  // (guarded: kept → null ends it); persistence runs in an effect per clear.
+  const [goneClearSeq, setGoneClearSeq] = useState(0);
+  const goneClearDone = useRef(0);
+  const reconciled = nextMessengerKeptRecipient(kept, {
+    type: "assistantsChanged",
+    assistantMembershipIds: assistantIds,
+  });
+  if (reconciled.goneMembershipIds.length > 0) {
+    const id = reconciled.goneMembershipIds[0];
+    setGoneName(nameById.get(id) ?? "An assistant");
+    setKept(null);
+    setGoneClearSeq((n) => n + 1);
+  } else if (reconciled.recipient !== kept && assistantIds.length <= 1) {
+    setKept(null);
+  }
+
   useEffect(() => {
-    const next = nextMessengerKeptRecipient(kept, {
-      type: "assistantsChanged",
-      assistantMembershipIds: assistantIds,
-    });
-    if (next.goneMembershipIds.length > 0) {
-      const id = next.goneMembershipIds[0];
-      setGoneName(nameById.get(id) ?? "An assistant");
-      setKept(null);
-      if (memberKey !== null) {
-        void writeMessengerKeptRecipient({
-          store: messengerChatStoreIdb,
-          projectId,
-          memberKey,
-          recipient: null,
-          now: Date.now(),
-        });
-      }
-      void deleteComposerRecipientSticky(projectId);
-      return;
+    if (goneClearSeq === goneClearDone.current) return;
+    goneClearDone.current = goneClearSeq;
+    if (memberKey !== null) {
+      void writeMessengerKeptRecipient({
+        store: messengerChatStoreIdb,
+        projectId,
+        memberKey,
+        recipient: null,
+        now: Date.now(),
+      });
     }
-    if (next.recipient !== kept && assistantIds.length <= 1) {
-      setKept(null);
-    }
-  }, [assistantIds, kept, memberKey, nameById, projectId]);
+    void deleteComposerRecipientSticky(projectId);
+  }, [goneClearSeq, memberKey, projectId]);
 
   const modeInfo = resolveOneWindowComposerMode({
     assistantCount: assistants.length,
