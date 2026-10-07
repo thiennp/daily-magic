@@ -15,21 +15,25 @@ describe("ComputersDownloadLink", () => {
     expect(APP_SHELL_COMPUTERS_COPY.download).toBe("Download AgentWitch Local");
   });
 
-  it("HARD: HomeConnectedMacsPanel mounts Download when devices exist", () => {
+  it("HARD: HomeConnectedMacsPanel always mounts Download when not loading", () => {
     const panel = readFileSync(
       join(process.cwd(), "src/features/home/HomeConnectedMacsPanel.tsx"),
       "utf8",
     );
     expect(panel).toContain("ComputersDownloadLink");
-    expect(panel).toContain("hasExistingDevices");
+    expect(panel).toContain("!isLoading");
+    // Download is not gated on hasExistingDevices (Online / connected still show it).
+    expect(panel).toMatch(
+      /\{!isLoading \? \([\s\S]*ComputersDownloadLink[\s\S]*\) : null\}/,
+    );
   });
 
-  it("HARD: empty Computers state also mounts Download", () => {
+  it("HARD: empty Computers state does not double-render Download (panel footer owns it)", () => {
     const empty = readFileSync(
       join(process.cwd(), "src/features/home/HomeConnectedMacsEmptyState.tsx"),
       "utf8",
     );
-    expect(empty).toContain("ComputersDownloadLink");
+    expect(empty).not.toContain("ComputersDownloadLink");
   });
 
   it("HARD: ConnectAnotherMacButton is not gated on shouldShowAgentWitchAppDownloadCta", () => {

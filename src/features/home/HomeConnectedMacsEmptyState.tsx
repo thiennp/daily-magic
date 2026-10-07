@@ -1,6 +1,5 @@
 "use client";
 
-import ComputersDownloadLink from "@/features/home/ComputersDownloadLink";
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
 import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/appShellComputersCopy.constant";
 
@@ -26,9 +25,6 @@ export default function HomeConnectedMacsEmptyState({
           hasExistingDevices={false}
           className="font-medium text-brand-700 hover:underline dark:text-brand-300"
         />
-      </p>
-      <p className="text-sm text-gray-500 dark:text-gray-400">
-        <ComputersDownloadLink className="font-medium text-brand-700 hover:underline dark:text-brand-300" />
       </p>
     </div>
   );

@@ -51,7 +51,7 @@ describe("nav consolidation routes (scope 1)", () => {
     expect(source).toContain('intent === "bots"');
     expect(
       readApp("src/lib/shell/navConsolidationIntent.constant.ts"),
-    ).toContain("Claim or remove a bot here.");
+    ).toContain("Claim or remove an assistant here.");
   });
 
   it("retargets /agent plain entry to projects new-task intent", () => {

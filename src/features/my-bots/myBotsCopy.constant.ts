@@ -2,15 +2,15 @@
 export const MY_BOTS_COPY = {
   title: "My bots",
   description:
-    "Claim a bot with a short code from your bot, then manage its project wake links. Only you can unclaim a bot you own.",
-  claimHeading: "Claim a bot",
+    "Claim an assistant with a short code from your assistant, then manage its project wake links. Only you can unclaim an assistant you own.",
+  claimHeading: "Claim an assistant",
   claimHint:
-    "Ask your bot for a claim code. Codes expire in 10 minutes and work once.",
+    "Ask your assistant for a claim code. Codes expire in 10 minutes and work once.",
   claimPlaceholder: "awc_claim_…",
   claimSubmit: "Claim",
   claimSubmitting: "Claiming…",
-  listHeading: "Owned bots",
-  listEmpty: "No bots claimed yet.",
+  listHeading: "Owned assistants",
+  listEmpty: "No assistants claimed yet.",
   unclaim: "Unclaim",
   unclaiming: "Unclaiming…",
   webhookToggle: "Grok wake link",

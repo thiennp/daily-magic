@@ -78,13 +78,17 @@ export default function HomeConnectedMacsPanel({
           onDelete={onDelete}
         />
       )}
-      {!isLoading && hasExistingDevices ? (
-        <div className={`mt-4 flex flex-wrap items-center gap-3 ${APP_SHELL_V5_SECTION_CLASS}`}>
-          <ConnectAnotherMacButton
-            {...connectProps}
-            hasExistingDevices={hasExistingDevices}
-            className={APP_SHELL_V5_PILL_BUTTON_CLASS}
-          />
+      {!isLoading ? (
+        <div
+          className={`mt-4 flex flex-wrap items-center gap-3 ${APP_SHELL_V5_SECTION_CLASS}`}
+        >
+          {hasExistingDevices ? (
+            <ConnectAnotherMacButton
+              {...connectProps}
+              hasExistingDevices={hasExistingDevices}
+              className={APP_SHELL_V5_PILL_BUTTON_CLASS}
+            />
+          ) : null}
           <ComputersDownloadLink className={APP_SHELL_V5_PILL_BUTTON_CLASS} />
         </div>
       ) : null}

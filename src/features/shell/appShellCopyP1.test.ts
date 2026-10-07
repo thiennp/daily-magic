@@ -15,9 +15,16 @@ describe("COPY-P1 shell and auth labels", () => {
     expect(labels).toContain("Projects");
     expect(labels).toContain("Prompt optimizer");
     expect(labels).toContain("Marketplace");
+    expect(labels).toContain("Connect");
+    expect(labels).toContain("Automations");
     expect(
       PRIMARY_NAV.find((item) => item.label === "Prompt optimizer")?.href,
     ).toBe("/prompt-optimizer");
+    expect(PRIMARY_NAV.find((item) => item.label === "Connect")?.href).toBe(
+      "/download",
+    );
+    expect(labels.indexOf("Marketplace")).toBeLessThan(labels.indexOf("Connect"));
+    expect(labels.indexOf("Connect")).toBeLessThan(labels.indexOf("Automations"));
     expect(labels).not.toContain("My bots");
     expect(labels).not.toContain("Library");
     expect(labels).not.toContain("Reports");
