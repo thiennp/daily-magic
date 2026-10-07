@@ -85,3 +85,55 @@ export {
   MESSENGER_TIMELINE_TABLE_ID,
   messengerTimelineAdapter,
 } from "@/features/projects/sync/adapters/messengerTimelineAdapter";
+
+/** Dispatch Neon meta slice (pageNeon / allowlisted upsert / counts / IDB guard). */
+export {
+  mapNeonAgentRunToTimelineEntry,
+  mergeNeonMessengerTimelinePage,
+  neonMetaAdapter,
+  pageNeonAgentRunSessions,
+  pageNeonMessengerTimeline,
+  resolvePageNeonMessengerTimeline,
+  type NeonMetaPageResult,
+  type PageNeonMessengerTimelineInput,
+} from "@/features/projects/sync/adapters/neonMetaAdapter";
+
+export {
+  PROJECT_TASK_NEON_BODY_FIELD_DENYLIST,
+  PROJECT_TASK_NEON_META_ROW_CAP,
+  mapAgentRunRowToTaskNeonMeta,
+  mapProjectTaskUiStatusToAgentRun,
+  pageNeonProjectTasks,
+  pickProjectTaskNeonMetaAllowlist,
+  projectTasksNeonMetaAdapter,
+  purgeProjectTaskNeonMetaBeyondCap,
+  scrubNeonMetaTitle,
+} from "@/features/projects/sync/adapters/projectTasksNeonMeta";
+
+export {
+  createPushNeonMetaPort,
+  gateProjectTaskNeonMetaBatch,
+  upsertProjectTaskNeonMeta,
+  type PushNeonMetaPort as DispatchPushNeonMetaPort,
+  type UpsertProjectTaskNeonMetaResult,
+} from "@/features/projects/sync/adapters/upsertProjectTaskNeonMeta";
+
+export {
+  PROJECT_TASK_PLAN_MAX_BY_PLAN,
+  countProjectTaskNeonMeta,
+  formatProjectTaskPlanHint,
+  loadProjectTaskPlanCounts,
+  resolveProjectTaskPlanMax,
+  type ProjectTaskPlanCounts,
+} from "@/features/projects/sync/adapters/loadProjectTaskPlanCounts";
+
+export {
+  classifyIdbError,
+  decideNeonUpsertGivenIdb,
+  gateNeonUpsertAfterIdb,
+  softIdbCall,
+  type IdbFailureKind,
+  type IdbReadResult,
+  type NeonUpsertDecision,
+} from "@/features/projects/sync/adapters/neonMetaIdbGuard";
+
