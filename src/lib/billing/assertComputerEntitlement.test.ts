@@ -39,7 +39,11 @@ describe("assertComputerEntitlement", () => {
   });
 
   it("denies trial_closed for trial plan when infra gate is closed", async () => {
-    loadBillingPlanForUser.mockResolvedValue(row("trial"));
+    loadBillingPlanForUser.mockResolvedValue({
+      ...row("trial"),
+      trialStartedAt: "2026-10-01T00:00:00.000Z",
+      trialEndsAt: "2026-11-01T00:00:00.000Z",
+    });
     loadCostControlSnapshot.mockResolvedValue({ trialGate: "closed" });
     const result = await assertComputerEntitlement({ userId: "u1" });
     expect(result).toMatchObject({ ok: false, code: "trial_closed" });
@@ -59,4 +63,21 @@ describe("assertComputerEntitlement", () => {
     const result = await assertComputerEntitlement({ userId: "u1" });
     expect(result).toMatchObject({ ok: false, code: "computer_limit" });
   });
+
+  it("denies trial_closed for closed-gate mint without trial dates", async () => {
+    loadBillingPlanForUser.mockResolvedValue({
+      plan: "trial",
+      trialStartedAt: null,
+      trialEndsAt: null,
+      adminFree: false,
+      seatCount: 1,
+      stripeCustomerId: null,
+      stripeSubscriptionId: null,
+    });
+    loadCostControlSnapshot.mockResolvedValue({ trialGate: "open" });
+    countActiveComputersForUser.mockResolvedValue(0);
+    const result = await assertComputerEntitlement({ userId: "u1" });
+    expect(result).toMatchObject({ ok: false, code: "trial_closed" });
+  });
+
 });

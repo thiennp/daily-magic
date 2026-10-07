@@ -1,4 +1,4 @@
-import type { Adapter } from "next-auth/adapters";
+import type { Adapter, AdapterUser } from "next-auth/adapters";
 
 import { isAgentAccessSyntheticEmail } from "@/lib/agentAccess/isAgentAccessSyntheticEmail";
 import { SUPER_ADMIN_EMAIL } from "@/lib/auth/constants";
@@ -8,10 +8,17 @@ import {
   resolveGlobalRole,
 } from "@/lib/auth/neonAdapter/mapAdapterUserRow";
 import { assertTrialGateOpen } from "@/lib/billing/assertTrialGateOpen";
-import { BillingGateError } from "@/lib/billing/billingGateError";
 import { ensureBillingSchema } from "@/lib/billing/ensureBillingSchema";
 import { asRowArray, getSql } from "@/lib/db";
 
+/**
+ * Human signup when infra trialGate is closed: mint a `trial` row with **no**
+ * trial dates (no usable entitlements until checkout). Do not throw here —
+ * Auth.js must return the user so OAuth can linkAccount; `callbacks.signIn`
+ * then sends them to signed-out Pricing with the trial_closed banner (no
+ * usable session). Prefer reusing an existing closed-mint row by email so
+ * retries do not hit unique(email).
+ */
 export function createNeonUserAdapterMethods(): Pick<
   Adapter,
   | "createUser"
@@ -29,18 +36,28 @@ export function createNeonUserAdapterMethods(): Pick<
         email.length === 0 ||
         email === SUPER_ADMIN_EMAIL ||
         isAgentAccessSyntheticEmail(email);
+
+      let grantTrial = true;
       if (!skipTrialGate) {
         const trialGate = await assertTrialGateOpen();
         if (!trialGate.ok) {
-          throw new BillingGateError(trialGate);
+          grantTrial = false;
+          if (email.length > 0) {
+            const existing = await getUserByEmailRow(email);
+            if (existing) {
+              return existing;
+            }
+          }
         }
       }
+
       const sql = getSql();
       const globalRole = user.email
         ? resolveGlobalRole(user.email)
         : GlobalRole.USER;
       const result = asRowArray(
-        await sql`
+        grantTrial
+          ? await sql`
         INSERT INTO users (
           name, email, email_verified, image, global_role,
           plan, trial_started_at, trial_ends_at
@@ -54,6 +71,23 @@ export function createNeonUserAdapterMethods(): Pick<
           'trial',
           NOW(),
           NOW() + INTERVAL '1 month'
+        )
+        RETURNING id, name, email, email_verified, image
+      `
+          : await sql`
+        INSERT INTO users (
+          name, email, email_verified, image, global_role,
+          plan, trial_started_at, trial_ends_at
+        )
+        VALUES (
+          ${user.name ?? null},
+          ${user.email},
+          ${user.emailVerified ?? null},
+          ${user.image ?? null},
+          ${globalRole},
+          'trial',
+          NULL,
+          NULL
         )
         RETURNING id, name, email, email_verified, image
       `,
@@ -80,20 +114,7 @@ export function createNeonUserAdapterMethods(): Pick<
     },
 
     async getUserByEmail(email) {
-      const sql = getSql();
-      const result = asRowArray(
-        await sql`
-        SELECT id, name, email, email_verified, image
-        FROM users
-        WHERE email = ${email}
-      `,
-      );
-
-      if (!result[0]) {
-        return null;
-      }
-
-      return mapAdapterUserRow(result[0]);
+      return getUserByEmailRow(email);
     },
 
     async getUserByAccount({ provider, providerAccountId }) {
@@ -142,4 +163,21 @@ export function createNeonUserAdapterMethods(): Pick<
       await sql`DELETE FROM users WHERE id = ${userId}`;
     },
   };
+}
+
+async function getUserByEmailRow(email: string): Promise<AdapterUser | null> {
+  const sql = getSql();
+  const result = asRowArray(
+    await sql`
+        SELECT id, name, email, email_verified, image
+        FROM users
+        WHERE email = ${email}
+      `,
+  );
+
+  if (!result[0]) {
+    return null;
+  }
+
+  return mapAdapterUserRow(result[0]);
 }

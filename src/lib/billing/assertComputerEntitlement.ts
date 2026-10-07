@@ -1,6 +1,7 @@
 import { countActiveComputersForUser } from "@/lib/billing/countActiveComputersForUser";
 import { loadBillingPlanForUser } from "@/lib/billing/loadBillingPlanForUser";
 import { loadCostControlSnapshot } from "@/lib/billing/loadCostControlSnapshot";
+import { isTrialEntitlementGranted } from "@/lib/billing/isTrialEntitlementGranted";
 import { resolveBillingEntitlements } from "@/lib/billing/resolveBillingEntitlements";
 import type { BillingGateResult } from "@/lib/billing/types/BillingGateDenial.type";
 
@@ -17,7 +18,10 @@ export const assertComputerEntitlement = async (input: {
     row,
     trialGate: cost.trialGate,
   });
-  if (row.plan === "trial" && ents.trialGate === "closed") {
+  if (
+    row.plan === "trial" &&
+    (ents.trialGate === "closed" || !isTrialEntitlementGranted(row))
+  ) {
     return {
       ok: false,
       code: "trial_closed",

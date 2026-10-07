@@ -48,4 +48,14 @@ describe("resolveBillingEntitlements", () => {
     expect(ents.trialGate).toBe("closed");
     expect(JSON.stringify(ents)).not.toMatch(/eur|margin|cogs/i);
   });
+
+  it("gives closed-gate mint zero trial entitlements until checkout", () => {
+    const ents = resolveBillingEntitlements({
+      row: row({ plan: "trial", trialStartedAt: null, trialEndsAt: null }),
+      trialGate: "closed",
+    });
+    expect(ents.maxComputers).toBe(0);
+    expect(ents.maxAssistantConnects).toBe(0);
+    expect(ents.cloudMessageStorage).toBe(false);
+  });
 });

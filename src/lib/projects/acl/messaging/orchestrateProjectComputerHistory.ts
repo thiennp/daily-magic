@@ -1,4 +1,3 @@
-import { assertCloudMessageStorage } from "@/lib/billing/assertCloudMessageStorage";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
 import { acceptProjectMessageComputerAck } from "@/lib/projects/acl/messaging/acceptProjectMessageComputerAck";
@@ -54,14 +53,6 @@ export const orchestrateProjectComputerHistory = async (
   const { projectId } = command;
   switch (command.kind) {
     case "owner_toggle": {
-      if (command.enabled) {
-        const storage = await assertCloudMessageStorage({
-          userId: command.actorUserId,
-        });
-        if (!storage.ok) {
-          return { ok: false, code: "cloud_message_storage_off" };
-        }
-      }
       const toggled = await toggleProjectComputerHistory({
         projectId,
         enabled: command.enabled,

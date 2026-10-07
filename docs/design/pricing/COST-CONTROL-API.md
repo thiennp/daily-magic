@@ -2,6 +2,14 @@
 
 **Server gates (where asserts run, error codes, LIVE vs missing):** `docs/design/cost-control/GATES-CONTRACT.md`.
 
+## Product decisions (NRG Lead / Product — 2026-10-07 amend)
+
+1. **Mac-push** — coordinator keeps Mac-push note / `-push-on-mac.sh` when box cannot auth to GitHub.
+2. **History ≠ cloudMessageStorage** — local project-computer History (owner_enable / default ON) is **not** gated by `cloudMessageStorage`. Unpaid (`trial` + `admin_free`) keep local History ON. Do not flip existing ON→OFF. No purge. `cloudMessageStorage` gates **only** Neon/server long-tail persist.
+3. **OAuth trial_closed** — no usable trial session when trialGate is closed. Blocked signup lands on **signed-out Pricing** with blocking banner (`BILLING_COPY.trialGateClosed`, `?trial_closed=1`). If a user row was minted under a closed gate: **no trial entitlements** until checkout (null trial dates). Surface `BillingGateError` / `trial_closed` cleanly.
+
+Admin plan-override remains AW UI Box.
+
 Owner: NRG AgentWitch (API / DB / gates).  
 UI knobs: AW Human UI (AWC admin/settings; AWL only if Local needed).  
 Locked: Pricing product lock + NRG Lead alignment (2026-10-07). Land lock free — stack claim with Human UI when both suite-ready.  
@@ -28,7 +36,7 @@ No permanent self-serve Free. No Free seat-cap product. Internal loss budget sti
 | Cloud message storage (Neon long-tail / server retention beyond local) | **Off** | On | On | Off unless admin overrides |
 | AI credits in package | None | None | None | None |
 
-Cloud message storage starts only after **paid** billing (`pro` or `team`). Trial and admin_free do not get cloud message storage.
+Cloud message storage starts only after **paid** billing (`pro` or `team`). Trial and admin_free do not get Neon/server long-tail cloud message storage. Local History stays available on unpaid plans (see Product decisions §2).
 
 ## Internal cost control (not on Pricing page)
 
@@ -116,8 +124,8 @@ Customer Pricing page never calls this.
 
 1. Computer register / pair — reject above `maxComputers`.
 2. Assistant / bot connect — reject above `maxAssistantConnects`.
-3. Cloud message persist paths — reject or no-op when `cloudMessageStorage === false` (local/IndexedDB/History paths unchanged).
-4. Signup / trial start — if `trialGate === "closed"`, require paid path (API 403 with plain reason code `trial_closed`).
+3. Neon/server long-tail cloud message persist — reject or no-op when `cloudMessageStorage === false`. **Local project-computer History / IndexedDB paths are unchanged and are not gated by this flag.**
+4. Signup / trial start — if `trialGate === "closed"`, no usable trial session: mint without trial entitlements if a row is required, land signed-out on Pricing with `trial_closed` banner; API callers get `BillingGateError` / 403 `trial_closed`.
 
 ## Tip / stack claim
 

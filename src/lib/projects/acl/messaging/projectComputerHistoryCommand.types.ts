@@ -30,8 +30,7 @@ export type ProjectComputerHistoryErrorCode =
   | "forbidden"
   | "no_project_computer"
   | "illegal_transition"
-  | "backlog_pending"
-  | "cloud_message_storage_off";
+  | "backlog_pending";
 
 export type ProjectComputerHistoryCommandResult =
   | {

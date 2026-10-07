@@ -2,7 +2,9 @@ import { loadBillingPlanForUser } from "@/lib/billing/loadBillingPlanForUser";
 import { resolveBillingEntitlements } from "@/lib/billing/resolveBillingEntitlements";
 import type { BillingGateResult } from "@/lib/billing/types/BillingGateDenial.type";
 
-/** HARD gate: cloud message storage only after paid billing. */
+/** HARD gate: Neon/server long-tail message storage only after paid billing.
+ * Not for local project-computer History (owner_enable / default ON).
+ */
 export const assertCloudMessageStorage = async (input: {
   readonly userId: string;
 }): Promise<BillingGateResult> => {

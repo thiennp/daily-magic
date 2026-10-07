@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import BillingPlanSummary from "@/features/billing/components/BillingPlanSummary";
 import PricingBringYourOwn from "@/features/pricing/components/PricingBringYourOwn";
+import PricingTrialClosedBanner from "@/features/pricing/components/PricingTrialClosedBanner";
 import PricingCompareTable from "@/features/pricing/components/PricingCompareTable";
 import PricingFaq from "@/features/pricing/components/PricingFaq";
 import PricingHero from "@/features/pricing/components/PricingHero";
@@ -13,13 +14,16 @@ import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInter
 
 interface PricingPageLayoutProps {
   readonly signedIn: boolean;
+  readonly trialClosedBanner?: boolean;
 }
 
 export default function PricingPageLayout({
   signedIn,
+  trialClosedBanner = false,
 }: PricingPageLayoutProps) {
   return (
     <div className="pb-16">
+      {!signedIn && trialClosedBanner ? <PricingTrialClosedBanner /> : null}
       {signedIn ? (
         <nav aria-label="Breadcrumb" className="mb-6 text-sm text-awc-fg-muted">
           <ol className="flex flex-wrap items-center gap-2">
