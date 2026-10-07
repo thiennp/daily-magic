@@ -194,7 +194,7 @@ export const useAwcProjectMessengerThread = (input: {
   const { sending, send, sendTask } = useAwcProjectMessengerThreadSend({
     projectId,
     threadKey,
-    reload: reloadLoud,
+    reload: reloadSilent,
     onError,
   });
 

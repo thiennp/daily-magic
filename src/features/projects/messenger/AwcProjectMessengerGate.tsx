@@ -23,7 +23,8 @@ export const resolveMessengerGate = (input: {
 }): MessengerGate => {
   const copy = AWC_PROJECT_MESSENGER_COPY;
   if (input.hasProject === false) return { kind: "no_project" };
-  if (input.isLoading) return { kind: "loading" };
+  // Refetch with a list on screen keeps it mounted (DF-015): no composer reset.
+  if (input.isLoading && input.threads === null) return { kind: "loading" };
   if (input.unavailable || input.forbidden) {
     return { kind: "blocked", message: input.message ?? copy.unavailable };
   }
