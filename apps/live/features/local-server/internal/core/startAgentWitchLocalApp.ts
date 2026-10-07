@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { AGENT_WITCH_LOCAL_BROWSER_UI_RETIRED_MESSAGE } from "./agentWitchLocalApp.constants";
+import { isRetiredAgentWitchLocalBrowserUiRequest } from "./isRetiredAgentWitchLocalBrowserUiRequest";
 import {
   AGENT_WITCH_LOCAL_PORTS_IN_USE_MESSAGE,
 } from "./agentWitchLocalAppPortRange.constants";
@@ -564,6 +565,13 @@ export const startAgentWitchLocalApp = (input: {
         return;
       }
 
+      // AWL-H7 Arch Exact FIX-1: retire browser UI ABOVE prompt-sdlc + skill-draft
+      // so HTML pages / fragments / form POSTs cannot bypass. Keep agent + skills/query.
+      if (isRetiredAgentWitchLocalBrowserUiRequest({ method, pathname })) {
+        sendBrowserUiRetired(response);
+        return;
+      }
+
       if (
         await tryHandlePromptSdlcLocalRequest({
           method,
@@ -654,30 +662,6 @@ export const startAgentWitchLocalApp = (input: {
           server: awlMcpServer,
         })
       ) {
-        return;
-      }
-
-      // AWL-H7: retire browser UI pages (Mac app is the surface). Keep APIs below.
-      const retiredBrowserUiPaths = new Set<string>([
-        "/task",
-        "/writer-sessions",
-        "/errors",
-        "/status",
-        "/traffic",
-        "/projects",
-        "/project",
-        "/harness",
-        "/writer-api",
-        "/history",
-        "/estimates",
-        "/knowledge",
-        "/prompt-optimizer",
-        "/prompt-optimizer/guide",
-        "/prompt-sdlc",
-        "/prompt-sdlc/guide",
-      ]);
-      if (method === "GET" && retiredBrowserUiPaths.has(pathname)) {
-        sendBrowserUiRetired(response);
         return;
       }
 

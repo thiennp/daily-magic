@@ -2,8 +2,15 @@ import { AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN } from "@/lib/agentWitch/agentWit
 
 const HEALTH_PROBE_MS = 2500;
 
+/** Raises the Mac menu-bar app window (AWL-H7). Host handled by Mac `handleOpenURL`. */
+export const AGENT_WITCH_LOCAL_STATUS_DEEP_LINK = "agentwitch-local://status";
+
 export type OpenAgentWitchLocalStatusResult = "opened" | "unavailable";
 
+/**
+ * Legacy :43347 probe only — must NOT drive Revive alone (H6 per-account ports).
+ * Prefer `openAgentWitchLocalStatus` which deep-links the Mac app.
+ */
 export const probeAgentWitchLocalHealth = async (): Promise<boolean> => {
   try {
     const response = await fetch(
@@ -18,13 +25,29 @@ export const probeAgentWitchLocalHealth = async (): Promise<boolean> => {
   }
 };
 
+/** Best-effort: navigate to custom scheme so Mac can raise its window. */
+export const openAgentWitchLocalStatusDeepLink = (): void => {
+  if (typeof window === "undefined") {
+    return;
+  }
+  // Prefer <a> click over location.assign so AWC tab stays put when the OS handles the scheme.
+  const anchor = document.createElement("a");
+  anchor.href = AGENT_WITCH_LOCAL_STATUS_DEEP_LINK;
+  anchor.rel = "noopener";
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+};
+
 /**
- * AWL-H7: browser local UI retired. Probes `/health` only — does not open a tab.
- * Callers should treat `opened` as "local core reachable"; UI Mac rewires CTAs
- * toward the Mac menu bar app (not localhost HTML).
+ * AWL-H7 Arch Exact FIX-2: raise Mac via agentwitch-local://status.
+ * Never treat a lone :43347 /health miss as unavailable (false Revive on H6 ports).
+ * Callers (HomeOpenLocalStatusButton / MacDeviceRowThisMacMenuSection) must not
+ * open Revive from legacy probe failure alone — healthy H6 ≠ Revive.
  */
 export const openAgentWitchLocalStatus =
   async (): Promise<OpenAgentWitchLocalStatusResult> => {
-    const healthy = await probeAgentWitchLocalHealth();
-    return healthy ? "opened" : "unavailable";
+    openAgentWitchLocalStatusDeepLink();
+    // Deep-link is the open path. Do not gate on :43347 — H6 listens elsewhere.
+    return "opened";
   };

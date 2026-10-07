@@ -29,6 +29,7 @@ export default function MacDeviceRowThisMacMenuSection({
   const [repairManuallyOpen, setRepairManuallyOpen] = useState(false);
 
   const openLocalStatus = (): void => {
+    // Exact FIX-2: deep-link raises Mac; healthy H6 must not open Revive from :43347 miss.
     void openAgentWitchLocalStatus().then((result) => {
       if (result === "unavailable") {
         setReviveAwlOpen(true);

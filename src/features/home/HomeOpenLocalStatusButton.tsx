@@ -17,6 +17,7 @@ export default function HomeOpenLocalStatusButton({
 }: HomeOpenLocalStatusButtonProps) {
   const [reviveOpen, setReviveOpen] = useState(false);
   const handleClick = useCallback(() => {
+    // Exact FIX-2: openAgentWitchLocalStatus deep-links Mac; does not Revive from :43347 alone.
     void openAgentWitchLocalStatus().then((result) => {
       if (result === "unavailable") {
         setReviveOpen(true);

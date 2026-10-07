@@ -192,6 +192,11 @@ final class MacAppMenuController: ObservableObject {
     }
 
     func handleOpenURL(_ url: URL) {
+        // AWL-H7 Arch Exact FIX-2: AWC deep-links agentwitch-local://status to raise window.
+        if isAgentWitchLocalStatusDeepLink(url) {
+            openLocalStatus()
+            return
+        }
         guard let currentBootstrap = bootstrapState else {
             return
         }

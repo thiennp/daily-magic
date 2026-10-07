@@ -1,7 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
+  AGENT_WITCH_LOCAL_STATUS_DEEP_LINK,
   openAgentWitchLocalStatus,
+  openAgentWitchLocalStatusDeepLink,
   probeAgentWitchLocalHealth,
 } from "./openAgentWitchLocalStatus";
 
@@ -22,25 +24,41 @@ describe("probeAgentWitchLocalHealth", () => {
   });
 });
 
-describe("openAgentWitchLocalStatus", () => {
+describe("openAgentWitchLocalStatus (AWL-H7 Exact FIX-2)", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
   });
 
-  it("does not open a browser tab (AWL-H7) and returns opened when healthy", async () => {
-    const openSpy = vi.fn();
-    vi.stubGlobal("window", { open: openSpy });
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true } as Response));
+  it("deep-links agentwitch-local://status and returns opened even when :43347 is down", async () => {
+    const click = vi.fn();
+    const anchor = {
+      href: "",
+      rel: "",
+      click,
+    } as unknown as HTMLAnchorElement;
+    const createElement = vi.fn().mockReturnValue(anchor);
+    const appendChild = vi.fn();
+    const remove = vi.fn();
+    Object.defineProperty(anchor, "remove", { value: remove });
+
+    vi.stubGlobal("document", {
+      createElement,
+      body: { appendChild },
+    });
+    vi.stubGlobal("window", { open: vi.fn() });
+    // :43347 alone would fail on H6 — must still be opened (no false Revive).
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("ECONNREFUSED")));
 
     await expect(openAgentWitchLocalStatus()).resolves.toBe("opened");
-    expect(openSpy).not.toHaveBeenCalled();
+    expect(createElement).toHaveBeenCalledWith("a");
+    expect(anchor.href).toBe(AGENT_WITCH_LOCAL_STATUS_DEEP_LINK);
+    expect(click).toHaveBeenCalled();
+    expect(appendChild).toHaveBeenCalled();
   });
 
-  it("returns unavailable when health probe fails", async () => {
-    vi.stubGlobal("window", { open: vi.fn() });
-    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("down")));
-
-    await expect(openAgentWitchLocalStatus()).resolves.toBe("unavailable");
+  it("openAgentWitchLocalStatusDeepLink is a no-op without window", () => {
+    vi.stubGlobal("window", undefined);
+    expect(() => openAgentWitchLocalStatusDeepLink()).not.toThrow();
   });
 });

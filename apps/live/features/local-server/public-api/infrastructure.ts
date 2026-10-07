@@ -25,6 +25,13 @@ export {
 export { AGENT_WITCH_LOCAL_BROWSER_UI_RETIRED_MESSAGE } from "../internal/core/agentWitchLocalApp.constants";
 
 export {
+  isKeptPromptOptimizerApiPath,
+  isRetiredAgentWitchLocalBrowserUiPath,
+  isRetiredAgentWitchLocalBrowserUiRequest,
+} from "../internal/core/isRetiredAgentWitchLocalBrowserUiRequest";
+
+
+export {
   allocateOrLoadAgentWitchLocalAppPortRange,
   readAgentWitchLocalAppPortRangeFile,
 } from "../internal/core/allocateOrLoadAgentWitchLocalAppPortRange";
