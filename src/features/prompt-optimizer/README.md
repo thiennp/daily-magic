@@ -1,6 +1,6 @@
 # Prompt optimizer
 
-Console page for the prompt optimizer (**AWC**). `/prompt-optimizer` tells the person to run it in AgentWitch Live (`http://127.0.0.1:43347/prompt-optimizer`). The console does not run the wizard. You choose the folder and the writers on Live. **Run** starts the four-step wizard so writers can read the harness and the code in that folder. Bots on this computer call `http://127.0.0.1:43347/prompt-optimizer/agent` (same wizard).
+Console page for the prompt optimizer (**AWC**). `/prompt-optimizer` tells the person to run it in the AgentWitch Local Mac app (`agentwitch-local://prompt-optimizer`). The console does not run the wizard. You choose the folder and the writers on Live. **Run** starts the four-step wizard so writers can read the harness and the code in that folder. Bots on this computer call `http://127.0.0.1:<localAppPort>/prompt-optimizer/agent` (same wizard; port from `local-app-port.json`, see `docs/agent-witch/awl-port-discovery.md`).
 
 ## Registry
 
@@ -18,7 +18,7 @@ This feature does not write `capability_improvements` and does not run a workflo
 ## Routes
 
 - `/prompt-optimizer` and `/prompt-optimizer/guide` live in the console app chrome and tell the person to run the wizard in AgentWitch Live.
-- The wizard itself is `http://127.0.0.1:43347/prompt-optimizer`.
+- The wizard itself is in the Mac app: `agentwitch-local://prompt-optimizer`.
 
 ## APIs
 

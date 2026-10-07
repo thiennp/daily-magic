@@ -1,4 +1,8 @@
 import type { AgentWitchInstructionSection } from "@/lib/agentWitch/instructions/agentWitchInstructionDocument.type";
+import {
+  PROMPT_SDLC_AGENT_PORT_DISCOVERY,
+  PROMPT_SDLC_AGENT_URL,
+} from "@/lib/promptOptimizer/promptSdlcAgentContract.constant";
 
 export const AGENT_WITCH_INSTRUCTION_TASKS_SECTION: AgentWitchInstructionSection =
   {
@@ -46,7 +50,7 @@ export const AGENT_WITCH_INSTRUCTION_TASKS_SECTION: AgentWitchInstructionSection
       {
         id: "prompt-optimizer",
         title: "Optimize the prompt on this computer",
-        body: "Before you send or save a prompt, run the prompt optimizer yourself at http://127.0.0.1:43347/prompt-optimizer/agent. POST goal, prompt, and workingDirectory for the project folder. The judge and improver run in that folder, so they can read the harness and the code. Do not ask the human to paste the prompt into a different optimizer. Poll GET ?cycle= until done is true. Use bestPrompt when status is passed (useThisPrompt). Do not use the prompt when status is stopped or failed. totalTokens is the reported writer tokens so far.",
+        body: `Before you send or save a prompt, run the prompt optimizer yourself at ${PROMPT_SDLC_AGENT_URL}. ${PROMPT_SDLC_AGENT_PORT_DISCOVERY} POST goal, prompt, and workingDirectory for the project folder. The judge and improver run in that folder, so they can read the harness and the code. Do not ask the human to paste the prompt into a different optimizer. Poll GET ?cycle= until done is true. Use bestPrompt when status is passed (useThisPrompt). Do not use the prompt when status is stopped or failed. totalTokens is the reported writer tokens so far.`,
       },
       {
         id: "mid-run-input",

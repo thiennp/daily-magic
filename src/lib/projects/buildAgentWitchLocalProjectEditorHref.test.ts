@@ -2,15 +2,16 @@ import { describe, expect, it } from "vitest";
 
 import buildAgentWitchLocalProjectEditorHref from "@/lib/projects/buildAgentWitchLocalProjectEditorHref";
 
-describe("buildAgentWitchLocalProjectEditorHref", () => {
-  it("points at AWL loopback project editor", () => {
-    expect(buildAgentWitchLocalProjectEditorHref("abc-123")).toBe(
-      "http://127.0.0.1:43347/project?id=abc-123",
-    );
+describe("buildAgentWitchLocalProjectEditorHref (DF-033)", () => {
+  it("deep-links the Mac app instead of the retired 43347 project page", () => {
+    const href = buildAgentWitchLocalProjectEditorHref("abc-123");
+    expect(href).toBe("agentwitch-local://status?project=abc-123");
+    expect(href).not.toContain("43347");
+    expect(href).not.toContain("http");
   });
-  it("deep-links to the Pitfalls tab", () => {
-    expect(
-      buildAgentWitchLocalProjectEditorHref(" abc-123 ", "pitfalls"),
-    ).toMatch(/\/project\?id=abc-123&tab=pitfalls$/);
+  it("carries the Pitfalls tab and trims the id", () => {
+    expect(buildAgentWitchLocalProjectEditorHref(" abc-123 ", "pitfalls")).toBe(
+      "agentwitch-local://status?project=abc-123&tab=pitfalls",
+    );
   });
 });

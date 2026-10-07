@@ -22,9 +22,9 @@ describe("live agent guide", () => {
     expect(guide.projectCowork.tools).toContain("list_project_inbox");
     expect(guide.projectCowork.tools).toContain("ack_project_message");
     expect(guide.projectCowork.tools).toContain("rotate_project_api_key");
-    expect(guide.projectCowork.tools.indexOf("register_project_webhook")).toBeLessThan(
-      guide.projectCowork.tools.indexOf("list_project_inbox"),
-    );
+    expect(
+      guide.projectCowork.tools.indexOf("register_project_webhook"),
+    ).toBeLessThan(guide.projectCowork.tools.indexOf("list_project_inbox"));
     expect(guide.whatAgentWitchIs.role).toBe("agent_support_playground");
     expect(guide.whatAgentWitchIs.summary).toContain(
       "agent-support playground",
@@ -52,8 +52,10 @@ describe("live agent guide", () => {
       "https://www.agentwitch.com/api/agent-access/register",
     );
     expect(guide.promptSdlc.url).toBe(
-      "http://127.0.0.1:43347/prompt-optimizer/agent",
+      "http://127.0.0.1:<localAppPort>/prompt-optimizer/agent",
     );
+    expect(guide.promptSdlc.portDiscovery).toContain("local-app-port.json");
+    expect(guide.promptSdlc.page).toBe("agentwitch-local://prompt-optimizer");
     expect(guide.promptSdlc.context).toContain("harness");
   });
 });

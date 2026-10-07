@@ -47,16 +47,22 @@ describe("agent access registration", () => {
       "https://www.agentwitch.com/api/agent-access/register",
     );
     expect(text).toContain('method "none"');
-    expect(text).toContain('acceptTerms');
+    expect(text).toContain("acceptTerms");
     expect(text).toContain(AWC_TERMS_VERSION);
-    expect(text).toContain("Get your user's clear yes to the Terms and Privacy Policy first");
+    expect(text).toContain(
+      "Get your user's clear yes to the Terms and Privacy Policy first",
+    );
     expect(text).not.toContain("Tell your human");
     expect(text).toContain('method "agentmail"');
     expect(text).toContain("get_install_command");
     expect(text).toContain("create_workflow");
     expect(text).toContain("install_harness");
     expect(text).toContain("~/.agent-witch/harness/");
-    expect(text).toContain("http://127.0.0.1:43347/prompt-optimizer/agent");
+    expect(text).toContain(
+      "http://127.0.0.1:<localAppPort>/prompt-optimizer/agent",
+    );
+    expect(text).toContain("local-app-port.json");
+    expect(text).not.toContain("43347");
     expect(text).toContain("workingDirectory");
     expect(text).toContain("Do not ask the human to paste the prompt");
     expect(guideline.sections[0]?.heading).toBe("What AgentWitch is");

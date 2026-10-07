@@ -1,3 +1,5 @@
+import { buildAgentWitchLocalHealthCheckCommand } from "@agent-witch/shared/network";
+
 /**
  * Repair manually panel — Product EN FINAL LOCK
  * (docs/design/awl-hard-fix/COPY.md §6). Do not edit strings without Product.
@@ -24,6 +26,9 @@ export const AWL_REPAIR_MANUALLY_COPY = {
 export const AWL_REPAIR_MANUALLY_UPDATE_COMMAND =
   "curl -fsSL https://www.agentwitch.com/install/agent-witch-update.sh | bash";
 
-/** Step 4 — static check (v1 does not poll health from the browser). */
+/**
+ * Step 4 — static check (v1 does not poll health from the browser).
+ * DF-033: reads the per-account port AWL saved (H6) instead of legacy 43347.
+ */
 export const AWL_REPAIR_MANUALLY_HEALTH_COMMAND =
-  "curl -sS -m 5 http://127.0.0.1:43347/health";
+  buildAgentWitchLocalHealthCheckCommand(".agent-witch");

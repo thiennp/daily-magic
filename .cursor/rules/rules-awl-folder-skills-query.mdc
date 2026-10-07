@@ -11,8 +11,11 @@ Product skills for Prompt Optimizer / AgentWitch Live live under the chosen **wo
 Before inventing a new skill or playbook on a computer running AWL:
 
 1. **Query** folder skills:
+   AWL listens on a port unique to the account (H6), saved in
+   `~/.agent-witch/profiles/<account email>/local-app-port.json` — do not assume 43347.
    ```bash
-   curl -sS -X POST http://127.0.0.1:43347/prompt-optimizer/skills/query \
+   port="$(sed -n 's/.*"localAppPort"[^0-9]*\([0-9][0-9]*\).*/\1/p' "$HOME/.agent-witch"/profiles/*/local-app-port.json | head -n 1)"
+   curl -sS -X POST "http://127.0.0.1:${port}/prompt-optimizer/skills/query" \
      -H 'content-type: application/json' \
      -d '{"workingDirectory":"/path/to/repo","query":"your task","limit":5}'
    ```

@@ -5,6 +5,7 @@ import AwcProjectsMenuDisabledItem from "@/features/projects/AwcProjectsMenuDisa
 import { PROJECTS_V5_MENU_ITEM_CLASS as MENU_ITEM_CLASS } from "@/features/projects/projectsPageV5Classes.constant";
 import buildAwcProjectDetailHref from "@/lib/projects/buildAwcProjectDetailHref";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
+import resolveProjectEditOnMacLinkProps from "@/features/projects/utils/resolveProjectEditOnMacLinkProps";
 
 interface AwcProjectCardActionsMenuItemsProps {
   readonly projectId: string;
@@ -68,8 +69,7 @@ export default function AwcProjectCardActionsMenuItems({
           <a
             role="menuitem"
             href={editCta.href}
-            target="_blank"
-            rel="noopener noreferrer"
+            {...resolveProjectEditOnMacLinkProps(editCta.href)}
             className={MENU_ITEM_CLASS}
             onClick={onClose}
           >

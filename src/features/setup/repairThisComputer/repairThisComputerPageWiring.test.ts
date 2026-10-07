@@ -32,7 +32,8 @@ describe("Repair this computer page wiring", () => {
     expect(commands.updateWindows).toContain("wsl.exe -e bash -lc");
     expect(commands.restartMacos).toContain("launchctl kickstart");
     expect(commands.restartLinux).toContain("systemctl --user restart");
-    expect(commands.healthCheck).toContain("127.0.0.1:43347/health");
+    expect(commands.healthCheck).toContain("local-app-port.json");
+    expect(commands.healthCheck).not.toContain("43347");
   });
 
   it("wires the App route to the page body and metadata", () => {

@@ -32,11 +32,16 @@ If the menu bar app is not installed, open [/download](https://www.agentwitch.co
 
 ---
 
-## AgentWitch Local not responding (`:43347`)
+## AgentWitch Local not responding
+
+AgentWitch Local listens on a port unique to your account on this computer. It saves that port in `~/.agent-witch/profiles/<account email>/local-app-port.json` (`"localAppPort"`). Older versions used **43347** for everyone; do not assume that port.
 
 **Symptoms**
 
-- `curl http://127.0.0.1:43347/health` fails and nothing is listening on port **43347**.
+- The health check fails:
+  ```bash
+  port="$(sed -n 's/.*"localAppPort"[^0-9]*\([0-9][0-9]*\).*/\1/p' "$HOME/.agent-witch"/profiles/*/local-app-port.json | head -n 1)"; curl -sS -m 5 "http://127.0.0.1:${port}/health"
+  ```
 - The console can still show your **Mac online** when the background client (AWI) and bridge (AWB) are running without Live bound.
 
 **Common mistakes**
@@ -47,8 +52,8 @@ If the menu bar app is not installed, open [/download](https://www.agentwitch.co
 
 **Fix**
 
-1. On Home: **Status & settings on this computer** (opens `http://127.0.0.1:43347/status`). The **Revive AgentWitch Local** modal appears when health is down—copy the Terminal block from the modal.
-2. If `http://127.0.0.1:43347/status` still loads, use the **Revive local app** section on that page.
+1. On Home: **Status & settings on this computer** opens the Mac app (`agentwitch-local://status`). The **Revive AgentWitch Local** modal appears when health is down—copy the Terminal block from the modal.
+2. Or run the repair: `curl -fsSL https://www.agentwitch.com/install/agent-witch-update.sh | bash`. It finds the saved port itself.
 3. Otherwise paste the revive script from the modal, then read `"$AW_HOME/agent-witch.error.log"` if health stays down after `launchctl kickstart`.
 
 ---

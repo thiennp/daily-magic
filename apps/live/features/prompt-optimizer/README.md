@@ -9,7 +9,7 @@ Optimize one prompt on this computer. You choose the judge and the improver. Eac
 
 ## Routes
 
-- `http://127.0.0.1:43347/prompt-optimizer`
-- `http://127.0.0.1:43347/prompt-optimizer/guide`
+- `/prompt-optimizer` and `/prompt-optimizer/guide` on the AWL port (per account since H6, saved in `profiles/<email>/local-app-port.json`). People open them in the Mac app via `agentwitch-local://prompt-optimizer[/guide]` (H7); only the Mac webview UA gets the HTML (DF-029).
+- Bots: `http://127.0.0.1:<localAppPort>/prompt-optimizer/agent` (see `docs/agent-witch/awl-port-discovery.md`).
 
 Cycles are stored in `prompt-optimizer-cycles.json` beside the Mac profile config. The last folder, judge, improver, and wizard runner are stored in `prompt-optimizer-preferences.json` in that same directory. Writers run in the folder you choose. The reply file stays in a temporary directory. `/prompt-optimizer/guide` explains the four-step wizard and can start the sample. History shows a short title, the first clause of the goal, and Delete removes that run. Steps are a timeline of dots. **Run** starts the wizard (evaluate pass score **70**, up to **5** scored revisions in step 2; step 4 runs one trial per module).

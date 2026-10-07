@@ -1,7 +1,9 @@
-import { AGENT_WITCH_LOCAL_APP_PORT } from "@/lib/agentWitch/agentWitchLocalAppPort.constant";
+import { buildAgentWitchLocalHealthCheckCommand } from "@agent-witch/shared/network";
+
 import { buildAgentWitchReviveAwlSteps } from "@/lib/agentWitch/buildAgentWitchReviveAwlTerminalCommand";
 import { AGENT_WITCH_DEFAULT_ORIGIN } from "@/lib/agentWitch/constants";
 import { buildAgentWitchRepairCommands } from "@/lib/agentWitch/repair/buildAgentWitchRepairCommands";
+import { resolveAgentWitchAppHome } from "@/lib/agentWitch/resolveAgentWitchAppHome";
 
 const productionHostname = new URL(AGENT_WITCH_DEFAULT_ORIGIN).hostname;
 
@@ -35,6 +37,9 @@ export const resolveRepairThisComputerCommands =
       updateWindows: repair.windows,
       restartMacos: macRestart,
       restartLinux: linuxRestart,
-      healthCheck: `curl -sS -m 5 "http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}/health"`,
+      // DF-033: discovered per-account port (H6), not legacy 43347.
+      healthCheck: buildAgentWitchLocalHealthCheckCommand(
+        resolveAgentWitchAppHome(productionHostname).installDirName,
+      ),
     };
   };

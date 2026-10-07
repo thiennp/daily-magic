@@ -9,11 +9,11 @@ describe("withProjectEditOnMacTab", () => {
       state: "enabled",
       buttonLabel: "Edit on this computer",
       helperText: null,
-      href: "http://127.0.0.1:43347/project?id=proj-1",
+      href: "agentwitch-local://status?project=proj-1",
     };
     expect(withProjectEditOnMacTab(enabled, "proj-1", "pitfalls")).toEqual({
       ...enabled,
-      href: "http://127.0.0.1:43347/project?id=proj-1&tab=pitfalls",
+      href: "agentwitch-local://status?project=proj-1&tab=pitfalls",
     });
   });
 

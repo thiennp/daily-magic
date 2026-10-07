@@ -1,3 +1,4 @@
+import { buildAgentWitchLocalHealthCheckCommand } from "@agent-witch/shared/network";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -32,7 +33,8 @@ describe("AWL_REPAIR_MANUALLY_COPY (COPY.md §6 lock)", () => {
       "curl -fsSL https://www.agentwitch.com/install/agent-witch-update.sh | bash",
     );
     expect(AWL_REPAIR_MANUALLY_HEALTH_COMMAND).toBe(
-      "curl -sS -m 5 http://127.0.0.1:43347/health",
+      buildAgentWitchLocalHealthCheckCommand(".agent-witch"),
     );
+    expect(AWL_REPAIR_MANUALLY_HEALTH_COMMAND).not.toContain("43347");
   });
 });

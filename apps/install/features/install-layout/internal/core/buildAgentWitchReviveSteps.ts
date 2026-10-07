@@ -1,5 +1,5 @@
 import { AGENT_WITCH_SYSTEMD_USER_UNIT_NAME } from "@agent-witch/install-linux-launch/types";
-import { AGENT_WITCH_LIVE_APP_PORT } from "@agent-witch/shared/network";
+import { buildAgentWitchLocalHealthCheckCommand } from "@agent-witch/shared/network";
 
 export type AgentWitchRevivePlatform = "mac" | "linux" | "windows" | "unknown";
 
@@ -46,8 +46,9 @@ export const buildAgentWitchLinuxManualStartCommand = (
 ): string =>
   `nohup "$HOME/${installDirName}/app/command/run.sh" >/dev/null 2>&1 &`;
 
-const healthCheckLine = (): string =>
-  `curl -sS -m 5 "http://127.0.0.1:${AGENT_WITCH_LIVE_APP_PORT}/health" || echo "AWL still not responding — see logs:"`;
+/** DF-033: health on the per-account port AWL saved (H6), not legacy 43347. */
+const healthCheckLine = (installDirName: string): string =>
+  `${buildAgentWitchLocalHealthCheckCommand(installDirName)} || echo "AWL still not responding — see logs:"`;
 
 /** macOS: LaunchAgent written by the install script (prefix from install-layout types). */
 const buildMacReviveStep = (
@@ -60,7 +61,7 @@ const buildMacReviveStep = (
   command: `AW_HOME="$HOME/${input.installDirName}"
 launchctl kickstart -k "gui/$(id -u)/${input.launchAgentPrefix}"
 sleep 2
-${healthCheckLine()}
+${healthCheckLine(input.installDirName)}
 tail -20 "$AW_HOME/agent-witch.error.log" 2>/dev/null || true`,
   note: "Paste and run the whole block so AW_HOME is set before tail. Ignore com.agent-witch-live unless you installed Live as a separate LaunchAgent.",
 });
@@ -75,7 +76,7 @@ const buildLinuxReviveStep = (
     "On this computer, open a terminal (on Windows, your WSL distro's terminal), paste this command, and press Enter.",
   command: `systemctl --user restart ${AGENT_WITCH_SYSTEMD_USER_UNIT_NAME}
 sleep 2
-${healthCheckLine()}
+${healthCheckLine(input.installDirName)}
 journalctl --user -u ${AGENT_WITCH_SYSTEMD_USER_UNIT_NAME} -n 50 --no-pager`,
   note: `If systemctl is not available, the installer did not set up auto-start on this computer. Start the client by hand: ${buildAgentWitchLinuxManualStartCommand(input.installDirName)}`,
 });

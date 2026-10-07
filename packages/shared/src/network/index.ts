@@ -11,3 +11,11 @@ export {
   AGENT_WITCH_LIVE_APP_ORIGIN,
   AGENT_WITCH_LIVE_APP_PORT,
 } from "./agentWitchLiveNetwork.constant";
+export {
+  AGENT_WITCH_LOCAL_APP_DISCOVERED_ORIGIN,
+  AGENT_WITCH_LOCAL_APP_PORT_DISCOVERY_SENTENCE,
+  AGENT_WITCH_LOCAL_APP_PORT_FILE_HINT,
+  AGENT_WITCH_LOCAL_APP_PORT_FILE_NAME,
+  AGENT_WITCH_LOCAL_DEEP_LINK_SCHEME,
+  buildAgentWitchLocalHealthCheckCommand,
+} from "./agentWitchLocalAppDiscovery.constant";

@@ -88,6 +88,8 @@ export const servePromptSdlcAgent = async (input: {
   readonly rawBody: string;
   readonly storePath: string;
   readonly handlers: PromptSdlcAgentHandlers;
+  /** Real `http://127.0.0.1:<port>/prompt-optimizer/agent` of this AWL (DF-033). */
+  readonly agentUrl?: string;
 }): Promise<{ readonly status: number; readonly body: unknown }> => {
   const cycleId = new URL(
     input.requestUrl,
@@ -108,7 +110,7 @@ export const servePromptSdlcAgent = async (input: {
   if (input.method === "GET") {
     return {
       status: 200,
-      body: buildPromptSdlcAgentCatalog(selection.writers),
+      body: buildPromptSdlcAgentCatalog(selection.writers, input.agentUrl),
     };
   }
   if (input.method !== "POST") {
@@ -254,7 +256,10 @@ export const servePromptSdlcAgent = async (input: {
         parsed.body.rateUsdPer1kTokens ?? costControls.rateUsdPer1kTokens,
     });
     if (!confirmed.ok) {
-      return { status: 400, body: { ok: false, error: confirmed.errorMessage } };
+      return {
+        status: 400,
+        body: { ok: false, error: confirmed.errorMessage },
+      };
     }
     costControls = confirmed.costControls;
   }

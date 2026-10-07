@@ -4,6 +4,7 @@ import { useId } from "react";
 
 import { AWC_PROJECT_PITFALLS_COPY as C } from "@/features/projects/pitfalls/awcProjectPitfallsCopy.constant";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
+import resolveProjectEditOnMacLinkProps from "@/features/projects/utils/resolveProjectEditOnMacLinkProps";
 
 const LINK_CLASS =
   "font-medium text-awc-fg underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400/40 dark:text-white";
@@ -19,8 +20,7 @@ export default function AwcProjectPitfallsManageButton({
     return (
       <a
         href={editCta.href}
-        target="_blank"
-        rel="noopener noreferrer"
+        {...resolveProjectEditOnMacLinkProps(editCta.href)}
         className={LINK_CLASS}
       >
         {C.manageOnThisComputer}

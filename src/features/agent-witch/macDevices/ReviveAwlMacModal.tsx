@@ -32,11 +32,12 @@ export default function ReviveAwlMacModal({
         Revive AgentWitch Local
       </h2>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        AgentWitch Local is not responding on{" "}
-        <span className="font-mono text-sm">127.0.0.1:43347</span>. The cloud
-        can still show this computer as online when the background client (AWI)
-        and bridge (AWB) are running. Restart the AgentWitch client on this
-        computer.
+        AgentWitch Local is not responding on this computer. It listens on a
+        port unique to your account, saved in{" "}
+        <span className="font-mono text-sm">local-app-port.json</span>. The
+        cloud can still show this computer as online when the background client
+        (AWI) and bridge (AWB) are running. Restart the AgentWitch client on
+        this computer.
         {showLabels
           ? " Use the command for this computer's operating system."
           : null}

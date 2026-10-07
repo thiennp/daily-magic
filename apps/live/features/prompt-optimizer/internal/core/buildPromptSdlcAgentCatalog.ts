@@ -7,20 +7,25 @@ import {
 } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalWriterChoice } from "./promptSdlcLocalForm";
 
+/**
+ * `agentUrl`: AWL passes its real listen URL (DF-033, H6 per-account port);
+ * the default is the `<localAppPort>` template bots fill in.
+ */
 export const buildPromptSdlcAgentCatalog = (
   writers: readonly PromptSdlcLocalWriterChoice[],
+  agentUrl: string = PROMPT_SDLC_AGENT_URL,
 ) => {
   const sole = writers.length === 1 ? writers[0].id : null;
 
   return {
     ok: true as const,
-    url: PROMPT_SDLC_AGENT_URL,
+    url: agentUrl,
     page: PROMPT_SDLC_LIVE_PAGE_URL,
     context: PROMPT_SDLC_LOCAL_CONTEXT_REASON,
     installedWriters: writers,
     post: {
       method: "POST" as const,
-      url: PROMPT_SDLC_AGENT_URL,
+      url: agentUrl,
       body: {
         goal: "what a good result is",
         prompt: "the prompt to score and rewrite",
@@ -31,7 +36,7 @@ export const buildPromptSdlcAgentCatalog = (
         maxRounds: PROMPT_SDLC_WIZARD_MAX_ROUNDS,
       },
     },
-    poll: `GET ${PROMPT_SDLC_AGENT_URL}?cycle=<cycleId> until done is true.`,
+    poll: `GET ${agentUrl}?cycle=<cycleId> until done is true.`,
     writers:
       sole === null
         ? "Set judge and improver to installed writer ids. Omit them only when one writer is installed; that writer fills both roles."

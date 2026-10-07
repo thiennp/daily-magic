@@ -1,3 +1,4 @@
+import { buildAgentWitchLocalHealthCheckCommand } from "@agent-witch/shared/network";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -35,7 +36,7 @@ describe("buildAgentWitchReviveSteps", () => {
     expect(steps[0]?.command).toBe(`AW_HOME="$HOME/.agent-witch"
 launchctl kickstart -k "gui/$(id -u)/com.agent-witch"
 sleep 2
-curl -sS -m 5 "http://127.0.0.1:43347/health" || echo "AWL still not responding — see logs:"
+${buildAgentWitchLocalHealthCheckCommand(".agent-witch")} || echo "AWL still not responding — see logs:"
 tail -20 "$AW_HOME/agent-witch.error.log" 2>/dev/null || true`);
     expect(steps[0]?.instructions).toContain("this computer");
   });
@@ -48,7 +49,7 @@ tail -20 "$AW_HOME/agent-witch.error.log" 2>/dev/null || true`);
     expect(steps).toHaveLength(1);
     expect(steps[0]?.command).toBe(`systemctl --user restart agent-witch.service
 sleep 2
-curl -sS -m 5 "http://127.0.0.1:43347/health" || echo "AWL still not responding — see logs:"
+${buildAgentWitchLocalHealthCheckCommand(".agent-witch")} || echo "AWL still not responding — see logs:"
 journalctl --user -u agent-witch.service -n 50 --no-pager`);
     expect(steps[0]?.command).not.toContain("launchctl");
     expect(steps[0]?.instructions).toContain("this computer");

@@ -8,7 +8,9 @@ describe("buildAgentWitchReviveAwlTerminalCommand", () => {
       buildAgentWitchReviveAwlTerminalCommand("www.agentwitch.com");
     expect(command).toContain('AW_HOME="$HOME/.agent-witch"');
     expect(command).toContain("com.agent-witch");
-    expect(command).toContain("43347/health");
+    expect(command).toContain("local-app-port.json");
+    expect(command).toContain("/health");
+    expect(command).not.toContain("43347");
   });
 
   it("uses local install dir on localhost", () => {

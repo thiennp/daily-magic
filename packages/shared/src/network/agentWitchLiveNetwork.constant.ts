@@ -1,4 +1,7 @@
-/** AWL local UI listen port (user LaunchAgent; no root required). */
+/**
+ * Legacy fixed AWL port (pre-H6). Discovery fallback only — never use it in
+ * copy or links (DF-033); see agentWitchLocalAppDiscovery.constant.ts.
+ */
 export const AGENT_WITCH_LIVE_APP_PORT = 43347;
 
 /** Loopback bind/advertise host (IPv4 only). */

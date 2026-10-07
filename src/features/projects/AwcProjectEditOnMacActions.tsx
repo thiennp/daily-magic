@@ -3,6 +3,7 @@
 import { useId } from "react";
 
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
+import resolveProjectEditOnMacLinkProps from "@/features/projects/utils/resolveProjectEditOnMacLinkProps";
 
 interface AwcProjectEditOnMacActionsProps {
   readonly editCta: ProjectEditOnMacCta;
@@ -29,8 +30,7 @@ export default function AwcProjectEditOnMacActions({
     editCta.href !== null ? (
       <a
         href={editCta.href}
-        target="_blank"
-        rel="noopener noreferrer"
+        {...resolveProjectEditOnMacLinkProps(editCta.href)}
         className={`${buttonClass} border-brand-200 bg-brand-50 text-brand-700 transition hover:bg-brand-100 dark:border-brand-900/50 dark:bg-brand-950/30 dark:text-brand-300`}
       >
         {editCta.buttonLabel}

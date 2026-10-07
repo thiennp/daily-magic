@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { AGENT_WITCH_LOCAL_APP_ORIGIN } from "@/lib/agentWitch/agentWitchLocalAppPort.constant";
+import { AGENT_WITCH_LOCAL_STATUS_DEEP_LINK } from "@/features/agent-witch/macDevices/openAgentWitchLocalStatus";
 
 interface AgentLiveProgressStuckBannerProps {
   readonly isThisMac: boolean;
@@ -19,10 +19,9 @@ export default function AgentLiveProgressStuckBanner({
       Your computer has not sent updates for a while.{" "}
       {isThisMac ? (
         <>
+          {/* DF-033: raise the Mac app (H7) — not the retired 43347 page. */}
           <a
-            href={AGENT_WITCH_LOCAL_APP_ORIGIN}
-            target="_blank"
-            rel="noreferrer"
+            href={AGENT_WITCH_LOCAL_STATUS_DEEP_LINK}
             className="font-medium underline underline-offset-2 hover:text-amber-950 dark:hover:text-white"
           >
             Open AgentWitch

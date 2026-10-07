@@ -14,7 +14,7 @@ describe("resolveProjectEditOnMacCta", () => {
 
     expect(cta.state).toBe("enabled");
     expect(cta.buttonLabel).toBe("Edit on this computer");
-    expect(cta.href).toContain("/project?id=proj-1");
+    expect(cta.href).toBe("agentwitch-local://status?project=proj-1");
     expect(cta.helperText).toBeNull();
   });
 

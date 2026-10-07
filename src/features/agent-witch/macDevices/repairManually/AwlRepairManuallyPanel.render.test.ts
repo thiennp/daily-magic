@@ -38,7 +38,7 @@ describe("AwlRepairManuallyPanel render", () => {
       'If you see a line that starts with {"ok":true, AgentWitch Local is running. Then refresh Home. Don\'t share this output, because it can include a private link code.',
       "launchctl kickstart",
       "curl -fsSL https://www.agentwitch.com/install/agent-witch-update.sh | bash",
-      "curl -sS -m 5 http://127.0.0.1:43347/health",
+      "local-app-port.json",
     ]) {
       expect(html).toContain(text);
     }

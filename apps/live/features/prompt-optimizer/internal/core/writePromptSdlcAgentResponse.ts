@@ -3,6 +3,7 @@ import {
   readPromptSdlcInstalledWriters,
 } from "./runPromptSdlcLocalCycle";
 import { readPromptSdlcChosenWritersReady } from "./probePromptSdlcWriterReady";
+import { resolvePromptSdlcAgentUrlForRequest } from "./resolvePromptSdlcAgentUrlForRequest";
 import { servePromptSdlcAgent } from "./servePromptSdlcAgent";
 import type { PromptSdlcLocalRouteInput } from "./tryHandlePromptSdlcLocalRequest";
 
@@ -14,6 +15,7 @@ export const writePromptSdlcAgentResponse = async (
     requestUrl: input.requestUrl,
     rawBody: input.method === "POST" ? await input.readBody(input.request) : "",
     storePath: input.storePath,
+    agentUrl: resolvePromptSdlcAgentUrlForRequest(input.request),
     handlers: {
       readInstalledIds: readPromptSdlcInstalledWriters,
       readWritersReady: readPromptSdlcChosenWritersReady,

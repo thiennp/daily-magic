@@ -1,3 +1,4 @@
+import { buildAgentWitchLocalHealthCheckCommand } from "@agent-witch/shared/network";
 import { describe, expect, it } from "vitest";
 
 import { buildAgentWitchReviveAwlSteps } from "@/lib/agentWitch/buildAgentWitchReviveAwlTerminalCommand";
@@ -65,7 +66,7 @@ describe("buildAwlRepairManuallySteps", () => {
     );
     expect(steps[2]?.commands).toEqual([]);
     expect(steps[3]?.commands[0]?.command).toBe(
-      "curl -sS -m 5 http://127.0.0.1:43347/health",
+      buildAgentWitchLocalHealthCheckCommand(".agent-witch"),
     );
   });
 });

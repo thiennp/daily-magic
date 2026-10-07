@@ -1,10 +1,24 @@
-import { AGENT_WITCH_LOCAL_APP_ORIGIN } from "@/lib/agentWitch/agentWitchLocalAppPort.constant";
+import {
+  AGENT_WITCH_LOCAL_APP_DISCOVERED_ORIGIN,
+  AGENT_WITCH_LOCAL_APP_PORT_DISCOVERY_SENTENCE,
+  AGENT_WITCH_LOCAL_DEEP_LINK_SCHEME,
+} from "@agent-witch/shared/network";
 
 export const PROMPT_SDLC_AGENT_PATH = "/prompt-optimizer/agent";
 
-export const PROMPT_SDLC_AGENT_URL = `${AGENT_WITCH_LOCAL_APP_ORIGIN}${PROMPT_SDLC_AGENT_PATH}`;
+/**
+ * Bot API URL template (DF-033). Since H6 the port is per account, so bots
+ * replace `<localAppPort>` with the value AWL saved; AWL itself answers with
+ * its real port (buildPromptSdlcAgentCatalog).
+ */
+export const PROMPT_SDLC_AGENT_URL = `${AGENT_WITCH_LOCAL_APP_DISCOVERED_ORIGIN}${PROMPT_SDLC_AGENT_PATH}`;
 
-export const PROMPT_SDLC_LIVE_PAGE_URL = `${AGENT_WITCH_LOCAL_APP_ORIGIN}/prompt-optimizer`;
+/** How a bot finds `<localAppPort>` for PROMPT_SDLC_AGENT_URL. */
+export const PROMPT_SDLC_AGENT_PORT_DISCOVERY =
+  AGENT_WITCH_LOCAL_APP_PORT_DISCOVERY_SENTENCE;
+
+/** Human page: the Mac app's Prompt optimizer (H7 deep link; no browser AWL). */
+export const PROMPT_SDLC_LIVE_PAGE_URL = `${AGENT_WITCH_LOCAL_DEEP_LINK_SCHEME}://prompt-optimizer`;
 
 /** Why a bot must run the prompt optimizer in the project folder, not in a separate optimizer. */
 export const PROMPT_SDLC_LOCAL_CONTEXT_REASON =
