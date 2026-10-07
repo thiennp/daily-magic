@@ -133,7 +133,9 @@
 
   --color-theme-pink-500: #ee46bc;
 
-  --color-theme-purple-500: #7a5af8;
+  /* DEPRECATED (PALETTE-LOCK sand): Claude purple — do not use; prefer awc blue / sand.
+     Kept commented so existing Tailwind theme-purple-* lookups fail closed rather than ship violet. */
+  /* --color-theme-purple-500: #7a5af8; */
 
   --shadow-theme-md:
     0px 4px 8px -2px rgba(16, 24, 40, 0.1),
@@ -170,16 +172,16 @@
 
 /*
   Semantic aliases for layout slices (project-page redesign foundation).
-  No new hex — each var references an existing @theme palette color.
+  Light tokens wire to --awc-* sand (PALETTE-LOCK) — not cool Tailwind gray.
   Driven by the existing .dark class (ThemeContext).
 */
 :root {
-  --bg: var(--color-gray-50);
-  --surface: var(--color-white);
-  --surface-2: var(--color-gray-100);
-  --line: var(--color-gray-200);
-  --fg: var(--color-gray-900);
-  --muted: var(--color-gray-500);
+  --bg: var(--awc-bg);
+  --surface: var(--awc-surface);
+  --surface-2: var(--awc-surface-2);
+  --line: var(--awc-line);
+  --fg: var(--awc-fg);
+  --muted: var(--awc-fg-muted);
   --ok: var(--color-success-600);
   --ok-soft: var(--color-success-50);
   --warn: var(--color-warning-600);
