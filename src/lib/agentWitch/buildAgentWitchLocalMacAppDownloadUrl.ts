@@ -2,7 +2,7 @@
 export const AGENT_WITCH_LOCAL_MAC_APP_DMG_ASSET_NAME = "AgentWitchLocal.dmg";
 
 /** Current Mac app release tag. Bump this when a new awl-mac-v* tag is cut. */
-export const AGENT_WITCH_LOCAL_MAC_APP_RELEASE_TAG = "awl-mac-v0.2.1";
+export const AGENT_WITCH_LOCAL_MAC_APP_RELEASE_TAG = "awl-mac-v0.2.2";
 
 const AGENT_WITCH_LOCAL_MAC_APP_RELEASES_DOWNLOAD_BASE =
   "https://github.com/thiennp/daily-magic/releases/download";
