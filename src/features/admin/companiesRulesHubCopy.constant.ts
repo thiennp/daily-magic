@@ -12,8 +12,7 @@ import {
 export const COMPANIES_RULES_HUB_COPY = {
   navLabel: COMPANY_RULES_NAV_LABEL,
   title: COMPANIES_ENTITY_LABEL,
-  lede:
-    "A company is your team's shared workspace. Here you add teammates and decide who can send tasks to this computer. Safety rules stay inside each project.",
+  lede: "A company is your team's shared workspace. Here you add teammates and decide who can send tasks to this computer. Safety rules stay inside each project.",
   whatIsCompanyTip:
     "A company is the top-level workspace for your team. Projects, people and computers belong to it.",
   createHeading: "Create company",
@@ -55,6 +54,8 @@ export const COMPANIES_RULES_HUB_COPY = {
   deleteBody:
     "Removes the company, its members and its dispatch policy. This cannot be undone.",
   deleteConfirmHint: "Projects stay with their owners. This cannot be undone.",
+  deleteTypeToConfirmBefore: "Type",
+  deleteTypeToConfirmAfter: "to confirm",
   membersTitle: COMPANY_MEMBERS_LABEL,
   inviteEmailPlaceholder: "name@company.com",
   inviteEmailAria: "Email",

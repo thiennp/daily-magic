@@ -67,6 +67,13 @@ export default function GroupDeleteControls({
             : C.deleteBody
         }
         confirmLabel={C.deleteCompany}
+        typedConfirmText={selectedGroup?.name}
+        typedConfirmLabel={
+          <>
+            {C.deleteTypeToConfirmBefore} <b>{selectedGroup?.name}</b>{" "}
+            {C.deleteTypeToConfirmAfter}
+          </>
+        }
         onClose={() => {
           setIsDeleteModalOpen(false);
         }}
