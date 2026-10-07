@@ -16,9 +16,9 @@ final class MacAppMenuController: ObservableObject {
     @Published private(set) var updateOffer: UpdateOffer?
 
     // MARK: - AWL-H1/H2 chrome stubs (AWL-H3 auth / AWL-H6 port / AWL-H8 offline replace these)
-    /// AWL-H3 placeholder until real `signedInEmail` lands.
-    @Published var chromeAuthSignedIn: Bool = true
-    @Published var chromeAuthEmail: String? = "you@example.com"
+    /// AWL-H3 placeholder until real `signedInEmail` lands. Default signed-out (nil email).
+    @Published var chromeAuthSignedIn: Bool = false
+    @Published var chromeAuthEmail: String? = nil
     /// AWL-H8 placeholder for Waiting for internet.
     @Published var chromeOffline: Bool = false
 

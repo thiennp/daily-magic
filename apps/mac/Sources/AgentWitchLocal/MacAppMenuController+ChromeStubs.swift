@@ -43,9 +43,9 @@ extension MacAppMenuController {
     /// AWL-H5 placeholder — log path for See log.
     var setupLogPath: URL? { nil }
 
-    /// AWL-H3 placeholder — replace with real profile email.
+    /// AWL-H3 placeholder — replace with real profile email. Default nil (signed-out).
     var signedInEmail: String? {
-        chromeAuthSignedIn ? (chromeAuthEmail ?? "you@example.com") : nil
+        chromeAuthSignedIn ? chromeAuthEmail : nil
     }
 
     /// Convenience for chrome (same as signedInEmail != nil).
@@ -85,8 +85,7 @@ extension MacAppMenuController {
     }
 
     func beginSignInStub() {
-        // AWL-H3: open sign-in gate. For H1/H2 chrome only: mark signed-in stub.
-        setChromeAuth(signedIn: true, email: chromeAuthEmail ?? "you@example.com")
+        // AWL-H3: open sign-in gate. H1/H2: waiting chrome only — never invent an account email.
         statusMessage = "Sign in — AWL-H3 will open the sign-in gate here."
     }
 
