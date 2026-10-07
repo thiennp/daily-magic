@@ -1,4 +1,5 @@
 import { AGENT_WITCH_LOCAL_APP_STYLES } from "./agentWitchLocalAppStyles";
+import { buildAgentWitchLocalPromptOptimizerShell } from "./buildAgentWitchLocalPromptOptimizerShell";
 import { AGENT_WITCH_LOCAL_HEARTBEAT_ELAPSED_LIVE_SCRIPT } from "../../../status-health/internal/core/buildAgentWitchLocalHeartbeatElapsedMarkup";
 
 export type AgentWitchLocalAppNavPath =
@@ -63,6 +64,16 @@ export const buildAgentWitchLocalAppShell = (input: {
   readonly prependBody?: string;
   readonly headerUpdateButtonHtml?: string;
 }): string => {
+  // DF-034: since AWL-H7 the only local HTML a person can reach is the Prompt
+  // optimizer inside the Mac app window. It gets PO-only chrome — no links to
+  // retired local pages (Status, Harness, Writer API, …) and no update/cloud CTAs.
+  if (input.activePath === "/prompt-optimizer") {
+    return buildAgentWitchLocalPromptOptimizerShell({
+      title: input.title,
+      body: input.body,
+      installBundleVersionLabel: input.installBundleVersionLabel,
+    });
+  }
   const nav = NAV_ITEMS.map((item) => {
     const isActive = item.href === input.activePath;
     return `<a class="nav-link${isActive ? " is-active" : ""}" href="${item.href}"${isActive ? ' aria-current="page"' : ""}>${item.label}</a>`;

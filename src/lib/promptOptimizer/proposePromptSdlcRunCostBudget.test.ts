@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 
+import { PROMPT_SDLC_PREVIEW_STEP4_MODULE_COUNT } from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
 import {
-  PROMPT_SDLC_EARLY_TOKENS_PER_ROUND,
-  PROMPT_SDLC_PREVIEW_STEP4_MODULE_COUNT,
-  PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL,
-} from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
+  resolvePromptSdlcEarlyTokensPerRound,
+  resolvePromptSdlcStep4TokensPerModuleTrial,
+} from "@/lib/promptOptimizer/resolvePromptSdlcWriterTokensPerCall";
 import {
   proposePromptSdlcRunCostBudget,
   seedPromptSdlcRunCostProposal,
@@ -20,10 +20,10 @@ describe("proposePromptSdlcRunCostBudget", () => {
       writerId: "codex",
     });
     const expected =
-      3 * PROMPT_SDLC_EARLY_TOKENS_PER_ROUND +
+      3 * resolvePromptSdlcEarlyTokensPerRound("codex") +
       PROMPT_SDLC_PREVIEW_STEP4_MODULE_COUNT *
         1 *
-        PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL;
+        resolvePromptSdlcStep4TokensPerModuleTrial("codex");
     expect(proposal.targetTokenBudget).toBe(expected);
     expect(proposal.stub).toBe(true);
     expect(proposal.rateUsdPer1kTokens).toBe(0.008);
@@ -35,10 +35,11 @@ describe("proposePromptSdlcRunCostBudget", () => {
       writerId: "codex",
     });
     const expected =
-      PROMPT_SDLC_WIZARD_MAX_ROUNDS * PROMPT_SDLC_EARLY_TOKENS_PER_ROUND +
+      PROMPT_SDLC_WIZARD_MAX_ROUNDS *
+        resolvePromptSdlcEarlyTokensPerRound("codex") +
       PROMPT_SDLC_PREVIEW_STEP4_MODULE_COUNT *
         1 *
-        PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL;
+        resolvePromptSdlcStep4TokensPerModuleTrial("codex");
     expect(proposal.targetTokenBudget).toBe(expected);
   });
 

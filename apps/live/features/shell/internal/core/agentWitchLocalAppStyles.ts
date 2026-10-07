@@ -2,24 +2,24 @@ import { AGENT_WITCH_PUBLIC_UI_TOKENS } from "@agent-witch/shared/ui";
 
 const t = AGENT_WITCH_PUBLIC_UI_TOKENS;
 
-/** Inline CSS mirroring AgentWitch marketing surfaces (Inter + brand gray). */
+/** Inline CSS for AWL local pages — sand palette + Pine primary #1f6656 (AWL Mac UX redo). */
 export const AGENT_WITCH_LOCAL_APP_STYLES = `
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
 
 :root {
   color-scheme: light;
-  --aw-zinc-50: ${t.gray50};
-  --aw-zinc-100: ${t.gray100};
-  --aw-zinc-200: ${t.gray200};
-  --aw-zinc-400: ${t.gray400};
+  --aw-zinc-50: #f4f3f0;
+  --aw-zinc-100: #ebe9e4;
+  --aw-zinc-200: #ddd9d2;
+  --aw-zinc-400: #c9c4bb;
   --aw-zinc-500: ${t.gray500};
   --aw-zinc-600: ${t.gray600};
   --aw-zinc-700: ${t.gray700};
   --aw-zinc-800: ${t.gray900};
   --aw-zinc-900: ${t.gray900};
-  --aw-brand-600: ${t.brand600};
-  --aw-brand-700: ${t.brand700};
-  --aw-brand-50: ${t.brand50};
+  --aw-brand-600: #1f6656;
+  --aw-brand-700: #19564a;
+  --aw-brand-50: #dde8e3;
   --aw-emerald-50: ${t.success50};
   --aw-emerald-700: ${t.success700};
   --aw-amber-50: ${t.warning50};
@@ -37,8 +37,8 @@ export const AGENT_WITCH_LOCAL_APP_STYLES = `
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
-  background: var(--aw-zinc-50);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, ui-sans-serif, system-ui, sans-serif;
+  background: #e8e6e1;
   color: var(--aw-zinc-900);
   -webkit-font-smoothing: antialiased;
 }
@@ -49,7 +49,7 @@ a { color: inherit; text-decoration: none; }
   position: sticky;
   top: 0;
   z-index: 20;
-  border-bottom: 1px solid rgb(228 228 231 / 0.7);
+  border-bottom: 1px solid #ddd9d2;
   background: rgb(255 255 255 / 0.9);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -173,7 +173,7 @@ a { color: inherit; text-decoration: none; }
     overflow-y: auto;
     gap: 1rem;
     padding: 1rem 0.75rem;
-    border-right: 1px solid rgb(228 228 231 / 0.7);
+    border-right: 1px solid #ddd9d2;
     background: rgb(255 255 255 / 0.96);
   }
 
@@ -222,7 +222,7 @@ a { color: inherit; text-decoration: none; }
   border-radius: var(--aw-radius-2xl);
   padding: 1.5rem;
   box-shadow: var(--aw-shadow-sm);
-  outline: 1px solid rgb(228 228 231 / 0.5);
+  outline: 1px solid #ddd9d2;
 }
 
 .card + .card { margin-top: 0; }
@@ -327,7 +327,7 @@ code, .mono {
 }
 
 .btn:focus-visible {
-  outline: 2px solid rgb(26 68 190 / 0.45);
+  outline: 2px solid rgb(31 102 86 / 0.45);
   outline-offset: 2px;
 }
 
@@ -430,7 +430,7 @@ code, .mono {
 .input:focus {
   outline: none;
   border-color: var(--aw-brand-600);
-  box-shadow: 0 0 0 2px rgb(26 68 190 / 0.2);
+  box-shadow: 0 0 0 2px rgb(31 102 86 / 0.2);
 }
 
 .table-wrap {
@@ -829,10 +829,10 @@ form.sdlc-form { display: flex; flex-direction: column; }
 .sdlc-run-progress-compact { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 0.75rem; }
 .sdlc-run-progress-compact-title { margin: 0; font-size: 0.875rem; }
 .sdlc-compose-summary-hint { font-size: 0.8125rem; line-height: 1.35; }
-.sdlc-history-badge-viewing { background: #eff6ff; color: #1d4ed8; }
+.sdlc-history-badge-viewing { background: #dde8e3; color: #19564a; }
 .sdlc-history-item-viewing {
-  background: #f8fafc;
-  border-left: 3px solid #2563eb;
+  background: #f7f6f4;
+  border-left: 3px solid #1f6656;
   border-radius: var(--aw-radius-lg);
   padding: 0.35rem 0.5rem 0.35rem 0.65rem;
   margin: 0 -0.5rem;
@@ -883,7 +883,7 @@ form.sdlc-form { display: flex; flex-direction: column; }
   color: var(--aw-zinc-900);
 }
 .sdlc-goal-preset-chip:focus-visible {
-  outline: 2px solid rgb(26 68 190 / 0.45);
+  outline: 2px solid rgb(31 102 86 / 0.45);
   outline-offset: 2px;
 }
 .sdlc-compose-stepper {
@@ -906,13 +906,13 @@ form.sdlc-form { display: flex; flex-direction: column; }
   color: var(--aw-zinc-600);
 }
 .sdlc-compose-stepper-item[aria-current="step"] {
-  border-color: #2563eb;
-  background: #eff6ff;
-  color: #1d4ed8;
+  border-color: #1f6656;
+  background: #dde8e3;
+  color: #19564a;
   font-weight: 600;
 }
 .sdlc-compose-stepper-item[aria-current="step"] .sdlc-compose-stepper-index {
-  background: #2563eb;
+  background: #1f6656;
   color: #fff;
 }
 .sdlc-compose-stepper-index {
@@ -1051,8 +1051,8 @@ form.sdlc-form { display: flex; flex-direction: column; }
   margin: 0;
   padding: 0.7rem 0.9rem;
   border-radius: 0.75rem;
-  background: #eff6ff;
-  color: #1e3a8a;
+  background: #dde8e3;
+  color: #13463c;
   font-size: 0.875rem;
 }
 .sdlc-writer {
@@ -1152,7 +1152,7 @@ form.sdlc-form { display: flex; flex-direction: column; }
 .sdlc-wizard-resume .lede { margin: 0; }
 .sdlc-wizard-gate-lede { margin: 0; font-size: 0.9375rem; color: var(--aw-zinc-700); line-height: 1.5; }
 .sdlc-wizard-gate-active {
-  outline: 1px solid rgb(26 68 190 / 0.25);
+  outline: 1px solid rgb(31 102 86 / 0.25);
   background: linear-gradient(180deg, rgb(239 246 255 / 0.65), #fff 2.5rem);
 }
 form.sdlc-wizard-feedback {
@@ -1687,7 +1687,7 @@ form.sdlc-form textarea.input.sdlc-instruction {
   height: 0.95rem;
   margin-top: 0.15rem;
   border: 2px solid #d0d5dd;
-  border-top-color: #2150d6;
+  border-top-color: #1f6656;
   border-radius: 50%;
   animation: sdlc-spin 0.8s linear infinite;
   flex: none;
@@ -1934,7 +1934,7 @@ form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
 .sdlc-best-readonly { margin-top: 0.75rem; }
 .sdlc-best-readonly summary { cursor: pointer; font-weight: 600; }
 
-.sdlc-history-badge-live { background: #eff6ff; color: #1d4ed8; }
+.sdlc-history-badge-live { background: #dde8e3; color: #19564a; }
 .sdlc-history-badge-paused { background: #fffbeb; color: #b45309; }
 .sdlc-history-row-main { align-items: flex-start; display: flex; gap: 0.65rem; min-width: 0; }
 .sdlc-history-row-copy { min-width: 0; }

@@ -1,8 +1,8 @@
 import {
   PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_DEFAULT_RATE_USD_PER_1K_TOKENS,
-  PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL,
 } from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
+import { resolvePromptSdlcStep4TokensPerModuleTrial } from "@/lib/promptOptimizer/resolvePromptSdlcWriterTokensPerCall";
 import { estimatePromptSdlcSpendUsd } from "@/lib/promptOptimizer/estimatePromptSdlcSpendUsd";
 import { defaultPromptSdlcCostControls } from "@/lib/promptOptimizer/createEmptyPromptSdlcCostControl";
 import { readPromptSdlcLiveCostProposal } from "@/lib/promptOptimizer/readPromptSdlcLiveCostProposal";
@@ -46,7 +46,9 @@ export const proposePromptSdlcCostBudget = (input: {
     resolvePromptSdlcWriterRateUsdPer1k(input.writerId) ??
     PROMPT_SDLC_DEFAULT_RATE_USD_PER_1K_TOKENS;
   const targetTokenBudget =
-    modules * trials * PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL;
+    modules *
+    trials *
+    resolvePromptSdlcStep4TokensPerModuleTrial(input.writerId);
   return {
     targetTokenBudget,
     estimatedSpendUsd: estimatePromptSdlcSpendUsd({
@@ -101,4 +103,3 @@ export const seedPromptSdlcStep4CostProposal = (input: {
   });
   return applyPromptSdlcCostProposal(base, proposal);
 };
-

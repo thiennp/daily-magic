@@ -9,6 +9,10 @@ WORKDIR /app
 ENV CI=1
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+# DF-032: .git is dockerignored, so stamp the deploy commit into the AWL install
+# bundle (local /health commitSha) from Railway's build-time variable.
+ARG RAILWAY_GIT_COMMIT_SHA=""
+ENV RAILWAY_GIT_COMMIT_SHA=$RAILWAY_GIT_COMMIT_SHA
 RUN npm run build
 RUN npm run test:shipped-install-blackbox
 

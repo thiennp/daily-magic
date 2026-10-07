@@ -1,5 +1,6 @@
 import type { HarnessWriterAgentId } from "../../../../adapters/writerDispatchPresentation";
 import { parseClaudeCliPrintResult } from "../../../../adapters/writerDispatchPresentation";
+import { readClaudeCliErrorResult } from "./readClaudeCliErrorResult";
 import { readPromptSdlcWriterTokens } from "./readPromptSdlcWriterTokens";
 
 export type PromptSdlcWriterErrorKind =
@@ -30,7 +31,7 @@ export const isPromptSdlcWriterTimeoutError = (input: {
 
 /** Cursor monthly usage / quota — not a writer timeout. */
 const USAGE_LIMIT_ERROR =
-  /usage limit|monthly (usage )?limit|hit your (usage )?limit|quota|insufficient credit|resource[_ ]?exhausted|billing|subscription required|rate limit/i;
+  /usage limit|monthly (usage |spend )?limit|spend limit|hit your (org's |usage )?(monthly )?(usage |spend )?limit|quota|insufficient credit|resource[_ ]?exhausted|billing|subscription required|rate limit|too many requests|\b429\b/i;
 
 /** Cursor ActionRequiredError and similar hard stops that need human action. */
 const ACTION_REQUIRED_ERROR =
@@ -77,7 +78,7 @@ const STDIN_ERROR =
   "The writer waited on terminal input and did not return a prompt.";
 
 const CLI_STATUS_ERROR =
-  /authentication required|please run .+login|api[_ ]?key|not logged in|login required|unauthorized|invalid api key|quota|usage limit|insufficient credit|rate limit|billing|subscription required/i;
+  /authentication required|please run .+login|api[_ ]?key|not logged in|login required|unauthorized|invalid api key|quota|usage limit|spend limit|insufficient credit|rate limit|too many requests|billing|subscription required|API Error: \d{3}/i;
 
 const cliStatusLine = (raw: string): string | null => {
   const trimmed = raw.trim();
@@ -212,6 +213,19 @@ export const readPromptSdlcWriterOutput = (input: {
   }
 
   if (input.writerAgent === "claude-cli") {
+    // DF-035 (a): `claude -p --output-format json` reports API failures
+    // (429 spend limit, auth, overload) as {"is_error":true,"result":"API Error: …"}
+    // — often with zero usage. Surface that text verbatim instead of letting the
+    // judge parser report "needs a score and a reason".
+    const claudeError = readClaudeCliErrorResult(input.stdout);
+    if (claudeError !== null) {
+      const errorKind = classifyPromptSdlcWriterErrorKind({
+        errorMessage: claudeError,
+      });
+      return errorKind === undefined
+        ? { ok: false, errorMessage: claudeError }
+        : { ok: false, errorMessage: claudeError, errorKind };
+    }
     const parsed = parseClaudeCliPrintResult(input.stdout);
     if (parsed !== null && parsed.text.trim().length > 0) {
       return { ok: true, text: parsed.text, tokens: parsed.totalTokens };

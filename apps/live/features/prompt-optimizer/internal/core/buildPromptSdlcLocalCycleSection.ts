@@ -86,7 +86,13 @@ export const buildPromptSdlcLocalCycleSection = (
   const successActions =
     activitySuccess && cycle.wizard !== undefined
       ? `<p class="sdlc-run-success-actions"><a class="btn btn-primary" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}&amp;export=wizard-markdown">Download report (.md)</a><a class="btn btn-secondary" href="#prompt-optimizer-wizard-module-results" data-sdlc-view-module-results hidden>Jump to module table</a><button type="button" class="btn btn-secondary" data-sdlc-rerun-same title="Open compose with your last folder, models, and pass score">Re-run same settings</button></p><p class="muted sdlc-rerun-hint">Re-run keeps settings · New prompt clears the form.</p>`
-      : "";
+      : // DF-035 (c): a stopped/failed wizard run still gets its report (final module states).
+        !live &&
+          cycle.wizard !== undefined &&
+          cycle.wizard.modules.length > 0 &&
+          isPromptSdlcTerminalStatus(cycle.status)
+        ? `<p class="sdlc-run-success-actions"><a class="btn btn-secondary" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}&amp;export=wizard-markdown">Download report (.md)</a></p>`
+        : "";
   const replyPreviewBlock =
     activity.replyPreview === null || activity.replyPreview.length === 0
       ? ""

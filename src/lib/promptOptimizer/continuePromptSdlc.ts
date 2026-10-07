@@ -7,6 +7,7 @@ import {
   JUDGE_REPLY_WAS_NOT_A_SCORE,
   type PromptSdlcContinuation,
 } from "@/lib/promptOptimizer/promptSdlcContinuation.type";
+import { describePromptSdlcJudgeReplyFailure } from "@/lib/promptOptimizer/describePromptSdlcJudgeReplyFailure";
 import { PROMPT_SDLC_MAX_ROUNDS } from "@/lib/promptOptimizer/promptSdlcLimits.constant";
 import { readPromptSdlcRewriteStop } from "@/lib/promptOptimizer/readPromptSdlcRewriteStop";
 import type { PromptSdlcModelChoice } from "@/lib/promptOptimizer/types/PromptSdlcModelChoice.type";
@@ -41,7 +42,9 @@ export const continueAfterJudgeReply = (input: {
       verdict: null,
       continuation: {
         type: "failed",
-        errorMessage: JUDGE_REPLY_WAS_NOT_A_SCORE,
+        errorMessage:
+          describePromptSdlcJudgeReplyFailure(input.raw) ??
+          JUDGE_REPLY_WAS_NOT_A_SCORE,
       },
     };
   }

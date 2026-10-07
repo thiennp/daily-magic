@@ -2,6 +2,25 @@ import { readPromptSdlcWizardModulePassScore } from "./readPromptSdlcWizardModul
 import { summarizePromptSdlcWizardCompletion } from "./summarizePromptSdlcWizardCompletion";
 import type PromptSdlcWizardState from "./types/PromptSdlcWizardState.type";
 
+type ModuleStatus = PromptSdlcWizardState["modules"][number]["status"];
+
+/**
+ * DF-035 (c): the report is only exported for a finished run, so a module still
+ * marked running/paused/pending did not finish — say so instead of "running".
+ */
+const finalModuleStatus = (
+  status: ModuleStatus,
+  cycleStatus: string,
+): string => {
+  if (status === "passed" || status === "stopped" || status === "failed") {
+    return status;
+  }
+  if (status === "pending") {
+    return "not run";
+  }
+  return cycleStatus === "failed" ? "failed" : "stopped";
+};
+
 export const buildPromptSdlcWizardResultMarkdown = (input: {
   readonly goal: string;
   readonly cycleStatus: string;
@@ -22,7 +41,7 @@ export const buildPromptSdlcWizardResultMarkdown = (input: {
     "| --- | ---: | ---: | --- |",
     ...summary.rows.map(
       (row) =>
-        `| ${row.title.replaceAll("|", "\\|")} | ${row.bestScore ?? "—"} | ${row.tokens ?? "—"} | ${row.status} |`,
+        `| ${row.title.replaceAll("|", "\\|")} | ${row.bestScore ?? "—"} | ${row.tokens ?? "—"} | ${finalModuleStatus(row.status, input.cycleStatus)} |`,
     ),
   ];
 

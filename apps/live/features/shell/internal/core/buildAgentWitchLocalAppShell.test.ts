@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { buildAgentWitchLocalAppShell } from "./buildAgentWitchLocalAppShell";
 
 describe("buildAgentWitchLocalAppShell", () => {
-  it("uses Inter + brand gray marketing shell for local UI (AGENT-026)", () => {
+  it("uses the sand + Pine shell for local UI (AGENT-026, AWL Mac UX redo)", () => {
     const html = buildAgentWitchLocalAppShell({
       title: "Status",
       activePath: "/",
@@ -13,8 +13,9 @@ describe("buildAgentWitchLocalAppShell", () => {
       body: '<div class="card">ok</div>',
     });
 
-    expect(html).toContain("family=Inter");
-    expect(html).toContain("--aw-brand-600: #2150d6");
+    expect(html).toContain("--aw-brand-600: #1f6656");
+    expect(html).not.toContain("#2150d6");
+    expect(html).not.toContain("#2563eb");
     expect(html).toContain("--aw-zinc-900: #101828");
     expect(html).toContain('class="site-header"');
     expect(html).toContain('class="site-sidebar"');
@@ -91,5 +92,38 @@ describe("buildAgentWitchLocalAppShell", () => {
     });
 
     expect(html).toContain('class="brand-sub">Local(unknown)</span>');
+  });
+
+  it("DF-034: Prompt optimizer gets PO-only chrome (no retired page links)", () => {
+    const html = buildAgentWitchLocalAppShell({
+      title: "Prompt optimizer",
+      activePath: "/prompt-optimizer",
+      cloudAppOrigin: "https://www.agentwitch.com",
+      installBundleVersionLabel: "270",
+      headerUpdateButtonHtml: '<form action="/api/update"></form>',
+      body: '<div class="card">wizard</div>',
+    });
+
+    expect(html).toContain('<div class="card">wizard</div>');
+    expect(html).toContain('class="awl-po"');
+    expect(html).toContain('href="/prompt-optimizer"');
+    expect(html).toContain('href="/prompt-optimizer/guide"');
+    expect(html).not.toContain('class="site-sidebar"');
+    for (const retired of [
+      "/status",
+      "/task",
+      "/harness",
+      "/writer-api",
+      "/projects",
+      "/errors",
+      "/traffic",
+      "/knowledge",
+      "/history",
+    ]) {
+      expect(html).not.toContain(`href="${retired}"`);
+    }
+    expect(html).not.toContain("/api/update");
+    expect(html).not.toContain("Open cloud");
+    expect(html).toContain("#1f6656");
   });
 });

@@ -1,9 +1,11 @@
 import {
   PROMPT_SDLC_DEFAULT_MAX_TRIALS,
-  PROMPT_SDLC_EARLY_TOKENS_PER_ROUND,
   PROMPT_SDLC_PREVIEW_STEP4_MODULE_COUNT,
-  PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL,
 } from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
+import {
+  resolvePromptSdlcEarlyTokensPerRound,
+  resolvePromptSdlcStep4TokensPerModuleTrial,
+} from "@/lib/promptOptimizer/resolvePromptSdlcWriterTokensPerCall";
 import { PROMPT_SDLC_WIZARD_MAX_ROUNDS } from "@/lib/promptOptimizer/wizard/promptSdlcWizardLimits.constant";
 import { estimatePromptSdlcSpendUsd } from "@/lib/promptOptimizer/estimatePromptSdlcSpendUsd";
 import { defaultPromptSdlcCostControls } from "@/lib/promptOptimizer/createEmptyPromptSdlcCostControl";
@@ -54,9 +56,12 @@ export const proposePromptSdlcRunCostBudget = (input: {
   const rate =
     input.rateUsdPer1kTokens ??
     resolvePromptSdlcWriterRateUsdPer1k(input.writerId);
-  const earlyTokens = earlyRounds * PROMPT_SDLC_EARLY_TOKENS_PER_ROUND;
+  const earlyTokens =
+    earlyRounds * resolvePromptSdlcEarlyTokensPerRound(input.writerId);
   const step4Tokens =
-    previewModules * trials * PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL;
+    previewModules *
+    trials *
+    resolvePromptSdlcStep4TokensPerModuleTrial(input.writerId);
   const targetTokenBudget = earlyTokens + step4Tokens;
   return {
     targetTokenBudget,

@@ -56,7 +56,7 @@ The shipped-install blackbox also runs inside the Railway Docker build.
   `public/install/agent-witch/app/agent-witch.js` and `deps.tar.gz`, so each deploy serves the
   bundle built from that `main`. Do not commit that churn unless the commit is a bundle bump.
 - Existing installs self-update only when `AGENT_WITCH_INSTALL_BUNDLE_VERSION`
-  (`apps/install/features/bundle/public-api/types.ts`, currently `269`) increases.
+  (`apps/install/features/bundle/public-api/types.ts`, currently `270`) increases.
   The built bundle stamps the deploy commit (`RAILWAY_GIT_COMMIT_SHA` / `VERCEL_GIT_COMMIT_SHA` /
   `GITHUB_SHA`, else `git rev-parse HEAD`) so local `GET /health` reports `commitSha`.
   - **Bump it** whenever anything shipped to the computer changes: install scripts, `agent-witch.js`

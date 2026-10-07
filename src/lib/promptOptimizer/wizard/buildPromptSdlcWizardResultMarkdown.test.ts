@@ -42,4 +42,36 @@ describe("buildPromptSdlcWizardResultMarkdown", () => {
     expect(md).toContain("| Plan | 80 | 120 | passed |");
     expect(md).toContain("planned output");
   });
+
+  it("DF-035 (c): a failed run never lists a module as running", () => {
+    const wizard = createInitialPromptSdlcWizardState("Do {{task}}");
+    const md = buildPromptSdlcWizardResultMarkdown({
+      goal: "Draft reply",
+      cycleStatus: "failed",
+      wizard: {
+        ...wizard,
+        modules: [
+          {
+            moduleId: "m1",
+            title: "Draft Reply",
+            prompt: "x",
+            status: "running" as const,
+            selectedRevisionRound: null,
+            statistics: null,
+          },
+          {
+            moduleId: "m2",
+            title: "Polish",
+            prompt: "y",
+            status: "pending" as const,
+            selectedRevisionRound: null,
+            statistics: null,
+          },
+        ],
+      },
+    });
+    expect(md).not.toContain("| running |");
+    expect(md).toContain("| Draft Reply | — | — | failed |");
+    expect(md).toContain("| Polish | — | — | not run |");
+  });
 });
