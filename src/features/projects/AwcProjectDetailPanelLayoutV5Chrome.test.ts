@@ -26,7 +26,7 @@ describe("L3 V5-3 project chrome — Product EN lock", () => {
 
   it("v5 tab order + labels; live tabs keep that order (no placeholder panels)", () => {
     expect(PROJECT_PAGE_V5_TAB_ORDER.map((id) => PROJECT_PAGE_V5_TAB_LABELS[id])).toEqual([
-      "Overview", "Activity", "Reports", "Team", "Library", "Safety rules", "Resources", "Settings",
+      "Overview", "Chat", "Reports", "Team", "Library", "Safety rules", "Resources", "Settings",
     ]);
     const live = PROJECT_PAGE_V5_TAB_ORDER.filter((id) =>
       (PROJECT_PAGE_TAB_IDS as readonly string[]).includes(id),

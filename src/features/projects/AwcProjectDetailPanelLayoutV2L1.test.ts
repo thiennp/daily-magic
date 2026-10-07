@@ -12,7 +12,7 @@ describe("project layout v2 L1 shell", () => {
     expect(tabs).toMatch(
       /"overview",\s*"activity",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
     );
-    expect(tabs).toContain('activity: "Activity"');
+    expect(tabs).toContain('activity: "Chat"');
     expect(tabs).toContain('reports: "Reports"');
     expect(tabs).toContain('library: "Library"');
     expect(tabs).toContain('pitfalls: "Safety rules"');

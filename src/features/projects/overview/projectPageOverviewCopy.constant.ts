@@ -71,7 +71,7 @@ export const PROJECT_PAGE_OVERVIEW_COPY = {
   assistantsSilent: "Hasn't answered yet",
 
   recentTitle: "Recent activity",
-  recentViewAll: "Open Activity",
+  recentViewAll: "Open Chat",
   recentEmpty: "Nothing yet. Messages show up here.",
   recentOpen: "Open",
 

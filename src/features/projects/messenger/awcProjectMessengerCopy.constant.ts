@@ -1,8 +1,8 @@
 import { PROJECT_MEMBERSHIP_POLL_SILENCE_STATUS } from "@/lib/projects/acl/membershipDeliveryMode.constant";
 
-/** Activity messenger copy — matches design spec.md strings. */
+/** Project messenger copy — tab label Chat (Soft DROP Activity label). */
 export const AWC_PROJECT_MESSENGER_COPY = {
-  tab: "Activity",
+  tab: "Chat",
   listHeading: "Threads",
   wholeName: "Whole project",
   wholeSub: "Message every bot",
