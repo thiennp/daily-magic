@@ -7,6 +7,7 @@ import AwcProjectSettingsFolderRow from "@/features/projects/settings/AwcProject
 import AwcProjectSettingsHistoryRow from "@/features/projects/settings/AwcProjectSettingsHistoryRow";
 import AwcProjectSettingsLeaveZone from "@/features/projects/settings/AwcProjectSettingsLeaveZone";
 import AwcProjectSettingsNameSection from "@/features/projects/settings/AwcProjectSettingsNameSection";
+import AwcProjectConnectionsSection from "@/features/projects/settings/connections/AwcProjectConnectionsSection";
 import AwcProjectSettingsPendingRunApprovalsSection from "@/features/projects/settings/runApprovals/AwcProjectSettingsPendingRunApprovalsSection";
 import AwcProjectSettingsRunsWithoutApprovalRow from "@/features/projects/settings/runsWithoutApproval/AwcProjectSettingsRunsWithoutApprovalRow";
 
@@ -16,7 +17,7 @@ interface AwcProjectDetailSettingsPanelProps {
   readonly pageActorRole: ProjectPageActorRole;
 }
 
-/** Layout v2 L5 Settings — name · path · history · danger Delete|Leave. */
+/** Layout v2 L5 Settings — name · path · connections · history · danger. */
 export default function AwcProjectDetailSettingsPanel({
   project,
   startRename,
@@ -39,6 +40,10 @@ export default function AwcProjectDetailSettingsPanel({
         canEdit={isOwner}
       />
       <AwcProjectSettingsFolderRow folderPath={project.folderPath} />
+      <AwcProjectConnectionsSection
+        projectId={project.id}
+        isOwner={isOwner}
+      />
       {isOwner ? (
         <AwcProjectSettingsHistoryRow projectId={project.id} />
       ) : null}
