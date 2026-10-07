@@ -2,6 +2,7 @@
 
 import AwcProjectTaskGitTags from "@/features/projects/tasks/AwcProjectTaskGitTags";
 import AwcProjectTaskStatusChip from "@/features/projects/tasks/AwcProjectTaskStatusChip";
+import AwcProjectTaskTimeline from "@/features/projects/tasks/AwcProjectTaskTimeline";
 import AwcProjectTasksOfflineBanner from "@/features/projects/tasks/AwcProjectTasksOfflineBanner";
 import {
   AWC_TASKS_CARD_CLASS,
@@ -15,46 +16,8 @@ import {
   PROJECT_TASK_STATUS_LABEL,
 } from "@/features/projects/tasks/projectPageTasksCopy.constant";
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
-import type { ProjectTaskUiStatus } from "@/features/projects/sync/projectSync.types";
+import { formatProjectTaskMetaTime as formatMetaTime } from "@/features/projects/tasks/utils/projectTaskTimeline";
 import { buildProjectTabHash } from "@/lib/shell/buildNavConsolidationRedirect";
-
-const formatMetaTime = (iso: string | null): string => {
-  if (iso === null || iso.trim().length === 0) return "—";
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleString(undefined, {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
-
-/** Design timeline: queued → running → terminal (done|failed|cancelled). */
-const buildTimelineSteps = (
-  status: ProjectTaskUiStatus,
-): readonly ProjectTaskUiStatus[] => {
-  const end: ProjectTaskUiStatus =
-    status === "done" || status === "failed" || status === "cancelled"
-      ? status
-      : "done";
-  return ["queued", "running", end];
-};
-
-const stepClass = (
-  step: ProjectTaskUiStatus,
-  current: ProjectTaskUiStatus,
-): "ok" | "cur" | "pend" | "end-failed" | "end-cancelled" => {
-  if (step === current && (step === "queued" || step === "running")) return "cur";
-  if (step === current && step === "failed") return "end-failed";
-  if (step === current && step === "cancelled") return "end-cancelled";
-  if (current === "done" || current === "failed" || current === "cancelled") {
-    if (step === "queued" || step === "running") return "ok";
-    if (step === current && step === "done") return "ok";
-  }
-  if (current === "running" && step === "queued") return "ok";
-  return "pend";
-};
 
 export default function AwcProjectTaskDetail({
   task,
@@ -73,7 +36,6 @@ export default function AwcProjectTaskDetail({
     task.agentRunId !== null
       ? buildProjectTabHash("reports", { report: task.agentRunId })
       : null;
-  const steps = buildTimelineSteps(task.status);
 
   return (
     <section className="flex min-w-0 flex-col gap-4" aria-label={task.title}>
@@ -138,61 +100,7 @@ export default function AwcProjectTaskDetail({
             ) : null}
           </div>
         </div>
-        <div className={`${AWC_TASKS_CARD_CLASS} p-4`}>
-          <h3 className={`${AWC_TASKS_PANEL_HEADING_CLASS} mb-3`}>{C.statusTimeline}</h3>
-          <ol className="m-0 flex list-none flex-col p-0">
-            {steps.map((s, idx) => {
-              const cls = stepClass(s, task.status);
-              const node =
-                cls === "ok"
-                  ? "✓"
-                  : cls === "end-failed"
-                    ? "!"
-                    : cls === "end-cancelled"
-                      ? "–"
-                      : "";
-              const nodeTone =
-                cls === "ok"
-                  ? "border-awc-fg bg-awc-fg text-awc-surface"
-                  : cls === "cur"
-                    ? "border-awc-fg bg-awc-info-soft"
-                    : cls === "end-failed"
-                      ? "border-awc-fg bg-awc-surface text-awc-fg"
-                      : cls === "end-cancelled"
-                        ? "border-awc-control-border bg-awc-fill text-awc-fg-subtle"
-                        : "border-awc-border-strong bg-awc-surface text-awc-fg-subtle";
-              const labelTone =
-                cls === "pend" ? "font-medium text-awc-fg-subtle" : "font-semibold text-awc-fg";
-              const isLast = idx === steps.length - 1;
-              return (
-                <li
-                  key={`${s}-${idx}`}
-                  className={`relative grid grid-cols-[22px_1fr] items-center gap-2.5 ${isLast ? "" : "pb-4"}`}
-                >
-                  {!isLast ? (
-                    <span
-                      className={`absolute bottom-0.5 left-[10px] top-[22px] w-0.5 ${
-                        cls === "ok" ? "bg-awc-fg" : "bg-awc-border-strong"
-                      }`}
-                      aria-hidden="true"
-                    />
-                  ) : null}
-                  <span
-                    className={`relative z-[1] inline-grid h-[22px] w-[22px] place-items-center rounded-full border-2 text-[11px] font-extrabold ${nodeTone}`}
-                    aria-hidden="true"
-                  >
-                    {node}
-                  </span>
-                  <span className={`text-[13px] ${labelTone}`}>
-                    {PROJECT_TASK_STATUS_LABEL[s]}
-                    {cls === "cur" ? <span className="sr-only"> (now)</span> : null}
-                    {cls === "pend" ? <span className="sr-only"> (not yet)</span> : null}
-                  </span>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
+        <AwcProjectTaskTimeline status={task.status} />
       </div>
     </section>
   );

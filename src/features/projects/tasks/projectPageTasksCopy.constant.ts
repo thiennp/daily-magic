@@ -1,3 +1,5 @@
+import type { ProjectTaskDisplayStatus } from "@/features/projects/tasks/projectTaskDisplayStatus";
+
 /** EN PASS Tasks tab copy — prefer "assistant"; exact offline EN. */
 export const PROJECT_PAGE_TASKS_COPY = {
   tab: "Tasks",
@@ -14,6 +16,9 @@ export const PROJECT_PAGE_TASKS_COPY = {
   statusDone: "Done",
   statusFailed: "Failed",
   statusCancelled: "Cancelled",
+  statusDenied: "Denied",
+  statusTimedOut: "Timed out",
+  statusUnknown: "Unknown",
   /** Exact design EN — no trailing period. */
   offline: "Connection to the project computer was lost",
   offlineRetry: "Retry",
@@ -65,10 +70,15 @@ export const PROJECT_PAGE_TASKS_COPY = {
   kvUpdated: "Updated",
 } as const;
 
-export const PROJECT_TASK_STATUS_LABEL = {
+export const PROJECT_TASK_STATUS_LABEL: Readonly<
+  Record<ProjectTaskDisplayStatus, string>
+> = {
   queued: PROJECT_PAGE_TASKS_COPY.statusQueued,
   running: PROJECT_PAGE_TASKS_COPY.statusRunning,
   done: PROJECT_PAGE_TASKS_COPY.statusDone,
   failed: PROJECT_PAGE_TASKS_COPY.statusFailed,
   cancelled: PROJECT_PAGE_TASKS_COPY.statusCancelled,
-} as const;
+  denied: PROJECT_PAGE_TASKS_COPY.statusDenied,
+  timed_out: PROJECT_PAGE_TASKS_COPY.statusTimedOut,
+  unknown: PROJECT_PAGE_TASKS_COPY.statusUnknown,
+};

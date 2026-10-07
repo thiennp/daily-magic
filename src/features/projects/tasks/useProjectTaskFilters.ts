@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import type { ProjectTaskUiStatus } from "@/features/projects/sync/projectSync.types";
+import type { ProjectTaskDisplayStatus } from "@/features/projects/tasks/projectTaskDisplayStatus";
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
 import {
   filterProjectTasks,
@@ -12,7 +12,7 @@ import {
 /** Tasks tab filters (assistant + status) and the filtered list. */
 export const useProjectTaskFilters = (allTasks: readonly ProjectTaskMeta[]) => {
   const [assistantFilter, setAssistantFilter] = useState<string | "all">("all");
-  const [statusFilter, setStatusFilter] = useState<ProjectTaskUiStatus | "all">("all");
+  const [statusFilter, setStatusFilter] = useState<ProjectTaskDisplayStatus | "all">("all");
   const assistants = useMemo(() => listProjectTaskAssistants(allTasks), [allTasks]);
   const tasks = useMemo(
     () => filterProjectTasks(allTasks, assistantFilter, statusFilter),

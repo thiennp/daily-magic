@@ -1,7 +1,5 @@
-import type {
-  ProjectSyncConnectionState,
-  ProjectTaskUiStatus,
-} from "@/features/projects/sync/projectSync.types";
+import type { ProjectSyncConnectionState } from "@/features/projects/sync/projectSync.types";
+import type { ProjectTaskDisplayStatus } from "@/features/projects/tasks/projectTaskDisplayStatus";
 import type {
   ProjectTaskMeta,
   ProjectTaskPlanCounts,
@@ -17,12 +15,12 @@ export type AwcProjectTasksState = {
   readonly idbSoftDegraded: boolean;
   readonly planCounts: ProjectTaskPlanCounts | null;
   readonly assistantFilter: string | "all";
-  readonly statusFilter: ProjectTaskUiStatus | "all";
+  readonly statusFilter: ProjectTaskDisplayStatus | "all";
   readonly chatVisibility: ProjectTasksChatVisibility;
   readonly loading: boolean;
   readonly loadFailed: boolean;
   readonly setAssistantFilter: (id: string | "all") => void;
-  readonly setStatusFilter: (s: ProjectTaskUiStatus | "all") => void;
+  readonly setStatusFilter: (s: ProjectTaskDisplayStatus | "all") => void;
   readonly setChatVisibility: (v: ProjectTasksChatVisibility) => void;
   readonly reload: () => void;
   readonly assistants: readonly { readonly id: string; readonly name: string }[];

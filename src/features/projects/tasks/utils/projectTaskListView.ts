@@ -1,4 +1,4 @@
-import type { ProjectTaskUiStatus } from "@/features/projects/sync/projectSync.types";
+import type { ProjectTaskDisplayStatus } from "@/features/projects/tasks/projectTaskDisplayStatus";
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
 
 /** Assistant filter options: trimmed name when known, else membership id. */
@@ -23,7 +23,7 @@ export const listProjectTaskAssistants = (
 export const filterProjectTasks = (
   allTasks: readonly ProjectTaskMeta[],
   assistantFilter: string | "all",
-  statusFilter: ProjectTaskUiStatus | "all",
+  statusFilter: ProjectTaskDisplayStatus | "all",
 ): readonly ProjectTaskMeta[] =>
   allTasks.filter((t) => {
     if (assistantFilter !== "all") {

@@ -1,7 +1,6 @@
-import {
-  keyOfProjectTask,
-  type ProjectTaskLocalRecord,
-  type ProjectTaskNeonMeta,
+import type {
+  ProjectTaskLocalRecord,
+  ProjectTaskNeonMeta,
 } from "@/features/projects/sync/adapters/projectTasksAdapter";
 import { encodeProjectSyncCursor } from "@/features/projects/sync/projectSyncCursor";
 import {
@@ -37,7 +36,8 @@ export const loadProjectTasksSyncPage = async (input: {
     localLive,
     beforeRequested: false,
     limit: 50,
-    keyOf: (e) => keyOfProjectTask(e),
+    // Same key as keyOfProjectTask (record id); meta status is display-wide.
+    keyOf: (e) => e.id,
     createdAtOf: (e) => e.createdAt,
     encodeCursor: encodeProjectSyncCursor,
   });

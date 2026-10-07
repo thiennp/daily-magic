@@ -1,4 +1,5 @@
 import type { ProjectTaskUiStatus } from "@/features/projects/sync/projectSync.types";
+import type { ProjectTaskDisplayStatus } from "@/features/projects/tasks/projectTaskDisplayStatus";
 import type {
   ProjectTaskIdbRecord,
   ProjectTaskLocalRecord,
@@ -7,8 +8,12 @@ import type {
 
 export type { ProjectTaskUiStatus, ProjectTaskIdbRecord, ProjectTaskLocalRecord, ProjectTaskNeonMeta };
 
-/** UI list/detail row — Neon/IDB meta (+ optional assistant display name, UI-only). */
-export type ProjectTaskMeta = ProjectTaskNeonMeta & {
+/**
+ * UI list/detail row — Neon/IDB meta (+ optional assistant display name, UI-only).
+ * `status` widens to the display status so denied / timed-out runs keep their label.
+ */
+export type ProjectTaskMeta = Omit<ProjectTaskNeonMeta, "status"> & {
+  readonly status: ProjectTaskDisplayStatus;
   readonly assistantName?: string | null;
 };
 

@@ -1,23 +1,20 @@
-import {
-  PROJECT_TASK_STATUS_LABEL,
-} from "@/features/projects/tasks/projectPageTasksCopy.constant";
+import type { ProjectTaskDisplayStatus } from "@/features/projects/tasks/projectTaskDisplayStatus";
 import {
   PROJECT_TASK_TONE_CLASS,
-  projectTaskStatusTone,
+  projectTaskStatusChip,
 } from "@/features/projects/tasks/projectTaskStatusTone";
-import type { ProjectTaskUiStatus } from "@/features/projects/sync/projectSync.types";
 
 export default function AwcProjectTaskStatusChip({
   status,
 }: {
-  readonly status: ProjectTaskUiStatus;
+  readonly status: ProjectTaskDisplayStatus;
 }) {
-  const tone = projectTaskStatusTone(status);
+  const chip = projectTaskStatusChip(status);
   return (
     <span
-      className={`inline-flex rounded-full border px-2 py-0.5 text-[11px] font-medium ${PROJECT_TASK_TONE_CLASS[tone]}`}
+      className={`inline-flex rounded-full border px-2 py-0.5 text-[11px] font-medium ${PROJECT_TASK_TONE_CLASS[chip.tone]}`}
     >
-      {PROJECT_TASK_STATUS_LABEL[status]}
+      {chip.label}
     </span>
   );
 }

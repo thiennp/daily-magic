@@ -1,33 +1,34 @@
-import type { ProjectTaskUiStatus } from "@/features/projects/sync/projectSync.types";
 import {
   AWC_TASKS_INPUT_CLASS,
 } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
-import { PROJECT_PAGE_TASKS_COPY as C } from "@/features/projects/tasks/projectPageTasksCopy.constant";
+import {
+  PROJECT_PAGE_TASKS_COPY as C,
+  PROJECT_TASK_STATUS_LABEL,
+} from "@/features/projects/tasks/projectPageTasksCopy.constant";
+import type { ProjectTaskDisplayStatus } from "@/features/projects/tasks/projectTaskDisplayStatus";
 
-const STATUSES: readonly (ProjectTaskUiStatus | "all")[] = [
+const STATUSES: readonly (ProjectTaskDisplayStatus | "all")[] = [
   "all",
   "queued",
   "running",
   "done",
   "failed",
   "cancelled",
+  "denied",
+  "timed_out",
 ];
 
-const STATUS_LABEL: Record<ProjectTaskUiStatus | "all", string> = {
+const STATUS_LABEL: Record<ProjectTaskDisplayStatus | "all", string> = {
   all: C.filterAllStatus,
-  queued: C.statusQueued,
-  running: C.statusRunning,
-  done: C.statusDone,
-  failed: C.statusFailed,
-  cancelled: C.statusCancelled,
+  ...PROJECT_TASK_STATUS_LABEL,
 };
 
 export type AwcProjectTasksFiltersProps = {
   readonly assistants: readonly { readonly id: string; readonly name: string }[];
   readonly assistantId: string | "all";
-  readonly status: ProjectTaskUiStatus | "all";
+  readonly status: ProjectTaskDisplayStatus | "all";
   readonly onAssistantChange: (id: string | "all") => void;
-  readonly onStatusChange: (status: ProjectTaskUiStatus | "all") => void;
+  readonly onStatusChange: (status: ProjectTaskDisplayStatus | "all") => void;
 };
 
 export default function AwcProjectTasksFilters(p: AwcProjectTasksFiltersProps) {

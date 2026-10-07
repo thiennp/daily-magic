@@ -1,6 +1,6 @@
-import { mapProjectTaskStatusToUi } from "@/features/projects/sync/adapters/projectTasksAdapter";
 import { PROJECT_SYNC_NEON_SUMMARY_MAX_CHARS } from "@/features/projects/sync/projectSync.types";
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
+import { mapRunStatusToProjectTaskDisplayStatus } from "@/features/projects/tasks/projectTaskDisplayStatus";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
 const thinTitle = (raw: string): string =>
@@ -13,7 +13,8 @@ const firstLine = (value: string | null | undefined): string =>
     .find((line) => line.length > 0) ?? "";
 
 /**
- * Map Neon agent_runs (Reports feed) → Tasks list meta via S1 status mapper.
+ * Map Neon agent_runs (Reports feed) → Tasks list meta (DF-027 display status:
+ * denied / expired keep their own label instead of folding into "queued").
  * Branch/worktree not on agent_runs yet → null (hide tags until f61 wires them).
  */
 export const mapAgentRunToProjectTaskMeta = (
@@ -32,7 +33,7 @@ export const mapAgentRunToProjectTaskMeta = (
     projectId,
     assistantMembershipId: null,
     title,
-    status: mapProjectTaskStatusToUi(run.status),
+    status: mapRunStatusToProjectTaskDisplayStatus(run.status),
     createdAt: run.createdAt,
     updatedAt: run.updatedAt,
     startedAt: run.startedAt,
