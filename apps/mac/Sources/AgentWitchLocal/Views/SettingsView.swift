@@ -2,437 +2,388 @@ import AppKit
 import SwiftUI
 import AgentWitchLocalCore
 
+/// AWL-H4 — Settings chrome from Mac UX redo HTML.
+/// Account, Local port range (read-only until H6), open at login, menu bar, permissions, diagnostics (AWB/AWI glossed).
 struct SettingsView: View {
-    // AWL-H4/H6 mount: show controller.localPortRangeDisplayStub under Connection / Diagnostics.
     @ObservedObject var controller: MacAppMenuController
     @ObservedObject var store: MacAppLocalUIStore
-    @State private var showRemoveConfirm = false
-    @State private var tab: SettingsTab = .general
-    @State private var isRunningChecks = false
-    @State private var checkResults: [DiagCheck: DiagResult] = [:]
-    @State private var reportStubMessage: String?
+    @State private var showSignOutConfirm = false
 
-    private let keepOptions = [7, 14, 30, 90, 365]
-
-    enum SettingsTab: String, CaseIterable, Identifiable {
-        case general, updates, perms, startup, diag
-        var id: String { rawValue }
-        var title: String {
-            switch self {
-            case .general: return "General"
-            case .updates: return "Updates"
-            case .perms: return "Permissions"
-            case .startup: return "Startup"
-            case .diag: return "Diagnostics"
-            }
-        }
-        var systemImage: String {
-            switch self {
-            case .general: return "slider.horizontal.3"
-            case .updates: return "arrow.triangle.2.circlepath"
-            case .perms: return "lock.shield"
-            case .startup: return "power"
-            case .diag: return "stethoscope"
-            }
-        }
-    }
-
-    enum DiagCheck: String, CaseIterable, Identifiable {
-        case net, svc, disk, tools, perm
-        var id: String { rawValue }
-        var title: String {
-            switch self {
-            case .net: return "Internet"
-            case .svc: return "AgentWitch Local"
-            case .disk: return "Disk space"
-            case .tools: return "Agent tools"
-            case .perm: return "Permissions"
-            }
-        }
-        var help: String {
-            switch self {
-            case .net: return "Reaching the AgentWitch service"
-            case .svc: return "The background service on this computer"
-            case .disk: return "Free space for History and updates"
-            case .tools: return "Claude Code, Cursor CLI, Codex, Gemini CLI"
-            case .perm: return "Notifications and folders"
-            }
-        }
-    }
-
-    struct DiagResult {
-        var ok: Bool
-        var message: String
-    }
+    private var isSignedIn: Bool { controller.signedInEmail != nil }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack {
-                Image(systemName: "slider.horizontal.3")
-                    .foregroundStyle(MacAppTheme.accent)
-                Text("Settings")
-                    .font(.title2.bold())
-                Spacer()
+        ScrollView {
+            VStack(alignment: .leading, spacing: 22) {
+                accountSection
+                connectionSection
+                generalSection
+                permissionsSection
+                diagnosticsSection
             }
-            .padding(16)
-            .background(MacAppTheme.playSoft.opacity(0.45))
-
-            Picker("Section", selection: $tab) {
-                ForEach(SettingsTab.allCases) { t in
-                    Text(t.title).tag(t)
-                }
-            }
-            .pickerStyle(.segmented)
-            .padding(.horizontal, 16)
-            .padding(.bottom, 10)
-
-            ScrollView {
-                Group {
-                    switch tab {
-                    case .general: generalTab
-                    case .updates: updatesTab
-                    case .perms: permsTab
-                    case .startup: startupTab
-                    case .diag: diagTab
-                    }
-                }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 20)
-            }
+            .padding(20)
+            .frame(maxWidth: 760, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .background(MacAppTheme.cream)
+        .background(MacAppTheme.bg)
         .frame(minWidth: 480, minHeight: 600)
         .onAppear { controller.refreshInstallAndHealth() }
-        .alert("Remove this computer?", isPresented: $showRemoveConfirm) {
+        .alert(AWLSignOutConfirmCopy.title, isPresented: $showSignOutConfirm) {
             Button("Cancel", role: .cancel) {}
-            Button("Remove from AgentWitch", role: .destructive) {
-                // Local UI stub: opens Connect so the user can manage computers on the web.
-                controller.openConnectThisMac()
-            }
+            Button("Sign out", role: .destructive) { controller.signOut() }
         } message: {
-            Text("Disconnects all projects here. Your files and History stay on this computer.")
-        }
-        .alert("Diagnostic report", isPresented: Binding(
-            get: { reportStubMessage != nil },
-            set: { if !$0 { reportStubMessage = nil } }
-        )) {
-            Button("OK", role: .cancel) { reportStubMessage = nil }
-        } message: {
-            Text(reportStubMessage ?? "")
+            Text(AWLSignOutConfirmCopy.message(
+                displayName: controller.signedInDisplayName ?? "This account",
+                email: controller.signedInEmail ?? ""
+            ))
         }
     }
 
-    private var generalTab: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            settingsCard("Account") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(controller.bootstrapState == nil && controller.state != .notInstalled
-                         ? "Signed in on this computer"
-                         : "Sign in to connect this computer…")
-                        .font(.subheadline)
-                    Text(controller.statusMessage)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+    // MARK: - Account
+
+    private var accountSection: some View {
+        section("Account") {
+            if isSignedIn {
+                settingsRow {
+                    HStack(spacing: 12) {
+                        Text(accountInitials)
+                            .font(.caption.weight(.bold))
+                            .foregroundStyle(.white)
+                            .frame(width: 36, height: 36)
+                            .background(Circle().fill(MacAppTheme.brand))
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(controller.signedInDisplayName ?? "Account")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(MacAppTheme.fg)
+                            Text(controller.signedInEmail ?? "")
+                                .font(.caption)
+                                .foregroundStyle(MacAppTheme.fgMuted)
+                        }
+                        Spacer()
+                        Button("Sign out…") { showSignOutConfirm = true }
+                            .buttonStyle(.bordered)
+                    }
+                }
+                Divider().background(MacAppTheme.border)
+                settingsRow {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("This computer is connected to this account")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(MacAppTheme.fg)
+                            Text("Signing out disconnects it. Files stay on this computer.")
+                                .font(.caption)
+                                .foregroundStyle(MacAppTheme.fgMuted)
+                        }
+                        Spacer()
+                        statusPill(
+                            controller.isComputerBoundStub ? "Connected" : "Not connected",
+                            ok: controller.isComputerBoundStub
+                        )
+                    }
+                }
+            } else {
+                settingsRow {
                     HStack {
-                        Button("Open Connect this computer…") {
-                            controller.openConnectThisMac()
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Not signed in")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(MacAppTheme.fg)
+                            Text("Sign in to connect this computer.")
+                                .font(.caption)
+                                .foregroundStyle(MacAppTheme.fgMuted)
                         }
-                        Button("Open AgentWitch") {
-                            controller.openLocalStatus()
-                        }
-                    }
-                }
-            }
-            settingsCard("This computer") {
-                VStack(alignment: .leading, spacing: 8) {
-                    LabeledContent("Computer name") {
-                        Text(store.computerName)
-                    }
-                    Text("Shown in AgentWitch on the web.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Button("Open Computer") {
-                        NotificationCenter.default.post(name: .awlOpenWindow, object: MacAppWindowID.computer.rawValue)
-                    }
-                }
-            }
-            settingsCard("History") {
-                VStack(alignment: .leading, spacing: 10) {
-                    Toggle("Save History on this computer", isOn: $store.historyEnabled)
-                    Text("Past tasks stay on this computer only.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Picker("Keep for", selection: $store.historyKeepDays) {
-                        ForEach(keepOptions, id: \.self) { days in
-                            Text(days == 365 ? "1 year" : "\(days) days").tag(days)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    Text("Older tasks are removed by themselves.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Button("Open History") {
-                        NotificationCenter.default.post(name: .awlOpenWindow, object: MacAppWindowID.history.rawValue)
-                    }
-                }
-            }
-            settingsCard("Notifications") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Toggle("A task finishes", isOn: $store.notifyDone)
-                    Toggle("A task fails", isOn: $store.notifyFail)
-                    Toggle("An assistant needs my approval", isOn: $store.notifyAsk)
-                }
-            }
-            settingsCard("Remove this computer") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Remove from AgentWitch")
-                        .font(.subheadline.weight(.semibold))
-                    Text("Disconnects all projects here. Your files and History stay on this computer.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Button("Remove…", role: .destructive) {
-                        showRemoveConfirm = true
-                    }
-                }
-            }
-        }
-    }
-
-    private var updatesTab: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            settingsCard("Updates") {
-                VStack(alignment: .leading, spacing: 10) {
-                    if let offer = controller.updateOffer {
-                        Text(updateAvailableTitle(version: offer.version))
-                            .font(.subheadline.weight(.semibold))
-                        Button("Download update") {
-                            controller.openUpdate()
+                        Spacer()
+                        Button("Sign in") {
+                            NotificationCenter.default.post(
+                                name: .awlSelectSidebarPage,
+                                object: MacAppSidebarPage.computer.rawValue
+                            )
+                            controller.beginSignInStub()
                         }
                         .buttonStyle(.borderedProminent)
-                        .tint(MacAppTheme.accent)
+                        .tint(MacAppTheme.brand)
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Connection
+
+    private var connectionSection: some View {
+        section("Connection") {
+            settingsRow {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 6) {
+                            Text("Local port range")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(MacAppTheme.fg)
+                            Image(systemName: "info.circle")
+                                .font(.caption)
+                                .foregroundStyle(MacAppTheme.fgSubtle)
+                                .help("AgentWitch Local picks a random range when you first sign in and keeps it. Other accounts on this computer get their own range.")
+                        }
+                        Text("Unique to this AgentWitch account on this computer.")
+                            .font(.caption.italic())
+                            .foregroundStyle(MacAppTheme.fgMuted)
+                    }
+                    Spacer()
+                    if isSignedIn, controller.localPortRange != nil {
+                        Text(controller.localPortRangeDisplayStub)
+                            .font(.system(.subheadline, design: .monospaced).weight(.semibold))
+                            .foregroundStyle(MacAppTheme.brand)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 4)
+                            .background(RoundedRectangle(cornerRadius: 8).fill(MacAppTheme.accentSoft))
                     } else {
-                        Text("You are up to date (\(MacAppConstants.appVersion)).")
-                            .font(.subheadline)
-                        Button("Check for updates") {
-                            controller.refreshInstallAndHealth()
-                        }
-                        .controlSize(.small)
+                        Text("Assigned after you sign in")
+                            .font(.caption)
+                            .foregroundStyle(MacAppTheme.fgSubtle)
                     }
                 }
             }
-            settingsCard("How to update") {
-                VStack(alignment: .leading, spacing: 10) {
-                    Toggle("Update by itself", isOn: $store.autoUpdate)
-                    Text("Downloads in the background and asks before restarting.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Picker("Which versions", selection: $store.updateChannel) {
-                        Text("Stable").tag("stable")
-                        Text("Early access").tag("early")
+            Divider().background(MacAppTheme.border)
+            settingsRow {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Computer name")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(MacAppTheme.fg)
+                        Text("Shown to your projects")
+                            .font(.caption)
+                            .foregroundStyle(MacAppTheme.fgMuted)
                     }
-                    .pickerStyle(.menu)
-                    Text("Early access gets new things sooner and may have rough edges.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    // HARD: always show Download AWL even when connected / running / update offer present.
-                    Text("Get AgentWitch Local for this or another computer.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text(store.computerName)
+                        .font(.subheadline)
+                        .foregroundStyle(MacAppTheme.fg)
                 }
             }
         }
     }
 
-    private var permsTab: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            settingsCard("Ask me first") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Toggle("Before an assistant runs a command", isOn: $store.askBeforeCommand)
-                    Text("You see what it wants to do and choose.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Toggle("Before an assistant changes files outside its folder", isOn: $store.askBeforeOutsideFolder)
-                    Text("Recommended.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-            settingsCard("Folders assistants can use") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("No folders yet")
-                        .font(.subheadline.weight(.semibold))
-                    Text("Assistants can only work inside folders you add. Add-folder wiring stays a UI stub — no invented backend.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Button("Add folder") {}
-                        .disabled(true)
-                        .help("Stub — folder picker not wired in this tip.")
-                }
-            }
-            settingsCard("This computer allows") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Notifications")
-                        .font(.subheadline.weight(.semibold))
-                    Text("So you hear about finished and failed tasks.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Text("Files and folders")
-                        .font(.subheadline.weight(.semibold))
-                    Text("So assistants can read and write in the folders above.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Button("Open system settings") {
-                        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }
-                }
-            }
-        }
-    }
+    // MARK: - General
 
-    private var startupTab: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            settingsCard("Startup") {
-                VStack(alignment: .leading, spacing: 8) {
+    private var generalSection: some View {
+        section("General") {
+            settingsRow {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Open at login")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(MacAppTheme.fg)
+                        Text("Starts in the menu bar when you log in to this computer.")
+                            .font(.caption)
+                            .foregroundStyle(MacAppTheme.fgMuted)
+                    }
+                    Spacer()
                     Toggle(
-                        "Open at login",
+                        "",
                         isOn: Binding(
                             get: { controller.launchesAtLogin },
                             set: { controller.toggleLaunchAtLogin($0) }
                         )
                     )
-                    Text(controller.launchesAtLogin
-                         ? "Starts quietly when you sign in to this computer."
-                         : "Will not open at login")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Toggle("Start running when it opens", isOn: $store.autoStartCore)
-                    Text("Assistants can use this computer right away.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    .labelsHidden()
+                    .toggleStyle(.switch)
+                    .accessibilityLabel("Open at login")
                 }
             }
-            settingsCard("Where it lives") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Toggle("Show the icon in the menu bar or tray", isOn: $store.showTrayIcon)
-                    Text("Needed for the quick menu.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Toggle("Keep running when the window is closed", isOn: $store.keepRunningClosed)
-                    Text("Turn off to quit when you close the window.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+            Divider().background(MacAppTheme.border)
+            settingsRow {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Show in menu bar")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(MacAppTheme.fg)
+                        Text("Always on. The menu bar keeps working when this window is closed.")
+                            .font(.caption)
+                            .foregroundStyle(MacAppTheme.fgMuted)
+                    }
+                    Spacer()
+                    Toggle("", isOn: .constant(true))
+                        .labelsHidden()
+                        .toggleStyle(.switch)
+                        .disabled(true)
+                        .accessibilityLabel("Show in menu bar")
                 }
             }
         }
     }
 
-    private var diagTab: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            settingsCard("Checks") {
-                VStack(alignment: .leading, spacing: 10) {
-                    Button(isRunningChecks ? "Checking…" : "Run checks") {
-                        runChecks()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(MacAppTheme.accent)
-                    .disabled(isRunningChecks)
-                    ForEach(DiagCheck.allCases) { check in
-                        HStack(alignment: .top) {
-                            Image(systemName: icon(for: check))
-                                .foregroundStyle(color(for: check))
-                                .frame(width: 18)
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(check.title)
-                                    .font(.subheadline.weight(.semibold))
-                                Text(checkResults[check]?.message ?? check.help)
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            }
-                            Spacer()
-                        }
-                        .padding(8)
-                        .background(RoundedRectangle(cornerRadius: 8).fill(MacAppTheme.surface2))
-                    }
-                }
-            }
-            settingsCard("Log") {
-                VStack(alignment: .leading, spacing: 8) {
-                    LabeledContent("Status") {
-                        Text(controller.statusMessage)
-                    }
-                    LabeledContent("Runtime") {
-                        Text(String(describing: controller.state))
-                    }
-                    Button("View logs") {
-                        controller.openLogs()
-                    }
-                }
-            }
-            settingsCard("Report a problem") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Diagnostic report")
-                        .font(.subheadline.weight(.semibold))
-                    Text("A small file with versions, status and the log. It has no task content. You choose where to send it.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Button("Create report…") {
-                        // Explicit stub — no invented zip exporter in this tip.
-                        reportStubMessage = "Export diagnostics.zip is not wired in this tip. Use View logs for now."
-                    }
-                }
-            }
-            // HARD: Download AWL always visible
-        }
-    }
+    // MARK: - Permissions
 
-    private func runChecks() {
-        isRunningChecks = true
-        checkResults = [:]
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            var next: [DiagCheck: DiagResult] = [:]
-            next[.net] = DiagResult(ok: true, message: "Connected (UI check stub).")
-            next[.svc] = DiagResult(
-                ok: controller.state == .running,
-                message: controller.state == .running
-                    ? "Running, version \(MacAppConstants.appVersion)."
-                    : "The background service did not answer. Start AgentWitch Local."
+    private var permissionsSection: some View {
+        section("Permissions") {
+            permissionRow(
+                title: "Files and folders",
+                detail: "Lets assistant tools read and change project folders.",
+                status: "Allowed",
+                ok: true,
+                showOpenSettings: false
             )
-            next[.disk] = DiagResult(ok: true, message: "Enough free space (UI stub).")
-            let ready = store.toolsReadyCount
-            next[.tools] = DiagResult(
-                ok: ready >= 2,
-                message: "\(ready) of \(AgentCliKind.allCases.count) tools ready. See Computer."
+            Divider().background(MacAppTheme.border)
+            permissionRow(
+                title: "Notifications",
+                detail: "Tells you when something needs your attention.",
+                status: "Allowed",
+                ok: true,
+                showOpenSettings: false
             )
-            next[.perm] = DiagResult(ok: true, message: "All allowed (UI stub).")
-            checkResults = next
-            isRunningChecks = false
+            Divider().background(MacAppTheme.border)
+            permissionRow(
+                title: "Automation",
+                detail: "Lets assistant tools open other apps when a task needs it.",
+                status: "Not allowed",
+                ok: false,
+                showOpenSettings: true
+            )
         }
     }
 
-    private func icon(for check: DiagCheck) -> String {
-        guard let r = checkResults[check] else { return "circle" }
-        return r.ok ? "checkmark.circle.fill" : "exclamationmark.triangle.fill"
+    // MARK: - Diagnostics
+
+    private var diagnosticsSection: some View {
+        let running = controller.state == .running
+        return section("Diagnostics") {
+            glossRow(
+                code: "AWB",
+                title: "Connection service",
+                detail: "Links this computer to AgentWitch · version \(MacAppConstants.appVersion)",
+                running: running
+            )
+            Divider().background(MacAppTheme.border)
+            glossRow(
+                code: "AWI",
+                title: "Assistant tools runner",
+                detail: "Installs and runs assistant tools on this computer · version \(MacAppConstants.appVersion)",
+                running: running
+            )
+            Divider().background(MacAppTheme.border)
+            settingsRow {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Log")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(MacAppTheme.fg)
+                        Text("~/Library/Logs/AgentWitch Local/")
+                            .font(.system(size: 11.5, design: .monospaced))
+                            .foregroundStyle(MacAppTheme.fgMuted)
+                    }
+                    Spacer()
+                    Button("See log") { controller.openLogs() }
+                        .buttonStyle(.bordered)
+                    Button("Repair setup") { controller.startOrRepairSetup() }
+                        .buttonStyle(.bordered)
+                }
+            }
+        }
     }
 
-    private func color(for check: DiagCheck) -> Color {
-        guard let r = checkResults[check] else { return .secondary }
-        return r.ok ? MacAppTheme.success : MacAppTheme.accentWarm
-    }
+    // MARK: - Helpers
 
-    private func settingsCard<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
+    private func section<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
             Text(title)
-                .font(.headline)
-            content()
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(MacAppTheme.fg)
+            VStack(alignment: .leading, spacing: 0) {
+                content()
+            }
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(MacAppTheme.surface)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .stroke(MacAppTheme.border, lineWidth: 1)
+                    )
+            )
         }
-        .padding(14)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(MacAppTheme.surface)
-                .shadow(color: .black.opacity(0.04), radius: 4, y: 1)
-        )
+    }
+
+    private func settingsRow<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        content()
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func permissionRow(
+        title: String,
+        detail: String,
+        status: String,
+        ok: Bool,
+        showOpenSettings: Bool
+    ) -> some View {
+        settingsRow {
+            HStack(alignment: .center) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(MacAppTheme.fg)
+                    Text(detail)
+                        .font(.caption)
+                        .foregroundStyle(MacAppTheme.fgMuted)
+                }
+                Spacer()
+                HStack(spacing: 8) {
+                    Text(status)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(ok ? MacAppTheme.success : MacAppTheme.warning)
+                    if showOpenSettings {
+                        Button("Open System Settings") {
+                            if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security") {
+                                NSWorkspace.shared.open(url)
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
+                    }
+                }
+            }
+        }
+    }
+
+    private func glossRow(code: String, title: String, detail: String, running: Bool) -> some View {
+        settingsRow {
+            HStack(alignment: .center, spacing: 12) {
+                Text(code)
+                    .font(.system(.caption, design: .monospaced).weight(.bold))
+                    .foregroundStyle(MacAppTheme.brandInk)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(RoundedRectangle(cornerRadius: 6).fill(MacAppTheme.accentSoft))
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(MacAppTheme.fg)
+                    Text(detail)
+                        .font(.caption)
+                        .foregroundStyle(MacAppTheme.fgMuted)
+                }
+                Spacer()
+                statusPill(running ? "Running" : controller.chromeStatus.pillLabel, ok: running)
+            }
+        }
+    }
+
+    private func statusPill(_ text: String, ok: Bool) -> some View {
+        HStack(spacing: 5) {
+            Circle().fill(ok ? MacAppTheme.success : MacAppTheme.fgMuted).frame(width: 6, height: 6)
+            Text(text)
+                .font(.caption.weight(.semibold))
+        }
+        .foregroundStyle(ok ? MacAppTheme.success : MacAppTheme.fgMuted)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(Capsule().fill(ok ? MacAppTheme.successSoft : MacAppTheme.fill))
+    }
+
+    private var accountInitials: String {
+        let name = controller.signedInDisplayName ?? controller.signedInEmail ?? "?"
+        let parts = name.split(whereSeparator: { $0 == " " || $0 == "@" || $0 == "." }).prefix(2)
+        let letters = parts.compactMap { $0.first.map { String($0).uppercased() } }
+        return letters.isEmpty ? "?" : letters.joined()
     }
 }

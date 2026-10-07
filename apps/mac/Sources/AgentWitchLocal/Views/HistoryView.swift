@@ -1,266 +1,192 @@
+import AppKit
 import SwiftUI
+import AgentWitchLocalCore
 
+/// AWL-H4 — History offline fallback entry (Mac UX redo HTML).
+/// Full history lives in each AgentWitch project; this is the on-computer fallback.
 struct HistoryView: View {
+    @ObservedObject var controller: MacAppMenuController
     @ObservedObject var store: MacAppLocalUIStore
-    @State private var query: String = ""
-    @State private var projectFilter: String = "all"
-    @State private var statusFilter: String = "all"
-    @State private var toolFilter: String = "all"
-    @State private var whenFilter: String = "any"
-    @State private var sortNewest = true
-    @State private var shown = 15
-    @State private var showClearConfirm = false
 
-    private var projects: [String] {
-        Array(Set(store.historyItems.map(\.project))).sorted()
-    }
+    private var isOffline: Bool { controller.isOfflineStub }
+    private var isSignedIn: Bool { controller.signedInEmail != nil }
 
-    private var filtered: [LocalHistoryStubItem] {
-        let q = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        var items = store.historyItems.filter { item in
-            if projectFilter != "all", item.project != projectFilter { return false }
-            if statusFilter != "all", item.status != statusFilter { return false }
-            if toolFilter != "all", item.cli != toolFilter { return false }
-            if whenFilter == "today", item.whenLabel != "Today" { return false }
-            if whenFilter == "7d" {
-                let recent = ["Today", "Yesterday", "2 days ago", "3 days ago", "4 days ago", "5 days ago", "6 days ago"]
-                if !recent.contains(item.whenLabel) { return false }
-            }
-            // "30d" / "any" keep all stub rows (local stub list).
-            if !q.isEmpty {
-                let hay = "\(item.title) \(item.bot) \(item.project) \(item.summary) \(item.cli)".lowercased()
-                if !hay.contains(q) { return false }
-            }
-            return true
-        }
-        if sortNewest {
-            // seed order is newest-first already
-        } else {
-            items = Array(items.reversed())
-        }
-        return items
-    }
-
-    private var visible: [LocalHistoryStubItem] {
-        Array(filtered.prefix(shown))
-    }
-
-    private var anyFilter: Bool {
-        projectFilter != "all" || statusFilter != "all" || toolFilter != "all"
-            || whenFilter != "any" || !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    /// UI stub rows shaped like the HTML history table (not cloud history).
+    private var rows: [HistoryChromeRow] {
+        [
+            .init(day: "Today · Wed 7 Oct", time: "14:41", tool: "Claude Code", project: "Infusion",
+                  what: "Refactored the intake form validation", took: "6 min", ok: true),
+            .init(day: "Today · Wed 7 Oct", time: "13:02", tool: "Codex", project: "Website relaunch",
+                  what: "Updated image sizes on the pricing page", took: "2 min", ok: true),
+            .init(day: "Today · Wed 7 Oct", time: "11:20", tool: "Claude Code", project: "Infusion",
+                  what: "Ran test suite before release", took: "11 min", ok: false),
+            .init(day: "Yesterday · Tue 6 Oct", time: "17:55", tool: "Cursor CLI", project: "Website relaunch",
+                  what: "Fixed broken links in the footer", took: "3 min", ok: true),
+            .init(day: "Yesterday · Tue 6 Oct", time: "09:12", tool: "Claude Code", project: "Quarterly reports",
+                  what: "Merged Q3 sheets into one summary", took: "8 min", ok: true),
+        ]
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            header
-            filters
-            if !store.historyEnabled {
-                historyOffEmpty
-            } else if filtered.isEmpty {
-                emptySearch
-            } else {
-                List(visible) { item in
-                    historyRow(item)
-                }
-                .listStyle(.inset)
-                if filtered.count > shown {
-                    Button("Show more") { shown += 15 }
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 6)
-                }
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                offlineBanner
+                historyTable
             }
-            footer
+            .padding(20)
         }
-        .background(MacAppTheme.cream)
+        .background(MacAppTheme.bg)
         .frame(minWidth: 480, minHeight: 520)
-        .alert("Clear history?", isPresented: $showClearConfirm) {
-            Button("Cancel", role: .cancel) {}
-            Button("Clear", role: .destructive) {
-                store.clearHistory(projectFilter: projectFilter == "all" ? nil : projectFilter)
-            }
-        } message: {
-            Text("Removes tasks from this computer only. It cannot be undone.")
-        }
     }
 
-    private var header: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Image(systemName: "clock.arrow.circlepath")
-                    .foregroundStyle(MacAppTheme.accent)
-                Text("History")
-                    .font(.title2.bold())
-                Spacer()
-                Text(store.historySpaceUsedLabel)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            Text("Past tasks of your projects, saved on this computer only.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            TextField("Search History", text: $query)
-                .textFieldStyle(.roundedBorder)
-            Text("Local stub list — cloud History and S5 index stay on Soft LOCK tip-move; no invented backend.")
-                .font(.caption2)
-                .foregroundStyle(MacAppTheme.accentWarm)
-        }
-        .padding(16)
-        .background(MacAppTheme.playSoft.opacity(0.45))
-    }
-
-    private var filters: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Picker("Project", selection: $projectFilter) {
-                    Text("All projects").tag("all")
-                    ForEach(projects, id: \.self) { p in
-                        Text(p).tag(p)
-                    }
-                }
-                .frame(maxWidth: 160)
-                Picker("Status", selection: $statusFilter) {
-                    Text("Any status").tag("all")
-                    Text("Done").tag("done")
-                    Text("Failed").tag("failed")
-                }
-                .frame(maxWidth: 130)
-                Picker("Tool", selection: $toolFilter) {
-                    Text("Any tool").tag("all")
-                    Text("Claude").tag("claude")
-                    Text("Cursor").tag("cursor")
-                    Text("Codex").tag("codex")
-                    Text("Gemini").tag("gemini")
-                }
-                .frame(maxWidth: 130)
-            }
-            HStack {
-                Picker("When", selection: $whenFilter) {
-                    Text("Any time").tag("any")
-                    Text("Today").tag("today")
-                    Text("Last 7 days").tag("7d")
-                    Text("Last 30 days").tag("30d")
-                }
-                .frame(maxWidth: 150)
-                Picker("Sort", selection: $sortNewest) {
-                    Text("Newest first").tag(true)
-                    Text("Oldest first").tag(false)
-                }
-                .frame(maxWidth: 150)
-                if anyFilter {
-                    Button("Clear filters") {
-                        query = ""
-                        projectFilter = "all"
-                        statusFilter = "all"
-                        toolFilter = "all"
-                        whenFilter = "any"
-                        shown = 15
-                    }
-                    .controlSize(.small)
-                }
-                Spacer()
-                Text("\(filtered.count) task\(filtered.count == 1 ? "" : "s")\(anyFilter ? " found" : "")")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .padding(.horizontal, 16)
-        .padding(.bottom, 8)
-        .controlSize(.small)
-    }
-
-    private var historyOffEmpty: some View {
-        VStack(spacing: 12) {
-            Spacer()
-            Image(systemName: "eye.slash")
-                .font(.largeTitle)
-                .foregroundStyle(.secondary)
-            Text("History is off")
-                .font(.headline)
-            Text("New tasks are not saved. Items already here stay until you delete them.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-            Button("Turn on History") {
-                store.historyEnabled = true
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(MacAppTheme.accent)
-            Spacer()
-        }
-        .frame(maxWidth: .infinity)
-    }
-
-    private var emptySearch: some View {
-        VStack(spacing: 10) {
-            Spacer()
-            Text(anyFilter ? "Nothing matches." : "No tasks yet")
-                .font(.headline)
-            Text(anyFilter ? "Try other words or clear the filters." : "Past tasks will show here when History is on.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            if anyFilter {
-                Button("Clear filters") {
-                    query = ""
-                    projectFilter = "all"
-                    statusFilter = "all"
-                    toolFilter = "all"
-                    whenFilter = "any"
-                }
-            }
-            Spacer()
-        }
-        .frame(maxWidth: .infinity)
-    }
-
-    private func historyRow(_ item: LocalHistoryStubItem) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack {
-                Text(item.title)
+    private var offlineBanner: some View {
+        HStack(alignment: .center, spacing: 12) {
+            Image(systemName: isOffline ? "wifi.slash" : "clock.arrow.circlepath")
+                .foregroundStyle(isOffline ? MacAppTheme.warning : MacAppTheme.brand)
+                .frame(width: 28, height: 28)
+                .background(
+                    Circle().fill(isOffline ? MacAppTheme.warningSoft : MacAppTheme.accentSoft)
+                )
+            VStack(alignment: .leading, spacing: 4) {
+                Text(isOffline
+                     ? "You are offline. This history is saved on this computer."
+                     : "Saved on this computer")
                     .font(.subheadline.weight(.semibold))
-                Spacer()
-                if item.isStub {
-                    Text("STUB")
-                        .font(.caption2.weight(.bold))
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(Capsule().fill(MacAppTheme.skillSoft))
-                }
+                    .foregroundStyle(MacAppTheme.fg)
+                Text(bannerSubtitle)
+                    .font(.caption)
+                    .foregroundStyle(MacAppTheme.fgMuted)
             }
-            Text("\(item.bot) · \(item.project) · \(item.cli) · \(item.whenLabel)")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            Text(item.summary)
-                .font(.caption)
-            if let err = item.errorDetail {
-                Text(err)
-                    .font(.caption2)
-                    .foregroundStyle(MacAppTheme.danger)
-                    .padding(6)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(RoundedRectangle(cornerRadius: 6).fill(MacAppTheme.dangerSoft))
-            }
-            Text(item.status.capitalized)
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(item.status == "failed" ? MacAppTheme.danger : MacAppTheme.success)
+            Spacer()
+            Button("Show in Finder") { showHistoryFolder() }
+                .buttonStyle(.bordered)
         }
-        .padding(.vertical, 4)
-        .listRowBackground(MacAppTheme.surface)
+        .padding(14)
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(isOffline ? MacAppTheme.warningSoft : MacAppTheme.accentSoft)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(MacAppTheme.border, lineWidth: 1)
+                )
+        )
     }
 
-    private var footer: some View {
-        HStack {
-            Text("Keep for \(store.historyKeepDays) days")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            Button("Clear history…") {
-                showClearConfirm = true
-            }
-            .controlSize(.small)
-            .disabled(store.historyItems.isEmpty)
-            Spacer()
+    private var bannerSubtitle: String {
+        var parts: [String] = []
+        if isOffline {
+            parts.append("It stays readable until the internet is back.")
+        } else {
+            parts.append("Use this when you are offline. Full history is in each project in AgentWitch.")
         }
-        .padding(12)
-        .background(MacAppTheme.surface.opacity(0.92))
+        if !isSignedIn {
+            parts.append("You are signed out; history stays here.")
+        }
+        return parts.joined(separator: " ")
     }
+
+    private var historyTable: some View {
+        let grouped = Dictionary(grouping: rows, by: \.day)
+        let dayOrder = ["Today · Wed 7 Oct", "Yesterday · Tue 6 Oct"]
+        return VStack(alignment: .leading, spacing: 0) {
+            // Header
+            HStack(spacing: 0) {
+                headerCell("Time", width: 64)
+                headerCell("Assistant tool", flex: true)
+                headerCell("Project", flex: true)
+                headerCell("What happened", flex: true)
+                headerCell("Took", width: 56)
+                headerCell("Result", width: 72)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(MacAppTheme.tile)
+
+            ForEach(dayOrder, id: \.self) { day in
+                if let dayRows = grouped[day] {
+                    Text(day)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(MacAppTheme.fgSubtle)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(MacAppTheme.surface2)
+                    ForEach(dayRows) { row in
+                        historyRow(row)
+                        Divider().background(MacAppTheme.border)
+                    }
+                }
+            }
+        }
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(MacAppTheme.surface)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(MacAppTheme.border, lineWidth: 1)
+                )
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+
+    private func historyRow(_ row: HistoryChromeRow) -> some View {
+        HStack(spacing: 0) {
+            Text(row.time)
+                .font(.system(.caption, design: .monospaced))
+                .foregroundStyle(MacAppTheme.fg)
+                .frame(width: 64, alignment: .leading)
+            Text(row.tool)
+                .font(.caption)
+                .foregroundStyle(MacAppTheme.fg)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Text(row.project)
+                .font(.caption)
+                .foregroundStyle(MacAppTheme.fgMuted)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Text(row.what)
+                .font(.caption)
+                .foregroundStyle(MacAppTheme.fg)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .lineLimit(2)
+            Text(row.took)
+                .font(.system(.caption, design: .monospaced))
+                .foregroundStyle(MacAppTheme.fgSubtle)
+                .frame(width: 56, alignment: .leading)
+            Text(row.ok ? "Finished" : "Stopped")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(row.ok ? MacAppTheme.success : MacAppTheme.danger)
+                .frame(width: 72, alignment: .leading)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .background(MacAppTheme.surface)
+    }
+
+    private func headerCell(_ title: String, width: CGFloat? = nil, flex: Bool = false) -> some View {
+        Text(title)
+            .font(.caption2.weight(.semibold))
+            .foregroundStyle(MacAppTheme.fgSubtle)
+            .frame(width: width, alignment: .leading)
+            .frame(maxWidth: flex ? .infinity : nil, alignment: .leading)
+    }
+
+    private func showHistoryFolder() {
+        let logs = FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent("Library/Logs/AgentWitch Local", isDirectory: true)
+        if !FileManager.default.fileExists(atPath: logs.path) {
+            try? FileManager.default.createDirectory(at: logs, withIntermediateDirectories: true)
+        }
+        NSWorkspace.shared.activateFileViewerSelecting([logs])
+    }
+}
+
+private struct HistoryChromeRow: Identifiable {
+    var id: String { "\(day)-\(time)-\(what)" }
+    var day: String
+    var time: String
+    var tool: String
+    var project: String
+    var what: String
+    var took: String
+    var ok: Bool
 }

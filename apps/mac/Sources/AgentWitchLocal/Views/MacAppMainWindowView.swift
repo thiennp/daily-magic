@@ -169,7 +169,7 @@ struct MacAppMainWindowView: View {
                     ComputerView(controller: controller, store: store)
                 case .history:
                     // AWL-H4 mount: History chrome
-                    HistoryView(store: store)
+                    HistoryView(controller: controller, store: store)
                 case .settings:
                     // AWL-H4 mount: Settings chrome (+ H6 port range placeholder)
                     SettingsView(controller: controller, store: store)
