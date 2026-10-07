@@ -1,33 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 
 import {
-  deleteComposerRecipientSticky,
-  fetchComposerRecipientSticky,
-  putComposerRecipientSticky,
-} from "@/features/projects/messenger/oneWindow/fetchComposerRecipientSticky";
-import {
-  formatChipLabel,
-  formatChipLabelMany,
-  formatPlaceholderKept,
-  formatPlaceholderSingle,
-} from "@/features/projects/messenger/oneWindow/formatOneWindowComposerCopy";
-import {
-  keptToStickyPutBody,
-  keptToStickySnapshot,
-  stickySnapshotToKept,
-} from "@/features/projects/messenger/oneWindow/mapStickyToKeptRecipient";
-import { ONE_WINDOW_COMPOSER_COPY } from "@/features/projects/messenger/oneWindow/oneWindowComposerCopy.constant";
+  formatOneWindowRoutingChipLabel,
+  formatOneWindowRoutingPlaceholder,
+} from "@/features/projects/messenger/oneWindow/oneWindowComposerRoutingLabels";
 import { resolveOneWindowComposerMode } from "@/features/projects/messenger/oneWindow/resolveOneWindowComposerMode";
+import { useOneWindowComposerRoutingActions } from "@/features/projects/messenger/oneWindow/useOneWindowComposerRoutingActions";
+import { useOneWindowKeptRecipientGone } from "@/features/projects/messenger/oneWindow/useOneWindowKeptRecipientGone";
+import { useOneWindowKeptRecipientLoad } from "@/features/projects/messenger/oneWindow/useOneWindowKeptRecipientLoad";
 import type { MessengerKeptRecipient } from "@/features/projects/messenger/types/messengerChatStore.type";
-import { messengerChatStoreIdb } from "@/features/projects/messenger/utils/messengerChatStoreIdb";
-import { nextMessengerKeptRecipient } from "@/features/projects/messenger/utils/nextMessengerKeptRecipient";
-import {
-  readMessengerKeptRecipient,
-  writeMessengerKeptRecipient,
-} from "@/features/projects/messenger/utils/persistMessengerKeptRecipient";
-import { decideComposerRecipientRouting } from "@/lib/projects/acl/composer/decideComposerRecipientRouting";
 
 export type OneWindowRoutingAssistant = {
   readonly membershipId: string;
@@ -61,79 +44,16 @@ export const useOneWindowComposerRouting = (
     return map;
   }, [assistants]);
 
-  useEffect(() => {
-    let cancelled = false;
-    const load = async (): Promise<void> => {
-      const server = await fetchComposerRecipientSticky(projectId);
-      if (cancelled) return;
-      if (server.ok) {
-        if (server.singleAssistant !== null) {
-          setSingleName(
-            server.singleAssistant.displayName?.trim() ||
-              nameById.get(server.singleAssistant.membershipId) ||
-              "assistant",
-          );
-          setKept(null);
-          return;
-        }
-        const fromServer = stickySnapshotToKept(server.sticky);
-        setKept(fromServer);
-        if (memberKey !== null) {
-          await writeMessengerKeptRecipient({
-            store: messengerChatStoreIdb,
-            projectId,
-            memberKey,
-            recipient: fromServer,
-            now: Date.now(),
-          });
-        }
-        return;
-      }
-      if (memberKey === null) return;
-      const cached = await readMessengerKeptRecipient({
-        store: messengerChatStoreIdb,
-        projectId,
-        memberKey,
-      });
-      if (!cancelled) setKept(cached);
-    };
-    void load();
-    return () => {
-      cancelled = true;
-    };
-  }, [memberKey, nameById, projectId]);
-
-  // Kept recipient vs current assistants: state is reconciled during render
-  // (guarded: kept → null ends it); persistence runs in an effect per clear.
-  const [goneClearSeq, setGoneClearSeq] = useState(0);
-  const goneClearDone = useRef(0);
-  const reconciled = nextMessengerKeptRecipient(kept, {
-    type: "assistantsChanged",
-    assistantMembershipIds: assistantIds,
+  useOneWindowKeptRecipientLoad({ projectId, memberKey, nameById, setKept, setSingleName });
+  useOneWindowKeptRecipientGone({
+    projectId,
+    memberKey,
+    kept,
+    assistantIds,
+    nameById,
+    setKept,
+    setGoneName,
   });
-  if (reconciled.goneMembershipIds.length > 0) {
-    const id = reconciled.goneMembershipIds[0];
-    setGoneName(nameById.get(id) ?? "An assistant");
-    setKept(null);
-    setGoneClearSeq((n) => n + 1);
-  } else if (reconciled.recipient !== kept && assistantIds.length <= 1) {
-    setKept(null);
-  }
-
-  useEffect(() => {
-    if (goneClearSeq === goneClearDone.current) return;
-    goneClearDone.current = goneClearSeq;
-    if (memberKey !== null) {
-      void writeMessengerKeptRecipient({
-        store: messengerChatStoreIdb,
-        projectId,
-        memberKey,
-        recipient: null,
-        now: Date.now(),
-      });
-    }
-    void deleteComposerRecipientSticky(projectId);
-  }, [goneClearSeq, memberKey, projectId]);
 
   const modeInfo = resolveOneWindowComposerMode({
     assistantCount: assistants.length,
@@ -141,105 +61,32 @@ export const useOneWindowComposerRouting = (
     picking,
   });
 
-  const placeholder = useMemo(() => {
-    const C = ONE_WINDOW_COMPOSER_COPY;
-    if (modeInfo.mode === "SINGLE") {
-      const name =
-        singleName ??
-        assistants[0]?.displayName ??
-        "assistant";
-      return formatPlaceholderSingle(name);
-    }
-    if (modeInfo.mode === "KEPT" && kept !== null) {
-      if (kept.kind === "everyone") return formatPlaceholderKept("everyone");
-      const first = kept.membershipIds[0];
-      const name = nameById.get(first) ?? "assistant";
-      if (kept.membershipIds.length > 1) {
-        return formatPlaceholderKept(
-          `${name} and ${kept.membershipIds.length - 1} more`,
-        );
-      }
-      return formatPlaceholderKept(name);
-    }
-    return C.placeholderEveryone;
-  }, [assistants, kept, modeInfo.mode, nameById, singleName]);
-
-  const chipLabel = useMemo(() => {
-    if (kept === null) return null;
-    if (kept.kind === "everyone") return ONE_WINDOW_COMPOSER_COPY.chipEveryone;
-    const first = kept.membershipIds[0];
-    const name = nameById.get(first) ?? "assistant";
-    if (kept.membershipIds.length > 1) {
-      return formatChipLabelMany(name, kept.membershipIds.length - 1);
-    }
-    return formatChipLabel(name);
-  }, [kept, nameById]);
-
-  const persistKept = useCallback(
-    async (next: MessengerKeptRecipient | null) => {
-      setKept(next);
-      if (memberKey !== null) {
-        await writeMessengerKeptRecipient({
-          store: messengerChatStoreIdb,
-          projectId,
-          memberKey,
-          recipient: next,
-          now: Date.now(),
-        });
-      }
-      if (next === null) {
-        await deleteComposerRecipientSticky(projectId);
-      } else {
-        await putComposerRecipientSticky(projectId, keptToStickyPutBody(next));
-      }
-    },
-    [memberKey, projectId],
+  const placeholder = useMemo(
+    () =>
+      formatOneWindowRoutingPlaceholder({
+        mode: modeInfo.mode,
+        kept,
+        singleName,
+        firstAssistantName: assistants[0]?.displayName,
+        nameById,
+      }),
+    [assistants, kept, modeInfo.mode, nameById, singleName],
   );
-
-  const beginSendWithoutMention = useCallback(
-    (text: string): "send" | "pick" => {
-      if (modeInfo.hideAllRoutingUi) return "send";
-      const decision = decideComposerRecipientRouting({
-        mentionMembershipIds: [],
-        stickyChecked: kept !== null,
-        sticky: keptToStickySnapshot(kept),
-        assistants: assistants.map((a) => ({ membershipId: a.membershipId })),
-      });
-      if (decision.kind === "require_popup" || decision.kind === "clear_sticky") {
-        setDraftForPicker(text);
-        setPicking(true);
-        return "pick";
-      }
-      return "send";
-    },
-    [assistants, kept, modeInfo.hideAllRoutingUi],
+  const chipLabel = useMemo(
+    () => formatOneWindowRoutingChipLabel(kept, nameById),
+    [kept, nameById],
   );
-
-  const confirmPicker = useCallback(
-    async (inputConfirm: {
-      readonly recipient: MessengerKeptRecipient;
-      readonly keepSending: boolean;
-    }) => {
-      const next = nextMessengerKeptRecipient(kept, {
-        type: "confirm",
-        recipient: inputConfirm.recipient,
-        keepSending: inputConfirm.keepSending,
-      });
-      setPicking(false);
-      await persistKept(next.recipient);
-      return draftForPicker;
-    },
-    [draftForPicker, kept, persistKept],
-  );
-
-  const cancelPicker = useCallback(() => {
-    setPicking(false);
-  }, []);
-
-  const uncheckKeep = useCallback(async () => {
-    const next = nextMessengerKeptRecipient(kept, { type: "uncheckChip" });
-    await persistKept(next.recipient);
-  }, [kept, persistKept]);
+  const actions = useOneWindowComposerRoutingActions({
+    projectId,
+    memberKey,
+    assistants,
+    kept,
+    hideAllRoutingUi: modeInfo.hideAllRoutingUi,
+    draftForPicker,
+    setKept,
+    setPicking,
+    setDraftForPicker,
+  });
 
   return {
     mode: modeInfo.mode,
@@ -249,10 +96,7 @@ export const useOneWindowComposerRouting = (
     chipLabel,
     goneName,
     draftForPicker,
-    beginSendWithoutMention,
-    confirmPicker,
-    cancelPicker,
-    uncheckKeep,
+    ...actions,
     dismissGone: () => {
       setGoneName(null);
     },

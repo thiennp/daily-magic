@@ -3,13 +3,21 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-const src = readFileSync(
-  path.join(
-    process.cwd(),
-    "src/features/projects/tasks/AwcProjectTasksAssignDialog.tsx",
-  ),
-  "utf8",
-);
+// Dialog + the sibling modules it was split into (architecture gate, r7).
+const src = [
+  "AwcProjectTasksAssignDialog.tsx",
+  "AwcProjectTasksAssignTaskFields.tsx",
+  "AwcProjectTasksAssignGitFields.tsx",
+  "useAwcProjectTasksAssignForm.ts",
+  "useAwcProjectTasksAssignPeers.ts",
+]
+  .map((file) =>
+    readFileSync(
+      path.join(process.cwd(), "src/features/projects/tasks", file),
+      "utf8",
+    ),
+  )
+  .join("\n");
 
 const panel = readFileSync(
   path.join(process.cwd(), "src/features/projects/tasks/AwcProjectTasksPanel.tsx"),

@@ -18,7 +18,7 @@ export const AWC_PENDING_APPROVAL_CARD_COPY = {
   whoNotLinked: "{assistantName} · {kind} · not linked to a person yet",
   whoNotLinkedNoKind: "{assistantName} · not linked to a person yet",
   notLinkedTip:
-    "Nobody has said this assistant is theirs yet. You can still let it in. Someone can link it to themselves later.",
+    "Nobody has said this assistant is theirs yet. You can still allow it in. Someone can link it to themselves later.",
   notLinkedInfoLabel: "What does this mean?",
   /** connectVia null = came in by invite only (same rule as the expired body). */
   viaInvite: "Asked with an invite link",
