@@ -1,5 +1,5 @@
 import type { ProjectConnectionProvider } from "@/lib/projects/connections/projectConnection.types";
-import { PROJECT_CONNECTIONS_PHASE1_PROVIDERS } from "@/lib/projects/connections/projectConnection.constants";
+import { PROJECT_CONNECTIONS_LIVE_PROVIDERS } from "@/lib/projects/connections/projectConnection.constants";
 
 export type ProviderOAuthConfig = {
   readonly provider: ProjectConnectionProvider;
@@ -8,11 +8,11 @@ export type ProviderOAuthConfig = {
   readonly authorizeUrl: string;
   readonly tokenUrl: string;
   readonly scopes: readonly string[];
-  /** Phase 1 = implemented exchange; phase 2 returns unavailable on start. */
+  /** 1 = live OAuth exchange; reserved for future phases. */
   readonly phase: 1 | 2;
 };
 
-const PHASE1 = new Set<string>(PROJECT_CONNECTIONS_PHASE1_PROVIDERS);
+const LIVE = new Set<string>(PROJECT_CONNECTIONS_LIVE_PROVIDERS);
 
 const readPair = (
   idKey: string,
@@ -33,7 +33,7 @@ const readPair = (
 
 /**
  * Resolve OAuth app env for a provider. null = unavailable (missing env).
- * Linear/Gmail are phase 2 — config may exist but start still 501 until P2.
+ * Live providers (P1+P2) exchange when env is present; missing env → start 501.
  */
 export const getProviderOAuthConfig = (
   provider: ProjectConnectionProvider,
@@ -79,11 +79,14 @@ export const getProviderOAuthConfig = (
       ...pair,
       authorizeUrl: "https://linear.app/oauth/authorize",
       tokenUrl: "https://api.linear.app/oauth/token",
+      // Linear expects comma-separated scopes on authorize.
       scopes: ["read", "write"],
-      phase: 2,
+      phase: 1,
     };
   }
-  // gmail
+  // gmail — personal-first Google OAuth; least privilege for assistant read+send.
+  // gmail.readonly is Restricted (verification / possible security assessment).
+  // gmail.send is Sensitive. Avoid mail.google.com / gmail.modify.
   const pair = readPair(
     "PROJECT_CONNECTIONS_GOOGLE_CLIENT_ID",
     "PROJECT_CONNECTIONS_GOOGLE_CLIENT_SECRET",
@@ -95,12 +98,16 @@ export const getProviderOAuthConfig = (
     authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
     tokenUrl: "https://oauth2.googleapis.com/token",
     scopes: [
-      "https://www.googleapis.com/auth/gmail.send",
       "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/gmail.send",
     ],
-    phase: 2,
+    phase: 1,
   };
 };
 
-export const isPhase1Provider = (provider: ProjectConnectionProvider): boolean =>
-  PHASE1.has(provider);
+export const isLiveOAuthProvider = (
+  provider: ProjectConnectionProvider,
+): boolean => LIVE.has(provider);
+
+/** @deprecated Prefer isLiveOAuthProvider. */
+export const isPhase1Provider = isLiveOAuthProvider;

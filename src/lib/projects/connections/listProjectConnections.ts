@@ -7,6 +7,7 @@ import type { ProjectConnectionListItem } from "@/lib/projects/connections/proje
 /**
  * List metadata for a project. Always returns four provider rows
  * (missing → status none) so the UI merge is a no-op when complete.
+ * Past token_expires_at while status=connected → expired in the DTO.
  */
 export const listProjectConnections = async (
   projectId: string,
@@ -15,7 +16,7 @@ export const listProjectConnections = async (
   const sql = getSql();
   const rows = asRowArray(
     await sql`
-      SELECT provider, status, account_label, connected_at
+      SELECT provider, status, account_label, connected_at, token_expires_at
       FROM project_connections
       WHERE project_id = ${projectId}
     `,

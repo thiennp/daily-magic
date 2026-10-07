@@ -6,6 +6,7 @@ import {
   resolveProjectConnectionsAuthSecret,
 } from "@/lib/projects/connections/isProjectConnectionsFeatureEnabled";
 import { listProjectConnections } from "@/lib/projects/connections/listProjectConnections";
+import { projectConnectionsUnavailableJson } from "@/lib/projects/connections/projectConnectionsUnavailableJson";
 
 export const dynamic = "force-dynamic";
 
@@ -27,10 +28,7 @@ export async function GET(
     !isProjectConnectionsFeatureEnabled() ||
     resolveProjectConnectionsAuthSecret() === null
   ) {
-    return Response.json(
-      { ok: false, code: "unavailable", errorMessage: "Connections are not available on this deploy yet." },
-      { status: 501 },
-    );
+    return projectConnectionsUnavailableJson();
   }
 
   const { actor, error } = await requireAuth();

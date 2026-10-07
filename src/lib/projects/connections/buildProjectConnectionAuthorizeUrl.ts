@@ -5,6 +5,13 @@ import { resolveAppBaseUrl } from "@/lib/app/resolveAppBaseUrl";
 export const buildProjectConnectionCallbackUrl = (): string =>
   new URL(PROJECT_CONNECTIONS_CALLBACK_PATH, resolveAppBaseUrl()).toString();
 
+/** Linear authorize docs require comma-separated scopes; others use space. */
+export const formatProviderOAuthScopeParam = (
+  provider: ProviderOAuthConfig["provider"],
+  scopes: readonly string[],
+): string =>
+  provider === "linear" ? scopes.join(",") : scopes.join(" ");
+
 export const buildProjectConnectionAuthorizeUrl = (input: {
   readonly config: ProviderOAuthConfig;
   readonly state: string;
@@ -14,7 +21,10 @@ export const buildProjectConnectionAuthorizeUrl = (input: {
   url.searchParams.set("client_id", input.config.clientId);
   url.searchParams.set("redirect_uri", redirectUri);
   url.searchParams.set("state", input.state);
-  url.searchParams.set("scope", input.config.scopes.join(" "));
+  url.searchParams.set(
+    "scope",
+    formatProviderOAuthScopeParam(input.config.provider, input.config.scopes),
+  );
   if (input.config.provider === "github") {
     url.searchParams.set("allow_signup", "false");
   }

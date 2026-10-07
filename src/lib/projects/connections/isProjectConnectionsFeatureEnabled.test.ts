@@ -32,12 +32,11 @@ describe("project connections feature gates", () => {
     ).toEqual({ ok: false, code: "unavailable" });
   });
 
-  it("start returns unavailable for phase-2 linear even with env", () => {
+  it("start returns unavailable for linear when env missing", () => {
     vi.stubEnv("AUTH_SECRET", "test-secret");
-    vi.stubEnv("PROJECT_CONNECTIONS_LINEAR_CLIENT_ID", "lin-id");
-    vi.stubEnv("PROJECT_CONNECTIONS_LINEAR_CLIENT_SECRET", "lin-secret");
-    const config = getProviderOAuthConfig("linear");
-    expect(config?.phase).toBe(2);
+    vi.stubEnv("PROJECT_CONNECTIONS_LINEAR_CLIENT_ID", "");
+    vi.stubEnv("PROJECT_CONNECTIONS_LINEAR_CLIENT_SECRET", "");
+    expect(getProviderOAuthConfig("linear")).toBeNull();
     expect(
       startProjectConnectionOAuth({
         projectId: "p1",
@@ -45,6 +44,25 @@ describe("project connections feature gates", () => {
         actorUserId: "u1",
       }),
     ).toEqual({ ok: false, code: "unavailable" });
+  });
+
+  it("start returns url for linear when env present (P2)", () => {
+    vi.stubEnv("AUTH_SECRET", "test-secret");
+    vi.stubEnv("NODE_ENV", "development");
+    vi.stubEnv("PROJECT_CONNECTIONS_LINEAR_CLIENT_ID", "lin-id");
+    vi.stubEnv("PROJECT_CONNECTIONS_LINEAR_CLIENT_SECRET", "lin-secret");
+    const config = getProviderOAuthConfig("linear");
+    expect(config?.phase).toBe(1);
+    const started = startProjectConnectionOAuth({
+      projectId: "p1",
+      provider: "linear",
+      actorUserId: "u1",
+    });
+    expect(started.ok).toBe(true);
+    if (started.ok) {
+      expect(started.url).toContain("linear.app/oauth/authorize");
+      expect(started.url).toContain("scope=read%2Cwrite");
+    }
   });
 
   it("start returns url when github env present", () => {

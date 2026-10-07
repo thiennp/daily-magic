@@ -35,6 +35,27 @@ const bestEffortRevoke = async (input: {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body,
       });
+      return;
+    }
+    if (input.provider === "linear") {
+      const body = new URLSearchParams({
+        token: input.accessToken,
+        token_type_hint: "access_token",
+      });
+      await fetch("https://api.linear.app/oauth/revoke", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body,
+      });
+      return;
+    }
+    if (input.provider === "gmail") {
+      const body = new URLSearchParams({ token: input.accessToken });
+      await fetch("https://oauth2.googleapis.com/revoke", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body,
+      });
     }
   } catch {
     // Best-effort only — local row delete still proceeds.

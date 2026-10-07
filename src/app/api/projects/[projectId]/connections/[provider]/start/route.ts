@@ -6,6 +6,7 @@ import {
   resolveProjectConnectionsAuthSecret,
 } from "@/lib/projects/connections/isProjectConnectionsFeatureEnabled";
 import { parseProjectConnectionProvider } from "@/lib/projects/connections/parseProjectConnectionProvider";
+import { projectConnectionsUnavailableJson } from "@/lib/projects/connections/projectConnectionsUnavailableJson";
 import { startProjectConnectionOAuth } from "@/lib/projects/connections/startProjectConnectionOAuth";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +17,8 @@ type RouteContext = {
 
 /**
  * POST /api/projects/:projectId/connections/:provider/start
- * Owner only. Success: { url }. Missing env / phase-2 → 501 unavailable.
+ * Owner only. Success: { url }. Missing env → 501 unavailable.
+ * Live: GitHub, Slack, Linear, Gmail.
  */
 export async function POST(
   _request: Request,
@@ -26,10 +28,7 @@ export async function POST(
     !isProjectConnectionsFeatureEnabled() ||
     resolveProjectConnectionsAuthSecret() === null
   ) {
-    return Response.json(
-      { ok: false, code: "unavailable", errorMessage: "Connections are not available on this deploy yet." },
-      { status: 501 },
-    );
+    return projectConnectionsUnavailableJson();
   }
 
   const { actor, error } = await requireAuth();
@@ -56,14 +55,7 @@ export async function POST(
     actorUserId: actor.id,
   });
   if (!started.ok) {
-    return Response.json(
-      {
-        ok: false,
-        code: "unavailable",
-        errorMessage: "Connections are not available on this deploy yet.",
-      },
-      { status: 501 },
-    );
+    return projectConnectionsUnavailableJson();
   }
 
   // UI stub contract: { url }

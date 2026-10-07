@@ -13,5 +13,18 @@ export const PROJECT_CONNECTIONS_ENCRYPT_SALT = "project-connections-v1";
 
 export const PROJECT_CONNECTIONS_OAUTH_STATE_TTL_MS = 15 * 60 * 1000;
 
-/** Phase 1 providers with full start/callback/disconnect. */
-export const PROJECT_CONNECTIONS_PHASE1_PROVIDERS = ["github", "slack"] as const;
+/**
+ * Providers with full start/callback/disconnect implemented.
+ * P1: github + slack. P2: linear + gmail.
+ * Missing provider env still returns start 501 unavailable.
+ */
+export const PROJECT_CONNECTIONS_LIVE_PROVIDERS = [
+  "github",
+  "slack",
+  "linear",
+  "gmail",
+] as const;
+
+/** @deprecated Prefer PROJECT_CONNECTIONS_LIVE_PROVIDERS (P1+P2). */
+export const PROJECT_CONNECTIONS_PHASE1_PROVIDERS =
+  PROJECT_CONNECTIONS_LIVE_PROVIDERS;

@@ -7,6 +7,7 @@ import {
   resolveProjectConnectionsAuthSecret,
 } from "@/lib/projects/connections/isProjectConnectionsFeatureEnabled";
 import { parseProjectConnectionProvider } from "@/lib/projects/connections/parseProjectConnectionProvider";
+import { projectConnectionsUnavailableJson } from "@/lib/projects/connections/projectConnectionsUnavailableJson";
 
 export const dynamic = "force-dynamic";
 
@@ -26,10 +27,7 @@ export async function DELETE(
     !isProjectConnectionsFeatureEnabled() ||
     resolveProjectConnectionsAuthSecret() === null
   ) {
-    return Response.json(
-      { ok: false, code: "unavailable", errorMessage: "Connections are not available on this deploy yet." },
-      { status: 501 },
-    );
+    return projectConnectionsUnavailableJson();
   }
 
   const { actor, error } = await requireAuth();
@@ -52,14 +50,7 @@ export async function DELETE(
 
   const result = await disconnectProjectConnection({ projectId, provider });
   if (!result.ok) {
-    return Response.json(
-      {
-        ok: false,
-        code: "unavailable",
-        errorMessage: "Connections are not available on this deploy yet.",
-      },
-      { status: 501 },
-    );
+    return projectConnectionsUnavailableJson();
   }
 
   return Response.json({ ok: true, removed: result.removed });

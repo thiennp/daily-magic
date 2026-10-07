@@ -42,6 +42,9 @@ export const ensureProjectConnectionsSchema = async (): Promise<void> => {
     await sql`
       CREATE INDEX IF NOT EXISTS project_connections_project_idx
         ON project_connections (project_id)`;
+    await sql`
+      CREATE INDEX IF NOT EXISTS project_connections_project_provider_status_idx
+        ON project_connections (project_id, provider, status)`;
     state.ensured = true;
   })();
 
