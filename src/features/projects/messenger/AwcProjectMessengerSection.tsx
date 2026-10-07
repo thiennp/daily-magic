@@ -98,6 +98,7 @@ export default function AwcProjectMessengerSection({
       {!hasOwnerComputer ? <AwcMessengerNoComputerHint /> : null}
       <AwcProjectMessengerPanels
         projectId={projectId}
+        isOwner={isOwner}
         threads={gate.threads}
         headerAction={clearBar}
         selectedKey={selectedKey}

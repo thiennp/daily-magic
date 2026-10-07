@@ -15,6 +15,7 @@ import type { ProjectTasksChatVisibility } from "@/features/projects/tasks/proje
 interface AwcProjectMessengerPanelsProps {
   readonly projectId: string;
   readonly memberKey?: string | null;
+  readonly isOwner?: boolean;
   readonly threads: AwcMessengerThreadList;
   /** Desktop list-header action (owner Clear all bar). */
   readonly headerAction?: ReactNode;
@@ -42,6 +43,7 @@ interface AwcProjectMessengerPanelsProps {
 export default function AwcProjectMessengerPanels({
   projectId,
   memberKey = null,
+  isOwner = false,
   threads,
   headerAction,
   selectedKey,
@@ -86,6 +88,7 @@ export default function AwcProjectMessengerPanels({
         <AwcMessengerThreadPane
           projectId={projectId}
           memberKey={memberKey}
+          isOwner={isOwner}
           title={selectedMeta.title}
           kindLabel={selectedMeta.kindLabel}
           status={selectedMeta.status}

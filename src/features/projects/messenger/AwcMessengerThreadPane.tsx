@@ -3,6 +3,7 @@
 import { useMemo, useState, type ReactNode } from "react";
 
 import { useOneWindowComposerRouting } from "@/features/projects/messenger/oneWindow/useOneWindowComposerRouting";
+import AwcOneWindowInFeedApprovals from "@/features/projects/messenger/oneWindow/AwcOneWindowInFeedApprovals";
 
 import AwcMessengerComposer from "@/features/projects/messenger/AwcMessengerComposer";
 import AwcMessengerStatusDot from "@/features/projects/messenger/AwcMessengerStatusDot";
@@ -24,6 +25,7 @@ import type { ProjectTasksChatVisibility } from "@/features/projects/tasks/proje
 interface AwcMessengerThreadPaneProps {
   readonly projectId: string;
   readonly memberKey?: string | null;
+  readonly isOwner?: boolean;
   readonly title: string;
   readonly kindLabel: string;
   readonly status?: AwcMessengerBotStatus;
@@ -55,6 +57,7 @@ const isNeedsYou = (kind: string, text: string): boolean =>
 export default function AwcMessengerThreadPane({
   projectId,
   memberKey = null,
+  isOwner = false,
   title,
   kindLabel,
   status,
@@ -137,6 +140,7 @@ export default function AwcMessengerThreadPane({
           {feed.accessDeepLink}
         </a>
       </div>
+      <AwcOneWindowInFeedApprovals projectId={projectId} enabled={isOwner} />
       {showFilter ? (
         <AwcOneWindowFilterBar
           filter={filter}
