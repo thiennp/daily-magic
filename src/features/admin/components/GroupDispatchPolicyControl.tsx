@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import Button from "@/components/ui/button/Button";
-import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
+import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
 import {
   DispatchPolicy,
   type DispatchPolicyValue,
@@ -22,9 +22,11 @@ export default function GroupDispatchPolicyControl({
   const [policy, setPolicy] = useState<DispatchPolicyValue>(
     DispatchPolicy.APPROVAL,
   );
-  const [message, setMessage] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveState, setSaveState] = useState<"idle" | "ok" | "fail">("idle");
 
   useEffect(() => {
+    setSaveState("idle");
     void (async () => {
       const response = await fetch(
         `/api/admin/groups/${groupId}/dispatch-policy`,
@@ -52,6 +54,8 @@ export default function GroupDispatchPolicyControl({
   }, [groupId]);
 
   const savePolicy = async (): Promise<void> => {
+    setIsSaving(true);
+    setSaveState("idle");
     const response = await fetch(
       `/api/admin/groups/${groupId}/dispatch-policy`,
       {
@@ -60,39 +64,92 @@ export default function GroupDispatchPolicyControl({
         body: JSON.stringify({ dispatchPolicy: policy }),
       },
     );
-
-    setMessage(
-      response.ok
-        ? `${COMPANY_ENTITY_LABEL} dispatch policy saved.`
-        : "Could not save dispatch policy.",
-    );
+    setIsSaving(false);
+    setSaveState(response.ok ? "ok" : "fail");
   };
 
   const content = (
     <>
       <h3 className="text-sm font-semibold text-gray-800 dark:text-white/90">
-        {COMPANY_ENTITY_LABEL} dispatch policy
+        {C.dispatchSectionTitle}
       </h3>
       <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-        Default for members: open runs immediately, approval requires browser
-        and device confirmation.
+        {C.dispatchLegend}
       </p>
-      <select
-        value={policy}
-        onChange={(event) => {
-          setPolicy(event.target.value as DispatchPolicyValue);
-        }}
-        className="mt-3 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
-      >
-        <option value={DispatchPolicy.APPROVAL}>Approval required</option>
-        <option value={DispatchPolicy.OPEN}>Open dispatch</option>
-      </select>
-      <div className="mt-3">
-        <Button onClick={() => void savePolicy()}>Save policy</Button>
+      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+        {C.approvalTip}
+      </p>
+      <fieldset className="mt-3 space-y-2">
+        <legend className="sr-only">{C.dispatchSectionTitle}</legend>
+        <label className="flex cursor-pointer items-start gap-2 rounded-lg border border-gray-200 p-3 dark:border-gray-700">
+          <input
+            type="radio"
+            name={`dispatch-policy-${groupId}`}
+            checked={policy === DispatchPolicy.APPROVAL}
+            onChange={() => {
+              setPolicy(DispatchPolicy.APPROVAL);
+              setSaveState("idle");
+            }}
+            className="mt-1"
+          />
+          <span>
+            <span className="block text-sm font-medium text-gray-800 dark:text-white/90">
+              {C.approvalLabel}
+            </span>
+            <span className="block text-xs text-gray-500 dark:text-gray-400">
+              {C.approvalHelper}
+            </span>
+          </span>
+        </label>
+        <label className="flex cursor-pointer items-start gap-2 rounded-lg border border-gray-200 p-3 dark:border-gray-700">
+          <input
+            type="radio"
+            name={`dispatch-policy-${groupId}`}
+            checked={policy === DispatchPolicy.OPEN}
+            onChange={() => {
+              setPolicy(DispatchPolicy.OPEN);
+              setSaveState("idle");
+            }}
+            className="mt-1"
+          />
+          <span>
+            <span className="block text-sm font-medium text-gray-800 dark:text-white/90">
+              {C.openLabel}
+            </span>
+            <span className="block text-xs text-gray-500 dark:text-gray-400">
+              {C.openHelper}
+            </span>
+          </span>
+        </label>
+      </fieldset>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <Button
+          onClick={() => void savePolicy()}
+          disabled={isSaving}
+        >
+          {isSaving ? C.savingPolicy : C.savePolicy}
+        </Button>
+        {saveState === "fail" ? (
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => void savePolicy()}
+            disabled={isSaving}
+          >
+            {C.tryAgain}
+          </Button>
+        ) : null}
       </div>
-      {message ? (
-        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-          {message}
+      {saveState === "ok" ? (
+        <p className="mt-2 text-xs text-success-600 dark:text-success-400">
+          {C.policySaved}{" "}
+          {policy === DispatchPolicy.OPEN ? C.openLabel : C.approvalLabel} is
+          now on.
+        </p>
+      ) : null}
+      {saveState === "fail" ? (
+        <p className="mt-2 text-xs text-error-600 dark:text-error-400">
+          {C.policySaveFail}
         </p>
       ) : null}
     </>

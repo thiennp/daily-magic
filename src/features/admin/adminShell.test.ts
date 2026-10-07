@@ -18,15 +18,38 @@ const adminSidebarSource = readFileSync(
   "utf8",
 );
 
+const appNavSource = readFileSync(
+  path.join(process.cwd(), "src/features/shell/appNav.constant.ts"),
+  "utf8",
+);
+
+const computersCopySource = readFileSync(
+  path.join(
+    process.cwd(),
+    "src/features/shell/v5/appShellComputersCopy.constant.ts",
+  ),
+  "utf8",
+);
+
 describe("Admin production shell", () => {
   it("routes admin pages through AdminShell", () => {
     expect(adminLayoutSource).toMatch(/<AdminShell>/);
   });
 
-  it("uses the admin sidebar without duplicating the primary nav", () => {
+  it("keeps full primary nav and devices rail on admin chrome", () => {
     expect(adminShellSource).toMatch(/<AppShell[\s\S]*sidebar=/);
-    expect(adminShellSource).toMatch(/renderPrimaryNav=\{false\}/);
-    expect(adminShellSource).toContain("showDevicesRail={false}");
+    expect(adminShellSource).toMatch(/renderPrimaryNav=\{true\}/);
+    expect(adminShellSource).toContain("showDevicesRail={true}");
+  });
+
+  it("never hides Marketplace, Automations, or Companies & rules in primary nav", () => {
+    expect(appNavSource).toContain('label: "Marketplace"');
+    expect(appNavSource).toContain('label: "Automations"');
+    expect(appNavSource).toContain("COMPANY_RULES_NAV_LABEL");
+  });
+
+  it("keeps Download AgentWitch Local copy for the devices rail", () => {
+    expect(computersCopySource).toContain("Download AgentWitch Local");
   });
 
   it("links styleguide from the admin management sidebar", () => {

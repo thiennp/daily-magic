@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
+import Button from "@/components/ui/button/Button";
+import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
-import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
 interface GroupTeamActivityPanelProps {
@@ -17,12 +18,17 @@ export default function GroupTeamActivityPanel({
 }: GroupTeamActivityPanelProps) {
   const [runs, setRuns] = useState<readonly EnrichedAgentRunRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
-  useEffect(() => {
-    void (async () => {
+  const loadRuns = useCallback(async (): Promise<void> => {
+    setIsLoading(true);
+    setHasError(false);
+    try {
       const response = await fetch(`/api/admin/groups/${groupId}/agent-runs`);
       if (!response.ok) {
         setRuns([]);
+        setHasError(true);
         setIsLoading(false);
         return;
       }
@@ -35,29 +41,66 @@ export default function GroupTeamActivityPanel({
         Array.isArray((data as { runs: unknown }).runs)
       ) {
         setRuns((data as { runs: EnrichedAgentRunRecord[] }).runs);
+      } else {
+        setRuns([]);
       }
       setIsLoading(false);
-    })();
+    } catch {
+      setRuns([]);
+      setHasError(true);
+      setIsLoading(false);
+    }
   }, [groupId]);
+
+  useEffect(() => {
+    void loadRuns();
+  }, [loadRuns, reloadKey]);
 
   return (
     <AppPanel>
-      <h3 className="text-base font-semibold text-gray-800 dark:text-white/90">
-        Recent company agent runs
-      </h3>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        Latest dispatches for members of this{" "}
-        {COMPANY_ENTITY_LABEL.toLowerCase()}.
-      </p>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h3 className="text-base font-semibold text-gray-800 dark:text-white/90">
+          {C.runsTitle}
+        </h3>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => {
+            setReloadKey((key) => key + 1);
+          }}
+          aria-label={C.runsRefresh}
+        >
+          {C.runsRefresh}
+        </Button>
+      </div>
 
       {isLoading ? (
         <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-          Loading company activity…
+          {C.runsLoading}
         </p>
+      ) : hasError ? (
+        <div className="mt-4 space-y-3">
+          <p className="text-sm text-error-600 dark:text-error-400">
+            {C.runsError}
+          </p>
+          <Button
+            size="sm"
+            onClick={() => {
+              setReloadKey((key) => key + 1);
+            }}
+          >
+            {C.tryAgain}
+          </Button>
+        </div>
       ) : runs.length === 0 ? (
-        <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-          No company agent runs yet.
-        </p>
+        <div className="mt-4">
+          <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+            {C.runsEmptyTitle}
+          </p>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            {C.runsEmptyBody}
+          </p>
+        </div>
       ) : (
         <ul className="mt-4 space-y-3">
           {runs.map((run) => (
