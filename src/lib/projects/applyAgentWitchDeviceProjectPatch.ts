@@ -1,3 +1,4 @@
+import { linkDeviceProjectFolderRef } from "@/lib/projects/linkDeviceProjectFolderRef";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { updateUserProject } from "@/lib/projects/updateUserProject";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
@@ -15,7 +16,9 @@ export type ApplyAgentWitchDeviceProjectPatchInput = {
 
 /**
  * Apply device folder/repo patch. Schedules project.updated only via leaf writes
- * (updateUserProjectFolderPath / updateUserProject) — no orchestrator re-schedule.
+ * (updateUserProjectFolderPath / updateUserProject / upsertProjectFolderRef) —
+ * no orchestrator re-schedule. A linked folder is also upserted as a folder
+ * ref (best-effort) so it shows in AWC's Folders list.
  */
 export const applyAgentWitchDeviceProjectPatch = async (
   input: ApplyAgentWitchDeviceProjectPatchInput,
@@ -32,6 +35,15 @@ export const applyAgentWitchDeviceProjectPatch = async (
 
   if (afterFolder === null || afterFolder.ownerUserId !== input.ownerUserId) {
     return null;
+  }
+
+  if (input.folderPath !== null) {
+    await linkDeviceProjectFolderRef({
+      projectId: input.projectId,
+      ownerUserId: input.ownerUserId,
+      deviceId: input.deviceId,
+      folderPath: input.folderPath,
+    });
   }
 
   if (!input.hasRepoUpdate) {
