@@ -21,6 +21,7 @@ import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type"
 /**
  * Tasks tab panel — screens A/B/D (EN PASS). Screen E lives in project Settings.
  * No standalone New task page. Load older stays in Chat (not Tasks).
+ * Assign dialog POSTs via inbox/dispatch (same path as Activity / Ask box).
  */
 export default function AwcProjectTasksPanel({
   project,
@@ -124,18 +125,14 @@ export default function AwcProjectTasksPanel({
       )}
       <AwcProjectTasksAssignDialog
         open={assignOpen}
+        projectId={project.id}
         hasGit={hasGit}
         defaultBranch={project.defaultBranch ?? null}
-        assistants={
-          tasks.assistants.length > 0
-            ? tasks.assistants
-            : [{ id: "assistant", name: "Assistant" }]
-        }
         onClose={() => {
           setAssignOpen(false);
         }}
-        onAssign={() => {
-          /* Assign lands via existing chat composer path; dialog is UI only. */
+        onAssigned={() => {
+          tasks.reload();
         }}
       />
     </section>

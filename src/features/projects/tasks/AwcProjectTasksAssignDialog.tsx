@@ -1,7 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
+import {
+  inboxDispatchPeerOptions,
+  type InboxDispatchPeerOption,
+} from "@/features/projects/access/inbox/utils/inboxDispatchPeerOptions";
+import { fetchProjectAccess } from "@/features/projects/access/utils/fetchProjectAccess";
+import { sendMessengerTask } from "@/features/projects/messenger/utils/sendMessengerTask";
 import {
   AWC_TASKS_INPUT_CLASS,
   AWC_TASKS_PANEL_HEADING_CLASS,
@@ -15,36 +21,32 @@ import {
   sanitizeProjectTaskGitRefName,
   type ProjectTaskGitRefOption,
 } from "@/features/projects/tasks/projectTaskGitRefs";
+import { PROJECT_MESSAGE_SUMMARY_MAX_CHARS } from "@/lib/projects/acl/messaging/projectMessage.constants";
 
 /**
- * Assign dialog only — no standalone New task page (EN PASS / UI Box chrome).
- * Screen D: Branch/Worktree/Create worktree only when project has git.
- * Meta refs only (names); local paths never enter assign payload / Neon meta.
+ * Assign dialog — Screen D (EN PASS). Submits via existing
+ * POST /api/projects/:id/inbox/dispatch (sendMessengerTask → task.assign).
+ * Branch/Worktree UI stays meta-only (names); allowlisted refs do not include
+ * branch/worktree, so they are not POSTed (no new schema on this tip).
  */
 export default function AwcProjectTasksAssignDialog({
   open,
+  projectId,
   hasGit,
-  assistants,
   defaultBranch = null,
   branches,
   worktrees,
   onClose,
-  onAssign,
+  onAssigned,
 }: {
   readonly open: boolean;
+  readonly projectId: string;
   readonly hasGit: boolean;
-  readonly assistants: readonly { readonly id: string; readonly name: string }[];
   readonly defaultBranch?: string | null;
   readonly branches?: readonly string[];
   readonly worktrees?: readonly string[];
   readonly onClose: () => void;
-  readonly onAssign: (input: {
-    readonly assistantId: string;
-    readonly prompt: string;
-    readonly branch: string | null;
-    readonly worktree: string | null;
-    readonly createWorktree: boolean;
-  }) => void;
+  readonly onAssigned: () => void;
 }) {
   const branchOptions = useMemo(
     () =>
@@ -59,21 +61,93 @@ export default function AwcProjectTasksAssignDialog({
     [worktrees],
   );
 
-  const [assistantId, setAssistantId] = useState(assistants[0]?.id ?? "");
+  const [peers, setPeers] = useState<readonly InboxDispatchPeerOption[]>([]);
+  const [peersLoading, setPeersLoading] = useState(false);
+  const [peersError, setPeersError] = useState<string | null>(null);
+  const [assistantId, setAssistantId] = useState("");
   const [prompt, setPrompt] = useState("");
-  const [branch, setBranch] = useState(branchOptions[0]?.id ?? "");
+  const [branch, setBranch] = useState("");
   const [worktree, setWorktree] = useState("");
   const [createWorktree, setCreateWorktree] = useState(false);
   const [newWorktreeName, setNewWorktreeName] = useState("");
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    setPrompt("");
+    setBranch(branchOptions[0]?.id ?? "");
+    setWorktree("");
+    setCreateWorktree(false);
+    setNewWorktreeName("");
+    setPending(false);
+    setError(null);
+    setPeersError(null);
+    setPeers([]);
+    setAssistantId("");
+    setPeersLoading(true);
+    let cancelled = false;
+    void fetchProjectAccess(projectId)
+      .then((access) => {
+        if (cancelled) return;
+        if (!access.ok || access.members === undefined) {
+          setPeersError(C.assignPeersLoadFailed);
+          setPeersLoading(false);
+          return;
+        }
+        const next = inboxDispatchPeerOptions(access.members);
+        setPeers(next);
+        setAssistantId(next[0]?.membershipId ?? "");
+        setPeersLoading(false);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setPeersError(C.assignPeersLoadFailed);
+        setPeersLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // branchOptions[0] only seeds the form when the dialog opens.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- open/projectId gate the load
+  }, [open, projectId]);
 
   if (!open) return null;
 
-  const resolveWorktree = (): string | null => {
-    if (!hasGit) return null;
-    if (createWorktree) {
-      return sanitizeProjectTaskGitRefName(newWorktreeName);
-    }
-    return sanitizeProjectTaskGitRefName(worktree);
+  const trimmedPrompt = prompt.trim();
+  const summaryTooLarge = trimmedPrompt.length > PROJECT_MESSAGE_SUMMARY_MAX_CHARS;
+  const createWorktreeInvalid =
+    hasGit &&
+    createWorktree &&
+    sanitizeProjectTaskGitRefName(newWorktreeName) === null;
+  const canSubmit =
+    !pending &&
+    !peersLoading &&
+    peers.length > 0 &&
+    assistantId.length > 0 &&
+    trimmedPrompt.length > 0 &&
+    !summaryTooLarge &&
+    !createWorktreeInvalid;
+
+  const submit = (): void => {
+    if (!canSubmit || pending) return;
+    setPending(true);
+    setError(null);
+    void sendMessengerTask({
+      projectId,
+      draft: {
+        assigneeMembershipId: assistantId,
+        summary: trimmedPrompt,
+      },
+    }).then((result) => {
+      setPending(false);
+      if (!result.ok) {
+        setError(result.errorMessage);
+        return;
+      }
+      onAssigned();
+      onClose();
+    });
   };
 
   return (
@@ -90,6 +164,7 @@ export default function AwcProjectTasksAssignDialog({
             type="button"
             className={AWC_TASKS_SECONDARY_BUTTON_CLASS}
             aria-label="Close"
+            disabled={pending}
             onClick={onClose}
           >
             ✕
@@ -101,15 +176,22 @@ export default function AwcProjectTasksAssignDialog({
             <select
               className={AWC_TASKS_INPUT_CLASS}
               value={assistantId}
+              disabled={pending || peersLoading || peers.length === 0}
               onChange={(e) => {
                 setAssistantId(e.target.value);
               }}
             >
-              {assistants.map((a) => (
-                <option key={a.id} value={a.id}>
-                  {a.name}
-                </option>
-              ))}
+              {peersLoading ? (
+                <option value="">{C.assignPeersLoading}</option>
+              ) : peers.length === 0 ? (
+                <option value="">{C.assignPeersEmpty}</option>
+              ) : (
+                peers.map((p) => (
+                  <option key={p.membershipId} value={p.membershipId}>
+                    {p.projectDisplayName}
+                  </option>
+                ))
+              )}
             </select>
           </label>
           <label className="mb-3.5 grid gap-1.5 text-[13px] font-semibold text-awc-fg">
@@ -117,10 +199,15 @@ export default function AwcProjectTasksAssignDialog({
             <textarea
               className={`${AWC_TASKS_INPUT_CLASS} min-h-[5rem] font-normal`}
               value={prompt}
+              disabled={pending}
+              maxLength={PROJECT_MESSAGE_SUMMARY_MAX_CHARS}
               onChange={(e) => {
                 setPrompt(e.target.value);
               }}
             />
+            <span className="text-[12px] font-normal text-awc-fg-subtle">
+              {C.assignSummaryCounter(trimmedPrompt.length)}
+            </span>
           </label>
           {hasGit ? (
             <fieldset className="mb-1 rounded-lg border border-awc-border bg-awc-surface-2 px-3 pb-0.5 pt-3">
@@ -134,6 +221,7 @@ export default function AwcProjectTasksAssignDialog({
                     className={`${AWC_TASKS_INPUT_CLASS} font-normal`}
                     value={branch}
                     aria-label={C.branch}
+                    disabled={pending}
                     onChange={(e) => {
                       setBranch(e.target.value);
                     }}
@@ -150,7 +238,7 @@ export default function AwcProjectTasksAssignDialog({
                   <select
                     className={`${AWC_TASKS_INPUT_CLASS} font-normal`}
                     value={worktree}
-                    disabled={createWorktree}
+                    disabled={pending || createWorktree}
                     aria-label={C.worktree}
                     onChange={(e) => {
                       setWorktree(e.target.value);
@@ -169,6 +257,7 @@ export default function AwcProjectTasksAssignDialog({
                 <input
                   type="checkbox"
                   checked={createWorktree}
+                  disabled={pending}
                   onChange={(e) => {
                     setCreateWorktree(e.target.checked);
                   }}
@@ -183,41 +272,45 @@ export default function AwcProjectTasksAssignDialog({
                     value={newWorktreeName}
                     placeholder="wt-csv-export"
                     aria-label={C.worktreeName}
+                    disabled={pending}
                     onChange={(e) => {
                       setNewWorktreeName(e.target.value);
                     }}
                   />
                 </label>
               ) : null}
+              <p className="mb-3 text-[12px] font-normal text-awc-fg-subtle">
+                {C.assignGitMetaHint}
+              </p>
             </fieldset>
+          ) : null}
+          {peersError !== null ? (
+            <p role="alert" className="mt-2 text-[13px] text-red-600">
+              {peersError}
+            </p>
+          ) : null}
+          {error !== null ? (
+            <p role="alert" className="mt-2 text-[13px] text-red-600">
+              {error}
+            </p>
           ) : null}
         </div>
         <div className="flex justify-end gap-2 border-t border-awc-border bg-awc-surface-2 px-4 py-3">
-          <button type="button" className={AWC_TASKS_SECONDARY_BUTTON_CLASS} onClick={onClose}>
+          <button
+            type="button"
+            className={AWC_TASKS_SECONDARY_BUTTON_CLASS}
+            disabled={pending}
+            onClick={onClose}
+          >
             {C.assignCancel}
           </button>
           <button
             type="button"
             className={AWC_TASKS_PRIMARY_BUTTON_CLASS}
-            disabled={
-              prompt.trim().length === 0 ||
-              assistantId.length === 0 ||
-              (hasGit &&
-                createWorktree &&
-                sanitizeProjectTaskGitRefName(newWorktreeName) === null)
-            }
-            onClick={() => {
-              onAssign({
-                assistantId,
-                prompt: prompt.trim(),
-                branch: hasGit ? sanitizeProjectTaskGitRefName(branch) : null,
-                worktree: resolveWorktree(),
-                createWorktree: hasGit && createWorktree,
-              });
-              onClose();
-            }}
+            disabled={!canSubmit}
+            onClick={submit}
           >
-            {C.assignSubmit}
+            {pending ? C.assignPending : C.assignSubmit}
           </button>
         </div>
       </div>
