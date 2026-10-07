@@ -30,7 +30,19 @@ const AwcProjectDeleteConfirmFields = ({
     !pending && isProjectDeleteConfirmNameMatch(typedName, projectName);
 
   return (
-    <div className="space-y-2">
+    <form
+      className="space-y-2"
+      onSubmit={(event) => {
+        event.preventDefault();
+        if (!canConfirm) {
+          return;
+        }
+        onConfirm();
+      }}
+      onMouseDown={(event) => {
+        event.stopPropagation();
+      }}
+    >
       {showTitle ? (
         <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
           {AWC_PROJECT_DELETE_COPY.title}
@@ -54,6 +66,9 @@ const AwcProjectDeleteConfirmFields = ({
         onChange={(event) => {
           setTypedName(event.target.value);
         }}
+        onMouseDown={(event) => {
+          event.stopPropagation();
+        }}
         className={APP_SURFACE_FIELD_CLASS}
         autoComplete="off"
         spellCheck={false}
@@ -66,11 +81,10 @@ const AwcProjectDeleteConfirmFields = ({
       ) : null}
       <div className="flex flex-wrap gap-2">
         <Button
-          type="button"
+          type="submit"
           size="sm"
           disabled={!canConfirm}
           className="min-h-11 bg-error-600 hover:bg-error-700 sm:min-h-0"
-          onClick={onConfirm}
         >
           {pending
             ? AWC_PROJECT_DELETE_COPY.deleting
@@ -87,7 +101,7 @@ const AwcProjectDeleteConfirmFields = ({
           {AWC_PROJECT_DELETE_COPY.cancel}
         </Button>
       </div>
-    </div>
+    </form>
   );
 };
 

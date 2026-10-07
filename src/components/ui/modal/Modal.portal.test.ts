@@ -14,6 +14,9 @@ describe("Modal portal layering", () => {
     expect(source).toContain("createPortal(modal, document.body)");
     expect(source).toContain("z-99999");
     expect(source).toContain("canPortal");
+    expect(source).toContain("relative z-10");
+    expect(source).toContain('type="button"');
+    expect(source).toContain("onMouseDown");
   });
 
   it("Connect this computer and paste modals reuse the shared Modal primitive", () => {
