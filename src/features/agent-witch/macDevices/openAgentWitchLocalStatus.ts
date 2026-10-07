@@ -5,6 +5,13 @@ const HEALTH_PROBE_MS = 2500;
 /** Raises the Mac menu-bar app window (AWL-H7). Host handled by Mac `handleOpenURL`. */
 export const AGENT_WITCH_LOCAL_STATUS_DEEP_LINK = "agentwitch-local://status";
 
+/**
+ * Opens Prompt optimizer in the Mac app (AWL-H7 PM-3 b).
+ * Host handled by Mac `handleOpenURL` → in-app WKWebView on discovered port.
+ */
+export const AGENT_WITCH_LOCAL_PROMPT_OPTIMIZER_DEEP_LINK =
+  "agentwitch-local://prompt-optimizer";
+
 export type OpenAgentWitchLocalStatusResult = "opened" | "unavailable";
 
 /**
@@ -25,18 +32,26 @@ export const probeAgentWitchLocalHealth = async (): Promise<boolean> => {
   }
 };
 
-/** Best-effort: navigate to custom scheme so Mac can raise its window. */
-export const openAgentWitchLocalStatusDeepLink = (): void => {
+/**
+ * Best-effort: navigate to custom scheme so Mac can raise its window.
+ * Single helper for status + Prompt optimizer (AWL-H7 FIX-2 / PM-3 b) — no second helper.
+ */
+export const openAgentWitchLocalDeepLink = (href: string): void => {
   if (typeof window === "undefined") {
     return;
   }
   // Prefer <a> click over location.assign so AWC tab stays put when the OS handles the scheme.
   const anchor = document.createElement("a");
-  anchor.href = AGENT_WITCH_LOCAL_STATUS_DEEP_LINK;
+  anchor.href = href;
   anchor.rel = "noopener";
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();
+};
+
+/** Best-effort: navigate to status deep link so Mac can raise its window. */
+export const openAgentWitchLocalStatusDeepLink = (): void => {
+  openAgentWitchLocalDeepLink(AGENT_WITCH_LOCAL_STATUS_DEEP_LINK);
 };
 
 /**

@@ -25,7 +25,10 @@ export {
 export { AGENT_WITCH_LOCAL_BROWSER_UI_RETIRED_MESSAGE } from "../internal/core/agentWitchLocalApp.constants";
 
 export {
+  AGENT_WITCH_LOCAL_MAC_WEBVIEW_UA_MARKER,
+  isAgentWitchLocalMacWebViewRequest,
   isKeptPromptOptimizerApiPath,
+  isPromptOptimizerHumanPagePath,
   isRetiredAgentWitchLocalBrowserUiPath,
   isRetiredAgentWitchLocalBrowserUiRequest,
 } from "../internal/core/isRetiredAgentWitchLocalBrowserUiRequest";

@@ -21,7 +21,7 @@ describe("Prompt optimizer must-keeps", () => {
     expect(html).toContain("Open in AgentWitch Local");
     expect(html).toContain(PROMPT_SDLC_AWL_PAGE_HREF);
     expect(PROMPT_SDLC_AWL_PAGE_HREF).toBe(
-      "http://127.0.0.1:43347/prompt-optimizer",
+      "agentwitch-local://prompt-optimizer",
     );
     expect(html).toContain("does not run the optimizer");
     expect(html).toContain("Download AgentWitch Local");

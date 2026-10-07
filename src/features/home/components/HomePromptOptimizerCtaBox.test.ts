@@ -22,11 +22,13 @@ describe("HomePromptOptimizerCtaBox", () => {
     expect(html.match(/<a /g)).toHaveLength(1);
   });
 
-  it("opens AgentWitch Local on this computer", () => {
+  it("opens AgentWitch Local Mac deep link (not retired http route)", () => {
     expect(HOME_PROMPT_OPTIMIZER_CTA_HREF).toBe(PROMPT_SDLC_AWL_PAGE_HREF);
-    expect(HOME_PROMPT_OPTIMIZER_CTA_HREF).toContain(
-      "127.0.0.1:43347/prompt-optimizer",
+    expect(HOME_PROMPT_OPTIMIZER_CTA_HREF).toBe(
+      "agentwitch-local://prompt-optimizer",
     );
+    expect(HOME_PROMPT_OPTIMIZER_CTA_HREF).not.toContain("127.0.0.1");
+    expect(HOME_PROMPT_OPTIMIZER_CTA_HREF).not.toContain(":43347");
     expect(HOME_PROMPT_OPTIMIZER_CTA_COPY.cta).toBe("Open in AgentWitch Local");
     expect(HOME_PROMPT_OPTIMIZER_CTA_COPY.eyebrow).toBe("Prompt optimizer");
   });

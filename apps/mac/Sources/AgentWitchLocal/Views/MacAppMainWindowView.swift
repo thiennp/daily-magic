@@ -167,6 +167,9 @@ struct MacAppMainWindowView: View {
                 case .computer:
                     // AWL-H8 / H3 / H5 mount: Computer pane content
                     ComputerView(controller: controller, store: store)
+                case .promptOptimizer:
+                    // AWL-H7 PM-3 (b): Prompt optimizer WKWebView on discovered port
+                    PromptOptimizerView(controller: controller)
                 case .history:
                     // AWL-H4 mount: History chrome
                     HistoryView(controller: controller, store: store)

@@ -3,6 +3,11 @@
  * Must run AFTER OPTIONS and BEFORE tryHandlePromptSdlcLocalRequest / skill-draft
  * so HTML pages, fragments/cycle, and form POSTs cannot bypass retirement.
  * Keep /prompt-optimizer/agent and /prompt-optimizer/skills/query (API).
+ *
+ * AWL-H7 PM-3 (b): Mac in-app WKWebView may load Prompt optimizer human pages.
+ * Smallest allow signal: User-Agent marker set via WKWebView
+ * `applicationNameForUserAgent` (no new route, no general browser reopen).
+ * Other retired paths stay retired even with the marker.
  */
 
 const RETIRED_EXACT_PATHS = new Set<string>([
@@ -34,8 +39,39 @@ const KEEP_PROMPT_OPTIMIZER_API_PATHS = new Set<string>([
   "/prompt-sdlc/skills/query",
 ]);
 
+/**
+ * Appended by Mac WKWebView (`applicationNameForUserAgent`).
+ * Plain browsers do not send this — PO HTML stays retired for them.
+ */
+export const AGENT_WITCH_LOCAL_MAC_WEBVIEW_UA_MARKER =
+  "AgentWitchLocal-MacWebView";
+
 export const isKeptPromptOptimizerApiPath = (pathname: string): boolean =>
   KEEP_PROMPT_OPTIMIZER_API_PATHS.has(pathname);
+
+/** True when User-Agent is the Mac in-app Prompt optimizer webview. */
+export const isAgentWitchLocalMacWebViewRequest = (
+  userAgent: string | undefined,
+): boolean =>
+  typeof userAgent === "string" &&
+  userAgent.includes(AGENT_WITCH_LOCAL_MAC_WEBVIEW_UA_MARKER);
+
+/** Human Prompt optimizer / prompt-sdlc HTML paths (not keep-list APIs). */
+export const isPromptOptimizerHumanPagePath = (pathname: string): boolean => {
+  if (isKeptPromptOptimizerApiPath(pathname)) {
+    return false;
+  }
+  if (
+    pathname === "/prompt-optimizer" ||
+    pathname.startsWith("/prompt-optimizer/")
+  ) {
+    return true;
+  }
+  if (pathname === "/prompt-sdlc" || pathname.startsWith("/prompt-sdlc/")) {
+    return true;
+  }
+  return false;
+};
 
 /**
  * True when pathname is a retired local web UI page (GET HTML or HTML form POST).
@@ -66,13 +102,21 @@ export const isRetiredAgentWitchLocalBrowserUiPath = (
 /**
  * Retire GET pages and HTML form POSTs on retired paths.
  * Does not retire OPTIONS (caller handles OPTIONS first).
+ * Mac WKWebView UA marker allows Prompt optimizer human pages only.
  */
 export const isRetiredAgentWitchLocalBrowserUiRequest = (input: {
   readonly method: string;
   readonly pathname: string;
+  readonly userAgent?: string;
 }): boolean => {
   const method = input.method.toUpperCase();
   if (method !== "GET" && method !== "POST") {
+    return false;
+  }
+  if (
+    isAgentWitchLocalMacWebViewRequest(input.userAgent) &&
+    isPromptOptimizerHumanPagePath(input.pathname)
+  ) {
     return false;
   }
   return isRetiredAgentWitchLocalBrowserUiPath(input.pathname);

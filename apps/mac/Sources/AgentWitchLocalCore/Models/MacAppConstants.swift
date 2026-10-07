@@ -24,6 +24,10 @@ public enum MacAppConstants {
     public static let healthPath = "/health"
     /// Legacy browser status path (AWL-H7 retired HTML UI; route returns plain guidance).
     public static let statusPath = "/status"
+    /// Prompt optimizer human page (served to Mac WKWebView only after H7 retire).
+    public static let promptOptimizerPath = "/prompt-optimizer"
+    /// Appended via WKWebView `applicationNameForUserAgent` so local server allows PO HTML.
+    public static let macWebViewUserAgentMarker = "AgentWitchLocal-MacWebView"
     /// Same origin constant as `AGENT_WITCH_DEFAULT_ORIGIN` in packages/shared.
     public static let cloudOrigin = "https://www.agentwitch.com"
     public static let cloudOriginHostExact = "www.agentwitch.com"

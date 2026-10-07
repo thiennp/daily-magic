@@ -75,6 +75,9 @@ final class MacAppMenuController: ObservableObject {
     @Published private(set) var localPortRangeDisplay: String?
     /// Actual local-app listen port discovered from profile/health (may be legacy 43347).
     @Published private(set) var localAppPort: Int?
+    /// Prompt optimizer path/query for in-app WKWebView (AWL-H7 PM-3 b).
+    @Published private(set) var promptOptimizerPath: String = MacAppConstants.promptOptimizerPath
+    @Published private(set) var promptOptimizerQuery: String?
     /// True when core reported every port in the account range is busy.
     @Published private(set) var portsInUse: Bool = false
 
@@ -195,6 +198,11 @@ final class MacAppMenuController: ObservableObject {
         // AWL-H7 Arch Exact FIX-2: AWC deep-links agentwitch-local://status to raise window.
         if isAgentWitchLocalStatusDeepLink(url) {
             openLocalStatus()
+            return
+        }
+        // AWL-H7 PM-3 (b): Prompt optimizer → in-app WKWebView on discovered port.
+        if let po = parseAgentWitchLocalPromptOptimizerDeepLink(url) {
+            openLocalPromptOptimizer(path: po.path, query: po.query)
             return
         }
         guard let currentBootstrap = bootstrapState else {
@@ -457,6 +465,19 @@ final class MacAppMenuController: ObservableObject {
         NotificationCenter.default.post(
             name: .awlOpenWindow,
             object: MacAppWindowID.computer.rawValue
+        )
+    }
+
+    /// Opens Prompt optimizer sidebar + WKWebView (discovered port; Mac UA allow).
+    func openLocalPromptOptimizer(
+        path: String = MacAppConstants.promptOptimizerPath,
+        query: String? = nil
+    ) {
+        promptOptimizerPath = path
+        promptOptimizerQuery = query
+        NotificationCenter.default.post(
+            name: .awlOpenWindow,
+            object: MacAppWindowID.promptOptimizer.rawValue
         )
     }
 

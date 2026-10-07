@@ -22,6 +22,8 @@ enum MacAppTheme {
     static let brand = Color(hex: 0x1f6656)        // --brand / --primary (Pine)
     static let brandInk = Color(hex: 0x19564a)     // --brand-ink / --primary-hover
     static let brandPressed = Color(hex: 0x13463c) // --primary-pressed
+    /// Pine accent for Prompt optimizer chrome (AWL-H7 PM-3 b). Alias of `brand` since HN-H1 Pine swap.
+    static let pine = brand
 
     // Semantic (status pills)
     static let success = Color(hex: 0x24784A)

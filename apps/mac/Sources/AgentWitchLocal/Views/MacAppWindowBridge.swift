@@ -9,10 +9,13 @@ enum MacAppWindowID: String {
     case history
     case settings
     case firstRun
+    /// Prompt optimizer in-app WKWebView (AWL-H7 PM-3 b).
+    case promptOptimizer
 }
 
 enum MacAppSidebarPage: String, CaseIterable, Identifiable, Hashable {
     case computer
+    case promptOptimizer
     case history
     case settings
 
@@ -21,6 +24,7 @@ enum MacAppSidebarPage: String, CaseIterable, Identifiable, Hashable {
     var title: String {
         switch self {
         case .computer: return "Computer"
+        case .promptOptimizer: return "Prompt optimizer"
         case .history: return "History"
         case .settings: return "Settings"
         }
@@ -29,6 +33,7 @@ enum MacAppSidebarPage: String, CaseIterable, Identifiable, Hashable {
     var systemImage: String {
         switch self {
         case .computer: return "desktopcomputer"
+        case .promptOptimizer: return "wand.and.stars"
         case .history: return "clock"
         case .settings: return "gearshape"
         }
@@ -37,6 +42,7 @@ enum MacAppSidebarPage: String, CaseIterable, Identifiable, Hashable {
     static func fromWindowID(_ raw: String) -> MacAppSidebarPage? {
         switch MacAppWindowID(rawValue: raw) {
         case .computer, .main, .firstRun, .none: return .computer
+        case .promptOptimizer: return .promptOptimizer
         case .history: return .history
         case .settings: return .settings
         }

@@ -19,13 +19,13 @@ export default function PromptSdlcPage(): ReactElement {
     <div className="space-y-6">
       <AppPageHeader
         title="Prompt optimizer"
-        description="Run the four-step wizard in AgentWitch Local on this computer. This console page does not run the optimizer."
+        description="Run the four-step wizard in the AgentWitch Local Mac app on this computer. This console page does not run the optimizer."
       />
       <ol
         className={`${APP_SURFACE_BODY_TEXT_CLASS} max-w-xl list-decimal space-y-4 pl-5`}
       >
         <li>Install or open AgentWitch Local on this computer if you have not already.</li>
-        <li>Open Prompt optimizer in AgentWitch Local.</li>
+        <li>Open Prompt optimizer in the AgentWitch Local Mac app (menu bar or the button below).</li>
         <li>
           Paste the prompt and goal, choose the project folder, then pick judge
           and improver writers.
@@ -48,8 +48,8 @@ export default function PromptSdlcPage(): ReactElement {
         </Link>
       </div>
       <p className={APP_SURFACE_BODY_TEXT_CLASS}>
-        Wizard URL: {PROMPT_SDLC_AWL_PAGE_HREF}. This console page does not run
-        the optimizer.
+        Opens the Mac app via {PROMPT_SDLC_AWL_PAGE_HREF}. This console page does
+        not run the optimizer.
       </p>
       <PromptSdlcAiPathStrip />
       <p>

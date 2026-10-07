@@ -567,7 +567,18 @@ export const startAgentWitchLocalApp = (input: {
 
       // AWL-H7 Arch Exact FIX-1: retire browser UI ABOVE prompt-sdlc + skill-draft
       // so HTML pages / fragments / form POSTs cannot bypass. Keep agent + skills/query.
-      if (isRetiredAgentWitchLocalBrowserUiRequest({ method, pathname })) {
+      // PM-3 (b): Mac WKWebView UA marker may load Prompt optimizer human pages only.
+      const userAgentHeader = request.headers["user-agent"];
+      const userAgent = Array.isArray(userAgentHeader)
+        ? userAgentHeader[0]
+        : userAgentHeader;
+      if (
+        isRetiredAgentWitchLocalBrowserUiRequest({
+          method,
+          pathname,
+          userAgent,
+        })
+      ) {
         sendBrowserUiRetired(response);
         return;
       }
