@@ -38,14 +38,16 @@ struct MacAppMainWindowView: View {
                 page = p
             }
         }
-        .alert("Sign out of AgentWitch Local?", isPresented: $showSignOutConfirm) {
+        .alert(AWLSignOutConfirmCopy.title, isPresented: $showSignOutConfirm) {
             Button("Cancel", role: .cancel) {}
             Button("Sign out", role: .destructive) {
-                // AWL-H3: wire to controller.signOut()
                 controller.signOut()
             }
         } message: {
-            Text("Connect controls clear. Files stay on this computer. Assistants cannot use it until someone signs in and starts again.")
+            Text(AWLSignOutConfirmCopy.message(
+                displayName: controller.signedInDisplayName ?? "This account",
+                email: controller.signedInEmail ?? ""
+            ))
         }
     }
 

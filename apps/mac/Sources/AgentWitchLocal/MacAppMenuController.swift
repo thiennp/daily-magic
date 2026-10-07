@@ -15,16 +15,51 @@ final class MacAppMenuController: ObservableObject {
     @Published var statusMessage: String = ""
     @Published private(set) var updateOffer: UpdateOffer?
 
-    // MARK: - AWL-H1/H2 chrome stubs (AWL-H3 auth / AWL-H6 port / AWL-H8 offline replace these)
+    // MARK: - AWL-H1/H2/H3 chrome stubs (AWL-H5 setup / AWL-H6 port / AWL-H8 offline replace these)
     /// AWL-H3 placeholder until real `signedInEmail` lands. Default signed-out (nil email).
     @Published var chromeAuthSignedIn: Bool = false
     @Published var chromeAuthEmail: String? = nil
+    @Published var chromeDisplayName: String? = nil
+    /// Connect bind placeholder until AWL-H8 lands.
+    @Published var chromeComputerBound: Bool = false
+    /// AWL-H3 sign-in gate phase (UI-only until real OAuth/email).
+    @Published var chromeSignInPhase: ChromeSignInPhase = .none
+    @Published var chromeSignInEmailDraft: String = ""
+    @Published var chromeSignInCodeDraft: String = ""
+    /// AWL-H6 placeholder until port allocator lands (nil = "Assigned after you sign in").
+    @Published var localPortRange: ClosedRange<Int>? = nil
     /// AWL-H8 placeholder for Waiting for internet.
     @Published var chromeOffline: Bool = false
 
-    func setChromeAuth(signedIn: Bool, email: String?) {
+    enum ChromeSignInPhase: Equatable {
+        case none
+        case prompt
+        case choose
+        case waitingInBrowser
+        case emailCode
+    }
+
+    func setChromeAuth(signedIn: Bool, email: String?, displayName: String? = nil) {
         chromeAuthSignedIn = signedIn
         chromeAuthEmail = email
+        if signedIn {
+            chromeDisplayName = displayName ?? displayNameFromEmail(email)
+            chromeSignInPhase = .none
+        } else {
+            chromeDisplayName = nil
+            chromeComputerBound = false
+            chromeSignInPhase = .none
+            chromeSignInEmailDraft = ""
+            chromeSignInCodeDraft = ""
+            localPortRange = nil
+        }
+    }
+
+    private func displayNameFromEmail(_ email: String?) -> String? {
+        guard let local = email?.split(separator: "@").first else { return nil }
+        let part = local.split(separator: ".").first.map(String.init) ?? String(local)
+        guard let first = part.first else { return part }
+        return String(first).uppercased() + part.dropFirst()
     }
 
 

@@ -31,37 +31,24 @@ struct ComputerView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            header
-            statsRow
-                .padding(.horizontal, 20)
-                .padding(.bottom, 8)
-            Picker("Section", selection: $tab) {
-                ForEach(ComputerTab.allCases) { t in
-                    Label(t.title, systemImage: t.systemImage).tag(t)
-                }
+        Group {
+            if controller.showsSignInOrConnectGate {
+                signInOrConnectGate
+            } else {
+                runningComputerChrome
             }
-            .pickerStyle(.segmented)
-            .padding(.horizontal, 20)
-            .padding(.bottom, 10)
-
-            ScrollView {
-                Group {
-                    switch tab {
-                    case .projects: connectedProjects
-                    case .tools: agentTools
-                    case .bots: botsTab
-                    }
-                }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 12)
-}
         }
-        .background(MacAppTheme.cream)
+        .background(MacAppTheme.bg)
         .frame(minWidth: 460, minHeight: 520)
         .onAppear {
             renameDraft = store.computerName
             controller.refreshInstallAndHealth()
+            if controller.signedInEmail == nil
+                && controller.chromeSignInPhase == .none
+                && controller.bootstrapState == nil
+                && controller.state != .notInstalled {
+                controller.showSignInPromptGate()
+            }
         }
         .sheet(item: $howtoKind) { kind in
             VStack(alignment: .leading, spacing: 12) {
@@ -87,6 +74,44 @@ struct ComputerView: View {
             }
             .padding(20)
             .frame(width: 420)
+        }
+    }
+
+    @ViewBuilder
+    private var signInOrConnectGate: some View {
+        if controller.signedInEmail == nil || controller.chromeSignInPhase != .none {
+            AWLSignInView(controller: controller)
+        } else {
+            AWLConnectGateView(controller: controller, store: store)
+        }
+    }
+
+    private var runningComputerChrome: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            header
+            statsRow
+                .padding(.horizontal, 20)
+                .padding(.bottom, 8)
+            Picker("Section", selection: $tab) {
+                ForEach(ComputerTab.allCases) { t in
+                    Label(t.title, systemImage: t.systemImage).tag(t)
+                }
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal, 20)
+            .padding(.bottom, 10)
+
+            ScrollView {
+                Group {
+                    switch tab {
+                    case .projects: connectedProjects
+                    case .tools: agentTools
+                    case .bots: botsTab
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 12)
+            }
         }
     }
 
