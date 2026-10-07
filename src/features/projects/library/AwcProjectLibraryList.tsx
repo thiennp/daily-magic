@@ -63,9 +63,7 @@ export default function AwcProjectLibraryList({
     () => filterProjectLibraryItems(library.items, filter, query),
     [library.items, filter, query],
   );
-  const note = canEdit
-    ? C["library.visibilityHint"]
-    : C["library.readOnlyNote"];
+  const note = C["library.readOnlyNote"];
 
   if (library.loadFailed && library.items.length === 0) {
     return (
@@ -132,6 +130,7 @@ export default function AwcProjectLibraryList({
         query={query}
         onFilterChange={setFilter}
         onQueryChange={setQuery}
+        showVisibilityInfo={canEdit}
       />
       {visible.length === 0 ? (
         <p className={PANEL_STATUS_CLASS}>{C["library.filter.empty"]}</p>
@@ -142,7 +141,7 @@ export default function AwcProjectLibraryList({
           ))}
         </ul>
       )}
-      <p className={`px-1 ${PANEL_INTRO_CLASS}`}>{note}</p>
+      {canEdit ? null : <p className={`px-1 ${PANEL_INTRO_CLASS}`}>{note}</p>}
     </>
   );
 }

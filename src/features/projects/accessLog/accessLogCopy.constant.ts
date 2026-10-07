@@ -4,6 +4,8 @@
  */
 export const ACCESS_LOG_COPY = {
   title: "Access log",
+  /** Members-rail quiet link (HN-H3 project-library design). */
+  railLink: "View access log",
   ariaLabel: "Access log: changes to who can use this project",
   intro:
     "Who joined, left, or was invited, and how each assistant gets messages. Only you can see this.",

@@ -41,6 +41,7 @@ export const PROJECT_PAGE_LIBRARY_COPY = {
     "You can view this library. Only the project owner can change it.",
   "library.visibilityHint":
     "Members and viewers see published items. Drafts are visible only to you.",
+  "library.visibilityInfoLabel": "Who sees the library",
   "library.loading": "Loading library…",
   "library.error": "Could not load the library. Try again.",
   "library.error.retry": "Try again",

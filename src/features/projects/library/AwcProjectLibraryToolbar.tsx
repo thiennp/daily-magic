@@ -2,6 +2,7 @@
 
 import { useId } from "react";
 
+import AwcProjectLibraryVisibilityInfo from "@/features/projects/library/AwcProjectLibraryVisibilityInfo";
 import { PROJECT_PAGE_LIBRARY_COPY as C } from "@/features/projects/library/projectPageLibraryCopy.constant";
 import type { ProjectLibraryFilter } from "@/features/projects/library/utils/buildProjectLibraryItems";
 import {
@@ -27,6 +28,8 @@ interface AwcProjectLibraryToolbarProps {
   readonly query: string;
   readonly onFilterChange: (filter: ProjectLibraryFilter) => void;
   readonly onQueryChange: (query: string) => void;
+  /** Owner view: drafts-visibility note as an (i) tooltip after the chips. */
+  readonly showVisibilityInfo?: boolean;
 }
 
 export default function AwcProjectLibraryToolbar({
@@ -35,34 +38,38 @@ export default function AwcProjectLibraryToolbar({
   query,
   onFilterChange,
   onQueryChange,
+  showVisibilityInfo = false,
 }: AwcProjectLibraryToolbarProps) {
   const searchId = useId();
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div
-        role="group"
-        aria-label={C["library.filter.aria"]}
-        className="flex flex-wrap items-center gap-2"
-      >
-        {CHIPS.map((chip) => (
-          <button
-            key={chip.id}
-            type="button"
-            aria-pressed={filter === chip.id}
-            className={
-              filter === chip.id
-                ? PITFALL_CHIP_ACTIVE_CLASS
-                : PITFALL_CHIP_IDLE_CLASS
-            }
-            onClick={() => {
-              onFilterChange(chip.id);
-            }}
-          >
-            {chip.label}
-            <span className="tabular-nums opacity-70">{counts[chip.id]}</span>
-          </button>
-        ))}
+      <div className="flex flex-wrap items-center gap-2">
+        <div
+          role="group"
+          aria-label={C["library.filter.aria"]}
+          className="flex flex-wrap items-center gap-2"
+        >
+          {CHIPS.map((chip) => (
+            <button
+              key={chip.id}
+              type="button"
+              aria-pressed={filter === chip.id}
+              className={
+                filter === chip.id
+                  ? PITFALL_CHIP_ACTIVE_CLASS
+                  : PITFALL_CHIP_IDLE_CLASS
+              }
+              onClick={() => {
+                onFilterChange(chip.id);
+              }}
+            >
+              {chip.label}
+              <span className="tabular-nums opacity-70">{counts[chip.id]}</span>
+            </button>
+          ))}
+        </div>
+        {showVisibilityInfo ? <AwcProjectLibraryVisibilityInfo /> : null}
       </div>
       <label htmlFor={searchId} className="sr-only">
         {C["library.search.sr"]}
