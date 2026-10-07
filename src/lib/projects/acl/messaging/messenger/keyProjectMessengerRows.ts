@@ -1,6 +1,15 @@
 import { isProjectMessengerWholeAddress } from "@/lib/projects/acl/messaging/messenger/isProjectMessengerWholeAddress";
 import { isProjectMessengerBotToBotRow } from "@/lib/projects/acl/messaging/messenger/isProjectMessengerBotToBotRow";
 import {
+  isProjectMessengerNoticeRow,
+  showProjectMessengerNoticeRow,
+  type ProjectMessengerNoticeViewer,
+} from "@/lib/projects/acl/messaging/messenger/isProjectMessengerNoticeRow";
+import {
+  keyProjectMessengerNoticeRow,
+  placeProjectMessengerNoticeRows,
+} from "@/lib/projects/acl/messaging/messenger/keyProjectMessengerNoticeRows";
+import {
   PROJECT_MESSENGER_HIDDEN_KINDS,
   PROJECT_MESSENGER_STATE_ONLY_KINDS,
   PROJECT_MESSENGER_WHOLE_THREAD_KEY,
@@ -37,12 +46,16 @@ const peerKeyedRow = (
  * bot text has its parent id read out. Lifecycle notices are dropped.
  * `includeBotToBot` (owner view only, DF-023): bot↔bot dispatch rows are
  * placed in Whole project with `peer` set instead of being dropped.
+ * `notices` (thread GET only): notice rows the viewer may see are kept with
+ * `notice: true` (see showProjectMessengerNoticeRow) instead of dropped.
  */
 export const keyProjectMessengerRows = (input: {
   readonly rows: readonly ProjectMessengerRow[];
   readonly botIds: ReadonlySet<string>;
   readonly includeBotToBot?: boolean;
+  readonly notices?: ProjectMessengerNoticeViewer;
 }): readonly ProjectMessengerKeyedRow[] => {
+  const notices = input.notices;
   const wholeMessageIds = new Set(
     input.rows
       .filter(
@@ -50,7 +63,12 @@ export const keyProjectMessengerRows = (input: {
       )
       .map((row) => row.messageId),
   );
-  return input.rows.flatMap((row) => {
+  const keyed = input.rows.flatMap((row) => {
+    if (notices !== undefined && isProjectMessengerNoticeRow(row)) {
+      return showProjectMessengerNoticeRow({ row, viewer: notices })
+        ? [keyProjectMessengerNoticeRow(row)]
+        : [];
+    }
     if (PROJECT_MESSENGER_HIDDEN_KINDS.includes(row.kind)) {
       return [];
     }
@@ -76,4 +94,5 @@ export const keyProjectMessengerRows = (input: {
       { threadKey, row, inReplyTo: reply.inReplyTo, text: reply.text, visible },
     ];
   });
+  return notices !== undefined ? placeProjectMessengerNoticeRows(keyed) : keyed;
 };

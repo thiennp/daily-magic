@@ -9,14 +9,15 @@ import type {
  * OW9: add server `windowKind` + live `subjectState` to one timeline row
  * (Neon message, Neon AI session, or a local AWL page row).
  * A row that already carries windowKind keeps it.
- * recipientKind "none": timeline rows are never bot↔bot. That is enforced by
- * projectMessengerThreadKeyForRow, so bot_to_bot cannot appear here yet.
+ * A DF-023 `peer` row (owner view) is bot↔bot by construction → bot_to_bot.
+ * Other rows classify with recipientKind "none" (human↔bot or notice).
  */
 export const withProjectMessengerWindowFields = (
   entry: ProjectMessengerTimelineEntryInput,
 ): ProjectMessengerWindowTimelineEntry => {
   const windowKind =
     entry.windowKind ??
+    (entry.peer !== undefined ? "bot_to_bot" : undefined) ??
     classifyProjectMessageWindowKind({
       kind: entry.kind,
       senderKind: entry.author.kind,

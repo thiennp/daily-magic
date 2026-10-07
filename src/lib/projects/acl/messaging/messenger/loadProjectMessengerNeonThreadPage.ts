@@ -1,4 +1,3 @@
-import { asRowArray, getSql } from "@/lib/db";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { checkProjectMessageSilence } from "@/lib/projects/acl/messaging/checkProjectMessageSilence";
 import { buildProjectMessengerTimeline } from "@/lib/projects/acl/messaging/messenger/buildProjectMessengerTimeline";
@@ -7,6 +6,7 @@ import { keyProjectMessengerRows } from "@/lib/projects/acl/messaging/messenger/
 import { loadProjectMessengerBots } from "@/lib/projects/acl/messaging/messenger/loadProjectMessengerBots";
 import { loadProjectMessengerDeliveries } from "@/lib/projects/acl/messaging/messenger/loadProjectMessengerDeliveries";
 import { loadProjectMessengerNeonAgentRunsPage } from "@/lib/projects/acl/messaging/messenger/loadProjectMessengerNeonAgentRunsPage";
+import type { ProjectMessengerNoticeViewer } from "@/lib/projects/acl/messaging/messenger/isProjectMessengerNoticeRow";
 import { mapProjectMessengerRow } from "@/lib/projects/acl/messaging/messenger/mapProjectMessengerRow";
 import { mergeProjectMessengerNeonTimelinePage } from "@/lib/projects/acl/messaging/messenger/mergeProjectMessengerNeonTimelinePage";
 import {
@@ -15,6 +15,7 @@ import {
 } from "@/lib/projects/acl/messaging/messenger/projectMessenger.constant";
 import type { ProjectMessengerCursor } from "@/lib/projects/acl/messaging/messenger/projectMessengerCursor";
 import type { ProjectMessengerTimelineEntry } from "@/lib/projects/acl/messaging/messenger/projectMessenger.type";
+import { selectProjectMessengerNeonRows } from "@/lib/projects/acl/messaging/messenger/selectProjectMessengerNeonRows";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 
 export type LoadProjectMessengerNeonThreadPageResult = {
@@ -29,6 +30,7 @@ export type LoadProjectMessengerNeonThreadPageResult = {
  * On `whole`, also merges agent_runs session entries (v1 whole-only).
  * `includeBotToBot` (owner only, DF-023): bot↔bot rows join `whole` as
  * compact `peer` entries. Default off (members / module callers unchanged).
+ * `notices` (thread GET): notice rows for that viewer (see keyProjectMessengerRows).
  */
 export const loadProjectMessengerNeonThreadPage = async (input: {
   readonly projectId: string;
@@ -37,6 +39,7 @@ export const loadProjectMessengerNeonThreadPage = async (input: {
   readonly before: ProjectMessengerCursor | null;
   readonly limit: number;
   readonly includeBotToBot?: boolean;
+  readonly notices?: ProjectMessengerNoticeViewer;
 }): Promise<LoadProjectMessengerNeonThreadPageResult> => {
   await ensureProjectAclSchema();
   await purgeExpiredProjectMessages();
@@ -49,31 +52,11 @@ export const loadProjectMessengerNeonThreadPage = async (input: {
           PROJECT_MESSENGER_ROW_LIMIT,
           Math.max(input.limit * 8, input.limit + 1),
         );
-  const sql = getSql();
-  const rows = asRowArray(
-    await sql`
-      SELECT m.id, m.kind, m.summary, m.created_at,
-        m.sender_membership_id, m.sender_user_id,
-        m.to_membership_id, m.to_user_id, m.to_team_label,
-        sender.project_display_name AS sender_display_name,
-        sender.member_kind AS sender_member_kind,
-        recipient.member_kind AS recipient_member_kind,
-        recipient.project_display_name AS recipient_display_name,
-        to_char(m.created_at AT TIME ZONE 'UTC',
-          'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS cursor_at
-      FROM project_messages m
-      LEFT JOIN project_memberships sender ON sender.id = m.sender_membership_id
-      LEFT JOIN project_memberships recipient ON recipient.id = m.to_membership_id
-      WHERE m.project_id = ${input.projectId}
-        AND (${input.before?.t ?? null}::timestamptz IS NULL
-          OR (m.created_at, m.id) < (
-            ${input.before?.t ?? null}::timestamptz,
-            ${input.before?.id ?? null}::text
-          ))
-      ORDER BY m.created_at DESC, m.id DESC
-      LIMIT ${fetchLimit}::int
-    `,
-  );
+  const rows = await selectProjectMessengerNeonRows({
+    projectId: input.projectId,
+    before: input.before,
+    fetchLimit,
+  });
 
   const mapped = rows.map((row) => {
     const entry = mapProjectMessengerRow(row, input.ownerUserId);
@@ -90,6 +73,7 @@ export const loadProjectMessengerNeonThreadPage = async (input: {
     rows: mapped,
     botIds: new Set(bots.map((bot) => bot.membershipId)),
     includeBotToBot: input.includeBotToBot === true,
+    ...(input.notices !== undefined ? { notices: input.notices } : {}),
   });
   const timeline = buildProjectMessengerTimeline({
     threadKey: input.threadKey,

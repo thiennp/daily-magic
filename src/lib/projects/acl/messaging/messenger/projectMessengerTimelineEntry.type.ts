@@ -4,6 +4,19 @@ import type {
 } from "@/lib/projects/acl/messaging/messenger/projectMessenger.type";
 import type { ProjectMessengerPeerAddress } from "@/lib/projects/acl/messaging/messenger/projectMessengerPeerAddress.type";
 
+/**
+ * Archive meta (migration 098 archived_at / archived_by). Worked out when the
+ * thread is read; null when the row is not archived or the source has no data.
+ */
+export type ProjectMessengerArchiveMeta = {
+  /** ISO time the row was archived (Clear all). */
+  readonly at: string;
+  /** User id that archived it (archived_by). */
+  readonly byUserId: string | null;
+  /** That user's project seat name, "Owner" for the owner, else null. */
+  readonly byDisplayName: string | null;
+};
+
 /** Discriminator for timeline rows. Omit / "message" = chat/task bubble. */
 export type ProjectMessengerTimelineEntryKind = "message" | "session";
 
@@ -24,7 +37,8 @@ export type ProjectMessengerTimelineEntry = {
   readonly messageId: string;
   readonly createdAt: string;
   readonly author: {
-    readonly kind: Exclude<ProjectMessengerPartyKind, "system">;
+    /** "system" only on notice rows (server notices, no sender seat). */
+    readonly kind: ProjectMessengerPartyKind;
     readonly membershipId: string | null;
     readonly displayName: string | null;
   };
@@ -47,4 +61,6 @@ export type ProjectMessengerTimelineEntry = {
    * project. UI renders a compact "A → B · label · summary" line.
    */
   readonly peer?: ProjectMessengerPeerAddress;
+  /** Additive (thread rows): archive meta; Neon rows only. */
+  readonly archived?: ProjectMessengerArchiveMeta | null;
 };

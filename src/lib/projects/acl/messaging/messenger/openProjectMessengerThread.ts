@@ -12,20 +12,21 @@ import {
   encodeProjectMessengerCursor,
   type ProjectMessengerCursor,
 } from "@/lib/projects/acl/messaging/messenger/projectMessengerCursor";
-import type { ProjectMessengerWindowTimelineEntry } from "@/lib/projects/acl/messaging/messenger/projectMessengerWindowFields.type";
+import type { ProjectMessengerThreadRowEntry } from "@/lib/projects/acl/messaging/messenger/projectMessengerThreadRow.type";
 import {
   resolveProjectMessengerLoadPage,
   type ProjectMessengerOfflineError,
   type ProjectMessengerPageMeta,
 } from "@/lib/projects/acl/messaging/messenger/resolveProjectMessengerLoadPage";
 import { resolveProjectMessengerViewer } from "@/lib/projects/acl/messaging/messenger/resolveProjectMessengerViewer";
+import { withProjectMessengerThreadRowMeta } from "@/lib/projects/acl/messaging/messenger/withProjectMessengerThreadRowMeta";
 import { withProjectMessengerWindowFields } from "@/lib/projects/acl/messaging/messenger/withProjectMessengerWindowFields";
 
 export type OpenProjectMessengerThreadResult =
   | {
       readonly ok: true;
       readonly threadKey: string;
-      readonly entries: readonly ProjectMessengerWindowTimelineEntry[];
+      readonly entries: readonly ProjectMessengerThreadRowEntry[];
       readonly page: ProjectMessengerPageMeta;
       readonly error?: ProjectMessengerOfflineError;
       readonly canSend: boolean;
@@ -89,6 +90,8 @@ export const openProjectMessengerThread = async (input: {
     limit,
     // DF-023: owner sees every bot↔bot dispatch in Whole project; members don't.
     includeBotToBot: viewer.isOwner,
+    // Notice rows: owner gets all; others only lifecycle (one copy each).
+    notices: viewer.isOwner ? "owner" : "member",
   });
 
   const resolved = resolveProjectMessengerLoadPage({
@@ -115,7 +118,9 @@ export const openProjectMessengerThread = async (input: {
   return {
     ok: true,
     threadKey: input.threadKey,
-    entries: resolved.entries.map(withProjectMessengerWindowFields),
+    entries: withProjectMessengerThreadRowMeta(
+      resolved.entries.map(withProjectMessengerWindowFields),
+    ),
     page: resolved.page,
     ...(resolved.error !== undefined ? { error: resolved.error } : {}),
     canSend: viewer.canSend,

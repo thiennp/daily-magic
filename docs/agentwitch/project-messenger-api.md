@@ -125,8 +125,9 @@ replies to Owner with the id in the summary link the same way. Allowed on
    Opening a thread marks read up to its newest visible message. Own messages
    never count. Marking read never stamps `project_messages.read_at` and
    never acks: actionable rows still need the bot's ack (DOR rules unchanged).
-8. `task.received` / `task.processing` bot rows are state-only (no bubble);
-   `peer.*` / lifecycle notices stay out of the messenger.
+8. `task.received` / `task.processing` bot rows are state-only (no bubble).
+   `peer.*` / lifecycle notices stay out of the thread list / snapshot; the
+   thread GET returns them as notice rows (item 10).
 9. **Bot↔bot rows (DF-023, owner only)**: when the viewer is the project
    owner, every bot→bot (or bot→team label) `project_dispatch` row joins the
    Whole project timeline with an additive `peer: { toMembershipId,
@@ -139,6 +140,34 @@ toDisplayName, toTeamLabel }` field (state-only kinds included). UI renders
    page. Live updates ride the same thread poll. Local History (AWL) indexes
    bot↔bot records under the recipient bot's thread (heuristic) — not merged
    into Whole yet (see DF-023 report).
+
+10. **Thread rows: notices, grouping, archive meta** (thread GET only;
+    additive, worked out at read time, no migration, no bodies to Neon).
+    Every entry of `GET …/messenger/threads/:threadKey` now carries:
+
+    | field             | type                                                        | meaning                                                                                                                                                 |
+    | ----------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | `author.kind`     | `"owner" \| "member" \| "bot" \| "system"`                  | `"system"` only on server notices (no sender seat)                                                                                                      |
+    | `windowKind`      | OW9 enum                                                    | now also `"notice"` and `"bot_to_bot"` rows                                                                                                             |
+    | `subjectState`    | OW9 object \| null                                          | null on notice / bot_to_bot rows                                                                                                                        |
+    | `peer`            | `{ toMembershipId, toDisplayName, toTeamLabel }` (optional) | DF-023 bot↔bot rows (owner only)                                                                                                                        |
+    | `parentMessageId` | `string \| null`                                            | parent row id (DESIGN `parent_message_id`), read from the reply convention (= `inReplyTo`). May point at an older page or a removed row                 |
+    | `replyIds`        | `string[]`                                                  | ids of this row's direct replies **in this response**, oldest first                                                                                     |
+    | `archived`        | `{ at, byUserId, byDisplayName } \| null`                   | Clear all meta (`archived_at` / `archived_by`, seat name; `"Owner"` for the owner). null when not archived, and always on local (AWL) / AI-session rows |
+
+    Order stays newest first and nothing else changes, so the flat list UI
+    renders as before; a grouped UI nests rows by `parentMessageId` across the
+    pages it has loaded (`replyIds` is a per-page hint).
+    Notice rows (`windowKind: "notice"`): server notices (`peer.silent`,
+    `peer.silent_blocked`, `composer.recipient_sticky_cleared`, any row with no
+    sender seat) and lifecycle `peer.joined` / `peer.left` / `peer.renamed`.
+    Visibility: lifecycle → the owner's copy only (one row per event, every
+    viewer); silence notices → owner only (whoever was told); other server
+    notices → owner only, owner-addressed. A notice that names a message id
+    sits in that message's thread, else Whole project. Notices never move
+    delivery chips and never count toward preview / unread (the thread list
+    does not load them). Bot↔bot rows stay owner only (item 9) and now
+    classify as `windowKind: "bot_to_bot"`.
 
 ## Known limits (v1)
 

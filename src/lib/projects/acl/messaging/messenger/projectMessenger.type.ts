@@ -1,6 +1,7 @@
 import type { ProjectMessengerPeerAddress } from "@/lib/projects/acl/messaging/messenger/projectMessengerPeerAddress.type";
 import type {
   ProjectMessengerAiSessionMeta,
+  ProjectMessengerArchiveMeta,
   ProjectMessengerEntryKind,
   ProjectMessengerTimelineEntry,
   ProjectMessengerTimelineEntryKind,
@@ -11,6 +12,7 @@ export type { ProjectMessengerPeerAddress };
 // Timeline entry types live in projectMessengerTimelineEntry.type (size cap).
 export type {
   ProjectMessengerAiSessionMeta,
+  ProjectMessengerArchiveMeta,
   ProjectMessengerEntryKind,
   ProjectMessengerTimelineEntry,
   ProjectMessengerTimelineEntryKind,
@@ -58,6 +60,10 @@ export type ProjectMessengerRow = {
   readonly toTeamLabel: string | null;
   /** Recipient seat name (bot↔bot rows; optional for older callers). */
   readonly toDisplayName?: string | null;
+  /** archived_at / archived_by (+ seat name) when the read selected them. */
+  readonly archivedAt?: string | null;
+  readonly archivedBy?: string | null;
+  readonly archivedByDisplayName?: string | null;
 };
 
 /** Thread row; inReplyTo/text from bot reply summaries. */
@@ -70,6 +76,8 @@ export type ProjectMessengerKeyedRow = {
   readonly visible: boolean;
   /** DF-023: set only on owner-view bot↔bot rows (compact feed line). */
   readonly peer?: ProjectMessengerPeerAddress;
+  /** Notice row (server notice / lifecycle), thread GET only. */
+  readonly notice?: true;
 };
 
 export type ProjectMessengerDelivery = {
