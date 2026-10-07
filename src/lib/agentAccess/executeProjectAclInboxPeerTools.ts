@@ -68,7 +68,11 @@ export const executeProjectAclInboxPeerTools = async (input: {
         true,
       );
     }
-    return agentAccessTextResult({ ok: true, messageId: result.messageId });
+    return agentAccessTextResult(
+      result.alreadyAcked === true
+        ? { ok: true, messageId: result.messageId, alreadyAcked: true }
+        : { ok: true, messageId: result.messageId },
+    );
   }
 
   if (input.name === "list_project_peers") {

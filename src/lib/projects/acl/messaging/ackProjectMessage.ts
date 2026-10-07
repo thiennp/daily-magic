@@ -5,16 +5,16 @@ import { ackProjectWholeMessageDelivery } from "@/lib/projects/acl/messaging/mes
 import { isProjectMessengerWholeAddress } from "@/lib/projects/acl/messaging/messenger/isProjectMessengerWholeAddress";
 import { gateProjectMessageDelete } from "@/lib/projects/acl/messaging/gateProjectMessageDelete";
 import { holdProjectMessageForComputerAck } from "@/lib/projects/acl/messaging/holdProjectMessageForComputerAck";
+import {
+  ackedProjectMessageOk,
+  alreadyAckedProjectMessageOrNotFound,
+  type AckProjectMessageResult,
+} from "@/lib/projects/acl/messaging/ackProjectMessageResult";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { asRowArray, getSql } from "@/lib/db";
 
-export type AckProjectMessageResult =
-  | { readonly ok: true; readonly messageId: string }
-  | {
-      readonly ok: false;
-      readonly code: "forbidden" | "not_found" | "computer_ack_required";
-    };
+export type { AckProjectMessageResult };
 
 export const ackProjectMessage = async (input: {
   readonly messageId: string;
@@ -28,7 +28,7 @@ export const ackProjectMessage = async (input: {
     `,
   );
   if (rows.length === 0) {
-    return { ok: false, code: "not_found" };
+    return alreadyAckedProjectMessageOrNotFound(input);
   }
   const projectId = String(rows[0].project_id);
   const membership = await getActiveProjectMembership(
@@ -66,6 +66,8 @@ export const ackProjectMessage = async (input: {
   if (!addressed) {
     return { ok: false, code: "forbidden" };
   }
+  // Held for computerAck after an earlier ack: acked_at is already set.
+  const wasAcked = rows[0].acked_at !== null && rows[0].acked_at !== undefined;
   // History delete gate: hold when computerAck is still required.
   const gate = await gateProjectMessageDelete({
     projectId,
@@ -81,7 +83,7 @@ export const ackProjectMessage = async (input: {
       action: "msg.ack",
       detail: { messageId: input.messageId, deleted: false },
     });
-    return { ok: true, messageId: input.messageId };
+    return ackedProjectMessageOk(input.messageId, wasAcked);
   }
   // Main delete-on-ack: thin outcome first, then gated hard DELETE.
   const deleted = await deleteProjectMessageWithOutcome({
@@ -98,9 +100,10 @@ export const ackProjectMessage = async (input: {
         action: "msg.ack",
         detail: { messageId: input.messageId, deleted: false },
       });
-      return { ok: true, messageId: input.messageId };
+      return ackedProjectMessageOk(input.messageId, wasAcked);
     }
-    return { ok: false, code: deleted.code };
+    // A sibling ack deleted the row between our SELECT and DELETE.
+    return alreadyAckedProjectMessageOrNotFound(input);
   }
   await writeProjectAccessAudit({
     projectId,
@@ -108,5 +111,5 @@ export const ackProjectMessage = async (input: {
     action: "msg.ack",
     detail: { messageId: input.messageId, deleted: true },
   });
-  return { ok: true, messageId: input.messageId };
+  return ackedProjectMessageOk(input.messageId, wasAcked);
 };

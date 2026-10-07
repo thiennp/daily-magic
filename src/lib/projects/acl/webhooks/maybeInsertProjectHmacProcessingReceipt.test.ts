@@ -66,4 +66,16 @@ describe("maybeInsertProjectHmacProcessingReceipt", () => {
     });
     expect(insertMock).not.toHaveBeenCalled();
   });
+
+  it.each(["task.received", "task.status", "task.done", "task.blocked"])(
+    "skips status kind %s (DF-022)",
+    async (kind) => {
+      await maybeInsertProjectHmacProcessingReceipt({
+        payload: { ...payload, kind },
+        peerMembershipId: "mem-a",
+        deliveryOk: true,
+      });
+      expect(insertMock).not.toHaveBeenCalled();
+    },
+  );
 });

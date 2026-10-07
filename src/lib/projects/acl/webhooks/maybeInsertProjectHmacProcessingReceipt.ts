@@ -1,5 +1,5 @@
 import { insertProjectProcessingReceipt } from "@/lib/projects/acl/messaging/insertProjectProcessingReceipt";
-import { PROJECT_MESSAGE_KIND_TASK_PROCESSING } from "@/lib/projects/acl/messaging/projectMessage.constants";
+import { isProjectMessageWakeSkippedByPolicy } from "@/lib/projects/acl/messaging/isProjectMessageWakeSkippedByPolicy";
 
 /**
  * HMAC path: after a POST 2xx, insert the shared task.processing receipt (the
@@ -20,7 +20,8 @@ export const maybeInsertProjectHmacProcessingReceipt = async (input: {
   if (!input.deliveryOk) {
     return;
   }
-  if (input.payload.kind === PROJECT_MESSAGE_KIND_TASK_PROCESSING) {
+  // Status kinds (incl. task.processing) never get a receipt (DF-022).
+  if (isProjectMessageWakeSkippedByPolicy(input.payload.kind)) {
     return;
   }
   try {

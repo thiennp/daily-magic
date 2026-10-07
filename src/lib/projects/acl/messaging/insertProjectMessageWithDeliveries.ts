@@ -90,6 +90,7 @@ export const insertProjectMessageWithDeliveries = async (input: {
   const wakeResults = await wakeProjectMessageGrokRoutines({
     projectId: input.projectId,
     messageId,
+    kind: input.kind,
     summary: input.summary,
     senderMembershipId: input.senderMembershipId,
     senderProjectDisplayName: input.senderProjectDisplayName,

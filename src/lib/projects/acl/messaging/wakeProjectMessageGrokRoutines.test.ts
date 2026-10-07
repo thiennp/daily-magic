@@ -10,6 +10,7 @@ import { wakeProjectMessageGrokRoutines } from "@/lib/projects/acl/messaging/wak
 const base = {
   projectId: "proj-1",
   messageId: "msg-1",
+  kind: "task.assign",
   summary: "hello",
   recipientMembershipIds: ["mem-a"],
 };

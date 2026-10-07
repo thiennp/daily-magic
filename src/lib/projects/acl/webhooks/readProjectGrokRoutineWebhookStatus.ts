@@ -1,6 +1,9 @@
 import { asRowArray, getSql } from "@/lib/db";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
-import { STORED_GROK_WAKE_RESULT } from "@/lib/projects/acl/messaging/storedGrokWakeResult.constant";
+import {
+  GROK_WAKE_RESULT_SKIPPED_BY_POLICY,
+  STORED_GROK_WAKE_RESULT,
+} from "@/lib/projects/acl/messaging/storedGrokWakeResult.constant";
 import {
   projectGrokWebhookOwnerUserId,
   projectGrokWebhookTargetId,
@@ -14,6 +17,7 @@ export type ProjectGrokRoutineWebhookStatus = {
 
 /**
  * One SELECT scoped like the save step. null = no such membership.
+ * lastGrokWakeResult ignores skipped_by_policy (status kinds are never woken).
  * Never selects bearer_retained.
  */
 export const readProjectGrokRoutineWebhookStatus = async (
@@ -31,6 +35,7 @@ export const readProjectGrokRoutineWebhookStatus = async (
           SELECT a.result
           FROM project_grok_routine_wake_attempts a
           WHERE a.membership_id = m.id
+            AND a.result <> ${GROK_WAKE_RESULT_SKIPPED_BY_POLICY}
           ORDER BY a.created_at DESC
           LIMIT 1
         ) AS last_wake_result

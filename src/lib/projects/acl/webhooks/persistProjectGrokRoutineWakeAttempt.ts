@@ -1,8 +1,7 @@
 import { randomUUID } from "node:crypto";
 
 import { getSql } from "@/lib/db";
-
-const STORED_GROK_WAKE_RESULT = /^(?:http_\d{3}|fetch_failed|not_postable)$/;
+import { STORED_GROK_WAKE_RESULT } from "@/lib/projects/acl/messaging/storedGrokWakeResult.constant";
 
 /** Store only the short wake result. Never a webhook URL or bearer. */
 export const persistProjectGrokRoutineWakeAttempt = async (input: {

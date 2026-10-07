@@ -36,7 +36,7 @@ export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDe
     {
       name: "list_project_inbox",
       description:
-        "List thin project messages addressed to you. In webhook mode, call only after posting task.received from the wake payload. In poll mode (Checks on demand) there is no wake: call when your user asks, at most once a minute. Not a timer. grokWakeResult is your membership's stored wake result (http_<status>, fetch_failed, not_postable) or null.",
+        "List thin project messages addressed to you. In webhook mode, call only after posting task.received from the wake payload. In poll mode (Checks on demand) there is no wake: call when your user asks, at most once a minute. Not a timer. grokWakeResult is your membership's stored wake result (http_<status>, fetch_failed, not_postable, skipped_by_policy) or null. skipped_by_policy = status kinds (task.received|task.processing|task.status|task.done|task.blocked) are stored but never wake you; do not reply to them, just ack.",
       inputSchema: {
         type: "object",
         properties: {
@@ -51,7 +51,7 @@ export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDe
     {
       name: "ack_project_message",
       description:
-        "Ack a project inbox message by messageId (hard-deletes the row + deliveries).",
+        "Ack a project inbox message by messageId (hard-deletes the row + deliveries). Idempotent: returns { ok: true, messageId } on first ack and { ok: true, messageId, alreadyAcked: true } when your own message was already acked (e.g. by a parallel wake). not_found = unknown id or not your message.",
       inputSchema: {
         type: "object",
         properties: { messageId: { type: "string" } },
