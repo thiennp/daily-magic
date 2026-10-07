@@ -162,6 +162,65 @@ final class SelfHealSetupFlowTests: XCTestCase {
         XCTAssertEqual(MacAppSetupFailureKind.couldNotFinishTitle.contains("113"), false)
     }
 
+    /// DF-031: old update script exits 1 after verifying only :43347, but the
+    /// core is healthy on its discovered H6 port → Start/repair must succeed.
+    func testSelfHealRepairSucceedsWhenScriptFailsButCoreIsOursOnDiscoveredPort() async {
+        let http = FakeHealHTTP()
+        let runner = FakeHealScriptRunner(status: 1)
+        final class ProbeBox: @unchecked Sendable { var calls = 0 }
+        let probes = ProbeBox()
+        let result = await runSelfHealSetupFlow(
+            isCoreInstalled: true,
+            http: http,
+            scriptRunner: runner,
+            probeHealth: {
+                probes.calls += 1
+                // First probe (pre-check) unverified; after the script the core is ours.
+                return probes.calls == 1 ? .unverified : .ours
+            },
+            sleep: { _ in },
+            healthTimeoutSeconds: 0.1,
+            healthPollIntervalSeconds: 0
+        )
+        XCTAssertTrue(runner.ran)
+        XCTAssertEqual(result.session, .succeeded)
+        XCTAssertEqual(result.runtimeState, .running)
+    }
+
+    /// Fresh install (no core yet) never masks a script failure.
+    func testSelfHealFreshInstallScriptFailureStaysFailedEvenIfHealthAnswers() async {
+        let http = FakeHealHTTP()
+        let runner = FakeHealScriptRunner(status: 1)
+        let result = await runSelfHealSetupFlow(
+            isCoreInstalled: false,
+            http: http,
+            scriptRunner: runner,
+            probeHealth: { .ours },
+            sleep: { _ in },
+            healthTimeoutSeconds: 0.1,
+            healthPollIntervalSeconds: 0
+        )
+        guard case .failed(let kind, _) = result.session else {
+            return XCTFail("expected failed session, got \(result.session)")
+        }
+        XCTAssertEqual(kind, .generic)
+    }
+
+    /// DF-031: health candidates put the discovered port first and legacy 43347 last.
+    func testSelfHealHealthCandidatesPreferDiscoveredPortOverLegacy() {
+        let ports = candidateLocalAppPorts(
+            savedPort: 65376,
+            range: MacAppLocalPortRange(start: 65376, end: 65391)
+        )
+        XCTAssertEqual(ports.first, 65376)
+        XCTAssertEqual(ports.last, MacAppConstants.localAppPort)
+        XCTAssertEqual(ports.count, 17)
+        XCTAssertEqual(
+            resolveAgentWitchLocalHealthUrl(port: ports[0]).absoluteString,
+            "http://127.0.0.1:65376/health"
+        )
+    }
+
     func testSelfHealOfflineWhenDownloadFails() async {
         let http = FakeHealHTTP()
         http.getError = FakeNetworkError()

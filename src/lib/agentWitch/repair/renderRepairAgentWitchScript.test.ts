@@ -32,7 +32,9 @@ describe("renderRepairAgentWitchScript", () => {
     expect(script).toContain('bash "${installer}" </dev/null');
     expect(script).toContain('INSTALL_DIR="${HOME}/.agent-witch"');
     expect(script).toContain('LAUNCH_AGENT_PREFIX="com.agent-witch"');
-    expect(script).toContain("http://127.0.0.1:43347/health");
+    expect(script).toContain(
+      'AWL_REPAIR_LEGACY_HEALTH_URL="http://127.0.0.1:43347/health"',
+    );
   });
 
   it("AWLR-004: removes only allowlisted direct children of the install dir", () => {

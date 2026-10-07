@@ -1,24 +1,9 @@
-/** Preflight (install + identity present, latest version) and the already-healthy no-op check. */
+/** Preflight (install + identity present, latest version) and the already-healthy no-op check. Health helpers: buildAgentWitchRepairScriptHealth. */
 export const buildAgentWitchRepairScriptPreflight = (): string => `
 awl_repair_fetch_target_version() {
   local body
   body="$(curl -fsSL --max-time 20 "\${AWL_REPAIR_ORIGIN}/install/agent-witch/version")" || return 1
   printf '%s' "\${body}" | awl_repair_bundle_version
-}
-
-# Reads only non-secret fields from GET /health (its body also carries a link code).
-awl_repair_health_ok() {
-  local body node_bin
-  body="$(curl -fsS --max-time 3 "\${AWL_REPAIR_HEALTH_URL}" 2>/dev/null)" || return 1
-  node_bin="$(awl_repair_node)" || return 1
-  printf '%s' "\${body}" | "\${node_bin}" -e '
-const fs = require("node:fs");
-try {
-  const health = JSON.parse(fs.readFileSync(0, "utf8"));
-  const uidOk = typeof health.osUid !== "number" || health.osUid === Number(process.argv[1]);
-  const rootOk = typeof health.installRootName !== "string" || health.installRootName === process.argv[2];
-  process.exit(health.ok === true && uidOk && rootOk ? 0 : 1);
-} catch { process.exit(1); }' "$(id -u)" "$(basename "\${INSTALL_DIR}")"
 }
 
 awl_repair_app_present() {
@@ -63,7 +48,7 @@ awl_repair_is_already_healthy() {
     return 0
   fi
   if awl_repair_health_ok; then
-    HEALTH_STATUS="ok (\${AWL_REPAIR_HEALTH_URL})"
+    HEALTH_STATUS="ok ($(awl_repair_health_label))"
     return 0
   fi
   return 1

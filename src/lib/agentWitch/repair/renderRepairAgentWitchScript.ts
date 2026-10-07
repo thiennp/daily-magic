@@ -1,4 +1,5 @@
 import { AGENT_WITCH_LOCAL_APP_PORT } from "@/lib/agentWitch/agentWitchLocalAppPort.constant";
+import { buildAgentWitchRepairScriptHealth } from "@/lib/agentWitch/repair/buildAgentWitchRepairScriptHealth";
 import { buildAgentWitchRepairScriptEmbeddedInstaller } from "@/lib/agentWitch/repair/buildAgentWitchRepairScriptEmbeddedInstaller";
 import { buildAgentWitchRepairScriptBackup } from "@/lib/agentWitch/repair/buildAgentWitchRepairScriptBackup";
 import { buildAgentWitchRepairScriptIdentity } from "@/lib/agentWitch/repair/buildAgentWitchRepairScriptIdentity";
@@ -23,13 +24,14 @@ export const renderRepairAgentWitchScript = (origin: string): string => {
     origin: normalizedOrigin,
     installDirName: appHome.installDirName,
     launchAgentPrefix: appHome.launchAgentPrefix,
-    healthPort: AGENT_WITCH_LOCAL_APP_PORT,
+    legacyHealthPort: AGENT_WITCH_LOCAL_APP_PORT,
   };
 
   return [
     buildAgentWitchRepairScriptPreamble(input),
     buildAgentWitchRepairScriptIdentity(),
     buildAgentWitchRepairScriptNodeCheck(),
+    buildAgentWitchRepairScriptHealth(),
     buildAgentWitchRepairScriptPreflight(),
     buildAgentWitchRepairScriptServices(),
     buildAgentWitchRepairScriptBackup(),

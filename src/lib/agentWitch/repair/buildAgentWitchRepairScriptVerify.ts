@@ -13,16 +13,16 @@ awl_repair_verify() {
     HEALTH_STATUS="skipped (AWL_REPAIR_NO_START=1)"
     return 0
   fi
-  awl_repair_log "Waiting for \${AWL_REPAIR_HEALTH_URL}…"
+  awl_repair_log "Waiting for AgentWitch Local /health ($(awl_repair_health_label))…"
   while (( waited < AWL_REPAIR_HEALTH_TIMEOUT )); do
     if awl_repair_health_ok; then
-      HEALTH_STATUS="ok (\${AWL_REPAIR_HEALTH_URL})"
+      HEALTH_STATUS="ok ($(awl_repair_health_label))"
       return 0
     fi
     sleep 2
     waited=$((waited + 2))
   done
-  HEALTH_STATUS="no response after \${AWL_REPAIR_HEALTH_TIMEOUT}s (\${AWL_REPAIR_HEALTH_URL})"
+  HEALTH_STATUS="no response after \${AWL_REPAIR_HEALTH_TIMEOUT}s ($(awl_repair_health_label))"
   if [[ "\${OS_NAME}" == "Linux" ]] && ! systemctl --user is-active agent-witch.service >/dev/null 2>&1; then
     awl_repair_warn "agent-witch.service is not active. On WSL, enable systemd (/etc/wsl.conf [boot] systemd=true) or run \${INSTALL_DIR}/app/command/run.sh."
   fi

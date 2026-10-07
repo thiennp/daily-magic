@@ -6,6 +6,10 @@ export interface AgentWitchRepairScriptInput {
   readonly installDirName: string;
   /** LaunchAgent label prefix (`com.agent-witch` prod). */
   readonly launchAgentPrefix: string;
-  /** AWL local app port; the repair verifies `GET /health` there. */
-  readonly healthPort: number;
+  /**
+   * Legacy fixed AWL port (pre-H6). DF-031: the repair probes the discovered
+   * per-account port first (profiles/<email>/local-app-port.json, then the
+   * local-port-range.json range) and this port last.
+   */
+  readonly legacyHealthPort: number;
 }

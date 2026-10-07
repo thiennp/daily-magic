@@ -3,7 +3,9 @@
 `/install/agent-witch-update.sh` (and the legacy alias `/install/agent-witch-repair.sh`) serve
 `renderRepairAgentWitchScript`: stop AWL, back up config + identity, remove app files, run the
 embedded update installer (`renderUpdateAgentWitchScript`), restore lost identity, verify the
-version and `GET http://127.0.0.1:43347/health`. Tests use `AWLR-` IDs.
+version and `GET /health` on the discovered per-account port (DF-031: `profiles/*/local-app-port.json`
+→ `profiles/*/local-port-range.json` → legacy `127.0.0.1:43347` last; `AWL_REPAIR_HEALTH_URL` pins one
+URL). Tests use `AWLR-` IDs.
 
 Linux e2e (throwaway HOME, no daemons):
 `npx tsx scripts/agentWitchRepair/renderAgentWitchRepairE2eScripts.ts /tmp/awlr && REPAIR_SCRIPT=/tmp/awlr/agent-witch-update.sh BUNDLE_DIR=public/install/agent-witch/app bash scripts/agentWitchRepair/runAgentWitchRepairE2e.sh`

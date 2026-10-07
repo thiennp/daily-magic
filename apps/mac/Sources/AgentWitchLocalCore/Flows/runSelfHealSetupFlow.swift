@@ -112,8 +112,16 @@ public func runSelfHealSetupFlow(
         return fail(.permission)
     }
     // Never surface the numeric status (113 etc.) — map to plain failure.
-    guard exitStatus == 0 else {
-        return fail(.generic)
+    if exitStatus != 0 {
+        // DF-031: update scripts served before the fix verify only legacy 43347,
+        // so they exit non-zero after a good reinstall on the H6 per-account port.
+        // `probeHealth` uses the discovered port (saved → range → legacy): when
+        // it already sees our core, the repair worked — do not report failure.
+        guard isCoreInstalled, case .ours = await probeHealth() else {
+            return fail(.generic)
+        }
+        emit(.checkingEverythingWorks, 100)
+        return RunSelfHealSetupFlowResult(session: .succeeded, runtimeState: .running)
     }
     emit(.installingAssistantTools, 84)
 
