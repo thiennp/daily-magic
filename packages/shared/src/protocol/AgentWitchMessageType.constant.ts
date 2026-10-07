@@ -60,6 +60,10 @@ export const AGENT_WITCH_MESSAGE_TYPES = {
   WRITER_STATUS: "writer.status",
   /** AWC → owner's project computer: one project message to save locally (history on). */
   PROJECT_MESSAGE_HISTORY: "project.message.history",
+  /** AW cloud → enabled computer: sync change available (thin: projectId + seq). */
+  SYNC_AVAILABLE: "sync.available",
+  /** AW cloud → enabled computer: purge learning paths only (History off). */
+  SYNC_PURGE: "sync.purge",
 } as const;
 
 export type AgentWitchMessageType =
