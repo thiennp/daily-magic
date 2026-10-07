@@ -13,17 +13,17 @@ vi.mock("@/components/ui/dropdown/DropdownItem", () => ({
 }));
 
 vi.mock("@/features/projects/AwcProjectDeleteMenuItem", () => ({
-  default: ({ projectName }: { readonly projectName: string }) =>
-    createElement(
-      "li",
-      { "data-testid": "delete-item" },
-      `Delete ${projectName}`,
-    ),
+  default: () =>
+    createElement("li", { "data-testid": "delete-item" }, "Delete"),
+}));
+
+vi.mock("@/features/projects/AwcProjectLeaveMenuItem", () => ({
+  default: () =>
+    createElement("li", { "data-testid": "leave-item" }, "Leave"),
 }));
 
 const baseProps = {
   projectId: "p1",
-  projectName: "Alpha",
   isDefaultProject: false,
   assignTasksHref: "/?projectId=p1",
   editCta: {
@@ -34,6 +34,8 @@ const baseProps = {
   },
   editHelperId: undefined as string | undefined,
   onClose: () => undefined,
+  onRequestDelete: () => undefined,
+  onRequestLeave: () => undefined,
 };
 
 describe("AwcProjectCardActionsMenuItems delete visibility", () => {
@@ -45,19 +47,29 @@ describe("AwcProjectCardActionsMenuItems delete visibility", () => {
       createElement(
         "ul",
         null,
-        createElement(Items, { ...baseProps, canDelete: true }),
+        createElement(Items, {
+          ...baseProps,
+          canDelete: true,
+          canLeave: false,
+        }),
       ),
     );
     expect(ownerHtml).toContain('data-testid="delete-item"');
+    expect(ownerHtml).not.toContain('data-testid="leave-item"');
 
     const memberHtml = renderToStaticMarkup(
       createElement(
         "ul",
         null,
-        createElement(Items, { ...baseProps, canDelete: false }),
+        createElement(Items, {
+          ...baseProps,
+          canDelete: false,
+          canLeave: true,
+        }),
       ),
     );
     expect(memberHtml).not.toContain('data-testid="delete-item"');
+    expect(memberHtml).toContain('data-testid="leave-item"');
 
     const defaultHtml = renderToStaticMarkup(
       createElement(
@@ -66,11 +78,12 @@ describe("AwcProjectCardActionsMenuItems delete visibility", () => {
         createElement(Items, {
           ...baseProps,
           canDelete: true,
+          canLeave: true,
           isDefaultProject: true,
-          projectName: "Default",
         }),
       ),
     );
     expect(defaultHtml).not.toContain('data-testid="delete-item"');
+    expect(defaultHtml).not.toContain('data-testid="leave-item"');
   });
 });
