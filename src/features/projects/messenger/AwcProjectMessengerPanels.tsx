@@ -19,6 +19,10 @@ interface AwcProjectMessengerPanelsProps {
   readonly selectedMeta: MessengerThreadMeta;
   readonly thread: AwcMessengerOpenThread | null;
   readonly isLoading: boolean;
+  readonly loadingOlder: boolean;
+  readonly canLoadOlder: boolean;
+  readonly reachedStart: boolean;
+  readonly projectComputerOffline: boolean;
   readonly canSend: boolean;
   readonly sending: boolean;
   readonly mobileShowThread: boolean;
@@ -26,6 +30,7 @@ interface AwcProjectMessengerPanelsProps {
   readonly defaultAssigneeMembershipId: string;
   readonly onSelect: (threadKey: string) => void;
   readonly onBack: () => void;
+  readonly onLoadOlder: () => void;
   readonly onSendMessage: (text: string, needsReply: boolean) => Promise<boolean>;
   readonly onSendTask: (draft: MessengerTaskDraft) => Promise<boolean>;
 }
@@ -37,6 +42,10 @@ export default function AwcProjectMessengerPanels({
   selectedMeta,
   thread,
   isLoading,
+  loadingOlder,
+  canLoadOlder,
+  reachedStart,
+  projectComputerOffline,
   canSend,
   sending,
   mobileShowThread,
@@ -44,6 +53,7 @@ export default function AwcProjectMessengerPanels({
   defaultAssigneeMembershipId,
   onSelect,
   onBack,
+  onLoadOlder,
   onSendMessage,
   onSendTask,
 }: AwcProjectMessengerPanelsProps) {
@@ -72,12 +82,17 @@ export default function AwcProjectMessengerPanels({
           status={selectedMeta.status}
           thread={thread}
           isLoading={isLoading}
+          loadingOlder={loadingOlder}
+          canLoadOlder={canLoadOlder}
+          reachedStart={reachedStart}
+          projectComputerOffline={projectComputerOffline}
           canSend={canSend}
           sending={sending}
           showBack={mobileShowThread}
           assignees={assignees}
           defaultAssigneeMembershipId={defaultAssigneeMembershipId}
           onBack={onBack}
+          onLoadOlder={onLoadOlder}
           onSendMessage={onSendMessage}
           onSendTask={onSendTask}
         />

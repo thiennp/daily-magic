@@ -58,4 +58,10 @@ export const AWC_PROJECT_MESSENGER_COPY = {
   noComputerHintLabel: "Where chat history is kept",
   noComputerHint:
     "This browser keeps this project's chat history for now. Add a computer to keep a lasting copy.",
+  loadOlder: "Load older",
+  loadingOlder: "Loading older messages…",
+  startOfConversation: "Start of conversation",
+  projectComputerOffline:
+    "Lost connection to the project computer. Older messages will load when it's back online.",
+  projectComputerOfflineRetry: "Retry",
 } as const;

@@ -16,12 +16,17 @@ interface AwcMessengerThreadPaneProps {
   readonly status?: AwcMessengerBotStatus;
   readonly thread: AwcMessengerOpenThread | null;
   readonly isLoading: boolean;
+  readonly loadingOlder: boolean;
+  readonly canLoadOlder: boolean;
+  readonly reachedStart: boolean;
+  readonly projectComputerOffline: boolean;
   readonly canSend: boolean;
   readonly sending: boolean;
   readonly showBack: boolean;
   readonly assignees: readonly MessengerTaskAssigneeOption[];
   readonly defaultAssigneeMembershipId: string;
   readonly onBack: () => void;
+  readonly onLoadOlder: () => void;
   readonly onSendMessage: (text: string, needsReply: boolean) => Promise<boolean>;
   readonly onSendTask: (draft: MessengerTaskDraft) => Promise<boolean>;
 }
@@ -32,12 +37,17 @@ export default function AwcMessengerThreadPane({
   status,
   thread,
   isLoading,
+  loadingOlder,
+  canLoadOlder,
+  reachedStart,
+  projectComputerOffline,
   canSend,
   sending,
   showBack,
   assignees,
   defaultAssigneeMembershipId,
   onBack,
+  onLoadOlder,
   onSendMessage,
   onSendTask,
 }: AwcMessengerThreadPaneProps) {
@@ -74,7 +84,14 @@ export default function AwcMessengerThreadPane({
         <p className="p-4 text-xs text-gray-400">{copy.loadingThread}</p>
       ) : null}
       {thread !== null ? (
-        <AwcMessengerTimeline entries={thread.entries} />
+        <AwcMessengerTimeline
+          entries={thread.entries}
+          loadingOlder={loadingOlder}
+          canLoadOlder={canLoadOlder}
+          reachedStart={reachedStart}
+          projectComputerOffline={projectComputerOffline}
+          onLoadOlder={onLoadOlder}
+        />
       ) : null}
       {canSend ? (
         <AwcMessengerComposer

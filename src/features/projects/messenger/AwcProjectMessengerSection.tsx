@@ -99,6 +99,10 @@ export default function AwcProjectMessengerSection({
         selectedMeta={selectedMeta}
         thread={open.thread}
         isLoading={open.isLoading}
+        loadingOlder={open.loadingOlder}
+        canLoadOlder={open.canLoadOlder}
+        reachedStart={open.reachedStart}
+        projectComputerOffline={open.projectComputerOffline}
         canSend={canSend}
         sending={open.sending}
         mobileShowThread={mobileShowThread}
@@ -110,6 +114,9 @@ export default function AwcProjectMessengerSection({
         }}
         onBack={() => {
           setMobileShowThread(false);
+        }}
+        onLoadOlder={() => {
+          void open.loadOlder();
         }}
         onSendMessage={async (text, needsReply) =>
           afterSend(await open.send(text, needsReply))

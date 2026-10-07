@@ -54,8 +54,27 @@ export type AwcMessengerTimelineEntry = {
   readonly states: readonly AwcMessengerStateChip[];
 };
 
+/** Dispatch load-older page meta (fd7764c0). Absent on today's main. */
+export type AwcMessengerPageSource = "local" | "neon" | "mixed" | "exhausted";
+
+export type AwcMessengerThreadPage = {
+  readonly beforeCursor: string | null;
+  readonly hasMore: boolean;
+  readonly source: AwcMessengerPageSource;
+  readonly localLive: boolean;
+};
+
+/** Dispatch offline error when Neon is exhausted and the project computer is offline. */
+export type AwcMessengerThreadError = {
+  readonly code: "project_computer_offline";
+  readonly message: string;
+};
+
 export type AwcMessengerOpenThread = {
   readonly threadKey: string;
+  /** Display order: oldest first, newest last (composer sits under the latest). */
   readonly entries: readonly AwcMessengerTimelineEntry[];
   readonly canSend: boolean;
+  readonly page?: AwcMessengerThreadPage;
+  readonly error?: AwcMessengerThreadError;
 };
