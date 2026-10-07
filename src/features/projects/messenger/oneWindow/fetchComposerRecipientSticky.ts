@@ -31,13 +31,28 @@ const parseSticky = (raw: unknown): ComposerRecipientStickySnapshot | null => {
   return null;
 };
 
+const parseSingleAssistant = (
+  raw: unknown,
+): ComposerStickyGetOk["singleAssistant"] => {
+  if (raw === null || typeof raw !== "object" || Array.isArray(raw)) return null;
+  const s = raw as Record<string, unknown>;
+  if (typeof s.membershipId !== "string" || s.membershipId.length === 0) return null;
+  return {
+    membershipId: s.membershipId,
+    displayName: typeof s.displayName === "string" ? s.displayName : null,
+  };
+};
+
 /** GET — server sticky wins; includes singleAssistant hint. */
 export const fetchComposerRecipientSticky = async (
   projectId: string,
+  signal?: AbortSignal,
 ): Promise<ComposerStickyGetResult> => {
+  // Aborted (or network error) → { ok: false }; callers check their signal.
   const response = await fetch(stickyUrl(projectId), {
     method: "GET",
     cache: "no-store",
+    signal,
   }).catch(() => null);
   if (response === null || !response.ok) return { ok: false };
   const payload: unknown = await response.json().catch(() => null);
@@ -46,22 +61,11 @@ export const fetchComposerRecipientSticky = async (
   }
   const body = payload as Record<string, unknown>;
   if (body.ok !== true) return { ok: false };
-  const singleRaw = body.singleAssistant;
-  let singleAssistant: ComposerStickyGetOk["singleAssistant"] = null;
-  if (singleRaw !== null && typeof singleRaw === "object" && !Array.isArray(singleRaw)) {
-    const s = singleRaw as Record<string, unknown>;
-    if (typeof s.membershipId === "string" && s.membershipId.length > 0) {
-      singleAssistant = {
-        membershipId: s.membershipId,
-        displayName: typeof s.displayName === "string" ? s.displayName : null,
-      };
-    }
-  }
   return {
     ok: true,
     sticky: parseSticky(body.sticky),
     cleared: body.cleared === true,
-    singleAssistant,
+    singleAssistant: parseSingleAssistant(body.singleAssistant),
   };
 };
 

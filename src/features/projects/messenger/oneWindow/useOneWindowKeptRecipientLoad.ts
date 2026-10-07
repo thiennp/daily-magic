@@ -21,7 +21,10 @@ export const useOneWindowKeptRecipientLoad = (input: {
   useEffect(() => {
     const controller = new AbortController();
     const load = async (): Promise<void> => {
-      const server = await fetchComposerRecipientSticky(projectId);
+      const server = await fetchComposerRecipientSticky(
+        projectId,
+        controller.signal,
+      );
       if (controller.signal.aborted) return;
       if (server.ok) {
         if (server.singleAssistant !== null) {

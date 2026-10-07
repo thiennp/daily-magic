@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { deleteComposerRecipientSticky } from "@/features/projects/messenger/oneWindow/fetchComposerRecipientSticky";
-import { cacheOneWindowKeptRecipient } from "@/features/projects/messenger/oneWindow/persistOneWindowKeptRecipient";
+import {
+  cacheOneWindowKeptRecipient,
+  syncOneWindowKeptRecipientSticky,
+} from "@/features/projects/messenger/oneWindow/persistOneWindowKeptRecipient";
 import type { MessengerKeptRecipient } from "@/features/projects/messenger/types/messengerChatStore.type";
 import { nextMessengerKeptRecipient } from "@/features/projects/messenger/utils/nextMessengerKeptRecipient";
 
@@ -40,6 +42,6 @@ export const useOneWindowKeptRecipientGone = (input: {
     if (goneClearSeq === goneClearDone.current) return;
     goneClearDone.current = goneClearSeq;
     void cacheOneWindowKeptRecipient({ projectId, memberKey, recipient: null });
-    void deleteComposerRecipientSticky(projectId);
+    void syncOneWindowKeptRecipientSticky(projectId, null);
   }, [goneClearSeq, memberKey, projectId]);
 };

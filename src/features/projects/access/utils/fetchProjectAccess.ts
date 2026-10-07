@@ -3,9 +3,11 @@ import type {
   AccessPendingView,
 } from "@/features/projects/access/utils/projectAccessApi.types";
 
-export const fetchProjectAccess = async (projectId: string) => {
+/** Optional `signal` aborts the request (rejects with AbortError — callers ignore it). */
+export const fetchProjectAccess = async (projectId: string, signal?: AbortSignal) => {
   const response = await fetch(`/api/projects/${projectId}/access`, {
     cache: "no-store",
+    signal,
   });
   return response.json() as Promise<{
     readonly ok: boolean;

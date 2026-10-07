@@ -36,7 +36,8 @@ export const useAwcProjectTasksAssignPeers = (input: {
       setPeersError(C.assignPeersLoadFailed);
       setPeersLoading(false);
     };
-    void fetchProjectAccess(projectId)
+    // Abort rejects with AbortError → fail() returns early (signal aborted).
+    void fetchProjectAccess(projectId, controller.signal)
       .then((access) => {
         if (controller.signal.aborted) return;
         if (!access.ok || access.members === undefined) {
