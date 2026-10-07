@@ -5,10 +5,8 @@ import { useState } from "react";
 import AppPanel from "@/components/surfaces/AppPanel";
 import GroupMemberInviteForm from "@/features/admin/components/GroupMemberInviteForm";
 import GroupMembersTable from "@/features/admin/components/GroupMembersTable";
-import {
-  COMPANY_ENTITY_LABEL,
-  COMPANY_MEMBERS_LABEL,
-} from "@/lib/admin/companyGroupCopy.constant";
+import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
+import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
 import type { MemberItem } from "@/features/admin/types/groupManagement.types";
 
@@ -44,8 +42,11 @@ export default function GroupMembersSection({
     <>
       <AppPanel padding="compact">
         <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          {COMPANY_MEMBERS_LABEL}
+          {C.membersTitle}
         </h2>
+        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          {C.roleTip}
+        </p>
 
         <GroupMemberInviteForm
           memberEmail={memberEmail}

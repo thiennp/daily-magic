@@ -4,6 +4,7 @@ import {
   GROUP_ROLE_OPTIONS,
   type MemberItem,
 } from "@/features/admin/types/groupManagement.types";
+import { formatCompanyMemberRoleLabel } from "@/features/admin/utils/formatCompanyMemberRoleLabel";
 
 interface GroupMembersTableProps {
   readonly members: readonly MemberItem[];
@@ -21,9 +22,9 @@ export default function GroupMembersTable({
       <table className="min-w-full text-left text-sm">
         <thead>
           <tr className="border-b border-gray-200 dark:border-gray-800">
-            <th className="px-3 py-2">Email</th>
-            <th className="px-3 py-2">Agent</th>
+            <th className="px-3 py-2">Person</th>
             <th className="px-3 py-2">Role</th>
+            <th className="px-3 py-2">Last active</th>
             <th className="px-3 py-2">Actions</th>
           </tr>
         </thead>
@@ -34,13 +35,15 @@ export default function GroupMembersTable({
               className="border-b border-gray-100 dark:border-gray-800/80"
             >
               <td className="px-3 py-2">
-                {member.user?.email ?? member.membership.userId}
-              </td>
-              <td className="px-3 py-2">
-                <TargetPresenceBadges
-                  isOnline={member.presence?.isOnline ?? false}
-                  isPaired={member.presence?.isPaired ?? false}
-                />
+                <div className="flex flex-col gap-1">
+                  <span>
+                    {member.user?.email ?? member.membership.userId}
+                  </span>
+                  <TargetPresenceBadges
+                    isOnline={member.presence?.isOnline ?? false}
+                    isPaired={member.presence?.isPaired ?? false}
+                  />
+                </div>
               </td>
               <td className="px-3 py-2">
                 <select
@@ -48,14 +51,18 @@ export default function GroupMembersTable({
                   onChange={(event) => {
                     void onRoleChange(member.membership.id, event.target.value);
                   }}
+                  aria-label="Role"
                   className="rounded-lg border border-gray-200 px-2 py-1 text-sm dark:border-gray-700 dark:bg-gray-950"
                 >
                   {GROUP_ROLE_OPTIONS.map((role) => (
                     <option key={role} value={role}>
-                      {role}
+                      {formatCompanyMemberRoleLabel(role)}
                     </option>
                   ))}
                 </select>
+              </td>
+              <td className="px-3 py-2 text-gray-500 dark:text-gray-400">
+                {member.presence?.isOnline ? "Online now" : "—"}
               </td>
               <td className="px-3 py-2">
                 <Button

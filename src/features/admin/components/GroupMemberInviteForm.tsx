@@ -1,5 +1,7 @@
 import Button from "@/components/ui/button/Button";
+import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
 import { GROUP_ROLE_OPTIONS } from "@/features/admin/types/groupManagement.types";
+import { formatCompanyMemberRoleLabel } from "@/features/admin/utils/formatCompanyMemberRoleLabel";
 
 interface GroupMemberInviteFormProps {
   readonly memberEmail: string;
@@ -23,8 +25,8 @@ export default function GroupMemberInviteForm({
         onChange={(event) => {
           onMemberEmailChange(event.target.value);
         }}
-        placeholder="user@example.com"
-        aria-label="Member email"
+        placeholder={C.inviteEmailPlaceholder}
+        aria-label={C.inviteEmailAria}
         className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
       />
       <select
@@ -32,15 +34,16 @@ export default function GroupMemberInviteForm({
         onChange={(event) => {
           onMemberRoleChange(event.target.value);
         }}
+        aria-label={C.inviteRoleAria}
         className="rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
       >
         {GROUP_ROLE_OPTIONS.map((role) => (
           <option key={role} value={role}>
-            {role}
+            {formatCompanyMemberRoleLabel(role)}
           </option>
         ))}
       </select>
-      <Button onClick={() => void onAddMember()}>Add member</Button>
+      <Button onClick={() => void onAddMember()}>{C.inviteCta}</Button>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import GroupCompanySettingsGearButton from "@/features/admin/components/GroupCompanySettingsGearButton";
+import { COMPANIES_RULES_HUB_COPY } from "@/features/admin/companiesRulesHubCopy.constant";
 import type { GroupItem } from "@/features/admin/types/groupManagement.types";
 
 const GEAR_CLASS =
@@ -9,41 +10,27 @@ const GEAR_CLASS =
 interface GroupCompanySettingsAccessProps {
   readonly groups: readonly GroupItem[];
   readonly selectedGroupId: string;
-  readonly companyLabel: string;
   readonly canConfigureDispatchPolicy: boolean;
   readonly canDeleteTeam: boolean;
-  readonly deleteMembers: boolean;
   readonly onSelectGroup: (groupId: string) => void;
-  readonly onDeleteMembersChange: (value: boolean) => void;
-  readonly onDeleteGroup: () => void;
+  readonly onOpenSettings: () => void;
 }
 
 export default function GroupCompanySettingsAccess({
   groups,
   selectedGroupId,
-  companyLabel,
   canConfigureDispatchPolicy,
   canDeleteTeam,
-  deleteMembers,
   onSelectGroup,
-  onDeleteMembersChange,
-  onDeleteGroup,
+  onOpenSettings,
 }: GroupCompanySettingsAccessProps) {
   const selectedGroup = groups.find((group) => group.id === selectedGroupId);
   const canOpenSettings =
     Boolean(selectedGroupId) && (canDeleteTeam || canConfigureDispatchPolicy);
-  const gearProps = {
-    groups,
-    selectedGroupId,
-    canConfigureDispatchPolicy,
-    canDeleteTeam,
-    deleteMembers,
-    onDeleteMembersChange,
-    onDeleteGroup,
-  };
   const gear = canOpenSettings ? (
     <GroupCompanySettingsGearButton
-      {...gearProps}
+      companyName={selectedGroup?.name}
+      onOpen={onOpenSettings}
       className={`${GEAR_CLASS} ${groups.length === 1 ? "h-8 w-8" : "h-[42px] w-[42px] shrink-0"}`}
     />
   ) : null;
@@ -62,7 +49,7 @@ export default function GroupCompanySettingsAccess({
   return (
     <div className="mt-4 flex items-end gap-2">
       <label className="flex-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-        Managing {companyLabel}
+        {COMPANIES_RULES_HUB_COPY.managingCompany}
         <select
           value={selectedGroupId}
           onChange={(event) => {

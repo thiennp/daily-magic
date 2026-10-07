@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import Button from "@/components/ui/button/Button";
 import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
+import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
 import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import type { GroupItem } from "@/features/admin/types/groupManagement.types";
 
@@ -53,19 +54,19 @@ export default function GroupDeleteControls({
             setIsDeleteModalOpen(true);
           }}
         >
-          Delete {companyLabel}
+          {C.deleteCompany}
         </Button>
       </div>
 
       <ConfirmDestructiveModal
         isOpen={isDeleteModalOpen}
-        title={`Delete ${companyLabel}?`}
+        title={`Delete ${selectedGroup?.name ?? companyLabel}?`}
         description={
           deleteMembers
-            ? `Delete "${selectedGroup?.name ?? `this ${companyLabel}`}" and remove all users in it. This cannot be undone.`
-            : `Delete "${selectedGroup?.name ?? `this ${companyLabel}`}". Members will lose access to this ${companyLabel}.`
+            ? `Delete "${selectedGroup?.name ?? `this ${companyLabel}`}" and remove all users in it. ${C.deleteConfirmHint}`
+            : C.deleteBody
         }
-        confirmLabel={`Delete ${companyLabel}`}
+        confirmLabel={C.deleteCompany}
         onClose={() => {
           setIsDeleteModalOpen(false);
         }}

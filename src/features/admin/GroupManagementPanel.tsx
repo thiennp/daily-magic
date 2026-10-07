@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
+import CompaniesRulesOrientationStrip from "@/features/admin/components/CompaniesRulesOrientationStrip";
+import GroupCompanySettingsModal from "@/features/admin/components/GroupCompanySettingsModal";
 import GroupMembersSection from "@/features/admin/components/GroupMembersSection";
 import GroupSelectionSection from "@/features/admin/components/GroupSelectionSection";
 import GroupTeamActivityPanel from "@/features/admin/components/GroupTeamActivityPanel";
@@ -21,6 +23,7 @@ export default function GroupManagementPanel({
   const { data: session } = useSession();
   const adminGroupsSidebar = useAdminGroupsSidebar();
   const groupManagement = useGroupManagement(initialGroups);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   useEffect(() => {
     adminGroupsSidebar?.setSelectedGroupId(groupManagement.selectedGroupId);
@@ -44,20 +47,28 @@ export default function GroupManagementPanel({
     actorMembership?.role === GroupRole.GROUP_SUPER_ADMIN ||
     actorMembership?.role === GroupRole.GROUP_ADMIN;
 
+  const openSettings = (): void => {
+    setIsSettingsOpen(true);
+  };
+
   return (
     <div className="space-y-6">
       <GroupSelectionSection
         groups={groupManagement.groups}
         selectedGroupId={groupManagement.selectedGroupId}
         newGroupName={groupManagement.newGroupName}
-        deleteMembers={groupManagement.deleteMembers}
         canDeleteTeam={canDeleteTeam}
         canConfigureDispatchPolicy={canConfigureDispatchPolicy}
         onNewGroupNameChange={groupManagement.setNewGroupName}
         onSelectGroup={groupManagement.handleSelectGroup}
-        onDeleteMembersChange={groupManagement.setDeleteMembers}
         onCreateGroup={() => void groupManagement.handleCreateGroup()}
-        onDeleteGroup={() => void groupManagement.handleDeleteGroup()}
+        onOpenSettings={openSettings}
+      />
+
+      <CompaniesRulesOrientationStrip
+        groupId={groupManagement.selectedGroupId || null}
+        canConfigureDispatchPolicy={canConfigureDispatchPolicy}
+        onOpenCompanySettings={openSettings}
       />
 
       {groupManagement.selectedGroupId ? (
@@ -74,6 +85,25 @@ export default function GroupManagementPanel({
           />
           <GroupTeamActivityPanel groupId={groupManagement.selectedGroupId} />
         </>
+      ) : null}
+
+      {groupManagement.selectedGroupId ? (
+        <GroupCompanySettingsModal
+          isOpen={isSettingsOpen}
+          groupId={groupManagement.selectedGroupId}
+          groups={groupManagement.groups}
+          canConfigureDispatchPolicy={canConfigureDispatchPolicy}
+          canDeleteTeam={canDeleteTeam}
+          deleteMembers={groupManagement.deleteMembers}
+          onClose={() => {
+            setIsSettingsOpen(false);
+          }}
+          onDeleteMembersChange={groupManagement.setDeleteMembers}
+          onDeleteGroup={() => {
+            setIsSettingsOpen(false);
+            void groupManagement.handleDeleteGroup();
+          }}
+        />
       ) : null}
 
       {groupManagement.message ? (
