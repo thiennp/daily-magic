@@ -19,6 +19,7 @@ const SILENCE_BLOCK_MINUTES = PROJECT_B2B_SILENCE_BLOCK_MS / 60_000;
 /** Shared reply clause for briefing, invite prompt, and agent guideline. */
 export const PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE =
   "On a wake, read projectId and messageId from the wake POST body and act ONLY on that projectId (never mix another project's inbox, briefing, or replies). " +
+  "Wake/briefing carries ONLY this project's id, name, and the triggering message — no status/tips/EN-PASS from other projects; answer only about this project; questions about another product go to that product's project. " +
   "The first action — before list_project_inbox, before composing, before the task and before ack — is project_dispatch kind " +
   `"${PROJECT_MESSAGE_KIND_TASK_RECEIVED}" to that sender with summary "received <messageId>" using the wake payload messageId, projectId, and from* (do not wait to read inbox); ` +
   "also one short line in your own window that the message was received. " +

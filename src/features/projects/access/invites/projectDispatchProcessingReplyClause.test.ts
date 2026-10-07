@@ -82,6 +82,15 @@ describe("PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE", () => {
       /every owner\/member ask needs a visible reply/i,
     );
     expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain("Alternate OK");
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain(
+      "answer only about this project; questions about another product go to that product's project",
+    );
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain(
+      "Wake/briefing carries ONLY this project's id, name, and the triggering message",
+    );
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain(
+      "no status/tips/EN-PASS from other projects",
+    );
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain(
       PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE,
     );
