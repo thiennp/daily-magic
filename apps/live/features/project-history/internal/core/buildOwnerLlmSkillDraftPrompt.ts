@@ -48,8 +48,8 @@ export const buildOwnerLlmSkillWritePrompt = (
   return [
     "Write ONE SKILL.md draft from the scrubbed transcript.",
     "Output ONLY the markdown file: YAML frontmatter then body.",
-    "Frontmatter keys: name (kebab-case), description, version: 0.1.0,",
-    "source_message_ids: [] (ids unknown — leave empty array), status: draft.",
+    "Frontmatter keys: name (kebab-case), description, version: 0.1.0, status: draft.",
+    "Do NOT write source_message_ids; the system adds the transcript message ids.",
     "Body sections: When to use, Inputs, Steps (3–8, use placeholders for specifics),",
     "Pitfalls, Verification.",
     "Avoid overlapping similar drafts/skills listed below.",

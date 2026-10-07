@@ -27,6 +27,16 @@ describe("buildOwnerLlmSkillDraftPrompt", () => {
     expect(text).not.toContain("Prior reflection");
   });
 
+  it("does not ask the LLM for source_message_ids (code stamps them)", () => {
+    const text = buildOwnerLlmSkillWritePrompt({
+      scrubbedTranscript: "body",
+      similarDraftHints: [],
+      mode: "write",
+    });
+    expect(text).not.toContain("leave empty array");
+    expect(text).toContain("Do NOT write source_message_ids");
+  });
+
   it("includes prior reflection for reflect_then_write", () => {
     const text = buildOwnerLlmSkillWritePrompt({
       scrubbedTranscript: "body",

@@ -92,6 +92,50 @@ describe("advanceProjectHistorySkillgenEpisode", () => {
     ).toBe(true);
   });
 
+  it("stamps source_message_ids from the episode, not the LLM output", async () => {
+    const now = 1_000_000;
+    const messages = Array.from({ length: 20 }, (_, i) => ({
+      messageId: `m${i}`,
+      createdAtMs: now - 1_000,
+      text: i === 19 ? "all done — tests green" : `step ${i}: do the work`,
+    }));
+    const llmSkill = validSkill.replace(
+      "source_message_ids: [m0, m1, m2]",
+      "source_message_ids: []",
+    );
+    const writeDraft = vi.fn(
+      (input: { draftId: string; sourceMessageIds: readonly string[] }) => ({
+        draftDir: `/tmp/${input.draftId}`,
+        skillPath: `/tmp/${input.draftId}/SKILL.md`,
+        metaPath: `/tmp/${input.draftId}/meta.json`,
+        contentHash: "sha256:stamped",
+      }),
+    );
+    const result = await advanceProjectHistorySkillgenEpisode({
+      episode: baseEpisode({ lastMessageAtMs: now - 1_000 }),
+      messages,
+      tokensUsedToday: 0,
+      lastClosedAtMs: now - 60_000,
+      nowMs: now,
+      deps: {
+        ownerLlm: async () => ({
+          ok: true as const,
+          skillMarkdown: llmSkill,
+          tokensUsed: 1,
+        }),
+        writeDraft,
+        listDraftFingerprints: () => [],
+        listPublishedFingerprints: () => [],
+        openDraftCount: () => 0,
+      },
+    });
+    expect(result.episode.state).toBe("AWAITING_REVIEW");
+    expect(writeDraft).toHaveBeenCalledTimes(1);
+    expect(writeDraft.mock.calls[0]?.[0].sourceMessageIds).toEqual(
+      messages.map((m) => m.messageId),
+    );
+  });
+
   it("pauses at EPISODE_READY when the draft cap is reached", async () => {
     const now = 1_000_000;
     const messages = Array.from({ length: 20 }, (_, i) => ({

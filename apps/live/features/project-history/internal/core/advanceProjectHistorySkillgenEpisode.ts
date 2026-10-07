@@ -23,6 +23,7 @@ import {
 import { recordProjectHistorySkillgenMetrics } from "./recordProjectHistorySkillgenMetrics";
 import type { ProjectHistorySkillgenMetricsEvent } from "./recordProjectHistorySkillgenMetrics";
 import { scrubProjectHistorySkillgenSecrets } from "./scrubProjectHistorySkillgenSecrets";
+import { stampProjectHistorySkillgenSourceMessageIds } from "./stampProjectHistorySkillgenSourceMessageIds";
 import { stepProjectHistorySkillgenFsm } from "./stepProjectHistorySkillgenFsm";
 import {
   extractProjectHistorySkillgenStepLines,
@@ -292,7 +293,11 @@ export const advanceProjectHistorySkillgenEpisode = async (
       }
       const from = episode.state;
       if (written.ok) {
-        pendingMarkdown = written.skillMarkdown;
+        // Provenance from code, not the LLM: ids actually fed to the writer.
+        pendingMarkdown = stampProjectHistorySkillgenSourceMessageIds({
+          skillMarkdown: written.skillMarkdown,
+          sourceMessageIds: episode.messageIds,
+        });
       }
       episode = withTransition(
         episode,
