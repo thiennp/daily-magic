@@ -1,15 +1,10 @@
 import { resolveSendTaskModalPanelKey } from "@/features/agent/utils/resolveSendTaskModalPanelKey";
+import { setSendTaskModalUrl } from "@/features/agent/utils/setSendTaskModalUrl";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 
 export const expandRunningSendTaskModal = (input: {
   readonly runId: string;
   readonly pathname: string;
-  readonly router: {
-    readonly push: (
-      href: string,
-      options?: { readonly scroll?: boolean },
-    ) => void;
-  };
   readonly setKeepAlive: (value: boolean) => void;
   readonly setPanelKey: (value: string) => void;
 }): void => {
@@ -26,12 +21,12 @@ export const expandRunningSendTaskModal = (input: {
       capabilityFromUrl: "custom",
     }),
   );
-  input.router.push(
+  setSendTaskModalUrl(
     buildAgentComposerHref({
       pathname: input.pathname,
       sourceRunId: runId,
       resumeLiveSession: true,
     }),
-    { scroll: false },
+    "push",
   );
 };

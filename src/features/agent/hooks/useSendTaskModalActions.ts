@@ -9,6 +9,7 @@ import { resolveSendTaskCloseAction } from "@/features/agent/utils/resolveSendTa
 import { resolveSendTaskModalPanelKey } from "@/features/agent/utils/resolveSendTaskModalPanelKey";
 import { clearPersistedAgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalLocalStore";
 import { expandRunningSendTaskModal } from "@/features/agent/utils/expandRunningSendTaskModal";
+import { setSendTaskModalUrl } from "@/features/agent/utils/setSendTaskModalUrl";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 import { stripSendTaskModalQuery } from "@/features/agent/utils/stripSendTaskModalQuery";
 
@@ -36,10 +37,11 @@ export const useSendTaskModalActions = (input: {
 
   const minimizeSendTaskModal = useCallback(() => {
     setKeepAlive(true);
-    router.replace(`${pathname}${stripSendTaskModalQuery(searchParams)}`, {
-      scroll: false,
-    });
-  }, [pathname, router, searchParams, setKeepAlive]);
+    setSendTaskModalUrl(
+      `${pathname}${stripSendTaskModalQuery(searchParams)}`,
+      "replace",
+    );
+  }, [pathname, searchParams, setKeepAlive]);
 
   const closeSendTaskModal = useCallback(() => {
     if (resolveSendTaskCloseAction({ isSessionActive }) === "minimize") {
@@ -48,14 +50,14 @@ export const useSendTaskModalActions = (input: {
     }
 
     setKeepAlive(false);
-    router.replace(`${pathname}${stripSendTaskModalQuery(searchParams)}`, {
-      scroll: false,
-    });
+    setSendTaskModalUrl(
+      `${pathname}${stripSendTaskModalQuery(searchParams)}`,
+      "replace",
+    );
   }, [
     isSessionActive,
     minimizeSendTaskModal,
     pathname,
-    router,
     searchParams,
     setKeepAlive,
   ]);
@@ -82,9 +84,7 @@ export const useSendTaskModalActions = (input: {
           capabilityFromUrl: "custom",
         }),
       );
-      router.push(composerHref, {
-        scroll: false,
-      });
+      setSendTaskModalUrl(composerHref, "push");
     },
     [pathname, router, session?.user, setKeepAlive, setPanelKey],
   );
@@ -94,20 +94,20 @@ export const useSendTaskModalActions = (input: {
       expandRunningSendTaskModal({
         runId,
         pathname,
-        router,
         setKeepAlive,
         setPanelKey,
       });
     },
-    [pathname, router, setKeepAlive, setPanelKey],
+    [pathname, setKeepAlive, setPanelKey],
   );
 
   const expandSendTaskModal = useCallback(() => {
     setKeepAlive(true);
-    router.push(buildAgentComposerHref({ pathname, resumeLiveSession: true }), {
-      scroll: false,
-    });
-  }, [pathname, router, setKeepAlive]);
+    setSendTaskModalUrl(
+      buildAgentComposerHref({ pathname, resumeLiveSession: true }),
+      "push",
+    );
+  }, [pathname, setKeepAlive]);
 
   return {
     openSendTaskModal,
