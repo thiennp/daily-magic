@@ -17,6 +17,14 @@ export const assertComputerEntitlement = async (input: {
     row,
     trialGate: cost.trialGate,
   });
+  if (row.plan === "trial" && ents.trialGate === "closed") {
+    return {
+      ok: false,
+      code: "trial_closed",
+      errorMessage:
+        "Trial capacity is full. Choose Pro or Team to continue.",
+    };
+  }
   if (current >= ents.maxComputers) {
     return {
       ok: false,

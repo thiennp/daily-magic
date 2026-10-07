@@ -2,6 +2,7 @@ import { createAgentWitchInstallTokenForUser } from "@/lib/agentWitch/createAgen
 import { buildAppOriginFromHeaders } from "@/lib/agentWitch/resolveAgentWitchAppOrigin";
 import { requireAuth } from "@/lib/auth/requireAuth";
 import { isBillingGateError } from "@/lib/billing/billingGateError";
+import { toBillingGateResponse } from "@/lib/billing/toBillingGateResponse";
 import isMobileRequest from "@/lib/mobile/isMobileRequest";
 
 export const dynamic = "force-dynamic";
@@ -44,10 +45,11 @@ export async function POST(request: Request): Promise<Response> {
     });
   } catch (error) {
     if (isBillingGateError(error)) {
-      return Response.json(
-        { error: error.message, code: error.code },
-        { status: 403 },
-      );
+      return toBillingGateResponse({
+        ok: false,
+        code: error.code,
+        errorMessage: error.message,
+      });
     }
     throw error;
   }

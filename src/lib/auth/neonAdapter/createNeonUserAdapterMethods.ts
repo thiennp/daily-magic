@@ -1,11 +1,15 @@
 import type { Adapter } from "next-auth/adapters";
 
+import { isAgentAccessSyntheticEmail } from "@/lib/agentAccess/isAgentAccessSyntheticEmail";
 import { SUPER_ADMIN_EMAIL } from "@/lib/auth/constants";
 import { GlobalRole } from "@/lib/auth/roles";
 import {
   mapAdapterUserRow,
   resolveGlobalRole,
 } from "@/lib/auth/neonAdapter/mapAdapterUserRow";
+import { assertTrialGateOpen } from "@/lib/billing/assertTrialGateOpen";
+import { BillingGateError } from "@/lib/billing/billingGateError";
+import { ensureBillingSchema } from "@/lib/billing/ensureBillingSchema";
 import { asRowArray, getSql } from "@/lib/db";
 
 export function createNeonUserAdapterMethods(): Pick<
@@ -19,19 +23,37 @@ export function createNeonUserAdapterMethods(): Pick<
 > {
   return {
     async createUser(user) {
+      await ensureBillingSchema();
+      const email = user.email?.trim() ?? "";
+      const skipTrialGate =
+        email.length === 0 ||
+        email === SUPER_ADMIN_EMAIL ||
+        isAgentAccessSyntheticEmail(email);
+      if (!skipTrialGate) {
+        const trialGate = await assertTrialGateOpen();
+        if (!trialGate.ok) {
+          throw new BillingGateError(trialGate);
+        }
+      }
       const sql = getSql();
       const globalRole = user.email
         ? resolveGlobalRole(user.email)
         : GlobalRole.USER;
       const result = asRowArray(
         await sql`
-        INSERT INTO users (name, email, email_verified, image, global_role)
+        INSERT INTO users (
+          name, email, email_verified, image, global_role,
+          plan, trial_started_at, trial_ends_at
+        )
         VALUES (
           ${user.name ?? null},
           ${user.email},
           ${user.emailVerified ?? null},
           ${user.image ?? null},
-          ${globalRole}
+          ${globalRole},
+          'trial',
+          NOW(),
+          NOW() + INTERVAL '1 month'
         )
         RETURNING id, name, email, email_verified, image
       `,

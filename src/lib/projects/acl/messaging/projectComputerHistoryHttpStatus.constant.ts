@@ -8,4 +8,5 @@ export const PROJECT_COMPUTER_HISTORY_HTTP_STATUS: Readonly<
   no_project_computer: 409,
   illegal_transition: 409,
   backlog_pending: 409,
+  cloud_message_storage_off: 403,
 };

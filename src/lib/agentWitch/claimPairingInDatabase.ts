@@ -1,4 +1,5 @@
 import { claimAgentWitchDevice } from "@/lib/agentWitch/claimAgentWitchDevice";
+import { isBillingGateError } from "@/lib/billing/billingGateError";
 import { findAgentWitchDeviceByToken } from "@/lib/agentWitch/findAgentWitchDeviceByToken";
 import type AgentWitchClaimedPairing from "@/lib/agentWitch/types/AgentWitchClaimedPairing.type";
 import type ClaimPairingResult from "@/lib/agentWitch/types/ClaimPairingResult.type";
@@ -68,6 +69,13 @@ export async function claimPairingInDatabase(
       claimedPairing,
     };
   } catch (error) {
+    if (isBillingGateError(error)) {
+      return {
+        success: false,
+        errorMessage: error.message,
+        code: error.code,
+      };
+    }
     const message =
       error instanceof Error ? error.message : "Could not claim pairing.";
     if (message.includes("already linked to another account")) {

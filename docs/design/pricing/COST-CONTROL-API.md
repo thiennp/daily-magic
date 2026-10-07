@@ -1,5 +1,7 @@
 # AgentWitch cost-control API — contract
 
+**Server gates (where asserts run, error codes, LIVE vs missing):** `docs/design/cost-control/GATES-CONTRACT.md`.
+
 Owner: NRG AgentWitch (API / DB / gates).  
 UI knobs: AW Human UI (AWC admin/settings; AWL only if Local needed).  
 Locked: Pricing product lock + NRG Lead alignment (2026-10-07). Land lock free — stack claim with Human UI when both suite-ready.  
