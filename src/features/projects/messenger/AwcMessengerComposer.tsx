@@ -3,17 +3,17 @@
 import AwcOneWindowComposerGoneNotice from "@/features/projects/messenger/oneWindow/AwcOneWindowComposerGoneNotice";
 import AwcOneWindowComposerHint from "@/features/projects/messenger/oneWindow/AwcOneWindowComposerHint";
 import AwcOneWindowComposerPicker from "@/features/projects/messenger/oneWindow/AwcOneWindowComposerPicker";
-import AwcOneWindowKeptChip from "@/features/projects/messenger/oneWindow/AwcOneWindowKeptChip";
+import AwcOneWindowComposerRouteRow from "@/features/projects/messenger/oneWindow/AwcOneWindowComposerRouteRow";
+import AwcOneWindowKeptRetryNotice from "@/features/projects/messenger/oneWindow/AwcOneWindowKeptRetryNotice";
 import AwcOneWindowMentionBox from "@/features/projects/messenger/oneWindow/AwcOneWindowMentionBox";
-import AwcOneWindowRecipientSwitch from "@/features/projects/messenger/oneWindow/AwcOneWindowRecipientSwitch";
 import {
   type OneWindowSendMessage,
-  oneWindowWholeFeedSwitchLabel,
   sendOneWindowMessageTo,
 } from "@/features/projects/messenger/oneWindow/oneWindowSendTarget";
 import { useOneWindowComposerDraft } from "@/features/projects/messenger/oneWindow/useOneWindowComposerDraft";
 import type { useOneWindowComposerRouting } from "@/features/projects/messenger/oneWindow/useOneWindowComposerRouting";
 import { useOneWindowComposerSend } from "@/features/projects/messenger/oneWindow/useOneWindowComposerSend";
+import { useOneWindowKeptSendRetry } from "@/features/projects/messenger/oneWindow/useOneWindowKeptSendRetry";
 import type { MessengerTaskAssigneeOption } from "@/features/projects/messenger/utils/messengerTaskAssigneeOptions";
 import type { MessengerTaskDraft } from "@/features/projects/messenger/utils/validateMessengerTaskDraft";
 import { PROJECT_MESSENGER_WHOLE_THREAD_KEY } from "@/lib/projects/acl/messaging/messenger/projectMessenger.constant";
@@ -37,6 +37,7 @@ interface AwcMessengerComposerProps {
  * Replaces the Message | Assign task toggle and the "Needs a reply" box.
  * P1-S5 (COMPOSER-LOCK KEPT(r)): no-@ and picker sends go to r; with a feed
  * switch the kept chip is hidden and the switch names the target.
+ * P1-S5b: a retry after a part-way kept send only goes to who has not got it.
  */
 export default function AwcMessengerComposer({
   disabled,
@@ -52,6 +53,7 @@ export default function AwcMessengerComposer({
   const feedKey = feedSwitch?.key ?? PROJECT_MESSENGER_WHOLE_THREAD_KEY;
   const privateFeed = feedKey !== PROJECT_MESSENGER_WHOLE_THREAD_KEY;
   const busy = disabled || sending;
+  const { progress: keptProgress, pending, sync } = useOneWindowKeptSendRetry();
   const send = useOneWindowComposerSend({
     assistants,
     mentionsEnabled: !single,
@@ -59,6 +61,7 @@ export default function AwcMessengerComposer({
     routing,
     onSendMessage,
     onSendTask,
+    keptProgress,
   });
   const draft = useOneWindowComposerDraft({
     assistants,
@@ -66,36 +69,17 @@ export default function AwcMessengerComposer({
     onSubmit: (text, clear) => {
       if (busy) return;
       void send(text).then((ok) => {
+        sync();
         if (ok) clear();
       });
     },
   });
-  const kept = routing?.kept ?? null;
-  const nameById = new Map(assistants.map((a) => [a.membershipId, a.displayName]));
-  const showKept = !single && feedSwitch === undefined && kept !== null;
-  const onSwitch = (key: string) => {
-    // The hidden chip's uncheck: "Everyone in this project" on the whole feed clears KEPT(r).
-    if (key === PROJECT_MESSENGER_WHOLE_THREAD_KEY && !privateFeed && kept !== null) void routing?.uncheckKeep();
-    else feedSwitch?.onSelect(key);
-  };
-
   return (
     <div className="relative flex flex-col gap-2 border-t border-awc-border bg-awc-surface px-4 pb-3.5 pt-2.5 dark:border-gray-800 dark:bg-gray-950">
       {routing?.goneName ? <AwcOneWindowComposerGoneNotice name={routing.goneName} onDismiss={routing.dismissGone} /> : null}
-      {!single && (feedSwitch !== undefined || showKept) ? (
-        <div className="flex flex-wrap items-center gap-2.5">
-          {feedSwitch !== undefined ? (
-            <AwcOneWindowRecipientSwitch
-              feedKey={feedKey}
-              assistants={assistants}
-              wholeLabel={oneWindowWholeFeedSwitchLabel(kept, nameById)}
-              onSelect={onSwitch}
-            />
-          ) : null}
-          {showKept && routing?.chipLabel ? (
-            <AwcOneWindowKeptChip label={routing.chipLabel} keepChecked disabled={busy} onKeepChange={(on) => void (on ? null : routing.uncheckKeep())} />
-          ) : null}
-        </div>
+      {!single ? <AwcOneWindowComposerRouteRow assistants={assistants} routing={routing} feedSwitch={feedSwitch} busy={busy} /> : null}
+      {pending !== null && pending.text === draft.text.trim() ? (
+        <AwcOneWindowKeptRetryNotice pendingKeys={pending.pending} assistants={assistants} />
       ) : null}
       <AwcOneWindowMentionBox draft={draft} busy={busy} single={single} placeholder={routing?.placeholder} />
       <AwcOneWindowComposerHint single={single} />
@@ -107,8 +91,9 @@ export default function AwcMessengerComposer({
           onConfirm={(choice) => {
             void routing
               .confirmPicker(choice)
-              .then((text) => sendOneWindowMessageTo(onSendMessage, text, choice.recipient))
+              .then((text) => sendOneWindowMessageTo(onSendMessage, text, choice.recipient, keptProgress))
               .then((ok) => {
+                sync();
                 if (ok) draft.clear();
               });
           }}

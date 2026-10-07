@@ -7,6 +7,7 @@ import {
   type OneWindowMentionAssistant,
 } from "@/features/projects/messenger/oneWindow/oneWindowMentions";
 import {
+  type OneWindowKeptProgressRef,
   type OneWindowSendMessage,
   sendOneWindowMessageTo,
 } from "@/features/projects/messenger/oneWindow/oneWindowSendTarget";
@@ -24,6 +25,8 @@ export type OneWindowComposerSendInput = {
     readonly kept?: MessengerKeptRecipient | null;
   };
   readonly onSendMessage: OneWindowSendMessage;
+  /** P1-S5b: per-draft kept-send tracking so a retry skips who already got it. */
+  readonly keptProgress?: OneWindowKeptProgressRef;
   readonly onSendTask: (draft: MessengerTaskDraft) => Promise<boolean>;
 };
 
@@ -53,19 +56,19 @@ export const sendOneWindowComposerText = async (
   if (useRouting) {
     if (routing.beginSendWithoutMention(text) === "pick") return false;
     const kept = routing.kept ?? null;
-    if (kept !== null) return sendOneWindowMessageTo(input.onSendMessage, text, kept);
+    if (kept !== null) return sendOneWindowMessageTo(input.onSendMessage, text, kept, input.keptProgress);
   }
   return input.onSendMessage(text, privateFeed);
 };
 
 export const useOneWindowComposerSend = (input: OneWindowComposerSendInput) => {
-  const { assistants, mentionsEnabled, privateFeed, routing, onSendMessage, onSendTask } = input;
+  const { assistants, mentionsEnabled, privateFeed, routing, onSendMessage, onSendTask, keptProgress } = input;
   return useCallback(
     (raw: string) =>
       sendOneWindowComposerText(
-        { assistants, mentionsEnabled, privateFeed, routing, onSendMessage, onSendTask },
+        { assistants, mentionsEnabled, privateFeed, routing, onSendMessage, onSendTask, keptProgress },
         raw,
       ),
-    [assistants, mentionsEnabled, onSendMessage, onSendTask, privateFeed, routing],
+    [assistants, keptProgress, mentionsEnabled, onSendMessage, onSendTask, privateFeed, routing],
   );
 };

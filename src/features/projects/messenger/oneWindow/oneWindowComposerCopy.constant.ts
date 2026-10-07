@@ -11,6 +11,7 @@ export const ONE_WINDOW_COMPOSER_COPY = {
   chipLabel: "To {name}",
   chipLabelMany: "To {name} and {n} more",
   chipKeep: "Keep sending",
+  keptRetry: "Not sent to {names} yet. Send again to retry.",
   keptGone:
     "{name} is no longer in this project. Pick who gets your next message.",
   placeholderEveryone:

@@ -3,6 +3,7 @@ import AwcOneWindowBotToBotCard from "@/features/projects/messenger/oneWindow/Aw
 import AwcOneWindowNoticeRow from "@/features/projects/messenger/oneWindow/AwcOneWindowNoticeRow";
 import AwcOneWindowTaskUpdateRow from "@/features/projects/messenger/oneWindow/AwcOneWindowTaskUpdateRow";
 import type { OneWindowSubjectState } from "@/features/projects/messenger/oneWindow/oneWindowFeedItem.type";
+import { oneWindowReplyKindStatus } from "@/features/projects/messenger/oneWindow/oneWindowTaskUpdateStatus";
 import type {
   AwcMessengerTimelineEntry,
   AwcMessengerWindowKind,
@@ -36,7 +37,8 @@ interface AwcOneWindowSystemEntryProps {
 
 /**
  * P1-S5: rows picked by OW9 `windowKind`. task_update → pill from the
- * server's subjectState (DF-027 labels; none when null); approval_* →
+ * server's subjectState (DF-027 labels); P1-S5b: when it is null/missing, the
+ * reply kind's pill as a fallback; approval_* →
  * approval row; notice / bot_to_bot → their cards. Dispatch sends notice and
  * bot_to_bot rows in a later r2 (the thread builder drops them today), so
  * those light up with no UI change.
@@ -70,12 +72,13 @@ export default function AwcOneWindowSystemEntry({
       />
     );
   }
+  const status = subjectState ?? oneWindowReplyKindStatus(entry.kind);
   return (
     <AwcOneWindowTaskUpdateRow
       who={who}
       textHtmlSafe={entry.text}
-      statusLabel={subjectState?.label}
-      statusTone={subjectState?.tone}
+      statusLabel={status?.label}
+      statusTone={status?.tone}
       timeLabel={timeLabel}
     />
   );

@@ -23,15 +23,36 @@ export const oneWindowSendTargetKeys = (
   return keys.length > 0 ? keys : [WHOLE];
 };
 
-/** Sends once per target; stops at the first failure (draft stays). */
+/** P1-S5b: who already got this draft; `pending` = failed + not sent yet. */
+export type OneWindowKeptProgress = {
+  readonly text: string;
+  readonly sent: readonly string[];
+  readonly pending: readonly string[];
+} | null;
+export type OneWindowKeptProgressRef = { current: OneWindowKeptProgress };
+
+/**
+ * Sends once per target; stops at the first failure (draft stays). With a
+ * progress ref, a retry of the same text skips targets that already got it;
+ * other text or a full success clears the tracking (no duplicates on retry).
+ */
 export const sendOneWindowMessageTo = async (
   onSendMessage: OneWindowSendMessage,
   text: string,
   recipient: MessengerKeptRecipient | null,
+  progress?: OneWindowKeptProgressRef,
 ): Promise<boolean> => {
-  for (const key of oneWindowSendTargetKeys(recipient)) {
-    if (!(await onSendMessage(text, false, key))) return false;
+  const keys = oneWindowSendTargetKeys(recipient);
+  const prior = progress?.current?.text === text ? progress.current.sent : [];
+  const sent = [...prior];
+  for (const key of keys.filter((k) => !prior.includes(k))) {
+    if (!(await onSendMessage(text, false, key))) {
+      if (progress) progress.current = { text, sent, pending: keys.filter((k) => !sent.includes(k)) };
+      return false;
+    }
+    sent.push(key);
   }
+  if (progress) progress.current = null;
   return true;
 };
 

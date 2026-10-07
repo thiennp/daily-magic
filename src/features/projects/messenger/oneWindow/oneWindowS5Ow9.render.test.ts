@@ -14,13 +14,13 @@ const row = (over: Partial<AwcMessengerTimelineEntry>): string =>
   );
 
 describe("P1-S5 One window rows from OW9 windowKind", () => {
-  it("task_update pill comes from subjectState (DF-027), none when null", () => {
+  it("task_update pill comes from subjectState (DF-027); null → reply-kind fallback (S5b)", () => {
     const state = { source: "reply_kind" as const, status: "done", ...flags };
     const done = row({ kind: "task.done", text: "fixed", windowKind: "task_update", subjectState: state });
     expect(done).toContain("<b>Scout</b>");
     expect(done).toContain(">Done<");
     expect(done).toContain("bg-awc-ok-soft");
-    const plain = row({ kind: "task.status", text: "on it", windowKind: "task_update", subjectState: null });
+    const plain = row({ kind: "chat.note", text: "on it", windowKind: "task_update", subjectState: null });
     expect(plain).toContain("on it");
     expect(plain).not.toContain("rounded-full px-2 py-0.5 text-[12px]");
   });

@@ -23,14 +23,14 @@ const row = (e: AwcMessengerTimelineEntry): string =>
   renderToStaticMarkup(createElement(AwcMessengerTimelineEntryRow, { entry: e, isMine: false }));
 
 describe("P1-S3 One window rows mounted in the feed", () => {
-  it("task-update rows: DF-027 pill from OW9 subjectState; none without it (P1-S5)", () => {
+  it("task-update rows: DF-027 pill from OW9 subjectState; reply-kind fallback without it", () => {
     const done = { source: "reply_kind" as const, status: "done", needsYou: false, awaitingApproval: false };
     const html = row(entry({ kind: "task.done", windowKind: "task_update", subjectState: done }));
     expect(html).toContain("<b>Scout</b>");
     expect(html).toContain(">Done<");
     expect(html).toContain("bg-awc-ok-soft");
     expect(html).not.toContain("emerald");
-    expect(row(entry({ kind: "task.status" }))).not.toContain(">Running<");
+    expect(row(entry({ kind: "task.status" }))).toContain(">Running<");
   });
 
   it("plain bot chat stays a message row (no task-update pill)", () => {
