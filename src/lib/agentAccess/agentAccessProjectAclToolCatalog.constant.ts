@@ -1,4 +1,5 @@
 import type { AgentAccessToolDefinition } from "@/lib/agentAccess/agentAccessToolCatalog.constant";
+import { CREATE_PROJECT_ASSISTANT_INVITE_TOOL } from "@/lib/agentAccess/createProjectAssistantInviteTool.constant";
 import { AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS } from "@/lib/agentAccess/agentAccessProjectInviteHooksToolCatalog.constant";
 import { AGENT_ACCESS_PROJECT_SKILL_SHARE_TOOLS } from "@/lib/agentAccess/agentAccessProjectSkillShareToolCatalog.constant";
 import { AGENT_ACCESS_PROJECT_LEAVE_TOOL } from "@/lib/agentAccess/agentAccessProjectLeaveTool.constant";
@@ -8,6 +9,7 @@ import { AGENT_ACCESS_PROJECT_TASK_TOOLS } from "@/lib/agentAccess/projectTaskTo
 const AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS: readonly AgentAccessToolDefinition[] =
   [
     AGENT_ACCESS_REDEEM_PROJECT_INVITE_TOOL,
+    CREATE_PROJECT_ASSISTANT_INVITE_TOOL,
     {
       name: "request_project_access",
       description:

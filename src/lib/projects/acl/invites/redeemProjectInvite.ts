@@ -1,12 +1,13 @@
 import { checkProjectMembershipStatus } from "@/lib/projects/acl/checkProjectMembershipStatus";
+import { finishBotMadeInviteRedeem } from "@/lib/projects/acl/invites/botInvites/finishBotMadeInviteRedeem";
+import { gateBotMadeInviteRedeem } from "@/lib/projects/acl/invites/botInvites/gateBotMadeInviteRedeem";
 import {
   claimProjectInviteToken,
   restoreProjectInviteUse,
 } from "@/lib/projects/acl/invites/claimProjectInviteToken";
 import { insertRedeemPendingAccessRequest } from "@/lib/projects/acl/invites/insertRedeemPendingAccessRequest";
 import { resolveRedeemSuggestedDisplayName } from "@/lib/projects/acl/invites/resolveRedeemSuggestedDisplayName";
-import { shouldAutoApproveInviteRedeem } from "@/lib/projects/acl/invites/shouldAutoApproveInviteRedeem";
-import { tryAutoApproveInviteRedeem } from "@/lib/projects/acl/invites/tryAutoApproveInviteRedeem";
+import { settleOwnerInviteRedeem } from "@/lib/projects/acl/invites/settleOwnerInviteRedeem";
 import type { RedeemProjectInviteResult } from "@/lib/projects/acl/invites/types/RedeemProjectInviteResult.type";
 import { PROJECT_ACL_DEFAULT_MEMBER_SCOPES } from "@/lib/projects/acl/projectAclScopes.constant";
 
@@ -18,6 +19,8 @@ export type { RedeemProjectInviteResult };
  * AND the redeeming bot is claimed (linked owner_user_id), or when
  * AWC_TEST_AUTO_APPROVE_JOINS is enabled outside production.
  * Agents still need a suggested display name to auto-approve.
+ * DF-038 (only other exception): a bot-made invite (migration 112) seats a
+ * redeemer proven server-side to share the project owner, else it fails.
  */
 export const redeemProjectInvite = async (input: {
   readonly token: string;
@@ -57,6 +60,13 @@ export const redeemProjectInvite = async (input: {
     return { ok: false, code: nameResult.code };
   }
 
+  const botGate = await gateBotMadeInviteRedeem({
+    invite,
+    actorUserId: input.actorUserId,
+    suggestedName: nameResult.name,
+  });
+  if (!botGate.ok) return { ok: false, code: botGate.code };
+
   const scopes =
     invite.scopes.length > 0
       ? [...invite.scopes]
@@ -87,27 +97,18 @@ export const redeemProjectInvite = async (input: {
     invitePlatform: invite.platform ?? null,
   };
 
-  const mayAutoApprove = await shouldAutoApproveInviteRedeem({
-    actorUserId: input.actorUserId,
-    inviteAutoApprove: invite.autoApprove,
-    suggestedDisplayName: nameResult.name,
-  });
-  if (!mayAutoApprove) {
-    return pendingResult;
-  }
-
-  const finished = await tryAutoApproveInviteRedeem({
-    projectId: invite.projectId,
-    actorUserId: input.actorUserId,
-    inviteId: invite.id,
-    inviteAutoApprove: invite.autoApprove,
-    teamLabel: invite.teamLabel,
-    scopes,
-    suggestedName: nameResult.name,
-    request: inserted.request,
-    pendingResult,
-  });
-  return finished.ok
-    ? { ...finished, invitePlatform: invite.platform ?? null }
-    : finished;
+  return botGate.botMade !== null
+    ? finishBotMadeInviteRedeem({
+        ...botGate.botMade,
+        invite,
+        actorUserId: input.actorUserId,
+        pendingResult,
+      })
+    : settleOwnerInviteRedeem({
+        invite,
+        actorUserId: input.actorUserId,
+        scopes,
+        suggestedName: nameResult.name,
+        pendingResult,
+      });
 };

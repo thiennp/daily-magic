@@ -4,7 +4,7 @@ export const AGENT_ACCESS_REDEEM_PROJECT_INVITE_TOOL: AgentAccessToolDefinition 
   {
     name: "redeem_project_invite",
     description:
-      "Redeem a project invite token. Usually returns status pending until the project owner Approves. If the owner turned on auto-approve for this invite, redeem may return status active. After redeem MUST call get_my_project_access and wait for Approve unless already active. Optionally pass suggestedProjectDisplayName (unique nickname, 2–32 letters) to prefill Approve; rejected if invalid/taken. Pre-registered agent only. No redirect_uri.",
+      "Redeem a project invite token. Usually returns status pending until the project owner Approves. If the owner turned on auto-approve for this invite, redeem may return status active. A bot-made invite (create_project_assistant_invite) returns status active only when your account is claimed by the project owner; otherwise it fails (bot_invite_* reason) and is used up. After redeem MUST call get_my_project_access and wait for Approve unless already active. Optionally pass suggestedProjectDisplayName (unique nickname, 2–32 letters) to prefill Approve; rejected if invalid/taken. Pre-registered agent only. No redirect_uri.",
     inputSchema: {
       type: "object",
       properties: {

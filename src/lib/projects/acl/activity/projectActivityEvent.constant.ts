@@ -55,9 +55,12 @@ export const PROJECT_ACTIVITY_WAKE_TYPES: readonly ProjectActivityEventType[] =
 export const PROJECT_ACTIVITY_SAFETY_TYPES: readonly ProjectActivityEventType[] =
   ["rule.dropped", "rule.restored"];
 
-/** How a join was approved. Only "owner" ever produces request.approved. */
+/**
+ * How a join was approved. Only "owner" ever produces request.approved.
+ * bot_invite (DF-038): same-owner bot redeemed a bot-made invite.
+ */
 export type ProjectApprovalSource =
-  "owner" | "invite_auto_approve" | "test_auto_connect";
+  "owner" | "invite_auto_approve" | "test_auto_connect" | "bot_invite";
 
 /** Write-time trim: newest N per project, nothing older than D days. */
 export const PROJECT_ACTIVITY_RETENTION = {

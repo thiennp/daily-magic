@@ -1,5 +1,6 @@
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
+import { executeCreateProjectAssistantInviteTool } from "@/lib/agentAccess/executeCreateProjectAssistantInviteTool";
 import { executeProjectAclActivityTool } from "@/lib/agentAccess/executeProjectAclActivityTool";
 import { executeProjectAclBriefingTool } from "@/lib/agentAccess/executeProjectAclBriefingTool";
 import { executeProjectAclCheckMembershipTool } from "@/lib/agentAccess/executeProjectAclCheckMembershipTool";
@@ -19,6 +20,10 @@ export const executeAgentAccessProjectAclTool = async (input: {
   const hooksResult = await executeProjectAclInviteHooksTools(input);
   if (hooksResult !== null) {
     return hooksResult;
+  }
+  const botInviteResult = await executeCreateProjectAssistantInviteTool(input);
+  if (botInviteResult !== null) {
+    return botInviteResult;
   }
   const redeemResult = await executeProjectAclRedeemInviteTool(input);
   if (redeemResult !== null) {

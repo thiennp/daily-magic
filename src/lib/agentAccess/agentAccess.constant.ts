@@ -49,6 +49,7 @@ export const AGENT_ACCESS_MUTATING_TOOLS = [
   "get_install_command",
   "request_project_access",
   "redeem_project_invite",
+  "create_project_assistant_invite",
   "rotate_project_api_key",
   "register_project_webhook",
   "mint_allow_claim",

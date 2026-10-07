@@ -13,6 +13,8 @@ export type InviteListItem = {
   readonly autoApprove: boolean;
   /** 107: owner can fetch the Copy prompt (token stored encrypted). */
   readonly copyAvailable: boolean;
+  /** DF-038: inviting bot's membership id; null = owner-made invite. */
+  readonly invitedByMembershipId: string | null;
 };
 
 export const toInviteListItem = (invite: ProjectInviteRecord): InviteListItem => ({
@@ -26,4 +28,5 @@ export const toInviteListItem = (invite: ProjectInviteRecord): InviteListItem =>
   scopes: [...invite.scopes],
   autoApprove: invite.autoApprove,
   copyAvailable: invite.copyAvailable === true,
+  invitedByMembershipId: invite.createdByMembershipId ?? null,
 });

@@ -52,6 +52,9 @@ export const ACCESS_LOG_COPY = {
     "You allowed tasks to run on this project's computer without approval",
   runsWithoutApprovalOff:
     "You turned approval back on for tasks on this project's computer",
+  // DF-038 draft EN (pending Product copy lock): bot-made invites.
+  botInviteCreated: "Invited by {bot}: an assistant invite was created",
+  botInviteJoined: "{name} joined. Invited by {bot}",
   ruleDropped: 'You dropped the safety rule "{title}".',
   ruleDroppedNoTitle: "You dropped a safety rule.",
   ruleRestored: 'You restored the safety rule "{title}".',

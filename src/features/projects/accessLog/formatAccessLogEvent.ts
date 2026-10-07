@@ -8,6 +8,7 @@ import {
   type AccessLogRendered,
 } from "@/features/projects/accessLog/accessLogEventHelpers";
 import { ACCESS_LOG_COPY as C } from "@/features/projects/accessLog/accessLogCopy.constant";
+import { formatAccessLogBotInvite } from "@/features/projects/accessLog/formatAccessLogBotInvite";
 import { formatAccessLogDeliveryEvent } from "@/features/projects/accessLog/formatAccessLogDeliveryEvent";
 import { formatAccessLogHumanInvite } from "@/features/projects/accessLog/formatAccessLogHumanInvite";
 import { formatAccessLogMessagesEvent } from "@/features/projects/accessLog/formatAccessLogMessagesEvent";
@@ -23,6 +24,11 @@ export const formatAccessLogEvent = (
   if (!isProjectActivityEventType(event.type)) return null;
   const d = event.detail;
   const name = accessLogTargetName(event);
+  const botInvite =
+    d.approvalSource === "bot_invite"
+      ? formatAccessLogBotInvite(event, nowMs)
+      : null;
+  if (botInvite !== null) return botInvite;
   switch (event.type) {
     case "invite.created":
       return {

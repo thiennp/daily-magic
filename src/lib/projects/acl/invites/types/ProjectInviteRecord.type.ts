@@ -18,4 +18,8 @@ export default interface ProjectInviteRecord {
   readonly platform?: ProjectInvitePlatformValue | null;
   /** 107: an encrypted token copy is stored, so the owner can Copy again. */
   readonly copyAvailable?: boolean;
+  /** 112 (DF-038): inviting bot's membership; set = bot-made invite. */
+  readonly createdByMembershipId?: string | null;
+  /** 112 (DF-038): project owner the bot-made invite is bound to. */
+  readonly boundOwnerUserId?: string | null;
 }

@@ -13,6 +13,9 @@ const parseScopes = (value: unknown): readonly ProjectAclScope[] => {
   );
 };
 
+const optionalString = (value: unknown): string | null =>
+  typeof value === "string" && value.length > 0 ? value : null;
+
 export default function mapProjectInviteRow(
   row: Record<string, unknown>,
 ): ProjectInviteRecord {
@@ -35,5 +38,7 @@ export default function mapProjectInviteRow(
       row.token_ciphertext.length > 0 &&
       typeof row.token_iv === "string" &&
       row.token_iv.length > 0,
+    createdByMembershipId: optionalString(row.created_by_membership_id),
+    boundOwnerUserId: optionalString(row.bound_owner_user_id),
   };
 }

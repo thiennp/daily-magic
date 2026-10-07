@@ -1,3 +1,4 @@
+import type { BotProjectInviteRedeemErrorCode } from "@/lib/projects/acl/invites/botInvites/botProjectInviteResult.type";
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
 
@@ -37,7 +38,8 @@ type RedeemProjectInviteResult =
         | "display_name_invalid"
         | "display_name_reserved"
         | "display_name_required"
-        | "display_name_taken";
+        | "display_name_taken"
+        | BotProjectInviteRedeemErrorCode;
     };
 
 export type { RedeemProjectInviteResult };

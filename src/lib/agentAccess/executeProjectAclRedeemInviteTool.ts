@@ -9,6 +9,10 @@ import {
   isProjectAclRedeemNoTypeJoin,
   isProjectAclRedeemPollJoin,
 } from "@/lib/agentAccess/isProjectAclRedeemPollJoin";
+import {
+  botProjectInviteErrorBody,
+  isBotProjectInviteRedeemErrorCode,
+} from "@/lib/projects/acl/invites/botInvites/botProjectInviteErrorBody";
 import { readProjectAclRedeemInviteArgs } from "@/lib/agentAccess/readProjectAclRedeemInviteArgs";
 import { retypeProjectAclRedeemInvite } from "@/lib/agentAccess/retypeProjectAclRedeemInvite";
 
@@ -46,6 +50,10 @@ export const executeProjectAclRedeemInviteTool = async (input: {
           })
         : null;
     if (retyped !== null) return retyped;
+    if (isBotProjectInviteRedeemErrorCode(result.code)) {
+      const { body } = botProjectInviteErrorBody({ code: result.code });
+      return agentAccessTextResult(body, true);
+    }
     if (
       result.code === "display_name_taken" ||
       result.code === "display_name_invalid" ||
