@@ -82,6 +82,16 @@ export const APP_SURFACE_CTA_SECONDARY_CLASS =
 export const APP_SURFACE_CTA_SECONDARY_SM_CLASS =
   "inline-flex items-center justify-center rounded-lg border border-awc-border/90 bg-white px-3 py-1.5 text-xs font-medium text-awc-fg transition-all duration-200 hover:bg-awc-surface-2 hover:border-awc-border-strong dark:border-gray-700 dark:bg-gray-800/60 dark:text-gray-300 dark:hover:bg-gray-700/60";
 
+/** Quiet text CTA (HN-H2 Home connect block secondary). Pine ink on sand. */
+export const APP_SURFACE_CTA_QUIET_CLASS =
+  "inline-flex h-10 items-center justify-center rounded-xl bg-transparent px-2 text-sm font-semibold text-brand-600 transition-colors hover:bg-awc-accent-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-awc-blue-600/40 focus-visible:ring-offset-2 dark:text-brand-400 dark:hover:bg-white/10";
+
+/** Compact primary matching design 40px Connect CTA (replaces oversized LG slab on Home). */
+export const APP_SURFACE_CTA_PRIMARY_COMPACT_CLASS = [
+  "inline-flex h-10 items-center justify-center rounded-[9px] bg-brand-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-awc-blue-700 active:bg-awc-blue-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-awc-blue-600/40 focus-visible:ring-offset-2 disabled:cursor-default disabled:bg-awc-fill disabled:text-awc-fg-subtle disabled:opacity-100",
+  APP_SURFACE_CTA_PRIMARY_DARK_MODE_CLASS,
+].join(" ");
+
 export const APP_SURFACE_TEXT_LINK_CLASS =
   "font-semibold text-brand-600 underline-offset-4 transition-colors hover:text-awc-blue-700 hover:underline dark:text-brand-400 dark:hover:text-brand-300";
 
