@@ -11,7 +11,7 @@ import {
 afterEach(cleanupAwlRepairHealthHarness);
 
 describe("repair script /health probe on the discovered port (DF-031)", () => {
-  it("reports healthy on the discovered port with nothing on 43347", async () => {
+  it("reports healthy on the discovered port with nothing on the legacy port", async () => {
     const port = await startHealthServer();
     const home = makeHome({ port });
 
@@ -49,5 +49,39 @@ describe("repair script /health probe on the discovered port (DF-031)", () => {
     );
 
     expect(stdout.trim()).toBe("DOWN");
+  });
+
+  it("does not count another macOS user's AWL on the legacy port as healthy", async () => {
+    const legacyHealthPort = await startHealthServer({
+      ok: true,
+      osUid: uid + 1,
+      installRootName: ".agent-witch",
+    });
+    const home = makeHome({});
+
+    const { stdout } = await runHelpers(
+      home,
+      "if awl_repair_health_ok; then echo HEALTHY; else echo DOWN; fi",
+      {},
+      { legacyHealthPort },
+    );
+
+    expect(stdout.trim()).toBe("DOWN");
+  });
+
+  it("still accepts this user's pre-H6 AWL on the legacy port", async () => {
+    const legacyHealthPort = await startHealthServer();
+    const home = makeHome({});
+
+    const { stdout } = await runHelpers(
+      home,
+      'awl_repair_health_ok && echo "FOUND=${AWL_REPAIR_HEALTH_FOUND_URL}"',
+      {},
+      { legacyHealthPort },
+    );
+
+    expect(stdout).toContain(
+      `FOUND=http://127.0.0.1:${legacyHealthPort}/health`,
+    );
   });
 });

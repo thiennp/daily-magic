@@ -75,18 +75,26 @@ export const makeHome = (files: {
   return home;
 };
 
+/**
+ * Legacy fallback port for tests: TCP port 1 is never an AWL, so the probe
+ * cannot reach a real AgentWitch Local on the host's 43347 (an AWL running on
+ * the dev machine must not turn a DOWN expectation into HEALTHY).
+ */
+export const CLOSED_LEGACY_HEALTH_PORT = 1;
+
 /** Runs the repair script's real health helpers (preamble + preflight) — async so the test server can answer. */
 export const runHelpers = (
   home: string,
   commands: string,
   env: Record<string, string> = {},
+  options: { readonly legacyHealthPort?: number } = {},
 ): Promise<{ readonly status: number | null; readonly stdout: string }> => {
   const script = [
     buildAgentWitchRepairScriptPreamble({
       origin: "https://www.agentwitch.com",
       installDirName: ".agent-witch",
       launchAgentPrefix: "com.agent-witch",
-      legacyHealthPort: 43347,
+      legacyHealthPort: options.legacyHealthPort ?? CLOSED_LEGACY_HEALTH_PORT,
     }),
     buildAgentWitchRepairScriptHealth(),
     `\n${commands}\n`,

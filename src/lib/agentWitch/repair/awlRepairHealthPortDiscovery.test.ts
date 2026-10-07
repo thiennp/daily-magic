@@ -13,7 +13,13 @@ describe("repair script health port discovery (DF-031)", () => {
   it("lists saved port → range → legacy 43347", async () => {
     const home = makeHome({ port: 65380, range: { start: 65376, end: 65391 } });
 
-    const { stdout } = await runHelpers(home, "awl_repair_health_urls");
+    // Listing only (no network): the real legacy port is safe here.
+    const { stdout } = await runHelpers(
+      home,
+      "awl_repair_health_urls",
+      {},
+      { legacyHealthPort: 43347 },
+    );
     const urls = stdout.trim().split("\n");
 
     expect(urls[0]).toBe("http://127.0.0.1:65380/health");
