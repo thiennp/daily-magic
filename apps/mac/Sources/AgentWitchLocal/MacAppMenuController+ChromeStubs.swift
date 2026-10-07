@@ -22,8 +22,9 @@ extension MacAppMenuController {
     /// AWL-H8 / Connect bind placeholder.
     var isComputerBoundStub: Bool { chromeComputerBound && signedInEmail != nil }
 
-    /// AWL-H6 placeholder until port allocator lands.
+    /// H6 owns the range; chrome display reads real allocation (or placeholder copy).
     var localPortRangeDisplayStub: String {
+        if let localPortRangeDisplay { return localPortRangeDisplay }
         if let localPortRange {
             return "\(localPortRange.lowerBound)–\(localPortRange.upperBound)"
         }
@@ -150,9 +151,7 @@ extension MacAppMenuController {
     func completeSignInStub(email: String, displayName: String? = nil) {
         setChromeAuth(signedIn: true, email: email, displayName: displayName)
         chromeComputerBound = false
-        if localPortRange == nil {
-            localPortRange = 49152...49167
-        }
+        // H6 allocates the real per-account range after profile exists — do not invent one here.
         statusMessage = "Signed in — connect this computer"
     }
 

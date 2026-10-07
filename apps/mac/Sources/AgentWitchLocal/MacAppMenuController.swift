@@ -26,8 +26,6 @@ final class MacAppMenuController: ObservableObject {
     @Published var chromeSignInPhase: ChromeSignInPhase = .none
     @Published var chromeSignInEmailDraft: String = ""
     @Published var chromeSignInCodeDraft: String = ""
-    /// AWL-H6 placeholder until port allocator lands (nil = "Assigned after you sign in").
-    @Published var localPortRange: ClosedRange<Int>? = nil
     /// AWL-H8 placeholder for Waiting for internet.
     @Published var chromeOffline: Bool = false
 
@@ -52,6 +50,9 @@ final class MacAppMenuController: ObservableObject {
             chromeSignInEmailDraft = ""
             chromeSignInCodeDraft = ""
             localPortRange = nil
+            localPortRangeDisplay = nil
+            localAppPort = nil
+            portsInUse = false
         }
     }
 
@@ -268,6 +269,10 @@ final class MacAppMenuController: ObservableObject {
             return
         }
         signedInEmail = nil
+        localPortRange = nil
+        localPortRangeDisplay = nil
+        localAppPort = nil
+        portsInUse = false
         // Design: files stay; assistants cannot use this computer until sign-in + Start.
         if state == .running {
             stopCore()
