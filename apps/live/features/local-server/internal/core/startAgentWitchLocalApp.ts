@@ -1070,8 +1070,22 @@ export const startAgentWitchLocalApp = (input: {
           return;
         }
 
+        // Auto-discover harness already linked on disk (materialization ledger
+        // under the project folder) and sync cloud bindings to match.
+        const linkedSetSlugs =
+          listLinkedHarnessSetSlugsFromProjectFolder(chosen);
+        const bindingsSynced = await syncProjectHarnessBindingsToCloud(
+          cloudConfig,
+          projectId,
+          linkedSetSlugs,
+        );
+
+        const redirectQuery = new URLSearchParams({
+          folderUpdated: "1",
+          bindingsSynced: bindingsSynced ? "1" : "0",
+        });
         response.writeHead(303, {
-          Location: `/project?id=${encodeURIComponent(projectId)}&folderUpdated=1`,
+          Location: `/project?id=${encodeURIComponent(projectId)}&${redirectQuery.toString()}`,
         });
         response.end();
         return;
@@ -1134,7 +1148,9 @@ export const startAgentWitchLocalApp = (input: {
               ? `Harness linked locally (${url.searchParams.get("files") ?? "0"} file(s)). Cloud composition sync failed — check WS connection on Status.`
               : `Harness linked (${url.searchParams.get("files") ?? "0"} file(s) written) and composition synced to cloud.`
             : url.searchParams.get("folderUpdated") === "1"
-              ? "Project folder updated and synced with AgentWitch."
+              ? url.searchParams.get("bindingsSynced") === "0"
+                ? "Project folder updated. Harness composition sync to cloud failed — check WS connection on Status."
+                : "Project folder updated and harness bindings synced with AgentWitch."
               : null;
         const knowledgePromotedCount =
           url.searchParams.get("knowledgePromoted");
