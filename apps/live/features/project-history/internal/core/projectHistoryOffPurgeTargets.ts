@@ -14,6 +14,35 @@ export type ProjectHistoryOffPurgeTargets = {
 };
 
 /**
+ * Join path segments under projectDataDir for a History OFF purge target.
+ *
+ * Runtime guard (Arch soft / defense in depth): rejects empty or
+ * whitespace-only segments so `path.join(projectDataDir, "")` can never
+ * collapse to `projectDataDir` and rm the project root. Also rejects a
+ * joined path that resolves to the project data dir itself.
+ */
+export const joinProjectHistoryOffPurgeTarget = (
+  projectDataDir: string,
+  ...segments: readonly string[]
+): string => {
+  if (typeof projectDataDir !== "string" || projectDataDir.trim().length === 0) {
+    throw new Error("invalid_project_data_dir");
+  }
+  for (const segment of segments) {
+    if (typeof segment !== "string" || segment.trim().length === 0) {
+      throw new Error("empty_purge_path_segment");
+    }
+  }
+  const joined = path.join(projectDataDir, ...segments);
+  const rootResolved = path.resolve(projectDataDir);
+  const joinedResolved = path.resolve(joined);
+  if (joinedResolved === rootResolved) {
+    throw new Error("purge_target_is_project_data_dir");
+  }
+  return joined;
+};
+
+/**
  * Absolute paths of History OFF learning-only purge targets under a project
  * data dir. Single source for hasTargets + purge (cascade).
  *
@@ -27,13 +56,19 @@ export type ProjectHistoryOffPurgeTargets = {
 export const resolveProjectHistoryOffPurgeTargets = (
   projectDataDir: string,
 ): ProjectHistoryOffPurgeTargets => ({
-  drafts: path.join(
+  drafts: joinProjectHistoryOffPurgeTarget(
     projectDataDir,
     PROJECT_HISTORY_SKILLS_DIR_NAME,
     PROJECT_HISTORY_SKILLS_DRAFTS_DIR_NAME,
   ),
-  skillgen: path.join(projectDataDir, PROJECT_HISTORY_SKILLGEN_DIR_NAME),
-  outcomes: path.join(projectDataDir, PROJECT_HISTORY_OUTCOMES_DIR_NAME),
+  skillgen: joinProjectHistoryOffPurgeTarget(
+    projectDataDir,
+    PROJECT_HISTORY_SKILLGEN_DIR_NAME,
+  ),
+  outcomes: joinProjectHistoryOffPurgeTarget(
+    projectDataDir,
+    PROJECT_HISTORY_OUTCOMES_DIR_NAME,
+  ),
 });
 
 export const listProjectHistoryOffPurgeTargetPaths = (
