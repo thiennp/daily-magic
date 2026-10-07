@@ -49,6 +49,20 @@ export type AwcMessengerAiSessionMeta = {
   readonly agentRunId: string | null;
 };
 
+/**
+ * One-window row kind — DESIGN §3.1 `window_kind` enum (OW1 CHECK), sent as
+ * `windowKind` on the feed by OW9. Absent on today's main → client derives it
+ * from existing fields (see mapMessengerEntryToOneWindowItem). Never shown in UI.
+ */
+export type AwcMessengerWindowKind =
+  | "chat"
+  | "task"
+  | "task_update"
+  | "approval_request"
+  | "approval_result"
+  | "notice"
+  | "bot_to_bot";
+
 export type AwcMessengerTimelineEntry = {
   readonly messageId: string;
   readonly createdAt: string;
@@ -66,6 +80,8 @@ export type AwcMessengerTimelineEntry = {
   /** Additive: omit or "message" = bubble; "session" = compact AI-session row. */
   readonly entryKind?: AwcMessengerEntryKind;
   readonly session?: AwcMessengerAiSessionMeta;
+  /** Additive (OW9): server window kind when the feed sends it; else omitted. */
+  readonly windowKind?: AwcMessengerWindowKind;
 };
 
 /** Dispatch load-older page meta (fd7764c0). Absent on today's main. */

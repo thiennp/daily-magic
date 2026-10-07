@@ -1,6 +1,7 @@
 import {
   OW_BUBBLE_OTHER_CLASS,
   OW_BUBBLE_SELF_CLASS,
+  OW_STATUS_TONE_CLASS,
 } from "@/features/projects/messenger/oneWindow/awcOneWindowChrome.constant";
 
 interface AwcOneWindowMessageRowProps {
@@ -10,6 +11,11 @@ interface AwcOneWindowMessageRowProps {
   readonly toLabel?: string;
   readonly timeLabel: string;
   readonly text: string;
+  /** OW-H5: live task-update status pill (e.g. Done / Blocked). */
+  readonly status?: {
+    readonly label: string;
+    readonly tone: keyof typeof OW_STATUS_TONE_CLASS;
+  };
 }
 
 /** Chat bubble row matching One-window HTML. */
@@ -20,6 +26,7 @@ export default function AwcOneWindowMessageRow({
   toLabel,
   timeLabel,
   text,
+  status,
 }: AwcOneWindowMessageRowProps) {
   return (
     <article
@@ -50,6 +57,11 @@ export default function AwcOneWindowMessageRow({
           ) : null}
           {toLabel !== undefined && toLabel.length > 0 ? (
             <span className="text-awc-fg-subtle">{toLabel}</span>
+          ) : null}
+          {status !== undefined ? (
+            <span className={`rounded-full px-2 py-0.5 text-[11px] ${OW_STATUS_TONE_CLASS[status.tone]}`}>
+              {status.label}
+            </span>
           ) : null}
           <span className="text-awc-fg-subtle">{timeLabel}</span>
         </div>

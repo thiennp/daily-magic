@@ -50,3 +50,10 @@ export const OW_STATE_WRAP_CLASS =
 
 export const OW_ILL_CLASS =
   "grid h-14 w-14 place-items-center rounded-2xl bg-awc-tile-2 text-awc-fg-muted";
+
+/** Status pill tones (task card / update pill) — existing awc ok / warn / Pine tint tokens. */
+export const OW_STATUS_TONE_CLASS = {
+  ok: "bg-awc-ok-soft text-awc-ok",
+  warn: "bg-awc-warn-soft text-awc-warn",
+  info: "bg-awc-accent-soft text-awc-blue-700",
+} as const;

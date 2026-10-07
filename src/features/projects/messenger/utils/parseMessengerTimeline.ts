@@ -8,6 +8,7 @@ import type {
   AwcMessengerThreadError,
   AwcMessengerThreadPage,
   AwcMessengerTimelineEntry,
+  AwcMessengerWindowKind,
 } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 
 const asRecord = (value: unknown): Record<string, unknown> | null => {
@@ -54,6 +55,24 @@ const parseEntryKind = (value: unknown): AwcMessengerEntryKind | undefined => {
   return value as AwcMessengerEntryKind;
 };
 
+const WINDOW_KINDS: ReadonlySet<string> = new Set([
+  "chat",
+  "task",
+  "task_update",
+  "approval_request",
+  "approval_result",
+  "notice",
+  "bot_to_bot",
+]);
+
+/** OW9 `windowKind` (DESIGN §3.1 enum) — feature-detected; unknown → omitted. */
+const parseWindowKind = (
+  value: unknown,
+): AwcMessengerWindowKind | undefined => {
+  if (typeof value !== "string" || !WINDOW_KINDS.has(value)) return undefined;
+  return value as AwcMessengerWindowKind;
+};
+
 const parseSession = (value: unknown): AwcMessengerAiSessionMeta | undefined => {
   const row = asRecord(value);
   if (row === null || typeof row.status !== "string") return undefined;
@@ -77,6 +96,7 @@ const parseEntry = (value: unknown): AwcMessengerTimelineEntry | null => {
   const statesRaw = Array.isArray(row.states) ? row.states : [];
   const entryKind = parseEntryKind(row.entryKind);
   const session = parseSession(row.session);
+  const windowKind = parseWindowKind(row.windowKind);
   return {
     messageId: row.messageId,
     createdAt: typeof row.createdAt === "string" ? row.createdAt : "",
@@ -96,6 +116,7 @@ const parseEntry = (value: unknown): AwcMessengerTimelineEntry | null => {
       .filter((chip): chip is AwcMessengerStateChip => chip !== null),
     ...(entryKind !== undefined ? { entryKind } : {}),
     ...(session !== undefined ? { session } : {}),
+    ...(windowKind !== undefined ? { windowKind } : {}),
   };
 };
 

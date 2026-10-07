@@ -4,6 +4,11 @@ import { useMemo, useState, type ReactNode } from "react";
 
 import { useOneWindowComposerRouting } from "@/features/projects/messenger/oneWindow/useOneWindowComposerRouting";
 import AwcOneWindowInFeedApprovals from "@/features/projects/messenger/oneWindow/AwcOneWindowInFeedApprovals";
+import {
+  isOneWindowApprovalItem,
+  isOneWindowNeedsYouItem,
+  mapMessengerEntryToOneWindowItem,
+} from "@/features/projects/messenger/oneWindow/mapMessengerEntryToOneWindowItem";
 
 import AwcMessengerComposer from "@/features/projects/messenger/AwcMessengerComposer";
 import AwcMessengerStatusDot from "@/features/projects/messenger/AwcMessengerStatusDot";
@@ -18,6 +23,7 @@ import AwcOneWindowFilterBar, {
 import { ONE_WINDOW_FEED_COPY } from "@/features/projects/messenger/oneWindow/oneWindowFeedCopy.constant";
 import type { AwcMessengerBotStatus } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 import type { AwcMessengerOpenThread } from "@/features/projects/messenger/types/awcProjectMessenger.type";
+import { isMessengerAiSessionEntry } from "@/features/projects/messenger/utils/isMessengerAiSessionEntry";
 import type { MessengerTaskAssigneeOption } from "@/features/projects/messenger/utils/messengerTaskAssigneeOptions";
 import type { MessengerTaskDraft } from "@/features/projects/messenger/utils/validateMessengerTaskDraft";
 import type { ProjectTasksChatVisibility } from "@/features/projects/tasks/projectTask.type";
@@ -47,12 +53,6 @@ interface AwcMessengerThreadPaneProps {
   readonly onSendTask: (draft: MessengerTaskDraft) => Promise<boolean>;
   readonly chatVisibility?: ProjectTasksChatVisibility;
 }
-
-const isApprovalish = (kind: string): boolean =>
-  kind.includes("approval") || kind.includes("join") || kind.includes("access");
-
-const isNeedsYou = (kind: string, text: string): boolean =>
-  isApprovalish(kind) || text.toLowerCase().includes("needs a reply");
 
 export default function AwcMessengerThreadPane({
   projectId,
@@ -92,17 +92,26 @@ export default function AwcMessengerThreadPane({
   const feed = ONE_WINDOW_FEED_COPY;
   const [filter, setFilter] = useState<OneWindowFeedFilter>("all");
 
-  const entries = thread?.entries ?? [];
-  const needsCount = entries.filter((e) => isNeedsYou(e.kind, e.text)).length;
-  const approvalsCount = entries.filter((e) => isApprovalish(e.kind)).length;
+  const entries = useMemo(() => thread?.entries ?? [], [thread]);
+  // OW-H5: chips read window kind + live subject state from existing feed fields.
+  // Session rows render nothing under tasks_tab_only (row default) → not counted.
+  const sessionsHidden = (chatVisibility ?? "tasks_tab_only") === "tasks_tab_only";
+  const items = useMemo(
+    () =>
+      entries
+        .filter((entry) => !(sessionsHidden && isMessengerAiSessionEntry(entry)))
+        .map((entry) => ({ entry, item: mapMessengerEntryToOneWindowItem(entry) })),
+    [entries, sessionsHidden],
+  );
+  const needsCount = items.filter(({ item }) => isOneWindowNeedsYouItem(item)).length;
+  const approvalsCount = items.filter(({ item }) => isOneWindowApprovalItem(item)).length;
 
   const filtered = useMemo(() => {
     if (filter === "all") return entries;
-    if (filter === "approvals") {
-      return entries.filter((e) => isApprovalish(e.kind));
-    }
-    return entries.filter((e) => isNeedsYou(e.kind, e.text));
-  }, [entries, filter]);
+    const keep =
+      filter === "approvals" ? isOneWindowApprovalItem : isOneWindowNeedsYouItem;
+    return items.filter(({ item }) => keep(item)).map(({ entry }) => entry);
+  }, [entries, items, filter]);
 
   const showFilter = !isLoading && thread !== null && entries.length > 0;
 
