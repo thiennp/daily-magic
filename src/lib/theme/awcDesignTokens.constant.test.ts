@@ -53,11 +53,11 @@ describe("awcDesignTokens", () => {
 });
 
 describe("awcDesignTokens L3 v5 foundation", () => {
-  it("pins the effective brand blue primary and hover", () => {
-    expect(AWC_V5_BLUE_HEX["blue-500"]).toBe("#3563e9");
-    expect(AWC_V5_BLUE_HEX["blue-600"]).toBe("#2150d6");
-    expect(AWC_V5_BLUE_HEX["blue-700"]).toBe("#1b3fae");
-    expect(AWC_V5_BLUE_HEX["blue-950"]).toBe("#0f1c42");
+  it("pins the effective brand Pine primary and hover", () => {
+    expect(AWC_V5_BLUE_HEX["blue-500"]).toBe("#2a7a68");
+    expect(AWC_V5_BLUE_HEX["blue-600"]).toBe("#1f6656");
+    expect(AWC_V5_BLUE_HEX["blue-700"]).toBe("#19564a");
+    expect(AWC_V5_BLUE_HEX["blue-950"]).toBe("#0a241f");
   });
 
   it("pins the warm-grey canvas and one border family", () => {
@@ -71,6 +71,8 @@ describe("awcDesignTokens L3 v5 foundation", () => {
     expect(AWC_V5_NEUTRAL_HEX.fg).toBe("#101828");
     expect(AWC_V5_NEUTRAL_HEX["fg-muted"]).toBe("#475467");
     expect(AWC_V5_NEUTRAL_HEX["fg-subtle"]).toBe("#566073");
+    expect(AWC_V5_NEUTRAL_HEX["accent-soft"]).toBe("#dde8e3");
+    expect(AWC_V5_NEUTRAL_HEX["accent-soft-2"]).toBe("#c8ddd6");
   });
 
   it("pins status chip tints and disabled / focus / radius foundation", () => {

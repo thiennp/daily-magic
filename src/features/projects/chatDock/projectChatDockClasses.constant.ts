@@ -6,7 +6,7 @@ export const CHAT_DOCK_ROOT_FULL_CLASS =
   "pointer-events-auto fixed inset-0 z-[60] flex items-center justify-center bg-[rgba(16,24,40,0.35)] p-4 max-md:inset-0 max-md:rounded-none max-md:bg-awc-surface max-md:p-0 md:rounded-3xl";
 
 export const CHAT_DOCK_FAB_CLASS =
-  "awc-focus-ring pointer-events-auto relative inline-grid size-12 place-items-center rounded-awc-pill bg-awc-blue-600 text-white shadow-[0_8px_24px_rgba(33,80,214,0.35),0_2px_6px_rgba(16,24,40,0.15)] transition hover:bg-awc-blue-700 md:size-[3.25rem]";
+  "awc-focus-ring pointer-events-auto relative inline-grid size-12 place-items-center rounded-awc-pill bg-awc-blue-600 text-white shadow-[0_8px_24px_rgba(31,102,86,0.35),0_2px_6px_rgba(16,24,40,0.15)] transition hover:bg-awc-blue-700 md:size-[3.25rem]";
 
 export const CHAT_DOCK_BADGE_CLASS =
   "absolute -right-1 -top-1.5 grid h-[1.375rem] min-w-[1.375rem] place-items-center rounded-awc-pill bg-white px-1.5 text-[12px] font-semibold tabular-nums text-awc-blue-700 shadow-[0_0_0_2px_var(--awc-blue-600)]";

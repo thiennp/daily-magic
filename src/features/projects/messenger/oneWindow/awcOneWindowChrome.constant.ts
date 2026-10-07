@@ -1,6 +1,6 @@
 /**
- * One-window Activity chrome — awc sand + locked brand #2150d6 / #1b3fae.
- * Scoped to messenger/oneWindow (+ Activity consumers); brand blue + sand only.
+ * One-window Activity chrome — awc sand + locked brand Pine #1f6656 / #19564a.
+ * Scoped to messenger/oneWindow (+ Activity consumers); brand Pine + sand only.
  */
 
 export const OW_PRIMARY_BUTTON_CLASS =

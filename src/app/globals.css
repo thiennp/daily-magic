@@ -39,18 +39,18 @@
   --color-white: #ffffff;
   --color-black: #101828;
 
-  --color-brand-25: #f5f8fe;
-  --color-brand-50: #eaf0fe;
-  --color-brand-100: #d6e1fc;
-  --color-brand-200: #aec3f8;
-  --color-brand-300: #85a5f2;
-  --color-brand-400: #4d78e6;
-  --color-brand-500: #1e4fd8;
-  --color-brand-600: #2150d6;
-  --color-brand-700: #1b3fae;
-  --color-brand-800: #112c7d;
-  --color-brand-900: #0f2566;
-  --color-brand-950: #0a1a47;
+  --color-brand-25: #f3f7f5;
+  --color-brand-50: #eaf2ef;
+  --color-brand-100: #dde8e3;
+  --color-brand-200: #c8ddd6;
+  --color-brand-300: #9fc4b8;
+  --color-brand-400: #5a9a88;
+  --color-brand-500: #1f6656;
+  --color-brand-600: #1f6656;
+  --color-brand-700: #19564a;
+  --color-brand-800: #13463c;
+  --color-brand-900: #0e352e;
+  --color-brand-950: #0a241f;
 
   --color-blue-light-25: #f5fbff;
   --color-blue-light-50: #f0f9ff;
@@ -151,7 +151,7 @@
     0px 20px 24px -4px rgba(16, 24, 40, 0.08),
     0px 8px 8px -4px rgba(16, 24, 40, 0.03);
   --shadow-datepicker: -5px 0 0 #262d3c, 5px 0 0 #262d3c;
-  --shadow-focus-ring: 0px 0px 0px 4px rgba(30, 79, 216, 0.12);
+  --shadow-focus-ring: 0px 0px 0px 4px rgba(31, 102, 86, 0.12);
   --shadow-slider-navigation:
     0px 1px 2px 0px rgba(16, 24, 40, 0.1), 0px 1px 3px 0px rgba(16, 24, 40, 0.1);
   --shadow-tooltip:
@@ -234,18 +234,18 @@
   Disabled primitive is .awc-disabled only (no global button:disabled restyle).
 */
 :root {
-  --awc-blue-25: #f7f9fe;
-  --awc-blue-50: #eff4ff;
-  --awc-blue-100: #dbe6fe;
-  --awc-blue-200: #bdd1fd;
-  --awc-blue-300: #8fb0fa;
-  --awc-blue-400: #5b86f3;
-  --awc-blue-500: #3563e9;
-  --awc-blue-600: #2150d6;
-  --awc-blue-700: #1b3fae;
-  --awc-blue-800: #1a3589;
-  --awc-blue-900: #172e6b;
-  --awc-blue-950: #0f1c42;
+  --awc-blue-25: #f3f7f5;
+  --awc-blue-50: #eaf2ef;
+  --awc-blue-100: #dde8e3;
+  --awc-blue-200: #c8ddd6;
+  --awc-blue-300: #9fc4b8;
+  --awc-blue-400: #5a9a88;
+  --awc-blue-500: #2a7a68;
+  --awc-blue-600: #1f6656;
+  --awc-blue-700: #19564a;
+  --awc-blue-800: #13463c;
+  --awc-blue-900: #0e352e;
+  --awc-blue-950: #0a241f;
   --awc-primary: var(--awc-blue-600);
 
   --awc-bg: #e8e6e1;
@@ -254,8 +254,8 @@
   --awc-tile: #f4f3f0;
   --awc-tile-2: #ebe9e4;
   --awc-fill: #e9e7e2;
-  --awc-accent-soft: #e4ecff;
-  --awc-accent-soft-2: #d6e2ff;
+  --awc-accent-soft: #dde8e3;
+  --awc-accent-soft-2: #c8ddd6;
   --awc-border: #e0e5ed;
   --awc-line: var(--awc-border);
   --awc-border-strong: #cbd2de;
@@ -522,7 +522,7 @@
 }
 
 @utility shadow-glow-brand {
-  @apply shadow-[0_0_20px_-3px_rgba(30,79,216,0.35)];
+  @apply shadow-[0_0_20px_-3px_rgba(31,102,86,0.35)];
 }
 
 @utility menu-item {
@@ -800,13 +800,13 @@ span.flatpickr-weekday,
 .flatpickr-day.selected.nextMonthDay,
 .flatpickr-day.startRange.nextMonthDay,
 .flatpickr-day.endRange.nextMonthDay {
-  background: #1e4fd8;
+  background: #1f6656;
   @apply !border-brand-500 !bg-brand-500 hover:!border-brand-50 hover:!bg-brand-500;
 }
 .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n + 1)),
 .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n + 1)),
 .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n + 1)) {
-  box-shadow: -10px 0 0 #1e4fd8;
+  box-shadow: -10px 0 0 #1f6656;
 }
 
 .flatpickr-months .flatpickr-prev-month svg,

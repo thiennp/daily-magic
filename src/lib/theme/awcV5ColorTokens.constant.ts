@@ -1,21 +1,21 @@
 /**
  * L3 v5 foundation colour tokens (light only). TS is source of truth;
- * globals.css mirrors every entry as --awc-*. Additive — does not overwrite brand-*.
+ * globals.css mirrors every entry as --awc-*. Additive — does not overwrite brand-* (brand-* also Pine via globals).
  */
 
 export const AWC_V5_BLUE_HEX = {
-  "blue-25": "#f7f9fe",
-  "blue-50": "#eff4ff",
-  "blue-100": "#dbe6fe",
-  "blue-200": "#bdd1fd",
-  "blue-300": "#8fb0fa",
-  "blue-400": "#5b86f3",
-  "blue-500": "#3563e9",
-  "blue-600": "#2150d6",
-  "blue-700": "#1b3fae",
-  "blue-800": "#1a3589",
-  "blue-900": "#172e6b",
-  "blue-950": "#0f1c42",
+  "blue-25": "#f3f7f5",
+  "blue-50": "#eaf2ef",
+  "blue-100": "#dde8e3",
+  "blue-200": "#c8ddd6",
+  "blue-300": "#9fc4b8",
+  "blue-400": "#5a9a88",
+  "blue-500": "#2a7a68",
+  "blue-600": "#1f6656",
+  "blue-700": "#19564a",
+  "blue-800": "#13463c",
+  "blue-900": "#0e352e",
+  "blue-950": "#0a241f",
 } as const;
 
 /** Sand surfaces + cool slate borders/ink (artifact palette). */
@@ -26,8 +26,8 @@ export const AWC_V5_NEUTRAL_HEX = {
   tile: "#f4f3f0",
   "tile-2": "#ebe9e4",
   fill: "#e9e7e2",
-  "accent-soft": "#e4ecff",
-  "accent-soft-2": "#d6e2ff",
+  "accent-soft": "#dde8e3",
+  "accent-soft-2": "#c8ddd6",
   border: "#e0e5ed",
   "border-strong": "#cbd2de",
   "control-border": "#748094",

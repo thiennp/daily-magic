@@ -1,7 +1,7 @@
 import type { ApexOptions } from "apexcharts";
 
 export const BAR_CHART_ONE_OPTIONS: ApexOptions = {
-  colors: ["#1e4fd8"],
+  colors: ["#1f6656"],
   chart: {
     fontFamily: "Inter, sans-serif",
     type: "bar",
