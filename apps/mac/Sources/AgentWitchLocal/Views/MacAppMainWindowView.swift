@@ -18,7 +18,8 @@ struct MacAppMainWindowView: View {
             bootstrap: controller.bootstrapState,
             signedIn: (controller.signedInEmail != nil),
             offline: controller.isOfflineStub,
-            updateReady: controller.updateOffer != nil
+            updateReady: controller.updateOffer != nil,
+            setupSession: controller.setupSession
         )
     }
 
@@ -215,6 +216,7 @@ struct MacAppMainWindowView: View {
             Button("Start setup") { controller.startOrRepairSetup() }
                 .buttonStyle(.borderedProminent)
                 .tint(MacAppTheme.brand)
+                .disabled(controller.setupSession.isInProgress)
         case .settingUp:
             Button("Setting up…") {}
                 .disabled(true)
@@ -233,15 +235,24 @@ struct MacAppMainWindowView: View {
             Button("Starting…") {}
                 .disabled(true)
         case .problem:
-            Button(controller.bootstrapState != nil ? "Start setup" : "Start") {
-                controller.startOrRepairSetup()
+            if controller.setupSession.failureKind != nil {
+                Button("Try again") { controller.retrySetup() }
+                    .buttonStyle(.borderedProminent)
+                    .tint(MacAppTheme.brand)
+                    .disabled(controller.setupSession.isInProgress)
+            } else {
+                Button(controller.bootstrapState != nil ? "Start setup" : "Start") {
+                    controller.startOrRepairSetup()
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(MacAppTheme.brand)
+                .disabled(controller.setupSession.isInProgress)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(MacAppTheme.brand)
         case .stopped, .waitingForInternet:
             Button("Start") { controller.startOrRepairSetup() }
                 .buttonStyle(.borderedProminent)
                 .tint(MacAppTheme.brandInk)
+                .disabled(controller.setupSession.isInProgress)
         }
     }
 

@@ -17,7 +17,8 @@ struct MacAppMenuBarContentView: View {
             bootstrap: controller.bootstrapState,
             signedIn: (controller.signedInEmail != nil),
             offline: controller.isOfflineStub,
-            updateReady: controller.updateOffer != nil
+            updateReady: controller.updateOffer != nil,
+            setupSession: controller.setupSession
         )
     }
 
@@ -102,23 +103,29 @@ struct MacAppMenuBarContentView: View {
                     .tint(MacAppTheme.brand)
                     .controlSize(.large)
                     .frame(maxWidth: .infinity)
+                    .disabled(controller.setupSession.isInProgress)
             }
 
         case .settingUp:
             VStack(alignment: .leading, spacing: 8) {
                 Text(chrome.detailTitle)
                     .font(.subheadline.weight(.semibold))
-                Text(chrome.detailSubtitle)
-                    .font(.caption)
-                    .foregroundStyle(MacAppTheme.fgMuted)
-                ProgressView()
-                    .progressViewStyle(.linear)
-                    .tint(MacAppTheme.brand)
-                // AWL-H5 will bind real step progress here
-                Text(controller.statusMessage.isEmpty ? "Setting up…" : sanitizeChromeMessage(controller.statusMessage))
-                    .font(.caption2)
-                    .foregroundStyle(MacAppTheme.fgSubtle)
-                    .lineLimit(2)
+                    .foregroundStyle(MacAppTheme.fg)
+                if case .running(let step, let percent) = controller.setupSession {
+                    Text(step.title)
+                        .font(.caption)
+                        .foregroundStyle(MacAppTheme.fgMuted)
+                    ProgressView(value: Double(max(0, min(percent, 100))), total: 100)
+                        .progressViewStyle(.linear)
+                        .tint(MacAppTheme.brand)
+                } else {
+                    Text(chrome.detailSubtitle)
+                        .font(.caption)
+                        .foregroundStyle(MacAppTheme.fgMuted)
+                    ProgressView()
+                        .progressViewStyle(.linear)
+                        .tint(MacAppTheme.brand)
+                }
             }
 
         case .signedOut:
@@ -152,18 +159,25 @@ struct MacAppMenuBarContentView: View {
         case .problem:
             if (controller.signedInEmail != nil) { accountRow }
             VStack(alignment: .leading, spacing: 8) {
-                Text(chrome.detailTitle)
+                Text(
+                    controller.setupSession.failureKind != nil
+                        ? MacAppSetupFailureKind.couldNotFinishTitle
+                        : chrome.detailTitle
+                )
                     .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(MacAppTheme.fg)
                 Text(chrome.detailSubtitle)
                     .font(.caption)
                     .foregroundStyle(MacAppTheme.fgMuted)
                     .fixedSize(horizontal: false, vertical: true)
                 HStack {
-                    Button("Try again") { controller.retrySetup() }
+                    Button("Try again") { controller.retryFromProblem() }
                         .buttonStyle(.borderedProminent)
                         .tint(MacAppTheme.brand)
-                    Button("See log") { controller.openLogs() }
+                        .disabled(controller.setupSession.isInProgress)
+                    Button("See log") { controller.openSetupLog() }
                         .buttonStyle(.bordered)
+                        .disabled(!controller.canOpenSetupLog)
                 }
             }
 
@@ -221,6 +235,7 @@ struct MacAppMenuBarContentView: View {
                     .buttonStyle(.borderedProminent)
                     .tint(MacAppTheme.brandInk)
                     .controlSize(.small)
+                    .disabled(controller.setupSession.isInProgress)
             }
         }
         .padding(10)

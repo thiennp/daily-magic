@@ -46,9 +46,30 @@ public struct MacAppChromeStatus: Equatable, Sendable {
         bootstrap: MacAppBootstrapState?,
         signedIn: Bool,
         offline: Bool = false,
-        updateReady: Bool = false
+        updateReady: Bool = false,
+        setupSession: MacAppSetupSessionState = .idle
     ) -> MacAppChromeStatus {
         _ = updateReady // surfaced separately as Update ready strip; does not override pill
+
+        // AWL-H5: bind chrome to real setupSession before bootstrap/runtime.
+        switch setupSession {
+        case .running(let step, _):
+            return MacAppChromeStatus(
+                kind: .settingUp,
+                pillLabel: "Setting up…",
+                detailTitle: "Setting up this computer",
+                detailSubtitle: step.title
+            )
+        case .failed(let kind, _):
+            return MacAppChromeStatus(
+                kind: .problem,
+                pillLabel: "Problem",
+                detailTitle: MacAppSetupFailureKind.couldNotFinishTitle,
+                detailSubtitle: kind.userFacingDetail
+            )
+        case .idle, .succeeded:
+            break
+        }
 
         if let bootstrap {
             switch bootstrap {

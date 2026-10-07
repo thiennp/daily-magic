@@ -33,6 +33,9 @@ struct ComputerView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             header
+            setupChromeBanner
+                .padding(.horizontal, 20)
+                .padding(.bottom, 8)
             statsRow
                 .padding(.horizontal, 20)
                 .padding(.bottom, 8)
@@ -130,6 +133,81 @@ struct ComputerView: View {
         }
         .padding(16)
         .background(MacAppTheme.playSoft.opacity(0.55))
+    }
+
+    @ViewBuilder
+    private var setupChromeBanner: some View {
+        switch controller.setupSession {
+        case .running(let step, let percent):
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Setting up this computer")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(MacAppTheme.fg)
+                Text(step.title)
+                    .font(.caption)
+                    .foregroundStyle(MacAppTheme.fgMuted)
+                ProgressView(value: Double(max(0, min(percent, 100))), total: 100)
+                    .progressViewStyle(.linear)
+                    .tint(MacAppTheme.accent)
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(MacAppTheme.surface)
+                    .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(MacAppTheme.border))
+            )
+        case .failed:
+            VStack(alignment: .leading, spacing: 8) {
+                Text(MacAppSetupFailureKind.couldNotFinishTitle)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(MacAppTheme.fg)
+                if let kind = controller.setupSession.failureKind {
+                    Text(kind.userFacingDetail)
+                        .font(.caption)
+                        .foregroundStyle(MacAppTheme.fgMuted)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                HStack {
+                    Button("Try again") { controller.retrySetup() }
+                        .buttonStyle(.borderedProminent)
+                        .tint(MacAppTheme.accent)
+                        .disabled(controller.setupSession.isInProgress)
+                    Button("See log") { controller.openSetupLog() }
+                        .buttonStyle(.bordered)
+                        .disabled(!controller.canOpenSetupLog)
+                }
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(MacAppTheme.dangerSoft.opacity(0.55))
+                    .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(MacAppTheme.border))
+            )
+        case .idle, .succeeded:
+            if controller.state == .notInstalled {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("This computer is not set up yet")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(MacAppTheme.fg)
+                    Text("Setup takes about a minute.")
+                        .font(.caption)
+                        .foregroundStyle(MacAppTheme.fgMuted)
+                    Button("Start setup") { controller.startOrRepairSetup() }
+                        .buttonStyle(.borderedProminent)
+                        .tint(MacAppTheme.accent)
+                        .disabled(controller.setupSession.isInProgress)
+                }
+                .padding(12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(MacAppTheme.surface)
+                        .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(MacAppTheme.border))
+                )
+            }
+        }
     }
 
     private var statsRow: some View {

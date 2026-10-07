@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 import AgentWitchLocalCore
 
@@ -23,8 +24,20 @@ extension MacAppMenuController {
             bootstrap: bootstrapState,
             signedIn: isSignedInStub,
             offline: isOfflineStub,
-            updateReady: updateOffer != nil
+            updateReady: updateOffer != nil,
+            setupSession: setupSession
         )
+    }
+
+    /// Open the latest setup failure log (H5 `setupLogPath`), if any.
+    func openSetupLog() {
+        let path = setupLogPath ?? setupSession.logPath
+        guard let path else { return }
+        NSWorkspace.shared.open(path)
+    }
+
+    var canOpenSetupLog: Bool {
+        setupLogPath != nil || setupSession.logPath != nil
     }
 
     func beginSignInStub() {
