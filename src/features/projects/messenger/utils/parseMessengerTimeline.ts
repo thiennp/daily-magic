@@ -1,4 +1,6 @@
 import type {
+  AwcMessengerAiSessionMeta,
+  AwcMessengerEntryKind,
   AwcMessengerMessageState,
   AwcMessengerOpenThread,
   AwcMessengerPageSource,
@@ -45,6 +47,23 @@ const parseChip = (value: unknown): AwcMessengerStateChip | null => {
   };
 };
 
+const ENTRY_KINDS: ReadonlySet<string> = new Set(["message", "ai_session"]);
+
+const parseEntryKind = (value: unknown): AwcMessengerEntryKind | undefined => {
+  if (typeof value !== "string" || !ENTRY_KINDS.has(value)) return undefined;
+  return value as AwcMessengerEntryKind;
+};
+
+const parseSession = (value: unknown): AwcMessengerAiSessionMeta | undefined => {
+  const row = asRecord(value);
+  if (row === null || typeof row.status !== "string") return undefined;
+  return {
+    status: row.status,
+    writerAgent: typeof row.writerAgent === "string" ? row.writerAgent : null,
+    agentRunId: typeof row.agentRunId === "string" ? row.agentRunId : null,
+  };
+};
+
 const parseEntry = (value: unknown): AwcMessengerTimelineEntry | null => {
   const row = asRecord(value);
   if (row === null || typeof row.messageId !== "string") return null;
@@ -56,6 +75,8 @@ const parseEntry = (value: unknown): AwcMessengerTimelineEntry | null => {
       : null;
   if (kind === null) return null;
   const statesRaw = Array.isArray(row.states) ? row.states : [];
+  const entryKind = parseEntryKind(row.entryKind);
+  const session = parseSession(row.session);
   return {
     messageId: row.messageId,
     createdAt: typeof row.createdAt === "string" ? row.createdAt : "",
@@ -73,6 +94,8 @@ const parseEntry = (value: unknown): AwcMessengerTimelineEntry | null => {
     states: statesRaw
       .map(parseChip)
       .filter((chip): chip is AwcMessengerStateChip => chip !== null),
+    ...(entryKind !== undefined ? { entryKind } : {}),
+    ...(session !== undefined ? { session } : {}),
   };
 };
 

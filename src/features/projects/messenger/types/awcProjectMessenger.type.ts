@@ -39,6 +39,16 @@ export type AwcMessengerStateChip = {
   readonly reason: string | null;
 };
 
+/** Discriminator for timeline rows. Omit / "message" = chat/task bubble. */
+export type AwcMessengerEntryKind = "message" | "ai_session";
+
+/** Optional AI-session metadata from History/Dispatch (additive). */
+export type AwcMessengerAiSessionMeta = {
+  readonly status: string;
+  readonly writerAgent: string | null;
+  readonly agentRunId: string | null;
+};
+
 export type AwcMessengerTimelineEntry = {
   readonly messageId: string;
   readonly createdAt: string;
@@ -47,11 +57,15 @@ export type AwcMessengerTimelineEntry = {
     readonly membershipId: string | null;
     readonly displayName: string | null;
   };
+  /** Message subtype (chat.note, task.assign, ai.session, …). */
   readonly kind: string;
   readonly text: string;
   readonly needsReply: boolean;
   readonly inReplyTo: string | null;
   readonly states: readonly AwcMessengerStateChip[];
+  /** Additive: omit or "message" = bubble; "ai_session" = compact session row. */
+  readonly entryKind?: AwcMessengerEntryKind;
+  readonly session?: AwcMessengerAiSessionMeta;
 };
 
 /** Dispatch load-older page meta (fd7764c0). Absent on today's main. */

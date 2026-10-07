@@ -71,6 +71,16 @@ export type ProjectMessengerStateChip = {
   readonly reason: string | null;
 };
 
+/** Discriminator for timeline rows. Omit / "message" = chat/task bubble. */
+export type ProjectMessengerEntryKind = "message" | "ai_session";
+
+/** Optional AI-session metadata (History / Dispatch additive; missing on old rows). */
+export type ProjectMessengerAiSessionMeta = {
+  readonly status: string;
+  readonly writerAgent: string | null;
+  readonly agentRunId: string | null;
+};
+
 export type ProjectMessengerTimelineEntry = {
   readonly messageId: string;
   readonly createdAt: string;
@@ -79,12 +89,16 @@ export type ProjectMessengerTimelineEntry = {
     readonly membershipId: string | null;
     readonly displayName: string | null;
   };
+  /** Message subtype (chat.note, task.assign, ai.session, …). Not the entry discriminator. */
   readonly kind: string;
   readonly text: string;
   readonly needsReply: boolean;
   readonly inReplyTo: string | null;
   /** Owner/member messages: one chip per bot delivery. */
   readonly states: readonly ProjectMessengerStateChip[];
+  /** Additive: omit or "message" = bubble; "ai_session" = compact session row. */
+  readonly entryKind?: ProjectMessengerEntryKind;
+  readonly session?: ProjectMessengerAiSessionMeta;
 };
 
 export type ProjectMessengerThreadSummary = {

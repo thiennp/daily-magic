@@ -2,8 +2,10 @@ import {
   ACTIVITY_OWN_BUBBLE_CLASS,
   ACTIVITY_OWN_META_CLASS,
 } from "@/features/projects/messenger/activityChrome.constant";
+import AwcMessengerAiSessionRow from "@/features/projects/messenger/AwcMessengerAiSessionRow";
 import AwcMessengerStateChips from "@/features/projects/messenger/AwcMessengerStateChips";
 import type { AwcMessengerTimelineEntry } from "@/features/projects/messenger/types/awcProjectMessenger.type";
+import { isMessengerAiSessionEntry } from "@/features/projects/messenger/utils/isMessengerAiSessionEntry";
 
 interface AwcMessengerTimelineEntryRowProps {
   readonly entry: AwcMessengerTimelineEntry;
@@ -20,6 +22,10 @@ export default function AwcMessengerTimelineEntryRow({
   entry,
   isMine,
 }: AwcMessengerTimelineEntryRowProps) {
+  if (isMessengerAiSessionEntry(entry)) {
+    return <AwcMessengerAiSessionRow entry={entry} />;
+  }
+
   const who = entry.author.displayName?.trim() || entry.author.kind;
   return (
     <div

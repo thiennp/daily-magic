@@ -53,3 +53,48 @@ export const memoryChatStore = (options?: {
   };
   return { store, chats, kept };
 };
+
+/** Complete AI-session timeline fixture (completed + report link). */
+export const aiSessionCompletedFixture = (): AwcMessengerTimelineEntry => ({
+  messageId: "task:sess-completed-1",
+  createdAt: "2026-10-07T09:30:00.000Z",
+  author: {
+    kind: "bot",
+    membershipId: null,
+    displayName: "claude-cli",
+  },
+  kind: "ai.session",
+  entryKind: "ai_session",
+  text: "Refactored the messenger Load older path and fixed the offline banner.",
+  needsReply: false,
+  inReplyTo: null,
+  states: [],
+  session: {
+    status: "completed",
+    writerAgent: "claude-cli",
+    agentRunId: "run-completed-abc",
+  },
+});
+
+/** Failed AI-session fixture without report id (expand summary only). */
+export const aiSessionFailedFixture = (): AwcMessengerTimelineEntry => ({
+  messageId: "task:sess-failed-1",
+  createdAt: "2026-10-07T08:15:00.000Z",
+  author: {
+    kind: "bot",
+    membershipId: null,
+    displayName: "cursor",
+  },
+  kind: "ai.session",
+  entryKind: "ai_session",
+  text: "Stopped: writer could not apply the patch to the locked file.",
+  needsReply: false,
+  inReplyTo: null,
+  states: [],
+  session: {
+    status: "failed",
+    writerAgent: "cursor",
+    agentRunId: null,
+  },
+});
+

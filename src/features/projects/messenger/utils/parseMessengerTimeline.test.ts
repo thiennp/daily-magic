@@ -18,7 +18,10 @@ describe("parseMessengerOpenThread", () => {
     const parsed = parseMessengerOpenThread({
       ok: true,
       threadKey: "whole",
-      entries: [entry("a", "2026-10-01T00:00:00.000Z"), entry("b", "2026-10-02T00:00:00.000Z")],
+      entries: [
+        entry("a", "2026-10-01T00:00:00.000Z"),
+        entry("b", "2026-10-02T00:00:00.000Z"),
+      ],
       canSend: true,
     });
     expect(parsed).not.toBeNull();
@@ -30,7 +33,10 @@ describe("parseMessengerOpenThread", () => {
     const parsed = parseMessengerOpenThread({
       ok: true,
       threadKey: "whole",
-      entries: [entry("new", "2026-10-03T00:00:00.000Z"), entry("old", "2026-10-01T00:00:00.000Z")],
+      entries: [
+        entry("new", "2026-10-03T00:00:00.000Z"),
+        entry("old", "2026-10-01T00:00:00.000Z"),
+      ],
       page: {
         beforeCursor: "cursor-old",
         hasMore: true,
@@ -87,5 +93,67 @@ describe("parseMessengerOpenThread", () => {
       canSend: true,
     });
     expect(parsed?.error).toBeUndefined();
+  });
+
+  it("parses additive entryKind and session without rejecting old payloads", () => {
+    const parsed = parseMessengerOpenThread({
+      ok: true,
+      threadKey: "whole",
+      entries: [
+        {
+          ...entry("chat-1", "2026-10-01T00:00:00.000Z"),
+        },
+        {
+          messageId: "task:1",
+          createdAt: "2026-10-02T00:00:00.000Z",
+          author: {
+            kind: "bot",
+            membershipId: null,
+            displayName: "claude-cli",
+          },
+          kind: "ai.session",
+          entryKind: "ai_session",
+          text: "Finished the refactor",
+          needsReply: false,
+          inReplyTo: null,
+          states: [],
+          session: {
+            status: "completed",
+            writerAgent: "claude-cli",
+            agentRunId: "run-1",
+          },
+        },
+      ],
+      canSend: true,
+    });
+    expect(parsed?.entries).toHaveLength(2);
+    expect(parsed?.entries[0]?.entryKind).toBeUndefined();
+    expect(parsed?.entries[1]).toMatchObject({
+      entryKind: "ai_session",
+      kind: "ai.session",
+      needsReply: false,
+      session: {
+        status: "completed",
+        writerAgent: "claude-cli",
+        agentRunId: "run-1",
+      },
+    });
+  });
+
+  it("ignores invalid entryKind / session shapes", () => {
+    const parsed = parseMessengerOpenThread({
+      ok: true,
+      threadKey: "whole",
+      entries: [
+        {
+          ...entry("x", "2026-10-01T00:00:00.000Z"),
+          entryKind: "nope",
+          session: { writerAgent: "claude-cli" },
+        },
+      ],
+      canSend: true,
+    });
+    expect(parsed?.entries[0]?.entryKind).toBeUndefined();
+    expect(parsed?.entries[0]?.session).toBeUndefined();
   });
 });
