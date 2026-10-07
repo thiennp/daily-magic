@@ -2,7 +2,7 @@
 
 **Audience:** NRG AgentWitch · **UI tip:** `feat/awc-project-connections-en` @ `c99b9344` (on main)  
 **Updated:** 2026-10-07 ~10:30 CEST · **Notion + Google Drive BUILD GO** (AW Lead)  
-**Base:** stack on P2 tip `feat/awc-project-connections-p2-r1` @ `ebed87c1` (Linear + Gmail). Do **not** FF main from implement tip. Merge order before this tip lands: History default-ON hotfix → admin set-plan → Human UI merges P2 → rebase this tip.
+**Base:** rebased onto `origin/main` @ `d06476dc` (P2 `bd1ba9d9` + Messenger Load older). Do **not** FF main from implement tip. Soft-queue after Messenger Load older (coordinator merges).
 
 ---
 
@@ -87,4 +87,4 @@ Railway: GitHub/Slack already set. Add Linear + Google + Notion client pairs for
 - Soft land vs parked 102/103 (no new mig for Notion/Drive).
 - Merge order: History hotfix → admin set-plan → Human UI / P2 → rebase this tip.
 
-*Implement on `feat/awc-project-connections-notion-drive-r1` stacked on P2 tip. Light Arch before FF. Coordinator merges.*
+*Implement on `feat/awc-project-connections-notion-drive-r1` rebased on current main. Light Arch before Soft land. Coordinator merges — do not FF main.*

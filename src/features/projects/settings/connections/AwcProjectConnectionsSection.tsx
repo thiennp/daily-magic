@@ -15,7 +15,7 @@ interface AwcProjectConnectionsSectionProps {
 }
 
 /**
- * Settings → Connections (EN PASS UI-only). Four providers; owner-only mutate.
+ * Settings → Connections (EN PASS UI). Six providers (Slack–Drive); owner-only mutate.
  * 404/501/network → Not connected + disabled Connect + honest unavailable line.
  */
 export default function AwcProjectConnectionsSection({
