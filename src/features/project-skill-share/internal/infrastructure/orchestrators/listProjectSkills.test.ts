@@ -35,15 +35,20 @@ describe("listProjectSkills", () => {
     ]);
   });
 
-  it("member: published only (drafts owner-only)", async () => {
+  it("member: published + every draft (own and others'), no revoke/publish", async () => {
     vi.mocked(resolveProjectSkillActorRole).mockResolvedValue("member");
     const result = await listProjectSkills({
       actorUserId: "m1",
       args: { projectId: "proj-1" },
     });
-    expect(result.ok && result.skills.map((s) => s.skillId)).toEqual(["pub"]);
+    expect(result.ok && result.skills.map((s) => s.skillId)).toEqual([
+      "pub",
+      "mine",
+      "theirs",
+    ]);
     expect(result.ok && result.skills[0]).toMatchObject({
       canRevoke: false,
+      canPublish: false,
       isPublisher: false,
     });
   });

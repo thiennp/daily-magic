@@ -30,8 +30,8 @@ export const getProjectSkill = async (input: {
   if (record === null || !canViewProjectSkill({ ...viewer, ...record })) {
     return { ok: false, code: "not_found" };
   }
-  const canManage =
-    access.role === "owner" || record.publisherUserId === input.actorUserId;
+  /** Owner + active members read drafts (viewers: published only). */
+  const canManage = access.role === "owner" || access.role === "member";
   const readVersion = resolveProjectSkillReadVersion({
     requestedVersion: version,
     publishedVersion: record.publishedVersion,

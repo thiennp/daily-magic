@@ -20,7 +20,11 @@ export async function POST(
   });
   if (!result.ok) {
     return Response.json(
-      { ok: false, errorMessage: result.code },
+      {
+        ok: false,
+        code: result.code,
+        errorMessage: result.message ?? result.code,
+      },
       { status: mapProjectSkillShareErrorStatus(result.code) },
     );
   }

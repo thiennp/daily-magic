@@ -1,6 +1,6 @@
 export const PROJECT_SKILLS_COPY = {
   title: "Skills & playbooks",
-  hint: "Skills and playbooks shared with this project. Members and viewers see published skills. Drafts stay with the owner. Each skill can be up to 64 KB of text, and the last 20 versions are kept.",
+  hint: "Skills and playbooks shared with this project. Members and viewers see published skills. Drafts are visible to the owner and members; only the owner publishes. Each skill can be up to 64 KB of text, and the last 20 versions are kept.",
   loading: "Loading skills…",
   empty: "No skills shared yet.",
   publishHeading: "Share a skill",
@@ -9,7 +9,10 @@ export const PROJECT_SKILLS_COPY = {
   bodyLabel: "Skill text",
   publish: "Publish",
   saveDraft: "Save draft",
-  publishDraft: "Publish draft",
+  publishDraft: "Publish",
+  draftByLabel: (name: string) => `Draft by ${name}`,
+  memberDraftHint:
+    "Only the project owner can publish. Save a draft and the owner can publish it.",
   publishing: "Saving…",
   revoke: "Revoke",
   discardDraft: "Discard draft",

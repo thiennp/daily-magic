@@ -52,10 +52,16 @@ export default function AwcProjectAccessMemberViewerPanel({
       />
 
       {pageActorRole === "viewer" ? (
-        <p className="text-xs text-awc-fg-muted">{humanCopy.viewerConnectHint}</p>
+        <p className="text-xs text-awc-fg-muted">
+          {humanCopy.viewerConnectHint}
+        </p>
       ) : null}
 
-      <ProjectSkillsSection projectId={projectId} canEdit={false} />
+      <ProjectSkillsSection
+        projectId={projectId}
+        canEdit={false}
+        canDraft={pageActorRole === "member"}
+      />
     </section>
   );
 }

@@ -20,12 +20,15 @@ interface ProjectSkillsSectionProps {
   readonly projectId: string;
   /** Owner-only mutate; member/viewer get disabled controls + Product EN reasons. */
   readonly canEdit: boolean;
+  /** Owner or active member: Save draft + see drafts (default = canEdit). */
+  readonly canDraft?: boolean;
 }
 
 /** Resources Shared skills — owner mutates; others read published with disabled CTAs. */
 export default function ProjectSkillsSection({
   projectId,
   canEdit,
+  canDraft = canEdit,
 }: ProjectSkillsSectionProps) {
   const copy = PROJECT_SKILLS_COPY;
   const skills = useProjectSkills(projectId);
@@ -47,7 +50,7 @@ export default function ProjectSkillsSection({
             {skills.skills.length}
           </span>
           <ProjectPlaybookAddButton
-            canEdit={canEdit}
+            canEdit={canDraft}
             onAdd={() => setKind("playbook")}
           />
         </div>
@@ -76,6 +79,7 @@ export default function ProjectSkillsSection({
       <ProjectSkillPublishForm
         busy={skills.busy}
         canEdit={canEdit}
+        canDraft={canDraft}
         kind={kind}
         onKind={setKind}
         onSubmit={skills.publish}

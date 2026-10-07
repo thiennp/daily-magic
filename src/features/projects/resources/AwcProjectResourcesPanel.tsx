@@ -49,6 +49,7 @@ export default function AwcProjectResourcesPanel({
       <ProjectSkillsSection
         projectId={project.id}
         canEdit={pageActorRole === "owner"}
+        canDraft={pageActorRole !== "viewer"}
       />
     </div>
   );

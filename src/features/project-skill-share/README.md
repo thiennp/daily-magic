@@ -51,6 +51,18 @@ Definitions: `src/lib/agentAccess/agentAccessProjectSkillShareToolCatalog.consta
 | mcp                | `executeProjectSkillShareTool`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | tool name → orchestrator                         |
 | presentation       | `ProjectSkillsSection`, `ProjectSkillRow`, `ProjectSkillPublishForm`, `useProjectSkills`, `fetchProjectSkills`, `postProjectSkillMutation`                                                                                                                                                                                                                                                                                                                                                                                         | Project Access → Skills                          |
 
+## ACL (DF-040)
+
+One check, `decideProjectSkillPublishAccess` (used by `resolvePublishProjectSkillTarget`, so server fn, HTTP `POST /api/projects/:projectId/skills` and MCP `publish_project_skill` share it):
+
+| Role   | Save draft (`asDraft: true` + body)                                                                              | Publish / promote        | Revoke | See drafts |
+| ------ | ---------------------------------------------------------------------------------------------------------------- | ------------------------ | ------ | ---------- |
+| owner  | yes                                                                                                              | yes                      | yes    | yes        |
+| member | yes — new skill, or a new draft version; live row (state, published version/hash, name, kind, revoked) untouched | no (forbidden + message) | no     | yes        |
+| viewer | no                                                                                                               | no                       | no     | no         |
+
+The draft author is `project_skill_versions.created_by_user_id`; list views carry `latestAuthorName` and `canPublish`.
+
 ## Playbooks (kind)
 
 A **project playbook** is a project skill with `kind: "playbook"` (migration `110-project-skill-kind.sql`, default `'skill'`). Same table, draft → published → revoked lifecycle, ACL (owner publishes/revokes; owner | member | viewer read published), 64KB body cap, contentHash and 20-version limit. `list_project_skills` / `GET /api/projects/:projectId/skills?kind=playbook` filter by kind; every view carries `kind`. Omitting `kind` on publish keeps an existing row's kind (new rows: `skill`). UI: Resources → "Skills & playbooks" (Add playbook, Skill | Playbook toggle, Playbook badge, Revoke) and Library → "Add playbook" / New → Playbook. Seed: `111-project-playbook-agentwitch-seed.sql` (AgentWitch project, "How the AgentWitch team ships").

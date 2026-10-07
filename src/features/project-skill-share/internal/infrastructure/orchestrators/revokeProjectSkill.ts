@@ -1,4 +1,5 @@
 import { decideProjectSkillRevokeAccess } from "@/features/project-skill-share/internal/core/decideProjectSkillRevokeAccess";
+import { PROJECT_SKILL_ACL_MESSAGES } from "@/features/project-skill-share/internal/core/projectSkillAclMessages.constant";
 import { isProjectSkillRefArgs } from "@/features/project-skill-share/internal/core/isProjectSkillRefArgs.guardz";
 import type { RevokeProjectSkillResult } from "@/features/project-skill-share/internal/core/projectSkillResults.type";
 import { toProjectSkillView } from "@/features/project-skill-share/internal/core/toProjectSkillView";
@@ -31,7 +32,11 @@ export const revokeProjectSkill = async (input: {
       publisherUserId: record.publisherUserId,
     })
   ) {
-    return { ok: false, code: "forbidden" };
+    return {
+      ok: false,
+      code: "forbidden",
+      message: PROJECT_SKILL_ACL_MESSAGES.ownerOnlyRevoke,
+    };
   }
   const revoked =
     record.state === "revoked"

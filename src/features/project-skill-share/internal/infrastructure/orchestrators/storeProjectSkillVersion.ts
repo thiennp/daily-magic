@@ -46,11 +46,13 @@ export const storeProjectSkillVersion = async (input: {
     contentHash,
     byteSize: measureProjectSkillBodyBytes(input.body),
     asDraft,
+    draftOnly: target.draftOnly,
     transition: decideProjectSkillPublishTransition({
       existing: target.existing,
       newVersion: version,
       asDraft,
       contentHash,
+      draftOnly: target.draftOnly,
     }),
   });
   if (record === null) {

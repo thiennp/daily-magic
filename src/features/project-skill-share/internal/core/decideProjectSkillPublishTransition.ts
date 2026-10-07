@@ -18,7 +18,16 @@ export const decideProjectSkillPublishTransition = (input: {
   readonly newVersion: number;
   readonly asDraft: boolean;
   readonly contentHash: string;
+  /** Member draft: keep state / published version / hash exactly as they are. */
+  readonly draftOnly?: boolean;
 }): ProjectSkillPublishTransition => {
+  if (input.draftOnly === true && input.existing !== null) {
+    return {
+      state: input.existing.state,
+      publishedVersion: input.existing.publishedVersion,
+      contentHash: input.existing.contentHash,
+    };
+  }
   if (!input.asDraft) {
     return {
       state: "published",

@@ -24,11 +24,14 @@ export const insertProjectSkillVersionWithSkill = async (input: {
   readonly contentHash: string;
   readonly byteSize: number;
   readonly asDraft: boolean;
+  /** Member draft on an existing row: only latest_version moves. */
+  readonly draftOnly: boolean;
   readonly transition: ProjectSkillPublishTransition;
 }): Promise<ProjectSkillRecord | null> => {
   await ensureProjectSkillShareSchema();
   const sql = getSql();
   const t = input.transition;
+  const keep = input.draftOnly;
   const rows = asRowArray(
     await sql`
       WITH skill AS (
@@ -37,10 +40,16 @@ export const insertProjectSkillVersionWithSkill = async (input: {
         VALUES (${input.projectId}, ${input.skillId}, ${input.kind}, ${input.name}, ${input.description},
           ${input.actorUserId}, ${t.state}, ${t.publishedVersion}, ${input.version}, ${t.contentHash})
         ON CONFLICT (project_id, skill_id) DO UPDATE SET
-          kind = EXCLUDED.kind, name = EXCLUDED.name, description = EXCLUDED.description,
+          kind = CASE WHEN ${keep} THEN project_skills.kind ELSE EXCLUDED.kind END,
+          name = CASE WHEN ${keep} THEN project_skills.name ELSE EXCLUDED.name END,
+          description = CASE WHEN ${keep} THEN project_skills.description
+            ELSE EXCLUDED.description END,
           state = EXCLUDED.state, published_version = EXCLUDED.published_version,
           latest_version = EXCLUDED.latest_version, content_hash = EXCLUDED.content_hash,
-          revoked_at = NULL, revoked_by_user_id = NULL, updated_at = NOW()
+          revoked_at = CASE WHEN ${keep} THEN project_skills.revoked_at ELSE NULL END,
+          revoked_by_user_id = CASE WHEN ${keep} THEN project_skills.revoked_by_user_id
+            ELSE NULL END,
+          updated_at = NOW()
         WHERE project_skills.latest_version = ${input.expectedLatestVersion}
         RETURNING *
       ), ver AS (

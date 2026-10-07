@@ -45,12 +45,17 @@ export default function ProjectSkillRow({
               {PROJECT_PLAYBOOKS_COPY.playbookBadge}
             </span>
           ) : null}
-          {skill.state === "draft" ? (
+          {hasPendingDraft ? (
             <span className={PROJECT_SKILLS_BADGE_CLASS}>
               {copy.draftBadge}
             </span>
           ) : null}
         </span>
+        {hasPendingDraft && skill.latestAuthorName !== null ? (
+          <span className="block text-xs text-awc-fg-muted">
+            {copy.draftByLabel(skill.latestAuthorName)}
+          </span>
+        ) : null}
         {skill.description ? (
           <span className="block text-xs text-awc-fg-muted">
             {skill.description}

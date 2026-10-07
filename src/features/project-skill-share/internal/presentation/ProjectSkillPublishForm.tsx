@@ -17,6 +17,8 @@ import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPag
 interface Props {
   readonly busy: boolean;
   readonly canEdit: boolean;
+  /** Owner or active member: may Save draft (Publish stays owner-only). */
+  readonly canDraft: boolean;
   readonly kind: ProjectSkillKind;
   readonly onKind: (kind: ProjectSkillKind) => void;
   readonly onSubmit: (draft: PublishProjectSkillDraft) => Promise<boolean>;
@@ -25,6 +27,7 @@ interface Props {
 export default function ProjectSkillPublishForm({
   busy,
   canEdit,
+  canDraft,
   kind,
   onKind,
   onSubmit,
@@ -37,10 +40,10 @@ export default function ProjectSkillPublishForm({
   const bytes = measureProjectSkillBodyBytes(body);
   const tooLarge = bytes > PROJECT_SKILL_MAX_BODY_BYTES;
   const canSubmit =
-    canEdit && !busy && !tooLarge && name.trim() !== "" && body.trim() !== "";
+    canDraft && !busy && !tooLarge && name.trim() !== "" && body.trim() !== "";
 
   const submit = async (asDraft: boolean) => {
-    if (!canEdit) return;
+    if (!canDraft || (!asDraft && !canEdit)) return;
     const ok = await onSubmit({
       name: name.trim(),
       ...(description.trim() === "" ? {} : { description: description.trim() }),
@@ -60,7 +63,7 @@ export default function ProjectSkillPublishForm({
       className="space-y-2 border-t border-awc-border/70 pt-3 dark:border-gray-800/70"
       onSubmit={(event) => {
         event.preventDefault();
-        void submit(false);
+        void submit(!canEdit);
       }}
     >
       <span className="flex flex-wrap items-center justify-between gap-2">
@@ -71,7 +74,7 @@ export default function ProjectSkillPublishForm({
         </p>
         <ProjectSkillKindToggle
           kind={kind}
-          disabled={!canEdit}
+          disabled={!canDraft}
           onKind={onKind}
         />
       </span>
@@ -94,10 +97,11 @@ export default function ProjectSkillPublishForm({
           ? copy.tooLarge
           : copy.bytesLabel(bytes, PROJECT_SKILL_MAX_BODY_BYTES)}
       </p>
-      {canEdit ? (
+      {canDraft ? (
         <ProjectSkillPublishSubmitActions
           busy={busy}
           canSubmit={canSubmit}
+          canPublish={canEdit}
           onSaveDraft={() => void submit(true)}
         />
       ) : (

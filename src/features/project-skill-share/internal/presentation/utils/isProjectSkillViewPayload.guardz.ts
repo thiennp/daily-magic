@@ -22,4 +22,6 @@ export const isProjectSkillViewPayload = isType<ProjectSkillView>({
   updatedAt: isString,
   isPublisher: isBoolean,
   canRevoke: isBoolean,
+  canPublish: isBoolean,
+  latestAuthorName: isNullOr(isString),
 });

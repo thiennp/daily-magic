@@ -70,7 +70,7 @@ describe("publishProjectSkill real resolver viewer gate", () => {
       actorUserId: "actor-1",
       args: { projectId: "proj-1", name: "Deploy", body },
     });
-    expect(result).toEqual({ ok: false, code: "forbidden" });
+    expect(result).toMatchObject({ ok: false, code: "forbidden" });
     expect(insertProjectSkillVersionWithSkill).not.toHaveBeenCalled();
   });
 
@@ -82,7 +82,7 @@ describe("publishProjectSkill real resolver viewer gate", () => {
       actorUserId: "actor-1",
       args: { projectId: "proj-1", name: "Deploy", body },
     });
-    expect(result).toEqual({ ok: false, code: "forbidden" });
+    expect(result).toMatchObject({ ok: false, code: "forbidden" });
     expect(insertProjectSkillVersionWithSkill).not.toHaveBeenCalled();
   });
 

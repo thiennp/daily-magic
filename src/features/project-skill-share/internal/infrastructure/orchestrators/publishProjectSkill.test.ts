@@ -50,7 +50,7 @@ describe("publishProjectSkill", () => {
       actorUserId: "x",
       args: { projectId: "proj-1", name: "Deploy", body },
     });
-    expect(result).toEqual({ ok: false, code: "forbidden" });
+    expect(result).toMatchObject({ ok: false, code: "forbidden" });
   });
 
   it("rejects bodies over 64KB before writing", async () => {
@@ -93,7 +93,7 @@ describe("publishProjectSkill", () => {
       actorUserId: "m1",
       args: { projectId: "proj-1", name: "Deploy", body },
     });
-    expect(result).toEqual({ ok: false, code: "forbidden" });
+    expect(result).toMatchObject({ ok: false, code: "forbidden" });
     expect(insertProjectSkillVersionWithSkill).not.toHaveBeenCalled();
   });
 });

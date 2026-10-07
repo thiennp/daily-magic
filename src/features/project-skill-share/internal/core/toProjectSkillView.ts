@@ -21,6 +21,8 @@ export const toProjectSkillView = (input: {
   contentHash: input.record.contentHash,
   updatedAt: input.record.updatedAt,
   isPublisher: input.record.publisherUserId === input.actorUserId,
+  canPublish: input.role === "owner",
+  latestAuthorName: input.record.latestAuthorName ?? null,
   canRevoke:
     input.record.state !== "revoked" &&
     decideProjectSkillRevokeAccess({

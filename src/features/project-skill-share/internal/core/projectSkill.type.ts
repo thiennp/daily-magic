@@ -39,6 +39,9 @@ export interface ProjectSkillRecord {
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly revokedAt: string | null;
+  /** Author of latest_version (list queries only). */
+  readonly latestAuthorUserId?: string | null;
+  readonly latestAuthorName?: string | null;
 }
 
 export interface ProjectSkillVersionRecord {
@@ -65,6 +68,10 @@ export interface ProjectSkillView {
   readonly updatedAt: string;
   readonly isPublisher: boolean;
   readonly canRevoke: boolean;
+  /** Owner only: may publish / promote the latest draft. */
+  readonly canPublish: boolean;
+  /** Who saved the latest version (shown on draft rows); null when unknown. */
+  readonly latestAuthorName: string | null;
 }
 
 export interface ProjectSkillDetail extends ProjectSkillView {
@@ -78,4 +85,6 @@ export interface ProjectSkillDetail extends ProjectSkillView {
 export type ProjectSkillFailure = {
   readonly ok: false;
   readonly code: ProjectSkillShareErrorCode;
+  /** Human-readable reason (e.g. owner-only publish); optional. */
+  readonly message?: string;
 };

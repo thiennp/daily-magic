@@ -48,7 +48,7 @@ describe("revokeProjectSkill real resolver viewer gate", () => {
       actorUserId: "actor-1",
       args: { projectId: "proj-1", skillId: "deploy" },
     });
-    expect(result).toEqual({ ok: false, code: "forbidden" });
+    expect(result).toMatchObject({ ok: false, code: "forbidden" });
     expect(updateProjectSkillRevoked).not.toHaveBeenCalled();
   });
 
@@ -63,7 +63,7 @@ describe("revokeProjectSkill real resolver viewer gate", () => {
       actorUserId: "actor-1",
       args: { projectId: "proj-1", skillId: "deploy" },
     });
-    expect(result).toEqual({ ok: false, code: "forbidden" });
+    expect(result).toMatchObject({ ok: false, code: "forbidden" });
     expect(updateProjectSkillRevoked).not.toHaveBeenCalled();
   });
 

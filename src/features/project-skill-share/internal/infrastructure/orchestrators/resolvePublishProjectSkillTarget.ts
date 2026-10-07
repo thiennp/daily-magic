@@ -24,15 +24,18 @@ export type PublishProjectSkillTarget = {
   readonly skillId: string;
   readonly kind: ProjectSkillKind;
   readonly name: string;
+  /** Member draft: add a draft version only (row state/meta untouched). */
+  readonly draftOnly: boolean;
   readonly existing: ProjectSkillRecord | null;
 };
 
-const fail = (code: ProjectSkillFailure["code"]): ProjectSkillFailure => ({
-  ok: false,
-  code,
-});
+const fail = (
+  code: ProjectSkillFailure["code"],
+  message?: string,
+): ProjectSkillFailure =>
+  message === undefined ? { ok: false, code } : { ok: false, code, message };
 
-/** Parse args, resolve role + skill, apply publish access (project owner only). */
+/** Parse args, resolve role, apply the shared publish ACL, resolve the skill row. */
 export const resolvePublishProjectSkillTarget = async (input: {
   readonly actorUserId: string;
   readonly args: unknown;
@@ -50,7 +53,12 @@ export const resolvePublishProjectSkillTarget = async (input: {
     actorUserId: input.actorUserId,
   });
   if (role === "project_not_found") return fail("not_found");
-  if (role === "none") return fail("forbidden");
+  const access = decideProjectSkillPublishAccess({
+    role,
+    asDraft: args.asDraft === true,
+    hasBody: args.body !== undefined,
+  });
+  if (!access.allowed) return fail("forbidden", access.message);
   const skillId =
     args.skillId ??
     (args.name !== undefined ? deriveProjectSkillIdFromName(args.name) : null);
@@ -61,14 +69,11 @@ export const resolvePublishProjectSkillTarget = async (input: {
     projectId: args.projectId,
     skillId,
   });
-  const allowed = decideProjectSkillPublishAccess({
-    role,
-    actorUserId: input.actorUserId,
-    existingPublisherUserId: existing?.publisherUserId ?? null,
-  });
-  if (!allowed) return fail("forbidden");
   const name = args.name ?? existing?.name;
   if (name === undefined) return fail("invalid_arguments");
-  const kind = args.kind ?? existing?.kind ?? PROJECT_SKILL_DEFAULT_KIND;
-  return { ok: true, args, role, skillId, kind, name, existing };
+  const draftOnly = access.draftOnly && existing !== null;
+  const kind = draftOnly
+    ? (existing?.kind ?? PROJECT_SKILL_DEFAULT_KIND)
+    : (args.kind ?? existing?.kind ?? PROJECT_SKILL_DEFAULT_KIND);
+  return { ok: true, args, role, skillId, kind, name, draftOnly, existing };
 };

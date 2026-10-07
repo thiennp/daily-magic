@@ -18,7 +18,12 @@ export const executeProjectSkillShareTool: AgentAccessFeatureToolExecutor =
     });
     if (!result.ok) {
       return agentAccessTextResult(
-        { ok: false, error: result.code, code: result.code },
+        {
+          ok: false,
+          error: result.code,
+          code: result.code,
+          ...(result.message === undefined ? {} : { message: result.message }),
+        },
         true,
       );
     }
