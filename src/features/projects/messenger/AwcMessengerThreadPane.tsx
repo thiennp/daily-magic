@@ -31,6 +31,7 @@ export default function AwcMessengerThreadPane({
   assignees,
   defaultAssigneeMembershipId,
   clearAllSlot,
+  noticesSlot,
   onBack,
   onLoadOlder,
   onSendMessage,
@@ -70,6 +71,7 @@ export default function AwcMessengerThreadPane({
       ) : clearAllSlot ? (
         <div className="flex justify-end border-b border-awc-border px-4 py-2">{clearAllSlot}</div>
       ) : null}
+      {!isLoading && filter === "all" ? noticesSlot : null}
       {isLoading ? <AwcOneWindowFeedLoading /> : null}
       {!isLoading && thread !== null && filtered.length === 0 ? (
         <AwcOneWindowFeedEmpty />

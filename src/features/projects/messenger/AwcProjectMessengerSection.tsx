@@ -14,7 +14,12 @@ import {
   WHOLE_THREAD_KEY,
 } from "@/features/projects/messenger/hooks/useAwcProjectMessengerFeed";
 import { useAwcProjectMessengerInboxClear } from "@/features/projects/messenger/hooks/useAwcProjectMessengerInboxClear";
+import AwcOneWindowFeedNotices from "@/features/projects/messenger/oneWindow/AwcOneWindowFeedNotices";
 import { OW_SURFACE_CLASS } from "@/features/projects/messenger/oneWindow/awcOneWindowChrome.constant";
+import {
+  oneWindowArchivedNoticeText,
+  oneWindowQuietNoticeTexts,
+} from "@/features/projects/messenger/oneWindow/oneWindowFeedNotices";
 import { defaultMessengerTaskAssignee } from "@/features/projects/messenger/utils/defaultMessengerTaskAssignee";
 import { messengerTaskAssigneeOptions } from "@/features/projects/messenger/utils/messengerTaskAssigneeOptions";
 import { selectMessengerThreadMeta } from "@/features/projects/messenger/utils/selectMessengerThreadMeta";
@@ -50,7 +55,12 @@ export default function AwcProjectMessengerSection({
     () => messengerTaskAssigneeOptions({ bots: list.threads?.bots ?? [] }),
     [list.threads],
   );
-  const gate = resolveMessengerGate(list);
+  const quiet = useMemo(
+    () => oneWindowQuietNoticeTexts({ bots: list.threads?.bots ?? [], selectedKey }),
+    [list.threads, selectedKey],
+  );
+  const { inbox } = inboxClear;
+  const gate = resolveMessengerGate({ ...list, hasProject: projectId.trim() !== "" });
   if (gate.kind !== "ready") {
     return <AwcProjectMessengerGateView gate={gate} onRetry={() => void list.reload()} />;
   }
@@ -81,6 +91,13 @@ export default function AwcProjectMessengerSection({
         defaultAssigneeMembershipId={defaultMessengerTaskAssignee(selectedKey)}
         clearAllSlot={
           inboxClear.visible ? <AwcProjectMessengerInboxClearBar clear={inboxClear} /> : null
+        }
+        noticesSlot={
+          <AwcOneWindowFeedNotices
+            archivedText={isOwner ? oneWindowArchivedNoticeText(inbox.archivedCount) : null}
+            onRestore={inbox.canRestore ? () => inboxClear.setRestoreAllOpen(true) : undefined}
+            quiet={quiet}
+          />
         }
         onBack={() => feed.setSelectedKey(WHOLE_THREAD_KEY)}
         onLoadOlder={() => void open.loadOlder()}

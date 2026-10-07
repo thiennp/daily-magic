@@ -1,6 +1,9 @@
 import AwcMessengerAiSessionRow from "@/features/projects/messenger/AwcMessengerAiSessionRow";
 import AwcMessengerStateChips from "@/features/projects/messenger/AwcMessengerStateChips";
 import AwcOneWindowMessageRow from "@/features/projects/messenger/oneWindow/AwcOneWindowMessageRow";
+import AwcOneWindowSystemEntry, {
+  isOneWindowSystemKind,
+} from "@/features/projects/messenger/oneWindow/AwcOneWindowSystemEntry";
 import AwcOneWindowTaskCard from "@/features/projects/messenger/oneWindow/AwcOneWindowTaskCard";
 import {
   formatChipLabel,
@@ -76,10 +79,17 @@ export default function AwcMessengerTimelineEntryRow({
     );
   }
 
-  const status =
-    windowKind === "task_update" && subjectState !== null
-      ? { label: subjectState.label, tone: subjectState.tone }
-      : undefined;
+  if (isOneWindowSystemKind(windowKind)) {
+    return (
+      <AwcOneWindowSystemEntry
+        entry={entry}
+        windowKind={windowKind}
+        who={who}
+        timeLabel={timeLabel}
+      />
+    );
+  }
+
   return (
     <div className={`flex flex-col gap-1.5 ${isMine ? "items-end" : "items-start"}`}>
       <AwcOneWindowMessageRow
@@ -88,7 +98,6 @@ export default function AwcMessengerTimelineEntryRow({
         isAssistant={isAssistant}
         timeLabel={timeLabel}
         text={entry.text}
-        status={status}
       />
       {isMine ? <AwcMessengerStateChips states={entry.states} /> : null}
     </div>

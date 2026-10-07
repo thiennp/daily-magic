@@ -27,6 +27,8 @@ export interface AwcMessengerThreadPaneProps {
   readonly assignees: readonly MessengerTaskAssigneeOption[];
   readonly defaultAssigneeMembershipId: string;
   readonly clearAllSlot?: ReactNode;
+  /** P1-S3 feed notices (archived, quiet) shown above the timeline on "All". */
+  readonly noticesSlot?: ReactNode;
   readonly onBack: () => void;
   readonly onLoadOlder: () => void;
   readonly onSendMessage: (text: string, needsReply: boolean) => Promise<boolean>;

@@ -24,4 +24,9 @@ export const ONE_WINDOW_FEED_COPY = {
   approvalJoinKind: "Approval · Join request",
   waitingForYou: "Waiting for you",
   timedOut: "Timed out",
+  noticeArchivedOne: "1 older message is archived. It is kept, not deleted.",
+  noticeArchivedMany: "{n} older messages are archived. They are kept, not deleted.",
+  noticeRestore: "Restore",
+  noticeQuiet: "{name} has been quiet for a while. It may be busy, or its computer may be asleep.",
+  betweenTo: "to",
 } as const;

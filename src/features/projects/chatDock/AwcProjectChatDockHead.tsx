@@ -12,16 +12,17 @@ interface AwcProjectChatDockHeadProps {
   readonly onClose: () => void;
 }
 
-/** Dock title + Full screen / Exit full screen + Minimise. */
+/** Dock title ("Chat" in full view, "New message" compact) + Full screen / Exit full screen + Minimise. */
 export default function AwcProjectChatDockHead({
   full,
   onToggleFull,
   onClose,
 }: AwcProjectChatDockHeadProps) {
   const sizeLabel = full ? C["dock.exitFull"] : C["dock.expand"];
+  const title = full ? C["dock.titleFull"] : C["dock.title"];
   return (
     <header className={CHAT_DOCK_HEAD_CLASS}>
-      <h3 className="m-0 text-[15px] font-semibold text-white">{C["dock.title"]}</h3>
+      <h3 className="m-0 text-[15px] font-semibold text-white">{title}</h3>
       <span className="flex items-center gap-0.5">
         <button
           type="button"

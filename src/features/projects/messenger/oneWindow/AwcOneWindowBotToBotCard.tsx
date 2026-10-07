@@ -36,7 +36,9 @@ export default function AwcOneWindowBotToBotCard({
             <div className="min-w-0">
               <div className="text-[13px]">
                 <b>{line.who}</b>{" "}
-                <span className="text-awc-fg-subtle">to {line.to}</span>
+                <span className="text-awc-fg-subtle">
+                  {copy.betweenTo} {line.to}
+                </span>
               </div>
               <p className="m-0 mt-0.5 text-[13px] text-awc-fg">{line.text}</p>
             </div>

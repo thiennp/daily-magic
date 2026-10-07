@@ -32,7 +32,7 @@ export default function AwcProjectChatDockPopover({
     <section
       id="awc-chat-dock-pop"
       role="dialog"
-      aria-label={C["dock.title"]}
+      aria-label={full ? C["dock.titleFull"] : C["dock.title"]}
       className={full ? CHAT_DOCK_POP_FULL_CLASS : CHAT_DOCK_POP_CLASS}
     >
       <AwcProjectChatDockHead

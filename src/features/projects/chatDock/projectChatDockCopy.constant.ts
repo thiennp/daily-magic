@@ -7,6 +7,8 @@ import { PROJECT_ASK_BOX_COPY } from "@/features/projects/askBox/projectAskBoxCo
  */
 export const PROJECT_CHAT_DOCK_COPY = {
   "dock.title": "New message",
+  /** P1-S3 (AW Lead): full-view header; the composer lock keeps "New message" compact only. */
+  "dock.titleFull": "Chat",
   "dock.expand": "Full screen",
   "dock.exitFull": "Exit full screen",
   "dock.minimise": "Minimise",

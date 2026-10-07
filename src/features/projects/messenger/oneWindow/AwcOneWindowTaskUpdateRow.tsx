@@ -6,7 +6,7 @@ interface AwcOneWindowTaskUpdateRowProps {
   readonly timeLabel: string;
 }
 
-/** Task-update line in the unified feed. */
+/** Task-update line in the unified feed (P1-S3: bot `task.*` replies). */
 export default function AwcOneWindowTaskUpdateRow({
   who,
   textHtmlSafe,
@@ -16,7 +16,7 @@ export default function AwcOneWindowTaskUpdateRow({
 }: AwcOneWindowTaskUpdateRowProps) {
   const tone =
     statusTone === "ok"
-      ? "bg-emerald-50 text-emerald-800"
+      ? "bg-awc-ok-soft text-awc-ok"
       : statusTone === "warn"
         ? "bg-awc-warn-soft text-awc-warn"
         : "bg-awc-accent-soft text-awc-blue-700";
@@ -28,7 +28,7 @@ export default function AwcOneWindowTaskUpdateRow({
       >
         {who.slice(0, 2).toUpperCase()}
       </div>
-      <span className="min-w-0 flex-1">
+      <span className="min-w-0 flex-1 whitespace-pre-wrap break-words">
         <b>{who}</b> {textHtmlSafe}
       </span>
       <span className={`rounded-full px-2 py-0.5 text-[12px] ${tone}`}>{statusLabel}</span>

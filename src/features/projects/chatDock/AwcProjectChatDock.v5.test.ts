@@ -24,6 +24,7 @@ describe("L3 V5-4 Chat dock — shell contract", () => {
     expect(head).toContain('C["dock.expand"]');
     expect(head).toContain('C["dock.exitFull"]');
     expect(head).toContain('C["dock.minimise"]');
+    expect(head).toContain('full ? C["dock.titleFull"] : C["dock.title"]');
     expect(head).not.toContain("collapse");
     expect(read("AwcProjectChatDock.tsx")).toContain("AwcProjectAskBox");
     expect(read("AwcProjectChatDock.tsx")).not.toContain("fetch(");
