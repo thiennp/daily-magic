@@ -76,6 +76,7 @@ export const openProjectMessengerThread = async (input: {
         threadKey: input.threadKey,
         beforeCursor: beforeRaw,
         limit,
+        ownerUserId: viewer.ownerUserId,
       })
     : { entries: [], nextBeforeCursor: null, hasMore: false };
 

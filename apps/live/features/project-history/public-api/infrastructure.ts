@@ -12,6 +12,7 @@ export {
 export { listProjectSkillIds } from "../internal/core/listProjectSkillIds";
 export { writeProjectHistoryMessage } from "../internal/core/writeProjectHistoryMessage";
 export { handleProjectMessageHistoryDispatch } from "../internal/core/handleProjectMessageHistoryDispatch";
+export { handleProjectHistoryPageRequest } from "../internal/core/handleProjectHistoryPageRequest";
 export { PROJECT_COMPUTER_HISTORY_TICK_INTERVAL_MS } from "../internal/core/projectHistory.constants";
 export { createProjectSkillHistoryPort } from "../internal/core/createProjectSkillHistoryPort";
 export { createHttpProjectSkillAwcPublishedSource } from "../internal/core/createHttpProjectSkillAwcPublishedSource";

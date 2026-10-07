@@ -7,6 +7,7 @@ export type {
 export type { ProjectSkillLocalMirrorRef } from "../internal/core/listProjectSkillIds";
 export type { ProjectHistoryMessageRecord } from "../internal/core/writeProjectHistoryMessage";
 export type { HandleProjectMessageHistoryDispatchResult } from "../internal/core/handleProjectMessageHistoryDispatch";
+export type { HandleProjectHistoryPageRequestResult } from "../internal/core/handleProjectHistoryPageRequest";
 export type {
   LocalProjectHistoryState,
   LocalProjectHistoryStateRecord,

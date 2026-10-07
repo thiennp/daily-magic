@@ -50,6 +50,7 @@ import {
 } from "@agent-witch/install-runtime-client";
 import {
   handleProjectMessageHistoryDispatch,
+  handleProjectHistoryPageRequest,
   writeProjectHistoryAiSession,
 } from "@agent-witch/live-project-history";
 import type { AgentWitchClientConfig as AgentWitchConfig } from "@agent-witch/install-runtime-client/types";
@@ -1406,6 +1407,21 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
     if (parsed.type === "project.message.history" && isRecord(parsed.payload)) {
       void handleProjectMessageHistoryDispatch({ payload: parsed.payload });
+      return;
+    }
+
+    if (
+      parsed.type === "project.history.page.request" &&
+      isRecord(parsed.payload)
+    ) {
+      const pageResult = handleProjectHistoryPageRequest({
+        payload: parsed.payload,
+      });
+      sendMessage(socket, {
+        type: "project.history.page.result",
+        payload: pageResult,
+        requestId,
+      });
       return;
     }
 

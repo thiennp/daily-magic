@@ -2,6 +2,7 @@ import { handleHarnessBorrowExportMessage } from "./handleHarnessBorrowExportMes
 import { handleHarnessExportResultMessage } from "./handleHarnessExportResultMessage";
 import { handleHarnessManifestRequestMessage } from "./handleHarnessManifestRequestMessage";
 import { handleHarnessManifestReportMessage } from "./handleHarnessManifestReportMessage";
+import { handleProjectHistoryPageResultMessage } from "./handleProjectHistoryPageResultMessage";
 import {
   handleHarnessAgentRelayMessage,
   handleHarnessRequestMessage,
@@ -65,6 +66,11 @@ export const handleAgentWitchSyncMessage = async (
     message.type === AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST_RESULT
   ) {
     return handleHarnessAgentRelayMessage(runtime, message, sender);
+  }
+
+
+  if (message.type === AGENT_WITCH_MESSAGE_TYPES.PROJECT_HISTORY_PAGE_RESULT) {
+    return handleProjectHistoryPageResultMessage(runtime, message, sender);
   }
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.HARNESS_MANIFEST_REPORT) {
