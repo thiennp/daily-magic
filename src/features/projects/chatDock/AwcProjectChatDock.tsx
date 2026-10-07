@@ -13,12 +13,15 @@ import {
 } from "@/features/projects/chatDock/projectChatDockClasses.constant";
 import { useAwcProjectChatDock } from "@/features/projects/chatDock/useAwcProjectChatDock";
 import type { AwcMessengerThreadList } from "@/features/projects/messenger/types/awcProjectMessenger.type";
+import buildOverviewAttention from "@/features/projects/overview/buildOverviewAttention";
 import sumMessengerUnread from "@/features/projects/overview/sumMessengerUnread";
 
 interface AwcProjectChatDockProps {
   readonly projectId: string;
   readonly threads: AwcMessengerThreadList | null;
   readonly onSent: (threadKey: string) => void;
+  /** Deep-link to Activity messenger (same path as Overview attention). */
+  readonly onGotoActivity: (threadKey: string | null) => void;
   /** Onboarding first-task handoff: open dock from ?chat=1. */
   readonly startOpen?: boolean;
 }
@@ -26,11 +29,13 @@ interface AwcProjectChatDockProps {
 /**
  * V5-4 floating Chat dock — FAB + popover + full-screen expand.
  * Reuses ask-box → messenger / inbox dispatch (no new API).
+ * Unread FAB click opens Activity thread instead of composer dock.
  */
 export default function AwcProjectChatDock({
   projectId,
   threads,
   onSent,
+  onGotoActivity,
   startOpen = false,
 }: AwcProjectChatDockProps) {
   const dock = useAwcProjectChatDock(startOpen);
@@ -45,6 +50,14 @@ export default function AwcProjectChatDock({
   );
   if (threads === null) return null;
   const canSend = threads.canSend;
+  const unreadCount = sumMessengerUnread(threads);
+  const onFabToggle = () => {
+    if (unreadCount > 0) {
+      onGotoActivity(buildOverviewAttention(threads)?.membershipId ?? null);
+      return;
+    }
+    dock.toggleDock();
+  };
   const rootClass =
     dock.open && dock.full ? CHAT_DOCK_ROOT_FULL_CLASS : CHAT_DOCK_ROOT_CLASS;
   return (
@@ -68,9 +81,9 @@ export default function AwcProjectChatDock({
         </AwcProjectChatDockPopover>
       ) : (
         <AwcProjectChatDockFab
-          unreadCount={sumMessengerUnread(threads)}
+          unreadCount={unreadCount}
           expanded={false}
-          onToggle={dock.toggleDock}
+          onToggle={onFabToggle}
         />
       )}
     </div>

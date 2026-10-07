@@ -149,6 +149,7 @@ export default function AwcProjectDetailPanel({
         projectId={project.id}
         threads={messengerThreads.threads}
         onSent={onAskSent}
+        onGotoActivity={onGotoActivity}
       />
       {leaveConfirmOpen ? (
         <AwcProjectLeaveConfirmForm
