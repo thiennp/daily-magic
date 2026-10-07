@@ -42,6 +42,11 @@ export default function BillingPlanSummary() {
       {plan.adminFree || plan.plan === "admin_free" ? (
         <p className="mt-3 text-sm text-amber-800">{BILLING_COPY.adminFreeEdge}</p>
       ) : null}
+      {plan.trialGate === "closed" ? (
+        <p className="mt-3 text-sm text-amber-800">
+          {plan.trialGateReason ?? BILLING_COPY.trialGateClosed}
+        </p>
+      ) : null}
       {plan.cancelAnytime ? (
         <p className="mt-3 text-sm text-gray-600">{BILLING_COPY.cancelAnytime}</p>
       ) : null}

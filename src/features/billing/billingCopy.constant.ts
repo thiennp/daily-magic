@@ -9,6 +9,8 @@ export const BILLING_COPY = {
     "Cloud message storage is off until you start paid billing.",
   adminFreeEdge:
     "You are on permanent Free set by an admin. This is not a self-serve plan.",
+  trialGateClosed:
+    "New trials are paused right now. Choose Pro or Team to continue.",
   trialEndsPrefix: "Trial ends",
   seatsLabel: "Seats",
   computersLabel: "Computers",

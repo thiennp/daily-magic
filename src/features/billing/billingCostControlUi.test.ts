@@ -102,6 +102,11 @@ describe("billing cost-control UI (customer vs admin)", () => {
     expect(planDetails.includes("plan.maxAssistantConnects")).toBe(true);
     expect(planDetails.includes("plan.cloudMessageStorage")).toBe(true);
     expect(planDetails.includes("plan.trialEndsAt")).toBe(true);
+    expect(
+      read("src/features/billing/components/BillingPlanSummary.tsx").includes(
+        "trialGate",
+      ),
+    ).toBe(true);
     expect(formatBillingPlanLabel("trial")).toBe("Trial");
     expect(formatBillingPlanLabel("admin_free")).toContain("Permanent Free");
   });
