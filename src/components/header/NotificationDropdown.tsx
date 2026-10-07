@@ -1,12 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+
 import NotificationBellButton from "@/components/header/NotificationBellButton";
 import NotificationDropdownPanel from "@/components/header/NotificationDropdownPanel";
+import {
+  NOTIFICATIONS_DEMO_ITEMS,
+  countUnread,
+} from "@/features/notifications/notificationsDemoItems.constant";
 
 export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const [notifying, setNotifying] = useState(true);
+  const initialUnread = useMemo(
+    () => countUnread(NOTIFICATIONS_DEMO_ITEMS),
+    [],
+  );
+  const [unreadCount, setUnreadCount] = useState(initialUnread);
 
   const toggleDropdown = () => {
     setIsOpen((previous) => !previous);
@@ -16,18 +25,17 @@ export default function NotificationDropdown() {
     setIsOpen(false);
   };
 
-  const handleClick = () => {
-    toggleDropdown();
-    setNotifying(false);
-  };
-
   return (
     <div className="relative">
-      <NotificationBellButton notifying={notifying} onClick={handleClick} />
+      <NotificationBellButton
+        notifying={unreadCount > 0}
+        onClick={toggleDropdown}
+      />
       <NotificationDropdownPanel
         isOpen={isOpen}
         onClose={closeDropdown}
         onToggle={toggleDropdown}
+        onUnreadChange={setUnreadCount}
       />
     </div>
   );
