@@ -1,3 +1,6 @@
+import {
+  loadOlderProjectHistoryMessages,
+} from "@agent-witch/live-project-history";
 import type { ProjectMessengerTimelineEntry } from "@/lib/projects/acl/messaging/messenger/projectMessenger.type";
 
 /**
@@ -7,9 +10,8 @@ import type { ProjectMessengerTimelineEntry } from "@/lib/projects/acl/messaging
  *   input  { projectId, threadKey, beforeCursor?, limit }
  *   output { entries (newest-first), nextBeforeCursor, hasMore }
  *
- * Dispatch stub until History lands the real local reader: always empty,
- * hasMore false. Orchestrator still sets page.localLive from the live check
- * and falls through to Neon / offline error.
+ * Delegates to History public-api `loadOlderProjectHistoryMessages`
+ * (alias of `readProjectHistoryMessagesPage`).
  */
 export type LoadProjectMessengerOlderFromLocalInput = {
   readonly projectId: string;
@@ -27,6 +29,15 @@ export type LoadProjectMessengerOlderFromLocalResult = {
 export const loadProjectMessengerOlderFromLocal = async (
   input: LoadProjectMessengerOlderFromLocalInput,
 ): Promise<LoadProjectMessengerOlderFromLocalResult> => {
-  void input;
-  return { entries: [], nextBeforeCursor: null, hasMore: false };
+  const page = loadOlderProjectHistoryMessages({
+    projectId: input.projectId,
+    threadKey: input.threadKey,
+    beforeCursor: input.beforeCursor,
+    limit: input.limit,
+  });
+  return {
+    entries: page.entries,
+    nextBeforeCursor: page.nextBeforeCursor,
+    hasMore: page.hasMore,
+  };
 };

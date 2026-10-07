@@ -35,7 +35,7 @@ export type OpenProjectMessengerThreadResult =
     };
 
 /**
- * Orchestrator: viewer gate → localLive → History local stub / Neon page →
+ * Orchestrator: viewer gate → localLive → History local read / Neon page →
  * newest-first entries + page meta. Opening the newest page (no before)
  * marks read up to the newest visible message. Load-older past Neon while
  * the project computer is offline returns error project_computer_offline.

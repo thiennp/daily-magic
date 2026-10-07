@@ -59,8 +59,9 @@ Opaque cursor encodes `{ t: createdAt, id: messageId }` (stable). Path: when
 `localLive` try History local read (`loadProjectMessengerOlderFromLocal`);
 else Neon rows with `created_at` older than the cursor. When load-older
 (`before` set) finds nothing in Neon and the project computer is offline →
-`error.code = project_computer_offline`. History owns the local reader;
-Dispatch ships a stub that returns empty until that tip lands.
+`error.code = project_computer_offline`. History owns the local reader (`readProjectHistoryMessagesPage` /
+`loadOlderProjectHistoryMessages`); Dispatch calls it via
+`loadProjectMessengerOlderFromLocal` when `localLive`.
 
 
 ## Bot tool (MCP)
