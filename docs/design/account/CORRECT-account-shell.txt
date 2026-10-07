@@ -1,0 +1,21 @@
+CORRECT — AgentWitch – Account (artifact AgentWitch – Account only). Rebuild this artifact only. Do not touch Companies & rules, Pricing, Automations design, Prompt optimizer, Home, Projects, Invite, Onboarding, AWL, Marketplace, or Notifications inbox redesigns.
+
+Product EN = FIX-NEEDED. Locked shell rules win over the current HTML.
+
+## Hard blockers to fix
+
+1. ADD **Automations** to the primary nav (signed-in shell). Winning NAVL today is Home, Projects, Marketplace, Connect, My bots, New task — Automations count is 0. Live PRIMARY_NAV keeps Automations. Never hide Automations. Prefer full primary nav: Home, Projects, Marketplace, Connect, Automations, My bots (or Assistants), plus Download / Account patterns already on other pages.
+
+2. ADD **Download AgentWitch Local** (or live **Download AgentWitch**) to the Devices rail and/or topbar. It must stay visible when a computer is already connected. Devices today only has Connect this/another computer — that is not enough. HARD: never hide Download just because connected.
+
+## Keep (already PASS — do not regress)
+- Marketplace and Connect in primary nav
+- Account is a global user surface (not a project tab): Profile, Sign-in and security, Notifications, Privacy and data
+- AgentWitch one word; prefer assistant over bot in body copy; computer / This computer
+- Do not invent project Connections (Slack/Linear/Gmail/GitHub) on Account
+- Pricing CTA stays Cancel anytime / USD / trial→Pro/Team; plan/seats/invoices stay on Pricing
+- Light mode; responsive 1440/1100/768/390 no sideways scroll
+- Soft needles OK later (CSS "Agent Witch", My bots vs Assistants) — not this CORRECT
+
+When rebuilt, list each hard blocker done or missing, then say clearly the artifact is ready to export as AgentWitch – Account.
+

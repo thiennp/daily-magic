@@ -3,6 +3,8 @@
 import AwcProjectAccessSection from "@/features/projects/access/AwcProjectAccessSection";
 import AwcProjectInvitesPanel from "@/features/projects/access/invites/AwcProjectInvitesPanel";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
+import LaneCompareHelpTrigger from "@/features/projects/access/laneCompare/LaneCompareHelpTrigger";
+import { LANE_COMPARE_COPY } from "@/features/projects/access/laneCompare/laneCompareCopy.constant";
 import type { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 
 interface AwcProjectAccessInvitesSectionProps {
@@ -23,6 +25,10 @@ export default function AwcProjectAccessInvitesSection({
       hint={copy.invitesIntro}
       count={access.invites.length}
     >
+      <LaneCompareHelpTrigger
+        hint={LANE_COMPARE_COPY.help.invite}
+        testId="lane-compare-help-invite"
+      />
       <AwcProjectInvitesPanel
         invites={access.invites}
         createdInviteUrl={access.createdInviteUrl}

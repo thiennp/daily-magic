@@ -3,6 +3,8 @@
 import AwcProjectAccessComputerMemberRow from "@/features/projects/access/AwcProjectAccessComputerMemberRow";
 import AwcProjectAccessSection from "@/features/projects/access/AwcProjectAccessSection";
 import { AWC_PROJECT_COMPUTER_MEMBER_COPY } from "@/features/projects/access/awcProjectComputerMemberCopy.constant";
+import LaneCompareHelpTrigger from "@/features/projects/access/laneCompare/LaneCompareHelpTrigger";
+import { LANE_COMPARE_COPY } from "@/features/projects/access/laneCompare/laneCompareCopy.constant";
 import type { ComputerAccessMemberFields } from "@/features/projects/access/utils/describeComputerAccessMember";
 
 interface AwcProjectAccessComputerMembersSectionProps {
@@ -31,6 +33,15 @@ export default function AwcProjectAccessComputerMembersSection({
       hint={copy.hint}
       count={computers.length}
     >
+      <div className="space-y-2">
+        <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+          Coding tools
+        </p>
+        <LaneCompareHelpTrigger
+          hint={LANE_COMPARE_COPY.help.computers}
+          testId="lane-compare-help-computers"
+        />
+      </div>
       <ul className="space-y-2">
         {computers.map((computer) => (
           <AwcProjectAccessComputerMemberRow
