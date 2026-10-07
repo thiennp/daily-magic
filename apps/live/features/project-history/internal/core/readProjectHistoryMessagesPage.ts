@@ -2,6 +2,11 @@ import type { ProjectMessengerTimelineEntry } from "../../../../adapters/project
 
 import { getLocalChatMessage } from "./getLocalChatMessage";
 import { listLocalChatIndexPage } from "./listLocalChatIndexPage";
+import { listProjectHistoryAiSessions } from "./listProjectHistoryAiSessions";
+import {
+  aiSessionMatchesThreadKey,
+  mapAiSessionRecordToTimelineEntry,
+} from "./mapAiSessionRecordToTimelineEntry";
 import { mapHistoryRecordToTimelineEntry } from "./mapHistoryRecordToTimelineEntry";
 import {
   decodeProjectHistoryTimelineCursor,
@@ -24,12 +29,45 @@ export type ReadProjectHistoryMessagesPageResult = {
   readonly hasMore: boolean;
 };
 
+const compareNewestFirst = (
+  left: ProjectMessengerTimelineEntry,
+  right: ProjectMessengerTimelineEntry,
+): number => {
+  if (left.createdAt !== right.createdAt) {
+    return left.createdAt < right.createdAt ? 1 : -1;
+  }
+  return left.messageId < right.messageId ? 1 : -1;
+};
+
+const isStrictlyOlderThanCursor = (
+  entry: ProjectMessengerTimelineEntry,
+  beforeCreatedAt: string | null | undefined,
+  beforeId: string | null | undefined,
+): boolean => {
+  if (
+    beforeCreatedAt === undefined ||
+    beforeCreatedAt === null ||
+    beforeCreatedAt === ""
+  ) {
+    return true;
+  }
+  if (entry.createdAt < beforeCreatedAt) {
+    return true;
+  }
+  if (entry.createdAt > beforeCreatedAt) {
+    return false;
+  }
+  if (beforeId === undefined || beforeId === null || beforeId === "") {
+    return true;
+  }
+  return entry.messageId < beforeId;
+};
+
 /**
  * History half of Messenger "Load older": page local history for one thread.
- * Entries are newest-first. Relies on S5 index (sqlite) with file-scan fallback
- * via `listLocalChatIndexPage`. threadKey is the v2 index field (or derived
- * into the index on ingest from message.threadKey / thread_key / messenger
- * keying — see `deriveProjectHistoryThreadKey` / `extractHistoryIndexFields`).
+ * Merges chat messages with C1 AI session records (tasks/) on `whole` only.
+ * Entries are newest-first. Cursor: base64url({ t: createdAt, id }) where id
+ * is messageId for messages and raw agentRunId for sessions.
  */
 export const readProjectHistoryMessagesPage = (
   input: ReadProjectHistoryMessagesPageInput,
@@ -44,27 +82,26 @@ export const readProjectHistoryMessagesPage = (
       ? Math.max(1, Math.floor(input.limit))
       : 50;
 
+  const beforeCreatedAt = decoded?.t ?? null;
+  const beforeId = decoded?.id ?? null;
+
+  // Over-fetch messages so merge with sessions still fills a page.
   const page = listLocalChatIndexPage({
     projectId: input.projectId,
     threadKey: input.threadKey,
-    beforeCreatedAt: decoded?.t ?? null,
-    beforeMessageId: decoded?.id ?? null,
+    beforeCreatedAt,
+    beforeMessageId: beforeId,
     limit: fetchLimit + 1,
   });
 
-  const hasMore = page.rows.length > fetchLimit;
-  const rows = hasMore ? page.rows.slice(0, fetchLimit) : page.rows;
-
-  const entries: ProjectMessengerTimelineEntry[] = [];
-  for (const row of rows) {
+  const messageEntries: ProjectMessengerTimelineEntry[] = [];
+  for (const row of page.rows) {
     const body = getLocalChatMessage({
       projectId: input.projectId,
       messageId: row.messageId,
     });
     if (body === null) {
-      // Index-only hit without body: still surface a minimal bubble so paging
-      // does not skip the cursor key.
-      entries.push({
+      messageEntries.push({
         messageId: row.messageId,
         createdAt: row.createdAt,
         author: { kind: "owner", membershipId: null, displayName: null },
@@ -76,8 +113,32 @@ export const readProjectHistoryMessagesPage = (
       });
       continue;
     }
-    entries.push(mapHistoryRecordToTimelineEntry(body));
+    messageEntries.push(mapHistoryRecordToTimelineEntry(body));
   }
+
+  const sessionEntries: ProjectMessengerTimelineEntry[] = [];
+  for (const record of listProjectHistoryAiSessions(input.projectId)) {
+    if (!aiSessionMatchesThreadKey(record, input.threadKey)) {
+      continue;
+    }
+    const entry = mapAiSessionRecordToTimelineEntry(record);
+    if (!isStrictlyOlderThanCursor(entry, beforeCreatedAt, beforeId)) {
+      continue;
+    }
+    sessionEntries.push(entry);
+  }
+
+  const merged = [...messageEntries, ...sessionEntries].sort(compareNewestFirst);
+  // Dedupe by messageId (local wins over duplicate); prefer first seen after sort.
+  const byId = new Map<string, ProjectMessengerTimelineEntry>();
+  for (const entry of merged) {
+    if (!byId.has(entry.messageId)) {
+      byId.set(entry.messageId, entry);
+    }
+  }
+  const sorted = [...byId.values()].sort(compareNewestFirst);
+  const hasMore = sorted.length > fetchLimit;
+  const entries = hasMore ? sorted.slice(0, fetchLimit) : sorted;
 
   const oldest = entries.length > 0 ? entries[entries.length - 1] : undefined;
   const nextBeforeCursor =

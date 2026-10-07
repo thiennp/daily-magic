@@ -112,3 +112,13 @@ export type {
 } from "../internal/core/readProjectHistoryMessagesPage";
 export type { ProjectMessengerTimelineEntry as ProjectHistoryTimelineEntry } from "../../../adapters/projectHistorySharedMappers";
 export type { ProjectHistorySkillgenDraftReviewItem } from "../internal/core/projectHistorySkillgenDraftReview.type";
+
+export type { ProjectHistoryAiSessionRecord } from "../internal/core/projectHistoryAiSessionRecord.type";
+export type {
+  WriteProjectHistoryAiSessionInput,
+  WriteProjectHistoryAiSessionResult,
+} from "../internal/core/writeProjectHistoryAiSession";
+export type {
+  ProjectMessengerTimelineEntryKind,
+  ProjectMessengerTimelineSession,
+} from "../../../adapters/projectHistorySharedMappers";

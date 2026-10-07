@@ -27,6 +27,9 @@ const rmIfExists = (target: string): boolean => {
  * Chat-retention rule: the local message archive `history/` (message records
  * and `state.json`) is never deleted. Mirror (`skills/<skillId>/`) and
  * tombstones are kept.
+ * C1 `tasks/` AI session records are PRIMARY source records (like messages),
+ * not derived data — they are kept on OFF. Flag for Lead if Product wants
+ * otherwise.
  */
 export const purgeProjectHistoryOnOff = (input: {
   readonly projectId: string;

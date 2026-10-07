@@ -14,5 +14,7 @@ export type {
   ProjectMessengerRow,
   ProjectMessengerThreadKey,
   ProjectMessengerTimelineEntry,
+  ProjectMessengerTimelineEntryKind,
+  ProjectMessengerTimelineSession,
 } from "../../../src/lib/projects/acl/messaging/messenger/projectMessenger.type";
 export { projectMessageSenderDisplayName } from "../../../src/lib/projects/acl/messaging/projectMessageSenderDisplayName";

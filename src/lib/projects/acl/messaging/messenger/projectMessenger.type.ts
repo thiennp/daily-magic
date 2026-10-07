@@ -72,14 +72,20 @@ export type ProjectMessengerStateChip = {
 };
 
 /** Discriminator for timeline rows. Omit / "message" = chat/task bubble. */
-export type ProjectMessengerEntryKind = "message" | "session";
+export type ProjectMessengerTimelineEntryKind = "message" | "session";
 
-/** Optional AI-session metadata (History / Dispatch additive; missing on old rows). */
-export type ProjectMessengerAiSessionMeta = {
+/** Nested AI session fields (local tasks/ + Neon agent_runs parity). */
+export type ProjectMessengerTimelineSession = {
   readonly status: string;
   readonly writerAgent: string | null;
-  readonly agentRunId: string | null;
+  readonly agentRunId: string;
 };
+
+/** @deprecated Alias — prefer ProjectMessengerTimelineEntryKind (C1 / UI lock). */
+export type ProjectMessengerEntryKind = ProjectMessengerTimelineEntryKind;
+
+/** @deprecated Alias — prefer ProjectMessengerTimelineSession (C1 / UI lock). */
+export type ProjectMessengerAiSessionMeta = ProjectMessengerTimelineSession;
 
 export type ProjectMessengerTimelineEntry = {
   readonly messageId: string;
@@ -91,14 +97,18 @@ export type ProjectMessengerTimelineEntry = {
   };
   /** Message subtype (chat.note, task.assign, ai.session, …). Not the entry discriminator. */
   readonly kind: string;
+  /**
+   * Additive row discriminator. Omit or `"message"` = chat/history message.
+   * `"session"` = C1 AI session row (local tasks/ or Neon agent_runs).
+   */
+  readonly entryKind?: ProjectMessengerTimelineEntryKind;
+  /** Present when entryKind is `"session"`. */
+  readonly session?: ProjectMessengerTimelineSession;
   readonly text: string;
   readonly needsReply: boolean;
   readonly inReplyTo: string | null;
   /** Owner/member messages: one chip per bot delivery. */
   readonly states: readonly ProjectMessengerStateChip[];
-  /** Additive: omit or "message" = bubble; "session" = compact AI-session row. */
-  readonly entryKind?: ProjectMessengerEntryKind;
-  readonly session?: ProjectMessengerAiSessionMeta;
 };
 
 export type ProjectMessengerThreadSummary = {

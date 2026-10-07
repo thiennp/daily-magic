@@ -101,6 +101,8 @@ interface ActiveRunSession {
   readonly writerAgent: HarnessWriterAgentId;
   readonly projectFolderPath?: string;
   readonly reportKey?: string;
+  /** Project id from dispatch payload when the run is project-scoped. */
+  readonly projectId?: string;
   accumulatedOutput: string;
 }
 
@@ -414,6 +416,12 @@ const finishRun = (
       exitCode: resolvedExitCode,
       output: resolvedOutput,
       layout: config.layout,
+      ...(session !== undefined &&
+      session.projectId !== undefined &&
+      session.projectId.trim().length > 0
+        ? { projectId: session.projectId.trim() }
+        : {}),
+      ...(session !== undefined ? { writerAgent: session.writerAgent } : {}),
     });
 
     enqueueAgentRunCompletionOutbox(config.layout, {
@@ -549,6 +557,7 @@ const attachChildHandlers = (
       writerAgent,
       projectFolderPath: existingSession?.projectFolderPath,
       reportKey: existingSession?.reportKey,
+      projectId: existingSession?.projectId,
       accumulatedOutput: existingSession?.accumulatedOutput ?? "",
     });
     sendMessage(socket, {
@@ -689,6 +698,7 @@ const runWriterApiTask = (
   projectFolderPath?: string,
   reportKey?: string,
   userTranscriptPrompt?: string,
+  projectId?: string,
 ): void => {
   const resolvedTranscriptPrompt = resolveUserTranscriptPrompt(
     prompt,
@@ -702,6 +712,7 @@ const runWriterApiTask = (
       writerAgent,
       projectFolderPath,
       reportKey,
+      projectId,
       accumulatedOutput: "",
     });
     sendMessage(socket, {
@@ -772,6 +783,7 @@ export const runWriterTask = (
   reportKey?: string,
   userTranscriptPrompt?: string,
   processEnv?: NodeJS.ProcessEnv,
+  projectId?: string,
 ): void => {
   const resolvedTranscriptPrompt = resolveUserTranscriptPrompt(
     prompt,
@@ -812,6 +824,7 @@ export const runWriterTask = (
       projectFolderPath,
       reportKey,
       resolvedTranscriptPrompt,
+      projectId,
     );
     return;
   }
@@ -886,6 +899,8 @@ export const runWriterTask = (
     writerAgent,
     projectFolderPath,
     reportKey,
+    projectId:
+      projectId ?? runSessions.get(agentRunId)?.projectId,
     accumulatedOutput: runSessions.get(agentRunId)?.accumulatedOutput ?? "",
   });
 
@@ -1066,6 +1081,8 @@ export const continueClaudeTaskAfterInput = (
     projectFolderPath,
     reportKey,
     session?.userTranscriptPrompt,
+    undefined,
+    session?.projectId,
   );
 };
 

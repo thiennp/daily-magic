@@ -144,3 +144,13 @@ export { saveProjectHistorySkillgenDraftForReview } from "../internal/core/saveP
 export { discardProjectHistorySkillgenDraftForReview } from "../internal/core/discardProjectHistorySkillgenDraftForReview";
 export { publishProjectHistorySkillgenDraftForReview } from "../internal/core/publishProjectHistorySkillgenDraftForReview";
 export { tryHandleLocalSkillDraftReviewRequest } from "../internal/core/tryHandleLocalSkillDraftReviewRequest";
+
+export { writeProjectHistoryAiSession } from "../internal/core/writeProjectHistoryAiSession";
+export { listProjectHistoryAiSessions } from "../internal/core/listProjectHistoryAiSessions";
+export {
+  mapAiSessionRecordToTimelineEntry,
+  aiSessionMatchesThreadKey,
+  timelineMessageIdForAiSession,
+  PROJECT_HISTORY_AI_SESSION_KIND,
+} from "../internal/core/mapAiSessionRecordToTimelineEntry";
+export { PROJECT_HISTORY_TASKS_DIR_NAME } from "../internal/core/projectHistoryPaths.constant";

@@ -20,3 +20,6 @@ export const PROJECT_HISTORY_INDEX_DIR_NAME = "index";
 export const PROJECT_HISTORY_INDEX_STORE_DB_FILE_NAME = "store.db";
 
 export const PROJECT_HISTORY_ACKS_DIR_NAME = "acks";
+
+/** Part C / C1: durable AI session (task) records for History timeline. */
+export const PROJECT_HISTORY_TASKS_DIR_NAME = "tasks";

@@ -1,6 +1,8 @@
+import { writeProjectHistoryAiSession } from "@agent-witch/live-project-history";
 import { resolveAgentRunWriterCompletion } from "@/lib/dispatch/resolveAgentRunWriterCompletion";
 
 import { DispatchPolicy } from "./dispatch/DispatchPolicy.constant";
+import { extractUserTaskFromWrappedPrompt } from "./dispatch/extractUserTaskFromWrappedPrompt";
 import type AgentRunRecord from "./dispatch/types/AgentRunRecord.type";
 
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
@@ -12,6 +14,9 @@ interface BuildFinishedRunInput {
   readonly exitCode: number;
   readonly output: string;
   readonly layout: AgentWitchLocalLayout;
+  /** Set when the run was started for a project (from dispatch payload). */
+  readonly projectId?: string;
+  readonly writerAgent?: string;
 }
 
 export const buildFinishedAgentRunRecord = (
@@ -46,11 +51,36 @@ export const buildFinishedAgentRunRecord = (
   };
 };
 
+/**
+ * Persist the profile-level run record, and when projectId is known write the
+ * C1 History AI session under project-data/<projectId>/tasks/<agentRunId>.json
+ * (only if local History is ON — gated inside writeProjectHistoryAiSession).
+ */
 export const persistFinishedAgentRun = (
   layout: AgentWitchLocalLayout,
   input: BuildFinishedRunInput,
 ): AgentRunRecord => {
   const run = buildFinishedAgentRunRecord(input);
   saveAgentRunLocal(layout, run);
+
+  const projectId = input.projectId?.trim() ?? "";
+  if (projectId.length > 0) {
+    const promptSummary = extractUserTaskFromWrappedPrompt(
+      input.originalPrompt,
+    );
+    writeProjectHistoryAiSession({
+      projectId,
+      taskId: input.agentRunId,
+      agentRunId: input.agentRunId,
+      status: run.status,
+      promptSummary,
+      resultSummary: input.output,
+      createdAt: run.createdAt,
+      completedAt: run.completedAt,
+      writerAgent: input.writerAgent ?? null,
+      threadKey: null,
+    });
+  }
+
   return run;
 };

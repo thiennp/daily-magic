@@ -628,6 +628,7 @@ const dispatchWriterTask = async (
     resolvedReportKey,
     prompt,
     resolveWriterSpawnEnv(config.layout, agentRunId, hasRunScopedOverlay),
+    resolvedProjectId.length > 0 ? resolvedProjectId : undefined,
   );
 
   if (needsWarmup && agentRunId !== undefined) {

@@ -29,6 +29,7 @@ describe("purgeProjectHistoryOnOff", () => {
   it("deletes _drafts and skillgen but keeps history messages, mirror and tombstones", () => {
     const root = ensureProjectDataTree("p1");
     atomicWriteFile0600(path.join(root, "history", "m1.json"), "{}\n");
+    atomicWriteFile0600(path.join(root, "tasks", "run-1.json"), '{"taskId":"run-1"}\n');
     ensureDir0700(path.join(root, "skills", "_drafts", "d1"));
     atomicWriteFile0600(
       path.join(root, "skills", "_drafts", "d1", "SKILL.md"),
@@ -54,6 +55,8 @@ describe("purgeProjectHistoryOnOff", () => {
     });
     // Chat-retention rule: the message archive is never purged.
     expect(fs.existsSync(path.join(root, "history", "m1.json"))).toBe(true);
+    // C1 tasks/ are primary source records — kept on OFF.
+    expect(fs.existsSync(path.join(root, "tasks", "run-1.json"))).toBe(true);
     expect(fs.existsSync(path.join(root, "skills", "_drafts"))).toBe(false);
     expect(fs.existsSync(path.join(root, "skillgen"))).toBe(false);
     expect(
