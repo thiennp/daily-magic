@@ -57,7 +57,7 @@ fi
 source "${ROOT_DIR}/scripts/mac/signing/runAwlMacSigningPipeline.sh"
 awl_sign_init "${ROOT_DIR}" "${AWL_MAC_SIGNING_REQUESTED}"
 
-VERSION="$(node -p "require('${ROOT_DIR}/package.json').version" 2>/dev/null || echo "0.2.0")"
+VERSION="$(node -p "require('${ROOT_DIR}/package.json').version" 2>/dev/null || echo "0.2.1")"
 # GITHUB_RUN_NUMBER is a leftover from the removed mac-app.yml workflow; local builds get 1 unless it is exported.
 BUILD_NUMBER="${GITHUB_RUN_NUMBER:-1}"
 
