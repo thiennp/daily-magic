@@ -4,6 +4,7 @@ import path from "node:path";
 
 import { AGENT_WITCH_LOCAL_BROWSER_UI_RETIRED_MESSAGE } from "./agentWitchLocalApp.constants";
 import { createAgentWitchLocalSendHtml } from "./writeAgentWitchLocalHtmlResponse";
+import { readAgentWitchLocalBundleCommitSha } from "./readAgentWitchLocalBundleCommitSha";
 import { isRetiredAgentWitchLocalBrowserUiRequest } from "./isRetiredAgentWitchLocalBrowserUiRequest";
 import { AGENT_WITCH_LOCAL_PORTS_IN_USE_MESSAGE } from "./agentWitchLocalAppPortRange.constants";
 import { allocateOrLoadAgentWitchLocalAppPortRange } from "./allocateOrLoadAgentWitchLocalAppPortRange";
@@ -698,6 +699,8 @@ export const startAgentWitchLocalApp = (input: {
             end: localPortRange.end,
           },
           portsExhausted,
+          // DF-032: which build is running (null when unstamped).
+          ...readAgentWitchLocalBundleCommitSha(),
           ...buildAgentWitchLocalHealthIdentity({
             uid: process.getuid?.(),
             installDir: input.layout.installDir,

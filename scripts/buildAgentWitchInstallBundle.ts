@@ -9,6 +9,7 @@ import {
   resolveAgentWitchShippedInstallBundleAppDir,
 } from "@agent-witch/install-bundle";
 import { buildAgentWitchBundledDepsArchive } from "./buildAgentWitchBundledDepsArchive";
+import { resolveAgentWitchBundleCommitSha } from "./resolveAgentWitchBundleCommitSha";
 
 const workspaceRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -39,6 +40,10 @@ var __agentWitchImportMetaUrl=require("url").pathToFileURL(__filename).href;`,
     },
     define: {
       "process.env.AGENT_WITCH_BUNDLED": '"1"',
+      // DF-032: local /health reports which build is running.
+      "process.env.AGENT_WITCH_BUNDLE_COMMIT_SHA": JSON.stringify(
+        resolveAgentWitchBundleCommitSha() ?? "",
+      ),
       "import.meta.url": "__agentWitchImportMetaUrl",
     },
     external: ["node-pty"],

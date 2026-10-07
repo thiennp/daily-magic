@@ -3,8 +3,13 @@
  * Canonical runtime version: `AGENT_WITCH_INSTALL_BUNDLE_VERSION` in this module.
  */
 
-/** Bump when any install bundle artifact changes (shell, JS, deps). */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "268";
+/**
+ * Bump when any install bundle artifact changes (shell, JS, deps).
+ * 269 = DF-029/030/031 AWL hotfix (PO HTML in the Mac webview, watchdog +
+ * repair on the H6 discovered port, /health commitSha). 268 never shipped
+ * H5–H7 to existing installs because it was not bumped after ddfcfe44.
+ */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "269";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =
