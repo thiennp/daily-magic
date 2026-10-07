@@ -137,6 +137,15 @@ final class MacAppLocalUIStore: ObservableObject {
             defaults.set(true, forKey: Key.historyStubSeeded)
             persistHistory()
         }
+        refreshCliScanIncludingLoginShell()
+    }
+
+    /// GUI apps get launchd's short PATH; re-check with the login-shell PATH too.
+    private func refreshCliScanIncludingLoginShell() {
+        AgentCliDetection.scanIncludingLoginShell { [weak self] found in
+            guard let self else { return }
+            self.cliInstalled = self.cliInstalled.merging(found) { _, new in new }
+        }
     }
 
     func setCliAddToProject(_ kind: AgentCliKind, enabled: Bool) {
@@ -182,6 +191,7 @@ final class MacAppLocalUIStore: ObservableObject {
     /// UI-only rescan stub — flips scanning flag in ComputerView; does not invent backend.
     func markToolsRescanned() {
         cliInstalled = AgentCliDetection.scan()
+        refreshCliScanIncludingLoginShell()
     }
 
     private func persistHistory() {
