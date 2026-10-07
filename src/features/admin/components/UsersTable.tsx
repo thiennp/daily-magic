@@ -3,13 +3,18 @@
 import { useState } from "react";
 
 import Button from "@/components/ui/button/Button";
-import AdminSetFreeButton from "@/features/billing/components/AdminSetFreeButton";
+import AdminSetPlanControl from "@/features/billing/components/AdminSetPlanControl";
+import type { BillingPlanId } from "@/features/billing/billingPlan.types";
+import formatBillingPlanLabel from "@/features/billing/formatBillingPlanLabel";
 import formatAdminUserKindLabel from "@/features/admin/utils/formatAdminUserKindLabel";
 import formatAdminUserLastActivity from "@/features/admin/utils/formatAdminUserLastActivity";
 import formatGlobalRole from "@/lib/auth/formatGlobalRole";
 import type AdminUserRecord from "@/lib/auth/types/AdminUserRecord.type";
 
-type UserItem = AdminUserRecord & { readonly adminFree?: boolean };
+type UserItem = AdminUserRecord & {
+  readonly plan: BillingPlanId;
+  readonly adminFree: boolean;
+};
 
 interface UsersTableProps {
   readonly users: readonly UserItem[];
@@ -22,7 +27,9 @@ export default function UsersTable({
   currentUserId,
   onRemoveRequest,
 }: UsersTableProps) {
-  const [freeByUserId, setFreeByUserId] = useState<Record<string, boolean>>({});
+  const [planByUserId, setPlanByUserId] = useState<
+    Record<string, BillingPlanId>
+  >({});
 
   return (
     <div className="mt-4 overflow-x-auto">
@@ -32,14 +39,14 @@ export default function UsersTable({
             <th className="px-3 py-2">Email</th>
             <th className="px-3 py-2">Kind</th>
             <th className="px-3 py-2">Global role</th>
+            <th className="px-3 py-2">Plan</th>
             <th className="px-3 py-2">Last activity</th>
             <th className="px-3 py-2">Actions</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user) => {
-            const adminFree =
-              freeByUserId[user.id] ?? user.adminFree ?? false;
+            const plan = planByUserId[user.id] ?? user.plan ?? "trial";
             return (
               <tr
                 key={user.id}
@@ -52,18 +59,20 @@ export default function UsersTable({
                 <td className="px-3 py-2">
                   {formatGlobalRole(user.globalRole)}
                 </td>
+                <td className="px-3 py-2">{formatBillingPlanLabel(plan)}</td>
                 <td className="px-3 py-2">
                   {formatAdminUserLastActivity(user.lastActivityAt)}
                 </td>
                 <td className="px-3 py-2">
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-start">
-                    <AdminSetFreeButton
+                    <AdminSetPlanControl
+                      key={`${user.id}-${plan}`}
                       userId={user.id}
-                      adminFree={adminFree}
-                      onUpdated={() => {
-                        setFreeByUserId((prev) => ({
+                      plan={plan}
+                      onUpdated={(next) => {
+                        setPlanByUserId((prev) => ({
                           ...prev,
-                          [user.id]: !adminFree,
+                          [user.id]: next.plan,
                         }));
                       }}
                     />

@@ -5,5 +5,6 @@ export const BILLING_API_PATHS = {
   checkout: "/api/billing/checkout",
   portal: "/api/billing/portal",
   adminSetFree: "/api/billing/admin/set-free",
+  adminSetPlan: "/api/billing/admin/set-plan",
   adminCostControl: "/api/billing/admin/cost-control",
 } as const;

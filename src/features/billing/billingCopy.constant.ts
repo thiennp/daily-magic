@@ -33,4 +33,7 @@ export const BILLING_COPY = {
   adminSetFreeOff: "Remove permanent Free",
   adminSetFreeDone: "Permanent Free updated.",
   adminSetFreeError: "Could not update permanent Free.",
+  adminSetPlanApply: "Set plan",
+  adminSetPlanDone: "Plan updated.",
+  adminSetPlanError: "Could not update plan.",
 } as const;

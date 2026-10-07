@@ -1,11 +1,11 @@
 import loadAdminUsersLastActivity from "@/lib/auth/loadAdminUsersLastActivity";
 import resolveAdminUserKind from "@/lib/auth/resolveAdminUserKind";
 import type AdminUserRecord from "@/lib/auth/types/AdminUserRecord.type";
-import { listUsers } from "@/lib/auth/userRepository";
+import { listUsersWithPlan } from "@/lib/auth/userRepository";
 
-/** Enriched admin users list: kind + lastActivityAt (never copies createdAt). */
+/** Enriched admin users list: kind + lastActivityAt + plan (never copies createdAt). */
 const listAdminUsers = async (): Promise<readonly AdminUserRecord[]> => {
-  const users = await listUsers();
+  const users = await listUsersWithPlan();
   const activityByUserId = await loadAdminUsersLastActivity();
 
   return users.map((user) => ({

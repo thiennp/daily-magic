@@ -19,6 +19,9 @@ describe("billing cost-control UI (admin)", () => {
     const setFree = read(
       "src/features/billing/components/AdminSetFreeButton.tsx",
     );
+    const setPlan = read(
+      "src/features/billing/components/AdminSetPlanControl.tsx",
+    );
     const usersTable = read("src/features/admin/components/UsersTable.tsx");
 
     expect(sidebar.includes('href: "/admin/cost-control"')).toBe(true);
@@ -29,7 +32,8 @@ describe("billing cost-control UI (admin)", () => {
         costPanel.includes("useAdminCostControl"),
     ).toBe(true);
     expect(setFree.includes("postAdminSetFree")).toBe(true);
-    expect(usersTable.includes("AdminSetFreeButton")).toBe(true);
+    expect(setPlan.includes("postAdminSetPlan")).toBe(true);
+    expect(usersTable.includes("AdminSetPlanControl")).toBe(true);
     expect(
       costPanel.includes("budgetEur") || costPanel.includes("Budget"),
     ).toBe(true);

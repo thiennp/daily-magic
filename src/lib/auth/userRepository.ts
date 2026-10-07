@@ -1,6 +1,8 @@
 import { SUPER_ADMIN_EMAIL } from "@/lib/auth/constants";
 import { GlobalRole, isGlobalRole } from "@/lib/auth/roles";
 import type UserRecord from "@/lib/auth/types/UserRecord.type";
+import { isBillingPlan } from "@/lib/billing/isBillingPlan";
+import type { BillingPlan } from "@/lib/billing/types/BillingPlan.type";
 import { getSql, asRowArray } from "@/lib/db";
 
 function mapUserRow(row: Record<string, unknown>): UserRecord {
@@ -13,6 +15,20 @@ function mapUserRow(row: Record<string, unknown>): UserRecord {
     image: row.image ? String(row.image) : null,
     globalRole: isGlobalRole(globalRole) ? globalRole : GlobalRole.USER,
     createdAt: String(row.created_at),
+  };
+}
+
+export type UserRecordWithPlan = UserRecord & {
+  readonly plan: BillingPlan;
+  readonly adminFree: boolean;
+};
+
+function mapUserRowWithPlan(row: Record<string, unknown>): UserRecordWithPlan {
+  const planRaw = String(row.plan ?? "trial");
+  return {
+    ...mapUserRow(row),
+    plan: isBillingPlan(planRaw) ? planRaw : "trial",
+    adminFree: Boolean(row.admin_free),
   };
 }
 
@@ -63,6 +79,22 @@ export async function listUsers(): Promise<readonly UserRecord[]> {
   );
 
   return result.map((row) => mapUserRow(row));
+}
+
+/** Admin users list: includes plan + admin_free for plan override UI. */
+export async function listUsersWithPlan(): Promise<
+  readonly UserRecordWithPlan[]
+> {
+  const sql = getSql();
+  const result = asRowArray(
+    await sql`
+    SELECT id, email, name, image, global_role, created_at, plan, admin_free
+    FROM users
+    ORDER BY created_at DESC
+  `,
+  );
+
+  return result.map((row) => mapUserRowWithPlan(row));
 }
 
 export async function deleteUserById(userId: string): Promise<void> {

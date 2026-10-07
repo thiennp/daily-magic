@@ -3,11 +3,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import listAdminUsers from "@/lib/auth/listAdminUsers";
 import { GlobalRole } from "@/lib/auth/roles";
 
-const listUsersMock = vi.fn();
+const listUsersWithPlanMock = vi.fn();
 const loadActivityMock = vi.fn();
 
 vi.mock("@/lib/auth/userRepository", () => ({
-  listUsers: (...args: unknown[]) => listUsersMock(...args),
+  listUsersWithPlan: (...args: unknown[]) => listUsersWithPlanMock(...args),
 }));
 
 vi.mock("@/lib/auth/loadAdminUsersLastActivity", () => ({
@@ -16,12 +16,12 @@ vi.mock("@/lib/auth/loadAdminUsersLastActivity", () => ({
 
 describe("listAdminUsers", () => {
   beforeEach(() => {
-    listUsersMock.mockReset();
+    listUsersWithPlanMock.mockReset();
     loadActivityMock.mockReset();
   });
 
   it("adds kind and lastActivityAt without copying createdAt", async () => {
-    listUsersMock.mockResolvedValue([
+    listUsersWithPlanMock.mockResolvedValue([
       {
         id: "bot-1",
         email: "scout@agents.agentwitch.com",
@@ -29,6 +29,8 @@ describe("listAdminUsers", () => {
         image: null,
         globalRole: GlobalRole.USER,
         createdAt: "2026-01-01T00:00:00.000Z",
+        plan: "trial",
+        adminFree: false,
       },
       {
         id: "real-1",
@@ -37,6 +39,8 @@ describe("listAdminUsers", () => {
         image: null,
         globalRole: GlobalRole.USER,
         createdAt: "2026-01-02T00:00:00.000Z",
+        plan: "pro",
+        adminFree: false,
       },
     ]);
     loadActivityMock.mockResolvedValue(
@@ -53,6 +57,8 @@ describe("listAdminUsers", () => {
         image: null,
         globalRole: GlobalRole.USER,
         createdAt: "2026-01-01T00:00:00.000Z",
+        plan: "trial",
+        adminFree: false,
         kind: "bot",
         lastActivityAt: "2026-06-01T12:00:00.000Z",
       },
@@ -63,6 +69,8 @@ describe("listAdminUsers", () => {
         image: null,
         globalRole: GlobalRole.USER,
         createdAt: "2026-01-02T00:00:00.000Z",
+        plan: "pro",
+        adminFree: false,
         kind: "real",
         lastActivityAt: null,
       },
