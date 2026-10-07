@@ -66,7 +66,8 @@ export default function AwcProjectSettingsNameSection({
               }}
               className={`${APP_SURFACE_FIELD_CLASS} min-w-0 flex-1`}
               autoComplete="off"
-              disabled={isSaving}
+              // readOnly, not disabled: a disabled input drops focus on Enter-save.
+              readOnly={isSaving}
             />
             <Button type="submit" size="sm" disabled={isSaving}>
               {isSaving ? C.nameSaving : C.nameSave}

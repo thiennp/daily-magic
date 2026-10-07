@@ -16,5 +16,6 @@ describe("Settings name field focus (jump audit r2)", () => {
     expect(section).toMatch(
       /useAwcProjectRename\(\{[^}]*startInEditMode,\s*\}\)/,
     );
+    expect(section).toContain("readOnly={isSaving}");
   });
 });
