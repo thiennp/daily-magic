@@ -19,14 +19,14 @@ export default function ConnectThisLinuxDownloadChoice({
       <p className={APP_SURFACE_BODY_TEXT_CLASS}>
         <a
           href={appImageUrl}
-          className="font-medium text-violet-700 underline-offset-2 hover:underline dark:text-violet-300"
+          className="font-medium text-awc-blue-700 underline-offset-2 hover:underline"
         >
           AppImage
         </a>
         {" · "}
         <a
           href={debUrl}
-          className="font-medium text-violet-700 underline-offset-2 hover:underline dark:text-violet-300"
+          className="font-medium text-awc-blue-700 underline-offset-2 hover:underline"
         >
           .deb
         </a>

@@ -19,7 +19,7 @@ export default function OnboardingTopBar({
     <header className={OB_TOP_CLASS}>
       <Link href="/" className={OB_BRAND_CLASS}>
         <span
-          className="grid h-[30px] w-[30px] place-items-center rounded-lg bg-gradient-to-br from-[#dbe7ff] to-[#e8e0ff] text-awc-blue-700"
+          className="grid h-[30px] w-[30px] place-items-center rounded-lg bg-gradient-to-br from-awc-accent-soft to-awc-accent-soft-2 text-awc-blue-700"
           aria-hidden="true"
         >
           ◆

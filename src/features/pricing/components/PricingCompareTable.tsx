@@ -28,7 +28,7 @@ export default function PricingCompareTable() {
               <th scope="col" className="px-4 py-3 font-semibold text-blue-800">
                 {PRICING_COMPARE_COLUMN_LABELS.pro}
               </th>
-              <th scope="col" className="px-4 py-3 font-semibold text-violet-800">
+              <th scope="col" className="px-4 py-3 font-semibold text-awc-fg">
                 {PRICING_COMPARE_COLUMN_LABELS.team}
               </th>
             </tr>

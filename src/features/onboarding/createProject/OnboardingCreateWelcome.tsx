@@ -11,7 +11,7 @@ export default function OnboardingCreateWelcome({
   return (
     <div className="flex flex-col items-center gap-4 text-center">
       <span
-        className="grid h-[72px] w-[72px] place-items-center rounded-[22px] bg-gradient-to-br from-[#dbe7ff] to-[#e8e0ff] text-2xl text-awc-blue-700"
+        className="grid h-[72px] w-[72px] place-items-center rounded-[22px] bg-gradient-to-br from-awc-accent-soft to-awc-accent-soft-2 text-2xl text-awc-blue-700"
         aria-hidden="true"
       >
         ◆

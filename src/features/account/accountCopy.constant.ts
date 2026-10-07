@@ -128,7 +128,7 @@ export const ACCOUNT_COPY = {
 
 export const ACCOUNT_AVATAR_COLORS = [
   { id: "sky", label: "Sky", className: "bg-sky-500" },
-  { id: "violet", label: "Violet", className: "bg-violet-500" },
+  { id: "blue", label: "Blue", className: "bg-awc-blue-600" },
   { id: "emerald", label: "Emerald", className: "bg-emerald-500" },
   { id: "amber", label: "Amber", className: "bg-amber-500" },
   { id: "rose", label: "Rose", className: "bg-rose-500" },

@@ -20,7 +20,7 @@ export default function ConnectThisMacDownloadChoice({
         and check AgentWitch.{" "}
         <a
           href={downloadUrl}
-          className="font-medium text-violet-700 underline-offset-2 hover:underline dark:text-violet-300"
+          className="font-medium text-awc-blue-700 underline-offset-2 hover:underline"
         >
           Download for Mac
         </a>

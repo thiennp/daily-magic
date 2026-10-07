@@ -35,7 +35,7 @@ export const PRICING_PLAN_CARDS: readonly PricingPlanCard[] = [
       "No cloud message storage during the trial",
     ],
     ctaLabel: "Start trial",
-    accentClass: "border-teal-500/40 ring-teal-500/15",
+    accentClass: "border-awc-border-strong ring-awc-accent-soft",
   },
   {
     id: "pro",
@@ -71,7 +71,7 @@ export const PRICING_PLAN_CARDS: readonly PricingPlanCard[] = [
       "Pay by invoice",
     ],
     ctaLabel: "Start team",
-    accentClass: "border-violet-600/40 ring-violet-600/20",
+    accentClass: "border-awc-border-strong ring-awc-accent-soft",
     contactSales: true,
   },
 ] as const;

@@ -26,7 +26,7 @@ const TONE_CLASS: Record<
     "border-amber-300 bg-amber-50 text-amber-950 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100",
   live: "border-sky-300 bg-sky-50 text-sky-900 dark:border-sky-800 dark:bg-sky-950/40 dark:text-sky-100",
   paused:
-    "border-violet-300 bg-violet-50 text-violet-900 dark:border-violet-800 dark:bg-violet-950/40 dark:text-violet-100",
+    "border-awc-blue-200 bg-awc-accent-soft text-awc-blue-900",
 };
 
 export default function PromptSdlcCycleOutcomeBadges({
