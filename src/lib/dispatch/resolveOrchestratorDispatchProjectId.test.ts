@@ -33,7 +33,7 @@ describe("resolveOrchestratorDispatchProjectId", () => {
     expect(mocks.ensureDefaultUserProject).not.toHaveBeenCalled();
   });
 
-  it("falls back to the owner's Default on the run computer", async () => {
+  it("falls back to an existing Default on the run computer (no auto-create)", async () => {
     mocks.ensureDefaultUserProject.mockResolvedValue({ id: "proj-default" });
 
     const id = await resolveOrchestratorDispatchProjectId({
@@ -82,7 +82,7 @@ describe("resolveOrchestratorDispatchProjectId", () => {
     expect(mocks.ensureDefaultUserProject).not.toHaveBeenCalled();
   });
 
-  it("returns null instead of throwing when Default setup fails", async () => {
+  it("returns null instead of throwing when Default lookup fails", async () => {
     mocks.ensureDefaultUserProject.mockRejectedValue(new Error("db down"));
 
     await expect(

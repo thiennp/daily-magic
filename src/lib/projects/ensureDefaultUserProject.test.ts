@@ -29,7 +29,7 @@ describe("ensureDefaultUserProject", () => {
     sqlMock.mockReset();
   });
 
-  it("does not create a default project when no Mac is linked", async () => {
+  it("does not look up a default project when no Mac is linked", async () => {
     const project = await ensureDefaultUserProject(
       "user-1",
       "owner@example.com",
@@ -53,8 +53,8 @@ describe("ensureDefaultUserProject", () => {
     expect(sqlMock).toHaveBeenCalledTimes(1);
   });
 
-  it("creates a default project linked to the Mac", async () => {
-    sqlMock.mockResolvedValueOnce([]).mockResolvedValueOnce([projectRow]);
+  it("does not create a default project when none exists", async () => {
+    sqlMock.mockResolvedValueOnce([]);
 
     const project = await ensureDefaultUserProject(
       "user-1",
@@ -62,16 +62,8 @@ describe("ensureDefaultUserProject", () => {
       " device-1 ",
     );
 
-    expect(project?.deviceId).toBe("device-1");
-    expect(sqlMock).toHaveBeenCalledTimes(2);
-  });
-
-  it("fails when the linked default project cannot be saved", async () => {
-    sqlMock.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
-
-    await expect(
-      ensureDefaultUserProject("user-1", "owner@example.com", "device-1"),
-    ).rejects.toThrow("Could not create the default project.");
+    expect(project).toBeNull();
+    expect(sqlMock).toHaveBeenCalledTimes(1);
   });
 });
 

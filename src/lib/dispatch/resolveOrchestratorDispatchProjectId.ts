@@ -24,8 +24,8 @@ const readOwnerEmail = async (
 /**
  * Thien LOCK: every orchestrated run belongs to a project.
  * 1) Prefer the domain-bound id (explicit body, automation, capability).
- * 2) Else the owner's Default project on the run's computer
- *    (ensureDefaultUserProject needs a real device id).
+ * 2) Else an existing Default on the run's computer (lookup only —
+ *    never auto-creates Default; new users must pick/create a project).
  * Returns null when neither resolves; dispatch then answers
  * `project_required` with a hint. Never throws (no 500 from orchestrators),
  * never invents a no-project path.

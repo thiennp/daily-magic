@@ -1,6 +1,5 @@
 import { getUserById } from "@/lib/auth/userRepository";
 import { requireAgentWitchDeviceAuth } from "@/lib/agentWitch/requireAgentWitchDeviceAuth";
-import { ensureDefaultUserProject } from "@/lib/projects/ensureDefaultUserProject";
 import { parseCreateUserProjectBody } from "@/lib/projects/parseUserProjectBody";
 import { createUserProject } from "@/lib/projects/userProjectMutations";
 import { summarizeDeviceUserProject } from "@/lib/projects/summarizeDeviceUserProject";
@@ -23,12 +22,6 @@ export async function GET(request: Request): Promise<Response> {
       { status: 500 },
     );
   }
-
-  await ensureDefaultUserProject(
-    auth.device.userId,
-    user.email,
-    auth.device.id,
-  );
 
   const projects = await listUserProjectsForOwner(
     auth.device.userId,

@@ -1,5 +1,4 @@
 import { createUserProject } from "@/lib/projects/userProjectMutations";
-import { ensureDefaultUserProject } from "@/lib/projects/ensureDefaultUserProject";
 import listProjectCompositionCountsForOwner from "@/lib/projects/listProjectCompositionCountsForOwner";
 import { listUserProjectsForOwner } from "@/lib/projects/userProjectQueries";
 import { parseCreateUserProjectBody } from "@/lib/projects/parseUserProjectBody";
@@ -16,11 +15,6 @@ export async function GET(request: Request): Promise<Response> {
 
   const url = new URL(request.url);
   const deviceId = url.searchParams.get("deviceId");
-  await ensureDefaultUserProject(
-    actor.id,
-    actor.email,
-    deviceId && deviceId.length > 0 ? deviceId : null,
-  );
   const projects = await listUserProjectsForOwner(
     actor.id,
     deviceId && deviceId.length > 0 ? deviceId : null,
