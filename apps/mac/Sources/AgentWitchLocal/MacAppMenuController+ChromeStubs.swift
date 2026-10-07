@@ -14,7 +14,7 @@ extension MacAppMenuController {
 
     var signedInDisplayName: String? {
         guard signedInEmail != nil else { return nil }
-        return chromeDisplayName ?? "You"
+        return chromeDisplayName ?? displayNameFromEmail(signedInEmail) ?? "You"
     }
 
     /// AWL-H8 placeholder — offline / waiting for internet.

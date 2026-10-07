@@ -34,7 +34,7 @@ public enum MacAppConstants {
     public static let cloudOriginHostApex = "agentwitch.com"
     public static let bundleIdentifier = "com.agent-witch.local-app"
     /// Desktop app marketing version (keep in sync with CFBundleShortVersionString / Linux core.Version).
-    public static let appVersion = "0.2.0"
+    public static let appVersion = "0.2.1"
 
     // MARK: - Desktop update notice (GitHub releases)
 

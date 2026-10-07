@@ -56,7 +56,7 @@ final class MacAppMenuController: ObservableObject {
         }
     }
 
-    private func displayNameFromEmail(_ email: String?) -> String? {
+    func displayNameFromEmail(_ email: String?) -> String? {
         guard let local = email?.split(separator: "@").first else { return nil }
         let part = local.split(separator: ".").first.map(String.init) ?? String(local)
         guard let first = part.first else { return part }

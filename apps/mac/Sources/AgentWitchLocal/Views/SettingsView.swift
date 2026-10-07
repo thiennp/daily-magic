@@ -187,6 +187,7 @@ struct SettingsView: View {
                     )
                     .labelsHidden()
                     .toggleStyle(.switch)
+                    .tint(MacAppTheme.brand)
                     .accessibilityLabel("Open at login")
                 }
             }
@@ -205,6 +206,7 @@ struct SettingsView: View {
                     Toggle("", isOn: .constant(true))
                         .labelsHidden()
                         .toggleStyle(.switch)
+                        .tint(MacAppTheme.brand)
                         .disabled(true)
                         .accessibilityLabel("Show in menu bar")
                 }
@@ -250,14 +252,14 @@ struct SettingsView: View {
             glossRow(
                 code: "AWB",
                 title: "Connection service",
-                detail: "Links this computer to AgentWitch · version \(MacAppConstants.appVersion)",
+                detail: "Links this computer to AgentWitch · app version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? MacAppConstants.appVersion)",
                 running: running
             )
             Divider().background(MacAppTheme.border)
             glossRow(
                 code: "AWI",
                 title: "Assistant tools runner",
-                detail: "Installs and runs assistant tools on this computer · version \(MacAppConstants.appVersion)",
+                detail: "Installs and runs assistant tools on this computer" + (controller.installBundleVersion.map { " · version \($0)" } ?? "") + (controller.localAppPort.map { " · port \($0)" } ?? ""),
                 running: running
             )
             Divider().background(MacAppTheme.border)
