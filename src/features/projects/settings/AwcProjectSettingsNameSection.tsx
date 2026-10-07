@@ -26,7 +26,10 @@ export default function AwcProjectSettingsNameSection({
     useAwcProjectRename({
       projectId,
       initialName,
-      startInEditMode: canEdit ? true : startInEditMode,
+      // Edit mode (focus + select + Escape) only on an explicit rename
+      // (?rename / Rename action). The field is always visible; forcing edit
+      // mode focused it on every Settings open (scroll jump, mobile keyboard).
+      startInEditMode,
     });
 
   return (
