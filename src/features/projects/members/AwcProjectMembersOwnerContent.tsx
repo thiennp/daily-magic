@@ -44,14 +44,7 @@ export default function AwcProjectMembersOwnerContent({
         ) : null}
         {ready ? (
           <>
-            <AwcProjectMembersPeopleSection
-              projectId={projectId}
-              projectName={access.projectName}
-              ownerEmail={ownerEmail}
-              ownerDisplayName={ownerDisplayName}
-              accessMembers={access.members}
-              pendingRequestCount={access.pending.length}
-            />
+            {/* P1-S4b: design panel order — Pending, Assistants, People, Invite. */}
             <AwcProjectMembersJoinRequestsSection
               projectId={projectId}
               pending={access.pending}
@@ -68,6 +61,14 @@ export default function AwcProjectMembersOwnerContent({
               onRemove={(id) => {
                 void access.revoke(id);
               }}
+            />
+            <AwcProjectMembersPeopleSection
+              projectId={projectId}
+              projectName={access.projectName}
+              ownerEmail={ownerEmail}
+              ownerDisplayName={ownerDisplayName}
+              accessMembers={access.members}
+              pendingRequestCount={access.pending.length}
             />
             <AwcProjectMembersInviteBotsSection
               projectId={projectId}

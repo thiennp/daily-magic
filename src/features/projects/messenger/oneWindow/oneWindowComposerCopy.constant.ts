@@ -18,6 +18,16 @@ export const ONE_WINDOW_COMPOSER_COPY = {
   /** Kept — Message {name}.… (everyone → name "everyone", COMPOSER-LOCK / EN-PASS soft). */
   placeholderKept: "Message {name}. Type @ to pick someone else.",
   placeholderSingle: "Message {name}.",
+  /** P1-S4b @ composer (design hint row + mention picker). */
+  hintKeys: "Enter to send · Shift+Enter for a new line",
+  hintEachAt: "· Each @ assigns one task.",
+  hintEachAtTip:
+    "You can @ up to 5 assistants in one message. Each gets its own task.",
+  atButton: "Pick who gets it (@)",
+  mentionList: "Pick who gets it",
+  mentionGroupAssistants: "Assistants",
+  mentionNoMatch: "No match in this project",
+  recipientSwitch: "Choose who sees this chat",
 } as const;
 
 export type OneWindowComposerCopy = typeof ONE_WINDOW_COMPOSER_COPY;

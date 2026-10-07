@@ -21,7 +21,6 @@ import {
   oneWindowArchivedNoticeText,
   oneWindowQuietNoticeTexts,
 } from "@/features/projects/messenger/oneWindow/oneWindowFeedNotices";
-import { defaultMessengerTaskAssignee } from "@/features/projects/messenger/utils/defaultMessengerTaskAssignee";
 import { messengerTaskAssigneeOptions } from "@/features/projects/messenger/utils/messengerTaskAssigneeOptions";
 import { selectMessengerThreadMeta } from "@/features/projects/messenger/utils/selectMessengerThreadMeta";
 import type { AwcProjectMessengerSectionProps } from "@/features/projects/messenger/AwcProjectMessengerSection.types";
@@ -96,7 +95,7 @@ export default function AwcProjectMessengerSection({
         sending={open.sending}
         showBack={selectedKey !== WHOLE_THREAD_KEY}
         assignees={assignees}
-        defaultAssigneeMembershipId={defaultMessengerTaskAssignee(selectedKey)}
+        feedSwitch={{ key: selectedKey, onSelect: feed.setSelectedKey }}
         clearAllSlot={
           inboxClear.visible ? <AwcProjectMessengerInboxClearBar clear={inboxClear} /> : null
         }

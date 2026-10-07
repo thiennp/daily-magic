@@ -25,7 +25,8 @@ export interface AwcMessengerThreadPaneProps {
   readonly sending: boolean;
   readonly showBack: boolean;
   readonly assignees: readonly MessengerTaskAssigneeOption[];
-  readonly defaultAssigneeMembershipId: string;
+  /** P1-S4b "To X" feed switch for the composer (whole ↔ an assistant). */
+  readonly feedSwitch?: { readonly key: string; readonly onSelect: (key: string) => void };
   readonly clearAllSlot?: ReactNode;
   /** P1-S3 feed notices (archived, quiet) shown above the timeline on "All". */
   readonly noticesSlot?: ReactNode;

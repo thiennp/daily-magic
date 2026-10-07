@@ -29,7 +29,7 @@ export default function AwcMessengerThreadPane({
   sending,
   showBack,
   assignees,
-  defaultAssigneeMembershipId,
+  feedSwitch,
   clearAllSlot,
   noticesSlot,
   unreadCount = 0,
@@ -94,7 +94,7 @@ export default function AwcMessengerThreadPane({
           disabled={sending}
           sending={sending}
           assignees={assignees}
-          defaultAssigneeMembershipId={defaultAssigneeMembershipId}
+          feedSwitch={feedSwitch}
           onSendMessage={onSendMessage}
           onSendTask={onSendTask}
           routing={routing}

@@ -101,8 +101,9 @@ describe("AwcProjectDetailPanel layout S3 activity → P1-S1 Chat dock", () => {
     expect(messengerSectionSource).toContain("AwcMessengerThreadPane");
     expect(messengerSectionSource).toContain("OW_SURFACE_CLASS");
     expect(messengerSectionSource).not.toContain("AwcProjectMessengerPanels");
-    expect(messengerComposerSource).toContain("AwcMessengerMessageComposer");
-    expect(messengerComposerSource).toContain("AwcMessengerTaskComposer");
+    // P1-S4b: one @ composer (no Message | Assign task toggle).
+    expect(messengerComposerSource).toContain("AwcOneWindowMentionBox");
+    expect(messengerComposerSource).not.toContain("AwcMessengerTaskComposer");
   });
 
   it("keeps gray-only chat chrome (no indigo/purple/blue brand); no Activity tab badge", () => {

@@ -73,3 +73,14 @@ export const OW_NEW_MARKER_CLASS =
 /** P1-S4a jump-to-new pill, floating over the bottom of the feed. */
 export const OW_JUMP_NEW_CLASS =
   "absolute bottom-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-lg border border-awc-primary bg-awc-primary px-2.5 py-1 text-[12.5px] font-medium text-white shadow-md hover:bg-awc-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-awc-primary/40";
+
+/** P1-S4b inline @ mention picker (listbox above the composer box). */
+export const OW_MENTION_PICKER_CLASS =
+  "absolute bottom-full left-3 z-20 mb-1 max-h-80 w-[min(340px,calc(100%-24px))] overflow-y-auto rounded-[10px] border border-awc-border-strong bg-awc-surface p-1.5 shadow-lg";
+
+export const OW_MENTION_OPTION_CLASS =
+  "flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-awc-fg aria-selected:bg-awc-accent-soft hover:bg-awc-tile";
+
+/** P1-S4b "To X" recipient switch (whole feed ↔ an assistant's private feed). */
+export const OW_RECIPIENT_SWITCH_CLASS =
+  "inline-flex items-center gap-1.5 rounded-full border border-awc-border bg-awc-surface px-2.5 py-0.5 text-[13px] font-semibold text-awc-fg hover:bg-awc-tile focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-awc-primary/40";
