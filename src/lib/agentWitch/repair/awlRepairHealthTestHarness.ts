@@ -75,11 +75,7 @@ export const makeHome = (files: {
   return home;
 };
 
-/**
- * Legacy fallback port for tests: TCP port 1 is never an AWL, so the probe
- * cannot reach a real AgentWitch Local on the host's 43347 (an AWL running on
- * the dev machine must not turn a DOWN expectation into HEALTHY).
- */
+/** Legacy port for tests: TCP 1 is never an AWL, so a host AWL on 43347 can't answer. */
 export const CLOSED_LEGACY_HEALTH_PORT = 1;
 
 /** Runs the repair script's real health helpers (preamble + preflight) — async so the test server can answer. */
