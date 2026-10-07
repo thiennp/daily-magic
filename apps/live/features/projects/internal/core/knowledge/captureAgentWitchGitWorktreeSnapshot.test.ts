@@ -22,7 +22,7 @@ const git = (dir: string, args: readonly string[]): void => {
 };
 
 const initGitRepo = (dir: string): void => {
-  git(dir, ["init"]);
+  git(dir, ["init", "-b", "main"]);
   git(dir, ["config", "user.email", "test@agentwitch.com"]);
   git(dir, ["config", "user.name", "AgentWitch Test"]);
   fs.writeFileSync(path.join(dir, "README.md"), "hello\n");
@@ -53,7 +53,7 @@ describe("captureAgentWitchGitWorktreeSnapshot", () => {
     const verdict = formatAgentWitchGitWorktreeVerdict({ before, after });
 
     expect(before.isGitRepo).toBe(true);
-    expect(before.branch === "main" || before.branch === "master").toBe(true);
+    expect(before.branch).toBe("main");
     expect(after.porcelainLineCount).toBeGreaterThan(0);
     expect(verdict).toContain("Git verdict:");
     expect(verdict).toContain("dirty path(s) after run");
