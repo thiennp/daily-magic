@@ -60,6 +60,8 @@ export const AWC_STORYBOOK_SAMPLE_ADMIN_USERS = [
     createdAt: "2026-01-01T00:00:00.000Z",
     kind: "real" as const,
     lastActivityAt: "2026-06-01T12:00:00.000Z",
+    plan: "admin_free" as const,
+    adminFree: true,
   },
   {
     id: "user-storybook-2",
@@ -70,6 +72,8 @@ export const AWC_STORYBOOK_SAMPLE_ADMIN_USERS = [
     createdAt: "2026-02-01T00:00:00.000Z",
     kind: "bot" as const,
     lastActivityAt: null,
+    plan: "trial" as const,
+    adminFree: false,
   },
 ] as const;
 
