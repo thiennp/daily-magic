@@ -1,8 +1,10 @@
 import { readAgentWitchRunConfig } from "@agent-witch/install-runtime-client";
 import {
   ensureAgentWitchProjectFolder,
+  listLinkedHarnessSetSlugsFromProjectFolder,
   pickMacOsFolderDialog,
   resolveAgentWitchCloudApiConfig,
+  syncProjectHarnessBindingsToCloud,
   updateAgentWitchCloudProjectFolder,
 } from "@agent-witch/live-projects";
 
@@ -15,6 +17,8 @@ export type SelectAgentWitchProjectFolderWakeResult =
         readonly id: string;
         readonly folderPath: string;
       };
+      readonly bindingsSynced: boolean;
+      readonly linkedSetSlugs: readonly string[];
     }
   | { readonly ok: false; readonly cancelled: true }
   | { readonly ok: false; readonly errorMessage: string };
@@ -93,8 +97,19 @@ export const selectAgentWitchProjectFolderFromWakeServer = async (
     };
   }
 
+  // Auto-discover harness already linked on disk (materialization ledger
+  // under the project folder) and sync cloud bindings to match.
+  const linkedSetSlugs = listLinkedHarnessSetSlugsFromProjectFolder(chosen);
+  const bindingsSynced = await syncProjectHarnessBindingsToCloud(
+    cloudConfig,
+    parsed.projectId,
+    linkedSetSlugs,
+  );
+
   return {
     ok: true,
     project: { id: parsed.projectId, folderPath: chosen },
+    bindingsSynced,
+    linkedSetSlugs,
   };
 };
