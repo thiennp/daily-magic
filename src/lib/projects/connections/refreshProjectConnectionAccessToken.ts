@@ -9,6 +9,15 @@ import {
 import { resolveProjectConnectionsAuthSecret } from "@/lib/projects/connections/isProjectConnectionsFeatureEnabled";
 import type { ProjectConnectionProvider } from "@/lib/projects/connections/projectConnection.types";
 
+const NOTION_VERSION = "2022-06-28";
+
+const REFRESHABLE = new Set<ProjectConnectionProvider>([
+  "gmail",
+  "linear",
+  "notion",
+  "google_drive",
+]);
+
 const asRecord = (value: unknown): Record<string, unknown> | null =>
   value !== null && typeof value === "object"
     ? (value as Record<string, unknown>)
@@ -25,16 +34,53 @@ export type RefreshedProjectConnectionTokens = {
   readonly expiresAt: Date | null;
 };
 
+const refreshNotionAccessToken = async (input: {
+  readonly config: ProviderOAuthConfig;
+  readonly refreshToken: string;
+}): Promise<RefreshedProjectConnectionTokens | null> => {
+  const basic = `Basic ${Buffer.from(`${input.config.clientId}:${input.config.clientSecret}`).toString("base64")}`;
+  const tokenRes = await fetch(input.config.tokenUrl, {
+    method: "POST",
+    headers: {
+      Authorization: basic,
+      "Content-Type": "application/json",
+      "Notion-Version": NOTION_VERSION,
+    },
+    body: JSON.stringify({
+      grant_type: "refresh_token",
+      refresh_token: input.refreshToken,
+    }),
+  });
+  if (!tokenRes.ok) return null;
+  const tokenJson = asRecord(await tokenRes.json().catch(() => null));
+  if (tokenJson === null) return null;
+  const accessToken =
+    typeof tokenJson.access_token === "string" ? tokenJson.access_token : null;
+  if (accessToken === null || accessToken.length === 0) return null;
+  const nextRefresh =
+    typeof tokenJson.refresh_token === "string"
+      ? tokenJson.refresh_token
+      : input.refreshToken;
+  return {
+    accessToken,
+    refreshToken: nextRefresh,
+    expiresAt: expiresAtFromExpiresIn(tokenJson.expires_in),
+  };
+};
+
 /**
- * Provider refresh for Gmail (Google) and Linear.
+ * Provider refresh for Gmail/Google Drive (Google), Linear, and Notion.
  * GitHub/Slack typically have no short-lived access token refresh in P1.
  */
 export const refreshProviderAccessToken = async (input: {
   readonly config: ProviderOAuthConfig;
   readonly refreshToken: string;
 }): Promise<RefreshedProjectConnectionTokens | null> => {
-  if (input.config.provider !== "gmail" && input.config.provider !== "linear") {
+  if (!REFRESHABLE.has(input.config.provider)) {
     return null;
+  }
+  if (input.config.provider === "notion") {
+    return refreshNotionAccessToken(input);
   }
   const body = new URLSearchParams({
     grant_type: "refresh_token",
@@ -92,7 +138,7 @@ export type RefreshProjectConnectionAccessTokenResult =
 
 /**
  * Decrypt refresh token, call provider, persist rotated tokens.
- * On failure for Gmail/Linear → status expired (list surfaces honestly).
+ * On failure for refreshable providers → status expired (list surfaces honestly).
  */
 export const refreshProjectConnectionAccessToken = async (input: {
   readonly projectId: string;
@@ -102,7 +148,7 @@ export const refreshProjectConnectionAccessToken = async (input: {
   if (authSecret === null) {
     return { ok: false, code: "unavailable" };
   }
-  if (input.provider !== "gmail" && input.provider !== "linear") {
+  if (!REFRESHABLE.has(input.provider)) {
     return { ok: false, code: "unsupported" };
   }
   const config = getProviderOAuthConfig(input.provider);

@@ -21,10 +21,13 @@ export const buildProjectConnectionAuthorizeUrl = (input: {
   url.searchParams.set("client_id", input.config.clientId);
   url.searchParams.set("redirect_uri", redirectUri);
   url.searchParams.set("state", input.state);
-  url.searchParams.set(
-    "scope",
-    formatProviderOAuthScopeParam(input.config.provider, input.config.scopes),
-  );
+  // Notion public OAuth: no scope query param (capabilities live in portal).
+  if (input.config.provider !== "notion" && input.config.scopes.length > 0) {
+    url.searchParams.set(
+      "scope",
+      formatProviderOAuthScopeParam(input.config.provider, input.config.scopes),
+    );
+  }
   if (input.config.provider === "github") {
     url.searchParams.set("allow_signup", "false");
   }
@@ -32,13 +35,21 @@ export const buildProjectConnectionAuthorizeUrl = (input: {
     // Slack v2 user/bot: scope param is bot scopes for workspace install.
     url.searchParams.set("user_scope", "");
   }
-  if (input.config.provider === "gmail") {
+  if (
+    input.config.provider === "gmail" ||
+    input.config.provider === "google_drive"
+  ) {
     url.searchParams.set("response_type", "code");
     url.searchParams.set("access_type", "offline");
     url.searchParams.set("prompt", "consent");
   }
   if (input.config.provider === "linear") {
     url.searchParams.set("response_type", "code");
+  }
+  if (input.config.provider === "notion") {
+    // Public integration: owner=user workspace install (not internal static token).
+    url.searchParams.set("response_type", "code");
+    url.searchParams.set("owner", "user");
   }
   return url.toString();
 };

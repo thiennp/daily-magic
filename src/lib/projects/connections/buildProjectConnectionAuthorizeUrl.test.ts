@@ -73,4 +73,44 @@ describe("buildProjectConnectionAuthorizeUrl", () => {
     expect(url.searchParams.get("scope")).toContain("gmail.readonly");
     expect(url.searchParams.get("scope")).toContain("gmail.send");
   });
+
+  it("builds Notion authorize URL with owner=user and no scope param", () => {
+    const config: ProviderOAuthConfig = {
+      provider: "notion",
+      clientId: "notion-client",
+      clientSecret: "secret",
+      authorizeUrl: "https://api.notion.com/v1/oauth/authorize",
+      tokenUrl: "https://api.notion.com/v1/oauth/token",
+      scopes: ["read_content", "update_content"],
+      phase: 1,
+    };
+    const url = new URL(
+      buildProjectConnectionAuthorizeUrl({ config, state: "st" }),
+    );
+    expect(url.searchParams.get("owner")).toBe("user");
+    expect(url.searchParams.get("response_type")).toBe("code");
+    expect(url.searchParams.get("client_id")).toBe("notion-client");
+    expect(url.searchParams.has("scope")).toBe(false);
+  });
+
+  it("builds Google Drive authorize URL with drive.file + offline consent", () => {
+    const config: ProviderOAuthConfig = {
+      provider: "google_drive",
+      clientId: "google-client",
+      clientSecret: "secret",
+      authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+      tokenUrl: "https://oauth2.googleapis.com/token",
+      scopes: ["https://www.googleapis.com/auth/drive.file"],
+      phase: 1,
+    };
+    const url = new URL(
+      buildProjectConnectionAuthorizeUrl({ config, state: "st" }),
+    );
+    expect(url.searchParams.get("access_type")).toBe("offline");
+    expect(url.searchParams.get("prompt")).toBe("consent");
+    expect(url.searchParams.get("response_type")).toBe("code");
+    expect(url.searchParams.get("scope")).toBe(
+      "https://www.googleapis.com/auth/drive.file",
+    );
+  });
 });

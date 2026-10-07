@@ -1,9 +1,11 @@
-/** v1 providers — LOCK / API-BRIEF. */
+/** v1 providers — LOCK / API-BRIEF (incl. Notion + Google Drive). */
 export type ProjectConnectionProvider =
   | "slack"
   | "linear"
   | "gmail"
-  | "github";
+  | "github"
+  | "notion"
+  | "google_drive";
 
 /** UI status; API `revoked` maps to `none`. */
 export type ProjectConnectionStatus =

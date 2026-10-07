@@ -14,7 +14,7 @@ export type StartProjectConnectionOAuthResult =
 /**
  * Owner-only start. Missing OAuth env → unavailable (HTTP 501 at the route)
  * so the UI stays honest — never throws. Live providers: GitHub, Slack,
- * Linear, Gmail (P1+P2).
+ * Linear, Gmail, Notion, Google Drive.
  */
 export const startProjectConnectionOAuth = (input: {
   readonly projectId: string;

@@ -5,7 +5,7 @@ import { mapProjectConnectionRowToListItem } from "@/lib/projects/connections/ma
 import type { ProjectConnectionListItem } from "@/lib/projects/connections/projectConnection.types";
 
 /**
- * List metadata for a project. Always returns four provider rows
+ * List metadata for a project. Always returns one row per known provider
  * (missing → status none) so the UI merge is a no-op when complete.
  * Past token_expires_at while status=connected → expired in the DTO.
  */

@@ -4,7 +4,7 @@ import {
 import type { ProjectConnectionProvider } from "@/features/projects/settings/connections/projectConnection.types";
 
 export const PROJECT_CONNECTION_PROVIDERS: readonly ProjectConnectionProvider[] =
-  ["slack", "linear", "gmail", "github"] as const;
+  ["slack", "linear", "gmail", "github", "notion", "google_drive"] as const;
 
 export const PROJECT_CONNECTION_PROVIDER_LABEL: Record<
   ProjectConnectionProvider,
@@ -14,4 +14,6 @@ export const PROJECT_CONNECTION_PROVIDER_LABEL: Record<
   linear: C.providerLinear,
   gmail: C.providerGmail,
   github: C.providerGithub,
+  notion: C.providerNotion,
+  google_drive: C.providerGoogleDrive,
 };

@@ -5,7 +5,7 @@
 export const PROJECT_CONNECTIONS_COPY = {
   heading: "Connections",
   intro:
-    "Link Slack, Linear, Gmail, and GitHub so assistants in this project can use them.",
+    "Link Slack, Linear, Gmail, GitHub, Notion, and Google Drive so assistants in this project can use them.",
   empty: "Connect a service so assistants in this project can use it.",
   vsResources:
     "Pasted links in Resources stay bookmarks. Connections are signed-in services.",
@@ -35,6 +35,8 @@ export const PROJECT_CONNECTIONS_COPY = {
   providerLinear: "Linear",
   providerGmail: "Gmail",
   providerGithub: "GitHub",
+  providerNotion: "Notion",
+  providerGoogleDrive: "Google Drive",
 } as const;
 
 export const formatProjectConnectionsCopy = (

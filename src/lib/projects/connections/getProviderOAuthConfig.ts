@@ -33,7 +33,7 @@ const readPair = (
 
 /**
  * Resolve OAuth app env for a provider. null = unavailable (missing env).
- * Live providers (P1+P2) exchange when env is present; missing env → start 501.
+ * Live providers exchange when env is present; missing env → start 501.
  */
 export const getProviderOAuthConfig = (
   provider: ProjectConnectionProvider,
@@ -84,25 +84,67 @@ export const getProviderOAuthConfig = (
       phase: 1,
     };
   }
-  // gmail — personal-first Google OAuth; least privilege for assistant read+send.
-  // gmail.readonly is Restricted (verification / possible security assessment).
-  // gmail.send is Sensitive. Avoid mail.google.com / gmail.modify.
-  const pair = readPair(
-    "PROJECT_CONNECTIONS_GOOGLE_CLIENT_ID",
-    "PROJECT_CONNECTIONS_GOOGLE_CLIENT_SECRET",
-  );
-  if (pair === null) return null;
-  return {
-    provider,
-    ...pair,
-    authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
-    tokenUrl: "https://oauth2.googleapis.com/token",
-    scopes: [
-      "https://www.googleapis.com/auth/gmail.readonly",
-      "https://www.googleapis.com/auth/gmail.send",
-    ],
-    phase: 1,
-  };
+  if (provider === "gmail") {
+    // Personal-first Google OAuth; least privilege for assistant read+send.
+    // gmail.readonly is Restricted (verification / possible security assessment).
+    // gmail.send is Sensitive. Avoid mail.google.com / gmail.modify.
+    // Same PROJECT_CONNECTIONS_GOOGLE_* client as google_drive (extra Drive scopes on Drive connect).
+    const pair = readPair(
+      "PROJECT_CONNECTIONS_GOOGLE_CLIENT_ID",
+      "PROJECT_CONNECTIONS_GOOGLE_CLIENT_SECRET",
+    );
+    if (pair === null) return null;
+    return {
+      provider,
+      ...pair,
+      authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+      tokenUrl: "https://oauth2.googleapis.com/token",
+      scopes: [
+        "https://www.googleapis.com/auth/gmail.readonly",
+        "https://www.googleapis.com/auth/gmail.send",
+      ],
+      phase: 1,
+    };
+  }
+  if (provider === "notion") {
+    // Public Notion integration (OAuth). Internal integrations use a static
+    // workspace token and do not use this flow. Capabilities (read/update
+    // content, etc.) are configured in the Notion integration portal — Notion
+    // does not take OAuth scope query params. Stored scopes document intent.
+    const pair = readPair(
+      "PROJECT_CONNECTIONS_NOTION_CLIENT_ID",
+      "PROJECT_CONNECTIONS_NOTION_CLIENT_SECRET",
+    );
+    if (pair === null) return null;
+    return {
+      provider,
+      ...pair,
+      authorizeUrl: "https://api.notion.com/v1/oauth/authorize",
+      tokenUrl: "https://api.notion.com/v1/oauth/token",
+      scopes: ["read_content", "update_content"],
+      phase: 1,
+    };
+  }
+  if (provider === "google_drive") {
+    // Same Google OAuth client as Gmail; Drive-only scopes on this connect.
+    // drive.file = least privilege (Sensitive): files created/opened by the app.
+    // drive.readonly is Restricted (Google verification) — upgrade only if
+    // assistants must browse arbitrary existing Drive files without picker.
+    const pair = readPair(
+      "PROJECT_CONNECTIONS_GOOGLE_CLIENT_ID",
+      "PROJECT_CONNECTIONS_GOOGLE_CLIENT_SECRET",
+    );
+    if (pair === null) return null;
+    return {
+      provider,
+      ...pair,
+      authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+      tokenUrl: "https://oauth2.googleapis.com/token",
+      scopes: ["https://www.googleapis.com/auth/drive.file"],
+      phase: 1,
+    };
+  }
+  return null;
 };
 
 export const isLiveOAuthProvider = (

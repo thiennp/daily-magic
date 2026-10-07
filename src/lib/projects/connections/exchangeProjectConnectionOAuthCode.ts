@@ -10,6 +10,8 @@ export type ExchangedProjectConnectionTokens = {
   readonly accountLabel: string;
 };
 
+const NOTION_VERSION = "2022-06-28";
+
 const asRecord = (value: unknown): Record<string, unknown> | null =>
   value !== null && typeof value === "object"
     ? (value as Record<string, unknown>)
@@ -38,6 +40,9 @@ const expiresAtFromExpiresIn = (expiresIn: unknown): Date | null =>
   typeof expiresIn === "number" && Number.isFinite(expiresIn) && expiresIn > 0
     ? new Date(Date.now() + expiresIn * 1000)
     : null;
+
+const notionBasicAuth = (config: ProviderOAuthConfig): string =>
+  `Basic ${Buffer.from(`${config.clientId}:${config.clientSecret}`).toString("base64")}`;
 
 const exchangeGithub = async (
   config: ProviderOAuthConfig,
@@ -274,7 +279,128 @@ const exchangeGmail = async (
   };
 };
 
-/** Exchange authorization code — live providers: GitHub, Slack, Linear, Gmail. */
+/** Notion public OAuth: Basic auth + JSON body; label from workspace. */
+const exchangeNotion = async (
+  config: ProviderOAuthConfig,
+  code: string,
+): Promise<ExchangedProjectConnectionTokens | null> => {
+  const redirectUri = buildProjectConnectionCallbackUrl();
+  const tokenRes = await fetch(config.tokenUrl, {
+    method: "POST",
+    headers: {
+      Authorization: notionBasicAuth(config),
+      "Content-Type": "application/json",
+      "Notion-Version": NOTION_VERSION,
+    },
+    body: JSON.stringify({
+      grant_type: "authorization_code",
+      code,
+      redirect_uri: redirectUri,
+    }),
+  });
+  if (!tokenRes.ok) return null;
+  const tokenJson = asRecord(await tokenRes.json().catch(() => null));
+  if (tokenJson === null) return null;
+  const accessToken =
+    typeof tokenJson.access_token === "string" ? tokenJson.access_token : null;
+  if (accessToken === null || accessToken.length === 0) return null;
+  const workspaceId =
+    typeof tokenJson.workspace_id === "string" &&
+    tokenJson.workspace_id.trim().length > 0
+      ? tokenJson.workspace_id.trim()
+      : null;
+  const botId =
+    typeof tokenJson.bot_id === "string" && tokenJson.bot_id.trim().length > 0
+      ? tokenJson.bot_id.trim()
+      : null;
+  const externalAccountId = workspaceId ?? botId;
+  if (externalAccountId === null) return null;
+  const workspaceName =
+    typeof tokenJson.workspace_name === "string" &&
+    tokenJson.workspace_name.trim().length > 0
+      ? tokenJson.workspace_name.trim()
+      : null;
+
+  return {
+    accessToken,
+    refreshToken:
+      typeof tokenJson.refresh_token === "string"
+        ? tokenJson.refresh_token
+        : null,
+    expiresAt: expiresAtFromExpiresIn(tokenJson.expires_in),
+    scopes: parseScopeList(tokenJson.scope, config.scopes),
+    externalAccountId,
+    accountLabel: workspaceName ?? externalAccountId,
+  };
+};
+
+/** Google Drive — same token endpoint as Gmail; identity via Drive about.user. */
+const exchangeGoogleDrive = async (
+  config: ProviderOAuthConfig,
+  code: string,
+): Promise<ExchangedProjectConnectionTokens | null> => {
+  const redirectUri = buildProjectConnectionCallbackUrl();
+  const body = new URLSearchParams({
+    grant_type: "authorization_code",
+    code,
+    redirect_uri: redirectUri,
+    client_id: config.clientId,
+    client_secret: config.clientSecret,
+  });
+  const tokenRes = await fetch(config.tokenUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body,
+  });
+  if (!tokenRes.ok) return null;
+  const tokenJson = asRecord(await tokenRes.json().catch(() => null));
+  if (tokenJson === null) return null;
+  const accessToken =
+    typeof tokenJson.access_token === "string" ? tokenJson.access_token : null;
+  if (accessToken === null || accessToken.length === 0) return null;
+  const refreshToken =
+    typeof tokenJson.refresh_token === "string"
+      ? tokenJson.refresh_token
+      : null;
+  const scopes = parseScopeList(tokenJson.scope, config.scopes);
+
+  const aboutRes = await fetch(
+    "https://www.googleapis.com/drive/v3/about?fields=user",
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    },
+  );
+  if (!aboutRes.ok) return null;
+  const aboutJson = asRecord(await aboutRes.json().catch(() => null));
+  if (aboutJson === null) return null;
+  const user = asRecord(aboutJson.user);
+  if (user === null) return null;
+  const email =
+    typeof user.emailAddress === "string" && user.emailAddress.trim().length > 0
+      ? user.emailAddress.trim()
+      : null;
+  const permissionId =
+    typeof user.permissionId === "string" && user.permissionId.trim().length > 0
+      ? user.permissionId.trim()
+      : null;
+  const displayName =
+    typeof user.displayName === "string" && user.displayName.trim().length > 0
+      ? user.displayName.trim()
+      : null;
+  const externalAccountId = email ?? permissionId;
+  if (externalAccountId === null) return null;
+
+  return {
+    accessToken,
+    refreshToken,
+    expiresAt: expiresAtFromExpiresIn(tokenJson.expires_in),
+    scopes,
+    externalAccountId,
+    accountLabel: email ?? displayName ?? externalAccountId,
+  };
+};
+
+/** Exchange authorization code — live providers including Notion + Google Drive. */
 export const exchangeProjectConnectionOAuthCode = async (input: {
   readonly config: ProviderOAuthConfig;
   readonly code: string;
@@ -290,6 +416,12 @@ export const exchangeProjectConnectionOAuthCode = async (input: {
   }
   if (input.config.provider === "gmail") {
     return exchangeGmail(input.config, input.code);
+  }
+  if (input.config.provider === "notion") {
+    return exchangeNotion(input.config, input.code);
+  }
+  if (input.config.provider === "google_drive") {
+    return exchangeGoogleDrive(input.config, input.code);
   }
   return null;
 };

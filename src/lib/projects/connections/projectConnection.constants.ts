@@ -3,6 +3,8 @@ export const PROJECT_CONNECTION_PROVIDERS = [
   "linear",
   "gmail",
   "github",
+  "notion",
+  "google_drive",
 ] as const;
 
 export const PROJECT_CONNECTIONS_CALLBACK_PATH =
@@ -15,7 +17,7 @@ export const PROJECT_CONNECTIONS_OAUTH_STATE_TTL_MS = 15 * 60 * 1000;
 
 /**
  * Providers with full start/callback/disconnect implemented.
- * P1: github + slack. P2: linear + gmail.
+ * P1: github + slack. P2: linear + gmail. Notion/Drive: notion + google_drive.
  * Missing provider env still returns start 501 unavailable.
  */
 export const PROJECT_CONNECTIONS_LIVE_PROVIDERS = [
@@ -23,8 +25,10 @@ export const PROJECT_CONNECTIONS_LIVE_PROVIDERS = [
   "slack",
   "linear",
   "gmail",
+  "notion",
+  "google_drive",
 ] as const;
 
-/** @deprecated Prefer PROJECT_CONNECTIONS_LIVE_PROVIDERS (P1+P2). */
+/** @deprecated Prefer PROJECT_CONNECTIONS_LIVE_PROVIDERS (P1+P2+Notion/Drive). */
 export const PROJECT_CONNECTIONS_PHASE1_PROVIDERS =
   PROJECT_CONNECTIONS_LIVE_PROVIDERS;

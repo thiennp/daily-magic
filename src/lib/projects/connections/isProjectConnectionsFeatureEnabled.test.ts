@@ -87,4 +87,65 @@ describe("project connections feature gates", () => {
     vi.stubEnv("AUTH_SECRET", "");
     expect(resolveProjectConnectionsAuthSecret()).toBeNull();
   });
+
+  it("start returns unavailable for notion/google_drive when env missing", () => {
+    vi.stubEnv("AUTH_SECRET", "test-secret");
+    vi.stubEnv("PROJECT_CONNECTIONS_NOTION_CLIENT_ID", "");
+    vi.stubEnv("PROJECT_CONNECTIONS_NOTION_CLIENT_SECRET", "");
+    vi.stubEnv("PROJECT_CONNECTIONS_GOOGLE_CLIENT_ID", "");
+    vi.stubEnv("PROJECT_CONNECTIONS_GOOGLE_CLIENT_SECRET", "");
+    expect(getProviderOAuthConfig("notion")).toBeNull();
+    expect(getProviderOAuthConfig("google_drive")).toBeNull();
+    expect(
+      startProjectConnectionOAuth({
+        projectId: "p1",
+        provider: "notion",
+        actorUserId: "u1",
+      }),
+    ).toEqual({ ok: false, code: "unavailable" });
+    expect(
+      startProjectConnectionOAuth({
+        projectId: "p1",
+        provider: "google_drive",
+        actorUserId: "u1",
+      }),
+    ).toEqual({ ok: false, code: "unavailable" });
+  });
+
+  it("start returns url for notion when env present", () => {
+    vi.stubEnv("AUTH_SECRET", "test-secret");
+    vi.stubEnv("NODE_ENV", "development");
+    vi.stubEnv("PROJECT_CONNECTIONS_NOTION_CLIENT_ID", "n-id");
+    vi.stubEnv("PROJECT_CONNECTIONS_NOTION_CLIENT_SECRET", "n-secret");
+    const started = startProjectConnectionOAuth({
+      projectId: "p1",
+      provider: "notion",
+      actorUserId: "u1",
+    });
+    expect(started.ok).toBe(true);
+    if (started.ok) {
+      expect(started.url).toContain("api.notion.com/v1/oauth/authorize");
+      expect(started.url).toContain("owner=user");
+      expect(started.url).not.toContain("scope=");
+    }
+  });
+
+  it("start returns url for google_drive when Google env present", () => {
+    vi.stubEnv("AUTH_SECRET", "test-secret");
+    vi.stubEnv("NODE_ENV", "development");
+    vi.stubEnv("PROJECT_CONNECTIONS_GOOGLE_CLIENT_ID", "g-id");
+    vi.stubEnv("PROJECT_CONNECTIONS_GOOGLE_CLIENT_SECRET", "g-secret");
+    const started = startProjectConnectionOAuth({
+      projectId: "p1",
+      provider: "google_drive",
+      actorUserId: "u1",
+    });
+    expect(started.ok).toBe(true);
+    if (started.ok) {
+      expect(started.url).toContain("accounts.google.com/o/oauth2/v2/auth");
+      expect(started.url).toContain("access_type=offline");
+      expect(started.url).toContain("drive.file");
+    }
+  });
+
 });
