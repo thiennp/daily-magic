@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import BillingPlanSummary from "@/features/billing/components/BillingPlanSummary";
 import PricingBringYourOwn from "@/features/pricing/components/PricingBringYourOwn";
 import PricingCompareTable from "@/features/pricing/components/PricingCompareTable";
 import PricingFaq from "@/features/pricing/components/PricingFaq";
@@ -32,6 +33,7 @@ export default function PricingPageLayout({
           </ol>
         </nav>
       ) : null}
+      {signedIn ? <BillingPlanSummary /> : null}
       <PricingHero />
       <PricingPlanCards signedIn={signedIn} />
       <PricingTrustStrip />

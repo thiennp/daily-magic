@@ -1,5 +1,6 @@
 "use client";
 
+import AssistantEntitlementLimitNote from "@/features/billing/components/AssistantEntitlementLimitNote";
 import MyBotRow from "@/features/my-bots/MyBotRow";
 import MyBotsClaimForm from "@/features/my-bots/MyBotsClaimForm";
 import { useMyBotsPanel } from "@/features/my-bots/hooks/useMyBotsPanel";
@@ -16,6 +17,7 @@ export default function MyBotsPanel() {
         onCodeChange={panel.setCode}
         onSubmit={panel.claim}
       />
+      <AssistantEntitlementLimitNote connectedCount={panel.bots.length} />
       <div>
         <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
           {MY_BOTS_COPY.listHeading}

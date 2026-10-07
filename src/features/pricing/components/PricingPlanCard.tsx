@@ -1,12 +1,6 @@
-import Link from "next/link";
-
+import PricingPlanCardCta from "@/features/pricing/components/PricingPlanCardCta";
 import type { PricingPlanCard as PlanCard } from "@/features/pricing/pricingPlans.constant";
 import {
-  PRICING_CANCEL_NOTE,
-  PRICING_TEAM_VOLUME_NOTE,
-} from "@/features/pricing/pricingCopy.constant";
-import {
-  PRICING_CONTACT_SALES_HREF,
   PRICING_PAGE_PATH,
   PRICING_SIGN_IN_HREF,
   PRICING_START_TRIAL_HREF,
@@ -29,10 +23,10 @@ export default function PricingPlanCard({
   signedIn,
 }: PricingPlanCardProps) {
   const href = resolveCtaHref(plan.id, signedIn);
+  const useCheckoutStub =
+    signedIn && (plan.id === "pro" || plan.id === "team");
   const ctaLabel =
-    signedIn && plan.id === "trial"
-      ? "Your plan options"
-      : plan.ctaLabel;
+    signedIn && plan.id === "trial" ? "Your plan options" : plan.ctaLabel;
 
   return (
     <article
@@ -62,30 +56,12 @@ export default function PricingPlanCard({
           </li>
         ))}
       </ul>
-      <div className="mt-6 space-y-2">
-        <Link
-          href={href}
-          className="inline-flex w-full items-center justify-center rounded-2xl bg-brand-600 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40"
-        >
-          {ctaLabel}
-        </Link>
-        {plan.contactSales ? (
-          <a
-            href={PRICING_CONTACT_SALES_HREF}
-            className="inline-flex w-full items-center justify-center rounded-2xl border border-gray-200 bg-white px-5 py-3 text-sm font-semibold text-gray-800 transition hover:bg-gray-50"
-          >
-            Contact sales
-          </a>
-        ) : null}
-        {plan.contactSales ? (
-          <p className="text-center text-xs text-gray-500">
-            {PRICING_TEAM_VOLUME_NOTE}
-          </p>
-        ) : null}
-        <p className="text-center text-xs text-gray-500">
-          {PRICING_CANCEL_NOTE}
-        </p>
-      </div>
+      <PricingPlanCardCta
+        plan={plan}
+        href={href}
+        ctaLabel={ctaLabel}
+        useCheckoutStub={useCheckoutStub}
+      />
     </article>
   );
 }

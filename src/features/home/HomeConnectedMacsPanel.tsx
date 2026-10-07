@@ -1,5 +1,6 @@
 "use client";
 
+import ComputerEntitlementLimitNote from "@/features/billing/components/ComputerEntitlementLimitNote";
 import ComputersDownloadLink from "@/features/home/ComputersDownloadLink";
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
 import ConnectCursorCloudCard from "@/features/home/ConnectCursorCloudCard";
@@ -87,6 +88,7 @@ export default function HomeConnectedMacsPanel({
           <ComputersDownloadLink className={APP_SHELL_V5_PILL_BUTTON_CLASS} />
         </div>
       ) : null}
+      {!isLoading ? <ComputerEntitlementLimitNote devices={devices} /> : null}
       <div className={`mt-4 ${APP_SHELL_V5_SECTION_CLASS}`}>
         <ConnectCursorCloudCard />
       </div>
