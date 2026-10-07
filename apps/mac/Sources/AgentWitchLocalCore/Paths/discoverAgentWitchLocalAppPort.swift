@@ -42,6 +42,7 @@ public func resolveAgentWitchLocalHealthUrl(port: Int) -> URL {
     return components.url!
 }
 
+/// Legacy status URL (browser UI retired — AWL-H7). Prefer Mac app window.
 public func resolveAgentWitchLocalStatusUrl(port: Int) -> URL {
     var components = URLComponents()
     components.scheme = "http"

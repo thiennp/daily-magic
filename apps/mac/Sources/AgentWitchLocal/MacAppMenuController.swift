@@ -447,10 +447,12 @@ final class MacAppMenuController: ObservableObject {
         }
     }
 
+    /// AWL-H7: raise the Mac app window (browser local UI retired).
     func openLocalStatus() {
-        // Arch Exact FIX-2: use discovered localAppPort (H6 range), not hard-coded 43347.
-        let port = localAppPort ?? MacAppConstants.localAppPort
-        NSWorkspace.shared.open(resolveAgentWitchLocalStatusUrl(port: port))
+        NotificationCenter.default.post(
+            name: .awlOpenWindow,
+            object: MacAppWindowID.computer.rawValue
+        )
     }
 
     func openConnectThisMac() {

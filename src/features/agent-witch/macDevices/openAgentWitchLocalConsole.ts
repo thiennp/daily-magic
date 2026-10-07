@@ -1,9 +1,7 @@
-import { AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN } from "@/lib/agentWitch/agentWitchLocalAppPort.constant";
-
+/**
+ * AWL-H7: browser local console retired. No-op — Mac menu bar app is the surface.
+ * UI Mac should remove or rewire any remaining callers.
+ */
 export const openAgentWitchLocalConsole = (): void => {
-  window.open(
-    AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN,
-    "_blank",
-    "noopener,noreferrer",
-  );
+  // Intentionally empty.
 };

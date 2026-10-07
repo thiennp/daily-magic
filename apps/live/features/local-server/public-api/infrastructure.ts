@@ -22,6 +22,8 @@ export {
   AGENT_WITCH_LOCAL_PORT_RANGE_HELP,
 } from "../internal/core/agentWitchLocalAppPortRange.constants";
 
+export { AGENT_WITCH_LOCAL_BROWSER_UI_RETIRED_MESSAGE } from "../internal/core/agentWitchLocalApp.constants";
+
 export {
   allocateOrLoadAgentWitchLocalAppPortRange,
   readAgentWitchLocalAppPortRangeFile,

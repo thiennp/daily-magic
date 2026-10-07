@@ -22,6 +22,7 @@ public enum MacAppConstants {
     public static let localPortRangeHelp =
         "Unique to this AgentWitch account on this computer."
     public static let healthPath = "/health"
+    /// Legacy browser status path (AWL-H7 retired HTML UI; route returns plain guidance).
     public static let statusPath = "/status"
     /// Same origin constant as `AGENT_WITCH_DEFAULT_ORIGIN` in packages/shared.
     public static let cloudOrigin = "https://www.agentwitch.com"

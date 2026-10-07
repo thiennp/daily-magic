@@ -2,6 +2,7 @@ import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
 
+import { AGENT_WITCH_LOCAL_BROWSER_UI_RETIRED_MESSAGE } from "./agentWitchLocalApp.constants";
 import {
   AGENT_WITCH_LOCAL_PORTS_IN_USE_MESSAGE,
 } from "./agentWitchLocalAppPortRange.constants";
@@ -290,9 +291,17 @@ const sendJson = (
   response.end(JSON.stringify(payload));
 };
 
-const sendHtml = (response: http.ServerResponse, html: string): void => {
-  response.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-  response.end(html);
+/** AWL-H7: local web UI retired — Mac menu bar app is the user surface. */
+const sendHtml = (response: http.ServerResponse, _html: string): void => {
+  response.writeHead(200, {
+    "Content-Type": "text/plain; charset=utf-8",
+    ...LOCAL_APP_CORS_HEADERS,
+  });
+  response.end(AGENT_WITCH_LOCAL_BROWSER_UI_RETIRED_MESSAGE);
+};
+
+const sendBrowserUiRetired = (response: http.ServerResponse): void => {
+  sendHtml(response, "");
 };
 
 const readBody = async (request: http.IncomingMessage): Promise<string> => {
@@ -525,27 +534,13 @@ export const startAgentWitchLocalApp = (input: {
   };
   const sendLocalAppNotFound = async (
     response: http.ServerResponse,
-    heading: "Not found" | "Project not found",
+    _heading: "Not found" | "Project not found",
   ): Promise<void> => {
-    const sentence =
-      heading === "Project not found"
-        ? "That project is not available on this computer."
-        : "That page does not exist on this computer.";
-    const installBundle = buildInstallBundleStatus();
-    const html = await buildLocalAppShell({
-      title: heading,
-      activePath: heading === "Project not found" ? "/projects" : "/",
-      installVersion: installBundle.installVersion,
-      body: `<section class="card">
-      <h1>${escapeHtml(heading)}</h1>
-      <p>${escapeHtml(sentence)}</p>
-      <div class="actions"><a class="btn btn-secondary" href="/">Home</a></div>
-    </section>`,
-    });
     response.writeHead(404, {
-      "Content-Type": "text/html; charset=utf-8",
+      "Content-Type": "text/plain; charset=utf-8",
+      ...LOCAL_APP_CORS_HEADERS,
     });
-    response.end(html);
+    response.end(AGENT_WITCH_LOCAL_BROWSER_UI_RETIRED_MESSAGE);
   };
   const ensureLinkCode = (): string => {
     if (fs.existsSync(linkCodePath)) {
@@ -659,6 +654,30 @@ export const startAgentWitchLocalApp = (input: {
           server: awlMcpServer,
         })
       ) {
+        return;
+      }
+
+      // AWL-H7: retire browser UI pages (Mac app is the surface). Keep APIs below.
+      const retiredBrowserUiPaths = new Set<string>([
+        "/task",
+        "/writer-sessions",
+        "/errors",
+        "/status",
+        "/traffic",
+        "/projects",
+        "/project",
+        "/harness",
+        "/writer-api",
+        "/history",
+        "/estimates",
+        "/knowledge",
+        "/prompt-optimizer",
+        "/prompt-optimizer/guide",
+        "/prompt-sdlc",
+        "/prompt-sdlc/guide",
+      ]);
+      if (method === "GET" && retiredBrowserUiPaths.has(pathname)) {
+        sendBrowserUiRetired(response);
         return;
       }
 
@@ -787,32 +806,7 @@ export const startAgentWitchLocalApp = (input: {
       }
 
       if (method === "GET" && pathname === "/") {
-        const status = input.controllers.getStatus();
-        const installBundle = buildInstallBundleStatus();
-        const installed = readInstalledLocalHarnessSnapshot(input.layout);
-        const errorLog = readAgentWitchErrorLogTail(input.layout.errorLogPath);
-        sendHtml(
-          response,
-          await buildLocalAppShell({
-            title: "Home",
-            activePath: "/",
-            installVersion: installBundle.installVersion,
-            updateFlash: readLocalAppUpdateFlash(request.url ?? undefined),
-            updateError: readLocalAppUpdateError(request.url ?? undefined),
-            body: buildAgentWitchLocalHomePageBody({
-              wsConnected: status.wsConnected,
-              lastHeartbeatAt: status.lastHeartbeatAt,
-              installBundleVersion: installBundle.installBundleVersion,
-              harnessSetCount: installed.sets.length,
-              knowledgeChunkCount: readAgentWitchRagChunks(input.layout).length,
-              trafficEntryCount: readAgentWitchLocalTraffic(input.layout)
-                .length,
-              wakeError: status.wakeError,
-              errorLogByteSize: errorLog.byteSize,
-              errorLogExists: errorLog.exists,
-            }),
-          }),
-        );
+        sendBrowserUiRetired(response);
         return;
       }
 
@@ -1100,8 +1094,11 @@ export const startAgentWitchLocalApp = (input: {
             : null;
 
         if (chosen === null || cloudConfig === null) {
-          response.writeHead(303, { Location: "/projects" });
-          response.end();
+          response.writeHead(200, {
+            "Content-Type": "text/plain; charset=utf-8",
+            ...LOCAL_APP_CORS_HEADERS,
+          });
+          response.end(AGENT_WITCH_LOCAL_BROWSER_UI_RETIRED_MESSAGE);
           return;
         }
 
@@ -1113,8 +1110,10 @@ export const startAgentWitchLocalApp = (input: {
         );
 
         if (!updated) {
-          response.writeHead(303, { Location: "/projects?folderError=1" });
-          response.end();
+          sendJson(response, 502, {
+            ok: false,
+            error: "Could not update the project folder in AgentWitch Cloud.",
+          });
           return;
         }
 
@@ -1128,14 +1127,12 @@ export const startAgentWitchLocalApp = (input: {
           linkedSetSlugs,
         );
 
-        const redirectQuery = new URLSearchParams({
-          folderUpdated: "1",
-          bindingsSynced: bindingsSynced ? "1" : "0",
+        sendJson(response, 200, {
+          ok: true,
+          projectId,
+          folderPath: chosen,
+          bindingsSynced,
         });
-        response.writeHead(303, {
-          Location: `/project?id=${encodeURIComponent(projectId)}&${redirectQuery.toString()}`,
-        });
-        response.end();
         return;
       }
 

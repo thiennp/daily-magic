@@ -1,7 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN } from "@/lib/agentWitch/agentWitchLocalAppPort.constant";
-
 import {
   openAgentWitchLocalStatus,
   probeAgentWitchLocalHealth,
@@ -30,26 +28,13 @@ describe("openAgentWitchLocalStatus", () => {
     vi.restoreAllMocks();
   });
 
-  it("opens status before awaiting health probe", async () => {
+  it("does not open a browser tab (AWL-H7) and returns opened when healthy", async () => {
     const openSpy = vi.fn();
     vi.stubGlobal("window", { open: openSpy });
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true } as Response));
 
-    let resolveFetch: (value: Response) => void = () => undefined;
-    const fetchPromise = new Promise<Response>((resolve) => {
-      resolveFetch = resolve;
-    });
-    vi.stubGlobal("fetch", vi.fn().mockReturnValue(fetchPromise));
-
-    const resultPromise = openAgentWitchLocalStatus();
-
-    expect(openSpy).toHaveBeenCalledWith(
-      `${AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN}/status`,
-      "_blank",
-      "noopener,noreferrer",
-    );
-
-    resolveFetch({ ok: true } as Response);
-    await expect(resultPromise).resolves.toBe("opened");
+    await expect(openAgentWitchLocalStatus()).resolves.toBe("opened");
+    expect(openSpy).not.toHaveBeenCalled();
   });
 
   it("returns unavailable when health probe fails", async () => {
