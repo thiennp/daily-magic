@@ -42,7 +42,7 @@ describe("POST /api/billing/admin/set-plan", () => {
 
   it("sets plan for admins with seatCount 1 for pro", async () => {
     vi.mocked(canManageAllUsers).mockReturnValue(true);
-    vi.mocked(setPlanForUser).mockResolvedValue(true);
+    vi.mocked(setPlanForUser).mockResolvedValue({ ok: true, seatCount: 1 });
     const res = await POST(
       new Request("https://www.agentwitch.com/api/billing/admin/set-plan", {
         method: "POST",
@@ -68,7 +68,7 @@ describe("POST /api/billing/admin/set-plan", () => {
 
   it("defaults team seatCount to 5", async () => {
     vi.mocked(canManageAllUsers).mockReturnValue(true);
-    vi.mocked(setPlanForUser).mockResolvedValue(true);
+    vi.mocked(setPlanForUser).mockResolvedValue({ ok: true, seatCount: 5 });
     const res = await POST(
       new Request("https://www.agentwitch.com/api/billing/admin/set-plan", {
         method: "POST",

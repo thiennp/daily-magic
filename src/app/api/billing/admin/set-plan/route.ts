@@ -1,15 +1,14 @@
 import { canManageAllUsers } from "@/lib/auth/globalRolePermissions";
 import { requireAuth } from "@/lib/auth/requireAuth";
 import { isBillingPlan } from "@/lib/billing/isBillingPlan";
-import {
-  resolveSeatCountForPlan,
-  setPlanForUser,
-} from "@/lib/billing/setPlanForUser";
+import { setPlanForUser } from "@/lib/billing/setPlanForUser";
 import type { BillingPlan } from "@/lib/billing/types/BillingPlan.type";
 
 export const dynamic = "force-dynamic";
 
-/** POST { userId, plan, seatCount?, expiresAt? } — admin-only plan override (no Stripe). */
+/** POST { userId, plan, seatCount?, expiresAt? } — admin-only plan override (no Stripe).
+ * expiresAt accepted as optional (null/omitted) but not persisted without mig (no plan_override_expires_at).
+ */
 export async function POST(request: Request): Promise<Response> {
   const { actor, error } = await requireAuth();
   if (error || !actor) return error;
@@ -42,7 +41,6 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
   const plan: BillingPlan = planRaw;
-
   let seatCount: number | undefined;
   if (
     body !== null &&
@@ -60,11 +58,9 @@ export async function POST(request: Request): Promise<Response> {
     }
     seatCount = raw;
   }
-
-  // expiresAt (string|null) accepted but not persisted — no plan_override_expires_at without mig 105.
-  const resolvedSeatCount = resolveSeatCountForPlan(plan, seatCount);
-  const updated = await setPlanForUser({ userId, plan, seatCount });
-  if (!updated) {
+  // Optional expiresAt: accepted, not persisted (no mig for plan_override_expires_at).
+  const result = await setPlanForUser({ userId, plan, seatCount });
+  if (!result.ok) {
     return Response.json({ error: "User not found" }, { status: 404 });
   }
   const adminFree = plan === "admin_free";
@@ -73,7 +69,7 @@ export async function POST(request: Request): Promise<Response> {
     userId,
     plan,
     adminFree,
-    seatCount: resolvedSeatCount,
+    seatCount: result.seatCount,
     expiresAt: null,
   });
 }

@@ -4,31 +4,22 @@ import { asRowArray, getSql } from "@/lib/db";
 
 const DEFAULT_TEAM_SEAT_COUNT = 5;
 
-/** Resolve seat_count: team → seatCount ?? 5; others → 1. */
-export const resolveSeatCountForPlan = (
-  plan: BillingPlan,
-  seatCount?: number,
-): number => {
-  if (plan === "team") {
-    return seatCount !== undefined && Number.isInteger(seatCount) && seatCount >= 1
-      ? seatCount
-      : DEFAULT_TEAM_SEAT_COUNT;
-  }
-  return 1;
-};
-
 /**
  * Admin force-set of users.plan without Stripe.
- * Syncs admin_free + seat_count; clears stripe_subscription_id (no subscribe flow).
+ * Syncs admin_free; clears stripe_subscription_id (no subscribe flow).
+ * Team seatCount defaults to 5; other plans force seat_count = 1.
  */
 export const setPlanForUser = async (input: {
   readonly userId: string;
   readonly plan: BillingPlan;
   readonly seatCount?: number;
-}): Promise<boolean> => {
+}): Promise<{ ok: boolean; seatCount: number }> => {
   await ensureBillingSchema();
   const sql = getSql();
-  const seatCount = resolveSeatCountForPlan(input.plan, input.seatCount);
+  const seatCount =
+    input.plan === "team"
+      ? Math.max(1, input.seatCount ?? DEFAULT_TEAM_SEAT_COUNT)
+      : 1;
 
   if (input.plan === "admin_free") {
     const rows = asRowArray(
@@ -42,7 +33,7 @@ export const setPlanForUser = async (input: {
         RETURNING id
       `,
     );
-    return rows.length > 0;
+    return { ok: rows.length > 0, seatCount };
   }
 
   if (input.plan === "trial") {
@@ -62,7 +53,7 @@ export const setPlanForUser = async (input: {
         RETURNING id
       `,
     );
-    return rows.length > 0;
+    return { ok: rows.length > 0, seatCount };
   }
 
   // pro | team — entitlements only; do not create Stripe subscription
@@ -77,15 +68,17 @@ export const setPlanForUser = async (input: {
       RETURNING id
     `,
   );
-  return rows.length > 0;
+  return { ok: rows.length > 0, seatCount };
 };
 
 /** Permanent Free toggle — wraps setPlanForUser for back-compat. */
 export const setAdminFreeForUser = async (input: {
   readonly userId: string;
   readonly adminFree: boolean;
-}): Promise<boolean> =>
-  setPlanForUser({
+}): Promise<boolean> => {
+  const result = await setPlanForUser({
     userId: input.userId,
     plan: input.adminFree ? "admin_free" : "trial",
   });
+  return result.ok;
+};
