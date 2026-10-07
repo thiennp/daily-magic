@@ -19,9 +19,12 @@ interface AwcProjectDetailHeaderProps {
   readonly editCta: ProjectEditOnMacCta;
   readonly canRename: boolean;
   readonly canApprove: boolean;
+  readonly canDelete: boolean;
+  readonly canLeave: boolean;
   readonly onRename: () => void;
   readonly onInvite: () => void;
   readonly onDelete: () => void;
+  readonly onLeave: () => void;
 }
 
 /**
@@ -37,9 +40,12 @@ export default function AwcProjectDetailHeader({
   editCta,
   canRename,
   canApprove,
+  canDelete,
+  canLeave,
   onRename,
   onInvite,
   onDelete,
+  onLeave,
 }: AwcProjectDetailHeaderProps) {
   return (
     <header className="flex min-w-0 flex-col gap-2">
@@ -58,9 +64,12 @@ export default function AwcProjectDetailHeader({
         </div>
         <AwcProjectDetailHeaderActions
           canRename={canRename}
+          canDelete={canDelete}
+          canLeave={canLeave}
           onRename={onRename}
           onInvite={onInvite}
           onDelete={onDelete}
+          onLeave={onLeave}
         >
           <AwcProjectHeaderEditAction editCta={editCta} />
         </AwcProjectDetailHeaderActions>

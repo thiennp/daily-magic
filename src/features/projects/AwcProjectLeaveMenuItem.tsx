@@ -1,19 +1,19 @@
 "use client";
 
-import { AWC_PROJECT_DELETE_COPY } from "@/features/projects/awcProjectDeleteCopy.constant";
+import { AWC_PROJECT_LEAVE_COPY } from "@/features/projects/awcProjectLeaveCopy.constant";
 import {
   PROJECTS_V5_DIVIDER_CLASS,
   PROJECTS_V5_MENU_ITEM_DANGER_CLASS,
 } from "@/features/projects/projectsPageV5Classes.constant";
 
-interface AwcProjectDeleteMenuItemProps {
+interface AwcProjectLeaveMenuItemProps {
   readonly onRequestConfirm: () => void;
 }
 
-/** Danger menu row — opens type-to-confirm outside the dropdown so focus stays. */
-const AwcProjectDeleteMenuItem = ({
+/** Danger menu row for invitees — confirm modal mounts outside the dropdown. */
+const AwcProjectLeaveMenuItem = ({
   onRequestConfirm,
-}: AwcProjectDeleteMenuItemProps) => {
+}: AwcProjectLeaveMenuItemProps) => {
   return (
     <li role="none" className={`mt-1 pt-1 ${PROJECTS_V5_DIVIDER_CLASS}`}>
       <button
@@ -22,10 +22,10 @@ const AwcProjectDeleteMenuItem = ({
         className={PROJECTS_V5_MENU_ITEM_DANGER_CLASS}
         onClick={onRequestConfirm}
       >
-        {AWC_PROJECT_DELETE_COPY.trigger}
+        {AWC_PROJECT_LEAVE_COPY.trigger}
       </button>
     </li>
   );
 };
 
-export default AwcProjectDeleteMenuItem;
+export default AwcProjectLeaveMenuItem;

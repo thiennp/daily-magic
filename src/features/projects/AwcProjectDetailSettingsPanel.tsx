@@ -6,6 +6,7 @@ import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type"
 import AwcProjectSettingsDangerZone from "@/features/projects/settings/AwcProjectSettingsDangerZone";
 import AwcProjectSettingsFolderRow from "@/features/projects/settings/AwcProjectSettingsFolderRow";
 import AwcProjectSettingsHistoryRow from "@/features/projects/settings/AwcProjectSettingsHistoryRow";
+import AwcProjectSettingsLeaveZone from "@/features/projects/settings/AwcProjectSettingsLeaveZone";
 import AwcProjectSettingsNameSection from "@/features/projects/settings/AwcProjectSettingsNameSection";
 import AwcProjectSettingsPendingRunApprovalsSection from "@/features/projects/settings/runApprovals/AwcProjectSettingsPendingRunApprovalsSection";
 import AwcProjectSettingsRunsWithoutApprovalRow from "@/features/projects/settings/runsWithoutApproval/AwcProjectSettingsRunsWithoutApprovalRow";
@@ -16,7 +17,7 @@ interface AwcProjectDetailSettingsPanelProps {
   readonly pageActorRole: ProjectPageActorRole;
 }
 
-/** Layout v2 L5 Settings (p-set): name · path · history · S0-2 · pending run approvals (owner) · danger. */
+/** Layout v2 L5 Settings — name · path · history · danger Delete|Leave. */
 export default function AwcProjectDetailSettingsPanel({
   project,
   startRename,
@@ -24,6 +25,7 @@ export default function AwcProjectDetailSettingsPanel({
 }: AwcProjectDetailSettingsPanelProps) {
   const isOwner = pageActorRole === "owner";
   const canDelete = isOwner && !isDefaultUserProject(project);
+  const canLeave = !isOwner;
 
   return (
     <div
@@ -53,6 +55,9 @@ export default function AwcProjectDetailSettingsPanel({
           projectId={project.id}
           projectName={project.name}
         />
+      ) : null}
+      {canLeave ? (
+        <AwcProjectSettingsLeaveZone projectId={project.id} />
       ) : null}
     </div>
   );

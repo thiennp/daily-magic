@@ -33,7 +33,7 @@ export const leaveProjectMembership = async (input: {
       FROM project_memberships
       WHERE project_id = ${input.projectId}
         AND user_id = ${input.actorUserId}
-        AND role = 'member'
+        AND role IN ('member', 'viewer')
       ORDER BY created_at DESC
       LIMIT 1
     `,
@@ -65,7 +65,7 @@ export const leaveProjectMembership = async (input: {
         AND project_id = ${input.projectId}
         AND user_id = ${input.actorUserId}
         AND status IN ('active', 'naming_required')
-        AND role = 'member'
+        AND role IN ('member', 'viewer')
       RETURNING *
     `,
   );

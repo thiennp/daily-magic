@@ -1,5 +1,6 @@
 import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
 import AwcProjectDeleteMenuItem from "@/features/projects/AwcProjectDeleteMenuItem";
+import AwcProjectLeaveMenuItem from "@/features/projects/AwcProjectLeaveMenuItem";
 import AwcProjectsMenuDisabledItem from "@/features/projects/AwcProjectsMenuDisabledItem";
 import { PROJECTS_V5_MENU_ITEM_CLASS as MENU_ITEM_CLASS } from "@/features/projects/projectsPageV5Classes.constant";
 import buildAwcProjectDetailHref from "@/lib/projects/buildAwcProjectDetailHref";
@@ -7,26 +8,28 @@ import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProje
 
 interface AwcProjectCardActionsMenuItemsProps {
   readonly projectId: string;
-  readonly projectName: string;
   readonly isDefaultProject: boolean;
   readonly canDelete: boolean;
+  readonly canLeave: boolean;
   readonly assignTasksHref: string;
   readonly editCta: ProjectEditOnMacCta;
   readonly editHelperId: string | undefined;
   readonly onClose: () => void;
-  readonly onProjectDeleted?: () => void;
+  readonly onRequestDelete: () => void;
+  readonly onRequestLeave: () => void;
 }
 
 export default function AwcProjectCardActionsMenuItems({
   projectId,
-  projectName,
   isDefaultProject,
   canDelete,
+  canLeave,
   assignTasksHref,
   editCta,
   editHelperId,
   onClose,
-  onProjectDeleted,
+  onRequestDelete,
+  onRequestLeave,
 }: AwcProjectCardActionsMenuItemsProps) {
   return (
     <>
@@ -82,11 +85,17 @@ export default function AwcProjectCardActionsMenuItems({
       )}
       {canDelete && !isDefaultProject ? (
         <AwcProjectDeleteMenuItem
-          projectId={projectId}
-          projectName={projectName}
-          onDeleted={() => {
+          onRequestConfirm={() => {
             onClose();
-            onProjectDeleted?.();
+            onRequestDelete();
+          }}
+        />
+      ) : null}
+      {canLeave && !isDefaultProject ? (
+        <AwcProjectLeaveMenuItem
+          onRequestConfirm={() => {
+            onClose();
+            onRequestLeave();
           }}
         />
       ) : null}

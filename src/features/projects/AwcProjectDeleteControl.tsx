@@ -1,9 +1,13 @@
 "use client";
 
+import { useState } from "react";
+
 import isDefaultUserProject from "@/lib/projects/isDefaultUserProject";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
+import AwcProjectDeleteConfirmForm from "@/features/projects/AwcProjectDeleteConfirmForm";
 import AwcProjectDeleteDangerZone from "@/features/projects/AwcProjectDeleteDangerZone";
 import AwcProjectDeleteMenuItem from "@/features/projects/AwcProjectDeleteMenuItem";
+import useDeleteProject from "@/features/projects/hooks/useDeleteProject";
 
 interface AwcProjectDeleteControlProps {
   readonly project: Pick<UserProjectRecord, "id" | "name">;
@@ -16,17 +20,45 @@ const AwcProjectDeleteControl = ({
   onDeleted,
   variant = "detail",
 }: AwcProjectDeleteControlProps) => {
+  const { deleteProject, errorMessage, pending, clearError } = useDeleteProject(
+    project.id,
+  );
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
   if (isDefaultUserProject(project)) {
     return null;
   }
 
   if (variant === "menu") {
     return (
-      <AwcProjectDeleteMenuItem
-        projectId={project.id}
-        projectName={project.name}
-        onDeleted={onDeleted}
-      />
+      <>
+        <AwcProjectDeleteMenuItem
+          onRequestConfirm={() => {
+            clearError();
+            setConfirmOpen(true);
+          }}
+        />
+        {confirmOpen ? (
+          <AwcProjectDeleteConfirmForm
+            variant="dialog"
+            projectName={project.name}
+            pending={pending}
+            errorMessage={errorMessage}
+            onConfirm={() => {
+              void deleteProject().then((ok) => {
+                if (ok) {
+                  setConfirmOpen(false);
+                  onDeleted?.();
+                }
+              });
+            }}
+            onCancel={() => {
+              clearError();
+              setConfirmOpen(false);
+            }}
+          />
+        ) : null}
+      </>
     );
   }
 
