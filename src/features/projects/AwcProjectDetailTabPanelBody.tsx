@@ -3,7 +3,7 @@
 import AwcProjectDetailSettingsPanel from "@/features/projects/AwcProjectDetailSettingsPanel";
 import AwcProjectMessengerSection from "@/features/projects/messenger/AwcProjectMessengerSection";
 import AwcProjectLibraryPanel from "@/features/projects/library/AwcProjectLibraryPanel";
-import AwcProjectTasksPanel from "@/features/projects/tasks/AwcProjectTasksPanel";
+import AwcProjectTasksPanelWithRecords from "@/features/projects/tasks/AwcProjectTasksPanelWithRecords";
 import AwcProjectOverviewPanel from "@/features/projects/overview/AwcProjectOverviewPanel";
 import AwcProjectPitfallsPanel from "@/features/projects/pitfalls/AwcProjectPitfallsPanel";
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
@@ -104,7 +104,7 @@ export default function AwcProjectDetailTabPanelBody(
     );
   }
   if (t === "tasks" && sel) {
-    return <AwcProjectTasksPanel project={project} />;
+    return <AwcProjectTasksPanelWithRecords project={project} />;
   }
   return null;
 }

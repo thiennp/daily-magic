@@ -9,6 +9,7 @@ import { executeProjectAclInviteHooksTools } from "@/lib/agentAccess/executeProj
 import { executeProjectAclRedeemInviteTool } from "@/lib/agentAccess/executeProjectAclRedeemInviteTool";
 import { executeProjectAclLeaveTool } from "@/lib/agentAccess/executeProjectAclLeaveTool";
 import { executeProjectAclRequestTools } from "@/lib/agentAccess/executeProjectAclRequestTools";
+import { executeProjectTaskTools } from "@/lib/agentAccess/executeProjectTaskTools";
 
 export const executeAgentAccessProjectAclTool = async (input: {
   readonly actor: AgentAccessActor;
@@ -42,6 +43,10 @@ export const executeAgentAccessProjectAclTool = async (input: {
   const checkResult = await executeProjectAclCheckMembershipTool(input);
   if (checkResult !== null) {
     return checkResult;
+  }
+  const taskResult = await executeProjectTaskTools(input);
+  if (taskResult !== null) {
+    return taskResult;
   }
   const activityResult = await executeProjectAclActivityTool(input);
   if (activityResult !== null) {

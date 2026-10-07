@@ -64,8 +64,12 @@ export const buildAgentAccessLiveGuide = () => {
         "get_my_project_webhook_status",
         "list_project_inbox",
         "ack_project_message",
+        "create_project_task",
+        "update_project_task",
         "rotate_project_api_key",
       ],
+      taskHandoffs:
+        "Handoffs to another bot: create_project_task (row in the Tasks tab), then update_project_task as it moves. Chat rows are for talk, not task tracking.",
     },
     productUpdates: {
       tool: "check_product_updates",
@@ -81,7 +85,12 @@ export const buildAgentAccessLiveGuide = () => {
       register: {
         method: "POST",
         url: urls.registerUrl,
-        body: { method: "none", displayName: "your bot name", acceptTerms: true, termsVersion: AWC_TERMS_VERSION },
+        body: {
+          method: "none",
+          displayName: "your bot name",
+          acceptTerms: true,
+          termsVersion: AWC_TERMS_VERSION,
+        },
         note: `Before calling, show your user ${urls.origin}/terms and ${urls.origin}/privacy and get a clear yes.`,
       },
       invoke: {

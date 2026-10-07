@@ -3,6 +3,7 @@ import { AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS } from "@/lib/agentAccess/agent
 import { AGENT_ACCESS_PROJECT_SKILL_SHARE_TOOLS } from "@/lib/agentAccess/agentAccessProjectSkillShareToolCatalog.constant";
 import { AGENT_ACCESS_PROJECT_LEAVE_TOOL } from "@/lib/agentAccess/agentAccessProjectLeaveTool.constant";
 import { AGENT_ACCESS_REDEEM_PROJECT_INVITE_TOOL } from "@/lib/agentAccess/agentAccessRedeemProjectInviteTool.constant";
+import { AGENT_ACCESS_PROJECT_TASK_TOOLS } from "@/lib/agentAccess/projectTaskTools.constant";
 
 const AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS: readonly AgentAccessToolDefinition[] =
   [
@@ -25,8 +26,7 @@ const AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS: readonly AgentAccessToolDefinition[] 
           },
           suggestedProjectDisplayName: {
             type: "string",
-            description:
-              "Optional nickname to prefill owner Approve.",
+            description: "Optional nickname to prefill owner Approve.",
           },
         },
         required: ["projectId"],
@@ -93,5 +93,6 @@ export const AGENT_ACCESS_PROJECT_ACL_TOOLS: readonly AgentAccessToolDefinition[
     ...AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS,
     AGENT_ACCESS_PROJECT_LEAVE_TOOL,
     ...AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS,
+    ...AGENT_ACCESS_PROJECT_TASK_TOOLS,
     ...AGENT_ACCESS_PROJECT_SKILL_SHARE_TOOLS,
   ];
