@@ -10,7 +10,7 @@
 import {
   compareVersionProjectTask,
   keyOfProjectTask,
-  preferLocalDirtyOverNeonNewer,
+  preferLocalOverNeonNewer,
   toNeonMetaProjectTask,
   type ProjectTaskLocalRecord,
   type ProjectTaskNeonMeta,
@@ -156,7 +156,7 @@ export const reconcileProjectSyncOnConnect = async (
     } else {
       skippedNeonNewer.push(key);
       // T4: local body/title/prompt win (dirty or clean); Neon refreshes meta only.
-      const prefer = preferLocalDirtyOverNeonNewer(local, neon);
+      const prefer = preferLocalOverNeonNewer(local, neon);
       keptLocal.push(prefer.winner);
     }
   }

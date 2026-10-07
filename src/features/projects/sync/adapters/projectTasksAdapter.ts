@@ -245,9 +245,9 @@ export const mergeLocalProjectTask = (
  * T4 harden (Lead Soft FIX Soft Soft + Arch add-on): local SoT body/title/prompt
  * always wins — dirty *or clean*. Neon-newer may refresh meta fields only
  * (status/times/branch/worktree/session ids/version); never replace local body,
- * title, prompt, report, or logs. Alias: preferLocalOverNeonNewer.
+ * title, prompt, report, or logs. Local wins dirty or clean.
  */
-export const preferLocalDirtyOverNeonNewer = (
+export const preferLocalOverNeonNewer = (
   local: ProjectTaskLocalRecord,
   neon: ProjectTaskNeonMeta,
 ): {
@@ -293,7 +293,6 @@ export const preferLocalDirtyOverNeonNewer = (
 };
 
 /** Arch alias — clean local keeps body the same as dirty. */
-export const preferLocalOverNeonNewer = preferLocalDirtyOverNeonNewer;
 
 /** Pure — IDB cache from local or neon meta (snippet optional; never full body). */
 export const toIdbProjectTask = (
@@ -407,7 +406,6 @@ export const projectTasksAdapter = {
   idbFields: PROJECT_TASK_IDB_FIELDS,
   toNeonMeta: toNeonMetaProjectTask,
   mergeLocal: mergeLocalProjectTask,
-  preferLocalDirtyOverNeonNewer,
   preferLocalOverNeonNewer,
   toIdb: toIdbProjectTask,
 } as const;

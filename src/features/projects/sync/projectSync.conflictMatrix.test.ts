@@ -22,7 +22,7 @@ import {
   assertProjectTaskNeonMetaAllowlist,
   compareVersionProjectTask,
   mergeLocalProjectTask,
-  preferLocalDirtyOverNeonNewer,
+  preferLocalOverNeonNewer,
   PROJECT_TASK_NEON_FIELDS,
   toIdbProjectTask,
   toNeonMetaProjectTask,
@@ -336,7 +336,7 @@ describe("§11.2 conflict T1–T15", () => {
       updatedAt: "2026-10-07T09:00:00.000Z",
     });
     // Pure merge harden: unsynced local always wins over Neon-newer
-    const prefer = preferLocalDirtyOverNeonNewer(local, neon);
+    const prefer = preferLocalOverNeonNewer(local, neon);
     expect(prefer.neonNewerSkipped).toBe(true);
     expect(prefer.metaRefreshedFromNeon).toBe(true);
     expect(prefer.winner.body).toBe("SECRET BODY");
@@ -379,7 +379,7 @@ describe("§11.2 conflict T1–T15", () => {
       branch: "feat/from-neon",
       worktree: "wt-neon",
     });
-    const prefer = preferLocalDirtyOverNeonNewer(local, neon);
+    const prefer = preferLocalOverNeonNewer(local, neon);
     expect(prefer.neonNewerSkipped).toBe(true);
     expect(prefer.metaRefreshedFromNeon).toBe(true);
     expect(prefer.winner.body).toBe("CLEAN BODY");

@@ -7,7 +7,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  preferLocalDirtyOverNeonNewer,
+  preferLocalOverNeonNewer,
   type ProjectTaskLocalRecord,
   type ProjectTaskNeonMeta,
 } from "@/features/projects/sync/adapters/projectTasksAdapter";
@@ -131,7 +131,7 @@ describe("SPEC §11 Human IDB + T4 Soft FIX Soft Soft", () => {
       prompt: "dirty local edit",
     });
     const neo = neon({ version: 99, title: "Neon ahead", status: "running" });
-    const prefer = preferLocalDirtyOverNeonNewer(loc, neo);
+    const prefer = preferLocalOverNeonNewer(loc, neo);
     expect(prefer.neonNewerSkipped).toBe(true);
     expect(prefer.metaRefreshedFromNeon).toBe(true);
     expect(prefer.winner.body).toBe("SECRET BODY");
@@ -154,7 +154,7 @@ describe("SPEC §11 Human IDB + T4 Soft FIX Soft Soft", () => {
       status: "done",
       endedAt: "2026-10-07T10:00:00.000Z",
     });
-    const prefer = preferLocalDirtyOverNeonNewer(loc, neo);
+    const prefer = preferLocalOverNeonNewer(loc, neo);
     expect(prefer.neonNewerSkipped).toBe(true);
     expect(prefer.metaRefreshedFromNeon).toBe(true);
     expect(prefer.winner.body).toBe("clean body");
