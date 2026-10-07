@@ -32,6 +32,9 @@ const seedProject = (projectId: string): string => {
   ensureDir0700(path.join(root, "skills", "_drafts", "d1"));
   atomicWriteFile0600(path.join(root, "skills", "_drafts", "d1", "SKILL.md"), "x\n");
   atomicWriteFile0600(path.join(root, "skillgen", "episodes.json"), "{}\n");
+  ensureDir0700(path.join(root, "outcomes"));
+  atomicWriteFile0600(path.join(root, "outcomes", "outcomes.db"), "db\n");
+  atomicWriteFile0600(path.join(root, "tasks", "run-1.json"), '{"taskId":"run-1"}\n');
   ensureDir0700(path.join(root, "skills", "keep-me"));
   atomicWriteFile0600(path.join(root, "skills", "keep-me", "meta.json"), "{}\n");
   atomicWriteFile0600(path.join(root, "skills", "_tombstones", "gone.json"), "{}\n");
@@ -42,6 +45,8 @@ const expectHistoryDataKept = (root: string) => {
   expect(fs.existsSync(path.join(root, "history", "m1.json"))).toBe(true);
   expect(fs.existsSync(path.join(root, "skills", "_drafts", "d1", "SKILL.md"))).toBe(true);
   expect(fs.existsSync(path.join(root, "skillgen", "episodes.json"))).toBe(true);
+  expect(fs.existsSync(path.join(root, "outcomes", "outcomes.db"))).toBe(true);
+  expect(fs.existsSync(path.join(root, "tasks", "run-1.json"))).toBe(true);
 };
 
 describe("reconcileProjectHistoryOffPurge", () => {
@@ -71,6 +76,8 @@ describe("reconcileProjectHistoryOffPurge", () => {
     expect(fs.existsSync(path.join(root, "history", "m1.json"))).toBe(true);
     expect(fs.existsSync(path.join(root, "skills", "_drafts"))).toBe(false);
     expect(fs.existsSync(path.join(root, "skillgen"))).toBe(false);
+    expect(fs.existsSync(path.join(root, "outcomes"))).toBe(false);
+    expect(fs.existsSync(path.join(root, "tasks", "run-1.json"))).toBe(true);
     expect(fs.existsSync(path.join(root, "skills", "keep-me", "meta.json"))).toBe(true);
     expect(fs.existsSync(path.join(root, "skills", "_tombstones", "gone.json"))).toBe(true);
   });

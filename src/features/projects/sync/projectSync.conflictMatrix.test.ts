@@ -1,11 +1,22 @@
 /**
  * SPEC §11 matrix — History-owned pager + reconcile + Tasks adapter coverage.
  * H1–H6 happy · T1–T15 conflict · I1–I6 IDB Soft degrade (pager boundary fakes).
+ * T12 = real History OFF purge cascade integration (disk learning paths).
  * Human UI owns real IDB client; Dispatch owns Neon package-cap prune HTTP.
- * Soft STOP Soft web History UI — this file is pure unit only.
+ * Soft STOP Soft web History UI — no History UI pages/components.
  */
 
-import { describe, expect, it } from "vitest";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+const layoutState = vi.hoisted(() => ({ root: "" }));
+
+vi.mock("@agent-witch/install-layout", () => ({
+  resolveAgentWitchLocalLayout: () => ({ projectDataDir: layoutState.root }),
+}));
 
 import {
   assertProjectTaskNeonMetaAllowlist,
@@ -41,6 +52,12 @@ import {
 import {
   reconcileProjectSyncOnConnect,
 } from "../../../../apps/live/features/project-history/internal/core/reconcileProjectSyncOnConnect";
+import { atomicWriteFile0600, ensureDir0700 } from "../../../../apps/live/features/project-history/internal/core/atomicWriteFile0600";
+import { decideProjectHistoryOffPurge } from "../../../../apps/live/features/project-history/internal/core/decideProjectHistoryOffPurge";
+import { hasProjectHistoryPurgeTargets } from "../../../../apps/live/features/project-history/internal/core/hasProjectHistoryPurgeTargets";
+import { purgeProjectHistoryOnOff } from "../../../../apps/live/features/project-history/internal/core/purgeProjectHistoryOnOff";
+import { reconcileProjectHistoryOffPurge } from "../../../../apps/live/features/project-history/internal/core/reconcileProjectHistoryOffPurge";
+import { ensureProjectDataTree } from "../../../../apps/live/features/project-history/internal/core/resolveProjectDataDir";
 
 type PageEntry = {
   readonly id: string;
@@ -448,20 +465,113 @@ describe("§11.2 conflict T1–T15", () => {
     expect(page.page.source).toBe("exhausted");
   });
 
-  it("T12: History OFF purge cascade — tasks/ kept; no body into Neon", () => {
-    // Contract: purgeProjectHistoryOnOff keeps tasks/ (documented + simulated).
-    const meta = toNeonMetaProjectTask(
-      localTask({ prompt: "keep local", body: "keep local" }),
-    );
-    for (const bad of FORBIDDEN) {
-      expect(meta).not.toHaveProperty(bad);
-    }
-    // mergeLocal does not drop local body on History-off style merge
-    const merged = mergeLocalProjectTask(
-      localTask({ body: "KEEP" }),
-      localTask({ version: 1, body: "KEEP", updatedAt: "2026-10-07T01:00:00.000Z" }),
-    );
-    expect(merged.body).toBe("KEEP");
+  describe("T12: History OFF purge cascade", () => {
+    let tempRoot = "";
+
+    beforeEach(() => {
+      tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ph-t12-"));
+      layoutState.root = tempRoot;
+      vi.spyOn(console, "info").mockImplementation(() => {});
+      vi.spyOn(console, "error").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+      fs.rmSync(tempRoot, { recursive: true, force: true });
+    });
+
+    it("purges learning paths only; keeps history/ + tasks/; no body into Neon", async () => {
+      const root = ensureProjectDataTree("proj-t12");
+      atomicWriteFile0600(path.join(root, "history", "m1.json"), '{"messageId":"m1"}\n');
+      atomicWriteFile0600(
+        path.join(root, "tasks", "run-1.json"),
+        '{"taskId":"run-1","body":"KEEP LOCAL BODY"}\n',
+      );
+      ensureDir0700(path.join(root, "skills", "_drafts", "d1"));
+      atomicWriteFile0600(
+        path.join(root, "skills", "_drafts", "d1", "SKILL.md"),
+        "draft\n",
+      );
+      atomicWriteFile0600(path.join(root, "skillgen", "episodes.json"), "{}\n");
+      ensureDir0700(path.join(root, "outcomes"));
+      atomicWriteFile0600(path.join(root, "outcomes", "outcomes.db"), "db\n");
+      ensureDir0700(path.join(root, "skills", "keep-me"));
+      atomicWriteFile0600(path.join(root, "skills", "keep-me", "meta.json"), "{}\n");
+      atomicWriteFile0600(
+        path.join(root, "skills", "_tombstones", "gone.json"),
+        "{}\n",
+      );
+
+      expect(hasProjectHistoryPurgeTargets("proj-t12")).toBe(true);
+      expect(
+        decideProjectHistoryOffPurge({
+          cloudState: { kind: "known", state: "off" },
+          hasPurgeTargets: true,
+        }),
+      ).toBe("purge");
+
+      const outcome = await reconcileProjectHistoryOffPurge({
+        projectId: "proj-t12",
+        cloudApi: { appOrigin: "https://example.test", pairingToken: "tok" },
+        deps: {
+          fetchCloudState: async () => ({ kind: "known", state: "off" }),
+        },
+      });
+      expect(outcome).toBe("purged");
+
+      // Learning purged
+      expect(fs.existsSync(path.join(root, "skills", "_drafts"))).toBe(false);
+      expect(fs.existsSync(path.join(root, "skillgen"))).toBe(false);
+      expect(fs.existsSync(path.join(root, "outcomes"))).toBe(false);
+      // Chats + C1 tasks kept
+      expect(fs.existsSync(path.join(root, "history", "m1.json"))).toBe(true);
+      expect(fs.existsSync(path.join(root, "tasks", "run-1.json"))).toBe(true);
+      expect(
+        fs.readFileSync(path.join(root, "tasks", "run-1.json"), "utf8"),
+      ).toContain("KEEP LOCAL BODY");
+      // Mirror + tombstones kept
+      expect(fs.existsSync(path.join(root, "skills", "keep-me", "meta.json"))).toBe(
+        true,
+      );
+      expect(
+        fs.existsSync(path.join(root, "skills", "_tombstones", "gone.json")),
+      ).toBe(true);
+      expect(hasProjectHistoryPurgeTargets("proj-t12")).toBe(false);
+
+      // Idempotent second OFF
+      expect(
+        await reconcileProjectHistoryOffPurge({
+          projectId: "proj-t12",
+          cloudApi: { appOrigin: "https://example.test", pairingToken: "tok" },
+          deps: {
+            fetchCloudState: async () => ({ kind: "known", state: "off" }),
+          },
+        }),
+      ).toBe("nothing_to_purge");
+
+      // Direct purge result shape + Neon no-body contract
+      const again = purgeProjectHistoryOnOff({ projectId: "proj-t12" });
+      expect(again).toEqual({
+        removedDrafts: false,
+        removedSkillgen: false,
+        removedOutcomes: false,
+      });
+      const meta = toNeonMetaProjectTask(
+        localTask({ prompt: "keep local", body: "keep local" }),
+      );
+      for (const bad of FORBIDDEN) {
+        expect(meta).not.toHaveProperty(bad);
+      }
+      const merged = mergeLocalProjectTask(
+        localTask({ body: "KEEP" }),
+        localTask({
+          version: 1,
+          body: "KEEP",
+          updatedAt: "2026-10-07T01:00:00.000Z",
+        }),
+      );
+      expect(merged.body).toBe("KEEP");
+    });
   });
 
   it("T13: package-cap Neon meta — allowlist only; never bodies (Dispatch owns prune)", () => {

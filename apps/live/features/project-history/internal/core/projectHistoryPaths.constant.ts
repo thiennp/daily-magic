@@ -23,3 +23,9 @@ export const PROJECT_HISTORY_ACKS_DIR_NAME = "acks";
 
 /** Part C / C1: durable AI session (task) records for History timeline. */
 export const PROJECT_HISTORY_TASKS_DIR_NAME = "tasks";
+
+/**
+ * Derived task-outcome index (rebuildable from tasks/). LOCKED Q1 learning path —
+ * purged on History OFF. C1 `tasks/` primary records are kept (separate constant).
+ */
+export const PROJECT_HISTORY_OUTCOMES_DIR_NAME = "outcomes";

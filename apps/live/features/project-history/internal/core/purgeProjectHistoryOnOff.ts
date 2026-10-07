@@ -1,16 +1,12 @@
 import fs from "node:fs";
-import path from "node:path";
 
-import {
-  PROJECT_HISTORY_SKILLGEN_DIR_NAME,
-  PROJECT_HISTORY_SKILLS_DIR_NAME,
-  PROJECT_HISTORY_SKILLS_DRAFTS_DIR_NAME,
-} from "./projectHistoryPaths.constant";
+import { resolveProjectHistoryOffPurgeTargets } from "./projectHistoryOffPurgeTargets";
 import { resolveProjectDataDir } from "./resolveProjectDataDir";
 
 export type PurgeProjectHistoryOnOffResult = {
   readonly removedDrafts: boolean;
   readonly removedSkillgen: boolean;
+  readonly removedOutcomes: boolean;
 };
 
 const rmIfExists = (target: string): boolean => {
@@ -22,28 +18,27 @@ const rmIfExists = (target: string): boolean => {
 };
 
 /**
- * History OFF purge of history-DERIVED data only: delete `skills/_drafts/` and
- * `skillgen/` (episodes, budget, metrics, learned pitfalls, flags).
- * Chat-retention rule: the local message archive `history/` (message records
- * and `state.json`) is never deleted. Mirror (`skills/<skillId>/`) and
- * tombstones are kept.
- * C1 `tasks/` AI session records are PRIMARY source records (like messages),
- * not derived data — they are kept on OFF. Flag for Lead if Product wants
- * otherwise.
+ * History OFF purge cascade of history-DERIVED learning data only.
+ *
+ * Removes: `skills/_drafts/`, `skillgen/` (episodes, budget, metrics, learned
+ * pitfalls, flags), and `outcomes/` (derived task-outcome index per LOCKED Q1).
+ *
+ * Never deletes: chat archive `history/` (messages + state.json + acks);
+ * C1 primary `tasks/` AI session records (C1 keep-tasks lock); published skill
+ * mirror `skills/<skillId>/`; `_tombstones/`.
+ *
+ * Soft note (Human): clear learning IDB caches on OFF when those stores exist;
+ * chat/task body retention is separate. Neon package-cap prune = Dispatch.
  */
 export const purgeProjectHistoryOnOff = (input: {
   readonly projectId: string;
 }): PurgeProjectHistoryOnOffResult => {
-  const projectDataDir = resolveProjectDataDir(input.projectId);
-  const removedDrafts = rmIfExists(
-    path.join(
-      projectDataDir,
-      PROJECT_HISTORY_SKILLS_DIR_NAME,
-      PROJECT_HISTORY_SKILLS_DRAFTS_DIR_NAME,
-    ),
+  const targets = resolveProjectHistoryOffPurgeTargets(
+    resolveProjectDataDir(input.projectId),
   );
-  const removedSkillgen = rmIfExists(
-    path.join(projectDataDir, PROJECT_HISTORY_SKILLGEN_DIR_NAME),
-  );
-  return { removedDrafts, removedSkillgen };
+  return {
+    removedDrafts: rmIfExists(targets.drafts),
+    removedSkillgen: rmIfExists(targets.skillgen),
+    removedOutcomes: rmIfExists(targets.outcomes),
+  };
 };

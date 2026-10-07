@@ -12,6 +12,7 @@ vi.mock("@agent-witch/install-layout", () => ({
 
 import { ensureProjectDataTree } from "./resolveProjectDataDir";
 import { purgeProjectHistoryOnOff } from "./purgeProjectHistoryOnOff";
+import { hasProjectHistoryPurgeTargets } from "./hasProjectHistoryPurgeTargets";
 import { atomicWriteFile0600, ensureDir0700 } from "./atomicWriteFile0600";
 
 describe("purgeProjectHistoryOnOff", () => {
@@ -26,7 +27,7 @@ describe("purgeProjectHistoryOnOff", () => {
     fs.rmSync(tempRoot, { recursive: true, force: true });
   });
 
-  it("deletes _drafts and skillgen but keeps history messages, mirror and tombstones", () => {
+  it("deletes _drafts, skillgen, and outcomes but keeps history, tasks, mirror and tombstones", () => {
     const root = ensureProjectDataTree("p1");
     atomicWriteFile0600(path.join(root, "history", "m1.json"), "{}\n");
     atomicWriteFile0600(path.join(root, "tasks", "run-1.json"), '{"taskId":"run-1"}\n');
@@ -37,6 +38,8 @@ describe("purgeProjectHistoryOnOff", () => {
     );
     ensureDir0700(path.join(root, "skillgen"));
     atomicWriteFile0600(path.join(root, "skillgen", "budget.json"), "{}\n");
+    ensureDir0700(path.join(root, "outcomes"));
+    atomicWriteFile0600(path.join(root, "outcomes", "outcomes.db"), "db\n");
     ensureDir0700(path.join(root, "skills", "keep-me"));
     atomicWriteFile0600(
       path.join(root, "skills", "keep-me", "meta.json"),
@@ -48,10 +51,12 @@ describe("purgeProjectHistoryOnOff", () => {
       "{}\n",
     );
 
+    expect(hasProjectHistoryPurgeTargets("p1")).toBe(true);
     const result = purgeProjectHistoryOnOff({ projectId: "p1" });
     expect(result).toEqual({
       removedDrafts: true,
       removedSkillgen: true,
+      removedOutcomes: true,
     });
     // Chat-retention rule: the message archive is never purged.
     expect(fs.existsSync(path.join(root, "history", "m1.json"))).toBe(true);
@@ -59,6 +64,7 @@ describe("purgeProjectHistoryOnOff", () => {
     expect(fs.existsSync(path.join(root, "tasks", "run-1.json"))).toBe(true);
     expect(fs.existsSync(path.join(root, "skills", "_drafts"))).toBe(false);
     expect(fs.existsSync(path.join(root, "skillgen"))).toBe(false);
+    expect(fs.existsSync(path.join(root, "outcomes"))).toBe(false);
     expect(
       fs.existsSync(path.join(root, "skillgen", "learned-pitfalls.json")),
     ).toBe(false);
@@ -69,6 +75,7 @@ describe("purgeProjectHistoryOnOff", () => {
     expect(
       fs.existsSync(path.join(root, "skills", "_tombstones", "gone.json")),
     ).toBe(true);
+    expect(hasProjectHistoryPurgeTargets("p1")).toBe(false);
   });
 
   it("keeps every history/ message record and state.json on an OFF purge", () => {
@@ -108,14 +115,38 @@ describe("purgeProjectHistoryOnOff", () => {
     expect(fs.existsSync(path.join(root, "skillgen"))).toBe(false);
   });
 
-  it("is a no-op when only the message archive exists", () => {
+  it("purges outcomes alone when drafts and skillgen are already gone", () => {
+    const root = ensureProjectDataTree("p1");
+    atomicWriteFile0600(path.join(root, "tasks", "run-1.json"), "{}\n");
+    ensureDir0700(path.join(root, "outcomes"));
+    atomicWriteFile0600(path.join(root, "outcomes", "outcomes.db"), "x\n");
+    // Remove empty derived dirs created by ensure so only outcomes remains.
+    fs.rmSync(path.join(root, "skills", "_drafts"), { recursive: true, force: true });
+    fs.rmSync(path.join(root, "skillgen"), { recursive: true, force: true });
+
+    expect(hasProjectHistoryPurgeTargets("p1")).toBe(true);
+    expect(purgeProjectHistoryOnOff({ projectId: "p1" })).toEqual({
+      removedDrafts: false,
+      removedSkillgen: false,
+      removedOutcomes: true,
+    });
+    expect(fs.existsSync(path.join(root, "outcomes"))).toBe(false);
+    expect(fs.existsSync(path.join(root, "tasks", "run-1.json"))).toBe(true);
+  });
+
+  it("is a no-op when only the message archive and tasks exist", () => {
     const root = path.join(tempRoot, "p2");
     ensureDir0700(path.join(root, "history"));
+    ensureDir0700(path.join(root, "tasks"));
     atomicWriteFile0600(path.join(root, "history", "m1.json"), "{}\n");
+    atomicWriteFile0600(path.join(root, "tasks", "run-1.json"), "{}\n");
+    expect(hasProjectHistoryPurgeTargets("p2")).toBe(false);
     expect(purgeProjectHistoryOnOff({ projectId: "p2" })).toEqual({
       removedDrafts: false,
       removedSkillgen: false,
+      removedOutcomes: false,
     });
     expect(fs.existsSync(path.join(root, "history", "m1.json"))).toBe(true);
+    expect(fs.existsSync(path.join(root, "tasks", "run-1.json"))).toBe(true);
   });
 });
