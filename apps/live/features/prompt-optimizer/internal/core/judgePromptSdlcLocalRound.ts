@@ -296,6 +296,13 @@ const reviewTokenSpend = async (input: {
     if (reply.stopped === true || input.signal?.aborted === true) {
       return { kind: "stopped", cycle: stoppedCycle(input.cycle) };
     }
+    // Not signed in is terminal: stop here instead of failing again next step.
+    if (classifyPromptSdlcWriterErrorKind(reply) === "action_required") {
+      return {
+        kind: "stopped",
+        cycle: failCycle(input.cycle, reply.errorMessage, "action_required"),
+      };
+    }
     return { kind: "suggestion", text: "", tokens: null };
   }
   return {

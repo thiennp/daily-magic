@@ -14,6 +14,10 @@ import {
   terminatePromptSdlcWriterChild,
 } from "./bindPromptSdlcWriterAbort";
 import {
+  buildPromptSdlcWriterSignInMessage,
+  detectPromptSdlcWriterAuthPrompt,
+} from "./detectPromptSdlcWriterAuthPrompt";
+import {
   buildPromptSdlcWriterArgs,
   readPromptSdlcWriterOutput,
   type PromptSdlcWriterResult,
@@ -203,7 +207,7 @@ export const runPromptSdlcWriterReply = (input: {
     const stderrChunks: Buffer[] = [];
     const state = {
       settled: false,
-      stopReason: null as "timeout" | "abort" | null,
+      stopReason: null as "timeout" | "abort" | "auth" | null,
       timer: undefined as NodeJS.Timeout | undefined,
     };
     const child = spawn(invocation.command, [...args], {
@@ -222,6 +226,9 @@ export const runPromptSdlcWriterReply = (input: {
       state.stopReason = "abort";
     });
     state.timer = setTimeout(() => {
+      if (state.stopReason === "auth") {
+        return;
+      }
       state.stopReason = "timeout";
       void terminatePromptSdlcWriterChild(child).then((killSignal) => {
         finish({
@@ -232,11 +239,36 @@ export const runPromptSdlcWriterReply = (input: {
         });
       });
     }, timeoutMs);
+    const signInFailure: PromptSdlcWriterResult = {
+      ok: false,
+      errorMessage: buildPromptSdlcWriterSignInMessage(writerAgent),
+      errorKind: "action_required",
+    };
+    const outputSoFar = () => ({
+      stdout: Buffer.concat(stdoutChunks).toString("utf8"),
+      stderr: Buffer.concat(stderrChunks).toString("utf8"),
+    });
+    // Not signed in: the CLI prints a login prompt and waits for a browser code.
+    // Kill it now instead of waiting for the timeout.
+    const failFastOnSignInPrompt = (): void => {
+      if (state.settled || state.stopReason !== null) {
+        return;
+      }
+      if (!detectPromptSdlcWriterAuthPrompt(outputSoFar())) {
+        return;
+      }
+      state.stopReason = "auth";
+      void terminatePromptSdlcWriterChild(child).then((killSignal) => {
+        finish({ ...signInFailure, killSignal });
+      });
+    };
     child.stdout.on("data", (chunk: Buffer | string) => {
       stdoutChunks.push(Buffer.from(chunk));
+      failFastOnSignInPrompt();
     });
     child.stderr.on("data", (chunk: Buffer | string) => {
       stderrChunks.push(Buffer.from(chunk));
+      failFastOnSignInPrompt();
     });
     child.on("error", () =>
       finish({
@@ -251,10 +283,17 @@ export const runPromptSdlcWriterReply = (input: {
       const replyFileText = fs.existsSync(replyPath)
         ? fs.readFileSync(replyPath, "utf8")
         : null;
+      const output = outputSoFar();
+      if (
+        state.stopReason === null &&
+        detectPromptSdlcWriterAuthPrompt(output)
+      ) {
+        finish(signInFailure);
+        return;
+      }
       const result = readPromptSdlcWriterOutput({
         writerAgent,
-        stdout: Buffer.concat(stdoutChunks).toString("utf8"),
-        stderr: Buffer.concat(stderrChunks).toString("utf8"),
+        ...output,
         replyFileText,
       });
       if (result.ok && state.stopReason !== "abort") {
