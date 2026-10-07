@@ -11,6 +11,7 @@ import AwcProjectMessengerInboxClearModals from "@/features/projects/messenger/A
 import AwcProjectMessengerHeading from "@/features/projects/messenger/AwcProjectMessengerHeading";
 import AwcProjectMessengerPanels from "@/features/projects/messenger/AwcProjectMessengerPanels";
 import { useAwcProjectMessengerInboxClear } from "@/features/projects/messenger/hooks/useAwcProjectMessengerInboxClear";
+import { useAwcProjectMessengerLivePoll } from "@/features/projects/messenger/hooks/useAwcProjectMessengerLivePoll";
 import { useAwcProjectMessengerThread } from "@/features/projects/messenger/hooks/useAwcProjectMessengerThread";
 import { useAwcProjectMessengerThreads } from "@/features/projects/messenger/hooks/useAwcProjectMessengerThreads";
 import { defaultMessengerTaskAssignee } from "@/features/projects/messenger/utils/defaultMessengerTaskAssignee";
@@ -34,6 +35,7 @@ export default function AwcProjectMessengerSection({
     <AwcProjectMessengerInboxClearBar clear={inboxClear} />
   ) : null;
   const reloadThreads = list.reload;
+  const reloadThreadsSilent = list.reloadSilent;
   const [selectedKey, setSelectedKey] = useState<string | null>(
     initialThreadKey ?? WHOLE_KEY,
   );
@@ -49,6 +51,16 @@ export default function AwcProjectMessengerSection({
     threadKey: selectedKey,
     hasOwnerComputer,
     onOpened,
+  });
+  const reloadThreadSilent = open.reloadSilent;
+  const onPollTick = useCallback(() => {
+    void reloadThreadsSilent();
+    void reloadThreadSilent();
+    onUnreadMaybeChanged?.();
+  }, [onUnreadMaybeChanged, reloadThreadSilent, reloadThreadsSilent]);
+  useAwcProjectMessengerLivePoll({
+    enabled: !list.forbidden,
+    onTick: onPollTick,
   });
   const selectedMeta = useMemo(
     () => selectMessengerThreadMeta({ selectedKey, threads: list.threads }),

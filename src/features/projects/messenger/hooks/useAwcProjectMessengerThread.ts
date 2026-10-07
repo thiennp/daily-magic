@@ -60,12 +60,19 @@ export const useAwcProjectMessengerThread = (input: {
     [projectId, hasOwnerComputer],
   );
 
-  const reload = useCallback(async () => {
-    if (threadKey === null) return;
-    setIsLoading(true);
-    applyResult(await fetchPersisted(threadKey));
-    setIsLoading(false);
-  }, [threadKey, applyResult, fetchPersisted]);
+  const reload = useCallback(
+    async (silent: boolean = false) => {
+      if (threadKey === null) return;
+      if (!silent) {
+        setIsLoading(true);
+      }
+      applyResult(await fetchPersisted(threadKey));
+      if (!silent) {
+        setIsLoading(false);
+      }
+    },
+    [threadKey, applyResult, fetchPersisted],
+  );
 
   useEffect(() => {
     if (threadKey === null) return;
@@ -92,10 +99,12 @@ export const useAwcProjectMessengerThread = (input: {
   const onError = useCallback((errorMessage: string) => {
     setMessage(errorMessage);
   }, []);
+  const reloadLoud = useCallback(() => reload(false), [reload]);
+  const reloadSilent = useCallback(() => reload(true), [reload]);
   const { sending, send, sendTask } = useAwcProjectMessengerThreadSend({
     projectId,
     threadKey,
-    reload,
+    reload: reloadLoud,
     onError,
   });
 
@@ -105,7 +114,8 @@ export const useAwcProjectMessengerThread = (input: {
     unavailable,
     message,
     sending,
-    reload,
+    reload: reloadLoud,
+    reloadSilent,
     send,
     sendTask,
   };

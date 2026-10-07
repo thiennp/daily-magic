@@ -30,12 +30,19 @@ export const useAwcProjectMessengerThreads = (projectId: string) => {
     [],
   );
 
-  const reload = useCallback(async () => {
-    setIsLoading(true);
-    const result = await fetchMessengerThreads({ projectId });
-    applyResult(result);
-    setIsLoading(false);
-  }, [projectId, applyResult]);
+  const reload = useCallback(
+    async (silent: boolean = false) => {
+      if (!silent) {
+        setIsLoading(true);
+      }
+      const result = await fetchMessengerThreads({ projectId });
+      applyResult(result);
+      if (!silent) {
+        setIsLoading(false);
+      }
+    },
+    [projectId, applyResult],
+  );
 
   useEffect(() => {
     const generation = generationRef.current + 1;
@@ -52,12 +59,16 @@ export const useAwcProjectMessengerThreads = (projectId: string) => {
     void load();
   }, [projectId, applyResult]);
 
+  const reloadLoud = useCallback(() => reload(false), [reload]);
+  const reloadSilent = useCallback(() => reload(true), [reload]);
+
   return {
     threads,
     isLoading,
     unavailable,
     forbidden,
     message,
-    reload,
+    reload: reloadLoud,
+    reloadSilent,
   };
 };
