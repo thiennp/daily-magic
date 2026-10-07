@@ -21,15 +21,15 @@ describe("AwcMessengerNoComputerHint", () => {
     expect(html).toContain("Add a computer to keep a lasting copy.");
   });
 
-  it("messenger shows it only when the project has no owner computer", () => {
+  it("messenger (Chat dock full view) shows it only when the project has no owner computer", () => {
     const section = read(
       "src/features/projects/messenger/AwcProjectMessengerSection.tsx",
     );
     expect(section).toContain(
       "{!hasOwnerComputer ? <AwcMessengerNoComputerHint /> : null}",
     );
-    const body = read("src/features/projects/AwcProjectDetailTabPanelBody.tsx");
-    expect(body).toContain(
+    const dock = read("src/features/projects/chatDock/AwcProjectChatDock.tsx");
+    expect(dock).toContain(
       "hasOwnerComputer={projectHasOwnerComputer(project)}",
     );
   });
