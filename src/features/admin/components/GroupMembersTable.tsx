@@ -21,7 +21,7 @@ export default function GroupMembersTable({
     <div className="mt-4 overflow-x-auto">
       <table className="min-w-full text-left text-sm">
         <thead>
-          <tr className="border-b border-gray-200 dark:border-gray-800">
+          <tr className="border-b border-awc-border">
             <th className="px-3 py-2">Person</th>
             <th className="px-3 py-2">Role</th>
             <th className="px-3 py-2">Last active</th>
@@ -32,7 +32,7 @@ export default function GroupMembersTable({
           {members.map((member) => (
             <tr
               key={member.membership.id}
-              className="border-b border-gray-100 dark:border-gray-800/80"
+              className="border-b border-awc-border"
             >
               <td className="px-3 py-2">
                 <div className="flex flex-col gap-1">
@@ -52,7 +52,7 @@ export default function GroupMembersTable({
                     void onRoleChange(member.membership.id, event.target.value);
                   }}
                   aria-label="Role"
-                  className="rounded-lg border border-gray-200 px-2 py-1 text-sm dark:border-gray-700 dark:bg-gray-950"
+                  className="rounded-lg border border-awc-border px-2 py-1 text-sm"
                 >
                   {GROUP_ROLE_OPTIONS.map((role) => (
                     <option key={role} value={role}>
@@ -61,7 +61,7 @@ export default function GroupMembersTable({
                   ))}
                 </select>
               </td>
-              <td className="px-3 py-2 text-gray-500 dark:text-gray-400">
+              <td className="px-3 py-2 text-awc-fg-muted">
                 {member.presence?.isOnline ? "Online now" : "—"}
               </td>
               <td className="px-3 py-2">

@@ -26,18 +26,18 @@ export default function GroupDispatchPolicyFields({
 }: GroupDispatchPolicyFieldsProps) {
   return (
     <>
-      <h3 className="text-sm font-semibold text-gray-800 dark:text-white/90">
+      <h3 className="text-sm font-semibold text-awc-fg">
         {C.dispatchSectionTitle}
       </h3>
-      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-1 text-xs text-awc-fg-muted">
         {C.dispatchLegend}
       </p>
-      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-1 text-xs text-awc-fg-muted">
         {C.approvalTip}
       </p>
       <fieldset className="mt-3 space-y-2">
         <legend className="sr-only">{C.dispatchSectionTitle}</legend>
-        <label className="flex cursor-pointer items-start gap-2 rounded-lg border border-gray-200 p-3 dark:border-gray-700">
+        <label className="flex cursor-pointer items-start gap-2 rounded-lg border border-awc-border p-3">
           <input
             type="radio"
             name={`dispatch-policy-${groupId}`}
@@ -48,15 +48,15 @@ export default function GroupDispatchPolicyFields({
             className="mt-1"
           />
           <span>
-            <span className="block text-sm font-medium text-gray-800 dark:text-white/90">
+            <span className="block text-sm font-medium text-awc-fg">
               {C.approvalLabel}
             </span>
-            <span className="block text-xs text-gray-500 dark:text-gray-400">
+            <span className="block text-xs text-awc-fg-muted">
               {C.approvalHelper}
             </span>
           </span>
         </label>
-        <label className="flex cursor-pointer items-start gap-2 rounded-lg border border-gray-200 p-3 dark:border-gray-700">
+        <label className="flex cursor-pointer items-start gap-2 rounded-lg border border-awc-border p-3">
           <input
             type="radio"
             name={`dispatch-policy-${groupId}`}
@@ -67,10 +67,10 @@ export default function GroupDispatchPolicyFields({
             className="mt-1"
           />
           <span>
-            <span className="block text-sm font-medium text-gray-800 dark:text-white/90">
+            <span className="block text-sm font-medium text-awc-fg">
               {C.openLabel}
             </span>
-            <span className="block text-xs text-gray-500 dark:text-gray-400">
+            <span className="block text-xs text-awc-fg-muted">
               {C.openHelper}
             </span>
           </span>

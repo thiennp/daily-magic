@@ -6,22 +6,22 @@ export default function PricingBringYourOwn() {
     <section className="mt-16" aria-labelledby="pricing-byo-heading">
       <h2
         id="pricing-byo-heading"
-        className="text-2xl font-bold tracking-[-0.02em] text-gray-900"
+        className="text-2xl font-bold tracking-[-0.02em] text-awc-fg"
       >
         {copy.title}
       </h2>
-      <p className="mt-2 max-w-3xl text-gray-600">{copy.sub}</p>
+      <p className="mt-2 max-w-3xl text-awc-fg-muted">{copy.sub}</p>
       <ul className="mt-6 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-2">
         {copy.cards.map((card) => (
           <li
             key={card.title}
-            className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+            className="rounded-2xl border border-awc-border bg-awc-surface p-6 shadow-sm"
           >
-            <h3 className="text-lg font-semibold text-gray-900">{card.title}</h3>
+            <h3 className="text-lg font-semibold text-awc-fg">{card.title}</h3>
             <p className="mt-1 text-sm font-medium text-emerald-700">
               {card.price}
             </p>
-            <p className="mt-3 text-sm leading-relaxed text-gray-600">
+            <p className="mt-3 text-sm leading-relaxed text-awc-fg-muted">
               {card.body}
             </p>
           </li>

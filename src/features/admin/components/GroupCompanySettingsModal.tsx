@@ -34,27 +34,27 @@ export default function GroupCompanySettingsModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-lg p-6">
-      <h2 className="pr-10 text-lg font-semibold text-gray-800 dark:text-white/90">
+      <h2 className="pr-10 text-lg font-semibold text-awc-fg">
         {C.companySettings}
       </h2>
-      <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-1 text-sm text-awc-fg-muted">
         {selectedGroup?.name ?? COMPANY_ENTITY_LABEL}
       </p>
 
       {canConfigureDispatchPolicy ? (
         <GroupDispatchPolicyControl groupId={groupId} embedded />
       ) : (
-        <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-4 text-sm text-awc-fg-muted">
           {C.onlyAdminsChange}
         </p>
       )}
 
       {canDeleteTeam ? (
-        <section className="mt-6 border-t border-gray-200 pt-6 dark:border-gray-700">
+        <section className="mt-6 border-t border-awc-border pt-6">
           <h3 className="text-sm font-semibold text-error-700 dark:text-error-300">
             {C.dangerZone}
           </h3>
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          <p className="mt-1 text-xs text-awc-fg-muted">
             {C.deleteBody}
           </p>
           <GroupDeleteControls

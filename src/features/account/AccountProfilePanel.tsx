@@ -92,7 +92,7 @@ export default function AccountProfilePanel({
         </div>
         <div className="space-y-1">
           <p className={ACCOUNT_LABEL_CLASS}>{copy.email}</p>
-          <p className="text-sm text-awc-fg dark:text-gray-200">
+          <p className="text-sm text-awc-fg">
             {email} <span className={ACCOUNT_CHIP_CLASS}>{copy.verified}</span>
           </p>
           <button
@@ -111,7 +111,7 @@ export default function AccountProfilePanel({
         </div>
         <div className="space-y-1">
           <p className={ACCOUNT_LABEL_CLASS}>{copy.timeZone}</p>
-          <p className="text-sm text-awc-fg dark:text-gray-200">{tz}</p>
+          <p className="text-sm text-awc-fg">{tz}</p>
           <p className={ACCOUNT_HINT_CLASS}>{copy.timeZoneHint}</p>
         </div>
         <AccountAvatarColorField

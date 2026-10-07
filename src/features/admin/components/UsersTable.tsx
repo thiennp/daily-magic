@@ -35,7 +35,7 @@ export default function UsersTable({
     <div className="mt-4 overflow-x-auto">
       <table className="min-w-full text-left text-sm">
         <thead>
-          <tr className="border-b border-gray-200 dark:border-gray-800">
+          <tr className="border-b border-awc-border">
             <th className="px-3 py-2">Email</th>
             <th className="px-3 py-2">Kind</th>
             <th className="px-3 py-2">Global role</th>
@@ -50,7 +50,7 @@ export default function UsersTable({
             return (
               <tr
                 key={user.id}
-                className="border-b border-gray-100 dark:border-gray-800/80"
+                className="border-b border-awc-border"
               >
                 <td className="px-3 py-2">{user.email}</td>
                 <td className="px-3 py-2">

@@ -74,7 +74,7 @@ export default function UserManagementPanel({
 
   if (!isAdmin) {
     return (
-      <p className="text-sm text-gray-600 dark:text-gray-400">
+      <p className="text-sm text-awc-fg-muted">
         Only global admins can manage users.
       </p>
     );
@@ -84,7 +84,7 @@ export default function UserManagementPanel({
     <div className="space-y-4">
       <AppPanel padding="compact">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+          <h2 className="text-lg font-semibold text-awc-fg">
             Users
           </h2>
           <UsersKindFilter value={kindFilter} onChange={setKindFilter} />
@@ -97,7 +97,7 @@ export default function UserManagementPanel({
       </AppPanel>
 
       {message ? (
-        <p className="text-sm text-gray-600 dark:text-gray-400">{message}</p>
+        <p className="text-sm text-awc-fg-muted">{message}</p>
       ) : null}
 
       <ConfirmDestructiveModal

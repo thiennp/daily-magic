@@ -31,13 +31,13 @@ export default function AccountSecurityPanel({
         <h2 className={ACCOUNT_H2_CLASS}>{copy.h2SignIn}</h2>
         <p className={ACCOUNT_HINT_CLASS}>{copy.tipSignIn}</p>
         <div className={`${ACCOUNT_ROW_CARD_CLASS} space-y-1`}>
-          <p className="text-sm font-medium text-awc-fg dark:text-gray-200">
+          <p className="text-sm font-medium text-awc-fg">
             {copy.emailCode.replace("{email}", email)}
           </p>
           <span className={ACCOUNT_CHIP_CLASS}>{copy.emailCodeAlways}</span>
         </div>
         <div className={`${ACCOUNT_ROW_CARD_CLASS} flex flex-wrap items-center justify-between gap-2`}>
-          <p className="text-sm text-awc-fg dark:text-gray-200">
+          <p className="text-sm text-awc-fg">
             {googleLinked
               ? copy.googleLinked.replace("{email}", email)
               : copy.googleNotLinked}
@@ -59,13 +59,13 @@ export default function AccountSecurityPanel({
         <p className={ACCOUNT_HINT_CLASS}>{copy.tipSessions}</p>
         <ul className="space-y-2">
           <li className={`${ACCOUNT_ROW_CARD_CLASS} flex flex-wrap items-center justify-between gap-2`}>
-            <span className="text-sm font-medium text-awc-fg dark:text-gray-200">
+            <span className="text-sm font-medium text-awc-fg">
               {copy.sessionChrome}
             </span>
             <span className={ACCOUNT_CHIP_CLASS}>{copy.thisBrowser}</span>
           </li>
         </ul>
-        <p className="text-sm font-medium text-awc-fg dark:text-gray-200">
+        <p className="text-sm font-medium text-awc-fg">
           {copy.emptyTitle}
         </p>
         <p className={ACCOUNT_HINT_CLASS}>{copy.emptyBody}</p>

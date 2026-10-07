@@ -34,20 +34,20 @@ export default function CompaniesRulesOrientationDispatchCard({
         : null;
 
   return (
-    <section className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
-      <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+    <section className="rounded-lg border border-awc-border p-4">
+      <p className="text-xs font-medium uppercase tracking-wide text-awc-fg-muted">
         {C.dispatchSectionTitle}
       </p>
-      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-1 text-xs text-awc-fg-muted">
         {C.dispatchTip}
       </p>
       {groupId && policyLabel ? (
         <>
-          <p className="mt-3 text-sm font-semibold text-gray-800 dark:text-white/90">
+          <p className="mt-3 text-sm font-semibold text-awc-fg">
             {policyLabel}
           </p>
           {policyHelper ? (
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-1 text-sm text-awc-fg-muted">
               {policyHelper}
             </p>
           ) : null}
@@ -58,7 +58,7 @@ export default function CompaniesRulesOrientationDispatchCard({
           </div>
         </>
       ) : (
-        <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-3 text-sm text-awc-fg-muted">
           {groupId
             ? C.runsLoading
             : "Create a company to set who can send tasks to this computer."}

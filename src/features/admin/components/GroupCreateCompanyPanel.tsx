@@ -22,7 +22,7 @@ export default function GroupCreateCompanyPanel({
 
   return (
     <>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-2 text-sm text-awc-fg-muted">
         {C.createBody}
       </p>
       <div className="mt-4 flex flex-col gap-3 sm:flex-row">
@@ -35,25 +35,25 @@ export default function GroupCreateCompanyPanel({
             }}
             placeholder={C.companyNamePlaceholder}
             aria-label={C.companyNameLabel}
-            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
+            className="w-full rounded-lg border border-awc-border px-3 py-2 text-sm"
           />
         </label>
         <Button onClick={() => void onCreateGroup()}>{C.createCta}</Button>
       </div>
 
-      <section className="mt-6 rounded-lg border border-dashed border-gray-200 p-4 dark:border-gray-700">
-        <h3 className="text-sm font-semibold text-gray-800 dark:text-white/90">
+      <section className="mt-6 rounded-lg border border-dashed border-awc-border p-4">
+        <h3 className="text-sm font-semibold text-awc-fg">
           {C.joinHonestyHeading}
         </h3>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm text-awc-fg-muted">
           {C.joinHonestyBody}
         </p>
         {actorEmail ? (
-          <p className="mt-2 font-mono text-sm text-gray-800 dark:text-white/90">
+          <p className="mt-2 font-mono text-sm text-awc-fg">
             {actorEmail}
           </p>
         ) : null}
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-2 text-sm text-awc-fg-muted">
           {C.joinHonestyFollowUp}
         </p>
         {actorEmail ? (

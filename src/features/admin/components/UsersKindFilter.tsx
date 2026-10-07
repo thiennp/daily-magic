@@ -14,10 +14,10 @@ export default function UsersKindFilter({
   onChange,
 }: UsersKindFilterProps) {
   return (
-    <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+    <label className="flex items-center gap-2 text-sm text-awc-fg-muted">
       <span>Kind</span>
       <select
-        className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-sm dark:border-gray-700 dark:bg-gray-950"
+        className="rounded-lg border border-awc-border bg-awc-surface px-2 py-1 text-sm"
         value={value}
         onChange={(event) => {
           onChange(event.target.value as AdminUserKindFilter);

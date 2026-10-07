@@ -64,7 +64,7 @@ export default function GroupTeamActivityPanel({
   return (
     <AppPanel>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-base font-semibold text-gray-800 dark:text-white/90">
+        <h3 className="text-base font-semibold text-awc-fg">
           {C.runsTitle}
         </h3>
         <Button

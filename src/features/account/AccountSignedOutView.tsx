@@ -13,7 +13,7 @@ export default function AccountSignedOutView() {
       <h1 className="text-2xl font-bold tracking-tight text-awc-fg dark:text-white">
         {copy.title}
       </h1>
-      <p className="text-sm text-awc-fg-muted dark:text-gray-400">{copy.body}</p>
+      <p className="text-sm text-awc-fg-muted">{copy.body}</p>
       <Link href="/login" className={APP_SURFACE_CTA_PRIMARY_CLASS}>
         {copy.signIn}
       </Link>

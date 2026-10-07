@@ -41,10 +41,10 @@ export default function GroupMembersSection({
   return (
     <>
       <AppPanel padding="compact">
-        <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+        <h2 className="text-lg font-semibold text-awc-fg">
           {C.membersTitle}
         </h2>
-        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-1 text-xs text-awc-fg-muted">
           {C.roleTip}
         </p>
 

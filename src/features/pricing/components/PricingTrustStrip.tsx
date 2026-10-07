@@ -6,10 +6,10 @@ export default function PricingTrustStrip() {
       {PRICING_TRUST_ITEMS.map((item) => (
         <li
           key={item.title}
-          className="rounded-2xl border border-gray-200 bg-white px-5 py-4 text-center shadow-sm"
+          className="rounded-2xl border border-awc-border bg-awc-surface px-5 py-4 text-center shadow-sm"
         >
-          <p className="font-semibold text-gray-900">{item.title}</p>
-          <p className="mt-1 text-sm text-gray-600">{item.body}</p>
+          <p className="font-semibold text-awc-fg">{item.title}</p>
+          <p className="mt-1 text-sm text-awc-fg-muted">{item.body}</p>
         </li>
       ))}
     </ul>

@@ -5,7 +5,7 @@ export default function PricingFaq() {
     <section className="mt-16" aria-labelledby="pricing-faq-heading">
       <h2
         id="pricing-faq-heading"
-        className="text-2xl font-bold tracking-[-0.02em] text-gray-900"
+        className="text-2xl font-bold tracking-[-0.02em] text-awc-fg"
       >
         Questions
       </h2>
@@ -13,12 +13,12 @@ export default function PricingFaq() {
         {PRICING_FAQ_ITEMS.map((item) => (
           <details
             key={item.question}
-            className="rounded-xl border border-gray-200 bg-white shadow-sm open:shadow-md"
+            className="rounded-xl border border-awc-border bg-awc-surface shadow-sm open:shadow-md"
           >
-            <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-semibold text-gray-900 marker:content-none [&::-webkit-details-marker]:hidden">
+            <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-semibold text-awc-fg marker:content-none [&::-webkit-details-marker]:hidden">
               {item.question}
             </summary>
-            <p className="max-w-[70ch] px-4 pb-4 text-sm leading-relaxed text-gray-600">
+            <p className="max-w-[70ch] px-4 pb-4 text-sm leading-relaxed text-awc-fg-muted">
               {item.answer}
             </p>
           </details>

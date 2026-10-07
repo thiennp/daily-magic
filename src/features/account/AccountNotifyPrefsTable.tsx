@@ -63,7 +63,7 @@ export default function AccountNotifyPrefsTable({
     <div className="overflow-x-auto">
       <table className="w-full min-w-[28rem] text-left text-sm">
         <thead>
-          <tr className="border-b border-awc-border text-awc-fg-muted dark:border-gray-700">
+          <tr className="border-b border-awc-border text-awc-fg-muted">
             <th className="py-2 pr-3 font-medium">{copy.colEvent}</th>
             <th className="py-2 pr-3 font-medium">{copy.colEmail}</th>
             <th className="py-2 font-medium">{copy.colInApp}</th>
@@ -73,10 +73,10 @@ export default function AccountNotifyPrefsTable({
           {ACCOUNT_NOTIFY_ROWS.map((row) => (
             <tr
               key={row.key}
-              className="border-b border-awc-border/70 dark:border-gray-800"
+              className="border-b border-awc-border/70"
             >
               <td className="py-3 pr-3 align-top">
-                <p className="font-medium text-awc-fg dark:text-gray-200">
+                <p className="font-medium text-awc-fg">
                   {row.label}
                 </p>
                 <p className={ACCOUNT_HINT_CLASS}>{row.hint}</p>

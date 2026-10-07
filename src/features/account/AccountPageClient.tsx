@@ -52,7 +52,7 @@ export default function AccountPageClient() {
 
   if (status === "loading") {
     return (
-      <p className="text-sm text-awc-fg-muted dark:text-gray-400">Loading…</p>
+      <p className="text-sm text-awc-fg-muted">Loading…</p>
     );
   }
 

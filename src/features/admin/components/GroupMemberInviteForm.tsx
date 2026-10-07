@@ -27,7 +27,7 @@ export default function GroupMemberInviteForm({
         }}
         placeholder={C.inviteEmailPlaceholder}
         aria-label={C.inviteEmailAria}
-        className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
+        className="flex-1 rounded-lg border border-awc-border px-3 py-2 text-sm"
       />
       <select
         value={memberRole}
@@ -35,7 +35,7 @@ export default function GroupMemberInviteForm({
           onMemberRoleChange(event.target.value);
         }}
         aria-label={C.inviteRoleAria}
-        className="rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
+        className="rounded-lg border border-awc-border px-3 py-2 text-sm"
       >
         {GROUP_ROLE_OPTIONS.map((role) => (
           <option key={role} value={role}>

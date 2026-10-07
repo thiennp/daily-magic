@@ -38,7 +38,7 @@ export default function GroupDeleteControls({
             : "mt-4 flex flex-wrap items-center gap-3"
         }
       >
-        <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+        <label className="flex items-center gap-2 text-sm text-awc-fg-muted">
           <input
             type="checkbox"
             checked={deleteMembers}

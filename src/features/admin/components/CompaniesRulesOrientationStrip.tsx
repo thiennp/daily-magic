@@ -73,7 +73,7 @@ export default function CompaniesRulesOrientationStrip({
 
   return (
     <AppPanel padding="compact">
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+      <h2 className="text-lg font-semibold text-awc-fg">
         {C.rulesStripTitle}
       </h2>
 

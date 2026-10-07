@@ -26,7 +26,7 @@ export default function AccountAvatarColorField({
         {ACCOUNT_AVATAR_COLORS.map((color) => (
           <label
             key={color.id}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-awc-border px-2 py-1.5 text-xs dark:border-gray-700"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-awc-border px-2 py-1.5 text-xs"
           >
             <input
               type="radio"

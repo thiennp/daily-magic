@@ -10,16 +10,16 @@ export default function PricingCompareTable() {
     <section className="mt-16" aria-labelledby="pricing-compare-heading">
       <h2
         id="pricing-compare-heading"
-        className="text-2xl font-bold tracking-[-0.02em] text-gray-900"
+        className="text-2xl font-bold tracking-[-0.02em] text-awc-fg"
       >
         Compare plans
       </h2>
-      <div className="mt-6 overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <div className="mt-6 overflow-x-auto rounded-2xl border border-awc-border bg-awc-surface shadow-sm">
         <table className="min-w-full border-collapse text-left text-sm">
           <caption className="sr-only">{PRICING_COMPARE_CAPTION}</caption>
           <thead>
-            <tr className="border-b border-gray-200 bg-gray-50">
-              <th scope="col" className="px-4 py-3 font-semibold text-gray-700">
+            <tr className="border-b border-awc-border bg-awc-surface-2">
+              <th scope="col" className="px-4 py-3 font-semibold text-awc-fg">
                 Feature
               </th>
               <th scope="col" className="px-4 py-3 font-semibold text-teal-800">
@@ -57,25 +57,25 @@ function PricingCompareSectionRows({
 }) {
   return (
     <>
-      <tr className="bg-gray-50/80">
+      <tr className="bg-awc-surface-2/80">
         <th
           colSpan={4}
           scope="colgroup"
-          className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-500"
+          className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-awc-fg-muted"
         >
           {heading}
         </th>
       </tr>
       {rows.map((row) => (
-        <tr key={row.feature} className="border-t border-gray-100">
+        <tr key={row.feature} className="border-t border-awc-border">
           <th
             scope="row"
-            className="px-4 py-3 font-medium text-gray-900"
+            className="px-4 py-3 font-medium text-awc-fg"
             title={row.tip}
           >
             {row.feature}
             {row.tip ? (
-              <span className="mt-0.5 block text-xs font-normal text-gray-500">
+              <span className="mt-0.5 block text-xs font-normal text-awc-fg-muted">
                 {row.tip}
               </span>
             ) : null}

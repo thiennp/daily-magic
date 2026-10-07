@@ -107,7 +107,7 @@ export default function GroupManagementPanel({
       ) : null}
 
       {groupManagement.message ? (
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-sm text-awc-fg-muted">
           {groupManagement.message}
         </p>
       ) : null}

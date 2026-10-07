@@ -22,26 +22,26 @@ export default function CompaniesRulesOrientationSafetyCard({
       : null;
 
   return (
-    <section className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
-      <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+    <section className="rounded-lg border border-awc-border p-4">
+      <p className="text-xs font-medium uppercase tracking-wide text-awc-fg-muted">
         {C.safetyKicker}
       </p>
-      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-1 text-xs text-awc-fg-muted">
         {C.safetyTip}
       </p>
-      <p className="mt-3 text-sm font-semibold text-gray-800 dark:text-white/90">
+      <p className="mt-3 text-sm font-semibold text-awc-fg">
         {C.safetyValue}
       </p>
-      <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+      <p className="mt-1 text-sm text-awc-fg-muted">
         {C.safetyBody}
       </p>
       {projects.length === 0 ? (
-        <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-3 text-sm text-awc-fg-muted">
           {C.safetyNoProjects}
         </p>
       ) : (
         <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
-          <label className="flex-1 text-sm text-gray-700 dark:text-gray-300">
+          <label className="flex-1 text-sm text-awc-fg">
             <span className="sr-only">{C.safetyProjectSelectAria}</span>
             <select
               aria-label={C.safetyProjectSelectAria}
@@ -49,7 +49,7 @@ export default function CompaniesRulesOrientationSafetyCard({
               onChange={(event) => {
                 onSelectedProjectIdChange(event.target.value);
               }}
-              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
+              className="w-full rounded-lg border border-awc-border px-3 py-2 text-sm"
             >
               {projects.map((project) => (
                 <option key={project.id} value={project.id}>

@@ -86,7 +86,7 @@ export default function GroupDispatchPolicyControl({
 
   if (embedded) {
     return (
-      <div className="mt-6 rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+      <div className="mt-6 rounded-lg border border-awc-border p-4">
         {content}
       </div>
     );

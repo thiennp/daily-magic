@@ -21,7 +21,7 @@ export default function PricingPageLayout({
   return (
     <div className="pb-16">
       {signedIn ? (
-        <nav aria-label="Breadcrumb" className="mb-6 text-sm text-gray-500">
+        <nav aria-label="Breadcrumb" className="mb-6 text-sm text-awc-fg-muted">
           <ol className="flex flex-wrap items-center gap-2">
             <li>
               <Link href="/" className={MARKETING_TEXT_LINK_CLASSES}>
@@ -29,7 +29,7 @@ export default function PricingPageLayout({
               </Link>
             </li>
             <li aria-hidden="true">›</li>
-            <li className="font-medium text-gray-800">Billing and plans</li>
+            <li className="font-medium text-awc-fg">Billing and plans</li>
           </ol>
         </nav>
       ) : null}
@@ -42,7 +42,7 @@ export default function PricingPageLayout({
       <PricingOnDemand signedIn={signedIn} />
       <PricingHowAiNotes />
       <PricingFaq />
-      <p className="mt-10 text-center text-sm text-gray-500">
+      <p className="mt-10 text-center text-sm text-awc-fg-muted">
         <Link href="/terms" className={MARKETING_TEXT_LINK_CLASSES}>
           Terms
         </Link>

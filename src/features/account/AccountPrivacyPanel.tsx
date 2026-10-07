@@ -31,11 +31,11 @@ export default function AccountPrivacyPanel({
       <section className="space-y-2">
         <h2 className={ACCOUNT_H2_CLASS}>{copy.historyH2}</h2>
         <p className={ACCOUNT_HINT_CLASS}>{copy.historyTip}</p>
-        <p className="text-sm text-awc-fg dark:text-gray-200">{copy.historyBody}</p>
+        <p className="text-sm text-awc-fg">{copy.historyBody}</p>
       </section>
       <section className={`${ACCOUNT_ROW_CARD_CLASS} space-y-3`}>
         <h2 className={ACCOUNT_H2_CLASS}>{copy.exportH2}</h2>
-        <p className="text-sm text-awc-fg dark:text-gray-200">
+        <p className="text-sm text-awc-fg">
           {copy.exportBody.replace("{email}", email)}
         </p>
         <div className="flex flex-wrap items-center gap-2">

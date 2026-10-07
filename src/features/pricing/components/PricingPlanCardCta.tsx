@@ -53,22 +53,22 @@ export default function PricingPlanCardCta({
         </Link>
       )}
       {stubNote ? (
-        <p className="text-center text-xs text-gray-500">{stubNote}</p>
+        <p className="text-center text-xs text-awc-fg-muted">{stubNote}</p>
       ) : null}
       {plan.contactSales ? (
         <a
           href={PRICING_CONTACT_SALES_HREF}
-          className="inline-flex w-full items-center justify-center rounded-2xl border border-gray-200 bg-white px-5 py-3 text-sm font-semibold text-gray-800 transition hover:bg-gray-50"
+          className="inline-flex w-full items-center justify-center rounded-2xl border border-awc-border bg-awc-surface px-5 py-3 text-sm font-semibold text-awc-fg transition hover:bg-awc-surface-2"
         >
           Contact sales
         </a>
       ) : null}
       {plan.contactSales ? (
-        <p className="text-center text-xs text-gray-500">
+        <p className="text-center text-xs text-awc-fg-muted">
           {PRICING_TEAM_VOLUME_NOTE}
         </p>
       ) : null}
-      <p className="text-center text-xs text-gray-500">{PRICING_CANCEL_NOTE}</p>
+      <p className="text-center text-xs text-awc-fg-muted">{PRICING_CANCEL_NOTE}</p>
     </div>
   );
 }

@@ -22,7 +22,7 @@ export default function GroupTeamActivityRunsList({
 }: GroupTeamActivityRunsListProps) {
   if (isLoading) {
     return (
-      <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+      <p className="mt-4 text-sm text-awc-fg-muted">
         {C.runsLoading}
       </p>
     );
@@ -44,10 +44,10 @@ export default function GroupTeamActivityRunsList({
   if (runs.length === 0) {
     return (
       <div className="mt-4">
-        <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+        <p className="text-sm font-medium text-awc-fg">
           {C.runsEmptyTitle}
         </p>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-1 text-sm text-awc-fg-muted">
           {C.runsEmptyBody}
         </p>
       </div>
@@ -59,15 +59,15 @@ export default function GroupTeamActivityRunsList({
       {runs.map((run) => (
         <li
           key={run.id}
-          className="rounded-lg border border-gray-200 px-4 py-3 dark:border-gray-700"
+          className="rounded-lg border border-awc-border px-4 py-3"
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
             <AgentRunStatusBadge status={run.status} />
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-awc-fg-muted">
               {new Date(run.createdAt).toLocaleString()}
             </p>
           </div>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          <p className="mt-2 text-sm text-awc-fg-muted">
             {run.requesterEmail} → {run.executorEmail}
           </p>
           <Link
