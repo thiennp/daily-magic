@@ -35,7 +35,8 @@ describe("Awc projects card view", () => {
     expect(menuItems).toContain("Edit");
     expect(card).toContain("pointer-events-auto");
     expect(menuItems).toContain("AwcProjectDeleteMenuItem");
-    expect(menuItems).toContain("canDelete && !isDefaultProject");
+    expect(menuItems).toContain("{canDelete ? (");
+    expect(menuItems).toContain("canLeave && !isDefaultProject");
     expect(menuItems).toContain("isDefaultProject");
     expect(card).toContain("canDelete={canDelete}");
     expect(card).toContain("useCanDeleteOwnedProject");

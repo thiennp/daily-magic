@@ -24,6 +24,7 @@ describe("gateProjectMessageDelete", () => {
   });
 
   it("off: returns the existing rule, no ack lookup", async () => {
+    fake.current?.states.set("p1", "off");
     const decision = await gateProjectMessageDelete({
       projectId: "p1",
       messageId: "m1",

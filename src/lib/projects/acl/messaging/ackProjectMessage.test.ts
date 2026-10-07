@@ -51,6 +51,10 @@ describe("ackProjectMessage delete-on-ack", () => {
       if (q.includes("DELETE FROM project_messages") && q.includes("make_interval")) {
         return [];
       }
+      // History OFF so the delete gate allows immediate delete-on-ack.
+      if (q.includes("SELECT state FROM project_computer_history_settings")) {
+        return [{ state: "off" }];
+      }
       if (q.includes("SELECT * FROM project_messages")) {
         return [
           {
@@ -58,6 +62,7 @@ describe("ackProjectMessage delete-on-ack", () => {
             project_id: "proj-1",
             to_user_id: "bot-1",
             to_team_label: null,
+            created_at: "2026-10-01T00:00:00.000Z",
             acked_at: null,
           },
         ];

@@ -39,7 +39,7 @@ const baseProps = {
 };
 
 describe("AwcProjectCardActionsMenuItems delete visibility", () => {
-  it("shows Delete only when canDelete is true and project is not Default", async () => {
+  it("shows Delete when canDelete; Leave when canLeave and not Default", async () => {
     const { default: Items } =
       await import("@/features/projects/AwcProjectCardActionsMenuItems");
 
@@ -83,7 +83,8 @@ describe("AwcProjectCardActionsMenuItems delete visibility", () => {
         }),
       ),
     );
-    expect(defaultHtml).not.toContain('data-testid="delete-item"');
+    // Default projects may be deleted by the owner (d2761a76); Leave stays hidden.
+    expect(defaultHtml).toContain('data-testid="delete-item"');
     expect(defaultHtml).not.toContain('data-testid="leave-item"');
   });
 });

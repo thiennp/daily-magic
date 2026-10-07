@@ -92,14 +92,19 @@ describe("DELETE /api/projects/[projectId] (owner session, DB-only)", () => {
     expect(sql()).not.toHaveBeenCalled();
   });
 
-  it("Default project: 400 and nothing deleted", async () => {
+  it("Default project: owner may delete (200 + guarded DELETE)", async () => {
     vi.mocked(getUserProjectById).mockResolvedValue({
       ...OWNER_PROJECT,
       name: "Default",
     });
     const response = await callWeb(OWNER_PROJECT.id);
-    expect(response.status).toBe(400);
-    expect(sql()).not.toHaveBeenCalled();
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({
+      ok: true,
+      projectId: OWNER_PROJECT.id,
+    });
+    expect(sql()).toHaveBeenCalledTimes(1);
+    expect(sql().calls[0]?.text).toContain("DELETE FROM user_projects");
   });
 
   it("delete failure: 500, generic message, no SQL detail", async () => {

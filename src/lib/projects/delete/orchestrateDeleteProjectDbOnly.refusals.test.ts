@@ -89,7 +89,7 @@ describe("orchestrateDeleteProjectDbOnly — refusals delete nothing", () => {
     expectNothingDeleted();
   });
 
-  it("Default project: default_project", async () => {
+  it("Default project: owner may delete (no default_project refusal)", async () => {
     vi.mocked(getUserProjectById).mockResolvedValue({
       ...OWNER_PROJECT,
       name: "Default",
@@ -97,7 +97,8 @@ describe("orchestrateDeleteProjectDbOnly — refusals delete nothing", () => {
 
     const result = await orchestrateDeleteProjectDbOnly(asOwner);
 
-    expect(result).toEqual({ ok: false, code: "default_project" });
-    expectNothingDeleted();
+    expect(result).toEqual({ ok: true, projectId: OWNER_PROJECT.id });
+    expect(sql()).toHaveBeenCalledTimes(1);
+    expect(sql().transaction).not.toHaveBeenCalled();
   });
 });

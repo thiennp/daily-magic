@@ -23,11 +23,11 @@ describe("selectProjectBriefingHowToDispatch delivery_mode", () => {
     );
   });
 
-  it("poll briefing: check when your human asks, soft ≤1/min, no wake MUST or silence warning", () => {
+  it("poll briefing: Checks on demand, soft ≤1/min, no wake MUST or silence warning", () => {
     const text = PROJECT_BRIEFING_HOW_TO_DISPATCH_POLL;
-    expect(text).toContain("check when your human asks");
-    expect(text).toContain("at most about once a minute");
     expect(text).toContain("Checks on demand");
+    expect(text).toContain("at most about once a minute");
+    expect(text).toContain("AWC never wakes you");
     expect(text).toContain("MUST ack_project_message");
     expect(text).not.toMatch(/MUST on connect \(webhook-first\)/);
     expect(text).not.toMatch(/after 10 minutes the delivery is blocked/);

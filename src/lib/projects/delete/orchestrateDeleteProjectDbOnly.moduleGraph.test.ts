@@ -27,7 +27,6 @@ describe("project delete module graph is DB-only", () => {
     expect([...bare].sort()).toMatchInlineSnapshot(`
       [
         "@neondatabase/serverless",
-        "node:path",
       ]
     `);
   });

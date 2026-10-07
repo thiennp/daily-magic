@@ -35,9 +35,11 @@ describe("projectConnectionsCopy", () => {
       "utf8",
     );
     expect(panel).toContain("AwcProjectConnectionsSection");
-    const folderAt = panel.indexOf("AwcProjectSettingsFolderRow");
-    const connAt = panel.indexOf("AwcProjectConnectionsSection");
-    const dangerAt = panel.indexOf("AwcProjectSettingsDangerZone");
+    // Use the JSX return body so import order does not fake the mount order.
+    const body = panel.slice(panel.indexOf("return ("));
+    const folderAt = body.indexOf("<AwcProjectSettingsFolderRow");
+    const connAt = body.indexOf("<AwcProjectConnectionsSection");
+    const dangerAt = body.indexOf("<AwcProjectSettingsDangerZone");
     expect(folderAt).toBeGreaterThan(-1);
     expect(connAt).toBeGreaterThan(folderAt);
     expect(dangerAt).toBeGreaterThan(connAt);
