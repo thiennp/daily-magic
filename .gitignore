@@ -68,3 +68,6 @@ apps/mac/.build/
 # Desktop tray packaging output
 dist/linux/
 dist/windows/
+
+# AgentWitch Local per-project metadata when this checkout is linked as a project folder
+/.agent-witch/

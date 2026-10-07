@@ -35,14 +35,26 @@ A website cannot read the POSIX path of a folder the user selects in a file dial
 
 ### AWB (127.0.0.1:47892 / 47893)
 
-| Action                         | What happens                                                                                      |
-| ------------------------------ | ------------------------------------------------------------------------------------------------- |
-| `POST /projects/select-folder` | Runs Finder via `pickMacOsFolderDialog`, then `PATCH /api/agent-witch/projects/:projectId` on AWC |
-| Cancel Finder                  | Returns `{ ok: false, cancelled: true }` — no cloud change                                        |
+| Action                         | What happens                                                                                                      |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| `POST /projects/select-folder` | Runs Finder via `pickMacOsFolderDialog`, then `PATCH /api/agent-witch/projects/:projectId` on AWC                 |
+| Cancel Finder                  | Returns `{ ok: false, cancelled: true }` — no cloud change                                                        |
+| `POST /projects/link-folder`   | Typed path, no dialog: `{ projectId, folderPath, allowOutsideHome? }` → validate on this Mac, then the same PATCH |
+| `GET /projects/folders`        | Folders linked on this Mac: `{ ok, summary, folders[] }` (plain-words `summary` per folder)                       |
 
 ### AWL (http://127.0.0.1:43347)
 
 AWL exposes `/projects/select-folder` for choosing folders from the Mac app UI.
+
+AWL also exposes `GET|POST /api/local/projects/folder` (same body/response as AWB `link-folder` / `folders`; POST refuses foreign browser Origins). `/api/status` includes `projectFolders`.
+
+### Linking a folder (all three routes share `linkAgentWitchProjectFolder`)
+
+1. Validate on the computer: path exists, is a readable directory, symlinks resolved (realpath is what gets saved), inside the user's home unless `allowOutsideHome: true` (the Finder picker always sets it), never the home folder itself. Git is reported (`isGitRepo`), not required.
+2. `PATCH /api/agent-witch/projects/:projectId { folderPath }` (device auth) — sets `user_projects.folder_path` and binds the project to this computer (`device_id`), which the run-folder allowlist reads.
+3. Create `<folder>/.agent-witch/` (project.json, rag, memory) and save the link in `<AWL profile dir>/linked-project-folders.json` for offline status.
+
+Refusal codes: `project_id_invalid`, `folder_required`, `folder_not_absolute`, `folder_not_found`, `not_a_folder`, `folder_not_readable`, `folder_is_home`, `folder_outside_home` (400), `not_paired` (409), `cloud_update_failed` (502). Each comes with a plain-words `errorMessage` (AWB) / `message` (AWL).
 
 ## Related
 
@@ -54,4 +66,4 @@ AWL exposes `/projects/select-folder` for choosing folders from the Mac app UI.
 
 ## Last reviewed
 
-2026-09-18
+2026-10-08

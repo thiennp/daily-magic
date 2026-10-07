@@ -60,6 +60,7 @@ import {
 import { buildAgentWitchLocalHomePageBody } from "@agent-witch/live-home/presentation";
 import { tryHandlePromptSdlcLocalRequest } from "../../../prompt-optimizer/public-api/infrastructure";
 import { tryHandleCodingToolsPauseLocalRequest } from "./tryHandleCodingToolsPauseLocalRequest";
+import { tryHandleProjectFolderLocalRequest } from "./tryHandleProjectFolderLocalRequest";
 import {
   describePitfallCacheAvailability,
   tryHandleTokenSaverLocalRequest,
@@ -94,7 +95,6 @@ import {
   writeLocalHarnessRevealCache,
 } from "@agent-witch/live-harness";
 import {
-  ensureAgentWitchProjectFolder,
   fetchAgentWitchProjectsForLocalApp,
   findAgentWitchProjectById,
   handlePullBoundHarnessPost,
@@ -105,7 +105,8 @@ import {
   pickMacOsFolderDialog,
   resolveAgentWitchCloudApiConfig,
   syncProjectHarnessBindingsToCloud,
-  updateAgentWitchCloudProjectFolder,
+  describeLinkedProjectFolders,
+  linkAgentWitchProjectFolder,
   deleteAgentWitchCloudProject,
 } from "@agent-witch/live-projects";
 import { AGENT_WITCH_PAIRING_TOKEN_HEADER } from "../../../projects/internal/core/agentWitchDeviceAuth.constant";
@@ -278,6 +279,18 @@ const LOCAL_APP_CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Headers":
     "Content-Type, Access-Control-Request-Private-Network",
   "Access-Control-Allow-Private-Network": "true",
+};
+
+const readLocalAppCloudConfig = (): ReturnType<
+  typeof resolveAgentWitchCloudApiConfig
+> => {
+  const runConfig = readAgentWitchRunConfig();
+  return runConfig === null
+    ? null
+    : resolveAgentWitchCloudApiConfig({
+        wsUrl: runConfig.wsUrl,
+        pairingToken: runConfig.pairingToken,
+      });
 };
 
 const sendJson = (
@@ -625,6 +638,21 @@ export const startAgentWitchLocalApp = (input: {
       }
 
       if (
+        await tryHandleProjectFolderLocalRequest({
+          method,
+          pathname,
+          request,
+          response,
+          profileDir: path.dirname(input.layout.configPath),
+          readCloudConfig: readLocalAppCloudConfig,
+          readBody,
+          sendJson,
+        })
+      ) {
+        return;
+      }
+
+      if (
         await tryHandleTokenSaverLocalRequest({
           method,
           pathname,
@@ -714,6 +742,9 @@ export const startAgentWitchLocalApp = (input: {
         sendJson(response, 200, {
           ...input.controllers.getStatus(),
           linkCode: ensureLinkCode(),
+          projectFolders: describeLinkedProjectFolders(
+            path.dirname(input.layout.configPath),
+          ),
           installBundleVersion: installBundle.installBundleVersion,
           installBundleUpdatedAt: installBundle.installBundleUpdatedAt,
         });
@@ -1108,36 +1139,29 @@ export const startAgentWitchLocalApp = (input: {
           return;
         }
 
-        ensureAgentWitchProjectFolder({ projectFolderPath: chosen });
-        const updated = await updateAgentWitchCloudProjectFolder(
-          cloudConfig,
+        const linked = await linkAgentWitchProjectFolder({
           projectId,
-          chosen,
-        );
+          folderPath: chosen,
+          // Native picker = explicit user choice.
+          allowOutsideHome: true,
+          profileDir: path.dirname(input.layout.configPath),
+          cloudConfig,
+        });
 
-        if (!updated) {
-          sendJson(response, 502, {
+        if (!linked.ok) {
+          sendJson(response, linked.httpStatus, {
             ok: false,
-            error: "Could not update the project folder in AgentWitch Cloud.",
+            error: linked.message,
           });
           return;
         }
 
-        // Auto-discover harness already linked on disk (materialization ledger
-        // under the project folder) and sync cloud bindings to match.
-        const linkedSetSlugs =
-          listLinkedHarnessSetSlugsFromProjectFolder(chosen);
-        const bindingsSynced = await syncProjectHarnessBindingsToCloud(
-          cloudConfig,
-          projectId,
-          linkedSetSlugs,
-        );
-
         sendJson(response, 200, {
           ok: true,
           projectId,
-          folderPath: chosen,
-          bindingsSynced,
+          folderPath: linked.folderPath,
+          bindingsSynced: linked.bindingsSynced,
+          summary: linked.summary,
         });
         return;
       }

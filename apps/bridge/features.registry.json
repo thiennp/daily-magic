@@ -99,7 +99,7 @@
     },
     {
       "slug": "projects-proxy",
-      "title": "Project folder ensure",
+      "title": "Project folder ensure, link and picker",
       "parentSlug": "awc-proxy",
       "fsaStatus": "fsa",
       "featurePath": "apps/bridge/features/awc-proxy/features/projects-proxy"

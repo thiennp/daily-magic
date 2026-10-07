@@ -1,11 +1,10 @@
+import path from "node:path";
+
 import { readAgentWitchRunConfig } from "@agent-witch/install-runtime-client";
 import {
-  ensureAgentWitchProjectFolder,
-  listLinkedHarnessSetSlugsFromProjectFolder,
+  linkAgentWitchProjectFolder,
   pickMacOsFolderDialog,
   resolveAgentWitchCloudApiConfig,
-  syncProjectHarnessBindingsToCloud,
-  updateAgentWitchCloudProjectFolder,
 } from "@agent-witch/live-projects";
 
 import { isRecord } from "../../../../server/internal/isRecord";
@@ -82,34 +81,23 @@ export const selectAgentWitchProjectFolderFromWakeServer = async (
     };
   }
 
-  ensureAgentWitchProjectFolder({ projectFolderPath: chosen });
-
-  const updated = await updateAgentWitchCloudProjectFolder(
+  const linked = await linkAgentWitchProjectFolder({
+    projectId: parsed.projectId,
+    folderPath: chosen,
+    // Native picker = explicit user choice.
+    allowOutsideHome: true,
+    profileDir: path.dirname(runConfig.layout.configPath),
     cloudConfig,
-    parsed.projectId,
-    chosen,
-  );
+  });
 
-  if (!updated) {
-    return {
-      ok: false,
-      errorMessage: "Could not save the folder to AgentWitch Cloud.",
-    };
+  if (!linked.ok) {
+    return { ok: false, errorMessage: linked.message };
   }
-
-  // Auto-discover harness already linked on disk (materialization ledger
-  // under the project folder) and sync cloud bindings to match.
-  const linkedSetSlugs = listLinkedHarnessSetSlugsFromProjectFolder(chosen);
-  const bindingsSynced = await syncProjectHarnessBindingsToCloud(
-    cloudConfig,
-    parsed.projectId,
-    linkedSetSlugs,
-  );
 
   return {
     ok: true,
-    project: { id: parsed.projectId, folderPath: chosen },
-    bindingsSynced,
-    linkedSetSlugs,
+    project: { id: parsed.projectId, folderPath: linked.folderPath },
+    bindingsSynced: linked.bindingsSynced,
+    linkedSetSlugs: linked.linkedSetSlugs,
   };
 };

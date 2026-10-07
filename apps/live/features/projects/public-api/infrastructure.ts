@@ -89,3 +89,14 @@ export { loadRegisteredRunFolders } from "../internal/core/runFolderAllowlist/lo
 export type { RegisteredRunFolder } from "../internal/core/runFolderAllowlist/registeredRunFolder.type";
 
 export type { RunFolderDecision } from "../internal/core/runFolderAllowlist/decideRunFolder";
+
+export {
+  linkAgentWitchProjectFolder,
+  type LinkAgentWitchProjectFolderInput,
+  type LinkAgentWitchProjectFolderResult,
+} from "../internal/core/linkProjectFolder/linkAgentWitchProjectFolder";
+
+export {
+  describeLinkedProjectFolders,
+  type LinkedProjectFoldersStatus,
+} from "../internal/core/linkProjectFolder/describeLinkedProjectFolders";
