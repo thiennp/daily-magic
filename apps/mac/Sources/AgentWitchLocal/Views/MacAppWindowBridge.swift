@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 import SwiftUI
 
@@ -64,6 +65,7 @@ struct MacAppWindowOpener: ViewModifier {
             .onReceive(NotificationCenter.default.publisher(for: .awlOpenWindow)) { note in
                 let raw = (note.object as? String) ?? MacAppWindowID.main.rawValue
                 openWindow(id: MacAppWindowID.main.rawValue)
+                NSApp.activate(ignoringOtherApps: true)
                 if let page = MacAppSidebarPage(rawValue: raw) ?? MacAppSidebarPage.fromWindowID(raw) {
                     NotificationCenter.default.post(name: .awlSelectSidebarPage, object: page.rawValue)
                 }

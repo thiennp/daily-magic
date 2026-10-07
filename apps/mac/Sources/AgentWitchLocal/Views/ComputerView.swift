@@ -196,8 +196,7 @@ struct ComputerView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(heroTitle).font(.system(size: 22, weight: .semibold)).foregroundStyle(MacAppTheme.fg)
                 Text(heroSubtitle).font(.system(size: 13)).foregroundStyle(MacAppTheme.fgMuted)
-                (Text("Connected as ") + Text(controller.signedInDisplayName ?? "You").bold().foregroundColor(MacAppTheme.fg)
-                    + Text(" · \(controller.signedInEmail ?? "")"))
+                connectedAsLine
                     .font(.system(size: 13)).foregroundStyle(MacAppTheme.fgSubtle)
                     .padding(.top, 2)
             }
@@ -206,6 +205,14 @@ struct ComputerView: View {
         }
         .padding(.horizontal, 24).padding(.vertical, 22)
         .background(card)
+    }
+
+    private var connectedAsLine: Text {
+        let email = controller.signedInEmail ?? ""
+        if let name = controller.signedInDisplayName, !name.isEmpty, name != email, name != "You" {
+            return Text("Connected as ") + Text(name).bold().foregroundColor(MacAppTheme.fg) + Text(" · \(email)")
+        }
+        return Text("Connected as ") + Text(email).bold().foregroundColor(MacAppTheme.fg)
     }
 
     private var heroTitle: String {

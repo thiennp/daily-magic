@@ -14,11 +14,17 @@ struct AgentWitchLocalApp: App {
                 store: appDelegate.uiStore
             )
         } label: {
-            if let template = MenuBarTemplateImage.load() {
-                Image(nsImage: template)
-            } else {
-                Image(systemName: "wand.and.stars")
+            Group {
+                if let template = MenuBarTemplateImage.load() {
+                    Image(nsImage: template)
+                } else {
+                    Image(systemName: "wand.and.stars")
+                }
             }
+            // The status item label is always alive, so deep links
+            // (agentwitch-local://status, Prompt optimizer) and Dock reopen can
+            // raise the window even when it was never opened or was closed.
+            .awlWindowOpener()
         }
         .menuBarExtraStyle(.window)
 
@@ -45,6 +51,12 @@ final class MacAppAppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Menu bar + window are both first-class; do not activate as a dock-only app.
         NSApp.setActivationPolicy(.accessory)
+        // Onboarding starts in the window (design): open it when signed out.
+        if controller.signedInEmail == nil {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                NotificationCenter.default.post(name: .awlOpenWindow, object: MacAppWindowID.main.rawValue)
+            }
+        }
     }
 
     func application(_ application: NSApplication, open urls: [URL]) {

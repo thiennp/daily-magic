@@ -258,31 +258,48 @@ struct MacAppMainWindowView: View {
     @ViewBuilder
     private var accountChip: some View {
         if (controller.signedInEmail != nil) {
-            Menu {
-                Text(controller.signedInEmail ?? "Signed in")
-                    .font(.caption)
-                Button("Settings") { page = .settings }
-                Divider()
-                Button("Sign out…", role: .destructive) { showSignOutConfirm = true }
+            Button {
+                showAccountMenu.toggle()
             } label: {
-                HStack(spacing: 6) {
+                HStack(spacing: 7) {
                     Text(accountInitials)
-                        .font(.caption2.weight(.bold))
+                        .font(.system(size: 10, weight: .bold))
                         .foregroundStyle(.white)
                         .frame(width: 22, height: 22)
                         .background(Circle().fill(MacAppTheme.brand))
                     Text(accountFirstName)
-                        .font(.subheadline.weight(.medium))
+                        .font(.system(size: 13, weight: .medium))
                         .foregroundStyle(MacAppTheme.fg)
                     Image(systemName: "chevron.down")
-                        .font(.caption2)
+                        .font(.system(size: 9, weight: .bold))
                         .foregroundStyle(MacAppTheme.fgMuted)
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
                 .background(RoundedRectangle(cornerRadius: 8).strokeBorder(MacAppTheme.border))
+                .contentShape(Rectangle())
             }
-            .menuStyle(.borderlessButton)
+            .buttonStyle(.plain)
+            .popover(isPresented: $showAccountMenu, arrowEdge: .bottom) {
+                VStack(alignment: .leading, spacing: 0) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(accountFirstName).font(.system(size: 13, weight: .semibold)).foregroundStyle(MacAppTheme.fg)
+                        Text(controller.signedInEmail ?? "").font(.system(size: 12)).foregroundStyle(MacAppTheme.fgSubtle)
+                    }
+                    .padding(.horizontal, 12).padding(.vertical, 10)
+                    Divider()
+                    accountMenuRow("Settings", destructive: false) {
+                        showAccountMenu = false
+                        page = .settings
+                    }
+                    accountMenuRow("Sign out…", destructive: true) {
+                        showAccountMenu = false
+                        showSignOutConfirm = true
+                    }
+                }
+                .padding(.vertical, 4)
+                .frame(width: 240)
+            }
         } else if chrome.kind != .notSetUp && chrome.kind != .settingUp {
             Button("Sign in") {
                 page = .computer
@@ -290,6 +307,18 @@ struct MacAppMainWindowView: View {
             }
             .buttonStyle(.bordered)
         }
+    }
+
+    private func accountMenuRow(_ title: String, destructive: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 13))
+                .foregroundStyle(destructive ? MacAppTheme.danger : MacAppTheme.fg)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 12).padding(.vertical, 7)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 
     private var accountInitials: String {
