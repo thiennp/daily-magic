@@ -125,3 +125,13 @@ export { deriveProjectHistoryThreadKey } from "../internal/core/deriveProjectHis
 export { deriveProjectHistorySenderLabel } from "../internal/core/deriveProjectHistorySenderLabel";
 export { buildLocalChatAckRecord } from "../internal/core/buildLocalChatAckRecord";
 export { writeLocalChatAckRecord } from "../internal/core/writeLocalChatAckRecord";
+
+export {
+  encodeProjectHistoryTimelineCursor,
+  decodeProjectHistoryTimelineCursor,
+} from "../internal/core/projectHistoryTimelineCursor";
+export {
+  readProjectHistoryMessagesPage,
+  loadOlderProjectHistoryMessages,
+} from "../internal/core/readProjectHistoryMessagesPage";
+export { mapHistoryRecordToTimelineEntry } from "../internal/core/mapHistoryRecordToTimelineEntry";

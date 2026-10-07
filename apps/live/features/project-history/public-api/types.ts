@@ -104,3 +104,10 @@ export type {
 export type { ListLocalChatThreadKeysResult } from "../internal/core/listLocalChatThreadKeys";
 export type { LocalChatReadRouteInput } from "../internal/core/tryHandleLocalChatReadRequest";
 export type { HistoryStoreRecordKind } from "../internal/core/historyStore.constants";
+
+export type { ProjectHistoryTimelineCursor } from "../internal/core/projectHistoryTimelineCursor";
+export type {
+  ReadProjectHistoryMessagesPageInput,
+  ReadProjectHistoryMessagesPageResult,
+} from "../internal/core/readProjectHistoryMessagesPage";
+export type { ProjectMessengerTimelineEntry as ProjectHistoryTimelineEntry } from "../../../adapters/projectHistorySharedMappers";
