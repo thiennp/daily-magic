@@ -47,7 +47,7 @@ export default function AdminSetFreeButton({
       >
         {adminFree ? BILLING_COPY.adminSetFreeOff : BILLING_COPY.adminSetFreeOn}
       </Button>
-      {message ? <p className="text-xs text-gray-500">{message}</p> : null}
+      {message ? <p className="text-xs text-awc-fg-muted">{message}</p> : null}
     </div>
   );
 }

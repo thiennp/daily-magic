@@ -55,7 +55,7 @@ export default function AdminSetPlanControl({
     <div className="space-y-1">
       <div className="flex flex-wrap items-center gap-2">
         <select
-          className="h-9 min-w-[10rem] appearance-none rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
+          className="h-9 min-w-[10rem] appearance-none rounded-lg border border-awc-control-border bg-awc-surface px-3 py-1.5 text-sm text-awc-fg shadow-theme-xs focus:border-awc-border-strong focus:outline-hidden focus:ring-3 focus:ring-awc-accent-soft"
           value={selected}
           disabled={busy}
           aria-label="User plan"
@@ -79,7 +79,7 @@ export default function AdminSetPlanControl({
           {BILLING_COPY.adminSetPlanApply}
         </Button>
       </div>
-      {message ? <p className="text-xs text-gray-500">{message}</p> : null}
+      {message ? <p className="text-xs text-awc-fg-muted">{message}</p> : null}
     </div>
   );
 }

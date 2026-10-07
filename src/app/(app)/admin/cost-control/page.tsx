@@ -13,7 +13,7 @@ export default async function AdminCostControlPage() {
 
   if (!isGlobalAdmin(actor)) {
     return (
-      <p className="text-sm text-gray-600 dark:text-gray-400">
+      <p className="text-sm text-awc-fg-muted">
         Only global admins can view cost control.
       </p>
     );

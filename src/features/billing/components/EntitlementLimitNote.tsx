@@ -9,7 +9,7 @@ export default function EntitlementLimitNote({
   return (
     <p
       role="status"
-      className="mt-2 text-sm text-amber-800 dark:text-amber-200"
+      className="mt-2 text-sm text-awc-warn"
     >
       {message}
     </p>

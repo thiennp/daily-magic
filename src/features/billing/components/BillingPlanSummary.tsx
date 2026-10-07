@@ -15,13 +15,13 @@ export default function BillingPlanSummary() {
   const [portalNote, setPortalNote] = useState<string | null>(null);
 
   if (isLoading) {
-    return <p className="text-sm text-gray-600">{BILLING_COPY.loading}</p>;
+    return <p className="text-sm text-awc-fg-muted">{BILLING_COPY.loading}</p>;
   }
 
   if (error || !plan) {
     return (
       <div className="space-y-2">
-        <p className="text-sm text-red-600">
+        <p className="text-sm text-awc-bad">
           {error ?? BILLING_COPY.loadError}
         </p>
         <Button size="sm" variant="outline" onClick={() => void refresh()}>
@@ -35,20 +35,20 @@ export default function BillingPlanSummary() {
 
   return (
     <AppPanel padding="compact" className="mb-10">
-      <h2 className="text-lg font-semibold text-gray-900">
+      <h2 className="text-lg font-semibold text-awc-fg">
         {BILLING_COPY.planHeading}
       </h2>
       <BillingPlanDetailsList plan={plan} />
       {plan.adminFree || plan.plan === "admin_free" ? (
-        <p className="mt-3 text-sm text-amber-800">{BILLING_COPY.adminFreeEdge}</p>
+        <p className="mt-3 text-sm text-awc-warn">{BILLING_COPY.adminFreeEdge}</p>
       ) : null}
       {plan.trialGate === "closed" ? (
-        <p className="mt-3 text-sm text-amber-800">
+        <p className="mt-3 text-sm text-awc-warn">
           {plan.trialGateReason ?? BILLING_COPY.trialGateClosed}
         </p>
       ) : null}
       {plan.cancelAnytime ? (
-        <p className="mt-3 text-sm text-gray-600">{BILLING_COPY.cancelAnytime}</p>
+        <p className="mt-3 text-sm text-awc-fg-muted">{BILLING_COPY.cancelAnytime}</p>
       ) : null}
       {showPortal ? (
         <div className="mt-4">
@@ -66,7 +66,7 @@ export default function BillingPlanSummary() {
             Manage billing
           </Button>
           {portalNote ? (
-            <p className="mt-2 text-xs text-gray-500">{portalNote}</p>
+            <p className="mt-2 text-xs text-awc-fg-muted">{portalNote}</p>
           ) : null}
         </div>
       ) : null}

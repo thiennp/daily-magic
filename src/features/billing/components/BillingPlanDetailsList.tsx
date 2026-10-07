@@ -15,31 +15,31 @@ export default function BillingPlanDetailsList({
       : null;
 
   return (
-    <dl className="mt-3 grid gap-2 text-sm text-gray-700 sm:grid-cols-2">
+    <dl className="mt-3 grid gap-2 text-sm text-awc-fg sm:grid-cols-2">
       <div>
-        <dt className="text-gray-500">Plan</dt>
+        <dt className="text-awc-fg-muted">Plan</dt>
         <dd className="font-medium">{formatBillingPlanLabel(plan.plan)}</dd>
       </div>
       {trialEnds ? (
         <div>
-          <dt className="text-gray-500">{BILLING_COPY.trialEndsPrefix}</dt>
+          <dt className="text-awc-fg-muted">{BILLING_COPY.trialEndsPrefix}</dt>
           <dd className="font-medium">{trialEnds}</dd>
         </div>
       ) : null}
       <div>
-        <dt className="text-gray-500">{BILLING_COPY.seatsLabel}</dt>
+        <dt className="text-awc-fg-muted">{BILLING_COPY.seatsLabel}</dt>
         <dd className="font-medium">{plan.seats}</dd>
       </div>
       <div>
-        <dt className="text-gray-500">{BILLING_COPY.computersLabel}</dt>
+        <dt className="text-awc-fg-muted">{BILLING_COPY.computersLabel}</dt>
         <dd className="font-medium">Up to {plan.maxComputers}</dd>
       </div>
       <div>
-        <dt className="text-gray-500">{BILLING_COPY.assistantsLabel}</dt>
+        <dt className="text-awc-fg-muted">{BILLING_COPY.assistantsLabel}</dt>
         <dd className="font-medium">Up to {plan.maxAssistantConnects}</dd>
       </div>
       <div>
-        <dt className="text-gray-500">Cloud message storage</dt>
+        <dt className="text-awc-fg-muted">Cloud message storage</dt>
         <dd className="font-medium">
           {plan.cloudMessageStorage
             ? BILLING_COPY.cloudStorageOn
