@@ -122,12 +122,12 @@ final class MacAppLocalUIStore: ObservableObject {
         for kind in AgentCliKind.allCases {
             // HARD default OFF — do not treat missing key as on.
             toggles[kind] = defaults.object(forKey: Key.cliPrefix + kind.rawValue) as? Bool ?? false
-            // Default: Claude + Cursor look installed; Codex/Gemini missing (matches HTML demo).
-            let defaultInstalled = (kind == .claude || kind == .cursor)
-            installed[kind] = defaults.object(forKey: Key.cliInstalledPrefix + kind.rawValue) as? Bool ?? defaultInstalled
+            installed[kind] = false
         }
         self.cliAddToProject = toggles
-        self.cliInstalled = installed
+        // Real scan of this computer (no demo defaults).
+        let scanned = AgentCliDetection.scan()
+        self.cliInstalled = installed.merging(scanned) { _, found in found }
         self.botStubs = LocalBotStubItem.seedStubs()
         if let data = defaults.data(forKey: Key.historyJSON),
            let decoded = try? JSONDecoder().decode([LocalHistoryStubItem].self, from: data) {
@@ -181,8 +181,7 @@ final class MacAppLocalUIStore: ObservableObject {
 
     /// UI-only rescan stub — flips scanning flag in ComputerView; does not invent backend.
     func markToolsRescanned() {
-        // Keep current install map; presence is local UI stub only.
-        objectWillChange.send()
+        cliInstalled = AgentCliDetection.scan()
     }
 
     private func persistHistory() {

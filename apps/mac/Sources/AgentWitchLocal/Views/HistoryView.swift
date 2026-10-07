@@ -11,27 +11,15 @@ struct HistoryView: View {
     private var isOffline: Bool { controller.isOfflineStub }
     private var isSignedIn: Bool { controller.signedInEmail != nil }
 
-    /// UI stub rows shaped like the HTML history table (not cloud history).
-    private var rows: [HistoryChromeRow] {
-        [
-            .init(day: "Today · Wed 7 Oct", time: "14:41", tool: "Claude Code", project: "Infusion",
-                  what: "Refactored the intake form validation", took: "6 min", ok: true),
-            .init(day: "Today · Wed 7 Oct", time: "13:02", tool: "Codex", project: "Website relaunch",
-                  what: "Updated image sizes on the pricing page", took: "2 min", ok: true),
-            .init(day: "Today · Wed 7 Oct", time: "11:20", tool: "Claude Code", project: "Infusion",
-                  what: "Ran test suite before release", took: "11 min", ok: false),
-            .init(day: "Yesterday · Tue 6 Oct", time: "17:55", tool: "Cursor CLI", project: "Website relaunch",
-                  what: "Fixed broken links in the footer", took: "3 min", ok: true),
-            .init(day: "Yesterday · Tue 6 Oct", time: "09:12", tool: "Claude Code", project: "Quarterly reports",
-                  what: "Merged Q3 sheets into one summary", took: "8 min", ok: true),
-        ]
-    }
+    /// No fake rows: this computer does not keep a run log the app can read yet.
+    /// Real history lives in each project in AgentWitch.
+    private var rows: [HistoryChromeRow] { [] }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 offlineBanner
-                historyTable
+                if rows.isEmpty { emptyState } else { historyTable }
             }
             .padding(20)
         }
@@ -85,9 +73,39 @@ struct HistoryView: View {
         return parts.joined(separator: " ")
     }
 
+    private var emptyState: some View {
+        VStack(spacing: 10) {
+            Image(systemName: "clock")
+                .font(.system(size: 22))
+                .foregroundStyle(MacAppTheme.fgSubtle)
+            Text("Nothing saved on this computer yet")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(MacAppTheme.fg)
+            Text("What assistants did with your tools shows in each project in AgentWitch.")
+                .font(.system(size: 12.5))
+                .foregroundStyle(MacAppTheme.fgMuted)
+                .multilineTextAlignment(.center)
+            HStack(spacing: 10) {
+                Button("Open AgentWitch") { controller.openAgentWitch(path: "/projects") }
+                    .buttonStyle(.bordered)
+                Button("See log") { controller.openLogs() }
+                    .buttonStyle(.borderless)
+            }
+            .padding(.top, 4)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 36)
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(MacAppTheme.surface)
+                .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(MacAppTheme.border, lineWidth: 1))
+        )
+    }
+
     private var historyTable: some View {
         let grouped = Dictionary(grouping: rows, by: \.day)
-        let dayOrder = ["Today · Wed 7 Oct", "Yesterday · Tue 6 Oct"]
+        var dayOrder: [String] = []
+        for row in rows where !dayOrder.contains(row.day) { dayOrder.append(row.day) }
         return VStack(alignment: .leading, spacing: 0) {
             // Header
             HStack(spacing: 0) {

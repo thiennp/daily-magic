@@ -2,46 +2,48 @@ import AppKit
 import SwiftUI
 import AgentWitchLocalCore
 
+/// Computer pane — AWL Mac UX redo (design screens 2–7).
+/// Thin AWL: plain-language status of the connection (AWB) and the assistant
+/// tools runner (AWI) on this computer. Projects, assistants and tool access
+/// are managed in AgentWitch (cloud); this pane links there instead.
 struct ComputerView: View {
     @ObservedObject var controller: MacAppMenuController
     @ObservedObject var store: MacAppLocalUIStore
-    @State private var renameDraft: String = ""
-    @State private var isRenaming = false
-    @State private var tab: ComputerTab = .projects
     @State private var isScanning = false
-    @State private var howtoKind: AgentCliKind?
 
-    enum ComputerTab: String, CaseIterable, Identifiable {
-        case projects, tools, bots
-        var id: String { rawValue }
-        var title: String {
-            switch self {
-            case .projects: return "Projects"
-            case .tools: return "Agent tools"
-            case .bots: return "Assistants"
-            }
+    enum Pane: Equatable {
+        case notSetUp, settingUp, setupFailed, signingInBrowser, signIn, connect, connected
+    }
+
+    private var pane: Pane {
+        if case .failed = controller.setupSession { return .setupFailed }
+        if case .error? = controller.bootstrapState { return .setupFailed }
+        if controller.bootstrapState == .signingIn { return .signingInBrowser }
+        if controller.setupSession.isInProgress { return .settingUp }
+        switch controller.bootstrapState {
+        case .checking?, .installing?, .settingUp?: return .settingUp
+        default: break
         }
-        var systemImage: String {
-            switch self {
-            case .projects: return "folder.fill"
-            case .tools: return "terminal"
-            case .bots: return "face.smiling"
-            }
-        }
+        if case .notInstalled = controller.state { return .notSetUp }
+        if controller.signedInEmail == nil || controller.chromeSignInPhase != .none { return .signIn }
+        if !controller.isComputerBoundStub { return .connect }
+        return .connected
     }
 
     var body: some View {
         Group {
-            if controller.showsSignInOrConnectGate {
-                signInOrConnectGate
-            } else {
-                runningComputerChrome
+            switch pane {
+            case .notSetUp: centered { notSetUpPanel }
+            case .settingUp: centered { settingUpPanel }
+            case .setupFailed: centered { setupFailedPanel }
+            case .signingInBrowser, .signIn: AWLSignInView(controller: controller)
+            case .connect: AWLConnectGateView(controller: controller, store: store)
+            case .connected: connectedPane
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(MacAppTheme.bg)
-        .frame(minWidth: 460, minHeight: 520)
         .onAppear {
-            renameDraft = store.computerName
             controller.refreshInstallAndHealth()
             if controller.signedInEmail == nil
                 && controller.chromeSignInPhase == .none
@@ -50,311 +52,379 @@ struct ComputerView: View {
                 controller.showSignInPromptGate()
             }
         }
-        .sheet(item: $howtoKind) { kind in
-            VStack(alignment: .leading, spacing: 12) {
-                Text(kind.installTitle)
-                    .font(.headline)
-                Text(kind == .codex
-                     ? "Run this in a terminal, then check again."
-                     : "Install on this computer, then check again.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Text(kind.installHint)
-                    .font(.system(.body, design: .monospaced))
-                    .padding(10)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(RoundedRectangle(cornerRadius: 8).fill(MacAppTheme.surface2))
-                Button("Copy command") {
-                    NSPasteboard.general.clearContents()
-                    NSPasteboard.general.setString(kind.installHint, forType: .string)
+    }
+
+    // MARK: - Setup panels (self-heal, never a raw exit code)
+
+    private var notSetUpPanel: some View {
+        VStack(spacing: 18) {
+            emblem("desktopcomputer", tint: MacAppTheme.brand, fill: MacAppTheme.accentSoft)
+            title("Set up this computer")
+            bodyText("AgentWitch Local lets assistants in your projects use tools on this computer. Setup takes about a minute and repairs itself if anything is missing.")
+            Button("Start setup") { controller.startOrRepairSetup() }
+                .buttonStyle(.borderedProminent).tint(MacAppTheme.brand).controlSize(.large)
+            AWLConnectGateInline(afterSetupHint: true)
+        }
+    }
+
+    private var settingUpPanel: some View {
+        VStack(spacing: 18) {
+            emblem("arrow.down.circle", tint: MacAppTheme.brand, fill: MacAppTheme.accentSoft)
+            title("Setting up this computer")
+            ProgressView(value: Double(progressPercent), total: 100)
+                .progressViewStyle(.linear).tint(MacAppTheme.brand)
+            VStack(spacing: 0) {
+                ForEach(MacAppSetupProgressStep.allCases, id: \.rawValue) { step in
+                    stepRow(step)
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(MacAppTheme.accent)
-                Button("Done") { howtoKind = nil }
             }
-            .padding(20)
-            .frame(width: 420)
+            .padding(.vertical, 6)
+            .background(card)
+            bodyText("You can close this window. Setup keeps going in the menu bar.")
+        }
+    }
+
+    private var setupFailedPanel: some View {
+        VStack(spacing: 18) {
+            emblem("exclamationmark.triangle", tint: MacAppTheme.danger, fill: MacAppTheme.dangerSoft)
+            title(MacAppSetupFailureKind.couldNotFinishTitle)
+            bodyText(failureDetail)
+            HStack(spacing: 10) {
+                Button("Try again") { controller.retryFromProblem() }
+                    .buttonStyle(.borderedProminent).tint(MacAppTheme.brand).controlSize(.large)
+                Button("See log") { controller.openLogs() }
+                    .buttonStyle(.borderless).foregroundStyle(MacAppTheme.brandInk)
+            }
+        }
+    }
+
+    private var progressPercent: Int {
+        if case .running(_, let percent) = controller.setupSession { return percent }
+        switch controller.bootstrapState {
+        case .installing?: return 46
+        case .settingUp?: return 86
+        default: return 8
+        }
+    }
+
+    private var currentStep: MacAppSetupProgressStep {
+        if case .running(let step, _) = controller.setupSession { return step }
+        switch controller.bootstrapState {
+        case .installing?: return .installingAssistantTools
+        case .settingUp?: return .checkingEverythingWorks
+        default: return .checkingThisComputer
+        }
+    }
+
+    private var failureDetail: String {
+        if let kind = controller.setupSession.failureKind { return kind.userFacingDetailText }
+        if case .error(let reason)? = controller.bootstrapState { return sanitizeChromeMessage(reason) }
+        return MacAppSetupFailureKind.generic.userFacingDetail
+    }
+
+    private func stepRow(_ step: MacAppSetupProgressStep) -> some View {
+        let done = step.rawValue < currentStep.rawValue
+        let now = step == currentStep
+        return HStack(spacing: 10) {
+            ZStack {
+                if done {
+                    Circle().fill(MacAppTheme.success)
+                    Image(systemName: "checkmark").font(.system(size: 9, weight: .bold)).foregroundStyle(.white)
+                } else if now {
+                    ProgressView().controlSize(.small).scaleEffect(0.6)
+                } else {
+                    Circle().strokeBorder(MacAppTheme.border, lineWidth: 1.5)
+                }
+            }
+            .frame(width: 18, height: 18)
+            Text(step.title)
+                .font(.system(size: 13))
+                .foregroundStyle(done || now ? MacAppTheme.fg : MacAppTheme.fgSubtle)
+            Spacer()
+            Text(done ? "Done" : now ? "…" : "")
+                .font(.system(size: 12, design: .monospaced))
+                .foregroundStyle(MacAppTheme.fgSubtle)
+        }
+        .padding(.horizontal, 16).padding(.vertical, 9)
+    }
+
+    // MARK: - Connected (Running · Computer pane)
+
+    private var chrome: MacAppChromeStatus { controller.chromeStatus }
+    private var isRunning: Bool { controller.state == .running }
+
+    private var connectedPane: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                if controller.portsInUse { portsBanner }
+                heroCard
+                thisComputerCard
+                toolsCard
+                projectsCard
+            }
+            .padding(.horizontal, 40).padding(.vertical, 32)
+            .frame(maxWidth: 880, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private var portsBanner: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle")
+            VStack(alignment: .leading, spacing: 2) {
+                Text(MacAppConstants.portsInUseReason).font(.system(size: 13, weight: .semibold))
+                Text("Another app is using part of \(controller.localPortRangeDisplayStub). Close it or try again.")
+                    .font(.system(size: 12)).foregroundStyle(MacAppTheme.fgMuted)
+            }
+            Spacer()
+            Button("Try again") { controller.startOrRepairSetup() }.buttonStyle(.bordered)
+            Button("See log") { controller.openLogs() }.buttonStyle(.borderless)
+        }
+        .foregroundStyle(MacAppTheme.danger)
+        .padding(.horizontal, 16).padding(.vertical, 12)
+        .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.dangerSoft))
+    }
+
+    private var heroCard: some View {
+        let colors = MacAppTheme.pillColors(for: chrome.kind)
+        return HStack(spacing: 18) {
+            Image(systemName: "desktopcomputer")
+                .font(.system(size: 24, weight: .medium))
+                .foregroundStyle(colors.fg)
+                .frame(width: 52, height: 52)
+                .background(RoundedRectangle(cornerRadius: 14).fill(colors.bg))
+            VStack(alignment: .leading, spacing: 4) {
+                Text(heroTitle).font(.system(size: 22, weight: .semibold)).foregroundStyle(MacAppTheme.fg)
+                Text(heroSubtitle).font(.system(size: 13)).foregroundStyle(MacAppTheme.fgMuted)
+                (Text("Connected as ") + Text(controller.signedInDisplayName ?? "You").bold().foregroundColor(MacAppTheme.fg)
+                    + Text(" · \(controller.signedInEmail ?? "")"))
+                    .font(.system(size: 13)).foregroundStyle(MacAppTheme.fgSubtle)
+                    .padding(.top, 2)
+            }
+            Spacer()
+            startStopButton
+        }
+        .padding(.horizontal, 24).padding(.vertical, 22)
+        .background(card)
+    }
+
+    private var heroTitle: String {
+        switch chrome.kind {
+        case .running: return "Running"
+        case .starting: return "Starting…"
+        case .problem: return "Problem"
+        case .waitingForInternet: return "Waiting for internet"
+        default: return "Stopped"
+        }
+    }
+
+    private var heroSubtitle: String {
+        switch chrome.kind {
+        case .running:
+            return controller.connectionLive == false
+                ? "Running, but AgentWitch cannot reach this computer yet."
+                : "Assistants in your projects can use this computer."
+        case .starting: return "Opening the connection for your account."
+        case .problem: return chrome.detailSubtitle
+        case .waitingForInternet: return "AgentWitch Local reconnects by itself when the internet is back."
+        default: return "Assistants cannot use this computer until you start it."
         }
     }
 
     @ViewBuilder
-    private var signInOrConnectGate: some View {
-        if controller.signedInEmail == nil || controller.chromeSignInPhase != .none {
-            AWLSignInView(controller: controller)
-        } else {
-            AWLConnectGateView(controller: controller, store: store)
+    private var startStopButton: some View {
+        switch chrome.kind {
+        case .running:
+            Button { controller.stopCore() } label: { Label("Stop", systemImage: "stop.fill") }
+                .buttonStyle(.bordered).controlSize(.large)
+        case .starting:
+            Button("Starting…") {}.disabled(true).controlSize(.large)
+        default:
+            Button { controller.startOrRepairSetup() } label: { Label("Start", systemImage: "play.fill") }
+                .buttonStyle(.borderedProminent).tint(MacAppTheme.brand).controlSize(.large)
         }
     }
 
-    private var runningComputerChrome: some View {
+    private var thisComputerCard: some View {
+        cardSection(title: "On this computer", trailing: store.computerName) {
+            serviceRow(
+                icon: "cable.connector",
+                title: "Connection to AgentWitch",
+                detail: connectionDetail,
+                pill: connectionPill
+            )
+            Divider()
+            serviceRow(
+                icon: "wrench.and.screwdriver",
+                title: "Assistant tools runner",
+                detail: runnerDetail,
+                pill: isRunning ? ("Running", MacAppChromeKind.running) : ("Stopped", MacAppChromeKind.stopped)
+            )
+        }
+    }
+
+    private var connectionDetail: String {
+        if !isRunning { return "Lets your projects reach this computer" }
+        switch controller.connectionLive {
+        case true?: return "Lets your projects reach this computer · connected"
+        case false?: return "Not connected to AgentWitch yet. It retries by itself."
+        case nil: return "Checking the connection…"
+        }
+    }
+
+    private var connectionPill: (String, MacAppChromeKind) {
+        if !isRunning { return ("Stopped", .stopped) }
+        switch controller.connectionLive {
+        case true?: return ("Connected", .running)
+        case false?: return ("Not connected", .problem)
+        case nil: return ("Checking…", .starting)
+        }
+    }
+
+    private var runnerDetail: String {
+        var parts = ["Runs the tools your assistants use"]
+        if let port = controller.localAppPort { parts.append("port \(port)") }
+        if let version = controller.installBundleVersion { parts.append("version \(version)") }
+        parts.append("\(store.toolsReadyCount) tools found")
+        return parts.joined(separator: " · ")
+    }
+
+    private var toolsCard: some View {
+        cardSection(title: "Assistant tools found", trailing: nil, action: (isScanning ? "Checking…" : "Check again", rescan)) {
+            ForEach(Array(AgentCliKind.allCases.enumerated()), id: \.element) { index, kind in
+                if index > 0 { Divider() }
+                let found = store.cliInstalled[kind] ?? false
+                HStack(spacing: 14) {
+                    Text(kind.displayName.split(separator: " ").map { String($0.prefix(1)) }.joined())
+                        .font(.system(size: 11, weight: .bold)).foregroundStyle(MacAppTheme.fgMuted)
+                        .frame(width: 28, height: 28)
+                        .background(RoundedRectangle(cornerRadius: 7).fill(MacAppTheme.tile2))
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(kind.displayName).font(.system(size: 13, weight: .medium)).foregroundStyle(MacAppTheme.fg)
+                        Text(found ? "On this computer" : "Not installed on this computer")
+                            .font(.system(size: 12)).foregroundStyle(MacAppTheme.fgSubtle)
+                    }
+                    Spacer()
+                    pillView(found ? "Found" : "Not found", kind: found ? .running : .stopped)
+                }
+                .padding(.horizontal, 18).padding(.vertical, 12)
+            }
+            Divider()
+            footerLink("Which project may use which tool is set in AgentWitch.", button: "Open AgentWitch") {
+                controller.openAgentWitch(path: "/projects")
+            }
+        }
+    }
+
+    private var projectsCard: some View {
+        cardSection(title: "Projects and assistants", trailing: nil) {
+            footerLink("Chat, tasks, projects and assistants live in AgentWitch. This app only keeps this computer available to them.", button: "Open AgentWitch") {
+                controller.openAgentWitch(path: "/projects")
+            }
+        }
+    }
+
+    private func rescan() {
+        isScanning = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            store.markToolsRescanned()
+            isScanning = false
+        }
+    }
+
+    // MARK: - Building blocks
+
+    private var card: some View {
+        RoundedRectangle(cornerRadius: 12)
+            .fill(MacAppTheme.surface)
+            .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(MacAppTheme.border))
+    }
+
+    private func centered<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        ScrollView {
+            content()
+                .frame(maxWidth: 460)
+                .multilineTextAlignment(.center)
+                .padding(40)
+                .frame(maxWidth: .infinity, minHeight: 560)
+        }
+    }
+
+    private func emblem(_ systemName: String, tint: Color, fill: Color) -> some View {
+        Image(systemName: systemName)
+            .font(.system(size: 30, weight: .medium))
+            .foregroundStyle(tint)
+            .frame(width: 72, height: 72)
+            .background(RoundedRectangle(cornerRadius: 20).fill(fill))
+    }
+
+    private func title(_ text: String) -> some View {
+        Text(text).font(.system(size: 26, weight: .bold)).foregroundStyle(MacAppTheme.fg)
+    }
+
+    private func bodyText(_ text: String) -> some View {
+        Text(text).font(.system(size: 14)).foregroundStyle(MacAppTheme.fgMuted).fixedSize(horizontal: false, vertical: true)
+    }
+
+    private func cardSection<Content: View>(
+        title: String,
+        trailing: String?,
+        action: (String, () -> Void)? = nil,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            header
-            statsRow
-                .padding(.horizontal, 20)
-                .padding(.bottom, 8)
-            Picker("Section", selection: $tab) {
-                ForEach(ComputerTab.allCases) { t in
-                    Label(t.title, systemImage: t.systemImage).tag(t)
-                }
-            }
-            .pickerStyle(.segmented)
-            .padding(.horizontal, 20)
-            .padding(.bottom, 10)
-
-            ScrollView {
-                Group {
-                    switch tab {
-                    case .projects: connectedProjects
-                    case .tools: agentTools
-                    case .bots: botsTab
-                    }
-                }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 12)
-            }
-        }
-    }
-
-    private var header: some View {
-        VStack(alignment: .leading, spacing: 8) {
             HStack {
+                Text(title).font(.system(size: 13.5, weight: .semibold)).foregroundStyle(MacAppTheme.fg)
                 Spacer()
-                Text(sanitizeChromeMessage(controller.statusMessage))
-                    .font(.caption)
-                    .foregroundStyle(MacAppTheme.fgMuted)
-                    .lineLimit(2)
+                if let trailing { Text(trailing).font(.system(size: 12)).foregroundStyle(MacAppTheme.fgSubtle) }
+                if let action { Button(action.0, action: action.1).buttonStyle(.borderless).controlSize(.small) }
             }
-            if isRenaming {
-                HStack {
-                    TextField("Computer name", text: $renameDraft)
-                        .textFieldStyle(.roundedBorder)
-                    Button("Save") {
-                        let trimmed = renameDraft.trimmingCharacters(in: .whitespacesAndNewlines)
-                        if trimmed.count >= 2 {
-                            store.computerName = trimmed
-                            isRenaming = false
-                        }
-                    }
-                    .disabled(renameDraft.trimmingCharacters(in: .whitespacesAndNewlines).count < 2)
-                    Button("Cancel") { isRenaming = false }
-                }
-            } else {
-                HStack {
-                    Text(store.computerName)
-                        .font(.headline)
-                    Button("Rename") {
-                        renameDraft = store.computerName
-                        isRenaming = true
-                    }
-                    .buttonStyle(.bordered)
-                }
-            }
-            Text("Shown in AgentWitch on the web.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            .padding(.horizontal, 18).padding(.vertical, 14)
+            Divider()
+            content()
         }
-        .padding(16)
-        .background(MacAppTheme.playSoft.opacity(0.55))
+        .background(card)
     }
 
-    private var statsRow: some View {
-        HStack(spacing: 10) {
-            statChip("Tools ready", "\(store.toolsReadyCount) / \(AgentCliKind.allCases.count)", MacAppTheme.agentSoft)
-            statChip("Projects", store.hasConnectedProject ? "1" : "0", MacAppTheme.skillSoft)
-            statChip("Status", controller.state == .running ? "Running" : "Idle", MacAppTheme.botSoft)
+    private func serviceRow(icon: String, title: String, detail: String, pill: (String, MacAppChromeKind)) -> some View {
+        let colors = MacAppTheme.pillColors(for: pill.1)
+        return HStack(spacing: 14) {
+            Image(systemName: icon)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(colors.fg)
+                .frame(width: 28, height: 28)
+                .background(RoundedRectangle(cornerRadius: 8).fill(colors.bg))
+            VStack(alignment: .leading, spacing: 1) {
+                Text(title).font(.system(size: 13, weight: .semibold)).foregroundStyle(MacAppTheme.fg)
+                Text(detail).font(.system(size: 12)).foregroundStyle(MacAppTheme.fgMuted)
+            }
+            Spacer()
+            pillView(pill.0, kind: pill.1)
         }
+        .padding(.horizontal, 18).padding(.vertical, 12)
     }
 
-    private func statChip(_ title: String, _ value: String, _ fill: Color) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(title)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-            Text(value)
-                .font(.subheadline.weight(.semibold))
+    private func pillView(_ label: String, kind: MacAppChromeKind) -> some View {
+        let colors = MacAppTheme.pillColors(for: kind)
+        return HStack(spacing: 6) {
+            Circle().fill(colors.fg).frame(width: 7, height: 7)
+            Text(label).font(.system(size: 12, weight: .semibold))
         }
-        .padding(10)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 10).fill(fill))
+        .padding(.horizontal, 10).padding(.vertical, 3)
+        .background(Capsule().fill(colors.bg))
+        .foregroundStyle(colors.fg)
     }
 
-    private var connectedProjects: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Connected projects")
-                .font(.headline)
-            if store.hasConnectedProject {
-                HStack {
-                    Image(systemName: "folder.fill")
-                        .foregroundStyle(MacAppTheme.accentWarm)
-                        .frame(width: 28, height: 28)
-                        .background(Circle().fill(MacAppTheme.skillSoft))
-                    VStack(alignment: .leading) {
-                        Text("infusion")
-                            .font(.subheadline.weight(.semibold))
-                        Text(store.isOwner ? "You are the owner." : "You are a member.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                    Spacer()
-                    Button("Open on web") {
-                        controller.openConnectThisMac()
-                    }
-                    .buttonStyle(.borderless)
-                }
-                .padding(12)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(MacAppTheme.surface)
-                        .shadow(color: .black.opacity(0.04), radius: 3, y: 1)
-                )
-            } else {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("No project yet")
-                        .font(.subheadline.weight(.semibold))
-                    Text("Connect this computer to a project to let its assistants work here.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Button("Connect a project") {
-                        controller.openConnectThisMac()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(MacAppTheme.accent)
-                }
-                .padding(14)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .strokeBorder(MacAppTheme.border)
-                        .background(RoundedRectangle(cornerRadius: 12).fill(MacAppTheme.surface))
-                )
-            }
+    private func footerLink(_ text: String, button: String, action: @escaping () -> Void) -> some View {
+        HStack(spacing: 12) {
+            Text(text).font(.system(size: 12.5)).foregroundStyle(MacAppTheme.fgMuted)
+            Spacer()
+            Button(button, action: action).buttonStyle(.bordered)
         }
+        .padding(.horizontal, 18).padding(.vertical, 12)
     }
+}
 
-    private var agentTools: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Text("Agent tools")
-                    .font(.headline)
-                Spacer()
-                Button(isScanning ? "Checking…" : "Check again") {
-                    isScanning = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                        store.markToolsRescanned()
-                        isScanning = false
-                    }
-                }
-                .disabled(isScanning)
-                .controlSize(.small)
-            }
-            Text("Tools found on this computer. Add to project lets that project's assistants use the tool here. It is off until the owner turns it on.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            if let reason = store.cliToggleDisabledReason {
-                Text(reason)
-                    .font(.caption)
-                    .foregroundStyle(MacAppTheme.accentWarm)
-                    .padding(8)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(RoundedRectangle(cornerRadius: 8).fill(MacAppTheme.warningSoft))
-            }
-            ForEach(AgentCliKind.allCases) { kind in
-                let installed = store.cliInstalled[kind] ?? false
-                HStack(alignment: .top) {
-                    Image(systemName: kind.systemImage)
-                        .foregroundStyle(MacAppTheme.accent)
-                        .frame(width: 28, height: 28)
-                        .background(Circle().fill(MacAppTheme.accentSoft))
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack {
-                            Text(kind.displayName)
-                                .font(.subheadline.weight(.semibold))
-                            Text(installed ? "Ready" : "Not installed")
-                                .font(.caption2.weight(.semibold))
-                                .padding(.horizontal, 7)
-                                .padding(.vertical, 2)
-                                .background(Capsule().fill(installed ? MacAppTheme.successSoft : MacAppTheme.dangerSoft))
-                                .foregroundStyle(installed ? MacAppTheme.success : MacAppTheme.danger)
-                        }
-                        if installed {
-                            Text("Add to project")
-                                .font(.caption2)
-                                .foregroundStyle(.secondary)
-                        } else {
-                            Button(kind.installTitle) { howtoKind = kind }
-                                .buttonStyle(.borderless)
-                                .font(.caption)
-                        }
-                    }
-                    Spacer()
-                    if installed {
-                        Toggle(
-                            "Add to project",
-                            isOn: Binding(
-                                get: { store.cliAddToProject[kind] ?? false },
-                                set: { store.setCliAddToProject(kind, enabled: $0) }
-                            )
-                        )
-                        .labelsHidden()
-                        .disabled(!store.canEditCliToggles)
-                        .accessibilityLabel("Add \(kind.displayName) to project")
-                    }
-                }
-                .padding(12)
-                .opacity(installed ? 1 : 0.85)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(MacAppTheme.surface)
-                        .shadow(color: .black.opacity(0.04), radius: 3, y: 1)
-                )
-            }
-        }
-    }
-
-    private var botsTab: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Assistants")
-                .font(.headline)
-            if store.botStubs.isEmpty || !store.hasConnectedProject {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("No assistants on this computer")
-                        .font(.subheadline.weight(.semibold))
-                    Text("Assistants from your connected projects show up here when they run.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                .padding(14)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(RoundedRectangle(cornerRadius: 12).fill(MacAppTheme.botSoft.opacity(0.5)))
-            } else {
-                ForEach(store.botStubs) { bot in
-                    HStack {
-                        Image(systemName: "face.smiling")
-                            .foregroundStyle(MacAppTheme.accent)
-                            .frame(width: 28, height: 28)
-                            .background(Circle().fill(MacAppTheme.botSoft))
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(bot.name)
-                                .font(.subheadline.weight(.semibold))
-                            Text("\(bot.project) · \(bot.cli)")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                        Spacer()
-                        Text(bot.working ? "Working" : "Idle")
-                            .font(.caption2.weight(.semibold))
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background(Capsule().fill(bot.working ? MacAppTheme.successSoft : MacAppTheme.surface2))
-                    }
-                    .padding(12)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(MacAppTheme.surface)
-                            .shadow(color: .black.opacity(0.04), radius: 3, y: 1)
-                    )
-                }
-            }
-        }
-    }
+private extension MacAppSetupFailureKind {
+    var userFacingDetailText: String { userFacingDetail }
 }

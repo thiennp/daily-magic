@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 import AgentWitchLocalCore
 
@@ -19,8 +20,30 @@ extension MacAppMenuController {
     /// AWL-H8 placeholder — offline / waiting for internet.
     var isOfflineStub: Bool { chromeOffline }
 
-    /// AWL-H8 / Connect bind placeholder.
-    var isComputerBoundStub: Bool { chromeComputerBound && signedInEmail != nil }
+    /// Connect bind: this session's Connect, a live connection for the signed-in
+    /// account, or a bind remembered for this account (survives app restarts).
+    var isComputerBoundStub: Bool {
+        guard let email = signedInEmail else { return false }
+        return chromeComputerBound
+            || connectionLive == true
+            || UserDefaults.standard.string(forKey: Self.boundAccountKey) == email
+    }
+
+    static let boundAccountKey = "awl.boundAccountEmail"
+
+    func rememberBoundAccount(_ email: String) {
+        UserDefaults.standard.set(email, forKey: Self.boundAccountKey)
+    }
+
+    func forgetBoundAccount() {
+        UserDefaults.standard.removeObject(forKey: Self.boundAccountKey)
+    }
+
+    /// Opens AgentWitch (cloud) — projects, assistants and tool access are managed there.
+    func openAgentWitch(path: String = "/projects") {
+        guard let url = URL(string: MacAppConstants.cloudOrigin + path) else { return }
+        NSWorkspace.shared.open(url)
+    }
 
     /// H6 owns the range; chrome display reads real allocation (or placeholder copy).
     var localPortRangeDisplayStub: String {
@@ -91,20 +114,21 @@ extension MacAppMenuController {
 
     func continueWithGoogleStub() {
         // System browser OAuth handoff only — not browser AWL / local.agentwitch.com.
-        chromeSignInPhase = .waitingInBrowser
-        statusMessage = "Finish signing in in your browser"
-        openConnectThisMac()
+        beginAccountSignIn()
     }
 
     func openBrowserAgainStub() {
-        openConnectThisMac()
+        if bootstrapState == .signingIn {
+            restartBootstrapSignIn()
+        } else {
+            beginAccountSignIn()
+        }
         statusMessage = "Finish signing in in your browser"
     }
 
     func cancelSignInStub() {
-        chromeSignInPhase = signedInEmail == nil ? .prompt : .none
         chromeSignInCodeDraft = ""
-        statusMessage = signedInEmail == nil ? "Signed out" : statusMessage
+        cancelAccountSignIn()
     }
 
     func sendEmailCodeStub() {
@@ -171,9 +195,13 @@ extension MacAppMenuController {
             return
         }
         chromeComputerBound = true
+        if let email = signedInEmail { rememberBoundAccount(email) }
         MacAppLocalUIStore.shared.hasConnectedProject = true
         chromeSignInPhase = .none
         statusMessage = "This computer is connected"
+        if state != .running {
+            startOrRepairSetup()
+        }
     }
 
     func notYouSignOutStub() {

@@ -80,6 +80,10 @@ final class MacAppMenuController: ObservableObject {
     @Published private(set) var promptOptimizerQuery: String?
     /// True when core reported every port in the account range is busy.
     @Published private(set) var portsInUse: Bool = false
+    /// AWB: local `/health` `wsConnected` (nil when no healthy listener was found).
+    @Published private(set) var connectionLive: Bool?
+    /// AWI: install bundle version from local `/health` (e.g. "270").
+    @Published private(set) var installBundleVersion: String?
 
     private let fileManager: FileManager
     private var selfHealTask: Task<Void, Never>?
@@ -131,6 +135,14 @@ final class MacAppMenuController: ObservableObject {
             )
 
             if installed {
+                // Sign-in handoff / install exchange in flight on an installed core:
+                // keep the bootstrap session so the browser callback still lands.
+                switch bootstrapState {
+                case .signingIn?, .installing?, .settingUp?:
+                    return
+                default:
+                    break
+                }
                 bootstrapState = nil
                 pendingBootstrapAttempt = nil
                 let next = detectInstallFlow(
@@ -263,6 +275,48 @@ final class MacAppMenuController: ObservableObject {
         }
     }
 
+    /// Real sign-in (installed core, signed out): system-browser OAuth handoff with
+    /// PKCE, then the same install exchange binds this computer to that account.
+    /// Not browser AWL — the browser is used only for sign-in and hands back here.
+    func beginAccountSignIn() {
+        guard !setupSession.isInProgress else { return }
+        bootstrapTask?.cancel()
+        pendingBootstrapAttempt = nil
+        chromeSignInPhase = .waitingInBrowser
+#if os(macOS)
+        do {
+            let result = try beginBootstrapSignInFlow(
+                current: .checking,
+                opener: browserOpener
+            )
+            pendingBootstrapAttempt = result.pending
+            bootstrapState = result.state
+            statusMessage = "Finish signing in in your browser"
+        } catch {
+            pendingBootstrapAttempt = nil
+            chromeSignInPhase = .choose
+            let reason = sanitizeBootstrapErrorReason(error.localizedDescription)
+            statusMessage = reason
+        }
+#endif
+    }
+
+    /// Cancel a browser sign-in handoff. Leaves an installed core as it was.
+    func cancelAccountSignIn() {
+        bootstrapTask?.cancel()
+        pendingBootstrapAttempt = nil
+        let installed = isAgentWitchCoreInstalled(
+            installDir: resolveAgentWitchInstallDir(),
+            plistPath: resolveAgentWitchLaunchAgentPlistPath(),
+            fileManager: fileManager
+        )
+        if installed, bootstrapState == .signingIn {
+            bootstrapState = nil
+        }
+        chromeSignInPhase = signedInEmail == nil ? .prompt : .none
+        statusMessage = signedInEmail == nil ? "Signed out" : statusMessage
+    }
+
     func retrySetup() {
         // Arch Exact FIX-1: retry only from failed.
         guard case .failed = setupSession else { return }
@@ -282,6 +336,9 @@ final class MacAppMenuController: ObservableObject {
             return
         }
         signedInEmail = nil
+        chromeComputerBound = false
+        connectionLive = nil
+        forgetBoundAccount()
         localPortRange = nil
         localPortRangeDisplay = nil
         localAppPort = nil
@@ -648,6 +705,14 @@ final class MacAppMenuController: ObservableObject {
             bootstrapState = nil
             state = .running
             statusMessage = statusLabel(for: .running)
+            // Sign-in handoff finished: the install exchange bound this computer
+            // to the account that signed in (active-profile.json).
+            refreshSignedInEmail()
+            chromeSignInPhase = .none
+            if let email = signedInEmail {
+                chromeComputerBound = true
+                rememberBoundAccount(email)
+            }
         }
 #else
         _ = code
@@ -745,6 +810,7 @@ final class MacAppMenuController: ObservableObject {
                 continue
             }
         }
+        connectionLive = nil
         // No healthy listener: honor exhausted marker from local-app-port.json
         // (written when preflight fails — /health never comes up).
         if let profileDir,
@@ -768,6 +834,12 @@ final class MacAppMenuController: ObservableObject {
             if let port = json["localAppPort"] as? Int {
                 localAppPort = port
             }
+            connectionLive = json["wsConnected"] as? Bool
+            if connectionLive == true, let email = signedInEmail {
+                rememberBoundAccount(email)
+            }
+            installBundleVersion = (json["installBundleVersion"] as? String)
+                ?? (json["installBundleVersion"] as? Int).map(String.init)
             if let rangeObj = json["localPortRange"] as? [String: Any],
                let start = rangeObj["start"] as? Int,
                let end = rangeObj["end"] as? Int

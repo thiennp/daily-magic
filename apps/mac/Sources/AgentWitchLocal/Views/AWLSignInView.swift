@@ -98,20 +98,18 @@ struct AWLSignInView: View {
                 Rectangle().fill(MacAppTheme.border).frame(height: 1)
             }
 
-            Text("Email")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(MacAppTheme.fgSubtle)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            TextField("name@example.com", text: $controller.chromeSignInEmailDraft)
-                .textFieldStyle(.roundedBorder)
+            // Real sign-in only: AgentWitch's sign-in page (Google or email link)
+            // opens in the system browser, then hands back to this window.
+            Button("Sign in with email") { controller.continueWithGoogleStub() }
+                .buttonStyle(.borderedProminent)
+                .tint(MacAppTheme.brand)
+                .controlSize(.large)
+                .frame(maxWidth: .infinity)
 
-            Button("Send sign-in code") {
-                controller.sendEmailCodeStub()
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(MacAppTheme.brand)
-            .disabled(controller.chromeSignInEmailDraft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-            .frame(maxWidth: .infinity)
+            Text("Your browser opens only for sign-in, then hands back here.")
+                .font(.caption)
+                .foregroundStyle(MacAppTheme.fgSubtle)
+                .multilineTextAlignment(.center)
 
             Button("Cancel") { controller.cancelSignInStub() }
                 .buttonStyle(.borderless)
@@ -128,7 +126,7 @@ struct AWLSignInView: View {
                 .font(.system(size: 22, weight: .semibold))
                 .foregroundStyle(MacAppTheme.fg)
                 .multilineTextAlignment(.center)
-            Text("Your browser opened for Google sign-in. When it says you're done, come back here. This window updates by itself.")
+            Text("Your browser opened for sign-in. When it says you're done, come back here. This window updates by itself.")
                 .font(.system(size: 14))
                 .foregroundStyle(MacAppTheme.fgMuted)
                 .multilineTextAlignment(.center)
@@ -138,9 +136,6 @@ struct AWLSignInView: View {
             HStack(spacing: 12) {
                 Button("Open browser again") { controller.openBrowserAgainStub() }
                     .buttonStyle(.bordered)
-                Button("I'm done") { controller.completeBrowserSignInStub() }
-                    .buttonStyle(.borderedProminent)
-                    .tint(MacAppTheme.brand)
                 Button("Cancel") { controller.cancelSignInStub() }
                     .buttonStyle(.borderless)
                     .foregroundStyle(MacAppTheme.brand)

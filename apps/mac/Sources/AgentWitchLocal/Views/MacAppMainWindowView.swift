@@ -61,7 +61,7 @@ struct MacAppMainWindowView: View {
                     .font(.system(size: 11, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
                     .frame(width: 22, height: 22)
-                    .background(RoundedRectangle(cornerRadius: 6).fill(MacAppTheme.brand))
+                    .background(RoundedRectangle(cornerRadius: 7).fill(MacAppTheme.fg))
                 Text("AgentWitch Local")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(MacAppTheme.fg)
@@ -82,7 +82,7 @@ struct MacAppMainWindowView: View {
             sidebarFooter
         }
         .frame(width: 220)
-        .background(MacAppTheme.surface2)
+        .background(MacAppTheme.tile)
     }
 
     private func sidebarButton(_ item: MacAppSidebarPage) -> some View {
@@ -107,12 +107,12 @@ struct MacAppMainWindowView: View {
                 Spacer()
             }
             .font(.system(size: 13, weight: selected ? .semibold : .regular))
-            .foregroundStyle(selected ? MacAppTheme.brand : MacAppTheme.fg)
+            .foregroundStyle(MacAppTheme.fg)
             .padding(.horizontal, 10)
             .padding(.vertical, 8)
             .background(
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(selected ? MacAppTheme.accentSoft : Color.clear)
+                    .fill(selected ? MacAppTheme.tile2 : Color.clear)
             )
         }
         .buttonStyle(.plain)
@@ -140,17 +140,23 @@ struct MacAppMainWindowView: View {
 
             HStack(spacing: 8) {
                 Image(systemName: "desktopcomputer")
-                    .foregroundStyle(MacAppTheme.brand)
+                    .foregroundStyle(MacAppTheme.fgMuted)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("This computer")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(MacAppTheme.fg)
-                    Text("\(store.computerName) · \(store.hasConnectedProject && (controller.signedInEmail != nil) ? "connected" : "not connected")")
+                    Text("\(store.computerName) · \(controller.isComputerBoundStub ? "connected" : "not connected")")
                         .font(.caption2)
                         .foregroundStyle(MacAppTheme.fgMuted)
                 }
             }
             .padding(10)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 9)
+                    .fill(MacAppTheme.surface)
+                    .overlay(RoundedRectangle(cornerRadius: 9).strokeBorder(MacAppTheme.border))
+            )
         }
         .padding(.horizontal, 10)
         .padding(.bottom, 14)
@@ -190,7 +196,6 @@ struct MacAppMainWindowView: View {
                 .foregroundStyle(MacAppTheme.fg)
             statusPill
             Spacer()
-            startStopChrome
             accountChip
         }
         .padding(.horizontal, 20)

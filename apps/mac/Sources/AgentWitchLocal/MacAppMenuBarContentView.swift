@@ -170,9 +170,7 @@ struct MacAppMenuBarContentView: View {
         case .running, .starting, .stopped:
             accountRow
             runRow
-            if store.hasConnectedProject {
-                projectsPeek
-            }
+            statusLines
         }
     }
 
@@ -228,29 +226,45 @@ struct MacAppMenuBarContentView: View {
         .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(MacAppTheme.border))
     }
 
-    private var projectsPeek: some View {
+    /// Thin AWL: plain-language AWB / AWI status (projects live in AgentWitch).
+    private var statusLines: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Projects")
+            Text("On this computer")
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(MacAppTheme.fgMuted)
-            // Stub peek — AWL-H8 binds real connected projects
-            HStack(spacing: 8) {
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(MacAppTheme.accentSoft2)
-                    .frame(width: 22, height: 22)
-                    .overlay(Image(systemName: "folder.fill").font(.caption2).foregroundStyle(MacAppTheme.brand))
-                Text(store.computerName)
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(MacAppTheme.fg)
-                Spacer()
-                Text(store.isOwner ? "Owner" : "Member")
-                    .font(.caption2)
-                    .foregroundStyle(MacAppTheme.fgSubtle)
-            }
-            .padding(8)
-            .background(RoundedRectangle(cornerRadius: 8).fill(MacAppTheme.tile))
+            statusLine("Connection to AgentWitch", value: connectionValue)
+            statusLine("Assistant tools", value: toolsValue)
         }
         .padding(.top, 6)
+    }
+
+    private var connectionValue: String {
+        guard controller.state == .running else { return "Stopped" }
+        switch controller.connectionLive {
+        case true?: return "Connected"
+        case false?: return "Not connected yet"
+        case nil: return "Checking…"
+        }
+    }
+
+    private var toolsValue: String {
+        var parts = ["\(store.toolsReadyCount) found"]
+        if controller.state == .running, let port = controller.localAppPort {
+            parts.append("port \(port)")
+        }
+        return parts.joined(separator: " · ")
+    }
+
+    private func statusLine(_ title: String, value: String) -> some View {
+        HStack {
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(MacAppTheme.fg)
+            Spacer()
+            Text(value)
+                .font(.caption)
+                .foregroundStyle(MacAppTheme.fgSubtle)
+        }
     }
 
     private func updateStrip(_ offer: UpdateOffer) -> some View {
@@ -275,28 +289,29 @@ struct MacAppMenuBarContentView: View {
     }
 
     private var footer: some View {
-        HStack(spacing: 8) {
-            Button {
-                openMainWindow(page: .computer)
-            } label: {
-                Label("Open window", systemImage: "macwindow")
-            }
-            .buttonStyle(.borderless)
-            .controlSize(.small)
-
-            Spacer()
-
-            Button {
-                showQuitConfirm = true
-            } label: {
-                Label("Quit", systemImage: "power")
-            }
-            .buttonStyle(.borderless)
-            .controlSize(.small)
+        VStack(spacing: 0) {
+            footerRow("Open window", shortcut: "⌘O") { openMainWindow(page: .computer) }
+            footerRow("Settings…", shortcut: "⌘,") { openMainWindow(page: .settings) }
+                .disabled(chrome.kind == .notSetUp || chrome.kind == .settingUp)
+            Divider().padding(.horizontal, 8).padding(.vertical, 4)
+            footerRow("Quit AgentWitch Local", shortcut: "⌘Q") { showQuitConfirm = true }
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
+        .padding(5)
         .background(MacAppTheme.surface)
+    }
+
+    private func footerRow(_ title: String, shortcut: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack {
+                Text(title).font(.system(size: 13)).foregroundStyle(MacAppTheme.fg)
+                Spacer()
+                Text(shortcut).font(.system(size: 12)).foregroundStyle(MacAppTheme.fgSubtle)
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 
     private func openMainWindow(page: MacAppSidebarPage) {
