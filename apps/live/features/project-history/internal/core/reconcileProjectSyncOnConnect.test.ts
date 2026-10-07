@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import type {
   ProjectTaskLocalRecord,
   ProjectTaskNeonMeta,
-} from "@/features/projects/sync/adapters/projectTasksAdapter";
+} from "./projectTaskSyncAdapter";
 import {
   claimPendingProjectTaskMeta,
   reconcileProjectSyncOnConnect,

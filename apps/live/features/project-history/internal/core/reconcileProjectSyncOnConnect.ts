@@ -8,17 +8,15 @@
  */
 
 import {
+  PROJECT_SYNC_RECONCILE_BATCH_SIZE,
   compareVersionProjectTask,
   keyOfProjectTask,
   preferLocalOverNeonNewer,
   toNeonMetaProjectTask,
+  type ProjectSyncVersion,
   type ProjectTaskLocalRecord,
   type ProjectTaskNeonMeta,
-} from "@/features/projects/sync/adapters/projectTasksAdapter";
-import {
-  PROJECT_SYNC_RECONCILE_BATCH_SIZE,
-  type ProjectSyncVersion,
-} from "@/features/projects/sync/projectSync.types";
+} from "./projectTaskSyncAdapter";
 
 export type PushNeonMetaPort = {
   /**

@@ -7,7 +7,7 @@ export const PROJECT_PAGE_LIBRARY_COPY = {
   "tabs.library": "Library",
   "library.heading": "Library",
   "library.intro":
-    "Playbooks, workflows, assistants and skills for this project.",
+    "Playbooks, workflows, assistants, and skills for this project.",
   "library.aria": "Library for this project",
   "library.kind.playbook": "Playbook",
   "library.kind.playbooks": "Playbooks",
