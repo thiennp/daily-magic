@@ -61,3 +61,15 @@ export const OW_STATUS_TONE_CLASS = {
   warn: "bg-awc-warn-soft text-awc-warn",
   info: "bg-awc-accent-soft text-awc-blue-700",
 } as const;
+
+/** P1-S4a day separator: centred label between hairlines. */
+export const OW_DAY_SEPARATOR_CLASS =
+  "flex items-center gap-2.5 text-[12px] font-semibold text-awc-fg-subtle before:h-px before:flex-1 before:bg-awc-border after:h-px after:flex-1 after:bg-awc-border";
+
+/** P1-S4a "New" marker at the first unread message. */
+export const OW_NEW_MARKER_CLASS =
+  "flex items-center gap-2.5 text-[12px] font-bold text-awc-bad after:h-px after:flex-1 after:bg-awc-bad after:opacity-50";
+
+/** P1-S4a jump-to-new pill, floating over the bottom of the feed. */
+export const OW_JUMP_NEW_CLASS =
+  "absolute bottom-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-lg border border-awc-primary bg-awc-primary px-2.5 py-1 text-[12.5px] font-medium text-white shadow-md hover:bg-awc-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-awc-primary/40";

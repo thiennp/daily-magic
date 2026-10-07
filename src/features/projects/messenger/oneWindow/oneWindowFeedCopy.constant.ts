@@ -29,4 +29,11 @@ export const ONE_WINDOW_FEED_COPY = {
   noticeRestore: "Restore",
   noticeQuiet: "{name} has been quiet for a while. It may be busy, or its computer may be asleep.",
   betweenTo: "to",
+  dayToday: "Today · {date}",
+  dayYesterday: "Yesterday · {date}",
+  jumpNewOne: "1 new",
+  jumpNewMany: "{n} new",
+  jumpNewA11y: "Jump to the first new message",
+  accessPending: "Access · {n} pending",
+  accessPendingA11y: "Open Access: {n} pending",
 } as const;

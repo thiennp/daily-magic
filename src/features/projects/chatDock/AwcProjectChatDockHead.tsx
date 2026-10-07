@@ -1,5 +1,6 @@
 "use client";
 
+import AwcProjectChatDockAccessPill from "@/features/projects/chatDock/AwcProjectChatDockAccessPill";
 import {
   CHAT_DOCK_HEAD_BTN_CLASS,
   CHAT_DOCK_HEAD_CLASS,
@@ -10,6 +11,9 @@ interface AwcProjectChatDockHeadProps {
   readonly full: boolean;
   readonly onToggleFull: () => void;
   readonly onClose: () => void;
+  /** P1-S4a: owner's open join requests; the pill shows in full view only. */
+  readonly accessPendingCount?: number;
+  readonly onOpenAccess?: () => void;
 }
 
 /** Dock title ("Chat" in full view, "New message" compact) + Full screen / Exit full screen + Minimise. */
@@ -17,12 +21,19 @@ export default function AwcProjectChatDockHead({
   full,
   onToggleFull,
   onClose,
+  accessPendingCount = 0,
+  onOpenAccess,
 }: AwcProjectChatDockHeadProps) {
   const sizeLabel = full ? C["dock.exitFull"] : C["dock.expand"];
   const title = full ? C["dock.titleFull"] : C["dock.title"];
   return (
     <header className={CHAT_DOCK_HEAD_CLASS}>
-      <h3 className="m-0 text-[15px] font-semibold text-white">{title}</h3>
+      <span className="flex min-w-0 items-center gap-2.5">
+        <h3 className="m-0 text-[15px] font-semibold text-white">{title}</h3>
+        {full && onOpenAccess !== undefined ? (
+          <AwcProjectChatDockAccessPill count={accessPendingCount} onOpen={onOpenAccess} />
+        ) : null}
+      </span>
       <span className="flex items-center gap-0.5">
         <button
           type="button"

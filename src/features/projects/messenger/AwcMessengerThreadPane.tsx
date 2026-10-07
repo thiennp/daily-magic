@@ -32,6 +32,7 @@ export default function AwcMessengerThreadPane({
   defaultAssigneeMembershipId,
   clearAllSlot,
   noticesSlot,
+  unreadCount = 0,
   onBack,
   onLoadOlder,
   onSendMessage,
@@ -85,6 +86,7 @@ export default function AwcMessengerThreadPane({
           projectComputerOffline={projectComputerOffline}
           onLoadOlder={onLoadOlder}
           chatVisibility={chatVisibility}
+          unreadCount={filter === "all" ? unreadCount : 0}
         />
       ) : null}
       {canSend ? (

@@ -32,3 +32,7 @@ export const CHAT_DOCK_BODY_FULL_CLASS =
 
 export const CHAT_DOCK_VIEWER_CLASS =
   "border-b border-awc-border bg-awc-tile px-3.5 py-2.5 text-[length:var(--awc-fs-sm)] text-awc-fg-subtle";
+
+/** P1-S4a "Access · N pending" pill in the full-view head (warn soft tokens). */
+export const CHAT_DOCK_ACCESS_PILL_CLASS =
+  "awc-focus-ring inline-flex items-center rounded-awc-pill bg-awc-warn-soft px-2.5 py-0.5 text-[12.5px] font-semibold text-awc-warn transition hover:brightness-95";

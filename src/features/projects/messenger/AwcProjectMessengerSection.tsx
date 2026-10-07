@@ -15,6 +15,7 @@ import {
 } from "@/features/projects/messenger/hooks/useAwcProjectMessengerFeed";
 import { useAwcProjectMessengerInboxClear } from "@/features/projects/messenger/hooks/useAwcProjectMessengerInboxClear";
 import AwcOneWindowFeedNotices from "@/features/projects/messenger/oneWindow/AwcOneWindowFeedNotices";
+import { useOneWindowUnreadSnapshot } from "@/features/projects/messenger/oneWindow/useOneWindowUnreadSnapshot";
 import { OW_SURFACE_CLASS } from "@/features/projects/messenger/oneWindow/awcOneWindowChrome.constant";
 import {
   oneWindowArchivedNoticeText,
@@ -37,6 +38,7 @@ export default function AwcProjectMessengerSection({
   initialThreadKey = null,
   onUnreadMaybeChanged,
   isOwner = false,
+  initialUnreadCount = 0,
 }: AwcProjectMessengerSectionProps) {
   const feed = useAwcProjectMessengerFeed({
     projectId,
@@ -45,6 +47,12 @@ export default function AwcProjectMessengerSection({
     onUnreadMaybeChanged,
   });
   const { list, open, selectedKey } = feed;
+  const unreadCount = useOneWindowUnreadSnapshot({
+    selectedKey,
+    initialKey: initialThreadKey ?? WHOLE_THREAD_KEY,
+    initialCount: initialUnreadCount,
+    threads: list.threads,
+  });
   const chatVisibility = useProjectTasksChatVisibility(projectId);
   const inboxClear = useAwcProjectMessengerInboxClear(projectId, isOwner);
   const meta = useMemo(
@@ -99,6 +107,7 @@ export default function AwcProjectMessengerSection({
             quiet={quiet}
           />
         }
+        unreadCount={unreadCount}
         onBack={() => feed.setSelectedKey(WHOLE_THREAD_KEY)}
         onLoadOlder={() => void open.loadOlder()}
         onSendMessage={async (text, needsReply) =>

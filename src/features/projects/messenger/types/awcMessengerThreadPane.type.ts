@@ -29,6 +29,8 @@ export interface AwcMessengerThreadPaneProps {
   readonly clearAllSlot?: ReactNode;
   /** P1-S3 feed notices (archived, quiet) shown above the timeline on "All". */
   readonly noticesSlot?: ReactNode;
+  /** P1-S4a: unread count frozen at open → New marker + jump-to-new on "All". */
+  readonly unreadCount?: number;
   readonly onBack: () => void;
   readonly onLoadOlder: () => void;
   readonly onSendMessage: (text: string, needsReply: boolean) => Promise<boolean>;

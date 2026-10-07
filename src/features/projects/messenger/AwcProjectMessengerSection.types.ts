@@ -8,4 +8,6 @@ export type AwcProjectMessengerSectionProps = {
   readonly onUnreadMaybeChanged?: () => void;
   /** Owner-only Clear all bar; non-owners fetch nothing. */
   readonly isOwner?: boolean;
+  /** P1-S4a: the opening feed's unread count before it is marked read (New marker). */
+  readonly initialUnreadCount?: number;
 };

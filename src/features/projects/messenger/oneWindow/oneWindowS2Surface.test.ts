@@ -32,7 +32,7 @@ describe("P1-S2 One window — full-width Chat surface", () => {
     for (const part of ["AwcOneWindowFilterBar", "AwcOneWindowInFeedApprovals", "AwcMessengerTimeline", "AwcMessengerComposer"]) {
       expect(pane).toContain(part);
     }
-    expect(read(`${M}/AwcMessengerTimeline.tsx`)).toContain("TOP_LOAD_THRESHOLD_PX");
+    expect(read(`${M}/hooks/useMessengerTimelineScroll.ts`)).toContain("TOP_LOAD_THRESHOLD_PX");
   });
 
   it("Chat dock full view hosts it full width and re-opens on a new thread", () => {

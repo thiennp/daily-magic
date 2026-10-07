@@ -6,6 +6,7 @@ import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProj
 import AwcProjectAskBox from "@/features/projects/askBox/AwcProjectAskBox";
 import AwcProjectChatDockFab from "@/features/projects/chatDock/AwcProjectChatDockFab";
 import AwcProjectChatDockPopover from "@/features/projects/chatDock/AwcProjectChatDockPopover";
+import { openProjectAccessPending } from "@/features/projects/chatDock/openProjectAccessPending";
 import { dockTaskComputerTargets } from "@/features/projects/chatDock/dockTaskComputerTargets";
 import {
   CHAT_DOCK_ROOT_CLASS,
@@ -13,6 +14,8 @@ import {
 } from "@/features/projects/chatDock/projectChatDockClasses.constant";
 import type { AwcProjectChatSurface } from "@/features/projects/chatDock/useAwcProjectChatSurface";
 import AwcProjectMessengerSection from "@/features/projects/messenger/AwcProjectMessengerSection";
+import { unreadForMessengerThread } from "@/features/projects/messenger/oneWindow/useOneWindowUnreadSnapshot";
+import { PROJECT_MESSENGER_WHOLE_THREAD_KEY } from "@/lib/projects/acl/messaging/messenger/projectMessenger.constant";
 import type { AwcMessengerThreadList } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 import buildOverviewAttention from "@/features/projects/overview/buildOverviewAttention";
 import sumMessengerUnread from "@/features/projects/overview/sumMessengerUnread";
@@ -79,6 +82,11 @@ export default function AwcProjectChatDock({
           canSend={canSend}
           onToggleFull={dock.toggleFull}
           onClose={dock.closeDock}
+          accessPendingCount={isOwner ? access.pending.length : 0}
+          onOpenAccess={() => {
+            dock.closeDock();
+            window.requestAnimationFrame(() => openProjectAccessPending());
+          }}
         >
           {dock.full ? (
             <AwcProjectMessengerSection
@@ -87,6 +95,7 @@ export default function AwcProjectChatDock({
               hasOwnerComputer={projectHasOwnerComputer(project)}
               initialThreadKey={chat.threadKey}
               isOwner={isOwner}
+              initialUnreadCount={unreadForMessengerThread(threads, chat.threadKey ?? PROJECT_MESSENGER_WHOLE_THREAD_KEY)}
               onUnreadMaybeChanged={onUnreadMaybeChanged}
             />
           ) : (

@@ -18,6 +18,8 @@ interface AwcProjectChatDockPopoverProps {
   readonly onToggleFull: () => void;
   readonly onClose: () => void;
   readonly children: ReactNode;
+  readonly accessPendingCount?: number;
+  readonly onOpenAccess?: () => void;
 }
 
 /** Dock dialog shell: head, optional viewer banner, composer / full chat slot. */
@@ -27,6 +29,8 @@ export default function AwcProjectChatDockPopover({
   onToggleFull,
   onClose,
   children,
+  accessPendingCount,
+  onOpenAccess,
 }: AwcProjectChatDockPopoverProps) {
   return (
     <section
@@ -39,6 +43,8 @@ export default function AwcProjectChatDockPopover({
         full={full}
         onToggleFull={onToggleFull}
         onClose={onClose}
+        accessPendingCount={accessPendingCount}
+        onOpenAccess={onOpenAccess}
       />
       {canSend || full ? null : <AwcProjectChatDockViewerBanner />}
       <div className={full ? CHAT_DOCK_BODY_FULL_CLASS : CHAT_DOCK_COMPOSER_CLASS}>
