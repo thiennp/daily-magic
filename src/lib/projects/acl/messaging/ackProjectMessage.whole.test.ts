@@ -50,7 +50,7 @@ describe("ackProjectMessage on a Whole project message", () => {
         expect(text).toContain("SET b2b_state = 'acked'");
         expect(values).toContain("mem-planner");
         expect(values.find(Array.isArray)).not.toContain("blocked_silent_10m");
-        return [{ mine_count: 1 }];
+        return [{ mine_count: 1, moved_count: 1 }];
       },
     );
     expect(
@@ -62,6 +62,21 @@ describe("ackProjectMessage on a Whole project message", () => {
       ok: true,
       messageId: "msg-whole",
     });
+    expect(deleteMock).not.toHaveBeenCalled();
+  });
+
+  it("a repeat ack (nothing moved) reports alreadyAcked", async () => {
+    sqlMock.mockImplementation(async (strings: TemplateStringsArray) =>
+      strings.join("?").includes("SELECT * FROM project_messages")
+        ? [wholeRow]
+        : [{ mine_count: 1, moved_count: 0 }],
+    );
+    expect(
+      await ackProjectMessage({
+        messageId: "msg-whole",
+        actorUserId: "user-planner",
+      }),
+    ).toEqual({ ok: true, messageId: "msg-whole", alreadyAcked: true });
     expect(deleteMock).not.toHaveBeenCalled();
   });
 

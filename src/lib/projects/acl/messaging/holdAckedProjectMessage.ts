@@ -7,17 +7,19 @@ import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAu
 
 /**
  * Ack while the history gate still needs computerAck: keep the row (acked_at
- * set once). Only the first ack writes the msg.ack audit; a repeat ack
- * (wasAcked) emits no second audit / activity event (Arch FIX 3).
+ * set once). Only the call that sets acked_at (atomic UPDATE ... RETURNING)
+ * writes the msg.ack audit. A repeat or concurrent ack emits no second audit
+ * or activity event and returns alreadyAcked (Arch FIX 3 / 3b).
  */
 export const holdAckedProjectMessage = async (input: {
   readonly projectId: string;
   readonly messageId: string;
   readonly actorUserId: string;
-  readonly wasAcked: boolean;
 }): Promise<AckProjectMessageResult> => {
-  await holdProjectMessageForComputerAck({ messageId: input.messageId });
-  if (!input.wasAcked) {
+  const firstAck = await holdProjectMessageForComputerAck({
+    messageId: input.messageId,
+  });
+  if (firstAck) {
     await writeProjectAccessAudit({
       projectId: input.projectId,
       actorUserId: input.actorUserId,
@@ -25,5 +27,5 @@ export const holdAckedProjectMessage = async (input: {
       detail: { messageId: input.messageId, deleted: false },
     });
   }
-  return ackedProjectMessageOk(input.messageId, input.wasAcked);
+  return ackedProjectMessageOk(input.messageId, !firstAck);
 };

@@ -11,13 +11,16 @@ const ACKABLE_FROM: readonly string[] = PROJECT_B2B_STATES.filter(
  * Ack of a Whole project message by one bot: only that bot's delivery moves
  * to acked (unwatched rows too). The shared message row stays for the other
  * bots' chips; ack/TTL/delete-on-read remove it later. blocked_silent_10m
- * stays final. Idempotent: an already-final delivery is still ok.
+ * stays final. Idempotent: an already-final delivery is still ok, flagged
+ * alreadyAcked (nothing moved: acked before, or timed out as
+ * blocked_silent_10m). Concurrent acks: only one UPDATE moves the row.
  */
 export const ackProjectWholeMessageDelivery = async (input: {
   readonly messageId: string;
   readonly membershipId: string;
 }): Promise<
-  { readonly ok: true } | { readonly ok: false; readonly code: "forbidden" }
+  | { readonly ok: true; readonly alreadyAcked: boolean }
+  | { readonly ok: false; readonly code: "forbidden" }
 > => {
   const sql = getSql();
   const ackable = [...ACKABLE_FROM];
@@ -34,10 +37,12 @@ export const ackProjectWholeMessageDelivery = async (input: {
           AND (b2b_state IS NULL OR b2b_state = ANY(${ackable}::text[]))
         RETURNING id
       )
-      SELECT (SELECT COUNT(*) FROM mine) AS mine_count
+      SELECT
+        (SELECT COUNT(*) FROM mine) AS mine_count,
+        (SELECT COUNT(*) FROM moved) AS moved_count
     `,
   );
   return Number(rows[0]?.mine_count ?? 0) > 0
-    ? { ok: true }
+    ? { ok: true, alreadyAcked: Number(rows[0]?.moved_count ?? 0) === 0 }
     : { ok: false, code: "forbidden" };
 };

@@ -43,6 +43,9 @@ describe("ackProjectMessage history delete gate", () => {
       if (q.includes("SELECT state FROM project_computer_history_settings")) {
         return [{ state: "on_ready" }];
       }
+      if (q.includes("SET acked_at = NOW()")) {
+        return [{ id: "msg-1" }];
+      }
       if (q.includes("SELECT * FROM project_messages")) {
         return [
           {
@@ -71,8 +74,6 @@ describe("ackProjectMessage history delete gate", () => {
           !q.includes("make_interval"),
       ),
     ).toBe(false);
-    expect(queries.some((q) => q.includes("SET acked_at = COALESCE"))).toBe(
-      true,
-    );
+    expect(queries.some((q) => q.includes("AND acked_at IS NULL"))).toBe(true);
   });
 });

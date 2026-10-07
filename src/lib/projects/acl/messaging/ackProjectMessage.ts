@@ -58,7 +58,9 @@ export const ackProjectMessage = async (input: {
       messageId: input.messageId,
       membershipId: membership.id,
     });
-    return acked.ok ? { ok: true, messageId: input.messageId } : acked;
+    return acked.ok
+      ? ackedProjectMessageOk(input.messageId, acked.alreadyAcked)
+      : acked;
   }
   const addressed =
     toUserId === input.actorUserId ||
@@ -66,8 +68,9 @@ export const ackProjectMessage = async (input: {
   if (!addressed) {
     return { ok: false, code: "forbidden" };
   }
-  // Held for computerAck after an earlier ack: acked_at is already set.
-  const wasAcked = rows[0].acked_at !== null && rows[0].acked_at !== undefined;
+  // Delete path only: a row held by an earlier ack reports alreadyAcked.
+  const heldBefore =
+    rows[0].acked_at !== null && rows[0].acked_at !== undefined;
   // History delete gate: hold when computerAck is still required.
   const gate = await gateProjectMessageDelete({
     projectId,
@@ -76,7 +79,7 @@ export const ackProjectMessage = async (input: {
     existingRuleAllows: true,
   });
   if (gate === "deny") {
-    return holdAckedProjectMessage({ ...input, projectId, wasAcked });
+    return holdAckedProjectMessage({ ...input, projectId });
   }
   // Main delete-on-ack: thin outcome first, then gated hard DELETE.
   const deleted = await deleteProjectMessageWithOutcome({
@@ -86,7 +89,7 @@ export const ackProjectMessage = async (input: {
   });
   if (!deleted.ok) {
     if (deleted.code === "computer_ack_required") {
-      return holdAckedProjectMessage({ ...input, projectId, wasAcked });
+      return holdAckedProjectMessage({ ...input, projectId });
     }
     // A sibling ack deleted the row between our SELECT and DELETE.
     return alreadyAckedProjectMessageOrNotFound(input);
@@ -97,5 +100,5 @@ export const ackProjectMessage = async (input: {
     action: "msg.ack",
     detail: { messageId: input.messageId, deleted: true },
   });
-  return ackedProjectMessageOk(input.messageId, wasAcked);
+  return ackedProjectMessageOk(input.messageId, heldBefore);
 };

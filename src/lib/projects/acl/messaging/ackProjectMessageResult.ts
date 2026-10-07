@@ -12,12 +12,12 @@ export type AckProjectMessageResult =
       readonly code: "forbidden" | "not_found" | "computer_ack_required";
     };
 
-/** ok, flagged alreadyAcked when the row was already acked (held for computerAck). */
+/** ok, flagged alreadyAcked when an earlier ack already handled the row. */
 export const ackedProjectMessageOk = (
   messageId: string,
-  wasAcked: boolean,
+  alreadyAcked: boolean,
 ): AckProjectMessageResult =>
-  wasAcked
+  alreadyAcked
     ? { ok: true, messageId, alreadyAcked: true }
     : { ok: true, messageId };
 

@@ -24,11 +24,15 @@ const NON_LEADER_KINDS: readonly string[] = [
  * endpoint would fail this POST too) or is still in flight.
  * Leader rows exclude status, done/blocked and ack-event kinds (worst case one
  * extra wake, never a dropped one).
- * Gated rows (coalesced / deferred_429) store no result, so "no stored result"
- * counts as in flight only for a few seconds, only for the FIRST unread leader
- * row of its batch, and never under a recent stored http_429. A gated row
- * always has an earlier leader (or a 429), so it can never pass as in flight. That stops a chain of
- * unstored rows from coalescing each other forever.
+ * Gated rows (coalesced / deferred_429) store no result. A leader row with no
+ * stored result counts as in flight only when ALL of these hold:
+ *   (a) it is younger than PROJECT_WAKE_IN_FLIGHT_SECONDS;
+ *   (b) no http_429 for that membership is stored in
+ *       [created_at - PROJECT_WAKE_MAX_RETRY_AFTER_SECONDS, created_at];
+ *   (c) no earlier unread/unacked leader row to the same membership exists
+ *       within the coalesce window before it (it leads its batch).
+ * A coalesced row fails (c) while its leader is unread; a deferred_429 row
+ * fails (b). So a chain of unstored rows cannot coalesce each other forever.
  * Earlier = (created_at, id) order, so concurrent inserts elect one leader.
  * Once the bot lists its inbox (read_at set), the next row wakes again.
  */

@@ -60,11 +60,17 @@ export const ackIdempotentSql = async (
     const row = ackIdempotentState.outcomes.get(id);
     return row === undefined ? [] : [row];
   }
-  if (text.includes("SET acked_at = COALESCE")) {
+  if (
+    text.includes("SET acked_at = NOW()") &&
+    text.includes("acked_at IS NULL")
+  ) {
+    // Atomic first-ack: a row comes back only when acked_at was NULL.
     const row = ackIdempotentState.messages.get(id);
-    if (row !== undefined && row.acked_at === null) {
-      row.acked_at = "2026-10-07T19:00:00.000Z";
+    if (row === undefined || row.acked_at !== null) {
+      return [];
     }
+    row.acked_at = "2026-10-07T19:00:00.000Z";
+    return [{ id }];
   }
   return [];
 };
