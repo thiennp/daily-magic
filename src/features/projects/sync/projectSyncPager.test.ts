@@ -79,7 +79,7 @@ describe("mergeProjectSyncEntries / loadPage", () => {
   });
 
   it("errors when load-older is empty and computer offline", () => {
-    const result = loadPage({
+    const result = loadPage<Entry>({
       idbEntries: [],
       localEntries: [],
       localHasMore: false,
@@ -101,7 +101,7 @@ describe("mergeProjectSyncEntries / loadPage", () => {
   });
 
   it("does not error on empty first page", () => {
-    const result = loadPage({
+    const result = loadPage<Entry>({
       idbEntries: [],
       localEntries: [],
       localHasMore: false,

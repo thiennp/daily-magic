@@ -532,7 +532,7 @@ describe("§11.3 IDB Soft degrade I1–I6 (pager/reconcile boundary)", () => {
   });
 
   it("I2: open blocked — Soft degrade without IDB; Load older works", async () => {
-    const read = await softReadIdbEntries({
+    const read = await softReadIdbEntries<PageEntry>({
       read: async () => {
         throw new ProjectSyncIdbSoftError("open_blocked");
       },
@@ -547,7 +547,7 @@ describe("§11.3 IDB Soft degrade I1–I6 (pager/reconcile boundary)", () => {
   });
 
   it("I3: corrupted store — skip IDB; never wipe Neon/local", async () => {
-    const read = await softReadIdbEntries({
+    const read = await softReadIdbEntries<PageEntry>({
       read: async () => {
         throw new ProjectSyncIdbSoftError("corrupted");
       },
@@ -561,7 +561,7 @@ describe("§11.3 IDB Soft degrade I1–I6 (pager/reconcile boundary)", () => {
   });
 
   it("I4: IDB unavailable / private mode — Soft degrade; page Neon+local", async () => {
-    const read = await softReadIdbEntries({
+    const read = await softReadIdbEntries<PageEntry>({
       read: async () => {
         throw new ProjectSyncIdbSoftError("unavailable");
       },
@@ -605,7 +605,7 @@ describe("§11.3 IDB Soft degrade I1–I6 (pager/reconcile boundary)", () => {
   });
 
   it("I6: IDB read fail during Load older — skip IDB; fall through local→Neon→lost", async () => {
-    const read = await softReadIdbEntries({
+    const read = await softReadIdbEntries<PageEntry>({
       read: async () => {
         throw new ProjectSyncIdbSoftError("read_fail");
       },
@@ -638,7 +638,7 @@ describe("§11.3 IDB Soft degrade I1–I6 (pager/reconcile boundary)", () => {
 
   it("I*: Soft read/write never throws out to Load older caller", async () => {
     await expect(
-      softReadIdbEntries({
+      softReadIdbEntries<PageEntry>({
         read: async () => {
           throw new Error("boom");
         },
