@@ -47,6 +47,36 @@ export const createProjectInviteApi = async (
   }>;
 };
 
+/** Owner-only: invite URL for a usable pending invite (107, any device). */
+export const fetchProjectInvitePromptApi = async (
+  projectId: string,
+  inviteId: string,
+): Promise<
+  | { readonly ok: true; readonly url: string }
+  | { readonly ok: false; readonly errorMessage?: string }
+> => {
+  try {
+    const response = await fetch(
+      `/api/projects/${projectId}/invites/${inviteId}/prompt`,
+      { cache: "no-store" },
+    );
+    const body = (await response.json().catch(() => ({}))) as {
+      readonly url?: unknown;
+      readonly errorMessage?: unknown;
+    };
+    if (response.ok && typeof body.url === "string" && body.url.length > 0) {
+      return { ok: true, url: body.url };
+    }
+    return {
+      ok: false,
+      errorMessage:
+        typeof body.errorMessage === "string" ? body.errorMessage : undefined,
+    };
+  } catch {
+    return { ok: false };
+  }
+};
+
 export const updateProjectInviteAutoApproveApi = async (
   projectId: string,
   inviteId: string,

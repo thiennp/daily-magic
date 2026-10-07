@@ -56,4 +56,6 @@ export type InviteListItem = {
   readonly teamLabel: string | null;
   readonly scopes: readonly string[];
   readonly autoApprove: boolean;
+  /** 107: Copy can fetch the prompt from the server (any device). */
+  readonly copyAvailable?: boolean;
 };

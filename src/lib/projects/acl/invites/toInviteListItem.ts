@@ -11,6 +11,8 @@ export type InviteListItem = {
   readonly teamLabel: string | null;
   readonly scopes: readonly string[];
   readonly autoApprove: boolean;
+  /** 107: owner can fetch the Copy prompt (token stored encrypted). */
+  readonly copyAvailable: boolean;
 };
 
 export const toInviteListItem = (invite: ProjectInviteRecord): InviteListItem => ({
@@ -23,4 +25,5 @@ export const toInviteListItem = (invite: ProjectInviteRecord): InviteListItem =>
   teamLabel: invite.teamLabel,
   scopes: [...invite.scopes],
   autoApprove: invite.autoApprove,
+  copyAvailable: invite.copyAvailable === true,
 });

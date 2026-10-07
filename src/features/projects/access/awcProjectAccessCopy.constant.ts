@@ -50,14 +50,14 @@ export const AWC_PROJECT_ACCESS_COPY = {
   invitesRevoke: "Revoke",
   invitesPromptCopied: "Prompt copied",
   invitesTokenOnceNote:
-    "Copy prompt is available once at create — you cannot copy it again from this list.",
+    "You can copy the prompt again from Members until an assistant uses it.",
   invitesActiveHeading: "Active invites",
   invitesInactiveHeading: "Inactive invites",
   invitesStatusUsedUp: "used up",
   invitesStatusExpired: "expired",
   invitesStatusRevoked: "revoked",
   invitesCreatedOnce:
-    "Copy the invite prompt now. It is shown once and includes a secret the bot needs to join.",
+    "Copy the prompt and paste it into your assistant. It includes a secret the assistant needs to join.",
   displayNameLabel: "Assistant nickname",
   displayNameHint:
     "Required. Each assistant in a project needs a different name (2–32 letters, single spaces OK). We fill in a free one for you.",

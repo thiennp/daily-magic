@@ -25,8 +25,8 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   inviteBotHeading: "Invite a new assistant",
   invitePrompt: (kind: string | null) =>
     kind === null
-      ? "Paste this prompt into your assistant. It shows once, so copy it now."
-      : `Prompt for the ${kind} assistant. Paste it into your assistant. The prompt shows once, so copy it now.`,
+      ? "Paste this prompt into your assistant. You can copy it again until it's used."
+      : `Prompt for the ${kind} assistant. Paste it into your assistant. You can copy it again until it's used.`,
   /** State 1 — invite out; Cancel only (no Approve). */
   invitePendingTitle: "Invite sent",
   invitePendingSubOff: "Waiting for assistant",
@@ -36,11 +36,14 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   /** State 2 — join request subtitle; Approve + Deny. */
   requestWaitingApproval: "Wants to join",
   invitePendingCancel: "Cancel",
-  /** DF-014 — copy the prompt again from an Invite sent row (this tab). */
+  /** DF-014 / 107 — copy the prompt again from an Invite sent row (any device). */
   invitePendingCopy: "Copy",
   invitePendingCopied: "Copied",
-  inviteEmpty:
-    "No assistant invites yet. The prompt shows only once when you create it.",
+  invitePendingCopying: "Copying…",
+  invitePendingCopyFailed: "Couldn't copy. Try again.",
+  /** 107 — invite made before Copy-anywhere: no stored prompt. */
+  invitePendingCopyUnavailable: "Make a new invite to copy a prompt.",
+  inviteEmpty: "No assistant invites yet.",
   compatGrok:
     "Grok Bot joins with the prompt and wakes up through its own routine.",
   compatOther:

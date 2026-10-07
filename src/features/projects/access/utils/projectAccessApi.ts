@@ -12,6 +12,7 @@ export {
   createProjectInviteApi,
   updateProjectInviteAutoApproveApi,
   fetchDisplayNamePresets,
+  fetchProjectInvitePromptApi,
   fetchProjectInvites,
   renameMembershipDisplayNameApi,
   revokeProjectInviteApi,

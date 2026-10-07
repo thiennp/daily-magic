@@ -29,5 +29,11 @@ export default function mapProjectInviteRow(
     revokedAt: row.revoked_at ? String(row.revoked_at) : null,
     createdAt: String(row.created_at),
     platform: parseProjectInvitePlatform(row.platform),
+    // 107: only a flag leaves this mapper; the ciphertext never does.
+    copyAvailable:
+      typeof row.token_ciphertext === "string" &&
+      row.token_ciphertext.length > 0 &&
+      typeof row.token_iv === "string" &&
+      row.token_iv.length > 0,
   };
 }

@@ -30,6 +30,10 @@ export const PROJECT_ACCESS_ERROR_MESSAGES: Readonly<Record<string, string>> = {
   already_member: "Already a member of this project.",
   already_pending: "A request is already pending.",
   invalid_token: "Invite link is invalid or expired.",
+  invite_not_usable:
+    "This invite was used, cancelled, or expired. Make a new invite.",
+  invite_prompt_unavailable:
+    "Copy isn't available for this invite. Make a new invite.",
   owner: "Project owners do not need an access request.",
   already_left: "You already left this project.",
   confirm_required: "Pass confirm:true to leave this project.",

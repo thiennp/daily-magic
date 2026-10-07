@@ -11,6 +11,7 @@ import type { AwcProjectAccessInvite } from "@/features/projects/access/hooks/lo
 import AwcProjectMembersInvitePendingList from "@/features/projects/members/AwcProjectMembersInvitePendingList";
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
 import { buildCreatedInviteCopyPrompt } from "@/features/projects/access/invites/buildCreatedInviteCopyPrompt";
+import { fetchPendingInviteCopyPrompt } from "@/features/projects/access/invites/fetchPendingInviteCopyPrompt";
 import type { CreatedInvitePrompts } from "@/features/projects/access/invites/createdInvitePrompts";
 
 interface AwcProjectMembersInviteBotsSectionProps {
@@ -87,6 +88,9 @@ export default function AwcProjectMembersInviteBotsSection({
             prompt: createdInvitePrompts[inviteId],
             projectName,
           })
+        }
+        fetchCopyPrompt={(inviteId) =>
+          fetchPendingInviteCopyPrompt({ projectId, inviteId, projectName })
         }
       />
     </section>

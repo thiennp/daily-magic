@@ -29,7 +29,7 @@ export const revokeProjectInvite = async (input: {
   const rows = asRowArray(
     await sql`
       UPDATE project_invites
-      SET revoked_at = NOW()
+      SET revoked_at = NOW(), token_ciphertext = NULL, token_iv = NULL
       WHERE id = ${input.inviteId}
         AND project_id = ${input.projectId}
         AND revoked_at IS NULL

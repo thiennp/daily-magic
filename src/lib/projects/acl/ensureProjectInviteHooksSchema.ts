@@ -20,6 +20,11 @@ export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
   await sql`ALTER TABLE project_invites
     ADD COLUMN IF NOT EXISTS auto_approve BOOLEAN NOT NULL DEFAULT FALSE`;
+  // 107: encrypted invite token so the owner can Copy from any device.
+  await sql`ALTER TABLE project_invites
+    ADD COLUMN IF NOT EXISTS token_ciphertext TEXT`;
+  await sql`ALTER TABLE project_invites
+    ADD COLUMN IF NOT EXISTS token_iv TEXT`;
   // 093: the redeeming assistant's join type → join-time delivery_mode.
   await sql`ALTER TABLE IF EXISTS project_access_requests
     ADD COLUMN IF NOT EXISTS join_platform TEXT`;

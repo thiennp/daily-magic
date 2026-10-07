@@ -1,9 +1,9 @@
 import type { ProjectInvitePlatform } from "@/features/projects/access/invites/projectInvitePlatform.type";
 
 /**
- * Copy-prompt source for an invite this owner tab created. The token exists
- * only in the POST create response (DB keeps the hash), so the owner's tab is
- * the only place a pending row can rebuild the prompt from.
+ * Copy-prompt source for an invite this owner tab created (from the POST
+ * create response). Used first so Copy needs no round trip; other devices /
+ * tabs fetch the prompt from the owner-only reveal endpoint (107).
  */
 export type CreatedInvitePrompt = {
   readonly inviteId: string;

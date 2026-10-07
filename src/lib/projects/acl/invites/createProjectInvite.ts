@@ -14,6 +14,8 @@ import {
   clampInviteMaxUses,
   parseInviteScopes,
 } from "@/lib/projects/acl/invites/clampProjectInviteParams";
+import { clearUnusableProjectInviteCiphertexts } from "@/lib/projects/acl/invites/clearUnusableProjectInviteCiphertexts";
+import { tryEncryptProjectInviteToken } from "@/lib/projects/acl/invites/projectInviteTokenCipher";
 import { dualWriteProjectInviteAutoApproveEvent } from "@/lib/projects/acl/invites/dualWriteProjectInviteAutoApproveEvent";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
@@ -53,6 +55,8 @@ export const createProjectInvite = async (input: {
 
   const token = createProjectInviteToken();
   const tokenHash = hashProjectInviteToken(token);
+  // 107: encrypted copy so the owner can Copy the prompt from any device.
+  const encrypted = tryEncryptProjectInviteToken(token);
   const inviteId = randomUUID();
   const expiresAt = new Date(
     Date.now() + expiresInDays * 24 * 60 * 60 * 1000,
@@ -64,7 +68,8 @@ export const createProjectInvite = async (input: {
     await sql`
       INSERT INTO project_invites (
         id, project_id, created_by_user_id, token_hash, team_label, scopes,
-        max_uses, uses_remaining, expires_at, auto_approve, platform
+        max_uses, uses_remaining, expires_at, auto_approve, platform,
+        token_ciphertext, token_iv
       )
       VALUES (
         ${inviteId},
@@ -77,7 +82,9 @@ export const createProjectInvite = async (input: {
         ${maxUses},
         ${expiresAt}::timestamptz,
         ${autoApprove},
-        ${platform}
+        ${platform},
+        ${encrypted?.ciphertext ?? null},
+        ${encrypted?.iv ?? null}
       )
       RETURNING *
     `,
@@ -86,6 +93,7 @@ export const createProjectInvite = async (input: {
     return { ok: false, code: "invalid" };
   }
   const invite = mapProjectInviteRow(rows[0]);
+  await clearUnusableProjectInviteCiphertexts(input.projectId);
   await writeProjectAccessAudit({
     projectId: input.projectId,
     actorUserId: input.ownerUserId,

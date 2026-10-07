@@ -16,4 +16,6 @@ export default interface ProjectInviteRecord {
   readonly createdAt: string;
   /** grok | muse; null = legacy / unknown (075). Optional on fixtures. */
   readonly platform?: ProjectInvitePlatformValue | null;
+  /** 107: an encrypted token copy is stored, so the owner can Copy again. */
+  readonly copyAvailable?: boolean;
 }
