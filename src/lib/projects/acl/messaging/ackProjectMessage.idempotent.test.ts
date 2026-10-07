@@ -22,8 +22,10 @@ vi.mock("@/lib/projects/acl/getActiveProjectMembership", async () => {
 vi.mock("@/lib/projects/userProjectQueries", () => ({
   getUserProjectById: async () => ({ id: "proj-1", ownerUserId: "owner-1" }),
 }));
-vi.mock("@/lib/projects/acl/writeProjectAccessAudit", () => ({
-  writeProjectAccessAudit: async () => undefined,
+vi.mock("@/lib/projects/acl/writeProjectAccessAudit", async () => ({
+  writeProjectAccessAudit: (
+    await import("@/lib/projects/acl/messaging/ackProjectMessage.idempotent.fixtures")
+  ).ackIdempotentAudit,
 }));
 vi.mock("@/lib/projects/acl/messaging/gateProjectMessageDelete", async () => {
   const f =
@@ -101,5 +103,14 @@ describe("ackProjectMessage idempotent (DF-020/021)", () => {
     state.messages.set("msg-5", message("msg-5", "bot-1", "mem-1"));
     expect(await ack("msg-5", "bot-1")).toEqual(okAck("msg-5"));
     expect(await ack("msg-5", "bot-1")).toEqual(alreadyAcked("msg-5"));
+    expect(state.audits).toBe(1);
+  });
+
+  it("a repeat ack on the computer_ack_required delete path writes no audit", async () => {
+    const held = { ...message("msg-6", "bot-1", "mem-1"), acked_at: "x" };
+    state.messages.set("msg-6", held);
+    state.deleteCode = "computer_ack_required";
+    expect(await ack("msg-6", "bot-1")).toEqual(alreadyAcked("msg-6"));
+    expect(state.audits).toBe(0);
   });
 });

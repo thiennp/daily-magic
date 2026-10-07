@@ -1,5 +1,13 @@
 import { AGENT_ACCESS_POSTS_PER_HOUR } from "@/lib/agentAccess/agentAccess.constant";
+import {
+  buildAgentAccessRateLimitedBody,
+  readAgentAccessRetryAfterHeader,
+} from "@/lib/agentAccess/agentAccessRateLimited";
 import { consumeAgentAccessBucket } from "@/lib/agentAccess/consumeAgentAccessBucket";
+import {
+  AGENT_ACCESS_RETRY_AFTER_FALLBACK_SECONDS,
+  readAgentAccessBucketRetryAfterSeconds,
+} from "@/lib/agentAccess/readAgentAccessBucketRetryAfterSeconds";
 import {
   hashAgentAccessClientIp,
   readClientIp,
@@ -15,24 +23,33 @@ export const agentAccessTooLargeResponse = (): Response =>
     { status: 413 },
   );
 
-export const agentAccessRateLimitedResponse = (): Response =>
-  Response.json(
-    {
-      ok: false,
-      error: "Too many requests. Wait before trying again.",
-      code: "rate_limited",
-    },
-    { status: 429 },
-  );
+/** 429 with retryAfterSeconds / retryAfterAt in the body and a Retry-After header. */
+export const agentAccessRateLimitedResponse = (
+  retryAfterSeconds: number = AGENT_ACCESS_RETRY_AFTER_FALLBACK_SECONDS,
+): Response => {
+  const body = buildAgentAccessRateLimitedBody(retryAfterSeconds);
+  return Response.json(body, {
+    status: 429,
+    headers: readAgentAccessRetryAfterHeader(body),
+  });
+};
 
 export const guardAgentAccessPost = async (
   request: Request,
 ): Promise<Response | null> => {
+  const subjectHash = hashAgentAccessClientIp(readClientIp(request));
   const allowed = await consumeAgentAccessBucket({
-    subjectHash: hashAgentAccessClientIp(readClientIp(request)),
+    subjectHash,
     bucket: "post",
     limit: AGENT_ACCESS_POSTS_PER_HOUR,
   });
 
-  return allowed ? null : agentAccessRateLimitedResponse();
+  return allowed
+    ? null
+    : agentAccessRateLimitedResponse(
+        await readAgentAccessBucketRetryAfterSeconds({
+          subjectHash,
+          bucket: "post",
+        }),
+      );
 };

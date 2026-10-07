@@ -1,4 +1,5 @@
 import { executeProjectSkillShareTool } from "@/features/project-skill-share/public-api/infrastructure";
+import { readAgentAccessRetryAfterHeader } from "@/lib/agentAccess/agentAccessRateLimited";
 import { readAgentAccessInvokeBody } from "@/lib/agentAccess/coerceAgentAccessArguments";
 import { executeAgentAccessTool } from "@/lib/agentAccess/executeAgentAccessTool";
 import {
@@ -77,7 +78,10 @@ export async function POST(request: Request): Promise<Response> {
   });
   const parsed = parseToolText(result.text);
 
+  const status = result.isError ? statusForToolError(parsed) : 200;
+
   return Response.json(parsed, {
-    status: result.isError ? statusForToolError(parsed) : 200,
+    status,
+    headers: status === 429 ? readAgentAccessRetryAfterHeader(parsed) : {},
   });
 }

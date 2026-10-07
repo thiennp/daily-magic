@@ -6,6 +6,8 @@ export const ackIdempotentState = {
   outcomes: new Map<string, Row>(),
   gate: "allow" as "allow" | "deny",
   siblingDeletesFirst: false,
+  audits: 0,
+  deleteCode: null as "computer_ack_required" | null,
 };
 
 export const resetAckIdempotentState = (): void => {
@@ -13,6 +15,14 @@ export const resetAckIdempotentState = (): void => {
   ackIdempotentState.outcomes.clear();
   ackIdempotentState.gate = "allow";
   ackIdempotentState.siblingDeletesFirst = false;
+  ackIdempotentState.audits = 0;
+  ackIdempotentState.deleteCode = null;
+};
+
+/** writeProjectAccessAudit stand-in: counts msg.ack audits. */
+export const ackIdempotentAudit = async (): Promise<void> => {
+  await Promise.resolve();
+  ackIdempotentState.audits += 1;
 };
 
 export const ackIdempotentMemberships: Readonly<
@@ -73,9 +83,12 @@ export const ackIdempotentDeleteWithOutcome = async (input: {
   readonly messageId: string;
 }): Promise<
   | { readonly ok: true; readonly messageId: string }
-  | { readonly ok: false; readonly code: "not_found" }
+  | { readonly ok: false; readonly code: "not_found" | "computer_ack_required" }
 > => {
   await Promise.resolve();
+  if (ackIdempotentState.deleteCode !== null) {
+    return { ok: false, code: ackIdempotentState.deleteCode };
+  }
   const row = ackIdempotentState.messages.get(input.messageId);
   if (row === undefined) {
     return { ok: false, code: "not_found" };

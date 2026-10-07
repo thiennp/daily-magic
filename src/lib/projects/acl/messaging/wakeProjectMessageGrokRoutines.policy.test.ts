@@ -17,12 +17,12 @@ import { isProjectMessageWakeSkippedByPolicy } from "@/lib/projects/acl/messagin
 import { STORED_GROK_WAKE_RESULT } from "@/lib/projects/acl/messaging/storedGrokWakeResult.constant";
 import { wakeProjectMessageGrokRoutines } from "@/lib/projects/acl/messaging/wakeProjectMessageGrokRoutines";
 
+// No-wake list (Lead): done / blocked wake the assigner only, see
+// applyProjectMessageWakePolicy.test.ts.
 const STATUS_KINDS = [
   "task.received",
   "task.processing",
   "task.status",
-  "task.done",
-  "task.blocked",
 ] as const;
 
 const base = {
@@ -85,7 +85,7 @@ describe("wakeProjectMessageGrokRoutines status-kind policy (DF-022)", () => {
     persistMock.mockRejectedValue(new Error("db_down"));
     const results = await wakeProjectMessageGrokRoutines({
       ...base,
-      kind: "task.done",
+      kind: "task.status",
     });
     expect(results).toEqual([]);
     expect(wakeMock).not.toHaveBeenCalled();

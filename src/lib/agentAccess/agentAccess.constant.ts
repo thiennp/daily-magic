@@ -19,6 +19,20 @@ export const AGENT_ACCESS_MUTATIONS_PER_HOUR = 20;
 
 export const AGENT_ACCESS_FEEDBACK_PER_HOUR = 10;
 
+/** Rolling window for the agent-access attempt buckets (post / tool / mutate). */
+export const AGENT_ACCESS_RATE_LIMIT_WINDOW_SECONDS = 3600;
+
+/**
+ * Inbox drain tools skip the per-token tool + mutate buckets (DF-026): a bot
+ * must always be able to list and ack its own inbox, or rate limits turn into
+ * redelivery loops. Both are scoped to the caller's own deliveries, ack is
+ * idempotent, and the pre-auth per-IP POST bucket still applies.
+ */
+export const AGENT_ACCESS_RATE_LIMIT_EXEMPT_TOOLS = [
+  "list_project_inbox",
+  "ack_project_message",
+] as const;
+
 export const AGENT_ACCESS_MAX_OPEN_RUNS = 3;
 
 export const AGENT_ACCESS_MAX_WORKFLOWS = 20;

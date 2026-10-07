@@ -4,7 +4,7 @@ import { deleteProjectMessageWithOutcome } from "@/lib/projects/acl/messaging/de
 import { ackProjectWholeMessageDelivery } from "@/lib/projects/acl/messaging/messenger/ackProjectWholeMessageDelivery";
 import { isProjectMessengerWholeAddress } from "@/lib/projects/acl/messaging/messenger/isProjectMessengerWholeAddress";
 import { gateProjectMessageDelete } from "@/lib/projects/acl/messaging/gateProjectMessageDelete";
-import { holdProjectMessageForComputerAck } from "@/lib/projects/acl/messaging/holdProjectMessageForComputerAck";
+import { holdAckedProjectMessage } from "@/lib/projects/acl/messaging/holdAckedProjectMessage";
 import {
   ackedProjectMessageOk,
   alreadyAckedProjectMessageOrNotFound,
@@ -76,14 +76,7 @@ export const ackProjectMessage = async (input: {
     existingRuleAllows: true,
   });
   if (gate === "deny") {
-    await holdProjectMessageForComputerAck({ messageId: input.messageId });
-    await writeProjectAccessAudit({
-      projectId,
-      actorUserId: input.actorUserId,
-      action: "msg.ack",
-      detail: { messageId: input.messageId, deleted: false },
-    });
-    return ackedProjectMessageOk(input.messageId, wasAcked);
+    return holdAckedProjectMessage({ ...input, projectId, wasAcked });
   }
   // Main delete-on-ack: thin outcome first, then gated hard DELETE.
   const deleted = await deleteProjectMessageWithOutcome({
@@ -93,14 +86,7 @@ export const ackProjectMessage = async (input: {
   });
   if (!deleted.ok) {
     if (deleted.code === "computer_ack_required") {
-      await holdProjectMessageForComputerAck({ messageId: input.messageId });
-      await writeProjectAccessAudit({
-        projectId,
-        actorUserId: input.actorUserId,
-        action: "msg.ack",
-        detail: { messageId: input.messageId, deleted: false },
-      });
-      return ackedProjectMessageOk(input.messageId, wasAcked);
+      return holdAckedProjectMessage({ ...input, projectId, wasAcked });
     }
     // A sibling ack deleted the row between our SELECT and DELETE.
     return alreadyAckedProjectMessageOrNotFound(input);

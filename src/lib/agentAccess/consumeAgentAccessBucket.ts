@@ -1,5 +1,6 @@
 import { asRowArray, getSql } from "@/lib/db";
 
+import { AGENT_ACCESS_RATE_LIMIT_WINDOW_SECONDS } from "@/lib/agentAccess/agentAccess.constant";
 import { ensureAgentAccessSchema } from "@/lib/agentAccess/ensureAgentAccessSchema";
 
 const countBucket = async (
@@ -7,7 +8,9 @@ const countBucket = async (
   bucket: string,
 ): Promise<number> => {
   const sql = getSql();
-  const since = new Date(Date.now() - 60 * 60 * 1000);
+  const since = new Date(
+    Date.now() - AGENT_ACCESS_RATE_LIMIT_WINDOW_SECONDS * 1000,
+  );
   const rows = asRowArray(
     await sql`
       SELECT COUNT(*)::int AS attempt_count

@@ -7,6 +7,10 @@ import {
   AGENT_ACCESS_MUTATIONS_PER_HOUR,
   AGENT_ACCESS_TOOL_CALLS_PER_HOUR,
 } from "@/lib/agentAccess/agentAccess.constant";
+import {
+  buildAgentAccessRateLimitedBody,
+  isAgentAccessRateLimitExemptTool,
+} from "@/lib/agentAccess/agentAccessRateLimited";
 import { AGENT_ACCESS_TOOLS } from "@/lib/agentAccess/agentAccessTools.constant";
 import { consumeAgentAccessBucket } from "@/lib/agentAccess/consumeAgentAccessBucket";
 import {
@@ -15,6 +19,7 @@ import {
   isAgentAccessWorkflowCapacityFull,
 } from "@/lib/agentAccess/decideAgentAccessAllowance";
 import { hashAgentAccessToken } from "@/lib/agentAccess/hashAgentAccessToken";
+import { readAgentAccessBucketRetryAfterSeconds } from "@/lib/agentAccess/readAgentAccessBucketRetryAfterSeconds";
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 
@@ -22,13 +27,14 @@ const KNOWN_TOOLS = new Set<string>(
   AGENT_ACCESS_TOOLS.map((tool) => tool.name),
 );
 
-const limited = (): AgentAccessToolCallResult =>
+const limited = async (
+  subjectHash: string,
+  bucket: string,
+): Promise<AgentAccessToolCallResult> =>
   agentAccessTextResult(
-    {
-      ok: false,
-      error: "Too many requests. Wait before trying again.",
-      code: "rate_limited",
-    },
+    buildAgentAccessRateLimitedBody(
+      await readAgentAccessBucketRetryAfterSeconds({ subjectHash, bucket }),
+    ),
     true,
   );
 
@@ -56,6 +62,11 @@ export const guardAgentAccessToolUse = async (input: {
     );
   }
 
+  // DF-026: inbox drain (list + idempotent ack) never hits the token buckets.
+  if (isAgentAccessRateLimitExemptTool(input.name)) {
+    return null;
+  }
+
   const subjectHash = hashAgentAccessToken(input.token);
   const toolAllowed = await consumeAgentAccessBucket({
     subjectHash,
@@ -64,7 +75,7 @@ export const guardAgentAccessToolUse = async (input: {
   });
 
   if (!toolAllowed) {
-    return limited();
+    return limited(subjectHash, "tool");
   }
 
   if (!isAgentAccessMutatingTool(input.name)) {
@@ -78,7 +89,7 @@ export const guardAgentAccessToolUse = async (input: {
   });
 
   if (!mutationAllowed) {
-    return limited();
+    return limited(subjectHash, "mutate");
   }
 
   if (input.name === "send_task" || input.name === "run_workflow") {
