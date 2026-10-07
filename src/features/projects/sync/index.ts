@@ -50,10 +50,33 @@ export {
 export {
   projectSyncIdbDbName,
   versionFromIdbRecord,
+  classifyProjectSyncIdbFailure,
+  clearProjectSyncAll,
+  clearProjectSyncForProject,
+  listProjectSyncByProject,
+  listProjectSyncByProjectOrThrowSoft,
+  readProjectSyncRow,
+  readProjectSyncRowOrThrowSoft,
+  resetProjectSyncIdbHolder,
+  writeProjectSyncRow,
+  writeProjectSyncRowOrThrowSoft,
   type ProjectSyncIdbPort,
   type ProjectSyncIdbRecord,
   type ProjectSyncIdbStoreId,
 } from "@/features/projects/sync/projectSyncIdb";
+
+export {
+  PROJECT_SYNC_IDB_DB_NAME,
+  PROJECT_SYNC_IDB_DB_VERSION,
+  PROJECT_SYNC_TABLE_MESSENGER_CHATS,
+  PROJECT_SYNC_TABLE_KEPT_RECIPIENTS,
+  PROJECT_SYNC_TABLE_PROJECT_TASKS,
+  PROJECT_SYNC_PROJECT_INDEX,
+  type ProjectSyncTableId,
+} from "@/features/projects/sync/projectSyncIdb.constant";
+
+export { clearProjectSyncOnLeave } from "@/features/projects/sync/clearProjectSyncOnLeave";
+export { clearProjectSyncOnSignOut } from "@/features/projects/sync/clearProjectSyncOnSignOut";
 
 export {
   assertProjectTaskNeonMetaAllowlist,
@@ -61,6 +84,7 @@ export {
   keyOfProjectTask,
   mapProjectTaskStatusToUi,
   mergeLocalProjectTask,
+  preferLocalDirtyOverNeonNewer,
   PROJECT_TASK_IDB_FIELDS,
   PROJECT_TASK_LOCAL_ONLY_FIELDS,
   PROJECT_TASK_NEON_FIELDS,

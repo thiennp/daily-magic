@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 
+import { clearProjectSyncOnLeave } from "@/features/projects/sync/clearProjectSyncOnLeave";
 import requestDeleteUserProject from "@/features/projects/utils/requestDeleteUserProject";
 
 /**
@@ -32,6 +33,7 @@ export default function useDeleteProject(projectId: string): {
       return false;
     }
 
+    await clearProjectSyncOnLeave(projectId);
     setPending(false);
     return true;
   }, [projectId]);

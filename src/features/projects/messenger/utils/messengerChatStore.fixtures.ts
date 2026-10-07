@@ -50,6 +50,20 @@ export const memoryChatStore = (options?: {
       kept.set(record.keptKey, record);
       return true;
     },
+    clearProject: async (projectId) => {
+      for (const [key, row] of chats) {
+        if (row.projectId === projectId) chats.delete(key);
+      }
+      for (const [key, row] of kept) {
+        if (row.projectId === projectId) kept.delete(key);
+      }
+      return true;
+    },
+    clearAll: async () => {
+      chats.clear();
+      kept.clear();
+      return true;
+    },
   };
   return { store, chats, kept };
 };

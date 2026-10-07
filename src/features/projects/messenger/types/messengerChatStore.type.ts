@@ -3,7 +3,7 @@ import type { AwcMessengerTimelineEntry } from "@/features/projects/messenger/ty
 /**
  * One browser (IndexedDB) copy of a project chat. Keyed by `chatKey`
  * (`projectId:threadKey`) with a `projectId` index so a later one-window
- * timeline can read every chat of a project. Never deleted outright.
+ * timeline can read every chat of a project.
  */
 export type MessengerChatStoreRecord = {
   readonly chatKey: string;
@@ -35,8 +35,8 @@ export type MessengerKeptRecipientRecord = {
 };
 
 /**
- * Read/write only. There is deliberately no delete / clear: chats are never
- * wiped from the browser; prune drops old message bodies inside a record.
+ * Read/write + privacy clear (SPEC §3.1 / Arch Soft S5).
+ * clearProject on leave/delete; clearAll on sign-out.
  */
 export type MessengerChatStoreAdapter = {
   readonly readChat: (
@@ -49,4 +49,6 @@ export type MessengerChatStoreAdapter = {
   readonly writeKept: (
     record: MessengerKeptRecipientRecord,
   ) => Promise<boolean>;
+  readonly clearProject: (projectId: string) => Promise<boolean>;
+  readonly clearAll: () => Promise<boolean>;
 };

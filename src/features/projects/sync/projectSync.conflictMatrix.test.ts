@@ -22,6 +22,7 @@ import {
   assertProjectTaskNeonMetaAllowlist,
   compareVersionProjectTask,
   mergeLocalProjectTask,
+  preferLocalDirtyOverNeonNewer,
   PROJECT_TASK_NEON_FIELDS,
   toIdbProjectTask,
   toNeonMetaProjectTask,
@@ -323,16 +324,31 @@ describe("§11.2 conflict T1–T15", () => {
   });
 
   it("T4: Neon version > local — still local authoritative; do not clobber body", async () => {
+    const local = localTask({
+      version: 1,
+      title: "Keep local unsynced",
+      body: "SECRET BODY",
+      prompt: "dirty local edit",
+    });
+    const neon = neonMeta({
+      version: 99,
+      title: "Neon ahead",
+      updatedAt: "2026-10-07T09:00:00.000Z",
+    });
+    // Pure merge harden: unsynced local always wins over Neon-newer
+    const prefer = preferLocalDirtyOverNeonNewer(local, neon);
+    expect(prefer.neonNewerSkipped).toBe(true);
+    expect(prefer.winner.body).toBe("SECRET BODY");
+    expect(prefer.winner.title).toBe("Keep local unsynced");
+    expect(prefer.winner.prompt).toBe("dirty local edit");
+    expect(prefer.winner).not.toMatchObject({ title: "Neon ahead" });
+
     const pushed: ProjectTaskNeonMeta[] = [];
     const result = await reconcileProjectSyncOnConnect({
       projectId: "proj-1",
       tableId: "project_tasks",
-      localRecords: [
-        localTask({ version: 1, title: "Keep local", body: "SECRET BODY" }),
-      ],
-      neonMetaRecords: [
-        neonMeta({ version: 99, title: "Neon ahead", updatedAt: "2026-10-07T09:00:00.000Z" }),
-      ],
+      localRecords: [local],
+      neonMetaRecords: [neon],
       pushNeonMeta: async (batch) => {
         pushed.push(...batch);
         return { ok: true };
@@ -341,7 +357,7 @@ describe("§11.2 conflict T1–T15", () => {
     expect(result.skippedNeonNewer).toContain("run-1");
     expect(pushed).toHaveLength(0);
     expect(result.keptLocal[0]?.body).toBe("SECRET BODY");
-    expect(result.keptLocal[0]?.title).toBe("Keep local");
+    expect(result.keptLocal[0]?.title).toBe("Keep local unsynced");
   });
 
   it("T5: equal version divergent meta — tie-break updatedAt then key", () => {

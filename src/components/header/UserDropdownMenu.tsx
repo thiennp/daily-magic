@@ -1,6 +1,8 @@
 "use client";
 
 import { signOut } from "next-auth/react";
+
+import { clearProjectSyncOnSignOut } from "@/features/projects/sync/clearProjectSyncOnSignOut";
 import type { Session } from "next-auth";
 
 import { Dropdown } from "@/components/ui/dropdown/Dropdown";
@@ -101,7 +103,9 @@ export default function UserDropdownMenu({
         type="button"
         onClick={() => {
           onClose();
-          void signOut({ callbackUrl: "/login" });
+          void clearProjectSyncOnSignOut().finally(() => {
+            void signOut({ callbackUrl: "/login" });
+          });
         }}
         className="group mt-3 flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
       >

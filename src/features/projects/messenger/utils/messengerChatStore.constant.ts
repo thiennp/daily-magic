@@ -1,9 +1,14 @@
-/** Browser chat store (IndexedDB). Bump version + add stores; never drop data. */
-export const MESSENGER_CHAT_DB_NAME = "awc-chat";
-export const MESSENGER_CHAT_DB_VERSION = 1;
-export const MESSENGER_CHAT_STORE = "messengerChats";
-export const MESSENGER_KEPT_RECIPIENT_STORE = "keptRecipients";
-export const MESSENGER_CHAT_PROJECT_INDEX = "projectId";
+/**
+ * Browser chat store (IndexedDB) — thin re-exports of project-sync IDB.
+ * Soft tip names kept; schema owned by `projectSyncIdb` (v2 + clear path).
+ */
+export {
+  PROJECT_SYNC_IDB_DB_NAME as MESSENGER_CHAT_DB_NAME,
+  PROJECT_SYNC_IDB_DB_VERSION as MESSENGER_CHAT_DB_VERSION,
+  PROJECT_SYNC_TABLE_MESSENGER_CHATS as MESSENGER_CHAT_STORE,
+  PROJECT_SYNC_TABLE_KEPT_RECIPIENTS as MESSENGER_KEPT_RECIPIENT_STORE,
+  PROJECT_SYNC_PROJECT_INDEX as MESSENGER_CHAT_PROJECT_INDEX,
+} from "@/features/projects/sync/projectSyncIdb.constant";
 
 /** Trim lock (Lead Q2): a message may leave the browser only when it is
  * BOTH older than this AND outside the newest MAX_MESSAGES, AND confirmed

@@ -240,6 +240,26 @@ export const mergeLocalProjectTask = (
   return prev;
 };
 
+
+/**
+ * T4 harden (Lead Soft FIX Soft Soft): local unsynced/dirty edit always wins
+ * over Neon-newer meta. Never prefer Neon version for local SoT body/title.
+ * Reconcile uses the same rule (skippedNeonNewer + keptLocal).
+ */
+export const preferLocalDirtyOverNeonNewer = (
+  local: ProjectTaskLocalRecord,
+  neon: ProjectTaskNeonMeta,
+): {
+  readonly winner: ProjectTaskLocalRecord;
+  readonly neonNewerSkipped: boolean;
+} => {
+  const neonNewer = compareVersionProjectTask(neon, local) > 0;
+  return {
+    winner: local,
+    neonNewerSkipped: neonNewer,
+  };
+};
+
 /** Pure — IDB cache from local or neon meta (snippet optional; never full body). */
 export const toIdbProjectTask = (
   record: ProjectTaskLocalRecord | ProjectTaskNeonMeta,
@@ -352,5 +372,6 @@ export const projectTasksAdapter = {
   idbFields: PROJECT_TASK_IDB_FIELDS,
   toNeonMeta: toNeonMetaProjectTask,
   mergeLocal: mergeLocalProjectTask,
+  preferLocalDirtyOverNeonNewer,
   toIdb: toIdbProjectTask,
 } as const;
