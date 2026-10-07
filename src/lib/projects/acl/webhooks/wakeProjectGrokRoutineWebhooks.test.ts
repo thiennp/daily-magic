@@ -34,6 +34,9 @@ describe("wakeProjectGrokRoutineWebhooks", () => {
           },
         ];
       }
+      if (q.includes("FROM user_projects")) {
+        return [{ name: "Daily Magic" }];
+      }
       return [];
     });
     const results = await wakeProjectGrokRoutineWebhooks({
@@ -56,8 +59,10 @@ describe("wakeProjectGrokRoutineWebhooks", () => {
     expect(headers.Authorization).toBe("Bearer sekret-bearer");
     expect(JSON.parse(String(init.body))).toEqual({
       projectId: "proj-1",
+      projectName: "Daily Magic",
       messageId: "msg-1",
       event: "project_message.stored",
+      body: "hello",
       summary: "hello",
       fromMembershipId: "mem-s",
       fromProjectDisplayName: "Probe",

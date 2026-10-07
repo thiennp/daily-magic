@@ -1,6 +1,13 @@
 import { asRowArray, getSql } from "@/lib/db";
+import {
+  buildProjectGrokRoutineWakeBody,
+  PROJECT_GROK_ROUTINE_WAKE_EVENT,
+} from "@/lib/projects/acl/webhooks/buildProjectGrokRoutineWakeBody";
+import { loadProjectGrokWakeProjectName } from "@/lib/projects/acl/webhooks/loadProjectGrokWakeProjectName";
 import { persistProjectGrokRoutineWakeAttempt } from "@/lib/projects/acl/webhooks/persistProjectGrokRoutineWakeAttempt";
 import { postProjectGrokRoutineWebhook } from "@/lib/projects/acl/webhooks/postProjectGrokRoutineWebhook";
+
+export { PROJECT_GROK_ROUTINE_WAKE_EVENT };
 
 const isPostableGrokRoutineWebhook = (
   row: Record<string, unknown>,
@@ -36,8 +43,6 @@ export const loadPostableGrokRoutineWebhookMembershipIds = async (input: {
   );
 };
 
-export const PROJECT_GROK_ROUTINE_WAKE_EVENT = "project_message.stored";
-
 const wakeResultForRecipient = async (
   row: Record<string, unknown> | undefined,
   body: string,
@@ -62,6 +67,7 @@ export type ProjectGrokRoutineWakeResult = {
  * POST each addressed recipient and persist the short result.
  * Returns one result per recipient. Callers must await this.
  * A missed POST must not fail dispatch.
+ * Wake body is scoped to THIS project only (id, name, triggering message).
  */
 export const wakeProjectGrokRoutineWebhooks = async (input: {
   readonly projectId: string;
@@ -87,10 +93,11 @@ export const wakeProjectGrokRoutineWebhooks = async (input: {
   const byMembership = new Map(
     rows.map((row) => [String(row.membership_id), row]),
   );
-  const body = JSON.stringify({
+  const projectName = await loadProjectGrokWakeProjectName(input.projectId);
+  const body = buildProjectGrokRoutineWakeBody({
     projectId: input.projectId,
+    projectName,
     messageId: input.messageId,
-    event: PROJECT_GROK_ROUTINE_WAKE_EVENT,
     summary: input.summary,
     fromMembershipId: input.fromMembershipId,
     fromProjectDisplayName: input.fromProjectDisplayName,
