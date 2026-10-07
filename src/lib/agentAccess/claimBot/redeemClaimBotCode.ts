@@ -5,6 +5,7 @@ import { hashClaimBotCode } from "@/lib/agentAccess/claimBot/hashClaimBotCode";
 import { resolveClaimEntryGate } from "@/lib/agentAccess/claimBot/resolveClaimEntryGate";
 import { revokePendingClaimCodesForToken } from "@/lib/agentAccess/claimBot/revokePendingClaimCodesForToken";
 import type { RedeemClaimBotCodeResult } from "@/lib/agentAccess/claimBot/types/RedeemClaimBotCodeResult.type";
+import { assertAssistantConnectEntitlement } from "@/lib/billing/assertAssistantConnectEntitlement";
 import { asRowArray, getSql } from "@/lib/db";
 
 export type { RedeemClaimBotCodeResult };
@@ -24,6 +25,12 @@ export const redeemClaimBotCode = async (input: {
   });
   if (!gate.ok) {
     return { ok: false, code: "locked", retryAt: gate.retryAt };
+  }
+  const entitlement = await assertAssistantConnectEntitlement({
+    userId: input.claimantUserId,
+  });
+  if (!entitlement.ok) {
+    return { ok: false, code: "assistant_connect_limit" };
   }
   await ensureClaimBotSchema();
   const sql = getSql();

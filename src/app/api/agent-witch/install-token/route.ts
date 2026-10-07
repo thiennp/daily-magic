@@ -1,6 +1,7 @@
 import { createAgentWitchInstallTokenForUser } from "@/lib/agentWitch/createAgentWitchInstallTokenForUser";
 import { buildAppOriginFromHeaders } from "@/lib/agentWitch/resolveAgentWitchAppOrigin";
 import { requireAuth } from "@/lib/auth/requireAuth";
+import { isBillingGateError } from "@/lib/billing/BillingGateError";
 import isMobileRequest from "@/lib/mobile/isMobileRequest";
 
 export const dynamic = "force-dynamic";
@@ -28,17 +29,26 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const appOrigin = buildAppOriginFromHeaders(request.headers);
-  const installToken = await createAgentWitchInstallTokenForUser({
-    userId: actor.id,
-    email,
-    origin: appOrigin,
-  });
-
-  return Response.json({
-    ok: true,
-    pairingToken: installToken.pairingToken,
-    tokenHash: installToken.tokenHash,
-    installCommand: installToken.installCommand,
-    email,
-  });
+  try {
+    const installToken = await createAgentWitchInstallTokenForUser({
+      userId: actor.id,
+      email,
+      origin: appOrigin,
+    });
+    return Response.json({
+      ok: true,
+      pairingToken: installToken.pairingToken,
+      tokenHash: installToken.tokenHash,
+      installCommand: installToken.installCommand,
+      email,
+    });
+  } catch (error) {
+    if (isBillingGateError(error)) {
+      return Response.json(
+        { error: error.message, code: error.code },
+        { status: 403 },
+      );
+    }
+    throw error;
+  }
 }

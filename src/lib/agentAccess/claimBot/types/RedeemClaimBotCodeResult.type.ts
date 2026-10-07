@@ -11,6 +11,7 @@ export type RedeemClaimBotCodeResult =
         | "invalid_code"
         | "expired"
         | "already_claimed"
-        | "already_redeemed";
+        | "already_redeemed"
+        | "assistant_connect_limit";
       readonly retryAt?: string;
     };

@@ -8,6 +8,7 @@ const redeemStatus = (code: string): number => {
   if (code === "locked") return 429;
   if (code === "already_claimed" || code === "already_redeemed") return 409;
   if (code === "expired") return 410;
+  if (code === "assistant_connect_limit") return 403;
   return 400;
 };
 
@@ -49,7 +50,9 @@ export async function POST(request: Request): Promise<Response> {
         errorMessage:
           result.code === "locked"
             ? `Too many failed attempts. Try again after ${result.retryAt}.`
-            : result.code,
+            : result.code === "assistant_connect_limit"
+              ? "This plan's assistant connect limit is full. Upgrade to connect more."
+              : result.code,
       },
       { status: redeemStatus(result.code) },
     );

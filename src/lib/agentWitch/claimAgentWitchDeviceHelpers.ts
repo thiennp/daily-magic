@@ -1,6 +1,8 @@
 import mapAgentWitchDeviceRow from "@/lib/agentWitch/mapAgentWitchDeviceRow";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
 import { revokeProjectComputerMembershipsForDevice } from "@/lib/projects/acl/revokeProjectComputerMembershipsForDevice";
+import { assertComputerEntitlement } from "@/lib/billing/assertComputerEntitlement";
+import { BillingGateError } from "@/lib/billing/BillingGateError";
 import { asRowArray, getSql } from "@/lib/db";
 
 export const isUniqueTokenHashViolation = (error: unknown): boolean => {
@@ -26,6 +28,10 @@ export const insertAgentWitchDeviceClaim = async (input: {
    */
   readonly recordLastSeen?: boolean;
 }): Promise<AgentWitchDeviceRecord> => {
+  const gate = await assertComputerEntitlement({ userId: input.userId });
+  if (!gate.ok) {
+    throw new BillingGateError(gate);
+  }
   const sql = getSql();
   const insertResult = asRowArray(
     input.recordLastSeen === false

@@ -21,6 +21,14 @@ CREATE TABLE IF NOT EXISTS users (
   onboarding_first_task_sent BOOLEAN NOT NULL DEFAULT FALSE,
   onboarding_automation_created BOOLEAN NOT NULL DEFAULT FALSE,
   onboarding_setup_acknowledged BOOLEAN NOT NULL DEFAULT FALSE,
+  plan TEXT NOT NULL DEFAULT 'trial'
+    CHECK (plan IN ('trial', 'pro', 'team', 'admin_free')),
+  trial_started_at TIMESTAMPTZ,
+  trial_ends_at TIMESTAMPTZ,
+  admin_free BOOLEAN NOT NULL DEFAULT FALSE,
+  seat_count INTEGER NOT NULL DEFAULT 1 CHECK (seat_count >= 1),
+  stripe_customer_id TEXT,
+  stripe_subscription_id TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -784,3 +792,14 @@ CREATE UNIQUE INDEX IF NOT EXISTS project_folder_refs_unique_idx
 
 CREATE INDEX IF NOT EXISTS project_folder_refs_project_idx
   ON project_folder_refs (project_id, updated_at DESC);
+
+
+CREATE TABLE IF NOT EXISTS billing_infra_spend_months (
+  month_key TEXT PRIMARY KEY,
+  railway_spend_eur NUMERIC(12, 2) NOT NULL DEFAULT 0,
+  neon_spend_eur NUMERIC(12, 2) NOT NULL DEFAULT 0,
+  related_infra_spend_eur NUMERIC(12, 2) NOT NULL DEFAULT 0,
+  trial_gate TEXT NOT NULL DEFAULT 'open'
+    CHECK (trial_gate IN ('open', 'closed')),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
