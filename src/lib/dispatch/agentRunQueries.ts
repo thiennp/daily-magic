@@ -6,6 +6,7 @@ import {
 } from "@/lib/dispatch/agentRunSessionRegistry";
 import { deleteAgentRunLocalPrompt } from "@/lib/dispatch/agentRunLocalPromptStore";
 import { getAgentRunRowById } from "@/lib/dispatch/agentRunEventQueries";
+import { finalizeAgentRunLocalPromptAtTerminal } from "@/lib/dispatch/persistAgentRunHistoryAiSession";
 import mapAgentRunRow from "@/lib/dispatch/mapAgentRunRow";
 import {
   AGENT_RUN_NEON_META_MAX_CHARS,
@@ -21,6 +22,45 @@ const syncAgentRunCache = (run: AgentRunRecord): AgentRunRecord => {
   return run;
 };
 
+const isTerminalStatus = (status: AgentRunStatusValue): boolean =>
+  status === AgentRunStatus.COMPLETED ||
+  status === AgentRunStatus.FAILED ||
+  status === AgentRunStatus.DENIED ||
+  status === AgentRunStatus.EXPIRED;
+
+/**
+ * After terminal Neon/session update: persist full bodies to C1 when possible,
+ * then delete server-local prompt only when C1 durable write confirmed OR
+ * History OFF / no projectId (explicit drop). Never re-expand Neon from local.
+ */
+const maybeDeleteLocalPromptAfterTerminal = async (input: {
+  readonly runId: string;
+  readonly status: AgentRunStatusValue;
+  readonly projectId: string | null | undefined;
+  readonly writerAgent?: string | null;
+  /** Uncapped full result (or denial text) for C1 — never the Neon ≤120 cap. */
+  readonly fullResultBody?: string | null;
+}): Promise<void> => {
+  if (!isTerminalStatus(input.status)) {
+    return;
+  }
+  const shouldDelete = await finalizeAgentRunLocalPromptAtTerminal({
+    agentRunId: input.runId,
+    projectId: input.projectId,
+    status: input.status,
+    ...(input.fullResultBody !== undefined
+      ? { resultBody: input.fullResultBody }
+      : {}),
+    ...(typeof input.writerAgent === "string"
+      ? { writerAgent: input.writerAgent }
+      : {}),
+    completedAt: new Date().toISOString(),
+  });
+  if (shouldDelete) {
+    deleteAgentRunLocalPrompt(input.runId);
+  }
+};
+
 export async function updateAgentRunStatus(
   runId: string,
   status: AgentRunStatusValue,
@@ -34,6 +74,14 @@ export async function updateAgentRunStatus(
     readonly actualSeconds?: number | null;
   },
 ): Promise<AgentRunRecord | null> {
+  // Preserve uncapped bodies for C1 local SoT before Neon meta cap.
+  const fullResultBody =
+    typeof fields?.resultOutput === "string"
+      ? fields.resultOutput
+      : typeof fields?.denialReason === "string"
+        ? fields.denialReason
+        : undefined;
+
   // Cap body-capable fields before any Neon/session write (meta-only HARD).
   const cappedFields =
     fields === undefined
@@ -49,25 +97,21 @@ export async function updateAgentRunStatus(
         };
 
   if (isAgentWitchDevDashboardEnabled()) {
+    const prior = getAgentRunSession(runId);
     const session = updateAgentRunSessionStatus(runId, status, cappedFields);
-    if (
-      status === AgentRunStatus.COMPLETED ||
-      status === AgentRunStatus.FAILED ||
-      status === AgentRunStatus.DENIED ||
-      status === AgentRunStatus.EXPIRED
-    ) {
-      deleteAgentRunLocalPrompt(runId);
-    }
+    await maybeDeleteLocalPromptAfterTerminal({
+      runId,
+      status,
+      projectId: session?.projectId ?? prior?.projectId ?? null,
+      writerAgent: session?.writerAgent ?? prior?.writerAgent ?? null,
+      ...(fullResultBody !== undefined ? { fullResultBody } : {}),
+    });
     return session;
   }
 
   const now = new Date().toISOString();
   const startedAt = status === AgentRunStatus.RUNNING ? now : undefined;
-  const isTerminal =
-    status === AgentRunStatus.COMPLETED ||
-    status === AgentRunStatus.FAILED ||
-    status === AgentRunStatus.DENIED ||
-    status === AgentRunStatus.EXPIRED;
+  const isTerminal = isTerminalStatus(status);
   const completedAt = isTerminal ? now : undefined;
 
   const sql = getSql();
@@ -96,18 +140,28 @@ export async function updateAgentRunStatus(
   );
 
   if (!result[0]) {
+    const prior = getAgentRunSession(runId);
     const session = updateAgentRunSessionStatus(runId, status, cappedFields);
-    if (isTerminal) {
-      deleteAgentRunLocalPrompt(runId);
-    }
+    await maybeDeleteLocalPromptAfterTerminal({
+      runId,
+      status,
+      projectId: session?.projectId ?? prior?.projectId ?? null,
+      writerAgent: session?.writerAgent ?? prior?.writerAgent ?? null,
+      ...(fullResultBody !== undefined ? { fullResultBody } : {}),
+    });
     return session;
   }
 
-  if (isTerminal) {
-    deleteAgentRunLocalPrompt(runId);
-  }
+  const mapped = syncAgentRunCache(mapAgentRunRow(result[0]));
+  await maybeDeleteLocalPromptAfterTerminal({
+    runId,
+    status,
+    projectId: mapped.projectId,
+    writerAgent: mapped.writerAgent,
+    ...(fullResultBody !== undefined ? { fullResultBody } : {}),
+  });
 
-  return syncAgentRunCache(mapAgentRunRow(result[0]));
+  return mapped;
 }
 
 export async function getAgentRunById(

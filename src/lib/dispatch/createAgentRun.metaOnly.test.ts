@@ -8,6 +8,11 @@ import { AGENT_RUN_NEON_META_MAX_CHARS } from "@/lib/dispatch/toAgentRunNeonMeta
 import { getAgentRunLocalPrompt } from "@/lib/dispatch/agentRunLocalPromptStore";
 
 const insertCalls: { prompt: unknown }[] = [];
+const layoutState = vi.hoisted(() => ({ root: "" }));
+
+vi.mock("@agent-witch/install-layout", () => ({
+  resolveAgentWitchLocalLayout: () => ({ projectDataDir: layoutState.root }),
+}));
 
 vi.mock("@/lib/auth/resolveDevDashboardActor", () => ({
   isAgentWitchDevDashboardEnabled: () => false,
@@ -86,11 +91,14 @@ vi.mock("@/lib/dispatch/mapAgentRunRow", () => ({
 
 describe("createAgentRun Neon meta-only", () => {
   let tempDir: string;
+  let tempRoot: string;
   let prevEnv: string | undefined;
 
   beforeEach(() => {
     insertCalls.length = 0;
     tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "awc-create-prompts-"));
+    tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "awc-create-c1-"));
+    layoutState.root = tempRoot;
     prevEnv = process.env.AGENT_WITCH_AGENT_RUN_LOCAL_PROMPTS_DIR;
     process.env.AGENT_WITCH_AGENT_RUN_LOCAL_PROMPTS_DIR = tempDir;
   });
@@ -102,6 +110,7 @@ describe("createAgentRun Neon meta-only", () => {
       process.env.AGENT_WITCH_AGENT_RUN_LOCAL_PROMPTS_DIR = prevEnv;
     }
     fs.rmSync(tempDir, { recursive: true, force: true });
+    fs.rmSync(tempRoot, { recursive: true, force: true });
     vi.resetModules();
   });
 
@@ -129,5 +138,64 @@ describe("createAgentRun Neon meta-only", () => {
 
     expect(run.prompt).toBe(full);
     expect(getAgentRunLocalPrompt("run-meta-1")).toBe(full);
+  });
+
+  it("with projectId + History ON writes full promptBody to C1; Neon still ≤120", async () => {
+    const { writeLocalProjectHistoryState, listProjectHistoryAiSessions } =
+      await import("@agent-witch/live-project-history");
+    writeLocalProjectHistoryState({ projectId: "proj-c1", state: "on_ready" });
+
+    const { default: createAgentRun } = await import(
+      "@/lib/dispatch/createAgentRun"
+    );
+    const full = `Please do a long task with project. ${"x".repeat(300)}`;
+    const run = await createAgentRun({
+      id: "run-c1-1",
+      requesterUserId: "u1",
+      executorUserId: "u2",
+      prompt: full,
+      status: "pending_approval",
+      dispatchPolicy: "approval",
+      projectId: "proj-c1",
+    });
+
+    expect(insertCalls).toHaveLength(1);
+    expect((insertCalls[0]?.prompt as string).length).toBeLessThanOrEqual(
+      AGENT_RUN_NEON_META_MAX_CHARS,
+    );
+    expect(run.prompt).toBe(full);
+    expect(getAgentRunLocalPrompt("run-c1-1")).toBe(full);
+
+    const sessions = listProjectHistoryAiSessions("proj-c1");
+    expect(sessions).toHaveLength(1);
+    expect(sessions[0]?.promptBody).toBe(full);
+    expect(sessions[0]?.promptBody!.length).toBeGreaterThan(280);
+    expect(sessions[0]?.promptSummary.length).toBeLessThanOrEqual(280);
+  });
+
+  it("History OFF + projectId: no C1 write; Neon meta + local hydrate bridge", async () => {
+    const { writeLocalProjectHistoryState, listProjectHistoryAiSessions } =
+      await import("@agent-witch/live-project-history");
+    writeLocalProjectHistoryState({ projectId: "proj-off", state: "off" });
+
+    const { default: createAgentRun } = await import(
+      "@/lib/dispatch/createAgentRun"
+    );
+    const full = `History off prompt ${"y".repeat(200)}`;
+    await createAgentRun({
+      id: "run-off-1",
+      requesterUserId: "u1",
+      executorUserId: "u2",
+      prompt: full,
+      status: "pending_approval",
+      dispatchPolicy: "approval",
+      projectId: "proj-off",
+    });
+
+    expect((insertCalls[0]?.prompt as string).length).toBeLessThanOrEqual(
+      AGENT_RUN_NEON_META_MAX_CHARS,
+    );
+    expect(getAgentRunLocalPrompt("run-off-1")).toBe(full);
+    expect(listProjectHistoryAiSessions("proj-off")).toHaveLength(0);
   });
 });

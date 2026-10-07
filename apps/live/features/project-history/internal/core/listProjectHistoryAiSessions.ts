@@ -48,6 +48,10 @@ const parseSessionFile = (
         typeof parsed.promptSummary === "string" ? parsed.promptSummary : "",
       resultSummary:
         typeof parsed.resultSummary === "string" ? parsed.resultSummary : "",
+      promptBody:
+        typeof parsed.promptBody === "string" ? parsed.promptBody : null,
+      resultBody:
+        typeof parsed.resultBody === "string" ? parsed.resultBody : null,
       createdAt,
       completedAt:
         parsed.completedAt === null || parsed.completedAt === undefined

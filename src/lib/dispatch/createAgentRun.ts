@@ -3,7 +3,11 @@ import { randomUUID } from "node:crypto";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
-import { putAgentRunLocalPrompt } from "@/lib/dispatch/agentRunLocalPromptStore";
+import {
+  deleteAgentRunLocalPrompt,
+  putAgentRunLocalPrompt,
+} from "@/lib/dispatch/agentRunLocalPromptStore";
+import { tryPersistAgentRunHistoryAiSession } from "@/lib/dispatch/persistAgentRunHistoryAiSession";
 import mapAgentRunRow from "@/lib/dispatch/mapAgentRunRow";
 import { toAgentRunNeonMetaText } from "@/lib/dispatch/toAgentRunNeonMetaText";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
@@ -38,6 +42,19 @@ const createAgentRun = async (
   const neonPrompt = toAgentRunNeonMetaText(input.prompt);
   putAgentRunLocalPrompt(runId, input.prompt);
 
+  // Project-computer C1 durable SoT when History ON + this process shares the
+  // Mac profileDir (AWL / colocated). Hosted Railway usually no-ops
+  // (history_unknown); device COMMAND_CLAUDE_RUN path writes C1 then.
+  tryPersistAgentRunHistoryAiSession({
+    projectId: input.projectId,
+    agentRunId: runId,
+    status: input.status,
+    promptBody: input.prompt,
+    resultBody: null,
+    writerAgent,
+    completedAt: null,
+  });
+
   if (isAgentWitchDevDashboardEnabled()) {
     const now = new Date().toISOString();
     const run: AgentRunRecord = {
@@ -69,48 +86,54 @@ const createAgentRun = async (
     return run;
   }
 
-  const sql = getSql();
-  const result = asRowArray(
-    await sql`
-      INSERT INTO agent_runs (
-        id,
-        group_id,
-        requester_user_id,
-        executor_user_id,
-        device_id,
-        prompt,
-        status,
-        dispatch_policy,
-        writer_agent,
-        capability_id,
-        capability_version_id,
-        project_id,
-        composition_snapshot_id,
-        approval_expires_at
-      )
-      VALUES (
-        ${runId},
-        ${input.groupId ?? null},
-        ${input.requesterUserId},
-        ${input.executorUserId},
-        ${input.deviceId ?? null},
-        ${neonPrompt},
-        ${input.status},
-        ${input.dispatchPolicy},
-        ${writerAgent},
-        ${input.capabilityId ?? null},
-        ${input.capabilityVersionId ?? null},
-        ${input.projectId ?? null},
-        ${input.compositionSnapshotId ?? null},
-        ${input.approvalExpiresAt ?? null}
-      )
-      RETURNING *
-    `,
-  );
+  try {
+    const sql = getSql();
+    const result = asRowArray(
+      await sql`
+        INSERT INTO agent_runs (
+          id,
+          group_id,
+          requester_user_id,
+          executor_user_id,
+          device_id,
+          prompt,
+          status,
+          dispatch_policy,
+          writer_agent,
+          capability_id,
+          capability_version_id,
+          project_id,
+          composition_snapshot_id,
+          approval_expires_at
+        )
+        VALUES (
+          ${runId},
+          ${input.groupId ?? null},
+          ${input.requesterUserId},
+          ${input.executorUserId},
+          ${input.deviceId ?? null},
+          ${neonPrompt},
+          ${input.status},
+          ${input.dispatchPolicy},
+          ${writerAgent},
+          ${input.capabilityId ?? null},
+          ${input.capabilityVersionId ?? null},
+          ${input.projectId ?? null},
+          ${input.compositionSnapshotId ?? null},
+          ${input.approvalExpiresAt ?? null}
+        )
+        RETURNING *
+      `,
+    );
 
-  const fromNeon = mapAgentRunRow(result[0]);
-  // Callers (registry / approval) need the full prompt; Neon row is meta-only.
-  return { ...fromNeon, prompt: input.prompt };
+    const fromNeon = mapAgentRunRow(result[0]);
+    // Callers (registry / approval) need the full prompt; Neon row is meta-only.
+    return { ...fromNeon, prompt: input.prompt };
+  } catch (error: unknown) {
+    // Soft note: put-then-INSERT-fail orphan cleanup.
+    deleteAgentRunLocalPrompt(runId);
+    throw error;
+  }
 };
 
 export default createAgentRun;

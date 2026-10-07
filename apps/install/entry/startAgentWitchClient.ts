@@ -48,7 +48,10 @@ import {
   waitForAgentWitchClientConfigs as waitForConfigs,
   watchCodingToolsPause,
 } from "@agent-witch/install-runtime-client";
-import { handleProjectMessageHistoryDispatch } from "@agent-witch/live-project-history";
+import {
+  handleProjectMessageHistoryDispatch,
+  writeProjectHistoryAiSession,
+} from "@agent-witch/live-project-history";
 import type { AgentWitchClientConfig as AgentWitchConfig } from "@agent-witch/install-runtime-client/types";
 import { buildAgentWitchDeviceRestartAckPayload } from "@agent-witch/install-runtime-client";
 import {
@@ -184,6 +187,37 @@ const shellSessionIdByRunId = new Map<string, string>();
 const projectFolderPathByRunId = new Map<string, string>();
 const projectIdByRunId = new Map<string, string>();
 const promptByRunId = new Map<string, string>();
+
+/** Durable C1 SoT on the project computer when History is ON (no-op otherwise). */
+const persistRunHistoryAiSessionLocal = (input: {
+  readonly projectId: string;
+  readonly agentRunId: string;
+  readonly status: string;
+  readonly promptBody?: string | null;
+  readonly resultBody?: string | null;
+  readonly writerAgent?: string | null;
+  readonly completedAt?: string | null;
+}): void => {
+  try {
+    writeProjectHistoryAiSession({
+      projectId: input.projectId,
+      taskId: input.agentRunId,
+      agentRunId: input.agentRunId,
+      status: input.status,
+      ...(input.promptBody !== undefined ? { promptBody: input.promptBody } : {}),
+      ...(input.resultBody !== undefined ? { resultBody: input.resultBody } : {}),
+      ...(typeof input.writerAgent === "string"
+        ? { writerAgent: input.writerAgent }
+        : {}),
+      ...(input.completedAt !== undefined
+        ? { completedAt: input.completedAt }
+        : { completedAt: null }),
+    });
+  } catch {
+    // best-effort; never block the run
+  }
+};
+
 const reportKeyByRunId = new Map<string, string>();
 const gitSnapshotBeforeByRunId = new Map<
   string,
@@ -1540,6 +1574,17 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
               projectIdByRunId.set(agentRunId, projectId.trim());
             }
             promptByRunId.set(agentRunId, prompt.trim());
+            if (projectId !== undefined && projectId.trim().length > 0) {
+              persistRunHistoryAiSessionLocal({
+                projectId: projectId.trim(),
+                agentRunId,
+                status: "running",
+                promptBody: prompt.trim(),
+                resultBody: null,
+                writerAgent,
+                completedAt: null,
+              });
+            }
             ensureAgentWitchProjectFolder({
               projectFolderPath: admittedFolderPath,
               ...(projectId !== undefined && projectId.trim().length > 0
@@ -1949,10 +1994,32 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         }
       }
 
+      if (
+        agentRunId !== undefined &&
+        projectId !== undefined &&
+        projectId.trim().length > 0
+      ) {
+        const terminalStatus =
+          exitCode === undefined || exitCode === null
+            ? "completed"
+            : exitCode === 0
+              ? "completed"
+              : "failed";
+        persistRunHistoryAiSessionLocal({
+          projectId: projectId.trim(),
+          agentRunId,
+          status: terminalStatus,
+          promptBody: prompt.length > 0 ? prompt : undefined,
+          resultBody: output,
+          completedAt: new Date().toISOString(),
+        });
+      }
+
       if (agentRunId !== undefined) {
         removeRunCompositionOverlay(config.layout, agentRunId);
         runScopedOverlayByRunId.delete(agentRunId);
         projectIdByRunId.delete(agentRunId);
+        promptByRunId.delete(agentRunId);
       }
     }
   };

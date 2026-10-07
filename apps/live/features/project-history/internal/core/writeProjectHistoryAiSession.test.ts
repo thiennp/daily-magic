@@ -45,6 +45,8 @@ describe("writeProjectHistoryAiSession", () => {
     expect(result.record.agentRunId).toBe("run-abc");
     expect(result.record.promptSummary).not.toMatch(/sk-/);
     expect(result.record.resultSummary).toContain("[redacted-email]");
+    expect(result.record.promptBody).toBeNull();
+    expect(result.record.resultBody).toBeNull();
     const filePath = path.join(
       ensureProjectDataTree("p1"),
       PROJECT_HISTORY_TASKS_DIR_NAME,
@@ -59,6 +61,49 @@ describe("writeProjectHistoryAiSession", () => {
     expect(parsed.agentRunId).toBe("run-abc");
   });
 
+  it("stores full secret-scrubbed promptBody/resultBody (uncapped) and merges", () => {
+    writeLocalProjectHistoryState({ projectId: "p1", state: "on_ready" });
+    const longPrompt = `Please do a long task. ${"x".repeat(400)} sk-abcdefghijklmnopqrstuvwxyz123456`;
+    const create = writeProjectHistoryAiSession({
+      projectId: "p1",
+      taskId: "run-full",
+      agentRunId: "run-full",
+      status: "running",
+      promptBody: longPrompt,
+      resultBody: null,
+      writerAgent: "claude-cli",
+      completedAt: null,
+    });
+    expect(create.ok).toBe(true);
+    if (!create.ok) return;
+    expect(create.record.promptBody).not.toBeNull();
+    expect(create.record.promptBody!.length).toBeGreaterThan(280);
+    expect(create.record.promptBody).not.toMatch(/sk-/);
+    expect(create.record.promptSummary.length).toBeLessThanOrEqual(280);
+    expect(create.record.promptSummary).not.toMatch(/sk-/);
+    expect(create.record.resultBody).toBeNull();
+    expect(create.record.completedAt).toBeNull();
+
+    const longResult = `All done. ${"y".repeat(350)} email a@b.com`;
+    const terminal = writeProjectHistoryAiSession({
+      projectId: "p1",
+      taskId: "run-full",
+      agentRunId: "run-full",
+      status: "completed",
+      resultBody: longResult,
+      completedAt: "2026-01-02T00:02:00.000Z",
+    });
+    expect(terminal.ok).toBe(true);
+    if (!terminal.ok) return;
+    // Prompt body preserved across terminal merge.
+    expect(terminal.record.promptBody).toBe(create.record.promptBody);
+    expect(terminal.record.resultBody).not.toBeNull();
+    expect(terminal.record.resultBody!.length).toBeGreaterThan(280);
+    expect(terminal.record.resultBody).toContain("[redacted-email]");
+    expect(terminal.record.resultSummary.length).toBeLessThanOrEqual(280);
+    expect(terminal.record.status).toBe("completed");
+  });
+
   it("skips write when History is off or unknown", () => {
     expect(
       writeProjectHistoryAiSession({
@@ -68,6 +113,7 @@ describe("writeProjectHistoryAiSession", () => {
         status: "completed",
         promptSummary: "x",
         resultSummary: "y",
+        promptBody: "full prompt body that must not be written",
       }).ok,
     ).toBe(false);
 
@@ -80,6 +126,7 @@ describe("writeProjectHistoryAiSession", () => {
         status: "completed",
         promptSummary: "x",
         resultSummary: "y",
+        promptBody: "full prompt body that must not be written",
       }),
     ).toEqual({ ok: false, reason: "history_off" });
   });
