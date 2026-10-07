@@ -130,12 +130,39 @@ describe("SPEC §11 Human IDB + T4 Soft FIX Soft Soft", () => {
       body: "SECRET BODY",
       prompt: "dirty local edit",
     });
-    const neo = neon({ version: 99, title: "Neon ahead" });
+    const neo = neon({ version: 99, title: "Neon ahead", status: "running" });
     const prefer = preferLocalDirtyOverNeonNewer(loc, neo);
     expect(prefer.neonNewerSkipped).toBe(true);
+    expect(prefer.metaRefreshedFromNeon).toBe(true);
     expect(prefer.winner.body).toBe("SECRET BODY");
     expect(prefer.winner.title).toBe("Keep local unsynced");
     expect(prefer.winner.prompt).toBe("dirty local edit");
+    expect(prefer.winner.status).toBe("running");
+  });
+
+  it("T4 clean local: Neon-newer meta-only; body/title/prompt stay local", () => {
+    const loc = local({
+      version: 2,
+      title: "Synced clean title",
+      body: "clean body",
+      prompt: "clean prompt",
+      status: "queued",
+    });
+    const neo = neon({
+      version: 8,
+      title: "Neon must not clobber title",
+      status: "done",
+      endedAt: "2026-10-07T10:00:00.000Z",
+    });
+    const prefer = preferLocalDirtyOverNeonNewer(loc, neo);
+    expect(prefer.neonNewerSkipped).toBe(true);
+    expect(prefer.metaRefreshedFromNeon).toBe(true);
+    expect(prefer.winner.body).toBe("clean body");
+    expect(prefer.winner.prompt).toBe("clean prompt");
+    expect(prefer.winner.title).toBe("Synced clean title");
+    expect(prefer.winner.status).toBe("done");
+    expect(prefer.winner.version).toBe(8);
+    expect(prefer.winner.endedAt).toBe("2026-10-07T10:00:00.000Z");
   });
 
   it("IDB structure: awc-chat v2 + projectTasks", () => {

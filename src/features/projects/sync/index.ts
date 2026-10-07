@@ -85,6 +85,7 @@ export {
   mapProjectTaskStatusToUi,
   mergeLocalProjectTask,
   preferLocalDirtyOverNeonNewer,
+  preferLocalOverNeonNewer,
   PROJECT_TASK_IDB_FIELDS,
   PROJECT_TASK_LOCAL_ONLY_FIELDS,
   PROJECT_TASK_NEON_FIELDS,

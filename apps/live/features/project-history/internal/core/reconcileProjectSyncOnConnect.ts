@@ -10,6 +10,7 @@
 import {
   compareVersionProjectTask,
   keyOfProjectTask,
+  preferLocalDirtyOverNeonNewer,
   toNeonMetaProjectTask,
   type ProjectTaskLocalRecord,
   type ProjectTaskNeonMeta,
@@ -154,8 +155,9 @@ export const reconcileProjectSyncOnConnect = async (
       toPush.push(toNeonMetaProjectTask(local));
     } else {
       skippedNeonNewer.push(key);
-      // Local SoT: keep AWL record; do not promote Neon meta bodies (none exist).
-      keptLocal.push(local);
+      // T4: local body/title/prompt win (dirty or clean); Neon refreshes meta only.
+      const prefer = preferLocalDirtyOverNeonNewer(local, neon);
+      keptLocal.push(prefer.winner);
     }
   }
 

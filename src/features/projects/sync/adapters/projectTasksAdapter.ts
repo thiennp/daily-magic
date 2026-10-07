@@ -242,9 +242,10 @@ export const mergeLocalProjectTask = (
 
 
 /**
- * T4 harden (Lead Soft FIX Soft Soft): local unsynced/dirty edit always wins
- * over Neon-newer meta. Never prefer Neon version for local SoT body/title.
- * Reconcile uses the same rule (skippedNeonNewer + keptLocal).
+ * T4 harden (Lead Soft FIX Soft Soft + Arch add-on): local SoT body/title/prompt
+ * always wins — dirty *or clean*. Neon-newer may refresh meta fields only
+ * (status/times/branch/worktree/session ids/version); never replace local body,
+ * title, prompt, report, or logs. Alias: preferLocalOverNeonNewer.
  */
 export const preferLocalDirtyOverNeonNewer = (
   local: ProjectTaskLocalRecord,
@@ -252,13 +253,47 @@ export const preferLocalDirtyOverNeonNewer = (
 ): {
   readonly winner: ProjectTaskLocalRecord;
   readonly neonNewerSkipped: boolean;
+  readonly metaRefreshedFromNeon: boolean;
 } => {
   const neonNewer = compareVersionProjectTask(neon, local) > 0;
+  if (!neonNewer) {
+    return {
+      winner: local,
+      neonNewerSkipped: false,
+      metaRefreshedFromNeon: false,
+    };
+  }
+  // Neon newer → meta-only refresh; local body/title/prompt stay authoritative.
+  const winner: ProjectTaskLocalRecord = {
+    id: local.id,
+    projectId: local.projectId,
+    assistantMembershipId:
+      neon.assistantMembershipId ?? local.assistantMembershipId,
+    title: local.title,
+    status: neon.status,
+    createdAt: local.createdAt,
+    updatedAt: neon.updatedAt,
+    startedAt: neon.startedAt,
+    endedAt: neon.endedAt,
+    version: neon.version,
+    sessionId: neon.sessionId ?? local.sessionId,
+    agentRunId: neon.agentRunId ?? local.agentRunId,
+    branch: neon.branch ?? local.branch,
+    worktree: neon.worktree ?? local.worktree,
+    prompt: local.prompt,
+    body: local.body,
+    report: local.report,
+    logs: local.logs,
+  };
   return {
-    winner: local,
-    neonNewerSkipped: neonNewer,
+    winner,
+    neonNewerSkipped: true,
+    metaRefreshedFromNeon: true,
   };
 };
+
+/** Arch alias — clean local keeps body the same as dirty. */
+export const preferLocalOverNeonNewer = preferLocalDirtyOverNeonNewer;
 
 /** Pure — IDB cache from local or neon meta (snippet optional; never full body). */
 export const toIdbProjectTask = (
@@ -373,5 +408,6 @@ export const projectTasksAdapter = {
   toNeonMeta: toNeonMetaProjectTask,
   mergeLocal: mergeLocalProjectTask,
   preferLocalDirtyOverNeonNewer,
+  preferLocalOverNeonNewer,
   toIdb: toIdbProjectTask,
 } as const;

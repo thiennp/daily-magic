@@ -338,6 +338,7 @@ describe("§11.2 conflict T1–T15", () => {
     // Pure merge harden: unsynced local always wins over Neon-newer
     const prefer = preferLocalDirtyOverNeonNewer(local, neon);
     expect(prefer.neonNewerSkipped).toBe(true);
+    expect(prefer.metaRefreshedFromNeon).toBe(true);
     expect(prefer.winner.body).toBe("SECRET BODY");
     expect(prefer.winner.title).toBe("Keep local unsynced");
     expect(prefer.winner.prompt).toBe("dirty local edit");
@@ -358,6 +359,37 @@ describe("§11.2 conflict T1–T15", () => {
     expect(pushed).toHaveLength(0);
     expect(result.keptLocal[0]?.body).toBe("SECRET BODY");
     expect(result.keptLocal[0]?.title).toBe("Keep local unsynced");
+  });
+
+  it("T4 clean local: Neon-newer refreshes meta only; never replaces body/title/prompt", () => {
+    const local = localTask({
+      version: 1,
+      title: "Clean local title",
+      body: "CLEAN BODY",
+      prompt: "clean prompt",
+      status: "queued",
+      updatedAt: "2026-10-07T01:00:00.000Z",
+    });
+    const neon = neonMeta({
+      version: 5,
+      title: "Neon title must not win",
+      status: "running",
+      updatedAt: "2026-10-07T09:00:00.000Z",
+      startedAt: "2026-10-07T08:00:00.000Z",
+      branch: "feat/from-neon",
+      worktree: "wt-neon",
+    });
+    const prefer = preferLocalDirtyOverNeonNewer(local, neon);
+    expect(prefer.neonNewerSkipped).toBe(true);
+    expect(prefer.metaRefreshedFromNeon).toBe(true);
+    expect(prefer.winner.body).toBe("CLEAN BODY");
+    expect(prefer.winner.prompt).toBe("clean prompt");
+    expect(prefer.winner.title).toBe("Clean local title");
+    expect(prefer.winner.status).toBe("running");
+    expect(prefer.winner.version).toBe(5);
+    expect(prefer.winner.branch).toBe("feat/from-neon");
+    expect(prefer.winner.worktree).toBe("wt-neon");
+    expect(prefer.winner.startedAt).toBe("2026-10-07T08:00:00.000Z");
   });
 
   it("T5: equal version divergent meta — tie-break updatedAt then key", () => {
