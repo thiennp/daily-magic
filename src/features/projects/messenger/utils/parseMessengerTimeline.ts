@@ -1,14 +1,15 @@
-import type {
-  AwcMessengerAiSessionMeta,
-  AwcMessengerEntryKind,
-  AwcMessengerMessageState,
-  AwcMessengerOpenThread,
-  AwcMessengerPageSource,
-  AwcMessengerStateChip,
-  AwcMessengerThreadError,
-  AwcMessengerThreadPage,
-  AwcMessengerTimelineEntry,
-  AwcMessengerWindowKind,
+import {
+  AWC_MESSENGER_WINDOW_KINDS,
+  type AwcMessengerAiSessionMeta,
+  type AwcMessengerEntryKind,
+  type AwcMessengerMessageState,
+  type AwcMessengerOpenThread,
+  type AwcMessengerPageSource,
+  type AwcMessengerStateChip,
+  type AwcMessengerThreadError,
+  type AwcMessengerThreadPage,
+  type AwcMessengerTimelineEntry,
+  type AwcMessengerWindowKind,
 } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 
 const asRecord = (value: unknown): Record<string, unknown> | null => {
@@ -55,23 +56,15 @@ const parseEntryKind = (value: unknown): AwcMessengerEntryKind | undefined => {
   return value as AwcMessengerEntryKind;
 };
 
-const WINDOW_KINDS: ReadonlySet<string> = new Set([
-  "chat",
-  "task",
-  "task_update",
-  "approval_request",
-  "approval_result",
-  "notice",
-  "bot_to_bot",
-]);
+const isWindowKind = (value: unknown): value is AwcMessengerWindowKind =>
+  typeof value === "string" &&
+  (AWC_MESSENGER_WINDOW_KINDS as readonly string[]).includes(value);
 
 /** OW9 `windowKind` (DESIGN §3.1 enum) — feature-detected; unknown → omitted. */
 const parseWindowKind = (
   value: unknown,
-): AwcMessengerWindowKind | undefined => {
-  if (typeof value !== "string" || !WINDOW_KINDS.has(value)) return undefined;
-  return value as AwcMessengerWindowKind;
-};
+): AwcMessengerWindowKind | undefined =>
+  isWindowKind(value) ? value : undefined;
 
 const parseSession = (value: unknown): AwcMessengerAiSessionMeta | undefined => {
   const row = asRecord(value);

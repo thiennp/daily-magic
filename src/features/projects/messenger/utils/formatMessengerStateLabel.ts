@@ -10,7 +10,7 @@ export const formatMessengerStateLabel = (
     return copy.stateChecksOnDemand;
   }
   if (state === "waiting") {
-    const name = displayName?.trim() || "the bot";
+    const name = displayName?.trim() || "the assistant";
     return copy.stateWaiting.replace("{name}", name);
   }
   const map: Record<

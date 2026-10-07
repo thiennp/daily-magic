@@ -54,14 +54,17 @@ export type AwcMessengerAiSessionMeta = {
  * `windowKind` on the feed by OW9. Absent on today's main → client derives it
  * from existing fields (see mapMessengerEntryToOneWindowItem). Never shown in UI.
  */
-export type AwcMessengerWindowKind =
-  | "chat"
-  | "task"
-  | "task_update"
-  | "approval_request"
-  | "approval_result"
-  | "notice"
-  | "bot_to_bot";
+export const AWC_MESSENGER_WINDOW_KINDS = [
+  "chat",
+  "task",
+  "task_update",
+  "approval_request",
+  "approval_result",
+  "notice",
+  "bot_to_bot",
+] as const;
+
+export type AwcMessengerWindowKind = (typeof AWC_MESSENGER_WINDOW_KINDS)[number];
 
 export type AwcMessengerTimelineEntry = {
   readonly messageId: string;

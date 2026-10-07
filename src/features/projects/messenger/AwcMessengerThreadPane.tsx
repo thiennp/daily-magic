@@ -6,7 +6,7 @@ import { useOneWindowComposerRouting } from "@/features/projects/messenger/oneWi
 import AwcOneWindowInFeedApprovals from "@/features/projects/messenger/oneWindow/AwcOneWindowInFeedApprovals";
 import {
   isOneWindowApprovalItem,
-  isOneWindowNeedsYouItem,
+  isOneWindowNeedsYouForViewer,
   mapMessengerEntryToOneWindowItem,
 } from "@/features/projects/messenger/oneWindow/mapMessengerEntryToOneWindowItem";
 
@@ -96,21 +96,29 @@ export default function AwcMessengerThreadPane({
   // OW-H5: chips read window kind + live subject state from existing feed fields.
   // Session rows render nothing under tasks_tab_only (row default) → not counted.
   const sessionsHidden = (chatVisibility ?? "tasks_tab_only") === "tasks_tab_only";
-  const items = useMemo(
-    () =>
-      entries
-        .filter((entry) => !(sessionsHidden && isMessengerAiSessionEntry(entry)))
-        .map((entry) => ({ entry, item: mapMessengerEntryToOneWindowItem(entry) })),
-    [entries, sessionsHidden],
-  );
-  const needsCount = items.filter(({ item }) => isOneWindowNeedsYouItem(item)).length;
-  const approvalsCount = items.filter(({ item }) => isOneWindowApprovalItem(item)).length;
+  // Needs you = owner-created or assigned-to-viewer rows only (Product/Lead).
+  const items = useMemo(() => {
+    const viewer = { isOwner };
+    const entriesById = new Map(entries.map((entry) => [entry.messageId, entry]));
+    return entries
+      .filter((entry) => !(sessionsHidden && isMessengerAiSessionEntry(entry)))
+      .map((entry) => {
+        const item = mapMessengerEntryToOneWindowItem(entry);
+        return {
+          entry,
+          approval: isOneWindowApprovalItem(item),
+          needsYou: isOneWindowNeedsYouForViewer({ entry, item, viewer, entriesById }),
+        };
+      });
+  }, [entries, sessionsHidden, isOwner]);
+  const needsCount = items.filter((row) => row.needsYou).length;
+  const approvalsCount = items.filter((row) => row.approval).length;
 
   const filtered = useMemo(() => {
     if (filter === "all") return entries;
-    const keep =
-      filter === "approvals" ? isOneWindowApprovalItem : isOneWindowNeedsYouItem;
-    return items.filter(({ item }) => keep(item)).map(({ entry }) => entry);
+    return items
+      .filter((row) => (filter === "approvals" ? row.approval : row.needsYou))
+      .map((row) => row.entry);
   }, [entries, items, filter]);
 
   const showFilter = !isLoading && thread !== null && entries.length > 0;

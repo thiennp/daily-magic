@@ -206,3 +206,61 @@ export const isOneWindowApprovalItem = (item: OneWindowFeedItem): boolean =>
 /** Needs you chip: pending approvals or a task that is blocked on a person. */
 export const isOneWindowNeedsYouItem = (item: OneWindowFeedItem): boolean =>
   item.windowKind === "approval_request" || item.subjectState?.needsYou === true;
+
+/**
+ * Who is looking at the feed. `isOwner` comes from the pane; `membershipId` is
+ * the viewer's own membership when known (the messenger client has none today).
+ */
+export type OneWindowViewer = {
+  readonly isOwner: boolean;
+  readonly membershipId?: string | null;
+};
+
+const createdByOwnerViewer = (
+  entry: AwcMessengerTimelineEntry,
+  viewer: OneWindowViewer,
+): boolean => viewer.isOwner && entry.author.kind === "owner";
+
+const assignedToViewer = (
+  entry: AwcMessengerTimelineEntry,
+  viewer: OneWindowViewer,
+): boolean => {
+  const self = viewer.membershipId ?? null;
+  return self !== null && entry.states.some((chip) => chip.membershipId === self);
+};
+
+const isViewerTask = (
+  entry: AwcMessengerTimelineEntry,
+  viewer: OneWindowViewer,
+): boolean =>
+  createdByOwnerViewer(entry, viewer) || assignedToViewer(entry, viewer);
+
+/**
+ * Product/Lead scope for Needs you: a row counts only when it is assigned to the
+ * viewer, or created by the viewer as project owner. Approvals (run / join) are
+ * decided by the project owner in v1, so they are the owner's. A task update
+ * counts through its parent task row (`inReplyTo`); unknown parent → not counted.
+ */
+export const isOneWindowRowForViewer = (input: {
+  readonly entry: AwcMessengerTimelineEntry;
+  readonly item: OneWindowFeedItem;
+  readonly viewer: OneWindowViewer;
+  readonly entriesById: ReadonlyMap<string, AwcMessengerTimelineEntry>;
+}): boolean => {
+  const { entry, item, viewer, entriesById } = input;
+  if (isOneWindowApprovalItem(item)) return viewer.isOwner;
+  if (item.windowKind === "task_update") {
+    const parent =
+      entry.inReplyTo !== null ? entriesById.get(entry.inReplyTo) : undefined;
+    return parent !== undefined && isViewerTask(parent, viewer);
+  }
+  return isViewerTask(entry, viewer);
+};
+
+/** Needs you chip/count: needs a person AND is the viewer's row (scope above). */
+export const isOneWindowNeedsYouForViewer = (input: {
+  readonly entry: AwcMessengerTimelineEntry;
+  readonly item: OneWindowFeedItem;
+  readonly viewer: OneWindowViewer;
+  readonly entriesById: ReadonlyMap<string, AwcMessengerTimelineEntry>;
+}): boolean => isOneWindowNeedsYouItem(input.item) && isOneWindowRowForViewer(input);
