@@ -84,6 +84,8 @@ final class MacAppMenuController: ObservableObject {
     @Published private(set) var connectionLive: Bool?
     /// AWI: install bundle version from local `/health` (e.g. "270").
     @Published private(set) var installBundleVersion: String?
+    /// Plain line from GET /api/local/projects/folder, e.g. "AgentWitch uses ~/daily-magic (git repo).".
+    @Published private(set) var projectFolderSummary: String?
 
     private let fileManager: FileManager
     private var selfHealTask: Task<Void, Never>?
@@ -338,6 +340,7 @@ final class MacAppMenuController: ObservableObject {
         signedInEmail = nil
         chromeComputerBound = false
         connectionLive = nil
+        projectFolderSummary = nil
         forgetBoundAccount()
         localPortRange = nil
         localPortRangeDisplay = nil
@@ -760,6 +763,11 @@ final class MacAppMenuController: ObservableObject {
         }
         Task {
             let ownership = await probeHealth()
+            if ownership.isHealthy {
+                await refreshProjectFolderSummary()
+            } else {
+                projectFolderSummary = nil
+            }
             do {
                 state = try pollHealthFlow(current: state, isHealthy: ownership.isHealthy)
                 statusMessage = resolveLocalHealthStatusMessage(
@@ -822,6 +830,23 @@ final class MacAppMenuController: ObservableObject {
             portsInUse = false
         }
         return .unhealthy
+    }
+
+    private func refreshProjectFolderSummary() async {
+        guard let port = localAppPort,
+              let url = URL(string: "http://127.0.0.1:\(port)\(ProjectFolderSummary.path)")
+        else { return }
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 1.5
+        guard let (data, response) = try? await URLSession.shared.data(for: request),
+              let code = (response as? HTTPURLResponse)?.statusCode,
+              (200..<300).contains(code)
+        else {
+            // Older bundles (< 271) have no folder route: show nothing.
+            projectFolderSummary = nil
+            return
+        }
+        projectFolderSummary = ProjectFolderSummary.parse(data)
     }
 
     private func applyHealthPortHints(

@@ -267,6 +267,24 @@ struct ComputerView: View {
                 detail: runnerDetail,
                 pill: isRunning ? ("Running", MacAppChromeKind.running) : ("Stopped", MacAppChromeKind.stopped)
             )
+            if isRunning, let folder = controller.projectFolderSummary {
+                Divider()
+                HStack(spacing: 14) {
+                    Image(systemName: "folder")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(MacAppTheme.brand)
+                        .frame(width: 28, height: 28)
+                        .background(RoundedRectangle(cornerRadius: 8).fill(MacAppTheme.accentSoft))
+                    Text(folder)
+                        .font(.system(size: 12.5))
+                        .foregroundStyle(MacAppTheme.fgMuted)
+                        .lineLimit(2)
+                        .textSelection(.enabled)
+                    Spacer()
+                }
+                .padding(.horizontal, 18).padding(.vertical, 12)
+                .accessibilityLabel(folder)
+            }
         }
     }
 
