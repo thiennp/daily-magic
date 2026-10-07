@@ -21,7 +21,7 @@ export default function AwcHumanPendingInviteRow({
   const copy = HUMAN_INVITE_UI_COPY;
 
   return (
-    <li className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-amber-200/80 bg-amber-50/60 px-3 py-2 text-sm dark:border-amber-900/50 dark:bg-amber-950/30">
+    <li className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-awc-line bg-awc-surface-2 px-3 py-2 text-sm">
       <div>
         <div className="font-medium text-awc-fg dark:text-white/90">
           {invite.delivery === "email" && invite.email
@@ -30,7 +30,7 @@ export default function AwcHumanPendingInviteRow({
               })
             : (invite.email ?? "Invite link · no email")}
           {invite.requireEmailMatch ? (
-            <span className="ml-2 inline-flex rounded-full bg-amber-200/80 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-900 dark:bg-amber-900/60 dark:text-amber-100">
+            <span className="ml-2 inline-flex rounded-full bg-awc-tile-2 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-awc-fg-muted">
               {copy.pendingEmailLocked}
             </span>
           ) : null}

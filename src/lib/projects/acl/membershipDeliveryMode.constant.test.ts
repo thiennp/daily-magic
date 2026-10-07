@@ -30,6 +30,6 @@ describe("membershipDeliveryMode", () => {
   });
 
   it("locks sender-facing poll silence honesty copy", () => {
-    expect(PROJECT_MEMBERSHIP_POLL_SILENCE_STATUS).toBe("Checks on demand");
+    expect(PROJECT_MEMBERSHIP_POLL_SILENCE_STATUS).toBe("Checks in only when asked");
   });
 });

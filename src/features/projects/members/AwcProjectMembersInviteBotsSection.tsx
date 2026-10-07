@@ -31,8 +31,9 @@ interface AwcProjectMembersInviteBotsSectionProps {
   readonly onClearCreated: () => void;
 }
 
+/** DF-036 F2: Pine-outline secondary (never a black pill). */
 const BTN =
-  "inline-flex items-center justify-center rounded-full bg-gray-900 px-3 py-1.5 text-[13px] font-semibold text-white transition hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100";
+  "awc-focus-ring inline-flex items-center justify-center rounded-full border border-awc-primary bg-transparent px-3 py-1.5 text-[13px] font-semibold text-awc-primary transition hover:bg-awc-accent-soft";
 
 /** Shared "Add assistant" invite (optional type) + one-time prompt + pending invites. */
 export default function AwcProjectMembersInviteBotsSection({

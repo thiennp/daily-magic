@@ -34,7 +34,7 @@ export default function AwcHumanInviteEmailLockAcceptPanel({
 
   return (
     <main className="mx-auto max-w-xl px-4 py-12 text-awc-fg dark:text-white">
-      <p className="mb-3 inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-900 dark:bg-amber-950/50 dark:text-amber-100">
+      <p className="mb-3 inline-flex items-center gap-2 rounded-full bg-awc-tile-2 px-3 py-1 text-xs font-semibold text-awc-fg-muted">
         {copy.pendingEmailLocked} · {projectName}
       </p>
       <h1 className="text-xl font-semibold">{title}</h1>

@@ -54,7 +54,7 @@ export default function AwcHumanInviteAcceptJoinBody(
         Invited by {props.inviterDisplayName} · {props.expiresInLabel}
       </p>
       {props.requireEmailMatch ? (
-        <p className="mt-3 rounded-lg border border-amber-200/80 bg-amber-50/80 px-3 py-2 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100">
+        <p className="mt-3 rounded-lg border border-awc-line bg-awc-surface-2 px-3 py-2 text-xs text-awc-fg">
           {withMaskedEmail(
             copy.emailLockSignedOutHint,
             props.invitedEmailMasked,

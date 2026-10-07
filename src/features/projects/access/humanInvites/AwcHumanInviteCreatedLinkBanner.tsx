@@ -19,16 +19,16 @@ export default function AwcHumanInviteCreatedLinkBanner({
   const copy = HUMAN_INVITE_UI_COPY;
 
   return (
-    <div className="rounded-lg border border-amber-300/80 bg-amber-50/80 p-3 text-xs dark:border-amber-700/60 dark:bg-amber-950/30">
-      <p className="font-medium text-amber-900 dark:text-amber-200">
+    <div className="rounded-lg border border-awc-line bg-awc-surface-2 p-3 text-xs">
+      <p className="font-medium text-awc-fg">
         {copy.createdBannerTitle}
       </p>
-      <p className="mt-1 text-amber-900 dark:text-amber-200">
+      <p className="mt-1 text-awc-fg-muted">
         Role · {createdInvite.role} · exp{" "}
         {new Date(createdInvite.expiresAt).toLocaleDateString()}
         {createdInvite.requireEmailMatch ? ` · ${copy.pendingEmailLocked}` : ""}
       </p>
-      <p className="mt-1 break-all text-amber-900/90 dark:text-amber-100/90">
+      <p className="mt-1 break-all text-awc-fg-muted">
         {createdInvite.url}
       </p>
       <div className="mt-2 flex flex-wrap gap-2">

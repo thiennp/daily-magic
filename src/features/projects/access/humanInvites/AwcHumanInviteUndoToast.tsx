@@ -17,7 +17,7 @@ export default function AwcHumanInviteUndoToast({
   return (
     <div
       role="status"
-      className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-amber-300/80 bg-amber-50/90 px-3 py-2 text-xs text-amber-950 dark:border-amber-700/60 dark:bg-amber-950/40 dark:text-amber-100"
+      className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-awc-line bg-awc-surface-2 px-3 py-2 text-xs text-awc-fg"
     >
       <span className="font-medium">{message}</span>
       <button

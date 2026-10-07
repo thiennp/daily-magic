@@ -38,7 +38,7 @@ export default function AwcHumanPeopleSectionBody({
         </p>
       ) : null}
       {people.loadError ? (
-        <p className="rounded-md border border-amber-200/80 bg-amber-50/80 px-3 py-2 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100">
+        <p className="rounded-md border border-awc-line bg-awc-surface-2 px-3 py-2 text-xs text-awc-bad">
           {people.loadError}
         </p>
       ) : null}

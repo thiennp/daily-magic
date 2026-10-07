@@ -2,15 +2,22 @@
 
 import { useState } from "react";
 
-import AwcWakeConnectPasteCard from "@/features/projects/access/AwcWakeConnectPasteCard";
+import AwcProjectMembersHelperWakeBlock from "@/features/projects/members/AwcProjectMembersHelperWakeBlock";
+import type { AssistantWakeHealth } from "@/features/projects/members/utils/formatAssistantWakeHealth";
+import type { RailAssistantWakeStatus } from "@/features/projects/members/utils/resolveRailAssistantWakeStatus";
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
 
 interface AwcProjectMembersHelperRowMenuProps {
   readonly projectId: string;
   readonly member: { readonly id: string; readonly projectDisplayName: string | null };
   readonly name: string;
-  readonly wakeOpen: boolean;
-  readonly onToggleWake: () => void;
+  readonly wake: {
+    readonly status: RailAssistantWakeStatus;
+    readonly health: AssistantWakeHealth | null | undefined;
+    readonly pasteOpen: boolean;
+    readonly onOpenPaste: () => void;
+    readonly onRetry: () => void;
+  };
   readonly onWakeSaved: (membershipId: string) => void;
   readonly onMessage: (membershipId: string) => void;
   readonly onRename: (membershipId: string, name: string) => Promise<boolean>;
@@ -19,7 +26,7 @@ interface AwcProjectMembersHelperRowMenuProps {
 
 const LINK = "text-[13px] font-medium text-awc-fg underline-offset-2 hover:underline dark:text-gray-200";
 
-/** Expanded assistant row: Message / Rename / Grok wake link (one-box) / Remove. */
+/** Expanded assistant row: Message / Rename / Remove, then the always-visible Wake link block (DF-036 D3). */
 export default function AwcProjectMembersHelperRowMenu(p: AwcProjectMembersHelperRowMenuProps) {
   const { member, name } = p;
   const [renaming, setRenaming] = useState(false);
@@ -31,8 +38,7 @@ export default function AwcProjectMembersHelperRowMenu(p: AwcProjectMembersHelpe
         <div className="flex flex-wrap gap-2">
           <button type="button" className={LINK} onClick={() => p.onMessage(member.id)}>{C.menuChat}</button>
           <button type="button" className={LINK} onClick={() => { setDraft(member.projectDisplayName ?? ""); setRenaming(true); }}>{C.menuRename}</button>
-          <button type="button" className={LINK} aria-expanded={p.wakeOpen} onClick={p.onToggleWake}>{C.menuWebhook}</button>
-          <button type="button" className="text-[13px] font-medium text-error-600 underline-offset-2 hover:underline dark:text-error-400" onClick={() => setConfirmRemove(true)}>{C.menuRemove}</button>
+          <button type="button" className="text-[13px] font-medium text-awc-bad underline-offset-2 hover:underline" onClick={() => setConfirmRemove(true)}>{C.menuRemove}</button>
         </div>
       ) : null}
       {renaming ? (
@@ -47,19 +53,17 @@ export default function AwcProjectMembersHelperRowMenu(p: AwcProjectMembersHelpe
         <div className="flex flex-col gap-2">
           <p className="text-[13px] text-awc-fg-muted dark:text-gray-300">{C.revokeText(name)}</p>
           <div className="flex flex-wrap gap-2">
-            <button type="button" className="text-[13px] font-semibold text-error-600 dark:text-error-400" onClick={() => p.onRemove(member.id)}>{C.revokeConfirm(name)}</button>
+            <button type="button" className="text-[13px] font-semibold text-awc-bad" onClick={() => p.onRemove(member.id)}>{C.revokeConfirm(name)}</button>
             <button type="button" className="text-[13px] text-awc-fg-muted" onClick={() => setConfirmRemove(false)}>{C.revokeCancel}</button>
           </div>
         </div>
       ) : null}
-      {p.wakeOpen ? (
-        <AwcWakeConnectPasteCard
-          projectId={p.projectId}
-          membershipId={member.id}
-          memberName={member.projectDisplayName}
-          onSaved={p.onWakeSaved}
-        />
-      ) : null}
+      <AwcProjectMembersHelperWakeBlock
+        projectId={p.projectId}
+        member={member}
+        {...p.wake}
+        onWakeSaved={p.onWakeSaved}
+      />
     </div>
   );
 }

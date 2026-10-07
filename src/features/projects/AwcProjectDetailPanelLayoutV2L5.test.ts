@@ -52,7 +52,7 @@ describe("project layout v2 L5 Settings + Members", () => {
     const column = read(`${P}/AwcProjectMembersColumn.tsx`);
     const owner = read(`${P}/members/AwcProjectMembersOwnerContent.tsx`);
     const helpers = read(`${P}/members/AwcProjectMembersHelpersSection.tsx`);
-    const row = read(`${P}/members/AwcProjectMembersHelperRow.tsx`) + read(`${P}/members/AwcProjectMembersHelperRowMenu.tsx`);
+    const row = ["HelperRow", "HelperRowMenu", "HelperWakeBlock"].map((n) => read(`${P}/members/AwcProjectMembers${n}.tsx`)).join("\n");
     const invite = read(`${P}/members/AwcProjectMembersInviteBotsSection.tsx`);
     const copy = read(`${P}/projectPageMembersCopy.constant.ts`);
     const layoutCopy = read(`${P}/projectPageLayoutV2Copy.constant.ts`);
@@ -78,13 +78,12 @@ describe("project layout v2 L5 Settings + Members", () => {
     expect(copy).not.toContain("inviteGrok");
     expect(copy).not.toContain("inviteMuse");
     expect(copy).toContain('peopleInvite: "Invite people"');
-    expect(copy).toContain('menuWebhook: "Grok wake link"');
+    expect(copy).toContain('menuWebhook: "Wake link"');
+    // DF-036 F1: one (i) tip; no "routine", no Muse footnote.
     expect(copy).toContain(
-      "Grok Bot joins with the prompt and wakes up through its own routine.",
+      'compatGrok: "Grok Bot sets up its wake link after it joins."',
     );
-    expect(copy).toContain(
-      "Other assistants, such as Muse, can join with the same invite prompt.",
-    );
+    expect(copy).not.toMatch(/compatOther|its own routine|such as Muse/);
     expect(copy).toContain(
       "Remove takes the assistant out of the project. If it leaves on its own, you don't need to approve.",
     );

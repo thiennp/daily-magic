@@ -2,7 +2,7 @@ import { PROJECT_MEMBERSHIP_POLL_SILENCE_STATUS } from "@/lib/projects/acl/membe
 
 /**
  * Owner Access "How it gets messages" control (Product EN, S5).
- * webhook = "Wakes up on its own"; poll = "Checks on demand". `{name}` = nickname.
+ * webhook = "Wakes up on its own"; poll = "Checks in only when asked". `{name}` = nickname.
  */
 export const AWC_DELIVERY_MODE_COPY = {
   label: "How it gets messages",
@@ -11,7 +11,7 @@ export const AWC_DELIVERY_MODE_COPY = {
   webhookNeedsLink: "Needs a wake link. Add one to switch.",
   addWakeLink: "Add wake link",
   toastPoll:
-    "{name} now checks on demand. It reads messages when its person asks.",
+    "{name} now checks in only when asked. It reads messages when its person asks.",
   toastWebhook: "{name} now wakes up on its own.",
   /** Replaces the whole wake-link saved toast when the save flipped poll → webhook. */
   toastSavedAutoFlip:

@@ -34,7 +34,7 @@ export default function AwcHumanInviteNicknameField({
         {copy.nicknameHint}
       </span>
       {error ? (
-        <span role="alert" className="mt-1 block text-[11px] text-red-600">
+        <span role="alert" className="mt-1 block text-[11px] text-awc-bad">
           {error}
         </span>
       ) : null}

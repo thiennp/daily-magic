@@ -1,5 +1,5 @@
 import { AWC_WAKE_CONNECT_PASTE_COPY as C } from "@/features/projects/access/awcWakeConnectPasteCopy.constant";
-import { detectWakeConnectPaste } from "@/features/projects/access/utils/detectWakeConnectPaste";
+import type { WakeConnectDetect } from "@/features/projects/access/utils/detectWakeConnectPaste";
 
 const CHIP =
   "inline-flex items-center gap-1.5 rounded-full border border-awc-line bg-awc-surface-2 px-2 py-0.5 text-[11px] text-awc-fg-muted";
@@ -14,8 +14,7 @@ function Chip({ ok, label }: { readonly ok: boolean; readonly label: string }) {
 }
 
 /** DF-036: what the one-box paste found so far — wake link site + "Key ✓ hidden". */
-export default function AwcWakeConnectPasteChips({ text }: { readonly text: string }) {
-  const found = detectWakeConnectPaste(text);
+export default function AwcWakeConnectPasteChips({ found }: { readonly found: WakeConnectDetect }) {
   const linkLabel =
     found.link === "ok"
       ? C.chipLinkOk.replace("{site}", found.site ?? "")

@@ -42,7 +42,7 @@ export const NOTIFICATIONS_COPY = {
   deniedByYou: "Denied by you {when}",
   timedOutLine:
     "No reply before the wait ended, so it stopped at {when}. Nothing ran.",
-  checksOnDemand: "Checks on demand",
+  checksOnDemand: "Checks in only when asked",
   thisComputer: "This computer",
   alsoOn: "Also on {computer}",
   denyJoinTitle: "Deny {who}?",

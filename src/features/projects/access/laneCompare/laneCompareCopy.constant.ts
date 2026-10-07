@@ -11,7 +11,7 @@ export const LANE_COMPARE_COPY = {
   },
   assistant: {
     label: "Connect as an assistant",
-    when: "Cursor Desktop or Claude Desktop joins the project like other assistants. You Approve the join; they check on demand.",
+    when: "Cursor Desktop or Claude Desktop joins the project like other assistants. You Approve the join; they check in only when asked.",
     where: "Invite / Connect assistant",
   },
   diff: {

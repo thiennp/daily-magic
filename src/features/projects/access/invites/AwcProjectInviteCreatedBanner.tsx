@@ -50,12 +50,12 @@ export default function AwcProjectInviteCreatedBanner({
   };
 
   return (
-    <div className="mt-2 rounded-md border border-amber-300/80 bg-amber-50/80 p-2 text-xs dark:border-amber-700/60 dark:bg-amber-950/30">
-      <p className="font-medium text-amber-900 dark:text-amber-200">
+    <div className="mt-2 rounded-md border border-awc-line bg-awc-surface-2 p-2 text-xs">
+      <p className="font-medium text-awc-fg">
         {copy.invitesCreatedOnce}
       </p>
       <p
-        className="mt-1 text-amber-900 dark:text-amber-200"
+        className="mt-1 text-awc-fg-muted"
         data-invite-platform={platform ?? "any"}
       >
         {resolveProjectInviteCreatedForLine({ platform, joinTypeId })}
@@ -89,7 +89,7 @@ export default function AwcProjectInviteCreatedBanner({
       </div>
       <button
         type="button"
-        className="mt-2 text-[11px] font-medium text-amber-900 underline underline-offset-2 hover:no-underline dark:text-amber-200"
+        className="mt-2 text-[11px] font-medium text-awc-primary underline underline-offset-2 hover:no-underline"
         onClick={() => {
           void navigator.clipboard.writeText(buildFullPrompt()).then(() => {
             showToast(shortCopy.fullCopiedToast);
@@ -99,7 +99,7 @@ export default function AwcProjectInviteCreatedBanner({
         {shortCopy.fallbackLink}
       </button>
       {toast ? (
-        <p className="mt-2 text-[11px] font-medium text-amber-900 dark:text-amber-100">
+        <p className="mt-2 text-[11px] font-medium text-awc-fg-muted">
           {toast}
         </p>
       ) : null}

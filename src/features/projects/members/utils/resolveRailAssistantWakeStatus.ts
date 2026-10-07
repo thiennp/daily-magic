@@ -6,26 +6,30 @@ export type RailAssistantWakeStatus =
   | "checks_on_demand"
   | "checking"
   | "cant_reach"
+  | "cant_check"
   | "not_connected";
 
 /**
- * P1-S1b: honest wake status for a Members rail assistant row.
+ * Honest wake status for a Members rail assistant row (DF-036):
  * - poll (no wake save this session) → Checks in only when asked
  * - no stored wake link → Checking… right after a save, else Not connected
- * - stored link: health loading → Checking…; last wake failed → Wake failed;
- *   health known and fine → Wake link ✓; health unknown (load failed) → Not connected
- * Never a fake Ready.
+ * - stored link: status request failed → Couldn't check the wake link (+ Retry);
+ *   loading → Checking…; backend says none saved → Not connected;
+ *   last wake failed → Wake failed; else Wake link ✓
+ * Never "Not connected" while the backend has a link saved; never a fake ✓.
  */
 export const resolveRailAssistantWakeStatus = (input: {
   readonly member: Pick<AccessMembershipView, "id" | "wakeLinkSet" | "deliveryMode">;
   readonly savedIds: ReadonlySet<string>;
-  /** undefined = still loading; null = could not load. */
+  /** undefined = still loading; null = backend says no wake link is saved. */
   readonly health: AssistantWakeHealth | null | undefined;
+  readonly loadFailed?: boolean;
 }): RailAssistantWakeStatus => {
   const { member, savedIds, health } = input;
   const savedNow = savedIds.has(member.id);
   if (member.deliveryMode === "poll" && !savedNow) return "checks_on_demand";
   if (member.wakeLinkSet !== true) return savedNow ? "checking" : "not_connected";
+  if (input.loadFailed === true) return "cant_check";
   if (health === undefined) return "checking";
   if (health === null) return "not_connected";
   return health.failed ? "cant_reach" : "ready";

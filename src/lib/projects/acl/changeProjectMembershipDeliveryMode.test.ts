@@ -58,7 +58,7 @@ describe("changeProjectMembershipDeliveryMode", () => {
       membershipId: "mem-b",
       deliveryMode: "poll",
       changed: true,
-      activity: "You switched Muse to checks on demand",
+      activity: "You switched Muse to checks in only when asked",
     });
     expect(db.mode).toBe("poll");
   });
@@ -81,7 +81,7 @@ describe("changeProjectMembershipDeliveryMode", () => {
   it("member self-switch uses member Activity copy; same mode is a no-op", async () => {
     expect(await change("poll", "member")).toMatchObject({
       changed: true,
-      activity: "Muse switched to checks on demand",
+      activity: "Muse switched to checks in only when asked",
     });
     expect(await change("poll", "member")).toMatchObject({ changed: false });
   });

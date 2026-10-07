@@ -2,9 +2,9 @@ import type { ProjectMembershipDeliveryMode } from "@/lib/projects/acl/membershi
 
 /** Product EN (S5) Activity lines for a delivery_mode switch. `{name}` = nickname. */
 export const PROJECT_DELIVERY_MODE_ACTIVITY_COPY = {
-  ownerToPoll: "You switched {name} to checks on demand",
+  ownerToPoll: "You switched {name} to checks in only when asked",
   ownerToWebhook: "You switched {name} to wakes up on its own",
-  memberToPoll: "{name} switched to checks on demand",
+  memberToPoll: "{name} switched to checks in only when asked",
   memberToWebhook: "{name} now wakes up on its own",
   nameFallback: "this assistant",
 } as const;

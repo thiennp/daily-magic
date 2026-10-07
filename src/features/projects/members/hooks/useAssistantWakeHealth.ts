@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import {
   formatAssistantWakeHealth,
@@ -8,44 +8,64 @@ import {
 } from "@/features/projects/members/utils/formatAssistantWakeHealth";
 import { fetchMemberGrokWebhookStatus } from "@/features/projects/access/utils/projectGrokWebhookApi";
 
-type Loaded = { readonly key: string; readonly health: AssistantWakeHealth | null };
+type Loaded = {
+  readonly key: string;
+  readonly health: AssistantWakeHealth | null;
+  readonly loadFailed: boolean;
+};
+
+export type AssistantWakeHealthState = {
+  /** undefined = loading; null = the backend says no wake link is saved. */
+  readonly health: AssistantWakeHealth | null | undefined;
+  /** The status request failed: "Couldn't check the wake link" + Retry (never "Not connected"). */
+  readonly loadFailed: boolean;
+  readonly retry: () => void;
+};
 
 /**
- * P1-S1b: owner GET grok-webhook (`lastWakeAt` + `lastFailureReason`) → row
- * health. undefined = loading; null = not registered / could not load.
- * `reloadKey` bumps after a wake-link save.
+ * Owner GET grok-webhook (`lastWakeAt` + `lastFailureReason`) → row health.
+ * `reloadKey` bumps after a wake-link save; `retry` re-asks after a failure.
  */
 export const useAssistantWakeHealth = (input: {
   readonly projectId: string;
   readonly membershipId: string;
   readonly enabled: boolean;
   readonly reloadKey: number;
-}): AssistantWakeHealth | null | undefined => {
+}): AssistantWakeHealthState => {
   const { projectId, membershipId, enabled, reloadKey } = input;
-  const key = `${projectId}|${membershipId}|${reloadKey}`;
+  const [attempt, setAttempt] = useState(0);
+  const key = `${projectId}|${membershipId}|${reloadKey}|${attempt}`;
   const [loaded, setLoaded] = useState<Loaded | null>(null);
+  const retry = useCallback(() => setAttempt((n) => n + 1), []);
 
   useEffect(() => {
     if (!enabled) return;
     const controller = new AbortController();
-    const settle = (health: AssistantWakeHealth | null): void => {
-      if (!controller.signal.aborted) setLoaded({ key, health });
+    const settle = (health: AssistantWakeHealth | null, loadFailed: boolean): void => {
+      if (!controller.signal.aborted) setLoaded({ key, health, loadFailed });
     };
     void fetchMemberGrokWebhookStatus(projectId, membershipId)
-      .then((view) =>
+      .then((view) => {
+        // An error body (ok:false / no flag) is a failed check, not "no wake link".
+        if (view.ok !== true || typeof view.grokWebhookRegistered !== "boolean") {
+          settle(null, true);
+          return;
+        }
         settle(
-          view.grokWebhookRegistered === true
+          view.grokWebhookRegistered
             ? formatAssistantWakeHealth({
                 lastWakeAt: view.lastWakeAt ?? null,
                 lastFailureReason: view.lastFailureReason ?? null,
               })
             : null,
-        ),
-      )
-      .catch(() => settle(null));
+          false,
+        );
+      })
+      .catch(() => settle(null, true));
     return () => controller.abort();
   }, [enabled, key, projectId, membershipId]);
 
-  if (!enabled) return null;
-  return loaded?.key === key ? loaded.health : undefined;
+  if (!enabled) return { health: null, loadFailed: false, retry };
+  if (loaded?.key !== key) return { health: undefined, loadFailed: false, retry };
+  return { health: loaded.health, loadFailed: loaded.loadFailed, retry };
 };

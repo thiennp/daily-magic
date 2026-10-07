@@ -3,14 +3,15 @@
 import { useState } from "react";
 
 import { AWC_GROK_WAKE_AWAITING_COPY } from "@/features/projects/access/awcGrokWakeAwaitingCopy.constant";
-import { AWC_WAKE_CONNECT_PASTE_COPY as C } from "@/features/projects/access/awcWakeConnectPasteCopy.constant";
 import { mapWakeLinkSaveError } from "@/features/projects/access/hooks/useMemberGrokWebhookForm";
+import { detectWakeConnectPaste } from "@/features/projects/access/utils/detectWakeConnectPaste";
 import { parseWakeConnectPaste } from "@/features/projects/access/utils/parseWakeConnectPaste";
 import { saveMemberGrokWebhook } from "@/features/projects/access/utils/projectGrokWebhookApi";
 
 /**
- * One-box wake connect: parse the pasted link + key, then save through the
- * existing owner wake-link route. The pasted text is cleared after every send.
+ * One-box wake connect: detect the pasted link + key as you type (Connect is
+ * ready only when both are found), then save through the existing owner
+ * wake-link route. The pasted text is cleared after every send.
  */
 export const useWakeConnectPaste = (input: {
   readonly projectId: string;
@@ -22,6 +23,7 @@ export const useWakeConnectPaste = (input: {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const found = detectWakeConnectPaste(text);
 
   const changeText = (value: string): void => {
     setText(value);
@@ -31,10 +33,7 @@ export const useWakeConnectPaste = (input: {
 
   const save = (): void => {
     const parsed = parseWakeConnectPaste(text);
-    if (!parsed.ok) {
-      setError(parsed.error === "bad_link" ? C.badLink : C.missingKey);
-      return;
-    }
+    if (!found.ready || !parsed.ok) return;
     setSaving(true);
     setError(null);
     void saveMemberGrokWebhook(projectId, membershipId, parsed)
@@ -53,5 +52,5 @@ export const useWakeConnectPaste = (input: {
       });
   };
 
-  return { text, saving, error, saved, changeText, save };
+  return { text, found, saving, error, saved, changeText, save };
 };

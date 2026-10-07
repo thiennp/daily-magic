@@ -6,9 +6,16 @@ export const AWC_WAKE_CONNECT_PASTE_COPY = {
   placeholder: "Paste the wake link, then the key",
   save: "Connect",
   saving: "Connecting…",
-  saved: "Connected. Checking {name} now.",
-  badLink: "That link doesn't look right. Copy the wake link again from Grok Bot.",
-  missingKey: "The key is missing. Paste the wake link and its key together.",
+  /** DF-036 F9: success shows the status line. */
+  saved: "Registered ✓ · No wakes yet",
+  /** DF-036 F9: the brief's inline errors (bad = --bad text; need_* = muted guidance). */
+  badLink: "That doesn't look like a wake link. Copy it again from Grok Bot.",
+  needKey: "Now paste the key too. It's the second link {name} posted.",
+  needLink: "Paste the wake link too. It starts with https://",
+  httpsOnly: "The wake link must start with https://",
+  twoLinks: "That's two web addresses. Paste one wake link and one key.",
+  keyTooLong: "That key is too long. Copy it again from Grok Bot.",
+  needNickname: "Give {name} a nickname first, then connect the wake link.",
   /** DF-036 detection chips (EN PASS S5: a rejected address reads "check it"). */
   chipLinkOk: "Wake link ✓ {site}",
   chipLinkCheck: "Wake link — check it",

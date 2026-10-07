@@ -36,6 +36,7 @@ describe("P1-S1b assistant row — wake status + one-box connect", () => {
       checking: "Checking…",
       cant_reach: "Wake failed",
       not_connected: "Not connected",
+      cant_check: "Couldn't check the wake link",
     });
     expect(read("members/AwcProjectMembersHelperWakeStatus.tsx")).toContain("text-awc-bad");
   });

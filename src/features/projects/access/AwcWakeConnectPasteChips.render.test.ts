@@ -4,10 +4,11 @@ import { describe, expect, it } from "vitest";
 
 import AwcWakeConnectPasteCard from "@/features/projects/access/AwcWakeConnectPasteCard";
 import AwcWakeConnectPasteChips from "@/features/projects/access/AwcWakeConnectPasteChips";
+import { detectWakeConnectPaste } from "@/features/projects/access/utils/detectWakeConnectPaste";
 
 const KEY = "sk_live_0123456789abcdef";
 const chips = (text: string): string =>
-  renderToStaticMarkup(createElement(AwcWakeConnectPasteChips, { text })).replace(/<[^>]+>/g, " ");
+  renderToStaticMarkup(createElement(AwcWakeConnectPasteChips, { found: detectWakeConnectPaste(text) })).replace(/<[^>]+>/g, " ");
 
 describe("one-box wake connect chips (DF-036 EN PASS S5)", () => {
   it("empty box: both parts not pasted yet", () => {
@@ -37,5 +38,20 @@ describe("one-box wake connect chips (DF-036 EN PASS S5)", () => {
     expect(html).toContain('placeholder="Paste the wake link, then the key"');
     expect(html).toContain("data-wake-detect");
     expect(html.toLowerCase()).not.toMatch(/routine|webhook url|token|secret/);
+  });
+
+  it("DF-036 F7: Connect stays disabled until link and key are both detected", () => {
+    const html = renderToStaticMarkup(
+      createElement(AwcWakeConnectPasteCard, { projectId: "p1", membershipId: "m1", memberName: "NRG Lead" }),
+    );
+    expect(html).toMatch(/<button[^>]*disabled[^>]*>Connect<\/button>/);
+    expect(html).not.toContain(">Connect wake link<");
+  });
+
+  it("no nickname yet: one plain line asks for it first", () => {
+    const html = renderToStaticMarkup(
+      createElement(AwcWakeConnectPasteCard, { projectId: "p1", membershipId: "m1", memberName: null }),
+    );
+    expect(html).toContain("a nickname first, then connect the wake link.");
   });
 });

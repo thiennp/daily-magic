@@ -9,12 +9,12 @@ const radio = (html: string, value: string): string =>
   html.match(new RegExp(`<input[^>]*value="${value}"[^>]*>`))?.[0] ?? "";
 
 describe("delivery_mode control + pill render", () => {
-  it("pills: Checks on demand / Wakes up on its own / Waiting for wake link", () => {
+  it("pills: Checks in only when asked / Wakes up on its own / Waiting for wake link", () => {
     const pill = (state: "on_demand" | "wakes" | "awaiting") =>
       renderToStaticMarkup(
         createElement(AwcProjectAccessMemberWakeLinkPill, { state }),
       );
-    expect(pill("on_demand")).toContain(">Checks on demand<");
+    expect(pill("on_demand")).toContain(">Checks in only when asked<");
     expect(pill("wakes")).toContain(">Wakes up on its own<");
     expect(pill("wakes")).not.toContain("Wake link set");
     expect(pill("awaiting")).toContain(">Waiting for wake link<");
@@ -35,7 +35,7 @@ describe("delivery_mode control + pill render", () => {
     expect(radio(html, "poll")).toContain("checked");
     const help = html.indexOf("Needs a wake link. Add one to switch.");
     const add = html.indexOf(">Add wake link<");
-    const pollLabel = html.indexOf("Checks on demand");
+    const pollLabel = html.indexOf("Checks in only when asked");
     expect(help).toBeGreaterThan(pollLabel);
     expect(add).toBeGreaterThan(help);
   });

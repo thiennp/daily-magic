@@ -22,6 +22,14 @@ describe("resolveRailAssistantWakeStatus (P1-S1b)", () => {
     expect(resolve({ member: linked, savedIds: none, health: null })).toBe("not_connected");
   });
 
+  it("status load failure with a saved link → cant_check, never not_connected (DF-036 Q2)", () => {
+    expect(resolve({ member: linked, savedIds: none, health: null, loadFailed: true })).toBe("cant_check");
+    expect(resolve({ member: linked, savedIds: none, health: undefined, loadFailed: true })).toBe("cant_check");
+    expect(resolve({ member: { id: "a", wakeLinkSet: false }, savedIds: none, health: null, loadFailed: true })).toBe(
+      "not_connected",
+    );
+  });
+
   it("Checking… right after a save until the next load confirms it", () => {
     const saved = new Set(["a"]);
     const member = { id: "a", wakeLinkSet: false, deliveryMode: "poll" };

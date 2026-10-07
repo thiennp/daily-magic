@@ -95,7 +95,7 @@ export default function AwcHumanInvitePersonForm({
         />
       ) : null}
       {shownError ? (
-        <p className="text-xs text-red-600 dark:text-red-300">{shownError}</p>
+        <p className="text-xs text-awc-bad">{shownError}</p>
       ) : null}
       <AwcHumanInvitePersonPanelActions
         busy={busy}

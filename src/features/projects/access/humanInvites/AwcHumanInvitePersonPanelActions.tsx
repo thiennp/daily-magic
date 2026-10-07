@@ -46,7 +46,7 @@ export default function AwcHumanInvitePersonPanelActions({
           title="Email send — Later"
         >
           {copy.sendEmail}
-          <span className="ml-1 rounded bg-amber-100 px-1 text-[10px] font-semibold text-amber-800">
+          <span className="ml-1 rounded bg-awc-tile-2 px-1 text-[10px] font-semibold text-awc-fg-muted">
             {copy.sendEmailLaterBadge}
           </span>
         </button>

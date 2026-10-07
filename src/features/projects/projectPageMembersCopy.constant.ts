@@ -16,6 +16,7 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
     checks_on_demand: "Checks in only when asked",
     checking: "Checking…",
     cant_reach: "Wake failed",
+    cant_check: "Couldn't check the wake link",
     not_connected: "Not connected",
   },
   helpersWorking: "Working",
@@ -23,7 +24,8 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
     "Remove takes the assistant out of the project. If it leaves on its own, you don't need to approve.",
   menuChat: "Message privately",
   menuRename: "Rename",
-  menuWebhook: "Grok wake link",
+  /** DF-036: the row's "Wake link" block title (the old "Grok wake link" text link is retired). */
+  menuWebhook: "Wake link",
   menuRemove: "Remove",
   renameAria: "New name",
   renameSave: "Save",
@@ -53,10 +55,8 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   /** 107 — invite made before Copy-anywhere: no stored prompt. */
   invitePendingCopyUnavailable: "Make a new invite to copy a prompt.",
   inviteEmpty: "No assistant invites yet.",
-  compatGrok:
-    "Grok Bot joins with the prompt and wakes up through its own routine.",
-  compatOther:
-    "Other assistants, such as Muse, can join with the same invite prompt.",
+  /** DF-036 F1: the one (i) tip under the invite list (no "routine"; Muse footnote retired). */
+  compatGrok: "Grok Bot sets up its wake link after it joins.",
   helperRemoved: (name: string) => `Removed ${name} from the project`,
   helperRenamed: "Assistant renamed",
   viewerHint: "Only the project owner can invite people and assistants.",

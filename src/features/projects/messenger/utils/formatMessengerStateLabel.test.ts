@@ -13,9 +13,9 @@ describe("formatMessengerStateLabel", () => {
     expect(formatMessengerStateLabel("got_it", null)).toBe("Got it");
   });
 
-  it("shows Checks on demand for poll-mode silence honesty", () => {
+  it("shows Checks in only when asked for poll-mode silence honesty", () => {
     expect(formatMessengerStateLabel("checks_on_demand", "Poll bot")).toBe(
-      "Checks on demand",
+      "Checks in only when asked",
     );
   });
 });

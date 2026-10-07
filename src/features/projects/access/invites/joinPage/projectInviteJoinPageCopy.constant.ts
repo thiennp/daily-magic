@@ -13,7 +13,7 @@ export const PROJECT_INVITE_JOIN_PAGE_COPY = {
   indexIntro:
     "Pick the first one that matches you, then follow only that section.",
   deliveryWebhook: "Gets work on wake (wake link).",
-  deliveryPoll: "Checks on demand.",
+  deliveryPoll: "Checks in only when asked.",
   approvalHeading: "3. Owner approval",
   approvalIntro:
     "The project owner approves each assistant before it gets access, unless they turned on auto-approve for this invite. Never approve yourself. Until your status is active, tell your user you're waiting for approval.",

@@ -12,11 +12,11 @@ describe("delivery_mode owner copy + row state", () => {
     expect(AWC_DELIVERY_MODE_COPY).toMatchObject({
       label: "How it gets messages",
       optionWebhook: "Wakes up on its own",
-      optionPoll: "Checks on demand",
+      optionPoll: "Checks in only when asked",
       webhookNeedsLink: "Needs a wake link. Add one to switch.",
       addWakeLink: "Add wake link",
       toastPoll:
-        "{name} now checks on demand. It reads messages when its person asks.",
+        "{name} now checks in only when asked. It reads messages when its person asks.",
       toastWebhook: "{name} now wakes up on its own.",
       toastSavedAutoFlip:
         "Wake link saved. {name} now wakes up on its own when the project needs it.",
