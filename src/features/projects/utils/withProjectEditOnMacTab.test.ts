@@ -7,7 +7,7 @@ describe("withProjectEditOnMacTab", () => {
   it("rewrites only the href when Edit on computer is enabled", () => {
     const enabled: ProjectEditOnMacCta = {
       state: "enabled",
-      buttonLabel: "Edit on this computer →",
+      buttonLabel: "Edit on this computer",
       helperText: null,
       href: "http://127.0.0.1:43347/project?id=proj-1",
     };
@@ -17,12 +17,12 @@ describe("withProjectEditOnMacTab", () => {
     });
   });
 
-  it("leaves offline CTAs unchanged", () => {
+  it("leaves offline Connect CTAs unchanged", () => {
     const offline: ProjectEditOnMacCta = {
       state: "offline",
-      buttonLabel: "Edit on this computer",
-      helperText: "Office Mac is offline right now.",
-      href: null,
+      buttonLabel: "Connect this computer",
+      helperText: null,
+      href: "/#awc-connect",
     };
     expect(withProjectEditOnMacTab(offline, "proj-1", "pitfalls")).toBe(
       offline,

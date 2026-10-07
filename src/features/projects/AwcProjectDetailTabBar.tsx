@@ -25,7 +25,7 @@ interface AwcProjectDetailTabBarProps {
   readonly rulesImportantCount?: number;
 }
 
-/** V5-3 white pill track; selected tab is tonal blue (accent-soft + blue-700). */
+/** HN-H3 underline tabs; selected = Pine text + bar. Safety rules = amber count. */
 export default function AwcProjectDetailTabBar({
   activeTab,
   onTabChange,
@@ -63,7 +63,12 @@ export default function AwcProjectDetailTabBar({
               </span>
             ) : null}
             {showImportant ? (
-              <span className={PROJECT_V5_TAB_COUNT_CHIP_CLASS}>
+              <span
+                className={PROJECT_V5_TAB_COUNT_CHIP_CLASS}
+                aria-label={PROJECT_PAGE_V5_CHROME_COPY["tabs.importantCountAria"](
+                  rulesImportantCount,
+                )}
+              >
                 {PROJECT_PAGE_V5_CHROME_COPY["tabs.importantCount"](rulesImportantCount)}
               </span>
             ) : null}

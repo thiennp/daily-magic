@@ -26,24 +26,27 @@ export const PROJECT_V5_ROUND_TRIGGER_CLASS =
 export const PROJECT_V5_MENU_CLASS =
   "absolute right-0 top-11 z-20 flex min-w-[14.5rem] flex-col rounded-awc-lg border border-awc-border bg-awc-surface p-1.5 shadow-awc-overlay dark:border-gray-700 dark:bg-gray-950";
 
+/** HN-H3: underline tab track (sand page; no pill-in-pill). */
 export const PROJECT_V5_TABLIST_CLASS =
-  "flex max-w-full gap-1 self-start overflow-x-auto rounded-awc-pill bg-awc-surface p-1 shadow-awc-card [-ms-overflow-style:none] [scrollbar-width:none] dark:bg-white/10 [&::-webkit-scrollbar]:hidden";
+  "flex max-w-full gap-1 self-start overflow-x-auto border-b border-awc-border-strong [-ms-overflow-style:none] [scrollbar-width:none] dark:border-gray-700 [&::-webkit-scrollbar]:hidden";
 
 export const PROJECT_V5_TAB_BASE_CLASS =
-  "awc-focus-ring inline-flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded-awc-pill px-4 text-[length:var(--awc-fs-body)] font-medium transition-colors";
+  "awc-focus-ring relative inline-flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-t-lg px-3 pb-[11px] pt-2.5 text-[length:var(--awc-fs-body)] font-medium transition-colors";
 
+/** HN-H3: selected = Pine text + 2px underline bar. */
 export const PROJECT_V5_TAB_ACTIVE_CLASS =
-  "bg-awc-accent-soft text-awc-blue-700 dark:bg-white/15 dark:text-white";
+  "font-semibold text-brand-600 after:absolute after:inset-x-2 after:bottom-[-1px] after:h-0.5 after:rounded-sm after:bg-brand-600 dark:text-brand-400 dark:after:bg-brand-400";
 
 export const PROJECT_V5_TAB_INACTIVE_CLASS =
-  "text-awc-fg-muted hover:bg-awc-tile hover:text-awc-fg dark:text-gray-400 dark:hover:text-gray-200";
+  "text-awc-fg-muted hover:text-awc-fg dark:text-gray-400 dark:hover:text-gray-200";
 
 /** New / unread: solid blue-600 + white number. */
 export const PROJECT_V5_TAB_UNREAD_BADGE_CLASS =
   "inline-grid h-5 min-w-5 place-items-center rounded-awc-pill bg-awc-blue-600 px-1.5 text-[11px] font-semibold tabular-nums text-white";
 
+/** HN-H3: compact amber Safety rules count. */
 export const PROJECT_V5_TAB_COUNT_CHIP_CLASS =
-  "inline-flex h-5 items-center rounded-awc-chip-sm bg-awc-tile-2 px-1.5 text-[11px] font-semibold tabular-nums text-awc-fg-muted dark:bg-white/10 dark:text-gray-300";
+  "inline-grid h-[18px] min-w-[18px] place-items-center rounded-full bg-[#f2e4cf] px-1.5 text-[11.5px] font-bold tabular-nums text-[#7a4410] dark:bg-warning-500/20 dark:text-warning-400";
 
 export const PROJECT_V5_PANEL_SUBTITLE_CLASS =
   "px-1 text-[length:var(--awc-fs-sm)] text-awc-fg-muted dark:text-gray-400";

@@ -6,6 +6,7 @@ import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import buildProjectDevicePresenceLabel from "@/features/projects/utils/buildProjectDevicePresenceLabel";
 import resolveProjectEditOnMacCta from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import resolveProjectMacDeviceContext from "@/features/projects/utils/resolveProjectMacDeviceContext";
+import { formatRelativeTimeAgo } from "@/lib/time/formatRelativeTimeAgo";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 const useAwcProjectDevicePresentation = (input: {
@@ -52,6 +53,7 @@ const useAwcProjectDevicePresentation = (input: {
       presence,
       editCta,
       statusPrefix,
+      lastSeenLabel: formatRelativeTimeAgo(device?.lastSeenAt ?? null),
     };
   }, [
     input.project,

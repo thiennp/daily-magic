@@ -19,9 +19,10 @@ describe("L3 V5-3 project chrome — Product EN lock", () => {
   it("locks header strings", () => {
     expect(C["header.edit"]).toBe("Edit on this computer");
     expect(C["header.moreActions"]).toBe("More actions");
-    expect(C["status.onlineOnThisComputer"]).toBe("Online on this computer");
+    expect(C["status.onlineOnThisComputer"]).toBe("This computer is online");
     expect(C["status.offlineThisComputer"]).toBe("This computer is offline");
-    expect(C["tabs.importantCount"](3)).toBe("3 Important");
+    expect(C["tabs.importantCount"](3)).toBe("3");
+    expect(C["tabs.importantCountAria"](3)).toBe("3 important");
   });
 
   it("v5 tab order + labels; live tabs keep that order (no placeholder panels)", () => {
@@ -64,11 +65,12 @@ describe("L3 V5-3 project chrome — Product EN lock", () => {
     expect(read("AwcProjectDetailHeaderActions.tsx")).toContain('"header.moreActions"');
   });
 
-  it("disabled Edit looks disabled (.awc-disabled) with a visible reason", () => {
+  it("header action uses editCta.buttonLabel (Connect while offline; Edit when online)", () => {
     const edit = read("AwcProjectHeaderEditAction.tsx");
+    expect(edit).toContain("editCta.buttonLabel");
     expect(edit).toContain("awc-disabled");
     expect(edit).toContain("aria-describedby");
-    expect(edit).toContain('C["header.edit"]');
+    expect(edit).not.toContain('C["header.edit"]');
   });
 
   it("keeps the live Members rail + mobile Members chip; Chat dock replaces ask box", () => {

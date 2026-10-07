@@ -10,14 +10,15 @@ export interface ProjectHeaderStatus {
 }
 
 /**
- * V5-3 header status chip. This computer → locked v5 strings; another
- * computer keeps the existing v2 "Online on {name}" / "Offline on {name}".
+ * V5-3 / HN-H3 header status. This computer → locked strings; offline adds the
+ * "tasks wait" hint. Another computer keeps v2 Online/Offline on {name}.
  */
 const resolveProjectHeaderStatus = (input: {
   readonly presence: ProjectDevicePresenceLabel;
   readonly isThisMac: boolean;
   readonly hasLinkedDevice: boolean;
   readonly deviceDisplayName: string;
+  readonly lastSeenLabel?: string | null;
 }): ProjectHeaderStatus => {
   const v2 = PROJECT_PAGE_LAYOUT_V2_COPY;
   const v5 = PROJECT_PAGE_V5_CHROME_COPY;
@@ -35,7 +36,13 @@ const resolveProjectHeaderStatus = (input: {
     return { tone: "ok", text: name ? v2.onlineOn(name) : v2.statusAllGood };
   }
   if (input.isThisMac) {
-    return { tone: "neutral", text: v5["status.offlineThisComputer"] };
+    const parts: string[] = [v5["status.offlineThisComputer"]];
+    const lastSeen = input.lastSeenLabel?.trim();
+    if (lastSeen) {
+      parts.push(`last seen ${lastSeen}`);
+    }
+    parts.push(v5["status.offlineWaitHint"]);
+    return { tone: "neutral", text: parts.join(" · ") };
   }
   return { tone: "neutral", text: name ? v2.offlineOn(name) : v2.statusOffline };
 };

@@ -20,7 +20,10 @@ interface Props {
   readonly onAddFrom: () => void;
 }
 
-/** New + Add from; non-owners get disabled-with-reason controls. */
+/**
+ * HN-H3 one-item toolbar: outline Add from (secondary) + filled New (primary).
+ * Non-owners get disabled-with-reason controls.
+ */
 export default function AwcProjectLibraryOwnerActions({
   canEdit,
   canCreateSkill,
@@ -33,6 +36,13 @@ export default function AwcProjectLibraryOwnerActions({
   }
   return (
     <div className="flex items-center gap-2">
+      <button
+        type="button"
+        className={PANEL_BUTTON_SECONDARY_CLASS}
+        onClick={onAddFrom}
+      >
+        {A["library.add_from"]}
+      </button>
       {canCreateSkill ? (
         <div ref={wrapRef} className="relative">
           <button
@@ -65,13 +75,6 @@ export default function AwcProjectLibraryOwnerActions({
           ) : null}
         </div>
       ) : null}
-      <button
-        type="button"
-        className={PANEL_BUTTON_SECONDARY_CLASS}
-        onClick={onAddFrom}
-      >
-        {A["library.add_from"]}
-      </button>
     </div>
   );
 }

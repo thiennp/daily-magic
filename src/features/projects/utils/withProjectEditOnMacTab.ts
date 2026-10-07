@@ -9,7 +9,7 @@ const withProjectEditOnMacTab = (
   projectId: string,
   tab: AgentWitchLocalProjectEditorTab,
 ): ProjectEditOnMacCta =>
-  editCta.href === null
+  editCta.state !== "enabled" || editCta.href === null
     ? editCta
     : {
         ...editCta,

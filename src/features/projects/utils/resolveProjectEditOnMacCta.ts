@@ -24,6 +24,9 @@ export interface ResolveProjectEditOnMacCtaInput {
   readonly isThisMac: boolean;
 }
 
+/** Shell Connect hash — scrolls to Computers rail (never hide Connect). */
+const CONNECT_THIS_COMPUTER_HREF = "/#awc-connect";
+
 const resolveProjectEditOnMacCta = (
   input: ResolveProjectEditOnMacCtaInput,
 ): ProjectEditOnMacCta => {
@@ -32,9 +35,9 @@ const resolveProjectEditOnMacCta = (
   if (input.device === null) {
     return {
       state: "unknown_device",
-      buttonLabel: "Edit on this computer",
-      helperText: "Connect a computer to edit this project.",
-      href: null,
+      buttonLabel: "Connect this computer",
+      helperText: null,
+      href: CONNECT_THIS_COMPUTER_HREF,
     };
   }
 
@@ -43,9 +46,9 @@ const resolveProjectEditOnMacCta = (
   if (tier === "live_other_instance") {
     return {
       state: "reconnecting",
-      buttonLabel: "Edit on this computer",
+      buttonLabel: "Connect this computer",
       helperText: "Reconnecting…",
-      href: null,
+      href: CONNECT_THIS_COMPUTER_HREF,
     };
   }
 
@@ -54,16 +57,17 @@ const resolveProjectEditOnMacCta = (
     const lastSeenSuffix = lastSeen !== null ? ` · last seen ${lastSeen}` : "";
     return {
       state: "offline",
-      buttonLabel: "Edit on this computer",
+      // HN-H3: header owns Connect while offline (not a greyed Edit).
+      buttonLabel: "Connect this computer",
       helperText: `${deviceName} is offline right now${lastSeenSuffix}.`,
-      href: null,
+      href: CONNECT_THIS_COMPUTER_HREF,
     };
   }
 
   if (input.isThisMac) {
     return {
       state: "enabled",
-      buttonLabel: "Edit on this computer →",
+      buttonLabel: "Edit on this computer",
       helperText: null,
       href: buildAgentWitchLocalProjectEditorHref(input.projectId),
     };
@@ -78,12 +82,12 @@ const resolveProjectEditOnMacCta = (
 };
 
 /**
- * "offline" and "reconnecting" helper text just restates the presence line
- * shown next to it — only show the helper text for states that add a reason
- * the presence line doesn't already say (wrong Mac, no computer linked).
+ * Offline / reconnecting: status line owns the presence copy; Connect is the
+ * header action (href set). Helper text only when it adds a reason the status
+ * line does not already say (wrong Mac).
  */
 export const shouldShowProjectEditOnMacHelperText = (
   state: ProjectEditOnMacCtaState,
-): boolean => state !== "offline" && state !== "reconnecting";
+): boolean => state === "wrong_mac";
 
 export default resolveProjectEditOnMacCta;

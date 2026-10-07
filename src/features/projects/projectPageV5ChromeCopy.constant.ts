@@ -10,7 +10,10 @@ export const PROJECT_PAGE_V5_CHROME_COPY = {
   "header.moreActions": "More actions",
   "header.breadcrumbAllProjects": PROJECT_PAGE_SHELL_COPY.breadcrumbAllProjects,
   "header.breadcrumbAria": "Breadcrumb",
-  "status.onlineOnThisComputer": "Online on this computer",
+  "status.onlineOnThisComputer": "This computer is online",
   "status.offlineThisComputer": "This computer is offline",
-  "tabs.importantCount": (n: number) => `${n} Important`,
+  "status.offlineWaitHint": "tasks here wait until it's back",
+  "tabs.importantCount": (n: number) => String(n),
+  "tabs.importantCountAria": (n: number) =>
+    n === 1 ? "1 important" : `${n} important`,
 } as const;

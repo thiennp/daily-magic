@@ -186,7 +186,7 @@ export default function HomeNotLinkedConnectBlock({
   }, [handleCloseModal, notice?.kind]);
 
   const connectedDetail = useMemo(() => {
-    const parts = [C.connectedDetailOnline];
+    const parts: string[] = [C.connectedDetailOnline];
     const version = thisMacDevice?.installBundleVersion?.trim();
     if (version) {
       parts.push(`Version ${version.replace(/^v/i, "")}`);

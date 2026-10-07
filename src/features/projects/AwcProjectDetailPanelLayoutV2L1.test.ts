@@ -35,16 +35,16 @@ describe("project layout v2 L1 shell", () => {
     expect(tabs).toContain('overview: "Overview"');
   });
 
-  it("V5-3 tab bar: white pill track, tonal blue selected via --awc tokens", () => {
+  it("HN-H3 tab bar: underline track, Pine selected via brand tokens", () => {
     const bar = read("src/features/projects/AwcProjectDetailTabBar.tsx");
     const classes = read(
       "src/features/projects/projectPageV5ChromeClasses.constant.ts",
     );
     expect(bar).toContain("PROJECT_V5_TABLIST_CLASS");
-    expect(classes).toContain("rounded-awc-pill bg-awc-surface");
-    expect(classes).toContain("bg-awc-accent-soft text-awc-blue-700");
-    expect(bar).not.toContain("border-b-2");
-    expect(bar).not.toMatch(/indigo|#0a6cf5|#4a97ff/i);
+    expect(classes).toContain("border-b border-awc-border-strong");
+    expect(classes).toContain("text-brand-600");
+    expect(classes).toContain("after:bg-brand-600");
+    expect(bar).not.toMatch(/indigo|#0a6cf5|#4a97ff|#2150d6/i);
     expect(bar).toContain('role="tablist"');
   });
 

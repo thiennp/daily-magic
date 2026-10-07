@@ -19,11 +19,13 @@ export const PANEL_ROW_META_CLASS =
 export const PANEL_PILL_CLASS =
   "shrink-0 rounded-full bg-gray-200/80 px-2 py-0.5 text-[11.5px] font-medium text-awc-fg dark:bg-white/10 dark:text-gray-300";
 
+/** HN-H3: filled Pine primary (never black). */
 export const PANEL_BUTTON_PRIMARY_CLASS =
-  "rounded-full bg-gray-900 px-3.5 py-1.5 text-[13px] font-medium text-white hover:bg-gray-800 disabled:opacity-50 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200";
+  "inline-flex h-10 items-center justify-center rounded-[9px] bg-brand-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-awc-blue-700 active:bg-awc-blue-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-brand-600 dark:hover:bg-brand-500";
 
+/** HN-H3: outline secondary. */
 export const PANEL_BUTTON_SECONDARY_CLASS =
-  "rounded-full border border-awc-border bg-white px-3.5 py-1.5 text-[13px] font-medium text-awc-fg hover:bg-awc-surface-2 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800/60 dark:text-gray-200 dark:hover:bg-gray-700/60";
+  "inline-flex h-10 items-center justify-center rounded-[9px] border border-awc-border-strong bg-awc-tile px-4 text-sm font-semibold text-awc-fg transition-colors hover:border-awc-control-border disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800/60 dark:text-gray-200 dark:hover:bg-gray-700/60";
 
 export const PANEL_LINK_CLASS =
   "text-[13px] font-medium text-awc-fg underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400/40 dark:text-white";

@@ -9,42 +9,19 @@ const render = (
 ): string =>
   renderToStaticMarkup(createElement(DeviceUpdateButton, { action }));
 
-describe("DeviceUpdateButton (#29 disabled + reason)", () => {
-  it("renders disabled Update with the reason always visible", () => {
-    const html = render({
-      kind: "disabled",
-      reason: "Offline — update when it's back.",
-    });
-    expect(html).toContain("disabled");
-    expect(html).toContain('aria-disabled="true"');
-    expect(html).toContain("awc-disabled");
-    expect(html).toContain("Offline — update when it&#x27;s back.");
-    const describedBy = /aria-describedby="([^"]+)"/.exec(html)?.[1];
-    expect(describedBy).toBeTruthy();
-    expect(html).toContain(`id="${describedBy}"`);
-    expect(html).toContain('title="Offline — update when it&#x27;s back."');
+describe("DeviceUpdateButton (HN-H3 badge / enabled)", () => {
+  it("renders an amber Update badge while offline (no greyed button)", () => {
+    const html = render({ kind: "badge", label: "Update v268" });
+    expect(html).toContain("Update v268");
+    expect(html).not.toContain("<button");
+    expect(html).not.toContain("disabled");
   });
 
-  it("renders remote Update disabled with Update it from that computer.", () => {
-    const html = render({
-      kind: "disabled",
-      reason: "Update it from that computer.",
-    });
-    expect(html).toContain(">Update</button>");
-    expect(html).toContain('aria-disabled="true"');
-    expect(html).toContain('title="Update it from that computer."');
-    const describedBy = /aria-describedby="([^"]+)"/.exec(html)?.[1];
-    expect(describedBy).toBeTruthy();
-    expect(html).toContain(`id="${describedBy}" class=`);
-    expect(html).toContain(">Update it from that computer.</p>");
-  });
-
-  it("renders an enabled Update without a reason", () => {
-    const html = render({ kind: "enabled" });
-    expect(html).toContain(">Update</button>");
+  it("renders an enabled Update button with the version label", () => {
+    const html = render({ kind: "enabled", label: "Update to v268" });
+    expect(html).toContain(">Update to v268</button>");
     expect(html).not.toContain("disabled");
     expect(html).not.toContain("aria-describedby");
-    expect(html).not.toContain("title=");
   });
 
   it("renders nothing when hidden", () => {

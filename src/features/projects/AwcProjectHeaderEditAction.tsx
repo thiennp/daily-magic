@@ -2,7 +2,6 @@
 
 import { useId } from "react";
 
-import { PROJECT_PAGE_V5_CHROME_COPY as C } from "@/features/projects/projectPageV5ChromeCopy.constant";
 import {
   PROJECT_V5_PILL_BUTTON_CLASS,
   PROJECT_V5_REASON_CLASS,
@@ -13,9 +12,9 @@ import {
 } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 
 /**
- * V5-3: the ONE header action — "Edit on this computer". Disabled looks
- * disabled (`.awc-disabled`, #29) and keeps its reason visible (not hover).
- * Offline / reconnecting reasons are the status chip right beside it.
+ * HN-H3 header action: "Edit on this computer" when online on this computer;
+ * "Connect this computer" (outline) while offline / unlinked — never a greyed
+ * Edit that reads as broken.
  */
 export default function AwcProjectHeaderEditAction({
   editCta,
@@ -23,13 +22,13 @@ export default function AwcProjectHeaderEditAction({
   readonly editCta: ProjectEditOnMacCta;
 }) {
   const reasonId = useId();
-  const label = C["header.edit"];
+  const label = editCta.buttonLabel;
   if (editCta.href !== null) {
     return (
       <a
         href={editCta.href}
-        target="_blank"
-        rel="noopener noreferrer"
+        target={editCta.state === "enabled" ? "_blank" : undefined}
+        rel={editCta.state === "enabled" ? "noopener noreferrer" : undefined}
         className={PROJECT_V5_PILL_BUTTON_CLASS}
       >
         {label}

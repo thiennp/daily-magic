@@ -21,8 +21,8 @@ interface AwcProjectLibraryPanelProps {
 }
 
 /**
- * Library tab: project-scoped playbooks/workflows/skills. Mutate: owner only
- * (disabled-with-reason for member/viewer). No remove / unpublish (open Qs).
+ * Library tab: project-scoped playbooks/workflows/skills.
+ * HN-H3: empty card owns New + Add from; toolbar CTAs only when items exist.
  */
 export default function AwcProjectLibraryPanel({
   project,
@@ -36,6 +36,16 @@ export default function AwcProjectLibraryPanel({
     setMode("list");
     if (message !== null) setToast(message);
   };
+  const startNewSkill = (): void => {
+    setItemId(null);
+    setMode("new-skill");
+  };
+  const startAddFrom = (): void => {
+    setItemId(null);
+    setMode("add-from");
+  };
+  const showHeaderActions =
+    mode === "list" && itemId === null && library.items.length > 0;
 
   return (
     <section
@@ -45,14 +55,9 @@ export default function AwcProjectLibraryPanel({
       <AwcProjectLibraryHeader
         canEdit={canEdit}
         canCreateSkill={canEdit && !library.skills.forbidden}
-        onNewSkill={() => {
-          setItemId(null);
-          setMode("new-skill");
-        }}
-        onAddFrom={() => {
-          setItemId(null);
-          setMode("add-from");
-        }}
+        showActions={showHeaderActions}
+        onNewSkill={startNewSkill}
+        onAddFrom={startAddFrom}
       />
       {toast !== null ? (
         <p role="status" className={PANEL_STATUS_CLASS}>
@@ -82,6 +87,8 @@ export default function AwcProjectLibraryPanel({
           library={library}
           canEdit={canEdit}
           onOpen={setItemId}
+          onNew={startNewSkill}
+          onAddFrom={startAddFrom}
         />
       )}
     </section>

@@ -46,6 +46,7 @@ export default function HomeConnectedMacDeviceRow(
     needsUpdate: detail?.isMismatch === true,
     isOffline: isMacPresenceTierHardOffline(resolveMacPresenceTier(device)),
     canUpdateHere: isThisMac,
+    latestVersion: props.serverInstallBundleVersion,
   });
   const onSeeLocalLog = useMacDeviceSeeLocalLog({
     wakePort: device.wakePort,

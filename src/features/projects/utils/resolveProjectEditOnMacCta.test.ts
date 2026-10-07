@@ -13,7 +13,7 @@ describe("resolveProjectEditOnMacCta", () => {
     });
 
     expect(cta.state).toBe("enabled");
-    expect(cta.buttonLabel).toBe("Edit on this computer →");
+    expect(cta.buttonLabel).toBe("Edit on this computer");
     expect(cta.href).toContain("/project?id=proj-1");
     expect(cta.helperText).toBeNull();
   });
@@ -32,7 +32,7 @@ describe("resolveProjectEditOnMacCta", () => {
     expect(cta.helperText).toContain("Jamie's Mac mini");
   });
 
-  it("shows reconnecting for live_other_instance", () => {
+  it("offers Connect while reconnecting", () => {
     const cta = resolveProjectEditOnMacCta({
       projectId: "proj-1",
       deviceDisplayName: "Mac",
@@ -46,10 +46,11 @@ describe("resolveProjectEditOnMacCta", () => {
     });
 
     expect(cta.state).toBe("reconnecting");
-    expect(cta.helperText).toContain("Reconnecting");
+    expect(cta.buttonLabel).toBe("Connect this computer");
+    expect(cta.href).toBe("/#awc-connect");
   });
 
-  it("shows offline copy with last seen", () => {
+  it("offers Connect (not greyed Edit) while offline", () => {
     const cta = resolveProjectEditOnMacCta({
       projectId: "proj-1",
       deviceDisplayName: "Mac",
@@ -59,6 +60,21 @@ describe("resolveProjectEditOnMacCta", () => {
     });
 
     expect(cta.state).toBe("offline");
-    expect(cta.helperText).toContain("offline");
+    expect(cta.buttonLabel).toBe("Connect this computer");
+    expect(cta.href).toBe("/#awc-connect");
+  });
+
+  it("offers Connect when no computer is linked", () => {
+    const cta = resolveProjectEditOnMacCta({
+      projectId: "proj-1",
+      deviceDisplayName: "",
+      device: null,
+      deviceLastSeenAt: null,
+      isThisMac: false,
+    });
+
+    expect(cta.state).toBe("unknown_device");
+    expect(cta.buttonLabel).toBe("Connect this computer");
+    expect(cta.href).toBe("/#awc-connect");
   });
 });
