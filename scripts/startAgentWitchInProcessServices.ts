@@ -24,7 +24,7 @@ export interface StartAgentWitchInProcessServicesInput {
    * reconnect only when connection health is stale (not on every tick).
    */
   readonly reconnectWebSockets?: () => void;
-  /** Probe AWL `:43347/health` and kickstart LaunchAgents when down. */
+  /** Probe AWL `/health` on the discovered port (H6 range; legacy 43347 last) and kickstart LaunchAgents when down. */
   readonly ensureLiveAppReachable?: () => void;
   readonly onLostMachineLease?: () => void;
 }

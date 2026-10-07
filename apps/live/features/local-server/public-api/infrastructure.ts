@@ -33,13 +33,14 @@ export {
   isRetiredAgentWitchLocalBrowserUiRequest,
 } from "../internal/core/isRetiredAgentWitchLocalBrowserUiRequest";
 
-
 export {
   allocateOrLoadAgentWitchLocalAppPortRange,
   readAgentWitchLocalAppPortRangeFile,
 } from "../internal/core/allocateOrLoadAgentWitchLocalAppPortRange";
 
 export { formatAgentWitchLocalAppPortRangeDisplay } from "../internal/core/formatAgentWitchLocalAppPortRangeDisplay";
+
+export { listAgentWitchLocalAppHealthCandidatePorts } from "../internal/core/listAgentWitchLocalAppHealthCandidatePorts";
 
 export {
   resolveAgentWitchLocalAppListenPort,

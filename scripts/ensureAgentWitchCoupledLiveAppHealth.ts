@@ -1,7 +1,7 @@
 import fs from "node:fs";
+import path from "node:path";
 
-import { AGENT_WITCH_LIVE_APP_PORT } from "@agent-witch/shared/network";
-
+import { listAgentWitchLocalAppHealthCandidatePorts } from "../apps/live/features/local-server/internal/core/listAgentWitchLocalAppHealthCandidatePorts";
 import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent";
 import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
 import {
@@ -14,27 +14,69 @@ export interface AgentWitchCoupledLiveAppHealthResult {
   readonly liveReachable: boolean;
   readonly hollowInstall: boolean;
   readonly kickstartedLabels: readonly string[];
+  /** Port that answered `/health` (null when none did). */
+  readonly reachablePort: number | null;
 }
 
-export const isAgentWitchLiveAppHttpReachable = async (
-  timeoutMs: number = 1500,
-): Promise<boolean> => {
+/** DF-030: ports for this install (saved listen port → range → legacy 43347). */
+export const resolveAgentWitchLiveAppHealthPorts = (
+  installDir: string,
+): readonly number[] =>
+  listAgentWitchLocalAppHealthCandidatePorts(path.join(installDir, "profiles"));
+
+const isOwnHealthBody = async (response: Response): Promise<boolean> => {
   try {
-    const response = await fetch(
-      `http://127.0.0.1:${AGENT_WITCH_LIVE_APP_PORT}/health`,
-      {
-        signal: AbortSignal.timeout(timeoutMs),
-      },
+    const body: unknown = await response.json();
+    if (typeof body !== "object" || body === null) {
+      return true;
+    }
+    const osUid = (body as { osUid?: unknown }).osUid;
+    // Another macOS user's AWL may sit on the same range — never count it as ours.
+    return (
+      typeof osUid !== "number" ||
+      typeof process.getuid !== "function" ||
+      osUid === process.getuid()
     );
-    return response.ok;
   } catch {
-    return false;
+    return true;
   }
 };
 
+/** First port in `ports` whose `/health` answers OK for this OS user, else null. */
+export const findAgentWitchLiveAppReachablePort = async (
+  ports: readonly number[],
+  timeoutMs: number = 1500,
+): Promise<number | null> => {
+  for (const port of ports) {
+    try {
+      const response = await fetch(`http://127.0.0.1:${port}/health`, {
+        signal: AbortSignal.timeout(timeoutMs),
+      });
+      if (response.ok && (await isOwnHealthBody(response))) {
+        return port;
+      }
+    } catch {
+      // Not listening on this port — try the next candidate.
+    }
+  }
+  return null;
+};
+
+export const isAgentWitchLiveAppHttpReachable = async (
+  timeoutMs: number = 1500,
+  installDir: string = resolveAgentWitchInstallDir(),
+): Promise<boolean> =>
+  (await findAgentWitchLiveAppReachablePort(
+    resolveAgentWitchLiveAppHealthPorts(installDir),
+    timeoutMs,
+  )) !== null;
+
 /**
- * When AWL (`:43347`) is down but the install bundle exists, kickstart AgentWitch
+ * When AWL is down but the install bundle exists, kickstart AgentWitch
  * LaunchAgents so the in-process or coupled runtime brings Live back.
+ * DF-030: probes the discovered H6 port (local-app-port.json / range), not only
+ * legacy 43347 — otherwise the 60 s in-process watchdog kickstart -k'd a
+ * healthy server every minute.
  */
 export const ensureAgentWitchCoupledLiveAppHealth = async (
   installDir: string = resolveAgentWitchInstallDir(),
@@ -49,16 +91,20 @@ export const ensureAgentWitchCoupledLiveAppHealth = async (
       liveReachable: false,
       hollowInstall: true,
       kickstartedLabels: [],
+      reachablePort: null,
     };
   }
 
-  const initiallyReachable = await isAgentWitchLiveAppHttpReachable();
-  if (initiallyReachable) {
+  const initialPort = await findAgentWitchLiveAppReachablePort(
+    resolveAgentWitchLiveAppHealthPorts(installDir),
+  );
+  if (initialPort !== null) {
     return {
       ok: true,
       liveReachable: true,
       hollowInstall: false,
       kickstartedLabels: [],
+      reachablePort: initialPort,
     };
   }
 
@@ -72,12 +118,16 @@ export const ensureAgentWitchCoupledLiveAppHealth = async (
     }
   }
 
-  const liveReachable = await isAgentWitchLiveAppHttpReachable();
+  // Re-read port files: a restarted server may have picked another range port.
+  const reachablePort = await findAgentWitchLiveAppReachablePort(
+    resolveAgentWitchLiveAppHealthPorts(installDir),
+  );
 
   return {
-    ok: liveReachable || kickstartedLabels.length > 0,
-    liveReachable,
+    ok: reachablePort !== null || kickstartedLabels.length > 0,
+    liveReachable: reachablePort !== null,
     hollowInstall: false,
     kickstartedLabels,
+    reachablePort,
   };
 };
