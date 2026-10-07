@@ -18,7 +18,9 @@ export type UpsertProjectFolderRefResult =
       readonly code:
         | "not_found"
         | "forbidden"
-        | "invalid"
+        | "folder_ref_path_required"
+        | "folder_ref_invalid_device"
+        | "folder_ref_failed"
         | "folder_ref_device_not_member";
     };
 
@@ -41,7 +43,7 @@ export const upsertProjectFolderRef = async (input: {
   }
   const folder = input.folderPath.trim();
   if (folder.length === 0) {
-    return { ok: false, code: "invalid" };
+    return { ok: false, code: "folder_ref_path_required" };
   }
   const acl = await checkFolderRefDeviceAcl(input);
   if (!acl.ok) {
@@ -90,7 +92,7 @@ export const upsertProjectFolderRef = async (input: {
     `,
   );
   if (rows.length === 0) {
-    return { ok: false, code: "invalid" };
+    return { ok: false, code: "folder_ref_failed" };
   }
   const folderRef = mapProjectFolderRefRow(rows[0]);
   await writeProjectAccessAudit({

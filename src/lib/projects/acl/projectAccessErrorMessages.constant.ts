@@ -44,6 +44,9 @@ export const PROJECT_ACCESS_ERROR_MESSAGES: Readonly<Record<string, string>> = {
   invalid_delivery_mode: "Choose how this assistant gets messages.",
   folder_ref_device_not_member:
     "Pick a computer that is an active member of this project.",
+  folder_ref_path_required: "Enter a folder path.",
+  folder_ref_invalid_device: "Choose a computer for this folder.",
+  folder_ref_failed: "Could not add the folder. Try again.",
   invalid_transition: "That approval was already decided or timed out.",
   invalid_arguments: "Check the request and try again.",
 };

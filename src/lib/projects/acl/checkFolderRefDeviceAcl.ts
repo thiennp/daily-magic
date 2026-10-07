@@ -8,7 +8,7 @@ export type FolderRefDeviceAclResult =
   | { readonly ok: true; readonly ref: string }
   | {
       readonly ok: false;
-      readonly code: "invalid" | "folder_ref_device_not_member";
+      readonly code: "folder_ref_invalid_device" | "folder_ref_device_not_member";
     };
 
 /**
@@ -26,7 +26,7 @@ export const checkFolderRefDeviceAcl = async (input: {
 }): Promise<FolderRefDeviceAclResult> => {
   const target = resolveFolderRefDeviceTarget(input);
   if (target.kind === "invalid") {
-    return { ok: false, code: "invalid" };
+    return { ok: false, code: "folder_ref_invalid_device" };
   }
   if (target.kind === "label") {
     return { ok: true, ref: target.ref };

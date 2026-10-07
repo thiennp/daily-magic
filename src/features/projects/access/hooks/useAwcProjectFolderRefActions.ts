@@ -11,10 +11,29 @@ import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError"
 export const resolveAddFolderRefError = (result: {
   readonly code?: string;
   readonly errorMessage?: string;
-}): string =>
-  result.code === "folder_ref_device_not_member"
-    ? C.foldersDeviceNotMember
-    : mapProjectAccessError(result.errorMessage, C.foldersAddFailed);
+}): string => {
+  if (result.code === "folder_ref_device_not_member") {
+    return C.foldersDeviceNotMember;
+  }
+  if (result.code === "folder_ref_path_required") {
+    return "Enter a folder path.";
+  }
+  if (result.code === "folder_ref_invalid_device") {
+    return C.foldersChooseComputerFirst;
+  }
+  if (result.code === "folder_ref_failed") {
+    return C.foldersAddFailed;
+  }
+  const mapped = mapProjectAccessError(
+    result.errorMessage ?? result.code,
+    C.foldersAddFailed,
+  );
+  // Never show display-name Nickname copy on folder-path errors.
+  if (/nickname/i.test(mapped)) {
+    return C.foldersAddFailed;
+  }
+  return mapped;
+};
 
 /** Single owner for folder-ref add/remove mutations (Access + Resources). */
 export const useAwcProjectFolderRefActions = (input: {

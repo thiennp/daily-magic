@@ -52,10 +52,10 @@ describe("checkFolderRefDeviceAcl", () => {
   });
 
   it("rejects empty refs and a deviceId that disagrees with the ref", async () => {
-    expect(await check("  ")).toEqual({ ok: false, code: "invalid" });
+    expect(await check("  ")).toEqual({ ok: false, code: "folder_ref_invalid_device" });
     expect(await check("MacBook Pro", MEMBER_MAC)).toEqual({
       ok: false,
-      code: "invalid",
+      code: "folder_ref_invalid_device",
     });
   });
 });
