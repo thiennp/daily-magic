@@ -4,7 +4,6 @@ import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type"
 type FindOwnedProjectForDeleteResult =
   | { readonly kind: "owned"; readonly project: UserProjectRecord }
   | { readonly kind: "not_found" }
-  | { readonly kind: "not_owner" }
-  | { readonly kind: "default_project" };
+  | { readonly kind: "not_owner" };
 
 export default FindOwnedProjectForDeleteResult;
