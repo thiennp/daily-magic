@@ -82,7 +82,7 @@ export default function AwcProjectChatDock({
         >
           {dock.full ? (
             <AwcProjectMessengerSection
-              key={chat.refreshKey}
+              key={`${chat.refreshKey}:${chat.threadKey ?? ""}`}
               projectId={project.id}
               hasOwnerComputer={projectHasOwnerComputer(project)}
               initialThreadKey={chat.threadKey}

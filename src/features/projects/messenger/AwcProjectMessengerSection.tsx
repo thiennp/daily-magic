@@ -1,28 +1,31 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import AwcProjectMessengerGateView, {
   resolveMessengerGate,
 } from "@/features/projects/messenger/AwcProjectMessengerGate";
 import AwcMessengerNoComputerHint from "@/features/projects/messenger/AwcMessengerNoComputerHint";
+import AwcMessengerThreadPane from "@/features/projects/messenger/AwcMessengerThreadPane";
 import AwcProjectMessengerInboxClearBar from "@/features/projects/messenger/AwcProjectMessengerInboxClearBar";
 import AwcProjectMessengerInboxClearModals from "@/features/projects/messenger/AwcProjectMessengerInboxClearModals";
-import AwcProjectMessengerHeading from "@/features/projects/messenger/AwcProjectMessengerHeading";
-import AwcProjectMessengerPanels from "@/features/projects/messenger/AwcProjectMessengerPanels";
+import {
+  useAwcProjectMessengerFeed,
+  WHOLE_THREAD_KEY,
+} from "@/features/projects/messenger/hooks/useAwcProjectMessengerFeed";
 import { useAwcProjectMessengerInboxClear } from "@/features/projects/messenger/hooks/useAwcProjectMessengerInboxClear";
-import { useAwcProjectMessengerLivePoll } from "@/features/projects/messenger/hooks/useAwcProjectMessengerLivePoll";
-import { useAwcProjectMessengerThread } from "@/features/projects/messenger/hooks/useAwcProjectMessengerThread";
-import { useAwcProjectMessengerThreads } from "@/features/projects/messenger/hooks/useAwcProjectMessengerThreads";
+import { OW_SURFACE_CLASS } from "@/features/projects/messenger/oneWindow/awcOneWindowChrome.constant";
 import { defaultMessengerTaskAssignee } from "@/features/projects/messenger/utils/defaultMessengerTaskAssignee";
 import { messengerTaskAssigneeOptions } from "@/features/projects/messenger/utils/messengerTaskAssigneeOptions";
 import { selectMessengerThreadMeta } from "@/features/projects/messenger/utils/selectMessengerThreadMeta";
-import { sumMessengerUnreadCount } from "@/features/projects/messenger/utils/sumMessengerUnreadCount";
 import type { AwcProjectMessengerSectionProps } from "@/features/projects/messenger/AwcProjectMessengerSection.types";
 import useProjectTasksChatVisibility from "@/features/projects/tasks/useProjectTasksChatVisibility";
 
-const WHOLE_KEY = "whole";
-
+/**
+ * P1-S2 One window: ONE full-width chat column (no thread list). Whole-project
+ * feed with filters, in-feed approvals, newest at the bottom (scroll up loads
+ * older) and the composer pinned at the bottom.
+ */
 export default function AwcProjectMessengerSection({
   projectId,
   hasOwnerComputer,
@@ -30,41 +33,16 @@ export default function AwcProjectMessengerSection({
   onUnreadMaybeChanged,
   isOwner = false,
 }: AwcProjectMessengerSectionProps) {
-  const list = useAwcProjectMessengerThreads(projectId);
+  const feed = useAwcProjectMessengerFeed({
+    projectId,
+    hasOwnerComputer,
+    initialThreadKey,
+    onUnreadMaybeChanged,
+  });
+  const { list, open, selectedKey } = feed;
   const chatVisibility = useProjectTasksChatVisibility(projectId);
   const inboxClear = useAwcProjectMessengerInboxClear(projectId, isOwner);
-  const clearBar = inboxClear.visible ? (
-    <AwcProjectMessengerInboxClearBar clear={inboxClear} />
-  ) : null;
-  const reloadThreads = list.reload;
-  const reloadThreadsSilent = list.reloadSilent;
-  const [selectedKey, setSelectedKey] = useState<string | null>(
-    initialThreadKey ?? WHOLE_KEY,
-  );
-  const [mobileShowThread, setMobileShowThread] = useState(
-    initialThreadKey !== null && initialThreadKey !== WHOLE_KEY,
-  );
-  const onOpened = useCallback(() => {
-    void reloadThreads();
-    onUnreadMaybeChanged?.();
-  }, [onUnreadMaybeChanged, reloadThreads]);
-  const open = useAwcProjectMessengerThread({
-    projectId,
-    threadKey: selectedKey,
-    hasOwnerComputer,
-    onOpened,
-  });
-  const reloadThreadSilent = open.reloadSilent;
-  const onPollTick = useCallback(() => {
-    void reloadThreadsSilent();
-    void reloadThreadSilent();
-    onUnreadMaybeChanged?.();
-  }, [onUnreadMaybeChanged, reloadThreadSilent, reloadThreadsSilent]);
-  useAwcProjectMessengerLivePoll({
-    enabled: !list.forbidden,
-    onTick: onPollTick,
-  });
-  const selectedMeta = useMemo(
+  const meta = useMemo(
     () => selectMessengerThreadMeta({ selectedKey, threads: list.threads }),
     [list.threads, selectedKey],
   );
@@ -72,37 +50,24 @@ export default function AwcProjectMessengerSection({
     () => messengerTaskAssigneeOptions({ bots: list.threads?.bots ?? [] }),
     [list.threads],
   );
-  const unreadTotal = sumMessengerUnreadCount(list.threads);
   const gate = resolveMessengerGate(list);
   if (gate.kind !== "ready") {
-    return (
-    <AwcProjectMessengerGateView gate={gate} onRetry={() => { void reloadThreads(); }} />
-  );
+    return <AwcProjectMessengerGateView gate={gate} onRetry={() => void list.reload()} />;
   }
   const canSend = gate.threads.canSend && (open.thread?.canSend ?? true);
-  const afterSend = async (ok: boolean): Promise<boolean> => {
-    if (ok) {
-      void list.reload();
-      onUnreadMaybeChanged?.();
-    }
-    return ok;
-  };
 
   return (
-    <div className="space-y-3">
-      <AwcProjectMessengerHeading
-        unreadTotal={unreadTotal}
-        message={open.message}
-      />
-      {clearBar ? <div className="md:hidden">{clearBar}</div> : null}
+    <div className={OW_SURFACE_CLASS} data-one-window="chat">
       {!hasOwnerComputer ? <AwcMessengerNoComputerHint /> : null}
-      <AwcProjectMessengerPanels
+      {open.message !== null ? (
+        <p className="px-4 pt-2 text-xs text-awc-warn">{open.message}</p>
+      ) : null}
+      <AwcMessengerThreadPane
         projectId={projectId}
         isOwner={isOwner}
-        threads={gate.threads}
-        headerAction={clearBar}
-        selectedKey={selectedKey}
-        selectedMeta={selectedMeta}
+        title={meta.title}
+        kindLabel={meta.kindLabel}
+        status={meta.status}
         thread={open.thread}
         isLoading={open.isLoading}
         loadingOlder={open.loadingOlder}
@@ -111,28 +76,21 @@ export default function AwcProjectMessengerSection({
         projectComputerOffline={open.projectComputerOffline}
         canSend={canSend}
         sending={open.sending}
-        mobileShowThread={mobileShowThread}
+        showBack={selectedKey !== WHOLE_THREAD_KEY}
         assignees={assignees}
         defaultAssigneeMembershipId={defaultMessengerTaskAssignee(selectedKey)}
-        onSelect={(key) => {
-          setSelectedKey(key);
-          setMobileShowThread(true);
-        }}
-        onBack={() => {
-          setMobileShowThread(false);
-        }}
-        onLoadOlder={() => {
-          void open.loadOlder();
-        }}
-        onSendMessage={async (text, needsReply) =>
-          afterSend(await open.send(text, needsReply))
+        clearAllSlot={
+          inboxClear.visible ? <AwcProjectMessengerInboxClearBar clear={inboxClear} /> : null
         }
+        onBack={() => feed.setSelectedKey(WHOLE_THREAD_KEY)}
+        onLoadOlder={() => void open.loadOlder()}
+        onSendMessage={async (text, needsReply) =>
+          feed.afterSend(await open.send(text, needsReply))
+        }
+        onSendTask={async (draft) => feed.afterSend(await open.sendTask(draft))}
         chatVisibility={chatVisibility}
-        onSendTask={async (draft) => afterSend(await open.sendTask(draft))}
       />
-      {isOwner ? (
-        <AwcProjectMessengerInboxClearModals clear={inboxClear} />
-      ) : null}
+      {isOwner ? <AwcProjectMessengerInboxClearModals clear={inboxClear} /> : null}
     </div>
   );
 }

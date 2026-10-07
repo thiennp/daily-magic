@@ -3,7 +3,6 @@ import { PROJECT_MEMBERSHIP_POLL_SILENCE_STATUS } from "@/lib/projects/acl/membe
 /** Project messenger copy — tab label Chat (Soft DROP Activity label). */
 export const AWC_PROJECT_MESSENGER_COPY = {
   tab: "Chat",
-  listHeading: "Threads",
   wholeName: "Whole project",
   wholeSub: "Message every assistant",
   kindBot: "Assistant",
@@ -47,7 +46,7 @@ export const AWC_PROJECT_MESSENGER_COPY = {
   emptyTitle: "No messages yet",
   emptyBody: "Say hello or @ an assistant to assign work.",
   emptyCta: "Open Bots & people",
-  a11yBack: "Back to threads",
+  a11yBack: "Back to the whole project",
   loading: "Loading threads…",
   loadingThread: "Loading messages…",
   unavailable:

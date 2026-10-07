@@ -53,14 +53,11 @@ export default function AwcMessengerThreadPane({
   const showFilter = !isLoading && thread !== null && entries.length > 0;
 
   return (
-    <section className="flex min-h-0 min-w-0 flex-col bg-awc-surface dark:bg-gray-950" aria-label={title}>
-      <AwcMessengerThreadPaneHeader
-        title={title}
-        kindLabel={kindLabel}
-        status={status}
-        showBack={showBack}
-        onBack={onBack}
-      />
+    <section className="flex min-h-0 min-w-0 flex-1 flex-col bg-awc-surface dark:bg-gray-950" aria-label={title}>
+      {/* P1-S2: whole feed has no header; an assistant's private feed gets ← Whole project. */}
+      {showBack ? (
+        <AwcMessengerThreadPaneHeader title={title} kindLabel={kindLabel} status={status} showBack onBack={onBack} />
+      ) : null}
       <AwcOneWindowInFeedApprovals projectId={projectId} enabled={isOwner} />
       {showFilter ? (
         <AwcOneWindowFilterBar
@@ -70,6 +67,8 @@ export default function AwcMessengerThreadPane({
           onFilter={setFilter}
           clearAllSlot={clearAllSlot}
         />
+      ) : clearAllSlot ? (
+        <div className="flex justify-end border-b border-awc-border px-4 py-2">{clearAllSlot}</div>
       ) : null}
       {isLoading ? <AwcOneWindowFeedLoading /> : null}
       {!isLoading && thread !== null && filtered.length === 0 ? (

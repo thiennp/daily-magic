@@ -3,6 +3,10 @@
  * Scoped to messenger/oneWindow (+ Activity consumers); brand Pine + sand only.
  */
 
+/** P1-S2: the One window — one full-width chat column filling the Chat full view. */
+export const OW_SURFACE_CLASS =
+  "flex min-h-0 min-w-0 flex-1 flex-col bg-awc-surface";
+
 export const OW_PRIMARY_BUTTON_CLASS =
   "inline-flex items-center justify-center gap-1.5 rounded-lg border border-awc-primary bg-awc-primary px-3.5 py-2 text-sm font-medium text-white transition hover:bg-awc-blue-700 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-awc-primary/40";
 

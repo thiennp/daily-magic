@@ -34,7 +34,7 @@ export default function AwcMessengerThreadPaneHeader({
           className={`mb-1 ${ACTIVITY_LINK_CLASS}`}
           aria-label={copy.a11yBack}
         >
-          ← {copy.listHeading}
+          ← {copy.wholeName}
         </button>
       ) : null}
       <h3 className="truncate text-base font-semibold text-awc-fg dark:text-white">

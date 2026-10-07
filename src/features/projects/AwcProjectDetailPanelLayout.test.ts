@@ -97,7 +97,10 @@ describe("AwcProjectDetailPanel layout S3 activity → P1-S1 Chat dock", () => {
     expect(tabBodySource).not.toMatch(
       /const STUB_TABS[\s\S]*?= \[[^\]]*"(?:activity|team)"[^\]]*\];/,
     );
-    expect(messengerSectionSource).toContain("AwcProjectMessengerPanels");
+    // P1-S2: One window = one full-width column (no two-pane thread list).
+    expect(messengerSectionSource).toContain("AwcMessengerThreadPane");
+    expect(messengerSectionSource).toContain("OW_SURFACE_CLASS");
+    expect(messengerSectionSource).not.toContain("AwcProjectMessengerPanels");
     expect(messengerComposerSource).toContain("AwcMessengerMessageComposer");
     expect(messengerComposerSource).toContain("AwcMessengerTaskComposer");
   });
