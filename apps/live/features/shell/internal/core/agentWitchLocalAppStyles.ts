@@ -1687,7 +1687,7 @@ form.sdlc-form textarea.input.sdlc-instruction {
   height: 0.95rem;
   margin-top: 0.15rem;
   border: 2px solid #d0d5dd;
-  border-top-color: #1a44be;
+  border-top-color: #2150d6;
   border-radius: 50%;
   animation: sdlc-spin 0.8s linear infinite;
   flex: none;

@@ -6,7 +6,7 @@
 export const AGENT_WITCH_PUBLIC_UI_TOKENS = {
   brand50: "#eaf0fe",
   brand100: "#d6e1fc",
-  brand600: "#1a44be",
+  brand600: "#2150d6",
   brand700: "#15359c",
   gray50: "#f9fafb",
   gray100: "#f2f4f7",

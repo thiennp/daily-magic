@@ -14,7 +14,7 @@ describe("buildAgentWitchLocalAppShell", () => {
     });
 
     expect(html).toContain("family=Inter");
-    expect(html).toContain("--aw-brand-600: #1a44be");
+    expect(html).toContain("--aw-brand-600: #2150d6");
     expect(html).toContain("--aw-zinc-900: #101828");
     expect(html).toContain('class="site-header"');
     expect(html).toContain('class="site-sidebar"');
