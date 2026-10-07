@@ -4,6 +4,8 @@ public enum MacAppConstants {
     public static let productionInstallDirName = ".agent-witch"
     public static let launchAgentLabel = "com.agent-witch"
     public static let mainLogFileName = "agent-witch.log"
+    /// Self-heal / install script stdout+stderr (redacted) for See log on fresh failure.
+    public static let setupLogFileName = "setup.log"
     public static let logsDirName = "logs"
     public static let profilesDirName = "profiles"
     public static let localAppHost = "127.0.0.1"

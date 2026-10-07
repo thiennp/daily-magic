@@ -37,10 +37,18 @@ public func runSelfHealSetupFlow(
         _ kind: MacAppSetupFailureKind,
         runtime: MacAppRuntimeState? = .notInstalled
     ) -> RunSelfHealSetupFlowResult {
-        let logPath = resolveNewestAgentWitchMainLogPath(
-            installDir: resolveAgentWitchInstallDir(),
-            fileManager: fileManager
-        )
+        let installDir = resolveAgentWitchInstallDir()
+        let setupLog = resolveAgentWitchSetupLogPath(installDir: installDir)
+        // Prefer teed setup.log on a fresh failure (main log may not exist yet).
+        let logPath: URL?
+        if fileManager.fileExists(atPath: setupLog.path) {
+            logPath = setupLog
+        } else {
+            logPath = resolveNewestAgentWitchMainLogPath(
+                installDir: installDir,
+                fileManager: fileManager
+            )
+        }
         return RunSelfHealSetupFlowResult(
             session: .failed(kind: kind, logPath: logPath),
             runtimeState: runtime
