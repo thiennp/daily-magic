@@ -7,10 +7,10 @@ import { parseAwcGrokWakeLinkHash } from "@/features/projects/access/awcGrokWake
 /**
  * When `openRequest` bumps (deep link or "Add wake link"): expand the form,
  * drop a consumed `#wake-link-<id>` hash, scroll the row in and focus the
- * wake link field.
+ * wake link field (Access form) or the one-box paste field (Members rail).
  */
 export const useWakeLinkOpenRequest = (input: {
-  readonly containerRef: RefObject<HTMLDivElement | null>;
+  readonly containerRef: RefObject<HTMLElement | null>;
   readonly openRequest: number;
   readonly openForm: () => void;
   readonly membershipId: string;
@@ -30,7 +30,9 @@ export const useWakeLinkOpenRequest = (input: {
     node?.scrollIntoView?.({ behavior: "smooth", block: "center" });
     const frame = window.requestAnimationFrame(() => {
       node
-        ?.querySelector<HTMLInputElement>('input[name="grok-webhook-url"]')
+        ?.querySelector<HTMLElement>(
+          'input[name="grok-webhook-url"], textarea[name="grok-wake-connect"]',
+        )
         ?.focus();
     });
     return () => window.cancelAnimationFrame(frame);

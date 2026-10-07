@@ -8,7 +8,14 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   peoplePendingEmpty: "No pending invites or access requests.",
   helpersHeading: "Assistants",
   helpersEmpty: "No assistants yet. Invite an assistant below.",
-  helpersReady: "Ready",
+  /** P1-S1b assistant row wake status (never a fake Ready). */
+  helpersWake: {
+    ready: "Ready",
+    checks_on_demand: "Checks on demand",
+    checking: "Checking…",
+    cant_reach: "Can't reach it",
+    not_connected: "Not connected",
+  },
   helpersWorking: "Working",
   helpersNote:
     "Remove takes the assistant out of the project. If it leaves on its own, you don't need to approve.",

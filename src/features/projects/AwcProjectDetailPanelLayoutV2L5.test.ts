@@ -52,7 +52,7 @@ describe("project layout v2 L5 Settings + Members", () => {
     const column = read(`${P}/AwcProjectMembersColumn.tsx`);
     const owner = read(`${P}/members/AwcProjectMembersOwnerContent.tsx`);
     const helpers = read(`${P}/members/AwcProjectMembersHelpersSection.tsx`);
-    const row = read(`${P}/members/AwcProjectMembersHelperRow.tsx`);
+    const row = read(`${P}/members/AwcProjectMembersHelperRow.tsx`) + read(`${P}/members/AwcProjectMembersHelperRowMenu.tsx`);
     const invite = read(`${P}/members/AwcProjectMembersInviteBotsSection.tsx`);
     const copy = read(`${P}/projectPageMembersCopy.constant.ts`);
     const layoutCopy = read(`${P}/projectPageLayoutV2Copy.constant.ts`);
@@ -70,7 +70,7 @@ describe("project layout v2 L5 Settings + Members", () => {
     expect(row).toContain("C.menuRename");
     expect(row).toContain("C.menuWebhook");
     expect(row).toContain("C.menuRemove");
-    expect(row).toContain("AwcProjectAccessMemberGrokWebhookForm");
+    expect(row).toContain("AwcWakeConnectPasteCard");
     expect(invite).toContain("AwcProjectInviteAddAssistantControl");
     expect(invite).not.toContain('onCreate("grok")');
     expect(invite).toContain("AwcProjectInviteCreatedBanner");

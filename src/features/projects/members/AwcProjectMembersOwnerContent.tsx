@@ -56,6 +56,7 @@ export default function AwcProjectMembersOwnerContent({
           <AwcProjectMembersHelpersSection
             projectId={projectId}
             members={access.members}
+            onWakeSaved={() => void access.reload()}
             onMessage={onMessageHelper}
             onRename={access.renameMember}
             onRemove={(id) => {
