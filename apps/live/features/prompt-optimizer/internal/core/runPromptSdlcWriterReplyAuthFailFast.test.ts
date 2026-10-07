@@ -13,7 +13,7 @@ const writeFakeUnsignedAgy = (): string => {
   const promptFile = path.join(dir, "prompt.txt");
   fs.writeFileSync(promptFile, AGY_AUTH_REQUIRED_PROMPT_STDERR);
   const bin = path.join(dir, "agy");
-  fs.writeFileSync(bin, `#!/bin/sh\ncat '${promptFile}' >&2\nsleep 60\n`);
+  fs.writeFileSync(bin, `#!/bin/sh\ncat '${promptFile}' >&2\nexec sleep 60\n`);
   fs.chmodSync(bin, 0o755);
   return bin;
 };

@@ -276,8 +276,17 @@ export const runPromptSdlcWriterReply = (input: {
         errorMessage: "The writer failed to start.",
       }),
     );
-    child.on("close", () => {
+    child.on("close", (_code: number | null, signal: NodeJS.Signals | null) => {
       if (state.settled) {
+        return;
+      }
+      // Sign-in prompt already seen: 'close' can fire before the kill promise
+      // resolves (exit and close in one tick). Never read that output as a reply.
+      if (state.stopReason === "auth") {
+        finish({
+          ...signInFailure,
+          killSignal: signal === "SIGKILL" ? "SIGKILL" : "SIGTERM",
+        });
         return;
       }
       const replyFileText = fs.existsSync(replyPath)
