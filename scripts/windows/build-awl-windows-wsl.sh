@@ -141,7 +141,7 @@ From Windows PowerShell (same commands the tray uses):
   wsl.exe -e bash -lc 'systemctl --user enable --now agent-witch.service'
   wsl.exe -e bash -lc 'systemctl --user disable --now agent-witch.service'
 
-Health/status stay on http://127.0.0.1:43347 (WSL2 localhost forwarding).
+Health/status use the per-account port in ~/.agent-witch/profiles/<email>/local-app-port.json (WSL2 localhost forwarding).
 WSL
 
 # Optional notes file for the GitHub release body

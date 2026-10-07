@@ -185,8 +185,14 @@ test.describe("Create project, pull harness, run workflow", () => {
     await shot(page, "02-workflow-installed");
 
     const awl = await page.context().newPage();
+    // H6: AWL listens on a per-account port (local-app-port.json); pass its origin.
+    const awlOrigin = process.env.AWL_ORIGIN ?? "";
+    test.skip(
+      awlOrigin.length === 0,
+      "Set AWL_ORIGIN to the discovered AWL origin",
+    );
     await awl.goto(
-      `http://127.0.0.1:43347/project?id=${encodeURIComponent(projectId)}&tab=harness`,
+      `${awlOrigin}/project?id=${encodeURIComponent(projectId)}&tab=harness`,
     );
     await awl.waitForLoadState("load");
     await shot(awl, "03-awl-harness-tab");

@@ -274,7 +274,7 @@ for (const cycle of [step1, step2, step3, step4, finalResult]) {
 
 const manifest = {
   installDir,
-  port: 43347,
+  port: Number(process.env.AWL_PORT ?? "0") || null,
   cycles: [
     { step: 1, label: "Generalize gate", id: step1.id },
     { step: 2, label: "Evaluate gate", id: step2.id },

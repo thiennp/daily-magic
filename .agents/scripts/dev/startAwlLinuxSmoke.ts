@@ -66,9 +66,13 @@ const server = startAgentWitchLocalApp({
   },
 });
 
-const port = Number(process.env.AWL_PORT ?? "43347");
+// H6: no fixed port — AWL_PORT or an OS-assigned free port.
+const port = Number(process.env.AWL_PORT ?? "0");
 server.listen(port, "127.0.0.1", () => {
+  const address = server.address();
+  const boundPort =
+    typeof address === "object" && address !== null ? address.port : port;
   console.log(
-    `AWL smoke server http://127.0.0.1:${port} install=${installDir}`,
+    `AWL smoke server http://127.0.0.1:${boundPort} install=${installDir}`,
   );
 });

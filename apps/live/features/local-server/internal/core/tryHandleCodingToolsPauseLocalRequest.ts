@@ -13,17 +13,25 @@ import {
 
 export const CODING_TOOLS_PAUSE_LOCAL_PATH = "/api/local/coding-tools/pause";
 
+const LOOPBACK_HOST = /^(?:127\.0\.0\.1|localhost):\d{1,5}$/;
+
 /**
  * The local app answers CORS `*`, so a browser page on another site could
  * POST here. Only same-machine callers (no Origin, e.g. curl) and the AWL
- * page itself may flip the switch.
+ * page itself may flip the switch. Since H6 AWL listens on a per-account port,
+ * "the page itself" is a loopback Origin equal to the request Host (the
+ * discovered port); the legacy fixed origins stay accepted.
  */
 export const isCodingToolsPauseOriginAllowed = (
   origin: string | undefined,
+  host?: string,
 ): boolean =>
   origin === undefined ||
   origin === AGENT_WITCH_LOCAL_APP_ORIGIN ||
-  origin === AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN;
+  origin === AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN ||
+  (host !== undefined &&
+    LOOPBACK_HOST.test(host) &&
+    origin === `http://${host}`);
 
 export interface CodingToolsPauseLocalRouteInput {
   readonly method: string;
@@ -70,12 +78,24 @@ export const tryHandleCodingToolsPauseLocalRequest = async (
     return true;
   }
   if (input.method !== "POST") {
-    input.sendJson(input.response, 405, { ok: false, error: "method_not_allowed" });
+    input.sendJson(input.response, 405, {
+      ok: false,
+      error: "method_not_allowed",
+    });
     return true;
   }
   const origin = input.request.headers.origin;
-  if (!isCodingToolsPauseOriginAllowed(typeof origin === "string" ? origin : undefined)) {
-    input.sendJson(input.response, 403, { ok: false, error: "forbidden_origin" });
+  const host = input.request.headers.host;
+  if (
+    !isCodingToolsPauseOriginAllowed(
+      typeof origin === "string" ? origin : undefined,
+      typeof host === "string" ? host : undefined,
+    )
+  ) {
+    input.sendJson(input.response, 403, {
+      ok: false,
+      error: "forbidden_origin",
+    });
     return true;
   }
   const paused = parsePausedBody(await input.readBody(input.request));

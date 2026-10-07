@@ -1,5 +1,6 @@
 /**
- * Live AWL wizard demo: real writers against http://127.0.0.1:43347.
+ * Live AWL wizard demo: real writers against AWL_ORIGIN (the URL printed by
+ * startAwlLinuxSmoke, or http://127.0.0.1:<port> from local-app-port.json).
  * Prerequisite: npx tsx .agents/scripts/dev/startAwlLinuxSmoke.ts
  */
 import fs from "node:fs";
@@ -7,7 +8,12 @@ import path from "node:path";
 
 import { chromium, type Page } from "playwright";
 
-const AWL_ORIGIN = process.env.AWL_ORIGIN ?? "http://127.0.0.1:43347";
+const AWL_ORIGIN = process.env.AWL_ORIGIN ?? "";
+if (AWL_ORIGIN.length === 0) {
+  throw new Error(
+    "Set AWL_ORIGIN (e.g. http://127.0.0.1:<port from local-app-port.json>).",
+  );
+}
 const ARTIFACTS = "/opt/cursor/artifacts";
 const WORKSPACE = process.env.AWL_DEMO_FOLDER ?? "/workspace";
 const SKILL = process.env.AWL_DEMO_SKILL ?? "skill-post-change-verification";
