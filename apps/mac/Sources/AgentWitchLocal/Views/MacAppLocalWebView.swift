@@ -7,6 +7,7 @@ import AgentWitchLocalCore
 /// so the local server serves PO HTML while plain browsers stay retired (AWL-H7 PM-3 b).
 /// Reloads only when the requested URL *prop* changes (F-1); in-page navigation is kept.
 /// Navigations are restricted to loopback + discovered port; https opens externally (F-2).
+/// Attachment responses / `<a download>` become WKDownloads saved to ~/Downloads (DF-013).
 struct MacAppLocalWebView: NSViewRepresentable {
     let url: URL
 
@@ -37,9 +38,10 @@ struct MacAppLocalWebView: NSViewRepresentable {
         webView.load(URLRequest(url: url))
     }
 
-    final class Coordinator: NSObject, WKNavigationDelegate {
+    final class Coordinator: NSObject, WKNavigationDelegate, WKDownloadDelegate {
         var lastRequested: URL?
         var allowedPort: Int?
+        private var downloadDestinations: [ObjectIdentifier: URL] = [:]
 
         func webView(
             _ webView: WKWebView,
@@ -50,16 +52,87 @@ struct MacAppLocalWebView: NSViewRepresentable {
                 decisionHandler(.cancel)
                 return
             }
-            if let allowedPort,
-               shouldAllowLocalWebViewNavigation(url: destination, allowedPort: allowedPort)
-            {
+            switch decideLocalWebViewNavigation(
+                url: destination,
+                allowedPort: allowedPort,
+                shouldPerformDownload: navigationAction.shouldPerformDownload
+            ) {
+            case .allow:
                 decisionHandler(.allow)
+            case .download:
+                decisionHandler(.download)
+            case .openExternally:
+                NSWorkspace.shared.open(destination)
+                decisionHandler(.cancel)
+            case .cancel:
+                decisionHandler(.cancel)
+            }
+        }
+
+        func webView(
+            _ webView: WKWebView,
+            decidePolicyFor navigationResponse: WKNavigationResponse,
+            decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void
+        ) {
+            let disposition = (navigationResponse.response as? HTTPURLResponse)?
+                .value(forHTTPHeaderField: "Content-Disposition")
+            if shouldDownloadLocalWebViewResponse(
+                contentDisposition: disposition,
+                canShowMIMEType: navigationResponse.canShowMIMEType
+            ) {
+                decisionHandler(.download)
                 return
             }
-            if let scheme = destination.scheme?.lowercased(), scheme == "https" {
-                NSWorkspace.shared.open(destination)
+            decisionHandler(.allow)
+        }
+
+        func webView(
+            _ webView: WKWebView,
+            navigationAction: WKNavigationAction,
+            didBecome download: WKDownload
+        ) {
+            download.delegate = self
+        }
+
+        func webView(
+            _ webView: WKWebView,
+            navigationResponse: WKNavigationResponse,
+            didBecome download: WKDownload
+        ) {
+            download.delegate = self
+        }
+
+        func download(
+            _ download: WKDownload,
+            decideDestinationUsing response: URLResponse,
+            suggestedFilename: String,
+            completionHandler: @escaping (URL?) -> Void
+        ) {
+            let fileManager = FileManager.default
+            guard let directory = fileManager.urls(for: .downloadsDirectory, in: .userDomainMask).first else {
+                completionHandler(nil)
+                return
             }
-            decisionHandler(.cancel)
+            let destination = resolveLocalWebViewDownloadDestination(
+                directory: directory,
+                suggestedFilename: suggestedFilename,
+                fileExists: { fileManager.fileExists(atPath: $0) }
+            )
+            downloadDestinations[ObjectIdentifier(download)] = destination
+            completionHandler(destination)
+        }
+
+        func downloadDidFinish(_ download: WKDownload) {
+            guard let destination = downloadDestinations.removeValue(forKey: ObjectIdentifier(download)) else {
+                return
+            }
+            NSWorkspace.shared.activateFileViewerSelecting([destination])
+        }
+
+        func download(_ download: WKDownload, didFailWithError error: Error, resumeData: Data?) {
+            downloadDestinations.removeValue(forKey: ObjectIdentifier(download))
+            NSLog("AgentWitchLocal: local web view download failed: \(error.localizedDescription)")
+            NSSound.beep()
         }
     }
 }
