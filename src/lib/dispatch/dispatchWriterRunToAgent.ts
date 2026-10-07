@@ -9,6 +9,7 @@ import { updateAgentRunStatus } from "@/lib/dispatch/agentRunQueries";
 import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord";
 import { buildCommandClaudeRunDispatchMessage } from "@/lib/dispatch/buildCommandClaudeRunDispatchMessage";
 import { resolveAgentRunWriterCompletion } from "@/lib/dispatch/resolveAgentRunWriterCompletion";
+import { toAgentRunNeonMetaText } from "@/lib/dispatch/toAgentRunNeonMetaText";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 export { buildCommandClaudeRunDispatchMessage } from "@/lib/dispatch/buildCommandClaudeRunDispatchMessage";
@@ -88,7 +89,8 @@ export const markAgentRunCompleted = async (
       kind: "terminal.end",
       payload: {
         exitCode: completion.resultExitCode,
-        output,
+        // Meta-only: never persist full writer body on Neon events.
+        output: toAgentRunNeonMetaText(output),
         outcomeCode: completion.resultOutcomeCode,
       },
     });

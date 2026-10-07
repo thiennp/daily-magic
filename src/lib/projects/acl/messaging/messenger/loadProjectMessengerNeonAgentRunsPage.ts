@@ -1,3 +1,4 @@
+import { AGENT_RUN_NEON_META_MAX_CHARS } from "@/lib/dispatch/toAgentRunNeonMetaText";
 import { asRowArray, getSql } from "@/lib/db";
 import { mapAgentRunToMessengerTimelineEntry } from "@/lib/projects/acl/messaging/messenger/mapAgentRunToMessengerTimelineEntry";
 import type { ProjectMessengerCursor } from "@/lib/projects/acl/messaging/messenger/projectMessengerCursor";
@@ -21,7 +22,9 @@ export const loadProjectMessengerNeonAgentRunsPage = async (input: {
   const sql = getSql();
   const rows = asRowArray(
     await sql`
-      SELECT r.id, r.prompt, r.status, r.writer_agent,
+      SELECT r.id,
+        LEFT(r.prompt, ${AGENT_RUN_NEON_META_MAX_CHARS}::int) AS prompt,
+        r.status, r.writer_agent,
         to_char(r.created_at AT TIME ZONE 'UTC',
           'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS cursor_at
       FROM agent_runs r

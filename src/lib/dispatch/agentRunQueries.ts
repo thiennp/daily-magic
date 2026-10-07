@@ -6,6 +6,10 @@ import {
 } from "@/lib/dispatch/agentRunSessionRegistry";
 import { getAgentRunRowById } from "@/lib/dispatch/agentRunEventQueries";
 import mapAgentRunRow from "@/lib/dispatch/mapAgentRunRow";
+import {
+  AGENT_RUN_NEON_META_MAX_CHARS,
+  toAgentRunNeonMetaText,
+} from "@/lib/dispatch/toAgentRunNeonMetaText";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import { updateAgentRunSessionStatus } from "@/lib/dispatch/updateAgentRunSessionStatus";
 import { asRowArray, getSql } from "@/lib/db";
@@ -29,19 +33,32 @@ export async function updateAgentRunStatus(
     readonly actualSeconds?: number | null;
   },
 ): Promise<AgentRunRecord | null> {
+  // Cap body-capable fields before any Neon/session write (meta-only HARD).
+  const cappedFields =
+    fields === undefined
+      ? undefined
+      : {
+          ...fields,
+          ...(typeof fields.resultOutput === "string"
+            ? { resultOutput: toAgentRunNeonMetaText(fields.resultOutput) }
+            : {}),
+          ...(typeof fields.denialReason === "string"
+            ? { denialReason: toAgentRunNeonMetaText(fields.denialReason) }
+            : {}),
+        };
+
   if (isAgentWitchDevDashboardEnabled()) {
-    return updateAgentRunSessionStatus(runId, status, fields);
+    return updateAgentRunSessionStatus(runId, status, cappedFields);
   }
 
   const now = new Date().toISOString();
   const startedAt = status === AgentRunStatus.RUNNING ? now : undefined;
-  const completedAt =
+  const isTerminal =
     status === AgentRunStatus.COMPLETED ||
     status === AgentRunStatus.FAILED ||
     status === AgentRunStatus.DENIED ||
-    status === AgentRunStatus.EXPIRED
-      ? now
-      : undefined;
+    status === AgentRunStatus.EXPIRED;
+  const completedAt = isTerminal ? now : undefined;
 
   const sql = getSql();
   const result = asRowArray(
@@ -49,15 +66,19 @@ export async function updateAgentRunStatus(
       UPDATE agent_runs
       SET
         status = ${status},
-        result_output = COALESCE(${fields?.resultOutput ?? null}, result_output),
-        result_exit_code = COALESCE(${fields?.resultExitCode ?? null}, result_exit_code),
-        result_outcome_code = COALESCE(${fields?.resultOutcomeCode ?? null}, result_outcome_code),
-        denial_reason = COALESCE(${fields?.denialReason ?? null}, denial_reason),
-        approval_expires_at = COALESCE(${fields?.approvalExpiresAt ?? null}, approval_expires_at),
+        result_output = COALESCE(${cappedFields?.resultOutput ?? null}, result_output),
+        result_exit_code = COALESCE(${cappedFields?.resultExitCode ?? null}, result_exit_code),
+        result_outcome_code = COALESCE(${cappedFields?.resultOutcomeCode ?? null}, result_outcome_code),
+        denial_reason = COALESCE(${cappedFields?.denialReason ?? null}, denial_reason),
+        approval_expires_at = COALESCE(${cappedFields?.approvalExpiresAt ?? null}, approval_expires_at),
         started_at = COALESCE(${startedAt ?? null}, started_at),
         completed_at = COALESCE(${completedAt ?? null}, completed_at),
-        estimate_seconds = COALESCE(${fields?.estimateSeconds ?? null}, estimate_seconds),
-        actual_seconds = COALESCE(${fields?.actualSeconds ?? null}, actual_seconds),
+        estimate_seconds = COALESCE(${cappedFields?.estimateSeconds ?? null}, estimate_seconds),
+        actual_seconds = COALESCE(${cappedFields?.actualSeconds ?? null}, actual_seconds),
+        prompt = CASE
+          WHEN ${isTerminal} THEN LEFT(prompt, ${AGENT_RUN_NEON_META_MAX_CHARS}::int)
+          ELSE prompt
+        END,
         updated_at = NOW()
       WHERE id = ${runId}
       RETURNING *
@@ -65,7 +86,7 @@ export async function updateAgentRunStatus(
   );
 
   if (!result[0]) {
-    return updateAgentRunSessionStatus(runId, status, fields);
+    return updateAgentRunSessionStatus(runId, status, cappedFields);
   }
 
   return syncAgentRunCache(mapAgentRunRow(result[0]));
