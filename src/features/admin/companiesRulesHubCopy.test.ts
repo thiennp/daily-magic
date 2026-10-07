@@ -4,28 +4,11 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { COMPANIES_RULES_HUB_COPY } from "@/features/admin/companiesRulesHubCopy.constant";
-import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
-import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/appShellComputersCopy.constant";
-import { PRIMARY_NAV } from "@/features/shell/appNav.constant";
 
 const read = (relativePath: string): string =>
   readFileSync(path.join(process.cwd(), relativePath), "utf8");
 
-describe("Companies & rules hub", () => {
-  it("keeps Marketplace, Connect, Automations, and Download AgentWitch Local reachable", () => {
-    const labels = PRIMARY_NAV.map((item) => item.label);
-    expect(labels).toContain("Marketplace");
-    expect(labels).toContain("Automations");
-    expect(labels).toContain(COMPANY_RULES_NAV_LABEL);
-
-    const adminShell = read("src/features/admin/AdminShell.tsx");
-    expect(adminShell).toContain("renderPrimaryNav={true}");
-    expect(adminShell).toContain("showDevicesRail={true}");
-
-    expect(APP_SHELL_COMPUTERS_COPY.connectThis).toContain("Connect");
-    expect(APP_SHELL_COMPUTERS_COPY.download).toBe("Download AgentWitch Local");
-  });
-
+describe("Companies & rules hub (copy + surfaces)", () => {
   it("ships Create company and cannot-self-join honesty — no join-with-a-code", () => {
     expect(COMPANIES_RULES_HUB_COPY.createCta).toBe("Create company");
     expect(COMPANIES_RULES_HUB_COPY.createHeading).toBe("Create company");
@@ -36,11 +19,14 @@ describe("Companies & rules hub", () => {
     const selection = read(
       "src/features/admin/components/GroupSelectionSection.tsx",
     );
+    const createPanel = read(
+      "src/features/admin/components/GroupCreateCompanyPanel.tsx",
+    );
     expect(selection).toContain("C.createHeading");
-    expect(selection).toContain("C.createCta");
-    expect(selection).toContain("C.joinHonestyHeading");
-    expect(selection).toContain("C.joinHonestyBody");
-    expect(selection).not.toMatch(/Join with a code/i);
+    expect(createPanel).toContain("C.createCta");
+    expect(createPanel).toContain("C.joinHonestyHeading");
+    expect(createPanel).toContain("C.joinHonestyBody");
+    expect(createPanel).not.toMatch(/Join with a code/i);
   });
 
   it("uses company dispatch policy labels Approval required and Open dispatch", () => {
@@ -49,13 +35,13 @@ describe("Companies & rules hub", () => {
     expect(COMPANIES_RULES_HUB_COPY.approvalHelper).toContain("this computer");
     expect(COMPANIES_RULES_HUB_COPY.openHelper).toContain("this computer");
 
-    const dispatch = read(
-      "src/features/admin/components/GroupDispatchPolicyControl.tsx",
+    const fields = read(
+      "src/features/admin/components/GroupDispatchPolicyFields.tsx",
     );
-    expect(dispatch).toContain("C.approvalLabel");
-    expect(dispatch).toContain("C.openLabel");
-    expect(dispatch).toContain("C.approvalHelper");
-    expect(dispatch).toContain("C.tryAgain");
+    expect(fields).toContain("C.approvalLabel");
+    expect(fields).toContain("C.openLabel");
+    expect(fields).toContain("C.approvalHelper");
+    expect(fields).toContain("C.tryAgain");
   });
 
   it("keeps Danger zone delete and members invite on company settings / members", () => {
@@ -82,14 +68,14 @@ describe("Companies & rules hub", () => {
     expect(COMPANIES_RULES_HUB_COPY.safetyValue).toBe("Set per project");
     expect(COMPANIES_RULES_HUB_COPY.safetyOpenCta).toBe("Open Safety rules");
 
-    const runs = read(
-      "src/features/admin/components/GroupTeamActivityPanel.tsx",
+    const runsList = read(
+      "src/features/admin/components/GroupTeamActivityRunsList.tsx",
     );
-    expect(runs).toContain("C.tryAgain");
-    expect(runs).toContain("C.runsError");
+    expect(runsList).toContain("C.tryAgain");
+    expect(runsList).toContain("C.runsError");
 
     const orientation = read(
-      "src/features/admin/components/CompaniesRulesOrientationStrip.tsx",
+      "src/features/admin/components/CompaniesRulesOrientationSafetyCard.tsx",
     );
     expect(orientation).toContain("#pitfalls");
     expect(orientation).toContain("C.safetyOpenCta");

@@ -2,7 +2,7 @@ import mapAgentWitchDeviceRow from "@/lib/agentWitch/mapAgentWitchDeviceRow";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
 import { revokeProjectComputerMembershipsForDevice } from "@/lib/projects/acl/revokeProjectComputerMembershipsForDevice";
 import { assertComputerEntitlement } from "@/lib/billing/assertComputerEntitlement";
-import { BillingGateError } from "@/lib/billing/BillingGateError";
+import { BillingGateError } from "@/lib/billing/billingGateError";
 import { asRowArray, getSql } from "@/lib/db";
 
 export const isUniqueTokenHashViolation = (error: unknown): boolean => {

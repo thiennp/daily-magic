@@ -1,7 +1,7 @@
 import { createAgentWitchInstallTokenForUser } from "@/lib/agentWitch/createAgentWitchInstallTokenForUser";
 import { buildAppOriginFromHeaders } from "@/lib/agentWitch/resolveAgentWitchAppOrigin";
 import { requireAuth } from "@/lib/auth/requireAuth";
-import { isBillingGateError } from "@/lib/billing/BillingGateError";
+import { isBillingGateError } from "@/lib/billing/billingGateError";
 import isMobileRequest from "@/lib/mobile/isMobileRequest";
 
 export const dynamic = "force-dynamic";

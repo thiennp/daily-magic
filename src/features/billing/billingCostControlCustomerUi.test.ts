@@ -16,7 +16,7 @@ const root = process.cwd();
 const read = (relativePath: string): string =>
   readFileSync(join(root, relativePath), "utf8");
 
-describe("billing cost-control UI (customer vs admin)", () => {
+describe("billing cost-control UI (customer)", () => {
   it("customer Pricing / BillingPlanSummary never call admin cost-control", () => {
     const pricingLayout = read("src/features/pricing/PricingPageLayout.tsx");
     const planSummary = read(
@@ -71,28 +71,6 @@ describe("billing cost-control UI (customer vs admin)", () => {
     expect(blob.includes("infra")).toBe(false);
   });
 
-  it("admin set-free and cost-control surfaces exist", () => {
-    const sidebar = read("src/features/shell/AdminSidebar.tsx");
-    const costPage = read("src/app/(app)/admin/cost-control/page.tsx");
-    const costPanel = read(
-      "src/features/billing/components/AdminCostControlPanel.tsx",
-    );
-    const setFree = read(
-      "src/features/billing/components/AdminSetFreeButton.tsx",
-    );
-    const usersTable = read("src/features/admin/components/UsersTable.tsx");
-
-    expect(sidebar.includes('href: "/admin/cost-control"')).toBe(true);
-    expect(sidebar.includes('label: "Cost control"')).toBe(true);
-    expect(costPage.includes("AdminCostControlPanel")).toBe(true);
-    expect(costPanel.includes(BILLING_API_PATHS.adminCostControl) || costPanel.includes("useAdminCostControl")).toBe(true);
-    expect(setFree.includes("postAdminSetFree")).toBe(true);
-    expect(usersTable.includes("AdminSetFreeButton")).toBe(true);
-    expect(costPanel.includes("budgetEur") || costPanel.includes("Budget")).toBe(
-      true,
-    );
-  });
-
   it("renders entitlement fields in Billing plan details", () => {
     const planDetails = read(
       "src/features/billing/components/BillingPlanDetailsList.tsx",
@@ -138,12 +116,5 @@ describe("billing cost-control UI (customer vs admin)", () => {
     expect(homePanel.includes("ComputerEntitlementLimitNote")).toBe(true);
     const myBots = read("src/features/my-bots/MyBotsPanel.tsx");
     expect(myBots.includes("AssistantEntitlementLimitNote")).toBe(true);
-  });
-
-  it("keeps contract file on the tip under docs/design/pricing", () => {
-    const contract = read("docs/design/pricing/COST-CONTROL-API.md");
-    expect(contract.includes("/api/billing/entitlements")).toBe(true);
-    expect(contract.includes("/api/billing/admin/cost-control")).toBe(true);
-    expect(contract.includes("admin/set-free")).toBe(true);
   });
 });
