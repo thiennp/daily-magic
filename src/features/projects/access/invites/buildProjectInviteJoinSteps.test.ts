@@ -50,6 +50,17 @@ describe("join steps with input", () => {
     },
   );
 
+  it("dispatch step teaches visible messenger reply", () => {
+    const text = buildProjectInviteJoinDispatchStep({ projectIdHint: HINT }).join(
+      "\n",
+    );
+    expect(text).toContain("project_messenger_reply");
+    expect(text).toContain('"inReplyTo": "<messageId>"');
+    expect(text).toContain("never stop there alone");
+    expect(text).toContain("task.status");
+    expect(text).toContain("task.done");
+  });
+
   it("token and project line helpers", () => {
     expect(
       resolveProjectInviteJoinToken({ inviteUrl: "x", token: "  t  " }),

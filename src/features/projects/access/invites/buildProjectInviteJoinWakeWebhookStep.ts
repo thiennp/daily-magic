@@ -17,6 +17,7 @@ export const buildProjectInviteJoinWakeWebhookStep = (): readonly string[] => {
     "   Legacy: register_project_webhook still accepts webhookUrl, or both grokWebhookUrl and grokWebhookBearer (projectId alone is rejected). Prefer the Grok wake-link form so the key is never pasted into chat or a project message.",
     `   ${AWC_GROK_WEBHOOK_KEY_NOTE}`,
     "   Inbox wake is webhook-only, via a Grok routine; do not poll list_project_inbox on a timer.",
+    "   Project scope (HARD): the wake POST body carries projectId + messageId for ONE project — use that projectId on every list_project_inbox / project_messenger_reply / project_dispatch / ack; never act on another project's messages in the same wake.",
     `   ${AWC_GROK_WEBHOOK_DAILY_REPAIR}`,
     `   ${PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE}`,
     `   ${PROJECT_UPDATED_WAKE_REPLY_CLAUSE}`,

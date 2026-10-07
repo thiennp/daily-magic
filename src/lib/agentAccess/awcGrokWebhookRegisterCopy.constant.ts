@@ -35,7 +35,7 @@ export const AWC_GROK_WEBHOOK_STATUS_AUTH =
 
 /** Grok Bot register steps — create the wake routine on active membership; bot never sees the key. */
 export const AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS =
-  "Grok Bot only: as soon as your membership is active (right after redeem if already active, or the moment status turns active), if this project has no webhook routine yet, create one yourself (webhook trigger; saved prompt: handle this AgentWitch project's wakes — read the inbox, do the task, ack). If Grok Bot shows your user a confirm card, they approve it there — that is their only step; nobody has to open Routines. You cannot see your own wake link or key — never guess them and never ask anyone to paste them into chat. " +
+  "Grok Bot only: as soon as your membership is active (right after redeem if already active, or the moment status turns active), if this project has no webhook routine yet, create one yourself (webhook trigger; saved prompt: on each wake read projectId+messageId from the POST body and handle ONLY that AgentWitch project — list_project_inbox({ projectId }), visible project_messenger_reply / project_dispatch, ack; never mix other projects). If Grok Bot shows your user a confirm card, they approve it there — that is their only step; nobody has to open Routines. You cannot see your own wake link or key — never guess them and never ask anyone to paste them into chat. " +
   AWC_GROK_WEBHOOK_OWNER_ENTRY +
   " Do not wait to be asked. Then call get_my_project_webhook_status({ projectId }) (" +
   AWC_GROK_WEBHOOK_STATUS_AUTH +

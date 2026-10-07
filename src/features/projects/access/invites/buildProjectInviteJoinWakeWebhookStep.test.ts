@@ -29,6 +29,9 @@ describe("buildProjectInviteJoinWakeWebhookStep (step 7, copy only)", () => {
     expect(lines).toContain(`   ${PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE}`);
     expect(lines).toContain(`   ${PROJECT_UPDATED_WAKE_REPLY_CLAUSE}`);
     expect(lines).toContain(
+      "   Project scope (HARD): the wake POST body carries projectId + messageId for ONE project — use that projectId on every list_project_inbox / project_messenger_reply / project_dispatch / ack; never act on another project's messages in the same wake.",
+    );
+    expect(lines).toContain(
       '   MUST ack_project_message { "messageId": "<id>" }.',
     );
   });

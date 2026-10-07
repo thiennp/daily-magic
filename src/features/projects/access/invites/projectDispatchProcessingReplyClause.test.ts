@@ -68,6 +68,20 @@ describe("PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE", () => {
     expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain(
       'toProjectDisplayName is "Owner"',
     );
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toMatch(
+      /act ONLY on that projectId/i,
+    );
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain(
+      "project_messenger_reply",
+    );
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain("inReplyTo");
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toMatch(
+      /never stop at task\.received \/ task\.processing alone/i,
+    );
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toMatch(
+      /every owner\/member ask needs a visible reply/i,
+    );
+    expect(PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE).toContain("Alternate OK");
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain(
       PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE,
     );

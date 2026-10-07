@@ -18,15 +18,19 @@ const SILENCE_BLOCK_MINUTES = PROJECT_B2B_SILENCE_BLOCK_MS / 60_000;
 
 /** Shared reply clause for briefing, invite prompt, and agent guideline. */
 export const PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE =
-  "On a wake, the first action — before list_project_inbox, before composing, before the task and before ack — is project_dispatch kind " +
-  `"${PROJECT_MESSAGE_KIND_TASK_RECEIVED}" to that sender with summary "received <messageId>" using the wake payload messageId and from* (do not wait to read inbox); ` +
+  "On a wake, read projectId and messageId from the wake POST body and act ONLY on that projectId (never mix another project's inbox, briefing, or replies). " +
+  "The first action — before list_project_inbox, before composing, before the task and before ack — is project_dispatch kind " +
+  `"${PROJECT_MESSAGE_KIND_TASK_RECEIVED}" to that sender with summary "received <messageId>" using the wake payload messageId, projectId, and from* (do not wait to read inbox); ` +
   "also one short line in your own window that the message was received. " +
-  "On each delivery: same first action (task.received + own-window line) before list_project_inbox and before the task. " +
-  `Then do the task: list_project_inbox if needed, then project_dispatch kind "${PROJECT_MESSAGE_KIND_TASK_PROCESSING}" to that sender with summary "processing <messageId>" (refs cannot carry the message id), ` +
-  `then kind "${PROJECT_MESSAGE_KIND_TASK_STATUS}" with summary "status <messageId>: <progress>" every ${SILENCE_NOTIFY_MINUTES} minutes while working, ` +
-  `then kind "${PROJECT_MESSAGE_KIND_TASK_DONE}" or "${PROJECT_MESSAGE_KIND_TASK_BLOCKED}" with summary "<messageId>: <result>" as the reply to that sender, post the same reply in your own window, then ack. ` +
+  "On each delivery: same first action (task.received + own-window line) before list_project_inbox({ projectId }) and before the task. " +
+  `Then do the task: list_project_inbox if needed, then optional project_dispatch kind "${PROJECT_MESSAGE_KIND_TASK_PROCESSING}" to that sender with summary "processing <messageId>" (refs cannot carry the message id; task.received / task.processing are state-only chips — never stop there alone). ` +
+  `ALWAYS finish with a visible app-messenger bubble: prefer project_messenger_reply { projectId, summary, kind: "${PROJECT_MESSAGE_KIND_TASK_STATUS}" | "${PROJECT_MESSAGE_KIND_TASK_DONE}" | "${PROJECT_MESSAGE_KIND_TASK_BLOCKED}", inReplyTo: <messageId> } ` +
+  `(every owner/member ask needs a visible reply in the app messenger — even just "ok" or "done"; use kind "${PROJECT_MESSAGE_KIND_TASK_STATUS}" with summary "status <messageId>: <progress>" every ${SILENCE_NOTIFY_MINUTES} minutes while working, ` +
+  `then kind "${PROJECT_MESSAGE_KIND_TASK_DONE}" or "${PROJECT_MESSAGE_KIND_TASK_BLOCKED}" with summary "<messageId>: <result>"). ` +
+  `Alternate OK: project_dispatch the same kind "${PROJECT_MESSAGE_KIND_TASK_STATUS}" | "${PROJECT_MESSAGE_KIND_TASK_DONE}" | "${PROJECT_MESSAGE_KIND_TASK_BLOCKED}" to that sender (when the sender is the owner, toProjectDisplayName is "Owner"). ` +
+  "post the same reply in your own window, then ack. " +
   `If you are silent for ${SILENCE_NOTIFY_MINUTES} minutes the server tells the sender; after ${SILENCE_BLOCK_MINUTES} minutes the delivery is blocked. ` +
-  'Do not ack only. When the sender is the owner, toProjectDisplayName is "Owner".';
+  "Do not ack only. Never stop at task.received / task.processing alone.";
 
 /** Shared project.updated wake clause for briefing, invite prompt, and agent guideline. */
 export const PROJECT_UPDATED_WAKE_REPLY_CLAUSE =
