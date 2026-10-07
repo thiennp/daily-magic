@@ -18,7 +18,8 @@ export { PROJECT_COMPUTER_HISTORY_UNSAVED_FLAG_AFTER_DAYS } from "@/lib/projects
  * Project computer history (cloud half). Opt-in per project; the owner's Mac
  * (AWL) saves each project message locally, then posts a computerAck.
  *
- * States (projectComputerHistoryStateMachine.ts), default off:
+ * States (projectComputerHistoryStateMachine.ts), default on_configuring
+ * (no row / unset = ON; explicit off stays off):
  *   off → on_configuring      owner toggle only, never automatic
  *   on_configuring → on_ready AWL on the project computer reports "ready"
  *   on_ready → degraded       computer offline on notify, or reports "degraded"

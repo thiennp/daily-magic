@@ -16,7 +16,7 @@ interface AwcProjectSettingsHistoryRowProps {
 export default function AwcProjectSettingsHistoryRow({
   projectId,
 }: AwcProjectSettingsHistoryRowProps) {
-  const [enabled, setEnabledDisplay] = useState(false);
+  const [enabled, setEnabledDisplay] = useState(true);
   const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {

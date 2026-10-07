@@ -2,7 +2,7 @@ import { asRowArray, getSql } from "@/lib/db";
 import { parseProjectComputerHistoryState } from "@/lib/projects/acl/messaging/parseProjectComputerHistoryState";
 import type { ProjectComputerHistoryState } from "@/lib/projects/acl/messaging/projectComputerHistoryStateMachine";
 
-/** Current history state for one project. No row means off. */
+/** Current history state for one project. No row means on_configuring (default ON). */
 export const readProjectComputerHistoryState = async (
   projectId: string,
 ): Promise<ProjectComputerHistoryState> => {

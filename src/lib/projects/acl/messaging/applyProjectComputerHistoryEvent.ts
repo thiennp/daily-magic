@@ -16,8 +16,9 @@ export type ApplyProjectComputerHistoryEventResult =
 
 /**
  * Move one project along the history FSA. Illegal transitions are rejected.
- * The write only lands while the row is still in `from` (or missing, for off),
- * so a racing caller cannot apply a stale transition.
+ * The write only lands while the row is still in `from` (or missing when
+ * `from` is the unset default on_configuring), so a racing caller cannot
+ * apply a stale transition.
  */
 export const applyProjectComputerHistoryEvent = async (input: {
   readonly projectId: string;

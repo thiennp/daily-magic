@@ -23,7 +23,7 @@ export const createProjectComputerHistoryFakeSql = () => {
     }
     if (query.includes("INSERT INTO project_computer_history_settings")) {
       const [projectId, next, from] = values.map(String);
-      if ((states.get(projectId) ?? "off") !== from) return [];
+      if ((states.get(projectId) ?? "on_configuring") !== from) return [];
       states.set(projectId, next);
       return [{ state: next }];
     }

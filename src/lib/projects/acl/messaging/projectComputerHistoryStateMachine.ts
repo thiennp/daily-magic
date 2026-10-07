@@ -1,6 +1,6 @@
 /**
  * Project computer history: per-project opt-in state, stored in
- * project_computer_history_settings. Anything not in the table is illegal.
+ * project_computer_history_settings. No row = default on_configuring.
  * The full flow and the unsaved-overdue flag/wake are documented in
  * orchestrateProjectComputerHistory.ts.
  */
@@ -13,6 +13,10 @@ export const PROJECT_COMPUTER_HISTORY_STATES = [
 
 export type ProjectComputerHistoryState =
   (typeof PROJECT_COMPUTER_HISTORY_STATES)[number];
+
+/** Unset / no-row default for new projects (owner can still toggle OFF). */
+export const DEFAULT_PROJECT_COMPUTER_HISTORY_STATE: ProjectComputerHistoryState =
+  "on_configuring";
 
 export type ProjectComputerHistoryEvent =
   | "owner_enable"

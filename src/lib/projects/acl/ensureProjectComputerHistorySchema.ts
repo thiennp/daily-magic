@@ -20,13 +20,15 @@ export const ensureProjectComputerHistorySchema = async (): Promise<void> => {
   const sql = getSql();
   await sql`CREATE TABLE IF NOT EXISTS project_computer_history_settings (
     project_id TEXT PRIMARY KEY REFERENCES user_projects(id) ON DELETE CASCADE,
-    state TEXT NOT NULL DEFAULT 'off'
+    state TEXT NOT NULL DEFAULT 'on_configuring'
       CHECK (state IN ('off', 'on_configuring', 'on_ready', 'degraded')),
     state_changed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     last_unsaved_wake_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
   await sql`ALTER TABLE project_computer_history_settings
     ADD COLUMN IF NOT EXISTS last_unsaved_wake_at TIMESTAMPTZ`;
+  await sql`ALTER TABLE project_computer_history_settings
+    ALTER COLUMN state SET DEFAULT 'on_configuring'`;
   const acksTable = asRowArray(
     await sql`SELECT to_regclass('public.project_message_computer_acks') AS t`,
   );
