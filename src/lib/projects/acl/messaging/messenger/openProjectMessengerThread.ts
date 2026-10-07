@@ -12,19 +12,20 @@ import {
   encodeProjectMessengerCursor,
   type ProjectMessengerCursor,
 } from "@/lib/projects/acl/messaging/messenger/projectMessengerCursor";
-import type { ProjectMessengerTimelineEntry } from "@/lib/projects/acl/messaging/messenger/projectMessenger.type";
+import type { ProjectMessengerWindowTimelineEntry } from "@/lib/projects/acl/messaging/messenger/projectMessengerWindowFields.type";
 import {
   resolveProjectMessengerLoadPage,
   type ProjectMessengerOfflineError,
   type ProjectMessengerPageMeta,
 } from "@/lib/projects/acl/messaging/messenger/resolveProjectMessengerLoadPage";
 import { resolveProjectMessengerViewer } from "@/lib/projects/acl/messaging/messenger/resolveProjectMessengerViewer";
+import { withProjectMessengerWindowFields } from "@/lib/projects/acl/messaging/messenger/withProjectMessengerWindowFields";
 
 export type OpenProjectMessengerThreadResult =
   | {
       readonly ok: true;
       readonly threadKey: string;
-      readonly entries: readonly ProjectMessengerTimelineEntry[];
+      readonly entries: readonly ProjectMessengerWindowTimelineEntry[];
       readonly page: ProjectMessengerPageMeta;
       readonly error?: ProjectMessengerOfflineError;
       readonly canSend: boolean;
@@ -112,7 +113,7 @@ export const openProjectMessengerThread = async (input: {
   return {
     ok: true,
     threadKey: input.threadKey,
-    entries: resolved.entries,
+    entries: resolved.entries.map(withProjectMessengerWindowFields),
     page: resolved.page,
     ...(resolved.error !== undefined ? { error: resolved.error } : {}),
     canSend: viewer.canSend,

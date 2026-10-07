@@ -1,8 +1,7 @@
+import type { AwcMessengerSubjectStateWire } from "@/features/projects/messenger/types/awcMessengerSubjectStateWire.type";
+
 export type AwcMessengerBotStatus =
-  | "working"
-  | "idle"
-  | "silent"
-  | "checks_on_demand";
+  "working" | "idle" | "silent" | "checks_on_demand";
 
 export type AwcMessengerMessageState =
   | "received"
@@ -64,7 +63,8 @@ export const AWC_MESSENGER_WINDOW_KINDS = [
   "bot_to_bot",
 ] as const;
 
-export type AwcMessengerWindowKind = (typeof AWC_MESSENGER_WINDOW_KINDS)[number];
+export type AwcMessengerWindowKind =
+  (typeof AWC_MESSENGER_WINDOW_KINDS)[number];
 
 export type AwcMessengerTimelineEntry = {
   readonly messageId: string;
@@ -85,6 +85,8 @@ export type AwcMessengerTimelineEntry = {
   readonly session?: AwcMessengerAiSessionMeta;
   /** Additive (OW9): server window kind when the feed sends it; else omitted. */
   readonly windowKind?: AwcMessengerWindowKind;
+  /** Additive (OW9): server live subject state (codes); null = none. */
+  readonly subjectState?: AwcMessengerSubjectStateWire | null;
 };
 
 /** Dispatch load-older page meta (fd7764c0). Absent on today's main. */
