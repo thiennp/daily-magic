@@ -35,6 +35,12 @@ public enum MacAppConstants {
     public static let bootstrapConnectPath = "/connect"
     public static let bootstrapExchangePath = "/api/local/bootstrap/exchange"
     public static let bootstrapInstallScriptPath = "/install/agent-witch.sh"
+    /// Existing-install repair/update script (same family as install; no token query).
+    public static let updateInstallScriptPath = "/install/agent-witch-update.sh"
+    /// Active account pointer under `~/.agent-witch` (email only — never pairing secrets).
+    public static let activeProfileFileName = "active-profile.json"
+    /// Status pill while self-heal runs (design).
+    public static let setupInProgressStatus = "Setting up…"
     /// Official install script: `PAIRING_TOKEN="${PRESET_PAIRING_TOKEN:-}"`.
     public static let installTokenEnvironmentVariable = "PRESET_PAIRING_TOKEN"
     /// Official install script: profile email preset.
@@ -49,8 +55,8 @@ public enum MacAppConstants {
         + "Quit it there, then Retry."
     /// Shown when `/health` answers without identity (AWL bundle older than this app).
     public static let unverifiedLocalHealthReason =
-        "AgentWitch Local needs an update to finish connecting. "
-        + "Keep it running so it can self-update, or use Copy install command / Connect this computer."
+        "AgentWitch Local needs an update on this computer. "
+        + "Start setup to repair it."
     /// Menu-bar notice when web opens agentwitch-local:// with a path this app cannot handle.
     public static let unsupportedConnectDeepLinkReason =
         "This AgentWitch Local cannot handle that Connect link. "
