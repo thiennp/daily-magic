@@ -68,6 +68,14 @@ final class MacAppMenuController: ObservableObject {
     @Published private(set) var signedInEmail: String?
     /// Last setup failure log path (also on `setupSession.failed`); for See log.
     @Published private(set) var setupLogPath: URL?
+    /// Per-account local HTTP port range (nil until a profile range exists / is allocated).
+    @Published private(set) var localPortRange: ClosedRange<Int>?
+    /// Settings display, e.g. `49152–49167`.
+    @Published private(set) var localPortRangeDisplay: String?
+    /// Actual local-app listen port discovered from profile/health (may be legacy 43347).
+    @Published private(set) var localAppPort: Int?
+    /// True when core reported every port in the account range is busy.
+    @Published private(set) var portsInUse: Bool = false
 
     private let fileManager: FileManager
     private var selfHealTask: Task<Void, Never>?
@@ -90,6 +98,7 @@ final class MacAppMenuController: ObservableObject {
         self.fileManager = fileManager
         self.nowProvider = now
         refreshSignedInEmail()
+        refreshLocalPortRange()
         refreshInstallAndHealth()
         refreshLaunchAtLogin()
         startHealthPolling()
@@ -396,6 +405,7 @@ final class MacAppMenuController: ObservableObject {
             }
             statusMessage = statusLabel(for: state)
             refreshSignedInEmail()
+            refreshLocalPortRange()
         case .failed(let kind, let logPath):
             setupLogPath = logPath
             if let runtime = result.runtimeState {
@@ -662,16 +672,100 @@ final class MacAppMenuController: ObservableObject {
         }
     }
 
-    /// `.ours` only when the responder on the shared port reports this user's uid.
+    /// Probes discovered local-app port (range / saved / legacy 43347) for ownership.
     private func probeHealth() async -> LocalHealthOwnership {
-        var request = URLRequest(url: resolveAgentWitchLocalHealthUrl())
-        request.timeoutInterval = 2.0
+        refreshLocalPortRange()
+        let email = signedInEmail
+        let profileDir: URL? = {
+            guard let email else { return nil }
+            return resolveAgentWitchProfileDir(email: email)
+        }()
+        let range: MacAppLocalPortRange? = {
+            guard let profileDir else { return localPortRange.map { MacAppLocalPortRange(start: $0.lowerBound, end: $0.upperBound) } }
+            return readLocalPortRangeFile(profileDir: profileDir, fileManager: fileManager)
+        }()
+        let saved = profileDir.flatMap { readLocalAppPortFile(profileDir: $0, fileManager: fileManager) }
+        let candidates = candidateLocalAppPorts(savedPort: saved ?? localAppPort, range: range)
+
+        for port in candidates {
+            var request = URLRequest(url: resolveAgentWitchLocalHealthUrl(port: port))
+            request.timeoutInterval = 1.5
+            do {
+                let (data, response) = try await URLSession.shared.data(for: request)
+                let code = (response as? HTTPURLResponse)?.statusCode ?? 0
+                if !(200..<300).contains(code) {
+                    continue
+                }
+                let ownership = parseLocalHealthResponse(
+                    statusCode: code,
+                    body: data,
+                    expectedUid: getuid()
+                )
+                applyHealthPortHints(data: data, fallbackPort: port, range: range)
+                if ownership == .unhealthy {
+                    continue
+                }
+                return ownership
+            } catch {
+                continue
+            }
+        }
+        portsInUse = false
+        return .unhealthy
+    }
+
+    private func applyHealthPortHints(
+        data: Data,
+        fallbackPort: Int,
+        range: MacAppLocalPortRange?
+    ) {
+        localAppPort = fallbackPort
+        if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+            if let port = json["localAppPort"] as? Int {
+                localAppPort = port
+            }
+            if let rangeObj = json["localPortRange"] as? [String: Any],
+               let start = rangeObj["start"] as? Int,
+               let end = rangeObj["end"] as? Int
+            {
+                let parsed = MacAppLocalPortRange(start: start, end: end)
+                if parsed.isValid {
+                    localPortRange = parsed.closedRange
+                    localPortRangeDisplay = parsed.displayString
+                }
+            }
+            if let exhausted = json["portsExhausted"] as? Bool, exhausted {
+                portsInUse = true
+                statusMessage = MacAppConstants.portsInUseReason
+            } else {
+                portsInUse = false
+            }
+        } else if let range {
+            localPortRange = range.closedRange
+            localPortRangeDisplay = range.displayString
+        }
+    }
+
+    private func refreshLocalPortRange() {
+        guard let email = signedInEmail ?? resolveSignedInProfileEmail(fileManager: fileManager) else {
+            // Keep last known range while signed out only if files remain; else clear display.
+            return
+        }
+        let profileDir = resolveAgentWitchProfileDir(email: email)
+        let profilesDir = resolveAgentWitchProfilesDir()
         do {
-            let (data, response) = try await URLSession.shared.data(for: request)
-            let code = (response as? HTTPURLResponse)?.statusCode ?? 0
-            return parseLocalHealthResponse(statusCode: code, body: data, expectedUid: getuid())
+            let range = try allocateOrLoadLocalPortRange(
+                profileDir: profileDir,
+                profilesDir: profilesDir,
+                fileManager: fileManager
+            )
+            localPortRange = range.closedRange
+            localPortRangeDisplay = range.displayString
+            if let port = readLocalAppPortFile(profileDir: profileDir, fileManager: fileManager) {
+                localAppPort = port
+            }
         } catch {
-            return .unhealthy
+            // Non-fatal: discovery still probes legacy 43347.
         }
     }
 

@@ -1,11 +1,7 @@
 import Foundation
 
-/// Builds `http://127.0.0.1:43347/health`.
+/// Builds health URL. Prefer `resolveAgentWitchLocalHealthUrl(port:)` after discovery.
+/// Default keeps probing legacy 43347 so old cores remain visible to H5 self-heal.
 public func resolveAgentWitchLocalHealthUrl() -> URL {
-    var components = URLComponents()
-    components.scheme = "http"
-    components.host = MacAppConstants.localAppHost
-    components.port = MacAppConstants.localAppPort
-    components.path = MacAppConstants.healthPath
-    return components.url!
+    resolveAgentWitchLocalHealthUrl(port: MacAppConstants.localAppPort)
 }

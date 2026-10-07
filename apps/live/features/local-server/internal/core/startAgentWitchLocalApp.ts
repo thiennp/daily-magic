@@ -3,7 +3,15 @@ import fs from "node:fs";
 import path from "node:path";
 
 import {
-  AGENT_WITCH_LOCAL_APP_ORIGIN,
+  AGENT_WITCH_LOCAL_PORTS_IN_USE_MESSAGE,
+} from "./agentWitchLocalAppPortRange.constants";
+import { allocateOrLoadAgentWitchLocalAppPortRange } from "./allocateOrLoadAgentWitchLocalAppPortRange";
+import {
+  readAgentWitchLocalAppPortFile,
+  writeAgentWitchLocalAppPortFile,
+} from "./resolveAgentWitchLocalAppListenPort";
+
+import {
   AGENT_WITCH_LOCAL_APP_PORT,
   formatAgentWitchRelativeTimeAgo,
 } from "@agent-witch/live-local-server";
@@ -391,6 +399,29 @@ export const startAgentWitchLocalApp = (input: {
   readonly controllers: AgentWitchLocalAppControllers;
 }): http.Server => {
   const linkCodePath = path.join(input.layout.installDir, "link-code.txt");
+  const profilesDir = path.join(input.layout.installDir, "profiles");
+  const profileDir = path.dirname(input.layout.configPath);
+  const localPortRange = allocateOrLoadAgentWitchLocalAppPortRange({
+    profileDir,
+    profilesDir,
+  });
+  const preferredPort = readAgentWitchLocalAppPortFile(profileDir);
+  const portsToTry: number[] = [];
+  if (
+    preferredPort !== null &&
+    preferredPort >= localPortRange.start &&
+    preferredPort <= localPortRange.end
+  ) {
+    portsToTry.push(preferredPort);
+  }
+  for (let port = localPortRange.start; port <= localPortRange.end; port += 1) {
+    if (!portsToTry.includes(port)) {
+      portsToTry.push(port);
+    }
+  }
+  let localAppPort = portsToTry[0] ?? localPortRange.start;
+  let bindAttempt = 0;
+  let portsExhausted = false;
   const readInstallVersion = () =>
     readAgentWitchInstallVersion(input.layout.installDir);
   const buildInstallBundleStatus = () => {
@@ -649,6 +680,12 @@ export const startAgentWitchLocalApp = (input: {
           ...status,
           installBundleVersion: installBundle.installBundleVersion,
           installBundleUpdatedAt: installBundle.installBundleUpdatedAt,
+          localAppPort,
+          localPortRange: {
+            start: localPortRange.start,
+            end: localPortRange.end,
+          },
+          portsExhausted,
           ...buildAgentWitchLocalHealthIdentity({
             uid: process.getuid?.(),
             installDir: input.layout.installDir,
@@ -720,7 +757,7 @@ export const startAgentWitchLocalApp = (input: {
       if (method === "GET" && pathname === "/api/knowledge") {
         const url = new URL(
           request.url ?? "/",
-          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+          `http://127.0.0.1:${localAppPort}`,
         );
         const q = url.searchParams.get("q")?.trim() ?? "";
         if (q.length > 0) {
@@ -795,7 +832,7 @@ export const startAgentWitchLocalApp = (input: {
         const runConfig = readAgentWitchRunConfig();
         const url = new URL(
           request.url ?? "/",
-          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+          `http://127.0.0.1:${localAppPort}`,
         );
         const flashMessage =
           url.searchParams.get("ok") === "1"
@@ -889,7 +926,7 @@ export const startAgentWitchLocalApp = (input: {
               cleared:
                 new URL(
                   request.url ?? "/",
-                  `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+                  `http://127.0.0.1:${localAppPort}`,
                 ).searchParams.get("cleared") === "1",
             }),
           }),
@@ -900,7 +937,7 @@ export const startAgentWitchLocalApp = (input: {
       if (method === "GET" && pathname === "/status") {
         const statusUrl = new URL(
           request.url ?? "/",
-          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+          `http://127.0.0.1:${localAppPort}`,
         );
         const status = input.controllers.getStatus();
         const health = readAgentWitchConnectionHealth(input.layout);
@@ -946,7 +983,7 @@ export const startAgentWitchLocalApp = (input: {
       if (method === "GET" && pathname === "/traffic") {
         const trafficUrl = new URL(
           request.url ?? "/",
-          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+          `http://127.0.0.1:${localAppPort}`,
         );
         const entries = readAgentWitchLocalTraffic(input.layout);
         const installBundle = buildInstallBundleStatus();
@@ -988,7 +1025,7 @@ export const startAgentWitchLocalApp = (input: {
       if (method === "GET" && pathname === "/projects") {
         const url = new URL(
           request.url ?? "/",
-          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+          `http://127.0.0.1:${localAppPort}`,
         );
         const installBundle = buildInstallBundleStatus();
         const cloudAppOrigin = resolveAgentWitchLocalCloudAppOrigin(
@@ -1056,7 +1093,7 @@ export const startAgentWitchLocalApp = (input: {
       if (method === "GET" && pathname === "/projects/select-folder") {
         const url = new URL(
           request.url ?? "/",
-          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+          `http://127.0.0.1:${localAppPort}`,
         );
         const projectId = url.searchParams.get("projectId")?.trim() ?? "";
         const runConfig = readAgentWitchRunConfig();
@@ -1147,7 +1184,7 @@ export const startAgentWitchLocalApp = (input: {
       if (method === "GET" && pathname === "/project") {
         const url = new URL(
           request.url ?? "/",
-          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+          `http://127.0.0.1:${localAppPort}`,
         );
         const projectId = url.searchParams.get("id")?.trim() ?? "";
         const installBundle = buildInstallBundleStatus();
@@ -1563,7 +1600,7 @@ export const startAgentWitchLocalApp = (input: {
       if (method === "GET" && pathname === "/harness") {
         const url = new URL(
           request.url ?? "/",
-          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+          `http://127.0.0.1:${localAppPort}`,
         );
         const installBundle = buildInstallBundleStatus();
         const reveal = readLocalHarnessRevealCache(input.layout);
@@ -1625,7 +1662,7 @@ export const startAgentWitchLocalApp = (input: {
       if (method === "GET" && pathname === "/api/harness/file-content") {
         const url = new URL(
           request.url ?? "/",
-          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+          `http://127.0.0.1:${localAppPort}`,
         );
         const filePath = url.searchParams.get("path")?.trim() ?? "";
         const safePath = assertReadableFileUnderHome(filePath);
@@ -1707,7 +1744,7 @@ export const startAgentWitchLocalApp = (input: {
       if (method === "GET" && pathname === "/api/harness/reveal/stream") {
         const url = new URL(
           request.url ?? "/",
-          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+          `http://127.0.0.1:${localAppPort}`,
         );
         const scanRoot = url.searchParams.get("scanRoot")?.trim() ?? "";
         if (scanRoot.length === 0) {
@@ -1820,7 +1857,7 @@ export const startAgentWitchLocalApp = (input: {
       if (method === "GET" && pathname === "/writer-api") {
         const url = new URL(
           request.url ?? "/",
-          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+          `http://127.0.0.1:${localAppPort}`,
         );
         const runConfig = readAgentWitchRunConfig();
         const writerExecutionBackend: WriterExecutionBackend =
@@ -1895,7 +1932,7 @@ export const startAgentWitchLocalApp = (input: {
       if (method === "GET" && pathname === "/knowledge") {
         const url = new URL(
           request.url ?? "/",
-          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+          `http://127.0.0.1:${localAppPort}`,
         );
         const q = url.searchParams.get("q")?.trim() ?? "";
         const installBundle = buildInstallBundleStatus();
@@ -1968,11 +2005,36 @@ export const startAgentWitchLocalApp = (input: {
     });
   });
 
+  const tryListen = (): void => {
+    if (bindAttempt >= portsToTry.length) {
+      portsExhausted = true;
+      console.error(`[agent-witch] ${AGENT_WITCH_LOCAL_PORTS_IN_USE_MESSAGE}`);
+      return;
+    }
+    localAppPort = portsToTry[bindAttempt]!;
+    bindAttempt += 1;
+    server.listen(localAppPort, "127.0.0.1", () => {
+      writeAgentWitchLocalAppPortFile(profileDir, localAppPort);
+      // GlobalTriggersWritten: idempotent MCP/hook writers (injectable in unit tests).
+      try {
+        writeGlobalTriggers();
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(`[agent-witch] writeGlobalTriggers failed: ${message}`);
+      }
+      console.log(
+        `[agent-witch] Local app http://127.0.0.1:${localAppPort} (range ${localPortRange.start}–${localPortRange.end})`,
+      );
+      const pitfallCacheNote = describePitfallCacheAvailability();
+      if (pitfallCacheNote !== null) {
+        console.warn(pitfallCacheNote);
+      }
+    });
+  };
+
   server.on("error", (error: NodeJS.ErrnoException) => {
     if (error.code === "EADDRINUSE") {
-      console.error(
-        `[agent-witch] Local app port ${AGENT_WITCH_LOCAL_APP_PORT} already in use — skipping bind.`,
-      );
+      tryListen();
       return;
     }
     console.error("[agent-witch] Local app server error:", error);
@@ -1983,20 +2045,7 @@ export const startAgentWitchLocalApp = (input: {
     historyTick.stop();
   });
 
-  server.listen(AGENT_WITCH_LOCAL_APP_PORT, "127.0.0.1", () => {
-    // GlobalTriggersWritten: idempotent MCP/hook writers (injectable in unit tests).
-    try {
-      writeGlobalTriggers();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      console.error(`[agent-witch] writeGlobalTriggers failed: ${message}`);
-    }
-    console.log(`[agent-witch] Local app ${AGENT_WITCH_LOCAL_APP_ORIGIN}`);
-    const pitfallCacheNote = describePitfallCacheAvailability();
-    if (pitfallCacheNote !== null) {
-      console.warn(pitfallCacheNote);
-    }
-  });
+  tryListen();
 
   return server;
 };

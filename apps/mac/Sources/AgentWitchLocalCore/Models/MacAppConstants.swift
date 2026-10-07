@@ -9,7 +9,18 @@ public enum MacAppConstants {
     public static let logsDirName = "logs"
     public static let profilesDirName = "profiles"
     public static let localAppHost = "127.0.0.1"
+    /// Legacy fixed local-app port (pre–per-account ranges). Discovery still probes it.
     public static let localAppPort = 43347
+    public static let localAppPortRangeFloor = 49152
+    public static let localAppPortRangeCeiling = 65535
+    public static let localAppPortRangeSize = 16
+    public static let localPortRangeFileName = "local-port-range.json"
+    public static let localAppPortFileName = "local-app-port.json"
+    /// Product / design conflict copy.
+    public static let portsInUseReason = "Ports for this account are in use."
+    /// Settings → Connection help.
+    public static let localPortRangeHelp =
+        "Unique to this AgentWitch account on this computer."
     public static let healthPath = "/health"
     public static let statusPath = "/status"
     /// Same origin constant as `AGENT_WITCH_DEFAULT_ORIGIN` in packages/shared.
@@ -53,7 +64,7 @@ public enum MacAppConstants {
     public static let bootstrapSetupHealthPollIntervalSeconds: TimeInterval = 2
     /// Shown when `/health` on the shared port is answered by another user's / install's AWL.
     public static let foreignLocalHealthReason =
-        "Another AgentWitch (another macOS user or install) is answering on port 43347. "
+        "Another AgentWitch (another macOS user or install) is answering on the local port. "
         + "Quit it there, then Retry."
     /// Shown when `/health` answers without identity (AWL bundle older than this app).
     public static let unverifiedLocalHealthReason =

@@ -13,3 +13,23 @@ export {
   startAgentWitchLocalApp,
   type AgentWitchLocalAppControllers,
 } from "../internal/core/startAgentWitchLocalApp";
+
+export {
+  AGENT_WITCH_LOCAL_APP_LEGACY_PORT,
+  AGENT_WITCH_LOCAL_APP_PORT_RANGE_FLOOR,
+  AGENT_WITCH_LOCAL_APP_PORT_RANGE_SIZE,
+  AGENT_WITCH_LOCAL_PORTS_IN_USE_MESSAGE,
+  AGENT_WITCH_LOCAL_PORT_RANGE_HELP,
+} from "../internal/core/agentWitchLocalAppPortRange.constants";
+
+export {
+  allocateOrLoadAgentWitchLocalAppPortRange,
+  readAgentWitchLocalAppPortRangeFile,
+} from "../internal/core/allocateOrLoadAgentWitchLocalAppPortRange";
+
+export { formatAgentWitchLocalAppPortRangeDisplay } from "../internal/core/formatAgentWitchLocalAppPortRangeDisplay";
+
+export {
+  resolveAgentWitchLocalAppListenPort,
+  readAgentWitchLocalAppPortFile,
+} from "../internal/core/resolveAgentWitchLocalAppListenPort";
