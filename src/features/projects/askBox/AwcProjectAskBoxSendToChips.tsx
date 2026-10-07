@@ -28,7 +28,7 @@ export default function AwcProjectAskBoxSendToChips({
             type="button"
             disabled={disabled}
             aria-pressed={pressed}
-            className={pressed ? "awc-focus-ring rounded-awc-pill bg-awc-blue-600 px-3 py-1 text-[13px] font-medium text-white" : "awc-focus-ring rounded-awc-pill bg-awc-tile-2 px-3 py-1 text-[13px] font-medium text-awc-fg transition hover:bg-[#dedbd4]"}
+            className={pressed ? "awc-focus-ring rounded-awc-pill bg-awc-blue-600 px-3 py-1 text-[13px] font-medium text-white" : "awc-focus-ring rounded-awc-pill bg-awc-tile-2 px-3 py-1 text-[13px] font-medium text-awc-fg transition hover:bg-awc-fill"}
             onClick={() => {
               onChange(target.key);
             }}

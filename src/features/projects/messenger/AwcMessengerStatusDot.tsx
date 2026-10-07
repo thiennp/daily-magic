@@ -14,7 +14,7 @@ export default function AwcMessengerStatusDot({
       ? "bg-emerald-600"
       : status === "silent" || status === "checks_on_demand"
         ? "bg-amber-600"
-        : "bg-gray-200 shadow-[inset_0_0_0_2px_#667085]";
+        : "bg-gray-200 shadow-[inset_0_0_0_2px_var(--awc-fg-muted)]";
   return (
     <span className="inline-flex items-center gap-1.5 text-xs text-gray-500">
       <span className={`h-2 w-2 shrink-0 rounded-full ${dotClass}`} aria-hidden />

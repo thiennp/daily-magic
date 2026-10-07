@@ -7,8 +7,8 @@ import {
 
 /**
  * Type chrome maps live CapabilityType to playbook / assistant chrome.
- * workflow = playbook (approved blue hex; marketplace tip later); agent = sand + accent-soft / awc-blue.
- * No harness-set type in API.
+ * workflow = playbook (accent-soft + awc-blue); agent = sand + accent-soft / awc-blue.
+ * No harness-set type in API. No Claude violet.
  */
 export interface MarketplaceListingTypeChrome {
   readonly label: string;
@@ -23,9 +23,9 @@ const WORKFLOW_CHROME: MarketplaceListingTypeChrome = {
   label: "Playbook",
   plural: "Playbooks",
   icon: DocsIcon as unknown as AppIconComponent,
-  borderClass: "border-t-[3px] border-t-[#2457f0]",
-  iconWrapClass: "bg-[#e1ebff] text-[#2457f0]",
-  chipClass: "bg-[#e1ebff] text-[#1b45c8]",
+  borderClass: "border-t-[3px] border-t-awc-blue-600",
+  iconWrapClass: "bg-awc-accent-soft text-awc-blue-600",
+  chipClass: "bg-awc-accent-soft-2 text-awc-blue-700",
 };
 
 const AGENT_CHROME: MarketplaceListingTypeChrome = {

@@ -60,7 +60,7 @@ export const MK_GRID_CLASS =
   "mt-4 grid list-none grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3";
 
 export const MK_CARD_BASE_CLASS =
-  "relative flex h-full min-w-0 flex-col gap-3 rounded-[20px] bg-awc-surface p-5 shadow-awc-card transition hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(36,87,240,0.14)] focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-awc-blue-500";
+  "relative flex h-full min-w-0 flex-col gap-3 rounded-[20px] bg-awc-surface p-5 shadow-awc-card transition hover:-translate-y-px hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--awc-blue-600)_14%,transparent)] focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-awc-blue-500";
 
 export const MK_CARD_HEAD_CLASS =
   "flex min-w-0 items-start gap-3";
