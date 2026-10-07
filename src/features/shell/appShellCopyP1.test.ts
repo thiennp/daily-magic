@@ -21,7 +21,7 @@ describe("COPY-P1 shell and auth labels", () => {
       PRIMARY_NAV.find((item) => item.label === "Prompt optimizer")?.href,
     ).toBe("/prompt-optimizer");
     expect(PRIMARY_NAV.find((item) => item.label === "Connect")?.href).toBe(
-      "/download",
+      "#awc-connect",
     );
     expect(labels.indexOf("Marketplace")).toBeLessThan(labels.indexOf("Connect"));
     expect(labels.indexOf("Connect")).toBeLessThan(labels.indexOf("Automations"));

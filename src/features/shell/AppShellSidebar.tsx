@@ -19,7 +19,7 @@ export default function AppShellSidebar({
       >
         <AppShellNav />
         {showDevicesRail ? (
-          <div className="mt-auto shrink-0">
+          <div id="awc-connect" className="mt-auto shrink-0 scroll-mt-24">
             <AppShellDevicesPanel embedded />
           </div>
         ) : null}

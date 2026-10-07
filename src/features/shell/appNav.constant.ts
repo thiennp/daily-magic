@@ -25,10 +25,10 @@ export const PRIMARY_NAV: readonly AppNavItem[] = [
     isActive: (pathname) => pathname.startsWith("/marketplace"),
   },
   {
-    href: "/download",
+    href: "#awc-connect",
     label: "Connect",
-    isActive: (pathname) =>
-      pathname.startsWith("/download") || pathname.startsWith("/connect"),
+    // Hash scrolls to Devices rail — do not mark /download or Mac /connect active.
+    isActive: () => false,
   },
   {
     href: "/automations",
