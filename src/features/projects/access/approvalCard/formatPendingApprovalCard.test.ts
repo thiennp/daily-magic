@@ -4,9 +4,16 @@ import { AWC_PENDING_APPROVAL_CARD_COPY as C } from "@/features/projects/access/
 import {
   formatPendingApprovalMode,
   formatPendingApprovalWhoLine,
-  formatPendingDecisionToast,
+  formatPendingAskedAt,
+  formatPendingOwnerLine,
+  formatPendingResolved,
   pendingAssistantName,
+  pendingInitials,
 } from "@/features/projects/access/approvalCard/formatPendingApprovalCard";
+import {
+  PENDING_CAPABILITIES_VISIBLE,
+  pendingCapabilities,
+} from "@/features/projects/access/approvalCard/pendingCapabilities";
 import type { PendingApprovalCardMeta } from "@/lib/projects/acl/approvalCard/PendingApprovalCardMeta.type";
 
 const card = (
@@ -22,17 +29,25 @@ const card = (
   ...over,
 });
 
-describe("pending approval card copy (COPY.md pending_card.* verbatim)", () => {
-  it("locks every COPY.md string", () => {
-    expect(C.title).toBe("Wants to join");
-    expect(C.whoLabel).toBe("Who is asking");
-    expect(C.canDoLabel).toBe("What it can do");
-    expect(C.canDoBody).toBe(
-      "Read project info and peers. Send and receive short project messages. Use shared skills the owner publishes.",
+describe("pending approval card copy (DF-017 EN PASS)", () => {
+  it("locks the EN PASS strings", () => {
+    expect(C.notLinked).toBe("Not linked to a person yet");
+    expect(C.notLinkedTip).toBe(
+      "Nobody has said this assistant is theirs yet. You can still let it in. Someone can link it to themselves later.",
     );
-    expect(C.modeWake).toBe("Wakes up on its own when there is work");
-    expect(C.modeNoWake).toBe("Checks on demand (no wake link)");
+    expect(C.canDoLabel).toBe("If you approve, it can");
+    expect(C.nicknameLabel).toBe("Name in this project");
+    expect(C.nicknameAskedFor).toBe(
+      "This is the name it asked for. You can change it.",
+    );
+    expect(C.nicknameTaken).toBe(
+      "Another assistant here is already called “{name}”. Pick a different name.",
+    );
     expect([C.approve, C.deny]).toEqual(["Approve", "Deny"]);
+    expect(C.approvedTitle).toBe("{name} joined the project");
+    expect(C.approvedSub).toBe("It now appears under Assistants.");
+    expect(C.deniedTitle).toBe("Request from {requester} denied");
+    expect(C.deniedSub).toBe("It has no access.");
     expect(C.expiredTitle).toBe("This join request expired");
     expect(C.expiredBody).toBe(
       "The assistant must start again with a new code.",
@@ -40,69 +55,97 @@ describe("pending approval card copy (COPY.md pending_card.* verbatim)", () => {
     expect(C.expiredBodyInvite).toBe(
       "The assistant must ask to join again with the invite.",
     );
+  });
+
+  it("drops jargon and unverified limitation / undo claims", () => {
     const all = Object.values(C).join(" ").toLowerCase();
     expect(all).not.toMatch(
       /\bbots?\b|oauth|device_code|awc_proj_|token|its person|@/,
     );
+    expect(all).not.toContain("not claimed");
+    expect(all).not.toContain("team member");
+    expect(all).not.toContain("can’t change settings");
+    expect(all).not.toContain("can't change settings");
+    expect(all).not.toContain("undo");
+    expect(all).not.toContain("ask again with a new invite link");
+  });
+});
+
+describe("pending approval card formatters", () => {
+  it("owner line: claimed person, unnamed person, not linked", () => {
+    expect(formatPendingOwnerLine(card())).toBe("Belongs to Thien");
+    expect(formatPendingOwnerLine(card({ ownerPersonName: " " }))).toBe(
+      "Belongs to a person with no name set",
+    );
+    expect(
+      formatPendingOwnerLine(card({ ownerClaimed: false, ownerPersonName: null })),
+    ).toBeNull();
   });
 
-  it("who line: claimed, unclaimed, no kind, no person name", () => {
-    expect(
-      formatPendingApprovalWhoLine({ assistantName: "Scout", card: card() }),
-    ).toBe("Scout · Claude · belongs to Thien");
-    expect(
-      formatPendingApprovalWhoLine({
-        assistantName: "Scout",
-        card: card({ ownerClaimed: false, ownerPersonName: null }),
-      }),
-    ).toBe("Scout · Claude · person not claimed yet");
-    expect(
-      formatPendingApprovalWhoLine({
-        assistantName: "Scout",
-        card: card({ ownerPersonName: null }),
-      }),
-    ).toBe("Scout · Claude · belongs to a person with no name set");
-    expect(
-      formatPendingApprovalWhoLine({
-        assistantName: "Scout",
-        card: card({ assistantKind: null, ownerPersonName: null }),
-      }),
-    ).toBe("Scout · belongs to a person with no name set");
-    expect(
-      formatPendingApprovalWhoLine({
-        assistantName: "Scout",
-        card: card({ assistantKind: null }),
-      }),
-    ).toBe("Scout · belongs to Thien");
-    expect(
-      formatPendingApprovalWhoLine({
-        assistantName: "Scout",
-        card: card({ assistantKind: null, ownerClaimed: false }),
-      }),
-    ).toBe("Scout · person not claimed yet");
+  it("who line (One Window): claimed, not linked, no kind", () => {
+    const who = (over: Partial<PendingApprovalCardMeta>) =>
+      formatPendingApprovalWhoLine({ assistantName: "Scout", card: card(over) });
+    expect(who({})).toBe("Scout · Claude · belongs to Thien");
+    expect(who({ ownerClaimed: false, ownerPersonName: null })).toBe(
+      "Scout · Claude · not linked to a person yet",
+    );
+    expect(who({ assistantKind: null, ownerPersonName: null })).toBe(
+      "Scout · belongs to a person with no name set",
+    );
+    expect(who({ assistantKind: null, ownerClaimed: false })).toBe(
+      "Scout · not linked to a person yet",
+    );
   });
 
-  it("mode only when known; toasts; name fallback", () => {
+  it("mode only when known", () => {
     expect(formatPendingApprovalMode(card())).toBeNull();
     expect(
-      formatPendingApprovalMode(
-        card({ modeKnown: true, expectedDeliveryMode: "poll" }),
-      ),
+      formatPendingApprovalMode(card({ modeKnown: true, expectedDeliveryMode: "poll" })),
     ).toBe(C.modeNoWake);
-    expect(formatPendingApprovalMode(card({ modeKnown: true }))).toBe(
-      C.modeWake,
-    );
-    expect(formatPendingDecisionToast("approved", "Scout")).toBe(
-      "You approved Scout. It can finish joining now.",
-    );
-    expect(formatPendingDecisionToast("denied", "Scout")).toBe(
-      "You denied Scout. It did not get access.",
-    );
+    expect(formatPendingApprovalMode(card({ modeKnown: true }))).toBe(C.modeWake);
+  });
+
+  it("capability chips: 5 from COPY.md + mode when known; 4 visible", () => {
+    expect(PENDING_CAPABILITIES_VISIBLE).toBe(4);
+    expect(pendingCapabilities(card()).map((c) => c.label)).toEqual([
+      "Read project info",
+      "See who is in the project",
+      "Send short messages",
+      "Receive messages",
+      "Use skills you publish",
+    ]);
+    const withMode = pendingCapabilities(card({ modeKnown: true }));
+    expect(withMode).toHaveLength(6);
+    expect(withMode[5]?.label).toBe(C.modeWake);
+    expect(pendingCapabilities(null)).toHaveLength(5);
+  });
+
+  it("asked-at: today vs other day, local 24h; bad input → null", () => {
+    const now = new Date(2026, 9, 7, 21, 6);
     expect(
-      pendingAssistantName({
-        requesterLabel: " ",
-        suggestedProjectDisplayName: null,
-      }),
+      formatPendingAskedAt(new Date(2026, 9, 7, 20, 41).toISOString(), now),
+    ).toBe("Asked today, 20:41");
+    expect(
+      formatPendingAskedAt(new Date(2026, 9, 6, 9, 0).toISOString(), now),
+    ).toBe("Asked Oct 6, 09:00");
+    expect(formatPendingAskedAt("nope", now)).toBeNull();
+    expect(formatPendingAskedAt(undefined, now)).toBeNull();
+  });
+
+  it("initials, resolved rows, name fallback", () => {
+    expect(pendingInitials("NRG Lead")).toBe("NL");
+    expect(pendingInitials("scout")).toBe("SC");
+    expect(
+      formatPendingResolved("approved", { nickname: "NRG Lead", requester: "x" }),
+    ).toEqual({
+      title: "NRG Lead joined the project",
+      sub: "It now appears under Assistants.",
+    });
+    expect(
+      formatPendingResolved("denied", { nickname: "x", requester: "NRG Lead" }),
+    ).toEqual({ title: "Request from NRG Lead denied", sub: "It has no access." });
+    expect(
+      pendingAssistantName({ requesterLabel: " ", suggestedProjectDisplayName: null }),
     ).toBe("this assistant");
   });
 });
