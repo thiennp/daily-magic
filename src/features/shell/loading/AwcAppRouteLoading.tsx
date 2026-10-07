@@ -4,40 +4,42 @@ import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 
 import HomeDashboardSkeleton from "@/features/home/HomeDashboardSkeleton";
+import AwcProjectDetailSkeleton from "@/features/projects/AwcProjectDetailSkeleton";
+import AwcProjectsListSkeleton from "@/features/projects/AwcProjectsListSkeleton";
 import AppShell from "@/features/shell/AppShell";
+import { APP_SHELL_NARROW_CONTENT_CLASS } from "@/features/shell/appShellContentWidth.constant";
 import AwcPageSkeleton from "@/features/shell/loading/AwcPageSkeleton";
-
-/** Signed-in shell routes without their own loading.tsx → generic page skeleton. */
-const SHELL_ROUTE_PREFIXES = [
-  "/prompt-optimizer",
-  "/marketplace",
-  "/automations",
-  "/notifications",
-  "/account",
-] as const;
+import { resolveAwcRouteSkeleton } from "@/features/shell/loading/resolveAwcRouteSkeleton";
 
 /**
- * DF-016 `(app)/loading.tsx` body. Home ("/") gets the dashboard skeleton;
- * known shell routes get a generic page skeleton. Signed-out visitors
- * (marketing landing, /login, legal pages) get a plain sand canvas so no
- * app chrome flashes before a non-shell page.
+ * DF-016 body for every `loading.tsx` under `(app)`. Skeleton follows the
+ * target pathname (see resolveAwcRouteSkeleton). Signed-out visitors and
+ * non-shell routes (marketing landing, /login, legal) get a plain sand
+ * canvas so no app chrome flashes before a non-shell page.
+ *
+ * In-project tab switches use `history.replaceState` (hash only) and rail
+ * actions use fetch + local state, so neither hits this boundary.
  */
 export default function AwcAppRouteLoading() {
   const { status } = useSession();
-  const pathname = usePathname() ?? "/";
-  const isHome = pathname === "/";
-  const isShellRoute = SHELL_ROUTE_PREFIXES.some((prefix) =>
-    pathname.startsWith(prefix),
-  );
-  if (status !== "authenticated" || (!isHome && !isShellRoute)) {
+  const kind = resolveAwcRouteSkeleton(usePathname() ?? "/");
+  if (status !== "authenticated" || kind === "none") {
     return (
-      <div
-        className="min-h-screen bg-awc-bg dark:bg-gray-900"
-        aria-busy="true"
-      />
+      <div className="min-h-screen bg-awc-bg dark:bg-gray-900" aria-busy="true" />
+    );
+  }
+  if (kind === "projects") {
+    return (
+      <AppShell contentClassName={APP_SHELL_NARROW_CONTENT_CLASS}>
+        <AwcProjectsListSkeleton />
+      </AppShell>
     );
   }
   return (
-    <AppShell>{isHome ? <HomeDashboardSkeleton /> : <AwcPageSkeleton />}</AppShell>
+    <AppShell>
+      {kind === "home" ? <HomeDashboardSkeleton /> : null}
+      {kind === "project" ? <AwcProjectDetailSkeleton /> : null}
+      {kind === "page" ? <AwcPageSkeleton /> : null}
+    </AppShell>
   );
 }

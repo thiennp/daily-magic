@@ -1,2 +1,2 @@
-/** DF-016: /library/<id> redirects to the project Library tab → project skeleton. */
-export { default } from "@/app/(app)/projects/[projectId]/loading";
+/** DF-016: same path-aware route skeleton as `(app)/loading.tsx`. */
+export { default } from "@/app/(app)/loading";
