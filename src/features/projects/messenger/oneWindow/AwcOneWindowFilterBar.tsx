@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
-
 "use client";
+
+import type { ReactNode } from "react";
 
 import {
   OW_FILTER_CHIP_ACTIVE_CLASS,
