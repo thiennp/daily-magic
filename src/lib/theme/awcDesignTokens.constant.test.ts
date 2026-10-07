@@ -65,11 +65,11 @@ describe("awcDesignTokens L3 v5 foundation", () => {
     expect(AWC_V5_NEUTRAL_HEX.surface).toBe("#ffffff");
     expect(AWC_V5_NEUTRAL_HEX.tile).toBe("#f4f3f0");
     expect(AWC_V5_NEUTRAL_HEX["tile-2"]).toBe("#ebe9e4");
-    expect(AWC_V5_NEUTRAL_HEX.border).toBe("#ddd9d2");
-    expect(AWC_V5_NEUTRAL_HEX["border-strong"]).toBe("#c9c4bb");
-    expect(AWC_V5_NEUTRAL_HEX["control-border"]).toBe("#8a8478");
+    expect(AWC_V5_NEUTRAL_HEX.border).toBe("#e0e5ed");
+    expect(AWC_V5_NEUTRAL_HEX["border-strong"]).toBe("#cbd2de");
+    expect(AWC_V5_NEUTRAL_HEX["control-border"]).toBe("#748094");
     expect(AWC_V5_NEUTRAL_HEX.fg).toBe("#101828");
-    expect(AWC_V5_NEUTRAL_HEX["fg-muted"]).toBe("#4b5567");
+    expect(AWC_V5_NEUTRAL_HEX["fg-muted"]).toBe("#475467");
     expect(AWC_V5_NEUTRAL_HEX["fg-subtle"]).toBe("#566073");
   });
 
@@ -81,7 +81,7 @@ describe("awcDesignTokens L3 v5 foundation", () => {
     expect(AWC_V5_DISABLED_TOKENS).toEqual({
       bg: "#ebe9e4",
       fg: "#566073",
-      border: "#c9c4bb",
+      border: "#cbd2de",
     });
     expect(AWC_V5_RADIUS_TOKENS.card).toBe(20);
     expect(AWC_V5_RADIUS_TOKENS.control).toBe(12);

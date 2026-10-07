@@ -18,7 +18,7 @@ export const AWC_V5_BLUE_HEX = {
   "blue-950": "#0f1c42",
 } as const;
 
-/** One warm-grey family for canvas, tiles, fills, borders + ink. */
+/** Sand surfaces + cool slate borders/ink (artifact palette). */
 export const AWC_V5_NEUTRAL_HEX = {
   bg: "#e8e6e1",
   surface: "#ffffff",
@@ -28,11 +28,11 @@ export const AWC_V5_NEUTRAL_HEX = {
   fill: "#e9e7e2",
   "accent-soft": "#e4ecff",
   "accent-soft-2": "#d6e2ff",
-  border: "#ddd9d2",
-  "border-strong": "#c9c4bb",
-  "control-border": "#8a8478",
+  border: "#e0e5ed",
+  "border-strong": "#cbd2de",
+  "control-border": "#748094",
   fg: "#101828",
-  "fg-muted": "#4b5567",
+  "fg-muted": "#475467",
   "fg-subtle": "#566073",
 } as const;
 

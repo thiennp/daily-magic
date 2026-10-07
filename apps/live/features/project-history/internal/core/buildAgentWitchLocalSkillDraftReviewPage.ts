@@ -11,8 +11,8 @@ const PAGE_CSS = `:root{
   --awc-bg:#e8e6e1; --awc-surface:#ffffff; --awc-surface-2:#f7f6f4;
   --awc-tile:#f4f3f0; --awc-tile-2:#ebe9e4; --awc-fill:#e9e7e2;
   --awc-accent-soft:#e4ecff; --awc-accent-soft-2:#d6e2ff;
-  --awc-border:#ddd9d2; --awc-line:#ddd9d2; --awc-border-strong:#c9c4bb; --awc-control-border:#8a8478;
-  --awc-fg:#101828; --awc-fg-muted:#4b5567; --awc-fg-subtle:#566073;
+  --awc-border:#e0e5ed; --awc-line:#e0e5ed; --awc-border-strong:#cbd2de; --awc-control-border:#748094;
+  --awc-fg:#101828; --awc-fg-muted:#475467; --awc-fg-subtle:#566073;
   --awc-blue-600:#2150d6; --awc-primary:var(--awc-blue-600);
   --font-ui:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
