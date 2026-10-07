@@ -30,14 +30,21 @@ vi.mock("@/lib/projects/acl/writeProjectAccessAudit", () => ({
   writeProjectAccessAudit: vi.fn(async () => undefined),
 }));
 
-describe("ackProjectMessage history delete gate", () => {
+vi.mock("@/lib/projects/userProjectQueries", () => ({
+  getUserProjectById: vi.fn(async () => ({
+    id: "proj-1",
+    ownerUserId: "owner-1",
+  })),
+}));
+
+describe("ackProjectMessage keep-300 stamp (was history gate)", () => {
   beforeEach(() => {
     sqlMock.mockReset();
     resetProjectAclSchemaEnsureForTests();
     resetProjectMessagePurgeForTests();
   });
 
-  it("holds the row instead of deleting when the history gate denies", async () => {
+  it("stamps acked_at and never deletes", async () => {
     sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
       const q = String(strings);
       if (q.includes("SELECT state FROM project_computer_history_settings")) {

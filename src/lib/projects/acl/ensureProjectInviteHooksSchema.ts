@@ -1,6 +1,7 @@
 import { ensureProjectComputerHistorySchema } from "@/lib/projects/acl/ensureProjectComputerHistorySchema";
 import { ensureProjectInviteAutoApproveEventsSchema } from "@/lib/projects/acl/invites/ensureProjectInviteAutoApproveEventsSchema";
 import { ensureProjectMessageArchiveSchema } from "@/lib/projects/acl/messaging/ensureProjectMessageArchiveSchema";
+import { ensureProjectMessageChatKeySchema } from "@/lib/projects/acl/messaging/ensureProjectMessageChatKeySchema";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 import { getSql } from "@/lib/db";
 
@@ -93,6 +94,7 @@ export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
   await ensureProjectComputerHistorySchema();
   // Archive columns before the purge below reads archived_at (migration 098).
   await ensureProjectMessageArchiveSchema();
+  await ensureProjectMessageChatKeySchema();
 
   await purgeExpiredProjectMessages();
 };

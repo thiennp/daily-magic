@@ -4,7 +4,8 @@ import { getSql } from "@/lib/db";
 export type ProjectMessageDeletedReason =
   | "ack"
   | "delete_on_read"
-  | "computer_ack";
+  | "computer_ack"
+  | "prune_keep_300";
 
 export type WriteProjectMessageOutcomeInput = {
   readonly messageId: string;

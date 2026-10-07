@@ -2,12 +2,10 @@
  * Thin protocol metadata for project bot↔bot messages (cloud).
  * No media, blobs, base64, or content bodies — use P2P / localPath for bulky payloads.
  *
- * Retention: stamp read_at on inbox fetch; hard-delete on ack or when read and
- * delivery is terminal/unwatched (CASCADE deliveries). Outcome rows keep a thin
- * wake/final-state record with no FK to project_messages. Unacked TTL purge
- * remains for History-off projects only; gated History (on_configuring/on_ready/degraded)
- * never age-deletes — only after folder-save computerAck (7d → flag + wake).
- * Dispatch caps: per-sender rolling hourly + project-wide unread (row count).
+ * Retention (keep-300): stamp read_at / acked_at; Neon keeps newest 300 per
+ * chat_key and may prune older rows only after a synced computer ack. Outcome
+ * rows keep a thin wake/final-state record. No age DELETE of chat rows.
+ * Unsaved overdue → flag + wake. Dispatch caps: hourly + unread (unacked).
  */
 
 const readPositiveIntEnv = (name: string, fallback: number): number => {
@@ -60,8 +58,7 @@ export const PROJECT_B2B_SILENCE_TICK_MS = 60_000;
 export const PROJECT_MESSAGE_REFS_MAX_BYTES = 768;
 /** Per allowlisted ref string value. */
 export const PROJECT_MESSAGE_REF_VALUE_MAX_CHARS = 256;
-/** Unacked messages older than this are hard-deleted (CASCADE deliveries).
- * Gated History projects are excluded from this TTL purge. */
+/** Legacy delivery-side hint (days). Row age purge removed under keep-300. */
 export const PROJECT_MESSAGE_UNACKED_TTL_DAYS = 3;
 
 /** Default max user/owner dispatches per sender in a rolling 1h window. */
@@ -81,8 +78,8 @@ export const PROJECT_MESSAGE_HOURLY_WINDOW_MS = 3_600_000;
 /** Default max unacked project_messages rows per project. */
 export const PROJECT_MESSAGE_UNREAD_CAP_DEFAULT = 300;
 /**
- * Max existing project_messages rows for a project (delete-on-ack ⇒ unread).
- * Override with AWC_PROJECT_MESSAGE_UNREAD_CAP. Clear-all / ack / TTL purge free slots.
+ * Max unacked, not-archived project_messages rows per project.
+ * Override with AWC_PROJECT_MESSAGE_UNREAD_CAP. Clear-all / ack free slots.
  */
 export const PROJECT_MESSAGE_UNREAD_CAP = readPositiveIntEnv(
   "AWC_PROJECT_MESSAGE_UNREAD_CAP",

@@ -16,8 +16,8 @@ export type AcceptProjectMessageComputerAckResult =
   | { readonly ok: false; readonly code: "not_found" };
 
 /**
- * computerAck(projectId, messageId), idempotent. Records the ack, deletes the
- * row if the recipient already acked it, and moves degraded → on_ready once
+ * computerAck(projectId, messageId), idempotent. Records the per-device ack,
+ * may prune that chat past newest 300, and moves degraded → on_ready once
  * no message is left without a computerAck.
  */
 export const acceptProjectMessageComputerAck = async (input: {

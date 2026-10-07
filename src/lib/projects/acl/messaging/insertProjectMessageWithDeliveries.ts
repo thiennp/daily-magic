@@ -3,8 +3,10 @@ import { randomUUID } from "node:crypto";
 import { getSql } from "@/lib/db";
 import { buildProjectComputerHistoryMessage } from "@/lib/projects/acl/messaging/buildProjectComputerHistoryMessage";
 import { filterProjectWakeRecipientIds } from "@/lib/projects/acl/messaging/loadProjectPollDeliveryMembershipIds";
+import { insertProjectMessageRow } from "@/lib/projects/acl/messaging/insertProjectMessageRow";
 import { notifyProjectComputerOfMessage } from "@/lib/projects/acl/messaging/notifyProjectComputerOfMessage";
 import { parseProjectMessageRefsJson } from "@/lib/projects/acl/messaging/parseProjectMessageRefsJson";
+import { pruneAfterProjectMessageInsert } from "@/lib/projects/acl/messaging/pruneAfterProjectMessageInsert";
 import { wakeProjectMessageGrokRoutines } from "@/lib/projects/acl/messaging/wakeProjectMessageGrokRoutines";
 import { scheduleProjectMessageWebhookDelivery } from "@/lib/projects/acl/webhooks/scheduleProjectMessageWebhookDelivery";
 import type { ProjectGrokRoutineWakeResult } from "@/lib/projects/acl/webhooks/wakeProjectGrokRoutineWebhooks";
@@ -33,26 +35,19 @@ export const insertProjectMessageWithDeliveries = async (input: {
   const sql = getSql();
   const messageId = randomUUID();
   const createdAt = new Date().toISOString();
-  await sql`
-    INSERT INTO project_messages (
-      id, project_id, sender_membership_id, sender_user_id,
-      to_membership_id, to_user_id, to_team_label, to_project_display_name,
-      kind, summary, refs
-    )
-    VALUES (
-      ${messageId},
-      ${input.projectId},
-      ${input.senderMembershipId},
-      ${input.senderUserId},
-      ${input.toMembershipId},
-      ${input.toUserId},
-      ${input.toTeamLabel},
-      ${input.toProjectDisplayName},
-      ${input.kind},
-      ${input.summary},
-      ${input.refsJson}::jsonb
-    )
-  `;
+  const { chatKey } = await insertProjectMessageRow({
+    messageId,
+    projectId: input.projectId,
+    senderMembershipId: input.senderMembershipId,
+    senderUserId: input.senderUserId,
+    toMembershipId: input.toMembershipId,
+    toUserId: input.toUserId,
+    toTeamLabel: input.toTeamLabel,
+    toProjectDisplayName: input.toProjectDisplayName,
+    kind: input.kind,
+    summary: input.summary,
+    refsJson: input.refsJson,
+  });
   for (const recipient of input.recipients) {
     await sql`
       INSERT INTO project_message_deliveries (
@@ -68,8 +63,6 @@ export const insertProjectMessageWithDeliveries = async (input: {
       ON CONFLICT DO NOTHING
     `;
   }
-  // Accept = row stored. HMAC push stays best-effort. Grok wake is recorded first.
-  // delivery_mode=poll recipients keep their pending row but get no wake.
   const refs = parseProjectMessageRefsJson(input.refsJson);
   const recipientMembershipIds = await filterProjectWakeRecipientIds({
     projectId: input.projectId,
@@ -95,7 +88,6 @@ export const insertProjectMessageWithDeliveries = async (input: {
     senderProjectDisplayName: input.senderProjectDisplayName,
     recipientMembershipIds,
   });
-  // History on: also tell the owner's project computer (no-op when off).
   await notifyProjectComputerOfMessage({
     projectId: input.projectId,
     message: buildProjectComputerHistoryMessage({
@@ -104,6 +96,10 @@ export const insertProjectMessageWithDeliveries = async (input: {
       createdAt,
       refs,
     }),
+  });
+  await pruneAfterProjectMessageInsert({
+    projectId: input.projectId,
+    chatKey,
   });
   return { messageId, wakeResults };
 };

@@ -1,9 +1,8 @@
 import { getSql } from "@/lib/db";
 
 /**
- * The recipient acked but the delete gate denied (no computerAck yet).
- * Mark the row acked so it leaves the inbox; it is deleted once the project
- * computer acks, or the owner turns history off (never deleted for age alone).
+ * Stamp acked_at so the row leaves the inbox. Keep-300 never deletes on ack;
+ * Neon prune owns retention after a synced computer ack.
  */
 export const holdProjectMessageForComputerAck = async (input: {
   readonly messageId: string;

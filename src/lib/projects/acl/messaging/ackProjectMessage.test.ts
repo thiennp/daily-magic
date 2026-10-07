@@ -3,9 +3,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ackProjectMessage } from "@/lib/projects/acl/messaging/ackProjectMessage";
 import { resetProjectAclSchemaEnsureForTests } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { resetProjectMessagePurgeForTests } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
+import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 
 const sqlMock = vi.fn();
-const deleteWithOutcome = vi.hoisted(() => vi.fn());
 
 vi.mock("@/lib/db", () => ({
   getSql: () => sqlMock,
@@ -31,26 +31,25 @@ vi.mock("@/lib/projects/acl/writeProjectAccessAudit", () => ({
   writeProjectAccessAudit: vi.fn(async () => undefined),
 }));
 
-vi.mock("@/lib/projects/acl/messaging/deleteProjectMessageWithOutcome", () => ({
-  deleteProjectMessageWithOutcome: (input: unknown) => deleteWithOutcome(input),
+vi.mock("@/lib/projects/userProjectQueries", () => ({
+  getUserProjectById: vi.fn(async () => ({
+    id: "proj-1",
+    ownerUserId: "owner-1",
+  })),
 }));
 
-describe("ackProjectMessage delete-on-ack", () => {
+describe("ackProjectMessage keep-300 stamp", () => {
   beforeEach(() => {
     sqlMock.mockReset();
-    deleteWithOutcome.mockReset();
-    deleteWithOutcome.mockResolvedValue({ ok: true, messageId: "msg-1" });
+    vi.mocked(writeProjectAccessAudit).mockClear();
     resetProjectAclSchemaEnsureForTests();
     resetProjectMessagePurgeForTests();
   });
 
-  it("hard-deletes immediately via outcome helper", async () => {
+  it("stamps acked_at and never hard-deletes", async () => {
     sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
       const q = String(strings);
       if (q.includes("CREATE TABLE") || q.includes("ALTER TABLE")) return [];
-      if (q.includes("DELETE FROM project_messages") && q.includes("make_interval")) {
-        return [];
-      }
       if (q.includes("SELECT * FROM project_messages")) {
         return [
           {
@@ -58,6 +57,7 @@ describe("ackProjectMessage delete-on-ack", () => {
             project_id: "proj-1",
             to_user_id: "bot-1",
             to_team_label: null,
+            to_membership_id: null,
             acked_at: null,
           },
         ];
@@ -70,10 +70,21 @@ describe("ackProjectMessage delete-on-ack", () => {
       actorUserId: "bot-1",
     });
     expect(result).toEqual({ ok: true, messageId: "msg-1" });
-    expect(deleteWithOutcome).toHaveBeenCalledWith({
-      messageId: "msg-1",
-      deletedReason: "ack",
-      finalB2bState: "acked",
-    });
+    const queries = sqlMock.mock.calls.map((call) => String(call[0]));
+    expect(queries.some((q) => q.includes("SET acked_at = COALESCE"))).toBe(
+      true,
+    );
+    expect(
+      queries.some(
+        (q) =>
+          q.includes("DELETE FROM project_messages") &&
+          !q.includes("make_interval"),
+      ),
+    ).toBe(false);
+    expect(writeProjectAccessAudit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: { messageId: "msg-1", deleted: false },
+      }),
+    );
   });
 });
