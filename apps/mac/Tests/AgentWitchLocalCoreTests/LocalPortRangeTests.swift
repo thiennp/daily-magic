@@ -77,4 +77,32 @@ final class LocalPortRangeTests: XCTestCase {
             "http://127.0.0.1:43347/health"
         )
     }
+
+    func testPortsExhaustedMarker() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("awl-exhaust-\(UUID().uuidString)", isDirectory: true)
+        let profile = root.appendingPathComponent("profile", isDirectory: true)
+        try FileManager.default.createDirectory(at: profile, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        XCTAssertFalse(readLocalAppPortsExhausted(profileDir: profile))
+
+        let marker: [String: Any] = ["portsExhausted": true]
+        let data = try JSONSerialization.data(withJSONObject: marker, options: [.prettyPrinted])
+        try data.write(to: resolveLocalAppPortFileURL(profileDir: profile), options: .atomic)
+
+        XCTAssertTrue(readLocalAppPortsExhausted(profileDir: profile))
+        XCTAssertNil(readLocalAppPortFile(profileDir: profile))
+    }
+
+    func testStatusUrlUsesDiscoveredPort() {
+        XCTAssertEqual(
+            resolveAgentWitchLocalStatusUrl(port: 49155).absoluteString,
+            "http://127.0.0.1:49155/status"
+        )
+        XCTAssertEqual(
+            resolveAgentWitchLocalStatusUrl().absoluteString,
+            "http://127.0.0.1:43347/status"
+        )
+    }
 }

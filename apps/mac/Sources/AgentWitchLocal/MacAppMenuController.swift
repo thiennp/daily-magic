@@ -443,7 +443,9 @@ final class MacAppMenuController: ObservableObject {
     }
 
     func openLocalStatus() {
-        NSWorkspace.shared.open(resolveAgentWitchLocalStatusUrl())
+        // Arch Exact FIX-2: use discovered localAppPort (H6 range), not hard-coded 43347.
+        let port = localAppPort ?? MacAppConstants.localAppPort
+        NSWorkspace.shared.open(resolveAgentWitchLocalStatusUrl(port: port))
     }
 
     func openConnectThisMac() {
@@ -710,7 +712,16 @@ final class MacAppMenuController: ObservableObject {
                 continue
             }
         }
-        portsInUse = false
+        // No healthy listener: honor exhausted marker from local-app-port.json
+        // (written when preflight fails — /health never comes up).
+        if let profileDir,
+           readLocalAppPortsExhausted(profileDir: profileDir, fileManager: fileManager)
+        {
+            portsInUse = true
+            statusMessage = MacAppConstants.portsInUseReason
+        } else {
+            portsInUse = false
+        }
         return .unhealthy
     }
 
@@ -763,6 +774,10 @@ final class MacAppMenuController: ObservableObject {
             localPortRangeDisplay = range.displayString
             if let port = readLocalAppPortFile(profileDir: profileDir, fileManager: fileManager) {
                 localAppPort = port
+            }
+            if readLocalAppPortsExhausted(profileDir: profileDir, fileManager: fileManager) {
+                portsInUse = true
+                statusMessage = MacAppConstants.portsInUseReason
             }
         } catch {
             // Non-fatal: discovery still probes legacy 43347.

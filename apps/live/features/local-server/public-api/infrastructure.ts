@@ -32,4 +32,6 @@ export { formatAgentWitchLocalAppPortRangeDisplay } from "../internal/core/forma
 export {
   resolveAgentWitchLocalAppListenPort,
   readAgentWitchLocalAppPortFile,
+  readAgentWitchLocalAppPortsExhausted,
+  writeAgentWitchLocalAppPortsExhaustedFile,
 } from "../internal/core/resolveAgentWitchLocalAppListenPort";

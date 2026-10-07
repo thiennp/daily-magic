@@ -37,6 +37,22 @@ export const readAgentWitchLocalAppPortFile = (
   return null;
 };
 
+/** True when local-app-port.json records a validated portsExhausted marker. */
+export const readAgentWitchLocalAppPortsExhausted = (
+  profileDir: string,
+): boolean => {
+  const filePath = resolveAgentWitchLocalAppPortFilePath(profileDir);
+  if (!fs.existsSync(filePath)) {
+    return false;
+  }
+  try {
+    const parsed: unknown = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    return isRecord(parsed) && parsed.portsExhausted === true;
+  } catch {
+    return false;
+  }
+};
+
 export const writeAgentWitchLocalAppPortFile = (
   profileDir: string,
   localAppPort: number,
@@ -45,6 +61,21 @@ export const writeAgentWitchLocalAppPortFile = (
   fs.writeFileSync(
     resolveAgentWitchLocalAppPortFilePath(profileDir),
     `${JSON.stringify({ localAppPort }, null, 2)}\n`,
+    "utf8",
+  );
+};
+
+/**
+ * Marker Mac refreshLocalPortRange / probeHealth already understands via
+ * portsExhausted on health — and via this file when no listener can start.
+ */
+export const writeAgentWitchLocalAppPortsExhaustedFile = (
+  profileDir: string,
+): void => {
+  fs.mkdirSync(profileDir, { recursive: true });
+  fs.writeFileSync(
+    resolveAgentWitchLocalAppPortFilePath(profileDir),
+    `${JSON.stringify({ portsExhausted: true }, null, 2)}\n`,
     "utf8",
   );
 };
@@ -70,6 +101,8 @@ export type ResolveLocalAppListenPortResult =
 /**
  * Prefer the previously bound port when still free and inside the range;
  * otherwise the first free port in the account range.
+ * On exhaustion writes local-app-port.json `{ portsExhausted: true }` so Mac
+ * can set portsInUse without needing a live /health listener.
  */
 export const resolveAgentWitchLocalAppListenPort = async (input: {
   readonly profileDir: string;
@@ -93,5 +126,6 @@ export const resolveAgentWitchLocalAppListenPort = async (input: {
     }
   }
 
+  writeAgentWitchLocalAppPortsExhaustedFile(input.profileDir);
   return { ok: false, reason: AGENT_WITCH_LOCAL_PORTS_IN_USE_MESSAGE };
 };

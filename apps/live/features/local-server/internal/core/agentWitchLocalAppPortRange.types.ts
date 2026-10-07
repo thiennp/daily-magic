@@ -4,5 +4,7 @@ export interface AgentWitchLocalAppPortRange {
 }
 
 export interface AgentWitchLocalAppPortFile {
-  readonly localAppPort: number;
+  readonly localAppPort?: number;
+  /** Set when the account range has no free bind port (Mac sets portsInUse). */
+  readonly portsExhausted?: boolean;
 }
