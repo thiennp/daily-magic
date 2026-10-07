@@ -11,7 +11,6 @@ import {
   PROJECT_V5_TAB_BASE_CLASS,
   PROJECT_V5_TAB_COUNT_CHIP_CLASS,
   PROJECT_V5_TAB_INACTIVE_CLASS,
-  PROJECT_V5_TAB_UNREAD_BADGE_CLASS,
 } from "@/features/projects/projectPageV5ChromeClasses.constant";
 import { PROJECT_PAGE_V5_CHROME_COPY } from "@/features/projects/projectPageV5ChromeCopy.constant";
 import { PROJECT_PAGE_V5_TAB_LABELS } from "@/features/projects/projectPageV5Tabs.constant";
@@ -19,8 +18,6 @@ import { PROJECT_PAGE_V5_TAB_LABELS } from "@/features/projects/projectPageV5Tab
 interface AwcProjectDetailTabBarProps {
   readonly activeTab: ProjectPageTabId;
   readonly onTabChange: (tab: ProjectPageTabId) => void;
-  /** Activity unread from messenger threads — a number (hidden at 0). */
-  readonly activityUnreadCount?: number;
   /** Safety rules: active Important rules — "{n} Important" (hidden at 0). */
   readonly rulesImportantCount?: number;
 }
@@ -29,7 +26,6 @@ interface AwcProjectDetailTabBarProps {
 export default function AwcProjectDetailTabBar({
   activeTab,
   onTabChange,
-  activityUnreadCount = 0,
   rulesImportantCount = 0,
 }: AwcProjectDetailTabBarProps) {
   const copy = PROJECT_PAGE_LAYOUT_V2_COPY;
@@ -37,7 +33,6 @@ export default function AwcProjectDetailTabBar({
     <div role="tablist" aria-label={copy.tablistLabel} className={PROJECT_V5_TABLIST_CLASS}>
       {PROJECT_PAGE_TAB_IDS.map((tabId) => {
         const selected = tabId === activeTab;
-        const showUnread = tabId === "activity" && activityUnreadCount > 0;
         const showImportant = tabId === "pitfalls" && rulesImportantCount > 0;
         return (
           <button
@@ -54,14 +49,6 @@ export default function AwcProjectDetailTabBar({
             }}
           >
             {PROJECT_PAGE_V5_TAB_LABELS[tabId]}
-            {showUnread ? (
-              <span
-                className={PROJECT_V5_TAB_UNREAD_BADGE_CLASS}
-                aria-label={`${activityUnreadCount} unread`}
-              >
-                {activityUnreadCount}
-              </span>
-            ) : null}
             {showImportant ? (
               <span
                 className={PROJECT_V5_TAB_COUNT_CHIP_CLASS}

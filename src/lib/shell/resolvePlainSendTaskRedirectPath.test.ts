@@ -22,17 +22,17 @@ describe("resolvePlainSendTaskRedirectPath", () => {
     ).toBe(true);
   });
 
-  it("maps projectId / project to Activity Task mode", () => {
+  it("maps projectId / project to project Chat Task mode", () => {
     expect(
       resolvePlainSendTaskRedirectPath(
         new URLSearchParams("sendTask=1&projectId=p1"),
       ),
-    ).toBe("/projects/p1#activity?mode=task");
+    ).toBe("/projects/p1#chat?mode=task");
     expect(
       resolvePlainSendTaskRedirectPath(
         new URLSearchParams("sendTask=1&project=p2"),
       ),
-    ).toBe("/projects/p2#activity?mode=task");
+    ).toBe("/projects/p2#chat?mode=task");
   });
 
   it("keeps Mac / composer deep links on the legacy modal", () => {

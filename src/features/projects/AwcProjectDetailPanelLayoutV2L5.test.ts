@@ -89,7 +89,7 @@ describe("project layout v2 L5 Settings + Members", () => {
       "Remove takes the assistant out of the project. If it leaves on its own, you don't need to approve.",
     );
     expect(layoutCopy).toContain('membersColumnLabel: "Members"');
-    expect(panel).toContain("onMessageHelper={onGotoActivity}");
+    expect(panel).toContain("onMessageHelper={chat.onGotoChat}");
     for (const file of [column, owner, helpers, row, invite]) {
       expect(file).not.toMatch(
         /blue-|indigo-|#0a6cf5|#4a97ff|#e5effe|#0d2749/i,

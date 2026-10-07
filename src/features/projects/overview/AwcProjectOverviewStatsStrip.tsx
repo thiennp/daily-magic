@@ -26,12 +26,15 @@ export type OverviewStats = {
 interface Props {
   readonly stats: OverviewStats;
   readonly onGoto: (tab: ProjectPageNavTarget) => void;
+  /** Unread → Chat dock full view (no Activity tab). */
+  readonly onOpenChat: () => void;
   readonly onShowSetup: () => void;
 }
 
 export default function AwcProjectOverviewStatsStrip({
   stats: s,
   onGoto,
+  onOpenChat,
   onShowSetup,
 }: Props) {
   const pending = s.pendingCount > 0 ? ` (${s.pendingCount} pending)` : "";
@@ -42,7 +45,7 @@ export default function AwcProjectOverviewStatsStrip({
         <b className="font-semibold tabular-nums text-awc-fg dark:text-white">{s.memberCount}</b>{" "}
         members{pending}
       </button>
-      <button type="button" className={unreadCls} onClick={() => onGoto("activity")}>
+      <button type="button" className={unreadCls} onClick={onOpenChat}>
         <b className="font-semibold tabular-nums">{s.unreadCount}</b> unread
       </button>
       {s.pitfallsMax === 0 ? null : (

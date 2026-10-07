@@ -25,7 +25,7 @@ describe("buildNavConsolidationRedirect", () => {
       "#reports?report=r1",
     );
     expect(buildIntentProjectTabRedirectPath("p1", "new-task")).toBe(
-      "/projects/p1#activity?mode=task",
+      "/projects/p1#chat?mode=task",
     );
     expect(
       buildIntentProjectTabRedirectPath("p1", "library", { item: "c1" }),

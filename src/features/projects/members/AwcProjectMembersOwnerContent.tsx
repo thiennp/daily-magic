@@ -44,6 +44,7 @@ export default function AwcProjectMembersOwnerContent({
             ownerEmail={ownerEmail}
             ownerDisplayName={ownerDisplayName}
             accessMembers={access.members}
+            pendingRequestCount={access.pending.length}
           />
           <AwcProjectMembersJoinRequestsSection
             projectId={projectId}

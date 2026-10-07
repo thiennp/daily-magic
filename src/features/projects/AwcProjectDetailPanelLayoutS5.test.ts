@@ -7,6 +7,10 @@ const read = (relative: string): string =>
   readFileSync(path.join(process.cwd(), relative), "utf8");
 
 const detailPanelSource = read("src/features/projects/AwcProjectDetailPanel.tsx");
+// P1-S1: page-level loads moved into useAwcProjectDetailPanelData.
+const panelDataSource = read(
+  "src/features/projects/hooks/useAwcProjectDetailPanelData.ts",
+);
 const tabPanelsSource = read("src/features/projects/AwcProjectDetailTabPanels.tsx");
 const tabBodySource = read(
   "src/features/projects/AwcProjectDetailTabPanelBody.tsx",
@@ -31,7 +35,7 @@ const tabsConstantSource = readFileSync(
 describe("AwcProjectDetailPanel layout S5 pitfalls", () => {
   it("uses Product tab order (Reports/Library full panels since L6)", () => {
     expect(tabsConstantSource).toMatch(
-      /"overview",\s*"activity",\s*"tasks",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
+      /"overview",\s*"tasks",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
     );
     expect(tabBodySource).not.toContain("STUB_TABS");
     expect(tabBodySource).toContain('t === "pitfalls"');
@@ -45,9 +49,9 @@ describe("AwcProjectDetailPanel layout S5 pitfalls", () => {
 
   it("mounts the Pitfalls panel from one shared page-level load", () => {
     expect(tabBodySource).toContain("AwcProjectPitfallsPanel");
-    expect(detailPanelSource).toContain("useAwcProjectPitfalls(project.id)");
+    expect(panelDataSource).toContain("useAwcProjectPitfalls(project.id)");
     expect(detailPanelSource).toContain(
-      "rulesImportantCount={rulesImportantCount}",
+      "rulesImportantCount={d.rulesImportantCount}",
     );
     expect(overviewPanelSource).not.toContain("useAwcProjectPitfalls(");
     expect(pitfallsPanelSource).toContain("AwcProjectPitfallsToolbar");

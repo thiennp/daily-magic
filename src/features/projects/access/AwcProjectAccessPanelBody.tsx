@@ -57,6 +57,7 @@ export default function AwcProjectAccessPanelBody({
         ownerEmail={ownerEmail}
         ownerDisplayName={ownerDisplayName}
         accessMembers={access.members}
+        pendingRequestCount={access.pending.length}
         enabled
       />
 

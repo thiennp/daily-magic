@@ -35,9 +35,9 @@ describe("One-window wave A (OW-H1 + OW-H4)", () => {
     );
   });
 
-  it("Activity tab label is Activity (not a new One window tab)", () => {
+  it("P1-S1: no Activity tab and no new One window tab (lives in Chat dock)", () => {
     const tabs = read("src/features/projects/projectPageTabs.constant.ts");
-    expect(tabs).toContain('activity: "Activity"');
+    expect(tabs).not.toContain('activity: "Activity"');
     expect(tabs).not.toContain("One window");
     expect(tabs).not.toContain("One-window");
   });

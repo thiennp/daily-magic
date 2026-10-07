@@ -8,7 +8,7 @@ interface NewTaskPageProps {
   >;
 }
 
-/** Retired top-level New task → project picker (or project Activity Task mode). */
+/** Retired top-level New task → project picker (or the project Chat dock, `#chat?mode=task`). */
 export default async function NewTaskPage({ searchParams }: NewTaskPageProps) {
   await runNavConsolidationPageRedirect({
     intent: "new-task",

@@ -1,7 +1,6 @@
 "use client";
 
 import AwcProjectDetailSettingsPanel from "@/features/projects/AwcProjectDetailSettingsPanel";
-import AwcProjectMessengerSection from "@/features/projects/messenger/AwcProjectMessengerSection";
 import AwcProjectLibraryPanel from "@/features/projects/library/AwcProjectLibraryPanel";
 import AwcProjectTasksPanelWithRecords from "@/features/projects/tasks/AwcProjectTasksPanelWithRecords";
 import AwcProjectOverviewPanel from "@/features/projects/overview/AwcProjectOverviewPanel";
@@ -13,7 +12,6 @@ import type {
   ProjectPageNavTarget,
   ProjectPageTabId,
 } from "@/features/projects/projectPageTabs.constant";
-import { projectHasOwnerComputer } from "@/features/projects/utils/projectHasOwnerComputer";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
@@ -28,11 +26,9 @@ export type AwcProjectDetailTabPanelBodyProps = {
   readonly editCta: ProjectEditOnMacCta;
   readonly pitfalls: AwcProjectPitfallsState;
   readonly computerStatus: string | null;
-  readonly activityInitialThreadKey: string | null;
-  readonly activityRefreshKey: number;
-  readonly onActivityUnreadMaybeChanged?: () => void;
   readonly onGotoTab: (tab: ProjectPageNavTarget) => void;
-  readonly onGotoActivity: (threadKey: string | null) => void;
+  /** Opens the Chat dock full view (P1-S1: replaces the Activity tab). */
+  readonly onGotoChat: (threadKey: string | null) => void;
 };
 
 export default function AwcProjectDetailTabPanelBody(
@@ -47,7 +43,7 @@ export default function AwcProjectDetailTabPanelBody(
         pitfalls={p.pitfalls}
         computerStatus={p.computerStatus}
         onGotoTab={p.onGotoTab}
-        onGotoActivity={p.onGotoActivity}
+        onGotoChat={p.onGotoChat}
       />
     );
   }
@@ -58,18 +54,6 @@ export default function AwcProjectDetailTabPanelBody(
         pitfalls={p.pitfalls}
         deviceDisplayName={p.deviceDisplayName}
         editCta={p.editCta}
-      />
-    );
-  }
-  if (t === "activity" && sel) {
-    return (
-      <AwcProjectMessengerSection
-        key={p.activityRefreshKey}
-        projectId={project.id}
-        hasOwnerComputer={projectHasOwnerComputer(project)}
-        initialThreadKey={p.activityInitialThreadKey}
-        isOwner={p.pageActorRole === "owner"}
-        onUnreadMaybeChanged={p.onActivityUnreadMaybeChanged}
       />
     );
   }

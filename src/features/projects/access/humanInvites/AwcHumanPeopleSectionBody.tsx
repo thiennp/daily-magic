@@ -12,6 +12,8 @@ export type AwcHumanPeopleSectionBodyProps = {
   readonly ownerEmail?: string | null;
   readonly ownerDisplayName?: string | null;
   readonly people: PeopleModel;
+  /** DF-036: assistants + pending requests + invites (not "Just you"). */
+  readonly othersCount?: number;
 };
 
 /** People list or Invite person panel + undo toast. */
@@ -20,6 +22,7 @@ export default function AwcHumanPeopleSectionBody({
   ownerEmail = null,
   ownerDisplayName = null,
   people,
+  othersCount = 0,
 }: AwcHumanPeopleSectionBodyProps) {
   return (
     <>
@@ -55,6 +58,7 @@ export default function AwcHumanPeopleSectionBody({
         <AwcHumanPeopleMembersList
           pendingInvites={people.invites}
           joinedHumans={people.joinedHumans}
+          othersCount={othersCount}
           ownerEmail={ownerEmail}
           ownerDisplayName={ownerDisplayName}
           pendingIdsHidden={people.hiddenPending}

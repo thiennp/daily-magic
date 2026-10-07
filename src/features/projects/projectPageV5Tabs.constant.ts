@@ -8,7 +8,6 @@ import { PROJECT_PAGE_REPORTS_COPY } from "@/features/projects/reports/projectPa
  */
 export const PROJECT_PAGE_V5_TAB_ORDER = [
   "overview",
-  "activity",
   "tasks",
   "reports",
   "team",
@@ -29,7 +28,6 @@ export const PROJECT_PAGE_V5_TAB_LABELS: Record<ProjectPageV5TabId, string> = {
 export const PROJECT_PAGE_V5_TAB_SUBTITLES: Record<ProjectPageV5TabId, string> =
   {
     overview: "What's happening in this project and what needs you.",
-    activity: "Every conversation, newest first.",
     tasks: "Tasks assigned in this project.",
     reports: PROJECT_PAGE_REPORTS_COPY["reports.intro"],
     team: "People, assistants, and computers in this project.",

@@ -22,10 +22,7 @@ interface Props {
   readonly pitfalls: AwcProjectPitfallsState;
   readonly computerStatus: string | null;
   readonly onGotoTab: (tab: ProjectPageNavTarget) => void;
-  readonly onGotoActivity: (threadKey: string | null) => void;
-  readonly activityInitialThreadKey?: string | null;
-  readonly activityRefreshKey?: number;
-  readonly onActivityUnreadMaybeChanged?: () => void;
+  readonly onGotoChat: (threadKey: string | null) => void;
 }
 
 export default function AwcProjectDetailTabPanels({
@@ -38,10 +35,7 @@ export default function AwcProjectDetailTabPanels({
   pitfalls,
   computerStatus,
   onGotoTab,
-  onGotoActivity,
-  activityInitialThreadKey = null,
-  activityRefreshKey = 0,
-  onActivityUnreadMaybeChanged,
+  onGotoChat,
 }: Props) {
   return (
     <>
@@ -67,11 +61,8 @@ export default function AwcProjectDetailTabPanels({
               editCta={editCta}
               pitfalls={pitfalls}
               computerStatus={computerStatus}
-              activityInitialThreadKey={activityInitialThreadKey}
-              activityRefreshKey={activityRefreshKey}
-              onActivityUnreadMaybeChanged={onActivityUnreadMaybeChanged}
               onGotoTab={onGotoTab}
-              onGotoActivity={onGotoActivity}
+              onGotoChat={onGotoChat}
             />
           </div>
         );

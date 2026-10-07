@@ -10,6 +10,11 @@ export const useAwcProjectChatDock = (initialOpen = false) => {
   const openDock = useCallback(() => {
     setOpen(true);
   }, []);
+  /** P1-S1: "Go to chat" opens the full view (the One window host). */
+  const openFull = useCallback(() => {
+    setOpen(true);
+    setFull(true);
+  }, []);
   const closeDock = useCallback(() => {
     setOpen(false);
     setFull(false);
@@ -43,5 +48,5 @@ export const useAwcProjectChatDock = (initialOpen = false) => {
     };
   }, [full, open]);
 
-  return { open, full, openDock, closeDock, toggleDock, toggleFull };
+  return { open, full, openDock, openFull, closeDock, toggleDock, toggleFull };
 };

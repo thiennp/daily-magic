@@ -22,6 +22,8 @@ export type AwcHumanPeopleMembersListProps = {
   readonly onRevokeInvite?: (inviteId: string) => void;
   /** One-click Remove → 10s Undo (schedules POST remove). */
   readonly onRemoveMember?: (membershipId: string) => void;
+  /** Assistants + pending requests + invites (DF-036: not "Just you" when > 0). */
+  readonly othersCount?: number;
 };
 
 /**
@@ -38,6 +40,7 @@ export default function AwcHumanPeopleMembersList({
   onInvitePerson,
   onRevokeInvite,
   onRemoveMember,
+  othersCount = 0,
 }: AwcHumanPeopleMembersListProps) {
   const copy = HUMAN_INVITE_UI_COPY;
   const visiblePending = pendingInvites.filter(
@@ -51,15 +54,8 @@ export default function AwcHumanPeopleMembersList({
 
   return (
     <section className="space-y-4">
-      <header className="flex flex-wrap items-start justify-between gap-2">
-        <div>
-          <h3 className="text-sm font-semibold text-awc-fg dark:text-white/90">
-            {copy.peopleHeading}
-          </h3>
-          <p className="mt-1 text-xs text-awc-fg-muted dark:text-gray-400">
-            {copy.peopleHint}
-          </p>
-        </div>
+      {/* DF-036: heading + hint come from the wrapping People section. */}
+      <header className="flex justify-end">
         <button
           type="button"
           className={AWC_PROJECT_ACCESS_CTA.primary}
@@ -76,6 +72,7 @@ export default function AwcHumanPeopleMembersList({
       <AwcHumanJoinedMembersSection
         joinedHumans={visibleJoined}
         ownerLabel={ownerLabel}
+        othersCount={othersCount}
         onRemoveMember={onRemoveMember}
       />
     </section>

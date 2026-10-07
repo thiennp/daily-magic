@@ -26,5 +26,9 @@ export const CHAT_DOCK_HEAD_BTN_CLASS =
 export const CHAT_DOCK_COMPOSER_CLASS =
   "overflow-y-auto bg-awc-surface-2 p-3 max-h-[55vh]";
 
+/** P1-S1 full view hosts the project conversations (former Activity tab). */
+export const CHAT_DOCK_BODY_FULL_CLASS =
+  "min-h-0 flex-1 overflow-y-auto bg-awc-surface-2 p-3";
+
 export const CHAT_DOCK_VIEWER_CLASS =
   "border-b border-awc-border bg-awc-tile px-3.5 py-2.5 text-[length:var(--awc-fs-sm)] text-awc-fg-subtle";

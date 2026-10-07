@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import AwcProjectChatDockHead from "@/features/projects/chatDock/AwcProjectChatDockHead";
 import AwcProjectChatDockViewerBanner from "@/features/projects/chatDock/AwcProjectChatDockViewerBanner";
 import {
+  CHAT_DOCK_BODY_FULL_CLASS,
   CHAT_DOCK_COMPOSER_CLASS,
   CHAT_DOCK_POP_CLASS,
   CHAT_DOCK_POP_FULL_CLASS,
@@ -19,7 +20,7 @@ interface AwcProjectChatDockPopoverProps {
   readonly children: ReactNode;
 }
 
-/** Dock dialog shell: head, optional viewer banner, composer slot. */
+/** Dock dialog shell: head, optional viewer banner, composer / full chat slot. */
 export default function AwcProjectChatDockPopover({
   full,
   canSend,
@@ -39,8 +40,10 @@ export default function AwcProjectChatDockPopover({
         onToggleFull={onToggleFull}
         onClose={onClose}
       />
-      {canSend ? null : <AwcProjectChatDockViewerBanner />}
-      <div className={CHAT_DOCK_COMPOSER_CLASS}>{children}</div>
+      {canSend || full ? null : <AwcProjectChatDockViewerBanner />}
+      <div className={full ? CHAT_DOCK_BODY_FULL_CLASS : CHAT_DOCK_COMPOSER_CLASS}>
+        {children}
+      </div>
     </section>
   );
 }

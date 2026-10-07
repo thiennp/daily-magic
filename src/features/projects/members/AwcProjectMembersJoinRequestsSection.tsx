@@ -65,6 +65,7 @@ export default function AwcProjectMembersJoinRequestsSection({
         pending={pending}
         onApprove={onApprove}
         onDeny={onDeny}
+        hideWhenIdle
       />
       <AwcExpiredJoinRequestList expired={expired} />
     </section>

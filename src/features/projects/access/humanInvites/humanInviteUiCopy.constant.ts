@@ -31,6 +31,8 @@ export const HUMAN_INVITE_UI_COPY = {
     "No one else has joined yet. Invite a person to share this project.",
   joinedOwnerOnly:
     "Just you so far. Invite a person to share this project.",
+  /** DF-036: assistants, requests or invites exist, but no other person joined. */
+  joinedNoOtherPeople: "No other people have joined yet.",
   youOwner: "You (owner)",
   revoke: "Cancel",
   remove: "Remove",

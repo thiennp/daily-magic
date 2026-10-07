@@ -8,6 +8,8 @@ export type AwcHumanJoinedMembersSectionProps = {
   readonly joinedHumans: readonly HumanJoinedMemberRow[];
   readonly ownerLabel: string;
   readonly onRemoveMember?: (membershipId: string) => void;
+  /** Assistants + pending requests + invites (DF-036: "Just you" only at 0). */
+  readonly othersCount?: number;
 };
 
 /** Joined humans subsection — owner row first, then members. */
@@ -15,6 +17,7 @@ export default function AwcHumanJoinedMembersSection({
   joinedHumans,
   ownerLabel,
   onRemoveMember,
+  othersCount = 0,
 }: AwcHumanJoinedMembersSectionProps) {
   const copy = HUMAN_INVITE_UI_COPY;
 
@@ -33,7 +36,9 @@ export default function AwcHumanJoinedMembersSection({
           </div>
         </li>
         {joinedHumans.length === 0 ? (
-          <li className="text-sm text-awc-fg-muted">{copy.joinedOwnerOnly}</li>
+          <li className="text-sm text-awc-fg-muted">
+            {othersCount > 0 ? copy.joinedNoOtherPeople : copy.joinedOwnerOnly}
+          </li>
         ) : (
           joinedHumans.map((member) => (
             <AwcHumanJoinedMemberRow

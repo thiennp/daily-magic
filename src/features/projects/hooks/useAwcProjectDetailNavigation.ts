@@ -9,7 +9,7 @@ import {
   type ProjectPageTabId,
 } from "@/features/projects/projectPageTabs.constant";
 
-/** Project page tab + cross-section navigation (Team rail scroll, Activity thread, rename). */
+/** Project page tab + cross-section navigation (Team rail scroll, rename). Chat lives in the dock. */
 const useAwcProjectDetailNavigation = (input: {
   readonly startRename: boolean;
   readonly isOwner: boolean;
@@ -17,16 +17,11 @@ const useAwcProjectDetailNavigation = (input: {
   readonly activeTab: ProjectPageTabId;
   readonly setActiveTab: (tab: ProjectPageTabId) => void;
   readonly renameInSettings: boolean;
-  readonly activityThreadKey: string | null;
   readonly onGotoTab: (tab: ProjectPageNavTarget) => void;
-  readonly onGotoActivity: (threadKey: string | null) => void;
   readonly onRename: () => void;
 } => {
   const [renameInSettings, setRenameInSettings] = useState(
     input.startRename && input.isOwner,
-  );
-  const [activityThreadKey, setActivityThreadKey] = useState<string | null>(
-    null,
   );
   const { activeTab, setActiveTab } = useAwcProjectDetailTab({
     preferSettingsOnMount: renameInSettings,
@@ -45,13 +40,6 @@ const useAwcProjectDetailNavigation = (input: {
     },
     [setActiveTab],
   );
-  const onGotoActivity = useCallback(
-    (threadKey: string | null) => {
-      setActivityThreadKey(threadKey === null ? "whole" : threadKey);
-      setActiveTab("activity");
-    },
-    [setActiveTab],
-  );
   const onRename = useCallback(() => {
     setRenameInSettings(true);
     setActiveTab("settings");
@@ -61,9 +49,7 @@ const useAwcProjectDetailNavigation = (input: {
     activeTab,
     setActiveTab,
     renameInSettings,
-    activityThreadKey,
     onGotoTab,
-    onGotoActivity,
     onRename,
   };
 };

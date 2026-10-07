@@ -10,10 +10,12 @@ describe("project layout v2 L1 shell", () => {
   it("uses EN tabs with Overview first, Safety rules label, Overview default", () => {
     const tabs = read("src/features/projects/projectPageTabs.constant.ts");
     expect(tabs).toMatch(
-      /"overview",\s*"activity",\s*"tasks",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
+      /"overview",\s*"tasks",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
     );
     expect(tabs).toContain('tasks: "Tasks"');
-    expect(tabs).toContain('activity: "Activity"');
+    // P1-S1: no Activity tab — conversations live in the Chat dock full view.
+    expect(tabs).not.toContain('activity: "Activity"');
+    expect(tabs).not.toMatch(/"activity"/);
     expect(tabs).toContain('reports: "Reports"');
     expect(tabs).toContain('library: "Library"');
     expect(tabs).toContain('pitfalls: "Safety rules"');
@@ -28,7 +30,7 @@ describe("project layout v2 L1 shell", () => {
         /export const PROJECT_PAGE_TAB_IDS = \[[\s\S]*?\] as const/,
       )?.[0] ?? "";
     expect(tabIdsBlock).toMatch(
-      /^export const PROJECT_PAGE_TAB_IDS = \[\s*"overview",\s*"activity",\s*"tasks",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings",\s*\] as const$/,
+      /^export const PROJECT_PAGE_TAB_IDS = \[\s*"overview",\s*"tasks",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings",\s*\] as const$/,
     );
     expect(tabIdsBlock).toContain('"overview"');
     expect(tabIdsBlock).not.toContain('"team"');

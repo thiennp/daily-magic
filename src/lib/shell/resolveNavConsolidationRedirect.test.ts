@@ -47,7 +47,7 @@ describe("resolveNavConsolidationRedirectPath", () => {
         searchParams: { project: "p1", ref: "mail" },
         actorUserId: "u1",
       }),
-    ).resolves.toBe("/projects/p1#activity?mode=task");
+    ).resolves.toBe("/projects/p1#chat?mode=task");
   });
 
   it("falls back when project is not openable", async () => {

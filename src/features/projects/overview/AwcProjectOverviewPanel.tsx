@@ -19,7 +19,7 @@ interface Props {
   readonly pitfalls: AwcProjectPitfallsState;
   readonly computerStatus: string | null;
   readonly onGotoTab: (tab: ProjectPageNavTarget) => void;
-  readonly onGotoActivity: (threadKey: string | null) => void;
+  readonly onGotoChat: (threadKey: string | null) => void;
 }
 
 export default function AwcProjectOverviewPanel({
@@ -28,7 +28,7 @@ export default function AwcProjectOverviewPanel({
   pitfalls,
   computerStatus,
   onGotoTab,
-  onGotoActivity,
+  onGotoChat,
 }: Props) {
   const d = useOverviewPanelData({ project, pitfalls, computerStatus });
   return (
@@ -36,12 +36,13 @@ export default function AwcProjectOverviewPanel({
       <AwcProjectOverviewStatsStrip
         stats={d.stats}
         onGoto={onGotoTab}
+        onOpenChat={() => onGotoChat(null)}
         onShowSetup={d.showSetup}
       />
       {d.attention ? (
         <AwcProjectOverviewAttentionBanner
           attention={d.attention}
-          onOpen={() => onGotoActivity(d.attention!.membershipId)}
+          onOpen={() => onGotoChat(d.attention!.membershipId)}
         />
       ) : null}
       <AwcProjectOverviewSetupCard
@@ -56,7 +57,7 @@ export default function AwcProjectOverviewPanel({
           <AwcProjectOverviewAssistantsCard
             assistants={d.assistants}
             canSend={d.canSend}
-            onMessage={(id) => onGotoActivity(id)}
+            onMessage={(id) => onGotoChat(id)}
             onGotoTeam={() => onGotoTab("team")}
           />
           <AwcProjectOverviewPitfallsCard
@@ -67,8 +68,8 @@ export default function AwcProjectOverviewPanel({
         </div>
         <AwcProjectOverviewRecentCard
           items={d.recent}
-          onViewAll={() => onGotoActivity(null)}
-          onOpen={(id) => onGotoActivity(id === "whole" ? null : id)}
+          onViewAll={() => onGotoChat(null)}
+          onOpen={(id) => onGotoChat(id === "whole" ? null : id)}
         />
       </div>
     </div>

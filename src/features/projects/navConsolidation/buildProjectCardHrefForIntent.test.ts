@@ -7,9 +7,9 @@ describe("buildProjectCardHrefForIntent", () => {
     expect(buildProjectCardHrefForIntent("p1", null)).toBe("/projects/p1");
   });
 
-  it("deep-links Activity Task mode for new-task intent", () => {
+  it("deep-links project Chat Task mode for new-task intent", () => {
     expect(buildProjectCardHrefForIntent("p1", "new-task")).toBe(
-      "/projects/p1#activity?mode=task",
+      "/projects/p1#chat?mode=task",
     );
   });
 

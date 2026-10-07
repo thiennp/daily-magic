@@ -10,6 +10,7 @@ interface AwcProjectMembersPeopleSectionProps {
   readonly ownerEmail: string | null;
   readonly ownerDisplayName: string | null;
   readonly accessMembers: readonly AccessMemberForHumanFilter[];
+  readonly pendingRequestCount: number;
 }
 
 /**
@@ -22,6 +23,7 @@ export default function AwcProjectMembersPeopleSection({
   ownerEmail,
   ownerDisplayName,
   accessMembers,
+  pendingRequestCount,
 }: AwcProjectMembersPeopleSectionProps) {
   return (
     <section
@@ -35,6 +37,7 @@ export default function AwcProjectMembersPeopleSection({
         ownerEmail={ownerEmail}
         ownerDisplayName={ownerDisplayName}
         accessMembers={accessMembers}
+        pendingRequestCount={pendingRequestCount}
         enabled
       />
     </section>

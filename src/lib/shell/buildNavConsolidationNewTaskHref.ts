@@ -3,7 +3,7 @@ import {
   buildProjectsIntentRedirectPath,
 } from "@/lib/shell/buildNavConsolidationRedirect";
 
-/** Project New task / retired top-level New task → Activity Task mode or picker. */
+/** Project New task / retired top-level New task → project Chat (`#chat?mode=task`) or picker. */
 export const buildNavConsolidationNewTaskHref = (input?: {
   readonly projectId?: string | null;
 }): string => {

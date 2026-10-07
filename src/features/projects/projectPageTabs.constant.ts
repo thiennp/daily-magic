@@ -1,10 +1,10 @@
 /**
  * Project page live tab track. V5 order with Overview (V5-5) mounted;
  * Team stays a section until V5-8 (Members rail remains live).
+ * P1-S1: no Activity tab — conversations live in the Chat dock full view.
  */
 export const PROJECT_PAGE_TAB_IDS = [
   "overview",
-  "activity",
   "tasks",
   "reports",
   "library",
@@ -26,7 +26,6 @@ export type ProjectPageNavTarget =
 
 export const PROJECT_PAGE_TAB_LABELS: Record<ProjectPageTabId, string> = {
   overview: "Overview",
-  activity: "Activity",
   tasks: "Tasks",
   reports: "Reports",
   library: "Library",

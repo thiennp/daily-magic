@@ -53,6 +53,11 @@ const tabPanelsSource = readFileSync(
   "utf8",
 );
 
+const chatDockSource = readFileSync(
+  path.join(process.cwd(), "src/features/projects/chatDock/AwcProjectChatDock.tsx"),
+  "utf8",
+);
+
 const tabBodySource = readFileSync(
   path.join(process.cwd(), "src/features/projects/AwcProjectDetailTabPanelBody.tsx"),
   "utf8",
@@ -84,10 +89,11 @@ const messengerComposerSource = readFileSync(
   "utf8",
 );
 
-describe("AwcProjectDetailPanel layout S3 activity", () => {
-  it("mounts messenger Activity panel with dual-mode composer", () => {
+describe("AwcProjectDetailPanel layout S3 activity → P1-S1 Chat dock", () => {
+  it("mounts the messenger in the Chat dock full view (no Activity tab)", () => {
     expect(tabPanelsSource).toContain("AwcProjectDetailTabPanelBody");
-    expect(tabBodySource).toContain("AwcProjectMessengerSection");
+    expect(tabBodySource).not.toContain("AwcProjectMessengerSection");
+    expect(chatDockSource).toContain("AwcProjectMessengerSection");
     expect(tabBodySource).not.toMatch(
       /const STUB_TABS[\s\S]*?= \[[^\]]*"(?:activity|team)"[^\]]*\];/,
     );
@@ -96,8 +102,9 @@ describe("AwcProjectDetailPanel layout S3 activity", () => {
     expect(messengerComposerSource).toContain("AwcMessengerTaskComposer");
   });
 
-  it("keeps gray-only Activity chrome (no indigo/purple/blue brand)", () => {
+  it("keeps gray-only chat chrome (no indigo/purple/blue brand); no Activity tab badge", () => {
     expect(messengerSectionSource).not.toMatch(/indigo|purple|#6366f1|blue-6/i);
-    expect(detailPanelSource).toContain("activityUnreadCount");
+    expect(detailPanelSource).not.toContain("activityUnreadCount");
+    expect(detailPanelSource).toContain("useAwcProjectChatSurface");
   });
 });

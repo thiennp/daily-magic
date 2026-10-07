@@ -11,35 +11,37 @@ import {
   CHAT_DOCK_ROOT_CLASS,
   CHAT_DOCK_ROOT_FULL_CLASS,
 } from "@/features/projects/chatDock/projectChatDockClasses.constant";
-import { useAwcProjectChatDock } from "@/features/projects/chatDock/useAwcProjectChatDock";
+import type { AwcProjectChatSurface } from "@/features/projects/chatDock/useAwcProjectChatSurface";
+import AwcProjectMessengerSection from "@/features/projects/messenger/AwcProjectMessengerSection";
 import type { AwcMessengerThreadList } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 import buildOverviewAttention from "@/features/projects/overview/buildOverviewAttention";
 import sumMessengerUnread from "@/features/projects/overview/sumMessengerUnread";
+import { projectHasOwnerComputer } from "@/features/projects/utils/projectHasOwnerComputer";
+import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 interface AwcProjectChatDockProps {
-  readonly projectId: string;
+  readonly project: UserProjectRecord;
+  readonly isOwner: boolean;
   readonly threads: AwcMessengerThreadList | null;
-  readonly onSent: (threadKey: string) => void;
-  /** Deep-link to Activity messenger (same path as Overview attention). */
-  readonly onGotoActivity: (threadKey: string | null) => void;
-  /** Onboarding first-task handoff: open dock from ?chat=1. */
-  readonly startOpen?: boolean;
+  /** Dock state + "go to chat" (P1-S1: replaces the Activity tab). */
+  readonly chat: AwcProjectChatSurface;
+  readonly onUnreadMaybeChanged: () => void;
 }
 
 /**
  * V5-4 floating Chat dock — FAB + popover + full-screen expand.
- * Reuses ask-box → messenger / inbox dispatch (no new API).
- * Unread FAB click opens Activity thread instead of composer dock.
+ * Small dock = ask box; full view = project conversations (former Activity).
+ * Unread FAB click opens the full view on the thread that needs you.
  */
 export default function AwcProjectChatDock({
-  projectId,
+  project,
+  isOwner,
   threads,
-  onSent,
-  onGotoActivity,
-  startOpen = false,
+  chat,
+  onUnreadMaybeChanged,
 }: AwcProjectChatDockProps) {
-  const dock = useAwcProjectChatDock(startOpen);
-  const access = useAwcProjectAccess(projectId);
+  const { dock } = chat;
+  const access = useAwcProjectAccess(project.id);
   const computers = useMemo(
     () =>
       dockTaskComputerTargets(access.members).map((t) => ({
@@ -53,13 +55,22 @@ export default function AwcProjectChatDock({
   const unreadCount = sumMessengerUnread(threads);
   const onFabToggle = () => {
     if (unreadCount > 0) {
-      onGotoActivity(buildOverviewAttention(threads)?.membershipId ?? null);
+      chat.onGotoChat(buildOverviewAttention(threads)?.membershipId ?? null);
       return;
     }
     dock.toggleDock();
   };
   const rootClass =
     dock.open && dock.full ? CHAT_DOCK_ROOT_FULL_CLASS : CHAT_DOCK_ROOT_CLASS;
+  const askBox = canSend ? (
+    <AwcProjectAskBox
+      projectId={project.id}
+      bots={threads.bots}
+      computers={computers}
+      onSent={chat.onAskSent}
+      layout="dock"
+    />
+  ) : null;
   return (
     <div className={rootClass}>
       {dock.open ? (
@@ -69,15 +80,18 @@ export default function AwcProjectChatDock({
           onToggleFull={dock.toggleFull}
           onClose={dock.closeDock}
         >
-          {canSend ? (
-            <AwcProjectAskBox
-              projectId={projectId}
-              bots={threads.bots}
-              computers={computers}
-              onSent={onSent}
-              layout="dock"
+          {dock.full ? (
+            <AwcProjectMessengerSection
+              key={chat.refreshKey}
+              projectId={project.id}
+              hasOwnerComputer={projectHasOwnerComputer(project)}
+              initialThreadKey={chat.threadKey}
+              isOwner={isOwner}
+              onUnreadMaybeChanged={onUnreadMaybeChanged}
             />
-          ) : null}
+          ) : (
+            askBox
+          )}
         </AwcProjectChatDockPopover>
       ) : (
         <AwcProjectChatDockFab

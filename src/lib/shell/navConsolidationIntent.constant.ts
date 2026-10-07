@@ -16,7 +16,7 @@ export const isNavConsolidationIntent = (
   (NAV_CONSOLIDATION_INTENTS as readonly string[]).includes(value);
 
 export type NavConsolidationProjectTab =
-  | "activity"
+  | "chat"
   | "tasks"
   | "team"
   | "library"
@@ -25,7 +25,7 @@ export type NavConsolidationProjectTab =
 export const NAV_CONSOLIDATION_INTENT_TO_TAB: Readonly<
   Record<NavConsolidationIntent, NavConsolidationProjectTab>
 > = {
-  "new-task": "activity",
+  "new-task": "chat",
   bots: "team",
   library: "library",
   reports: "reports",

@@ -12,9 +12,9 @@ describe("buildNavConsolidationNewTaskHref", () => {
     );
   });
 
-  it("deep-links a known project into Activity Task mode", () => {
+  it("deep-links a known project into project Chat Task mode", () => {
     expect(buildNavConsolidationNewTaskHref({ projectId: "p1" })).toBe(
-      "/projects/p1#activity?mode=task",
+      "/projects/p1#chat?mode=task",
     );
   });
 });

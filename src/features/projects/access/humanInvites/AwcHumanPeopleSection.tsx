@@ -2,6 +2,7 @@
 
 import AwcHumanPeopleSectionBody from "@/features/projects/access/humanInvites/AwcHumanPeopleSectionBody";
 import { useHumanPeopleInvites } from "@/features/projects/access/humanInvites/hooks/useHumanPeopleInvites";
+import { countActiveAssistantMembers } from "@/features/projects/access/humanInvites/utils/countActiveAssistantMembers";
 import type { AccessMemberForHumanFilter } from "@/features/projects/access/humanInvites/utils/filterJoinedHumanMembers";
 import AwcProjectAccessSection from "@/features/projects/access/AwcProjectAccessSection";
 import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
@@ -14,6 +15,8 @@ export type AwcHumanPeopleSectionProps = {
   readonly accessMembers: readonly AccessMemberForHumanFilter[];
   /** Owner Access loaded — enable human invite APIs. */
   readonly enabled: boolean;
+  /** Open join requests (DF-036: counted so the rail never says "Just you"). */
+  readonly pendingRequestCount?: number;
 };
 
 /** People + Invite person inside Assistants & people (improve in place). */
@@ -24,6 +27,7 @@ export default function AwcHumanPeopleSection({
   ownerDisplayName = null,
   accessMembers,
   enabled,
+  pendingRequestCount = 0,
 }: AwcHumanPeopleSectionProps) {
   const copy = HUMAN_INVITE_UI_COPY;
   const people = useHumanPeopleInvites({
@@ -56,6 +60,9 @@ export default function AwcHumanPeopleSection({
         ownerEmail={ownerEmail}
         ownerDisplayName={ownerDisplayName}
         people={people}
+        othersCount={
+          countActiveAssistantMembers(accessMembers) + pendingRequestCount + pendingCount
+        }
       />
     </AwcProjectAccessSection>
   );
