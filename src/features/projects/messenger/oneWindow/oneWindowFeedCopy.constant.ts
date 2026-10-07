@@ -22,6 +22,7 @@ export const ONE_WINDOW_FEED_COPY = {
   deny: "Deny",
   approvalRunKind: "Approval · Run on a computer",
   approvalJoinKind: "Approval · Join request",
+  approvalKind: "Approval",
   waitingForYou: "Waiting for you",
   timedOut: "Timed out",
   noticeArchivedOne: "1 older message is archived. It is kept, not deleted.",

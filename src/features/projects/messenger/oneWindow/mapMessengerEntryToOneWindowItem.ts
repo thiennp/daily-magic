@@ -1,8 +1,8 @@
 import {
   subjectStateFromAgentRun,
   subjectStateFromDeliveries,
-  subjectStateFromReplyKind,
 } from "@/features/projects/messenger/oneWindow/oneWindowSubjectState";
+import { subjectStateFromWire } from "@/features/projects/messenger/oneWindow/oneWindowSubjectStateFromWire";
 import type {
   OneWindowFeedItem,
   OneWindowSubjectState,
@@ -31,7 +31,6 @@ export type {
 export {
   subjectStateFromAgentRun,
   subjectStateFromDeliveries,
-  subjectStateFromReplyKind,
 } from "@/features/projects/messenger/oneWindow/oneWindowSubjectState";
 export {
   isOneWindowApprovalItem,
@@ -52,9 +51,9 @@ const TASK_UPDATE_KINDS: ReadonlySet<string> = new Set([
 const TASK_ASSIGN_KIND = "task.assign";
 
 /**
- * DESIGN §3.1 classifier, limited to what today's feed rows carry. `notice`,
- * `bot_to_bot` and `approval_*` need fields the feed does not send yet
- * (system rows are dropped server-side; no recipient kind) → only via OW9.
+ * Fallback for rows without OW9 `windowKind` (pre-OW9 browser copy): DESIGN
+ * §3.1 rules on the fields those rows carry. `notice`, `bot_to_bot` and
+ * `approval_*` come only from the server's windowKind.
  */
 export const deriveOneWindowKind = (
   entry: AwcMessengerTimelineEntry,
@@ -66,18 +65,27 @@ export const deriveOneWindowKind = (
   return entry.kind === TASK_ASSIGN_KIND ? "task" : "chat";
 };
 
+/**
+ * P1-S5: OW9 rows carry `subjectState` (null = none) → used as is. Rows
+ * without it (pre-OW9 browser copy) read live fields only: AR status on
+ * sessions, delivery chips on tasks. Task updates get no pill there (the S3
+ * reply-kind heuristic is gone; OW9's reply_kind state replaces it).
+ */
 const resolveSubjectState = (
   entry: AwcMessengerTimelineEntry,
   windowKind: AwcMessengerWindowKind,
 ): OneWindowSubjectState | null => {
+  if (entry.subjectState !== undefined) {
+    return entry.subjectState === null
+      ? null
+      : subjectStateFromWire(entry.subjectState, entry.states);
+  }
   if (isMessengerAiSessionEntry(entry)) {
     return entry.session !== undefined
       ? subjectStateFromAgentRun(entry.session.status)
       : null;
   }
-  if (windowKind === "task") return subjectStateFromDeliveries(entry.states);
-  if (windowKind === "task_update") return subjectStateFromReplyKind(entry.kind);
-  return null;
+  return windowKind === "task" ? subjectStateFromDeliveries(entry.states) : null;
 };
 
 /**

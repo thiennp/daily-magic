@@ -84,6 +84,7 @@ export default function AwcMessengerTimelineEntryRow({
       <AwcOneWindowSystemEntry
         entry={entry}
         windowKind={windowKind}
+        subjectState={subjectState}
         who={who}
         timeLabel={timeLabel}
       />

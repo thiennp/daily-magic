@@ -15,22 +15,26 @@ import { PROJECT_MESSENGER_WHOLE_THREAD_KEY as WHOLE } from "@/lib/projects/acl/
 interface AwcOneWindowRecipientSwitchProps {
   readonly feedKey: string;
   readonly assistants: readonly OneWindowMentionAssistant[];
+  /** P1-S5: label on the whole feed = the no-@ send target (default "To everyone"). */
+  readonly wholeLabel?: string;
   readonly onSelect: (feedKey: string) => void;
 }
 
 /**
  * P1-S4b "To X" chip (AW Lead): "To everyone" on the whole-project feed,
  * "To {name}" on an assistant's private feed; pick another to switch feeds.
+ * P1-S5: on the whole feed it names the kept recipient ("To {name}") if any.
  */
 export default function AwcOneWindowRecipientSwitch({
   feedKey,
   assistants,
+  wholeLabel,
   onSelect,
 }: AwcOneWindowRecipientSwitchProps) {
   const copy = ONE_WINDOW_COMPOSER_COPY;
   const [open, setOpen] = useState(false);
   const current = assistants.find((a) => a.membershipId === feedKey);
-  const label = current === undefined ? copy.chipEveryone : formatChipLabel(current.displayName);
+  const label = current === undefined ? (wholeLabel ?? copy.chipEveryone) : formatChipLabel(current.displayName);
   const options = [{ membershipId: WHOLE, displayName: copy.pickerEveryone }, ...assistants];
   return (
     <div className="relative">

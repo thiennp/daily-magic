@@ -34,7 +34,8 @@ export interface AwcMessengerThreadPaneProps {
   readonly unreadCount?: number;
   readonly onBack: () => void;
   readonly onLoadOlder: () => void;
-  readonly onSendMessage: (text: string, needsReply: boolean) => Promise<boolean>;
+  /** targetKey: P1-S5 KEPT(r) send to another thread (whole / an assistant). */
+  readonly onSendMessage: (text: string, needsReply: boolean, targetKey?: string) => Promise<boolean>;
   readonly onSendTask: (draft: MessengerTaskDraft) => Promise<boolean>;
   readonly chatVisibility?: ProjectTasksChatVisibility;
 }

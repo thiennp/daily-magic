@@ -1,4 +1,3 @@
-import { AWC_PROJECT_MESSENGER_COPY } from "@/features/projects/messenger/awcProjectMessengerCopy.constant";
 import type {
   OneWindowStatusTone,
   OneWindowSubjectState,
@@ -11,12 +10,8 @@ import { formatMessengerStateLabel } from "@/features/projects/messenger/utils/f
 import { messengerAiSessionStatusTone } from "@/features/projects/messenger/utils/messengerAiSessionStatusTone";
 import { messengerStateChipTone } from "@/features/projects/messenger/utils/messengerStateChipTone";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
-import {
-  PROJECT_MESSAGE_KIND_TASK_BLOCKED,
-  PROJECT_MESSAGE_KIND_TASK_DONE,
-} from "@/lib/projects/acl/messaging/projectMessage.constants";
 
-const toStatusTone = (
+export const toStatusTone = (
   tone: ReturnType<typeof messengerStateChipTone>,
 ): OneWindowStatusTone => {
   if (tone === "ok") return "ok";
@@ -25,7 +20,7 @@ const toStatusTone = (
 };
 
 /** Lower = shown first when recipients disagree (attention before progress). */
-const STATE_RANK: Record<AwcMessengerMessageState, number> = {
+export const STATE_RANK: Record<AwcMessengerMessageState, number> = {
   blocked: 0,
   no_answer: 1,
   waiting: 2,
@@ -60,7 +55,7 @@ export const subjectStateFromDeliveries = (
   };
 };
 
-const formatRunStatusLabel = (status: string): string => {
+export const formatRunStatusLabel = (status: string): string => {
   const trimmed = status.trim();
   return trimmed.length === 0 ? "Unknown" : trimmed.replaceAll("_", " ");
 };
@@ -80,30 +75,4 @@ export const subjectStateFromAgentRun = (
     needsYou: awaitingApproval,
     awaitingApproval,
   };
-};
-
-/** Bot reply kind → terminal status only (plain `task.status` stays unlabeled). */
-export const subjectStateFromReplyKind = (
-  kind: string,
-): OneWindowSubjectState | null => {
-  const copy = AWC_PROJECT_MESSENGER_COPY;
-  if (kind === PROJECT_MESSAGE_KIND_TASK_DONE) {
-    return {
-      source: "reply_kind",
-      label: copy.stateDone,
-      tone: "ok",
-      needsYou: false,
-      awaitingApproval: false,
-    };
-  }
-  if (kind === PROJECT_MESSAGE_KIND_TASK_BLOCKED) {
-    return {
-      source: "reply_kind",
-      label: copy.stateBlocked,
-      tone: "warn",
-      needsYou: true,
-      awaitingApproval: false,
-    };
-  }
-  return null;
 };

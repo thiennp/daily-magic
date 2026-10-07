@@ -90,6 +90,8 @@ export const useOneWindowComposerRouting = (
 
   return {
     mode: modeInfo.mode,
+    /** P1-S5: KEPT(r) is the no-@ send target (null in SINGLE / EVERYONE). */
+    kept: modeInfo.mode === "KEPT" ? kept : null,
     picking: modeInfo.picking,
     hideAllRoutingUi: modeInfo.hideAllRoutingUi,
     placeholder,

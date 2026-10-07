@@ -15,6 +15,8 @@ describe("AWD-3b Needs you scope (owner-created or assigned to viewer)", () => {
   const owner = { kind: "owner" as const, membershipId: null, displayName: "Thien" };
   const member = { kind: "member" as const, membershipId: "mem-linh", displayName: "Linh" };
   const bot = { kind: "bot" as const, membershipId: "b1", displayName: "Scout" };
+  const blocked = { source: "reply_kind" as const, status: "blocked", needsYou: true, awaitingApproval: false };
+  const blockedReply = { windowKind: "task_update" as const, subjectState: blocked };
 
   const needsYou = (
     target: AwcMessengerTimelineEntry,
@@ -68,7 +70,7 @@ describe("AWD-3b Needs you scope (owner-created or assigned to viewer)", () => {
     const ownTask = entry({ messageId: "p1", author: owner, kind: "task.assign" });
     const memberTask = entry({ messageId: "p2", author: member, kind: "task.assign" });
     const reply = (parent: string) =>
-      entry({ messageId: `r-${parent}`, author: bot, kind: "task.blocked", inReplyTo: parent });
+      entry({ messageId: `r-${parent}`, author: bot, kind: "task.blocked", inReplyTo: parent, ...blockedReply });
     const all = [ownTask, memberTask, reply("p1"), reply("p2"), reply("gone")];
     expect(needsYou(reply("p1"), { isOwner: true }, all)).toBe(true);
     expect(needsYou(reply("p2"), { isOwner: true }, all)).toBe(false);

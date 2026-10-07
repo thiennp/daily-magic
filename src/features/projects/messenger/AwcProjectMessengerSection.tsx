@@ -109,8 +109,8 @@ export default function AwcProjectMessengerSection({
         unreadCount={unreadCount}
         onBack={() => feed.setSelectedKey(WHOLE_THREAD_KEY)}
         onLoadOlder={() => void open.loadOlder()}
-        onSendMessage={async (text, needsReply) =>
-          feed.afterSend(await open.send(text, needsReply))
+        onSendMessage={async (text, needsReply, targetKey) =>
+          feed.afterSend(await open.send(text, needsReply, targetKey))
         }
         onSendTask={async (draft) => feed.afterSend(await open.sendTask(draft))}
         chatVisibility={chatVisibility}

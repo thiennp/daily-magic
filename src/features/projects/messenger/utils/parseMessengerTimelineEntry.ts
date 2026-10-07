@@ -7,6 +7,7 @@ import {
   type AwcMessengerTimelineEntry,
   type AwcMessengerWindowKind,
 } from "@/features/projects/messenger/types/awcProjectMessenger.type";
+import { parseMessengerSubjectState } from "@/features/projects/messenger/utils/parseMessengerSubjectState";
 
 export const asRecord = (value: unknown): Record<string, unknown> | null => {
   if (value === null || typeof value !== "object" || Array.isArray(value)) {
@@ -80,6 +81,7 @@ export const parseMessengerTimelineEntry = (value: unknown): AwcMessengerTimelin
   const entryKind = parseEntryKind(row.entryKind);
   const session = parseSession(row.session);
   const windowKind = parseWindowKind(row.windowKind);
+  const subjectState = parseMessengerSubjectState(row.subjectState);
   return {
     messageId: row.messageId,
     createdAt: typeof row.createdAt === "string" ? row.createdAt : "",
@@ -100,5 +102,6 @@ export const parseMessengerTimelineEntry = (value: unknown): AwcMessengerTimelin
     ...(entryKind !== undefined ? { entryKind } : {}),
     ...(session !== undefined ? { session } : {}),
     ...(windowKind !== undefined ? { windowKind } : {}),
+    ...(subjectState !== undefined ? { subjectState } : {}),
   };
 };

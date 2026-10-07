@@ -6,7 +6,12 @@ import {
   parseOneWindowMentions,
   type OneWindowMentionAssistant,
 } from "@/features/projects/messenger/oneWindow/oneWindowMentions";
+import {
+  type OneWindowSendMessage,
+  sendOneWindowMessageTo,
+} from "@/features/projects/messenger/oneWindow/oneWindowSendTarget";
 import type { useOneWindowComposerRouting } from "@/features/projects/messenger/oneWindow/useOneWindowComposerRouting";
+import type { MessengerKeptRecipient } from "@/features/projects/messenger/types/messengerChatStore.type";
 import type { MessengerTaskDraft } from "@/features/projects/messenger/utils/validateMessengerTaskDraft";
 
 type Routing = ReturnType<typeof useOneWindowComposerRouting>;
@@ -15,15 +20,18 @@ export type OneWindowComposerSendInput = {
   readonly assistants: readonly OneWindowMentionAssistant[];
   readonly mentionsEnabled: boolean;
   readonly privateFeed: boolean;
-  readonly routing?: Pick<Routing, "hideAllRoutingUi" | "beginSendWithoutMention">;
-  readonly onSendMessage: (text: string, needsReply: boolean) => Promise<boolean>;
+  readonly routing?: Pick<Routing, "hideAllRoutingUi" | "beginSendWithoutMention"> & {
+    readonly kept?: MessengerKeptRecipient | null;
+  };
+  readonly onSendMessage: OneWindowSendMessage;
   readonly onSendTask: (draft: MessengerTaskDraft) => Promise<boolean>;
 };
 
 /**
  * P1-S4b send rules on the existing send paths (no new backend fields):
  * - each @assistant → one task (existing task dispatch, summary = the text)
- * - no @ on the whole feed → OW-H2 routing (picker / kept), then the message
+ * - no @ on the whole feed → OW-H2 routing: picker, or KEPT(r) → sent to r
+ *   (P1-S5, COMPOSER-LOCK: each kept assistant's own thread; everyone → whole)
  * - no @ on an assistant's private feed → message to it, marked "needs a reply"
  * Resolves true when the draft can be cleared.
  */
@@ -42,7 +50,11 @@ export const sendOneWindowComposerText = async (
     return true;
   }
   const useRouting = !privateFeed && routing !== undefined && !routing.hideAllRoutingUi;
-  if (useRouting && routing.beginSendWithoutMention(text) === "pick") return false;
+  if (useRouting) {
+    if (routing.beginSendWithoutMention(text) === "pick") return false;
+    const kept = routing.kept ?? null;
+    if (kept !== null) return sendOneWindowMessageTo(input.onSendMessage, text, kept);
+  }
   return input.onSendMessage(text, privateFeed);
 };
 

@@ -5,7 +5,6 @@ import {
   oneWindowArchivedNoticeText,
   oneWindowQuietNoticeTexts,
 } from "@/features/projects/messenger/oneWindow/oneWindowFeedNotices";
-import { oneWindowTaskUpdateStatus } from "@/features/projects/messenger/oneWindow/oneWindowTaskUpdateStatus";
 import type { AwcMessengerBotThread } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 
 const bot = (
@@ -19,22 +18,6 @@ const bot = (
   lastMessageAt: null,
   lastPreview: null,
   unreadCount: 0,
-});
-
-describe("P1-S3 task-update status (DF-027 labels)", () => {
-  it("maps bot task.* reply kinds through the run-status mapper", () => {
-    expect(oneWindowTaskUpdateStatus("task.done")).toEqual({ label: "Done", tone: "ok" });
-    expect(oneWindowTaskUpdateStatus("task.processing")).toEqual({ label: "Running", tone: "info" });
-    expect(oneWindowTaskUpdateStatus("task.status")).toEqual({ label: "Running", tone: "info" });
-    expect(oneWindowTaskUpdateStatus("task.received").label).toBe("Queued");
-    expect(oneWindowTaskUpdateStatus("task.blocked")).toEqual({ label: "Blocked", tone: "warn" });
-  });
-
-  it("an unknown kind is Unknown, never Queued; raw run tokens keep DF-027 labels", () => {
-    expect(oneWindowTaskUpdateStatus("task.mystery").label).toBe("Unknown");
-    expect(oneWindowTaskUpdateStatus("denied").label).toBe("Denied");
-    expect(oneWindowTaskUpdateStatus("expired")).toEqual({ label: "Timed out", tone: "warn" });
-  });
 });
 
 describe("P1-S3 feed notices from existing data", () => {

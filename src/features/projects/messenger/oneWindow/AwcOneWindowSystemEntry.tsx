@@ -1,7 +1,8 @@
+import AwcOneWindowApprovalEntry from "@/features/projects/messenger/oneWindow/AwcOneWindowApprovalEntry";
 import AwcOneWindowBotToBotCard from "@/features/projects/messenger/oneWindow/AwcOneWindowBotToBotCard";
 import AwcOneWindowNoticeRow from "@/features/projects/messenger/oneWindow/AwcOneWindowNoticeRow";
 import AwcOneWindowTaskUpdateRow from "@/features/projects/messenger/oneWindow/AwcOneWindowTaskUpdateRow";
-import { oneWindowTaskUpdateStatus } from "@/features/projects/messenger/oneWindow/oneWindowTaskUpdateStatus";
+import type { OneWindowSubjectState } from "@/features/projects/messenger/oneWindow/oneWindowFeedItem.type";
 import type {
   AwcMessengerTimelineEntry,
   AwcMessengerWindowKind,
@@ -10,6 +11,8 @@ import type {
 /** Window kinds drawn as their own One window row instead of a message bubble. */
 const SYSTEM_KINDS: ReadonlySet<AwcMessengerWindowKind> = new Set([
   "task_update",
+  "approval_request",
+  "approval_result",
   "notice",
   "bot_to_bot",
 ]);
@@ -26,23 +29,37 @@ const recipientNames = (entry: AwcMessengerTimelineEntry): string =>
 interface AwcOneWindowSystemEntryProps {
   readonly entry: AwcMessengerTimelineEntry;
   readonly windowKind: AwcMessengerWindowKind;
+  readonly subjectState: OneWindowSubjectState | null;
   readonly who: string;
   readonly timeLabel: string;
 }
 
 /**
- * P1-S3: task_update (derived today from bot `task.*` replies) → task-update
- * row with DF-027 labels. `notice` / `bot_to_bot` only arrive once the feed
- * sends OW9 `windowKind` (today the server drops system and bot↔bot rows).
+ * P1-S5: rows picked by OW9 `windowKind`. task_update → pill from the
+ * server's subjectState (DF-027 labels; none when null); approval_* →
+ * approval row; notice / bot_to_bot → their cards. Dispatch sends notice and
+ * bot_to_bot rows in a later r2 (the thread builder drops them today), so
+ * those light up with no UI change.
  */
 export default function AwcOneWindowSystemEntry({
   entry,
   windowKind,
+  subjectState,
   who,
   timeLabel,
 }: AwcOneWindowSystemEntryProps) {
   if (windowKind === "notice") {
     return <AwcOneWindowNoticeRow text={entry.text} timeLabel={timeLabel} />;
+  }
+  if (windowKind === "approval_request" || windowKind === "approval_result") {
+    return (
+      <AwcOneWindowApprovalEntry
+        kind={windowKind}
+        who={who}
+        text={entry.text}
+        timeLabel={timeLabel}
+      />
+    );
   }
   if (windowKind === "bot_to_bot") {
     const to = recipientNames(entry);
@@ -53,13 +70,12 @@ export default function AwcOneWindowSystemEntry({
       />
     );
   }
-  const status = oneWindowTaskUpdateStatus(entry.kind);
   return (
     <AwcOneWindowTaskUpdateRow
       who={who}
       textHtmlSafe={entry.text}
-      statusLabel={status.label}
-      statusTone={status.tone}
+      statusLabel={subjectState?.label}
+      statusTone={subjectState?.tone}
       timeLabel={timeLabel}
     />
   );

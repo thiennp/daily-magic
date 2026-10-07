@@ -16,12 +16,14 @@ export const useAwcProjectMessengerThreadSend = (input: {
   const [sending, setSending] = useState(false);
 
   const send = useCallback(
-    async (text: string, needsReply: boolean): Promise<boolean> => {
-      if (threadKey === null) return false;
+    /** targetKey (P1-S5 KEPT(r)): send to that thread instead of the open one. */
+    async (text: string, needsReply: boolean, targetKey?: string): Promise<boolean> => {
+      const key = targetKey ?? threadKey;
+      if (key === null) return false;
       setSending(true);
       const result = await sendMessengerMessage({
         projectId,
-        threadKey,
+        threadKey: key,
         text,
         needsReply,
       });

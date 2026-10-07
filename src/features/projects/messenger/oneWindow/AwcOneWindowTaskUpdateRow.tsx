@@ -1,12 +1,13 @@
 interface AwcOneWindowTaskUpdateRowProps {
   readonly who: string;
   readonly textHtmlSafe: string;
-  readonly statusLabel: string;
+  /** P1-S5: omitted when OW9 sends no subject state for the update. */
+  readonly statusLabel?: string;
   readonly statusTone?: "ok" | "warn" | "info";
   readonly timeLabel: string;
 }
 
-/** Task-update line in the unified feed (P1-S3: bot `task.*` replies). */
+/** Task-update line in the unified feed (OW9 windowKind task_update). */
 export default function AwcOneWindowTaskUpdateRow({
   who,
   textHtmlSafe,
@@ -31,7 +32,9 @@ export default function AwcOneWindowTaskUpdateRow({
       <span className="min-w-0 flex-1 whitespace-pre-wrap break-words">
         <b>{who}</b> {textHtmlSafe}
       </span>
-      <span className={`rounded-full px-2 py-0.5 text-[12px] ${tone}`}>{statusLabel}</span>
+      {statusLabel !== undefined ? (
+        <span className={`rounded-full px-2 py-0.5 text-[12px] ${tone}`}>{statusLabel}</span>
+      ) : null}
       <span className="text-[12px] text-awc-fg-subtle">{timeLabel}</span>
     </div>
   );

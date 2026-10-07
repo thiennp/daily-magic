@@ -9,12 +9,16 @@ import { entry } from "@/features/projects/messenger/oneWindow/oneWindowOwH5.fix
 import { parseMessengerOpenThread } from "@/features/projects/messenger/utils/parseMessengerTimeline";
 
 describe("OW-H5 task update pill, filters and parser", () => {
-  it("task update pill only for terminal reply kinds", () => {
+  it("task update pill only for terminal reply kinds (OW9 reply_kind state)", () => {
     const bot = { kind: "bot" as const, membershipId: "b1", displayName: "Scout" };
-    const done = mapMessengerEntryToOneWindowItem(entry({ author: bot, kind: "task.done" }));
+    const reply = (status: string, needsYou: boolean) => ({
+      windowKind: "task_update" as const,
+      subjectState: { source: "reply_kind" as const, status, needsYou, awaitingApproval: false },
+    });
+    const done = mapMessengerEntryToOneWindowItem(entry({ author: bot, kind: "task.done", ...reply("done", false) }));
     expect(done.subjectState).toMatchObject({ source: "reply_kind", label: "Done", tone: "ok" });
     const blocked = mapMessengerEntryToOneWindowItem(
-      entry({ author: bot, kind: "task.blocked" }),
+      entry({ author: bot, kind: "task.blocked", ...reply("blocked", true) }),
     );
     expect(isOneWindowNeedsYouItem(blocked)).toBe(true);
     const status = mapMessengerEntryToOneWindowItem(entry({ author: bot, kind: "task.status" }));
