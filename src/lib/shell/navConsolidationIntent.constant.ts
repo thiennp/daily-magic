@@ -17,6 +17,7 @@ export const isNavConsolidationIntent = (
 
 export type NavConsolidationProjectTab =
   | "activity"
+  | "tasks"
   | "team"
   | "library"
   | "reports";

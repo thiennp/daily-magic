@@ -26,7 +26,7 @@ describe("L3 V5-3 project chrome — Product EN lock", () => {
 
   it("v5 tab order + labels; live tabs keep that order (no placeholder panels)", () => {
     expect(PROJECT_PAGE_V5_TAB_ORDER.map((id) => PROJECT_PAGE_V5_TAB_LABELS[id])).toEqual([
-      "Overview", "Chat", "Reports", "Team", "Library", "Safety rules", "Resources", "Settings",
+      "Overview", "Chat", "Tasks", "Reports", "Team", "Library", "Safety rules", "Resources", "Settings",
     ]);
     const live = PROJECT_PAGE_V5_TAB_ORDER.filter((id) =>
       (PROJECT_PAGE_TAB_IDS as readonly string[]).includes(id),
@@ -38,6 +38,7 @@ describe("L3 V5-3 project chrome — Product EN lock", () => {
     expect(PROJECT_PAGE_V5_TAB_SUBTITLES).toMatchObject({
       overview: "What's happening in this project and what needs you.",
       activity: "Every conversation, newest first.",
+      tasks: "Tasks assigned in this project.",
       team: "People, assistants, and computers in this project.",
       pitfalls: "Things your assistants must avoid.",
       resources: "Folders and code repositories for this project.",

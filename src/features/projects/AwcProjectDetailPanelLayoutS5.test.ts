@@ -31,7 +31,7 @@ const tabsConstantSource = readFileSync(
 describe("AwcProjectDetailPanel layout S5 pitfalls", () => {
   it("uses Product tab order (Reports/Library full panels since L6)", () => {
     expect(tabsConstantSource).toMatch(
-      /"overview",\s*"activity",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
+      /"overview",\s*"activity",\s*"tasks",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
     );
     expect(tabBodySource).not.toContain("STUB_TABS");
     expect(tabBodySource).toContain('t === "pitfalls"');

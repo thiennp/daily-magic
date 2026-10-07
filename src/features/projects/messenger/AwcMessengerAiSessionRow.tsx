@@ -53,6 +53,10 @@ export default function AwcMessengerAiSessionRow({
     agentRunId !== null
       ? buildProjectTabHash("reports", { report: agentRunId })
       : null;
+  const tasksHref =
+    agentRunId !== null
+      ? buildProjectTabHash("tasks", { task: agentRunId })
+      : null;
 
   return (
     <article
@@ -82,7 +86,15 @@ export default function AwcMessengerAiSessionRow({
           {summary}
         </p>
       ) : null}
-      <div className="mt-2">
+      <div className="mt-2 flex flex-wrap gap-3">
+        {tasksHref !== null ? (
+          <a
+            href={tasksHref}
+            className="text-xs font-medium text-awc-fg underline-offset-2 hover:underline dark:text-gray-200"
+          >
+            {C.openInTasks}
+          </a>
+        ) : null}
         {reportHref !== null ? (
           <a
             href={reportHref}

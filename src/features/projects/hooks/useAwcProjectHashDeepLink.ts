@@ -13,12 +13,12 @@ const readParam = (tab: ProjectPageTabId, key: string): string | null =>
 
 /**
  * Selected item id kept in the project hash: `#library?item=<id>` /
- * `#reports?report=<id>`. Read on mount + hashchange; opening or closing an
- * item rewrites the hash with replaceState (no history spam).
+ * `#reports?report=<id>` / `#tasks?task=<id>`. Read on mount + hashchange;
+ * opening or closing an item rewrites the hash with replaceState (no spam).
  */
 const useAwcProjectHashDeepLink = (
-  tab: "library" | "reports",
-  key: "item" | "report",
+  tab: "library" | "reports" | "tasks",
+  key: "item" | "report" | "task",
 ): readonly [string | null, (id: string | null) => void] => {
   const [selectedId, setSelectedIdState] = useState<string | null>(() =>
     readParam(tab, key),

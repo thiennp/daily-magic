@@ -28,7 +28,7 @@ const tabsConstantSource = read(
 describe("AwcProjectDetailPanel layout S6 resources", () => {
   it("mounts Resources panel and drops it from STUB_TABS", () => {
     expect(tabsConstantSource).toMatch(
-      /"overview",\s*"activity",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
+      /"overview",\s*"activity",\s*"tasks",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
     );
     expect(tabBodySource).toContain("AwcProjectResourcesPanel");
     expect(tabBodySource).not.toContain("STUB_TABS");

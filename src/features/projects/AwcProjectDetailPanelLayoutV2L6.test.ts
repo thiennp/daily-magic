@@ -21,7 +21,7 @@ describe("project layout v2 L6 Reports + Library", () => {
     expect(body).toContain("<AwcProjectLibraryPanel");
     expect(body).toContain('canEdit={p.pageActorRole === "owner"}');
     expect(tabs).toMatch(
-      /"overview",\s*"activity",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
+      /"overview",\s*"activity",\s*"tasks",\s*"reports",\s*"library",\s*"pitfalls",\s*"resources",\s*"settings"/,
     );
   });
 
