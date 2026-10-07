@@ -46,6 +46,7 @@ export default function mapHumanInviteRow(
     acceptedAt: toPostgresTimestamptz(row.accepted_at),
     acceptedByUserId: optionalString(row.accepted_by_user_id),
     acceptedDisplayName: optionalString(row.accepted_display_name),
+    acceptedByEmail: optionalString(row.accepted_by_email),
     decidedAt: toPostgresTimestamptz(row.decided_at),
   };
 }

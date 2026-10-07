@@ -18,6 +18,8 @@ export type HumanInviteListItem = {
   readonly emailSentAt: string | null;
   readonly acceptedAt: string | null;
   readonly acceptedDisplayName: string | null;
+  /** Accepter's verified account email (owner-only; who the owner approves). */
+  readonly acceptedByEmail: string | null;
 };
 
 export const toHumanInviteListItem = (
@@ -38,4 +40,5 @@ export const toHumanInviteListItem = (
   emailSentAt: invite.emailSentAt,
   acceptedAt: invite.acceptedAt,
   acceptedDisplayName: invite.acceptedDisplayName,
+  acceptedByEmail: invite.acceptedByEmail ?? null,
 });

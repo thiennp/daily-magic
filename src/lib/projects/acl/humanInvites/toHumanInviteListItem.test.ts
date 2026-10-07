@@ -25,6 +25,7 @@ describe("toHumanInviteListItem", () => {
       acceptedAt: null,
       acceptedByUserId: "user-should-not-leak",
       acceptedDisplayName: null,
+      acceptedByEmail: "bob@example.org",
       decidedAt: null,
     });
     expect(item).not.toHaveProperty("url");
@@ -34,8 +35,10 @@ describe("toHumanInviteListItem", () => {
     expect(item).not.toHaveProperty("acceptedByUserId");
     expect(item.status).toBe("pending");
     expect(item.delivery).toBe("email");
+    expect(item.acceptedByEmail).toBe("bob@example.org");
     expect(Object.keys(item).sort()).toEqual([
       "acceptedAt",
+      "acceptedByEmail",
       "acceptedDisplayName",
       "createdAt",
       "delivery",

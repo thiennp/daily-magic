@@ -8,7 +8,7 @@ export type AwcHumanInviteEmailLockFieldProps = {
   readonly onChange: (checked: boolean) => void;
 };
 
-/** Checkbox: Only this email can join (default off). */
+/** Checkbox: Only this email can join (Email tab default on — F1). */
 export default function AwcHumanInviteEmailLockField({
   checked,
   disabled = false,

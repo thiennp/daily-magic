@@ -32,6 +32,8 @@ export type HumanInviteListItem = {
   readonly emailSentAt?: string | null;
   readonly acceptedAt?: string | null;
   readonly acceptedDisplayName?: string | null;
+  /** Accepter's verified account email — the identity the owner approves. */
+  readonly acceptedByEmail?: string | null;
 };
 
 /** POST /api/projects/{projectId}/human-invites/email body (DF-025). */

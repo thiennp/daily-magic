@@ -47,6 +47,7 @@ vi.mock("@/lib/projects/acl/humanInvites/logHumanInviteActivity", () => ({
 
 import {
   callSendEmailInvite as call,
+  insertedLockFlag,
   primeSendInviteMocks,
 } from "@/lib/projects/acl/humanInvites/sendHumanEmailInviteTestFixtures";
 
@@ -101,8 +102,12 @@ describe("sendHumanProjectEmailInvite guards (DF-025)", () => {
     expect(sqlMock).not.toHaveBeenCalled();
   });
 
-  it("owner can explicitly opt out of approval", async () => {
-    await call({ requiresApproval: false });
+  it("email lock defaults ON; owner can untick the lock and approval", async () => {
+    await call();
+    expect(insertedLockFlag(sqlMock)).toBe(true);
+    sqlMock.mockClear();
+    await call({ requireEmailMatch: false, requiresApproval: false });
+    expect(insertedLockFlag(sqlMock)).toBe(false);
     expect(sendEmail).toHaveBeenCalledWith(
       expect.objectContaining({ requiresApproval: false }),
     );

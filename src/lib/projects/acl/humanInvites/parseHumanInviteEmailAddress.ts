@@ -17,6 +17,10 @@ export const parseHumanInviteEmailAddress = (value: unknown): string | null => {
   return normalized;
 };
 
+/** Email invites lock to the invited address unless the owner unticks it. */
+export const parseEmailInviteRequireEmailMatch = (value: unknown): boolean =>
+  !(value === false || value === "false");
+
 /** Email invites need owner Approve unless the owner explicitly opts out. */
 export const parseRequiresApproval = (value: unknown): boolean =>
   !(value === false || value === "false");

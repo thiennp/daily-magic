@@ -24,9 +24,13 @@ export default function AwcHumanAwaitingApprovalRow({
   onDeny,
 }: AwcHumanAwaitingApprovalRowProps) {
   const copy = HUMAN_INVITE_EMAIL_COPY;
-  const name =
-    invite.acceptedDisplayName?.trim() || invite.email?.trim() || "Someone";
-  const showEmail = invite.email !== null && invite.email.trim() !== name;
+  // F1: identity = accepter's verified account email. The invited address is
+  // used only when the server enforced the match (then they are equal).
+  const verifiedEmail =
+    invite.acceptedByEmail?.trim() ||
+    (invite.requireEmailMatch ? invite.email?.trim() : "");
+  const name = invite.acceptedDisplayName?.trim() || verifiedEmail || "Someone";
+  const showEmail = Boolean(verifiedEmail) && verifiedEmail !== name;
 
   return (
     <li
@@ -44,7 +48,7 @@ export default function AwcHumanAwaitingApprovalRow({
           <span className="block truncate font-semibold">{name}</span>
           <span className="mt-0.5 block text-[12.5px] font-normal text-awc-fg-subtle">
             {copy.wantsToJoin}
-            {showEmail ? ` · ${invite.email}` : ""}
+            {showEmail ? ` · ${verifiedEmail}` : ""}
             {` · ${invite.role === "viewer" ? "Viewer" : "Member"}`}
           </span>
         </span>

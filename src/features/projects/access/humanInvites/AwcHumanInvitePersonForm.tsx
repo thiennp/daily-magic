@@ -34,7 +34,7 @@ export default function AwcHumanInvitePersonForm({
   const [tab, setTab] = useState<InvitePersonTab>("email");
   const [role, setRole] = useState<HumanInviteRole>("member");
   const [email, setEmail] = useState("");
-  const [requireEmailMatch, setRequireEmailMatch] = useState(false);
+  const [requireEmailMatch, setRequireEmailMatch] = useState(true); // F1: email lock ON by default
   const [localError, setLocalError] = useState<string | null>(null);
   const shownError = localError ?? sendErrorMessage ?? errorMessage;
   const send = useHumanInviteSendForm({

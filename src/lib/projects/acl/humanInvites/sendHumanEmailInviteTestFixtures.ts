@@ -69,3 +69,14 @@ export const callSendEmailInvite = (over: Record<string, unknown> = {}) =>
     email: "  Ada@Example.org ",
     ...over,
   });
+
+/** require_email_match value bound into the INSERT (F1: email lock default). */
+export const insertedLockFlag = (sqlMock: {
+  readonly mock: { readonly calls: readonly unknown[][] };
+}): unknown => {
+  const call = sqlMock.mock.calls.find(([strings]) =>
+    String(strings).includes("INSERT INTO project_human_invites"),
+  );
+  const values = call?.slice(1) ?? [];
+  return values[values.indexOf("ada@example.org") + 1];
+};

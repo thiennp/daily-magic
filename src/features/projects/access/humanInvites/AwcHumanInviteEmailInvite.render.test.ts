@@ -36,6 +36,10 @@ describe("DF-025 Members email invite UI", () => {
     expect(html).toMatch(
       /<input type="checkbox"[^>]*checked=""[^>]*\/><span>Approve before they join/,
     );
+    // F1: Only this email can join is ON by default (owner can untick).
+    expect(html).toMatch(
+      /<input type="checkbox"[^>]*checked=""[^>]*\/><span>Only this email can join/,
+    );
   });
 
   it("without a send handler the legacy disabled Send invite · Later stays", () => {

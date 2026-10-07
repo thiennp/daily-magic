@@ -26,5 +26,7 @@ export default interface HumanInviteRecord {
   readonly acceptedAt: string | null;
   readonly acceptedByUserId: string | null;
   readonly acceptedDisplayName: string | null;
+  /** Accepter's verified account email; only on the owner's awaiting list. */
+  readonly acceptedByEmail?: string | null;
   readonly decidedAt: string | null;
 }

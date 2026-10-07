@@ -4,10 +4,7 @@ import { getUserById } from "@/lib/auth/userRepository";
 import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { buildHumanInviteUrl } from "@/lib/projects/acl/humanInvites/buildHumanInviteUrl";
-import {
-  parseHumanInviteRole,
-  parseRequireEmailMatch,
-} from "@/lib/projects/acl/humanInvites/clampHumanInviteParams";
+import { parseHumanInviteRole } from "@/lib/projects/acl/humanInvites/clampHumanInviteParams";
 import {
   createHumanInviteToken,
   hashHumanInviteToken,
@@ -25,6 +22,7 @@ import { logHumanInviteCreated } from "@/lib/projects/acl/humanInvites/logHumanI
 import mapHumanInviteRow from "@/lib/projects/acl/humanInvites/mapHumanInviteRow";
 import {
   parseHumanInviteEmailAddress,
+  parseEmailInviteRequireEmailMatch,
   parseRequiresApproval,
 } from "@/lib/projects/acl/humanInvites/parseHumanInviteEmailAddress";
 import type HumanInviteRecord from "@/lib/projects/acl/humanInvites/types/HumanInviteRecord.type";
@@ -93,7 +91,9 @@ export const sendHumanProjectEmailInvite = async (input: {
     tokenHash: hashHumanInviteToken(token),
     email,
     role,
-    requireEmailMatch: parseRequireEmailMatch(input.requireEmailMatch),
+    requireEmailMatch: parseEmailInviteRequireEmailMatch(
+      input.requireEmailMatch,
+    ),
     requiresApproval,
   });
   if (inserted === "duplicate") return { ok: false, code: "already_invited" };
