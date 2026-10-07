@@ -11,7 +11,7 @@ export const resetProjectMessageChatKeySchemaForTests = (): void => {
 };
 
 /**
- * Soft ensure for keep-300 chat_key (migration 101). Additive only:
+ * Soft ensure for keep-300 chat_key (migration 102). Additive only:
  * column + default + index. Unique-key swap on computer_acks stays in the
  * numbered migration (same pattern as 060 NOT NULL).
  */

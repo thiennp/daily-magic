@@ -90,7 +90,7 @@ Until tip 2 lands tables, tip 1 may treat “any `project_message_computer_acks`
 
 ### 1.6 Files (expected)
 
-- `db/migrations/101-project-messages-chat-key-prune.sql` (number = next free after 100 on tip base)
+- `db/migrations/102-project-messages-chat-key-prune.sql` (number = next free after cost-control 101 on tip base (preemptive renumber))
 - `src/lib/projects/acl/messaging/projectMessageChatKey.ts` (+ test)
 - `src/lib/projects/acl/messaging/pruneProjectChatMessages.ts` (+ test)
 - `src/lib/projects/acl/messaging/projectMessagePrune.constants.ts`
