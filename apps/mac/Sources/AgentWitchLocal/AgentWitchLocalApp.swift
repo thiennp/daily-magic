@@ -7,6 +7,7 @@ struct AgentWitchLocalApp: App {
     @NSApplicationDelegateAdaptor(MacAppAppDelegate.self) private var appDelegate
 
     var body: some Scene {
+        // AWL-H1 — menu bar companion (works with window closed)
         MenuBarExtra {
             MacAppMenuBarContentView(
                 controller: appDelegate.controller,
@@ -21,29 +22,16 @@ struct AgentWitchLocalApp: App {
         }
         .menuBarExtraStyle(.window)
 
-        Window("Computer", id: MacAppWindowID.computer.rawValue) {
-            ComputerView(controller: appDelegate.controller, store: appDelegate.uiStore)
-                .awlWindowOpener()
+        // AWL-H2 — single Grok Bot–class window (1280×800 light sand)
+        Window("AgentWitch Local", id: MacAppWindowID.main.rawValue) {
+            MacAppMainWindowView(
+                controller: appDelegate.controller,
+                store: appDelegate.uiStore
+            )
+            .awlWindowOpener()
         }
-        .defaultSize(width: 480, height: 560)
-
-        Window("History", id: MacAppWindowID.history.rawValue) {
-            HistoryView(store: appDelegate.uiStore)
-                .awlWindowOpener()
-        }
-        .defaultSize(width: 500, height: 560)
-
-        Window("Settings", id: MacAppWindowID.settings.rawValue) {
-            SettingsView(controller: appDelegate.controller, store: appDelegate.uiStore)
-                .awlWindowOpener()
-        }
-        .defaultSize(width: 500, height: 640)
-
-        Window("First run", id: MacAppWindowID.firstRun.rawValue) {
-            FirstRunWizardView(controller: appDelegate.controller, store: appDelegate.uiStore)
-                .awlWindowOpener()
-        }
-        .defaultSize(width: 480, height: 560)
+        .defaultSize(width: 1280, height: 800)
+        .windowToolbarStyle(.unified(showsTitle: false))
     }
 }
 
@@ -54,9 +42,21 @@ final class MacAppAppDelegate: NSObject, NSApplicationDelegate {
     let controller = MacAppMenuController()
     let uiStore = MacAppLocalUIStore.shared
 
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        // Menu bar + window are both first-class; do not activate as a dock-only app.
+        NSApp.setActivationPolicy(.accessory)
+    }
+
     func application(_ application: NSApplication, open urls: [URL]) {
         for url in urls {
             controller.handleOpenURL(url)
         }
+    }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        if !flag {
+            NotificationCenter.default.post(name: .awlOpenWindow, object: MacAppWindowID.main.rawValue)
+        }
+        return true
     }
 }

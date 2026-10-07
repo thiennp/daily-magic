@@ -259,7 +259,6 @@ struct HistoryView: View {
             .controlSize(.small)
             .disabled(store.historyItems.isEmpty)
             Spacer()
-            DownloadAwlLink(style: .compactFooter)
         }
         .padding(12)
         .background(MacAppTheme.surface.opacity(0.92))

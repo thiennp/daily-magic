@@ -2,27 +2,65 @@ import Foundation
 import SwiftUI
 
 enum MacAppWindowID: String {
+    /// Single Grok Bot–class app window (AWL-H2).
+    case main
+    /// Legacy ids — open main and select sidebar page.
     case computer
     case history
     case settings
     case firstRun
 }
 
-extension Notification.Name {
-    static let awlOpenWindow = Notification.Name("awl.openWindow")
+enum MacAppSidebarPage: String, CaseIterable, Identifiable, Hashable {
+    case computer
+    case history
+    case settings
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .computer: return "Computer"
+        case .history: return "History"
+        case .settings: return "Settings"
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .computer: return "desktopcomputer"
+        case .history: return "clock"
+        case .settings: return "gearshape"
+        }
+    }
+
+    static func fromWindowID(_ raw: String) -> MacAppSidebarPage? {
+        switch MacAppWindowID(rawValue: raw) {
+        case .computer, .main, .firstRun, .none: return .computer
+        case .history: return .history
+        case .settings: return .settings
+        }
+    }
 }
 
-/// Hosts openWindow so MenuBarExtra and Settings buttons can raise feature windows.
+extension Notification.Name {
+    static let awlOpenWindow = Notification.Name("awl.openWindow")
+    /// object = MacAppSidebarPage.rawValue
+    static let awlSelectSidebarPage = Notification.Name("awl.selectSidebarPage")
+}
+
+/// Hosts openWindow so MenuBarExtra can raise the main window.
 struct MacAppWindowOpener: ViewModifier {
     @Environment(\.openWindow) private var openWindow
 
     func body(content: Content) -> some View {
         content
             .onReceive(NotificationCenter.default.publisher(for: .awlOpenWindow)) { note in
-                guard let raw = note.object as? String,
-                      let id = MacAppWindowID(rawValue: raw)
-                else { return }
-                openWindow(id: id.rawValue)
+                let raw = (note.object as? String) ?? MacAppWindowID.main.rawValue
+                openWindow(id: MacAppWindowID.main.rawValue)
+                if let page = MacAppSidebarPage(rawValue: raw) ?? MacAppSidebarPage.fromWindowID(raw) {
+                    NotificationCenter.default.post(name: .awlSelectSidebarPage, object: page.rawValue)
+                }
             }
     }
 }

@@ -2,32 +2,42 @@ import AppKit
 import SwiftUI
 import AgentWitchLocalCore
 
+/// AWL-H1 — Menu bar companion chrome. Works with the app window closed.
+/// States from HTML: status pill, Start/Stop / Start setup, Open window, Sign in,
+/// projects peek, Update ready, Quit. Mirrors MacAppChromeStatus with AWL-H2.
 struct MacAppMenuBarContentView: View {
     @ObservedObject var controller: MacAppMenuController
     @ObservedObject var store: MacAppLocalUIStore
     @Environment(\.openWindow) private var openWindow
     @State private var showQuitConfirm = false
 
+    private var chrome: MacAppChromeStatus {
+        MacAppChromeStatus.resolve(
+            runtime: controller.state,
+            bootstrap: controller.bootstrapState,
+            signedIn: (controller.signedInEmail != nil),
+            offline: controller.isOfflineStub,
+            updateReady: controller.updateOffer != nil
+        )
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            hero
-            Divider()
-            bodyActions
-                .padding(.horizontal, 12)
-                .padding(.vertical, 10)
+            header
+            Divider().background(MacAppTheme.border)
+            bodyContent
+                .padding(12)
             if let offer = controller.updateOffer {
-                Divider()
+                Divider().background(MacAppTheme.border)
                 updateStrip(offer)
             }
-            Divider()
-            // HARD: Download AWL always visible in footer even when connected/running.
+            Divider().background(MacAppTheme.border)
             footer
         }
-        .frame(minWidth: 280)
-        .background(MacAppTheme.cream)
-        .onAppear {
-            controller.refreshInstallAndHealth()
-        }
+        .frame(width: 320)
+        .background(MacAppTheme.bg)
+        .preferredColorScheme(.light)
+        .onAppear { controller.refreshInstallAndHealth() }
         .awlWindowOpener()
         .alert("Quit AgentWitch Local?", isPresented: $showQuitConfirm) {
             Button("Cancel", role: .cancel) {}
@@ -41,100 +51,204 @@ struct MacAppMenuBarContentView: View {
         }
     }
 
-    private var hero: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Image(systemName: "wand.and.stars")
-                    .foregroundStyle(.white)
+    private var header: some View {
+        HStack(alignment: .center, spacing: 10) {
+            Text("AW")
+                .font(.system(size: 10, weight: .bold, design: .rounded))
+                .foregroundStyle(.white)
+                .frame(width: 20, height: 20)
+                .background(RoundedRectangle(cornerRadius: 5).fill(MacAppTheme.brand))
+            VStack(alignment: .leading, spacing: 2) {
                 Text("AgentWitch Local")
-                    .font(.headline)
-                    .foregroundStyle(.white)
-                Spacer()
-                statusPill
-            }
-            Text(controller.statusMessage)
-                .font(.caption)
-                .foregroundStyle(.white.opacity(0.9))
-            if store.hasConnectedProject {
-                Text("Connected projects · \(store.computerName)")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(MacAppTheme.fg)
+                Text(store.computerName)
                     .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.8))
+                    .foregroundStyle(MacAppTheme.fgMuted)
             }
+            Spacer()
+            statusPill
         }
-        .padding(14)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(MacAppTheme.heroGradient)
+        .padding(12)
+        .background(MacAppTheme.surface)
     }
 
     private var statusPill: some View {
-        let running = controller.state == .running
-        return Text(running ? "Running" : shortStatus)
-            .font(.caption2.weight(.semibold))
-            .padding(.horizontal, 8)
-            .padding(.vertical, 3)
-            .background(Capsule().fill(Color.white.opacity(0.22)))
-            .foregroundStyle(.white)
-    }
-
-    private var shortStatus: String {
-        if controller.bootstrapState != nil { return "Setup" }
-        switch controller.state {
-        case .notInstalled: return "Not installed"
-        case .stopped: return "Stopped"
-        case .starting: return "Starting"
-        case .running: return "Running"
-        case .stopping: return "Stopping"
-        case .error: return "Error"
+        let colors = MacAppTheme.pillColors(for: chrome.kind)
+        return HStack(spacing: 5) {
+            Circle().fill(colors.fg).frame(width: 6, height: 6)
+            Text(chrome.pillLabel)
+                .font(.caption2.weight(.semibold))
         }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 3)
+        .background(Capsule().fill(colors.bg))
+        .foregroundStyle(colors.fg)
     }
 
     @ViewBuilder
-    private var bodyActions: some View {
-        if let bootstrap = controller.bootstrapState {
-            bootstrapButtons(bootstrap)
-            Button("Open first-run wizard") {
-                openWindow(id: MacAppWindowID.firstRun.rawValue)
-            }
-            .buttonStyle(.borderless)
-        } else {
-            runtimeButtons
-            if store.hasConnectedProject {
-                Text("This computer is connected as \(store.computerName)")
+    private var bodyContent: some View {
+        switch chrome.kind {
+        case .notSetUp:
+            VStack(alignment: .leading, spacing: 10) {
+                Text(chrome.detailTitle)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(MacAppTheme.fg)
+                Text(chrome.detailSubtitle)
                     .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .padding(.top, 4)
-            } else if controller.state != .notInstalled {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("No project yet")
-                        .font(.subheadline.weight(.semibold))
-                    Text("Connect this computer to a project to let its assistants work here.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Button("Connect a project") {
-                        controller.openConnectThisMac()
-                    }
+                    .foregroundStyle(MacAppTheme.fgMuted)
+                Button("Start setup") { controller.startOrRepairSetup() }
                     .buttonStyle(.borderedProminent)
-                    .tint(MacAppTheme.accent)
-                    .controlSize(.small)
+                    .tint(MacAppTheme.brand)
+                    .controlSize(.large)
+                    .frame(maxWidth: .infinity)
+            }
+
+        case .settingUp:
+            VStack(alignment: .leading, spacing: 8) {
+                Text(chrome.detailTitle)
+                    .font(.subheadline.weight(.semibold))
+                Text(chrome.detailSubtitle)
+                    .font(.caption)
+                    .foregroundStyle(MacAppTheme.fgMuted)
+                ProgressView()
+                    .progressViewStyle(.linear)
+                    .tint(MacAppTheme.brand)
+                // AWL-H5 will bind real step progress here
+                Text(controller.statusMessage.isEmpty ? "Setting up…" : sanitizeChromeMessage(controller.statusMessage))
+                    .font(.caption2)
+                    .foregroundStyle(MacAppTheme.fgSubtle)
+                    .lineLimit(2)
+            }
+
+        case .signedOut:
+            VStack(alignment: .leading, spacing: 10) {
+                Text(chrome.detailTitle)
+                    .font(.subheadline.weight(.semibold))
+                Text(chrome.detailSubtitle)
+                    .font(.caption)
+                    .foregroundStyle(MacAppTheme.fgMuted)
+                Button("Sign in") {
+                    openMainWindow(page: .computer)
+                    controller.beginSignInStub()
                 }
-                .padding(10)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.skillSoft.opacity(0.7)))
+                .buttonStyle(.borderedProminent)
+                .tint(MacAppTheme.brand)
+                .frame(maxWidth: .infinity)
+            }
+
+        case .waitingForInternet:
+            accountRow
+            VStack(alignment: .leading, spacing: 8) {
+                Text(chrome.detailTitle)
+                    .font(.subheadline.weight(.semibold))
+                Text(chrome.detailSubtitle)
+                    .font(.caption)
+                    .foregroundStyle(MacAppTheme.fgMuted)
+                Button("Try now") { controller.refreshInstallAndHealth() }
+                    .frame(maxWidth: .infinity)
+            }
+
+        case .problem:
+            if (controller.signedInEmail != nil) { accountRow }
+            VStack(alignment: .leading, spacing: 8) {
+                Text(chrome.detailTitle)
+                    .font(.subheadline.weight(.semibold))
+                Text(chrome.detailSubtitle)
+                    .font(.caption)
+                    .foregroundStyle(MacAppTheme.fgMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+                HStack {
+                    Button("Try again") { controller.retrySetup() }
+                        .buttonStyle(.borderedProminent)
+                        .tint(MacAppTheme.brand)
+                    Button("See log") { controller.openLogs() }
+                        .buttonStyle(.bordered)
+                }
+            }
+
+        case .running, .starting, .stopped:
+            accountRow
+            runRow
+            if store.hasConnectedProject {
+                projectsPeek
             }
         }
+    }
+
+    private var accountRow: some View {
         HStack(spacing: 8) {
-            Button {
-                controller.openLocalStatus()
-            } label: {
-                Label("Open AgentWitch", systemImage: "safari")
+            Text(accountInitials)
+                .font(.caption2.weight(.bold))
+                .foregroundStyle(.white)
+                .frame(width: 28, height: 28)
+                .background(Circle().fill(MacAppTheme.brand))
+            VStack(alignment: .leading, spacing: 1) {
+                Text(accountDisplayName)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(MacAppTheme.fg)
+                Text(controller.signedInEmail ?? "Signed in")
+                    .font(.caption2)
+                    .foregroundStyle(MacAppTheme.fgMuted)
             }
-            .controlSize(.small)
-            Button {
-                openWindow(id: MacAppWindowID.computer.rawValue)
-            } label: {
-                Label("Open window", systemImage: "desktopcomputer")
+            Spacer()
+        }
+        .padding(.bottom, 4)
+    }
+
+    private var runRow: some View {
+        HStack(alignment: .center) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(chrome.detailTitle)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(MacAppTheme.fg)
+                Text(chrome.detailSubtitle)
+                    .font(.caption)
+                    .foregroundStyle(MacAppTheme.fgMuted)
             }
-            .controlSize(.small)
+            Spacer()
+            switch chrome.kind {
+            case .running:
+                Button("Stop") { controller.stopCore() }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+            case .starting:
+                Button("Starting…") {}
+                    .disabled(true)
+                    .controlSize(.small)
+            default:
+                Button("Start") { controller.startOrRepairSetup() }
+                    .buttonStyle(.borderedProminent)
+                    .tint(MacAppTheme.brandInk)
+                    .controlSize(.small)
+            }
+        }
+        .padding(10)
+        .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.surface))
+        .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(MacAppTheme.border))
+    }
+
+    private var projectsPeek: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Projects")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(MacAppTheme.fgMuted)
+            // Stub peek — AWL-H8 binds real connected projects
+            HStack(spacing: 8) {
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(MacAppTheme.accentSoft2)
+                    .frame(width: 22, height: 22)
+                    .overlay(Image(systemName: "folder.fill").font(.caption2).foregroundStyle(MacAppTheme.brand))
+                Text(store.computerName)
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(MacAppTheme.fg)
+                Spacer()
+                Text(store.isOwner ? "Owner" : "Member")
+                    .font(.caption2)
+                    .foregroundStyle(MacAppTheme.fgSubtle)
+            }
+            .padding(8)
+            .background(RoundedRectangle(cornerRadius: 8).fill(MacAppTheme.tile))
         }
         .padding(.top, 6)
     }
@@ -142,135 +256,69 @@ struct MacAppMenuBarContentView: View {
     private func updateStrip(_ offer: UpdateOffer) -> some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
-                Text(updateAvailableTitle(version: offer.version))
+                Text("Update ready · \(offer.version)")
                     .font(.caption.weight(.semibold))
+                    .foregroundStyle(MacAppTheme.brandInk)
                 Text("What is new in version \(offer.version)")
                     .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(MacAppTheme.fgMuted)
             }
             Spacer()
-            Button("Download") {
-                controller.openUpdate()
-            }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.small)
-            .tint(MacAppTheme.accent)
+            Button("Restart to update") { controller.openUpdate() }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.small)
+                .tint(MacAppTheme.brand)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
-        .background(MacAppTheme.accent.opacity(0.08))
+        .background(MacAppTheme.accentSoft)
     }
 
     private var footer: some View {
-        VStack(spacing: 8) {
-            HStack(spacing: 4) {
-                Button {
-                    openWindow(id: MacAppWindowID.history.rawValue)
-                } label: {
-                    Label("History", systemImage: "clock.arrow.circlepath")
-                }
-                .buttonStyle(.borderless)
-                .controlSize(.small)
-
-                Button {
-                    openWindow(id: MacAppWindowID.settings.rawValue)
-                } label: {
-                    Label("Settings", systemImage: "slider.horizontal.3")
-                }
-                .buttonStyle(.borderless)
-                .controlSize(.small)
-
-                Spacer(minLength: 4)
-
-                DownloadAwlLink(style: .compactFooter)
-
-                Button {
-                    showQuitConfirm = true
-                } label: {
-                    Label("Quit", systemImage: "power")
-                }
-                .buttonStyle(.borderless)
-                .controlSize(.small)
+        HStack(spacing: 8) {
+            Button {
+                openMainWindow(page: .computer)
+            } label: {
+                Label("Open window", systemImage: "macwindow")
             }
-            // Second explicit always-on row so Download cannot be missed when footer wraps.
-            DownloadAwlLink(style: .button)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            .buttonStyle(.borderless)
+            .controlSize(.small)
+
+            Spacer()
+
+            Button {
+                showQuitConfirm = true
+            } label: {
+                Label("Quit", systemImage: "power")
+            }
+            .buttonStyle(.borderless)
+            .controlSize(.small)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
-        .background(MacAppTheme.surface.opacity(0.95))
+        .background(MacAppTheme.surface)
     }
 
-    @ViewBuilder
-    private func bootstrapButtons(_ bootstrap: MacAppBootstrapState) -> some View {
-        switch bootstrap {
-        case .checking, .signingIn, .installing, .settingUp:
-            Text(progressLabel(for: bootstrap))
-                .foregroundStyle(.secondary)
-            if bootstrap == .signingIn {
-                Button("Try sign-in again") {
-                    controller.restartBootstrapSignIn()
-                }
-            }
-            Button("Open Connect this computer…") {
-                controller.openConnectThisMac()
-            }
-        case .connected:
-            EmptyView()
-        case .error:
-            Button("Retry") {
-                controller.retryBootstrap()
-            }
-            Button("Copy install command") {
-                controller.copyBootstrapFallbackInstallCommand()
-            }
-            Button("Open Connect this computer…") {
-                controller.openConnectThisMac()
-            }
-        }
+    private func openMainWindow(page: MacAppSidebarPage) {
+        openWindow(id: MacAppWindowID.main.rawValue)
+        NotificationCenter.default.post(name: .awlSelectSidebarPage, object: page.rawValue)
     }
 
-    private func progressLabel(for bootstrap: MacAppBootstrapState) -> String {
-        switch bootstrap {
-        case .checking: return "Checking install…"
-        case .signingIn: return "Waiting for browser sign-in…"
-        case .installing: return "Installing…"
-        case .settingUp: return "Waiting for local health…"
-        default: return ""
+    private var accountInitials: String {
+        let email = controller.signedInEmail ?? "A"
+        let local = email.split(separator: "@").first.map(String.init) ?? "A"
+        let parts = local.split(separator: ".")
+        if parts.count >= 2 {
+            return String(parts[0].prefix(1) + parts[1].prefix(1)).uppercased()
         }
+        return String(local.prefix(1)).uppercased()
     }
 
-    @ViewBuilder
-    private var runtimeButtons: some View {
-        switch controller.state {
-        case .notInstalled:
-            Button("Open Connect this computer…") {
-                controller.openConnectThisMac()
-            }
-        case .stopped, .error:
-            Button("Start AgentWitch") {
-                controller.startCore()
-            }
-            Button("Open AgentWitch Local") {
-                controller.openLocalStatus()
-            }
-            Button("View logs") {
-                controller.openLogs()
-            }
-        case .starting, .running:
-            Button("Open AgentWitch Local") {
-                controller.openLocalStatus()
-            }
-            Button("Stop AgentWitch") {
-                controller.stopCore()
-            }
-            .disabled(controller.state == .starting)
-            Button("View logs") {
-                controller.openLogs()
-            }
-        case .stopping:
-            Button("Stopping…") {}
-                .disabled(true)
+    private var accountDisplayName: String {
+        let email = controller.signedInEmail ?? "Account"
+        if let local = email.split(separator: "@").first {
+            return local.split(separator: ".").map { $0.prefix(1).uppercased() + $0.dropFirst() }.joined(separator: " ")
         }
+        return "Account"
     }
 }

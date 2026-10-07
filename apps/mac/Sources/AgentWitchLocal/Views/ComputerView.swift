@@ -55,11 +55,7 @@ struct ComputerView: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 12)
-
-                DownloadAwlLink(style: .prominent)
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 20)
-            }
+}
         }
         .background(MacAppTheme.cream)
         .frame(minWidth: 460, minHeight: 520)
@@ -97,14 +93,11 @@ struct ComputerView: View {
     private var header: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Image(systemName: "desktopcomputer")
-                    .foregroundStyle(MacAppTheme.accent)
-                Text("Computer")
-                    .font(.title2.bold())
                 Spacer()
-                Text(controller.statusMessage)
+                Text(sanitizeChromeMessage(controller.statusMessage))
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(MacAppTheme.fgMuted)
+                    .lineLimit(2)
             }
             if isRenaming {
                 HStack {

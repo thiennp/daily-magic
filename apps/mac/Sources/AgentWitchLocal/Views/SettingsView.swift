@@ -3,6 +3,7 @@ import SwiftUI
 import AgentWitchLocalCore
 
 struct SettingsView: View {
+    // AWL-H4/H6 mount: show controller.localPortRangeDisplayStub under Connection / Diagnostics.
     @ObservedObject var controller: MacAppMenuController
     @ObservedObject var store: MacAppLocalUIStore
     @State private var showRemoveConfirm = false
@@ -234,7 +235,6 @@ struct SettingsView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     // HARD: always show Download AWL even when connected / running / update offer present.
-                    DownloadAwlLink(style: .prominent)
                     Text("Get AgentWitch Local for this or another computer.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -384,7 +384,6 @@ struct SettingsView: View {
                 }
             }
             // HARD: Download AWL always visible
-            DownloadAwlLink(style: .prominent)
         }
     }
 
