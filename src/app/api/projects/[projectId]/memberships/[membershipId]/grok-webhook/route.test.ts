@@ -73,6 +73,26 @@ describe("owned-bot memberships grok-webhook route", () => {
     );
   });
 
+  it("DF-036: GET adds lastWakeAt + lastFailureReason (meta only)", async () => {
+    db.statusRow = {
+      webhook_url: URL_OK,
+      last_wake_result: "fetch_failed",
+      last_wake_at: "2026-10-07T21:15:00.000Z",
+    };
+    const response = await GET(new Request("http://localhost/x"), { params });
+    expect(response.status).toBe(200);
+    const text = await response.text();
+    expect(JSON.parse(text)).toEqual({
+      ok: true,
+      grokWebhookRegistered: true,
+      grokWebhookUrlHost: "hooks.example.com",
+      keySet: true,
+      lastWakeAt: "2026-10-07T21:15:00.000Z",
+      lastFailureReason: "Fetch failed (timeout, DNS or refused)",
+    });
+    expect(text).not.toContain("/wake/owned");
+  });
+
   it("non-owner write matches no row (404)", async () => {
     Object.assign(db, { writable: false, present: false });
     requireAuth.mockResolvedValue({ actor: { id: "stranger" }, error: null });

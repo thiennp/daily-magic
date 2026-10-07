@@ -4,8 +4,18 @@ import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError
 import type { ProjectGrokWebhookTarget } from "@/lib/projects/acl/webhooks/projectGrokWebhookTarget";
 import { readProjectGrokRoutineWebhookStatus } from "@/lib/projects/acl/webhooks/readProjectGrokRoutineWebhookStatus";
 import { readProjectMembershipHmacWebhookStatus } from "@/lib/projects/acl/webhooks/readProjectMembershipHmacWebhookStatus";
-import { toGrokWebhookStatusView } from "@/lib/projects/acl/webhooks/toGrokWebhookStatusView";
-import { toHmacWebhookStatusView } from "@/lib/projects/acl/webhooks/toHmacWebhookStatusView";
+import {
+  toGrokWakeHealthView,
+  type GrokWakeHealthView,
+} from "@/lib/projects/acl/webhooks/toGrokWakeHealthView";
+import {
+  toGrokWebhookStatusView,
+  type GrokWebhookStatusView,
+} from "@/lib/projects/acl/webhooks/toGrokWebhookStatusView";
+import {
+  toHmacWebhookStatusView,
+  type HmacWebhookStatusView,
+} from "@/lib/projects/acl/webhooks/toHmacWebhookStatusView";
 import { writeProjectGrokRoutineWebhook } from "@/lib/projects/acl/webhooks/writeProjectGrokRoutineWebhook";
 
 export const dynamic = "force-dynamic";
@@ -16,6 +26,11 @@ type RouteContext = {
     readonly membershipId: string;
   }>;
 };
+
+/** GET 200 body: host + flags + last wake meta. Never a URL path, key, secret or response body. */
+type OwnerGrokWebhookGetBody = { readonly ok: true } & GrokWebhookStatusView &
+  HmacWebhookStatusView &
+  GrokWakeHealthView;
 
 const statusForCode = (code: string): number => {
   if (code === "forbidden") return 403;
@@ -53,7 +68,10 @@ const ownerTarget = async (
   };
 };
 
-/** GET a member bot's webhook status. Project owner only. Host + flags; never secrets. */
+/**
+ * GET a member bot's webhook status. Project owner only. Host + flags, plus
+ * lastWakeAt / lastFailureReason (DF-036); never secrets.
+ */
 export async function GET(
   _request: Request,
   context: RouteContext,
@@ -69,11 +87,13 @@ export async function GET(
       hmacWebhookUrl: null,
       secretSet: false,
     };
-  return Response.json({
+  const body: OwnerGrokWebhookGetBody = {
     ok: true,
     ...toGrokWebhookStatusView(status.grokWebhookUrl),
     ...toHmacWebhookStatusView(hmac),
-  });
+    ...toGrokWakeHealthView(status),
+  };
+  return Response.json(body);
 }
 
 /**

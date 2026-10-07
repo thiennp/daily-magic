@@ -48,6 +48,8 @@ beforeEach(() => {
   sqlMock.mockImplementation(grokWebhookSql(db));
 });
 
+const WAKE_AT = "2026-10-07T21:15:00.000Z";
+
 const callGet = () => GET(new Request("http://localhost/x"), { params });
 
 const statusQuery = (): string | undefined =>
@@ -62,6 +64,7 @@ describe("owner grok-webhook route GET", () => {
     db.statusRow = {
       webhook_url: "https://hooks.example.com/wake/abc",
       last_wake_result: "http_200",
+      last_wake_at: WAKE_AT,
     };
     const response = await callGet();
     expect(response.status).toBe(200);
@@ -73,6 +76,8 @@ describe("owner grok-webhook route GET", () => {
       hmacWebhookRegistered: false,
       hmacWebhookUrlHost: null,
       secretSet: false,
+      lastWakeAt: WAKE_AT,
+      lastFailureReason: null,
     });
     expect(statusQuery()).toContain("m.status = 'active'");
     expect(statusQuery()).not.toContain("bearer");
@@ -82,6 +87,7 @@ describe("owner grok-webhook route GET", () => {
     db.statusRow = {
       webhook_url: "https://hooks.example.com/wake/abc",
       last_wake_result: "http_200",
+      last_wake_at: WAKE_AT,
     };
     db.hmacStatusRow = {
       webhook_url: "https://muse.example.com/inbox",
@@ -98,8 +104,38 @@ describe("owner grok-webhook route GET", () => {
       hmacWebhookRegistered: true,
       hmacWebhookUrlHost: "muse.example.com",
       secretSet: true,
+      lastWakeAt: WAKE_AT,
+      lastFailureReason: null,
     });
     expect(JSON.stringify(body)).not.toMatch(/awc_whsec_|inbox/i);
+  });
+
+  it("DF-036: latest failed wake → lastWakeAt ISO + short reason, never URL/body", async () => {
+    db.statusRow = {
+      webhook_url: "https://hooks.example.com/wake/abc",
+      last_wake_result: "http_429",
+      last_wake_at: new Date(WAKE_AT),
+    };
+    const response = await callGet();
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body).toMatchObject({
+      lastWakeAt: WAKE_AT,
+      lastFailureReason: "HTTP 429",
+    });
+    expect(JSON.stringify(body)).not.toContain("/wake/abc");
+    expect(statusQuery()).toContain("LEFT JOIN LATERAL");
+  });
+
+  it("DF-036: no stored wake → lastWakeAt and lastFailureReason null", async () => {
+    db.statusRow = {
+      webhook_url: "https://hooks.example.com/wake/abc",
+      last_wake_result: null,
+      last_wake_at: null,
+    };
+    const body = await (await callGet()).json();
+    expect(body.lastWakeAt).toBeNull();
+    expect(body.lastFailureReason).toBeNull();
   });
 
   it("404s when the membership is not an active member of this project", async () => {

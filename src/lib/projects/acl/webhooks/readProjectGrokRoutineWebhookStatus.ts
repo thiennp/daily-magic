@@ -13,11 +13,22 @@ import {
 export type ProjectGrokRoutineWebhookStatus = {
   readonly grokWebhookUrl: string | null;
   readonly lastGrokWakeResult: string | null;
+  /** ISO time of that same latest non-skipped attempt; null when none. */
+  readonly lastGrokWakeAt: string | null;
+};
+
+const toIsoOrNull = (value: unknown): string | null => {
+  if (!(value instanceof Date) && typeof value !== "string") {
+    return null;
+  }
+  const date = value instanceof Date ? value : new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date.toISOString();
 };
 
 /**
  * One SELECT scoped like the save step. null = no such membership.
- * lastGrokWakeResult ignores skipped_by_policy (status kinds are never woken).
+ * lastGrokWakeResult / lastGrokWakeAt ignore skipped_by_policy (status kinds
+ * are never woken) and come from the same latest attempt row.
  * Never selects bearer_retained.
  */
 export const readProjectGrokRoutineWebhookStatus = async (
@@ -31,17 +42,19 @@ export const readProjectGrokRoutineWebhookStatus = async (
     await sql`
       SELECT
         w.webhook_url,
-        (
-          SELECT a.result
-          FROM project_grok_routine_wake_attempts a
-          WHERE a.membership_id = m.id
-            AND a.result <> ${GROK_WAKE_RESULT_SKIPPED_BY_POLICY}
-          ORDER BY a.created_at DESC
-          LIMIT 1
-        ) AS last_wake_result
+        lw.result AS last_wake_result,
+        lw.created_at AS last_wake_at
       FROM project_memberships m
       LEFT JOIN project_membership_grok_routine_webhooks w
         ON w.membership_id = m.id
+      LEFT JOIN LATERAL (
+        SELECT a.result, a.created_at
+        FROM project_grok_routine_wake_attempts a
+        WHERE a.membership_id = m.id
+          AND a.result <> ${GROK_WAKE_RESULT_SKIPPED_BY_POLICY}
+        ORDER BY a.created_at DESC
+        LIMIT 1
+      ) lw ON TRUE
       WHERE m.project_id = ${target.projectId}::text
         AND m.status = 'active'
         AND (
@@ -69,11 +82,14 @@ export const readProjectGrokRoutineWebhookStatus = async (
       ? row.webhook_url
       : null;
   const last = row.last_wake_result;
+  const lastGrokWakeResult =
+    typeof last === "string" && STORED_GROK_WAKE_RESULT.test(last)
+      ? last
+      : null;
   return {
     grokWebhookUrl: url,
-    lastGrokWakeResult:
-      typeof last === "string" && STORED_GROK_WAKE_RESULT.test(last)
-        ? last
-        : null,
+    lastGrokWakeResult,
+    lastGrokWakeAt:
+      lastGrokWakeResult === null ? null : toIsoOrNull(row.last_wake_at),
   };
 };

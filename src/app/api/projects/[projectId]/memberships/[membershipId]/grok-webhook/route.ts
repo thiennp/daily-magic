@@ -2,7 +2,14 @@ import { requireAuth } from "@/lib/auth/requireAuth";
 import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import type { ProjectGrokWebhookTarget } from "@/lib/projects/acl/webhooks/projectGrokWebhookTarget";
 import { readProjectGrokRoutineWebhookStatus } from "@/lib/projects/acl/webhooks/readProjectGrokRoutineWebhookStatus";
-import { toGrokWebhookStatusView } from "@/lib/projects/acl/webhooks/toGrokWebhookStatusView";
+import {
+  toGrokWakeHealthView,
+  type GrokWakeHealthView,
+} from "@/lib/projects/acl/webhooks/toGrokWakeHealthView";
+import {
+  toGrokWebhookStatusView,
+  type GrokWebhookStatusView,
+} from "@/lib/projects/acl/webhooks/toGrokWebhookStatusView";
 import { writeProjectGrokRoutineWebhook } from "@/lib/projects/acl/webhooks/writeProjectGrokRoutineWebhook";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +20,10 @@ type RouteContext = {
     readonly membershipId: string;
   }>;
 };
+
+/** GET 200 body: host + flags + last wake meta. Never a URL path, key or response body. */
+type OwnedBotGrokWebhookGetBody = { readonly ok: true } & GrokWebhookStatusView &
+  GrokWakeHealthView;
 
 const statusForCode = (code: string): number => {
   if (code === "forbidden") return 403;
@@ -42,7 +53,7 @@ const ownedBotTarget = async (
   };
 };
 
-/** GET webhook status for a membership whose bot the signed-in person owns. */
+/** GET webhook status (+ lastWakeAt / lastFailureReason) for a membership whose bot the signed-in person owns. */
 export async function GET(
   _request: Request,
   context: RouteContext,
@@ -53,10 +64,12 @@ export async function GET(
   if (status === null) {
     return projectAccessErrorJson("not_found", 404);
   }
-  return Response.json({
+  const body: OwnedBotGrokWebhookGetBody = {
     ok: true,
     ...toGrokWebhookStatusView(status.grokWebhookUrl),
-  });
+    ...toGrokWakeHealthView(status),
+  };
+  return Response.json(body);
 }
 
 /**

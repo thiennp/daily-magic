@@ -6,6 +6,10 @@ export type ProjectGrokWebhookStatusView = {
   readonly hmacWebhookRegistered?: boolean;
   readonly hmacWebhookUrlHost?: string | null;
   readonly secretSet?: boolean;
+  /** GET only (DF-036): ISO time of the latest real wake attempt, or null. */
+  readonly lastWakeAt?: string | null;
+  /** GET only (DF-036): meta only, e.g. "HTTP 429", "HTTP 500", "Fetch failed (timeout, DNS or refused)", "Not postable"; null after a success. */
+  readonly lastFailureReason?: string | null;
   readonly errorMessage?: string;
   /** PUT only: this save flipped delivery_mode poll → webhook. */
   readonly deliveryModeFlipped?: boolean;
