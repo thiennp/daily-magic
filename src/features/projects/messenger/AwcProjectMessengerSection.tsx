@@ -75,7 +75,9 @@ export default function AwcProjectMessengerSection({
   const unreadTotal = sumMessengerUnreadCount(list.threads);
   const gate = resolveMessengerGate(list);
   if (gate.kind !== "ready") {
-    return <AwcProjectMessengerGateView gate={gate} />;
+    return (
+    <AwcProjectMessengerGateView gate={gate} onRetry={() => { void reloadThreads(); }} />
+  );
   }
   const canSend = gate.threads.canSend && (open.thread?.canSend ?? true);
   const afterSend = async (ok: boolean): Promise<boolean> => {

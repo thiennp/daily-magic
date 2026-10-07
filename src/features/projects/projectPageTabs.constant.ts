@@ -26,7 +26,7 @@ export type ProjectPageNavTarget =
 
 export const PROJECT_PAGE_TAB_LABELS: Record<ProjectPageTabId, string> = {
   overview: "Overview",
-  activity: "Chat",
+  activity: "Activity",
   tasks: "Tasks",
   reports: "Reports",
   library: "Library",

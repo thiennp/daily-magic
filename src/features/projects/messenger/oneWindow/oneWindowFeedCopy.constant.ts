@@ -1,0 +1,27 @@
+/** One-window Activity feed / gate EN (brief + EN-PASS). */
+export const ONE_WINDOW_FEED_COPY = {
+  emptyTitle: "No messages yet",
+  emptyBody: "Say hello or @ an assistant to assign work.",
+  loading: "Loading messages",
+  errorTitle: "Messages didn't load",
+  errorBody:
+    "We couldn't reach AgentWitch. Check your connection, then try again. Nothing you sent was lost.",
+  tryAgain: "Try again",
+  projectRequiredTitle: "Pick a project",
+  projectRequired:
+    "Pick a project first. Every message and task belongs to a project.",
+  filterAll: "All",
+  filterNeedsYou: "Needs you",
+  filterApprovals: "Approvals",
+  betweenAssistants: "Between assistants",
+  kindTask: "Task",
+  openTask: "Open task",
+  newMark: "New",
+  accessDeepLink: "Open Access",
+  approve: "Approve",
+  deny: "Deny",
+  approvalRunKind: "Approval · Run on a computer",
+  approvalJoinKind: "Approval · Join request",
+  waitingForYou: "Waiting for you",
+  timedOut: "Timed out",
+} as const;

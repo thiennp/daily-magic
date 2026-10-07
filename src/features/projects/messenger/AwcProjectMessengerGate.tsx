@@ -1,4 +1,6 @@
 import AwcMessengerEmptyState from "@/features/projects/messenger/AwcMessengerEmptyState";
+import AwcOneWindowFeedError from "@/features/projects/messenger/oneWindow/AwcOneWindowFeedError";
+import AwcOneWindowFeedLoading from "@/features/projects/messenger/oneWindow/AwcOneWindowFeedLoading";
 import { AWC_PROJECT_MESSENGER_COPY } from "@/features/projects/messenger/awcProjectMessengerCopy.constant";
 import type { AwcMessengerThreadList } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 
@@ -29,18 +31,22 @@ export const resolveMessengerGate = (input: {
 
 export default function AwcProjectMessengerGateView({
   gate,
+  onRetry,
 }: {
   readonly gate: Exclude<MessengerGate, { kind: "ready" }>;
+  readonly onRetry?: () => void;
 }) {
-  const copy = AWC_PROJECT_MESSENGER_COPY;
   if (gate.kind === "loading") {
-    return <p className="text-xs text-awc-fg-subtle">{copy.loading}</p>;
+    return <AwcOneWindowFeedLoading />;
   }
   if (gate.kind === "empty") {
     return <AwcMessengerEmptyState />;
   }
+  if (onRetry !== undefined) {
+    return <AwcOneWindowFeedError onRetry={onRetry} />;
+  }
   return (
-    <p className="rounded-md border border-amber-200/80 bg-amber-50/80 px-3 py-2 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100">
+    <p className="rounded-md border border-awc-border bg-awc-warn-soft px-3 py-2 text-xs text-awc-warn">
       {gate.message}
     </p>
   );

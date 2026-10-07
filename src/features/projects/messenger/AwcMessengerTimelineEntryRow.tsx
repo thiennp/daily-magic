@@ -1,9 +1,6 @@
-import {
-  ACTIVITY_OWN_BUBBLE_CLASS,
-  ACTIVITY_OWN_META_CLASS,
-} from "@/features/projects/messenger/activityChrome.constant";
 import AwcMessengerAiSessionRow from "@/features/projects/messenger/AwcMessengerAiSessionRow";
 import AwcMessengerStateChips from "@/features/projects/messenger/AwcMessengerStateChips";
+import AwcOneWindowMessageRow from "@/features/projects/messenger/oneWindow/AwcOneWindowMessageRow";
 import type { AwcMessengerTimelineEntry } from "@/features/projects/messenger/types/awcProjectMessenger.type";
 import type { ProjectTasksChatVisibility } from "@/features/projects/tasks/projectTask.type";
 import { isMessengerAiSessionEntry } from "@/features/projects/messenger/utils/isMessengerAiSessionEntry";
@@ -17,7 +14,7 @@ interface AwcMessengerTimelineEntryRowProps {
 const formatWhen = (iso: string): string => {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return iso;
-  return date.toLocaleString();
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 };
 
 export default function AwcMessengerTimelineEntryRow({
@@ -32,30 +29,17 @@ export default function AwcMessengerTimelineEntryRow({
   }
 
   const who = entry.author.displayName?.trim() || entry.author.kind;
+  const isAssistant = entry.author.kind === "bot";
   return (
-    <div
-      className={`flex max-w-[85%] flex-col gap-1.5 ${
-        isMine ? "self-end items-end" : "self-start items-start"
-      }`}
-    >
-      <div
-        className={`rounded-xl px-3 py-2 text-sm leading-5 ${
-          isMine
-            ? ACTIVITY_OWN_BUBBLE_CLASS
-            : "rounded-bl-sm border border-awc-border bg-white text-awc-fg dark:border-gray-700 dark:bg-gray-950 dark:text-white"
-        }`}
-      >
-        <div
-          className={`mb-1 text-xs font-semibold ${
-            isMine ? ACTIVITY_OWN_META_CLASS : "text-awc-fg-muted"
-          }`}
-        >
-          {isMine ? "You" : who}
-        </div>
-        <p className="whitespace-pre-wrap">{entry.text}</p>
-      </div>
+    <div className={`flex flex-col gap-1.5 ${isMine ? "items-end" : "items-start"}`}>
+      <AwcOneWindowMessageRow
+        who={isMine ? "You" : who}
+        isSelf={isMine}
+        isAssistant={isAssistant}
+        timeLabel={formatWhen(entry.createdAt)}
+        text={entry.text}
+      />
       {isMine ? <AwcMessengerStateChips states={entry.states} /> : null}
-      <span className="text-xs text-awc-fg-muted">{formatWhen(entry.createdAt)}</span>
     </div>
   );
 }

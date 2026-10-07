@@ -99,7 +99,9 @@ export default function AwcProjectMessengerPanels({
           onSendMessage={onSendMessage}
           onSendTask={onSendTask}
         
-          chatVisibility={chatVisibility}/>
+          chatVisibility={chatVisibility}
+          clearAllSlot={headerAction}
+        />
       </div>
     </div>
   );
