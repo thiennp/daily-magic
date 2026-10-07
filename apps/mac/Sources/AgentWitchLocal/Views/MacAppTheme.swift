@@ -1,8 +1,8 @@
 import AgentWitchLocalCore
 import SwiftUI
 
-/// Product palette tokens from AWL Mac UX redo (EN PASS). Light sand + brand `#2150d6`.
-/// No clay, no purple.
+/// Product palette tokens from AWL Mac UX redo (EN PASS). Light sand + brand Pine `#1f6656`.
+/// No clay, no purple. HN-H1 primary swap (PALETTE-LOCK amended 16:33).
 enum MacAppTheme {
     // Exact tokens from Product SoT
     static let bg = Color(hex: 0xe8e6e1)           // --bg
@@ -11,16 +11,17 @@ enum MacAppTheme {
     static let tile = Color(hex: 0xf4f3f0)         // --tile
     static let tile2 = Color(hex: 0xebe9e4)        // --tile-2
     static let fill = Color(hex: 0xe9e7e2)         // --fill
-    static let accentSoft = Color(hex: 0xe4ecff)   // --accent-soft
-    static let accentSoft2 = Color(hex: 0xd6e2ff)  // --accent-soft-2
+    static let accentSoft = Color(hex: 0xdde8e3)   // --accent-soft (Pine tint)
+    static let accentSoft2 = Color(hex: 0xc8ddd6)  // --accent-soft-2 (Pine soft companion)
     static let border = Color(hex: 0xddd9d2)       // --border
     static let borderStrong = Color(hex: 0xc9c4bb) // --border-strong
     static let controlBorder = Color(hex: 0x8a8478)// --control-border
     static let fg = Color(hex: 0x101828)           // --fg
     static let fgMuted = Color(hex: 0x4b5567)      // --fg-muted
     static let fgSubtle = Color(hex: 0x566073)     // --fg-subtle
-    static let brand = Color(hex: 0x2150d6)        // --brand
-    static let brandInk = Color(hex: 0x1b3fae)     // --brand-ink
+    static let brand = Color(hex: 0x1f6656)        // --brand / --primary (Pine)
+    static let brandInk = Color(hex: 0x19564a)     // --brand-ink / --primary-hover
+    static let brandPressed = Color(hex: 0x13463c) // --primary-pressed
 
     // Semantic (status pills)
     static let success = Color(hex: 0x24784A)
