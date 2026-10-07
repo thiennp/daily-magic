@@ -4,6 +4,7 @@ import {
   getAgentRunSession,
   registerAgentRunSession,
 } from "@/lib/dispatch/agentRunSessionRegistry";
+import { deleteAgentRunLocalPrompt } from "@/lib/dispatch/agentRunLocalPromptStore";
 import { getAgentRunRowById } from "@/lib/dispatch/agentRunEventQueries";
 import mapAgentRunRow from "@/lib/dispatch/mapAgentRunRow";
 import {
@@ -48,7 +49,16 @@ export async function updateAgentRunStatus(
         };
 
   if (isAgentWitchDevDashboardEnabled()) {
-    return updateAgentRunSessionStatus(runId, status, cappedFields);
+    const session = updateAgentRunSessionStatus(runId, status, cappedFields);
+    if (
+      status === AgentRunStatus.COMPLETED ||
+      status === AgentRunStatus.FAILED ||
+      status === AgentRunStatus.DENIED ||
+      status === AgentRunStatus.EXPIRED
+    ) {
+      deleteAgentRunLocalPrompt(runId);
+    }
+    return session;
   }
 
   const now = new Date().toISOString();
@@ -86,7 +96,15 @@ export async function updateAgentRunStatus(
   );
 
   if (!result[0]) {
-    return updateAgentRunSessionStatus(runId, status, cappedFields);
+    const session = updateAgentRunSessionStatus(runId, status, cappedFields);
+    if (isTerminal) {
+      deleteAgentRunLocalPrompt(runId);
+    }
+    return session;
+  }
+
+  if (isTerminal) {
+    deleteAgentRunLocalPrompt(runId);
   }
 
   return syncAgentRunCache(mapAgentRunRow(result[0]));

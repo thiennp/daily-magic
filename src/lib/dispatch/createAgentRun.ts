@@ -3,7 +3,9 @@ import { randomUUID } from "node:crypto";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
+import { putAgentRunLocalPrompt } from "@/lib/dispatch/agentRunLocalPromptStore";
 import mapAgentRunRow from "@/lib/dispatch/mapAgentRunRow";
+import { toAgentRunNeonMetaText } from "@/lib/dispatch/toAgentRunNeonMetaText";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import { asRowArray, getSql } from "@/lib/db";
 import { isAgentWitchDevDashboardEnabled } from "@/lib/auth/resolveDevDashboardActor";
@@ -31,6 +33,10 @@ const createAgentRun = async (
 ): Promise<AgentRunRecord> => {
   const runId = input.id ?? randomUUID();
   const writerAgent = input.writerAgent ?? "claude-cli";
+  // Neon meta-only: store capped prompt. Full body stays on local store for
+  // pending_approval hydrate — never re-expand local → Neon.
+  const neonPrompt = toAgentRunNeonMetaText(input.prompt);
+  putAgentRunLocalPrompt(runId, input.prompt);
 
   if (isAgentWitchDevDashboardEnabled()) {
     const now = new Date().toISOString();
@@ -88,7 +94,7 @@ const createAgentRun = async (
         ${input.requesterUserId},
         ${input.executorUserId},
         ${input.deviceId ?? null},
-        ${input.prompt},
+        ${neonPrompt},
         ${input.status},
         ${input.dispatchPolicy},
         ${writerAgent},
@@ -102,7 +108,9 @@ const createAgentRun = async (
     `,
   );
 
-  return mapAgentRunRow(result[0]);
+  const fromNeon = mapAgentRunRow(result[0]);
+  // Callers (registry / approval) need the full prompt; Neon row is meta-only.
+  return { ...fromNeon, prompt: input.prompt };
 };
 
 export default createAgentRun;

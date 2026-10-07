@@ -1,7 +1,9 @@
 /**
  * Neon holds agent_runs meta only — never full prompt/result bodies (Thien/
- * AW Lead HARD 2026-10-07). Cap body-capable text at write and shrink prompt
- * on terminal status so pending-approval restore still has the full prompt.
+ * AW Lead HARD 2026-10-07). Cap body-capable text at every Neon write
+ * (createAgentRun INSERT + status UPDATE). Full prompts for pending_approval
+ * hydrate live in the local prompt store (agentRunLocalPromptStore), never
+ * re-expanded into Neon.
  */
 export const AGENT_RUN_NEON_META_MAX_CHARS = 120;
 

@@ -1,5 +1,6 @@
 import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
+import { resolveAgentRunPromptForHydrate } from "@/lib/dispatch/agentRunLocalPromptStore";
 import { dispatchApprovalRegistry } from "@/lib/dispatch/dispatchApprovalRegistry";
 import mapAgentRunRow from "@/lib/dispatch/mapAgentRunRow";
 import { DEFAULT_DELEGATED_WRITER_AGENT } from "@/lib/dispatch/resolveDelegatedWriterAgent";
@@ -22,7 +23,7 @@ export const ensureDispatchApprovalsHydrated = async (): Promise<void> => {
       runId: run.id,
       requesterUserId: run.requesterUserId,
       executorUserId: run.executorUserId,
-      prompt: run.prompt,
+      prompt: resolveAgentRunPromptForHydrate(run.id, run.prompt),
       groupId: run.groupId,
       writerAgent: isHarnessWriterAgent(run.writerAgent)
         ? run.writerAgent
