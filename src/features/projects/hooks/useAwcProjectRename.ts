@@ -43,10 +43,19 @@ const useAwcProjectRename = (input: {
   }
 
   const clearRenameQuery = useCallback((): void => {
-    router.replace(`/projects/${encodeURIComponent(input.projectId)}`, {
-      scroll: false,
-    });
-  }, [input.projectId, router]);
+    // DF-015: drop `?rename=` in place (Next syncs history.replaceState into
+    // the router, like the #tab hash in useAwcProjectDetailTab). The old
+    // router.replace ran on every Save/Cancel, dropped the #tab hash, and a
+    // search change re-keys the page segment → whole panel remount.
+    if (!new URLSearchParams(window.location.search).has("rename")) {
+      return;
+    }
+    window.history.replaceState(
+      null,
+      "",
+      `/projects/${encodeURIComponent(input.projectId)}${window.location.hash}`,
+    );
+  }, [input.projectId]);
 
   const startEditing = useCallback((): void => {
     setDraft(name);
