@@ -97,6 +97,7 @@ export default function AwcProjectMessengerSection({
       {clearBar ? <div className="md:hidden">{clearBar}</div> : null}
       {!hasOwnerComputer ? <AwcMessengerNoComputerHint /> : null}
       <AwcProjectMessengerPanels
+        projectId={projectId}
         threads={gate.threads}
         headerAction={clearBar}
         selectedKey={selectedKey}

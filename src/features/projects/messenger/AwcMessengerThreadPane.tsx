@@ -2,6 +2,8 @@
 
 import { useMemo, useState, type ReactNode } from "react";
 
+import { useOneWindowComposerRouting } from "@/features/projects/messenger/oneWindow/useOneWindowComposerRouting";
+
 import AwcMessengerComposer from "@/features/projects/messenger/AwcMessengerComposer";
 import AwcMessengerStatusDot from "@/features/projects/messenger/AwcMessengerStatusDot";
 import AwcMessengerTimeline from "@/features/projects/messenger/AwcMessengerTimeline";
@@ -20,6 +22,8 @@ import type { MessengerTaskDraft } from "@/features/projects/messenger/utils/val
 import type { ProjectTasksChatVisibility } from "@/features/projects/tasks/projectTask.type";
 
 interface AwcMessengerThreadPaneProps {
+  readonly projectId: string;
+  readonly memberKey?: string | null;
   readonly title: string;
   readonly kindLabel: string;
   readonly status?: AwcMessengerBotStatus;
@@ -49,6 +53,8 @@ const isNeedsYou = (kind: string, text: string): boolean =>
   isApprovalish(kind) || text.toLowerCase().includes("needs a reply");
 
 export default function AwcMessengerThreadPane({
+  projectId,
+  memberKey = null,
   title,
   kindLabel,
   status,
@@ -71,6 +77,15 @@ export default function AwcMessengerThreadPane({
   chatVisibility,
 }: AwcMessengerThreadPaneProps) {
   const copy = AWC_PROJECT_MESSENGER_COPY;
+  const routingAssistants = assignees.map((a) => ({
+    membershipId: a.membershipId,
+    displayName: a.displayName,
+  }));
+  const routing = useOneWindowComposerRouting({
+    projectId,
+    memberKey,
+    assistants: routingAssistants,
+  });
   const feed = ONE_WINDOW_FEED_COPY;
   const [filter, setFilter] = useState<OneWindowFeedFilter>("all");
 
@@ -154,6 +169,7 @@ export default function AwcMessengerThreadPane({
           defaultAssigneeMembershipId={defaultAssigneeMembershipId}
           onSendMessage={onSendMessage}
           onSendTask={onSendTask}
+          routing={routing}
         />
       ) : (
         <p className="border-t border-awc-border bg-awc-surface-2 px-4 py-3.5 text-center text-sm text-awc-fg dark:border-gray-800 dark:bg-white/[0.03] dark:text-gray-300">

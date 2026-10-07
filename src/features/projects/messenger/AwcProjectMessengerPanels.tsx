@@ -13,6 +13,8 @@ import type { MessengerTaskDraft } from "@/features/projects/messenger/utils/val
 import type { ProjectTasksChatVisibility } from "@/features/projects/tasks/projectTask.type";
 
 interface AwcProjectMessengerPanelsProps {
+  readonly projectId: string;
+  readonly memberKey?: string | null;
   readonly threads: AwcMessengerThreadList;
   /** Desktop list-header action (owner Clear all bar). */
   readonly headerAction?: ReactNode;
@@ -38,6 +40,8 @@ interface AwcProjectMessengerPanelsProps {
 }
 
 export default function AwcProjectMessengerPanels({
+  projectId,
+  memberKey = null,
   threads,
   headerAction,
   selectedKey,
@@ -80,6 +84,8 @@ export default function AwcProjectMessengerPanels({
         } min-h-0 min-w-0 flex-col`}
       >
         <AwcMessengerThreadPane
+          projectId={projectId}
+          memberKey={memberKey}
           title={selectedMeta.title}
           kindLabel={selectedMeta.kindLabel}
           status={selectedMeta.status}
