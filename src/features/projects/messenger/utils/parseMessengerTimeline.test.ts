@@ -112,7 +112,7 @@ describe("parseMessengerOpenThread", () => {
             displayName: "claude-cli",
           },
           kind: "ai.session",
-          entryKind: "ai_session",
+          entryKind: "session",
           text: "Finished the refactor",
           needsReply: false,
           inReplyTo: null,
@@ -129,7 +129,7 @@ describe("parseMessengerOpenThread", () => {
     expect(parsed?.entries).toHaveLength(2);
     expect(parsed?.entries[0]?.entryKind).toBeUndefined();
     expect(parsed?.entries[1]).toMatchObject({
-      entryKind: "ai_session",
+      entryKind: "session",
       kind: "ai.session",
       needsReply: false,
       session: {

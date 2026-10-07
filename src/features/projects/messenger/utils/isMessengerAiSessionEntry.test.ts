@@ -19,9 +19,9 @@ describe("isMessengerAiSessionEntry", () => {
     expect(isMessengerAiSessionEntry(base())).toBe(false);
   });
 
-  it("detects entryKind ai_session", () => {
+  it("detects entryKind session", () => {
     expect(
-      isMessengerAiSessionEntry({ ...base(), entryKind: "ai_session" }),
+      isMessengerAiSessionEntry({ ...base(), entryKind: "session" }),
     ).toBe(true);
   });
 

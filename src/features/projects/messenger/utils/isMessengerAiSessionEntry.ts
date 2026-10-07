@@ -4,4 +4,4 @@ import type { AwcMessengerTimelineEntry } from "@/features/projects/messenger/ty
 export const isMessengerAiSessionEntry = (
   entry: AwcMessengerTimelineEntry,
 ): boolean =>
-  entry.entryKind === "ai_session" || entry.kind === "ai.session";
+  entry.entryKind === "session" || entry.kind === "ai.session";

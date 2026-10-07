@@ -47,7 +47,7 @@ const parseChip = (value: unknown): AwcMessengerStateChip | null => {
   };
 };
 
-const ENTRY_KINDS: ReadonlySet<string> = new Set(["message", "ai_session"]);
+const ENTRY_KINDS: ReadonlySet<string> = new Set(["message", "session"]);
 
 const parseEntryKind = (value: unknown): AwcMessengerEntryKind | undefined => {
   if (typeof value !== "string" || !ENTRY_KINDS.has(value)) return undefined;

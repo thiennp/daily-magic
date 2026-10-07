@@ -57,7 +57,7 @@ export default function AwcMessengerAiSessionRow({
   return (
     <article
       className="w-full max-w-xl self-stretch rounded-xl border border-awc-border bg-awc-surface-2 px-3 py-2.5 dark:border-gray-800 dark:bg-white/[0.03]"
-      data-entry-kind="ai_session"
+      data-entry-kind="session"
     >
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm font-semibold text-awc-fg dark:text-white">

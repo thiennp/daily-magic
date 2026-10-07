@@ -40,7 +40,7 @@ export type AwcMessengerStateChip = {
 };
 
 /** Discriminator for timeline rows. Omit / "message" = chat/task bubble. */
-export type AwcMessengerEntryKind = "message" | "ai_session";
+export type AwcMessengerEntryKind = "message" | "session";
 
 /** Optional AI-session metadata from History/Dispatch (additive). */
 export type AwcMessengerAiSessionMeta = {
@@ -63,7 +63,7 @@ export type AwcMessengerTimelineEntry = {
   readonly needsReply: boolean;
   readonly inReplyTo: string | null;
   readonly states: readonly AwcMessengerStateChip[];
-  /** Additive: omit or "message" = bubble; "ai_session" = compact session row. */
+  /** Additive: omit or "message" = bubble; "session" = compact AI-session row. */
   readonly entryKind?: AwcMessengerEntryKind;
   readonly session?: AwcMessengerAiSessionMeta;
 };
