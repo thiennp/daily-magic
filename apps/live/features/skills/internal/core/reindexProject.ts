@@ -3,9 +3,10 @@ import type { SkillEmbedder, SkillIndexDb } from "./skillIndex.types";
 import { deleteSkillRow, listSkillRows } from "./skillIndexDb";
 import {
   listMirrorSkills,
-  readMirrorSkillBody,
+  readMirrorSkillMarkdown,
   resolveMirrorSkillsDir,
 } from "./skillMirror";
+import { seedSkillScripts } from "./skillScriptSeed";
 import { parseSkillText } from "./skillText";
 
 export type ReindexResult = {
@@ -29,6 +30,9 @@ export const reindexProject = async (input: {
     input.projectDataDir,
     input.projectId,
   );
+  if (skillsDir !== null) {
+    listMirrorSkills(skillsDir).forEach(seedSkillScripts);
+  }
   const mirror = skillsDir === null ? [] : listMirrorSkills(skillsDir);
   const existing = new Map(
     listSkillRows(input.db, input.projectId).map(
@@ -49,7 +53,7 @@ export const reindexProject = async (input: {
       unchanged += 1;
       continue;
     }
-    const body = readMirrorSkillBody(skill);
+    const body = readMirrorSkillMarkdown(skill);
     if (body === null) {
       continue;
     }

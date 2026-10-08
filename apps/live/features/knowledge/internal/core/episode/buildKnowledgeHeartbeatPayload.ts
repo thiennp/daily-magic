@@ -44,6 +44,13 @@ export type KnowledgeHeartbeatPayload = {
   readonly cards?: readonly KnowledgeSharedCard[];
   /** Projects whose shared notes the server should drop (`knowledgeShare` off). */
   readonly shareOffProjectIds?: readonly string[];
+  /** Per project skill savings and miss stats (counts only), when provided. */
+  readonly skillStats?: readonly unknown[];
+};
+
+/** Optional contributions from other slices (kept out to avoid import cycles). */
+export type KnowledgeHeartbeatExtras = {
+  readonly skillStats?: (db: KnowledgeDatabase) => readonly unknown[];
 };
 
 const ollamaCache: { checkedAt: number; status: "ready" | "missing" } = {
@@ -156,10 +163,22 @@ export const buildKnowledgeDailyAggregates = (
   });
 };
 
+const tryBuildSkillStats = (
+  db: KnowledgeDatabase,
+  extras: KnowledgeHeartbeatExtras,
+): readonly unknown[] => {
+  try {
+    return extras.skillStats?.(db) ?? [];
+  } catch {
+    return [];
+  }
+};
+
 /** Heartbeat `knowledge` block: capabilities every beat, aggregates every 10 min. */
 export const buildKnowledgeHeartbeatPayload = async (
   layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">,
   now: number = Date.now(),
+  extras: KnowledgeHeartbeatExtras = {},
 ): Promise<KnowledgeHeartbeatPayload> => {
   const enabled = isKnowledgeEnabled();
   const db = enabled ? getKnowledgeDb(layout) : null;
@@ -185,9 +204,11 @@ export const buildKnowledgeHeartbeatPayload = async (
   dailyCache.sentAt = now;
   try {
     const shared = buildKnowledgeSharedCards(db, now);
+    const skillStats = tryBuildSkillStats(db, extras);
     return {
       capabilities,
       daily: buildKnowledgeDailyAggregates(db, now),
+      ...(skillStats.length > 0 ? { skillStats } : {}),
       ...(shared.cards.length > 0 ? { cards: shared.cards } : {}),
       ...(shared.shareOffProjectIds.length > 0
         ? { shareOffProjectIds: shared.shareOffProjectIds }

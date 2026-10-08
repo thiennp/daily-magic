@@ -14,3 +14,26 @@ export {
   SKILLS_FIND_INSTRUCTION,
   withSkillsFindInstruction,
 } from "../internal/core/skillsPromptInstruction";
+export { buildScriptArgv } from "../internal/core/skillScriptParams";
+export {
+  buildScriptEnv,
+  runSkillScript,
+} from "../internal/core/runSkillScript";
+export { openSkillIndexDb } from "../internal/core/createDefaultSkillToolDeps";
+export {
+  listScriptsNeedingApproval,
+  recordScriptDecision,
+  scriptApprovalKey,
+  type ScriptApprovalRequest,
+} from "../internal/core/skillScriptApprovals";
+export { seedSkillScripts } from "../internal/core/skillScriptSeed";
+export { settleSkillCallsForRun } from "../internal/core/settleSkillCalls";
+export {
+  computeSkillSavings,
+  computeSkillWeekly,
+  type SkillSavings,
+  type SkillWeeklyPoint,
+} from "../internal/core/computeSkillSavings";
+export { addSkillBaselineSample } from "../internal/core/skillBaselineDb";
+export { settleRunSkillCalls } from "../internal/core/settleRunSkillCalls";
+export { buildSkillStatsPayload } from "../internal/core/buildSkillStatsPayload";

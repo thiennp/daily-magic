@@ -46,3 +46,25 @@ export {
   pullPublishedProjectSkillsToMirror,
   type PullPublishedProjectSkillsToMirror,
 } from "./pullPublishedProjectSkillsToMirror";
+export * from "./skillBundle.constant";
+export type {
+  SkillBundle,
+  SkillBundleResult,
+  SkillManifest,
+  SkillScriptEntry,
+  SkillScriptParam,
+  SkillScriptPermissions,
+} from "./skillBundle.type";
+export { computeSkillScriptSha256 } from "./computeSkillScriptSha256";
+export { embedSkillBundle, splitSkillBundle } from "./skillBundleCodec";
+export { parseSkillManifest } from "./parseSkillManifest";
+export {
+  parseSkillBundleJson,
+  validateSkillBundle,
+} from "./validateSkillBundle";
+export {
+  buildSkillBundle,
+  readSkillBundleFromBody,
+  type SkillBodyBundle,
+  type SkillScriptProposal,
+} from "./readSkillBundleFromBody";

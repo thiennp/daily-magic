@@ -13,6 +13,8 @@ export type SkillToolDeps = {
   readonly rerank?: SkillRerankCompleter;
   /** The run this MCP process serves, when the host exports it. */
   readonly runId?: string | null;
+  /** Coding-tools pause switch (S0-7a); scripts refuse while paused. */
+  readonly isPaused?: () => boolean;
   /** Fallback cwd for stdio servers started inside the project. */
   readonly defaultCwd?: () => string;
 };

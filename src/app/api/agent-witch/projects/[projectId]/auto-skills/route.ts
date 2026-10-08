@@ -1,6 +1,7 @@
 import {
   getAutoSkillsDeviceView,
   recordAutoSkillsStatus,
+  sanitizeScriptInfo,
   upsertAutoSkillSuggestion,
 } from "@/features/project-auto-skills/public-api/infrastructure";
 import { requireAgentWitchDeviceAuth } from "@/lib/agentWitch/requireAgentWitchDeviceAuth";
@@ -62,7 +63,7 @@ export async function POST(
   }
   const s = body?.suggestion;
   const clusterId = str(s?.clusterId, 80);
-  const draftBody = str(s?.draftBody, 60_000);
+  const draftBody = str(s?.draftBody, 500_000);
   const draftName = str(s?.draftName, 80);
   if (
     body?.kind !== "suggestion" ||
@@ -89,6 +90,8 @@ export async function POST(
     draftName,
     draftBody,
     judgeLabel: str(s.judgeLabel, 120),
+    kind: s.kind === "script_approval" ? "script_approval" : "skill",
+    scriptInfo: sanitizeScriptInfo(s.scriptInfo),
   });
   return Response.json({ ok: true, raised });
 }

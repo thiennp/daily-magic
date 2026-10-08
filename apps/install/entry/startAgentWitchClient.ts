@@ -125,7 +125,10 @@ import {
   isDeviceNotLinkedError,
   isUnknownAgentWitchIdentityError,
 } from "@agent-witch/install-uninstall";
-import { withSkillsFindInstruction } from "@agent-witch/live-skills";
+import {
+  buildSkillStatsPayload,
+  withSkillsFindInstruction,
+} from "@agent-witch/live-skills";
 import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
 import { LocalCodingToolRefusalCode } from "@agent-witch/shared/dispatch";
 
@@ -1477,6 +1480,8 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       ]);
       const knowledge = await buildKnowledgeHeartbeatPayload(
         config.layout,
+        Date.now(),
+        { skillStats: buildSkillStatsPayload },
       ).catch(() => null);
       const installBundleVersion =
         resolveAgentWitchHeartbeatInstallBundleVersion(

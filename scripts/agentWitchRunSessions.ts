@@ -19,6 +19,8 @@ import {
   releaseFolderWriteLocksForRun,
 } from "@agent-witch/live-projects";
 
+import { settleRunSkillCalls } from "@agent-witch/live-skills";
+
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import {
   buildWriterCliInvocation,
@@ -370,6 +372,13 @@ const finishRun = (
         actualTokens,
       });
     }
+    // Skill savings: attribute the run's tokens to its skills_run calls.
+    settleRunSkillCalls(config.layout, {
+      runId: agentRunId,
+      reportedTokens: actualTokens,
+      prompt: originalPrompt,
+      output: resolvedOutput,
+    });
   }
 
   if (agentRunId !== undefined) {
@@ -1043,12 +1052,18 @@ export const runWriterTask = (
     projectFolderPath,
   });
 
+  // The writer's MCP server reads this to attribute skill calls to the run.
+  const writerEnv: NodeJS.ProcessEnv | undefined =
+    agentRunId === undefined
+      ? processEnv
+      : { ...(processEnv ?? process.env), AGENT_WITCH_RUN_ID: agentRunId };
+
   const startPipeChild = (): void => {
     ensureAntigravityCliHeadlessPermissionsBeforeRun(writerAgent);
     const child = spawn(invocation.command, [...invocation.args], {
       cwd,
       stdio: ["ignore", "pipe", "pipe"],
-      env: processEnv ?? process.env,
+      env: writerEnv ?? process.env,
       // Own process group so a stop / session limit kills the whole tree.
       detached: process.platform !== "win32",
     });
@@ -1132,7 +1147,7 @@ export const runWriterTask = (
     command: invocation.command,
     args: invocation.args,
     cwd,
-    processEnv,
+    processEnv: writerEnv,
     originalPrompt: prompt,
     writerAgent,
     onSpawned: (pid) => {

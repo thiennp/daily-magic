@@ -37,6 +37,32 @@ export type AutoSkillSuggestionPayload = {
   readonly draftName: string;
   readonly draftBody: string;
   readonly judgeLabel: string;
+  /** `script_approval`: owner approval of one installed script version. */
+  readonly kind?: "skill" | "script_approval";
+  /** Permission list and replay result of the scripts (nothing secret). */
+  readonly scriptInfo?: AutoSkillScriptInfoPayload;
+};
+
+export type AutoSkillScriptInfoPayload = {
+  readonly skillId?: string;
+  readonly scripts: readonly {
+    readonly name: string;
+    readonly description: string;
+    readonly permissions: {
+      readonly write: boolean;
+      readonly network: boolean;
+    };
+    readonly params: readonly {
+      readonly name: string;
+      readonly required: boolean;
+    }[];
+    readonly replay: {
+      readonly status: "ok" | "failed" | "not_replayed";
+      readonly exitCode: number | null;
+      readonly ms: number | null;
+      readonly note: string | null;
+    };
+  }[];
 };
 
 /** Cloud side of auto skills (settings, status, questions). Throws on http errors. */

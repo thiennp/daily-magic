@@ -4,6 +4,9 @@ import type {
   AutoSkillAnswer,
   AutoSkillSuggestion,
 } from "@/features/project-auto-skills/public-api/types";
+import { splitSkillBundle } from "@agent-witch/shared/projectSkills/skillBundleCodec";
+
+import AwcAutoSkillScriptList from "@/features/projects/autoskills/AwcAutoSkillScriptList";
 import {
   OW_CARD_NEEDS_CLASS,
   OW_PRIMARY_BUTTON_CLASS,
@@ -28,26 +31,29 @@ export default function AwcAutoSkillQuestionCard({
   onAnswer,
   projectName,
 }: AwcAutoSkillQuestionCardProps) {
+  const approval = suggestion.kind === "script_approval";
+  const question = approval ? "Allow script to run?" : "Save as skill?";
   return (
     <article
       className={OW_CARD_NEEDS_CLASS}
-      aria-label={`Save as skill? ${suggestion.title}`}
+      aria-label={`${question} ${suggestion.title}`}
     >
       <div className="mb-2 flex flex-wrap items-center gap-2 text-[12.5px]">
         <span className="font-semibold uppercase tracking-wide text-awc-fg-subtle">
-          Skill question
+          {approval ? "Script approval" : "Skill question"}
         </span>
         {projectName !== undefined ? (
           <span className="text-awc-fg-subtle">{projectName}</span>
         ) : null}
       </div>
-      <h3 className="m-0 text-[15px] font-semibold text-awc-fg">
-        Save as skill?
-      </h3>
+      <h3 className="m-0 text-[15px] font-semibold text-awc-fg">{question}</h3>
       <p className="mt-1 text-[13px] text-awc-fg-muted">
-        {suggestion.moduleLabel !== null && suggestion.distinctPrompts !== null
-          ? `This step appeared ${suggestion.occurrences} times in ${suggestion.distinctPrompts} ${suggestion.distinctPrompts === 1 ? "prompt" : "prompts"}.`
-          : `You ran this kind of task ${suggestion.occurrences} times.`}
+        {approval
+          ? `Allow ${suggestion.draftName} to run on your computer? It stays blocked until you approve.`
+          : suggestion.moduleLabel !== null &&
+              suggestion.distinctPrompts !== null
+            ? `This step appeared ${suggestion.occurrences} times in ${suggestion.distinctPrompts} ${suggestion.distinctPrompts === 1 ? "prompt" : "prompts"}.`
+            : `You ran this kind of task ${suggestion.occurrences} times.`}
       </p>
       {suggestion.moduleLabel !== null ? (
         <p className="mt-1 text-[13px] font-medium text-awc-fg">
@@ -59,12 +65,17 @@ export default function AwcAutoSkillQuestionCard({
       </p>
       <details className="mt-2 text-[13px] text-awc-fg">
         <summary className="cursor-pointer font-medium">
-          Draft skill: {suggestion.draftName}
+          {approval ? "Script" : "Draft skill"}: {suggestion.draftName}
         </summary>
         <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap rounded-lg bg-awc-bg/80 p-2 text-[12px] dark:bg-black/20">
-          {suggestion.draftBody}
+          {approval
+            ? suggestion.draftBody
+            : splitSkillBundle(suggestion.draftBody).markdown}
         </pre>
       </details>
+      {suggestion.scriptInfo !== null ? (
+        <AwcAutoSkillScriptList info={suggestion.scriptInfo} />
+      ) : null}
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <button
           type="button"
@@ -72,23 +83,25 @@ export default function AwcAutoSkillQuestionCard({
           className={OW_PRIMARY_BUTTON_CLASS}
           onClick={() => onAnswer("save")}
         >
-          Save as skill
+          {approval ? "Approve" : "Save as skill"}
         </button>
-        <button
-          type="button"
-          disabled={busy}
-          className={OW_SECONDARY_BUTTON_CLASS}
-          onClick={() => onAnswer("not_now")}
-        >
-          Not now
-        </button>
+        {approval ? null : (
+          <button
+            type="button"
+            disabled={busy}
+            className={OW_SECONDARY_BUTTON_CLASS}
+            onClick={() => onAnswer("not_now")}
+          >
+            Not now
+          </button>
+        )}
         <button
           type="button"
           disabled={busy}
           className={OW_SECONDARY_BUTTON_CLASS}
           onClick={() => onAnswer("never")}
         >
-          Never for this task
+          {approval ? "Deny" : "Never for this task"}
         </button>
       </div>
     </article>

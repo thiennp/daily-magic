@@ -1,10 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { splitSkillBundle } from "@agent-witch/shared/projectSkills";
+
 /** Same layout the History skill pull writes: skills/<id>/{meta.json,vNNNN.md}. */
 const SKILLS_DIR = "skills";
 const META_FILE = "meta.json";
-const SCRIPTS_DIR = "scripts";
+export const SCRIPTS_DIR = "scripts";
+export const SCRIPTS_MANIFEST_FILE = "manifest.json";
 const VERSION_PAD = 4;
 
 const SAFE_ID = /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/;
@@ -56,7 +59,9 @@ export const listMirrorSkills = (skillsDir: string): MirrorSkill[] => {
               skillId,
               version,
               dir,
-              hasScripts: fs.existsSync(path.join(dir, SCRIPTS_DIR)),
+              hasScripts: fs.existsSync(
+                path.join(dir, SCRIPTS_DIR, SCRIPTS_MANIFEST_FILE),
+              ),
             },
           ];
     });
@@ -74,4 +79,10 @@ export const readMirrorSkillBody = (skill: MirrorSkill): string | null => {
   } catch {
     return null;
   }
+};
+
+/** SKILL.md without the embedded script bundle comment. */
+export const readMirrorSkillMarkdown = (skill: MirrorSkill): string | null => {
+  const body = readMirrorSkillBody(skill);
+  return body === null ? null : splitSkillBundle(body).markdown;
 };

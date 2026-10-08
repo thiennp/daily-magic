@@ -170,3 +170,4 @@ export type {
 } from "../internal/core/reconcileProjectSyncOnConnect";
 
 export { reportAutoSkillRunCompleted } from "../internal/core/reportAutoSkillRunCompleted";
+export { syncSkillScriptApprovals } from "../internal/core/syncSkillScriptApprovals";

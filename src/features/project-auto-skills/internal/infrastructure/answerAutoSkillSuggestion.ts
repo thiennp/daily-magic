@@ -66,8 +66,14 @@ export const answerAutoSkillSuggestion = async (input: {
     id: input.suggestionId,
     actorUserId: input.actorUserId,
   };
-  if (input.answer !== "save") {
-    const status = input.answer === "never" ? "never" : "not_now";
+  if (input.answer !== "save" || suggestion.kind === "script_approval") {
+    // A script approval never publishes a skill: save = approved.
+    const status =
+      input.answer === "never"
+        ? "never"
+        : input.answer === "save"
+          ? "saved"
+          : "not_now";
     await markAutoSkillSuggestionAnswered({ ...base, status, skillId: null });
     return { ok: true, skillId: null };
   }

@@ -10,6 +10,7 @@ export type SkillCallRecord = {
   readonly tool: string;
   readonly ok: boolean;
   readonly durationMs: number;
+  readonly holdout?: boolean;
 };
 
 /** One row per tool call; savings columns stay NULL until phase 3. */
@@ -20,7 +21,7 @@ export const insertSkillCall = (
   db.prepare(
     `INSERT INTO skill_call (id, skill_id, project_id, run_id, chosen_by,
       tool, ok, duration_ms, created_at, holdout)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)`,
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   ).run(
     randomUUID(),
     call.skillId,
@@ -31,8 +32,25 @@ export const insertSkillCall = (
     call.ok ? 1 : 0,
     Math.round(call.durationMs),
     new Date().toISOString(),
+    call.holdout === true ? 1 : 0,
   );
 };
+
+/** Earlier `skills_run` calls of a skill (the holdout counter). */
+export const countSkillRunCalls = (
+  db: SkillIndexDb,
+  projectId: string,
+  skillId: string,
+): number =>
+  Number(
+    (
+      db
+        .prepare(
+          "SELECT COUNT(*) AS n FROM skill_call WHERE project_id = ? AND skill_id = ? AND tool = 'skills_run' AND ok = 1",
+        )
+        .get(projectId, skillId) as { n: number }
+    ).n,
+  );
 
 export const insertFindLog = (
   db: SkillIndexDb,

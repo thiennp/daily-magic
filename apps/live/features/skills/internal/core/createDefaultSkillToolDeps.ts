@@ -1,4 +1,5 @@
 import { resolveAgentWitchLocalLayout } from "@agent-witch/install-layout";
+import { isCodingToolsPaused } from "@agent-witch/install-runtime-client";
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 import {
   embedKnowledgeQuery,
@@ -28,8 +29,12 @@ export const openSkillIndexDb = (
 
 /** Production wiring: knowledge.db, Ollama embeddings, project-data mirror. */
 export const createDefaultSkillToolDeps = (
-  layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">,
+  layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail"> &
+    Partial<Pick<AgentWitchLocalLayout, "configPath">>,
 ): SkillToolDeps => ({
+  // Fail closed: without a config path scripts are treated as paused.
+  isPaused: () =>
+    layout.configPath === undefined || isCodingToolsPaused(layout.configPath),
   openDb: () => openSkillIndexDb(layout),
   resolveProjectId: resolveAgentWitchProjectIdFromCwd,
   projectDataDir: resolveAgentWitchLocalLayout().projectDataDir,

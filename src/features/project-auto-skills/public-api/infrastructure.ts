@@ -10,3 +10,4 @@ export {
 } from "@/features/project-auto-skills/internal/infrastructure/autoSkillsSettingsDb";
 export { upsertAutoSkillSuggestion } from "@/features/project-auto-skills/internal/infrastructure/autoSkillsSuggestionsDb";
 export { ensureProjectAutoSkillsSchema } from "@/features/project-auto-skills/internal/infrastructure/ensureProjectAutoSkillsSchema";
+export { sanitizeScriptInfo } from "@/features/project-auto-skills/internal/core/sanitizeScriptInfo";

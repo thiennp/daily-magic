@@ -18,6 +18,7 @@ export type ProjectSkillShareErrorCode =
   | "invalid_skill_id"
   | "body_required"
   | "body_too_large"
+  | "bundle_invalid"
   | "no_draft"
   | "version_conflict";
 

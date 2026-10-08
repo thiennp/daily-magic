@@ -1,5 +1,11 @@
 import { buildOwnerLlmSkillWritePrompt } from "./buildOwnerLlmSkillDraftPrompt";
 import { extractOwnerLlmSkillMarkdown } from "./extractOwnerLlmSkillMarkdown";
+import {
+  parseScriptProposals,
+  splitScriptsBlock,
+  type ParsedScripts,
+} from "./autoSkillScriptsBlock";
+import { AUTO_SKILL_SCRIPTS_INSTRUCTION } from "./autoSkillScriptsPrompt";
 import { scrubProjectHistorySkillgenSecrets } from "./scrubProjectHistorySkillgenSecrets";
 import { stampProjectHistorySkillgenSourceMessageIds } from "./stampProjectHistorySkillgenSourceMessageIds";
 import { validateProjectHistorySkillgenDraft } from "./validateProjectHistorySkillgenDraft";
@@ -15,6 +21,8 @@ export type AutoSkillDraftResult =
       readonly name: string;
       readonly description: string;
       readonly markdown: string;
+      /** Validated script proposal; absent when none or unparseable. */
+      readonly scripts?: ParsedScripts;
     }
   | { readonly ok: false; readonly reason: string };
 
@@ -34,16 +42,21 @@ export const buildAutoSkillTranscript = (
       .join("\n\n"),
   ).scrubbed;
 
+const scriptsOf = (json: string | null): { scripts?: ParsedScripts } => {
+  const parsed = json === null ? null : parseScriptProposals(json);
+  return parsed === null ? {} : { scripts: parsed };
+};
+
 /** Draft SKILL.md from the repeated runs via the chosen completer. */
 export const generateAutoSkillDraft = async (
   runs: readonly AutoSkillRunRecord[],
   completer: AutoSkillCompleter,
 ): Promise<AutoSkillDraftResult> => {
-  const prompt = buildOwnerLlmSkillWritePrompt({
+  const prompt = `${buildOwnerLlmSkillWritePrompt({
     scrubbedTranscript: buildAutoSkillTranscript(runs),
     similarDraftHints: [],
     mode: "write",
-  });
+  })}\n${AUTO_SKILL_SCRIPTS_INSTRUCTION}`;
   let reason = "draft_invalid";
   for (let attempt = 0; attempt < 2; attempt += 1) {
     const done = await completer({
@@ -55,7 +68,8 @@ export const generateAutoSkillDraft = async (
       reason = done.reason;
       continue;
     }
-    const extracted = extractOwnerLlmSkillMarkdown(done.text);
+    const split = splitScriptsBlock(done.text);
+    const extracted = extractOwnerLlmSkillMarkdown(split.rest);
     if (extracted === null) {
       continue;
     }
@@ -72,6 +86,7 @@ export const generateAutoSkillDraft = async (
         name: valid.name,
         description: valid.description,
         markdown,
+        ...scriptsOf(split.json),
       };
     }
     reason = valid.reason;

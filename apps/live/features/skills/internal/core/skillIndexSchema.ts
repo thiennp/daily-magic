@@ -21,6 +21,15 @@ CREATE TABLE IF NOT EXISTS skill_find_log (
   run_id TEXT, created_at TEXT NOT NULL);
 CREATE INDEX IF NOT EXISTS skill_find_log_project
   ON skill_find_log (project_id, created_at);
+CREATE TABLE IF NOT EXISTS skill_script_approval (
+  project_id TEXT NOT NULL, skill_id TEXT NOT NULL, script TEXT NOT NULL,
+  sha256 TEXT NOT NULL, status TEXT NOT NULL, decided_at TEXT NOT NULL,
+  PRIMARY KEY (project_id, skill_id, script, sha256));
+CREATE TABLE IF NOT EXISTS skill_baseline (
+  project_id TEXT NOT NULL, skill_id TEXT NOT NULL,
+  samples TEXT NOT NULL DEFAULT '[]', baseline INTEGER,
+  estimate INTEGER NOT NULL DEFAULT 1, seeded INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (project_id, skill_id));
 `;
 
 /** Idempotent bootstrap; safe to call on every open. */

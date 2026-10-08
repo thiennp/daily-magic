@@ -24,6 +24,32 @@ export interface AutoSkillSuggestionMatch {
   readonly summary: string;
 }
 
+export type AutoSkillSuggestionKind = "skill" | "script_approval";
+
+export type AutoSkillReplayStatus = "ok" | "failed" | "not_replayed";
+
+/** One proposed (or installed) script: what it may do and how its replay went. */
+export interface AutoSkillScriptInfoEntry {
+  readonly name: string;
+  readonly description: string;
+  readonly permissions: { readonly write: boolean; readonly network: boolean };
+  readonly params: readonly {
+    readonly name: string;
+    readonly required: boolean;
+  }[];
+  readonly replay: {
+    readonly status: AutoSkillReplayStatus;
+    readonly exitCode: number | null;
+    readonly ms: number | null;
+    readonly note: string | null;
+  };
+}
+
+export interface AutoSkillScriptInfo {
+  readonly skillId?: string;
+  readonly scripts: readonly AutoSkillScriptInfoEntry[];
+}
+
 export interface AutoSkillSuggestion {
   readonly id: string;
   readonly clusterId: string;
@@ -40,6 +66,9 @@ export interface AutoSkillSuggestion {
   readonly draftBody: string;
   readonly judgeLabel: string | null;
   readonly skillId: string | null;
+  /** `script_approval`: "Allow script X to run on your computer?" (draftBody = script text). */
+  readonly kind: AutoSkillSuggestionKind;
+  readonly scriptInfo: AutoSkillScriptInfo | null;
   readonly createdAt: string;
 }
 

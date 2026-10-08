@@ -1,8 +1,11 @@
 import type {
+  AutoSkillScriptInfo,
   AutoSkillSuggestion,
+  AutoSkillSuggestionKind,
   AutoSkillSuggestionMatch,
   AutoSkillSuggestionStatus,
 } from "@/features/project-auto-skills/internal/core/projectAutoSkills.type";
+import { mapAutoSkillSuggestionRow as mapRow } from "@/features/project-auto-skills/internal/infrastructure/mapAutoSkillSuggestionRow";
 import { ensureProjectAutoSkillsSchema } from "@/features/project-auto-skills/internal/infrastructure/ensureProjectAutoSkillsSchema";
 import { asRowArray, getSql } from "@/lib/db";
 
@@ -17,27 +20,9 @@ export type NewAutoSkillSuggestion = {
   readonly draftName: string;
   readonly draftBody: string;
   readonly judgeLabel: string | null;
+  readonly kind?: AutoSkillSuggestionKind;
+  readonly scriptInfo?: AutoSkillScriptInfo | null;
 };
-
-const mapRow = (row: Record<string, unknown>): AutoSkillSuggestion => ({
-  id: String(row.id),
-  clusterId: String(row.cluster_id),
-  status: String(row.status) as AutoSkillSuggestionStatus,
-  title: String(row.title),
-  prompt: String(row.prompt),
-  occurrences: Number(row.occurrences),
-  moduleLabel: row.module_label == null ? null : String(row.module_label),
-  distinctPrompts:
-    row.distinct_prompts == null ? null : Number(row.distinct_prompts),
-  matches: Array.isArray(row.matches)
-    ? (row.matches as AutoSkillSuggestionMatch[])
-    : [],
-  draftName: String(row.draft_name),
-  draftBody: String(row.draft_body),
-  judgeLabel: row.judge_label === null ? null : String(row.judge_label),
-  skillId: row.skill_id === null ? null : String(row.skill_id),
-  createdAt: String(row.created_at),
-});
 
 /**
  * Raise (or re-raise after "Not now") a question. A cluster the owner marked
@@ -51,17 +36,20 @@ export const upsertAutoSkillSuggestion = async (
   const rows = asRowArray(
     await getSql()`
       INSERT INTO project_skill_suggestions (project_id, cluster_id, title, prompt,
-        occurrences, module_label, distinct_prompts, matches, draft_name, draft_body, judge_label)
+        occurrences, module_label, distinct_prompts, matches, draft_name, draft_body, judge_label,
+        kind, script_info)
       VALUES (${projectId}, ${s.clusterId}, ${s.title}, ${s.prompt}, ${s.occurrences},
         ${s.moduleLabel ?? null}, ${s.distinctPrompts ?? null},
-        ${JSON.stringify(s.matches)}::jsonb, ${s.draftName}, ${s.draftBody}, ${s.judgeLabel})
+        ${JSON.stringify(s.matches)}::jsonb, ${s.draftName}, ${s.draftBody}, ${s.judgeLabel},
+        ${s.kind ?? "skill"}, ${s.scriptInfo == null ? null : JSON.stringify(s.scriptInfo)}::jsonb)
       ON CONFLICT (project_id, cluster_id) DO UPDATE SET status = 'pending',
         title = EXCLUDED.title, prompt = EXCLUDED.prompt,
         occurrences = EXCLUDED.occurrences,
         module_label = EXCLUDED.module_label,
         distinct_prompts = EXCLUDED.distinct_prompts, matches = EXCLUDED.matches,
         draft_name = EXCLUDED.draft_name, draft_body = EXCLUDED.draft_body,
-        judge_label = EXCLUDED.judge_label, updated_at = NOW()
+        judge_label = EXCLUDED.judge_label, kind = EXCLUDED.kind,
+        script_info = EXCLUDED.script_info, updated_at = NOW()
       WHERE project_skill_suggestions.status IN ('pending', 'not_now')
       RETURNING id`,
   );

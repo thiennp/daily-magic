@@ -140,6 +140,7 @@ import { runLocalSelfDelegatedTask } from "@agent-witch/live-tasks";
 import { refreshSkillIndex } from "@agent-witch/live-skills";
 import {
   startProjectComputerHistoryTick,
+  syncSkillScriptApprovals,
   tickProjectComputerHistory,
   tryHandleLocalChatReadRequest,
   tryHandleLocalSkillDraftReviewRequest,
@@ -2062,6 +2063,11 @@ export const startAgentWitchLocalApp = (input: {
     tick: async () => {
       await tickProjectComputerHistory();
       await refreshSkillIndex(input.layout);
+      // New script versions raise an owner approval question; answers come back here.
+      const cloudApi = readLocalAppCloudConfig();
+      if (cloudApi !== null) {
+        await syncSkillScriptApprovals(input.layout, cloudApi);
+      }
     },
   });
   server.on("close", () => {

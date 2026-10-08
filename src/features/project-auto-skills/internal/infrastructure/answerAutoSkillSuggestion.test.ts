@@ -84,6 +84,17 @@ describe("answerAutoSkillSuggestion", () => {
     expect(out).toEqual({ ok: true, skillId: "release-notes-s1" });
   });
 
+  it("a script approval is saved/denied without publishing a skill", async () => {
+    mocks.get.mockResolvedValue({ id: "s1", kind: "script_approval" });
+    await answerAutoSkillSuggestion({ ...input, answer: "save" });
+    await answerAutoSkillSuggestion({ ...input, answer: "never" });
+    expect(mocks.mark.mock.calls.map((c) => c[0].status)).toEqual([
+      "saved",
+      "never",
+    ]);
+    expect(mocks.publish).not.toHaveBeenCalled();
+  });
+
   it("never and not_now only record the answer", async () => {
     await answerAutoSkillSuggestion({ ...input, answer: "never" });
     await answerAutoSkillSuggestion({ ...input, answer: "not_now" });

@@ -32,14 +32,19 @@ export const SKILLS_FIND_TOOL: McpToolDefinition = {
 export const SKILLS_RUN_TOOL: McpToolDefinition = {
   name: SKILLS_RUN_TOOL_NAME,
   description:
-    "Load a skill found with skills_find and follow it. Returns the skill's instructions.",
+    "Load a skill found with skills_find and follow it. Returns the skill's instructions. With `script`, runs one of the skill's approved scripts in the project folder and returns {ok, exitCode, stdout, stderr}; if it fails, do that step yourself.",
   inputSchema: {
     type: "object",
     properties: {
       skill: { type: "string", description: "The skillId from skills_find." },
+      script: {
+        type: "string",
+        description: "Name of a script listed by the skill. Optional.",
+      },
       params: {
         type: "object",
-        description: "Optional values for the skill's inputs.",
+        description:
+          "Optional values for the skill's inputs; with `script`, string values only.",
       },
       cwd: CWD_PROPERTY,
     },

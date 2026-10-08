@@ -97,6 +97,9 @@ export const onAutoSkillRunCompleted = async (
       cloud: deps.cloud,
       completer,
       judgeLabel: choice.label,
+      ...(input.folderPath !== undefined
+        ? { folderPath: input.folderPath }
+        : {}),
     });
     deps.saveState(projectId, state);
     if (result.asked > 0) {

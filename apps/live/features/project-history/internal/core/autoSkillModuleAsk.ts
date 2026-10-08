@@ -1,6 +1,7 @@
 import type { AutoSkillCompleter, AutoSkillRunRecord } from "./autoSkill.types";
 import type { AutoSkillCloud } from "./autoSkillCloud";
 import { generateAutoSkillDraft } from "./autoSkillDraft";
+import { buildScriptQuestionParts } from "./autoSkillScriptQuestion";
 import type { AutoSkillModuleCluster } from "./autoSkillModule.types";
 import { setClusterState } from "./autoSkillModuleClusterDb";
 import type { AutoSkillModuleDb } from "./autoSkillModuleDb";
@@ -31,6 +32,8 @@ export const askForRepeatedModules = async (input: {
   readonly cloud: AutoSkillCloud;
   readonly completer: AutoSkillCompleter;
   readonly judgeLabel: string;
+  /** Project folder: scripts are replayed in a temp copy of it. */
+  readonly folderPath?: string;
 }): Promise<ModuleAskResult> => {
   const toAsk = pickClustersToAsk(
     input.touched.filter(
@@ -55,6 +58,7 @@ export const askForRepeatedModules = async (input: {
       draftFailed = true;
       continue;
     }
+    const parts = await buildScriptQuestionParts(draft, input.folderPath);
     await input.cloud.postSuggestion(input.projectId, {
       clusterId: cluster.id,
       title: draft.name,
@@ -68,8 +72,11 @@ export const askForRepeatedModules = async (input: {
         summary: r.prompt.split("\n", 1)[0]?.slice(0, 160) ?? "",
       })),
       draftName: draft.name,
-      draftBody: draft.markdown,
+      draftBody: parts.draftBody,
       judgeLabel: input.judgeLabel,
+      ...(parts.scriptInfo !== undefined
+        ? { scriptInfo: parts.scriptInfo }
+        : {}),
     });
     setClusterState(input.db, cluster.id, "asked");
     asked += 1;
