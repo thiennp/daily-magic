@@ -64,8 +64,14 @@ struct MacAppWindowOpener: ViewModifier {
         content
             .onReceive(NotificationCenter.default.publisher(for: .awlOpenWindow)) { note in
                 let raw = (note.object as? String) ?? MacAppWindowID.main.rawValue
+                // A menu-bar (.accessory) app cannot show its Window scene (AWL 0.2.3).
+                NSApp.setActivationPolicy(.regular)
+                if #available(macOS 14, *) {
+                    NSApp.activate()
+                } else {
+                    NSApp.activate(ignoringOtherApps: true)
+                }
                 openWindow(id: MacAppWindowID.main.rawValue)
-                NSApp.activate(ignoringOtherApps: true)
                 if let page = MacAppSidebarPage(rawValue: raw) ?? MacAppSidebarPage.fromWindowID(raw) {
                     NotificationCenter.default.post(name: .awlSelectSidebarPage, object: page.rawValue)
                 }

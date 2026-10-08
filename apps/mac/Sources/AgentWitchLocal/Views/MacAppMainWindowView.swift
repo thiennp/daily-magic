@@ -8,6 +8,7 @@ import AgentWitchLocalCore
 struct MacAppMainWindowView: View {
     @ObservedObject var controller: MacAppMenuController
     @ObservedObject var store: MacAppLocalUIStore
+    let presenter: MacAppMainWindowPresenter
     @State private var page: MacAppSidebarPage = .computer
     @State private var showAccountMenu = false
     @State private var showSignOutConfirm = false
@@ -32,7 +33,12 @@ struct MacAppMainWindowView: View {
         .frame(idealWidth: 1280, idealHeight: 800)
         .background(MacAppTheme.bg)
         .preferredColorScheme(.light)
-        .onAppear { controller.refreshInstallAndHealth() }
+        .onAppear {
+            controller.refreshInstallAndHealth()
+            if let pending = presenter.consumePendingPage(), let p = MacAppSidebarPage(rawValue: pending) {
+                page = p
+            }
+        }
         .onReceive(NotificationCenter.default.publisher(for: .awlSelectSidebarPage)) { note in
             if let raw = note.object as? String, let p = MacAppSidebarPage(rawValue: raw) {
                 page = p

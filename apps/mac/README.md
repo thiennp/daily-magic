@@ -39,3 +39,8 @@ This folder is **not** a separate deployable in `deployables.registry.json` (sch
   `Contents/Resources` by `scripts/mac/build-awl-mac-dmg.sh` and loaded via
   `Bundle.main` (not SPM `Bundle.module`).
 - Regenerate all desktop icons: `bash scripts/agentWitchLocal/generateDesktopIcons.sh` then on macOS `iconutil -c icns -o apps/mac/AppIcon.icns apps/mac/AppIcon.iconset`.
+
+## Window and translocation (0.2.3)
+
+- Open window / Settings… go through `MacAppMainWindowPresenter` (`AgentWitchLocalCore/Window/`): `.regular` + activate, focus or open the `main` Window, select the page; back to `.accessory` after the last main window closes.
+- When the app runs translocated (opened from Downloads or the DMG) or outside an Applications folder, the menu shows "Move AgentWitch Local to Applications".

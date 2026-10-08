@@ -8,6 +8,8 @@ import AgentWitchLocalCore
 struct MacAppMenuBarContentView: View {
     @ObservedObject var controller: MacAppMenuController
     @ObservedObject var store: MacAppLocalUIStore
+    let presenter: MacAppMainWindowPresenter
+    let presenting: AppKitMacAppWindowPresenting
     @Environment(\.openWindow) private var openWindow
     @State private var showQuitConfirm = false
 
@@ -21,6 +23,13 @@ struct MacAppMenuBarContentView: View {
         )
     }
 
+    /// Translocated (quarantined copy) or not installed in an Applications folder.
+    private var showTranslocationBanner: Bool {
+        let path = Bundle.main.bundlePath
+        return isAppTranslocated(bundlePath: path)
+            || !isAppInApplicationsFolder(bundlePath: path, homeDirectory: NSHomeDirectory())
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             header
@@ -31,14 +40,23 @@ struct MacAppMenuBarContentView: View {
                 Divider().background(MacAppTheme.border)
                 updateStrip(offer)
             }
+            if showTranslocationBanner {
+                Divider().background(MacAppTheme.border)
+                translocationStrip
+                    .padding(12)
+            }
             Divider().background(MacAppTheme.border)
             footer
         }
         .frame(width: 320)
         .background(MacAppTheme.bg)
         .preferredColorScheme(.light)
-        .onAppear { controller.refreshInstallAndHealth() }
-        .awlWindowOpener()
+        .onAppear {
+            controller.refreshInstallAndHealth()
+            presenting.openWindowAction = {
+                openWindow(id: MacAppWindowID.main.rawValue)
+            }
+        }
         .alert("Quit AgentWitch Local?", isPresented: $showQuitConfirm) {
             Button("Cancel", role: .cancel) {}
             Button("Quit", role: .destructive) {
@@ -288,10 +306,33 @@ struct MacAppMenuBarContentView: View {
         .background(MacAppTheme.accentSoft)
     }
 
+    private var translocationStrip: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Move AgentWitch Local to Applications")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(MacAppTheme.brandInk)
+            Text("macOS is running a temporary copy. Quit, drag AgentWitch Local into Applications, then open it from there.")
+                .font(.caption2)
+                .foregroundStyle(MacAppTheme.fgMuted)
+                .fixedSize(horizontal: false, vertical: true)
+            Button("Show Applications") {
+                NSWorkspace.shared.open(URL(fileURLWithPath: "/Applications"))
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.mini)
+            .tint(MacAppTheme.brand)
+            .padding(.top, 4)
+        }
+        .padding(10)
+        .background(RoundedRectangle(cornerRadius: 8).fill(MacAppTheme.accentSoft))
+    }
+
     private var footer: some View {
         VStack(spacing: 0) {
             footerRow("Open window", shortcut: "⌘O") { openMainWindow(page: .computer) }
+                .keyboardShortcut("o")
             footerRow("Settings…", shortcut: "⌘,") { openMainWindow(page: .settings) }
+                .keyboardShortcut(",")
                 .disabled(chrome.kind == .notSetUp || chrome.kind == .settingUp)
             Divider().padding(.horizontal, 8).padding(.vertical, 4)
             footerRow("Quit AgentWitch Local", shortcut: "⌘Q") { showQuitConfirm = true }
@@ -315,8 +356,7 @@ struct MacAppMenuBarContentView: View {
     }
 
     private func openMainWindow(page: MacAppSidebarPage) {
-        openWindow(id: MacAppWindowID.main.rawValue)
-        NotificationCenter.default.post(name: .awlSelectSidebarPage, object: page.rawValue)
+        presenter.present(pageRawValue: page.rawValue)
     }
 
     private var accountInitials: String {
