@@ -4,7 +4,7 @@ The **main agent does not** capture, score, or fix pages. It:
 
 1. Keeps `progress.json` queue state honest (`reset-agent-roles` after policy changes).
 2. Spawns **one cloud subagent per catalog page** (short-lived branch optional).
-3. **Ship to `main` directly** — no PRs. After architecture review SHIP and `npm run ci` passes on the exact tip, fast-forward `main` (Railway deploys from `main`). There is no GitHub Actions CI.
+3. **Ship to `main` directly** — no PRs. After architecture review SHIP and `npm run ci` passes locally (or green GitHub Actions on the commit), fast-forward `main` (Railway deploys from `main`). Never push with a red CI.
 
 ## Subagent branch naming
 

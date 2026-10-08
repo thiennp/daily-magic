@@ -5,7 +5,7 @@ description: >-
   full local npm run ci on the exact tip, fast-forward push --no-verify with a
   literal SHA, then health + install smoke. Use when asked to push main, ship
   AWC, or land after Arch GO. Never push from ~/daily-magic; no PRs, no HUSKY=0,
-  no force-push, no GitHub Actions.
+  no force-push.
 ---
 
 # Commit and push to main (local release path)
@@ -16,7 +16,7 @@ Canonical steps: **`docs/agent-witch/local-release-path.md`** (§1 AWC). This sk
 
 - Never push from `~/daily-magic` (its husky `pre-push` re-runs CI and rewrites install artifacts). Push only from a **dedicated worktree** (fresh worktrees have no `.husky/_`, so hooks do not run).
 - Push with `git push --no-verify origin <fullsha>:refs/heads/main` — write the **literal SHA**, never `"$VAR:refs/heads/main"` (zsh treats `:r` as a modifier).
-- No `HUSKY=0`, no PRs, no force-push, no GitHub Actions (workflows deleted in `ee10c375`).
+- No `HUSKY=0`, no PRs, no force-push. After push, wait for green GitHub Actions on `main` (verify + e2e + shipped-install-blackbox).
 
 ## Gate (in order)
 
@@ -29,8 +29,9 @@ Canonical steps: **`docs/agent-witch/local-release-path.md`** (§1 AWC). This sk
    - `HEAD` equals the tested tip
    - `git ls-remote origin refs/heads/main` equals the expected base you tested on
 5. **Fast-forward push** from the dedicated worktree (literal SHA form above).
-6. **Health:** `https://www.agentwitch.com/api/health` → `release.commitSha` == tip.
-7. **Smoke install endpoints:** `/`, `/install/agent-witch/version`, `/install/agent-witch.sh`, `/install/agent-witch-update.sh`, `/install/agent-witch/repair` (see release doc).
+6. **GitHub Actions:** `gh run watch` (or Actions UI) until the `CI` workflow is green on the tip.
+7. **Health:** `https://www.agentwitch.com/api/health` → `release.commitSha` == tip.
+8. **Smoke install endpoints:** `/`, `/install/agent-witch/version`, `/install/agent-witch.sh`, `/install/agent-witch-update.sh`, `/install/agent-witch/repair` (see release doc).
 
 ## If main moved
 
@@ -50,6 +51,7 @@ git range-diff <oldbase>..<oldtip> origin/main..HEAD
 - [ ] npm run ci on exact tip
 - [ ] Restore install artifacts; porcelain clean; HEAD == tip; origin/main == base
 - [ ] git push --no-verify origin <literal-sha>:refs/heads/main
+- [ ] GitHub Actions CI green on tip
 - [ ] /api/health release.commitSha == tip
 - [ ] Install endpoint smoke
 ```
