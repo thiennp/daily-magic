@@ -37,7 +37,10 @@ describe("Admin production shell", () => {
   });
 
   it("keeps full primary nav and devices rail on admin chrome", () => {
-    expect(adminShellSource).toMatch(/<AppShell[\s\S]*sidebar=/);
+    expect(adminShellSource).toMatch(
+      /<AppShell[\s\S]*primaryNavExtra=\{<AdminSidebar \/>\}/,
+    );
+    expect(adminShellSource).not.toMatch(/<AppShell[\s\S]*sidebar=/);
     expect(adminShellSource).toMatch(/renderPrimaryNav=\{true\}/);
     expect(adminShellSource).toContain("showDevicesRail={true}");
   });

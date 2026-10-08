@@ -11,8 +11,8 @@ describe("AppShell sidebar layout", () => {
     );
 
     expect(source).toContain("const primaryNavAside = renderPrimaryNav");
-    expect(source).toContain(
-      "<AppShellSidebar showDevicesRail={showDevicesRail} />",
+    expect(source).toMatch(
+      /<AppShellSidebar\s+showDevicesRail=\{showDevicesRail\}\s+extraNav=\{primaryNavExtra\}\s*\/>/,
     );
     expect(source).toMatch(
       /sidebar \? \([\s\S]*\{primaryNavAside\}[\s\S]*\{sidebar\}[\s\S]*\{children\}/,
