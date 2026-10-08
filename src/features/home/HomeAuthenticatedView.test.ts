@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 describe("HomeAuthenticatedView showcases", () => {
-  it("includes marketing showcase articles like the guest landing (behind a collapsible wrapper for returning users)", () => {
+  it("shows the design 'What you can do' accordion instead of showcase articles", () => {
     const source = readFileSync(
       join(
         dirname(fileURLToPath(import.meta.url)),
@@ -13,23 +13,9 @@ describe("HomeAuthenticatedView showcases", () => {
       "utf8",
     );
 
-    expect(source).toContain(
-      'from "@/features/home/HomeCollapsibleMarketingShowcases"',
-    );
-    expect(source).toContain("<HomeCollapsibleMarketingShowcases");
-
-    const wrapperSource = readFileSync(
-      join(
-        dirname(fileURLToPath(import.meta.url)),
-        "HomeCollapsibleMarketingShowcases.tsx",
-      ),
-      "utf8",
-    );
-
-    expect(wrapperSource).toContain(
-      'from "@/features/home/HomeMarketingShowcases"',
-    );
-    expect(wrapperSource).toContain("<HomeMarketingShowcases");
+    expect(source).toContain('from "@/features/home/HomeWhatYouCanDo"');
+    expect(source).toContain("<HomeWhatYouCanDo");
+    expect(source).not.toContain("HomeMarketingShowcases");
   });
 
   it("HOME-048: shows projects panel in the dashboard main column", () => {
@@ -85,9 +71,7 @@ describe("HomeAuthenticatedView showcases", () => {
     );
 
     expect(source).toContain("<HomeDashboardLowerSection>");
-    expect(source).toMatch(
-      /HomeDashboardLowerSection[\s\S]*HomeCollapsibleMarketingShowcases/,
-    );
+    expect(source).toMatch(/HomeDashboardLowerSection[\s\S]*HomeWhatYouCanDo/);
 
     const lowerSectionSource = readFileSync(
       join(

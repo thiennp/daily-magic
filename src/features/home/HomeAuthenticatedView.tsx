@@ -5,7 +5,7 @@ import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
 import ImprovementReviewPanel from "@/features/improvements/ImprovementReviewPanel";
 import MarketplaceHomePromo from "@/features/marketplace/MarketplaceHomePromo";
 import HomeAttentionPanel from "@/features/home/HomeAttentionPanel";
-import HomeCollapsibleMarketingShowcases from "@/features/home/HomeCollapsibleMarketingShowcases";
+import HomeComputersCard from "@/features/home/HomeComputersCard";
 import HomeCursorCloudPanel from "@/features/home/HomeCursorCloudPanel";
 import HomeDashboardBoard from "@/features/home/HomeDashboardBoard";
 import HomeDashboardGrid from "@/features/home/HomeDashboardGrid";
@@ -15,6 +15,7 @@ import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
 import HomePageHead from "@/features/home/HomePageHead";
 import HomeProjectsPanel from "@/features/home/HomeProjectsPanel";
 import HomeSetupSection from "@/features/home/HomeSetupSection";
+import HomeWhatYouCanDo from "@/features/home/HomeWhatYouCanDo";
 import { buildAppOriginFromHeaders } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
 import { buildLocalAgentInstallUrlsFromHeaders } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
 import { isAgentWitchWebSocketAvailableForHost } from "@/lib/agentWitch/isAgentWitchWebSocketAvailable";
@@ -49,7 +50,11 @@ export default async function HomeAuthenticatedView({
       host={host}
       below={
         <HomeDashboardLowerSection>
-          <HomeCollapsibleMarketingShowcases />
+          <HomeWhatYouCanDo
+            installCommand={installCommand}
+            isWebSocketSupported={isWebSocketSupported}
+            host={host}
+          />
         </HomeDashboardLowerSection>
       }
     >
@@ -76,6 +81,11 @@ export default async function HomeAuthenticatedView({
             }
             right={
               <>
+                <HomeComputersCard
+                  installCommand={installCommand}
+                  isWebSocketSupported={isWebSocketSupported}
+                  host={host}
+                />
                 <HomeCursorCloudPanel />
                 <FeedbackInboxPanel />
                 <MarketplaceHomePromo />

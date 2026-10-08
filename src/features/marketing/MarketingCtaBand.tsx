@@ -1,4 +1,4 @@
-import Link from "next/link";
+import MarketingAuthTrigger from "@/features/marketing/MarketingAuthTrigger";
 
 import {
   MARKETING_BUTTON_ON_BRAND_BAND_CLASSES,
@@ -21,18 +21,20 @@ export default function MarketingCtaBand() {
           </h2>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <Link
-            href="/#get-started"
+          <MarketingAuthTrigger
+            mode="up"
+            fallbackHref="/#get-started"
             className={MARKETING_BUTTON_ON_BRAND_BAND_CLASSES}
           >
             Create free account
-          </Link>
-          <Link
-            href="/#get-started"
+          </MarketingAuthTrigger>
+          <MarketingAuthTrigger
+            mode="in"
+            fallbackHref="/login"
             className={MARKETING_BUTTON_ON_BRAND_BAND_CLASSES}
           >
             Sign in
-          </Link>
+          </MarketingAuthTrigger>
         </div>
       </div>
     </section>

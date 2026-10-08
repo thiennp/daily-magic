@@ -80,7 +80,9 @@ export default function HomeMarketingStatusPreview() {
             <dd className={MARKETING_TEXT_PRIMARY_CLASSES}>100% local</dd>
           </div>
           <div>
-            <dt className={MARKETING_TEXT_SECONDARY_CLASSES}>Secrets in cloud</dt>
+            <dt className={MARKETING_TEXT_SECONDARY_CLASSES}>
+              Secrets in cloud
+            </dt>
             <dd className={MARKETING_TEXT_PRIMARY_CLASSES}>0</dd>
           </div>
         </dl>

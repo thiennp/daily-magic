@@ -1,5 +1,4 @@
 import { COMPANIES_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
-import { buildNavConsolidationNewTaskHref } from "@/lib/shell/buildNavConsolidationNewTaskHref";
 import { PROJECTS_REPORTS_INTENT_HREF } from "@/lib/shell/projectTabIntentHrefs.constant";
 
 export interface MarketingFooterLink {
@@ -7,13 +6,11 @@ export interface MarketingFooterLink {
   readonly href: string;
 }
 
+/** Design home-v1 footer: Real examples, For agents, Reports (+ legal links). */
 const FOOTER_PUBLIC_PRODUCT_LINKS: readonly MarketingFooterLink[] = [
-  { label: "Pricing", href: "/pricing" },
   { label: "Real examples", href: "/showcases" },
   { label: "For agents", href: "/for-agents" },
-  { label: "New task", href: buildNavConsolidationNewTaskHref() },
   { label: "Reports", href: PROJECTS_REPORTS_INTENT_HREF },
-  { label: "Prompt optimizer", href: "/prompt-optimizer" },
 ];
 
 const FOOTER_STAFF_PRODUCT_LINKS: readonly MarketingFooterLink[] = [

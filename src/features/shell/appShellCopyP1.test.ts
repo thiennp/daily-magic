@@ -23,8 +23,12 @@ describe("COPY-P1 shell and auth labels", () => {
     expect(PRIMARY_NAV.find((item) => item.label === "Connect")?.href).toBe(
       "#awc-connect",
     );
-    expect(labels.indexOf("Marketplace")).toBeLessThan(labels.indexOf("Connect"));
-    expect(labels.indexOf("Connect")).toBeLessThan(labels.indexOf("Automations"));
+    expect(labels.indexOf("Marketplace")).toBeLessThan(
+      labels.indexOf("Connect"),
+    );
+    expect(labels.indexOf("Connect")).toBeLessThan(
+      labels.indexOf("Automations"),
+    );
     expect(labels).not.toContain("My bots");
     expect(labels).not.toContain("Library");
     expect(labels).not.toContain("Reports");
@@ -43,10 +47,13 @@ describe("COPY-P1 shell and auth labels", () => {
     ]);
   });
 
-  it("uses New task in marketing footer product links", () => {
+  it("marketing footer follows the design links (no Send a task)", () => {
     const productLinks = resolveMarketingFooterProductLinks(false);
-    const sendLink = productLinks.find((link) => link.label === "New task");
-    expect(sendLink?.href).toBe("/projects?intent=new-task");
+    expect(productLinks.map((link) => link.label)).toEqual([
+      "Real examples",
+      "For agents",
+      "Reports",
+    ]);
     expect(productLinks.some((link) => link.label === "Send a task")).toBe(
       false,
     );

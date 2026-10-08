@@ -1,30 +1,26 @@
-import HomeAgentAccessPrompt from "@/features/agent-access/HomeAgentAccessPrompt";
-import HomePromptSdlcSection from "@/features/home/components/HomePromptSdlcSection";
+import HomeMarketingAuthModalProvider from "@/features/home/components/HomeMarketingAuthModalProvider";
 import HomeMarketingHero from "@/features/home/components/HomeMarketingHero";
 import HomeMarketingPopularPresets from "@/features/home/components/HomeMarketingPopularPresets";
 import HomeMarketingFaq from "@/features/home/HomeMarketingFaq";
 import HomeMarketingFeatures from "@/features/home/HomeMarketingFeatures";
-import HomeMarketingShowcases from "@/features/home/HomeMarketingShowcases";
+import HomeMarketingSecurity from "@/features/home/HomeMarketingSecurity";
 import HomeMarketingSteps from "@/features/home/HomeMarketingSteps";
 import MarketingCtaBand from "@/features/marketing/MarketingCtaBand";
-import MarketingIntegrationsRow from "@/features/marketing/MarketingIntegrationsRow";
 import MarketingShell from "@/features/marketing/MarketingShell";
 
+/** Design home-v1 signed-out order: hero, what, bots, workflows, files, FAQ, CTA. */
 export default function HomeMarketingLanding() {
   return (
-    <MarketingShell>
-      <HomeMarketingHero />
-      <div className="mt-28 space-y-16 sm:mt-32">
-        <HomeAgentAccessPrompt />
-        <HomePromptSdlcSection />
-      </div>
-      <HomeMarketingPopularPresets />
-      <HomeMarketingFeatures />
-      <HomeMarketingShowcases />
-      <HomeMarketingSteps />
-      <HomeMarketingFaq />
-      <MarketingCtaBand />
-      <MarketingIntegrationsRow />
-    </MarketingShell>
+    <HomeMarketingAuthModalProvider>
+      <MarketingShell>
+        <HomeMarketingHero />
+        <HomeMarketingFeatures />
+        <HomeMarketingSteps />
+        <HomeMarketingPopularPresets />
+        <HomeMarketingSecurity />
+        <HomeMarketingFaq />
+        <MarketingCtaBand />
+      </MarketingShell>
+    </HomeMarketingAuthModalProvider>
   );
 }

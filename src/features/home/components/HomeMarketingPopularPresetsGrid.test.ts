@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 describe("HomeMarketingPopularPresetsGrid (HOME-038)", () => {
-  it("syncs capabilityId on preset pick and does not strip it on dialog dismiss", () => {
+  it("syncs capabilityId on pick and never strips it", () => {
     const source = readFileSync(
       join(
         process.cwd(),
@@ -18,8 +18,6 @@ describe("HomeMarketingPopularPresetsGrid (HOME-038)", () => {
       "router.replace(buildPathWithSearchParams(pathname, nextParams)",
     );
     expect(source).not.toContain("removePresetCapabilityIdFromSearchParams");
-    expect(source).toMatch(
-      /const closeDialog = useCallback\(\(\) => \{\s*setSelectedPreset\(null\);/,
-    );
+    expect(source).toContain("authModal?.open(");
   });
 });

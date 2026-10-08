@@ -1,13 +1,7 @@
-import Link from "next/link";
-
 import HomeMarketingPopularPresetsGrid from "@/features/home/components/HomeMarketingPopularPresetsGrid";
-import { homeMarketingSignInCallbackMarketplaceHref } from "@/features/home/constants/homeMarketingAuthCallbackHrefs.constant";
 import { HOME_MARKETING_POPULAR_PRESETS_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
 import resolveHomePopularPresets from "@/features/home/utils/resolveHomePopularPresets";
-import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
-import { MARKETING_TEXT_SECONDARY_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
 import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
 export default function HomeMarketingPopularPresets() {
   const presets = resolveHomePopularPresets();
@@ -16,26 +10,11 @@ export default function HomeMarketingPopularPresets() {
   return (
     <section className="mt-16" aria-labelledby="popular-presets-heading">
       <MarketingSectionHeader
-        eyebrow={copy.eyebrow}
         title={copy.title}
+        description={copy.description}
         headingId="popular-presets-heading"
       />
       <HomeMarketingPopularPresetsGrid presets={presets} />
-      <p
-        className={mergeMarketingClasses(
-          "mt-6 text-sm",
-          MARKETING_TEXT_SECONDARY_CLASSES,
-        )}
-      >
-        {copy.footerPrefix}{" "}
-        <Link
-          href={homeMarketingSignInCallbackMarketplaceHref}
-          className={MARKETING_TEXT_LINK_CLASSES}
-        >
-          {copy.footerLink}
-        </Link>
-        .
-      </p>
     </section>
   );
 }

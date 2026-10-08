@@ -3,10 +3,10 @@
 import Link from "next/link";
 
 import {
-  APP_SURFACE_BODY_TEXT_CLASS,
   APP_SURFACE_SECTION_TITLE_CLASS,
   APP_SURFACE_TEXT_LINK_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
+import HomeNewProjectButton from "@/features/home/HomeNewProjectButton";
 import selectHomeRecentProjects from "@/features/home/utils/selectHomeRecentProjects";
 import AwcProjectsPanel from "@/features/projects/AwcProjectsPanel";
 
@@ -21,19 +21,17 @@ export default function HomeProjectsPanel() {
       selectProjects={selectHomeRecentProjects}
       showManageControls={false}
       header={
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Your projects</h2>
-            <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-              Your most recent projects. Open a card for details.
-            </p>
+        <div className="flex items-center justify-between gap-3">
+          <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Your projects</h2>
+          <div className="flex shrink-0 items-center gap-3">
+            <HomeNewProjectButton />
+            <Link
+              href="/projects"
+              className={`text-sm ${APP_SURFACE_TEXT_LINK_CLASS}`}
+            >
+              All projects
+            </Link>
           </div>
-          <Link
-            href="/projects"
-            className={`shrink-0 text-sm ${APP_SURFACE_TEXT_LINK_CLASS}`}
-          >
-            All projects
-          </Link>
         </div>
       }
     />

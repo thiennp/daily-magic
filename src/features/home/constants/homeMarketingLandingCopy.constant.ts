@@ -1,7 +1,6 @@
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
 export const HOME_MARKETING_HERO_COPY = {
-  eyebrow: AGENT_WITCH_PRODUCT_NAME,
   title: "Teach your bot or agent a job once. Let your whole team reuse it.",
   description:
     "Do a task with your Grok bot, Muse bot, Claude or Codex agent, check the result, and save it as a Playbook. Anyone on your team can run it again in one click.",
@@ -15,20 +14,9 @@ export const HOME_MARKETING_AUTH_COPY = {
 } as const;
 
 export const HOME_MARKETING_POPULAR_PRESETS_COPY = {
-  eyebrow: "Everyday jobs",
   title: "Everyday jobs, ready to run",
-  footerPrefix: "Want more? After sign-in, browse the full",
-  footerLink: "marketplace",
-} as const;
-
-export const HOME_MARKETING_POPULAR_PRESET_DIALOG_COPY = {
-  title: "Sign in first",
-  bodyPrefix: "To use",
-  bodySuffix:
-    ". Create free account or sign in — you will be ready to run it in minutes.",
-  signIn: "Sign in",
-  register: "Create free account",
-  dismiss: "Not now",
+  description: "Pick one, run it, then make it yours.",
+  useWorkflow: "Use this workflow",
 } as const;
 
 export const HOME_MARKETING_FEATURES_COPY = {

@@ -54,7 +54,6 @@ describe("COPY-P1 product vocab", () => {
     const source = readFileSync(HOME_MARKETING_COPY_PATH, "utf8");
 
     expect(source).toContain('cta: "Create free account"');
-    expect(source).toContain('register: "Create free account"');
     expect(source).toContain('title: "Create free account"');
     expect(source).not.toContain("Create your free account");
     expect(source).not.toContain("Create a free account");

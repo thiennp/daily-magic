@@ -1,8 +1,4 @@
-import {
-  HOME_MARKETING_FEATURES_COPY,
-  HOME_MARKETING_SECURITY_COPY,
-} from "@/features/home/constants/homeMarketingLandingCopy.constant";
-import MarketingDarkBand from "@/features/marketing/MarketingDarkBand";
+import { HOME_MARKETING_FEATURES_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
 import MarketingCard from "@/features/marketing/MarketingCard";
 import { MARKETING_TEXT_PRIMARY_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { MARKETING_TEXT_SECONDARY_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
@@ -44,13 +40,6 @@ export default function HomeMarketingFeatures() {
           </li>
         ))}
       </ul>
-      <div id="security">
-        <MarketingDarkBand
-          eyebrow="Your files"
-          title={HOME_MARKETING_SECURITY_COPY.title}
-          description={HOME_MARKETING_SECURITY_COPY.body}
-        />
-      </div>
     </section>
   );
 }

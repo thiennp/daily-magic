@@ -18,36 +18,33 @@ describe("HomeProjectsPanel render", () => {
     ];
   });
 
-  it(
-    "renders shared /projects cards for the 4 most recently active projects",
-    async () => {
-      const { default: HomeProjectsPanel } =
-        await import("@/features/home/HomeProjectsPanel");
-      const html = renderToStaticMarkup(createElement(HomeProjectsPanel));
+  it("renders shared /projects cards for the 4 most recently active projects", async () => {
+    const { default: HomeProjectsPanel } =
+      await import("@/features/home/HomeProjectsPanel");
+    const html = renderToStaticMarkup(createElement(HomeProjectsPanel));
 
-      expect(html).toContain("Your projects");
-      expect(html).toContain(">All projects<");
-      expect(html).toContain('href="/projects"');
-      expect(html).toContain("Project delta");
-      expect(html).toContain("Project bravo");
-      expect(html).toContain("Project echo");
-      expect(html).toContain("Project alpha");
-      expect(html).not.toContain("Project charlie");
-      expect(html).toContain('href="/projects/delta"');
-      expect(html).toContain('href="/projects/alpha"');
-      expect(html.indexOf("Project delta")).toBeLessThan(
-        html.indexOf("Project bravo"),
-      );
-      expect(html.indexOf("Project bravo")).toBeLessThan(
-        html.indexOf("Project echo"),
-      );
-      expect(html.indexOf("Project echo")).toBeLessThan(
-        html.indexOf("Project alpha"),
-      );
-      expect(html).not.toContain("New project");
-      expect(html).not.toContain("create-project-form-stub");
-      expect(html).not.toContain(">Edit<");
-    },
-    15_000,
-  );
+    expect(html).toContain("Your projects");
+    expect(html).toContain(">All projects<");
+    expect(html).toContain('href="/projects"');
+    expect(html).toContain("Project delta");
+    expect(html).toContain("Project bravo");
+    expect(html).toContain("Project echo");
+    expect(html).toContain("Project alpha");
+    expect(html).not.toContain("Project charlie");
+    expect(html).toContain('href="/projects/delta"');
+    expect(html).toContain('href="/projects/alpha"');
+    expect(html.indexOf("Project delta")).toBeLessThan(
+      html.indexOf("Project bravo"),
+    );
+    expect(html.indexOf("Project bravo")).toBeLessThan(
+      html.indexOf("Project echo"),
+    );
+    expect(html.indexOf("Project echo")).toBeLessThan(
+      html.indexOf("Project alpha"),
+    );
+    expect(html).toContain(">New project<");
+    expect(html).not.toContain("Your most recent projects");
+    expect(html).not.toContain("create-project-form-stub");
+    expect(html).not.toContain(">Edit<");
+  }, 15_000);
 });

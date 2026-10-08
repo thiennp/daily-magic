@@ -1,23 +1,23 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
+import { HOME_MARKETING_POPULAR_PRESETS_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
+import type { HomePopularPresetSummary } from "@/features/home/utils/resolveHomePopularPresets";
+import {
+  applyPresetCapabilityIdToSearchParams,
+  buildPathWithSearchParams,
+} from "@/features/home/utils/syncHomeMarketingPresetCapabilityQuery";
+import { useMarketingAuthModal } from "@/features/marketing/MarketingAuthModalContext";
 import MarketingCard from "@/features/marketing/MarketingCard";
-import { MARKETING_CARD_INTERACTIVE_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
+import { MARKETING_CTA_SECONDARY_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import {
   MARKETING_EYEBROW_TEXT_CLASSES,
   MARKETING_TEXT_PRIMARY_CLASSES,
   MARKETING_TEXT_SECONDARY_CLASSES,
 } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
-
-import HomeMarketingPopularPresetSignInDialog from "./HomeMarketingPopularPresetSignInDialog";
-import type { HomePopularPresetSummary } from "@/features/home/utils/resolveHomePopularPresets";
-import {
-  applyPresetCapabilityIdToSearchParams,
-  buildPathWithSearchParams,
-} from "@/features/home/utils/syncHomeMarketingPresetCapabilityQuery";
 
 interface HomeMarketingPopularPresetsGridProps {
   readonly presets: readonly HomePopularPresetSummary[];
@@ -29,14 +29,9 @@ export default function HomeMarketingPopularPresetsGrid({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [selectedPreset, setSelectedPreset] =
-    useState<HomePopularPresetSummary | null>(null);
-  const closeDialog = useCallback(() => {
-    setSelectedPreset(null);
-  }, []);
-  const openPresetDialog = useCallback(
+  const authModal = useMarketingAuthModal();
+  const pickWorkflow = useCallback(
     (preset: HomePopularPresetSummary) => {
-      setSelectedPreset(preset);
       const nextParams = applyPresetCapabilityIdToSearchParams(
         preset.id,
         searchParams,
@@ -44,63 +39,59 @@ export default function HomeMarketingPopularPresetsGrid({
       router.replace(buildPathWithSearchParams(pathname, nextParams), {
         scroll: false,
       });
+      authModal?.open("up", `Create a free account to use “${preset.name}”.`);
     },
-    [pathname, router, searchParams],
+    [authModal, pathname, router, searchParams],
   );
 
   return (
-    <>
-      <ul className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {presets.map((preset) => (
-          <li key={preset.id}>
+    <ul className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {presets.map((preset) => (
+        <li key={preset.id}>
+          <MarketingCard
+            as="article"
+            className="flex h-full flex-col gap-3 p-5"
+          >
+            <p
+              className={mergeMarketingClasses(
+                "text-xs font-medium tracking-wide",
+                MARKETING_EYEBROW_TEXT_CLASSES,
+              )}
+            >
+              {preset.category}
+            </p>
+            <h3
+              className={mergeMarketingClasses(
+                "text-sm font-semibold",
+                MARKETING_TEXT_PRIMARY_CLASSES,
+              )}
+            >
+              {preset.name}
+            </h3>
+            <p
+              className={mergeMarketingClasses(
+                "line-clamp-4 flex-1 text-sm leading-relaxed",
+                MARKETING_TEXT_SECONDARY_CLASSES,
+              )}
+            >
+              {preset.description}
+            </p>
             <button
               type="button"
-              className="block h-full w-full text-left"
+              aria-label={`Use workflow: ${preset.name}`}
+              className={mergeMarketingClasses(
+                "self-start",
+                MARKETING_CTA_SECONDARY_CLASSES,
+              )}
               onClick={() => {
-                openPresetDialog(preset);
+                pickWorkflow(preset);
               }}
             >
-              <MarketingCard
-                as="article"
-                interactive
-                className={mergeMarketingClasses(
-                  "flex h-full flex-col gap-3 p-5",
-                  MARKETING_CARD_INTERACTIVE_CLASSES,
-                )}
-              >
-                <p
-                  className={mergeMarketingClasses(
-                    "text-xs font-medium tracking-wide",
-                    MARKETING_EYEBROW_TEXT_CLASSES,
-                  )}
-                >
-                  {preset.category}
-                </p>
-                <h3
-                  className={mergeMarketingClasses(
-                    "text-sm font-semibold",
-                    MARKETING_TEXT_PRIMARY_CLASSES,
-                  )}
-                >
-                  {preset.name}
-                </h3>
-                <p
-                  className={mergeMarketingClasses(
-                    "line-clamp-4 text-sm leading-relaxed",
-                    MARKETING_TEXT_SECONDARY_CLASSES,
-                  )}
-                >
-                  {preset.description}
-                </p>
-              </MarketingCard>
+              {HOME_MARKETING_POPULAR_PRESETS_COPY.useWorkflow}
             </button>
-          </li>
-        ))}
-      </ul>
-      <HomeMarketingPopularPresetSignInDialog
-        preset={selectedPreset}
-        onClose={closeDialog}
-      />
-    </>
+          </MarketingCard>
+        </li>
+      ))}
+    </ul>
   );
 }

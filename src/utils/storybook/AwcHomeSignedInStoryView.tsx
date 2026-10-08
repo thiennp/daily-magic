@@ -7,7 +7,7 @@ import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
 import ImprovementReviewPanel from "@/features/improvements/ImprovementReviewPanel";
 import MarketplaceHomePromo from "@/features/marketplace/MarketplaceHomePromo";
 import HomeAttentionPanel from "@/features/home/HomeAttentionPanel";
-import HomeCollapsibleMarketingShowcases from "@/features/home/HomeCollapsibleMarketingShowcases";
+import HomeComputersCard from "@/features/home/HomeComputersCard";
 import HomeCursorCloudPanel from "@/features/home/HomeCursorCloudPanel";
 import HomeDashboardBoard from "@/features/home/HomeDashboardBoard";
 import HomeDashboardGrid from "@/features/home/HomeDashboardGrid";
@@ -17,6 +17,7 @@ import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
 import HomePageHead from "@/features/home/HomePageHead";
 import HomeProjectsPanel from "@/features/home/HomeProjectsPanel";
 import HomeSetupSection from "@/features/home/HomeSetupSection";
+import HomeWhatYouCanDo from "@/features/home/HomeWhatYouCanDo";
 import {
   AWC_STORYBOOK_INSTALL_COMMAND,
   AWC_STORYBOOK_USER,
@@ -35,7 +36,11 @@ export default function AwcHomeSignedInStoryView() {
       host={STORY_HOST}
       below={
         <HomeDashboardLowerSection>
-          <HomeCollapsibleMarketingShowcases />
+          <HomeWhatYouCanDo
+            installCommand={AWC_STORYBOOK_INSTALL_COMMAND}
+            isWebSocketSupported={true}
+            host={STORY_HOST}
+          />
         </HomeDashboardLowerSection>
       }
     >
@@ -62,6 +67,11 @@ export default function AwcHomeSignedInStoryView() {
             }
             right={
               <>
+                <HomeComputersCard
+                  installCommand={AWC_STORYBOOK_INSTALL_COMMAND}
+                  isWebSocketSupported={true}
+                  host={STORY_HOST}
+                />
                 <HomeCursorCloudPanel />
                 <FeedbackInboxPanel />
                 <MarketplaceHomePromo />

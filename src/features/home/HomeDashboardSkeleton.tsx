@@ -7,12 +7,12 @@ import AwcSkeletonBar from "@/features/shell/loading/AwcSkeletonBar";
 import AwcSkeletonStatus from "@/features/shell/loading/AwcSkeletonStatus";
 import { AWC_SKELETON_CARD_CLASS } from "@/features/shell/loading/awcSkeleton.constant";
 
-const SkeletonCard = ({ lines }: { readonly lines: number }) => (
+/** Design skeleton card: three bars of decreasing width. */
+const SkeletonCard = () => (
   <div className={`${AWC_SKELETON_CARD_CLASS} space-y-3`}>
     <AwcSkeletonBar className="h-5 w-1/3" />
-    {Array.from({ length: lines }, (_, i) => (
-      <AwcSkeletonBar key={i} className={`h-4 ${i % 2 === 0 ? "w-full" : "w-4/5"}`} />
-    ))}
+    <AwcSkeletonBar className="h-4 w-full" />
+    <AwcSkeletonBar className="h-4 w-4/5" />
   </div>
 );
 
@@ -27,18 +27,21 @@ export default function HomeDashboardSkeleton() {
         <AwcSkeletonBar className="h-8 w-72 max-w-full" />
         <AwcSkeletonBar className="h-4 w-full max-w-md" />
       </div>
-      <div className={`${AWC_SKELETON_CARD_CLASS} flex flex-wrap items-center gap-3`}>
+      <div
+        className={`${AWC_SKELETON_CARD_CLASS} flex flex-wrap items-center gap-3`}
+      >
         <AwcSkeletonBar className="h-5 w-1/3 min-w-40" />
         <AwcSkeletonBar accent className="ml-auto h-9 w-32 rounded-lg" />
       </div>
       <div className={HOME_DASHBOARD_GRID_WITHOUT_LEFT_RAIL_CLASS}>
         <div className={HOME_MAIN_COLUMN_WITHOUT_LEFT_RAIL_CLASS}>
-          <SkeletonCard lines={3} />
-          <SkeletonCard lines={4} />
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
         </div>
         <div className={HOME_RIGHT_RAIL_WITHOUT_LEFT_RAIL_CLASS}>
-          <SkeletonCard lines={2} />
-          <SkeletonCard lines={2} />
+          <SkeletonCard />
+          <SkeletonCard />
         </div>
       </div>
       <AwcSkeletonStatus />

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import MarketingAuthTrigger from "@/features/marketing/MarketingAuthTrigger";
 import MarketingHeaderDesktopNavLinks from "@/features/marketing/MarketingHeaderDesktopNavLinks";
 import MarketingHeaderNavHamburgerButton from "@/features/marketing/MarketingHeaderNavHamburgerButton";
 import { MARKETING_HEADER_NAV_ITEMS } from "@/features/marketing/marketingHeaderNavItems.constant";
@@ -89,26 +90,28 @@ export default function MarketingHeaderNav({
         </div>
       ) : null}
       {showSignIn ? (
-        <Link
-          href="/login"
+        <MarketingAuthTrigger
+          mode="in"
+          fallbackHref="/login"
           className={mergeMarketingClasses(
             MARKETING_HEADER_LINK_CLASSES,
             "hidden min-h-10 items-center sm:inline-flex",
           )}
         >
           Sign in
-        </Link>
+        </MarketingAuthTrigger>
       ) : null}
-      <Link
-        href="/#get-started"
-        aria-label="Create free account"
+      <MarketingAuthTrigger
+        mode="up"
+        fallbackHref="/#get-started"
+        ariaLabel="Create free account"
         className={mergeMarketingClasses(
           MARKETING_CTA_PRIMARY_CLASSES,
           "inline-flex min-h-10 shrink-0 items-center px-3 sm:px-4",
         )}
       >
         Create account
-      </Link>
+      </MarketingAuthTrigger>
     </nav>
   );
 }
