@@ -4,6 +4,9 @@ import { vitestResolveAlias } from "./vitest.resolveAlias";
 
 export default defineConfig({
   test: {
+    env: {
+      TZ: "Europe/Berlin",
+    },
     environment: "node",
     include: [
       "src/**/*.test.ts",
