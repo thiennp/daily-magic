@@ -19,6 +19,7 @@ describe("decideLinearPull (loop guard)", () => {
     const result = decideLinearPull({
       pulled: fields,
       labelsKnown: true,
+      descriptionClipped: false,
       current,
       lastSyncedHash: hashTaskSyncFields(fields),
     });
@@ -29,6 +30,7 @@ describe("decideLinearPull (loop guard)", () => {
     const result = decideLinearPull({
       pulled: { ...fields, title: "B" },
       labelsKnown: true,
+      descriptionClipped: false,
       current,
       lastSyncedHash: hashTaskSyncFields(fields),
     });
@@ -40,9 +42,26 @@ describe("decideLinearPull (loop guard)", () => {
     const result = decideLinearPull({
       pulled: fields,
       labelsKnown: false,
+      descriptionClipped: false,
       current: projectTaskRecordFixture({ status: "blocked" }),
       lastSyncedHash: hashTaskSyncFields(blocked),
     });
     expect(result.apply).toBe(false);
+  });
+
+  it("keeps the AW description when Linear's is clipped", () => {
+    const aw = projectTaskRecordFixture({
+      status: "in_progress",
+      description: "AW text",
+    });
+    const result = decideLinearPull({
+      pulled: { ...fields, title: "B", description: "x".repeat(200) },
+      labelsKnown: true,
+      descriptionClipped: true,
+      current: aw,
+      lastSyncedHash: hashTaskSyncFields(fields),
+    });
+    expect(result.apply && result.fields.description).toBe("AW text");
+    expect(result.apply && result.fields.title).toBe("B");
   });
 });

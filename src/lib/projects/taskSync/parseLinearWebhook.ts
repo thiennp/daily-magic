@@ -32,9 +32,11 @@ export const parseLinearWebhook = (payload: unknown): ParsedTaskWebhook => {
   const stateType = text(asRecord(data.state)?.type);
   if (title === "" || stateType === "") return { kind: "ignore" };
   const labels = labelNames(data.labels);
-  const description = text(data.description)
-    .trim()
-    .slice(0, PROJECT_TASK_DESCRIPTION_MAX_CHARS);
+  const fullDescription = text(data.description).trim();
+  const description = fullDescription.slice(
+    0,
+    PROJECT_TASK_DESCRIPTION_MAX_CHARS,
+  );
   return {
     kind: "upsert",
     ref: {
@@ -44,6 +46,8 @@ export const parseLinearWebhook = (payload: unknown): ParsedTaskWebhook => {
     },
     teamId: text(asRecord(data.team)?.id) || text(data.teamId) || null,
     labelsKnown: labels !== null,
+    descriptionClipped:
+      fullDescription.length > PROJECT_TASK_DESCRIPTION_MAX_CHARS,
     fields: {
       title,
       description: description === "" ? null : description,

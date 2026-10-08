@@ -12,7 +12,7 @@ import {
   type ProjectTaskArgsError,
 } from "@/lib/projects/tasks/parseProjectTaskToolArgs";
 import { notifyProjectTaskChanged } from "@/lib/projects/tasks/notifyProjectTaskChanged";
-import { pushTaskToLinear } from "@/lib/projects/taskSync/pushTaskToLinear";
+import { afterProjectTaskWrite } from "@/lib/projects/tasks/afterProjectTaskWrite";
 import type { ProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecord.type";
 import { loadProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecordReadQueries";
 import { updateProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecordWriteQueries";
@@ -96,6 +96,6 @@ export const updateProjectTask = async (input: {
     before: current,
     after: task,
   });
-  await pushTaskToLinear(task);
+  await afterProjectTaskWrite({ task, origin: "local" });
   return { ok: true, task };
 };

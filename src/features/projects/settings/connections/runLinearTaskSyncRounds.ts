@@ -6,6 +6,7 @@ export const MAX_TASK_SYNC_ROUNDS = 20;
 export type LinearTaskSyncTotals = {
   readonly pushed: number;
   readonly failed: number;
+  readonly pulled: number;
 };
 
 /** POST /sync until nothing remains (or the round cap); reports progress. */
@@ -23,6 +24,7 @@ export const runLinearTaskSyncRounds = async (input: {
     const next = {
       pushed: totals.pushed + result.value.pushed,
       failed: totals.failed + result.value.failed,
+      pulled: totals.pulled + result.value.pulled,
     };
     input.onProgress(result.value.remaining);
     const done =
@@ -31,5 +33,5 @@ export const runLinearTaskSyncRounds = async (input: {
       input.signal.aborted;
     return done ? { ok: true, value: next } : step(round + 1, next);
   };
-  return step(1, { pushed: 0, failed: 0 });
+  return step(1, { pushed: 0, failed: 0, pulled: 0 });
 };

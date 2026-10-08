@@ -51,6 +51,13 @@ export const ensureTaskSyncSchema = async (): Promise<void> => {
     await sql`
       CREATE INDEX IF NOT EXISTS project_task_external_links_project_idx
         ON project_task_external_links (project_id, provider)`;
+    // db/migrations/117-project-task-sync-pull-state.sql
+    await sql`
+      ALTER TABLE project_task_external_links
+        ADD COLUMN IF NOT EXISTS clipped_description_hash TEXT`;
+    await sql`
+      ALTER TABLE project_task_sync_settings
+        ADD COLUMN IF NOT EXISTS last_pulled_at TIMESTAMPTZ`;
     state.ensured = true;
   })();
 

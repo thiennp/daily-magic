@@ -16,7 +16,7 @@ export const PROJECT_TASK_SYNC_COPY = {
   webhookOff: "Linear → AgentWitch updates: off (webhook)",
   syncNow: "Sync now",
   syncing: "Syncing… ({count} left)",
-  syncSummary: "Pushed {pushed}, failed {failed}",
+  syncSummary: "Pushed {pushed}, failed {failed}, pulled {pulled}",
   teamRequired: "Choose a team first.",
   notConnected: "Linear is not connected.",
   syncDisabled: "Turn sync on before syncing.",

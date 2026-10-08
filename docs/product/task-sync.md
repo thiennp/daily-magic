@@ -1,12 +1,10 @@
 # Task sync (Linear)
 
-Two-way sync between project tasks and Linear issues. Provider-neutral adapter
-(`src/lib/projects/taskSync/taskSync.types.ts`); only Linear is implemented. Jira is planned.
+Two-way sync of project tasks and Linear issues (adapter: `taskSync/taskSync.types.ts`; Jira planned).
 
 ## What syncs
 
-Title, status, priority, description (200 chars max on the AW side). Not synced in v1:
-assignee/owner, stage, dependencies, comments.
+Title, status, priority, description (200 chars max on the AW side). Not synced: assignee, stage, dependencies, comments.
 
 ## Mapping
 
@@ -23,32 +21,39 @@ p2=3 Medium, p3=4 Low, none=0 (and back).
 
 ## Direction and loop guard
 
-- AW -> Linear: after a task is created/changed, issue is created/updated (best effort, never
-  blocks the task write; failures land in `last_error`). Token refreshed once on 401.
+- AW -> Linear: every local writer calls `afterProjectTaskWrite({task, origin})` (create/update);
+  `origin: "linear"` (pull side) never pushes back. Best effort; failures land in `last_error`.
+- New issues: the id is generated client-side (`IssueCreateInput.id`, UUID v4) and the link row
+  is reserved BEFORE `issueCreate`, so a webhook always finds its link (no title heuristic). A
+  failed create deletes the reservation; a reserved link ("pending") ignores webhooks.
 - Linear -> AW: signed webhook (`Linear-Signature` HMAC-SHA256, 60 s freshness). Each link stores
-  `last_synced_hash` of the mapped fields; a webhook whose fields hash equals it (our own push
-  echoed back) is ignored. Real changes go through the status FSM step by step; unreachable
-  moves are skipped and recorded in `last_error`. Actor is shown as "Linear".
+  `last_synced_hash`; a payload whose fields hash equals it (our own push echoed) is ignored.
+  Moves go through the status FSM; unreachable ones are skipped and recorded in `last_error`.
+- Linear descriptions over 200 chars: the AW description is kept on pull; the link stores
+  `clipped_description_hash` (AW text at that time). Push omits the description until the AW
+  text differs from it (an AW-side edit), then sends it and clears the marker.
 - New Linear issues in the chosen team become tasks only if `importNew` is on. Deleted or
   archived issues are just unlinked (the task stays).
+- Disconnecting Linear deletes the webhook (before the token is revoked) and sets enabled=false,
+  webhook id/secret cleared; links and team id stay so a reconnect resumes.
 
 ## Enable
 
 1. Owner connects Linear in the project's Connections.
 2. `GET /api/projects/:id/task-sync/linear` lists teams; owner `PUT`s `enabled` + `externalTeamId`
    (registers the webhook at `<public base URL>/api/projects/:id/connections/linear/webhook`).
-3. `POST .../task-sync/linear/sync` pushes existing tasks in batches of 40 (repeat while `remaining` > 0).
+3. `POST .../task-sync/linear/sync` pushes existing tasks in batches of 40 (repeat while
+   `remaining` > 0), then on the last round PULLS team issues updated since `last_pulled_at`
+   (3 pages x 100; watermark only advances when all pages were read) through the webhook's
+   loop-guarded path. Returns `{ pushed, failed, unchanged, remaining, pulled }`. Works without a webhook.
 
 ## OAuth scopes and reconnect
 
-Registering the webhook (`webhookCreate`/`webhookDelete`) requires the Linear **`admin`** scope
-(see linear.app/developers/webhooks); the connection requests `read,write,admin`. Connections
-made before this change only have `read,write`: the owner must **disconnect and reconnect**
-Linear (and the connecting user must be a workspace admin) before enabling sync. Access tokens
-live 24 h; the refresh-token grant is used on a 401. Rate limits (5,000 req/h for OAuth apps)
-come back as HTTP 400 with `extensions.code = RATELIMITED` and surface as `linear_rate_limited`.
+Registering the webhook needs the Linear **`admin`** scope (linear.app/developers/webhooks); the
+connection requests `read,write,admin`. Older `read,write` connections must **disconnect and
+reconnect** (as a workspace admin) before enabling sync. Access tokens live 24 h; refresh on a 401. Rate limits (5,000 req/h) come back as HTTP 400 `RATELIMITED` -> `linear_rate_limited`.
 
 ## Limits
 
-Public HTTPS base URL needed for the webhook (localhost: push works, pull does not). Linear
-descriptions longer than 200 chars are truncated when pulled. Max 500 tasks per project.
+Public HTTPS base URL needed for the webhook (localhost: push and "Sync now" pull work, live
+webhook does not). Max 500 tasks per project. Archived issues are not seen by the pull.

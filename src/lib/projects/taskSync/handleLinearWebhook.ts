@@ -1,15 +1,10 @@
 import { decryptProjectConnectionToken } from "@/lib/projects/connections/decryptProjectConnectionToken";
 import { resolveProjectConnectionsAuthSecret } from "@/lib/projects/connections/isProjectConnectionsFeatureEnabled";
-import { applyLinearPull } from "@/lib/projects/taskSync/applyLinearPull";
-import { importLinearIssue } from "@/lib/projects/taskSync/importLinearIssue";
+import { applyLinearIssueEvent } from "@/lib/projects/taskSync/applyLinearIssueEvent";
 import { parseLinearWebhook } from "@/lib/projects/taskSync/parseLinearWebhook";
-import {
-  deleteLinkByExternalId,
-  loadLinkByExternalId,
-} from "@/lib/projects/taskSync/taskExternalLinkQueries";
+import { deleteLinkByExternalId } from "@/lib/projects/taskSync/taskExternalLinkReservation";
 import { loadTaskSyncSettings } from "@/lib/projects/taskSync/taskSyncSettingsQueries";
 import { verifyLinearWebhook } from "@/lib/projects/taskSync/verifyLinearWebhook";
-import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
 export type LinearWebhookResult = {
   readonly status: number;
@@ -69,32 +64,6 @@ export const handleLinearWebhook = async (input: {
     });
     return reply(200, "unlinked");
   }
-  if (event.teamId !== settings.externalTeamId) return reply(200, "other_team");
-
-  const project = await getUserProjectById(projectId);
-  if (project === null) return reply(404, "project_not_found");
-  const link = await loadLinkByExternalId({
-    projectId,
-    provider: "linear",
-    externalId: event.ref.externalId,
-  });
-  if (link === null) {
-    if (!settings.importNew) return reply(200, "not_linked");
-    const outcome = await importLinearIssue({
-      projectId,
-      ownerUserId: project.ownerUserId,
-      ref: event.ref,
-      fields: event.fields,
-    });
-    return reply(200, outcome);
-  }
-
-  const outcome = await applyLinearPull({
-    projectId,
-    ownerUserId: project.ownerUserId,
-    link,
-    pulled: event.fields,
-    labelsKnown: event.labelsKnown,
-  });
-  return reply(200, outcome);
+  const outcome = await applyLinearIssueEvent({ projectId, settings, event });
+  return reply(outcome === "project_not_found" ? 404 : 200, outcome);
 };

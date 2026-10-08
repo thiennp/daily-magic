@@ -22,6 +22,7 @@ const mapRow = (row: Record<string, unknown>): TaskSyncSettings => ({
   webhookSecretIv: str(row.webhook_secret_iv),
   lastError: str(row.last_error),
   lastSyncedAt: iso(row.last_synced_at),
+  lastPulledAt: iso(row.last_pulled_at),
 });
 
 export const loadTaskSyncSettings = async (

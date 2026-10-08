@@ -1,3 +1,4 @@
+import { afterProjectTaskWrite } from "@/lib/projects/tasks/afterProjectTaskWrite";
 import { findProjectTaskStatusPath } from "@/lib/projects/tasks/findProjectTaskStatusPath";
 import { mergeProjectTaskPatch } from "@/lib/projects/tasks/mergeProjectTaskPatch";
 import { notifyProjectTaskChanged } from "@/lib/projects/tasks/notifyProjectTaskChanged";
@@ -72,5 +73,7 @@ export const applyExternalProjectTaskChange = async (input: {
     before,
     after,
   });
+  // Pull side: the origin guard keeps this write from being pushed back.
+  await afterProjectTaskWrite({ task: after, origin: "linear" });
   return { ok: true, task: after };
 };

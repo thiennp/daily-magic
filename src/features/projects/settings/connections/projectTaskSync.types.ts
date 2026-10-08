@@ -22,6 +22,7 @@ export type LinearTaskSyncUpdate = {
 export type LinearTaskSyncBatch = {
   readonly pushed: number;
   readonly failed: number;
+  readonly pulled: number;
   readonly remaining: number;
 };
 

@@ -31,11 +31,15 @@ export type TaskSyncSettings = {
   readonly webhookSecretIv: string | null;
   readonly lastError: string | null;
   readonly lastSyncedAt: string | null;
+  /** Watermark of the "Sync now" pull (null = never pulled). */
+  readonly lastPulledAt: string | null;
 };
 
 export type TaskExternalLink = ExternalTaskRef & {
   readonly taskId: string;
   readonly lastSyncedHash: string | null;
+  /** Non-null: the provider description is longer than the AW cap; hash of the AW text at last sync. */
+  readonly clippedDescriptionHash: string | null;
 };
 
 /** Parsed provider webhook event, provider-neutral. */
@@ -50,6 +54,8 @@ export type ParsedTaskWebhook =
       readonly fields: TaskSyncFields;
       /** False when the payload had no label list (blocked unknown). */
       readonly labelsKnown: boolean;
+      /** The provider description was longer than the AW cap. */
+      readonly descriptionClipped: boolean;
     };
 
 /** Adapter a task tracker (Linear now, Jira later) implements. */
@@ -60,6 +66,10 @@ export type TaskSyncProvider = {
     readonly teamId: string;
     readonly fields: TaskSyncFields;
     readonly existing: ExternalTaskRef | null;
+    /** Client-generated issue id used when `existing` is null. */
+    readonly createId: string;
+    /** False: leave the provider description untouched on update. */
+    readonly sendDescription: boolean;
   }) => Promise<ExternalTaskRef>;
   readonly parseWebhook: (payload: unknown) => ParsedTaskWebhook;
 };

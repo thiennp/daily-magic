@@ -93,6 +93,7 @@ export const useProjectTaskSyncLinear = (
         fmt(C.syncSummary, {
           pushed: String(result.value.pushed),
           failed: String(result.value.failed),
+          pulled: String(result.value.pulled),
         }),
       );
     } else {

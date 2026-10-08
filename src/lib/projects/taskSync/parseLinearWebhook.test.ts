@@ -51,6 +51,13 @@ describe("parseLinearWebhook", () => {
     expect(parsed.labelsKnown).toBe(true);
   });
 
+  it("flags a description longer than the cap as clipped", () => {
+    const parsed = parseLinearWebhook(issue({ description: "d".repeat(201) }));
+    expect(parsed.kind === "upsert" && parsed.descriptionClipped).toBe(true);
+    const short = parseLinearWebhook(issue({ description: "d".repeat(200) }));
+    expect(short.kind === "upsert" && short.descriptionClipped).toBe(false);
+  });
+
   it("flags unknown labels when the payload has none", () => {
     const parsed = parseLinearWebhook(issue({ labels: undefined }));
     expect(parsed.kind === "upsert" && parsed.labelsKnown).toBe(false);

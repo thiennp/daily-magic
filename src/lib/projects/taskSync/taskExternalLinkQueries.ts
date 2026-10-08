@@ -13,6 +13,10 @@ const mapRow = (row: Record<string, unknown>): TaskExternalLink => ({
   url: typeof row.external_url === "string" ? row.external_url : "",
   lastSyncedHash:
     typeof row.last_synced_hash === "string" ? row.last_synced_hash : null,
+  clippedDescriptionHash:
+    typeof row.clipped_description_hash === "string"
+      ? row.clipped_description_hash
+      : null,
 });
 
 export const loadLinkByTask = async (
@@ -66,21 +70,24 @@ export const upsertTaskLink = async (input: {
   readonly identifier: string;
   readonly url: string;
   readonly hash: string;
+  readonly clippedDescriptionHash?: string | null;
 }): Promise<void> => {
   await ensureTaskSyncSchema();
   await getSql()`
     INSERT INTO project_task_external_links (
       project_id, task_id, provider, external_id, external_identifier,
-      external_url, last_synced_hash, last_synced_at
+      external_url, last_synced_hash, last_synced_at, clipped_description_hash
     ) VALUES (
       ${input.projectId}, ${input.taskId}, ${input.provider},
-      ${input.externalId}, ${input.identifier}, ${input.url}, ${input.hash}, NOW()
+      ${input.externalId}, ${input.identifier}, ${input.url}, ${input.hash}, NOW(),
+      ${input.clippedDescriptionHash ?? null}
     )
     ON CONFLICT (task_id, provider) DO UPDATE SET
       external_id = EXCLUDED.external_id,
       external_identifier = EXCLUDED.external_identifier,
       external_url = EXCLUDED.external_url,
       last_synced_hash = EXCLUDED.last_synced_hash,
+      clipped_description_hash = EXCLUDED.clipped_description_hash,
       last_synced_at = NOW()
   `;
 };
@@ -95,18 +102,5 @@ export const setLinkHash = async (
     UPDATE project_task_external_links
     SET last_synced_hash = ${hash}, last_synced_at = NOW()
     WHERE task_id = ${taskId} AND provider = ${provider}
-  `;
-};
-
-export const deleteLinkByExternalId = async (input: {
-  readonly projectId: string;
-  readonly provider: TaskSyncProviderId;
-  readonly externalId: string;
-}): Promise<void> => {
-  await ensureTaskSyncSchema();
-  await getSql()`
-    DELETE FROM project_task_external_links
-    WHERE project_id = ${input.projectId} AND provider = ${input.provider}
-      AND external_id = ${input.externalId}
   `;
 };

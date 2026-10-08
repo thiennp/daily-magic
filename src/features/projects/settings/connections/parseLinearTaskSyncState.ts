@@ -48,6 +48,7 @@ export const parseLinearTaskSyncBatch = (
     ? {
         pushed: count(data.pushed),
         failed: count(data.failed),
+        pulled: count(data.pulled),
         remaining: count(data.remaining),
       }
     : null;

@@ -1,4 +1,5 @@
 import { guardTaskSyncOwner } from "@/lib/projects/taskSync/guardTaskSyncOwner";
+import { pullLinearIssues } from "@/lib/projects/taskSync/pullLinearIssues";
 import { syncAllTasksToLinear } from "@/lib/projects/taskSync/syncAllTasksToLinear";
 import { loadTaskSyncSettings } from "@/lib/projects/taskSync/taskSyncSettingsQueries";
 
@@ -26,8 +27,9 @@ export async function POST(
       { status: 409 },
     );
   }
-  return Response.json({
-    ok: true,
-    ...(await syncAllTasksToLinear(projectId)),
-  });
+  const pushed = await syncAllTasksToLinear(projectId);
+  // Pull once the push batches are done (the last round), so our own pushes
+  // are already hashed and echo as "unchanged".
+  const pulled = pushed.remaining <= 0 ? await pullLinearIssues(projectId) : 0;
+  return Response.json({ ok: true, ...pushed, pulled });
 }

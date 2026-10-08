@@ -37,6 +37,10 @@ export const pushLinearIssue = async (input: {
   readonly teamId: string;
   readonly fields: TaskSyncFields;
   readonly existing: ExternalTaskRef | null;
+  /** Client-generated UUID v4 for issueCreate (IssueCreateInput.id). */
+  readonly createId: string;
+  /** False: update without touching Linear's (longer) description. */
+  readonly sendDescription: boolean;
 }): Promise<ExternalTaskRef> => {
   const { token, teamId, fields, existing } = input;
   const stateId = await findLinearStateId(
@@ -49,7 +53,9 @@ export const pushLinearIssue = async (input: {
   const labelId = await findLinearBlockedLabelId(token, teamId, blocked);
   const base = {
     title: fields.title,
-    description: fields.description ?? "",
+    ...(existing === null || input.sendDescription
+      ? { description: fields.description ?? "" }
+      : {}),
     priority: linearPriorityForTask(fields.priority),
     ...(stateId !== null ? { stateId } : {}),
   };
@@ -61,6 +67,7 @@ export const pushLinearIssue = async (input: {
       {
         input: {
           ...base,
+          id: input.createId,
           teamId,
           ...(blocked && labelId !== null ? { labelIds: [labelId] } : {}),
         },

@@ -8,12 +8,15 @@ export type LinearPullDecision =
 
 /**
  * Loop guard. Payload without labels cannot tell blocked from in_progress, so a
- * blocked task stays blocked. If the resulting field hash equals the hash we
- * last synced (our own push echoed back, or no real change) → ignore.
+ * blocked task stays blocked. A Linear description longer than the AW cap is
+ * truncated in `pulled`, so the AW description is kept instead of overwritten.
+ * If the resulting field hash equals the hash we last synced (our own push
+ * echoed back, or no real change) → ignore.
  */
 export const decideLinearPull = (input: {
   readonly pulled: TaskSyncFields;
   readonly labelsKnown: boolean;
+  readonly descriptionClipped: boolean;
   readonly current: ProjectTaskRecord;
   readonly lastSyncedHash: string | null;
 }): LinearPullDecision => {
@@ -21,9 +24,13 @@ export const decideLinearPull = (input: {
     !input.labelsKnown &&
     input.pulled.status === "in_progress" &&
     input.current.status === "blocked";
-  const fields: TaskSyncFields = keepBlocked
-    ? { ...input.pulled, status: "blocked" }
-    : input.pulled;
+  const fields: TaskSyncFields = {
+    ...input.pulled,
+    ...(keepBlocked ? { status: "blocked" as const } : {}),
+    ...(input.descriptionClipped
+      ? { description: input.current.description }
+      : {}),
+  };
   return hashTaskSyncFields(fields) === input.lastSyncedHash
     ? { apply: false, reason: "unchanged" }
     : { apply: true, fields };
