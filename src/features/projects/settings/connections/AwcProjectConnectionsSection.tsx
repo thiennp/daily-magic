@@ -42,7 +42,9 @@ export default function AwcProjectConnectionsSection({
       >
         {C.heading}
       </h3>
-      <p className="text-[13px] text-awc-fg-muted dark:text-gray-400">{C.intro}</p>
+      <p className="text-[13px] text-awc-fg-muted dark:text-gray-400">
+        {C.intro}
+      </p>
       <p className="text-[12px] text-awc-fg-muted dark:text-gray-400">
         {C.vsConnectHint}
       </p>
@@ -68,6 +70,7 @@ export default function AwcProjectConnectionsSection({
                 item={item}
                 isOwner={isOwner}
                 canMutate={canMutate}
+                projectId={projectId}
                 onDisconnect={() => setDisconnectProvider(item.provider)}
               />
             ))}

@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/button/Button";
+import AwcProjectTaskSyncBlock from "@/features/projects/settings/connections/AwcProjectTaskSyncBlock";
 import AwcProjectConnectionStatusPill from "@/features/projects/settings/connections/AwcProjectConnectionStatusPill";
 import { formatConnectionConnectedOn } from "@/features/projects/settings/connections/formatConnectionConnectedOn";
 import type { ProjectConnectionItem } from "@/features/projects/settings/connections/projectConnection.types";
@@ -18,6 +19,7 @@ interface AwcProjectConnectionRowProps {
   /** Owner + API ready — Disconnect lights up when connected. */
   readonly canMutate: boolean;
   readonly onDisconnect: () => void;
+  readonly projectId: string;
 }
 
 /** One provider row — service, status, account, owner action. */
@@ -26,6 +28,7 @@ export default function AwcProjectConnectionRow({
   isOwner,
   canMutate,
   onDisconnect,
+  projectId,
 }: AwcProjectConnectionRowProps) {
   const name = PROJECT_CONNECTION_PROVIDER_LABEL[item.provider];
   const action = resolveConnectionRowAction(item.status);
@@ -75,6 +78,9 @@ export default function AwcProjectConnectionRow({
         >
           {label}
         </Button>
+      ) : null}
+      {isOwner && item.provider === "linear" && item.status === "connected" ? (
+        <AwcProjectTaskSyncBlock projectId={projectId} />
       ) : null}
     </li>
   );
