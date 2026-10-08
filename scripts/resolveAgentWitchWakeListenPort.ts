@@ -1,6 +1,11 @@
 import net from "node:net";
 
 import { syncAgentWitchLaunchAgentPlistWakePort } from "@agent-witch/install-macos-launch";
+import {
+  resolveAgentWitchWakePortDir,
+  resolveAgentWitchHostProcessScope,
+  resolveAgentWitchAccountLaunchAgentLabel,
+} from "@agent-witch/install-layout";
 
 import { allocateAgentWitchWakePort } from "./allocateAgentWitchWakePort";
 import {
@@ -57,11 +62,17 @@ export const resolveAgentWitchWakeListenPort = async (
   }
 
   const allocatedPort = await allocateAgentWitchWakePort();
-  writeAgentWitchWakePortFile(installDir, allocatedPort);
+  const dir = resolveAgentWitchWakePortDir(installDir);
+  writeAgentWitchWakePortFile(dir, allocatedPort);
   process.env.AGENT_WITCH_WAKE_PORT = String(allocatedPort);
   try {
+    const scope = resolveAgentWitchHostProcessScope({ installDir });
+    const launchAgentPrefix =
+      scope.kind === "account"
+        ? resolveAgentWitchAccountLaunchAgentLabel(installDir, scope.email)
+        : resolveAgentWitchLaunchAgentPrefix(installDir);
     syncAgentWitchLaunchAgentPlistWakePort({
-      launchAgentPrefix: resolveAgentWitchLaunchAgentPrefix(installDir),
+      launchAgentPrefix,
       wakePort: allocatedPort,
     });
   } catch (error) {

@@ -1,4 +1,7 @@
-import { resolveAgentWitchWakePortFromSources } from "@agent-witch/install-layout";
+import {
+  resolveAgentWitchWakePortFromSources,
+  resolveAgentWitchWakePortDir,
+} from "@agent-witch/install-layout";
 
 import { readAgentWitchWakePortFromFile } from "./agentWitchWakePortFile";
 import {
@@ -19,7 +22,9 @@ export const AGENT_WITCH_LEGACY_LAUNCH_AGENT_LABEL =
 export const resolveAgentWitchWakePort = (): number => {
   const installDir = resolveAgentWitchInstallDir();
   return resolveAgentWitchWakePortFromSources({
-    filePort: readAgentWitchWakePortFromFile(installDir),
+    filePort: readAgentWitchWakePortFromFile(
+      resolveAgentWitchWakePortDir(installDir),
+    ),
     envValue: process.env.AGENT_WITCH_WAKE_PORT,
     defaultPort: resolveAgentWitchDefaultWakePort(installDir),
   });
@@ -27,9 +32,10 @@ export const resolveAgentWitchWakePort = (): number => {
 
 export const persistAgentWitchWakePortIfMissing = (wakePort: number): void => {
   const installDir = resolveAgentWitchInstallDir();
-  if (readAgentWitchWakePortFromFile(installDir) !== null) {
+  const dir = resolveAgentWitchWakePortDir(installDir);
+  if (readAgentWitchWakePortFromFile(dir) !== null) {
     return;
   }
 
-  writeAgentWitchWakePortFile(installDir, wakePort);
+  writeAgentWitchWakePortFile(dir, wakePort);
 };

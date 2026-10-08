@@ -12,7 +12,7 @@
 /** 290 = AWL-ISO-2 cross-account folder claims + write locks. */
 /** 291 = run report closes when the run ends (FAIL3). */
 /** 293 = project runs fall back to the profile's linked folder when the payload has none. */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "294";
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "295";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =

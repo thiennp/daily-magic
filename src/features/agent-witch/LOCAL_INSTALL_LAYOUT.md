@@ -12,6 +12,7 @@ When installed with `--email user@example.com` (or `AGENT_WITCH_PROFILE` / `acti
 
 ```
 ~/.agent-witch/
+├── host-services.json               # AWL-ISO-1 B: enable per-account launchd services/units
 ├── active-profile.json              # Last active profile email (install-wide)
 ├── install-version.json             # Shipped bundle version + app origin
 ├── wake-port.json                   # Local wake HTTP server port (47892 prod / 47893 local)
@@ -47,6 +48,7 @@ When installed with `--email user@example.com` (or `AGENT_WITCH_PROFILE` / `acti
 │
 └── profiles/
     └── user@example.com/            # Sanitized lowercase email
+        ├── wake-port.json           # Account-specific wake HTTP port (AWL-ISO-1)
         ├── config.json              # wsUrl, pairingToken, device label, writerExecutionBackend (cli|api), …
         ├── writer-api-secrets.json  # Optional provider API keys (mode 600); not synced to cloud
         ├── device-keypair.json      # Ed25519 device credentials (per profile)
@@ -102,6 +104,17 @@ When installed with `--email user@example.com` (or `AGENT_WITCH_PROFILE` / `acti
 
 ---
 
+## Per-account host services (AWL-ISO-1)
+
+When `host-services.json` is present in the install root, the host launcher operates in "per-account" mode.
+
+- **Labels & Units**: Each account gets a unique hash (first 12 chars of SHA-256 of the sanitized email) and its own service: `com.agent-witch.<hash>` (macOS) or `agent-witch-<hash>.service` (Linux).
+- **Lease Files**: Each account gets its own lock lease in `os.tmpdir()`: `com.agent-witch.<hostname>.<hash>.lease.json`.
+- **Wake Ports**: Each account gets a dedicated wake HTTP port, persisted in `profiles/<email>/wake-port.json`.
+- **Process Isolation**: The host process uses `AGENT_WITCH_HOST_ACCOUNT` in its environment to ensure it only manages its own account's profiles and never kills sibling processes belonging to other accounts.
+
+---
+
 ## Legacy single-profile layout (no `profiles/`)
 
 If no profile email is configured, the same per-profile paths collapse to the install root:
@@ -136,6 +149,7 @@ New installs should use a profile email so accounts stay isolated.
 
 | Path                            | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `host-services.json`            | `{ "version": 1, "mode": "per-account", "accounts": [...] }` — AWL-ISO-1 switch to spawn one host process per account.                                                                                                                                                                                                                                                                                                                                                                    |
 | `active-profile.json`           | `{ "email": "user@example.com" }` — default profile when env is unset                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `install-version.json`          | `{ "bundleVersion", "appOrigin", "updatedAt" }` — compared to hub on heartbeat for auto-update                                                                                                                                                                                                                                                                                                                                                                                            |
 | `wake-port.json`                | `{ "wakePort": 47892 }` — **source of truth** for the wake HTTP port. Resolution order: this file → `AGENT_WITCH_WAKE_PORT` (LaunchAgent / systemd) → 47892 / 47893. The installer writes the same value into both the file and every plist / unit; if the wake server has to move ports, it rewrites the file and the LaunchAgent plists together; on start the client also rewrites a drifted plist `AGENT_WITCH_WAKE_PORT` to the file value (that key only, via `plutil`, no reload). |

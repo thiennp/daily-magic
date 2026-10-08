@@ -10,6 +10,7 @@ import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
 export const kickstartAgentWitchClientLaunchAgents = async (
   installDir: string = resolveAgentWitchInstallDir(),
   platform: string = process.platform,
+  options?: { readonly onlyAccountEmail?: string | null },
 ): Promise<readonly string[]> => {
   if (platform !== "darwin") {
     return [];
@@ -17,7 +18,7 @@ export const kickstartAgentWitchClientLaunchAgents = async (
 
   const kicked: string[] = [];
 
-  for (const target of listAgentWitchLaunchTargets(installDir)) {
+  for (const target of listAgentWitchLaunchTargets(installDir, options)) {
     const result = await kickstartAgentWitchLaunchAgent(
       target.launchAgentLabel,
       installDir,

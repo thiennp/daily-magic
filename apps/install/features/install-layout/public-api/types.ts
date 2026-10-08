@@ -154,3 +154,10 @@ export interface AgentWitchLocalLayout {
   readonly harnessManifestPath: string;
   readonly harnessSetsDir: string;
 }
+
+export type {
+  AgentWitchHostEnv,
+  AgentWitchHostProcessScope,
+  AgentWitchHostServiceAccount,
+  AgentWitchHostServicesFile,
+} from "../internal/core/hostAccountServices/hostAccountServices.type";

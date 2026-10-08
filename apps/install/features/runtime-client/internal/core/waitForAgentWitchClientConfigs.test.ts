@@ -44,3 +44,22 @@ describe("waitForAgentWitchClientConfigsWithDeps", () => {
     await expect(promise).resolves.toEqual([sampleConfig]);
   });
 });
+
+describe("waitForAgentWitchClientConfigsWithDeps onlyProfileEmail (AWL-ISO-1)", () => {
+  it("returns only the account host's own profile", async () => {
+    const readConfig = vi.fn((email?: string | null) =>
+      email === "b@example.com" ? sampleConfig : null,
+    );
+    await expect(
+      waitForAgentWitchClientConfigsWithDeps({
+        listProfileEmails: () => ["a@example.com", "b@example.com"],
+        readConfig,
+        pollIntervalMs: 100,
+        logWaiting: vi.fn(),
+        onlyProfileEmail: "B@example.com",
+      }),
+    ).resolves.toEqual([sampleConfig]);
+    expect(readConfig).toHaveBeenCalledTimes(1);
+    expect(readConfig).toHaveBeenCalledWith("b@example.com");
+  });
+});

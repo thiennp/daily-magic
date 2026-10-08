@@ -1,6 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import {
+  resolveAgentWitchAccountLaunchAgentLabel,
+  resolveAgentWitchHostAccountFromEnv,
+  resolveAgentWitchLaunchAgentPrefix,
+} from "@agent-witch/install-layout";
+
 import { AGENT_WITCH_HOST_LOCAL_APP_ACCOUNTS_FILE_NAME } from "./agentWitchHostLocalAppAccountsDiscovery.constant";
 import type {
   AgentWitchHostLocalAppAccountDiscoveryRow,
@@ -45,8 +51,30 @@ const parseDiscoveryRow = (
     port: value.port,
     pid: value.pid,
     startedAt: value.startedAt,
+    ...(typeof value.launchAgentLabel === "string" &&
+    value.launchAgentLabel.trim().length > 0
+      ? { launchAgentLabel: value.launchAgentLabel.trim() }
+      : {}),
   };
 };
+
+const isPidAlive = (pid: number): boolean => {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (error) {
+    return (error as NodeJS.ErrnoException).code === "EPERM";
+  }
+};
+
+/** Service label that restarts this process: the account LaunchAgent (AWL-ISO-1) or the legacy one. */
+const resolveListeningLaunchAgentLabel = (
+  installDir: string,
+  profileEmail: string,
+): string =>
+  resolveAgentWitchHostAccountFromEnv() === null
+    ? resolveAgentWitchLaunchAgentPrefix(installDir)
+    : resolveAgentWitchAccountLaunchAgentLabel(installDir, profileEmail);
 
 export const resolveAgentWitchHostLocalAppAccountsFilePath = (
   installDir: string,
@@ -116,25 +144,69 @@ export const readPreferredAgentWitchLocalAppPortHint = (input: {
   return readAgentWitchLocalAppPortFile(input.profileDir);
 };
 
+/** AWL-ISO-1: one host process per account — keep other live processes' rows. */
+const mergeInProcessRowsIntoDiscovery = (
+  installDir: string,
+  pid: number,
+  isAlive: (pid: number) => boolean,
+): void => {
+  const ownEmails = new Set(inProcessAccountRows.keys());
+  const otherLiveRows = readAgentWitchHostLocalAppAccountsDiscovery(
+    installDir,
+  ).filter(
+    (existing) =>
+      !ownEmails.has(existing.email) &&
+      existing.pid !== pid &&
+      isAlive(existing.pid),
+  );
+  writeAgentWitchHostLocalAppAccountsDiscovery(installDir, [
+    ...otherLiveRows,
+    ...inProcessAccountRows.values(),
+  ]);
+};
+
 export const registerAgentWitchLocalAppAccountListening = (input: {
   readonly installDir: string;
   readonly profileEmail: string;
   readonly profileDir: string;
   readonly port: number;
+  readonly pid?: number;
+  readonly isProcessAlive?: (pid: number) => boolean;
 }): void => {
   if (!isValidPort(input.port) || !isValidEmail(input.profileEmail)) {
     throw new Error("Invalid local app account discovery row");
   }
+  const pid = input.pid ?? process.pid;
+  const isAlive = input.isProcessAlive ?? isPidAlive;
   const row: AgentWitchHostLocalAppAccountDiscoveryRow = {
     email: input.profileEmail.trim(),
     port: input.port,
-    pid: process.pid,
+    pid,
     startedAt: new Date().toISOString(),
+    launchAgentLabel: resolveListeningLaunchAgentLabel(
+      input.installDir,
+      input.profileEmail,
+    ),
   };
   inProcessAccountRows.set(row.email, row);
-  writeAgentWitchHostLocalAppAccountsDiscovery(input.installDir, [
-    ...inProcessAccountRows.values(),
-  ]);
+  mergeInProcessRowsIntoDiscovery(input.installDir, pid, isAlive);
+  if (
+    input.pid === undefined &&
+    resolveAgentWitchHostAccountFromEnv() !== null
+  ) {
+    // Sibling account hosts can start together; re-merge once in case a
+    // concurrent read-modify-write dropped this row.
+    setTimeout(
+      () => {
+        try {
+          mergeInProcessRowsIntoDiscovery(input.installDir, pid, isAlive);
+        } catch {
+          // best effort
+        }
+      },
+      2_000 + Math.floor(Math.random() * 3_000),
+    ).unref();
+  }
   writeAgentWitchLocalAppPortFile(input.profileDir, input.port);
 };
 

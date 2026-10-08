@@ -1,6 +1,10 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import {
+  resolveAgentWitchAccountHash,
+  resolveAgentWitchHostAccountFromEnv,
+} from "@agent-witch/install-layout";
 
 import { AGENT_WITCH_MACHINE_LEASE_TTL_MS } from "./agentWitchInProcessServices.constants";
 import { isProcessAlive } from "./isProcessAlive";
@@ -17,11 +21,16 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 
 export const resolveAgentWitchMachineLeasePath = (
   hostname: string = os.hostname(),
-): string =>
-  path.join(
+  accountEmail: string | null = resolveAgentWitchHostAccountFromEnv(),
+): string => {
+  const hashPart = accountEmail
+    ? `.${resolveAgentWitchAccountHash(accountEmail)}`
+    : "";
+  return path.join(
     os.tmpdir(),
-    `com.agent-witch.${hostname.trim().toLowerCase()}.lease.json`,
+    `com.agent-witch.${hostname.trim().toLowerCase()}${hashPart}.lease.json`,
   );
+};
 
 const readMachineLease = (leasePath: string): AgentWitchMachineLease | null => {
   if (!fs.existsSync(leasePath)) {

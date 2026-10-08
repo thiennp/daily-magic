@@ -1,5 +1,11 @@
 import { execFileSync } from "node:child_process";
+import fs from "node:fs";
 import path from "node:path";
+
+import {
+  AGENT_WITCH_HOST_ACCOUNT_ENV,
+  resolveAgentWitchHostAccountFromEnv,
+} from "@agent-witch/install-layout";
 
 import { isProcessAlive } from "./isProcessAlive";
 import {
@@ -108,6 +114,76 @@ const parseAgentWitchClientPids = (
   return pids;
 };
 
+export interface ReadAgentWitchProcessHostAccountDeps {
+  readonly platform?: NodeJS.Platform;
+  readonly readFile?: (filePath: string) => string;
+  readonly readPsEnv?: (pid: number) => string;
+}
+
+const readHostAccountFromEnvPairs = (
+  pairs: readonly string[],
+): string | null => {
+  const prefix = `${AGENT_WITCH_HOST_ACCOUNT_ENV}=`;
+  const pair = pairs.find((entry) => entry.startsWith(prefix));
+  return pair === undefined
+    ? null
+    : resolveAgentWitchHostAccountFromEnv({
+        [AGENT_WITCH_HOST_ACCOUNT_ENV]: pair.slice(prefix.length),
+      });
+};
+
+/**
+ * AGENT_WITCH_HOST_ACCOUNT of another process: email, null when unset (monolith /
+ * launcher), undefined when the environment cannot be read.
+ */
+export const readAgentWitchProcessHostAccount = (
+  pid: number,
+  deps: ReadAgentWitchProcessHostAccountDeps = {},
+): string | null | undefined => {
+  const platform = deps.platform ?? process.platform;
+  try {
+    if (platform === "linux") {
+      const readFile =
+        deps.readFile ??
+        ((filePath: string) => fs.readFileSync(filePath, "utf8"));
+      return readHostAccountFromEnvPairs(
+        readFile(`/proc/${String(pid)}/environ`).split("\0"),
+      );
+    }
+    if (platform === "darwin") {
+      const readPsEnv =
+        deps.readPsEnv ??
+        ((target: number) =>
+          execFileSync("ps", ["eww", "-o", "command=", "-p", String(target)], {
+            encoding: "utf8",
+          }));
+      return readHostAccountFromEnvPairs(readPsEnv(pid).split(/\s+/));
+    }
+  } catch {
+    return undefined;
+  }
+  return undefined;
+};
+
+/**
+ * AWL-ISO-1: an account host replaces only its own account's process; the
+ * monolith / launcher never kills an account host. Unreadable env counts as a
+ * legacy sibling only while host-services.json is absent.
+ */
+export const shouldTerminateAgentWitchSibling = (input: {
+  readonly selfAccountEmail: string | null;
+  readonly siblingAccountEmail: string | null | undefined;
+  readonly hostServicesPresent: boolean;
+}): boolean => {
+  if (input.selfAccountEmail !== null) {
+    return input.siblingAccountEmail === input.selfAccountEmail;
+  }
+  if (input.siblingAccountEmail === undefined) {
+    return !input.hostServicesPresent;
+  }
+  return input.siblingAccountEmail === null;
+};
+
 /**
  * Kill other AgentWitch client processes for this install home.
  * One macOS user / install dir should run a single bridge process.
@@ -115,6 +191,9 @@ const parseAgentWitchClientPids = (
 export const terminateOtherAgentWitchClientProcesses = (input: {
   readonly installDir: string;
   readonly selfPid?: number;
+  readonly accountEmail?: string | null;
+  readonly hostServicesPresent?: boolean;
+  readonly readHostAccount?: (pid: number) => string | null | undefined;
 }): readonly number[] => {
   const selfPid = input.selfPid ?? process.pid;
   let psOutput = "";
@@ -132,9 +211,21 @@ export const terminateOtherAgentWitchClientProcesses = (input: {
     selfPid,
   );
 
+  const readHostAccount =
+    input.readHostAccount ??
+    ((pid: number) => readAgentWitchProcessHostAccount(pid));
   const terminated: number[] = [];
   for (const pid of siblingPids) {
     if (!isProcessAlive(pid)) {
+      continue;
+    }
+    if (
+      !shouldTerminateAgentWitchSibling({
+        selfAccountEmail: input.accountEmail ?? null,
+        siblingAccountEmail: readHostAccount(pid),
+        hostServicesPresent: input.hostServicesPresent ?? false,
+      })
+    ) {
       continue;
     }
     try {

@@ -1,4 +1,8 @@
-import { resolveAgentWitchLaunchAgentPrefix } from "@agent-witch/install-layout";
+import {
+  resolveAgentWitchLaunchAgentPrefix,
+  resolveAgentWitchHostProcessScope,
+  resolveAgentWitchAccountLaunchAgentLabel,
+} from "@agent-witch/install-layout";
 import { ensureAgentWitchLaunchAgentPlist } from "@agent-witch/install-macos-launch";
 
 import { appendAgentWitchLocalTraffic } from "./agentWitchLocalTrafficLog";
@@ -99,10 +103,19 @@ export const runLocalInstallBundleUpdate = async (input: {
     action: "install-bundle-update-start",
   });
 
+  const scope = resolveAgentWitchHostProcessScope({
+    installDir: input.layout.installDir,
+  });
+  const label =
+    scope.kind === "account"
+      ? resolveAgentWitchAccountLaunchAgentLabel(
+          input.layout.installDir,
+          scope.email,
+        )
+      : resolveAgentWitchLaunchAgentPrefix(input.layout.installDir);
+
   ensureAgentWitchLaunchAgentPlist({
-    launchAgentLabel: resolveAgentWitchLaunchAgentPrefix(
-      input.layout.installDir,
-    ),
+    launchAgentLabel: label,
     installDir: input.layout.installDir,
   });
   const wakeResult = await requestLocalAgentWitchSelfUpdate({ force: true });

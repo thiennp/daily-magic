@@ -27,6 +27,7 @@ export interface StartAgentWitchInProcessServicesInput {
   /** Probe AWL `/health` on the discovered port (H6 range; legacy 43347 last) and kickstart LaunchAgents when down. */
   readonly ensureLiveAppReachable?: () => void;
   readonly onLostMachineLease?: () => void;
+  readonly leasePath?: string;
 }
 
 export const startAgentWitchInProcessServices = async (
@@ -43,7 +44,7 @@ export const startAgentWitchInProcessServices = async (
   }, AGENT_WITCH_IN_PROCESS_SCHEDULER_INTERVAL_MS);
 
   const watchdogTimer = setInterval(() => {
-    const lease = renewAgentWitchMachineLease();
+    const lease = renewAgentWitchMachineLease({ leasePath: input.leasePath });
     if (!lease.ok) {
       input.onLostMachineLease?.();
       return;

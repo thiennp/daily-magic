@@ -3,6 +3,7 @@ import path from "node:path";
 
 import {
   readActiveProfileEmailFromFile,
+  readAgentWitchHostServices,
   resolveAgentWitchInstallDir,
   resolveAgentWitchLaunchAgentPrefix,
   sanitizeProfileEmailForDir,
@@ -25,12 +26,26 @@ const listProfileEmails = (installDir: string): readonly string[] => {
 };
 
 /**
- * One LaunchAgent / process per install home.
- * Multi-account profiles share that process (multiple WebSockets).
+ * Legacy (no host-services.json): one LaunchAgent / process per install home,
+ * every profile bridged in that process.
+ * Per-account (AWL-ISO-1): one target per account `com.agent-witch.<hash>`,
+ * optionally only `onlyAccountEmail`.
  */
 export const listAgentWitchLaunchTargets = (
   installDir: string = resolveAgentWitchInstallDir(),
+  options?: { readonly onlyAccountEmail?: string | null },
 ): readonly AgentWitchLaunchTarget[] => {
+  const services = readAgentWitchHostServices(installDir);
+  if (services !== null) {
+    const only = options?.onlyAccountEmail?.trim().toLowerCase() ?? "";
+    return services.accounts
+      .filter((account) => only.length === 0 || account.email === only)
+      .map((account) => ({
+        profileEmail: account.email,
+        launchAgentLabel: account.launchAgentLabel,
+      }));
+  }
+
   const launchAgentLabel = resolveAgentWitchLaunchAgentPrefix(installDir);
   const profileEmails = listProfileEmails(installDir);
   const activeProfileEmail = readActiveProfileEmailFromFile(installDir);

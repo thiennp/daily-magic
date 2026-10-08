@@ -168,3 +168,70 @@ describe("listenAgentWitchLocalAppHttpServer", () => {
     });
   });
 });
+
+describe("per-account host processes (AWL-ISO-1)", () => {
+  it("keeps live rows written by other account hosts and drops dead ones", () => {
+    const { installDir, profileDir } = makeInstall();
+    fs.writeFileSync(
+      resolveAgentWitchHostLocalAppAccountsFilePath(installDir),
+      JSON.stringify({
+        accounts: [
+          {
+            email: "agt@example.com",
+            port: 60704,
+            pid: 4242,
+            startedAt: "2026-10-08T00:00:00.000Z",
+            launchAgentLabel: "com.agent-witch.bbbbbbbbbbbb",
+          },
+          {
+            email: "dead@example.com",
+            port: 60705,
+            pid: 4343,
+            startedAt: "2026-10-08T00:00:00.000Z",
+          },
+        ],
+      }),
+    );
+
+    registerAgentWitchLocalAppAccountListening({
+      installDir,
+      profileEmail: "gmail@example.com",
+      profileDir: profileDir("gmail@example.com"),
+      port: 65376,
+      pid: 1111,
+      isProcessAlive: (pid) => pid === 4242,
+    });
+
+    const rows = readAgentWitchHostLocalAppAccountsDiscovery(installDir);
+    expect(rows.map((row) => [row.email, row.port, row.pid])).toEqual([
+      ["agt@example.com", 60704, 4242],
+      ["gmail@example.com", 65376, 1111],
+    ]);
+    expect(rows[0]?.launchAgentLabel).toBe("com.agent-witch.bbbbbbbbbbbb");
+    expect(rows[1]?.launchAgentLabel).toBeDefined();
+  });
+
+  it("records the account LaunchAgent label when the process serves one account", () => {
+    const { installDir, profileDir } = makeInstall();
+    const previous = process.env.AGENT_WITCH_HOST_ACCOUNT;
+    process.env.AGENT_WITCH_HOST_ACCOUNT = "gmail@example.com";
+    try {
+      registerAgentWitchLocalAppAccountListening({
+        installDir,
+        profileEmail: "gmail@example.com",
+        profileDir: profileDir("gmail@example.com"),
+        port: 65376,
+        pid: 1111,
+        isProcessAlive: () => false,
+      });
+    } finally {
+      if (previous === undefined) {
+        delete process.env.AGENT_WITCH_HOST_ACCOUNT;
+      } else {
+        process.env.AGENT_WITCH_HOST_ACCOUNT = previous;
+      }
+    }
+    const [row] = readAgentWitchHostLocalAppAccountsDiscovery(installDir);
+    expect(row?.launchAgentLabel).toMatch(/\.[0-9a-f]{12}$/);
+  });
+});

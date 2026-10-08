@@ -4,10 +4,12 @@ import path from "node:path";
 
 import { AWI_BUNDLED_COMMAND_DIR } from "@agent-witch/install-layout/types";
 import {
+  readAgentWitchHostServices,
   resolveAgentWitchInstallDir,
   resolveAgentWitchRuntimeWakePort,
 } from "@agent-witch/install-layout";
 
+import { writeAgentWitchAccountLaunchAgentPlist } from "./agentWitchAccountLaunchAgent";
 import { buildAgentWitchLaunchAgentPlistXml } from "./buildAgentWitchLaunchAgentPlistXml";
 import { isAgentWitchLaunchAgentPlistXmlValid } from "./isAgentWitchLaunchAgentPlistXmlValid";
 
@@ -37,6 +39,36 @@ export const ensureAgentWitchLaunchAgentPlist = (
 ): EnsureAgentWitchLaunchAgentPlistResult => {
   const installDir = input.installDir ?? resolveAgentWitchInstallDir();
   const homeDir = input.homeDir ?? os.homedir();
+
+  // Per-account label (AWL-ISO-1): always the account plist (pins AGENT_WITCH_HOST_ACCOUNT).
+  const account = readAgentWitchHostServices(installDir)?.accounts.find(
+    (row) => row.launchAgentLabel === input.launchAgentLabel,
+  );
+  if (account !== undefined) {
+    try {
+      const written = writeAgentWitchAccountLaunchAgentPlist({
+        installDir,
+        homeDir,
+        account,
+      });
+      return {
+        ok: true,
+        rewritten: written.changed,
+        plistPath: written.plistPath,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        rewritten: false,
+        plistPath: resolveAgentWitchLaunchAgentPlistPath(
+          input.launchAgentLabel,
+          homeDir,
+        ),
+        errorMessage: error instanceof Error ? error.message : String(error),
+      };
+    }
+  }
+
   const plistPath = resolveAgentWitchLaunchAgentPlistPath(
     input.launchAgentLabel,
     homeDir,

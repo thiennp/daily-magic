@@ -7,15 +7,23 @@ export interface WaitForAgentWitchClientConfigsDeps {
   ) => AgentWitchClientConfig | null;
   readonly pollIntervalMs: number;
   readonly logWaiting: (message: string) => void;
+  readonly onlyProfileEmail?: string | null;
 }
 
 const loadAgentWitchClientConfigs = (
   deps: Pick<
     WaitForAgentWitchClientConfigsDeps,
-    "listProfileEmails" | "readConfig"
+    "listProfileEmails" | "readConfig" | "onlyProfileEmail"
   >,
 ): readonly AgentWitchClientConfig[] => {
-  const profileEmails = deps.listProfileEmails();
+  const only = deps.onlyProfileEmail?.trim().toLowerCase() ?? "";
+  const listed = deps.listProfileEmails();
+  // AWL-ISO-1 account host: exactly its own profile (keep waiting until it exists).
+  if (only.length > 0) {
+    const config = listed.includes(only) ? deps.readConfig(only) : null;
+    return config === null ? [] : [config];
+  }
+  const profileEmails = listed;
   if (profileEmails.length === 0) {
     const legacy = deps.readConfig(null);
     return legacy === null ? [] : [legacy];

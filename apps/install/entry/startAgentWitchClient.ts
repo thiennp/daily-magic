@@ -10,7 +10,12 @@ import {
   readAgentWitchWakePortFromFile,
   resolveAgentWitchInstallDir,
   resolveAgentWitchLaunchAgentPrefix,
+  readAgentWitchHostServices,
+  resolveAgentWitchHostProcessScope,
+  resolveAgentWitchAccountLaunchAgentLabel,
+  resolveAgentWitchWakePortDir,
 } from "@agent-witch/install-layout";
+import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@agent-witch/install-bundle";
 import {
   bootoutAgentWitchAuxiliaryLaunchAgents,
   bootoutAgentWitchLaunchAgentsForCurrentUser,
@@ -122,6 +127,7 @@ import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
 import { LocalCodingToolRefusalCode } from "@agent-witch/shared/dispatch";
 
 import { admitLocalCodingToolRun } from "./admitLocalCodingToolRun";
+import { runAgentWitchHostLauncher } from "./hostLauncher/runAgentWitchHostLauncher";
 
 import {
   acceptTerminalStream,
@@ -165,6 +171,7 @@ import {
   registerAgentWitchProcessTraceHandlers,
   releaseAgentWitchMachineLease,
   replayPendingRunInputRequests,
+  resolveAgentWitchMachineLeasePath,
   bindAgentWitchLiveRunSocket,
   dropPendingRunInputSession,
   requestLocalAgentWitchRestart,
@@ -1165,6 +1172,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     wakeError: string | null;
     restartInFlight: boolean;
     selfUpdateInFlight: boolean;
+    hasRequestedAccountConvergenceRestart: boolean;
   } = {
     reconnectAttempt: 0,
     notLinked: false,
@@ -1174,6 +1182,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     wakeError: null,
     restartInFlight: false,
     selfUpdateInFlight: false,
+    hasRequestedAccountConvergenceRestart: false,
   };
 
   const runLocalRestart = (
@@ -1294,6 +1303,19 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         remoteBundleVersion,
       })
     ) {
+      // AWL-ISO-1: another account host already installed this bundle; this
+      // per-account process still runs the old code, so restart into it once.
+      const scope = resolveAgentWitchHostProcessScope({
+        installDir: config.layout.installDir,
+      });
+      if (
+        scope.kind === "account" &&
+        AGENT_WITCH_INSTALL_BUNDLE_VERSION !== remoteBundleVersion &&
+        !state.hasRequestedAccountConvergenceRestart
+      ) {
+        state.hasRequestedAccountConvergenceRestart = true;
+        runLocalHostRestartIntoUpdatedBundle("install-bundle-update");
+      }
       return;
     }
 
@@ -2485,10 +2507,21 @@ const main = async (): Promise<void> => {
   const processHost = resolveAgentWitchProcessHost();
   const installDir = resolveAgentWitchInstallDir();
 
-  const machineLease = claimAgentWitchMachineLease();
+  const scope = resolveAgentWitchHostProcessScope({ installDir });
+  if (scope.kind === "launcher") {
+    await runAgentWitchHostLauncher({ installDir, services: scope.services });
+    return;
+  }
+
+  const accountEmail = scope.kind === "account" ? scope.email : null;
+  const leasePath = resolveAgentWitchMachineLeasePath(undefined, accountEmail);
+
+  const machineLease = claimAgentWitchMachineLease({ leasePath });
   if (!machineLease.ok) {
     if (process.platform === "darwin") {
-      await kickstartAgentWitchClientLaunchAgents(installDir);
+      await kickstartAgentWitchClientLaunchAgents(installDir, "darwin", {
+        onlyAccountEmail: accountEmail,
+      });
       process.stdout.write(
         "[agent-witch] Another AgentWitch process already owns this Mac user lease — kickstarted LaunchAgent and exiting.\n",
       );
@@ -2500,7 +2533,12 @@ const main = async (): Promise<void> => {
     process.exit(0);
   }
   migrateLegacyAgentWitchInstallLogsForActiveProfiles(installDir);
-  const terminated = terminateOtherAgentWitchClientProcesses({ installDir });
+  // AWL-ISO-1: an account host only replaces its own account's older process.
+  const terminated = terminateOtherAgentWitchClientProcesses({
+    installDir,
+    accountEmail,
+    hostServicesPresent: readAgentWitchHostServices(installDir) !== null,
+  });
   if (terminated.length > 0) {
     console.log(
       `[agent-witch] Stopped ${terminated.length} sibling process(es): ${terminated.join(", ")}`,
@@ -2508,8 +2546,12 @@ const main = async (): Promise<void> => {
   }
 
   if (process.platform === "darwin") {
+    const label =
+      accountEmail === null
+        ? resolveAgentWitchLaunchAgentPrefix(installDir)
+        : resolveAgentWitchAccountLaunchAgentLabel(installDir, accountEmail);
     const launchAgentPlist = ensureAgentWitchLaunchAgentPlist({
-      launchAgentLabel: resolveAgentWitchLaunchAgentPrefix(installDir),
+      launchAgentLabel: label,
       installDir,
     });
     if (launchAgentPlist.rewritten) {
@@ -2518,8 +2560,10 @@ const main = async (): Promise<void> => {
     try {
       // Heal a plist whose AGENT_WITCH_WAKE_PORT drifted from wake-port.json (file wins; no reload).
       const synced = syncAgentWitchLaunchAgentPlistWakePort({
-        launchAgentPrefix: resolveAgentWitchLaunchAgentPrefix(installDir),
-        wakePort: readAgentWitchWakePortFromFile(installDir),
+        launchAgentPrefix: label,
+        wakePort: readAgentWitchWakePortFromFile(
+          resolveAgentWitchWakePortDir(installDir),
+        ),
       });
       if (synced.length > 0) {
         console.log(
@@ -2535,7 +2579,7 @@ const main = async (): Promise<void> => {
     bootoutAgentWitchAuxiliaryLaunchAgents();
   }
 
-  const configs = await waitForConfigs();
+  const configs = await waitForConfigs({ onlyProfileEmail: accountEmail });
   const primaryConfig = configs[0];
   if (primaryConfig !== undefined) {
     registerAgentWitchProcessTraceHandlers(primaryConfig.layout);
@@ -2550,7 +2594,7 @@ const main = async (): Promise<void> => {
   const primaryClient = clients[0];
   if (primaryClient === undefined) {
     process.stdout.write("[agent-witch] No profile configs found — exiting.\n");
-    releaseAgentWitchMachineLease();
+    releaseAgentWitchMachineLease({ leasePath });
     process.exit(0);
   }
 
@@ -2587,13 +2631,16 @@ const main = async (): Promise<void> => {
     if (isAgentWitchWriterWorkInProgress(layout)) {
       return;
     }
-    void ensureAgentWitchCoupledLiveAppHealth(layout.installDir);
+    void ensureAgentWitchCoupledLiveAppHealth(layout.installDir, {
+      accountEmail,
+    });
   };
 
   const inProcessServices = await startAgentWitchInProcessServices({
     skipInProcessBridge: processHost.skipInProcessBridge,
     reconnectWebSockets: reconnectWebSocketsIfStale,
     ensureLiveAppReachable: ensureLiveAppReachableIfIdle,
+    leasePath,
     onLostMachineLease: () => {
       console.log(
         "[agent-witch] Lost machine lease to another process — shutting down.",
@@ -2639,9 +2686,15 @@ const main = async (): Promise<void> => {
     client.connect();
   }
 
-  console.log(
-    `[agent-witch] Host mode ${processHost.mode}; bridging ${clients.length} account profile(s) in one process.`,
-  );
+  if (scope.kind === "account") {
+    console.log(
+      `[agent-witch] Host mode account; one process for ${accountEmail} (pid ${process.pid}).`,
+    );
+  } else {
+    console.log(
+      `[agent-witch] Host mode ${processHost.mode}; bridging ${clients.length} account profile(s) in one process.`,
+    );
+  }
 
   const stopConsoleUserGuard = startActiveMacOsConsoleUserGuard(() => {
     console.log(
@@ -2661,7 +2714,7 @@ const main = async (): Promise<void> => {
     for (const client of clients) {
       client.stop();
     }
-    releaseAgentWitchMachineLease();
+    releaseAgentWitchMachineLease({ leasePath });
   };
 
   registerAgentWitchHostGracefulShutdown(gracefulHostShutdown);

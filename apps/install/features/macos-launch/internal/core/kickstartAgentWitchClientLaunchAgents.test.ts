@@ -28,7 +28,10 @@ describe("kickstartAgentWitchClientLaunchAgents", () => {
       "darwin",
     );
 
-    expect(listAgentWitchLaunchTargets).toHaveBeenCalledWith("/tmp/install");
+    expect(listAgentWitchLaunchTargets).toHaveBeenCalledWith(
+      "/tmp/install",
+      undefined,
+    );
     expect(kickstartAgentWitchLaunchAgent).toHaveBeenCalledWith(
       "com.agent-witch",
       "/tmp/install",

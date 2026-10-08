@@ -1,7 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { readAgentWitchHostLocalAppAccountsDiscovery } from "../apps/live/features/local-server/internal/core/agentWitchHostLocalAppAccountsDiscovery";
 import { listAgentWitchLocalAppHealthCandidatePorts } from "../apps/live/features/local-server/internal/core/listAgentWitchLocalAppHealthCandidatePorts";
+import { readAgentWitchLocalAppPortFile } from "../apps/live/features/local-server/internal/core/resolveAgentWitchLocalAppListenPort";
 import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent";
 import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
 import {
@@ -18,11 +20,33 @@ export interface AgentWitchCoupledLiveAppHealthResult {
   readonly reachablePort: number | null;
 }
 
+export interface AgentWitchCoupledLiveAppHealthOptions {
+  /** AWL-ISO-1 account host: probe and kickstart only this account. */
+  readonly accountEmail?: string | null;
+}
+
 /** DF-030: ports for this install (saved listen port → range → legacy 43347). */
 export const resolveAgentWitchLiveAppHealthPorts = (
   installDir: string,
-): readonly number[] =>
-  listAgentWitchLocalAppHealthCandidatePorts(path.join(installDir, "profiles"));
+  options: AgentWitchCoupledLiveAppHealthOptions = {},
+): readonly number[] => {
+  const accountEmail = options.accountEmail?.trim().toLowerCase() ?? "";
+  if (accountEmail.length === 0) {
+    return listAgentWitchLocalAppHealthCandidatePorts(
+      path.join(installDir, "profiles"),
+    );
+  }
+  const row = readAgentWitchHostLocalAppAccountsDiscovery(installDir).find(
+    (entry) => entry.email.toLowerCase() === accountEmail,
+  );
+  if (row !== undefined) {
+    return [row.port];
+  }
+  const legacyPort = readAgentWitchLocalAppPortFile(
+    path.join(installDir, "profiles", accountEmail),
+  );
+  return legacyPort === null ? [] : [legacyPort];
+};
 
 const isOwnHealthBody = async (response: Response): Promise<boolean> => {
   try {
@@ -80,6 +104,7 @@ export const isAgentWitchLiveAppHttpReachable = async (
  */
 export const ensureAgentWitchCoupledLiveAppHealth = async (
   installDir: string = resolveAgentWitchInstallDir(),
+  options: AgentWitchCoupledLiveAppHealthOptions = {},
 ): Promise<AgentWitchCoupledLiveAppHealthResult> => {
   const hollowInstall = !fs.existsSync(
     resolveAgentWitchAppBundlePath(installDir),
@@ -96,7 +121,7 @@ export const ensureAgentWitchCoupledLiveAppHealth = async (
   }
 
   const initialPort = await findAgentWitchLiveAppReachablePort(
-    resolveAgentWitchLiveAppHealthPorts(installDir),
+    resolveAgentWitchLiveAppHealthPorts(installDir, options),
   );
   if (initialPort !== null) {
     return {
@@ -109,7 +134,9 @@ export const ensureAgentWitchCoupledLiveAppHealth = async (
   }
 
   const kickstartedLabels: string[] = [];
-  for (const target of listAgentWitchLaunchTargets(installDir)) {
+  for (const target of listAgentWitchLaunchTargets(installDir, {
+    onlyAccountEmail: options.accountEmail ?? null,
+  })) {
     const kicked = await kickstartAgentWitchLaunchAgent(
       target.launchAgentLabel,
     );
@@ -120,7 +147,7 @@ export const ensureAgentWitchCoupledLiveAppHealth = async (
 
   // Re-read port files: a restarted server may have picked another range port.
   const reachablePort = await findAgentWitchLiveAppReachablePort(
-    resolveAgentWitchLiveAppHealthPorts(installDir),
+    resolveAgentWitchLiveAppHealthPorts(installDir, options),
   );
 
   return {

@@ -7,7 +7,11 @@ import {
   bootoutAgentWitchAuxiliaryLaunchAgents,
   kickstartAgentWitchClientLaunchAgents,
 } from "@agent-witch/install-macos-launch";
-import { resolveAgentWitchAppBundlePath } from "@agent-witch/install-layout";
+import {
+  resolveAgentWitchAppBundlePath,
+  resolveAgentWitchHostAccountFromEnv,
+  resolveAgentWitchAccountSystemdUnitName,
+} from "@agent-witch/install-layout";
 import { AWI_BUNDLED_COMMAND_DIR } from "@agent-witch/install-layout/types";
 
 export const AGENT_WITCH_HOST_RESTART_LOG_PREFIX =
@@ -96,10 +100,14 @@ export const restartAgentWitchHostAfterBundleUpdate = async (input: {
 
   await runGracefulShutdown();
 
+  const accountEmail = resolveAgentWitchHostAccountFromEnv();
+
   if (process.platform === "darwin") {
     bootoutAgentWitchAuxiliaryLaunchAgents();
     const kicked = await kickstartAgentWitchClientLaunchAgents(
       input.installDir,
+      "darwin",
+      { onlyAccountEmail: accountEmail },
     );
     if (kicked.length > 0) {
       exitProcess(0);
@@ -116,7 +124,10 @@ export const restartAgentWitchHostAfterBundleUpdate = async (input: {
     isAgentWitchProcessRunningUnderSystemdUserService()
   ) {
     try {
-      await restartAgentWitchLinuxSystemdUserService();
+      const unitName = accountEmail
+        ? resolveAgentWitchAccountSystemdUnitName(accountEmail)
+        : undefined;
+      await restartAgentWitchLinuxSystemdUserService(unitName);
       exitProcess(0);
       return {
         ok: true,

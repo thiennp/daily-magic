@@ -11,3 +11,15 @@ export { buildAgentWitchInstallScriptLinuxNodeRuntime } from "../internal/core/b
 export { buildAgentWitchInstallScriptSystemdUserUnitBlock } from "../internal/core/buildAgentWitchInstallScriptSystemdUserUnitBlock";
 
 export { restartAgentWitchLinuxSystemdUserService } from "../internal/core/restartAgentWitchLinuxSystemdUserService";
+
+export {
+  buildAgentWitchAccountSystemdUnit,
+  resolveAgentWitchSystemdUserUnitDir,
+  writeAgentWitchAccountSystemdUnit,
+} from "../internal/core/agentWitchAccountSystemdUnit";
+
+export {
+  startAgentWitchAccountSystemdUnits,
+  type AgentWitchAccountUnitStartResult,
+  type AgentWitchSystemctlExec,
+} from "../internal/core/startAgentWitchAccountSystemdUnits";

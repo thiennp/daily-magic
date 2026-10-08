@@ -64,3 +64,16 @@ export {
   exitUnlessActiveMacOsConsoleUser,
   startActiveMacOsConsoleUserGuard,
 } from "../internal/core/guardMacOsConsoleUser";
+
+export {
+  startAgentWitchAccountLaunchAgents,
+  type AgentWitchAccountServiceStartResult,
+  type AgentWitchLaunchctlExec,
+} from "../internal/core/startAgentWitchAccountLaunchAgents";
+
+export {
+  buildAgentWitchAccountLaunchAgentEnvironment,
+  buildAgentWitchAccountLaunchAgentPlistXml,
+  resolveAgentWitchAccountLaunchAgentPlistPath,
+  writeAgentWitchAccountLaunchAgentPlist,
+} from "../internal/core/agentWitchAccountLaunchAgent";

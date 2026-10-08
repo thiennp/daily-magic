@@ -6,9 +6,9 @@ import { waitForAgentWitchClientConfigsWithDeps } from "./waitForAgentWitchClien
 
 const DEFAULT_POLL_INTERVAL_MS = 10_000;
 
-export const waitForAgentWitchClientConfigs = (): Promise<
-  readonly AgentWitchClientConfig[]
-> =>
+export const waitForAgentWitchClientConfigs = (options?: {
+  readonly onlyProfileEmail?: string | null;
+}): Promise<readonly AgentWitchClientConfig[]> =>
   waitForAgentWitchClientConfigsWithDeps({
     listProfileEmails: listAgentWitchProfileEmails,
     readConfig: readAgentWitchClientConfig,
@@ -16,4 +16,5 @@ export const waitForAgentWitchClientConfigs = (): Promise<
     logWaiting: (message) => {
       console.error(message);
     },
+    onlyProfileEmail: options?.onlyProfileEmail,
   });

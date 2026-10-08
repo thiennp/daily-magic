@@ -48,3 +48,7 @@ export {
   readAgentWitchLocalAppPortsExhausted,
   writeAgentWitchLocalAppPortsExhaustedFile,
 } from "../internal/core/resolveAgentWitchLocalAppListenPort";
+export {
+  readAgentWitchHostLocalAppAccountsDiscovery,
+  writeAgentWitchHostLocalAppAccountsDiscovery,
+} from "../internal/core/agentWitchHostLocalAppAccountsDiscovery";

@@ -15,9 +15,17 @@ export const buildAgentWitchLaunchAgentPlistXml = (input: {
   readonly homeDir: string;
   readonly wakePort: number;
   readonly pathValue?: string;
+  readonly extraEnvironment?: Readonly<Record<string, string>>;
 }): string => {
   const pathValue =
     input.pathValue ?? buildAgentWitchLaunchAgentPathValue(input.homeDir);
+
+  const extraEnvXml = Object.entries(input.extraEnvironment ?? {})
+    .map(
+      ([key, value]) =>
+        `    <key>${escapeXml(key)}</key>\n    <string>${escapeXml(value)}</string>\n`,
+    )
+    .join("");
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -41,7 +49,7 @@ export const buildAgentWitchLaunchAgentPlistXml = (input: {
     <string>${escapeXml(input.installDir)}</string>
     <key>AGENT_WITCH_WAKE_PORT</key>
     <string>${escapeXml(String(input.wakePort))}</string>
-  </dict>
+${extraEnvXml}  </dict>
   <key>RunAtLoad</key>
   <true/>
   <key>KeepAlive</key>

@@ -6,6 +6,7 @@
 export {
   claimAgentWitchMachineLease,
   releaseAgentWitchMachineLease,
+  resolveAgentWitchMachineLeasePath,
 } from "../../../scripts/claimAgentWitchMachineLease";
 export { terminateOtherAgentWitchClientProcesses } from "../../../scripts/terminateOtherAgentWitchClientProcesses";
 export { migrateLegacyAgentWitchInstallLogsForActiveProfiles } from "../../../scripts/migrateLegacyAgentWitchInstallLogs";
@@ -101,9 +102,11 @@ export {
   supportsWriterSessionWarmup,
 } from "../../../scripts/agentWitchWriterSession";
 export {
+  isAgentWitchProcessRunningUnderSystemdUserService,
   registerAgentWitchHostGracefulShutdown,
   restartAgentWitchHostAfterBundleUpdate,
 } from "../../../scripts/restartAgentWitchHostAfterBundleUpdate";
+export { isProcessAlive } from "../../../scripts/isProcessAlive";
 export { flushPendingRunResultDeliveries } from "../../../scripts/agentWitchPendingRunResultDelivery";
 export {
   bindAgentWitchLiveRunSocket,

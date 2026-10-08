@@ -3,6 +3,7 @@ export interface AgentWitchHostLocalAppAccountDiscoveryRow {
   readonly port: number;
   readonly pid: number;
   readonly startedAt: string;
+  readonly launchAgentLabel?: string;
 }
 
 export interface AgentWitchHostLocalAppAccountsDiscoveryFile {
