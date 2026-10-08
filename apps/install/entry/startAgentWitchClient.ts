@@ -7,6 +7,7 @@ import path from "node:path";
 import WebSocket from "ws";
 
 import {
+  ensureAgentWitchRunScript,
   readAgentWitchWakePortFromFile,
   resolveAgentWitchInstallDir,
   resolveAgentWitchLaunchAgentPrefix,
@@ -15,7 +16,6 @@ import {
   resolveAgentWitchAccountLaunchAgentLabel,
   resolveAgentWitchWakePortDir,
 } from "@agent-witch/install-layout";
-import { ensureAgentWitchRunScript } from "@agent-witch/install-layout";
 import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@agent-witch/install-bundle";
 import {
   bootoutAgentWitchAuxiliaryLaunchAgents,
@@ -2604,18 +2604,17 @@ const main = async (): Promise<void> => {
 
   // d5e39215: run.sh is profile-agnostic; repair an old one, then make sure an
   // account host started by the old run.sh relaunches through the new one.
-  const runScriptCurrent = (() => {
+  const runScriptRepair = (() => {
     try {
-      ensureAgentWitchRunScript(installDir);
-      return true;
+      return ensureAgentWitchRunScript(installDir);
     } catch (error) {
       console.error("[agent-witch] Could not repair run.sh:", error);
-      return false;
+      return { runPath: "", changed: false, current: false };
     }
   })();
   if (
     shouldRestartForRepairedRunScript({
-      runScriptCurrent,
+      runScriptCurrent: runScriptRepair.current,
       platform: process.platform,
       scope: initialScope,
       envProfile: process.env.AGENT_WITCH_PROFILE,

@@ -128,6 +128,8 @@ final class MacAppMenuController: ObservableObject {
     init(fileManager: FileManager = .default, now: @escaping () -> Date = Date.init) {
         self.fileManager = fileManager
         self.nowProvider = now
+        ensureAgentWitchLocalAppLogsDir(fileManager: fileManager)
+        appendAgentWitchLocalAppLog("AgentWitch Local \(MacAppConstants.appVersion) launched")
         refreshSignedInEmail()
         refreshLocalPortRange()
         refreshInstallAndHealth()
@@ -153,7 +155,7 @@ final class MacAppMenuController: ObservableObject {
             let healthy = ownership.isHealthy
             let installed = isAgentWitchCoreInstalled(
                 installDir: resolveAgentWitchInstallDir(),
-                plistPath: resolveAgentWitchLaunchAgentPlistPath(),
+                plistPath: selectedOrLegacyPlistPath(),
                 fileManager: fileManager
             )
 
@@ -170,7 +172,7 @@ final class MacAppMenuController: ObservableObject {
                 pendingBootstrapAttempt = nil
                 let next = detectInstallFlow(
                     installDir: resolveAgentWitchInstallDir(),
-                    plistPath: resolveAgentWitchLaunchAgentPlistPath(),
+                    plistPath: selectedOrLegacyPlistPath(),
                     fileManager: fileManager,
                     isHealthy: healthy
                 )
@@ -330,7 +332,7 @@ final class MacAppMenuController: ObservableObject {
         pendingBootstrapAttempt = nil
         let installed = isAgentWitchCoreInstalled(
             installDir: resolveAgentWitchInstallDir(),
-            plistPath: resolveAgentWitchLaunchAgentPlistPath(),
+            plistPath: selectedOrLegacyPlistPath(),
             fileManager: fileManager
         )
         if installed, bootstrapState == .signingIn {
@@ -371,6 +373,7 @@ final class MacAppMenuController: ObservableObject {
     }
 
     func signOut() {
+        let signedOutEmail = signedInEmail
         do {
             try clearSignedInProfilePointer(fileManager: fileManager)
         } catch {
@@ -393,10 +396,35 @@ final class MacAppMenuController: ObservableObject {
         portsInUse = false
         // Design: files stay; assistants cannot use this computer until sign-in + Start.
         if state == .running {
-            stopCore(announce: false)
+            stopCore(announce: false, email: signedOutEmail)
         }
         statusMessage = "Signed out. Files stay on this computer."
         showToast(statusMessage)
+    }
+
+
+
+    private func selectedOrLegacyPlistPath() -> URL {
+        if let target = selectedAccountLaunchTarget() {
+            return target.plistPath
+        }
+        return resolveAgentWitchLaunchAgentPlistPath()
+    }
+
+    /// Per-account LaunchAgent for the selected account (never the legacy
+    /// all-accounts label once host-services.json is present).
+    private func selectedAccountLaunchTarget() -> MacAppAccountLaunchTarget? {
+        resolveAccountLaunchTarget(
+            email: signedInEmail,
+            installDir: resolveAgentWitchInstallDir(),
+            fileManager: fileManager
+        )
+    }
+
+    /// True when this account's `/health` answers for the selected email.
+    private func isSelectedAccountHealthy() async -> Bool {
+        let ownership = await probeHealth()
+        return ownership.isHealthy
     }
 
     private func performStartOrRepairSetup() async {
@@ -404,7 +432,7 @@ final class MacAppMenuController: ObservableObject {
         let ownership = await probeHealth()
         let installed = isAgentWitchCoreInstalled(
             installDir: resolveAgentWitchInstallDir(),
-            plistPath: resolveAgentWitchLaunchAgentPlistPath(),
+            plistPath: selectedOrLegacyPlistPath(),
             fileManager: fileManager
         )
         let action = decideMacAppStartAction(
@@ -432,44 +460,49 @@ final class MacAppMenuController: ObservableObject {
 
     private func runKickstartOnly() async {
 #if os(macOS)
-        do {
-            let domain = resolveLaunchctlGuiDomain(userId: getuid())
-            let result = try startCoreFlow(
-                current: state == .notInstalled ? .stopped : state,
-                domain: domain,
-                plistPath: resolveAgentWitchLaunchAgentPlistPath(),
-                runner: runner
-            )
-            // Arch Exact FIX-2: non-zero kickstart / .error → self-heal via Core helper (never raw 113).
-            switch decideKickstartFallback(result: result) {
-            case .selfHeal:
+        guard let target = selectedAccountLaunchTarget() else {
+            let message = signedInEmail == nil
+                ? "Sign in before starting AgentWitch on this computer."
+                : "This account is not set up as a host service on this computer. Use Repair setup."
+            state = .error(message: message)
+            statusMessage = message
+            appendAgentWitchLocalAppLog("Start blocked: \(message)")
+            return
+        }
+        state = .starting
+        statusMessage = statusLabel(for: .starting)
+        let domain = resolveLaunchctlGuiDomain(userId: getuid())
+        let result = await runAccountServiceActionFlow(
+            action: .start,
+            target: target,
+            domain: domain,
+            runner: runner,
+            isHealthy: { await self.isSelectedAccountHealthy() }
+        )
+        appendAgentWitchLocalAppLog(
+            "Start \(target.label): \(result.state) calls=\(result.launchctlCalls)"
+        )
+        if case .error(let message) = result.state {
+            // Pre-migration install only: a missing / unloadable legacy LaunchAgent
+            // is repaired by self-heal. Per-account services show the real error.
+            let isLegacyInstall = target.label == MacAppConstants.launchAgentLabel
+            if isLegacyInstall,
+               message.contains("has no LaunchAgent") || message.contains("could not load") {
                 await runSelfHeal(isCoreInstalled: true)
                 return
-            case .none, .kickstart, .blockedForeign:
-                break
             }
-            let ownership = await probeHealth()
-            if ownership == .unverified {
-                await runSelfHeal(isCoreInstalled: true)
-                return
-            }
-            if case .error(let message) = result.state {
-                let sanitized = sanitizeMacAppUserFacingStatus(message)
-                state = .error(message: sanitized)
-                statusMessage = sanitized
-                return
-            }
-            state = result.state
-            statusMessage = statusLabel(for: result.state)
-        } catch {
-            let sanitized = sanitizeMacAppUserFacingStatus(error.localizedDescription)
-            if state == .notInstalled {
-                await runSelfHeal(isCoreInstalled: false)
-                return
-            }
+            let sanitized = sanitizeMacAppUserFacingStatus(message)
             state = .error(message: sanitized)
             statusMessage = sanitized
+            return
         }
+        let ownership = await probeHealth()
+        if ownership == .unverified {
+            await runSelfHeal(isCoreInstalled: true)
+            return
+        }
+        state = result.state
+        statusMessage = statusLabel(for: result.state)
 #endif
     }
 
@@ -544,28 +577,91 @@ final class MacAppMenuController: ObservableObject {
 #endif
     }
 
-    func stopCore(announce: Bool = true) {
+    /// Stops only `email`'s host (default: the selected account).
+    func stopCore(announce: Bool = true, email: String? = nil) {
+        let accountEmail = email ?? signedInEmail
         Task {
 #if os(macOS)
-            do {
-                let domain = resolveLaunchctlGuiDomain(userId: getuid())
-                let result = try stopCoreFlow(
-                    current: state,
-                    domain: domain,
-                    runner: runner
-                )
-                state = result.state
-                statusMessage = statusLabel(for: result.state)
-                if announce, result.state == .stopped {
-                    showToast("Stopped. Assistants cannot use this computer.")
+            guard let target = resolveAccountLaunchTarget(
+                email: accountEmail,
+                installDir: resolveAgentWitchInstallDir(),
+                fileManager: fileManager
+            ) else {
+                let message = accountEmail == nil
+                    ? "Sign in before stopping AgentWitch on this computer."
+                    : "This account is not set up as a host service on this computer."
+                state = .error(message: message)
+                statusMessage = message
+                appendAgentWitchLocalAppLog("Stop blocked: \(message)")
+                return
+            }
+            state = .stopping
+            statusMessage = statusLabel(for: .stopping)
+            let domain = resolveLaunchctlGuiDomain(userId: getuid())
+            let result = await runAccountServiceActionFlow(
+                action: .stop,
+                target: target,
+                domain: domain,
+                runner: runner,
+                isHealthy: {
+                    // Signed out: the selected email is gone; launchctl state is the signal.
+                    guard self.signedInEmail == target.email else {
+                        return self.runner.isServiceLoaded(domain: domain, label: target.label)
+                    }
+                    return await self.isSelectedAccountHealthy()
                 }
-            } catch {
-                let sanitized = sanitizeMacAppUserFacingStatus(error.localizedDescription)
+            )
+            appendAgentWitchLocalAppLog(
+                "Stop \(target.label): \(result.state) calls=\(result.launchctlCalls)"
+            )
+            if case .error(let message) = result.state {
+                let sanitized = sanitizeMacAppUserFacingStatus(message)
                 state = .error(message: sanitized)
                 statusMessage = sanitized
+                return
+            }
+            state = result.state
+            statusMessage = statusLabel(for: result.state)
+            if announce, result.state == .stopped {
+                showToast("Stopped. Assistants cannot use this computer.")
             }
 #else
             state = .error(message: "Stop is only supported on macOS.")
+#endif
+        }
+    }
+
+    /// Restart only the selected account's host (`kickstart -k gui/<uid>/<label>`).
+    func restartCore() {
+        guard !setupSession.isInProgress else { return }
+        Task {
+#if os(macOS)
+            guard let target = selectedAccountLaunchTarget() else {
+                let message = "This account is not set up as a host service on this computer."
+                state = .error(message: message)
+                statusMessage = message
+                return
+            }
+            state = .starting
+            statusMessage = statusLabel(for: .starting)
+            let result = await runAccountServiceActionFlow(
+                action: .restart,
+                target: target,
+                domain: resolveLaunchctlGuiDomain(userId: getuid()),
+                runner: runner,
+                isHealthy: { await self.isSelectedAccountHealthy() }
+            )
+            appendAgentWitchLocalAppLog(
+                "Restart \(target.label): \(result.state) calls=\(result.launchctlCalls)"
+            )
+            if case .error(let message) = result.state {
+                let sanitized = sanitizeMacAppUserFacingStatus(message)
+                state = .error(message: sanitized)
+                statusMessage = sanitized
+                return
+            }
+            state = result.state
+            statusMessage = statusLabel(for: result.state)
 #endif
         }
     }
@@ -683,7 +779,7 @@ final class MacAppMenuController: ObservableObject {
     private func startOrResumeBootstrap(isHealthy: Bool) async {
         let installed = isAgentWitchCoreInstalled(
             installDir: resolveAgentWitchInstallDir(),
-            plistPath: resolveAgentWitchLaunchAgentPlistPath(),
+            plistPath: selectedOrLegacyPlistPath(),
             fileManager: fileManager
         )
 

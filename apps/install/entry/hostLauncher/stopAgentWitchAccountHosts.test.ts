@@ -94,17 +94,13 @@ describe("stopAgentWitchAccountHosts (AWL-ISO-1/4)", () => {
 });
 
 describe("runAgentWitchHostLauncher shutdown", () => {
-  it("stops every account host before the launcher exits", async () => {
+  it("exits without stopping account hosts (dd5c338d)", async () => {
     const handlers = new Map<string, () => void>();
-    const stopHosts = vi.fn(async () => [
-      { email: GMAIL, service: "x", ok: true },
-    ]);
     const exitProcess = vi.fn();
     const launcher = await runAgentWitchHostLauncher({
       installDir: "/x",
       services,
-      startHosts: async () => ({ mode: "launchd", results: [] }),
-      stopHosts,
+      startHosts: async () => ({ mode: "spawn", results: [] }),
       setIntervalFn: (() => 0) as unknown as typeof setInterval,
       onSignal: (signal, handler) => {
         handlers.set(signal, handler);
@@ -113,11 +109,46 @@ describe("runAgentWitchHostLauncher shutdown", () => {
     });
     handlers.get("SIGTERM")?.();
     handlers.get("SIGTERM")?.();
-    await vi.waitFor(() => {
-      expect(exitProcess).toHaveBeenCalledWith(0);
+    expect(exitProcess).toHaveBeenCalledTimes(1);
+    expect(exitProcess).toHaveBeenCalledWith(0);
+    launcher.stop();
+  });
+
+  it("in launchd mode retires the legacy LaunchAgent, then exits without stopping hosts", async () => {
+    const exitProcess = vi.fn();
+    const retireLegacyLauncher = vi.fn(async () => ({ message: "retired" }));
+    const startHosts = vi.fn(async () => ({
+      mode: "launchd" as const,
+      results: [{ email: GMAIL, service: "x", ok: true }],
+    }));
+    await runAgentWitchHostLauncher({
+      installDir: "/x",
+      services,
+      startHosts,
+      retireLegacyLauncher,
+      setIntervalFn: (() => 0) as unknown as typeof setInterval,
+      onSignal: () => undefined,
+      exitProcess,
     });
-    expect(stopHosts).toHaveBeenCalledTimes(1);
-    expect(stopHosts).toHaveBeenCalledWith({ installDir: "/x", services });
+    expect(startHosts).toHaveBeenCalledTimes(1);
+    expect(retireLegacyLauncher).toHaveBeenCalledWith("/x");
+    expect(exitProcess).toHaveBeenCalledWith(0);
+  });
+
+  it("in spawn mode keeps supervising (no retire, no exit)", async () => {
+    const exitProcess = vi.fn();
+    const retireLegacyLauncher = vi.fn(async () => ({ message: "retired" }));
+    const launcher = await runAgentWitchHostLauncher({
+      installDir: "/x",
+      services,
+      startHosts: async () => ({ mode: "spawn", results: [] }),
+      retireLegacyLauncher,
+      setIntervalFn: (() => 0) as unknown as typeof setInterval,
+      onSignal: () => undefined,
+      exitProcess,
+    });
+    expect(retireLegacyLauncher).not.toHaveBeenCalled();
+    expect(exitProcess).not.toHaveBeenCalled();
     launcher.stop();
   });
 });

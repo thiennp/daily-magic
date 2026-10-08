@@ -34,7 +34,18 @@ public enum MacAppConstants {
     public static let cloudOriginHostApex = "agentwitch.com"
     public static let bundleIdentifier = "com.agent-witch.local-app"
     /// Desktop app marketing version (keep in sync with CFBundleShortVersionString / Linux core.Version).
-    public static let appVersion = "0.2.5"
+    public static let appVersion = "0.2.6"
+
+    /// Per-account host services (AWL-ISO-1): label, systemd unit and wake port per account.
+    public static let hostServicesFileName = "host-services.json"
+    /// AWL's own log folder under `~/Library/Logs`.
+    public static let appLogsDirectoryName = "AgentWitch Local"
+    public static let appLogFileName = "AgentWitchLocal.log"
+    /// Start / Restart: wait this long for the account's `/health` (dd5c338d).
+    public static let accountServiceStartTimeoutSeconds: TimeInterval = 30
+    /// Stop: wait this long for the account's `/health` to go away.
+    public static let accountServiceStopTimeoutSeconds: TimeInterval = 15
+    public static let accountServicePollIntervalSeconds: TimeInterval = 0.5
 
     /// File name for the host-written list of accounts.
     public static let localAppAccountsFileName = "local-app-accounts.json"

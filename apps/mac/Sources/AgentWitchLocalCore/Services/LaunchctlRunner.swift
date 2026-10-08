@@ -4,6 +4,13 @@ public protocol LaunchctlRunning: Sendable {
     func run(arguments: [String]) throws -> Int32
 }
 
+extension LaunchctlRunning {
+    /// `launchctl print gui/<uid>/<label>` exits 0 when the service is loaded.
+    public func isServiceLoaded(domain: String, label: String) -> Bool {
+        ((try? run(arguments: ["print", "\(domain)/\(label)"])) ?? 1) == 0
+    }
+}
+
 #if os(macOS)
 public struct ProcessLaunchctlRunner: LaunchctlRunning {
     public init() {}

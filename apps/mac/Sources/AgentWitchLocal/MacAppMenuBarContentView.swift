@@ -329,12 +329,20 @@ struct MacAppMenuBarContentView: View {
                 .font(.caption2)
                 .foregroundStyle(MacAppTheme.fgMuted)
                 .fixedSize(horizontal: false, vertical: true)
-            Button("Show Applications") {
+            // 0.2.5: `.bordered` + `.mini` + tint rendered a blank label in the popover.
+            Button {
                 NSWorkspace.shared.open(URL(fileURLWithPath: "/Applications"))
+            } label: {
+                Text("Show Applications")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Color.white)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(RoundedRectangle(cornerRadius: 6).fill(MacAppTheme.brand))
+                    .contentShape(Rectangle())
             }
-            .buttonStyle(.bordered)
-            .controlSize(.mini)
-            .tint(MacAppTheme.brand)
+            .buttonStyle(.plain)
+            .accessibilityLabel("Show Applications")
             .padding(.top, 4)
         }
         .padding(10)

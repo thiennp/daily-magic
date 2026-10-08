@@ -139,7 +139,7 @@ const writeServiceDefinitions = (input: {
  * AWL-ISO-4: turn a single-service multi-account host into one service per
  * account (idempotent, backup first, rollback when the account hosts do not
  * come up). Profiles, pairing keys and AWL ports are never rewritten; the
- * legacy com.agent-witch / agent-witch.service stays as the launcher.
+ * legacy com.agent-witch launcher then retires itself (no-op plist, bootout).
  */
 export const migrateAgentWitchMonolithToAccountServices = async (input: {
   readonly installDir: string;

@@ -1,14 +1,12 @@
 import type { AgentWitchHostServicesFile } from "@agent-witch/install-layout/types";
 
+import { retireAgentWitchLegacyHostLauncher } from "../hostServicesMigration/retireAgentWitchLegacyHostLauncher";
+
 import { AGENT_WITCH_ACCOUNT_HOST_RESPAWN_MS } from "./superviseAgentWitchAccountHosts";
 import {
   startAgentWitchAccountHosts,
   type AgentWitchAccountHostStartResult,
 } from "./startAgentWitchAccountHosts";
-import { stopAgentWitchAccountHosts } from "./stopAgentWitchAccountHosts";
-
-/** launchd gives a job ~20 s after SIGTERM; stop the account hosts well before that. */
-const LAUNCHER_STOP_ACCOUNTS_TIMEOUT_MS = 10_000;
 
 const describeResults = (
   results: readonly AgentWitchAccountHostStartResult[],
@@ -23,20 +21,22 @@ const describeResults = (
 
 /**
  * Launcher scope (host-services.json present, no AGENT_WITCH_HOST_ACCOUNT): start each
- * account's own service, then idle. Never claims a lease, binds a port or opens a socket,
- * so old AWL Mac apps that kickstart the legacy `com.agent-witch` label keep working.
- * Without a service manager it re-checks the account hosts every minute.
- * Stopping the launcher (old AWL "Stop" = bootout com.agent-witch, systemctl stop
- * agent-witch.service) stops every account host too: the computer goes offline.
+ * account's own service, then idle. Never claims a lease, binds a port or opens a socket.
+ *
+ * dd5c338d / d5e39215: stopping the legacy launcher must NOT stop account hosts. AWL 0.2.6+
+ * Start/Stop target the selected account's own LaunchAgent; an accidental bootstrap of
+ * `com.agent-witch` (old AWL, login KeepAlive) must not take every account offline.
+ * In launchd mode the launcher has nothing left to supervise: it retires the legacy
+ * LaunchAgent (no-op plist + bootout) and exits; each account's own LaunchAgent keeps
+ * its host alive.
  */
 export const runAgentWitchHostLauncher = async (input: {
   readonly installDir: string;
   readonly services: AgentWitchHostServicesFile;
   readonly startHosts?: typeof startAgentWitchAccountHosts;
-  readonly stopHosts?: (input: {
-    readonly installDir: string;
-    readonly services: AgentWitchHostServicesFile;
-  }) => Promise<readonly AgentWitchAccountHostStartResult[]>;
+  readonly retireLegacyLauncher?: (installDir: string) => Promise<{
+    readonly message: string;
+  }>;
   readonly setIntervalFn?: typeof setInterval;
   readonly onSignal?: (
     signal: "SIGINT" | "SIGTERM",
@@ -45,7 +45,6 @@ export const runAgentWitchHostLauncher = async (input: {
   readonly exitProcess?: (code: number) => void;
 }): Promise<{ readonly stop: () => void }> => {
   const startHosts = input.startHosts ?? startAgentWitchAccountHosts;
-  const stopHosts = input.stopHosts ?? stopAgentWitchAccountHosts;
   const setIntervalFn = input.setIntervalFn ?? setInterval;
   const lastSpawnAtByEmail = new Map<string, number>();
 
@@ -91,27 +90,27 @@ export const runAgentWitchHostLauncher = async (input: {
     shutdownState.started = true;
     stop();
     console.log(
-      "[agent-witch] Host launcher stopping; stopping account hosts.",
+      "[agent-witch] Host launcher stopping; leaving account hosts running.",
     );
-    const timeout = new Promise<string>((resolve) => {
-      setTimeout(() => {
-        resolve("timed out");
-      }, LAUNCHER_STOP_ACCOUNTS_TIMEOUT_MS).unref();
-    });
-    const stopped = stopHosts({
-      installDir: input.installDir,
-      services: input.services,
-    }).then(
-      (results) => describeResults(results),
-      (error: unknown) =>
-        error instanceof Error ? error.message : String(error),
-    );
-    void Promise.race([stopped, timeout]).then((summary) => {
-      console.log(`[agent-witch] Host launcher stopped: ${summary}`);
-      exitProcess(0);
-    });
+    exitProcess(0);
   };
   onSignal("SIGINT", shutdown);
   onSignal("SIGTERM", shutdown);
+
+  if (started.mode === "launchd") {
+    const retire =
+      input.retireLegacyLauncher ??
+      ((installDir: string) => retireAgentWitchLegacyHostLauncher({ installDir }));
+    try {
+      const retired = await retire(input.installDir);
+      console.log(`[agent-witch] ${retired.message}`);
+    } catch (error) {
+      console.error(
+        `[agent-witch] Could not retire the legacy launcher: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+    // Still alive: not the loaded legacy job (e.g. nohup run.sh). Nothing to supervise.
+    shutdown();
+  }
   return { stop };
 };
