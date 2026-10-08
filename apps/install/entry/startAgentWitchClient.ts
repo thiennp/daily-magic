@@ -126,6 +126,10 @@ import {
 import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
 import { LocalCodingToolRefusalCode } from "@agent-witch/shared/dispatch";
 
+import {
+  AGENT_WITCH_BUNDLE_RESTART_RECHECK_MS,
+  isAgentWitchBundleRestartBlocked,
+} from "../../../scripts/agentWitchBundleRestartGate";
 import { admitLocalCodingToolRun } from "./admitLocalCodingToolRun";
 import { runAgentWitchHostLauncher } from "./hostLauncher/runAgentWitchHostLauncher";
 import { describeAgentWitchHostServicesMigration } from "./hostServicesMigration/describeAgentWitchHostServicesMigration";
@@ -1247,17 +1251,19 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       return "already_in_progress";
     }
 
-    if (isAgentWitchWriterWorkInProgress(config.layout)) {
-      deferAgentWitchLocalRestart(reason);
-      console.log(
-        `[agent-witch] Deferring host restart (${reason}) until the active writer task finishes.`,
-      );
-      return "deferred_writer_busy";
-    }
-
     const bundleVersion =
       readAgentWitchInstallVersion(config.layout.installDir)?.bundleVersion ??
       "unknown";
+
+    if (
+      isAgentWitchBundleRestartBlocked({
+        installDir: config.layout.installDir,
+        bundleVersion,
+      })
+    ) {
+      deferAgentWitchLocalRestart(reason);
+      return "deferred_writer_busy";
+    }
 
     state.restartInFlight = true;
     console.log(
@@ -1315,13 +1321,10 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         remoteBundleVersion,
       })
     ) {
-      // AWL-ISO-1: another account host already installed this bundle; this
-      // per-account process still runs the old code, so restart into it once.
-      const scope = resolveAgentWitchHostProcessScope({
-        installDir: config.layout.installDir,
-      });
+      // Files are already on disk (another host or the wake server staged
+      // them) but this process still runs the old code: restart into them once,
+      // deferred while tasks run.
       if (
-        scope.kind === "account" &&
         AGENT_WITCH_INSTALL_BUNDLE_VERSION !== remoteBundleVersion &&
         !state.hasRequestedAccountConvergenceRestart
       ) {
@@ -1331,15 +1334,17 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       return;
     }
 
-    if (isAgentWitchWriterWorkInProgress(config.layout)) {
+    if (
+      isAgentWitchBundleRestartBlocked({
+        installDir: config.layout.installDir,
+        bundleVersion: remoteBundleVersion,
+      })
+    ) {
       deferAgentWitchInstallBundleUpdate({
         layout: config.layout,
         remoteBundleVersion,
         trigger,
       });
-      console.log(
-        `[agent-witch] Deferring install bundle update (${remoteBundleVersion} via ${trigger}) until the active writer task finishes.`,
-      );
       return;
     }
 
@@ -2443,6 +2448,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
   const stop = (): void => {
     state.stopped = true;
+    clearInterval(deferredRestartTimer);
     unwatchCodingToolsPause();
     clearHeartbeat();
     clearLocalHealthCheck();
@@ -2450,7 +2456,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     closeSocket();
   };
 
-  subscribeAgentWitchWriterWorkIdle(() => {
+  const flushDeferredRestarts = (): void => {
     const deferredUpdate = takeDeferredAgentWitchInstallBundleUpdate();
     if (
       deferredUpdate !== null &&
@@ -2471,7 +2477,16 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     if (deferredRestart !== null) {
       runLocalRestart(deferredRestart);
     }
-  });
+  };
+
+  subscribeAgentWitchWriterWorkIdle(flushDeferredRestarts);
+  // Parked (awaiting-input) runs and other profiles do not fire the idle
+  // listener, so re-check deferred bundle restarts on a timer too.
+  const deferredRestartTimer = setInterval(
+    flushDeferredRestarts,
+    AGENT_WITCH_BUNDLE_RESTART_RECHECK_MS,
+  );
+  deferredRestartTimer.unref();
 
   return {
     connect,

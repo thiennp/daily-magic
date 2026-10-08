@@ -1,6 +1,8 @@
 export const AGENT_RUN_LOST_CONNECTION_REASONS = {
   STALE: "No run heartbeat from your computer — the job was marked stale.",
   DISCONNECT: "Lost connection to the host before the result arrived.",
+  INTERRUPTED:
+    "AgentWitch Local restarted while this task was running. Nothing was lost on disk, but the task did not finish. Send it again.",
 } as const;
 
 export const formatAgentRunTerminalReasonLine = (

@@ -16,7 +16,8 @@
 /** 295 = AWL-ISO-1 Landing B: one host process + service per account. */
 /** 296 = AWL-ISO-4: migrate a multi-account host to one service per account. */
 /** 297 = paused run closes when a history Continue answers it (b2179f2b). */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "297";
+/** 298 = bundle restart waits for running/parked tasks (all profiles), 6h cap, 30s recheck. */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "298";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =

@@ -217,6 +217,10 @@ export const isAgentWitchWriterWorkInProgress = (
   layout: AgentWitchLocalLayout,
 ): boolean => readLiveAgentWitchWriterWorkState(layout).activeCount > 0;
 
+export const countAgentWitchLiveWriterWork = (
+  layout: AgentWitchLocalLayout,
+): number => readLiveAgentWitchWriterWorkState(layout).activeCount;
+
 export const beginAgentWitchWriterWork = (
   layout: AgentWitchLocalLayout,
   workId?: string,

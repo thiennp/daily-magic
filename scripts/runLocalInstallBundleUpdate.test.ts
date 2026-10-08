@@ -25,6 +25,11 @@ vi.mock("./agentWitchWriterWorkGuard", () => ({
   isAgentWitchWriterWorkInProgress: vi.fn(() => false),
 }));
 
+vi.mock("./agentWitchBundleRestartGate", () => ({
+  isAgentWitchBundleRestartBlocked: () =>
+    vi.mocked(isAgentWitchWriterWorkInProgress)({} as never),
+}));
+
 vi.mock("@agent-witch/install-macos-launch", () => ({
   ensureAgentWitchLaunchAgentPlist: vi.fn(() => ({
     ok: true,

@@ -2,6 +2,10 @@ import type { KnowledgeHeartbeatReport } from "@/lib/knowledge/knowledgeHeartbea
 import { saveKnowledgeHeartbeat } from "@/lib/knowledge/saveKnowledgeHeartbeat";
 import { consolidateActiveAgentWitchDeviceByLabel } from "@/lib/agentWitch/consolidateActiveAgentWitchDeviceByLabel";
 import { deliverAgentWitchDeviceRestartIfRequested } from "@/lib/agentWitch/deliverAgentWitchDeviceRestart";
+import {
+  reconcileInterruptedAgentRunsForDevice,
+  shouldReconcileInterruptedRunsNow,
+} from "@/lib/dispatch/reconcileInterruptedAgentRunsForDevice";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { updateAgentWitchDeviceInstallBundleVersion } from "@/lib/agentWitch/updateAgentWitchDeviceInstallBundleVersion";
 import { updateAgentWitchDeviceWakePort } from "@/lib/agentWitch/updateAgentWitchDeviceWakePort";
@@ -52,6 +56,15 @@ export const runAgentWitchHeartbeatDeviceMaintenance = async (input: {
     userId: input.userId,
     deviceId: input.deviceId,
   });
+
+  if (shouldReconcileInterruptedRunsNow(input.deviceId, Date.now())) {
+    await reconcileInterruptedAgentRunsForDevice(input.runtime, {
+      userId: input.userId,
+      deviceId: input.deviceId,
+    }).catch((error: unknown) => {
+      console.error("[agent-witch] interrupted run reconcile failed", error);
+    });
+  }
 
   if (input.installDeviceLabel !== null) {
     await upgradeAgentWitchDeviceLabelFromLegacyHostname({

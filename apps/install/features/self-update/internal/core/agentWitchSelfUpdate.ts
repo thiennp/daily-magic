@@ -18,10 +18,8 @@ import {
   readAgentWitchInstallVersion,
   writeAgentWitchInstallVersion,
 } from "./agentWitchInstallVersion";
-import {
-  deferAgentWitchLocalRestart,
-  isAgentWitchWriterWorkInProgress,
-} from "../../../../../../scripts/agentWitchWriterWorkGuard";
+import { deferAgentWitchLocalRestart } from "../../../../../../scripts/agentWitchWriterWorkGuard";
+import { isAgentWitchBundleRestartBlocked } from "../../../../../../scripts/agentWitchBundleRestartGate";
 import { resolveAgentWitchAppOriginFromWsUrl } from "./resolveAgentWitchAppOriginFromWsUrl";
 import {
   appendAgentWitchSelfUpdateLog,
@@ -261,7 +259,12 @@ export const runAgentWitchSelfUpdate = async (input?: {
     const layout = resolveAgentWitchLocalLayout(
       readActiveProfileEmailFromFile(installDir),
     );
-    if (isAgentWitchWriterWorkInProgress(layout)) {
+    if (
+      isAgentWitchBundleRestartBlocked({
+        installDir,
+        bundleVersion: manifest.bundleVersion,
+      })
+    ) {
       deferAgentWitchLocalRestart("install-bundle-update");
       const result = buildSelfUpdateResult(
         {
