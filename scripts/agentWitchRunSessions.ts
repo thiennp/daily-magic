@@ -193,6 +193,16 @@ const resolveUserTranscriptPrompt = (
 
 let cloudApiConfig: AgentWitchCloudApiConfig | null = null;
 
+let runResultObserver: ((message: Record<string, unknown>) => void) | null =
+  null;
+
+/** Lets the client observe the final run result this module emits (e.g. project knowledge capture). */
+export const setAgentWitchRunResultObserver = (
+  observer: ((message: Record<string, unknown>) => void) | null,
+): void => {
+  runResultObserver = observer;
+};
+
 export const configureAgentWitchRunCloudApi = (
   config: AgentWitchCloudApiConfig | null,
 ): void => {
@@ -517,7 +527,7 @@ const finishRun = (
     removePendingRunInputSession(config.layout, agentRunId);
   }
 
-  sendMessage(socket, {
+  const resultMessageForSocket = {
     type: "command.claude.result",
     payload: {
       exitCode: resolvedExitCode,
@@ -533,7 +543,9 @@ const finishRun = (
       ...(errorCode !== undefined ? { errorCode } : {}),
     },
     requestId,
-  });
+  };
+  sendMessage(socket, resultMessageForSocket);
+  runResultObserver?.(resultMessageForSocket);
 
   endAgentWitchWriterWork(config.layout, agentRunId);
   if (agentRunId !== undefined) {

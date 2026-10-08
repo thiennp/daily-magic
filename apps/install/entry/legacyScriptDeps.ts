@@ -15,6 +15,7 @@ export { resolveAgentWitchWakePort } from "../../../scripts/agentWitchWakeConsta
 export {
   continueClaudeTaskAfterInput,
   configureAgentWitchRunCloudApi,
+  setAgentWitchRunResultObserver,
   flushPendingAgentRunCompletions,
   replayPendingRunInputRequests,
   runWriterTask,

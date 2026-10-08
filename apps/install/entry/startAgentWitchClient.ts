@@ -155,6 +155,7 @@ import {
   clearWriterSession,
   closeShellPtySession,
   configureAgentWitchRunCloudApi,
+  setAgentWitchRunResultObserver,
   continueClaudeTaskAfterInput,
   supersedePausedRunForContinuation,
   ensureHarnessWriterCli,
@@ -369,6 +370,9 @@ const captureKnowledgeForRunResult = (
           },
   });
 };
+
+// Run results are emitted by agentWitchRunSessions, not by sendMessage below.
+setAgentWitchRunResultObserver(captureKnowledgeForRunResult);
 
 const sendMessage = (
   socket: AgentWitchOutboundSocket,
