@@ -35,3 +35,13 @@
 **Fix:** Always load ordered rows from Neon and overlay same-index session records so fresh in-process updates win without hiding DB steps.
 
 **Regression test:** `listWorkflowStepRunsForWorkflowRunId.test.ts` (DISPATCH-004).
+
+## DISPATCH-005 — Input answer nobody remembered typing (8181f143)
+
+**Symptom:** A paused run got an `input_respond` with a canned text ("Do not commit or push…") that nobody remembered sending.
+
+**Root cause:** No app code makes or auto-sends that text; it came through `POST /api/agent-witch/dashboard/messages` from a signed-in browser. The modal is shown in every open tab, and it kept a typed answer when a new question replaced the old one.
+
+**Fix:** Only an explicit Send with typed or picked text sends; Esc and backdrop only close. The modal is keyed by run, so a new question starts empty. The server logs each answer's run, length and browser (never the text).
+
+**Regression test:** `AgentRunInputModal.explicitSend.test.ts` (DISPATCH-005).

@@ -30,6 +30,8 @@ export default function DispatchApprovalListener() {
       ) : null}
       {pendingInput !== null ? (
         <AgentRunInputModal
+          // 8181f143: a new question (another run) never inherits a typed answer.
+          key={pendingInput.agentRunId}
           request={pendingInput}
           onSubmit={(response) => {
             respondToInput(response);

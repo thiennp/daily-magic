@@ -99,7 +99,10 @@ export default function AgentRunInputModal({
         <Button
           disabled={!canSubmit}
           onClick={() => {
-            onSubmit(trimmedResponse);
+            // 8181f143: only an explicit Send with a typed or picked answer sends.
+            if (canSubmit) {
+              onSubmit(trimmedResponse);
+            }
           }}
         >
           Send answer and continue
