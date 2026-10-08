@@ -27,7 +27,7 @@ describe("Create invite: shared Add assistant", () => {
   it("panel shows one Add assistant button, the type picker and the support list", () => {
     const html = panelHtml();
     expect(html).toContain(">Add assistant<");
-    expect(html).toContain("Setup steps for");
+    expect(html).toContain("Supported assistants");
     expect(html).toContain(
       "Only changes the setup steps in the invite. Any assistant can use it.",
     );
