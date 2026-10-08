@@ -40,13 +40,11 @@ const resolvePill = (
   return paused
     ? {
         label: "Paused",
-        className:
-          "bg-amber-100 text-amber-800 dark:bg-amber-400/15 dark:text-amber-300",
+        className: "bg-awc-warn-soft text-awc-warn",
       }
     : {
         label: "On",
-        className:
-          "bg-emerald-100 text-emerald-800 dark:bg-emerald-400/15 dark:text-emerald-300",
+        className: "bg-awc-ok-soft text-awc-ok",
       };
 };
 
