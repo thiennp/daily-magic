@@ -36,7 +36,7 @@ const render = () =>
   );
 
 describe("AwcProjectTaskRecordsList tabs + sort", () => {
-  it("renders a status tablist with counts, All selected by default", () => {
+  it("renders a status tablist with counts, In progress selected by default", () => {
     const html = render();
     expect(html).toContain('role="tablist"');
     for (const t of [
@@ -51,18 +51,19 @@ describe("AwcProjectTaskRecordsList tabs + sort", () => {
       expect(html).toContain(`data-task-record-tab="${t}"`);
     }
     expect(html).toMatch(/data-task-record-tab="all"[^>]*>All<span[^>]*>3</);
-    expect(html).toMatch(/aria-selected="true"[^>]*data-task-record-tab="all"/);
+    expect(html).toMatch(
+      /aria-selected="true"[^>]*data-task-record-tab="in_progress"/,
+    );
     expect(html).toMatch(
       /data-task-record-tab="blocked"[^>]*>Blocked<span[^>]*>0</,
     );
   });
 
-  it("lists newest-updated first by default and offers every sort key", () => {
+  it("lists only in-progress work by default and offers every sort key", () => {
     const html = render();
-    expect(html.indexOf("Active work")).toBeLessThan(
-      html.indexOf("Old queued"),
-    );
-    expect(html.indexOf("Old queued")).toBeLessThan(html.indexOf("Finished"));
+    expect(html).toContain("Active work");
+    expect(html).not.toContain("Old queued");
+    expect(html).not.toContain("Finished");
     for (const label of [
       "Last updated",
       "Date created",

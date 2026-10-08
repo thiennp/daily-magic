@@ -23,7 +23,7 @@ describe("AwcProjectTaskRecordsList (DF-024 Tasks tab rows)", () => {
   it("renders compact rows: status chip, owner, priority, stage, tip, waits-on", () => {
     const html = render([
       projectTaskRecordFixture({
-        status: "blocked",
+        status: "in_progress",
         priority: "p0",
         stage: "build",
         tipSha: "52c4fe42abcdef",
@@ -33,7 +33,7 @@ describe("AwcProjectTaskRecordsList (DF-024 Tasks tab rows)", () => {
     ]);
     expect(html).toContain("Planned work");
     expect(html).toContain("Ship DF-024");
-    expect(html).toContain("Blocked");
+    expect(html).toContain("In progress");
     expect(html).toContain("Kai");
     expect(html).toContain("Urgent");
     expect(html).toContain("Build");
