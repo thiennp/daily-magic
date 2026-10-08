@@ -9,11 +9,11 @@ export type ProjectTaskStatusUpdateDecision =
       readonly status: ProjectTaskStatus;
       readonly changed: boolean;
     }
-  | { readonly ok: false; readonly code: "task_done" | "invalid_transition" };
+  | { readonly ok: false; readonly code: "invalid_transition" };
 
 /**
  * Explicit FSM (PROJECT_TASK_TRANSITIONS). Same status = no-op (idempotent
- * retries); done is terminal; anything else not listed → invalid_transition.
+ * retries); anything not listed → invalid_transition. Done can be reopened.
  */
 export const decideProjectTaskStatusUpdate = (input: {
   readonly currentStatus: ProjectTaskStatus;
@@ -21,9 +21,6 @@ export const decideProjectTaskStatusUpdate = (input: {
 }): ProjectTaskStatusUpdateDecision => {
   if (input.currentStatus === input.nextStatus) {
     return { ok: true, status: input.nextStatus, changed: false };
-  }
-  if (input.currentStatus === "done") {
-    return { ok: false, code: "task_done" };
   }
   return PROJECT_TASK_TRANSITIONS[input.currentStatus].includes(
     input.nextStatus,

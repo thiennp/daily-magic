@@ -22,11 +22,11 @@ vi.mock("@/lib/projects/tasks/projectTaskRecordReadQueries", () => ({
 vi.mock("@/lib/projects/tasks/validateProjectTaskRefs", () => ({
   validateProjectTaskRefs: h.refs,
 }));
+vi.mock("@/lib/projects/tasks/notifyProjectTaskChanged", () => ({
+  notifyProjectTaskChanged: vi.fn(async () => 0),
+}));
 vi.mock("@/lib/projects/tasks/projectTaskRecordWriteQueries", () => ({
   updateProjectTaskRecord: h.update,
-}));
-vi.mock("@/lib/projects/acl/invites/botInvites/isBotLinkedToOwnerUser", () => ({
-  isBotLinkedToOwnerUser: async () => false,
 }));
 
 const run = (args: Record<string, unknown>, actorUserId = "bot-user") =>
@@ -51,15 +51,16 @@ describe("updateProjectTask (DF-024 auth)", () => {
     }));
   });
 
-  it("owner edits any task; other members only own/created ones", async () => {
-    const foreign = projectTaskRecordFixture({
-      createdByUserId: "u9",
-      ownerMembershipId: "s9",
-    });
-    h.load.mockResolvedValue(foreign);
-    expect(await run({ priority: "p0" })).toEqual({
-      ok: false,
-      code: "not_task_owner",
+  it("any writer (owner, member, bot) edits any task, even one it did not create", async () => {
+    h.load.mockResolvedValue(
+      projectTaskRecordFixture({
+        createdByUserId: "u9",
+        ownerMembershipId: "s9",
+      }),
+    );
+    expect(await run({ priority: "p0" })).toMatchObject({
+      ok: true,
+      task: { priority: "p0" },
     });
     h.writer.mockResolvedValue({
       ok: true,
@@ -67,10 +68,10 @@ describe("updateProjectTask (DF-024 auth)", () => {
       membership: null,
     });
     expect(
-      await run({ priority: "p0", stage: "design" }, "owner-1"),
+      await run({ priority: "p1", stage: "design" }, "owner-1"),
     ).toMatchObject({
       ok: true,
-      task: { priority: "p0", stage: "design" },
+      task: { priority: "p1", stage: "design" },
     });
   });
 

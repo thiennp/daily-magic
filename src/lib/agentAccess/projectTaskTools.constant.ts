@@ -56,7 +56,7 @@ export const CREATE_PROJECT_TASK_TOOL: AgentAccessToolDefinition = {
 export const UPDATE_PROJECT_TASK_TOOL: AgentAccessToolDefinition = {
   name: "update_project_task",
   description:
-    "Update a project task (from create_project_task or list_project_tasks). Status moves: queued⇄planned → in_progress ⇄ blocked; in_progress → done. done is final (task_done), but retrying done with nothing else changed returns ok; other moves → invalid_transition. Send only fields to change; null clears optional fields; an unchanged edit is ok and writes nothing. dependsOn may not form a cycle (depends_on_cycle). A concurrent edit → update_conflict (re-read, retry). Owner, and assistants claimed by the project owner, may edit any task; others only tasks they created or own (not_task_owner).",
+    "Update a project task (from create_project_task or list_project_tasks). Status moves: queued⇄planned → in_progress ⇄ blocked; in_progress → done. Anyone may stop work (in_progress|blocked → queued, i.e. To do) or reopen a done task (→ queued); retrying a move with nothing else changed returns ok; other moves → invalid_transition. When a task is moved back to To do or given to someone else, the previous owner gets a task.updated message: stop work on it. Send only fields to change; null clears optional fields; an unchanged edit is ok and writes nothing. dependsOn may not form a cycle (depends_on_cycle). A concurrent edit → update_conflict (re-read, retry). Any member who can write (not viewers) may edit any task.",
   inputSchema: {
     type: "object",
     properties: {

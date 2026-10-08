@@ -14,6 +14,9 @@ const ALLOWED: readonly (readonly [ProjectTaskStatus, ProjectTaskStatus])[] = [
   ["in_progress", "blocked"],
   ["in_progress", "done"],
   ["blocked", "in_progress"],
+  ["in_progress", "queued"],
+  ["blocked", "queued"],
+  ["done", "queued"],
 ];
 
 describe("decideProjectTaskStatusUpdate (DF-024 FSM)", () => {
@@ -28,7 +31,7 @@ describe("decideProjectTaskStatusUpdate (DF-024 FSM)", () => {
     }
   });
 
-  it("same status is a no-op; done is terminal; skips are invalid", () => {
+  it("same status is a no-op; done can only be reopened to To do; skips are invalid", () => {
     expect(decide({ currentStatus: "blocked", nextStatus: "blocked" })).toEqual(
       {
         ok: true,
@@ -38,9 +41,11 @@ describe("decideProjectTaskStatusUpdate (DF-024 FSM)", () => {
     );
     expect(
       decide({ currentStatus: "done", nextStatus: "in_progress" }),
-    ).toEqual({
-      ok: false,
-      code: "task_done",
+    ).toEqual({ ok: false, code: "invalid_transition" });
+    expect(decide({ currentStatus: "done", nextStatus: "queued" })).toEqual({
+      ok: true,
+      status: "queued",
+      changed: true,
     });
     expect(decide({ currentStatus: "queued", nextStatus: "done" })).toEqual({
       ok: false,

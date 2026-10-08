@@ -22,6 +22,9 @@ vi.mock("@/lib/projects/tasks/projectTaskRecordReadQueries", () => ({
 vi.mock("@/lib/projects/tasks/validateProjectTaskRefs", () => ({
   validateProjectTaskRefs: h.refs,
 }));
+vi.mock("@/lib/projects/tasks/notifyProjectTaskChanged", () => ({
+  notifyProjectTaskChanged: vi.fn(async () => 0),
+}));
 vi.mock("@/lib/projects/tasks/projectTaskRecordWriteQueries", () => ({
   updateProjectTaskRecord: h.update,
 }));
@@ -63,13 +66,13 @@ describe("updateProjectTask — S4 done idempotent, S1 no-op / CAS", () => {
     expect(h.update).not.toHaveBeenCalled();
   });
 
-  it("a real change to a done task is still task_done", async () => {
+  it("editing a field of a done task is allowed and keeps it done", async () => {
     h.load.mockResolvedValue(done);
-    expect(await run({ status: "done", title: "Renamed" })).toEqual({
-      ok: false,
-      code: "task_done",
+    expect(await run({ status: "done", title: "Renamed" })).toMatchObject({
+      ok: true,
+      task: { status: "done", title: "Renamed" },
     });
-    expect(h.update).not.toHaveBeenCalled();
+    expect(h.update).toHaveBeenCalledTimes(1);
   });
 
   it("an unchanged edit on an open task writes nothing (updated_at kept)", async () => {

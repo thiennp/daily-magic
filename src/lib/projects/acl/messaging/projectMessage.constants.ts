@@ -107,4 +107,5 @@ export const PROJECT_MESSAGE_ALLOWED_REF_KEYS = [
   "allowClaimId",
 ] as const;
 
-export type ProjectMessageRefKey = (typeof PROJECT_MESSAGE_ALLOWED_REF_KEYS)[number];
+export type ProjectMessageRefKey =
+  (typeof PROJECT_MESSAGE_ALLOWED_REF_KEYS)[number];

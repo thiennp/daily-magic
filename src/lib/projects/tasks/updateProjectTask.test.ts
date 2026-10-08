@@ -22,6 +22,9 @@ vi.mock("@/lib/projects/tasks/projectTaskRecordReadQueries", () => ({
 vi.mock("@/lib/projects/tasks/validateProjectTaskRefs", () => ({
   validateProjectTaskRefs: h.refs,
 }));
+vi.mock("@/lib/projects/tasks/notifyProjectTaskChanged", () => ({
+  notifyProjectTaskChanged: vi.fn(async () => 0),
+}));
 vi.mock("@/lib/projects/tasks/projectTaskRecordWriteQueries", () => ({
   updateProjectTaskRecord: h.update,
 }));
@@ -59,17 +62,29 @@ describe("updateProjectTask (DF-024)", () => {
     );
   });
 
-  it("invalid transition and done-terminal are rejected", async () => {
+  it("invalid transition is rejected; stopping work and reopening done work", async () => {
     expect(await run({ status: "done" })).toEqual({
       ok: false,
       code: "invalid_transition",
     });
+    expect(h.update).not.toHaveBeenCalled();
+    h.load.mockResolvedValueOnce(
+      projectTaskRecordFixture({ status: "in_progress" }),
+    );
+    expect(await run({ status: "queued" })).toMatchObject({
+      ok: true,
+      task: { status: "queued" },
+    });
+    h.load.mockResolvedValueOnce(projectTaskRecordFixture({ status: "done" }));
+    expect(await run({ status: "queued" })).toMatchObject({
+      ok: true,
+      task: { status: "queued" },
+    });
     h.load.mockResolvedValueOnce(projectTaskRecordFixture({ status: "done" }));
     expect(await run({ status: "in_progress" })).toEqual({
       ok: false,
-      code: "task_done",
+      code: "invalid_transition",
     });
-    expect(h.update).not.toHaveBeenCalled();
   });
 
   it("self dependency / unknown task / lost race → clear codes", async () => {

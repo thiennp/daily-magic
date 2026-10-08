@@ -34,16 +34,17 @@ export const PROJECT_TASK_INITIAL_STATUSES: readonly ProjectTaskStatus[] = [
 
 /**
  * Allowed moves: queued ⇄ planned → in_progress ⇄ blocked; in_progress → done.
- * done is terminal.
+ * Anyone may stop work (in_progress | blocked → queued, "To do") or reopen a
+ * finished task (done → queued).
  */
 export const PROJECT_TASK_TRANSITIONS: Readonly<
   Record<ProjectTaskStatus, readonly ProjectTaskStatus[]>
 > = {
   queued: ["planned", "in_progress"],
   planned: ["queued", "in_progress"],
-  in_progress: ["blocked", "done"],
-  blocked: ["in_progress"],
-  done: [],
+  in_progress: ["blocked", "done", "queued"],
+  blocked: ["in_progress", "queued"],
+  done: ["queued"],
 };
 
 export const PROJECT_TASK_TITLE_MAX_CHARS = 120;
