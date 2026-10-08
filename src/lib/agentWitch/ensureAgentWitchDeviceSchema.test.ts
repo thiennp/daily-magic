@@ -24,12 +24,13 @@ describe("ensureAgentWitchDeviceSchema", () => {
     await ensureAgentWitchDeviceSchema();
     await ensureAgentWitchDeviceSchema();
 
-    // display_name … install_bundle_version (9) + platform column + platform check (2)
-    expect(sqlMock).toHaveBeenCalledTimes(12);
+    // display_name … install_bundle_version (9) + platform column + platform check (2) + install_id (61e9c49e)
+    expect(sqlMock).toHaveBeenCalledTimes(13);
 
     const sqlText = sqlCallsAsText();
     expect(sqlText).toContain("ADD COLUMN IF NOT EXISTS platform");
     expect(sqlText).toContain("agent_witch_devices_platform_check");
     expect(sqlText).toContain("'mac', 'linux'");
+    expect(sqlText).toContain("ADD COLUMN IF NOT EXISTS install_id");
   });
 });

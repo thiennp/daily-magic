@@ -61,6 +61,10 @@ export const ensureAgentWitchDeviceSchema = async (): Promise<void> => {
     `;
     await sql`
       ALTER TABLE agent_witch_devices
+      ADD COLUMN IF NOT EXISTS install_id TEXT
+    `;
+    await sql`
+      ALTER TABLE agent_witch_devices
       ADD COLUMN IF NOT EXISTS platform TEXT NOT NULL DEFAULT 'mac'
     `;
     await sql`
