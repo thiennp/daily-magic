@@ -4,3 +4,4 @@
 
 - **5e000feb**: Linux install without a systemd user session used to print "AgentWitch is ready." while nothing was running. Finish now prints that it is installed but not running, the `nohup …/run.sh` start command, and the device name + id (with the same ·XXXX suffix the web app uses for duplicate names).
 - **2331ef53**: Bundle updates on Linux no longer create `~/Library/LaunchAgents` (the plist ensure is macOS-only). A connect script that fails after setup began prints a re-run hint. Ships in bundle 317.
+- **77e29f7a / 2331ef53**: ensure-writer.sh installs a missing writer CLI (e.g. `~/.local/bin/codex`) only after printing "Installing <tool> CLI on this computer", and the host logs it. The installer prints each percentage once. Ships in bundle 319.

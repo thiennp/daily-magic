@@ -36,7 +36,8 @@
 /** 315 = the writer-execution (Anthropic key) header is only added for claude-cli, never for codex/cursor/antigravity. */
 /** 317 = heartbeat ready means it can run (77e29f7a); no ~/Library on Linux, failed-connect hint (2331ef53). */
 /** 318 = auto skills judge with the owner coding agent first, then Ollama, then the project bot. */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "318";
+/** 319 = ensure-writer logs CLI installs (77e29f7a); installer prints each percentage once (2331ef53). */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "319";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =
