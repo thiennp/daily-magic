@@ -160,6 +160,8 @@ import {
   registerAgentWitchProcessTraceHandlers,
   releaseAgentWitchMachineLease,
   replayPendingRunInputRequests,
+  bindAgentWitchLiveRunSocket,
+  dropPendingRunInputSession,
   requestLocalAgentWitchRestart,
   resizeShellPty,
   resolveAgentWitchCloudApiConfig,
@@ -1377,6 +1379,30 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     const requestId =
       typeof parsed.requestId === "string" ? parsed.requestId : undefined;
 
+    if (parsed.type === "system.error" && isRecord(parsed.payload)) {
+      const errorCode =
+        typeof parsed.payload.errorCode === "string"
+          ? parsed.payload.errorCode
+          : "";
+      const payloadRunId =
+        typeof parsed.payload.agentRunId === "string"
+          ? parsed.payload.agentRunId
+          : "";
+
+      if (
+        (requestId && requestId.startsWith("replay-input:")) ||
+        (errorCode === "run_not_awaiting_input" && payloadRunId.length > 0)
+      ) {
+        const dropRunId =
+          payloadRunId.length > 0
+            ? payloadRunId
+            : requestId?.replace("replay-input:", "");
+        if (dropRunId && dropRunId.length > 0) {
+          dropPendingRunInputSession(config, dropRunId);
+        }
+      }
+    }
+
     if (parsed.type === "device.auth.attestation" && isRecord(parsed.payload)) {
       const serverPublicKey =
         typeof parsed.payload.serverPublicKey === "string"
@@ -1938,7 +1964,6 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         response.length > 0 &&
         originalPrompt.length > 0
       ) {
-        console.log("[agent-witch] Continuing Claude task after user input…");
         continueClaudeTaskAfterInput(
           config,
           {
@@ -2188,6 +2213,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     state.socket = socket;
 
     socket.on("open", () => {
+      bindAgentWitchLiveRunSocket(config.layout.profileEmail ?? "", socket);
       state.reconnectAttempt = 0;
       state.wsConnected = true;
       state.wakeError = null;

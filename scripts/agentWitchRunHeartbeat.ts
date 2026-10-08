@@ -2,6 +2,7 @@ import type WebSocket from "ws";
 
 import { scrubOutboundRunFrame } from "@agent-witch/install-runtime-client";
 
+import { resolveAgentWitchLiveRunSocket } from "./agentWitchLiveRunSocket";
 import { AGENT_RUN_HEARTBEAT_INTERVAL_MS } from "./agentWitchRunHeartbeat.constant";
 
 const runHeartbeatTimers = new Map<string, NodeJS.Timeout>();
@@ -25,11 +26,12 @@ const sendRunHeartbeatMessage = (
   awaitingInput: boolean,
   extraPayload: Record<string, unknown> = {},
 ): void => {
-  if (socket.readyState !== 1) {
+  const activeSocket = resolveAgentWitchLiveRunSocket(socket);
+  if (activeSocket.readyState !== 1) {
     return;
   }
   // S0-8: heartbeat payloads can carry report summaries; scrub them.
-  socket.send(
+  activeSocket.send(
     JSON.stringify(
       scrubOutboundRunFrame({
         type: "run.heartbeat",

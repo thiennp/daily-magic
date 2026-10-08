@@ -69,4 +69,31 @@ describe("startRunHeartbeat", () => {
 
     stopRunHeartbeat("run-2");
   });
+
+  it("sends to new socket after rebind", async () => {
+    const sent1: string[] = [];
+    const socket1 = {
+      readyState: 3, // CLOSED
+      send: (raw: string) => sent1.push(raw),
+    };
+    const sent2: string[] = [];
+    const socket2 = {
+      readyState: 1, // OPEN
+      send: (raw: string) => sent2.push(raw),
+    };
+
+    const { bindAgentWitchLiveRunSocket } =
+      await import("./agentWitchLiveRunSocket");
+    bindAgentWitchLiveRunSocket("test-profile", socket1 as never);
+    bindAgentWitchLiveRunSocket("test-profile", socket2 as never);
+
+    startRunHeartbeat(socket1 as never, "run-rebind", () => true);
+
+    expect(sent1).toHaveLength(0);
+    expect(sent2).toHaveLength(1);
+    expect(JSON.parse(sent2[0] ?? "{}")).toEqual({
+      type: "run.heartbeat",
+      payload: { agentRunId: "run-rebind" },
+    });
+  });
 });

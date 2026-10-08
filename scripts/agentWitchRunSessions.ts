@@ -20,8 +20,10 @@ import {
   buildWriterCliInvocation,
   type BuildWriterCliInvocationOptions,
   type HarnessWriterAgentId,
+  isHarnessWriterAgentId,
   resolveWriterCliCommands,
 } from "./buildWriterCliInvocation";
+import { AGENT_RUN_REPORT_STATUSES } from "./dispatch/agentRunReport.constant";
 import { ensureAntigravityCliHeadlessPermissionsBeforeRun } from "./ensureAntigravityCliHeadlessPermissions";
 import {
   hasPendingRunInputSession,
@@ -91,8 +93,10 @@ import {
   readAgentRunReportFile,
   resolveAgentRunCompletionFromReport,
   seedAgentRunReportFile,
+  upsertAgentRunReportFile,
 } from "./agentWitchRunReport";
 import type { StartRunHeartbeatOptions } from "./agentWitchRunHeartbeat";
+import { resolveAgentWitchLiveRunSocket } from "./agentWitchLiveRunSocket";
 import type { AgentWitchRunConfig } from "./readAgentWitchRunConfig";
 
 import type WebSocket from "ws";
@@ -242,9 +246,10 @@ const sendMessage = (
   socket: WebSocket,
   message: Record<string, unknown>,
 ): void => {
-  if (socket.readyState === 1) {
+  const activeSocket = resolveAgentWitchLiveRunSocket(socket);
+  if (activeSocket.readyState === 1) {
     // S0-8: scrub run output before it leaves the machine.
-    socket.send(JSON.stringify(scrubOutboundRunFrame(message)));
+    activeSocket.send(JSON.stringify(scrubOutboundRunFrame(message)));
   }
 };
 
@@ -520,12 +525,32 @@ const requestRunInput = (
   // turn re-arms the session limit when it starts a new process.
   clearRunSessionLimit(agentRunId);
 
+  const questionTruncated =
+    question.length > 120 ? `${question.substring(0, 117)}...` : question;
+  console.log(
+    `[agent-witch] Run ${agentRunId.substring(0, 8)} paused for input: ${questionTruncated}`,
+  );
+
+  if (session?.projectFolderPath && session?.reportKey) {
+    upsertAgentRunReportFile({
+      reportKey: session.reportKey,
+      agentRunId,
+      status: AGENT_RUN_REPORT_STATUSES.IN_PROGRESS,
+      userSummary: `Waiting for your answer: ${questionTruncated}`,
+    });
+  }
+
   savePendingRunInputSession(config.layout, {
     agentRunId,
     originalPrompt,
     partialOutput,
     question,
     accumulatedOutput,
+    writerAgent: session?.writerAgent,
+    projectFolderPath: session?.projectFolderPath,
+    reportKey: session?.reportKey,
+    projectId: session?.projectId,
+    savedAt: new Date().toISOString(),
   });
 
   // Keep run.heartbeat alive while waiting so cloud does not stale-fail the job.
@@ -1116,6 +1141,9 @@ export const continueClaudeTaskAfterInput = (
   const continuationPrompt = buildContinuationPrompt(input);
   const session = runSessions.get(input.agentRunId);
   const writerAgent = session?.writerAgent ?? "claude-cli";
+  console.log(
+    `[agent-witch] Continuing ${writerAgent} task ${input.agentRunId.substring(0, 8)} after user input…`,
+  );
   const projectFolderPath = session?.projectFolderPath;
   const reportKey = session?.reportKey;
   runWriterTask(
@@ -1135,24 +1163,59 @@ export const continueClaudeTaskAfterInput = (
   );
 };
 
+/** Pending checkpoints older than this are dropped on replay instead of re-asked. */
+export const PENDING_RUN_INPUT_REPLAY_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
 export const replayPendingRunInputRequests = (
   config: AgentWitchRunConfig,
   socket: WebSocket,
 ): void => {
+  const now = Date.now();
   for (const session of listPendingRunInputSessions(config.layout)) {
+    const parsedSavedAtMs =
+      session.savedAt !== undefined ? Date.parse(session.savedAt) : Number.NaN;
+    if (Number.isNaN(parsedSavedAtMs)) {
+      // Legacy entry: start its expiry clock now.
+      savePendingRunInputSession(config.layout, {
+        ...session,
+        savedAt: new Date(now).toISOString(),
+      });
+    }
+    const savedAtMs = Number.isNaN(parsedSavedAtMs) ? now : parsedSavedAtMs;
+
+    if (now - savedAtMs > PENDING_RUN_INPUT_REPLAY_MAX_AGE_MS) {
+      removePendingRunInputSession(config.layout, session.agentRunId);
+      continue;
+    }
+
     runSessions.set(session.agentRunId, {
       originalPrompt: session.originalPrompt,
       userTranscriptPrompt: extractUserTaskFromWrappedPrompt(
         session.originalPrompt,
       ),
-      writerAgent: "claude-cli",
+      writerAgent:
+        session.writerAgent !== undefined &&
+        isHarnessWriterAgentId(session.writerAgent)
+          ? session.writerAgent
+          : "claude-cli",
       accumulatedOutput: session.accumulatedOutput,
+      projectFolderPath: session.projectFolderPath,
+      reportKey: session.reportKey,
+      projectId: session.projectId,
     });
     startRunHeartbeat(
       socket,
       session.agentRunId,
       () => hasPendingRunInputSession(config.layout, session.agentRunId),
-      { awaitingInput: true },
+      buildRunReportHeartbeatOptions(
+        config,
+        socket,
+        session.agentRunId,
+        undefined,
+        session.projectFolderPath,
+        session.reportKey,
+        true,
+      ),
     );
     sendMessage(socket, {
       type: "command.claude.input_required",
@@ -1161,6 +1224,7 @@ export const replayPendingRunInputRequests = (
         question: session.question,
         partialOutput: session.accumulatedOutput,
       },
+      requestId: `replay-input:${session.agentRunId}`,
     });
   }
 };
@@ -1237,3 +1301,17 @@ export const stopAllAgentRuns = (
   [...runSessions.keys()].filter((agentRunId) =>
     stopAgentRun(config, socket, agentRunId),
   ).length;
+
+export const dropPendingRunInputSession = (
+  config: AgentWitchRunConfig,
+  agentRunId: string,
+): void => {
+  removePendingRunInputSession(config.layout, agentRunId);
+  stopRunHeartbeat(agentRunId);
+  runSessions.delete(agentRunId);
+};
+
+export const getRunSessionForTests = (id: string) => runSessions.get(id);
+export const clearRunSessionsForTests = () => runSessions.clear();
+export const setRunSessionForTests = (id: string, session: ActiveRunSession) =>
+  runSessions.set(id, session);

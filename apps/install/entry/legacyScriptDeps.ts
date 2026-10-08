@@ -105,3 +105,8 @@ export {
   restartAgentWitchHostAfterBundleUpdate,
 } from "../../../scripts/restartAgentWitchHostAfterBundleUpdate";
 export { flushPendingRunResultDeliveries } from "../../../scripts/agentWitchPendingRunResultDelivery";
+export {
+  bindAgentWitchLiveRunSocket,
+  resolveAgentWitchLiveRunSocket,
+} from "../../../scripts/agentWitchLiveRunSocket";
+export { dropPendingRunInputSession } from "../../../scripts/agentWitchRunSessions";

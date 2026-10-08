@@ -11,6 +11,11 @@ export interface PendingRunInputSession {
   readonly partialOutput: string;
   readonly question: string;
   readonly accumulatedOutput: string;
+  readonly writerAgent?: string;
+  readonly projectFolderPath?: string;
+  readonly reportKey?: string;
+  readonly projectId?: string;
+  readonly savedAt?: string;
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -56,6 +61,19 @@ const readPendingSessions = (
             ? value.accumulatedOutput
             : partialOutput;
 
+        const writerAgent =
+          typeof value.writerAgent === "string" ? value.writerAgent : undefined;
+        const projectFolderPath =
+          typeof value.projectFolderPath === "string"
+            ? value.projectFolderPath
+            : undefined;
+        const reportKey =
+          typeof value.reportKey === "string" ? value.reportKey : undefined;
+        const projectId =
+          typeof value.projectId === "string" ? value.projectId : undefined;
+        const savedAt =
+          typeof value.savedAt === "string" ? value.savedAt : undefined;
+
         if (originalPrompt.length === 0 || question.length === 0) {
           return [];
         }
@@ -69,6 +87,11 @@ const readPendingSessions = (
               partialOutput,
               question,
               accumulatedOutput,
+              writerAgent,
+              projectFolderPath,
+              reportKey,
+              projectId,
+              savedAt,
             },
           ],
         ];

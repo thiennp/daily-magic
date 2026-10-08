@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
 
 import { AGENT_RUN_INPUT_MARKER } from "./dispatch/agentRunInputGuardrails.constant";
 
@@ -29,5 +29,125 @@ describe("parseAwaitingInputFromOutput", () => {
 
   it("returns null when the marker is missing", () => {
     expect(parseAwaitingInputFromOutput("done")).toBeNull();
+  });
+});
+
+import {
+  replayPendingRunInputRequests,
+  dropPendingRunInputSession,
+  getRunSessionForTests,
+  clearRunSessionsForTests,
+  setRunSessionForTests,
+} from "./agentWitchRunSessions";
+import {
+  savePendingRunInputSession,
+  listPendingRunInputSessions,
+} from "./agentWitchPendingRunSessions";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import type WebSocket from "ws";
+
+import { clearRunHeartbeatTimersForTests } from "./agentWitchRunHeartbeat";
+import type { AgentWitchRunConfig } from "./readAgentWitchRunConfig";
+import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
+
+describe("agentWitchRunSessions pending sessions", () => {
+  let tempDir: string;
+  let layout: AgentWitchLocalLayout;
+
+  beforeEach(() => {
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "aw-pending-"));
+    layout = {
+      installDir: tempDir,
+      profileEmail: "test@example.com",
+    } as unknown as AgentWitchLocalLayout;
+    clearRunSessionsForTests();
+  });
+
+  afterEach(() => {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+    vi.restoreAllMocks();
+    clearRunHeartbeatTimersForTests();
+  });
+
+  it("replayPendingRunInputRequests restores writerAgent, drops >24h, sends replay-input requestId", () => {
+    const config = { layout } as unknown as AgentWitchRunConfig;
+    const sentMessages: { type?: string; requestId?: string }[] = [];
+    const mockSocket = {
+      readyState: 1,
+      send: (msg: string) => sentMessages.push(JSON.parse(msg)),
+    } as unknown as WebSocket;
+
+    const now = Date.now();
+    const oldDate = new Date(now - 25 * 60 * 60 * 1000).toISOString();
+    const recentDate = new Date(now - 1 * 60 * 60 * 1000).toISOString();
+
+    savePendingRunInputSession(layout, {
+      agentRunId: "run-old",
+      originalPrompt: "prompt",
+      partialOutput: "out",
+      question: "q",
+      accumulatedOutput: "acc",
+      savedAt: oldDate,
+    });
+
+    savePendingRunInputSession(layout, {
+      agentRunId: "run-recent",
+      originalPrompt: "prompt",
+      partialOutput: "out",
+      question: "q",
+      accumulatedOutput: "acc",
+      writerAgent: "antigravity",
+      savedAt: recentDate,
+    });
+
+    replayPendingRunInputRequests(config, mockSocket);
+
+    // Old should be dropped
+    expect(
+      listPendingRunInputSessions(layout).find(
+        (s) => s.agentRunId === "run-old",
+      ),
+    ).toBeUndefined();
+    expect(getRunSessionForTests("run-old")).toBeUndefined();
+
+    // Recent should be restored
+    const restored = getRunSessionForTests("run-recent");
+    expect(restored?.writerAgent).toBe("antigravity");
+
+    // Check message sent
+    const msg = sentMessages.find(
+      (m) => m.type === "command.claude.input_required",
+    );
+    expect(msg?.requestId).toBe("replay-input:run-recent");
+  });
+
+  it("dropPendingRunInputSession removes file entry and session", () => {
+    savePendingRunInputSession(layout, {
+      agentRunId: "run-drop",
+      originalPrompt: "prompt",
+      partialOutput: "out",
+      question: "q",
+      accumulatedOutput: "acc",
+    });
+    setRunSessionForTests("run-drop", {
+      originalPrompt: "",
+      userTranscriptPrompt: "",
+      writerAgent: "claude-cli",
+      accumulatedOutput: "",
+    });
+
+    dropPendingRunInputSession(
+      { layout } as unknown as AgentWitchRunConfig,
+      "run-drop",
+    );
+
+    expect(
+      listPendingRunInputSessions(layout).find(
+        (s) => s.agentRunId === "run-drop",
+      ),
+    ).toBeUndefined();
+    expect(getRunSessionForTests("run-drop")).toBeUndefined();
   });
 });
