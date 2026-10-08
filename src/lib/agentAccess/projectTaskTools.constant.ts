@@ -56,7 +56,7 @@ export const CREATE_PROJECT_TASK_TOOL: AgentAccessToolDefinition = {
 export const UPDATE_PROJECT_TASK_TOOL: AgentAccessToolDefinition = {
   name: "update_project_task",
   description:
-    "Update a project task (from create_project_task or list_project_tasks). Status moves: queued⇄planned → in_progress ⇄ blocked; in_progress → done. done is final (task_done); other moves → invalid_transition. Send only fields to change; null clears optional fields. Owner may edit any task; others only tasks they created or own (not_task_owner).",
+    "Update a project task (from create_project_task or list_project_tasks). Status moves: queued⇄planned → in_progress ⇄ blocked; in_progress → done. done is final (task_done); other moves → invalid_transition. Send only fields to change; null clears optional fields. Owner, and assistants claimed by the project owner, may edit any task; others only tasks they created or own (not_task_owner).",
   inputSchema: {
     type: "object",
     properties: {

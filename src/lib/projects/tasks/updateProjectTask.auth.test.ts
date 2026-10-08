@@ -25,6 +25,9 @@ vi.mock("@/lib/projects/tasks/validateProjectTaskRefs", () => ({
 vi.mock("@/lib/projects/tasks/projectTaskRecordWriteQueries", () => ({
   updateProjectTaskRecord: h.update,
 }));
+vi.mock("@/lib/projects/acl/invites/botInvites/isBotLinkedToOwnerUser", () => ({
+  isBotLinkedToOwnerUser: async () => false,
+}));
 
 const run = (args: Record<string, unknown>, actorUserId = "bot-user") =>
   updateProjectTask({

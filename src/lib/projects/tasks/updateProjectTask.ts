@@ -2,7 +2,7 @@ import {
   authorizeProjectTaskWriter,
   type ProjectTaskWriterDenyCode,
 } from "@/lib/projects/tasks/authorizeProjectTaskWriter";
-import { canEditProjectTask } from "@/lib/projects/tasks/canEditProjectTask";
+import { canActorEditProjectTask } from "@/lib/projects/tasks/canActorEditProjectTask";
 import { decideProjectTaskStatusUpdate } from "@/lib/projects/tasks/decideProjectTaskStatusUpdate";
 import { mergeProjectTaskPatch } from "@/lib/projects/tasks/mergeProjectTaskPatch";
 import {
@@ -34,8 +34,8 @@ export type UpdateProjectTaskResult =
 
 /**
  * Orchestrator (DF-024 update_project_task): args → writer gate → record of
- * this project (done = final) → edit right (owner: every task; others: tasks
- * they created or own) → explicit status FSM → owner/dependsOn/planItem refs (no self) →
+ * this project (done = final) → edit right (owner and owner-claimed bots: every
+ * task; others: tasks they created or own) → explicit status FSM → owner/dependsOn/planItem refs (no self) →
  * compare-and-set on the status read (concurrent move → update_conflict).
  */
 export const updateProjectTask = async (input: {
@@ -56,11 +56,12 @@ export const updateProjectTask = async (input: {
   if (current === null) return { ok: false, code: "task_not_found" };
   if (current.status === "done") return { ok: false, code: "task_done" };
   if (
-    !canEditProjectTask({
+    !(await canActorEditProjectTask({
       task: current,
       actorUserId: input.actorUserId,
-      seatId: writer.membership?.id ?? null,
-    })
+      ownerUserId: writer.ownerUserId,
+      membership: writer.membership,
+    }))
   ) {
     return { ok: false, code: "not_task_owner" };
   }
