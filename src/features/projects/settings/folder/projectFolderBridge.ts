@@ -1,6 +1,9 @@
 export interface ProjectFolderLocalStatus {
   readonly folderFound: boolean;
   readonly isGitRepo: boolean;
+  /** `origin` remote, credentials already stripped on the computer. */
+  readonly gitRemoteUrl: string | null;
+  readonly branch: string | null;
 }
 
 export type ProjectFolderStatusResult =
@@ -23,6 +26,9 @@ const asRecord = (value: unknown): Record<string, unknown> | null =>
     ? (value as Record<string, unknown>)
     : null;
 
+const nonEmptyString = (value: unknown): string | null =>
+  typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
+
 /** GET /projects/folders on the computer's bridge; only answers in a browser on that computer. */
 export const fetchProjectFolderStatus = async (
   wakePort: number,
@@ -43,6 +49,8 @@ export const fetchProjectFolderStatus = async (
         ? {
             folderFound: entry.folderFound === true,
             isGitRepo: entry.isGitRepo === true,
+            gitRemoteUrl: nonEmptyString(entry.gitRemoteUrl),
+            branch: nonEmptyString(entry.branch),
           }
         : null,
     };

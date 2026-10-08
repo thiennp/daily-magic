@@ -10,6 +10,7 @@ import AwcProjectFolderChangeDialog from "@/features/projects/settings/folder/Aw
 import AwcProjectFolderMissingWarning from "@/features/projects/settings/folder/AwcProjectFolderMissingWarning";
 import AwcProjectFolderStatusChips from "@/features/projects/settings/folder/AwcProjectFolderStatusChips";
 import AwcProjectOpenOnGitHub from "@/features/projects/settings/folder/AwcProjectOpenOnGitHub";
+import AwcProjectUseGitRemote from "@/features/projects/settings/folder/AwcProjectUseGitRemote";
 import { useProjectFolderCard } from "@/features/projects/settings/folder/useProjectFolderCard";
 import { AWC_TASKS_SECONDARY_BUTTON_CLASS } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
@@ -80,6 +81,11 @@ export default function AwcProjectSettingsFolderRow({
           <span>Open AgentWitch Local on {computerName} to change it.</span>
         ) : null}
       </div>
+      <AwcProjectUseGitRemote
+        project={project}
+        isOwner={isOwner}
+        status={status}
+      />
       <AwcProjectOpenOnGitHub repoUrls={project.repoUrls} />
       <AwcProjectRepoUrlsSection project={project} />
       {dialogOpen && card.wakePort !== null ? (

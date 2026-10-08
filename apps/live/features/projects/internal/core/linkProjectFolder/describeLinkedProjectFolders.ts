@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 
 import { readLinkedProjectFolders } from "./linkedProjectFoldersFile";
+import { readGitFolderInfo } from "./readGitFolderInfo";
 
 export interface LinkedProjectFolderStatus {
   readonly projectId: string;
@@ -11,6 +12,10 @@ export interface LinkedProjectFolderStatus {
   readonly linkedAt: string;
   readonly folderFound: boolean;
   readonly isGitRepo: boolean;
+  /** `origin` remote with credentials stripped (git repos with a remote only). */
+  readonly gitRemoteUrl?: string;
+  /** Current branch (git repos on a branch only). */
+  readonly branch?: string;
   /** One plain sentence for status surfaces. */
   readonly summary: string;
 }
@@ -54,6 +59,7 @@ export const describeLinkedProjectFolders = (
       linkedAt: entry.linkedAt,
       folderFound,
       isGitRepo,
+      ...(isGitRepo ? readGitFolderInfo(entry.folderPath) : {}),
       summary,
     };
   });

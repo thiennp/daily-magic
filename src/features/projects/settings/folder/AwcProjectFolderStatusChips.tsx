@@ -1,3 +1,4 @@
+import { formatGitRemote } from "@/features/projects/settings/folder/formatGitRemote";
 import type { ProjectFolderStatusResult } from "@/features/projects/settings/folder/projectFolderBridge";
 
 const CHIP = "rounded-full px-2 py-0.5 text-[12px] font-medium";
@@ -24,7 +25,7 @@ export default function AwcProjectFolderStatusChips({
       </span>
     );
   }
-  const { folderFound, isGitRepo } = result.status;
+  const { folderFound, isGitRepo, branch, gitRemoteUrl } = result.status;
   return (
     <>
       <span
@@ -35,6 +36,19 @@ export default function AwcProjectFolderStatusChips({
       {folderFound ? (
         <span className={`${CHIP} bg-awc-tile text-awc-fg-muted`}>
           {isGitRepo ? "Git repo" : "Not a git repo"}
+        </span>
+      ) : null}
+      {branch !== null ? (
+        <span className={`${CHIP} bg-awc-tile text-awc-fg-muted`}>
+          Branch {branch}
+        </span>
+      ) : null}
+      {gitRemoteUrl !== null ? (
+        <span
+          className={`${CHIP} bg-awc-tile text-awc-fg-muted`}
+          title={gitRemoteUrl}
+        >
+          {formatGitRemote(gitRemoteUrl)}
         </span>
       ) : null}
     </>
