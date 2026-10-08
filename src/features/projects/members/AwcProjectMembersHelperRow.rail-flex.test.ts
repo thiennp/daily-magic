@@ -36,7 +36,7 @@ describe("DF-036 narrow rail: assistant name vs long wake chip", () => {
   });
 
   it("row keeps min-w-0 flex-1 on the name block beside chip + menu", () => {
-    const row = read("members/AwcProjectMembersHelperRow.tsx");
+    const row = read("members/AwcProjectMembersHelperRowLabel.tsx");
     expect(row).toContain("min-w-0 flex-1");
     expect(row).toMatch(/truncate font-semibold text-awc-fg/);
   });
