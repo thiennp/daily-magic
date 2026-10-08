@@ -20,7 +20,7 @@ const routing = (
   kept: MessengerKeptRecipient | null,
   chipLabel: string | null,
 ): Routing => ({
-  mode: kept === null ? "EVERYONE" : "KEPT",
+  mode: kept === null ? "PICK" : "KEPT",
   kept,
   picking: false,
   hideAllRoutingUi: false,
@@ -51,32 +51,25 @@ const composer = (r: Routing, key: string | null = "whole"): string =>
 describe("P1-S5 Product guard: the To X switch names the send target", () => {
   it("whole feed + KEPT(Scout): only 'To Scout', no separate kept chip", () => {
     const html = composer(
-      routing({ kind: "assistants", membershipIds: ["b1"] }, "To Scout"),
+      routing({ kind: "assistant", membershipId: "b1" }, "To Scout"),
     );
     expect(html).toContain(">To Scout<");
-    expect(html).not.toContain(">To everyone<");
+    expect(html).not.toContain(">Choose an assistant<");
     expect(html).not.toContain("Keep sending");
   });
 
-  it("whole feed, nothing kept or everyone kept: 'To everyone'", () => {
-    expect(composer(routing(null, null))).toContain(">To everyone<");
-    expect(composer(routing({ kind: "everyone" }, "To everyone"))).toContain(
-      ">To everyone<",
-    );
+  it("whole feed, nothing kept: 'Choose an assistant'", () => {
+    expect(composer(routing(null, null))).toContain(">Choose an assistant<");
   });
 
-  it("kept many names the first and the count; private feed names its assistant", () => {
-    const many = routing(
-      { kind: "assistants", membershipIds: ["b1", "b2"] },
-      "To Scout and 1 more",
-    );
-    expect(composer(many)).toContain(">To Scout and 1 more<");
+  it("private feed names its assistant", () => {
+    const many = routing({ kind: "assistant", membershipId: "b1" }, "To Scout");
     expect(composer(many, "b2")).toContain(">To Forge<");
   });
 
   it("without a feed switch the kept chip still shows (Keep sending)", () => {
     const html = composer(
-      routing({ kind: "assistants", membershipIds: ["b1"] }, "To Scout"),
+      routing({ kind: "assistant", membershipId: "b1" }, "To Scout"),
       null,
     );
     expect(html).toContain("Keep sending");

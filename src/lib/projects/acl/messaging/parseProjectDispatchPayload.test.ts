@@ -4,50 +4,39 @@ import { parseProjectDispatchPayload } from "@/lib/projects/acl/messaging/parseP
 import { PROJECT_MESSAGE_SUMMARY_MAX_CHARS } from "@/lib/projects/acl/messaging/projectMessage.constants";
 
 describe("parseProjectDispatchPayload (A3.4)", () => {
-  it("requires exactly one of toMembershipId | toProjectDisplayName | toTeamLabel; rejects broadcast", () => {
-    expect(
-      parseProjectDispatchPayload({
-        kind: "handoff",
-        summary: "hi",
-        broadcast: true,
-      }).ok,
-    ).toBe(false);
-    expect(
-      parseProjectDispatchPayload({
-        kind: "handoff",
-        summary: "pointer",
-        toProjectDisplayName: "Buni",
-      }).ok,
-    ).toBe(true);
-    expect(
-      parseProjectDispatchPayload({
-        kind: "task",
-        summary: "owner update",
-        toProjectDisplayName: "Owner",
-      }).ok,
-    ).toBe(true);
-    expect(
-      parseProjectDispatchPayload({
-        kind: "task",
-        summary: "by id",
-        toMembershipId: "mem-1",
-      }).ok,
-    ).toBe(true);
-    expect(
-      parseProjectDispatchPayload({
-        kind: "task",
-        summary: "both",
-        toMembershipId: "mem-1",
-        toProjectDisplayName: "Buni",
-      }).ok,
-    ).toBe(false);
+  const parse = (to: Record<string, unknown>) =>
+    parseProjectDispatchPayload({ kind: "task", summary: "hi", ...to });
+
+  it.each([
+    { toProjectDisplayName: "Buni" },
+    { toProjectDisplayName: "Owner" },
+    { toMembershipId: "mem-1" },
+  ])("accepts exactly one recipient %o", (to) => {
+    expect(parse(to).ok).toBe(true);
+  });
+
+  it("rejects broadcast", () => {
+    expect(parse({ broadcast: true }).ok).toBe(false);
+  });
+
+  it.each([
+    { toMembershipId: "mem-1", toProjectDisplayName: "Buni" },
+    { toTeamLabel: "engineers" },
+    { toMembershipIds: ["mem-1", "mem-2"] },
+    { toMembershipId: ["mem-1", "mem-2"] },
+    { recipients: ["mem-1"] },
+  ])("rejects more than one recipient or fan-out %o (093103ac)", (to) => {
+    expect(parse(to)).toEqual({
+      ok: false,
+      code: "single_recipient_required",
+    });
   });
 
   it("caps summary and allowlists refs", () => {
     const tooLarge = parseProjectDispatchPayload({
       kind: "x",
       summary: "a".repeat(PROJECT_MESSAGE_SUMMARY_MAX_CHARS + 1),
-      toTeamLabel: "builders",
+      toProjectDisplayName: "Buni",
     });
     expect(tooLarge.ok).toBe(false);
     if (!tooLarge.ok) {
@@ -57,7 +46,7 @@ describe("parseProjectDispatchPayload (A3.4)", () => {
       parseProjectDispatchPayload({
         kind: "x",
         summary: "ok",
-        toTeamLabel: "builders",
+        toProjectDisplayName: "Buni",
         refs: { prUrl: "https://github.com/x/y/pull/1", evil: "no" },
       }).ok,
     ).toBe(false);
@@ -67,7 +56,7 @@ describe("parseProjectDispatchPayload (A3.4)", () => {
     const result = parseProjectDispatchPayload({
       kind: "x",
       summary: "here is a run log dump",
-      toTeamLabel: "builders",
+      toProjectDisplayName: "Buni",
     });
     expect(result.ok).toBe(false);
     if (!result.ok) {

@@ -30,10 +30,16 @@ export async function POST(
     body: await readJson(request),
   });
   if (!result.ok) {
+    const errorMessage =
+      result.code === "single_recipient_required"
+        ? "One recipient per send"
+        : "message" in result
+          ? result.message
+          : result.code;
     return Response.json(
       {
         ...result,
-        errorMessage: "message" in result ? result.message : result.code,
+        errorMessage,
       },
       { status: projectMessengerHttpStatus(result.code) },
     );

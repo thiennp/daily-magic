@@ -1,25 +1,26 @@
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
-import { asRowArray, getSql } from "@/lib/db";
 
 import {
   lookupDisplayNameRecipients,
   type DispatchRecipient,
 } from "@/lib/projects/acl/messaging/lookupDispatchMembershipRecipients";
-import { parseDispatchMemberKind } from "@/lib/projects/acl/messaging/parseDispatchMemberKind";
 import { resolveMembershipIdDispatchRecipient } from "@/lib/projects/acl/messaging/resolveMembershipIdDispatchRecipient";
 
 export type { DispatchRecipient };
 
-const capRecipients = (
+const requireExactlyOneRecipient = (
   recipients: readonly DispatchRecipient[],
 ):
   | { readonly ok: true; readonly recipients: readonly DispatchRecipient[] }
-  | { readonly ok: false; readonly code: "recipient_not_found" | "fanout_cap" } => {
+  | {
+      readonly ok: false;
+      readonly code: "recipient_not_found" | "single_recipient_required";
+    } => {
   if (recipients.length === 0) {
     return { ok: false, code: "recipient_not_found" };
   }
-  if (recipients.length > 20) {
-    return { ok: false, code: "fanout_cap" };
+  if (recipients.length > 1) {
+    return { ok: false, code: "single_recipient_required" };
   }
   return { ok: true, recipients };
 };
@@ -29,12 +30,13 @@ export const resolveDispatchRecipients = async (input: {
   readonly actorUserId: string;
   readonly toMembershipId?: string | null;
   readonly toProjectDisplayName: string | null;
-  readonly toTeamLabel: string | null;
 }): Promise<
   | { readonly ok: true; readonly recipients: readonly DispatchRecipient[] }
-  | { readonly ok: false; readonly code: "recipient_not_found" | "fanout_cap" }
+  | {
+      readonly ok: false;
+      readonly code: "recipient_not_found" | "single_recipient_required";
+    }
 > => {
-  const sql = getSql();
   if (input.toMembershipId) {
     return resolveMembershipIdDispatchRecipient({
       projectId: input.projectId,
@@ -47,36 +49,18 @@ export const resolveDispatchRecipients = async (input: {
     if (project === null || project.ownerUserId === input.actorUserId) {
       return { ok: false, code: "recipient_not_found" };
     }
-    return { ok: true, recipients: [{ id: null, user_id: project.ownerUserId }] };
+    return {
+      ok: true,
+      recipients: [{ id: null, user_id: project.ownerUserId }],
+    };
   }
   if (input.toProjectDisplayName) {
-    return capRecipients(
+    return requireExactlyOneRecipient(
       await lookupDisplayNameRecipients({
         projectId: input.projectId,
         actorUserId: input.actorUserId,
         toProjectDisplayName: input.toProjectDisplayName,
       }),
-    );
-  }
-  if (input.toTeamLabel) {
-    const rows = asRowArray(
-      await sql`
-        SELECT id, user_id, member_kind
-        FROM project_memberships
-        WHERE project_id = ${input.projectId}
-          AND status = 'active'
-          AND team_label = ${input.toTeamLabel}
-          AND user_id <> ${input.actorUserId}
-          AND member_kind <> 'computer'
-      `,
-    );
-    return capRecipients(
-      rows.map((row) => ({
-        id: String(row.id),
-        user_id: String(row.user_id),
-        memberKind: parseDispatchMemberKind(row.member_kind),
-        deviceId: null,
-      })),
     );
   }
   return { ok: false, code: "recipient_not_found" };

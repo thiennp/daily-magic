@@ -17,12 +17,14 @@ export type MessengerChatStoreRecord = {
 };
 
 /**
- * Kept recipient (COMPOSER-LOCK `KEPT(r)`): `null` = EVERYONE (nothing kept).
+ * Kept recipient (COMPOSER-LOCK `KEPT(r)`): exactly one assistant; `null` =
+ * nothing kept (no send-to-all since 093103ac).
  * Only a checked "Keep sending" is ever stored; a one-shot never is.
  */
-export type MessengerKeptRecipient =
-  | { readonly kind: "everyone" }
-  | { readonly kind: "assistants"; readonly membershipIds: readonly string[] };
+export type MessengerKeptRecipient = {
+  readonly kind: "assistant";
+  readonly membershipId: string;
+};
 
 /** Per project chat per member. Cache only — server value wins on load (later). */
 export type MessengerKeptRecipientRecord = {

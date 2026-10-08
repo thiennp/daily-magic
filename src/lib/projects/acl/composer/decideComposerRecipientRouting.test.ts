@@ -22,7 +22,7 @@ describe("decideComposerRecipientRouting", () => {
     });
   });
 
-  it("no @ + sticky checked all → use sticky, no popup", () => {
+  it("no @ + sticky checked legacy all → acts as null, popup required", () => {
     const result = decideComposerRecipientRouting({
       mentionMembershipIds: [],
       stickyChecked: true,
@@ -30,8 +30,8 @@ describe("decideComposerRecipientRouting", () => {
       assistants: bots(["mem-a", "mem-b"]),
     });
     expect(result).toEqual({
-      kind: "use_sticky_all",
-      showPopup: false,
+      kind: "require_popup",
+      showPopup: true,
       hideAllRoutingUi: false,
       stickyUntouched: true,
     });

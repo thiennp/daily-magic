@@ -2,6 +2,7 @@ import {
   AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
   AWC_GROK_WEBHOOK_DAILY_REPAIR,
 } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
+import { PRODUCT_CONNECT_UPDATES_MESSAGING } from "@/lib/agentAccess/productConnectUpdatesMessaging.constant";
 import type { ProductConnectUpdateEntry } from "@/lib/agentAccess/productConnectUpdatesMeta.constant";
 import { PRODUCT_CONNECT_UPDATES_PROJECT_TASKS } from "@/lib/agentAccess/productConnectUpdatesProjectTasks.constant";
 import { PRODUCT_CONNECT_UPDATES_WAKE_ROUTINE } from "@/lib/agentAccess/productConnectUpdatesWakeRoutine.constant";
@@ -96,4 +97,5 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
     },
     ...PRODUCT_CONNECT_UPDATES_WAKE_ROUTINE,
     ...PRODUCT_CONNECT_UPDATES_PROJECT_TASKS,
+    ...PRODUCT_CONNECT_UPDATES_MESSAGING,
   ];

@@ -8,7 +8,7 @@ describe("parseProjectDispatchPayload refs media guards", () => {
     const dataUri = parseProjectDispatchPayload({
       kind: "x",
       summary: "ok",
-      toTeamLabel: "builders",
+      toProjectDisplayName: "Owner",
       refs: { localPath: "data:image/png;base64,aaaa" },
     });
     expect(dataUri.ok).toBe(false);
@@ -19,7 +19,7 @@ describe("parseProjectDispatchPayload refs media guards", () => {
     const blob = parseProjectDispatchPayload({
       kind: "x",
       summary: "ok",
-      toTeamLabel: "builders",
+      toProjectDisplayName: "Owner",
       refs: { localPath: "A".repeat(90) },
     });
     expect(blob.ok).toBe(false);
@@ -30,7 +30,7 @@ describe("parseProjectDispatchPayload refs media guards", () => {
     const imagePath = parseProjectDispatchPayload({
       kind: "x",
       summary: "ok",
-      toTeamLabel: "builders",
+      toProjectDisplayName: "Owner",
       refs: { localPath: "https://cdn.example.com/shot.png" },
     });
     expect(imagePath.ok).toBe(false);
@@ -43,7 +43,7 @@ describe("parseProjectDispatchPayload refs media guards", () => {
     const result = parseProjectDispatchPayload({
       kind: "x",
       summary: "ok",
-      toTeamLabel: "builders",
+      toProjectDisplayName: "Owner",
       refs: { localPath: "p".repeat(PROJECT_MESSAGE_REF_VALUE_MAX_CHARS + 1) },
     });
     expect(result.ok).toBe(false);

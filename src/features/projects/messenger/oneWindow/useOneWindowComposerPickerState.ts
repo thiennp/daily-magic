@@ -11,13 +11,11 @@ export const useOneWindowComposerPickerState = (input: {
     readonly keepSending: boolean;
   }) => void;
 }) => {
-  const [everyone, setEveryone] = useState(false);
-  const [selected, setSelected] = useState<readonly string[]>([]);
+  const [selected, setSelected] = useState<string | null>(null);
   const [keep, setKeep] = useState(false);
 
-  const selectedCount = everyone ? 1 : selected.length;
-  const keepLab = keepCheckboxLabel({ everyone, selectedCount });
-  const canSend = everyone || selected.length > 0;
+  const keepLab = keepCheckboxLabel();
+  const canSend = selected !== null;
 
   const subtitle = useMemo(
     () =>
@@ -27,15 +25,14 @@ export const useOneWindowComposerPickerState = (input: {
 
   const confirm = (): void => {
     if (!canSend) return;
-    const recipient: MessengerKeptRecipient = everyone
-      ? { kind: "everyone" }
-      : { kind: "assistants", membershipIds: selected };
+    const recipient: MessengerKeptRecipient = {
+      kind: "assistant",
+      membershipId: selected,
+    };
     input.onConfirm({ recipient, keepSending: keep });
   };
 
   return {
-    everyone,
-    setEveryone,
     selected,
     setSelected,
     keep,

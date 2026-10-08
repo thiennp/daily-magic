@@ -16,7 +16,10 @@ import type { AwcMessengerTimelineEntry } from "@/features/projects/messenger/ty
 const bot = { kind: "bot" as const, membershipId: "b1", displayName: "Scout" };
 const row = (over: Partial<AwcMessengerTimelineEntry>): string =>
   renderToStaticMarkup(
-    createElement(AwcMessengerTimelineEntryRow, { entry: entry({ author: bot, ...over }), isMine: false }),
+    createElement(AwcMessengerTimelineEntryRow, {
+      entry: entry({ author: bot, ...over }),
+      isMine: false,
+    }),
   );
 
 describe("P1-S5b reply-kind pill fallback (subjectState null or missing)", () => {
@@ -24,47 +27,69 @@ describe("P1-S5b reply-kind pill fallback (subjectState null or missing)", () =>
     expect(oneWindowReplyKindStatus("task.received")?.label).toBe("Queued");
     expect(oneWindowReplyKindStatus("task.processing")?.label).toBe("Running");
     expect(oneWindowReplyKindStatus("task.status")?.label).toBe("Running");
-    expect(oneWindowReplyKindStatus("task.done")).toEqual({ label: "Done", tone: "ok" });
-    expect(oneWindowReplyKindStatus("task.blocked")).toEqual({ label: "Blocked", tone: "warn" });
+    expect(oneWindowReplyKindStatus("task.done")).toEqual({
+      label: "Done",
+      tone: "ok",
+    });
+    expect(oneWindowReplyKindStatus("task.blocked")).toEqual({
+      label: "Blocked",
+      tone: "warn",
+    });
     expect(oneWindowReplyKindStatus("chat.note")).toBeNull();
   });
 
   it("null or missing subjectState → fallback pill; present subjectState always wins", () => {
-    expect(row({ kind: "task.received", windowKind: "task_update", subjectState: null })).toContain(">Queued<");
+    expect(
+      row({
+        kind: "task.received",
+        windowKind: "task_update",
+        subjectState: null,
+      }),
+    ).toContain(">Queued<");
     expect(row({ kind: "task.processing" })).toContain(">Running<");
-    const done = { source: "reply_kind" as const, status: "done", needsYou: false, awaitingApproval: false };
-    const wins = row({ kind: "task.received", windowKind: "task_update", subjectState: done });
+    const done = {
+      source: "reply_kind" as const,
+      status: "done",
+      needsYou: false,
+      awaitingApproval: false,
+    };
+    const wins = row({
+      kind: "task.received",
+      windowKind: "task_update",
+      subjectState: done,
+    });
     expect(wins).toContain(">Done<");
     expect(wins).not.toContain(">Queued<");
   });
 });
 
-describe("P1-S5b kept send retry: no duplicates", () => {
-  const three = { kind: "assistants" as const, membershipIds: ["b1", "b2", "b3"] };
+describe("P1-S5b kept send retry (one recipient, 093103ac)", () => {
+  const kept = { kind: "assistant" as const, membershipId: "b1" };
 
-  it("3 kept, the 2nd fails: retry sends to the 2nd and 3rd only, then tracking clears", async () => {
+  it("a failed kept send stays pending; the retry sends once and clears tracking", async () => {
     const progress: OneWindowKeptProgressRef = { current: null };
     const send = vi.fn<OneWindowSendMessage>(async () => true);
-    send.mockResolvedValueOnce(true).mockResolvedValueOnce(false);
-    await expect(sendOneWindowMessageTo(send, "hi", three, progress)).resolves.toBe(false);
-    expect(progress.current).toEqual({ text: "hi", sent: ["b1"], pending: ["b2", "b3"] });
+    send.mockResolvedValueOnce(false);
+    await expect(
+      sendOneWindowMessageTo(send, "hi", kept, progress),
+    ).resolves.toBe(false);
+    expect(progress.current).toEqual({ text: "hi", sent: [], pending: ["b1"] });
     send.mockClear();
-    await expect(sendOneWindowMessageTo(send, "hi", three, progress)).resolves.toBe(true);
-    expect(send.mock.calls.map((call) => call[2])).toEqual(["b2", "b3"]);
-    expect(progress.current).toBeNull();
-  });
-
-  it("changed draft text resets the tracking: every kept recipient gets the new text", async () => {
-    const progress: OneWindowKeptProgressRef = { current: { text: "hi", sent: ["b1"], pending: ["b2", "b3"] } };
-    const send = vi.fn<OneWindowSendMessage>(async () => true);
-    await sendOneWindowMessageTo(send, "hi there", three, progress);
-    expect(send.mock.calls.map((call) => call[2])).toEqual(["b1", "b2", "b3"]);
+    await expect(
+      sendOneWindowMessageTo(send, "hi", kept, progress),
+    ).resolves.toBe(true);
+    expect(send.mock.calls.map((call) => call[2])).toEqual(["b1"]);
     expect(progress.current).toBeNull();
   });
 
   it("the retry notice names who has not got the draft yet", () => {
-    const assistants = [{ membershipId: "b2", displayName: "Forge" }, { membershipId: "b3", displayName: "Ink" }];
-    const html = renderToStaticMarkup(createElement(AwcOneWindowKeptRetryNotice, { pendingKeys: ["b2", "b3"], assistants }));
-    expect(html).toContain("Not sent to Forge, Ink yet. Send again to retry.");
+    const assistants = [{ membershipId: "b1", displayName: "Forge" }];
+    const html = renderToStaticMarkup(
+      createElement(AwcOneWindowKeptRetryNotice, {
+        pendingKeys: ["b1"],
+        assistants,
+      }),
+    );
+    expect(html).toContain("Not sent to Forge yet. Send again to retry.");
   });
 });

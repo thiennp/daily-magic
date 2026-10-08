@@ -8,15 +8,11 @@ describe("OW-H2 oneWindowComposerCopy (COMPOSER-LOCK)", () => {
   it("locks exact EN strings", () => {
     const C = ONE_WINDOW_COMPOSER_COPY;
     expect(C.pickerTitle).toBe("Who should get this?");
-    expect(C.pickerEveryone).toBe("Everyone in this project");
     expect(C.pickerKeep).toBe("Keep sending to this assistant");
-    expect(C.pickerKeepMany).toBe("Keep sending to these assistants");
-    expect(C.pickerKeepEveryone).toBe("Keep sending to everyone");
-    expect(C.chipEveryone).toBe("To everyone");
+    expect(C.chipEveryone).toBe("Choose an assistant");
     expect(C.pickerSend).toBe("Send");
     expect(C.pickerCancel).toBe("Cancel");
     expect(C.chipLabel).toBe("To {name}");
-    expect(C.chipLabelMany).toBe("To {name} and {n} more");
     expect(C.chipKeep).toBe("Keep sending");
     expect(C.keptGone).toBe(
       "{name} is no longer in this project. Pick who gets your next message.",
@@ -30,9 +26,9 @@ describe("OW-H2 oneWindowComposerCopy (COMPOSER-LOCK)", () => {
     expect(C.placeholderSingle).toBe("Message {name}.");
   });
 
-  it("kept-everyone placeholder follows COMPOSER-LOCK Message {name}.…", () => {
-    expect(formatPlaceholderKept("everyone")).toBe(
-      "Message everyone. Type @ to pick someone else.",
+  it("kept-assistant placeholder follows COMPOSER-LOCK Message {name}.…", () => {
+    expect(formatPlaceholderKept("Scout")).toBe(
+      "Message Scout. Type @ to pick someone else.",
     );
   });
 
@@ -43,7 +39,7 @@ describe("OW-H2 oneWindowComposerCopy (COMPOSER-LOCK)", () => {
     }
   });
 
-  it("SINGLE hides routing; KEPT when sticky present; else EVERYONE", () => {
+  it("SINGLE hides routing; KEPT when sticky present; else PICK", () => {
     expect(
       resolveOneWindowComposerMode({
         assistantCount: 1,
@@ -54,7 +50,7 @@ describe("OW-H2 oneWindowComposerCopy (COMPOSER-LOCK)", () => {
     expect(
       resolveOneWindowComposerMode({
         assistantCount: 2,
-        kept: { kind: "everyone" },
+        kept: { kind: "assistant", membershipId: "b1" },
         picking: false,
       }).mode,
     ).toBe("KEPT");
@@ -64,6 +60,6 @@ describe("OW-H2 oneWindowComposerCopy (COMPOSER-LOCK)", () => {
         kept: null,
         picking: true,
       }),
-    ).toEqual({ mode: "EVERYONE", picking: true, hideAllRoutingUi: false });
+    ).toEqual({ mode: "PICK", picking: true, hideAllRoutingUi: false });
   });
 });

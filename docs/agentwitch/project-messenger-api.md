@@ -129,9 +129,9 @@ replies to Owner with the id in the summary link the same way. Allowed on
    `peer.*` / lifecycle notices stay out of the thread list / snapshot; the
    thread GET returns them as notice rows (item 10).
 9. **Bot↔bot rows (DF-023, owner only)**: when the viewer is the project
-   owner, every bot→bot (or bot→team label) `project_dispatch` row joins the
+   owner, every bot→bot `project_dispatch` row joins the
    Whole project timeline with an additive `peer: { toMembershipId,
-toDisplayName, toTeamLabel }` field (state-only kinds included). UI renders
+toDisplayName }` field (state-only kinds included). UI renders
    a compact line "Kai → AW Lead · Status update · summary" with a
    "Between assistants" show/hide chip (default shown). These rows never move
    state chips and never count toward preview / unread. Members and viewers
@@ -145,15 +145,15 @@ toDisplayName, toTeamLabel }` field (state-only kinds included). UI renders
     additive, worked out at read time, no migration, no bodies to Neon).
     Every entry of `GET …/messenger/threads/:threadKey` now carries:
 
-    | field             | type                                                        | meaning                                                                                                                                                 |
-    | ----------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-    | `author.kind`     | `"owner" \| "member" \| "bot" \| "system"`                  | `"system"` only on server notices (no sender seat)                                                                                                      |
-    | `windowKind`      | OW9 enum                                                    | now also `"notice"` and `"bot_to_bot"` rows                                                                                                             |
-    | `subjectState`    | OW9 object \| null                                          | null on notice / bot_to_bot rows                                                                                                                        |
-    | `peer`            | `{ toMembershipId, toDisplayName, toTeamLabel }` (optional) | DF-023 bot↔bot rows (owner only)                                                                                                                        |
-    | `parentMessageId` | `string \| null`                                            | parent row id (DESIGN `parent_message_id`), read from the reply convention (= `inReplyTo`). May point at an older page or a removed row                 |
-    | `replyIds`        | `string[]`                                                  | ids of this row's direct replies **in this response**, oldest first                                                                                     |
-    | `archived`        | `{ at, byUserId, byDisplayName } \| null`                   | Clear all meta (`archived_at` / `archived_by`, seat name; `"Owner"` for the owner). null when not archived, and always on local (AWL) / AI-session rows |
+    | field             | type                                           | meaning                                                                                                                                                 |
+    | ----------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | `author.kind`     | `"owner" \| "member" \| "bot" \| "system"`     | `"system"` only on server notices (no sender seat)                                                                                                      |
+    | `windowKind`      | OW9 enum                                       | now also `"notice"` and `"bot_to_bot"` rows                                                                                                             |
+    | `subjectState`    | OW9 object \| null                             | null on notice / bot_to_bot rows                                                                                                                        |
+    | `peer`            | `{ toMembershipId, toDisplayName }` (optional) | DF-023 bot↔bot rows (owner only)                                                                                                                        |
+    | `parentMessageId` | `string \| null`                               | parent row id (DESIGN `parent_message_id`), read from the reply convention (= `inReplyTo`). May point at an older page or a removed row                 |
+    | `replyIds`        | `string[]`                                     | ids of this row's direct replies **in this response**, oldest first                                                                                     |
+    | `archived`        | `{ at, byUserId, byDisplayName } \| null`      | Clear all meta (`archived_at` / `archived_by`, seat name; `"Owner"` for the owner). null when not archived, and always on local (AWL) / AI-session rows |
 
     Order stays newest first and nothing else changes, so the flat list UI
     renders as before; a grouped UI nests rows by `parentMessageId` across the

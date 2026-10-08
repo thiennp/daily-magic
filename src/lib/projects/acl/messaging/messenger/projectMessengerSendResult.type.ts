@@ -9,7 +9,8 @@ export type ProjectMessengerSendFailureCode =
   | "summary_too_large"
   | "forbidden_content"
   | "thread_not_found"
-  | "no_bots";
+  | "no_bots"
+  | "single_recipient_required";
 
 export type ProjectMessengerSendResult =
   | {

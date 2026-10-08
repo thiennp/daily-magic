@@ -26,9 +26,6 @@ const keepOrNone = (
   keepSending: boolean,
 ): MessengerKeptRecipient | null => {
   if (!keepSending) return null; // unchecked one-shot is never persisted
-  if (recipient.kind === "assistants" && recipient.membershipIds.length === 0) {
-    return null;
-  }
   return recipient;
 };
 
@@ -37,8 +34,8 @@ const afterAssistantsChanged = (
   ids: readonly string[],
 ): MessengerKeptRecipientNext => {
   const gone =
-    current?.kind === "assistants"
-      ? current.membershipIds.filter((id) => !ids.includes(id))
+    current?.kind === "assistant" && !ids.includes(current.membershipId)
+      ? [current.membershipId]
       : [];
   // SINGLE (≤1 assistant) has no routing: nothing is kept.
   if (ids.length <= 1 || gone.length > 0) {

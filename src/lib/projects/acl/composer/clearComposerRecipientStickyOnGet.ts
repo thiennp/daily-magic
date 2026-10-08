@@ -21,11 +21,18 @@ export const clearInactiveComposerRecipientStickyOnGet = async (input: {
   readonly assistants: readonly AssistantSeat[];
 }): Promise<ComposerStickyGetClearState> => {
   const sticky = input.sticky;
-  if (
-    sticky === null ||
-    sticky.mode !== "membership" ||
-    sticky.membershipId === null
-  ) {
+  if (sticky === null) {
+    return { sticky, cleared: false, clearedReason: null };
+  }
+  if (sticky.mode === "all") {
+    await deleteProjectComposerRecipientStickyRow(input);
+    return {
+      sticky: null,
+      cleared: true,
+      clearedReason: "membership_inactive",
+    };
+  }
+  if (sticky.mode !== "membership" || sticky.membershipId === null) {
     return { sticky, cleared: false, clearedReason: null };
   }
   const stillActive = input.assistants.some(

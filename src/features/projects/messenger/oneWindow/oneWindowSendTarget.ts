@@ -11,16 +11,15 @@ export type OneWindowSendMessage = (
 ) => Promise<boolean>;
 
 /**
- * COMPOSER-LOCK "send to r" on the existing thread send path: everyone (or
- * nothing kept) → the whole-project thread (fan-out to every assistant);
- * assistants → each one's own thread, in order, no duplicates.
+ * COMPOSER-LOCK "send to r" on the existing thread send path: nothing kept
+ * → the whole-project thread (server maps to the single bot if exactly one, else fails);
+ * assistant → their own thread.
  */
 export const oneWindowSendTargetKeys = (
   recipient: MessengerKeptRecipient | null,
 ): readonly string[] => {
-  if (recipient === null || recipient.kind === "everyone") return [WHOLE];
-  const keys = [...new Set(recipient.membershipIds)];
-  return keys.length > 0 ? keys : [WHOLE];
+  if (recipient === null || recipient.kind !== "assistant") return [WHOLE];
+  return [recipient.membershipId];
 };
 
 /** P1-S5b: who already got this draft; `pending` = failed + not sent yet. */
@@ -32,9 +31,7 @@ export type OneWindowKeptProgress = {
 export type OneWindowKeptProgressRef = { current: OneWindowKeptProgress };
 
 /**
- * Sends once per target; stops at the first failure (draft stays). With a
- * progress ref, a retry of the same text skips targets that already got it;
- * other text or a full success clears the tracking (no duplicates on retry).
+ * Sends to the single target. With a progress ref, tracks failure.
  */
 export const sendOneWindowMessageTo = async (
   onSendMessage: OneWindowSendMessage,
@@ -43,15 +40,21 @@ export const sendOneWindowMessageTo = async (
   progress?: OneWindowKeptProgressRef,
 ): Promise<boolean> => {
   const keys = oneWindowSendTargetKeys(recipient);
+  const key = keys[0];
+
+  // If we already sent it, we don't need to send again.
   const prior = progress?.current?.text === text ? progress.current.sent : [];
-  const sent = [...prior];
-  for (const key of keys.filter((k) => !prior.includes(k))) {
-    if (!(await onSendMessage(text, false, key))) {
-      if (progress) progress.current = { text, sent, pending: keys.filter((k) => !sent.includes(k)) };
-      return false;
-    }
-    sent.push(key);
+  if (prior.includes(key)) {
+    if (progress) progress.current = null;
+    return true;
   }
+
+  const success = await onSendMessage(text, false, key);
+  if (!success) {
+    if (progress) progress.current = { text, sent: [], pending: [key] };
+    return false;
+  }
+
   if (progress) progress.current = null;
   return true;
 };

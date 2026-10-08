@@ -40,12 +40,6 @@ export type DecideComposerRecipientRoutingResult =
       readonly stickyUntouched: true;
     }
   | {
-      readonly kind: "use_sticky_all";
-      readonly showPopup: false;
-      readonly hideAllRoutingUi: false;
-      readonly stickyUntouched: true;
-    }
-  | {
       readonly kind: "use_sticky_membership";
       readonly membershipId: string;
       readonly showPopup: false;

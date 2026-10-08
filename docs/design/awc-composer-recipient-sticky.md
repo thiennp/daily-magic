@@ -34,7 +34,7 @@ Pure helper: `src/lib/projects/acl/composer/decideComposerRecipientRouting.ts`
 1. One assistant → `force_single_assistant` (`hideAllRoutingUi: true`)
 2. Chip uncheck → `clear_sticky` + popup
 3. `@` mentions → `use_mentions` (sticky untouched)
-4. No `@` + sticky checked → `use_sticky_all` | `use_sticky_membership`
+4. No `@` + sticky checked → `use_sticky_membership` (one assistant only; `all` removed by 093103ac)
 5. Else → `require_popup`
 
 ## Leave / remove

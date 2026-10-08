@@ -1,6 +1,5 @@
 import {
   formatChipLabel,
-  formatChipLabelMany,
   formatPlaceholderKept,
   formatPlaceholderSingle,
 } from "@/features/projects/messenger/oneWindow/formatOneWindowComposerCopy";
@@ -23,13 +22,9 @@ export const formatOneWindowRoutingPlaceholder = (input: {
     );
   }
   if (mode === "KEPT" && kept !== null) {
-    if (kept.kind === "everyone") return formatPlaceholderKept("everyone");
-    const name = nameById.get(kept.membershipIds[0]) ?? "assistant";
-    if (kept.membershipIds.length > 1) {
-      return formatPlaceholderKept(
-        `${name} and ${kept.membershipIds.length - 1} more`,
-      );
-    }
+    if (kept.kind !== "assistant")
+      return ONE_WINDOW_COMPOSER_COPY.placeholderEveryone;
+    const name = nameById.get(kept.membershipId) ?? "assistant";
     return formatPlaceholderKept(name);
   }
   return ONE_WINDOW_COMPOSER_COPY.placeholderEveryone;
@@ -40,11 +35,7 @@ export const formatOneWindowRoutingChipLabel = (
   kept: MessengerKeptRecipient | null,
   nameById: ReadonlyMap<string, string>,
 ): string | null => {
-  if (kept === null) return null;
-  if (kept.kind === "everyone") return ONE_WINDOW_COMPOSER_COPY.chipEveryone;
-  const name = nameById.get(kept.membershipIds[0]) ?? "assistant";
-  if (kept.membershipIds.length > 1) {
-    return formatChipLabelMany(name, kept.membershipIds.length - 1);
-  }
+  if (kept === null || kept.kind !== "assistant") return null;
+  const name = nameById.get(kept.membershipId) ?? "assistant";
   return formatChipLabel(name);
 };

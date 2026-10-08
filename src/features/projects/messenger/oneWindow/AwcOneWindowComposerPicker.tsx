@@ -69,9 +69,7 @@ export default function AwcOneWindowComposerPicker({
         <AwcOneWindowComposerPickerRecipients
           assistants={assistants}
           subtitle={state.subtitle}
-          everyone={state.everyone}
           selected={state.selected}
-          setEveryone={state.setEveryone}
           setSelected={state.setSelected}
           setKeep={state.setKeep}
         />

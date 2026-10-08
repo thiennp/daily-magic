@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { orchestrateProjectMessengerSend } from "@/lib/projects/acl/messaging/messenger/orchestrateProjectMessengerSend";
 import {
   getActiveProjectMembership,
-  humanSeat,
+  loadProjectMessengerBots,
   sqlCalls,
   sqlTexts,
 } from "@/lib/projects/acl/messaging/messenger/orchestrateProjectMessengerSend.fixtures";
@@ -62,13 +62,38 @@ const send = (actorUserId: string, threadKey: string, body: unknown) =>
     body,
   });
 
+const bot = (membershipId: string, displayName: string) => ({
+  membershipId,
+  userId: `u-${membershipId}`,
+  displayName,
+  deliveryMode: "webhook" as const,
+});
+
 beforeEach(() => {
   sqlCalls.length = 0;
   getActiveProjectMembership.mockReset();
 });
 
 describe("orchestrateProjectMessengerSend — Whole project", () => {
-  it("one message, one delivery + silence watch per bot", async () => {
+  it("rejects whole thread when there is more than 1 bot", async () => {
+    loadProjectMessengerBots.mockResolvedValueOnce([
+      bot("b1", "Scout"),
+      bot("b2", "Forge"),
+    ]);
+    const result = await send("user-jordan", "whole", {
+      text: "Plan day 2",
+      needsReply: true,
+    });
+    expect(result).toMatchObject({
+      ok: false,
+      code: "single_recipient_required",
+    });
+  });
+
+  it("maps whole thread to the single bot if there is exactly 1 bot", async () => {
+    loadProjectMessengerBots.mockResolvedValueOnce([
+      bot("mem-planner", "Planner"),
+    ]);
     const result = await send("user-jordan", "whole", {
       text: "Plan day 2",
       needsReply: true,
@@ -76,12 +101,11 @@ describe("orchestrateProjectMessengerSend — Whole project", () => {
     expect(result).toMatchObject({
       ok: true,
       threadKey: "whole",
-      recipientCount: 2,
-      watchedCount: 2,
+      recipientCount: 1,
+      watchedCount: 1,
     });
     const message = sqlTexts("INSERT INTO project_messages");
     expect(message).toHaveLength(1);
-    // owner sender (no membership); no membership / user / team address
     expect(message[0].values.slice(2, 7)).toEqual([
       null,
       "user-jordan",
@@ -89,15 +113,10 @@ describe("orchestrateProjectMessengerSend — Whole project", () => {
       null,
       null,
     ]);
-    expect(message[0].values).toContain("task.assign");
     const deliveries = sqlTexts("INSERT INTO project_message_deliveries");
-    expect(deliveries.map((call) => call.values[2])).toEqual([
-      "mem-planner",
-      "mem-research",
-    ]);
+    expect(deliveries.map((call) => call.values[2])).toEqual(["mem-planner"]);
     const watch = sqlTexts("UPDATE project_message_deliveries");
     expect(watch[0].values).toContain("awaiting_first_activity");
-    expect(watch[0].values).toContainEqual(["mem-planner", "mem-research"]);
   });
 
   it("unknown thread key is thread_not_found and stores nothing", async () => {

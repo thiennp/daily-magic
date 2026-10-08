@@ -11,11 +11,11 @@ import {
   writeMessengerKeptRecipient,
 } from "@/features/projects/messenger/utils/persistMessengerKeptRecipient";
 
-const botA = { kind: "assistants", membershipIds: ["a"] } as const;
+const botA = { kind: "assistant", membershipId: "a" } as const;
 const two = ["a", "b"];
 
 describe("nextMessengerKeptRecipient (COMPOSER-LOCK persist)", () => {
-  it("checked keep persists r; unchecked one-shot goes back to EVERYONE", () => {
+  it("checked keep persists r; unchecked one-shot goes back to nothing kept", () => {
     expect(
       nextMessengerKeptRecipient(null, {
         type: "confirm",
@@ -30,13 +30,6 @@ describe("nextMessengerKeptRecipient (COMPOSER-LOCK persist)", () => {
         keepSending: false,
       }).recipient,
     ).toBeNull();
-    expect(
-      nextMessengerKeptRecipient(null, {
-        type: "confirm",
-        recipient: { kind: "everyone" },
-        keepSending: true,
-      }).recipient,
-    ).toEqual({ kind: "everyone" });
   });
 
   it("explicit @ sends once and leaves kept r unchanged; chip uncheck clears", () => {
@@ -48,7 +41,7 @@ describe("nextMessengerKeptRecipient (COMPOSER-LOCK persist)", () => {
     ).toBeNull();
   });
 
-  it("kept assistant leaves → EVERYONE + gone ids for the notice", () => {
+  it("kept assistant leaves → nothing kept + gone ids for the notice", () => {
     const next = nextMessengerKeptRecipient(botA, {
       type: "assistantsChanged",
       assistantMembershipIds: ["b", "c"],

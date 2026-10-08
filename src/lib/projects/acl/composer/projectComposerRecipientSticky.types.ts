@@ -23,7 +23,10 @@ export type ProjectComposerRecipientStickyGetResult =
         readonly displayName: string | null;
       } | null;
     }
-  | { readonly ok: false; readonly code: "not_found" | "forbidden" | "viewer_read_only" };
+  | {
+      readonly ok: false;
+      readonly code: "not_found" | "forbidden" | "viewer_read_only";
+    };
 
 export type ProjectComposerRecipientStickyPutResult =
   | {
@@ -38,7 +41,8 @@ export type ProjectComposerRecipientStickyPutResult =
         | "viewer_read_only"
         | "invalid_body"
         | "membership_inactive"
-        | "single_assistant";
+        | "single_assistant"
+        | "single_recipient_only";
     };
 
 export type ProjectComposerRecipientStickyDeleteResult =

@@ -6,13 +6,13 @@ export const stickySnapshotToKept = (
   sticky: ComposerRecipientStickySnapshot | null,
 ): MessengerKeptRecipient | null => {
   if (sticky === null) return null;
-  if (sticky.mode === "all") return { kind: "everyone" };
+  if (sticky.mode === "all") return null;
   if (
     sticky.mode === "membership" &&
     typeof sticky.membershipId === "string" &&
     sticky.membershipId.length > 0
   ) {
-    return { kind: "assistants", membershipIds: [sticky.membershipId] };
+    return { kind: "assistant", membershipId: sticky.membershipId };
   }
   return null;
 };
@@ -20,10 +20,8 @@ export const stickySnapshotToKept = (
 /** Kept → PUT body for recipient-sticky API. */
 export const keptToStickyPutBody = (
   kept: MessengerKeptRecipient,
-): { readonly mode: "all" } | { readonly mode: "membership"; readonly membershipId: string } => {
-  if (kept.kind === "everyone") return { mode: "all" };
-  const id = kept.membershipIds[0];
-  return { mode: "membership", membershipId: id };
+): { readonly mode: "membership"; readonly membershipId: string } => {
+  return { mode: "membership", membershipId: kept.membershipId };
 };
 
 /** Kept → FSA sticky snapshot (chip checked). */
@@ -31,10 +29,8 @@ export const keptToStickySnapshot = (
   kept: MessengerKeptRecipient | null,
 ): ComposerRecipientStickySnapshot | null => {
   if (kept === null) return null;
-  if (kept.kind === "everyone") {
-    return { mode: "all", membershipId: null };
-  }
-  const id = kept.membershipIds[0];
+  if (kept.kind !== "assistant") return null;
+  const id = kept.membershipId;
   if (typeof id !== "string" || id.length === 0) return null;
   return { mode: "membership", membershipId: id };
 };

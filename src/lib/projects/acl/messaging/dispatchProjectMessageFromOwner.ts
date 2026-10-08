@@ -59,7 +59,6 @@ export const dispatchProjectMessageFromOwner = async (input: {
     actorUserId: input.ownerUserId,
     toMembershipId: parsed.toMembershipId,
     toProjectDisplayName: parsed.toProjectDisplayName,
-    toTeamLabel: null,
   });
   if (!resolved.ok) return { ok: false, code: resolved.code };
   const resolvedRecipient = resolved.recipients[0];

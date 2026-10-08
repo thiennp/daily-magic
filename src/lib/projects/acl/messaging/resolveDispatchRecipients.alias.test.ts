@@ -37,7 +37,6 @@ describe("resolveDispatchRecipients membershipId + rename alias", () => {
       actorUserId: "bot-1",
       toMembershipId: "mem-ada",
       toProjectDisplayName: null,
-      toTeamLabel: null,
     });
     expect(result).toEqual({ ok: true, recipients: [adaBotRecipient] });
   });
@@ -66,7 +65,6 @@ describe("resolveDispatchRecipients membershipId + rename alias", () => {
       projectId: "proj-1",
       actorUserId: "bot-1",
       toProjectDisplayName: "Ada",
-      toTeamLabel: null,
     });
     expect(result).toEqual({ ok: true, recipients: [adaBotRecipient] });
   });
@@ -95,7 +93,6 @@ describe("resolveDispatchRecipients membershipId + rename alias", () => {
       projectId: "proj-1",
       actorUserId: "bot-1",
       toProjectDisplayName: "Ada",
-      toTeamLabel: null,
     });
     expect(result).toEqual({ ok: false, code: "recipient_not_found" });
   });

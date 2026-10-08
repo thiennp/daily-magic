@@ -47,7 +47,7 @@ export const purgeExpiredProjectMessages = async () => 0;
 export const assertProjectMessageDispatchRateLimits = async () => ({
   ok: true,
 });
-export const loadProjectMessengerBots = async () => [
+export const loadProjectMessengerBots = vi.fn(async () => [
   {
     membershipId: "mem-planner",
     userId: "user-planner",
@@ -60,7 +60,7 @@ export const loadProjectMessengerBots = async () => [
     displayName: "Research bot",
     deliveryMode: "webhook" as const,
   },
-];
+]);
 export const scheduleProjectMessageWebhookDelivery = () => undefined;
 export const wakeProjectMessageGrokRoutines = async (input: {
   readonly recipientMembershipIds: readonly string[];

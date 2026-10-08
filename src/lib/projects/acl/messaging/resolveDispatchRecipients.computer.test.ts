@@ -42,7 +42,6 @@ describe("resolveDispatchRecipients computer seat", () => {
       actorUserId: "user-owner",
       toMembershipId: "mem-mac",
       toProjectDisplayName: null,
-      toTeamLabel: null,
     });
     expect(result).toEqual({
       ok: true,
@@ -68,7 +67,6 @@ describe("resolveDispatchRecipients computer seat", () => {
       actorUserId: "user-owner",
       toMembershipId: "mem-mac",
       toProjectDisplayName: null,
-      toTeamLabel: null,
     });
     expect(result).toEqual({ ok: false, code: "recipient_not_found" });
   });

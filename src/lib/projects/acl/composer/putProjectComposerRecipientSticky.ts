@@ -11,9 +11,9 @@ import { resolveComposerRecipientStickyActor } from "@/lib/projects/acl/composer
 
 const parseMode = (raw: unknown): ProjectComposerRecipientStickyMode | null => {
   if (typeof raw !== "string") return null;
-  return (PROJECT_COMPOSER_RECIPIENT_STICKY_MODES as readonly string[]).includes(
-    raw,
-  )
+  return (
+    PROJECT_COMPOSER_RECIPIENT_STICKY_MODES as readonly string[]
+  ).includes(raw)
     ? (raw as ProjectComposerRecipientStickyMode)
     : null;
 };
@@ -35,6 +35,9 @@ export const putProjectComposerRecipientSticky = async (input: {
   if (body === null) {
     return { ok: false, code: "invalid_body" };
   }
+  if (body.mode === "all" || Array.isArray(body.membershipIds)) {
+    return { ok: false, code: "single_recipient_only" };
+  }
   const mode = parseMode(body.mode);
   if (mode === null) {
     return { ok: false, code: "invalid_body" };
@@ -45,11 +48,7 @@ export const putProjectComposerRecipientSticky = async (input: {
       ? membershipIdRaw.trim()
       : null;
 
-  if (mode === "all") {
-    if (membershipId !== null) {
-      return { ok: false, code: "invalid_body" };
-    }
-  } else if (membershipId === null) {
+  if (membershipId === null) {
     return { ok: false, code: "invalid_body" };
   }
 
@@ -76,7 +75,7 @@ export const putProjectComposerRecipientSticky = async (input: {
     projectId: input.projectId,
     actorUserId: input.actorUserId,
     mode,
-    membershipId: mode === "all" ? null : membershipId,
+    membershipId,
   });
   return { ok: true, sticky };
 };

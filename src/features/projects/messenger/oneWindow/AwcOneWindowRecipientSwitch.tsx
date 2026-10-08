@@ -34,8 +34,14 @@ export default function AwcOneWindowRecipientSwitch({
   const copy = ONE_WINDOW_COMPOSER_COPY;
   const [open, setOpen] = useState(false);
   const current = assistants.find((a) => a.membershipId === feedKey);
-  const label = current === undefined ? (wholeLabel ?? copy.chipEveryone) : formatChipLabel(current.displayName);
-  const options = [{ membershipId: WHOLE, displayName: copy.pickerEveryone }, ...assistants];
+  const label =
+    current === undefined
+      ? (wholeLabel ?? copy.chipEveryone)
+      : formatChipLabel(current.displayName);
+  const options = [
+    { membershipId: WHOLE, displayName: copy.feedWhole },
+    ...assistants,
+  ];
   return (
     <div className="relative">
       <button
@@ -50,13 +56,19 @@ export default function AwcOneWindowRecipientSwitch({
         <span aria-hidden>▾</span>
       </button>
       {open ? (
-        <div className={`${OW_MENTION_PICKER_CLASS} left-0`} role="listbox" aria-label={copy.recipientSwitch}>
+        <div
+          className={`${OW_MENTION_PICKER_CLASS} left-0`}
+          role="listbox"
+          aria-label={copy.recipientSwitch}
+        >
           {options.map((option) => (
             <button
               key={option.membershipId}
               type="button"
               role="option"
-              aria-selected={option.membershipId === (current?.membershipId ?? WHOLE)}
+              aria-selected={
+                option.membershipId === (current?.membershipId ?? WHOLE)
+              }
               className={OW_MENTION_OPTION_CLASS}
               onClick={() => {
                 setOpen(false);

@@ -23,7 +23,6 @@ export const parseOwnerPeerDispatchPayload = (
   });
   if (
     !parsed.ok ||
-    parsed.toTeamLabel !== null ||
     (parsed.toMembershipId === null && parsed.toProjectDisplayName === null) ||
     (parsed.toMembershipId !== null && parsed.toProjectDisplayName !== null)
   ) {

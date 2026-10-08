@@ -20,9 +20,10 @@ import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAu
 /**
  * Owner or member → bot thread / Whole project, in order:
  * 1. gate (owner, or human member via the shared post gate; viewer → viewer_read_only)
- * 2. parse composer body  3. pick bots (whole = every active bot)
+ * 2. parse composer body  3. pick ONE bot (whole thread only when the
+ *    project has exactly one bot, else single_recipient_required; no fan-out)
  * 4. same caps as project_dispatch
- * 5. store ONE message + one pending delivery per bot; wake runs inside insert
+ * 5. store ONE message + one pending delivery; wake runs inside insert
  *    (same message + wake path for owner and member)
  * 6. Needs a reply → existing silence watch on accepted wakes (5 min notice,
  *    10 min blocked_silent_10m = "No answer — blocked"); no second timer

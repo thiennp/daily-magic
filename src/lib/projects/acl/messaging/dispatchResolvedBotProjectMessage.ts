@@ -20,17 +20,16 @@ export const dispatchResolvedBotProjectMessage = async (input: {
 }> => {
   const { parsed, recipients } = input;
   const primary = recipients[0];
-  const addressedByMembershipOrName =
-    parsed.toMembershipId !== null || parsed.toProjectDisplayName !== null;
   const inserted = await orchestrateProjectBotToBotMessage({
     message: {
       projectId: input.projectId,
       senderMembershipId: input.senderMembershipId,
       senderProjectDisplayName: input.senderProjectDisplayName,
       senderUserId: input.actorUserId,
-      toMembershipId: addressedByMembershipOrName ? primary.id : null,
-      toUserId: addressedByMembershipOrName ? primary.user_id : null,
-      toTeamLabel: parsed.toTeamLabel,
+      // One recipient per send (093103ac): always addressed to that seat.
+      toMembershipId: primary.id,
+      toUserId: primary.user_id,
+      toTeamLabel: null,
       toProjectDisplayName: parsed.toProjectDisplayName,
       kind: parsed.kind,
       summary: parsed.summary,

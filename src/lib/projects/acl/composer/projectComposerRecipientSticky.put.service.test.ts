@@ -18,26 +18,38 @@ vi.mock("@/lib/db", () => ({
   getSql: () => sqlMock,
   asRowArray: (value: unknown) => (Array.isArray(value) ? value : []),
 }));
-vi.mock("@/lib/projects/acl/composer/resolveComposerRecipientStickyActor", () => ({
-  resolveComposerRecipientStickyActor: async () =>
-    actor.ok
-      ? {
-          ok: true,
-          projectId: "proj-1",
-          actorUserId: "owner-1",
-          ownerUserId: actor.ownerUserId,
-        }
-      : { ok: false, code: actor.code },
-}));
-vi.mock("@/lib/projects/acl/composer/loadActiveComposerRecipientAssistants", () => ({
-  loadActiveComposerRecipientAssistants: async () => assistants.seats,
-}));
-vi.mock("@/lib/projects/acl/composer/ensureProjectComposerRecipientStickySchema", () => ({
-  ensureProjectComposerRecipientStickySchema: async () => undefined,
-}));
-vi.mock("@/lib/projects/acl/composer/notifyComposerRecipientStickyCleared", () => ({
-  notifyComposerRecipientStickyCleared: notify,
-}));
+vi.mock(
+  "@/lib/projects/acl/composer/resolveComposerRecipientStickyActor",
+  () => ({
+    resolveComposerRecipientStickyActor: async () =>
+      actor.ok
+        ? {
+            ok: true,
+            projectId: "proj-1",
+            actorUserId: "owner-1",
+            ownerUserId: actor.ownerUserId,
+          }
+        : { ok: false, code: actor.code },
+  }),
+);
+vi.mock(
+  "@/lib/projects/acl/composer/loadActiveComposerRecipientAssistants",
+  () => ({
+    loadActiveComposerRecipientAssistants: async () => assistants.seats,
+  }),
+);
+vi.mock(
+  "@/lib/projects/acl/composer/ensureProjectComposerRecipientStickySchema",
+  () => ({
+    ensureProjectComposerRecipientStickySchema: async () => undefined,
+  }),
+);
+vi.mock(
+  "@/lib/projects/acl/composer/notifyComposerRecipientStickyCleared",
+  () => ({
+    notifyComposerRecipientStickyCleared: notify,
+  }),
+);
 
 const reset = (): void => {
   sqlMock.mockReset();
@@ -50,27 +62,19 @@ const reset = (): void => {
   ];
 };
 
-
 import { putProjectComposerRecipientSticky } from "@/lib/projects/acl/composer/putProjectComposerRecipientSticky";
 
 describe("sticky PUT", () => {
   beforeEach(reset);
 
-  it("PUT all persists; inactive + single_assistant blocked", async () => {
-    sqlMock.mockResolvedValueOnce([
-      {
-        mode: "all",
-        membership_id: null,
-        updated_at: "2026-10-06T00:00:00.000Z",
-      },
-    ]);
+  it("PUT all rejected; inactive + single_assistant blocked", async () => {
     expect(
       await putProjectComposerRecipientSticky({
         projectId: "proj-1",
         actorUserId: "owner-1",
         body: { mode: "all" },
       }),
-    ).toMatchObject({ ok: true, sticky: { mode: "all", membershipId: null } });
+    ).toEqual({ ok: false, code: "single_recipient_only" });
 
     sqlMock.mockResolvedValueOnce([]);
     expect(
@@ -88,7 +92,7 @@ describe("sticky PUT", () => {
       await putProjectComposerRecipientSticky({
         projectId: "proj-1",
         actorUserId: "owner-1",
-        body: { mode: "all" },
+        body: { mode: "membership", membershipId: "mem-only" },
       }),
     ).toEqual({ ok: false, code: "single_assistant" });
   });

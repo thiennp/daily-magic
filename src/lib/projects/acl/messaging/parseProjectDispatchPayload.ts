@@ -10,7 +10,6 @@ export type ParsedProjectDispatch =
       readonly refs: Readonly<Record<string, string>>;
       readonly toMembershipId: string | null;
       readonly toProjectDisplayName: string | null;
-      readonly toTeamLabel: string | null;
     }
   | { readonly ok: false; readonly code: string };
 
@@ -28,23 +27,38 @@ export const parseProjectDispatchPayload = (
     typeof body.kind === "string" && body.kind.trim().length > 0
       ? body.kind.trim().slice(0, 64)
       : null;
-  const summary =
-    typeof body.summary === "string" ? body.summary.trim() : null;
+  const summary = typeof body.summary === "string" ? body.summary.trim() : null;
   if (kind === null || summary === null) {
     return { ok: false, code: "invalid_arguments" };
   }
-  if (summary.length === 0 || summary.length > PROJECT_MESSAGE_SUMMARY_MAX_CHARS) {
+  if (
+    summary.length === 0 ||
+    summary.length > PROJECT_MESSAGE_SUMMARY_MAX_CHARS
+  ) {
     return { ok: false, code: "summary_too_large" };
   }
   if (summaryHasForbiddenContent(summary)) {
     return { ok: false, code: "forbidden_content" };
   }
+
+  // Reject array-valued recipient fields and toTeamLabel entirely
+  if (
+    Array.isArray(body.toMembershipId) ||
+    Array.isArray(body.toProjectDisplayName) ||
+    "toMembershipIds" in body ||
+    "membershipIds" in body ||
+    "recipients" in body ||
+    "toProjectDisplayNames" in body ||
+    ("toTeamLabel" in body &&
+      typeof body.toTeamLabel === "string" &&
+      body.toTeamLabel.trim().length > 0)
+  ) {
+    return { ok: false, code: "single_recipient_required" };
+  }
+
   const toMembershipId = asNonEmptyString(body.toMembershipId);
   const toProjectDisplayName = asNonEmptyString(body.toProjectDisplayName);
-  const toTeamLabelRaw = asNonEmptyString(body.toTeamLabel);
-  const toTeamLabel =
-    toTeamLabelRaw !== null ? toTeamLabelRaw.slice(0, 64) : null;
-  const addressCount = [toMembershipId, toProjectDisplayName, toTeamLabel].filter(
+  const addressCount = [toMembershipId, toProjectDisplayName].filter(
     (value) => value !== null,
   ).length;
   if (addressCount === 0) {
@@ -67,6 +81,5 @@ export const parseProjectDispatchPayload = (
     refs: parsedRefs.refs,
     toMembershipId,
     toProjectDisplayName,
-    toTeamLabel,
   };
 };

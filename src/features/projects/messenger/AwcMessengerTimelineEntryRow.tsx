@@ -6,10 +6,7 @@ import AwcOneWindowSystemEntry, {
   isOneWindowSystemKind,
 } from "@/features/projects/messenger/oneWindow/AwcOneWindowSystemEntry";
 import AwcOneWindowTaskCard from "@/features/projects/messenger/oneWindow/AwcOneWindowTaskCard";
-import {
-  formatChipLabel,
-  formatChipLabelMany,
-} from "@/features/projects/messenger/oneWindow/formatOneWindowComposerCopy";
+import { formatChipLabel } from "@/features/projects/messenger/oneWindow/formatOneWindowComposerCopy";
 import { mapMessengerEntryToOneWindowItem } from "@/features/projects/messenger/oneWindow/mapMessengerEntryToOneWindowItem";
 import type {
   AwcMessengerStateChip,
@@ -39,9 +36,7 @@ const formatRecipients = (
     .map((chip) => chip.displayName?.trim() ?? "")
     .filter((name) => name.length > 0);
   if (names.length === 0) return null;
-  return names.length === 1
-    ? formatChipLabel(names[0])
-    : formatChipLabelMany(names[0], names.length - 1);
+  return formatChipLabel(names[0]);
 };
 
 export default function AwcMessengerTimelineEntryRow({

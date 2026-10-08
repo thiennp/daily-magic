@@ -7,17 +7,25 @@ export type ProjectMessengerRecipients =
       readonly whole: boolean;
       readonly recipients: readonly ProjectMessengerBotSeat[];
     }
-  | { readonly ok: false; readonly code: "thread_not_found" | "no_bots" };
+  | {
+      readonly ok: false;
+      readonly code:
+        "thread_not_found" | "no_bots" | "single_recipient_required";
+    };
 
-/** Thread key → bot recipients: Whole project = every active bot; else that one bot. */
+/** Thread key → bot recipients: Whole project = exactly one active bot; else that one bot. */
 export const pickProjectMessengerRecipients = (input: {
   readonly threadKey: string;
   readonly bots: readonly ProjectMessengerBotSeat[];
 }): ProjectMessengerRecipients => {
   if (input.threadKey === PROJECT_MESSENGER_WHOLE_THREAD_KEY) {
-    return input.bots.length === 0
-      ? { ok: false, code: "no_bots" }
-      : { ok: true, whole: true, recipients: input.bots };
+    if (input.bots.length === 0) {
+      return { ok: false, code: "no_bots" };
+    }
+    if (input.bots.length > 1) {
+      return { ok: false, code: "single_recipient_required" };
+    }
+    return { ok: true, whole: true, recipients: input.bots };
   }
   const bot = input.bots.find((seat) => seat.membershipId === input.threadKey);
   return bot === undefined

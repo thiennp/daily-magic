@@ -1,7 +1,7 @@
 import type { MessengerKeptRecipient } from "@/features/projects/messenger/types/messengerChatStore.type";
 
 /** COMPOSER-LOCK visible modes (PICKING is transient UI overlay). */
-export type OneWindowComposerMode = "EVERYONE" | "KEPT" | "SINGLE";
+export type OneWindowComposerMode = "PICK" | "KEPT" | "SINGLE";
 
 export type OneWindowComposerModeInput = {
   readonly assistantCount: number;
@@ -18,7 +18,7 @@ export type OneWindowComposerModeResult = {
 
 /**
  * Resolve chrome mode from assistant count + kept sticky.
- * PICKING is overlay on EVERYONE (picker open); SINGLE hides all routing.
+ * PICKING is overlay on PICK (picker open); SINGLE hides all routing.
  */
 export const resolveOneWindowComposerMode = (
   input: OneWindowComposerModeInput,
@@ -30,7 +30,7 @@ export const resolveOneWindowComposerMode = (
     return { mode: "KEPT", picking: false, hideAllRoutingUi: false };
   }
   return {
-    mode: "EVERYONE",
+    mode: "PICK",
     picking: input.picking,
     hideAllRoutingUi: false,
   };

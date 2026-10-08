@@ -21,7 +21,7 @@ export const writeProjectMessageDispatchAudit = async (input: {
       recipientCount: input.recipientCount,
       toMembershipId: input.parsed.toMembershipId,
       toProjectDisplayName: input.parsed.toProjectDisplayName,
-      toTeamLabel: input.parsed.toTeamLabel,
+      toTeamLabel: null,
     },
   });
 };

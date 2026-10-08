@@ -62,14 +62,6 @@ export const decideComposerRecipientRouting = (
 
   // No @: checked sticky → use it, no popup.
   if (input.stickyChecked && input.sticky !== null) {
-    if (input.sticky.mode === "all") {
-      return {
-        kind: "use_sticky_all",
-        showPopup: false,
-        hideAllRoutingUi: false,
-        stickyUntouched: true,
-      };
-    }
     if (
       input.sticky.mode === "membership" &&
       typeof input.sticky.membershipId === "string" &&

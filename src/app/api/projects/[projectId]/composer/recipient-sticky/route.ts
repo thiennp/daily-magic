@@ -13,7 +13,7 @@ const statusForCode = (code: string): number => {
   if (code === "not_found") return 404;
   if (code === "forbidden" || code === "viewer_read_only") return 403;
   if (code === "membership_inactive" || code === "single_assistant") return 409;
-  if (code === "invalid_body") return 400;
+  if (code === "invalid_body" || code === "single_recipient_only") return 400;
   return 400;
 };
 
