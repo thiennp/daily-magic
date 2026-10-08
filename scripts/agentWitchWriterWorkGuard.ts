@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import crypto from "node:crypto";
 import path from "node:path";
 
 import { isProcessAlive } from "./isProcessAlive";
@@ -21,12 +22,23 @@ export const AGENT_WITCH_WRITER_WORK_STATE_FILE_NAME =
  */
 export const AGENT_WITCH_WRITER_WORK_STALE_MS = 24 * 60 * 60 * 1000;
 
+export interface AgentWitchWriterWorkEntry {
+  readonly id: string;
+  readonly ownerPid: number;
+  readonly startedAt: string;
+  readonly childPid?: number;
+  readonly inProcess?: boolean;
+}
+
 export interface AgentWitchWriterWorkState {
   readonly activeCount: number;
   readonly updatedAt: string;
   /** Pid of the AWL process that last changed the counter (absent in legacy files). */
   readonly ownerPid?: number;
+  readonly entries?: readonly AgentWitchWriterWorkEntry[];
 }
+
+export const AGENT_WITCH_WRITER_PRE_SPAWN_GRACE_MS = 2 * 60 * 1000;
 
 type WriterWorkIdleListener = () => void;
 
@@ -34,6 +46,16 @@ const idleListeners = new Set<WriterWorkIdleListener>();
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
+
+const isWriterWorkEntry = (
+  value: unknown,
+): value is AgentWitchWriterWorkEntry =>
+  isRecord(value) &&
+  typeof value.id === "string" &&
+  typeof value.ownerPid === "number" &&
+  typeof value.startedAt === "string" &&
+  (value.childPid === undefined || typeof value.childPid === "number") &&
+  (value.inProcess === undefined || typeof value.inProcess === "boolean");
 
 export const resolveAgentWitchWriterWorkStatePath = (
   layout: AgentWitchLocalLayout,
@@ -80,6 +102,9 @@ export const readAgentWitchWriterWorkState = (
       activeCount,
       updatedAt: parsed.updatedAt,
       ...(ownerPid !== undefined ? { ownerPid } : {}),
+      ...(Array.isArray(parsed.entries)
+        ? { entries: parsed.entries.filter(isWriterWorkEntry) }
+        : {}),
     };
   } catch {
     return { activeCount: 0, updatedAt: new Date(0).toISOString() };
@@ -101,6 +126,43 @@ export interface AgentWitchWriterWorkStalenessInput {
 }
 
 /**
+ * An entry is live only while its AWL owner process lives AND either a
+ * registered writer child / PTY pid is still alive, or (no pid yet) it is
+ * inside the short pre-spawn window. In-process writer API calls have no
+ * child pid and stay live until ended. A parked run (waiting for a human
+ * answer) has no entry, so it never blocks bundle updates.
+ */
+const isEntryLive = (
+  entry: AgentWitchWriterWorkEntry,
+  input: AgentWitchWriterWorkStalenessInput,
+): boolean => {
+  const isPidAlive = input.isPidAlive ?? isProcessAlive;
+  const nowMs = input.nowMs ?? Date.now();
+
+  const startedAtMs = Date.parse(entry.startedAt);
+  if (
+    Number.isNaN(startedAtMs) ||
+    nowMs - startedAtMs > AGENT_WITCH_WRITER_WORK_STALE_MS
+  ) {
+    return false;
+  }
+
+  if (!isPidAlive(entry.ownerPid)) {
+    return false;
+  }
+
+  if (entry.inProcess) {
+    return true;
+  }
+
+  if (entry.childPid !== undefined) {
+    return isPidAlive(entry.childPid);
+  }
+
+  return nowMs - startedAtMs <= AGENT_WITCH_WRITER_PRE_SPAWN_GRACE_MS;
+};
+
+/**
  * A non-zero counter is stale when its owner process is gone (writers run
  * in-process, so they died with it) or when it has not changed for
  * `AGENT_WITCH_WRITER_WORK_STALE_MS`. Without this, a counter leaked by a
@@ -114,32 +176,34 @@ export const isAgentWitchWriterWorkStateStale = (
     return false;
   }
 
-  const isPidAlive = input.isPidAlive ?? isProcessAlive;
-  if (state.ownerPid !== undefined && !isPidAlive(state.ownerPid)) {
+  if (!state.entries) {
+    // Legacy file healing: activeCount > 0 but no entries means it is legacy.
     return true;
   }
 
-  const updatedAtMs = Date.parse(state.updatedAt);
-  if (Number.isNaN(updatedAtMs)) {
-    return true;
-  }
-
-  const nowMs = input.nowMs ?? Date.now();
-  return nowMs - updatedAtMs > AGENT_WITCH_WRITER_WORK_STALE_MS;
+  const liveCount = state.entries.filter((e) => isEntryLive(e, input)).length;
+  return liveCount !== state.activeCount || liveCount !== state.entries.length;
 };
 
 /** Reads the counter and self-heals (resets to 0 on disk) when it is stale. */
 const readLiveAgentWitchWriterWorkState = (
   layout: AgentWitchLocalLayout,
+  input: AgentWitchWriterWorkStalenessInput = {},
 ): AgentWitchWriterWorkState => {
   const state = readAgentWitchWriterWorkState(layout);
-  if (!isAgentWitchWriterWorkStateStale(state)) {
+  if (!isAgentWitchWriterWorkStateStale(state, input)) {
     return state;
   }
 
+  const liveEntries = (state.entries || []).filter((e) =>
+    isEntryLive(e, input),
+  );
+
   const reset: AgentWitchWriterWorkState = {
-    activeCount: 0,
+    activeCount: liveEntries.length,
     updatedAt: new Date().toISOString(),
+    ownerPid: process.pid,
+    entries: liveEntries,
   };
   try {
     writeAgentWitchWriterWorkState(layout, reset);
@@ -155,27 +219,84 @@ export const isAgentWitchWriterWorkInProgress = (
 
 export const beginAgentWitchWriterWork = (
   layout: AgentWitchLocalLayout,
-): void => {
+  workId?: string,
+  inProcess?: boolean,
+): string => {
   const current = readLiveAgentWitchWriterWorkState(layout);
+  const id = workId ?? crypto.randomUUID();
+  const newEntry: AgentWitchWriterWorkEntry = {
+    id,
+    ownerPid: process.pid,
+    startedAt: new Date().toISOString(),
+    ...(inProcess ? { inProcess: true } : {}),
+  };
+  // A continuation re-begins the same run id: replace, never duplicate.
+  const entries = [
+    ...(current.entries ?? []).filter((entry) => entry.id !== id),
+    newEntry,
+  ];
   writeAgentWitchWriterWorkState(layout, {
-    activeCount: current.activeCount + 1,
+    activeCount: entries.length,
     updatedAt: new Date().toISOString(),
     ownerPid: process.pid,
+    entries,
+  });
+  return id;
+};
+
+export const registerAgentWitchWriterWorkPid = (
+  layout: AgentWitchLocalLayout,
+  workId: string,
+  pid: number,
+): void => {
+  const current = readLiveAgentWitchWriterWorkState(layout);
+  if (!current.entries) {
+    return;
+  }
+  const index = current.entries.findIndex((e) => e.id === workId);
+  if (index === -1) {
+    return;
+  }
+  const nextEntries = [...current.entries];
+  nextEntries[index] = { ...nextEntries[index], childPid: pid };
+  writeAgentWitchWriterWorkState(layout, {
+    activeCount: nextEntries.length,
+    updatedAt: new Date().toISOString(),
+    ownerPid: process.pid,
+    entries: nextEntries,
   });
 };
 
 export const endAgentWitchWriterWork = (
   layout: AgentWitchLocalLayout,
+  workId?: string,
 ): void => {
   const current = readLiveAgentWitchWriterWorkState(layout);
-  const nextCount = Math.max(0, current.activeCount - 1);
+  const nextEntries = [...(current.entries || [])];
+
+  if (workId !== undefined) {
+    const index = nextEntries.findIndex((e) => e.id === workId);
+    if (index === -1) {
+      return;
+    }
+    nextEntries.splice(index, 1);
+  } else {
+    for (let i = nextEntries.length - 1; i >= 0; i--) {
+      if (nextEntries[i].ownerPid === process.pid) {
+        nextEntries.splice(i, 1);
+        break;
+      }
+    }
+  }
+
   writeAgentWitchWriterWorkState(layout, {
-    activeCount: nextCount,
+    activeCount: nextEntries.length,
     updatedAt: new Date().toISOString(),
     ownerPid: process.pid,
+    entries: nextEntries,
   });
 
-  if (nextCount === 0) {
+  if (nextEntries.length === 0) {
     for (const listener of idleListeners) {
       listener();
     }

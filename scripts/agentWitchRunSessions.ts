@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import { spawn, type ChildProcess } from "node:child_process";
 
 import {
@@ -79,6 +80,7 @@ import type WriterLlmUsage from "@/lib/agentWitch/writerLlmUsage.type";
 
 import {
   beginAgentWitchWriterWork,
+  registerAgentWitchWriterWorkPid,
   endAgentWitchWriterWork,
 } from "./agentWitchWriterWorkGuard";
 
@@ -499,7 +501,7 @@ const finishRun = (
     requestId,
   });
 
-  endAgentWitchWriterWork(config.layout);
+  endAgentWitchWriterWork(config.layout, agentRunId);
 };
 
 const requestRunInput = (
@@ -511,6 +513,7 @@ const requestRunInput = (
   partialOutput: string,
   originalPrompt: string,
 ): void => {
+  endAgentWitchWriterWork(config.layout, agentRunId);
   const session = runSessions.get(agentRunId);
   const accumulatedOutput = session?.accumulatedOutput ?? partialOutput;
   // The CLI has exited while we wait for a human answer; the continuation
@@ -825,7 +828,9 @@ export const runWriterTask = (
     userTranscriptPrompt,
   );
 
-  beginAgentWitchWriterWork(config.layout);
+  const workId = agentRunId ?? crypto.randomUUID();
+  const isApi = shouldUseWriterApi(config, writerAgent);
+  beginAgentWitchWriterWork(config.layout, workId, isApi);
 
   const refuse = (code: LocalCodingToolRefusalCodeValue): void => {
     finishRun(
@@ -910,6 +915,9 @@ export const runWriterTask = (
       // Own process group so a stop / session limit kills the whole tree.
       detached: process.platform !== "win32",
     });
+    if (child.pid !== undefined) {
+      registerAgentWitchWriterWorkPid(config.layout, workId, child.pid);
+    }
     attachChildHandlers(
       config,
       child,
@@ -990,6 +998,9 @@ export const runWriterTask = (
     processEnv,
     originalPrompt: prompt,
     writerAgent,
+    onSpawned: (pid) => {
+      registerAgentWitchWriterWorkPid(config.layout, workId, pid);
+    },
     onInputRequired: (parsed) => {
       if (shellSessionId !== undefined) {
         closeShellPtySession(

@@ -25,6 +25,7 @@ export const tryRunWriterTaskInPty = async (input: {
   readonly processEnv?: NodeJS.ProcessEnv;
   readonly originalPrompt: string;
   readonly writerAgent: HarnessWriterAgentId;
+  readonly onSpawned: (pid: number) => void;
   readonly onInputRequired: (parsed: {
     readonly question: string;
     readonly partialOutput: string;
@@ -90,6 +91,10 @@ export const tryRunWriterTaskInPty = async (input: {
       input.onFinished(exitCode, outputChunks.join("").trim());
     },
   });
+
+  if (spawned.pid !== undefined) {
+    input.onSpawned(spawned.pid);
+  }
 
   return spawned.usedPty;
 };

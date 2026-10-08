@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import { spawn } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -123,6 +124,7 @@ import {
   applyAutomationsRunFromCloud,
   applyAutomationsSyncFromCloud,
   beginAgentWitchWriterWork,
+  registerAgentWitchWriterWorkPid,
   buildDefaultUserProjectFolderPath,
   deferAgentWitchInstallBundleUpdate,
   deferAgentWitchLocalRestart,
@@ -753,6 +755,7 @@ const runWriterProcess = (
   config: AgentWitchConfig,
   writerAgent: string,
   instruction: string,
+  onSpawned?: (pid: number) => void,
 ): Promise<{ readonly exitCode: number; readonly output: string }> =>
   new Promise((resolve) => {
     if (!isHarnessWriterAgentId(writerAgent)) {
@@ -788,6 +791,10 @@ const runWriterProcess = (
       stdio: ["ignore", "pipe", "pipe"],
       env: process.env,
     });
+
+    if (child.pid !== undefined) {
+      onSpawned?.(child.pid);
+    }
 
     child.stdout?.on("data", (chunk: Buffer) => {
       outputChunks.push(chunk.toString("utf8"));
@@ -985,7 +992,8 @@ const runHarnessRequest = async (
     return;
   }
 
-  beginAgentWitchWriterWork(config.layout);
+  const workId = crypto.randomUUID();
+  beginAgentWitchWriterWork(config.layout, workId);
   const result = await (async () => {
     try {
       await ensureHarnessWriterCli(config.layout.installDir, writerAgent);
@@ -997,9 +1005,11 @@ const runHarnessRequest = async (
       };
     }
 
-    return runWriterProcess(config, writerAgent, instruction);
+    return runWriterProcess(config, writerAgent, instruction, (pid) => {
+      registerAgentWitchWriterWorkPid(config.layout, workId, pid);
+    });
   })().finally(() => {
-    endAgentWitchWriterWork(config.layout);
+    endAgentWitchWriterWork(config.layout, workId);
   });
 
   sendMessage(socket, {

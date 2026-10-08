@@ -44,6 +44,7 @@ export {
 } from "../../../scripts/runLocalInstallBundleUpdate";
 export {
   beginAgentWitchWriterWork,
+  registerAgentWitchWriterWorkPid,
   deferAgentWitchInstallBundleUpdate,
   deferAgentWitchLocalRestart,
   endAgentWitchWriterWork,

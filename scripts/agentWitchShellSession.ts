@@ -257,7 +257,11 @@ export const spawnAgentCommandInPty = async (input: {
   readonly requestId?: string;
   readonly onData: (chunk: string) => void;
   readonly onExit: (exitCode: number) => void;
-}): Promise<{ readonly shellSessionId: string; readonly usedPty: boolean }> => {
+}): Promise<{
+  readonly shellSessionId: string;
+  readonly usedPty: boolean;
+  readonly pid?: number;
+}> => {
   const shellSessionId = input.shellSessionId ?? randomUUID();
   const pty = await loadPty();
   if (pty === null) {
@@ -316,7 +320,7 @@ export const spawnAgentCommandInPty = async (input: {
     input.onExit(exitCode ?? -1);
   });
 
-  return { shellSessionId, usedPty: true };
+  return { shellSessionId, usedPty: true, pid: child.pid };
 };
 
 export const clearShellPtySessionsForTests = (): void => {
