@@ -173,7 +173,11 @@ struct ComputerView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 if controller.portsInUse { portsBanner }
+<<<<<<< Updated upstream
                 if chrome.kind == .waitingForInternet { offlineBanner }
+=======
+                if isRunning && controller.connectionNotLinked { notLinkedBanner }
+>>>>>>> Stashed changes
                 heroCard
                 thisComputerCard
                 toolsCard
@@ -202,6 +206,7 @@ struct ComputerView: View {
         .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.dangerSoft))
     }
 
+<<<<<<< Updated upstream
     private var offlineBanner: some View {
         HStack(spacing: 12) {
             Image(systemName: "wifi.slash")
@@ -217,6 +222,26 @@ struct ComputerView: View {
         .padding(.horizontal, 16).padding(.vertical, 12)
         .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.warningSoft))
         .accessibilityElement(children: .combine)
+=======
+    /// Cloud revoked or replaced this computer. It cannot recover by itself, so offer the
+    /// same browser sign-in the first-run flow uses (no Terminal).
+    private var notLinkedBanner: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "link.badge.plus")
+            VStack(alignment: .leading, spacing: 2) {
+                Text("This computer is not linked to your account")
+                    .font(.system(size: 13, weight: .semibold))
+                Text("It was replaced or removed in AgentWitch. Sign in again to reconnect it.")
+                    .font(.system(size: 12)).foregroundStyle(MacAppTheme.fgMuted)
+            }
+            Spacer()
+            Button("Reconnect") { controller.beginAccountSignIn() }
+                .buttonStyle(.borderedProminent).tint(MacAppTheme.brand)
+        }
+        .foregroundStyle(MacAppTheme.danger)
+        .padding(.horizontal, 16).padding(.vertical, 12)
+        .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.dangerSoft))
+>>>>>>> Stashed changes
     }
 
     private var heroCard: some View {
@@ -262,6 +287,9 @@ struct ComputerView: View {
     private var heroSubtitle: String {
         switch chrome.kind {
         case .running:
+            if controller.connectionNotLinked {
+                return "Running, but this computer is not linked to your account."
+            }
             return controller.connectionLive == false
                 ? "Running, but AgentWitch cannot reach this computer yet."
                 : "Assistants in your projects can use this computer."
@@ -324,6 +352,9 @@ struct ComputerView: View {
 
     private var connectionDetail: String {
         if !isRunning { return "Lets your projects reach this computer" }
+        if controller.connectionNotLinked {
+            return "Not linked to your account. Use Reconnect to sign in again."
+        }
         switch controller.connectionLive {
         case true?: return "Lets your projects reach this computer · connected"
         case false?: return "Not connected to AgentWitch yet. It retries by itself."
@@ -335,6 +366,7 @@ struct ComputerView: View {
         if chrome.kind == .waitingForInternet { return ("Waiting for internet", .waitingForInternet) }
         if controller.portsInUse { return ("Problem", .problem) }
         if !isRunning { return ("Stopped", .stopped) }
+        if controller.connectionNotLinked { return ("Not linked", .problem) }
         switch controller.connectionLive {
         case true?: return ("Connected", .running)
         case false?: return ("Not connected", .problem)

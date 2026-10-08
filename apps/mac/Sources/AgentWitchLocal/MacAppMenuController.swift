@@ -82,6 +82,8 @@ final class MacAppMenuController: ObservableObject {
     @Published private(set) var portsInUse: Bool = false
     /// AWB: local `/health` `wsConnected` (nil when no healthy listener was found).
     @Published private(set) var connectionLive: Bool?
+    /// AWB: `/health` says the cloud revoked or replaced this computer (needs a new sign-in).
+    @Published private(set) var connectionNotLinked: Bool = false
     /// AWI: install bundle version from local `/health` (e.g. "270").
     @Published private(set) var installBundleVersion: String?
     /// Plain line from GET /api/local/projects/folder, e.g. "AgentWitch uses ~/daily-magic (git repo).".
@@ -340,6 +342,7 @@ final class MacAppMenuController: ObservableObject {
         signedInEmail = nil
         chromeComputerBound = false
         connectionLive = nil
+        connectionNotLinked = false
         projectFolderSummary = nil
         forgetBoundAccount()
         localPortRange = nil
@@ -819,6 +822,7 @@ final class MacAppMenuController: ObservableObject {
             }
         }
         connectionLive = nil
+        connectionNotLinked = false
         // No healthy listener: honor exhausted marker from local-app-port.json
         // (written when preflight fails — /health never comes up).
         if let profileDir,
@@ -860,6 +864,7 @@ final class MacAppMenuController: ObservableObject {
                 localAppPort = port
             }
             connectionLive = json["wsConnected"] as? Bool
+            connectionNotLinked = parseLocalConnectionLinkState(json) == .notLinked
             if connectionLive == true, let email = signedInEmail {
                 rememberBoundAccount(email)
             }

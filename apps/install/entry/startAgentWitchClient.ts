@@ -2374,9 +2374,12 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     stop,
     hasMacSocketOpen: () => state.wsConnected,
     getStatus: () => ({
-      wsConnected: resolveAgentWitchLocalWsConnected(config.layout, {
-        socketOpen: state.wsConnected,
-      }),
+      wsConnected:
+        !state.notLinked &&
+        resolveAgentWitchLocalWsConnected(config.layout, {
+          socketOpen: state.wsConnected,
+        }),
+      notLinked: state.notLinked,
       lastHeartbeatAt: state.lastHeartbeatAt,
       wakeError: state.wakeError,
       linkCode: null,

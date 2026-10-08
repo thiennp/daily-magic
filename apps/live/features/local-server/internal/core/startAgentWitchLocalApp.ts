@@ -221,6 +221,8 @@ const loadCloudProjectsForLocalApp = async (
 
 type LocalAppStatus = {
   readonly wsConnected: boolean;
+  /** Cloud says this computer is revoked/unlinked: it will not recover by itself. */
+  readonly notLinked?: boolean;
   readonly lastHeartbeatAt: string | null;
   readonly wakeError: string | null;
   readonly linkCode: string | null;
@@ -337,7 +339,9 @@ const buildStatusBody = (input: {
     : `<span class="badge badge-offline">Not linked</span>`;
   const notLinkedHint = input.status.wsConnected
     ? ""
-    : `<p class="status-hint">This computer is not linked to AgentWitch cloud (token missing or revoked). Open Home → Connect this computer for a fresh install command — do not reuse an old one.</p>`;
+    : input.status.notLinked === true
+      ? `<p class="status-hint">This computer is not linked to your account anymore (it was replaced or removed). It will not recover by itself. In the AgentWitch menu bar app choose <strong>Reconnect</strong> and sign in, or copy a fresh command from Home → Connect this computer.</p>`
+      : `<p class="status-hint">This computer is not linked to AgentWitch cloud (token missing or revoked). Open Home → Connect this computer for a fresh install command — do not reuse an old one.</p>`;
   const healthBadge = buildLocalAppHealthFileBadgeHtml(input.healthBadge);
   const wakeError = input.status.wakeError
     ? `<div class="alert-error">${escapeHtml(input.status.wakeError)}</div>`
