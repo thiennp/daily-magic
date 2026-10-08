@@ -45,6 +45,13 @@ describe("migration 109 project_task_records shape (DF-024)", () => {
 
   it("runtime ensure mirrors the migration", () => {
     expect(ensure).toContain("109-project-task-records.sql");
-    for (const column of COLUMNS) expect(ensure).toContain(column);
+    for (const column of COLUMNS) {
+      if (column.startsWith("status IN")) continue; // updated in 116
+      expect(ensure).toContain(column);
+    }
+    expect(ensure).toContain(
+      "status IN ('queued', 'planned', 'in_progress', 'blocked', 'done', 'cancelled')",
+    );
+    expect(ensure).toContain("cancelled_at TIMESTAMPTZ");
   });
 });

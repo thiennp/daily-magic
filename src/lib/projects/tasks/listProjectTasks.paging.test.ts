@@ -68,5 +68,7 @@ describe("listProjectTasks — filter + paging", () => {
       code: "invalid_cursor",
     });
     expect(h.calls).toHaveLength(0);
+    const okRun = await run({ projectId: "p1", status: "cancelled" });
+    expect(okRun.ok).toBe(true);
   });
 });

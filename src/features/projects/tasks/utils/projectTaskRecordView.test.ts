@@ -55,6 +55,7 @@ describe("projectTaskRecordView", () => {
       queued: 2,
       planned: 0,
       done: 1,
+      cancelled: 0,
     });
   });
 

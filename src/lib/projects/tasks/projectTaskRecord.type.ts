@@ -24,6 +24,7 @@ export type ProjectTaskRecord = {
   readonly startedAt: string | null;
   readonly blockedAt: string | null;
   readonly doneAt: string | null;
+  readonly cancelledAt: string | null;
   /** stageChangedAt per step: { design: iso, build: iso, … }. */
   readonly stageTimes: Readonly<Partial<Record<ProjectTaskStage, string>>>;
   readonly createdAt: string;

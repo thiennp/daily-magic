@@ -13,6 +13,7 @@ describe("linear task mapping", () => {
     expect(linearStateTypeForStatus("planned")).toBe("backlog");
     expect(linearStateTypeForStatus("blocked")).toBe("started");
     expect(linearStateTypeForStatus("done")).toBe("completed");
+    expect(linearStateTypeForStatus("cancelled")).toBe("canceled");
   });
 
   it("maps Linear state type back, honouring the Blocked label", () => {
@@ -22,7 +23,7 @@ describe("linear task mapping", () => {
     expect(statusFromLinearState("started", false)).toBe("in_progress");
     expect(statusFromLinearState("started", true)).toBe("blocked");
     expect(statusFromLinearState("completed", false)).toBe("done");
-    expect(statusFromLinearState("canceled", false)).toBe("done");
+    expect(statusFromLinearState("canceled", false)).toBe("cancelled");
   });
 
   it("maps priorities both ways", () => {

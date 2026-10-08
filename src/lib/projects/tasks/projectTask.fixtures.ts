@@ -38,6 +38,7 @@ export const projectTaskRecordFixture = (
   startedAt: null,
   blockedAt: null,
   doneAt: null,
+  cancelledAt: null,
   stageTimes: {},
   createdAt: "2026-10-07T10:00:00.000Z",
   updatedAt: "2026-10-07T10:00:00.000Z",

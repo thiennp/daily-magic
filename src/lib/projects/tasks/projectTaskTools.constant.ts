@@ -10,6 +10,7 @@ export const PROJECT_TASK_STATUSES = [
   "in_progress",
   "blocked",
   "done",
+  "cancelled",
 ] as const;
 export type ProjectTaskStatus = (typeof PROJECT_TASK_STATUSES)[number];
 
@@ -36,15 +37,17 @@ export const PROJECT_TASK_INITIAL_STATUSES: readonly ProjectTaskStatus[] = [
  * Allowed moves: queued ⇄ planned → in_progress ⇄ blocked; in_progress → done.
  * Anyone may stop work (in_progress | blocked → queued, "To do") or reopen a
  * finished task (done → queued).
+ * Terminal cancelled is allowed from any open status; reopen → queued.
  */
 export const PROJECT_TASK_TRANSITIONS: Readonly<
   Record<ProjectTaskStatus, readonly ProjectTaskStatus[]>
 > = {
-  queued: ["planned", "in_progress"],
-  planned: ["queued", "in_progress"],
-  in_progress: ["blocked", "done", "queued"],
-  blocked: ["in_progress", "queued"],
+  queued: ["planned", "in_progress", "cancelled"],
+  planned: ["queued", "in_progress", "cancelled"],
+  in_progress: ["blocked", "done", "queued", "cancelled"],
+  blocked: ["in_progress", "queued", "cancelled"],
   done: ["queued"],
+  cancelled: ["queued"],
 };
 
 export const PROJECT_TASK_TITLE_MAX_CHARS = 120;

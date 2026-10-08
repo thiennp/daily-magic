@@ -48,6 +48,7 @@ const parseRow = (value: unknown): ProjectTaskRecord | null => {
     startedAt: str(row.startedAt),
     blockedAt: str(row.blockedAt),
     doneAt: str(row.doneAt),
+    cancelledAt: str(row.cancelledAt),
     stageTimes: parseStageTimes(row.stageTimes),
     createdAt: str(row.createdAt) ?? "",
     updatedAt: str(row.updatedAt) ?? "",

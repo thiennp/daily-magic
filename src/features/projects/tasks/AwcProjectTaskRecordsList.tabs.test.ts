@@ -46,6 +46,7 @@ describe("AwcProjectTaskRecordsList tabs + sort", () => {
       "queued",
       "planned",
       "done",
+      "cancelled",
     ]) {
       expect(html).toContain(`data-task-record-tab="${t}"`);
     }

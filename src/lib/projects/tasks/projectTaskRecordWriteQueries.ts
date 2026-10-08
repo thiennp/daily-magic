@@ -76,6 +76,8 @@ export const updateProjectTaskRecord = async (input: {
           THEN NOW() ELSE blocked_at END,
         done_at = CASE WHEN ${v.status} = 'done'
           THEN COALESCE(done_at, NOW()) ELSE done_at END,
+        cancelled_at = CASE WHEN ${v.status} = 'cancelled'
+          THEN COALESCE(cancelled_at, NOW()) ELSE cancelled_at END,
         stage_times = CASE
           WHEN ${v.stage}::text IS NOT NULL AND stage IS DISTINCT FROM ${v.stage}::text
           THEN stage_times || jsonb_build_object(${v.stage}::text, NOW())

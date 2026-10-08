@@ -14,6 +14,7 @@ describe("projectTaskStatusChoices", () => {
       "blocked",
       "in_progress",
       "queued",
+      "cancelled",
     ]);
   });
 });

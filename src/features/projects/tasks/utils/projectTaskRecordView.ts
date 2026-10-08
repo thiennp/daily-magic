@@ -14,6 +14,7 @@ export const PROJECT_TASK_RECORD_TABS: readonly ProjectTaskRecordTab[] = [
   "queued",
   "planned",
   "done",
+  "cancelled",
 ];
 
 export const PROJECT_TASK_RECORD_SORT_KEYS: readonly ProjectTaskRecordSortKey[] =
@@ -37,6 +38,7 @@ const STATUS_RANK: Record<ProjectTaskStatus, number> = {
   queued: 2,
   planned: 3,
   done: 4,
+  cancelled: 5,
 };
 
 export const countProjectTaskRecordsByTab = (
@@ -49,6 +51,7 @@ export const countProjectTaskRecordsByTab = (
     queued: 0,
     planned: 0,
     done: 0,
+    cancelled: 0,
   };
   for (const r of records) counts[r.status] += 1;
   return counts;

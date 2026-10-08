@@ -51,6 +51,7 @@ export const mapProjectTaskRecordRow = (
   startedAt: isoOrNull(row.started_at),
   blockedAt: isoOrNull(row.blocked_at),
   doneAt: isoOrNull(row.done_at),
+  cancelledAt: isoOrNull(row.cancelled_at),
   stageTimes: toStageTimes(row.stage_times),
   createdAt: iso(row.created_at),
   updatedAt: iso(row.updated_at),

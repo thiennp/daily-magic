@@ -9,14 +9,19 @@ import {
 const ALLOWED: readonly (readonly [ProjectTaskStatus, ProjectTaskStatus])[] = [
   ["queued", "planned"],
   ["queued", "in_progress"],
+  ["queued", "cancelled"],
   ["planned", "queued"],
   ["planned", "in_progress"],
+  ["planned", "cancelled"],
   ["in_progress", "blocked"],
   ["in_progress", "done"],
-  ["blocked", "in_progress"],
   ["in_progress", "queued"],
+  ["in_progress", "cancelled"],
+  ["blocked", "in_progress"],
   ["blocked", "queued"],
+  ["blocked", "cancelled"],
   ["done", "queued"],
+  ["cancelled", "queued"],
 ];
 
 describe("decideProjectTaskStatusUpdate (DF-024 FSM)", () => {

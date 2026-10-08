@@ -16,6 +16,7 @@ const STATE_TYPE_BY_STATUS: Readonly<
   in_progress: "started",
   blocked: "started",
   done: "completed",
+  cancelled: "canceled",
 };
 
 export const linearStateTypeForStatus = (
@@ -29,7 +30,8 @@ export const statusFromLinearState = (
 ): ProjectTaskStatus => {
   if (type === "backlog") return "planned";
   if (type === "started") return isBlocked ? "blocked" : "in_progress";
-  if (type === "completed" || type === "canceled") return "done";
+  if (type === "completed") return "done";
+  if (type === "canceled") return "cancelled";
   return "queued";
 };
 

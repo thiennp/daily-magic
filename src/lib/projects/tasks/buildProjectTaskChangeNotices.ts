@@ -16,6 +16,7 @@ export type ProjectTaskChangeNotice = {
 const STOP_STATUSES: readonly ProjectTaskRecord["status"][] = [
   "queued",
   "planned",
+  "cancelled",
 ];
 
 const clip = (text: string): string =>
@@ -86,9 +87,12 @@ export const buildProjectTaskChangeNotices = (input: {
     );
   }
 
-  if (statusChanged && (a.status === "done" || a.status === "blocked")) {
+  if (
+    statusChanged &&
+    (a.status === "done" || a.status === "blocked" || a.status === "cancelled")
+  ) {
     for (const d of input.dependents) {
-      if (d.status === "done") continue;
+      if (d.status === "done" || d.status === "cancelled") continue;
       tell(
         d.ownerMembershipId,
         `Dependency ${label(a)} is now ${STATUS[a.status]}; your task "${d.title.slice(0, 50)}" waits on it.`,

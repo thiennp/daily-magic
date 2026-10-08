@@ -30,7 +30,7 @@ export const ensureProjectTaskRecordsSchema = async (): Promise<void> => {
         description TEXT
           CHECK (description IS NULL OR char_length(description) <= 200),
         status TEXT NOT NULL DEFAULT 'queued'
-          CHECK (status IN ('queued', 'planned', 'in_progress', 'blocked', 'done')),
+          CHECK (status IN ('queued', 'planned', 'in_progress', 'blocked', 'done', 'cancelled')),
         priority TEXT
           CHECK (priority IS NULL OR priority IN ('p0', 'p1', 'p2', 'p3')),
         stage TEXT
@@ -44,10 +44,30 @@ export const ensureProjectTaskRecordsSchema = async (): Promise<void> => {
         started_at TIMESTAMPTZ,
         blocked_at TIMESTAMPTZ,
         done_at TIMESTAMPTZ,
+        cancelled_at TIMESTAMPTZ,
         stage_times JSONB NOT NULL DEFAULT '{}'::jsonb,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )`;
+    // Upgrade a pre-116 table (mirrors db/migrations/116): only swaps the
+    // status CHECK when it still lacks 'cancelled', so restarts are no-ops.
+    await sql`
+      DO $$
+      BEGIN
+        IF EXISTS (
+          SELECT 1 FROM pg_constraint
+          WHERE conrelid = 'project_task_records'::regclass
+            AND conname = 'project_task_records_status_check'
+            AND pg_get_constraintdef(oid) NOT LIKE '%cancelled%'
+        ) THEN
+          ALTER TABLE project_task_records
+            DROP CONSTRAINT project_task_records_status_check;
+          ALTER TABLE project_task_records
+            ADD CONSTRAINT project_task_records_status_check
+            CHECK (status IN ('queued', 'planned', 'in_progress', 'blocked', 'done', 'cancelled'));
+        END IF;
+      END $$`;
+    await sql`ALTER TABLE project_task_records ADD COLUMN IF NOT EXISTS cancelled_at TIMESTAMPTZ`;
     await sql`
       CREATE INDEX IF NOT EXISTS project_task_records_project_created_idx
         ON project_task_records (project_id, created_at DESC, id DESC)`;

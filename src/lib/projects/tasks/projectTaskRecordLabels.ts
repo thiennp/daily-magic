@@ -10,4 +10,5 @@ export const PROJECT_TASK_RECORD_STATUS_LABEL: Record<
   in_progress: "In progress",
   blocked: "Blocked",
   done: "Done",
+  cancelled: "Cancelled",
 };

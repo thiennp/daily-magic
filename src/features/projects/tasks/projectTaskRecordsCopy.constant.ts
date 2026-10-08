@@ -39,6 +39,7 @@ export const PROJECT_TASK_RECORDS_COPY = {
   timelineStarted: "Started",
   timelineBlocked: "Blocked",
   timelineDone: "Done",
+  timelineCancelled: "Cancelled",
   timelineUpdated: "Last updated",
   controlsHeading: "Change",
   controlStatus: "Status",
@@ -67,6 +68,7 @@ export const PROJECT_TASK_RECORD_STATUS_LABEL: Record<
   in_progress: "In progress",
   blocked: "Blocked",
   done: "Done",
+  cancelled: "Cancelled",
 };
 
 export const PROJECT_TASK_RECORD_PRIORITY_LABEL: Record<

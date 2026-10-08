@@ -25,4 +25,15 @@ export const PRODUCT_CONNECT_UPDATES_PROJECT_TASKS: readonly ProductConnectUpdat
       adapt:
         'To pick work call list_project_tasks { status: "queued", mine: true, sort: "priority" }, take the first, set it in_progress with update_project_task, done when finished. On task.updated: stop work if told to stop or the task moved to another seat, start assigned tasks in priority order, then ack.',
     },
+    {
+      id: "update-project-task-cancelled",
+      catalogVersion: 21,
+      at: "2026-10-08",
+      kind: "mcp_tool",
+      title: "update_project_task: new terminal status 'cancelled'",
+      summary:
+        "update_project_task: new terminal status 'cancelled' (from queued|planned|in_progress|blocked; reopen → queued).",
+      adapt:
+        "Use 'cancelled' for tasks that will never be done. Can be set from any open status. Reopening a cancelled task moves it to queued.",
+    },
   ];

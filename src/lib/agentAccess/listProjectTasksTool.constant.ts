@@ -11,7 +11,14 @@ export const LIST_PROJECT_TASKS_TOOL: AgentAccessToolDefinition = {
       projectId: { type: "string" },
       status: {
         type: "string",
-        enum: ["queued", "planned", "in_progress", "blocked", "done"],
+        enum: [
+          "queued",
+          "planned",
+          "in_progress",
+          "blocked",
+          "done",
+          "cancelled",
+        ],
         description: "Optional filter: only tasks in this status.",
       },
       sort: {

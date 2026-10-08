@@ -24,6 +24,7 @@ export const buildProjectTaskRecordTimeline = (
     { label: C.timelineBlocked, at: task.blockedAt },
     ...stages,
     { label: C.timelineDone, at: task.doneAt },
+    { label: C.timelineCancelled, at: task.cancelledAt },
     { label: C.timelineUpdated, at: task.updatedAt },
   ]
     .flatMap((e) => (e.at === null ? [] : [{ label: e.label, at: e.at }]))
