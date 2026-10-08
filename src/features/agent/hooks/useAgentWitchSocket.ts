@@ -80,6 +80,7 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
     socketRef,
     connectionLab,
     isSessionContinuation: promptContinuation.isSessionContinuation,
+    liveRunId: terminal.activeRunId,
     beginSession: terminal.beginSession,
     applySocketMessage,
     setLastResponse,

@@ -11,8 +11,9 @@ export const resolveNextAgentLiveTerminalBeginState = (
   commandLine: string,
   writerAgent: HarnessWriterAgent,
   deviceId?: string,
+  options?: { readonly fresh?: boolean },
 ): AgentLiveTerminalState =>
-  shouldContinueAgentLiveTerminalThread(current)
+  options?.fresh !== true && shouldContinueAgentLiveTerminalThread(current)
     ? continueAgentLiveTerminalSession(current, commandLine)
     : beginAgentLiveTerminalSession(
         commandLine,

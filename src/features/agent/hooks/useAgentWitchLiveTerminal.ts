@@ -55,6 +55,7 @@ export function useAgentWitchLiveTerminal(socketRef: {
       commandLine: string,
       writerAgent: HarnessWriterAgent,
       deviceId?: string,
+      options?: { readonly fresh?: boolean },
     ) => {
       allowPersistRef.current = true;
       setState((current) =>
@@ -63,6 +64,7 @@ export function useAgentWitchLiveTerminal(socketRef: {
           commandLine,
           writerAgent,
           deviceId,
+          options,
         ),
       );
     },

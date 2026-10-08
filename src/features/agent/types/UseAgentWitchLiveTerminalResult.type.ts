@@ -14,6 +14,7 @@ export interface UseAgentWitchLiveTerminalResult {
     commandLine: string,
     writerAgent: HarnessWriterAgent,
     deviceId?: string,
+    options?: { readonly fresh?: boolean },
   ) => void;
   readonly finishSession: () => void;
   readonly bindDispatchedRunId: (runId: string) => void;

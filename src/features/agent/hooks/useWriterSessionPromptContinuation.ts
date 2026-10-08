@@ -16,6 +16,7 @@ type SendClaudePrompt = (
     readonly capabilityId?: string;
     readonly targetDeviceId?: string;
     readonly projectId: string;
+    readonly freshStart?: boolean;
   },
 ) => void;
 

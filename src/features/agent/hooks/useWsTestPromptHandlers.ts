@@ -18,14 +18,16 @@ export const useWsTestPromptHandlers = (input: {
   readonly onClear: () => void;
 } => ({
   onSend: () => {
-    input.sendClaudePrompt(
-      input.composer.resolvedPrompt,
-      buildWsTestSendOptions(
+    // FAIL1 (run a76d46ac): Start is a new task. It must not resume the
+    // open thread or seed prior_context from the run the floater last showed.
+    input.sendClaudePrompt(input.composer.resolvedPrompt, {
+      ...buildWsTestSendOptions(
         input.composer,
         input.activeWriterAgent,
         input.activeDeviceId,
       ),
-    );
+      freshStart: true,
+    });
     // Keep prompt/workflow fields after Start so a failed dispatch or
     // validation/offline error does not wipe the form (AGENT-046).
   },

@@ -35,6 +35,8 @@ export interface UseAgentWitchSocketResult {
       readonly projectId: string;
       readonly fieldValues?: Readonly<Record<string, string>>;
       readonly useOfficialWorkflowOrchestration?: boolean;
+      /** Composer Start: a new task, never a continuation of the open thread (FAIL1). */
+      readonly freshStart?: boolean;
     },
   ) => void;
   readonly startWriterSession: (

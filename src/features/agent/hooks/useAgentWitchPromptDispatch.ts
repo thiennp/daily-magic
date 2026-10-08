@@ -8,47 +8,42 @@ import {
 } from "react";
 import { useSearchParams } from "next/navigation";
 
-import { SEND_TASK_SOURCE_RUN_ID_QUERY_PARAM } from "@/features/agent/constants/sendTaskModalQuery.constant";
+import {
+  SEND_TASK_CONTINUE_SESSION_QUERY_PARAM,
+  SEND_TASK_SOURCE_RUN_ID_QUERY_PARAM,
+} from "@/features/agent/constants/sendTaskModalQuery.constant";
 
 import { buildDemoWriterPromptAck } from "@/features/agent/utils/buildDemoWriterPromptAck";
 import { formatAgentLiveTerminalCommandLine } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
 import { isMacTerminalDispatch } from "@/features/agent/utils/isMacTerminalDispatch";
 import { dispatchClaudePrompt } from "@/features/agent/utils/dispatchWriterPrompt";
+import { resolveWriterPromptDispatchContinuation } from "@/features/agent/utils/resolveWriterPromptDispatchContinuation";
 import parseAgentWitchSocketDisplay, {
   type AgentWitchSocketDisplay,
 } from "@/lib/agentWitch/parseAgentWitchSocketDisplay";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import type { WriterPromptDispatchOptions } from "@/features/agent/types/WriterPromptDispatchOptions.type";
 
 export const useAgentWitchPromptDispatch = (input: {
   readonly socketRef: RefObject<WebSocket | null>;
   readonly connectionLab: unknown;
   readonly isSessionContinuation: () => boolean;
+  readonly liveRunId: string | null;
   readonly beginSession: (
     commandLine: string,
     writerAgent: HarnessWriterAgent,
     deviceId?: string,
+    options?: { readonly fresh?: boolean },
   ) => void;
   readonly applySocketMessage: (raw: string) => void;
   readonly setLastResponse: Dispatch<SetStateAction<AgentWitchSocketDisplay>>;
   readonly bindDispatchedRunId: (runId: string) => void;
-}): ((
-  prompt: string,
-  options?: {
-    readonly writerAgent: HarnessWriterAgent;
-    readonly targetUserId?: string;
-    readonly groupId?: string;
-    readonly capabilityId?: string;
-    readonly targetDeviceId?: string;
-    readonly projectFolderPath?: string;
-    readonly projectId: string;
-    readonly runScopedComponentIds?: readonly string[];
-    readonly fieldValues?: Readonly<Record<string, string>>;
-    readonly useOfficialWorkflowOrchestration?: boolean;
-  },
-) => void) => {
+}): ((prompt: string, options?: WriterPromptDispatchOptions) => void) => {
   const searchParams = useSearchParams();
-  const sourceRunId =
+  const urlSourceRunId =
     searchParams.get(SEND_TASK_SOURCE_RUN_ID_QUERY_PARAM) ?? "";
+  const continueFromQuery =
+    searchParams.get(SEND_TASK_CONTINUE_SESSION_QUERY_PARAM) === "1";
 
   return useCallback(
     (prompt, options) => {
@@ -57,7 +52,14 @@ export const useAgentWitchPromptDispatch = (input: {
         return;
       }
 
-      const sessionContinuation = input.isSessionContinuation();
+      const { isFreshStart, sessionContinuation, sourceRunId } =
+        resolveWriterPromptDispatchContinuation({
+          freshStart: options.freshStart === true,
+          continueFromQuery,
+          isSessionContinuation: input.isSessionContinuation,
+          urlSourceRunId,
+          liveRunId: input.liveRunId,
+        });
       const sessionTurn = sessionContinuation ? "continue" : "first";
 
       if (isMacTerminalDispatch(options)) {
@@ -69,6 +71,7 @@ export const useAgentWitchPromptDispatch = (input: {
           ),
           options.writerAgent,
           options.targetDeviceId,
+          { fresh: isFreshStart },
         );
       }
 
@@ -88,7 +91,7 @@ export const useAgentWitchPromptDispatch = (input: {
         capabilityId: options.capabilityId,
         targetDeviceId: options.targetDeviceId,
         sessionContinuation,
-        ...(sourceRunId.length > 0 ? { sourceRunId } : {}),
+        ...(sourceRunId !== undefined ? { sourceRunId } : {}),
         ...(options.projectFolderPath !== undefined
           ? { projectFolderPath: options.projectFolderPath }
           : {}),
@@ -110,6 +113,6 @@ export const useAgentWitchPromptDispatch = (input: {
         onDispatchedRunId: input.bindDispatchedRunId,
       });
     },
-    [input, sourceRunId],
+    [input, urlSourceRunId, continueFromQuery],
   );
 };
