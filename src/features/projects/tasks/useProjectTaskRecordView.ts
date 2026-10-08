@@ -17,7 +17,7 @@ import type { ProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecord.t
 export const useProjectTaskRecordView = (
   records: readonly ProjectTaskRecord[],
 ) => {
-  const [tab, setTab] = useState<ProjectTaskRecordTab>("all");
+  const [tab, setTab] = useState<ProjectTaskRecordTab>("in_progress");
   const [sortKey, setSortKeyState] =
     useState<ProjectTaskRecordSortKey>("updated");
   const [sortDir, setSortDir] = useState<ProjectTaskRecordSortDir>("desc");
