@@ -23,6 +23,10 @@ export const buildKnowledgeWeeklySeries = (
     .sort(([left], [right]) => left.localeCompare(right))
     .map(([weekStart, weekRows]) => {
       const runsWith = sumKnowledgeRows(weekRows, (row) => row.runsWith);
+      const injectedTokens = sumKnowledgeRows(
+        weekRows,
+        (row) => row.injectedTokens,
+      );
       return {
         weekStart,
         runsWith,
@@ -30,12 +34,10 @@ export const buildKnowledgeWeeklySeries = (
         runsHoldout: sumKnowledgeRows(weekRows, (row) => row.holdoutRuns),
         repeatsHoldout: sumKnowledgeRows(weekRows, (row) => row.repeatsHoldout),
         injectedTokensPerRun:
-          runsWith === 0
-            ? 0
-            : Math.round(
-                sumKnowledgeRows(weekRows, (row) => row.injectedTokens) /
-                  runsWith,
-              ),
+          runsWith === 0 ? 0 : Math.round(injectedTokens / runsWith),
+        injectedTokens,
+        mistakesAvoided: sumKnowledgeRows(weekRows, (r) => r.mistakesAvoided),
+        estTokensSaved: sumKnowledgeRows(weekRows, (r) => r.estTokensSaved),
       };
     });
 };

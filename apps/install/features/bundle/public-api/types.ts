@@ -21,7 +21,8 @@
 /** 300 = host start closes orphaned run reports; expired paused runs close their report; Done summary skips pre-answer waits (378558e8). */
 /** 301 = paused runs no longer block bundle restart (b53ecc47); known agy/CLI errors get one-sentence report summaries (9b3947bc). */
 /** 302 = heartbeat reports which coding tools are ready on this computer. */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "302";
+/** 303 = local Knowledge impact panel: chart empty states and runs-with-notes vs holdout chart. */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "303";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =

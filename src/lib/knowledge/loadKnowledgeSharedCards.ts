@@ -8,6 +8,8 @@ const parseFiles = (value: unknown): string[] =>
     ? value.filter((file): file is string => typeof file === "string")
     : [];
 
+import { resolveComputerLabel } from "@/lib/knowledge/resolveComputerLabel";
+
 /** Latest shared note text for a project (owner view). */
 export const loadKnowledgeSharedCards = async (
   projectId: string,
@@ -31,6 +33,6 @@ export const loadKnowledgeSharedCards = async (
     outcome: String(row.outcome),
     commitSha: row.commit_sha === null ? null : String(row.commit_sha),
     occurrences: Number(row.occurrences ?? 1),
-    computerLabel: String(row.computer_label),
+    computerLabel: resolveComputerLabel(row.computer_label, ""),
     updatedAt: String(row.card_updated_at),
   }));

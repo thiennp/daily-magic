@@ -57,6 +57,9 @@ export type KnowledgeWeeklyView = {
   readonly runsHoldout: number;
   readonly repeatsHoldout: number;
   readonly injectedTokensPerRun: number;
+  readonly injectedTokens: number;
+  readonly mistakesAvoided: number;
+  readonly estTokensSaved: number;
 };
 
 export type KnowledgeComputerSummary = {

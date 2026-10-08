@@ -4,17 +4,21 @@ import { useEffect, useState } from "react";
 
 import type { ProjectKnowledgeImpactView } from "@/lib/knowledge/buildProjectKnowledgeImpactView";
 
+type LoadState = Omit<AwcProjectKnowledgeImpactState, "reload">;
+
 export interface AwcProjectKnowledgeImpactState {
   readonly impact: ProjectKnowledgeImpactView | null;
   readonly isLoading: boolean;
   readonly loadFailed: boolean;
+  readonly reload: () => void;
 }
 
 /** `/api/projects/:id/knowledge-impact` for the Reports tab block. */
 const useAwcProjectKnowledgeImpact = (
   projectId: string,
 ): AwcProjectKnowledgeImpactState => {
-  const [state, setState] = useState<AwcProjectKnowledgeImpactState>({
+  const [attempt, setAttempt] = useState(0);
+  const [state, setState] = useState<LoadState>({
     impact: null,
     isLoading: true,
     loadFailed: false,
@@ -51,9 +55,13 @@ const useAwcProjectKnowledgeImpact = (
     return () => {
       controller.abort();
     };
-  }, [projectId]);
+  }, [projectId, attempt]);
 
-  return state;
+  const reload = (): void => {
+    setState({ impact: null, isLoading: true, loadFailed: false });
+    setAttempt((n) => n + 1);
+  };
+  return { ...state, reload };
 };
 
 export default useAwcProjectKnowledgeImpact;

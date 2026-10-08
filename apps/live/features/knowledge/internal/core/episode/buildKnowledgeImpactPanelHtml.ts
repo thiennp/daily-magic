@@ -1,3 +1,7 @@
+import {
+  buildKnowledgeRunsSplitChartHtml,
+  KNOWLEDGE_CHART_EMPTY_HTML,
+} from "./buildKnowledgeRunsSplitChartHtml";
 import type { EpisodeCard } from "./episode.types";
 import type {
   KnowledgeImpactSummary,
@@ -68,17 +72,23 @@ const buildRepeatRateChart = (
     ...withRate.map((v) => v ?? 0),
     ...holdoutRate.map((v) => v ?? 0),
   );
+  if (weekly.every((w) => w.runsWithKnowledge + w.runsHoldout === 0)) {
+    return KNOWLEDGE_CHART_EMPTY_HTML;
+  }
   return `<svg viewBox="0 0 ${CHART_WIDTH} ${CHART_HEIGHT}" role="img" aria-label="Repeat-mistake rate per week" style="width:100%;max-width:420px">
     <line x1="${CHART_PAD}" y1="${CHART_HEIGHT - CHART_PAD}" x2="${CHART_WIDTH - CHART_PAD}" y2="${CHART_HEIGHT - CHART_PAD}" stroke="#9ca3af" stroke-width="1"/>
     ${buildPolyline(withRate, maxValue, "#2563eb", false)}
     ${buildPolyline(holdoutRate, maxValue, "#9ca3af", true)}
-    <text x="${CHART_PAD}" y="12" font-size="10" fill="currentColor">max ${(maxValue * 100).toFixed(0)}%</text>
+    <text x="${CHART_PAD}" y="12" font-size="10" fill="currentColor">${(maxValue * 100).toFixed(0)}%</text>
   </svg>
   <p class="muted"><span style="color:#2563eb">●</span> with knowledge &nbsp; <span style="color:#9ca3af">●</span> holdout (no knowledge)</p>`;
 };
 
 const buildTokenBars = (weekly: readonly KnowledgeWeeklyPoint[]): string => {
   const maxValue = Math.max(1, ...weekly.map((week) => week.avgInjectedTokens));
+  if (weekly.every((week) => week.avgInjectedTokens === 0)) {
+    return KNOWLEDGE_CHART_EMPTY_HTML;
+  }
   const barWidth = Math.max(
     6,
     Math.floor((CHART_WIDTH - 2 * CHART_PAD) / Math.max(1, weekly.length)) - 4,
@@ -152,6 +162,7 @@ export const buildKnowledgeImpactPanelHtml = (
     <div class="grid">
       <div><h3>Repeat-mistake rate per week</h3>${buildRepeatRateChart(summary.weekly)}</div>
       <div><h3>Avg injected tokens per run</h3>${buildTokenBars(summary.weekly)}</div>
+      <div><h3>Runs with notes vs holdout</h3>${buildKnowledgeRunsSplitChartHtml(summary.weekly)}</div>
     </div>
     <h3>Top mistakes avoided</h3>${avoided}
     <h3>Needs review</h3>${review}

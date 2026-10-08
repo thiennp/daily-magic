@@ -2,6 +2,7 @@ import { asRowArray, getSql } from "@/lib/db";
 import type { KnowledgeComputerRow } from "@/lib/knowledge/knowledgeImpactView.type";
 import type { KnowledgeCapabilitiesReport } from "@/lib/knowledge/knowledgeHeartbeat.type";
 import { resolveKnowledgeComputerStatus } from "@/lib/knowledge/parseKnowledgeHeartbeat";
+import { resolveComputerLabel } from "@/lib/knowledge/resolveComputerLabel";
 
 const parseCapabilities = (
   value: unknown,
@@ -36,7 +37,10 @@ export const loadKnowledgeComputers = async (
     const capabilities = parseCapabilities(row.knowledge_capabilities);
     return {
       deviceId: String(row.id),
-      label: String(row.display_name ?? row.device_label ?? "Computer"),
+      label: resolveComputerLabel(
+        row.display_name ?? row.device_label,
+        String(row.id),
+      ),
       ownerName:
         row.owner_name !== null && row.owner_name !== undefined
           ? String(row.owner_name)
