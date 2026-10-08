@@ -29,7 +29,8 @@
 /** 308 = auto skills work at module level: runs are split into steps, matched into clusters in knowledge.db, and a step repeated in 2+ runs raises the owner question. */
 /** 309 = local skill index plus skills_find / skills_run MCP tools; coding-tool prompts get one line pointing to skills_find when the project has indexed skills. */
 /** 310 = killed runs say why; stopped runs report stopped; report summary reaches the web; per-account Mac run.sh, migration log, stale lock cleanup. */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "310";
+/** 311 = skill scripts: proposed in drafts, replayed in a temp copy, verified and seeded read-only, owner-approved, run through skills_run; per-skill token savings, holdout calls and miss stats in the heartbeat; the writer gets AGENT_WITCH_RUN_ID. */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "311";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =
