@@ -1,3 +1,4 @@
+import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { persistAgentRun } from "@/lib/dispatch/persistAgentRun";
 import { deliverProjectComputerAgentRun } from "@/lib/projects/acl/messaging/deliverProjectComputerAgentRun";
@@ -16,13 +17,10 @@ export type DispatchProjectComputerAgentRunResult =
   | { readonly ok: false; readonly code: string };
 
 /**
- * Computer assign bridge: persist project_message (audit/UI) then reuse the
- * existing Mac agent-runs path — COMMAND_CLAUDE_RUN via hub / dispatch outbox.
- * No new AWL wire. History computerAck stays orthogonal.
- *
- * S0-1: no more OPEN. The computer owner's own assigns run; anyone else
- * (members, bots) needs the owner's approval (15 min) unless the project
- * allows runs without approval (S0-2). Sandbox + limits apply either way.
+ * Computer assign bridge: persist project_message, then reuse the Mac
+ * agent-runs path (COMMAND_CLAUDE_RUN via hub / dispatch outbox).
+ * S0-1: the computer owner's own assigns run; anyone else needs approval
+ * (15 min) unless the project allows runs without it (S0-2).
  */
 export const dispatchProjectComputerAgentRun = async (input: {
   readonly projectId: string;
@@ -36,6 +34,7 @@ export const dispatchProjectComputerAgentRun = async (input: {
   readonly summary: string;
   readonly refsJson: string;
   readonly toProjectDisplayName: string | null;
+  readonly writerAgent?: HarnessWriterAgent;
 }): Promise<DispatchProjectComputerAgentRunResult> => {
   const stored = await insertProjectMessageWithDeliveries({
     projectId: input.projectId,
@@ -69,7 +68,7 @@ export const dispatchProjectComputerAgentRun = async (input: {
         ? AgentRunStatus.PENDING_APPROVAL
         : AgentRunStatus.RUNNING,
     dispatchPolicy,
-    writerAgent: "claude-cli",
+    writerAgent: input.writerAgent ?? "claude-cli",
     projectId: input.projectId,
     approvalExpiresAt,
   });
@@ -85,6 +84,7 @@ export const dispatchProjectComputerAgentRun = async (input: {
       projectId: input.projectId,
       requestId: stored.messageId,
       approvalExpiresAt,
+      writerAgent: input.writerAgent,
     });
     return {
       ok: true,
@@ -101,6 +101,7 @@ export const dispatchProjectComputerAgentRun = async (input: {
     messageId: stored.messageId,
     deviceOwnerUserId: input.deviceOwnerUserId,
     deviceId: input.deviceId,
+    writerAgent: input.writerAgent,
   });
   return {
     ok: true,

@@ -1,5 +1,6 @@
 "use client";
 
+import AwcProjectTasksAssignCodingTool from "@/features/projects/tasks/AwcProjectTasksAssignCodingTool";
 import { AWC_TASKS_INPUT_CLASS } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
 import { PROJECT_PAGE_TASKS_COPY as C } from "@/features/projects/tasks/projectPageTasksCopy.constant";
 import type { useAwcProjectTasksAssignForm } from "@/features/projects/tasks/useAwcProjectTasksAssignForm";
@@ -48,6 +49,9 @@ export default function AwcProjectTasksAssignTaskFields({
           )}
         </select>
       </label>
+      {form.writer.isComputer ? (
+        <AwcProjectTasksAssignCodingTool form={form} />
+      ) : null}
       <label className="mb-3.5 grid gap-1.5 text-[13px] font-semibold text-awc-fg">
         <span>{C.assignPrompt}</span>
         <textarea

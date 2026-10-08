@@ -62,6 +62,7 @@ export const mapAgentRunToProjectTaskMeta = (
     localClaimedAt: null,
     assistantName,
     resultOutput: run.resultOutput,
+    writerAgent: run.writerAgent ?? null,
     denialReason: denialReason.length > 0 ? denialReason : null,
   };
 };

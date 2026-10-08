@@ -6,7 +6,11 @@ import type { MessengerTaskDraft } from "@/features/projects/messenger/utils/val
 
 export type SendMessengerTaskResult =
   | { readonly ok: true; readonly messageId: string }
-  | { readonly ok: false; readonly errorMessage: string; readonly code?: string };
+  | {
+      readonly ok: false;
+      readonly errorMessage: string;
+      readonly code?: string;
+    };
 
 /**
  * Activity task mode → real POST /api/projects/:id/inbox/dispatch
@@ -33,6 +37,7 @@ export const sendMessengerTask = async (input: {
     summary: parsed.summary,
     kind: parsed.kind,
     refs: parsed.refs,
+    writerAgent: parsed.writerAgent,
   });
   if (result.ok) {
     return { ok: true, messageId: result.messageId };

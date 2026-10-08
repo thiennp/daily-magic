@@ -1,13 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
-import { sendMessengerTask } from "@/features/projects/messenger/utils/sendMessengerTask";
-import {
-  buildProjectTaskBranchOptions,
-  buildProjectTaskWorktreeOptions,
-  sanitizeProjectTaskGitRefName,
-} from "@/features/projects/tasks/projectTaskGitRefs";
+import { useAwcProjectTasksAssignWriter } from "@/features/projects/tasks/useAwcProjectTasksAssignWriter";
+import { useAwcProjectTasksRefOptions } from "@/features/projects/tasks/useAwcProjectTasksRefOptions";
+import { runAssignTaskSubmit } from "@/features/projects/tasks/utils/runAssignTaskSubmit";
+import { sanitizeProjectTaskGitRefName } from "@/features/projects/tasks/projectTaskGitRefs";
 import { useAwcProjectTasksAssignPeers } from "@/features/projects/tasks/useAwcProjectTasksAssignPeers";
 import { PROJECT_MESSAGE_SUMMARY_MAX_CHARS } from "@/lib/projects/acl/messaging/projectMessage.constants";
 
@@ -23,17 +21,24 @@ export type AwcProjectTasksAssignFormInput = {
 };
 
 /** Assign dialog form: fields, open seed, validation, submit (task.assign). */
-export const useAwcProjectTasksAssignForm = (input: AwcProjectTasksAssignFormInput) => {
-  const { open, projectId, hasGit, defaultBranch = null, branches, worktrees } = input;
-  const branchOptions = useMemo(
-    () => buildProjectTaskBranchOptions({ defaultBranch: defaultBranch ?? null, branches }),
-    [defaultBranch, branches],
-  );
-  const worktreeOptions = useMemo(
-    () => buildProjectTaskWorktreeOptions({ worktrees }),
-    [worktrees],
-  );
+export const useAwcProjectTasksAssignForm = (
+  input: AwcProjectTasksAssignFormInput,
+) => {
+  const {
+    open,
+    projectId,
+    hasGit,
+    defaultBranch = null,
+    branches,
+    worktrees,
+  } = input;
+  const { branchOptions, worktreeOptions } = useAwcProjectTasksRefOptions({
+    defaultBranch,
+    branches,
+    worktrees,
+  });
   const peers = useAwcProjectTasksAssignPeers({ open, projectId });
+  const writer = useAwcProjectTasksAssignWriter(peers);
   const [prompt, setPrompt] = useState("");
   const [branch, setBranch] = useState("");
   const [worktree, setWorktree] = useState("");
@@ -60,34 +65,26 @@ export const useAwcProjectTasksAssignForm = (input: AwcProjectTasksAssignFormInp
   }
 
   const trimmedPrompt = prompt.trim();
-  const summaryTooLarge = trimmedPrompt.length > PROJECT_MESSAGE_SUMMARY_MAX_CHARS;
-  const createWorktreeInvalid =
-    hasGit && createWorktree && sanitizeProjectTaskGitRefName(newWorktreeName) === null;
   const canSubmit =
     !pending &&
     !peers.peersLoading &&
-    peers.peers.length > 0 &&
     peers.assistantId.length > 0 &&
     trimmedPrompt.length > 0 &&
-    !summaryTooLarge &&
-    !createWorktreeInvalid;
+    trimmedPrompt.length <= PROJECT_MESSAGE_SUMMARY_MAX_CHARS &&
+    !(
+      hasGit &&
+      createWorktree &&
+      !sanitizeProjectTaskGitRefName(newWorktreeName)
+    );
 
   const submit = (): void => {
-    if (!canSubmit || pending) return;
-    setPending(true);
-    setError(null);
-    void sendMessengerTask({
-      projectId,
-      draft: { assigneeMembershipId: peers.assistantId, summary: trimmedPrompt },
-    }).then((result) => {
-      setPending(false);
-      if (!result.ok) {
-        setError(result.errorMessage);
-        return;
-      }
-      input.onAssigned();
-      input.onClose();
-    });
+    if (!canSubmit) return;
+    const draft = {
+      assigneeMembershipId: peers.assistantId,
+      summary: trimmedPrompt,
+      ...writer.draftFields,
+    };
+    runAssignTaskSubmit({ draft, setPending, setError, ...input });
   };
 
   return {
@@ -95,8 +92,15 @@ export const useAwcProjectTasksAssignForm = (input: AwcProjectTasksAssignFormInp
     branchOptions,
     worktreeOptions,
     fields: { prompt, branch, worktree, createWorktree, newWorktreeName },
-    setters: { setPrompt, setBranch, setWorktree, setCreateWorktree, setNewWorktreeName },
+    setters: {
+      setPrompt,
+      setBranch,
+      setWorktree,
+      setCreateWorktree,
+      setNewWorktreeName,
+    },
     trimmedPrompt,
+    writer,
     pending,
     error,
     canSubmit,

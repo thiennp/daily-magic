@@ -1,3 +1,4 @@
+import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import type {
   AwcProjectInboxRefs,
   DispatchProjectInboxResult,
@@ -19,6 +20,7 @@ export const dispatchProjectInboxMessage = async (input: {
   readonly summary: string;
   readonly kind?: string;
   readonly refs?: AwcProjectInboxRefs;
+  readonly writerAgent?: HarnessWriterAgent;
 }): Promise<DispatchProjectInboxResult> => {
   const url = `/api/projects/${encodeURIComponent(input.projectId)}/inbox/dispatch`;
   const bodyPayload: Record<string, unknown> = {
@@ -30,6 +32,10 @@ export const dispatchProjectInboxMessage = async (input: {
   }
   if (input.refs !== undefined && Object.keys(input.refs).length > 0) {
     bodyPayload.refs = input.refs;
+  }
+
+  if (input.writerAgent !== undefined) {
+    bodyPayload.writerAgent = input.writerAgent;
   }
 
   const response = await fetch(url, {
@@ -64,7 +70,9 @@ export const dispatchProjectInboxMessage = async (input: {
   const code =
     codeFromField ??
     (errorMessage !== null &&
-    /^(rate_limited|rate_limited_daily|rate_limited_hourly|unread_cap|recipient_not_found)/.test(errorMessage)
+    /^(rate_limited|rate_limited_daily|rate_limited_hourly|unread_cap|recipient_not_found)/.test(
+      errorMessage,
+    )
       ? errorMessage
       : null);
 

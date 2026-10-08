@@ -4,6 +4,7 @@ import {
   PROJECT_MESSAGE_REF_VALUE_MAX_CHARS,
   PROJECT_MESSAGE_SUMMARY_MAX_CHARS,
 } from "@/lib/projects/acl/messaging/projectMessage.constants";
+import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import type { AwcProjectInboxRefs } from "@/features/projects/access/inbox/types/awcProjectInboxMessage.type";
 
 export type MessengerTaskDraft = {
@@ -11,6 +12,8 @@ export type MessengerTaskDraft = {
   readonly summary: string;
   readonly kind?: string;
   readonly refs?: AwcProjectInboxRefs;
+  /** Coding tool for computer assignees (server default: claude-cli). */
+  readonly writerAgent?: HarnessWriterAgent;
 };
 
 export type ValidateMessengerTaskDraftResult =
@@ -20,6 +23,7 @@ export type ValidateMessengerTaskDraftResult =
       readonly summary: string;
       readonly kind: string | undefined;
       readonly refs: AwcProjectInboxRefs | undefined;
+      readonly writerAgent: HarnessWriterAgent | undefined;
     }
   | {
       readonly ok: false;
@@ -48,7 +52,9 @@ const validateRefs = (
   if (refs === undefined) return { ok: true, refs: undefined };
   const cleaned: Record<string, string> = {};
   for (const [key, value] of Object.entries(refs)) {
-    if (!(PROJECT_MESSAGE_ALLOWED_REF_KEYS as readonly string[]).includes(key)) {
+    if (
+      !(PROJECT_MESSAGE_ALLOWED_REF_KEYS as readonly string[]).includes(key)
+    ) {
       return { ok: false, code: "invalid_ref_key" };
     }
     if (typeof value !== "string") return { ok: false, code: "invalid_refs" };
@@ -88,5 +94,6 @@ export const validateMessengerTaskDraft = (
     summary,
     kind: kindRaw.length > 0 ? kindRaw : undefined,
     refs: refsResult.refs,
+    writerAgent: draft.writerAgent,
   };
 };

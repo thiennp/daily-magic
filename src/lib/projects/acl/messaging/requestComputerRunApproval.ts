@@ -1,3 +1,4 @@
+import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { resolveDispatchTargetAgentClient } from "@/lib/agentWitch/resolveDispatchTargetAgentClient";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
@@ -24,6 +25,7 @@ export const requestComputerRunApproval = async (input: {
   readonly projectId: string;
   readonly requestId: string;
   readonly approvalExpiresAt: string;
+  readonly writerAgent?: HarnessWriterAgent;
 }): Promise<void> => {
   dispatchApprovalRegistry.register({
     runId: input.runId,
@@ -31,7 +33,7 @@ export const requestComputerRunApproval = async (input: {
     executorUserId: input.executorUserId,
     prompt: input.prompt,
     groupId: null,
-    writerAgent: "claude-cli",
+    writerAgent: input.writerAgent ?? "claude-cli",
     deviceId: input.deviceId,
     requestId: input.requestId,
     approvalExpiresAt: input.approvalExpiresAt,
@@ -45,7 +47,7 @@ export const requestComputerRunApproval = async (input: {
       : ((await getUserById(input.requesterUserId))?.email ??
         input.requesterUserId);
   const fields = await resolveComputerRunApprovalCardFields({
-    writerAgent: "claude-cli",
+    writerAgent: input.writerAgent ?? "claude-cli",
     deviceId: input.deviceId,
     projectId: input.projectId,
   });

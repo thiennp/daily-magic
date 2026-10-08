@@ -22,6 +22,7 @@ export type ProjectTaskMeta = Omit<ProjectTaskNeonMeta, "status"> & {
   readonly assistantName?: string | null;
   readonly statusReason?: string | null;
   readonly resultOutput?: string | null;
+  readonly writerAgent?: string | null;
   readonly denialReason?: string | null;
 };
 

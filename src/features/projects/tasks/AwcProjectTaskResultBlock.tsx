@@ -26,6 +26,7 @@ export default function AwcProjectTaskResultBlock({
       }`}
     >
       <p className="m-0 font-semibold">{result.title}</p>
+      {result.hint ? <p className="m-0 mt-1">{result.hint}</p> : null}
       {result.body.length > 0 ? (
         <pre className="m-0 mt-1 font-sans break-words whitespace-pre-wrap">
           {expanded ? result.body : result.preview}

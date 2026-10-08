@@ -40,6 +40,7 @@ export const PROJECT_PAGE_TASKS_COPY = {
   assignTitle: "Assign task",
   assignAssistant: "Assistant",
   assignPrompt: "Task",
+  assignCodingTool: "Coding tool",
   assignSubmit: "Assign",
   assignPending: "Assigning…",
   assignCancel: "Cancel",

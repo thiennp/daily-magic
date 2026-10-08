@@ -17,7 +17,11 @@ export type RouteResolvedComputerDispatchResult =
       readonly code: string;
       readonly cause?: "offline" | "too_old";
     }
-  | { readonly ok: false; readonly code: "not_computer"; readonly cause?: undefined };
+  | {
+      readonly ok: false;
+      readonly code: "not_computer";
+      readonly cause?: undefined;
+    };
 
 const isComputerRecipient = (
   recipient: DispatchRecipient | undefined,
@@ -65,6 +69,7 @@ export const routeResolvedComputerDispatch = async (input: {
     summary: input.parsed.summary,
     refsJson: JSON.stringify(input.parsed.refs),
     toProjectDisplayName: input.parsed.toProjectDisplayName,
+    writerAgent: input.parsed.writerAgent,
   });
   if (!bridged.ok) {
     return { ok: false, code: bridged.code };

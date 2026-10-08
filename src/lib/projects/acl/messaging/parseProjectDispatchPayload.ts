@@ -1,3 +1,5 @@
+import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";
+import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import { PROJECT_MESSAGE_SUMMARY_MAX_CHARS } from "@/lib/projects/acl/messaging/projectMessage.constants";
 import { summaryHasForbiddenContent } from "@/lib/projects/acl/messaging/assertProjectMessageThinContent";
 import { parseProjectDispatchRefs } from "@/lib/projects/acl/messaging/parseProjectDispatchRefs";
@@ -10,6 +12,8 @@ export type ParsedProjectDispatch =
       readonly refs: Readonly<Record<string, string>>;
       readonly toMembershipId: string | null;
       readonly toProjectDisplayName: string | null;
+      /** Optional coding tool for computer assigns; absent = claude-cli. */
+      readonly writerAgent?: HarnessWriterAgent;
     }
   | { readonly ok: false; readonly code: string };
 
@@ -81,5 +85,8 @@ export const parseProjectDispatchPayload = (
     refs: parsedRefs.refs,
     toMembershipId,
     toProjectDisplayName,
+    ...(isHarnessWriterAgent(body.writerAgent)
+      ? { writerAgent: body.writerAgent }
+      : {}),
   };
 };

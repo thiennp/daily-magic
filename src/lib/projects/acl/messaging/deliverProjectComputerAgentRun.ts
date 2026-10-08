@@ -1,3 +1,4 @@
+import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import { deliverOrQueueAgentWitchDispatchMessage } from "@/lib/agentWitch/deliverOrQueueAgentWitchDispatchMessage";
 import { buildCommandClaudeRunDispatchMessage } from "@/lib/dispatch/buildCommandClaudeRunDispatchMessage";
 
@@ -13,11 +14,12 @@ export const deliverProjectComputerAgentRun = async (input: {
   readonly messageId: string;
   readonly deviceOwnerUserId: string;
   readonly deviceId: string;
+  readonly writerAgent?: HarnessWriterAgent;
 }): Promise<"delivered" | "queued" | "unavailable"> => {
   const command = buildCommandClaudeRunDispatchMessage({
     prompt: input.prompt,
     agentRunId: input.agentRunId,
-    writerAgent: "claude-cli",
+    writerAgent: input.writerAgent ?? "claude-cli",
     projectId: input.projectId,
     requestId: input.messageId,
   });
