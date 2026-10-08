@@ -1,5 +1,19 @@
 import { redirect } from "next/navigation";
 
-export default function AdminPage() {
-  redirect("/admin/users");
+import AdminDashboard from "@/features/admin/components/AdminDashboard";
+import { getAuthActor } from "@/lib/auth/auth";
+import { isGlobalAdmin } from "@/lib/auth/globalRolePermissions";
+
+export default async function AdminPage() {
+  const actor = await getAuthActor();
+
+  if (!actor) {
+    redirect("/login?callbackUrl=/admin");
+  }
+
+  if (!isGlobalAdmin(actor)) {
+    redirect("/admin/groups");
+  }
+
+  return <AdminDashboard />;
 }

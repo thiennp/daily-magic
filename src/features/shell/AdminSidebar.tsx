@@ -12,6 +12,7 @@ const LOCKED_WHY =
   "is for AgentWitch staff admins. Your account cannot open it.";
 
 const ADMIN_NAV = [
+  { href: "/admin", label: "Overview", staffOnly: true },
   { href: "/admin/groups", label: COMPANIES_ENTITY_LABEL, staffOnly: false },
   { href: "/admin/users", label: "Users", staffOnly: true },
   { href: "/admin/cost-control", label: "Cost control", staffOnly: true },
@@ -54,7 +55,10 @@ export default function AdminSidebar() {
               </span>
             );
           }
-          const isActive = pathname.startsWith(item.href);
+          const isActive =
+            item.href === "/admin"
+              ? pathname === "/admin"
+              : pathname.startsWith(item.href);
 
           return (
             <Link

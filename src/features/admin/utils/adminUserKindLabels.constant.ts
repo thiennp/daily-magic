@@ -11,8 +11,7 @@ export const ADMIN_USER_KIND_LABELS: Record<AdminUserKind, string> = {
 export const ADMIN_USER_KIND_FILTER_ALL = "all" as const;
 
 export type AdminUserKindFilter =
-  | typeof ADMIN_USER_KIND_FILTER_ALL
-  | AdminUserKind;
+  typeof ADMIN_USER_KIND_FILTER_ALL | AdminUserKind;
 
 export const ADMIN_USER_KIND_FILTER_OPTIONS: readonly AdminUserKindFilter[] = [
   ADMIN_USER_KIND_FILTER_ALL,
