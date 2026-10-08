@@ -16,6 +16,17 @@ describe("parseAwaitingInputFromOutput", () => {
     });
   });
 
+  it("joins a question wrapped across lines until a blank line", () => {
+    const parsed = parseAwaitingInputFromOutput(
+      `Plan ready.\n${AGENT_RUN_INPUT_MARKER}\nDo\nyou approve checkpoint 1.2?\n\nWaiting.`,
+    );
+
+    expect(parsed).toEqual({
+      question: "Do you approve checkpoint 1.2?",
+      partialOutput: "Plan ready.",
+    });
+  });
+
   it("returns null when the marker is missing", () => {
     expect(parseAwaitingInputFromOutput("done")).toBeNull();
   });

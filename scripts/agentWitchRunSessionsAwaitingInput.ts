@@ -15,7 +15,12 @@ export const parseAwaitingInputFromOutput = (
   const afterMarker = output
     .slice(markerIndex + AGENT_RUN_INPUT_MARKER.length)
     .trim();
-  const question = afterMarker.split("\n")[0]?.trim() ?? "";
+  const paragraph = afterMarker.split(/\r?\n\s*\r?\n|\[\[[A-Z_]+\]\]/)[0] ?? "";
+  const question = paragraph
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0)
+    .join(" ");
 
   if (question.length === 0) {
     return null;
