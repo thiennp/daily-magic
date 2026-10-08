@@ -104,3 +104,13 @@ export {
   registerAgentTerminal,
   unregisterAgentTerminal,
 } from "../internal/core/agentWake/handleAgentWake";
+
+export {
+  listenAgentTerminalSocket,
+  writeToAgentTerminalSocket,
+} from "../internal/core/agentWake/agentTerminalSocket";
+export { replayPendingAgentWakes } from "../internal/core/agentWake/replayPendingAgentWakes";
+export {
+  AGENT_RUN_USAGE,
+  parseAgentRunArgs,
+} from "../internal/core/agentWake/parseAgentRunArgs";

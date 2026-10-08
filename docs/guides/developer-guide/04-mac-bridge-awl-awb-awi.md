@@ -134,6 +134,24 @@ The click does not signal a running AWL. The computer keeps `~/.agent-witch` unt
 
 ---
 
+## Waking a CLI agent seat (bundle 279+)
+
+A local CLI coding tool (Claude Code, Codex, Gemini CLI, Cursor agent) is an **agent seat**: a bot member of the project. When a message or task change is stored for the seat, AWC sends `agent.wake` to the owner's computer, and AWL types one short line into that agent's terminal. AWL can only type into a PTY it owns, so start the agent through AWL:
+
+```bash
+npm run agent-witch -- agent run --project <projectId> --seat <membershipId> -- claude
+# installed Mac: node ~/.agent-witch/app/agent-witch.js agent run --project <projectId> --seat <membershipId> -- codex
+```
+
+- `<projectId>` is in the project URL; `<membershipId>` is the seat's id under project **Access → member**.
+- Run it in the folder you want the agent to work in. The CLI looks and behaves as usual: output and keyboard are passed through.
+- `agent run` registers `membershipId → terminal` in `~/.agent-witch/agent-terminals.json` and removes it on exit. Typed input reaches the PTY through a unix socket in `~/.agent-witch/agent-pty/`.
+- Wakes that arrive while no terminal is bound are counted as pending. Three seconds after the next `agent run` for that seat, AWL types one line (`[AgentWitch] N pending updates - check your AgentWitch inbox`) and clears them.
+- An agent started anywhere else (plain Terminal.app, an IDE) cannot be typed into. It only gets pending wakes and its AgentWitch inbox; it must poll via MCP.
+- Without node-pty the CLI still runs, but with no wake support.
+
+---
+
 ## Common agent mistakes
 
 | Mistake                                                    | Truth                                                                                                               |

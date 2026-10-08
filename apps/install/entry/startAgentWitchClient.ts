@@ -42,6 +42,7 @@ import {
   removeRunCompositionOverlay,
   resolveRunProjectFolderPath,
   handleAgentWake,
+  writeToAgentTerminalSocket,
   registerAgentTerminal,
   unregisterAgentTerminal,
   readAgentWitchRunConfig,
@@ -1726,9 +1727,8 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       const rows =
         typeof parsed.payload.rows === "number" ? parsed.payload.rows : 32;
       if (shellSessionId.length > 0) {
-        // TODO(agent-wake): the server does not send projectId/membershipId on
-        // shell.session.open yet; once the project-agent terminal open carries
-        // them, this registers the PTY so agent.wake can type into it.
+        // Server-opened shells may carry projectId/membershipId; CLI agents the
+        // user starts via `agent-witch agent run` bind through their own launcher.
         const agentProjectId = parsed.payload.projectId;
         const agentMembershipId = parsed.payload.membershipId;
         if (
@@ -1763,7 +1763,13 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           installDir: config.layout.installDir,
           projectDataDir: config.layout.projectDataDir,
           payload: parsed.payload,
-          writeInput: writeShellPtyInput,
+          writeInput: (shellSessionId, data) =>
+            writeShellPtyInput(shellSessionId, data) ||
+            writeToAgentTerminalSocket(
+              config.layout.installDir,
+              shellSessionId,
+              data,
+            ),
           schedule: (run, delayMs) => {
             setTimeout(run, delayMs);
           },

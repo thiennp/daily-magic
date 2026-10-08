@@ -85,6 +85,7 @@ export {
   closeShellPtySession,
   openInteractiveShellPty,
   resizeShellPty,
+  spawnAgentCommandInPty,
   writeShellPtyInput,
 } from "../../../scripts/agentWitchShellSession";
 export {

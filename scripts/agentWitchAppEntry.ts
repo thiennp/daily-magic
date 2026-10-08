@@ -124,6 +124,13 @@ const run = async (): Promise<void> => {
     return;
   }
 
+  if (subcommand === "agent" && process.argv[3] === "run") {
+    const { runAgentWitchAgentRunCli } =
+      await import("../apps/install/entry/runAgentWitchAgentRunCli");
+    await runAgentWitchAgentRunCli(process.argv.slice(4));
+    return;
+  }
+
   if (subcommand === "mcp") {
     const { resolveAgentWitchLocalLayout } =
       await import("@agent-witch/install-layout");
