@@ -1,6 +1,26 @@
 [build]
 builder = "DOCKERFILE"
 dockerfilePath = "Dockerfile"
+# Deploy only when something that ships in the runtime image changed; docs, CI
+# config, the Mac app (Swift) and design files never rebuild the service.
+watchPatterns = [
+  "/src/**",
+  "/apps/bridge/**",
+  "/apps/install/**",
+  "/apps/live/**",
+  "/packages/**",
+  "/scripts/**",
+  "/db/**",
+  "/public/**",
+  "/.feature-knowledge/**",
+  "/server.ts",
+  "/next.config.ts",
+  "/tsconfig.json",
+  "/package.json",
+  "/package-lock.json",
+  "/Dockerfile",
+  "/railway.toml",
+]
 
 [deploy]
 preDeployCommand = "/bin/sh -c \"npm run db:migrate\""

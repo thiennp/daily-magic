@@ -18,7 +18,7 @@ Stack: Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Neon Postgre
 | ---------------- | ------------------------------ |
 | `/`              | Home                           |
 | `/styleguide`    | TailAdmin component styleguide |
-| `/ws-test`       | AgentWitch send-task test UI  |
+| `/ws-test`       | AgentWitch send-task test UI   |
 | `/api/db/health` | Neon connection health check   |
 
 **Top-level structure:**
@@ -58,7 +58,14 @@ Stack: Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Neon Postgre
 
 ## Verification (after code changes)
 
-Use **`.cursor/commands/command-verify-post-change-lint-typecheck-tests.md`** for the full agent workflow.
+**Testing policy (current):** the full unit suite is not part of the commit/push gate. No CI runs on GitHub (workflow is manual-only) or Railway — Railway only builds the image (CPU and deploy cost).
+
+- Working on a feature: run only the tests related to it — `npm run test:related` (tests affected by your diff vs `origin/main`) or `npx vitest run <paths>`. Never the whole suite unless asked.
+- UI-only change (presentational components, copy, styling): write and run no tests.
+- Write tests only for logic with cyclomatic complexity > 3.
+- Hooks: pre-commit runs prettier/ESLint/architecture on staged files + `tsc`; pre-push runs `npm run ci:fast` (architecture on your changes + `tsc`). Full gate on demand: `FULL_CI=1 git push` (= `npm run ci`).
+
+The older full workflow is in **`.cursor/commands/command-verify-post-change-lint-typecheck-tests.md`** (use when explicitly asked for a full verification).
 
 Husky **pre-commit** steps are listed in **`.cursor/harness/git-hooks.md`** (Prettier, ESLint, structure-validation, staged architecture checks, typecheck).
 

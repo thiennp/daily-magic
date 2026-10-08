@@ -49,8 +49,9 @@ else
 fi
 
 if [ -n "$TYPECHECK_TRIGGER" ]; then
+  # Staged src files were already ESLint --fix'd above; whole-repo ESLint runs in CI.
   echo "Running typecheck..."
-  npm run typecheck
+  npm run typecheck:fast
 else
   echo "No staged src JS/TS or project toolchain files — skipping typecheck."
 fi

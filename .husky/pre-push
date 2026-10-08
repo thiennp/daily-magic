@@ -21,8 +21,16 @@ if [ "$saw_ref" = "1" ] && [ "$delete_only" = "1" ]; then
   exit 0
 fi
 
-echo "Running CI parity checks (npm run ci) before push..."
-npm run ci || exit 1
+# Unit tests are not part of the push gate (CPU / deploy time): while working on
+# a feature run `npm run test:related`. The full gate stays available:
+#   FULL_CI=1 git push
+if [ "${FULL_CI:-0}" = "1" ]; then
+  echo "Running full CI parity checks (npm run ci) before push..."
+  npm run ci || exit 1
+else
+  echo "Running fast checks (architecture on changes + typecheck) before push..."
+  npm run ci:fast || exit 1
+fi
 export GIT_DIR="$git_dir"
 export GIT_WORK_TREE="$repo_root"
 branch=$(git symbolic-ref --short HEAD 2>/dev/null || true)

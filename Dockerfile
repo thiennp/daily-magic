@@ -15,7 +15,6 @@ ARG RAILWAY_GIT_COMMIT_SHA=""
 ENV RAILWAY_GIT_COMMIT_SHA=$RAILWAY_GIT_COMMIT_SHA
 ENV AGENT_WITCH_WRITE_SHIPPED_INSTALL_BUNDLE=1
 RUN npm run build
-RUN npm run test:shipped-install-blackbox
 
 FROM node:22-bookworm-slim AS runner
 WORKDIR /app

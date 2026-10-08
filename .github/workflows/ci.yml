@@ -3,11 +3,9 @@ name: CI
 env:
   TZ: Europe/Berlin
 
+# Manual only: CI does not run on push or pull requests (cost). Railway builds
+# the image on deploy; checks run locally (pre-commit / pre-push hooks).
 on:
-  push:
-    branches:
-      - main
-  pull_request:
   workflow_dispatch:
 
 concurrency:
@@ -29,10 +27,18 @@ jobs:
           cache: npm
 
       - run: npm ci
-      - run: npm test
+      # Unit tests are skipped for now (CPU / deploy time): run them locally
+      # with `npm run test:related`, or everything with `npm test`.
       - run: npm run ci:architecture
       - run: npm run typecheck
+      # One build serves both the typecheck gate and the shipped-install check.
       - run: npm run build
+        env:
+          AGENT_WITCH_WRITE_SHIPPED_INSTALL_BUNDLE: "1"
+      - run: npm run test:shipped-install-blackbox
+        if: github.ref == 'refs/heads/main'
+        env:
+          CI: true
 
   e2e:
     name: Playwright E2E
@@ -49,25 +55,5 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
-        env:
-          CI: true
-
-  shipped-install-blackbox:
-    name: Shipped install blackbox
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: "24"
-          cache: npm
-
-      - run: npm ci
-      - run: npm run build
-        env:
-          AGENT_WITCH_WRITE_SHIPPED_INSTALL_BUNDLE: "1"
-      - run: npm run test:shipped-install-blackbox
         env:
           CI: true
