@@ -8,6 +8,7 @@ import {
   syncAgentWitchConnectionRegistry,
 } from "@/lib/agentWitch/syncAgentWitchConnectionRegistry";
 import { clearDashboardTerminalSubscriptions } from "@/lib/dispatch/dashboardTerminalSubscriptionRegistry";
+import { reconcileRunningAgentRunsOnDeviceDisconnect } from "@/lib/dispatch/reconcileRunningAgentRunsOnDeviceDisconnect";
 import type {
   AgentWitchConnectionState,
   AgentWitchWebSocketAuthContext,
@@ -58,8 +59,28 @@ export const attachAgentWitchWebSocket = (
   };
 
   const unregisterClient = (): void => {
+    const role = connectionState.role;
+    const userId = connectionState.userId;
+    const deviceId = connectionState.deviceId;
     clearDashboardTerminalSubscriptions(clientId);
     hub.unregisterClient(clientId);
+    if (
+      role === "agent" &&
+      typeof userId === "string" &&
+      userId.length > 0 &&
+      typeof deviceId === "string" &&
+      deviceId.length > 0
+    ) {
+      void reconcileRunningAgentRunsOnDeviceDisconnect(hub, {
+        userId,
+        deviceId,
+      }).catch((error: unknown) => {
+        console.error(
+          "[agent-witch/ws] device disconnect run reconcile failed",
+          error,
+        );
+      });
+    }
     void removeAgentWitchConnectionRegistry(clientId).catch(
       (error: unknown) => {
         console.error(

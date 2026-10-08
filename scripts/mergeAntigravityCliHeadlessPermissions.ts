@@ -4,8 +4,9 @@ import path from "node:path";
 
 import {
   AGENT_WITCH_ANTIGRAVITY_HEADLESS_PERMISSION_ALLOW_RULES,
-  resolveAntigravityCliSettingsJsonPath,
-} from "./antigravityCliHeadlessPermissions.constant";
+  filterValidAntigravityCliPermissionAllowRules,
+} from "./antigravityCliPermissionAllowRules";
+import { resolveAntigravityCliSettingsJsonPath } from "./antigravityCliHeadlessPermissions.constant";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -27,11 +28,13 @@ const mergeAllowRules = (
   existingAllow: unknown,
   rulesToAdd: readonly string[],
 ): readonly string[] => {
-  const allow = Array.isArray(existingAllow)
-    ? existingAllow.filter(
-        (entry): entry is string => typeof entry === "string",
-      )
-    : [];
+  const allow = filterValidAntigravityCliPermissionAllowRules(
+    Array.isArray(existingAllow)
+      ? existingAllow.filter(
+          (entry): entry is string => typeof entry === "string",
+        )
+      : [],
+  );
   const merged = [...allow];
   for (const rule of rulesToAdd) {
     if (!merged.includes(rule)) {

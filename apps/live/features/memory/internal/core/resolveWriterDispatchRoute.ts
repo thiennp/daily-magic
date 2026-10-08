@@ -89,11 +89,13 @@ export const resolveWriterSessionTurn = (
     | "sessionContinuation"
     | "supportsWriterSessionContinuation"
     | "isWriterConversationStarted"
+    | "hasSourceRunId"
   >,
 ): WriterDispatchSessionTurn =>
   input.sessionContinuation &&
   input.supportsWriterSessionContinuation &&
-  input.isWriterConversationStarted
+  input.isWriterConversationStarted &&
+  !input.hasSourceRunId
     ? "continue"
     : "first";
 

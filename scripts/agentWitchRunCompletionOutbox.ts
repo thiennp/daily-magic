@@ -7,6 +7,8 @@ import {
 } from "@agent-witch/shared/dispatch";
 import { rememberRunId } from "@agent-witch/install-runtime-client";
 
+import { removePendingRunResultDelivery } from "./agentWitchPendingRunResultDelivery";
+
 import {
   completeAgentRunOnCloud,
   type AgentWitchCloudApiConfig,
@@ -44,7 +46,10 @@ const resolveOutboxPath = (layout: AgentWitchLocalLayout): string =>
 const readPostedRunIds = (layout: AgentWitchLocalLayout): readonly string[] => {
   try {
     const parsed: unknown = JSON.parse(
-      fs.readFileSync(resolveProfileFilePath(layout, POSTED_LEDGER_FILENAME), "utf8"),
+      fs.readFileSync(
+        resolveProfileFilePath(layout, POSTED_LEDGER_FILENAME),
+        "utf8",
+      ),
     );
     return Array.isArray(parsed)
       ? parsed.filter((id): id is string => typeof id === "string")
@@ -170,6 +175,7 @@ const flushOnce = async (input: {
     );
     if (completed) {
       markRunCompletionPosted(input.layout, entry.runId);
+      removePendingRunResultDelivery(input.layout, entry.runId);
       // Re-read so entries queued during the POST are kept.
       removeOutboxEntry(input.layout, entry.runId);
     }

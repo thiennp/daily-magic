@@ -41,6 +41,7 @@ import {
   enqueueAgentRunCompletionOutbox,
   flushAgentRunCompletionOutbox,
 } from "./agentWitchRunCompletionOutbox";
+import { persistPendingRunResultDelivery } from "./agentWitchPendingRunResultDelivery";
 import { reportAgentRunEstimateComparisonOnCloud } from "./agentWitchCloudApi";
 import { startRunHeartbeat, stopRunHeartbeat } from "./agentWitchRunHeartbeat";
 import { isProcessAlive } from "./isProcessAlive";
@@ -375,7 +376,8 @@ const finishRun = (
     stopRunHeartbeat(agentRunId);
     removeRunCompositionOverlay(config.layout, agentRunId);
 
-    if (isTerminalStreamAccepted(agentRunId)) {
+    const hadTerminalStream = isTerminalStreamAccepted(agentRunId);
+    if (hadTerminalStream) {
       sendMessage(socket, {
         type: "terminal.stream.end",
         payload: { runId: agentRunId },
@@ -440,6 +442,38 @@ const finishRun = (
     void flushAgentRunCompletionOutbox({
       layout: config.layout,
       cloudApi: cloudApiConfig,
+    });
+
+    const resultMessage = {
+      type: "command.claude.result",
+      payload: {
+        exitCode: resolvedExitCode,
+        output: resolvedOutput,
+        agentRunId,
+        ...(typeof comparison?.estimateSeconds === "number"
+          ? { estimateSeconds: comparison.estimateSeconds }
+          : {}),
+        ...(typeof comparison?.actualSeconds === "number"
+          ? { actualSeconds: comparison.actualSeconds }
+          : {}),
+        ...(llmUsage !== undefined ? { llmUsage } : {}),
+        ...(errorCode !== undefined ? { errorCode } : {}),
+      },
+      ...(requestId !== undefined ? { requestId } : {}),
+    };
+    persistPendingRunResultDelivery(config.layout, {
+      runId: agentRunId,
+      resultMessage,
+      ...(hadTerminalStream
+        ? {
+            terminalEndMessage: {
+              type: "terminal.stream.end",
+              payload: { runId: agentRunId },
+              ...(requestId !== undefined ? { requestId } : {}),
+            },
+          }
+        : {}),
+      createdAt: new Date().toISOString(),
     });
 
     runSessions.delete(agentRunId);

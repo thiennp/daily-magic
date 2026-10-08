@@ -4,10 +4,8 @@ import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import {
-  AGENT_WITCH_ANTIGRAVITY_HEADLESS_COMMAND_ALLOW_RULE,
-  resolveAntigravityCliSettingsJsonPath,
-} from "./antigravityCliHeadlessPermissions.constant";
+import { AGENT_WITCH_ANTIGRAVITY_HEADLESS_PERMISSION_ALLOW_RULES } from "./antigravityCliPermissionAllowRules";
+import { resolveAntigravityCliSettingsJsonPath } from "./antigravityCliHeadlessPermissions.constant";
 import { mergeAntigravityCliHeadlessPermissions } from "./mergeAntigravityCliHeadlessPermissions";
 
 describe("mergeAntigravityCliHeadlessPermissions", () => {
@@ -19,7 +17,42 @@ describe("mergeAntigravityCliHeadlessPermissions", () => {
     }
   });
 
-  it("appends command(*) without removing existing allow rules", () => {
+  it("strips invalid allow rules and merges headless writer rules", () => {
+    const home = fs.mkdtempSync(path.join(os.tmpdir(), "agy-settings-home-"));
+    tempDirs.push(home);
+    const settingsPath = resolveAntigravityCliSettingsJsonPath(home);
+    fs.mkdirSync(path.dirname(settingsPath), { recursive: true });
+    fs.writeFileSync(
+      settingsPath,
+      `${JSON.stringify(
+        {
+          permissions: {
+            allow: ["read(*)", "command(git)"],
+          },
+          qaMarker: "keep",
+        },
+        null,
+        2,
+      )}\n`,
+      "utf8",
+    );
+
+    const result = mergeAntigravityCliHeadlessPermissions(home);
+    expect(result.wrote).toBe(true);
+
+    const parsed = JSON.parse(fs.readFileSync(settingsPath, "utf8")) as {
+      permissions: { allow: string[] };
+      qaMarker: string;
+    };
+    expect(parsed.qaMarker).toBe("keep");
+    expect(parsed.permissions.allow).toEqual([
+      "command(git)",
+      ...AGENT_WITCH_ANTIGRAVITY_HEADLESS_PERMISSION_ALLOW_RULES,
+    ]);
+    expect(parsed.permissions.allow).not.toContain("read(*)");
+  });
+
+  it("appends headless rules without removing existing valid allow rules", () => {
     const home = fs.mkdtempSync(path.join(os.tmpdir(), "agy-settings-home-"));
     tempDirs.push(home);
     const settingsPath = resolveAntigravityCliSettingsJsonPath(home);
@@ -47,7 +80,7 @@ describe("mergeAntigravityCliHeadlessPermissions", () => {
     };
     expect(parsed.permissions.allow).toEqual([
       "command(git)",
-      AGENT_WITCH_ANTIGRAVITY_HEADLESS_COMMAND_ALLOW_RULE,
+      ...AGENT_WITCH_ANTIGRAVITY_HEADLESS_PERMISSION_ALLOW_RULES,
     ]);
     expect(parsed.permissions.ask).toEqual(["command(*)"]);
   });
@@ -62,7 +95,7 @@ describe("mergeAntigravityCliHeadlessPermissions", () => {
       `${JSON.stringify(
         {
           permissions: {
-            allow: [AGENT_WITCH_ANTIGRAVITY_HEADLESS_COMMAND_ALLOW_RULE],
+            allow: [...AGENT_WITCH_ANTIGRAVITY_HEADLESS_PERMISSION_ALLOW_RULES],
           },
         },
         null,

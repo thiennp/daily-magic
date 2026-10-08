@@ -6,14 +6,26 @@ import {
 } from "./resolveWriterDispatchRoute";
 
 describe("resolveWriterSessionTurn", () => {
-  it("returns continue when warm session continuation is active", () => {
+  it("returns continue for same-thread follow-up without sourceRunId", () => {
     expect(
       resolveWriterSessionTurn({
         sessionContinuation: true,
         supportsWriterSessionContinuation: true,
         isWriterConversationStarted: true,
+        hasSourceRunId: false,
       }),
     ).toBe("continue");
+  });
+
+  it("returns first for a new task seeded from sourceRunId (no CLI --continue)", () => {
+    expect(
+      resolveWriterSessionTurn({
+        sessionContinuation: true,
+        supportsWriterSessionContinuation: true,
+        isWriterConversationStarted: true,
+        hasSourceRunId: true,
+      }),
+    ).toBe("first");
   });
 
   it("returns first when conversation is not started", () => {
@@ -22,6 +34,7 @@ describe("resolveWriterSessionTurn", () => {
         sessionContinuation: true,
         supportsWriterSessionContinuation: true,
         isWriterConversationStarted: false,
+        hasSourceRunId: false,
       }),
     ).toBe("first");
   });
@@ -33,7 +46,7 @@ describe("resolveWriterDispatchRoute", () => {
       sessionContinuation: true,
       supportsWriterSessionContinuation: true,
       isWriterConversationStarted: true,
-      hasSourceRunId: true,
+      hasSourceRunId: false,
       hasCanonicalTurns: true,
       userPromptCharacterCount: 120,
     });
@@ -55,6 +68,7 @@ describe("resolveWriterDispatchRoute", () => {
       userPromptCharacterCount: 200,
     });
 
+    expect(plan.sessionTurn).toBe("first");
     expect(plan.continuationStrategy).toBe("source_run_seed");
     expect(plan.ragLimit).toBe(3);
     expect(plan.ragMinScore).toBe(0.35);

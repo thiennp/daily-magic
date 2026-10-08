@@ -20,6 +20,7 @@ const LEGACY_PERMISSION_BYPASS_ARGV_SNIPPET =
   '"--dangerously-skip-permissions"';
 
 const HEADLESS_COMMAND_ALLOW_RULE_SNIPPET = "command(*)";
+const HEADLESS_READ_FILE_ALLOW_RULE_SNIPPET = "read_file(*)";
 
 export const assertShippedInstallBundleAntigravityArgv = (
   workspaceRoot: string,
@@ -51,6 +52,12 @@ export const assertShippedInstallBundleAntigravityArgv = (
   if (!source.includes(HEADLESS_COMMAND_ALLOW_RULE_SNIPPET)) {
     throw new Error(
       `Shipped install bundle is missing Antigravity headless permissions allow rule (${HEADLESS_COMMAND_ALLOW_RULE_SNIPPET}). Rebuild with npm run build:agent-witch and bump AGENT_WITCH_INSTALL_BUNDLE_VERSION.`,
+    );
+  }
+
+  if (!source.includes(HEADLESS_READ_FILE_ALLOW_RULE_SNIPPET)) {
+    throw new Error(
+      `Shipped install bundle is missing Antigravity headless read_file allow rule (${HEADLESS_READ_FILE_ALLOW_RULE_SNIPPET}). Rebuild with npm run build:agent-witch and bump AGENT_WITCH_INSTALL_BUNDLE_VERSION.`,
     );
   }
 };

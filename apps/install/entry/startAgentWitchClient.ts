@@ -136,6 +136,7 @@ import {
   continueClaudeTaskAfterInput,
   ensureHarnessWriterCli,
   flushPendingAgentRunCompletions,
+  flushPendingRunResultDeliveries,
   generateAgentRunReportKey,
   appendAgentRunReportDetailsLine,
   isHarnessWriterAgentId,
@@ -438,11 +439,15 @@ const dispatchWriterTask = async (
     );
   }
 
+  const hasSourceRunId =
+    typeof sourceRunId === "string" && sourceRunId.trim().length > 0;
+
   const sessionTurn = resolveWriterSessionTurn({
     sessionContinuation,
     supportsWriterSessionContinuation:
       supportsWriterSessionContinuation(writerAgent),
     isWriterConversationStarted: isWriterConversationStarted(writerAgent),
+    hasSourceRunId,
   });
 
   const activeSessionId =
@@ -465,8 +470,7 @@ const dispatchWriterTask = async (
     supportsWriterSessionContinuation:
       supportsWriterSessionContinuation(writerAgent),
     isWriterConversationStarted: isWriterConversationStarted(writerAgent),
-    hasSourceRunId:
-      typeof sourceRunId === "string" && sourceRunId.trim().length > 0,
+    hasSourceRunId,
     hasCanonicalTurns,
     userPromptCharacterCount: prompt.length,
   });
@@ -2116,6 +2120,12 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         }),
       );
       void flushPendingAgentRunCompletions(config.layout);
+      flushPendingRunResultDeliveries({
+        layout: config.layout,
+        send: (message) => {
+          sendMessage(socket, message);
+        },
+      });
 
       const origin =
         resolveAgentWitchAppOriginFromWsUrl(config.wsUrl) ??
