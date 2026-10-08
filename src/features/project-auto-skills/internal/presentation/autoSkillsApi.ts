@@ -42,3 +42,29 @@ export const postAutoSkillAnswer = async (
     return false;
   }
 };
+
+/** Owner: ask the owner's online computers to scan past tasks now. */
+export const postAutoSkillScan = async (
+  projectId: string,
+): Promise<{ readonly ok: boolean; readonly errorMessage?: string }> => {
+  try {
+    const response = await fetch(`${autoSkillsUrl(projectId)}/scan`, {
+      method: "POST",
+    });
+    if (response.ok) {
+      return { ok: true };
+    }
+    const body = (await response.json().catch(() => ({}))) as {
+      errorMessage?: unknown;
+    };
+    return {
+      ok: false,
+      errorMessage:
+        typeof body.errorMessage === "string"
+          ? body.errorMessage
+          : "Could not start the scan.",
+    };
+  } catch {
+    return { ok: false, errorMessage: "Could not start the scan." };
+  }
+};

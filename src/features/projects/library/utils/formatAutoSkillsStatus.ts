@@ -31,16 +31,24 @@ export const formatAutoSkillsStatus = (
   if (overview.pausedReason !== null) {
     return { line: overview.pausedReason, paused: true };
   }
-  const parts = [
-    "Auto skills are on",
+  return {
+    line: [
+      "Auto skills are on",
+      ...autoSkillsDetailParts(overview, nowMs),
+    ].join(" · "),
+    paused: false,
+  };
+};
+
+/** The facts after "Auto skills are on": judge, last check, waiting questions. */
+export const autoSkillsDetailParts = (
+  overview: AutoSkillsOverview,
+  nowMs: number,
+): readonly string[] =>
+  [
     overview.judgeLabel === null ? null : `Judged by ${overview.judgeLabel}`,
     overview.lastCheckedAt === null
       ? "waiting for the first finished task"
       : `last checked ${timeAgo(overview.lastCheckedAt, nowMs) ?? "recently"}`,
     overview.pending.length > 0 ? countLabel(overview.pending.length) : null,
-  ];
-  return {
-    line: parts.filter((p): p is string => p !== null).join(" · "),
-    paused: false,
-  };
-};
+  ].filter((p): p is string => p !== null);

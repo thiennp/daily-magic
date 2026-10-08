@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 
-import type { AutoSkillJudgePref } from "@/features/project-auto-skills/public-api/types";
 import type { AutoSkillsState } from "@/features/project-auto-skills/public-api/presentation";
 import AwcAutoSkillQuestionCard from "@/features/projects/autoskills/AwcAutoSkillQuestionCard";
-import { formatAutoSkillsStatus } from "@/features/projects/library/utils/formatAutoSkillsStatus";
+import AwcAutoSkillsActions from "@/features/projects/library/AwcAutoSkillsActions";
+import AwcAutoSkillsHeader from "@/features/projects/library/AwcAutoSkillsHeader";
+import AwcAutoSkillsJudgePicker from "@/features/projects/library/AwcAutoSkillsJudgePicker";
 import {
-  PANEL_BUTTON_SECONDARY_CLASS,
-  PANEL_INPUT_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
+  autoSkillsDetailParts,
+  formatAutoSkillsStatus,
+} from "@/features/projects/library/utils/formatAutoSkillsStatus";
 
 interface AwcProjectLibraryAutoSkillsProps {
   readonly auto: AutoSkillsState;
@@ -17,14 +18,7 @@ interface AwcProjectLibraryAutoSkillsProps {
   readonly onSaved: () => void;
 }
 
-const JUDGES: readonly { value: AutoSkillJudgePref; label: string }[] = [
-  { value: "auto", label: "Judge: automatic" },
-  { value: "ollama", label: "Judge: Ollama (local)" },
-  { value: "agent", label: "Judge: My coding agent" },
-  { value: "bot", label: "Judge: Project bot (not available yet)" },
-];
-
-/** Library "Auto skills" strip (owner only): toggle, status, judge, questions. */
+/** Library "Auto skills" card (owner only): switch, judge, manual scan, drafts to review. */
 export default function AwcProjectLibraryAutoSkills({
   auto,
   onSaved,
@@ -40,57 +34,50 @@ export default function AwcProjectLibraryAutoSkills({
   const waiting = overview.pending.length;
 
   return (
-    <div className="flex flex-col gap-2 rounded-xl border border-awc-border bg-awc-bg/80 px-3 py-2 dark:border-gray-800 dark:bg-white/[0.03]">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <p
-          role="status"
-          className={`text-[13px] ${status.paused ? "text-awc-fg" : "text-awc-fg-muted"} dark:text-gray-300`}
-        >
-          {status.line}
-        </p>
-        <div className="flex flex-wrap items-center gap-2">
-          {waiting > 0 ? (
-            <button
-              type="button"
-              className={PANEL_BUTTON_SECONDARY_CLASS}
-              aria-expanded={open}
-              onClick={() => setOpen(!open)}
-            >
-              Review drafts ({waiting})
-            </button>
-          ) : null}
-          <label className="flex items-center gap-2 text-[13px] text-awc-fg dark:text-gray-200">
-            <input
-              type="checkbox"
-              checked={overview.enabled}
-              disabled={auto.busy}
-              onChange={(event) => void auto.setEnabled(event.target.checked)}
-            />
-            Create skills automatically
-          </label>
-        </div>
-      </div>
+    <section
+      aria-label="Auto skills"
+      className="flex flex-col gap-4 rounded-2xl border border-awc-border bg-awc-tile/60 p-4 dark:border-gray-800 dark:bg-white/[0.03]"
+    >
+      <AwcAutoSkillsHeader
+        on={overview.enabled}
+        paused={status.paused}
+        busy={auto.busy}
+        onToggle={() => void auto.setEnabled(!overview.enabled)}
+      />
       {overview.enabled ? (
-        <select
-          aria-label="Judge"
-          className={`${PANEL_INPUT_CLASS} max-w-[260px]`}
-          value={overview.judgePref}
-          disabled={auto.busy}
-          onChange={(event) =>
-            void auto.setJudgePref(event.target.value as AutoSkillJudgePref)
-          }
-        >
-          {JUDGES.map((j) => (
-            <option key={j.value} value={j.value}>
-              {j.label}
-            </option>
-          ))}
-        </select>
-      ) : null}
-      {overview.statusNote !== null && overview.enabled ? (
-        <p className="text-[12.5px] text-awc-fg-muted dark:text-gray-400">
-          {overview.statusNote}
-        </p>
+        <>
+          <p
+            role="status"
+            className={`rounded-lg px-3 py-2 text-[13px] ${
+              status.paused
+                ? "bg-amber-50 text-amber-900 dark:bg-amber-400/10 dark:text-amber-200"
+                : "bg-white/70 text-awc-fg-muted dark:bg-white/[0.04] dark:text-gray-300"
+            }`}
+          >
+            {status.paused
+              ? status.line
+              : autoSkillsDetailParts(overview, nowMs).join(" · ")}
+            {overview.statusNote !== null ? (
+              <span className="mt-0.5 block text-awc-fg dark:text-gray-200">
+                {overview.statusNote}
+              </span>
+            ) : null}
+          </p>
+          <AwcAutoSkillsJudgePicker
+            value={overview.judgePref}
+            busy={auto.busy}
+            onChange={(pref) => void auto.setJudgePref(pref)}
+          />
+          <AwcAutoSkillsActions
+            busy={auto.busy}
+            scanning={auto.scanning}
+            scanError={auto.scanError}
+            waiting={waiting}
+            open={open}
+            onScan={() => void auto.scan()}
+            onToggleDrafts={() => setOpen(!open)}
+          />
+        </>
       ) : null}
       {open && waiting > 0 ? (
         <ul className="flex flex-col gap-2">
@@ -109,6 +96,6 @@ export default function AwcProjectLibraryAutoSkills({
           ))}
         </ul>
       ) : null}
-    </div>
+    </section>
   );
 }

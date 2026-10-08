@@ -12,8 +12,12 @@ import {
   fetchAutoSkillsOverview,
   postAutoSkillAnswer,
 } from "@/features/project-auto-skills/internal/presentation/autoSkillsApi";
+import {
+  useAutoSkillScan,
+  type AutoSkillScan,
+} from "@/features/project-auto-skills/internal/presentation/useAutoSkillScan";
 
-export interface AutoSkillsState {
+export interface AutoSkillsState extends AutoSkillScan {
   /** Null for non-owners and while loading. */
   readonly overview: AutoSkillsOverview | null;
   readonly busy: boolean;
@@ -35,6 +39,11 @@ export const useAutoSkills = (
   const [busy, setBusy] = useState(false);
   const [nonce, setNonce] = useState(0);
   const reload = useCallback((): void => setNonce((n) => n + 1), []);
+  const scanState = useAutoSkillScan({
+    projectId,
+    lastCheckedAt: overview?.lastCheckedAt ?? null,
+    reload,
+  });
 
   useEffect(() => {
     if (!enabled) {
@@ -81,6 +90,7 @@ export const useAutoSkills = (
     overview: enabled ? overview : null,
     busy,
     reload,
+    ...scanState,
     setEnabled: (value) => patch({ enabled: value }),
     setJudgePref: (judgePref) => patch({ judgePref }),
     answer,

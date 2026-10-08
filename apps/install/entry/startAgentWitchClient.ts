@@ -64,6 +64,7 @@ import {
   handleProjectMessageHistoryDispatch,
   handleProjectHistoryPageRequest,
   reportAutoSkillRunCompleted,
+  scanProjectTasksForAutoSkills,
   writeProjectHistoryAiSession,
 } from "@agent-witch/live-project-history";
 import type { AgentWitchClientConfig as AgentWitchConfig } from "@agent-witch/install-runtime-client/types";
@@ -2261,6 +2262,48 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     if (parsed.type === "harness.manifest.request") {
       reportHarnessManifest(socket, config.layout);
     }
+
+    if (
+      parsed.type === "autoskill.scan.request" &&
+      isRecord(parsed.payload) &&
+      typeof parsed.payload.projectId === "string" &&
+      parsed.payload.projectId.trim().length > 0
+    ) {
+      runAutoSkillScan(config, parsed.payload.projectId.trim());
+    }
+  };
+
+  const autoSkillScansRunning = new Set<string>();
+
+  /** Owner pressed "Scan past tasks": feed this computer's finished tasks through auto skills. */
+  const runAutoSkillScan = (
+    scanConfig: AgentWitchConfig,
+    projectId: string,
+  ): void => {
+    const runConfig = readAgentWitchRunConfig();
+    const cloudApi =
+      runConfig === null
+        ? null
+        : resolveAgentWitchCloudApiConfig({
+            wsUrl: runConfig.wsUrl,
+            pairingToken: runConfig.pairingToken,
+          });
+    if (cloudApi === null || autoSkillScansRunning.has(projectId)) {
+      return;
+    }
+    autoSkillScansRunning.add(projectId);
+    const folderPath = resolveLinkedProjectFolderPath(
+      path.dirname(scanConfig.layout.configPath),
+      projectId,
+    );
+    void scanProjectTasksForAutoSkills({
+      cloudApi,
+      layout: scanConfig.layout,
+      projectId,
+      ...(folderPath !== null && folderPath !== undefined
+        ? { folderPath }
+        : {}),
+    }).finally(() => autoSkillScansRunning.delete(projectId));
   };
 
   /** The cloud never echoes a run result back, so this runs where the result is emitted. */
