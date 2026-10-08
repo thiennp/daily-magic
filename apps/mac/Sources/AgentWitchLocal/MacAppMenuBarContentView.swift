@@ -334,6 +334,7 @@ struct MacAppMenuBarContentView: View {
             footerRow("Settings…", shortcut: "⌘,") { openMainWindow(page: .settings) }
                 .keyboardShortcut(",")
                 .disabled(chrome.kind == .notSetUp || chrome.kind == .settingUp)
+                .help(chrome.kind == .notSetUp || chrome.kind == .settingUp ? "Available after setup" : "Settings")
             Divider().padding(.horizontal, 8).padding(.vertical, 4)
             footerRow("Quit AgentWitch Local", shortcut: "⌘Q") { showQuitConfirm = true }
         }

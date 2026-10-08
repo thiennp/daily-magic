@@ -141,10 +141,11 @@ final class MacAppLocalUIStore: ObservableObject {
     }
 
     /// GUI apps get launchd's short PATH; re-check with the login-shell PATH too.
-    private func refreshCliScanIncludingLoginShell() {
+    private func refreshCliScanIncludingLoginShell(completion: (() -> Void)? = nil) {
         AgentCliDetection.scanIncludingLoginShell { [weak self] found in
             guard let self else { return }
             self.cliInstalled = self.cliInstalled.merging(found) { _, new in new }
+            completion?()
         }
     }
 
@@ -189,9 +190,9 @@ final class MacAppLocalUIStore: ObservableObject {
     }
 
     /// UI-only rescan stub — flips scanning flag in ComputerView; does not invent backend.
-    func markToolsRescanned() {
+    func markToolsRescanned(completion: (() -> Void)? = nil) {
         cliInstalled = AgentCliDetection.scan()
-        refreshCliScanIncludingLoginShell()
+        refreshCliScanIncludingLoginShell(completion: completion)
     }
 
     private func persistHistory() {
@@ -231,7 +232,7 @@ enum AgentCliKind: String, CaseIterable, Identifiable, Codable {
         switch self {
         case .claude: return "npm install -g @anthropic-ai/claude-code"
         case .cursor: return "curl https://cursor.com/install -fsS | bash"
-        case .codex: return "codex login"
+        case .codex: return "npm install -g @openai/codex"
         case .gemini: return "npm install -g @google/gemini-cli"
         }
     }
@@ -240,7 +241,7 @@ enum AgentCliKind: String, CaseIterable, Identifiable, Codable {
         switch self {
         case .claude: return "Install Claude Code"
         case .cursor: return "Install Cursor CLI"
-        case .codex: return "How to sign in"
+        case .codex: return "Install Codex"
         case .gemini: return "Install Gemini CLI"
         }
     }

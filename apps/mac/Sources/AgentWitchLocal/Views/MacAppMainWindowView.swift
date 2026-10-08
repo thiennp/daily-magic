@@ -25,6 +25,10 @@ struct MacAppMainWindowView: View {
         .frame(idealWidth: 1280, idealHeight: 800)
         .background(MacAppTheme.bg)
         .preferredColorScheme(.light)
+        .awlToastOverlay(controller)
+        .sheet(isPresented: $controller.isLogSheetPresented) {
+            MacAppLogSheet(controller: controller)
+        }
         .onAppear {
             controller.refreshInstallAndHealth()
             if let pending = presenter.consumePendingPage(), let p = MacAppSidebarPage(rawValue: pending) {
@@ -69,7 +73,9 @@ struct MacAppMainWindowView: View {
             .padding(.bottom, 18)
 
             VStack(alignment: .leading, spacing: 4) {
-                ForEach(MacAppSidebarPage.allCases) { item in
+                // Design nav: Computer, History, Settings. Prompt optimizer opens from
+                // AgentWitch deep links and has no sidebar row.
+                ForEach(MacAppSidebarPage.allCases.filter { $0 != .promptOptimizer }) { item in
                     sidebarButton(item)
                 }
             }
@@ -117,6 +123,7 @@ struct MacAppMainWindowView: View {
         .disabled(disabled)
         .opacity(disabled ? 0.45 : 1)
         .help(disabled ? "Available after setup" : item.title)
+        .accessibilityAddTraits(selected ? .isSelected : [])
     }
 
     private var sidebarFooter: some View {

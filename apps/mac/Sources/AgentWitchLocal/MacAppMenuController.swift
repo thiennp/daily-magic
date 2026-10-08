@@ -14,6 +14,12 @@ final class MacAppMenuController: ObservableObject {
     @Published var launchesAtLogin: Bool = false
     @Published var statusMessage: String = ""
     @Published private(set) var updateOffer: UpdateOffer?
+    /// Short confirmation bubble shown over the app window (design toasts).
+    @Published private(set) var toastMessage: String?
+    /// "Setup and connection log" sheet in the app window (design: See log).
+    @Published var isLogSheetPresented: Bool = false
+    private var toastTask: Task<Void, Never>?
+    private var didReadProfileOnce = false
 
     // MARK: - AWL-H1/H2/H3 chrome stubs (AWL-H5 setup / AWL-H6 port / AWL-H8 offline replace these)
     /// AWL-H3 placeholder until real `signedInEmail` lands. Default signed-out (nil email).
@@ -53,6 +59,17 @@ final class MacAppMenuController: ObservableObject {
             localPortRangeDisplay = nil
             localAppPort = nil
             portsInUse = false
+        }
+    }
+
+    /// Shows `message` for a couple of seconds; a newer toast replaces it.
+    func showToast(_ message: String) {
+        toastTask?.cancel()
+        toastMessage = message
+        toastTask = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: 2_600_000_000)
+            guard !Task.isCancelled else { return }
+            self?.toastMessage = nil
         }
     }
 
@@ -351,9 +368,10 @@ final class MacAppMenuController: ObservableObject {
         portsInUse = false
         // Design: files stay; assistants cannot use this computer until sign-in + Start.
         if state == .running {
-            stopCore()
+            stopCore(announce: false)
         }
         statusMessage = "Signed out. Files stay on this computer."
+        showToast(statusMessage)
     }
 
     private func performStartOrRepairSetup() async {
@@ -487,6 +505,7 @@ final class MacAppMenuController: ObservableObject {
             statusMessage = statusLabel(for: state)
             refreshSignedInEmail()
             refreshLocalPortRange()
+            showToast("Setup finished on this computer")
         case .failed(let kind, let logPath):
             setupLogPath = logPath
             if let runtime = result.runtimeState {
@@ -500,7 +519,7 @@ final class MacAppMenuController: ObservableObject {
 #endif
     }
 
-    func stopCore() {
+    func stopCore(announce: Bool = true) {
         Task {
 #if os(macOS)
             do {
@@ -512,6 +531,9 @@ final class MacAppMenuController: ObservableObject {
                 )
                 state = result.state
                 statusMessage = statusLabel(for: result.state)
+                if announce, result.state == .stopped {
+                    showToast("Stopped. Assistants cannot use this computer.")
+                }
             } catch {
                 let sanitized = sanitizeMacAppUserFacingStatus(error.localizedDescription)
                 state = .error(message: sanitized)
@@ -553,13 +575,19 @@ final class MacAppMenuController: ObservableObject {
         NSWorkspace.shared.open(resolveDownloadAwlUrl())
     }
 
+    /// Opens the readable log inside the app window (raises the window if it is closed).
     func openLogs() {
-        let result = openLogsFlow(fileManager: fileManager)
-        guard let logPath = result.logPath else {
-            statusMessage = "No agent-witch.log found yet."
-            return
+        isLogSheetPresented = true
+        let mainVisible = NSApp.windows.contains { isMainAppWindow($0) && $0.isVisible }
+        if !mainVisible {
+            NotificationCenter.default.post(name: .awlOpenWindow, object: MacAppWindowID.main.rawValue)
         }
-        NSWorkspace.shared.open(logPath)
+    }
+
+    /// Newest readable log: the failed setup log when there is one, else the main agent log.
+    var currentLogURL: URL? {
+        if let setupLogPath, fileManager.fileExists(atPath: setupLogPath.path) { return setupLogPath }
+        return openLogsFlow(fileManager: fileManager).logPath
     }
 
     func toggleLaunchAtLogin(_ enabled: Bool) {
@@ -571,6 +599,7 @@ final class MacAppMenuController: ObservableObject {
                 try SMAppService.mainApp.unregister()
             }
             launchesAtLogin = enabled
+            showToast(enabled ? "Opens at login" : "Will not open at login")
         } catch {
             statusMessage = "Launch at login: \(error.localizedDescription)"
             refreshLaunchAtLogin()
@@ -920,7 +949,12 @@ final class MacAppMenuController: ObservableObject {
     }
 
     private func refreshSignedInEmail() {
+        let previous = signedInEmail
         signedInEmail = resolveSignedInProfileEmail(fileManager: fileManager)
+        if didReadProfileOnce, previous == nil, let email = signedInEmail {
+            showToast("Signed in as \(email)")
+        }
+        didReadProfileOnce = true
     }
 
     private func statusLabel(for state: MacAppRuntimeState) -> String {

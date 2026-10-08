@@ -19,6 +19,15 @@ struct HistoryView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 offlineBanner
+                if isSignedIn && controller.chromeStatus.kind == .stopped {
+                    AWLNoticeBanner(
+                        tone: .info,
+                        icon: "info.circle",
+                        title: "AgentWitch Local is stopped.",
+                        message: "You can still read History.",
+                        actions: [("Start", { controller.startOrRepairSetup() })]
+                    )
+                }
                 if rows.isEmpty { emptyState } else { historyTable }
             }
             .padding(20)

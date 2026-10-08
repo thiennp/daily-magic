@@ -16,17 +16,7 @@ struct AgentWitchLocalApp: App {
                 presenting: appDelegate.windowPresenting
             )
         } label: {
-            Group {
-                if let template = MenuBarTemplateImage.load() {
-                    Image(nsImage: template)
-                } else {
-                    Image(systemName: "wand.and.stars")
-                }
-            }
-            // The status item label is always alive, so deep links
-            // (agentwitch-local://status, Prompt optimizer) and Dock reopen can
-            // raise the window even when it was never opened or was closed.
-            .awlWindowOpener()
+            MacAppMenuBarLabel(controller: appDelegate.controller)
         }
         .menuBarExtraStyle(.window)
 
@@ -40,6 +30,26 @@ struct AgentWitchLocalApp: App {
         }
         .defaultSize(width: 1280, height: 800)
         .windowToolbarStyle(.unified(showsTitle: false))
+    }
+}
+
+/// Menu bar icon. Design a11y label: "AgentWitch Local: Running" (status follows the pill).
+struct MacAppMenuBarLabel: View {
+    @ObservedObject var controller: MacAppMenuController
+
+    var body: some View {
+        Group {
+            if let template = MenuBarTemplateImage.load() {
+                Image(nsImage: template)
+            } else {
+                Image(systemName: "wand.and.stars")
+            }
+        }
+        .accessibilityLabel("AgentWitch Local: \(controller.chromeStatus.pillLabel)")
+        // The status item label is always alive, so deep links
+        // (agentwitch-local://status, Prompt optimizer) and Dock reopen can
+        // raise the window even when it was never opened or was closed.
+        .awlWindowOpener()
     }
 }
 

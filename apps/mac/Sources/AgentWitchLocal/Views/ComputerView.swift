@@ -10,6 +10,7 @@ struct ComputerView: View {
     @ObservedObject var controller: MacAppMenuController
     @ObservedObject var store: MacAppLocalUIStore
     @State private var isScanning = false
+    @State private var installHelp: AgentCliKind?
 
     enum Pane: Equatable {
         case notSetUp, settingUp, setupFailed, signingInBrowser, signIn, connect, connected
@@ -43,6 +44,9 @@ struct ComputerView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(MacAppTheme.bg)
+        .sheet(item: $installHelp) { kind in
+            AgentCliInstallHelpSheet(kind: kind)
+        }
         .onAppear {
             controller.refreshInstallAndHealth()
             if controller.signedInEmail == nil
@@ -398,6 +402,11 @@ struct ComputerView: View {
                             .font(.system(size: 12)).foregroundStyle(MacAppTheme.fgSubtle)
                     }
                     Spacer()
+                    if !found {
+                        Button("How to install") { installHelp = kind }
+                            .buttonStyle(.bordered).controlSize(.small)
+                            .accessibilityLabel("How to install \(kind.displayName)")
+                    }
                     pillView(found ? "Found" : "Not found", kind: found ? .running : .stopped)
                 }
                 .padding(.horizontal, 18).padding(.vertical, 12)
@@ -418,10 +427,12 @@ struct ComputerView: View {
     }
 
     private func rescan() {
+        guard !isScanning else { return }
         isScanning = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            store.markToolsRescanned()
+        store.markToolsRescanned {
             isScanning = false
+            let ready = store.toolsReadyCount
+            controller.showToast("Checked. \(ready) \(ready == 1 ? "tool" : "tools") ready.")
         }
     }
 

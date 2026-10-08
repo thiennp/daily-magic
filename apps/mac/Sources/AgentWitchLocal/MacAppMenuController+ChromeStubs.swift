@@ -140,6 +140,7 @@ extension MacAppMenuController {
             beginAccountSignIn()
         }
         statusMessage = "Finish signing in in your browser"
+        showToast("Browser opened again for sign-in")
     }
 
     func cancelSignInStub() {
@@ -215,6 +216,7 @@ extension MacAppMenuController {
         MacAppLocalUIStore.shared.hasConnectedProject = true
         chromeSignInPhase = .none
         statusMessage = "This computer is connected"
+        showToast("This computer is connected to \(signedInEmail ?? "your account")")
         if state != .running {
             startOrRepairSetup()
         }

@@ -14,6 +14,7 @@ struct SettingsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 22) {
+                statusBanner
                 accountSection
                 connectionSection
                 generalSection
@@ -35,6 +36,40 @@ struct SettingsView: View {
                 displayName: controller.signedInDisplayName ?? "This account",
                 email: controller.signedInEmail ?? ""
             ))
+        }
+    }
+
+    // MARK: - Status banner (design: stopped, problem, offline)
+
+    @ViewBuilder
+    private var statusBanner: some View {
+        let kind = controller.chromeStatus.kind
+        if kind == .problem {
+            AWLNoticeBanner(
+                tone: .danger,
+                icon: "exclamationmark.triangle",
+                title: "Could not start.",
+                message: controller.chromeStatus.detailSubtitle,
+                actions: [
+                    ("Try again", { controller.retryFromProblem() }),
+                    ("See log", { controller.openLogs() }),
+                ]
+            )
+        } else if kind == .waitingForInternet {
+            AWLNoticeBanner(
+                tone: .warning,
+                icon: "wifi.slash",
+                title: "Waiting for internet",
+                message: "Settings save here. Updates and checks need a connection."
+            )
+        } else if isSignedIn && kind == .stopped {
+            AWLNoticeBanner(
+                tone: .info,
+                icon: "info.circle",
+                title: "AgentWitch Local is stopped.",
+                message: "Settings still save.",
+                actions: [("Start", { controller.startOrRepairSetup() })]
+            )
         }
     }
 
