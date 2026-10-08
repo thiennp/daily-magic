@@ -41,6 +41,9 @@ import {
   parseProjectCompositionSnapshotWire,
   removeRunCompositionOverlay,
   resolveRunProjectFolderPath,
+  handleAgentWake,
+  registerAgentTerminal,
+  unregisterAgentTerminal,
   readAgentWitchRunConfig,
   resolveWriterSpawnEnv,
   scrubOutboundRunFrame,
@@ -1723,6 +1726,22 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       const rows =
         typeof parsed.payload.rows === "number" ? parsed.payload.rows : 32;
       if (shellSessionId.length > 0) {
+        // TODO(agent-wake): the server does not send projectId/membershipId on
+        // shell.session.open yet; once the project-agent terminal open carries
+        // them, this registers the PTY so agent.wake can type into it.
+        const agentProjectId = parsed.payload.projectId;
+        const agentMembershipId = parsed.payload.membershipId;
+        if (
+          typeof agentProjectId === "string" &&
+          typeof agentMembershipId === "string"
+        ) {
+          registerAgentTerminal({
+            installDir: config.layout.installDir,
+            projectId: agentProjectId,
+            membershipId: agentMembershipId,
+            shellSessionId,
+          });
+        }
         console.log("[agent-witch] Opening interactive Mac shell…");
         void openInteractiveShellPty({
           shellSessionId,
@@ -1737,12 +1756,37 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       }
     }
 
+    if (parsed.type === "agent.wake") {
+      // Wake a local CLI agent through its terminal; task meta stays local.
+      try {
+        const result = handleAgentWake({
+          installDir: config.layout.installDir,
+          projectDataDir: config.layout.projectDataDir,
+          payload: parsed.payload,
+          writeInput: writeShellPtyInput,
+          schedule: (run, delayMs) => {
+            setTimeout(run, delayMs);
+          },
+        });
+        console.log(`[agent-witch] agent.wake ${result}`);
+      } catch (error: unknown) {
+        console.error(
+          "[agent-witch] agent.wake failed:",
+          error instanceof Error ? error.message : error,
+        );
+      }
+    }
+
     if (parsed.type === "shell.session.close" && isRecord(parsed.payload)) {
       const shellSessionId =
         typeof parsed.payload.shellSessionId === "string"
           ? parsed.payload.shellSessionId
           : "";
       if (shellSessionId.length > 0) {
+        unregisterAgentTerminal({
+          installDir: config.layout.installDir,
+          shellSessionId,
+        });
         closeShellPtySession(
           shellSessionId,
           (message) => {

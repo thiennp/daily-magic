@@ -1,5 +1,6 @@
 import { insertProjectMessageWithDeliveries } from "@/lib/projects/acl/messaging/insertProjectMessageWithDeliveries";
 import { PROJECT_MESSAGE_KIND_TASK_UPDATED } from "@/lib/projects/acl/messaging/projectTaskMessageKind.constant";
+import { buildProjectTaskChangedRefsJson } from "@/lib/projects/tasks/buildProjectTaskChangedRefsJson";
 import { buildProjectTaskChangeNotices } from "@/lib/projects/tasks/buildProjectTaskChangeNotices";
 import {
   listProjectTaskDependents,
@@ -56,7 +57,7 @@ export const notifyProjectTaskChanged = async (input: {
         toProjectDisplayName: seat.projectDisplayName,
         kind: PROJECT_MESSAGE_KIND_TASK_UPDATED,
         summary: notice.summary,
-        refsJson: "{}",
+        refsJson: buildProjectTaskChangedRefsJson(input.after),
         recipients: [{ id: seat.id, user_id: seat.userId }],
       });
       told.push(seat.id);

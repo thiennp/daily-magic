@@ -59,7 +59,7 @@ describe("notifyProjectTaskChanged", () => {
       senderUserId: "owner-1",
       toMembershipId: "seat-a",
       toUserId: "u-a",
-      refsJson: "{}",
+      refsJson: expect.stringContaining('"taskId":"t1"'),
     });
   });
 

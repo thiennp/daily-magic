@@ -98,3 +98,9 @@ export {
 } from "../internal/core/safety/boundedRunIdLedger";
 
 export { buildLocalCodingToolRefusalResult } from "../internal/core/safety/buildLocalCodingToolRefusalResult";
+
+export {
+  handleAgentWake,
+  registerAgentTerminal,
+  unregisterAgentTerminal,
+} from "../internal/core/agentWake/handleAgentWake";

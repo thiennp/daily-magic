@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import { getSql } from "@/lib/db";
 import { buildProjectComputerHistoryMessage } from "@/lib/projects/acl/messaging/buildProjectComputerHistoryMessage";
 import { filterProjectWakeRecipientIds } from "@/lib/projects/acl/messaging/loadProjectPollDeliveryMembershipIds";
+import { notifyProjectComputerOfAgentWake } from "@/lib/projects/acl/messaging/notifyProjectComputerOfAgentWake";
 import { notifyProjectComputerOfMessage } from "@/lib/projects/acl/messaging/notifyProjectComputerOfMessage";
 import { parseProjectMessageRefsJson } from "@/lib/projects/acl/messaging/parseProjectMessageRefsJson";
 import { wakeProjectMessageGrokRoutines } from "@/lib/projects/acl/messaging/wakeProjectMessageGrokRoutines";
@@ -106,5 +107,7 @@ export const insertProjectMessageWithDeliveries = async (input: {
       refs,
     }),
   });
+  // Local CLI agent seats (poll) are woken through their terminal instead.
+  await notifyProjectComputerOfAgentWake({ ...input, messageId, refs });
   return { messageId, wakeResults };
 };

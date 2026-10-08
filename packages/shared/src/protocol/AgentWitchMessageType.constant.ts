@@ -60,6 +60,8 @@ export const AGENT_WITCH_MESSAGE_TYPES = {
   WRITER_STATUS: "writer.status",
   /** AWC → owner's project computer: one project message to save locally (history on). */
   PROJECT_MESSAGE_HISTORY: "project.message.history",
+  /** AWC → owner's project computer: wake a local CLI agent seat through its terminal (thin meta, no bodies). */
+  AGENT_WAKE: "agent.wake",
   /** Hosted AWC → project computer: request a History Load-older page (bodies in transit only). */
   PROJECT_HISTORY_PAGE_REQUEST: "project.history.page.request",
   /** Project computer → hosted AWC: History page result (bodies in transit; never persist to Neon). */
