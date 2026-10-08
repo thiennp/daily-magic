@@ -5,8 +5,8 @@ import { fileURLToPath } from "node:url";
 import esbuild from "esbuild";
 
 import {
+  resolveAgentWitchInstallBundleAppDir,
   resolveAgentWitchInstallBundleOutfile,
-  resolveAgentWitchShippedInstallBundleAppDir,
 } from "@agent-witch/install-bundle";
 import { buildAgentWitchBundledDepsArchive } from "./buildAgentWitchBundledDepsArchive";
 import { resolveAgentWitchBundleCommitSha } from "./resolveAgentWitchBundleCommitSha";
@@ -17,7 +17,7 @@ const workspaceRoot = path.resolve(
 );
 
 const entryPath = path.join(workspaceRoot, "scripts/agentWitchAppEntry.ts");
-const outDir = resolveAgentWitchShippedInstallBundleAppDir(workspaceRoot);
+const outDir = resolveAgentWitchInstallBundleAppDir(workspaceRoot);
 const outfile = resolveAgentWitchInstallBundleOutfile(workspaceRoot);
 
 const buildAgentWitchInstallBundle = async (): Promise<void> => {

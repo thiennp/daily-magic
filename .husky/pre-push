@@ -4,6 +4,15 @@
 repo_root=$(pwd)
 git_dir="$repo_root/.git"
 unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_OBJECT_DIRECTORY GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_PREFIX GIT_EXEC_PATH GIT_QUARANTINE_PATH GIT_REFLOG_ACTION GIT_TEMPLATE_DIR GIT_CEILING_DIRECTORIES GIT_COMMON_DIR
+
+push_lines=$(cat)
+if [ -n "$push_lines" ]; then
+  if printf '%s\n' "$push_lines" | npx --no-install tsx scripts/isDeleteOnlyGitPushStdin.ts; then
+    echo "Skipping CI parity checks (delete-only push)."
+    exit 0
+  fi
+fi
+
 echo "Running CI parity checks (npm run ci) before push..."
 npm run ci || exit 1
 export GIT_DIR="$git_dir"

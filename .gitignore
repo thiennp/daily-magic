@@ -27,6 +27,9 @@
 /storybook-static/
 /storybook-wave-captures/
 
+# AgentWitch install bundle verify output (pretest / CI without shipping)
+.cache/
+
 # misc
 .DS_Store
 *.pem

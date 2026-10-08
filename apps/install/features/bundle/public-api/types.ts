@@ -31,6 +31,14 @@ export const AWI_INSTALL_VERSION_FILENAME = "install-version.json";
 /** HTTP path segment AWC serves for the curl | bash installer. */
 export const AWI_PUBLIC_INSTALL_URL_PREFIX = "/install/agent-witch";
 
+/** When `1`, `build:agent-witch` writes tracked `public/install/agent-witch/app/*`. */
+export const AGENT_WITCH_WRITE_SHIPPED_INSTALL_BUNDLE_ENV =
+  "AGENT_WITCH_WRITE_SHIPPED_INSTALL_BUNDLE";
+
+/** Gitignored output used by `pretest` / CI verify so pushes stay clean. */
+export const AWI_VERIFY_INSTALL_BUNDLE_RELATIVE_PATH =
+  ".cache/agent-witch-install-verify";
+
 export const AWI_SHIPPED_APP_DIR_NAME = "app";
 
 export const AWI_SHIPPED_MAIN_SCRIPT_FILE_NAME = "agent-witch.js";

@@ -66,6 +66,8 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+        env:
+          AGENT_WITCH_WRITE_SHIPPED_INSTALL_BUNDLE: "1"
       - run: npm run test:shipped-install-blackbox
         env:
           CI: true

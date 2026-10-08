@@ -21,6 +21,7 @@ const eslintConfig = defineConfig([
     ".agents/**",
     // esbuild output — shebang banner confuses the JS parser
     "public/install/agent-witch/app/**",
+    ".cache/**",
     "storybook-static/**",
   ]),
 ]);
