@@ -5,7 +5,7 @@ import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMess
 import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord";
-import { updateAgentRunStatus } from "@/lib/dispatch/agentRunQueries";
+import { updateRunAndTask } from "@/lib/dispatch/updateRunAndTask";
 import type { PendingDispatchApproval } from "@/lib/dispatch/dispatchApprovalRegistry";
 import {
   approveDispatchWhenMacOffline,
@@ -29,7 +29,7 @@ export const denyDispatchApproval = async (
   denialReason: string,
   requestId?: string,
 ): Promise<AgentWitchMessage> => {
-  const deniedRun = await updateAgentRunStatus(runId, AgentRunStatus.DENIED, {
+  const deniedRun = await updateRunAndTask(runId, AgentRunStatus.DENIED, {
     denialReason,
   });
   if (deniedRun !== null) {

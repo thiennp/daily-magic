@@ -50,6 +50,14 @@ describe("shouldEmitWriterApiMissingCliFallbackHonesty", () => {
     ).toBe(true);
   });
 
+  it("returns false for codex CLI even when the openai key is absent", () => {
+    mocks.readWriterApiProviderSecret.mockReturnValue(null);
+
+    expect(
+      shouldEmitWriterApiMissingCliFallbackHonesty(baseConfig("cli"), "codex"),
+    ).toBe(false);
+  });
+
   it("returns false for antigravity CLI (no Writer API fallback marker)", () => {
     mocks.readWriterApiProviderSecret.mockReturnValue(null);
 

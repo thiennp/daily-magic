@@ -1,4 +1,7 @@
-import { summarizeKnownWriterError } from "@agent-witch/shared/dispatch";
+import {
+  stripAgentRunWriterExecutionHonesty,
+  summarizeKnownWriterError,
+} from "@agent-witch/shared/dispatch";
 
 import { CODING_TOOL_LABELS } from "@/features/projects/tasks/utils/codingToolLabels.constant";
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
@@ -47,11 +50,14 @@ export const resolveTaskResultBlock = (
   >,
 ): TaskResultBlock | null => {
   if (task.status === "failed") {
-    const output = task.resultOutput?.trim() ?? "";
+    const raw = task.resultOutput?.trim() ?? "";
+    const output = stripAgentRunWriterExecutionHonesty(raw);
     // 9b3947bc: a known CLI error (agy quota…) gets one plain sentence; the raw text stays below.
     const hint =
-      resolveNotSignedInHint(output, task.writerAgent) ??
-      summarizeKnownWriterError(`${output}\n${task.reportSummary ?? ""}`);
+      resolveNotSignedInHint(
+        task.writerAgent === "claude-cli" ? raw : output,
+        task.writerAgent,
+      ) ?? summarizeKnownWriterError(`${output}\n${task.reportSummary ?? ""}`);
     return {
       ...block(
         "bad",

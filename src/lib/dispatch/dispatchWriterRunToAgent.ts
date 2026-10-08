@@ -1,3 +1,4 @@
+import { agentRunResultOutputToStore } from "@/lib/dispatch/agentRunResultOutputToStore";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import type { ProjectCompositionSnapshotWire } from "@agent-witch/shared/protocol";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
@@ -5,7 +6,7 @@ import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRunti
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { appendAgentRunEvent } from "@/lib/dispatch/agentRunEventQueries";
-import { updateAgentRunStatus } from "@/lib/dispatch/agentRunQueries";
+import { updateRunAndTask } from "@/lib/dispatch/updateRunAndTask";
 import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord";
 import { buildCommandClaudeRunDispatchMessage } from "@/lib/dispatch/buildCommandClaudeRunDispatchMessage";
 import { resolveAgentRunWriterCompletion } from "@/lib/dispatch/resolveAgentRunWriterCompletion";
@@ -53,7 +54,7 @@ export const markAgentRunRunning = async (
   runtime: AgentWitchHubRuntime,
   runId: string,
 ): Promise<AgentRunRecord | null> => {
-  const run = await updateAgentRunStatus(runId, AgentRunStatus.RUNNING);
+  const run = await updateRunAndTask(runId, AgentRunStatus.RUNNING);
   if (run !== null) {
     await appendAgentRunEvent({
       agentRunId: runId,
@@ -76,10 +77,10 @@ export const markAgentRunCompleted = async (
   },
 ): Promise<AgentRunRecord | null> => {
   const completion = resolveAgentRunWriterCompletion({ exitCode, output });
-  const run = await updateAgentRunStatus(runId, completion.status, {
+  const run = await updateRunAndTask(runId, completion.status, {
     resultExitCode: completion.resultExitCode,
     resultOutcomeCode: completion.resultOutcomeCode,
-    resultOutput: output,
+    resultOutput: agentRunResultOutputToStore(completion.status, output),
     estimateSeconds: comparison?.estimateSeconds,
     actualSeconds: comparison?.actualSeconds,
   });

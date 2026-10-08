@@ -33,7 +33,8 @@
 /** 312 = dd5c338d: legacy launcher no longer stops account hosts and retires itself as a no-op; console-user bootout spares other accounts; run.sh repair reports current. */
 /** 313 = per-install identity scopes same-label auto-revoke; Codex prepare fail-fast + heartbeat; Linux finish honest without systemd (name+id); ask Context so far strips ANSI/harness. */
 /** 314 = post-run work (run history, auto skill report, report verdict, knowledge candidate) runs where the result is emitted; it waited for a cloud echo that never comes. */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "314";
+/** 315 = the writer-execution (Anthropic key) header is only added for claude-cli, never for codex/cursor/antigravity. */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "315";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =

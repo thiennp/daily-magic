@@ -14,6 +14,7 @@ export {
   AGENT_RUN_WRITER_EXECUTION_HONESTY_MARKER,
   AGENT_RUN_WRITER_EXECUTION_MISSING_WRITER_API_KEY_REASON_CODE,
 } from "./agentRunWriterExecutionHonesty.constant";
+export { stripAgentRunWriterExecutionHonesty } from "./stripAgentRunWriterExecutionHonesty";
 export {
   isCliWriterApiKeyMissingExecutionBackend,
   parseAgentRunWriterExecutionHonestyFromOutput,

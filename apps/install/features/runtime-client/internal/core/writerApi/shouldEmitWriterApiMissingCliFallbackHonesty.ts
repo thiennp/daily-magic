@@ -14,8 +14,10 @@ export const shouldEmitWriterApiMissingCliFallbackHonesty = (
     return false;
   }
 
-  // Antigravity runs on CLI OAuth (agy); missing Google Writer API profile keys are not a CLI fallback signal.
-  if (writerAgent === "antigravity") {
+  // Only claude-cli has an Anthropic Writer API key to be missing. Codex,
+  // Cursor and Antigravity run on their own CLI sign-in, so a missing
+  // provider key is never a signal for them.
+  if (writerAgent !== "claude-cli") {
     return false;
   }
 

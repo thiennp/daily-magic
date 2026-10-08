@@ -2,6 +2,7 @@ import { dispatchProjectMessageFromHumanMember } from "@/lib/projects/acl/messag
 import { dispatchProjectMessageFromOwner } from "@/lib/projects/acl/messaging/dispatchProjectMessageFromOwner";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { requireAuth } from "@/lib/auth/requireAuth";
+import { linkTaskAssignRun } from "@/lib/projects/tasks/linkTaskAssignRun";
 
 type DispatchFailure = Extract<
   Awaited<ReturnType<typeof dispatchProjectMessageFromOwner>>,
@@ -30,7 +31,9 @@ const failureStatus = (result: DispatchFailure): number => {
 
 const readJsonBody = async (
   request: Request,
-): Promise<{ readonly ok: true; readonly args: unknown } | { readonly ok: false }> => {
+): Promise<
+  { readonly ok: true; readonly args: unknown } | { readonly ok: false }
+> => {
   try {
     return { ok: true, args: await request.json() };
   } catch {
@@ -48,7 +51,10 @@ export async function POST(
   const { projectId } = await context.params;
   const project = await getUserProjectById(projectId);
   if (project === null) {
-    return Response.json({ ok: false, errorMessage: "not_found" }, { status: 404 });
+    return Response.json(
+      { ok: false, errorMessage: "not_found" },
+      { status: 404 },
+    );
   }
   const isOwner = project.ownerUserId === actor.id;
   const body = await readJsonBody(request);
@@ -60,7 +66,11 @@ export async function POST(
   }
   const args = body.ok ? body.args : null;
   const result = isOwner
-    ? await dispatchProjectMessageFromOwner({ projectId, ownerUserId: actor.id, args })
+    ? await dispatchProjectMessageFromOwner({
+        projectId,
+        ownerUserId: actor.id,
+        args,
+      })
     : await dispatchProjectMessageFromHumanMember({
         projectId,
         actorUserId: actor.id,
@@ -82,6 +92,7 @@ export async function POST(
       { status: failureStatus(result) },
     );
   }
+  await linkTaskAssignRun(projectId, actor.id, args, result);
   return Response.json({
     ok: true,
     messageId: result.messageId,

@@ -1,6 +1,6 @@
 import { asRowArray, getSql } from "@/lib/db";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
-import { updateAgentRunStatus } from "@/lib/dispatch/agentRunQueries";
+import { updateRunAndTask } from "@/lib/dispatch/updateRunAndTask";
 import { dispatchApprovalRegistry } from "@/lib/dispatch/dispatchApprovalRegistry";
 import { notifyComputerRunApprovalTimedOut } from "@/lib/projects/acl/runApprovals/notifyComputerRunApprovalTimedOut";
 
@@ -11,7 +11,7 @@ const isExpiredApproval = (expiresAt: string | null | undefined): boolean =>
 
 /** Terminal timed_out on the run + live DISPATCH_APPROVAL_RESULT push. */
 const expireRun = async (runId: string): Promise<void> => {
-  const run = await updateAgentRunStatus(runId, AgentRunStatus.EXPIRED, {
+  const run = await updateRunAndTask(runId, AgentRunStatus.EXPIRED, {
     denialReason: "Dispatch approval expired.",
   });
   dispatchApprovalRegistry.remove(runId);
