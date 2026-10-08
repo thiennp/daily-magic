@@ -1,10 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { trimAgentWitchLogFile } from "./trimAgentWitchLogFile";
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
 const TRAFFIC_LOG_FILE_NAME = "local-ws-traffic.ndjson";
 const MAX_TRAFFIC_LOG_ENTRIES = 500;
+const MAX_TRAFFIC_LOG_BYTES = 512 * 1024;
+const KEEP_TRAFFIC_LOG_BYTES = 128 * 1024;
 
 export type AgentWitchLocalTrafficEntry = {
   readonly at: string;
@@ -31,6 +34,10 @@ export const appendAgentWitchLocalTraffic = (
     ...(entry.action !== undefined ? { action: entry.action } : {}),
   });
   fs.appendFileSync(logPath, `${line}\n`, "utf8");
+  trimAgentWitchLogFile(logPath, {
+    maxBytes: MAX_TRAFFIC_LOG_BYTES,
+    keepBytes: KEEP_TRAFFIC_LOG_BYTES,
+  });
 };
 
 export const readAgentWitchLocalTraffic = (

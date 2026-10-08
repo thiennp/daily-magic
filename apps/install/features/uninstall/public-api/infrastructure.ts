@@ -10,3 +10,4 @@ export {
   type ForgetAgentWitchLocalConnectionResult,
 } from "../internal/core/forgetAgentWitchLocalConnection";
 export { isUnknownAgentWitchIdentityError } from "../internal/core/isUnknownAgentWitchIdentityError";
+export { isDeviceNotLinkedError } from "../internal/core/isDeviceNotLinkedError";

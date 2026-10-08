@@ -16,13 +16,13 @@ describe("resolveAgentRegisterIdentityRejection", () => {
     });
   });
 
-  it("keeps a revoked row as not linked, without a wipe code", () => {
+  it("keeps a revoked row as not linked (back-off code, never the wipe code)", () => {
     const rejection = resolveAgentRegisterIdentityRejection({
       device: { revokedAt: "2026-09-28T00:00:00.000Z" },
       userId: "user-1",
     });
 
-    expect(rejection?.errorCode).toBeUndefined();
+    expect(rejection?.errorCode).toBe("device_not_linked");
     expect(rejection?.errorMessage).toContain("not linked");
   });
 
@@ -32,7 +32,7 @@ describe("resolveAgentRegisterIdentityRejection", () => {
       userId: undefined,
     });
 
-    expect(rejection?.errorCode).toBeUndefined();
+    expect(rejection?.errorCode).toBe("device_not_linked");
     expect(rejection?.errorMessage).toContain("not linked");
   });
 

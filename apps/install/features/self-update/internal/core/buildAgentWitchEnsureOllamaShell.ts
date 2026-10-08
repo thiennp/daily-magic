@@ -54,6 +54,10 @@ agent_witch_ensure_ollama_model() {
     echo "Ollama model \${model} is already present."
     return 0
   fi
+  if pgrep -f "ollama pull \${model}" >/dev/null 2>&1; then
+    echo "Ollama model \${model} is already being pulled."
+    return 0
+  fi
   echo "Pulling Ollama model \${model} in the background…"
   nohup ollama pull "\${model}" >>"\${pull_log}" 2>&1 &
 }

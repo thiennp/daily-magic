@@ -1,6 +1,7 @@
 import { spawn } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
+import path from "node:path";
 
 import WebSocket from "ws";
 
@@ -69,6 +70,7 @@ import {
   appendAgentWitchLocalTraffic,
   recordAgentWitchLocalTraceEvent,
   recordAgentWitchWsTraceFromObject,
+  trimAgentWitchLogs,
 } from "@agent-witch/live-diagnostics";
 import {
   buildKnowledgeHeartbeatPayload,
@@ -107,6 +109,7 @@ import {
 } from "@agent-witch/live-harness";
 import {
   forgetAgentWitchLocalConnection,
+  isDeviceNotLinkedError,
   isUnknownAgentWitchIdentityError,
 } from "@agent-witch/install-uninstall";
 import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
@@ -189,6 +192,8 @@ import {
 } from "./legacyScriptDeps";
 const HEARTBEAT_INTERVAL_MS = 30_000;
 const MAX_RECONNECT_DELAY_MS = 30_000;
+/** Revoked/unlinked device: retry rarely instead of every 2s. */
+const NOT_LINKED_RETRY_MS = 5 * 60 * 1_000;
 const shellSessionIdByRunId = new Map<string, string>();
 const projectFolderPathByRunId = new Map<string, string>();
 const projectIdByRunId = new Map<string, string>();
@@ -1023,6 +1028,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     localHealthTimer?: NodeJS.Timeout;
     reconnectTimer?: NodeJS.Timeout;
     reconnectAttempt: number;
+    notLinked: boolean;
     stopped: boolean;
     wsConnected: boolean;
     lastHeartbeatAt: string | null;
@@ -1031,6 +1037,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     selfUpdateInFlight: boolean;
   } = {
     reconnectAttempt: 0,
+    notLinked: false,
     stopped: false,
     wsConnected: false,
     lastHeartbeatAt: null,
@@ -1262,7 +1269,9 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       return;
     }
 
-    const delayMs = computeReconnectDelayMs(state.reconnectAttempt);
+    const delayMs = state.notLinked
+      ? NOT_LINKED_RETRY_MS
+      : computeReconnectDelayMs(state.reconnectAttempt);
     console.log(`[agent-witch] Reconnecting in ${delayMs}ms…`);
 
     state.reconnectTimer = setTimeout(() => {
@@ -1274,6 +1283,12 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
   const startHeartbeat = (socket: WebSocket): void => {
     clearHeartbeat();
     const sendHeartbeat = async (): Promise<void> => {
+      trimAgentWitchLogs([
+        config.layout.mainLogPath,
+        config.layout.errorLogPath,
+        path.join(config.layout.installDir, "agent-witch.log"),
+        path.join(config.layout.installDir, "agent-witch.error.log"),
+      ]);
       const knowledge = await buildKnowledgeHeartbeatPayload(
         config.layout,
       ).catch(() => null);
@@ -1312,6 +1327,20 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
   ): void => {
     if (typeof parsed.type !== "string") {
       return;
+    }
+
+    if (isDeviceNotLinkedError(parsed)) {
+      if (!state.notLinked) {
+        console.error(
+          "[agent-witch] This computer is not linked to AgentWitch (revoked or removed). Retrying every 5 minutes. Run the install command from Home to link it again.",
+        );
+      }
+      state.notLinked = true;
+      return;
+    }
+
+    if (parsed.type === "system.ack") {
+      state.notLinked = false;
     }
 
     if (isUnknownAgentWitchIdentityError(parsed)) {

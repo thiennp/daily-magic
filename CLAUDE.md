@@ -114,8 +114,10 @@ npm run agent-witch:install
 - Test UI: http://localhost:3000/ws-test
 - Status API: `GET /api/agent-witch/status`
 - Config: `~/.agent-witch/config.json`
-- Watchdog (macOS): `com.agent-witch-watchdog` LaunchAgent runs every 60s and kickstarts stale agent clients (`npm run agent-witch:watchdog` for a manual check)
-- Self-update (macOS): `com.agent-witch-updater` LaunchAgent checks hourly for install bundle updates (`npm run agent-witch:self-update` for a manual run)
+- Watchdog: runs in-process (`startAgentWitchInProcessServices`) and restarts a stale client; `npm run agent-witch:watchdog` for a manual check. There is no separate watchdog LaunchAgent on current installs
+- Self-update: triggered when the heartbeat ack reports a newer install bundle (`npm run agent-witch:self-update` for a manual run). There is no hourly updater LaunchAgent on current installs
+- A revoked/unlinked device gets `device_not_linked` and retries every 5 minutes (not every 2s); `unknown_identity` still wipes the local connection
+- Logs under the profile `logs/` dir are trimmed at 5 MB (keep last 1 MB) on each heartbeat
 - Install bundle version API: `GET /install/agent-witch/version` — bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` in `src/lib/agentWitch/agentWitchInstallBundleVersion.ts` whenever any install script changes
 - Local version file: `~/.agent-witch/install-version.json`
 - Local watchdog API (wake server): `GET http://127.0.0.1:47892/watchdog/status`, `GET /watchdog/logs`, `POST /watchdog/revive`

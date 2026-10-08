@@ -17,3 +17,5 @@ export {
   clearAgentWitchErrorLog,
   readAgentWitchErrorLogTail,
 } from "../internal/core/readAgentWitchErrorLogTail";
+
+export { trimAgentWitchLogs } from "../internal/core/trimAgentWitchLogFile";
