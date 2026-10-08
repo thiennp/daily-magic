@@ -19,6 +19,8 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     ".agents/**",
+    // local agent worktrees (untracked)
+    ".claude/**",
     // esbuild output — shebang banner confuses the JS parser
     "public/install/agent-witch/app/**",
     ".cache/**",
