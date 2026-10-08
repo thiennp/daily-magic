@@ -3,17 +3,15 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-const loginPageViewSource = readFileSync(
-  path.join(process.cwd(), "src/features/auth/LoginPageView.tsx"),
-  "utf8",
-);
+const read = (file: string) =>
+  readFileSync(path.join(process.cwd(), "src/features/auth", file), "utf8");
 
-describe("LoginPageView layout (login-ready / tablet)", () => {
-  it("stacks welcome copy above the sign-in card until lg two-column", () => {
-    expect(loginPageViewSource).toMatch(/lg:grid-cols-2/);
-    expect(loginPageViewSource).not.toMatch(/\border-\d/);
-    expect(loginPageViewSource).toMatch(
-      /LOGIN_PAGE_COPY\.title[\s\S]*<MarketingCard/,
-    );
+describe("LoginPageView layout (design: single centered card)", () => {
+  it("renders one centered card instead of a two-column hero", () => {
+    const view = read("LoginPageView.tsx");
+    const card = read("LoginCard.tsx");
+    expect(view).not.toMatch(/lg:grid-cols-2/);
+    expect(view).toMatch(/<LoginCard/);
+    expect(card).toMatch(/max-w-\[440px\]/);
   });
 });

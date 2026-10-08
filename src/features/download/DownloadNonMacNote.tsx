@@ -6,8 +6,7 @@ import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceSty
 export default function DownloadNonMacNote() {
   return (
     <p className={`mt-4 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-      {DOWNLOAD_PAGE_COPY.nonMacNote}{" "}
-      <DownloadPageTextLink />
+      {DOWNLOAD_PAGE_COPY.nonMacNote} <DownloadPageTextLink />
     </p>
   );
 }

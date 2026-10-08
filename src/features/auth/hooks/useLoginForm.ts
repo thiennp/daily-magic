@@ -4,17 +4,15 @@ import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-import {
-  buildLoginFeedback,
-  type LoginFeedback,
-} from "@/features/auth/utils/buildLoginFeedback";
+import { type LoginFeedback } from "@/features/auth/utils/buildLoginFeedback";
 import buildLoginFeedbackFromAuthError from "@/features/auth/utils/buildLoginFeedbackFromAuthError";
 import normalizeAuthErrorCode from "@/features/auth/utils/normalizeAuthErrorCode";
 import parseEmailSignInFeedback from "@/features/auth/utils/parseEmailSignInFeedback";
 import readDevSecretFromLocalStorage from "@/features/auth/utils/readDevSecretFromLocalStorage";
-import secretLogin from "@/features/auth/utils/secretLogin";
-import testAgentWitchLogin from "@/features/auth/utils/testAgentWitchLogin";
-import isTestAgentWitchEmail from "@/lib/auth/isTestAgentWitchEmail";
+import runDevLogin from "@/features/auth/utils/runDevLogin";
+import validateLoginEmail, {
+  LOGIN_EMAIL_SEND_FAILED_MESSAGE,
+} from "@/features/auth/utils/validateLoginEmail";
 
 interface UseLoginFormParams {
   readonly defaultCallbackUrl: string;
@@ -30,6 +28,8 @@ export default function useLoginForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleSigningIn, setIsGoogleSigningIn] = useState(false);
   const [feedback, setFeedback] = useState<LoginFeedback | null>(null);
+  const [fieldError, setFieldError] = useState<string | null>(null);
+  const [sentEmail, setSentEmail] = useState<string | null>(null);
   const authErrorFeedback = authError
     ? buildLoginFeedbackFromAuthError(authError)
     : null;
@@ -38,8 +38,10 @@ export default function useLoginForm({
   const handleEmailSignIn = async (submittedEmail?: string) => {
     const trimmedEmail = (submittedEmail ?? email).trim();
 
-    if (!trimmedEmail) {
-      setFeedback(buildLoginFeedback("Enter your email address."));
+    const validationError = validateLoginEmail(trimmedEmail);
+    setFieldError(validationError);
+    if (validationError !== null) {
+      setFeedback(null);
       return;
     }
 
@@ -49,40 +51,13 @@ export default function useLoginForm({
     setFeedback(null);
 
     try {
-      if (isTestAgentWitchEmail(trimmedEmail)) {
-        const result = await testAgentWitchLogin({ email: trimmedEmail });
-
-        if (result.ok) {
+      const dev = await runDevLogin(trimmedEmail, devSecret);
+      if (dev.handled) {
+        if (dev.feedback === null) {
           window.location.assign(callbackUrl);
-          return;
+        } else {
+          setFeedback(dev.feedback);
         }
-
-        setFeedback(
-          buildLoginFeedback(
-            result.error ??
-              "Test account login failed. Use npm run dev locally, or set ALLOW_TEST_AUTH=1 for production builds on localhost.",
-          ),
-        );
-        return;
-      }
-
-      if (devSecret) {
-        const result = await secretLogin({
-          email: trimmedEmail,
-          secret: devSecret,
-        });
-
-        if (result.ok) {
-          window.location.assign(callbackUrl);
-          return;
-        }
-
-        setFeedback(
-          buildLoginFeedback(
-            result.error ??
-              "Dev secret login failed. Check localStorage secret and SECRET env.",
-          ),
-        );
         return;
       }
 
@@ -91,9 +66,14 @@ export default function useLoginForm({
         callbackUrl,
         redirect: false,
       });
-      setFeedback(parseEmailSignInFeedback(result));
+      const parsed = parseEmailSignInFeedback(result);
+      if (parsed.variant === "success") {
+        setSentEmail(trimmedEmail);
+      } else {
+        setFeedback(parsed);
+      }
     } catch {
-      setFeedback(buildLoginFeedback("Could not send the sign-in email."));
+      setFieldError(LOGIN_EMAIL_SEND_FAILED_MESSAGE);
     } finally {
       setIsSubmitting(false);
     }
@@ -111,7 +91,13 @@ export default function useLoginForm({
 
   return {
     email,
-    setEmail,
+    setEmail: (value: string) => {
+      setEmail(value);
+      setFieldError(null);
+    },
+    fieldError,
+    sentEmail,
+    resetSent: () => setSentEmail(null),
     isSubmitting,
     isGoogleSigningIn,
     displayedFeedback,

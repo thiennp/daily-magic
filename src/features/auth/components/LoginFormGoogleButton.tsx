@@ -14,17 +14,19 @@ export default function LoginFormGoogleButton({
   disabled = false,
   onGoogleSignIn,
 }: LoginFormGoogleButtonProps) {
+  const label = disabled ? "Opening Google…" : "Continue with Google";
+
   if (appearance === "marketing") {
     return (
       <button
         type="button"
-        aria-label="Continue signing in with Google"
         className={LOGIN_FORM_APPEARANCE_CLASSES.marketing.googleButton}
         disabled={disabled}
+        aria-busy={disabled || undefined}
         onClick={onGoogleSignIn}
       >
         <GoogleSignInIcon />
-        Continue with Google
+        {label}
       </button>
     );
   }
@@ -33,12 +35,11 @@ export default function LoginFormGoogleButton({
     <Button
       variant="outline"
       className="w-full"
-      aria-label="Continue signing in with Google"
       disabled={disabled}
       startIcon={<GoogleSignInIcon />}
       onClick={onGoogleSignIn}
     >
-      Continue with Google
+      {label}
     </Button>
   );
 }

@@ -2,6 +2,11 @@
 
 import { useEffect } from "react";
 
+import {
+  APP_SURFACE_CTA_PRIMARY_CLASS,
+  APP_SURFACE_TEXT_LINK_CLASS,
+} from "@/components/surfaces/appSurfaceStyles.constant";
+
 type MacConnectBootstrapClientProps = {
   readonly redirectUrl: string;
   readonly errorSlug?: string;
@@ -17,22 +22,41 @@ export default function MacConnectBootstrapClient({
   }, [redirectUrl]);
 
   return (
-    <main className="mx-auto flex min-h-[50vh] max-w-lg flex-col justify-center px-4 py-12 text-awc-fg dark:text-white">
-      <h1 className="text-xl font-semibold">
-        {errorSlug ? "Could not connect Mac" : "Signing in…"}
-      </h1>
-      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
-        {errorSlug
-          ? `Returning to AgentWitch Local (${errorSlug}).`
-          : "Finishing computer setup and returning to the app."}
-      </p>
-      <p className="mt-6 text-xs text-awc-fg-muted dark:text-gray-500">
-        If the app does not open,{" "}
-        <a className="underline" href={redirectUrl}>
-          continue here
-        </a>
-        .
-      </p>
+    <main className="mx-auto flex w-full max-w-[720px] flex-col gap-5 px-4 py-10 text-awc-fg sm:py-14">
+      <header className="space-y-2">
+        <h1 className="text-3xl font-bold tracking-tight">Connect</h1>
+        <p className="text-sm text-awc-fg-muted">
+          Link this computer to your account.
+        </p>
+      </header>
+      <section
+        aria-labelledby="connect-heading"
+        className="flex flex-col gap-4 rounded-xl border border-awc-border bg-awc-surface p-5"
+      >
+        <h2 id="connect-heading" className="text-base font-semibold">
+          {errorSlug ? "Could not connect Mac" : "Signing in…"}
+        </h2>
+        {errorSlug ? (
+          <p role="alert" className="text-sm text-awc-bad">
+            Returning to AgentWitch Local ({errorSlug}). Nothing was connected.
+          </p>
+        ) : (
+          <p role="status" className="text-sm text-awc-fg-muted">
+            Finishing computer setup and returning to the app.
+          </p>
+        )}
+        <div className="flex flex-wrap items-center gap-3">
+          <a href={redirectUrl} className={APP_SURFACE_CTA_PRIMARY_CLASS}>
+            {errorSlug ? "Try again" : "Open AgentWitch"}
+          </a>
+        </div>
+        <p className="text-[13px] text-awc-fg-muted">
+          Not installed yet?{" "}
+          <a href="/download" className={APP_SURFACE_TEXT_LINK_CLASS}>
+            Download AgentWitch
+          </a>
+        </p>
+      </section>
     </main>
   );
 }

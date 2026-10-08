@@ -4,10 +4,10 @@ import DownloadPageBody from "@/features/download/DownloadPageBody";
 import AppShell from "@/features/shell/AppShell";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import { AGENT_WITCH_DEFAULT_ORIGIN } from "@/lib/agentWitch/constants";
+import { auth } from "@/lib/auth/auth";
 
 const title = `Download | ${AGENT_WITCH_PRODUCT_NAME}`;
-const description =
-  "Download the AgentWitch menu bar app for Mac on Apple Silicon.";
+const description = "Download and set up the AgentWitch app for Mac or Linux.";
 
 export const metadata: Metadata = {
   title,
@@ -17,10 +17,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DownloadPage() {
+export default async function DownloadPage() {
+  const session = await auth();
   return (
     <AppShell>
-      <DownloadPageBody />
+      <DownloadPageBody signedInEmail={session?.user?.email ?? null} />
     </AppShell>
   );
 }

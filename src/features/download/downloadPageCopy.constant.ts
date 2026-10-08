@@ -1,11 +1,16 @@
-/** User-facing copy for the Mac app Download page. */
+/** User-facing copy for the Download and set up page. */
 export const DOWNLOAD_PAGE_COPY = {
-  title: "Download the Mac app",
+  title: "Get AgentWitch",
   intro:
-    "Get the AgentWitch menu bar app for Mac. Use it to start, stop, and check AgentWitch on this computer.",
+    "Three short steps to put AgentWitch on a computer. Bots work there, and your files stay there.",
   downloadCta: "Download for Mac",
+  freeNote: "Free. It runs only on a computer, not on a phone or in a browser.",
   siliconNote: "Built for Mac on Apple Silicon (M1, M2, M3, and later).",
   signedNote: "Signed by Developer ID and notarized by Apple.",
+  linuxNote:
+    "The Linux build is not signed. On stock GNOME, enable the AppIndicator extension for the tray icon.",
+  unsupportedNote:
+    "AgentWitch runs on a Mac or a Linux computer, not on a phone or Windows yet. Open this page on that computer to download it.",
   nonMacNote:
     "The menu bar app runs on Mac with Apple Silicon. On this device, open the Download page on your Mac to get the app.",
   nonMacLinkLabel: "Open the Download page",
