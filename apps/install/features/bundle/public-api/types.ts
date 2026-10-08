@@ -40,7 +40,8 @@
 /** 320 = auto skills "Scan past tasks": the owner can run this computer's finished tasks through auto skills on demand (autoskill.scan.request). */
 /** 321 = auto skills: the owner picks which coding agent (Codex, Claude, Cursor) judges; no fallback to other tools. */
 /** 322 = a finished run's report summary says what changed (last progress or answer plus the git diff), not just "Finished on your computer.". */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "322";
+/** 323 = after a reconnect the host re-starts every live run's terminal stream, so end-of-run output still reaches the dashboard. */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "323";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =

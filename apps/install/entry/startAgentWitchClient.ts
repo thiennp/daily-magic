@@ -145,6 +145,8 @@ import { shouldRestartForRepairedRunScript } from "./hostServicesMigration/shoul
 
 import {
   acceptTerminalStream,
+  isInactiveTerminalStreamError,
+  reRegisterAgentWitchTerminalStreams,
   AGENT_RUN_WORKING_ESTIMATE_MARKER,
   AGENT_WITCH_BUNDLE_RESTART_RECHECK_MS,
   applyAutomationsRunFromCloud,
@@ -1583,6 +1585,12 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     const requestId =
       typeof parsed.requestId === "string" ? parsed.requestId : undefined;
 
+    if (isInactiveTerminalStreamError(parsed) && requestId !== undefined) {
+      reRegisterAgentWitchTerminalStreams((message) => {
+        sendMessage(socket, message);
+      }, requestId);
+    }
+
     if (parsed.type === "system.error" && isRecord(parsed.payload)) {
       const errorCode =
         typeof parsed.payload.errorCode === "string"
@@ -2502,6 +2510,10 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       );
       reportHarnessManifest(socket, config.layout);
       replayPendingRunInputRequests(config, socket);
+      // r323: re-start live run streams; the server lost the slot on reconnect.
+      reRegisterAgentWitchTerminalStreams((message) => {
+        sendMessage(socket, message);
+      });
       startHeartbeat(socket);
     });
 

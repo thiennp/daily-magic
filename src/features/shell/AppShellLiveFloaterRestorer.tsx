@@ -12,6 +12,7 @@ import { fetchAgentRunDetail } from "@/features/reports/fetchAgentRunDetail";
 import { isAgentRunSilentPastStall } from "@/lib/dispatch/isAgentRunSilentPastStall";
 import { shouldRestoreLiveFloaterAfterReload } from "@/features/shell/utils/shouldRestoreLiveFloaterAfterReload";
 import { shouldDockResumedLiveSessionOnLoad } from "@/features/shell/utils/shouldDockResumedLiveSessionOnLoad";
+import { shouldDockRestoredLiveFloater } from "@/features/shell/utils/shouldDockRestoredLiveFloater";
 
 const readRunStatus = async (runId: string): Promise<string | null> => {
   const cached = getAgentRunLocalCache(runId);
@@ -28,10 +29,27 @@ const readRunStatus = async (runId: string): Promise<string | null> => {
 /**
  * afae8216: the host auto-update reloads the tab; reopen the floater this
  * tab had open for a run that is still live, once per page load.
+ * d863fc9e: like ?resumeLive=1, it lands docked in the floater, not the big
+ * modal: the run opens with its URL, then docks once the panel is up.
  */
 export default function AppShellLiveFloaterRestorer() {
-  const { expandRunningSendTask, minimizeSendTaskModal } = useSendTaskModal();
+  const { expandRunningSendTask, minimizeSendTaskModal, isOpen } =
+    useSendTaskModal();
   const attempted = useRef(false);
+  const dockPending = useRef(false);
+
+  useEffect(() => {
+    if (
+      !shouldDockRestoredLiveFloater({
+        isOpen,
+        dockPending: dockPending.current,
+      })
+    ) {
+      return;
+    }
+    dockPending.current = false;
+    minimizeSendTaskModal();
+  }, [isOpen, minimizeSendTaskModal]);
 
   useEffect(() => {
     if (attempted.current) {
@@ -59,6 +77,7 @@ export default function AppShellLiveFloaterRestorer() {
             floaterOpen,
           })
         ) {
+          dockPending.current = true;
           expandRunningSendTask(storedRunId);
           return;
         }

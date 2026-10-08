@@ -2,6 +2,7 @@ import type WebSocket from "ws";
 
 import type { HarnessWriterAgentId } from "./buildWriterCliInvocation";
 import {
+  beginTerminalStream,
   isTerminalStreamAccepted,
   queueTerminalStreamChunk,
 } from "./agentWitchTerminalStreamState";
@@ -55,16 +56,16 @@ export const tryRunWriterTaskInPty = async (input: {
     queueTerminalStreamChunk(input.agentRunId, text);
   };
 
-  input.sendMessage(input.socket, {
-    type: "terminal.stream.start",
-    payload: {
-      runId: input.agentRunId,
-      ...(input.shellSessionId !== undefined
+  input.sendMessage(
+    input.socket,
+    beginTerminalStream(
+      input.agentRunId,
+      input.requestId,
+      input.shellSessionId !== undefined
         ? { shellSessionId: input.shellSessionId }
-        : {}),
-    },
-    requestId: input.requestId,
-  });
+        : {},
+    ),
+  );
 
   const spawned = await spawnAgentCommandInPty({
     shellSessionId: input.shellSessionId,

@@ -12,6 +12,7 @@ import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
 import HomeAttentionRow from "@/features/home/HomeAttentionRow";
 import HomeStalledJobRow from "@/features/home/HomeStalledJobRow";
 import HomeAttentionSkillRows from "@/features/home/HomeAttentionSkillRows";
+import useHomeAttentionRemoteRuns from "@/features/home/hooks/useHomeAttentionRemoteRuns";
 import useHomeAttentionRuns from "@/features/home/hooks/useHomeAttentionRuns";
 import selectHomeRecentProjects from "@/features/home/utils/selectHomeRecentProjects";
 import { isAgentRunSweptStale } from "@/lib/dispatch/isAgentRunStalled";
@@ -19,11 +20,13 @@ import { useAutoSkillQuestions } from "@/features/project-auto-skills/public-api
 
 /**
  * Design "Needs your attention": count badge plus runs waiting for approval
- * or failed in the last 24h (browser run cache), and "Save as skill?"
+ * or failed in the last 24h (browser run cache, filled from the server so
+ * runs from other browsers show too — e48cd107), and "Save as skill?"
  * questions of the recent projects (owner-only, one request per project).
  * Bot join requests are per-project only, so they are not listed here.
  */
 export default function HomeAttentionPanel() {
+  useHomeAttentionRemoteRuns();
   const runs = useHomeAttentionRuns();
   const [nowMs] = useState(() => Date.now());
   const { projects } = useUserProjects("");

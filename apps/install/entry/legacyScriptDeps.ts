@@ -42,6 +42,10 @@ export {
   isTerminalStreamAccepted,
   queueTerminalStreamChunk,
 } from "../../../scripts/agentWitchTerminalStreamState";
+export {
+  isInactiveTerminalStreamError,
+  reRegisterAgentWitchTerminalStreams,
+} from "../../../scripts/reRegisterAgentWitchTerminalStreams";
 export { requestLocalAgentWitchRestart } from "../../../scripts/requestLocalAgentWitchRestart";
 export { ensureAgentWitchCoupledLiveAppHealth } from "../../../scripts/ensureAgentWitchCoupledLiveAppHealth";
 export {

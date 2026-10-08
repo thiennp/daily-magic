@@ -9,6 +9,7 @@ import { expireStaleAgentWitchHubDispatchRelays } from "@/lib/agentWitch/updateA
 import { processAgentWitchHubDispatchRelaysForHub } from "@/lib/agentWitch/processAgentWitchHubDispatchRelaysForHub";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { getAgentWitchHubInstanceId } from "@/lib/agentWitch/getAgentWitchHubInstanceId";
+import { startConnectPlaceholderSweep } from "@/lib/agentWitch/startConnectPlaceholderSweep";
 import { isDatabaseUrlConfigured } from "@/lib/db";
 import { expireStaleDispatchApprovals } from "@/lib/dispatch/expireStaleDispatchApprovals";
 
@@ -43,6 +44,7 @@ export const startAgentWitchConnectionRegistryMaintenance = (): void => {
   const startPolling = (): void => {
     const sweepIntervalMs = AGENT_WITCH_HEARTBEAT_INTERVAL_MS;
     const relayPollIntervalMs = 1_000;
+    startConnectPlaceholderSweep();
     setInterval(() => {
       void processAgentWitchHubDispatchRelaysForHub(getAgentWitchHub()).catch(
         (error: unknown) => {

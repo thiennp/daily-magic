@@ -59,8 +59,11 @@ import { isProcessAlive } from "./isProcessAlive";
 import { resolveWriterTaskCwd } from "./resolveWriterTaskCwd";
 import type { AgentWitchCloudApiConfig } from "./agentWitchCloudApi";
 import {
+  acceptTerminalStream,
+  beginTerminalStream,
   clearTerminalStreamState,
   isTerminalStreamAccepted,
+  isTerminalStreamStarted,
   queueTerminalStreamChunk,
 } from "./agentWitchTerminalStreamState";
 import {
@@ -448,15 +451,24 @@ const finishRun = (
     stopRunHeartbeat(agentRunId);
     removeRunCompositionOverlay(config.layout, agentRunId);
 
-    const hadTerminalStream = isTerminalStreamAccepted(agentRunId);
+    const hadTerminalStream = isTerminalStreamStarted(agentRunId);
     if (hadTerminalStream) {
+      // r323: chunks still queued for a re-registering stream go out before
+      // the end frame; the server re-adopts a running run's stream.
+      for (const chunk of acceptTerminalStream(agentRunId)) {
+        sendMessage(socket, {
+          type: "terminal.stream.chunk",
+          payload: { runId: agentRunId, chunk },
+          requestId,
+        });
+      }
       sendMessage(socket, {
         type: "terminal.stream.end",
         payload: { runId: agentRunId },
         requestId,
       });
-      clearTerminalStreamState(agentRunId);
     }
+    clearTerminalStreamState(agentRunId);
 
     const session = runSessions.get(agentRunId);
     recordAgentRunPromptExchange({
@@ -702,11 +714,7 @@ const attachChildHandlers = (
       projectId: existingSession?.projectId,
       accumulatedOutput: existingSession?.accumulatedOutput ?? "",
     });
-    sendMessage(socket, {
-      type: "terminal.stream.start",
-      payload: { runId: agentRunId },
-      requestId,
-    });
+    sendMessage(socket, beginTerminalStream(agentRunId, requestId));
     startRunHeartbeat(
       socket,
       agentRunId,
@@ -882,11 +890,7 @@ const runWriterApiTask = (
       projectId,
       accumulatedOutput: "",
     });
-    sendMessage(socket, {
-      type: "terminal.stream.start",
-      payload: { runId: agentRunId },
-      requestId,
-    });
+    sendMessage(socket, beginTerminalStream(agentRunId, requestId));
     startRunHeartbeat(
       socket,
       agentRunId,

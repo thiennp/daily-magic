@@ -1,4 +1,4 @@
-import { isTerminalStreamSlotOwnedBy } from "@/lib/agentWitch/agentWitchStreamSlotManager";
+import { tryAcquireTerminalStreamSlot } from "@/lib/agentWitch/agentWitchStreamSlotManager";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import {
@@ -35,9 +35,12 @@ export const requireTerminalStreamPublisher = async (input: {
     return authorization;
   }
 
+  // r323: a server restart or host reconnect drops the in-memory slot. The
+  // authorized executor of a still-running run re-adopts it instead of
+  // losing the rest of the run's output; another publisher is still refused.
   if (
     input.requireActiveSlot === true &&
-    !isTerminalStreamSlotOwnedBy(input.runId, authorization.publisher)
+    !tryAcquireTerminalStreamSlot(input.runId, authorization.publisher).accepted
   ) {
     return {
       ok: false,
