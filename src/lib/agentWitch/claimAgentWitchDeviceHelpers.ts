@@ -1,3 +1,4 @@
+import { AGENT_WITCH_ONLINE_THRESHOLD_MS } from "@/lib/agentWitch/agentWitchHeartbeat.constant";
 import mapAgentWitchDeviceRow from "@/lib/agentWitch/mapAgentWitchDeviceRow";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
 import { revokeProjectComputerMembershipsForDevice } from "@/lib/projects/acl/revokeProjectComputerMembershipsForDevice";
@@ -58,6 +59,11 @@ export const revokeSiblingDevicesWithSameLabel = async (input: {
   readonly keepDeviceId: string;
   readonly userId: string;
   readonly deviceLabels: readonly string[];
+  /**
+   * Heartbeat consolidation must not orphan a computer that is still checking
+   * in: only siblings silent for the online window are superseded.
+   */
+  readonly skipLive?: boolean;
 }): Promise<void> => {
   const matchedLabels = [
     ...new Set(
@@ -81,6 +87,11 @@ export const revokeSiblingDevicesWithSameLabel = async (input: {
         AND revoked_at IS NULL
         AND device_label = ANY(${matchedLabels}::text[])
         AND id <> ${input.keepDeviceId}
+        AND (
+          ${input.skipLive !== true}
+          OR last_seen_at IS NULL
+          OR last_seen_at < NOW() - make_interval(secs => ${AGENT_WITCH_ONLINE_THRESHOLD_MS / 1000})
+        )
       RETURNING id
     `,
   );

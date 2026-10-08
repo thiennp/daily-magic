@@ -10,7 +10,7 @@ export async function findAgentWitchDeviceByToken(
   const tokenHash = hashPairingToken(pairingToken);
   const result = asRowArray(
     await sql`
-      SELECT id, user_id, device_label, claimed_at, last_seen_at, revoked_at
+      SELECT id, user_id, device_label, claimed_at, last_seen_at, revoked_at, superseded_by_device_id
       FROM agent_witch_devices
       WHERE token_hash = ${tokenHash}
       LIMIT 1

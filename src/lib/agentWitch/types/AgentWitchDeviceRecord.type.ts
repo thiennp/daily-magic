@@ -12,6 +12,8 @@ export default interface AgentWitchDeviceRecord {
   readonly claimedAt: string;
   readonly lastSeenAt: string | null;
   readonly revokedAt: string | null;
+  /** Set when a later install with the same computer label replaced this row. */
+  readonly supersededByDeviceId?: string | null;
   readonly publicKey?: string | null;
   readonly preferredWriter?: string | null;
   readonly lastWakeError?: string | null;

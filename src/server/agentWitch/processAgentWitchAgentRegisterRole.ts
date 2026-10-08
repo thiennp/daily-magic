@@ -2,6 +2,7 @@ import type { WebSocket } from "ws";
 
 import type { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
 import { findAgentWitchDeviceByToken } from "@/lib/agentWitch/findAgentWitchDeviceByToken";
+import { reinstateSupersededAgentWitchDevice } from "@/lib/agentWitch/reinstateSupersededAgentWitchDevice";
 import { resolveAgentRegisterIdentityRejection } from "@/lib/agentWitch/resolveAgentRegisterIdentityRejection";
 import { resolveAgentRegisterPlatform } from "@/lib/agentWitch/resolveAgentRegisterPlatform";
 import { resolvePairingTokenFromRegisterPayload } from "@/lib/agentWitch/resolveAgentWitchRegisterPayload";
@@ -13,6 +14,24 @@ import { processAgentWitchDeviceAuthOnRegister } from "@/server/agentWitch/proce
 import type { AgentWitchConnectionState } from "@/server/agentWitch/processAgentWitchRegisterMessage";
 import { resolveAgentWitchAgentRegisterConnection } from "@/server/agentWitch/resolveAgentWitchAgentRegisterConnection";
 import { sendAgentWitchSocketMessage } from "@/server/agentWitch/sendAgentWitchSocketMessage";
+
+const reinstateSupersededDeviceForToken = async (
+  pairingToken: string,
+): Promise<void> => {
+  try {
+    const device = await findAgentWitchDeviceByToken(pairingToken);
+    if (
+      device !== null &&
+      device.revokedAt !== null &&
+      device.supersededByDeviceId !== null &&
+      device.supersededByDeviceId !== undefined
+    ) {
+      await reinstateSupersededAgentWitchDevice(device.id);
+    }
+  } catch (error) {
+    console.error("[agent-witch] reinstate check failed", error);
+  }
+};
 
 export const processAgentWitchAgentRegisterRole = async (
   hub: AgentWitchHub,
@@ -34,6 +53,8 @@ export const processAgentWitchAgentRegisterRole = async (
     socket.close();
     return false;
   }
+
+  await reinstateSupersededDeviceForToken(pairingToken);
 
   await resolveAgentWitchAgentRegisterConnection(
     hub,

@@ -26,6 +26,19 @@ describe("resolveAgentRegisterIdentityRejection", () => {
     expect(rejection?.errorMessage).toContain("not linked");
   });
 
+  it("explains a superseded device and still never sends the wipe code", () => {
+    const rejection = resolveAgentRegisterIdentityRejection({
+      device: {
+        revokedAt: "2026-09-28T00:00:00.000Z",
+        supersededByDeviceId: "device-2",
+      },
+      userId: "user-1",
+    });
+
+    expect(rejection?.errorCode).toBe("device_not_linked");
+    expect(rejection?.errorMessage).toContain("replaced it");
+  });
+
   it("rejects a known device when the connection has no user", () => {
     const rejection = resolveAgentRegisterIdentityRejection({
       device: { revokedAt: null },

@@ -28,5 +28,6 @@ export const consolidateActiveAgentWitchDeviceByLabel = async (input: {
     keepDeviceId: input.keepDeviceId,
     userId: input.userId,
     deviceLabels: listDuplicateDeviceLabels(input.deviceLabel),
+    skipLive: true,
   });
 };

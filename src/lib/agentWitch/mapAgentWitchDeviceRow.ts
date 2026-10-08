@@ -48,6 +48,9 @@ export default function mapAgentWitchDeviceRow(
     claimedAt: String(row.claimed_at),
     lastSeenAt: row.last_seen_at ? String(row.last_seen_at) : null,
     revokedAt: row.revoked_at ? String(row.revoked_at) : null,
+    supersededByDeviceId: row.superseded_by_device_id
+      ? String(row.superseded_by_device_id)
+      : null,
     publicKey: row.public_key ? String(row.public_key) : null,
     preferredWriter: row.preferred_writer ? String(row.preferred_writer) : null,
     lastWakeError: row.last_wake_error ? String(row.last_wake_error) : null,
