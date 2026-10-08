@@ -18,7 +18,7 @@ const readParam = (tab: ProjectPageTabId, key: string): string | null =>
  */
 const useAwcProjectHashDeepLink = (
   tab: "library" | "reports" | "tasks",
-  key: "item" | "report" | "task",
+  key: "item" | "report" | "task" | "record",
 ): readonly [string | null, (id: string | null) => void] => {
   const [selectedId, setSelectedIdState] = useState<string | null>(() =>
     readParam(tab, key),

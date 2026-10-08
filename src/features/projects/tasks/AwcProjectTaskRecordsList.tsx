@@ -1,5 +1,7 @@
 "use client";
 
+import useAwcProjectHashDeepLink from "@/features/projects/hooks/useAwcProjectHashDeepLink";
+import AwcProjectTaskRecordDetail from "@/features/projects/tasks/AwcProjectTaskRecordDetail";
 import AwcProjectTaskRecordRow from "@/features/projects/tasks/AwcProjectTaskRecordRow";
 import AwcProjectTaskRecordSort from "@/features/projects/tasks/AwcProjectTaskRecordSort";
 import AwcProjectTaskRecordTabs from "@/features/projects/tasks/AwcProjectTaskRecordTabs";
@@ -15,14 +17,35 @@ import type { ProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecord.t
 
 /** DF-024: task records split into status tabs, sortable (meta only). */
 export default function AwcProjectTaskRecordsList({
+  projectId,
   records,
   loadFailed,
+  reload,
 }: {
+  readonly projectId: string;
   readonly records: readonly ProjectTaskRecord[];
   readonly loadFailed: boolean;
+  readonly reload: () => void;
 }) {
   const view = useProjectTaskRecordView(records);
+  const [recordId, setRecordId] = useAwcProjectHashDeepLink("tasks", "record");
   if (!loadFailed && records.length === 0) return null;
+  const selected = records.find((r) => r.id === recordId) ?? null;
+  if (selected !== null) {
+    return (
+      <section aria-label={C.aria} className={AWC_TASKS_CARD_CLASS}>
+        <AwcProjectTaskRecordDetail
+          projectId={projectId}
+          task={selected}
+          records={records}
+          reload={reload}
+          onBack={() => {
+            setRecordId(null);
+          }}
+        />
+      </section>
+    );
+  }
   return (
     <section aria-label={C.aria} className={AWC_TASKS_CARD_CLASS}>
       <h3 className={`px-3.5 pt-3 pb-1 ${AWC_TASKS_PANEL_HEADING_CLASS}`}>
@@ -50,7 +73,11 @@ export default function AwcProjectTaskRecordsList({
           ) : (
             <ul className={AWC_TASKS_LIST_CLASS}>
               {view.visible.map((task) => (
-                <AwcProjectTaskRecordRow key={task.id} task={task} />
+                <AwcProjectTaskRecordRow
+                  key={task.id}
+                  task={task}
+                  onOpen={setRecordId}
+                />
               ))}
             </ul>
           )}

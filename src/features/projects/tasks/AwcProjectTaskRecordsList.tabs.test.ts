@@ -27,7 +27,12 @@ const records = [
 ];
 const render = () =>
   renderToStaticMarkup(
-    createElement(AwcProjectTaskRecordsList, { records, loadFailed: false }),
+    createElement(AwcProjectTaskRecordsList, {
+      projectId: "p1",
+      records,
+      loadFailed: false,
+      reload: () => undefined,
+    }),
   );
 
 describe("AwcProjectTaskRecordsList tabs + sort", () => {

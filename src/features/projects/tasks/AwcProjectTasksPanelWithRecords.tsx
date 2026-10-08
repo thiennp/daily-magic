@@ -18,8 +18,10 @@ export default function AwcProjectTasksPanelWithRecords({
   return (
     <div className="flex min-w-0 flex-col gap-3.5">
       <AwcProjectTaskRecordsList
+        projectId={project.id}
         records={records.records}
         loadFailed={records.loadFailed}
+        reload={records.reload}
       />
       <AwcProjectTasksPanel project={project} />
     </div>

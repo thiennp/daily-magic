@@ -11,7 +11,12 @@ const render = (
   loadFailed = false,
 ) =>
   renderToStaticMarkup(
-    createElement(AwcProjectTaskRecordsList, { records, loadFailed }),
+    createElement(AwcProjectTaskRecordsList, {
+      projectId: "p1",
+      records,
+      loadFailed,
+      reload: () => undefined,
+    }),
   );
 
 describe("AwcProjectTaskRecordsList (DF-024 Tasks tab rows)", () => {
