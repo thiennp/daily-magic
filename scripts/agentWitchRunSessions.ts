@@ -21,6 +21,7 @@ import {
   type HarnessWriterAgentId,
   resolveWriterCliCommands,
 } from "./buildWriterCliInvocation";
+import { ensureAntigravityCliHeadlessPermissionsBeforeRun } from "./ensureAntigravityCliHeadlessPermissions";
 import {
   hasPendingRunInputSession,
   listPendingRunInputSessions,
@@ -851,7 +852,10 @@ export const runWriterTask = (
 
   // S0-5: a local CLI never falls back to the AWL workspace; the handler
   // already checked the folder against the project's registered folders.
-  if (projectFolderPath === undefined || projectFolderPath.trim().length === 0) {
+  if (
+    projectFolderPath === undefined ||
+    projectFolderPath.trim().length === 0
+  ) {
     refuse(LocalCodingToolRefusalCode.FOLDER_REQUIRED);
     return;
   }
@@ -864,6 +868,7 @@ export const runWriterTask = (
   });
 
   const startPipeChild = (): void => {
+    ensureAntigravityCliHeadlessPermissionsBeforeRun(writerAgent);
     const child = spawn(invocation.command, [...invocation.args], {
       cwd,
       stdio: ["ignore", "pipe", "pipe"],
@@ -899,8 +904,7 @@ export const runWriterTask = (
     writerAgent,
     projectFolderPath,
     reportKey,
-    projectId:
-      projectId ?? runSessions.get(agentRunId)?.projectId,
+    projectId: projectId ?? runSessions.get(agentRunId)?.projectId,
     accumulatedOutput: runSessions.get(agentRunId)?.accumulatedOutput ?? "",
   });
 

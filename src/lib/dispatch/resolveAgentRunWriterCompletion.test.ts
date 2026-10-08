@@ -34,4 +34,27 @@ describe("resolveAgentRunWriterCompletion", () => {
       denialReason: null,
     });
   });
+
+  it("maps Antigravity permission auto-deny with exit 0 to failed (not success)", () => {
+    const completion = resolveAgentRunWriterCompletion({
+      exitCode: 0,
+      output:
+        'jetski: no output produced — a tool required the "command" permission that headless mode cannot prompt for, so it was auto-denied.',
+    });
+
+    expect(completion.status).toBe(AgentRunStatus.FAILED);
+    expect(completion.resultExitCode).toBe(1);
+    expect(completion.denialReason).toContain("auto-denied");
+  });
+
+  it("maps empty output with exit 0 to failed (not success)", () => {
+    const completion = resolveAgentRunWriterCompletion({
+      exitCode: 0,
+      output: "   ",
+    });
+
+    expect(completion.status).toBe(AgentRunStatus.FAILED);
+    expect(completion.resultExitCode).toBe(1);
+    expect(completion.denialReason).toContain("No agent output");
+  });
 });

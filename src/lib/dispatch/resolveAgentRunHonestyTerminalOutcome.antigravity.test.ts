@@ -72,6 +72,18 @@ describe("resolveAgentRunHonestyTerminalOutcome — Antigravity shipped path", (
     );
   });
 
+  it("maps jetski permission auto-deny to Failed even when run status is completed", () => {
+    const outcome = resolveAgentRunHonestyTerminalOutcome({
+      output:
+        'jetski: no output produced — a tool required the "command" permission that headless mode cannot prompt for, so it was auto-denied.',
+      runStatus: AgentRunStatus.COMPLETED,
+      resultExitCode: 0,
+    });
+
+    expect(outcome?.kind).toBe("failed");
+    expect(outcome?.chipLabel).toBe("Failed");
+  });
+
   it("maps Antigravity auth blocker output to Waiting on you", () => {
     const outcome = resolveAgentRunHonestyTerminalOutcome({
       output: "Authentication required — sign in to continue",

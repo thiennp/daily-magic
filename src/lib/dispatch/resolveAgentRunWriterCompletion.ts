@@ -7,6 +7,7 @@ import {
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
 import { buildAgentRunOutcomeDenialReason } from "@/lib/dispatch/buildAgentRunOutcomeDenialReason";
+import { resolveAntigravityCliHeadlessRunFailureReason } from "@/lib/dispatch/isAntigravityCliHeadlessRunFailureInOutput";
 
 export interface AgentRunWriterCompletion {
   readonly status: AgentRunStatusValue;
@@ -27,6 +28,26 @@ export const resolveAgentRunWriterCompletion = (input: {
       resultExitCode: input.exitCode === 0 ? 1 : input.exitCode,
       resultOutcomeCode: outcome.code,
       denialReason: buildAgentRunOutcomeDenialReason(outcome),
+    };
+  }
+
+  const antigravityHeadlessFailureReason =
+    resolveAntigravityCliHeadlessRunFailureReason(input.output);
+  if (antigravityHeadlessFailureReason !== null) {
+    return {
+      status: AgentRunStatus.FAILED,
+      resultExitCode: input.exitCode === 0 ? 1 : input.exitCode,
+      resultOutcomeCode: null,
+      denialReason: antigravityHeadlessFailureReason,
+    };
+  }
+
+  if (input.exitCode === 0 && input.output.trim().length === 0) {
+    return {
+      status: AgentRunStatus.FAILED,
+      resultExitCode: 1,
+      resultOutcomeCode: null,
+      denialReason: "No agent output was captured.",
     };
   }
 

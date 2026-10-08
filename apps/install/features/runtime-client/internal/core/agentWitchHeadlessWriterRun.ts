@@ -16,6 +16,7 @@ import { runWriterApiPrompt } from "./writerApi/runWriterApiPrompt";
 import { shouldUseWriterApi } from "./writerApi/shouldUseWriterApi";
 import type { AgentWitchRunConfig } from "./readAgentWitchRunConfig";
 import { isCodingToolsPaused } from "./safety/codingToolsPauseStore";
+import { ensureAntigravityCliHeadlessPermissionsBeforeRun } from "../../../../../../scripts/ensureAntigravityCliHeadlessPermissions";
 
 export type AgentWitchHeadlessWriterConfig = AgentWitchRunConfig;
 
@@ -67,6 +68,8 @@ export const runHeadlessWriter = (
       });
       return;
     }
+
+    ensureAntigravityCliHeadlessPermissionsBeforeRun(writerAgent);
 
     const child = spawn(invocation.command, invocation.args, {
       cwd: config.workspace,

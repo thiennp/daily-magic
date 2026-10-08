@@ -211,9 +211,8 @@ export const buildWriterCliInvocation = (
     };
   }
 
-  // Antigravity: no permission bypass. Headless agy auto-allows file reads and
-  // writes inside the workspace and soft-denies other tools; --sandbox keeps
-  // any command it does run inside the terminal sandbox. No turn/budget flag.
+  // Antigravity: `--sandbox` + merged `permissions.allow` (see
+  // mergeAntigravityCliHeadlessPermissions.ts). No argv permission bypass.
   return {
     command: commands.antigravityCommand,
     args: [...continueArgs, "--sandbox", "-p", prompt],

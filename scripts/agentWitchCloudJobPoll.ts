@@ -5,6 +5,7 @@ import {
   isHarnessWriterAgentId,
   resolveWriterCliCommands,
 } from "./buildWriterCliInvocation";
+import { ensureAntigravityCliHeadlessPermissionsBeforeRun } from "./ensureAntigravityCliHeadlessPermissions";
 import {
   claimAgentRunFromCloud,
   completeAgentRunOnCloud,
@@ -63,6 +64,8 @@ const runWriterForCloudJob = (
       });
       return;
     }
+
+    ensureAntigravityCliHeadlessPermissionsBeforeRun(writerAgent);
 
     const child = spawn(invocation.command, invocation.args, {
       cwd: config.workspace,

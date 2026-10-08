@@ -16,7 +16,10 @@ const CORRECT_ANTIGRAVITY_ARGV_SNIPPETS = [
 ] as const;
 
 /** Any permission-bypass flag in the shipped bundle means it is stale. */
-const LEGACY_PERMISSION_BYPASS_ARGV_SNIPPET = '"--dangerously-skip-permissions"';
+const LEGACY_PERMISSION_BYPASS_ARGV_SNIPPET =
+  '"--dangerously-skip-permissions"';
+
+const HEADLESS_COMMAND_ALLOW_RULE_SNIPPET = "command(*)";
 
 export const assertShippedInstallBundleAntigravityArgv = (
   workspaceRoot: string,
@@ -42,6 +45,12 @@ export const assertShippedInstallBundleAntigravityArgv = (
   if (!hasCorrectArgv) {
     throw new Error(
       "Shipped install bundle is missing expected antigravity argv (--sandbox before -p).",
+    );
+  }
+
+  if (!source.includes(HEADLESS_COMMAND_ALLOW_RULE_SNIPPET)) {
+    throw new Error(
+      `Shipped install bundle is missing Antigravity headless permissions allow rule (${HEADLESS_COMMAND_ALLOW_RULE_SNIPPET}). Rebuild with npm run build:agent-witch and bump AGENT_WITCH_INSTALL_BUNDLE_VERSION.`,
     );
   }
 };

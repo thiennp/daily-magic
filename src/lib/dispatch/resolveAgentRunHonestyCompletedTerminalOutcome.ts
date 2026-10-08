@@ -3,6 +3,7 @@ import {
   formatAgentRunHonestyFailedSummary,
 } from "@/lib/dispatch/agentRunHonestyCopy.constant";
 import type { AgentRunHonestyOutcome } from "@/lib/dispatch/agentRunHonestyOutcome.type";
+import { resolveAntigravityCliHeadlessRunFailureReason } from "@/lib/dispatch/isAntigravityCliHeadlessRunFailureInOutput";
 import { tryResolveAgentRunWriterPrepareFailureTerminalOutcome } from "@/lib/dispatch/tryResolveAgentRunWriterPrepareFailureTerminalOutcome";
 
 export const resolveAgentRunHonestyCompletedTerminalOutcome = (
@@ -12,6 +13,18 @@ export const resolveAgentRunHonestyCompletedTerminalOutcome = (
     tryResolveAgentRunWriterPrepareFailureTerminalOutcome(output);
   if (prepareFailureOutcome !== null) {
     return prepareFailureOutcome;
+  }
+
+  const antigravityHeadlessFailureReason =
+    resolveAntigravityCliHeadlessRunFailureReason(output);
+  if (antigravityHeadlessFailureReason !== null) {
+    return {
+      kind: "failed",
+      chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.failed,
+      summaryLines: [
+        formatAgentRunHonestyFailedSummary(antigravityHeadlessFailureReason),
+      ],
+    };
   }
 
   if (output.trim().length === 0) {
