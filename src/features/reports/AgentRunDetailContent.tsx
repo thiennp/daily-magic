@@ -89,10 +89,7 @@ export default function AgentRunDetailContent({
       <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap break-words rounded-lg bg-awc-surface-2 p-3 text-xs text-awc-fg dark:bg-gray-800 dark:text-gray-300">
         {run.prompt}
       </pre>
-      <AgentRunReportProgress
-        reportSummary={run.reportSummary}
-        reportStatus={run.reportStatus}
-      />
+      <AgentRunReportProgress run={run} />
       {run.status === AgentRunStatus.RUNNING ? (
         <AgentRunLiveTerminal key={run.id} runId={run.id} />
       ) : null}

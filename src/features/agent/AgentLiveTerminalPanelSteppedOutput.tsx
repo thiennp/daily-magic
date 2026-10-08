@@ -14,6 +14,7 @@ interface AgentLiveTerminalPanelSteppedOutputProps extends AgentMacShellPanelPro
   readonly pendingCommandLine: string | null;
   readonly feedbackPendingQuestion: string | null;
   readonly feedbackPendingPartialOutput?: string | null;
+  readonly sessionDeviceId?: string | null;
 }
 
 export default function AgentLiveTerminalPanelSteppedOutput(
@@ -31,6 +32,7 @@ export default function AgentLiveTerminalPanelSteppedOutput(
     pendingCommandLine: props.pendingCommandLine,
     feedbackPendingQuestion: props.feedbackPendingQuestion,
     isSteppedComposer: true,
+    sessionDeviceId: props.sessionDeviceId,
     macShell: props,
   });
 

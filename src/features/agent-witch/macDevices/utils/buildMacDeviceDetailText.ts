@@ -20,6 +20,7 @@ export const buildMacDeviceDetailText = (input: {
     isConnected: input.device.isConnected,
     isOnline: input.device.isOnline,
     presenceTier: input.device.presenceTier,
+    lastSeenAt: input.device.lastSeenAt,
   };
   const parts: string[] = [formatMacPresenceStatusLabel(presence)];
 

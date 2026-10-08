@@ -1,5 +1,6 @@
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { createAgentWitchRequestId } from "@/features/agent/utils/agentWitchSocketUtils";
+import { stripAgentRunWavePlanFromOutput } from "@/features/agent/utils/stripAgentRunWavePlanFromOutput";
 
 export interface AgentRunInputRequest {
   readonly agentRunId: string;
@@ -73,10 +74,13 @@ export const parseDispatchApprovalSocketMessage = (
     const payload = parsed.payload as Record<string, unknown>;
     const agentRunId =
       typeof payload.agentRunId === "string" ? payload.agentRunId : "";
-    const question =
+    const rawQuestion =
       typeof payload.question === "string" ? payload.question : "";
-    const partialOutput =
+    const rawPartialOutput =
       typeof payload.partialOutput === "string" ? payload.partialOutput : "";
+
+    const question = stripAgentRunWavePlanFromOutput(rawQuestion);
+    const partialOutput = stripAgentRunWavePlanFromOutput(rawPartialOutput);
 
     if (agentRunId.length > 0 && question.length > 0) {
       handlers.onInputRequired({ agentRunId, question, partialOutput });

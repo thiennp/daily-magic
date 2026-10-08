@@ -6,8 +6,10 @@ import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRunti
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import { asRowArray, getSql } from "@/lib/db";
 
+import { AGENT_RUN_LOST_CONNECTION_REASONS } from "@/lib/dispatch/agentRunLostConnectionReasons.constant";
+
 export const LOST_HOST_BEFORE_RESULT_DENIAL_REASON =
-  "Lost connection to the host before the result arrived.";
+  AGENT_RUN_LOST_CONNECTION_REASONS.DISCONNECT;
 
 /** Do not fail runs that were actively heartbeating right before disconnect. */
 export const AGENT_RUN_DISCONNECT_RECONCILE_GRACE_MS = 45_000;

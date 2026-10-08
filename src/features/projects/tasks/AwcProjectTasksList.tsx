@@ -1,5 +1,6 @@
 "use client";
 
+import AwcProjectTasksEmptyCat from "@/features/projects/tasks/AwcProjectTasksEmptyCat";
 import AwcProjectTaskGitTags from "@/features/projects/tasks/AwcProjectTaskGitTags";
 import AwcProjectTaskStatusChip from "@/features/projects/tasks/AwcProjectTaskStatusChip";
 import {
@@ -23,39 +24,6 @@ const formatWhen = (iso: string): string => {
   return d.toLocaleString();
 };
 
-/** Simple cat mark for empty state (design HTML). */
-const EmptyCat = () => (
-  <svg
-    className="mx-auto mb-2.5 h-11 w-11 opacity-70"
-    viewBox="0 0 44 44"
-    fill="none"
-    aria-hidden="true"
-  >
-    <ellipse
-      cx="22"
-      cy="26"
-      rx="14"
-      ry="12"
-      className="fill-awc-fill stroke-awc-border-strong"
-      strokeWidth="1.5"
-    />
-    <path
-      d="M10 18l4-10 6 8M34 18l-4-10-6 8"
-      className="stroke-awc-border-strong"
-      strokeWidth="1.5"
-      strokeLinejoin="round"
-    />
-    <circle cx="17" cy="25" r="1.5" className="fill-awc-fg-muted" />
-    <circle cx="27" cy="25" r="1.5" className="fill-awc-fg-muted" />
-    <path
-      d="M20 29c1 .8 3 .8 4 0"
-      className="stroke-awc-fg-muted"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
 export default function AwcProjectTasksList({
   tasks,
   hasGit,
@@ -75,7 +43,7 @@ export default function AwcProjectTasksList({
     const filtered = hasActiveFilters;
     return (
       <div className="px-4 py-12 text-center text-awc-fg-muted">
-        <EmptyCat />
+        <AwcProjectTasksEmptyCat />
         <h3 className="mb-3 text-[15px] font-semibold text-awc-fg">
           {filtered ? C.emptyFiltered : C.empty}
         </h3>
@@ -100,7 +68,9 @@ export default function AwcProjectTasksList({
     );
   }
   return (
-    <ul className={`${AWC_TASKS_LIST_CLASS} [&>li:last-child>button]:border-b-0`}>
+    <ul
+      className={`${AWC_TASKS_LIST_CLASS} [&>li:last-child>button]:border-b-0`}
+    >
       {tasks.map((task) => (
         <li key={task.id}>
           <button
@@ -112,6 +82,11 @@ export default function AwcProjectTasksList({
           >
             <span className="min-w-0">
               <span className={AWC_TASKS_ROW_TITLE_CLASS}>{task.title}</span>
+              {task.statusReason ? (
+                <span className="mb-1 block truncate text-[13px] text-awc-fg-muted">
+                  {task.statusReason}
+                </span>
+              ) : null}
               <span className={AWC_TASKS_ROW_META_CLASS}>
                 <span>{task.assistantName?.trim() || "Assistant"}</span>
                 <AwcProjectTaskGitTags

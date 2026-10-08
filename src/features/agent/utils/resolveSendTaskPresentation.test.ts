@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  resolveSendTaskCloseAction,
   resolveSendTaskKeepAliveOnUrlClose,
   resolveSendTaskPresentation,
   shouldKeepSendTaskAliveOnNavigate,
@@ -38,20 +37,6 @@ describe("shouldKeepSendTaskAliveOnNavigate", () => {
   });
 });
 
-describe("resolveSendTaskCloseAction", () => {
-  it("AGENT-037: minimizes instead of dismissing while a computer run is active", () => {
-    expect(resolveSendTaskCloseAction({ isSessionActive: true })).toBe(
-      "minimize",
-    );
-  });
-
-  it("dismisses when no live session is running", () => {
-    expect(resolveSendTaskCloseAction({ isSessionActive: false })).toBe(
-      "dismiss",
-    );
-  });
-});
-
 describe("resolveSendTaskKeepAliveOnUrlClose", () => {
   it("AGENT-037: keeps the panel alive when navigating away during a live run", () => {
     expect(
@@ -61,5 +46,16 @@ describe("resolveSendTaskKeepAliveOnUrlClose", () => {
         isSessionActive: true,
       }),
     ).toBe(true);
+  });
+
+  it("S11: an explicit Close hides the floater even while a run is active", () => {
+    expect(
+      resolveSendTaskKeepAliveOnUrlClose({
+        wasUrlOpen: true,
+        keepAlive: false,
+        isSessionActive: true,
+        closedByUser: true,
+      }),
+    ).toBe(false);
   });
 });

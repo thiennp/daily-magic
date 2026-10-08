@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from "react";
 
 import { useConnectionLab } from "@/features/agent-witch/connection-lab/ConnectionLabContext";
 import { useAgentWitchDashboardSocketConnection } from "@/features/agent/hooks/useAgentWitchDashboardSocketConnection";
+import { useAgentLiveRunRecordResync } from "@/features/agent/hooks/useAgentLiveRunRecordResync";
 import { useAgentMacShell } from "@/features/agent/hooks/useAgentMacShell";
 import { useAgentWitchLiveTerminal } from "@/features/agent/hooks/useAgentWitchLiveTerminal";
 import { useAgentWitchPromptDispatch } from "@/features/agent/hooks/useAgentWitchPromptDispatch";
@@ -64,6 +65,8 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
       terminal.applySocketMessage,
     ],
   );
+
+  useAgentLiveRunRecordResync(connectionStatus, terminal);
 
   useAgentWitchDashboardSocketConnection({
     connectionLab,

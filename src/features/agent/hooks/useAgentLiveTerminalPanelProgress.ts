@@ -10,6 +10,7 @@ import { isAgentLiveTerminalWorking } from "@/features/agent/utils/isAgentLiveTe
 import { parseAgentLiveWorkingEstimateSeconds } from "@/features/agent/utils/parseAgentLiveWorkingEstimateSeconds";
 import { resolveAgentLiveWavePlanView } from "@/features/agent/utils/resolveAgentLiveWavePlanView";
 import { resolveAgentLiveWorkingEstimateProgress } from "@/features/agent/utils/resolveAgentLiveWorkingEstimateProgress";
+import { useRegisterAgentLiveProgressFeed } from "@/features/agent/hooks/useRegisterAgentLiveProgressFeed";
 
 export function useAgentLiveTerminalPanelProgress(input: {
   readonly output: string;
@@ -27,6 +28,9 @@ export function useAgentLiveTerminalPanelProgress(input: {
   const isStopping = input.status === "stopping";
   const isWorking = isAgentLiveTerminalWorking(input.status);
   const dashboard = useAgentWitchDashboard();
+
+  useRegisterAgentLiveProgressFeed(input.activeRunId);
+
   const connectionStatus = dashboard?.connectionStatus ?? "disconnected";
   const progressSource = [
     input.output,

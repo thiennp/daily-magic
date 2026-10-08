@@ -86,4 +86,33 @@ describe("run.heartbeat applies a stored stop (S0-7)", () => {
     expect(sent).toHaveLength(0);
     expect(response?.payload).not.toHaveProperty("stopRequested");
   });
+
+  it("returns system.error with run_not_running and agentRunId when run is missing or not running", async () => {
+    vi.mocked(getAgentRunById).mockResolvedValue({
+      ...run,
+      status: "failed",
+    } as never);
+
+    const sender = {
+      role: "agent",
+      id: "a1",
+      userId: "device-owner",
+      send: () => {},
+    };
+
+    const response = await handleAgentRunHeartbeatMessageAsync(
+      {} as never,
+      heartbeat,
+      sender as never,
+    );
+
+    expect(response).toMatchObject({
+      type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+      payload: {
+        errorMessage: "Agent run is not eligible for run heartbeats.",
+        errorCode: "run_not_running",
+        agentRunId: "run-1",
+      },
+    });
+  });
 });

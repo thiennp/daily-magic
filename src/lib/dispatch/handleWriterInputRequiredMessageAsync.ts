@@ -66,6 +66,8 @@ export const handleClaudeInputRequiredMessageAsync = async (
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
         errorMessage: "Agent run is not eligible for input requests.",
+        errorCode: "run_not_awaiting_input",
+        agentRunId,
       },
       requestId: message.requestId,
     };

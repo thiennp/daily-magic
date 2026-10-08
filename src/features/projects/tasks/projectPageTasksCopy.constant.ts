@@ -18,6 +18,7 @@ export const PROJECT_PAGE_TASKS_COPY = {
   statusCancelled: "Cancelled",
   statusDenied: "Denied",
   statusTimedOut: "Timed out",
+  statusStopped: "Stopped",
   statusUnknown: "Unknown",
   /** Exact design EN — no trailing period. */
   offline: "Connection to the project computer was lost",
@@ -80,5 +81,6 @@ export const PROJECT_TASK_STATUS_LABEL: Readonly<
   cancelled: PROJECT_PAGE_TASKS_COPY.statusCancelled,
   denied: PROJECT_PAGE_TASKS_COPY.statusDenied,
   timed_out: PROJECT_PAGE_TASKS_COPY.statusTimedOut,
+  stopped: PROJECT_PAGE_TASKS_COPY.statusStopped,
   unknown: PROJECT_PAGE_TASKS_COPY.statusUnknown,
 };

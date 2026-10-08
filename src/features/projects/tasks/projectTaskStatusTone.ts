@@ -5,12 +5,15 @@ import type { ProjectTaskDisplayStatus } from "@/features/projects/tasks/project
 export type ProjectTaskChipTone = "ok" | "info" | "warn" | "err" | "muted";
 
 /** Exhaustive: a new display status will not compile without a tone. */
-const STATUS_TONE: Readonly<Record<ProjectTaskDisplayStatus, ProjectTaskChipTone>> = {
+const STATUS_TONE: Readonly<
+  Record<ProjectTaskDisplayStatus, ProjectTaskChipTone>
+> = {
   done: "ok",
   running: "info",
   queued: "warn",
   failed: "err",
   timed_out: "err",
+  stopped: "muted",
   cancelled: "muted",
   denied: "muted",
   unknown: "muted",

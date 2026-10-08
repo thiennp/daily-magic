@@ -1,5 +1,5 @@
 export const AGENT_LIVE_PROGRESS_CLI_COMMAND_LINE_PATTERN =
-  /^(?:agent-witch@mac ~ % )?(?:claude|codex|cursor|agy)\b/i;
+  /^(?:agent-witch@(mac|linux) ~ [%\$] )?(?:claude|codex|cursor|agy)\b/i;
 
 export const AGENT_LIVE_PROGRESS_ACTIVITY_PATTERNS: readonly {
   readonly id: string;

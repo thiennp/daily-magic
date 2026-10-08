@@ -11,7 +11,7 @@ import {
   sendDispatchApprovalResponse,
   type AgentRunInputRequest,
 } from "@/features/dispatch/utils/dispatchApprovalSocket";
-import { isAgentRunLiveTerminalActive } from "@/features/reports/utils/registerAgentRunLiveTerminal";
+import { shouldShowGlobalAgentRunInputModal } from "@/features/dispatch/utils/shouldShowGlobalAgentRunInputModal";
 
 export type { DispatchApprovalRequest };
 
@@ -52,7 +52,7 @@ export function useDispatchApprovalListener(): {
       parseDispatchApprovalSocketMessage(parsed as Record<string, unknown>, {
         onApprovalRequired: setPendingApproval,
         onInputRequired: (request) => {
-          if (isAgentRunLiveTerminalActive(request.agentRunId)) {
+          if (!shouldShowGlobalAgentRunInputModal(request.agentRunId)) {
             return;
           }
           setPendingInput(request);

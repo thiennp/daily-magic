@@ -1,4 +1,5 @@
 import type AgentWitchPresenceTier from "@/lib/agentWitch/types/AgentWitchPresenceTier.type";
+import { resolveMacPresenceTier } from "@/features/agent-witch/online-wake/resolveMacPresenceTier";
 
 export type MacPresenceTier = AgentWitchPresenceTier;
 
@@ -7,7 +8,10 @@ export interface MacDevicePresence {
   readonly isOnline: boolean;
   readonly presenceTier?: MacPresenceTier;
   readonly isDispatchReady?: boolean;
+  readonly lastSeenAt?: string | null;
 }
+
+export { resolveMacPresenceTier };
 
 export interface MacDevicePresenceCounts {
   readonly live: number;
@@ -15,24 +19,6 @@ export interface MacDevicePresenceCounts {
   readonly recent: number;
   readonly offline: number;
 }
-
-const resolveTierFromLegacyFlags = (
-  device: MacDevicePresence,
-): MacPresenceTier => {
-  if (device.isConnected) {
-    return "live";
-  }
-
-  if (device.isOnline) {
-    return "recent";
-  }
-
-  return "offline";
-};
-
-export const resolveMacPresenceTier = (
-  device: MacDevicePresence,
-): MacPresenceTier => device.presenceTier ?? resolveTierFromLegacyFlags(device);
 
 /** User-facing status for Mac picker rows (send-task, device lists). */
 export const formatMacPresenceStatusLabel = (

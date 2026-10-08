@@ -12,6 +12,7 @@ export const renderAgentLiveTerminalBody = (input: {
   readonly pendingCommandLine: string | null;
   readonly awaitingUserAnswer?: boolean;
   readonly isSteppedComposer: boolean;
+  readonly sessionDeviceId?: string | null;
   readonly macShell: AgentMacShellPanelProps;
 }): ReactElement => {
   const {
@@ -32,6 +33,7 @@ export const renderAgentLiveTerminalBody = (input: {
       <AgentLiveTerminalDeveloperMirror
         output={input.output}
         status={input.status}
+        sessionDeviceId={input.sessionDeviceId ?? null}
         pendingCommandLine={input.pendingCommandLine}
         awaitingUserAnswer={input.awaitingUserAnswer === true}
         macShellStatus={macShellStatus}

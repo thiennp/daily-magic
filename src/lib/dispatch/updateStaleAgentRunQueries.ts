@@ -5,8 +5,9 @@ import {
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { asRowArray, getSql } from "@/lib/db";
 
-export const STALE_RUN_DENIAL_REASON =
-  "No run heartbeat from your computer — the job was marked stale.";
+import { AGENT_RUN_LOST_CONNECTION_REASONS } from "@/lib/dispatch/agentRunLostConnectionReasons.constant";
+
+export const STALE_RUN_DENIAL_REASON = AGENT_RUN_LOST_CONNECTION_REASONS.STALE;
 
 export const updateStaleHeartbeatAgentRuns = async (
   awaitingInputRunIds: readonly string[],

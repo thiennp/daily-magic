@@ -5,6 +5,14 @@ import type { WriterCliSessionTurn } from "@/lib/agentWitch/writerCliSessionTurn
 
 export const AGENT_LIVE_BASH_PROMPT = "agent-witch@mac ~ % ";
 
+export const getAgentLivePrompt = (
+  platform: "mac" | "linux" = "mac",
+): string => {
+  return platform === "linux"
+    ? "agent-witch@linux ~ $ "
+    : "agent-witch@mac ~ % ";
+};
+
 const isHarnessWriterAgent = (value: string): value is HarnessWriterAgent =>
   (HARNESS_WRITER_AGENTS as readonly string[]).includes(value);
 
@@ -22,47 +30,63 @@ export const formatAgentLiveTerminalCommandLine = (
 
 export const buildAgentLiveTerminalCommandEntry = (
   commandLine: string,
-): string => `${AGENT_LIVE_BASH_PROMPT}${commandLine}\n`;
+  platform: "mac" | "linux" = "mac",
+): string => `${getAgentLivePrompt(platform)}${commandLine}\n`;
 
-export const buildAgentLiveTerminalIdleLine = (): string =>
-  AGENT_LIVE_BASH_PROMPT;
+export const buildAgentLiveTerminalIdleLine = (
+  platform: "mac" | "linux" = "mac",
+): string => getAgentLivePrompt(platform);
 
-export const appendAgentLiveTerminalPrompt = (output: string): string => {
-  if (output.endsWith(AGENT_LIVE_BASH_PROMPT)) {
+export const appendAgentLiveTerminalPrompt = (
+  output: string,
+  platform: "mac" | "linux" = "mac",
+): string => {
+  const prompt = getAgentLivePrompt(platform);
+  if (output.endsWith(prompt) || output.endsWith(AGENT_LIVE_BASH_PROMPT)) {
     return output;
   }
 
   const suffix = output.endsWith("\n") ? "" : "\n";
-  return `${output}${suffix}${AGENT_LIVE_BASH_PROMPT}`;
+  return `${output}${suffix}${prompt}`;
 };
 
 export const appendAgentLiveTerminalCommand = (
   output: string,
   commandLine: string,
+  platform: "mac" | "linux" = "mac",
 ): string => {
+  const prompt = getAgentLivePrompt(platform);
   if (output.length === 0) {
-    return buildAgentLiveTerminalCommandEntry(commandLine);
+    return buildAgentLiveTerminalCommandEntry(commandLine, platform);
   }
 
+  if (output.endsWith(prompt)) {
+    return `${output}${commandLine}\n`;
+  }
   if (output.endsWith(AGENT_LIVE_BASH_PROMPT)) {
     return `${output}${commandLine}\n`;
   }
 
   const suffix = output.endsWith("\n") ? "" : "\n";
-  return `${output}${suffix}${buildAgentLiveTerminalCommandEntry(commandLine)}`;
+  return `${output}${suffix}${buildAgentLiveTerminalCommandEntry(commandLine, platform)}`;
 };
 
 export const appendAgentLiveTerminalCommandIfMissing = (
   output: string,
   commandLine: string,
+  platform: "mac" | "linux" = "mac",
 ): string => {
   if (commandLine.length === 0) {
     return output;
   }
 
-  if (output.includes(`${AGENT_LIVE_BASH_PROMPT}${commandLine}`)) {
+  const prompt = getAgentLivePrompt(platform);
+  if (
+    output.includes(`${prompt}${commandLine}`) ||
+    output.includes(`${AGENT_LIVE_BASH_PROMPT}${commandLine}`)
+  ) {
     return output;
   }
 
-  return appendAgentLiveTerminalCommand(output, commandLine);
+  return appendAgentLiveTerminalCommand(output, commandLine, platform);
 };

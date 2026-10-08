@@ -52,6 +52,8 @@ export const useSendTaskModalState = (): {
         wasUrlOpen: previousWasUrlOpen,
         keepAlive,
         isSessionActive,
+        // keepAlive is only cleared while the URL is open by an explicit Close.
+        closedByUser: !keepAlive,
       })
     ) {
       setKeepAlive(true);

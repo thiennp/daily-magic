@@ -24,7 +24,7 @@ interface AwcProjectMembersColumnProps {
  * surface tone + left divider only. L5 content: people · assistants · invite.
  */
 const RAIL_CLASS =
-  "min-w-0 border-t border-awc-border/80 bg-awc-bg/70 px-1 py-4 dark:border-gray-800/80 dark:bg-white/[0.03] lg:border-l lg:border-t-0 lg:pl-2 lg:pr-1";
+  "min-w-0 border-t border-awc-border/80 bg-awc-bg/70 px-1 py-4 lg:pb-40 dark:border-gray-800/80 dark:bg-white/[0.03] lg:border-l lg:border-t-0 lg:pl-2 lg:pr-1";
 
 export default function AwcProjectMembersColumn({
   projectId,

@@ -3,9 +3,12 @@
 import { useEffect, useRef } from "react";
 
 import { APP_SURFACE_BASH_TERMINAL_PRE_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import { AGENT_LIVE_TERMINAL_PLATFORM_LABELS } from "@/features/agent/utils/agentLiveTerminalPlatformLabels.constant";
+import type { AgentWitchDevicePlatform } from "@/lib/agentWitch/types/AgentWitchDevicePlatform.type";
 import { buildAgentLiveTerminalActivityLine } from "@/features/agent/utils/buildAgentLiveTerminalDisplay";
 
 interface AgentLiveTerminalBashWindowProps {
+  readonly platform?: AgentWitchDevicePlatform;
   readonly displayOutput: string;
   readonly showLoadingIndicator: boolean;
   readonly loadingDotCount: number;
@@ -14,6 +17,7 @@ interface AgentLiveTerminalBashWindowProps {
 }
 
 export default function AgentLiveTerminalBashWindow({
+  platform = "mac",
   displayOutput,
   showLoadingIndicator,
   loadingDotCount,
@@ -43,7 +47,7 @@ export default function AgentLiveTerminalBashWindow({
         <span className="size-2.5 rounded-full bg-[#febc2e]" />
         <span className="size-2.5 rounded-full bg-[#28c840]" />
         <span className="ml-2 font-mono text-[11px] text-zinc-400">
-          agent-witch@mac — -zsh — 80×24
+          {AGENT_LIVE_TERMINAL_PLATFORM_LABELS[platform].windowTitle}
         </span>
       </div>
       <pre

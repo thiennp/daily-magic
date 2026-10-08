@@ -9,9 +9,9 @@ export const isAgentRunSpawnFailureLine = (trimmed: string): boolean =>
   /attach the prompt to the flag/i.test(trimmed);
 
 export const isAgentRunBareShellPromptLine = (trimmed: string): boolean =>
-  /^agent-witch@mac\s+~\s+%\s*$/.test(trimmed);
+  /^agent-witch@(mac|linux)\s+~\s+[%\$]\s*$/.test(trimmed);
 
 export const isAgentRunWriterCliInvocationLine = (trimmed: string): boolean =>
-  /^(?:agent-witch@mac\s+~\s+%\s+)?(?:claude|codex|cursor|agy)\b/i.test(
+  /^(?:agent-witch@(mac|linux)\s+~\s+[%\$]\s+)?(?:claude|codex|cursor|agy)\b/i.test(
     trimmed,
   );

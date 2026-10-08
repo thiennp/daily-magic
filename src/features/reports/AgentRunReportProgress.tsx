@@ -1,23 +1,27 @@
 "use client";
 
-import { formatAgentRunReportSummaryLine } from "@/features/reports/utils/formatAgentRunReportSummaryLine";
+import { resolveAgentRunReportProgressView } from "@/features/reports/utils/resolveAgentRunReportProgressView";
+import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
 interface AgentRunReportProgressProps {
-  readonly reportSummary: string | null | undefined;
-  readonly reportStatus?: string | null;
+  readonly run: Pick<
+    EnrichedAgentRunRecord,
+    | "status"
+    | "reportSummary"
+    | "reportStatus"
+    | "denialReason"
+    | "resultOutput"
+    | "resultExitCode"
+  >;
 }
 
 export default function AgentRunReportProgress({
-  reportSummary,
-  reportStatus,
+  run,
 }: AgentRunReportProgressProps) {
-  const summaryLine = formatAgentRunReportSummaryLine(reportSummary);
-  const statusLabel =
-    typeof reportStatus === "string" && reportStatus.trim().length > 0
-      ? reportStatus.trim().replaceAll("_", " ")
-      : null;
+  const { summaryLine, statusLabel, reasonLine } =
+    resolveAgentRunReportProgressView({ ...run, runStatus: run.status });
 
-  if (summaryLine === null && statusLabel === null) {
+  if (summaryLine === null && statusLabel === null && reasonLine === null) {
     return null;
   }
 
@@ -29,6 +33,11 @@ export default function AgentRunReportProgress({
       {summaryLine !== null ? (
         <p className="mt-1 text-sm text-awc-fg dark:text-white/90">
           {summaryLine}
+        </p>
+      ) : null}
+      {reasonLine !== null ? (
+        <p className="mt-1 text-sm text-awc-fg dark:text-white/90">
+          {reasonLine}
         </p>
       ) : null}
       {statusLabel !== null ? (

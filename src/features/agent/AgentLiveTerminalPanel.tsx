@@ -32,6 +32,7 @@ export default function AgentLiveTerminalPanel(
     pendingCommandLine,
     feedbackPendingQuestion: props.feedbackPendingQuestion,
     isSteppedComposer,
+    sessionDeviceId: props.sessionDeviceId,
     macShell: props,
   });
   const onDeleteRun =

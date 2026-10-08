@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { buildSignInHref } from "@/features/empty-states/buildGuestAuthHrefs";
-import { resolveSendTaskCloseAction } from "@/features/agent/utils/resolveSendTaskPresentation";
 import { resolveSendTaskModalPanelKey } from "@/features/agent/utils/resolveSendTaskModalPanelKey";
 import { clearPersistedAgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalLocalStore";
 import { expandRunningSendTaskModal } from "@/features/agent/utils/expandRunningSendTaskModal";
@@ -33,7 +32,7 @@ export const useSendTaskModalActions = (input: {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { data: session } = useSession();
-  const { isSessionActive, setKeepAlive, setPanelKey } = input;
+  const { setKeepAlive, setPanelKey } = input;
 
   const minimizeSendTaskModal = useCallback(() => {
     setKeepAlive(true);
@@ -43,24 +42,14 @@ export const useSendTaskModalActions = (input: {
     );
   }, [pathname, searchParams, setKeepAlive]);
 
+  // S11: Close always hides the panel/floater; it never stops the run.
   const closeSendTaskModal = useCallback(() => {
-    if (resolveSendTaskCloseAction({ isSessionActive }) === "minimize") {
-      minimizeSendTaskModal();
-      return;
-    }
-
     setKeepAlive(false);
     setSendTaskModalUrl(
       `${pathname}${stripSendTaskModalQuery(searchParams)}`,
       "replace",
     );
-  }, [
-    isSessionActive,
-    minimizeSendTaskModal,
-    pathname,
-    searchParams,
-    setKeepAlive,
-  ]);
+  }, [pathname, searchParams, setKeepAlive]);
 
   const openSendTaskModal = useCallback(
     (options?: {

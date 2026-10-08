@@ -1,5 +1,6 @@
 "use client";
 
+import AwcProjectTaskDetailInfoList from "@/features/projects/tasks/AwcProjectTaskDetailInfoList";
 import AwcProjectTaskGitTags from "@/features/projects/tasks/AwcProjectTaskGitTags";
 import AwcProjectTaskStatusChip from "@/features/projects/tasks/AwcProjectTaskStatusChip";
 import AwcProjectTaskTimeline from "@/features/projects/tasks/AwcProjectTaskTimeline";
@@ -11,12 +12,8 @@ import {
   AWC_TASKS_PANEL_HEADING_CLASS,
   AWC_TASKS_SECONDARY_BUTTON_CLASS,
 } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
-import {
-  PROJECT_PAGE_TASKS_COPY as C,
-  PROJECT_TASK_STATUS_LABEL,
-} from "@/features/projects/tasks/projectPageTasksCopy.constant";
+import { PROJECT_PAGE_TASKS_COPY as C } from "@/features/projects/tasks/projectPageTasksCopy.constant";
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
-import { formatProjectTaskMetaTime as formatMetaTime } from "@/features/projects/tasks/utils/projectTaskTimeline";
 import { buildProjectTabHash } from "@/lib/shell/buildNavConsolidationRedirect";
 
 export default function AwcProjectTaskDetail({
@@ -39,7 +36,11 @@ export default function AwcProjectTaskDetail({
 
   return (
     <section className="flex min-w-0 flex-col gap-4" aria-label={task.title}>
-      <button type="button" className={`${AWC_TASKS_GHOST_BUTTON_CLASS} self-start`} onClick={onBack}>
+      <button
+        type="button"
+        className={`${AWC_TASKS_GHOST_BUTTON_CLASS} self-start`}
+        onClick={onBack}
+      >
         {C.backToList}
       </button>
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -50,12 +51,18 @@ export default function AwcProjectTaskDetail({
         <span className="text-[13px] text-awc-fg-muted">
           {task.assistantName?.trim() || "Assistant"}
         </span>
-        <AwcProjectTaskGitTags show={hasGit} branch={task.branch} worktree={task.worktree} />
+        <AwcProjectTaskGitTags
+          show={hasGit}
+          branch={task.branch}
+          worktree={task.worktree}
+        />
       </div>
       {showOffline ? <AwcProjectTasksOfflineBanner onRetry={onRetry} /> : null}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <div className={`${AWC_TASKS_CARD_CLASS} p-4`}>
-          <h3 className={`${AWC_TASKS_PANEL_HEADING_CLASS} mb-3 flex items-center gap-2`}>
+          <h3
+            className={`${AWC_TASKS_PANEL_HEADING_CLASS} mb-3 flex items-center gap-2`}
+          >
             {C.taskInfo}
             <span className="flex-1" />
             <span
@@ -66,30 +73,11 @@ export default function AwcProjectTaskDetail({
               i
             </span>
           </h3>
-          <dl className="m-0 grid grid-cols-[7rem_minmax(0,1fr)] gap-x-3 gap-y-2 text-[13.5px]">
-            <dt className="text-awc-fg-muted">{C.kvTask}</dt>
-            <dd className="m-0 min-w-0 break-all text-awc-fg">{task.id}</dd>
-            <dt className="text-awc-fg-muted">{C.kvAssistant}</dt>
-            <dd className="m-0 text-awc-fg">{task.assistantName?.trim() || "Assistant"}</dd>
-            <dt className="text-awc-fg-muted">{C.kvStatus}</dt>
-            <dd className="m-0 text-awc-fg">{PROJECT_TASK_STATUS_LABEL[task.status]}</dd>
-            <dt className="text-awc-fg-muted">{C.kvCreated}</dt>
-            <dd className="m-0 text-awc-fg">{formatMetaTime(task.createdAt)}</dd>
-            <dt className="text-awc-fg-muted">{C.kvUpdated}</dt>
-            <dd className="m-0 text-awc-fg">{formatMetaTime(task.updatedAt)}</dd>
-            {hasGit ? (
-              <>
-                <dt className="text-awc-fg-muted">{C.branch}</dt>
-                <dd className="m-0 text-awc-fg">{task.branch?.trim() || "—"}</dd>
-                <dt className="text-awc-fg-muted">{C.worktree}</dt>
-                <dd className="m-0 text-awc-fg">
-                  {task.worktree?.trim() || C.worktreeProjectFolder}
-                </dd>
-              </>
-            ) : null}
-          </dl>
+          <AwcProjectTaskDetailInfoList task={task} hasGit={hasGit} />
           <div className="mt-3 flex flex-wrap items-center gap-2">
-            <span className="text-[12px] text-awc-fg-muted">{C.fromComputer}</span>
+            <span className="text-[12px] text-awc-fg-muted">
+              {C.fromComputer}
+            </span>
             <button type="button" className={AWC_TASKS_SECONDARY_BUTTON_CLASS}>
               {C.openHistory}
             </button>

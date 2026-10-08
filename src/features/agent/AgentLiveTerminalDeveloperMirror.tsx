@@ -14,9 +14,11 @@ import type { AgentMacShellStatus } from "@/features/agent/utils/reduceAgentMacS
 import { shouldShowLiveMacShellInTerminal } from "@/features/agent/utils/shouldShowLiveMacShellInTerminal";
 import { resolvePreferStreamMirrorOverLiveShell } from "@/features/agent/utils/resolvePreferStreamMirrorOverLiveShell";
 
+import { useAgentLiveSessionPlatform } from "@/features/agent/hooks/useAgentLiveSessionPlatform";
 interface AgentLiveTerminalDeveloperMirrorProps {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
+  readonly sessionDeviceId?: string | null;
   readonly pendingCommandLine?: string | null;
   readonly awaitingUserAnswer?: boolean;
   readonly macShellStatus?: AgentMacShellStatus;
@@ -31,6 +33,7 @@ interface AgentLiveTerminalDeveloperMirrorProps {
 export default function AgentLiveTerminalDeveloperMirror({
   output,
   status,
+  sessionDeviceId,
   pendingCommandLine = null,
   awaitingUserAnswer = false,
   macShellStatus,
@@ -41,6 +44,8 @@ export default function AgentLiveTerminalDeveloperMirror({
   onMacShellInput,
   onMacShellResize,
 }: AgentLiveTerminalDeveloperMirrorProps) {
+  const chrome = useAgentLiveSessionPlatform(sessionDeviceId);
+
   const preferStreamMirror = resolvePreferStreamMirrorOverLiveShell({
     output,
     status,
@@ -54,6 +59,7 @@ export default function AgentLiveTerminalDeveloperMirror({
     output,
     status,
     pendingCommandLine,
+    platform: chrome.platform,
   });
   const showCursor = !shellIsLive && shouldShowAgentLiveTerminalCursor(status);
   const showLoadingIndicator =
@@ -71,7 +77,7 @@ export default function AgentLiveTerminalDeveloperMirror({
     <>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-sm font-medium text-awc-fg dark:text-white/90">
-          Local Mac terminal
+          {chrome.heading}
         </h2>
         <span className="rounded-full bg-zinc-800 px-2.5 py-1 font-mono text-[11px] text-zinc-200">
           {statusLabel}
@@ -86,7 +92,7 @@ export default function AgentLiveTerminalDeveloperMirror({
             <span className="size-2.5 rounded-full bg-[#febc2e]" />
             <span className="size-2.5 rounded-full bg-[#28c840]" />
             <span className="ml-2 font-mono text-[11px] text-zinc-400">
-              agent-witch@mac — -zsh — 80×24
+              {chrome.windowTitle}
             </span>
           </div>
           <AgentMacShellXterm
@@ -100,6 +106,7 @@ export default function AgentLiveTerminalDeveloperMirror({
         </div>
       ) : (
         <AgentLiveTerminalBashWindow
+          platform={chrome.platform}
           displayOutput={displayOutput}
           showLoadingIndicator={showLoadingIndicator}
           loadingDotCount={loadingDotCount}

@@ -1,6 +1,8 @@
 import { PROJECT_SYNC_NEON_SUMMARY_MAX_CHARS } from "@/features/projects/sync/projectSync.types";
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
 import { mapRunStatusToProjectTaskDisplayStatus } from "@/features/projects/tasks/projectTaskDisplayStatus";
+import { formatAgentRunTerminalReasonLine } from "@/lib/dispatch/agentRunLostConnectionReasons.constant";
+import { isAgentRunUserStopped } from "@/lib/dispatch/isAgentRunUserStopped";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
 const thinTitle = (raw: string): string =>
@@ -21,19 +23,33 @@ export const mapAgentRunToProjectTaskMeta = (
   run: EnrichedAgentRunRecord,
   projectId: string,
 ): ProjectTaskMeta => {
-  const title =
-    thinTitle(firstLine(run.reportSummary) || firstLine(run.prompt)) ||
-    "Task";
   const assistantName =
     run.writerAgent?.trim() ||
     run.executorName?.trim() ||
     (run.executorEmail.includes("@") ? run.executorEmail : null);
+  const runStatus = mapRunStatusToProjectTaskDisplayStatus(run.status);
+  // S9: same "Stopped" predicate as the live floater.
+  const status =
+    runStatus === "failed" &&
+    isAgentRunUserStopped(run.resultOutput, run.resultExitCode)
+      ? "stopped"
+      : runStatus;
+  const title =
+    thinTitle(firstLine(run.reportSummary) || firstLine(run.prompt)) || "Task";
+  // S4/S10: the failure reason rides next to the title, never replacing it.
+  const denialReason = run.denialReason?.trim() ?? "";
+  const statusReason =
+    (status === "failed" || status === "denied") && denialReason.length > 0
+      ? formatAgentRunTerminalReasonLine(denialReason)
+      : null;
+
   return {
     id: run.id,
     projectId,
     assistantMembershipId: null,
     title,
-    status: mapRunStatusToProjectTaskDisplayStatus(run.status),
+    status,
+    statusReason,
     createdAt: run.createdAt,
     updatedAt: run.updatedAt,
     startedAt: run.startedAt,

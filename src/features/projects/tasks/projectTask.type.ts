@@ -6,7 +6,12 @@ import type {
   ProjectTaskNeonMeta,
 } from "@/features/projects/sync/adapters/projectTasksAdapter";
 
-export type { ProjectTaskUiStatus, ProjectTaskIdbRecord, ProjectTaskLocalRecord, ProjectTaskNeonMeta };
+export type {
+  ProjectTaskUiStatus,
+  ProjectTaskIdbRecord,
+  ProjectTaskLocalRecord,
+  ProjectTaskNeonMeta,
+};
 
 /**
  * UI list/detail row — Neon/IDB meta (+ optional assistant display name, UI-only).
@@ -15,6 +20,7 @@ export type { ProjectTaskUiStatus, ProjectTaskIdbRecord, ProjectTaskLocalRecord,
 export type ProjectTaskMeta = Omit<ProjectTaskNeonMeta, "status"> & {
   readonly status: ProjectTaskDisplayStatus;
   readonly assistantName?: string | null;
+  readonly statusReason?: string | null;
 };
 
 export type ProjectTaskPlanCounts = {
@@ -23,6 +29,4 @@ export type ProjectTaskPlanCounts = {
 };
 
 export type ProjectTasksChatVisibility =
-  | "show_in_chat"
-  | "tasks_tab_only"
-  | "compact_chips";
+  "show_in_chat" | "tasks_tab_only" | "compact_chips";

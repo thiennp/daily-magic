@@ -2,6 +2,7 @@ import { dedupeConsecutiveLogLines } from "@/features/agent/utils/dedupeConsecut
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import {
   AGENT_LIVE_BASH_PROMPT,
+  getAgentLivePrompt,
   appendAgentLiveTerminalPrompt,
   buildAgentLiveTerminalCommandEntry,
   buildAgentLiveTerminalIdleLine,
@@ -12,8 +13,11 @@ export const buildAgentLiveTerminalDisplay = (input: {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
   readonly pendingCommandLine?: string | null;
+  readonly platform?: "mac" | "linux";
 }): string => {
   const visibleOutput = stripNextActionsFromTerminalOutput(input.output);
+  const platform = input.platform ?? "mac";
+  const prompt = getAgentLivePrompt(platform);
 
   if (visibleOutput.length === 0) {
     const pendingCommandLine = input.pendingCommandLine?.trim() ?? "";
@@ -23,22 +27,27 @@ export const buildAgentLiveTerminalDisplay = (input: {
         input.status === "waiting_approval" ||
         input.status === "streaming")
     ) {
-      return buildAgentLiveTerminalCommandEntry(pendingCommandLine);
+      return buildAgentLiveTerminalCommandEntry(pendingCommandLine, platform);
     }
 
-    if (input.status === "finished" || input.status === "error" || input.status === "timed_out") {
-      return `${buildAgentLiveTerminalIdleLine()}No agent output was captured for this run.\n`;
+    if (
+      input.status === "finished" ||
+      input.status === "error" ||
+      input.status === "timed_out"
+    ) {
+      return `${buildAgentLiveTerminalIdleLine(platform)}No agent output was captured for this run.\n`;
     }
 
-    return buildAgentLiveTerminalIdleLine();
+    return buildAgentLiveTerminalIdleLine(platform);
   }
 
   if (
     input.status === "finished" &&
+    !visibleOutput.endsWith(prompt) &&
     !visibleOutput.endsWith(AGENT_LIVE_BASH_PROMPT)
   ) {
     return dedupeConsecutiveLogLines(
-      appendAgentLiveTerminalPrompt(visibleOutput),
+      appendAgentLiveTerminalPrompt(visibleOutput, platform),
     );
   }
 
@@ -47,7 +56,11 @@ export const buildAgentLiveTerminalDisplay = (input: {
 
 export const shouldShowAgentLiveTerminalCursor = (
   status: AgentLiveTerminalStatus,
-): boolean => status === "idle" || status === "finished" || status === "error" || status === "timed_out";
+): boolean =>
+  status === "idle" ||
+  status === "finished" ||
+  status === "error" ||
+  status === "timed_out";
 
 export const shouldShowAgentLiveTerminalLoadingIndicator = (
   status: AgentLiveTerminalStatus,

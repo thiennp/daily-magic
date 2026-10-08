@@ -3,12 +3,9 @@ import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 import type { AgentLiveTerminalState } from "./agentLiveTerminalState.type";
-import {
-  isRecord,
-  matchesActiveRun,
-  mergeTerminalResultOutput,
-} from "./agentLiveTerminalMessageUtils";
-import { appendAgentLiveTerminalPrompt } from "./agentLiveTerminalPrompt.constant";
+import { isRecord, matchesActiveRun } from "./agentLiveTerminalMessageUtils";
+import { isTerminalAgentRunRecordStatus } from "./agentLiveRunRecordResync";
+import { reduceAgentLiveTerminalRunRecordEnd } from "./reduceAgentLiveTerminalRunRecordEnd";
 
 export const reduceAgentLiveTerminalApprovalMessage = (
   state: AgentLiveTerminalState,
@@ -33,26 +30,12 @@ export const reduceAgentLiveTerminalApprovalMessage = (
 
     if (
       run.id === state.activeRunId &&
-      (run.status === AgentRunStatus.COMPLETED ||
-        run.status === AgentRunStatus.FAILED ||
-        run.status === AgentRunStatus.EXPIRED ||
-        run.status === AgentRunStatus.DENIED) &&
+      isTerminalAgentRunRecordStatus(run.status) &&
       state.status !== "finished" &&
       state.status !== "idle" &&
       state.status !== "timed_out"
     ) {
-      const resultOutput =
-        typeof run.resultOutput === "string" ? run.resultOutput : "";
-      const timedOut = run.status === AgentRunStatus.EXPIRED;
-      return {
-        ...state,
-        output: appendAgentLiveTerminalPrompt(
-          mergeTerminalResultOutput(state.output, resultOutput),
-        ),
-        status: timedOut ? "timed_out" : "finished",
-        pendingInput: null,
-        pendingCommandLine: null,
-      };
+      return reduceAgentLiveTerminalRunRecordEnd(state, run);
     }
   }
 

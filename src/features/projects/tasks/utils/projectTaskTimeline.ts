@@ -1,11 +1,7 @@
 import type { ProjectTaskDisplayStatus } from "@/features/projects/tasks/projectTaskDisplayStatus";
 
 export type ProjectTaskTimelineStepClass =
-  | "ok"
-  | "cur"
-  | "pend"
-  | "end-failed"
-  | "end-cancelled";
+  "ok" | "cur" | "pend" | "end-failed" | "end-cancelled";
 
 const TERMINAL: ReadonlySet<ProjectTaskDisplayStatus> = new Set([
   "done",
@@ -13,10 +9,11 @@ const TERMINAL: ReadonlySet<ProjectTaskDisplayStatus> = new Set([
   "cancelled",
   "denied",
   "timed_out",
+  "stopped",
 ]);
 
 /**
- * Design timeline: queued → running → terminal (done|failed|cancelled).
+ * Design timeline: queued → running → terminal (done|failed|cancelled|stopped).
  * DF-027: denied / timed out never ran → queued → outcome; unknown → one step.
  */
 export const buildProjectTaskTimelineSteps = (
@@ -25,7 +22,10 @@ export const buildProjectTaskTimelineSteps = (
   if (status === "unknown") return ["unknown"];
   if (status === "denied" || status === "timed_out") return ["queued", status];
   const end: ProjectTaskDisplayStatus =
-    status === "done" || status === "failed" || status === "cancelled"
+    status === "done" ||
+    status === "failed" ||
+    status === "cancelled" ||
+    status === "stopped"
       ? status
       : "done";
   return ["queued", "running", end];
@@ -36,9 +36,11 @@ export const projectTaskTimelineStepClass = (
   current: ProjectTaskDisplayStatus,
 ): ProjectTaskTimelineStepClass => {
   if (step === current) {
-    if (step === "queued" || step === "running" || step === "unknown") return "cur";
+    if (step === "queued" || step === "running" || step === "unknown")
+      return "cur";
     if (step === "failed" || step === "timed_out") return "end-failed";
-    if (step === "cancelled" || step === "denied") return "end-cancelled";
+    if (step === "cancelled" || step === "denied" || step === "stopped")
+      return "end-cancelled";
   }
   if (TERMINAL.has(current)) {
     if (step === "queued" || step === "running") return "ok";

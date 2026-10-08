@@ -13,6 +13,7 @@ export function buildAgentLiveTerminalPanelMirror(input: {
   readonly pendingCommandLine: string | null;
   readonly feedbackPendingQuestion: string | null;
   readonly isSteppedComposer: boolean;
+  readonly sessionDeviceId?: string | null;
   readonly macShell: AgentMacShellPanelProps;
 }): ReactElement | null {
   if (!input.show) return null;
@@ -22,6 +23,7 @@ export function buildAgentLiveTerminalPanelMirror(input: {
     pendingCommandLine: input.pendingCommandLine,
     awaitingUserAnswer: (input.feedbackPendingQuestion ?? "").trim().length > 0,
     isSteppedComposer: input.isSteppedComposer,
+    sessionDeviceId: input.sessionDeviceId,
     macShell: input.macShell,
   });
 }
