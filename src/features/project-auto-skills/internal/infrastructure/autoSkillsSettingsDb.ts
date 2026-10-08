@@ -10,6 +10,7 @@ import { asRowArray, getSql } from "@/lib/db";
 const DEFAULTS: AutoSkillsSettings & AutoSkillsStatus = {
   enabled: true,
   judgePref: "auto",
+  judgeAgent: null,
   publishMode: "draft",
   judgeKind: null,
   judgeLabel: null,
@@ -36,6 +37,7 @@ export const getAutoSkillsSettingsRow = async (
   return {
     enabled: row.enabled !== false,
     judgePref: String(row.judge_pref) as AutoSkillJudgePref,
+    judgeAgent: text(row.judge_agent),
     publishMode: String(row.publish_mode) as AutoSkillPublishMode,
     judgeKind: text(row.judge_kind),
     judgeLabel: text(row.judge_label),
@@ -54,11 +56,11 @@ export const patchAutoSkillsSettings = async (
   const current = await getAutoSkillsSettingsRow(projectId);
   const next = { ...current, ...patch };
   await getSql()`
-    INSERT INTO project_auto_skills (project_id, enabled, judge_pref, publish_mode)
-    VALUES (${projectId}, ${next.enabled}, ${next.judgePref}, ${next.publishMode})
+    INSERT INTO project_auto_skills (project_id, enabled, judge_pref, judge_agent, publish_mode)
+    VALUES (${projectId}, ${next.enabled}, ${next.judgePref}, ${next.judgeAgent}, ${next.publishMode})
     ON CONFLICT (project_id) DO UPDATE SET enabled = EXCLUDED.enabled,
-      judge_pref = EXCLUDED.judge_pref, publish_mode = EXCLUDED.publish_mode,
-      updated_at = NOW()`;
+      judge_pref = EXCLUDED.judge_pref, judge_agent = EXCLUDED.judge_agent,
+      publish_mode = EXCLUDED.publish_mode, updated_at = NOW()`;
 };
 
 /** Reported by the owner's computer after each check. */

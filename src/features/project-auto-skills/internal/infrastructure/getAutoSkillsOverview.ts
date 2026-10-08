@@ -31,6 +31,7 @@ export const getAutoSkillsDeviceView = async (input: {
 }): Promise<{
   readonly enabled: boolean;
   readonly judgePref: string;
+  readonly judgeAgent: string | null;
   readonly publishMode: string;
   readonly neverClusterIds: readonly string[];
   readonly savedClusterIds: readonly string[];
@@ -48,6 +49,7 @@ export const getAutoSkillsDeviceView = async (input: {
   return {
     enabled: role.ok && role.role === "owner" && settings.enabled,
     judgePref: settings.judgePref,
+    judgeAgent: settings.judgeAgent,
     publishMode: settings.publishMode,
     neverClusterIds: ids("never"),
     savedClusterIds: ids("saved"),

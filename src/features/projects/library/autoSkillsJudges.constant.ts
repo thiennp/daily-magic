@@ -24,3 +24,14 @@ export const AUTO_SKILL_JUDGES: readonly {
     disabled: true,
   },
 ];
+
+/** Coding agents that can judge; null = whichever signed-in tool is found first. */
+export const AUTO_SKILL_AGENTS: readonly {
+  readonly value: string | null;
+  readonly label: string;
+}[] = [
+  { value: null, label: "Any signed-in tool" },
+  { value: "codex", label: "Codex" },
+  { value: "claude-cli", label: "Claude" },
+  { value: "cursor", label: "Cursor" },
+];

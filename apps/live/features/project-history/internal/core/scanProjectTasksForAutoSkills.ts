@@ -136,7 +136,11 @@ export const scanProjectTasksForAutoSkills = async (input: {
     const writer = tasks[tasks.length - 1]?.writerAgent ?? null;
     const choice = selectAutoSkillJudge(settings.judgePref, {
       ollamaModel: await probeAutoSkillOllamaModel(),
-      agentWriter: await probeSignedInAutoSkillAgent(writer),
+      agentWriter: await probeSignedInAutoSkillAgent(
+        writer,
+        undefined,
+        settings.judgeAgent ?? null,
+      ),
       botName: null,
     });
     await cloud.postStatus(input.projectId, {

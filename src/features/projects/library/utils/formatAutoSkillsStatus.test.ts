@@ -8,6 +8,7 @@ const NOW = Date.parse("2026-10-08T12:00:00Z");
 const overview = (patch: Partial<AutoSkillsOverview>): AutoSkillsOverview => ({
   enabled: true,
   judgePref: "auto",
+  judgeAgent: null,
   publishMode: "draft",
   judgeKind: "agent",
   judgeLabel: "your computer agent: Codex",

@@ -38,7 +38,10 @@ export const onAutoSkillRunCompleted = async (
       return "disabled";
     }
     let state = appendAutoSkillRun(deps.loadState(projectId), run);
-    const availability = await deps.probeAvailability(run.writerAgent);
+    const availability = await deps.probeAvailability(
+      run.writerAgent,
+      settings.judgeAgent ?? null,
+    );
     const choice = selectAutoSkillJudge(settings.judgePref, availability);
     await deps.cloud
       .postStatus(projectId, {

@@ -29,7 +29,7 @@ export async function GET(
   return Response.json({ ok: true, overview });
 }
 
-/** Owner PATCH: `{enabled?, judgePref?, publishMode?}`. */
+/** Owner PATCH: `{enabled?, judgePref?, judgeAgent?, publishMode?}`. */
 export async function PATCH(
   request: Request,
   context: RouteContext,
@@ -53,6 +53,10 @@ export async function PATCH(
     ...(typeof body.enabled === "boolean" ? { enabled: body.enabled } : {}),
     ...(["auto", "ollama", "agent", "bot"].includes(String(body.judgePref))
       ? { judgePref: body.judgePref as "auto" }
+      : {}),
+    ...(body.judgeAgent === null ||
+    ["codex", "claude-cli", "cursor"].includes(String(body.judgeAgent))
+      ? { judgeAgent: body.judgeAgent as string | null }
       : {}),
     ...(body.publishMode === "draft" || body.publishMode === "publish"
       ? { publishMode: body.publishMode }

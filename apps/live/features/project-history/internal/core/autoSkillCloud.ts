@@ -6,6 +6,8 @@ import type { AutoSkillJudgePref } from "./autoSkill.types";
 export type AutoSkillCloudSettings = {
   readonly enabled: boolean;
   readonly judgePref: AutoSkillJudgePref;
+  /** Coding agent the owner picked to judge; null/absent = any signed-in one. */
+  readonly judgeAgent?: string | null;
   readonly publishMode: "draft" | "publish";
   readonly neverClusterIds: readonly string[];
   readonly savedClusterIds: readonly string[];

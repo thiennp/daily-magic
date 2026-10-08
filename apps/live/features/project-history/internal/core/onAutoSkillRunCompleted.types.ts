@@ -13,6 +13,7 @@ export type OnAutoSkillRunCompletedDeps = {
   readonly saveState: (projectId: string, state: AutoSkillState) => void;
   readonly probeAvailability: (
     writerOfRun: string | null,
+    judgeAgent: string | null,
   ) => Promise<AutoSkillAvailability>;
   readonly makeCompleter: (
     kind: AutoSkillJudgeKind,

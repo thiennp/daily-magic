@@ -76,9 +76,13 @@ export const reportAutoSkillRunCompleted = async (input: {
             readLocalProjectHistoryState(projectId)?.state,
           ),
         ),
-      probeAvailability: async (writerOfRun) => ({
+      probeAvailability: async (writerOfRun, judgeAgent) => ({
         ollamaModel: await probeAutoSkillOllamaModel(),
-        agentWriter: await probeSignedInAutoSkillAgent(writerOfRun),
+        agentWriter: await probeSignedInAutoSkillAgent(
+          writerOfRun,
+          undefined,
+          judgeAgent,
+        ),
         botName: null,
       }),
       makeCompleter: (kind, availability) => {

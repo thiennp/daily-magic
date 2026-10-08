@@ -7,6 +7,8 @@ export type AutoSkillAnswer = "save" | "not_now" | "never";
 export interface AutoSkillsSettings {
   readonly enabled: boolean;
   readonly judgePref: AutoSkillJudgePref;
+  /** Coding agent that judges (codex, claude-cli, cursor); null = any signed-in one. */
+  readonly judgeAgent: string | null;
   readonly publishMode: AutoSkillPublishMode;
 }
 

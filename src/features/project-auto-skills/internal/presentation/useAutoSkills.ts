@@ -23,6 +23,7 @@ export interface AutoSkillsState extends AutoSkillScan {
   readonly busy: boolean;
   readonly setEnabled: (enabled: boolean) => Promise<void>;
   readonly setJudgePref: (pref: AutoSkillJudgePref) => Promise<void>;
+  readonly setJudgeAgent: (agent: string | null) => Promise<void>;
   readonly answer: (id: string, answer: AutoSkillAnswer) => Promise<boolean>;
   readonly reload: () => void;
 }
@@ -93,6 +94,7 @@ export const useAutoSkills = (
     ...scanState,
     setEnabled: (value) => patch({ enabled: value }),
     setJudgePref: (judgePref) => patch({ judgePref }),
+    setJudgeAgent: (judgeAgent) => patch({ judgeAgent }),
     answer,
   };
 };

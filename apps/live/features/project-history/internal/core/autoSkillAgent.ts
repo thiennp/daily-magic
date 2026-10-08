@@ -69,15 +69,22 @@ const looksSignedIn = (
   !/not logged in|"loggedIn":\s*false|not authenticated/i.test(out) &&
   (writer !== "claude-cli" || /"loggedIn":\s*true/.test(out));
 
-/** First signed-in writer CLI; `preferred` (writer of the runs) goes first. */
+/**
+ * First signed-in writer CLI; `preferred` (writer of the runs) goes first.
+ * `only` is the owner's pick: no other tool is tried.
+ */
 export const probeSignedInAutoSkillAgent = async (
   preferred: string | null,
   exec: AutoSkillExec = execAutoSkillCommand,
+  only: string | null = null,
 ): Promise<HarnessWriterAgentId | null> => {
-  const order = [
-    ...CANDIDATES.filter((w) => w === preferred),
-    ...CANDIDATES.filter((w) => w !== preferred),
-  ];
+  const order =
+    only !== null
+      ? CANDIDATES.filter((w) => w === only)
+      : [
+          ...CANDIDATES.filter((w) => w === preferred),
+          ...CANDIDATES.filter((w) => w !== preferred),
+        ];
   for (const writer of order) {
     const probe = statusArgs(writer);
     if (probe === null) {

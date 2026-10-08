@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { AutoSkillsState } from "@/features/project-auto-skills/public-api/presentation";
 import AwcAutoSkillQuestionCard from "@/features/projects/autoskills/AwcAutoSkillQuestionCard";
 import AwcAutoSkillsActions from "@/features/projects/library/AwcAutoSkillsActions";
+import AwcAutoSkillsAgentPicker from "@/features/projects/library/AwcAutoSkillsAgentPicker";
 import AwcAutoSkillsHeader from "@/features/projects/library/AwcAutoSkillsHeader";
 import AwcAutoSkillsJudgePicker from "@/features/projects/library/AwcAutoSkillsJudgePicker";
 import {
@@ -68,6 +69,13 @@ export default function AwcProjectLibraryAutoSkills({
             busy={auto.busy}
             onChange={(pref) => void auto.setJudgePref(pref)}
           />
+          {overview.judgePref === "auto" || overview.judgePref === "agent" ? (
+            <AwcAutoSkillsAgentPicker
+              value={overview.judgeAgent}
+              busy={auto.busy}
+              onChange={(agent) => void auto.setJudgeAgent(agent)}
+            />
+          ) : null}
           <AwcAutoSkillsActions
             busy={auto.busy}
             scanning={auto.scanning}
