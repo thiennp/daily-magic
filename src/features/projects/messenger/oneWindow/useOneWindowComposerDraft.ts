@@ -26,7 +26,9 @@ export const useOneWindowComposerDraft = (input: {
   const [caret, setCaret] = useState(0);
   const [index, setIndex] = useState(0);
   const [dismissedAt, setDismissedAt] = useState<number | null>(null);
-  const query = mentionsEnabled ? activeOneWindowMentionQuery(text, caret) : null;
+  const query = mentionsEnabled
+    ? activeOneWindowMentionQuery(text, caret)
+    : null;
   const open = query !== null && dismissedAt !== caret;
   const options = open ? filterOneWindowMentionOptions(assistants, query) : [];
   const active = Math.min(index, Math.max(0, options.length - 1));
@@ -59,23 +61,34 @@ export const useOneWindowComposerDraft = (input: {
     setDismissedAt(null);
   };
   const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>): void => {
-    const step = event.key === "ArrowDown" ? 1 : event.key === "ArrowUp" ? -1 : 0;
+    const step =
+      event.key === "ArrowDown" ? 1 : event.key === "ArrowUp" ? -1 : 0;
     if (open && options.length > 0 && step !== 0) {
       event.preventDefault();
       setIndex((active + step + options.length) % options.length);
       return;
     }
-    if (open && options.length > 0 && (event.key === "Enter" || event.key === "Tab") && !event.shiftKey) {
+    if (
+      open &&
+      options.length > 0 &&
+      (event.key === "Enter" || event.key === "Tab") &&
+      !event.shiftKey
+    ) {
       event.preventDefault();
       pick(options[active].displayName);
       return;
     }
     if (open && event.key === "Escape") {
       event.preventDefault();
+      event.stopPropagation();
       setDismissedAt(caret);
       return;
     }
-    if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) {
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey &&
+      !event.nativeEvent.isComposing
+    ) {
       event.preventDefault();
       submit();
     }

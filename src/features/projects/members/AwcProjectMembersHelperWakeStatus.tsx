@@ -26,12 +26,15 @@ export default function AwcProjectMembersHelperWakeStatus({
   return (
     <button
       type="button"
-      className={`awc-focus-ring flex shrink-0 items-center gap-1.5 rounded-md px-1 py-0.5 text-[12.5px] hover:bg-awc-fill ${TEXT_CLASS(status)}`}
+      className={`awc-focus-ring flex min-w-0 shrink items-center gap-1.5 rounded-md px-1 py-0.5 text-[12.5px] hover:bg-awc-fill ${TEXT_CLASS(status)}`}
       data-wake-status={status}
       onClick={onOpen}
     >
-      <span className={`inline-block size-[7px] rounded-full ${DOT_CLASS[status]}`} aria-hidden />
-      {C.helpersWake[status]}
+      <span
+        className={`inline-block size-[7px] shrink-0 rounded-full ${DOT_CLASS[status]}`}
+        aria-hidden
+      />
+      <span className="min-w-0 truncate">{C.helpersWake[status]}</span>
     </button>
   );
 }
