@@ -1,15 +1,14 @@
 "use client";
 
 import { useId, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 
 import { Dropdown } from "@/components/ui/dropdown/Dropdown";
 import AppIcon from "@/components/ui/icon/AppIcon";
+import {
+  AwcProjectCardDeleteDialog,
+  AwcProjectCardLeaveDialog,
+} from "@/features/projects/AwcProjectCardActionsDialogs";
 import AwcProjectCardActionsMenuItems from "@/features/projects/AwcProjectCardActionsMenuItems";
-import AwcProjectDeleteConfirmForm from "@/features/projects/AwcProjectDeleteConfirmForm";
-import AwcProjectLeaveConfirmForm from "@/features/projects/AwcProjectLeaveConfirmForm";
-import useDeleteProject from "@/features/projects/hooks/useDeleteProject";
-import useLeaveProject from "@/features/projects/hooks/useLeaveProject";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import {
   PROJECTS_V5_ICON_BUTTON_CLASS,
@@ -36,57 +35,22 @@ export default function AwcProjectCardActionsMenu({
   onProjectDeleted,
   canDelete,
 }: AwcProjectCardActionsMenuProps) {
-  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
   const menuId = useId();
   const toggleRef = useRef<HTMLButtonElement>(null);
-  const {
-    deleteProject,
-    errorMessage: deleteError,
-    pending: deletePending,
-    clearError: clearDeleteError,
-  } = useDeleteProject(projectId);
-  const {
-    leaveProject,
-    errorMessage: leaveError,
-    pending: leavePending,
-    clearError: clearLeaveError,
-  } = useLeaveProject(projectId);
-
   const closeMenu = (): void => {
     setIsOpen(false);
   };
-
-  const assignTasksHref = buildNavConsolidationNewTaskHref({ projectId });
-  const canLeave = !canDelete;
-
-  const runDelete = (): void => {
-    void deleteProject().then((ok) => {
-      if (ok) {
-        setDeleteConfirmOpen(false);
-        onProjectDeleted?.();
-      }
-    });
-  };
-
-  const runLeave = (): void => {
-    void leaveProject().then((ok) => {
-      if (!ok) return;
-      setLeaveConfirmOpen(false);
-      onProjectDeleted?.();
-      router.push("/projects");
-      router.refresh();
-    });
-  };
+  const actionsLabel = `Actions for ${projectName}`;
 
   return (
     <div className="relative shrink-0">
       <button
         ref={toggleRef}
         type="button"
-        aria-label="Project actions"
+        aria-label={actionsLabel}
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-controls={isOpen ? menuId : undefined}
@@ -106,52 +70,36 @@ export default function AwcProjectCardActionsMenu({
         <ul
           id={menuId}
           role="menu"
-          aria-label="Project actions"
+          aria-label={actionsLabel}
           className="flex flex-col gap-0.5"
         >
           <AwcProjectCardActionsMenuItems
             projectId={projectId}
             isDefaultProject={isDefaultUserProject({ name: projectName })}
             canDelete={canDelete}
-            canLeave={canLeave}
-            assignTasksHref={assignTasksHref}
+            canLeave={!canDelete}
+            assignTasksHref={buildNavConsolidationNewTaskHref({ projectId })}
             editCta={editCta}
             editHelperId={editHelperId}
             onClose={closeMenu}
-            onRequestDelete={() => {
-              clearDeleteError();
-              setDeleteConfirmOpen(true);
-            }}
-            onRequestLeave={() => {
-              clearLeaveError();
-              setLeaveConfirmOpen(true);
-            }}
+            onRequestDelete={() => setDeleteConfirmOpen(true)}
+            onRequestLeave={() => setLeaveConfirmOpen(true)}
           />
         </ul>
       </Dropdown>
       {deleteConfirmOpen ? (
-        <AwcProjectDeleteConfirmForm
-          variant="dialog"
+        <AwcProjectCardDeleteDialog
+          projectId={projectId}
           projectName={projectName}
-          pending={deletePending}
-          errorMessage={deleteError}
-          onConfirm={runDelete}
-          onCancel={() => {
-            clearDeleteError();
-            setDeleteConfirmOpen(false);
-          }}
+          onClose={() => setDeleteConfirmOpen(false)}
+          onProjectDeleted={onProjectDeleted}
         />
       ) : null}
       {leaveConfirmOpen ? (
-        <AwcProjectLeaveConfirmForm
-          variant="dialog"
-          pending={leavePending}
-          errorMessage={leaveError}
-          onConfirm={runLeave}
-          onCancel={() => {
-            clearLeaveError();
-            setLeaveConfirmOpen(false);
-          }}
+        <AwcProjectCardLeaveDialog
+          projectId={projectId}
+          onClose={() => setLeaveConfirmOpen(false)}
+          onProjectDeleted={onProjectDeleted}
         />
       ) : null}
     </div>

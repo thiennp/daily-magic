@@ -9,7 +9,10 @@ describe("AwcProjectsPanel delete list update", () => {
       "utf8",
     );
     const menu = readFileSync(
-      join(process.cwd(), "src/features/projects/AwcProjectCardActionsMenu.tsx"),
+      join(
+        process.cwd(),
+        "src/features/projects/AwcProjectCardActionsMenu.tsx",
+      ),
       "utf8",
     );
     const menuItem = readFileSync(
@@ -33,9 +36,17 @@ describe("AwcProjectsPanel delete list update", () => {
 
     expect(panel).toContain("onProjectDeleted");
     expect(panel).toContain("removeProject(projectId)");
-    expect(menu).toContain("useDeleteProject");
-    expect(menu).toContain("AwcProjectDeleteConfirmForm");
-    expect(menu).toContain('variant="dialog"');
+    const dialogs = readFileSync(
+      join(
+        process.cwd(),
+        "src/features/projects/AwcProjectCardActionsDialogs.tsx",
+      ),
+      "utf8",
+    );
+    expect(menu).toContain("AwcProjectCardDeleteDialog");
+    expect(dialogs).toContain("useDeleteProject");
+    expect(dialogs).toContain("AwcProjectDeleteConfirmForm");
+    expect(dialogs).toContain('variant="dialog"');
     expect(menuItem).toContain("AwcProjectDeleteMenuItem");
     expect(confirm).toContain("variant?: AwcProjectDeleteConfirmVariant");
     expect(confirm).toContain("AwcProjectDeleteConfirmFields");

@@ -1,85 +1,91 @@
 "use client";
 
-import { useState } from "react";
-
+import AwcProjectConnectionConnectDialog from "@/features/projects/settings/connections/AwcProjectConnectionConnectDialog";
 import AwcProjectConnectionDisconnectModal from "@/features/projects/settings/connections/AwcProjectConnectionDisconnectModal";
 import AwcProjectConnectionRow from "@/features/projects/settings/connections/AwcProjectConnectionRow";
+import AwcProjectConnectionsEmpty from "@/features/projects/settings/connections/AwcProjectConnectionsEmpty";
+import AwcProjectConnectionsHeading from "@/features/projects/settings/connections/AwcProjectConnectionsHeading";
 import AwcProjectConnectionsLoadNotes from "@/features/projects/settings/connections/AwcProjectConnectionsLoadNotes";
-import type { ProjectConnectionProvider } from "@/features/projects/settings/connections/projectConnection.types";
-import { PROJECT_CONNECTIONS_COPY as C } from "@/features/projects/settings/connections/projectConnectionsCopy.constant";
+import AwcProjectConnectionsNotice from "@/features/projects/settings/connections/AwcProjectConnectionsNotice";
+import AwcProjectConnectionsVsStrip from "@/features/projects/settings/connections/AwcProjectConnectionsVsStrip";
+import { useProjectConnectionsActions } from "@/features/projects/settings/connections/useProjectConnectionsActions";
 import { useProjectConnections } from "@/features/projects/settings/connections/useProjectConnections";
 
 interface AwcProjectConnectionsSectionProps {
   readonly projectId: string;
+  readonly projectName: string;
   readonly isOwner: boolean;
 }
 
 /**
- * Settings → Connections (EN PASS UI). Six providers (Slack–Drive); owner-only mutate.
- * 404/501/network → Not connected + disabled Connect + honest unavailable line.
+ * Settings → Connections (design: AgentWitch – Project Connections). Six
+ * providers; owner-only Connect / Reconnect (OAuth window) / Disconnect.
+ * 404/501/network → Not connected + disabled actions + honest unavailable line.
  */
 export default function AwcProjectConnectionsSection({
   projectId,
+  projectName,
   isOwner,
 }: AwcProjectConnectionsSectionProps) {
   const { loadState, rows, reload } = useProjectConnections(projectId);
+  const { notice, connectFlow, disconnect } = useProjectConnectionsActions({
+    projectId,
+    reload,
+  });
   const canMutate = isOwner && loadState === "ready";
-  const [disconnectProvider, setDisconnectProvider] =
-    useState<ProjectConnectionProvider | null>(null);
-  const disconnectRow =
-    disconnectProvider === null
-      ? null
-      : (rows.find((row) => row.provider === disconnectProvider) ?? null);
   const showList = loadState === "ready" || loadState === "unavailable";
   const allDisconnected =
     loadState === "ready" && rows.every((row) => row.status === "none");
+  const current = connectFlow.state;
 
   return (
-    <section className="flex flex-col gap-2" aria-labelledby="p-set-conn-h">
-      <h3
-        id="p-set-conn-h"
-        className="text-[13px] font-semibold text-awc-fg-muted dark:text-gray-400"
-      >
-        {C.heading}
-      </h3>
-      <p className="text-[13px] text-awc-fg-muted dark:text-gray-400">
-        {C.intro}
-      </p>
-      <p className="text-[12px] text-awc-fg-muted dark:text-gray-400">
-        {C.vsConnectHint}
-      </p>
+    <section className="flex flex-col gap-3" aria-labelledby="p-set-conn-h">
+      <AwcProjectConnectionsHeading
+        rows={rows}
+        showSummary={loadState === "ready"}
+      />
       <AwcProjectConnectionsLoadNotes
         loadState={loadState}
         isOwner={isOwner}
         onRetry={reload}
       />
+      <AwcProjectConnectionsNotice notice={notice} />
+      {allDisconnected ? <AwcProjectConnectionsEmpty /> : null}
       {showList ? (
-        <>
-          {allDisconnected ? (
-            <p className="text-[13px] text-awc-fg-muted dark:text-gray-400">
-              {C.empty}
-            </p>
-          ) : null}
-          <p className="text-[13px] text-awc-fg-muted dark:text-gray-400">
-            {C.vsResources}
-          </p>
-          <ul className="flex flex-col gap-2">
-            {rows.map((item) => (
-              <AwcProjectConnectionRow
-                key={item.provider}
-                item={item}
-                isOwner={isOwner}
-                canMutate={canMutate}
-                projectId={projectId}
-                onDisconnect={() => setDisconnectProvider(item.provider)}
-              />
-            ))}
-          </ul>
-        </>
+        <ul
+          aria-label="Services"
+          className="divide-y divide-awc-border overflow-hidden rounded-awc-lg border border-awc-border bg-awc-surface"
+        >
+          {rows.map((item) => (
+            <AwcProjectConnectionRow
+              key={item.provider}
+              item={item}
+              isOwner={isOwner}
+              canMutate={canMutate}
+              projectId={projectId}
+              onConnect={(reconnect) =>
+                void connectFlow.begin(item.provider, reconnect)
+              }
+              onDisconnect={() => disconnect.open(item.provider)}
+            />
+          ))}
+        </ul>
       ) : null}
+      <AwcProjectConnectionsVsStrip />
       <AwcProjectConnectionDisconnectModal
-        item={disconnectRow}
-        onClose={() => setDisconnectProvider(null)}
+        item={rows.find((r) => r.provider === disconnect.target) ?? null}
+        isConfirming={disconnect.busy}
+        onClose={disconnect.close}
+        onConfirm={() => void disconnect.confirm()}
+      />
+      <AwcProjectConnectionConnectDialog
+        state={current}
+        projectName={projectName}
+        onCancel={connectFlow.cancel}
+        onRetry={() => {
+          if (current !== null)
+            void connectFlow.begin(current.provider, current.reconnect);
+        }}
       />
     </section>
   );

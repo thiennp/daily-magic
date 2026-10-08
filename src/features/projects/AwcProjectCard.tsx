@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useId } from "react";
 
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import { AWC_PROJECTS_PAGE_COPY } from "@/features/projects/awcProjectsPageCopy.constant";
 import AwcProjectCardActionsMenu from "@/features/projects/AwcProjectCardActionsMenu";
 import AwcProjectPresenceBadge from "@/features/projects/AwcProjectPresenceBadge";
 import useAwcProjectDevicePresentation from "@/features/projects/hooks/useAwcProjectDevicePresentation";
@@ -71,7 +72,10 @@ export default function AwcProjectCard({
       <div className="relative z-10 flex min-w-0 flex-col pointer-events-none">
         <div className="flex min-w-0 items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
-            <h3 className={PROJECTS_V5_CARD_TITLE_CLASS} title={listTitle.primary}>
+            <h3
+              className={PROJECTS_V5_CARD_TITLE_CLASS}
+              title={listTitle.primary}
+            >
               {listTitle.primary}
             </h3>
             {listTitle.secondaryLabel !== null ? (
@@ -83,7 +87,9 @@ export default function AwcProjectCard({
               className={`mt-1 line-clamp-2 break-all ${PROJECTS_V5_CARD_META_CLASS}`}
               title={folderPathDisplay.full}
             >
-              {folderPathDisplay.display}
+              {folderPathDisplay.display === ""
+                ? AWC_PROJECTS_PAGE_COPY.noFolder
+                : folderPathDisplay.display}
             </p>
           </div>
           <div className="pointer-events-auto">
@@ -103,9 +109,7 @@ export default function AwcProjectCard({
             text={presence.text}
           />
           {compositionLine !== null ? (
-            <p className={PROJECTS_V5_CARD_META_CLASS}>
-              {compositionLine}
-            </p>
+            <p className={PROJECTS_V5_CARD_META_CLASS}>{compositionLine}</p>
           ) : null}
         </div>
         {showHelperText ? (

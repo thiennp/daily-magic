@@ -2,6 +2,7 @@
 
 import AwcProjectChatDock from "@/features/projects/chatDock/AwcProjectChatDock";
 import { useAwcProjectChatSurface } from "@/features/projects/chatDock/useAwcProjectChatSurface";
+import AwcProjectDetailBanners from "@/features/projects/AwcProjectDetailBanners";
 import AwcProjectDetailHeader from "@/features/projects/AwcProjectDetailHeader";
 import AwcProjectDetailTabBar from "@/features/projects/AwcProjectDetailTabBar";
 import AwcProjectDetailTabPanels from "@/features/projects/AwcProjectDetailTabPanels";
@@ -61,6 +62,11 @@ export default function AwcProjectDetailPanel({
           onInvite={() => onGotoTab("team")}
           onDelete={() => setActiveTab("settings")}
           onLeave={leave.open}
+        />
+        <AwcProjectDetailBanners
+          project={project}
+          pageActorRole={pageActorRole}
+          onAttachComputer={() => onGotoTab("team")}
         />
         <AwcProjectDetailTabBar
           activeTab={activeTab}

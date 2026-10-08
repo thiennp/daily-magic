@@ -16,12 +16,15 @@ interface SendTaskComposerCreateProjectFormProps {
   readonly deviceId: string;
   readonly onProjectCreated: (project: UserProjectRecord) => void;
   readonly onSelect: (project: UserProjectRecord) => void;
+  /** When set, a Cancel button is shown next to Save (Projects page card). */
+  readonly onCancel?: () => void;
 }
 
 export default function SendTaskComposerCreateProjectForm({
   deviceId,
   onProjectCreated,
   onSelect,
+  onCancel,
 }: SendTaskComposerCreateProjectFormProps) {
   const { data: session } = useSession();
   const [name, setName] = useState("");
@@ -83,11 +86,14 @@ export default function SendTaskComposerCreateProjectForm({
         />
       </div>
       {errorMessage !== null ? (
-        <p className="mt-2 text-sm text-error-600 dark:text-error-400">
+        <p
+          role="alert"
+          className="mt-2 text-sm text-error-600 dark:text-error-400"
+        >
           {errorMessage}
         </p>
       ) : null}
-      <div className="mt-3">
+      <div className="mt-3 flex flex-wrap gap-2">
         <Button
           disabled={isSaving}
           onClick={() => {
@@ -96,6 +102,11 @@ export default function SendTaskComposerCreateProjectForm({
         >
           {isSaving ? "Saving…" : "Save project"}
         </Button>
+        {onCancel !== undefined ? (
+          <Button variant="outline" disabled={isSaving} onClick={onCancel}>
+            Cancel
+          </Button>
+        ) : null}
       </div>
     </div>
   );

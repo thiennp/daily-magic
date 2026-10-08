@@ -4,6 +4,8 @@ import Link from "next/link";
 
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import AwcProjectCard from "@/features/projects/AwcProjectCard";
+import Button from "@/components/ui/button/Button";
+import AwcProjectsListLoading from "@/features/projects/AwcProjectsListLoading";
 import AwcProjectsListLoadErrorPanel from "@/features/projects/AwcProjectsListLoadErrorPanel";
 import { AWC_PROJECTS_PAGE_COPY } from "@/features/projects/awcProjectsPageCopy.constant";
 import { APP_SURFACE_TEXT_LINK_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
@@ -25,6 +27,7 @@ interface AwcProjectsListBodyProps {
   readonly isLoading: boolean;
   readonly loadFailed: boolean;
   readonly onRetryLoad: () => void;
+  readonly onClearSearch: () => void;
   readonly searchQuery: string;
   readonly projects: readonly UserProjectRecord[];
   readonly visibleProjects: readonly UserProjectRecord[];
@@ -42,6 +45,7 @@ export default function AwcProjectsListBody({
   isLoading,
   loadFailed,
   onRetryLoad,
+  onClearSearch,
   searchQuery,
   projects,
   visibleProjects,
@@ -53,11 +57,7 @@ export default function AwcProjectsListBody({
   intent = null,
 }: AwcProjectsListBodyProps) {
   if (isLoading) {
-    return (
-      <p className={`py-6 text-center ${PROJECTS_V5_MUTED_TEXT_CLASS}`}>
-        Loading projects…
-      </p>
-    );
+    return <AwcProjectsListLoading />;
   }
 
   if (loadFailed) {
@@ -77,20 +77,25 @@ export default function AwcProjectsListBody({
           {AWC_PROJECTS_PAGE_COPY.emptyTitle}
         </p>
         <p className={`max-w-sm ${PROJECTS_V5_MUTED_TEXT_CLASS}`}>
-          {AWC_PROJECTS_PAGE_COPY.emptyBody}
+          {AWC_PROJECTS_PAGE_COPY.emptyBody}{" "}
+          <Link href="/" className={APP_SURFACE_TEXT_LINK_CLASS}>
+            {AWC_PROJECTS_PAGE_COPY.emptyHomeLink}
+          </Link>
         </p>
-        <Link href="/" className={APP_SURFACE_TEXT_LINK_CLASS}>
-          {AWC_PROJECTS_PAGE_COPY.emptyHomeLink}
-        </Link>
       </div>
     );
   }
 
   if (visibleProjects.length === 0) {
     return (
-      <p className={`mt-4 ${PROJECTS_V5_MUTED_TEXT_CLASS}`}>
-        No projects match &ldquo;{searchQuery.trim()}&rdquo;.
-      </p>
+      <div className="mt-4 flex flex-col items-center gap-3 py-6 text-center">
+        <p className={PROJECTS_V5_HEADING_CLASS}>
+          {AWC_PROJECTS_PAGE_COPY.noMatchTitle(searchQuery.trim())}
+        </p>
+        <Button size="sm" variant="outline" onClick={onClearSearch}>
+          {AWC_PROJECTS_PAGE_COPY.clearSearch}
+        </Button>
+      </div>
     );
   }
 

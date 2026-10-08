@@ -1,6 +1,7 @@
 import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
 import AwcProjectDeleteMenuItem from "@/features/projects/AwcProjectDeleteMenuItem";
 import AwcProjectLeaveMenuItem from "@/features/projects/AwcProjectLeaveMenuItem";
+import AwcProjectsMenuNote from "@/features/projects/AwcProjectsMenuNote";
 import AwcProjectsMenuDisabledItem from "@/features/projects/AwcProjectsMenuDisabledItem";
 import { PROJECTS_V5_MENU_ITEM_CLASS as MENU_ITEM_CLASS } from "@/features/projects/projectsPageV5Classes.constant";
 import buildAwcProjectDetailHref from "@/lib/projects/buildAwcProjectDetailHref";
@@ -44,16 +45,18 @@ export default function AwcProjectCardActionsMenuItems({
           View details
         </DropdownItem>
       </li>
-      <li role="none">
-        <DropdownItem
-          tag="a"
-          href={buildAwcProjectDetailHref(projectId, "rename")}
-          baseClassName={MENU_ITEM_CLASS}
-          onItemClick={onClose}
-        >
-          Rename
-        </DropdownItem>
-      </li>
+      {canDelete ? (
+        <li role="none">
+          <DropdownItem
+            tag="a"
+            href={buildAwcProjectDetailHref(projectId, "rename")}
+            baseClassName={MENU_ITEM_CLASS}
+            onItemClick={onClose}
+          >
+            Rename
+          </DropdownItem>
+        </li>
+      ) : null}
       <li role="none">
         <DropdownItem
           tag="a"
@@ -73,12 +76,12 @@ export default function AwcProjectCardActionsMenuItems({
             className={MENU_ITEM_CLASS}
             onClick={onClose}
           >
-            Edit on Mac
+            Edit on this computer
           </a>
         </li>
       ) : (
         <AwcProjectsMenuDisabledItem
-          label="Edit on Mac"
+          label="Edit on this computer"
           reason={editCta.helperText}
           fallbackDescribedById={editHelperId}
         />
@@ -91,6 +94,7 @@ export default function AwcProjectCardActionsMenuItems({
           }}
         />
       ) : null}
+      {canLeave ? <AwcProjectsMenuNote /> : null}
       {canLeave && !isDefaultProject ? (
         <AwcProjectLeaveMenuItem
           onRequestConfirm={() => {

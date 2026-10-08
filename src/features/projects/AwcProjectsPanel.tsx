@@ -1,14 +1,13 @@
 "use client";
 
 import { useMemo, useState, type ReactNode } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-import SendTaskComposerCreateProjectForm from "@/features/agent/SendTaskComposerCreateProjectForm";
 import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import { pickDefaultMacDeviceId } from "@/features/agent-witch/online-wake";
 import AwcProjectsListBody from "@/features/projects/AwcProjectsListBody";
-import AwcProjectsToolbar from "@/features/projects/AwcProjectsToolbar";
+import AwcProjectsManageControls from "@/features/projects/AwcProjectsManageControls";
 import MyBotsPanel from "@/features/my-bots/MyBotsPanel";
 import AwcProjectsIntentNotice from "@/features/projects/navConsolidation/AwcProjectsIntentNotice";
 import { parseProjectsNavIntent } from "@/features/projects/navConsolidation/parseProjectsNavIntent";
@@ -16,8 +15,6 @@ import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserC
 import { filterAwcProjectsByQuery } from "@/features/projects/utils/filterAwcProjectsByQuery";
 import AppPanel from "@/components/surfaces/AppPanel";
 import {
-  PROJECTS_V5_DIVIDER_CLASS,
-  PROJECTS_V5_HEADING_CLASS,
   PROJECTS_V5_INSET_CLASS,
   PROJECTS_V5_PANEL_CLASS,
 } from "@/features/projects/projectsPageV5Classes.constant";
@@ -40,6 +37,7 @@ export default function AwcProjectsPanel({
   selectProjects,
   showManageControls = true,
 }: AwcProjectsPanelProps = {}) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const intent = parseProjectsNavIntent(
     searchParams.get(NAV_CONSOLIDATION_INTENT_QUERY_PARAM),
@@ -57,6 +55,8 @@ export default function AwcProjectsPanel({
     removeProject,
   } = useUserProjects("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [formOpen, setFormOpen] = useState(false);
+  const [createdName, setCreatedName] = useState<string | null>(null);
   const visibleProjects = useMemo(() => {
     const filtered = filterAwcProjectsByQuery(projects, searchQuery);
 
@@ -71,6 +71,8 @@ export default function AwcProjectsPanel({
           intent={intent}
           projectCount={projects.length}
           isLoading={isLoading}
+          onDismiss={() => router.replace("/projects")}
+          onNewProject={() => setFormOpen(true)}
         />
       ) : null}
       {intent === "bots" ? (
@@ -78,8 +80,17 @@ export default function AwcProjectsPanel({
           <MyBotsPanel />
         </div>
       ) : null}
-      {showManageControls && !isLoading && projects.length > 0 ? (
-        <AwcProjectsToolbar
+      {showManageControls && !isLoading ? (
+        <AwcProjectsManageControls
+          deviceId={defaultDeviceId}
+          formOpen={formOpen}
+          onFormOpenChange={setFormOpen}
+          createdName={createdName}
+          onCreated={(project) => {
+            addProject(project);
+            setCreatedName(project.name);
+            void refreshProjects();
+          }}
           searchQuery={searchQuery}
           onSearchQueryChange={setSearchQuery}
           projectCount={projects.length}
@@ -92,6 +103,7 @@ export default function AwcProjectsPanel({
         onRetryLoad={() => {
           void refreshProjects({ showLoading: true });
         }}
+        onClearSearch={() => setSearchQuery("")}
         searchQuery={searchQuery}
         projects={projects}
         visibleProjects={visibleProjects}
@@ -105,23 +117,6 @@ export default function AwcProjectsPanel({
           void refreshProjects();
         }}
       />
-      {showManageControls && !isLoading ? (
-        <div className={`mt-6 pt-4 pb-2 max-md:mb-4 ${PROJECTS_V5_DIVIDER_CLASS}`}>
-          <h3 className={PROJECTS_V5_HEADING_CLASS}>
-            New project
-          </h3>
-          <SendTaskComposerCreateProjectForm
-            deviceId={defaultDeviceId}
-            onProjectCreated={(project) => {
-              addProject(project);
-              void refreshProjects();
-            }}
-            onSelect={() => {
-              void refreshProjects();
-            }}
-          />
-        </div>
-      ) : null}
     </AppPanel>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
+import { AWC_PROJECTS_PAGE_COPY as COPY } from "@/features/projects/awcProjectsPageCopy.constant";
 import {
-  PROJECTS_V5_ICON_BUTTON_CLASS,
   PROJECTS_V5_MUTED_TEXT_CLASS,
   PROJECTS_V5_SEARCH_FIELD_CLASS,
 } from "@/features/projects/projectsPageV5Classes.constant";
@@ -26,8 +26,8 @@ export default function AwcProjectsToolbar({
       : `${visibleCount} of ${projectCount} projects`;
 
   return (
-    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-      <div className="relative w-full sm:max-w-xs">
+    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+      <div className="relative w-full sm:max-w-md sm:flex-1">
         <svg
           aria-hidden="true"
           viewBox="0 0 20 20"
@@ -46,24 +46,37 @@ export default function AwcProjectsToolbar({
           type="search"
           value={searchQuery}
           onChange={(event) => onSearchQueryChange(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Escape" && trimmedQuery !== "") {
+              event.preventDefault();
+              onSearchQueryChange("");
+            }
+          }}
           placeholder="Search projects…"
           aria-label="Search projects"
-          className={`${PROJECTS_V5_SEARCH_FIELD_CLASS} pl-9 ${trimmedQuery === "" ? "" : "pr-9"}`}
+          autoComplete="off"
+          spellCheck={false}
+          className={`${PROJECTS_V5_SEARCH_FIELD_CLASS} pl-9 ${trimmedQuery === "" ? "" : "pr-20"}`}
         />
         {trimmedQuery !== "" ? (
           <button
             type="button"
-            aria-label="Clear search"
-            className={`absolute right-2 top-1/2 h-8 w-8 -translate-y-1/2 ${PROJECTS_V5_ICON_BUTTON_CLASS}`}
+            className="awc-focus-ring absolute right-2 top-1/2 -translate-y-1/2 rounded-awc-pill bg-awc-tile px-2.5 py-1 text-xs font-semibold text-awc-fg hover:bg-awc-tile-2"
             onClick={() => {
               onSearchQueryChange("");
             }}
           >
-            ×
+            {COPY.clearShort}
           </button>
         ) : null}
       </div>
-      <p className={PROJECTS_V5_MUTED_TEXT_CLASS}>{countLabel}</p>
+      <p
+        role="status"
+        aria-live="polite"
+        className={`tabular-nums ${PROJECTS_V5_MUTED_TEXT_CLASS}`}
+      >
+        {countLabel}
+      </p>
     </div>
   );
 }

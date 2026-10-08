@@ -10,16 +10,17 @@ import {
 
 interface AwcProjectConnectionDisconnectModalProps {
   readonly item: ProjectConnectionItem | null;
+  readonly isConfirming: boolean;
   readonly onClose: () => void;
+  readonly onConfirm: () => void;
 }
 
-/**
- * Disconnect confirm (Invite destructive pattern). Confirm is a TODO until
- * DELETE …/connections/{provider} exists — closes only, no fake success.
- */
+/** Disconnect confirm (Invite destructive pattern) — DELETE …/connections/{provider}. */
 export default function AwcProjectConnectionDisconnectModal({
   item,
+  isConfirming,
   onClose,
+  onConfirm,
 }: AwcProjectConnectionDisconnectModalProps) {
   const name =
     item === null ? "" : PROJECT_CONNECTION_PROVIDER_LABEL[item.provider];
@@ -34,11 +35,10 @@ export default function AwcProjectConnectionDisconnectModal({
         accountLabel: item?.accountLabel ?? name,
       })}
       confirmLabel={C.disconnectConfirm}
+      cancelLabel={C.disconnectCancel}
+      isConfirming={isConfirming}
       onClose={onClose}
-      onConfirm={() => {
-        // TODO(awc-connections): DELETE …/connections/{provider} when API ships.
-        onClose();
-      }}
+      onConfirm={onConfirm}
     />
   );
 }

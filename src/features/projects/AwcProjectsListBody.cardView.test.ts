@@ -24,7 +24,7 @@ describe("Awc projects card view", () => {
     expect(card).toContain("AwcProjectCardActionsMenu");
     expect(card).toContain("PROJECTS_V5_CARD_CLASS");
     expect(card).toContain("shouldShowProjectEditOnMacHelperText");
-    expect(menu).toContain('aria-label="Project actions"');
+    expect(menu).toContain("`Actions for ${projectName}`");
     expect(menu).toContain("buildNavConsolidationNewTaskHref");
     expect(menu).toContain("projectId");
     expect(menu).not.toContain("buildAgentComposerHref");

@@ -19,7 +19,7 @@ describe("AwcProjectsPanel default render", () => {
   });
 
   it(
-    "keeps the full /projects panel (all projects + New project) by default",
+    "keeps the full /projects panel (all projects + New project button) by default",
     { timeout: 15000 },
     async () => {
       const { default: AwcProjectsPanel } =
@@ -29,8 +29,9 @@ describe("AwcProjectsPanel default render", () => {
       for (const id of ["alpha", "bravo", "charlie", "delta", "echo"]) {
         expect(html).toContain(`Project ${id}`);
       }
+      // Design: the New project button toggles the create card (closed by default).
       expect(html).toContain("New project");
-      expect(html).toContain("create-project-form-stub");
+      expect(html).not.toContain("create-project-form-stub");
     },
   );
 });

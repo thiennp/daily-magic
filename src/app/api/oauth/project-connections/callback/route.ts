@@ -11,6 +11,8 @@ const settingsConnectionsPath = (projectId: string, query: string): string => {
   if (query.length > 0) {
     url.searchParams.set("connections", query);
   }
+  // Project page reads the tab from the hash.
+  url.hash = "settings";
   return url.toString();
 };
 

@@ -1,4 +1,5 @@
 import AppPageHeader from "@/components/surfaces/AppPageHeader";
+import { AWC_PROJECTS_PAGE_COPY } from "@/features/projects/awcProjectsPageCopy.constant";
 import AppPanel from "@/components/surfaces/AppPanel";
 import {
   PROJECTS_V5_PAGE_CLASS,
@@ -16,7 +17,7 @@ export default function AwcProjectsListSkeleton() {
     <div className={PROJECTS_V5_PAGE_CLASS} aria-busy="true">
       <AppPageHeader
         title="Projects"
-        description="Cloud registry for membership and activity. Edit repos and composition in AgentWitch Local on your computer."
+        description={AWC_PROJECTS_PAGE_COPY.pageDescription}
       />
       <AppPanel embedded className={PROJECTS_V5_PANEL_CLASS}>
         <AwcSkeletonBar className="h-9 w-full rounded-lg" />

@@ -43,11 +43,10 @@ export default function AwcProjectDetailSettingsPanel({
       <AwcProjectSettingsFolderRow folderPath={project.folderPath} />
       <AwcProjectConnectionsSection
         projectId={project.id}
+        projectName={project.name}
         isOwner={isOwner}
       />
-      {isOwner ? (
-        <AwcProjectSettingsHistoryRow projectId={project.id} />
-      ) : null}
+      {isOwner ? <AwcProjectSettingsHistoryRow projectId={project.id} /> : null}
       <AwcProjectSettingsTasksChatRow projectId={project.id} />
       <AwcProjectSettingsRunsWithoutApprovalRow
         projectId={project.id}
@@ -62,9 +61,7 @@ export default function AwcProjectDetailSettingsPanel({
           projectName={project.name}
         />
       ) : null}
-      {canLeave ? (
-        <AwcProjectSettingsLeaveZone projectId={project.id} />
-      ) : null}
+      {canLeave ? <AwcProjectSettingsLeaveZone projectId={project.id} /> : null}
     </div>
   );
 }

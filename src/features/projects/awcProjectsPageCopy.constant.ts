@@ -1,10 +1,18 @@
 export const AWC_PROJECTS_PAGE_COPY = {
+  pageDescription:
+    "The cloud keeps membership and activity. Repos and composition are edited in AgentWitch Local on this computer.",
   emptyTitle: "No projects yet.",
-  emptyBody:
-    "Connect a computer with AgentWitch Install, then return here to add the first repo.",
-  emptyHomeLink: "Go to home to connect a computer",
+  emptyBody: "A project lives on a computer.",
+  emptyHomeLink: "Connect a computer on Home",
   loadFailedTitle: "Could not load projects",
-  loadFailedBody:
-    "Something went wrong while fetching your project list. Try again in a moment.",
+  loadFailedBody: "Check your connection and try again.",
   loadFailedRetry: "Try again",
+  loading: "Loading projects…",
+  newProject: "New project",
+  newProjectClose: "Close the form",
+  noFolder: "No folder yet",
+  noMatchTitle: (query: string) => `No projects match \u201c${query}\u201d`,
+  clearSearch: "Clear search",
+  clearShort: "Clear",
+  intentDismiss: "Dismiss this notice",
 } as const;

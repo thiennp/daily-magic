@@ -73,6 +73,7 @@ const ProjectsStorybookListRenameStories = ({
           isLoading={false}
           loadFailed={false}
           onRetryLoad={() => {}}
+          onClearSearch={() => {}}
           searchQuery=""
           projects={[
             PROJECTS_STORYBOOK_SAMPLE_PROJECT,
