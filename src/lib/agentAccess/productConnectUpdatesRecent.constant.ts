@@ -3,6 +3,7 @@ import {
   AWC_GROK_WEBHOOK_DAILY_REPAIR,
 } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
 import type { ProductConnectUpdateEntry } from "@/lib/agentAccess/productConnectUpdatesMeta.constant";
+import { PRODUCT_CONNECT_UPDATES_PROJECT_TASKS } from "@/lib/agentAccess/productConnectUpdatesProjectTasks.constant";
 import { PRODUCT_CONNECT_UPDATES_WAKE_ROUTINE } from "@/lib/agentAccess/productConnectUpdatesWakeRoutine.constant";
 
 /** Catalog entries v9+ (keep productConnectUpdates.constant.ts under line cap). */
@@ -94,4 +95,5 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
         "After register_account, call issue_bot_claim_code and give the code to your human once. They claim on Projects (Claim). Prefer claiming before redeem so invite auto-approve can apply when the owner turned it on.",
     },
     ...PRODUCT_CONNECT_UPDATES_WAKE_ROUTINE,
+    ...PRODUCT_CONNECT_UPDATES_PROJECT_TASKS,
   ];

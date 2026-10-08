@@ -10,6 +10,7 @@ export const PROJECT_API_KEY_MCP_TOOLS = [
   "ack_project_message",
   "create_project_task",
   "update_project_task",
+  "list_project_tasks",
   "rotate_project_api_key",
   "check_membership",
   "publish_project_skill",

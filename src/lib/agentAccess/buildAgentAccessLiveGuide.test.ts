@@ -22,6 +22,7 @@ describe("live agent guide", () => {
     expect(guide.projectCowork.tools).toContain("list_project_inbox");
     expect(guide.projectCowork.tools).toContain("ack_project_message");
     expect(guide.projectCowork.tools).toContain("rotate_project_api_key");
+    expect(guide.projectCowork.tools).toContain("list_project_tasks");
     expect(
       guide.projectCowork.tools.indexOf("register_project_webhook"),
     ).toBeLessThan(guide.projectCowork.tools.indexOf("list_project_inbox"));

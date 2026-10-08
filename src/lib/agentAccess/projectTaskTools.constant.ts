@@ -1,4 +1,5 @@
 import type { AgentAccessToolDefinition } from "@/lib/agentAccess/agentAccessToolDefinition.type";
+import { LIST_PROJECT_TASKS_TOOL } from "@/lib/agentAccess/listProjectTasksTool.constant";
 
 const META_PROPERTIES = {
   title: { type: "string", description: "Short task title (≤120 chars)." },
@@ -55,7 +56,7 @@ export const CREATE_PROJECT_TASK_TOOL: AgentAccessToolDefinition = {
 export const UPDATE_PROJECT_TASK_TOOL: AgentAccessToolDefinition = {
   name: "update_project_task",
   description:
-    "Update a project task (from create_project_task). Status moves: queued⇄planned → in_progress ⇄ blocked; in_progress → done. done is final (task_done); other moves → invalid_transition. Send only fields to change; null clears optional fields. Owner may edit any task; others only tasks they created or own (not_task_owner).",
+    "Update a project task (from create_project_task or list_project_tasks). Status moves: queued⇄planned → in_progress ⇄ blocked; in_progress → done. done is final (task_done); other moves → invalid_transition. Send only fields to change; null clears optional fields. Owner may edit any task; others only tasks they created or own (not_task_owner).",
   inputSchema: {
     type: "object",
     properties: {
@@ -73,4 +74,4 @@ export const UPDATE_PROJECT_TASK_TOOL: AgentAccessToolDefinition = {
 };
 
 export const AGENT_ACCESS_PROJECT_TASK_TOOLS: readonly AgentAccessToolDefinition[] =
-  [CREATE_PROJECT_TASK_TOOL, UPDATE_PROJECT_TASK_TOOL];
+  [CREATE_PROJECT_TASK_TOOL, UPDATE_PROJECT_TASK_TOOL, LIST_PROJECT_TASKS_TOOL];

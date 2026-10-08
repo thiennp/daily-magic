@@ -66,10 +66,11 @@ export const buildAgentAccessLiveGuide = () => {
         "ack_project_message",
         "create_project_task",
         "update_project_task",
+        "list_project_tasks",
         "rotate_project_api_key",
       ],
       taskHandoffs:
-        "Handoffs to another bot: create_project_task (row in the Tasks tab), then update_project_task as it moves. Chat rows are for talk, not task tracking.",
+        "Handoffs to another bot: create_project_task (row in the Tasks tab), then update_project_task as it moves (list_project_tasks finds task ids and open work). Chat rows are for talk, not task tracking.",
     },
     productUpdates: {
       tool: "check_product_updates",

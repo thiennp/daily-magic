@@ -5,13 +5,20 @@ import { executeProjectTaskTools } from "@/lib/agentAccess/executeProjectTaskToo
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
 import { isProjectApiKeyMcpTool } from "@/lib/projects/acl/projectApiKeys/projectApiKeyMcpAllowlist.constant";
 
-const h = vi.hoisted(() => ({ create: vi.fn(), update: vi.fn() }));
+const h = vi.hoisted(() => ({
+  create: vi.fn(),
+  update: vi.fn(),
+  list: vi.fn(),
+}));
 
 vi.mock("@/lib/projects/tasks/createProjectTask", () => ({
   createProjectTask: h.create,
 }));
 vi.mock("@/lib/projects/tasks/updateProjectTask", () => ({
   updateProjectTask: h.update,
+}));
+vi.mock("@/lib/projects/tasks/listProjectTasks", () => ({
+  listProjectTasks: h.list,
 }));
 
 const actor = { id: "bot-user" } as AgentAccessActor;
@@ -23,12 +30,43 @@ describe("executeProjectTaskTools (DF-024)", () => {
     vi.clearAllMocks();
   });
 
-  it("registers both tools in the agent-access catalog and project-key allowlist", () => {
+  it("registers the task tools in the agent-access catalog and project-key allowlist", () => {
     const names = AGENT_ACCESS_PROJECT_ACL_TOOLS.map((t) => t.name);
-    expect(names).toContain("create_project_task");
-    expect(names).toContain("update_project_task");
-    expect(isProjectApiKeyMcpTool("create_project_task")).toBe(true);
-    expect(isProjectApiKeyMcpTool("update_project_task")).toBe(true);
+    for (const name of [
+      "create_project_task",
+      "update_project_task",
+      "list_project_tasks",
+    ]) {
+      expect(names).toContain(name);
+      expect(isProjectApiKeyMcpTool(name)).toBe(true);
+    }
+  });
+
+  it("list → tasks + nextCursor; forbidden carries code + isError", async () => {
+    const page = { ok: true, tasks: [{ id: "t1" }], nextCursor: null };
+    h.list.mockResolvedValueOnce(page);
+    const ok = await executeProjectTaskTools({
+      actor,
+      name: "list_project_tasks",
+      args: { projectId: "p1" },
+    });
+    expect(parse(ok)).toEqual(page);
+    expect(h.list).toHaveBeenCalledWith({
+      actorUserId: "bot-user",
+      args: { projectId: "p1" },
+    });
+    h.list.mockResolvedValueOnce({ ok: false, code: "forbidden" });
+    const denied = await executeProjectTaskTools({
+      actor,
+      name: "list_project_tasks",
+      args: { projectId: "p1" },
+    });
+    expect(denied?.isError).toBe(true);
+    expect(parse(denied)).toEqual({
+      ok: false,
+      code: "forbidden",
+      error: "forbidden",
+    });
   });
 
   it("create → task payload; errors carry code + isError", async () => {
