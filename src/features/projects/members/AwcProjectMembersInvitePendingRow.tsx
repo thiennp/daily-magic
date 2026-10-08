@@ -1,6 +1,6 @@
 import type { AwcProjectAccessInvite } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 import type { InviteRowCopyState } from "@/features/projects/members/hooks/useInviteRowCopy";
-import { formatInviteExpiry } from "@/features/projects/members/utils/formatInviteExpiry";
+import AwcProjectMembersInviteMeta from "@/features/projects/members/AwcProjectMembersInviteMeta";
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
 
 export interface AwcProjectMembersInvitePendingRowProps {
@@ -15,55 +15,86 @@ export interface AwcProjectMembersInvitePendingRowProps {
   readonly onTurnOffAutoApprove?: () => void;
 }
 
-const ROW =
-  "flex items-center gap-2.5 rounded-[10px] border border-awc-line bg-awc-surface-2 px-2.5 py-2.5 text-sm";
+const ROW = "flex items-start gap-2.5 py-2.5 text-sm";
 const AV =
   "grid size-8 shrink-0 place-items-center rounded-full border-[1.5px] border-dashed border-awc-border-strong bg-transparent text-[13px] font-semibold text-awc-fg-muted";
 const GHOST =
   "awc-focus-ring shrink-0 rounded-lg border border-transparent bg-transparent px-2 py-1.5 text-[13px] font-semibold text-awc-fg-muted transition hover:bg-awc-fill";
-const CHIP =
-  "inline-flex items-center rounded-full bg-awc-tile-2 px-2 py-px text-[11.5px] font-semibold text-awc-fg-muted";
 
 /**
  * DF-036 D4 unused invite row: what it is, one use, expiry; Copy again ·
  * Cancel invite. Pure (no hooks) so the list can call it as a function and
  * tests can walk the returned tree.
  */
-export default function AwcProjectMembersInvitePendingRow(p: AwcProjectMembersInvitePendingRowProps) {
+export default function AwcProjectMembersInvitePendingRow(
+  p: AwcProjectMembersInvitePendingRowProps,
+) {
   const { invite, rowState } = p;
   const copyLabel =
-    rowState?.kind === "copied" ? C.invitePendingCopied : rowState?.kind === "busy" ? C.invitePendingCopying : C.invitePendingCopy;
+    rowState?.kind === "copied"
+      ? C.invitePendingCopied
+      : rowState?.kind === "busy"
+        ? C.invitePendingCopying
+        : C.invitePendingCopy;
   const uses = Math.max(1, invite.usesRemaining);
   return (
     <li key={invite.inviteId} className={ROW} data-invite-row={invite.inviteId}>
-      <span className={AV} aria-hidden>+</span>
+      <span className={AV} aria-hidden>
+        +
+      </span>
       <span className="min-w-0 flex-1">
         <span className="block truncate font-semibold text-awc-fg">
-          {p.typeLabel ? C.invitePendingTitleFor(p.typeLabel) : C.invitePendingTitle}
+          {p.typeLabel
+            ? C.invitePendingTitleFor(p.typeLabel)
+            : C.invitePendingTitle}
         </span>
-        <span className="mt-0.5 block text-[12.5px] text-awc-fg-subtle">
-          {C.invitePendingSub(uses, formatInviteExpiry(invite.expiresAt))}
-        </span>
-        {invite.autoApprove ? <span className={`mt-1 ${CHIP}`}>{C.invitePendingSubOn}</span> : null}
+        <AwcProjectMembersInviteMeta
+          uses={uses}
+          expiresAt={invite.expiresAt}
+          autoApprove={invite.autoApprove === true}
+        />
         {!p.canCopy ? (
-          <span className="mt-0.5 block text-[12px] text-awc-fg-muted" data-invite-copy-unavailable={invite.inviteId}>
+          <span
+            className="mt-0.5 block text-[12px] text-awc-fg-muted"
+            data-invite-copy-unavailable={invite.inviteId}
+          >
             {C.invitePendingCopyUnavailable}
           </span>
         ) : null}
         {rowState?.kind === "error" ? (
-          <span role="status" className="mt-0.5 block text-[12px] text-awc-fg-muted">{rowState.message}</span>
+          <span
+            role="status"
+            className="mt-0.5 block text-[12px] text-awc-fg-muted"
+          >
+            {rowState.message}
+          </span>
         ) : null}
       </span>
       <span className="flex shrink-0 flex-col items-end gap-0.5">
         {p.canCopy ? (
-          <button type="button" className={GHOST} data-invite-copy={invite.inviteId} disabled={rowState?.kind === "busy"} onClick={p.onCopy}>
+          <button
+            type="button"
+            className={GHOST}
+            data-invite-copy={invite.inviteId}
+            disabled={rowState?.kind === "busy"}
+            onClick={p.onCopy}
+          >
             {copyLabel}
           </button>
         ) : null}
         {invite.autoApprove && p.onTurnOffAutoApprove ? (
-          <button type="button" className={GHOST} aria-label="Turn off auto-approve" onClick={p.onTurnOffAutoApprove}>{C.invitePendingTurnOff}</button>
+          <button
+            type="button"
+            className={GHOST}
+            aria-label="Turn off auto-approve"
+            onClick={p.onTurnOffAutoApprove}
+          >
+            {C.invitePendingTurnOff}
+          </button>
         ) : null}
-        <button type="button" className={GHOST} onClick={p.onRevoke}>{C.invitePendingCancel}</button>
+        <button type="button" className={GHOST} onClick={p.onRevoke}>
+          {C.invitePendingCancel}
+        </button>
       </span>
     </li>
   );

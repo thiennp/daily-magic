@@ -6,7 +6,10 @@ import AwcPendingRequestActions, {
   type PendingBusy,
 } from "@/features/projects/access/approvalCard/AwcPendingRequestActions";
 import AwcPendingRequestHeader from "@/features/projects/access/approvalCard/AwcPendingRequestHeader";
-import { pendingCapabilities } from "@/features/projects/access/approvalCard/pendingCapabilities";
+import {
+  pendingCapabilities,
+  pendingModeLabel,
+} from "@/features/projects/access/approvalCard/pendingCapabilities";
 import {
   pendingNicknameHelp,
   pendingNicknameIssue,
@@ -17,7 +20,10 @@ type PendingRequest = Pick<
   AwcProjectAccessPending,
   "id" | "requesterUserId" | "reason" | "requesterIsAgent" | "requesterLabel"
 > &
-  Pick<AwcProjectAccessPending, "approvalCard" | "suggestedProjectDisplayName"> &
+  Pick<
+    AwcProjectAccessPending,
+    "approvalCard" | "suggestedProjectDisplayName"
+  > &
   Partial<Pick<AwcProjectAccessPending, "createdAt">>;
 
 interface AwcProjectAccessPendingRowProps {
@@ -54,7 +60,7 @@ export default function AwcProjectAccessPendingRow({
 
   return (
     <li
-      className="grid divide-y divide-awc-border overflow-visible rounded-[14px] border border-awc-border bg-awc-tile-2"
+      className="grid divide-y divide-awc-accent-soft-2 overflow-visible rounded-2xl border border-awc-accent-soft-2 bg-gradient-to-b from-awc-accent-soft to-awc-surface shadow-awc-lift"
       aria-labelledby={`pending-who-${req.id}`}
       data-pending-approval-card
     >
@@ -71,6 +77,7 @@ export default function AwcProjectAccessPendingRow({
         <div className={SECTION}>
           <AwcPendingCapabilityChips
             capabilities={pendingCapabilities(req.approvalCard)}
+            mode={pendingModeLabel(req.approvalCard)}
           />
         </div>
       ) : null}

@@ -3,12 +3,7 @@ import { formatPendingApprovalMode } from "@/features/projects/access/approvalCa
 import type { PendingApprovalCardMeta } from "@/lib/projects/acl/approvalCard/PendingApprovalCardMeta.type";
 
 export type PendingCapabilityIcon =
-  | "eye"
-  | "users"
-  | "send"
-  | "inbox"
-  | "spark"
-  | "clock";
+  "eye" | "users" | "send" | "inbox" | "spark" | "clock";
 
 export type PendingCapability = {
   readonly icon: PendingCapabilityIcon;
@@ -23,15 +18,18 @@ export const PENDING_CAPABILITIES_VISIBLE = 4;
  * Only what the card already promised — no extra capability or limit claims.
  */
 export const pendingCapabilities = (
-  card: PendingApprovalCardMeta | null | undefined,
+  _card?: PendingApprovalCardMeta | null,
 ): readonly PendingCapability[] => {
   const base: PendingCapability[] = [
     { icon: "eye", label: C.canRead },
     { icon: "users", label: C.canSeePeers },
     { icon: "send", label: C.canSend },
-    { icon: "inbox", label: C.canReceive },
     { icon: "spark", label: C.canUseSkills },
   ];
-  const mode = card ? formatPendingApprovalMode(card) : null;
-  return mode === null ? base : [...base, { icon: "clock", label: mode }];
+  return base;
 };
+
+/** Join mode shown as its own pill under the tags (design v2), when known. */
+export const pendingModeLabel = (
+  card: PendingApprovalCardMeta | null | undefined,
+): string | null => (card ? formatPendingApprovalMode(card) : null);

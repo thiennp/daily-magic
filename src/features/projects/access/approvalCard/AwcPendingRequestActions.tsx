@@ -14,7 +14,7 @@ const BTN =
 const BTN_DENY = `${BTN} border-awc-border-strong bg-awc-surface text-awc-fg hover:border-awc-control-border`;
 const BTN_APPROVE = `${BTN} border-transparent bg-awc-primary text-white hover:bg-awc-blue-700`;
 
-/** Bottom action row: note, Deny (secondary), Approve (Pine primary). */
+/** Bottom action row: Deny (secondary), Approve (Pine primary). */
 export default function AwcPendingRequestActions({
   busy,
   approveDisabled,
@@ -24,10 +24,12 @@ export default function AwcPendingRequestActions({
   const working = busy !== null;
   return (
     <div className="grid grid-cols-2 items-center gap-2.5 @min-[520px]:flex @min-[520px]:flex-wrap @min-[520px]:justify-end">
-      <span className="col-span-2 text-[12.5px] text-awc-fg-muted @min-[520px]:mr-auto">
-        {C.removeNote}
-      </span>
-      <button type="button" className={BTN_DENY} disabled={working} onClick={onDeny}>
+      <button
+        type="button"
+        className={BTN_DENY}
+        disabled={working}
+        onClick={onDeny}
+      >
         {busy === "denying" ? C.denying : C.deny}
       </button>
       <button

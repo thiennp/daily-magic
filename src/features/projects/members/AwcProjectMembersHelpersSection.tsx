@@ -6,6 +6,9 @@ import type { AwcProjectAccessMember } from "@/features/projects/access/hooks/lo
 import { useAwcProjectAccessWakeLinks } from "@/features/projects/access/hooks/useAwcProjectAccessWakeLinks";
 import AwcProjectMembersHelperRow from "@/features/projects/members/AwcProjectMembersHelperRow";
 import { isRailAssistantMember } from "@/features/projects/members/utils/countRailMembers";
+import SectionIcon, {
+  SECTION_CARD,
+} from "@/features/projects/members/AwcProjectMembersSectionCard";
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
 
 interface AwcProjectMembersHelpersSectionProps {
@@ -31,8 +34,7 @@ export default function AwcProjectMembersHelpersSection({
   onWakeSaved,
 }: AwcProjectMembersHelpersSectionProps) {
   const helpers = useMemo(
-    () =>
-      members.filter(isRailAssistantMember),
+    () => members.filter(isRailAssistantMember),
     [members],
   );
   const { list: wake } = useAwcProjectAccessWakeLinks(helpers);
@@ -42,15 +44,23 @@ export default function AwcProjectMembersHelpersSection({
   };
 
   return (
-    <section className="flex flex-col gap-1" aria-labelledby="members-helpers-h">
-      <div className="flex items-baseline justify-between gap-2 px-3.5">
-        <h3 id="members-helpers-h" className="text-[13px] font-semibold text-awc-fg-subtle">
+    <section className={SECTION_CARD} aria-labelledby="members-helpers-h">
+      <div className="flex items-center gap-2">
+        <SectionIcon tone="pine" />
+        <h3
+          id="members-helpers-h"
+          className="text-sm font-semibold text-awc-fg"
+        >
           {C.helpersHeading}
         </h3>
-        <span className="text-[12px] tabular-nums text-awc-fg-subtle">{helpers.length}</span>
+        <span className="rounded-full bg-awc-fill px-2 text-[12px] tabular-nums text-awc-fg-muted">
+          {helpers.length}
+        </span>
       </div>
       {helpers.length === 0 ? (
-        <p className="px-3.5 py-2 text-[13px] text-awc-fg-subtle">{C.helpersEmpty}</p>
+        <p className="px-3.5 py-2 text-[13px] text-awc-fg-subtle">
+          {C.helpersEmpty}
+        </p>
       ) : (
         <ul className="flex flex-col">
           {helpers.map((member) => (
@@ -59,7 +69,11 @@ export default function AwcProjectMembersHelpersSection({
               projectId={projectId}
               member={member}
               savedIds={wake.savedIds}
-              wakeOpenRequest={wake.request?.membershipId === member.id ? wake.request.nonce : 0}
+              wakeOpenRequest={
+                wake.request?.membershipId === member.id
+                  ? wake.request.nonce
+                  : 0
+              }
               onWakeSaved={onSaved}
               onMessage={onMessage}
               onRename={async (id, name) => (await onRename(id, name)).ok}
@@ -68,7 +82,6 @@ export default function AwcProjectMembersHelpersSection({
           ))}
         </ul>
       )}
-      <p className="px-3.5 pt-1 text-[12px] text-awc-fg-subtle">{C.helpersNote}</p>
     </section>
   );
 }

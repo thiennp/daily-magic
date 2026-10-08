@@ -3,6 +3,7 @@
 import AwcWakeConnectPasteCard from "@/features/projects/access/AwcWakeConnectPasteCard";
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
 import { formatAwcGrokWakeCopy } from "@/features/projects/access/awcGrokWakeAwaitingCopy.constant";
+import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
 import { ASSISTANT_WAKE_BLOCK_COPY as B } from "@/features/projects/members/assistantWakeBlockCopy.constant";
 import { ASSISTANT_WAKE_HEALTH_COPY as W } from "@/features/projects/members/assistantWakeHealthCopy.constant";
 import type { AssistantWakeHealth } from "@/features/projects/members/utils/formatAssistantWakeHealth";
@@ -11,7 +12,10 @@ import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageM
 
 interface AwcProjectMembersHelperWakeBlockProps {
   readonly projectId: string;
-  readonly member: { readonly id: string; readonly projectDisplayName: string | null };
+  readonly member: {
+    readonly id: string;
+    readonly projectDisplayName: string | null;
+  };
   readonly status: RailAssistantWakeStatus;
   readonly health: AssistantWakeHealth | null | undefined;
   readonly pasteOpen: boolean;
@@ -20,9 +24,12 @@ interface AwcProjectMembersHelperWakeBlockProps {
   readonly onWakeSaved: (membershipId: string) => void;
 }
 
-
-const statusLine = (status: RailAssistantWakeStatus, health: AssistantWakeHealth | null | undefined): string => {
-  if ((status === "ready" || status === "cant_reach") && health) return health.line;
+const statusLine = (
+  status: RailAssistantWakeStatus,
+  health: AssistantWakeHealth | null | undefined,
+): string => {
+  if ((status === "ready" || status === "cant_reach") && health)
+    return health.line;
   if (status === "checks_on_demand") return B.checksIn;
   if (status === "cant_check") return B.cantCheck;
   if (status === "checking") return B.checking;
@@ -30,25 +37,40 @@ const statusLine = (status: RailAssistantWakeStatus, health: AssistantWakeHealth
 };
 
 /** DF-036 D3: always-visible "Wake link" block — status line + paste box or the one next step. */
-export default function AwcProjectMembersHelperWakeBlock(p: AwcProjectMembersHelperWakeBlockProps) {
+export default function AwcProjectMembersHelperWakeBlock(
+  p: AwcProjectMembersHelperWakeBlockProps,
+) {
   const { status, health } = p;
   const showPaste = p.pasteOpen || status === "not_connected";
   const offerPaste = status === "cant_reach" && health?.offerPaste === true;
   const action =
-    status === "cant_check" ? { label: B.retry, run: p.onRetry, primary: false }
-    : offerPaste ? { label: W.pasteNew, run: p.onOpenPaste, primary: true }
-    : status === "checks_on_demand" ? { label: B.addWakeLink, run: p.onOpenPaste, primary: false }
-    : status === "ready" || status === "cant_reach" ? { label: B.changeWakeLink, run: p.onOpenPaste, primary: false }
-    : null;
+    status === "cant_check"
+      ? { label: B.retry, run: p.onRetry, primary: false }
+      : offerPaste
+        ? { label: W.pasteNew, run: p.onOpenPaste, primary: true }
+        : status === "checks_on_demand"
+          ? { label: B.addWakeLink, run: p.onOpenPaste, primary: false }
+          : status === "ready" || status === "cant_reach"
+            ? { label: B.changeWakeLink, run: p.onOpenPaste, primary: false }
+            : null;
   return (
     <div className="flex flex-col gap-1.5 pt-1" data-wake-block={status}>
-      <h4 className="text-[12px] font-semibold text-awc-fg">{C.menuWebhook}</h4>
-      <p className={`text-[12.5px] ${status === "cant_reach" ? "text-awc-bad" : "text-awc-fg-subtle"}`} role="status">
+      <div className="flex items-center gap-1.5">
+        <h4 className="text-[12px] font-semibold text-awc-fg">
+          {C.menuWebhook}
+        </h4>
+        {showPaste ? (
+          <AwcProjectMembersInfoTip id={`wake-tip-${p.member.id}`}>
+            {formatAwcGrokWakeCopy(B.intro, p.member.projectDisplayName)}
+          </AwcProjectMembersInfoTip>
+        ) : null}
+      </div>
+      <p
+        className={`text-[12.5px] ${status === "cant_reach" ? "text-awc-bad" : "text-awc-fg-subtle"}`}
+        role="status"
+      >
         {statusLine(status, health)}
       </p>
-      {status === "not_connected" ? (
-        <p className="text-[12.5px] text-awc-fg-muted">{formatAwcGrokWakeCopy(B.intro, p.member.projectDisplayName)}</p>
-      ) : null}
       {showPaste ? (
         <AwcWakeConnectPasteCard
           projectId={p.projectId}

@@ -10,10 +10,6 @@ import {
   pendingAssistantName,
   pendingInitials,
 } from "@/features/projects/access/approvalCard/formatPendingApprovalCard";
-import {
-  PENDING_CAPABILITIES_VISIBLE,
-  pendingCapabilities,
-} from "@/features/projects/access/approvalCard/pendingCapabilities";
 import type { PendingApprovalCardMeta } from "@/lib/projects/acl/approvalCard/PendingApprovalCardMeta.type";
 
 const card = (
@@ -36,13 +32,18 @@ describe("pending approval card formatters", () => {
       "Belongs to a person with no name set",
     );
     expect(
-      formatPendingOwnerLine(card({ ownerClaimed: false, ownerPersonName: null })),
+      formatPendingOwnerLine(
+        card({ ownerClaimed: false, ownerPersonName: null }),
+      ),
     ).toBeNull();
   });
 
   it("who line (One Window): claimed, not linked, no kind", () => {
     const who = (over: Partial<PendingApprovalCardMeta>) =>
-      formatPendingApprovalWhoLine({ assistantName: "Scout", card: card(over) });
+      formatPendingApprovalWhoLine({
+        assistantName: "Scout",
+        card: card(over),
+      });
     expect(who({})).toBe("Scout · Claude · belongs to Thien");
     expect(who({ ownerClaimed: false, ownerPersonName: null })).toBe(
       "Scout · Claude · not linked to a person yet",
@@ -58,24 +59,13 @@ describe("pending approval card formatters", () => {
   it("mode only when known", () => {
     expect(formatPendingApprovalMode(card())).toBeNull();
     expect(
-      formatPendingApprovalMode(card({ modeKnown: true, expectedDeliveryMode: "poll" })),
+      formatPendingApprovalMode(
+        card({ modeKnown: true, expectedDeliveryMode: "poll" }),
+      ),
     ).toBe(C.modeNoWake);
-    expect(formatPendingApprovalMode(card({ modeKnown: true }))).toBe(C.modeWake);
-  });
-
-  it("capability chips: 5 from COPY.md + mode when known; 4 visible", () => {
-    expect(PENDING_CAPABILITIES_VISIBLE).toBe(4);
-    expect(pendingCapabilities(card()).map((c) => c.label)).toEqual([
-      "Read project info",
-      "See who is in the project",
-      "Send short messages",
-      "Receive messages",
-      "Use skills you publish",
-    ]);
-    const withMode = pendingCapabilities(card({ modeKnown: true }));
-    expect(withMode).toHaveLength(6);
-    expect(withMode[5]?.label).toBe(C.modeWake);
-    expect(pendingCapabilities(null)).toHaveLength(5);
+    expect(formatPendingApprovalMode(card({ modeKnown: true }))).toBe(
+      C.modeWake,
+    );
   });
 
   it("asked-at: today vs other day, local 24h; bad input → null", () => {
@@ -94,16 +84,25 @@ describe("pending approval card formatters", () => {
     expect(pendingInitials("NRG Lead")).toBe("NL");
     expect(pendingInitials("scout")).toBe("SC");
     expect(
-      formatPendingResolved("approved", { nickname: "NRG Lead", requester: "x" }),
+      formatPendingResolved("approved", {
+        nickname: "NRG Lead",
+        requester: "x",
+      }),
     ).toEqual({
       title: "NRG Lead joined the project",
       sub: "It now appears under Assistants.",
     });
     expect(
       formatPendingResolved("denied", { nickname: "x", requester: "NRG Lead" }),
-    ).toEqual({ title: "Request from NRG Lead denied", sub: "It has no access." });
+    ).toEqual({
+      title: "Request from NRG Lead denied",
+      sub: "It has no access.",
+    });
     expect(
-      pendingAssistantName({ requesterLabel: " ", suggestedProjectDisplayName: null }),
+      pendingAssistantName({
+        requesterLabel: " ",
+        suggestedProjectDisplayName: null,
+      }),
     ).toBe("this assistant");
   });
 });

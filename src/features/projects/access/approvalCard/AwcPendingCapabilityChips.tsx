@@ -4,68 +4,58 @@ import { useState } from "react";
 
 import AwcPendingCapabilityIcon from "@/features/projects/access/approvalCard/AwcPendingCapabilityIcon";
 import { AWC_PENDING_APPROVAL_CARD_COPY as C } from "@/features/projects/access/approvalCard/awcPendingApprovalCardCopy.constant";
-import {
-  PENDING_CAPABILITIES_VISIBLE,
-  type PendingCapability,
-} from "@/features/projects/access/approvalCard/pendingCapabilities";
+import type { PendingCapability } from "@/features/projects/access/approvalCard/pendingCapabilities";
 
-const CHIP =
-  "inline-flex items-center gap-1.5 rounded-full border border-awc-border bg-awc-bg py-1 pl-2 pr-2.5 text-[13px] text-awc-fg";
-const MORE =
-  "awc-focus-ring rounded-full border border-dashed border-awc-border-strong bg-transparent px-2.5 py-1 text-[13px] font-semibold text-awc-primary transition hover:border-awc-primary";
-
+const TAG =
+  "flex min-w-0 items-center gap-1.5 rounded-[9px] border border-awc-accent-soft-2 bg-awc-surface px-2 py-1.5 text-[12.5px] text-awc-fg";
+const MODE =
+  "inline-flex items-center gap-1.5 rounded-full border border-awc-accent-soft-2 bg-awc-surface px-2.5 py-1 text-[12.5px] text-awc-fg";
 const DETAILS =
-  "awc-focus-ring mt-2 text-[13px] font-semibold text-awc-primary underline-offset-2 hover:underline";
+  "awc-focus-ring text-[13px] font-semibold text-awc-primary underline-offset-2 hover:underline";
 
-/** "If you approve, it can" — 4 chips, "+N more" / "Show less", then Show details (full sentence). */
+/** Design v2: four short capability tags in two columns, the join mode as a pill, then Show details (full sentence). */
 export default function AwcPendingCapabilityChips({
   capabilities,
+  mode = null,
 }: {
   readonly capabilities: readonly PendingCapability[];
+  readonly mode?: string | null;
 }) {
-  const [expanded, setExpanded] = useState(false);
   const [details, setDetails] = useState(false);
-  const hidden = capabilities.length - PENDING_CAPABILITIES_VISIBLE;
-  const shown =
-    expanded || hidden <= 0
-      ? capabilities
-      : capabilities.slice(0, PENDING_CAPABILITIES_VISIBLE);
   return (
-    <div data-pending-capabilities>
-      <p className="mb-2.5 text-[13px] font-semibold text-awc-fg">
-        {C.canDoLabel}
-      </p>
-      <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
-        {shown.map((cap) => (
-          <li key={cap.label} className={CHIP}>
+    <div className="grid gap-2.5" data-pending-capabilities>
+      <ul
+        className="m-0 grid list-none grid-cols-2 gap-1.5 p-0"
+        aria-label={C.canDoLabel}
+      >
+        {capabilities.map((cap) => (
+          <li key={cap.label} className={TAG}>
             <AwcPendingCapabilityIcon icon={cap.icon} />
-            {cap.label}
+            <span className="min-w-0">{cap.label}</span>
           </li>
         ))}
-        {hidden > 0 ? (
-          <li>
-            <button
-              type="button"
-              className={MORE}
-              aria-expanded={expanded}
-              onClick={() => setExpanded((v) => !v)}
-            >
-              {expanded
-                ? C.showLess
-                : C.showMore.replace("{count}", String(hidden))}
-            </button>
-          </li>
-        ) : null}
       </ul>
-      <button
-        type="button"
-        className={DETAILS}
-        aria-expanded={details}
-        onClick={() => setDetails((v) => !v)}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        {mode ? (
+          <span className={MODE} data-pending-mode>
+            <AwcPendingCapabilityIcon icon="clock" />
+            {mode}
+          </span>
+        ) : null}
+        <button
+          type="button"
+          className={DETAILS}
+          aria-expanded={details}
+          onClick={() => setDetails((v) => !v)}
+        >
+          {details ? C.hideDetails : C.showDetails}
+        </button>
+      </div>
+      <p
+        className="text-[13px] text-awc-fg-muted"
+        hidden={!details}
+        data-pending-details
       >
-        {details ? C.hideDetails : C.showDetails}
-      </button>
-      <p className="mt-1.5 text-[13px] text-awc-fg-muted" hidden={!details} data-pending-details>
         {C.canDoBody}
       </p>
     </div>

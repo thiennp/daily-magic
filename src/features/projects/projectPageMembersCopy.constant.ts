@@ -3,6 +3,8 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   columnLabel: "Members",
   /** DF-036 D1: you + joined people + assistants (no computers). */
   columnLabelCount: (n: number) => `Members · ${n}`,
+  memberSingular: "member",
+  memberPlural: "members",
   /** DF-036 F5: header pill (hidden at 0). */
   waitingPill: (k: number) => `${k} waiting`,
   peopleHeading: "People",
@@ -37,7 +39,11 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   revokeCancel: "Cancel",
   /** DF-036 D4: say what the invite is. */
   inviteBotHeading: "Invite an assistant",
-  inviteBotIntro: "Make a one-time invite and paste it into the assistant you want to add.",
+  inviteBotIntro:
+    "Make a one-time invite and paste it into the assistant you want to add. When it is used, the assistant appears under Pending for you to approve. Grok Bot sets up its wake link after it joins.",
+  peopleHint: "People who accepted and can open this project.",
+  wakeIntroTip:
+    "In Grok Bot, the assistant posted two links: wake link and key. Copy each one and paste both here, one after the other.",
   invitePrompt: (kind: string | null) =>
     kind === null
       ? "Paste this prompt into your assistant. You can copy it again until it's used."
@@ -47,6 +53,10 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   invitePendingTitleFor: (type: string) => `Invite for ${type}`,
   invitePendingSub: (uses: number, expires: string) =>
     `Not used yet · for ${uses === 1 ? "1 assistant" : `${uses} assistants`} · expires ${expires}`,
+  invitePendingNotUsed: "Not used yet",
+  invitePendingFor: (uses: number) =>
+    uses === 1 ? "1 assistant" : `${uses} assistants`,
+  invitePendingExpires: (expires: string) => `expires ${expires}`,
   /** State 1b — chip label when auto-approve is on. */
   invitePendingSubOn: "Auto-approve on",
   invitePendingTurnOff: "Turn off",
@@ -61,7 +71,8 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   /** 107 — no stored prompt (made before Copy-anywhere): the lost-copy line. */
   invitePendingCopyUnavailable:
     "The invite was shown once. Cancel it and make a new one if you lost it.",
-  inviteListNote: "When an assistant uses an invite, it appears under Pending for you to approve.",
+  inviteListNote:
+    "When an assistant uses an invite, it appears under Pending for you to approve.",
   inviteEmpty: "No assistant invites yet.",
   /** DF-036 F1: the one (i) tip under the invite list (no "routine"; Muse footnote retired). */
   compatGrok: "Grok Bot sets up its wake link after it joins.",

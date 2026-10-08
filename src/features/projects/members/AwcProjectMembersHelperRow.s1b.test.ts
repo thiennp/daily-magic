@@ -6,15 +6,21 @@ import { describe, expect, it } from "vitest";
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
 
 const read = (relative: string): string =>
-  readFileSync(path.join(process.cwd(), "src/features/projects", relative), "utf8");
+  readFileSync(
+    path.join(process.cwd(), "src/features/projects", relative),
+    "utf8",
+  );
 
 describe("P1-S1b assistant row — wake status + one-box connect", () => {
   it("no hard-coded Ready: status comes from the wake resolver + GET health", () => {
     const row = read("members/AwcProjectMembersHelperRow.tsx");
     expect(row).not.toContain("helpersReady");
-    expect(row).toContain("resolveRailAssistantWakeStatus");
-    expect(row).toContain("useAssistantWakeHealth");
-    expect(row).toContain("W.pasteNew");
+    const hook = read("members/hooks/useHelperRowWakeStatus.ts");
+    expect(hook).toContain("resolveRailAssistantWakeStatus");
+    expect(hook).toContain("useAssistantWakeHealth");
+    expect(read("members/AwcProjectMembersHelperRowLinks.tsx")).toContain(
+      "W.pasteNew",
+    );
   });
 
   it("#wake-link-<id> opens the one-box connect in the rail", () => {
@@ -38,10 +44,14 @@ describe("P1-S1b assistant row — wake status + one-box connect", () => {
       not_connected: "Not connected",
       cant_check: "Couldn't check the wake link",
     });
-    expect(read("members/AwcProjectMembersHelperWakeStatus.tsx")).toContain("text-awc-bad");
+    expect(read("members/AwcProjectMembersHelperWakeStatus.tsx")).toContain(
+      "text-awc-bad",
+    );
   });
 
   it("rename input caps the nickname at 32 (2–32 letters rule)", () => {
-    expect(read("members/AwcProjectMembersHelperRowMenu.tsx")).toContain("maxLength={32}");
+    expect(read("members/AwcProjectMembersRenameForm.tsx")).toContain(
+      "maxLength={32}",
+    );
   });
 });

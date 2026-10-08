@@ -33,14 +33,16 @@ export default function AwcOneWindowFilterBar({
     return (
       <button
         type="button"
-        className={active ? OW_FILTER_CHIP_ACTIVE_CLASS : OW_FILTER_CHIP_IDLE_CLASS}
+        className={
+          active ? OW_FILTER_CHIP_ACTIVE_CLASS : OW_FILTER_CHIP_IDLE_CLASS
+        }
         aria-pressed={active}
         onClick={() => {
           onFilter(id);
         }}
       >
         {label}
-        {typeof n === "number" && n > 0 ? (
+        {typeof n === "number" ? (
           <span className="rounded-full bg-awc-tile-2 px-1.5 text-[11px] font-semibold text-awc-fg">
             {n}
           </span>

@@ -6,6 +6,10 @@ import AwcProjectInviteCreatedBanner from "@/features/projects/access/invites/Aw
 import { awcProjectInviteTypeLabel } from "@/features/projects/access/invites/awcProjectInviteAddAssistantTypes";
 import { buildCreatedInviteCopyPrompt } from "@/features/projects/access/invites/buildCreatedInviteCopyPrompt";
 import { fetchPendingInviteCopyPrompt } from "@/features/projects/access/invites/fetchPendingInviteCopyPrompt";
+import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
+import SectionIcon, {
+  SECTION_CARD,
+} from "@/features/projects/members/AwcProjectMembersSectionCard";
 import AwcProjectMembersInvitePendingList from "@/features/projects/members/AwcProjectMembersInvitePendingList";
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
 
@@ -35,27 +39,41 @@ const BTN =
   "awc-focus-ring inline-flex items-center justify-center rounded-full border border-awc-primary bg-transparent px-3 py-1.5 text-[13px] font-semibold text-awc-primary transition hover:bg-awc-accent-soft";
 
 /** DF-036 D4 "Invite an assistant": one-time invite (setup steps picker) + unused invite rows. */
-export default function AwcProjectMembersInviteBotsSection({ projectId, access }: AwcProjectMembersInviteBotsSectionProps) {
+export default function AwcProjectMembersInviteBotsSection({
+  projectId,
+  access,
+}: AwcProjectMembersInviteBotsSectionProps) {
   const { projectName, createdInviteUrl } = access;
   const prompts = access.createdInvitePrompts ?? {};
   return (
-    <section className="flex flex-col gap-2" aria-labelledby="members-invite-h">
-      <div className="px-3.5">
-        <h3 id="members-invite-h" className="text-[13px] font-semibold text-awc-fg-muted dark:text-gray-400">
+    <section className={SECTION_CARD} aria-labelledby="members-invite-h">
+      <div className="flex items-center gap-2">
+        <SectionIcon tone="neutral" />
+        <h3 id="members-invite-h" className="text-sm font-semibold text-awc-fg">
           {C.inviteBotHeading}
         </h3>
-        <p className="mt-0.5 text-[12.5px] text-awc-fg-subtle">{C.inviteBotIntro}</p>
+        <AwcProjectMembersInfoTip id="members-invite-tip">
+          {C.inviteBotIntro}
+        </AwcProjectMembersInfoTip>
       </div>
-      <div className="px-3.5">
+      <div>
         <AwcProjectInviteAddAssistantControl
           buttonClassName={BTN}
-          onCreate={(selection) => void access.createInvite(selection.platform, false, selection.joinTypeId)}
+          onCreate={(selection) =>
+            void access.createInvite(
+              selection.platform,
+              false,
+              selection.joinTypeId,
+            )
+          }
         />
       </div>
       {createdInviteUrl ? (
-        <div className="px-3.5">
+        <div>
           <p className="mb-1 text-[12px] text-awc-fg-muted dark:text-gray-400">
-            {C.invitePrompt(awcProjectInviteTypeLabel(access.createdInviteJoinTypeId))}
+            {C.invitePrompt(
+              awcProjectInviteTypeLabel(access.createdInviteJoinTypeId),
+            )}
           </p>
           <AwcProjectInviteCreatedBanner
             createdInviteUrl={createdInviteUrl}
@@ -72,9 +90,15 @@ export default function AwcProjectMembersInviteBotsSection({ projectId, access }
         invites={access.invites}
         onRevoke={(id) => void access.revokeInvite(id)}
         onTurnOffAutoApprove={(id) => void access.turnOffAutoApprove(id)}
-        typeLabelFor={(id) => awcProjectInviteTypeLabel(prompts[id]?.joinTypeId ?? null)}
-        copyPromptFor={(id) => buildCreatedInviteCopyPrompt({ prompt: prompts[id], projectName })}
-        fetchCopyPrompt={(inviteId) => fetchPendingInviteCopyPrompt({ projectId, inviteId, projectName })}
+        typeLabelFor={(id) =>
+          awcProjectInviteTypeLabel(prompts[id]?.joinTypeId ?? null)
+        }
+        copyPromptFor={(id) =>
+          buildCreatedInviteCopyPrompt({ prompt: prompts[id], projectName })
+        }
+        fetchCopyPrompt={(inviteId) =>
+          fetchPendingInviteCopyPrompt({ projectId, inviteId, projectName })
+        }
       />
     </section>
   );

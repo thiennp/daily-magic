@@ -23,6 +23,8 @@ export type AwcHumanPeopleSectionProps = {
   readonly assistantInviteCount?: number;
   /** DF-036 F5: waiting person invites, for the rail's "{k} waiting" pill. */
   readonly onWaitingCountChange?: (count: number) => void;
+  /** Members rail: show the hint as an (i) tip. */
+  readonly hintAsTip?: boolean;
 };
 
 /**
@@ -39,6 +41,7 @@ export default function AwcHumanPeopleSection({
   pendingRequestCount = 0,
   assistantInviteCount = 0,
   onWaitingCountChange,
+  hintAsTip = false,
 }: AwcHumanPeopleSectionProps) {
   const copy = HUMAN_INVITE_UI_COPY;
   const people = useHumanPeopleInvites({
@@ -67,6 +70,7 @@ export default function AwcHumanPeopleSection({
       id="project-access-human-people"
       title={copy.peopleHeading}
       hint={copy.peopleHint}
+      hintAsTip={hintAsTip}
       count={joinedCount + 1}
       alertCount={pendingCount > 0}
     >

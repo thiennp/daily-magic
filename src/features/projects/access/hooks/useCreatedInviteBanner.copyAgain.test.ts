@@ -4,7 +4,10 @@ import {
   actionsFor,
   renderBanner,
 } from "@/features/projects/access/hooks/createdInviteBanner.testUtils";
-import { listed, membersHtml } from "@/features/projects/access/hooks/createdInviteMembersHtml.testUtils";
+import {
+  listed,
+  membersHtml,
+} from "@/features/projects/access/hooks/createdInviteMembersHtml.testUtils";
 import {
   reactHookRunner as runner,
   runWithHookSlots,
@@ -67,7 +70,9 @@ describe("DF-014 Members rail: Copy prompt after invite + Copy again", () => {
     const state = renderBanner();
     expect(state.createdInviteUrl).toBeNull();
     const html = membersHtml(state, [listed("inv-new")]);
-    expect(html).toContain("Not used yet · for 1 assistant · expires");
+    expect(html).toMatch(
+      /Not used yet<\/span><span[^>]*>1 assistant<\/span><span[^>]*>expires /,
+    );
     expect(html).toContain('data-invite-copy="inv-new"');
     expect(html).not.toContain("Dismiss");
   });

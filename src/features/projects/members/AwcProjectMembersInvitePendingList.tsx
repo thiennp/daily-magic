@@ -18,7 +18,9 @@ interface AwcProjectMembersInvitePendingListProps {
    * 107: fetch the prompt from the server on click (any device) for rows with
    * copyAvailable. Rows without it show the lost-copy line instead of Copy again.
    */
-  readonly fetchCopyPrompt?: (inviteId: string) => Promise<PendingInviteCopyPromptResult>;
+  readonly fetchCopyPrompt?: (
+    inviteId: string,
+  ) => Promise<PendingInviteCopyPromptResult>;
 }
 
 /** DF-036 D4: unused assistant invites, the Pending note and one (i) tip (F1: no "routine", no Muse). */
@@ -33,9 +35,11 @@ export default function AwcProjectMembersInvitePendingList({
   const copy = useInviteRowCopy(fetchCopyPrompt);
   return (
     <>
-      <ul className="flex flex-col gap-2 px-1">
+      <ul className="flex flex-col divide-y divide-awc-line">
         {invites.length === 0 ? (
-          <li className="px-3.5 py-2 text-[13px] text-awc-fg-muted">{C.inviteEmpty}</li>
+          <li className="py-2 text-[13px] text-awc-fg-muted">
+            {C.inviteEmpty}
+          </li>
         ) : (
           invites.map((invite) => {
             const prompt = copyPromptFor?.(invite.inviteId) ?? null;
@@ -43,22 +47,20 @@ export default function AwcProjectMembersInvitePendingList({
             return AwcProjectMembersInvitePendingRow({
               invite,
               typeLabel: typeLabelFor?.(invite.inviteId) ?? null,
-              canCopy: prompt !== null || (fetchCopyPrompt !== undefined && invite.copyAvailable === true),
+              canCopy:
+                prompt !== null ||
+                (fetchCopyPrompt !== undefined &&
+                  invite.copyAvailable === true),
               rowState: copy.stateFor(invite.inviteId),
               onCopy: () => void copy.copyPrompt(invite.inviteId, prompt),
               onRevoke: () => onRevoke(invite.inviteId),
-              onTurnOffAutoApprove: onTurnOffAutoApprove ? () => onTurnOffAutoApprove(invite.inviteId) : undefined,
+              onTurnOffAutoApprove: onTurnOffAutoApprove
+                ? () => onTurnOffAutoApprove(invite.inviteId)
+                : undefined,
             });
           })
         )}
       </ul>
-      {invites.length > 0 ? (
-        <p className="px-3.5 text-[12px] text-awc-fg-muted" data-invite-note>{C.inviteListNote}</p>
-      ) : null}
-      <p className="flex gap-1.5 px-3.5 text-[12px] text-awc-fg-muted" data-invite-tip>
-        <span className="text-awc-fg-subtle" aria-hidden>ⓘ</span>
-        <span>{C.compatGrok}</span>
-      </p>
     </>
   );
 }

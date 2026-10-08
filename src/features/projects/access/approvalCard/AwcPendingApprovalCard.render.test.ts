@@ -15,19 +15,20 @@ describe("pending join card (DF-017)", () => {
       "Assistant",
       "Claude",
       "Belongs to Thien",
-      "If you approve, it can",
       "Read project info",
       "Name in this project",
       "This is the name it asked for. You can change it.",
-      "You can remove it any time from Members.",
       "Deny",
       "Approve",
     ].map((s) => t.indexOf(s));
     expect(order.every((i) => i >= 0)).toBe(true);
     expect([...order].sort((a, b) => a - b)).toEqual(order);
-    expect(t).toContain("+2 more");
+    expect(t).not.toContain("more");
+    expect(t).toContain("See who’s here");
     expect(t).toContain("Show details");
-    expect(html).toMatch(/<p[^>]*hidden=""[^>]*>Read project info and see who is in the project\. Send and receive short project messages\. Use shared skills the owner publishes\.<\/p>/);
+    expect(html).toMatch(
+      /<p[^>]*hidden=""[^>]*>Read project info and see who is in the project\. Send and receive short project messages\. Use shared skills the owner publishes\.<\/p>/,
+    );
     expect(t).not.toMatch(/\bpeers\b/);
     expect(t).not.toContain("Checks on demand (no wake link)");
     expect(html).toMatch(/>Approve<\/button>/);
@@ -41,7 +42,12 @@ describe("pending join card (DF-017)", () => {
     const html = row({
       req: {
         ...req,
-        approvalCard: { ...req.approvalCard, ownerClaimed: false, ownerPersonName: null, connectVia: null },
+        approvalCard: {
+          ...req.approvalCard,
+          ownerClaimed: false,
+          ownerPersonName: null,
+          connectVia: null,
+        },
       },
     });
     const t = text(html);
@@ -58,7 +64,8 @@ describe("pending join card (DF-017)", () => {
 
   it("taken / invalid name: inline error, Approve disabled only for format issues", () => {
     const taken = row({
-      error: "Another assistant here is already called “Scout”. Pick a different name.",
+      error:
+        "Another assistant here is already called “Scout”. Pick a different name.",
     });
     expect(text(taken)).toContain(
       "Another assistant here is already called “Scout”. Pick a different name.",
@@ -74,5 +81,4 @@ describe("pending join card (DF-017)", () => {
     expect(text(row({ busy: "approving" }))).toContain("Approving…");
     expect(text(row({ busy: "denying" }))).toContain("Denying…");
   });
-
 });

@@ -9,8 +9,12 @@ import AwcProjectMembersJoinRequestsSection from "@/features/projects/members/Aw
 import AwcProjectMembersInviteBotsSection from "@/features/projects/members/AwcProjectMembersInviteBotsSection";
 import AwcProjectMembersPeopleSection from "@/features/projects/members/AwcProjectMembersPeopleSection";
 import AwcProjectMembersRailHeading from "@/features/projects/members/AwcProjectMembersRailHeading";
+import { buildRailAvatars } from "@/features/projects/members/utils/buildRailAvatars";
 import AwcProjectMembersRailSkeleton from "@/features/projects/members/AwcProjectMembersRailSkeleton";
-import { countRailMembers, countRailWaiting } from "@/features/projects/members/utils/countRailMembers";
+import {
+  countRailMembers,
+  countRailWaiting,
+} from "@/features/projects/members/utils/countRailMembers";
 import { resolveProjectAccessLoadError } from "@/lib/projects/acl/mapProjectAccessError";
 
 interface AwcProjectMembersOwnerContentProps {
@@ -42,6 +46,14 @@ export default function AwcProjectMembersOwnerContent({
       <AwcProjectMembersRailHeading
         count={ready ? countRailMembers(access.members) : null}
         waiting={ready ? waiting : 0}
+        avatars={
+          ready
+            ? buildRailAvatars(
+                ownerDisplayName ?? ownerEmail ?? "You",
+                access.members,
+              )
+            : []
+        }
       />
       <div className="flex flex-col gap-5" data-layout-v2="l5-members">
         {access.isLoading ? <AwcProjectMembersRailSkeleton /> : null}
@@ -80,7 +92,10 @@ export default function AwcProjectMembersOwnerContent({
               assistantInviteCount={access.invites.length}
               onWaitingCountChange={setPeopleWaiting}
             />
-            <AwcProjectMembersInviteBotsSection projectId={projectId} access={access} />
+            <AwcProjectMembersInviteBotsSection
+              projectId={projectId}
+              access={access}
+            />
             <AwcAccessLogRailFooter projectId={projectId} />
           </>
         ) : null}

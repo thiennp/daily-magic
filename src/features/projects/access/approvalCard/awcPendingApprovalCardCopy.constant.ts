@@ -27,10 +27,10 @@ export const AWC_PENDING_APPROVAL_CARD_COPY = {
   canDoLabel: "If you approve, it can",
   /** COPY.md canDoBody split into scannable chips (same promises, no more). */
   canRead: "Read project info",
-  canSeePeers: "See who is in the project",
-  canSend: "Send short messages",
+  canSeePeers: "See who’s here",
+  canSend: "Short messages",
   canReceive: "Receive messages",
-  canUseSkills: "Use skills you publish",
+  canUseSkills: "Use your skills",
   /** DF-036 EN PASS: full sentence behind "Show details" ("peers" retired). */
   canDoBody:
     "Read project info and see who is in the project. Send and receive short project messages. Use shared skills the owner publishes.",

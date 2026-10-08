@@ -10,6 +10,12 @@ import {
 } from "@/features/projects/access/utils/projectAccessApi";
 import type { AccessPendingView } from "@/features/projects/access/utils/projectAccessApi.types";
 
+type DecidedCard = {
+  readonly req: AccessPendingView;
+  readonly decision: "approved" | "denied";
+  readonly at: string;
+};
+
 interface AwcOneWindowInFeedApprovalsProps {
   readonly projectId: string;
   /** Owner-only; non-owners see nothing (Access pending stays the live list). */
@@ -25,6 +31,10 @@ export default function AwcOneWindowInFeedApprovals({
   enabled,
 }: AwcOneWindowInFeedApprovalsProps) {
   const [pending, setPending] = useState<readonly AccessPendingView[]>([]);
+  // A decided card stays in the feed (result line) instead of vanishing on reload.
+  const [decided, setDecided] = useState<ReadonlyMap<string, DecidedCard>>(
+    new Map(),
+  );
 
   // Disabled → empty list (render-time reset; the effect only subscribes to the fetch).
   const [wasEnabled, setWasEnabled] = useState(enabled);
@@ -50,23 +60,46 @@ export default function AwcOneWindowInFeedApprovals({
     void loadPending().then(setPending);
   }, [enabled, loadPending]);
 
-  if (!enabled || pending.length === 0) return null;
+  const decide = (req: AccessPendingView, decision: "approved" | "denied") => {
+    const at = new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    setDecided((prev) => new Map(prev).set(req.id, { req, decision, at }));
+  };
+  const decidedOnly = [...decided.values()].filter(
+    (d) => !pending.some((p) => p.id === d.req.id),
+  );
+  if (!enabled || (pending.length === 0 && decidedOnly.length === 0))
+    return null;
 
   return (
     <div className="flex flex-col gap-3 border-b border-awc-border bg-awc-surface px-4 py-3">
-      {pending.map((req) => {
-        const model = mapAccessPendingToOneWindowCard(req);
+      {[...pending, ...decidedOnly.map((d) => d.req)].map((req) => {
+        const done = decided.get(req.id);
+        const model = {
+          ...mapAccessPendingToOneWindowCard(req),
+          ...(done
+            ? {
+                status: done.decision,
+                decidedAt: done.at,
+                expiresLabel: undefined,
+              }
+            : {}),
+        };
         return (
           <AwcOneWindowApprovalCard
             key={req.id}
             model={model}
             onApprove={(id) => {
+              decide(req, "approved");
               void postProjectAccessAction(
                 `/api/projects/${projectId}/access/requests/${id}/approve`,
                 {},
               ).then(() => reload());
             }}
             onDeny={(id) => {
+              decide(req, "denied");
               void postProjectAccessAction(
                 `/api/projects/${projectId}/access/requests/${id}/deny`,
               ).then(() => reload());

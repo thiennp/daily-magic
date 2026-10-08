@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 
+import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
 import {
   AWC_PROJECT_ACCESS_BADGE_ALERT_CLASS,
   AWC_PROJECT_ACCESS_BADGE_CLASS,
@@ -16,6 +17,8 @@ interface AwcProjectAccessSectionProps {
   readonly hint?: string;
   readonly count?: number;
   readonly alertCount?: boolean;
+  /** Rail (design v2): show the hint as an (i) tooltip beside the title instead of a visible line. */
+  readonly hintAsTip?: boolean;
   readonly children: ReactNode;
 }
 
@@ -25,6 +28,7 @@ export default function AwcProjectAccessSection({
   hint,
   count,
   alertCount = false,
+  hintAsTip = false,
   children,
 }: AwcProjectAccessSectionProps) {
   const badgeClass = alertCount
@@ -39,8 +43,13 @@ export default function AwcProjectAccessSection({
           {count !== undefined ? (
             <span className={badgeClass}>{count}</span>
           ) : null}
+          {hint && hintAsTip ? (
+            <AwcProjectMembersInfoTip id={`${id ?? title}-tip`}>
+              {hint}
+            </AwcProjectMembersInfoTip>
+          ) : null}
         </div>
-        {hint ? (
+        {hint && !hintAsTip ? (
           <p className={AWC_PROJECT_ACCESS_SECTION_HINT_CLASS}>{hint}</p>
         ) : null}
       </header>
