@@ -2,6 +2,7 @@ import { loadUserProfilesByIds } from "@/lib/projects/acl/isAgentUser";
 import type { ProjectMembershipDeliveryMode } from "@/lib/projects/acl/membershipDeliveryMode.constant";
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
+import type { ComputerAgentView } from "@/lib/agentWitch/deviceWriters";
 import type { AgentWitchLocalConnectVersionStatus } from "@/lib/agentWitch/types/AgentWitchLocalConnectVersionStatus.type";
 
 /** UI-contract MembershipView (computer fields filled by enrich). */
@@ -25,6 +26,8 @@ export type MembershipView = {
   readonly ownerDisplayName?: string | null;
   readonly isOnline?: boolean;
   readonly isDispatchReady?: boolean;
+  /** Coding tools on this computer; offline whenever the computer is. */
+  readonly agents?: readonly ComputerAgentView[];
   readonly installBundleVersion?: string | null;
   readonly connectVersionStatus?: AgentWitchLocalConnectVersionStatus;
   readonly assignable?: boolean;

@@ -8,6 +8,8 @@ import {
 } from "@/lib/dispatch/reconcileInterruptedAgentRunsForDevice";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { updateAgentWitchDeviceInstallBundleVersion } from "@/lib/agentWitch/updateAgentWitchDeviceInstallBundleVersion";
+import type { AgentWitchDeviceWriter } from "@/lib/agentWitch/deviceWriters";
+import { updateAgentWitchDeviceWriters } from "@/lib/agentWitch/updateAgentWitchDeviceWriters";
 import { updateAgentWitchDeviceWakePort } from "@/lib/agentWitch/updateAgentWitchDeviceWakePort";
 import { updateAgentWitchDeviceWakeError } from "@/lib/agentWitch/updateAgentWitchDeviceAuthFields";
 import { upgradeAgentWitchDeviceLabelFromLegacyHostname } from "@/lib/agentWitch/upgradeAgentWitchDeviceLabelFromLegacyHostname";
@@ -22,6 +24,7 @@ export const runAgentWitchHeartbeatDeviceMaintenance = async (input: {
   readonly wakePort: number | null;
   readonly wakeError: string | null;
   readonly knowledge?: KnowledgeHeartbeatReport | null;
+  readonly writers?: readonly AgentWitchDeviceWriter[] | null;
 }): Promise<void> => {
   await updateAgentWitchDeviceWakeError({
     deviceId: input.deviceId,
@@ -39,6 +42,13 @@ export const runAgentWitchHeartbeatDeviceMaintenance = async (input: {
     await updateAgentWitchDeviceWakePort({
       deviceId: input.deviceId,
       wakePort: input.wakePort,
+    });
+  }
+
+  if (input.writers !== undefined && input.writers !== null) {
+    await updateAgentWitchDeviceWriters({
+      deviceId: input.deviceId,
+      writers: input.writers,
     });
   }
 

@@ -25,7 +25,7 @@ describe("ensureAgentWitchDeviceSchema", () => {
     await ensureAgentWitchDeviceSchema();
 
     // display_name … install_bundle_version (9) + platform column + platform check (2)
-    expect(sqlMock).toHaveBeenCalledTimes(11);
+    expect(sqlMock).toHaveBeenCalledTimes(12);
 
     const sqlText = sqlCallsAsText();
     expect(sqlText).toContain("ADD COLUMN IF NOT EXISTS platform");

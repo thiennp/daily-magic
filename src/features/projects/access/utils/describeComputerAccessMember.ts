@@ -10,6 +10,11 @@ export type ComputerAccessMemberFields = {
   readonly isOnline?: boolean;
   readonly connectVersionStatus?: "ok" | "too_old" | string;
   readonly assignable?: boolean;
+  readonly agents?: readonly {
+    readonly writerAgent: string;
+    readonly label: string;
+    readonly isOnline: boolean;
+  }[];
 };
 
 export type ComputerAccessMemberDescription = {
@@ -25,7 +30,10 @@ const resolveStatus = (
   if (member.isOnline !== true) {
     return "offline";
   }
-  if (member.connectVersionStatus === "too_old" || member.assignable === false) {
+  if (
+    member.connectVersionStatus === "too_old" ||
+    member.assignable === false
+  ) {
     return "needs_update";
   }
   return "online";
@@ -46,7 +54,9 @@ const resolveOwnerLine = (
     return copy.yourComputer;
   }
   const ownerName = member.ownerDisplayName?.trim() ?? "";
-  return ownerName ? `${ownerName}${copy.ownersComputerSuffix}` : copy.genericOwner;
+  return ownerName
+    ? `${ownerName}${copy.ownersComputerSuffix}`
+    : copy.genericOwner;
 };
 
 /** Name, owner sub-line, and Online / Offline / Needs update for a computer row. */

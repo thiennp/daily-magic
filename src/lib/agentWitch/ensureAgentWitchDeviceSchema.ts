@@ -41,6 +41,10 @@ export const ensureAgentWitchDeviceSchema = async (): Promise<void> => {
     `;
     await sql`
       ALTER TABLE agent_witch_devices
+      ADD COLUMN IF NOT EXISTS writers JSONB
+    `;
+    await sql`
+      ALTER TABLE agent_witch_devices
       ADD COLUMN IF NOT EXISTS last_wake_error TEXT
     `;
     await sql`

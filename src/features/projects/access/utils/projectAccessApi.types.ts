@@ -20,6 +20,12 @@ export type AccessMembershipView = {
   readonly ownerDisplayName?: string | null;
   readonly isOnline?: boolean;
   readonly isDispatchReady?: boolean;
+  /** Coding tools on this computer; all offline when the computer is. */
+  readonly agents?: readonly {
+    readonly writerAgent: string;
+    readonly label: string;
+    readonly isOnline: boolean;
+  }[];
   readonly installBundleVersion?: string | null;
   readonly connectVersionStatus?: "ok" | "too_old" | string;
   readonly assignable?: boolean;

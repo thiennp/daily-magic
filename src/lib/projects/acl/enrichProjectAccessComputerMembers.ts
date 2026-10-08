@@ -1,3 +1,8 @@
+import {
+  buildComputerAgents,
+  parseStoredDeviceWriters,
+  type AgentWitchDeviceWriter,
+} from "@/lib/agentWitch/deviceWriters";
 import { isAgentWitchDeviceRecentlySeen } from "@/lib/agentWitch/agentWitchHeartbeat.constant";
 import type { MembershipView } from "@/lib/projects/acl/buildProjectAccessViews";
 import { isProjectComputerMemberAssignable } from "@/lib/projects/acl/isProjectComputerMemberAssignable";
@@ -7,6 +12,7 @@ import { asRowArray, getSql } from "@/lib/db";
 type DevicePresence = {
   readonly installBundleVersion: string | null;
   readonly lastSeenAt: string | null;
+  readonly writers: readonly AgentWitchDeviceWriter[];
 };
 
 const loadDevicePresence = async (
@@ -18,7 +24,7 @@ const loadDevicePresence = async (
   }
   const rows = asRowArray(
     await getSql()`
-      SELECT id, install_bundle_version, last_seen_at
+      SELECT id, install_bundle_version, last_seen_at, writers
       FROM agent_witch_devices
       WHERE id = ANY(${[...deviceIds]}::text[])
     `,
@@ -29,6 +35,7 @@ const loadDevicePresence = async (
         ? String(row.install_bundle_version)
         : null,
       lastSeenAt: row.last_seen_at ? String(row.last_seen_at) : null,
+      writers: parseStoredDeviceWriters(row.writers),
     });
   }
   return map;
@@ -47,18 +54,21 @@ const enrichOne = (
     isDispatchReady ||
     isAgentWitchDeviceRecentlySeen(presence?.lastSeenAt ?? null, nowMs);
   const installBundleVersion = presence?.installBundleVersion ?? null;
-  const { connectVersionStatus, assignable } = isProjectComputerMemberAssignable(
-    {
+  const { connectVersionStatus, assignable } =
+    isProjectComputerMemberAssignable({
       status: member.status,
       isOnline: presence !== undefined && isOnline,
       installBundleVersion,
-    },
-  );
+    });
   return {
     ...member,
     ownerUserId: member.userId,
     ownerDisplayName,
     isOnline: presence !== undefined && isOnline,
+    agents: buildComputerAgents(
+      presence?.writers ?? [],
+      presence !== undefined && isOnline,
+    ),
     isDispatchReady,
     installBundleVersion,
     connectVersionStatus,

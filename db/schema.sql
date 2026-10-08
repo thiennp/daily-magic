@@ -109,7 +109,8 @@ CREATE TABLE IF NOT EXISTS agent_witch_devices (
   superseded_by_device_id TEXT
     REFERENCES agent_witch_devices(id) ON DELETE SET NULL,
   knowledge_capabilities JSONB,
-  knowledge_capabilities_at TIMESTAMPTZ
+  knowledge_capabilities_at TIMESTAMPTZ,
+  writers JSONB
 );
 
 CREATE TABLE IF NOT EXISTS agent_witch_connections (

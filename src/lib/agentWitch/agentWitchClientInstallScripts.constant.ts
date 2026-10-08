@@ -20,6 +20,7 @@ export const AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES = [
   "agentWitchPendingRunSessions.ts",
   "agentWitchRunFinish.ts",
   "ensureHarnessWriterCli.ts",
+  "probeAgentWitchWriters.ts",
   "agentWitchLocalRunStore.ts",
   "agentWitchTerminalStreamState.ts",
   "agentWitchShellSession.ts",

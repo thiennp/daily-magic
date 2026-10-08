@@ -9,6 +9,7 @@ import {
   type ComputerAccessMemberFields,
   type ComputerAccessMemberStatus,
 } from "@/features/projects/access/utils/describeComputerAccessMember";
+import AwcProjectAccessComputerAgents from "@/features/projects/access/AwcProjectAccessComputerAgents";
 import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPageMetadataText.constant";
 
 /** Black / white / gray only (no brand or status hues). */
@@ -64,6 +65,7 @@ export default function AwcProjectAccessComputerMemberRow({
           <AwlRepairManuallyInfoButton />
         ) : null}
       </span>
+      <AwcProjectAccessComputerAgents agents={member.agents ?? []} />
     </li>
   );
 }

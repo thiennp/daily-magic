@@ -185,6 +185,7 @@ import {
   resolveAgentWitchCloudApiConfig,
   resolveAgentWitchWakePort,
   resolveWriterCliCommands,
+  probeAgentWitchWriters,
   beginAgentRunPreEstimate,
   recordAgentRunPreEstimateOutput,
   storeAgentRunTimeEstimateHistory,
@@ -1464,6 +1465,14 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         resolveAgentWitchHeartbeatInstallBundleVersion(
           config.layout.installDir,
         );
+      const writers = await probeAgentWitchWriters(
+        resolveWriterCliCommands({
+          claudeCommand: config.claudeCommand,
+          codexCommand: config.codexCommand,
+          cursorCommand: config.cursorCommand,
+          antigravityCommand: config.antigravityCommand,
+        }),
+      ).catch(() => null);
       const wakePort = resolveAgentWitchWakePort();
       sendMessage(
         socket,
@@ -1477,6 +1486,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
             ...(config.email !== null ? { email: config.email } : {}),
             installBundleVersion,
             ...(knowledge !== null ? { knowledge } : {}),
+            ...(writers !== null ? { writers } : {}),
           },
         },
         config.layout,
