@@ -18,6 +18,8 @@ export interface EnsureAgentWitchLaunchAgentPlistInput {
   readonly installDir?: string;
   readonly homeDir?: string;
   readonly wakePort?: number;
+  /** Defaults to process.platform; LaunchAgents only exist on macOS. */
+  readonly platform?: NodeJS.Platform;
 }
 
 export interface EnsureAgentWitchLaunchAgentPlistResult {
@@ -39,6 +41,17 @@ export const ensureAgentWitchLaunchAgentPlist = (
 ): EnsureAgentWitchLaunchAgentPlistResult => {
   const installDir = input.installDir ?? resolveAgentWitchInstallDir();
   const homeDir = input.homeDir ?? os.homedir();
+  // 2331ef53: bundle updates on Linux created ~/Library/LaunchAgents.
+  if ((input.platform ?? process.platform) !== "darwin") {
+    return {
+      ok: true,
+      rewritten: false,
+      plistPath: resolveAgentWitchLaunchAgentPlistPath(
+        input.launchAgentLabel,
+        homeDir,
+      ),
+    };
+  }
 
   // Per-account label (AWL-ISO-1): always the account plist (pins AGENT_WITCH_HOST_ACCOUNT).
   const account = readAgentWitchHostServices(installDir)?.accounts.find(

@@ -49,6 +49,7 @@ fi
     );
 
     const result = ensureAgentWitchLaunchAgentPlist({
+      platform: "darwin",
       launchAgentLabel: "com.agent-witch",
       installDir,
       homeDir,
@@ -74,12 +75,14 @@ fi
     );
     tempDirs.push(homeDir, installDir);
     const first = ensureAgentWitchLaunchAgentPlist({
+      platform: "darwin",
       launchAgentLabel: "com.agent-witch",
       installDir,
       homeDir,
       wakePort: 47892,
     });
     const second = ensureAgentWitchLaunchAgentPlist({
+      platform: "darwin",
       launchAgentLabel: "com.agent-witch",
       installDir,
       homeDir,
@@ -89,5 +92,21 @@ fi
     expect(first.rewritten).toBe(true);
     expect(second.ok).toBe(true);
     expect(second.rewritten).toBe(false);
+  });
+
+  it("2331ef53: never creates ~/Library on Linux", () => {
+    const homeDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "agent-witch-launchagent-home-"),
+    );
+    tempDirs.push(homeDir);
+    const result = ensureAgentWitchLaunchAgentPlist({
+      platform: "linux",
+      launchAgentLabel: "com.agent-witch",
+      installDir: homeDir,
+      homeDir,
+    });
+
+    expect(result).toMatchObject({ ok: true, rewritten: false });
+    expect(fs.existsSync(path.join(homeDir, "Library"))).toBe(false);
   });
 });

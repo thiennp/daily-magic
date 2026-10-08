@@ -7,6 +7,7 @@ import { ensureAgentWitchDeviceSchema } from "@/lib/agentWitch/ensureAgentWitchD
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { listAgentWitchDevicesForUser } from "@/lib/agentWitch/listAgentWitchDevicesForUser";
 import { revokePendingInstallDevicesForUser } from "@/lib/agentWitch/revokePendingInstallDevicesForUser";
+import { sortAgentWitchDevicesForDisplay } from "@/lib/agentWitch/sortAgentWitchDevicesForDisplay";
 import { buildMockDevicesApiResponse } from "@/lib/agentWitch/mock/buildMockDevicesApiResponse";
 import { readAgentWitchMockScenario } from "@/lib/agentWitch/mock/readAgentWitchMockScenario";
 import { recordAgentWitchTraffic } from "@/lib/agentWitch/agentWitchTrafficLog";
@@ -55,10 +56,12 @@ export async function GET(): Promise<Response> {
       preferDeviceIds: localLiveDeviceIds,
     });
     const devices = await listAgentWitchDevicesForUser(actor.id);
-    const devicesWithStatus = buildAgentWitchDevicesWithOnlineStatus(
-      devices,
-      localLiveDeviceIds,
-      remoteLiveDeviceIds,
+    const devicesWithStatus = sortAgentWitchDevicesForDisplay(
+      buildAgentWitchDevicesWithOnlineStatus(
+        devices,
+        localLiveDeviceIds,
+        remoteLiveDeviceIds,
+      ),
     );
     const response = {
       ok: true,

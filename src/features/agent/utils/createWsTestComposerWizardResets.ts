@@ -27,8 +27,13 @@ export const createWsTestComposerWizardResets = (
     setters.setHasConfirmedProjectSelection(false);
     setters.setHasConfirmedWriterAgentSelection(false);
   },
+  // 2331ef53: the LLM CLI pencil rewound the prefilled project and workflow
+  // too (their auto-complete ignores a rewound wizard); keep them confirmed.
   resetWriterAgentStep: () => {
     setHasRewoundWizard(true);
+    setters.setHasConfirmedMacSelection(true);
+    setters.setHasConfirmedProjectSelection(true);
+    setters.setHasConfirmedPickerSelection(true);
     setters.setHasConfirmedWriterAgentSelection(false);
   },
 });
