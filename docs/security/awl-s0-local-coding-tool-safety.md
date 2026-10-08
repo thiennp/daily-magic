@@ -7,13 +7,22 @@ via `LOCAL_CODING_TOOL_SAFETY_COPY` in `@agent-witch/shared/dispatch`. AWL fills
 
 ## Error codes (`errorCode` on `command.claude.result`)
 
-| Code | When | Line |
-| --- | --- | --- |
-| `folder_required` | run has no folder | `s0.folder.missing` |
-| `folder_not_registered` | realpath not inside a folder registered for this project + device (incl. symlink escapes) | `s0.folder.notAllowed` |
-| `folder_not_found` | registered folder missing on disk (only AWL-managed folders are created) | `s0.folder.missing` |
-| `folder_check_unavailable` | cloud folder list unavailable and no last-good list (fail closed) | placeholder, Product to supply |
-| `coding_tools_paused` | "Pause all coding tools" is on | `s0.pause.reason` |
+| Code                             | When                                                                                      | Line                           |
+| -------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------ |
+| `folder_required`                | run has no folder                                                                         | `s0.folder.missing`            |
+| `folder_not_registered`          | realpath not inside a folder registered for this project + device (incl. symlink escapes) | `s0.folder.notAllowed`         |
+| `folder_not_found`               | registered folder missing on disk (only AWL-managed folders are created)                  | `s0.folder.missing`            |
+| `folder_check_unavailable`       | cloud folder list unavailable and no last-good list (fail closed)                         | placeholder, Product to supply |
+| `coding_tools_paused`            | "Pause all coding tools" is on                                                            | `s0.pause.reason`              |
+| `folder_owned_by_other_account`  | folder overlaps a folder another account uses on this computer                            | placeholder, Product to supply |
+| `folder_locked_by_other_account` | another account is writing in this folder right now                                       | placeholder, Product to supply |
+
+## Cross-account folders (AWL-ISO-2)
+
+Two different accounts on the same computer may only share a folder when it is the same exact folder for the same `projectId`. While one account's CLI writer runs in a folder, another account may not start a writer in that same folder (write lock). Same-account behaviour is unchanged.
+
+- Claims file: `local-folder-claims.json` at the install root holds one claim per (account, folder realpath) with its `projectId`; claims of accounts whose `profiles/<email>/` is gone are ignored and pruned. Checked in `admitLocalCodingToolRun` → `folder_owned_by_other_account`.
+- Lock dir: `folder-write-locks/` at the install root holds `<sha256(folder realpath)>.json` (`accountEmail`, `pid`, `runIds`) while CLI writers run; taken in `runWriterTask`, released when the run finishes or waits for input; a dead `pid` makes it stale → `folder_locked_by_other_account`.
 
 ## Guards
 

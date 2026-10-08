@@ -15,6 +15,10 @@ const REFUSAL_COPY_KEY: Readonly<
   [LocalCodingToolRefusalCode.FOLDER_CHECK_UNAVAILABLE]:
     "folderCheckUnavailablePlaceholder",
   [LocalCodingToolRefusalCode.CODING_TOOLS_PAUSED]: "pauseReason",
+  [LocalCodingToolRefusalCode.FOLDER_OWNED_BY_OTHER_ACCOUNT]:
+    "folderOwnedByOtherAccountPlaceholder",
+  [LocalCodingToolRefusalCode.FOLDER_LOCKED_BY_OTHER_ACCOUNT]:
+    "folderLockedByOtherAccountPlaceholder",
 };
 
 /** Fill `{computer}`; AWL defaults to the locked "This computer" fallback. */

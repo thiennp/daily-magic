@@ -14,6 +14,10 @@ import {
   scrubOutboundSecrets,
   type LocalCodingToolRefusalCodeValue,
 } from "@agent-witch/shared/dispatch";
+import {
+  acquireFolderWriteLock,
+  releaseFolderWriteLocksForRun,
+} from "@agent-witch/live-projects";
 
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import {
@@ -507,6 +511,12 @@ const finishRun = (
   });
 
   endAgentWitchWriterWork(config.layout, agentRunId);
+  if (agentRunId !== undefined) {
+    releaseFolderWriteLocksForRun({
+      installDir: config.layout.installDir,
+      runId: agentRunId,
+    });
+  }
 };
 
 const requestRunInput = (
@@ -519,6 +529,10 @@ const requestRunInput = (
   originalPrompt: string,
 ): void => {
   endAgentWitchWriterWork(config.layout, agentRunId);
+  releaseFolderWriteLocksForRun({
+    installDir: config.layout.installDir,
+    runId: agentRunId,
+  });
   const session = runSessions.get(agentRunId);
   const accumulatedOutput = session?.accumulatedOutput ?? partialOutput;
   // The CLI has exited while we wait for a human answer; the continuation
@@ -922,6 +936,24 @@ export const runWriterTask = (
   ) {
     refuse(LocalCodingToolRefusalCode.FOLDER_REQUIRED);
     return;
+  }
+
+  const profileEmail = config.layout.profileEmail;
+  if (
+    agentRunId !== undefined &&
+    profileEmail !== null &&
+    profileEmail.trim().length > 0
+  ) {
+    const lock = acquireFolderWriteLock({
+      installDir: config.layout.installDir,
+      accountEmail: profileEmail,
+      folderRealPath: projectFolderPath,
+      runId: agentRunId,
+    });
+    if (!lock.ok) {
+      refuse(LocalCodingToolRefusalCode.FOLDER_LOCKED_BY_OTHER_ACCOUNT);
+      return;
+    }
   }
 
   noteTaskStarted(agentRunId);

@@ -100,3 +100,19 @@ export {
   describeLinkedProjectFolders,
   type LinkedProjectFoldersStatus,
 } from "../internal/core/linkProjectFolder/describeLinkedProjectFolders";
+
+export {
+  claimCrossAccountFolder,
+  readCrossAccountFolderClaims,
+} from "../internal/core/crossAccountFolderGuard/crossAccountFolderClaims";
+
+export {
+  acquireFolderWriteLock,
+  releaseFolderWriteLocksForRun,
+} from "../internal/core/crossAccountFolderGuard/folderWriteLock";
+
+export {
+  CROSS_ACCOUNT_FOLDER_CLAIMS_FILE_NAME,
+  FOLDER_WRITE_LOCKS_DIR_NAME,
+  AGENT_WITCH_PROFILES_DIR_NAME_FOR_CLAIMS,
+} from "../internal/core/crossAccountFolderGuard/crossAccountFolderGuard.constant";

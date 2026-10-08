@@ -13,6 +13,10 @@ export const LocalCodingToolRefusalCode = {
   FOLDER_CHECK_UNAVAILABLE: "folder_check_unavailable",
   /** Local "Pause all coding tools" is on. */
   CODING_TOOLS_PAUSED: "coding_tools_paused",
+  /** folder overlaps a folder another account on this computer uses for a different project or a different folder; cross-account sharing only for the same project's exact folder */
+  FOLDER_OWNED_BY_OTHER_ACCOUNT: "folder_owned_by_other_account",
+  /** another account's coding tool is writing in this folder right now */
+  FOLDER_LOCKED_BY_OTHER_ACCOUNT: "folder_locked_by_other_account",
 } as const;
 
 export type LocalCodingToolRefusalCodeValue =

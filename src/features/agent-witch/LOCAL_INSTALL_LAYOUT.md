@@ -17,6 +17,9 @@ When installed with `--email user@example.com` (or `AGENT_WITCH_PROFILE` / `acti
 ├── wake-port.json                   # Local wake HTTP server port (47892 prod / 47893 local)
 ├── link-code.txt                    # Optional pairing link code (local app UI)
 ├── watchdog-reinstall-state.json    # Cooldown state for watchdog reinstall attempts
+├── local-app-accounts.json          # Host-written: one row per account {email, port, pid, startedAt}
+├── local-folder-claims.json         # Folder claims per account + projectId (AWL-ISO-2 guard)
+├── folder-write-locks/              # <sha256(folder)>.json while a CLI writer runs (AWL-ISO-2)
 │
 ├── app/                             # Shipped binaries (shared across profiles)
 │   ├── agent-witch.js               # Bundled Mac client (Node entry; includes ws)

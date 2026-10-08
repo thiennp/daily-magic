@@ -18,4 +18,10 @@ export const LOCAL_CODING_TOOL_SAFETY_COPY = {
   /** PLACEHOLDER — not in COPY-S0-A-B-C.md; Product to supply. */
   folderCheckUnavailablePlaceholder:
     "Couldn't check this project's folder on {computer}. Nothing ran.",
+  /** PLACEHOLDER — not in COPY-S0-A-B-C.md; Product to supply. */
+  folderOwnedByOtherAccountPlaceholder:
+    "Blocked: another AgentWitch account on {computer} uses that folder for a different project. Nothing ran.",
+  /** PLACEHOLDER — not in COPY-S0-A-B-C.md; Product to supply. */
+  folderLockedByOtherAccountPlaceholder:
+    "Another AgentWitch account on {computer} is working in that folder right now. Nothing ran. Send the task again when it finishes.",
 } as const;
