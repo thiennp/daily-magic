@@ -10,6 +10,7 @@ import {
   parseCreateProjectTaskArgs,
   type ProjectTaskArgsError,
 } from "@/lib/projects/tasks/parseProjectTaskToolArgs";
+import { pushTaskToLinear } from "@/lib/projects/taskSync/pushTaskToLinear";
 import type { ProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecord.type";
 import { insertProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecordWriteQueries";
 import {
@@ -85,5 +86,6 @@ export const createProjectTask = async (input: {
       planItemId: fields.planItemId ?? null,
     },
   });
+  await pushTaskToLinear(task);
   return { ok: true, task };
 };
