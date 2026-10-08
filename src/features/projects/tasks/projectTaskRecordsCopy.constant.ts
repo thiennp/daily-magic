@@ -10,6 +10,19 @@ export const PROJECT_TASK_RECORDS_COPY = {
   aria: "Project task records",
   loadError: "Could not load planned work.",
   ownerFallback: "Unassigned",
+  tabsAria: "Filter planned work by status",
+  tabAll: "All",
+  tabEmpty: "Nothing here yet.",
+  sortAria: "Sort planned work",
+  sortAscAria: "Ascending — switch to descending",
+  sortDescAria: "Descending — switch to ascending",
+  sortLabel: {
+    updated: "Last updated",
+    created: "Date created",
+    priority: "Priority",
+    status: "Status",
+    title: "Title",
+  },
   dependsOn: (n: number) =>
     n === 1 ? "Waits on 1 task" : `Waits on ${n} tasks`,
 } as const;
