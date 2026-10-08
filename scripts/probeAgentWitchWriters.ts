@@ -4,6 +4,7 @@ import type { WriterCliCommands } from "./buildWriterCliInvocation";
 
 export type ProbedWriter = {
   readonly writerAgent: string;
+  /** Can run a task now: installed and not reported signed out (77e29f7a). */
   readonly ready: boolean;
   /** null = unknown: only Codex has a login-status command we can trust. */
   readonly loggedIn: boolean | null;
@@ -36,6 +37,17 @@ const canRun = (
     });
   });
 
+/** 77e29f7a: a signed-out Codex reported ready:true and got picked. */
+export const toProbedWriter = (
+  writerAgent: string,
+  installed: boolean,
+  loggedIn: boolean | null,
+): ProbedWriter => ({
+  writerAgent,
+  ready: installed && loggedIn !== false,
+  loggedIn,
+});
+
 /**
  * Which coding tools run on this computer. Cached for 5 minutes so the
  * 30-second heartbeat does not spawn four processes every time.
@@ -55,12 +67,12 @@ export const probeAgentWitchWriters = async (
   ];
   const writers = await Promise.all(
     entries.map(async ([writerAgent, bin]) => {
-      const ready = await canRun(bin);
+      const installed = await canRun(bin);
       const loggedIn =
-        ready && writerAgent === "codex"
+        installed && writerAgent === "codex"
           ? await canRun(bin, ["login", "status"])
           : null;
-      return { writerAgent, ready, loggedIn };
+      return toProbedWriter(writerAgent, installed, loggedIn);
     }),
   );
   state.cache = { at: nowMs, writers };

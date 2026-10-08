@@ -25,13 +25,13 @@ export const resolveWriterNotReadyNotice = (input: {
   if (writer === undefined || label === undefined) {
     return null;
   }
-  if (!writer.ready) {
-    return `${label} isn't set up on ${input.computerName}. Install and sign in to it there, or pick another coding tool.`;
-  }
   if (writer.loggedIn === false) {
     return input.writerAgent === "codex"
       ? `Codex isn't signed in on ${input.computerName}. Run codex login in a terminal there, or pick another coding tool.`
       : `${label} isn't signed in on ${input.computerName}. Sign in there, or pick another coding tool.`;
+  }
+  if (!writer.ready) {
+    return `${label} isn't set up on ${input.computerName}. Install and sign in to it there, or pick another coding tool.`;
   }
   return null;
 };

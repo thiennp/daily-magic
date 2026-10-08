@@ -21,6 +21,14 @@ describe("device writers", () => {
     expect(parseHeartbeatWriters(undefined)).toBeNull();
   });
 
+  it("a signed-out tool is never ready, even from an older host (77e29f7a)", () => {
+    expect(
+      parseHeartbeatWriters([
+        { writerAgent: "codex", ready: true, loggedIn: false },
+      ]),
+    ).toEqual([{ writerAgent: "codex", ready: false, loggedIn: false }]);
+  });
+
   it("makes every agent offline when the computer is offline", () => {
     const writers = [
       { writerAgent: "codex", ready: true },
@@ -49,7 +57,7 @@ describe("device writers", () => {
 
   it("flags a tool that reported it is signed out", () => {
     const agents = buildComputerAgents(
-      [{ writerAgent: "codex", ready: true, loggedIn: false }],
+      [{ writerAgent: "codex", ready: false, loggedIn: false }],
       true,
     );
     expect(agents[0]?.needsSignIn).toBe(true);

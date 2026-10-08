@@ -31,12 +31,14 @@ export const parseHeartbeatWriters = (
   return value.slice(0, MAX_WRITERS).flatMap((item) => {
     if (typeof item !== "object" || item === null) return [];
     const { writerAgent, ready, loggedIn } = item as Record<string, unknown>;
+    const login = typeof loggedIn === "boolean" ? loggedIn : null;
+    // 77e29f7a: older hosts sent ready:true with loggedIn:false.
     return typeof writerAgent === "string" && writerAgent.length <= 40
       ? [
           {
             writerAgent,
-            ready: ready === true,
-            loggedIn: typeof loggedIn === "boolean" ? loggedIn : null,
+            ready: ready === true && login !== false,
+            loggedIn: login,
           },
         ]
       : [];
@@ -57,13 +59,13 @@ const safeJson = (text: string): unknown => {
   }
 };
 
-/** A computer offline means every agent on it is offline. */
+/** A computer offline means every agent on it is offline. Signed-out tools stay listed. */
 export const buildComputerAgents = (
   writers: readonly AgentWitchDeviceWriter[],
   computerOnline: boolean,
 ): readonly ComputerAgentView[] =>
   writers
-    .filter((writer) => writer.ready)
+    .filter((writer) => writer.ready || writer.loggedIn === false)
     .map((writer) => ({
       writerAgent: writer.writerAgent,
       label: WRITER_LABELS[writer.writerAgent] ?? writer.writerAgent,
