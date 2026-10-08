@@ -6,7 +6,6 @@ import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { AGENT_WITCH_HOST_LOCAL_APP_ACCOUNTS_FILE_NAME } from "./agentWitchHostLocalAppAccountsDiscovery.constant";
 import {
   clearInProcessAgentWitchLocalAppAccountRegistryForTests,
   readAgentWitchHostLocalAppAccountsDiscovery,
