@@ -1,3 +1,6 @@
+import { isAgentRunHarnessInstructionLine } from "@/features/agent/utils/isAgentRunHarnessInstructionLine";
+import { stripAgentRunCliAnsi } from "@/features/agent/utils/stripAgentRunCliAnsi";
+
 const WRITER_EXECUTION_MARKER = "[[AGENT_RUN_WRITER_EXECUTION]]";
 const CLI_BANNER_START = /^OpenAI Codex v/;
 const CLI_RULE_LINE = /^-{4,}$/;
@@ -26,32 +29,47 @@ const dropBanner = (lines: readonly string[]): readonly string[] => {
   return [...lines.slice(0, start), ...lines.slice(end + 1)];
 };
 
-/** Drops the echoed prompt (`user` line) up to the agent's reply, if any. */
+/**
+ * Drops the echoed prompt under a `user` line. A lone ANSI-stripped `user`
+ * (no banner / reply) is only that one chrome line — keep the rest.
+ */
 const dropPromptEcho = (lines: readonly string[]): readonly string[] => {
-  const start = lines.findIndex((line) => line.trim() === "user");
+  const start = lines.findIndex((line) => /^user$/i.test(line.trim()));
   if (start < 0) return lines;
   const reply = lines.findIndex(
     (line, index) => index > start && CLI_REPLY_START.test(line.trim()),
   );
-  return [
-    ...lines.slice(0, start),
-    ...(reply < 0 ? [] : lines.slice(reply + 1)),
-  ];
+  if (reply >= 0) {
+    return [...lines.slice(0, start), ...lines.slice(reply + 1)];
+  }
+  const hasCliChrome = lines.some(
+    (line) =>
+      CLI_BANNER_START.test(line.trim()) ||
+      line.trim() === WRITER_EXECUTION_MARKER,
+  );
+  if (hasCliChrome) {
+    return lines.slice(0, start);
+  }
+  return [...lines.slice(0, start), ...lines.slice(start + 1)];
 };
 
 /**
- * Removes writer-CLI chatter (banner, log lines, execution markers, echoed
- * prompt) so the "Context so far" preview only shows what the agent did.
+ * Removes writer-CLI chatter (banner, logs, execution markers, echoed prompt,
+ * ANSI, harness rules) so "Context so far" only shows clean agent/user output.
+ * Keeps [[PROGRESS]] / wave markers for the display parsers that consume them.
  */
 export const stripAgentRunCliNoise = (output: string): string =>
-  dropPromptEcho(dropBanner(dropLeadingFragment(output.split("\n"))))
+  dropPromptEcho(
+    dropBanner(dropLeadingFragment(stripAgentRunCliAnsi(output).split("\n"))),
+  )
     .filter((line) => {
       const trimmed = line.trim();
       return (
         trimmed !== WRITER_EXECUTION_MARKER &&
         !WRITER_EXECUTION_FIELD.test(trimmed) &&
         !CLI_LOG_LINE.test(trimmed) &&
-        !CLI_STDIN_NOTICE.test(trimmed)
+        !CLI_STDIN_NOTICE.test(trimmed) &&
+        !isAgentRunHarnessInstructionLine(trimmed)
       );
     })
     .join("\n")

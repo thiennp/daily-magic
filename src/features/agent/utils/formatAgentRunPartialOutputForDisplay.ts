@@ -18,7 +18,11 @@ export const formatAgentRunPartialOutputForDisplay = (
   partialOutput: string,
 ): FormattedAgentRunPartialOutput => {
   const cleanOutput = stripAgentRunCliNoise(partialOutput);
-  const remainingText = stripAgentRunProgressFromOutput(cleanOutput);
+  // 3945994e: no raw [[MARKER]] syntax may reach the "Context so far" text.
+  const remainingText = stripAgentRunProgressFromOutput(cleanOutput).replace(
+    /\[\[[A-Z_]+\]\]/g,
+    "",
+  );
 
   return {
     progressUpdates: parseAgentLiveProgressUpdates(cleanOutput),
