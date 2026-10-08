@@ -1,5 +1,4 @@
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
-import { encodeProjectActivityCursor } from "@/lib/projects/acl/activity/projectActivityCursor";
 import { mapProjectTaskRecordRow } from "@/lib/projects/tasks/mapProjectTaskRecordRow";
 import {
   parseListProjectTasksArgs,
@@ -9,6 +8,11 @@ import {
   toProjectTaskListItem,
   type ProjectTaskListItem,
 } from "@/lib/projects/tasks/projectTaskListItem";
+import {
+  EMPTY_PAGE,
+  nextCursorOf,
+  resolveOwnerFilter,
+} from "@/lib/projects/tasks/listProjectTasksHelpers";
 import { queryProjectTaskRecordPage } from "@/lib/projects/tasks/queryProjectTaskRecordPage";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
@@ -51,7 +55,19 @@ export const listProjectTasks = async (input: {
   });
   if (access !== "ok") return { ok: false, code: access };
 
-  const rows = await queryProjectTaskRecordPage(parsed.value);
+  const owner = await resolveOwnerFilter({
+    projectId: parsed.value.projectId,
+    actorUserId: input.actorUserId,
+    mine: parsed.value.mine,
+    ownerMembershipId: parsed.value.ownerMembershipId,
+  });
+  /** mine without a seat (project owner) owns nothing → empty page. */
+  if (owner.none) return EMPTY_PAGE;
+
+  const rows = await queryProjectTaskRecordPage({
+    ...parsed.value,
+    ownerMembershipId: owner.seatId,
+  });
   const page = rows.slice(0, parsed.value.limit);
   const last = page.at(-1);
   const hasMore = rows.length > parsed.value.limit && last !== undefined;
@@ -60,11 +76,6 @@ export const listProjectTasks = async (input: {
     tasks: page.map((row) =>
       toProjectTaskListItem(mapProjectTaskRecordRow(row)),
     ),
-    nextCursor: hasMore
-      ? encodeProjectActivityCursor({
-          at: String(last.cursor_at),
-          id: String(last.id),
-        })
-      : null,
+    nextCursor: hasMore ? nextCursorOf(parsed.value.sort, last) : null,
   };
 };

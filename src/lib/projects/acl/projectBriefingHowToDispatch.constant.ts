@@ -2,6 +2,7 @@ import {
   AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
   AWC_GROK_WEBHOOK_DAILY_REPAIR,
 } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
+import { PROJECT_TASK_UPDATED_WAKE_CLAUSE } from "@/lib/projects/acl/projectTaskUpdatedWakeClause.constant";
 import {
   PROJECT_B2B_SILENCE_BLOCK_MS,
   PROJECT_B2B_SILENCE_NOTIFY_MS,
@@ -35,11 +36,12 @@ export const PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE =
 
 /** Shared project.updated wake clause for briefing, invite prompt, and agent guideline. */
 export const PROJECT_UPDATED_WAKE_REPLY_CLAUSE =
-  `On kind "${PROJECT_MESSAGE_KIND_PROJECT_UPDATED}": re-pull get_project_acl and get_project_briefing (and knowledge list if relevant), tell the user in one short line that project info changed, then ack. Do not ack only.`;
+  `On kind "${PROJECT_MESSAGE_KIND_PROJECT_UPDATED}": re-pull get_project_acl and get_project_briefing (and knowledge list if relevant), tell the user in one short line that project info changed, then ack. Do not ack only. ` +
+  PROJECT_TASK_UPDATED_WAKE_CLAUSE;
 
 /** Addressing rules shared by the wake (webhook) and poll briefings. */
 export const PROJECT_BRIEFING_DISPATCH_ADDRESSING =
-  "Dispatch with project_dispatch: pass projectId, kind, summary ≤ 200 chars, optional refs ≤ 768 bytes (prUrl|commitSha|localPath|allowClaimId) — no media/blobs (media_not_allowed); use only localPath / P2P refs for bulky payloads; address the human with toProjectDisplayName: \"Owner\" (reserved; not account name); address one peer bot via toMembershipId (preferred when list_project_peers exposes membershipId) or toProjectDisplayName / toTeamLabel — exactly one of toMembershipId | toProjectDisplayName | toTeamLabel; no broadcast in v1; re-list peers after rename (old nickname may resolve ~7 days); on Approve/invite auto-approve peers+owner get peer.joined; on knowledge|folder_refs|repo_urls|project_info change peers+owner get project.updated; owner tasks have fromProjectDisplayName === \"Owner\"; ";
+  'Dispatch with project_dispatch: pass projectId, kind, summary ≤ 200 chars, optional refs ≤ 768 bytes (prUrl|commitSha|localPath|allowClaimId) — no media/blobs (media_not_allowed); use only localPath / P2P refs for bulky payloads; address the human with toProjectDisplayName: "Owner" (reserved; not account name); address one peer bot via toMembershipId (preferred when list_project_peers exposes membershipId) or toProjectDisplayName / toTeamLabel — exactly one of toMembershipId | toProjectDisplayName | toTeamLabel; no broadcast in v1; re-list peers after rename (old nickname may resolve ~7 days); on Approve/invite auto-approve peers+owner get peer.joined; on knowledge|folder_refs|repo_urls|project_info change peers+owner get project.updated; owner tasks have fromProjectDisplayName === "Owner"; ';
 
 /** Ack, rate-limit, and leave rules shared by the wake and poll briefings. */
 export const PROJECT_BRIEFING_DISPATCH_TAIL =

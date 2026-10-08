@@ -3,6 +3,10 @@ import {
   type ProjectActivityCursor,
 } from "@/lib/projects/acl/activity/projectActivityCursor";
 import {
+  decodeProjectTaskPriorityCursor,
+  type ProjectTaskPriorityCursor,
+} from "@/lib/projects/tasks/projectTaskPriorityCursor";
+import {
   PROJECT_TASK_STATUSES,
   type ProjectTaskStatus,
 } from "@/lib/projects/tasks/projectTaskTools.constant";
@@ -11,13 +15,21 @@ export const LIST_PROJECT_TASKS_DEFAULT_LIMIT = 50;
 export const LIST_PROJECT_TASKS_MAX_LIMIT = 100;
 
 export type ListProjectTasksArgsError =
-  "invalid_arguments" | "invalid_status" | "invalid_cursor";
+  "invalid_arguments" | "invalid_status" | "invalid_sort" | "invalid_cursor";
+
+export type ListProjectTasksSort = "updated" | "priority";
 
 export type ParsedListProjectTasksArgs = {
   readonly projectId: string;
   readonly status: ProjectTaskStatus | null;
   readonly limit: number;
+  readonly sort: ListProjectTasksSort;
+  readonly mine: boolean;
+  readonly ownerMembershipId: string | null;
+  /** Set for sort "updated". */
   readonly cursor: ProjectActivityCursor | null;
+  /** Set for sort "priority". */
+  readonly priorityCursor: ProjectTaskPriorityCursor | null;
 };
 
 const text = (value: unknown): string =>
@@ -30,7 +42,7 @@ const parseLimit = (value: unknown): number => {
   return Math.min(LIST_PROJECT_TASKS_MAX_LIMIT, Math.max(1, Math.floor(value)));
 };
 
-/** list_project_tasks args: projectId, status?, limit 1–100 (50), cursor?. */
+/** list_project_tasks args: projectId, status?, sort?, mine?, ownerMembershipId?, limit 1–100 (50), cursor?. */
 export const parseListProjectTasksArgs = (
   args: unknown,
 ):
@@ -52,17 +64,30 @@ export const parseListProjectTasksArgs = (
   ) {
     return { ok: false, code: "invalid_status" };
   }
-  const cursor = decodeProjectActivityCursor(
-    typeof row.cursor === "string" ? row.cursor : null,
-  );
-  if (cursor === "invalid") return { ok: false, code: "invalid_cursor" };
+  const rawSort = text(row.sort).toLowerCase();
+  const sort = rawSort.length === 0 ? "updated" : rawSort;
+  if (sort !== "updated" && sort !== "priority") {
+    return { ok: false, code: "invalid_sort" };
+  }
+  const rawCursor = typeof row.cursor === "string" ? row.cursor : null;
+  const cursor =
+    sort === "updated" ? decodeProjectActivityCursor(rawCursor) : null;
+  const priorityCursor =
+    sort === "priority" ? decodeProjectTaskPriorityCursor(rawCursor) : null;
+  if (cursor === "invalid" || priorityCursor === "invalid") {
+    return { ok: false, code: "invalid_cursor" };
+  }
   return {
     ok: true,
     value: {
       projectId,
       status: status as ProjectTaskStatus | null,
       limit: parseLimit(row.limit),
+      sort,
+      mine: row.mine === true,
+      ownerMembershipId: text(row.ownerMembershipId) || null,
       cursor,
+      priorityCursor,
     },
   };
 };

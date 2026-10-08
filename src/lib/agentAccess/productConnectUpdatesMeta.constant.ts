@@ -14,7 +14,7 @@ export interface ProductConnectUpdateEntry {
 }
 
 /** Bump whenever PRODUCT_CONNECT_UPDATES entries change. */
-export const PRODUCT_CONNECT_UPDATES_CATALOG_VERSION = 19;
+export const PRODUCT_CONNECT_UPDATES_CATALOG_VERSION = 20;
 
 export const PRODUCT_CONNECT_METHOD_SUMMARY = {
   mcpBearer: "agent-access",

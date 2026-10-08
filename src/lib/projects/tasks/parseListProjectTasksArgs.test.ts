@@ -12,7 +12,16 @@ describe("parseListProjectTasksArgs", () => {
   it("defaults: no status, limit 50, no cursor", () => {
     expect(parseListProjectTasksArgs({ projectId: " p1 " })).toEqual({
       ok: true,
-      value: { projectId: "p1", status: null, limit: 50, cursor: null },
+      value: {
+        projectId: "p1",
+        status: null,
+        limit: 50,
+        sort: "updated",
+        mine: false,
+        ownerMembershipId: null,
+        cursor: null,
+        priorityCursor: null,
+      },
     });
   });
 
