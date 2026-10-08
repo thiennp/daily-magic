@@ -3,7 +3,7 @@
 import { useState, type ReactNode, type MouseEvent } from "react";
 
 import MacDeviceWakeModal from "./MacDeviceWakeModal";
-import { isMacDeviceRowInteractiveTarget } from "@/features/agent-witch/macDevices/utils/isMacDeviceRowInteractiveTarget";
+import { shouldOpenMacDeviceWakeModal } from "@/features/agent-witch/macDevices/utils/shouldOpenMacDeviceWakeModal";
 
 interface MacDeviceOfflineWakeHintProps {
   readonly deviceId: string;
@@ -23,7 +23,7 @@ export default function MacDeviceOfflineWakeHint({
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openWakeModal = (event: MouseEvent<HTMLDivElement>) => {
-    if (isMacDeviceRowInteractiveTarget(event.target)) {
+    if (!shouldOpenMacDeviceWakeModal(event.currentTarget, event.target)) {
       return;
     }
 
