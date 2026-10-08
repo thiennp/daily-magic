@@ -9,6 +9,8 @@ import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 import {
   chunkTextForRag,
   embedTextWithOllama,
+  INDEX_EMBED_TIMEOUT_MS,
+  RAG_QUERY_MAX_CHARS,
   type AgentWitchRagChunk,
 } from "./agentWitchLocalRag";
 
@@ -75,7 +77,7 @@ export const indexAgentWitchErrorKnowledgeText = async (input: {
 
   let indexed = 0;
   for (const part of parts.slice(0, 3)) {
-    const embedding = await embedTextWithOllama(part);
+    const embedding = await embedTextWithOllama(part, INDEX_EMBED_TIMEOUT_MS);
     if (embedding === null) {
       continue;
     }
@@ -113,7 +115,9 @@ export const queryAgentWitchErrorKnowledge = async (input: {
     return [];
   }
 
-  const embedding = await embedTextWithOllama(input.query);
+  const embedding = await embedTextWithOllama(
+    input.query.slice(0, RAG_QUERY_MAX_CHARS),
+  );
   if (embedding === null) {
     return [];
   }

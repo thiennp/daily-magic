@@ -10,6 +10,9 @@ import { recordAgentWitchChunkRetrievals } from "./agentWitchLocalKnowledgeUsage
 
 const DEFAULT_OLLAMA_URL = "http://127.0.0.1:11434";
 const DEFAULT_EMBED_MODEL = "nomic-embed-text";
+const EMBED_TIMEOUT_MS = 400;
+export const INDEX_EMBED_TIMEOUT_MS = 5_000;
+export const RAG_QUERY_MAX_CHARS = 400;
 
 export type AgentWitchRagChunk = {
   readonly id: string;
@@ -65,32 +68,36 @@ export const chunkTextForRag = (text: string, maxChars = 800): string[] => {
   return chunks;
 };
 
+const readEmbeddingFromBody = (body: unknown): number[] | null => {
+  if (typeof body !== "object" || body === null || !("embeddings" in body)) {
+    return null;
+  }
+  const { embeddings } = body as { embeddings: unknown };
+  if (!Array.isArray(embeddings) || !Array.isArray(embeddings[0])) {
+    return null;
+  }
+  return embeddings[0] as number[];
+};
+
 export const embedTextWithOllama = async (
   text: string,
+  timeoutMs = EMBED_TIMEOUT_MS,
 ): Promise<number[] | null> => {
   const baseUrl =
     process.env.AGENT_WITCH_OLLAMA_URL?.trim() || DEFAULT_OLLAMA_URL;
   const model =
     process.env.AGENT_WITCH_EMBED_MODEL?.trim() || DEFAULT_EMBED_MODEL;
   try {
-    const response = await fetch(`${baseUrl}/api/embeddings`, {
+    const response = await fetch(`${baseUrl}/api/embed`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ model, prompt: text }),
+      body: JSON.stringify({ model, input: text }),
+      signal: AbortSignal.timeout(timeoutMs),
     });
     if (!response.ok) {
       return null;
     }
-    const body: unknown = await response.json();
-    if (
-      typeof body === "object" &&
-      body !== null &&
-      "embedding" in body &&
-      Array.isArray((body as { embedding: unknown }).embedding)
-    ) {
-      return (body as { embedding: number[] }).embedding;
-    }
-    return null;
+    return readEmbeddingFromBody(await response.json());
   } catch {
     return null;
   }
@@ -142,7 +149,7 @@ export const indexAgentWitchRagText = async (input: {
   fs.mkdirSync(path.dirname(chunksPath), { recursive: true });
   let indexed = 0;
   for (const part of parts) {
-    const embedding = await embedTextWithOllama(part);
+    const embedding = await embedTextWithOllama(part, INDEX_EMBED_TIMEOUT_MS);
     if (embedding === null) {
       continue;
     }
@@ -170,7 +177,9 @@ export const queryAgentWitchRag = async (input: {
   readonly projectFolderPath?: string;
   readonly projectId?: string;
 }): Promise<AgentWitchRagChunk[]> => {
-  const embedding = await embedTextWithOllama(input.query);
+  const embedding = await embedTextWithOllama(
+    input.query.slice(0, RAG_QUERY_MAX_CHARS),
+  );
   if (embedding === null) {
     return [];
   }
