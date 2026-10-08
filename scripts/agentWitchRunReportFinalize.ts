@@ -1,3 +1,5 @@
+import { summarizeKnownWriterError } from "@agent-witch/shared/dispatch";
+
 import {
   AGENT_RUN_REPORT_STATUSES,
   isTerminalAgentRunReportStatus,
@@ -74,8 +76,15 @@ export const finalizeAgentRunReportOnFinish = (input: {
   }
 
   const failedLine = lastOutputLine(input.output);
-  const userSummary =
-    input.exitCode === input.stoppedExitCode
+  // 9b3947bc: a known CLI error (agy 429 quota…) is one sentence; raw text goes to details.
+  const knownError = summarizeKnownWriterError(input.output);
+  const isStop =
+    input.exitCode === input.stoppedExitCode ||
+    input.exitCode === input.sessionLimitExitCode;
+  const useKnownError = knownError !== null && !isStop;
+  const userSummary = useKnownError
+    ? knownError
+    : input.exitCode === input.stoppedExitCode
       ? "Stopped by user."
       : input.exitCode === input.sessionLimitExitCode
         ? "Stopped at the session time limit."
@@ -90,5 +99,6 @@ export const finalizeAgentRunReportOnFinish = (input: {
     agentRunId: input.agentRunId,
     status: AGENT_RUN_REPORT_STATUSES.FAILED,
     userSummary,
+    ...(useKnownError ? { details: input.output.trim().slice(-2000) } : {}),
   });
 };

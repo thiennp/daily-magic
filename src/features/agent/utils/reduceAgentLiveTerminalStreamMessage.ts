@@ -1,15 +1,10 @@
-import { resolveAgentRunOutcomeFromWriterOutput } from "@agent-witch/shared/dispatch";
-
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
-import { formatHardStopOutcomeTerminalBlock } from "@/lib/dispatch/formatHardStopOutcomeTerminalBlock";
 
 import { applySessionLimitHardStopToTerminalState } from "./applySessionLimitHardStopToTerminalState";
 import type { AgentLiveTerminalState } from "./agentLiveTerminalState.type";
 import { appendAgentLiveTerminalPrompt } from "./agentLiveTerminalPrompt.constant";
-import {
-  matchesActiveRun,
-  mergeTerminalResultOutput,
-} from "./agentLiveTerminalMessageUtils";
+import { matchesActiveRun } from "./agentLiveTerminalMessageUtils";
+import { reduceAgentLiveTerminalResultMessage } from "./reduceAgentLiveTerminalResultMessage";
 
 export const reduceAgentLiveTerminalStreamMessage = (
   state: AgentLiveTerminalState,
@@ -41,32 +36,7 @@ export const reduceAgentLiveTerminalStreamMessage = (
     parsed.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RESULT &&
     matchesActiveRun(state.activeRunId, payload)
   ) {
-    const resultOutput =
-      typeof payload.output === "string" ? payload.output : "";
-    const mergedOutput = appendAgentLiveTerminalPrompt(
-      mergeTerminalResultOutput(state.output, resultOutput),
-    );
-    const outcome = resolveAgentRunOutcomeFromWriterOutput(resultOutput);
-
-    if (outcome !== null) {
-      const banner = formatHardStopOutcomeTerminalBlock(outcome);
-
-      return {
-        ...state,
-        output: `${mergedOutput}\n${banner}\n`,
-        status: "error",
-        pendingInput: null,
-        pendingCommandLine: null,
-      };
-    }
-
-    return {
-      ...state,
-      output: mergedOutput,
-      status: "finished",
-      pendingInput: null,
-      pendingCommandLine: null,
-    };
+    return reduceAgentLiveTerminalResultMessage(state, payload);
   }
 
   if (

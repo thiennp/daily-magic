@@ -24,4 +24,13 @@ describe("resolveTaskResultBlock", () => {
     );
     expect(resolveTaskResultBlock({ status: "done" })).toBeNull();
   });
+  it("gives a known agy quota error one plain hint (9b3947bc)", () => {
+    const r = resolveTaskResultBlock({
+      status: "failed",
+      resultOutput:
+        "error: Individual quota reached. Resets in 44m20s.\nAGY_ERROR: {}",
+    });
+    expect(r?.hint).toBe("Antigravity quota reached; resets in 44m.");
+    expect(r?.body).toContain("AGY_ERROR");
+  });
 });

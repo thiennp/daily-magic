@@ -92,7 +92,8 @@ describe("reduceAgentLiveTerminalMessage", () => {
     });
 
     expect(finished.output).toContain("command not found");
-    expect(finished.status).toBe("finished");
+    // 74408099: a non-zero exit (not a user stop) ends the floater in error.
+    expect(finished.status).toBe("error");
   });
 
   it("keeps the computer session on dispatch failure so the user can resume (AGENT-011)", () => {

@@ -27,14 +27,15 @@ export default function AwcProjectReportDetailFields({
 }: {
   readonly run: EnrichedAgentRunRecord;
 }) {
-  const { statusLabel, reasonLine, body } = resolveProjectReportDetailView({
-    run,
-    fallbackOutput: resolveAgentRunDetailResultOutputForHonesty(
-      run.id,
-      run.resultOutput,
-    ),
-    cached: getAgentRunLocalCache(run.id),
-  });
+  const { statusLabel, reasonLine, body, details } =
+    resolveProjectReportDetailView({
+      run,
+      fallbackOutput: resolveAgentRunDetailResultOutputForHonesty(
+        run.id,
+        run.resultOutput,
+      ),
+      cached: getAgentRunLocalCache(run.id),
+    });
 
   return (
     <article className="flex min-w-0 flex-col gap-3 px-1">
@@ -71,6 +72,18 @@ export default function AwcProjectReportDetailFields({
           >
             {body}
           </pre>
+          {details !== null ? (
+            <details className="text-[13px] text-awc-fg-muted dark:text-gray-400">
+              <summary className="cursor-pointer">
+                {C["reports.detail.rawError"]}
+              </summary>
+              <pre
+                className={`${PANEL_LIST_CLASS} mt-1 max-h-64 overflow-auto whitespace-pre-wrap p-3 text-[12px]`}
+              >
+                {details}
+              </pre>
+            </details>
+          ) : null}
         </section>
       ) : null}
     </article>

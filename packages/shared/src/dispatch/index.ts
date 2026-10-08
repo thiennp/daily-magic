@@ -3,6 +3,7 @@ export {
   isAgentRunOutcomeCode,
   type AgentRunOutcomeCodeValue,
 } from "./agentRunOutcome.constant";
+export { summarizeKnownWriterError } from "./summarizeKnownWriterError";
 export {
   resolveAgentRunOutcomeFromWriterOutput,
   type ResolvedAgentRunOutcome,

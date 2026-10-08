@@ -1,5 +1,6 @@
 import { stripAgentLiveProgressCliChrome } from "@/features/agent/utils/stripAgentLiveProgressCliChrome";
 import { dropRepeatedReportBodyLines } from "@/features/projects/reports/utils/dropRepeatedReportBodyLines";
+import { resolveProjectReportKnownError } from "@/features/projects/reports/utils/resolveProjectReportKnownError";
 import { resolveProjectReportFallbackBody } from "@/features/projects/reports/utils/resolveProjectReportFallbackBody";
 import { stripAgentRunReportMarkerFragments } from "@/features/projects/reports/utils/stripAgentRunReportMarkerFragments";
 import { resolveAgentRunReportProgressView } from "@/features/reports/utils/resolveAgentRunReportProgressView";
@@ -14,6 +15,8 @@ export interface ProjectReportDetailView {
   readonly statusLabel: string | null;
   readonly reasonLine: string | null;
   readonly body: string;
+  /** 9b3947bc: the raw error text when `body` is a plain-language sentence. */
+  readonly details: string | null;
 }
 
 const TERMINAL_RUN_STATUSES: ReadonlySet<string> = new Set([
@@ -89,6 +92,10 @@ export const resolveProjectReportDetailView = (input: {
   const stoppedBody =
     body.replace(/^error:\s*interrupted[\s\p{P}]*/iu, "").trim() ||
     "Stopped by user.";
+  const knownError = resolveProjectReportKnownError(run, reportSummary, output);
+  if (knownError !== null) {
+    return { statusLabel, reasonLine: view.reasonLine, ...knownError };
+  }
   const finalBody =
     statusLabel === "Stopped"
       ? stoppedBody
@@ -104,5 +111,6 @@ export const resolveProjectReportDetailView = (input: {
     statusLabel,
     reasonLine: view.reasonLine,
     body: finalBody,
+    details: null,
   };
 };

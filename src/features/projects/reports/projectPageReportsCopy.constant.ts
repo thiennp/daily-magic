@@ -34,6 +34,7 @@ export const PROJECT_PAGE_REPORTS_COPY = {
   "reports.detail.date": "Date",
   "reports.detail.status": "Status",
   "reports.detail.body": "What happened",
+  "reports.detail.rawError": "Details",
   "reports.detail.missing": "This report is not in this project.",
   "reports.detail.loading": "Loading report…",
   "reports.detail.error": "Could not load this report. Try again.",

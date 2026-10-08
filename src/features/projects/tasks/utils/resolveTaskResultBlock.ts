@@ -1,3 +1,5 @@
+import { summarizeKnownWriterError } from "@agent-witch/shared/dispatch";
+
 import { CODING_TOOL_LABELS } from "@/features/projects/tasks/utils/codingToolLabels.constant";
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
 
@@ -46,7 +48,10 @@ export const resolveTaskResultBlock = (
 ): TaskResultBlock | null => {
   if (task.status === "failed") {
     const output = task.resultOutput?.trim() ?? "";
-    const hint = resolveNotSignedInHint(output, task.writerAgent);
+    // 9b3947bc: a known CLI error (agy quota…) gets one plain sentence; the raw text stays below.
+    const hint =
+      resolveNotSignedInHint(output, task.writerAgent) ??
+      summarizeKnownWriterError(output);
     return {
       ...block(
         "bad",

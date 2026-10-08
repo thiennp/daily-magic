@@ -5,6 +5,7 @@ import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMess
 import type { AgentLiveTerminalState } from "./agentLiveTerminalState.type";
 import { isRecord, matchesActiveRun } from "./agentLiveTerminalMessageUtils";
 import { isTerminalAgentRunRecordStatus } from "./agentLiveRunRecordResync";
+import { reconcileFinishedFloaterWithRunRecord } from "./reconcileFinishedFloaterWithRunRecord";
 import { reduceAgentLiveTerminalRunRecordEnd } from "./reduceAgentLiveTerminalRunRecordEnd";
 
 export const reduceAgentLiveTerminalApprovalMessage = (
@@ -26,6 +27,14 @@ export const reduceAgentLiveTerminalApprovalMessage = (
         ...state,
         status: "streaming",
       };
+    }
+
+    if (
+      run.id === state.activeRunId &&
+      state.status === "finished" &&
+      isTerminalAgentRunRecordStatus(run.status)
+    ) {
+      return reconcileFinishedFloaterWithRunRecord(state, run);
     }
 
     if (

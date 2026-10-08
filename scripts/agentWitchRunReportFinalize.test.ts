@@ -107,13 +107,29 @@ describe("finalizeAgentRunReportOnFinish (FAIL3 452bdbc8)", () => {
 
   it("marks a failed run failed with its last real output line", () => {
     seedWaitingReport("k-fail");
-    finalize("k-fail", 1, "[[PROGRESS]]\nerror: Individual quota reached.");
+    finalize("k-fail", 1, "[[PROGRESS]]\nerror: npm run build failed.");
 
     const report = readAgentRunReportFile("k-fail");
     expect(report?.status).toBe(AGENT_RUN_REPORT_STATUSES.FAILED);
     expect(report?.userSummary).toBe(
-      "Failed on your computer: error: Individual quota reached.",
+      "Failed on your computer: error: npm run build failed.",
     );
+  });
+
+  it("gives a known agy quota error one sentence; raw text in details (9b3947bc)", () => {
+    seedWaitingReport("k-quota");
+    finalize(
+      "k-quota",
+      3,
+      'error: Individual quota reached. Resets in 44m20s.\nAGY_ERROR: {"code":429}',
+    );
+
+    const report = readAgentRunReportFile("k-quota");
+    expect(report?.status).toBe(AGENT_RUN_REPORT_STATUSES.FAILED);
+    expect(report?.userSummary).toBe(
+      "Antigravity quota reached; resets in 44m.",
+    );
+    expect(report?.details).toContain("AGY_ERROR");
   });
 
   it("says Stopped by user for a user stop", () => {

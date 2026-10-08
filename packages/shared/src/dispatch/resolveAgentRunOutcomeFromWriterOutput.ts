@@ -1,3 +1,4 @@
+import { summarizeKnownWriterError } from "./summarizeKnownWriterError";
 import {
   AgentRunOutcomeCode,
   type AgentRunOutcomeCodeValue,
@@ -10,6 +11,9 @@ const PROVIDER_QUOTA_PATTERNS: readonly RegExp[] = [
   /\busage limit\b/i,
   /\bquota exceeded\b/i,
   /\bexceeded your .* quota\b/i,
+  // 74408099: agy fails fast with "Individual quota reached" / RESOURCE_EXHAUSTED (429).
+  /\bindividual quota reached\b/i,
+  /\bRESOURCE_EXHAUSTED\b/,
 ];
 
 const SESSION_LIMIT_RESET_PATTERN =
@@ -65,7 +69,9 @@ export const resolveAgentRunOutcomeFromWriterOutput = (
       return {
         code: AgentRunOutcomeCode.PROVIDER_QUOTA,
         resetHint: null,
-        matchedLine: firstMatchingLine(normalized, pattern),
+        matchedLine:
+          summarizeKnownWriterError(normalized) ??
+          firstMatchingLine(normalized, pattern),
       };
     }
   }
