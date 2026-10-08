@@ -48,6 +48,7 @@ export function useAgentLiveTerminalPanelProgress(input: {
         input.status,
         input.pendingCommandLine ?? "",
       ].join("\u0000"),
+      isWaitingOnInput: input.feedbackPendingQuestion !== null,
     });
 
   useAgentRunHeartbeatStallReset({

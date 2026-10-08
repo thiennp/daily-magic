@@ -17,6 +17,8 @@ import { PROJECT_PAGE_TASKS_COPY as C } from "@/features/projects/tasks/projectP
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
 import { shouldShowTaskOpenReport } from "@/features/projects/tasks/utils/shouldShowTaskOpenReport";
 import { buildProjectTabHash } from "@/lib/shell/buildNavConsolidationRedirect";
+import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
+import { resolveTaskLiveViewAction } from "@/features/projects/tasks/utils/resolveTaskLiveViewAction";
 
 export default function AwcProjectTaskDetail({
   task,
@@ -35,6 +37,12 @@ export default function AwcProjectTaskDetail({
     task.agentRunId !== null
       ? buildProjectTabHash("reports", { report: task.agentRunId })
       : null;
+
+  const { expandRunningSendTask } = useSendTaskModal();
+  const liveAction = resolveTaskLiveViewAction({
+    status: task.status,
+    agentRunId: task.agentRunId,
+  });
 
   return (
     <section className="flex min-w-0 flex-col gap-4" aria-label={task.title}>
@@ -81,6 +89,15 @@ export default function AwcProjectTaskDetail({
             <span className="text-[12px] text-awc-fg-muted">
               {C.fromComputer}
             </span>
+            {liveAction !== null ? (
+              <button
+                type="button"
+                className={AWC_TASKS_SECONDARY_BUTTON_CLASS}
+                onClick={() => expandRunningSendTask(liveAction.runId)}
+              >
+                {liveAction.label}
+              </button>
+            ) : null}
             <button type="button" className={AWC_TASKS_SECONDARY_BUTTON_CLASS}>
               {C.openHistory}
             </button>

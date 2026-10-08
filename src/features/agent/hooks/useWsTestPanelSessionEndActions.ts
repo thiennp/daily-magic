@@ -3,6 +3,8 @@
 import type { useAgentWitchSocket } from "@/features/agent/hooks/useAgentWitchSocket";
 import type { useWsTestPromptHandlers } from "@/features/agent/hooks/useWsTestPromptHandlers";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import { resolveEndedRunRetryPrefill } from "@/features/agent/utils/resolveEndedRunRetryPrefill";
+import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 
 /**
  * 73820cb1 (Testi run 4 @298): an agy PTY run leaves the live shell open, and
@@ -12,6 +14,9 @@ import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTask
  * Finishing now closes that shell too, so the wizard comes back. Retry starts
  * the same task again as a fresh run (the same path as Start); without a
  * prompt it just finishes the ended session.
+ * afae8216: a floater re-opened on a failed run (from Tasks/Home) has an
+ * empty form; Retry then refills the ended run's ask and project and returns
+ * to the form, so Start re-runs it. Nothing is sent without that Start.
  */
 export const useWsTestPanelSessionEndActions = (input: {
   readonly socket: ReturnType<typeof useAgentWitchSocket>;
@@ -42,7 +47,19 @@ export const useWsTestPanelSessionEndActions = (input: {
         input.promptHandlers.onSend();
         return;
       }
+      const prefill =
+        input.composer.resolvedPrompt.trim().length === 0
+          ? resolveEndedRunRetryPrefill(
+              getAgentRunLocalCache(input.socket.liveTerminalRunId ?? ""),
+            )
+          : null;
       finishSession();
+      if (prefill !== null) {
+        input.composer.setPrompt(prefill.prompt);
+        if (prefill.projectId !== null) {
+          input.composer.setSelectedProjectId(prefill.projectId);
+        }
+      }
     },
   };
 };

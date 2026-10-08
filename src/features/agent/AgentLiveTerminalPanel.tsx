@@ -45,6 +45,7 @@ export default function AgentLiveTerminalPanel(
       {isSteppedComposer ? (
         <AgentLiveTerminalPanelProgressFeed
           panelProgress={panelProgress}
+          activeRunId={props.activeRunId}
           sessionDeviceId={props.sessionDeviceId}
           nextActions={showNextActions ? nextActions : []}
           nextActionsDisabled={props.isFeedbackSubmitting}

@@ -2,6 +2,8 @@
 
 import { useEffect, useId } from "react";
 
+import { useModalEscapeLayer } from "@/components/ui/modal/useModalEscapeLayer";
+
 import SendTaskModalChrome from "@/features/agent/SendTaskModalChrome";
 import WsTestPanel from "@/features/agent/WsTestPanel";
 import type { SendTaskPresentation } from "@/features/agent/utils/resolveSendTaskPresentation";
@@ -27,24 +29,18 @@ export default function SendTaskModal({
   const isExpanded = presentation === "expanded";
   const isMinimized = presentation === "minimized";
 
+  // afae8216: Esc minimizes New task only when it is the top layer.
+  useModalEscapeLayer(isExpanded, onMinimize);
+
   useEffect(() => {
     if (!isExpanded) {
       return;
     }
-
-    const onKeyDown = (event: KeyboardEvent): void => {
-      if (event.key === "Escape") {
-        onMinimize();
-      }
-    };
-
-    document.addEventListener("keydown", onKeyDown);
     document.body.style.overflow = "hidden";
     return () => {
-      document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "unset";
     };
-  }, [isExpanded, onMinimize]);
+  }, [isExpanded]);
 
   if (presentation === "hidden") {
     return null;

@@ -16,6 +16,7 @@ export const useAgentLiveProgressStallState = (input: {
   readonly activityFingerprint: string;
   readonly estimateSeconds?: number | null;
   readonly sessionLimitSeconds?: number | null;
+  readonly isWaitingOnInput?: boolean;
 }): {
   readonly stallState: AgentLiveProgressStallState;
   readonly msSinceLastActivity: number | null;
@@ -50,6 +51,14 @@ export const useAgentLiveProgressStallState = (input: {
       dispatch({ type: "estimate", at: Date.now() });
     }
   }, [input.estimateSeconds]);
+
+  // afae8216: the worked clock pauses while the run waits on the user.
+  useEffect(() => {
+    dispatch({
+      type: input.isWaitingOnInput === true ? "waitStart" : "waitEnd",
+      at: Date.now(),
+    });
+  }, [input.isWaitingOnInput]);
 
   useEffect(() => {
     if (!input.isWorking) {

@@ -19,7 +19,11 @@ describe("DispatchApprovalExpiryNote (S0)", () => {
     const html = renderToStaticMarkup(
       createElement(DispatchApprovalExpiryNote, {
         id: "n",
-        expiry: { kind: "ended", title: "This request ended", body: "Nothing ran." },
+        expiry: {
+          kind: "ended",
+          title: "This request ended",
+          body: "Nothing ran.",
+        },
       }),
     );
     expect(html).toContain('role="status"');

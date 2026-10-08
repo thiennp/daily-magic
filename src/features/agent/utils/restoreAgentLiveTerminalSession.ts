@@ -3,6 +3,8 @@ import type { PersistedTerminalSession } from "@/features/agent/utils/agentLiveT
 import type { AgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalState.type";
 import { initialAgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalState.type";
 import { shouldPersistAgentLiveTerminalOutput } from "@/features/agent/utils/shouldPersistAgentLiveTerminalOutput";
+import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { seedRestoredAgentLivePendingInput } from "@/features/agent/utils/seedRestoredAgentLivePendingInput";
 
 export const restoreAgentLiveTerminalSession = (
   session: PersistedTerminalSession,
@@ -30,5 +32,14 @@ export const restoreAgentLiveTerminalSession = (
     sessionWriterAgent: session.sessionWriterAgent,
     sessionDeviceId: session.sessionDeviceId,
     sessionWriterSessionId: session.sessionWriterSessionId ?? null,
+    pendingInput:
+      session.activeRunId === null
+        ? null
+        : seedRestoredAgentLivePendingInput({
+            runId: session.activeRunId,
+            status: session.status,
+            reportSummary:
+              getAgentRunLocalCache(session.activeRunId)?.reportSummary ?? null,
+          }),
   };
 };

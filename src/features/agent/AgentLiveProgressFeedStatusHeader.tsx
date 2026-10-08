@@ -5,8 +5,13 @@ import AgentLiveRunOutcomeChip from "@/features/agent/AgentLiveRunOutcomeChip";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import type { AgentLiveRunOutcome } from "@/features/agent/utils/agentLiveRunOutcomeKind.type";
 import { shouldShowAgentLiveRetry } from "@/features/agent/utils/shouldShowAgentLiveRetry";
+import { useAgentRunInputRequest } from "@/features/dispatch/agentRunInputStore";
+import { requestAgentRunInputModalReopen } from "@/features/dispatch/utils/agentRunInputModalEvents";
+import { resolveRunInputReopenRequest } from "@/features/dispatch/utils/resolveRunInputReopenRequest";
+import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 
 interface AgentLiveProgressFeedStatusHeaderProps {
+  readonly activeRunId?: string | null;
   readonly outcome: AgentLiveRunOutcome | null;
   readonly isWorking: boolean;
   readonly isStopping: boolean;
@@ -18,6 +23,7 @@ interface AgentLiveProgressFeedStatusHeaderProps {
 }
 
 export default function AgentLiveProgressFeedStatusHeader({
+  activeRunId,
   outcome,
   isWorking,
   isStopping,
@@ -32,6 +38,16 @@ export default function AgentLiveProgressFeedStatusHeader({
     isWorking,
     isStopping,
   });
+  const pendingInput = useAgentRunInputRequest(activeRunId);
+  const runId = activeRunId ?? "";
+  const reopenRequest =
+    runId.length > 0 && (isWorking || pendingInput !== null)
+      ? resolveRunInputReopenRequest({
+          runId,
+          stored: pendingInput,
+          reportSummary: getAgentRunLocalCache(runId)?.reportSummary ?? null,
+        })
+      : null;
 
   return (
     <div className="flex items-center justify-between gap-3">
@@ -44,6 +60,15 @@ export default function AgentLiveProgressFeedStatusHeader({
             kind={outcome.kind}
             label={outcome.chipLabel}
           />
+        ) : null}
+        {reopenRequest !== null ? (
+          <button
+            type="button"
+            className="inline-flex items-center justify-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 hover:bg-indigo-100 dark:bg-indigo-500/10 dark:text-indigo-300 dark:hover:bg-indigo-500/20"
+            onClick={() => requestAgentRunInputModalReopen(reopenRequest)}
+          >
+            Open question
+          </button>
         ) : null}
       </div>
       <AgentLiveProgressFeedStopControl

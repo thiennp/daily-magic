@@ -26,6 +26,7 @@ interface AgentLiveProgressFeedProps {
   readonly msSinceLastActivity?: number | null;
   readonly estimateProgress?: AgentLiveWorkingEstimateProgress | null;
   readonly wavePlanItems?: readonly AgentLiveWavePlanViewItem[];
+  readonly activeRunId?: string | null;
   readonly sessionDeviceId?: string | null;
   readonly nextActions?: readonly string[];
   readonly nextActionsDisabled?: boolean;
@@ -46,6 +47,7 @@ export default function AgentLiveProgressFeed({
   msSinceLastActivity = null,
   estimateProgress = null,
   wavePlanItems = [],
+  activeRunId = null,
   sessionDeviceId = null,
   nextActions = [],
   nextActionsDisabled = false,
@@ -71,6 +73,7 @@ export default function AgentLiveProgressFeed({
         msSinceLastActivity={msSinceLastActivity}
         stallState={stallState}
         estimateProgress={estimateProgress}
+        activeRunId={activeRunId}
         sessionDeviceId={sessionDeviceId}
         onStopRun={onStopRun}
         onDeleteRun={onDeleteRun}

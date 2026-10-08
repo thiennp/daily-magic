@@ -26,8 +26,7 @@ export const formatDispatchApprovalCardTitle = (
   const tool = fields.tool!.trim();
   const computer = fields.computerName!.trim();
   const name = fields.requester?.trim() ?? "";
-  const template =
-    name.length > 0 ? C.richTitle : C.richTitleNoRequester;
+  const template = name.length > 0 ? C.richTitle : C.richTitleNoRequester;
   return template
     .replace("{requester}", name)
     .replace("{tool}", tool)

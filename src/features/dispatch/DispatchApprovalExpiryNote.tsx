@@ -26,7 +26,9 @@ export default function DispatchApprovalExpiryNote({
       <p className="font-medium text-awc-fg dark:text-white/90">
         {expiry.title}
       </p>
-      <p className="mt-0.5 text-awc-fg-muted dark:text-gray-400">{expiry.body}</p>
+      <p className="mt-0.5 text-awc-fg-muted dark:text-gray-400">
+        {expiry.body}
+      </p>
     </div>
   );
 }

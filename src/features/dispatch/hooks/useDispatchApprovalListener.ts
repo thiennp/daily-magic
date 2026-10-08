@@ -1,6 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useAgentRunInputReopenListener } from "@/features/dispatch/hooks/useAgentRunInputReopenListener";
+import {
+  setPendingInputForRun,
+  clearPendingInputForRun,
+} from "@/features/dispatch/agentRunInputStore";
 
 import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/AgentWitchDashboardContext";
 import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/useAgentWitchDashboardSubscription";
@@ -52,10 +57,15 @@ export function useDispatchApprovalListener(): {
       parseDispatchApprovalSocketMessage(parsed as Record<string, unknown>, {
         onApprovalRequired: setPendingApproval,
         onInputRequired: (request) => {
+          setPendingInputForRun(request.agentRunId, request);
           if (!shouldShowGlobalAgentRunInputModal(request.agentRunId)) {
             return;
           }
           setPendingInput(request);
+        },
+        onRunEnd: (runId) => {
+          clearPendingInputForRun(runId);
+          setPendingInput((prev) => (prev?.agentRunId === runId ? null : prev));
         },
       });
     } catch {
@@ -64,6 +74,8 @@ export function useDispatchApprovalListener(): {
   }, []);
 
   useAgentWitchDashboardSubscription(handleDashboardMessage);
+
+  useAgentRunInputReopenListener(setPendingInput);
 
   const respondToApproval = useCallback(
     (decision: "approve" | "deny", denialReason?: string) => {
@@ -106,13 +118,8 @@ export function useDispatchApprovalListener(): {
     [pendingInput?.agentRunId],
   );
 
-  const dismissApproval = useCallback(() => {
-    setPendingApproval(null);
-  }, []);
-
-  const dismissInput = useCallback(() => {
-    setPendingInput(null);
-  }, []);
+  const dismissApproval = useCallback(() => setPendingApproval(null), []);
+  const dismissInput = useCallback(() => setPendingInput(null), []);
 
   return {
     pendingApproval,

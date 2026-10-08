@@ -10,7 +10,8 @@
 export const DISPATCH_APPROVAL_CARD_COPY = {
   title: "Approve this task?",
   body: "{requester} wants to start a task on your computer.",
-  bodyNoRequester: "Someone in this project wants to start a task on your computer.",
+  bodyNoRequester:
+    "Someone in this project wants to start a task on your computer.",
   /** Stands in for {requester} in `expiredBody` when the card has no name. */
   requesterFallback: "Someone in this project",
   /** When tool + computer are on the payload. */

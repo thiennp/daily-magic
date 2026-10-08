@@ -1,6 +1,8 @@
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { createAgentWitchRequestId } from "@/features/agent/utils/agentWitchSocketUtils";
 
+import { clearPendingInputForRun } from "@/features/dispatch/agentRunInputStore";
+import { readEndedAgentRunId } from "@/features/dispatch/utils/readEndedAgentRunId";
 import { parseAgentRunInputRequest } from "@/features/dispatch/utils/parseAgentRunInputContext";
 import type { AgentRunInputContext } from "@/lib/dispatch/agentRunInputContext.type";
 
@@ -37,15 +39,15 @@ export const parseDispatchApprovalSocketMessage = (
       payload: DispatchApprovalRequiredPayload,
     ) => void;
     readonly onInputRequired?: (payload: AgentRunInputRequest) => void;
+    readonly onRunEnd?: (agentRunId: string) => void;
   },
 ): void => {
+  const payload = parsed.payload as Record<string, unknown>;
+  const isPayloadObj = typeof payload === "object" && payload !== null;
   if (
     parsed.type === AGENT_WITCH_MESSAGE_TYPES.DISPATCH_APPROVAL_REQUIRED &&
-    "payload" in parsed &&
-    typeof parsed.payload === "object" &&
-    parsed.payload !== null
+    isPayloadObj
   ) {
-    const payload = parsed.payload as Record<string, unknown>;
     const runId = typeof payload.runId === "string" ? payload.runId : "";
     const prompt = typeof payload.prompt === "string" ? payload.prompt : "";
     const requesterEmail = optionalTrimmedString(payload.requesterEmail);
@@ -70,15 +72,18 @@ export const parseDispatchApprovalSocketMessage = (
   if (
     handlers.onInputRequired !== undefined &&
     parsed.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_INPUT_REQUIRED &&
-    "payload" in parsed &&
-    typeof parsed.payload === "object" &&
-    parsed.payload !== null
+    isPayloadObj
   ) {
-    const request = parseAgentRunInputRequest(
-      parsed.payload as Record<string, unknown>,
-    );
+    const request = parseAgentRunInputRequest(payload);
     if (request !== null) {
       handlers.onInputRequired(request);
+    }
+  }
+
+  if (handlers.onRunEnd !== undefined && isPayloadObj) {
+    const endedRunId = readEndedAgentRunId(parsed.type, payload);
+    if (endedRunId !== null) {
+      handlers.onRunEnd(endedRunId);
     }
   }
 };
@@ -88,6 +93,8 @@ export const sendAgentRunInputResponse = (
   agentRunId: string,
   response: string,
 ): void => {
+  // afae8216: an answered question no longer offers "Open question".
+  clearPendingInputForRun(agentRunId);
   socket.send(
     JSON.stringify({
       type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_INPUT_RESPOND,

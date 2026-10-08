@@ -11,6 +11,7 @@ import {
 } from "@/features/home/utils/resolveHomeRunningJobBadgeOverride";
 import { formatHomeRunningJobAliveLabel } from "@/features/home/utils/formatHomeRunningJobAliveLabel";
 import { formatHomeRunningJobTitle } from "@/features/home/utils/formatHomeRunningJobTitle";
+import HomeRunningJobQuestionButton from "@/features/home/HomeRunningJobQuestionButton";
 import { deleteAgentRunHistory } from "@/features/reports/utils/deleteAgentRunHistory";
 import { TrashBinIcon } from "@/icons";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
@@ -85,6 +86,7 @@ export default function HomeRunningJobRow({
           classNameOverride={badgeClassNameOverride}
         />
       </button>
+      <HomeRunningJobQuestionButton run={run} />
       <button
         type="button"
         aria-label={`Delete ${formatHomeRunningJobTitle(run.prompt)}`}

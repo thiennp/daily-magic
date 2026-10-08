@@ -5,6 +5,7 @@ import {
   APP_SURFACE_CTA_SECONDARY_SM_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import Badge from "@/components/ui/badge/Badge";
+import HomeAttentionRetryButton from "@/features/home/HomeAttentionRetryButton";
 import { formatHomeRunningJobTitle } from "@/features/home/utils/formatHomeRunningJobTitle";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
@@ -44,6 +45,9 @@ export default function HomeAttentionRow({ run }: HomeAttentionRowProps) {
           <p className="truncate text-[12px] text-awc-fg-muted">{reason}</p>
         ) : null}
       </div>
+      {isPending(run) ? null : (
+        <HomeAttentionRetryButton runId={run.id} title={title} />
+      )}
       <Link href={href} className={APP_SURFACE_CTA_SECONDARY_SM_CLASS}>
         Open<span className="sr-only"> {title}</span>
       </Link>

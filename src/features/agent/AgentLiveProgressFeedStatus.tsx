@@ -23,6 +23,7 @@ interface AgentLiveProgressFeedStatusProps {
   readonly msSinceLastActivity: number | null;
   readonly stallState: AgentLiveProgressStallState;
   readonly estimateProgress: AgentLiveWorkingEstimateProgress | null;
+  readonly activeRunId?: string | null;
   readonly sessionDeviceId?: string | null;
   readonly onStopRun?: () => void;
   readonly onDeleteRun?: () => void;
@@ -38,6 +39,7 @@ export default function AgentLiveProgressFeedStatus({
   msSinceLastActivity,
   stallState,
   estimateProgress,
+  activeRunId = null,
   sessionDeviceId = null,
   onStopRun,
   onDeleteRun,
@@ -65,6 +67,7 @@ export default function AgentLiveProgressFeedStatus({
       <AgentLiveProgressFeedStatusHeader
         outcome={outcome}
         isWorking={isWorking}
+        activeRunId={activeRunId}
         isStopping={isStopping}
         workingEllipsis={workingEllipsis}
         connectionStatus={connectionStatus}

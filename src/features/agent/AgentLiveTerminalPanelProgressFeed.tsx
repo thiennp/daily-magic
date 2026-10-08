@@ -6,6 +6,7 @@ import SendReadinessApprovalWaitingChip from "@/features/agent/send-readiness/Se
 
 interface AgentLiveTerminalPanelProgressFeedProps {
   readonly panelProgress: ReturnType<typeof useAgentLiveTerminalPanelProgress>;
+  readonly activeRunId?: string | null;
   readonly sessionDeviceId?: string | null;
   readonly nextActions: readonly string[];
   readonly nextActionsDisabled: boolean;
@@ -18,6 +19,7 @@ interface AgentLiveTerminalPanelProgressFeedProps {
 export default function AgentLiveTerminalPanelProgressFeed({
   panelProgress,
   sessionDeviceId,
+  activeRunId,
   nextActions,
   nextActionsDisabled,
   onSelectNextAction,
@@ -43,6 +45,7 @@ export default function AgentLiveTerminalPanelProgressFeed({
         msSinceLastActivity={panelProgress.msSinceLastActivity}
         estimateProgress={panelProgress.estimateProgress}
         wavePlanItems={panelProgress.wavePlanItems}
+        activeRunId={activeRunId}
         sessionDeviceId={sessionDeviceId}
         nextActions={nextActions}
         nextActionsDisabled={nextActionsDisabled}

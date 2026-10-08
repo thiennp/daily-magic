@@ -3,13 +3,17 @@ export interface AgentLiveProgressStallClockState {
   readonly workingStartedAt: number | null;
   readonly estimateReceivedAt: number | null;
   readonly nowMs: number;
+  readonly accumulatedWaitMs: number;
+  readonly waitStartedAt: number | null;
 }
 
 export type AgentLiveProgressStallClockAction =
   | { readonly type: "reset"; readonly at: number }
   | { readonly type: "activity"; readonly at: number }
   | { readonly type: "estimate"; readonly at: number }
-  | { readonly type: "tick"; readonly at: number };
+  | { readonly type: "tick"; readonly at: number }
+  | { readonly type: "waitStart"; readonly at: number }
+  | { readonly type: "waitEnd"; readonly at: number };
 
 export const initialAgentLiveProgressStallClockState =
   (): AgentLiveProgressStallClockState => ({
@@ -17,6 +21,8 @@ export const initialAgentLiveProgressStallClockState =
     workingStartedAt: null,
     estimateReceivedAt: null,
     nowMs: 0,
+    accumulatedWaitMs: 0,
+    waitStartedAt: null,
   });
 
 export const agentLiveProgressStallClockReducer = (
@@ -30,6 +36,8 @@ export const agentLiveProgressStallClockReducer = (
         workingStartedAt: null,
         estimateReceivedAt: null,
         nowMs: action.at,
+        accumulatedWaitMs: 0,
+        waitStartedAt: null,
       };
     case "activity":
       return {
@@ -37,6 +45,8 @@ export const agentLiveProgressStallClockReducer = (
         workingStartedAt: state.workingStartedAt ?? action.at,
         estimateReceivedAt: state.estimateReceivedAt,
         nowMs: action.at,
+        accumulatedWaitMs: state.accumulatedWaitMs,
+        waitStartedAt: state.waitStartedAt,
       };
     case "estimate":
       return {
@@ -46,6 +56,18 @@ export const agentLiveProgressStallClockReducer = (
       };
     case "tick":
       return { ...state, nowMs: action.at };
+    case "waitStart":
+      if (state.waitStartedAt !== null) return state;
+      return { ...state, waitStartedAt: action.at, nowMs: action.at };
+    case "waitEnd":
+      if (state.waitStartedAt === null) return state;
+      return {
+        ...state,
+        accumulatedWaitMs:
+          state.accumulatedWaitMs + (action.at - state.waitStartedAt),
+        waitStartedAt: null,
+        nowMs: action.at,
+      };
     default:
       return state;
   }
@@ -58,13 +80,18 @@ export const resolveAgentLiveProgressWorkedMs = (input: {
   if (!input.isWorking) {
     return null;
   }
-  if (input.clock.estimateReceivedAt !== null) {
-    return input.clock.nowMs - input.clock.estimateReceivedAt;
+  const start = input.clock.estimateReceivedAt ?? input.clock.workingStartedAt;
+  if (start === null) {
+    return null;
   }
-  if (input.clock.workingStartedAt !== null) {
-    return input.clock.nowMs - input.clock.workingStartedAt;
-  }
-  return null;
+  const currentWaitMs =
+    input.clock.waitStartedAt === null
+      ? 0
+      : input.clock.nowMs - Math.max(input.clock.waitStartedAt, start);
+  return Math.max(
+    0,
+    input.clock.nowMs - start - input.clock.accumulatedWaitMs - currentWaitMs,
+  );
 };
 
 export const resolveAgentLiveProgressMsSinceLastActivity = (input: {

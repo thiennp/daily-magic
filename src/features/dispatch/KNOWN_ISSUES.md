@@ -45,3 +45,8 @@
 **Fix:** Only an explicit Send with typed or picked text sends; Esc and backdrop only close. The modal is keyed by run, so a new question starts empty. The server logs each answer's run, length and browser (never the text).
 
 **Regression test:** `AgentRunInputModal.explicitSend.test.ts` (DISPATCH-005).
+
+## DISPATCH-006 — Esc closed underlying task dialogs; dismissed input modals could not be reopened
+
+**Symptom:** Pressing Escape to close the "Agent needs your input" modal also closed the underlying New Task dialog. In addition, dismissing the modal left the user with no way to reopen it to provide the answer, permanently pausing the run.
+**Fix:** Introduced a module-level stack for open modals so Esc only closes the top-most modal. Added a client store for pending input requests, allowing the run floater and the Home row to display an "Open question" button to reopen the modal via a custom DOM event. afae8216.

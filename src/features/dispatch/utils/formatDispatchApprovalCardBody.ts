@@ -5,5 +5,7 @@ export const formatDispatchApprovalCardBody = (
   requester: string | null,
 ): string => {
   const name = requester?.trim() ?? "";
-  return name.length > 0 ? C.body.replace("{requester}", name) : C.bodyNoRequester;
+  return name.length > 0
+    ? C.body.replace("{requester}", name)
+    : C.bodyNoRequester;
 };

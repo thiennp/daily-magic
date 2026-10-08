@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useLiveFloaterRunIdPersistence } from "@/features/agent/hooks/useLiveFloaterRunIdPersistence";
 
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import { useWsTestPanelController } from "@/features/agent/hooks/useWsTestPanelController";
@@ -19,6 +20,13 @@ export default function WsTestPanel({
 }: WsTestPanelProps) {
   const isSteppedComposer = variant === "modal";
   const panel = useWsTestPanelController({ isSteppedComposer });
+
+  useLiveFloaterRunIdPersistence({
+    enabled: variant === "modal",
+    runId: panel.socket.liveTerminalRunId,
+    status: panel.socket.liveTerminalStatus,
+    hasPendingQuestion: panel.terminalFeedback.pendingQuestion !== null,
+  });
 
   useEffect(() => {
     onSessionActiveChange?.(panel.isSessionActive);

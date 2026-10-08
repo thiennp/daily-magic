@@ -2,6 +2,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { useModalEscapeLayer } from "@/components/ui/modal/useModalEscapeLayer";
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -26,29 +28,10 @@ export const Modal: React.FC<ModalProps> = ({
     setCanPortal(true);
   }, []);
 
-  useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
-    }
-
-    return () => {
-      document.removeEventListener("keydown", handleEscape);
-    };
-  }, [isOpen, onClose]);
+  useModalEscapeLayer(isOpen, onClose);
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-
+    document.body.style.overflow = isOpen ? "hidden" : "unset";
     return () => {
       document.body.style.overflow = "unset";
     };

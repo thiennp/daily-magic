@@ -10,6 +10,7 @@ import {
   APP_SHELL_WIDE_MAIN_CLASS,
 } from "@/features/shell/appShellContentWidth.constant";
 import DispatchApprovalListener from "@/features/dispatch/DispatchApprovalListener";
+import AppShellLiveFloaterRestorer from "@/features/shell/AppShellLiveFloaterRestorer";
 import WorkflowAttentionBanner from "@/features/dispatch/WorkflowAttentionBanner";
 import WorkflowHumanStepListener from "@/features/dispatch/WorkflowHumanStepListener";
 import GuestLibraryDraftSyncListener from "@/features/library/GuestLibraryDraftSyncListener";
@@ -95,6 +96,7 @@ export default function AppShell({
       <WorkflowAttentionBanner />
       <DispatchApprovalListener />
       <WorkflowHumanStepListener />
+      <AppShellLiveFloaterRestorer />
       <GuestLibraryDraftSyncListener />
       {pageBody}
       {mobileDevicesRail}

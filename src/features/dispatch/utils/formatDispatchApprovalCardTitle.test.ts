@@ -59,7 +59,11 @@ describe("formatDispatchApprovalCardTitle (richer live card)", () => {
   });
 
   it("has no jargon in new card strings", () => {
-    for (const key of ["richTitle", "richTitleNoRequester", "folderLine"] as const) {
+    for (const key of [
+      "richTitle",
+      "richTitleNoRequester",
+      "folderLine",
+    ] as const) {
       expect(C[key]).not.toMatch(/agent|dispatch|machine/i);
     }
   });
