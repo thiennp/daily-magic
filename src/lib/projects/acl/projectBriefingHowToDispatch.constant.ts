@@ -2,6 +2,10 @@ import {
   AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
   AWC_GROK_WEBHOOK_DAILY_REPAIR,
 } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
+import {
+  PROJECT_TASKS_FIRST_CLAUSE,
+  PROJECT_TASKS_FIRST_WAKE_POINTER,
+} from "@/lib/projects/acl/projectTasksFirstClause.constant";
 import { PROJECT_TASK_UPDATED_WAKE_CLAUSE } from "@/lib/projects/acl/projectTaskUpdatedWakeClause.constant";
 import {
   PROJECT_B2B_SILENCE_BLOCK_MS,
@@ -24,6 +28,8 @@ export const PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE =
   "The first action — before list_project_inbox, before composing, before the task and before ack — is project_dispatch kind " +
   `"${PROJECT_MESSAGE_KIND_TASK_RECEIVED}" to that sender with summary "received <messageId>" using the wake payload messageId, projectId, and from* (do not wait to read inbox); ` +
   "also one short line in your own window that the message was received. " +
+  PROJECT_TASKS_FIRST_WAKE_POINTER +
+  " " +
   "On each delivery: same first action (task.received + own-window line) before list_project_inbox({ projectId }) and before the task. " +
   `Then do the task: list_project_inbox if needed, then optional project_dispatch kind "${PROJECT_MESSAGE_KIND_TASK_PROCESSING}" to that sender with summary "processing <messageId>" (refs cannot carry the message id; task.received / task.processing are state-only chips — never stop there alone). ` +
   `ALWAYS finish with a visible app-messenger bubble: prefer project_messenger_reply { projectId, summary, kind: "${PROJECT_MESSAGE_KIND_TASK_STATUS}" | "${PROJECT_MESSAGE_KIND_TASK_DONE}" | "${PROJECT_MESSAGE_KIND_TASK_BLOCKED}", inReplyTo: <messageId> } ` +
@@ -49,6 +55,8 @@ export const PROJECT_BRIEFING_DISPATCH_TAIL =
 
 /** One paragraph: how active members address peers via project_dispatch. */
 export const PROJECT_BRIEFING_HOW_TO_DISPATCH =
+  PROJECT_TASKS_FIRST_CLAUSE +
+  " " +
   PROJECT_BRIEFING_DISPATCH_ADDRESSING +
   "MUST on connect (webhook-first): " +
   AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS +

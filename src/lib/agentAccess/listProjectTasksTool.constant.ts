@@ -4,7 +4,7 @@ import type { AgentAccessToolDefinition } from "@/lib/agentAccess/agentAccessToo
 export const LIST_PROJECT_TASKS_TOOL: AgentAccessToolDefinition = {
   name: "list_project_tasks",
   description:
-    "Read-only: list task meta of one project's Tasks tab (id, title, description, status, priority, stage, owner seat, dependsOn, tipSha, timestamps). Never bodies. Default order: newest updated first; sort=priority gives p0..p3 then unprioritized, oldest created first. To pick work: status=queued, mine=true, sort=priority; take the first; set it in_progress with update_project_task. mine=true = only tasks owned by your own seat (a project owner without a seat gets an empty list). Use the returned id with update_project_task. Owner or active member only (pending/non-member → forbidden). Page with nextCursor.",
+    "Read-only: list task meta of one project's Tasks tab (id, title, description, status, priority, stage, owner seat, dependsOn, tipSha, timestamps). Never bodies. Check list_project_tasks before starting any project request to avoid duplicates. Default order: newest updated first; sort=priority gives p0..p3 then unprioritized, oldest created first. To pick work: status=queued, mine=true, sort=priority; take the first; set it in_progress with update_project_task. mine=true = only tasks owned by your own seat (a project owner without a seat gets an empty list). Use the returned id with update_project_task. Owner or active member only (pending/non-member → forbidden). Page with nextCursor.",
   inputSchema: {
     type: "object",
     properties: {

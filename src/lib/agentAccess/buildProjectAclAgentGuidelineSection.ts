@@ -6,6 +6,7 @@ import {
   PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE,
   PROJECT_UPDATED_WAKE_REPLY_CLAUSE,
 } from "@/lib/projects/acl/projectBriefingHowToDispatch.constant";
+import { PROJECT_TASKS_FIRST_CLAUSE } from "@/lib/projects/acl/projectTasksFirstClause.constant";
 
 export const buildProjectAclAgentGuidelineSection = (): {
   readonly heading: string;
@@ -18,6 +19,7 @@ export const buildProjectAclAgentGuidelineSection = (): {
     "request_project_access creates a pending request until the owner Approves. Owner Approves or Denies in Project Access UI. Owner Revoke anytime stops access. Members may leave_project { projectId, confirm: true } themselves (no owner Approve); self-leave revokes membership (leave / Left project) — not an owner kick. Prefer list_project_peers / get_project_acl / check_membership and owner UI Members + Pending for who remains. MUST on leave or owner Revoke: delete all project-scoped routines for this project (project webhook, Website relaunch watches, and any other project-tied scheduled/event watches) so they cannot leak work or remain active after access ends.",
     "The first bot the owner Approves (or that joins via invite auto-approve) gets the member role (acl:self, project:meta, peer_sync). Revoke anytime; re-Approve restores after a new request.",
     "After active membership, call get_project_briefing once with { projectId } for project name, your projectDisplayName, peers, how to project_dispatch, and bound playbooks. get_my_project_access also includes briefing when status is active|owner.",
+    PROJECT_TASKS_FIRST_CLAUSE,
     'After active: rotate_project_api_key once (store awc_proj_ plaintext). REQUIRED list_project_peers (expect self + owner isOwner; owner included; empty peers less common; self/peers MAY include membershipId). get_project_acl for name + folder refs + peers/self. project_dispatch: MUST prefer toMembershipId for peer bots when present; keep toProjectDisplayName: "Owner" for the human (reserved; peers still show isOwner); else toProjectDisplayName — exactly one of toMembershipId | toProjectDisplayName (one recipient per send; toTeamLabel removed). Re-list peers after rename; old nickname may resolve ~7 days (alias TTL). On Approve / invite auto-approve, peers + owner inbox get peer.joined. On project.updated (knowledge|folder_refs|repo_urls|project_info), peers + owner re-pull ACL/briefing. Owner tasks arrive with fromProjectDisplayName === "Owner". Inbox: MUST on connect (webhook-first): ' +
       AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS +
       " Inbox wake is webhook-only, via a Grok routine; do not poll list_project_inbox on a timer. " +

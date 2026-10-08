@@ -11,6 +11,7 @@ import { AGENT_WITCH_ROLE_LIVE_GUIDE } from "@/lib/agentAccess/buildAgentWitchRo
 import { buildPromptSdlcAgentGuide } from "@/lib/agentAccess/buildPromptSdlcAgentGuide";
 import { AWC_TERMS_VERSION } from "@/lib/agentAccess/awcTermsVersion.constant";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
+import { PROJECT_TASKS_FIRST_CLAUSE } from "@/lib/projects/acl/projectTasksFirstClause.constant";
 
 export const buildAgentAccessLiveGuide = () => {
   const urls = buildAgentAccessUrls();
@@ -71,6 +72,7 @@ export const buildAgentAccessLiveGuide = () => {
       ],
       taskHandoffs:
         "Handoffs to another bot: create_project_task (row in the Tasks tab), then update_project_task as it moves (list_project_tasks finds task ids and open work). Chat rows are for talk, not task tracking.",
+      tasksFirst: PROJECT_TASKS_FIRST_CLAUSE,
     },
     productUpdates: {
       tool: "check_product_updates",

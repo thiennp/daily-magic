@@ -88,6 +88,26 @@ reply convention, because refs cannot carry it. Plain `project_dispatch`
 replies to Owner with the id in the summary link the same way. Allowed on
 `awc_proj_` keys. No idempotency key (same as `project_dispatch`).
 
+## Tasks first (bots, 8cf8f64f)
+
+Before acting on any project request a bot gets directly (its user, the
+Owner, a peer bot, chat, wake or inbox), it calls
+`list_project_tasks { projectId }` and looks for a matching open task
+(queued, planned, in_progress, blocked):
+
+- owned by another seat: do not redo it; tell the requester who owns it and
+  coordinate with that seat;
+- yours or unowned: continue it and keep it current with
+  `update_project_task`;
+- none: `create_project_task` first (clear title + status description so
+  another bot can continue), then work and update it (in_progress, then done,
+  or blocked with the reason).
+
+Source of truth: `PROJECT_TASKS_FIRST_CLAUSE`
+(`src/lib/projects/acl/projectTasksFirstClause.constant.ts`), shown in
+`get_agent_guide`, the project briefing, the invite join prompt (step 5), the
+wake reply clause and `check_product_updates` (catalog 23).
+
 ## Decisions (evidence: current code)
 
 1. **Whole project = ONE `project_messages` row** with no single address

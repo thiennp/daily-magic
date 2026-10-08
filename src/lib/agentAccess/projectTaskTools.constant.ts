@@ -40,7 +40,7 @@ const META_PROPERTIES = {
 export const CREATE_PROJECT_TASK_TOOL: AgentAccessToolDefinition = {
   name: "create_project_task",
   description:
-    "Create a task in the project Tasks tab (use this for handoffs instead of chat rows). Meta only: title ≤120 + optional description ≤200; no body/prompt — keep bodies local. status queued (default) or planned. Viewers cannot write. 300/hour; 500 tasks per project (task_cap_reached { limit, hint }). Returns task.id for update_project_task. Not send_task (that runs work on a computer).",
+    "Create a task in the project Tasks tab (use this for handoffs instead of chat rows). Check list_project_tasks before starting any project request to avoid duplicates; create the task first for new work. Meta only: title ≤120 + optional description ≤200; no body/prompt — keep bodies local. status queued (default) or planned. Viewers cannot write. 300/hour; 500 tasks per project (task_cap_reached { limit, hint }). Returns task.id for update_project_task. Not send_task (that runs work on a computer).",
   inputSchema: {
     type: "object",
     properties: {

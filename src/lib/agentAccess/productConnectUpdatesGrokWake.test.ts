@@ -12,7 +12,7 @@ describe("product connect grok wake copy", () => {
     const blob = PRODUCT_CONNECT_UPDATES.map(
       (entry) => `${entry.summary} ${entry.adapt ?? ""}`,
     ).join("\n");
-    expect(PRODUCT_CONNECT_UPDATES_CATALOG_VERSION).toBe(22);
+    expect(PRODUCT_CONNECT_UPDATES_CATALOG_VERSION).toBe(23);
     expect(blob).toContain(AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS);
     expect(blob).toMatch(/Grok Bot only/);
     expect(blob).not.toMatch(/Slack|Discord|grokbot:\/\//i);
