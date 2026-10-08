@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS knowledge_events (
 );
 CREATE INDEX IF NOT EXISTS knowledge_events_project_ts
   ON knowledge_events (project_key, ts);
+CREATE INDEX IF NOT EXISTS knowledge_events_ts ON knowledge_events (ts);
 CREATE TABLE IF NOT EXISTS injections (
   run_id TEXT NOT NULL,
   episode_id TEXT NOT NULL,
@@ -108,6 +109,8 @@ export const openKnowledgeDb = (dbPath: string): KnowledgeDatabase => {
   const db = new availability.sqlite.DatabaseSync(dbPath);
   db.exec(`PRAGMA busy_timeout = ${KNOWLEDGE_DB_BUSY_TIMEOUT_MS}`);
   db.exec("PRAGMA foreign_keys = ON");
+  db.exec("PRAGMA journal_mode = WAL");
+  db.exec("PRAGMA synchronous = NORMAL");
   db.exec(KNOWLEDGE_SCHEMA_SQL);
   db.prepare(
     `INSERT INTO knowledge_meta (key, value) VALUES ('schema_version', ?)
@@ -116,7 +119,9 @@ export const openKnowledgeDb = (dbPath: string): KnowledgeDatabase => {
   return db;
 };
 
+const OPEN_RETRY_MS = 60_000;
 const openDatabases = new Map<string, KnowledgeDatabase | null>();
+const failedOpenAt = new Map<string, number>();
 
 /** Cached per-process handle; null when SQLite is unavailable or the file is corrupt. */
 export const getKnowledgeDb = (
@@ -124,15 +129,20 @@ export const getKnowledgeDb = (
 ): KnowledgeDatabase | null => {
   const dbPath = resolveKnowledgeDbPath(layout);
   const cached = openDatabases.get(dbPath);
-  if (cached !== undefined) {
+  if (cached !== undefined && cached !== null) {
     return cached;
+  }
+  const failedAt = failedOpenAt.get(dbPath);
+  if (failedAt !== undefined && Date.now() - failedAt < OPEN_RETRY_MS) {
+    return null;
   }
   try {
     const db = openKnowledgeDb(dbPath);
     openDatabases.set(dbPath, db);
+    failedOpenAt.delete(dbPath);
     return db;
   } catch {
-    openDatabases.set(dbPath, null);
+    failedOpenAt.set(dbPath, Date.now());
     return null;
   }
 };
@@ -142,4 +152,5 @@ export const closeKnowledgeDbsForTests = (): void => {
     db?.close();
   }
   openDatabases.clear();
+  failedOpenAt.clear();
 };

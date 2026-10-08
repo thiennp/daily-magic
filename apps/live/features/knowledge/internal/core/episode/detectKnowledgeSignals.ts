@@ -3,7 +3,7 @@ import {
   EPISODE_TAKEAWAY_MAX_CHARS,
 } from "./episode.types";
 
-const CORRECTION_WINDOW_CHARS = 160;
+const CORRECTION_WINDOW_CHARS = 80;
 const CORRECTION_MAX_MESSAGE_CHARS = 400;
 
 const CORRECTION_PHRASES = [
@@ -17,14 +17,18 @@ const CORRECTION_PHRASES = [
   "không ý này",
   "hoàn tác",
   "revert",
-  "undo",
-  "redo",
+  "undo that",
+  "redo it",
   "try again",
   "that's not",
   "that is not",
   "not what i",
-  "wrong",
-  "incorrect",
+  "that's wrong",
+  "that is wrong",
+  "it's wrong",
+  "still wrong",
+  "wrong again",
+  "that's incorrect",
   "you broke",
   "you missed",
 ] as const;

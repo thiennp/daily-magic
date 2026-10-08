@@ -42,6 +42,11 @@ export const saveKnowledgeHeartbeat = async (input: {
         knowledge_capabilities_at = NOW()
     WHERE id = ${input.deviceId}
       AND revoked_at IS NULL
+      AND (
+        knowledge_capabilities IS DISTINCT FROM ${JSON.stringify(input.report.capabilities)}::jsonb
+        OR knowledge_capabilities_at IS NULL
+        OR knowledge_capabilities_at < NOW() - INTERVAL '10 minutes'
+      )
   `;
 
   const authorized = await listAuthorizedProjectIds(input.userId, [

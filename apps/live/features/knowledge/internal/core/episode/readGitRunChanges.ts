@@ -69,38 +69,33 @@ export const readGitRunChanges = async (input: {
   readonly headBefore: string | null;
 }): Promise<GitRunChanges> => {
   const cwd = input.projectFolderPath;
-  const branch = await runGit(cwd, ["rev-parse", "--abbrev-ref", "HEAD"]);
-  const headAfter = await runGit(cwd, ["rev-parse", "HEAD"]);
+  const [branch, headAfter, porcelainRaw] = await Promise.all([
+    runGit(cwd, ["rev-parse", "--abbrev-ref", "HEAD"]),
+    runGit(cwd, ["rev-parse", "HEAD"]),
+    runGit(cwd, ["status", "--porcelain"], { trim: false }),
+  ]);
+  const { headBefore } = input;
   const moved =
-    input.headBefore !== null &&
-    headAfter !== null &&
-    input.headBefore !== headAfter;
+    headBefore !== null && headAfter !== null && headBefore !== headAfter;
 
-  const commits = moved
-    ? parseGitLogCommits(
-        (await runGit(cwd, [
+  const [logRaw, diffRaw] = moved
+    ? await Promise.all([
+        runGit(cwd, [
           "log",
           `-${MAX_COMMITS}`,
           `--format=%H${FIELD_SEPARATOR}%s${FIELD_SEPARATOR}%b${COMMIT_SEPARATOR}`,
-          `${input.headBefore}..HEAD`,
-        ])) ?? "",
-      )
-    : [];
-
-  const committedFiles = moved
-    ? splitLines(
-        await runGit(cwd, ["diff", "--name-only", `${input.headBefore}..HEAD`]),
-      )
-    : [];
-  const porcelain = splitLines(
-    await runGit(cwd, ["status", "--porcelain"], { trim: false }),
-  );
-  const dirtyFiles = porcelain.map(parsePorcelainPath);
+          `${headBefore}..HEAD`,
+        ]),
+        runGit(cwd, ["diff", "--name-only", `${headBefore}..HEAD`]),
+      ])
+    : [null, null];
 
   return {
-    commits,
-    committedFiles: committedFiles.slice(0, EPISODE_MAX_FILES),
-    dirtyFiles: dirtyFiles.slice(0, EPISODE_MAX_FILES),
+    commits: parseGitLogCommits(logRaw ?? ""),
+    committedFiles: splitLines(diffRaw).slice(0, EPISODE_MAX_FILES),
+    dirtyFiles: splitLines(porcelainRaw)
+      .map(parsePorcelainPath)
+      .slice(0, EPISODE_MAX_FILES),
     branch,
   };
 };

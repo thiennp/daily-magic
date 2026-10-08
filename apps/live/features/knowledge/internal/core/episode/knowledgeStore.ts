@@ -506,3 +506,26 @@ export const listEpisodesUpdatedSince = (
       )
       .all(projectKey, since, limit) as unknown as EpisodeRow[]
   ).map(toCard);
+
+const TELEMETRY_RETENTION_DAYS = 180;
+const TELEMETRY_PRUNE_INTERVAL_MS = 60 * 60 * 1_000;
+const telemetryPrune: { at: number } = { at: 0 };
+
+/** Drop run telemetry older than 180 days (at most once an hour per process). */
+export const pruneKnowledgeTelemetry = (
+  db: KnowledgeDatabase,
+  now: number = Date.now(),
+): void => {
+  if (now - telemetryPrune.at < TELEMETRY_PRUNE_INTERVAL_MS) {
+    return;
+  }
+  telemetryPrune.at = now;
+  const cutoff = new Date(
+    now - TELEMETRY_RETENTION_DAYS * 24 * 60 * 60 * 1_000,
+  ).toISOString();
+  db.prepare("DELETE FROM knowledge_events WHERE ts < ?").run(cutoff);
+  db.prepare("DELETE FROM mistake_hits WHERE ts < ?").run(cutoff);
+  db.prepare(
+    "DELETE FROM injections WHERE run_id NOT IN (SELECT run_id FROM knowledge_events)",
+  ).run();
+};

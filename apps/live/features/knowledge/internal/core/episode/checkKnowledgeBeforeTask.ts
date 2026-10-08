@@ -134,15 +134,13 @@ export const checkKnowledgeBeforeTask = async (input: {
       const cards = listEpisodesWithVectors(db, input.projectKey, {
         withVectors: input.plan.mode === "hybrid",
       });
-      const queryVector =
-        input.plan.mode === "hybrid" && cards.length > 0
-          ? await embedKnowledgeQuery(query.text, input.plan.embedTimeoutMs)
-          : null;
-      if (
+      const canEmbed =
         input.plan.mode === "hybrid" &&
-        cards.length > 0 &&
-        queryVector === null
-      ) {
+        cards.some((card) => card.vector !== null);
+      const queryVector = canEmbed
+        ? await embedKnowledgeQuery(query.text, input.plan.embedTimeoutMs)
+        : null;
+      if (input.plan.mode === "hybrid" && queryVector === null) {
         degraded = "embed";
       }
 

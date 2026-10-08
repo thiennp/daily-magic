@@ -18,6 +18,9 @@ describe("isUserCorrection", () => {
   it("ignores long messages and ordinary requests", () => {
     expect(isUserCorrection(`wrong ${"x".repeat(500)}`)).toBe(false);
     expect(isUserCorrection("add a retry to the fetch helper")).toBe(false);
+    expect(isUserCorrection("what is wrong with this query?")).toBe(false);
+    expect(isUserCorrection("hãy redo migration docs sau")).toBe(false);
+    expect(isUserCorrection("it's wrong, use the other API")).toBe(true);
   });
 });
 

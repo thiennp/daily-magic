@@ -1,7 +1,7 @@
 import {
   AGENT_WITCH_OLLAMA_DOWNLOAD_HINT,
   AGENT_WITCH_OLLAMA_EMBED_MODEL,
-  AGENT_WITCH_OLLAMA_ESTIMATE_MODEL,
+  AGENT_WITCH_OLLAMA_ESTIMATE_PULL_MODEL,
 } from "./agentWitchOllamaInstall.constant";
 
 /** Bash that installs Ollama, starts it, and pulls the models AgentWitch calls. */
@@ -41,6 +41,10 @@ agent_witch_ensure_ollama_serving() {
 agent_witch_ollama_has_model() {
   local model="\$1"
   ollama list 2>/dev/null | awk 'NR>1 { print \$1 }' | grep -Fx "\${model}" >/dev/null 2>&1
+}
+
+agent_witch_ollama_has_chat_model() {
+  ollama list 2>/dev/null | awk 'NR>1 { print \$1 }' | grep -viE 'embed|minilm|^bge-' | grep -q .
 }
 
 agent_witch_ensure_ollama_model() {
@@ -99,8 +103,12 @@ agent_witch_ensure_ollama() {
     echo "Ollama is already installed."
   fi
   agent_witch_ensure_ollama_serving || return 1
-  agent_witch_ensure_ollama_model "${AGENT_WITCH_OLLAMA_ESTIMATE_MODEL}" "\${pull_log}"
   agent_witch_ensure_ollama_model "${AGENT_WITCH_OLLAMA_EMBED_MODEL}" "\${pull_log}"
+  if agent_witch_ollama_has_chat_model; then
+    echo "A local chat model is already installed; skipping the estimate model."
+  else
+    agent_witch_ensure_ollama_model "${AGENT_WITCH_OLLAMA_ESTIMATE_PULL_MODEL}" "\${pull_log}"
+  fi
 }
 `;
 

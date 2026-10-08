@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   AGENT_WITCH_OLLAMA_EMBED_MODEL,
-  AGENT_WITCH_OLLAMA_ESTIMATE_MODEL,
+  AGENT_WITCH_OLLAMA_ESTIMATE_PULL_MODEL,
 } from "./agentWitchOllamaInstall.constant";
 import {
   buildAgentWitchEnsureOllamaShell,
@@ -19,7 +19,8 @@ describe("buildAgentWitchEnsureOllamaShell", () => {
     expect(script).toContain("install ollama");
     expect(script).toContain("ollama-darwin.tgz");
     expect(script).toContain("services start ollama");
-    expect(script).toContain(AGENT_WITCH_OLLAMA_ESTIMATE_MODEL);
+    expect(script).toContain(AGENT_WITCH_OLLAMA_ESTIMATE_PULL_MODEL);
+    expect(script).toContain("agent_witch_ollama_has_chat_model");
     expect(script).toContain(AGENT_WITCH_OLLAMA_EMBED_MODEL);
     expect(script).toContain("ollama pull");
   });

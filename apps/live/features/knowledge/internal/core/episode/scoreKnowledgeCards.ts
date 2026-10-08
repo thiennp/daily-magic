@@ -38,12 +38,27 @@ export const cosineSimilarity = (a: Float32Array, b: Float32Array): number => {
 const basename = (filePath: string): string =>
   filePath.split("/").filter(Boolean).pop() ?? filePath;
 
-const cardTerms = (card: EpisodeCardWithVector): Set<string> =>
-  new Set(
+const TERM_CACHE_LIMIT = 5_000;
+const termCache = new Map<string, Set<string>>();
+
+/** Tokenized card text, memoized by id + updatedAt (cards are re-read per query). */
+const cardTerms = (card: EpisodeCardWithVector): Set<string> => {
+  const key = `${card.id}:${card.updatedAt}`;
+  const cached = termCache.get(key);
+  if (cached !== undefined) {
+    return cached;
+  }
+  const terms = new Set(
     tokenizeKnowledgeText(
       `${card.request} ${card.takeaway} ${card.files.map(basename).join(" ")}`,
     ),
   );
+  if (termCache.size >= TERM_CACHE_LIMIT) {
+    termCache.clear();
+  }
+  termCache.set(key, terms);
+  return terms;
+};
 
 const inverseDocumentFrequency = (
   terms: readonly string[],

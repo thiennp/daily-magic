@@ -5,6 +5,17 @@ const QUERY_CACHE_LIMIT = 64;
 export const KNOWLEDGE_INDEX_EMBED_TIMEOUT_MS = 5_000;
 
 const queryVectorCache = new Map<string, Float32Array>();
+const FAILURE_BACKOFF_MS = 60_000;
+const breaker: { failedAt: number } = { failedAt: 0 };
+
+/** True while embedding is backing off after a failure (Ollama down or cold). */
+export const isKnowledgeEmbedBackingOff = (now: number = Date.now()): boolean =>
+  now - breaker.failedAt < FAILURE_BACKOFF_MS;
+
+export const resetKnowledgeEmbedBreakerForTests = (): void => {
+  breaker.failedAt = 0;
+  queryVectorCache.clear();
+};
 
 export const resolveKnowledgeEmbedModel = (): string =>
   process.env.AGENT_WITCH_EMBED_MODEL?.trim() || DEFAULT_EMBED_MODEL;
@@ -25,6 +36,9 @@ export const embedKnowledgeText = async (
   text: string,
   timeoutMs: number,
 ): Promise<number[] | null> => {
+  if (isKnowledgeEmbedBackingOff()) {
+    return null;
+  }
   const baseUrl =
     process.env.AGENT_WITCH_OLLAMA_URL?.trim() || DEFAULT_OLLAMA_URL;
   try {
@@ -37,8 +51,13 @@ export const embedKnowledgeText = async (
       }),
       signal: AbortSignal.timeout(timeoutMs),
     });
-    return response.ok ? readEmbeddingFromBody(await response.json()) : null;
+    const embedding = response.ok
+      ? readEmbeddingFromBody(await response.json())
+      : null;
+    breaker.failedAt = embedding === null ? Date.now() : 0;
+    return embedding;
   } catch {
+    breaker.failedAt = Date.now();
     return null;
   }
 };

@@ -30,6 +30,7 @@ import {
   listInjectedEpisodeIds,
   markEpisodeSuperseded,
   pruneEpisodes,
+  pruneKnowledgeTelemetry,
   recordMistakeHit,
   setEpisodeVector,
   sumMistakeOccurrencesByFingerprint,
@@ -277,6 +278,7 @@ export const captureKnowledgeAfterRun = async (input: {
       passed: !failed && verifyLine === null,
     });
     pruneEpisodes(db, input.projectKey);
+    pruneKnowledgeTelemetry(db);
 
     for (const cardId of newCardIds) {
       const card = getEpisode(db, cardId);
