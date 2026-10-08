@@ -21,6 +21,7 @@ function mapUserRow(row: Record<string, unknown>): UserRecord {
 export type UserRecordWithPlan = UserRecord & {
   readonly plan: BillingPlan;
   readonly adminFree: boolean;
+  readonly costControlExcluded: boolean;
 };
 
 function mapUserRowWithPlan(row: Record<string, unknown>): UserRecordWithPlan {
@@ -29,6 +30,7 @@ function mapUserRowWithPlan(row: Record<string, unknown>): UserRecordWithPlan {
     ...mapUserRow(row),
     plan: isBillingPlan(planRaw) ? planRaw : "trial",
     adminFree: Boolean(row.admin_free),
+    costControlExcluded: Boolean(row.cost_control_excluded),
   };
 }
 
@@ -88,7 +90,8 @@ export async function listUsersWithPlan(): Promise<
   const sql = getSql();
   const result = asRowArray(
     await sql`
-    SELECT id, email, name, image, global_role, created_at, plan, admin_free
+    SELECT id, email, name, image, global_role, created_at, plan, admin_free,
+      cost_control_excluded
     FROM users
     ORDER BY created_at DESC
   `,

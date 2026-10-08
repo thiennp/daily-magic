@@ -62,6 +62,7 @@ export const AWC_STORYBOOK_SAMPLE_ADMIN_USERS = [
     lastActivityAt: "2026-06-01T12:00:00.000Z",
     plan: "admin_free" as const,
     adminFree: true,
+    costControlExcluded: false,
   },
   {
     id: "user-storybook-2",
@@ -74,6 +75,7 @@ export const AWC_STORYBOOK_SAMPLE_ADMIN_USERS = [
     lastActivityAt: null,
     plan: "trial" as const,
     adminFree: false,
+    costControlExcluded: false,
   },
 ] as const;
 

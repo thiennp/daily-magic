@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS users (
   trial_started_at TIMESTAMPTZ,
   trial_ends_at TIMESTAMPTZ,
   admin_free BOOLEAN NOT NULL DEFAULT FALSE,
+  cost_control_excluded BOOLEAN NOT NULL DEFAULT FALSE,
   seat_count INTEGER NOT NULL DEFAULT 1 CHECK (seat_count >= 1),
   stripe_customer_id TEXT,
   stripe_subscription_id TEXT,

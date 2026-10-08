@@ -12,7 +12,9 @@ export default function AdminCostControlPanel() {
 
   if (isLoading) {
     return (
-      <p className="text-sm text-awc-fg-muted">{BILLING_COPY.adminCostLoading}</p>
+      <p className="text-sm text-awc-fg-muted">
+        {BILLING_COPY.adminCostLoading}
+      </p>
     );
   }
 
@@ -66,6 +68,10 @@ export default function AdminCostControlPanel() {
         <li>Railway: €{signals.railwaySpendEur.toFixed(2)}</li>
         <li>Neon: €{signals.neonSpendEur.toFixed(2)}</li>
         <li>Related infra: €{signals.relatedInfraSpendEur.toFixed(2)}</li>
+        <li>
+          Estimated users: €{signals.estimatedUserSpendEur.toFixed(2)} (
+          {signals.countedUsers} counted; bots, test and excluded users ignored)
+        </li>
       </ul>
     </AppPanel>
   );

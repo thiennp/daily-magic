@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import Button from "@/components/ui/button/Button";
 import AdminSetPlanControl from "@/features/billing/components/AdminSetPlanControl";
+import AdminCostControlExcludeCheckbox from "@/features/billing/components/AdminCostControlExcludeCheckbox";
 import type { BillingPlanId } from "@/features/billing/billingPlan.types";
 import formatBillingPlanLabel from "@/features/billing/formatBillingPlanLabel";
 import formatAdminUserKindLabel from "@/features/admin/utils/formatAdminUserKindLabel";
@@ -14,6 +15,7 @@ import type AdminUserRecord from "@/lib/auth/types/AdminUserRecord.type";
 type UserItem = AdminUserRecord & {
   readonly plan: BillingPlanId;
   readonly adminFree: boolean;
+  readonly costControlExcluded?: boolean;
 };
 
 interface UsersTableProps {
@@ -48,10 +50,7 @@ export default function UsersTable({
           {users.map((user) => {
             const plan = planByUserId[user.id] ?? user.plan ?? "trial";
             return (
-              <tr
-                key={user.id}
-                className="border-b border-awc-border"
-              >
+              <tr key={user.id} className="border-b border-awc-border">
                 <td className="px-3 py-2">{user.email}</td>
                 <td className="px-3 py-2">
                   {formatAdminUserKindLabel(user.kind)}
@@ -75,6 +74,10 @@ export default function UsersTable({
                           [user.id]: next.plan,
                         }));
                       }}
+                    />
+                    <AdminCostControlExcludeCheckbox
+                      userId={user.id}
+                      excluded={user.costControlExcluded ?? false}
                     />
                     <Button
                       size="sm"

@@ -16,6 +16,7 @@ export const ensureBillingSchema = async (): Promise<void> => {
       ADD COLUMN IF NOT EXISTS trial_started_at TIMESTAMPTZ,
       ADD COLUMN IF NOT EXISTS trial_ends_at TIMESTAMPTZ,
       ADD COLUMN IF NOT EXISTS admin_free BOOLEAN NOT NULL DEFAULT FALSE,
+      ADD COLUMN IF NOT EXISTS cost_control_excluded BOOLEAN NOT NULL DEFAULT FALSE,
       ADD COLUMN IF NOT EXISTS seat_count INTEGER NOT NULL DEFAULT 1,
       ADD COLUMN IF NOT EXISTS stripe_customer_id TEXT,
       ADD COLUMN IF NOT EXISTS stripe_subscription_id TEXT

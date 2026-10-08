@@ -8,4 +8,5 @@ export default interface AdminUserRecord extends UserRecord {
   readonly lastActivityAt: string | null;
   readonly plan: BillingPlan;
   readonly adminFree: boolean;
+  readonly costControlExcluded: boolean;
 }

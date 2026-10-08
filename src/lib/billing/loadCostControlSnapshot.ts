@@ -1,4 +1,8 @@
-import { FREE_TRIAL_INFRA_BUDGET_EUR } from "@/lib/billing/billingPlan.constant";
+import { AGENT_ACCESS_EMAIL_DOMAIN } from "@/lib/agentAccess/agentAccess.constant";
+import {
+  ESTIMATED_USER_INFRA_COST_EUR,
+  FREE_TRIAL_INFRA_BUDGET_EUR,
+} from "@/lib/billing/billingPlan.constant";
 import { currentBillingMonthKey } from "@/lib/billing/currentBillingMonthKey";
 import { ensureBillingSchema } from "@/lib/billing/ensureBillingSchema";
 import { resolveCostControlStatus } from "@/lib/billing/resolveCostControlStatus";
@@ -22,13 +26,26 @@ export const loadCostControlSnapshot = async (input?: {
       LIMIT 1
     `,
   );
+  const countedRows = asRowArray(
+    await sql`
+      SELECT COUNT(*)::int AS counted
+      FROM users
+      WHERE (plan = 'trial' OR plan = 'admin_free' OR admin_free = TRUE)
+        AND cost_control_excluded = FALSE
+        AND email NOT LIKE ${`%@${AGENT_ACCESS_EMAIL_DOMAIN}`}
+        AND email !~* '^test[^@]*@agentwitch\\.com$'
+    `,
+  );
+  const countedUsers = num(countedRows[0]?.counted);
+  const estimatedUserSpend = countedUsers * ESTIMATED_USER_INFRA_COST_EUR;
   const row = rows[0];
   const railway = num(row?.railway_spend_eur);
   const neon = num(row?.neon_spend_eur);
   const related = num(row?.related_infra_spend_eur);
-  const spend = railway + neon + related;
+  const spend = railway + neon + related + estimatedUserSpend;
   const resolved = resolveCostControlStatus({ spendEur: spend });
-  const storedGate = row?.trial_gate === "closed" ? "closed" : resolved.trialGate;
+  const storedGate =
+    row?.trial_gate === "closed" ? "closed" : resolved.trialGate;
   return {
     month,
     trialPlusAdminFreeSpendEur: spend,
@@ -39,6 +56,8 @@ export const loadCostControlSnapshot = async (input?: {
       railwaySpendEur: railway,
       neonSpendEur: neon,
       relatedInfraSpendEur: related,
+      estimatedUserSpendEur: estimatedUserSpend,
+      countedUsers,
     },
   };
 };

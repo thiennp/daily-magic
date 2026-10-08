@@ -4,10 +4,7 @@ export type BillingPlanId = "trial" | "pro" | "team" | "admin_free";
 
 export type TrialGateState = "open" | "closed";
 
-export type CostControlStatus =
-  | "under_budget"
-  | "near_limit"
-  | "over_budget";
+export type CostControlStatus = "under_budget" | "near_limit" | "over_budget";
 
 /** GET /api/billing/entitlements — customer-safe; no infra euros. */
 export interface BillingEntitlements {
@@ -33,6 +30,8 @@ export interface AdminCostControlSignals {
   readonly railwaySpendEur: number;
   readonly neonSpendEur: number;
   readonly relatedInfraSpendEur: number;
+  readonly estimatedUserSpendEur: number;
+  readonly countedUsers: number;
 }
 
 /** GET /api/billing/admin/cost-control — admin only. */

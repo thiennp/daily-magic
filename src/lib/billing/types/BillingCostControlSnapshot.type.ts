@@ -14,5 +14,7 @@ export type BillingCostControlSnapshot = {
     readonly railwaySpendEur: number;
     readonly neonSpendEur: number;
     readonly relatedInfraSpendEur: number;
+    readonly estimatedUserSpendEur: number;
+    readonly countedUsers: number;
   };
 };
