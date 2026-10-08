@@ -10,7 +10,7 @@ import {
   resolveProjectReportFrom,
   resolveProjectReportTitle,
 } from "@/features/projects/reports/utils/buildProjectReportRows";
-import { formatAgentRunReportSummaryLine } from "@/features/reports/utils/formatAgentRunReportSummaryLine";
+import { resolveProjectReportDetailView } from "@/features/projects/reports/utils/resolveProjectReportDetailView";
 import { resolveAgentRunDetailResultOutputForHonesty } from "@/features/reports/utils/resolveAgentRunDetailResultOutputForHonesty";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
@@ -18,17 +18,21 @@ const LABEL_CLASS =
   "text-[12px] font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-400";
 
 /**
- * Title · From · Date + "What happened" (report summary, else run output).
- * Status pill waits on the Product status set (open Q2).
+ * Title · From · Date · Status + "What happened" (report summary, else the
+ * run output without progress / wave markers).
  */
 export default function AwcProjectReportDetailFields({
   run,
 }: {
   readonly run: EnrichedAgentRunRecord;
 }) {
-  const body =
-    formatAgentRunReportSummaryLine(run.reportSummary) ??
-    resolveAgentRunDetailResultOutputForHonesty(run.id, run.resultOutput);
+  const { statusLabel, reasonLine, body } = resolveProjectReportDetailView({
+    run,
+    fallbackOutput: resolveAgentRunDetailResultOutputForHonesty(
+      run.id,
+      run.resultOutput,
+    ),
+  });
 
   return (
     <article className="flex min-w-0 flex-col gap-3 px-1">
@@ -46,6 +50,16 @@ export default function AwcProjectReportDetailFields({
             {new Date(run.createdAt).toLocaleString()}
           </time>
         </dd>
+        {statusLabel !== null ? (
+          <>
+            <dt className={LABEL_CLASS}>{C["reports.detail.status"]}</dt>
+            <dd className={PANEL_ROW_META_CLASS}>
+              {reasonLine !== null
+                ? `${statusLabel} · ${reasonLine}`
+                : statusLabel}
+            </dd>
+          </>
+        ) : null}
       </dl>
       {body.length > 0 ? (
         <section className="flex flex-col gap-1">
