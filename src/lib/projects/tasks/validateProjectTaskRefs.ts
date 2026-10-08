@@ -1,3 +1,4 @@
+import { projectTaskDependsOnReaches } from "@/lib/projects/tasks/projectTaskDependsOnReaches";
 import {
   countProjectTaskRecordsIn,
   isActiveProjectTaskOwnerSeat,
@@ -7,12 +8,13 @@ export type ProjectTaskRefError =
   | "owner_not_member"
   | "self_dependency"
   | "depends_on_not_found"
+  | "depends_on_cycle"
   | "plan_item_not_found";
 
 /**
  * Cross-row checks: ownerBot is an active non-viewer seat of this project;
  * every dependsOn id / planItemId is a task of the SAME project; never the
- * task itself.
+ * task itself; no dependsOn cycle (A → B → A) once the task exists.
  */
 export const validateProjectTaskRefs = async (input: {
   readonly projectId: string;
@@ -45,6 +47,16 @@ export const validateProjectTaskRefs = async (input: {
     });
     if (found !== deps.length)
       return { ok: false, code: "depends_on_not_found" };
+    if (
+      input.taskId !== null &&
+      (await projectTaskDependsOnReaches({
+        projectId: input.projectId,
+        fromIds: deps,
+        targetId: input.taskId,
+      }))
+    ) {
+      return { ok: false, code: "depends_on_cycle" };
+    }
   }
   const plan = input.planItemId;
   if (typeof plan === "string") {

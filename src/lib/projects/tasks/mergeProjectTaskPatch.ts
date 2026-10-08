@@ -6,6 +6,21 @@ import type { ProjectTaskStatus } from "@/lib/projects/tasks/projectTaskTools.co
 const pick = <T>(patch: T | undefined, current: T): T =>
   patch === undefined ? current : patch;
 
+/** True when the write snapshot changes nothing on the record (no-op edit). */
+export const isProjectTaskWriteUnchanged = (
+  current: ProjectTaskRecord,
+  next: ProjectTaskRecordWrite,
+): boolean =>
+  next.title === current.title &&
+  next.description === current.description &&
+  next.status === current.status &&
+  next.priority === current.priority &&
+  next.stage === current.stage &&
+  next.tipSha === current.tipSha &&
+  next.ownerMembershipId === current.ownerMembershipId &&
+  next.planItemId === current.planItemId &&
+  next.dependsOn.join("\n") === current.dependsOn.join("\n");
+
 /** Current record + patch (undefined keeps, null clears) → full write snapshot. */
 export const mergeProjectTaskPatch = (input: {
   readonly current: ProjectTaskRecord;

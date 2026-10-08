@@ -56,10 +56,15 @@ export const PROJECT_TASK_TIP_SHA_PATTERN = /^[0-9a-f]{7,40}$/;
 export const PROJECT_TASK_HOURLY_CREATE_CAP = PROJECT_MESSAGE_HOURLY_CAP;
 
 /**
- * Per-project row cap (Neon). Create beyond it → task_cap_reached.
- * Arch review: no purge yet; brief suggests not-Live plan rows exempt.
+ * Per-project row cap (Neon), done rows included. Create beyond it →
+ * task_cap_reached { limit, hint }.
  */
 export const PROJECT_TASK_PROJECT_ROW_CAP = 500;
+
+export const PROJECT_TASK_CAP_HINT = `Project has ${PROJECT_TASK_PROJECT_ROW_CAP} tasks. Mark tasks done or remove obsolete rows to create new ones.`;
+
+/** Task / seat ids are UUID text (36); anything longer is rejected early. */
+export const PROJECT_TASK_ID_MAX_CHARS = 64;
 
 /** Tasks tab list window (newest first). */
 export const PROJECT_TASK_LIST_LIMIT = 200;

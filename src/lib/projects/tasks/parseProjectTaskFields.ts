@@ -1,3 +1,4 @@
+import { parseProjectTaskId } from "@/lib/projects/tasks/parseProjectTaskId";
 import {
   fail,
   isBlank,
@@ -51,12 +52,16 @@ const parseOne = (
       const s = oneOf(PROJECT_TASK_STAGES, v);
       return s === null ? fail("invalid_stage") : ok(s);
     }
-    case "ownerMembershipId":
+    case "ownerMembershipId": {
       if (isBlank(v)) return ok(null);
-      return typeof v === "string" ? ok(v.trim()) : fail("invalid_owner");
-    case "planItemId":
+      const id = parseProjectTaskId(v);
+      return id === null ? fail("invalid_owner") : ok(id);
+    }
+    case "planItemId": {
       if (isBlank(v)) return ok(null);
-      return typeof v === "string" ? ok(v.trim()) : fail("invalid_plan_item");
+      const id = parseProjectTaskId(v);
+      return id === null ? fail("invalid_plan_item") : ok(id);
+    }
   }
 };
 

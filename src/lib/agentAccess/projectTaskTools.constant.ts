@@ -40,7 +40,7 @@ const META_PROPERTIES = {
 export const CREATE_PROJECT_TASK_TOOL: AgentAccessToolDefinition = {
   name: "create_project_task",
   description:
-    "Create a task in the project Tasks tab (use this for handoffs instead of chat rows). Meta only: title ≤120 + optional description ≤200; no body/prompt — keep bodies local. status queued (default) or planned. Viewers cannot write. 300/hour; 500 tasks per project (task_cap_reached). Returns task.id for update_project_task. Not send_task (that runs work on a computer).",
+    "Create a task in the project Tasks tab (use this for handoffs instead of chat rows). Meta only: title ≤120 + optional description ≤200; no body/prompt — keep bodies local. status queued (default) or planned. Viewers cannot write. 300/hour; 500 tasks per project (task_cap_reached { limit, hint }). Returns task.id for update_project_task. Not send_task (that runs work on a computer).",
   inputSchema: {
     type: "object",
     properties: {
@@ -56,7 +56,7 @@ export const CREATE_PROJECT_TASK_TOOL: AgentAccessToolDefinition = {
 export const UPDATE_PROJECT_TASK_TOOL: AgentAccessToolDefinition = {
   name: "update_project_task",
   description:
-    "Update a project task (from create_project_task or list_project_tasks). Status moves: queued⇄planned → in_progress ⇄ blocked; in_progress → done. done is final (task_done); other moves → invalid_transition. Send only fields to change; null clears optional fields. Owner, and assistants claimed by the project owner, may edit any task; others only tasks they created or own (not_task_owner).",
+    "Update a project task (from create_project_task or list_project_tasks). Status moves: queued⇄planned → in_progress ⇄ blocked; in_progress → done. done is final (task_done), but retrying done with nothing else changed returns ok; other moves → invalid_transition. Send only fields to change; null clears optional fields; an unchanged edit is ok and writes nothing. dependsOn may not form a cycle (depends_on_cycle). A concurrent edit → update_conflict (re-read, retry). Owner, and assistants claimed by the project owner, may edit any task; others only tasks they created or own (not_task_owner).",
   inputSchema: {
     type: "object",
     properties: {

@@ -1,4 +1,5 @@
 import { scrubOutboundSecrets } from "@agent-witch/shared/dispatch";
+import { parseProjectTaskId } from "@/lib/projects/tasks/parseProjectTaskId";
 import {
   PROJECT_TASK_DEPENDS_ON_MAX,
   PROJECT_TASK_DESCRIPTION_MAX_CHARS,
@@ -11,6 +12,7 @@ export type ProjectTaskFieldError =
   | "title_required"
   | "title_too_long"
   | "description_too_long"
+  | "invalid_description"
   | "invalid_priority"
   | "invalid_stage"
   | "invalid_tip_sha"
@@ -55,7 +57,7 @@ export const parseDescription = (
   v: unknown,
 ): ProjectTaskFieldResult<string | null> => {
   if (isBlank(v)) return ok(null);
-  if (typeof v !== "string") return fail("description_too_long");
+  if (typeof v !== "string") return fail("invalid_description");
   const text = scrub(v);
   return text.length > PROJECT_TASK_DESCRIPTION_MAX_CHARS
     ? fail("description_too_long")
@@ -76,9 +78,9 @@ export const parseDependsOn = (
   v: unknown,
 ): ProjectTaskFieldResult<readonly string[]> => {
   if (!Array.isArray(v)) return fail("invalid_depends_on");
-  const ids = v.map((id) => (typeof id === "string" ? id.trim() : ""));
-  if (ids.some((id) => id.length === 0)) return fail("invalid_depends_on");
-  const unique = [...new Set(ids)];
+  const ids = v.map(parseProjectTaskId);
+  if (ids.some((id) => id === null)) return fail("invalid_depends_on");
+  const unique = [...new Set(ids as string[])];
   return unique.length > PROJECT_TASK_DEPENDS_ON_MAX
     ? fail("too_many_depends_on")
     : ok(unique);

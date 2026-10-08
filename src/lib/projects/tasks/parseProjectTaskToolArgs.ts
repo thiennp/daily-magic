@@ -1,5 +1,9 @@
 import type { ProjectTaskFieldError } from "@/lib/projects/tasks/parseProjectTaskFieldValues";
 import {
+  parseProjectTaskId,
+  parseRequiredProjectTaskId,
+} from "@/lib/projects/tasks/parseProjectTaskId";
+import {
   parseProjectTaskFields,
   type ProjectTaskFieldPatch,
 } from "@/lib/projects/tasks/parseProjectTaskFields";
@@ -15,6 +19,7 @@ export type ProjectTaskArgsError =
   | "invalid_arguments"
   | "body_not_allowed"
   | "task_id_required"
+  | "invalid_task_id"
   | "invalid_status"
   | "nothing_to_update";
 
@@ -60,7 +65,7 @@ const parseCommon = (
   readonly projectId: string;
 }> => {
   const row = asRecord(args);
-  const projectId = text(row?.projectId);
+  const projectId = parseProjectTaskId(row?.projectId) ?? "";
   if (row === null || projectId.length === 0) {
     return { ok: false, code: "invalid_arguments" };
   }
@@ -99,8 +104,8 @@ export const parseUpdateProjectTaskArgs = (
   const common = parseCommon(args);
   if (!common.ok) return common;
   const { row, projectId } = common.value;
-  const taskId = text(row.taskId);
-  if (taskId.length === 0) return { ok: false, code: "task_id_required" };
+  const taskId = parseRequiredProjectTaskId(row.taskId);
+  if (!taskId.ok) return taskId;
   const status =
     row.status === undefined
       ? null
@@ -115,6 +120,6 @@ export const parseUpdateProjectTaskArgs = (
   }
   return {
     ok: true,
-    value: { projectId, taskId, status, fields: fields.value },
+    value: { projectId, taskId: taskId.value, status, fields: fields.value },
   };
 };

@@ -2,11 +2,18 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { validateProjectTaskRefs } from "@/lib/projects/tasks/validateProjectTaskRefs";
 
-const h = vi.hoisted(() => ({ seat: vi.fn(), count: vi.fn() }));
+const h = vi.hoisted(() => ({
+  seat: vi.fn(),
+  count: vi.fn(),
+  reaches: vi.fn(async () => false),
+}));
 
 vi.mock("@/lib/projects/tasks/projectTaskRecordReadQueries", () => ({
   isActiveProjectTaskOwnerSeat: h.seat,
   countProjectTaskRecordsIn: h.count,
+}));
+vi.mock("@/lib/projects/tasks/projectTaskDependsOnReaches", () => ({
+  projectTaskDependsOnReaches: h.reaches,
 }));
 
 const base = { projectId: "p1", taskId: "t1" };
@@ -50,6 +57,27 @@ describe("validateProjectTaskRefs (DF-024)", () => {
     expect(
       await validateProjectTaskRefs({ ...base, dependsOn: ["a", "b"] }),
     ).toEqual({ ok: true });
+  });
+
+  it("dependsOn may not close a cycle (S2); new tasks skip the walk", async () => {
+    h.reaches.mockResolvedValueOnce(true);
+    expect(
+      await validateProjectTaskRefs({ ...base, dependsOn: ["a"] }),
+    ).toEqual({ ok: false, code: "depends_on_cycle" });
+    expect(h.reaches).toHaveBeenCalledWith({
+      projectId: "p1",
+      fromIds: ["a"],
+      targetId: "t1",
+    });
+    h.reaches.mockClear();
+    expect(
+      await validateProjectTaskRefs({
+        ...base,
+        taskId: null,
+        dependsOn: ["a"],
+      }),
+    ).toEqual({ ok: true });
+    expect(h.reaches).not.toHaveBeenCalled();
   });
 
   it("planItemId must be a task of the same project", async () => {

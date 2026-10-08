@@ -1,4 +1,7 @@
-import { computeHourlyDispatchRetryAfter } from "@/lib/projects/acl/messaging/computeHourlyDispatchRetryAfter";
+import {
+  checkProjectTaskCreateCaps,
+  type ProjectTaskCreateCapFailure,
+} from "@/lib/projects/tasks/checkProjectTaskCreateCaps";
 import {
   authorizeProjectTaskWriter,
   type ProjectTaskWriterDenyCode,
@@ -8,15 +11,7 @@ import {
   type ProjectTaskArgsError,
 } from "@/lib/projects/tasks/parseProjectTaskToolArgs";
 import type { ProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecord.type";
-import {
-  countProjectTaskRecords,
-  loadProjectTaskHourlyCreates,
-} from "@/lib/projects/tasks/projectTaskRecordReadQueries";
 import { insertProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecordWriteQueries";
-import {
-  PROJECT_TASK_HOURLY_CREATE_CAP,
-  PROJECT_TASK_PROJECT_ROW_CAP,
-} from "@/lib/projects/tasks/projectTaskTools.constant";
 import {
   validateProjectTaskRefs,
   type ProjectTaskRefError,
@@ -27,19 +22,15 @@ export type CreateProjectTaskResult =
   | {
       readonly ok: false;
       readonly code:
-        | ProjectTaskWriterDenyCode
-        | ProjectTaskArgsError
-        | ProjectTaskRefError
-        | "rate_limited"
-        | "task_cap_reached";
-      readonly retryAfterSeconds?: number;
-      readonly retryAfterAt?: string;
-    };
+        ProjectTaskWriterDenyCode | ProjectTaskArgsError | ProjectTaskRefError;
+    }
+  | ProjectTaskCreateCapFailure;
 
 /**
  * Orchestrator (DF-024 create_project_task): args → writer gate (owner or
  * active non-viewer member / assistant) → ownerBot / dependsOn / planItemId
- * refs → 300/h caller cap → 500 rows/project cap → one project_task_records
+ * refs → 500 rows/project cap + 300/h caller cap (checkProjectTaskCreateCaps)
+ * → one project_task_records
  * row (meta only). ownerBot defaults to the
  * caller's own seat.
  */
@@ -71,25 +62,12 @@ export const createProjectTask = async (input: {
   });
   if (!refs.ok) return refs;
 
-  if (
-    (await countProjectTaskRecords(projectId)) >= PROJECT_TASK_PROJECT_ROW_CAP
-  ) {
-    return { ok: false, code: "task_cap_reached" };
-  }
-
-  const creates = await loadProjectTaskHourlyCreates({
+  const caps = await checkProjectTaskCreateCaps({
+    projectId,
     creatorUserId: input.actorUserId,
+    ...(input.now !== undefined ? { now: input.now } : {}),
   });
-  if (creates.count >= PROJECT_TASK_HOURLY_CREATE_CAP) {
-    const retry =
-      creates.oldestAt === null
-        ? {}
-        : computeHourlyDispatchRetryAfter({
-            oldestCreatedAt: creates.oldestAt,
-            now: input.now ?? new Date(),
-          });
-    return { ok: false, code: "rate_limited", ...retry };
-  }
+  if (!caps.ok) return caps;
 
   const task = await insertProjectTaskRecord({
     projectId,

@@ -45,7 +45,8 @@ export const insertProjectTaskRecord = async (input: {
 };
 
 /**
- * Compare-and-set on the status read before deciding (null = lost race).
+ * Compare-and-set on the status AND updated_at read before deciding (null =
+ * lost race: a concurrent status move or field edit; ms precision, as read).
  * Step times: started_at first in_progress, blocked_at latest block,
  * done_at on done, stage_times[stage] when the step changes.
  */
@@ -53,6 +54,7 @@ export const updateProjectTaskRecord = async (input: {
   readonly projectId: string;
   readonly taskId: string;
   readonly expectedStatus: ProjectTaskStatus;
+  readonly expectedUpdatedAt: string;
   readonly values: ProjectTaskRecordWrite;
 }): Promise<ProjectTaskRecord | null> => {
   const v = input.values;
@@ -82,6 +84,8 @@ export const updateProjectTaskRecord = async (input: {
       WHERE id = ${input.taskId}
         AND project_id = ${input.projectId}
         AND status = ${input.expectedStatus}
+        AND date_trunc('milliseconds', updated_at) =
+          date_trunc('milliseconds', ${input.expectedUpdatedAt}::timestamptz)
       RETURNING *
     `,
   );

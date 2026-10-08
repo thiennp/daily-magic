@@ -64,6 +64,8 @@ describe("createProjectTask (DF-024 caps)", () => {
     expect(await createProjectTask({ actorUserId: "bot-user", args })).toEqual({
       ok: false,
       code: "task_cap_reached",
+      limit: 500,
+      hint: expect.stringContaining("500"),
     });
     expect(h.insert).not.toHaveBeenCalled();
   });

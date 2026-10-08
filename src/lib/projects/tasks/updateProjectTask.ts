@@ -4,7 +4,10 @@ import {
 } from "@/lib/projects/tasks/authorizeProjectTaskWriter";
 import { canActorEditProjectTask } from "@/lib/projects/tasks/canActorEditProjectTask";
 import { decideProjectTaskStatusUpdate } from "@/lib/projects/tasks/decideProjectTaskStatusUpdate";
-import { mergeProjectTaskPatch } from "@/lib/projects/tasks/mergeProjectTaskPatch";
+import {
+  isProjectTaskWriteUnchanged,
+  mergeProjectTaskPatch,
+} from "@/lib/projects/tasks/mergeProjectTaskPatch";
 import {
   parseUpdateProjectTaskArgs,
   type ProjectTaskArgsError,
@@ -34,9 +37,12 @@ export type UpdateProjectTaskResult =
 
 /**
  * Orchestrator (DF-024 update_project_task): args → writer gate → record of
- * this project (done = final) → edit right (owner and owner-claimed bots: every
- * task; others: tasks they created or own) → explicit status FSM → owner/dependsOn/planItem refs (no self) →
- * compare-and-set on the status read (concurrent move → update_conflict).
+ * this project → edit right (owner and owner-claimed bots: every task; others:
+ * tasks they created or own) → explicit status FSM → no-op edit (incl. retrying
+ * done on a done task) = ok, no write; any other change to a done task →
+ * task_done → owner/dependsOn/planItem refs (no self, no cycle) →
+ * compare-and-set on the status + updated_at read (concurrent move or edit →
+ * update_conflict).
  */
 export const updateProjectTask = async (input: {
   readonly actorUserId: string;
@@ -54,7 +60,6 @@ export const updateProjectTask = async (input: {
 
   const current = await loadProjectTaskRecord({ projectId, taskId });
   if (current === null) return { ok: false, code: "task_not_found" };
-  if (current.status === "done") return { ok: false, code: "task_done" };
   if (
     !(await canActorEditProjectTask({
       task: current,
@@ -71,6 +76,16 @@ export const updateProjectTask = async (input: {
     nextStatus: status ?? current.status,
   });
   if (!decision.ok) return decision;
+  const values = mergeProjectTaskPatch({
+    current,
+    fields,
+    status: decision.status,
+  });
+  // No-op (incl. a done retry): no write, updated_at untouched.
+  if (isProjectTaskWriteUnchanged(current, values)) {
+    return { ok: true, task: current };
+  }
+  if (current.status === "done") return { ok: false, code: "task_done" };
 
   const refs = await validateProjectTaskRefs({
     projectId,
@@ -85,7 +100,8 @@ export const updateProjectTask = async (input: {
     projectId,
     taskId,
     expectedStatus: current.status,
-    values: mergeProjectTaskPatch({ current, fields, status: decision.status }),
+    expectedUpdatedAt: current.updatedAt,
+    values,
   });
   return task === null
     ? { ok: false, code: "update_conflict" }
