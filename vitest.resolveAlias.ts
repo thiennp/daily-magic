@@ -45,6 +45,10 @@ export const vitestResolveAlias: Record<string, string> = {
     ROOT,
     "./packages/shared/src/mcp/index.ts",
   ),
+  "@agent-witch/shared/projectSkills/skillBundleCodec": path.resolve(
+    ROOT,
+    "./packages/shared/src/projectSkills/skillBundleCodec.ts",
+  ),
   "@agent-witch/shared/projectSkills": path.resolve(
     ROOT,
     "./packages/shared/src/projectSkills/index.ts",
