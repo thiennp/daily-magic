@@ -35,7 +35,8 @@
 /** 314 = post-run work (run history, auto skill report, report verdict, knowledge candidate) runs where the result is emitted; it waited for a cloud echo that never comes. */
 /** 315 = the writer-execution (Anthropic key) header is only added for claude-cli, never for codex/cursor/antigravity. */
 /** 317 = heartbeat ready means it can run (77e29f7a); no ~/Library on Linux, failed-connect hint (2331ef53). */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "317";
+/** 318 = auto skills judge with the owner coding agent first, then Ollama, then the project bot. */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "318";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =

@@ -5,16 +5,19 @@ import { selectAutoSkillJudge } from "./autoSkillSelectJudge";
 const none = { ollamaModel: null, agentWriter: null, botName: null };
 
 describe("selectAutoSkillJudge", () => {
-  it("prefers Ollama, then the owner agent, then the bot", () => {
+  it("prefers the owner agent, then Ollama, then the bot", () => {
     const all = {
       ollamaModel: "mistral:7b",
       agentWriter: "codex",
       botName: "Ada",
     };
-    expect(selectAutoSkillJudge("auto", all)).toMatchObject({ kind: "ollama" });
+    expect(selectAutoSkillJudge("auto", all)).toMatchObject({
+      kind: "agent",
+      label: "your computer agent: Codex",
+    });
     expect(
-      selectAutoSkillJudge("auto", { ...all, ollamaModel: null }),
-    ).toMatchObject({ kind: "agent", label: "your computer agent: Codex" });
+      selectAutoSkillJudge("auto", { ...all, agentWriter: null }),
+    ).toMatchObject({ kind: "ollama" });
     expect(
       selectAutoSkillJudge("auto", { ...none, botName: "Ada" }),
     ).toMatchObject({ kind: "bot", label: "bot Ada" });

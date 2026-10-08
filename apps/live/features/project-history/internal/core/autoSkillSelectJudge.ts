@@ -5,7 +5,7 @@ import type {
   AutoSkillJudgePref,
 } from "./autoSkill.types";
 
-const ORDER: readonly AutoSkillJudgeKind[] = ["ollama", "agent", "bot"];
+const ORDER: readonly AutoSkillJudgeKind[] = ["agent", "ollama", "bot"];
 
 const WRITER_LABELS: Record<string, string> = {
   codex: "Codex",
@@ -36,7 +36,7 @@ const MISSING: Record<AutoSkillJudgeKind, string> = {
 };
 
 /**
- * Judge selection: Ollama, then owner agent, then project bot. An owner
+ * Judge selection: owner coding agent, then Ollama, then project bot. An owner
  * override is tried first; when it is unavailable we fall back down the list
  * and say why. No judge at all returns a clear paused reason.
  */

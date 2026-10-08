@@ -112,7 +112,7 @@ describe("onAutoSkillRunCompleted (module level)", () => {
       occurrences: 2,
       distinctPrompts: 2,
       draftName: "lint-check",
-      judgeLabel: "Ollama (local, mistral:7b)",
+      judgeLabel: "your computer agent: Codex",
     });
   });
 
