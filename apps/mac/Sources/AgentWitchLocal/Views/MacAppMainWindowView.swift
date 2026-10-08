@@ -13,15 +13,7 @@ struct MacAppMainWindowView: View {
     @State private var showAccountMenu = false
     @State private var showSignOutConfirm = false
 
-    private var chrome: MacAppChromeStatus {
-        MacAppChromeStatus.resolve(
-            runtime: controller.state,
-            bootstrap: controller.bootstrapState,
-            signedIn: (controller.signedInEmail != nil),
-            offline: controller.isOfflineStub,
-            updateReady: controller.updateOffer != nil
-        )
-    }
+    private var chrome: MacAppChromeStatus { controller.chromeStatus }
 
     var body: some View {
         HStack(spacing: 0) {
@@ -306,7 +298,8 @@ struct MacAppMainWindowView: View {
                 .padding(.vertical, 4)
                 .frame(width: 240)
             }
-        } else if chrome.kind != .notSetUp && chrome.kind != .settingUp {
+        } else if chrome.kind != .notSetUp && chrome.kind != .settingUp
+            && controller.chromeSignInPhase == .none && !controller.isWaitingInBrowserForSignIn {
             Button("Sign in") {
                 page = .computer
                 controller.beginSignInStub()

@@ -92,10 +92,26 @@ struct ComputerView: View {
             HStack(spacing: 10) {
                 Button("Try again") { controller.retryFromProblem() }
                     .buttonStyle(.borderedProminent).tint(MacAppTheme.brand).controlSize(.large)
+                if needsSystemSettings {
+                    Button("Open System Settings") { openSystemSettings() }
+                        .buttonStyle(.bordered).controlSize(.large)
+                }
                 Button("See log") { controller.openLogs() }
                     .buttonStyle(.borderless).foregroundStyle(MacAppTheme.brandInk)
             }
         }
+    }
+
+    private var needsSystemSettings: Bool {
+        guard let kind = controller.setupSession.failureKind else { return false }
+        return kind == .disk || kind == .permission
+    }
+
+    private func openSystemSettings() {
+        let pane = controller.setupSession.failureKind == .disk
+            ? "x-apple.systempreferences:com.apple.settings.Storage"
+            : "x-apple.systempreferences:com.apple.preference.security"
+        if let url = URL(string: pane) { NSWorkspace.shared.open(url) }
     }
 
     private var progressPercent: Int {
@@ -157,6 +173,7 @@ struct ComputerView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 if controller.portsInUse { portsBanner }
+                if chrome.kind == .waitingForInternet { offlineBanner }
                 heroCard
                 thisComputerCard
                 toolsCard
@@ -185,6 +202,23 @@ struct ComputerView: View {
         .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.dangerSoft))
     }
 
+    private var offlineBanner: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "wifi.slash")
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Waiting for internet").font(.system(size: 13, weight: .semibold))
+                Text("Projects and assistants reconnect automatically. History still works offline.")
+                    .font(.system(size: 12)).foregroundStyle(MacAppTheme.fgMuted)
+            }
+            Spacer()
+            Button("Try now") { controller.refreshInstallAndHealth() }.buttonStyle(.bordered)
+        }
+        .foregroundStyle(MacAppTheme.warning)
+        .padding(.horizontal, 16).padding(.vertical, 12)
+        .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.warningSoft))
+        .accessibilityElement(children: .combine)
+    }
+
     private var heroCard: some View {
         let colors = MacAppTheme.pillColors(for: chrome.kind)
         return HStack(spacing: 18) {
@@ -201,7 +235,7 @@ struct ComputerView: View {
                     .padding(.top, 2)
             }
             Spacer()
-            startStopButton
+            if !controller.portsInUse { startStopButton }
         }
         .padding(.horizontal, 24).padding(.vertical, 22)
         .background(card)
@@ -298,6 +332,8 @@ struct ComputerView: View {
     }
 
     private var connectionPill: (String, MacAppChromeKind) {
+        if chrome.kind == .waitingForInternet { return ("Waiting for internet", .waitingForInternet) }
+        if controller.portsInUse { return ("Problem", .problem) }
         if !isRunning { return ("Stopped", .stopped) }
         switch controller.connectionLive {
         case true?: return ("Connected", .running)

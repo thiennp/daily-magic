@@ -13,15 +13,7 @@ struct MacAppMenuBarContentView: View {
     @Environment(\.openWindow) private var openWindow
     @State private var showQuitConfirm = false
 
-    private var chrome: MacAppChromeStatus {
-        MacAppChromeStatus.resolve(
-            runtime: controller.state,
-            bootstrap: controller.bootstrapState,
-            signedIn: (controller.signedInEmail != nil),
-            offline: controller.isOfflineStub,
-            updateReady: controller.updateOffer != nil
-        )
-    }
+    private var chrome: MacAppChromeStatus { controller.chromeStatus }
 
     /// Translocated (quarantined copy) or not installed in an Applications folder.
     private var showTranslocationBanner: Bool {
@@ -146,13 +138,21 @@ struct MacAppMenuBarContentView: View {
                 Text(chrome.detailSubtitle)
                     .font(.caption)
                     .foregroundStyle(MacAppTheme.fgMuted)
-                Button("Sign in") {
-                    openMainWindow(page: .computer)
-                    controller.beginSignInStub()
+                if controller.isWaitingInBrowserForSignIn {
+                    ProgressView()
+                        .progressViewStyle(.linear)
+                        .tint(MacAppTheme.brand)
+                    Button("Cancel sign-in") { controller.cancelSignInStub() }
+                        .frame(maxWidth: .infinity)
+                } else {
+                    Button("Sign in") {
+                        openMainWindow(page: .computer)
+                        controller.beginSignInStub()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(MacAppTheme.brand)
+                    .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(MacAppTheme.brand)
-                .frame(maxWidth: .infinity)
             }
 
         case .waitingForInternet:

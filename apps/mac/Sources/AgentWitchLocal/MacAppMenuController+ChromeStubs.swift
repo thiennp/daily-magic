@@ -54,8 +54,24 @@ extension MacAppMenuController {
         return "Assigned after you sign in"
     }
 
+    /// Signing in from the system browser on an already set up computer.
+    /// Design: still "Signed out" (not "Setting up…") while the handoff runs.
+    var isWaitingInBrowserForSignIn: Bool {
+        guard signedInEmail == nil else { return false }
+        if case .notInstalled = state { return false }
+        return bootstrapState == .signingIn || chromeSignInPhase == .waitingInBrowser
+    }
+
     var chromeStatus: MacAppChromeStatus {
-        MacAppChromeStatus.resolve(
+        if isWaitingInBrowserForSignIn {
+            return MacAppChromeStatus(
+                kind: .signedOut,
+                pillLabel: "Signed out",
+                detailTitle: "Finishing sign-in in your browser…",
+                detailSubtitle: "Come back here when your browser says you're done."
+            )
+        }
+        return MacAppChromeStatus.resolve(
             runtime: state,
             bootstrap: bootstrapState,
             signedIn: isSignedInStub,
