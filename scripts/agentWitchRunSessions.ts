@@ -99,6 +99,7 @@ import {
   seedAgentRunReportFile,
   upsertAgentRunReportFile,
 } from "./agentWitchRunReport";
+import { finalizeAgentRunReportOnFinish } from "./agentWitchRunReportFinalize";
 import type { StartRunHeartbeatOptions } from "./agentWitchRunHeartbeat";
 import { resolveAgentWitchLiveRunSocket } from "./agentWitchLiveRunSocket";
 import type { AgentWitchRunConfig } from "./readAgentWitchRunConfig";
@@ -377,6 +378,27 @@ const finishRun = (
   // run history = the report). Outbound copies (outbox, result frame) are
   // scrubbed again and hidden entirely when a secret shape survives.
   resolvedOutput = scrubOutboundSecrets(resolvedOutput).scrubbed;
+
+  if (agentRunId !== undefined) {
+    const reportKey = runSessions.get(agentRunId)?.reportKey?.trim() ?? "";
+    if (reportKey.length > 0) {
+      try {
+        finalizeAgentRunReportOnFinish({
+          reportKey,
+          agentRunId,
+          exitCode: resolvedExitCode,
+          output: resolvedOutput,
+          stoppedExitCode: STOPPED_EXIT_CODE,
+          sessionLimitExitCode: LOCAL_CLI_SESSION_LIMIT_EXIT_CODE,
+        });
+      } catch (error) {
+        console.warn(
+          "[agent-witch] Could not finalize the run report:",
+          error instanceof Error ? error.message : error,
+        );
+      }
+    }
+  }
 
   const comparison =
     agentRunId !== undefined
@@ -1178,6 +1200,20 @@ export const continueClaudeTaskAfterInput = (
   );
   const projectFolderPath = session?.projectFolderPath;
   const reportKey = session?.reportKey;
+  if (
+    projectFolderPath !== undefined &&
+    projectFolderPath.trim().length > 0 &&
+    reportKey !== undefined &&
+    reportKey.trim().length > 0
+  ) {
+    // The answer is in; the report must stop saying "Waiting for your answer".
+    upsertAgentRunReportFile({
+      reportKey,
+      agentRunId: input.agentRunId,
+      status: AGENT_RUN_REPORT_STATUSES.IN_PROGRESS,
+      userSummary: "Continuing after your answer.",
+    });
+  }
   runWriterTask(
     config,
     writerAgent,

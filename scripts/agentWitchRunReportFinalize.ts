@@ -1,0 +1,86 @@
+import {
+  AGENT_RUN_REPORT_STATUSES,
+  isTerminalAgentRunReportStatus,
+  readAgentRunReportFile,
+  upsertAgentRunReportFile,
+  type AgentRunReportFile,
+} from "./agentWitchRunReport";
+
+const LIVE_ONLY_SUMMARY =
+  /^(?:Waiting for your answer|Continuing after your answer|Working on your computer|Task started)/i;
+const MARKER_LINE = /\[\[[A-Z_]+\]\]|^[WA]\|/;
+const MAX_SUMMARY_CHARS = 200;
+
+const truncate = (text: string): string =>
+  text.length > MAX_SUMMARY_CHARS
+    ? `${text.slice(0, MAX_SUMMARY_CHARS - 1).trimEnd()}…`
+    : text;
+
+const lastMeaningfulSummary = (report: AgentRunReportFile): string | null => {
+  for (let index = report.history.length - 1; index >= 0; index -= 1) {
+    const summary = report.history[index]?.summary.trim() ?? "";
+    if (summary.length > 0 && !LIVE_ONLY_SUMMARY.test(summary)) {
+      return summary;
+    }
+  }
+  return null;
+};
+
+const lastOutputLine = (output: string): string | null => {
+  const lines = output
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0 && !MARKER_LINE.test(line));
+  return lines.at(-1) ?? null;
+};
+
+/**
+ * FAIL3 (Testi long-run run 2, report 452bdbc8): the run ended Done in the UI
+ * but the host report stayed `in_progress` "Waiting for your answer…",
+ * because only the agent wrote the report. When the run ends, a report the
+ * agent left open is closed with the run's real outcome. A report the agent
+ * already finished is left as is.
+ */
+export const finalizeAgentRunReportOnFinish = (input: {
+  readonly reportKey: string;
+  readonly agentRunId: string;
+  readonly exitCode: number;
+  readonly output: string;
+  readonly stoppedExitCode: number;
+  readonly sessionLimitExitCode: number;
+}): AgentRunReportFile | null => {
+  const existing = readAgentRunReportFile(input.reportKey);
+  if (existing === null || isTerminalAgentRunReportStatus(existing.status)) {
+    return existing;
+  }
+
+  if (input.exitCode === 0) {
+    return upsertAgentRunReportFile({
+      reportKey: input.reportKey,
+      agentRunId: input.agentRunId,
+      status: AGENT_RUN_REPORT_STATUSES.COMPLETED,
+      userSummary: truncate(
+        lastMeaningfulSummary(existing) ?? "Finished on your computer.",
+      ),
+    });
+  }
+
+  const failedLine = lastOutputLine(input.output);
+  const userSummary =
+    input.exitCode === input.stoppedExitCode
+      ? "Stopped by user."
+      : input.exitCode === input.sessionLimitExitCode
+        ? "Stopped at the session time limit."
+        : truncate(
+            failedLine !== null
+              ? `Failed on your computer: ${failedLine}`
+              : `Failed on your computer (exit ${input.exitCode}).`,
+          );
+
+  return upsertAgentRunReportFile({
+    reportKey: input.reportKey,
+    agentRunId: input.agentRunId,
+    status: AGENT_RUN_REPORT_STATUSES.FAILED,
+    userSummary,
+  });
+};

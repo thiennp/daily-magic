@@ -10,7 +10,8 @@
  * H5–H7 to existing installs because it was not bumped after ddfcfe44.
  */
 /** 290 = AWL-ISO-2 cross-account folder claims + write locks. */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "290";
+/** 291 = run report closes when the run ends (FAIL3). */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "291";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =
