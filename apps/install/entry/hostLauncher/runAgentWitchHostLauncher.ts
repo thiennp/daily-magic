@@ -5,6 +5,10 @@ import {
   startAgentWitchAccountHosts,
   type AgentWitchAccountHostStartResult,
 } from "./startAgentWitchAccountHosts";
+import { stopAgentWitchAccountHosts } from "./stopAgentWitchAccountHosts";
+
+/** launchd gives a job ~20 s after SIGTERM; stop the account hosts well before that. */
+const LAUNCHER_STOP_ACCOUNTS_TIMEOUT_MS = 10_000;
 
 const describeResults = (
   results: readonly AgentWitchAccountHostStartResult[],
@@ -22,11 +26,17 @@ const describeResults = (
  * account's own service, then idle. Never claims a lease, binds a port or opens a socket,
  * so old AWL Mac apps that kickstart the legacy `com.agent-witch` label keep working.
  * Without a service manager it re-checks the account hosts every minute.
+ * Stopping the launcher (old AWL "Stop" = bootout com.agent-witch, systemctl stop
+ * agent-witch.service) stops every account host too: the computer goes offline.
  */
 export const runAgentWitchHostLauncher = async (input: {
   readonly installDir: string;
   readonly services: AgentWitchHostServicesFile;
   readonly startHosts?: typeof startAgentWitchAccountHosts;
+  readonly stopHosts?: (input: {
+    readonly installDir: string;
+    readonly services: AgentWitchHostServicesFile;
+  }) => Promise<readonly AgentWitchAccountHostStartResult[]>;
   readonly setIntervalFn?: typeof setInterval;
   readonly onSignal?: (
     signal: "SIGINT" | "SIGTERM",
@@ -35,6 +45,7 @@ export const runAgentWitchHostLauncher = async (input: {
   readonly exitProcess?: (code: number) => void;
 }): Promise<{ readonly stop: () => void }> => {
   const startHosts = input.startHosts ?? startAgentWitchAccountHosts;
+  const stopHosts = input.stopHosts ?? stopAgentWitchAccountHosts;
   const setIntervalFn = input.setIntervalFn ?? setInterval;
   const lastSpawnAtByEmail = new Map<string, number>();
 
@@ -72,10 +83,33 @@ export const runAgentWitchHostLauncher = async (input: {
     });
   const exitProcess =
     input.exitProcess ?? ((code: number) => process.exit(code));
+  const shutdownState = { started: false };
   const shutdown = (): void => {
+    if (shutdownState.started) {
+      return;
+    }
+    shutdownState.started = true;
     stop();
-    console.log("[agent-witch] Host launcher shutting down.");
-    exitProcess(0);
+    console.log(
+      "[agent-witch] Host launcher stopping; stopping account hosts.",
+    );
+    const timeout = new Promise<string>((resolve) => {
+      setTimeout(() => {
+        resolve("timed out");
+      }, LAUNCHER_STOP_ACCOUNTS_TIMEOUT_MS).unref();
+    });
+    const stopped = stopHosts({
+      installDir: input.installDir,
+      services: input.services,
+    }).then(
+      (results) => describeResults(results),
+      (error: unknown) =>
+        error instanceof Error ? error.message : String(error),
+    );
+    void Promise.race([stopped, timeout]).then((summary) => {
+      console.log(`[agent-witch] Host launcher stopped: ${summary}`);
+      exitProcess(0);
+    });
   };
   onSignal("SIGINT", shutdown);
   onSignal("SIGTERM", shutdown);

@@ -13,6 +13,9 @@ When installed with `--email user@example.com` (or `AGENT_WITCH_PROFILE` / `acti
 ```
 ~/.agent-witch/
 ├── host-services.json               # AWL-ISO-1 B: enable per-account launchd services/units
+├── host-services-migration.json     # AWL-ISO-4: last 20 migration attempts (migrated / rolled_back)
+├── host-services-migration.lock     # AWL-ISO-4: held while one process migrates
+├── backups/host-services-<ts>/      # AWL-ISO-4: pre-migration copies + manifest.json (rollback source)
 ├── active-profile.json              # Last active profile email (install-wide)
 ├── install-version.json             # Shipped bundle version + app origin
 ├── wake-port.json                   # Local wake HTTP server port (47892 prod / 47893 local)
@@ -112,6 +115,18 @@ When `host-services.json` is present in the install root, the host launcher oper
 - **Lease Files**: Each account gets its own lock lease in `os.tmpdir()`: `com.agent-witch.<hostname>.<hash>.lease.json`.
 - **Wake Ports**: Each account gets a dedicated wake HTTP port, persisted in `profiles/<email>/wake-port.json`.
 - **Process Isolation**: The host process uses `AGENT_WITCH_HOST_ACCOUNT` in its environment to ensure it only manages its own account's profiles and never kills sibling processes belonging to other accounts.
+- **Launcher**: the legacy `com.agent-witch` LaunchAgent / `agent-witch.service` unit stays installed and runs the launcher: it starts every account service (never restarts a running one) and idles. Stopping it (old AWL "Stop", `systemctl --user stop agent-witch.service`) stops every account host too.
+
+### Migration (AWL-ISO-4)
+
+On the first host start of a bundle with this code, an install with two or more paired profiles (`profiles/<email>/config.json`) and no `host-services.json` is moved to per-account services. An install with one profile is left alone. Steps, under `host-services-migration.lock`:
+
+1. Back up every file the migration may write (legacy + account plists or units, root `wake-port.json`, `local-app-accounts.json`, `host-services.json`, per-profile `wake-port.json` / `local-app-port.json`) to `backups/host-services-<ts>/` with a manifest. Pairing configs and device keys are never copied or changed.
+2. Give each account its own wake port, write its LaunchAgent (macOS) or systemd user unit (Linux under systemd; otherwise setsid supervision), then `host-services.json`.
+3. Start the account hosts and wait up to 45 s for each to answer `/health` with its own `profileEmail`. Account hosts keep the AWL ports recorded in `local-app-accounts.json`.
+4. On success the migrating process becomes the launcher. On failure the account services are stopped and disabled, the backup is restored, the attempt is recorded as `rolled_back`, and the host continues as before. The migration is not retried until the next bundle.
+
+Re-running is idempotent (noop). A profile added later is added to `host-services.json` the same way, and existing rows are not changed.
 
 ---
 

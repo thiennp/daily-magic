@@ -128,6 +128,8 @@ import { LocalCodingToolRefusalCode } from "@agent-witch/shared/dispatch";
 
 import { admitLocalCodingToolRun } from "./admitLocalCodingToolRun";
 import { runAgentWitchHostLauncher } from "./hostLauncher/runAgentWitchHostLauncher";
+import { describeAgentWitchHostServicesMigration } from "./hostServicesMigration/describeAgentWitchHostServicesMigration";
+import { migrateAgentWitchMonolithToAccountServices } from "./hostServicesMigration/migrateAgentWitchMonolithToAccountServices";
 
 import {
   acceptTerminalStream,
@@ -2507,7 +2509,25 @@ const main = async (): Promise<void> => {
   const processHost = resolveAgentWitchProcessHost();
   const installDir = resolveAgentWitchInstallDir();
 
-  const scope = resolveAgentWitchHostProcessScope({ installDir });
+  const initialScope = resolveAgentWitchHostProcessScope({ installDir });
+  // AWL-ISO-4: before any lease or port, move a multi-account monolith (or
+  // accounts added later) onto one service per account.
+  const migration =
+    initialScope.kind === "account"
+      ? null
+      : await migrateAgentWitchMonolithToAccountServices({
+          installDir,
+          bundleVersion: AGENT_WITCH_INSTALL_BUNDLE_VERSION,
+        });
+  if (migration !== null) {
+    console.log(
+      `[agent-witch] Host services migration: ${describeAgentWitchHostServicesMigration(migration)}`,
+    );
+  }
+  const scope =
+    migration === null
+      ? initialScope
+      : resolveAgentWitchHostProcessScope({ installDir });
   if (scope.kind === "launcher") {
     await runAgentWitchHostLauncher({ installDir, services: scope.services });
     return;
