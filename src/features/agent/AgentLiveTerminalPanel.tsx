@@ -51,6 +51,7 @@ export default function AgentLiveTerminalPanel(
           onSelectNextAction={props.onSubmitFeedback}
           onStopRun={props.onStopRun}
           onDeleteRun={onDeleteRun}
+          onRetryRun={props.onRetryRun}
         />
       ) : null}
       {!isSteppedComposer && showNextActions ? (

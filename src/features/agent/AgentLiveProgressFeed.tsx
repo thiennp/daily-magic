@@ -32,6 +32,7 @@ interface AgentLiveProgressFeedProps {
   readonly onSelectNextAction?: (action: string) => void;
   readonly onStopRun?: () => void;
   readonly onDeleteRun?: () => void;
+  readonly onRetryRun?: () => void;
 }
 
 export default function AgentLiveProgressFeed({
@@ -51,6 +52,7 @@ export default function AgentLiveProgressFeed({
   onSelectNextAction,
   onStopRun,
   onDeleteRun,
+  onRetryRun,
 }: AgentLiveProgressFeedProps) {
   const loadingDotCount = useAgentLiveTerminalLoadingDots(isWorking);
   const workingEllipsis = buildAgentLiveTerminalLoadingLine(loadingDotCount);
@@ -72,6 +74,7 @@ export default function AgentLiveProgressFeed({
         sessionDeviceId={sessionDeviceId}
         onStopRun={onStopRun}
         onDeleteRun={onDeleteRun}
+        onRetryRun={onRetryRun}
       />
       {humanSummary !== null ? (
         <p className="mt-3 whitespace-pre-line text-sm text-awc-fg dark:text-gray-200">

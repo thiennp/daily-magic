@@ -12,6 +12,7 @@ interface AgentLiveTerminalPanelProgressFeedProps {
   readonly onSelectNextAction: (action: string) => void;
   readonly onStopRun: () => void;
   readonly onDeleteRun?: () => void;
+  readonly onRetryRun?: () => void;
 }
 
 export default function AgentLiveTerminalPanelProgressFeed({
@@ -22,6 +23,7 @@ export default function AgentLiveTerminalPanelProgressFeed({
   onSelectNextAction,
   onStopRun,
   onDeleteRun,
+  onRetryRun,
 }: AgentLiveTerminalPanelProgressFeedProps) {
   const approvalWaitingLabel = panelProgress.approvalWaitingLabel;
 
@@ -47,6 +49,7 @@ export default function AgentLiveTerminalPanelProgressFeed({
         onSelectNextAction={onSelectNextAction}
         onStopRun={onStopRun}
         onDeleteRun={onDeleteRun}
+        onRetryRun={onRetryRun}
       />
     </>
   );

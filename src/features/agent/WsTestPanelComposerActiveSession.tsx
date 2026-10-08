@@ -32,6 +32,7 @@ export interface WsTestPanelComposerActiveSessionProps extends AgentMacShellPane
   readonly onFinishSession: () => void;
   readonly onStopRun: () => void;
   readonly onDeleteRun: () => void;
+  readonly onRetryRun?: () => void;
 }
 
 export default function WsTestPanelComposerActiveSession({
@@ -54,6 +55,7 @@ export default function WsTestPanelComposerActiveSession({
   onFinishSession,
   onStopRun,
   onDeleteRun,
+  onRetryRun,
   macShellStatus,
   macShellCanWrite,
   macShellLatestChunk,
@@ -86,6 +88,7 @@ export default function WsTestPanelComposerActiveSession({
         onFinishSession={onFinishSession}
         onStopRun={onStopRun}
         onDeleteRun={onDeleteRun}
+        onRetryRun={onRetryRun}
         isSteppedComposer={isSteppedComposer}
         macShellStatus={macShellStatus}
         macShellCanWrite={macShellCanWrite}

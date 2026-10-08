@@ -12,6 +12,8 @@ interface AgentLiveProgressFeedStopControlProps {
   readonly connectionStatus: WsTestConnectionStatus;
   readonly onStopRun?: () => void;
   readonly onDeleteRun?: () => void;
+  /** 73820cb1: only passed for a Failed / Timed-out run. */
+  readonly onRetryRun?: () => void;
 }
 
 export default function AgentLiveProgressFeedStopControl({
@@ -21,8 +23,14 @@ export default function AgentLiveProgressFeedStopControl({
   connectionStatus,
   onStopRun,
   onDeleteRun,
+  onRetryRun,
 }: AgentLiveProgressFeedStopControlProps) {
-  if (!isWorking && !isStopping && onDeleteRun === undefined) {
+  if (
+    !isWorking &&
+    !isStopping &&
+    onDeleteRun === undefined &&
+    onRetryRun === undefined
+  ) {
     return null;
   }
 
@@ -51,6 +59,11 @@ export default function AgentLiveProgressFeedStopControl({
       {isWorking && !isStopping && onStopRun !== undefined ? (
         <Button size="sm" variant="outline" onClick={onStopRun}>
           Stop
+        </Button>
+      ) : null}
+      {onRetryRun !== undefined ? (
+        <Button size="sm" onClick={onRetryRun}>
+          Retry
         </Button>
       ) : null}
       {onDeleteRun !== undefined ? (

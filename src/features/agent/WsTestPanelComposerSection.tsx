@@ -32,6 +32,7 @@ export default function WsTestPanelComposerSection({
   onFinishSession,
   onStopRun,
   onDeleteRun,
+  onRetryRun,
   macShellStatus,
   macShellCanWrite,
   macShellLatestChunk,
@@ -80,6 +81,7 @@ export default function WsTestPanelComposerSection({
       onFinishSession={onFinishSession}
       onStopRun={onStopRun}
       onDeleteRun={onDeleteRun}
+      onRetryRun={onRetryRun}
       macShellStatus={macShellStatus}
       macShellCanWrite={macShellCanWrite}
       macShellLatestChunk={macShellLatestChunk}

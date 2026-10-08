@@ -23,4 +23,6 @@ export default interface AgentLiveTerminalPanelProps extends AgentMacShellPanelP
   readonly onFinishSession: () => void;
   readonly onStopRun: () => void;
   readonly onDeleteRun: () => void;
+  /** 73820cb1: start the same task again after a Failed / Timed-out run. */
+  readonly onRetryRun?: () => void;
 }

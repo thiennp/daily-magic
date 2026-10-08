@@ -2,7 +2,7 @@
 
 import AgentLiveProgressBudgetNotices from "@/features/agent/AgentLiveProgressBudgetNotices";
 import AgentLiveProgressActivityBar from "@/features/agent/AgentLiveProgressActivityBar";
-import AgentLiveProgressFeedStopControl from "@/features/agent/AgentLiveProgressFeedStopControl";
+import AgentLiveProgressFeedStatusHeader from "@/features/agent/AgentLiveProgressFeedStatusHeader";
 import AgentLiveProgressEstimateBar from "@/features/agent/AgentLiveProgressEstimateBar";
 import AgentLiveProgressStuckBanner from "@/features/agent/AgentLiveProgressStuckBanner";
 import { useIsAgentLiveSessionThisMac } from "@/features/agent/hooks/useIsAgentLiveSessionThisMac";
@@ -13,7 +13,6 @@ import type { AgentLiveProgressStallState } from "@/features/agent/utils/resolve
 import { resolveAgentLiveRunBudgetNotices } from "@/features/agent/utils/resolveAgentLiveRunBudgetNotices";
 import type { AgentLiveWorkingEstimateProgress } from "@/features/agent/utils/resolveAgentLiveWorkingEstimateProgress";
 import type { AgentLiveRunOutcome } from "@/features/agent/utils/agentLiveRunOutcomeKind.type";
-import AgentLiveRunOutcomeChip from "@/features/agent/AgentLiveRunOutcomeChip";
 
 interface AgentLiveProgressFeedStatusProps {
   readonly outcome?: AgentLiveRunOutcome | null;
@@ -27,6 +26,7 @@ interface AgentLiveProgressFeedStatusProps {
   readonly sessionDeviceId?: string | null;
   readonly onStopRun?: () => void;
   readonly onDeleteRun?: () => void;
+  readonly onRetryRun?: () => void;
 }
 
 export default function AgentLiveProgressFeedStatus({
@@ -41,6 +41,7 @@ export default function AgentLiveProgressFeedStatus({
   sessionDeviceId = null,
   onStopRun,
   onDeleteRun,
+  onRetryRun,
 }: AgentLiveProgressFeedStatusProps) {
   const isThisMac = useIsAgentLiveSessionThisMac(sessionDeviceId);
   const connectionHint = resolveAgentLiveProgressConnectionHint({
@@ -61,27 +62,16 @@ export default function AgentLiveProgressFeedStatus({
 
   return (
     <>
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex min-w-0 flex-wrap items-center gap-2">
-          <h3 className="text-sm font-medium text-awc-fg dark:text-white/90">
-            Progress on your computer
-          </h3>
-          {outcome !== null ? (
-            <AgentLiveRunOutcomeChip
-              kind={outcome.kind}
-              label={outcome.chipLabel}
-            />
-          ) : null}
-        </div>
-        <AgentLiveProgressFeedStopControl
-          isWorking={isWorking}
-          isStopping={isStopping}
-          workingEllipsis={workingEllipsis}
-          connectionStatus={connectionStatus}
-          onStopRun={onStopRun}
-          onDeleteRun={onDeleteRun}
-        />
-      </div>
+      <AgentLiveProgressFeedStatusHeader
+        outcome={outcome}
+        isWorking={isWorking}
+        isStopping={isStopping}
+        workingEllipsis={workingEllipsis}
+        connectionStatus={connectionStatus}
+        onStopRun={onStopRun}
+        onDeleteRun={onDeleteRun}
+        onRetryRun={onRetryRun}
+      />
       {isWorking || isStopping ? (
         <p className={`mt-2 text-xs ${connectionHintTone}`} role="status">
           {connectionHint}

@@ -27,6 +27,7 @@ interface WsTestPanelMacSessionSectionProps extends AgentMacShellPanelProps {
   readonly onFinishSession: () => void;
   readonly onStopRun: () => void;
   readonly onDeleteRun: () => void;
+  readonly onRetryRun?: () => void;
   readonly isSteppedComposer?: boolean;
 }
 

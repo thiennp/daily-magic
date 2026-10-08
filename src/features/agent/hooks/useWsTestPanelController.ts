@@ -8,6 +8,7 @@ import { useClearStaleMacDispatchError } from "@/features/agent/hooks/useClearSt
 import { useRefreshMacDevicesOnDispatchOfflineError } from "@/features/agent/hooks/useRefreshMacDevicesOnDispatchOfflineError";
 import { useWsTestMacSession } from "@/features/agent/hooks/useWsTestMacSession";
 import { useWsTestPanelLifecycle } from "@/features/agent/hooks/useWsTestPanelLifecycle";
+import { useWsTestPanelSessionEndActions } from "@/features/agent/hooks/useWsTestPanelSessionEndActions";
 import { useWsTestPanelSteppedComposer } from "@/features/agent/hooks/useWsTestPanelSteppedComposer";
 import { useWsTestPromptHandlers } from "@/features/agent/hooks/useWsTestPromptHandlers";
 import { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
@@ -44,6 +45,12 @@ export const useWsTestPanelController = (input: {
     sendClaudePrompt: socket.sendClaudePrompt,
     enqueueRun,
   });
+  const sessionEndActions = useWsTestPanelSessionEndActions({
+    socket,
+    composer,
+    activeDeviceId: sessionTargets.activeDeviceId,
+    promptHandlers,
+  });
   const startWriterSession = (nextWriterAgent: typeof writerAgent) => {
     setWriterAgent(nextWriterAgent);
     socket.startWriterSession(nextWriterAgent, sessionTargets.activeDeviceId);
@@ -59,7 +66,7 @@ export const useWsTestPanelController = (input: {
     isMacDeviceLocked: sessionTargets.isMacDeviceLocked,
     onWriterAgentChange: setWriterAgent,
     onStartWriterAgent: startWriterSession,
-    onFinishSession: socket.finishLiveTerminalSession,
+    onFinishSession: sessionEndActions.finishSession,
   });
 
   useWsTestPanelLifecycle({
@@ -96,5 +103,6 @@ export const useWsTestPanelController = (input: {
     setWriterAgent,
     ...macSession,
     ...steppedComposer,
+    ...sessionEndActions,
   };
 };
