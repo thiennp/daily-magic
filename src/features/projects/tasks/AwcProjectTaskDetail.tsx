@@ -2,6 +2,7 @@
 
 import AwcProjectTaskDetailInfoList from "@/features/projects/tasks/AwcProjectTaskDetailInfoList";
 import AwcProjectTaskGitTags from "@/features/projects/tasks/AwcProjectTaskGitTags";
+import AwcProjectTaskResultBlock from "@/features/projects/tasks/AwcProjectTaskResultBlock";
 import AwcProjectTaskStatusChip from "@/features/projects/tasks/AwcProjectTaskStatusChip";
 import AwcProjectTaskTimeline from "@/features/projects/tasks/AwcProjectTaskTimeline";
 import AwcProjectTasksOfflineBanner from "@/features/projects/tasks/AwcProjectTasksOfflineBanner";
@@ -74,6 +75,7 @@ export default function AwcProjectTaskDetail({
             </span>
           </h3>
           <AwcProjectTaskDetailInfoList task={task} hasGit={hasGit} />
+          <AwcProjectTaskResultBlock task={task} />
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <span className="text-[12px] text-awc-fg-muted">
               {C.fromComputer}

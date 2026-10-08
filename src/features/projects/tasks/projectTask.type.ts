@@ -21,6 +21,8 @@ export type ProjectTaskMeta = Omit<ProjectTaskNeonMeta, "status"> & {
   readonly status: ProjectTaskDisplayStatus;
   readonly assistantName?: string | null;
   readonly statusReason?: string | null;
+  readonly resultOutput?: string | null;
+  readonly denialReason?: string | null;
 };
 
 export type ProjectTaskPlanCounts = {

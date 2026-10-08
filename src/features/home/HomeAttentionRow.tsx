@@ -20,6 +20,12 @@ const isPending = (run: AgentRunRecord): boolean =>
 /** One design attention row: state pill, title, Open. */
 export default function HomeAttentionRow({ run }: HomeAttentionRowProps) {
   const title = formatHomeRunningJobTitle(run.prompt);
+  const reason = isPending(run)
+    ? ""
+    : ((run.denialReason ?? run.resultOutput ?? "")
+        .split("\n")
+        .map((line) => line.trim())
+        .find((line) => line.length > 0) ?? "");
   const href =
     run.projectId === null
       ? PROJECTS_REPORTS_INTENT_HREF
@@ -34,6 +40,9 @@ export default function HomeAttentionRow({ run }: HomeAttentionRowProps) {
         <p className={`truncate font-medium ${APP_SURFACE_BODY_TEXT_CLASS}`}>
           {title}
         </p>
+        {reason.length > 0 ? (
+          <p className="truncate text-[12px] text-awc-fg-muted">{reason}</p>
+        ) : null}
       </div>
       <Link href={href} className={APP_SURFACE_CTA_SECONDARY_SM_CLASS}>
         Open<span className="sr-only"> {title}</span>
