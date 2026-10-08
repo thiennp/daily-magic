@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
 import { AWC_PROJECT_INVITE_ADD_ASSISTANT_COPY as C } from "@/features/projects/access/invites/awcProjectInviteAddAssistantCopy.constant";
 import {
   AWC_PROJECT_INVITE_TYPE_OPTIONS,
@@ -39,6 +40,9 @@ export default function AwcProjectInviteAddAssistantControl({
         </button>
         <label className="flex items-center gap-1.5 text-xs text-awc-fg-muted dark:text-white/70">
           <span>{C.typeLabel}</span>
+          <AwcProjectMembersInfoTip id="invite-type-tip">
+            {C.typeHelp}
+          </AwcProjectMembersInfoTip>
           <select
             className={SELECT}
             value={joinTypeId}
@@ -54,9 +58,6 @@ export default function AwcProjectInviteAddAssistantControl({
           </select>
         </label>
       </div>
-      <p className="text-[11px] text-awc-fg-muted dark:text-gray-400">
-        {C.typeHelp}
-      </p>
     </div>
   );
 }
