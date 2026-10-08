@@ -65,7 +65,10 @@ export default function AwcProjectAccessComputerMemberRow({
           <AwlRepairManuallyInfoButton />
         ) : null}
       </span>
-      <AwcProjectAccessComputerAgents agents={member.agents ?? []} />
+      <AwcProjectAccessComputerAgents
+        computerName={view.name}
+        agents={member.agents ?? []}
+      />
     </li>
   );
 }

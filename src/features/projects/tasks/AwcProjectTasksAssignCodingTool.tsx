@@ -14,7 +14,7 @@ export default function AwcProjectTasksAssignCodingTool({
 }: {
   readonly form: AssignForm;
 }) {
-  const { writerAgent, setWriterAgent, readyWriters } = form.writer;
+  const { writerAgent, setWriterAgent } = form.writer;
   const { pending } = form;
   const known = ASSIGN_CODING_TOOL_OPTIONS.some((o) => o.value === writerAgent);
   return (
@@ -29,9 +29,7 @@ export default function AwcProjectTasksAssignCodingTool({
           setWriterAgent(e.target.value as HarnessWriterAgent);
         }}
       >
-        {ASSIGN_CODING_TOOL_OPTIONS.filter(
-          (o) => readyWriters === undefined || readyWriters.includes(o.value),
-        ).map((o) => (
+        {ASSIGN_CODING_TOOL_OPTIONS.map((o) => (
           <option key={o.value} value={o.value}>
             {o.label}
           </option>
