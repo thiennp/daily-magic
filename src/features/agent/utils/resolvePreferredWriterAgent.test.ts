@@ -66,4 +66,19 @@ describe("resolvePreferredWriterAgent (37874fdc)", () => {
       }),
     ).toBe("codex");
   });
+
+  it("72ae6076: a link / last-picked Codex (Not signed in) yields the first Ready writer", () => {
+    expect(
+      resolvePreferredWriterAgent({
+        writerAgent: "codex",
+        isExplicitPick: false,
+        writers: [
+          { writerAgent: "claude-cli", ready: true, loggedIn: true },
+          { writerAgent: "codex", ready: true, loggedIn: false },
+          { writerAgent: "cursor", ready: false },
+          { writerAgent: "antigravity", ready: true, loggedIn: null },
+        ],
+      }),
+    ).toBe("claude-cli");
+  });
 });

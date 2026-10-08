@@ -25,6 +25,7 @@ export const useWsTestWriterAgentSelection = (input: {
   readonly pickWriterAgent: (value: HarnessWriterAgent) => void;
   readonly setWriterAgent: (value: HarnessWriterAgent) => void;
   readonly hasRememberedWriterAgentSelection: boolean;
+  readonly forgetWriterAgentPickInView: () => void;
 } => {
   const delegated = useDelegatedWriterAgent();
   const { socket } = input;
@@ -40,7 +41,11 @@ export const useWsTestWriterAgentSelection = (input: {
     },
     [setWriterAgent, socket],
   );
-  useContinueFromSourceRunPrefill({ setWriterAgent: pickWriterAgent });
+  // 72ae6076: a link's writer is a preset, not a pick, so a not-ready one
+  // never wins over a Ready writer.
+  useContinueFromSourceRunPrefill({
+    setWriterAgent: delegated.presetWriterAgent,
+  });
   const writerAgent = resolvePreferredWriterAgent({
     writerAgent: delegated.writerAgent,
     isExplicitPick: delegated.hasPickedWriterAgentInView,
@@ -55,5 +60,6 @@ export const useWsTestWriterAgentSelection = (input: {
     setWriterAgent,
     hasRememberedWriterAgentSelection:
       delegated.hasRememberedWriterAgentSelection,
+    forgetWriterAgentPickInView: delegated.forgetWriterAgentPickInView,
   };
 };

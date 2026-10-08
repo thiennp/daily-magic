@@ -11,6 +11,7 @@ vi.mock("@/lib/dispatch/touchAgentRunHeartbeatAt", () => ({
 }));
 vi.mock("@/lib/dispatch/reconcileStaleAgentRuns", () => ({
   reconcileStaleAgentRuns: vi.fn(async () => undefined),
+  maybeReconcileStaleAgentRuns: vi.fn(async () => undefined),
 }));
 vi.mock("@/lib/dispatch/dispatchWriterRunToAgent", () => ({
   notifyDashboardUser: vi.fn(),

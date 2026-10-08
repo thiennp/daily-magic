@@ -68,6 +68,7 @@ describe("restoreAgentLiveTerminalFromSourceRun", () => {
         resultExitCode: null,
         resultOutcomeCode: null,
         completedAt: null,
+        lastRunHeartbeatAt: new Date().toISOString(),
       }),
     );
     setAgentRunTerminalOutput("run-live", "still working\n");
@@ -78,6 +79,16 @@ describe("restoreAgentLiveTerminalFromSourceRun", () => {
       status: "streaming",
       sessionDeviceId: "mac-1",
     });
+  });
+
+  it("6253aa7e restores a running job silent for hours as timed out", () => {
+    upsertAgentRunLocalCache(
+      sampleRun({ id: "run-old", status: AgentRunStatus.RUNNING }),
+    );
+
+    expect(restoreAgentLiveTerminalFromSourceRun("run-old")?.status).toBe(
+      "timed_out",
+    );
   });
 
   it("returns null when the run is not in local cache", () => {

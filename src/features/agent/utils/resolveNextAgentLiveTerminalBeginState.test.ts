@@ -52,4 +52,16 @@ describe("resolveNextAgentLiveTerminalBeginState", () => {
     expect(next.sessionWriterAgent).toBe("antigravity");
     expect(next.output).not.toContain("quota");
   });
+
+  it("a different computer starts fresh instead of continuing (ed42d8ce)", () => {
+    const next = resolveNextAgentLiveTerminalBeginState(
+      failedRun,
+      'agy --sandbox -p "Run workflow"',
+      "antigravity",
+      "linux-2",
+    );
+
+    expect(next.output).not.toContain("quota");
+    expect(next.sessionDeviceId).toBe("linux-2");
+  });
 });

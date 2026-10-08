@@ -6,6 +6,7 @@ import type {
 } from "@/features/project-auto-skills/public-api/types";
 import { splitSkillBundle } from "@agent-witch/shared/projectSkills/skillBundleCodec";
 
+import { sanitizeSkillTextForDisplay } from "@/features/agent/utils/sanitizeSkillTextForDisplay";
 import AwcAutoSkillScriptList from "@/features/projects/autoskills/AwcAutoSkillScriptList";
 import {
   OW_CARD_NEEDS_CLASS,
@@ -61,7 +62,7 @@ export default function AwcAutoSkillQuestionCard({
         </p>
       ) : null}
       <p className="mt-1 line-clamp-3 text-[13px] text-awc-fg">
-        {suggestion.prompt}
+        {sanitizeSkillTextForDisplay(suggestion.prompt)}
       </p>
       <details className="mt-2 text-[13px] text-awc-fg">
         <summary className="cursor-pointer font-medium">
@@ -70,7 +71,9 @@ export default function AwcAutoSkillQuestionCard({
         <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap rounded-lg bg-awc-bg/80 p-2 text-[12px] dark:bg-black/20">
           {approval
             ? suggestion.draftBody
-            : splitSkillBundle(suggestion.draftBody).markdown}
+            : sanitizeSkillTextForDisplay(
+                splitSkillBundle(suggestion.draftBody).markdown,
+              )}
         </pre>
       </details>
       {suggestion.scriptInfo !== null ? (

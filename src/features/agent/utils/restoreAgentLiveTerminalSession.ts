@@ -4,6 +4,8 @@ import type { AgentLiveTerminalState } from "@/features/agent/utils/agentLiveTer
 import { initialAgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalState.type";
 import { shouldPersistAgentLiveTerminalOutput } from "@/features/agent/utils/shouldPersistAgentLiveTerminalOutput";
 import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { resolveRestoredLiveTerminalStatus } from "@/features/agent/utils/resolveRestoredLiveTerminalStatus";
+import { resolveAgentRunLastAliveMs } from "@/lib/dispatch/isAgentRunSilentPastStall";
 import { seedRestoredAgentLivePendingInput } from "@/features/agent/utils/seedRestoredAgentLivePendingInput";
 
 export const restoreAgentLiveTerminalSession = (
@@ -22,12 +24,24 @@ export const restoreAgentLiveTerminalSession = (
       : cachedOutput.length > 0
         ? cachedOutput
         : "";
+  const cachedRun =
+    session.activeRunId !== null
+      ? getAgentRunLocalCache(session.activeRunId)
+      : null;
+  const status = resolveRestoredLiveTerminalStatus({
+    status: session.status,
+    lastAliveMs: [
+      Date.parse(session.updatedAt),
+      cachedRun === null ? null : resolveAgentRunLastAliveMs(cachedRun),
+    ],
+    nowMs: Date.now(),
+  });
 
   return {
     ...initialAgentLiveTerminalState(),
     activeRunId: session.activeRunId,
     output,
-    status: session.status,
+    status,
     pendingCommandLine: session.pendingCommandLine,
     sessionWriterAgent: session.sessionWriterAgent,
     sessionDeviceId: session.sessionDeviceId,
@@ -37,9 +51,8 @@ export const restoreAgentLiveTerminalSession = (
         ? null
         : seedRestoredAgentLivePendingInput({
             runId: session.activeRunId,
-            status: session.status,
-            reportSummary:
-              getAgentRunLocalCache(session.activeRunId)?.reportSummary ?? null,
+            status,
+            reportSummary: cachedRun?.reportSummary ?? null,
           }),
   };
 };

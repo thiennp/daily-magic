@@ -1,4 +1,5 @@
 import { readTerminalStore } from "@/features/agent/utils/agentLiveTerminalLocalStoreIO";
+import { resolveRestoredLiveTerminalStatus } from "@/features/agent/utils/resolveRestoredLiveTerminalStatus";
 import { isInProgressAgentLiveTerminalStatus } from "@/features/agent/utils/isInProgressAgentLiveTerminalStatus";
 
 export const hasPersistedInProgressAgentLiveTerminalSession = (): boolean => {
@@ -7,7 +8,14 @@ export const hasPersistedInProgressAgentLiveTerminalSession = (): boolean => {
   }
 
   const session = readTerminalStore().current;
-  return (
-    session !== null && isInProgressAgentLiveTerminalStatus(session.status)
-  );
+  if (session === null) {
+    return false;
+  }
+  // ed42d8ce: a stored live session silent for hours must not reopen the floater.
+  const status = resolveRestoredLiveTerminalStatus({
+    status: session.status,
+    lastAliveMs: [Date.parse(session.updatedAt)],
+    nowMs: Date.now(),
+  });
+  return isInProgressAgentLiveTerminalStatus(status);
 };

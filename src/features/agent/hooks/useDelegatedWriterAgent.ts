@@ -13,6 +13,10 @@ export function useDelegatedWriterAgent(): {
   readonly hasRememberedWriterAgentSelection: boolean;
   /** True once the user picked a writer in this view (not just remembered). */
   readonly hasPickedWriterAgentInView: boolean;
+  /** 72ae6076: a link / source-run writer; only used while it is Ready. */
+  readonly presetWriterAgent: (value: HarnessWriterAgent) => void;
+  /** "Pick another coding tool": the old pick no longer counts as a click. */
+  readonly forgetWriterAgentPickInView: () => void;
 } {
   const [writerAgent, setWriterAgentState] = useState<HarnessWriterAgent>(
     readDelegatedWriterAgentFromStorage,
@@ -31,9 +35,19 @@ export function useDelegatedWriterAgent(): {
     setHasPickedWriterAgentInView(true);
   }, []);
 
+  const presetWriterAgent = useCallback((value: HarnessWriterAgent) => {
+    setWriterAgentState(value);
+  }, []);
+
+  const forgetWriterAgentPickInView = useCallback(() => {
+    setHasPickedWriterAgentInView(false);
+  }, []);
+
   return {
     writerAgent,
     setWriterAgent,
+    presetWriterAgent,
+    forgetWriterAgentPickInView,
     hasRememberedWriterAgentSelection,
     hasPickedWriterAgentInView,
   };

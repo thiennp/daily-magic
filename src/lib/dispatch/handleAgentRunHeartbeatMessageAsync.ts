@@ -7,27 +7,9 @@ import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
 import { isAgentRunReportHistoryEntry } from "@/lib/dispatch/isAgentRunReportHistoryEntry";
 import { notifyDashboardUser } from "@/lib/dispatch/dispatchWriterRunToAgent";
-import { reconcileStaleAgentRuns } from "@/lib/dispatch/reconcileStaleAgentRuns";
+import { maybeReconcileStaleAgentRuns } from "@/lib/dispatch/reconcileStaleAgentRuns";
 import { touchAgentRunHeartbeatAt } from "@/lib/dispatch/touchAgentRunHeartbeatAt";
 import { applyStoredAgentRunStopOnHeartbeat } from "@/lib/dispatch/applyStoredAgentRunStopOnHeartbeat";
-
-const reconcileGlobal = globalThis as typeof globalThis & {
-  __dailyMagicLastStaleRunReconcileMs?: number;
-};
-
-const maybeReconcileStaleRuns = async (
-  runtime: AgentWitchHubRuntime,
-): Promise<void> => {
-  const nowMs = Date.now();
-  const lastMs = reconcileGlobal.__dailyMagicLastStaleRunReconcileMs ?? 0;
-
-  if (nowMs - lastMs < 60_000) {
-    return;
-  }
-
-  reconcileGlobal.__dailyMagicLastStaleRunReconcileMs = nowMs;
-  await reconcileStaleAgentRuns(runtime);
-};
 
 export const handleAgentRunHeartbeatMessageAsync = async (
   runtime: AgentWitchHubRuntime,
@@ -107,7 +89,7 @@ export const handleAgentRunHeartbeatMessageAsync = async (
     notifyDashboardUser(runtime, existingRun.executorUserId, heartbeatMessage);
   }
 
-  void maybeReconcileStaleRuns(runtime);
+  void maybeReconcileStaleAgentRuns(runtime);
 
   return {
     type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,

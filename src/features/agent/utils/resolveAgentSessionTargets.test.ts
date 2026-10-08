@@ -53,3 +53,34 @@ describe("resolveAgentSessionTargets", () => {
     });
   });
 });
+
+describe("resolveAgentSessionTargets (ed42d8ce: only a live session locks)", () => {
+  const ended = {
+    sessionWriterAgent: "codex",
+    writerAgent: "claude-cli",
+    sessionDeviceId: "device-9031",
+    selectedDeviceId: "device-8f03",
+    availableDeviceIds: ["device-9031", "device-8f03"],
+    isSessionLive: false,
+  } as const;
+
+  it("an ended or stale session never pins the computer or coding tool", () => {
+    expect(resolveAgentSessionTargets(ended)).toEqual({
+      activeWriterAgent: "claude-cli",
+      activeDeviceId: "device-8f03",
+      isWriterAgentLocked: false,
+      isMacDeviceLocked: false,
+    });
+  });
+
+  it("a live session still locks both", () => {
+    expect(
+      resolveAgentSessionTargets({ ...ended, isSessionLive: true }),
+    ).toEqual({
+      activeWriterAgent: "codex",
+      activeDeviceId: "device-9031",
+      isWriterAgentLocked: true,
+      isMacDeviceLocked: true,
+    });
+  });
+});

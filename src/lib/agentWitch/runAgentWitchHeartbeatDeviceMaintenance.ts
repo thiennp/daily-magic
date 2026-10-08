@@ -6,6 +6,7 @@ import {
   reconcileInterruptedAgentRunsForDevice,
   shouldReconcileInterruptedRunsNow,
 } from "@/lib/dispatch/reconcileInterruptedAgentRunsForDevice";
+import { maybeReconcileStaleAgentRuns } from "@/lib/dispatch/reconcileStaleAgentRuns";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { updateAgentWitchDeviceInstallBundleVersion } from "@/lib/agentWitch/updateAgentWitchDeviceInstallBundleVersion";
 import type { AgentWitchDeviceWriter } from "@/lib/agentWitch/deviceWriters";
@@ -77,6 +78,11 @@ export const runAgentWitchHeartbeatDeviceMaintenance = async (input: {
       console.error("[agent-witch] interrupted run reconcile failed", error);
     });
   }
+  // 6253aa7e: the global stale sweep also runs on device heartbeats, so a
+  // silent run is closed even when no other run is heartbeating.
+  await maybeReconcileStaleAgentRuns(input.runtime).catch((error: unknown) => {
+    console.error("[agent-witch] stale run reconcile failed", error);
+  });
 
   if (input.installId !== undefined && input.installId !== null) {
     await updateAgentWitchDeviceInstallId({

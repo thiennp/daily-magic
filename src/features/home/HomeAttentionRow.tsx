@@ -1,4 +1,3 @@
-import { summarizeKnownWriterError } from "@agent-witch/shared/dispatch";
 import Link from "next/link";
 
 import {
@@ -6,6 +5,7 @@ import {
   APP_SURFACE_CTA_SECONDARY_SM_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import Badge from "@/components/ui/badge/Badge";
+import { summarizeAgentRunReasonForDisplay } from "@/features/agent/utils/summarizeAgentRunReasonForDisplay";
 import HomeAttentionRetryButton from "@/features/home/HomeAttentionRetryButton";
 import { formatHomeRunningJobTitle } from "@/features/home/utils/formatHomeRunningJobTitle";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
@@ -22,16 +22,14 @@ const isPending = (run: AgentRunRecord): boolean =>
 /** One design attention row: state pill, title, Open. */
 export default function HomeAttentionRow({ run }: HomeAttentionRowProps) {
   const title = formatHomeRunningJobTitle(run.prompt);
-  const rawReason = run.denialReason ?? run.resultOutput ?? "";
-  // 5ca01f06: a known writer failure reads as its next step, not raw text.
+  // 5ca01f06 + aedfe094: known failures read as their next step; legacy rows
+  // lose ANSI, CLI banners, [[MARKER]] rules and key=value diagnostics.
   const reason = isPending(run)
     ? ""
-    : (summarizeKnownWriterError(rawReason) ??
-      rawReason
-        .split("\n")
-        .map((line) => line.trim())
-        .find((line) => line.length > 0) ??
-      "");
+    : summarizeAgentRunReasonForDisplay({
+        raw: run.denialReason ?? run.resultOutput ?? "",
+        writerAgent: run.writerAgent,
+      });
   const href =
     run.projectId === null
       ? PROJECTS_REPORTS_INTENT_HREF

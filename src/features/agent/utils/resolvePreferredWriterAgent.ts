@@ -8,11 +8,12 @@ const canRun = (writer: AgentWitchDeviceWriter | undefined): boolean =>
   writer !== undefined && writer.ready && writer.loggedIn !== false;
 
 /**
- * 37874fdc: the remembered writer (Codex) was used although the computer's
- * heartbeat said it could not run, while Antigravity was ready. A pick made
- * in this view always wins; otherwise the remembered writer is kept only when
- * it can run, else the first writer that can. Unknown readiness (older host)
- * or no runnable writer keeps the remembered one so the not-ready notice shows.
+ * 37874fdc / 72ae6076 (Magi rule): preselect the last-picked writer only if
+ * it is Ready, else the first Ready writer; never preselect a not-ready writer
+ * while a Ready one exists. A link / source-run writer is a preset and follows
+ * the same rule. Only a click in this view sticks to a not-ready writer.
+ * Unknown readiness (older host) or no Ready writer keeps the remembered one
+ * so the not-ready notice shows.
  */
 export const resolvePreferredWriterAgent = (input: {
   readonly writerAgent: HarnessWriterAgent;

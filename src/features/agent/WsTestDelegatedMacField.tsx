@@ -2,6 +2,7 @@
 
 import MacDevicePicker from "@/features/agent/MacDevicePicker";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import { requestEndSendTaskSession } from "@/features/agent/utils/sendTaskSessionEvents";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 
 interface WsTestDelegatedMacFieldProps {
@@ -43,8 +44,16 @@ export default function WsTestDelegatedMacField({
         onDelete={onDeviceDeleted}
       />
       {disabled ? (
-        <p className="mt-2 text-xs text-awc-fg-muted dark:text-gray-400">
-          Finish the current session to switch computers.
+        <p className="pointer-events-auto mt-2 flex flex-wrap items-center gap-2 text-xs text-awc-fg-muted dark:text-gray-400">
+          A task is running on this computer. End the session to pick another
+          computer; the task keeps running.
+          <button
+            type="button"
+            onClick={requestEndSendTaskSession}
+            className="rounded-lg border border-awc-border px-2 py-0.5 font-medium text-awc-fg hover:bg-awc-bg dark:border-gray-700 dark:text-white/90"
+          >
+            End session
+          </button>
         </p>
       ) : null}
     </div>

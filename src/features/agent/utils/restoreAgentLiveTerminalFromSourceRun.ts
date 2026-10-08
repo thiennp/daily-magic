@@ -7,6 +7,7 @@ import { restoreAgentLiveTerminalSession } from "@/features/agent/utils/restoreA
 import { isRestorableAgentLiveTerminalStatus } from "@/features/agent/utils/isRestorableAgentLiveTerminalStatus";
 import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";
+import { isAgentRunSilentPastStall } from "@/lib/dispatch/isAgentRunSilentPastStall";
 import { seedRestoredAgentLivePendingInput } from "@/features/agent/utils/seedRestoredAgentLivePendingInput";
 
 /** Prefer archived live-session chrome, then job-history cache. */
@@ -37,19 +38,23 @@ export const restoreAgentLiveTerminalFromSourceRun = (
       : (run.resultOutput ?? "").length > 0
         ? (run.resultOutput ?? "")
         : "";
+  // 6253aa7e: a run silent for hours restores as ended (Retry), not live.
+  const status = isAgentRunSilentPastStall(run, Date.now())
+    ? "timed_out"
+    : mapAgentRunStatusToLiveTerminalStatus(run.status);
 
   return {
     ...initialAgentLiveTerminalState(),
     activeRunId: sourceRunId,
     output,
-    status: mapAgentRunStatusToLiveTerminalStatus(run.status),
+    status,
     sessionWriterAgent: isHarnessWriterAgent(run.writerAgent)
       ? run.writerAgent
       : null,
     sessionDeviceId: run.deviceId,
     pendingInput: seedRestoredAgentLivePendingInput({
       runId: sourceRunId,
-      status: mapAgentRunStatusToLiveTerminalStatus(run.status),
+      status,
       reportSummary: run.reportSummary ?? null,
     }),
   };

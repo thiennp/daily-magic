@@ -1,7 +1,7 @@
 "use client";
 
 import { useAgentRunQueue } from "@/features/agent/hooks/useAgentRunQueue";
-import { usePickAnotherWriterRequest } from "@/features/agent/hooks/usePickAnotherWriterRequest";
+import { useSendTaskSessionEndRequests } from "@/features/agent/hooks/useSendTaskSessionEndRequests";
 import { useOpenMacShellFromQuery } from "@/features/agent/hooks/useOpenMacShellFromQuery";
 import { useClearStaleMacDispatchError } from "@/features/agent/hooks/useClearStaleMacDispatchError";
 import { useRefreshMacDevicesOnDispatchOfflineError } from "@/features/agent/hooks/useRefreshMacDevicesOnDispatchOfflineError";
@@ -13,7 +13,7 @@ import { useWsTestPromptHandlers } from "@/features/agent/hooks/useWsTestPromptH
 import { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import { useWsTestWriterAgentSelection } from "@/features/agent/hooks/useWsTestWriterAgentSelection";
 import { useAgentWitchSocket } from "@/features/agent/hooks/useAgentWitchSocket";
-import { resolveAgentSessionTargets } from "@/features/agent/utils/resolveAgentSessionTargets";
+import { resolveWsTestPanelSessionTargets } from "@/features/agent/utils/resolveWsTestPanelSessionTargets";
 
 export const useWsTestPanelController = (input: {
   readonly isSteppedComposer: boolean;
@@ -25,13 +25,12 @@ export const useWsTestPanelController = (input: {
     pickWriterAgent,
     setWriterAgent,
     hasRememberedWriterAgentSelection,
+    forgetWriterAgentPickInView,
   } = useWsTestWriterAgentSelection({ socket, composer });
-  const sessionTargets = resolveAgentSessionTargets({
-    sessionWriterAgent: socket.sessionWriterAgent,
+  const { isSessionLive, sessionTargets } = resolveWsTestPanelSessionTargets({
+    socket,
+    composer,
     writerAgent,
-    sessionDeviceId: socket.sessionDeviceId,
-    selectedDeviceId: composer.selectedDeviceId,
-    availableDeviceIds: composer.macDevices.map((device) => device.id),
   });
   const { queueCount, queueMessage, enqueueRun, flushQueue, refreshCount } =
     useAgentRunQueue();
@@ -72,9 +71,13 @@ export const useWsTestPanelController = (input: {
     onFinishSession: sessionEndActions.finishSession,
   });
 
-  usePickAnotherWriterRequest(() => {
-    sessionEndActions.finishSession();
-    steppedComposer.panelActions.handleWriterStepBack();
+  useSendTaskSessionEndRequests({
+    isSessionLive,
+    finishSession: sessionEndActions.finishSession,
+    onPickAnotherWriter: () => {
+      forgetWriterAgentPickInView();
+      steppedComposer.panelActions.handleWriterStepBack();
+    },
   });
   useWsTestPanelLifecycle({
     connectionStatus: socket.connectionStatus,

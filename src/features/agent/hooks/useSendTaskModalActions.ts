@@ -7,6 +7,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { buildSignInHref } from "@/features/empty-states/buildGuestAuthHrefs";
 import { resolveSendTaskModalPanelKey } from "@/features/agent/utils/resolveSendTaskModalPanelKey";
 import { clearPersistedAgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalLocalStore";
+import { clearLiveFloaterRunId } from "@/features/agent/utils/liveFloaterRunIdStorage";
+import { announceSendTaskClose } from "@/features/agent/utils/sendTaskSessionEvents";
 import { expandRunningSendTaskModal } from "@/features/agent/utils/expandRunningSendTaskModal";
 import { setSendTaskModalUrl } from "@/features/agent/utils/setSendTaskModalUrl";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
@@ -43,12 +45,19 @@ export const useSendTaskModalActions = (input: {
   }, [pathname, searchParams, setKeepAlive]);
 
   // S11: Close always hides the panel/floater; it never stops the run.
+  // ed42d8ce: it does end a session with nothing running, and it forgets the
+  // focused session and floater run so a reload does not bring them back.
   const closeSendTaskModal = useCallback(() => {
-    setKeepAlive(false);
+    announceSendTaskClose();
     setSendTaskModalUrl(
       `${pathname}${stripSendTaskModalQuery(searchParams)}`,
       "replace",
     );
+    window.setTimeout(() => {
+      clearPersistedAgentLiveTerminalState();
+      clearLiveFloaterRunId();
+      setKeepAlive(false);
+    }, 0);
   }, [pathname, searchParams, setKeepAlive]);
 
   const openSendTaskModal = useCallback(

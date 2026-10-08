@@ -31,7 +31,7 @@ const staleRow = {
   dispatch_policy: "open",
   result_output: null,
   result_exit_code: null,
-  denial_reason: "No run heartbeat from your computer — the job was marked stale.",
+  denial_reason: "No run heartbeat — the job was marked stale.",
   created_at: "2026-07-19T10:00:00.000Z",
   updated_at: "2026-07-19T10:05:00.000Z",
   started_at: "2026-07-19T10:00:00.000Z",
@@ -54,7 +54,7 @@ describe("reconcileStaleAgentRuns (AGENT-039 / AGENT-056 / AGENT-057)", () => {
   });
 
   it("marks stale running jobs failed and broadcasts updated records", async () => {
-    sqlMock.mockResolvedValueOnce([staleRow]).mockResolvedValueOnce([]);
+    sqlMock.mockResolvedValue([]).mockResolvedValueOnce([staleRow]);
 
     const runtime = {} as never;
     const reconciled = await reconcileStaleAgentRuns(runtime);
@@ -66,7 +66,7 @@ describe("reconcileStaleAgentRuns (AGENT-039 / AGENT-056 / AGENT-057)", () => {
       runtime,
       reconciled[0],
     );
-    expect(sqlMock).toHaveBeenCalledTimes(2);
+    expect(sqlMock).toHaveBeenCalledTimes(3);
   });
 
   it("fails never-heartbeat orphans after started_at timeout (AGENT-057)", async () => {

@@ -45,7 +45,7 @@ export default function WsTestComposerWizardSteps({
           displayNameById={composer.macDisplayNameById}
           selectedDeviceId={macDispatchDeviceId}
           isLoading={composer.isMacDevicesLoading}
-          disabled={isMacDeviceLocked || composer.isOwnDeviceDispatch}
+          disabled={isMacDeviceLocked}
           onDeviceChange={onDeviceChange}
           onDeviceRenamed={composer.renameMacDevice}
           onDeviceDeleted={onDeviceDeleted}

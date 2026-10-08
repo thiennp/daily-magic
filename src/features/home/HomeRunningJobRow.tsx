@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { useComposerApprovalWaitingLabel } from "@/features/agent/hooks/useComposerApprovalWaitingLabel";
+import { sanitizeAgentRunTextForDisplay } from "@/features/agent/utils/sanitizeAgentRunTextForDisplay";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import {
@@ -41,6 +42,11 @@ export default function HomeRunningJobRow({
     approvalWaitingLabel,
   });
 
+  // aedfe094: legacy summaries can carry ANSI / [[MARKER]] text.
+  const summary =
+    sanitizeAgentRunTextForDisplay(run.reportSummary ?? null).split("\n")[0] ??
+    "";
+
   const handleDelete = (): void => {
     if (isDeleting) {
       return;
@@ -66,11 +72,7 @@ export default function HomeRunningJobRow({
             {formatHomeRunningJobTitle(run.prompt)}
           </span>
           <span className="mt-0.5 block text-xs text-awc-fg-muted dark:text-gray-400">
-            {run.reportSummary !== null &&
-            run.reportSummary !== undefined &&
-            run.reportSummary.trim().length > 0
-              ? `${run.reportSummary.trim()} · `
-              : ""}
+            {summary.length > 0 ? `${summary} · ` : ""}
             {formatHomeRunningJobAliveLabel({
               lastRunHeartbeatAt: run.lastRunHeartbeatAt,
               startedAt: run.startedAt,

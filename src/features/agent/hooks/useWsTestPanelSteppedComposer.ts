@@ -90,5 +90,17 @@ export const useWsTestPanelSteppedComposer = (input: {
     onWriterStepBack: finishSessionAnd(panelActions.handleWriterStepBack),
   });
 
-  return { wizard, panelActions, stepTrail };
+  // ed42d8ce: switching computer ends an open (not live) writer session.
+  const handleDeviceChange = (deviceId: string): void => {
+    if (input.isSessionActive && deviceId !== input.activeDeviceId) {
+      input.onFinishSession();
+    }
+    panelActions.handleDeviceChange(deviceId);
+  };
+
+  return {
+    wizard,
+    panelActions: { ...panelActions, handleDeviceChange },
+    stepTrail,
+  };
 };

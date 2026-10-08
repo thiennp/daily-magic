@@ -4,12 +4,19 @@ import { useEffect, useState } from "react";
 
 import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
 import HomeRunningJobRow from "@/features/home/HomeRunningJobRow";
+import HomeStalledJobRow from "@/features/home/HomeStalledJobRow";
 import { useHomeRunningAgentJobs } from "@/features/home/hooks/useHomeRunningAgentJobs";
+import { useRefreshStalledAgentRuns } from "@/features/home/hooks/useRefreshStalledAgentRuns";
+import { isAgentRunSilentPastStall } from "@/lib/dispatch/isAgentRunSilentPastStall";
 
 export default function HomeRunningJobsPanel() {
   const runningJobs = useHomeRunningAgentJobs();
   const { expandRunningSendTask } = useSendTaskModal();
   const [nowMs, setNowMs] = useState(() => Date.now());
+  const stalledJobs = runningJobs.filter((run) =>
+    isAgentRunSilentPastStall(run, nowMs),
+  );
+  useRefreshStalledAgentRuns(stalledJobs);
 
   useEffect(() => {
     if (runningJobs.length === 0) {
@@ -33,14 +40,18 @@ export default function HomeRunningJobsPanel() {
         Running on your computer
       </h2>
       <ul className="mt-3 space-y-2">
-        {runningJobs.map((run) => (
-          <HomeRunningJobRow
-            key={run.id}
-            run={run}
-            nowMs={nowMs}
-            onExpand={expandRunningSendTask}
-          />
-        ))}
+        {runningJobs.map((run) =>
+          stalledJobs.includes(run) ? (
+            <HomeStalledJobRow key={run.id} run={run} nowMs={nowMs} />
+          ) : (
+            <HomeRunningJobRow
+              key={run.id}
+              run={run}
+              nowMs={nowMs}
+              onExpand={expandRunningSendTask}
+            />
+          ),
+        )}
       </ul>
     </div>
   );
