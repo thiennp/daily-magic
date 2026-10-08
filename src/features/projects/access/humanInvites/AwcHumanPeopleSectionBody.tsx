@@ -16,7 +16,7 @@ export type AwcHumanPeopleSectionBodyProps = {
   readonly othersCount?: number;
 };
 
-/** People list or Invite person panel + undo toast. */
+/** Invite person card (above the list) + People list + undo toast. */
 export default function AwcHumanPeopleSectionBody({
   projectName,
   ownerEmail = null,
@@ -55,28 +55,27 @@ export default function AwcHumanPeopleSectionBody({
             people.clearCreatedInvite();
             people.clearSendError();
           }}
-          onDismissCreated={people.clearCreatedInvite}
           onSendEmails={people.sendEmails}
           sendBusy={people.sendBusy}
           sendErrorMessage={people.sendError}
         />
-      ) : (
-        <AwcHumanPeopleMembersList
-          pendingInvites={people.invites}
-          joinedHumans={people.joinedHumans}
-          othersCount={othersCount}
-          ownerEmail={ownerEmail}
-          ownerDisplayName={ownerDisplayName}
-          pendingIdsHidden={people.hiddenPending}
-          removedIdsHidden={people.hiddenRemoved}
-          onInvitePerson={() => people.setPanelOpen(true)}
-          onRevokeInvite={people.scheduleRevoke}
-          onRemoveMember={people.scheduleRemove}
-          decidingId={people.decidingId}
-          onApproveRequest={people.approveRequest}
-          onDenyRequest={people.denyRequest}
-        />
-      )}
+      ) : null}
+      <AwcHumanPeopleMembersList
+        pendingInvites={people.invites}
+        joinedHumans={people.joinedHumans}
+        othersCount={othersCount}
+        ownerEmail={ownerEmail}
+        ownerDisplayName={ownerDisplayName}
+        pendingIdsHidden={people.hiddenPending}
+        removedIdsHidden={people.hiddenRemoved}
+        invitePersonOpen={people.panelOpen}
+        onInvitePerson={() => people.setPanelOpen(true)}
+        onRevokeInvite={people.scheduleRevoke}
+        onRemoveMember={people.scheduleRemove}
+        decidingId={people.decidingId}
+        onApproveRequest={people.approveRequest}
+        onDenyRequest={people.denyRequest}
+      />
       {people.isLoading && people.invites.length === 0 ? (
         <p className="text-xs text-awc-fg-muted">Loading people…</p>
       ) : null}

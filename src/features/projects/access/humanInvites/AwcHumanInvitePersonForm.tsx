@@ -27,7 +27,6 @@ export default function AwcHumanInvitePersonForm({
   onCreate,
   onCopyLink,
   onCancel,
-  onDismissCreated,
   onSendEmails,
   sendBusy = false,
   sendErrorMessage = null,
@@ -75,13 +74,16 @@ export default function AwcHumanInvitePersonForm({
   return (
     <>
       <AwcHumanInvitePersonTabSeg tab={tab} busy={busy} onTabChange={setTab} />
+      <AwcHumanInvitePersonRolePicker
+        role={role}
+        busy={busy}
+        onRoleChange={setRole}
+      />
       <AwcHumanInvitePersonFormBody
         tab={tab}
         busy={busy || sendBusy}
         email={email}
         requireEmailMatch={requireEmailMatch}
-        createdUrl={createdInvite?.url ?? null}
-        roleLabel={roleLabel}
         onEmailChange={(value) => {
           setEmail(value);
           setLocalError(null);
@@ -94,16 +96,10 @@ export default function AwcHumanInvitePersonForm({
         requiresApproval={send.requiresApproval}
         onRequiresApprovalChange={send.onRequiresApprovalChange}
       />
-      <AwcHumanInvitePersonRolePicker
-        role={role}
-        busy={busy}
-        onRoleChange={setRole}
-      />
       {createdInvite ? (
         <AwcHumanInviteCreatedLinkBanner
           createdInvite={createdInvite}
           onCopyLink={onCopyLink}
-          onDismissCreated={onDismissCreated}
         />
       ) : null}
       <AwcHumanInviteFormError message={shownError} />
@@ -113,6 +109,7 @@ export default function AwcHumanInvitePersonForm({
         onCancel={onCancel}
         tab={tab}
         sendBusy={sendBusy}
+        linkReady={createdInvite !== null}
         onSubmitSend={send.onSubmitSend}
       />
     </>

@@ -33,6 +33,11 @@ describe("DF-025 Members email invite UI", () => {
     expect(html).toContain("data-human-invite-send");
     expect(html).toContain(">Send invite<");
     expect(html).not.toContain(">Later<");
+    // Design: descriptions live in (i) tips, no comma helper line.
+    expect(html).not.toContain("What happens next");
+    expect(html).not.toContain("Separate several emails");
+    expect(html).toContain('placeholder="Email"');
+    expect(html).toContain('role="tooltip"');
     expect(html).toMatch(
       /<input type="checkbox"[^>]*checked=""[^>]*\/><span>Approve before they join/,
     );

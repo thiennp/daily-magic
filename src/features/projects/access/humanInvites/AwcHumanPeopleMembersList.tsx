@@ -17,6 +17,7 @@ export type AwcHumanPeopleMembersListProps = {
   readonly ownerDisplayName?: string | null;
   readonly pendingIdsHidden?: ReadonlySet<string>;
   readonly removedIdsHidden?: ReadonlySet<string>;
+  readonly invitePersonOpen?: boolean;
   readonly onInvitePerson?: () => void;
   /** One-click Revoke → 10s Undo (schedules DELETE). */
   readonly onRevokeInvite?: (inviteId: string) => void;
@@ -41,6 +42,7 @@ export default function AwcHumanPeopleMembersList({
   ownerDisplayName = null,
   pendingIdsHidden,
   removedIdsHidden,
+  invitePersonOpen = false,
   onInvitePerson,
   onRevokeInvite,
   onRemoveMember,
@@ -65,6 +67,8 @@ export default function AwcHumanPeopleMembersList({
         <button
           type="button"
           className={AWC_PROJECT_ACCESS_CTA.primary}
+          aria-expanded={invitePersonOpen}
+          aria-controls="inv-person-card"
           onClick={onInvitePerson}
         >
           {copy.invitePersonTitle}

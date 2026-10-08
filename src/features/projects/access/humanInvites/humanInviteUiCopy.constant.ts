@@ -12,7 +12,7 @@ export const HUMAN_INVITE_UI_COPY = {
   roleViewerOneLiner:
     "Can read the project. Cannot give tasks or add assistants.",
   emailLabel: "Email",
-  emailPlaceholder: "name@company.com",
+  emailPlaceholder: "Email",
   copyLink: "Copy link",
   sendEmail: "Send invite",
   sendEmailLaterBadge: "Later",

@@ -12,7 +12,6 @@ export type AwcHumanInvitePersonPanelProps = {
   readonly onCreate?: (body: CreateHumanInviteBody) => void;
   readonly onCopyLink?: (url: string) => void;
   readonly onCancel?: () => void;
-  readonly onDismissCreated?: () => void;
   /** DF-025 Email tab → Send invite. Resolves true when every email was sent. */
   readonly onSendEmails?: (
     body: SendHumanInviteEmailsInput,
