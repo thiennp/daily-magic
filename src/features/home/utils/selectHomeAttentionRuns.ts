@@ -3,12 +3,13 @@ import { isAgentRunSweptStale } from "@/lib/dispatch/isAgentRunStalled";
 import { isAgentRunUserStopped } from "@/lib/dispatch/isAgentRunUserStopped";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
-export const HOME_ATTENTION_FAILED_WINDOW_MS = 24 * 60 * 60 * 1000;
-export const HOME_ATTENTION_MAX_ROWS = 5;
+// a13083ee: the last 7 days and up to 50 runs, like the server load.
+export const HOME_ATTENTION_FAILED_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
+export const HOME_ATTENTION_MAX_ROWS = 50;
 
 /**
  * Design "Needs your attention": runs waiting for approval plus runs that
- * failed in the last 24h, newest first. Source is the browser run cache.
+ * failed in the last 7 days, newest first. Source is the browser run cache.
  */
 const selectRecentAttentionRuns = (
   runs: readonly AgentRunRecord[],

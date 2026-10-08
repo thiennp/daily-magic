@@ -12,6 +12,8 @@ export interface AgentRunInputRequest {
   readonly question: string;
   readonly partialOutput: string;
   readonly context?: AgentRunInputContext;
+  /** 2a17ba21: opened from a heartbeat, so a non-waiting heartbeat closes it. */
+  readonly fromHeartbeat?: boolean;
 }
 
 export type DispatchApprovalRequiredPayload = {

@@ -53,6 +53,7 @@ export const restoreAgentLiveTerminalSession = (
             runId: session.activeRunId,
             status,
             reportSummary: cachedRun?.reportSummary ?? null,
+            output,
           }),
   };
 };

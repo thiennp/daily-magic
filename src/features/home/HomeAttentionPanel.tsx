@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import {
@@ -9,13 +9,12 @@ import {
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import Badge from "@/components/ui/badge/Badge";
 import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
-import HomeAttentionRow from "@/features/home/HomeAttentionRow";
-import HomeStalledJobRow from "@/features/home/HomeStalledJobRow";
+import HomeAttentionRunRows from "@/features/home/HomeAttentionRunRows";
 import HomeAttentionSkillRows from "@/features/home/HomeAttentionSkillRows";
 import useHomeAttentionRemoteRuns from "@/features/home/hooks/useHomeAttentionRemoteRuns";
 import useHomeAttentionRuns from "@/features/home/hooks/useHomeAttentionRuns";
 import selectHomeRecentProjects from "@/features/home/utils/selectHomeRecentProjects";
-import { isAgentRunSweptStale } from "@/lib/dispatch/isAgentRunStalled";
+import { publishHomeAttentionTotal } from "@/features/home/utils/homeAttentionTotalStore";
 import { useAutoSkillQuestions } from "@/features/project-auto-skills/public-api/presentation";
 
 /**
@@ -36,6 +35,13 @@ export default function HomeAttentionPanel() {
   );
   const questions = useAutoSkillQuestions(recentProjects.map((p) => p.id));
   const total = runs.length + questions.rows.length;
+  // a13083ee: the greeting reads this same total.
+  useEffect(() => {
+    publishHomeAttentionTotal(total);
+    return () => {
+      publishHomeAttentionTotal(null);
+    };
+  }, [total]);
 
   return (
     <AppPanel as="section" aria-labelledby="home-attention-heading">
@@ -54,13 +60,7 @@ export default function HomeAttentionPanel() {
         </p>
       ) : (
         <ul className="mt-3 divide-y divide-awc-border">
-          {runs.map((run) =>
-            isAgentRunSweptStale(run) ? (
-              <HomeStalledJobRow key={run.id} run={run} nowMs={nowMs} />
-            ) : (
-              <HomeAttentionRow key={run.id} run={run} />
-            ),
-          )}
+          <HomeAttentionRunRows runs={runs} nowMs={nowMs} />
           <HomeAttentionSkillRows
             questions={questions}
             projects={recentProjects}

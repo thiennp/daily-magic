@@ -6,6 +6,7 @@ import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRunti
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { dispatchAgentRunInputRegistry } from "@/lib/dispatch/dispatchAgentRunInputRegistry";
+import { answeredAgentRunInputMemory } from "@/lib/dispatch/answeredAgentRunInputMemory";
 import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
 
 export const handleClaudeInputRespondMessageAsync = async (
@@ -72,10 +73,7 @@ export const handleClaudeInputRespondMessageAsync = async (
 
   const run = await getAgentRunById(agentRunId);
   const originalPrompt = run?.prompt ?? "";
-  const targetDeviceId =
-    run?.deviceId !== null && run?.deviceId !== undefined
-      ? run.deviceId
-      : undefined;
+  const targetDeviceId = run?.deviceId ?? undefined;
 
   const agentClient = runtime.findAgentClientForUser(
     pending.executorUserId,
@@ -97,7 +95,7 @@ export const handleClaudeInputRespondMessageAsync = async (
 
   dispatchAgentRunInputRegistry.remove(agentRunId);
 
-  agentClient.send({
+  const respondMessage: AgentWitchMessage = {
     type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_INPUT_RESPOND,
     payload: {
       agentRunId,
@@ -107,7 +105,13 @@ export const handleClaudeInputRespondMessageAsync = async (
       question: pending.question,
     },
     requestId: message.requestId,
-  });
+  };
+  answeredAgentRunInputMemory.remember(
+    agentRunId,
+    pending.question,
+    respondMessage,
+  );
+  agentClient.send(respondMessage);
 
   return {
     type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,

@@ -5,6 +5,8 @@ import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.typ
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
+import { answeredAgentRunInputMemory } from "@/lib/dispatch/answeredAgentRunInputMemory";
+import { dispatchAgentRunInputRegistry } from "@/lib/dispatch/dispatchAgentRunInputRegistry";
 import { isAgentRunReportHistoryEntry } from "@/lib/dispatch/isAgentRunReportHistoryEntry";
 import { notifyDashboardUser } from "@/lib/dispatch/dispatchWriterRunToAgent";
 import { maybeReconcileStaleAgentRuns } from "@/lib/dispatch/reconcileStaleAgentRuns";
@@ -53,7 +55,11 @@ export const handleAgentRunHeartbeatMessageAsync = async (
     };
   }
 
-  const awaitingInput = message.payload?.awaitingInput === true;
+  // 2a17ba21: a heartbeat sent before the host saw the answer is not an ask.
+  const awaitingInput =
+    message.payload?.awaitingInput === true &&
+    (dispatchAgentRunInputRegistry.has(agentRunId) ||
+      !answeredAgentRunInputMemory.isInHeartbeatGrace(agentRunId));
 
   const stopRequested = applyStoredAgentRunStopOnHeartbeat({
     sender,

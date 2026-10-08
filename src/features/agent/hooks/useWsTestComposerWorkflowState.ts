@@ -7,6 +7,7 @@ import { useWorkflowUploadExcerptState } from "@/features/agent/hooks/useWorkflo
 import type { DispatchTargetCapability } from "@/features/dispatch/hooks/useDispatchTargets";
 import { useComposerResolvedPrompt } from "@/features/agent/hooks/useComposerResolvedPrompt";
 import { useEffectiveWorkflowFieldValues } from "@/features/agent/hooks/useEffectiveWorkflowFieldValues";
+import { usePrefillProjectFolderTextFields } from "@/features/agent/hooks/usePrefillProjectFolderTextFields";
 import { resolveComposerPlaybookContext } from "@/features/agent/utils/resolveComposerPlaybookContext";
 import type OperatorStepDefinition from "@/lib/workflows/types/OperatorStepDefinition.type";
 import type LibraryPlaybookTemplate from "@/lib/library/types/LibraryPlaybookTemplate.type";
@@ -65,6 +66,12 @@ export function useWsTestComposerWorkflowState(
     () => filterNonProjectWorkflowFields(workflowFields),
     [workflowFields],
   );
+  usePrefillProjectFolderTextFields({
+    fields: workflowFields,
+    values: workflowFieldValues,
+    setValues: setWorkflowFieldValues,
+    projectFolderPath,
+  });
   const effectiveWorkflowFieldValues = useEffectiveWorkflowFieldValues(
     workflowFields,
     workflowFieldValues,

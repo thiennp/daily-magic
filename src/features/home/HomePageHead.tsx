@@ -4,7 +4,13 @@ import {
   APP_SURFACE_PAGE_DESCRIPTION_CLASS,
   APP_SURFACE_PAGE_TITLE_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
+import { useSyncExternalStore } from "react";
+
 import useHomeAttentionRuns from "@/features/home/hooks/useHomeAttentionRuns";
+import {
+  readHomeAttentionTotal,
+  subscribeHomeAttentionTotal,
+} from "@/features/home/utils/homeAttentionTotalStore";
 import buildHomeGreeting from "@/features/home/utils/buildHomeGreeting";
 
 interface HomePageHeadProps {
@@ -20,7 +26,13 @@ export default function HomePageHead({
   isBrandNew = false,
 }: HomePageHeadProps) {
   const attentionRuns = useHomeAttentionRuns();
-  const resolvedAttentionCount = attentionCount ?? attentionRuns.length;
+  const panelTotal = useSyncExternalStore(
+    subscribeHomeAttentionTotal,
+    readHomeAttentionTotal,
+    () => null,
+  );
+  const resolvedAttentionCount =
+    attentionCount ?? panelTotal ?? attentionRuns.length;
 
   return (
     <header className="flex flex-wrap items-start justify-between gap-4">

@@ -1,7 +1,4 @@
-import {
-  AGENT_LIVE_PROGRESS_CHECKPOINT_QA_MARKER,
-  AGENT_LIVE_PROGRESS_CHECKPOINT_QUESTION_PREFIX,
-} from "@/features/agent/utils/agentLiveProgressCheckpoint.constant";
+import { isAgentRunQuestionAlreadyAnswered } from "@/features/agent/utils/isAgentRunQuestionAlreadyAnswered";
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
@@ -9,13 +6,6 @@ import type { AgentLiveTerminalState } from "./agentLiveTerminalState.type";
 import { matchesActiveRun } from "./agentLiveTerminalMessageUtils";
 
 const WAITING_FOR_ANSWER_PREFIX = /^Waiting for your answer:\s*/i;
-
-const wasAlreadyAnswered = (output: string, question: string): boolean => {
-  const questionStart = question.replace(/(?:\.\.\.|…)$/, "").trim();
-  return output.includes(
-    `${AGENT_LIVE_PROGRESS_CHECKPOINT_QA_MARKER}\n${AGENT_LIVE_PROGRESS_CHECKPOINT_QUESTION_PREFIX}${questionStart}`,
-  );
-};
 
 /**
  * 9c8a811d (Testi run 3 @292): the host paused for input, but the one-shot
@@ -32,10 +22,23 @@ export const reduceAgentLiveTerminalHeartbeatInput = (
 ): AgentLiveTerminalState => {
   if (
     parsed.type !== AGENT_WITCH_MESSAGE_TYPES.RUN_HEARTBEAT ||
-    payload.awaitingInput !== true ||
-    state.pendingInput !== null ||
     !matchesActiveRun(state.activeRunId, payload)
   ) {
+    return state;
+  }
+  // 2a17ba21: the host stopped waiting, so an ask we opened from a heartbeat
+  // (or one already answered) closes instead of sticking until the run ends.
+  if (payload.awaitingInput !== true) {
+    return state.pendingInput !== null &&
+      (state.pendingInput.fromHeartbeat === true ||
+        isAgentRunQuestionAlreadyAnswered(
+          state.output,
+          state.pendingInput.question,
+        ))
+      ? { ...state, pendingInput: null }
+      : state;
+  }
+  if (state.pendingInput !== null) {
     return state;
   }
 
@@ -48,7 +51,10 @@ export const reduceAgentLiveTerminalHeartbeatInput = (
   }
 
   const question = summary.replace(WAITING_FOR_ANSWER_PREFIX, "").trim();
-  if (question.length === 0 || wasAlreadyAnswered(state.output, question)) {
+  if (
+    question.length === 0 ||
+    isAgentRunQuestionAlreadyAnswered(state.output, question)
+  ) {
     return state;
   }
 
@@ -58,6 +64,7 @@ export const reduceAgentLiveTerminalHeartbeatInput = (
       agentRunId: state.activeRunId ?? "",
       question,
       partialOutput: "",
+      fromHeartbeat: true,
     } satisfies AgentRunInputRequest,
   };
 };

@@ -8,11 +8,12 @@ import { getSql } from "@/lib/db";
  * signal: install-token inserts used to stamp it (HOME-059).
  *
  * Always keep the newest placeholder (and any claimed within the in-flight
- * grace window) so multi-Mac Connect can mint while another Mac is live
+ * grace window, 10 minutes since bca9b1eb so stubs from repeated Connect opens
+ * are cleaned on the next open) so multi-Mac Connect can mint while another Mac is live
  * (HOME-065 Soft HOLD). `hasLiveMac` no longer wipes every placeholder —
  * that killed the in-flight claim on devices GET.
  */
-export const AGENT_WITCH_CONNECT_PLACEHOLDER_CLAIM_GRACE_MINUTES = 30;
+export const AGENT_WITCH_CONNECT_PLACEHOLDER_CLAIM_GRACE_MINUTES = 10;
 
 export const revokePendingInstallDevicesForUser = async (input: {
   readonly userId: string;
@@ -39,7 +40,7 @@ export const revokePendingInstallDevicesForUser = async (input: {
         AND (device.device_label IS NULL OR btrim(device.device_label) = '')
         AND (device.display_name IS NULL OR btrim(device.display_name) = '')
         AND lower(coalesce(device.token_hash, '')) <> ${protectTokenHash}
-        AND device.claimed_at < NOW() - INTERVAL '30 minutes'
+        AND device.claimed_at < NOW() - INTERVAL '10 minutes'
         AND device.id <> (
           SELECT newest.id
           FROM agent_witch_devices AS newest
@@ -67,7 +68,7 @@ export const revokePendingInstallDevicesForUser = async (input: {
         AND device.last_handshake_at IS NULL
         AND (device.device_label IS NULL OR btrim(device.device_label) = '')
         AND (device.display_name IS NULL OR btrim(device.display_name) = '')
-        AND device.claimed_at < NOW() - INTERVAL '30 minutes'
+        AND device.claimed_at < NOW() - INTERVAL '10 minutes'
         AND device.id <> (
           SELECT newest.id
           FROM agent_witch_devices AS newest

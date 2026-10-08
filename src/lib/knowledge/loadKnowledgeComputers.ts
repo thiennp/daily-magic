@@ -11,7 +11,12 @@ const parseCapabilities = (
     ? (value as KnowledgeCapabilitiesReport)
     : null;
 
-/** Active computers of the project's owner and members, with knowledge status. */
+/**
+ * Active computers of the project's owner and members, with knowledge status.
+ * bca9b1eb (544db9dd follow-up): pairing stubs that never checked in (no
+ * bundle, key, handshake or name) are not computers, so they are not listed
+ * or counted as "Unnamed computer · Not reported".
+ */
 export const loadKnowledgeComputers = async (
   projectId: string,
 ): Promise<KnowledgeComputerRow[]> =>
@@ -24,6 +29,13 @@ export const loadKnowledgeComputers = async (
       JOIN users usr ON usr.id = dev.user_id
       WHERE dev.revoked_at IS NULL
         AND dev.superseded_by_device_id IS NULL
+        AND NOT (
+          dev.install_bundle_version IS NULL
+          AND dev.public_key IS NULL
+          AND dev.last_handshake_at IS NULL
+          AND COALESCE(btrim(dev.display_name), '') = ''
+          AND COALESCE(btrim(dev.device_label), '') = ''
+        )
         AND (
           dev.user_id IN (SELECT owner_user_id FROM user_projects WHERE id = ${projectId})
           OR dev.user_id IN (

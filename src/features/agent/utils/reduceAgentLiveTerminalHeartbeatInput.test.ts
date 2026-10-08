@@ -36,6 +36,7 @@ describe("floater checkpoint from the paused run's heartbeat (9c8a811d)", () => 
       agentRunId: RUN_ID,
       question: QUESTION,
       partialOutput: "",
+      fromHeartbeat: true,
     });
   });
 

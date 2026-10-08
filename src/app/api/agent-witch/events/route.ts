@@ -35,6 +35,9 @@ export async function GET(request: Request): Promise<Response> {
   const stream = new ReadableStream({
     start: (controller) => {
       const position = { cursor: startCursor };
+      // 33512877: send bytes at once so proxies flush the headers and the
+      // browser opens the stream now, not at the first event or keepalive.
+      controller.enqueue(encoder.encode("retry: 2000\n: connected\n\n"));
 
       const push = async (): Promise<void> => {
         while (!abortController.signal.aborted) {

@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import selectHomeAttentionRuns from "@/features/home/utils/selectHomeAttentionRuns";
+import selectHomeAttentionRuns, {
+  HOME_ATTENTION_MAX_ROWS,
+} from "@/features/home/utils/selectHomeAttentionRuns";
 import { AGENT_RUN_LOST_CONNECTION_REASONS } from "@/lib/dispatch/agentRunLostConnectionReasons.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
@@ -12,7 +14,7 @@ describe("selectHomeAttentionRuns", () => {
   it("keeps pending approvals and recent failures, newest first", () => {
     const result = selectHomeAttentionRuns(
       [
-        run("old-fail", "failed", "2026-10-06T12:00:00Z"),
+        run("old-fail", "failed", "2026-09-30T12:00:00Z"),
         run("fail", "failed", "2026-10-08T10:00:00Z"),
         run("ok", "completed", "2026-10-08T11:00:00Z"),
         run("wait", "pending_approval", "2026-10-08T11:30:00Z"),
@@ -46,14 +48,22 @@ describe("selectHomeAttentionRuns", () => {
       denialReason: AGENT_RUN_LOST_CONNECTION_REASONS.DISCONNECT,
       resultOutput: "",
     } as AgentRunRecord;
-    const failures = ["a", "b", "c", "d", "e"].map((id, index) =>
-      run(id, "failed", `2026-10-08T1${index}:00:00Z`),
+    const failures = Array.from({ length: HOME_ATTENTION_MAX_ROWS }, (_, i) =>
+      run(`f${i}`, "failed", `2026-10-08T11:${String(i).padStart(2, "0")}:00Z`),
     );
 
     const ids = selectHomeAttentionRuns([stalled, ...failures], NOW).map(
       (r) => r.id,
     );
-    expect(ids).toHaveLength(5);
+    expect(ids).toHaveLength(HOME_ATTENTION_MAX_ROWS);
     expect(ids.at(-1)).toBe("stalled");
+  });
+
+  it("keeps failures of the last 7 days, not just 24h (a13083ee)", () => {
+    const ids = selectHomeAttentionRuns(
+      [run("two-days", "failed", "2026-10-06T12:00:00Z")],
+      NOW,
+    ).map((r) => r.id);
+    expect(ids).toEqual(["two-days"]);
   });
 });

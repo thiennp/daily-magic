@@ -5,6 +5,7 @@ import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.typ
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { dispatchAgentRunInputRegistry } from "@/lib/dispatch/dispatchAgentRunInputRegistry";
+import { answeredAgentRunInputMemory } from "@/lib/dispatch/answeredAgentRunInputMemory";
 import { buildAgentRunInputContext } from "@/lib/dispatch/buildAgentRunInputContext";
 import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
 import { notifyDashboardUser } from "@/lib/dispatch/dispatchWriterRunToAgent";
@@ -70,6 +71,21 @@ export const handleClaudeInputRequiredMessageAsync = async (
         errorCode: "run_not_awaiting_input",
         agentRunId,
       },
+      requestId: message.requestId,
+    };
+  }
+
+  // 2a17ba21: the host re-sent an ask that was just answered (it reconnected
+  // before the answer arrived): hand it the same answer, don't reopen it.
+  const replayAnswer = answeredAgentRunInputMemory.findReplayAnswer(
+    agentRunId,
+    question,
+  );
+  if (replayAnswer !== null) {
+    sender.send(replayAnswer);
+    return {
+      type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
+      payload: { agentRunId, resumed: true },
       requestId: message.requestId,
     };
   }

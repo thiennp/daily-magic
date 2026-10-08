@@ -28,7 +28,7 @@ describe("revokePendingInstallDevicesForUser (HOME-059 / HOME-065 Soft HOLD)", (
     const revokeSql = sqlTextOf(sqlMock.mock.calls[0] ?? []);
     expect(revokeSql).toContain("SET revoked_at = NOW()");
     expect(revokeSql).toContain("ORDER BY newest.claimed_at DESC");
-    expect(revokeSql).toContain("INTERVAL '30 minutes'");
+    expect(revokeSql).toContain("INTERVAL '10 minutes'");
     expect(sqlMock.mock.calls[0]?.[1]).toBe("user-1");
   });
 

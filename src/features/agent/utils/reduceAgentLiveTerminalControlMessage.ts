@@ -1,4 +1,5 @@
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
+import { isAgentRunQuestionAlreadyAnswered } from "@/features/agent/utils/isAgentRunQuestionAlreadyAnswered";
 import { parseAgentRunInputContext } from "@/features/dispatch/utils/parseAgentRunInputContext";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
@@ -83,7 +84,11 @@ export const reduceAgentLiveTerminalControlMessage = (
   ) {
     const question =
       typeof payload.question === "string" ? payload.question : "";
-    if (question.length === 0) {
+    // 2a17ba21: a replayed ask the user already answered stays closed.
+    if (
+      question.length === 0 ||
+      isAgentRunQuestionAlreadyAnswered(state.output, question)
+    ) {
       return state;
     }
 
