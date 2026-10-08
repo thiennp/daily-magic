@@ -383,9 +383,6 @@ const captureKnowledgeForRunResult = (
   });
 };
 
-// Run results are emitted by agentWitchRunSessions, not by sendMessage below.
-setAgentWitchRunResultObserver(captureKnowledgeForRunResult);
-
 const sendMessage = (
   socket: AgentWitchOutboundSocket,
   message: Record<string, unknown>,
@@ -2264,136 +2261,139 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     if (parsed.type === "harness.manifest.request") {
       reportHarnessManifest(socket, config.layout);
     }
+  };
 
-    if (parsed.type === "command.claude.result" && isRecord(parsed.payload)) {
-      const agentRunId =
-        typeof parsed.payload.agentRunId === "string"
-          ? parsed.payload.agentRunId
-          : undefined;
-      const output =
-        typeof parsed.payload.output === "string" ? parsed.payload.output : "";
-      const exitCode =
-        typeof parsed.payload.exitCode === "number"
-          ? parsed.payload.exitCode
-          : null;
-      const projectFolderPath = resolveRunProjectFolderPath(
-        agentRunId !== undefined
-          ? projectFolderPathByRunId.get(agentRunId)
-          : undefined,
-        buildDefaultUserProjectFolderPath,
-      );
-      const projectId =
-        agentRunId !== undefined ? projectIdByRunId.get(agentRunId) : undefined;
-      const prompt =
-        agentRunId !== undefined ? (promptByRunId.get(agentRunId) ?? "") : "";
+  /** The cloud never echoes a run result back, so this runs where the result is emitted. */
+  const handleRunResultOnAgent = (payload: Record<string, unknown>): void => {
+    const agentRunId =
+      typeof payload.agentRunId === "string" ? payload.agentRunId : undefined;
+    const output = typeof payload.output === "string" ? payload.output : "";
+    const exitCode =
+      typeof payload.exitCode === "number" ? payload.exitCode : null;
+    const projectFolderPath = resolveRunProjectFolderPath(
+      agentRunId !== undefined
+        ? projectFolderPathByRunId.get(agentRunId)
+        : undefined,
+      buildDefaultUserProjectFolderPath,
+    );
+    const projectId =
+      agentRunId !== undefined ? projectIdByRunId.get(agentRunId) : undefined;
+    const prompt =
+      agentRunId !== undefined ? (promptByRunId.get(agentRunId) ?? "") : "";
 
-      const shouldCapture = shouldCaptureRunOutputForProjectKnowledge({
-        exitCode,
-        output,
-      });
+    const shouldCapture = shouldCaptureRunOutputForProjectKnowledge({
+      exitCode,
+      output,
+    });
 
-      if (agentRunId !== undefined && projectFolderPath !== null) {
-        const reportKey = reportKeyByRunId.get(agentRunId);
-        const gitBefore = gitSnapshotBeforeByRunId.get(agentRunId);
-        if (reportKey !== undefined && gitBefore !== undefined) {
-          void captureAgentWitchGitWorktreeSnapshot(projectFolderPath).then(
-            (gitAfter) => {
-              const verdictLine = formatAgentWitchGitWorktreeVerdict({
-                before: gitBefore,
-                after: gitAfter,
-              });
-              appendAgentRunReportDetailsLine(reportKey, verdictLine);
-              gitSnapshotBeforeByRunId.delete(agentRunId);
-              reportKeyByRunId.delete(agentRunId);
-            },
-          );
-        }
+    if (agentRunId !== undefined && projectFolderPath !== null) {
+      const reportKey = reportKeyByRunId.get(agentRunId);
+      const gitBefore = gitSnapshotBeforeByRunId.get(agentRunId);
+      if (reportKey !== undefined && gitBefore !== undefined) {
+        void captureAgentWitchGitWorktreeSnapshot(projectFolderPath).then(
+          (gitAfter) => {
+            const verdictLine = formatAgentWitchGitWorktreeVerdict({
+              before: gitBefore,
+              after: gitAfter,
+            });
+            appendAgentRunReportDetailsLine(reportKey, verdictLine);
+            gitSnapshotBeforeByRunId.delete(agentRunId);
+            reportKeyByRunId.delete(agentRunId);
+          },
+        );
       }
+    }
 
-      if (
-        shouldCapture &&
-        projectId !== undefined &&
-        projectId.trim().length > 0
-      ) {
-        const runConfig = readAgentWitchRunConfig();
-        const cloudConfig =
-          runConfig === null
+    if (
+      shouldCapture &&
+      projectId !== undefined &&
+      projectId.trim().length > 0
+    ) {
+      const runConfig = readAgentWitchRunConfig();
+      const cloudConfig =
+        runConfig === null
+          ? null
+          : resolveAgentWitchCloudApiConfig({
+              wsUrl: runConfig.wsUrl,
+              pairingToken: runConfig.pairingToken,
+            });
+      if (cloudConfig !== null) {
+        void syncProjectKnowledgeCandidateToCloud(cloudConfig, projectId, {
+          ...(agentRunId !== undefined ? { sourceRunId: agentRunId } : {}),
+          lesson: distillProjectKnowledgeLesson({ prompt, output }),
+        });
+      }
+    }
+
+    if (
+      agentRunId !== undefined &&
+      projectId !== undefined &&
+      projectId.trim().length > 0
+    ) {
+      const terminalStatus =
+        exitCode === undefined || exitCode === null
+          ? "completed"
+          : exitCode === 0
+            ? "completed"
+            : "failed";
+      persistRunHistoryAiSessionLocal({
+        projectId: projectId.trim(),
+        agentRunId,
+        status: terminalStatus,
+        promptBody: prompt.length > 0 ? prompt : undefined,
+        resultBody: output,
+        completedAt: new Date().toISOString(),
+      });
+      if (terminalStatus === "completed" && prompt.length > 0) {
+        const autoSkillRunConfig = readAgentWitchRunConfig();
+        const autoSkillCloudApi =
+          autoSkillRunConfig === null
             ? null
             : resolveAgentWitchCloudApiConfig({
-                wsUrl: runConfig.wsUrl,
-                pairingToken: runConfig.pairingToken,
+                wsUrl: autoSkillRunConfig.wsUrl,
+                pairingToken: autoSkillRunConfig.pairingToken,
               });
-        if (cloudConfig !== null) {
-          void syncProjectKnowledgeCandidateToCloud(cloudConfig, projectId, {
-            ...(agentRunId !== undefined ? { sourceRunId: agentRunId } : {}),
-            lesson: distillProjectKnowledgeLesson({ prompt, output }),
+        const autoSkillWriterAgent =
+          agentRunId !== undefined
+            ? (writerAgentByRunId.get(agentRunId) ?? null)
+            : null;
+        if (autoSkillCloudApi !== null) {
+          void reportAutoSkillRunCompleted({
+            cloudApi: autoSkillCloudApi,
+            projectId: projectId.trim(),
+            run: {
+              runId: agentRunId,
+              prompt,
+              resultSummary: output.slice(0, 600),
+              completedAt: new Date().toISOString(),
+              writerAgent: autoSkillWriterAgent,
+              taskTitle: prompt.split("\n", 1)[0]?.trim().slice(0, 120) ?? "",
+            },
+            ...(projectFolderPath !== null
+              ? { folderPath: projectFolderPath }
+              : {}),
+            layout: config.layout,
+            agentOutput: output,
           });
         }
       }
+    }
 
-      if (
-        agentRunId !== undefined &&
-        projectId !== undefined &&
-        projectId.trim().length > 0
-      ) {
-        const terminalStatus =
-          exitCode === undefined || exitCode === null
-            ? "completed"
-            : exitCode === 0
-              ? "completed"
-              : "failed";
-        persistRunHistoryAiSessionLocal({
-          projectId: projectId.trim(),
-          agentRunId,
-          status: terminalStatus,
-          promptBody: prompt.length > 0 ? prompt : undefined,
-          resultBody: output,
-          completedAt: new Date().toISOString(),
-        });
-        if (terminalStatus === "completed" && prompt.length > 0) {
-          const autoSkillRunConfig = readAgentWitchRunConfig();
-          const autoSkillCloudApi =
-            autoSkillRunConfig === null
-              ? null
-              : resolveAgentWitchCloudApiConfig({
-                  wsUrl: autoSkillRunConfig.wsUrl,
-                  pairingToken: autoSkillRunConfig.pairingToken,
-                });
-          const autoSkillWriterAgent =
-            agentRunId !== undefined
-              ? (writerAgentByRunId.get(agentRunId) ?? null)
-              : null;
-          if (autoSkillCloudApi !== null) {
-            void reportAutoSkillRunCompleted({
-              cloudApi: autoSkillCloudApi,
-              projectId: projectId.trim(),
-              run: {
-                runId: agentRunId,
-                prompt,
-                resultSummary: output.slice(0, 600),
-                completedAt: new Date().toISOString(),
-                writerAgent: autoSkillWriterAgent,
-                taskTitle: prompt.split("\n", 1)[0]?.trim().slice(0, 120) ?? "",
-              },
-              ...(projectFolderPath !== null
-                ? { folderPath: projectFolderPath }
-                : {}),
-              layout: config.layout,
-              agentOutput: output,
-            });
-          }
-        }
-      }
-
-      if (agentRunId !== undefined) {
-        removeRunCompositionOverlay(config.layout, agentRunId);
-        runScopedOverlayByRunId.delete(agentRunId);
-        projectIdByRunId.delete(agentRunId);
-        promptByRunId.delete(agentRunId);
-        writerAgentByRunId.delete(agentRunId);
-      }
+    if (agentRunId !== undefined) {
+      removeRunCompositionOverlay(config.layout, agentRunId);
+      runScopedOverlayByRunId.delete(agentRunId);
+      projectIdByRunId.delete(agentRunId);
+      promptByRunId.delete(agentRunId);
+      writerAgentByRunId.delete(agentRunId);
     }
   };
+
+  setAgentWitchRunResultObserver((message) => {
+    captureKnowledgeForRunResult(message);
+    if (isRecord(message.payload)) {
+      handleRunResultOnAgent(message.payload);
+    }
+  });
 
   const connect = (): void => {
     if (state.stopped) {
