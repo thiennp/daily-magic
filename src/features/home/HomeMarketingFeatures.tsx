@@ -1,15 +1,10 @@
-import Link from "next/link";
-
 import {
   HOME_MARKETING_FEATURES_COPY,
-  HOME_MARKETING_HONESTY_FOOTNOTE,
   HOME_MARKETING_SECURITY_COPY,
 } from "@/features/home/constants/homeMarketingLandingCopy.constant";
 import MarketingDarkBand from "@/features/marketing/MarketingDarkBand";
-import MarketingFeatureCard from "@/features/marketing/MarketingFeatureCard";
-import { MARKETING_FEATURE_ITEMS } from "@/features/marketing/marketingFeatureItems.constant";
-import { MARKETING_GROUPED_CARD_SHELL_CLASSES } from "@/features/marketing/marketingDesignSystem.constant";
-import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
+import MarketingCard from "@/features/marketing/MarketingCard";
+import { MARKETING_TEXT_PRIMARY_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { MARKETING_TEXT_SECONDARY_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
 import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
@@ -18,51 +13,44 @@ export default function HomeMarketingFeatures() {
   const copy = HOME_MARKETING_FEATURES_COPY;
 
   return (
-    <section className="mt-16" aria-labelledby="features-heading">
+    <section className="mt-16" id="what" aria-labelledby="features-heading">
       <MarketingSectionHeader
-        eyebrow={copy.eyebrow}
         title={copy.title}
         description={copy.description}
         headingId="features-heading"
         width="full"
       />
-      <div
-        className={mergeMarketingClasses(
-          MARKETING_GROUPED_CARD_SHELL_CLASSES,
-          "mt-8 grid sm:grid-cols-3",
-        )}
-      >
-        {MARKETING_FEATURE_ITEMS.map((item) => (
-          <MarketingFeatureCard key={item.title} item={item} grouped />
+      <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {copy.items.map((item) => (
+          <li key={item.title}>
+            <MarketingCard as="div" className="h-full space-y-2">
+              <h3
+                className={mergeMarketingClasses(
+                  "text-base font-semibold",
+                  MARKETING_TEXT_PRIMARY_CLASSES,
+                )}
+              >
+                {item.title}
+              </h3>
+              <p
+                className={mergeMarketingClasses(
+                  "text-sm leading-relaxed",
+                  MARKETING_TEXT_SECONDARY_CLASSES,
+                )}
+              >
+                {item.body}
+              </p>
+            </MarketingCard>
+          </li>
         ))}
+      </ul>
+      <div id="security">
+        <MarketingDarkBand
+          eyebrow="Your files"
+          title={HOME_MARKETING_SECURITY_COPY.title}
+          description={HOME_MARKETING_SECURITY_COPY.body}
+        />
       </div>
-      <MarketingDarkBand
-        eyebrow="Your files"
-        title={HOME_MARKETING_SECURITY_COPY.title}
-        description={HOME_MARKETING_SECURITY_COPY.body}
-      />
-      <p
-        className={mergeMarketingClasses(
-          "mt-6 text-sm",
-          MARKETING_TEXT_SECONDARY_CLASSES,
-        )}
-      >
-        {copy.footerPrefix}{" "}
-        <Link href="/#get-started" className={MARKETING_TEXT_LINK_CLASSES}>
-          {copy.footerLink}
-        </Link>
-        .
-      </p>
-      {HOME_MARKETING_HONESTY_FOOTNOTE ? (
-        <p
-          className={mergeMarketingClasses(
-            "mt-3 text-xs",
-            MARKETING_TEXT_SECONDARY_CLASSES,
-          )}
-        >
-          {HOME_MARKETING_HONESTY_FOOTNOTE}
-        </p>
-      ) : null}
     </section>
   );
 }

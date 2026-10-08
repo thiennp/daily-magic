@@ -7,10 +7,12 @@ export interface MarketingHeaderNavItem {
 
 /** In-page anchors on the public landing; auth routes for signed-in areas. */
 export const MARKETING_HEADER_NAV_ITEMS: readonly MarketingHeaderNavItem[] = [
-  { label: "Pricing", href: "/pricing" },
+  { label: "What it does", href: "/#what" },
+  { label: "Bots", href: "/#bots" },
   { label: "Workflows", href: "/#popular-presets-heading" },
-  { label: "Security", href: "/#features-heading" },
-  { label: "Resources", href: "/showcases" },
+  { label: "Your files", href: "/#security" },
+  { label: "FAQ", href: "/#faq" },
+  { label: "Pricing", href: "/pricing" },
   {
     label: "Reports",
     href: `/login?callbackUrl=${encodeURIComponent(PROJECTS_REPORTS_INTENT_HREF)}`,

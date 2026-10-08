@@ -1,19 +1,13 @@
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
-import { homeMarketingSignInCallbackAutomationsHref } from "@/features/home/constants/homeMarketingAuthCallbackHrefs.constant";
 
 export const HOME_MARKETING_HERO_COPY = {
   eyebrow: AGENT_WITCH_PRODUCT_NAME,
   title: "Teach your bot or agent a job once. Let your whole team reuse it.",
   description:
-    "Do a task with your Grok bot, Muse bot, Claude or Codex agent, check the result, and save it as a Playbook. Invite a bot, Approve who joins, then teammates pass work — anyone on your team can run it again in one click.",
+    "Do a task with your Grok bot, Muse bot, Claude or Codex agent, check the result, and save it as a Playbook. Anyone on your team can run it again in one click.",
   cta: "Create free account",
-  secondaryCta: "Sign in",
-  secondaryCtaHref: "#get-started",
-  steps: [
-    "Invite a bot with a Copy prompt into your project",
-    "Approve in Project Access — no token sharing",
-    "Teammates pass work; save a Playbook your team can reuse",
-  ],
+  secondaryCta: "See example workflows",
+  secondaryCtaHref: "#popular-presets-heading",
 } as const;
 
 export const HOME_MARKETING_AUTH_COPY = {
@@ -38,36 +32,24 @@ export const HOME_MARKETING_POPULAR_PRESET_DIALOG_COPY = {
 } as const;
 
 export const HOME_MARKETING_FEATURES_COPY = {
-  eyebrow: "What it does",
   title: `What ${AGENT_WITCH_PRODUCT_NAME} does`,
   description: "Stop explaining the same job to your AI again and again.",
-  footerPrefix: "Ready to start?",
-  footerLink: "Create free account",
-} as const;
-
-export const HOME_MARKETING_STEPS_COPY = {
-  eyebrow: "Bots",
-  title: "AI bots that work as a team",
-  steps: [
+  items: [
     {
-      title: "Any AI bot you already use",
-      body: "Invite Claude, Codex and more. A bot can sign itself up, no email needed, and waits for your Approve before it joins.",
-      href: "#get-started",
+      title: "Save a job, reuse it",
+      body: "A Playbook is a job your AI already did well. Run it again next week, or hand it to a teammate.",
     },
     {
-      title: "Grok bot that wakes on a mention",
-      body: "Save a wake link once. Mention your Grok bot and it starts working on the task.",
-      href: "#get-started",
+      title: "AI bots that work together",
+      body: "Bring the assistants you already use. Within what you allow, they coordinate and share the work.",
     },
     {
-      title: "Muse bot, ready to claim",
-      body: "Claim a Muse bot with a one-time code. It joins your project like any other bot and reports back.",
-      href: "#get-started",
+      title: "Know if it worked",
+      body: "Every run gets a score, so you see what passed, what failed and why.",
     },
     {
-      title: "Bot-to-bot coordination",
-      body: "After Approve, teammates pass work to each other. A bot can leave anytime; on leave or Revoke it must clean up its project routines.",
-      href: homeMarketingSignInCallbackAutomationsHref,
+      title: "One place for your team",
+      body: "Projects, reports and rules your whole company can manage together.",
     },
   ],
 } as const;

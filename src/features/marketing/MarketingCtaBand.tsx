@@ -19,17 +19,21 @@ export default function MarketingCtaBand() {
           >
             Stop repeating yourself to your AI.
           </h2>
-          <p className="text-base text-brand-100">
-            Create a free account. Work stays on your computer — about fifteen
-            minutes to first run.
-          </p>
         </div>
-        <Link
-          href="/#get-started"
-          className={MARKETING_BUTTON_ON_BRAND_BAND_CLASSES}
-        >
-          Create free account
-        </Link>
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            href="/#get-started"
+            className={MARKETING_BUTTON_ON_BRAND_BAND_CLASSES}
+          >
+            Create free account
+          </Link>
+          <Link
+            href="/#get-started"
+            className={MARKETING_BUTTON_ON_BRAND_BAND_CLASSES}
+          >
+            Sign in
+          </Link>
+        </div>
       </div>
     </section>
   );

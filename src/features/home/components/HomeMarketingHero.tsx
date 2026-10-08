@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import HomeMarketingAuthSection from "./HomeMarketingAuthSection";
-import HomeMarketingHeroSteps from "./HomeMarketingHeroSteps";
 import { HOME_MARKETING_HERO_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
 import HomeMarketingStatusPreview from "@/features/home/components/HomeMarketingStatusPreview";
 import MarketingTrustStrip from "@/features/marketing/MarketingTrustStrip";
@@ -50,7 +49,6 @@ export default function HomeMarketingHero() {
             >
               {HOME_MARKETING_HERO_COPY.description}
             </p>
-            <HomeMarketingHeroSteps />
           </div>
 
           <nav

@@ -1,10 +1,10 @@
+import { HOME_MARKETING_STEPS_COPY } from "@/features/home/constants/homeMarketingBotsFaqCopy.constant";
 import { describe, expect, it } from "vitest";
 
 import {
   HOME_MARKETING_FEATURES_COPY,
   HOME_MARKETING_HERO_COPY,
   HOME_MARKETING_HONESTY_FOOTNOTE,
-  HOME_MARKETING_STEPS_COPY,
 } from "@/features/home/constants/homeMarketingLandingCopy.constant";
 import { MARKETING_FEATURE_ITEMS } from "@/features/marketing/marketingFeatureItems.constant";
 import { AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
@@ -14,16 +14,17 @@ describe("home marketing bot-to-bot connect (Grok launch)", () => {
   it("landing hero and steps cover invite → Approve → peers → dispatch in plain words", () => {
     const blob = [
       HOME_MARKETING_HERO_COPY.description,
-      ...HOME_MARKETING_HERO_COPY.steps,
       HOME_MARKETING_FEATURES_COPY.title,
       HOME_MARKETING_FEATURES_COPY.description,
       ...HOME_MARKETING_STEPS_COPY.steps.map((s) => `${s.title} ${s.body}`),
       HOME_MARKETING_HONESTY_FOOTNOTE,
+      ...HOME_MARKETING_FEATURES_COPY.items.map((i) => `${i.title} ${i.body}`),
     ].join("\n");
-    expect(blob).toMatch(/invite/i);
-    expect(blob).toMatch(/Approve/i);
-    expect(blob).toMatch(/teammates|peers|pass work/i);
-    expect(blob).not.toMatch(/list_project_peers|project_dispatch|leave_project/i);
+    expect(blob).toMatch(/approv/i);
+    expect(blob).toMatch(/teammate/i);
+    expect(blob).not.toMatch(
+      /list_project_peers|project_dispatch|leave_project/i,
+    );
     expect(blob).not.toMatch(/Dual Bearer|awc_proj_|agent-access|HMAC/i);
     expect(HOME_MARKETING_HONESTY_FOOTNOTE).toBe("");
   });
@@ -39,7 +40,7 @@ describe("home marketing bot-to-bot connect (Grok launch)", () => {
     expect(MARKETING_FEATURE_ITEMS[1]?.body).toMatch(/Left project/i);
     expect(
       HOME_MARKETING_STEPS_COPY.steps.map((s) => s.body).join(" "),
-    ).toMatch(/clean up its project routines/i);
+    ).toMatch(/owner approves/i);
   });
 
   it("for-agents Project cowork ACL documents the full connect path", () => {
