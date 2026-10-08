@@ -100,8 +100,8 @@ struct MacAppMainWindowView: View {
                 Image(systemName: item.systemImage)
                     .frame(width: 16)
                 Text(item.title)
-                if item == .history {
-                    Text("Offline")
+                if let badge = sidebarBadge(for: item) {
+                    Text(badge)
                         .font(.caption2.weight(.semibold))
                         .padding(.horizontal, 6)
                         .padding(.vertical, 2)
@@ -123,7 +123,14 @@ struct MacAppMainWindowView: View {
         .disabled(disabled)
         .opacity(disabled ? 0.45 : 1)
         .help(disabled ? "Available after setup" : item.title)
+        .accessibilityLabel(sidebarRowAccessibilityLabel(title: item.title, badge: sidebarBadge(for: item)))
         .accessibilityAddTraits(selected ? .isSelected : [])
+    }
+
+    /// 279e425f: "Offline" on History only while this computer really is offline.
+    private func sidebarBadge(for item: MacAppSidebarPage) -> String? {
+        guard item == .history else { return nil }
+        return resolveHistorySidebarBadge(chromeKind: chrome.kind, isOffline: controller.isOfflineStub)
     }
 
     private var sidebarFooter: some View {
@@ -221,6 +228,8 @@ struct MacAppMainWindowView: View {
         .padding(.vertical, 4)
         .background(Capsule().fill(colors.bg))
         .foregroundStyle(colors.fg)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Status: \(chrome.pillLabel)")
     }
 
     @ViewBuilder
@@ -285,6 +294,8 @@ struct MacAppMainWindowView: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("Account: \(accountFirstName)")
+            .accessibilityHint("Shows Settings and Sign out")
             .popover(isPresented: $showAccountMenu, arrowEdge: .bottom) {
                 VStack(alignment: .leading, spacing: 0) {
                     VStack(alignment: .leading, spacing: 2) {
@@ -325,23 +336,21 @@ struct MacAppMainWindowView: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(title)
     }
 
     private var accountInitials: String {
-        let email = controller.signedInEmail ?? "A"
-        let parts = email.split(separator: "@").first?.split(separator: ".") ?? []
-        if parts.count >= 2 {
-            return String(parts[0].prefix(1) + parts[1].prefix(1)).uppercased()
-        }
-        return String(email.prefix(1)).uppercased()
+        LocalAccountName.initials(
+            email: controller.signedInEmail,
+            preferredName: controller.chromeDisplayName
+        )
     }
 
+    /// 279e425f: never the raw "Agt-c7f998a3-…" agent id.
     private var accountFirstName: String {
-        let email = controller.signedInEmail ?? "Account"
-        if let local = email.split(separator: "@").first {
-            let name = local.split(separator: ".").first.map(String.init) ?? String(local)
-            return name.prefix(1).uppercased() + name.dropFirst()
-        }
-        return "Account"
+        LocalAccountName.firstName(
+            email: controller.signedInEmail,
+            preferredName: controller.chromeDisplayName
+        )
     }
 }

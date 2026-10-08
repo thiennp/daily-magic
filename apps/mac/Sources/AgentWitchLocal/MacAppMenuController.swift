@@ -73,11 +73,11 @@ final class MacAppMenuController: ObservableObject {
         }
     }
 
+    /// 279e425f: agent accounts (`agt-<uuid>@agents.agentwitch.com`) get a friendly
+    /// name instead of "Agt-c7f998a3-…".
     func displayNameFromEmail(_ email: String?) -> String? {
-        guard let local = email?.split(separator: "@").first else { return nil }
-        let part = local.split(separator: ".").first.map(String.init) ?? String(local)
-        guard let first = part.first else { return part }
-        return String(first).uppercased() + part.dropFirst()
+        guard let email, !email.isEmpty else { return nil }
+        return LocalAccountName.displayName(email: email)
     }
 
     /// H5 self-heal / first-setup session (menu bar + window share this).

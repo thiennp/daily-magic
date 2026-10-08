@@ -10,7 +10,7 @@ describe("AWL Mac app version sources stay in sync", () => {
     const packageJson = JSON.parse(
       readFileSync(join(root, "package.json"), "utf8"),
     ) as { version: string };
-    expect(packageJson.version).toBe("0.2.7");
+    expect(packageJson.version).toBe("0.2.8");
 
     const constants = readFileSync(
       join(

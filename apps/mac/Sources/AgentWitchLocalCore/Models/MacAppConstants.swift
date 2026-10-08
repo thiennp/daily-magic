@@ -34,7 +34,7 @@ public enum MacAppConstants {
     public static let cloudOriginHostApex = "agentwitch.com"
     public static let bundleIdentifier = "com.agent-witch.local-app"
     /// Desktop app marketing version (keep in sync with CFBundleShortVersionString / Linux core.Version).
-    public static let appVersion = "0.2.7"
+    public static let appVersion = "0.2.8"
 
     /// Per-account host services (AWL-ISO-1): label, systemd unit and wake port per account.
     public static let hostServicesFileName = "host-services.json"

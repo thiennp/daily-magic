@@ -68,6 +68,7 @@ struct MacAppMenuBarContentView: View {
                 .foregroundStyle(.white)
                 .frame(width: 20, height: 20)
                 .background(RoundedRectangle(cornerRadius: 5).fill(MacAppTheme.brand))
+                .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 Text("AgentWitch Local")
                     .font(.subheadline.weight(.semibold))
@@ -94,6 +95,8 @@ struct MacAppMenuBarContentView: View {
         .padding(.vertical, 3)
         .background(Capsule().fill(colors.bg))
         .foregroundStyle(colors.fg)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Status: \(chrome.pillLabel)")
     }
 
     @ViewBuilder
@@ -199,6 +202,7 @@ struct MacAppMenuBarContentView: View {
                 .foregroundStyle(.white)
                 .frame(width: 28, height: 28)
                 .background(Circle().fill(MacAppTheme.brand))
+                .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 1) {
                 Text(accountDisplayName)
                     .font(.subheadline.weight(.semibold))
@@ -221,6 +225,7 @@ struct MacAppMenuBarContentView: View {
                 .menuStyle(.borderlessButton)
                 .fixedSize()
                 .help("Switch account")
+                .accessibilityLabel("Switch account")
             }
         }
         .padding(.bottom, 4)
@@ -404,27 +409,38 @@ struct MacAppMenuBarContentView: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        // 279e425f: VoiceOver reads the action, not "Open window ⌘O" glyphs.
+        .accessibilityLabel(title)
+        .accessibilityHint("Shortcut \(shortcut)")
     }
 
     private func openMainWindow(page: MacAppSidebarPage) {
         presenter.present(pageRawValue: page.rawValue)
+        // 279e425f: the popover closed nothing; it stayed over the opened window.
+        Task { @MainActor in dismissMenuBarExtraPopover() }
     }
 
     private var accountInitials: String {
-        let email = controller.signedInEmail ?? "A"
-        let local = email.split(separator: "@").first.map(String.init) ?? "A"
-        let parts = local.split(separator: ".")
-        if parts.count >= 2 {
-            return String(parts[0].prefix(1) + parts[1].prefix(1)).uppercased()
-        }
-        return String(local.prefix(1)).uppercased()
+        LocalAccountName.initials(
+            email: controller.signedInEmail,
+            preferredName: controller.chromeDisplayName
+        )
     }
 
+    /// 279e425f: friendly name (never the raw "Agt-c7f998a3-…" agent id).
     private var accountDisplayName: String {
-        let email = controller.signedInEmail ?? "Account"
-        if let local = email.split(separator: "@").first {
-            return local.split(separator: ".").map { $0.prefix(1).uppercased() + $0.dropFirst() }.joined(separator: " ")
-        }
-        return "Account"
+        LocalAccountName.displayName(
+            email: controller.signedInEmail,
+            preferredName: controller.chromeDisplayName
+        )
+    }
+}
+
+/// 279e425f: closes SwiftUI's MenuBarExtra panel after Open window / Settings / Sign in.
+@MainActor
+func dismissMenuBarExtraPopover() {
+    for window in NSApp.windows
+    where window.isVisible && isMenuBarExtraWindowClassName(String(describing: type(of: window))) {
+        window.close()
     }
 }

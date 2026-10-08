@@ -12,9 +12,10 @@ extension MacAppMenuController {
 
     var signedInEmailStub: String? { signedInEmail ?? chromeAuthEmail }
 
+    /// 279e425f: a friendly name, never the raw "Agt-c7f998a3-…" agent id.
     var signedInDisplayName: String? {
-        guard signedInEmail != nil else { return nil }
-        return chromeDisplayName ?? displayNameFromEmail(signedInEmail) ?? "You"
+        guard let email = signedInEmail else { return nil }
+        return LocalAccountName.displayName(email: email, preferredName: chromeDisplayName)
     }
 
     /// AWL-H8 placeholder — offline / waiting for internet.
