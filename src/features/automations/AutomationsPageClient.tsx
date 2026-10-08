@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-import AutomationCard from "@/features/automations/AutomationCard";
 import AutomationsListLoadErrorPanel from "@/features/automations/AutomationsListLoadErrorPanel";
+import AutomationsListSection from "@/features/automations/AutomationsListSection";
+import AutomationsLoadingSkeleton from "@/features/automations/AutomationsLoadingSkeleton";
 import CreateAutomationForm from "@/features/automations/CreateAutomationForm";
 import { AUTOMATIONS_PAGE_COPY } from "@/features/automations/automationsPageCopy.constant";
 import { syncAutomationsToLocalMac } from "@/features/automations/submitAutomationActions";
@@ -44,7 +45,7 @@ export default function AutomationsPageClient() {
       {loadFailed ? (
         <AutomationsListLoadErrorPanel onRetry={reload} />
       ) : isLoading ? (
-        <p className="text-sm text-awc-fg-muted dark:text-gray-400">Loading…</p>
+        <AutomationsLoadingSkeleton />
       ) : automations.length === 0 ? (
         <div className="rounded-xl border border-dashed border-awc-border-strong px-4 py-8 text-center dark:border-gray-700">
           <p className="text-sm font-medium text-awc-fg dark:text-white/90">
@@ -55,17 +56,12 @@ export default function AutomationsPageClient() {
           </p>
         </div>
       ) : (
-        <div className="grid gap-4">
-          {automations.map((automation) => (
-            <AutomationCard
-              key={automation.id}
-              automation={automation}
-              onChanged={() => {
-                void refreshAndSync();
-              }}
-            />
-          ))}
-        </div>
+        <AutomationsListSection
+          automations={automations}
+          onChanged={() => {
+            void refreshAndSync();
+          }}
+        />
       )}
     </div>
   );

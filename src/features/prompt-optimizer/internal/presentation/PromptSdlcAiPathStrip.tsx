@@ -14,23 +14,38 @@ export default function PromptSdlcAiPathStrip(): ReactElement {
       aria-labelledby="prompt-sdlc-ai-paths-heading"
       className="space-y-3"
     >
-      <h2
-        id="prompt-sdlc-ai-paths-heading"
-        className={APP_SURFACE_SECTION_TITLE_CLASS}
-      >
-        {copy.title}
-      </h2>
-      <p className={`${APP_SURFACE_BODY_TEXT_CLASS} max-w-xl`}>{copy.intro}</p>
-      <ul className="grid gap-3 sm:grid-cols-2">
+      <div className="flex flex-wrap items-end justify-between gap-2">
+        <h2
+          id="prompt-sdlc-ai-paths-heading"
+          className={APP_SURFACE_SECTION_TITLE_CLASS}
+          title={copy.tip}
+        >
+          {copy.title}
+        </h2>
+        <p className={APP_SURFACE_BODY_TEXT_CLASS}>{copy.intro}</p>
+      </div>
+      <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {copy.paths.map((path) => (
-          <li key={path.id} className={APP_SURFACE_NESTED_CARD_CLASS}>
-            <p className="text-sm font-semibold text-awc-fg dark:text-white">
+          <li
+            key={path.id}
+            className={`${APP_SURFACE_NESTED_CARD_CLASS} flex flex-col gap-2`}
+          >
+            <h3
+              className="text-sm font-semibold text-awc-fg dark:text-white"
+              title={path.tip}
+            >
               {path.label}
-            </p>
-            <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>{path.detail}</p>
+            </h3>
+            <p className={APP_SURFACE_BODY_TEXT_CLASS}>{path.detail}</p>
+            <span className="mt-auto self-start rounded-full bg-awc-surface-2 px-2.5 py-0.5 text-xs font-semibold text-awc-fg-muted dark:bg-white/10 dark:text-gray-300">
+              {path.tag}
+            </span>
           </li>
         ))}
       </ul>
+      <p className="text-xs text-awc-fg-muted dark:text-gray-400">
+        {copy.footnote}
+      </p>
     </section>
   );
 }

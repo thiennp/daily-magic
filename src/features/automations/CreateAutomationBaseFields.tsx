@@ -64,6 +64,8 @@ export default function CreateAutomationBaseFields({
         Name
         <input
           type="text"
+          placeholder="Friday digest"
+          autoComplete="off"
           value={name}
           onChange={(event) => {
             onNameChange(event.target.value);

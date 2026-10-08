@@ -19,7 +19,9 @@ export default function CreateAutomationWebhookReveal({
   return (
     <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm dark:border-amber-900 dark:bg-amber-950/40">
       <div className="flex flex-wrap items-start justify-between gap-2">
-        <p className="font-medium">{AUTOMATIONS_PAGE_COPY.webhookSecretTitle}</p>
+        <p className="font-medium">
+          {AUTOMATIONS_PAGE_COPY.webhookSecretTitle}
+        </p>
         <Button
           type="button"
           size="sm"
@@ -37,7 +39,9 @@ export default function CreateAutomationWebhookReveal({
       {webhookUrl !== null ? (
         <>
           <div className="mt-3 flex flex-wrap items-start justify-between gap-2">
-            <p className="font-medium">{AUTOMATIONS_PAGE_COPY.webhookUrlTitle}</p>
+            <p className="font-medium">
+              {AUTOMATIONS_PAGE_COPY.webhookUrlTitle}
+            </p>
             <Button
               type="button"
               size="sm"

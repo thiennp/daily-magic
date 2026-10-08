@@ -88,7 +88,10 @@ export default function CreateAutomationForm({
           />
         ) : null}
         {form.error ? (
-          <p className="text-sm text-error-600 dark:text-error-400">
+          <p
+            role="alert"
+            className="text-sm text-error-600 dark:text-error-400"
+          >
             {form.error}
           </p>
         ) : null}

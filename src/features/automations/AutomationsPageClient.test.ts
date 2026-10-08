@@ -19,7 +19,7 @@ describe("AutomationsPageClient", () => {
   });
 
   it("surfaces sync failure as amber status", () => {
-    expect(source).toContain("role=\"status\"");
+    expect(source).toContain('role="status"');
     expect(source).toContain("amber-");
   });
 });

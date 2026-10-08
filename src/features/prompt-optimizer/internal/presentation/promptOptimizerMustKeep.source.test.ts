@@ -38,9 +38,9 @@ describe("Prompt optimizer must-keeps", () => {
     }
     expect(PROMPT_SDLC_AI_PATH_COPY.paths.map((p) => p.label)).toEqual([
       "CLI",
-      "assistant",
-      "buy tokens",
-      "own API key",
+      "Assistant",
+      "Buy tokens",
+      "Own API key",
     ]);
     expect(html).toContain("1 agent");
     expect(html.toLowerCase()).not.toContain("ai credits included");

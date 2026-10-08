@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { useAutomationProjectSelection } from "@/features/automations/hooks/useAutomationProjectSelection";
+import { validateCreateAutomationInput } from "@/features/automations/validateCreateAutomationInput";
 import { submitCreateAutomation } from "@/features/automations/submitCreateAutomation";
 import { AGENT_AUTOMATION_SCHEDULE_PRESETS } from "@/lib/automations/AgentAutomationSchedulePreset.constant";
 import type { AgentAutomationSchedulePresetValue } from "@/lib/automations/AgentAutomationSchedulePreset.constant";
@@ -52,16 +53,15 @@ export const useCreateAutomationForm = (
   };
 
   const handleSubmit = async (): Promise<void> => {
-    if (capabilityId.length === 0 || name.trim().length === 0) {
-      setError("Choose a workflow and name.");
-      return;
-    }
+    const invalid = validateCreateAutomationInput({
+      capabilityId,
+      name,
+      requiresProject: projectSelection.requiresProjectSelection,
+      selectedProjectId: projectSelection.selectedProjectId,
+    });
 
-    if (
-      projectSelection.requiresProjectSelection &&
-      projectSelection.selectedProjectId.length === 0
-    ) {
-      setError("Choose a project folder.");
+    if (invalid !== null) {
+      setError(invalid);
       return;
     }
 

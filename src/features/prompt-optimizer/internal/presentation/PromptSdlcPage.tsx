@@ -5,64 +5,76 @@ import AppPageHeader from "@/components/surfaces/AppPageHeader";
 import {
   APP_SURFACE_BODY_TEXT_CLASS,
   APP_SURFACE_CTA_PRIMARY_CLASS,
+  APP_SURFACE_NESTED_CARD_CLASS,
   APP_SURFACE_TEXT_LINK_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import PromptSdlcAiPathStrip from "@/features/prompt-optimizer/internal/presentation/PromptSdlcAiPathStrip";
+import PromptSdlcHowItWorks from "@/features/prompt-optimizer/internal/presentation/PromptSdlcHowItWorks";
+import PromptSdlcResultsLegend from "@/features/prompt-optimizer/internal/presentation/PromptSdlcResultsLegend";
 import {
   PROMPT_SDLC_AWL_GUIDE_HREF,
   PROMPT_SDLC_AWL_PAGE_HREF,
 } from "@/features/prompt-optimizer/internal/presentation/promptSdlcAwlHref.constant";
-import { PROMPT_SDLC_OUTCOME_COPY } from "@/features/prompt-optimizer/internal/presentation/promptSdlcOutcomeLabels.constant";
+
+const SECONDARY_CTA_CLASS =
+  "inline-flex h-11 items-center rounded-xl border border-awc-border-strong px-5 text-sm font-semibold text-awc-fg dark:border-gray-700 dark:text-white";
 
 export default function PromptSdlcPage(): ReactElement {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <AppPageHeader
         title="Prompt optimizer"
-        description="Run the four-step wizard in the AgentWitch Local Mac app on this computer. This console page does not run the optimizer."
+        description="Run the four-step wizard in AgentWitch Local on this computer. A judge scores each try, the runner executes module trials, and writers work from your Playbook and project folder."
       />
-      <ol
-        className={`${APP_SURFACE_BODY_TEXT_CLASS} max-w-xl list-decimal space-y-4 pl-5`}
+      <section
+        aria-labelledby="prompt-sdlc-computer-heading"
+        className={`${APP_SURFACE_NESTED_CARD_CLASS} space-y-4`}
       >
-        <li>Install or open AgentWitch Local on this computer if you have not already.</li>
-        <li>Open Prompt optimizer in the AgentWitch Local Mac app (menu bar or the button below).</li>
-        <li>
-          Paste the prompt and goal, choose the project folder, then pick judge
-          and improver writers.
-        </li>
-      </ol>
-      <p
-        className="max-w-xl rounded-lg border border-amber-200/80 bg-amber-50/70 px-3 py-2 text-sm text-amber-950 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-100"
-        title={PROMPT_SDLC_OUTCOME_COPY.recommendTimeoutTip}
-      >
-        <strong>Honesty chrome:</strong> cycle badges show{" "}
-        <strong>passed</strong> / failed / timeout / interrupt / no_reply
-        unmistakably. {PROMPT_SDLC_OUTCOME_COPY.useThisOnlyWhenPassed}
-      </p>
-      <div className="flex flex-wrap items-center gap-3">
-        <a href={PROMPT_SDLC_AWL_PAGE_HREF} className={APP_SURFACE_CTA_PRIMARY_CLASS}>
-          Open in AgentWitch Local
-        </a>
-        <Link href="/download" className={APP_SURFACE_TEXT_LINK_CLASS}>
-          Download AgentWitch Local
-        </Link>
-      </div>
-      <p className={APP_SURFACE_BODY_TEXT_CLASS}>
-        Opens the Mac app via {PROMPT_SDLC_AWL_PAGE_HREF}. This console page does
-        not run the optimizer.
-      </p>
+        <div className="space-y-1">
+          <h2
+            id="prompt-sdlc-computer-heading"
+            className="text-base font-semibold text-awc-fg dark:text-white"
+          >
+            This computer
+          </h2>
+          <p className={APP_SURFACE_BODY_TEXT_CLASS}>
+            Opens the wizard in AgentWitch Local on this computer.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <a
+            href={PROMPT_SDLC_AWL_PAGE_HREF}
+            className={APP_SURFACE_CTA_PRIMARY_CLASS}
+          >
+            Open in AgentWitch Local
+          </a>
+          <Link href="/download" className={SECONDARY_CTA_CLASS}>
+            Download AgentWitch Local
+          </Link>
+        </div>
+        <p className="flex flex-wrap items-center gap-x-2 border-t border-awc-border pt-3 text-sm text-awc-fg-muted dark:border-gray-800 dark:text-gray-400">
+          <span className="mr-auto">This page does not run the optimizer.</span>
+          <Link
+            href="/prompt-optimizer/guide"
+            className={APP_SURFACE_TEXT_LINK_CLASS}
+          >
+            How it works
+          </Link>
+          <span aria-hidden="true">·</span>
+          <a
+            href={PROMPT_SDLC_AWL_GUIDE_HREF}
+            className={APP_SURFACE_TEXT_LINK_CLASS}
+          >
+            Instructions in AgentWitch Local
+          </a>
+        </p>
+      </section>
       <PromptSdlcAiPathStrip />
-      <p>
-        <Link
-          href="/prompt-optimizer/guide"
-          className={APP_SURFACE_TEXT_LINK_CLASS}
-        >
-          How it works
-        </Link>
-        {" · "}
-        <a href={PROMPT_SDLC_AWL_GUIDE_HREF} className={APP_SURFACE_TEXT_LINK_CLASS}>
-          Instructions in AgentWitch Local
-        </a>
+      <PromptSdlcHowItWorks />
+      <PromptSdlcResultsLegend />
+      <p className="rounded-lg border border-awc-border bg-awc-surface-2/70 px-4 py-3 text-sm text-awc-fg dark:border-gray-800 dark:bg-white/5 dark:text-gray-200">
+        <strong>Run history stays on this computer.</strong> Reports and prompts
+        never upload to the cloud.
       </p>
     </div>
   );

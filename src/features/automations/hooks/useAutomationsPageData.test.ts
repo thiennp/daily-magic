@@ -19,7 +19,6 @@ describe("useAutomationsPageData", () => {
     expect(source).toContain("loadGenerationRef");
   });
 
-
   it("skips authed fetches when signed out", () => {
     const source = readFileSync(
       join(

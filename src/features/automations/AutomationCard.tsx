@@ -6,6 +6,7 @@ import { PROJECTS_REPORTS_INTENT_HREF } from "@/lib/shell/projectTabIntentHrefs.
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import Button from "@/components/ui/button/Button";
+import AutomationRunCells from "@/features/automations/AutomationRunCells";
 import { AUTOMATIONS_PAGE_COPY } from "@/features/automations/automationsPageCopy.constant";
 import { formatAutomationScheduleLabel } from "@/features/automations/formatAutomationScheduleLabel";
 import { useAutomationCardActions } from "@/features/automations/hooks/useAutomationCardActions";
@@ -38,18 +39,17 @@ export default function AutomationCard({
       <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
         {formatAutomationScheduleLabel(automation)}
       </p>
-      {automation.nextRunAt !== null ? (
-        <p className="mt-1 text-xs text-awc-fg-muted dark:text-gray-400">
-          Next run: {new Date(automation.nextRunAt).toLocaleString()}
-        </p>
-      ) : null}
+      <AutomationRunCells automation={automation} />
       {automation.lastError ? (
         <p className="mt-2 text-sm text-error-600 dark:text-error-400">
           {automation.lastError}
         </p>
       ) : null}
       {error ? (
-        <p className="mt-2 text-sm text-error-600 dark:text-error-400">
+        <p
+          role="alert"
+          className="mt-2 text-sm text-error-600 dark:text-error-400"
+        >
           {error}
         </p>
       ) : null}
