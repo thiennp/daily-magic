@@ -9,6 +9,7 @@ import {
   type LoginFeedback,
 } from "@/features/auth/utils/buildLoginFeedback";
 import buildLoginFeedbackFromAuthError from "@/features/auth/utils/buildLoginFeedbackFromAuthError";
+import normalizeAuthErrorCode from "@/features/auth/utils/normalizeAuthErrorCode";
 import parseEmailSignInFeedback from "@/features/auth/utils/parseEmailSignInFeedback";
 import readDevSecretFromLocalStorage from "@/features/auth/utils/readDevSecretFromLocalStorage";
 import secretLogin from "@/features/auth/utils/secretLogin";
@@ -24,7 +25,7 @@ export default function useLoginForm({
 }: UseLoginFormParams) {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? defaultCallbackUrl;
-  const authError = searchParams.get("error");
+  const authError = normalizeAuthErrorCode(searchParams.get("error"));
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleSigningIn, setIsGoogleSigningIn] = useState(false);

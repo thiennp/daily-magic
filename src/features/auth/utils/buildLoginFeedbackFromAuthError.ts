@@ -27,17 +27,18 @@ const AUTH_ERROR_FEEDBACK_MAP: Record<string, LoginFeedback> = {
   },
   Verification: {
     variant: "error",
-    title: "Sign-in link expired",
+    title: "Sign-in link not valid",
     message:
-      "That sign-in link is no longer valid. Request a new email link and try again.",
+      "That sign-in link may have expired, already been used, or never been valid. Request a new email link below and try again.",
   },
 };
 
 export default function buildLoginFeedbackFromAuthError(
   errorCode: string,
 ): LoginFeedback {
+  const normalized = errorCode.split("/")[0]?.trim() ?? errorCode;
   return (
-    AUTH_ERROR_FEEDBACK_MAP[errorCode] ?? {
+    AUTH_ERROR_FEEDBACK_MAP[normalized] ?? {
       variant: "error",
       title: "Sign-in failed",
       message: "Something went wrong during sign-in. Please try again.",

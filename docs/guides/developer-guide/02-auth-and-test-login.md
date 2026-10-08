@@ -1,6 +1,6 @@
 # Chapter 2 — Auth and test login
 
-AWC uses **Auth.js (NextAuth v5)** with Google OAuth, email magic links, and a **gated test bypass** for engineers and E2E. Product sign-in flows are in [user guide ch.2 — Accounts and sign-in](../user-guide/02-accounts-and-sign-in.md).
+AWC uses **Auth.js (NextAuth v5)** with Google OAuth, email magic links, and a **gated test bypass** for engineers and E2E. Product sign-in flows are in [user guide ch.2 — Accounts and sign-in](../user-guide/02-accounts-and-sign-in.md). Auth errors (including invalid magic links) redirect to `/login?error=…` with branded feedback — not the default `/api/auth/error` HTML page.
 
 Code layout: UI `src/features/auth/` · server helpers `src/lib/auth/` · routes `src/app/api/auth/`.
 
