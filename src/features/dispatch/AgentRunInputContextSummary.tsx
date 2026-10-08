@@ -6,6 +6,7 @@ interface AgentRunInputContextSummaryProps {
 
 const ROWS = [
   { label: "Agent", read: (c: AgentRunInputContext) => c.agentLabel },
+  { label: "Computer", read: (c: AgentRunInputContext) => c.computerName },
   { label: "Project", read: (c: AgentRunInputContext) => c.projectName },
   { label: "Task", read: (c: AgentRunInputContext) => c.taskTitle },
 ] as const;

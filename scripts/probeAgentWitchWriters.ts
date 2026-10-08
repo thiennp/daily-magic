@@ -5,6 +5,8 @@ import type { WriterCliCommands } from "./buildWriterCliInvocation";
 export type ProbedWriter = {
   readonly writerAgent: string;
   readonly ready: boolean;
+  /** null = unknown: only Codex has a login-status command we can trust. */
+  readonly loggedIn: boolean | null;
 };
 
 const PROBE_TIMEOUT_MS = 3000;
@@ -14,9 +16,12 @@ const state: {
   cache: { at: number; writers: readonly ProbedWriter[] } | null;
 } = { cache: null };
 
-const canRun = (bin: string): Promise<boolean> =>
+const canRun = (
+  bin: string,
+  args: readonly string[] = ["--version"],
+): Promise<boolean> =>
   new Promise((resolve) => {
-    const child = spawn(bin, ["--version"], { stdio: "ignore" });
+    const child = spawn(bin, [...args], { stdio: "ignore" });
     const timer = setTimeout(() => {
       child.kill();
       resolve(false);
@@ -49,10 +54,14 @@ export const probeAgentWitchWriters = async (
     ["antigravity", commands.antigravityCommand],
   ];
   const writers = await Promise.all(
-    entries.map(async ([writerAgent, bin]) => ({
-      writerAgent,
-      ready: await canRun(bin),
-    })),
+    entries.map(async ([writerAgent, bin]) => {
+      const ready = await canRun(bin);
+      const loggedIn =
+        ready && writerAgent === "codex"
+          ? await canRun(bin, ["login", "status"])
+          : null;
+      return { writerAgent, ready, loggedIn };
+    }),
   );
   state.cache = { at: nowMs, writers };
   return writers;

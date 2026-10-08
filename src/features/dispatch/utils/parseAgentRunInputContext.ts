@@ -16,6 +16,7 @@ export const parseAgentRunInputContext = (
   if (agentLabel === null) return undefined;
   return {
     agentLabel,
+    computerName: optionalTrimmedString(record.computerName),
     projectName: optionalTrimmedString(record.projectName),
     taskTitle: optionalTrimmedString(record.taskTitle),
   };

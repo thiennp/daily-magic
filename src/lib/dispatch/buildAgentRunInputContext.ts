@@ -1,5 +1,6 @@
 import type { AgentRunInputContext } from "@/lib/dispatch/agentRunInputContext.type";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
+import { findAgentWitchDeviceById } from "@/lib/agentWitch/findAgentWitchDeviceById";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
 const WRITER_AGENT_LABELS: Readonly<Record<string, string>> = {
@@ -27,12 +28,18 @@ export const resolveAgentRunTaskTitle = (prompt: string): string | null => {
 };
 
 export const buildAgentRunInputContext = async (
-  run: Pick<AgentRunRecord, "writerAgent" | "projectId" | "prompt">,
+  run: Pick<
+    AgentRunRecord,
+    "writerAgent" | "projectId" | "prompt" | "deviceId"
+  >,
 ): Promise<AgentRunInputContext> => {
-  const project =
-    run.projectId === null ? null : await getUserProjectById(run.projectId);
+  const [project, device] = await Promise.all([
+    run.projectId === null ? null : getUserProjectById(run.projectId),
+    run.deviceId === null ? null : findAgentWitchDeviceById(run.deviceId),
+  ]);
   return {
     agentLabel: WRITER_AGENT_LABELS[run.writerAgent] ?? run.writerAgent,
+    computerName: device?.displayName ?? device?.deviceLabel ?? null,
     projectName: project?.name ?? null,
     taskTitle: resolveAgentRunTaskTitle(run.prompt),
   };

@@ -14,6 +14,7 @@ export type ComputerAccessMemberFields = {
     readonly writerAgent: string;
     readonly label: string;
     readonly isOnline: boolean;
+    readonly needsSignIn?: boolean;
   }[];
 };
 

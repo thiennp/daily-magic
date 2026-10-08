@@ -25,6 +25,7 @@ export type AccessMembershipView = {
     readonly writerAgent: string;
     readonly label: string;
     readonly isOnline: boolean;
+    readonly needsSignIn?: boolean;
   }[];
   readonly installBundleVersion?: string | null;
   readonly connectVersionStatus?: "ok" | "too_old" | string;

@@ -2,6 +2,8 @@
 export type AgentWitchDeviceWriter = {
   readonly writerAgent: string;
   readonly ready: boolean;
+  /** null = unknown (no trustworthy login check for that tool). */
+  readonly loggedIn?: boolean | null;
 };
 
 /** One agent seat under a computer: a coding tool on that machine. */
@@ -9,6 +11,8 @@ export type ComputerAgentView = {
   readonly writerAgent: string;
   readonly label: string;
   readonly isOnline: boolean;
+  /** True only when the tool reported it is signed out. */
+  readonly needsSignIn: boolean;
 };
 
 const WRITER_LABELS: Readonly<Record<string, string>> = {
@@ -26,9 +30,15 @@ export const parseHeartbeatWriters = (
   if (!Array.isArray(value)) return null;
   return value.slice(0, MAX_WRITERS).flatMap((item) => {
     if (typeof item !== "object" || item === null) return [];
-    const { writerAgent, ready } = item as Record<string, unknown>;
+    const { writerAgent, ready, loggedIn } = item as Record<string, unknown>;
     return typeof writerAgent === "string" && writerAgent.length <= 40
-      ? [{ writerAgent, ready: ready === true }]
+      ? [
+          {
+            writerAgent,
+            ready: ready === true,
+            loggedIn: typeof loggedIn === "boolean" ? loggedIn : null,
+          },
+        ]
       : [];
   });
 };
@@ -58,4 +68,5 @@ export const buildComputerAgents = (
       writerAgent: writer.writerAgent,
       label: WRITER_LABELS[writer.writerAgent] ?? writer.writerAgent,
       isOnline: computerOnline,
+      needsSignIn: writer.loggedIn === false,
     }));

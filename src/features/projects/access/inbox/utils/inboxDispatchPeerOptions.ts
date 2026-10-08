@@ -16,6 +16,7 @@ type InboxDispatchPeerMember = {
   readonly agents?: readonly {
     readonly writerAgent: string;
     readonly isOnline: boolean;
+    readonly needsSignIn?: boolean;
   }[];
 };
 

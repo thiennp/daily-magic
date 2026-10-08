@@ -15,8 +15,8 @@ describe("device writers", () => {
         "x",
       ]),
     ).toEqual([
-      { writerAgent: "codex", ready: true },
-      { writerAgent: "cursor", ready: false },
+      { writerAgent: "codex", ready: true, loggedIn: null },
+      { writerAgent: "cursor", ready: false, loggedIn: null },
     ]);
     expect(parseHeartbeatWriters(undefined)).toBeNull();
   });
@@ -32,8 +32,26 @@ describe("device writers", () => {
       false,
     ]);
     expect(buildComputerAgents(writers, true)).toEqual([
-      { writerAgent: "codex", label: "Codex", isOnline: true },
-      { writerAgent: "claude-cli", label: "Claude Code", isOnline: true },
+      {
+        writerAgent: "codex",
+        label: "Codex",
+        isOnline: true,
+        needsSignIn: false,
+      },
+      {
+        writerAgent: "claude-cli",
+        label: "Claude Code",
+        isOnline: true,
+        needsSignIn: false,
+      },
     ]);
+  });
+
+  it("flags a tool that reported it is signed out", () => {
+    const agents = buildComputerAgents(
+      [{ writerAgent: "codex", ready: true, loggedIn: false }],
+      true,
+    );
+    expect(agents[0]?.needsSignIn).toBe(true);
   });
 });

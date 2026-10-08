@@ -3,6 +3,7 @@ interface AwcProjectAccessComputerAgentsProps {
     readonly writerAgent: string;
     readonly label: string;
     readonly isOnline: boolean;
+    readonly needsSignIn?: boolean;
   }[];
 }
 
@@ -26,6 +27,7 @@ export default function AwcProjectAccessComputerAgents({
           }`}
         >
           {agent.label} · {agent.isOnline ? "Online" : "Offline"}
+          {agent.needsSignIn ? " · Sign in needed" : ""}
         </li>
       ))}
     </ul>
