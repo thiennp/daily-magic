@@ -41,10 +41,11 @@ export const useWsTestWriterAgentSelection = (input: {
     },
     [setWriterAgent, socket],
   );
-  // 72ae6076: a link's writer is a preset, not a pick, so a not-ready one
-  // never wins over a Ready writer.
+  // 72ae6076: a resumed run's writer is a preset, so a not-ready one never
+  // wins over a Ready writer. 9bad2e07: an explicit link writer is honored.
   useContinueFromSourceRunPrefill({
     setWriterAgent: delegated.presetWriterAgent,
+    honorLinkWriterAgent: delegated.honorLinkWriterAgent,
   });
   const writerAgent = resolvePreferredWriterAgent({
     writerAgent: delegated.writerAgent,

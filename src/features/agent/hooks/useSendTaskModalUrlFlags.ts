@@ -17,6 +17,7 @@ export const useSendTaskModalUrlFlags = (): {
   readonly shouldRestoreLiveSession: boolean;
   readonly capabilityFromUrl: string;
   readonly sourceRunId: string;
+  readonly isResumeLive: boolean;
 } => {
   const searchParams = useSearchParams();
   const sourceRunId =
@@ -37,5 +38,7 @@ export const useSendTaskModalUrlFlags = (): {
     }),
     capabilityFromUrl: searchParams.get("libraryCapabilityId") ?? "custom",
     sourceRunId,
+    isResumeLive:
+      searchParams.get(SEND_TASK_RESUME_LIVE_SESSION_QUERY_PARAM) === "1",
   };
 };

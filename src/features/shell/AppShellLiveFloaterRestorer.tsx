@@ -11,7 +11,11 @@ import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 import { fetchAgentRunDetail } from "@/features/reports/fetchAgentRunDetail";
 import { isAgentRunSilentPastStall } from "@/lib/dispatch/isAgentRunSilentPastStall";
 import { shouldRestoreLiveFloaterAfterReload } from "@/features/shell/utils/shouldRestoreLiveFloaterAfterReload";
-import { shouldDockResumedLiveSessionOnLoad } from "@/features/shell/utils/shouldDockResumedLiveSessionOnLoad";
+import { hasPersistedInProgressAgentLiveTerminalSession } from "@/features/agent/utils/hasPersistedInProgressAgentLiveTerminalSession";
+import {
+  isPageReloadNavigation,
+  shouldDockReloadedLiveSession,
+} from "@/features/shell/utils/shouldDockResumedLiveSessionOnLoad";
 import { shouldDockRestoredLiveFloater } from "@/features/shell/utils/shouldDockRestoredLiveFloater";
 
 const readRunStatus = async (runId: string): Promise<string | null> => {
@@ -57,7 +61,14 @@ export default function AppShellLiveFloaterRestorer() {
     }
     attempted.current = true;
     // a6053d1c: a reload mid-run restores the floater, not the big modal.
-    if (shouldDockResumedLiveSessionOnLoad(window.location.search)) {
+    // bd93cdcc: a reloaded deep link with a live run docks the same way.
+    if (
+      shouldDockReloadedLiveSession({
+        search: window.location.search,
+        isReload: isPageReloadNavigation(),
+        hasLiveSession: hasPersistedInProgressAgentLiveTerminalSession(),
+      })
+    ) {
       minimizeSendTaskModal();
       return;
     }

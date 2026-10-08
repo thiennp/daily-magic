@@ -1,11 +1,11 @@
 "use client";
 
 import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
+import { useRetryRunInComposer } from "@/features/agent/hooks/useRetryRunInComposer";
 
 /**
- * afae8216: a Failed run stays retryable from Home. Opens its floater on the
- * ended run, where Retry starts it again.
+ * afae8216: a Failed run stays retryable from Home. 7a3086f1: Retry opens
+ * New task prefilled with the run's ask, computer and writer.
  */
 export default function HomeAttentionRetryButton({
   runId,
@@ -14,11 +14,11 @@ export default function HomeAttentionRetryButton({
   readonly runId: string;
   readonly title: string;
 }) {
-  const { expandRunningSendTask } = useSendTaskModal();
+  const retryRun = useRetryRunInComposer();
   return (
     <button
       type="button"
-      onClick={() => expandRunningSendTask(runId)}
+      onClick={() => retryRun(runId)}
       className={APP_SURFACE_CTA_SECONDARY_SM_CLASS}
     >
       Retry<span className="sr-only"> {title}</span>

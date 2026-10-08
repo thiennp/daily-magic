@@ -32,4 +32,16 @@ describe("isAgentRunStalled (41888ea3)", () => {
       ),
     ).toBe(false);
   });
+
+  it("treats an old lost-connection run with no output as Stalled (f5881faa)", () => {
+    const lost = {
+      ...base,
+      status: "failed" as const,
+      denialReason: AGENT_RUN_LOST_CONNECTION_REASONS.DISCONNECT,
+    };
+    expect(isAgentRunStalled({ ...lost, resultOutput: null }, NOW)).toBe(true);
+    expect(
+      isAgentRunStalled({ ...lost, resultOutput: "partial result" }, NOW),
+    ).toBe(false);
+  });
 });

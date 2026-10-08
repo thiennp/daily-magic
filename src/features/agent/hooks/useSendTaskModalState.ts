@@ -5,7 +5,10 @@ import { useState } from "react";
 import { useSendTaskModalUrlFlags } from "@/features/agent/hooks/useSendTaskModalUrlFlags";
 import { hasPersistedInProgressAgentLiveTerminalSession } from "@/features/agent/utils/hasPersistedInProgressAgentLiveTerminalSession";
 import { resolveSendTaskKeepAliveOnUrlClose } from "@/features/agent/utils/resolveSendTaskPresentation";
-import { resolveSendTaskModalPanelKey } from "@/features/agent/utils/resolveSendTaskModalPanelKey";
+import {
+  resolveSendTaskModalPanelKey,
+  shouldKeepDockedPanelOnExpand,
+} from "@/features/agent/utils/resolveSendTaskModalPanelKey";
 
 export const useSendTaskModalState = (): {
   readonly keepAlive: boolean;
@@ -21,6 +24,7 @@ export const useSendTaskModalState = (): {
     shouldRestoreLiveSession,
     capabilityFromUrl,
     sourceRunId,
+    isResumeLive,
   } = useSendTaskModalUrlFlags();
   const [keepAlive, setKeepAlive] = useState(
     () => urlWantsOpen || hasPersistedInProgressAgentLiveTerminalSession(),
@@ -38,7 +42,12 @@ export const useSendTaskModalState = (): {
   if (urlWantsOpen !== wasUrlOpen) {
     const previousWasUrlOpen = wasUrlOpen;
     setWasUrlOpen(urlWantsOpen);
-    if (urlWantsOpen) {
+    if (
+      urlWantsOpen &&
+      shouldKeepDockedPanelOnExpand({ keepAlive, isResumeLive, sourceRunId })
+    ) {
+      setKeepAlive(true);
+    } else if (urlWantsOpen) {
       setKeepAlive(true);
       setPanelKey(
         resolveSendTaskModalPanelKey({

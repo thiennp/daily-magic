@@ -18,6 +18,7 @@ import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type
 import { shouldShowTaskOpenReport } from "@/features/projects/tasks/utils/shouldShowTaskOpenReport";
 import { buildProjectTabHash } from "@/lib/shell/buildNavConsolidationRedirect";
 import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
+import { useRetryRunInComposer } from "@/features/agent/hooks/useRetryRunInComposer";
 import { resolveTaskLiveViewAction } from "@/features/projects/tasks/utils/resolveTaskLiveViewAction";
 
 export default function AwcProjectTaskDetail({
@@ -39,6 +40,7 @@ export default function AwcProjectTaskDetail({
       : null;
 
   const { expandRunningSendTask } = useSendTaskModal();
+  const retryRun = useRetryRunInComposer();
   const liveAction = resolveTaskLiveViewAction({
     status: task.status,
     agentRunId: task.agentRunId,
@@ -93,7 +95,11 @@ export default function AwcProjectTaskDetail({
               <button
                 type="button"
                 className={AWC_TASKS_SECONDARY_BUTTON_CLASS}
-                onClick={() => expandRunningSendTask(liveAction.runId)}
+                onClick={() =>
+                  liveAction.label === "Retry"
+                    ? retryRun(liveAction.runId)
+                    : expandRunningSendTask(liveAction.runId)
+                }
               >
                 {liveAction.label}
               </button>

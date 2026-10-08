@@ -31,13 +31,19 @@ describe("buildProjectReportRows", () => {
     expect(rows.map((row) => row.id)).toEqual(["r1"]);
   });
 
-  it("title: summary first line, else prompt first line", () => {
+  it("title: the user's prompt first line, else the summary (f4bf6a0c)", () => {
     expect(buildProjectReportRows([run({})], "p1")[0].title).toBe(
       "Fix the login bug",
     );
     expect(
       buildProjectReportRows([run({ reportSummary: "Shipped fix" })], "p1")[0]
         .title,
+    ).toBe("Fix the login bug");
+    expect(
+      buildProjectReportRows(
+        [run({ prompt: "", reportSummary: "Shipped fix" })],
+        "p1",
+      )[0].title,
     ).toBe("Shipped fix");
     expect(
       buildProjectReportRows([run({ prompt: "", reportSummary: "" })], "p1")[0]

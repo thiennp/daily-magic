@@ -1,6 +1,6 @@
 "use client";
 
-import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
+import { useRetryRunInComposer } from "@/features/agent/hooks/useRetryRunInComposer";
 import {
   AWC_TASKS_LINK_CLASS,
   AWC_TASKS_SECONDARY_BUTTON_CLASS,
@@ -15,7 +15,7 @@ export default function AwcProjectTaskStalledActions({
 }: {
   readonly task: Pick<ProjectTaskMeta, "agentRunId" | "title">;
 }) {
-  const { expandRunningSendTask } = useSendTaskModal();
+  const retryRun = useRetryRunInComposer();
   const runId = task.agentRunId?.trim() ?? "";
   if (runId.length === 0) {
     return null;
@@ -25,7 +25,7 @@ export default function AwcProjectTaskStalledActions({
       <button
         type="button"
         className={AWC_TASKS_SECONDARY_BUTTON_CLASS}
-        onClick={() => expandRunningSendTask(runId)}
+        onClick={() => retryRun(runId)}
       >
         Retry<span className="sr-only"> {task.title}</span>
       </button>

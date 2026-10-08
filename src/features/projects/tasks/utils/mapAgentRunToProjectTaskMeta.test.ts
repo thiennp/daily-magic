@@ -26,7 +26,10 @@ const run = (
 describe("mapAgentRunToProjectTaskMeta", () => {
   it("keeps the title and adds the lost-connection reason for a disconnected run", () => {
     const meta = mapAgentRunToProjectTaskMeta(
-      run({ denialReason: AGENT_RUN_LOST_CONNECTION_REASONS.DISCONNECT }),
+      run({
+        denialReason: AGENT_RUN_LOST_CONNECTION_REASONS.DISCONNECT,
+        resultOutput: "partial output",
+      }),
       "p1",
     );
     expect(meta.title).toBe("Run workflow: Add vibe coding app feature");
@@ -42,9 +45,16 @@ describe("mapAgentRunToProjectTaskMeta", () => {
       "p1",
     );
     expect(meta.status).toBe("stalled");
-    expect(meta.statusReason).toMatch(
-      /^Stalled — last update from your computer .+\.$/,
+    expect(meta.statusReason).toMatch(/^Last update from your computer .+\.$/);
+  });
+
+  it("shows an old lost-connection run with no output as Stalled (f5881faa)", () => {
+    const meta = mapAgentRunToProjectTaskMeta(
+      run({ denialReason: AGENT_RUN_LOST_CONNECTION_REASONS.DISCONNECT }),
+      "p1",
     );
+    expect(meta.status).toBe("stalled");
+    expect(meta.statusReason).not.toMatch(/^Stalled/);
   });
 
   it("shows Stopped (no reason) for a user-stopped run", () => {
@@ -63,5 +73,16 @@ describe("mapAgentRunToProjectTaskMeta", () => {
     );
     expect(meta.status).toBe("done");
     expect(meta.statusReason).toBeNull();
+  });
+
+  it("keeps the user's title and shows the Done summary separately (f4bf6a0c)", () => {
+    const summary =
+      "Added the settings screen. Changed: 2 files changed, 749 insertions(+), 1 deletion(-), 1 new file(s)";
+    const meta = mapAgentRunToProjectTaskMeta(
+      run({ status: "completed", reportSummary: summary }),
+      "p1",
+    );
+    expect(meta.title).toBe("Run workflow: Add vibe coding app feature");
+    expect(meta.summaryLine).toBe(summary);
   });
 });

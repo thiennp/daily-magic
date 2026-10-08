@@ -83,9 +83,9 @@ export default function AwcProjectTasksList({
           >
             <span className="min-w-0">
               <span className={AWC_TASKS_ROW_TITLE_CLASS}>{task.title}</span>
-              {task.statusReason ? (
-                <span className="mb-1 block truncate text-[13px] text-awc-fg-muted">
-                  {task.statusReason}
+              {task.statusReason || task.summaryLine ? (
+                <span className="mb-1 block whitespace-normal break-words text-[13px] text-awc-fg-muted">
+                  {task.statusReason || task.summaryLine}
                 </span>
               ) : null}
               <span className={AWC_TASKS_ROW_META_CLASS}>

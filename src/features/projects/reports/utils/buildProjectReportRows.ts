@@ -22,12 +22,15 @@ const firstLine = (value: string | null | undefined): string =>
     .map((line) => line.trim())
     .find((line) => line.length > 0) ?? "";
 
-/** Report summary first line, else the ask; empty → detail heading fallback. */
+/**
+ * The ask (f4bf6a0c: a Done summary never replaces it; it is the report
+ * body), else the summary; empty → detail heading fallback.
+ */
 export const resolveProjectReportTitle = (
   run: EnrichedAgentRunRecord,
 ): string => {
   const line =
-    firstLine(resolveAgentRunTitleSummary(run)) || firstLine(run.prompt);
+    firstLine(run.prompt) || firstLine(resolveAgentRunTitleSummary(run));
   if (line.length === 0) {
     return C["reports.detail.heading"];
   }

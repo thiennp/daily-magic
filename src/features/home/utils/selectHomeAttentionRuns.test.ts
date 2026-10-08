@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import selectHomeAttentionRuns from "@/features/home/utils/selectHomeAttentionRuns";
+import { AGENT_RUN_LOST_CONNECTION_REASONS } from "@/lib/dispatch/agentRunLostConnectionReasons.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 const NOW = Date.parse("2026-10-08T12:00:00Z");
@@ -37,5 +38,22 @@ describe("selectHomeAttentionRuns", () => {
     expect(
       selectHomeAttentionRuns([stopped, reportStopped], NOW).map((r) => r.id),
     ).toEqual([]);
+  });
+
+  it("keeps a Stalled run when newer failures fill the list (f5881faa)", () => {
+    const stalled = {
+      ...run("stalled", "failed", "2026-10-08T01:00:00Z"),
+      denialReason: AGENT_RUN_LOST_CONNECTION_REASONS.DISCONNECT,
+      resultOutput: "",
+    } as AgentRunRecord;
+    const failures = ["a", "b", "c", "d", "e"].map((id, index) =>
+      run(id, "failed", `2026-10-08T1${index}:00:00Z`),
+    );
+
+    const ids = selectHomeAttentionRuns([stalled, ...failures], NOW).map(
+      (r) => r.id,
+    );
+    expect(ids).toHaveLength(5);
+    expect(ids.at(-1)).toBe("stalled");
   });
 });

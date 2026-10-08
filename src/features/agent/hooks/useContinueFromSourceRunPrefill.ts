@@ -7,7 +7,7 @@ import {
   SEND_TASK_SOURCE_RUN_ID_QUERY_PARAM,
   SEND_TASK_WRITER_AGENT_QUERY_PARAM,
 } from "@/features/agent/constants/sendTaskModalQuery.constant";
-import { resolveSendTaskLinkWriterAgent } from "@/features/agent/utils/resolveSendTaskLinkWriterAgent";
+import { resolveSendTaskLinkWriterChoice } from "@/features/agent/utils/resolveSendTaskLinkWriterAgent";
 import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
@@ -19,6 +19,8 @@ import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessW
  */
 export const useContinueFromSourceRunPrefill = (input: {
   readonly setWriterAgent: (writerAgent: HarnessWriterAgent) => void;
+  /** 9bad2e07: an explicit link writer, honored even when not Ready. */
+  readonly honorLinkWriterAgent: (writerAgent: HarnessWriterAgent) => void;
 }): void => {
   const searchParams = useSearchParams();
   const sourceRunId =
@@ -27,7 +29,7 @@ export const useContinueFromSourceRunPrefill = (input: {
     SEND_TASK_WRITER_AGENT_QUERY_PARAM,
   );
   const appliedKeyRef = useRef<string | null>(null);
-  const { setWriterAgent } = input;
+  const { setWriterAgent, honorLinkWriterAgent } = input;
 
   useEffect(() => {
     const key = `${sourceRunId}|${writerAgentFromUrl ?? ""}`;
@@ -37,13 +39,18 @@ export const useContinueFromSourceRunPrefill = (input: {
     appliedKeyRef.current = key;
     const cachedRun =
       sourceRunId.length > 0 ? getAgentRunLocalCache(sourceRunId) : null;
-    const writerAgent = resolveSendTaskLinkWriterAgent({
+    const choice = resolveSendTaskLinkWriterChoice({
       writerAgentFromUrl,
       writerAgentFromRun: cachedRun?.writerAgent ?? null,
     });
 
-    if (writerAgent !== null) {
-      setWriterAgent(writerAgent);
+    if (choice === null) {
+      return;
     }
-  }, [setWriterAgent, sourceRunId, writerAgentFromUrl]);
+    if (choice.isExplicit) {
+      honorLinkWriterAgent(choice.writerAgent);
+      return;
+    }
+    setWriterAgent(choice.writerAgent);
+  }, [honorLinkWriterAgent, setWriterAgent, sourceRunId, writerAgentFromUrl]);
 };

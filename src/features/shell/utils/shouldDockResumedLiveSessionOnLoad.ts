@@ -15,3 +15,30 @@ export const shouldDockResumedLiveSessionOnLoad = (search: string): boolean => {
     (params.get(SEND_TASK_SOURCE_RUN_ID_QUERY_PARAM) ?? "").trim().length > 0
   );
 };
+
+/**
+ * bd93cdcc: reloading any open New task URL (a deep link, `?sendTask=1`)
+ * while this tab's run is still live restores that run, so it docks to the
+ * floater too instead of the big centered modal.
+ */
+export const shouldDockReloadedLiveSession = (input: {
+  readonly search: string;
+  readonly isReload: boolean;
+  readonly hasLiveSession: boolean;
+}): boolean =>
+  shouldDockResumedLiveSessionOnLoad(input.search) ||
+  (input.isReload &&
+    input.hasLiveSession &&
+    new URLSearchParams(input.search).get(SEND_TASK_MODAL_QUERY_PARAM) === "1");
+
+export const isPageReloadNavigation = (): boolean => {
+  if (typeof performance === "undefined") {
+    return false;
+  }
+  const [entry] = performance.getEntriesByType("navigation");
+  return (
+    entry !== undefined &&
+    "type" in entry &&
+    (entry as PerformanceNavigationTiming).type === "reload"
+  );
+};

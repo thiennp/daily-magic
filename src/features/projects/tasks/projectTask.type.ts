@@ -21,6 +21,8 @@ export type ProjectTaskMeta = Omit<ProjectTaskNeonMeta, "status"> & {
   readonly status: ProjectTaskDisplayStatus;
   readonly assistantName?: string | null;
   readonly statusReason?: string | null;
+  /** f4bf6a0c: Done summary shown under the title (never replaces it). */
+  readonly summaryLine?: string | null;
   readonly resultOutput?: string | null;
   /** Host report summary (c1731750), e.g. the killed-process reason. */
   readonly reportSummary?: string | null;

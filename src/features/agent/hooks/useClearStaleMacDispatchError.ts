@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 
+import { useClearSessionErrorOnNavigate } from "@/features/agent/hooks/useClearSessionErrorOnNavigate";
 import { isMacDispatchOfflineErrorMessage } from "@/features/agent/utils/isMacDispatchOfflineErrorMessage";
 import type { AgentWitchSocketDisplay } from "@/lib/agentWitch/parseAgentWitchSocketDisplay";
 
@@ -17,6 +18,10 @@ export const useClearStaleMacDispatchError = (input: {
     selectedDeviceCanDispatch,
     isTeamDispatch,
   } = input;
+  useClearSessionErrorOnNavigate({
+    isError: lastResponse.isError,
+    clearLastResponse,
+  });
 
   useEffect(() => {
     if (

@@ -38,10 +38,14 @@ export const mapAgentRunToProjectTaskMeta = (
         isAgentRunUserStopped(run.resultOutput, run.resultExitCode)
       ? "stopped"
       : runStatus;
+  // f4bf6a0c: the title is always the user's ask; a Done summary rides below.
+  const doneSummary = firstLine(resolveAgentRunTitleSummary(run));
   const title =
-    thinTitle(
-      firstLine(resolveAgentRunTitleSummary(run)) || firstLine(run.prompt),
-    ) || "Task";
+    thinTitle(firstLine(run.prompt)) || thinTitle(doneSummary) || "Task";
+  const summaryLine =
+    doneSummary.length > 0 && thinTitle(doneSummary) !== title
+      ? doneSummary
+      : null;
   // S4/S10: the failure reason rides next to the title, never replacing it.
   const denialReason = run.denialReason?.trim() ?? "";
   const statusReason =
@@ -58,6 +62,7 @@ export const mapAgentRunToProjectTaskMeta = (
     title,
     status,
     statusReason,
+    summaryLine,
     createdAt: run.createdAt,
     updatedAt: run.updatedAt,
     startedAt: run.startedAt,

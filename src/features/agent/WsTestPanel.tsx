@@ -7,6 +7,7 @@ import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupport
 import { useWsTestPanelController } from "@/features/agent/hooks/useWsTestPanelController";
 import WsTestPanelComposerSection from "@/features/agent/WsTestPanelComposerSection";
 import WsTestPanelStatusSection from "@/features/agent/WsTestPanelStatusSection";
+import { resolveStatusSectionSessionError } from "@/features/agent/utils/resolveStatusSectionSessionError";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 
 interface WsTestPanelProps {
@@ -49,7 +50,11 @@ export default function WsTestPanel({
         connectionStatus={panel.socket.connectionStatus}
         queueCount={panel.queueCount}
         queueMessage={panel.queueMessage}
-        errorMessage={panel.sessionErrorMessage}
+        errorMessage={resolveStatusSectionSessionError({
+          sessionErrorMessage: panel.sessionErrorMessage,
+          liveTerminalRunId: panel.socket.liveTerminalRunId,
+          liveTerminalStatus: panel.socket.liveTerminalStatus,
+        })}
       />
       <WsTestPanelComposerSection
         isSessionActive={panel.isSessionActive}

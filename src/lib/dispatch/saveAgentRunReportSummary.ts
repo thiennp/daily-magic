@@ -1,6 +1,6 @@
 import { asRowArray, getSql } from "@/lib/db";
 import { isAgentWitchDevDashboardEnabled } from "@/lib/auth/resolveDevDashboardActor";
-import { toAgentRunNeonMetaText } from "@/lib/dispatch/toAgentRunNeonMetaText";
+import { toAgentRunReportSummaryMetaText } from "@/lib/dispatch/toAgentRunReportSummaryMetaText";
 
 const REPORT_STATUSES: ReadonlySet<string> = new Set([
   "in_progress",
@@ -25,7 +25,7 @@ export const readAgentRunReportFields = (
   }
   return {
     reportStatus: status,
-    reportSummary: toAgentRunNeonMetaText(summary),
+    reportSummary: toAgentRunReportSummaryMetaText(summary),
   };
 };
 

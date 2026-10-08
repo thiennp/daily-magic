@@ -21,6 +21,24 @@ export const appendProgressStepsUntilIndex = (input: {
     return input.steps;
   }
 
+  const detail = update.detail.length > 0 ? update.detail : null;
+  const state: AgentLiveProgressStepState = input.needsInput
+    ? "done"
+    : (input.updateStates[input.progressCursor] ?? "pending");
+  const previous = input.steps.at(-1);
+  // bd93cdcc: the same progress block (title + detail) reported twice is one step.
+  if (
+    previous !== undefined &&
+    previous.label === update.title &&
+    (previous.detail ?? null) === detail
+  ) {
+    return appendProgressStepsUntilIndex({
+      ...input,
+      progressCursor: input.progressCursor + 1,
+      steps: [...input.steps.slice(0, -1), { ...previous, state }],
+    });
+  }
+
   return appendProgressStepsUntilIndex({
     ...input,
     progressCursor: input.progressCursor + 1,
@@ -29,10 +47,8 @@ export const appendProgressStepsUntilIndex = (input: {
       {
         id: `progress-${input.progressCursor}`,
         label: update.title,
-        detail: update.detail.length > 0 ? update.detail : null,
-        state: input.needsInput
-          ? "done"
-          : (input.updateStates[input.progressCursor] ?? "pending"),
+        detail,
+        state,
       },
     ],
   });

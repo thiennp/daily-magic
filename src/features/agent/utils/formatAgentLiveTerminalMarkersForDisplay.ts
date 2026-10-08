@@ -30,7 +30,8 @@ export const formatAgentLiveTerminalMarkersForDisplay = (
     ),
   )
     .join("\n")
-    // 4139ca18: the host echoes a reply as "[checkpoint answer] …".
-    .replace(/^\[checkpoint answer\]\s*/gim, "Your answer: ");
+    // 4139ca18 / bd93cdcc: the host echoes a reply as "[checkpoint answer] …",
+    // also after a prompt or indent; never show the raw marker.
+    .replace(/\[checkpoint answer\]\s*/gi, "Your answer: ");
   return `${formatted.trimEnd()}${trailing}`;
 };
