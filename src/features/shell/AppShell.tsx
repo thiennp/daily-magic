@@ -22,6 +22,8 @@ interface AppShellProps {
   readonly renderPrimaryNav?: boolean;
   /** When false, primary nav still renders but Your Devices is omitted (e.g. admin). */
   readonly showDevicesRail?: boolean;
+  /** Rendered inside the primary nav column, under the nav (keeps one left column). */
+  readonly primaryNavExtra?: React.ReactNode;
 }
 
 export default function AppShell({
@@ -30,6 +32,7 @@ export default function AppShell({
   contentClassName,
   renderPrimaryNav = true,
   showDevicesRail = true,
+  primaryNavExtra,
 }: AppShellProps) {
   const mainColumnClassName =
     contentClassName === APP_SHELL_NARROW_CONTENT_CLASS
@@ -39,7 +42,10 @@ export default function AppShell({
   const showHeaderBrand = renderPrimaryNav || sidebar !== undefined;
 
   const primaryNavAside = renderPrimaryNav ? (
-    <AppShellSidebar showDevicesRail={showDevicesRail} />
+    <AppShellSidebar
+      showDevicesRail={showDevicesRail}
+      extraNav={primaryNavExtra}
+    />
   ) : null;
 
   /** Mobile: devices sit below main content (artifact order), not above.
@@ -69,7 +75,12 @@ export default function AppShell({
     <div className="mx-auto w-full max-w-[1600px] px-4 pb-6 pt-6 sm:px-6 lg:px-6">
       <div className="grid gap-6 md:grid-cols-[var(--awc-side-w)_minmax(0,1fr)]">
         {primaryNavAside}
-        <main className={mainColumnClassName}>{children}</main>
+        <main className={mainColumnClassName}>
+          {primaryNavExtra ? (
+            <div className="mb-4 md:hidden">{primaryNavExtra}</div>
+          ) : null}
+          {children}
+        </main>
       </div>
     </div>
   ) : (
