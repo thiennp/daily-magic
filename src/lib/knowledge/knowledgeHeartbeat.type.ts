@@ -34,11 +34,38 @@ export type KnowledgeSharedCardReport = {
   readonly updatedAt: string;
 };
 
+export type SkillSavingsReport = {
+  readonly skillId: string;
+  readonly calls: number;
+  readonly saved: number;
+  readonly baseline: number | null;
+  readonly samples: number;
+  readonly holdouts: number;
+  readonly estimate: boolean;
+  readonly missRate: number;
+  readonly hasScripts: boolean;
+  readonly scriptCount: number;
+};
+
+export type SkillWeeklyReport = {
+  readonly weekStart: string;
+  readonly chosen: number;
+  readonly missed: number;
+};
+
+/** One project's skill stats from one computer (a full snapshot). */
+export type SkillStatsReport = {
+  readonly projectId: string;
+  readonly skills: readonly SkillSavingsReport[];
+  readonly weekly: readonly SkillWeeklyReport[];
+};
+
 export type KnowledgeHeartbeatReport = {
   readonly capabilities: KnowledgeCapabilitiesReport;
   readonly daily: readonly KnowledgeDailyReport[];
   readonly cards: readonly KnowledgeSharedCardReport[];
   readonly shareOffProjectIds: readonly string[];
+  readonly skillStats: readonly SkillStatsReport[];
 };
 
 /** Computer status shown to project owners (never blocks dispatch). */

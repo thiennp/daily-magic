@@ -59,6 +59,15 @@ export const ensureProjectKnowledgeSchema = async (): Promise<void> => {
     await sql`
       CREATE INDEX IF NOT EXISTS project_knowledge_cards_project_idx
       ON project_knowledge_cards (project_id, card_updated_at DESC)`;
+    await sql`
+      CREATE TABLE IF NOT EXISTS project_skill_stats (
+        project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
+        device_id TEXT NOT NULL REFERENCES agent_witch_devices(id) ON DELETE CASCADE,
+        skills JSONB NOT NULL DEFAULT '[]'::jsonb,
+        weekly JSONB NOT NULL DEFAULT '[]'::jsonb,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        PRIMARY KEY (project_id, device_id)
+      )`;
     state.ensured = true;
   })();
 

@@ -6,6 +6,7 @@ import {
 } from "@/lib/knowledge/buildProjectKnowledgeImpactView";
 import { ensureProjectKnowledgeSchema } from "@/lib/knowledge/ensureProjectKnowledgeSchema";
 import { loadKnowledgeSharedCards } from "@/lib/knowledge/loadKnowledgeSharedCards";
+import { loadSkillStats } from "@/lib/knowledge/loadSkillStats";
 import { loadKnowledgeComputers } from "@/lib/knowledge/loadKnowledgeComputers";
 
 const DEFAULT_WINDOW_DAYS = 30;
@@ -48,15 +49,17 @@ export const loadProjectKnowledgeImpact = async (input: {
 }): Promise<ProjectKnowledgeImpactView> => {
   await ensureProjectKnowledgeSchema();
   const windowDays = input.windowDays ?? DEFAULT_WINDOW_DAYS;
-  const [rows, computers] = await Promise.all([
+  const [rows, computers, skillStats] = await Promise.all([
     loadDailyRows(input.projectId, windowDays),
     loadKnowledgeComputers(input.projectId),
+    loadSkillStats(input.projectId),
   ]);
   const view = buildProjectKnowledgeImpactView({
     rows,
     computers,
     windowDays,
     includeComputers: input.includeComputers,
+    skillStats,
   });
   return input.includeComputers
     ? { ...view, sharedCards: await loadKnowledgeSharedCards(input.projectId) }

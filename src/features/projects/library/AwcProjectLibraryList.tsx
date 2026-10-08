@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 
+import type { SkillImpactRow } from "@/lib/knowledge/knowledgeImpactView.type";
 import AwcProjectLibraryEmptyOwner from "@/features/projects/library/AwcProjectLibraryEmptyOwner";
 import AwcProjectLibraryRow from "@/features/projects/library/AwcProjectLibraryRow";
 import AwcProjectLibraryToolbar from "@/features/projects/library/AwcProjectLibraryToolbar";
@@ -25,6 +26,8 @@ interface AwcProjectLibraryListProps {
   readonly canEdit: boolean;
   /** Skills saved from an auto question get the "Auto" chip. */
   readonly autoSkillIds?: readonly string[];
+  /** Per-skill calls and tokens saved (Reports data), for the row meta. */
+  readonly skillStats?: readonly SkillImpactRow[];
   readonly onOpen: (itemId: string) => void;
   readonly onNew?: () => void;
   readonly onAddFrom?: () => void;
@@ -35,6 +38,7 @@ export default function AwcProjectLibraryList({
   library,
   canEdit,
   autoSkillIds = [],
+  skillStats = [],
   onOpen,
   onNew,
   onAddFrom,
@@ -101,6 +105,7 @@ export default function AwcProjectLibraryList({
               isAuto={
                 item.skillId !== null && autoSkillIds.includes(item.skillId)
               }
+              stats={skillStats.find((s) => s.skillId === item.skillId)}
               onOpen={onOpen}
             />
           ))}

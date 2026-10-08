@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { useAutoSkills } from "@/features/project-auto-skills/public-api/presentation";
 import useAwcProjectHashDeepLink from "@/features/projects/hooks/useAwcProjectHashDeepLink";
+import useAwcProjectKnowledgeImpact from "@/features/projects/knowledge-impact/useAwcProjectKnowledgeImpact";
 import AwcProjectLibraryAutoSkills from "@/features/projects/library/AwcProjectLibraryAutoSkills";
 import AwcProjectLibraryAddFrom from "@/features/projects/library/AwcProjectLibraryAddFrom";
 import AwcProjectLibraryDetail from "@/features/projects/library/AwcProjectLibraryDetail";
@@ -32,6 +33,7 @@ export default function AwcProjectLibraryPanel({
 }: AwcProjectLibraryPanelProps) {
   const library = useAwcProjectLibrary(project.id);
   const auto = useAutoSkills(project.id);
+  const impact = useAwcProjectKnowledgeImpact(project.id);
   const [itemId, setItemId] = useAwcProjectHashDeepLink("library", "item");
   const [mode, setMode] = useState<LibraryMode>("list");
   const [toast, setToast] = useState<string | null>(null);
@@ -103,6 +105,7 @@ export default function AwcProjectLibraryPanel({
           library={library}
           canEdit={canEdit}
           autoSkillIds={auto.overview?.autoSkillIds ?? []}
+          skillStats={impact.impact?.skills ?? []}
           onOpen={setItemId}
           onNew={startNewSkill}
           onAddFrom={startAddFrom}

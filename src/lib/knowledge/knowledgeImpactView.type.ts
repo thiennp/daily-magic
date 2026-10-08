@@ -69,6 +69,26 @@ export type KnowledgeComputerSummary = {
   readonly other: number;
 };
 
+/** One skill's merged stats; `estimate` means show a ≈ before the numbers. */
+export type SkillImpactRow = {
+  readonly skillId: string;
+  readonly calls: number;
+  readonly saved: number;
+  readonly baseline: number | null;
+  readonly samples: number;
+  readonly holdouts: number;
+  readonly estimate: boolean;
+  readonly missRate: number;
+  readonly hasScripts: boolean;
+  readonly scriptCount: number;
+};
+
+export type SkillWeeklyView = {
+  readonly weekStart: string;
+  readonly chosen: number;
+  readonly missed: number;
+};
+
 export type ProjectKnowledgeImpactView = {
   readonly windowDays: number;
   readonly totals: KnowledgeImpactTotals;
@@ -78,4 +98,8 @@ export type ProjectKnowledgeImpactView = {
   readonly computers: readonly KnowledgeComputerRow[] | null;
   /** Owner only; note text from computers with sharing on. */
   readonly sharedCards: readonly KnowledgeSharedCardRow[] | null;
+  /** Per-skill calls, tokens saved and miss rate (all computers merged). */
+  readonly skills: readonly SkillImpactRow[];
+  /** Weekly skill finds: chosen vs. missed. */
+  readonly skillWeekly: readonly SkillWeeklyView[];
 };

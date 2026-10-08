@@ -3,6 +3,7 @@ import {
   parseKnowledgeSharedCards,
   parseShareOffProjectIds,
 } from "@/lib/knowledge/parseKnowledgeSharedCards";
+import { parseSkillStats } from "@/lib/knowledge/parseSkillStats";
 import { readKnowledgeCount } from "@/lib/knowledge/readKnowledgeCount";
 import type {
   KnowledgeCapabilitiesReport,
@@ -64,6 +65,7 @@ export const parseKnowledgeHeartbeat = (
     daily,
     cards: parseKnowledgeSharedCards(raw.cards),
     shareOffProjectIds: parseShareOffProjectIds(raw.shareOffProjectIds),
+    skillStats: parseSkillStats(raw.skillStats),
   };
 };
 

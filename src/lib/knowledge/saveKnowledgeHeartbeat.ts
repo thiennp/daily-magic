@@ -1,6 +1,7 @@
 import { asRowArray, getSql } from "@/lib/db";
 import { ensureProjectKnowledgeSchema } from "@/lib/knowledge/ensureProjectKnowledgeSchema";
 import { saveKnowledgeSharedCards } from "@/lib/knowledge/saveKnowledgeSharedCards";
+import { saveSkillStats } from "@/lib/knowledge/saveSkillStats";
 import type { KnowledgeHeartbeatReport } from "@/lib/knowledge/knowledgeHeartbeat.type";
 
 /** Projects among `projectIds` the device owner owns or is an active member of. */
@@ -54,8 +55,14 @@ export const saveKnowledgeHeartbeat = async (input: {
       ...input.report.daily.map((row) => row.projectId),
       ...input.report.cards.map((card) => card.projectId),
       ...input.report.shareOffProjectIds,
+      ...input.report.skillStats.map((stats) => stats.projectId),
     ]),
   ]);
+  for (const stats of input.report.skillStats) {
+    if (authorized.has(stats.projectId)) {
+      await saveSkillStats(input.deviceId, stats);
+    }
+  }
   await saveKnowledgeSharedCards({
     deviceId: input.deviceId,
     authorizedProjectIds: authorized,

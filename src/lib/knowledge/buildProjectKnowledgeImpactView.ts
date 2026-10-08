@@ -1,4 +1,6 @@
 import { buildKnowledgeWeeklySeries } from "@/lib/knowledge/buildKnowledgeWeeklySeries";
+import { mergeSkillStats } from "@/lib/knowledge/mergeSkillStats";
+import type { SkillStatsReport } from "@/lib/knowledge/knowledgeHeartbeat.type";
 import type {
   KnowledgeComputerRow,
   KnowledgeDailyRow,
@@ -17,8 +19,11 @@ export const buildProjectKnowledgeImpactView = (input: {
   readonly computers: readonly KnowledgeComputerRow[];
   readonly windowDays: number;
   readonly includeComputers: boolean;
+  /** One snapshot per computer (project_skill_stats). */
+  readonly skillStats?: readonly Pick<SkillStatsReport, "skills" | "weekly">[];
 }): ProjectKnowledgeImpactView => {
   const { rows } = input;
+  const skillStats = mergeSkillStats(input.skillStats ?? []);
   const runsWith = sum(rows, (row) => row.runsWith);
   const injectedTokens = sum(rows, (row) => row.injectedTokens);
   const holdoutRuns = sum(rows, (row) => row.holdoutRuns);
@@ -54,5 +59,7 @@ export const buildProjectKnowledgeImpactView = (input: {
     },
     computers: input.includeComputers ? input.computers : null,
     sharedCards: null,
+    skills: skillStats.skills,
+    skillWeekly: skillStats.weekly,
   };
 };

@@ -3,6 +3,8 @@ import KnowledgeNotesByComputerChart from "@/features/projects/knowledge-impact/
 import KnowledgeRepeatRateChart from "@/features/projects/knowledge-impact/KnowledgeRepeatRateChart";
 import KnowledgeRunsSplitChart from "@/features/projects/knowledge-impact/KnowledgeRunsSplitChart";
 import KnowledgeSavedVsAddedChart from "@/features/projects/knowledge-impact/KnowledgeSavedVsAddedChart";
+import KnowledgeSkillCallsChart from "@/features/projects/knowledge-impact/KnowledgeSkillCallsChart";
+import KnowledgeSkillSavedChart from "@/features/projects/knowledge-impact/KnowledgeSkillSavedChart";
 import KnowledgeTokensPerRunChart from "@/features/projects/knowledge-impact/KnowledgeTokensPerRunChart";
 import KnowledgeTopNotesChart from "@/features/projects/knowledge-impact/KnowledgeTopNotesChart";
 import type { ProjectKnowledgeImpactView } from "@/lib/knowledge/buildProjectKnowledgeImpactView";
@@ -20,6 +22,8 @@ export default function KnowledgeChartsGrid({
       <KnowledgeMistakesAvoidedChart impact={impact} />
       <KnowledgeSavedVsAddedChart impact={impact} />
       <KnowledgeTokensPerRunChart impact={impact} />
+      <KnowledgeSkillSavedChart impact={impact} />
+      <KnowledgeSkillCallsChart impact={impact} />
       <KnowledgeNotesByComputerChart impact={impact} />
       <KnowledgeTopNotesChart impact={impact} />
     </div>
