@@ -1,3 +1,4 @@
+import { buildAgentWitchInstallScriptFinishSummary } from "@/lib/agentWitch/buildAgentWitchInstallScriptFinishSummary";
 import { buildAgentWitchInstallScriptRegisterInstall } from "@/lib/agentWitch/buildAgentWitchInstallScriptRegisterInstall";
 import { buildAgentWitchInstallScriptVersionStamp } from "@/lib/agentWitch/buildAgentWitchInstallScriptVersionStamp";
 
@@ -7,7 +8,7 @@ export const buildAgentWitchInstallScriptFinish = (input: {
 ${buildAgentWitchInstallScriptVersionStamp(input.appOrigin)}
 ${buildAgentWitchInstallScriptRegisterInstall(input)}
 agent_witch_install_finish_progress
-echo "AgentWitch is ready."
+${buildAgentWitchInstallScriptFinishSummary()}
 
 if [[ "\$(uname -s)" == "Darwin" ]]; then
   launchctl kickstart -k "gui/\$(id -u)/\${LAUNCH_AGENT_LABEL}" 2>/dev/null || true

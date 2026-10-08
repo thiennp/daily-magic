@@ -49,7 +49,9 @@ describe("buildAgentWitchInstallScriptWakePortAllocation", () => {
     expect(result.code).toBe(0);
     expect(result.stdout).toContain("PORT=49273\n");
     expect(
-      JSON.parse(fs.readFileSync(path.join(installDir, "wake-port.json"), "utf8")),
+      JSON.parse(
+        fs.readFileSync(path.join(installDir, "wake-port.json"), "utf8"),
+      ),
     ).toEqual({ wakePort: 49273 });
   });
 
@@ -64,7 +66,9 @@ describe("buildAgentWitchInstallScriptWakePortAllocation", () => {
     const port = Number(match![1]);
     expect(port).toBeGreaterThan(0);
     expect(
-      JSON.parse(fs.readFileSync(path.join(installDir, "wake-port.json"), "utf8")),
+      JSON.parse(
+        fs.readFileSync(path.join(installDir, "wake-port.json"), "utf8"),
+      ),
     ).toEqual({ wakePort: port });
   });
 

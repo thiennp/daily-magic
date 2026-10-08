@@ -111,7 +111,7 @@ describe("billing cost-control UI (customer)", () => {
     expect(isAtOrOverLimit(1, 2)).toBe(false);
     expect(resolveComputerLimitMessage(2)).toContain("2");
     expect(resolveAssistantLimitMessage(3)).toContain("3");
-    expect(BILLING_COPY.computerLimit.toLowerCase()).toContain("server");
+    expect(BILLING_COPY.computerLimit).toContain("{linked} of {max}");
     const homePanel = read("src/features/home/HomeConnectedMacsPanel.tsx");
     expect(homePanel.includes("ComputerEntitlementLimitNote")).toBe(true);
     const myBots = read("src/features/my-bots/MyBotsPanel.tsx");

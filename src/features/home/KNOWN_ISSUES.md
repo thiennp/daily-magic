@@ -739,3 +739,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 ## Adding issues
 
 Use the next ID (`HOME-070`, …). Include symptom, root cause, fix paths, and test file.
+
+### d17fbf8e — computer limit note next to "N connected"
+**Symptom:** Sidebar said "You are at your computer limit (5)" under a header of "4 connected", which looked like a wrong count after a delete.
+**Fix:** Soft limit copy now spells out linked vs connected (`{linked} of {max}` plus an offline split). Offline computers still count toward the plan; the note no longer looks like it disagrees with the header.

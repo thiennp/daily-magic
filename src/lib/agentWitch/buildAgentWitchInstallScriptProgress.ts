@@ -18,6 +18,9 @@ agent_witch_install_begin() {
 agent_witch_install_step() {
   AGENT_WITCH_INSTALL_STEP=$((AGENT_WITCH_INSTALL_STEP + 1))
   local percent=$((AGENT_WITCH_INSTALL_STEP * 100 / AGENT_WITCH_INSTALL_TOTAL))
+  if (( percent > 99 )); then
+    percent=99
+  fi
   printf '\\r${progressLabel}… %d%%' "\${percent}"
 }
 

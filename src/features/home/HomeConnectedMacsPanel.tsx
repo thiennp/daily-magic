@@ -47,7 +47,8 @@ export default function HomeConnectedMacsPanel({
   } = useHomeConnectedMacs();
   const { localHostname, localTokenHash } = useLocalMacBrowserContext();
   const shouldShowConnectThisMac = useShouldShowConnectThisMac();
-  const statusLine = buildMacDevicesStatusLine(countMacPresenceTiers(devices));
+  const presence = countMacPresenceTiers(devices);
+  const statusLine = buildMacDevicesStatusLine(presence);
   const hasExistingDevices = devices.length > 0;
   const connectProps = { installCommand, isWebSocketSupported, host };
 
@@ -92,7 +93,12 @@ export default function HomeConnectedMacsPanel({
           <ComputersDownloadLink className={APP_SHELL_V5_PILL_BUTTON_CLASS} />
         </div>
       ) : null}
-      {!isLoading ? <ComputerEntitlementLimitNote devices={devices} /> : null}
+      {!isLoading ? (
+        <ComputerEntitlementLimitNote
+          devices={devices}
+          connectedCount={presence.live + presence.liveOtherInstance}
+        />
+      ) : null}
       <div className={`mt-4 ${APP_SHELL_V5_SECTION_CLASS}`}>
         <ConnectCursorCloudCard />
       </div>

@@ -14,11 +14,14 @@ interface ComputerEntitlementLimitNoteProps {
     readonly deviceLabel?: string | null;
     readonly displayName?: string | null;
   }[];
+  /** Same number as the Computers header ("N connected"). */
+  readonly connectedCount: number;
 }
 
 /** Shows when linked computers hit entitlements.maxComputers. Never hides Connect. */
 export default function ComputerEntitlementLimitNote({
   devices,
+  connectedCount,
 }: ComputerEntitlementLimitNoteProps) {
   const { entitlements } = useBillingEntitlements();
   if (!entitlements) {
@@ -30,7 +33,10 @@ export default function ComputerEntitlementLimitNote({
   }
   return (
     <EntitlementLimitNote
-      message={resolveComputerLimitMessage(entitlements.maxComputers)}
+      message={resolveComputerLimitMessage(entitlements.maxComputers, {
+        linked,
+        connected: connectedCount,
+      })}
     />
   );
 }

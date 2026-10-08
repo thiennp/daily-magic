@@ -1,7 +1,19 @@
 import { BILLING_COPY } from "@/features/billing/billingCopy.constant";
 
-export function resolveComputerLimitMessage(maxComputers: number): string {
-  return BILLING_COPY.computerLimit.replace("{max}", String(maxComputers));
+/** Spells out linked vs connected so "4 connected" next to "limit (5)" reads true (offline computers count). */
+export function resolveComputerLimitMessage(
+  maxComputers: number,
+  counts?: { readonly linked: number; readonly connected: number },
+): string {
+  const linked = counts?.linked ?? maxComputers;
+  const connected = Math.min(counts?.connected ?? linked, linked);
+  const offline = linked - connected;
+  const split =
+    offline > 0 ? ` (${connected} connected, ${offline} offline)` : "";
+  return BILLING_COPY.computerLimit
+    .replace("{linked}", String(linked))
+    .replace("{max}", String(maxComputers))
+    .replace("{split}", split);
 }
 
 export function resolveAssistantLimitMessage(

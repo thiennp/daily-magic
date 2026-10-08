@@ -34,4 +34,17 @@ describe("buildAgentWitchInstallScriptRegisterInstall", () => {
       "This install token is invalid or revoked. Open Home → Connect this computer for a fresh command.",
     );
   });
+
+  it("keeps the registered device id for the finish summary before deleting the body", () => {
+    const script = buildAgentWitchInstallScriptRegisterInstall({
+      appOrigin: "https://www.agentwitch.com",
+    });
+    const readAt = script.indexOf("REGISTERED_DEVICE_ID=");
+
+    expect(readAt).toBeGreaterThan(-1);
+    expect(script.lastIndexOf('rm -f "${REGISTER_BODY_FILE}"')).toBeGreaterThan(
+      readAt,
+    );
+    expect(script).toContain("/^[A-Za-z0-9-]{1,64}$/");
+  });
 });

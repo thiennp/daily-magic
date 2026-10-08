@@ -5,8 +5,7 @@ export const BILLING_COPY = {
   tryAgain: "Try again",
   cancelAnytime: "Cancel anytime.",
   cloudStorageOn: "Cloud message storage is on.",
-  cloudStorageOff:
-    "Cloud message storage is off until you start paid billing.",
+  cloudStorageOff: "Cloud message storage is off until you start paid billing.",
   adminFreeEdge:
     "You are on permanent Free set by an admin. This is not a self-serve plan.",
   trialGateClosed:
@@ -18,7 +17,7 @@ export const BILLING_COPY = {
   upgradeStubPending: "Checkout is not live yet. Your plan options stay here.",
   portalStubPending: "Billing portal is not live yet.",
   computerLimit:
-    "You are at your computer limit ({max}). Remove a computer or upgrade to free a slot. Server still enforces the limit.",
+    "You are at your computer limit: {linked} of {max} computers are linked{split}. Offline computers still count. Remove one you no longer use, or upgrade to free a slot.",
   assistantLimit:
     "You are at your assistant connect limit ({max}). Disconnect an assistant or upgrade. Server still enforces the limit.",
   adminCostHeading: "Trial and Free cost control",

@@ -5,7 +5,7 @@ import {
 
 import { AGENT_WITCH_SYSTEMD_USER_UNIT_NAME } from "../../public-api/types";
 
-/** Writes and enables a systemd user unit (v1 default); foreground when AGENT_WITCH_FOREGROUND=1. */
+/** Writes and enables a systemd user unit (v1 default); foreground when AGENT_WITCH_FOREGROUND=1. Sets AGENT_WITCH_LINUX_START_NEEDED=1 when it could not start it. */
 export const buildAgentWitchInstallScriptSystemdUserUnitBlock = (): string => `
 agent_witch_install_linux_systemd_user_unit() {
   if [[ "\$(uname -s)" != "Linux" ]]; then
@@ -19,7 +19,7 @@ agent_witch_install_linux_systemd_user_unit() {
   fi
 
   if ! command -v systemctl >/dev/null 2>&1; then
-    echo "systemctl not found — run foreground client: \${RUN_PATH}" >&2
+    AGENT_WITCH_LINUX_START_NEEDED=1
     return 0
   fi
 
@@ -61,7 +61,13 @@ RestartSec=10
 WantedBy=default.target
 EOF
 
-  systemctl --user daemon-reload
-  systemctl --user enable --now "${AGENT_WITCH_SYSTEMD_USER_UNIT_NAME}" || true
+  # No user bus (containers, ssh without lingering): never abort the install; the finish step says how to start it.
+  if ! systemctl --user daemon-reload >/dev/null 2>&1; then
+    AGENT_WITCH_LINUX_START_NEEDED=1
+    return 0
+  fi
+  if ! systemctl --user enable --now "${AGENT_WITCH_SYSTEMD_USER_UNIT_NAME}" >/dev/null 2>&1; then
+    AGENT_WITCH_LINUX_START_NEEDED=1
+  fi
 }
 `;

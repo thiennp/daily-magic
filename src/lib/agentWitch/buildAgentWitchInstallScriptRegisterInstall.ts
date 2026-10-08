@@ -65,5 +65,11 @@ if [[ "\${REGISTER_HTTP_CODE}" != "200" && "\${REGISTER_HTTP_CODE}" != "201" ]];
   rm -f "\${REGISTER_BODY_FILE}"
   exit 1
 fi
+REGISTERED_DEVICE_ID="\$( "\${NODE_BIN}" -e "
+try {
+  const id = JSON.parse(require('node:fs').readFileSync(process.argv[1], 'utf8')).deviceId;
+  if (typeof id === 'string' && /^[A-Za-z0-9-]{1,64}$/.test(id)) process.stdout.write(id);
+} catch {}
+" "\${REGISTER_BODY_FILE}" 2>/dev/null || true )"
 rm -f "\${REGISTER_BODY_FILE}"
 `;

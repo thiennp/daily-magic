@@ -10,6 +10,10 @@ describe("buildAgentWitchInstallScriptFinish", () => {
 
     expect(block).toContain("agent_witch_install_finish_progress");
     expect(block).toContain('echo "AgentWitch is ready."');
+    expect(block).toContain("installed but not running yet");
+    expect(block.indexOf("agent_witch_install_finish_progress")).toBeLessThan(
+      block.indexOf("AgentWitch is ready."),
+    );
     expect(block).toContain(
       'launchctl kickstart -k "gui/$(id -u)/${LAUNCH_AGENT_LABEL}"',
     );
