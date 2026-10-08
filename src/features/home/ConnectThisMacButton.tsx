@@ -90,6 +90,7 @@ export default function ConnectThisMacButton({
         operatingSystem={operatingSystem}
         installCommand={personalizedInstallCommand}
         isInstallCommandLoading={isInstallCommandLoading}
+        installCommandError={installCommandError}
         isWebSocketSupported={isWebSocketSupported}
         host={host}
         onClose={handleCloseModal}

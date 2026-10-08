@@ -17,6 +17,7 @@ interface ConnectThisMacModalProps {
   readonly operatingSystem: BrowserOperatingSystem;
   readonly installCommand: string;
   readonly isInstallCommandLoading: boolean;
+  readonly installCommandError?: string | null;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
   readonly onClose: () => void;
@@ -40,6 +41,7 @@ export default function ConnectThisMacModal({
   operatingSystem,
   installCommand,
   isInstallCommandLoading,
+  installCommandError = null,
   isWebSocketSupported,
   host,
   onClose,
@@ -74,6 +76,7 @@ export default function ConnectThisMacModal({
             description={installDescription}
             installCommand={installCommand}
             isInstallCommandLoading={isInstallCommandLoading}
+            installCommandError={installCommandError}
             onInstallEngaged={onInstallEngaged}
           />
           <ConnectThisMacDownloadArea operatingSystem={operatingSystem} />

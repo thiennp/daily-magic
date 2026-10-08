@@ -1,3 +1,7 @@
+import {
+  GENERIC_INSTALL_TOKEN_ERROR,
+  readInstallTokenErrorMessage,
+} from "@/lib/agentWitch/readInstallTokenErrorMessage";
 import detectMobileClient from "@/lib/mobile/detectMobileClient";
 
 interface InstallTokenResult {
@@ -71,7 +75,7 @@ export const fetchAgentWitchInstallToken =
       if (!response.ok) {
         return {
           ok: false,
-          errorMessage: "Could not create a computer install link.",
+          errorMessage: await readInstallTokenErrorMessage(response),
         };
       }
 
@@ -88,7 +92,7 @@ export const fetchAgentWitchInstallToken =
 
       return {
         ok: false,
-        errorMessage: "Could not create a computer install link.",
+        errorMessage: GENERIC_INSTALL_TOKEN_ERROR,
       };
     }
   };

@@ -25,15 +25,14 @@ export const assertComputerEntitlement = async (input: {
     return {
       ok: false,
       code: "trial_closed",
-      errorMessage:
-        "Trial capacity is full. Choose Pro or Team to continue.",
+      errorMessage: "Trial capacity is full. Choose Pro or Team to continue.",
     };
   }
   if (current >= ents.maxComputers) {
     return {
       ok: false,
       code: "computer_limit",
-      errorMessage: `This plan allows up to ${ents.maxComputers} computers.`,
+      errorMessage: `This plan allows up to ${ents.maxComputers} computers, and you have ${current} connected. Remove one you no longer use on the Computers page, then connect again.`,
     };
   }
   return { ok: true };
