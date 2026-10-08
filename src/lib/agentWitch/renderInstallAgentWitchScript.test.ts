@@ -47,15 +47,10 @@ describe("renderInstallAgentWitchScript", () => {
     expect(script).toContain("install-version.json");
   });
 
-  it("AGENT-065: run.sh log redirect escapes line under nounset during install heredoc", () => {
+  it("AGENT-065: run.sh log redirect is nounset-safe in the quoted heredoc", () => {
     const script = renderTestInstallScript("https://www.agentwitch.com");
 
-    expect(script).toContain(
-      'while IFS= read -r line || [ -n "\\${line}" ]; do',
-    );
-    expect(script).not.toMatch(
-      /while IFS= read -r line \|\| \[ -n "\$\{line\}" \]; do/,
-    );
+    expect(script).toContain('while IFS= read -r line || [ -n "${line}" ]; do');
   });
 
   it("AGENT-004 installs the local app under ~/.local-agent-witch", () => {

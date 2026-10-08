@@ -23,6 +23,7 @@ import {
   backupAgentWitchHostServicesFiles,
   restoreAgentWitchHostServicesBackup,
 } from "./backupAgentWitchHostServicesFiles";
+import { appendAgentWitchHostServicesMigrationLog } from "./appendAgentWitchHostServicesMigrationLog";
 import { acquireAgentWitchHostServicesMigrationLock } from "./hostServicesMigrationLock";
 import {
   appendAgentWitchHostServicesMigrationAttempt,
@@ -55,6 +56,7 @@ export interface AgentWitchHostServicesMigrationDeps {
 export type AgentWitchHostServicesMigrationResult =
   | { readonly kind: "skipped"; readonly reason: string }
   | { readonly kind: "noop"; readonly services: AgentWitchHostServicesFile }
+  | { readonly kind: "pending"; readonly pendingEmails: readonly string[] }
   | {
       readonly kind: "migrated";
       readonly services: AgentWitchHostServicesFile;
@@ -180,7 +182,7 @@ export const migrateAgentWitchMonolithToAccountServices = async (input: {
     acquireLock: acquireAgentWitchHostServicesMigrationLock,
     allocateWakePort: undefined,
     log: (message) => {
-      console.log(message);
+      appendAgentWitchHostServicesMigrationLog(input.installDir, message);
     },
     ...input.deps,
   };

@@ -15,6 +15,7 @@ import {
   resolveAgentWitchAccountLaunchAgentLabel,
   resolveAgentWitchWakePortDir,
 } from "@agent-witch/install-layout";
+import { ensureAgentWitchRunScript } from "@agent-witch/install-layout";
 import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@agent-witch/install-bundle";
 import {
   bootoutAgentWitchAuxiliaryLaunchAgents,
@@ -132,6 +133,10 @@ import { admitLocalCodingToolRun } from "./admitLocalCodingToolRun";
 import { runAgentWitchHostLauncher } from "./hostLauncher/runAgentWitchHostLauncher";
 import { describeAgentWitchHostServicesMigration } from "./hostServicesMigration/describeAgentWitchHostServicesMigration";
 import { migrateAgentWitchMonolithToAccountServices } from "./hostServicesMigration/migrateAgentWitchMonolithToAccountServices";
+import { appendAgentWitchHostServicesMigrationLog } from "./hostServicesMigration/appendAgentWitchHostServicesMigrationLog";
+import { checkAgentWitchHostServicesMigration } from "./hostServicesMigration/checkAgentWitchHostServicesMigration";
+import { clearStaleAgentWitchHostServicesMigrationLock } from "./hostServicesMigration/hostServicesMigrationLock";
+import { shouldRestartForRepairedRunScript } from "./hostServicesMigration/shouldRestartForRepairedRunScript";
 
 import {
   acceptTerminalStream,
@@ -2591,17 +2596,52 @@ const main = async (): Promise<void> => {
   const installDir = resolveAgentWitchInstallDir();
 
   const initialScope = resolveAgentWitchHostProcessScope({ installDir });
+
+  // d5e39215: run.sh is profile-agnostic; repair an old one, then make sure an
+  // account host started by the old run.sh relaunches through the new one.
+  const runScriptCurrent = (() => {
+    try {
+      ensureAgentWitchRunScript(installDir);
+      return true;
+    } catch (error) {
+      console.error("[agent-witch] Could not repair run.sh:", error);
+      return false;
+    }
+  })();
+  if (
+    shouldRestartForRepairedRunScript({
+      runScriptCurrent,
+      platform: process.platform,
+      scope: initialScope,
+      envProfile: process.env.AGENT_WITCH_PROFILE,
+    })
+  ) {
+    appendAgentWitchHostServicesMigrationLog(
+      installDir,
+      `[agent-witch] Repaired run.sh for per-account logs; restarting ${initialScope.kind === "account" ? initialScope.email : ""} host once.`,
+    );
+    process.exit(0);
+  }
+  if (clearStaleAgentWitchHostServicesMigrationLock(installDir)) {
+    appendAgentWitchHostServicesMigrationLog(
+      installDir,
+      "[agent-witch] Removed a stale host-services-migration.lock (holder gone).",
+    );
+  }
+
   // AWL-ISO-4: before any lease or port, move a multi-account monolith (or
-  // accounts added later) onto one service per account.
+  // accounts added later) onto one service per account. An account host only
+  // re-runs the side-effect-free check (d5e39215).
   const migration =
     initialScope.kind === "account"
-      ? null
+      ? (checkAgentWitchHostServicesMigration({ installDir }), null)
       : await migrateAgentWitchMonolithToAccountServices({
           installDir,
           bundleVersion: AGENT_WITCH_INSTALL_BUNDLE_VERSION,
         });
   if (migration !== null) {
-    console.log(
+    appendAgentWitchHostServicesMigrationLog(
+      installDir,
       `[agent-witch] Host services migration: ${describeAgentWitchHostServicesMigration(migration)}`,
     );
   }

@@ -80,3 +80,36 @@ export const acquireAgentWitchHostServicesMigrationLock = (
   fs.rmSync(lockPath, { force: true });
   return tryCreate(lockPath, payload) ? { release } : null;
 };
+
+export const clearStaleAgentWitchHostServicesMigrationLock = (
+  installDir: string,
+  deps: Partial<AgentWitchHostServicesMigrationLockDeps> = {},
+): boolean => {
+  const isAlive = deps.isProcessAlive ?? isProcessAlive;
+  const nowMs = (deps.now ?? Date.now)();
+  const lockPath = path.join(
+    installDir,
+    AGENT_WITCH_HOST_SERVICES_MIGRATION_LOCK_FILE_NAME,
+  );
+
+  if (!fs.existsSync(lockPath)) {
+    return false;
+  }
+
+  const holder = readHolder(lockPath);
+  const stale =
+    holder === null ||
+    !isAlive(holder.pid) ||
+    nowMs - holder.at > AGENT_WITCH_HOST_SERVICES_MIGRATION_LOCK_STALE_MS;
+
+  if (!stale) {
+    return false;
+  }
+
+  try {
+    fs.rmSync(lockPath, { force: true });
+    return true;
+  } catch {
+    return false;
+  }
+};

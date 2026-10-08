@@ -59,3 +59,4 @@ export {
   resolveAgentWitchAccountProfileDir,
   resolveAgentWitchWakePortDir,
 } from "../internal/core/hostAccountServices/resolveAgentWitchWakePortDir";
+export { ensureAgentWitchRunScript } from "../internal/core/ensureAgentWitchRunScript";

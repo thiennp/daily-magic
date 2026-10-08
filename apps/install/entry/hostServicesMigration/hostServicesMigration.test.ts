@@ -585,3 +585,47 @@ describe("migrateAgentWitchMonolithToAccountServices (AWL-ISO-4)", () => {
     expect(attempts[0]?.at).toBe("5");
   });
 });
+
+import { clearStaleAgentWitchHostServicesMigrationLock } from "./hostServicesMigrationLock";
+
+describe("clearStaleAgentWitchHostServicesMigrationLock", () => {
+  it("removes stale locks but leaves fresh ones alone", () => {
+    const tmpDir = path.join(os.tmpdir(), `test-lock-${Date.now()}`);
+    fs.mkdirSync(tmpDir, { recursive: true });
+    try {
+      const lockPath = path.join(tmpDir, "host-services-migration.lock");
+      fs.writeFileSync(lockPath, JSON.stringify({ pid: 1234, at: 1000 }));
+
+      // Fresh, alive -> do not clear
+      expect(
+        clearStaleAgentWitchHostServicesMigrationLock(tmpDir, {
+          now: () => 1000,
+          isProcessAlive: () => true,
+        }),
+      ).toBe(false);
+      expect(fs.existsSync(lockPath)).toBe(true);
+
+      // Alive but too old -> clear
+      expect(
+        clearStaleAgentWitchHostServicesMigrationLock(tmpDir, {
+          now: () => 1000 + 10 * 60_000 + 1,
+          isProcessAlive: () => true,
+        }),
+      ).toBe(true);
+      expect(fs.existsSync(lockPath)).toBe(false);
+
+      fs.writeFileSync(lockPath, JSON.stringify({ pid: 1234, at: 1000 }));
+
+      // Fresh but dead -> clear
+      expect(
+        clearStaleAgentWitchHostServicesMigrationLock(tmpDir, {
+          now: () => 1000,
+          isProcessAlive: () => false,
+        }),
+      ).toBe(true);
+      expect(fs.existsSync(lockPath)).toBe(false);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+});

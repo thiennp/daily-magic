@@ -27,3 +27,6 @@ export {
   type AgentWitchReviveProcessResult,
   type AgentWitchReviveProcessRunners,
 } from "../internal/core/reviveAgentWitchClientProcess";
+
+/** d5e39215: profile-agnostic run.sh text (pure string, browser-safe). */
+export { buildAgentWitchRunScript } from "../internal/core/buildAgentWitchRunScript";
