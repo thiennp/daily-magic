@@ -27,6 +27,20 @@ describe("buildOverviewAttentionItems", () => {
     ]);
   });
 
+  it("lists skill questions after approvals", () => {
+    expect(
+      buildOverviewAttentionItems({
+        pendingRunCount: 1,
+        joinRequestCount: 0,
+        skillQuestionCount: 2,
+        unread: null,
+      }),
+    ).toEqual([
+      { kind: "run", count: 1 },
+      { kind: "skill", count: 2 },
+    ]);
+  });
+
   it("skips zero counts", () => {
     expect(
       buildOverviewAttentionItems({

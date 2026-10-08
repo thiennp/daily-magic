@@ -45,6 +45,10 @@ export const isExactAutoSkillRepeat = (
 };
 
 /** Cheap local prefilter: only limits how many candidates reach the judge. */
+/** Redacted runs hold only a preview: compare against the same-length head. */
+const comparable = (newPrompt: string, run: AutoSkillRunRecord): string =>
+  run.redacted === true ? newPrompt.slice(0, run.prompt.length) : newPrompt;
+
 export const prefilterAutoSkillCandidates = (
   newPrompt: string,
   earlier: readonly AutoSkillRunRecord[],
@@ -53,7 +57,10 @@ export const prefilterAutoSkillCandidates = (
     .map((run) => ({
       id: run.runId,
       prompt: run.prompt,
-      score: scoreAutoSkillPromptSimilarity(newPrompt, run.prompt),
+      score: scoreAutoSkillPromptSimilarity(
+        comparable(newPrompt, run),
+        run.prompt,
+      ),
     }))
     .filter((row) => row.score >= PREFILTER_MIN_SCORE)
     .sort((x, y) => y.score - x.score)

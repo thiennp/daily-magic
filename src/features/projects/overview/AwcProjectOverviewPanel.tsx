@@ -41,7 +41,8 @@ export default function AwcProjectOverviewPanel({
   });
   const openAttention = (item: OverviewAttentionItem): void => {
     if (item.kind === "run") onGotoTab("settings");
-    else if (item.kind === "join") onGotoChat(null);
+    // Join requests and skill questions both render as cards in the feed.
+    else if (item.kind === "join" || item.kind === "skill") onGotoChat(null);
     else onGotoChat(item.membershipId);
   };
   return (

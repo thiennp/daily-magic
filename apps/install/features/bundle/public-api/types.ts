@@ -25,7 +25,8 @@
 /** 304 = heartbeat also reports whether Codex is signed in. */
 /** 305 = auto skills: repeated tasks raise an owner question (Ollama / agent judge); owner-LLM CLI turns fail on non-zero exit. */
 /** 306 = project knowledge is captured from the final run result (it was never reached before, so notes and impact stayed 0). */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "306";
+/** 307 = auto skills keep only hashes + previews when history is OFF, run completion carries the writer; local folder describe adds git remote and branch. */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "307";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =

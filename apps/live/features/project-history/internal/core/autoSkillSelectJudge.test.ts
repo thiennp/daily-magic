@@ -38,7 +38,9 @@ describe("selectAutoSkillJudge", () => {
       ollamaModel: "mistral:7b",
     });
     expect(choice).toMatchObject({ ok: true, kind: "ollama" });
-    expect(choice.ok && choice.note).toContain("no project bot");
+    expect(choice.ok && choice.note).toContain(
+      "Project bot judging is not available yet",
+    );
   });
 
   it("returns a clear paused reason when nothing is available", () => {

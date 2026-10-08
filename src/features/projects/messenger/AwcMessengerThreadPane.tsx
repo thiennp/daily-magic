@@ -7,7 +7,7 @@ import { AWC_PROJECT_MESSENGER_COPY } from "@/features/projects/messenger/awcPro
 import AwcOneWindowFeedEmpty from "@/features/projects/messenger/oneWindow/AwcOneWindowFeedEmpty";
 import AwcOneWindowFeedLoading from "@/features/projects/messenger/oneWindow/AwcOneWindowFeedLoading";
 import AwcOneWindowFilterBarRow from "@/features/projects/messenger/oneWindow/AwcOneWindowFilterBarRow";
-import AwcOneWindowInFeedApprovals from "@/features/projects/messenger/oneWindow/AwcOneWindowInFeedApprovals";
+import AwcOneWindowInFeedCards from "@/features/projects/messenger/oneWindow/AwcOneWindowInFeedCards";
 import { useOneWindowComposerRouting } from "@/features/projects/messenger/oneWindow/useOneWindowComposerRouting";
 import { useOneWindowFeedFilter } from "@/features/projects/messenger/oneWindow/useOneWindowFeedFilter";
 import { useOneWindowPeerToggle } from "@/features/projects/messenger/oneWindow/useOneWindowPeerToggle";
@@ -68,7 +68,7 @@ export default function AwcMessengerThreadPane({
           onBack={onBack}
         />
       ) : null}
-      <AwcOneWindowInFeedApprovals projectId={projectId} enabled={isOwner} />
+      <AwcOneWindowInFeedCards projectId={projectId} enabled={isOwner} />
       <AwcOneWindowFilterBarRow
         show={!isLoading && thread !== null && entries.length > 0}
         filter={filter}

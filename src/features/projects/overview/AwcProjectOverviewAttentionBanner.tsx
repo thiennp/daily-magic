@@ -15,6 +15,8 @@ const itemText = (item: OverviewAttentionItem): string => {
       return C.attentionRunApprovals(item.count);
     case "join":
       return C.attentionJoinRequests(item.count);
+    case "skill":
+      return C.attentionSkillQuestions(item.count);
     case "unread":
       return C.attentionUnread(item.assistantName);
   }

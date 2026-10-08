@@ -223,6 +223,7 @@ const shellSessionIdByRunId = new Map<string, string>();
 const projectFolderPathByRunId = new Map<string, string>();
 const projectIdByRunId = new Map<string, string>();
 const promptByRunId = new Map<string, string>();
+const writerAgentByRunId = new Map<string, string>();
 
 /** Durable C1 SoT on the project computer when History is ON (no-op otherwise). */
 const persistRunHistoryAiSessionLocal = (input: {
@@ -1881,6 +1882,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
               projectIdByRunId.set(agentRunId, projectId.trim());
             }
             promptByRunId.set(agentRunId, prompt.trim());
+            writerAgentByRunId.set(agentRunId, writerAgent);
             if (projectId !== undefined && projectId.trim().length > 0) {
               persistRunHistoryAiSessionLocal({
                 projectId: projectId.trim(),
@@ -2327,6 +2329,10 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
                   wsUrl: autoSkillRunConfig.wsUrl,
                   pairingToken: autoSkillRunConfig.pairingToken,
                 });
+          const autoSkillWriterAgent =
+            agentRunId !== undefined
+              ? (writerAgentByRunId.get(agentRunId) ?? null)
+              : null;
           if (autoSkillCloudApi !== null) {
             void reportAutoSkillRunCompleted({
               cloudApi: autoSkillCloudApi,
@@ -2336,7 +2342,8 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
                 prompt,
                 resultSummary: output.slice(0, 600),
                 completedAt: new Date().toISOString(),
-                writerAgent: null,
+                writerAgent: autoSkillWriterAgent,
+                taskTitle: prompt.split("\n", 1)[0]?.trim().slice(0, 120) ?? "",
               },
               ...(projectFolderPath !== null
                 ? { folderPath: projectFolderPath }
@@ -2351,6 +2358,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         runScopedOverlayByRunId.delete(agentRunId);
         projectIdByRunId.delete(agentRunId);
         promptByRunId.delete(agentRunId);
+        writerAgentByRunId.delete(agentRunId);
       }
     }
   };

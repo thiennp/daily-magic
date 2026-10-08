@@ -32,7 +32,7 @@ const labelFor = (
 const MISSING: Record<AutoSkillJudgeKind, string> = {
   ollama: "Ollama is not running or has no chat model",
   agent: "no coding tool is signed in on this computer",
-  bot: "no project bot is configured",
+  bot: "Project bot judging is not available yet",
 };
 
 /**

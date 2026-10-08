@@ -6,6 +6,12 @@ export type AutoSkillRunRecord = {
   readonly resultSummary: string;
   readonly completedAt: string;
   readonly writerAgent: string | null;
+  /** Short label of the task (first line of the prompt) when known. */
+  readonly taskTitle?: string;
+  /** sha256 prefix of the normalized prompt; survives redaction. */
+  readonly promptHash?: string;
+  /** True when only a preview was stored (project history is OFF). */
+  readonly redacted?: boolean;
 };
 
 export type AutoSkillVerdictKind = "SAME" | "SIMILAR" | "DIFFERENT";

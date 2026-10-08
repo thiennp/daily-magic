@@ -13,8 +13,14 @@ describe("P1-S2 One window — full-width Chat surface", () => {
     expect(section).toContain("OW_SURFACE_CLASS");
     expect(section).toContain("<AwcMessengerThreadPane");
     expect(section).not.toMatch(/ThreadList|MessengerPanels|mobileShowThread/);
-    for (const gone of ["AwcProjectMessengerPanels", "AwcMessengerThreadList", "AwcMessengerThreadRow"]) {
-      expect(existsSync(path.join(process.cwd(), `${M}/${gone}.tsx`))).toBe(false);
+    for (const gone of [
+      "AwcProjectMessengerPanels",
+      "AwcMessengerThreadList",
+      "AwcMessengerThreadRow",
+    ]) {
+      expect(existsSync(path.join(process.cwd(), `${M}/${gone}.tsx`))).toBe(
+        false,
+      );
     }
   });
 
@@ -24,22 +30,37 @@ describe("P1-S2 One window — full-width Chat surface", () => {
     );
     const pane = read(`${M}/AwcMessengerThreadPane.tsx`);
     expect(pane).toMatch(/\{showBack \? \(\s*<AwcMessengerThreadPaneHeader/);
-    expect(read(`${M}/AwcMessengerThreadPaneHeader.tsx`)).toContain("← {copy.wholeName}");
+    expect(read(`${M}/AwcMessengerThreadPaneHeader.tsx`)).toContain(
+      "← {copy.wholeName}",
+    );
   });
 
   it("keeps filters, in-feed approvals, timeline (scroll up loads older) and the composer", () => {
     const pane = read(`${M}/AwcMessengerThreadPane.tsx`);
-    for (const part of ["AwcOneWindowFilterBar", "AwcOneWindowInFeedApprovals", "AwcMessengerTimeline", "AwcMessengerComposer"]) {
+    for (const part of [
+      "AwcOneWindowFilterBar",
+      "AwcOneWindowInFeedCards",
+      "AwcMessengerTimeline",
+      "AwcMessengerComposer",
+    ]) {
       expect(pane).toContain(part);
     }
-    expect(read(`${M}/hooks/useMessengerTimelineScroll.ts`)).toContain("TOP_LOAD_THRESHOLD_PX");
+    expect(read(`${M}/hooks/useMessengerTimelineScroll.ts`)).toContain(
+      "TOP_LOAD_THRESHOLD_PX",
+    );
   });
 
   it("Chat dock full view hosts it full width and re-opens on a new thread", () => {
     const dock = read("src/features/projects/chatDock/AwcProjectChatDock.tsx");
-    expect(dock).toContain("hasOwnerComputer={projectHasOwnerComputer(project)}");
-    expect(dock).toContain("key={`${chat.refreshKey}:${chat.threadKey ?? \"\"}`}");
-    expect(read("src/features/projects/chatDock/projectChatDockClasses.constant.ts")).toMatch(
+    expect(dock).toContain(
+      "hasOwnerComputer={projectHasOwnerComputer(project)}",
+    );
+    expect(dock).toContain(
+      'key={`${chat.refreshKey}:${chat.threadKey ?? ""}`}',
+    );
+    expect(
+      read("src/features/projects/chatDock/projectChatDockClasses.constant.ts"),
+    ).toMatch(
       /CHAT_DOCK_BODY_FULL_CLASS =\s*"flex min-h-0 flex-1 flex-col overflow-hidden bg-awc-surface"/,
     );
   });

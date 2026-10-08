@@ -8,7 +8,13 @@
       "libPath": null,
       "routePaths": ["/"],
       "apiPaths": [],
-      "dependsOn": ["agent-witch", "capabilities", "harness", "dispatch"],
+      "dependsOn": [
+        "agent-witch",
+        "capabilities",
+        "harness",
+        "dispatch",
+        "project-auto-skills"
+      ],
       "migrationStatus": "migrated"
     },
     {

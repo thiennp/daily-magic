@@ -32,6 +32,10 @@ export const PROJECT_PAGE_OVERVIEW_COPY = {
     n === 1
       ? "1 request to join is waiting for your approval."
       : `${n} requests to join are waiting for your approval.`,
+  attentionSkillQuestions: (n: number) =>
+    n === 1
+      ? "1 repeated task could be saved as a skill."
+      : `${n} repeated tasks could be saved as skills.`,
   attentionReview: "Review",
 
   setupTitle: "Set up",

@@ -12,6 +12,8 @@ import {
   probeAutoSkillOllamaModel,
 } from "./autoSkillOllama";
 import { readAutoSkillState, writeAutoSkillState } from "./autoSkillStore";
+import { isLocalProjectHistoryOn } from "./isLocalProjectHistoryOn";
+import { readLocalProjectHistoryState } from "./localProjectHistoryState";
 import {
   onAutoSkillRunCompleted,
   type AutoSkillOutcome,
@@ -38,7 +40,15 @@ export const reportAutoSkillRunCompleted = async (input: {
     {
       cloud: createHttpAutoSkillCloud(input.cloudApi),
       loadState: readAutoSkillState,
-      saveState: writeAutoSkillState,
+      // Unknown or OFF history counts as OFF: store only hashes + previews.
+      saveState: (projectId, state) =>
+        writeAutoSkillState(
+          projectId,
+          state,
+          isLocalProjectHistoryOn(
+            readLocalProjectHistoryState(projectId)?.state,
+          ),
+        ),
       probeAvailability: async (writerOfRun) => ({
         ollamaModel: await probeAutoSkillOllamaModel(),
         agentWriter: await probeSignedInAutoSkillAgent(writerOfRun),

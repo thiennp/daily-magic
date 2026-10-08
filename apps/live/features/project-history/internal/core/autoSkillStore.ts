@@ -7,6 +7,7 @@ import type {
   AutoSkillRunRecord,
   AutoSkillVerdict,
 } from "./autoSkill.types";
+import { hashAutoSkillPrompt, redactAutoSkillRun } from "./autoSkillRedact";
 import { resolveProjectDataDir } from "./resolveProjectDataDir";
 
 export type AutoSkillState = {
@@ -46,13 +47,19 @@ const takeLast = <T>(
   cap: number,
 ): Record<string, T> => Object.fromEntries(Object.entries(record).slice(-cap));
 
+/**
+ * `historyOn` false: persist only hashes + short previews (see
+ * autoSkillRedact). Existing full prompts are redacted on the next write.
+ */
 export const writeAutoSkillState = (
   projectId: string,
   state: AutoSkillState,
+  historyOn = true,
 ): void => {
+  const runs = state.runs.slice(-RUNS_CAP);
   const next: AutoSkillState = {
     ...state,
-    runs: state.runs.slice(-RUNS_CAP),
+    runs: historyOn ? runs : runs.map(redactAutoSkillRun),
     verdictCache: takeLast(state.verdictCache, CACHE_CAP),
   };
   atomicWriteFile0600(statePath(projectId), JSON.stringify(next));
@@ -69,6 +76,10 @@ export const appendAutoSkillRun = (
         ...state,
         runs: [
           ...state.runs,
-          { ...run, prompt: run.prompt.slice(0, PROMPT_CAP) },
+          {
+            ...run,
+            prompt: run.prompt.slice(0, PROMPT_CAP),
+            promptHash: run.promptHash ?? hashAutoSkillPrompt(run.prompt),
+          },
         ],
       };

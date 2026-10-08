@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 
+import { useAutoSkills } from "@/features/project-auto-skills/public-api/presentation";
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 import { useHumanInviteWaitingCount } from "@/features/projects/access/humanInvites/hooks/useHumanInviteWaitingCount";
 import {
@@ -64,14 +65,18 @@ const useOverviewPanelData = (input: {
   const joinRequestCount =
     input.isOwner && !access.loadError ? access.pending.length : 0;
   const pendingRunCount = input.isOwner ? runApprovals.approvals.length : 0;
+  const skillQuestionCount =
+    useAutoSkills(input.project.id, input.isOwner).overview?.pending.length ??
+    0;
   const attention = useMemo(
     () =>
       buildOverviewAttentionItems({
         pendingRunCount,
         joinRequestCount,
+        skillQuestionCount,
         unread: buildOverviewAttention(threads),
       }),
-    [pendingRunCount, joinRequestCount, threads],
+    [pendingRunCount, joinRequestCount, skillQuestionCount, threads],
   );
   const recent = useMemo(() => buildOverviewRecentActivity(threads), [threads]);
   const assistants = useMemo(

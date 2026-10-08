@@ -7,6 +7,11 @@ import type {
   AutoSkillJudgePref,
   AutoSkillsOverview,
 } from "@/features/project-auto-skills/internal/core/projectAutoSkills.type";
+import {
+  autoSkillsUrl,
+  fetchAutoSkillsOverview,
+  postAutoSkillAnswer,
+} from "@/features/project-auto-skills/internal/presentation/autoSkillsApi";
 
 export interface AutoSkillsState {
   /** Null for non-owners and while loading. */
@@ -18,74 +23,66 @@ export interface AutoSkillsState {
   readonly reload: () => void;
 }
 
-const base = (projectId: string): string =>
-  `/api/projects/${encodeURIComponent(projectId)}/auto-skills`;
-
-/** Owner-only Auto skills state for the Library strip. */
-export const useAutoSkills = (projectId: string): AutoSkillsState => {
+/**
+ * Owner-only Auto skills state, shared by the Library strip, the project
+ * Overview, the One window feed. `enabled` false skips the request.
+ */
+export const useAutoSkills = (
+  projectId: string,
+  enabled = true,
+): AutoSkillsState => {
   const [overview, setOverview] = useState<AutoSkillsOverview | null>(null);
   const [busy, setBusy] = useState(false);
   const [nonce, setNonce] = useState(0);
   const reload = useCallback((): void => setNonce((n) => n + 1), []);
 
   useEffect(() => {
+    if (!enabled) {
+      return;
+    }
     const controller = new AbortController();
-    void (async () => {
-      try {
-        const response = await fetch(base(projectId), {
-          signal: controller.signal,
-          cache: "no-store",
-        });
-        const body = (await response.json()) as {
-          overview?: AutoSkillsOverview;
-        };
-        setOverview(response.ok ? (body.overview ?? null) : null);
-      } catch {
-        // keep the previous state; the strip is optional chrome
-      }
-    })();
+    void fetchAutoSkillsOverview(projectId, controller.signal)
+      .then(setOverview)
+      .catch(() => undefined); // keep the previous state; optional chrome
     return () => controller.abort();
-  }, [projectId, nonce]);
+  }, [projectId, nonce, enabled]);
 
-  const send = useCallback(
-    async (url: string, init: RequestInit): Promise<boolean> => {
+  const patch = useCallback(
+    async (body: Record<string, unknown>): Promise<void> => {
       setBusy(true);
       try {
-        const response = await fetch(url, {
-          ...init,
+        await fetch(autoSkillsUrl(projectId), {
+          method: "PATCH",
           headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
         });
-        reload();
-        return response.ok;
       } catch {
-        return false;
+        // surfaced by the next reload
       } finally {
         setBusy(false);
+        reload();
       }
     },
-    [reload],
+    [projectId, reload],
+  );
+
+  const answer = useCallback(
+    async (id: string, value: AutoSkillAnswer): Promise<boolean> => {
+      setBusy(true);
+      const ok = await postAutoSkillAnswer(projectId, id, value);
+      setBusy(false);
+      reload();
+      return ok;
+    },
+    [projectId, reload],
   );
 
   return {
-    overview,
+    overview: enabled ? overview : null,
     busy,
     reload,
-    setEnabled: async (enabled) => {
-      await send(base(projectId), {
-        method: "PATCH",
-        body: JSON.stringify({ enabled }),
-      });
-    },
-    setJudgePref: async (judgePref) => {
-      await send(base(projectId), {
-        method: "PATCH",
-        body: JSON.stringify({ judgePref }),
-      });
-    },
-    answer: (id, answer) =>
-      send(`${base(projectId)}/suggestions/${encodeURIComponent(id)}`, {
-        method: "POST",
-        body: JSON.stringify({ answer }),
-      }),
+    setEnabled: (value) => patch({ enabled: value }),
+    setJudgePref: (judgePref) => patch({ judgePref }),
+    answer,
   };
 };

@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import type { AutoSkillJudgePref } from "@/features/project-auto-skills/public-api/types";
 import type { AutoSkillsState } from "@/features/project-auto-skills/public-api/presentation";
-import AwcProjectLibraryAutoSkillCard from "@/features/projects/library/AwcProjectLibraryAutoSkillCard";
+import AwcAutoSkillQuestionCard from "@/features/projects/autoskills/AwcAutoSkillQuestionCard";
 import { formatAutoSkillsStatus } from "@/features/projects/library/utils/formatAutoSkillsStatus";
 import {
   PANEL_BUTTON_SECONDARY_CLASS,
@@ -21,7 +21,7 @@ const JUDGES: readonly { value: AutoSkillJudgePref; label: string }[] = [
   { value: "auto", label: "Judge: automatic" },
   { value: "ollama", label: "Judge: Ollama (local)" },
   { value: "agent", label: "Judge: My coding agent" },
-  { value: "bot", label: "Judge: Project bot" },
+  { value: "bot", label: "Judge: Project bot (not available yet)" },
 ];
 
 /** Library "Auto skills" strip (owner only): toggle, status, judge, questions. */
@@ -95,16 +95,17 @@ export default function AwcProjectLibraryAutoSkills({
       {open && waiting > 0 ? (
         <ul className="flex flex-col gap-2">
           {overview.pending.map((suggestion) => (
-            <AwcProjectLibraryAutoSkillCard
-              key={suggestion.id}
-              suggestion={suggestion}
-              busy={auto.busy}
-              onAnswer={(answer) => {
-                void auto.answer(suggestion.id, answer).then((ok) => {
-                  if (ok && answer === "save") onSaved();
-                });
-              }}
-            />
+            <li key={suggestion.id}>
+              <AwcAutoSkillQuestionCard
+                suggestion={suggestion}
+                busy={auto.busy}
+                onAnswer={(answer) => {
+                  void auto.answer(suggestion.id, answer).then((ok) => {
+                    if (ok && answer === "save") onSaved();
+                  });
+                }}
+              />
+            </li>
           ))}
         </ul>
       ) : null}

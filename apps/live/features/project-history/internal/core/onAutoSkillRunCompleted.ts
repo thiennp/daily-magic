@@ -14,6 +14,7 @@ import {
   isExactAutoSkillRepeat,
   prefilterAutoSkillCandidates,
 } from "./autoSkillPromptSimilarity";
+import { hashAutoSkillPrompt } from "./autoSkillRedact";
 import { selectAutoSkillJudge } from "./autoSkillSelectJudge";
 import { appendAutoSkillRun, type AutoSkillState } from "./autoSkillStore";
 
@@ -63,7 +64,11 @@ const exactVerdicts = (
   earlier: readonly AutoSkillRunRecord[],
 ): AutoSkillVerdict[] =>
   earlier
-    .filter((e) => isExactAutoSkillRepeat(run.prompt, e.prompt))
+    .filter((e) =>
+      e.redacted === true && e.promptHash !== undefined
+        ? e.promptHash === hashAutoSkillPrompt(run.prompt)
+        : isExactAutoSkillRepeat(run.prompt, e.prompt),
+    )
     .map((e) => ({
       candidateId: e.runId,
       verdict: "SAME",
@@ -155,7 +160,7 @@ export const onAutoSkillRunCompleted = async (
       matches: matched.map((r) => ({
         runId: r.runId,
         completedAt: r.completedAt,
-        summary: r.prompt.slice(0, 160),
+        summary: (r.taskTitle ?? r.prompt).slice(0, 160),
       })),
       draftName: draft.name,
       draftBody: draft.markdown,
