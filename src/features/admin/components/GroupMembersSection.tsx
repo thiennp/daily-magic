@@ -6,12 +6,14 @@ import AppPanel from "@/components/surfaces/AppPanel";
 import GroupMemberInviteForm from "@/features/admin/components/GroupMemberInviteForm";
 import GroupMembersTable from "@/features/admin/components/GroupMembersTable";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
-import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
 import type { MemberItem } from "@/features/admin/types/groupManagement.types";
 
 interface GroupMembersSectionProps {
   readonly members: readonly MemberItem[];
+  readonly companyName: string;
+  readonly actorUserId: string | null;
+  readonly actorIsAdmin: boolean;
   readonly memberEmail: string;
   readonly memberRole: string;
   readonly onMemberEmailChange: (value: string) => void;
@@ -23,6 +25,9 @@ interface GroupMembersSectionProps {
 
 export default function GroupMembersSection({
   members,
+  companyName,
+  actorUserId,
+  actorIsAdmin,
   memberEmail,
   memberRole,
   onMemberEmailChange,
@@ -37,20 +42,30 @@ export default function GroupMembersSection({
   const pendingMember = members.find(
     (member) => member.membership.id === pendingMembershipId,
   );
+  const pendingName =
+    pendingMember?.user?.name?.trim() ||
+    pendingMember?.user?.email ||
+    "this member";
 
   return (
     <>
-      <AppPanel padding="compact">
-        <h2 className="text-lg font-semibold text-awc-fg">
-          {C.membersTitle}
-        </h2>
-        <p className="mt-1 text-xs text-awc-fg-muted">
-          {C.roleTip}
-        </p>
+      <AppPanel padding="compact" aria-labelledby="mem-h">
+        <div className="flex items-center gap-2">
+          <h2 id="mem-h" className="text-lg font-semibold text-awc-fg">
+            {C.membersTitle}
+          </h2>
+          <span className="rounded-full bg-awc-fill px-2 py-0.5 text-xs font-semibold tabular-nums text-awc-fg-muted">
+            {members.length}
+          </span>
+        </div>
 
         <GroupMemberInviteForm
           memberEmail={memberEmail}
           memberRole={memberRole}
+          memberEmails={members.flatMap((member) =>
+            member.user?.email ? [member.user.email] : [],
+          )}
+          canInvite={actorIsAdmin}
           onMemberEmailChange={onMemberEmailChange}
           onMemberRoleChange={onMemberRoleChange}
           onAddMember={onAddMember}
@@ -58,20 +73,20 @@ export default function GroupMembersSection({
 
         <GroupMembersTable
           members={members}
+          actorUserId={actorUserId}
+          actorIsAdmin={actorIsAdmin}
           onRoleChange={onRoleChange}
-          onRemoveMember={(membershipId) => {
-            setPendingMembershipId(membershipId);
-          }}
+          onRemoveMember={setPendingMembershipId}
         />
       </AppPanel>
 
       <ConfirmDestructiveModal
         isOpen={pendingMembershipId !== null}
-        title="Remove member?"
-        description={`Remove ${
-          pendingMember?.user?.email ?? "this member"
-        } from the ${COMPANY_ENTITY_LABEL.toLowerCase()}.`}
-        confirmLabel="Remove member"
+        title={`Remove ${pendingName}?`}
+        description={C.removeMemberText
+          .replace("{name}", pendingName)
+          .replace("{company}", companyName)}
+        confirmLabel={C.removeMemberConfirm}
         onClose={() => {
           setPendingMembershipId(null);
         }}

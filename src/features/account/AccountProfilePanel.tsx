@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 
-import Button from "@/components/ui/button/Button";
+import AccountH2 from "@/features/account/AccountH2";
 import {
   ACCOUNT_CHIP_CLASS,
-  ACCOUNT_FIELD_CLASS,
-  ACCOUNT_H2_CLASS,
   ACCOUNT_HINT_CLASS,
   ACCOUNT_LABEL_CLASS,
 } from "@/features/account/accountClasses.constant";
@@ -14,18 +12,27 @@ import {
   ACCOUNT_AVATAR_COLORS,
   ACCOUNT_COPY,
 } from "@/features/account/accountCopy.constant";
-
-type AvatarColorId = (typeof ACCOUNT_AVATAR_COLORS)[number]["id"];
 import AccountAvatarColorField from "@/features/account/AccountAvatarColorField";
+import AccountNameForm from "@/features/account/AccountNameForm";
 import AccountProfilePlanCard from "@/features/account/AccountProfilePlanCard";
 import useBillingPlan from "@/features/billing/hooks/useBillingPlan";
 import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+
+type AvatarColorId = (typeof ACCOUNT_AVATAR_COLORS)[number]["id"];
 
 interface AccountProfilePanelProps {
   readonly displayName: string;
   readonly email: string;
   readonly offline: boolean;
 }
+
+const initialsOf = (value: string): string =>
+  value
+    .split(/[\s@.]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
 
 export default function AccountProfilePanel({
   displayName,
@@ -35,92 +42,71 @@ export default function AccountProfilePanel({
   const copy = ACCOUNT_COPY.profile;
   const { plan } = useBillingPlan();
   const [name, setName] = useState(displayName);
-  const [draft, setDraft] = useState(displayName);
-  const [avatarId, setAvatarId] = useState<AvatarColorId>(ACCOUNT_AVATAR_COLORS[0].id);
-  const [saved, setSaved] = useState(false);
+  const [avatarId, setAvatarId] = useState<AvatarColorId>(
+    ACCOUNT_AVATAR_COLORS[0].id,
+  );
   const [emailNote, setEmailNote] = useState(false);
   const tz =
     typeof Intl !== "undefined"
       ? Intl.DateTimeFormat().resolvedOptions().timeZone
       : "UTC";
+  const avatarClass =
+    ACCOUNT_AVATAR_COLORS.find((color) => color.id === avatarId)?.className ??
+    "";
 
   return (
     <div className="space-y-6" data-testid="account-profile-panel">
-      <section className="space-y-4">
-        <h2 className={ACCOUNT_H2_CLASS}>{copy.h2}</h2>
-        <div className="space-y-1">
-          <label className={ACCOUNT_LABEL_CLASS} htmlFor="account-display-name">
-            {copy.displayName}
-          </label>
-          <p className={ACCOUNT_HINT_CLASS}>{copy.displayNameTip}</p>
-          <input
-            id="account-display-name"
-            className={ACCOUNT_FIELD_CLASS}
-            value={draft}
-            disabled={offline}
-            onChange={(e) => {
-              setDraft(e.target.value);
-              setSaved(false);
+      <section className="space-y-4" aria-labelledby="account-profile-h">
+        <AccountH2 id="account-profile-h" title={copy.h2} />
+        <div className="flex flex-wrap items-center gap-4">
+          <span
+            aria-hidden="true"
+            className={`grid size-14 place-items-center rounded-full text-lg font-semibold text-white ${avatarClass}`}
+          >
+            {initialsOf(name)}
+          </span>
+          <div className="min-w-0">
+            <p className="font-semibold text-awc-fg">{name}</p>
+            <p className="text-sm text-awc-fg-muted">{email}</p>
+          </div>
+          <AccountAvatarColorField
+            avatarId={avatarId}
+            offline={offline}
+            onChange={(id) => {
+              setAvatarId(id as AvatarColorId);
             }}
           />
-          <div className="flex flex-wrap gap-2 pt-1">
-            <Button
-              size="sm"
-              disabled={offline || draft.trim() === name}
-              onClick={() => {
-                setName(draft.trim());
-                setSaved(true);
-              }}
-            >
-              {copy.saveName}
-            </Button>
+        </div>
+        <AccountNameForm name={name} offline={offline} onSave={setName} />
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <p className={ACCOUNT_LABEL_CLASS}>{copy.email}</p>
+            <p className="text-sm text-awc-fg">{email}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className={ACCOUNT_CHIP_CLASS}>✓ {copy.verified}</span>
             <button
               type="button"
               className={APP_SURFACE_CTA_SECONDARY_SM_CLASS}
-              disabled={offline || draft === name}
+              disabled={offline}
               onClick={() => {
-                setDraft(name);
-                setSaved(false);
+                setEmailNote(true);
               }}
             >
-              {copy.cancel}
+              {copy.changeEmail}
             </button>
-            {saved ? (
-              <span className={ACCOUNT_CHIP_CLASS}>{copy.nameSaved}</span>
-            ) : null}
           </div>
         </div>
-        <div className="space-y-1">
-          <p className={ACCOUNT_LABEL_CLASS}>{copy.email}</p>
-          <p className="text-sm text-awc-fg">
-            {email} <span className={ACCOUNT_CHIP_CLASS}>{copy.verified}</span>
+        {emailNote ? (
+          <p role="status" className={ACCOUNT_HINT_CLASS}>
+            {copy.changeEmailNote}
           </p>
-          <button
-            type="button"
-            className={APP_SURFACE_CTA_SECONDARY_SM_CLASS}
-            disabled={offline}
-            onClick={() => {
-              setEmailNote(true);
-            }}
-          >
-            {copy.changeEmail}
-          </button>
-          {emailNote ? (
-            <p className={ACCOUNT_HINT_CLASS}>{copy.changeEmailNote}</p>
-          ) : null}
-        </div>
+        ) : null}
         <div className="space-y-1">
           <p className={ACCOUNT_LABEL_CLASS}>{copy.timeZone}</p>
           <p className="text-sm text-awc-fg">{tz}</p>
           <p className={ACCOUNT_HINT_CLASS}>{copy.timeZoneHint}</p>
         </div>
-        <AccountAvatarColorField
-          avatarId={avatarId}
-          offline={offline}
-          onChange={(id) => {
-            setAvatarId(id as AvatarColorId);
-          }}
-        />
       </section>
       <AccountProfilePlanCard planId={plan?.plan ?? null} />
     </div>

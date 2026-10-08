@@ -1,17 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+import { useState } from "react";
 
+import CompaniesRulesHead, {
+  COMPANIES_RULES_HUB_CRUMBS,
+} from "@/features/admin/components/CompaniesRulesHead";
 import CompaniesRulesOrientationStrip from "@/features/admin/components/CompaniesRulesOrientationStrip";
-import GroupCompanySettingsModal from "@/features/admin/components/GroupCompanySettingsModal";
-import GroupMembersSection from "@/features/admin/components/GroupMembersSection";
+import GroupCompanySettingsView from "@/features/admin/components/GroupCompanySettingsView";
+import GroupMembersAndRuns from "@/features/admin/components/GroupMembersAndRuns";
 import GroupSelectionSection from "@/features/admin/components/GroupSelectionSection";
-import GroupTeamActivityPanel from "@/features/admin/components/GroupTeamActivityPanel";
-import { useAdminGroupsSidebar } from "@/features/admin/context/AdminGroupsSidebarContext";
+import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
+import { useGroupActorAccess } from "@/features/admin/hooks/useGroupActorAccess";
 import { useGroupManagement } from "@/features/admin/hooks/useGroupManagement";
 import type { GroupItem } from "@/features/admin/types/groupManagement.types";
-import { GroupRole, isPrivilegedGlobalRole } from "@/lib/auth/roles";
+import { formatCompanyMemberRoleLabel } from "@/features/admin/utils/formatCompanyMemberRoleLabel";
 
 interface GroupManagementPanelProps {
   readonly initialGroups: readonly GroupItem[];
@@ -20,97 +22,91 @@ interface GroupManagementPanelProps {
 export default function GroupManagementPanel({
   initialGroups,
 }: GroupManagementPanelProps) {
-  const { data: session } = useSession();
-  const adminGroupsSidebar = useAdminGroupsSidebar();
   const groupManagement = useGroupManagement(initialGroups);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-  useEffect(() => {
-    adminGroupsSidebar?.setSelectedGroupId(groupManagement.selectedGroupId);
-  }, [adminGroupsSidebar, groupManagement.selectedGroupId]);
+  const {
+    actorUserId,
+    actorMembership,
+    canDeleteTeam,
+    canConfigureDispatchPolicy,
+  } = useGroupActorAccess(groupManagement.members);
+  const selectedGroupId = groupManagement.selectedGroupId;
+  const hasCompany = groupManagement.groups.length > 0 && selectedGroupId;
 
-  const actorUserId =
-    session?.user && "id" in session.user && typeof session.user.id === "string"
-      ? session.user.id
-      : null;
-  const actorMembership = groupManagement.members.find(
-    (member) => member.membership.userId === actorUserId,
-  )?.membership;
-  const isGlobalAdmin =
-    session?.user?.globalRole &&
-    isPrivilegedGlobalRole(session.user.globalRole);
-  const canDeleteTeam =
-    Boolean(isGlobalAdmin) ||
-    actorMembership?.role === GroupRole.GROUP_SUPER_ADMIN;
-  const canConfigureDispatchPolicy =
-    Boolean(isGlobalAdmin) ||
-    actorMembership?.role === GroupRole.GROUP_SUPER_ADMIN ||
-    actorMembership?.role === GroupRole.GROUP_ADMIN;
-
-  const openSettings = (): void => {
-    setIsSettingsOpen(true);
-  };
+  if (isSettingsOpen && selectedGroupId) {
+    return (
+      <GroupCompanySettingsView
+        groupId={selectedGroupId}
+        groups={groupManagement.groups}
+        canConfigureDispatchPolicy={canConfigureDispatchPolicy}
+        canDeleteTeam={canDeleteTeam}
+        deleteMembers={groupManagement.deleteMembers}
+        onBack={() => {
+          setIsSettingsOpen(false);
+        }}
+        onDeleteMembersChange={groupManagement.setDeleteMembers}
+        onDeleteGroup={() => {
+          setIsSettingsOpen(false);
+          void groupManagement.handleDeleteGroup();
+        }}
+      />
+    );
+  }
 
   return (
     <div className="space-y-6">
+      <CompaniesRulesHead
+        crumbs={COMPANIES_RULES_HUB_CRUMBS}
+        title={C.title}
+        tip={C.whatIsCompanyTip}
+        tipLabel="What is a company?"
+        lede={C.lede}
+      />
       <GroupSelectionSection
         groups={groupManagement.groups}
-        selectedGroupId={groupManagement.selectedGroupId}
+        selectedGroupId={selectedGroupId}
         newGroupName={groupManagement.newGroupName}
+        actorRoleLabel={
+          actorMembership
+            ? formatCompanyMemberRoleLabel(actorMembership.role)
+            : null
+        }
+        peopleCount={groupManagement.members.length}
         canDeleteTeam={canDeleteTeam}
         canConfigureDispatchPolicy={canConfigureDispatchPolicy}
         onNewGroupNameChange={groupManagement.setNewGroupName}
         onSelectGroup={groupManagement.handleSelectGroup}
-        onCreateGroup={() => void groupManagement.handleCreateGroup()}
-        onOpenSettings={openSettings}
+        onCreateGroup={(name) => void groupManagement.handleCreateGroup(name)}
+        onOpenSettings={() => {
+          setIsSettingsOpen(true);
+        }}
       />
 
-      <CompaniesRulesOrientationStrip
-        groupId={groupManagement.selectedGroupId || null}
-        canConfigureDispatchPolicy={canConfigureDispatchPolicy}
-        onOpenCompanySettings={openSettings}
-      />
-
-      {groupManagement.selectedGroupId ? (
+      {hasCompany ? (
         <>
-          <GroupMembersSection
-            members={groupManagement.members}
-            memberEmail={groupManagement.memberEmail}
-            memberRole={groupManagement.memberRole}
-            onMemberEmailChange={groupManagement.setMemberEmail}
-            onMemberRoleChange={groupManagement.setMemberRole}
-            onAddMember={() => void groupManagement.handleAddMember()}
-            onRoleChange={groupManagement.handleRoleChange}
-            onRemoveMember={groupManagement.handleRemoveMember}
+          <CompaniesRulesOrientationStrip
+            groupId={selectedGroupId}
+            canConfigureDispatchPolicy={canConfigureDispatchPolicy}
+            onOpenCompanySettings={() => {
+              setIsSettingsOpen(true);
+            }}
           />
-          <GroupTeamActivityPanel groupId={groupManagement.selectedGroupId} />
+          <GroupMembersAndRuns
+            groupManagement={groupManagement}
+            actorUserId={actorUserId}
+            actorIsAdmin={canConfigureDispatchPolicy}
+          />
         </>
       ) : null}
 
-      {groupManagement.selectedGroupId ? (
-        <GroupCompanySettingsModal
-          isOpen={isSettingsOpen}
-          groupId={groupManagement.selectedGroupId}
-          groups={groupManagement.groups}
-          canConfigureDispatchPolicy={canConfigureDispatchPolicy}
-          canDeleteTeam={canDeleteTeam}
-          deleteMembers={groupManagement.deleteMembers}
-          onClose={() => {
-            setIsSettingsOpen(false);
-          }}
-          onDeleteMembersChange={groupManagement.setDeleteMembers}
-          onDeleteGroup={() => {
-            setIsSettingsOpen(false);
-            void groupManagement.handleDeleteGroup();
-          }}
-        />
-      ) : null}
-
-      {groupManagement.message ? (
-        <p className="text-sm text-awc-fg-muted">
-          {groupManagement.message}
-        </p>
-      ) : null}
+      <p
+        role="status"
+        aria-live="polite"
+        className="text-sm text-awc-fg-muted empty:hidden"
+      >
+        {groupManagement.message}
+      </p>
     </div>
   );
 }

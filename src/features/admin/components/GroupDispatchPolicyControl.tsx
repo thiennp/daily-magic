@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import GroupDispatchPolicyFields from "@/features/admin/components/GroupDispatchPolicyFields";
+import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
 import {
   DispatchPolicy,
   type DispatchPolicyValue,
@@ -11,13 +12,21 @@ import {
 
 interface GroupDispatchPolicyControlProps {
   readonly groupId: string;
-  readonly embedded?: boolean;
+  readonly companyName: string;
+  readonly canEdit: boolean;
 }
+
+const isPolicy = (value: unknown): value is DispatchPolicyValue =>
+  value === DispatchPolicy.OPEN || value === DispatchPolicy.APPROVAL;
 
 export default function GroupDispatchPolicyControl({
   groupId,
-  embedded = false,
+  companyName,
+  canEdit,
 }: GroupDispatchPolicyControlProps) {
+  const [saved, setSaved] = useState<DispatchPolicyValue>(
+    DispatchPolicy.APPROVAL,
+  );
   const [policy, setPolicy] = useState<DispatchPolicyValue>(
     DispatchPolicy.APPROVAL,
   );
@@ -34,21 +43,10 @@ export default function GroupDispatchPolicyControl({
       if (!response.ok) {
         return;
       }
-
-      const data: unknown = await response.json();
-      if (
-        typeof data === "object" &&
-        data !== null &&
-        "dispatchPolicy" in data &&
-        typeof (data as { dispatchPolicy: string }).dispatchPolicy === "string"
-      ) {
-        const nextPolicy = (data as { dispatchPolicy: string }).dispatchPolicy;
-        if (
-          nextPolicy === DispatchPolicy.OPEN ||
-          nextPolicy === DispatchPolicy.APPROVAL
-        ) {
-          setPolicy(nextPolicy);
-        }
+      const data = (await response.json()) as { dispatchPolicy?: unknown };
+      if (isPolicy(data.dispatchPolicy)) {
+        setSaved(data.dispatchPolicy);
+        setPolicy(data.dispatchPolicy);
       }
     })();
   }, [groupId]);
@@ -66,35 +64,32 @@ export default function GroupDispatchPolicyControl({
     );
     setIsSaving(false);
     setSaveState(response.ok ? "ok" : "fail");
+    if (response.ok) {
+      setSaved(policy);
+    }
   };
 
-  const content = (
-    <GroupDispatchPolicyFields
-      groupId={groupId}
-      policy={policy}
-      isSaving={isSaving}
-      saveState={saveState}
-      onPolicyChange={(next) => {
-        setPolicy(next);
-        setSaveState("idle");
-      }}
-      onSave={() => {
-        void savePolicy();
-      }}
-    />
-  );
-
-  if (embedded) {
-    return (
-      <div className="mt-6 rounded-lg border border-awc-border p-4">
-        {content}
-      </div>
-    );
-  }
-
   return (
-    <AppPanel as="aside" padding="compact" className="h-fit">
-      {content}
+    <AppPanel padding="compact" aria-labelledby="pol-h">
+      <h2 id="pol-h" className="text-lg font-semibold text-awc-fg">
+        {C.dispatchSectionTitle}
+      </h2>
+      <GroupDispatchPolicyFields
+        groupId={groupId}
+        companyName={companyName}
+        policy={policy}
+        savedPolicy={saved}
+        canEdit={canEdit}
+        isSaving={isSaving}
+        saveState={saveState}
+        onPolicyChange={(next) => {
+          setPolicy(next);
+          setSaveState("idle");
+        }}
+        onSave={() => {
+          void savePolicy();
+        }}
+      />
     </AppPanel>
   );
 }

@@ -9,6 +9,8 @@ import {
   COMPANY_RULES_NAV_LABEL,
 } from "@/lib/admin/companyGroupCopy.constant";
 
+import { COMPANIES_RULES_HUB_UI_COPY } from "@/features/admin/companiesRulesHubUiCopy.constant";
+
 export const COMPANIES_RULES_HUB_COPY = {
   navLabel: COMPANY_RULES_NAV_LABEL,
   title: COMPANIES_ENTITY_LABEL,
@@ -46,7 +48,7 @@ export const COMPANIES_RULES_HUB_COPY = {
   savePolicy: "Save",
   savingPolicy: "Saving…",
   policySaved: "Policy saved.",
-  policySaveFail: "Could not save the dispatch policy.",
+  policySaveFail: "Couldn't save the policy.",
   tryAgain: "Try again",
   onlyAdminsChange: "Only company admins can change this.",
   dangerZone: "Danger zone",
@@ -85,6 +87,7 @@ export const COMPANIES_RULES_HUB_COPY = {
   safetyProjectSelectAria: "Project",
   safetyNoProjects: "Create a project first to open Safety rules.",
   rulesStripTitle: "Rules",
+  ...COMPANIES_RULES_HUB_UI_COPY,
 } as const;
 
 export type CompaniesRulesHubCopy = typeof COMPANIES_RULES_HUB_COPY;

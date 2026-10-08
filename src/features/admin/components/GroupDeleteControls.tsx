@@ -12,7 +12,7 @@ interface GroupDeleteControlsProps {
   readonly groups: readonly GroupItem[];
   readonly selectedGroupId: string;
   readonly deleteMembers: boolean;
-  readonly embedded?: boolean;
+  readonly canDelete: boolean;
   readonly onDeleteMembersChange: (value: boolean) => void;
   readonly onDeleteGroup: () => void;
 }
@@ -21,7 +21,7 @@ export default function GroupDeleteControls({
   groups,
   selectedGroupId,
   deleteMembers,
-  embedded = false,
+  canDelete,
   onDeleteMembersChange,
   onDeleteGroup,
 }: GroupDeleteControlsProps) {
@@ -31,31 +31,31 @@ export default function GroupDeleteControls({
 
   return (
     <>
-      <div
-        className={
-          embedded
-            ? "mt-4 flex flex-wrap items-center gap-3"
-            : "mt-4 flex flex-wrap items-center gap-3"
-        }
-      >
+      <div className="mt-4 flex flex-wrap items-center gap-3">
         <label className="flex items-center gap-2 text-sm text-awc-fg-muted">
           <input
             type="checkbox"
             checked={deleteMembers}
+            disabled={!canDelete}
             onChange={(event) => {
               onDeleteMembersChange(event.target.checked);
             }}
           />
-          Also delete all users in this {companyLabel}
+          {C.deleteAlsoMembers}
         </label>
         <Button
           variant="outline"
+          disabled={!canDelete}
+          className="border-awc-bad-dot/40 text-awc-bad"
           onClick={() => {
             setIsDeleteModalOpen(true);
           }}
         >
           {C.deleteCompany}
         </Button>
+        {canDelete ? null : (
+          <span className="text-sm text-awc-fg-muted">{C.deleteOwnerOnly}</span>
+        )}
       </div>
 
       <ConfirmDestructiveModal
@@ -64,7 +64,7 @@ export default function GroupDeleteControls({
         description={
           deleteMembers
             ? `Delete "${selectedGroup?.name ?? `this ${companyLabel}`}" and remove all users in it. ${C.deleteConfirmHint}`
-            : C.deleteBody
+            : `Removes the company, its members and its dispatch policy. ${C.deleteConfirmHint}`
         }
         confirmLabel={C.deleteCompany}
         typedConfirmText={selectedGroup?.name}

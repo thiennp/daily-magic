@@ -23,9 +23,12 @@ describe("Companies & rules hub (copy + surfaces)", () => {
       "src/features/admin/components/GroupCreateCompanyPanel.tsx",
     );
     expect(selection).toContain("C.createHeading");
+    const joinCard = read(
+      "src/features/admin/components/GroupJoinHonestyCard.tsx",
+    );
     expect(createPanel).toContain("C.createCta");
-    expect(createPanel).toContain("C.joinHonestyHeading");
-    expect(createPanel).toContain("C.joinHonestyBody");
+    expect(joinCard).toContain("C.joinHonestyHeading");
+    expect(joinCard).toContain("C.joinHonestyBody");
     expect(createPanel).not.toMatch(/Join with a code/i);
   });
 
@@ -41,7 +44,10 @@ describe("Companies & rules hub (copy + surfaces)", () => {
     expect(fields).toContain("C.approvalLabel");
     expect(fields).toContain("C.openLabel");
     expect(fields).toContain("C.approvalHelper");
-    expect(fields).toContain("C.tryAgain");
+    const status = read(
+      "src/features/admin/components/GroupDispatchPolicyStatus.tsx",
+    );
+    expect(status).toContain("C.tryAgain");
   });
 
   it("keeps Danger zone delete and members invite on company settings / members", () => {
@@ -51,7 +57,7 @@ describe("Companies & rules hub (copy + surfaces)", () => {
     expect(COMPANIES_RULES_HUB_COPY.inviteCta).toBe("Invite");
 
     const settings = read(
-      "src/features/admin/components/GroupCompanySettingsModal.tsx",
+      "src/features/admin/components/GroupCompanySettingsView.tsx",
     );
     expect(settings).toContain("C.dangerZone");
     expect(settings).toContain("C.deleteBody");

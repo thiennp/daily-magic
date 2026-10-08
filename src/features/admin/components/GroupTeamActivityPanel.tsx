@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
-import Button from "@/components/ui/button/Button";
 import GroupTeamActivityRunsList from "@/features/admin/components/GroupTeamActivityRunsList";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
@@ -62,19 +61,34 @@ export default function GroupTeamActivityPanel({
   };
 
   return (
-    <AppPanel>
+    <AppPanel aria-labelledby="run-h" aria-busy={isLoading}>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-base font-semibold text-awc-fg">
+        <h2 id="run-h" className="text-lg font-semibold text-awc-fg">
           {C.runsTitle}
-        </h3>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={bumpReload}
-          aria-label={C.runsRefresh}
-        >
-          {C.runsRefresh}
-        </Button>
+        </h2>
+        {!isLoading && !hasError && runs.length > 0 ? (
+          <button
+            type="button"
+            onClick={bumpReload}
+            aria-label={C.runsRefresh}
+            title={C.runsRefresh}
+            className="inline-flex size-9 items-center justify-center rounded-lg text-awc-fg-muted transition hover:bg-awc-tile hover:text-awc-fg"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.9"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M20 11a8 8 0 0 0-14-4L4 9M4 4v5h5M4 13a8 8 0 0 0 14 4l2-2M20 20v-5h-5" />
+            </svg>
+          </button>
+        ) : null}
       </div>
 
       <GroupTeamActivityRunsList

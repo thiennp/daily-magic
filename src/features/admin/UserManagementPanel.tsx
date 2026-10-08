@@ -4,15 +4,24 @@ import { useSession } from "next-auth/react";
 import { useMemo, useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
-import UsersKindFilter from "@/features/admin/components/UsersKindFilter";
+import Button from "@/components/ui/button/Button";
+import AdminNoAccess from "@/features/admin/components/AdminNoAccess";
+import AdminUsersToolbar from "@/features/admin/components/AdminUsersToolbar";
 import UsersTable, {
   type UserItem,
 } from "@/features/admin/components/UsersTable";
+import {
+  ADMIN_COPY,
+  ADMIN_USERS_PAGE_SIZE,
+} from "@/features/admin/adminCopy.constant";
 import {
   ADMIN_USER_KIND_FILTER_ALL,
   type AdminUserKindFilter,
 } from "@/features/admin/utils/adminUserKindLabels.constant";
 import filterAdminUsersByKind from "@/features/admin/utils/filterAdminUsersByKind";
+import filterAdminUsersBySearch from "@/features/admin/utils/filterAdminUsersBySearch";
+import { useAdminUserActions } from "@/features/admin/hooks/useAdminUserActions";
+import { PROJECT_V5_H1_CLASS } from "@/features/projects/projectPageV5ChromeClasses.constant";
 import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import { isPrivilegedGlobalRole } from "@/lib/auth/roles";
@@ -28,77 +37,80 @@ export default function UserManagementPanel({
   const isAdmin =
     session?.user?.globalRole &&
     isPrivilegedGlobalRole(session.user.globalRole);
-  const [users, setUsers] = useState<readonly UserItem[]>(initialUsers);
+  const { users, message, deleteUser } = useAdminUserActions(initialUsers);
   const [kindFilter, setKindFilter] = useState<AdminUserKindFilter>(
     ADMIN_USER_KIND_FILTER_ALL,
   );
-  const [message, setMessage] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [shown, setShown] = useState(ADMIN_USERS_PAGE_SIZE);
   const [pendingUserId, setPendingUserId] = useState<string | null>(null);
   const pendingUser = users.find((user) => user.id === pendingUserId);
-  const visibleUsers = useMemo(
-    () => filterAdminUsersByKind(users, kindFilter),
-    [users, kindFilter],
+  const matches = useMemo(
+    () =>
+      filterAdminUsersBySearch(
+        filterAdminUsersByKind(users, kindFilter),
+        query,
+      ),
+    [users, kindFilter, query],
   );
 
-  const loadUsers = async () => {
-    const response = await fetch("/api/admin/users");
-    const payload = (await response.json()) as {
-      users?: UserItem[];
-      error?: string;
-    };
-
-    if (!response.ok) {
-      setMessage(payload.error ?? "Could not load users.");
-      return;
-    }
-
-    setUsers(payload.users ?? []);
-  };
-
-  const handleDeleteUser = async (userId: string) => {
-    const response = await fetch("/api/admin/users", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId }),
-    });
-    const payload = (await response.json()) as { error?: string };
-
-    if (!response.ok) {
-      setMessage(payload.error ?? "Could not delete user.");
-      return;
-    }
-
-    setMessage("User deleted.");
-    await loadUsers();
-  };
-
   if (!isAdmin) {
-    return (
-      <p className="text-sm text-awc-fg-muted">
-        Only global admins can manage users.
-      </p>
-    );
+    return <AdminNoAccess what={ADMIN_COPY.usersOnlyAdmins} />;
   }
 
   return (
     <div className="space-y-4">
-      <AppPanel padding="compact">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold text-awc-fg">
-            Users
-          </h2>
-          <UsersKindFilter value={kindFilter} onChange={setKindFilter} />
-        </div>
-        <UsersTable
-          users={visibleUsers}
-          currentUserId={session?.user?.id}
-          onRemoveRequest={setPendingUserId}
+      <header className="space-y-1">
+        <h1 className={PROJECT_V5_H1_CLASS}>{ADMIN_COPY.title}</h1>
+        <p className="text-sm text-awc-fg-muted">{ADMIN_COPY.description}</p>
+      </header>
+      <AppPanel padding="compact" aria-labelledby="us-h">
+        <h2 id="us-h" className="text-lg font-semibold text-awc-fg">
+          {ADMIN_COPY.usersTitle}
+        </h2>
+        <AdminUsersToolbar
+          query={query}
+          kindFilter={kindFilter}
+          count={matches.length}
+          onQueryChange={(value) => {
+            setQuery(value);
+            setShown(ADMIN_USERS_PAGE_SIZE);
+          }}
+          onKindChange={setKindFilter}
         />
+        {matches.length === 0 ? (
+          <div className="mt-4 rounded-lg border border-dashed border-awc-border-strong bg-awc-surface-2 px-4 py-6 text-center">
+            <h3 className="text-base font-semibold text-awc-fg">
+              {ADMIN_COPY.noUsersTitle}
+            </h3>
+            <p className="text-sm text-awc-fg-muted">
+              {ADMIN_COPY.noUsersBody}
+            </p>
+          </div>
+        ) : (
+          <UsersTable
+            users={matches.slice(0, shown)}
+            currentUserId={session?.user?.id}
+            onRemoveRequest={setPendingUserId}
+          />
+        )}
+        {matches.length > shown ? (
+          <div className="mt-4 flex justify-center">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShown((n) => n + ADMIN_USERS_PAGE_SIZE);
+              }}
+            >
+              {ADMIN_COPY.showMore}
+            </Button>
+          </div>
+        ) : null}
       </AppPanel>
 
-      {message ? (
-        <p className="text-sm text-awc-fg-muted">{message}</p>
-      ) : null}
+      <p role="status" className="text-sm text-awc-fg-muted empty:hidden">
+        {message}
+      </p>
 
       <ConfirmDestructiveModal
         isOpen={pendingUserId !== null}
@@ -110,7 +122,7 @@ export default function UserManagementPanel({
         }}
         onConfirm={() => {
           if (pendingUserId !== null) {
-            void handleDeleteUser(pendingUserId);
+            void deleteUser(pendingUserId);
           }
           setPendingUserId(null);
         }}

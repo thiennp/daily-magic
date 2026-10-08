@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 
+import AdminNoAccess from "@/features/admin/components/AdminNoAccess";
+import { ADMIN_COPY } from "@/features/admin/adminCopy.constant";
 import AdminCostControlPanel from "@/features/billing/components/AdminCostControlPanel";
 import { getAuthActor } from "@/lib/auth/auth";
 import { isGlobalAdmin } from "@/lib/auth/globalRolePermissions";
@@ -12,11 +14,7 @@ export default async function AdminCostControlPage() {
   }
 
   if (!isGlobalAdmin(actor)) {
-    return (
-      <p className="text-sm text-awc-fg-muted">
-        Only global admins can view cost control.
-      </p>
-    );
+    return <AdminNoAccess what={ADMIN_COPY.costOnlyAdmins} />;
   }
 
   return <AdminCostControlPanel />;

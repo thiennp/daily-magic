@@ -10,6 +10,7 @@ interface ConfirmDestructiveModalProps {
   readonly title: string;
   readonly description: string;
   readonly confirmLabel?: string;
+  readonly cancelLabel?: string;
   readonly isConfirming?: boolean;
   /** When set, Confirm stays disabled until this exact text is typed. */
   readonly typedConfirmText?: string;
@@ -23,6 +24,7 @@ export default function ConfirmDestructiveModal({
   title,
   description,
   confirmLabel = "Confirm",
+  cancelLabel = "Cancel",
   isConfirming = false,
   typedConfirmText,
   typedConfirmLabel,
@@ -77,7 +79,7 @@ export default function ConfirmDestructiveModal({
       ) : null}
       <div className="mt-6 flex flex-wrap justify-end gap-3">
         <Button variant="outline" onClick={handleClose} disabled={isConfirming}>
-          Cancel
+          {cancelLabel}
         </Button>
         <Button
           variant="outline"

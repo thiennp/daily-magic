@@ -1,5 +1,6 @@
 "use client";
 
+import InfoTip from "@/components/ui/infoTip/InfoTip";
 import Button from "@/components/ui/button/Button";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
 import {
@@ -34,12 +35,16 @@ export default function CompaniesRulesOrientationDispatchCard({
         : null;
 
   return (
-    <section className="rounded-lg border border-awc-border p-4">
-      <p className="text-xs font-medium uppercase tracking-wide text-awc-fg-muted">
+    <section
+      aria-labelledby="pol-k"
+      className="rounded-xl border border-awc-border bg-awc-surface p-4"
+    >
+      <p
+        id="pol-k"
+        className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-awc-fg-muted"
+      >
         {C.dispatchSectionTitle}
-      </p>
-      <p className="mt-1 text-xs text-awc-fg-muted">
-        {C.dispatchTip}
+        <InfoTip text={C.dispatchTip} label="About dispatch policy" />
       </p>
       {groupId && policyLabel ? (
         <>
@@ -47,9 +52,7 @@ export default function CompaniesRulesOrientationDispatchCard({
             {policyLabel}
           </p>
           {policyHelper ? (
-            <p className="mt-1 text-sm text-awc-fg-muted">
-              {policyHelper}
-            </p>
+            <p className="mt-1 text-sm text-awc-fg-muted">{policyHelper}</p>
           ) : null}
           <div className="mt-3">
             <Button size="sm" variant="outline" onClick={onOpenCompanySettings}>
@@ -59,9 +62,7 @@ export default function CompaniesRulesOrientationDispatchCard({
         </>
       ) : (
         <p className="mt-3 text-sm text-awc-fg-muted">
-          {groupId
-            ? C.runsLoading
-            : "Create a company to set who can send tasks to this computer."}
+          {groupId ? C.policyLoading : C.createNoCompany}
         </p>
       )}
     </section>

@@ -33,7 +33,7 @@ interface UseGroupManagementResult {
   readonly setMemberRole: (value: string) => void;
   readonly setDeleteMembers: (value: boolean) => void;
   readonly handleSelectGroup: (groupId: string) => void;
-  readonly handleCreateGroup: () => Promise<void>;
+  readonly handleCreateGroup: (name: string) => Promise<void>;
   readonly handleDeleteGroup: () => Promise<void>;
   readonly handleAddMember: () => Promise<void>;
   readonly handleRoleChange: (
@@ -98,7 +98,8 @@ export function useGroupManagement(
     handleSelectGroup: (groupId) => {
       selectAdminGroup(groupId, actionDeps);
     },
-    handleCreateGroup: () => createAdminGroupAction(actionDeps),
+    handleCreateGroup: (name) =>
+      createAdminGroupAction({ ...actionDeps, newGroupName: name }),
     handleDeleteGroup: () => deleteAdminGroupAction(actionDeps),
     handleAddMember: () => addGroupMemberAction(actionDeps),
     handleRoleChange: (membershipId, role) =>

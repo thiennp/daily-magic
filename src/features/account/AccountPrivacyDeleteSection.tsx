@@ -1,76 +1,92 @@
 "use client";
 
+import Link from "next/link";
+import { useState } from "react";
+
 import Button from "@/components/ui/button/Button";
-import {
-  ACCOUNT_DANGER_BANNER_CLASS,
-  ACCOUNT_H2_CLASS,
-  ACCOUNT_HINT_CLASS,
-  ACCOUNT_ROW_CARD_CLASS,
-} from "@/features/account/accountClasses.constant";
+import AccountH2 from "@/features/account/AccountH2";
+import { ACCOUNT_ROW_CARD_CLASS } from "@/features/account/accountClasses.constant";
 import { ACCOUNT_COPY } from "@/features/account/accountCopy.constant";
-import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
+import formatAccountDate from "@/features/account/utils/formatAccountDate";
 
 interface AccountPrivacyDeleteSectionProps {
+  readonly email: string;
   readonly offline: boolean;
-  readonly confirmOpen: boolean;
+  readonly hasActivePlan: boolean;
+  readonly planLabel: string;
   readonly deletionScheduled: boolean;
-  readonly onOpenConfirm: () => void;
-  readonly onKeep: () => void;
   readonly onConfirmDelete: () => void;
-  readonly onCancelDeletion: () => void;
 }
 
 export default function AccountPrivacyDeleteSection({
+  email,
   offline,
-  confirmOpen,
+  hasActivePlan,
+  planLabel,
   deletionScheduled,
-  onOpenConfirm,
-  onKeep,
   onConfirmDelete,
-  onCancelDeletion,
 }: AccountPrivacyDeleteSectionProps) {
   const copy = ACCOUNT_COPY.privacy;
+  const [removalDate, setRemovalDate] = useState<number | null>(null);
+  const confirmOpen = removalDate !== null;
+  const blocked = hasActivePlan || deletionScheduled;
+  const why = deletionScheduled ? copy.deleteAlreadyScheduled : "";
   return (
-    <section className={`${ACCOUNT_ROW_CARD_CLASS} space-y-3`}>
-      <h2 className={ACCOUNT_H2_CLASS}>{copy.deleteH2}</h2>
-      <p className={ACCOUNT_HINT_CLASS}>{copy.deleteTip}</p>
-      <ul className={`${ACCOUNT_HINT_CLASS} list-disc space-y-1 pl-5`}>
-        <li>{copy.blockerPlan}</li>
-        <li>{copy.blockerOwner}</li>
-        <li>{copy.blockerManaged}</li>
+    <section
+      className={`${ACCOUNT_ROW_CARD_CLASS} space-y-3 border-awc-bad-dot/40`}
+      aria-labelledby="account-delete-h"
+    >
+      <AccountH2
+        id="account-delete-h"
+        title={copy.deleteH2}
+        tip={copy.deleteTip}
+        tipLabel="About deleting your account"
+      />
+      <p className="text-sm text-awc-fg">{copy.beforeDelete}</p>
+      <ul className="space-y-1 text-sm">
+        <li className={hasActivePlan ? "text-awc-bad" : "text-awc-ok"}>
+          {hasActivePlan
+            ? copy.blockerPlanActive.replace("{plan}", planLabel)
+            : copy.planClear}
+          {hasActivePlan ? (
+            <Link href="/pricing" className="ml-2 font-medium underline">
+              {copy.openBilling}
+            </Link>
+          ) : null}
+        </li>
       </ul>
-      {deletionScheduled ? (
-        <div className={ACCOUNT_DANGER_BANNER_CLASS}>
-          <p>{copy.deletionScheduled}</p>
-          <button
-            type="button"
-            className={`${APP_SURFACE_CTA_SECONDARY_SM_CLASS} mt-2`}
-            disabled={offline}
-            onClick={onCancelDeletion}
-          >
-            {copy.cancelDeletion}
-          </button>
-        </div>
-      ) : null}
-      {!deletionScheduled && !confirmOpen ? (
-        <Button size="sm" variant="outline" disabled={offline} onClick={onOpenConfirm}>
-          {copy.deleteCta}
-        </Button>
-      ) : null}
-      {confirmOpen && !deletionScheduled ? (
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            className={APP_SURFACE_CTA_SECONDARY_SM_CLASS}
-            onClick={onKeep}
-          >
-            {copy.keepAccount}
-          </button>
-          <Button size="sm" disabled={offline} onClick={onConfirmDelete}>
-            {copy.confirmDelete}
-          </Button>
-        </div>
-      ) : null}
+      <Button
+        size="sm"
+        variant="outline"
+        disabled={offline || blocked}
+        className="border-awc-bad-dot/40 text-awc-bad"
+        onClick={() => {
+          setRemovalDate(Date.now() + 7 * 864e5);
+        }}
+      >
+        {copy.deleteCta}
+      </Button>
+      {why ? <p className="text-sm text-awc-fg-muted">{why}</p> : null}
+      <ConfirmDestructiveModal
+        isOpen={confirmOpen}
+        title={copy.confirmTitle}
+        description={copy.confirmBody.replace(
+          "{date}",
+          formatAccountDate(removalDate ?? 0),
+        )}
+        confirmLabel={copy.confirmDelete}
+        cancelLabel={copy.keepAccount}
+        typedConfirmText={email}
+        typedConfirmLabel={copy.typeEmail}
+        onClose={() => {
+          setRemovalDate(null);
+        }}
+        onConfirm={() => {
+          setRemovalDate(null);
+          onConfirmDelete();
+        }}
+      />
     </section>
   );
 }

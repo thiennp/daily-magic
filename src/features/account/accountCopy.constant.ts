@@ -1,3 +1,6 @@
+import { ACCOUNT_NOTIFY_COPY } from "@/features/account/accountNotifyCopy.constant";
+import { ACCOUNT_PRIVACY_COPY } from "@/features/account/accountPrivacyCopy.constant";
+
 /** Account page EN — LOCK + COPY.md (EN PASS 2026-10-07). UI-only Soft claim. */
 export const ACCOUNT_TABS = [
   { id: "profile", label: "Profile" },
@@ -37,6 +40,7 @@ export const ACCOUNT_COPY = {
     planHelp:
       "Plans, seats, invoices and cancelling are on the Pricing page. Cancel anytime. Prices in USD.",
     nameSaved: "Name saved",
+    nameShort: "Enter at least 2 letters.",
     changeEmailNote: "Email change is not available in this preview yet.",
   },
 
@@ -59,70 +63,25 @@ export const ACCOUNT_COPY = {
     emptyTitle: "No other sessions",
     emptyBody: "You are signed in only on this browser.",
     sessionChrome: "Chrome",
-    mockOnlyNote: "Session list is a preview — sign-out elsewhere is not wired yet.",
+    unlinkTitle: "Unlink Google?",
+    unlinkBody: "You can still sign in with an email code sent to {email}.",
+    signOutHereTitle: "Sign out of this browser?",
+    signOutHereBody: "You can sign in again with an email code or Google.",
   },
 
-  notify: {
-    h2: "What we tell you",
-    tip: "Choose email and in-app notes for each event. Changes save as you go.",
-    colEvent: "Event",
-    colEmail: "Email",
-    colInApp: "In app",
-    sendTest: "Send a test email",
-    testSent: "Test email sent",
-    rowTask: "A task finishes",
-    rowTaskHint: "A short note when an assistant finishes a task.",
-    rowApproval: "An assistant needs your approval",
-    rowApprovalHint: "When a rule or automation says to ask first.",
-    rowDigest: "Weekly digest",
-    rowDigestHint: "Mondays at 09:00. What your assistants did last week.",
-    rowInvites: "Invites and access requests",
-    rowInvitesHint: "When someone invites you or asks to join your project.",
-    rowBilling: "Billing and trial reminders",
-    rowBillingHint: "Receipts, failed payments and when your trial ends.",
-    billingLocked: "Billing emails cannot be turned off.",
-    quietH2: "Quiet hours",
-    quietTip:
-      "No emails or in-app notes during these hours. Approvals wait until quiet hours end.",
-    quietFrom: "From",
-    quietTo: "To",
-    quietOn: "Quiet from {from} to {to} ({tz}).",
-    quietOff: "Quiet hours are off.",
-    prefsLocalNote: "Notification prefs save on this device only for now.",
-  },
+  notify: ACCOUNT_NOTIFY_COPY,
 
-  privacy: {
-    historyH2: "Your history stays on your computers",
-    historyTip:
-      "Tasks, replies and files are stored on the computer where an assistant ran them. The website only shows a notice.",
-    historyBody:
-      "AgentWitch does not keep your task history on its servers. Open AgentWitch on this computer to read it. Deleting your account does not touch files on your computers.",
-    exportH2: "Export your account data",
-    exportBody:
-      "We email a download link to {email} within 24 hours. It includes your profile, billing records, and your projects and companies. It does not include history, which stays on your computers.",
-    requestExport: "Request export",
-    exportRequested: "Export requested",
-    deleteH2: "Delete your account",
-    deleteTip:
-      "Your account is removed after 7 days. You can cancel during that time. This cannot be undone afterwards.",
-    blockerPlan: "Cancel paid plan on Pricing first",
-    blockerOwner: "You are the sole owner of shared projects",
-    blockerManaged: "This account is managed by a company",
-    deleteCta: "Delete my account",
-    cancelDeletion: "Cancel deletion",
-    keepAccount: "Keep my account",
-    confirmDelete: "Delete my account",
-    deletionScheduled: "Account deletion scheduled — you can cancel within 7 days.",
-    exportLocalNote: "Export and delete are preview actions — not sent to the server yet.",
-  },
+  privacy: ACCOUNT_PRIVACY_COPY,
 
   signedOut: {
     title: "Sign in to see your account",
     body: "Your profile, sign-in methods and notifications belong to your account.",
     signIn: "Sign in",
   },
+  loading: "Loading…",
   loadFail: "Could not load your account",
-  offline: "No internet. You can read everything. Changes wait for the connection.",
+  offline:
+    "No internet. You can read everything. Changes wait for the connection.",
   tryAgain: "Try again",
 } as const;
 

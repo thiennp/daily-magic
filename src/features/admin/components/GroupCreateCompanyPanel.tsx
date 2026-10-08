@@ -1,80 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 
 import Button from "@/components/ui/button/Button";
+import GroupCompanyNameField from "@/features/admin/components/GroupCompanyNameField";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
+import validateCompanyName from "@/features/admin/utils/validateCompanyName";
 
 interface GroupCreateCompanyPanelProps {
   readonly newGroupName: string;
-  readonly actorEmail: string | null;
   readonly onNewGroupNameChange: (value: string) => void;
-  readonly onCreateGroup: () => void;
+  readonly onCreateGroup: (name: string) => void;
 }
 
 export default function GroupCreateCompanyPanel({
   newGroupName,
-  actorEmail,
   onNewGroupNameChange,
   onCreateGroup,
 }: GroupCreateCompanyPanelProps) {
-  const [emailCopied, setEmailCopied] = useState(false);
+  const inputId = useId();
+  const [error, setError] = useState("");
 
   return (
     <>
-      <p className="mt-2 text-sm text-awc-fg-muted">
-        {C.createBody}
-      </p>
-      <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-        <label className="flex-1">
-          <span className="sr-only">{C.companyNameLabel}</span>
-          <input
-            value={newGroupName}
-            onChange={(event) => {
-              onNewGroupNameChange(event.target.value);
-            }}
-            placeholder={C.companyNamePlaceholder}
-            aria-label={C.companyNameLabel}
-            className="w-full rounded-lg border border-awc-border px-3 py-2 text-sm"
-          />
-        </label>
-        <Button onClick={() => void onCreateGroup()}>{C.createCta}</Button>
-      </div>
-
-      <section className="mt-6 rounded-lg border border-dashed border-awc-border p-4">
-        <h3 className="text-sm font-semibold text-awc-fg">
-          {C.joinHonestyHeading}
-        </h3>
-        <p className="mt-2 text-sm text-awc-fg-muted">
-          {C.joinHonestyBody}
-        </p>
-        {actorEmail ? (
-          <p className="mt-2 font-mono text-sm text-awc-fg">
-            {actorEmail}
-          </p>
-        ) : null}
-        <p className="mt-2 text-sm text-awc-fg-muted">
-          {C.joinHonestyFollowUp}
-        </p>
-        {actorEmail ? (
-          <div className="mt-3">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => {
-                void navigator.clipboard.writeText(actorEmail).then(() => {
-                  setEmailCopied(true);
-                  window.setTimeout(() => {
-                    setEmailCopied(false);
-                  }, 2000);
-                });
-              }}
-            >
-              {emailCopied ? "Copied" : C.copyEmail}
-            </Button>
-          </div>
-        ) : null}
-      </section>
+      <p className="mt-2 text-sm text-awc-fg-muted">{C.createBody}</p>
+      <form
+        noValidate
+        className="mt-4 flex flex-col gap-3"
+        onSubmit={(event) => {
+          event.preventDefault();
+          const next = validateCompanyName(newGroupName, []);
+          setError(next);
+          if (!next) {
+            onCreateGroup(newGroupName.trim());
+          }
+        }}
+      >
+        <GroupCompanyNameField
+          id={inputId}
+          value={newGroupName}
+          error={error}
+          onChange={(value) => {
+            setError("");
+            onNewGroupNameChange(value);
+          }}
+        />
+        <div>
+          <Button type="submit">{C.createCta}</Button>
+        </div>
+      </form>
     </>
   );
 }

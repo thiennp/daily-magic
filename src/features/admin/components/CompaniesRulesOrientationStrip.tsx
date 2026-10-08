@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-import AppPanel from "@/components/surfaces/AppPanel";
 import CompaniesRulesOrientationDispatchCard from "@/features/admin/components/CompaniesRulesOrientationDispatchCard";
 import CompaniesRulesOrientationSafetyCard from "@/features/admin/components/CompaniesRulesOrientationSafetyCard";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
@@ -72,24 +71,22 @@ export default function CompaniesRulesOrientationStrip({
   }, []);
 
   return (
-    <AppPanel padding="compact">
-      <h2 className="text-lg font-semibold text-awc-fg">
-        {C.rulesStripTitle}
-      </h2>
-
-      <div className="mt-4 grid gap-4 lg:grid-cols-2">
-        <CompaniesRulesOrientationDispatchCard
-          groupId={groupId}
-          policy={groupId ? policy : null}
-          canConfigureDispatchPolicy={canConfigureDispatchPolicy}
-          onOpenCompanySettings={onOpenCompanySettings}
-        />
-        <CompaniesRulesOrientationSafetyCard
-          projects={projects}
-          selectedProjectId={selectedProjectId}
-          onSelectedProjectIdChange={setSelectedProjectId}
-        />
-      </div>
-    </AppPanel>
+    <div
+      role="region"
+      aria-label={C.rulesStripTitle}
+      className="grid gap-5 lg:grid-cols-2"
+    >
+      <CompaniesRulesOrientationDispatchCard
+        groupId={groupId}
+        policy={groupId ? policy : null}
+        canConfigureDispatchPolicy={canConfigureDispatchPolicy}
+        onOpenCompanySettings={onOpenCompanySettings}
+      />
+      <CompaniesRulesOrientationSafetyCard
+        projects={projects}
+        selectedProjectId={selectedProjectId}
+        onSelectedProjectIdChange={setSelectedProjectId}
+      />
+    </div>
   );
 }

@@ -1,47 +1,12 @@
 "use client";
 
-import {
-  ACCOUNT_HINT_CLASS,
-} from "@/features/account/accountClasses.constant";
+import { ACCOUNT_HINT_CLASS } from "@/features/account/accountClasses.constant";
+import AccountSwitch from "@/features/account/AccountSwitch";
 import { ACCOUNT_COPY } from "@/features/account/accountCopy.constant";
-
-export type NotifyKey = "task" | "approval" | "digest" | "invites" | "billing";
-
-interface NotifyRow {
-  readonly key: NotifyKey;
-  readonly label: string;
-  readonly hint: string;
-  readonly emailLocked?: boolean;
-}
-
-export const ACCOUNT_NOTIFY_ROWS: readonly NotifyRow[] = [
-  {
-    key: "task",
-    label: ACCOUNT_COPY.notify.rowTask,
-    hint: ACCOUNT_COPY.notify.rowTaskHint,
-  },
-  {
-    key: "approval",
-    label: ACCOUNT_COPY.notify.rowApproval,
-    hint: ACCOUNT_COPY.notify.rowApprovalHint,
-  },
-  {
-    key: "digest",
-    label: ACCOUNT_COPY.notify.rowDigest,
-    hint: ACCOUNT_COPY.notify.rowDigestHint,
-  },
-  {
-    key: "invites",
-    label: ACCOUNT_COPY.notify.rowInvites,
-    hint: ACCOUNT_COPY.notify.rowInvitesHint,
-  },
-  {
-    key: "billing",
-    label: ACCOUNT_COPY.notify.rowBilling,
-    hint: ACCOUNT_COPY.notify.rowBillingHint,
-    emailLocked: true,
-  },
-];
+import {
+  ACCOUNT_NOTIFY_ROWS,
+  type NotifyKey,
+} from "@/features/account/accountNotifyRows.constant";
 
 interface AccountNotifyPrefsTableProps {
   readonly offline: boolean;
@@ -60,58 +25,53 @@ export default function AccountNotifyPrefsTable({
 }: AccountNotifyPrefsTableProps) {
   const copy = ACCOUNT_COPY.notify;
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[28rem] text-left text-sm">
-        <thead>
-          <tr className="border-b border-awc-border text-awc-fg-muted">
-            <th className="py-2 pr-3 font-medium">{copy.colEvent}</th>
-            <th className="py-2 pr-3 font-medium">{copy.colEmail}</th>
-            <th className="py-2 font-medium">{copy.colInApp}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ACCOUNT_NOTIFY_ROWS.map((row) => (
-            <tr
-              key={row.key}
-              className="border-b border-awc-border/70"
-            >
-              <td className="py-3 pr-3 align-top">
-                <p className="font-medium text-awc-fg">
-                  {row.label}
+    <div>
+      <div
+        aria-hidden="true"
+        className="grid grid-cols-[minmax(0,1fr)_4.5rem_4.5rem] gap-3 border-b border-awc-border pb-2 text-sm font-medium text-awc-fg-muted"
+      >
+        <span>{copy.colEvent}</span>
+        <span className="text-center">{copy.colEmail}</span>
+        <span className="text-center">{copy.colInApp}</span>
+      </div>
+      <ul>
+        {ACCOUNT_NOTIFY_ROWS.map((row) => (
+          <li
+            key={row.key}
+            className="grid grid-cols-[minmax(0,1fr)_4.5rem_4.5rem] items-center gap-3 border-b border-awc-border/70 py-3"
+          >
+            <div>
+              <p className="font-medium text-awc-fg">{row.label}</p>
+              <p className={ACCOUNT_HINT_CLASS}>{row.hint}</p>
+              {row.emailLocked ? (
+                <p className={`${ACCOUNT_HINT_CLASS} mt-1`}>
+                  {copy.billingLocked}
                 </p>
-                <p className={ACCOUNT_HINT_CLASS}>{row.hint}</p>
-                {row.emailLocked ? (
-                  <p className={`${ACCOUNT_HINT_CLASS} mt-1`}>
-                    {copy.billingLocked}
-                  </p>
-                ) : null}
-              </td>
-              <td className="py-3 pr-3 align-top">
-                <input
-                  type="checkbox"
-                  aria-label={`${row.label} ${copy.colEmail}`}
-                  checked={emailOn[row.key]}
-                  disabled={offline || row.emailLocked}
-                  onChange={(e) => {
-                    onEmailChange(row.key, e.target.checked);
-                  }}
-                />
-              </td>
-              <td className="py-3 align-top">
-                <input
-                  type="checkbox"
-                  aria-label={`${row.label} ${copy.colInApp}`}
-                  checked={appOn[row.key]}
-                  disabled={offline}
-                  onChange={(e) => {
-                    onAppChange(row.key, e.target.checked);
-                  }}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              ) : null}
+            </div>
+            <div className="flex justify-center">
+              <AccountSwitch
+                label={`${row.label}, ${copy.colEmail.toLowerCase()}`}
+                checked={emailOn[row.key]}
+                disabled={offline || row.emailLocked}
+                onToggle={() => {
+                  onEmailChange(row.key, !emailOn[row.key]);
+                }}
+              />
+            </div>
+            <div className="flex justify-center">
+              <AccountSwitch
+                label={`${row.label}, in the app`}
+                checked={appOn[row.key]}
+                disabled={offline}
+                onToggle={() => {
+                  onAppChange(row.key, !appOn[row.key]);
+                }}
+              />
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

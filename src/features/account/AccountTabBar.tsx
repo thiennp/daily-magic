@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ACCOUNT_COPY,
   ACCOUNT_TABS,
   type AccountTabId,
 } from "@/features/account/accountCopy.constant";
@@ -17,14 +16,40 @@ interface AccountTabBarProps {
   readonly onTabChange: (tab: AccountTabId) => void;
 }
 
+const KEY_STEP: Record<string, number> = { ArrowRight: 1, ArrowLeft: -1 };
+
 export default function AccountTabBar({
   activeTab,
   onTabChange,
 }: AccountTabBarProps) {
+  const handleKeyDown = (event: React.KeyboardEvent): void => {
+    const last = ACCOUNT_TABS.length - 1;
+    const index = ACCOUNT_TABS.findIndex((tab) => tab.id === activeTab);
+    const step = KEY_STEP[event.key];
+    const next =
+      event.key === "Home"
+        ? 0
+        : event.key === "End"
+          ? last
+          : step === undefined
+            ? -1
+            : (index + step + last + 1) % (last + 1);
+    if (next < 0) {
+      return;
+    }
+    event.preventDefault();
+    const nextId = ACCOUNT_TABS[next].id;
+    onTabChange(nextId);
+    requestAnimationFrame(() => {
+      document.getElementById(`account-tab-${nextId}`)?.focus();
+    });
+  };
+
   return (
     <div
       role="tablist"
-      aria-label={ACCOUNT_COPY.h1}
+      aria-label="Account sections"
+      onKeyDown={handleKeyDown}
       className={PROJECT_V5_TABLIST_CLASS}
     >
       {ACCOUNT_TABS.map((tab) => {
