@@ -39,7 +39,7 @@ export type OpenProjectMessengerThreadResult =
 /**
  * Orchestrator: viewer gate → localLive → History local read / Neon page →
  * newest-first entries + page meta. Opening the newest page (no before)
- * marks read up to the newest visible message. Load-older past Neon while
+ * marks the thread read as of now. Load-older past Neon while
  * the project computer is offline returns error project_computer_offline.
  */
 export const openProjectMessengerThread = async (input: {
@@ -106,14 +106,16 @@ export const openProjectMessengerThread = async (input: {
     limit,
   });
 
-  const newest = resolved.entries[0];
-  if (before === null && newest !== undefined) {
+  if (before === null) {
+    // Read up to now, not up to the newest entry shown: the thread list counts
+    // unread from project_messages, while this page can omit rows (local
+    // History merge, notices, agent run entries), which left them unread forever.
     await markProjectMessengerThreadRead({
       userId: viewer.viewerUserId,
       projectId: viewer.projectId,
       threadKey: input.threadKey,
-      lastReadMessageId: newest.messageId,
-      lastReadAt: newest.createdAt,
+      lastReadMessageId: resolved.entries[0]?.messageId ?? null,
+      lastReadAt: null,
     });
   }
 

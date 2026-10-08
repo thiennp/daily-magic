@@ -4,21 +4,27 @@ import { useMemo, useState } from "react";
 
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 import { useHumanInviteWaitingCount } from "@/features/projects/access/humanInvites/hooks/useHumanInviteWaitingCount";
-import { countRailMembers, countRailWaiting } from "@/features/projects/members/utils/countRailMembers";
+import {
+  countRailMembers,
+  countRailWaiting,
+} from "@/features/projects/members/utils/countRailMembers";
 import useAwcProjectComposition from "@/features/projects/hooks/useAwcProjectComposition";
 import { useAwcProjectMessengerThreads } from "@/features/projects/messenger/hooks/useAwcProjectMessengerThreads";
 import buildOverviewAssistants from "@/features/projects/overview/buildOverviewAssistants";
 import buildOverviewAttention from "@/features/projects/overview/buildOverviewAttention";
+import buildOverviewAttentionItems from "@/features/projects/overview/buildOverviewAttentionItems";
 import buildOverviewRecentActivity from "@/features/projects/overview/buildOverviewRecentActivity";
 import buildOverviewSetupSteps from "@/features/projects/overview/buildOverviewSetupSteps";
 import summarizeOverviewPitfalls from "@/features/projects/overview/summarizeOverviewPitfalls";
 import sumMessengerUnread from "@/features/projects/overview/sumMessengerUnread";
+import { useProjectPendingRunApprovals } from "@/features/projects/settings/runApprovals/useProjectPendingRunApprovals";
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 const useOverviewPanelData = (input: {
   readonly project: UserProjectRecord;
   readonly pitfalls: AwcProjectPitfallsState;
   readonly computerStatus: string | null;
+  readonly isOwner: boolean;
 }) => {
   const access = useAwcProjectAccess(input.project.id);
   const { threads } = useAwcProjectMessengerThreads(input.project.id);
@@ -30,7 +36,10 @@ const useOverviewPanelData = (input: {
   const folderRefs = access.loadError ? [] : access.folderRefs;
   // DF-036 F5: same numbers as the Members rail header ("Members · {n}" + "{k} waiting").
   const accessReady = !access.loadError && !access.isLoading;
-  const peopleInvites = useHumanInviteWaitingCount(input.project.id, accessReady);
+  const peopleInvites = useHumanInviteWaitingCount(
+    input.project.id,
+    accessReady,
+  );
   const pendingCount = access.loadError
     ? 0
     : countRailWaiting({
@@ -48,7 +57,22 @@ const useOverviewPanelData = (input: {
       }),
     [members, folderRefs, input.project.repoUrls.length, counts],
   );
-  const attention = useMemo(() => buildOverviewAttention(threads), [threads]);
+  const runApprovals = useProjectPendingRunApprovals(
+    input.project.id,
+    input.isOwner,
+  );
+  const joinRequestCount =
+    input.isOwner && !access.loadError ? access.pending.length : 0;
+  const pendingRunCount = input.isOwner ? runApprovals.approvals.length : 0;
+  const attention = useMemo(
+    () =>
+      buildOverviewAttentionItems({
+        pendingRunCount,
+        joinRequestCount,
+        unread: buildOverviewAttention(threads),
+      }),
+    [pendingRunCount, joinRequestCount, threads],
+  );
   const recent = useMemo(() => buildOverviewRecentActivity(threads), [threads]);
   const assistants = useMemo(
     () => buildOverviewAssistants(members, threads),

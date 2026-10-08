@@ -23,8 +23,16 @@ export const PROJECT_PAGE_OVERVIEW_COPY = {
 
   attentionTitle: "Needs your attention",
   attentionOpen: "Open conversation",
-  attentionWaiting: (name: string) =>
-    `${name} finished a task and is waiting for you to confirm.`,
+  attentionUnread: (name: string) => `You have unread messages from ${name}.`,
+  attentionRunApprovals: (n: number) =>
+    n === 1
+      ? "1 task is waiting for your approval."
+      : `${n} tasks are waiting for your approval.`,
+  attentionJoinRequests: (n: number) =>
+    n === 1
+      ? "1 request to join is waiting for your approval."
+      : `${n} requests to join are waiting for your approval.`,
+  attentionReview: "Review",
 
   setupTitle: "Set up",
   setupBarProgress: (done: number, total: number) =>

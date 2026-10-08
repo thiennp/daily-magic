@@ -13,6 +13,7 @@ import type {
 /** Owner reopen list: load, poll, focus-refetch, approve/deny. */
 export const useProjectPendingRunApprovals = (
   projectId: string,
+  enabled = true,
 ): {
   readonly loadState: RunApprovalsLoadState;
   readonly approvals: readonly RunApprovalListItem[];
@@ -25,19 +26,17 @@ export const useProjectPendingRunApprovals = (
     decision: "approve" | "deny",
   ) => Promise<void>;
 } => {
-  const [loadState, setLoadState] =
-    useState<RunApprovalsLoadState>("loading");
+  const [loadState, setLoadState] = useState<RunApprovalsLoadState>("loading");
   const [approvals, setApprovals] = useState<readonly RunApprovalListItem[]>(
     [],
   );
   const [busyRunId, setBusyRunId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
-  const [actionErrorRunId, setActionErrorRunId] = useState<string | null>(
-    null,
-  );
+  const [actionErrorRunId, setActionErrorRunId] = useState<string | null>(null);
   const [loadKey, setLoadKey] = useState(0);
 
   useEffect(() => {
+    if (!enabled) return;
     const controller = new AbortController();
     void requestProjectRunApprovals({
       projectId,
@@ -52,7 +51,7 @@ export const useProjectPendingRunApprovals = (
       setLoadState("ready");
     });
     return () => controller.abort();
-  }, [projectId, loadKey]);
+  }, [projectId, loadKey, enabled]);
 
   const refreshSilent = useCallback(() => {
     void requestProjectRunApprovals({ projectId }).then((result) => {
@@ -62,7 +61,7 @@ export const useProjectPendingRunApprovals = (
     });
   }, [projectId]);
 
-  usePendingRunApprovalsLivePoll({ enabled: true, onTick: refreshSilent });
+  usePendingRunApprovalsLivePoll({ enabled, onTick: refreshSilent });
 
   const reload = useCallback(() => {
     setLoadState("loading");

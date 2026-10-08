@@ -2,6 +2,7 @@
 
 import AwcProjectOverviewAssistantsCard from "@/features/projects/overview/AwcProjectOverviewAssistantsCard";
 import AwcProjectOverviewAttentionBanner from "@/features/projects/overview/AwcProjectOverviewAttentionBanner";
+import type { OverviewAttentionItem } from "@/features/projects/overview/buildOverviewAttentionItems";
 import AwcProjectOverviewPitfallsCard from "@/features/projects/overview/AwcProjectOverviewPitfallsCard";
 import AwcProjectOverviewRecentCard from "@/features/projects/overview/AwcProjectOverviewRecentCard";
 import AwcProjectOverviewSetupCard from "@/features/projects/overview/AwcProjectOverviewSetupCard";
@@ -18,6 +19,7 @@ interface Props {
   readonly editCta: ProjectEditOnMacCta;
   readonly pitfalls: AwcProjectPitfallsState;
   readonly computerStatus: string | null;
+  readonly isOwner: boolean;
   readonly onGotoTab: (tab: ProjectPageNavTarget) => void;
   readonly onGotoChat: (threadKey: string | null) => void;
 }
@@ -27,10 +29,21 @@ export default function AwcProjectOverviewPanel({
   editCta,
   pitfalls,
   computerStatus,
+  isOwner,
   onGotoTab,
   onGotoChat,
 }: Props) {
-  const d = useOverviewPanelData({ project, pitfalls, computerStatus });
+  const d = useOverviewPanelData({
+    project,
+    pitfalls,
+    computerStatus,
+    isOwner,
+  });
+  const openAttention = (item: OverviewAttentionItem): void => {
+    if (item.kind === "run") onGotoTab("settings");
+    else if (item.kind === "join") onGotoChat(null);
+    else onGotoChat(item.membershipId);
+  };
   return (
     <div className="flex min-w-0 flex-col gap-4">
       <AwcProjectOverviewStatsStrip
@@ -39,10 +52,10 @@ export default function AwcProjectOverviewPanel({
         onOpenChat={() => onGotoChat(null)}
         onShowSetup={d.showSetup}
       />
-      {d.attention ? (
+      {d.attention.length > 0 ? (
         <AwcProjectOverviewAttentionBanner
-          attention={d.attention}
-          onOpen={() => onGotoChat(d.attention!.membershipId)}
+          items={d.attention}
+          onOpen={openAttention}
         />
       ) : null}
       <AwcProjectOverviewSetupCard

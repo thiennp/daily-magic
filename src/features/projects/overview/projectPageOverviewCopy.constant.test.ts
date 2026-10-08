@@ -10,7 +10,6 @@ describe("PROJECT_PAGE_OVERVIEW_COPY (V5-5 EN)", () => {
     expect(`${C.safetyHitsNone} ${C.safetyHitsSome(2)}`).not.toMatch(/30 days/);
   });
 
-
   it("safety rules chip/summary use singular when total is 1", () => {
     expect(C.safetyRulesStat(1, 1)).toBe("1 of 1 safety rule on");
     expect(C.safetyRulesStat(2, 2)).toBe("2 of 2 safety rules on");
@@ -24,8 +23,18 @@ describe("PROJECT_PAGE_OVERVIEW_COPY (V5-5 EN)", () => {
   });
 
   it("locked setup / attention / assistants / recent strings", () => {
-    expect(C.attentionWaiting("Ava")).toBe(
-      "Ava finished a task and is waiting for you to confirm.",
+    expect(C.attentionUnread("Ava")).toBe("You have unread messages from Ava.");
+    expect(C.attentionRunApprovals(1)).toBe(
+      "1 task is waiting for your approval.",
+    );
+    expect(C.attentionRunApprovals(3)).toBe(
+      "3 tasks are waiting for your approval.",
+    );
+    expect(C.attentionJoinRequests(1)).toBe(
+      "1 request to join is waiting for your approval.",
+    );
+    expect(C.attentionJoinRequests(2)).toBe(
+      "2 requests to join are waiting for your approval.",
     );
     expect(C.setupPlaybookHint).toBe(
       "No playbook attached yet. Add one on this computer.",
@@ -35,7 +44,9 @@ describe("PROJECT_PAGE_OVERVIEW_COPY (V5-5 EN)", () => {
     expect(C.setupFolder).toBe("Add a folder");
     expect(C.setupFolderHint).toBe("Where the project files live.");
     expect(C.setupGit).toBe("Add a code repository");
-    expect(C.setupGitHint).toBe("Optional. Lets assistants get and save the code.");
+    expect(C.setupGitHint).toBe(
+      "Optional. Lets assistants get and save the code.",
+    );
     expect(C.setupGitDoneHint(1)).toBe("1 repository saved");
     expect(C.setupGitDoneHint(4)).toBe("4 repositories saved");
     expect(C.setupInvitePeopleHint).toBe("Right now it's only you.");
