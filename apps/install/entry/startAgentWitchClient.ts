@@ -100,6 +100,7 @@ import {
   distillProjectKnowledgeLesson,
   ensureAgentWitchProjectFolder,
   formatAgentWitchGitWorktreeVerdict,
+  resolveLinkedProjectFolderPath,
   shouldCaptureRunOutputForProjectKnowledge,
   syncProjectKnowledgeCandidateToCloud,
 } from "@agent-witch/live-projects";
@@ -424,6 +425,10 @@ const dispatchWriterTask = async (
     projectFolderPath,
     buildDefaultUserProjectFolderPath,
     projectId,
+    resolveLinkedProjectFolderPath(
+      path.dirname(config.layout.configPath),
+      projectId,
+    ),
   );
   if (resolvedProjectFolderPath === null) {
     sendMessage(
@@ -1613,6 +1618,10 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           : undefined,
         buildDefaultUserProjectFolderPath,
         projectId,
+        resolveLinkedProjectFolderPath(
+          path.dirname(config.layout.configPath),
+          projectId,
+        ),
       );
       const compositionSnapshot = parseProjectCompositionSnapshotWire(
         parsed.payload.compositionSnapshot,

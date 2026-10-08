@@ -101,6 +101,8 @@ export {
   type LinkedProjectFoldersStatus,
 } from "../internal/core/linkProjectFolder/describeLinkedProjectFolders";
 
+export { resolveLinkedProjectFolderPath } from "../internal/core/linkProjectFolder/resolveLinkedProjectFolderPath";
+
 export {
   claimCrossAccountFolder,
   readCrossAccountFolderClaims,

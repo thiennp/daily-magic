@@ -18,6 +18,28 @@ describe("resolveRunProjectFolderPath", () => {
     );
   });
 
+  it("uses the linked folder only when projectId is set and the payload has none", () => {
+    expect(
+      resolveRunProjectFolderPath(
+        undefined,
+        () => "~/Default",
+        "proj-1",
+        " /Users/me/baby-care ",
+      ),
+    ).toBe("/Users/me/baby-care");
+    expect(
+      resolveRunProjectFolderPath(
+        "~/app",
+        () => "~/Default",
+        "proj-1",
+        "/Users/me/other",
+      ),
+    ).toBe("~/app");
+    expect(
+      resolveRunProjectFolderPath(undefined, () => "~/Default", "proj-1", null),
+    ).toBeNull();
+  });
+
   it("requires a folder when projectId is set", () => {
     expect(
       resolveRunProjectFolderPath(undefined, () => "~/Default", "proj-1"),

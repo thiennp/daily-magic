@@ -5,6 +5,7 @@ import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMess
 import { markAgentRunRunning } from "@/lib/dispatch/dispatchWriterRunToAgent";
 import { notifyDispatchApprovalRunning } from "@/lib/dispatch/notifyDispatchApprovalRunning";
 import loadAgentRunDispatchCompositionExtras from "@/lib/dispatch/loadAgentRunDispatchCompositionExtras";
+import { resolveRunFolder } from "@/lib/dispatch/resolveRunFolder";
 import {
   buildQueuedClaudeRunDispatchAck,
   queueClaudeRunInDispatchOutbox,
@@ -26,6 +27,11 @@ export const approveDispatchWhenMacOffline = async (input: {
     input.runId,
   );
 
+  const projectFolderPath = await resolveRunFolder(
+    compositionExtras.projectId,
+    input.deviceId,
+  );
+
   await queueClaudeRunInDispatchOutbox({
     executorUserId: input.executorUserId,
     deviceId: input.deviceId,
@@ -34,6 +40,7 @@ export const approveDispatchWhenMacOffline = async (input: {
     writerAgent: input.writerAgent,
     requestId: input.pendingRequestId,
     includeNextActions: input.includeNextActions,
+    projectFolderPath,
     projectId: compositionExtras.projectId ?? undefined,
     compositionSnapshot: compositionExtras.compositionSnapshot ?? undefined,
   });
