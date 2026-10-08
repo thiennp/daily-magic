@@ -12,7 +12,11 @@
 /** 290 = AWL-ISO-2 cross-account folder claims + write locks. */
 /** 291 = run report closes when the run ends (FAIL3). */
 /** 293 = project runs fall back to the profile's linked folder when the payload has none. */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "296";
+/** 294 = project knowledge capture on result send; node-pty spawn-helper exec bit. */
+/** 295 = AWL-ISO-1 Landing B: one host process + service per account. */
+/** 296 = AWL-ISO-4: migrate a multi-account host to one service per account. */
+/** 297 = paused run closes when a history Continue answers it (b2179f2b). */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "297";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =
