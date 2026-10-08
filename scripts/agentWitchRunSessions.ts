@@ -1367,6 +1367,15 @@ export const replayPendingRunInputRequests = (
 
     if (now - savedAtMs > PENDING_RUN_INPUT_REPLAY_MAX_AGE_MS) {
       removePendingRunInputSession(config.layout, session.agentRunId);
+      // 378558e8: an expired checkpoint must not leave its report open.
+      if ((session.reportKey?.trim() ?? "").length > 0 && session.reportKey) {
+        upsertAgentRunReportFile({
+          reportKey: session.reportKey,
+          agentRunId: session.agentRunId,
+          status: AGENT_RUN_REPORT_STATUSES.FAILED,
+          userSummary: "Expired: no answer within 24 hours.",
+        });
+      }
       continue;
     }
 

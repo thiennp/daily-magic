@@ -23,6 +23,7 @@ export {
   stopAllAgentRuns,
   supersedePausedRunForContinuation,
 } from "../../../scripts/agentWitchRunSessions";
+export { sweepOrphanedAgentRunReports } from "../../../scripts/sweepOrphanedAgentRunReports";
 export { ensureHarnessWriterCli } from "../../../scripts/ensureHarnessWriterCli";
 export {
   buildWriterCliInvocation,

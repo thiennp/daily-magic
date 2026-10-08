@@ -7,7 +7,7 @@ import {
 } from "./agentWitchRunReport";
 
 const LIVE_ONLY_SUMMARY =
-  /^(?:Waiting for your answer|Continuing after your answer|Working on your computer|Task started)/i;
+  /^(?:Waiting for|Awaiting|Continuing after your answer|Working on your computer|Task started)/i;
 const MARKER_LINE = /\[\[[A-Z_]+\]\]|^[WA]\|/;
 const MAX_SUMMARY_CHARS = 200;
 
@@ -16,14 +16,22 @@ const truncate = (text: string): string =>
     ? `${text.slice(0, MAX_SUMMARY_CHARS - 1).trimEnd()}…`
     : text;
 
+/**
+ * 378558e8 (a7c6ce2c): only what happened after the last checkpoint answer
+ * describes the outcome; "Waiting for …" / "Awaiting …" lines are live-only.
+ */
 const lastMeaningfulSummary = (report: AgentRunReportFile): string | null => {
-  for (let index = report.history.length - 1; index >= 0; index -= 1) {
-    const summary = report.history[index]?.summary.trim() ?? "";
-    if (summary.length > 0 && !LIVE_ONLY_SUMMARY.test(summary)) {
-      return summary;
-    }
-  }
-  return null;
+  const summaries = report.history.map((entry) => entry.summary.trim());
+  const lastAnswerIndex = summaries.findLastIndex((summary) =>
+    /^Continuing after your answer/i.test(summary),
+  );
+  return (
+    summaries
+      .slice(lastAnswerIndex + 1)
+      .findLast(
+        (summary) => summary.length > 0 && !LIVE_ONLY_SUMMARY.test(summary),
+      ) ?? null
+  );
 };
 
 const lastOutputLine = (output: string): string | null => {

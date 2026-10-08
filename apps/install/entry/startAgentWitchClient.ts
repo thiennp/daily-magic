@@ -176,6 +176,7 @@ import {
   registerAgentWitchProcessTraceHandlers,
   releaseAgentWitchMachineLease,
   replayPendingRunInputRequests,
+  sweepOrphanedAgentRunReports,
   resolveAgentWitchMachineLeasePath,
   bindAgentWitchLiveRunSocket,
   dropPendingRunInputSession,
@@ -2632,6 +2633,19 @@ const main = async (): Promise<void> => {
       resolveAgentWitchAppOriginFromWsUrl(config.wsUrl) ??
       AGENT_WITCH_DEFAULT_ORIGIN;
     ensureAgentWitchInstallVersionRecorded(config.layout.installDir, appOrigin);
+    // 378558e8: once per process, before any run starts (never on reconnect).
+    try {
+      const closedCount = sweepOrphanedAgentRunReports(config.layout);
+      if (closedCount > 0) {
+        console.log(
+          `[agent-witch] Closed ${closedCount} interrupted run report(s) from a previous host process.`,
+        );
+      }
+    } catch (error) {
+      console.error(
+        `[agent-witch] Could not close interrupted run reports: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
   }
   const clients = configs.map((config) => createAgentWitchClient(config));
   const primaryClient = clients[0];
