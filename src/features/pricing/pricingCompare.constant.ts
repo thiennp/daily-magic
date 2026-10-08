@@ -17,7 +17,10 @@ export const PRICING_COMPARE_SECTIONS = [
 ] as const;
 
 export const PRICING_COMPARE_COLUMN_LABELS = {
-  trial: `${trial.name} (${formatUsd(trial.pricePerSeatMonth)} for 1 month)`,
-  pro: `${pro.name} (${formatUsd(pro.pricePerSeatMonth)} / seat)`,
-  team: `${team.name} (${formatUsd(team.pricePerSeatMonth)} / seat)`,
+  trial: {
+    name: trial.name,
+    sub: `${formatUsd(trial.pricePerSeatMonth)} for 1 month`,
+  },
+  pro: { name: pro.name, sub: `${formatUsd(pro.pricePerSeatMonth)} / seat` },
+  team: { name: team.name, sub: `${formatUsd(team.pricePerSeatMonth)} / seat` },
 } as const;

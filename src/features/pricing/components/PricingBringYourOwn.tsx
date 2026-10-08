@@ -1,3 +1,4 @@
+import InfoTip from "@/components/ui/infoTip/InfoTip";
 import { PRICING_BRING_YOUR_OWN } from "@/features/pricing/pricingCopy.constant";
 
 export default function PricingBringYourOwn() {
@@ -8,7 +9,7 @@ export default function PricingBringYourOwn() {
         id="pricing-byo-heading"
         className="text-2xl font-bold tracking-[-0.02em] text-awc-fg"
       >
-        {copy.title}
+        {copy.title} <InfoTip text={copy.tip} label={copy.tipLabel} />
       </h2>
       <p className="mt-2 max-w-3xl text-awc-fg-muted">{copy.sub}</p>
       <ul className="mt-6 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-2">

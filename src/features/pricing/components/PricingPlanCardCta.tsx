@@ -5,9 +5,7 @@ import { useState } from "react";
 
 import { BILLING_COPY } from "@/features/billing/billingCopy.constant";
 import postBillingCheckoutStub from "@/features/billing/postBillingCheckoutStub";
-import {
-  PRICING_CONTACT_SALES_HREF,
-} from "@/features/pricing/pricingAuthHrefs.constant";
+import { PRICING_CONTACT_SALES_HREF } from "@/features/pricing/pricingAuthHrefs.constant";
 import {
   PRICING_CANCEL_NOTE,
   PRICING_TEAM_VOLUME_NOTE,
@@ -42,13 +40,22 @@ export default function PricingPlanCardCta({
     "inline-flex w-full items-center justify-center rounded-2xl bg-brand-600 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-awc-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-awc-blue-600/40";
 
   return (
-    <div className="mt-6 space-y-2">
+    <div className="mt-5 space-y-2">
       {useCheckoutStub ? (
-        <button type="button" onClick={handleCheckout} className={ctaClassName}>
+        <button
+          type="button"
+          onClick={handleCheckout}
+          aria-label={`${ctaLabel}, ${plan.name}`}
+          className={ctaClassName}
+        >
           {ctaLabel}
         </button>
       ) : (
-        <Link href={href} className={ctaClassName}>
+        <Link
+          href={href}
+          aria-label={`${ctaLabel}, ${plan.name}`}
+          className={ctaClassName}
+        >
           {ctaLabel}
         </Link>
       )}
@@ -58,7 +65,7 @@ export default function PricingPlanCardCta({
       {plan.contactSales ? (
         <a
           href={PRICING_CONTACT_SALES_HREF}
-          className="inline-flex w-full items-center justify-center rounded-2xl border border-awc-border bg-awc-surface px-5 py-3 text-sm font-semibold text-awc-fg transition hover:bg-awc-surface-2"
+          className="block text-center text-sm font-medium text-awc-blue-700 underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-awc-blue-600"
         >
           Contact sales
         </a>
@@ -68,7 +75,11 @@ export default function PricingPlanCardCta({
           {PRICING_TEAM_VOLUME_NOTE}
         </p>
       ) : null}
-      <p className="text-center text-xs text-awc-fg-muted">{PRICING_CANCEL_NOTE}</p>
+      {plan.contactSales ? null : (
+        <p className="text-center text-xs text-awc-fg-muted">
+          {PRICING_CANCEL_NOTE}
+        </p>
+      )}
     </div>
   );
 }

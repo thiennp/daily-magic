@@ -5,6 +5,8 @@ import {
 } from "@/features/pricing/pricingAuthHrefs.constant";
 import Link from "next/link";
 
+import InfoTip from "@/components/ui/infoTip/InfoTip";
+
 interface PricingOnDemandProps {
   readonly signedIn: boolean;
 }
@@ -18,7 +20,7 @@ export default function PricingOnDemand({ signedIn }: PricingOnDemandProps) {
         id="pricing-ondemand-heading"
         className="text-2xl font-bold tracking-[-0.02em] text-awc-fg"
       >
-        {copy.title}
+        {copy.title} <InfoTip text={copy.tip} label={copy.tipLabel} />
       </h2>
       <p className="mt-2 max-w-3xl text-awc-fg-muted">{copy.sub}</p>
       <ul className="mt-6 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-2">
@@ -28,7 +30,9 @@ export default function PricingOnDemand({ signedIn }: PricingOnDemandProps) {
             className="flex flex-col rounded-2xl border border-awc-border bg-awc-surface p-6 shadow-sm"
           >
             <h3 className="text-lg font-semibold text-awc-fg">{addon.title}</h3>
-            <p className="mt-1 text-2xl font-bold text-blue-950">{addon.price}</p>
+            <p className="mt-1 text-2xl font-bold text-blue-950">
+              {addon.price}
+            </p>
             <p className="mt-3 flex-1 text-sm leading-relaxed text-awc-fg-muted">
               {addon.body}
             </p>
@@ -41,7 +45,28 @@ export default function PricingOnDemand({ signedIn }: PricingOnDemandProps) {
           </li>
         ))}
       </ul>
-      <p className="mt-4 text-sm text-awc-fg-muted">{copy.controlNote}</p>
+      <div className="mt-4 flex items-start gap-3 rounded-xl border border-awc-border bg-awc-surface p-4 shadow-sm">
+        <svg
+          width={22}
+          height={22}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.9}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          focusable="false"
+          className="mt-0.5 shrink-0 text-awc-blue-700"
+        >
+          <path d="M12 3 4 6v6c0 4.5 3.3 8 8 9 4.7-1 8-4.5 8-9V6l-8-3Z" />
+          <path d="m9 12 2 2 4-4" />
+        </svg>
+        <div>
+          <b className="font-semibold text-awc-fg">{copy.controlTitle}</b>
+          <p className="mt-1 text-sm text-awc-fg-muted">{copy.controlNote}</p>
+        </div>
+      </div>
     </section>
   );
 }

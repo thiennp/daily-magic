@@ -13,12 +13,12 @@ export default function PricingFaq() {
         {PRICING_FAQ_ITEMS.map((item) => (
           <details
             key={item.question}
-            className="rounded-xl border border-awc-border bg-awc-surface shadow-sm open:shadow-md"
+            className="group rounded-xl border border-awc-border bg-awc-surface shadow-sm"
           >
-            <summary className="cursor-pointer list-none px-4 py-3.5 text-sm font-semibold text-awc-fg marker:content-none [&::-webkit-details-marker]:hidden">
+            <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 rounded-xl px-4 py-3.5 font-semibold text-awc-fg marker:content-none after:mr-1 after:size-2 after:shrink-0 after:rotate-45 after:border-b-2 after:border-r-2 after:border-awc-blue-700 after:transition-transform group-open:after:-rotate-[135deg] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-awc-blue-600 [&::-webkit-details-marker]:hidden">
               {item.question}
             </summary>
-            <p className="max-w-[70ch] px-4 pb-4 text-sm leading-relaxed text-awc-fg-muted">
+            <p className="max-w-[70ch] px-4 pb-4 leading-relaxed text-awc-fg-muted">
               {item.answer}
             </p>
           </details>

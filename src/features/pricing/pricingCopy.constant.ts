@@ -10,17 +10,20 @@ const { aiCreditPacksUsd, cloudStorageUsdPerGbMonth } = PRICING_CONFIG;
 
 export const PRICING_HERO_COPY = {
   title: "Simple pricing",
-  lead:
-    "Assistants on your projects. Start with a free month, then pay per seat. Cancel anytime. Prices in USD, excl. tax",
+  lead: "Assistants on your projects. Start with a free month, then pay per seat. Cancel anytime. Prices in USD, excl. tax",
   tipTitle: "About prices",
   tipBody:
     "Sales tax is added at checkout where it applies. All prices are per seat per month unless said otherwise.",
 } as const;
 
 export const PRICING_TRUST_ITEMS = [
-  { title: "1 month free", body: "No card needed" },
-  { title: "Cancel anytime", body: "No fees, no calls" },
-  { title: "Seats are access only", body: "AI and storage are optional" },
+  { icon: "clock", title: "1 month free", body: "No card needed" },
+  { icon: "check", title: "Cancel anytime", body: "No fees, no calls" },
+  {
+    icon: "bot",
+    title: "Seats are access only",
+    body: "AI and storage are optional",
+  },
 ] as const;
 
 export const PRICING_CANCEL_NOTE = "Cancel anytime." as const;
@@ -30,6 +33,8 @@ export const PRICING_TEAM_VOLUME_NOTE =
 
 export const PRICING_BRING_YOUR_OWN = {
   title: "Bring your own",
+  tip: "Seats include access to AgentWitch only. AI and storage are optional. Connect what you already have and AgentWitch charges nothing for it.",
+  tipLabel: "About AI and storage",
   sub: "AI and storage are not part of a seat. Use your own, free, or add ours only when you need it.",
   cards: [
     {
@@ -49,12 +54,14 @@ const packList = aiCreditPacksUsd.map((n) => formatUsd(n)).join(", ");
 
 export const PRICING_ON_DEMAND = {
   title: "On demand, only if you need it",
+  tip: "These are add-ons outside your seats. Nothing here is required. They show up on the same invoice.",
+  tipLabel: "About add-ons",
   sub: "Need AgentWitch to run the AI or keep your messages? Add it when you want, cancel anytime.",
   addons: [
     {
       title: "AI credit",
       price: `${formatUsd(aiCreditPacksUsd[0])} / pack of ${formatUsd(aiCreditPacksUsd[0])} credit`,
-      body: `For skills from repeated work and the Prompt optimizer, when you do not want to use your own AI. Packs of ${packList}.`,
+      body: `For skills from repeated work and the Prompt Optimizer, when you do not want to use your own AI. Using your own accounts costs nothing here. Packs of ${packList}.`,
     },
     {
       title: "Cloud storage",
@@ -62,8 +69,9 @@ export const PRICING_ON_DEMAND = {
       body: "Only if you do not want to keep messages on this computer or in your own S3. Starts when paid billing starts, not during the free month.",
     },
   ],
+  controlTitle: "You stay in control of spend.",
   controlNote:
-    "You stay in control of spend. AI you run through AgentWitch is billed as you use it. Set a monthly limit; we email you at 80%.",
+    "AI you run through AgentWitch is billed as you use it, at list rates, on your next invoice. Set a monthly limit and assistants pause when you reach it. We email you at 80%.",
 } as const;
 
 export const PRICING_HOW_AI_NOTES = {
@@ -73,8 +81,8 @@ export const PRICING_HOW_AI_NOTES = {
     "Use my own tokens or AI — Free from AgentWitch. Your provider bills you.",
     `Buy an AgentWitch AI pack — Packs of ${packList}.`,
   ],
-  optimizerTitle: "Prompt optimizer",
-  optimizerIntro: "Pick how the Prompt optimizer runs.",
+  optimizerTitle: "Prompt Optimizer",
+  optimizerIntro: "Pick how the Prompt Optimizer runs.",
   optimizerOptions: [
     "My CLI",
     "An assistant",

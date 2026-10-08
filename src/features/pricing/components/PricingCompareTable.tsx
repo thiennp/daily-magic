@@ -1,9 +1,11 @@
-import PricingCompareCell from "@/features/pricing/components/PricingCompareCell";
+import PricingCompareSectionRows from "@/features/pricing/components/PricingCompareSectionRows";
 import {
   PRICING_COMPARE_COLUMN_LABELS,
   PRICING_COMPARE_SECTIONS,
 } from "@/features/pricing/pricingCompare.constant";
 import { PRICING_COMPARE_CAPTION } from "@/features/pricing/pricingCopy.constant";
+
+const PLAN_KEYS = ["trial", "pro", "team"] as const;
 
 export default function PricingCompareTable() {
   return (
@@ -14,26 +16,29 @@ export default function PricingCompareTable() {
       >
         Compare plans
       </h2>
-      <div className="mt-6 overflow-x-auto rounded-2xl border border-awc-border bg-awc-surface shadow-sm">
-        <table className="min-w-full border-collapse text-left text-sm">
+      <div className="mt-6 rounded-[14px] border border-awc-border bg-awc-surface shadow-sm">
+        <table className="w-full table-fixed border-collapse text-left text-sm max-md:block">
           <caption className="sr-only">{PRICING_COMPARE_CAPTION}</caption>
-          <thead>
-            <tr className="border-b border-awc-border bg-awc-surface-2">
-              <th scope="col" className="px-4 py-3 font-semibold text-awc-fg">
-                Feature
+          <thead className="max-md:sr-only">
+            <tr className="bg-awc-surface-2">
+              <th scope="col" className="w-[34%] px-4 py-3">
+                <span className="sr-only">Feature</span>
               </th>
-              <th scope="col" className="px-4 py-3 font-semibold text-teal-800">
-                {PRICING_COMPARE_COLUMN_LABELS.trial}
-              </th>
-              <th scope="col" className="px-4 py-3 font-semibold text-blue-800">
-                {PRICING_COMPARE_COLUMN_LABELS.pro}
-              </th>
-              <th scope="col" className="px-4 py-3 font-semibold text-awc-fg">
-                {PRICING_COMPARE_COLUMN_LABELS.team}
-              </th>
+              {PLAN_KEYS.map((key) => (
+                <th
+                  key={key}
+                  scope="col"
+                  className="px-4 py-3 align-top font-semibold text-awc-fg"
+                >
+                  {PRICING_COMPARE_COLUMN_LABELS[key].name}
+                  <span className="block text-[13px] font-normal text-awc-fg-muted">
+                    {PRICING_COMPARE_COLUMN_LABELS[key].sub}
+                  </span>
+                </th>
+              ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="max-md:block">
             {PRICING_COMPARE_SECTIONS.map((section) => (
               <PricingCompareSectionRows
                 key={section.heading}
@@ -45,52 +50,5 @@ export default function PricingCompareTable() {
         </table>
       </div>
     </section>
-  );
-}
-
-function PricingCompareSectionRows({
-  heading,
-  rows,
-}: {
-  readonly heading: string;
-  readonly rows: (typeof PRICING_COMPARE_SECTIONS)[number]["rows"];
-}) {
-  return (
-    <>
-      <tr className="bg-awc-surface-2/80">
-        <th
-          colSpan={4}
-          scope="colgroup"
-          className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-awc-fg-muted"
-        >
-          {heading}
-        </th>
-      </tr>
-      {rows.map((row) => (
-        <tr key={row.feature} className="border-t border-awc-border">
-          <th
-            scope="row"
-            className="px-4 py-3 font-medium text-awc-fg"
-            title={row.tip}
-          >
-            {row.feature}
-            {row.tip ? (
-              <span className="mt-0.5 block text-xs font-normal text-awc-fg-muted">
-                {row.tip}
-              </span>
-            ) : null}
-          </th>
-          <td className="px-4 py-3">
-            <PricingCompareCell value={row.trial} />
-          </td>
-          <td className="px-4 py-3">
-            <PricingCompareCell value={row.pro} />
-          </td>
-          <td className="px-4 py-3">
-            <PricingCompareCell value={row.team} />
-          </td>
-        </tr>
-      ))}
-    </>
   );
 }

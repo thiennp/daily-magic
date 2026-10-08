@@ -8,11 +8,12 @@ import {
   SHOWCASE_ARTICLES_PHASE_LEADERSHIP,
 } from "@/features/showcases/showcaseArticleRegistry";
 import { enrichShowcaseArticleWithImages } from "@/features/showcases/enrichShowcaseArticleWithImages";
-import ShowcasesIndexSection from "@/features/showcases/ShowcasesIndexSection";
+import type { ShowcaseGroup } from "@/features/showcases/filterShowcaseGroups";
+import ShowcasesBrowser from "@/features/showcases/ShowcasesBrowser";
+import ShowcasesHero from "@/features/showcases/ShowcasesHero";
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
 import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import MarketingShell from "@/features/marketing/MarketingShell";
-import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader";
 import { MARKETING_TEXT_MUTED_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
@@ -22,40 +23,44 @@ const phaseWithCovers = (
   articles.map((article) => enrichShowcaseArticleWithImages(article));
 
 export default function ShowcasesIndexPageLayout() {
-  const startHere = phaseWithCovers(SHOWCASE_ARTICLES_PHASE_1);
-  const moreExamples = phaseWithCovers(SHOWCASE_ARTICLES_PHASE_2);
-  const leadership = phaseWithCovers(SHOWCASE_ARTICLES_PHASE_LEADERSHIP);
-  const forTeams = phaseWithCovers(SHOWCASE_ARTICLES_PHASE_3);
-  const questions = phaseWithCovers(SHOWCASE_ARTICLES_PHASE_4);
+  const groups: readonly ShowcaseGroup[] = [
+    {
+      id: "start",
+      title: "Start here",
+      articles: phaseWithCovers(SHOWCASE_ARTICLES_PHASE_1),
+    },
+    {
+      id: "more",
+      title: "More examples",
+      description: "Mobile, marketplace, workflows, and team dispatch.",
+      articles: phaseWithCovers(SHOWCASE_ARTICLES_PHASE_2),
+    },
+    {
+      id: "leadership",
+      title: "For leadership",
+      description:
+        "Cost, automation, and governance—in language for CMOs and CEOs, not install docs.",
+      articles: phaseWithCovers(SHOWCASE_ARTICLES_PHASE_LEADERSHIP),
+    },
+    {
+      id: "teams",
+      title: "For teams",
+      description:
+        "Company workflows, approval, and onboarding—seed the catalog, then invite the team.",
+      articles: phaseWithCovers(SHOWCASE_ARTICLES_PHASE_3),
+    },
+    {
+      id: "questions",
+      title: "Common questions",
+      description:
+        "Slack, n8n, ChatGPT, mobile, and offline Macs — straight answers.",
+      articles: phaseWithCovers(SHOWCASE_ARTICLES_PHASE_4),
+    },
+  ];
   return (
     <MarketingShell>
-      <MarketingSectionHeader
-        eyebrow="Real examples"
-        headingLevel="h1"
-        title="See how teams use AgentWitch"
-        description="Short stories — no jargon. Each article explains one problem, what you need, and what to try next."
-      />
-      <ShowcasesIndexSection title="Start here" articles={startHere} />
-      <ShowcasesIndexSection
-        title="More examples"
-        description="Mobile, marketplace, workflows, and team dispatch."
-        articles={moreExamples}
-      />
-      <ShowcasesIndexSection
-        title="For leadership"
-        description="Cost, automation, and governance—in language for CMOs and CEOs, not install docs."
-        articles={leadership}
-      />
-      <ShowcasesIndexSection
-        title="For teams"
-        description="Company workflows, approval, and onboarding—seed the catalog, then invite the team."
-        articles={forTeams}
-      />
-      <ShowcasesIndexSection
-        title="Common questions"
-        description="Slack, n8n, ChatGPT, mobile, and offline Macs — straight answers."
-        articles={questions}
-      />
+      <ShowcasesHero />
+      <ShowcasesBrowser groups={groups} />
       <p
         className={mergeMarketingClasses(
           "mt-10 text-center text-sm",
