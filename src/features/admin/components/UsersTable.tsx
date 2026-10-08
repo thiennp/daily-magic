@@ -77,6 +77,7 @@ export default function UsersTable({
                     />
                     <AdminCostControlExcludeCheckbox
                       userId={user.id}
+                      email={user.email}
                       excluded={user.costControlExcluded ?? false}
                     />
                     <Button

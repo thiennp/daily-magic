@@ -2,18 +2,22 @@
 
 import { useState } from "react";
 
+import { isCostControlAutoIgnoredEmail } from "@/lib/billing/isCostControlAutoIgnoredEmail";
 import postAdminSetCostControlExcluded from "@/features/billing/postAdminSetCostControlExcluded";
 
 interface AdminCostControlExcludeCheckboxProps {
   readonly userId: string;
   readonly excluded: boolean;
+  readonly email: string;
 }
 
 /** Admin-only: ignore this user in the cost-control estimate. */
 export default function AdminCostControlExcludeCheckbox({
   userId,
   excluded,
+  email,
 }: AdminCostControlExcludeCheckboxProps) {
+  const autoIgnored = isCostControlAutoIgnoredEmail(email);
   const [checked, setChecked] = useState(excluded);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,8 +39,8 @@ export default function AdminCostControlExcludeCheckbox({
     <label className="flex items-center gap-2 text-xs">
       <input
         type="checkbox"
-        checked={checked}
-        disabled={busy}
+        checked={checked || autoIgnored}
+        disabled={busy || autoIgnored}
         onChange={(event) => void handleChange(event.target.checked)}
       />
       Ignore in cost control
