@@ -45,5 +45,18 @@ export const mockReactWithHookRunner = (actual: typeof React): typeof React => {
       reactHookRunner.active
         ? fn
         : actual.useCallback(fn as never, deps)) as typeof actual.useCallback,
+    useEffect: (effect, deps) => {
+      if (!reactHookRunner.active) {
+        return actual.useEffect(effect, deps);
+      }
+      const at = reactHookRunner.index++;
+      const prev = reactHookRunner.slots[at] as
+        { cleanup?: () => void } | undefined;
+      prev?.cleanup?.();
+      const cleanup = effect();
+      reactHookRunner.slots[at] = {
+        cleanup: typeof cleanup === "function" ? cleanup : undefined,
+      };
+    },
   };
 };

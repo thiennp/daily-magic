@@ -54,6 +54,10 @@ describe("P1-S4b composer Esc (7257954)", () => {
     vi.stubGlobal("window", {
       requestAnimationFrame: (fn: () => void) => fn(),
     });
+    vi.stubGlobal("document", {
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    });
   });
 
   it("with @ list open: Esc closes the picker and stops propagation so Chat dock Esc does not fire", () => {
