@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 
 import Button from "@/components/ui/button/Button";
 import { Modal } from "@/components/ui/modal";
+import AgentRunInputContextSummary from "@/features/dispatch/AgentRunInputContextSummary";
+import AgentRunInputQuestion from "@/features/dispatch/AgentRunInputQuestion";
 import AgentRunInputQuickReplies from "@/features/dispatch/AgentRunInputQuickReplies";
 import AgentRunPartialOutputPreview from "@/features/dispatch/AgentRunPartialOutputPreview";
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/dispatchApprovalSocket";
@@ -47,21 +49,17 @@ export default function AgentRunInputModal({
         Your computer paused this job until you answer. The run stays{" "}
         <span className="font-medium">running</span> in job history.
       </p>
+      {request.context !== undefined ? (
+        <AgentRunInputContextSummary context={request.context} />
+      ) : null}
       <div className="mt-4 rounded-lg border border-awc-border bg-white p-3 dark:border-gray-700 dark:bg-gray-900/40">
         <p className="text-xs font-medium uppercase tracking-wide text-awc-fg-muted dark:text-gray-400">
           What we need from you
         </p>
-        {questionParts.length > 1 ? (
-          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-awc-fg dark:text-white/90">
-            {questionParts.map((part) => (
-              <li key={part}>{part}</li>
-            ))}
-          </ul>
-        ) : (
-          <p className="mt-2 text-sm font-medium text-awc-fg dark:text-white/90">
-            {request.question}
-          </p>
-        )}
+        <AgentRunInputQuestion
+          question={request.question}
+          parts={questionParts}
+        />
       </div>
       {request.partialOutput.length > 0 ? (
         <AgentRunPartialOutputPreview partialOutput={request.partialOutput} />

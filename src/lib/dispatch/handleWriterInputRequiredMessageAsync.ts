@@ -5,6 +5,7 @@ import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.typ
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { dispatchAgentRunInputRegistry } from "@/lib/dispatch/dispatchAgentRunInputRegistry";
+import { buildAgentRunInputContext } from "@/lib/dispatch/buildAgentRunInputContext";
 import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
 import { notifyDashboardUser } from "@/lib/dispatch/dispatchWriterRunToAgent";
 
@@ -73,6 +74,8 @@ export const handleClaudeInputRequiredMessageAsync = async (
     };
   }
 
+  const context = await buildAgentRunInputContext(existingRun);
+
   dispatchAgentRunInputRegistry.register({
     agentRunId,
     requesterUserId: existingRun.requesterUserId,
@@ -80,6 +83,7 @@ export const handleClaudeInputRequiredMessageAsync = async (
     question,
     partialOutput,
     requestId: message.requestId,
+    context,
   });
 
   const broadcastMessage: AgentWitchMessage = {
@@ -88,6 +92,7 @@ export const handleClaudeInputRequiredMessageAsync = async (
       agentRunId,
       question,
       partialOutput,
+      context,
     },
     requestId: message.requestId,
   };

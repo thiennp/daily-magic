@@ -1,3 +1,5 @@
+import type { AgentRunInputContext } from "@/lib/dispatch/agentRunInputContext.type";
+
 export interface PendingAgentRunInput {
   readonly agentRunId: string;
   readonly requesterUserId: string;
@@ -5,6 +7,7 @@ export interface PendingAgentRunInput {
   readonly question: string;
   readonly partialOutput: string;
   readonly requestId?: string;
+  readonly context?: AgentRunInputContext;
 }
 
 export class DispatchAgentRunInputRegistry {

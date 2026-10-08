@@ -1,11 +1,14 @@
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { createAgentWitchRequestId } from "@/features/agent/utils/agentWitchSocketUtils";
-import { stripAgentRunWavePlanFromOutput } from "@/features/agent/utils/stripAgentRunWavePlanFromOutput";
+
+import { parseAgentRunInputRequest } from "@/features/dispatch/utils/parseAgentRunInputContext";
+import type { AgentRunInputContext } from "@/lib/dispatch/agentRunInputContext.type";
 
 export interface AgentRunInputRequest {
   readonly agentRunId: string;
   readonly question: string;
   readonly partialOutput: string;
+  readonly context?: AgentRunInputContext;
 }
 
 export type DispatchApprovalRequiredPayload = {
@@ -71,19 +74,11 @@ export const parseDispatchApprovalSocketMessage = (
     typeof parsed.payload === "object" &&
     parsed.payload !== null
   ) {
-    const payload = parsed.payload as Record<string, unknown>;
-    const agentRunId =
-      typeof payload.agentRunId === "string" ? payload.agentRunId : "";
-    const rawQuestion =
-      typeof payload.question === "string" ? payload.question : "";
-    const rawPartialOutput =
-      typeof payload.partialOutput === "string" ? payload.partialOutput : "";
-
-    const question = stripAgentRunWavePlanFromOutput(rawQuestion);
-    const partialOutput = stripAgentRunWavePlanFromOutput(rawPartialOutput);
-
-    if (agentRunId.length > 0 && question.length > 0) {
-      handlers.onInputRequired({ agentRunId, question, partialOutput });
+    const request = parseAgentRunInputRequest(
+      parsed.payload as Record<string, unknown>,
+    );
+    if (request !== null) {
+      handlers.onInputRequired(request);
     }
   }
 };

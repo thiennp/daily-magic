@@ -17,6 +17,7 @@ export function replayPendingAgentRunInputsForUser(
         agentRunId: pending.agentRunId,
         question: pending.question,
         partialOutput: pending.partialOutput,
+        context: pending.context,
       },
       requestId: pending.requestId,
     };

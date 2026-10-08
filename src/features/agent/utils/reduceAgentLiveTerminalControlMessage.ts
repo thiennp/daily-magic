@@ -1,4 +1,5 @@
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
+import { parseAgentRunInputContext } from "@/features/dispatch/utils/parseAgentRunInputContext";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 import type { AgentLiveTerminalState } from "./agentLiveTerminalState.type";
@@ -86,9 +87,12 @@ export const reduceAgentLiveTerminalControlMessage = (
       return state;
     }
 
+    const context = parseAgentRunInputContext(payload.context);
+
     return {
       ...state,
       pendingInput: {
+        ...(context !== undefined ? { context } : {}),
         agentRunId: state.activeRunId ?? "",
         question,
         partialOutput:
