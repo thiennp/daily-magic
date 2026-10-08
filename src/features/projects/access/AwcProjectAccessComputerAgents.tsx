@@ -1,4 +1,4 @@
-import AwcAssistantAvatarTile from "@/features/projects/access/invites/AwcAssistantAvatarTile";
+import AwcBotName from "@/features/projects/bots/AwcBotName";
 
 interface AwcProjectAccessComputerAgentsProps {
   readonly computerName: string;
@@ -26,11 +26,12 @@ export default function AwcProjectAccessComputerAgents({
           data-agent-online={agent.isOnline}
           className={`flex items-center gap-2 text-sm ${agent.isOnline ? "" : "opacity-60"}`}
         >
-          <AwcAssistantAvatarTile label={agent.label} />
           <span className="min-w-0 flex-1">
-            <span className="font-medium text-awc-fg dark:text-white/90">
-              {agent.label}
-            </span>
+            <AwcBotName
+              name={agent.label}
+              kindHint={agent.writerAgent}
+              className="font-medium text-awc-fg dark:text-white/90"
+            />
             <span className="ml-2 text-xs text-awc-fg-muted">
               {computerName}
             </span>

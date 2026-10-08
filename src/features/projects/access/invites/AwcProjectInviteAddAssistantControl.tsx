@@ -8,7 +8,7 @@ import {
   toAwcProjectInviteAddSelection,
   type AwcProjectInviteAddSelection,
 } from "@/features/projects/access/invites/awcProjectInviteAddAssistantTypes";
-import AwcAssistantAvatarTile from "@/features/projects/access/invites/AwcAssistantAvatarTile";
+import AwcBotName from "@/features/projects/bots/AwcBotName";
 import AwcSupportedAssistantsDialog from "@/features/projects/access/invites/AwcSupportedAssistantsDialog";
 import { findSupportedAssistant } from "@/features/projects/access/invites/awcSupportedAssistants";
 
@@ -49,10 +49,9 @@ export default function AwcProjectInviteAddAssistantControl({
         data-invite-type-value={joinTypeId}
         onClick={() => setOpen(true)}
       >
-        {joinTypeId !== "" ? (
-          <AwcAssistantAvatarTile label={chosen.label} />
-        ) : null}
-        <span className="flex-1">{chosen.label}</span>
+        <span className="flex-1">
+          <AwcBotName name={chosen.label} kindHint={joinTypeId} />
+        </span>
         <span aria-hidden="true">▾</span>
       </button>
       {open ? (

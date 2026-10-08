@@ -1,5 +1,7 @@
 "use client";
 
+import AwcBotName from "@/features/projects/bots/AwcBotName";
+
 /** Assistant row toggle: rounded-square Pine-soft avatar, name and optional wake-health line. */
 export default function AwcProjectMembersHelperRowLabel({
   name,
@@ -23,7 +25,7 @@ export default function AwcProjectMembersHelperRowLabel({
         {name.slice(0, 2).toUpperCase()}
       </span>
       <span className="min-w-0">
-        <span className="block truncate font-semibold text-awc-fg">{name}</span>
+        <AwcBotName name={name} className="flex font-semibold text-awc-fg" />
         {line ? (
           <span className="block text-[12px] text-awc-fg-subtle">{line}</span>
         ) : null}

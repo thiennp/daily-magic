@@ -1,5 +1,5 @@
 import { AWC_PROJECT_INVITE_ADD_ASSISTANT_COPY as C } from "@/features/projects/access/invites/awcProjectInviteAddAssistantCopy.constant";
-import AwcAssistantAvatarTile from "@/features/projects/access/invites/AwcAssistantAvatarTile";
+import AwcBotName from "@/features/projects/bots/AwcBotName";
 import type { AwcSupportedAssistant } from "@/features/projects/access/invites/awcSupportedAssistants";
 
 interface Props {
@@ -32,11 +32,12 @@ export default function AwcSupportedAssistantsList({
           onClick={() => onSelect(a.id)}
           className={`${ROW} ${a.id === value ? "border-awc-border-strong bg-awc-surface-2" : "border-awc-border bg-awc-surface"}`}
         >
-          <AwcAssistantAvatarTile label={a.label} />
           <span className="grid min-w-0">
-            <span className="text-[13px] font-semibold text-awc-fg">
-              {a.label}
-            </span>
+            <AwcBotName
+              name={a.label}
+              kindHint={a.id}
+              className="text-[13px] font-semibold text-awc-fg"
+            />
             <span className="text-xs text-awc-fg-muted">{a.hint}</span>
           </span>
         </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import AwcAssistantAvatarTile from "@/features/projects/access/invites/AwcAssistantAvatarTile";
+import AwcBotName from "@/features/projects/bots/AwcBotName";
 import { PROJECT_PAGE_TASKS_COPY as C } from "@/features/projects/tasks/projectPageTasksCopy.constant";
 import type { useAwcProjectTasksAssignForm } from "@/features/projects/tasks/useAwcProjectTasksAssignForm";
 
@@ -47,11 +47,12 @@ export default function AwcProjectTasksAssignAgentPicker({
                 : "border-awc-border bg-awc-surface"
             } ${o.disabled ? "opacity-50" : ""}`}
           >
-            <AwcAssistantAvatarTile label={o.name} />
             <span className="grid min-w-0 flex-1">
-              <span className="text-[13px] font-semibold text-awc-fg">
-                {o.name}
-              </span>
+              <AwcBotName
+                name={o.name}
+                kindHint={o.writerAgent}
+                className="text-[13px] font-semibold text-awc-fg"
+              />
               <span className="truncate text-xs text-awc-fg-muted">
                 {o.subtitle}
               </span>
