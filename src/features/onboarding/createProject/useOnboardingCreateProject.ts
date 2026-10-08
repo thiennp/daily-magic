@@ -1,5 +1,6 @@
 "use client";
 
+import { ONBOARDING_CREATE_COPY as CC } from "@/features/onboarding/createProject/onboardingCreateErrors.constant";
 import { useCallback, useState } from "react";
 
 import { createUserProjectFromComposer } from "@/features/agent/utils/createUserProjectFromComposer";
@@ -12,6 +13,7 @@ export const useOnboardingCreateProject = () => {
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [failure, setFailure] = useState<string | null>(null);
   const [created, setCreated] = useState<{
     readonly id: string;
     readonly name: string;
@@ -21,15 +23,16 @@ export const useOnboardingCreateProject = () => {
     const trimmed = name.trim();
     const slug = slugifyOnboardingProjectName(trimmed);
     if (!trimmed) {
-      setError("Give your project a name.");
+      setError(CC.nameRequired);
       return;
     }
     if (slug.length < 2) {
-      setError("Use at least 2 letters or numbers.");
+      setError(CC.nameTooShort);
       return;
     }
     setBusy(true);
     setError(null);
+    setFailure(null);
     try {
       const result = await createUserProjectFromComposer({
         name: trimmed,
@@ -37,7 +40,7 @@ export const useOnboardingCreateProject = () => {
         deviceId: "",
       });
       if (!result.ok) {
-        setError(result.errorMessage);
+        setFailure(result.errorMessage);
         return;
       }
       setCreated({ id: result.project.id, name: result.project.name });
@@ -55,6 +58,7 @@ export const useOnboardingCreateProject = () => {
     busy,
     error,
     setError,
+    failure,
     created,
     submit,
   };

@@ -1,3 +1,4 @@
+import { useOnboardingOnline } from "@/features/onboarding/hooks/useOnboardingOnline";
 import OnboardingCreateFormFields from "@/features/onboarding/createProject/OnboardingCreateFormFields";
 import { ONBOARDING_COPY as C } from "@/features/onboarding/onboardingCopy.constant";
 import {
@@ -27,6 +28,7 @@ export default function OnboardingCreateForm({
   onBack,
   onSubmit,
 }: OnboardingCreateFormProps) {
+  const online = useOnboardingOnline();
   return (
     <form
       className="flex flex-col gap-4"
@@ -56,7 +58,13 @@ export default function OnboardingCreateForm({
         >
           {C.back}
         </button>
-        <button type="submit" className={OB_PRIMARY_BTN_CLASS} disabled={busy}>
+        <button
+          type="submit"
+          id="ob-create-btn"
+          className={OB_PRIMARY_BTN_CLASS}
+          disabled={busy || !online}
+          title={online ? undefined : C.offlineWhy}
+        >
           {busy ? C.creating : C.createProject}
         </button>
       </div>

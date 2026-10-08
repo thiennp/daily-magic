@@ -1,7 +1,11 @@
 import Link from "next/link";
 
+import AgentWitchLogoMark from "@/components/branding/AgentWitchLogoMark";
 import OnboardingSkipButton from "@/features/onboarding/OnboardingSkipButton";
-import { OB_BRAND_CLASS, OB_TOP_CLASS } from "@/features/onboarding/onboardingShellClasses.constant";
+import {
+  OB_BRAND_CLASS,
+  OB_TOP_CLASS,
+} from "@/features/onboarding/onboardingShellClasses.constant";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
 interface OnboardingTopBarProps {
@@ -18,12 +22,7 @@ export default function OnboardingTopBar({
   return (
     <header className={OB_TOP_CLASS}>
       <Link href="/" className={OB_BRAND_CLASS}>
-        <span
-          className="grid h-[30px] w-[30px] place-items-center rounded-lg bg-gradient-to-br from-awc-accent-soft to-awc-accent-soft-2 text-awc-blue-700"
-          aria-hidden="true"
-        >
-          ◆
-        </span>
+        <AgentWitchLogoMark className="h-[30px] w-[30px] shrink-0" />
         {AGENT_WITCH_PRODUCT_NAME}
       </Link>
       <div className="flex items-center gap-3">

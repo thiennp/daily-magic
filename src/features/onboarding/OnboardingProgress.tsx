@@ -24,7 +24,10 @@ export default function OnboardingProgress({
 
   return (
     <div className="flex w-full max-w-[760px] flex-col gap-3">
-      <p className="text-center text-[length:var(--awc-fs-sm)] font-semibold text-awc-fg-muted" aria-hidden="true">
+      <p
+        className="text-center text-[length:var(--awc-fs-sm)] font-semibold text-awc-fg-muted"
+        aria-hidden="true"
+      >
         {C.stepOf(activeN)}
       </p>
       <nav aria-label={C.progressLabel}>
@@ -34,7 +37,8 @@ export default function OnboardingProgress({
             const done = n < activeN;
             const cur = n === activeN;
             const href = buildOnboardingStepHref(id, projectId);
-            const canLink = href !== null && !cur && (done || n === activeN + 1);
+            const canLink =
+              href !== null && !cur && (done || n === activeN + 1);
             const numClass = [
               "relative z-[1] grid h-8 w-8 place-items-center rounded-full border-2 text-sm font-bold no-underline",
               cur
@@ -46,11 +50,15 @@ export default function OnboardingProgress({
             return (
               <li
                 key={id}
-                className={`relative flex flex-col items-center gap-1.5 text-center text-[length:var(--awc-fs-sm)] font-medium ${cur ? "font-bold text-awc-blue-800" : "text-awc-fg-muted"}`}
+                className={`relative flex flex-col items-center gap-1.5 text-center text-[length:var(--awc-fs-sm)] font-medium before:absolute before:left-[calc(-50%+18px)] before:right-[calc(50%+18px)] before:top-[15px] before:h-0.5 before:content-[''] ${n === 1 ? "before:hidden" : done || cur ? "before:bg-awc-blue-500" : "before:bg-awc-border-strong"} ${cur ? "font-bold text-awc-blue-800" : "text-awc-fg-muted"}`}
                 aria-current={cur ? "step" : undefined}
               >
                 {canLink && href ? (
-                  <Link className={numClass} href={href} aria-label={`Step ${n}: ${ONBOARDING_STEP_LABELS[id]}`}>
+                  <Link
+                    className={numClass}
+                    href={href}
+                    aria-label={`Step ${n}: ${ONBOARDING_STEP_LABELS[id]}${done ? " (done)" : ""}`}
+                  >
                     {done ? "✓" : n}
                   </Link>
                 ) : (
@@ -58,7 +66,9 @@ export default function OnboardingProgress({
                 )}
                 <span>
                   {ONBOARDING_STEP_LABELS[id]}
-                  {cur ? <span className="sr-only"> (current step)</span> : null}
+                  {cur ? (
+                    <span className="sr-only"> (current step)</span>
+                  ) : null}
                 </span>
               </li>
             );
@@ -73,7 +83,10 @@ export default function OnboardingProgress({
         aria-valuemin={0}
         aria-valuemax={100}
       >
-        <i className="block h-full rounded-full bg-awc-blue-500" style={{ width: `${pct}%` }} />
+        <i
+          className="block h-full rounded-full bg-awc-blue-500"
+          style={{ width: `${pct}%` }}
+        />
       </div>
     </div>
   );

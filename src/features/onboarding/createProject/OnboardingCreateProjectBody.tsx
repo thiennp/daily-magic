@@ -1,5 +1,8 @@
 "use client";
 
+import { ONBOARDING_CREATE_COPY as CC } from "@/features/onboarding/createProject/onboardingCreateErrors.constant";
+import { useEffect, useRef } from "react";
+
 import OnboardingCreateDone from "@/features/onboarding/createProject/OnboardingCreateDone";
 import OnboardingCreateForm from "@/features/onboarding/createProject/OnboardingCreateForm";
 import OnboardingCreateWelcome from "@/features/onboarding/createProject/OnboardingCreateWelcome";
@@ -9,9 +12,35 @@ import { OB_CARD_CLASS } from "@/features/onboarding/onboardingShellClasses.cons
 
 export default function OnboardingCreateProjectBody() {
   const state = useOnboardingCreateProject();
+  const { view, failure } = state;
+  const mounted = useRef(false);
+
+  // Design: form focuses the name field, done focuses the heading, a failed
+  // create returns focus to the primary button.
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+    const target = view === "form" ? "ob-pn" : "ob-h";
+    document.getElementById(target)?.focus();
+  }, [view]);
+  useEffect(() => {
+    if (failure) {
+      document.getElementById("ob-create-btn")?.focus();
+    }
+  }, [failure]);
 
   return (
     <>
+      {failure ? (
+        <div
+          role="alert"
+          className="rounded-xl bg-awc-bad-soft px-4 py-3 text-sm text-awc-bad"
+        >
+          <b className="font-semibold">{CC.createFailedBold}</b> {failure}
+        </div>
+      ) : null}
       <section className={OB_CARD_CLASS} aria-labelledby="ob-h">
         {state.view === "welcome" ? (
           <OnboardingCreateWelcome onStart={() => state.setView("form")} />

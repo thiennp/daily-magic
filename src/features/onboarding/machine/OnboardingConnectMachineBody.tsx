@@ -1,20 +1,19 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import ComputersDownloadLink from "@/features/home/ComputersDownloadLink";
 import HomeConnectComputerGuide from "@/features/home/HomeConnectComputerGuide";
 import HomeConnectedMacsPanel from "@/features/home/HomeConnectedMacsPanel";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
+import OnboardingMachineStatus from "@/features/onboarding/machine/OnboardingMachineStatus";
+import OnboardingStepActions from "@/features/onboarding/OnboardingStepActions";
 import { ONBOARDING_COPY as C } from "@/features/onboarding/onboardingCopy.constant";
 import {
-  OB_ACT_CLASS,
   OB_CARD_CLASS,
   OB_H1_CLASS,
   OB_LEAD_CLASS,
   OB_PRIMARY_BTN_CLASS,
-  OB_SECONDARY_BTN_CLASS,
 } from "@/features/onboarding/onboardingShellClasses.constant";
 import { buildOnboardingStepHref } from "@/features/onboarding/utils/buildOnboardingStepHref";
 import { buildAgentWitchLocalMacAppDownloadUrl } from "@/lib/agentWitch/buildAgentWitchLocalMacAppDownloadUrl";
@@ -44,6 +43,7 @@ export default function OnboardingConnectMachineBody({
   const router = useRouter();
   const { devices, isLoading } = useHomeConnectedMacs();
   const connected = !isLoading && devices.length > 0;
+  const firstDevice = devices.find((d) => d.isOnline) ?? devices[0] ?? null;
   const botHref = buildOnboardingStepHref("bot", projectId);
   const backHref =
     buildOnboardingStepHref("project", null) ?? "/onboarding/project";
@@ -89,28 +89,32 @@ export default function OnboardingConnectMachineBody({
         />
       ) : null}
 
-      <div className={OB_ACT_CLASS}>
-        <Link href={backHref} className={OB_SECONDARY_BTN_CLASS}>
-          {C.back}
-        </Link>
-        <div className="flex flex-wrap gap-2">
-          {botHref ? (
-            <Link
-              href={botHref}
-              className={OB_PRIMARY_BTN_CLASS}
-              aria-disabled={!connected ? true : undefined}
-              onClick={(event) => {
-                if (!connected) {
-                  event.preventDefault();
-                }
-              }}
-              title={connected ? undefined : C.machineNeedConnect}
-            >
-              {C.machineContinue}
-            </Link>
-          ) : null}
-        </div>
-      </div>
+      <OnboardingMachineStatus
+        connected={connected}
+        isLoading={isLoading}
+        computerName={
+          firstDevice?.displayName ?? firstDevice?.deviceLabel ?? null
+        }
+        isOnline={firstDevice?.isOnline ?? false}
+        projectName={projectName}
+      />
+
+      <OnboardingStepActions
+        backHref={backHref}
+        skip={
+          connected || !botHref
+            ? null
+            : {
+                title: C.machineSkipConfirmTitle,
+                text: C.machineSkipText,
+                href: botHref,
+              }
+        }
+        nextHref={botHref}
+        nextLabel={C.machineContinue}
+        nextEnabled={connected}
+        nextWhy={C.machineNeedConnect}
+      />
     </section>
   );
 }

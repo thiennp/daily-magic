@@ -7,10 +7,15 @@ export const ONBOARDING_COPY = {
   skipForNow: "Skip for now",
   skipConfirmTitle: "Skip setup for now?",
   skipConfirmGo: "Skip setup",
-  skipNote:
-    "Not now? Use Skip for now at the top. You can finish later.",
+  skipNote: "Not now? Use Skip for now at the top. You can finish later.",
   stepOf: (n: number) => `Step ${n} of 4`,
   progressLabel: "Setup progress",
+  skipToContent: "Skip to content",
+  cancel: "Cancel",
+  skipStepGo: "Skip this step",
+  offlineBold: "No internet.",
+  offlineText: " You can look around. Changes wait until it is back.",
+  offlineWhy: "No internet connection.",
 
   welcomeTitle: "Welcome to AgentWitch",
   welcomeLead:
@@ -59,6 +64,12 @@ export const ONBOARDING_COPY = {
   machineSkipText:
     "Assistants need a computer to work on. You can connect one later from Home or Projects.",
   machineContinue: "Continue",
+  machineSkipConfirmTitle: "Skip connecting a computer?",
+  machineWaitingTitle: "Waiting for your computer…",
+  machineWaitingText: "Keep AgentWitch Local open. This updates by itself.",
+  machinePausedTitle: "Paused while offline",
+  machinePausedText: "We will keep looking when the internet is back.",
+  machineConnectedText: "is connected",
   machineNeedConnect: "Connect a computer first, or skip for now.",
   downloadTitle: "Download AgentWitch Local",
   downloadTitleAnother: "Connect another computer",
@@ -72,6 +83,9 @@ export const ONBOARDING_COPY = {
   botSkipConfirmTitle: "Skip adding an assistant?",
   botContinue: "Continue",
   botNeedAdd: "Add at least one assistant or tool, or skip for now.",
+  botNothingAdded: "Nothing added yet",
+  botAdded: (n: number, project: string) =>
+    `${n} ${n === 1 ? "item" : "items"} added to ${project}`,
   botOpenTeam: "Open team invites in project",
   botSection: "Assistants",
 
@@ -80,6 +94,7 @@ export const ONBOARDING_COPY = {
     `Assign work in ${project} chat — not on a separate New task page.`,
   taskSkipText:
     "You can give your first task any time from your project’s chat.",
+  taskSkipConfirmTitle: "Skip the first task?",
   taskCta: "Open project chat",
   taskHint:
     "New tasks happen only through project chat. The chat dock opens so you can assign your first task.",

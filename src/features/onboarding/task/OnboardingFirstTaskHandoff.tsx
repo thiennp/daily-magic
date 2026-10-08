@@ -1,13 +1,9 @@
-import Link from "next/link";
-
+import OnboardingStepActions from "@/features/onboarding/OnboardingStepActions";
 import { ONBOARDING_COPY as C } from "@/features/onboarding/onboardingCopy.constant";
 import {
-  OB_ACT_CLASS,
   OB_CARD_CLASS,
   OB_H1_CLASS,
   OB_LEAD_CLASS,
-  OB_PRIMARY_BTN_CLASS,
-  OB_SECONDARY_BTN_CLASS,
 } from "@/features/onboarding/onboardingShellClasses.constant";
 import {
   buildOnboardingProjectChatHref,
@@ -40,14 +36,18 @@ export default function OnboardingFirstTaskHandoff({
       <div className="rounded-2xl bg-awc-accent-soft p-4 text-sm text-awc-blue-900">
         {C.taskHint}
       </div>
-      <div className={OB_ACT_CLASS}>
-        <Link href={botHref} className={OB_SECONDARY_BTN_CLASS}>
-          {C.back}
-        </Link>
-        <Link href={chatHref} className={OB_PRIMARY_BTN_CLASS}>
-          {C.taskCta}
-        </Link>
-      </div>
+      <OnboardingStepActions
+        backHref={botHref}
+        skip={{
+          title: C.taskSkipConfirmTitle,
+          text: C.taskSkipText,
+          href: `/projects/${encodeURIComponent(projectId)}`,
+        }}
+        nextHref={chatHref}
+        nextLabel={C.taskCta}
+        nextEnabled
+        nextWhy=""
+      />
     </section>
   );
 }

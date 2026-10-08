@@ -1,3 +1,4 @@
+import { ONBOARDING_CREATE_COPY as CC } from "@/features/onboarding/createProject/onboardingCreateErrors.constant";
 import { ONBOARDING_COPY as C } from "@/features/onboarding/onboardingCopy.constant";
 import { OB_FIELD_CLASS } from "@/features/onboarding/onboardingShellClasses.constant";
 import { slugifyOnboardingProjectName } from "@/features/onboarding/utils/slugifyOnboardingProjectName";
@@ -33,14 +34,17 @@ export default function OnboardingCreateFormFields({
           value={name}
           disabled={busy}
           aria-invalid={error ? true : undefined}
-          aria-describedby="ob-pn-h"
+          aria-describedby={error ? "ob-pn-h ob-pn-e" : "ob-pn-h"}
           onChange={(event) => onNameChange(event.target.value)}
         />
-        <p className="text-[length:var(--awc-fs-sm)] text-awc-fg-muted" id="ob-pn-h">
+        <p
+          className="text-[length:var(--awc-fs-sm)] text-awc-fg-muted"
+          id="ob-pn-h"
+        >
           {slug ? C.projectNameSavedAs(slug) : C.projectNameHelp}
         </p>
         {error ? (
-          <p className="text-sm text-awc-bad" role="alert">
+          <p id="ob-pn-e" className="text-sm text-awc-bad" role="alert">
             {error}
           </p>
         ) : null}
@@ -48,7 +52,7 @@ export default function OnboardingCreateFormFields({
       <div
         className="flex flex-wrap items-center gap-2"
         role="group"
-        aria-label={C.nameIdeasLabel}
+        aria-label={CC.nameIdeasGroup}
       >
         <span className="text-awc-fg-muted">{C.nameIdeasLabel}</span>
         {C.nameIdeas.map((idea) => (

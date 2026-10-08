@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import OnboardingIcon from "@/features/onboarding/OnboardingIcon";
 import { ONBOARDING_COPY as C } from "@/features/onboarding/onboardingCopy.constant";
 import {
   OB_PRIMARY_BTN_CLASS,
@@ -23,9 +24,13 @@ export default function OnboardingCreateDone({
         className="grid h-16 w-16 place-items-center rounded-full bg-awc-ok-soft text-2xl text-awc-ok"
         aria-hidden="true"
       >
-        ✓
+        <OnboardingIcon name="check" size={32} />
       </span>
-      <h1 id="ob-h" tabIndex={-1} className="text-[length:var(--awc-fs-h1)] font-bold tracking-[-0.02em] text-awc-blue-950">
+      <h1
+        id="ob-h"
+        tabIndex={-1}
+        className="text-[length:var(--awc-fs-h1)] font-bold tracking-[-0.02em] text-awc-blue-950"
+      >
         {C.createdTitle}
       </h1>
       <p className="text-awc-fg-muted">{C.createdLead}</p>
@@ -34,7 +39,7 @@ export default function OnboardingCreateDone({
           className="grid h-11 w-11 shrink-0 place-items-center rounded-[14px] bg-awc-accent-soft text-awc-blue-700"
           aria-hidden="true"
         >
-          ▢
+          <OnboardingIcon name="folder" size={22} />
         </span>
         <div className="min-w-0">
           <b className="block break-words text-awc-fg">{projectName}</b>

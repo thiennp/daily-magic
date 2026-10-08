@@ -6,14 +6,13 @@ import { useState } from "react";
 import AwcProjectInviteAddAssistantControl from "@/features/projects/access/invites/AwcProjectInviteAddAssistantControl";
 import type { AwcProjectInviteAddSelection } from "@/features/projects/access/invites/awcProjectInviteAddAssistantTypes";
 import { createProjectInviteApi } from "@/features/projects/access/utils/projectAccessApi";
+import OnboardingStepActions from "@/features/onboarding/OnboardingStepActions";
 import { ONBOARDING_COPY as C } from "@/features/onboarding/onboardingCopy.constant";
 import {
-  OB_ACT_CLASS,
   OB_CARD_CLASS,
   OB_H1_CLASS,
   OB_LEAD_CLASS,
   OB_PRIMARY_BTN_CLASS,
-  OB_SECONDARY_BTN_CLASS,
 } from "@/features/onboarding/onboardingShellClasses.constant";
 import { buildOnboardingStepHref } from "@/features/onboarding/utils/buildOnboardingStepHref";
 import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
@@ -80,6 +79,10 @@ export default function OnboardingAddBotBody({
         </p>
       ) : null}
 
+      <p className="text-sm text-awc-fg-muted" role="status">
+        {added ? C.botAdded(1, projectName) : C.botNothingAdded}
+      </p>
+
       <Link
         href={`/projects/${encodeURIComponent(projectId)}?tab=team`}
         className="text-sm font-medium text-awc-blue-700 underline-offset-2 hover:underline"
@@ -87,24 +90,22 @@ export default function OnboardingAddBotBody({
         {C.botOpenTeam}
       </Link>
 
-      <div className={OB_ACT_CLASS}>
-        <Link href={machineHref} className={OB_SECONDARY_BTN_CLASS}>
-          {C.back}
-        </Link>
-        {taskHref ? (
-          <Link
-            href={taskHref}
-            className={OB_PRIMARY_BTN_CLASS}
-            aria-disabled={!added ? true : undefined}
-            title={added ? undefined : C.botNeedAdd}
-            onClick={(event) => {
-              if (!added) event.preventDefault();
-            }}
-          >
-            {C.botContinue}
-          </Link>
-        ) : null}
-      </div>
+      <OnboardingStepActions
+        backHref={machineHref}
+        skip={
+          taskHref
+            ? {
+                title: C.botSkipConfirmTitle,
+                text: C.botSkipText,
+                href: taskHref,
+              }
+            : null
+        }
+        nextHref={taskHref}
+        nextLabel={C.botContinue}
+        nextEnabled={added}
+        nextWhy={C.botNeedAdd}
+      />
     </section>
   );
 }
