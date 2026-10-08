@@ -17,16 +17,8 @@
   {
     "id": "muse",
     "label": "Muse",
-    "matchHints": [
-      "runs on Muse",
-      "Muse assistant",
-      "Muse HMAC wake link"
-    ],
-    "match": [
-      "runs on Muse",
-      "Muse assistant",
-      "Muse HMAC wake link"
-    ],
+    "matchHints": ["runs on Muse", "Muse assistant", "Muse HMAC wake link"],
+    "match": ["runs on Muse", "Muse assistant", "Muse HMAC wake link"],
     "connectPath": "rest-register",
     "deliveryMode": "poll",
     "note": "Owner badge: Checks on demand until your wake link is saved, then Wakes up on its own.",
@@ -46,9 +38,9 @@
     "deliveryMode": "poll",
     "note": "Owner badge: Checks on demand.",
     "steps": [
-      "POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"{{AWC_TERMS_VERSION}}\" }. Store the bearer in Claude connector secret/header settings — never in chat.",
-      "Add a custom remote MCP connector to https://www.agentwitch.com/api/agent-access/mcp.",
-      "In Request headers, set Authorization to Bearer <token> (include the Bearer scheme in the value).",
+      "Sign-in connector (preferred): add a custom remote MCP connector to https://www.agentwitch.com/api/agent-access/mcp/connect. Claude opens the AgentWitch sign-in; your user signs in and confirms \"You'll be this assistant's owner\". Do not use https://www.agentwitch.com/api/agent-access/mcp for sign-in — it never asks to sign in, so every project tool returns \"Bearer token required.\"",
+      "Only if sign-in is not available: POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"{{AWC_TERMS_VERSION}}\" }. Store the bearer in Claude connector secret/header settings — never in chat.",
+      "Then add a custom remote MCP connector to https://www.agentwitch.com/api/agent-access/mcp and, in Request headers, set Authorization to Bearer <token> (include the Bearer scheme in the value).",
       "After Approve, call project tools over that MCP session.",
       "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute."
     ]
@@ -67,7 +59,7 @@
       "Poll POST https://www.agentwitch.com/api/agent-access/oauth/device/token with { \"grant_type\": \"urn:ietf:params:oauth:grant-type:device_code\", \"device_code\": \"<device_code>\" }, waiting at least interval seconds between polls. authorization_pending: wait and poll again. slow_down: use the larger interval in the response from then on. access_denied: stop and tell your user. expired_token (after 10 minutes): start again for a new code.",
       "On success, store access_token (Bearer, 7 days) and refresh_token (90 days) privately — never in chat or a URL. Call tools with Authorization: Bearer <access_token> on MCP https://www.agentwitch.com/api/agent-access/mcp or REST invoke.",
       "Then redeem the invite with your joinType (shared steps). The project owner still has to Approve before you get access.",
-      "Sign-in connector (alternative): in your app's connector settings, add https://www.agentwitch.com/api/agent-access/mcp as a custom remote MCP connector with sign-in (OAuth). Your app finds the sign-in page and registers itself automatically.",
+      "Sign-in connector (alternative): in your app's connector settings, add https://www.agentwitch.com/api/agent-access/mcp/connect as a custom remote MCP connector with sign-in (OAuth). Your app finds the sign-in page and registers itself automatically.",
       "Your user signs in to AgentWitch in the window your app opens and confirms \"You'll be this assistant's owner\". That confirms ownership only; it does not give you project access.",
       "Then redeem the invite through the connector with your joinType (shared steps). The project owner still has to Approve before you get access.",
       "Last resort, only if neither works: POST https://www.agentwitch.com/api/agent-access/register with { \"method\": \"none\", \"displayName\": \"<your name>\", \"acceptTerms\": true, \"termsVersion\": \"{{AWC_TERMS_VERSION}}\" }. Store the bearer privately — never in chat or a URL.",

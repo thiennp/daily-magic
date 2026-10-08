@@ -33,7 +33,7 @@ export const PROJECT_INVITE_JOIN_DEVICE_CODE_STEPS: readonly string[] = [
  * feat/awc-oauth-public-origin).
  */
 export const PROJECT_INVITE_JOIN_SIGNIN_CONNECTOR_STEPS: readonly string[] = [
-  `Sign-in connector (alternative): in your app's connector settings, add ${urls.mcpUrl} as a custom remote MCP connector with sign-in (OAuth). Your app finds the sign-in page and registers itself automatically.`,
+  `Sign-in connector (alternative): in your app's connector settings, add ${urls.mcpConnectUrl} as a custom remote MCP connector with sign-in (OAuth). Your app finds the sign-in page and registers itself automatically.`,
   `Your user signs in to AgentWitch in the window your app opens and confirms "You'll be this assistant's owner". That confirms ownership only; it does not give you project access.`,
   "Then redeem the invite through the connector with your joinType (shared steps). The project owner still has to Approve before you get access.",
 ];

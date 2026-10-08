@@ -1,4 +1,5 @@
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
+import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 import { readBearerAgentAccessToken } from "@/lib/agentAccess/hashAgentAccessToken";
 import {
   resolveAgentAccessActor,
@@ -15,7 +16,12 @@ export const agentAccessTextResult = (
 
 export const agentAccessUnauthorized = (): AgentAccessToolCallResult =>
   agentAccessTextResult(
-    { ok: false, error: "Bearer token required.", code: "unauthorized" },
+    {
+      ok: false,
+      error: "Bearer token required.",
+      code: "unauthorized",
+      hint: `No sign-in on this connection. Reconnect with sign-in at ${buildAgentAccessUrls().mcpConnectUrl}, or send Authorization: Bearer <token>.`,
+    },
     true,
   );
 

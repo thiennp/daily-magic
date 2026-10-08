@@ -64,6 +64,7 @@ describe("join type registry vs Product EN lock", () => {
     const knownUrls = new Set([
       urls.registerUrl,
       urls.mcpUrl,
+      urls.mcpConnectUrl,
       urls.invokeUrl,
       PROJECT_INVITE_JOIN_DEVICE_START_URL,
       PROJECT_INVITE_JOIN_DEVICE_TOKEN_URL,

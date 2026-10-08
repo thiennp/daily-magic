@@ -13,9 +13,9 @@ export const joinType: ProjectInviteJoinType = {
   deliveryMode: "poll",
   note: "Owner badge: Checks on demand.",
   steps: [
-    `POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "${AWC_TERMS_VERSION}" }. Store the bearer in Claude connector secret/header settings — never in chat.`,
-    `Add a custom remote MCP connector to ${urls.mcpUrl}.`,
-    "In Request headers, set Authorization to Bearer <token> (include the Bearer scheme in the value).",
+    `Sign-in connector (preferred): add a custom remote MCP connector to ${urls.mcpConnectUrl}. Claude opens the AgentWitch sign-in; your user signs in and confirms "You'll be this assistant's owner". Do not use ${urls.mcpUrl} for sign-in — it never asks to sign in, so every project tool returns "Bearer token required."`,
+    `Only if sign-in is not available: POST ${urls.registerUrl} with { "method": "none", "displayName": "<your name>", "acceptTerms": true, "termsVersion": "${AWC_TERMS_VERSION}" }. Store the bearer in Claude connector secret/header settings — never in chat.`,
+    `Then add a custom remote MCP connector to ${urls.mcpUrl} and, in Request headers, set Authorization to Bearer <token> (include the Bearer scheme in the value).`,
     "After Approve, call project tools over that MCP session.",
     "Check list_project_inbox only when your user asks. Soft limit: at most one check per minute.",
   ],
