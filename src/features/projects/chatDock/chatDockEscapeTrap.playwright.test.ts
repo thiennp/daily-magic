@@ -1,11 +1,18 @@
-import { chromium } from "playwright";
+import type { Browser } from "playwright";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
+import {
+  launchVitestPlaywrightBrowser,
+  VITEST_PLAYWRIGHT_INSTALL_HINT,
+} from "@/lib/test/vitestPlaywrightChromium";
+
 describe("P1-S4b Chat dock Esc with composer trap (Playwright)", () => {
-  let browser: Awaited<ReturnType<typeof chromium.launch>>;
+  let browser: Browser | null = null;
+  let skipReason: string | null = "pending browser launch";
 
   beforeAll(async () => {
-    browser = await chromium.launch();
+    browser = await launchVitestPlaywrightBrowser();
+    skipReason = browser === null ? VITEST_PLAYWRIGHT_INSTALL_HINT : null;
   }, 60_000);
 
   afterAll(async () => {
@@ -13,8 +20,11 @@ describe("P1-S4b Chat dock Esc with composer trap (Playwright)", () => {
   });
 
   const dockTrapPage = async (): Promise<
-    Awaited<ReturnType<typeof browser.newPage>>
+    Awaited<ReturnType<NonNullable<typeof browser>["newPage"]>>
   > => {
+    if (browser === null) {
+      throw new Error("browser not launched");
+    }
     const page = await browser.newPage();
     await page.setContent(`<!DOCTYPE html><html><body><script>
       let trapDepth = 0;
@@ -37,7 +47,13 @@ describe("P1-S4b Chat dock Esc with composer trap (Playwright)", () => {
     return page;
   };
 
-  it("first Esc with mention-style capture trap keeps full view; second Esc exits full", async () => {
+  it("first Esc with mention-style capture trap keeps full view; second Esc exits full", async ({
+    skip,
+  }) => {
+    if (skipReason !== null) {
+      skip(skipReason);
+      return;
+    }
     const page = await dockTrapPage();
     await page.evaluate(() => {
       window.releaseTrap = window.pushTrap();
@@ -56,7 +72,13 @@ describe("P1-S4b Chat dock Esc with composer trap (Playwright)", () => {
     await page.close();
   }, 60_000);
 
-  it("first Esc with trap depth only (picker-style) keeps full view", async () => {
+  it("first Esc with trap depth only (picker-style) keeps full view", async ({
+    skip,
+  }) => {
+    if (skipReason !== null) {
+      skip(skipReason);
+      return;
+    }
     const page = await dockTrapPage();
     await page.evaluate(() => {
       window.releaseTrap = window.pushTrap();

@@ -1,13 +1,19 @@
-import { chromium } from "playwright";
+import type { Browser } from "playwright";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { df036RailRowLayoutHtml } from "@/features/projects/members/df036RailRowLayout.fixture.html";
+import {
+  launchVitestPlaywrightBrowser,
+  VITEST_PLAYWRIGHT_INSTALL_HINT,
+} from "@/lib/test/vitestPlaywrightChromium";
 
 describe("DF-036 helper row layout (Playwright)", () => {
-  let browser: Awaited<ReturnType<typeof chromium.launch>>;
+  let browser: Browser | null = null;
+  let skipReason: string | null = "pending browser launch";
 
   beforeAll(async () => {
-    browser = await chromium.launch();
+    browser = await launchVitestPlaywrightBrowser();
+    skipReason = browser === null ? VITEST_PLAYWRIGHT_INSTALL_HINT : null;
   }, 60_000);
 
   afterAll(async () => {
@@ -15,6 +21,9 @@ describe("DF-036 helper row layout (Playwright)", () => {
   });
 
   const assertRowLayout = async (viewportWidth: number): Promise<void> => {
+    if (browser === null) {
+      throw new Error("browser not launched");
+    }
     const page = await browser.newPage({
       viewport: { width: viewportWidth, height: 720 },
     });
@@ -47,7 +56,13 @@ describe("DF-036 helper row layout (Playwright)", () => {
     await page.close();
   };
 
-  it("keeps assistant name visible at ~850px and full width", async () => {
+  it("keeps assistant name visible at ~850px and full width", async ({
+    skip,
+  }) => {
+    if (skipReason !== null) {
+      skip(skipReason);
+      return;
+    }
     await assertRowLayout(850);
     await assertRowLayout(1440);
   }, 60_000);
