@@ -318,6 +318,18 @@ export const vitestResolveAlias: Record<string, string> = {
     ROOT,
     "./apps/live/features/token-saver/public-api/infrastructure.ts",
   ),
+  "@agent-witch/live-skills/types": path.resolve(
+    ROOT,
+    "./apps/live/features/skills/public-api/types.ts",
+  ),
+  "@agent-witch/live-skills/presentation": path.resolve(
+    ROOT,
+    "./apps/live/features/skills/public-api/presentation.ts",
+  ),
+  "@agent-witch/live-skills": path.resolve(
+    ROOT,
+    "./apps/live/features/skills/public-api/infrastructure.ts",
+  ),
   "@agent-witch/live-mcp/types": path.resolve(
     ROOT,
     "./apps/live/features/mcp/public-api/types.ts",

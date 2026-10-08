@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -23,15 +19,9 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@agent-witch/shared": [
-        "./packages/shared/src/index.ts"
-      ],
-      "@agent-witch/shared/*": [
-        "./packages/shared/src/*"
-      ],
+      "@/*": ["./src/*"],
+      "@agent-witch/shared": ["./packages/shared/src/index.ts"],
+      "@agent-witch/shared/*": ["./packages/shared/src/*"],
       "@agent-witch/install-layout/presentation": [
         "./apps/install/features/install-layout/public-api/presentation.ts"
       ],
@@ -239,6 +229,15 @@
       "@agent-witch/live-mcp/presentation": [
         "./apps/live/features/mcp/public-api/presentation.ts"
       ],
+      "@agent-witch/live-skills": [
+        "./apps/live/features/skills/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/live-skills/types": [
+        "./apps/live/features/skills/public-api/types.ts"
+      ],
+      "@agent-witch/live-skills/presentation": [
+        "./apps/live/features/skills/public-api/presentation.ts"
+      ],
       "@agent-witch/live-project-history": [
         "./apps/live/features/project-history/public-api/infrastructure.ts"
       ],
@@ -258,7 +257,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

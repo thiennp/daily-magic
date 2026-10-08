@@ -124,6 +124,7 @@ import {
   isDeviceNotLinkedError,
   isUnknownAgentWitchIdentityError,
 } from "@agent-witch/install-uninstall";
+import { withSkillsFindInstruction } from "@agent-witch/live-skills";
 import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
 import { LocalCodingToolRefusalCode } from "@agent-witch/shared/dispatch";
 
@@ -793,6 +794,11 @@ const dispatchWriterTask = async (
       reportKeyByRunId.set(agentRunId, resolvedReportKey);
     }
   }
+
+  promptWithProjectContext = withSkillsFindInstruction(
+    promptWithProjectContext,
+    { layout: config.layout, projectId: resolvedProjectId, writerAgent },
+  );
 
   runWriterTask(
     config,

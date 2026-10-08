@@ -137,8 +137,10 @@ import {
 } from "@agent-witch/live-shell";
 import { readAgentWitchInstallVersion } from "@agent-witch/install-self-update";
 import { runLocalSelfDelegatedTask } from "@agent-witch/live-tasks";
+import { refreshSkillIndex } from "@agent-witch/live-skills";
 import {
   startProjectComputerHistoryTick,
+  tickProjectComputerHistory,
   tryHandleLocalChatReadRequest,
   tryHandleLocalSkillDraftReviewRequest,
 } from "@agent-witch/live-project-history";
@@ -2055,7 +2057,13 @@ export const startAgentWitchLocalApp = (input: {
     console.error("[agent-witch] Local app server error:", error);
   });
 
-  const historyTick = startProjectComputerHistoryTick();
+  const historyTick = startProjectComputerHistoryTick({
+    // Skills are pulled by the History tick; re-index right after it.
+    tick: async () => {
+      await tickProjectComputerHistory();
+      await refreshSkillIndex(input.layout);
+    },
+  });
   server.on("close", () => {
     historyTick.stop();
   });
