@@ -1,7 +1,7 @@
 /**
  * Child tables removed by Postgres when an owned user_projects row is deleted.
  * Source of truth: db/migrations 021, 031–033, 041, 044, 045, 050, 052, 053,
- * 056, 057, 058, 059–060, 062, 065, 067, 068, 069, 073, 092, 094, 104, 109 and ensureProjectAclSchema /
+ * 056, 057, 058, 059–060, 062, 065, 067, 068, 069, 073, 092, 094, 104, 109, 120 and ensureProjectAclSchema /
  * ensureProjectInviteHooksSchema / ensureProjectComputerHistorySchema.
  * Direct FKs to user_projects are ON DELETE CASCADE; deeper children cascade
  * through project_memberships / project_messages / published_capabilities /
@@ -19,6 +19,7 @@ export const PROJECT_DELETE_CASCADE_CHILD_TABLES = [
   "project_access_requests",
   "project_activity_events",
   "project_api_keys",
+  "project_auto_skills",
   "project_components",
   "project_composer_recipient_sticky",
   "project_composition_snapshots",
@@ -44,6 +45,7 @@ export const PROJECT_DELETE_CASCADE_CHILD_TABLES = [
   "project_messenger_thread_reads",
   "project_pitfall_hits",
   "project_pitfalls",
+  "project_skill_suggestions",
   "project_skill_versions",
   "project_skills",
   "project_task_external_links",
