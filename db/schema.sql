@@ -830,3 +830,21 @@ CREATE TABLE IF NOT EXISTS project_knowledge_daily (
 
 CREATE INDEX IF NOT EXISTS project_knowledge_daily_project_day_idx
   ON project_knowledge_daily (project_id, day DESC);
+
+CREATE TABLE IF NOT EXISTS project_knowledge_cards (
+  project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
+  device_id TEXT NOT NULL REFERENCES agent_witch_devices(id) ON DELETE CASCADE,
+  card_id TEXT NOT NULL,
+  kind TEXT NOT NULL,
+  takeaway TEXT NOT NULL,
+  files JSONB NOT NULL DEFAULT '[]'::jsonb,
+  outcome TEXT NOT NULL,
+  commit_sha TEXT,
+  hits INTEGER NOT NULL DEFAULT 0,
+  occurrences INTEGER NOT NULL DEFAULT 1,
+  card_updated_at TIMESTAMPTZ NOT NULL,
+  PRIMARY KEY (project_id, device_id, card_id)
+);
+
+CREATE INDEX IF NOT EXISTS project_knowledge_cards_project_idx
+  ON project_knowledge_cards (project_id, card_updated_at DESC);

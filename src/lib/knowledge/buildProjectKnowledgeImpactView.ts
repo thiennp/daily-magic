@@ -53,5 +53,6 @@ export const buildProjectKnowledgeImpactView = (input: {
       ).length,
     },
     computers: input.includeComputers ? input.computers : null,
+    sharedCards: null,
   };
 };

@@ -7,7 +7,7 @@ import {
   isUserCorrection,
   parseRevertedSha,
 } from "./detectKnowledgeSignals";
-import { parseGitLogCommits } from "./readGitRunChanges";
+import { parseGitLogCommits, parsePorcelainPath } from "./readGitRunChanges";
 import { matchCommitsToUnverifiedFix } from "./reconcileUnverifiedKnowledgeFixes";
 
 describe("isUserCorrection", () => {
@@ -46,6 +46,11 @@ describe("revert + git parsing", () => {
       "abcdef1234567",
     );
   });
+  it("reads paths from porcelain lines, including renames", () => {
+    expect(parsePorcelainPath(" M src/auth.ts")).toBe("src/auth.ts");
+    expect(parsePorcelainPath("R  old.ts -> new.ts")).toBe("new.ts");
+    expect(parsePorcelainPath("?? notes.txt")).toBe("notes.txt");
+  });
   it("parses git log records", () => {
     const raw =
       "aaa\u001fsubject one\u001fbody\u001e\nbbb\u001fsubject two\u001f\u001e";
@@ -53,6 +58,28 @@ describe("revert + git parsing", () => {
       { sha: "aaa", subject: "subject one", body: "body" },
       { sha: "bbb", subject: "subject two", body: "" },
     ]);
+  });
+  it("compares commit time across timezone offsets", () => {
+    expect(
+      matchCommitsToUnverifiedFix({
+        cardFiles: ["auth.ts"],
+        cardCreatedAt: "2026-02-01T00:00:00.000Z",
+        commits: [
+          {
+            sha: "later",
+            committedAt: "2026-02-01T08:00:00+07:00",
+            subject: "s",
+            files: ["auth.ts"],
+          },
+          {
+            sha: "earlier",
+            committedAt: "2026-02-01T06:00:00+07:00",
+            subject: "s",
+            files: ["auth.ts"],
+          },
+        ],
+      }),
+    ).toEqual(["later"]);
   });
   it("matches later commits touching the same files to an unverified fix", () => {
     const commits = [

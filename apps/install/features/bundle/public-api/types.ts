@@ -9,7 +9,7 @@
  * repair on the H6 discovered port, /health commitSha). 268 never shipped
  * H5–H7 to existing installs because it was not bumped after ddfcfe44.
  */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "282";
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "283";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =

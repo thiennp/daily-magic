@@ -11,6 +11,8 @@ export const PROJECT_FEATURE_FLAG_KEYS = [
   "history",
   "ollama",
   "skillGen",
+  "knowledge",
+  "knowledgeShare",
 ] as const satisfies readonly ProjectFeatureFlagKey[];
 
 export const PROJECT_FEATURE_FLAG_STATES = [
@@ -31,6 +33,8 @@ export const PROJECT_FEATURE_FLAG_DEFAULTS: ProjectFeatureFlags = {
   history: "off",
   ollama: "off",
   skillGen: "off",
+  knowledge: "on",
+  knowledgeShare: "off",
 };
 
 export const buildDefaultProjectFlags = (): ProjectFeatureFlags => ({

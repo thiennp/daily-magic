@@ -434,3 +434,75 @@ export const pruneEpisodes = (
   }
   return victims.length;
 };
+
+export const touchKnowledgeProject = (
+  db: KnowledgeDatabase,
+  projectKey: string,
+  folderPath: string,
+): void => {
+  db.prepare(
+    `INSERT INTO knowledge_projects (project_key, folder_path, updated_at) VALUES (?, ?, ?)
+     ON CONFLICT(project_key) DO UPDATE SET folder_path = excluded.folder_path, updated_at = excluded.updated_at`,
+  ).run(projectKey, folderPath, new Date().toISOString());
+};
+
+export const listKnowledgeProjectFolders = (
+  db: KnowledgeDatabase,
+): { readonly projectKey: string; readonly folderPath: string }[] =>
+  (
+    db
+      .prepare("SELECT project_key, folder_path FROM knowledge_projects")
+      .all() as unknown as { project_key: string; folder_path: string }[]
+  ).map((row) => ({
+    projectKey: row.project_key,
+    folderPath: row.folder_path,
+  }));
+
+/** Total occurrences of mistake cards that share a fingerprint (recurrence count). */
+export const sumMistakeOccurrencesByFingerprint = (
+  db: KnowledgeDatabase,
+  projectKey: string,
+  fingerprint: string,
+): number =>
+  (
+    db
+      .prepare(
+        "SELECT COALESCE(SUM(occurrences), 0) AS n FROM episodes WHERE project_key = ? AND fingerprint = ? AND kind = 'mistake'",
+      )
+      .get(projectKey, fingerprint) as unknown as { n: number }
+  ).n;
+
+export const readKnowledgeMeta = (
+  db: KnowledgeDatabase,
+  key: string,
+): string | null => {
+  const row = db
+    .prepare("SELECT value FROM knowledge_meta WHERE key = ?")
+    .get(key) as unknown as { value: string } | undefined;
+  return row?.value ?? null;
+};
+
+export const writeKnowledgeMeta = (
+  db: KnowledgeDatabase,
+  key: string,
+  value: string,
+): void => {
+  db.prepare(
+    `INSERT INTO knowledge_meta (key, value) VALUES (?, ?)
+     ON CONFLICT(key) DO UPDATE SET value = excluded.value`,
+  ).run(key, value);
+};
+
+export const listEpisodesUpdatedSince = (
+  db: KnowledgeDatabase,
+  projectKey: string,
+  since: string,
+  limit: number,
+): EpisodeCard[] =>
+  (
+    db
+      .prepare(
+        "SELECT * FROM episodes WHERE project_key = ? AND updated_at >= ? ORDER BY updated_at DESC LIMIT ?",
+      )
+      .all(projectKey, since, limit) as unknown as EpisodeRow[]
+  ).map(toCard);

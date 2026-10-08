@@ -1,6 +1,10 @@
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
 import { resolveKnowledgeEmbedModel } from "./embedKnowledgeText";
+import {
+  buildKnowledgeSharedCards,
+  type KnowledgeSharedCard,
+} from "./buildKnowledgeSharedCards";
 import { getKnowledgeDb, type KnowledgeDatabase } from "./knowledgeDb";
 import { isKnowledgeEnabled } from "./knowledgeProjectKey";
 
@@ -36,6 +40,10 @@ export type KnowledgeCapabilities = {
 export type KnowledgeHeartbeatPayload = {
   readonly capabilities: KnowledgeCapabilities;
   readonly daily?: readonly KnowledgeDailyAggregate[];
+  /** Note text, only for projects with `knowledgeShare` on. */
+  readonly cards?: readonly KnowledgeSharedCard[];
+  /** Projects whose shared notes the server should drop (`knowledgeShare` off). */
+  readonly shareOffProjectIds?: readonly string[];
 };
 
 const ollamaCache: { checkedAt: number; status: "ready" | "missing" } = {
@@ -176,7 +184,15 @@ export const buildKnowledgeHeartbeatPayload = async (
   }
   dailyCache.sentAt = now;
   try {
-    return { capabilities, daily: buildKnowledgeDailyAggregates(db, now) };
+    const shared = buildKnowledgeSharedCards(db, now);
+    return {
+      capabilities,
+      daily: buildKnowledgeDailyAggregates(db, now),
+      ...(shared.cards.length > 0 ? { cards: shared.cards } : {}),
+      ...(shared.shareOffProjectIds.length > 0
+        ? { shareOffProjectIds: shared.shareOffProjectIds }
+        : {}),
+    };
   } catch {
     return { capabilities };
   }

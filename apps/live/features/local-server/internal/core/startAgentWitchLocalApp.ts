@@ -44,11 +44,14 @@ import { AGENT_WITCH_CONNECTION_STALE_MS } from "@agent-witch/install-connection
 import {
   getKnowledgeDb,
   listKnowledgeProjectKeys,
+  readKnowledgeFlagsForProject,
   searchKnowledgeCards,
+  setKnowledgeFlagForProject,
   summarizeKnowledgeImpact,
 } from "@agent-witch/live-knowledge";
 import {
   buildKnowledgeCardListHtml,
+  buildKnowledgeFlagsFormHtml,
   buildKnowledgeImpactPanelHtml,
 } from "@agent-witch/live-knowledge/presentation";
 import {
@@ -775,6 +778,29 @@ export const startAgentWitchLocalApp = (input: {
       if (method === "POST" && pathname === "/api/errors/clear") {
         clearAgentWitchErrorLog(input.layout.errorLogPath);
         response.writeHead(303, { Location: "/errors?cleared=1" });
+        response.end();
+        return;
+      }
+
+      if (method === "POST" && pathname === "/api/knowledge/flag") {
+        const form = new URLSearchParams(await readBody(request));
+        const projectKey = form.get("project")?.trim() ?? "";
+        const key = form.get("key");
+        const db = getKnowledgeDb(input.layout);
+        if (
+          db !== null &&
+          projectKey.length > 0 &&
+          (key === "knowledge" || key === "knowledgeShare")
+        ) {
+          setKnowledgeFlagForProject(db, {
+            projectKey,
+            key,
+            on: form.get("on") === "on",
+          });
+        }
+        response.writeHead(303, {
+          Location: `/knowledge?project=${encodeURIComponent(projectKey)}`,
+        });
         response.end();
         return;
       }
@@ -1960,7 +1986,15 @@ export const startAgentWitchLocalApp = (input: {
                 <input class="input" name="q" value="${escapeHtml(q)}" placeholder="Search knowledge" aria-label="Search knowledge" />
                 <button class="btn btn-primary" type="submit">Search</button>
               </form>
-            </section>${buildKnowledgeImpactPanelHtml(
+            </section>${(() => {
+              const flags = readKnowledgeFlagsForProject(db, projectKey);
+              return buildKnowledgeFlagsFormHtml({
+                projectKey,
+                knowledge: flags.knowledge,
+                share: flags.share,
+                known: flags.folderPath !== null,
+              });
+            })()}${buildKnowledgeImpactPanelHtml(
               summarizeKnowledgeImpact(db, { projectKey, windowDays: 30 }),
             )}${buildKnowledgeCardListHtml(
               searchKnowledgeCards(db, { projectKey, query: q, limit: 50 }),

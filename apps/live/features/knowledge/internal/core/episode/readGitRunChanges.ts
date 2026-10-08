@@ -26,6 +26,7 @@ export type GitRunChanges = {
 const runGit = async (
   cwd: string,
   args: readonly string[],
+  options: { readonly trim?: boolean } = {},
 ): Promise<string | null> => {
   try {
     const { stdout } = await execFileAsync("git", args, {
@@ -34,7 +35,7 @@ const runGit = async (
       maxBuffer: 1024 * 1024,
       timeout: 5_000,
     });
-    return stdout.trim();
+    return options.trim === false ? stdout : stdout.trim();
   } catch {
     return null;
   }
@@ -51,6 +52,13 @@ export const parseGitLogCommits = (raw: string): GitRunCommit[] =>
       return { sha, subject, body: bodyParts.join(FIELD_SEPARATOR).trim() };
     })
     .filter((commit) => commit.sha.length > 0);
+
+/** Path from a `git status --porcelain` line (renames: the new path). */
+export const parsePorcelainPath = (line: string): string => {
+  const path = line.slice(3).trim();
+  const arrow = path.indexOf(" -> ");
+  return arrow === -1 ? path : path.slice(arrow + 4);
+};
 
 const splitLines = (raw: string | null): string[] =>
   raw === null ? [] : raw.split("\n").filter((line) => line.trim().length > 0);
@@ -84,8 +92,10 @@ export const readGitRunChanges = async (input: {
         await runGit(cwd, ["diff", "--name-only", `${input.headBefore}..HEAD`]),
       )
     : [];
-  const porcelain = splitLines(await runGit(cwd, ["status", "--porcelain"]));
-  const dirtyFiles = porcelain.map((line) => line.slice(3).trim());
+  const porcelain = splitLines(
+    await runGit(cwd, ["status", "--porcelain"], { trim: false }),
+  );
+  const dirtyFiles = porcelain.map(parsePorcelainPath);
 
   return {
     commits,

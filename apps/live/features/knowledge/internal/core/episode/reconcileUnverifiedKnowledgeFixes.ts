@@ -24,7 +24,7 @@ export const matchCommitsToUnverifiedFix = (input: {
   return input.commits
     .filter(
       (commit) =>
-        commit.committedAt >= input.cardCreatedAt &&
+        Date.parse(commit.committedAt) >= Date.parse(input.cardCreatedAt) &&
         commit.files.some((file) => cardNames.has(basename(file))),
     )
     .map((commit) => commit.sha);

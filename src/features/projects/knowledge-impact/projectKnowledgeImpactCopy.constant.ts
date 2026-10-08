@@ -41,6 +41,16 @@ export const PROJECT_KNOWLEDGE_IMPACT_COPY = {
     "Ollama or the embedding model is missing. Run the install update on that computer.",
   "status.fix.unavailable": "Update Node to 22.13+ on that computer.",
   "status.fix.unknown": "Update the install on that computer.",
+  "cards.heading": "Shared notes",
+  "cards.intro":
+    "Note text from computers where sharing is on. Only project owners see this.",
+  "cards.empty":
+    'No shared notes. A member can turn on "Share note text with project owners" in the local app.',
+  "cards.kind.mistake": "Mistake",
+  "cards.kind.fix": "Fix",
+  "cards.kind.decision": "Decision",
+  "cards.kind.lesson": "Note",
+  "cards.meta": "{computer} · seen {count}×",
   footnote: "≈ marks an estimate. Everything else is measured.",
 } as const;
 

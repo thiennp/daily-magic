@@ -1,5 +1,6 @@
 import { asRowArray, getSql } from "@/lib/db";
 import { ensureProjectKnowledgeSchema } from "@/lib/knowledge/ensureProjectKnowledgeSchema";
+import { saveKnowledgeSharedCards } from "@/lib/knowledge/saveKnowledgeSharedCards";
 import type { KnowledgeHeartbeatReport } from "@/lib/knowledge/knowledgeHeartbeat.type";
 
 /** Projects among `projectIds` the device owner owns or is an active member of. */
@@ -43,10 +44,19 @@ export const saveKnowledgeHeartbeat = async (input: {
       AND revoked_at IS NULL
   `;
 
-  const authorized = await listAuthorizedProjectIds(
-    input.userId,
-    Array.from(new Set(input.report.daily.map((row) => row.projectId))),
-  );
+  const authorized = await listAuthorizedProjectIds(input.userId, [
+    ...new Set([
+      ...input.report.daily.map((row) => row.projectId),
+      ...input.report.cards.map((card) => card.projectId),
+      ...input.report.shareOffProjectIds,
+    ]),
+  ]);
+  await saveKnowledgeSharedCards({
+    deviceId: input.deviceId,
+    authorizedProjectIds: authorized,
+    cards: input.report.cards,
+    shareOffProjectIds: input.report.shareOffProjectIds,
+  });
   for (const row of input.report.daily) {
     if (!authorized.has(row.projectId)) {
       continue;

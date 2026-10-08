@@ -21,9 +21,24 @@ export type KnowledgeDailyReport = {
   readonly correctionTurns: number;
 };
 
+export type KnowledgeSharedCardReport = {
+  readonly projectId: string;
+  readonly cardId: string;
+  readonly kind: string;
+  readonly takeaway: string;
+  readonly files: readonly string[];
+  readonly outcome: string;
+  readonly commitSha: string | null;
+  readonly hits: number;
+  readonly occurrences: number;
+  readonly updatedAt: string;
+};
+
 export type KnowledgeHeartbeatReport = {
   readonly capabilities: KnowledgeCapabilitiesReport;
   readonly daily: readonly KnowledgeDailyReport[];
+  readonly cards: readonly KnowledgeSharedCardReport[];
+  readonly shareOffProjectIds: readonly string[];
 };
 
 /** Computer status shown to project owners (never blocks dispatch). */

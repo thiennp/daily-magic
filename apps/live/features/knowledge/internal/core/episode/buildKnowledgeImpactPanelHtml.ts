@@ -177,3 +177,27 @@ export const buildKnowledgeCardListHtml = (
             `<article class="card"><div class="muted" title="${escapeHtml(card.createdAt)}">${KIND_LABEL[card.kind]} · ${escapeHtml(card.outcome)} · used ${card.hits}× · ${escapeHtml(card.createdAt.slice(0, 10))}${card.commitShas[0] !== undefined ? ` · commit ${escapeHtml(card.commitShas[0].slice(0, 7))}` : ""}</div><p>${escapeHtml(card.takeaway)}</p>${card.files.length > 0 ? `<p class="muted">${escapeHtml(card.files.slice(0, 4).join(", "))}</p>` : ""}</article>`,
         )
         .join("");
+
+export const buildKnowledgeFlagsFormHtml = (input: {
+  readonly projectKey: string;
+  readonly knowledge: boolean;
+  readonly share: boolean;
+  readonly known: boolean;
+}): string => {
+  if (!input.known) {
+    return '<p class="muted">Settings appear after the next run in this project.</p>';
+  }
+  const row = (key: string, on: boolean, label: string, hint: string): string =>
+    `<form method="POST" action="/api/knowledge/flag" class="search-row">
+      <input type="hidden" name="project" value="${escapeHtml(input.projectKey)}"/>
+      <input type="hidden" name="key" value="${key}"/>
+      <input type="hidden" name="on" value="${on ? "off" : "on"}"/>
+      <span><strong>${escapeHtml(label)}:</strong> ${on ? "ON" : "OFF"} <span class="muted">${escapeHtml(hint)}</span></span>
+      <button class="btn" type="submit">Turn ${on ? "off" : "on"}</button>
+    </form>`;
+  return `<section class="card stack">
+    <p class="eyebrow">Project settings</p>
+    ${row("knowledge", input.knowledge, "Project knowledge", "Learn from runs and add notes to prompts.")}
+    ${row("knowledgeShare", input.share, "Share note text with project owners", "Off by default. Numbers are always shared; note text only when ON.")}
+  </section>`;
+};

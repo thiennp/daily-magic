@@ -1,4 +1,8 @@
 import { parseKnowledgeDailyRow } from "@/lib/knowledge/parseKnowledgeDailyRow";
+import {
+  parseKnowledgeSharedCards,
+  parseShareOffProjectIds,
+} from "@/lib/knowledge/parseKnowledgeSharedCards";
 import { readKnowledgeCount } from "@/lib/knowledge/readKnowledgeCount";
 import type {
   KnowledgeCapabilitiesReport,
@@ -55,7 +59,12 @@ export const parseKnowledgeHeartbeat = (
         .map(parseKnowledgeDailyRow)
         .filter((row): row is KnowledgeDailyReport => row !== null)
     : [];
-  return { capabilities, daily };
+  return {
+    capabilities,
+    daily,
+    cards: parseKnowledgeSharedCards(raw.cards),
+    shareOffProjectIds: parseShareOffProjectIds(raw.shareOffProjectIds),
+  };
 };
 
 export const resolveKnowledgeComputerStatus = (

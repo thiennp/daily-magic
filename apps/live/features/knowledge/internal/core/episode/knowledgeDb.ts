@@ -85,6 +85,11 @@ CREATE TABLE IF NOT EXISTS mistake_hits (
   ts TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS mistake_hits_episode ON mistake_hits (episode_id);
+CREATE TABLE IF NOT EXISTS knowledge_projects (
+  project_key TEXT PRIMARY KEY,
+  folder_path TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
 `;
 
 export const resolveKnowledgeDbPath = (

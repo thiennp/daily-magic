@@ -2,6 +2,7 @@ import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
 import { buildKnowledgeQuery } from "./buildKnowledgeQuery";
 import { getKnowledgeDb } from "./knowledgeDb";
+import { isKnowledgeOnForFolder } from "./knowledgeProjectFlags";
 import { isKnowledgeEnabled } from "./knowledgeProjectKey";
 import { listEpisodesWithVectors } from "./knowledgeStore";
 import { packKnowledgeCardsToBudget } from "./packKnowledgeCards";
@@ -22,8 +23,14 @@ export const buildKnowledgeNotes = (input: {
   readonly layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">;
   readonly projectKey: string;
   readonly message: string;
+  readonly projectFolderPath?: string;
 }): string => {
-  if (!isKnowledgeEnabled() || input.message.trim().length === 0) {
+  if (
+    !isKnowledgeEnabled() ||
+    input.message.trim().length === 0 ||
+    (input.projectFolderPath !== undefined &&
+      !isKnowledgeOnForFolder(input.projectFolderPath))
+  ) {
     return "";
   }
   try {

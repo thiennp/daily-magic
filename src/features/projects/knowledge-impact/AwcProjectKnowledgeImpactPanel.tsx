@@ -3,6 +3,7 @@
 import KnowledgeComputersList from "@/features/projects/knowledge-impact/KnowledgeComputersList";
 import KnowledgeImpactStat from "@/features/projects/knowledge-impact/KnowledgeImpactStat";
 import KnowledgeRepeatRateChart from "@/features/projects/knowledge-impact/KnowledgeRepeatRateChart";
+import KnowledgeSharedCardsList from "@/features/projects/knowledge-impact/KnowledgeSharedCardsList";
 import KnowledgeTokensPerRunChart from "@/features/projects/knowledge-impact/KnowledgeTokensPerRunChart";
 import { formatChartPercent } from "@/features/projects/knowledge-impact/knowledgeImpactChartMath";
 import {
@@ -86,6 +87,7 @@ export default function AwcProjectKnowledgeImpactPanel({
         <p className={MUTED_CLASS}>{C["impact.empty"]}</p>
       )}
       <KnowledgeComputersList impact={impact} />
+      <KnowledgeSharedCardsList impact={impact} />
       <p className={MUTED_CLASS}>{C["footnote"]}</p>
     </section>
   );

@@ -8,6 +8,7 @@ import {
   KNOWLEDGE_INDEX_EMBED_TIMEOUT_MS,
   resolveKnowledgeEmbedModel,
 } from "./embedKnowledgeText";
+import { isKnowledgeOnForFolder } from "./knowledgeProjectFlags";
 import { getKnowledgeDb, type KnowledgeDatabase } from "./knowledgeDb";
 import type { KnowledgeTaskClass } from "./episode.types";
 import type { KnowledgePlan } from "./knowledgePlan";
@@ -21,6 +22,7 @@ import {
   listInjectedEpisodeIds,
   recordInjections,
   setEpisodeVector,
+  touchKnowledgeProject,
   upsertEpisode,
 } from "./knowledgeStore";
 import {
@@ -100,6 +102,7 @@ export const registerKnowledgeUserCorrection = (input: {
 export const checkKnowledgeBeforeTask = async (input: {
   readonly layout: AgentWitchLocalLayout;
   readonly projectKey: string;
+  readonly projectFolderPath: string;
   readonly runId: string;
   readonly userPrompt: string;
   readonly promptText: string;
@@ -109,11 +112,12 @@ export const checkKnowledgeBeforeTask = async (input: {
 }): Promise<KnowledgeCheckResult> => {
   const startedAt = performance.now();
   const db = getKnowledgeDb(input.layout);
-  if (db === null) {
+  if (db === null || !isKnowledgeOnForFolder(input.projectFolderPath)) {
     return EMPTY_RESULT;
   }
 
   try {
+    touchKnowledgeProject(db, input.projectKey, input.projectFolderPath);
     registerKnowledgeUserCorrection({
       db,
       projectKey: input.projectKey,

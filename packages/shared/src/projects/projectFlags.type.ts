@@ -1,8 +1,4 @@
-export type ProjectFeatureFlagState =
-  | "on"
-  | "off"
-  | "degraded"
-  | "unavailable";
+export type ProjectFeatureFlagState = "on" | "off" | "degraded" | "unavailable";
 
 export type ProjectFeatureFlagKey =
   | "pitfalls"
@@ -10,7 +6,9 @@ export type ProjectFeatureFlagKey =
   | "localMcp"
   | "history"
   | "ollama"
-  | "skillGen";
+  | "skillGen"
+  | "knowledge"
+  | "knowledgeShare";
 
 /** Per-project token-saver switches (note 04). Stored in project meta / local cache. */
 export type ProjectFeatureFlags = {
@@ -20,4 +18,8 @@ export type ProjectFeatureFlags = {
   readonly history: ProjectFeatureFlagState;
   readonly ollama: ProjectFeatureFlagState;
   readonly skillGen: ProjectFeatureFlagState;
+  /** Local episode knowledge (notes in prompts + capture). Default on. */
+  readonly knowledge: ProjectFeatureFlagState;
+  /** Share note text with project owners (default off; numbers are always shared). */
+  readonly knowledgeShare: ProjectFeatureFlagState;
 };

@@ -25,6 +25,18 @@ export type KnowledgeComputerRow = {
   readonly lastReportAt: string | null;
 };
 
+export type KnowledgeSharedCardRow = {
+  readonly cardId: string;
+  readonly kind: string;
+  readonly takeaway: string;
+  readonly files: readonly string[];
+  readonly outcome: string;
+  readonly commitSha: string | null;
+  readonly occurrences: number;
+  readonly computerLabel: string;
+  readonly updatedAt: string;
+};
+
 export type KnowledgeImpactTotals = {
   readonly runs: number;
   readonly holdoutRuns: number;
@@ -61,4 +73,6 @@ export type ProjectKnowledgeImpactView = {
   readonly computerSummary: KnowledgeComputerSummary;
   /** Owner only. */
   readonly computers: readonly KnowledgeComputerRow[] | null;
+  /** Owner only; note text from computers with sharing on. */
+  readonly sharedCards: readonly KnowledgeSharedCardRow[] | null;
 };

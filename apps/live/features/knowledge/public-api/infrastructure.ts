@@ -14,3 +14,7 @@ export {
   searchKnowledgeCards,
 } from "../internal/core/episode/searchKnowledgeCards";
 export { summarizeKnowledgeImpact } from "../internal/core/episode/summarizeKnowledgeImpact";
+export {
+  readKnowledgeFlagsForProject,
+  setKnowledgeFlagForProject,
+} from "../internal/core/episode/knowledgeProjectFlagsByKey";

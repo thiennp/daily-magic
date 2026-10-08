@@ -55,6 +55,9 @@ export const createCheckContextRunner = (
               layout: deps.layout,
               projectKey: result.projectId,
               message: input.message ?? "",
+              ...(input.cwd !== undefined
+                ? { projectFolderPath: input.cwd }
+                : {}),
             })
           : "";
       return notes.length > 0 ? { ...result, notes } : result;

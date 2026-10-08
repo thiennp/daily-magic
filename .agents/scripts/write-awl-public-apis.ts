@@ -211,6 +211,10 @@ export {
   searchKnowledgeCards,
 } from "../internal/core/episode/searchKnowledgeCards";
 export { summarizeKnowledgeImpact } from "../internal/core/episode/summarizeKnowledgeImpact";
+export {
+  readKnowledgeFlagsForProject,
+  setKnowledgeFlagForProject,
+} from "../internal/core/episode/knowledgeProjectFlagsByKey";
 `,
 );
 
@@ -218,6 +222,7 @@ write(
   "apps/live/features/knowledge/public-api/presentation.ts",
   `export {
   buildKnowledgeCardListHtml,
+  buildKnowledgeFlagsFormHtml,
   buildKnowledgeImpactPanelHtml,
 } from "../internal/core/episode/buildKnowledgeImpactPanelHtml";
 `,

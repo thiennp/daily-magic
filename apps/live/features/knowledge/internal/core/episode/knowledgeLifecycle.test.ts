@@ -94,6 +94,7 @@ describe("knowledge lifecycle (no Ollama, lexical fallback)", () => {
     const result = await checkKnowledgeBeforeTask({
       layout,
       projectKey: "p1",
+      projectFolderPath: "/tmp/aw-nonexistent",
       runId: "r1",
       userPrompt: "fix auth.ts",
       promptText: "fix auth.ts",

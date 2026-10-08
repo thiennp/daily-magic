@@ -510,6 +510,7 @@ const dispatchWriterTask = async (
             projectId: resolvedProjectId,
             projectFolderPath: resolvedProjectFolderPath,
           }),
+          projectFolderPath: resolvedProjectFolderPath,
           runId: knowledgeRunId,
           userPrompt: prompt,
           promptText: resolvedPrompt,
@@ -2037,6 +2038,26 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           prompt,
           output,
           exitCode,
+          onRecurringMistake: (mistake) => {
+            const runConfig = readAgentWitchRunConfig();
+            const cloudConfig =
+              runConfig === null || projectId === undefined
+                ? null
+                : resolveAgentWitchCloudApiConfig({
+                    wsUrl: runConfig.wsUrl,
+                    pairingToken: runConfig.pairingToken,
+                  });
+            if (cloudConfig !== null && projectId !== undefined) {
+              void syncProjectKnowledgeCandidateToCloud(
+                cloudConfig,
+                projectId,
+                {
+                  sourceRunId: mistake.runId,
+                  lesson: `Recurring mistake (3x): ${mistake.takeaway}`,
+                },
+              );
+            }
+          },
           gitBefore:
             gitBeforeForKnowledge === undefined
               ? undefined

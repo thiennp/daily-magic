@@ -5,6 +5,7 @@ import {
   type ProjectKnowledgeImpactView,
 } from "@/lib/knowledge/buildProjectKnowledgeImpactView";
 import { ensureProjectKnowledgeSchema } from "@/lib/knowledge/ensureProjectKnowledgeSchema";
+import { loadKnowledgeSharedCards } from "@/lib/knowledge/loadKnowledgeSharedCards";
 import { loadKnowledgeComputers } from "@/lib/knowledge/loadKnowledgeComputers";
 
 const DEFAULT_WINDOW_DAYS = 30;
@@ -51,10 +52,13 @@ export const loadProjectKnowledgeImpact = async (input: {
     loadDailyRows(input.projectId, windowDays),
     loadKnowledgeComputers(input.projectId),
   ]);
-  return buildProjectKnowledgeImpactView({
+  const view = buildProjectKnowledgeImpactView({
     rows,
     computers,
     windowDays,
     includeComputers: input.includeComputers,
   });
+  return input.includeComputers
+    ? { ...view, sharedCards: await loadKnowledgeSharedCards(input.projectId) }
+    : view;
 };

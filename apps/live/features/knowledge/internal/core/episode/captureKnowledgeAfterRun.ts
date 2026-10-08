@@ -19,6 +19,7 @@ import {
 import { estimateKnowledgeTokens } from "./estimateKnowledgeTokens";
 import { fingerprintKnowledgeText } from "./knowledgeProjectKey";
 import { getKnowledgeDb, type KnowledgeDatabase } from "./knowledgeDb";
+import { isKnowledgeOnForFolder } from "./knowledgeProjectFlags";
 import { rememberKnowledgeRun } from "./knowledgeRunTracker";
 import {
   finishKnowledgeEvent,
@@ -31,12 +32,20 @@ import {
   pruneEpisodes,
   recordMistakeHit,
   setEpisodeVector,
+  sumMistakeOccurrencesByFingerprint,
   upsertEpisode,
 } from "./knowledgeStore";
 import { reconcileUnverifiedKnowledgeFixes } from "./reconcileUnverifiedKnowledgeFixes";
 import { readGitRunChanges, type GitRunChanges } from "./readGitRunChanges";
 
 const MAX_COST_TOKENS = 20_000;
+const RECURRING_MISTAKE_THRESHOLD = 3;
+
+export type RecurringKnowledgeMistake = {
+  readonly projectKey: string;
+  readonly runId: string;
+  readonly takeaway: string;
+};
 const MAX_COMMITS_ON_CARD = 5;
 
 export type KnowledgeRunGitBefore = {
@@ -144,9 +153,11 @@ export const captureKnowledgeAfterRun = async (input: {
   readonly output: string;
   readonly exitCode: number | null | undefined;
   readonly gitBefore: KnowledgeRunGitBefore | undefined;
+  /** Called once when a mistake recurs for the third time (suggest a Pitfall). */
+  readonly onRecurringMistake?: (mistake: RecurringKnowledgeMistake) => void;
 }): Promise<void> => {
   const db = getKnowledgeDb(input.layout);
-  if (db === null) {
+  if (db === null || !isKnowledgeOnForFolder(input.projectFolderPath)) {
     return;
   }
 
@@ -185,6 +196,19 @@ export const captureKnowledgeAfterRun = async (input: {
       });
       if (result.created) {
         newCardIds.push(result.id);
+      }
+      if (
+        sumMistakeOccurrencesByFingerprint(
+          db,
+          input.projectKey,
+          mistakeFingerprint,
+        ) === RECURRING_MISTAKE_THRESHOLD
+      ) {
+        input.onRecurringMistake?.({
+          projectKey: input.projectKey,
+          runId: input.runId,
+          takeaway: deriveMistakeTakeaway({ request, evidence }),
+        });
       }
     }
 
