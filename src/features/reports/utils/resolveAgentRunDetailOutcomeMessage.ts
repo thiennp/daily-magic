@@ -9,6 +9,7 @@ export const resolveAgentRunDetailOutcomeMessage = (input: {
   readonly denialReason: string | null;
   readonly reportSummary: string | null | undefined;
   readonly resultOutcomeCode?: string | null;
+  readonly writerAgent?: string | null;
   /** Terminal output when `resultOutput` was not persisted (e.g. fast Failed can't-run). */
   readonly supplementalResultOutput?: string | null;
 }): string | null => {
@@ -35,6 +36,7 @@ export const resolveAgentRunDetailOutcomeMessage = (input: {
         status: input.status,
         resultOutput: outputForHonesty,
         resultOutcomeCode: input.resultOutcomeCode ?? null,
+        writerAgent: input.writerAgent ?? null,
       }).summaryLines[0]?.trim() ?? "";
     if (honestySummary.length > 0) {
       return honestySummary;

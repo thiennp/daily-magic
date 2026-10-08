@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  ANTIGRAVITY_CLI_CANT_RUN_LOCKED_REASON,
   ANTIGRAVITY_LOGIN_REQUIRED_LOCKED_REASON,
   WRITER_MISSING_CLI_CANT_RUN_LOCKED_REASON,
 } from "@/lib/dispatch/agentRunHonestyCopy.constant";
@@ -63,10 +64,27 @@ describe("resolveAgentRunHonestyTerminalOutcome — Antigravity shipped path", (
     const outcome = resolveAgentRunHonestyTerminalOutcome({
       output,
       runStatus: AgentRunStatus.FAILED,
+      writerAgent: "antigravity",
     });
 
     expect(outcome?.kind).toBe("failed");
     expect(outcome?.chipLabel).toBe("Failed");
+    expect(outcome?.summaryLines[0]).not.toContain(
+      WRITER_MISSING_CLI_CANT_RUN_LOCKED_REASON,
+    );
+  });
+
+  it("maps agy ENOENT to Antigravity install Failed copy from writerAgent, not Claude", () => {
+    const outcome = resolveAgentRunHonestyTerminalOutcome({
+      output: "spawn /home/box/.local/bin/agy ENOENT",
+      runStatus: AgentRunStatus.COMPLETED,
+      writerAgent: "antigravity",
+    });
+
+    expect(outcome?.kind).toBe("failed");
+    expect(outcome?.summaryLines[0]).toContain(
+      ANTIGRAVITY_CLI_CANT_RUN_LOCKED_REASON,
+    );
     expect(outcome?.summaryLines[0]).not.toContain(
       WRITER_MISSING_CLI_CANT_RUN_LOCKED_REASON,
     );

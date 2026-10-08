@@ -24,10 +24,9 @@ export const resolveAgentRunHonestyOutcome = (input: {
   readonly runStatus?: AgentRunStatusValue | null;
   readonly resultOutcomeCode?: string | null;
   readonly resultExitCode?: number | null;
+  readonly writerAgent?: string | null;
 }): AgentRunHonestyOutcome => {
   const needsInput = (input.pendingQuestion ?? "").trim().length > 0;
-
-
 
   if (
     input.runStatus === AgentRunStatus.PENDING_APPROVAL ||
@@ -55,6 +54,7 @@ export const resolveAgentRunHonestyOutcome = (input: {
       runStatus: input.runStatus ?? AgentRunStatus.RUNNING,
       resultOutcomeCode: input.resultOutcomeCode,
       resultExitCode: input.resultExitCode,
+      writerAgent: input.writerAgent,
     });
     if (stoppingTerminal?.kind === "degraded") {
       return stoppingTerminal;
@@ -82,6 +82,7 @@ export const resolveAgentRunHonestyOutcome = (input: {
           : AgentRunStatus.FAILED),
       resultOutcomeCode: input.resultOutcomeCode,
       resultExitCode: input.resultExitCode,
+      writerAgent: input.writerAgent,
     });
     return (
       terminal ?? {
@@ -102,6 +103,7 @@ export const resolveAgentRunHonestyOutcome = (input: {
       runStatus: input.runStatus ?? AgentRunStatus.COMPLETED,
       resultOutcomeCode: input.resultOutcomeCode,
       resultExitCode: input.resultExitCode,
+      writerAgent: input.writerAgent,
     });
     if (terminal !== null) {
       return terminal;

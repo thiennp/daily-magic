@@ -4,7 +4,10 @@ import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import { resolveAgentRunStatusBadgeLabel } from "@/lib/dispatch/resolveAgentRunStatusBadgeLabel";
 
 export const resolveAgentRunHistoryOutcomeBadge = (
-  run: Pick<AgentRunRecord, "status" | "resultOutput" | "resultOutcomeCode">,
+  run: Pick<
+    AgentRunRecord,
+    "status" | "resultOutput" | "resultOutcomeCode" | "writerAgent"
+  >,
 ): {
   readonly label: string;
   readonly className: string;
@@ -13,6 +16,7 @@ export const resolveAgentRunHistoryOutcomeBadge = (
     status: run.status,
     resultOutput: run.resultOutput,
     resultOutcomeCode: run.resultOutcomeCode,
+    writerAgent: run.writerAgent,
   });
   return {
     label: resolveAgentRunStatusBadgeLabel(run),

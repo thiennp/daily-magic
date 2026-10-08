@@ -7,10 +7,12 @@ export const resolveAgentLiveRunOutcome = (input: {
   readonly output: string;
   readonly pendingQuestion?: string | null;
   readonly approvalWaitingLabel?: string | null;
+  readonly writerAgent?: string | null;
 }): AgentLiveRunOutcome =>
   resolveAgentRunHonestyOutcome({
     status: input.status,
     output: input.output,
     pendingQuestion: input.pendingQuestion,
     approvalWaitingLabel: input.approvalWaitingLabel,
+    writerAgent: input.writerAgent,
   });

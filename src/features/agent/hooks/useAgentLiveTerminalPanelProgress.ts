@@ -5,6 +5,7 @@ import { useAgentRunHeartbeatStallReset } from "@/features/agent/hooks/useAgentR
 import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/AgentWitchDashboardContext";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import { buildAgentLiveProgressSteps } from "@/features/agent/utils/buildAgentLiveProgressSteps";
+import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";
 import { isAgentLiveTerminalWorking } from "@/features/agent/utils/isAgentLiveTerminalWorking";
 import { parseAgentLiveWorkingEstimateSeconds } from "@/features/agent/utils/parseAgentLiveWorkingEstimateSeconds";
 import { resolveAgentLiveWavePlanView } from "@/features/agent/utils/resolveAgentLiveWavePlanView";
@@ -17,6 +18,7 @@ export function useAgentLiveTerminalPanelProgress(input: {
   readonly pendingCommandLine: string | null;
   readonly feedbackPendingQuestion: string | null;
   readonly feedbackPendingPartialOutput?: string | null;
+  readonly sessionWriterAgent?: string | null;
 }) {
   const approvalWaitingLabel = useComposerApprovalWaitingLabel({
     activeRunId: input.activeRunId,
@@ -50,6 +52,20 @@ export function useAgentLiveTerminalPanelProgress(input: {
     noteRunHeartbeat,
   });
 
+  const cachedRun =
+    input.activeRunId !== null &&
+    input.activeRunId !== undefined &&
+    input.activeRunId.length > 0
+      ? getAgentRunLocalCache(input.activeRunId)
+      : null;
+  const writerAgent =
+    (isHarnessWriterAgent(input.sessionWriterAgent)
+      ? input.sessionWriterAgent
+      : null) ??
+    (cachedRun !== null && isHarnessWriterAgent(cachedRun.writerAgent)
+      ? cachedRun.writerAgent
+      : null);
+
   const progress = buildAgentLiveProgressSteps({
     status: input.status,
     output: input.output,
@@ -59,6 +75,7 @@ export function useAgentLiveTerminalPanelProgress(input: {
     stallState,
     estimateSeconds,
     approvalWaitingLabel,
+    writerAgent,
   });
   const cachedReportSummary =
     input.activeRunId !== null &&

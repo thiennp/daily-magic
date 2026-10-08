@@ -19,6 +19,7 @@ export const buildAgentLiveProgressStepsCore = (input: {
   readonly stallState?: AgentLiveProgressStallState;
   readonly estimateSeconds?: number | null;
   readonly approvalWaitingLabel?: string | null;
+  readonly writerAgent?: string | null;
 }): {
   readonly steps: readonly AgentLiveProgressStep[];
   readonly replyPreview: string | null;
@@ -56,6 +57,7 @@ export const buildAgentLiveProgressStepsCore = (input: {
     hasProgressUpdates: updates.length > 0,
     workState: assembled.workState,
     steps: assembled.baseSteps,
+    writerAgent: input.writerAgent,
   });
 
   return {

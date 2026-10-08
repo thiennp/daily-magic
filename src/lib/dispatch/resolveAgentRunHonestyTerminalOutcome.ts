@@ -20,6 +20,7 @@ export const resolveAgentRunHonestyTerminalOutcome = (input: {
   readonly runStatus?: AgentRunStatusValue | null;
   readonly resultOutcomeCode?: string | null;
   readonly resultExitCode?: number | null;
+  readonly writerAgent?: string | null;
 }): AgentRunHonestyOutcome | null => {
   if (input.runStatus === AgentRunStatus.EXPIRED) {
     return {
@@ -41,6 +42,7 @@ export const resolveAgentRunHonestyTerminalOutcome = (input: {
     tryResolveWriterApiMissingCliFallbackTerminalOutcome({
       output: input.output,
       runStatus: input.runStatus,
+      writerAgent: input.writerAgent,
     });
   if (writerApiCliFallbackOutcome !== null) {
     return writerApiCliFallbackOutcome;

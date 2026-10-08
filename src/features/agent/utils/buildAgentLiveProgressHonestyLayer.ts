@@ -16,6 +16,7 @@ export const buildAgentLiveProgressHonestyLayer = (input: {
   readonly hasProgressUpdates: boolean;
   readonly workState: AgentLiveProgressStepState;
   readonly steps: readonly AgentLiveProgressStep[];
+  readonly writerAgent?: string | null;
 }): {
   readonly steps: readonly AgentLiveProgressStep[];
   readonly outcome: AgentLiveRunOutcome;
@@ -26,6 +27,7 @@ export const buildAgentLiveProgressHonestyLayer = (input: {
     output: input.output,
     pendingQuestion: input.pendingQuestion,
     approvalWaitingLabel: input.approvalWaitingLabel,
+    writerAgent: input.writerAgent,
   });
   const outcome = adjustAgentLiveRunOutcomeForEmptyWork({
     outcome: resolvedOutcome,

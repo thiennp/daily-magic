@@ -32,6 +32,7 @@ export default function AgentRunDetailContent({
     denialReason: run.denialReason,
     reportSummary: run.reportSummary,
     resultOutcomeCode: run.resultOutcomeCode,
+    writerAgent: run.writerAgent,
     supplementalResultOutput:
       supplementalResultOutput.length > 0 ? supplementalResultOutput : null,
   });
