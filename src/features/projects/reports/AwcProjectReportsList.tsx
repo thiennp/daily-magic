@@ -1,96 +1,86 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
-
-import {
-  PITFALL_CHIP_ACTIVE_CLASS,
-  PITFALL_SEARCH_INPUT_CLASS,
-} from "@/features/projects/pitfalls/pitfallsChrome.constant";
 import {
   PANEL_BUTTON_SECONDARY_CLASS,
   PANEL_LIST_CLASS,
-  PANEL_STATUS_CLASS,
 } from "@/features/projects/projectPagePanelChrome.constant";
 import AwcProjectReportRow from "@/features/projects/reports/AwcProjectReportRow";
-import { PROJECT_PAGE_REPORTS_COPY as C } from "@/features/projects/reports/projectPageReportsCopy.constant";
+import AwcProjectReportsFilters from "@/features/projects/reports/AwcProjectReportsFilters";
+import {
+  AwcProjectReportsEmpty,
+  AwcProjectReportsError,
+  AwcProjectReportsNoMatch,
+  AwcProjectReportsSkeleton,
+} from "@/features/projects/reports/AwcProjectReportsStates";
 import type { AwcProjectReportsState } from "@/features/projects/reports/useAwcProjectReports";
-import { filterProjectReportRows } from "@/features/projects/reports/utils/buildProjectReportRows";
+import useProjectReportsListView from "@/features/projects/reports/useProjectReportsListView";
 
 interface AwcProjectReportsListProps {
   readonly reports: AwcProjectReportsState;
   readonly onOpen: (reportId: string) => void;
 }
 
-/** All chip + search + rows; loading / error / empty states. */
+/** Filters + day-grouped report rows; loading / error / empty / no-match. */
 export default function AwcProjectReportsList({
   reports,
   onOpen,
 }: AwcProjectReportsListProps) {
-  const searchId = useId();
-  const [query, setQuery] = useState("");
-  const visible = useMemo(
-    () => filterProjectReportRows(reports.rows, query),
-    [reports.rows, query],
-  );
+  const { rows } = reports;
+  const view = useProjectReportsListView(rows);
 
   if (reports.loadFailed) {
-    return (
-      <div className="flex flex-col items-start gap-2 px-1">
-        <p className={PANEL_STATUS_CLASS}>{C["reports.error"]}</p>
-        <button
-          type="button"
-          className={PANEL_BUTTON_SECONDARY_CLASS}
-          onClick={reports.refresh}
-        >
-          {C["reports.error.retry"]}
-        </button>
-      </div>
-    );
+    return <AwcProjectReportsError onRetry={reports.refresh} />;
   }
-  if (reports.isLoading && reports.rows.length === 0) {
-    return <p className={PANEL_STATUS_CLASS}>{C["reports.loading"]}</p>;
+  if (reports.isLoading && rows.length === 0) {
+    return <AwcProjectReportsSkeleton />;
   }
-  if (reports.rows.length === 0) {
-    return <p className={PANEL_STATUS_CLASS}>{C["reports.empty"]}</p>;
-  }
+  if (rows.length === 0) return <AwcProjectReportsEmpty />;
 
   return (
     <>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div role="group" aria-label={C["reports.filter.aria"]}>
-          <button
-            type="button"
-            aria-pressed
-            className={PITFALL_CHIP_ACTIVE_CLASS}
-          >
-            {C["reports.filter.all"]}
-            <span className="tabular-nums opacity-70">
-              {reports.rows.length}
-            </span>
-          </button>
-        </div>
-        <label htmlFor={searchId} className="sr-only">
-          {C["reports.search.sr"]}
-        </label>
-        <input
-          id={searchId}
-          type="search"
-          value={query}
-          placeholder={C["reports.search.placeholder"]}
-          className={PITFALL_SEARCH_INPUT_CLASS}
-          onChange={(event) => {
-            setQuery(event.target.value);
-          }}
-        />
-      </div>
-      {visible.length === 0 ? (
-        <p className={PANEL_STATUS_CLASS}>{C["reports.filter.empty"]}</p>
+      <AwcProjectReportsFilters
+        filters={view.filters}
+        counts={view.counts}
+        tools={view.tools}
+        canClear={view.canClear}
+        onChange={view.update}
+        onClear={view.clear}
+      />
+      <p
+        role="status"
+        aria-live="polite"
+        className="text-[13px] text-awc-fg-muted"
+      >
+        {view.visible.length} of {rows.length} reports
+      </p>
+      {view.visible.length === 0 ? (
+        <AwcProjectReportsNoMatch onClear={view.clear} />
       ) : (
-        <ul className={PANEL_LIST_CLASS}>
-          {visible.map((row) => (
-            <AwcProjectReportRow key={row.id} row={row} onOpen={onOpen} />
-          ))}
-        </ul>
+        view.groups.map((group) => (
+          <section
+            key={group.key}
+            aria-label={group.label}
+            className="flex flex-col gap-1.5"
+          >
+            <h3 className="sticky top-0 z-10 bg-awc-bg/95 px-1 py-1 text-xs font-semibold uppercase tracking-wide text-awc-fg-muted backdrop-blur">
+              {group.label}
+            </h3>
+            <ul className={PANEL_LIST_CLASS}>
+              {group.items.map((row) => (
+                <AwcProjectReportRow key={row.id} row={row} onOpen={onOpen} />
+              ))}
+            </ul>
+          </section>
+        ))
+      )}
+      {view.remaining > 0 && (
+        <button
+          type="button"
+          className={`${PANEL_BUTTON_SECONDARY_CLASS} self-center`}
+          onClick={view.showMore}
+        >
+          Show more ({view.remaining} left)
+        </button>
       )}
     </>
   );

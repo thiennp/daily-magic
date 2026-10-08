@@ -1,10 +1,14 @@
 import { PROJECT_PAGE_REPORTS_COPY as C } from "@/features/projects/reports/projectPageReportsCopy.constant";
+import {
+  buildProjectReportExtras,
+  type ProjectReportExtras,
+} from "@/features/projects/reports/utils/buildProjectReportExtras";
 import { fillProjectPageCopy } from "@/features/projects/utils/fillProjectPageCopy";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
 const TITLE_MAX = 120;
 
-export interface ProjectReportRow {
+export interface ProjectReportRow extends ProjectReportExtras {
   readonly id: string;
   readonly title: string;
   readonly from: string;
@@ -51,6 +55,7 @@ export const buildProjectReportRows = (
       title: resolveProjectReportTitle(run),
       from: resolveProjectReportFrom(run),
       createdAt: run.createdAt,
+      ...buildProjectReportExtras(run),
     }));
 
 /** Search by title or who ran it (case-insensitive). */
