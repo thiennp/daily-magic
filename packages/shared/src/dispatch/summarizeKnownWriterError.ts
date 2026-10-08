@@ -7,6 +7,9 @@
 const ANTIGRAVITY_QUOTA =
   /individual quota reached|AGY_ERROR[^\n]*RESOURCE_EXHAUSTED|AGY_ERROR[^\n]*\b429\b/i;
 const GENERIC_RESOURCE_EXHAUSTED = /\bRESOURCE_EXHAUSTED\b/;
+/** c1731750: written by the host when the CLI died on a signal. */
+const PROCESS_KILLED =
+  /The agent process was stopped unexpectedly \(killed by [A-Z0-9 ]+\)\./;
 const CLAUDE_SESSION_LIMIT = /you(?:'|’)ve hit your (?:session|usage) limit/i;
 const RESETS_IN =
   /resets?\s+in\s+((?:\d+\s*h)?\s*(?:\d+\s*m(?!s))?\s*(?:\d+\s*s)?)/i;
@@ -37,6 +40,10 @@ export const summarizeKnownWriterError = (output: string): string | null => {
   const text = output.trim();
   if (text.length === 0) {
     return null;
+  }
+  const killed = PROCESS_KILLED.exec(text)?.[0];
+  if (killed !== undefined) {
+    return killed;
   }
   if (ANTIGRAVITY_QUOTA.test(text)) {
     return `Antigravity quota reached${resetSuffix(text)}.`;

@@ -7,6 +7,8 @@ export const AGENT_RUN_REPORT_STATUSES = {
   COMPLETED: "completed",
   FAILED: "failed",
   BLOCKED: "blocked",
+  /** 7bd7b9ae: a run the user stopped (was "failed"). */
+  STOPPED: "stopped",
 } as const;
 
 export type AgentRunReportStatus =
@@ -27,9 +29,11 @@ export const isTerminalAgentRunReportStatus = (
   status: string,
 ): status is
   | typeof AGENT_RUN_REPORT_STATUSES.COMPLETED
-  | typeof AGENT_RUN_REPORT_STATUSES.FAILED =>
+  | typeof AGENT_RUN_REPORT_STATUSES.FAILED
+  | typeof AGENT_RUN_REPORT_STATUSES.STOPPED =>
   status === AGENT_RUN_REPORT_STATUSES.COMPLETED ||
-  status === AGENT_RUN_REPORT_STATUSES.FAILED;
+  status === AGENT_RUN_REPORT_STATUSES.FAILED ||
+  status === AGENT_RUN_REPORT_STATUSES.STOPPED;
 
 export const buildAgentRunReportInstruction = (input: {
   readonly agentRunId: string;

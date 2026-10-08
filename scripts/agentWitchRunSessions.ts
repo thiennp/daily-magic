@@ -96,6 +96,11 @@ import {
 import { runWriterApiPrompt } from "./writerApi/runWriterApiPrompt";
 import { shouldUseWriterApi } from "./writerApi/shouldUseWriterApi";
 import {
+  appendAgentProcessKilledNote,
+  formatAgentProcessKilledNote,
+} from "./formatAgentProcessKilledNote";
+import { readFinishedRunReportFields } from "./readFinishedRunReportFields";
+import {
   buildAgentRunReportHeartbeatPayload,
   readAgentRunReportFile,
   resolveAgentRunCompletionFromReport,
@@ -324,6 +329,7 @@ const finishRun = (
   originalPrompt: string,
   llmUsage?: WriterLlmUsage,
   errorCode?: LocalCodingToolRefusalCodeValue,
+  killSignal?: NodeJS.Signals | number | null,
 ): void => {
   if (agentRunId !== undefined) {
     // Heartbeat tick and child close can both finish a run; only the first wins.
@@ -385,6 +391,10 @@ const finishRun = (
       !resolvedOutput.includes("Stopped by user.")
         ? `${resolvedOutput.trim()}${STOPPED_OUTPUT_SUFFIX}`
         : "Stopped by user.";
+  } else if (formatAgentProcessKilledNote(killSignal) !== null) {
+    // c1731750: the CLI died on a signal (not a user stop) — say so plainly.
+    resolvedExitCode = resolvedExitCode === 0 ? -1 : resolvedExitCode;
+    resolvedOutput = appendAgentProcessKilledNote(resolvedOutput, killSignal);
   }
 
   // S0-8: redact secrets before the output is stored locally (transcript,
@@ -417,6 +427,12 @@ const finishRun = (
     agentRunId !== undefined
       ? readAgentRunEstimateComparison(config.layout.reportsDir, agentRunId)
       : null;
+  // c1731750: the final host report summary rides on the result frame.
+  const reportFields = readFinishedRunReportFields(
+    agentRunId !== undefined
+      ? runSessions.get(agentRunId)?.reportKey
+      : undefined,
+  );
 
   if (agentRunId !== undefined) {
     stopRunHeartbeat(agentRunId);
@@ -504,6 +520,7 @@ const finishRun = (
           : {}),
         ...(llmUsage !== undefined ? { llmUsage } : {}),
         ...(errorCode !== undefined ? { errorCode } : {}),
+        ...reportFields,
       },
       ...(requestId !== undefined ? { requestId } : {}),
     };
@@ -541,6 +558,7 @@ const finishRun = (
         : {}),
       ...(llmUsage !== undefined ? { llmUsage } : {}),
       ...(errorCode !== undefined ? { errorCode } : {}),
+      ...reportFields,
     },
     requestId,
   };
@@ -756,7 +774,7 @@ const attachChildHandlers = (
     emitTerminalStreamChunk(text);
   });
 
-  child.on("close", (exitCode) => {
+  child.on("close", (exitCode, signal) => {
     if (inputRequested) {
       return;
     }
@@ -805,6 +823,8 @@ const attachChildHandlers = (
       mergedOutput,
       originalPrompt,
       printed.llmUsage,
+      undefined,
+      signal,
     );
   });
 
@@ -1148,7 +1168,7 @@ export const runWriterTask = (
         prompt,
       );
     },
-    onFinished: (exitCode, output) => {
+    onFinished: (exitCode, output, signal) => {
       markWriterConversationStarted(writerAgent);
       const printed = resolveClaudeCliPrintOutput(output);
       const session = runSessions.get(agentRunId);
@@ -1165,6 +1185,8 @@ export const runWriterTask = (
         mergedOutput,
         prompt,
         printed.llmUsage,
+        undefined,
+        signal,
       );
     },
   })

@@ -8,6 +8,10 @@ import { dispatchAgentRunInputRegistry } from "@/lib/dispatch/dispatchAgentRunIn
 import { getAgentRunSession } from "@/lib/dispatch/agentRunSessionRegistry";
 import { markAgentRunCompleted } from "@/lib/dispatch/dispatchWriterRunToAgent";
 import { readOptionalPositiveSeconds } from "@/lib/dispatch/readOptionalPositiveSeconds";
+import {
+  readAgentRunReportFields,
+  saveAgentRunReportSummary,
+} from "@/lib/dispatch/saveAgentRunReportSummary";
 
 export const handleClaudeResultMessageAsync = async (
   runtime: AgentWitchHubRuntime,
@@ -47,6 +51,17 @@ export const handleClaudeResultMessageAsync = async (
 
   if (agentRunId !== null) {
     dispatchAgentRunInputRegistry.remove(agentRunId);
+    const report = readAgentRunReportFields(message.payload);
+    if (report !== null) {
+      await saveAgentRunReportSummary({ runId: agentRunId, ...report }).catch(
+        (error: unknown) => {
+          console.warn(
+            "[agent-witch] Could not save the run report summary:",
+            error,
+          );
+        },
+      );
+    }
     await markAgentRunCompleted(runtime, agentRunId, exitCode, output, {
       estimateSeconds: readOptionalPositiveSeconds(
         message.payload?.estimateSeconds,

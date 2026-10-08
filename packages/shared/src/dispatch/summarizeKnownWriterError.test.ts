@@ -36,4 +36,11 @@ describe("summarizeKnownWriterError (9b3947bc)", () => {
     expect(summarizeKnownWriterError("error: ENOENT spawn agy")).toBeNull();
     expect(summarizeKnownWriterError("")).toBeNull();
   });
+  it("passes the host's killed-process sentence through (c1731750)", () => {
+    expect(
+      summarizeKnownWriterError(
+        "Reading…\nThe agent process was stopped unexpectedly (killed by SIGKILL).",
+      ),
+    ).toBe("The agent process was stopped unexpectedly (killed by SIGKILL).");
+  });
 });

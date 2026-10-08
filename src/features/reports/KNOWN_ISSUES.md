@@ -89,3 +89,17 @@
 **Cause:** `resolveAgentRunDetailOutcomeMessage` only mapped honesty when `resultOutput` was persisted; fast writer-missing + ENOENT failures often leave `resultOutput` empty while the browser still holds terminal stream output.
 
 **Fix:** Merge persisted output with `loadAgentRunTerminalOutput` before honesty resolution and accept `supplementalResultOutput` for parity tests. `resolveAgentRunDetailOutcomeMessage.test.ts`, `resolveAgentRunDetailResultOutputForHonesty.test.ts` (REPORTS-011).
+
+## REPORTS-012 — Done report said "No summary was captured"; killed runs said "No agent output was captured" (c1731750)
+
+**Symptom:** A Done report showed "Finished on your computer. No summary was captured." although the host report had a real summary. A run whose agent process was killed showed "Failed on your computer (exit -1). No agent output was captured." with no Details, and Tasks said "No details were reported."
+
+**Cause:** The host summary only reached open browser tabs through heartbeats, and the last heartbeat went out before the run finished; the server never kept it. A CLI that died on a signal ended with exit -1 and no explanation.
+
+**Fix:** The host sends the final report status + summary on `command.claude.result`; the server keeps them as run meta (`agent_runs.report_status` / `report_summary`, migration 120, capped like other meta). A signal death adds "The agent process was stopped unexpectedly (killed by SIGKILL)."; the report shows that sentence with the last output under Details. Failed/Stopped runs keep the ask as their title. Tests: `readFinishedRunReportFields.test.ts`, `formatAgentProcessKilledNote.test.ts`, `saveAgentRunReportSummary.test.ts`, `resolveProjectReportDetailView.knownError.test.ts`, `agentWitchRunReportFinalize.test.ts`.
+
+## REPORTS-013 — Stopped runs: host report "failed", no Open report (7bd7b9ae)
+
+**Symptom:** A user cancel left the host report status `failed`, and the Stopped task detail had no **Open report** link (Done had one).
+
+**Fix:** The host report status is `stopped` for a user stop; **Open report** shows for Done, Failed, Stopped and Timed out. Tests: `agentWitchRunReportFinalize.test.ts`, `shouldShowTaskOpenReport.test.ts`.

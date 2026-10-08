@@ -139,6 +139,38 @@ describe("finalizeAgentRunReportOnFinish (FAIL3 452bdbc8)", () => {
     expect(readAgentRunReportFile("k-stop")?.userSummary).toBe(
       "Stopped by user.",
     );
+    // 7bd7b9ae: a user stop is "stopped", not "failed".
+    expect(readAgentRunReportFile("k-stop")?.status).toBe(
+      AGENT_RUN_REPORT_STATUSES.STOPPED,
+    );
+  });
+
+  it("names a killed agent process and keeps its last output in details (c1731750)", () => {
+    seedWaitingReport("k-kill");
+    finalize(
+      "k-kill",
+      -1,
+      "Reading index.html…\nThe agent process was stopped unexpectedly (killed by SIGKILL).",
+    );
+
+    const report = readAgentRunReportFile("k-kill");
+    expect(report?.status).toBe(AGENT_RUN_REPORT_STATUSES.FAILED);
+    expect(report?.userSummary).toBe(
+      "The agent process was stopped unexpectedly (killed by SIGKILL).",
+    );
+    expect(report?.details).toBe("Reading index.html…");
+  });
+
+  it("a killed process with no output still gets a Details line", () => {
+    seedWaitingReport("k-kill-empty");
+    finalize(
+      "k-kill-empty",
+      -1,
+      "The agent process was stopped unexpectedly (killed by SIGKILL).",
+    );
+    expect(readAgentRunReportFile("k-kill-empty")?.details).toBe(
+      "The agent printed nothing before it stopped.",
+    );
   });
 
   it("keeps a report the agent already finished", () => {

@@ -3,6 +3,7 @@ import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type
 import { mapRunStatusToProjectTaskDisplayStatus } from "@/features/projects/tasks/projectTaskDisplayStatus";
 import { formatAgentRunTerminalReasonLine } from "@/lib/dispatch/agentRunLostConnectionReasons.constant";
 import { isAgentRunUserStopped } from "@/lib/dispatch/isAgentRunUserStopped";
+import { resolveAgentRunTitleSummary } from "@/lib/dispatch/resolveAgentRunTitleSummary";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
 const thinTitle = (raw: string): string =>
@@ -35,7 +36,9 @@ export const mapAgentRunToProjectTaskMeta = (
       ? "stopped"
       : runStatus;
   const title =
-    thinTitle(firstLine(run.reportSummary) || firstLine(run.prompt)) || "Task";
+    thinTitle(
+      firstLine(resolveAgentRunTitleSummary(run)) || firstLine(run.prompt),
+    ) || "Task";
   // S4/S10: the failure reason rides next to the title, never replacing it.
   const denialReason = run.denialReason?.trim() ?? "";
   const statusReason =
@@ -62,6 +65,7 @@ export const mapAgentRunToProjectTaskMeta = (
     localClaimedAt: null,
     assistantName,
     resultOutput: run.resultOutput,
+    reportSummary: run.reportSummary ?? null,
     writerAgent: run.writerAgent ?? null,
     denialReason: denialReason.length > 0 ? denialReason : null,
   };

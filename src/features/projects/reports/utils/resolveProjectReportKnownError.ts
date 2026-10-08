@@ -20,6 +20,10 @@ export const resolveProjectReportKnownError = (
   if (body === null) {
     return null;
   }
-  const raw = texts.find((text) => text.trim().length > 0)?.trim() ?? "";
+  // c1731750: Details never just repeat the sentence shown above them.
+  const raw =
+    texts
+      .map((text) => text.trim())
+      .find((text) => text.length > 0 && text !== body) ?? "";
   return { body, details: raw.length > 0 ? raw : null };
 };

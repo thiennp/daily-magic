@@ -1,4 +1,5 @@
 import { summarizeKnownWriterError } from "@agent-witch/shared/dispatch";
+import { AGENT_PROCESS_KILLED_PREFIX } from "./formatAgentProcessKilledNote";
 
 import {
   AGENT_RUN_REPORT_STATUSES,
@@ -51,6 +52,18 @@ const lastOutputLine = (output: string): string | null => {
  * agent left open is closed with the run's real outcome. A report the agent
  * already finished is left as is.
  */
+/** The raw output under Details; a killed run keeps its last output (c1731750). */
+const buildKnownErrorDetails = (output: string): string => {
+  const raw = output
+    .split("\n")
+    .filter((line) => !line.startsWith(AGENT_PROCESS_KILLED_PREFIX))
+    .join("\n")
+    .trim();
+  return raw.length > 0
+    ? raw.slice(-2000)
+    : "The agent printed nothing before it stopped.";
+};
+
 export const finalizeAgentRunReportOnFinish = (input: {
   readonly reportKey: string;
   readonly agentRunId: string;
@@ -97,8 +110,12 @@ export const finalizeAgentRunReportOnFinish = (input: {
   return upsertAgentRunReportFile({
     reportKey: input.reportKey,
     agentRunId: input.agentRunId,
-    status: AGENT_RUN_REPORT_STATUSES.FAILED,
+    // 7bd7b9ae: a user stop is "stopped", not "failed".
+    status:
+      input.exitCode === input.stoppedExitCode
+        ? AGENT_RUN_REPORT_STATUSES.STOPPED
+        : AGENT_RUN_REPORT_STATUSES.FAILED,
     userSummary,
-    ...(useKnownError ? { details: input.output.trim().slice(-2000) } : {}),
+    ...(useKnownError ? { details: buildKnownErrorDetails(input.output) } : {}),
   });
 };

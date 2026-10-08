@@ -15,6 +15,7 @@ import {
 } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
 import { PROJECT_PAGE_TASKS_COPY as C } from "@/features/projects/tasks/projectPageTasksCopy.constant";
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
+import { shouldShowTaskOpenReport } from "@/features/projects/tasks/utils/shouldShowTaskOpenReport";
 import { buildProjectTabHash } from "@/lib/shell/buildNavConsolidationRedirect";
 
 export default function AwcProjectTaskDetail({
@@ -83,7 +84,7 @@ export default function AwcProjectTaskDetail({
             <button type="button" className={AWC_TASKS_SECONDARY_BUTTON_CLASS}>
               {C.openHistory}
             </button>
-            {reportHref !== null && task.status === "done" ? (
+            {reportHref !== null && shouldShowTaskOpenReport(task.status) ? (
               <a href={reportHref} className={AWC_TASKS_LINK_CLASS}>
                 {C.openReport}
               </a>

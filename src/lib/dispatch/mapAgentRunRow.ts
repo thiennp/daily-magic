@@ -66,5 +66,13 @@ export default function mapAgentRunRow(
       : null,
     estimateSeconds: readStoredSeconds(row.estimate_seconds),
     actualSeconds: readStoredSeconds(row.actual_seconds),
+    // c1731750: host report summary kept as run meta.
+    ...(typeof row.report_summary === "string" && row.report_summary.length > 0
+      ? {
+          reportSummary: row.report_summary,
+          reportStatus:
+            typeof row.report_status === "string" ? row.report_status : null,
+        }
+      : {}),
   };
 }

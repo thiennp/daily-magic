@@ -43,7 +43,7 @@ export const resolveNotSignedInHint = (
 export const resolveTaskResultBlock = (
   task: Pick<
     ProjectTaskMeta,
-    "status" | "resultOutput" | "denialReason" | "writerAgent"
+    "status" | "resultOutput" | "denialReason" | "writerAgent" | "reportSummary"
   >,
 ): TaskResultBlock | null => {
   if (task.status === "failed") {
@@ -51,7 +51,7 @@ export const resolveTaskResultBlock = (
     // 9b3947bc: a known CLI error (agy quota…) gets one plain sentence; the raw text stays below.
     const hint =
       resolveNotSignedInHint(output, task.writerAgent) ??
-      summarizeKnownWriterError(output);
+      summarizeKnownWriterError(`${output}\n${task.reportSummary ?? ""}`);
     return {
       ...block(
         "bad",

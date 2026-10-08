@@ -5,6 +5,7 @@ import {
 } from "@/features/projects/reports/utils/buildProjectReportExtras";
 import { fillProjectPageCopy } from "@/features/projects/utils/fillProjectPageCopy";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
+import { resolveAgentRunTitleSummary } from "@/lib/dispatch/resolveAgentRunTitleSummary";
 
 const TITLE_MAX = 120;
 
@@ -25,7 +26,8 @@ const firstLine = (value: string | null | undefined): string =>
 export const resolveProjectReportTitle = (
   run: EnrichedAgentRunRecord,
 ): string => {
-  const line = firstLine(run.reportSummary) || firstLine(run.prompt);
+  const line =
+    firstLine(resolveAgentRunTitleSummary(run)) || firstLine(run.prompt);
   if (line.length === 0) {
     return C["reports.detail.heading"];
   }

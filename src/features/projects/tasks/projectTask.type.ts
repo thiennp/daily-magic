@@ -22,6 +22,8 @@ export type ProjectTaskMeta = Omit<ProjectTaskNeonMeta, "status"> & {
   readonly assistantName?: string | null;
   readonly statusReason?: string | null;
   readonly resultOutput?: string | null;
+  /** Host report summary (c1731750), e.g. the killed-process reason. */
+  readonly reportSummary?: string | null;
   readonly writerAgent?: string | null;
   readonly denialReason?: string | null;
 };

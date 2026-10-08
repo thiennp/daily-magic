@@ -30,7 +30,12 @@ export const tryRunWriterTaskInPty = async (input: {
     readonly question: string;
     readonly partialOutput: string;
   }) => void;
-  readonly onFinished: (exitCode: number, output: string) => void;
+  /** `signal` is set when the CLI died on a signal (c1731750). */
+  readonly onFinished: (
+    exitCode: number,
+    output: string,
+    signal?: number,
+  ) => void;
 }): Promise<boolean> => {
   const outputChunks: string[] = [];
   let inputRequested = false;
@@ -87,7 +92,7 @@ export const tryRunWriterTaskInPty = async (input: {
         input.onInputRequired(parsed);
       }
     },
-    onExit: (exitCode) => {
+    onExit: (exitCode, signal) => {
       if (inputRequested) {
         return;
       }
@@ -99,7 +104,7 @@ export const tryRunWriterTaskInPty = async (input: {
         input.onInputRequired(parsedAtExit);
         return;
       }
-      input.onFinished(exitCode, outputChunks.join("").trim());
+      input.onFinished(exitCode, outputChunks.join("").trim(), signal);
     },
   });
 

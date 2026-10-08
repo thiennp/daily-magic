@@ -256,7 +256,7 @@ export const spawnAgentCommandInPty = async (input: {
   readonly send: SendMessage;
   readonly requestId?: string;
   readonly onData: (chunk: string) => void;
-  readonly onExit: (exitCode: number) => void;
+  readonly onExit: (exitCode: number, signal?: number) => void;
 }): Promise<{
   readonly shellSessionId: string;
   readonly usedPty: boolean;
@@ -308,7 +308,7 @@ export const spawnAgentCommandInPty = async (input: {
     input.onData(chunk);
   });
 
-  child.onExit(({ exitCode }) => {
+  child.onExit(({ exitCode, signal }) => {
     if (sessions.get(shellSessionId)?.pty === child) {
       sessions.delete(shellSessionId);
       input.send({
@@ -317,7 +317,7 @@ export const spawnAgentCommandInPty = async (input: {
         requestId: input.requestId,
       });
     }
-    input.onExit(exitCode ?? -1);
+    input.onExit(exitCode ?? -1, signal);
   });
 
   return { shellSessionId, usedPty: true, pid: child.pid };

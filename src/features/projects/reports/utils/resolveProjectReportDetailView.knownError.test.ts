@@ -41,4 +41,49 @@ describe("Reports known CLI error (9b3947bc)", () => {
     });
     expect(view.details).toBeNull();
   });
+  it("Done shows the persisted host summary (c1731750)", () => {
+    const view = resolveProjectReportDetailView({
+      run: {
+        status: "completed",
+        reportSummary:
+          "Warm sepia reading mode implemented in index.html and documented in README.md.",
+        reportStatus: "completed",
+        denialReason: null,
+        resultOutput: "Run workflow: Add vibe coding app feature",
+        resultExitCode: 0,
+      } satisfies Partial<AgentRunRecord>,
+      fallbackOutput: "",
+      cached: undefined,
+    });
+    expect(view.body).toBe(
+      "Warm sepia reading mode implemented in index.html and documented in README.md.",
+    );
+  });
+
+  it("a killed run says so; Details hold the last output, never the same line (c1731750)", () => {
+    const note =
+      "The agent process was stopped unexpectedly (killed by SIGKILL).";
+    const run = {
+      status: "failed",
+      reportSummary: note,
+      reportStatus: "failed",
+      denialReason: null,
+      resultOutput: note,
+      resultExitCode: -1,
+    } satisfies Partial<AgentRunRecord>;
+    const bare = resolveProjectReportDetailView({
+      run,
+      fallbackOutput: "",
+      cached: undefined,
+    });
+    expect(bare.body).toBe(note);
+    expect(bare.details).toBeNull();
+    const withOutput = resolveProjectReportDetailView({
+      run,
+      fallbackOutput: `Reading index.html…\n${note}`,
+      cached: undefined,
+    });
+    expect(withOutput.body).toBe(note);
+    expect(withOutput.details).toContain("Reading index.html…");
+  });
 });
