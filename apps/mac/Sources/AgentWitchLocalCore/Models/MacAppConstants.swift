@@ -34,7 +34,13 @@ public enum MacAppConstants {
     public static let cloudOriginHostApex = "agentwitch.com"
     public static let bundleIdentifier = "com.agent-witch.local-app"
     /// Desktop app marketing version (keep in sync with CFBundleShortVersionString / Linux core.Version).
-    public static let appVersion = "0.2.4"
+    public static let appVersion = "0.2.5"
+
+    /// File name for the host-written list of accounts.
+    public static let localAppAccountsFileName = "local-app-accounts.json"
+
+    /// UserDefaults key for the selected account email.
+    public static let selectedAccountDefaultsKey = "awl.selectedAccountEmail"
 
     // MARK: - Desktop update notice (GitHub releases)
 

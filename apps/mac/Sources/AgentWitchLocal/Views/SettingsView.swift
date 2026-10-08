@@ -98,6 +98,29 @@ struct SettingsView: View {
                             .buttonStyle(.bordered)
                     }
                 }
+                if controller.accounts.count > 1 {
+                    Divider().background(MacAppTheme.border)
+                    settingsRow {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Account on this computer")
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(MacAppTheme.fg)
+                                Text("Start, Open and Settings use this account's AgentWitch on this computer.")
+                                    .font(.caption)
+                                    .foregroundStyle(MacAppTheme.fgMuted)
+                            }
+                            Spacer()
+                            Picker("", selection: Binding(get: { controller.signedInEmail ?? "" }, set: { controller.switchAccount(to: $0) })) {
+                                ForEach(controller.accounts, id: \.email) {
+                                    Text($0.email).tag($0.email)
+                                }
+                            }
+                            .labelsHidden()
+                            .frame(maxWidth: 260)
+                        }
+                    }
+                }
                 Divider().background(MacAppTheme.border)
                 settingsRow {
                     HStack(alignment: .top) {

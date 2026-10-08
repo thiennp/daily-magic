@@ -208,6 +208,20 @@ struct MacAppMenuBarContentView: View {
                     .foregroundStyle(MacAppTheme.fgMuted)
             }
             Spacer()
+            if controller.accounts.count > 1 {
+                Menu {
+                    ForEach(controller.accounts.filter { $0.email != controller.signedInEmail }, id: \.email) { account in
+                        Button("Switch to \(account.email)") {
+                            controller.switchAccount(to: account.email)
+                        }
+                    }
+                } label: {
+                    Image(systemName: "arrow.left.arrow.right.circle")
+                }
+                .menuStyle(.borderlessButton)
+                .fixedSize()
+                .help("Switch account")
+            }
         }
         .padding(.bottom, 4)
     }

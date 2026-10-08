@@ -82,6 +82,8 @@ final class MacAppMenuController: ObservableObject {
 
     /// H5 self-heal / first-setup session (menu bar + window share this).
     @Published private(set) var setupSession: MacAppSetupSessionState = .idle
+    /// List of accounts available on this computer.
+    @Published private(set) var accounts: [LocalAppAccount] = []
     /// Non-secret email from `active-profile.json`, or nil when signed out / missing.
     @Published private(set) var signedInEmail: String?
     /// Last setup failure log path (also on `setupSession.failed`); for See log.
@@ -346,6 +348,28 @@ final class MacAppMenuController: ObservableObject {
         startOrRepairSetup()
     }
 
+    func switchAccount(to email: String) {
+        let normalized = normalizeAccountEmail(email)
+        guard accounts.contains(where: { $0.email == normalized }),
+              normalized != signedInEmail else {
+            return
+        }
+        UserDefaults.standard.set(normalized, forKey: MacAppConstants.selectedAccountDefaultsKey)
+        signedInEmail = normalized
+        localPortRange = nil
+        localPortRangeDisplay = nil
+        localAppPort = nil
+        portsInUse = false
+        connectionLive = nil
+        connectionNotLinked = false
+        installBundleVersion = nil
+        projectFolderSummary = nil
+        chromeComputerBound = false
+        refreshLocalPortRange()
+        pollHealthOnce()
+        showToast("Switched to \(normalized)")
+    }
+
     func signOut() {
         do {
             try clearSignedInProfilePointer(fileManager: fileManager)
@@ -356,6 +380,7 @@ final class MacAppMenuController: ObservableObject {
             )
             return
         }
+        UserDefaults.standard.removeObject(forKey: MacAppConstants.selectedAccountDefaultsKey)
         signedInEmail = nil
         chromeComputerBound = false
         connectionLive = nil
@@ -825,7 +850,8 @@ final class MacAppMenuController: ObservableObject {
             return readLocalPortRangeFile(profileDir: profileDir, fileManager: fileManager)
         }()
         let saved = profileDir.flatMap { readLocalAppPortFile(profileDir: $0, fileManager: fileManager) }
-        let candidates = candidateLocalAppPorts(savedPort: saved ?? localAppPort, range: range)
+        let accountsFilePort = email.flatMap { readLocalAppAccountsFilePorts(fileManager: fileManager)[normalizeAccountEmail($0)] }
+        let candidates = candidateLocalAppPorts(savedPort: accountsFilePort ?? saved ?? localAppPort, range: range)
 
         for port in candidates {
             var request = URLRequest(url: resolveAgentWitchLocalHealthUrl(port: port))
@@ -834,6 +860,12 @@ final class MacAppMenuController: ObservableObject {
                 let (data, response) = try await URLSession.shared.data(for: request)
                 let code = (response as? HTTPURLResponse)?.statusCode ?? 0
                 if !(200..<300).contains(code) {
+                    continue
+                }
+                if let email = email,
+                   let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let profileEmail = json["profileEmail"] as? String,
+                   normalizeAccountEmail(profileEmail) != normalizeAccountEmail(email) {
                     continue
                 }
                 let ownership = parseLocalHealthResponse(
@@ -950,7 +982,12 @@ final class MacAppMenuController: ObservableObject {
 
     private func refreshSignedInEmail() {
         let previous = signedInEmail
-        signedInEmail = resolveSignedInProfileEmail(fileManager: fileManager)
+        accounts = listLocalAppAccounts(fileManager: fileManager)
+        signedInEmail = resolveSelectedAccountEmail(
+            selected: UserDefaults.standard.string(forKey: MacAppConstants.selectedAccountDefaultsKey),
+            activeProfileEmail: resolveSignedInProfileEmail(fileManager: fileManager),
+            accounts: accounts
+        )
         if didReadProfileOnce, previous == nil, let email = signedInEmail {
             showToast("Signed in as \(email)")
         }

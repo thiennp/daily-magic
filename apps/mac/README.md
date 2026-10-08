@@ -28,6 +28,12 @@ Signing: default auto-loads `~/.agentwitch-signing/signing.env` when present. Wi
 
 Manual only (no GitHub Actions): on a VM/new user, build with default auto (creds present) or `AWL_MAC_SIGNING=developer-id`, `gh release create awl-mac-vX.Y.Z`, then bump `AGENT_WITCH_LOCAL_MAC_APP_RELEASE_TAG` on `main`. Steps: [docs/agent-witch/local-release-path.md](../../docs/agent-witch/local-release-path.md#awl-mac).
 
+## Accounts
+
+- The app supports multiple accounts on the same computer (stored in `profiles/` + host-written `local-app-accounts.json`).
+- Selection is stored in UserDefaults `awl.selectedAccountEmail`.
+- Health check skips ports whose `profileEmail` response differs from the selected account.
+
 ## Note
 
 This folder is **not** a separate deployable in `deployables.registry.json` (schema is fixed to AWC/AWL/AWB/AWI). It is a packaging surface for AWL/AWI.
