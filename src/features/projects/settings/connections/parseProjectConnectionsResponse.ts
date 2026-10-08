@@ -42,6 +42,7 @@ const parseItem = (value: unknown): ProjectConnectionItem | null => {
     status: mapStatus(value.status),
     accountLabel: readLabel(value),
     connectedAt: readConnectedAt(value),
+    connectEnabled: value.connectEnabled === true,
   };
 };
 
@@ -71,7 +72,9 @@ export const parseProjectConnectionsResponse = (
   if (!httpOk) return { ok: false, reason: "error" };
   if (Array.isArray(data)) {
     const items = parseList(data);
-    return items === null ? { ok: false, reason: "error" } : { ok: true, items };
+    return items === null
+      ? { ok: false, reason: "error" }
+      : { ok: true, items };
   }
   if (!isNonNullObject(data) || data.ok !== true) {
     return { ok: false, reason: "error" };

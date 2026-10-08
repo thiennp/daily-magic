@@ -11,6 +11,7 @@ const emptyRow = (
   status: "none",
   accountLabel: null,
   connectedAt: null,
+  connectEnabled: false,
 });
 
 /** Always four v1 rows; API rows overlay by provider. */

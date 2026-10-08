@@ -21,6 +21,9 @@ export const PROJECT_CONNECTIONS_COPY = {
   statusError: "Needs attention",
   statusNone: "Not connected",
   actionConnect: "Connect",
+  comingSoon: "Coming soon",
+  comingSoonNote:
+    "Connections are coming soon. Assistants can't use these services yet.",
   actionReconnect: "Reconnect",
   actionDisconnect: "Disconnect",
   connectedOn: "Connected {date}",

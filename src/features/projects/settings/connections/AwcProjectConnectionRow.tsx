@@ -54,6 +54,11 @@ export default function AwcProjectConnectionRow({
           <h4 className="text-sm font-semibold text-awc-fg dark:text-white/90">
             {name}
           </h4>
+          {!item.connectEnabled && item.status !== "connected" ? (
+            <span className="rounded-awc-chip border border-dashed border-awc-border-strong px-2 py-0.5 text-xs font-medium text-awc-fg-muted dark:text-gray-400">
+              {C.comingSoon}
+            </span>
+          ) : null}
           <AwcProjectConnectionStatusPill status={item.status} />
         </div>
         {item.accountLabel !== null ? (
@@ -81,6 +86,7 @@ export default function AwcProjectConnectionRow({
           name={name}
           action={action}
           canMutate={canMutate}
+          connectEnabled={item.connectEnabled}
           onConnect={onConnect}
           onDisconnect={onDisconnect}
         />

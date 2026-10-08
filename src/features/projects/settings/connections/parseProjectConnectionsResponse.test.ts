@@ -23,6 +23,7 @@ describe("parseProjectConnectionsResponse", () => {
           status: "connected",
           accountLabel: "Acme",
           connectedAt: "2026-10-01T12:00:00Z",
+          connectEnabled: false,
         },
       ],
     });
@@ -34,6 +35,7 @@ describe("parseProjectConnectionsResponse", () => {
           status: "connected",
           accountLabel: "Acme",
           connectedAt: "2026-10-01T12:00:00Z",
+          connectEnabled: false,
         },
       ],
     });
@@ -52,6 +54,7 @@ describe("parseProjectConnectionsResponse", () => {
           status: "none",
           accountLabel: null,
           connectedAt: null,
+          connectEnabled: false,
         },
       ],
     });

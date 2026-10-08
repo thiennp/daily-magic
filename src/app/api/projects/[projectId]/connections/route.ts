@@ -5,6 +5,7 @@ import {
   isProjectConnectionsFeatureEnabled,
   resolveProjectConnectionsAuthSecret,
 } from "@/lib/projects/connections/isProjectConnectionsFeatureEnabled";
+import { isProviderConnectEnabled } from "@/lib/projects/connections/isProviderConnectEnabled";
 import { listProjectConnections } from "@/lib/projects/connections/listProjectConnections";
 import { projectConnectionsUnavailableJson } from "@/lib/projects/connections/projectConnectionsUnavailableJson";
 
@@ -45,5 +46,11 @@ export async function GET(
   }
 
   const connections = await listProjectConnections(projectId);
-  return Response.json({ ok: true, connections });
+  return Response.json({
+    ok: true,
+    connections: connections.map((c) => ({
+      ...c,
+      connectEnabled: isProviderConnectEnabled(c.provider),
+    })),
+  });
 }

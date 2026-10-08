@@ -4,6 +4,7 @@ import {
   CONNECTION_BTN,
   CONNECTION_BTN_DANGER,
   CONNECTION_BTN_PRIMARY,
+  CONNECTION_BTN_SOON,
 } from "@/features/projects/settings/connections/projectConnectionClasses.constant";
 import { PROJECT_CONNECTIONS_COPY as C } from "@/features/projects/settings/connections/projectConnectionsCopy.constant";
 import type { ConnectionRowActionKind } from "@/features/projects/settings/connections/resolveConnectionRowAction";
@@ -12,6 +13,7 @@ interface AwcProjectConnectionRowActionsProps {
   readonly name: string;
   readonly action: ConnectionRowActionKind;
   readonly canMutate: boolean;
+  readonly connectEnabled: boolean;
   readonly onConnect: (reconnect: boolean) => void;
   readonly onDisconnect: () => void;
 }
@@ -21,6 +23,7 @@ export default function AwcProjectConnectionRowActions({
   name,
   action,
   canMutate,
+  connectEnabled,
   onConnect,
   onDisconnect,
 }: AwcProjectConnectionRowActionsProps) {
@@ -44,15 +47,27 @@ export default function AwcProjectConnectionRowActions({
   return (
     <div className="flex flex-wrap justify-end gap-2">
       {reconnect ? disconnect : null}
-      <button
-        type="button"
-        disabled={!canMutate}
-        aria-label={`${reconnect ? C.actionReconnect : C.actionConnect} ${name}`}
-        className={CONNECTION_BTN_PRIMARY}
-        onClick={() => onConnect(reconnect)}
-      >
-        {reconnect ? C.actionReconnect : C.actionConnect}
-      </button>
+      {!connectEnabled ? (
+        <button
+          type="button"
+          aria-disabled="true"
+          aria-label={`${C.comingSoon}: ${name}`}
+          className={CONNECTION_BTN_SOON}
+          onClick={(event) => event.preventDefault()}
+        >
+          {C.comingSoon}
+        </button>
+      ) : (
+        <button
+          type="button"
+          disabled={!canMutate}
+          aria-label={`${reconnect ? C.actionReconnect : C.actionConnect} ${name}`}
+          className={CONNECTION_BTN_PRIMARY}
+          onClick={() => onConnect(reconnect)}
+        >
+          {reconnect ? C.actionReconnect : C.actionConnect}
+        </button>
+      )}
     </div>
   );
 }

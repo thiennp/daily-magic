@@ -144,3 +144,14 @@ Reuse Invite / access-log presentation; do not invent a second audit vocabulary.
 | This computer / computer       | Mac / machine (generic)                                      |
 | Connections (project services) | Connect (unless meaning computer pair)                       |
 | Disconnect                     | Unlink / revoke (unless provider docs need revoke in helper) |
+
+---
+
+## Coming soon (shared OAuth app not ready)
+
+All six providers are disabled until enabled per provider via env `PROJECT_CONNECTIONS_ENABLE` (e.g. `slack,linear`). Disconnect stays available for connected rows. The start route returns 403 `{ "error": "coming_soon" }` while disabled.
+
+| Key                          | EN                                                                    |
+| ---------------------------- | --------------------------------------------------------------------- |
+| `connections.comingSoon`     | Coming soon (chip next to name + disabled dashed button label)        |
+| `connections.comingSoonNote` | Connections are coming soon. Assistants can't use these services yet. |

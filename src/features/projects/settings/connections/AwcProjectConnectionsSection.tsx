@@ -35,7 +35,9 @@ export default function AwcProjectConnectionsSection({
   const canMutate = isOwner && loadState === "ready";
   const showList = loadState === "ready" || loadState === "unavailable";
   const allDisconnected =
-    loadState === "ready" && rows.every((row) => row.status === "none");
+    loadState === "ready" &&
+    rows.every((row) => row.status === "none") &&
+    rows.some((row) => row.connectEnabled);
   const current = connectFlow.state;
 
   return (

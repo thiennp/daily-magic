@@ -5,6 +5,7 @@ import {
   isProjectConnectionsFeatureEnabled,
   resolveProjectConnectionsAuthSecret,
 } from "@/lib/projects/connections/isProjectConnectionsFeatureEnabled";
+import { isProviderConnectEnabled } from "@/lib/projects/connections/isProviderConnectEnabled";
 import { parseProjectConnectionProvider } from "@/lib/projects/connections/parseProjectConnectionProvider";
 import { projectConnectionsUnavailableJson } from "@/lib/projects/connections/projectConnectionsUnavailableJson";
 import { startProjectConnectionOAuth } from "@/lib/projects/connections/startProjectConnectionOAuth";
@@ -38,6 +39,10 @@ export async function POST(
   const provider = parseProjectConnectionProvider(providerRaw);
   if (provider === null) {
     return projectAccessErrorJson("invalid_request", 400);
+  }
+
+  if (!isProviderConnectEnabled(provider)) {
+    return Response.json({ error: "coming_soon" }, { status: 403 });
   }
 
   const owner = await authorizeProjectOwner({

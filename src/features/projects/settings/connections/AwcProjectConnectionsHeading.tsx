@@ -39,6 +39,11 @@ export default function AwcProjectConnectionsHeading({
         <p className="mt-1 max-w-[60ch] text-[13px] text-awc-fg-muted dark:text-gray-400">
           {C.intro}
         </p>
+        {rows.some((row) => !row.connectEnabled) ? (
+          <p className="mt-1 text-[13px] font-medium text-awc-fg-muted dark:text-gray-400">
+            {C.comingSoonNote}
+          </p>
+        ) : null}
       </div>
       {showSummary ? <AwcProjectConnectionsSummary rows={rows} /> : null}
     </div>
