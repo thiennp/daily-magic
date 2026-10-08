@@ -35,9 +35,12 @@ describe("DF-036 narrow rail: assistant name vs long wake chip", () => {
     expect(html).toMatch(/class="[^"]*truncate[^"]*"/);
   });
 
-  it("row keeps min-w-0 flex-1 on the name block beside chip + menu", () => {
+  it("row reserves name min-width; wake chip max-width truncates first", () => {
     const row = read("members/AwcProjectMembersHelperRowLabel.tsx");
-    expect(row).toContain("min-w-0 flex-1");
+    expect(row).toContain("min-w-[8rem]");
     expect(row).toMatch(/truncate font-semibold text-awc-fg/);
+    expect(read("members/AwcProjectMembersHelperWakeStatus.tsx")).toContain(
+      "max-w-[45%]",
+    );
   });
 });

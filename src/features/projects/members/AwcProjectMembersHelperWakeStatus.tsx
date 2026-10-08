@@ -26,7 +26,7 @@ export default function AwcProjectMembersHelperWakeStatus({
   return (
     <button
       type="button"
-      className={`awc-focus-ring flex min-w-0 shrink items-center gap-1.5 rounded-md px-1 py-0.5 text-[12.5px] hover:bg-awc-fill ${TEXT_CLASS(status)}`}
+      className={`awc-focus-ring flex min-w-0 max-w-[45%] shrink items-center gap-1.5 rounded-md px-1 py-0.5 text-[12.5px] hover:bg-awc-fill ${TEXT_CLASS(status)}`}
       data-wake-status={status}
       onClick={onOpen}
     >

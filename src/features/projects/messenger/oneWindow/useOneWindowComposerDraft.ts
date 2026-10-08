@@ -2,6 +2,8 @@
 
 import { useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
 
+import { useOneWindowComposerMentionEscapeTrap } from "@/features/projects/messenger/oneWindow/useOneWindowComposerMentionEscapeTrap";
+
 import {
   activeOneWindowMentionQuery,
   applyOneWindowMention,
@@ -9,11 +11,7 @@ import {
   type OneWindowMentionAssistant,
 } from "@/features/projects/messenger/oneWindow/oneWindowMentions";
 
-/**
- * P1-S4b composer draft: text + caret, the inline @ picker (type "@" or press
- * the @ button; ↑/↓ move, Enter/Tab pick, Esc closes) and Enter-to-send
- * (Shift+Enter = new line). Mentions off (SINGLE) → "@" is plain text.
- */
+/** P1-S4b: @ mention picker + Enter send; Esc dismisses list before Chat dock. */
 export const useOneWindowComposerDraft = (input: {
   readonly assistants: readonly OneWindowMentionAssistant[];
   readonly mentionsEnabled: boolean;
@@ -32,6 +30,8 @@ export const useOneWindowComposerDraft = (input: {
   const open = query !== null && dismissedAt !== caret;
   const options = open ? filterOneWindowMentionOptions(assistants, query) : [];
   const active = Math.min(index, Math.max(0, options.length - 1));
+
+  useOneWindowComposerMentionEscapeTrap(open, caret, setDismissedAt);
 
   const moveTo = (nextText: string, nextCaret: number): void => {
     setText(nextText);

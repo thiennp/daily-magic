@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { isOneWindowComposerEscapeTrapActive } from "@/features/projects/messenger/oneWindow/oneWindowComposerEscapeTrap";
+
 /** Open / full-screen state for the floating Chat dock (UI expand only). */
 export const useAwcProjectChatDock = (initialOpen = false) => {
   const [open, setOpen] = useState(initialOpen);
@@ -36,6 +38,9 @@ export const useAwcProjectChatDock = (initialOpen = false) => {
     if (!open) return;
     const onKey = (event: KeyboardEvent): void => {
       if (event.key !== "Escape") return;
+      if (event.defaultPrevented || isOneWindowComposerEscapeTrapActive()) {
+        return;
+      }
       if (full) {
         setFull(false);
         return;
