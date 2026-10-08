@@ -32,6 +32,8 @@ export interface AdminCostControlSignals {
   readonly relatedInfraSpendEur: number;
   readonly estimatedUserSpendEur: number;
   readonly countedUsers: number;
+  readonly eligibleUsers: number;
+  readonly estimatedAllUsersSpendEur: number;
 }
 
 /** GET /api/billing/admin/cost-control — admin only. */

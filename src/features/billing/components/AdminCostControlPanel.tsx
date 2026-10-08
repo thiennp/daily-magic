@@ -32,6 +32,7 @@ export default function AdminCostControlPanel() {
   }
 
   const { signals } = data;
+  const excludedUsers = signals.eligibleUsers - signals.countedUsers;
 
   return (
     <AppPanel>
@@ -71,6 +72,10 @@ export default function AdminCostControlPanel() {
         <li>
           Estimated users: €{signals.estimatedUserSpendEur.toFixed(2)} (
           {signals.countedUsers} counted; bots, test and excluded users ignored)
+        </li>
+        <li>
+          If every user counted: €{signals.estimatedAllUsersSpendEur.toFixed(2)}{" "}
+          ({signals.eligibleUsers} trial/free users, {excludedUsers} excluded)
         </li>
       </ul>
     </AppPanel>

@@ -16,5 +16,7 @@ export type BillingCostControlSnapshot = {
     readonly relatedInfraSpendEur: number;
     readonly estimatedUserSpendEur: number;
     readonly countedUsers: number;
+    readonly eligibleUsers: number;
+    readonly estimatedAllUsersSpendEur: number;
   };
 };

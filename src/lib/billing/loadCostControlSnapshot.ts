@@ -28,15 +28,17 @@ export const loadCostControlSnapshot = async (input?: {
   );
   const countedRows = asRowArray(
     await sql`
-      SELECT COUNT(*)::int AS counted
+      SELECT
+        COUNT(*) FILTER (WHERE cost_control_excluded = FALSE)::int AS counted,
+        COUNT(*)::int AS eligible
       FROM users
       WHERE (plan = 'trial' OR plan = 'admin_free' OR admin_free = TRUE)
-        AND cost_control_excluded = FALSE
         AND email NOT LIKE ${`%@${AGENT_ACCESS_EMAIL_DOMAIN}`}
         AND email !~* '^test[^@]*@agentwitch\\.com$'
     `,
   );
   const countedUsers = num(countedRows[0]?.counted);
+  const eligibleUsers = num(countedRows[0]?.eligible);
   const estimatedUserSpend = countedUsers * ESTIMATED_USER_INFRA_COST_EUR;
   const row = rows[0];
   const railway = num(row?.railway_spend_eur);
@@ -58,6 +60,8 @@ export const loadCostControlSnapshot = async (input?: {
       relatedInfraSpendEur: related,
       estimatedUserSpendEur: estimatedUserSpend,
       countedUsers,
+      eligibleUsers,
+      estimatedAllUsersSpendEur: eligibleUsers * ESTIMATED_USER_INFRA_COST_EUR,
     },
   };
 };
