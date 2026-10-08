@@ -1,17 +1,14 @@
+export { captureKnowledgeAfterRun } from "../internal/core/episode/captureKnowledgeAfterRun";
+export { checkKnowledgeBeforeTask } from "../internal/core/episode/checkKnowledgeBeforeTask";
+export { classifyKnowledgeTaskClass } from "../internal/core/episode/classifyKnowledgeTaskClass";
+export { getKnowledgeDb } from "../internal/core/episode/knowledgeDb";
 export {
-  queryAgentWitchRag,
-  readAgentWitchRagChunks,
-  indexAgentWitchRagText,
-  formatRagContextForPrompt,
-} from "../internal/core/agentWitchLocalRag";
+  isKnowledgeEnabled,
+  isKnowledgeHoldoutRun,
+  resolveKnowledgeProjectKey,
+} from "../internal/core/episode/knowledgeProjectKey";
 export {
-  computeAgentWitchKnowledgeSuggestions,
-  getAgentWitchChunkRetrievalCount,
-  readAgentWitchKnowledgeUsageStats,
-  recordAgentWitchErrorOccurrence,
-} from "../internal/core/agentWitchLocalKnowledgeUsage";
-export {
-  formatErrorKnowledgeContextForPrompt,
-  indexAgentWitchErrorKnowledgeText,
-  queryAgentWitchErrorKnowledge,
-} from "../internal/core/agentWitchLocalErrorKnowledge";
+  listKnowledgeProjectKeys,
+  searchKnowledgeCards,
+} from "../internal/core/episode/searchKnowledgeCards";
+export { summarizeKnowledgeImpact } from "../internal/core/episode/summarizeKnowledgeImpact";

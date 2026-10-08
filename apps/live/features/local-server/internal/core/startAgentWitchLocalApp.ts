@@ -42,12 +42,15 @@ import {
 } from "@agent-witch/install-connection-health";
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "@agent-witch/install-connection-health/types";
 import {
-  computeAgentWitchKnowledgeSuggestions,
-  getAgentWitchChunkRetrievalCount,
-  queryAgentWitchRag,
-  readAgentWitchKnowledgeUsageStats,
-  readAgentWitchRagChunks,
+  getKnowledgeDb,
+  listKnowledgeProjectKeys,
+  searchKnowledgeCards,
+  summarizeKnowledgeImpact,
 } from "@agent-witch/live-knowledge";
+import {
+  buildKnowledgeCardListHtml,
+  buildKnowledgeImpactPanelHtml,
+} from "@agent-witch/live-knowledge/presentation";
 import {
   type AgentWitchLocalInstallUpdateFlash,
   buildAgentWitchLocalInstallUpdateFlashHtml,
@@ -259,16 +262,6 @@ const buildLocalAppUpdateFailureDetailHtml = (
     return "";
   }
   return `<div class="alert-error">${escapeHtml(updateError)}</div>`;
-};
-
-const buildKnowledgeEmptyHtml = (query: string, chunkCount: number): string => {
-  if (chunkCount > 0) {
-    return "";
-  }
-  if (query.length > 0) {
-    return `<p class="empty">No matches for "${escapeHtml(query)}".</p>`;
-  }
-  return `<p class="empty">No chunks yet. Finish an agent turn to index.</p>`;
 };
 
 const LOCAL_APP_CORS_HEADERS: Record<string, string> = {
@@ -792,17 +785,19 @@ export const startAgentWitchLocalApp = (input: {
           `http://127.0.0.1:${localAppPort}`,
         );
         const q = url.searchParams.get("q")?.trim() ?? "";
-        if (q.length > 0) {
-          const hits = await queryAgentWitchRag({
-            layout: input.layout,
-            query: q,
-            limit: 20,
-          });
-          sendJson(response, 200, { chunks: hits, query: q });
+        const db = getKnowledgeDb(input.layout);
+        const projectKey =
+          url.searchParams.get("project")?.trim() ||
+          (db === null ? undefined : listKnowledgeProjectKeys(db)[0]);
+        if (db === null || projectKey === undefined) {
+          sendJson(response, 200, { cards: [], impact: null, query: q });
           return;
         }
         sendJson(response, 200, {
-          chunks: readAgentWitchRagChunks(input.layout).slice(-50).reverse(),
+          projectKey,
+          cards: searchKnowledgeCards(db, { projectKey, query: q, limit: 50 }),
+          impact: summarizeKnowledgeImpact(db, { projectKey, windowDays: 30 }),
+          query: q,
         });
         return;
       }
@@ -1940,58 +1935,43 @@ export const startAgentWitchLocalApp = (input: {
         );
         const q = url.searchParams.get("q")?.trim() ?? "";
         const installBundle = buildInstallBundleStatus();
-        const usageStats = readAgentWitchKnowledgeUsageStats({
-          layout: input.layout,
-        });
-        const suggestions = computeAgentWitchKnowledgeSuggestions(usageStats);
-        const chunks =
-          q.length > 0
-            ? await queryAgentWitchRag({
-                layout: input.layout,
-                query: q,
-                limit: 20,
-              })
-            : readAgentWitchRagChunks(input.layout).slice(-50).reverse();
-        const list = chunks
-          .map((chunk) => {
-            const retrievalCount = getAgentWitchChunkRetrievalCount(
-              usageStats,
-              chunk.id,
-            );
-            const usageLabel =
-              retrievalCount > 0
-                ? ` · used in ${retrievalCount} dispatch(es)`
-                : "";
-            return `<article class="card"><div class="muted" title="${escapeHtml(chunk.createdAt)}">${escapeHtml(formatLocalAppTimestamp(chunk.createdAt))}${chunk.source ? ` · ${escapeHtml(chunk.source)}` : ""}${usageLabel}</div><pre>${escapeHtml(chunk.text)}</pre></article>`;
-          })
-          .join("");
-        const suggestionsHtml =
-          suggestions.length > 0
-            ? `<section class="card"><p class="eyebrow">Suggestions</p><h2>Save context as tools or rules</h2><ul>${suggestions
-                .map(
-                  (suggestion) =>
-                    `<li><strong>P${suggestion.priority}</strong> — ${escapeHtml(suggestion.message)}</li>`,
-                )
-                .join(
-                  "",
-                )}</ul><p class="muted">Accepting a cloud capability improvement still requires review in AWC — these hints are local on your computer.</p></section>`
-            : "";
+        const db = getKnowledgeDb(input.layout);
+        const projectKeys = db === null ? [] : listKnowledgeProjectKeys(db);
+        const projectKey =
+          url.searchParams.get("project")?.trim() || projectKeys[0];
+        const body =
+          db === null || projectKey === undefined
+            ? `<section class="card stack"><p class="eyebrow">Project knowledge</p><h1>Knowledge</h1><p class="lede">${
+                db === null
+                  ? "Knowledge needs Node 22.13+ (node:sqlite). It is off on this computer."
+                  : "Nothing learned yet. Mistakes, fixes and decisions from agent runs on this computer show up here."
+              }</p></section>`
+            : `<section class="card stack">
+              <p class="eyebrow">Project knowledge</p>
+              <h1>Knowledge</h1>
+              <p class="lede">Short cards learned from finished agent runs on this computer (mistakes, fixes, decisions). Relevant cards are added to the next prompt within a token budget.</p>
+              <form class="search-row" method="GET" action="/knowledge">
+                <select class="input" name="project" aria-label="Project">${projectKeys
+                  .map(
+                    (key) =>
+                      `<option value="${escapeHtml(key)}"${key === projectKey ? " selected" : ""}>${escapeHtml(key)}</option>`,
+                  )
+                  .join("")}</select>
+                <input class="input" name="q" value="${escapeHtml(q)}" placeholder="Search knowledge" aria-label="Search knowledge" />
+                <button class="btn btn-primary" type="submit">Search</button>
+              </form>
+            </section>${buildKnowledgeImpactPanelHtml(
+              summarizeKnowledgeImpact(db, { projectKey, windowDays: 30 }),
+            )}${buildKnowledgeCardListHtml(
+              searchKnowledgeCards(db, { projectKey, query: q, limit: 50 }),
+            )}`;
         sendHtml(
           response,
           await buildLocalAppShell({
             title: "Knowledge",
             activePath: "/knowledge",
             installVersion: installBundle.installVersion,
-            body: `<section class="card stack">
-              <p class="eyebrow">Local RAG</p>
-              <h1>Knowledge</h1>
-              <p class="lede">Indexed chunks from finished agent turns on this computer. Retrieval counts update when dispatch injects a chunk into the next writer prompt.</p>
-              <form class="search-row" method="GET" action="/knowledge">
-                <input class="input" name="q" value="${escapeHtml(q)}" placeholder="Search local knowledge" aria-label="Search local knowledge" />
-                <button class="btn btn-primary" type="submit">Search</button>
-              </form>
-              ${buildKnowledgeEmptyHtml(q, chunks.length)}
-            </section>${suggestionsHtml}${list}`,
+            body,
           }),
         );
         return;

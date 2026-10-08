@@ -71,25 +71,21 @@ import {
   recordAgentWitchWsTraceFromObject,
 } from "@agent-witch/live-diagnostics";
 import {
-  formatErrorKnowledgeContextForPrompt,
-  formatRagContextForPrompt,
-  indexAgentWitchErrorKnowledgeText,
-  indexAgentWitchRagText,
-  queryAgentWitchErrorKnowledge,
-  queryAgentWitchRag,
-  recordAgentWitchErrorOccurrence,
+  captureKnowledgeAfterRun,
+  checkKnowledgeBeforeTask,
+  classifyKnowledgeTaskClass,
+  isKnowledgeEnabled,
+  isKnowledgeHoldoutRun,
+  resolveKnowledgeProjectKey,
 } from "@agent-witch/live-knowledge";
 import {
   resolveLocalAppPublicKey,
   startAgentWitchLocalApp,
 } from "@agent-witch/live-local-server";
 import {
-  appendAgentWitchMemoryEntry,
   buildWriterSessionColdContinuePrompt,
   endActiveWriterTranscriptSession,
-  formatMemoryContextForPrompt,
   loadWriterSessionCanonical,
-  readAgentWitchMemoryEntries,
   resolveActiveWriterSessionId,
   resolveWriterDispatchRoute,
   resolveWriterSessionTurn,
@@ -477,6 +473,7 @@ const dispatchWriterTask = async (
     hasSourceRunId,
     hasCanonicalTurns,
     userPromptCharacterCount: prompt.length,
+    taskClass: classifyKnowledgeTaskClass(prompt),
   });
 
   let resolvedPrompt = prompt;
@@ -503,40 +500,24 @@ const dispatchWriterTask = async (
     }
   }
 
-  const ragChunks =
-    dispatchRoute.ragLimit > 0
-      ? await queryAgentWitchRag({
+  const knowledgeRunId = agentRunId ?? requestId;
+  const knowledgeCheck =
+    isKnowledgeEnabled() && knowledgeRunId !== undefined
+      ? await checkKnowledgeBeforeTask({
           layout: config.layout,
-          query: resolvedPrompt,
-          limit: dispatchRoute.ragLimit,
-          minScore: dispatchRoute.ragMinScore,
-          projectFolderPath: resolvedProjectFolderPath,
-          ...(resolvedProjectId.length > 0
-            ? { projectId: resolvedProjectId }
-            : {}),
+          projectKey: resolveKnowledgeProjectKey({
+            projectId: resolvedProjectId,
+            projectFolderPath: resolvedProjectFolderPath,
+          }),
+          runId: knowledgeRunId,
+          userPrompt: prompt,
+          promptText: resolvedPrompt,
+          plan: dispatchRoute.knowledgePlan,
+          taskClass: classifyKnowledgeTaskClass(prompt),
+          holdout: isKnowledgeHoldoutRun(knowledgeRunId),
         })
-      : [];
-  const errorKnowledgeChunks =
-    dispatchRoute.ragLimit > 0 && resolvedProjectFolderPath.trim().length > 0
-      ? await queryAgentWitchErrorKnowledge({
-          layout: config.layout,
-          query: resolvedPrompt,
-          limit: 2,
-          minScore: 0.32,
-          projectFolderPath: resolvedProjectFolderPath,
-          ...(resolvedProjectId.length > 0
-            ? { projectId: resolvedProjectId }
-            : {}),
-        })
-      : [];
-  const memoryEntries = dispatchRoute.injectMemory
-    ? readAgentWitchMemoryEntries(
-        config.layout,
-        resolvedProjectFolderPath,
-        resolvedProjectId.length > 0 ? resolvedProjectId : undefined,
-      )
-    : [];
-  let promptWithProjectContext = `${formatMemoryContextForPrompt(memoryEntries, dispatchRoute.memoryEntryLimit)}${formatRagContextForPrompt(ragChunks)}${formatErrorKnowledgeContextForPrompt(errorKnowledgeChunks)}${resolvedPrompt}`;
+      : null;
+  let promptWithProjectContext = `${knowledgeCheck?.contextText ?? ""}${resolvedPrompt}`;
 
   const resolvedReportKey =
     reportKey?.trim() ??
@@ -2028,50 +2009,34 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         output,
       });
 
-      if (shouldCapture && projectFolderPath !== null) {
-        void indexAgentWitchRagText({
-          layout: config.layout,
-          text: output,
-          source: agentRunId ?? "command.claude.result",
-          projectFolderPath,
-          ...(projectId !== undefined ? { projectId } : {}),
-        });
-      }
-
-      const runFailed =
-        exitCode !== undefined && exitCode !== null && exitCode !== 0;
-      if (runFailed && output.trim().length > 0 && projectFolderPath !== null) {
-        recordAgentWitchErrorOccurrence({
-          layout: config.layout,
-          errorText: output,
-          projectFolderPath,
-          ...(projectId !== undefined ? { projectId } : {}),
-        });
-        void indexAgentWitchErrorKnowledgeText({
-          layout: config.layout,
-          text: output,
-          source: agentRunId ?? "command.claude.result.failure",
-          projectFolderPath,
-          ...(projectId !== undefined ? { projectId } : {}),
-        });
-      }
-
+      const knowledgeRunId = agentRunId ?? requestId;
       if (
-        shouldCapture &&
-        prompt.trim().length > 0 &&
+        isKnowledgeEnabled() &&
+        knowledgeRunId !== undefined &&
         projectFolderPath !== null
       ) {
-        appendAgentWitchMemoryEntry({
+        const gitBeforeForKnowledge =
+          agentRunId !== undefined
+            ? gitSnapshotBeforeByRunId.get(agentRunId)
+            : undefined;
+        void captureKnowledgeAfterRun({
           layout: config.layout,
+          projectKey: resolveKnowledgeProjectKey({
+            projectId,
+            projectFolderPath,
+          }),
           projectFolderPath,
-          ...(projectId !== undefined ? { projectId } : {}),
-          entry: {
-            id: `${Date.now()}-${agentRunId ?? "run"}`,
-            ...(agentRunId !== undefined ? { agentRunId } : {}),
-            prompt,
-            output,
-            createdAt: new Date().toISOString(),
-          },
+          runId: knowledgeRunId,
+          prompt,
+          output,
+          exitCode,
+          gitBefore:
+            gitBeforeForKnowledge === undefined
+              ? undefined
+              : {
+                  headSha: gitBeforeForKnowledge.headSha,
+                  porcelainLineCount: gitBeforeForKnowledge.porcelainLineCount,
+                },
         });
       }
 

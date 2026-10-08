@@ -67,8 +67,6 @@ export const AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES = [
   "syncAgentWitchLocalProjectsFromCloud.ts",
   ...AGENT_WITCH_CLIENT_INSTALL_WRITER_API_SCRIPT_NAMES,
   "agentWitchLocalTrafficLog.ts",
-  "agentWitchLocalRag.ts",
-  "agentWitchLocalMemory.ts",
   "agentWitchProjectStorage.constants.ts",
   "expandAgentWitchProjectFolderPath.ts",
   "resolveAgentWitchProjectStorageLayout.ts",

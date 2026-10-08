@@ -6,6 +6,13 @@
 
 ---
 
+> **Đã triển khai (AWL):** `apps/live/features/knowledge/internal/core/episode/`. Khác thiết kế ban đầu:
+> điểm lexical tính bằng idf-weighted term overlap trong JS (không dùng FTS5; ≤ 2.000 card/project nên đủ nhanh và không phụ thuộc bản SQLite);
+> `taskClass`/`knowledgePlan` nằm trong `resolveWriterDispatchRoute`; không có migration (đường NDJSON/memory cũ đã xóa).
+> Env: `AGENT_WITCH_KNOWLEDGE=off` tắt hẳn, `AGENT_WITCH_KNOWLEDGE_HOLDOUT_PERCENT` (mặc định 10, 0 = tắt holdout).
+
+---
+
 ## 1. Mục tiêu và số đo
 
 | Mục tiêu      | Số đo (đo được, ghi vào report)                                                |

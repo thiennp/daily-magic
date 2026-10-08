@@ -1,9 +1,4 @@
 export {
-  appendAgentWitchMemoryEntry,
-  formatMemoryContextForPrompt,
-  readAgentWitchMemoryEntries,
-} from "../internal/core/agentWitchLocalMemory";
-export {
   appendWriterTranscriptTurn,
   endActiveWriterTranscriptSession,
   ensureActiveWriterTranscriptSession,

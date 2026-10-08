@@ -43,7 +43,9 @@ export const PROJECT_DELETE_CASCADE_CHILD_TABLES = [
   "project_pitfalls",
   "project_skill_versions",
   "project_skills",
+  "project_task_external_links",
   "project_task_records",
+  "project_task_sync_settings",
   "project_updated_notify_pending",
   "published_capabilities",
 ] as const;

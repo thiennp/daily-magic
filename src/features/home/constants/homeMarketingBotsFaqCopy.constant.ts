@@ -31,7 +31,7 @@ export const HOME_MARKETING_FAQ_COPY = {
   items: [
     [
       "Is this a Slack replacement?",
-      "No. Keep Slack for chat. Use Agent Witch for repeat AI work.",
+      "No. Keep Slack for chat. Use AgentWitch for repeat AI work.",
     ],
     [
       "Do I need n8n or a node editor?",

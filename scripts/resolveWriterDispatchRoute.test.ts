@@ -49,13 +49,13 @@ describe("resolveWriterDispatchRoute", () => {
       hasSourceRunId: false,
       hasCanonicalTurns: true,
       userPromptCharacterCount: 120,
+      taskClass: "code",
     });
 
     expect(plan.sessionTurn).toBe("continue");
     expect(plan.continuationStrategy).toBe("cli_continue");
     expect(plan.contextBudget).toBe("minimal");
-    expect(plan.injectMemory).toBe(false);
-    expect(plan.ragLimit).toBe(0);
+    expect(plan.knowledgePlan.mode).toBe("skip");
   });
 
   it("prefers source_run_seed over transcript when sourceRunId is set", () => {
@@ -66,13 +66,16 @@ describe("resolveWriterDispatchRoute", () => {
       hasSourceRunId: true,
       hasCanonicalTurns: true,
       userPromptCharacterCount: 200,
+      taskClass: "code",
     });
 
     expect(plan.sessionTurn).toBe("first");
     expect(plan.continuationStrategy).toBe("source_run_seed");
-    expect(plan.ragLimit).toBe(3);
-    expect(plan.ragMinScore).toBe(0.35);
-    expect(plan.memoryEntryLimit).toBe(3);
+    expect(plan.knowledgePlan).toMatchObject({
+      mode: "hybrid",
+      tokenBudget: 800,
+      maxCards: 6,
+    });
   });
 
   it("uses transcript_seed when cold but canonical turns exist", () => {
@@ -83,12 +86,13 @@ describe("resolveWriterDispatchRoute", () => {
       hasSourceRunId: false,
       hasCanonicalTurns: true,
       userPromptCharacterCount: 200,
+      taskClass: "code",
     });
 
     expect(plan.continuationStrategy).toBe("transcript_seed");
   });
 
-  it("tightens RAG on very short fresh prompts", () => {
+  it("gives short fresh code prompts the standard 300-token plan", () => {
     const plan = resolveWriterDispatchRoute({
       sessionContinuation: false,
       supportsWriterSessionContinuation: true,
@@ -96,11 +100,15 @@ describe("resolveWriterDispatchRoute", () => {
       hasSourceRunId: false,
       hasCanonicalTurns: false,
       userPromptCharacterCount: 12,
+      taskClass: "code",
     });
 
     expect(plan.continuationStrategy).toBe("none");
-    expect(plan.ragLimit).toBe(2);
-    expect(plan.ragMinScore).toBe(0.4);
+    expect(plan.knowledgePlan).toMatchObject({
+      mode: "hybrid",
+      tokenBudget: 300,
+      maxCards: 3,
+    });
   });
 
   it("uses full context budget for long prompts", () => {
@@ -111,10 +119,10 @@ describe("resolveWriterDispatchRoute", () => {
       hasSourceRunId: false,
       hasCanonicalTurns: false,
       userPromptCharacterCount: 4_000,
+      taskClass: "code",
     });
 
     expect(plan.contextBudget).toBe("full");
-    expect(plan.memoryEntryLimit).toBe(8);
-    expect(plan.ragMinScore).toBe(0.25);
+    expect(plan.knowledgePlan.tokenBudget).toBe(800);
   });
 });

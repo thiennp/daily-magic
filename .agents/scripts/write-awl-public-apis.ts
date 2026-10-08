@@ -195,34 +195,47 @@ write(
 
 write(
   "apps/live/features/knowledge/public-api/infrastructure.ts",
-  `export {
-  queryAgentWitchRag,
-  readAgentWitchRagChunks,
-  indexAgentWitchRagText,
-  formatRagContextForPrompt,
-} from "../internal/core/agentWitchLocalRag";
+  `export { captureKnowledgeAfterRun } from "../internal/core/episode/captureKnowledgeAfterRun";
+export { checkKnowledgeBeforeTask } from "../internal/core/episode/checkKnowledgeBeforeTask";
+export { classifyKnowledgeTaskClass } from "../internal/core/episode/classifyKnowledgeTaskClass";
+export { getKnowledgeDb } from "../internal/core/episode/knowledgeDb";
+export {
+  isKnowledgeEnabled,
+  isKnowledgeHoldoutRun,
+  resolveKnowledgeProjectKey,
+} from "../internal/core/episode/knowledgeProjectKey";
+export {
+  listKnowledgeProjectKeys,
+  searchKnowledgeCards,
+} from "../internal/core/episode/searchKnowledgeCards";
+export { summarizeKnowledgeImpact } from "../internal/core/episode/summarizeKnowledgeImpact";
 `,
 );
 
 write(
   "apps/live/features/knowledge/public-api/presentation.ts",
-  `export {};
+  `export {
+  buildKnowledgeCardListHtml,
+  buildKnowledgeImpactPanelHtml,
+} from "../internal/core/episode/buildKnowledgeImpactPanelHtml";
 `,
 );
 
 write(
   "apps/live/features/knowledge/public-api/types.ts",
-  `export {};
+  `export type {
+  EpisodeCard,
+  EpisodeKind,
+  EpisodeOutcome,
+  KnowledgeTaskClass,
+} from "../internal/core/episode/episode.types";
+export type { KnowledgeImpactSummary } from "../internal/core/episode/summarizeKnowledgeImpact";
 `,
 );
 
 write(
   "apps/live/features/memory/public-api/infrastructure.ts",
-  `export {
-  appendAgentWitchMemoryEntry,
-  formatMemoryContextForPrompt,
-  readAgentWitchMemoryEntries,
-} from "../internal/core/agentWitchLocalMemory";
+  `export {};
 `,
 );
 

@@ -20,14 +20,6 @@ const shims: Array<{ script: string; from: string }> = [
     from: "@agent-witch/live-diagnostics",
   },
   {
-    script: "agentWitchLocalRag.ts",
-    from: "@agent-witch/live-knowledge",
-  },
-  {
-    script: "agentWitchLocalMemory.ts",
-    from: "@agent-witch/live-memory",
-  },
-  {
     script: "ensureAgentWitchProjectFolder.ts",
     from: "@agent-witch/live-projects",
   },
