@@ -80,4 +80,19 @@ describe("buildAgentLiveTerminalDisplay", () => {
       }),
     ).toBe(`hello\n${AGENT_LIVE_BASH_PROMPT}`);
   });
+
+  it("a76d46ac: a Linux session never shows the mac prompt", () => {
+    const display = buildAgentLiveTerminalDisplay({
+      output:
+        'agent-witch@mac ~ % agy --sandbox -p "Run workflow"\nFeature Complete\n',
+      status: "finished",
+      platform: "linux",
+    });
+
+    expect(display).not.toContain("agent-witch@mac");
+    expect(display).toContain(
+      'agent-witch@linux ~ $ agy --sandbox -p "Run workflow"',
+    );
+    expect(display.endsWith("agent-witch@linux ~ $ ")).toBe(true);
+  });
 });

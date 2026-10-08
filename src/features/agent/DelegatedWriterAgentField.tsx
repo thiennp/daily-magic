@@ -21,7 +21,7 @@ export default function DelegatedWriterAgentField({
     <AwcFormField id="delegated-writer-agent" label="Delegate tasks to">
       {disabled ? (
         <p className="mb-2 text-xs text-awc-fg-muted dark:text-gray-400">
-          Finish the current Mac session to switch AI.
+          Finish the current session to switch AI.
         </p>
       ) : null}
       <select

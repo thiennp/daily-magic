@@ -15,9 +15,17 @@ export const buildAgentLiveTerminalDisplay = (input: {
   readonly pendingCommandLine?: string | null;
   readonly platform?: "mac" | "linux";
 }): string => {
-  const visibleOutput = stripNextActionsFromTerminalOutput(input.output);
   const platform = input.platform ?? "mac";
   const prompt = getAgentLivePrompt(platform);
+  // The stored transcript always uses the mac prompt as its line marker; a
+  // Linux session must not show "agent-witch@mac ~ %" (Testi run 2, a76d46ac).
+  const visibleOutput =
+    platform === "mac"
+      ? stripNextActionsFromTerminalOutput(input.output)
+      : stripNextActionsFromTerminalOutput(input.output).replaceAll(
+          AGENT_LIVE_BASH_PROMPT,
+          prompt,
+        );
 
   if (visibleOutput.length === 0) {
     const pendingCommandLine = input.pendingCommandLine?.trim() ?? "";

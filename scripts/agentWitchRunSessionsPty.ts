@@ -78,7 +78,9 @@ export const tryRunWriterTaskInPty = async (input: {
       if (inputRequested) {
         return;
       }
-      const parsed = parseAwaitingInputFromOutput(outputChunks.join(""));
+      const parsed = parseAwaitingInputFromOutput(outputChunks.join(""), {
+        requireCompleteQuestion: true,
+      });
       if (parsed !== null) {
         inputRequested = true;
         input.onInputRequired(parsed);
@@ -86,6 +88,12 @@ export const tryRunWriterTaskInPty = async (input: {
     },
     onExit: (exitCode) => {
       if (inputRequested) {
+        return;
+      }
+      const parsedAtExit = parseAwaitingInputFromOutput(outputChunks.join(""));
+      if (parsedAtExit !== null) {
+        inputRequested = true;
+        input.onInputRequired(parsedAtExit);
         return;
       }
       input.onFinished(exitCode, outputChunks.join("").trim());

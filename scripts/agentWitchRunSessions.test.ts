@@ -30,6 +30,39 @@ describe("parseAwaitingInputFromOutput", () => {
   it("returns null when the marker is missing", () => {
     expect(parseAwaitingInputFromOutput("done")).toBeNull();
   });
+
+  it("a76d46ac: while streaming, waits for the question line to end", () => {
+    const partial = `Reviewing.\n${AGENT_RUN_INPUT_MARKER}\nCan you confirm the vibe (add a small dark-mode`;
+    expect(
+      parseAwaitingInputFromOutput(partial, { requireCompleteQuestion: true }),
+    ).toBeNull();
+
+    expect(
+      parseAwaitingInputFromOutput(`${partial} toggle to index.html)?\r\n`, {
+        requireCompleteQuestion: true,
+      }),
+    ).toEqual({
+      question:
+        "Can you confirm the vibe (add a small dark-mode toggle to index.html)?",
+      partialOutput: "Reviewing.",
+    });
+  });
+
+  it("a76d46ac: at process exit accepts an unterminated final question", () => {
+    expect(
+      parseAwaitingInputFromOutput(
+        `${AGENT_RUN_INPUT_MARKER}\nCan you review and approve the dark mode change?`,
+      )?.question,
+    ).toBe("Can you review and approve the dark mode change?");
+  });
+
+  it("while streaming, a bare marker is not a question yet", () => {
+    expect(
+      parseAwaitingInputFromOutput(`x\n${AGENT_RUN_INPUT_MARKER}\n`, {
+        requireCompleteQuestion: true,
+      }),
+    ).toBeNull();
+  });
 });
 
 import {

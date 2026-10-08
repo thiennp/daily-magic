@@ -562,7 +562,7 @@ const requestRunInput = (
   clearRunSessionLimit(agentRunId);
 
   const questionTruncated =
-    question.length > 120 ? `${question.substring(0, 117)}...` : question;
+    question.length > 280 ? `${question.substring(0, 277)}...` : question;
   console.log(
     `[agent-witch] Run ${agentRunId.substring(0, 8)} paused for input: ${questionTruncated}`,
   );
@@ -682,6 +682,34 @@ const attachChildHandlers = (
   const bufferClaudeJson = writerAgent === "claude-cli";
   const stdoutChunks: string[] = [];
 
+  const parkPipeRunForInput = (
+    runId: string,
+    parsed: NonNullable<ReturnType<typeof parseAwaitingInputFromOutput>>,
+  ): void => {
+    const session = runSessions.get(runId);
+    const mergedOutput = [
+      session?.accumulatedOutput ?? "",
+      parsed.partialOutput,
+    ]
+      .filter((value) => value.length > 0)
+      .join("\n\n");
+
+    if (session !== undefined) {
+      session.accumulatedOutput = mergedOutput;
+    }
+
+    activeChildren.delete(runId);
+    requestRunInput(
+      config,
+      socket,
+      runId,
+      requestId,
+      parsed.question,
+      mergedOutput,
+      originalPrompt,
+    );
+  };
+
   child.stdout?.on("data", (chunk: Buffer) => {
     const text = chunk.toString("utf8");
     if (bufferClaudeJson) {
@@ -695,33 +723,14 @@ const attachChildHandlers = (
       return;
     }
 
-    const parsed = parseAwaitingInputFromOutput(outputChunks.join(""));
+    const parsed = parseAwaitingInputFromOutput(outputChunks.join(""), {
+      requireCompleteQuestion: true,
+    });
 
     if (parsed !== null) {
       inputRequested = true;
       child.kill("SIGTERM");
-      const session = runSessions.get(agentRunId);
-      const mergedOutput = [
-        session?.accumulatedOutput ?? "",
-        parsed.partialOutput,
-      ]
-        .filter((value) => value.length > 0)
-        .join("\n\n");
-
-      if (session !== undefined) {
-        session.accumulatedOutput = mergedOutput;
-      }
-
-      activeChildren.delete(agentRunId);
-      requestRunInput(
-        config,
-        socket,
-        agentRunId,
-        requestId,
-        parsed.question,
-        mergedOutput,
-        originalPrompt,
-      );
+      parkPipeRunForInput(agentRunId, parsed);
     }
   });
 
@@ -733,6 +742,17 @@ const attachChildHandlers = (
 
   child.on("close", (exitCode) => {
     if (inputRequested) {
+      return;
+    }
+
+    // The CLI may end its turn on the question line without a newline.
+    const parsedAtExit =
+      agentRunId !== undefined
+        ? parseAwaitingInputFromOutput(outputChunks.join(""))
+        : null;
+    if (agentRunId !== undefined && parsedAtExit !== null) {
+      inputRequested = true;
+      parkPipeRunForInput(agentRunId, parsedAtExit);
       return;
     }
 

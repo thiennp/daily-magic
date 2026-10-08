@@ -3,8 +3,23 @@ import {
   AGENT_RUN_INPUT_MARKER,
 } from "./dispatch/agentRunInputGuardrails.constant";
 
+const PARAGRAPH_END = /\r?\n\s*\r?\n|\[\[[A-Z_]+\]\]/;
+
+/**
+ * While the CLI is still streaming, a question counts only once its line has
+ * ended. Parsing the first chunk that held the marker cut asks mid-word
+ * ("Can you confirm the vibe (add a small dark-mode", Testi run 2 a76d46ac)
+ * and then killed the writer. At process exit pass `requireCompleteQuestion:
+ * false` to accept a final unterminated line.
+ */
+const hasCompleteQuestion = (afterMarkerRaw: string): boolean => {
+  const body = afterMarkerRaw.replace(/^\s+/, "");
+  return body.length > 0 && (PARAGRAPH_END.test(body) || /\n/.test(body));
+};
+
 export const parseAwaitingInputFromOutput = (
   output: string,
+  options?: { readonly requireCompleteQuestion?: boolean },
 ): { readonly question: string; readonly partialOutput: string } | null => {
   const markerIndex = output.indexOf(AGENT_RUN_INPUT_MARKER);
 
@@ -12,10 +27,17 @@ export const parseAwaitingInputFromOutput = (
     return null;
   }
 
-  const afterMarker = output
-    .slice(markerIndex + AGENT_RUN_INPUT_MARKER.length)
-    .trim();
-  const paragraph = afterMarker.split(/\r?\n\s*\r?\n|\[\[[A-Z_]+\]\]/)[0] ?? "";
+  const afterMarkerRaw = output.slice(
+    markerIndex + AGENT_RUN_INPUT_MARKER.length,
+  );
+  if (
+    options?.requireCompleteQuestion === true &&
+    !hasCompleteQuestion(afterMarkerRaw)
+  ) {
+    return null;
+  }
+  const afterMarker = afterMarkerRaw.trim();
+  const paragraph = afterMarker.split(PARAGRAPH_END)[0] ?? "";
   const question = paragraph
     .split(/\r?\n/)
     .map((line) => line.trim())

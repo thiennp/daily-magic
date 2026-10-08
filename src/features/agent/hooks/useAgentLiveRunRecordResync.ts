@@ -9,7 +9,7 @@ import {
   isTerminalAgentRunRecordStatus,
   shouldResyncAgentLiveRunRecord,
 } from "@/features/agent/utils/agentLiveRunRecordResync";
-import { AGENT_LIVE_PROGRESS_STALL_STUCK_MS } from "@/features/agent/utils/agentLiveProgressStall.constant";
+import { AGENT_LIVE_RUN_RECORD_RESYNC_MS } from "@/features/agent/utils/agentLiveProgressStall.constant";
 import { isAgentLiveTerminalWorking } from "@/features/agent/utils/isAgentLiveTerminalWorking";
 import { fetchAgentRunDetail } from "@/features/reports/fetchAgentRunDetail";
 
@@ -81,7 +81,7 @@ export function useAgentLiveRunRecordResync(
     // Re-armed on every output change, so it only fires after a quiet stretch.
     const timer = window.setInterval(() => {
       void resyncAgentLiveRunRecordAsync(activeRunId, applyTerminalMessage);
-    }, AGENT_LIVE_PROGRESS_STALL_STUCK_MS);
+    }, AGENT_LIVE_RUN_RECORD_RESYNC_MS);
     return () => {
       window.clearInterval(timer);
     };

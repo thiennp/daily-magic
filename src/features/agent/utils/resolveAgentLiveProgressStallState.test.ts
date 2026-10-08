@@ -84,4 +84,27 @@ describe("resolveAgentLiveProgressStallState (AGENT-038 / AGENT-052)", () => {
       }),
     ).toBe("stuck");
   });
+
+  it("a76d46ac: no Lost connection at 5 min without an estimate while heartbeats arrive", () => {
+    expect(
+      resolveAgentLiveProgressStallState({
+        isWorking: true,
+        msSinceLastActivity: 21_000,
+        workedMs: 5 * 60_000 + 1_000,
+        estimateSeconds: null,
+      }),
+    ).toBe("none");
+  });
+
+  it("a76d46ac: silence inside the 60 s presence grace is a warning, not stuck", () => {
+    expect(AGENT_LIVE_PROGRESS_STALL_STUCK_MS).toBeGreaterThan(60_000);
+    expect(
+      resolveAgentLiveProgressStallState({
+        isWorking: true,
+        msSinceLastActivity: 59_000,
+        workedMs: 130_000,
+        estimateSeconds: 100,
+      }),
+    ).toBe("warning");
+  });
 });

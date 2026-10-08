@@ -11,7 +11,8 @@
  */
 /** 290 = AWL-ISO-2 cross-account folder claims + write locks. */
 /** 291 = run report closes when the run ends (FAIL3). */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "291";
+/** 292 = whole checkpoint asks (no mid-line parse), long-run PARTIAL. */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "292";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =

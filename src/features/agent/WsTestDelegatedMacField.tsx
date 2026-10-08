@@ -44,7 +44,7 @@ export default function WsTestDelegatedMacField({
       />
       {disabled ? (
         <p className="mt-2 text-xs text-awc-fg-muted dark:text-gray-400">
-          Finish the current Mac session to switch devices.
+          Finish the current session to switch computers.
         </p>
       ) : null}
     </div>

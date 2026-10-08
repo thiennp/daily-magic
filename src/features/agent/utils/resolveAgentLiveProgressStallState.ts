@@ -46,8 +46,13 @@ export const resolveAgentLiveProgressStallState = (input: {
     }
   } else if (
     workedMs !== null &&
-    workedMs >= AGENT_LIVE_PROGRESS_ESTIMATE_FALLBACK_STUCK_MS
+    workedMs >= AGENT_LIVE_PROGRESS_ESTIMATE_FALLBACK_STUCK_MS &&
+    input.msSinceLastActivity !== null &&
+    input.msSinceLastActivity >= AGENT_LIVE_PROGRESS_STALL_STUCK_MS
   ) {
+    // Long run without an estimate: only stuck when the computer is also
+    // silent. It flipped to "Lost connection" at exactly 5 min while the
+    // computer was still heartbeating (a76d46ac).
     return "stuck";
   } else if (
     input.msSinceLastActivity !== null &&
