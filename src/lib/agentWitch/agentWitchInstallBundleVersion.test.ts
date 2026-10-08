@@ -7,7 +7,7 @@ import { HOSTED_DEVICE_HISTORY_PAGE_MIN_BUNDLE_VERSION } from "@/lib/projects/ac
 
 describe("AGENT_WITCH_INSTALL_BUNDLE_VERSION (DF-032)", () => {
   it("is bumped past 268 so self-update delivers the DF-029/030/031 AWL server", () => {
-    expect(AGENT_WITCH_INSTALL_BUNDLE_VERSION).toBe("309");
+    expect(AGENT_WITCH_INSTALL_BUNDLE_VERSION).toBe("310");
   });
 
   it("never points a floor at a bundle that is not served", () => {

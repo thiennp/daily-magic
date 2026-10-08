@@ -28,7 +28,8 @@
 /** 307 = auto skills keep only hashes + previews when history is OFF, run completion carries the writer; local folder describe adds git remote and branch. */
 /** 308 = auto skills work at module level: runs are split into steps, matched into clusters in knowledge.db, and a step repeated in 2+ runs raises the owner question. */
 /** 309 = local skill index plus skills_find / skills_run MCP tools; coding-tool prompts get one line pointing to skills_find when the project has indexed skills. */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "309";
+/** 310 = killed runs say why; stopped runs report stopped; report summary reaches the web; per-account Mac run.sh, migration log, stale lock cleanup. */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "310";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =
