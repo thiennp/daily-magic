@@ -1,3 +1,4 @@
+import { cleanAgentOutputForUser } from "@/features/agent/utils/cleanAgentOutputForUser";
 import {
   parseAgentLiveProgressUpdates,
   type AgentLiveProgressUpdate,
@@ -8,8 +9,13 @@ export const resolveAgentLiveProgressUpdatesFromSources = (
   output: string,
   partialOutput?: string | null,
 ): readonly AgentLiveProgressUpdate[] => {
-  const fromOutput = parseAgentLiveProgressUpdates(output);
-  const fromPartial = parseAgentLiveProgressUpdates(partialOutput ?? "");
+  // Harness rule lines that mention [[PROGRESS]] must never become updates.
+  const fromOutput = parseAgentLiveProgressUpdates(
+    cleanAgentOutputForUser(output, { keepMarkers: true }),
+  );
+  const fromPartial = parseAgentLiveProgressUpdates(
+    cleanAgentOutputForUser(partialOutput ?? "", { keepMarkers: true }),
+  );
 
   if (fromPartial.length === 0) {
     return fromOutput;

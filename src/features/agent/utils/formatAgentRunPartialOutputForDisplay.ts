@@ -2,7 +2,7 @@ import {
   parseAgentLiveProgressUpdates,
   type AgentLiveProgressUpdate,
 } from "@/features/agent/utils/parseAgentLiveProgressUpdates";
-import { stripAgentRunCliNoise } from "@/features/agent/utils/stripAgentRunCliNoise";
+import { cleanAgentOutputForUser } from "@/features/agent/utils/cleanAgentOutputForUser";
 import { stripAgentRunProgressFromOutput } from "@/features/agent/utils/stripAgentRunProgressFromOutput";
 import {
   parseAgentRunPartialOutputSections,
@@ -17,12 +17,13 @@ export type FormattedAgentRunPartialOutput = {
 export const formatAgentRunPartialOutputForDisplay = (
   partialOutput: string,
 ): FormattedAgentRunPartialOutput => {
-  const cleanOutput = stripAgentRunCliNoise(partialOutput);
-  // 3945994e: no raw [[MARKER]] syntax may reach the "Context so far" text.
-  const remainingText = stripAgentRunProgressFromOutput(cleanOutput).replace(
-    /\[\[[A-Z_]+\]\]/g,
-    "",
-  );
+  const cleanOutput = cleanAgentOutputForUser(partialOutput, {
+    keepMarkers: true,
+  }).trim();
+  // 3945994e / aedfe094: no raw [[MARKER]] syntax reaches "Context so far".
+  const remainingText = cleanAgentOutputForUser(
+    stripAgentRunProgressFromOutput(cleanOutput),
+  ).trim();
 
   return {
     progressUpdates: parseAgentLiveProgressUpdates(cleanOutput),

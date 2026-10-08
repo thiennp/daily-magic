@@ -1,3 +1,4 @@
+import { cleanAgentOutputForUser } from "@/features/agent/utils/cleanAgentOutputForUser";
 import { AGENT_LIVE_BASH_PROMPT } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
 import { AGENT_LIVE_PROGRESS_CLI_COMMAND_LINE_PATTERN } from "@/features/agent/utils/agentLiveProgressPatterns.constant";
 import { stripAgentLiveProgressCheckpointFromOutput } from "@/features/agent/utils/stripAgentLiveProgressCheckpointFromOutput";
@@ -6,55 +7,59 @@ import { stripAgentRunWavePlanFromOutput } from "@/features/agent/utils/stripAge
 import { stripAgentRunWorkingEstimateFromOutput } from "@/features/agent/utils/stripAgentRunWorkingEstimateFromOutput";
 import { stripNextActionsFromTerminalOutput } from "@/features/agent/utils/splitAgentLiveTerminalOutput";
 
+/** Progress feed + reports body; shares cleanAgentOutputForUser with the ask card and terminal (aedfe094). */
 export const stripAgentLiveProgressCliChrome = (output: string): string =>
-  stripAgentLiveProgressCheckpointFromOutput(
-    stripAgentRunWavePlanFromOutput(
-      stripAgentRunWorkingEstimateFromOutput(
-        stripAgentRunProgressFromOutput(
-          stripNextActionsFromTerminalOutput(output),
+  cleanAgentOutputForUser(
+    stripAgentLiveProgressCheckpointFromOutput(
+      stripAgentRunWavePlanFromOutput(
+        stripAgentRunWorkingEstimateFromOutput(
+          stripAgentRunProgressFromOutput(
+            stripNextActionsFromTerminalOutput(
+              cleanAgentOutputForUser(output, { keepMarkers: true }),
+            ),
+          ),
         ),
       ),
-    ),
-  )
-    .split(/\r?\n/)
-    .filter((line) => {
-      const trimmed = line.trim();
-      if (trimmed.length === 0) {
-        return false;
-      }
-      if (trimmed === AGENT_LIVE_BASH_PROMPT.trim()) {
-        return false;
-      }
-      if (AGENT_LIVE_PROGRESS_CLI_COMMAND_LINE_PATTERN.test(trimmed)) {
-        return false;
-      }
-      if (
-        /^Preparing .+ CLI on your (?:Mac|computer)/i.test(trimmed) ||
-        /^Preparing .+ for this session/i.test(trimmed)
-      ) {
-        return false;
-      }
-      if (/ is ready on your (?:Mac|computer)\.?$/i.test(trimmed)) {
-        return false;
-      }
-      if (/^Use New task below/i.test(trimmed)) {
-        return false;
-      }
-      if (/^\d+\.\d+\.\d+\s*\(Claude Code\)/i.test(trimmed)) {
-        return false;
-      }
-      if (trimmed === "[[MARKETPLACE_PLAN_ESTIMATE]]") {
-        return false;
-      }
-      if (trimmed.startsWith("marketplacePlanEstimate")) {
-        return false;
-      }
-      if (
-        /marketplace plan\/estimate falling back to claude-cli/i.test(trimmed)
-      ) {
-        return false;
-      }
-      return true;
-    })
-    .join("\n")
-    .trim();
+    )
+      .split(/\r?\n/)
+      .filter((line) => {
+        const trimmed = line.trim();
+        if (trimmed.length === 0) {
+          return false;
+        }
+        if (trimmed === AGENT_LIVE_BASH_PROMPT.trim()) {
+          return false;
+        }
+        if (AGENT_LIVE_PROGRESS_CLI_COMMAND_LINE_PATTERN.test(trimmed)) {
+          return false;
+        }
+        if (
+          /^Preparing .+ CLI on your (?:Mac|computer)/i.test(trimmed) ||
+          /^Preparing .+ for this session/i.test(trimmed)
+        ) {
+          return false;
+        }
+        if (/ is ready on your (?:Mac|computer)\.?$/i.test(trimmed)) {
+          return false;
+        }
+        if (/^Use New task below/i.test(trimmed)) {
+          return false;
+        }
+        if (/^\d+\.\d+\.\d+\s*\(Claude Code\)/i.test(trimmed)) {
+          return false;
+        }
+        if (trimmed === "[[MARKETPLACE_PLAN_ESTIMATE]]") {
+          return false;
+        }
+        if (trimmed.startsWith("marketplacePlanEstimate")) {
+          return false;
+        }
+        if (
+          /marketplace plan\/estimate falling back to claude-cli/i.test(trimmed)
+        ) {
+          return false;
+        }
+        return true;
+      })
+      .join("\n"),
+  ).trim();

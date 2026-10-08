@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import { formatAgentRunPartialOutputForDisplay } from "@/features/agent/utils/formatAgentRunPartialOutputForDisplay";
-import { stripAgentRunCliNoise } from "@/features/agent/utils/stripAgentRunCliNoise";
+import { cleanAgentOutputForUser } from "@/features/agent/utils/cleanAgentOutputForUser";
+
+const stripAgentRunCliNoise = (output: string): string =>
+  cleanAgentOutputForUser(output, { keepMarkers: true }).trim();
 
 const codexStart = [
   ", [[NEXT_ACTIONS]], or",
@@ -29,7 +32,7 @@ const thienAskContextJunk = [
   "Match design screens f1-* onboarding (welcome, sign-in, privacy, add baby, units, notif) and f2-* multi-baby (switcher, add, twins, edit, archive, delete, restore). Edit src; build; commit.",
 ].join("\n");
 
-describe("stripAgentRunCliNoise", () => {
+describe("cleanAgentOutputForUser (ask card path)", () => {
   it("returns nothing while only the banner and echoed prompt exist", () => {
     expect(stripAgentRunCliNoise(codexStart.join("\n"))).toBe("");
   });

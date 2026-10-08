@@ -27,7 +27,7 @@ export const isAgentRunHarnessInstructionLine = (line: string): boolean => {
     return true;
   }
   // Truncated earlier chunk: ", [[NEXT_ACTIONS]], or …" / "finding so the operator…"
-  if (/^[,;:]/.test(trimmed)) {
+  if (/^[,;:]/.test(trimmed) && MARKER_TOKEN.test(trimmed)) {
     return true;
   }
   if (

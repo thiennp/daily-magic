@@ -1,3 +1,4 @@
+import { cleanAgentOutputForUser } from "@/features/agent/utils/cleanAgentOutputForUser";
 import { dropRepeatedAgentLiveTerminalParagraphs } from "@/features/agent/utils/dropRepeatedAgentLiveTerminalParagraphs";
 import { mapAgentLiveTerminalMarkerLines } from "@/features/agent/utils/mapAgentLiveTerminalMarkerLines";
 import { replaceAgentLiveTerminalInterruptedLines } from "@/features/agent/utils/replaceAgentLiveTerminalInterruptedLines";
@@ -18,7 +19,12 @@ export const formatAgentLiveTerminalMarkersForDisplay = (
     dropRepeatedAgentLiveTerminalParagraphs(
       mapAgentLiveTerminalMarkerLines(
         stripAgentRunWorkingEstimateFromOutput(
-          stripAgentRunWavePlanFromOutput(output),
+          stripAgentRunWavePlanFromOutput(
+            cleanAgentOutputForUser(output, {
+              keepMarkers: true,
+              keepCliPreamble: true,
+            }),
+          ),
         ).split(/\r?\n/),
       ),
     ),
