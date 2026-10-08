@@ -98,3 +98,7 @@ export {
   supportsWriterSessionContinuation,
   supportsWriterSessionWarmup,
 } from "../../../scripts/agentWitchWriterSession";
+export {
+  registerAgentWitchHostGracefulShutdown,
+  restartAgentWitchHostAfterBundleUpdate,
+} from "../../../scripts/restartAgentWitchHostAfterBundleUpdate";

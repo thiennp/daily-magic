@@ -57,6 +57,7 @@ import type { AgentWitchClientConfig as AgentWitchConfig } from "@agent-witch/in
 import { buildAgentWitchDeviceRestartAckPayload } from "@agent-witch/install-runtime-client";
 import {
   ensureAgentWitchInstallVersionRecorded,
+  readAgentWitchInstallVersion,
   resolveAgentWitchAppOriginFromWsUrl,
   resolveAgentWitchHeartbeatInstallBundleVersion,
 } from "@agent-witch/install-self-update";
@@ -164,6 +165,8 @@ import {
   recordAgentRunTokenPreEstimateOutput,
   resolveTaskWriterEstimateLabel,
   probeLocalRunClis,
+  registerAgentWitchHostGracefulShutdown,
+  restartAgentWitchHostAfterBundleUpdate,
   runLocalInstallBundleUpdate,
   runWriterEnsure,
   runWriterSessionStart,
@@ -205,8 +208,12 @@ const persistRunHistoryAiSessionLocal = (input: {
       taskId: input.agentRunId,
       agentRunId: input.agentRunId,
       status: input.status,
-      ...(input.promptBody !== undefined ? { promptBody: input.promptBody } : {}),
-      ...(input.resultBody !== undefined ? { resultBody: input.resultBody } : {}),
+      ...(input.promptBody !== undefined
+        ? { promptBody: input.promptBody }
+        : {}),
+      ...(input.resultBody !== undefined
+        ? { resultBody: input.resultBody }
+        : {}),
       ...(typeof input.writerAgent === "string"
         ? { writerAgent: input.writerAgent }
         : {}),
@@ -1076,6 +1083,49 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
         state.wakeError = "Local restart failed";
         console.error("[agent-witch] Local restart failed.", result.payload);
+      })
+      .finally(() => {
+        state.restartInFlight = false;
+      });
+
+    return "accepted";
+  };
+
+  const runLocalHostRestartIntoUpdatedBundle = (
+    reason: string,
+  ): "accepted" | "already_in_progress" | "deferred_writer_busy" => {
+    if (state.restartInFlight) {
+      return "already_in_progress";
+    }
+
+    if (isAgentWitchWriterWorkInProgress(config.layout)) {
+      deferAgentWitchLocalRestart(reason);
+      console.log(
+        `[agent-witch] Deferring host restart (${reason}) until the active writer task finishes.`,
+      );
+      return "deferred_writer_busy";
+    }
+
+    const bundleVersion =
+      readAgentWitchInstallVersion(config.layout.installDir)?.bundleVersion ??
+      "unknown";
+
+    state.restartInFlight = true;
+    console.log(
+      `[agent-witch] Host restart into updated bundle requested (${reason})…`,
+    );
+
+    void restartAgentWitchHostAfterBundleUpdate({
+      installDir: config.layout.installDir,
+      bundleVersion,
+    })
+      .then((result) => {
+        if (!result.ok) {
+          state.wakeError = result.message;
+          console.error(
+            `[agent-witch] Host restart after bundle update failed: ${result.message}`,
+          );
+        }
       })
       .finally(() => {
         state.restartInFlight = false;
@@ -2151,9 +2201,16 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       }
       const stopped = stopAllAgentRuns(
         config,
-        asLegacyWebSocket(state.socket ?? { readyState: WebSocket.CLOSED, send: () => undefined }),
+        asLegacyWebSocket(
+          state.socket ?? {
+            readyState: WebSocket.CLOSED,
+            send: () => undefined,
+          },
+        ),
       );
-      console.log(`[agent-witch] Coding tools paused; stopped ${stopped} run(s).`);
+      console.log(
+        `[agent-witch] Coding tools paused; stopped ${stopped} run(s).`,
+      );
     },
   );
 
@@ -2180,6 +2237,10 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     }
 
     const deferredRestart = takeDeferredAgentWitchLocalRestartReason();
+    if (deferredRestart === "install-bundle-update") {
+      runLocalHostRestartIntoUpdatedBundle(deferredRestart);
+      return;
+    }
     if (deferredRestart !== null) {
       runLocalRestart(deferredRestart);
     }
@@ -2385,14 +2446,20 @@ const main = async (): Promise<void> => {
     shutdown();
   });
 
-  shutdown = (): void => {
+  const gracefulHostShutdown = (): void => {
     stopConsoleUserGuard();
     inProcessServices.stop();
-    releaseAgentWitchMachineLease();
-    console.log("[agent-witch] Shutting down.");
     for (const client of clients) {
       client.stop();
     }
+    releaseAgentWitchMachineLease();
+  };
+
+  registerAgentWitchHostGracefulShutdown(gracefulHostShutdown);
+
+  shutdown = (): void => {
+    gracefulHostShutdown();
+    console.log("[agent-witch] Shutting down.");
     process.exit(0);
   };
 

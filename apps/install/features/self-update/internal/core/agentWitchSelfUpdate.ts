@@ -5,11 +5,6 @@ import {
   extractAgentWitchBundledDepsArchive,
   removeLegacyAgentWitchNpmInstallArtifacts,
 } from "@agent-witch/install-bundled-deps";
-import { restartAgentWitchLinuxSystemdUserService } from "@agent-witch/install-linux-launch";
-import {
-  bootoutAgentWitchAuxiliaryLaunchAgents,
-  kickstartAgentWitchClientLaunchAgents,
-} from "@agent-witch/install-macos-launch";
 import {
   readActiveProfileEmailFromFile,
   resolveAgentWitchInstallDir,
@@ -32,6 +27,7 @@ import {
   appendAgentWitchSelfUpdateLog,
   readAgentWitchSelfUpdateLogs,
 } from "./agentWitchSelfUpdateLog";
+import { restartAgentWitchHostAfterBundleUpdate } from "../../../../../../scripts/restartAgentWitchHostAfterBundleUpdate";
 import { ensureAgentWitchOllamaInstalled } from "./ensureAgentWitchOllamaInstalled";
 
 interface RemoteBundleManifest {
@@ -133,23 +129,6 @@ const downloadInstallBundle = async (
   if (relativePath.endsWith(".js")) {
     fs.chmodSync(targetPath, 0o755);
   }
-};
-
-const kickstartServicesAfterUpdate = async (): Promise<void> => {
-  if (process.platform === "linux") {
-    try {
-      await restartAgentWitchLinuxSystemdUserService();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      console.warn(
-        `[agent-witch-self-update] Linux service restart skipped: ${message}`,
-      );
-    }
-    return;
-  }
-
-  bootoutAgentWitchAuxiliaryLaunchAgents();
-  await kickstartAgentWitchClientLaunchAgents();
 };
 
 const resolveAgentWitchSelfUpdateAppOrigin = (
@@ -304,7 +283,15 @@ export const runAgentWitchSelfUpdate = async (input?: {
       return result;
     }
 
-    await kickstartServicesAfterUpdate();
+    const restart = await restartAgentWitchHostAfterBundleUpdate({
+      installDir,
+      bundleVersion: manifest.bundleVersion,
+    });
+    if (!restart.ok) {
+      console.warn(
+        `[agent-witch-self-update] Host restart after bundle update failed: ${restart.message}`,
+      );
+    }
 
     const result = buildSelfUpdateResult(
       {
@@ -325,9 +312,7 @@ export const runAgentWitchSelfUpdate = async (input?: {
     return result;
   } catch (error) {
     const message =
-      error instanceof Error
-        ? error.message
-        : "AgentWitch self-update failed.";
+      error instanceof Error ? error.message : "AgentWitch self-update failed.";
     const result = buildSelfUpdateResult(
       {
         ok: false,

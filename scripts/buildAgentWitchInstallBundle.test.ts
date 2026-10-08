@@ -5,6 +5,7 @@ import fs from "node:fs";
 import { resolveAgentWitchInstallBundleOutfile } from "@agent-witch/install-bundle";
 
 import { assertShippedInstallBundleAntigravityArgv } from "./assertShippedInstallBundleAntigravityArgv";
+import { assertShippedInstallBundleHostRestart } from "./assertShippedInstallBundleHostRestart";
 
 describe("buildAgentWitchInstallBundle output", () => {
   it("AGENT-065: ships a CommonJS bundle without ESM dynamic-require shim", () => {
@@ -21,6 +22,12 @@ describe("buildAgentWitchInstallBundle output", () => {
   it("ships antigravity argv as --sandbox -p with headless command(*) allow merge", () => {
     expect(() =>
       assertShippedInstallBundleAntigravityArgv(process.cwd()),
+    ).not.toThrow();
+  });
+
+  it("ships host restart into updated bundle after in-process self-update", () => {
+    expect(() =>
+      assertShippedInstallBundleHostRestart(process.cwd()),
     ).not.toThrow();
   });
 });
