@@ -31,6 +31,10 @@ export interface AutoSkillSuggestion {
   readonly title: string;
   readonly prompt: string;
   readonly occurrences: number;
+  /** Repeated step (module) label; null for older prompt-level questions. */
+  readonly moduleLabel: string | null;
+  /** Distinct prompts the step appeared in; null for older questions. */
+  readonly distinctPrompts: number | null;
   readonly matches: readonly AutoSkillSuggestionMatch[];
   readonly draftName: string;
   readonly draftBody: string;

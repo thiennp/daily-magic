@@ -30,9 +30,12 @@ const createTables = async (): Promise<void> => {
     UNIQUE (project_id, cluster_id))`;
   await sql`CREATE INDEX IF NOT EXISTS project_skill_suggestions_project_status_idx
     ON project_skill_suggestions (project_id, status)`;
+  await sql`ALTER TABLE project_skill_suggestions
+    ADD COLUMN IF NOT EXISTS module_label TEXT,
+    ADD COLUMN IF NOT EXISTS distinct_prompts INTEGER`;
 };
 
-/** Idempotent CREATE (full DDL in db/migrations/120-project-auto-skills.sql). */
+/** Idempotent CREATE (full DDL in db/migrations/120-project-auto-skills.sql and 121).. */
 export const ensureProjectAutoSkillsSchema = async (): Promise<void> => {
   if (state.promise === null) {
     state.promise = createTables().catch((error: unknown) => {

@@ -2348,6 +2348,8 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
               ...(projectFolderPath !== null
                 ? { folderPath: projectFolderPath }
                 : {}),
+              layout: config.layout,
+              agentOutput: output,
             });
           }
         }

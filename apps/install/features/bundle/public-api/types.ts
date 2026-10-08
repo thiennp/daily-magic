@@ -26,7 +26,8 @@
 /** 305 = auto skills: repeated tasks raise an owner question (Ollama / agent judge); owner-LLM CLI turns fail on non-zero exit. */
 /** 306 = project knowledge is captured from the final run result (it was never reached before, so notes and impact stayed 0). */
 /** 307 = auto skills keep only hashes + previews when history is OFF, run completion carries the writer; local folder describe adds git remote and branch. */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "307";
+/** 308 = auto skills work at module level: runs are split into steps, matched into clusters in knowledge.db, and a step repeated in 2+ runs raises the owner question. */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "308";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =

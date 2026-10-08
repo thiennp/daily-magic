@@ -1,4 +1,10 @@
+import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
+
 import type { HarnessWriterAgentId } from "../../../../adapters/writerDispatch";
+import {
+  embedKnowledgeQuery,
+  getKnowledgeDb,
+} from "../../../knowledge/public-api/infrastructure";
 import type { AgentWitchCloudApiConfig } from "../../../projects/internal/core/agentWitchCloudApi";
 
 import type { AutoSkillRunRecord } from "./autoSkill.types";
@@ -7,6 +13,7 @@ import {
   probeSignedInAutoSkillAgent,
 } from "./autoSkillAgent";
 import { createHttpAutoSkillCloud } from "./autoSkillCloud";
+import { ensureAutoSkillModuleSchema } from "./autoSkillModuleSchema";
 import {
   createOllamaAutoSkillCompleter,
   probeAutoSkillOllamaModel,
@@ -19,6 +26,8 @@ import {
   type AutoSkillOutcome,
 } from "./onAutoSkillRunCompleted";
 
+const EMBED_TIMEOUT_MS = 5_000;
+
 /**
  * Production wiring for the "completed run" hook: real cloud, Ollama probe,
  * signed-in CLI probe. Fire-and-forget safe (never throws).
@@ -28,6 +37,10 @@ export const reportAutoSkillRunCompleted = async (input: {
   readonly projectId: string;
   readonly run: AutoSkillRunRecord;
   readonly folderPath?: string;
+  /** Local layout: locates knowledge.db for the module store. */
+  readonly layout?: AgentWitchLocalLayout;
+  /** Agent output; its [[WAVE_PLAN]] block is the preferred module source. */
+  readonly agentOutput?: string;
 }): Promise<AutoSkillOutcome> =>
   onAutoSkillRunCompleted(
     {
@@ -36,8 +49,22 @@ export const reportAutoSkillRunCompleted = async (input: {
       ...(input.folderPath !== undefined
         ? { folderPath: input.folderPath }
         : {}),
+      ...(input.agentOutput !== undefined
+        ? { agentOutput: input.agentOutput }
+        : {}),
     },
     {
+      openModuleDb: () => {
+        const db =
+          input.layout === undefined ? null : getKnowledgeDb(input.layout);
+        if (db !== null) {
+          ensureAutoSkillModuleSchema(db);
+        }
+        return db;
+      },
+      embed: (text) => embedKnowledgeQuery(text, EMBED_TIMEOUT_MS),
+      isHistoryOn: (projectId) =>
+        isLocalProjectHistoryOn(readLocalProjectHistoryState(projectId)?.state),
       cloud: createHttpAutoSkillCloud(input.cloudApi),
       loadState: readAutoSkillState,
       // Unknown or OFF history counts as OFF: store only hashes + previews.

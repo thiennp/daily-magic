@@ -3,6 +3,7 @@ export { buildKnowledgeNotes } from "../internal/core/episode/buildKnowledgeNote
 export { captureKnowledgeAfterRun } from "../internal/core/episode/captureKnowledgeAfterRun";
 export { checkKnowledgeBeforeTask } from "../internal/core/episode/checkKnowledgeBeforeTask";
 export { classifyKnowledgeTaskClass } from "../internal/core/episode/classifyKnowledgeTaskClass";
+export { embedKnowledgeQuery } from "../internal/core/episode/embedKnowledgeText";
 export { getKnowledgeDb } from "../internal/core/episode/knowledgeDb";
 export {
   isKnowledgeEnabled,

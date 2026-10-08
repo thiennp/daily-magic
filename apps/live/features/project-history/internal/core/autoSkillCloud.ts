@@ -25,6 +25,10 @@ export type AutoSkillSuggestionPayload = {
   readonly title: string;
   readonly prompt: string;
   readonly occurrences: number;
+  /** Canonical text of the repeated step (module-level questions). */
+  readonly moduleLabel?: string;
+  /** Distinct prompts the step appeared in. */
+  readonly distinctPrompts?: number;
   readonly matches: readonly {
     readonly runId: string;
     readonly completedAt: string;

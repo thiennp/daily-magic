@@ -45,8 +45,15 @@ export default function AwcAutoSkillQuestionCard({
         Save as skill?
       </h3>
       <p className="mt-1 text-[13px] text-awc-fg-muted">
-        You ran this kind of task {suggestion.occurrences} times.
+        {suggestion.moduleLabel !== null && suggestion.distinctPrompts !== null
+          ? `This step appeared ${suggestion.occurrences} times in ${suggestion.distinctPrompts} ${suggestion.distinctPrompts === 1 ? "prompt" : "prompts"}.`
+          : `You ran this kind of task ${suggestion.occurrences} times.`}
       </p>
+      {suggestion.moduleLabel !== null ? (
+        <p className="mt-1 text-[13px] font-medium text-awc-fg">
+          {suggestion.moduleLabel}
+        </p>
+      ) : null}
       <p className="mt-1 line-clamp-3 text-[13px] text-awc-fg">
         {suggestion.prompt}
       </p>

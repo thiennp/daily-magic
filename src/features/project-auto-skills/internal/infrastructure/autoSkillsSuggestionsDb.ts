@@ -11,6 +11,8 @@ export type NewAutoSkillSuggestion = {
   readonly title: string;
   readonly prompt: string;
   readonly occurrences: number;
+  readonly moduleLabel?: string | null;
+  readonly distinctPrompts?: number | null;
   readonly matches: readonly AutoSkillSuggestionMatch[];
   readonly draftName: string;
   readonly draftBody: string;
@@ -24,6 +26,9 @@ const mapRow = (row: Record<string, unknown>): AutoSkillSuggestion => ({
   title: String(row.title),
   prompt: String(row.prompt),
   occurrences: Number(row.occurrences),
+  moduleLabel: row.module_label == null ? null : String(row.module_label),
+  distinctPrompts:
+    row.distinct_prompts == null ? null : Number(row.distinct_prompts),
   matches: Array.isArray(row.matches)
     ? (row.matches as AutoSkillSuggestionMatch[])
     : [],
@@ -46,12 +51,15 @@ export const upsertAutoSkillSuggestion = async (
   const rows = asRowArray(
     await getSql()`
       INSERT INTO project_skill_suggestions (project_id, cluster_id, title, prompt,
-        occurrences, matches, draft_name, draft_body, judge_label)
+        occurrences, module_label, distinct_prompts, matches, draft_name, draft_body, judge_label)
       VALUES (${projectId}, ${s.clusterId}, ${s.title}, ${s.prompt}, ${s.occurrences},
+        ${s.moduleLabel ?? null}, ${s.distinctPrompts ?? null},
         ${JSON.stringify(s.matches)}::jsonb, ${s.draftName}, ${s.draftBody}, ${s.judgeLabel})
       ON CONFLICT (project_id, cluster_id) DO UPDATE SET status = 'pending',
         title = EXCLUDED.title, prompt = EXCLUDED.prompt,
-        occurrences = EXCLUDED.occurrences, matches = EXCLUDED.matches,
+        occurrences = EXCLUDED.occurrences,
+        module_label = EXCLUDED.module_label,
+        distinct_prompts = EXCLUDED.distinct_prompts, matches = EXCLUDED.matches,
         draft_name = EXCLUDED.draft_name, draft_body = EXCLUDED.draft_body,
         judge_label = EXCLUDED.judge_label, updated_at = NOW()
       WHERE project_skill_suggestions.status IN ('pending', 'not_now')
