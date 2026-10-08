@@ -304,8 +304,15 @@ struct ComputerView: View {
     private var startStopButton: some View {
         switch chrome.kind {
         case .running:
-            Button { controller.stopCore() } label: { Label("Stop", systemImage: "stop.fill") }
+            HStack(spacing: 8) {
+                Button { controller.restartCore() } label: {
+                    Label("Restart", systemImage: "arrow.clockwise")
+                }
                 .buttonStyle(.bordered).controlSize(.large)
+                .help("Restart AgentWitch for this account only")
+                Button { controller.stopCore() } label: { Label("Stop", systemImage: "stop.fill") }
+                    .buttonStyle(.bordered).controlSize(.large)
+            }
         case .starting:
             Button("Starting…") {}.disabled(true).controlSize(.large)
         default:

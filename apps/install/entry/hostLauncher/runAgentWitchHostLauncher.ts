@@ -100,10 +100,11 @@ export const runAgentWitchHostLauncher = async (input: {
   if (started.mode === "launchd") {
     const retire =
       input.retireLegacyLauncher ??
-      ((installDir: string) => retireAgentWitchLegacyHostLauncher({ installDir }));
+      ((installDir: string) =>
+        retireAgentWitchLegacyHostLauncher({ installDir }));
     try {
-      const retired = await retire(input.installDir);
-      console.log(`[agent-witch] ${retired.message}`);
+      // retire logs its own line before the bootout SIGTERMs this process (eb0fcdf9).
+      await retire(input.installDir);
     } catch (error) {
       console.error(
         `[agent-witch] Could not retire the legacy launcher: ${error instanceof Error ? error.message : String(error)}`,

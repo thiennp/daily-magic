@@ -31,12 +31,37 @@ describe("retireAgentWitchLegacyHostLauncher", () => {
           written = xml;
         },
         plistExists: () => true,
+        log: () => undefined,
       },
     });
     expect(result.ok).toBe(true);
     expect(result.retired).toBe(true);
     expect(written).toContain("/usr/bin/true");
     expect(calls).toEqual([["bootout", "gui/501/com.agent-witch"]]);
+  });
+
+  it("logs the no-op line before the bootout that SIGTERMs the launcher (eb0fcdf9)", async () => {
+    const order: string[] = [];
+    await retireAgentWitchLegacyHostLauncher({
+      installDir: "/tmp/.agent-witch",
+      homeDir: "/tmp/home",
+      platform: "darwin",
+      uid: 501,
+      deps: {
+        launchctl: async (args) => {
+          order.push(`launchctl ${args.join(" ")}`);
+        },
+        writePlist: () => undefined,
+        plistExists: () => true,
+        log: (line) => {
+          order.push(line);
+        },
+      },
+    });
+    expect(order).toEqual([
+      "[agent-witch] Legacy com.agent-witch LaunchAgent is now a no-op; unloading it (account hosts keep running).",
+      "launchctl bootout gui/501/com.agent-witch",
+    ]);
   });
 
   it("skips on non-macOS", async () => {

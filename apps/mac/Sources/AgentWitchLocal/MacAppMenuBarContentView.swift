@@ -239,9 +239,10 @@ struct MacAppMenuBarContentView: View {
             Spacer()
             switch chrome.kind {
             case .running:
-                Button("Stop") { controller.stopCore() }
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
+                // eb0fcdf9: `.bordered` rendered a blank label in the popover (same as 0.2.5's
+                // Show Applications); draw the labels ourselves like that fix.
+                popoverActionButton("Restart", prominent: false) { controller.restartCore() }
+                popoverActionButton("Stop", prominent: false) { controller.stopCore() }
             case .starting:
                 Button("Starting…") {}
                     .disabled(true)
@@ -256,6 +257,33 @@ struct MacAppMenuBarContentView: View {
         .padding(10)
         .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.surface))
         .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(MacAppTheme.border))
+    }
+
+    /// Plain-style button with an explicit label + background (system bordered styles
+    /// can render the label invisible in the MenuBarExtra popover).
+    private func popoverActionButton(
+        _ title: String,
+        prominent: Bool,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(prominent ? Color.white : MacAppTheme.fg)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 4)
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(prominent ? MacAppTheme.brandInk : MacAppTheme.surface2)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .strokeBorder(prominent ? Color.clear : MacAppTheme.border)
+                )
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(title)
     }
 
     /// Thin AWL: plain-language AWB / AWI status (projects live in AgentWitch).

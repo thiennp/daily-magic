@@ -40,6 +40,8 @@ export interface RetireAgentWitchLegacyHostLauncherDeps {
   readonly launchctl: (args: readonly string[]) => Promise<void>;
   readonly writePlist: (plistPath: string, xml: string) => void;
   readonly plistExists: (plistPath: string) => boolean;
+  /** Synchronous log line (launchd StandardOutPath is a file). */
+  readonly log: (line: string) => void;
 }
 
 const defaultDeps: RetireAgentWitchLegacyHostLauncherDeps = {
@@ -53,6 +55,9 @@ const defaultDeps: RetireAgentWitchLegacyHostLauncherDeps = {
     fs.renameSync(tmp, plistPath);
   },
   plistExists: (plistPath) => fs.existsSync(plistPath),
+  log: (line) => {
+    console.log(line);
+  },
 };
 
 /**
@@ -61,7 +66,8 @@ const defaultDeps: RetireAgentWitchLegacyHostLauncherDeps = {
  * or old AWL cannot keep a KeepAlive launcher around (dd5c338d / d5e39215).
  * Not `launchctl disable`: the install script must still be able to bootstrap
  * the label. Called by the launcher itself, so the bootout usually SIGTERMs
- * the caller (its handler exits without touching account hosts).
+ * the caller (its handler exits without touching account hosts), so the
+ * message is logged BEFORE the bootout or it never reaches the log (eb0fcdf9).
  */
 export const retireAgentWitchLegacyHostLauncher = async (input: {
   readonly installDir?: string;
@@ -107,6 +113,7 @@ export const retireAgentWitchLegacyHostLauncher = async (input: {
 
   const retired = deps.plistExists(plistPath);
   const message = `Legacy ${label} LaunchAgent is now a no-op; unloading it (account hosts keep running).`;
+  deps.log(`[agent-witch] ${message}`);
   try {
     await deps.launchctl(["bootout", target]);
   } catch {
