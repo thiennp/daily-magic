@@ -6,13 +6,11 @@ import { AGENT_WITCH_LOCAL_BROWSER_UI_RETIRED_MESSAGE } from "./agentWitchLocalA
 import { createAgentWitchLocalSendHtml } from "./writeAgentWitchLocalHtmlResponse";
 import { readAgentWitchLocalBundleCommitSha } from "./readAgentWitchLocalBundleCommitSha";
 import { isRetiredAgentWitchLocalBrowserUiRequest } from "./isRetiredAgentWitchLocalBrowserUiRequest";
-import { AGENT_WITCH_LOCAL_PORTS_IN_USE_MESSAGE } from "./agentWitchLocalAppPortRange.constants";
-import { allocateOrLoadAgentWitchLocalAppPortRange } from "./allocateOrLoadAgentWitchLocalAppPortRange";
 import {
-  resolveAgentWitchLocalAppListenPort,
-  writeAgentWitchLocalAppPortFile,
-  writeAgentWitchLocalAppPortsExhaustedFile,
-} from "./resolveAgentWitchLocalAppListenPort";
+  readPreferredAgentWitchLocalAppPortHint,
+  registerAgentWitchLocalAppAccountListening,
+} from "./agentWitchHostLocalAppAccountsDiscovery";
+import { listenAgentWitchLocalAppHttpServer } from "./listenAgentWitchLocalAppHttpServer";
 
 import {
   AGENT_WITCH_LOCAL_APP_PORT,
@@ -427,18 +425,9 @@ export const startAgentWitchLocalApp = (input: {
   readonly controllers: AgentWitchLocalAppControllers;
 }): http.Server => {
   const linkCodePath = path.join(input.layout.installDir, "link-code.txt");
-  const profilesDir = path.join(input.layout.installDir, "profiles");
   const profileDir = path.dirname(input.layout.configPath);
-  const localPortRange = allocateOrLoadAgentWitchLocalAppPortRange({
-    profileDir,
-    profilesDir,
-  });
-  // Placeholder until preflight resolves; health never serves until listen succeeds
-  // (or portsExhausted marker is written for Mac when the range is full).
-  let localAppPort = localPortRange.start;
-  let portsExhausted = false;
-  const portRangeSize = localPortRange.end - localPortRange.start + 1;
-  let preflightAttempts = 0;
+  const profileEmail = input.layout.profileEmail?.trim() ?? "";
+  let localAppPort = 0;
   const readInstallVersion = () =>
     readAgentWitchInstallVersion(input.layout.installDir);
   const buildInstallBundleStatus = () => {
@@ -722,11 +711,8 @@ export const startAgentWitchLocalApp = (input: {
           installBundleVersion: installBundle.installBundleVersion,
           installBundleUpdatedAt: installBundle.installBundleUpdatedAt,
           localAppPort,
-          localPortRange: {
-            start: localPortRange.start,
-            end: localPortRange.end,
-          },
-          portsExhausted,
+          profileEmail,
+          pid: process.pid,
           // DF-032: which build is running (null when unstamped).
           ...readAgentWitchLocalBundleCommitSha(),
           ...buildAgentWitchLocalHealthIdentity({
@@ -2023,8 +2009,14 @@ export const startAgentWitchLocalApp = (input: {
     });
   });
 
-  const onListening = (): void => {
-    writeAgentWitchLocalAppPortFile(profileDir, localAppPort);
+  const onListening = (boundPort: number): void => {
+    localAppPort = boundPort;
+    registerAgentWitchLocalAppAccountListening({
+      installDir: input.layout.installDir,
+      profileEmail,
+      profileDir,
+      port: boundPort,
+    });
     // GlobalTriggersWritten: idempotent MCP/hook writers (injectable in unit tests).
     try {
       writeGlobalTriggers();
@@ -2033,7 +2025,7 @@ export const startAgentWitchLocalApp = (input: {
       console.error(`[agent-witch] writeGlobalTriggers failed: ${message}`);
     }
     console.log(
-      `[agent-witch] Local app http://127.0.0.1:${localAppPort} (range ${localPortRange.start}–${localPortRange.end})`,
+      `[agent-witch] Local app http://127.0.0.1:${boundPort} (${profileEmail})`,
     );
     const pitfallCacheNote = describePitfallCacheAvailability();
     if (pitfallCacheNote !== null) {
@@ -2041,40 +2033,7 @@ export const startAgentWitchLocalApp = (input: {
     }
   };
 
-  /**
-   * Arch Exact FIX-1: preflight with resolveAgentWitchLocalAppListenPort before
-   * listen. When the range is exhausted the resolver writes local-app-port.json
-   * `{ portsExhausted: true }` so Mac can set portsInUse without a /health
-   * listener (the old bind loop set the flag but never listened).
-   */
-  const beginListen = async (): Promise<void> => {
-    preflightAttempts += 1;
-    if (preflightAttempts > portRangeSize) {
-      portsExhausted = true;
-      writeAgentWitchLocalAppPortsExhaustedFile(profileDir);
-      console.error(`[agent-witch] ${AGENT_WITCH_LOCAL_PORTS_IN_USE_MESSAGE}`);
-      return;
-    }
-    const resolved = await resolveAgentWitchLocalAppListenPort({
-      profileDir,
-      range: localPortRange,
-    });
-    if (!resolved.ok) {
-      portsExhausted = true;
-      console.error(`[agent-witch] ${resolved.reason}`);
-      return;
-    }
-    portsExhausted = false;
-    localAppPort = resolved.port;
-    server.listen(localAppPort, "127.0.0.1", onListening);
-  };
-
   server.on("error", (error: NodeJS.ErrnoException) => {
-    if (error.code === "EADDRINUSE") {
-      // Rare TOCTOU after preflight: re-resolve (skips the now-taken port).
-      void beginListen();
-      return;
-    }
     console.error("[agent-witch] Local app server error:", error);
   });
 
@@ -2083,7 +2042,29 @@ export const startAgentWitchLocalApp = (input: {
     historyTick.stop();
   });
 
-  void beginListen();
+  if (profileEmail.length === 0) {
+    console.error(
+      "[agent-witch] Cannot start local app without layout.profileEmail",
+    );
+  } else {
+    void listenAgentWitchLocalAppHttpServer(server, {
+      host: "127.0.0.1",
+      preferredPort: readPreferredAgentWitchLocalAppPortHint({
+        installDir: input.layout.installDir,
+        profileEmail,
+        profileDir,
+      }),
+    })
+      .then((boundPort) => {
+        onListening(boundPort);
+      })
+      .catch((error: unknown) => {
+        console.error(
+          "[agent-witch] Local app server failed to listen:",
+          error,
+        );
+      });
+  }
 
   return server;
 };

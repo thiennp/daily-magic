@@ -60,10 +60,11 @@ describe("ensureAgentWitchCoupledLiveAppHealth", () => {
 
   it("does not kickstart when AWL health succeeds", async () => {
     const installDir = createInstallDir();
-
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: true,
-    } as Response);
+    writeDiscoveryPortFiles(installDir, {
+      email: "me@example.com",
+      port: 65400,
+    });
+    mockHealthOnlyOn(65400);
 
     const result = await ensureAgentWitchCoupledLiveAppHealth(installDir);
 
@@ -85,23 +86,31 @@ describe("ensureAgentWitchCoupledLiveAppHealth", () => {
   });
 });
 
-const writeH6PortFiles = (
+const writeDiscoveryPortFiles = (
   installDir: string,
   input: {
+    readonly email: string;
     readonly port: number;
-    readonly start: number;
-    readonly end: number;
   },
 ): void => {
-  const profileDir = path.join(installDir, "profiles", "me@example.com");
+  const profileDir = path.join(installDir, "profiles", input.email);
   fs.mkdirSync(profileDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(installDir, "local-app-accounts.json"),
+    JSON.stringify({
+      accounts: [
+        {
+          email: input.email,
+          port: input.port,
+          pid: process.pid,
+          startedAt: new Date().toISOString(),
+        },
+      ],
+    }),
+  );
   fs.writeFileSync(
     path.join(profileDir, "local-app-port.json"),
     JSON.stringify({ localAppPort: input.port }),
-  );
-  fs.writeFileSync(
-    path.join(profileDir, "local-port-range.json"),
-    JSON.stringify({ start: input.start, end: input.end }),
   );
 };
 
@@ -115,10 +124,13 @@ const mockHealthOnlyOn = (healthyPort: number, body: unknown = { ok: true }) =>
     throw new Error("ECONNREFUSED");
   });
 
-describe("ensureAgentWitchCoupledLiveAppHealth — DF-030 discovered port", () => {
-  it("does not kickstart a healthy H6 server on its discovered port (nothing on 43347)", async () => {
+describe("ensureAgentWitchCoupledLiveAppHealth — host discovery ports", () => {
+  it("does not kickstart a healthy server on its discovered port", async () => {
     const installDir = createInstallDir();
-    writeH6PortFiles(installDir, { port: 65376, start: 65376, end: 65391 });
+    writeDiscoveryPortFiles(installDir, {
+      email: "me@example.com",
+      port: 65376,
+    });
     const fetchSpy = mockHealthOnlyOn(65376);
 
     const result = await ensureAgentWitchCoupledLiveAppHealth(installDir);
@@ -126,7 +138,6 @@ describe("ensureAgentWitchCoupledLiveAppHealth — DF-030 discovered port", () =
     expect(result.liveReachable).toBe(true);
     expect(result.reachablePort).toBe(65376);
     expect(kickstartAgentWitchLaunchAgent).not.toHaveBeenCalled();
-    // Saved port is probed first — no legacy probe needed.
     expect(String(fetchSpy.mock.calls[0]?.[0])).toBe(
       "http://127.0.0.1:65376/health",
     );
@@ -135,9 +146,27 @@ describe("ensureAgentWitchCoupledLiveAppHealth — DF-030 discovered port", () =
     ).toBe(false);
   });
 
-  it("finds a server that moved to another port in the range (stale port file)", async () => {
+  it("finds a server when legacy shim lists the live port (stale discovery row)", async () => {
     const installDir = createInstallDir();
-    writeH6PortFiles(installDir, { port: 65376, start: 65376, end: 65391 });
+    const profileDir = path.join(installDir, "profiles", "me@example.com");
+    fs.mkdirSync(profileDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(installDir, "local-app-accounts.json"),
+      JSON.stringify({
+        accounts: [
+          {
+            email: "me@example.com",
+            port: 65376,
+            pid: 1,
+            startedAt: "2020-01-01T00:00:00.000Z",
+          },
+        ],
+      }),
+    );
+    fs.writeFileSync(
+      path.join(profileDir, "local-app-port.json"),
+      JSON.stringify({ localAppPort: 65383 }),
+    );
     mockHealthOnlyOn(65383);
 
     const result = await ensureAgentWitchCoupledLiveAppHealth(installDir);
@@ -146,19 +175,12 @@ describe("ensureAgentWitchCoupledLiveAppHealth — DF-030 discovered port", () =
     expect(kickstartAgentWitchLaunchAgent).not.toHaveBeenCalled();
   });
 
-  it("still finds a pre-H6 core on legacy 43347", async () => {
-    const installDir = createInstallDir();
-    mockHealthOnlyOn(43347);
-
-    const result = await ensureAgentWitchCoupledLiveAppHealth(installDir);
-
-    expect(result.reachablePort).toBe(43347);
-    expect(kickstartAgentWitchLaunchAgent).not.toHaveBeenCalled();
-  });
-
   it("kickstarts when nothing answers on any candidate port", async () => {
     const installDir = createInstallDir();
-    writeH6PortFiles(installDir, { port: 65376, start: 65376, end: 65391 });
+    writeDiscoveryPortFiles(installDir, {
+      email: "me@example.com",
+      port: 65376,
+    });
     vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("ECONNREFUSED"));
     vi.mocked(kickstartAgentWitchLaunchAgent).mockResolvedValue({ ok: true });
 
@@ -173,19 +195,21 @@ describe("ensureAgentWitchCoupledLiveAppHealth — DF-030 discovered port", () =
     mockHealthOnlyOn(65376, { ok: true, osUid: uid + 1 });
 
     await expect(
-      findAgentWitchLiveAppReachablePort([65376, 43347]),
+      findAgentWitchLiveAppReachablePort([65376, 65377]),
     ).resolves.toBeNull();
   });
 
-  it("resolves saved port → range → legacy for the install", () => {
+  it("resolves discovery ports and legacy shims for the install", () => {
     const installDir = createInstallDir();
-    writeH6PortFiles(installDir, { port: 65380, start: 65376, end: 65391 });
+    writeDiscoveryPortFiles(installDir, {
+      email: "me@example.com",
+      port: 65380,
+    });
 
     const ports = resolveAgentWitchLiveAppHealthPorts(installDir);
 
     expect(ports[0]).toBe(65380);
-    expect(ports).toContain(65376);
-    expect(ports.at(-1)).toBe(43347);
+    expect(ports).not.toContain(43347);
   });
 });
 

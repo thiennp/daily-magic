@@ -31,6 +31,7 @@ export const AWI_INSTALL_ROOT_FILES = {
   activeProfile: "active-profile.json",
   installVersion: "install-version.json",
   wakePort: "wake-port.json",
+  localAppAccounts: "local-app-accounts.json",
   linkCode: "link-code.txt",
   watchdogReinstallState: "watchdog-reinstall-state.json",
 } as const;

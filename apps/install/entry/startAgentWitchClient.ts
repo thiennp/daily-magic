@@ -2416,16 +2416,26 @@ const main = async (): Promise<void> => {
     },
   });
 
+  const localAppServers: ReturnType<typeof startAgentWitchLocalApp>[] = [];
   if (!processHost.skipInProcessLive) {
-    startAgentWitchLocalApp({
-      layout: configs[0]!.layout,
-      controllers: {
-        getStatus: primaryClient.getStatus,
-        reviveWebSocket: reconnectWebSocketsIfStale,
-        reportHarnessManifestIfConnected:
-          primaryClient.reportHarnessManifestIfConnected,
-      },
-    });
+    for (let index = 0; index < clients.length; index += 1) {
+      const client = clients[index];
+      const config = configs[index];
+      if (client === undefined || config === undefined) {
+        continue;
+      }
+      localAppServers.push(
+        startAgentWitchLocalApp({
+          layout: config.layout,
+          controllers: {
+            getStatus: client.getStatus,
+            reviveWebSocket: reconnectWebSocketsIfStale,
+            reportHarnessManifestIfConnected:
+              client.reportHarnessManifestIfConnected,
+          },
+        }),
+      );
+    }
   } else {
     console.log(
       "[agent-witch] Skipping in-process AWL (AGENT_WITCH_EXTERNAL_LIVE).",
@@ -2459,6 +2469,9 @@ const main = async (): Promise<void> => {
   const gracefulHostShutdown = (): void => {
     stopConsoleUserGuard();
     inProcessServices.stop();
+    for (const localAppServer of localAppServers) {
+      localAppServer.close();
+    }
     for (const client of clients) {
       client.stop();
     }
