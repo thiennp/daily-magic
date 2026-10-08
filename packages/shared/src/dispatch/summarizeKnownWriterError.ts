@@ -1,3 +1,5 @@
+import { summarizeWriterPrepareFailure } from "./summarizeWriterPrepareFailure";
+
 /**
  * 9b3947bc (Testi recheck @300): a quota failure showed the raw
  * "error: Individual quota reached… AGY_ERROR:{…}" JSON as the report's
@@ -44,6 +46,10 @@ export const summarizeKnownWriterError = (output: string): string | null => {
   const killed = PROCESS_KILLED.exec(text)?.[0];
   if (killed !== undefined) {
     return killed;
+  }
+  const prepare = summarizeWriterPrepareFailure(text);
+  if (prepare !== null) {
+    return prepare;
   }
   if (ANTIGRAVITY_QUOTA.test(text)) {
     return `Antigravity quota reached${resetSuffix(text)}.`;

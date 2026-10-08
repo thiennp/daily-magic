@@ -1,3 +1,4 @@
+import { summarizeKnownWriterError } from "@agent-witch/shared/dispatch";
 import Link from "next/link";
 
 import {
@@ -21,12 +22,16 @@ const isPending = (run: AgentRunRecord): boolean =>
 /** One design attention row: state pill, title, Open. */
 export default function HomeAttentionRow({ run }: HomeAttentionRowProps) {
   const title = formatHomeRunningJobTitle(run.prompt);
+  const rawReason = run.denialReason ?? run.resultOutput ?? "";
+  // 5ca01f06: a known writer failure reads as its next step, not raw text.
   const reason = isPending(run)
     ? ""
-    : ((run.denialReason ?? run.resultOutput ?? "")
+    : (summarizeKnownWriterError(rawReason) ??
+      rawReason
         .split("\n")
         .map((line) => line.trim())
-        .find((line) => line.length > 0) ?? "");
+        .find((line) => line.length > 0) ??
+      "");
   const href =
     run.projectId === null
       ? PROJECTS_REPORTS_INTENT_HREF

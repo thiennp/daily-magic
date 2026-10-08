@@ -9,8 +9,9 @@ agent_witch_ensure_codex_cli() {
   if codex login status >/dev/null 2>&1; then
     echo "  Codex CLI authenticated."
   else
-    echo "  Codex CLI needs ChatGPT sign-in. Complete browser login if prompted…" >&2
-    codex login || true
+    # 5ca01f06: never run an interactive login here; the host has no terminal.
+    echo "  Codex CLI needs ChatGPT sign-in. Run codex login in a terminal (ensure-writer does not open interactive login)." >&2
+    exit 3
   fi
 }
 `;

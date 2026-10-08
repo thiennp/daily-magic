@@ -84,6 +84,7 @@ export default function WsTestComposerFormStep(
       <WsTestComposerFooter
         composer={props.composer}
         macDispatchDeviceId={props.macDispatchDeviceId}
+        writerAgent={props.writerAgent}
         connectionStatus={props.connectionStatus}
         isSendDisabled={effectiveSendDisabled}
         sendLabel={

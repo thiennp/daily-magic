@@ -1,5 +1,6 @@
 import { resolveAgentWitchDevicePresenceTier } from "@/lib/agentWitch/resolveAgentWitchDevicePresenceTier";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
+import type { AgentWitchDeviceWriter } from "@/lib/agentWitch/deviceWriters";
 import type AgentWitchPresenceTier from "@/lib/agentWitch/types/AgentWitchPresenceTier.type";
 import { isAgentWitchDeviceRecentlySeen } from "@/lib/agentWitch/agentWitchHeartbeat.constant";
 import { classifyAgentWitchLocalConnectVersion } from "@/lib/agentWitch/classifyAgentWitchLocalConnectVersion";
@@ -26,6 +27,8 @@ export interface AgentWitchDeviceWithOnlineStatus {
   /** Hard connect gate (`too_old` = AWL must update before Connect). */
   readonly connectVersionStatus: AgentWitchLocalConnectVersionStatus;
   readonly wakePort: number | null;
+  /** 5ca01f06: lets the composer warn when the picked tool isn't set up. */
+  readonly writers: readonly AgentWitchDeviceWriter[];
 }
 
 /**
@@ -79,6 +82,7 @@ const buildAgentWitchDevicesWithOnlineStatus = (
         device.installBundleVersion ?? null,
       ),
       wakePort: device.wakePort ?? null,
+      writers: device.writers ?? [],
     };
   });
 };

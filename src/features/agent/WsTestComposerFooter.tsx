@@ -1,6 +1,7 @@
 "use client";
 
 import WsTestComposerActions from "@/features/agent/WsTestComposerActions";
+import { resolveWriterNotReadyNotice } from "@/features/agent/send-readiness/resolveWriterNotReadyNotice";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 
@@ -10,6 +11,7 @@ interface WsTestComposerFooterProps {
   readonly connectionStatus: WsTestConnectionStatus;
   readonly isSendDisabled: boolean;
   readonly sendLabel?: string;
+  readonly writerAgent?: string;
   readonly onSend: () => void;
   readonly onClear: () => void;
   readonly onQueue: () => void;
@@ -21,6 +23,7 @@ export default function WsTestComposerFooter({
   connectionStatus,
   isSendDisabled,
   sendLabel,
+  writerAgent,
   onSend,
   onClear,
   onQueue,
@@ -53,6 +56,19 @@ export default function WsTestComposerFooter({
       selectedDeviceCanDispatch={composer.selectedDeviceCanDispatch}
       devices={composer.macDevices}
       selectedDeviceId={macDispatchDeviceId}
+      writerNotice={
+        writerAgent === undefined || composer.isTeamDispatch
+          ? null
+          : resolveWriterNotReadyNotice({
+              writerAgent,
+              writers: composer.macDevices.find(
+                (device) => device.id === macDispatchDeviceId,
+              )?.writers,
+              computerName:
+                composer.macDisplayNameById.get(macDispatchDeviceId) ??
+                "this computer",
+            })
+      }
       devicesHadLoadError={composer.devicesHadLoadError}
       serverInstallBundleVersion={composer.serverInstallBundleVersion}
       onFocusPrompt={focusPrompt}

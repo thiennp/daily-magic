@@ -169,6 +169,7 @@ import {
   continueClaudeTaskAfterInput,
   supersedePausedRunForContinuation,
   ensureHarnessWriterCli,
+  withRunHeartbeatWhilePreparing,
   flushPendingAgentRunCompletions,
   flushPendingRunResultDeliveries,
   generateAgentRunReportKey,
@@ -519,7 +520,11 @@ const dispatchWriterTask = async (
 
   if (needsWarmup) {
     try {
-      await ensureHarnessWriterCli(config.layout.installDir, writerAgent);
+      await withRunHeartbeatWhilePreparing(
+        asLegacyWebSocket(socket),
+        agentRunId,
+        () => ensureHarnessWriterCli(config.layout.installDir, writerAgent),
+      );
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       sendMessage(socket, {
@@ -537,7 +542,11 @@ const dispatchWriterTask = async (
     markWriterSessionWarmed(writerAgent);
   } else if (!supportsWriterSessionWarmup(writerAgent)) {
     try {
-      await ensureHarnessWriterCli(config.layout.installDir, writerAgent);
+      await withRunHeartbeatWhilePreparing(
+        asLegacyWebSocket(socket),
+        agentRunId,
+        () => ensureHarnessWriterCli(config.layout.installDir, writerAgent),
+      );
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       sendMessage(socket, {

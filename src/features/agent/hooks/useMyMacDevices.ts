@@ -8,6 +8,7 @@ import {
   refreshPairedDevices,
 } from "@/features/agent-witch/pairedDevicesResource";
 import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
+import type { AgentWitchDeviceWriter } from "@/lib/agentWitch/deviceWriters";
 import type { AgentWitchDevicePlatform } from "@/lib/agentWitch/types/AgentWitchDevicePlatform.type";
 import type { AgentWitchLocalConnectVersionStatus } from "@/lib/agentWitch/types/AgentWitchLocalConnectVersionStatus.type";
 import useSubscribeMacDeviceRevoked from "@/features/agent-witch/macDevices/hooks/useSubscribeMacDeviceRevoked";
@@ -31,6 +32,8 @@ export interface MyMacDevice {
   /** From devices API; `too_old` = server refuses Connect until AWL updates. */
   readonly connectVersionStatus?: AgentWitchLocalConnectVersionStatus;
   readonly wakePort: number | null;
+  /** 5ca01f06: heartbeat-reported coding tools; absent on older servers. */
+  readonly writers?: readonly AgentWitchDeviceWriter[];
 }
 
 const applyDisplayNameOverrides = (

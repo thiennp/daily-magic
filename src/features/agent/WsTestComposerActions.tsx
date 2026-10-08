@@ -6,6 +6,7 @@ import { useWsTestComposerActionsModel } from "@/features/agent/hooks/useWsTestC
 import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
 import SendReadinessBanner from "@/features/agent/send-readiness/SendReadinessBanner";
 import SendReadinessMacReadyChip from "@/features/agent/send-readiness/SendReadinessMacReadyChip";
+import SendReadinessWriterNotice from "@/features/agent/send-readiness/SendReadinessWriterNotice";
 import { resolveComposerSendDisabledWithReadiness } from "@/features/agent/send-readiness/resolveComposerSendDisabledWithReadiness";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
@@ -32,6 +33,8 @@ interface WsTestComposerActionsProps {
     readonly installBundleVersion?: string | null;
   }[];
   readonly selectedDeviceId: string;
+  /** 5ca01f06: set when the picked coding tool isn't ready there. */
+  readonly writerNotice?: string | null;
   readonly devicesHadLoadError: boolean;
   readonly serverInstallBundleVersion: string | null;
   readonly selectedGroupId: string;
@@ -63,6 +66,10 @@ export default function WsTestComposerActions(
           onRetry={props.onRetryDevices}
           onFocusPrompt={props.onFocusPrompt}
         />
+      ) : readinessUi.showMacReadyChip &&
+        props.writerNotice !== undefined &&
+        props.writerNotice !== null ? (
+        <SendReadinessWriterNotice notice={props.writerNotice} />
       ) : readinessUi.showMacReadyChip ? (
         <SendReadinessMacReadyChip />
       ) : null}

@@ -1,4 +1,9 @@
-import { AGENT_RUN_HONESTY_CHIP_LABEL } from "@/lib/dispatch/agentRunHonestyCopy.constant";
+import { summarizeWriterPrepareFailure } from "@agent-witch/shared/dispatch";
+
+import {
+  AGENT_RUN_HONESTY_CHIP_LABEL,
+  formatAgentRunHonestyWaitingYouTerminalSummary,
+} from "@/lib/dispatch/agentRunHonestyCopy.constant";
 import type { AgentRunHonestyOutcome } from "@/lib/dispatch/agentRunHonestyOutcome.type";
 import { buildAntigravityLoginWaitingYouOutcome } from "@/lib/dispatch/buildAntigravityLoginWaitingYouOutcome";
 import { buildClaudeLoginExpiredWaitingYouOutcome } from "@/lib/dispatch/buildClaudeLoginExpiredWaitingYouOutcome";
@@ -15,6 +20,18 @@ export const tryResolveAgentRunHonestyAuthStopTerminalOutcome = (input: {
       kind: "stopped",
       chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.stopped,
       summaryLines: ["Stopped — run ended from the console."],
+    };
+  }
+
+  // 5ca01f06: a Codex/Cursor prepare failure names that tool, not Claude.
+  const prepareFailure = summarizeWriterPrepareFailure(input.output);
+  if (prepareFailure !== null) {
+    return {
+      kind: "waiting_you",
+      chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.waiting_you,
+      summaryLines: [
+        formatAgentRunHonestyWaitingYouTerminalSummary(prepareFailure),
+      ],
     };
   }
 

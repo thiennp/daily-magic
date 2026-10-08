@@ -1,3 +1,4 @@
+import type { AgentWitchDeviceWriter } from "@/lib/agentWitch/deviceWriters";
 import type { AgentWitchDevicePlatform } from "@/lib/agentWitch/types/AgentWitchDevicePlatform.type";
 
 export default interface AgentWitchDeviceRecord {
@@ -20,4 +21,6 @@ export default interface AgentWitchDeviceRecord {
   readonly lastWakeErrorAt?: string | null;
   readonly installBundleVersion?: string | null;
   readonly wakePort?: number | null;
+  /** 5ca01f06: coding tools the computer last reported (heartbeat). */
+  readonly writers?: readonly AgentWitchDeviceWriter[];
 }

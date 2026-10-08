@@ -1,5 +1,6 @@
 import { isDispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
 import { isAgentWitchDevicePlatform } from "@/lib/agentWitch/isAgentWitchDevicePlatform";
+import { parseStoredDeviceWriters } from "@/lib/agentWitch/deviceWriters";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
 
 const parseAgentWitchDeviceWakePort = (raw: unknown): number | null => {
@@ -61,5 +62,8 @@ export default function mapAgentWitchDeviceRow(
       ? String(row.install_bundle_version)
       : null,
     wakePort: parseAgentWitchDeviceWakePort(row.wake_port),
+    ...("writers" in row
+      ? { writers: parseStoredDeviceWriters(row.writers) }
+      : {}),
   };
 }

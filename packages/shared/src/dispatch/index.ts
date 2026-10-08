@@ -4,6 +4,7 @@ export {
   type AgentRunOutcomeCodeValue,
 } from "./agentRunOutcome.constant";
 export { summarizeKnownWriterError } from "./summarizeKnownWriterError";
+export { summarizeWriterPrepareFailure } from "./summarizeWriterPrepareFailure";
 export {
   resolveAgentRunOutcomeFromWriterOutput,
   type ResolvedAgentRunOutcome,

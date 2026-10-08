@@ -54,4 +54,25 @@ describe("ensureHarnessWriterCli", () => {
 
     killSpy.mockRestore();
   });
+
+  it("fails fast instead of waiting on an interactive Codex login (5ca01f06)", async () => {
+    const killSpy = vi.spyOn(process, "kill").mockImplementation(() => true);
+    const child = Object.assign(new EventEmitter(), {
+      pid: 4343,
+      stdout: Object.assign(new EventEmitter(), { resume: vi.fn() }),
+      stderr: new EventEmitter(),
+      kill: vi.fn(),
+    });
+    spawnMock.mockReturnValue(child);
+
+    const promise = ensureHarnessWriterCli("/tmp/install", "codex");
+    child.stderr.emit(
+      "data",
+      "  Codex CLI needs ChatGPT sign-in. Complete browser login if prompted…\n",
+    );
+
+    await expect(promise).rejects.toThrow(/Codex isn't signed in/);
+    expect(killSpy).toHaveBeenCalledWith(-4343, "SIGTERM");
+    killSpy.mockRestore();
+  });
 });
