@@ -34,8 +34,8 @@
 /** 313 = per-install identity scopes same-label auto-revoke; Codex prepare fail-fast + heartbeat; Linux finish honest without systemd (name+id); ask Context so far strips ANSI/harness. */
 /** 314 = post-run work (run history, auto skill report, report verdict, knowledge candidate) runs where the result is emitted; it waited for a cloud echo that never comes. */
 /** 315 = the writer-execution (Anthropic key) header is only added for claude-cli, never for codex/cursor/antigravity. */
-/** 316 = legacy launcher logs its no-op line before the bootout that SIGTERMs it (eb0fcdf9). */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "316";
+/** 317 = heartbeat ready means it can run (77e29f7a); no ~/Library on Linux, failed-connect hint (2331ef53). */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "317";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =
