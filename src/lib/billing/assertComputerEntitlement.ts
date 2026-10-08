@@ -1,4 +1,6 @@
 import { countActiveComputersForUser } from "@/lib/billing/countActiveComputersForUser";
+import { buildComputerLimitErrorMessage } from "@/lib/billing/buildComputerLimitErrorMessage";
+import { listActiveComputersForLimit } from "@/lib/billing/listActiveComputersForLimit";
 import { loadBillingPlanForUser } from "@/lib/billing/loadBillingPlanForUser";
 import { loadCostControlSnapshot } from "@/lib/billing/loadCostControlSnapshot";
 import { isTrialEntitlementGranted } from "@/lib/billing/isTrialEntitlementGranted";
@@ -32,7 +34,10 @@ export const assertComputerEntitlement = async (input: {
     return {
       ok: false,
       code: "computer_limit",
-      errorMessage: `This plan allows up to ${ents.maxComputers} computers, and you have ${current} connected. Remove one you no longer use on the Computers page, then connect again.`,
+      errorMessage: buildComputerLimitErrorMessage({
+        maxComputers: ents.maxComputers,
+        computers: await listActiveComputersForLimit(input.userId),
+      }),
     };
   }
   return { ok: true };

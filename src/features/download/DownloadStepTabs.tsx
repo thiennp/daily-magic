@@ -33,7 +33,7 @@ export default function DownloadStepTabs({
     <div
       role="tablist"
       aria-label="Steps"
-      className="flex gap-1 overflow-x-auto border-b border-awc-border-strong"
+      className="flex gap-1 overflow-x-auto overflow-y-hidden border-b border-awc-border-strong"
     >
       {DOWNLOAD_STEPS.map((item, index) => {
         const selected = item.key === step;

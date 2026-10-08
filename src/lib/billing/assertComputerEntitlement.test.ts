@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const loadBillingPlanForUser = vi.fn();
 const loadCostControlSnapshot = vi.fn();
 const countActiveComputersForUser = vi.fn();
+const listActiveComputersForLimit = vi.fn();
 
 vi.mock("@/lib/billing/loadBillingPlanForUser", () => ({
   loadBillingPlanForUser: (...args: readonly unknown[]) =>
@@ -15,6 +16,11 @@ vi.mock("@/lib/billing/loadCostControlSnapshot", () => ({
 vi.mock("@/lib/billing/countActiveComputersForUser", () => ({
   countActiveComputersForUser: (...args: readonly unknown[]) =>
     countActiveComputersForUser(...args),
+}));
+
+vi.mock("@/lib/billing/listActiveComputersForLimit", () => ({
+  listActiveComputersForLimit: (...args: readonly unknown[]) =>
+    listActiveComputersForLimit(...args),
 }));
 
 import { assertComputerEntitlement } from "@/lib/billing/assertComputerEntitlement";
@@ -60,8 +66,19 @@ describe("assertComputerEntitlement", () => {
   it("denies computer_limit at cap", async () => {
     loadBillingPlanForUser.mockResolvedValue(row("pro"));
     countActiveComputersForUser.mockResolvedValue(5);
+    listActiveComputersForLimit.mockResolvedValue([
+      ...["A", "B", "C"].map((label) => ({
+        label,
+        lastSeenAt: new Date().toISOString(),
+      })),
+      { label: "Your computer", lastSeenAt: null },
+      { label: "Grey - Study", lastSeenAt: "2026-10-01T00:00:00.000Z" },
+    ]);
     const result = await assertComputerEntitlement({ userId: "u1" });
     expect(result).toMatchObject({ ok: false, code: "computer_limit" });
+    expect(result.ok ? "" : result.errorMessage).toContain(
+      "5 are linked to your account (3 online, 2 offline: Your computer, Grey - Study)",
+    );
   });
 
   it("denies trial_closed for closed-gate mint without trial dates", async () => {

@@ -11,13 +11,14 @@ interface HomeConnectGuideDownloadExtrasProps {
   readonly showInstallCta: boolean;
 }
 
-/** Non-Mac note, or Download when install CTA is hidden (already connected). */
+/** Phone / Windows note, or Download when install CTA is hidden (already connected). */
 export default function HomeConnectGuideDownloadExtras({
   operatingSystem,
   isWebSocketSupported,
   showInstallCta,
 }: HomeConnectGuideDownloadExtrasProps) {
-  if (operatingSystem !== "mac") {
+  /** 77c33bc5: Linux is a supported computer, not a "use your Mac" device. */
+  if (operatingSystem !== "mac" && operatingSystem !== "linux") {
     return <DownloadNonMacNote />;
   }
   if (isWebSocketSupported && !showInstallCta) {

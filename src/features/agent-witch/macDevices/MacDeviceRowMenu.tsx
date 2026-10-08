@@ -52,7 +52,7 @@ export default function MacDeviceRowMenu({
       <button
         ref={toggleRef}
         type="button"
-        aria-label="Mac actions"
+        aria-label="Computer actions"
         aria-expanded={isOpen}
         className="dropdown-toggle inline-flex h-8 w-8 items-center justify-center rounded-md text-awc-fg-muted hover:bg-awc-tile hover:text-awc-fg dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
         onClick={(event) => {

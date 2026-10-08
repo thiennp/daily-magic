@@ -98,7 +98,7 @@ export default function ConnectThisMacModal({
             onInstallEngaged={onInstallEngaged}
           />
           <ConnectThisLinuxDownloadArea operatingSystem={operatingSystem} />
-          <DownloadNonMacNote />
+          {operatingSystem === "linux" ? null : <DownloadNonMacNote />}
         </>
       ) : (
         <div className={`mt-3 space-y-4 ${APP_SURFACE_BODY_TEXT_CLASS}`}>

@@ -708,7 +708,6 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-
 ## HOME-067 — Connect guide disappears after install-token mint (computer missing)
 
 **Symptom:** With no linked computer, Home showed **Connect this computer** / the connect guide, but after (or during) minting the terminal install command the guide vanished or the command stopped appearing. Running a copied command often did not finish connect. AWL v267 still offered Connect / Copy install command.
@@ -719,8 +718,24 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 **Regression tests:** `isAgentWitchConnectInstallPlaceholderDevice.test.ts`, `resolveHomeConnectGuideCtas.test.ts`.
 
+## HOME-068
+
+**Symptom (E2E 6/8, f6e63bf4):** Connect another / Connect this computer said “This plan allows up to 5 computers, and you have 5 connected. Remove one … on the Computers page” while the sidebar said **3 connected** (two were offline or too old). There is no Computers page. The empty command bar's Copy flipped to a checkmark, and “Preparing your install command…” showed before the limit error.
+
+**Fix:** Limit unchanged. `buildComputerLimitErrorMessage` splits online / offline, names the offline ones, says offline still count, and points at Computers in the sidebar or Your computers on Home (⋯ → Delete). `CopyableBashCommand` renders nothing for an empty command. Loading copy is “Checking your plan and preparing your install command…”.
+
+**Regression tests:** `buildComputerLimitErrorMessage.test.ts`, `assertComputerEntitlement.test.ts`, `CopyableBashCommand.empty.test.tsx`.
+
+## HOME-069
+
+**Symptom (E2E 6/8, 77c33bc5):** On Linux the Connect dialog said “The menu bar app runs on Mac with Apple Silicon … open the Download page on your Mac”. Every computer's ⋯ menu (Linux too) was labelled **Mac actions**. On `/download` the step tabs sat in a 1px vertical scroll box (scrollbar arrows), and Testi saw Install / Set up clicks do nothing.
+
+**Fix:** Linux no longer gets the Mac-only note; the note names Mac and Linux. Menu is **Computer actions**, “Open shell”. Tab strip is `overflow-y-hidden` and the picked step is kept in the URL hash. Signed-out clicks switch tabs in a real browser; the signed-in no-op was not reproduced.
+
+**Regression tests:** `downloadLinuxWording.test.tsx`, `downloadPageWiring.test.ts`.
+
 ---
 
 ## Adding issues
 
-Use the next ID (`HOME-068`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-070`, …). Include symptom, root cause, fix paths, and test file.

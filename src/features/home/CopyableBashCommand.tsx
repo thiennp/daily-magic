@@ -28,6 +28,9 @@ export default function CopyableBashCommand({
   const [copied, setCopied] = useState(false);
 
   const handleCopyClick = useCallback(() => {
+    if (command.trim().length === 0) {
+      return;
+    }
     void navigator.clipboard.writeText(command).then(() => {
       setCopied(true);
       onEngaged?.();
@@ -36,6 +39,11 @@ export default function CopyableBashCommand({
       }, 2000);
     });
   }, [command, onEngaged]);
+
+  /** f6e63bf4: no empty bar whose Copy flips to a checkmark with nothing copied. */
+  if (command.trim().length === 0) {
+    return null;
+  }
 
   if (variant === "bash") {
     return (

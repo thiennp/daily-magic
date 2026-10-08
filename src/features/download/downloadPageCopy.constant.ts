@@ -12,7 +12,7 @@ export const DOWNLOAD_PAGE_COPY = {
   unsupportedNote:
     "AgentWitch runs on a Mac or a Linux computer, not on a phone or Windows yet. Open this page on that computer to download it.",
   nonMacNote:
-    "The menu bar app runs on Mac with Apple Silicon. On this device, open the Download page on your Mac to get the app.",
+    "AgentWitch runs on a Mac with Apple Silicon or a Linux computer. On this device, open the Download page on that computer to get the app.",
   nonMacLinkLabel: "Open the Download page",
   afterDownload:
     "After you install, return to Home and choose Connect this computer to link your account.",

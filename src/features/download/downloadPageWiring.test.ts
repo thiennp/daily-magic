@@ -24,12 +24,28 @@ describe("Download page wiring", () => {
     expect(source).not.toContain("github.com/thiennp/daily-magic/releases");
   });
 
+  it("77c33bc5: step tabs have no vertical scroll box and keep the picked step in the URL", () => {
+    const tabs = readFileSync(
+      join(root, "src/features/download/DownloadStepTabs.tsx"),
+      "utf8",
+    );
+    const wizard = readFileSync(
+      join(root, "src/features/download/DownloadWizard.tsx"),
+      "utf8",
+    );
+    expect(tabs).toContain("overflow-y-hidden");
+    expect(tabs).toContain("onClick={() => onSelect(item.key)}");
+    expect(wizard).toContain("window.history.replaceState");
+  });
+
   it("names Apple Silicon in page copy", () => {
     expect(DOWNLOAD_PAGE_COPY.siliconNote).toMatch(/Apple Silicon/i);
   });
 
   it("non-Mac note links to /download without Windows WSL wording", () => {
     expect(DOWNLOAD_PAGE_COPY.nonMacNote).toMatch(/Apple Silicon/i);
+    expect(DOWNLOAD_PAGE_COPY.nonMacNote).toMatch(/Linux/);
+    expect(DOWNLOAD_PAGE_COPY.nonMacNote).not.toMatch(/menu bar app/i);
     expect(DOWNLOAD_PAGE_COPY.nonMacNote.toLowerCase()).not.toContain("wsl");
     expect(DOWNLOAD_PAGE_COPY.nonMacNote.toLowerCase()).not.toContain(
       "windows via",

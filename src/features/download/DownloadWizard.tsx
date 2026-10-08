@@ -30,7 +30,12 @@ export default function DownloadWizard({ signedInEmail }: DownloadWizardProps) {
     "",
   ) as DownloadStepKey;
   const detected = useBrowserSnapshot(detectBrowserOperatingSystem, "mac");
-  const [pickedStep, setStep] = useState<DownloadStepKey | null>(null);
+  const [pickedStep, setPickedStep] = useState<DownloadStepKey | null>(null);
+  /** 77c33bc5: keep the picked step in the URL so it survives a remount. */
+  const setStep = (next: DownloadStepKey) => {
+    setPickedStep(next);
+    window.history.replaceState(window.history.state, "", `#${next}`);
+  };
   const [pickedOs, setOs] = useState<DownloadOsKey | null>(null);
   const [downloaded, setDownloaded] = useState(false);
   const step = pickedStep ?? (STEP_HASHES.includes(hash) ? hash : "download");

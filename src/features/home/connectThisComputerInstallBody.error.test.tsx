@@ -19,7 +19,7 @@ describe("ConnectThisComputerInstallBody", () => {
       />,
     );
     expect(html).toContain("This plan allows up to 2 computers.");
-    expect(html).not.toContain("Preparing your install command");
+    expect(html).not.toContain("preparing your install command");
   });
 
   it("still shows the loading line while the command is being created", () => {
@@ -30,6 +30,6 @@ describe("ConnectThisComputerInstallBody", () => {
         installCommandError={null}
       />,
     );
-    expect(html).toContain("Preparing your install command");
+    expect(html).toContain("preparing your install command");
   });
 });

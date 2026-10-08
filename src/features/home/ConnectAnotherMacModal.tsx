@@ -58,7 +58,7 @@ export default function ConnectAnotherMacModal({
         </div>
       ) : isInstallCommandLoading ? (
         <p className="mt-4 text-sm text-awc-fg-muted dark:text-gray-400">
-          Preparing your install command…
+          Checking your plan and preparing your install command…
         </p>
       ) : (
         <CopyableBashCommand
