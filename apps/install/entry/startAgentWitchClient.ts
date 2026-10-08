@@ -1342,9 +1342,13 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     }
 
     if (isDeviceNotLinkedError(parsed)) {
+      recordAgentWitchWsTraceFromObject(config.layout, "in", parsed);
       if (!state.notLinked) {
+        const serverMessage = isRecord(parsed.payload)
+          ? String(parsed.payload.errorMessage ?? "")
+          : "";
         console.error(
-          "[agent-witch] This computer is not linked to AgentWitch (revoked or removed). Retrying every 5 minutes. Run the install command from Home to link it again.",
+          `[agent-witch] This computer is not linked to AgentWitch. Retrying every 5 minutes. ${serverMessage}`.trim(),
         );
       }
       state.notLinked = true;
