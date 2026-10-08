@@ -20,8 +20,16 @@ const resolveAgyBinary = (): string | null => {
   return null;
 };
 
+/**
+ * Live check against a signed-in `agy` (network + login). Opt-in so the
+ * pre-push CI gate does not depend on one machine's CLI auth:
+ * AWC_AGY_INTEGRATION=1 npx vitest run scripts/antigravityCliHeadlessPermissions.integration.test.ts
+ */
+const runLive =
+  process.env.AWC_AGY_INTEGRATION === "1" && resolveAgyBinary() !== null;
+
 describe("antigravity headless permissions integration", () => {
-  it.skipIf(resolveAgyBinary() === null)(
+  it.skipIf(!runLive)(
     "merged settings allow headless read of a fixture file",
     () => {
       const agy = resolveAgyBinary();
