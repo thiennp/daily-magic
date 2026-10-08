@@ -46,6 +46,18 @@ describe("resolveProjectReportDetailView (FAIL2 a76d46ac)", () => {
     );
   });
 
+  it("a terminal run ignores a stuck 'Waiting for confirmation of vibe...' cached summary", () => {
+    const view = resolveProjectReportDetailView({
+      run: baseRun,
+      cached: {
+        reportSummary: "Waiting for confirmation of vibe...",
+      },
+      fallbackOutput: "Fallback output.",
+    });
+
+    expect(view.body).toBe("Fallback output.");
+  });
+
   it("prefers a real report summary", () => {
     const view = resolveProjectReportDetailView({
       run: {
@@ -59,13 +71,36 @@ describe("resolveProjectReportDetailView (FAIL2 a76d46ac)", () => {
     expect(view.body).toBe("Implemented dark mode toggle in index.html.");
   });
 
-  it("a wave-only output leaves an empty body (status row still shows)", () => {
+  it("Done run with output with PROGRESS/AWAITING_INPUT/CHECKPOINT_QA markers must yield body containing final summary and no marker text", () => {
     const view = resolveProjectReportDetailView({
-      run: { ...baseRun, status: "failed", resultExitCode: 1 },
+      run: baseRun,
+      fallbackOutput: `[[PROGRESS]]\nSome progress\n[[AWAITING_INPUT]]\nQuestion?\n[[CHECKPOINT_QA]]\nQ: Question?\nA: Yes\nfinal markdown summary`,
+    });
+
+    expect(view.body).toContain("final markdown summary");
+    expect(view.body).not.toContain("[[");
+  });
+
+  it("Done run with empty output -> fallback", () => {
+    const view = resolveProjectReportDetailView({
+      run: { ...baseRun, status: "completed" },
+      fallbackOutput: "   ",
+    });
+
+    expect(view.body).toBe(
+      "Finished on your computer. No summary was captured.",
+    );
+  });
+
+  it("Failed exit -1 with empty output -> fallback mentioning failure", () => {
+    const view = resolveProjectReportDetailView({
+      run: { ...baseRun, status: "failed", resultExitCode: -1 },
       fallbackOutput: WAVE_ONLY,
     });
 
-    expect(view.body).toBe("");
+    expect(view.body).toBe(
+      "Failed on your computer (exit -1). No agent output was captured.",
+    );
     expect(view.statusLabel).toBe("Failed");
   });
 });

@@ -1,4 +1,6 @@
 import { stripAgentLiveProgressCliChrome } from "@/features/agent/utils/stripAgentLiveProgressCliChrome";
+import { dropRepeatedReportBodyLines } from "@/features/projects/reports/utils/dropRepeatedReportBodyLines";
+import { resolveProjectReportFallbackBody } from "@/features/projects/reports/utils/resolveProjectReportFallbackBody";
 import { stripAgentRunReportMarkerFragments } from "@/features/projects/reports/utils/stripAgentRunReportMarkerFragments";
 import { resolveAgentRunReportProgressView } from "@/features/reports/utils/resolveAgentRunReportProgressView";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
@@ -22,7 +24,7 @@ const TERMINAL_RUN_STATUSES: ReadonlySet<string> = new Set([
 ]);
 
 const isStaleLiveSummary = (summary: string): boolean =>
-  /^(?:Waiting for your answer|Working on your computer|Task started)/i.test(
+  /^(?:Waiting for|Working on your computer|Task started|Continuing after your answer)/i.test(
     summary.trim(),
   );
 
@@ -72,8 +74,10 @@ export const resolveProjectReportDetailView = (input: {
     summary.length > 0 && !(isTerminal && isStaleLiveSummary(summary))
       ? summary
       : "";
-  const output = stripAgentRunReportMarkerFragments(
-    stripAgentLiveProgressCliChrome(input.fallbackOutput),
+  const output = dropRepeatedReportBodyLines(
+    stripAgentRunReportMarkerFragments(
+      stripAgentLiveProgressCliChrome(input.fallbackOutput),
+    ),
   );
   const isWaiting =
     !isTerminal && WAITING_SUMMARY.test(reportSummary?.trim() ?? "");
@@ -82,14 +86,23 @@ export const resolveProjectReportDetailView = (input: {
     : (toProjectReportStatusLabel(view.statusLabel ?? "") ??
       toProjectReportStatusLabel(run.status));
   const body = usableSummary.length > 0 ? usableSummary : output;
+  const stoppedBody =
+    body.replace(/^error:\s*interrupted[\s\p{P}]*/iu, "").trim() ||
+    "Stopped by user.";
+  const finalBody =
+    statusLabel === "Stopped"
+      ? stoppedBody
+      : isTerminal && body.trim().length === 0
+        ? resolveProjectReportFallbackBody({
+            status: run.status,
+            reasonLine: view.reasonLine,
+            resultExitCode: run.resultExitCode,
+          })
+        : body;
 
   return {
     statusLabel,
     reasonLine: view.reasonLine,
-    body:
-      statusLabel === "Stopped"
-        ? body.replace(/^error:\s*interrupted[\s\p{P}]*/iu, "").trim() ||
-          "Stopped by user."
-        : body,
+    body: finalBody,
   };
 };

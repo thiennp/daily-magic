@@ -28,7 +28,10 @@ export const stripAgentLiveProgressCliChrome = (output: string): string =>
       if (AGENT_LIVE_PROGRESS_CLI_COMMAND_LINE_PATTERN.test(trimmed)) {
         return false;
       }
-      if (/^Preparing .+ CLI on your (?:Mac|computer)/i.test(trimmed)) {
+      if (
+        /^Preparing .+ CLI on your (?:Mac|computer)/i.test(trimmed) ||
+        /^Preparing .+ for this session/i.test(trimmed)
+      ) {
         return false;
       }
       if (/ is ready on your (?:Mac|computer)\.?$/i.test(trimmed)) {

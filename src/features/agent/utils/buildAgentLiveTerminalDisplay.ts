@@ -1,3 +1,4 @@
+import { formatAgentLiveTerminalMarkersForDisplay } from "@/features/agent/utils/formatAgentLiveTerminalMarkersForDisplay";
 import { dedupeConsecutiveLogLines } from "@/features/agent/utils/dedupeConsecutiveLogLines";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import {
@@ -49,17 +50,20 @@ export const buildAgentLiveTerminalDisplay = (input: {
     return buildAgentLiveTerminalIdleLine(platform);
   }
 
+  const formattedOutput =
+    formatAgentLiveTerminalMarkersForDisplay(visibleOutput);
+
   if (
     input.status === "finished" &&
-    !visibleOutput.endsWith(prompt) &&
-    !visibleOutput.endsWith(AGENT_LIVE_BASH_PROMPT)
+    !formattedOutput.endsWith(prompt) &&
+    !formattedOutput.endsWith(AGENT_LIVE_BASH_PROMPT)
   ) {
     return dedupeConsecutiveLogLines(
-      appendAgentLiveTerminalPrompt(visibleOutput, platform),
+      appendAgentLiveTerminalPrompt(formattedOutput, platform),
     );
   }
 
-  return dedupeConsecutiveLogLines(visibleOutput);
+  return dedupeConsecutiveLogLines(formattedOutput);
 };
 
 export const shouldShowAgentLiveTerminalCursor = (

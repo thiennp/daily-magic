@@ -47,7 +47,10 @@ describe("resolveProjectReportDetailView (b8c56ef0, Testi run 3)", () => {
 
     expect(view.body).not.toContain("[[");
     expect(view.body).not.toContain("W|");
-    expect(view.body).toBe(""); // should be empty after stripping
+    // db0bd005 (run 4): a finished run never shows an empty What happened.
+    expect(view.body).toBe(
+      "Finished on your computer. No summary was captured.",
+    );
   });
 
   it("failed+stopped run => label Stopped, body 'Stopped by user.'", () => {
