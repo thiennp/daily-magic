@@ -24,15 +24,26 @@ const run = (
   }) as EnrichedAgentRunRecord;
 
 describe("mapAgentRunToProjectTaskMeta", () => {
-  it("keeps the title and adds the lost-connection reason for a stale-failed run", () => {
+  it("keeps the title and adds the lost-connection reason for a disconnected run", () => {
     const meta = mapAgentRunToProjectTaskMeta(
-      run({ denialReason: AGENT_RUN_LOST_CONNECTION_REASONS.STALE }),
+      run({ denialReason: AGENT_RUN_LOST_CONNECTION_REASONS.DISCONNECT }),
       "p1",
     );
     expect(meta.title).toBe("Run workflow: Add vibe coding app feature");
     expect(meta.status).toBe("failed");
     expect(meta.statusReason).toBe(
       "Lost connection to your computer — this task stopped.",
+    );
+  });
+
+  it("shows a swept stale run as Stalled with its last update (41888ea3)", () => {
+    const meta = mapAgentRunToProjectTaskMeta(
+      run({ denialReason: AGENT_RUN_LOST_CONNECTION_REASONS.STALE }),
+      "p1",
+    );
+    expect(meta.status).toBe("stalled");
+    expect(meta.statusReason).toMatch(
+      /^Stalled — last update from your computer .+\.$/,
     );
   });
 

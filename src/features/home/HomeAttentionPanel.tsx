@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import {
@@ -10,9 +10,11 @@ import {
 import Badge from "@/components/ui/badge/Badge";
 import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
 import HomeAttentionRow from "@/features/home/HomeAttentionRow";
+import HomeStalledJobRow from "@/features/home/HomeStalledJobRow";
 import HomeAttentionSkillRows from "@/features/home/HomeAttentionSkillRows";
 import useHomeAttentionRuns from "@/features/home/hooks/useHomeAttentionRuns";
 import selectHomeRecentProjects from "@/features/home/utils/selectHomeRecentProjects";
+import { isAgentRunSweptStale } from "@/lib/dispatch/isAgentRunStalled";
 import { useAutoSkillQuestions } from "@/features/project-auto-skills/public-api/presentation";
 
 /**
@@ -23,6 +25,7 @@ import { useAutoSkillQuestions } from "@/features/project-auto-skills/public-api
  */
 export default function HomeAttentionPanel() {
   const runs = useHomeAttentionRuns();
+  const [nowMs] = useState(() => Date.now());
   const { projects } = useUserProjects("");
   const recentProjects = useMemo(
     () => selectHomeRecentProjects(projects),
@@ -48,9 +51,13 @@ export default function HomeAttentionPanel() {
         </p>
       ) : (
         <ul className="mt-3 divide-y divide-awc-border">
-          {runs.map((run) => (
-            <HomeAttentionRow key={run.id} run={run} />
-          ))}
+          {runs.map((run) =>
+            isAgentRunSweptStale(run) ? (
+              <HomeStalledJobRow key={run.id} run={run} nowMs={nowMs} />
+            ) : (
+              <HomeAttentionRow key={run.id} run={run} />
+            ),
+          )}
           <HomeAttentionSkillRows
             questions={questions}
             projects={recentProjects}

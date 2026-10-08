@@ -5,6 +5,7 @@ import { resolveProjectReportKnownError } from "@/features/projects/reports/util
 import { resolveProjectReportFallbackBody } from "@/features/projects/reports/utils/resolveProjectReportFallbackBody";
 import { stripAgentRunReportMarkerFragments } from "@/features/projects/reports/utils/stripAgentRunReportMarkerFragments";
 import { resolveAgentRunReportProgressView } from "@/features/reports/utils/resolveAgentRunReportProgressView";
+import { isAgentRunSweptStale } from "@/lib/dispatch/isAgentRunStalled";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import {
@@ -84,8 +85,10 @@ export const resolveProjectReportDetailView = (input: {
     !isTerminal && WAITING_SUMMARY.test(reportSummary?.trim() ?? "");
   const statusLabel = isWaiting
     ? "Waiting for your answer"
-    : (toProjectReportStatusLabel(view.statusLabel ?? "") ??
-      toProjectReportStatusLabel(run.status));
+    : isAgentRunSweptStale(run)
+      ? "Stalled"
+      : (toProjectReportStatusLabel(view.statusLabel ?? "") ??
+        toProjectReportStatusLabel(run.status));
   const body = usableSummary.length > 0 ? usableSummary : output;
   const stoppedBody =
     body.replace(/^error:\s*interrupted[\s\p{P}]*/iu, "").trim() ||

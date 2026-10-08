@@ -1,6 +1,4 @@
-import {
-  AWC_TASKS_INPUT_CLASS,
-} from "@/features/projects/tasks/awcProjectTasksChrome.constant";
+import { AWC_TASKS_INPUT_CLASS } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
 import {
   PROJECT_PAGE_TASKS_COPY as C,
   PROJECT_TASK_STATUS_LABEL,
@@ -16,6 +14,7 @@ const STATUSES: readonly (ProjectTaskDisplayStatus | "all")[] = [
   "cancelled",
   "denied",
   "timed_out",
+  "stalled",
 ];
 
 const STATUS_LABEL: Record<ProjectTaskDisplayStatus | "all", string> = {
@@ -24,7 +23,10 @@ const STATUS_LABEL: Record<ProjectTaskDisplayStatus | "all", string> = {
 };
 
 export type AwcProjectTasksFiltersProps = {
-  readonly assistants: readonly { readonly id: string; readonly name: string }[];
+  readonly assistants: readonly {
+    readonly id: string;
+    readonly name: string;
+  }[];
   readonly assistantId: string | "all";
   readonly status: ProjectTaskDisplayStatus | "all";
   readonly onAssistantChange: (id: string | "all") => void;
@@ -42,7 +44,9 @@ export default function AwcProjectTasksFilters(p: AwcProjectTasksFiltersProps) {
         className={`${AWC_TASKS_INPUT_CLASS} w-auto max-w-[14rem]`}
         value={p.assistantId}
         onChange={(e) => {
-          p.onAssistantChange(e.target.value === "all" ? "all" : e.target.value);
+          p.onAssistantChange(
+            e.target.value === "all" ? "all" : e.target.value,
+          );
         }}
       >
         <option value="all">{C.filterAllAssistants}</option>
@@ -52,7 +56,11 @@ export default function AwcProjectTasksFilters(p: AwcProjectTasksFiltersProps) {
           </option>
         ))}
       </select>
-      <div className="flex flex-wrap gap-1.5" role="group" aria-label={C.filterAllStatus}>
+      <div
+        className="flex flex-wrap gap-1.5"
+        role="group"
+        aria-label={C.filterAllStatus}
+      >
         {STATUSES.map((s) => {
           const selected = p.status === s;
           return (

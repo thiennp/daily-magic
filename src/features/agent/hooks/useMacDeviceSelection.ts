@@ -22,6 +22,8 @@ const useMacDeviceSelection = (): {
   >["displayNameById"];
   readonly selectedDeviceId: string;
   readonly setSelectedDeviceId: (deviceId: string) => void;
+  /** Switch without remembering it as the user's choice (5c30842c). */
+  readonly adoptDeviceId: (deviceId: string) => void;
   readonly isLoading: boolean;
   readonly hasDispatchReadyMac: boolean;
   readonly dispatchReadyMacCount: number;
@@ -82,6 +84,7 @@ const useMacDeviceSelection = (): {
       setManualDeviceId(deviceId);
       writePreferredMacDeviceId(deviceId);
     },
+    adoptDeviceId: setManualDeviceId,
     isLoading,
     hasDispatchReadyMac: hasAnyWriterSendReadyMac(devices),
     dispatchReadyMacCount,

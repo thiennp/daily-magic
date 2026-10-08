@@ -15,7 +15,9 @@ export const resolveTaskLiveViewAction = (input: {
   if (input.status === "running") {
     return { runId, label: "Open live view" };
   }
-  return input.status === "failed" || input.status === "timed_out"
+  return input.status === "failed" ||
+    input.status === "timed_out" ||
+    input.status === "stalled"
     ? { runId, label: "Retry" }
     : null;
 };

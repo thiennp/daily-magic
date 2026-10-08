@@ -1,5 +1,6 @@
 "use client";
 
+import AwcProjectTaskStalledActions from "@/features/projects/tasks/AwcProjectTaskStalledActions";
 import AwcProjectTasksEmptyCat from "@/features/projects/tasks/AwcProjectTasksEmptyCat";
 import AwcProjectTaskGitTags from "@/features/projects/tasks/AwcProjectTaskGitTags";
 import AwcProjectTaskStatusChip from "@/features/projects/tasks/AwcProjectTaskStatusChip";
@@ -101,6 +102,9 @@ export default function AwcProjectTasksList({
               {formatWhen(task.updatedAt)}
             </span>
           </button>
+          {task.status === "stalled" ? (
+            <AwcProjectTaskStalledActions task={task} />
+          ) : null}
         </li>
       ))}
     </ul>

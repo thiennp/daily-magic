@@ -5,7 +5,12 @@ import type { ProjectTaskUiStatus } from "@/features/projects/sync/projectSync.t
  * terminal run outcomes it folds away, so they never read as "Queued" (DF-027).
  */
 export type ProjectTaskDisplayStatus =
-  ProjectTaskUiStatus | "denied" | "timed_out" | "stopped" | "unknown";
+  | ProjectTaskUiStatus
+  | "denied"
+  | "timed_out"
+  | "stopped"
+  | "stalled"
+  | "unknown";
 
 /** Raw agent_runs / local status token → display status (trimmed, lowercased). */
 const RUN_STATUS_TO_DISPLAY: ReadonlyMap<string, ProjectTaskDisplayStatus> =
@@ -28,6 +33,7 @@ const RUN_STATUS_TO_DISPLAY: ReadonlyMap<string, ProjectTaskDisplayStatus> =
       timed_out: "timed_out",
       timeout: "timed_out",
       stopped: "stopped",
+      stalled: "stalled",
     } satisfies Record<string, ProjectTaskDisplayStatus>),
   );
 

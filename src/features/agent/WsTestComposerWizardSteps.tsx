@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import ComposerDeviceSwitchNotice from "@/features/agent/ComposerDeviceSwitchNotice";
 import type { WsTestComposerWizardStepsProps } from "@/features/agent/types/WsTestComposerWizardStepsProps.type";
 import WsTestComposerMacSection from "@/features/agent/WsTestComposerMacSection";
@@ -26,11 +28,18 @@ export default function WsTestComposerWizardSteps({
   onDeviceDeleted,
   stepTrail,
 }: WsTestComposerWizardStepsProps) {
+  // 5c30842c: the switch banner is for the app's own switch, never a pick.
+  const [userPickedDeviceId, setUserPickedDeviceId] = useState("");
+  const handleDeviceChange = (deviceId: string): void => {
+    setUserPickedDeviceId(deviceId);
+    onDeviceChange(deviceId);
+  };
   return (
     <>
       {composer.isTeamDispatch ? null : (
         <ComposerDeviceSwitchNotice
           runDeviceId={macDispatchDeviceId}
+          userPickedDeviceId={userPickedDeviceId}
           isDevicesLoading={composer.isMacDevicesLoading}
           displayNameById={composer.macDisplayNameById}
         />
@@ -46,7 +55,7 @@ export default function WsTestComposerWizardSteps({
           selectedDeviceId={macDispatchDeviceId}
           isLoading={composer.isMacDevicesLoading}
           disabled={isMacDeviceLocked}
-          onDeviceChange={onDeviceChange}
+          onDeviceChange={handleDeviceChange}
           onDeviceRenamed={composer.renameMacDevice}
           onDeviceDeleted={onDeviceDeleted}
         />

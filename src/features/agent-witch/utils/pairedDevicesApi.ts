@@ -4,6 +4,7 @@ import { type DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant
 
 import {
   getPairedDevicesSnapshot,
+  hidePairedDeviceAfterRevoke,
   refreshPairedDevices,
 } from "@/features/agent-witch/pairedDevicesResource";
 
@@ -79,6 +80,7 @@ export const revokePairedDevice = async (
 
   if (response.ok) {
     purgeLocalAgentTasksForRevokedDevice(deviceId);
+    hidePairedDeviceAfterRevoke(deviceId);
     notifyMacDeviceRevoked(deviceId);
   }
 

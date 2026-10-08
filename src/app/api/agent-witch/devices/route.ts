@@ -5,6 +5,7 @@ import { collectLiveAgentWitchDeviceIdsForUser } from "@/lib/agentWitch/collectL
 import { consolidateDuplicateAgentWitchDevicesForUser } from "@/lib/agentWitch/consolidateDuplicateAgentWitchDevicesForUser";
 import { ensureAgentWitchDeviceSchema } from "@/lib/agentWitch/ensureAgentWitchDeviceSchema";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
+import { isAgentWitchConnectPlaceholder } from "@/lib/agentWitch/isAgentWitchConnectPlaceholder";
 import { listAgentWitchDevicesForUser } from "@/lib/agentWitch/listAgentWitchDevicesForUser";
 import { revokePendingInstallDevicesForUser } from "@/lib/agentWitch/revokePendingInstallDevicesForUser";
 import { sortAgentWitchDevicesForDisplay } from "@/lib/agentWitch/sortAgentWitchDevicesForDisplay";
@@ -61,7 +62,7 @@ export async function GET(): Promise<Response> {
         devices,
         localLiveDeviceIds,
         remoteLiveDeviceIds,
-      ),
+      ).filter((device) => !isAgentWitchConnectPlaceholder(device)),
     );
     const response = {
       ok: true,

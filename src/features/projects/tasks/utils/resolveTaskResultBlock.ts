@@ -6,6 +6,7 @@ import {
 import { sanitizeAgentRunTextForDisplay } from "@/features/agent/utils/sanitizeAgentRunTextForDisplay";
 import { CODING_TOOL_LABELS } from "@/features/projects/tasks/utils/codingToolLabels.constant";
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
+import { dropRedundantAgentRunDetailLines } from "@/lib/dispatch/dropRedundantAgentRunDetailLines";
 
 export const TASK_RESULT_PREVIEW_MAX_CHARS = 600;
 
@@ -84,7 +85,10 @@ export const resolveTaskResultBlock = (
       ) ??
       summarizeKnownWriterError(`${stripped}\n${task.reportSummary ?? ""}`);
     // 73181622: the reason showed twice when the hint repeats the output.
-    const body = dropLinesEqualTo(output, hint);
+    const body = dropRedundantAgentRunDetailLines(
+      dropLinesEqualTo(output, hint),
+      [hint],
+    );
     return {
       ...block(
         "bad",

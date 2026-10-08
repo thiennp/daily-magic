@@ -5,6 +5,7 @@ const ENDED_WITH_REPORT: ReadonlySet<ProjectTaskDisplayStatus> = new Set([
   "failed",
   "stopped",
   "timed_out",
+  "stalled",
 ]);
 
 /** 7bd7b9ae: every ended run has a report, not only Done ones. */

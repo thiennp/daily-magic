@@ -1,6 +1,7 @@
 import { summarizeKnownWriterError } from "@agent-witch/shared/dispatch";
 
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
+import { dropRedundantAgentRunDetailLines } from "@/lib/dispatch/dropRedundantAgentRunDetailLines";
 
 /**
  * 9b3947bc (Testi recheck @300): a failed run with a known agy / CLI error
@@ -21,9 +22,12 @@ export const resolveProjectReportKnownError = (
     return null;
   }
   // c1731750: Details never just repeat the sentence shown above them.
-  const raw =
+  // d591ae31: …nor repeat one line (cut off with "…") inside themselves.
+  const raw = dropRedundantAgentRunDetailLines(
     texts
       .map((text) => text.trim())
-      .find((text) => text.length > 0 && text !== body) ?? "";
+      .find((text) => text.length > 0 && text !== body) ?? "",
+    [body],
+  );
   return { body, details: raw.length > 0 ? raw : null };
 };

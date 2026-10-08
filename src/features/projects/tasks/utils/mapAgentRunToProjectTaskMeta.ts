@@ -2,6 +2,8 @@ import { PROJECT_SYNC_NEON_SUMMARY_MAX_CHARS } from "@/features/projects/sync/pr
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
 import { mapRunStatusToProjectTaskDisplayStatus } from "@/features/projects/tasks/projectTaskDisplayStatus";
 import { formatAgentRunTerminalReasonLine } from "@/lib/dispatch/agentRunLostConnectionReasons.constant";
+import { formatAgentRunStalledReason } from "@/features/projects/tasks/utils/formatAgentRunStalledReason";
+import { isAgentRunStalled } from "@/lib/dispatch/isAgentRunStalled";
 import { isAgentRunUserStopped } from "@/lib/dispatch/isAgentRunUserStopped";
 import { resolveAgentRunTitleSummary } from "@/lib/dispatch/resolveAgentRunTitleSummary";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
@@ -30,9 +32,10 @@ export const mapAgentRunToProjectTaskMeta = (
     (run.executorEmail.includes("@") ? run.executorEmail : null);
   const runStatus = mapRunStatusToProjectTaskDisplayStatus(run.status);
   // S9: same "Stopped" predicate as the live floater.
-  const status =
-    runStatus === "failed" &&
-    isAgentRunUserStopped(run.resultOutput, run.resultExitCode)
+  const status = isAgentRunStalled(run, Date.now())
+    ? "stalled"
+    : runStatus === "failed" &&
+        isAgentRunUserStopped(run.resultOutput, run.resultExitCode)
       ? "stopped"
       : runStatus;
   const title =
@@ -42,9 +45,11 @@ export const mapAgentRunToProjectTaskMeta = (
   // S4/S10: the failure reason rides next to the title, never replacing it.
   const denialReason = run.denialReason?.trim() ?? "";
   const statusReason =
-    (status === "failed" || status === "denied") && denialReason.length > 0
-      ? formatAgentRunTerminalReasonLine(denialReason)
-      : null;
+    status === "stalled"
+      ? formatAgentRunStalledReason(run)
+      : (status === "failed" || status === "denied") && denialReason.length > 0
+        ? formatAgentRunTerminalReasonLine(denialReason)
+        : null;
 
   return {
     id: run.id,

@@ -10,6 +10,7 @@ const TERMINAL: ReadonlySet<ProjectTaskDisplayStatus> = new Set([
   "denied",
   "timed_out",
   "stopped",
+  "stalled",
 ]);
 
 /**
@@ -25,7 +26,8 @@ export const buildProjectTaskTimelineSteps = (
     status === "done" ||
     status === "failed" ||
     status === "cancelled" ||
-    status === "stopped"
+    status === "stopped" ||
+    status === "stalled"
       ? status
       : "done";
   return ["queued", "running", end];
@@ -38,7 +40,8 @@ export const projectTaskTimelineStepClass = (
   if (step === current) {
     if (step === "queued" || step === "running" || step === "unknown")
       return "cur";
-    if (step === "failed" || step === "timed_out") return "end-failed";
+    if (step === "failed" || step === "timed_out" || step === "stalled")
+      return "end-failed";
     if (step === "cancelled" || step === "denied" || step === "stopped")
       return "end-cancelled";
   }

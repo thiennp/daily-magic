@@ -14,6 +14,7 @@ const STATUS_TONE: Readonly<
   failed: "err",
   timed_out: "err",
   stopped: "muted",
+  stalled: "warn",
   cancelled: "muted",
   denied: "muted",
   unknown: "muted",

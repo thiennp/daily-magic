@@ -8,6 +8,7 @@ import { useLibraryPlaybookSelection } from "@/features/agent/hooks/useLibraryPl
 import { useComposerProjectSelection } from "@/features/agent/hooks/useComposerProjectSelection";
 import { useSelectedDispatchCapability } from "@/features/dispatch/hooks/useSelectedDispatchCapability";
 import { useTeamDispatchSelection } from "@/features/dispatch/hooks/useTeamDispatchSelection";
+import { useAdoptDeepLinkProjectDevice } from "@/features/agent/hooks/useAdoptDeepLinkProjectDevice";
 import useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
 import useCursorCloudConnection from "@/features/home/hooks/useCursorCloudConnection";
 import { useWsTestComposerWorkflowState } from "@/features/agent/hooks/useWsTestComposerWorkflowState";
@@ -39,6 +40,14 @@ export function useWsTestTaskComposer(): UseWsTestTaskComposerResult {
   const projectSelection = useComposerProjectSelection({
     workflowFields: composerWorkflowFields,
     deviceId: macSelection.selectedDeviceId,
+  });
+  useAdoptDeepLinkProjectDevice({
+    urlProjectId: (searchParams.get("projectId") ?? "").trim(),
+    selectedDeviceId: macSelection.selectedDeviceId,
+    deviceIds: macSelection.devices.map((device) => device.id),
+    projectIds: projectSelection.projects.map((project) => project.id),
+    isProjectsLoading: projectSelection.isProjectsLoading,
+    adoptDeviceId: macSelection.adoptDeviceId,
   });
   const workflow = useWsTestComposerWorkflowState(
     selectedCapability,
