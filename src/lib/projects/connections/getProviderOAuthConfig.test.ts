@@ -42,7 +42,7 @@ describe("getProviderOAuthConfig P2 + Notion/Drive", () => {
     const cfg = getProviderOAuthConfig("linear");
     expect(cfg).not.toBeNull();
     expect(cfg?.phase).toBe(1);
-    expect(cfg?.scopes).toEqual(["read", "write"]);
+    expect(cfg?.scopes).toEqual(["read", "write", "admin"]);
     expect(cfg?.authorizeUrl).toContain("linear.app");
   });
 
@@ -77,11 +77,11 @@ describe("getProviderOAuthConfig P2 + Notion/Drive", () => {
     expect(cfg).not.toBeNull();
     expect(cfg?.phase).toBe(1);
     expect(cfg?.clientId).toBe("g-id");
-    expect(cfg?.scopes).toEqual([
-      "https://www.googleapis.com/auth/drive.file",
-    ]);
-    expect(cfg?.scopes.some((s) => s.endsWith("/drive") || s.includes("drive.readonly"))).toBe(
-      false,
-    );
+    expect(cfg?.scopes).toEqual(["https://www.googleapis.com/auth/drive.file"]);
+    expect(
+      cfg?.scopes.some(
+        (s) => s.endsWith("/drive") || s.includes("drive.readonly"),
+      ),
+    ).toBe(false);
   });
 });

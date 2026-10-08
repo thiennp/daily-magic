@@ -29,10 +29,17 @@ export const linearGraphql = async <T>(
   });
   const json = (await res.json().catch(() => null)) as {
     data?: T;
-    errors?: readonly { message?: string }[];
+    errors?: readonly {
+      message?: string;
+      extensions?: { code?: string };
+    }[];
   } | null;
   if (!res.ok || json === null || json.data === undefined) {
-    const detail = json?.errors?.[0]?.message ?? "linear_request_failed";
+    // Rate limits arrive as HTTP 400 with extensions.code RATELIMITED.
+    const detail =
+      json?.errors?.[0]?.extensions?.code === "RATELIMITED"
+        ? "linear_rate_limited"
+        : (json?.errors?.[0]?.message ?? "linear_request_failed");
     throw new LinearApiError(res.status, detail.slice(0, 200));
   }
   if (json.errors !== undefined && json.errors.length > 0) {

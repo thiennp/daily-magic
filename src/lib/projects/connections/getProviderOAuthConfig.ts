@@ -1,4 +1,5 @@
 import type { ProjectConnectionProvider } from "@/lib/projects/connections/projectConnection.types";
+import { PROVIDER_OAUTH_SPECS } from "@/lib/projects/connections/providerOAuthSpecs";
 import { PROJECT_CONNECTIONS_LIVE_PROVIDERS } from "@/lib/projects/connections/projectConnection.constants";
 
 export type ProviderOAuthConfig = {
@@ -38,113 +39,21 @@ const readPair = (
 export const getProviderOAuthConfig = (
   provider: ProjectConnectionProvider,
 ): ProviderOAuthConfig | null => {
-  if (provider === "github") {
-    const pair = readPair(
-      "PROJECT_CONNECTIONS_GITHUB_CLIENT_ID",
-      "PROJECT_CONNECTIONS_GITHUB_CLIENT_SECRET",
-    );
-    if (pair === null) return null;
-    return {
-      provider,
-      ...pair,
-      authorizeUrl: "https://github.com/login/oauth/authorize",
-      tokenUrl: "https://github.com/login/oauth/access_token",
-      scopes: ["read:user", "repo"],
-      phase: 1,
-    };
-  }
-  if (provider === "slack") {
-    const pair = readPair(
-      "PROJECT_CONNECTIONS_SLACK_CLIENT_ID",
-      "PROJECT_CONNECTIONS_SLACK_CLIENT_SECRET",
-    );
-    if (pair === null) return null;
-    return {
-      provider,
-      ...pair,
-      authorizeUrl: "https://slack.com/oauth/v2/authorize",
-      tokenUrl: "https://slack.com/api/oauth.v2.access",
-      scopes: ["chat:write", "channels:read", "users:read"],
-      phase: 1,
-    };
-  }
-  if (provider === "linear") {
-    const pair = readPair(
-      "PROJECT_CONNECTIONS_LINEAR_CLIENT_ID",
-      "PROJECT_CONNECTIONS_LINEAR_CLIENT_SECRET",
-    );
-    if (pair === null) return null;
-    return {
-      provider,
-      ...pair,
-      authorizeUrl: "https://linear.app/oauth/authorize",
-      tokenUrl: "https://api.linear.app/oauth/token",
-      // Linear expects comma-separated scopes on authorize.
-      scopes: ["read", "write"],
-      phase: 1,
-    };
-  }
-  if (provider === "gmail") {
-    // Personal-first Google OAuth; least privilege for assistant read+send.
-    // gmail.readonly is Restricted (verification / possible security assessment).
-    // gmail.send is Sensitive. Avoid mail.google.com / gmail.modify.
-    // Same PROJECT_CONNECTIONS_GOOGLE_* client as google_drive (extra Drive scopes on Drive connect).
-    const pair = readPair(
-      "PROJECT_CONNECTIONS_GOOGLE_CLIENT_ID",
-      "PROJECT_CONNECTIONS_GOOGLE_CLIENT_SECRET",
-    );
-    if (pair === null) return null;
-    return {
-      provider,
-      ...pair,
-      authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
-      tokenUrl: "https://oauth2.googleapis.com/token",
-      scopes: [
-        "https://www.googleapis.com/auth/gmail.readonly",
-        "https://www.googleapis.com/auth/gmail.send",
-      ],
-      phase: 1,
-    };
-  }
-  if (provider === "notion") {
-    // Public Notion integration (OAuth). Internal integrations use a static
-    // workspace token and do not use this flow. Capabilities (read/update
-    // content, etc.) are configured in the Notion integration portal — Notion
-    // does not take OAuth scope query params. Stored scopes document intent.
-    const pair = readPair(
-      "PROJECT_CONNECTIONS_NOTION_CLIENT_ID",
-      "PROJECT_CONNECTIONS_NOTION_CLIENT_SECRET",
-    );
-    if (pair === null) return null;
-    return {
-      provider,
-      ...pair,
-      authorizeUrl: "https://api.notion.com/v1/oauth/authorize",
-      tokenUrl: "https://api.notion.com/v1/oauth/token",
-      scopes: ["read_content", "update_content"],
-      phase: 1,
-    };
-  }
-  if (provider === "google_drive") {
-    // Same Google OAuth client as Gmail; Drive-only scopes on this connect.
-    // drive.file = least privilege (Sensitive): files created/opened by the app.
-    // drive.readonly is Restricted (Google verification) — upgrade only if
-    // assistants must browse arbitrary existing Drive files without picker.
-    const pair = readPair(
-      "PROJECT_CONNECTIONS_GOOGLE_CLIENT_ID",
-      "PROJECT_CONNECTIONS_GOOGLE_CLIENT_SECRET",
-    );
-    if (pair === null) return null;
-    return {
-      provider,
-      ...pair,
-      authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
-      tokenUrl: "https://oauth2.googleapis.com/token",
-      scopes: ["https://www.googleapis.com/auth/drive.file"],
-      phase: 1,
-    };
-  }
-  return null;
+  const spec = PROVIDER_OAUTH_SPECS[provider];
+  if (spec === undefined) return null;
+  const pair = readPair(
+    `PROJECT_CONNECTIONS_${spec.envPrefix}_CLIENT_ID`,
+    `PROJECT_CONNECTIONS_${spec.envPrefix}_CLIENT_SECRET`,
+  );
+  if (pair === null) return null;
+  return {
+    provider,
+    ...pair,
+    authorizeUrl: spec.authorizeUrl,
+    tokenUrl: spec.tokenUrl,
+    scopes: spec.scopes,
+    phase: 1,
+  };
 };
 
 export const isLiveOAuthProvider = (

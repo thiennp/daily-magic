@@ -39,6 +39,15 @@ p2=3 Medium, p3=4 Low, none=0 (and back).
    (registers the webhook at `<public base URL>/api/projects/:id/connections/linear/webhook`).
 3. `POST .../task-sync/linear/sync` pushes existing tasks in batches of 40 (repeat while `remaining` > 0).
 
+## OAuth scopes and reconnect
+
+Registering the webhook (`webhookCreate`/`webhookDelete`) requires the Linear **`admin`** scope
+(see linear.app/developers/webhooks); the connection requests `read,write,admin`. Connections
+made before this change only have `read,write`: the owner must **disconnect and reconnect**
+Linear (and the connecting user must be a workspace admin) before enabling sync. Access tokens
+live 24 h; the refresh-token grant is used on a 401. Rate limits (5,000 req/h for OAuth apps)
+come back as HTTP 400 with `extensions.code = RATELIMITED` and surface as `linear_rate_limited`.
+
 ## Limits
 
 Public HTTPS base URL needed for the webhook (localhost: push works, pull does not). Linear
