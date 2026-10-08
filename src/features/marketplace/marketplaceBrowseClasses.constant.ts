@@ -12,14 +12,13 @@ export const MK_DESC_CLASS = "mt-2 max-w-2xl text-sm text-awc-fg-muted";
 
 export const MK_TOP_CLASS = "flex flex-col gap-4";
 
-export const MK_TOOLS_CLASS =
-  "flex flex-wrap items-center gap-3";
+export const MK_TOOLS_CLASS = "flex flex-wrap items-center gap-3";
 
 export const MK_SEARCH_WRAP_CLASS =
   "relative flex min-w-0 flex-1 basis-[260px] items-center";
 
 export const MK_SEARCH_INPUT_CLASS =
-  "h-10 w-full rounded-xl border-0 bg-awc-surface py-2 pl-10 pr-16 text-sm text-awc-fg shadow-awc-lift outline-none ring-1 ring-inset ring-black/8 placeholder:text-awc-fg-subtle focus-visible:ring-2 focus-visible:ring-awc-blue-600";
+  "h-10 w-full rounded-xl border-0 bg-awc-surface py-2 pl-10 pr-16 text-sm text-awc-fg shadow-awc-lift outline-none ring-1 ring-inset ring-black/8 placeholder:text-awc-fg-subtle focus-visible:ring-2 focus-visible:ring-awc-blue-600 disabled:cursor-not-allowed disabled:opacity-60";
 
 export const MK_SEARCH_ICON_CLASS =
   "pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-awc-fg-subtle";
@@ -30,15 +29,13 @@ export const MK_SEARCH_CLEAR_CLASS =
 export const MK_SORT_WRAP_CLASS = "flex shrink-0 items-center gap-2";
 
 export const MK_SORT_SELECT_CLASS =
-  "h-10 min-w-[170px] rounded-xl border border-awc-border-strong bg-awc-surface px-3 text-sm font-medium text-awc-fg outline-none focus:border-awc-blue-500 focus:ring-4 focus:ring-awc-blue-500/15";
+  "h-10 min-w-[170px] rounded-xl border border-awc-border-strong bg-awc-surface px-3 text-sm font-medium text-awc-fg outline-none focus:border-awc-blue-500 focus:ring-4 focus:ring-awc-blue-500/15 disabled:cursor-not-allowed disabled:opacity-60";
 
-export const MK_SUB_CLASS =
-  "flex flex-wrap items-center justify-between gap-3";
+export const MK_SUB_CLASS = "flex flex-wrap items-center justify-between gap-3";
 
 export const MK_FILTERS_CLASS = "flex flex-wrap items-center gap-3";
 
-export const MK_FILTER_GROUP_CLASS =
-  "flex flex-wrap items-center gap-1.5";
+export const MK_FILTER_GROUP_CLASS = "flex flex-wrap items-center gap-1.5";
 
 export const MK_FILTER_LAB_CLASS =
   "inline-flex items-center gap-1 text-sm font-semibold text-awc-fg-muted";
@@ -49,7 +46,7 @@ export const MK_SEG_CLASS =
   "inline-flex max-w-full flex-wrap gap-0.5 rounded-lg bg-awc-fill p-[3px]";
 
 export const MK_SEG_BTN_CLASS =
-  "inline-flex min-h-[30px] items-center gap-2 whitespace-nowrap rounded-md px-3 text-sm font-medium text-awc-fg-muted transition";
+  "inline-flex min-h-[30px] items-center gap-2 whitespace-nowrap rounded-md px-3 text-sm font-medium text-awc-fg-muted transition disabled:cursor-not-allowed disabled:opacity-60";
 
 export const MK_SEG_BTN_ACTIVE_CLASS =
   "bg-awc-surface font-semibold text-awc-fg shadow-awc-lift";
@@ -62,8 +59,7 @@ export const MK_GRID_CLASS =
 export const MK_CARD_BASE_CLASS =
   "relative flex h-full min-w-0 flex-col gap-3 rounded-[20px] bg-awc-surface p-5 shadow-awc-card transition hover:-translate-y-px hover:shadow-[0_8px_24px_color-mix(in_srgb,var(--awc-blue-600)_14%,transparent)] focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-awc-blue-500";
 
-export const MK_CARD_HEAD_CLASS =
-  "flex min-w-0 items-start gap-3";
+export const MK_CARD_HEAD_CLASS = "flex min-w-0 items-start gap-3";
 
 export const MK_TICON_CLASS =
   "inline-grid size-11 shrink-0 place-items-center rounded-[14px]";
@@ -108,8 +104,7 @@ export const MK_SECTION_BODY_CLASS =
 export const MK_EMPTY_CLASS =
   "mt-4 flex flex-col items-center gap-3 rounded-[18px] border border-dashed border-awc-border-strong bg-awc-surface-2 px-4 py-6 text-center text-awc-fg-muted";
 
-export const MK_EMPTY_TITLE_CLASS =
-  "text-lg font-semibold text-awc-fg";
+export const MK_EMPTY_TITLE_CLASS = "text-lg font-semibold text-awc-fg";
 
 export const MK_SKEL_GRID_CLASS = MK_GRID_CLASS;
 

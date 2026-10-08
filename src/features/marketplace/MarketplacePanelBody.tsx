@@ -2,16 +2,11 @@
 
 import MarketplaceBrowseToolbar from "@/features/marketplace/MarketplaceBrowseToolbar";
 import MarketplaceListingSections from "@/features/marketplace/MarketplaceListingSections";
+import MarketplaceNoMatch from "@/features/marketplace/MarketplaceNoMatch";
+import MarketplaceLoadError from "@/features/marketplace/MarketplaceLoadError";
 import MarketplaceVisitorEmptyState from "@/features/marketplace/MarketplaceVisitorEmptyState";
-import {
-  MK_EMPTY_CLASS,
-  MK_EMPTY_TITLE_CLASS,
-  MK_PAGE_STACK_CLASS,
-} from "@/features/marketplace/marketplaceBrowseClasses.constant";
-import {
-  MARKETPLACE_FILTERED_EMPTY_BODY,
-  MARKETPLACE_FILTERED_EMPTY_TITLE,
-} from "@/features/marketplace/marketplaceCopy.constant";
+import { MK_PAGE_STACK_CLASS } from "@/features/marketplace/marketplaceBrowseClasses.constant";
+import {} from "@/features/marketplace/marketplaceCopy.constant";
 import {
   type MarketplaceBrowseFilters,
   marketplaceFiltersAreActive,
@@ -28,6 +23,8 @@ interface MarketplacePanelBodyProps {
   readonly officialListings: readonly HarnessMarketplaceListing[];
   readonly teammateListings: readonly HarnessMarketplaceListing[];
   readonly isLoading: boolean;
+  readonly loadFailed: boolean;
+  readonly onRetry: () => void;
   readonly onInstall: (listing: HarnessMarketplaceListing) => void;
   readonly teamNavEnabled: boolean;
 }
@@ -42,6 +39,8 @@ export default function MarketplacePanelBody({
   officialListings,
   teammateListings,
   isLoading,
+  loadFailed,
+  onRetry,
   onInstall,
   teamNavEnabled,
 }: MarketplacePanelBodyProps) {
@@ -57,13 +56,19 @@ export default function MarketplacePanelBody({
   const filtersActive = marketplaceFiltersAreActive(filters);
   const showFilteredEmpty =
     !isLoading &&
+    !loadFailed &&
     !showVisitorEmptyState &&
     filtersActive &&
     officialListings.length === 0 &&
     teammateListings.length === 0 &&
     listings.length > 0;
 
-  const panelBody = showVisitorEmptyState ? (
+  const clearFilters = () =>
+    onFiltersChange({ ...filters, query: "", type: "all", publisher: "all" });
+
+  const panelBody = loadFailed ? (
+    <MarketplaceLoadError onRetry={onRetry} />
+  ) : showVisitorEmptyState ? (
     <>
       <MarketplaceVisitorEmptyState />
       <MarketplaceListingSections
@@ -72,10 +77,7 @@ export default function MarketplacePanelBody({
       />
     </>
   ) : showFilteredEmpty ? (
-    <div className={MK_EMPTY_CLASS} role="status">
-      <h4 className={MK_EMPTY_TITLE_CLASS}>{MARKETPLACE_FILTERED_EMPTY_TITLE}</h4>
-      <p className="max-w-[42ch] text-sm">{MARKETPLACE_FILTERED_EMPTY_BODY}</p>
-    </div>
+    <MarketplaceNoMatch query={filters.query} onClear={clearFilters} />
   ) : (
     <MarketplaceListingSections {...sectionProps} />
   );
@@ -84,6 +86,7 @@ export default function MarketplacePanelBody({
     <div className={variant === "page" ? MK_PAGE_STACK_CLASS : "space-y-6"}>
       {variant === "page" && !showVisitorEmptyState ? (
         <MarketplaceBrowseToolbar
+          disabled={isLoading || loadFailed}
           filters={filters}
           listings={listings}
           resultCount={resultCount}

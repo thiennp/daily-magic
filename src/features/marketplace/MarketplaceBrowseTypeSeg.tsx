@@ -18,12 +18,14 @@ import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketpla
 interface MarketplaceBrowseTypeSegProps {
   readonly filters: MarketplaceBrowseFilters;
   readonly listings: readonly HarnessMarketplaceListing[];
+  readonly disabled: boolean;
   readonly onChange: (next: MarketplaceBrowseFilters) => void;
 }
 
 export default function MarketplaceBrowseTypeSeg({
   filters,
   listings,
+  disabled,
   onChange,
 }: MarketplaceBrowseTypeSegProps) {
   return (
@@ -44,6 +46,7 @@ export default function MarketplaceBrowseTypeSeg({
                 : MK_SEG_BTN_CLASS
             }
             aria-pressed={pressed}
+            disabled={disabled}
             onClick={() =>
               onChange({
                 ...filters,
@@ -53,7 +56,9 @@ export default function MarketplaceBrowseTypeSeg({
           >
             {option.label}
             <span className={MK_SEG_COUNT_CLASS}>
-              {countMarketplaceListingsByType(listings, option.value)}
+              {disabled
+                ? "·"
+                : countMarketplaceListingsByType(listings, option.value)}
             </span>
           </button>
         );

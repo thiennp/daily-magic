@@ -5,11 +5,17 @@ import {
 } from "@/features/marketplace/marketplaceBrowseClasses.constant";
 import { MARKETPLACE_LOADING_LABEL } from "@/features/marketplace/marketplaceCopy.constant";
 
-export default function MarketplaceSectionSkeleton() {
+interface MarketplaceSectionSkeletonProps {
+  readonly label?: string;
+}
+
+export default function MarketplaceSectionSkeleton({
+  label = MARKETPLACE_LOADING_LABEL,
+}: MarketplaceSectionSkeletonProps) {
   return (
-    <div aria-busy="true" aria-label={MARKETPLACE_LOADING_LABEL}>
+    <div aria-busy="true" aria-label={label}>
       <p className="sr-only" role="status">
-        {MARKETPLACE_LOADING_LABEL}
+        {label}
       </p>
       <ul className={MK_SKEL_GRID_CLASS} aria-hidden="true">
         {Array.from({ length: 6 }, (_, index) => (

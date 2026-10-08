@@ -13,11 +13,13 @@ import {
 
 interface MarketplaceBrowseSearchFieldProps {
   readonly query: string;
+  readonly disabled: boolean;
   readonly onQueryChange: (query: string) => void;
 }
 
 export default function MarketplaceBrowseSearchField({
   query,
+  disabled,
   onQueryChange,
 }: MarketplaceBrowseSearchFieldProps) {
   return (
@@ -44,7 +46,14 @@ export default function MarketplaceBrowseSearchField({
         autoComplete="off"
         spellCheck={false}
         value={query}
+        disabled={disabled}
         onChange={(event) => onQueryChange(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === "Escape" && query !== "") {
+            event.preventDefault();
+            onQueryChange("");
+          }
+        }}
       />
       {query.length > 0 ? (
         <button

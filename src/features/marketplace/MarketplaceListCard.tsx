@@ -18,6 +18,7 @@ import {
   MK_TICON_CLASS,
 } from "@/features/marketplace/marketplaceBrowseClasses.constant";
 import {
+  MARKETPLACE_INSTALL_ARIA,
   MARKETPLACE_INSTALL_LABEL,
   MARKETPLACE_OFFICIAL_CHIP_LABEL,
   MARKETPLACE_TEAMMATE_CHIP_LABEL,
@@ -43,7 +44,10 @@ export default function MarketplaceListCard({
   return (
     <article className={`${MK_CARD_BASE_CLASS} ${chrome.borderClass}`}>
       <div className={MK_CARD_HEAD_CLASS}>
-        <span className={`${MK_TICON_CLASS} ${chrome.iconWrapClass}`} aria-hidden>
+        <span
+          className={`${MK_TICON_CLASS} ${chrome.iconWrapClass}`}
+          aria-hidden
+        >
           <AppIcon icon={chrome.icon} size="sm" />
         </span>
         <div className="flex min-w-0 flex-col gap-0.5">
@@ -77,7 +81,9 @@ export default function MarketplaceListCard({
           <AppIcon icon={chrome.icon} size="sm" />
           {chrome.label}
         </span>
-        <span className={isOfficial ? MK_SRC_OFFICIAL_CLASS : MK_SRC_TEAM_CLASS}>
+        <span
+          className={isOfficial ? MK_SRC_OFFICIAL_CLASS : MK_SRC_TEAM_CLASS}
+        >
           {isOfficial
             ? MARKETPLACE_OFFICIAL_CHIP_LABEL
             : MARKETPLACE_TEAMMATE_CHIP_LABEL}
@@ -91,6 +97,7 @@ export default function MarketplaceListCard({
         <button
           type="button"
           className={MK_INSTALL_BTN_CLASS}
+          aria-label={MARKETPLACE_INSTALL_ARIA(listing.name)}
           onClick={() => onInstall(listing)}
         >
           <AppIcon icon={DownloadIcon} size="sm" />

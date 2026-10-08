@@ -1,18 +1,44 @@
-/** Copy for the My bots ownership screen. */
+/** Copy for the My bots screen. Design: "AgentWitch – My bots" (Claude Design). */
 export const MY_BOTS_COPY = {
   title: "My bots",
-  description:
-    "Claim an assistant with a short code from your assistant, then manage its project wake links. Only you can unclaim an assistant you own.",
-  claimHeading: "Claim an assistant",
-  claimHint:
-    "Ask your assistant for a claim code. Codes expire in 10 minutes and work once.",
+  description: "Bots and agents you own. Each one works inside a project.",
+  claimOpen: "Claim a bot",
+  claimHeading: "Claim a bot",
+  claimClose: "Close",
+  claimLabel: "Claim code",
+  claimTip:
+    "Get the code in the bot’s app. It expires in 10 minutes and works once.",
+  claimTipLabel: "About claim codes",
   claimPlaceholder: "awc_claim_…",
   claimSubmit: "Claim",
   claimSubmitting: "Claiming…",
-  listHeading: "Owned assistants",
-  listEmpty: "No assistants claimed yet.",
+  claimEnterCode: "Enter the claim code.",
+  claimBadFormat: "A claim code starts with awc_claim_",
+  searchLabel: "Search bots",
+  searchPlaceholder: "Search bots…",
+  searchClear: "Clear",
+  loading: "Loading your bots…",
+  loadErrorTitle: "Could not load your bots",
+  loadErrorBody: "Check your connection and try again.",
+  tryAgain: "Try again",
+  emptyTitle: "You have no bots yet.",
+  emptyBody: "Claim a bot with a code, or install one from the Marketplace.",
+  noMatchTitle: "No bots match",
+  noMatchTitleFilters: "No bots match these filters",
+  clearFilters: "Clear filters",
+  inProject: "In",
+  notInProject: "Not in a project",
   unclaim: "Unclaim",
   unclaiming: "Unclaiming…",
+  unclaimTitle: (name: string) => `Unclaim ${name}?`,
+  unclaimBody:
+    "It leaves its project and stops taking tasks. You can claim it again with a new code.",
+  unclaimCancel: "Cancel",
+  unclaimFailed: "Could not unclaim this bot. Nothing changed.",
+  countLabel: (shown: number, total: number): string =>
+    shown === total
+      ? `${String(total)} ${total === 1 ? "bot" : "bots"}`
+      : `${String(shown)} of ${String(total)} bots`,
   webhookToggle: "Grok wake link",
   webhookHide: "Hide",
   membershipLabel: "Project",

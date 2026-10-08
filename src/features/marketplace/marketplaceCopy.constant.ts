@@ -31,15 +31,37 @@ export const MARKETPLACE_TEAMMATES_TITLE = "From teammates";
 export const MARKETPLACE_TEAMMATES_DESCRIPTION =
   "Assistants and workflows your teammates shared.";
 
-export const MARKETPLACE_FILTERED_EMPTY_TITLE = "No matches";
+export const MARKETPLACE_FILTERED_EMPTY_TITLE = "Nothing matches";
 
 export const MARKETPLACE_FILTERED_EMPTY_BODY =
   "Try a different word or remove a filter.";
 
 export const MARKETPLACE_LOADING_LABEL = "Loading the Marketplace…";
 
-export const MARKETPLACE_RESULTS_COUNT_LABEL = (count: number): string =>
-  count === 1 ? "1 result" : `${String(count)} results`;
+export const MARKETPLACE_RESULTS_COUNT_LABEL = (
+  shown: number,
+  total: number,
+): string =>
+  shown === total
+    ? `${String(total)} ${total === 1 ? "listing" : "listings"}`
+    : `${String(shown)} of ${String(total)} listings`;
+
+export const MARKETPLACE_CLEAR_FILTERS_LABEL = "Clear filters";
+
+export const MARKETPLACE_NO_MATCH_TITLE = (query: string): string =>
+  query.trim() === "" ? "Nothing matches" : `Nothing matches “${query.trim()}”`;
+
+export const MARKETPLACE_LOAD_ERROR_TITLE = "Could not load the Marketplace";
+
+export const MARKETPLACE_LOAD_ERROR_BODY =
+  "Check your connection and try again.";
+
+export const MARKETPLACE_TRY_AGAIN_LABEL = "Try again";
+
+export const MARKETPLACE_PUBLISHER_TIP_LABEL = "About publishers";
+
+export const MARKETPLACE_INSTALL_ARIA = (name: string): string =>
+  `Install ${name}`;
 
 export const MARKETPLACE_SORT_OPTIONS = [
   { value: "officialFirst", label: "Official first" },

@@ -33,7 +33,7 @@ const DEFAULT_FILTERS: MarketplaceBrowseFilters = {
 export default function MarketplacePanel({
   variant = "embedded",
 }: MarketplacePanelProps) {
-  const { listings, isLoading } = useMarketplaceState();
+  const { listings, isLoading, loadFailed, retry } = useMarketplaceState();
   const { sessionState } = useGuestSessionState();
   const { teamNavEnabled } = useShellNavContext();
   const isGuest = sessionState !== "signed_in";
@@ -77,6 +77,8 @@ export default function MarketplacePanel({
       officialListings={officialListings}
       teammateListings={teammateListings}
       isLoading={isLoading}
+      loadFailed={loadFailed}
+      onRetry={retry}
       onInstall={setInstallListing}
       teamNavEnabled={teamNavEnabled}
     />

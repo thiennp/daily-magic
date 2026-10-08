@@ -4,6 +4,7 @@ import MarketplaceBrowsePublisherSeg from "@/features/marketplace/MarketplaceBro
 import MarketplaceBrowseSearchField from "@/features/marketplace/MarketplaceBrowseSearchField";
 import MarketplaceBrowseTypeSeg from "@/features/marketplace/MarketplaceBrowseTypeSeg";
 import {
+  MARKETPLACE_CLEAR_FILTERS_LABEL,
   MARKETPLACE_RESULTS_COUNT_LABEL,
   MARKETPLACE_SORT_LABEL,
   MARKETPLACE_SORT_OPTIONS,
@@ -28,6 +29,7 @@ interface MarketplaceBrowseToolbarProps {
   readonly filters: MarketplaceBrowseFilters;
   readonly listings: readonly HarnessMarketplaceListing[];
   readonly resultCount: number;
+  readonly disabled: boolean;
   readonly onChange: (next: MarketplaceBrowseFilters) => void;
 }
 
@@ -35,6 +37,7 @@ export default function MarketplaceBrowseToolbar({
   filters,
   listings,
   resultCount,
+  disabled,
   onChange,
 }: MarketplaceBrowseToolbarProps) {
   return (
@@ -42,6 +45,7 @@ export default function MarketplaceBrowseToolbar({
       <div className={MK_TOOLS_CLASS}>
         <MarketplaceBrowseSearchField
           query={filters.query}
+          disabled={disabled}
           onQueryChange={(query) => onChange({ ...filters, query })}
         />
         <div className={MK_SORT_WRAP_CLASS}>
@@ -53,6 +57,7 @@ export default function MarketplaceBrowseToolbar({
           </label>
           <select
             id="mk-sort"
+            disabled={disabled}
             className={MK_SORT_SELECT_CLASS}
             value={filters.sort}
             onChange={(event) =>
@@ -75,19 +80,39 @@ export default function MarketplaceBrowseToolbar({
           <MarketplaceBrowseTypeSeg
             filters={filters}
             listings={listings}
+            disabled={disabled}
             onChange={onChange}
           />
           <MarketplaceBrowsePublisherSeg
             filters={filters}
             listings={listings}
+            disabled={disabled}
             onChange={onChange}
           />
         </div>
-        {marketplaceFiltersAreActive(filters) ? (
+        <div className="flex flex-wrap items-center gap-4">
           <span className={MK_COUNT_CLASS} role="status">
-            {MARKETPLACE_RESULTS_COUNT_LABEL(resultCount)}
+            {disabled
+              ? ""
+              : MARKETPLACE_RESULTS_COUNT_LABEL(resultCount, listings.length)}
           </span>
-        ) : null}
+          {marketplaceFiltersAreActive(filters) ? (
+            <button
+              type="button"
+              className="rounded-md px-3 py-1 text-sm font-semibold text-awc-blue-700 hover:bg-awc-blue-50"
+              onClick={() =>
+                onChange({
+                  ...filters,
+                  query: "",
+                  type: "all",
+                  publisher: "all",
+                })
+              }
+            >
+              {MARKETPLACE_CLEAR_FILTERS_LABEL}
+            </button>
+          ) : null}
+        </div>
       </div>
     </div>
   );

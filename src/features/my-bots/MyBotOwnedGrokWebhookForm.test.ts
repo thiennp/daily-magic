@@ -8,9 +8,7 @@ const read = (path: string): string =>
 
 describe("owned-bot Grok webhook secret form", () => {
   it("masks inputs and clears the key after save like the owner form", () => {
-    const src = read(
-      "src/features/my-bots/MyBotOwnedGrokWebhookForm.tsx",
-    );
+    const src = read("src/features/my-bots/MyBotOwnedGrokWebhookForm.tsx");
     const hook = read(
       "src/features/my-bots/hooks/useOwnedBotGrokWebhookForm.ts",
     );

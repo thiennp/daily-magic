@@ -13,13 +13,14 @@ const NO_LISTINGS: readonly HarnessMarketplaceListing[] = [];
 
 export function useMarketplaceState() {
   const { status } = useSession();
-  const [remoteListings, setRemoteListings] = useState<
-    readonly HarnessMarketplaceListing[]
-  >(NO_LISTINGS);
+  const [remoteListings, setRemoteListings] =
+    useState<readonly HarnessMarketplaceListing[]>(NO_LISTINGS);
   const [borrowed, setBorrowed] =
     useState<BorrowedMarketplaceListingState | null>(null);
   /** Set only after the authenticated fetch settles (never synchronously in the effect). */
   const [loadedKey, setLoadedKey] = useState<string | null>(null);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   const authKey = status === "authenticated" ? AUTHED_KEY : status;
   const listings = status === "authenticated" ? remoteListings : NO_LISTINGS;
@@ -36,7 +37,11 @@ export function useMarketplaceState() {
     void (async () => {
       try {
         const response = await fetch("/api/harness/marketplace");
-        if (!response.ok || cancelledRef.current) {
+        if (cancelledRef.current) {
+          return;
+        }
+        if (!response.ok) {
+          setLoadFailed(true);
           return;
         }
 
@@ -54,6 +59,13 @@ export function useMarketplaceState() {
           setRemoteListings(
             (data as { listings: HarnessMarketplaceListing[] }).listings,
           );
+          setLoadFailed(false);
+        } else {
+          setLoadFailed(true);
+        }
+      } catch {
+        if (!cancelledRef.current) {
+          setLoadFailed(true);
         }
       } finally {
         if (!cancelledRef.current) {
@@ -65,7 +77,13 @@ export function useMarketplaceState() {
     return () => {
       cancelledRef.current = true;
     };
-  }, [status]);
+  }, [status, attempt]);
+
+  const retry = (): void => {
+    setLoadedKey(null);
+    setLoadFailed(false);
+    setAttempt((value) => value + 1);
+  };
 
   const borrowListing = async (capabilityId: string): Promise<void> => {
     const borrow = await fetchBorrowedMarketplaceListing(capabilityId);
@@ -74,5 +92,5 @@ export function useMarketplaceState() {
     }
   };
 
-  return { listings, borrowed, isLoading, borrowListing };
+  return { listings, borrowed, isLoading, loadFailed, retry, borrowListing };
 }
