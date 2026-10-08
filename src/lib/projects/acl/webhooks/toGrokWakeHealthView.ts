@@ -24,7 +24,7 @@ const failureReasonOf = (result: string): string | null => {
     return "Fetch failed (timeout, DNS or refused)";
   }
   if (result === "not_postable") {
-    return "Not postable";
+    return "No wake link was saved when this message was sent.";
   }
   return null;
 };

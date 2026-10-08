@@ -31,8 +31,13 @@ vi.mock("@/lib/projects/acl/webhooks/assertSafeProjectWebhookUrl", () => ({
   ),
 }));
 
-import { GET } from "@/app/api/projects/[projectId]/access/members/[membershipId]/grok-webhook/route";
+import {
+  GET,
+  PUT,
+} from "@/app/api/projects/[projectId]/access/members/[membershipId]/grok-webhook/route";
 
+const URL_OK = "https://hooks.example.com/wake/abc";
+const SECRET_KEY = "grok-routine-secret-key";
 const params = Promise.resolve({ projectId: "proj-1", membershipId: "mem-1" });
 const db: GrokWebhookSqlState = {
   writable: true,
@@ -55,6 +60,15 @@ beforeEach(() => {
 
 const callGet = () => GET(new Request("http://localhost/x"), { params });
 
+const callPut = (body: unknown) =>
+  PUT(
+    new Request("http://localhost/x", {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }),
+    { params },
+  );
+
 const statusQuery = (): string | undefined =>
   grokGetStatusQuery(sqlMock.mock.calls);
 
@@ -70,6 +84,16 @@ describe("owner grok-webhook route GET wake health (DF-036)", () => {
     });
     expect(JSON.stringify(body)).not.toContain("/wake/abc");
     expect(statusQuery()).toContain("LEFT JOIN LATERAL");
+    expect(statusQuery()).toContain("a.created_at >= w.updated_at");
+  });
+
+  it("owner GET after PUT issues status SQL that ignores pre-save wake attempts", async () => {
+    await callPut({ webhookUrl: URL_OK, webhookKey: SECRET_KEY });
+    db.statusRow = grokGetStatusRow(null, null);
+    sqlMock.mockClear();
+    const response = await callGet();
+    expect(response.status).toBe(200);
+    expect(statusQuery()).toContain("a.created_at >= w.updated_at");
   });
 
   it("DF-036: no stored wake → lastWakeAt and lastFailureReason null", async () => {

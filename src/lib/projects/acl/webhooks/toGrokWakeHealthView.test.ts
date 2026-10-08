@@ -44,7 +44,7 @@ describe("toGrokWakeHealthView", () => {
     });
     expect(view("not_postable")).toEqual({
       lastWakeAt: AT,
-      lastFailureReason: "Not postable",
+      lastFailureReason: "No wake link was saved when this message was sent.",
     });
   });
 

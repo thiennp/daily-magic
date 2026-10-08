@@ -9,12 +9,20 @@ export type AssistantWakeHealth = {
   readonly offerPaste: boolean;
 };
 
-const REASONS: Readonly<Record<string, { readonly text: string; readonly offerPaste: boolean }>> = {
+const REASONS: Readonly<
+  Record<string, { readonly text: string; readonly offerPaste: boolean }>
+> = {
   "HTTP 429": { text: C.busy, offerPaste: false },
   "HTTP 401": { text: C.keyRejected, offerPaste: true },
   "HTTP 403": { text: C.keyRejected, offerPaste: true },
-  "Fetch failed (timeout, DNS or refused)": { text: C.unreachable, offerPaste: false },
-  "Not postable": { text: C.notPostable, offerPaste: true },
+  "Fetch failed (timeout, DNS or refused)": {
+    text: C.unreachable,
+    offerPaste: false,
+  },
+  "No wake link was saved when this message was sent.": {
+    text: C.notPostable,
+    offerPaste: true,
+  },
 };
 
 const SERVER_ERROR = /^HTTP 5\d\d$/;
@@ -30,7 +38,9 @@ const MINUTE_MS = 60_000;
 
 /** "just now" / "5 min ago" / "3 h ago" / "2 d ago". */
 export const formatWakeAgo = (iso: string, nowMs: number): string => {
-  const minutes = Math.floor(Math.max(0, nowMs - new Date(iso).getTime()) / MINUTE_MS);
+  const minutes = Math.floor(
+    Math.max(0, nowMs - new Date(iso).getTime()) / MINUTE_MS,
+  );
   if (Number.isNaN(minutes) || minutes < 1) return C.justNow;
   if (minutes < 60) return C.minutesAgo.replace("{n}", String(minutes));
   const hours = Math.floor(minutes / 60);
@@ -52,10 +62,17 @@ export const formatAssistantWakeHealth = (input: {
   if (lastFailureReason !== null && lastFailureReason.trim() !== "") {
     const mapped = mapWakeFailureReason(lastFailureReason);
     const time = formatOverviewWhen(lastWakeAt, { nowMs }) ?? "";
-    const line = C.failedLine.replace("{time}", time).replace("{reason}", mapped.text);
-    return { failed: true, line: line.replace("failed :", "failed:"), offerPaste: mapped.offerPaste };
+    const line = C.failedLine
+      .replace("{time}", time)
+      .replace("{reason}", mapped.text);
+    return {
+      failed: true,
+      line: line.replace("failed :", "failed:"),
+      offerPaste: mapped.offerPaste,
+    };
   }
-  if (lastWakeAt === null) return { failed: false, line: C.noWakes, offerPaste: false };
+  if (lastWakeAt === null)
+    return { failed: false, line: C.noWakes, offerPaste: false };
   const line = C.okLine.replace("{ago}", formatWakeAgo(lastWakeAt, nowMs));
   return { failed: false, line, offerPaste: false };
 };

@@ -11,7 +11,7 @@ export const ASSISTANT_WAKE_HEALTH_COPY = {
   serverError: "Grok Bot had a problem on its side.",
   keyRejected: "Grok Bot didn't accept the key.",
   unreachable: "Couldn't reach Grok Bot.",
-  notPostable: "This wake link doesn't work anymore.",
+  notPostable: "No wake link was saved when this message was sent.",
   other: "Something went wrong.",
   justNow: "just now",
   minutesAgo: "{n} min ago",

@@ -52,6 +52,7 @@ export const readProjectGrokRoutineWebhookStatus = async (
         FROM project_grok_routine_wake_attempts a
         WHERE a.membership_id = m.id
           AND a.result <> ${GROK_WAKE_RESULT_SKIPPED_BY_POLICY}
+          AND (w.updated_at IS NULL OR a.created_at >= w.updated_at)
         ORDER BY a.created_at DESC
         LIMIT 1
       ) lw ON TRUE
