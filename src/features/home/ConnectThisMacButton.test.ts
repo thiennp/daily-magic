@@ -32,7 +32,7 @@ describe("ConnectThisMacButton", () => {
     const source = readSibling("ConnectThisMacButton.tsx");
     expect(source).toContain("commitIdentityWhenDisabled: true");
     expect(source).toMatch(
-      /usePersonalizedAgentWitchInstallCommand\(\{\s*enabled: isModalOpen,/,
+      /usePersonalizedAgentWitchInstallCommand\(\{\s*enabled: shouldMintCommand,/,
     );
   });
 });

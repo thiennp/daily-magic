@@ -3,13 +3,14 @@
 import { Modal } from "@/components/ui/modal";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
+import ConnectThisMacAppFirst from "@/features/home/ConnectThisMacAppFirst";
 import ConnectThisComputerInstallBody from "@/features/home/ConnectThisComputerInstallBody";
 import ConnectThisLinuxDownloadArea from "@/features/home/ConnectThisLinuxDownloadArea";
-import ConnectThisMacDownloadArea from "@/features/home/ConnectThisMacDownloadArea";
 import ConnectThisMacModalNotice from "@/features/home/ConnectThisMacModalNotice";
 import type { ConnectThisMacModalNotice as ConnectThisMacModalNoticeValue } from "@/features/home/utils/ConnectThisMacModalNotice.type";
 import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
 import DownloadNonMacNote from "@/features/download/DownloadNonMacNote";
+import { buildAgentWitchLocalMacAppDownloadUrl } from "@/lib/agentWitch/buildAgentWitchLocalMacAppDownloadUrl";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 interface ConnectThisMacModalProps {
@@ -18,6 +19,8 @@ interface ConnectThisMacModalProps {
   readonly installCommand: string;
   readonly isInstallCommandLoading: boolean;
   readonly installCommandError?: string | null;
+  /** Mac: the command sits in a collapsed section; told when it opens or closes. */
+  readonly onTerminalSectionToggle?: (open: boolean) => void;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
   readonly onClose: () => void;
@@ -42,6 +45,7 @@ export default function ConnectThisMacModal({
   installCommand,
   isInstallCommandLoading,
   installCommandError = null,
+  onTerminalSectionToggle,
   isWebSocketSupported,
   host,
   onClose,
@@ -70,6 +74,20 @@ export default function ConnectThisMacModal({
         <div className="mt-4">
           <AgentWitchUnsupportedHostNotice host={host} />
         </div>
+      ) : operatingSystem === "mac" ? (
+        <ConnectThisMacAppFirst
+          downloadUrl={buildAgentWitchLocalMacAppDownloadUrl()}
+          onTerminalSectionToggle={onTerminalSectionToggle}
+          terminalBody={
+            <ConnectThisComputerInstallBody
+              description={installDescription ?? ""}
+              installCommand={installCommand}
+              isInstallCommandLoading={isInstallCommandLoading}
+              installCommandError={installCommandError}
+              onInstallEngaged={onInstallEngaged}
+            />
+          }
+        />
       ) : installDescription !== undefined ? (
         <>
           <ConnectThisComputerInstallBody
@@ -79,9 +97,8 @@ export default function ConnectThisMacModal({
             installCommandError={installCommandError}
             onInstallEngaged={onInstallEngaged}
           />
-          <ConnectThisMacDownloadArea operatingSystem={operatingSystem} />
           <ConnectThisLinuxDownloadArea operatingSystem={operatingSystem} />
-          {operatingSystem !== "mac" ? <DownloadNonMacNote /> : null}
+          <DownloadNonMacNote />
         </>
       ) : (
         <div className={`mt-3 space-y-4 ${APP_SURFACE_BODY_TEXT_CLASS}`}>

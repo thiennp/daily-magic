@@ -8,6 +8,7 @@ import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
 import ConnectThisMacModal from "@/features/home/ConnectThisMacModal";
 import useConnectThisMacModalNotice from "@/features/home/hooks/useConnectThisMacModalNotice";
 import useConnectThisMacRowFlow from "@/features/home/hooks/useConnectThisMacRowFlow";
+import useConnectTerminalSection from "@/features/home/hooks/useConnectTerminalSection";
 import usePersonalizedAgentWitchInstallCommand from "@/features/home/hooks/usePersonalizedAgentWitchInstallCommand";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 
@@ -46,12 +47,14 @@ export default function ConnectThisMacButton({
   const { notice, isRetrying, retry } = useConnectThisMacModalNotice({
     isModalOpen,
   });
+  const { shouldMintCommand, onTerminalSectionToggle } =
+    useConnectTerminalSection({ operatingSystem, isModalOpen });
   const {
     installCommand: personalizedInstallCommand,
     isLoading: isInstallCommandLoading,
     error: installCommandError,
   } = usePersonalizedAgentWitchInstallCommand({
-    enabled: isModalOpen,
+    enabled: shouldMintCommand,
     fallbackInstallCommand: installCommand,
     commitIdentityWhenDisabled: true,
   });
@@ -91,6 +94,7 @@ export default function ConnectThisMacButton({
         installCommand={personalizedInstallCommand}
         isInstallCommandLoading={isInstallCommandLoading}
         installCommandError={installCommandError}
+        onTerminalSectionToggle={onTerminalSectionToggle}
         isWebSocketSupported={isWebSocketSupported}
         host={host}
         onClose={handleCloseModal}
