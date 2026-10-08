@@ -17,9 +17,11 @@ export const isTerminalAgentRunRecordStatus = (status: string): boolean =>
   TERMINAL_RUN_STATUSES.has(status);
 
 /**
- * Re-read the active run only while the floater still thinks it is working:
- * after the dashboard socket comes back (it may have missed AGENT_RUN_RECORD)
- * or once progress has stalled long enough to look stuck.
+ * Re-read the active run only while the floater still thinks it is working
+ * or stopping: after the dashboard socket comes back (it may have missed
+ * AGENT_RUN_RECORD) or once progress has stalled long enough to look stuck.
+ * 662eae04: a stopping floater never re-read its run (stopping is not
+ * "working"), so a missed result left it on "Stopping on your computer…".
  */
 export const shouldResyncAgentLiveRunRecord = (input: {
   readonly trigger: AgentLiveRunRecordResyncTrigger;
@@ -27,11 +29,12 @@ export const shouldResyncAgentLiveRunRecord = (input: {
   readonly connectionStatus: WsTestConnectionStatus;
   readonly activeRunId: string | null;
   readonly isWorking: boolean;
+  readonly isStopping?: boolean;
 }): boolean => {
   if (
     input.activeRunId === null ||
     input.activeRunId.length === 0 ||
-    !input.isWorking
+    (!input.isWorking && input.isStopping !== true)
   ) {
     return false;
   }

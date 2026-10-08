@@ -18,6 +18,7 @@ import { formatAgentLiveTerminalCommandLine } from "@/features/agent/utils/agent
 import { isMacTerminalDispatch } from "@/features/agent/utils/isMacTerminalDispatch";
 import { dispatchClaudePrompt } from "@/features/agent/utils/dispatchWriterPrompt";
 import { resolveWriterPromptDispatchContinuation } from "@/features/agent/utils/resolveWriterPromptDispatchContinuation";
+import { resolveWriterPromptDispatchSessionTurn } from "@/features/agent/utils/resolveWriterPromptDispatchSessionTurn";
 import parseAgentWitchSocketDisplay, {
   type AgentWitchSocketDisplay,
 } from "@/lib/agentWitch/parseAgentWitchSocketDisplay";
@@ -60,7 +61,10 @@ export const useAgentWitchPromptDispatch = (input: {
           urlSourceRunId,
           liveRunId: input.liveRunId,
         });
-      const sessionTurn = sessionContinuation ? "continue" : "first";
+      const sessionTurn = resolveWriterPromptDispatchSessionTurn({
+        sessionContinuation,
+        sourceRunId,
+      });
 
       if (isMacTerminalDispatch(options)) {
         input.beginSession(

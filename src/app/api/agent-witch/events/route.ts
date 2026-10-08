@@ -1,4 +1,7 @@
-import { pollDashboardUserEvent } from "@/lib/agentWitch/agentWitchDashboardEventBuffer";
+import {
+  resolveDashboardStreamStartSeq,
+  waitForDashboardUserEvents,
+} from "@/lib/agentWitch/agentWitchDashboardEventStream";
 import { registerHttpDashboardWitchClient } from "@/lib/agentWitch/registerHttpDashboardWitchClient";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
@@ -6,7 +9,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 /** Browser SSE stream of hub→dashboard events (replaces WebSocket). */
-export async function GET(): Promise<Response> {
+export async function GET(request: Request): Promise<Response> {
   const { actor, error } = await requireAuth();
 
   if (error || !actor) {
@@ -19,40 +22,69 @@ export async function GET(): Promise<Response> {
   });
 
   const encoder = new TextEncoder();
+  const startCursor = resolveDashboardStreamStartSeq(
+    actor.id,
+    request.headers.get("last-event-id"),
+  );
+
+  const abortController = new AbortController();
+  request.signal.addEventListener("abort", () => {
+    abortController.abort();
+  });
+
   const stream = new ReadableStream({
     start: (controller) => {
-      const poll = { active: true };
+      const position = { cursor: startCursor };
 
       const push = async (): Promise<void> => {
-        while (poll.active) {
-          const event = await pollDashboardUserEvent(actor.id, 25_000);
-          if (!poll.active) {
-            return;
+        while (!abortController.signal.aborted) {
+          const events = await waitForDashboardUserEvents(
+            actor.id,
+            position.cursor,
+            25_000,
+            abortController.signal,
+          );
+
+          if (abortController.signal.aborted) {
+            break;
           }
 
-          if (event === null) {
-            controller.enqueue(encoder.encode(": keepalive\n\n"));
+          if (events.length === 0) {
+            try {
+              controller.enqueue(encoder.encode(": keepalive\n\n"));
+            } catch {
+              abortController.abort();
+              break;
+            }
             continue;
           }
 
-          controller.enqueue(encoder.encode(`data: ${event.raw}\n\n`));
+          try {
+            for (const event of events) {
+              controller.enqueue(
+                encoder.encode(`id: ${event.seq}\ndata: ${event.raw}\n\n`),
+              );
+              position.cursor = event.seq;
+            }
+          } catch {
+            abortController.abort();
+            break;
+          }
         }
       };
 
       void push().catch(() => {
-        poll.active = false;
+        abortController.abort();
         try {
           controller.close();
         } catch {
           // already closed
         }
       });
-
-      return () => {
-        poll.active = false;
-      };
     },
-    cancel: () => undefined,
+    cancel: () => {
+      abortController.abort();
+    },
   });
 
   return new Response(stream, {

@@ -9,7 +9,10 @@ import {
   isTerminalAgentRunRecordStatus,
   shouldResyncAgentLiveRunRecord,
 } from "@/features/agent/utils/agentLiveRunRecordResync";
-import { AGENT_LIVE_RUN_RECORD_RESYNC_MS } from "@/features/agent/utils/agentLiveProgressStall.constant";
+import {
+  AGENT_LIVE_RUN_RECORD_RESYNC_MS,
+  AGENT_LIVE_STOPPING_RUN_RECORD_RESYNC_MS,
+} from "@/features/agent/utils/agentLiveProgressStall.constant";
 import { isAgentLiveTerminalWorking } from "@/features/agent/utils/isAgentLiveTerminalWorking";
 import { fetchAgentRunDetail } from "@/features/reports/fetchAgentRunDetail";
 
@@ -46,6 +49,7 @@ export function useAgentLiveRunRecordResync(
     applySocketMessage: applyTerminalMessage,
   } = terminal;
   const isWorking = isAgentLiveTerminalWorking(terminal.status);
+  const isStopping = terminal.status === "stopping";
   const previousConnectionRef = useRef<WsTestConnectionStatus | null>(null);
 
   useEffect(() => {
@@ -59,11 +63,18 @@ export function useAgentLiveRunRecordResync(
         connectionStatus,
         activeRunId,
         isWorking,
+        isStopping,
       })
     ) {
       void resyncAgentLiveRunRecordAsync(activeRunId, applyTerminalMessage);
     }
-  }, [connectionStatus, activeRunId, isWorking, applyTerminalMessage]);
+  }, [
+    connectionStatus,
+    activeRunId,
+    isWorking,
+    isStopping,
+    applyTerminalMessage,
+  ]);
 
   useEffect(() => {
     if (
@@ -74,16 +85,29 @@ export function useAgentLiveRunRecordResync(
         connectionStatus,
         activeRunId,
         isWorking,
+        isStopping,
       })
     ) {
       return undefined;
     }
     // Re-armed on every output change, so it only fires after a quiet stretch.
-    const timer = window.setInterval(() => {
-      void resyncAgentLiveRunRecordAsync(activeRunId, applyTerminalMessage);
-    }, AGENT_LIVE_RUN_RECORD_RESYNC_MS);
+    const timer = window.setInterval(
+      () => {
+        void resyncAgentLiveRunRecordAsync(activeRunId, applyTerminalMessage);
+      },
+      isStopping
+        ? AGENT_LIVE_STOPPING_RUN_RECORD_RESYNC_MS
+        : AGENT_LIVE_RUN_RECORD_RESYNC_MS,
+    );
     return () => {
       window.clearInterval(timer);
     };
-  }, [activeRunId, isWorking, output, connectionStatus, applyTerminalMessage]);
+  }, [
+    activeRunId,
+    isWorking,
+    isStopping,
+    output,
+    connectionStatus,
+    applyTerminalMessage,
+  ]);
 }

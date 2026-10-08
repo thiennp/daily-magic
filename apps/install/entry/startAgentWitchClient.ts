@@ -153,6 +153,7 @@ import {
   closeShellPtySession,
   configureAgentWitchRunCloudApi,
   continueClaudeTaskAfterInput,
+  supersedePausedRunForContinuation,
   ensureHarnessWriterCli,
   flushPendingAgentRunCompletions,
   flushPendingRunResultDeliveries,
@@ -567,6 +568,15 @@ const dispatchWriterTask = async (
 
   const hasSourceRunId =
     typeof sourceRunId === "string" && sourceRunId.trim().length > 0;
+  if (typeof sourceRunId === "string" && hasSourceRunId) {
+    // b2179f2b: a paused source run is answered by this new run; close it.
+    supersedePausedRunForContinuation(
+      config,
+      asLegacyWebSocket(socket),
+      sourceRunId.trim(),
+      agentRunId,
+    );
+  }
 
   const sessionTurn = resolveWriterSessionTurn({
     sessionContinuation,

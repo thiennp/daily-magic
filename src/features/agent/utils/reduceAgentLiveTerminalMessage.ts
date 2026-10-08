@@ -1,5 +1,6 @@
 import { isRecord } from "@/features/agent/utils/agentLiveTerminalMessageUtils";
 import { reduceAgentLiveTerminalControlMessage } from "@/features/agent/utils/reduceAgentLiveTerminalControlMessage";
+import { reduceAgentLiveTerminalHeartbeatInput } from "@/features/agent/utils/reduceAgentLiveTerminalHeartbeatInput";
 import { reduceAgentLiveTerminalStreamMessage } from "@/features/agent/utils/reduceAgentLiveTerminalStreamMessage";
 import type { AgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalState.type";
 import { failAgentLiveTerminalSession } from "@/features/agent/utils/agentLiveTerminalState.type";
@@ -46,6 +47,15 @@ export const reduceAgentLiveTerminalMessage = (
 
   if (afterControl !== state) {
     return afterControl;
+  }
+
+  const afterHeartbeat = reduceAgentLiveTerminalHeartbeatInput(
+    state,
+    parsed,
+    payload,
+  );
+  if (afterHeartbeat !== state) {
+    return afterHeartbeat;
   }
 
   return reduceAgentLiveTerminalStreamMessage(state, parsed, payload);

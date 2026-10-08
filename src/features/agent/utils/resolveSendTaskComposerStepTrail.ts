@@ -50,7 +50,7 @@ export const resolveSendTaskComposerStepTrailItems = (input: {
   if (input.showMacTrail) {
     items.push({
       id: "mac",
-      caption: "Mac",
+      caption: "Computer",
       value: input.macDeviceName,
     });
   }

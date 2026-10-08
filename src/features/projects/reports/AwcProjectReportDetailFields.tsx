@@ -13,6 +13,7 @@ import {
 import { resolveProjectReportDetailView } from "@/features/projects/reports/utils/resolveProjectReportDetailView";
 import { resolveAgentRunDetailResultOutputForHonesty } from "@/features/reports/utils/resolveAgentRunDetailResultOutputForHonesty";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
+import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 
 const LABEL_CLASS =
   "text-[12px] font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-400";
@@ -32,6 +33,7 @@ export default function AwcProjectReportDetailFields({
       run.id,
       run.resultOutput,
     ),
+    cached: getAgentRunLocalCache(run.id),
   });
 
   return (

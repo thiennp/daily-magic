@@ -1,18 +1,28 @@
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 
-interface DashboardEvent {
-  readonly id: string;
+export interface DashboardEvent {
+  readonly seq: number;
   readonly enqueuedAtMs: number;
   readonly raw: string;
 }
 
+/**
+ * Hub→dashboard events per user. Before 9c8a811d/662eae04 each event went to
+ * ONE waiter, so two SSE streams (floater + harness, two tabs) or a zombie
+ * poller from a closed stream stole checkpoint asks, heartbeats and results.
+ * Now every stream reads the ring after its own cursor.
+ */
+const DASHBOARD_EVENT_RING_MAX = 1000;
+const DASHBOARD_EVENT_RING_MAX_AGE_MS = 120_000;
+
 interface UserEventBuffer {
-  readonly events: DashboardEvent[];
-  waiters: Array<(event: DashboardEvent | null) => void>;
+  events: DashboardEvent[];
+  waiters: Array<() => void>;
 }
 
 const dashboardEventsGlobal = globalThis as typeof globalThis & {
   __dailyMagicAgentWitchDashboardEvents?: Map<string, UserEventBuffer>;
+  __dailyMagicAgentWitchDashboardEventsSeq?: number;
 };
 
 const getBuffers = (): Map<string, UserEventBuffer> => {
@@ -36,57 +46,68 @@ const getOrCreateBuffer = (userId: string): UserEventBuffer => {
   return created;
 };
 
+/**
+ * Seq starts at the process start time (ms) so a browser reconnecting with a
+ * Last-Event-ID from before a deploy/restart never sits ahead of the cursor.
+ */
+const nextGlobalSeq = (): number => {
+  const current =
+    dashboardEventsGlobal.__dailyMagicAgentWitchDashboardEventsSeq ??
+    Date.now();
+  dashboardEventsGlobal.__dailyMagicAgentWitchDashboardEventsSeq = current + 1;
+  return current + 1;
+};
+
+/** Highest seq issued by this process (0 before the first event). */
+export const currentDashboardEventSeq = (): number =>
+  dashboardEventsGlobal.__dailyMagicAgentWitchDashboardEventsSeq ?? 0;
+
 export const enqueueDashboardUserEvent = (
   userId: string,
   message: AgentWitchMessage,
 ): void => {
   const buffer = getOrCreateBuffer(userId);
+  const now = Date.now();
   const event: DashboardEvent = {
-    id: `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
-    enqueuedAtMs: Date.now(),
+    seq: nextGlobalSeq(),
+    enqueuedAtMs: now,
     raw: JSON.stringify(message),
   };
 
-  const waiter = buffer.waiters.shift();
-  if (waiter !== undefined) {
-    waiter(event);
-    return;
-  }
+  const cutoff = now - DASHBOARD_EVENT_RING_MAX_AGE_MS;
+  buffer.events = [...buffer.events, event]
+    .filter((e) => e.enqueuedAtMs >= cutoff)
+    .slice(-DASHBOARD_EVENT_RING_MAX);
 
-  buffer.events.push(event);
-  if (buffer.events.length > 200) {
-    buffer.events.shift();
+  const waitersToResolve = buffer.waiters;
+  buffer.waiters = [];
+  for (const waiter of waitersToResolve) {
+    waiter();
   }
 };
 
-export const pollDashboardUserEvent = async (
+export const readDashboardUserEventsAfter = (
   userId: string,
-  waitMs: number = 25_000,
-): Promise<DashboardEvent | null> => {
+  afterSeq: number,
+): readonly DashboardEvent[] => {
   const buffer = getOrCreateBuffer(userId);
-  const existing = buffer.events.shift();
-  if (existing !== undefined) {
-    return existing;
-  }
+  return buffer.events.filter((e) => e.seq > afterSeq);
+};
 
-  if (waitMs <= 0) {
-    return null;
-  }
+export const latestDashboardUserEventSeq = (userId: string): number =>
+  getOrCreateBuffer(userId).events.at(-1)?.seq ?? 0;
 
-  return new Promise((resolve) => {
-    const timer = setTimeout(() => {
-      const index = buffer.waiters.indexOf(onEvent);
-      if (index >= 0) {
-        buffer.waiters.splice(index, 1);
-      }
-      resolve(null);
-    }, waitMs);
+export const addDashboardUserEventWaiter = (
+  userId: string,
+  waiter: () => void,
+): void => {
+  getOrCreateBuffer(userId).waiters.push(waiter);
+};
 
-    const onEvent = (event: DashboardEvent | null): void => {
-      clearTimeout(timer);
-      resolve(event);
-    };
-
-    buffer.waiters.push(onEvent);
-  });
+export const removeDashboardUserEventWaiter = (
+  userId: string,
+  waiter: () => void,
+): void => {
+  const buffer = getOrCreateBuffer(userId);
+  buffer.waiters = buffer.waiters.filter((entry) => entry !== waiter);
 };

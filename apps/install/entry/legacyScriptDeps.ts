@@ -21,6 +21,7 @@ export {
   publishAgentRunEstimateComparison,
   stopAgentRun,
   stopAllAgentRuns,
+  supersedePausedRunForContinuation,
 } from "../../../scripts/agentWitchRunSessions";
 export { ensureHarnessWriterCli } from "../../../scripts/ensureHarnessWriterCli";
 export {

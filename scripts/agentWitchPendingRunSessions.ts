@@ -121,6 +121,12 @@ export const hasPendingRunInputSession = (
   agentRunId: string,
 ): boolean => readPendingSessions(layout)[agentRunId] !== undefined;
 
+export const loadPendingRunInputSession = (
+  layout: AgentWitchLocalLayout,
+  agentRunId: string,
+): PendingRunInputSession | null =>
+  readPendingSessions(layout)[agentRunId] ?? null;
+
 export const savePendingRunInputSession = (
   layout: AgentWitchLocalLayout,
   session: PendingRunInputSession,

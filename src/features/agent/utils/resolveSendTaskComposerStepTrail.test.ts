@@ -53,6 +53,16 @@ describe("resolveSendTaskComposerStepTrailItems", () => {
     ).toEqual(["mac", "project"]);
   });
 
+  it("Testi run 3: a Linux computer is captioned Computer, not Mac", () => {
+    expect(
+      resolveSendTaskComposerStepTrailItems({
+        ...baseInput,
+        macDeviceName: "Linux device",
+        currentStep: "project",
+      })[0],
+    ).toMatchObject({ caption: "Computer", value: "Linux device" });
+  });
+
   it("AGENT-045: shows only mac on the project step", () => {
     expect(
       resolveSendTaskComposerStepTrailItems({

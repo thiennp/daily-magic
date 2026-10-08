@@ -75,6 +75,24 @@ describe("shouldResyncAgentLiveRunRecord", () => {
   });
 });
 
+describe("shouldResyncAgentLiveRunRecord while stopping (662eae04)", () => {
+  it("keeps re-reading a stopping run until the server says it ended", () => {
+    const stopping = { ...base, isWorking: false, isStopping: true };
+
+    expect(
+      shouldResyncAgentLiveRunRecord({ ...stopping, trigger: "stalled" }),
+    ).toBe(true);
+    expect(shouldResyncAgentLiveRunRecord(stopping)).toBe(true);
+    expect(
+      shouldResyncAgentLiveRunRecord({
+        ...stopping,
+        trigger: "stalled",
+        activeRunId: null,
+      }),
+    ).toBe(false);
+  });
+});
+
 describe("isTerminalAgentRunRecordStatus", () => {
   it("treats completed/failed/expired/denied as terminal", () => {
     expect(

@@ -13,3 +13,6 @@ export const AGENT_LIVE_PROGRESS_STALL_STUCK_MS =
 
 /** Re-read the run record after this long without output (S2/S7, 9890735). */
 export const AGENT_LIVE_RUN_RECORD_RESYNC_MS = 45_000;
+
+/** 662eae04: while stopping, re-read the run until the server says it ended. */
+export const AGENT_LIVE_STOPPING_RUN_RECORD_RESYNC_MS = 4_000;

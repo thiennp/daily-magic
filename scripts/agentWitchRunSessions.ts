@@ -32,6 +32,7 @@ import { ensureAntigravityCliHeadlessPermissionsBeforeRun } from "./ensureAntigr
 import {
   hasPendingRunInputSession,
   listPendingRunInputSessions,
+  loadPendingRunInputSession,
   removePendingRunInputSession,
   savePendingRunInputSession,
 } from "./agentWitchPendingRunSessions";
@@ -1249,6 +1250,55 @@ export const continueClaudeTaskAfterInput = (
     undefined,
     session?.projectId,
   );
+};
+
+/**
+ * b2179f2b (Testi run 3 @292): the checkpoint was answered from job history
+ * ("Continue conversation"), which starts a NEW run seeded from the paused
+ * one. The paused run kept its awaiting-input heartbeat forever, so Tasks and
+ * its host report stayed Running / in_progress after the new run finished.
+ * Close the paused run as Done ("continued in a new run") before the new run
+ * starts; its local record then seeds the new run's context.
+ */
+export const supersedePausedRunForContinuation = (
+  config: AgentWitchRunConfig,
+  socket: WebSocket,
+  sourceRunId: string,
+  continuationRunId: string | undefined,
+): boolean => {
+  const pending = loadPendingRunInputSession(config.layout, sourceRunId);
+  if (pending === null) {
+    return false;
+  }
+
+  const note =
+    continuationRunId !== undefined && continuationRunId.length > 0
+      ? `Continued in a new run (${continuationRunId.substring(0, 8)}) after your answer.`
+      : "Continued in a new run after your answer.";
+  const reportKey = pending.reportKey?.trim() ?? "";
+  if (reportKey.length > 0) {
+    upsertAgentRunReportFile({
+      reportKey,
+      agentRunId: sourceRunId,
+      status: AGENT_RUN_REPORT_STATUSES.COMPLETED,
+      userSummary: note,
+    });
+  }
+  console.log(
+    `[agent-witch] Run ${sourceRunId.substring(0, 8)} continues in a new run; closing the paused run.`,
+  );
+  finishRun(
+    config,
+    socket,
+    sourceRunId,
+    undefined,
+    0,
+    [pending.accumulatedOutput.trim(), note]
+      .filter((part) => part.length > 0)
+      .join("\n\n"),
+    pending.originalPrompt,
+  );
+  return true;
 };
 
 /** Pending checkpoints older than this are dropped on replay instead of re-asked. */
