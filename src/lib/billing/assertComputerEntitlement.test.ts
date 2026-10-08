@@ -52,14 +52,14 @@ describe("assertComputerEntitlement", () => {
   it("still allows paid plan when trialGate is closed", async () => {
     loadBillingPlanForUser.mockResolvedValue(row("pro"));
     loadCostControlSnapshot.mockResolvedValue({ trialGate: "closed" });
-    await expect(
-      assertComputerEntitlement({ userId: "u1" }),
-    ).resolves.toEqual({ ok: true });
+    await expect(assertComputerEntitlement({ userId: "u1" })).resolves.toEqual({
+      ok: true,
+    });
   });
 
   it("denies computer_limit at cap", async () => {
     loadBillingPlanForUser.mockResolvedValue(row("pro"));
-    countActiveComputersForUser.mockResolvedValue(2);
+    countActiveComputersForUser.mockResolvedValue(5);
     const result = await assertComputerEntitlement({ userId: "u1" });
     expect(result).toMatchObject({ ok: false, code: "computer_limit" });
   });
@@ -79,5 +79,4 @@ describe("assertComputerEntitlement", () => {
     const result = await assertComputerEntitlement({ userId: "u1" });
     expect(result).toMatchObject({ ok: false, code: "trial_closed" });
   });
-
 });

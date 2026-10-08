@@ -24,7 +24,7 @@ describe("GET /api/billing/entitlements", () => {
       trialEndsAt: "2026-11-01T00:00:00.000Z",
       adminFree: false,
       seats: 1,
-      maxComputers: 2,
+      maxComputers: 5,
       maxAssistantConnects: 3,
       cloudMessageStorage: false,
       trialGate: "open",

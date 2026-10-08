@@ -18,23 +18,23 @@ Companies work is separate until Product EN green.
 
 ## Plans
 
-| Plan | How you get it | Customer Pricing |
-|------|----------------|------------------|
-| `trial` | Default on signup — 1 calendar month | Shown as free trial |
-| `pro` | Paid after trial (or upgrade) | Pro package |
-| `team` | Paid after trial (or upgrade) | Team package |
+| Plan         | How you get it                               | Customer Pricing                  |
+| ------------ | -------------------------------------------- | --------------------------------- |
+| `trial`      | Default on signup — 1 calendar month         | Shown as free trial               |
+| `pro`        | Paid after trial (or upgrade)                | Pro package                       |
+| `team`       | Paid after trial (or upgrade)                | Team package                      |
 | `admin_free` | Admin flag on the user only — not self-serve | Edge note only, not a package CTA |
 
 No permanent self-serve Free. No Free seat-cap product. Internal loss budget still applies to trial + admin_free.
 
 ## Entitlements (gated)
 
-| Gate | Trial | Pro | Team | Admin Free |
-|------|-------|-----|------|------------|
-| Max computers | 2 | 2 | 2 | 2 |
-| Assistant connect limit | same as Pro until paid rules differ — **Pro 3 / Team 10** once on paid; trial uses **Pro 3** | 3 | 10 | 3 (same as Pro unless admin overrides later) |
-| Cloud message storage (Neon long-tail / server retention beyond local) | **Off** | On | On | Off unless admin overrides |
-| AI credits in package | None | None | None | None |
+| Gate                                                                   | Trial                                                                                        | Pro  | Team | Admin Free                                   |
+| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ---- | ---- | -------------------------------------------- |
+| Max computers                                                          | 2                                                                                            | 2    | 2    | 2                                            |
+| Assistant connect limit                                                | same as Pro until paid rules differ — **Pro 3 / Team 10** once on paid; trial uses **Pro 3** | 3    | 10   | 3 (same as Pro unless admin overrides later) |
+| Cloud message storage (Neon long-tail / server retention beyond local) | **Off**                                                                                      | On   | On   | Off unless admin overrides                   |
+| AI credits in package                                                  | None                                                                                         | None | None | None                                         |
 
 Cloud message storage starts only after **paid** billing (`pro` or `team`). Trial and admin_free do not get Neon/server long-tail cloud message storage. Local History stays available on unpaid plans (see Product decisions §2).
 
@@ -47,13 +47,13 @@ Cloud message storage starts only after **paid** billing (`pro` or `team`). Tria
 
 ## Signals (inputs)
 
-| Signal | Source (stub OK first) | Use |
-|--------|------------------------|-----|
-| `railwaySpendEur` | Railway metrics / invoice hook (stub) | Infra budget |
-| `neonSpendEur` | Neon metrics / invoice hook (stub) | Infra budget |
-| `relatedInfraSpendEur` | Other related infra (stub) | Infra budget |
-| `trialUserCount` / active trial seats | DB | Capacity + gate |
-| `adminFreeUserCount` | DB | Budget category |
+| Signal                                | Source (stub OK first)                | Use             |
+| ------------------------------------- | ------------------------------------- | --------------- |
+| `railwaySpendEur`                     | Railway metrics / invoice hook (stub) | Infra budget    |
+| `neonSpendEur`                        | Neon metrics / invoice hook (stub)    | Infra budget    |
+| `relatedInfraSpendEur`                | Other related infra (stub)            | Infra budget    |
+| `trialUserCount` / active trial seats | DB                                    | Capacity + gate |
+| `adminFreeUserCount`                  | DB                                    | Budget category |
 
 Sum of trial + admin_free infra spend vs €200/mo → `trialGate`.
 
@@ -82,7 +82,7 @@ Returns current user’s effective plan and gates for the app:
   "plan": "trial",
   "trialEndsAt": "ISO-8601|null",
   "adminFree": false,
-  "maxComputers": 2,
+  "maxComputers": 5,
   "maxAssistantConnects": 3,
   "cloudMessageStorage": false,
   "trialGate": "open",
@@ -109,7 +109,11 @@ Body: `{ "userId": "...", "adminFree": true|false }`. Sets permanent Free admin 
   "budgetEur": 200,
   "status": "under_budget",
   "trialGate": "open",
-  "signals": { "railwaySpendEur": 0, "neonSpendEur": 0, "relatedInfraSpendEur": 0 }
+  "signals": {
+    "railwaySpendEur": 0,
+    "neonSpendEur": 0,
+    "relatedInfraSpendEur": 0
+  }
 }
 ```
 

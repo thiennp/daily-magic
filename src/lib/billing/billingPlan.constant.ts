@@ -1,7 +1,7 @@
 /** Locked entitlements + internal Free/trial infra budget (ops currency). */
 export const BILLING_PLANS = ["trial", "pro", "team", "admin_free"] as const;
 
-export const MAX_COMPUTERS_ALL_PLANS = 2;
+export const MAX_COMPUTERS_ALL_PLANS = 5;
 
 export const MAX_ASSISTANT_CONNECTS = {
   trial: 3,

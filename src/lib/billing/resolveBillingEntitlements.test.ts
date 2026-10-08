@@ -30,7 +30,7 @@ describe("resolveBillingEntitlements", () => {
   it("enables cloud storage for paid plans and sets assistant limits", () => {
     const pro = resolveBillingEntitlements({ row: row({ plan: "pro" }) });
     expect(pro.cloudMessageStorage).toBe(true);
-    expect(pro.maxComputers).toBe(2);
+    expect(pro.maxComputers).toBe(5);
     expect(pro.maxAssistantConnects).toBe(3);
     const team = resolveBillingEntitlements({
       row: row({ plan: "team", seatCount: 3 }),

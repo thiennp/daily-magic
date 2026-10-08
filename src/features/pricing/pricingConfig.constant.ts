@@ -10,7 +10,7 @@ export const PRICING_CONFIG = {
     pricePerSeatMonth: 0,
     minSeats: 1,
     assistantsConnect: 3,
-    maxComputers: 2,
+    maxComputers: 5,
   },
   pro: {
     id: "pro",
@@ -18,7 +18,7 @@ export const PRICING_CONFIG = {
     pricePerSeatMonth: 29,
     minSeats: 1,
     assistantsConnect: 3,
-    maxComputers: 2,
+    maxComputers: 5,
   },
   team: {
     id: "team",
@@ -26,7 +26,7 @@ export const PRICING_CONFIG = {
     pricePerSeatMonth: 49,
     minSeats: 3,
     assistantsConnect: 10,
-    maxComputers: 2,
+    maxComputers: 5,
   },
   /** Optional add-on credit pack sizes from design HTML (not part of seats). */
   aiCreditPacksUsd: [10, 20, 50] as const,

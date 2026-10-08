@@ -13,7 +13,7 @@ Agent messages: plain English only (no Soft shorthand).
 4. **Storage optional.** Users may use their own S3; no must-buy AW storage.
 5. **Cloud message storage** applies only after paid billing starts — **not** during the free trial month.
 6. **Cancel anytime** — state clearly on Pricing.
-7. **Max 2 computers** for all packages (drop any “5 computers per seat” or higher).
+7. **Max 5 computers** for all packages (raised from 2 on 2026-10-08; one limit for every plan, not per seat).
 8. **Bot connect limits:** Pro **3** bots, Team **10** bots. (UI copy still prefers **assistant** over **bot** where the noun is generic.)
 9. **Team package options:** share harness, local LLM, and team token savings for repeated work.  
    **Pro:** local LLM + auto skill-build token savings (own AI or bought tokens outside packages).

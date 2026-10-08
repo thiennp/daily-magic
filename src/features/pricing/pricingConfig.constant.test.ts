@@ -16,9 +16,9 @@ describe("PRICING_CONFIG (provisional seat prices)", () => {
   });
 
   it("caps computers at 2 for every package", () => {
-    expect(PRICING_CONFIG.trial.maxComputers).toBe(2);
-    expect(PRICING_CONFIG.pro.maxComputers).toBe(2);
-    expect(PRICING_CONFIG.team.maxComputers).toBe(2);
+    expect(PRICING_CONFIG.trial.maxComputers).toBe(5);
+    expect(PRICING_CONFIG.pro.maxComputers).toBe(5);
+    expect(PRICING_CONFIG.team.maxComputers).toBe(5);
   });
 
   it("limits assistants to Pro 3 / Team 10", () => {

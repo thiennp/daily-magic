@@ -32,7 +32,7 @@ export const PRICING_COMPARE_ACCESS_SECTIONS: readonly PricingCompareSection[] =
           trial: `Up to ${trial.maxComputers}`,
           pro: `Up to ${pro.maxComputers}`,
           team: `Up to ${team.maxComputers}`,
-          tip: "The same limit of 2 computers applies to every plan.",
+          tip: `The same limit of ${trial.maxComputers} computers applies to every plan.`,
         },
         {
           feature: "Projects",
