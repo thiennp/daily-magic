@@ -11,6 +11,8 @@ export function useDelegatedWriterAgent(): {
   readonly writerAgent: HarnessWriterAgent;
   readonly setWriterAgent: (value: HarnessWriterAgent) => void;
   readonly hasRememberedWriterAgentSelection: boolean;
+  /** True once the user picked a writer in this view (not just remembered). */
+  readonly hasPickedWriterAgentInView: boolean;
 } {
   const [writerAgent, setWriterAgentState] = useState<HarnessWriterAgent>(
     readDelegatedWriterAgentFromStorage,
@@ -19,16 +21,20 @@ export function useDelegatedWriterAgent(): {
     hasRememberedWriterAgentSelection,
     setHasRememberedWriterAgentSelection,
   ] = useState(hasStoredDelegatedWriterAgent);
+  const [hasPickedWriterAgentInView, setHasPickedWriterAgentInView] =
+    useState(false);
 
   const setWriterAgent = useCallback((value: HarnessWriterAgent) => {
     setWriterAgentState(value);
     window.localStorage.setItem(DELEGATED_WRITER_AGENT_STORAGE_KEY, value);
     setHasRememberedWriterAgentSelection(true);
+    setHasPickedWriterAgentInView(true);
   }, []);
 
   return {
     writerAgent,
     setWriterAgent,
     hasRememberedWriterAgentSelection,
+    hasPickedWriterAgentInView,
   };
 }

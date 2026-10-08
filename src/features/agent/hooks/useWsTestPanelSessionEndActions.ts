@@ -3,6 +3,7 @@
 import type { useAgentWitchSocket } from "@/features/agent/hooks/useAgentWitchSocket";
 import type { useWsTestPromptHandlers } from "@/features/agent/hooks/useWsTestPromptHandlers";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import { finishSendTaskSession } from "@/features/agent/utils/finishSendTaskSession";
 import { resolveEndedRunRetryPrefill } from "@/features/agent/utils/resolveEndedRunRetryPrefill";
 import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 
@@ -28,10 +29,7 @@ export const useWsTestPanelSessionEndActions = (input: {
   readonly retryEndedRun: () => void;
 } => {
   const finishSession = (): void => {
-    input.socket.finishLiveTerminalSession();
-    if (input.socket.macShell.status !== "idle") {
-      input.socket.macShell.closeShell();
-    }
+    finishSendTaskSession(input.socket);
   };
 
   return {

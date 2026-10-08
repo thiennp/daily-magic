@@ -6,6 +6,7 @@ import {
 } from "@/features/agent/utils/reduceAgentLiveTerminalMessage";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
+/** 37874fdc: a different writer never continues the open session's thread. */
 export const resolveNextAgentLiveTerminalBeginState = (
   current: AgentLiveTerminalState,
   commandLine: string,
@@ -13,7 +14,9 @@ export const resolveNextAgentLiveTerminalBeginState = (
   deviceId?: string,
   options?: { readonly fresh?: boolean },
 ): AgentLiveTerminalState =>
-  options?.fresh !== true && shouldContinueAgentLiveTerminalThread(current)
+  options?.fresh !== true &&
+  shouldContinueAgentLiveTerminalThread(current) &&
+  current.sessionWriterAgent === writerAgent
     ? continueAgentLiveTerminalSession(current, commandLine)
     : beginAgentLiveTerminalSession(
         commandLine,

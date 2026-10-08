@@ -1,8 +1,6 @@
 "use client";
 
 import { useAgentRunQueue } from "@/features/agent/hooks/useAgentRunQueue";
-import { useContinueFromSourceRunPrefill } from "@/features/agent/hooks/useContinueFromSourceRunPrefill";
-import { useDelegatedWriterAgent } from "@/features/agent/hooks/useDelegatedWriterAgent";
 import { useOpenMacShellFromQuery } from "@/features/agent/hooks/useOpenMacShellFromQuery";
 import { useClearStaleMacDispatchError } from "@/features/agent/hooks/useClearStaleMacDispatchError";
 import { useRefreshMacDevicesOnDispatchOfflineError } from "@/features/agent/hooks/useRefreshMacDevicesOnDispatchOfflineError";
@@ -12,6 +10,7 @@ import { useWsTestPanelSessionEndActions } from "@/features/agent/hooks/useWsTes
 import { useWsTestPanelSteppedComposer } from "@/features/agent/hooks/useWsTestPanelSteppedComposer";
 import { useWsTestPromptHandlers } from "@/features/agent/hooks/useWsTestPromptHandlers";
 import { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import { useWsTestWriterAgentSelection } from "@/features/agent/hooks/useWsTestWriterAgentSelection";
 import { useAgentWitchSocket } from "@/features/agent/hooks/useAgentWitchSocket";
 import { resolveAgentSessionTargets } from "@/features/agent/utils/resolveAgentSessionTargets";
 
@@ -20,9 +19,12 @@ export const useWsTestPanelController = (input: {
 }) => {
   const socket = useAgentWitchSocket();
   const composer = useWsTestTaskComposer();
-  const { writerAgent, setWriterAgent, hasRememberedWriterAgentSelection } =
-    useDelegatedWriterAgent();
-  useContinueFromSourceRunPrefill({ setWriterAgent });
+  const {
+    writerAgent,
+    pickWriterAgent,
+    setWriterAgent,
+    hasRememberedWriterAgentSelection,
+  } = useWsTestWriterAgentSelection({ socket, composer });
   const sessionTargets = resolveAgentSessionTargets({
     sessionWriterAgent: socket.sessionWriterAgent,
     writerAgent,
@@ -64,7 +66,7 @@ export const useWsTestPanelController = (input: {
     activeDeviceId: sessionTargets.activeDeviceId,
     showMacPicker: !composer.isTeamDispatch,
     isMacDeviceLocked: sessionTargets.isMacDeviceLocked,
-    onWriterAgentChange: setWriterAgent,
+    onWriterAgentChange: pickWriterAgent,
     onStartWriterAgent: startWriterSession,
     onFinishSession: sessionEndActions.finishSession,
   });
@@ -100,7 +102,7 @@ export const useWsTestPanelController = (input: {
     queueMessage,
     promptHandlers,
     startWriterSession,
-    setWriterAgent,
+    setWriterAgent: pickWriterAgent,
     ...macSession,
     ...steppedComposer,
     ...sessionEndActions,

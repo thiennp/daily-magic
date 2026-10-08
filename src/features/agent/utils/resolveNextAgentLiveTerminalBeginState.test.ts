@@ -40,4 +40,16 @@ describe("resolveNextAgentLiveTerminalBeginState", () => {
 
     expect(next.output).toContain("quota");
   });
+
+  it("a different writer starts fresh instead of continuing (37874fdc)", () => {
+    const next = resolveNextAgentLiveTerminalBeginState(
+      { ...failedRun, sessionWriterAgent: "codex" },
+      'agy --sandbox -p "Run workflow"',
+      "antigravity",
+      "linux-1",
+    );
+
+    expect(next.sessionWriterAgent).toBe("antigravity");
+    expect(next.output).not.toContain("quota");
+  });
 });
