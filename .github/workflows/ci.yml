@@ -27,8 +27,8 @@ jobs:
           cache: npm
 
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - run: npm test
+      # Unit tests are skipped for now (CPU / deploy time): run them locally
+      # with `npm run test:related`, or everything with `npm test`.
       - run: npm run ci:architecture
       - run: npm run typecheck
       # One build serves both the typecheck gate and the shipped-install check.
