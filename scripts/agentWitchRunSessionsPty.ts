@@ -80,6 +80,7 @@ export const tryRunWriterTaskInPty = async (input: {
       }
       const parsed = parseAwaitingInputFromOutput(outputChunks.join(""), {
         requireCompleteQuestion: true,
+        sentPrompt: input.originalPrompt,
       });
       if (parsed !== null) {
         inputRequested = true;
@@ -90,7 +91,9 @@ export const tryRunWriterTaskInPty = async (input: {
       if (inputRequested) {
         return;
       }
-      const parsedAtExit = parseAwaitingInputFromOutput(outputChunks.join(""));
+      const parsedAtExit = parseAwaitingInputFromOutput(outputChunks.join(""), {
+        sentPrompt: input.originalPrompt,
+      });
       if (parsedAtExit !== null) {
         inputRequested = true;
         input.onInputRequired(parsedAtExit);

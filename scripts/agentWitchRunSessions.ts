@@ -35,6 +35,7 @@ import {
   loadPendingRunInputSession,
   removePendingRunInputSession,
   savePendingRunInputSession,
+  type PendingRunInputSession,
 } from "./agentWitchPendingRunSessions";
 import {
   recordAgentRunEstimateActual,
@@ -69,6 +70,7 @@ import {
   buildContinuationPrompt,
   parseAwaitingInputFromOutput,
 } from "./agentWitchRunSessionsAwaitingInput";
+import { isInstructionTemplateText } from "./agentWitchAwaitingInputEcho";
 import { tryRunWriterTaskInPty } from "./agentWitchRunSessionsPty";
 import {
   appendRunSessionLimitNotice,
@@ -726,6 +728,7 @@ const attachChildHandlers = (
 
     const parsed = parseAwaitingInputFromOutput(outputChunks.join(""), {
       requireCompleteQuestion: true,
+      sentPrompt: originalPrompt,
     });
 
     if (parsed !== null) {
@@ -749,7 +752,9 @@ const attachChildHandlers = (
     // The CLI may end its turn on the question line without a newline.
     const parsedAtExit =
       agentRunId !== undefined
-        ? parseAwaitingInputFromOutput(outputChunks.join(""))
+        ? parseAwaitingInputFromOutput(outputChunks.join(""), {
+            sentPrompt: originalPrompt,
+          })
         : null;
     if (agentRunId !== undefined && parsedAtExit !== null) {
       inputRequested = true;
@@ -1304,12 +1309,51 @@ export const supersedePausedRunForContinuation = (
 /** Pending checkpoints older than this are dropped on replay instead of re-asked. */
 export const PENDING_RUN_INPUT_REPLAY_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 
+/**
+ * A run paused on our own instruction text echoed by the CLI (codex) can
+ * never be answered meaningfully; fail it so the operator can send it again.
+ */
+const closeFalselyPausedRun = (
+  config: AgentWitchRunConfig,
+  socket: WebSocket,
+  session: PendingRunInputSession,
+): void => {
+  const message =
+    "This run stopped by mistake waiting for an answer. Send it again.";
+  removePendingRunInputSession(config.layout, session.agentRunId);
+  const reportKey = session.reportKey?.trim() ?? "";
+  if (reportKey.length > 0) {
+    upsertAgentRunReportFile({
+      reportKey,
+      agentRunId: session.agentRunId,
+      status: AGENT_RUN_REPORT_STATUSES.FAILED,
+      userSummary: message,
+    });
+  }
+  console.log(
+    `[agent-witch] Run ${session.agentRunId.substring(0, 8)} was paused on instruction text; closing as failed.`,
+  );
+  finishRun(
+    config,
+    socket,
+    session.agentRunId,
+    undefined,
+    1,
+    message,
+    session.originalPrompt,
+  );
+};
+
 export const replayPendingRunInputRequests = (
   config: AgentWitchRunConfig,
   socket: WebSocket,
 ): void => {
   const now = Date.now();
   for (const session of listPendingRunInputSessions(config.layout)) {
+    if (isInstructionTemplateText(session.question)) {
+      closeFalselyPausedRun(config, socket, session);
+      continue;
+    }
     const parsedSavedAtMs =
       session.savedAt !== undefined ? Date.parse(session.savedAt) : Number.NaN;
     if (Number.isNaN(parsedSavedAtMs)) {

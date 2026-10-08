@@ -1,4 +1,8 @@
 import {
+  buildEchoedLineSet,
+  findRealMarkerIndex,
+} from "./agentWitchAwaitingInputEcho";
+import {
   AGENT_RUN_INPUT_GUARDRAILS,
   AGENT_RUN_INPUT_MARKER,
 } from "./dispatch/agentRunInputGuardrails.constant";
@@ -37,12 +41,17 @@ const findMarkerSearchStart = (output: string): number => {
 
 export const parseAwaitingInputFromOutput = (
   output: string,
-  options?: { readonly requireCompleteQuestion?: boolean },
+  options?: {
+    readonly requireCompleteQuestion?: boolean;
+    /** Prompt we sent; its lines (echoed by the CLI) are never questions. */
+    readonly sentPrompt?: string;
+  },
 ): { readonly question: string; readonly partialOutput: string } | null => {
   const searchStart = findMarkerSearchStart(output);
-  const relativeIndex = output
-    .slice(searchStart)
-    .indexOf(AGENT_RUN_INPUT_MARKER);
+  const relativeIndex = findRealMarkerIndex(
+    output.slice(searchStart),
+    buildEchoedLineSet(options?.sentPrompt),
+  );
   const markerIndex = relativeIndex < 0 ? -1 : searchStart + relativeIndex;
 
   if (markerIndex < 0) {
