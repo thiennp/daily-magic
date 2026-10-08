@@ -43,66 +43,66 @@ export default function AwcProjectInviteCreatedBanner({
       projectName,
       platform: platform ?? undefined,
     });
-  const [toast, setToast] = useState<string | null>(null);
-  const showToast = (message: string) => {
-    setToast(message);
-    window.setTimeout(() => setToast(null), 2500);
+  const [copied, setCopied] = useState<"short" | "full" | null>(null);
+  const joinToken = resolveProjectInviteJoinToken({
+    inviteUrl: createdInviteUrl,
+    token: createdInviteToken,
+  });
+  const shortPrompt = joinToken
+    ? buildProjectInviteShortPrompt({ token: joinToken, projectName })
+    : buildFullPrompt();
+  const copy_ = (kind: "short" | "full", text: string) => {
+    void navigator.clipboard.writeText(text).then(() => {
+      setCopied(kind);
+      window.setTimeout(() => setCopied(null), 2500);
+    });
   };
 
   return (
-    <div className="mt-2 rounded-md border border-awc-line bg-awc-surface-2 p-2 text-xs">
-      <p className="font-medium text-awc-fg">
-        {copy.invitesCreatedOnce}
+    <div
+      className="grid gap-2.5 rounded-xl border border-awc-accent-soft-2 bg-awc-accent-soft p-3"
+      role="status"
+      data-invite-created=""
+      data-invite-platform={platform ?? "any"}
+    >
+      <p className="m-0 flex flex-wrap items-center gap-2 text-[13px] text-awc-fg">
+        <b className="font-semibold">{copy.invitesCreatedOnce}</b>
+        <span className="rounded-full border border-awc-accent-soft-2 bg-awc-surface px-2 py-px text-[11.5px] font-semibold text-awc-fg-muted">
+          {resolveProjectInviteCreatedForLine({ platform, joinTypeId })}
+        </span>
       </p>
-      <p
-        className="mt-1 text-awc-fg-muted"
-        data-invite-platform={platform ?? "any"}
+      <pre
+        className="m-0 max-h-24 overflow-auto whitespace-pre-wrap break-words rounded-lg border border-awc-accent-soft-2 bg-awc-surface px-2.5 py-2 font-mono text-[12px] leading-relaxed text-awc-fg-muted"
+        tabIndex={0}
+        aria-label={shortCopy.promptPreviewLabel}
       >
-        {resolveProjectInviteCreatedForLine({ platform, joinTypeId })}
-      </p>
-      <div className="mt-2 flex flex-wrap gap-2">
+        {shortPrompt}
+      </pre>
+      <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"
-          className={AWC_PROJECT_ACCESS_CTA.secondary}
-          onClick={() => {
-            const joinToken = resolveProjectInviteJoinToken({
-              inviteUrl: createdInviteUrl,
-              token: createdInviteToken,
-            });
-            const prompt = joinToken
-              ? buildProjectInviteShortPrompt({ token: joinToken, projectName })
-              : buildFullPrompt();
-            void navigator.clipboard.writeText(prompt).then(() => {
-              showToast(shortCopy.copiedToast);
-            });
-          }}
+          className={AWC_PROJECT_ACCESS_CTA.primary}
+          onClick={() => copy_("short", shortPrompt)}
         >
-          {copy.invitesCopyPrompt}
+          {copied === "short" ? shortCopy.copiedToast : copy.invitesCopyPrompt}
         </button>
         <button
           type="button"
           className={AWC_PROJECT_ACCESS_CTA.secondary}
           onClick={onClearCreatedUrl}
         >
-          Dismiss
+          {shortCopy.done}
+        </button>
+        <button
+          type="button"
+          className="ml-auto text-[12px] font-medium text-awc-primary underline underline-offset-2 hover:no-underline"
+          onClick={() => copy_("full", buildFullPrompt())}
+        >
+          {copied === "full"
+            ? shortCopy.fullCopiedToast
+            : shortCopy.fallbackLink}
         </button>
       </div>
-      <button
-        type="button"
-        className="mt-2 text-[11px] font-medium text-awc-primary underline underline-offset-2 hover:no-underline"
-        onClick={() => {
-          void navigator.clipboard.writeText(buildFullPrompt()).then(() => {
-            showToast(shortCopy.fullCopiedToast);
-          });
-        }}
-      >
-        {shortCopy.fallbackLink}
-      </button>
-      {toast ? (
-        <p className="mt-2 text-[11px] font-medium text-awc-fg-muted">
-          {toast}
-        </p>
-      ) : null}
     </div>
   );
 }

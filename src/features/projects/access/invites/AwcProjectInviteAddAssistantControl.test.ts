@@ -50,9 +50,9 @@ describe("Add assistant: one shared invite with an optional type", () => {
     expect(state.createdInvitePlatform).toBeNull();
     const html = panelHtml(state);
     expect(html).toContain('data-invite-platform="any"');
-    expect(html).toContain("this Copy prompt works for any assistant");
+    expect(html).toContain("Any assistant");
     expect(html).not.toContain('data-invite-platform="grok"');
-    expect(html).not.toContain("this Copy prompt is for a Grok Bot");
+    expect(html).not.toContain("For Grok Bot");
   });
 
   it("Grok Bot through the shared button still creates a grok invite", async () => {

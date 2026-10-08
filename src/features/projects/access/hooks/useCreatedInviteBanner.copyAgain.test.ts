@@ -60,10 +60,10 @@ describe("DF-014 Members rail: Copy prompt after invite + Copy again", () => {
     expect(state.createdInviteUrl).toBe(INVITE_URL);
     const html = membersHtml(state, []);
     expect(html).toContain("Copy prompt");
-    expect(html).toContain("Dismiss");
+    expect(html).toContain("Done");
   });
 
-  it("after Dismiss the unused invite row still has Copy again (DF-036 D4)", async () => {
+  it("after Done the unused invite row still has Copy again (DF-036 D4)", async () => {
     await createOne();
     renderBanner().syncBannerWithUsableInvites([listed("inv-new")]);
     renderBanner().clearCreatedInviteBanner();
@@ -74,7 +74,7 @@ describe("DF-014 Members rail: Copy prompt after invite + Copy again", () => {
       /Not used yet<\/span><span[^>]*>1 assistant<\/span><span[^>]*>expires /,
     );
     expect(html).toContain('data-invite-copy="inv-new"');
-    expect(html).not.toContain("Dismiss");
+    expect(html).not.toContain("Done");
   });
 
   it("Cancel drops the prompt so the row cannot copy a revoked invite", async () => {

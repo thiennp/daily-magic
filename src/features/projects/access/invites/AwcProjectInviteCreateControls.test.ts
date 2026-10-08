@@ -28,7 +28,9 @@ describe("Create invite: shared Add assistant", () => {
     const html = panelHtml();
     expect(html).toContain(">Add assistant<");
     expect(html).toContain("Setup steps for");
-    expect(html).toContain("Only changes the setup steps in the invite. Any assistant can use it.");
+    expect(html).toContain(
+      "Only changes the setup steps in the invite. Any assistant can use it.",
+    );
     expect(html).toContain("Auto-approve assistants that use this invite");
     expect(html).not.toContain("Invite a Grok Bot");
     expect(html).not.toMatch(/Muse bot/i);
@@ -61,17 +63,11 @@ describe("Create invite: shared Add assistant", () => {
           onClearCreatedUrl: () => undefined,
         }),
       );
-    expect(render("muse")).toContain("this Copy prompt is for Muse.");
-    expect(render("grok")).toContain("this Copy prompt is for a Grok Bot");
-    expect(render("grok", "grok-bot")).toContain(
-      "this Copy prompt is for a Grok Bot",
-    );
-    expect(render("grok", null)).toContain(
-      "Assistant invite — this Copy prompt works for any assistant.",
-    );
-    expect(render("grok", "claude")).toContain(
-      "Claude invite — this Copy prompt is for Claude.",
-    );
+    expect(render("muse")).toContain("For Muse");
+    expect(render("grok")).toContain("For Grok Bot");
+    expect(render("grok", "grok-bot")).toContain("For Grok Bot");
+    expect(render("grok", null)).toContain("Any assistant");
+    expect(render("grok", "claude")).toContain("For Claude");
     expect(render("grok")).toContain('data-invite-platform="grok"');
     expect(render("muse")).toContain("Copy prompt");
   });

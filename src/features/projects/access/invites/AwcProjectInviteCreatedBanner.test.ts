@@ -10,12 +10,12 @@ function readSource(relativePath: string): string {
 }
 
 describe("Project Access invites: Copy prompt only", () => {
-  it("created banner shows Copy prompt and Dismiss, not the raw invite URL", () => {
+  it("created banner shows Copy prompt and Done, not the raw invite URL", () => {
     const banner = readSource(
       "src/features/projects/access/invites/AwcProjectInviteCreatedBanner.tsx",
     );
     expect(banner).toContain("copy.invitesCopyPrompt");
-    expect(banner).toContain("Dismiss");
+    expect(banner).toContain("shortCopy.done");
     expect(banner).not.toMatch(/>\s*\{createdInviteUrl\}\s*</);
     expect(banner).not.toContain("<code");
     // The copied prompt still carries what the bot needs to redeem.

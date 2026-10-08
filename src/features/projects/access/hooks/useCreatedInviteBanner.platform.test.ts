@@ -41,9 +41,7 @@ describe("created invite banner: platform is set with createdInviteId", () => {
       platform: "grok",
       joinTypeId: "grok-bot",
     });
-    expect(panelHtml(afterGrok)).toContain(
-      "this Copy prompt is for a Grok Bot",
-    );
+    expect(panelHtml(afterGrok)).toContain("For Grok Bot");
 
     vi.mocked(createProjectInviteApi).mockResolvedValueOnce({
       ok: false,
@@ -57,8 +55,8 @@ describe("created invite banner: platform is set with createdInviteId", () => {
       "https://www.agentwitch.com/invite/p/tok-grok",
     );
     const html = panelHtml(afterMuseFail);
-    expect(html).toContain("this Copy prompt is for a Grok Bot");
-    expect(html).not.toContain("this Copy prompt is for Muse");
+    expect(html).toContain("For Grok Bot");
+    expect(html).not.toContain("For Muse");
   });
 
   it("a failed Grok create does not relabel an open Muse banner", async () => {
@@ -75,7 +73,7 @@ describe("created invite banner: platform is set with createdInviteId", () => {
     const state = renderBanner();
     expect(state.createdInviteId).toBe("inv-muse");
     expect(state.createdInvitePlatform).toBe("muse");
-    expect(panelHtml(state)).toContain("this Copy prompt is for Muse");
+    expect(panelHtml(state)).toContain("For Muse");
   });
 
   it("dismiss clears inviteId and resets the platform together", async () => {

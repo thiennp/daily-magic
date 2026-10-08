@@ -6,9 +6,9 @@ import {
 } from "@/features/projects/access/invites/awcProjectInviteAddAssistantTypes";
 import { resolveProjectInviteCreatedForLine as line } from "@/features/projects/access/invites/resolveProjectInviteCreatedForLine";
 
-const ANY = "Assistant invite — this Copy prompt works for any assistant.";
-const GROK = "Grok Bot invite — this Copy prompt is for a Grok Bot.";
-const MUSE = "Muse invite — this Copy prompt is for Muse.";
+const ANY = "Any assistant";
+const GROK = "For Grok Bot";
+const MUSE = "For Muse";
 
 describe("invite platform and types[] id: one source, both directions", () => {
   it("round-trips grok and muse; other types and no type store no platform", () => {
@@ -26,9 +26,7 @@ describe("resolveProjectInviteCreatedForLine", () => {
   it("names the picked type", () => {
     expect(line({ platform: "grok", joinTypeId: "grok-bot" })).toBe(GROK);
     expect(line({ platform: "muse", joinTypeId: "muse" })).toBe(MUSE);
-    expect(line({ platform: null, joinTypeId: "claude" })).toBe(
-      "Claude invite — this Copy prompt is for Claude.",
-    );
+    expect(line({ platform: null, joinTypeId: "claude" })).toBe("For Claude");
   });
 
   it("platform-only callers get the same line as before", () => {

@@ -57,7 +57,7 @@ export const AWC_PROJECT_ACCESS_COPY = {
   invitesStatusExpired: "expired",
   invitesStatusRevoked: "revoked",
   invitesCreatedOnce:
-    "Copy the prompt and paste it into your assistant. It includes a secret the assistant needs to join.",
+    "Paste this prompt into your assistant. It holds the secret it needs to join.",
   displayNameLabel: "Assistant nickname",
   displayNameHint:
     "Required. Each assistant in a project needs a different name (2–32 letters, single spaces OK). We fill in a free one for you.",

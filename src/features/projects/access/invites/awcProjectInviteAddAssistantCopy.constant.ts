@@ -4,8 +4,8 @@ export const AWC_PROJECT_INVITE_ADD_ASSISTANT_COPY = {
   /** DF-036 D4: the picker only changes the setup steps written into the invite. */
   typeLabel: "Setup steps for",
   typeAny: "Another assistant (general steps)",
-  typeHelp: "Only changes the setup steps in the invite. Any assistant can use it.",
-  createdForAny: "Assistant invite — this Copy prompt works for any assistant.",
-  createdForType: (label: string) =>
-    `${label} invite — this Copy prompt is for ${label}.`,
+  typeHelp:
+    "Only changes the setup steps in the invite. Any assistant can use it.",
+  createdForAny: "Any assistant",
+  createdForType: (label: string) => `For ${label}`,
 } as const;

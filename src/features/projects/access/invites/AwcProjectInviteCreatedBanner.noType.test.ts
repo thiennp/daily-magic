@@ -20,9 +20,7 @@ describe("Created invite banner: no type picked", () => {
   it("shows the any-assistant line and never falls back to Grok", () => {
     for (const html of [render(), render(null)]) {
       expect(html).toContain('data-invite-platform="any"');
-      expect(html).toContain(
-        "Assistant invite — this Copy prompt works for any assistant.",
-      );
+      expect(html).toContain("Any assistant");
       expect(html).not.toContain("Grok Bot");
     }
   });

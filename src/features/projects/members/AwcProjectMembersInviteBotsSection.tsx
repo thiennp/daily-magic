@@ -70,11 +70,6 @@ export default function AwcProjectMembersInviteBotsSection({
       </div>
       {createdInviteUrl ? (
         <div>
-          <p className="mb-1 text-[12px] text-awc-fg-muted dark:text-gray-400">
-            {C.invitePrompt(
-              awcProjectInviteTypeLabel(access.createdInviteJoinTypeId),
-            )}
-          </p>
           <AwcProjectInviteCreatedBanner
             createdInviteUrl={createdInviteUrl}
             createdInviteToken={access.createdInviteToken}

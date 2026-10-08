@@ -5,9 +5,9 @@ export const AWC_PROJECT_INVITE_PLATFORM_COPY: Readonly<
   Record<ProjectInvitePlatform, { readonly createdFor: string }>
 > = {
   grok: {
-    createdFor: "Grok Bot invite — this Copy prompt is for a Grok Bot.",
+    createdFor: "For Grok Bot",
   },
   muse: {
-    createdFor: "Muse invite — this Copy prompt is for Muse.",
+    createdFor: "For Muse",
   },
 };
