@@ -4,6 +4,7 @@ import path from "node:path";
 
 import { AWI_SHIPPED_APP_DIR_NAME } from "@agent-witch/install-bundle/types";
 
+import { ensureNodePtySpawnHelpersExecutable } from "./ensureNodePtySpawnHelpersExecutable";
 import {
   AWI_BUNDLED_DEPS_DIR_NAME,
   AWI_SHIPPED_DEPS_ARCHIVE_FILE_NAME,
@@ -40,6 +41,9 @@ export const extractAgentWitchBundledDepsArchive = (
   execFileSync("tar", ["-xzf", archivePath, "-C", appDir], {
     stdio: "pipe",
   });
+  ensureNodePtySpawnHelpersExecutable(
+    resolveAgentWitchBundledDepsDir(installDir),
+  );
   fs.rmSync(archivePath, { force: true });
 };
 

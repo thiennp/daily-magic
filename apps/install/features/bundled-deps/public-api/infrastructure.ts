@@ -3,6 +3,8 @@
  */
 export { buildAgentWitchBundledDepsArchive } from "../internal/core/buildAgentWitchBundledDepsArchive";
 
+export { ensureNodePtySpawnHelpersExecutable } from "../internal/core/ensureNodePtySpawnHelpersExecutable";
+
 export {
   extractAgentWitchBundledDepsArchive,
   removeLegacyAgentWitchNpmInstallArtifacts,

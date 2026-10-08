@@ -60,6 +60,10 @@ import {
   writeProjectHistoryAiSession,
 } from "@agent-witch/live-project-history";
 import type { AgentWitchClientConfig as AgentWitchConfig } from "@agent-witch/install-runtime-client/types";
+import {
+  ensureNodePtySpawnHelpersExecutable,
+  resolveAgentWitchBundledDepsDir,
+} from "@agent-witch/install-bundled-deps";
 import { buildAgentWitchDeviceRestartAckPayload } from "@agent-witch/install-runtime-client";
 import {
   ensureAgentWitchInstallVersionRecorded,
@@ -256,6 +260,101 @@ interface AgentWitchOutboundSocket {
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
+const knowledgeConfigByRunId = new Map<string, AgentWitchConfig>();
+const capturedKnowledgeRunIds = new Set<string>();
+const CAPTURED_KNOWLEDGE_RUN_ID_LIMIT = 500;
+
+/**
+ * The cloud never echoes `command.claude.result` back to the agent, so project
+ * knowledge is captured where this computer emits the result.
+ */
+const captureKnowledgeForRunResult = (
+  message: Record<string, unknown>,
+): void => {
+  const payload = isRecord(message.payload) ? message.payload : null;
+  if (payload === null) {
+    return;
+  }
+  const agentRunId =
+    typeof payload.agentRunId === "string" ? payload.agentRunId : undefined;
+  const requestId =
+    typeof message.requestId === "string" ? message.requestId : undefined;
+  const runId = agentRunId ?? requestId;
+  if (runId === undefined || capturedKnowledgeRunIds.has(runId)) {
+    return;
+  }
+  const config = knowledgeConfigByRunId.get(runId);
+  if (config === undefined) {
+    return;
+  }
+  knowledgeConfigByRunId.delete(runId);
+  // Refusals (S0 errorCode) are policy denials, not something the agent got wrong.
+  if (typeof payload.errorCode === "string" || !isKnowledgeEnabled()) {
+    return;
+  }
+  capturedKnowledgeRunIds.add(runId);
+  if (capturedKnowledgeRunIds.size > CAPTURED_KNOWLEDGE_RUN_ID_LIMIT) {
+    const oldest = capturedKnowledgeRunIds.values().next().value;
+    if (oldest !== undefined) {
+      capturedKnowledgeRunIds.delete(oldest);
+    }
+  }
+
+  const output = typeof payload.output === "string" ? payload.output : "";
+  const exitCode =
+    typeof payload.exitCode === "number" ? payload.exitCode : null;
+  const projectFolderPath = resolveRunProjectFolderPath(
+    agentRunId !== undefined
+      ? projectFolderPathByRunId.get(agentRunId)
+      : undefined,
+    buildDefaultUserProjectFolderPath,
+  );
+  if (projectFolderPath === null) {
+    return;
+  }
+  const projectId =
+    agentRunId !== undefined ? projectIdByRunId.get(agentRunId) : undefined;
+  const prompt =
+    agentRunId !== undefined ? (promptByRunId.get(agentRunId) ?? "") : "";
+  const gitBefore =
+    agentRunId !== undefined
+      ? gitSnapshotBeforeByRunId.get(agentRunId)
+      : undefined;
+
+  void captureKnowledgeAfterRun({
+    layout: config.layout,
+    projectKey: resolveKnowledgeProjectKey({ projectId, projectFolderPath }),
+    projectFolderPath,
+    runId,
+    prompt,
+    output,
+    exitCode,
+    onRecurringMistake: (mistake) => {
+      const runConfig = readAgentWitchRunConfig();
+      const cloudConfig =
+        runConfig === null || projectId === undefined
+          ? null
+          : resolveAgentWitchCloudApiConfig({
+              wsUrl: runConfig.wsUrl,
+              pairingToken: runConfig.pairingToken,
+            });
+      if (cloudConfig !== null && projectId !== undefined) {
+        void syncProjectKnowledgeCandidateToCloud(cloudConfig, projectId, {
+          sourceRunId: mistake.runId,
+          lesson: `Recurring mistake (3x): ${mistake.takeaway}`,
+        });
+      }
+    },
+    gitBefore:
+      gitBefore === undefined
+        ? undefined
+        : {
+            headSha: gitBefore.headSha,
+            porcelainLineCount: gitBefore.porcelainLineCount,
+          },
+  });
+};
+
 const sendMessage = (
   socket: AgentWitchOutboundSocket,
   message: Record<string, unknown>,
@@ -265,6 +364,9 @@ const sendMessage = (
     // S0-8: scrub run output before it leaves the machine or hits the trace.
     const outbound = scrubOutboundRunFrame(message);
     socket.send(JSON.stringify(outbound));
+    if (message.type === "command.claude.result") {
+      captureKnowledgeForRunResult(message);
+    }
     if (layout !== undefined) {
       appendAgentWitchLocalTraffic(layout, {
         direction: "out",
@@ -533,6 +635,9 @@ const dispatchWriterTask = async (
           holdout: isKnowledgeHoldoutRun(knowledgeRunId),
         })
       : null;
+  if (knowledgeCheck !== null && knowledgeRunId !== undefined) {
+    knowledgeConfigByRunId.set(knowledgeRunId, config);
+  }
   let promptWithProjectContext = `${knowledgeCheck?.contextText ?? ""}${resolvedPrompt}`;
 
   const resolvedReportKey =
@@ -1039,6 +1144,14 @@ const computeReconnectDelayMs = (attempt: number): number => {
 };
 
 const createAgentWitchClient = (config: AgentWitchConfig) => {
+  // node-pty ships spawn-helper without +x; fix it before the first PTY run.
+  try {
+    ensureNodePtySpawnHelpersExecutable(
+      resolveAgentWitchBundledDepsDir(config.layout.installDir),
+    );
+  } catch {
+    // PTY simply falls back to a pipe
+  }
   const state: {
     socket?: WebSocket;
     heartbeatTimer?: NodeJS.Timeout;
@@ -2093,57 +2206,6 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         exitCode,
         output,
       });
-
-      const knowledgeRunId = agentRunId ?? requestId;
-      if (
-        isKnowledgeEnabled() &&
-        knowledgeRunId !== undefined &&
-        projectFolderPath !== null
-      ) {
-        const gitBeforeForKnowledge =
-          agentRunId !== undefined
-            ? gitSnapshotBeforeByRunId.get(agentRunId)
-            : undefined;
-        void captureKnowledgeAfterRun({
-          layout: config.layout,
-          projectKey: resolveKnowledgeProjectKey({
-            projectId,
-            projectFolderPath,
-          }),
-          projectFolderPath,
-          runId: knowledgeRunId,
-          prompt,
-          output,
-          exitCode,
-          onRecurringMistake: (mistake) => {
-            const runConfig = readAgentWitchRunConfig();
-            const cloudConfig =
-              runConfig === null || projectId === undefined
-                ? null
-                : resolveAgentWitchCloudApiConfig({
-                    wsUrl: runConfig.wsUrl,
-                    pairingToken: runConfig.pairingToken,
-                  });
-            if (cloudConfig !== null && projectId !== undefined) {
-              void syncProjectKnowledgeCandidateToCloud(
-                cloudConfig,
-                projectId,
-                {
-                  sourceRunId: mistake.runId,
-                  lesson: `Recurring mistake (3x): ${mistake.takeaway}`,
-                },
-              );
-            }
-          },
-          gitBefore:
-            gitBeforeForKnowledge === undefined
-              ? undefined
-              : {
-                  headSha: gitBeforeForKnowledge.headSha,
-                  porcelainLineCount: gitBeforeForKnowledge.porcelainLineCount,
-                },
-        });
-      }
 
       if (agentRunId !== undefined && projectFolderPath !== null) {
         const reportKey = reportKeyByRunId.get(agentRunId);

@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
+import { ensureNodePtySpawnHelpersExecutable } from "./ensureNodePtySpawnHelpersExecutable";
 import {
   AWI_BUNDLED_DEPS_DIR_NAME,
   AWI_SHIPPED_APP_DIR_NAME,
@@ -75,7 +76,15 @@ const writeDeterministicDepsTarGz = (input: {
 }): void => {
   execFileSync(
     "find",
-    [input.depsDir, "-exec", "touch", "-t", AGENT_WITCH_DEPS_ARCHIVE_MTIME, "{}", "+"],
+    [
+      input.depsDir,
+      "-exec",
+      "touch",
+      "-t",
+      AGENT_WITCH_DEPS_ARCHIVE_MTIME,
+      "{}",
+      "+",
+    ],
     { stdio: "pipe" },
   );
   execFileSync(
@@ -109,6 +118,7 @@ export const buildAgentWitchBundledDepsArchive = (input: {
     depsDir,
   });
 
+  ensureNodePtySpawnHelpersExecutable(depsDir);
   fs.rmSync(archivePath, { force: true });
   writeDeterministicDepsTarGz({
     appDir: input.appDir,
