@@ -6,6 +6,10 @@ vi.mock("@/lib/agentWitch/findAgentWitchDeviceByToken", () => ({
   findAgentWitchDeviceByToken: vi.fn(),
 }));
 
+vi.mock("@/lib/agentWitch/admitAgentWitchPlaceholderCheckIn", () => ({
+  admitAgentWitchPlaceholderCheckIn: async () => ({ ok: true }),
+}));
+
 vi.mock("@/lib/agentWitch/touchAgentWitchDeviceLastSeen", () => ({
   touchAgentWitchDeviceLastSeen: vi.fn(),
 }));

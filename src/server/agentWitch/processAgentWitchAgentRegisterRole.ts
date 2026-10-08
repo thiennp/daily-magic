@@ -12,6 +12,7 @@ import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMess
 import { isAgentWitchDevDashboardEnabled } from "@/lib/auth/resolveDevDashboardActor";
 import { processAgentWitchDeviceAuthOnRegister } from "@/server/agentWitch/processAgentWitchDeviceAuthOnRegister";
 import type { AgentWitchConnectionState } from "@/server/agentWitch/processAgentWitchRegisterMessage";
+import { refuseAgentRegisterOverComputerLimit } from "@/server/agentWitch/refuseAgentRegisterOverComputerLimit";
 import { resolveAgentWitchAgentRegisterConnection } from "@/server/agentWitch/resolveAgentWitchAgentRegisterConnection";
 import { sendAgentWitchSocketMessage } from "@/server/agentWitch/sendAgentWitchSocketMessage";
 
@@ -55,6 +56,13 @@ export const processAgentWitchAgentRegisterRole = async (
   }
 
   await reinstateSupersededDeviceForToken(pairingToken);
+
+  // 6abb783e: a placeholder's first check-in must fit the computer limit.
+  if (
+    await refuseAgentRegisterOverComputerLimit(socket, message, pairingToken)
+  ) {
+    return false;
+  }
 
   await resolveAgentWitchAgentRegisterConnection(
     hub,

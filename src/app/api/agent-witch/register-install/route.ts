@@ -22,9 +22,17 @@ export async function POST(request: Request): Promise<Response> {
       { status: 404 },
     );
   }
+  if (!registered.ok) {
+    return Response.json(
+      { error: registered.errorMessage, code: registered.code },
+      { status: 403 },
+    );
+  }
 
   const installBundleVersion = parsed.installBundleVersion ?? null;
-  if (classifyAgentWitchLocalConnectVersion(installBundleVersion) === "too_old") {
+  if (
+    classifyAgentWitchLocalConnectVersion(installBundleVersion) === "too_old"
+  ) {
     return buildAgentWitchLocalTooOldRefusalResponse(installBundleVersion);
   }
 

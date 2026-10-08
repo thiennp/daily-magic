@@ -1,3 +1,7 @@
+import {
+  admitAgentWitchPlaceholderCheckIn,
+  type PlaceholderCheckInAdmission,
+} from "@/lib/agentWitch/admitAgentWitchPlaceholderCheckIn";
 import { consolidateActiveAgentWitchDeviceByLabel } from "@/lib/agentWitch/consolidateActiveAgentWitchDeviceByLabel";
 import { findAgentWitchDeviceByToken } from "@/lib/agentWitch/findAgentWitchDeviceByToken";
 import { getAgentWitchPairingStore } from "@/lib/agentWitch/getAgentWitchHub";
@@ -13,10 +17,23 @@ export const registerAgentWitchInstallFromMac = async (input: {
   readonly installBundleVersion?: string;
   readonly wakePort?: number;
   readonly platform?: AgentWitchDevicePlatform;
-}): Promise<{ readonly ok: true; readonly deviceId: string } | null> => {
+}): Promise<
+  | { readonly ok: true; readonly deviceId: string }
+  | Extract<PlaceholderCheckInAdmission, { readonly ok: false }>
+  | null
+> => {
   const device = await findAgentWitchDeviceByToken(input.pairingToken);
   if (device === null || device.revokedAt !== null) {
     return null;
+  }
+
+  // 6abb783e: a placeholder's first check-in must fit the computer limit.
+  const admission = await admitAgentWitchPlaceholderCheckIn({
+    pairingToken: input.pairingToken,
+    deviceLabel: input.deviceLabel,
+  });
+  if (!admission.ok) {
+    return admission;
   }
 
   await touchAgentWitchDeviceLastSeen(input.pairingToken, input.deviceLabel);
