@@ -6,7 +6,7 @@ import { buildAgentWitchLocalMacAppDownloadUrl } from "@/lib/agentWitch/buildAge
 describe("ConnectThisMacDownloadChoice wiring", () => {
   it("uses the tag-pinned release URL for the Download for Mac link", () => {
     expect(buildAgentWitchLocalMacAppDownloadUrl()).toContain(
-      "/releases/download/awl-mac-v0.2.2/AgentWitchLocal\.dmg",
+      "/releases/download/awl-mac-v0.2.3/AgentWitchLocal\.dmg",
     );
   });
 
