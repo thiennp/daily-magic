@@ -1,3 +1,4 @@
+import { cleanAgentLiveCheckpointText } from "@/features/agent/utils/cleanAgentLiveCheckpointText";
 import type { AgentLiveProgressStep } from "@/features/agent/utils/agentLiveProgressStep.type";
 import { buildAgentLiveProgressTimelineSteps } from "@/features/agent/utils/buildAgentLiveProgressTimelineSteps";
 import type { AgentLiveProgressUpdate } from "@/features/agent/utils/parseAgentLiveProgressUpdates";
@@ -41,13 +42,13 @@ export const resolveAgentLiveProgressWorkSteps = (input: {
         {
           id: `checkpoint-q-${index}`,
           label: "Agent asked",
-          detail: exchange.question,
+          detail: cleanAgentLiveCheckpointText(exchange.question),
           state: "done" as const,
         },
         {
           id: `checkpoint-a-${index}`,
           label: "Your answer",
-          detail: exchange.answer,
+          detail: cleanAgentLiveCheckpointText(exchange.answer),
           state: "done" as const,
         },
       ],

@@ -8,6 +8,7 @@ import {
   removeAgentRunSession,
 } from "@/lib/dispatch/agentRunSessionRegistry";
 import { handleTerminalStreamMessageAsync } from "@/lib/dispatch/handleTerminalStreamMessageAsync";
+import { clearInactiveTerminalStreamReportsForTests } from "@/lib/dispatch/shouldReportInactiveTerminalStream";
 import {
   TERMINAL_STREAM_TEST_RUN_ID,
   buildTerminalStreamExecutorAgent,
@@ -19,6 +20,7 @@ describe("handleTerminalStreamMessageAsync authorization", () => {
   afterEach(() => {
     removeAgentRunSession(TERMINAL_STREAM_TEST_RUN_ID);
     clearTerminalStreamSlotsForTests();
+    clearInactiveTerminalStreamReportsForTests();
   });
 
   it("rejects terminal stream messages from a non-executor agent", async () => {

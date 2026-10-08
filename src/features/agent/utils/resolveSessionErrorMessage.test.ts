@@ -23,6 +23,16 @@ describe("resolveSessionErrorMessage (AGENT-011)", () => {
     ).toBe("No Mac agent connected.");
   });
 
+  it("skips the trailing shell prompt (a6053d1c)", () => {
+    expect(
+      resolveSessionErrorMessage({
+        liveTerminalStatus: "error",
+        liveTerminalOutput: "killed by SIGKILL\nagent-witch@mac ~ % ",
+        lastResponse: { text: "ok", isError: false },
+      }),
+    ).toBe("killed by SIGKILL");
+  });
+
   it("falls back when status is error without a last error payload", () => {
     expect(
       resolveSessionErrorMessage({

@@ -1,5 +1,9 @@
 import { summarizeKnownWriterError } from "@agent-witch/shared/dispatch";
 import { AGENT_PROCESS_KILLED_PREFIX } from "./formatAgentProcessKilledNote";
+import {
+  buildAgentRunFinishedSummary,
+  readAgentRunGitChangeLine,
+} from "./buildAgentRunFinishedSummary";
 
 import {
   AGENT_RUN_REPORT_STATUSES,
@@ -71,6 +75,8 @@ export const finalizeAgentRunReportOnFinish = (input: {
   readonly output: string;
   readonly stoppedExitCode: number;
   readonly sessionLimitExitCode: number;
+  /** 7daeea78: the run's folder, for a git change line in the summary. */
+  readonly projectFolderPath?: string;
 }): AgentRunReportFile | null => {
   const existing = readAgentRunReportFile(input.reportKey);
   if (existing === null || isTerminalAgentRunReportStatus(existing.status)) {
@@ -78,13 +84,18 @@ export const finalizeAgentRunReportOnFinish = (input: {
   }
 
   if (input.exitCode === 0) {
+    const agentSummary = lastMeaningfulSummary(existing);
     return upsertAgentRunReportFile({
       reportKey: input.reportKey,
       agentRunId: input.agentRunId,
       status: AGENT_RUN_REPORT_STATUSES.COMPLETED,
-      userSummary: truncate(
-        lastMeaningfulSummary(existing) ?? "Finished on your computer.",
-      ),
+      userSummary:
+        agentSummary !== null
+          ? truncate(agentSummary)
+          : (buildAgentRunFinishedSummary({
+              output: input.output,
+              gitChangeLine: readAgentRunGitChangeLine(input.projectFolderPath),
+            }) ?? "Finished on your computer."),
     });
   }
 

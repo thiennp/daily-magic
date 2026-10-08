@@ -1,5 +1,6 @@
 import { stripAgentLiveProgressCliChrome } from "@/features/agent/utils/stripAgentLiveProgressCliChrome";
 import { dropRepeatedReportBodyLines } from "@/features/projects/reports/utils/dropRepeatedReportBodyLines";
+import { isUsableProjectReportSummary } from "@/features/projects/reports/utils/isUsableProjectReportSummary";
 import { resolveProjectReportKnownError } from "@/features/projects/reports/utils/resolveProjectReportKnownError";
 import { resolveProjectReportFallbackBody } from "@/features/projects/reports/utils/resolveProjectReportFallbackBody";
 import { stripAgentRunReportMarkerFragments } from "@/features/projects/reports/utils/stripAgentRunReportMarkerFragments";
@@ -25,11 +26,6 @@ const TERMINAL_RUN_STATUSES: ReadonlySet<string> = new Set([
   AgentRunStatus.EXPIRED,
   AgentRunStatus.DENIED,
 ]);
-
-const isStaleLiveSummary = (summary: string): boolean =>
-  /^(?:Waiting for|Working on your computer|Task started|Continuing after your answer)/i.test(
-    summary.trim(),
-  );
 
 const WAITING_SUMMARY = /^Waiting for your answer/i;
 
@@ -73,10 +69,12 @@ export const resolveProjectReportDetailView = (input: {
   const summary = stripAgentRunReportMarkerFragments(
     stripAgentLiveProgressCliChrome(view.summaryLine ?? ""),
   );
-  const usableSummary =
-    summary.length > 0 && !(isTerminal && isStaleLiveSummary(summary))
-      ? summary
-      : "";
+  const usableSummary = isUsableProjectReportSummary(summary, {
+    isTerminal,
+    fallbackOutput: input.fallbackOutput,
+  })
+    ? summary
+    : "";
   const output = dropRepeatedReportBodyLines(
     stripAgentRunReportMarkerFragments(
       stripAgentLiveProgressCliChrome(input.fallbackOutput),

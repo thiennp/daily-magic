@@ -1,5 +1,6 @@
 "use client";
 
+import { formatAgentLiveEstimatePercentLabel } from "@/features/agent/utils/formatAgentLiveEstimatePercentLabel";
 import { formatAgentLiveWorkingEstimateLabel } from "@/features/agent/utils/formatAgentLiveWorkingEstimateLabel";
 import type { AgentLiveWavePlanViewItem } from "@/features/agent/utils/agentLiveWavePlan.type";
 import { resolveAgentLiveWorkingEstimateProgress } from "@/features/agent/utils/resolveAgentLiveWorkingEstimateProgress";
@@ -68,12 +69,15 @@ export default function AgentLiveProgressWaveItemRow({
         <div className="mt-2" aria-hidden="true">
           <div className="h-1 overflow-hidden rounded-full bg-brand-100 dark:bg-brand-950/50">
             <div
-              className="h-full rounded-full bg-brand-500 transition-[width] duration-500"
+              className={`h-full rounded-full bg-brand-500 transition-[width] duration-500 ${progress.percent >= 100 ? "animate-pulse" : ""}`}
               style={{ width: `${progress.percent}%` }}
             />
           </div>
           <p className="mt-1 text-[11px] text-awc-fg-muted dark:text-gray-400">
-            {progress.percent}% of estimate
+            {formatAgentLiveEstimatePercentLabel(
+              progress.percent,
+              " of estimate",
+            )}
           </p>
         </div>
       ) : null}

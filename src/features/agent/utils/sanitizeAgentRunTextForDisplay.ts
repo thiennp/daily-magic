@@ -10,6 +10,9 @@ const unescapeStoredText = (text: string): string =>
     .replace(/\\r\\n|\\n/g, "\n")
     .replace(/\\t/g, " ");
 
+/** 4139ca18: the CLI's pause / stop noise, never a reason to show. */
+const INTERRUPTED = /^\s*error:\s*interrupted\.?\s*$/i;
+
 /** "agentRunWriterExecutionBackend=cli-writer-api-key-missing reasonCode=…" */
 const DIAGNOSTIC_PAIR = /^[A-Za-z][\w.-]*=\S*$/;
 
@@ -36,7 +39,7 @@ export const sanitizeAgentRunTextForDisplay = (raw: string | null): string => {
   );
   return cleaned
     .split("\n")
-    .filter((line) => !isDiagnosticLine(line))
+    .filter((line) => !isDiagnosticLine(line) && !INTERRUPTED.test(line))
     .join("\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();

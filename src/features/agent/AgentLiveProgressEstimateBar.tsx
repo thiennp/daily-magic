@@ -1,5 +1,6 @@
 "use client";
 
+import { formatAgentLiveEstimatePercentLabel } from "@/features/agent/utils/formatAgentLiveEstimatePercentLabel";
 import { formatAgentLiveWorkingEstimateLabel } from "@/features/agent/utils/formatAgentLiveWorkingEstimateLabel";
 
 interface AgentLiveProgressEstimateBarProps {
@@ -21,14 +22,14 @@ export default function AgentLiveProgressEstimateBar({
     <div className="mt-3" role="status" aria-live="polite">
       <div className="flex items-center justify-between gap-3 text-xs text-awc-fg-muted dark:text-gray-300">
         <span>{label ?? "Progress"}</span>
-        <span>{percent}%</span>
+        <span>{formatAgentLiveEstimatePercentLabel(percent)}</span>
       </div>
       <div
         className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-brand-100 dark:bg-brand-950/50"
         aria-hidden="true"
       >
         <div
-          className="h-full rounded-full bg-brand-500 transition-[width] duration-500 ease-out"
+          className={`h-full rounded-full bg-brand-500 transition-[width] duration-500 ease-out ${percent >= 100 ? "animate-pulse" : ""}`}
           style={{ width: `${percent}%` }}
         />
       </div>

@@ -16,6 +16,7 @@ interface SendTaskModalContextValue {
   }) => void;
   readonly expandRunningSendTask: (runId: string) => void;
   readonly closeSendTaskModal: () => void;
+  readonly minimizeSendTaskModal: () => void;
 }
 
 const SendTaskModalContext = createContext<SendTaskModalContextValue | null>(
@@ -27,6 +28,7 @@ const SEND_TASK_MODAL_SUSPENSE_FALLBACK: SendTaskModalContextValue = {
   openSendTaskModal: () => undefined,
   expandRunningSendTask: () => undefined,
   closeSendTaskModal: () => undefined,
+  minimizeSendTaskModal: () => undefined,
 };
 
 function SendTaskModalController({
@@ -44,6 +46,7 @@ function SendTaskModalController({
         openSendTaskModal: controller.openSendTaskModal,
         expandRunningSendTask: controller.expandRunningSendTask,
         closeSendTaskModal: controller.closeSendTaskModal,
+        minimizeSendTaskModal: controller.minimizeSendTaskModal,
       }}
     >
       {children}

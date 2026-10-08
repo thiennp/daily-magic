@@ -1,4 +1,5 @@
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
+import { isAgentRunUserStopped } from "@/lib/dispatch/isAgentRunUserStopped";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 export const HOME_ATTENTION_FAILED_WINDOW_MS = 24 * 60 * 60 * 1000;
@@ -18,8 +19,11 @@ const selectHomeAttentionRuns = (
         return true;
       }
 
+      // 4139ca18: a run the user stopped is Stopped, not a failure to look at.
       return (
         run.status === AgentRunStatus.FAILED &&
+        !isAgentRunUserStopped(run.resultOutput, run.resultExitCode) &&
+        run.reportStatus !== "stopped" &&
         nowMs - Date.parse(run.updatedAt) <= HOME_ATTENTION_FAILED_WINDOW_MS
       );
     })

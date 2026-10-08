@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  requestPickAnotherWriter,
-  shouldOfferPickAnotherWriter,
-} from "@/features/agent/utils/pickAnotherWriterEvent";
+import AgentLiveProgressFeedSummary from "@/features/agent/AgentLiveProgressFeedSummary";
 import AgentLiveProgressFeedStatus from "@/features/agent/AgentLiveProgressFeedStatus";
 import AgentLiveProgressStepRow from "@/features/agent/AgentLiveProgressStepRow";
 import AgentLiveProgressWavesPanel from "@/features/agent/AgentLiveProgressWavesPanel";
@@ -22,6 +19,8 @@ import type { AgentLiveWavePlanViewItem } from "@/features/agent/utils/agentLive
 interface AgentLiveProgressFeedProps {
   readonly steps: readonly AgentLiveProgressStep[];
   readonly humanSummary: string | null;
+  /** Plain reason lines shown under a Failed outcome (73181622). */
+  readonly failureDetails?: string | null;
   readonly outcome: AgentLiveRunOutcome;
   readonly isWorking: boolean;
   readonly isStopping?: boolean;
@@ -43,6 +42,7 @@ interface AgentLiveProgressFeedProps {
 export default function AgentLiveProgressFeed({
   steps,
   humanSummary,
+  failureDetails = null,
   outcome,
   isWorking,
   isStopping = false,
@@ -83,20 +83,11 @@ export default function AgentLiveProgressFeed({
         onDeleteRun={onDeleteRun}
         onRetryRun={onRetryRun}
       />
-      {humanSummary !== null ? (
-        <p className="mt-3 whitespace-pre-line text-sm text-awc-fg dark:text-gray-200">
-          {humanSummary}
-        </p>
-      ) : null}
-      {shouldOfferPickAnotherWriter(humanSummary) ? (
-        <button
-          type="button"
-          onClick={requestPickAnotherWriter}
-          className="mt-2 inline-flex items-center rounded-lg border border-awc-border bg-white px-3 py-1.5 text-xs font-medium text-awc-fg hover:bg-gray-50 dark:border-gray-700 dark:bg-white/[0.03] dark:text-white/90"
-        >
-          Pick another coding tool
-        </button>
-      ) : null}
+      <AgentLiveProgressFeedSummary
+        humanSummary={humanSummary}
+        failureDetails={failureDetails}
+        outcome={outcome}
+      />
       <AgentLiveProgressWavesPanel items={wavePlanItems} />
       <ol className="mt-4 space-y-3">
         {steps.map((step) => (

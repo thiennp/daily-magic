@@ -28,6 +28,9 @@ export const formatAgentLiveTerminalMarkersForDisplay = (
         ).split(/\r?\n/),
       ),
     ),
-  ).join("\n");
+  )
+    .join("\n")
+    // 4139ca18: the host echoes a reply as "[checkpoint answer] …".
+    .replace(/^\[checkpoint answer\]\s*/gim, "Your answer: ");
   return `${formatted.trimEnd()}${trailing}`;
 };

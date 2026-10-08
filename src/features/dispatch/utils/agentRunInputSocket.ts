@@ -1,4 +1,5 @@
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
+import { announceAgentRunInputAnswered } from "@/features/dispatch/utils/announceAgentRunInputAnswered";
 import { createAgentWitchRequestId } from "@/features/agent/utils/agentWitchSocketUtils";
 
 import { clearPendingInputForRun } from "@/features/dispatch/agentRunInputStore";
@@ -95,6 +96,7 @@ export const sendAgentRunInputResponse = (
 ): void => {
   // afae8216: an answered question no longer offers "Open question".
   clearPendingInputForRun(agentRunId);
+  announceAgentRunInputAnswered(agentRunId);
   socket.send(
     JSON.stringify({
       type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_INPUT_RESPOND,

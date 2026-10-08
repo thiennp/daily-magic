@@ -1,3 +1,4 @@
+import { cleanAgentLiveCheckpointText } from "@/features/agent/utils/cleanAgentLiveCheckpointText";
 import type { AgentLiveProgressStep } from "@/features/agent/utils/agentLiveProgressStep.type";
 import type { AgentLiveProgressTimelineEntry } from "@/features/agent/utils/buildAgentLiveProgressTimelineEntries";
 import type { AgentLiveProgressUpdate } from "@/features/agent/utils/parseAgentLiveProgressUpdates";
@@ -47,7 +48,7 @@ export const appendTimelineEntry = (
       {
         id: `checkpoint-q-${steps.length}`,
         label: "Agent asked",
-        detail: entry.question,
+        detail: cleanAgentLiveCheckpointText(entry.question),
         state: "done",
       },
     ];
@@ -59,7 +60,7 @@ export const appendTimelineEntry = (
       {
         id: `checkpoint-a-${steps.length}`,
         label: "Your answer",
-        detail: entry.answer,
+        detail: cleanAgentLiveCheckpointText(entry.answer),
         state: "done",
       },
     ];

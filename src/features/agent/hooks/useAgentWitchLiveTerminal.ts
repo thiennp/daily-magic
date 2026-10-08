@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useAgentLiveTerminalRunControls } from "@/features/agent/hooks/useAgentLiveTerminalRunControls";
 import { useAgentWitchLiveTerminalWriterSessionSubscribe } from "@/features/agent/hooks/useAgentWitchLiveTerminalWriterSessionSubscribe";
+import { useClearAnsweredAgentLiveInput } from "@/features/agent/hooks/useClearAnsweredAgentLiveInput";
 import { useShouldRestoreAgentLiveTerminalSession } from "@/features/agent/hooks/useShouldRestoreAgentLiveTerminalSession";
 import type { UseAgentWitchLiveTerminalResult } from "@/features/agent/types/UseAgentWitchLiveTerminalResult.type";
 import { finishAgentLiveTerminalWriterSession } from "@/features/agent/utils/sendWriterSessionEnd";
@@ -42,6 +43,8 @@ export function useAgentWitchLiveTerminal(socketRef: {
       allowPersistRef.current = true;
     }
   }, [state]);
+
+  useClearAnsweredAgentLiveInput(setState);
 
   useAgentWitchLiveTerminalWriterSessionSubscribe({
     socketRef,

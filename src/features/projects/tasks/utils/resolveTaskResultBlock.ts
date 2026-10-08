@@ -3,6 +3,7 @@ import {
   summarizeKnownWriterError,
 } from "@agent-witch/shared/dispatch";
 
+import { sanitizeAgentRunTextForDisplay } from "@/features/agent/utils/sanitizeAgentRunTextForDisplay";
 import { CODING_TOOL_LABELS } from "@/features/projects/tasks/utils/codingToolLabels.constant";
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
 
@@ -29,6 +30,28 @@ const block = (
   truncated: body.length > TASK_RESULT_PREVIEW_MAX_CHARS,
 });
 
+const normalize = (line: string): string => line.trim().replace(/\s+/g, " ");
+
+const dedupeLines = (text: string): string =>
+  text
+    .split("\n")
+    .filter(
+      (line, index, lines) =>
+        index === 0 ||
+        normalize(line).length === 0 ||
+        normalize(line) !== normalize(lines[index - 1] ?? ""),
+    )
+    .join("\n");
+
+const dropLinesEqualTo = (text: string, hint: string | null): string =>
+  hint === null
+    ? text
+    : text
+        .split("\n")
+        .filter((line) => normalize(line) !== normalize(hint))
+        .join("\n")
+        .trim();
+
 const NOT_SIGNED_IN = /not logged in|cli-writer-api-key-missing/i;
 
 /** Plain-language hint when the coding tool is not signed in; else null. */
@@ -51,18 +74,26 @@ export const resolveTaskResultBlock = (
 ): TaskResultBlock | null => {
   if (task.status === "failed") {
     const raw = task.resultOutput?.trim() ?? "";
-    const output = stripAgentRunWriterExecutionHonesty(raw);
+    const stripped = stripAgentRunWriterExecutionHonesty(raw);
+    const output = dedupeLines(sanitizeAgentRunTextForDisplay(stripped));
     // 9b3947bc: a known CLI error (agy quota…) gets one plain sentence; the raw text stays below.
     const hint =
       resolveNotSignedInHint(
-        task.writerAgent === "claude-cli" ? raw : output,
+        task.writerAgent === "claude-cli" ? raw : stripped,
         task.writerAgent,
-      ) ?? summarizeKnownWriterError(`${output}\n${task.reportSummary ?? ""}`);
+      ) ??
+      summarizeKnownWriterError(`${stripped}\n${task.reportSummary ?? ""}`);
+    // 73181622: the reason showed twice when the hint repeats the output.
+    const body = dropLinesEqualTo(output, hint);
     return {
       ...block(
         "bad",
         "Why it failed",
-        output.length > 0 ? output : "No details were reported.",
+        body.length > 0
+          ? body
+          : hint === null
+            ? "No details were reported."
+            : "",
       ),
       hint,
     };

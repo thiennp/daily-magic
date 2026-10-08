@@ -6,6 +6,7 @@ import {
   type AuthorizeTerminalStreamPublisherResult,
 } from "@/lib/dispatch/authorizeTerminalStreamPublisher";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
+import { shouldReportInactiveTerminalStream } from "@/lib/dispatch/shouldReportInactiveTerminalStream";
 
 type AuthorizedTerminalStreamPublisher = Extract<
   AuthorizeTerminalStreamPublisherResult,
@@ -14,7 +15,7 @@ type AuthorizedTerminalStreamPublisher = Extract<
 
 export type RequireTerminalStreamPublisherResult =
   | AuthorizedTerminalStreamPublisher
-  | { readonly ok: false; readonly error: AgentWitchMessage };
+  | { readonly ok: false; readonly error: AgentWitchMessage | null };
 
 export const requireTerminalStreamPublisher = async (input: {
   readonly sender: AgentWitchHubClient | undefined;
@@ -40,10 +41,12 @@ export const requireTerminalStreamPublisher = async (input: {
   ) {
     return {
       ok: false,
-      error: buildDispatchError(
-        "Terminal stream is not active for this run.",
-        input.requestId,
-      ),
+      error: shouldReportInactiveTerminalStream(input.runId)
+        ? buildDispatchError(
+            "Terminal stream is not active for this run.",
+            input.requestId,
+          )
+        : null,
     };
   }
 

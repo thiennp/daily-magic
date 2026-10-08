@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import Button from "@/components/ui/button/Button";
 import { Modal } from "@/components/ui/modal";
@@ -9,6 +9,7 @@ import AgentRunInputQuestion from "@/features/dispatch/AgentRunInputQuestion";
 import AgentRunInputQuickReplies from "@/features/dispatch/AgentRunInputQuickReplies";
 import AgentRunPartialOutputPreview from "@/features/dispatch/AgentRunPartialOutputPreview";
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/dispatchApprovalSocket";
+import { useAgentRunInputDraft } from "@/features/dispatch/hooks/useAgentRunInputDraft";
 import { resolveAgentRunInputQuickReplies } from "@/features/dispatch/utils/resolveAgentRunInputQuickReplies";
 import { splitAgentRunInputQuestion } from "@/features/dispatch/utils/splitAgentRunInputQuestion";
 
@@ -23,7 +24,7 @@ export default function AgentRunInputModal({
   onSubmit,
   onDismiss,
 }: AgentRunInputModalProps) {
-  const [response, setResponse] = useState("");
+  const { response, setResponse, clearDraft } = useAgentRunInputDraft(request);
   const questionParts = useMemo(
     () => splitAgentRunInputQuestion(request.question),
     [request.question],
@@ -101,6 +102,7 @@ export default function AgentRunInputModal({
           onClick={() => {
             // 8181f143: only an explicit Send with a typed or picked answer sends.
             if (canSubmit) {
+              clearDraft();
               onSubmit(trimmedResponse);
             }
           }}

@@ -2,10 +2,12 @@
 
 import AgentLiveProgressFeed from "@/features/agent/AgentLiveProgressFeed";
 import { useAgentLiveTerminalPanelProgress } from "@/features/agent/hooks/useAgentLiveTerminalPanelProgress";
+import { resolveAgentLiveFailureDetails } from "@/features/agent/utils/resolveAgentLiveFailureDetails";
 import SendReadinessApprovalWaitingChip from "@/features/agent/send-readiness/SendReadinessApprovalWaitingChip";
 
 interface AgentLiveTerminalPanelProgressFeedProps {
   readonly panelProgress: ReturnType<typeof useAgentLiveTerminalPanelProgress>;
+  readonly output?: string;
   readonly activeRunId?: string | null;
   readonly sessionDeviceId?: string | null;
   readonly nextActions: readonly string[];
@@ -18,6 +20,7 @@ interface AgentLiveTerminalPanelProgressFeedProps {
 
 export default function AgentLiveTerminalPanelProgressFeed({
   panelProgress,
+  output = "",
   sessionDeviceId,
   activeRunId,
   nextActions,
@@ -37,6 +40,11 @@ export default function AgentLiveTerminalPanelProgressFeed({
       <AgentLiveProgressFeed
         steps={panelProgress.progress.steps}
         humanSummary={panelProgress.progress.humanSummary}
+        failureDetails={
+          panelProgress.progress.outcome.kind === "failed"
+            ? resolveAgentLiveFailureDetails(output)
+            : null
+        }
         outcome={panelProgress.progress.outcome}
         isWorking={panelProgress.isWorking}
         isStopping={panelProgress.isStopping}

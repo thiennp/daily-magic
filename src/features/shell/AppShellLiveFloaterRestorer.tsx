@@ -11,6 +11,7 @@ import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 import { fetchAgentRunDetail } from "@/features/reports/fetchAgentRunDetail";
 import { isAgentRunSilentPastStall } from "@/lib/dispatch/isAgentRunSilentPastStall";
 import { shouldRestoreLiveFloaterAfterReload } from "@/features/shell/utils/shouldRestoreLiveFloaterAfterReload";
+import { shouldDockResumedLiveSessionOnLoad } from "@/features/shell/utils/shouldDockResumedLiveSessionOnLoad";
 
 const readRunStatus = async (runId: string): Promise<string | null> => {
   const cached = getAgentRunLocalCache(runId);
@@ -29,7 +30,7 @@ const readRunStatus = async (runId: string): Promise<string | null> => {
  * tab had open for a run that is still live, once per page load.
  */
 export default function AppShellLiveFloaterRestorer() {
-  const { expandRunningSendTask } = useSendTaskModal();
+  const { expandRunningSendTask, minimizeSendTaskModal } = useSendTaskModal();
   const attempted = useRef(false);
 
   useEffect(() => {
@@ -37,6 +38,11 @@ export default function AppShellLiveFloaterRestorer() {
       return;
     }
     attempted.current = true;
+    // a6053d1c: a reload mid-run restores the floater, not the big modal.
+    if (shouldDockResumedLiveSessionOnLoad(window.location.search)) {
+      minimizeSendTaskModal();
+      return;
+    }
     const storedRunId = getLiveFloaterRunId();
     const floaterOpen =
       new URLSearchParams(window.location.search).get("sendTask") === "1";
@@ -58,7 +64,7 @@ export default function AppShellLiveFloaterRestorer() {
         }
         clearLiveFloaterRunId();
       });
-  }, [expandRunningSendTask]);
+  }, [expandRunningSendTask, minimizeSendTaskModal]);
 
   return null;
 }

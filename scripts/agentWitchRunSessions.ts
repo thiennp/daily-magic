@@ -422,6 +422,7 @@ const finishRun = (
           output: resolvedOutput,
           stoppedExitCode: STOPPED_EXIT_CODE,
           sessionLimitExitCode: LOCAL_CLI_SESSION_LIMIT_EXIT_CODE,
+          projectFolderPath: runSessions.get(agentRunId)?.projectFolderPath,
         });
       } catch (error) {
         console.warn(

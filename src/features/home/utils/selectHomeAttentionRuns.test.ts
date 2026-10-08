@@ -22,4 +22,20 @@ describe("selectHomeAttentionRuns", () => {
 
     expect(result.map((r) => r.id)).toEqual(["wait", "fail", "old-wait"]);
   });
+
+  it("leaves out runs the user stopped (4139ca18, B3)", () => {
+    const stopped = {
+      ...run("stopped", "failed", "2026-10-08T11:00:00Z"),
+      resultOutput: "error: interrupted\nStopped by user.",
+      resultExitCode: 130,
+    } as AgentRunRecord;
+    const reportStopped = {
+      ...run("report-stopped", "failed", "2026-10-08T11:10:00Z"),
+      reportStatus: "stopped",
+    } as AgentRunRecord;
+
+    expect(
+      selectHomeAttentionRuns([stopped, reportStopped], NOW).map((r) => r.id),
+    ).toEqual([]);
+  });
 });
