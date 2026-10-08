@@ -48,4 +48,21 @@ describe("buildAgentWitchInstallScriptProgress", () => {
     expect(ok.status).toBe(0);
     expect(ok.stderr).toBe("");
   });
+
+  it("2331ef53: never prints the same percentage twice", () => {
+    const steps = Array.from(
+      { length: 11 },
+      () => "agent_witch_install_step",
+    ).join("\n");
+    const out = spawnSync(
+      "bash",
+      [
+        "-c",
+        `set -euo pipefail\n${buildAgentWitchInstallScriptProgress()}\n${steps}`,
+      ],
+      { encoding: "utf8" },
+    ).stdout;
+
+    expect(out.split("99%").length - 1).toBe(1);
+  });
 });

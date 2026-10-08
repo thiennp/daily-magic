@@ -24,6 +24,11 @@ agent_witch_install_step() {
   if (( percent > 99 )); then
     percent=99
   fi
+  # 2331ef53: more steps than the total printed "99%" twice.
+  if [[ "\${percent}" == "\${AGENT_WITCH_INSTALL_LAST_PERCENT:-}" ]]; then
+    return 0
+  fi
+  AGENT_WITCH_INSTALL_LAST_PERCENT="\${percent}"
   printf '\\r${progressLabel}… %d%%' "\${percent}"
 }
 
