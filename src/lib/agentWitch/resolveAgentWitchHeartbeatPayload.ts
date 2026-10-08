@@ -34,3 +34,17 @@ export const resolveHeartbeatWakePort = (
 
   return wakePortRaw > 0 && wakePortRaw <= 65535 ? wakePortRaw : null;
 };
+
+const INSTALL_ID_PATTERN = /^[a-f0-9]{8,64}$/;
+
+/** 61e9c49e: per-install fingerprint (hex) from the host heartbeat. */
+export const resolveHeartbeatInstallId = (
+  payload: Readonly<Record<string, unknown>> | undefined,
+): string | null => {
+  const raw = payload?.installId;
+  if (typeof raw !== "string") {
+    return null;
+  }
+  const installId = raw.trim().toLowerCase();
+  return INSTALL_ID_PATTERN.test(installId) ? installId : null;
+};

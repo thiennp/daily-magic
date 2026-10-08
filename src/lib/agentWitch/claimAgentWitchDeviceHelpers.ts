@@ -55,6 +55,7 @@ export const insertAgentWitchDeviceClaim = async (input: {
   return mapAgentWitchDeviceRow(insertResult[0]);
 };
 
+/** 61e9c49e: supersedes only same-install (install_id) or legacy rows. */
 export const revokeSiblingDevicesWithSameLabel = async (input: {
   readonly keepDeviceId: string;
   readonly userId: string;
@@ -87,6 +88,14 @@ export const revokeSiblingDevicesWithSameLabel = async (input: {
         AND revoked_at IS NULL
         AND device_label = ANY(${matchedLabels}::text[])
         AND id <> ${input.keepDeviceId}
+        AND (
+          install_id IS NULL
+          OR install_id = (
+            SELECT keep.install_id
+            FROM agent_witch_devices keep
+            WHERE keep.id = ${input.keepDeviceId}
+          )
+        )
         AND (
           ${input.skipLive !== true}
           OR last_seen_at IS NULL

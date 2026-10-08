@@ -10,6 +10,7 @@ import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRunti
 import { updateAgentWitchDeviceInstallBundleVersion } from "@/lib/agentWitch/updateAgentWitchDeviceInstallBundleVersion";
 import type { AgentWitchDeviceWriter } from "@/lib/agentWitch/deviceWriters";
 import { updateAgentWitchDeviceWriters } from "@/lib/agentWitch/updateAgentWitchDeviceWriters";
+import { updateAgentWitchDeviceInstallId } from "@/lib/agentWitch/updateAgentWitchDeviceInstallId";
 import { updateAgentWitchDeviceWakePort } from "@/lib/agentWitch/updateAgentWitchDeviceWakePort";
 import { updateAgentWitchDeviceWakeError } from "@/lib/agentWitch/updateAgentWitchDeviceAuthFields";
 import { upgradeAgentWitchDeviceLabelFromLegacyHostname } from "@/lib/agentWitch/upgradeAgentWitchDeviceLabelFromLegacyHostname";
@@ -20,6 +21,7 @@ export const runAgentWitchHeartbeatDeviceMaintenance = async (input: {
   readonly deviceId: string;
   readonly hostname: string | null;
   readonly installDeviceLabel: string | null;
+  readonly installId?: string | null;
   readonly installBundleVersion: string | null;
   readonly wakePort: number | null;
   readonly wakeError: string | null;
@@ -73,6 +75,13 @@ export const runAgentWitchHeartbeatDeviceMaintenance = async (input: {
       deviceId: input.deviceId,
     }).catch((error: unknown) => {
       console.error("[agent-witch] interrupted run reconcile failed", error);
+    });
+  }
+
+  if (input.installId !== undefined && input.installId !== null) {
+    await updateAgentWitchDeviceInstallId({
+      deviceId: input.deviceId,
+      installId: input.installId,
     });
   }
 

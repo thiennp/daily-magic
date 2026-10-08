@@ -4,6 +4,7 @@ import { deliverAgentWitchInstallBundleUpdateIfBehind } from "@/lib/agentWitch/d
 import {
   resolveHeartbeatEmail,
   resolveHeartbeatInstallBundleVersion,
+  resolveHeartbeatInstallId,
   resolveHeartbeatWakePort,
 } from "@/lib/agentWitch/resolveAgentWitchHeartbeatPayload";
 import { parseHeartbeatWriters } from "@/lib/agentWitch/deviceWriters";
@@ -73,6 +74,7 @@ export const handleAgentHeartbeatMessageAsync = async (
       deviceId,
       hostname,
       installDeviceLabel,
+      installId: resolveHeartbeatInstallId(message.payload),
       installBundleVersion,
       wakePort,
       wakeError,

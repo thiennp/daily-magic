@@ -133,6 +133,7 @@ import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
 import { LocalCodingToolRefusalCode } from "@agent-witch/shared/dispatch";
 
 import { admitLocalCodingToolRun } from "./admitLocalCodingToolRun";
+import { resolveAgentWitchInstallId } from "./resolveAgentWitchInstallId";
 import { runAgentWitchHostLauncher } from "./hostLauncher/runAgentWitchHostLauncher";
 import { describeAgentWitchHostServicesMigration } from "./hostServicesMigration/describeAgentWitchHostServicesMigration";
 import { migrateAgentWitchMonolithToAccountServices } from "./hostServicesMigration/migrateAgentWitchMonolithToAccountServices";
@@ -1503,6 +1504,10 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           payload: {
             hostname: os.hostname(),
             macOsUsername: os.userInfo().username,
+            installId: resolveAgentWitchInstallId({
+              hostname: os.hostname(),
+              installDir: config.layout.installDir,
+            }),
             wakeError: state.wakeError,
             wakePort,
             ...(config.email !== null ? { email: config.email } : {}),

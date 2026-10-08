@@ -89,3 +89,13 @@ Architecture for multi-instance presence and the dispatch outbox: `docs/adr/0005
 **Regression tests:** `buildAgentWitchInstallScriptLaunchAgent.test.ts`, `renderInstallAgentWitchScriptProcessHost.test.ts`, `buildAgentWitchInstallScriptProcessHostBash.test.ts`, `ensureAgentWitchLaunchAgentPlist.test.ts`, `isAgentWitchLaunchAgentPlistXmlValid.test.ts`, `buildAgentWitchInstallScriptRegisterLaunchAgent.test.ts`, `resolveAgentWitchRuntimeWakePort.test.ts`, `triggerAgentWitchLocalInstallBundleUpdate.test.ts`, `requestLocalAgentWitchSelfUpdate.test.ts` (AGENT-067).
 
 **Q&A:** `docs/qa/awi-update-local-launchagent-plist.md`
+
+## 61e9c49e — Two installs on one machine and user revoked each other
+
+**Symptom:** A second install under a different HOME on the same machine and user sends the same `hostname#user` label. Same-label auto-revoke (heartbeat / register-install, silent > 180 s) superseded the OTHER install's row.
+
+**Fix:** The host sends a per-install `installId` (sha256 of hostname + resolved install dir) in each heartbeat; the server stores it in `agent_witch_devices.install_id` (migration 122). `revokeSiblingDevicesWithSameLabel` only supersedes rows with the same `install_id`, or legacy rows without one. A reinstall into the same folder keeps its id, so it still replaces its old row. The UI already tells same-name computers apart with the device-id suffix (`Linux device · 10F4`).
+
+**Not changed:** the pairing-time token move (`consolidateAgentWitchDeviceByHostname` / `reclaimAgentWitchDeviceByHostname`) runs before the host reports an install id.
+
+**Regression tests:** `resolveAgentWitchInstallId.test.ts`, `resolveHeartbeatInstallId.test.ts`, `handleAgentHeartbeatMessageAsync.installId.test.ts`, `claimAgentWitchDeviceHelpers.installScope.source.test.ts`.
