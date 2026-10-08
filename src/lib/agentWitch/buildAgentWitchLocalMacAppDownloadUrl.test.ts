@@ -9,7 +9,7 @@ import {
 describe("buildAgentWitchLocalMacAppDownloadUrl", () => {
   it("returns the tag-pinned GitHub release download URL", () => {
     expect(buildAgentWitchLocalMacAppDownloadUrl()).toBe(
-      "https://github.com/thiennp/daily-magic/releases/download/awl-mac-v0.2.4/AgentWitchLocal.dmg",
+      "https://github.com/thiennp/daily-magic/releases/download/awl-mac-v0.2.5/AgentWitchLocal.dmg",
     );
   });
 

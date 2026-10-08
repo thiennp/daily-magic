@@ -126,10 +126,6 @@ import {
 import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
 import { LocalCodingToolRefusalCode } from "@agent-witch/shared/dispatch";
 
-import {
-  AGENT_WITCH_BUNDLE_RESTART_RECHECK_MS,
-  isAgentWitchBundleRestartBlocked,
-} from "../../../scripts/agentWitchBundleRestartGate";
 import { admitLocalCodingToolRun } from "./admitLocalCodingToolRun";
 import { runAgentWitchHostLauncher } from "./hostLauncher/runAgentWitchHostLauncher";
 import { describeAgentWitchHostServicesMigration } from "./hostServicesMigration/describeAgentWitchHostServicesMigration";
@@ -138,6 +134,7 @@ import { migrateAgentWitchMonolithToAccountServices } from "./hostServicesMigrat
 import {
   acceptTerminalStream,
   AGENT_RUN_WORKING_ESTIMATE_MARKER,
+  AGENT_WITCH_BUNDLE_RESTART_RECHECK_MS,
   applyAutomationsRunFromCloud,
   applyAutomationsSyncFromCloud,
   beginAgentWitchWriterWork,
@@ -147,6 +144,7 @@ import {
   deferAgentWitchLocalRestart,
   ensureAgentWitchCoupledLiveAppHealth,
   endAgentWitchWriterWork,
+  isAgentWitchBundleRestartBlocked,
   isAgentWitchInstallBundleUpdateNeeded,
   isAgentWitchWriterWorkInProgress,
   buildWriterCliInvocation,

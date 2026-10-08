@@ -114,3 +114,7 @@ export {
   resolveAgentWitchLiveRunSocket,
 } from "../../../scripts/agentWitchLiveRunSocket";
 export { dropPendingRunInputSession } from "../../../scripts/agentWitchRunSessions";
+export {
+  AGENT_WITCH_BUNDLE_RESTART_RECHECK_MS,
+  isAgentWitchBundleRestartBlocked,
+} from "../../../scripts/agentWitchBundleRestartGate";

@@ -11,7 +11,7 @@ const root = process.cwd();
 describe("Download page wiring", () => {
   it("uses the same tag-pinned Mac release URL as Connect this computer", () => {
     expect(buildAgentWitchLocalMacAppDownloadUrl()).toContain(
-      "/releases/download/awl-mac-v0.2.4/AgentWitchLocal\.dmg",
+      "/releases/download/awl-mac-v0.2.5/AgentWitchLocal\.dmg",
     );
   });
 
