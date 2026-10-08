@@ -20,17 +20,13 @@ export default function AwcHumanInviteCreatedLinkBanner({
 
   return (
     <div className="rounded-lg border border-awc-line bg-awc-surface-2 p-3 text-xs">
-      <p className="font-medium text-awc-fg">
-        {copy.createdBannerTitle}
-      </p>
+      <p className="font-medium text-awc-fg">{copy.createdBannerTitle}</p>
       <p className="mt-1 text-awc-fg-muted">
         Role · {createdInvite.role} · exp{" "}
         {new Date(createdInvite.expiresAt).toLocaleDateString()}
         {createdInvite.requireEmailMatch ? ` · ${copy.pendingEmailLocked}` : ""}
       </p>
-      <p className="mt-1 break-all text-awc-fg-muted">
-        {createdInvite.url}
-      </p>
+      <p className="mt-1 break-all text-awc-fg-muted">{createdInvite.url}</p>
       <div className="mt-2 flex flex-wrap gap-2">
         <button
           type="button"

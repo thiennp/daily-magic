@@ -3,16 +3,18 @@
 import { useState } from "react";
 
 import AwcHumanInviteCreatedLinkBanner from "@/features/projects/access/humanInvites/AwcHumanInviteCreatedLinkBanner";
+import AwcHumanInviteFormError from "@/features/projects/access/humanInvites/AwcHumanInviteFormError";
+import AwcHumanInviteSentView from "@/features/projects/access/humanInvites/AwcHumanInviteSentView";
 import AwcHumanInvitePersonFormBody from "@/features/projects/access/humanInvites/AwcHumanInvitePersonFormBody";
 import AwcHumanInvitePersonPanelActions from "@/features/projects/access/humanInvites/AwcHumanInvitePersonPanelActions";
 import AwcHumanInvitePersonRolePicker from "@/features/projects/access/humanInvites/AwcHumanInvitePersonRolePicker";
+import { useHumanInviteCreateSubmit } from "@/features/projects/access/humanInvites/hooks/useHumanInviteCreateSubmit";
 import { useHumanInviteSendForm } from "@/features/projects/access/humanInvites/hooks/useHumanInviteSendForm";
 import AwcHumanInvitePersonTabSeg, {
   type InvitePersonTab,
 } from "@/features/projects/access/humanInvites/AwcHumanInvitePersonTabSeg";
 import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
 import type { AwcHumanInvitePersonPanelProps } from "@/features/projects/access/humanInvites/types/awcHumanInvitePersonPanelProps.type";
-import { buildHumanInviteCreateBody } from "@/features/projects/access/humanInvites/utils/buildHumanInviteCreateBody";
 import type { HumanInviteRole } from "@/features/projects/access/humanInvites/types/humanInviteUiContract.type";
 
 type FormProps = Omit<AwcHumanInvitePersonPanelProps, "projectName">;
@@ -36,6 +38,7 @@ export default function AwcHumanInvitePersonForm({
   const [email, setEmail] = useState("");
   const [requireEmailMatch, setRequireEmailMatch] = useState(true); // F1: email lock ON by default
   const [localError, setLocalError] = useState<string | null>(null);
+  const [sent, setSent] = useState<readonly string[] | null>(null);
   const shownError = localError ?? sendErrorMessage ?? errorMessage;
   const send = useHumanInviteSendForm({
     email,
@@ -44,22 +47,30 @@ export default function AwcHumanInvitePersonForm({
     setEmail,
     setLocalError,
     onSendEmails,
+    onSent: setSent,
   });
   const roleLabel = role === "member" ? copy.roleMember : copy.roleViewer;
 
-  const onSubmitCreate = () => {
-    const built = buildHumanInviteCreateBody({
-      role,
-      email: tab === "email" ? email : "",
-      requireEmailMatch: tab === "email" ? requireEmailMatch : false,
-    });
-    if (!built.ok) {
-      setLocalError(built.errorMessage);
-      return;
-    }
-    setLocalError(null);
-    onCreate?.(built.body);
-  };
+  const onSubmitCreate = useHumanInviteCreateSubmit({
+    role,
+    isEmailTab: tab === "email",
+    email,
+    requireEmailMatch,
+    setLocalError,
+    onCreate,
+  });
+
+  if (sent !== null) {
+    return (
+      <AwcHumanInviteSentView
+        emails={sent}
+        roleLabel={roleLabel}
+        onCopyLink={onSubmitCreate}
+        onAnother={() => setSent(null)}
+        onDone={onCancel}
+      />
+    );
+  }
 
   return (
     <>
@@ -79,6 +90,7 @@ export default function AwcHumanInvitePersonForm({
           setRequireEmailMatch(checked);
           setLocalError(null);
         }}
+        invalid={shownError !== null && tab === "email"}
         requiresApproval={send.requiresApproval}
         onRequiresApprovalChange={send.onRequiresApprovalChange}
       />
@@ -94,9 +106,7 @@ export default function AwcHumanInvitePersonForm({
           onDismissCreated={onDismissCreated}
         />
       ) : null}
-      {shownError ? (
-        <p className="text-xs text-awc-bad">{shownError}</p>
-      ) : null}
+      <AwcHumanInviteFormError message={shownError} />
       <AwcHumanInvitePersonPanelActions
         busy={busy}
         onSubmitCreate={onSubmitCreate}

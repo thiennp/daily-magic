@@ -18,6 +18,8 @@ export type AwcHumanInvitePersonFormBodyProps = {
   readonly onRequireEmailMatchChange: (checked: boolean) => void;
   readonly requiresApproval?: boolean;
   readonly onRequiresApprovalChange?: (checked: boolean) => void;
+  /** An error is shown for this form (email field is aria-invalid). */
+  readonly invalid?: boolean;
 };
 
 /** Email or Link fields for Invite person — Claude HTML tabs. */
@@ -32,6 +34,7 @@ export default function AwcHumanInvitePersonFormBody({
   onRequireEmailMatchChange,
   requiresApproval = true,
   onRequiresApprovalChange,
+  invalid = false,
 }: AwcHumanInvitePersonFormBodyProps) {
   const copy = HUMAN_INVITE_UI_COPY;
   const flow = HUMAN_INVITE_PERSON_FLOW_COPY;
@@ -79,7 +82,10 @@ export default function AwcHumanInvitePersonFormBody({
           disabled={busy}
           placeholder={copy.emailPlaceholder}
           className={INV_INPUT_CLASS}
-          aria-describedby="inv-email-help"
+          aria-describedby={
+            invalid ? "inv-email-help inv-err" : "inv-email-help"
+          }
+          aria-invalid={invalid ? true : undefined}
           onChange={(event) => onEmailChange(event.target.value)}
         />
         <p className="text-xs text-awc-fg-subtle" id="inv-email-help">

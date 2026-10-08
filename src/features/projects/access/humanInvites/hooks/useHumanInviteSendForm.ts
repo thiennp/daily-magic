@@ -13,6 +13,7 @@ export const useHumanInviteSendForm = (input: {
   readonly requireEmailMatch: boolean;
   readonly setEmail: (value: string) => void;
   readonly setLocalError: (value: string | null) => void;
+  readonly onSent?: (emails: readonly string[]) => void;
   readonly onSendEmails?: (
     body: SendHumanInviteEmailsInput,
   ) => Promise<boolean>;
@@ -33,7 +34,9 @@ export const useHumanInviteSendForm = (input: {
       requireEmailMatch: input.requireEmailMatch,
       requiresApproval,
     }).then((allSent) => {
-      if (allSent) input.setEmail("");
+      if (!allSent) return;
+      input.setEmail("");
+      input.onSent?.(parsed.emails);
     });
   };
 

@@ -4,24 +4,22 @@ import type { ReactNode } from "react";
 
 export type AwcHumanInviteAcceptShellProps = {
   readonly children: ReactNode;
-  readonly badge?: string;
   readonly projectName: string;
 };
 
-/** Shared chrome for human invite accept states. */
+/** Shared chrome for human invite accept states — one centered card (Join project). */
 export default function AwcHumanInviteAcceptShell({
   children,
-  badge,
   projectName,
 }: AwcHumanInviteAcceptShellProps) {
   return (
-    <main className="mx-auto max-w-xl px-4 py-12 text-awc-fg dark:text-white">
-      {badge ? (
-        <p className="mb-3 inline-flex items-center gap-2 rounded-full bg-awc-fill px-3 py-1 text-xs font-semibold text-awc-fg dark:bg-gray-800 dark:text-gray-200">
-          {badge} · {projectName}
-        </p>
-      ) : null}
-      {children}
+    <main className="mx-auto flex w-full max-w-[560px] flex-col px-4 py-12 text-awc-fg dark:text-white">
+      <section
+        aria-label={projectName}
+        className="space-y-4 rounded-[20px] bg-awc-surface p-5 text-left shadow-awc-card"
+      >
+        {children}
+      </section>
     </main>
   );
 }

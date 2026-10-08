@@ -6,10 +6,7 @@ import { useCallback, useMemo, useState } from "react";
 
 import type { HumanInviteAcceptViewState } from "@/features/projects/access/humanInvites/AwcHumanInviteAcceptView";
 import { acceptHumanInviteApi } from "@/features/projects/access/humanInvites/humanInviteApi";
-import {
-  expiresInLabel,
-  mapAcceptError,
-} from "@/features/projects/access/humanInvites/utils/mapHumanInviteAcceptPageError";
+import { mapAcceptError } from "@/features/projects/access/humanInvites/utils/mapHumanInviteAcceptPageError";
 import {
   checkHumanAcceptNickname,
   initialHumanAcceptNickname,
@@ -28,6 +25,7 @@ export const useHumanInviteAcceptFlow = (input: {
   const router = useRouter();
   const [viewState, setViewState] = useState(input.initialView);
   const [busy, setBusy] = useState(false);
+  const [joinError, setJoinError] = useState(false);
   const [nickname, setNickname] = useState(() =>
     initialHumanAcceptNickname(input.accountName),
   );
@@ -54,33 +52,44 @@ export const useHumanInviteAcceptFlow = (input: {
       return;
     }
     setNicknameError(null);
+    setJoinError(false);
     setBusy(true);
     void acceptHumanInviteApi(input.token, {
       suggestedProjectDisplayName: checked.name,
-    }).then((result) => {
-      setBusy(false);
-      if (result.ok === true && result.awaitingApproval === true) {
-        setViewState("awaiting_approval");
-        return;
-      }
-      if (result.ok === true) {
-        router.push(`/projects/${result.projectId}`);
-        return;
-      }
-      if (isHumanAcceptNamingError(result.code)) {
-        setNicknameError(
-          result.errorMessage ?? mapProjectAccessError(result.code),
-        );
-        if (result.suggestedProjectDisplayName) {
-          setNickname(result.suggestedProjectDisplayName);
+    })
+      .catch(() => null)
+      .then((result) => {
+        setBusy(false);
+        if (result === null) {
+          setJoinError(true);
+          return;
         }
-        return;
-      }
-      if (result.invitedEmailMasked) {
-        setMaskedEmail(result.invitedEmailMasked);
-      }
-      setViewState(mapAcceptError(result.status, result.code));
-    });
+        if (result.ok === true && result.awaitingApproval === true) {
+          setViewState("awaiting_approval");
+          return;
+        }
+        if (result.ok === true) {
+          router.push(`/projects/${result.projectId}`);
+          return;
+        }
+        if (isHumanAcceptNamingError(result.code)) {
+          setNicknameError(
+            result.errorMessage ?? mapProjectAccessError(result.code),
+          );
+          if (result.suggestedProjectDisplayName) {
+            setNickname(result.suggestedProjectDisplayName);
+          }
+          return;
+        }
+        if (result.invitedEmailMasked) {
+          setMaskedEmail(result.invitedEmailMasked);
+        }
+        if (result.status >= 500) {
+          setJoinError(true);
+          return;
+        }
+        setViewState(mapAcceptError(result.status, result.code));
+      });
   }, [input.token, nickname, router]);
 
   const onNicknameChange = useCallback((value: string) => {
@@ -99,10 +108,10 @@ export const useHumanInviteAcceptFlow = (input: {
   return {
     viewState,
     busy,
+    joinError,
     nickname,
     nicknameError,
     maskedEmail,
-    expiresInLabel: expiresInLabel(input.expiresAt),
     goAuth,
     onSwitchAccount,
     onAccept,

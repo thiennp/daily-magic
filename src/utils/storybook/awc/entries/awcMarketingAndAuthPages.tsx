@@ -38,19 +38,9 @@ export const AWC_MARKETING_AND_AUTH_PAGE_ENTRIES: readonly AwcStorybookPageEntry
       <SetupWriterRoutePage />
     )),
     onlyReady("privacy", "Privacy", "/privacy", "app", () => (
-      <MarketingLegalPageLayout
-        title={MARKETING_PRIVACY_COPY.title}
-        lastUpdated={MARKETING_PRIVACY_COPY.lastUpdated}
-        intro={MARKETING_PRIVACY_COPY.intro}
-        sections={MARKETING_PRIVACY_COPY.sections}
-      />
+      <MarketingLegalPageLayout doc={MARKETING_PRIVACY_COPY} />
     )),
     onlyReady("terms", "Terms", "/terms", "app", () => (
-      <MarketingLegalPageLayout
-        title={MARKETING_TERMS_COPY.title}
-        lastUpdated={MARKETING_TERMS_COPY.lastUpdated}
-        intro={MARKETING_TERMS_COPY.intro}
-        sections={MARKETING_TERMS_COPY.sections}
-      />
+      <MarketingLegalPageLayout doc={MARKETING_TERMS_COPY} />
     )),
   ];

@@ -1,6 +1,7 @@
 "use client";
 
 import AwcHumanInviteAcceptShell from "@/features/projects/access/humanInvites/AwcHumanInviteAcceptShell";
+import AwcHumanInviteStateCard from "@/features/projects/access/humanInvites/AwcHumanInviteStateCard";
 import {
   HUMAN_INVITE_EMAIL_COPY,
   fillHumanInviteEmailCopy,
@@ -19,15 +20,18 @@ export default function AwcHumanInviteAwaitingApprovalView({
   const copy = HUMAN_INVITE_EMAIL_COPY;
   return (
     <AwcHumanInviteAcceptShell projectName={projectName}>
-      <h1 className="text-xl font-semibold" data-human-invite-awaiting-approval>
-        {copy.awaitingTitle}
-      </h1>
-      <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-400">
-        {fillHumanInviteEmailCopy(copy.awaitingBody, {
-          inviter: inviterDisplayName,
-          projectName,
-        })}
-      </p>
+      <div data-human-invite-awaiting-approval>
+        <AwcHumanInviteStateCard
+          icon="check"
+          tone="ok"
+          title={copy.awaitingTitle}
+        >
+          {fillHumanInviteEmailCopy(copy.awaitingBody, {
+            inviter: inviterDisplayName,
+            projectName,
+          })}
+        </AwcHumanInviteStateCard>
+      </div>
     </AwcHumanInviteAcceptShell>
   );
 }

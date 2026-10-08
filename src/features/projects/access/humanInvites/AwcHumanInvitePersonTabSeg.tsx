@@ -23,7 +23,11 @@ export default function AwcHumanInvitePersonTabSeg({
 }: AwcHumanInvitePersonTabSegProps) {
   const copy = HUMAN_INVITE_PERSON_FLOW_COPY;
   return (
-    <div className={INV_SEG_CLASS} role="group" aria-label={copy.howToInviteAria}>
+    <div
+      className={INV_SEG_CLASS}
+      role="group"
+      aria-label={copy.howToInviteAria}
+    >
       {(["email", "link"] as const).map((value) => (
         <button
           key={value}

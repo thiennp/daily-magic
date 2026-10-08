@@ -12,7 +12,11 @@ export default function AwcHumanInviteWhatHappensNext() {
   const copy = HUMAN_INVITE_PERSON_FLOW_COPY;
   return (
     <section className={INV_NEXT_CARD_CLASS} aria-labelledby="inv-next-h">
-      <h2 className={INV_TITLE_CLASS} id="inv-next-h" title={copy.whatHappensNextTip}>
+      <h2
+        className={INV_TITLE_CLASS}
+        id="inv-next-h"
+        title={copy.whatHappensNextTip}
+      >
         {copy.whatHappensNext}
       </h2>
       <ol className={INV_NEXT_LIST_CLASS}>

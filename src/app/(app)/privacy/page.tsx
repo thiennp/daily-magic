@@ -11,16 +11,9 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPage() {
-  const copy = MARKETING_PRIVACY_COPY;
-
   return (
     <AppShell>
-      <MarketingLegalPageLayout
-        title={copy.title}
-        lastUpdated={copy.lastUpdated}
-        intro={copy.intro}
-        sections={copy.sections}
-      />
+      <MarketingLegalPageLayout doc={MARKETING_PRIVACY_COPY} />
     </AppShell>
   );
 }

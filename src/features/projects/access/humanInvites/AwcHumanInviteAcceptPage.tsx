@@ -46,9 +46,9 @@ export default function AwcHumanInviteAcceptPage({
       projectName={projectName}
       inviterDisplayName={inviterDisplayName}
       role={role}
-      expiresInLabel={flow.expiresInLabel}
       signedInEmail={signedInEmail}
       busy={flow.busy}
+      joinError={flow.joinError}
       nickname={flow.nickname}
       nicknameError={flow.nicknameError}
       onNicknameChange={flow.onNicknameChange}

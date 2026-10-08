@@ -24,9 +24,9 @@ export type AwcHumanInviteAcceptViewProps = {
   readonly projectName: string;
   readonly inviterDisplayName: string;
   readonly role: HumanInviteRole;
-  readonly expiresInLabel?: string;
   readonly signedInEmail?: string | null;
   readonly busy?: boolean;
+  readonly joinError?: boolean;
   readonly nickname?: string;
   readonly nicknameError?: string | null;
   readonly onNicknameChange?: (value: string) => void;
@@ -47,7 +47,6 @@ export default function AwcHumanInviteAcceptView({
   projectName,
   inviterDisplayName,
   role,
-  expiresInLabel = "expires soon",
   signedInEmail = null,
   busy = false,
   nickname = "",
@@ -60,7 +59,8 @@ export default function AwcHumanInviteAcceptView({
   requireEmailMatch = false,
   invitedEmailMasked = null,
   onSwitchAccount,
-  requiresApproval = false,
+  joinError,
+  requiresApproval,
 }: AwcHumanInviteAcceptViewProps) {
   const masked = invitedEmailMasked?.trim() || "the invited email";
 
@@ -70,6 +70,7 @@ export default function AwcHumanInviteAcceptView({
         kind={viewState}
         projectName={projectName}
         invitedEmailMasked={masked}
+        signedInEmail={signedInEmail}
         onSwitchAccount={onSwitchAccount}
       />
     );
@@ -94,9 +95,10 @@ export default function AwcHumanInviteAcceptView({
       projectName={projectName}
       inviterDisplayName={inviterDisplayName}
       role={role}
-      expiresInLabel={expiresInLabel}
       signedInEmail={signedInEmail}
       busy={busy}
+      joinError={joinError}
+      onSwitchAccount={onSwitchAccount}
       nickname={nickname}
       nicknameError={nicknameError}
       onNicknameChange={onNicknameChange}

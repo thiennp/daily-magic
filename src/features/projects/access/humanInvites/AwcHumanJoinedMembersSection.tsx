@@ -32,7 +32,9 @@ export default function AwcHumanJoinedMembersSection({
             <div className="font-medium text-awc-fg dark:text-white/90">
               {copy.youOwner}
             </div>
-            <div className="text-xs text-awc-fg-muted">Owner · {ownerLabel}</div>
+            <div className="text-xs text-awc-fg-muted">
+              Owner · {ownerLabel}
+            </div>
           </div>
         </li>
         {joinedHumans.length === 0 ? (

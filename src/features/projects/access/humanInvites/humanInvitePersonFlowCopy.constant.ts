@@ -24,6 +24,8 @@ export const HUMAN_INVITE_PERSON_FLOW_COPY = {
   nextStep3: "They can connect their own assistant.",
   inviteAnother: "Invite another",
   done: "Done",
+  copyLink: "Copy link",
+  sentBody: "They get an email with a link. It works for 7 days.",
   inviteSent: "Invite sent",
   invitesSent: "invites sent",
 } as const;

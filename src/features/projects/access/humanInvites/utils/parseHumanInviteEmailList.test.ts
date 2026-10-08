@@ -19,7 +19,7 @@ describe("parseHumanInviteEmailList", () => {
     });
     expect(parseHumanInviteEmailList("ada@x.com, nope")).toEqual({
       ok: false,
-      errorMessage: "Check this email: nope",
+      errorMessage: "This does not look like an email: nope",
     });
   });
 
@@ -27,7 +27,7 @@ describe("parseHumanInviteEmailList", () => {
     const many = Array.from({ length: 11 }, (_, i) => `p${i}@x.com`).join(",");
     expect(parseHumanInviteEmailList(many)).toEqual({
       ok: false,
-      errorMessage: "Send up to 10 invites at a time.",
+      errorMessage: "Invite up to 10 people at a time.",
     });
   });
 });

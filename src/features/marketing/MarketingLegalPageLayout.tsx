@@ -1,76 +1,85 @@
-import {
-  MARKETING_TEXT_PRIMARY_CLASSES,
-  MARKETING_TEXT_SECONDARY_CLASSES,
-  MARKETING_TEXT_MUTED_CLASSES,
-} from "@/features/marketing/marketingSurfaceClasses.constant";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+"use client";
 
-interface MarketingLegalSection {
-  readonly heading: string;
-  readonly body: string;
-}
+import { useCallback, useState } from "react";
 
-interface MarketingLegalPageLayoutProps {
-  readonly title: string;
-  readonly lastUpdated: string;
-  readonly intro: string;
-  readonly sections: readonly MarketingLegalSection[];
-}
+import MarketingLegalDocBar from "@/features/marketing/MarketingLegalDocBar";
+import MarketingLegalSectionBody from "@/features/marketing/MarketingLegalSectionBody";
+import { type MarketingLegalDoc } from "@/features/marketing/marketingLegalCopy.constant";
+import copyProjectPathToClipboard from "@/features/projects/utils/copyProjectPathToClipboard";
 
+const slugify = (value: string): string =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+const sectionId = (doc: MarketingLegalDoc, heading: string, index: number) =>
+  `${doc.key}-${slugify(heading)}-${index}`;
+
+/** Claude "Privacy and Terms" design: lead, TOC, switch, meta actions. */
 export default function MarketingLegalPageLayout({
-  title,
-  lastUpdated,
-  intro,
-  sections,
-}: MarketingLegalPageLayoutProps) {
+  doc,
+}: {
+  readonly doc: MarketingLegalDoc;
+}) {
+  const [status, setStatus] = useState("");
+
+  const jump = useCallback((id: string) => {
+    const el = document.getElementById(id);
+    if (el === null) return;
+    el.scrollIntoView({ block: "start" });
+    const heading = el.querySelector("h2");
+    heading?.setAttribute("tabindex", "-1");
+    heading?.focus({ preventScroll: true });
+  }, []);
+
+  const copyLink = useCallback(async () => {
+    const ok = await copyProjectPathToClipboard(
+      `${window.location.origin}${doc.path}`,
+    );
+    setStatus(ok ? "Link copied" : "Could not copy the link.");
+  }, [doc.path]);
+
   return (
-    <article className="mx-auto max-w-3xl py-2 sm:py-4">
-      <h1
-        className={mergeMarketingClasses(
-          "text-3xl font-semibold tracking-tight sm:text-4xl",
-          MARKETING_TEXT_PRIMARY_CLASSES,
-        )}
-      >
-        {title}
+    <div className="mx-auto max-w-[1040px] py-2 sm:py-4">
+      <h1 className="text-3xl font-bold tracking-tight text-awc-fg">
+        {doc.title}
       </h1>
-      <p
-        className={mergeMarketingClasses(
-          "mt-2 text-sm",
-          MARKETING_TEXT_MUTED_CLASSES,
-        )}
-      >
-        Last updated: {lastUpdated}
-      </p>
-      <p
-        className={mergeMarketingClasses(
-          "mt-6 text-base leading-relaxed",
-          MARKETING_TEXT_SECONDARY_CLASSES,
-        )}
-      >
-        {intro}
-      </p>
-      <div className="mt-12 space-y-12 border-t border-zinc-200/80 pt-10 dark:border-gray-800">
-        {sections.map((section) => (
-          <section key={section.heading}>
-            <h2
-              className={mergeMarketingClasses(
-                "text-2xl font-semibold tracking-tight",
-                MARKETING_TEXT_PRIMARY_CLASSES,
-              )}
+      <p className="mt-3 text-sm text-awc-fg-muted">{doc.lead}</p>
+      <div className="mt-5 grid items-start gap-6 md:grid-cols-[220px_minmax(0,1fr)]">
+        <nav
+          aria-label="On this page"
+          className="flex flex-row flex-wrap gap-0.5 md:sticky md:top-4 md:flex-col"
+        >
+          {doc.sections.map((s, i) => (
+            <a
+              key={sectionId(doc, s.heading, i)}
+              href={`#${sectionId(doc, s.heading, i)}`}
+              className="rounded-[10px] px-3 py-2 text-sm font-medium text-awc-fg-muted hover:bg-awc-fill hover:text-awc-fg"
+              onClick={(e) => {
+                e.preventDefault();
+                jump(sectionId(doc, s.heading, i));
+              }}
             >
-              {section.heading}
-            </h2>
-            <p
-              className={mergeMarketingClasses(
-                "mt-4 text-base leading-7",
-                MARKETING_TEXT_SECONDARY_CLASSES,
-              )}
-            >
-              {section.body}
-            </p>
-          </section>
-        ))}
+              {s.heading}
+            </a>
+          ))}
+        </nav>
+        <article className="rounded-[20px] bg-awc-surface p-4 shadow-awc-card sm:p-6">
+          <MarketingLegalDocBar
+            doc={doc}
+            status={status}
+            onCopyLink={() => void copyLink()}
+          />
+          {doc.sections.map((s, i) => (
+            <MarketingLegalSectionBody
+              key={sectionId(doc, s.heading, i)}
+              id={sectionId(doc, s.heading, i)}
+              section={s}
+            />
+          ))}
+        </article>
       </div>
-    </article>
+    </div>
   );
 }

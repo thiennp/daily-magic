@@ -8,8 +8,7 @@ export const HUMAN_INVITE_UI_COPY = {
   invitePersonIntro: "To {projectName}",
   roleMember: "Member",
   roleViewer: "Viewer",
-  roleMemberOneLiner:
-    "Can chat, give tasks and connect their own assistants.",
+  roleMemberOneLiner: "Can chat, give tasks and connect their own assistants.",
   roleViewerOneLiner:
     "Can read the project. Cannot give tasks or add assistants.",
   emailLabel: "Email",
@@ -29,8 +28,7 @@ export const HUMAN_INVITE_UI_COPY = {
   joinedSubhead: "In the project",
   joinedEmpty:
     "No one else has joined yet. Invite a person to share this project.",
-  joinedOwnerOnly:
-    "Just you so far. Invite a person to share this project.",
+  joinedOwnerOnly: "Just you so far. Invite a person to share this project.",
   /** DF-036: assistants, requests or invites exist, but no other person joined. */
   joinedNoOtherPeople: "No other people have joined yet.",
   youOwner: "You (owner)",
@@ -41,8 +39,7 @@ export const HUMAN_INVITE_UI_COPY = {
   removeScheduled: "Person removed — Undo for 10s.",
   acceptEyebrow: "Project invite",
   acceptJoinTitle: "Join {projectName}",
-  acceptSignedOutHint:
-    "No account yet? Signing in makes one for you.",
+  acceptSignedOutHint: "No account yet? Signing in makes one for you.",
   signUp: "Sign up",
   logIn: "Log in",
   joinProject: "Join project",
@@ -55,6 +52,14 @@ export const HUMAN_INVITE_UI_COPY = {
   usedTitle: "This invite was already used",
   revokedTitle: "This invite was cancelled",
   alreadyMemberTitle: "You are already in this project",
+  alreadyMemberBody: "{projectName} is in your list.",
+  goHome: "Go to Home",
+  joinFailedTitle: "Could not join.",
+  joinFailedBody: "Nothing changed. Try again.",
+  joiningAs: "Joining as",
+  notYou: "Not you?",
+  invitedYou: "invited you",
+  signInToJoin: "Sign in to join",
   openProject: "Open project",
   badgeExpired: "Expired",
   badgeUsed: "Already used",
@@ -75,8 +80,8 @@ export const HUMAN_INVITE_UI_COPY = {
   emailRequiredForLock: "Enter an email to lock this invite to one person.",
   pendingEmailLocked: "Only this email",
   emailMismatchTitle: "Wrong account",
-  emailMismatchBody:
-    "This invite is locked to {masked}. You're signed in as a different account. Sign out and switch to that email — the invite still works.",
+  emailMismatchBody: "This invite is for {masked}.",
+  emailMismatchSignedIn: "You are signed in as {email}.",
   emailUnverifiedTitle: "Verify your email to join",
   emailUnverifiedBody:
     "This invite is locked to {masked}. Verify that email on your account, then try again. The invite still works.",
@@ -88,8 +93,10 @@ export const HUMAN_INVITE_UI_COPY = {
   invalidInviteBody: "Ask for a fresh invite link from the project owner.",
 } as const;
 
-export const withProjectName = (template: string, projectName: string): string =>
-  template.replaceAll("{projectName}", projectName);
+export const withProjectName = (
+  template: string,
+  projectName: string,
+): string => template.replaceAll("{projectName}", projectName);
 
 export const withMaskedEmail = (template: string, masked: string): string =>
   template.replaceAll("{masked}", masked);

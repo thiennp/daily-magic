@@ -7,6 +7,10 @@ import {
   INV_ROLE_CARD_ON_CLASS,
   INV_ROLE_GRID_CLASS,
 } from "@/features/projects/access/humanInvites/invitePersonChromeClasses.constant";
+import {
+  InviteEyeIcon,
+  InviteUsersIcon,
+} from "@/features/projects/access/humanInvites/inviteInlineIcons";
 import type { HumanInviteRole } from "@/features/projects/access/humanInvites/types/humanInviteUiContract.type";
 
 export type AwcHumanInvitePersonRolePickerProps = {
@@ -25,15 +29,21 @@ export default function AwcHumanInvitePersonRolePicker({
   const flow = HUMAN_INVITE_PERSON_FLOW_COPY;
   return (
     <fieldset className="space-y-2">
-      <legend className="text-xs font-semibold text-awc-fg-muted" title={flow.roleTip}>
+      <legend
+        className="text-xs font-semibold text-awc-fg-muted"
+        title={flow.roleTip}
+      >
         {flow.roleLegend}
       </legend>
       <div className={INV_ROLE_GRID_CLASS}>
         {(["member", "viewer"] as const).map((value) => {
           const on = role === value;
+          const RoleIcon = value === "member" ? InviteUsersIcon : InviteEyeIcon;
           const label = value === "member" ? copy.roleMember : copy.roleViewer;
           const detail =
-            value === "member" ? copy.roleMemberOneLiner : copy.roleViewerOneLiner;
+            value === "member"
+              ? copy.roleMemberOneLiner
+              : copy.roleViewerOneLiner;
           return (
             <label
               key={value}
@@ -48,11 +58,16 @@ export default function AwcHumanInvitePersonRolePicker({
                 disabled={busy}
                 onChange={() => onRoleChange(value)}
               />
+              <span className="grid h-[34px] w-[34px] flex-none place-items-center rounded-[10px] bg-awc-tile text-awc-blue-700">
+                <RoleIcon className="h-[18px] w-[18px]" />
+              </span>
               <span className="min-w-0">
                 <span className="block text-sm font-semibold text-awc-blue-950">
                   {label}
                 </span>
-                <span className="mt-0.5 block text-xs text-awc-fg-muted">{detail}</span>
+                <span className="mt-0.5 block text-xs text-awc-fg-muted">
+                  {detail}
+                </span>
               </span>
             </label>
           );
