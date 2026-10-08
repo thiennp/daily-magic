@@ -65,4 +65,8 @@ export const AWC_PENDING_APPROVAL_CARD_COPY = {
   expiredBodyInvite: "The assistant must ask to join again with the invite.",
   /** COPY.md implementer note: fallback when the assistant has no name. */
   assistantFallback: "this assistant",
+  /** Optional wake link before approval (never required to approve). */
+  wakeSetup: "Set up wake link",
+  wakeChange: "Change wake link",
+  wakeReady: "Wake link ✓ — ready when you approve",
 } as const;

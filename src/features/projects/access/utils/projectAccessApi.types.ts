@@ -42,6 +42,8 @@ export type AccessPendingView = {
   readonly requestedScopes?: readonly string[];
   readonly expiresAt?: string | null;
   readonly suggestedProjectDisplayName?: string | null;
+  /** Pending assistants only: a wake link is pre-registered and carries over on Approve. */
+  readonly wakeLinkSet?: boolean;
   /** Non-Grok S3 owner card (assistants only); absent on older servers. */
   readonly approvalCard?: PendingApprovalCardMeta | null;
 };

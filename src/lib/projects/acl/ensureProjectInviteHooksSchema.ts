@@ -1,3 +1,4 @@
+import { ensureProjectAccessRequestGrokWebhookSchema } from "@/lib/projects/acl/ensureProjectAccessRequestGrokWebhookSchema";
 import { ensureProjectComputerHistorySchema } from "@/lib/projects/acl/ensureProjectComputerHistorySchema";
 import { ensureProjectInviteAutoApproveEventsSchema } from "@/lib/projects/acl/invites/ensureProjectInviteAutoApproveEventsSchema";
 import { ensureProjectMessageArchiveSchema } from "@/lib/projects/acl/messaging/ensureProjectMessageArchiveSchema";
@@ -73,6 +74,7 @@ export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
     bearer_retained TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
+  await ensureProjectAccessRequestGrokWebhookSchema();
   await sql`CREATE TABLE IF NOT EXISTS project_grok_routine_wake_attempts (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
     message_id TEXT NOT NULL REFERENCES project_messages(id) ON DELETE CASCADE,

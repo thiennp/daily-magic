@@ -44,6 +44,10 @@ export const denyProjectAccessRequest = async (input: {
     return { ok: false, code: "not_pending" };
   }
   const request = mapProjectAccessRequestRow(rows[0]);
+  await sql`
+    DELETE FROM project_access_request_grok_webhooks
+    WHERE request_id = ${input.requestId}
+  `.catch(() => undefined);
   await writeProjectAccessAudit({
     projectId: input.projectId,
     actorUserId: input.ownerUserId,

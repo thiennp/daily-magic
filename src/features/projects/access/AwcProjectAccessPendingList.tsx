@@ -94,6 +94,7 @@ export default function AwcProjectAccessPendingList({
               <AwcProjectAccessPendingRow
                 key={req.id}
                 req={req}
+                projectId={projectId}
                 nameValue={list.nameFor(req)}
                 error={list.errors[req.id] ?? null}
                 available={list.available}

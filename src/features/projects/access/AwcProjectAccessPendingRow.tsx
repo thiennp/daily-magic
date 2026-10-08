@@ -1,6 +1,7 @@
 "use client";
 
 import AwcPendingCapabilityChips from "@/features/projects/access/approvalCard/AwcPendingCapabilityChips";
+import AwcPendingWakeSetup from "@/features/projects/access/approvalCard/AwcPendingWakeSetup";
 import AwcPendingNicknameField from "@/features/projects/access/approvalCard/AwcPendingNicknameField";
 import AwcPendingRequestActions, {
   type PendingBusy,
@@ -14,20 +15,11 @@ import {
   pendingNicknameHelp,
   pendingNicknameIssue,
 } from "@/features/projects/access/approvalCard/pendingNickname";
-import type { AwcProjectAccessPending } from "@/features/projects/access/hooks/loadAwcProjectAccess";
-
-type PendingRequest = Pick<
-  AwcProjectAccessPending,
-  "id" | "requesterUserId" | "reason" | "requesterIsAgent" | "requesterLabel"
-> &
-  Pick<
-    AwcProjectAccessPending,
-    "approvalCard" | "suggestedProjectDisplayName"
-  > &
-  Partial<Pick<AwcProjectAccessPending, "createdAt">>;
+import type { PendingRequest } from "@/features/projects/access/approvalCard/pendingRequest.type";
 
 interface AwcProjectAccessPendingRowProps {
   readonly req: PendingRequest;
+  readonly projectId?: string;
   readonly nameValue: string;
   readonly error: string | null;
   readonly available: readonly string[];
@@ -42,6 +34,7 @@ const SECTION = "px-4 py-4 @min-[520px]:px-5 @min-[520px]:py-[18px]";
 /** DF-017 pending join card: who → what it can do → name → decide (stacked, full width). */
 export default function AwcProjectAccessPendingRow({
   req,
+  projectId,
   nameValue,
   error,
   available,
@@ -93,6 +86,16 @@ export default function AwcProjectAccessPendingRow({
             onSubmit={() => {
               if (issue === null && busy === null) onApprove();
             }}
+          />
+        </div>
+      ) : null}
+      {isAssistant && projectId !== undefined ? (
+        <div className={SECTION}>
+          <AwcPendingWakeSetup
+            projectId={projectId}
+            requestId={req.id}
+            memberName={nameValue.trim() || title}
+            ready={req.wakeLinkSet === true}
           />
         </div>
       ) : null}

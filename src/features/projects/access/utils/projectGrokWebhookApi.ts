@@ -40,3 +40,20 @@ export const saveMemberGrokWebhook = async (
   });
   return response.json() as Promise<ProjectGrokWebhookStatusView>;
 };
+
+/** Owner pre-registers the wake link of a still-pending join request (carried over on Approve). */
+export const savePendingRequestWakeLink = async (
+  projectId: string,
+  requestId: string,
+  body: { readonly webhookUrl: string; readonly webhookKey: string },
+): Promise<ProjectGrokWebhookStatusView> => {
+  const response = await fetch(
+    `/api/projects/${encodeURIComponent(projectId)}/access/requests/${encodeURIComponent(requestId)}/wake-link`,
+    {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    },
+  );
+  return response.json() as Promise<ProjectGrokWebhookStatusView>;
+};

@@ -15,6 +15,7 @@ export const PROJECT_DELETE_CASCADE_CHILD_TABLES = [
   "capability_forks",
   "capability_improvements",
   "capability_versions",
+  "project_access_request_grok_webhooks",
   "project_access_requests",
   "project_activity_events",
   "project_api_keys",

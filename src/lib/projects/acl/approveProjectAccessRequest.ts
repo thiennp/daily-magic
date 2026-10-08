@@ -7,6 +7,7 @@ import { finalizeApprovedMembership } from "@/lib/projects/acl/finalizeApprovedM
 import { insertApprovedMembership } from "@/lib/projects/acl/insertApprovedMembership";
 import { isAgentUserId } from "@/lib/projects/acl/isAgentUser";
 import mapProjectAccessRequestRow from "@/lib/projects/acl/mapProjectAccessRequestRow";
+import { carryOverPendingRequestGrokWebhook } from "@/lib/projects/acl/webhooks/carryOverPendingRequestGrokWebhook";
 import { resolveApproveMembershipScopes } from "@/lib/projects/acl/resolveApproveMembershipScopes";
 import { resolveApproveDisplayName } from "@/lib/projects/acl/resolveApproveDisplayName";
 import { resolveEffectiveApproveDisplayName } from "@/lib/projects/acl/resolveEffectiveApproveDisplayName";
@@ -87,6 +88,14 @@ export const approveProjectAccessRequest = async (input: {
       }
     : inserted.membership;
 
+  if (requesterIsAgent) {
+    await carryOverPendingRequestGrokWebhook({
+      projectId: input.projectId,
+      requestId: input.requestId,
+      membershipId: inserted.membership.id,
+      userId: inserted.membership.userId,
+    }).catch(() => false);
+  }
   const projectApiKey = await finalizeApprovedMembership({
     projectId: input.projectId,
     ownerUserId: input.ownerUserId,
