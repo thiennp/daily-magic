@@ -177,11 +177,8 @@ struct ComputerView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 if controller.portsInUse { portsBanner }
-<<<<<<< Updated upstream
                 if chrome.kind == .waitingForInternet { offlineBanner }
-=======
                 if isRunning && controller.connectionNotLinked { notLinkedBanner }
->>>>>>> Stashed changes
                 heroCard
                 thisComputerCard
                 toolsCard
@@ -210,7 +207,6 @@ struct ComputerView: View {
         .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.dangerSoft))
     }
 
-<<<<<<< Updated upstream
     private var offlineBanner: some View {
         HStack(spacing: 12) {
             Image(systemName: "wifi.slash")
@@ -226,7 +222,8 @@ struct ComputerView: View {
         .padding(.horizontal, 16).padding(.vertical, 12)
         .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.warningSoft))
         .accessibilityElement(children: .combine)
-=======
+    }
+
     /// Cloud revoked or replaced this computer. It cannot recover by itself, so offer the
     /// same browser sign-in the first-run flow uses (no Terminal).
     private var notLinkedBanner: some View {
@@ -245,7 +242,6 @@ struct ComputerView: View {
         .foregroundStyle(MacAppTheme.danger)
         .padding(.horizontal, 16).padding(.vertical, 12)
         .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.dangerSoft))
->>>>>>> Stashed changes
     }
 
     private var heroCard: some View {
