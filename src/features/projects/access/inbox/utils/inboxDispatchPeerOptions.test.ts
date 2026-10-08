@@ -81,4 +81,21 @@ describe("inboxDispatchPeerOptions", () => {
       },
     ]);
   });
+
+  it("passes the coding tools a computer reported as ready", () => {
+    const options = inboxDispatchPeerOptions([
+      {
+        id: "comp-1",
+        projectDisplayName: "Mac",
+        isAgent: false,
+        memberKind: "computer",
+        assignable: true,
+        agents: [
+          { writerAgent: "codex", isOnline: true },
+          { writerAgent: "claude-cli", isOnline: true },
+        ],
+      },
+    ]);
+    expect(options[0]?.readyWriters).toEqual(["codex", "claude-cli"]);
+  });
 });

@@ -2,6 +2,8 @@ export type InboxDispatchPeerOption = {
   readonly membershipId: string;
   readonly projectDisplayName: string;
   readonly memberKind: "bot" | "computer";
+  /** Coding tools ready on this computer; absent until it reports any. */
+  readonly readyWriters?: readonly string[];
 };
 
 type InboxDispatchPeerMember = {
@@ -11,12 +13,14 @@ type InboxDispatchPeerMember = {
   readonly memberKind?: "human" | "bot" | "computer" | string;
   readonly assignable?: boolean;
   readonly connectVersionStatus?: "ok" | "too_old" | string;
+  readonly agents?: readonly {
+    readonly writerAgent: string;
+    readonly isOnline: boolean;
+  }[];
 };
 
-const peerLabel = (
-  name: string,
-  memberKind: "bot" | "computer",
-): string => (memberKind === "computer" ? `${name} · computer` : name);
+const peerLabel = (name: string, memberKind: "bot" | "computer"): string =>
+  memberKind === "computer" ? `${name} · computer` : name;
 
 /**
  * Assign picker peers: active bots (isAgent) and assignable computers.
@@ -43,6 +47,9 @@ export const inboxDispatchPeerOptions = (
         membershipId: member.id,
         projectDisplayName: peerLabel(name, "computer"),
         memberKind: "computer",
+        ...(member.agents !== undefined && member.agents.length > 0
+          ? { readyWriters: member.agents.map((a) => a.writerAgent) }
+          : {}),
       });
       continue;
     }

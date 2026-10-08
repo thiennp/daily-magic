@@ -1,3 +1,4 @@
+import type { ComputerNotAssignableCause } from "@/lib/projects/acl/messaging/assertComputerDispatchAssignable";
 import { assertComputerDispatchAssignable } from "@/lib/projects/acl/messaging/assertComputerDispatchAssignable";
 import { dispatchProjectComputerAgentRun } from "@/lib/projects/acl/messaging/dispatchProjectComputerAgentRun";
 import type { DispatchRecipient } from "@/lib/projects/acl/messaging/lookupDispatchMembershipRecipients";
@@ -15,7 +16,7 @@ export type RouteResolvedComputerDispatchResult =
   | {
       readonly ok: false;
       readonly code: string;
-      readonly cause?: "offline" | "too_old";
+      readonly cause?: ComputerNotAssignableCause;
     }
   | {
       readonly ok: false;
@@ -53,6 +54,9 @@ export const routeResolvedComputerDispatch = async (input: {
   const gate = await assertComputerDispatchAssignable({
     deviceId: input.primary.deviceId,
     ownerUserId: input.primary.user_id,
+    ...(input.parsed.writerAgent !== undefined
+      ? { writerAgent: input.parsed.writerAgent }
+      : {}),
   });
   if (!gate.ok) {
     return { ok: false, code: gate.code, cause: gate.cause };

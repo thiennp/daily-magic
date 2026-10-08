@@ -1,3 +1,4 @@
+import type { ComputerNotAssignableCause } from "@/lib/projects/acl/messaging/assertComputerDispatchAssignable";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
 import { assertProjectMessageDispatchRateLimits } from "@/lib/projects/acl/messaging/assertProjectMessageDispatchRateLimits";
@@ -20,7 +21,7 @@ export type DispatchProjectMessageResult =
   | {
       readonly ok: false;
       readonly code: string;
-      readonly cause?: "offline" | "too_old";
+      readonly cause?: ComputerNotAssignableCause;
       readonly reason?: "hourly" | "unread_cap";
       readonly detail?: "rate_limited_hourly" | "unread_cap";
       readonly retryAfterSeconds?: number | null;

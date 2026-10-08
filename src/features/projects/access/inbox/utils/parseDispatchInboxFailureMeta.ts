@@ -33,7 +33,9 @@ export const parseDispatchInboxFailureMeta = (
         : undefined;
 
   const cause =
-    body.cause === "offline" || body.cause === "too_old"
+    body.cause === "offline" ||
+    body.cause === "too_old" ||
+    body.cause === "writer_not_ready"
       ? body.cause
       : undefined;
 

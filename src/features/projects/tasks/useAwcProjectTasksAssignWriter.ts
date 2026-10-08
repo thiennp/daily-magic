@@ -8,13 +8,19 @@ export const useAwcProjectTasksAssignWriter = (
   peers: ReturnType<typeof useAwcProjectTasksAssignPeers>,
 ) => {
   const { writerAgent, setWriterAgent } = useDelegatedWriterAgent();
-  const isComputer =
-    peers.peers.find((p) => p.membershipId === peers.assistantId)
-      ?.memberKind === "computer";
+  const peer = peers.peers.find((p) => p.membershipId === peers.assistantId);
+  const isComputer = peer?.memberKind === "computer";
+  const readyWriters = isComputer ? peer.readyWriters : undefined;
+  // The saved choice may not run on this computer: fall back to one that does.
+  const effectiveWriter =
+    readyWriters !== undefined && !readyWriters.includes(writerAgent)
+      ? ((readyWriters[0] ?? writerAgent) as typeof writerAgent)
+      : writerAgent;
   return {
-    writerAgent,
+    writerAgent: effectiveWriter,
     setWriterAgent,
     isComputer,
-    draftFields: isComputer ? { writerAgent } : {},
+    readyWriters,
+    draftFields: isComputer ? { writerAgent: effectiveWriter } : {},
   };
 };

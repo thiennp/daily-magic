@@ -28,6 +28,9 @@ export const mapInboxDispatchError = (
     if (result.cause === "too_old") {
       return AWC_PROJECT_INBOX_COPY.dispatchComputerNeedsUpdate;
     }
+    if (result.cause === "writer_not_ready") {
+      return AWC_PROJECT_INBOX_COPY.dispatchWriterNotReady;
+    }
     return AWC_PROJECT_INBOX_COPY.dispatchComputerNotAssignable;
   }
   return result.errorMessage || AWC_PROJECT_INBOX_COPY.dispatchFailed;

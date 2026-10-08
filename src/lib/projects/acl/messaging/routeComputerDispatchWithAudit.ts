@@ -1,3 +1,4 @@
+import type { ComputerNotAssignableCause } from "@/lib/projects/acl/messaging/assertComputerDispatchAssignable";
 import { routeResolvedComputerDispatch } from "@/lib/projects/acl/messaging/routeResolvedComputerDispatch";
 
 export type ComputerDispatchFinalResult =
@@ -10,7 +11,7 @@ export type ComputerDispatchFinalResult =
   | {
       readonly ok: false;
       readonly code: string;
-      readonly cause?: "offline" | "too_old";
+      readonly cause?: ComputerNotAssignableCause;
     };
 
 /**

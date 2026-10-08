@@ -74,6 +74,8 @@ export const AWC_PROJECT_INBOX_COPY = {
   dispatchComputerOffline: "That computer is offline.",
   dispatchComputerNeedsUpdate:
     "That computer needs an update before it can take tasks.",
+  dispatchWriterNotReady:
+    "That coding tool isn't ready on this computer. Pick another one.",
   dispatchComputerNotAssignable: "That computer can't take tasks right now.",
   dispatchInvalid: "Check summary (required, ≤200) and try again.",
   dispatchFailed: "Could not send task.",
