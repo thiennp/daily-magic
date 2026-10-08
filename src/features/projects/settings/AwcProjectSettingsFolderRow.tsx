@@ -1,27 +1,100 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
 import AwcProjectPathDisplay from "@/features/projects/AwcProjectPathDisplay";
-import { PROJECT_PAGE_LAYOUT_V2_COPY as C } from "@/features/projects/projectPageLayoutV2Copy.constant";
+import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
+import AwcProjectRepoUrlsSection from "@/features/projects/repoUrls/AwcProjectRepoUrlsSection";
+import AwcProjectFolderChangeDialog from "@/features/projects/settings/folder/AwcProjectFolderChangeDialog";
+import AwcProjectFolderMissingWarning from "@/features/projects/settings/folder/AwcProjectFolderMissingWarning";
+import AwcProjectFolderStatusChips from "@/features/projects/settings/folder/AwcProjectFolderStatusChips";
+import AwcProjectOpenOnGitHub from "@/features/projects/settings/folder/AwcProjectOpenOnGitHub";
+import { useProjectFolderCard } from "@/features/projects/settings/folder/useProjectFolderCard";
+import { AWC_TASKS_SECONDARY_BUTTON_CLASS } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
+import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 /**
- * Project path + Copy — moved here from the project header in V5-3 (I27:
- * header keeps one action; Copy path lives in Settings). Every role sees it,
- * as in the header before. V5-11 restyles (middle-ellipsis tooltip, #17).
+ * Folder and repository card: path, which computer holds it, a check of the
+ * folder, and git remotes. Changing the folder goes through the computer's
+ * bridge when this browser can reach it; otherwise AgentWitch Local does it.
  */
 export default function AwcProjectSettingsFolderRow({
-  folderPath,
+  project,
+  isOwner,
 }: {
-  readonly folderPath: string;
+  readonly project: UserProjectRecord;
+  readonly isOwner: boolean;
 }) {
+  const router = useRouter();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const card = useProjectFolderCard(project, isOwner);
+  const { canChange, computerName, status } = card;
+  const open = () => setDialogOpen(true);
+
   return (
-    <section className="flex min-w-0 flex-col gap-2" aria-labelledby="p-set-folder-h">
+    <section
+      className="flex min-w-0 flex-col gap-3"
+      aria-labelledby="p-set-folder-h"
+    >
       <h3
         id="p-set-folder-h"
-        className="text-[13px] font-semibold text-awc-fg-muted dark:text-gray-400"
+        className="flex items-center gap-2 text-[13px] font-semibold text-awc-fg-muted"
       >
-        {C.pathLabel}
+        Folder and repository
+        <AwcProjectMembersInfoTip
+          id="p-set-folder-tip"
+          label="About the project folder"
+        >
+          The folder lives on the project&apos;s computer. Assistants run tasks
+          inside it.
+        </AwcProjectMembersInfoTip>
       </h3>
-      <div className="min-w-0 max-w-full overflow-hidden px-1">
-        <AwcProjectPathDisplay folderPath={folderPath} />
+      {card.missing ? (
+        <AwcProjectFolderMissingWarning
+          hasFolder={card.hasFolder}
+          computerName={computerName}
+          onChange={canChange ? open : null}
+        />
+      ) : null}
+      {card.hasFolder ? (
+        <div className="min-w-0 max-w-full overflow-hidden px-1">
+          <AwcProjectPathDisplay folderPath={project.folderPath} />
+        </div>
+      ) : null}
+      <div className="flex flex-wrap items-center gap-2 text-[13px] text-awc-fg-muted">
+        <span>
+          on {computerName} · {card.computerState}
+        </span>
+        <AwcProjectFolderStatusChips result={status} />
+        {canChange && !card.missing ? (
+          <button
+            type="button"
+            className={AWC_TASKS_SECONDARY_BUTTON_CLASS}
+            onClick={open}
+          >
+            Change folder
+          </button>
+        ) : null}
+        {isOwner && !canChange && status !== "loading" ? (
+          <span>Open AgentWitch Local on {computerName} to change it.</span>
+        ) : null}
       </div>
+      <AwcProjectOpenOnGitHub repoUrls={project.repoUrls} />
+      <AwcProjectRepoUrlsSection project={project} />
+      {dialogOpen && card.wakePort !== null ? (
+        <AwcProjectFolderChangeDialog
+          projectId={project.id}
+          wakePort={card.wakePort}
+          computerName={computerName}
+          initialPath={project.folderPath}
+          onClose={() => setDialogOpen(false)}
+          onLinked={() => {
+            setDialogOpen(false);
+            router.refresh();
+          }}
+        />
+      ) : null}
     </section>
   );
 }

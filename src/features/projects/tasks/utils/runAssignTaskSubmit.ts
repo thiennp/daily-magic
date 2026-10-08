@@ -18,7 +18,11 @@ export const runAssignTaskSubmit = (input: {
   }).then((result) => {
     input.setPending(false);
     if (!result.ok) {
-      input.setError(result.errorMessage);
+      input.setError(
+        /folder/i.test(result.errorMessage)
+          ? `${result.errorMessage} Fix it in Settings, under Folder and repository.`
+          : result.errorMessage,
+      );
       return;
     }
     input.onAssigned();

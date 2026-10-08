@@ -40,7 +40,7 @@ export default function AwcProjectDetailSettingsPanel({
         startInEditMode={startRename}
         canEdit={isOwner}
       />
-      <AwcProjectSettingsFolderRow folderPath={project.folderPath} />
+      <AwcProjectSettingsFolderRow project={project} isOwner={isOwner} />
       <AwcProjectConnectionsSection
         projectId={project.id}
         projectName={project.name}

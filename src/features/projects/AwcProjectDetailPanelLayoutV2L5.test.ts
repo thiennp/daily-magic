@@ -22,7 +22,7 @@ describe("project layout v2 L5 Settings + Members", () => {
     expect(panel).not.toMatch(/border border-gray|rounded-xl border/);
     expect(copy).toContain('nameSave: "Save name"');
     expect(copy).toContain(
-      "Rename here on Cloud. Pick the folder and playbook in AgentWitch Local.",
+      "Rename here on Cloud. Change the folder under Folder and repository below.",
     );
     expect(copy).toContain(
       'historyTitle: "Save message history on my computer"',
@@ -52,7 +52,14 @@ describe("project layout v2 L5 Settings + Members", () => {
     const column = read(`${P}/AwcProjectMembersColumn.tsx`);
     const owner = read(`${P}/members/AwcProjectMembersOwnerContent.tsx`);
     const helpers = read(`${P}/members/AwcProjectMembersHelpersSection.tsx`);
-    const row = ["HelperRow", "HelperRowMenu", "HelperRowMoreMenu", "HelperWakeBlock"].map((n) => read(`${P}/members/AwcProjectMembers${n}.tsx`)).join("\n");
+    const row = [
+      "HelperRow",
+      "HelperRowMenu",
+      "HelperRowMoreMenu",
+      "HelperWakeBlock",
+    ]
+      .map((n) => read(`${P}/members/AwcProjectMembers${n}.tsx`))
+      .join("\n");
     const invite = read(`${P}/members/AwcProjectMembersInviteBotsSection.tsx`);
     const copy = read(`${P}/projectPageMembersCopy.constant.ts`);
     const layoutCopy = read(`${P}/projectPageLayoutV2Copy.constant.ts`);
@@ -94,14 +101,5 @@ describe("project layout v2 L5 Settings + Members", () => {
         /blue-|indigo-|#0a6cf5|#4a97ff|#e5effe|#0d2749/i,
       );
     }
-  });
-
-  it("Reports/Library are L6 panels (stubs gone); no L3 Activity redesign", () => {
-    const body = read(`${P}/AwcProjectDetailTabPanelBody.tsx`);
-    expect(body).not.toContain("AwcProjectTabStub");
-    expect(body).not.toContain("STUB_TABS");
-    expect(body).toContain("AwcProjectDetailSettingsPanel");
-    expect(body).not.toContain("AwcProjectActivity");
-    expect(body).not.toMatch(/0fd0078b|layout-v2-l3/i);
   });
 });

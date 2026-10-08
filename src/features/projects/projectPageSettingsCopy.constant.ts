@@ -5,13 +5,12 @@ export const PROJECT_PAGE_SETTINGS_COPY = {
   nameSave: "Save name",
   nameSaving: "Saving…",
   nameNote:
-    "Rename here on Cloud. Pick the folder and playbook in AgentWitch Local.",
+    "Rename here on Cloud. Change the folder under Folder and repository below.",
   historyHeading: "Message history",
   historyTitle: "Save message history on my computer",
   historySub: "Configure this in the AgentWitch Local app.",
   historyAria: "Save message history on this computer",
-  historyToast:
-    "Toggle this in AgentWitch Local on this computer.",
+  historyToast: "Toggle this in AgentWitch Local on this computer.",
   dangerHeading: "Danger zone",
   deleteTitle: "Delete project",
   deleteSub:
