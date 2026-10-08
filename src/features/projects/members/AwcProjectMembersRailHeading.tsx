@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
 
 export interface RailAvatar {
@@ -12,6 +14,8 @@ interface AwcProjectMembersRailHeadingProps {
   /** DF-036 F5: waiting person invites + join requests + unused assistant invites. */
   readonly waiting?: number;
   readonly avatars?: readonly RailAvatar[];
+  /** Right-aligned ⋯ menu slot in the eyebrow row. */
+  readonly menu?: ReactNode;
 }
 
 const STACK_MAX = 4;
@@ -23,6 +27,7 @@ export default function AwcProjectMembersRailHeading({
   count,
   waiting = 0,
   avatars = [],
+  menu = null,
 }: AwcProjectMembersRailHeadingProps) {
   const extra = avatars.length - STACK_MAX;
   return (
@@ -30,9 +35,12 @@ export default function AwcProjectMembersRailHeading({
       className="mb-3 grid gap-3 rounded-2xl border border-awc-accent-soft-2 bg-gradient-to-br from-awc-accent-soft to-awc-surface p-3.5 shadow-awc-lift"
       data-members-heading
     >
-      <h2 className="text-[13px] font-semibold uppercase tracking-[0.08em] text-awc-fg-muted">
-        {C.columnLabel}
-      </h2>
+      <div className="flex items-center gap-2">
+        <h2 className="text-[13px] font-semibold uppercase tracking-[0.08em] text-awc-fg-muted">
+          {C.columnLabel}
+        </h2>
+        {menu}
+      </div>
       {count === null ? null : (
         <div className="flex items-center gap-3">
           {avatars.length > 0 ? (

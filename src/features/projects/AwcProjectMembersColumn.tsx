@@ -1,6 +1,8 @@
 "use client";
 
 import AwcProjectMembersOwnerContent from "@/features/projects/members/AwcProjectMembersOwnerContent";
+import AwcProjectMembersRailMenu from "@/features/projects/members/AwcProjectMembersRailMenu";
+import { AWC_PROJECT_LEAVE_COPY } from "@/features/projects/awcProjectLeaveCopy.constant";
 import AwcProjectMembersRailHeading from "@/features/projects/members/AwcProjectMembersRailHeading";
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
 import { PROJECT_PAGE_LAYOUT_V2_COPY } from "@/features/projects/projectPageLayoutV2Copy.constant";
@@ -13,6 +15,8 @@ interface AwcProjectMembersColumnProps {
   readonly ownerDisplayName?: string | null;
   readonly viewerUserId?: string | null;
   readonly onMessageHelper?: (membershipId: string) => void;
+  readonly onOpenSettings?: () => void;
+  readonly onLeave?: () => void;
 }
 
 /**
@@ -28,6 +32,8 @@ export default function AwcProjectMembersColumn({
   ownerEmail = null,
   ownerDisplayName = null,
   onMessageHelper,
+  onOpenSettings,
+  onLeave,
 }: AwcProjectMembersColumnProps) {
   const label = PROJECT_PAGE_LAYOUT_V2_COPY.membersColumnLabel;
   return (
@@ -42,10 +48,26 @@ export default function AwcProjectMembersColumn({
           ownerEmail={ownerEmail}
           ownerDisplayName={ownerDisplayName}
           onMessageHelper={onMessageHelper ?? (() => undefined)}
+          onOpenSettings={onOpenSettings}
         />
       ) : (
         <>
-          <AwcProjectMembersRailHeading count={null} />
+          <AwcProjectMembersRailHeading
+            count={null}
+            menu={
+              onLeave ? (
+                <AwcProjectMembersRailMenu
+                  items={[
+                    {
+                      label: AWC_PROJECT_LEAVE_COPY.trigger,
+                      run: onLeave,
+                      bad: true,
+                    },
+                  ]}
+                />
+              ) : null
+            }
+          />
           <p className="px-3.5 text-[13px] text-awc-fg-muted dark:text-gray-400">
             {C.viewerHint}
           </p>

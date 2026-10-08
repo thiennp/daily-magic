@@ -2,6 +2,9 @@
 export const PROJECT_PAGE_MEMBERS_COPY = {
   columnLabel: "Members",
   /** DF-036 D1: you + joined people + assistants (no computers). */
+  railMenuLabel: "Members menu",
+  railMenuInvite: "Invite people or add an assistant",
+  railMenuAccessLog: "Access log",
   columnLabelCount: (n: number) => `Members · ${n}`,
   memberSingular: "member",
   memberPlural: "members",

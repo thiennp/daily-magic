@@ -1,24 +1,42 @@
+import { NOTIFICATIONS_COPY } from "@/features/notifications/notificationsCopy.constant";
+
 interface NotificationBellButtonProps {
-  readonly notifying: boolean;
+  readonly unreadCount: number;
+  readonly pendingCount: number;
+  readonly isOpen: boolean;
   readonly onClick: () => void;
 }
 
+export function formatBellBadge(count: number): string {
+  return count > 9 ? "9+" : String(count);
+}
+
 export default function NotificationBellButton({
-  notifying,
+  unreadCount,
+  pendingCount,
+  isOpen,
   onClick,
 }: NotificationBellButtonProps) {
   return (
     <button
+      type="button"
+      aria-label={NOTIFICATIONS_COPY.bellLabel
+        .replace("{n}", String(unreadCount))
+        .replace("{m}", String(pendingCount))}
+      aria-expanded={isOpen}
+      aria-haspopup="true"
       className="relative dropdown-toggle flex items-center justify-center text-awc-fg-muted transition-colors bg-white border border-awc-border rounded-full hover:text-awc-fg h-11 w-11 hover:bg-awc-tile dark:border-gray-800 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
       onClick={onClick}
     >
-      <span
-        className={`absolute right-0 top-0.5 z-10 h-2 w-2 rounded-full bg-orange-400 ${
-          !notifying ? "hidden" : "flex"
-        }`}
-      >
-        <span className="absolute inline-flex w-full h-full bg-orange-400 rounded-full opacity-75 animate-ping"></span>
-      </span>
+      {unreadCount > 0 ? (
+        <span
+          aria-hidden="true"
+          data-testid="notification-bell-badge"
+          className="absolute -right-1 -top-1 z-10 flex h-5 min-w-5 items-center justify-center rounded-full bg-orange-400 px-1 text-[length:var(--awc-fs-chip)] font-semibold leading-none text-white"
+        >
+          {formatBellBadge(unreadCount)}
+        </span>
+      ) : null}
       <svg
         className="fill-current"
         width="20"

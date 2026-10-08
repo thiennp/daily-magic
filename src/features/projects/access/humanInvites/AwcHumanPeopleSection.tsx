@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 
+import SectionIcon from "@/features/projects/members/AwcProjectMembersSectionCard";
 import AwcHumanPeopleSectionBody from "@/features/projects/access/humanInvites/AwcHumanPeopleSectionBody";
 import { useHumanPeopleInvites } from "@/features/projects/access/humanInvites/hooks/useHumanPeopleInvites";
 import { countActiveAssistantMembers } from "@/features/projects/access/humanInvites/utils/countActiveAssistantMembers";
@@ -71,6 +72,9 @@ export default function AwcHumanPeopleSection({
       title={copy.peopleHeading}
       hint={copy.peopleHint}
       hintAsTip={hintAsTip}
+      icon={
+        hintAsTip ? <SectionIcon tone="neutral" icon="people" /> : undefined
+      }
       count={joinedCount + 1}
       alertCount={pendingCount > 0}
     >

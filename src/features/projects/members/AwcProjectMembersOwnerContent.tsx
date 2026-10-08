@@ -8,6 +8,7 @@ import AwcAccessLogRailFooter from "@/features/projects/accessLog/AwcAccessLogRa
 import AwcProjectMembersJoinRequestsSection from "@/features/projects/members/AwcProjectMembersJoinRequestsSection";
 import AwcProjectMembersInviteBotsSection from "@/features/projects/members/AwcProjectMembersInviteBotsSection";
 import AwcProjectMembersPeopleSection from "@/features/projects/members/AwcProjectMembersPeopleSection";
+import AwcProjectMembersOwnerRailMenu from "@/features/projects/members/AwcProjectMembersOwnerRailMenu";
 import AwcProjectMembersRailHeading from "@/features/projects/members/AwcProjectMembersRailHeading";
 import { buildRailAvatars } from "@/features/projects/members/utils/buildRailAvatars";
 import AwcProjectMembersRailSkeleton from "@/features/projects/members/AwcProjectMembersRailSkeleton";
@@ -22,6 +23,7 @@ interface AwcProjectMembersOwnerContentProps {
   readonly ownerEmail: string | null;
   readonly ownerDisplayName: string | null;
   readonly onMessageHelper: (membershipId: string) => void;
+  readonly onOpenSettings?: () => void;
 }
 
 /** Owner Members rail body — people · assistants · invite bots (live APIs). */
@@ -30,6 +32,7 @@ export default function AwcProjectMembersOwnerContent({
   ownerEmail,
   ownerDisplayName,
   onMessageHelper,
+  onOpenSettings,
 }: AwcProjectMembersOwnerContentProps) {
   const access = useAwcProjectAccess(projectId);
   const ready = !access.isLoading && !access.loadError;
@@ -44,6 +47,12 @@ export default function AwcProjectMembersOwnerContent({
   return (
     <>
       <AwcProjectMembersRailHeading
+        menu={
+          <AwcProjectMembersOwnerRailMenu
+            projectId={projectId}
+            onOpenSettings={onOpenSettings ?? (() => undefined)}
+          />
+        }
         count={ready ? countRailMembers(access.members) : null}
         waiting={ready ? waiting : 0}
         avatars={

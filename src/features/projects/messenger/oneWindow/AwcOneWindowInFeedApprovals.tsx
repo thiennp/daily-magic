@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import AwcOneWindowApprovalCard from "@/features/projects/messenger/oneWindow/AwcOneWindowApprovalCard";
+import { buildAskAgainHandler } from "@/features/projects/messenger/oneWindow/oneWindowAskAgain";
 import { mapAccessPendingToOneWindowCard } from "@/features/projects/messenger/oneWindow/mapAccessPendingToOneWindowCard";
 import {
   fetchProjectAccess,
@@ -20,6 +21,8 @@ interface AwcOneWindowInFeedApprovalsProps {
   readonly projectId: string;
   /** Owner-only; non-owners see nothing (Access pending stays the live list). */
   readonly enabled: boolean;
+  /** Timed-out run approvals: prefill the composer with an @mention of the assistant. */
+  readonly onAskAgain?: (name: string) => void;
 }
 
 /**
@@ -29,6 +32,7 @@ interface AwcOneWindowInFeedApprovalsProps {
 export default function AwcOneWindowInFeedApprovals({
   projectId,
   enabled,
+  onAskAgain,
 }: AwcOneWindowInFeedApprovalsProps) {
   const [pending, setPending] = useState<readonly AccessPendingView[]>([]);
   // A decided card stays in the feed (result line) instead of vanishing on reload.
@@ -91,6 +95,7 @@ export default function AwcOneWindowInFeedApprovals({
           <AwcOneWindowApprovalCard
             key={req.id}
             model={model}
+            onAskAgain={buildAskAgainHandler(model, onAskAgain)}
             onApprove={(id) => {
               decide(req, "approved");
               void postProjectAccessAction(

@@ -33,9 +33,12 @@ export const mapAccessPendingToOneWindowCard = (
   return {
     id: req.id,
     kind: "join",
+    whoName: assistantName,
     title: `${assistantName} asks to join`,
     whoLabel,
-    action: req.reason?.trim() || "Join as a member. Can message assistants and see tasks.",
+    action:
+      req.reason?.trim() ||
+      "Join as a member. Can message assistants and see tasks.",
     email: undefined,
     status: "waiting",
     timeLabel: formatTime(req.createdAt),

@@ -48,7 +48,7 @@ export default function AwcProjectMembersInviteBotsSection({
   return (
     <section className={SECTION_CARD} aria-labelledby="members-invite-h">
       <div className="flex items-center gap-2">
-        <SectionIcon tone="neutral" />
+        <SectionIcon tone="neutral" icon="invite" />
         <h3 id="members-invite-h" className="text-sm font-semibold text-awc-fg">
           {C.inviteBotHeading}
         </h3>

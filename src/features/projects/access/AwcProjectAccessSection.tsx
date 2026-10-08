@@ -19,6 +19,8 @@ interface AwcProjectAccessSectionProps {
   readonly alertCount?: boolean;
   /** Rail (design v2): show the hint as an (i) tooltip beside the title instead of a visible line. */
   readonly hintAsTip?: boolean;
+  /** Rail: icon tile before the title. */
+  readonly icon?: ReactNode;
   readonly children: ReactNode;
 }
 
@@ -29,6 +31,7 @@ export default function AwcProjectAccessSection({
   count,
   alertCount = false,
   hintAsTip = false,
+  icon,
   children,
 }: AwcProjectAccessSectionProps) {
   const badgeClass = alertCount
@@ -39,6 +42,7 @@ export default function AwcProjectAccessSection({
     <section id={id} className={AWC_PROJECT_ACCESS_SECTION_CLASS}>
       <header className="space-y-0.5">
         <div className="flex items-center gap-2">
+          {icon}
           <h3 className={AWC_PROJECT_ACCESS_SECTION_TITLE_CLASS}>{title}</h3>
           {count !== undefined ? (
             <span className={badgeClass}>{count}</span>

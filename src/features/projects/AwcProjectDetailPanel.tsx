@@ -38,7 +38,10 @@ export default function AwcProjectDetailPanel({
   const { activeTab, setActiveTab, onGotoTab } = nav;
   const d = useAwcProjectDetailPanelData(project);
   const reloadThreads = d.messengerThreads.reload;
-  const chat = useAwcProjectChatSurface({ startOpen: startChatOpen, reloadThreads });
+  const chat = useAwcProjectChatSurface({
+    startOpen: startChatOpen,
+    reloadThreads,
+  });
   const leave = useAwcProjectLeaveFlow(project.id);
 
   return (
@@ -84,6 +87,8 @@ export default function AwcProjectDetailPanel({
         ownerDisplayName={actorDisplayName}
         viewerUserId={actorUserId}
         onMessageHelper={chat.onGotoChat}
+        onOpenSettings={() => setActiveTab("settings")}
+        onLeave={leave.open}
       />
       <AwcProjectChatDock
         project={project}

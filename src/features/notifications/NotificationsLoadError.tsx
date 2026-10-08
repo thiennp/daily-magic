@@ -7,11 +7,13 @@ import { NOTIFICATIONS_COPY } from "@/features/notifications/notificationsCopy.c
 interface NotificationsLoadErrorProps {
   readonly onRetry: () => void;
   readonly message?: string;
+  readonly showHint?: boolean;
 }
 
 export default function NotificationsLoadError({
   onRetry,
   message,
+  showHint = true,
 }: NotificationsLoadErrorProps) {
   return (
     <AppPanel padding="compact" className="w-full">
@@ -19,6 +21,11 @@ export default function NotificationsLoadError({
         <p className="text-sm font-medium text-awc-fg dark:text-white">
           {message ?? NOTIFICATIONS_COPY.loadError}
         </p>
+        {showHint ? (
+          <p className="text-sm text-awc-fg-muted dark:text-gray-400">
+            {NOTIFICATIONS_COPY.loadErrorHint}
+          </p>
+        ) : null}
         <div>
           <button
             type="button"

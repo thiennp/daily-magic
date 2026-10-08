@@ -46,7 +46,7 @@ export default function AwcProjectMembersHelpersSection({
   return (
     <section className={SECTION_CARD} aria-labelledby="members-helpers-h">
       <div className="flex items-center gap-2">
-        <SectionIcon tone="pine" />
+        <SectionIcon tone="pine" icon="assistants" />
         <h3
           id="members-helpers-h"
           className="text-sm font-semibold text-awc-fg"
