@@ -56,11 +56,11 @@ describe("answerAutoSkillSuggestion", () => {
     expect(mocks.publish).not.toHaveBeenCalled();
   });
 
-  it("save publishes through the existing path as a draft by default and marks it saved", async () => {
+  it("save publishes the skill right away (not a draft) and marks it saved", async () => {
     const out = await answerAutoSkillSuggestion({ ...input, answer: "save" });
     expect(out).toEqual({ ok: true, skillId: "release-notes" });
     expect(mocks.publish.mock.calls[0]?.[0].args).toMatchObject({
-      asDraft: true,
+      asDraft: false,
       body: "body",
       kind: "skill",
     });
@@ -69,8 +69,8 @@ describe("answerAutoSkillSuggestion", () => {
     );
   });
 
-  it("publishes directly when the owner setting says so", async () => {
-    mocks.settings.mockResolvedValue({ publishMode: "publish" });
+  it("ignores a stored draft publish mode: auto skills are always live", async () => {
+    mocks.settings.mockResolvedValue({ publishMode: "draft" });
     await answerAutoSkillSuggestion({ ...input, answer: "save" });
     expect(mocks.publish.mock.calls[0]?.[0].args.asDraft).toBe(false);
   });

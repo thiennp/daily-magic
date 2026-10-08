@@ -97,5 +97,14 @@ export const useProjectSkills = (projectId: string) => {
     [base, mutate],
   );
 
-  return { skills, isLoading, forbidden, busy, message, publish, revoke };
+  return {
+    skills,
+    isLoading,
+    forbidden,
+    busy,
+    message,
+    publish,
+    revoke,
+    reload,
+  };
 };

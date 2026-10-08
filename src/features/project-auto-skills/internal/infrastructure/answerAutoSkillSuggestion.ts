@@ -3,7 +3,6 @@ import {
   getAutoSkillSuggestion,
   markAutoSkillSuggestionAnswered,
 } from "@/features/project-auto-skills/internal/infrastructure/autoSkillsSuggestionsDb";
-import { getAutoSkillsSettingsRow } from "@/features/project-auto-skills/internal/infrastructure/autoSkillsSettingsDb";
 import {
   deriveProjectSkillIdFromName,
   listProjectSkills,
@@ -37,7 +36,7 @@ const pickSkillId = async (
 
 /**
  * Owner answers a question. "save" goes through the existing publish path
- * (Draft by default, or published per the owner setting); "not_now" keeps
+ * and the skill is published right away; "not_now" keeps
  * asking at the next repeat; "never" remembers the cluster.
  */
 export const answerAutoSkillSuggestion = async (input: {
@@ -77,7 +76,6 @@ export const answerAutoSkillSuggestion = async (input: {
     await markAutoSkillSuggestionAnswered({ ...base, status, skillId: null });
     return { ok: true, skillId: null };
   }
-  const settings = await getAutoSkillsSettingsRow(input.projectId);
   const skillId = await pickSkillId(
     input.actorUserId,
     input.projectId,
@@ -93,7 +91,8 @@ export const answerAutoSkillSuggestion = async (input: {
       description: suggestion.title,
       body: suggestion.draftBody,
       kind: "skill",
-      asDraft: settings.publishMode === "draft",
+      // Auto-created skills are live at once; only hand-made ones start as drafts.
+      asDraft: false,
     },
   });
   if (!published.ok) {

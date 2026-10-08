@@ -5,3 +5,4 @@ export {
 } from "@/features/project-skill-share/internal/presentation/hooks/useProjectSkills";
 export { measureProjectSkillBodyBytes } from "@/features/project-skill-share/internal/core/measureProjectSkillBodyBytes";
 export { PROJECT_SKILL_MAX_BODY_BYTES } from "@/features/project-skill-share/internal/core/projectSkillShare.constant";
+export { fetchProjectSkills } from "@/features/project-skill-share/internal/presentation/utils/fetchProjectSkills";

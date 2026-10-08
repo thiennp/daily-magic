@@ -27,9 +27,12 @@ const useAwcProjectLibrary = (projectId: string): AwcProjectLibraryState => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadFailed, setLoadFailed] = useState(false);
   const [reloadNonce, setReloadNonce] = useState(0);
+  const reloadSkills = skills.reload;
+  // Playbooks/workflows and skills load separately; "Save as skill" adds a skill.
   const reload = useCallback((): void => {
     setReloadNonce((nonce) => nonce + 1);
-  }, []);
+    void reloadSkills();
+  }, [reloadSkills]);
 
   useEffect(() => {
     const controller = new AbortController();

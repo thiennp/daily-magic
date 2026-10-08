@@ -1,6 +1,7 @@
 "use client";
 
 import AwcProjectTasksAssignAgentPicker from "@/features/projects/tasks/AwcProjectTasksAssignAgentPicker";
+import AwcProjectTasksSkillSuggestions from "@/features/projects/tasks/AwcProjectTasksSkillSuggestions";
 import AwcProjectTasksAssignCodingTool from "@/features/projects/tasks/AwcProjectTasksAssignCodingTool";
 import { AWC_TASKS_INPUT_CLASS } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
 import { PROJECT_PAGE_TASKS_COPY as C } from "@/features/projects/tasks/projectPageTasksCopy.constant";
@@ -39,6 +40,14 @@ export default function AwcProjectTasksAssignTaskFields({
           {C.assignSummaryCounter(trimmedPrompt.length)}
         </span>
       </label>
+      <AwcProjectTasksSkillSuggestions
+        skills={form.skillSuggestions}
+        prompt={prompt}
+        disabled={pending}
+        onAdd={(line) =>
+          setPrompt(`${prompt.trimEnd()}\n\n${line}`.trimStart())
+        }
+      />
     </>
   );
 }

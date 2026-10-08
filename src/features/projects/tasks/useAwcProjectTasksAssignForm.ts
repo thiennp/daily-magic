@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { useTaskSkillSuggestions } from "@/features/projects/tasks/useTaskSkillSuggestions";
 import { useAwcProjectTasksAssignWriter } from "@/features/projects/tasks/useAwcProjectTasksAssignWriter";
 import { useAwcProjectTasksRefOptions } from "@/features/projects/tasks/useAwcProjectTasksRefOptions";
 import { runAssignTaskSubmit } from "@/features/projects/tasks/utils/runAssignTaskSubmit";
@@ -64,6 +65,7 @@ export const useAwcProjectTasksAssignForm = (
     }
   }
 
+  const skillSuggestions = useTaskSkillSuggestions({ open, projectId, prompt });
   const trimmedPrompt = prompt.trim();
   const canSubmit =
     !pending &&
@@ -100,6 +102,7 @@ export const useAwcProjectTasksAssignForm = (
       setNewWorktreeName,
     },
     trimmedPrompt,
+    skillSuggestions,
     writer,
     pending,
     error,
