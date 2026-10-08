@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+import InfoTip from "@/components/ui/infoTip/InfoTip";
 
 import {
   APP_SURFACE_BODY_TEXT_CLASS,
@@ -46,11 +47,9 @@ export default function PromptSdlcHowItWorks(): ReactElement {
         ))}
       </ol>
       <div className={`${APP_SURFACE_NESTED_CARD_CLASS} space-y-2`}>
-        <p
-          className="text-sm font-semibold text-awc-fg dark:text-white"
-          title={RUN_TIP}
-        >
+        <p className="flex items-center gap-1.5 text-sm font-semibold text-awc-fg dark:text-white">
           The run
+          <InfoTip text={RUN_TIP} label="About the run" />
         </p>
         <p
           className="flex flex-wrap items-center gap-1.5 font-mono text-sm"
