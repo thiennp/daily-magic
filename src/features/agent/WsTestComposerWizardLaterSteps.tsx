@@ -81,6 +81,11 @@ export default function WsTestComposerWizardLaterSteps({
           <SendTaskComposerStepTrail items={stepTrail} />
           <SendTaskComposerWriterAgentStep
             selectedWriterAgent={writerAgent}
+            writers={
+              composer.macDevices.find(
+                (device) => device.id === macDispatchDeviceId,
+              )?.writers
+            }
             onSelect={onWriterAgentSelect}
           />
         </div>

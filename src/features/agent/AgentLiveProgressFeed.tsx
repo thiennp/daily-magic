@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  requestPickAnotherWriter,
+  shouldOfferPickAnotherWriter,
+} from "@/features/agent/utils/pickAnotherWriterEvent";
 import AgentLiveProgressFeedStatus from "@/features/agent/AgentLiveProgressFeedStatus";
 import AgentLiveProgressStepRow from "@/features/agent/AgentLiveProgressStepRow";
 import AgentLiveProgressWavesPanel from "@/features/agent/AgentLiveProgressWavesPanel";
@@ -83,6 +87,15 @@ export default function AgentLiveProgressFeed({
         <p className="mt-3 whitespace-pre-line text-sm text-awc-fg dark:text-gray-200">
           {humanSummary}
         </p>
+      ) : null}
+      {shouldOfferPickAnotherWriter(humanSummary) ? (
+        <button
+          type="button"
+          onClick={requestPickAnotherWriter}
+          className="mt-2 inline-flex items-center rounded-lg border border-awc-border bg-white px-3 py-1.5 text-xs font-medium text-awc-fg hover:bg-gray-50 dark:border-gray-700 dark:bg-white/[0.03] dark:text-white/90"
+        >
+          Pick another coding tool
+        </button>
       ) : null}
       <AgentLiveProgressWavesPanel items={wavePlanItems} />
       <ol className="mt-4 space-y-3">

@@ -1,12 +1,14 @@
 "use client";
 
 import HarnessWriterAgentMark from "@/features/agent/icons/HarnessWriterAgentMark";
+import type { WriterPickerStatus } from "@/features/agent/send-readiness/resolveWriterPickerStatus";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 interface SendTaskComposerWriterAgentPickerRowProps {
   readonly label: string;
   readonly writerAgent: HarnessWriterAgent;
   readonly isSelected: boolean;
+  readonly status?: WriterPickerStatus | null;
   readonly onSelect: () => void;
 }
 
@@ -14,6 +16,7 @@ export default function SendTaskComposerWriterAgentPickerRow({
   label,
   writerAgent,
   isSelected,
+  status = null,
   onSelect,
 }: SendTaskComposerWriterAgentPickerRowProps) {
   return (
@@ -35,6 +38,18 @@ export default function SendTaskComposerWriterAgentPickerRow({
           {label}
         </span>
       </span>
+      {status !== null ? (
+        <span
+          data-writer-status={status.label}
+          className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
+            status.tone === "ok"
+              ? "bg-success-50 text-success-700 dark:bg-success-500/15 dark:text-success-400"
+              : "bg-warning-50 text-warning-700 dark:bg-warning-500/15 dark:text-warning-400"
+          }`}
+        >
+          {status.label}
+        </span>
+      ) : null}
     </button>
   );
 }

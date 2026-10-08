@@ -1,6 +1,7 @@
 "use client";
 
 import { useAgentRunQueue } from "@/features/agent/hooks/useAgentRunQueue";
+import { usePickAnotherWriterRequest } from "@/features/agent/hooks/usePickAnotherWriterRequest";
 import { useOpenMacShellFromQuery } from "@/features/agent/hooks/useOpenMacShellFromQuery";
 import { useClearStaleMacDispatchError } from "@/features/agent/hooks/useClearStaleMacDispatchError";
 import { useRefreshMacDevicesOnDispatchOfflineError } from "@/features/agent/hooks/useRefreshMacDevicesOnDispatchOfflineError";
@@ -71,6 +72,10 @@ export const useWsTestPanelController = (input: {
     onFinishSession: sessionEndActions.finishSession,
   });
 
+  usePickAnotherWriterRequest(() => {
+    sessionEndActions.finishSession();
+    steppedComposer.panelActions.handleWriterStepBack();
+  });
   useWsTestPanelLifecycle({
     connectionStatus: socket.connectionStatus,
     flushQueue,

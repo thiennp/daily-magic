@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   CODEX_SIGN_IN_REQUIRED_MESSAGE,
+  resolveWriterCliInstallLogLine,
   resolveWriterSignInRequiredReason,
 } from "./writerSignInRequired";
 
@@ -24,6 +25,21 @@ describe("resolveWriterSignInRequiredReason (5ca01f06)", () => {
         "claude-cli",
         "Codex CLI needs ChatGPT sign-in.",
       ),
+    ).toBeNull();
+  });
+});
+
+describe("resolveWriterCliInstallLogLine (77e29f7a)", () => {
+  it("logs when ensure-writer installs a missing CLI", () => {
+    expect(
+      resolveWriterCliInstallLogLine(
+        "  Installing Codex CLI on this computer (not found on PATH).\n",
+      ),
+    ).toBe(
+      "[agent-witch] ensure-writer: installing the Codex CLI on this computer (it was not on PATH).",
+    );
+    expect(
+      resolveWriterCliInstallLogLine("  Codex CLI authenticated."),
     ).toBeNull();
   });
 });

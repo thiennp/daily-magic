@@ -1,5 +1,6 @@
 "use client";
 
+import ComposerDeviceSwitchNotice from "@/features/agent/ComposerDeviceSwitchNotice";
 import type { WsTestComposerWizardStepsProps } from "@/features/agent/types/WsTestComposerWizardStepsProps.type";
 import WsTestComposerMacSection from "@/features/agent/WsTestComposerMacSection";
 import WsTestComposerWizardLaterSteps from "@/features/agent/WsTestComposerWizardLaterSteps";
@@ -27,6 +28,13 @@ export default function WsTestComposerWizardSteps({
 }: WsTestComposerWizardStepsProps) {
   return (
     <>
+      {composer.isTeamDispatch ? null : (
+        <ComposerDeviceSwitchNotice
+          runDeviceId={macDispatchDeviceId}
+          isDevicesLoading={composer.isMacDevicesLoading}
+          displayNameById={composer.macDisplayNameById}
+        />
+      )}
       {wizard.showMacSection ? (
         <WsTestComposerMacSection
           isLibraryPlaybook={composer.isLibraryPlaybook}

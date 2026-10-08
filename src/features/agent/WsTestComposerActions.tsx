@@ -72,7 +72,10 @@ export default function WsTestComposerActions(
         <SendReadinessWriterNotice notice={props.writerNotice} />
       ) : readinessUi.showMacReadyChip ? (
         <SendReadinessMacReadyChip />
-      ) : null}
+      ) : (
+        // 77e29f7a: the chip arrived late and pushed Start down mid-click.
+        <div aria-hidden="true" data-readiness-slot className="mb-3 h-6" />
+      )}
       <ComposerBlockedActionButtons
         blockedAction={blockedAction}
         isSendDisabled={effectiveSendDisabled}

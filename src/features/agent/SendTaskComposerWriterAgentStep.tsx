@@ -1,16 +1,21 @@
 "use client";
 
 import SendTaskComposerWriterAgentPickerRow from "@/features/agent/SendTaskComposerWriterAgentPickerRow";
+import { resolveWriterPickerStatus } from "@/features/agent/send-readiness/resolveWriterPickerStatus";
 import { HARNESS_WRITER_OPTIONS } from "@/features/harness/constants/harnessFormOptions";
+import type { AgentWitchDeviceWriter } from "@/lib/agentWitch/deviceWriters";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 interface SendTaskComposerWriterAgentStepProps {
   readonly selectedWriterAgent: HarnessWriterAgent;
+  /** The selected computer's heartbeat writers (77e29f7a). */
+  readonly writers?: readonly AgentWitchDeviceWriter[];
   readonly onSelect: (writerAgent: HarnessWriterAgent) => void;
 }
 
 export default function SendTaskComposerWriterAgentStep({
   selectedWriterAgent,
+  writers,
   onSelect,
 }: SendTaskComposerWriterAgentStepProps) {
   return (
@@ -25,6 +30,7 @@ export default function SendTaskComposerWriterAgentStep({
               label={option.label}
               writerAgent={option.value}
               isSelected={option.value === selectedWriterAgent}
+              status={resolveWriterPickerStatus(option.value, writers)}
               onSelect={() => {
                 onSelect(option.value);
               }}

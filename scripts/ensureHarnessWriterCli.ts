@@ -8,7 +8,10 @@ import {
   AGENT_WITCH_APP_DIR_NAME,
   AGENT_WITCH_COMMAND_DIR_NAME,
 } from "./agentWitchInstallApp.constants";
-import { resolveWriterSignInRequiredReason } from "./writerSignInRequired";
+import {
+  resolveWriterCliInstallLogLine,
+  resolveWriterSignInRequiredReason,
+} from "./writerSignInRequired";
 
 const ENSURE_WRITER_SCRIPT_TIMEOUT_MS = 120_000;
 
@@ -71,6 +74,10 @@ export const ensureHarnessWriterCli = (
 
     // 5ca01f06: never wait on an interactive login with no terminal.
     child.stderr?.on("data", (chunk: Buffer | string) => {
+      const installLine = resolveWriterCliInstallLogLine(String(chunk));
+      if (installLine !== null) {
+        console.log(installLine);
+      }
       const reason = resolveWriterSignInRequiredReason(
         writerAgent,
         String(chunk),

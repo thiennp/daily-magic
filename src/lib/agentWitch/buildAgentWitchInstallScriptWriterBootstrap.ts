@@ -31,6 +31,7 @@ agent_witch_has_command() {
 agent_witch_ensure_claude_cli() {
   echo "→ Claude CLI"
   if ! agent_witch_has_command claude; then
+    echo "  Installing Claude CLI on this computer (not found on PATH)." >&2
     "\${CURL_BIN}" -fsSL https://claude.ai/install.sh | bash
   fi
   if claude auth status 2>/dev/null | "\${NODE_BIN}" -e "const input=require('fs').readFileSync(0,'utf8'); const parsed=JSON.parse(input); process.exit(parsed.loggedIn===true?0:1);"; then
@@ -45,6 +46,7 @@ ${AGENT_WITCH_INSTALL_ENSURE_WRITER_CODEX}
 agent_witch_ensure_cursor_cli() {
   echo "→ Cursor CLI"
   if ! agent_witch_has_command cursor; then
+    echo "  Installing Cursor CLI on this computer (not found on PATH)." >&2
     "\${CURL_BIN}" -fsSL https://cursor.com/install -fsS | bash
   fi
   cursor agent sandbox disable >/dev/null 2>&1 || true
@@ -58,6 +60,7 @@ agent_witch_ensure_cursor_cli() {
 agent_witch_ensure_antigravity_cli() {
   echo "→ Antigravity CLI"
   if ! agent_witch_has_command agy; then
+    echo "  Installing Antigravity CLI on this computer (not found on PATH)." >&2
     "\${CURL_BIN}" -fsSL https://antigravity.google/cli/install.sh | bash
   fi
   if [[ -s "\${HOME}/${ANTIGRAVITY_CLI_GEMINI_STATE_DIR}/${ANTIGRAVITY_CLI_OAUTH_TOKEN_FILENAME}" ]] || [[ -s "\${HOME}/${ANTIGRAVITY_CLI_LEGACY_CREDENTIALS_RELATIVE_PATH}" ]]; then
