@@ -20,16 +20,25 @@ describe("AppShellDevicesPanel install-token side effect", () => {
   });
 
   it("keeps the Connect buttons minting lazily when their modal opens", () => {
-    for (const file of [
-      "src/features/home/ConnectAnotherMacButton.tsx",
-      "src/features/home/ConnectThisMacButton.tsx",
-    ]) {
-      const source = read(file);
-      expect(source).toMatch(
-        /usePersonalizedAgentWitchInstallCommand\(\{\s*enabled: isModalOpen,/,
-      );
-      expect(source).toContain("commitIdentityWhenDisabled: true");
-    }
+    const another = read("src/features/home/ConnectAnotherMacButton.tsx");
+    expect(another).toMatch(
+      /usePersonalizedAgentWitchInstallCommand\(\{\s*enabled: isModalOpen,/,
+    );
+    expect(another).toContain("commitIdentityWhenDisabled: true");
+
+    // Home Connect: on a Mac the command is minted only once the Terminal
+    // section opens; useConnectTerminalSection still gates it on isModalOpen.
+    const thisMac = read("src/features/home/ConnectThisMacButton.tsx");
+    expect(thisMac).toMatch(
+      /useConnectTerminalSection\(\{\s*operatingSystem,\s*isModalOpen\s*\}\)/,
+    );
+    expect(thisMac).toMatch(
+      /usePersonalizedAgentWitchInstallCommand\(\{\s*enabled: shouldMintCommand,/,
+    );
+    expect(thisMac).toContain("commitIdentityWhenDisabled: true");
+    expect(
+      read("src/features/home/hooks/useConnectTerminalSection.ts"),
+    ).toMatch(/shouldMintCommand:\s*input\.isModalOpen &&/);
   });
 
   it("still renders the devices rail in both desktop and mobile slots", () => {
