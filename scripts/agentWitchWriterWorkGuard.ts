@@ -217,6 +217,14 @@ export const isAgentWitchWriterWorkInProgress = (
   layout: AgentWitchLocalLayout,
 ): boolean => readLiveAgentWitchWriterWorkState(layout).activeCount > 0;
 
+/** Ids (run ids) of the writer work that is live right now. */
+export const listAgentWitchLiveWriterWorkIds = (
+  layout: AgentWitchLocalLayout,
+): readonly string[] =>
+  (readLiveAgentWitchWriterWorkState(layout).entries ?? []).map(
+    (entry) => entry.id,
+  );
+
 export const countAgentWitchLiveWriterWork = (
   layout: AgentWitchLocalLayout,
 ): number => readLiveAgentWitchWriterWorkState(layout).activeCount;

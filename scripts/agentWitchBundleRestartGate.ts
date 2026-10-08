@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { listPendingRunInputSessions } from "./agentWitchPendingRunSessions";
-import { countAgentWitchLiveWriterWork } from "./agentWitchWriterWorkGuard";
+import { listAgentWitchLiveWriterWorkIds } from "./agentWitchWriterWorkGuard";
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 
 /** A bundle update never waits longer than this for running tasks. */
@@ -34,17 +34,23 @@ const listProfileEmails = (installDir: string): readonly (string | null)[] => {
 };
 
 /**
- * Running writer tasks plus runs parked on a human answer, across every
- * profile of this install. The restart kills all account hosts, so a task of
- * any account must keep the update waiting.
+ * Running writer tasks across every profile of this install (the restart
+ * kills all account hosts). b53ecc47 (Testi recheck @300): a run parked on a
+ * human answer no longer holds the update. Its question lives in
+ * pending-run-inputs.json, is replayed on the next connect, and an answer
+ * after the restart continues it; unanswered it closes at the 24 h expiry.
  */
 export const countAgentWitchBusyTasks = (installDir: string): number =>
   listProfileEmails(installDir).reduce((total, profileEmail) => {
     const layout = { installDir, profileEmail } as AgentWitchLocalLayout;
+    const parkedRunIds = new Set(
+      listPendingRunInputSessions(layout).map((session) => session.agentRunId),
+    );
     return (
       total +
-      countAgentWitchLiveWriterWork(layout) +
-      listPendingRunInputSessions(layout).length
+      listAgentWitchLiveWriterWorkIds(layout).filter(
+        (id) => !parkedRunIds.has(id),
+      ).length
     );
   }, 0);
 

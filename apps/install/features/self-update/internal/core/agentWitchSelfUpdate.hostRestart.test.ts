@@ -49,6 +49,8 @@ vi.mock("../../../../../../scripts/agentWitchWriterWorkGuard", () => ({
     deferRestartMock(...args),
   isAgentWitchWriterWorkInProgress: () => writerBusyMock(),
   countAgentWitchLiveWriterWork: () => (writerBusyMock() ? 1 : 0),
+  listAgentWitchLiveWriterWorkIds: () =>
+    writerBusyMock() ? ["writer-work-1"] : [],
 }));
 
 import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
