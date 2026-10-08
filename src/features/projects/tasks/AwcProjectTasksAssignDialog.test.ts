@@ -10,6 +10,8 @@ const src = [
   "AwcProjectTasksAssignGitFields.tsx",
   "useAwcProjectTasksAssignForm.ts",
   "useAwcProjectTasksAssignPeers.ts",
+  "useAwcProjectTasksRefOptions.ts",
+  "utils/runAssignTaskSubmit.ts",
 ]
   .map((file) =>
     readFileSync(
@@ -20,7 +22,10 @@ const src = [
   .join("\n");
 
 const panel = readFileSync(
-  path.join(process.cwd(), "src/features/projects/tasks/AwcProjectTasksPanel.tsx"),
+  path.join(
+    process.cwd(),
+    "src/features/projects/tasks/AwcProjectTasksPanel.tsx",
+  ),
   "utf8",
 );
 

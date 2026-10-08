@@ -76,7 +76,6 @@ describe("dispatchProjectComputerAgentRun", () => {
       messageId: "msg-1",
       deviceOwnerUserId: "user-owner",
       deviceId: "dev-1",
-      writerAgent: "claude-cli",
     });
     expect(requestApprovalMock).not.toHaveBeenCalled();
   });
