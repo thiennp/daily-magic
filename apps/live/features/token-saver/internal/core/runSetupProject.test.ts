@@ -66,9 +66,9 @@ describe("runSetupProject", () => {
     });
     expect(result).toEqual({ ok: true, state: "Declined" });
     expect(isDeclinedCwd({ layout, cwd: project, fs: io })).toBe(true);
-    expect(
-      io.exists(path.join(project, CURSOR_PROJECT_RULE_RELATIVE)),
-    ).toBe(false);
+    expect(io.exists(path.join(project, CURSOR_PROJECT_RULE_RELATIVE))).toBe(
+      false,
+    );
     expect(
       io.exists(path.join(project, ".agent-witch", "token-saver.json")),
     ).toBe(false);
@@ -121,9 +121,9 @@ describe("runSetupProject", () => {
     expect(io.readUtf8(declinePath)).toBe(before);
     expect(isDeclinedCwd({ layout, cwd: project, fs: io })).toBe(true);
     expect(readDeclinedProjectsStore(layout, io)).toEqual(storeBefore);
-    expect(
-      io.exists(path.join(project, CURSOR_PROJECT_RULE_RELATIVE)),
-    ).toBe(false);
+    expect(io.exists(path.join(project, CURSOR_PROJECT_RULE_RELATIVE))).toBe(
+      false,
+    );
     expect(
       io.exists(path.join(project, ".agent-witch", "token-saver.json")),
     ).toBe(false);
@@ -174,9 +174,9 @@ describe("runSetupProject", () => {
     });
     expect(io.readUtf8(declinePath)).toBe(before);
     expect(isDeclinedCwd({ layout, cwd: project, fs: io })).toBe(true);
-    expect(
-      io.exists(path.join(project, CURSOR_PROJECT_RULE_RELATIVE)),
-    ).toBe(false);
+    expect(io.exists(path.join(project, CURSOR_PROJECT_RULE_RELATIVE))).toBe(
+      false,
+    );
     expect(
       io.exists(path.join(project, ".agent-witch", "token-saver.json")),
     ).toBe(false);
@@ -186,14 +186,28 @@ describe("runSetupProject", () => {
     const { layout, project, io } = open();
     const flagsPath = path.join(project, ".agent-witch", "token-saver.json");
     expect(
-      runSetupProject({ layout, cwd: project, accept: true, projectId: "p", fs: io, io }).ok,
+      runSetupProject({
+        layout,
+        cwd: project,
+        accept: true,
+        projectId: "p",
+        fs: io,
+        io,
+      }).ok,
     ).toBe(true);
     io.writeUtf8(
       flagsPath,
       `${JSON.stringify({ pitfalls: "off", history: "on", bogus: "x" }, null, 2)}\n`,
     );
     expect(
-      runSetupProject({ layout, cwd: project, accept: true, projectId: "p", fs: io, io }).ok,
+      runSetupProject({
+        layout,
+        cwd: project,
+        accept: true,
+        projectId: "p",
+        fs: io,
+        io,
+      }).ok,
     ).toBe(true);
     expect(JSON.parse(io.readUtf8(flagsPath))).toEqual({
       ...buildDefaultProjectFlags(),
@@ -207,8 +221,17 @@ describe("runSetupProject", () => {
     const flagsPath = path.join(project, ".agent-witch", "token-saver.json");
     io.mkdirp(path.dirname(flagsPath));
     io.writeUtf8(flagsPath, "{not json");
-    runSetupProject({ layout, cwd: project, accept: true, projectId: "p", fs: io, io });
-    expect(JSON.parse(io.readUtf8(flagsPath))).toEqual(buildDefaultProjectFlags());
+    runSetupProject({
+      layout,
+      cwd: project,
+      accept: true,
+      projectId: "p",
+      fs: io,
+      io,
+    });
+    expect(JSON.parse(io.readUtf8(flagsPath))).toEqual(
+      buildDefaultProjectFlags(),
+    );
   });
 
   it("on success, order is resolve, then clearDecline, then defaults/fragments", () => {
@@ -223,9 +246,7 @@ describe("runSetupProject", () => {
       fs: tracked,
       io: tracked,
       resolveProject: () => {
-        expect(isDeclinedCwd({ layout, cwd: project, fs: tracked })).toBe(
-          true,
-        );
+        expect(isDeclinedCwd({ layout, cwd: project, fs: tracked })).toBe(true);
         calls.push("resolve");
         return { projectId: "proj-order", kind: "created" };
       },
@@ -236,11 +257,6 @@ describe("runSetupProject", () => {
       projectId: "proj-order",
     });
     expect(isDeclinedCwd({ layout, cwd: project, fs: tracked })).toBe(false);
-    expect(calls).toEqual([
-      "resolve",
-      "clearDecline",
-      "defaults",
-      "fragments",
-    ]);
+    expect(calls).toEqual(["resolve", "clearDecline", "defaults", "fragments"]);
   });
 });

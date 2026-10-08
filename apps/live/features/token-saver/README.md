@@ -19,9 +19,9 @@ Local pitfall registry cache + `check_context` MCP + `setup_project` CLI writers
   `hookSpecificOutput.additionalContext` (hit → tip; none+promptCreate → create prompt; else
   nothing). Always exits 0; errors go to stderr only
 - Project fragments on accept: Cursor `.cursor/rules/agent-witch-check-context.mdc`
-  + `.git/info/exclude` (D1, never commit); project flags `.agent-witch/token-saver.json`
-  (`AGENT_WITCH_PROJECT_META_DIR_NAME` from live-projects) from `buildDefaultProjectFlags()`
-  (`@agent-witch/shared/projects`); re-accept merges existing user flags over defaults
+  - `.git/info/exclude` (D1, never commit); project flags `.agent-witch/token-saver.json`
+    (`AGENT_WITCH_PROJECT_META_DIR_NAME` from live-projects) from `buildDefaultProjectFlags()`
+    (`@agent-witch/shared/projects`); re-accept merges existing user flags over defaults
 - `runSetupProject` never throws on a missing/blank projectId or a failing resolver
   (`ok:false` + reason; decline untouched)
 

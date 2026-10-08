@@ -1,6 +1,7 @@
 "use client";
 
 import AwcProjectDetailSettingsPanel from "@/features/projects/AwcProjectDetailSettingsPanel";
+import AwcProjectKnowledgeImpactPanel from "@/features/projects/knowledge-impact/AwcProjectKnowledgeImpactPanel";
 import AwcProjectLibraryPanel from "@/features/projects/library/AwcProjectLibraryPanel";
 import AwcProjectTasksPanelWithRecords from "@/features/projects/tasks/AwcProjectTasksPanelWithRecords";
 import AwcProjectOverviewPanel from "@/features/projects/overview/AwcProjectOverviewPanel";
@@ -77,7 +78,12 @@ export default function AwcProjectDetailTabPanelBody(
     );
   }
   if (t === "reports" && sel) {
-    return <AwcProjectReportsPanel projectId={project.id} />;
+    return (
+      <>
+        <AwcProjectKnowledgeImpactPanel projectId={project.id} />
+        <AwcProjectReportsPanel projectId={project.id} />
+      </>
+    );
   }
   if (t === "library" && sel) {
     return (

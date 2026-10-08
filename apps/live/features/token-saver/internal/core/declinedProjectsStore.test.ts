@@ -51,7 +51,9 @@ describe("declinedProjectsStore", () => {
     const { layout, project, io } = open();
     declineProjectForCwd({ layout, cwd: project, fs: io });
     declineProjectForCwd({ layout, cwd: project, fs: io });
-    expect(Object.keys(readDeclinedProjectsStore(layout, io).byRealpath)).toHaveLength(1);
+    expect(
+      Object.keys(readDeclinedProjectsStore(layout, io).byRealpath),
+    ).toHaveLength(1);
     expect(clearProjectDecline({ layout, cwd: project, fs: io })).toBe(true);
     expect(isDeclinedCwd({ layout, cwd: project, fs: io })).toBe(false);
     expect(clearProjectDecline({ layout, cwd: project, fs: io })).toBe(false);

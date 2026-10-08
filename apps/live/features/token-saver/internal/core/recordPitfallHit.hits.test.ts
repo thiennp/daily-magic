@@ -23,7 +23,9 @@ const openTemp = () => {
 
 const countRows = (dbPath: string, table: string): number => {
   const db = openPitfallDb(dbPath);
-  const row = db.prepare(`SELECT COUNT(*) AS n FROM ${table}`).get() as unknown as {
+  const row = db
+    .prepare(`SELECT COUNT(*) AS n FROM ${table}`)
+    .get() as unknown as {
     n: number;
   };
   closePitfallDb(db);
@@ -63,8 +65,14 @@ describe("recordHit uses the pitfall_hits table (must-fix a)", () => {
       { project_id: "proj-1", pitfall_id: "secrets-in-logs", hit_count: 2 },
       { project_id: "proj-2", pitfall_id: "secrets-in-logs", hit_count: 1 },
     ]);
-    expect(registry.getPitfall({ projectId: "proj-1", id: "secrets-in-logs" })?.hitCount).toBe(2);
-    expect(registry.getPitfall({ projectId: "proj-2", id: "secrets-in-logs" })?.hitCount).toBe(1);
+    expect(
+      registry.getPitfall({ projectId: "proj-1", id: "secrets-in-logs" })
+        ?.hitCount,
+    ).toBe(2);
+    expect(
+      registry.getPitfall({ projectId: "proj-2", id: "secrets-in-logs" })
+        ?.hitCount,
+    ).toBe(1);
     expect(registry.getPitfall({ id: "secrets-in-logs" })?.hitCount).toBe(0);
 
     const db = openPitfallDb(dbPath);
@@ -88,7 +96,11 @@ describe("recordHit uses the pitfall_hits table (must-fix a)", () => {
     closePitfallDb(db);
 
     const nowIso = "2026-10-05T12:00:00.000Z";
-    const hit = registry.recordHit({ projectId: "proj-1", id: "secrets-in-logs", nowIso });
+    const hit = registry.recordHit({
+      projectId: "proj-1",
+      id: "secrets-in-logs",
+      nowIso,
+    });
     expect(hit.ok).toBe(true);
     if (!hit.ok) {
       return;

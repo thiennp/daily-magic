@@ -195,7 +195,9 @@ write(
 
 write(
   "apps/live/features/knowledge/public-api/infrastructure.ts",
-  `export { captureKnowledgeAfterRun } from "../internal/core/episode/captureKnowledgeAfterRun";
+  `export { buildKnowledgeNotes } from "../internal/core/episode/buildKnowledgeNotes";
+export { buildKnowledgeHeartbeatPayload } from "../internal/core/episode/buildKnowledgeHeartbeatPayload";
+export { captureKnowledgeAfterRun } from "../internal/core/episode/captureKnowledgeAfterRun";
 export { checkKnowledgeBeforeTask } from "../internal/core/episode/checkKnowledgeBeforeTask";
 export { classifyKnowledgeTaskClass } from "../internal/core/episode/classifyKnowledgeTaskClass";
 export { getKnowledgeDb } from "../internal/core/episode/knowledgeDb";

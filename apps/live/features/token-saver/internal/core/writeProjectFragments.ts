@@ -8,8 +8,7 @@ export interface WriteProjectFragmentsResult {
   readonly ok: true;
   readonly cursorRule: CliWriteResult;
   readonly gitExclude:
-    | CliWriteResult
-    | { readonly ok: false; readonly reason: string };
+    CliWriteResult | { readonly ok: false; readonly reason: string };
 }
 
 /**

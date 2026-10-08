@@ -30,7 +30,11 @@ export const bumpPitfallHit = (
          last_seen_at = excluded.last_seen_at
        RETURNING hit_count, last_seen_at`,
     )
-    .get(projectIdToDb(projectId), pitfallId, nowIso) as unknown as PitfallHitDbRow;
+    .get(
+      projectIdToDb(projectId),
+      pitfallId,
+      nowIso,
+    ) as unknown as PitfallHitDbRow;
   return { hitCount: row.hit_count, lastSeenAt: row.last_seen_at };
 };
 
@@ -45,8 +49,7 @@ export const selectPitfallHit = (
        WHERE project_id = ? AND pitfall_id = ?`,
     )
     .get(projectIdToDb(projectId), pitfallId) as unknown as
-    | PitfallHitDbRow
-    | undefined;
+    PitfallHitDbRow | undefined;
   return row === undefined
     ? { hitCount: 0, lastSeenAt: null }
     : { hitCount: row.hit_count, lastSeenAt: row.last_seen_at };

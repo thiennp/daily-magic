@@ -71,6 +71,7 @@ import {
   recordAgentWitchWsTraceFromObject,
 } from "@agent-witch/live-diagnostics";
 import {
+  buildKnowledgeHeartbeatPayload,
   captureKnowledgeAfterRun,
   checkKnowledgeBeforeTask,
   classifyKnowledgeTaskClass,
@@ -1271,7 +1272,10 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
   const startHeartbeat = (socket: WebSocket): void => {
     clearHeartbeat();
-    const sendHeartbeat = (): void => {
+    const sendHeartbeat = async (): Promise<void> => {
+      const knowledge = await buildKnowledgeHeartbeatPayload(
+        config.layout,
+      ).catch(() => null);
       const installBundleVersion =
         resolveAgentWitchHeartbeatInstallBundleVersion(
           config.layout.installDir,
@@ -1288,14 +1292,17 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
             wakePort,
             ...(config.email !== null ? { email: config.email } : {}),
             installBundleVersion,
+            ...(knowledge !== null ? { knowledge } : {}),
           },
         },
         config.layout,
       );
       state.lastHeartbeatAt = new Date().toISOString();
     };
-    sendHeartbeat();
-    state.heartbeatTimer = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL_MS);
+    void sendHeartbeat();
+    state.heartbeatTimer = setInterval(() => {
+      void sendHeartbeat();
+    }, HEARTBEAT_INTERVAL_MS);
   };
 
   const handleInboundRaw = (

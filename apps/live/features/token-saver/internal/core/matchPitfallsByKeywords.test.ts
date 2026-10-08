@@ -23,7 +23,9 @@ afterEach(() => {
   }
 });
 
-const samplePitfall = (overrides: Partial<Pitfall> & { id: string }): Pitfall => ({
+const samplePitfall = (
+  overrides: Partial<Pitfall> & { id: string },
+): Pitfall => ({
   projectId: null,
   symptom: "s",
   cause: "c",

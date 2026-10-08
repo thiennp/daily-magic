@@ -33,13 +33,13 @@ export const matchPitfallsByKeywords = (input: {
       score: scorePitfallKeywords(input.text, pitfall.keywords),
     }))
     .filter((row) => row.score > 0)
-    .sort((a, b) => b.score - a.score || a.pitfall.id.localeCompare(b.pitfall.id));
+    .sort(
+      (a, b) => b.score - a.score || a.pitfall.id.localeCompare(b.pitfall.id),
+    );
 
   if (scored.length === 0) {
     return [];
   }
 
-  return scored
-    .slice(0, CHECK_CONTEXT_TIP_MAX_LINES)
-    .map((row) => row.pitfall);
+  return scored.slice(0, CHECK_CONTEXT_TIP_MAX_LINES).map((row) => row.pitfall);
 };

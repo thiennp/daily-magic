@@ -54,13 +54,18 @@ export const parseClaudeHookInput = (
   };
 };
 
-/** Context text per status: hit → tip, none+promptCreate → create prompt, else nothing. */
+/** Context text per status: hit → tip, none+promptCreate → create prompt, else nothing. Project notes ride along when present. */
 export const toCheckContextHookContext = (
   result: CheckContextResult,
 ): string | null => {
+  const notes = result.notes?.trim() ?? "";
   if (result.status === "hit") {
     const tip = result.tip?.trim() ?? "";
-    return tip.length > 0 ? tip : null;
+    const parts = [tip, notes].filter((part) => part.length > 0);
+    return parts.length > 0 ? parts.join("\n\n") : null;
+  }
+  if (result.status === "miss" && notes.length > 0) {
+    return notes;
   }
   if (result.status === "none" && result.promptCreate === true) {
     return CHECK_CONTEXT_CREATE_PROMPT;
@@ -91,9 +96,7 @@ export const runCheckContextHook = async (
       io.writeStderr("[agent-witch] mcp-hook: stdin is not a JSON object\n");
       return 0;
     }
-    const context = toCheckContextHookContext(
-      await io.runCheckContext(input),
-    );
+    const context = toCheckContextHookContext(await io.runCheckContext(input));
     if (context !== null) {
       io.writeStdout(formatClaudeHookOutput(context));
     }

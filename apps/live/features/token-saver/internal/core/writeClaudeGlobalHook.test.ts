@@ -26,9 +26,7 @@ describe("writeClaudeGlobalHook", () => {
       `${JSON.stringify({ theme: "dark", hooks: { PreToolUse: [] } }, null, 2)}\n`,
     );
     expect(writeClaudeGlobalHook({ io }).wrote).toBe(true);
-    const parsed = JSON.parse(
-      io.readUtf8(path.join(dir, "settings.json")),
-    ) as {
+    const parsed = JSON.parse(io.readUtf8(path.join(dir, "settings.json"))) as {
       theme: string;
       hooks: { UserPromptSubmit: unknown[]; PreToolUse: unknown[] };
     };

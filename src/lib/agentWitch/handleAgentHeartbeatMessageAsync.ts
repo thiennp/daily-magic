@@ -6,6 +6,7 @@ import {
   resolveHeartbeatInstallBundleVersion,
   resolveHeartbeatWakePort,
 } from "@/lib/agentWitch/resolveAgentWitchHeartbeatPayload";
+import { parseKnowledgeHeartbeat } from "@/lib/knowledge/parseKnowledgeHeartbeat";
 import { resolveAgentWitchInstallDeviceLabelFromPayload } from "@/lib/agentWitch/resolveAgentWitchInstallDeviceLabelFromPayload";
 import { runAgentWitchHeartbeatDeviceMaintenance } from "@/lib/agentWitch/runAgentWitchHeartbeatDeviceMaintenance";
 import { runAgentWitchHeartbeatRegistrySync } from "@/lib/agentWitch/runAgentWitchHeartbeatRegistrySync";
@@ -74,6 +75,7 @@ export const handleAgentHeartbeatMessageAsync = async (
       installBundleVersion,
       wakePort,
       wakeError,
+      knowledge: parseKnowledgeHeartbeat(message.payload),
     });
   }
 

@@ -22,12 +22,12 @@ describe("writeCodexGlobal", () => {
     const io = createTempCliIo(root);
     const codex = path.join(root, ".codex");
     io.mkdirp(codex);
-    io.writeUtf8(path.join(codex, "config.toml"), "model = \"o3\"\n");
+    io.writeUtf8(path.join(codex, "config.toml"), 'model = "o3"\n');
     io.writeUtf8(path.join(codex, "AGENTS.md"), "# User agents\n");
     expect(writeCodexGlobalConfig({ io }).wrote).toBe(true);
     expect(writeCodexGlobalAgents({ io }).wrote).toBe(true);
     const toml = io.readUtf8(path.join(codex, "config.toml"));
-    expect(toml.startsWith("model = \"o3\"")).toBe(true);
+    expect(toml.startsWith('model = "o3"')).toBe(true);
     expect(toml).toContain(MARKER_BEGIN);
     expect(toml).toContain("[mcp_servers.agent-witch]");
     const agents = io.readUtf8(path.join(codex, "AGENTS.md"));

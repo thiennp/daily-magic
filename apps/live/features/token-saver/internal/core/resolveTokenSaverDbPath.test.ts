@@ -35,7 +35,10 @@ describe("resolveTokenSaverDbPath", () => {
 
 describe("resolveDeclinedProjectsPath (shared profile path helper)", () => {
   it("scopes the decline store next to the DB under profiles/<email>", () => {
-    const layout = { installDir: "/tmp/aw-home", profileEmail: "user@example.com" };
+    const layout = {
+      installDir: "/tmp/aw-home",
+      profileEmail: "user@example.com",
+    };
     expect(resolveDeclinedProjectsPath(layout)).toBe(
       path.join(
         "/tmp/aw-home",
@@ -51,7 +54,10 @@ describe("resolveDeclinedProjectsPath (shared profile path helper)", () => {
 
   it("falls back to install root when profileEmail is null", () => {
     expect(
-      resolveDeclinedProjectsPath({ installDir: "/tmp/aw-home", profileEmail: null }),
+      resolveDeclinedProjectsPath({
+        installDir: "/tmp/aw-home",
+        profileEmail: null,
+      }),
     ).toBe(path.join("/tmp/aw-home", DECLINED_PROJECTS_FILE_NAME));
   });
 });

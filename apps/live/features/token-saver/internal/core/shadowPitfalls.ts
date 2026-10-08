@@ -27,6 +27,5 @@ export const shadowPitfalls = (input: {
   return merged.filter((row) => row.source !== "retired");
 };
 
-export const countActivePitfalls = (
-  shadowed: readonly Pitfall[],
-): number => shadowed.filter((row) => row.source !== "retired").length;
+export const countActivePitfalls = (shadowed: readonly Pitfall[]): number =>
+  shadowed.filter((row) => row.source !== "retired").length;

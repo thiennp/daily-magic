@@ -1,4 +1,5 @@
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
+import { buildKnowledgeNotes } from "@agent-witch/live-knowledge";
 import { resolveAgentWitchProjectIdFromCwd } from "@agent-witch/live-projects";
 
 import type {
@@ -32,15 +33,14 @@ export const createCheckContextRunner = (
     });
   const isDeclined =
     deps.isDeclined ??
-    ((cwd: string): boolean =>
-      isDeclinedCwd({ layout: deps.layout, cwd }));
+    ((cwd: string): boolean => isDeclinedCwd({ layout: deps.layout, cwd }));
 
   return (raw: unknown): CheckContextResult => {
     const input: CheckContextInput = parseCheckContextArgs(raw);
     let registry: ReturnType<typeof createPitfallRegistry> | null = null;
     try {
       registry = createPitfallRegistry({ layout: deps.layout });
-      return checkContext(
+      const result = checkContext(
         {
           registry,
           resolveProjectId: resolveAgentWitchProjectIdFromCwd,
@@ -49,6 +49,15 @@ export const createCheckContextRunner = (
         },
         input,
       );
+      const notes =
+        result.projectId !== undefined
+          ? buildKnowledgeNotes({
+              layout: deps.layout,
+              projectKey: result.projectId,
+              message: input.message ?? "",
+            })
+          : "";
+      return notes.length > 0 ? { ...result, notes } : result;
     } catch (error) {
       logError(error);
       return { status: "none" };

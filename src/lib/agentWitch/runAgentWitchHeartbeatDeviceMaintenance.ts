@@ -1,3 +1,5 @@
+import type { KnowledgeHeartbeatReport } from "@/lib/knowledge/knowledgeHeartbeat.type";
+import { saveKnowledgeHeartbeat } from "@/lib/knowledge/saveKnowledgeHeartbeat";
 import { consolidateActiveAgentWitchDeviceByLabel } from "@/lib/agentWitch/consolidateActiveAgentWitchDeviceByLabel";
 import { deliverAgentWitchDeviceRestartIfRequested } from "@/lib/agentWitch/deliverAgentWitchDeviceRestart";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
@@ -15,6 +17,7 @@ export const runAgentWitchHeartbeatDeviceMaintenance = async (input: {
   readonly installBundleVersion: string | null;
   readonly wakePort: number | null;
   readonly wakeError: string | null;
+  readonly knowledge?: KnowledgeHeartbeatReport | null;
 }): Promise<void> => {
   await updateAgentWitchDeviceWakeError({
     deviceId: input.deviceId,
@@ -32,6 +35,16 @@ export const runAgentWitchHeartbeatDeviceMaintenance = async (input: {
     await updateAgentWitchDeviceWakePort({
       deviceId: input.deviceId,
       wakePort: input.wakePort,
+    });
+  }
+
+  if (input.knowledge !== undefined && input.knowledge !== null) {
+    await saveKnowledgeHeartbeat({
+      userId: input.userId,
+      deviceId: input.deviceId,
+      report: input.knowledge,
+    }).catch((error: unknown) => {
+      console.error("[agent-witch/knowledge] heartbeat save failed", error);
     });
   }
 

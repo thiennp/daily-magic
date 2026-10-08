@@ -19,6 +19,8 @@ export type CheckContextResult = {
   readonly projectId?: string;
   /** Optional human tip string (≤~120 tokens) when status is hit. */
   readonly tip?: string;
+  /** Optional local project notes (≤~150 tokens) from AWL knowledge cards. */
+  readonly notes?: string;
 };
 
 export type GetContextInput = {

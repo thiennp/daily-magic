@@ -296,3 +296,19 @@ Không có enforcement bằng phạt hay xếp hạng cá nhân: chỉ hiển th
 2. **Không chặn dispatch** theo trạng thái knowledge (Degraded/Not installed chỉ cảnh báo). Chặn `too_old` ở bước connect là hành vi sẵn có, giữ nguyên, không thêm gate mới.
 3. **Owner xem tất cả:** gồm nội dung card và số liệu từng thành viên trong project. Hệ quả cần làm: card đã redact trước khi lưu và trước khi đồng bộ lên AWC; UI ghi rõ cho thành viên biết owner xem được ("Project knowledge is visible to project owners"); sync card lên AWC là opt-in theo project (flag), mặc định chỉ đồng bộ số tổng hợp.
 4. Các điểm còn lại ở §8: giữ theo đề xuất (luật mặc định, 2 turn, reconciler đầu run kế, budget 150/300/800, bỏ Redis và Postgres local).
+
+---
+
+## 12. Trạng thái triển khai
+
+| Hạng mục                                                                                   | Trạng thái                                                                                                     |
+| ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| `knowledge.db`, `EpisodeCard`, routing `knowledgePlan`, budget 150/300/800, fail-open      | Xong (AWL)                                                                                                     |
+| Capture: mistake (exit≠0, verify đỏ, user sửa lại), fix, commit link, reconciler, revert   | Xong (AWL)                                                                                                     |
+| Feedback loop, holdout, `knowledge_events`, impact panel local `/knowledge`                | Xong (AWL)                                                                                                     |
+| Heartbeat `knowledge` (capabilities + aggregate theo ngày), bảng `project_knowledge_daily` | Xong (AWC)                                                                                                     |
+| Panel "Knowledge impact" ở tab Reports + trạng thái từng máy cho owner                     | Xong (AWC)                                                                                                     |
+| `check_context` hook/MCP trả `notes` cho agent chạy ngoài AW                               | Xong (lexical, 150 token)                                                                                      |
+| Đồng bộ **nội dung** card lên AWC cho owner xem                                            | **Chưa**: hiện chỉ đồng bộ số tổng hợp; nội dung card ở lại máy. Cần quyết định opt-in và redact trước khi làm |
+| Project flag `knowledge` ON/OFF theo project (AWC)                                         | **Chưa**: hiện tắt bằng env `AGENT_WITCH_KNOWLEDGE=off` trên máy                                               |
+| Gợi ý "mistake lặp ≥ 3 → Project Pitfall"                                                  | **Chưa**: card đã gắn `occurrences`, danh sách "Needs review" hiện ở panel local                               |

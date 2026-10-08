@@ -5,7 +5,11 @@ import { PROJECT_PITFALL_AGENTWITCH_PROJECT_ID as AW } from "@agent-witch/shared
 import { afterEach, describe, expect, it } from "vitest";
 
 import { createPitfallRegistry } from "./createPitfallRegistry";
-import { closePitfallDb, openPitfallDb, type PitfallDatabase } from "./openPitfallDb";
+import {
+  closePitfallDb,
+  openPitfallDb,
+  type PitfallDatabase,
+} from "./openPitfallDb";
 
 const tempDirs: string[] = [];
 
@@ -15,9 +19,18 @@ afterEach(() => {
   }
 });
 
-const LEGACY_SEEDS = ["arch-max-lines", "ci-yml-main-only", "no-prs-daily-magic"];
+const LEGACY_SEEDS = [
+  "arch-max-lines",
+  "ci-yml-main-only",
+  "no-prs-daily-magic",
+];
 
-const insertRow = (db: PitfallDatabase, projectId: string, id: string, source: string) =>
+const insertRow = (
+  db: PitfallDatabase,
+  projectId: string,
+  id: string,
+  source: string,
+) =>
   db
     .prepare(
       `INSERT INTO pitfalls (project_id, id, symptom, cause, avoidance, check_kind,
@@ -44,8 +57,15 @@ const legacyDb = (knowsAgentWitch: boolean): string => {
 const rows = (dbPath: string) => {
   const db = openPitfallDb(dbPath);
   const all = db
-    .prepare("SELECT project_id, id, source, avoidance FROM pitfalls ORDER BY project_id, id")
-    .all() as unknown as { project_id: string; id: string; source: string; avoidance: string }[];
+    .prepare(
+      "SELECT project_id, id, source, avoidance FROM pitfalls ORDER BY project_id, id",
+    )
+    .all() as unknown as {
+    project_id: string;
+    id: string;
+    source: string;
+    avoidance: string;
+  }[];
   const hits = db.prepare("SELECT * FROM pitfall_hits").all();
   closePitfallDb(db);
   return { all, hits };
@@ -56,19 +76,26 @@ describe("retireStaleLocalSeedPitfalls", () => {
     const dbPath = legacyDb(true);
     createPitfallRegistry({ dbPath }).close();
     const after = rows(dbPath);
-    expect(after.all.filter((row) => row.project_id === "").map((row) => row.id)).toEqual([
-      "secrets-in-logs",
-    ]);
+    expect(
+      after.all.filter((row) => row.project_id === "").map((row) => row.id),
+    ).toEqual(["secrets-in-logs"]);
     const moved = after.all.filter((row) => row.project_id === AW);
     expect(moved.map((row) => row.id)).toEqual(LEGACY_SEEDS);
     expect(moved.every((row) => row.source === "project")).toBe(true);
     expect(moved[0]?.avoidance).toBe("avoid arch-max-lines");
     expect(after.all.some((row) => row.id === "my-own-rule")).toBe(true);
     expect(after.hits).toEqual([
-      { project_id: AW, pitfall_id: "arch-max-lines", hit_count: 7, last_seen_at: null },
+      {
+        project_id: AW,
+        pitfall_id: "arch-max-lines",
+        hit_count: 7,
+        last_seen_at: null,
+      },
     ]);
     const registry = createPitfallRegistry({ dbPath });
-    expect(registry.getPitfall({ projectId: AW, id: "arch-max-lines" })?.hitCount).toBe(7);
+    expect(
+      registry.getPitfall({ projectId: AW, id: "arch-max-lines" })?.hitCount,
+    ).toBe(7);
     registry.close();
     expect(rows(dbPath)).toEqual(after);
   });
@@ -90,7 +117,9 @@ describe("retireStaleLocalSeedPitfalls", () => {
     insertRow(db, AW, "ci-yml-main-only", "retired");
     closePitfallDb(db);
     createPitfallRegistry({ dbPath }).close();
-    const kept = rows(dbPath).all.find((row) => row.project_id === AW && row.id === "ci-yml-main-only");
+    const kept = rows(dbPath).all.find(
+      (row) => row.project_id === AW && row.id === "ci-yml-main-only",
+    );
     expect(kept?.source).toBe("retired");
   });
 });

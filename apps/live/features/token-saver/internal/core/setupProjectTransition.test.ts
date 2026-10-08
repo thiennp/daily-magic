@@ -19,16 +19,13 @@ describe("setupProjectTransition", () => {
   });
 
   it("Declined is terminal: no defaults or fragments", () => {
-    const declined = transitionSetupProject(
-      "GlobalTriggersWritten",
-      "decline",
-    );
+    const declined = transitionSetupProject("GlobalTriggersWritten", "decline");
     expect(declined).toEqual({ ok: true, state: "Declined" });
     expect(isDeclinedTerminal("Declined")).toBe(true);
     expect(transitionSetupProject("Declined", "applyDefaults").ok).toBe(false);
-    expect(
-      transitionSetupProject("Declined", "writeProjectFragments").ok,
-    ).toBe(false);
+    expect(transitionSetupProject("Declined", "writeProjectFragments").ok).toBe(
+      false,
+    );
     expect(transitionSetupProject("Declined", "accept").ok).toBe(false);
     expect(transitionSetupProject("Declined", "clearDecline")).toEqual({
       ok: true,

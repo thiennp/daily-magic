@@ -64,7 +64,11 @@ export const declineProjectForCwd = (input: {
     cwd: input.cwd,
   };
   const store = readDeclinedProjectsStore(input.layout, fs);
-  writeStore(input.layout, { byRealpath: { ...store.byRealpath, [key]: entry } }, fs);
+  writeStore(
+    input.layout,
+    { byRealpath: { ...store.byRealpath, [key]: entry } },
+    fs,
+  );
   return entry;
 };
 
@@ -93,5 +97,7 @@ export const isDeclinedCwd = (input: {
 }): boolean => {
   const fs = input.fs ?? createNodeCliFs();
   const key = resolveDeclinePathKey(input.cwd, fs);
-  return readDeclinedProjectsStore(input.layout, fs).byRealpath[key] !== undefined;
+  return (
+    readDeclinedProjectsStore(input.layout, fs).byRealpath[key] !== undefined
+  );
 };

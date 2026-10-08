@@ -36,13 +36,20 @@ const run = async (
     writeStderr: (text) => stderr.push(text),
     runCheckContext,
   });
-  return { code, stdout: stdout.join(""), stderr: stderr.join(""), runCheckContext };
+  return {
+    code,
+    stdout: stdout.join(""),
+    stderr: stderr.join(""),
+    runCheckContext,
+  };
 };
 
 const parseContext = (stdout: string): unknown =>
-  (JSON.parse(stdout) as {
-    hookSpecificOutput: { hookEventName: string; additionalContext: string };
-  }).hookSpecificOutput;
+  (
+    JSON.parse(stdout) as {
+      hookSpecificOutput: { hookEventName: string; additionalContext: string };
+    }
+  ).hookSpecificOutput;
 
 describe("runCheckContextHook (Claude UserPromptSubmit)", () => {
   it("setup_project writes exactly the subcommand the app entry dispatches", () => {
@@ -95,7 +102,7 @@ describe("runCheckContextHook (Claude UserPromptSubmit)", () => {
   });
 
   it("bad stdin: exit 0, nothing on stdout, runner not called, stderr note", async () => {
-    for (const stdin of ["", "not json", "[1,2]", "null", "\"str\""]) {
+    for (const stdin of ["", "not json", "[1,2]", "null", '"str"']) {
       const out = await run(stdin, () => ({ status: "hit", tip: "x" }));
       expect(out.code).toBe(0);
       expect(out.stdout).toBe("");
@@ -126,7 +133,10 @@ describe("runCheckContextHook (Claude UserPromptSubmit)", () => {
     expect(rejected).toMatchObject({ code: 0, stdout: "" });
     expect(rejected.stderr).toContain("async fail");
 
-    const stdinFailed = await run(new Error("EPIPE"), () => ({ status: "hit", tip: "x" }));
+    const stdinFailed = await run(new Error("EPIPE"), () => ({
+      status: "hit",
+      tip: "x",
+    }));
     expect(stdinFailed).toMatchObject({ code: 0, stdout: "" });
     expect(stdinFailed.stderr).toContain("EPIPE");
   });

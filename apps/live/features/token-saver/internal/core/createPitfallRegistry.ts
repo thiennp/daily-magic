@@ -9,25 +9,16 @@ import type {
   UpsertPitfallInput,
 } from "../../public-api/types";
 import { getPitfallFromDb } from "./getPitfall";
-import {
-  listPitfallsFromDb,
-  type ListPitfallsResult,
-} from "./listPitfalls";
+import { listPitfallsFromDb, type ListPitfallsResult } from "./listPitfalls";
 import { matchPitfallsFromDb } from "./matchPitfalls";
-import {
-  closePitfallDb,
-  openPitfallDb,
-} from "./openPitfallDb";
+import { closePitfallDb, openPitfallDb } from "./openPitfallDb";
 import {
   recordPitfallHitInDb,
   type RecordPitfallHitResult,
 } from "./recordPitfallHit";
 import { resolveTokenSaverDbPath } from "./resolveTokenSaverDbPath";
 import { seedPitfallsIdempotent } from "./seedPitfallsIdempotent";
-import {
-  upsertPitfallInDb,
-  type UpsertPitfallResult,
-} from "./upsertPitfall";
+import { upsertPitfallInDb, type UpsertPitfallResult } from "./upsertPitfall";
 
 export interface PitfallRegistry {
   readonly dbPath: string;

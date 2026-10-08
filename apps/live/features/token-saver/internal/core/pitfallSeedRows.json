@@ -8,16 +8,7 @@
       "kind": "id",
       "value": "pit.secrets-in-logs"
     },
-    "keywords": [
-      "secrets",
-      "logs",
-      "token",
-      "keypair",
-      "env",
-      "fingerprint"
-    ],
-    "tags": [
-      "secrets"
-    ]
+    "keywords": ["secrets", "logs", "token", "keypair", "env", "fingerprint"],
+    "tags": ["secrets"]
   }
 ]

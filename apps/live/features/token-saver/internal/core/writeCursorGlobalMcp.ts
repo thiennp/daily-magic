@@ -33,9 +33,7 @@ export const writeCursorGlobalMcp = (input: {
       root = {};
     }
   }
-  const servers = isRecord(root.mcpServers)
-    ? { ...root.mcpServers }
-    : {};
+  const servers = isRecord(root.mcpServers) ? { ...root.mcpServers } : {};
   const prev = servers[MCP_SERVER_NAME];
   const same =
     isRecord(prev) &&

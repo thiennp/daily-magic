@@ -106,7 +106,9 @@ CREATE TABLE IF NOT EXISTS agent_witch_devices (
   install_bundle_version TEXT,
   wake_port INTEGER,
   superseded_by_device_id TEXT
-    REFERENCES agent_witch_devices(id) ON DELETE SET NULL
+    REFERENCES agent_witch_devices(id) ON DELETE SET NULL,
+  knowledge_capabilities JSONB,
+  knowledge_capabilities_at TIMESTAMPTZ
 );
 
 CREATE TABLE IF NOT EXISTS agent_witch_connections (
@@ -807,3 +809,24 @@ CREATE TABLE IF NOT EXISTS billing_infra_spend_months (
     CHECK (trial_gate IN ('open', 'closed')),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS project_knowledge_daily (
+  project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
+  device_id TEXT NOT NULL REFERENCES agent_witch_devices(id) ON DELETE CASCADE,
+  day DATE NOT NULL,
+  runs INTEGER NOT NULL DEFAULT 0,
+  holdout_runs INTEGER NOT NULL DEFAULT 0,
+  runs_with INTEGER NOT NULL DEFAULT 0,
+  repeats_with INTEGER NOT NULL DEFAULT 0,
+  repeats_holdout INTEGER NOT NULL DEFAULT 0,
+  cards_injected INTEGER NOT NULL DEFAULT 0,
+  injected_tokens INTEGER NOT NULL DEFAULT 0,
+  mistakes_avoided INTEGER NOT NULL DEFAULT 0,
+  est_tokens_saved INTEGER NOT NULL DEFAULT 0,
+  correction_turns INTEGER NOT NULL DEFAULT 0,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (project_id, device_id, day)
+);
+
+CREATE INDEX IF NOT EXISTS project_knowledge_daily_project_day_idx
+  ON project_knowledge_daily (project_id, day DESC);

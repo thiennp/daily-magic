@@ -29,6 +29,7 @@ export const PROJECT_DELETE_CASCADE_CHILD_TABLES = [
   "project_human_invites",
   "project_invite_auto_approve_events",
   "project_invites",
+  "project_knowledge_daily",
   "project_knowledge_items",
   "project_membership_display_name_aliases",
   "project_membership_grok_routine_webhooks",

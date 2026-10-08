@@ -5,7 +5,11 @@ import type {
 
 export type TransitionResult =
   | { readonly ok: true; readonly state: SetupProjectState }
-  | { readonly ok: false; readonly reason: string; readonly state: SetupProjectState };
+  | {
+      readonly ok: false;
+      readonly reason: string;
+      readonly state: SetupProjectState;
+    };
 
 /**
  * Pure state transitions. Declined is TERMINAL (no DefaultsApplied /

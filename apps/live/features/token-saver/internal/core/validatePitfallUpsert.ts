@@ -7,13 +7,20 @@ import {
 } from "./pitfall.constants";
 
 export type PitfallValidationError =
-  | { readonly kind: "field_too_long"; readonly field: string; readonly max: number }
+  | {
+      readonly kind: "field_too_long";
+      readonly field: string;
+      readonly max: number;
+    }
   | { readonly kind: "active_cap"; readonly max: number }
   | { readonly kind: "empty_id" }
   | { readonly kind: "empty_project_id" };
 
 export const validatePitfallFieldLengths = (
-  input: Pick<UpsertPitfallInput, "symptom" | "cause" | "avoidance" | "id" | "projectId">,
+  input: Pick<
+    UpsertPitfallInput,
+    "symptom" | "cause" | "avoidance" | "id" | "projectId"
+  >,
 ): PitfallValidationError | null => {
   if (input.id.trim().length === 0) {
     return { kind: "empty_id" };
