@@ -4,54 +4,73 @@ import { describe, expect, it } from "vitest";
 
 import AwcWakeConnectPasteCard from "@/features/projects/access/AwcWakeConnectPasteCard";
 import AwcWakeConnectPasteChips from "@/features/projects/access/AwcWakeConnectPasteChips";
-import { detectWakeConnectPaste } from "@/features/projects/access/utils/detectWakeConnectPaste";
 
 const KEY = "sk_live_0123456789abcdef";
-const chips = (text: string): string =>
-  renderToStaticMarkup(createElement(AwcWakeConnectPasteChips, { found: detectWakeConnectPaste(text) })).replace(/<[^>]+>/g, " ");
+const chips = (found: {
+  site: string | null;
+  linkRejected: boolean;
+  keyOk: boolean;
+}): string =>
+  renderToStaticMarkup(
+    createElement(AwcWakeConnectPasteChips, { found }),
+  ).replace(/<[^>]+>/g, " ");
 
-describe("one-box wake connect chips (DF-036 EN PASS S5)", () => {
-  it("empty box: both parts not pasted yet", () => {
-    const t = chips("");
-    expect(t).toContain("Wake link — not pasted yet");
-    expect(t).toContain("Key — not pasted yet");
+describe("two-field wake connect chips", () => {
+  it("empty fields: both parts not added yet", () => {
+    const t = chips({ site: null, linkRejected: false, keyOk: false });
+    expect(t).toContain("Wake link — not added yet");
+    expect(t).toContain("Key — not added yet");
   });
 
-  it("found parts: site + hidden key, never the key itself", () => {
-    const t = chips(`https://grok.example.com/hooks/wake/abc ${KEY}`);
+  it("valid parts: site + hidden key, never the key itself", () => {
+    const t = chips({
+      site: "grok.example.com",
+      linkRejected: false,
+      keyOk: true,
+    });
     expect(t).toContain("Wake link ✓ grok.example.com");
     expect(t).toContain("Key ✓ hidden");
     expect(t).not.toContain(KEY);
   });
 
-  it("rejected address reads 'check it', not 'not pasted yet'", () => {
-    const t = chips(`http://grok.example.com/x ${KEY}`);
-    expect(t).toContain("Wake link — check it");
-    expect(t).not.toContain("Wake link — not pasted yet");
+  it("rejected address reads 'check it'", () => {
+    expect(chips({ site: null, linkRejected: true, keyOk: true })).toContain(
+      "Wake link — check it",
+    );
   });
 
-  it("card: plain steps, no jargon, chips mounted", () => {
-    const html = renderToStaticMarkup(
-      createElement(AwcWakeConnectPasteCard, { projectId: "p1", membershipId: "m1", memberName: "NRG Lead" }),
+  const card = (memberName: string | null): string =>
+    renderToStaticMarkup(
+      createElement(AwcWakeConnectPasteCard, {
+        projectId: "p1",
+        membershipId: "m1",
+        memberName,
+      }),
     );
+
+  it("card: separate Wake link and Key fields, key hidden, tips mounted", () => {
+    const html = card("NRG Lead");
     expect(html).toContain("NRG Lead posted two links: wake link and key.");
-    expect(html).toContain('placeholder="Paste the wake link, then the key"');
+    expect(html).toContain('name="grok-wake-url"');
+    expect(html).toContain('placeholder="https://…"');
+    expect(html).toMatch(
+      /type="password"[^>]*name="grok-wake-key"|name="grok-wake-key"[^>]*type="password"/,
+    );
+    expect(html).toContain('autoComplete="off"');
+    expect(html).toContain(">Show</button>");
     expect(html).toContain("data-wake-detect");
     expect(html.toLowerCase()).not.toMatch(/routine|webhook url|token|secret/);
   });
 
-  it("DF-036 F7: Connect stays disabled until link and key are both detected", () => {
-    const html = renderToStaticMarkup(
-      createElement(AwcWakeConnectPasteCard, { projectId: "p1", membershipId: "m1", memberName: "NRG Lead" }),
+  it("Connect stays disabled until both fields are valid", () => {
+    expect(card("NRG Lead")).toMatch(
+      /<button[^>]*disabled[^>]*>Connect<\/button>/,
     );
-    expect(html).toMatch(/<button[^>]*disabled[^>]*>Connect<\/button>/);
-    expect(html).not.toContain(">Connect wake link<");
   });
 
   it("no nickname yet: one plain line asks for it first", () => {
-    const html = renderToStaticMarkup(
-      createElement(AwcWakeConnectPasteCard, { projectId: "p1", membershipId: "m1", memberName: null }),
+    expect(card(null)).toContain(
+      "a nickname first, then connect the wake link.",
     );
-    expect(html).toContain("a nickname first, then connect the wake link.");
   });
 });

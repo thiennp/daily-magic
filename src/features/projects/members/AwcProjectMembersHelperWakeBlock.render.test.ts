@@ -25,15 +25,15 @@ describe("DF-036 F3 / Q2: the Wake link block in the row detail", () => {
     expect(html).toContain(">Wake link</h4>");
     expect(html).toContain("Not connected");
     expect(html).toContain("Let AgentWitch wake NRG Lead when there's work.");
-    expect(html).toContain('name="grok-wake-connect"');
+    expect(html).toContain('name="grok-wake-url"');
   });
 
   it("checks in only when asked: detail line + secondary Add wake link", () => {
     const html = render("checks_on_demand");
     expect(html).toContain("Checks in only when asked.");
     expect(html).toContain(">Add wake link</button>");
-    expect(html).not.toContain('name="grok-wake-connect"');
-    expect(render("checks_on_demand", true)).toContain('name="grok-wake-connect"');
+    expect(html).not.toContain('name="grok-wake-url"');
+    expect(render("checks_on_demand", true)).toContain('name="grok-wake-url"');
   });
 
   it("status failed to load: Couldn't check + Retry, never Not connected", () => {
@@ -41,7 +41,7 @@ describe("DF-036 F3 / Q2: the Wake link block in the row detail", () => {
     expect(html).toContain("Couldn't check the wake link");
     expect(html).toContain(">Retry</button>");
     expect(html).not.toContain("Not connected");
-    expect(html).not.toContain('name="grok-wake-connect"');
+    expect(html).not.toContain('name="grok-wake-url"');
   });
 
   it("checking shows no action and no paste box", () => {
@@ -51,8 +51,14 @@ describe("DF-036 F3 / Q2: the Wake link block in the row detail", () => {
   });
 
   it("no jargon in the block", () => {
-    for (const status of ["not_connected", "checks_on_demand", "cant_check"] as const) {
-      expect(render(status).toLowerCase()).not.toMatch(/routine|webhook|token|secret|grok wake link/);
+    for (const status of [
+      "not_connected",
+      "checks_on_demand",
+      "cant_check",
+    ] as const) {
+      expect(render(status).toLowerCase()).not.toMatch(
+        /routine|webhook|token|secret|grok wake link/,
+      );
     }
   });
 });

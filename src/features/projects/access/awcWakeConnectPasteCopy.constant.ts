@@ -1,25 +1,31 @@
-/** P1-S1b one-box wake connect (Members rail, `#wake-link-<id>`). `{name}` = nickname. */
+/** P1-S1b wake connect (Members rail + pending join card): two fields. `{name}` = nickname. */
 export const AWC_WAKE_CONNECT_PASTE_COPY = {
   title: "Connect wake link",
-  help: "In Grok Bot, {name} posted two links: wake link and key. Copy each one and paste both here, one after the other.",
-  label: "Wake link and key",
-  placeholder: "Paste the wake link, then the key",
+  help: "In Grok Bot, {name} posted two links: wake link and key. Copy each one into its own field.",
+  urlLabel: "Wake link",
+  urlPlaceholder: "https://…",
+  urlTip:
+    "The https address {name} posted in Grok Bot. It wakes {name} when there's work.",
+  keyLabel: "Key",
+  keyPlaceholder: "Paste the key",
+  keyTip:
+    "The second link {name} posted. It stays hidden and is never shown again.",
+  showKey: "Show",
+  hideKey: "Hide",
   save: "Connect",
   saving: "Connecting…",
   /** DF-036 F9: success shows the status line. */
   saved: "Registered ✓ · No wakes yet",
-  /** DF-036 F9: the brief's inline errors (bad = --bad text; need_* = muted guidance). */
+  /** Inline errors per field (bad = --bad text). */
   badLink: "That doesn't look like a wake link. Copy it again from Grok Bot.",
-  needKey: "Now paste the key too. It's the second link {name} posted.",
-  needLink: "Paste the wake link too. It starts with https://",
   httpsOnly: "The wake link must start with https://",
-  twoLinks: "That's two web addresses. Paste one wake link and one key.",
+  twoLinks: "That's more than one address. Paste only the wake link here.",
   keyTooLong: "That key is too long. Copy it again from Grok Bot.",
   needNickname: "Give {name} a nickname first, then connect the wake link.",
-  /** DF-036 detection chips (EN PASS S5: a rejected address reads "check it"). */
+  /** Status chips (site host shown once the link is valid). */
   chipLinkOk: "Wake link ✓ {site}",
   chipLinkCheck: "Wake link — check it",
-  chipLinkMissing: "Wake link — not pasted yet",
+  chipLinkMissing: "Wake link — not added yet",
   chipKeyOk: "Key ✓ hidden",
-  chipKeyMissing: "Key — not pasted yet",
+  chipKeyMissing: "Key — not added yet",
 } as const;

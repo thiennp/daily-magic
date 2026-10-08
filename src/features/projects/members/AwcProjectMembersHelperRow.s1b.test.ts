@@ -31,7 +31,7 @@ describe("P1-S1b assistant row — wake status + one-box connect", () => {
       "useAwcProjectAccessWakeLinks",
     );
     expect(read("access/hooks/useWakeLinkOpenRequest.ts")).toContain(
-      'textarea[name="grok-wake-connect"]',
+      'input[name="grok-wake-url"]',
     );
   });
 
