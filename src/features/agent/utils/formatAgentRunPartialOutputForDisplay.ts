@@ -2,6 +2,7 @@ import {
   parseAgentLiveProgressUpdates,
   type AgentLiveProgressUpdate,
 } from "@/features/agent/utils/parseAgentLiveProgressUpdates";
+import { stripAgentRunCliNoise } from "@/features/agent/utils/stripAgentRunCliNoise";
 import { stripAgentRunProgressFromOutput } from "@/features/agent/utils/stripAgentRunProgressFromOutput";
 import {
   parseAgentRunPartialOutputSections,
@@ -16,10 +17,11 @@ export type FormattedAgentRunPartialOutput = {
 export const formatAgentRunPartialOutputForDisplay = (
   partialOutput: string,
 ): FormattedAgentRunPartialOutput => {
-  const remainingText = stripAgentRunProgressFromOutput(partialOutput);
+  const cleanOutput = stripAgentRunCliNoise(partialOutput);
+  const remainingText = stripAgentRunProgressFromOutput(cleanOutput);
 
   return {
-    progressUpdates: parseAgentLiveProgressUpdates(partialOutput),
+    progressUpdates: parseAgentLiveProgressUpdates(cleanOutput),
     sections: parseAgentRunPartialOutputSections(remainingText),
   };
 };

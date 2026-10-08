@@ -17,11 +17,33 @@ const hasCompleteQuestion = (afterMarkerRaw: string): boolean => {
   return body.length > 0 && (PARAGRAPH_END.test(body) || /\n/.test(body));
 };
 
+const ECHOED_PROMPT_LINE = /^user$/m;
+const AGENT_REPLY_LINE = /^(?:codex|assistant)$/m;
+
+/**
+ * Codex prints the prompt back under a `user` line, and our own instructions
+ * mention the marker. Only text after the agent's reply line may hold a real
+ * question; until that line exists there is nothing to scan.
+ */
+const findMarkerSearchStart = (output: string): number => {
+  const echo = ECHOED_PROMPT_LINE.exec(output);
+  if (echo === null) {
+    return 0;
+  }
+  const afterEcho = echo.index + echo[0].length;
+  const reply = AGENT_REPLY_LINE.exec(output.slice(afterEcho));
+  return reply === null ? output.length : afterEcho + reply.index;
+};
+
 export const parseAwaitingInputFromOutput = (
   output: string,
   options?: { readonly requireCompleteQuestion?: boolean },
 ): { readonly question: string; readonly partialOutput: string } | null => {
-  const markerIndex = output.indexOf(AGENT_RUN_INPUT_MARKER);
+  const searchStart = findMarkerSearchStart(output);
+  const relativeIndex = output
+    .slice(searchStart)
+    .indexOf(AGENT_RUN_INPUT_MARKER);
+  const markerIndex = relativeIndex < 0 ? -1 : searchStart + relativeIndex;
 
   if (markerIndex < 0) {
     return null;

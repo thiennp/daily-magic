@@ -5,6 +5,25 @@ import { AGENT_RUN_INPUT_MARKER } from "./dispatch/agentRunInputGuardrails.const
 import { parseAwaitingInputFromOutput } from "./agentWitchRunSessions";
 
 describe("parseAwaitingInputFromOutput", () => {
+  const echoedPrompt = [
+    "OpenAI Codex v0.144.6",
+    "--------",
+    "user",
+    "Do the task.",
+    `4. Never use ${AGENT_RUN_INPUT_MARKER} to confirm an estimate.`,
+  ].join("\n");
+
+  it("ignores the marker inside the prompt a CLI echoes back", () => {
+    expect(parseAwaitingInputFromOutput(`${echoedPrompt}\n`)).toBeNull();
+  });
+
+  it("still finds a real question after the agent's reply line", () => {
+    const parsed = parseAwaitingInputFromOutput(
+      `${echoedPrompt}\ncodex\nWorking.\n${AGENT_RUN_INPUT_MARKER}\nWhich week?\n`,
+    );
+    expect(parsed?.question).toBe("Which week?");
+  });
+
   it("extracts the first line after the marker as the question", () => {
     const parsed = parseAwaitingInputFromOutput(
       `Working on the report.\n${AGENT_RUN_INPUT_MARKER}\nWhich week should I summarize?`,
