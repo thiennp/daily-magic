@@ -19,7 +19,8 @@
 /** 298 = bundle restart waits for running/parked tasks (all profiles), 6h cap, 30s recheck. */
 /** 299 = AWAITING_INPUT markers in the echoed prompt are ignored. */
 /** 300 = host start closes orphaned run reports; expired paused runs close their report; Done summary skips pre-answer waits (378558e8). */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "300";
+/** 301 = paused runs no longer block bundle restart (b53ecc47); known agy/CLI errors get one-sentence report summaries (9b3947bc). */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "301";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =
