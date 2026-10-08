@@ -34,10 +34,9 @@ describe("Add assistant: type picker", () => {
       }),
     );
     expect(html).toContain(">Add assistant<");
-    expect(html).toContain(
-      '<option value="" selected="">Another assistant (general steps)</option>',
-    );
-    expect(html).toContain('<option value="muse">Muse</option>');
+    expect(html).toContain("Any supported assistant");
+    expect(html).toContain('data-invite-type-picker=""');
+    expect(html).toContain('data-invite-type-value=""');
     const visible = html.replace(/<[^>]+>/g, " ");
     expect(visible).not.toMatch(/\bbot\b|right away/);
   });
