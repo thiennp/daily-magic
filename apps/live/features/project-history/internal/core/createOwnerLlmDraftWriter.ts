@@ -6,9 +6,7 @@ import {
   resolveWriterCliCommands,
   type HarnessWriterAgentId,
 } from "../../../../adapters/writerDispatch";
-import {
-  PROJECT_HISTORY_SKILLGEN_OWNER_LLM_DRY_RUN_ENV,
-} from "./projectHistory.constants";
+import { PROJECT_HISTORY_SKILLGEN_OWNER_LLM_DRY_RUN_ENV } from "./projectHistory.constants";
 import {
   buildOwnerLlmSkillReflectPrompt,
   buildOwnerLlmSkillWritePrompt,
@@ -28,11 +26,14 @@ export type OwnerLlmCliRunner = (input: {
   readonly writerAgent: HarnessWriterAgentId;
   readonly prompt: string;
   readonly timeoutMs: number;
-}) => Promise<{ readonly ok: true; readonly text: string; readonly tokensUsed: number } | {
-  readonly ok: false;
-  readonly reason: string;
-  readonly tokensUsed: number;
-}>;
+}) => Promise<
+  | { readonly ok: true; readonly text: string; readonly tokensUsed: number }
+  | {
+      readonly ok: false;
+      readonly reason: string;
+      readonly tokensUsed: number;
+    }
+>;
 
 const estimateTokens = (text: string): number => Math.ceil(text.length / 4);
 
@@ -59,9 +60,7 @@ export const runOwnerLlmCliTurn: OwnerLlmCliRunner = (input) =>
       stdio: ["ignore", "pipe", "pipe"],
     });
     let settled = false;
-    const finish = (
-      value: Awaited<ReturnType<OwnerLlmCliRunner>>,
-    ): void => {
+    const finish = (value: Awaited<ReturnType<OwnerLlmCliRunner>>): void => {
       if (settled) {
         return;
       }
@@ -90,7 +89,13 @@ export const runOwnerLlmCliTurn: OwnerLlmCliRunner = (input) =>
         tokensUsed: 0,
       }),
     );
-    child.on("close", () => {
+    child.on("close", (code) => {
+      if (code !== 0) {
+        // A signed-out / failing CLI prints an error and exits non-zero; treating
+        // that as success skipped the Codex fallback and yielded unparseable text.
+        finish({ ok: false, reason: `writer_exit_${code}`, tokensUsed: 0 });
+        return;
+      }
       const text = `${Buffer.concat(stdout).toString("utf8")}\n${Buffer.concat(stderr).toString("utf8")}`;
       finish({
         ok: true,
@@ -156,11 +161,13 @@ const tryAgents = async (
  * Step 10 — production OwnerLlmDraftWriter: Cursor first, Codex fallback
  * (same writerDispatch path as Prompt Optimizer). Dry-run via env for tests.
  */
-export const createOwnerLlmDraftWriter = (deps: {
-  readonly runCli?: OwnerLlmCliRunner;
-  readonly timeoutMs?: number;
-  readonly dryRun?: boolean;
-} = {}): OwnerLlmDraftWriter => {
+export const createOwnerLlmDraftWriter = (
+  deps: {
+    readonly runCli?: OwnerLlmCliRunner;
+    readonly timeoutMs?: number;
+    readonly dryRun?: boolean;
+  } = {},
+): OwnerLlmDraftWriter => {
   const runner = deps.runCli ?? runOwnerLlmCliTurn;
   const timeoutMs = deps.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   const dryRun =

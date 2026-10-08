@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 
+import AwcProjectLibraryEmptyOwner from "@/features/projects/library/AwcProjectLibraryEmptyOwner";
 import AwcProjectLibraryRow from "@/features/projects/library/AwcProjectLibraryRow";
 import AwcProjectLibraryToolbar from "@/features/projects/library/AwcProjectLibraryToolbar";
 import { PROJECT_PAGE_LIBRARY_ACTIONS_COPY as A } from "@/features/projects/library/projectPageLibraryActionsCopy.constant";
@@ -13,7 +14,6 @@ import {
   type ProjectLibraryFilter,
 } from "@/features/projects/library/utils/buildProjectLibraryItems";
 import {
-  PANEL_BUTTON_PRIMARY_CLASS,
   PANEL_BUTTON_SECONDARY_CLASS,
   PANEL_INTRO_CLASS,
   PANEL_LIST_CLASS,
@@ -23,32 +23,18 @@ import {
 interface AwcProjectLibraryListProps {
   readonly library: AwcProjectLibraryState;
   readonly canEdit: boolean;
+  /** Skills saved from an auto question get the "Auto" chip. */
+  readonly autoSkillIds?: readonly string[];
   readonly onOpen: (itemId: string) => void;
   readonly onNew?: () => void;
   readonly onAddFrom?: () => void;
 }
 
-const LIB_ICON = (
-  <svg
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10v16H5.5A1.5 1.5 0 0 1 4 18.5z" />
-    <path d="M14 4h4.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H14z" />
-  </svg>
-);
-
 /** Chips + search + rows; HN-H3 empty card with New (primary) + Add from (secondary). */
 export default function AwcProjectLibraryList({
   library,
   canEdit,
+  autoSkillIds = [],
   onOpen,
   onNew,
   onAddFrom,
@@ -91,35 +77,7 @@ export default function AwcProjectLibraryList({
         </>
       );
     }
-    return (
-      <div className="rounded-[14px] border border-dashed border-awc-border-strong bg-awc-tile px-6 py-10 text-center dark:border-gray-700 dark:bg-white/[0.03]">
-        <div className="mx-auto mb-3 grid size-11 place-items-center rounded-xl bg-awc-accent-soft text-brand-600 dark:bg-white/10 dark:text-brand-400">
-          {LIB_ICON}
-        </div>
-        <h2 className="text-[17px] font-semibold text-awc-fg dark:text-white">
-          {C["library.empty.owner.title"]}
-        </h2>
-        <p className="mx-auto mt-1 max-w-[380px] text-sm text-awc-fg-muted dark:text-gray-400">
-          {C["library.empty.owner.body"]}
-        </p>
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-          <button
-            type="button"
-            className={PANEL_BUTTON_PRIMARY_CLASS}
-            onClick={onNew}
-          >
-            {A["library.new"]}
-          </button>
-          <button
-            type="button"
-            className={PANEL_BUTTON_SECONDARY_CLASS}
-            onClick={onAddFrom}
-          >
-            {A["library.add_from"]}
-          </button>
-        </div>
-      </div>
-    );
+    return <AwcProjectLibraryEmptyOwner onNew={onNew} onAddFrom={onAddFrom} />;
   }
 
   return (
@@ -137,7 +95,14 @@ export default function AwcProjectLibraryList({
       ) : (
         <ul className={PANEL_LIST_CLASS}>
           {visible.map((item) => (
-            <AwcProjectLibraryRow key={item.id} item={item} onOpen={onOpen} />
+            <AwcProjectLibraryRow
+              key={item.id}
+              item={item}
+              isAuto={
+                item.skillId !== null && autoSkillIds.includes(item.skillId)
+              }
+              onOpen={onOpen}
+            />
           ))}
         </ul>
       )}

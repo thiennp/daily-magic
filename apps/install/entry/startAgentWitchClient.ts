@@ -62,6 +62,7 @@ import {
 import {
   handleProjectMessageHistoryDispatch,
   handleProjectHistoryPageRequest,
+  reportAutoSkillRunCompleted,
   writeProjectHistoryAiSession,
 } from "@agent-witch/live-project-history";
 import type { AgentWitchClientConfig as AgentWitchConfig } from "@agent-witch/install-runtime-client/types";
@@ -2313,6 +2314,32 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           resultBody: output,
           completedAt: new Date().toISOString(),
         });
+        if (terminalStatus === "completed" && prompt.length > 0) {
+          const autoSkillRunConfig = readAgentWitchRunConfig();
+          const autoSkillCloudApi =
+            autoSkillRunConfig === null
+              ? null
+              : resolveAgentWitchCloudApiConfig({
+                  wsUrl: autoSkillRunConfig.wsUrl,
+                  pairingToken: autoSkillRunConfig.pairingToken,
+                });
+          if (autoSkillCloudApi !== null) {
+            void reportAutoSkillRunCompleted({
+              cloudApi: autoSkillCloudApi,
+              projectId: projectId.trim(),
+              run: {
+                runId: agentRunId,
+                prompt,
+                resultSummary: output.slice(0, 600),
+                completedAt: new Date().toISOString(),
+                writerAgent: null,
+              },
+              ...(projectFolderPath !== null
+                ? { folderPath: projectFolderPath }
+                : {}),
+            });
+          }
+        }
       }
 
       if (agentRunId !== undefined) {

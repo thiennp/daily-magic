@@ -7,4 +7,8 @@ export {
   type HarnessWriterAgentId,
 } from "../../../scripts/buildWriterCliInvocation";
 export { probeLocalRunClis } from "../../../scripts/dispatch/probeLocalRunClis";
+export {
+  listInstalledOllamaChatModels,
+  selectInstalledOllamaEstimateModel,
+} from "../../../scripts/dispatch/selectInstalledOllamaEstimateModel";
 export { parseClaudeCliPrintResult } from "../../../scripts/dispatch/parseClaudeCliPrintResult";

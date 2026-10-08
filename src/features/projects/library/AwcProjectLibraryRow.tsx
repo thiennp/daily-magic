@@ -15,12 +15,14 @@ import {
 
 interface AwcProjectLibraryRowProps {
   readonly item: ProjectLibraryItem;
+  readonly isAuto?: boolean;
   readonly onOpen: (itemId: string) => void;
 }
 
 /** Name · kind · state · updated; whole row opens the item. */
 export default function AwcProjectLibraryRow({
   item,
+  isAuto = false,
   onOpen,
 }: AwcProjectLibraryRowProps) {
   return (
@@ -43,8 +45,15 @@ export default function AwcProjectLibraryRow({
             </time>
           </span>
         </span>
-        <span className={PANEL_PILL_CLASS}>
-          {PROJECT_LIBRARY_STATE_LABEL[item.state]}
+        <span className="flex shrink-0 items-center gap-1.5">
+          {isAuto ? (
+            <span className="rounded-full bg-awc-accent-soft px-2 py-0.5 text-[11.5px] font-medium text-brand-600 dark:bg-white/10 dark:text-brand-400">
+              Auto
+            </span>
+          ) : null}
+          <span className={PANEL_PILL_CLASS}>
+            {PROJECT_LIBRARY_STATE_LABEL[item.state]}
+          </span>
         </span>
       </button>
     </li>

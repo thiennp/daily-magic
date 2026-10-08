@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 
+import { useAutoSkills } from "@/features/project-auto-skills/public-api/presentation";
 import useAwcProjectHashDeepLink from "@/features/projects/hooks/useAwcProjectHashDeepLink";
+import AwcProjectLibraryAutoSkills from "@/features/projects/library/AwcProjectLibraryAutoSkills";
 import AwcProjectLibraryAddFrom from "@/features/projects/library/AwcProjectLibraryAddFrom";
 import AwcProjectLibraryDetail from "@/features/projects/library/AwcProjectLibraryDetail";
 import AwcProjectLibraryHeader from "@/features/projects/library/AwcProjectLibraryHeader";
@@ -29,6 +31,7 @@ export default function AwcProjectLibraryPanel({
   canEdit,
 }: AwcProjectLibraryPanelProps) {
   const library = useAwcProjectLibrary(project.id);
+  const auto = useAutoSkills(project.id);
   const [itemId, setItemId] = useAwcProjectHashDeepLink("library", "item");
   const [mode, setMode] = useState<LibraryMode>("list");
   const [toast, setToast] = useState<string | null>(null);
@@ -64,6 +67,9 @@ export default function AwcProjectLibraryPanel({
         onNewPlaybook={startNewPlaybook}
         onAddFrom={startAddFrom}
       />
+      {canEdit && mode === "list" && itemId === null ? (
+        <AwcProjectLibraryAutoSkills auto={auto} onSaved={library.reload} />
+      ) : null}
       {toast !== null ? (
         <p role="status" className={PANEL_STATUS_CLASS}>
           {toast}
@@ -96,6 +102,7 @@ export default function AwcProjectLibraryPanel({
         <AwcProjectLibraryList
           library={library}
           canEdit={canEdit}
+          autoSkillIds={auto.overview?.autoSkillIds ?? []}
           onOpen={setItemId}
           onNew={startNewSkill}
           onAddFrom={startAddFrom}

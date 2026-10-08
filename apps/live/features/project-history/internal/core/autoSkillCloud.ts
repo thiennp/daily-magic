@@ -1,0 +1,87 @@
+import type { AgentWitchCloudApiConfig } from "../../../projects/internal/core/agentWitchCloudApi";
+import { AGENT_WITCH_PAIRING_TOKEN_HEADER } from "../../../projects/internal/core/agentWitchDeviceAuth.constant";
+
+import type { AutoSkillJudgePref } from "./autoSkill.types";
+
+export type AutoSkillCloudSettings = {
+  readonly enabled: boolean;
+  readonly judgePref: AutoSkillJudgePref;
+  readonly publishMode: "draft" | "publish";
+  readonly neverClusterIds: readonly string[];
+  readonly savedClusterIds: readonly string[];
+  /** Clusters whose question is still waiting for the owner. */
+  readonly pendingClusterIds: readonly string[];
+};
+
+export type AutoSkillStatusReport = {
+  readonly judgeKind: string | null;
+  readonly judgeLabel: string | null;
+  readonly pausedReason: string | null;
+  readonly note: string | null;
+};
+
+export type AutoSkillSuggestionPayload = {
+  readonly clusterId: string;
+  readonly title: string;
+  readonly prompt: string;
+  readonly occurrences: number;
+  readonly matches: readonly {
+    readonly runId: string;
+    readonly completedAt: string;
+    readonly summary: string;
+  }[];
+  readonly draftName: string;
+  readonly draftBody: string;
+  readonly judgeLabel: string;
+};
+
+/** Cloud side of auto skills (settings, status, questions). Throws on http errors. */
+export type AutoSkillCloud = {
+  readonly getSettings: (projectId: string) => Promise<AutoSkillCloudSettings>;
+  readonly postStatus: (
+    projectId: string,
+    status: AutoSkillStatusReport,
+  ) => Promise<void>;
+  readonly postSuggestion: (
+    projectId: string,
+    suggestion: AutoSkillSuggestionPayload,
+  ) => Promise<void>;
+};
+
+export const createHttpAutoSkillCloud = (
+  api: AgentWitchCloudApiConfig,
+): AutoSkillCloud => {
+  const url = (projectId: string): string =>
+    `${api.appOrigin}/api/agent-witch/projects/${encodeURIComponent(projectId)}/auto-skills`;
+  const headers = {
+    [AGENT_WITCH_PAIRING_TOKEN_HEADER]: api.pairingToken,
+    "Content-Type": "application/json",
+  };
+  const post = async (projectId: string, body: unknown): Promise<void> => {
+    const response = await fetch(url(projectId), {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(20_000),
+    });
+    if (!response.ok) {
+      throw new Error(`auto-skills post http ${response.status}`);
+    }
+  };
+  return {
+    getSettings: async (projectId) => {
+      const response = await fetch(url(projectId), {
+        headers,
+        signal: AbortSignal.timeout(20_000),
+      });
+      if (!response.ok) {
+        throw new Error(`auto-skills get http ${response.status}`);
+      }
+      return (await response.json()) as AutoSkillCloudSettings;
+    },
+    postStatus: (projectId, status) =>
+      post(projectId, { kind: "status", status }),
+    postSuggestion: (projectId, suggestion) =>
+      post(projectId, { kind: "suggestion", suggestion }),
+  };
+};

@@ -258,12 +258,31 @@
       "migrationStatus": "in_progress"
     },
     {
+      "slug": "project-auto-skills",
+      "title": "Project auto skills",
+      "purpose": "Owner questions raised by the owner's computer when a kind of task repeats; the owner saves it as a skill, defers, or stops asking.",
+      "featurePath": "src/features/project-auto-skills",
+      "libPath": null,
+      "routePaths": [],
+      "apiPaths": [
+        "/api/projects/[projectId]/auto-skills",
+        "/api/agent-witch/projects/[projectId]/auto-skills"
+      ],
+      "dependsOn": ["auth", "agent-witch", "project-skill-share"],
+      "migrationStatus": "in_progress"
+    },
+    {
       "slug": "onboarding",
       "title": "AWC onboarding",
       "purpose": "Focused first-run flow: create project, connect computer, add assistant, first task via project chat.",
       "featurePath": "src/features/onboarding",
       "libPath": null,
-      "routePaths": ["/onboarding/project", "/onboarding/machine", "/onboarding/bot", "/onboarding/task"],
+      "routePaths": [
+        "/onboarding/project",
+        "/onboarding/machine",
+        "/onboarding/bot",
+        "/onboarding/task"
+      ],
       "apiPaths": [],
       "dependsOn": ["home", "projects", "download", "agent"],
       "migrationStatus": "in_progress"

@@ -42,9 +42,7 @@ export {
 } from "../internal/core/qualifyProjectHistorySkillgenEpisode";
 export { scrubProjectHistorySkillgenSecrets } from "../internal/core/scrubProjectHistorySkillgenSecrets";
 export { mergeOrSkipProjectHistorySkillgenDraft } from "../internal/core/mergeOrSkipProjectHistorySkillgenDraft";
-export {
-  resolveOwnerLlmDraftWriterMode,
-} from "../internal/core/ownerLlmDraftWriter.port";
+export { resolveOwnerLlmDraftWriterMode } from "../internal/core/ownerLlmDraftWriter.port";
 export {
   createOwnerLlmDraftWriter,
   runOwnerLlmCliTurn,
@@ -114,7 +112,10 @@ export { listLocalChatIndexPage } from "../internal/core/listLocalChatIndexPage"
 export { getLocalChatMessage } from "../internal/core/getLocalChatMessage";
 export { listLocalChatThreadKeys } from "../internal/core/listLocalChatThreadKeys";
 export { tryHandleLocalChatReadRequest } from "../internal/core/tryHandleLocalChatReadRequest";
-export { openHistoryStoreDb, closeHistoryStoreDb } from "../internal/core/openHistoryStoreDb";
+export {
+  openHistoryStoreDb,
+  closeHistoryStoreDb,
+} from "../internal/core/openHistoryStoreDb";
 export { extractHistoryIndexFields } from "../internal/core/extractHistoryIndexFields";
 export {
   PROJECT_HISTORY_INDEX_DIR_NAME,
@@ -168,3 +169,4 @@ export type {
   ReconcileProjectSyncClaim,
 } from "../internal/core/reconcileProjectSyncOnConnect";
 
+export { reportAutoSkillRunCompleted } from "../internal/core/reportAutoSkillRunCompleted";

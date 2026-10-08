@@ -23,7 +23,8 @@
 /** 302 = heartbeat reports which coding tools are ready on this computer. */
 /** 303 = local Knowledge impact panel: chart empty states and runs-with-notes vs holdout chart. */
 /** 304 = heartbeat also reports whether Codex is signed in. */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "304";
+/** 305 = auto skills: repeated tasks raise an owner question (Ollama / agent judge); owner-LLM CLI turns fail on non-zero exit. */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "305";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =
