@@ -33,8 +33,8 @@ export default function ConnectThisMacAppFirst({
           Download for Mac
         </a>
         <p className="text-xs text-awc-fg-muted dark:text-gray-400">
-          For Macs with Apple silicon. Already installed and it says this
-          computer is not linked? Open the app and choose Reconnect.
+          Free, signed and notarized by Apple. Already installed and it says
+          this computer is not linked? Open the app and choose Reconnect.
         </p>
       </section>
       <details
@@ -46,7 +46,7 @@ export default function ConnectThisMacAppFirst({
         }}
       >
         <summary className="cursor-pointer text-sm font-medium text-awc-fg dark:text-white/90">
-          Intel Mac, or prefer Terminal? Use a command instead
+          Prefer Terminal? Use a command instead
         </summary>
         {isTerminalSectionOpen ? terminalBody : null}
       </details>
