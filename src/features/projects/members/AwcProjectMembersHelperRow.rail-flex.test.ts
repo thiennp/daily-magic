@@ -45,7 +45,7 @@ describe("DF-036 narrow rail: assistant name vs long wake chip", () => {
       '<span className="truncate">',
     );
     expect(read("members/AwcProjectMembersHelperWakeStatus.tsx")).toContain(
-      "max-w-[45%]",
+      "max-w-[35%]",
     );
   });
 });

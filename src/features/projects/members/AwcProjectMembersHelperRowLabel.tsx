@@ -24,7 +24,10 @@ export default function AwcProjectMembersHelperRowLabel({
     >
       <AwcProjectMembersHelperAvatar name={name} />
       <span className="min-w-0 flex-1 overflow-hidden">
-        <AwcBotName name={name} className="flex font-semibold text-awc-fg" />
+        <AwcBotName
+          name={name}
+          className="flex max-w-full font-semibold text-awc-fg"
+        />
         {line ? (
           <span className="block text-[12px] text-awc-fg-subtle">{line}</span>
         ) : null}
