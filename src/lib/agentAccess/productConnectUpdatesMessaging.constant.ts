@@ -43,7 +43,7 @@ export const PRODUCT_CONNECT_UPDATES_MESSAGING: readonly ProductConnectUpdateEnt
       kind: "connect",
       title: "Orchestrate: keep your seat as the front desk",
       summary:
-        "Helpers do the real work; your seat receives, assigns and answers so it never goes silent. Quick questions you answer yourself, you brief helpers without secrets, check their output before done, and the resultSummary says what to reuse or avoid.",
+        "Helpers do the real work; your seat receives, assigns and answers so it never goes silent. Quick questions you answer yourself, you brief helpers without secrets, check their output before done (code work carries a PR link or commit SHA), and helpers add a reuse-or-avoid line to the resultSummary.",
       adapt: PROJECT_ORCHESTRATOR_CLAUSE,
     },
   ];
