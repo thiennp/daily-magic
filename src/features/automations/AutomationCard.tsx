@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { buildProjectTabRedirectPath } from "@/lib/shell/buildNavConsolidationRedirect";
 import { PROJECTS_REPORTS_INTENT_HREF } from "@/lib/shell/projectTabIntentHrefs.constant";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import Button from "@/components/ui/button/Button";
+import AutomationRunHistory from "@/features/automations/AutomationRunHistory";
 import AutomationRunCells from "@/features/automations/AutomationRunCells";
 import { AUTOMATIONS_PAGE_COPY } from "@/features/automations/automationsPageCopy.constant";
 import { formatAutomationScheduleLabel } from "@/features/automations/formatAutomationScheduleLabel";
@@ -23,6 +25,7 @@ export default function AutomationCard({
 }: AutomationCardProps) {
   const { error, isBusy, handleRun, handleToggle, handleDelete } =
     useAutomationCardActions(automation, onChanged);
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   return (
     <AppPanel as="article" padding="compact">
@@ -81,6 +84,13 @@ export default function AutomationCard({
         >
           {AUTOMATIONS_PAGE_COPY.delete}
         </Button>
+        <Button
+          variant="outline"
+          aria-expanded={historyOpen}
+          onClick={() => setHistoryOpen(!historyOpen)}
+        >
+          {historyOpen ? "Hide history" : "Run history"}
+        </Button>
         {automation.lastRunAt !== null ? (
           <Link
             href={
@@ -93,6 +103,9 @@ export default function AutomationCard({
           </Link>
         ) : null}
       </div>
+      {historyOpen ? (
+        <AutomationRunHistory automationId={automation.id} />
+      ) : null}
     </AppPanel>
   );
 }
