@@ -1,44 +1,35 @@
 import { describe, expect, it } from "vitest";
 
+import { filterProductConnectUpdatesSince } from "@/lib/agentAccess/buildCheckProductUpdatesPayload";
 import { PRODUCT_CONNECT_UPDATES } from "@/lib/agentAccess/productConnectUpdates.constant";
 import { PRODUCT_CONNECT_UPDATES_CATALOG_VERSION } from "@/lib/agentAccess/productConnectUpdatesMeta.constant";
-import { filterProductConnectUpdatesSince } from "@/lib/agentAccess/buildCheckProductUpdatesPayload";
 
-const findEntry = (id: string) =>
-  PRODUCT_CONNECT_UPDATES.find((row) => row.id === id);
+const ENTRY_ID = "bot-playbook-skill-report";
 
 describe("product connect Playbook skill catalog", () => {
-  it("is at catalog v30", () => {
+  it("is at catalog v30 with one Playbook entry", () => {
     expect(PRODUCT_CONNECT_UPDATES_CATALOG_VERSION).toBe(30);
+    const entries = PRODUCT_CONNECT_UPDATES.filter((row) =>
+      /playbook|knowledge-card/.test(row.id),
+    );
+    expect(entries.map((row) => row.id)).toEqual([ENTRY_ID]);
+    expect(entries[0]?.catalogVersion).toBe(30);
   });
 
-  it("v29 teaches library-first lookup, resultSummary and Playbook skills", () => {
-    const entry = findEntry("bot-knowledge-card-report");
-    expect(entry?.catalogVersion).toBe(29);
-    expect(entry?.adapt).toMatch(/publish_project_skill/);
+  it("teaches library-first lookup, resultSummary and Playbook skills", () => {
+    const entry = PRODUCT_CONNECT_UPDATES.find((row) => row.id === ENTRY_ID);
     expect(entry?.adapt).toMatch(/list_project_skills/);
+    expect(entry?.adapt).toMatch(/publish_project_skill/);
     expect(entry?.adapt).toMatch(/resultSummary/);
-    expect(entry?.adapt).toMatch(/Playbook skill/);
+    expect(entry?.adapt).toMatch(/You do not create auto skills/);
+    expect(entry?.adapt).toMatch(/do not publish another/);
   });
 
-  it("v30 retracts the onboarding skill and the resultSummary to auto-skill link", () => {
-    const entry = findEntry("bot-playbook-skill-terminology");
-    expect(entry?.catalogVersion).toBe(30);
-    expect(entry?.adapt).toMatch(/no longer required/);
-    expect(entry?.adapt).toMatch(/does not feed auto skills/);
-    expect(entry?.adapt).toMatch(/bots never create auto skills/);
-  });
-
-  it("returns v29 + v30 to a bot at catalog 28, only v30 at 29, nothing at 30", () => {
+  it("reaches bots at catalog 28 and 29, and nobody at 30", () => {
     const ids = (since: number) =>
       filterProductConnectUpdatesSince(since).map((row) => row.id);
-    expect(ids(28)).toEqual(
-      expect.arrayContaining([
-        "bot-knowledge-card-report",
-        "bot-playbook-skill-terminology",
-      ]),
-    );
-    expect(ids(29)).toEqual(["bot-playbook-skill-terminology"]);
+    expect(ids(28)).toContain(ENTRY_ID);
+    expect(ids(29)).toContain(ENTRY_ID);
     expect(ids(30)).toHaveLength(0);
   });
 });

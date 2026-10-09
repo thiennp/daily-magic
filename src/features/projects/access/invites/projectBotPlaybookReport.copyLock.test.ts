@@ -6,14 +6,22 @@ import { PRODUCT_CONNECT_UPDATES } from "@/lib/agentAccess/productConnectUpdates
 import {
   PROJECT_BOT_PLAYBOOK_FORMAT_LINE,
   PROJECT_BOT_PLAYBOOK_LIBRARY_FIRST_LINE,
+  PROJECT_BOT_PLAYBOOK_RETIRED_TERMS_NOTE,
   PROJECT_BOT_PLAYBOOK_TASK_PAIR_LINE,
 } from "@/lib/agentAccess/projectBotPlaybookReport.constant";
 import { PROJECT_BRIEFING_HOW_TO_DISPATCH } from "@/lib/projects/acl/projectBriefingHowToDispatch.constant";
 import { PROJECT_ORCHESTRATOR_CLAUSE } from "@/lib/projects/acl/projectOrchestratorClause.constant";
 
-const entryText = (id: string): string => {
-  const entry = PRODUCT_CONNECT_UPDATES.find((row) => row.id === id);
-  return `${entry?.title ?? ""} ${entry?.summary ?? ""} ${entry?.adapt ?? ""}`;
+const CATALOG_ENTRY_ID = "bot-playbook-skill-report";
+
+/** The catalog entry minus its one-time note about retired wording. */
+const catalogText = (): string => {
+  const entry = PRODUCT_CONNECT_UPDATES.find(
+    (row) => row.id === CATALOG_ENTRY_ID,
+  );
+  return `${entry?.title ?? ""} ${entry?.summary ?? ""} ${entry?.adapt ?? ""}`
+    .replace(PROJECT_BOT_PLAYBOOK_RETIRED_TERMS_NOTE, "")
+    .trim();
 };
 
 const JOIN_STEP = buildProjectInviteJoinReportSkillsStep({
@@ -31,7 +39,7 @@ const REPORT_SURFACES: Readonly<Record<string, string>> = {
   }),
   "orchestrator clause": PROJECT_ORCHESTRATOR_CLAUSE,
   "briefing how-to": PROJECT_BRIEFING_HOW_TO_DISPATCH,
-  "catalog v29": entryText("bot-knowledge-card-report"),
+  catalog: catalogText(),
 };
 
 const sentences = (text: string): readonly string[] =>
@@ -63,9 +71,7 @@ describe("bot Playbook report copy lock", () => {
     expect(PROJECT_ORCHESTRATOR_CLAUSE).toContain(
       PROJECT_BOT_PLAYBOOK_TASK_PAIR_LINE,
     );
-    expect(entryText("bot-knowledge-card-report")).toContain(
-      PROJECT_BOT_PLAYBOOK_TASK_PAIR_LINE,
-    );
+    expect(catalogText()).toContain(PROJECT_BOT_PLAYBOOK_TASK_PAIR_LINE);
   });
 
   it("tells bots they do not create auto skills", () => {
@@ -82,10 +88,14 @@ describe("bot Playbook report copy lock", () => {
     );
   });
 
-  it("v30 is the only place the old name appears, and only to retire it", () => {
-    const v30 = entryText("bot-playbook-skill-terminology");
-    expect(v30).toMatch(/knowledge card/i);
-    expect(v30).toMatch(/Playbook skill/);
-    expect(v30).toMatch(/no longer required/);
+  it("the catalog entry names the retired wording once, to retire it", () => {
+    const entry = PRODUCT_CONNECT_UPDATES.find(
+      (row) => row.id === CATALOG_ENTRY_ID,
+    );
+    expect(entry?.adapt).toContain(PROJECT_BOT_PLAYBOOK_RETIRED_TERMS_NOTE);
+    expect(PROJECT_BOT_PLAYBOOK_RETIRED_TERMS_NOTE).toMatch(/knowledge cards/);
+    expect(PROJECT_BOT_PLAYBOOK_RETIRED_TERMS_NOTE).toMatch(
+      /do not publish another/,
+    );
   });
 });
