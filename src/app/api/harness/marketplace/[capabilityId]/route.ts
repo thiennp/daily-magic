@@ -1,3 +1,4 @@
+import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import { getPublishedCapabilityById } from "@/lib/capabilities/capabilityQueries";
 import { canViewPublishedCapability } from "@/lib/capabilities/canViewPublishedCapability";
 import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabilityTemplateById";
@@ -49,7 +50,13 @@ export async function GET(
 
   const capability = await getPublishedCapabilityById(capabilityId);
 
-  if (capability === null || capability.harnessSetSlug === null) {
+  // Only a published listing can be borrowed by others (its owner may still read their own).
+  if (
+    capability === null ||
+    capability.harnessSetSlug === null ||
+    (capability.status !== CapabilityStatus.PUBLISHED &&
+      capability.ownerUserId !== actor.id)
+  ) {
     return Response.json({ error: "Listing not found." }, { status: 404 });
   }
 

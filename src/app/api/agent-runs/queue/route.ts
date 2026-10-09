@@ -7,6 +7,9 @@ import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
 
+const MAX_QUEUED_PROMPT_CHARS = 20_000;
+const MAX_QUEUED_PER_USER = 50;
+
 function parseEnqueueBody(body: unknown): {
   readonly prompt: string;
   readonly executorUserId?: string;
@@ -69,6 +72,15 @@ export async function POST(request: Request): Promise<Response> {
 
   if (!parsed) {
     return Response.json({ error: "prompt is required." }, { status: 400 });
+  }
+
+  // The queue lives in memory: a prompt and a count per person are capped.
+  if (
+    parsed.prompt.length > MAX_QUEUED_PROMPT_CHARS ||
+    (await listQueuedAgentRunsForRequester(actor.id)).length >=
+      MAX_QUEUED_PER_USER
+  ) {
+    return Response.json({ error: "Queue limit reached." }, { status: 413 });
   }
 
   const queued = await enqueueAgentRun({

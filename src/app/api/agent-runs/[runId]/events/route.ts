@@ -30,13 +30,27 @@ export async function GET(
     Number.isFinite(afterSeq) && afterSeq >= 0 ? afterSeq : 0;
 
   const encoder = new TextEncoder();
+  const state: {
+    closed: boolean;
+    interval: ReturnType<typeof setInterval> | undefined;
+  } = {
+    closed: false,
+    interval: undefined,
+  };
+  const closeOnce = (controller: ReadableStreamDefaultController): void => {
+    if (state.closed) return;
+    state.closed = true;
+    controller.close();
+  };
   const stream = new ReadableStream({
     start: async (controller) => {
       const cursor = { seq: safeAfterSeq };
 
       const pushEvents = async (): Promise<boolean> => {
+        if (state.closed) return true;
         const events = await listAgentRunEvents(runId, cursor.seq);
         for (const event of events) {
+          if (state.closed) return true;
           cursor.seq = event.seq;
           controller.enqueue(
             encoder.encode(`data: ${JSON.stringify(event)}\n\n`),
@@ -53,20 +67,28 @@ export async function GET(
         return isTerminal === true;
       };
 
-      const done = await pushEvents();
+      const done = await pushEvents().catch(() => true);
       if (done) {
-        controller.close();
+        closeOnce(controller);
         return;
       }
 
-      const interval = setInterval(() => {
-        void pushEvents().then((finished) => {
-          if (finished) {
-            clearInterval(interval);
-            controller.close();
-          }
-        });
+      state.interval = setInterval(() => {
+        void pushEvents()
+          .then((finished) => finished)
+          .catch(() => true)
+          .then((finished) => {
+            if (finished || state.closed) {
+              clearInterval(state.interval);
+              closeOnce(controller);
+            }
+          });
       }, 1000);
+    },
+    // The browser went away: stop polling the database for it.
+    cancel: () => {
+      state.closed = true;
+      clearInterval(state.interval);
     },
   });
 

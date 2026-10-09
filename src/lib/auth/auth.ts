@@ -24,7 +24,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     error: AUTH_PAGES.error,
   },
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user, account, profile }) {
+      // Google accounts are linked to an existing user by email: only a verified address may do that.
+      if (
+        account?.provider === "google" &&
+        (profile as { email_verified?: boolean } | undefined)
+          ?.email_verified !== true
+      ) {
+        return false;
+      }
       const email = user.email?.trim() ?? "";
       if (
         !user?.id ||
