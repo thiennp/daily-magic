@@ -1,6 +1,7 @@
 "use client";
 
 import AwcProjectTaskDetailInfoList from "@/features/projects/tasks/AwcProjectTaskDetailInfoList";
+import AwcProjectTaskDetailActions from "@/features/projects/tasks/AwcProjectTaskDetailActions";
 import AwcProjectTaskGitTags from "@/features/projects/tasks/AwcProjectTaskGitTags";
 import AwcProjectTaskResultBlock from "@/features/projects/tasks/AwcProjectTaskResultBlock";
 import AwcProjectTaskStatusChip from "@/features/projects/tasks/AwcProjectTaskStatusChip";
@@ -9,17 +10,10 @@ import AwcProjectTasksOfflineBanner from "@/features/projects/tasks/AwcProjectTa
 import {
   AWC_TASKS_CARD_CLASS,
   AWC_TASKS_GHOST_BUTTON_CLASS,
-  AWC_TASKS_LINK_CLASS,
   AWC_TASKS_PANEL_HEADING_CLASS,
-  AWC_TASKS_SECONDARY_BUTTON_CLASS,
 } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
 import { PROJECT_PAGE_TASKS_COPY as C } from "@/features/projects/tasks/projectPageTasksCopy.constant";
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
-import { shouldShowTaskOpenReport } from "@/features/projects/tasks/utils/shouldShowTaskOpenReport";
-import { buildProjectTabHash } from "@/lib/shell/buildNavConsolidationRedirect";
-import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
-import { useRetryRunInComposer } from "@/features/agent/hooks/useRetryRunInComposer";
-import { resolveTaskLiveViewAction } from "@/features/projects/tasks/utils/resolveTaskLiveViewAction";
 
 export default function AwcProjectTaskDetail({
   task,
@@ -34,18 +28,6 @@ export default function AwcProjectTaskDetail({
   readonly onBack: () => void;
   readonly onRetry?: () => void;
 }) {
-  const reportHref =
-    task.agentRunId !== null
-      ? buildProjectTabHash("reports", { report: task.agentRunId })
-      : null;
-
-  const { expandRunningSendTask } = useSendTaskModal();
-  const retryRun = useRetryRunInComposer();
-  const liveAction = resolveTaskLiveViewAction({
-    status: task.status,
-    agentRunId: task.agentRunId,
-  });
-
   return (
     <section className="flex min-w-0 flex-col gap-4" aria-label={task.title}>
       <button
@@ -87,32 +69,7 @@ export default function AwcProjectTaskDetail({
           </h3>
           <AwcProjectTaskDetailInfoList task={task} hasGit={hasGit} />
           <AwcProjectTaskResultBlock task={task} />
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            <span className="text-[12px] text-awc-fg-muted">
-              {C.fromComputer}
-            </span>
-            {liveAction !== null ? (
-              <button
-                type="button"
-                className={AWC_TASKS_SECONDARY_BUTTON_CLASS}
-                onClick={() =>
-                  liveAction.label === "Retry"
-                    ? retryRun(liveAction.runId)
-                    : expandRunningSendTask(liveAction.runId)
-                }
-              >
-                {liveAction.label}
-              </button>
-            ) : null}
-            <button type="button" className={AWC_TASKS_SECONDARY_BUTTON_CLASS}>
-              {C.openHistory}
-            </button>
-            {reportHref !== null && shouldShowTaskOpenReport(task.status) ? (
-              <a href={reportHref} className={AWC_TASKS_LINK_CLASS}>
-                {C.openReport}
-              </a>
-            ) : null}
-          </div>
+          <AwcProjectTaskDetailActions task={task} />
         </div>
         <AwcProjectTaskTimeline status={task.status} />
       </div>

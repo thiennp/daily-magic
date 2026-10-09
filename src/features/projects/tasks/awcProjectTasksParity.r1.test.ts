@@ -28,9 +28,11 @@ describe("Tasks tab parity r1 — design EN + product rules", () => {
     const detail = read("AwcProjectTaskDetail.tsx");
     expect(detail).not.toContain("C.loadOlder");
     expect(detail).not.toContain("onLoadOlder");
-    expect(detail).toContain("C.openHistory");
-    expect(detail).toContain("C.openReport");
     expect(detail).toContain("C.backToList");
+    // Open history / Open report live in the actions block.
+    const actions = read("AwcProjectTaskDetailActions.tsx");
+    expect(actions).toContain("C.openHistory");
+    expect(actions).toContain("C.openReport");
   });
 
   it("list rows order title · status · relative time; empty uses design copy", () => {
