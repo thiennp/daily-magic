@@ -110,6 +110,18 @@ FROM project_skill_lookup_log l
 WHERE l.project_id = $1 AND l.tool = 'list' AND l.had_query AND l.returned > 0;
 ```
 
+### Audit rounds on the lookup itself
+
+Real libraries: AgentWitch (14 skills), baby-care (24 distinct names). Queries come from the AgentWitch project chat (real asks, several with no matching skill) plus short lookups; the baby-care set is author-written, so its numbers are optimistic. A whole-library read of AgentWitch costs about 3,000 tokens.
+
+| Round | Where                                           | Change                                                                                         | recall@3 | Rank 1 | No-skill queries answered empty | Avg tokens / lookup |
+| ----- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------- | -------- | ------ | ------------------------------- | ------------------- |
+| 1     | production, AgentWitch (16 queries)             | tags + word-prefix match + two-word rule                                                       | 11/13    | 10/13  | 2/3                             | a few hundred       |
+| 2     | offline on the same library, same 16 queries    | IDF weights, short words whole-word only, one rare name/tag word allowed, cut below 40% of top | 12/13    | 11/13  | 2/3                             | 70                  |
+| 2     | offline, baby-care (12 queries, author-written) | same                                                                                           | 9/9      | 9/9    | 3/3                             | 61                  |
+
+Round 1 defects and what fixed them: common words ("project chat") outranked a rare one ("bot"); a single strong match ("push") was dropped by the two-word rule; "aw" matched "awl"; results below the top were noise. Open after round 2: synonyms ("release" for "bump a version") need tags, and no production skill has any because the auto-skill draft prompt never asked for `keywords:` (it does now, install bundle 329; older skills stay untagged until re-saved); "add local folder for aw" still returns the local-layout skill.
+
 | Feature (period) | Query lookups | Avg tokens | Empty % | Followed % | Whole-library reads | Notes |
 | ---------------- | ------------- | ---------- | ------- | ---------- | ------------------- | ----- |
 | (fill in)        |               |            |         |            |                     |       |

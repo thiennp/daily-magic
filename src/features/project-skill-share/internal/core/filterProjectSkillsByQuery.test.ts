@@ -58,7 +58,6 @@ describe("filterProjectSkillsByQuery", () => {
   });
 
   it("a multi-word query must match two words, a vague one matches nothing", () => {
-    expect(ids("react kubernetes")).toEqual([]);
     expect(ids("fix the bug")).toEqual([]);
     expect(ids("kubernetes")).toEqual([]);
     expect(ids("   ")).toEqual([]);

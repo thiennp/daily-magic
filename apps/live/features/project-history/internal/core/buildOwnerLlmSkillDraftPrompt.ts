@@ -65,6 +65,7 @@ export const buildOwnerLlmSkillWritePrompt = (
     "Output ONLY the markdown file: YAML frontmatter then body.",
     "Frontmatter keys: name (kebab-case, a generic action such as review-migration-naming),",
     "description (one sentence starting with 'Use when', different from the name),",
+    "keywords (one line, 5 to 8 lowercase search words, comma separated: the verbs, nouns and synonyms a person would use to ask for this task, none of them from the name),",
     "version: 0.1.0, status: draft.",
     ...REUSABILITY_RULES,
     "Do NOT write source_message_ids; the system adds the transcript message ids.",

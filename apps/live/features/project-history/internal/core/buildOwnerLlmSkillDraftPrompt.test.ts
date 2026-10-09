@@ -47,4 +47,16 @@ describe("buildOwnerLlmSkillDraftPrompt", () => {
     expect(text).toContain("Prior reflection");
     expect(text).toContain("outline here");
   });
+
+  it("asks for search keywords so the skill can be found by synonyms", () => {
+    const prompt = buildOwnerLlmSkillWritePrompt({
+      scrubbedTranscript: "T",
+      similarDraftHints: [],
+      mode: "write",
+    });
+    expect(prompt).toMatch(
+      /keywords \(one line, 5 to 8 lowercase search words/,
+    );
+    expect(prompt).toMatch(/synonyms/);
+  });
 });
