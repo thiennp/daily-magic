@@ -57,6 +57,7 @@ export default function AwcProjectDetailTabPanelBody(
         pitfalls={p.pitfalls}
         deviceDisplayName={p.deviceDisplayName}
         editCta={p.editCta}
+        canManage={p.pageActorRole === "owner"}
       />
     );
   }

@@ -50,13 +50,10 @@ describe("project layout v2 L6 Reports + Library", () => {
     expect(addFrom).toContain("useLibraryCapabilities");
   });
 
-  it("shows disabled New/Add with owner-only reason for non-owners", () => {
+  it("shows only the owner-only reason (no disabled New/Add buttons) for non-owners", () => {
     const disabled = read(`${P}/library/AwcProjectLibraryDisabledActions.tsx`);
-    expect(disabled).toContain("aria-describedby");
     expect(disabled).toContain('C["disabled.new"]');
-    expect(disabled).toContain('A["library.new"]');
-    expect(disabled).toContain('A["library.add_from"]');
-    expect(disabled).toContain("disabled");
+    expect(disabled).not.toContain("<button");
   });
 
   it("ships no remove / delete / unpublish / New report controls on Reports (open Qs)", () => {
