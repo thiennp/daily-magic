@@ -5,6 +5,7 @@ import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRunti
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { dispatchAgentRunInputRegistry } from "@/lib/dispatch/dispatchAgentRunInputRegistry";
+import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
 import { getAgentRunSession } from "@/lib/dispatch/agentRunSessionRegistry";
 import { markAgentRunCompleted } from "@/lib/dispatch/dispatchWriterRunToAgent";
 import { readOptionalPositiveSeconds } from "@/lib/dispatch/readOptionalPositiveSeconds";
@@ -28,6 +29,18 @@ export const handleClaudeResultMessageAsync = async (
     typeof message.payload?.agentRunId === "string"
       ? message.payload.agentRunId
       : null;
+
+  // Only the run's executor may report its result (a forged id must not complete another run).
+  if (agentRunId !== null) {
+    const owned = await getAgentRunById(agentRunId);
+    if (owned === null || owned.executorUserId !== sender.userId) {
+      return {
+        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+        payload: { errorMessage: "Agent run does not belong to this agent." },
+        requestId: message.requestId,
+      };
+    }
+  }
 
   if (agentRunId !== null) {
     const run = getAgentRunSession(agentRunId);

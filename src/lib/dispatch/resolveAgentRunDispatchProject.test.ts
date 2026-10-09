@@ -16,6 +16,9 @@ vi.mock("@/lib/projects/acl/findDeviceProjectFolderPath", () => ({
   findDeviceProjectFolderPath: async () => null,
 }));
 
+vi.mock("@/lib/projects/acl/getActiveProjectMembership", () => ({
+  getActiveProjectMembership: async () => ({ role: "member" }),
+}));
 vi.mock("@/lib/projects/acl/checkProjectMembershipStatus", () => ({
   checkProjectMembershipStatus: mocks.checkProjectMembershipStatus,
 }));

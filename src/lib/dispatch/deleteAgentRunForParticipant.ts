@@ -2,8 +2,9 @@ import { getAgentRunForStrictParticipant } from "@/lib/dispatch/getAgentRunForSt
 import { removeAgentRunSession } from "@/lib/dispatch/agentRunSessionRegistry";
 import { isAgentWitchDevDashboardEnabled } from "@/lib/auth/resolveDevDashboardActor";
 import { getSql } from "@/lib/db";
+import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
-/** Deletes a run the user participates in (DB + in-memory session). Strict ACL. */
+/** Deletes a run the user participates in (DB + in-memory session). Strict ACL; project runs: executor or project owner. */
 export async function deleteAgentRunForParticipant(
   runId: string,
   userId: string,
@@ -11,6 +12,15 @@ export async function deleteAgentRunForParticipant(
   const run = await getAgentRunForStrictParticipant(runId, userId);
   if (run === null) {
     return false;
+  }
+  // A project run lives on its executor's computer and in the project history: its requester
+  // (a member) cannot wipe it; only the executor or the project owner can.
+  const projectId = run.projectId?.trim() ?? "";
+  if (projectId.length > 0 && run.executorUserId !== userId) {
+    const project = await getUserProjectById(projectId);
+    if (project?.ownerUserId !== userId) {
+      return false;
+    }
   }
 
   removeAgentRunSession(runId);

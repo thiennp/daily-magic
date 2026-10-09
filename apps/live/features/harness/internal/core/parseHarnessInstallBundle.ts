@@ -5,6 +5,9 @@ import {
   type HarnessInstallItemKind,
 } from "./harnessInstallBundle.types";
 
+/** Ids and slugs become path segments on the user's Mac: no separators, no leading dot, no "..". */
+const SAFE_PATH_SEGMENT = /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/;
+
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
@@ -24,13 +27,15 @@ const parseHarnessInstallBundleItem = (
   const setSlugs = value.setSlugs;
   const normalizedSetSlugs = Array.isArray(setSlugs)
     ? setSlugs.flatMap((slug) =>
-        typeof slug === "string" && slug.trim().length > 0 ? [slug.trim()] : [],
+        typeof slug === "string" && SAFE_PATH_SEGMENT.test(slug.trim())
+          ? [slug.trim()]
+          : [],
       )
     : [];
 
   if (
     typeof value.id !== "string" ||
-    value.id.trim().length === 0 ||
+    !SAFE_PATH_SEGMENT.test(value.id.trim()) ||
     !isHarnessInstallItemKind(value.kind) ||
     typeof value.title !== "string" ||
     value.title.trim().length === 0 ||
@@ -60,7 +65,7 @@ export const parseHarnessInstallBundle = (
   const slug = typeof value.slug === "string" ? value.slug.trim() : "";
   const rawItems = Array.isArray(value.items) ? value.items : [];
 
-  if (name.length === 0 || slug.length === 0) {
+  if (name.length === 0 || !SAFE_PATH_SEGMENT.test(slug)) {
     return null;
   }
 

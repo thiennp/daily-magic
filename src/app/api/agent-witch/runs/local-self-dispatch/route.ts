@@ -1,6 +1,7 @@
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { DispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
 import createAgentRun from "@/lib/dispatch/createAgentRun";
+import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
 import { registerAgentRunSession } from "@/lib/dispatch/agentRunSessionRegistry";
 import { parseLocalSelfDispatchBody } from "@/lib/dispatch/parseLocalSelfDispatchBody";
 import { requireAgentWitchDeviceAuth } from "@/lib/agentWitch/requireAgentWitchDeviceAuth";
@@ -21,6 +22,15 @@ export async function POST(request: Request): Promise<Response> {
     return Response.json(
       { ok: false, errorMessage: "Invalid local self-dispatch payload." },
       { status: 400 },
+    );
+  }
+
+  // The id is chosen by the client: never let it touch (or overwrite the stored prompt of) a run
+  // that already exists, whoever owns it.
+  if ((await getAgentRunById(parsed.agentRunId)) !== null) {
+    return Response.json(
+      { ok: false, errorMessage: "This run id is already in use." },
+      { status: 409 },
     );
   }
 

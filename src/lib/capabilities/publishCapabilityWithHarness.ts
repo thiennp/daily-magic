@@ -8,7 +8,7 @@ import { publishCapabilityVersion } from "@/lib/capabilities/publishCapabilityVe
 import requestCapabilityTemplateHarnessInstall from "@/lib/capabilities/requestCapabilityTemplateHarnessInstall";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import { partitionHarnessItemsByAudience } from "@/lib/harness/partitionHarnessItemsByAudience";
-import { requireProjectIdForCreate } from "@/lib/projects/requireProjectIdForCreate";
+import { requireOwnerProjectIdForCreate } from "@/lib/projects/requireProjectIdForCreate";
 
 export type PublishCapabilityWithHarnessResult =
   | {
@@ -31,7 +31,7 @@ const publishCapabilityWithHarness = async (
   harnessItems: readonly ParsedCapabilityHarnessItem[],
   projectId: string,
 ): Promise<PublishCapabilityWithHarnessResult> => {
-  const project = await requireProjectIdForCreate({
+  const project = await requireOwnerProjectIdForCreate({
     actorUserId: ownerUserId,
     projectId,
   });

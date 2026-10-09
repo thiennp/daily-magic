@@ -5,7 +5,7 @@ import {
 } from "@/lib/capabilities/capabilityForkAudit";
 import { requireAuth } from "@/lib/auth/requireAuth";
 import { readProjectIdFromUnknown } from "@/lib/projects/readProjectIdFromUnknown";
-import { requireProjectIdForCreate } from "@/lib/projects/requireProjectIdForCreate";
+import { requireOwnerProjectIdForCreate } from "@/lib/projects/requireProjectIdForCreate";
 
 export const dynamic = "force-dynamic";
 
@@ -36,7 +36,7 @@ export async function POST(
 
   const body: unknown = await request.json().catch(() => ({}));
 
-  const project = await requireProjectIdForCreate({
+  const project = await requireOwnerProjectIdForCreate({
     actorUserId: actor.id,
     projectId: readProjectIdFromUnknown(body),
   });

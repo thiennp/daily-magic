@@ -7,7 +7,7 @@ import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabil
 import type { CapabilityTemplateHarness } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import { mapHarnessItemsToOperatorSteps } from "@/lib/harness/partitionHarnessItemsByAudience";
-import { requireProjectIdForCreate } from "@/lib/projects/requireProjectIdForCreate";
+import { requireOwnerProjectIdForCreate } from "@/lib/projects/requireProjectIdForCreate";
 
 export interface CreateCapabilityFromTemplateInput {
   readonly ownerUserId: string;
@@ -36,7 +36,7 @@ export type CreateCapabilityFromTemplateResult =
 const createCapabilityFromTemplate = async (
   input: CreateCapabilityFromTemplateInput,
 ): Promise<CreateCapabilityFromTemplateResult> => {
-  const project = await requireProjectIdForCreate({
+  const project = await requireOwnerProjectIdForCreate({
     actorUserId: input.ownerUserId,
     projectId: input.projectId,
   });

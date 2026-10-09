@@ -13,7 +13,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("@/lib/projects/requireProjectIdForCreate", () => ({
-  requireProjectIdForCreate: mocks.requireProjectIdForCreate,
+  requireOwnerProjectIdForCreate: mocks.requireProjectIdForCreate,
 }));
 vi.mock("@/lib/capabilities/templates/findCapabilityTemplateById", () => ({
   default: mocks.findCapabilityTemplateById,
@@ -77,12 +77,14 @@ describe("createCapabilityFromTemplate bind failure result", () => {
       projectId: "proj-1",
     });
     expect(result).toMatchObject({ ok: false, code: "project_bind_failed" });
-    expect(mocks.deletePublishedCapabilityAfterFailedBind).toHaveBeenCalledWith({
-      ownerUserId: "user-1",
-      capabilityId: "cap-1",
-      componentId: "comp-1",
-      capabilityVersionId: "cver-1",
-      componentVersionId: "compver-1",
-    });
+    expect(mocks.deletePublishedCapabilityAfterFailedBind).toHaveBeenCalledWith(
+      {
+        ownerUserId: "user-1",
+        capabilityId: "cap-1",
+        componentId: "comp-1",
+        capabilityVersionId: "cver-1",
+        componentVersionId: "compver-1",
+      },
+    );
   });
 });

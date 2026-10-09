@@ -106,4 +106,14 @@ describe("upsertProjectPitfall", () => {
     expect(result).toEqual({ ok: false, code: "forbidden" });
     expect(upsertProjectPitfallRow).not.toHaveBeenCalled();
   });
+
+  it("a member cannot retire a rule through upsert (owner-only drop)", async () => {
+    const result = await upsertProjectPitfall({
+      actorUserId: "u1",
+      projectId: "p1",
+      body: body({ id: "stale-next", source: "retired" }),
+    });
+    expect(result).toEqual({ ok: false, code: "forbidden" });
+    expect(upsertProjectPitfallRow).not.toHaveBeenCalled();
+  });
 });

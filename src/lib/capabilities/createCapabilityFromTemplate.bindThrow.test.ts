@@ -13,7 +13,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("@/lib/projects/requireProjectIdForCreate", () => ({
-  requireProjectIdForCreate: mocks.requireProjectIdForCreate,
+  requireOwnerProjectIdForCreate: mocks.requireProjectIdForCreate,
 }));
 vi.mock("@/lib/capabilities/templates/findCapabilityTemplateById", () => ({
   default: mocks.findCapabilityTemplateById,
@@ -67,7 +67,9 @@ describe("createCapabilityFromTemplate bind throw", () => {
   });
 
   it("compensates when bind throws", async () => {
-    mocks.bindPublishedCapabilityToProject.mockRejectedValue(new Error("db down"));
+    mocks.bindPublishedCapabilityToProject.mockRejectedValue(
+      new Error("db down"),
+    );
     const result = await createCapabilityFromTemplate({
       ownerUserId: "user-1",
       templateId: "tpl-1",

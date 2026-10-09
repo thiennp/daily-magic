@@ -1,6 +1,9 @@
 import { parseHarnessExportResultPayload } from "@/lib/harness/types/HarnessExportResult.type";
 import { applyHarnessExportSetsToDevice } from "@/lib/harness/applyHarnessExportSetsToDevice";
-import { completeHarnessExportRequest } from "@/lib/harness/harnessExportRequestRegistry";
+import {
+  completeHarnessExportRequest,
+  peekHarnessExportParties,
+} from "@/lib/harness/harnessExportRequestRegistry";
 import isNonEmptyString from "@/lib/agentWitch/isNonEmptyString";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
@@ -22,20 +25,17 @@ export const handleHarnessExportResultMessage = async (
     };
   }
 
-  const borrowerUserId =
-    typeof message.payload?.borrowerUserId === "string"
-      ? message.payload.borrowerUserId
-      : "";
-
-  if (borrowerUserId.length === 0) {
+  // Only the lender's agent may answer a request that is really pending; the borrower is
+  // the one recorded at request time, never what the sender claims.
+  const parties = peekHarnessExportParties(message.requestId);
+  if (parties === undefined || parties.lenderUserId !== sender.userId) {
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-      payload: {
-        errorMessage: "harness.export.result requires payload.borrowerUserId.",
-      },
+      payload: { errorMessage: "No matching harness export request." },
       requestId: message.requestId,
     };
   }
+  const { borrowerUserId } = parties;
 
   const targetDeviceId =
     typeof message.payload?.targetDeviceId === "string" &&

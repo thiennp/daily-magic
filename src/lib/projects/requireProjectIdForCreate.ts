@@ -1,4 +1,5 @@
 import { checkProjectMembershipStatus } from "@/lib/projects/acl/checkProjectMembershipStatus";
+import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
 export type RequireProjectIdForCreateResult =
@@ -10,9 +11,14 @@ export type RequireProjectIdForCreateResult =
       readonly error: string;
     };
 
+/**
+ * `writer` (default): the owner or an active member who is not a viewer (dispatch).
+ * `owner`: the project owner only (Library items bound into the project's composition).
+ */
 export const requireProjectIdForCreate = async (input: {
   readonly actorUserId: string;
   readonly projectId: string | null | undefined;
+  readonly requires?: "writer" | "owner";
 }): Promise<RequireProjectIdForCreateResult> => {
   const projectId =
     typeof input.projectId === "string" ? input.projectId.trim() : "";
@@ -31,8 +37,14 @@ export const requireProjectIdForCreate = async (input: {
     input.actorUserId,
   );
 
-  if (membership === "owner" || membership === "active") {
+  if (membership === "owner") {
     return { ok: true, projectId };
+  }
+  if (membership === "active" && input.requires !== "owner") {
+    const seat = await getActiveProjectMembership(projectId, input.actorUserId);
+    if (seat !== null && seat.role !== "viewer") {
+      return { ok: true, projectId };
+    }
   }
 
   const project = await getUserProjectById(projectId);
@@ -52,3 +64,10 @@ export const requireProjectIdForCreate = async (input: {
     error: "You do not have access to this project.",
   };
 };
+
+/** Library items bound into a project's composition: the project owner only. */
+export const requireOwnerProjectIdForCreate = (input: {
+  readonly actorUserId: string;
+  readonly projectId: string | null | undefined;
+}): Promise<RequireProjectIdForCreateResult> =>
+  requireProjectIdForCreate({ ...input, requires: "owner" });

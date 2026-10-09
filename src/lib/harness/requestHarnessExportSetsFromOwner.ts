@@ -12,7 +12,10 @@ export const requestHarnessExportSetsFromOwner = async (input: {
 }): Promise<readonly BorrowedHarnessExportSet[]> => {
   const requestId = randomUUID();
 
-  const exportPromise = registerHarnessExportRequest(requestId);
+  const exportPromise = registerHarnessExportRequest(requestId, {
+    lenderUserId: input.ownerAgent.userId ?? "",
+    borrowerUserId: input.borrowerUserId,
+  });
 
   input.ownerAgent.send({
     type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_EXPORT_REQUEST,

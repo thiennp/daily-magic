@@ -4,11 +4,16 @@ import { requireProjectIdForCreate } from "@/lib/projects/requireProjectIdForCre
 
 const mocks = vi.hoisted(() => ({
   checkProjectMembershipStatus: vi.fn(),
+  getActiveProjectMembership: vi.fn(),
   getUserProjectById: vi.fn(),
 }));
 
 vi.mock("@/lib/projects/acl/checkProjectMembershipStatus", () => ({
   checkProjectMembershipStatus: mocks.checkProjectMembershipStatus,
+}));
+
+vi.mock("@/lib/projects/acl/getActiveProjectMembership", () => ({
+  getActiveProjectMembership: mocks.getActiveProjectMembership,
 }));
 
 vi.mock("@/lib/projects/userProjectQueries", () => ({
@@ -19,6 +24,7 @@ describe("requireProjectIdForCreate", () => {
   beforeEach(() => {
     mocks.checkProjectMembershipStatus.mockReset();
     mocks.getUserProjectById.mockReset();
+    mocks.getActiveProjectMembership.mockReset();
   });
 
   it("rejects missing project_id with project_required", async () => {
@@ -79,5 +85,32 @@ describe("requireProjectIdForCreate", () => {
       status: 403,
       code: "forbidden",
     });
+  });
+
+  it("lets an active member through but never a viewer", async () => {
+    mocks.checkProjectMembershipStatus.mockResolvedValue("active");
+    mocks.getUserProjectById.mockResolvedValue({ id: "proj-1" });
+    const ask = (requires?: "owner") =>
+      requireProjectIdForCreate({
+        actorUserId: "user-1",
+        projectId: "proj-1",
+        requires,
+      });
+    mocks.getActiveProjectMembership.mockResolvedValue({ role: "member" });
+    expect(await ask()).toEqual({ ok: true, projectId: "proj-1" });
+    mocks.getActiveProjectMembership.mockResolvedValue({ role: "viewer" });
+    expect(await ask()).toMatchObject({ ok: false, status: 403 });
+  });
+
+  it("owner-only callers refuse even a member", async () => {
+    mocks.checkProjectMembershipStatus.mockResolvedValue("active");
+    mocks.getUserProjectById.mockResolvedValue({ id: "proj-1" });
+    mocks.getActiveProjectMembership.mockResolvedValue({ role: "member" });
+    const result = await requireProjectIdForCreate({
+      actorUserId: "user-1",
+      projectId: "proj-1",
+      requires: "owner",
+    });
+    expect(result).toMatchObject({ ok: false, status: 403, code: "forbidden" });
   });
 });
