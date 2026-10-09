@@ -18,19 +18,19 @@ export const SEND_READINESS_BANNER_COPY: Record<
     secondaryCta: null,
   },
   unreachable_dns: {
-    title: "Mac unreachable",
+    title: "Computer unreachable",
     body: "We couldn’t resolve your computer (DNS). Check network or reconnect the agent.",
     severity: "warning",
     blocksSend: true,
     primaryCta: {
-      label: "Reconnect Mac",
+      label: "Reconnect computer",
       action: "reconnect",
       href: SETUP_HREF,
     },
     secondaryCta: { label: "Setup help", action: "setup", href: SETUP_HREF },
   },
   offline: {
-    title: "Mac offline",
+    title: "Computer offline",
     body: "AgentWitch can’t reach your computer right now.",
     severity: "danger",
     blocksSend: true,
@@ -39,7 +39,7 @@ export const SEND_READINESS_BANNER_COPY: Record<
   },
   recent: {
     title: "Reconnecting",
-    body: "Mac was just online — reconnecting…",
+    body: "Your computer was just online — reconnecting…",
     severity: "info",
     blocksSend: true,
     primaryCta: { label: "Retry", action: "retry" },
