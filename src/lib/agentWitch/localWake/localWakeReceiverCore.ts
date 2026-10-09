@@ -17,6 +17,7 @@ const SECRET_PATH = join(DIR, 'secret.env');
 const SEEN_PATH = join(DIR, 'seen.json');
 const PROMPT_DIR = join(DIR, 'prompts');
 const MAX_SKEW_SEC = 300;
+const MAX_BODY_BYTES = 65536;
 const SEEN_TTL_MS = 24 * 60 * 60 * 1000;
 const HEALTH_INTERVAL_MS = 6 * 60 * 60 * 1000;
 const WEBHOOK_PATH = '/awc/project-inbox';

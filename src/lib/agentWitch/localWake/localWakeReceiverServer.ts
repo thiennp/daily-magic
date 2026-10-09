@@ -47,7 +47,16 @@ const server = createServer((req, res) => {
   if (req.method !== 'POST' || req.url !== WEBHOOK_PATH) return reply(404, { ok: false });
 
   const chunks = [];
-  req.on('data', (c) => chunks.push(c));
+  const size = { bytes: 0 };
+  req.on('data', (c) => {
+    size.bytes += c.length;
+    if (size.bytes > MAX_BODY_BYTES) {
+      reply(413, { ok: false, error: 'too_large' });
+      req.destroy();
+      return;
+    }
+    chunks.push(c);
+  });
   req.on('end', () => {
     const rawBody = Buffer.concat(chunks).toString('utf8');
     const header = (name) => {
