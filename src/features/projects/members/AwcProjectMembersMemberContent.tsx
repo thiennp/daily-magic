@@ -1,6 +1,7 @@
 "use client";
 
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
+import AwcProjectMembersInviteBotsSection from "@/features/projects/members/AwcProjectMembersInviteBotsSection";
 import AwcProjectMembersPeopleSection from "@/features/projects/members/AwcProjectMembersPeopleSection";
 import AwcProjectMembersRailHeading from "@/features/projects/members/AwcProjectMembersRailHeading";
 import AwcProjectMembersRailSkeleton from "@/features/projects/members/AwcProjectMembersRailSkeleton";
@@ -10,7 +11,8 @@ import type { ReactNode } from "react";
 
 /**
  * Members rail for a (non-owner) member: sees the people and can invite
- * people. Assistants, join requests and removing people stay with the owner.
+ * people and assistants (the owner still approves). Join requests and
+ * removing people stay with the owner.
  */
 export default function AwcProjectMembersMemberContent({
   projectId,
@@ -39,17 +41,23 @@ export default function AwcProjectMembersMemberContent({
           </p>
         ) : null}
         {ready ? (
-          <AwcProjectMembersPeopleSection
-            projectId={projectId}
-            projectName={access.projectName}
-            ownerEmail={ownerEmail}
-            ownerDisplayName={ownerDisplayName}
-            viewerIsOwner={false}
-            accessMembers={access.members}
-            pendingRequestCount={0}
-            assistantInviteCount={0}
-            onWaitingCountChange={() => undefined}
-          />
+          <>
+            <AwcProjectMembersPeopleSection
+              projectId={projectId}
+              projectName={access.projectName}
+              ownerEmail={ownerEmail}
+              ownerDisplayName={ownerDisplayName}
+              viewerIsOwner={false}
+              accessMembers={access.members}
+              pendingRequestCount={0}
+              assistantInviteCount={0}
+              onWaitingCountChange={() => undefined}
+            />
+            <AwcProjectMembersInviteBotsSection
+              projectId={projectId}
+              access={access}
+            />
+          </>
         ) : null}
         {access.message ? (
           <p className="px-3.5 text-sm text-awc-fg-muted dark:text-gray-300">

@@ -16,8 +16,8 @@ import {
 } from "@/lib/projects/acl/invites/clampProjectInviteParams";
 import { clearUnusableProjectInviteCiphertexts } from "@/lib/projects/acl/invites/clearUnusableProjectInviteCiphertexts";
 import { tryEncryptProjectInviteToken } from "@/lib/projects/acl/invites/projectInviteTokenCipher";
-import { dualWriteProjectInviteAutoApproveEvent } from "@/lib/projects/acl/invites/dualWriteProjectInviteAutoApproveEvent";
-import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
+import { auditProjectInviteCreated } from "@/lib/projects/acl/invites/auditProjectInviteCreated";
+import { resolveProjectInviteCreator } from "@/lib/projects/acl/invites/resolveProjectInviteCreator";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { asRowArray, getSql } from "@/lib/db";
 
@@ -25,12 +25,13 @@ export type { CreateProjectInviteResult };
 
 export const createProjectInvite = async (input: {
   readonly projectId: string;
+  /** The creating actor: the owner, or an active member (not viewer). */
   readonly ownerUserId: string;
   readonly teamLabel?: string | null;
   readonly scopes?: unknown;
   readonly maxUses?: unknown;
   readonly expiresInDays?: unknown;
-  /** Owner opt-in; default false. Only the project owner can set this. */
+  /** Owner opt-in; default false. Ignored for members (owner approves). */
   readonly autoApprove?: boolean;
   /** grok | muse; unknown → NULL. Drives the join-time delivery_mode. */
   readonly platform?: unknown;
@@ -39,14 +40,18 @@ export const createProjectInvite = async (input: {
   if (project === null) {
     return { ok: false, code: "not_found" };
   }
-  if (project.ownerUserId !== input.ownerUserId) {
+  const creator = await resolveProjectInviteCreator(project, input.ownerUserId);
+  if (!creator.ok) {
     return { ok: false, code: "forbidden" };
   }
 
   const maxUses = clampInviteMaxUses(input.maxUses);
   const expiresInDays = clampInviteExpiresDays(input.expiresInDays);
-  const scopes = parseInviteScopes(input.scopes);
-  const autoApprove = input.autoApprove === true;
+  const requestedScopes = parseInviteScopes(input.scopes);
+  const scopes = creator.isOwner
+    ? requestedScopes
+    : requestedScopes.filter((s) => creator.grantableScopes.includes(s));
+  const autoApprove = creator.isOwner && input.autoApprove === true;
   const teamLabel =
     typeof input.teamLabel === "string" && input.teamLabel.trim().length > 0
       ? input.teamLabel.trim().slice(0, 64)
@@ -94,33 +99,11 @@ export const createProjectInvite = async (input: {
   }
   const invite = mapProjectInviteRow(rows[0]);
   await clearUnusableProjectInviteCiphertexts(input.projectId);
-  await writeProjectAccessAudit({
+  await auditProjectInviteCreated({
     projectId: input.projectId,
     actorUserId: input.ownerUserId,
-    action: "invite.create",
-    detail: {
-      inviteId: invite.id,
-      maxUses: invite.maxUses,
-      expiresAt: invite.expiresAt,
-      teamLabel: invite.teamLabel,
-      autoApprove: invite.autoApprove,
-      platform: invite.platform,
-    },
+    invite,
   });
-  if (autoApprove) {
-    await writeProjectAccessAudit({
-      projectId: input.projectId,
-      actorUserId: input.ownerUserId,
-      action: "invite.auto_approve_on",
-      detail: { inviteId: invite.id, label: invite.id.slice(0, 8) },
-    });
-    await dualWriteProjectInviteAutoApproveEvent({
-      projectId: input.projectId,
-      inviteId: invite.id,
-      event: "enabled",
-      actorUserId: input.ownerUserId,
-    });
-  }
   return {
     ok: true,
     invite,
