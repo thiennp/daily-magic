@@ -32,7 +32,7 @@ export default function AwcProjectDetailSettingsPanel({
   return (
     <div
       id="p-set"
-      className="flex max-w-[760px] flex-col gap-6"
+      className="flex min-w-0 flex-col gap-4"
       data-layout-v2="l5-settings"
     >
       <AwcProjectSettingsNameSection

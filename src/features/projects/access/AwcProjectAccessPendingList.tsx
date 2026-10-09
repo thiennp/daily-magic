@@ -67,7 +67,7 @@ export default function AwcProjectAccessPendingList({
   return (
     <div>
       {openCount > 0 ? (
-        <div className="flex items-baseline justify-between">
+        <div className="flex items-baseline justify-between px-1">
           <h4 className="text-xs font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-300">
             {copy.pendingHeading}
           </h4>

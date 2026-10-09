@@ -53,7 +53,7 @@ export default function AwcProjectAccessPendingRow({
 
   return (
     <li
-      className="grid divide-y divide-awc-accent-soft-2 overflow-visible rounded-2xl border border-awc-accent-soft-2 bg-gradient-to-b from-awc-accent-soft to-awc-surface shadow-awc-lift"
+      className="grid divide-y divide-awc-accent-soft-2 overflow-visible rounded-awc-card border border-awc-accent-soft-2 bg-gradient-to-b from-awc-accent-soft to-awc-surface shadow-awc-lift"
       aria-labelledby={`pending-who-${req.id}`}
       data-pending-approval-card
     >

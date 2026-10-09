@@ -57,7 +57,7 @@ export default function AwcProjectMembersJoinRequestsSection({
   return (
     <section
       id="members-join-requests"
-      className="flex flex-col gap-1 px-3.5"
+      className="flex flex-col gap-2"
       data-members-join-requests
     >
       <AwcProjectAccessPendingList
