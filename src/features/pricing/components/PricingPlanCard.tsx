@@ -3,6 +3,7 @@ import type { PricingPlanCard as PlanCard } from "@/features/pricing/pricingPlan
 import {
   PRICING_PAGE_PATH,
   PRICING_SIGN_IN_HREF,
+  PRICING_SIGNED_IN_TRIAL_HREF,
   PRICING_START_TRIAL_HREF,
 } from "@/features/pricing/pricingAuthHrefs.constant";
 
@@ -13,7 +14,7 @@ interface PricingPlanCardProps {
 
 const resolveCtaHref = (planId: PlanCard["id"], signedIn: boolean): string => {
   if (planId === "trial") {
-    return signedIn ? PRICING_PAGE_PATH : PRICING_START_TRIAL_HREF;
+    return signedIn ? PRICING_SIGNED_IN_TRIAL_HREF : PRICING_START_TRIAL_HREF;
   }
   return signedIn ? PRICING_PAGE_PATH : PRICING_SIGN_IN_HREF;
 };

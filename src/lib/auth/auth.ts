@@ -12,8 +12,6 @@ import { getUserById } from "@/lib/auth/userRepository";
 import { isAgentAccessSyntheticEmail } from "@/lib/agentAccess/isAgentAccessSyntheticEmail";
 import { SUPER_ADMIN_EMAIL } from "@/lib/auth/constants";
 import { grantPendingTrialIfGateOpen } from "@/lib/billing/grantPendingTrialIfGateOpen";
-import { isTrialEntitlementGranted } from "@/lib/billing/isTrialEntitlementGranted";
-import { TRIAL_CLOSED_PRICING_PATH } from "@/lib/billing/trialClosedPricingPath.constant";
 
 process.env.AUTH_URL = resolveAppBaseUrl();
 
@@ -35,11 +33,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       ) {
         return true;
       }
-      const row = await grantPendingTrialIfGateOpen(user.id);
-      // Closed-gate mint: no usable trial session — signed-out Pricing banner.
-      if (!isTrialEntitlementGranted(row)) {
-        return TRIAL_CLOSED_PRICING_PATH;
-      }
+      // Everyone who signs up is on a trial: start it if it was never started.
+      await grantPendingTrialIfGateOpen(user.id);
       return true;
     },
     async session({ session, user }) {

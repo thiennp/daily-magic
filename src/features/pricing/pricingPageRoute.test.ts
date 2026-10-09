@@ -12,7 +12,10 @@ describe("pricing page route wiring", () => {
     expect(nav.includes('label: "Marketplace"')).toBe(true);
 
     const devices = readFileSync(
-      join(process.cwd(), "src/features/shell/v5/appShellComputersCopy.constant.ts"),
+      join(
+        process.cwd(),
+        "src/features/shell/v5/appShellComputersCopy.constant.ts",
+      ),
       "utf8",
     );
     expect(devices.includes("Connect this computer")).toBe(true);
