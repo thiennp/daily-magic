@@ -41,9 +41,11 @@ describe("DF-036 narrow rail: assistant name vs long wake chip", () => {
     expect(row).toContain("min-w-[4.5rem]");
     // 83a1e4d7: the name renders through AwcBotName, which truncates the text span.
     expect(row).toMatch(/<AwcBotName[^>]*font-semibold text-awc-fg/);
-    expect(read("bots/AwcBotName.tsx")).toContain(
-      '<span className="truncate">',
-    );
+    const botName = read("bots/AwcBotName.tsx");
+    expect(botName).toContain('<span className="truncate">');
+    // Its base `inline-flex` beats a caller's `flex`, so without max-w-full the name
+    // sizes to its full text and spills over the wake chip instead of truncating.
+    expect(botName).toContain("inline-flex min-w-0 max-w-full");
     expect(read("members/AwcProjectMembersHelperWakeStatus.tsx")).toContain(
       "max-w-[35%]",
     );
