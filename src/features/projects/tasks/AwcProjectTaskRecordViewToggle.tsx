@@ -1,4 +1,4 @@
-import { PROJECT_TASK_RECORDS_COPY as C } from "@/features/projects/tasks/projectTaskRecordsCopy.constant";
+import { PROJECT_TASK_BOARD_COPY as B } from "@/features/projects/tasks/projectTaskBoardCopy.constant";
 
 export type ProjectTaskRecordsView = "board" | "list";
 
@@ -13,7 +13,7 @@ export default function AwcProjectTaskRecordViewToggle({
   readonly onChange: (view: ProjectTaskRecordsView) => void;
 }) {
   return (
-    <div role="group" aria-label={C.viewAria} className="flex gap-1.5">
+    <div role="group" aria-label={B.viewAria} className="flex gap-1.5">
       {VIEWS.map((v) => (
         <button
           key={v}
@@ -26,7 +26,7 @@ export default function AwcProjectTaskRecordViewToggle({
           }`}
           onClick={() => onChange(v)}
         >
-          {v === "board" ? C.viewBoard : C.viewList}
+          {v === "board" ? B.viewBoard : B.viewList}
         </button>
       ))}
     </div>

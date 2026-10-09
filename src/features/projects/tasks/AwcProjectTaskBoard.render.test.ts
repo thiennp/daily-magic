@@ -42,3 +42,26 @@ describe("Tasks board (default view)", () => {
     expect(html).toContain("Drag a card to another column");
   });
 });
+
+describe("Tasks board paging", () => {
+  it("shows 10 cards per column and a Show 10 more button for the rest", () => {
+    const many = Array.from({ length: 25 }, (_, i) =>
+      projectTaskRecordFixture({
+        id: `t${i}`,
+        title: `Task ${i}`,
+        status: "queued",
+        updatedAt: `2026-01-${String(i + 1).padStart(2, "0")}`,
+      }),
+    );
+    const page = renderToStaticMarkup(
+      createElement(AwcProjectTaskRecordsList, {
+        projectId: "p1",
+        records: many,
+        loadFailed: false,
+        reload: () => undefined,
+      }),
+    );
+    expect(page.match(/data-task-record-id=/g)).toHaveLength(10);
+    expect(page).toContain("Show 10 more (15 left)");
+  });
+});

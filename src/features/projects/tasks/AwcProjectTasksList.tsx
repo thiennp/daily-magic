@@ -4,7 +4,6 @@ import AwcProjectTasksEmptyCat from "@/features/projects/tasks/AwcProjectTasksEm
 import AwcProjectTaskListRow from "@/features/projects/tasks/AwcProjectTaskListRow";
 import {
   AWC_TASKS_LIST_CLASS,
-  AWC_TASKS_PRIMARY_BUTTON_CLASS,
   AWC_TASKS_SECONDARY_BUTTON_CLASS,
 } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
 import { PROJECT_PAGE_TASKS_COPY as C } from "@/features/projects/tasks/projectPageTasksCopy.constant";
@@ -17,7 +16,6 @@ export default function AwcProjectTasksList({
   hasActiveFilters,
   groupByAssistant = false,
   onOpen,
-  onAssign,
   onClearFilters,
 }: {
   readonly tasks: readonly ProjectTaskMeta[];
@@ -25,7 +23,6 @@ export default function AwcProjectTasksList({
   readonly hasActiveFilters: boolean;
   readonly groupByAssistant?: boolean;
   readonly onOpen: (id: string) => void;
-  readonly onAssign: () => void;
   readonly onClearFilters: () => void;
 }) {
   if (tasks.length === 0) {
@@ -44,15 +41,7 @@ export default function AwcProjectTasksList({
           >
             {C.clearFilters}
           </button>
-        ) : (
-          <button
-            type="button"
-            className={AWC_TASKS_PRIMARY_BUTTON_CLASS}
-            onClick={onAssign}
-          >
-            {C.emptyAssign}
-          </button>
-        )}
+        ) : null}
       </div>
     );
   }

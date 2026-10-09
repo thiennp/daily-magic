@@ -1,0 +1,22 @@
+/** Planned work board + Create task copy. */
+export const PROJECT_TASK_BOARD_COPY = {
+  viewList: "List",
+  viewBoard: "Board",
+  viewAria: "Planned work view",
+  boardAria: "Planned work board",
+  boardHint: "Drag a card to another column to change its status.",
+  boardColumns: "Columns",
+  boardShowMore: (n: number, left: number) => `Show ${n} more (${left} left)`,
+  createTask: "Create task",
+  createTitle: "Create task",
+  createFieldTitle: "Title",
+  createFieldDescription: "Description (optional)",
+  createFieldStatus: "Start as",
+  createSubmit: "Create",
+  createPending: "Creating…",
+  createCancel: "Cancel",
+  createEmpty: "No planned work yet.",
+  createTitleRequired: "Give the task a title.",
+  createCapError: "This project has reached its task limit.",
+  createRateError: "Too many tasks created. Try again later.",
+} as const;

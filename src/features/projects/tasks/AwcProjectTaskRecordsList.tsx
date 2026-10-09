@@ -1,17 +1,18 @@
 "use client";
 
+import { PROJECT_TASK_BOARD_COPY as B } from "@/features/projects/tasks/projectTaskBoardCopy.constant";
 import { useState } from "react";
 
 import useAwcProjectHashDeepLink from "@/features/projects/hooks/useAwcProjectHashDeepLink";
 import AwcProjectTaskRecordDetail from "@/features/projects/tasks/AwcProjectTaskRecordDetail";
+import AwcProjectTaskCreateDialog from "@/features/projects/tasks/AwcProjectTaskCreateDialog";
 import AwcProjectTaskBoard from "@/features/projects/tasks/AwcProjectTaskBoard";
 import AwcProjectTaskRecordListView from "@/features/projects/tasks/AwcProjectTaskRecordListView";
-import AwcProjectTaskRecordViewToggle, {
-  type ProjectTaskRecordsView,
-} from "@/features/projects/tasks/AwcProjectTaskRecordViewToggle";
+import AwcProjectTaskRecordsHeader from "@/features/projects/tasks/AwcProjectTaskRecordsHeader";
+import { type ProjectTaskRecordsView } from "@/features/projects/tasks/AwcProjectTaskRecordViewToggle";
+import { useBoardColumnVisibility } from "@/features/projects/tasks/useBoardColumnVisibility";
 import {
   AWC_TASKS_CARD_CLASS,
-  AWC_TASKS_PANEL_HEADING_CLASS,
   AWC_TASKS_STATUS_CLASS,
 } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
 import { PROJECT_TASK_RECORDS_COPY as C } from "@/features/projects/tasks/projectTaskRecordsCopy.constant";
@@ -32,10 +33,11 @@ export default function AwcProjectTaskRecordsList({
   readonly reload: () => void;
   readonly initialView?: ProjectTaskRecordsView;
 }) {
+  const boardColumns = useBoardColumnVisibility();
   const listView = useProjectTaskRecordView(records);
+  const [creating, setCreating] = useState(false);
   const [view, setView] = useState<ProjectTaskRecordsView>(initialView);
   const [recordId, setRecordId] = useAwcProjectHashDeepLink("tasks", "record");
-  if (!loadFailed && records.length === 0) return null;
   const selected = records.find((r) => r.id === recordId) ?? null;
   if (selected !== null) {
     return (
@@ -54,12 +56,25 @@ export default function AwcProjectTaskRecordsList({
   }
   return (
     <section aria-label={C.aria} className={AWC_TASKS_CARD_CLASS}>
-      <div className="flex flex-wrap items-center justify-between gap-2 px-3.5 pt-3 pb-1">
-        <h3 className={`m-0 ${AWC_TASKS_PANEL_HEADING_CLASS}`}>{C.heading}</h3>
-        <AwcProjectTaskRecordViewToggle view={view} onChange={setView} />
-      </div>
+      <AwcProjectTaskRecordsHeader
+        view={view}
+        onViewChange={setView}
+        boardColumns={boardColumns}
+        onCreate={() => setCreating(true)}
+      />
+      {creating ? (
+        <AwcProjectTaskCreateDialog
+          projectId={projectId}
+          reload={reload}
+          onClose={() => setCreating(false)}
+        />
+      ) : null}
       {loadFailed ? (
         <p className={`px-3.5 ${AWC_TASKS_STATUS_CLASS}`}>{C.loadError}</p>
+      ) : records.length === 0 ? (
+        <p className={`px-3.5 pb-3 ${AWC_TASKS_STATUS_CLASS}`}>
+          {B.createEmpty}
+        </p>
       ) : view === "board" ? (
         <AwcProjectTaskBoard
           projectId={projectId}

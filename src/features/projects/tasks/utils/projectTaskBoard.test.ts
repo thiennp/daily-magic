@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   canMoveProjectTask,
+  nextBoardVisibleCount,
   groupProjectTasksForBoard,
 } from "@/features/projects/tasks/utils/projectTaskBoard";
 import { projectTaskRecordFixture } from "@/lib/projects/tasks/projectTask.fixtures";
@@ -34,5 +35,14 @@ describe("canMoveProjectTask", () => {
     expect(canMoveProjectTask("done", "queued")).toBe(true);
     expect(canMoveProjectTask("queued", "done")).toBe(false);
     expect(canMoveProjectTask("queued", "queued")).toBe(false);
+  });
+});
+
+describe("nextBoardVisibleCount", () => {
+  it("adds one page, never past the total", () => {
+    expect(nextBoardVisibleCount(undefined, 35)).toBe(20);
+    expect(nextBoardVisibleCount(20, 35)).toBe(30);
+    expect(nextBoardVisibleCount(30, 35)).toBe(35);
+    expect(nextBoardVisibleCount(undefined, 12)).toBe(12);
   });
 });

@@ -36,3 +36,16 @@ export const canMoveProjectTask = (
   from: ProjectTaskStatus,
   to: ProjectTaskStatus,
 ): boolean => from !== to && PROJECT_TASK_TRANSITIONS[from].includes(to);
+
+/** Cards each column shows at first, and how many more each "Show more" adds. */
+export const PROJECT_TASK_BOARD_PAGE_SIZE = 10;
+
+/** How many cards of a column are visible after the user asks for more. */
+export const nextBoardVisibleCount = (
+  current: number | undefined,
+  total: number,
+): number =>
+  Math.min(
+    total,
+    (current ?? PROJECT_TASK_BOARD_PAGE_SIZE) + PROJECT_TASK_BOARD_PAGE_SIZE,
+  );

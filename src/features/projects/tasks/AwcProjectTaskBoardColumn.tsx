@@ -1,5 +1,7 @@
+import { PROJECT_TASK_BOARD_COPY as B } from "@/features/projects/tasks/projectTaskBoardCopy.constant";
 import AwcProjectTaskBoardCard from "@/features/projects/tasks/AwcProjectTaskBoardCard";
 import { PROJECT_TASK_RECORD_STATUS_LABEL as STATUS } from "@/features/projects/tasks/projectTaskRecordsCopy.constant";
+import { PROJECT_TASK_BOARD_PAGE_SIZE } from "@/features/projects/tasks/utils/projectTaskBoard";
 import type { ProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecord.type";
 import type { ProjectTaskStatus } from "@/lib/projects/tasks/projectTaskTools.constant";
 
@@ -7,6 +9,8 @@ import type { ProjectTaskStatus } from "@/lib/projects/tasks/projectTaskTools.co
 export default function AwcProjectTaskBoardColumn({
   status,
   tasks,
+  visibleCount,
+  onShowMore,
   droppable,
   dragging,
   onOpen,
@@ -16,6 +20,9 @@ export default function AwcProjectTaskBoardColumn({
 }: {
   readonly status: ProjectTaskStatus;
   readonly tasks: readonly ProjectTaskRecord[];
+  /** Cards shown; the rest sit behind "Show more". */
+  readonly visibleCount: number;
+  readonly onShowMore: () => void;
   readonly droppable: boolean;
   readonly dragging: boolean;
   readonly onOpen: (id: string) => void;
@@ -48,7 +55,7 @@ export default function AwcProjectTaskBoardColumn({
         </span>
       </h4>
       <ul className="m-0 flex min-h-12 flex-col gap-2 p-0">
-        {tasks.map((task) => (
+        {tasks.slice(0, visibleCount).map((task) => (
           <AwcProjectTaskBoardCard
             key={task.id}
             task={task}
@@ -58,6 +65,18 @@ export default function AwcProjectTaskBoardColumn({
           />
         ))}
       </ul>
+      {tasks.length > visibleCount ? (
+        <button
+          type="button"
+          className="rounded-lg border border-awc-border-strong bg-awc-surface px-2 py-1.5 text-[12.5px] font-medium text-awc-fg-muted hover:bg-awc-surface-2"
+          onClick={onShowMore}
+        >
+          {B.boardShowMore(
+            Math.min(PROJECT_TASK_BOARD_PAGE_SIZE, tasks.length - visibleCount),
+            tasks.length - visibleCount,
+          )}
+        </button>
+      ) : null}
     </section>
   );
 }

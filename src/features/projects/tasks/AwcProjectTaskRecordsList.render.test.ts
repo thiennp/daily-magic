@@ -45,8 +45,9 @@ describe("AwcProjectTaskRecordsList (DF-024 Tasks tab rows)", () => {
     expect(html).not.toMatch(/purple|violet|#[0-9a-f]{6}/i);
   });
 
-  it("hides when empty; shows the error line when the load failed", () => {
-    expect(render([])).toBe("");
+  it("empty shows the Create task button; shows the error line when the load failed", () => {
+    expect(render([])).toContain("Create task");
+    expect(render([])).toContain("No planned work yet.");
     expect(render([], true)).toContain("Could not load planned work.");
   });
 

@@ -1,21 +1,18 @@
 "use client";
 
 import AwcProjectTasksFilters from "@/features/projects/tasks/AwcProjectTasksFilters";
-import { AWC_TASKS_PRIMARY_BUTTON_CLASS } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
 import { PROJECT_PAGE_TASKS_COPY as C } from "@/features/projects/tasks/projectPageTasksCopy.constant";
 import type { AwcProjectTasksState } from "@/features/projects/tasks/awcProjectTasksState.type";
 
-/** Tasks tab toolbar: filters, group switch, plan counts and the Assign button. */
+/** Tasks tab toolbar: filters, group switch, and plan counts. */
 export default function AwcProjectTasksToolbar({
   tasks,
   groupByAssistant,
   onGroupByAssistant,
-  onAssign,
 }: {
   readonly tasks: AwcProjectTasksState;
   readonly groupByAssistant: boolean;
   readonly onGroupByAssistant: (value: boolean) => void;
-  readonly onAssign: () => void;
 }) {
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-2.5 border-b border-awc-border px-3.5 py-3">
@@ -51,15 +48,6 @@ export default function AwcProjectTasksToolbar({
           </span>
         </span>
       ) : null}
-      <button
-        type="button"
-        className={AWC_TASKS_PRIMARY_BUTTON_CLASS}
-        onClick={() => {
-          onAssign();
-        }}
-      >
-        {C.emptyAssign}
-      </button>
     </div>
   );
 }

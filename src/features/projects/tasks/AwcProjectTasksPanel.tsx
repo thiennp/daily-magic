@@ -9,7 +9,6 @@ import {
   AWC_TASKS_STATUS_CLASS,
 } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
 import AwcProjectTaskDetail from "@/features/projects/tasks/AwcProjectTaskDetail";
-import AwcProjectTasksAssignDialog from "@/features/projects/tasks/AwcProjectTasksAssignDialog";
 import AwcProjectTasksList from "@/features/projects/tasks/AwcProjectTasksList";
 import AwcProjectTasksToolbar from "@/features/projects/tasks/AwcProjectTasksToolbar";
 import AwcProjectTasksOfflineBanner from "@/features/projects/tasks/AwcProjectTasksOfflineBanner";
@@ -21,7 +20,8 @@ import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type"
 /**
  * Tasks tab panel — screens A/B/D (EN PASS). Screen E lives in project Settings.
  * No standalone New task page. Load older stays in Chat (not Tasks).
- * Assign dialog POSTs via inbox/dispatch (same path as Activity / Ask box).
+ * Tasks are created from the Planned work board ("Create task") or in chat.
+ * With no assistant runs the panel stays out of the way (no empty box).
  */
 export default function AwcProjectTasksPanel({
   project,
@@ -33,7 +33,6 @@ export default function AwcProjectTasksPanel({
     hasOwnerComputer: projectHasOwnerComputer(project),
   });
   const [taskId, setTaskId] = useAwcProjectHashDeepLink("tasks", "task");
-  const [assignOpen, setAssignOpen] = useState(false);
   const [groupByAssistant, setGroupByAssistant] = useState(false);
   const selected =
     taskId === null
@@ -41,6 +40,16 @@ export default function AwcProjectTasksPanel({
       : (tasks.allTasks.find((t) => t.id === taskId) ?? null);
   const hasActiveFilters =
     tasks.assistantFilter !== "all" || tasks.statusFilter !== "all";
+
+  if (
+    selected === null &&
+    !tasks.loading &&
+    !tasks.loadFailed &&
+    tasks.allTasks.length === 0 &&
+    tasks.offlineMessage === null
+  ) {
+    return null;
+  }
 
   return (
     <section aria-label={C.aria} className="flex min-w-0 flex-col gap-3.5">
@@ -63,9 +72,6 @@ export default function AwcProjectTasksPanel({
             tasks={tasks}
             groupByAssistant={groupByAssistant}
             onGroupByAssistant={setGroupByAssistant}
-            onAssign={() => {
-              setAssignOpen(true);
-            }}
           />
           <div className="min-w-0">
             {tasks.loadFailed ? (
@@ -88,9 +94,6 @@ export default function AwcProjectTasksPanel({
                 hasActiveFilters={hasActiveFilters}
                 groupByAssistant={groupByAssistant}
                 onOpen={setTaskId}
-                onAssign={() => {
-                  setAssignOpen(true);
-                }}
                 onClearFilters={() => {
                   tasks.setAssistantFilter("all");
                   tasks.setStatusFilter("all");
@@ -100,18 +103,6 @@ export default function AwcProjectTasksPanel({
           </div>
         </div>
       )}
-      <AwcProjectTasksAssignDialog
-        open={assignOpen}
-        projectId={project.id}
-        hasGit={hasGit}
-        defaultBranch={project.defaultBranch ?? null}
-        onClose={() => {
-          setAssignOpen(false);
-        }}
-        onAssigned={() => {
-          tasks.reload();
-        }}
-      />
     </section>
   );
 }
