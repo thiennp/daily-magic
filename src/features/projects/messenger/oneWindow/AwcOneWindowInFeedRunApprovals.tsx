@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 
 import { postProjectAccessAction } from "@/features/projects/access/utils/projectAccessApi";
 import AwcOneWindowApprovalCard from "@/features/projects/messenger/oneWindow/AwcOneWindowApprovalCard";
+import { buildAskAgainHandler } from "@/features/projects/messenger/oneWindow/oneWindowAskAgain";
+import { askAssistantAgain } from "@/features/projects/messenger/oneWindow/oneWindowComposerPrefill";
 import {
   mapRunApprovalToOneWindowCard,
   type OneWindowRunApproval,
@@ -89,6 +91,7 @@ export default function AwcOneWindowInFeedRunApprovals({
           <AwcOneWindowApprovalCard
             key={approval.runId}
             model={model}
+            onAskAgain={buildAskAgainHandler(model, askAssistantAgain)}
             onApprove={(id) => decide(id, "approved")}
             onDeny={(id) => decide(id, "denied")}
           />

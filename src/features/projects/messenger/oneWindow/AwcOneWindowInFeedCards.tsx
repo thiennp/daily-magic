@@ -1,5 +1,6 @@
 "use client";
 
+import { askAssistantAgain } from "@/features/projects/messenger/oneWindow/oneWindowComposerPrefill";
 import AwcOneWindowInFeedApprovals from "@/features/projects/messenger/oneWindow/AwcOneWindowInFeedApprovals";
 import AwcOneWindowInFeedRunApprovals from "@/features/projects/messenger/oneWindow/AwcOneWindowInFeedRunApprovals";
 import AwcOneWindowInFeedSkillQuestions from "@/features/projects/messenger/oneWindow/AwcOneWindowInFeedSkillQuestions";
@@ -16,7 +17,11 @@ export default function AwcOneWindowInFeedCards({
 }: AwcOneWindowInFeedCardsProps) {
   return (
     <>
-      <AwcOneWindowInFeedApprovals projectId={projectId} enabled={enabled} />
+      <AwcOneWindowInFeedApprovals
+        projectId={projectId}
+        enabled={enabled}
+        onAskAgain={askAssistantAgain}
+      />
       <AwcOneWindowInFeedRunApprovals projectId={projectId} enabled={enabled} />
       <AwcOneWindowInFeedSkillQuestions
         projectId={projectId}

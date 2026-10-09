@@ -7,6 +7,7 @@ import AwcOneWindowComposerHint from "@/features/projects/messenger/oneWindow/Aw
 import AwcOneWindowComposerPickerSlot from "@/features/projects/messenger/oneWindow/AwcOneWindowComposerPickerSlot";
 import AwcOneWindowComposerRouteRow from "@/features/projects/messenger/oneWindow/AwcOneWindowComposerRouteRow";
 import AwcOneWindowKeptRetryNotice from "@/features/projects/messenger/oneWindow/AwcOneWindowKeptRetryNotice";
+import { useOneWindowComposerPrefill } from "@/features/projects/messenger/oneWindow/useOneWindowComposerPrefill";
 import AwcOneWindowMentionBox from "@/features/projects/messenger/oneWindow/AwcOneWindowMentionBox";
 import AwcOneWindowMentionError from "@/features/projects/messenger/oneWindow/AwcOneWindowMentionError";
 import { useOneWindowComposerDraft } from "@/features/projects/messenger/oneWindow/useOneWindowComposerDraft";
@@ -60,6 +61,7 @@ export default function AwcMessengerComposer({
       });
     },
   });
+  useOneWindowComposerPrefill(draft.textareaRef);
   return (
     <div className="relative flex flex-col gap-2 border-t border-awc-border bg-awc-surface px-4 pb-3.5 pt-2.5 dark:border-gray-800 dark:bg-gray-950">
       {routing?.goneName ? (
