@@ -89,6 +89,18 @@ This project uses **Tailwind CSS 4** (not SCSS modules). Follow TailAdmin utilit
 
 ---
 
+## UI / UX
+
+Every change that touches the UI must consider UI/UX, not just make the feature work.
+
+- Decide first who sees it and what they can do. Hide controls and status text that the viewer cannot act on.
+- Make it easy to find: put the action where the person already is (for example an Overview prompt), not only in a deep settings tab.
+- Check alignment and spacing against neighbouring rows, and cover empty, loading and error states.
+- Confirm risky actions (block, delete); keep copy short and plain.
+- For non-trivial UI, agree a short mockup before building, and re-check the rendered result afterwards.
+
+---
+
 ## Database
 
 Set `DATABASE_URL` in `.env.local` (Neon connection string). Apply schema with `npm run db:schema`.
