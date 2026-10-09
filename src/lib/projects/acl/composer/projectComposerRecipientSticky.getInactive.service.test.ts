@@ -67,17 +67,19 @@ const reset = (): void => {
 
 import { getProjectComposerRecipientSticky } from "@/lib/projects/acl/composer/getProjectComposerRecipientSticky";
 
-describe("sticky GET active + inactive", () => {
+describe("sticky GET inactive", () => {
   beforeEach(reset);
 
-  it("returns sticky when membership still active", async () => {
-    sqlMock.mockResolvedValueOnce([
-      {
-        mode: "membership",
-        membership_id: "mem-a",
-        updated_at: "2026-10-06T00:00:00.000Z",
-      },
-    ]);
+  it("auto-clears inactive membership sticky and notifies", async () => {
+    sqlMock
+      .mockResolvedValueOnce([
+        {
+          mode: "membership",
+          membership_id: "mem-gone",
+          updated_at: "2026-10-06T00:00:00.000Z",
+        },
+      ])
+      .mockResolvedValueOnce([{ actor_user_id: "owner-1" }]);
     expect(
       await getProjectComposerRecipientSticky({
         projectId: "proj-1",
@@ -85,9 +87,10 @@ describe("sticky GET active + inactive", () => {
       }),
     ).toMatchObject({
       ok: true,
-      sticky: { mode: "membership", membershipId: "mem-a" },
-      cleared: false,
-      singleAssistant: null,
+      sticky: null,
+      cleared: true,
+      clearedReason: "membership_inactive",
     });
+    expect(notify).toHaveBeenCalledOnce();
   });
 });

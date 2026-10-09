@@ -13,7 +13,8 @@ interface AwcProjectCardActionsMenuItemsProps {
   readonly isDefaultProject: boolean;
   readonly canDelete: boolean;
   readonly canLeave: boolean;
-  readonly assignTasksHref: string;
+  /** Null for a viewer, who cannot assign tasks. */
+  readonly assignTasksHref: string | null;
   readonly editCta: ProjectEditOnMacCta;
   readonly editHelperId: string | undefined;
   readonly onClose: () => void;
@@ -57,16 +58,18 @@ export default function AwcProjectCardActionsMenuItems({
           </DropdownItem>
         </li>
       ) : null}
-      <li role="none">
-        <DropdownItem
-          tag="a"
-          href={assignTasksHref}
-          baseClassName={MENU_ITEM_CLASS}
-          onItemClick={onClose}
-        >
-          Assign tasks
-        </DropdownItem>
-      </li>
+      {assignTasksHref !== null ? (
+        <li role="none">
+          <DropdownItem
+            tag="a"
+            href={assignTasksHref}
+            baseClassName={MENU_ITEM_CLASS}
+            onItemClick={onClose}
+          >
+            Assign tasks
+          </DropdownItem>
+        </li>
+      ) : null}
       {editCta.href !== null ? (
         <li role="none">
           <a

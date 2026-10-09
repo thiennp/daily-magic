@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const selectRows = vi.hoisted(() => vi.fn());
-const getProject = vi.hoisted(() => vi.fn());
+const authorize = vi.hoisted(() => vi.fn());
 
 vi.mock("@/lib/projects/acl/ensureProjectAclSchema", () => ({
   ensureProjectAclSchema: vi.fn(async () => undefined),
 }));
-vi.mock("@/lib/projects/userProjectQueries", () => ({
-  getUserProjectById: getProject,
+vi.mock("@/lib/projects/acl/authorizeProjectInviter", () => ({
+  authorizeProjectInviter: authorize,
 }));
 vi.mock("@/lib/projects/acl/invites/selectUsableProjectInviteRows", () => ({
   selectUsableProjectInviteRows: selectRows,
@@ -18,11 +18,11 @@ import { listProjectInvites } from "@/lib/projects/acl/invites/listProjectInvite
 describe("listProjectInvites", () => {
   beforeEach(() => {
     selectRows.mockReset();
-    getProject.mockReset();
+    authorize.mockReset();
   });
 
-  it("forbids non-owners and skips the SELECT", async () => {
-    getProject.mockResolvedValue({ ownerUserId: "other" });
+  it("forbids viewers and strangers and skips the SELECT", async () => {
+    authorize.mockResolvedValue({ allow: false, reason: "forbidden" });
     await expect(
       listProjectInvites({ projectId: "proj-1", ownerUserId: "me" }),
     ).resolves.toEqual({ ok: false, code: "forbidden" });
@@ -30,7 +30,7 @@ describe("listProjectInvites", () => {
   });
 
   it("returns mapped usable invites for the owner", async () => {
-    getProject.mockResolvedValue({ ownerUserId: "me" });
+    authorize.mockResolvedValue({ allow: true, owner: true });
     selectRows.mockResolvedValue([
       {
         id: "inv-1",
@@ -54,6 +54,13 @@ describe("listProjectInvites", () => {
     expect(result.invites).toHaveLength(1);
     expect(result.invites[0]?.id).toBe("inv-1");
     expect(result.invites[0]?.usesRemaining).toBe(1);
-    expect(selectRows).toHaveBeenCalledWith("proj-1");
+    expect(selectRows).toHaveBeenCalledWith("proj-1", null);
+  });
+
+  it("a member lists only the invites they created", async () => {
+    authorize.mockResolvedValue({ allow: true, owner: false });
+    selectRows.mockResolvedValue([]);
+    await listProjectInvites({ projectId: "proj-1", ownerUserId: "me" });
+    expect(selectRows).toHaveBeenCalledWith("proj-1", "me");
   });
 });

@@ -4,7 +4,7 @@ import { mapProjectMessageLogRow } from "@/lib/projects/acl/messaging/mapProject
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 import type { ListProjectMessageLogResult } from "@/lib/projects/acl/messaging/projectMessageLog.types";
 import { resolveOwnerOrActiveHumanSeat } from "@/lib/projects/acl/resolveOwnerOrActiveHumanSeat";
-import { asRowArray, getSql } from "@/lib/db";
+import { selectProjectMessageLogRows } from "@/lib/projects/acl/messaging/selectProjectMessageLogRows";
 
 export type {
   ListProjectMessageLogResult,
@@ -46,7 +46,6 @@ export const listProjectMessageLog = async (input: {
 
   await ensureProjectAclSchema();
   await purgeExpiredProjectMessages();
-  const sql = getSql();
   const limit = clampLimit(input.limit);
   const archived = input.archived === true;
   const since =
@@ -58,38 +57,15 @@ export const listProjectMessageLog = async (input: {
       ? input.cursor.trim()
       : null;
 
-  const rows = asRowArray(
-    await sql`
-      SELECT
-        m.*,
-        sender.project_display_name AS sender_display_name,
-        recipient.project_display_name AS recipient_display_name
-      FROM project_messages m
-      LEFT JOIN project_memberships sender
-        ON sender.id = m.sender_membership_id
-      LEFT JOIN project_memberships recipient
-        ON recipient.id = m.to_membership_id
-      WHERE m.project_id = ${input.projectId}
-        AND (m.archived_at IS NOT NULL) = ${archived}::boolean
-        AND (${since}::timestamptz IS NULL OR m.created_at > ${since}::timestamptz)
-        AND (
-          ${cursor}::text IS NULL
-          OR m.created_at < (
-            SELECT c.created_at FROM project_messages c
-            WHERE c.id = ${cursor} AND c.project_id = ${input.projectId}
-          )
-          OR (
-            m.created_at = (
-              SELECT c.created_at FROM project_messages c
-              WHERE c.id = ${cursor} AND c.project_id = ${input.projectId}
-            )
-            AND m.id < ${cursor}
-          )
-        )
-      ORDER BY m.created_at DESC, m.id DESC
-      LIMIT ${limit + 1}
-    `,
-  );
+  const rows = await selectProjectMessageLogRows({
+    projectId: input.projectId,
+    viewerUserId: input.actorUserId,
+    viewerIsOwner: access.kind === "owner",
+    archived,
+    since,
+    cursor,
+    limit,
+  });
 
   const page = rows.slice(0, limit).map(mapProjectMessageLogRow);
   const nextCursor =

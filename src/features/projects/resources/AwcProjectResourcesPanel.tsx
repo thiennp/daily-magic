@@ -29,11 +29,13 @@ export default function AwcProjectResourcesPanel({
 
   return (
     <div className="flex min-w-0 flex-col gap-6">
-      <AwcProjectResourcesCompositionSection
-        projectId={project.id}
-        deviceDisplayName={deviceDisplayName}
-        editCta={editCta}
-      />
+      {pageActorRole === "owner" ? (
+        <AwcProjectResourcesCompositionSection
+          projectId={project.id}
+          deviceDisplayName={deviceDisplayName}
+          editCta={editCta}
+        />
+      ) : null}
       <AwcProjectResourcesFoldersCard
         projectId={project.id}
         isOwner={pageActorRole === "owner"}

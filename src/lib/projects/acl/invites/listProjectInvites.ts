@@ -2,25 +2,28 @@ import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchem
 import mapProjectInviteRow from "@/lib/projects/acl/invites/mapProjectInviteRow";
 import { selectUsableProjectInviteRows } from "@/lib/projects/acl/invites/selectUsableProjectInviteRows";
 import type ProjectInviteRecord from "@/lib/projects/acl/invites/types/ProjectInviteRecord.type";
-import { getUserProjectById } from "@/lib/projects/userProjectQueries";
+import { authorizeProjectInviter } from "@/lib/projects/acl/authorizeProjectInviter";
 
 export type ListProjectInvitesResult =
   | { readonly ok: true; readonly invites: readonly ProjectInviteRecord[] }
   | { readonly ok: false; readonly code: "not_found" | "forbidden" };
 
-/** Owner-only invite list orchestrator: auth, then the usable-invite SELECT. */
+/** Owner: every usable invite. A member: only the assistant invites they created. */
 export const listProjectInvites = async (input: {
   readonly projectId: string;
   readonly ownerUserId: string;
 }): Promise<ListProjectInvitesResult> => {
-  const project = await getUserProjectById(input.projectId);
-  if (project === null) {
-    return { ok: false, code: "not_found" };
-  }
-  if (project.ownerUserId !== input.ownerUserId) {
-    return { ok: false, code: "forbidden" };
+  const access = await authorizeProjectInviter({
+    projectId: input.projectId,
+    actorUserId: input.ownerUserId,
+  });
+  if (!access.allow) {
+    return { ok: false, code: access.reason };
   }
   await ensureProjectAclSchema();
-  const rows = await selectUsableProjectInviteRows(input.projectId);
+  const rows = await selectUsableProjectInviteRows(
+    input.projectId,
+    access.owner ? null : input.ownerUserId,
+  );
   return { ok: true, invites: rows.map((row) => mapProjectInviteRow(row)) };
 };

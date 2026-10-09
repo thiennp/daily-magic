@@ -25,6 +25,7 @@ interface AwcProjectCardActionsMenuProps {
   readonly editHelperId: string | undefined;
   readonly onProjectDeleted?: () => void;
   readonly canDelete: boolean;
+  readonly canAssign: boolean;
 }
 
 export default function AwcProjectCardActionsMenu({
@@ -34,6 +35,7 @@ export default function AwcProjectCardActionsMenu({
   editHelperId,
   onProjectDeleted,
   canDelete,
+  canAssign,
 }: AwcProjectCardActionsMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -78,7 +80,9 @@ export default function AwcProjectCardActionsMenu({
             isDefaultProject={isDefaultUserProject({ name: projectName })}
             canDelete={canDelete}
             canLeave={!canDelete}
-            assignTasksHref={buildNavConsolidationNewTaskHref({ projectId })}
+            assignTasksHref={
+              canAssign ? buildNavConsolidationNewTaskHref({ projectId }) : null
+            }
             editCta={editCta}
             editHelperId={editHelperId}
             onClose={closeMenu}

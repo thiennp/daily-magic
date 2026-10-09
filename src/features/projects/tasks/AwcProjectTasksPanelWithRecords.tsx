@@ -1,6 +1,7 @@
 "use client";
 
 import AwcProjectTaskRecordsList from "@/features/projects/tasks/AwcProjectTaskRecordsList";
+import { AwcProjectTasksReadOnlyProvider } from "@/features/projects/tasks/AwcProjectTasksReadOnlyContext";
 import AwcProjectTasksPanel from "@/features/projects/tasks/AwcProjectTasksPanel";
 import useProjectTaskRecords from "@/features/projects/tasks/useProjectTaskRecords";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
@@ -19,15 +20,17 @@ export default function AwcProjectTasksPanelWithRecords({
 }) {
   const records = useProjectTaskRecords(project.id);
   return (
-    <div className="flex min-w-0 flex-col gap-3.5">
-      <AwcProjectTaskRecordsList
-        projectId={project.id}
-        records={records.records}
-        loadFailed={records.loadFailed}
-        reload={records.reload}
-        readOnly={readOnly}
-      />
-      <AwcProjectTasksPanel project={project} />
-    </div>
+    <AwcProjectTasksReadOnlyProvider value={readOnly}>
+      <div className="flex min-w-0 flex-col gap-3.5">
+        <AwcProjectTaskRecordsList
+          projectId={project.id}
+          records={records.records}
+          loadFailed={records.loadFailed}
+          reload={records.reload}
+          readOnly={readOnly}
+        />
+        <AwcProjectTasksPanel project={project} />
+      </div>
+    </AwcProjectTasksReadOnlyProvider>
   );
 }

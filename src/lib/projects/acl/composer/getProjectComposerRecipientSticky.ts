@@ -2,6 +2,8 @@ import {
   clearInactiveComposerRecipientStickyOnGet,
   clearLeftoverComposerRecipientStickyForSingleAssistant,
 } from "@/lib/projects/acl/composer/clearComposerRecipientStickyOnGet";
+import { canViewerMessageBot } from "@/lib/projects/acl/messaging/canViewerMessageBot";
+import { loadClosedBotSeats } from "@/lib/projects/acl/messaging/messenger/loadClosedBotSeats";
 import { ensureProjectComposerRecipientStickySchema } from "@/lib/projects/acl/composer/ensureProjectComposerRecipientStickySchema";
 import { loadActiveComposerRecipientAssistants } from "@/lib/projects/acl/composer/loadActiveComposerRecipientAssistants";
 import { loadProjectComposerRecipientStickyRow } from "@/lib/projects/acl/composer/projectComposerRecipientStickyRepo";
@@ -18,8 +20,19 @@ export const getProjectComposerRecipientSticky = async (input: {
     return actor;
   }
   await ensureProjectComposerRecipientStickySchema();
-  const assistants = await loadActiveComposerRecipientAssistants(
-    input.projectId,
+  const [active, closed] = await Promise.all([
+    loadActiveComposerRecipientAssistants(input.projectId),
+    loadClosedBotSeats(input.projectId),
+  ]);
+  // A closed assistant is not offered to anyone but the person who invited it.
+  const assistants = active.filter((bot) =>
+    canViewerMessageBot(
+      {
+        closed: closed.has(bot.membershipId),
+        invitedByUserId: closed.get(bot.membershipId) ?? null,
+      },
+      input.actorUserId,
+    ),
   );
   const singleAssistant =
     assistants.length === 1

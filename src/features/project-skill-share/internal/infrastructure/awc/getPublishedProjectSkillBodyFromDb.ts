@@ -9,14 +9,18 @@ export const getPublishedProjectSkillBodyFromDb = async (input: {
   readonly version: number;
   readonly skillRowId?: string;
 }): Promise<ProjectSkillPublishedBody | null> => {
-  const skillRowId =
-    input.skillRowId ??
-    (
-      await selectProjectSkillRow({
-        projectId: input.projectId,
-        skillId: input.skillId,
-      })
-    )?.rowId;
+  // A revoked (or never published) skill is not downloadable, whatever its old versions say.
+  const skill =
+    input.skillRowId === undefined
+      ? await selectProjectSkillRow({
+          projectId: input.projectId,
+          skillId: input.skillId,
+        })
+      : null;
+  if (input.skillRowId === undefined && skill?.state !== "published") {
+    return null;
+  }
+  const skillRowId = input.skillRowId ?? skill?.rowId;
   if (skillRowId === undefined) {
     return null;
   }

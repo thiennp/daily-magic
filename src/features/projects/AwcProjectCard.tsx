@@ -100,6 +100,7 @@ export default function AwcProjectCard({
               editHelperId={showHelperText ? editHelperId : undefined}
               onProjectDeleted={onProjectDeleted}
               canDelete={canDelete}
+              canAssign={project.viewerRole !== "viewer"}
             />
           </div>
         </div>

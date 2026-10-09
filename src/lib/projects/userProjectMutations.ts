@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 
+import { isActorOwnedLiveDevice } from "@/lib/projects/acl/isActorOwnedLiveDevice";
 import { syncProjectComputerMembership } from "@/lib/projects/acl/syncProjectComputerMembership";
 import { listUserProjectsForOwner } from "@/lib/projects/userProjectQueries";
 import mapUserProjectRow from "@/lib/projects/mapUserProjectRow";
@@ -15,6 +16,14 @@ export const createUserProject = async (
 ): Promise<UserProjectRecord | null> => {
   const linkedDeviceId = input.deviceId?.trim() ?? "";
   if (linkedDeviceId.length === 0) {
+    return null;
+  }
+  // A project can only be bound to a live computer its owner registered.
+  const ownsDevice = await isActorOwnedLiveDevice({
+    userId: ownerUserId,
+    deviceId: linkedDeviceId,
+  });
+  if (!ownsDevice) {
     return null;
   }
 

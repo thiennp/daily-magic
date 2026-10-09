@@ -1,5 +1,6 @@
 "use client";
 
+import { useAwcProjectTasksReadOnly } from "@/features/projects/tasks/AwcProjectTasksReadOnlyContext";
 import { useRetryRunInComposer } from "@/features/agent/hooks/useRetryRunInComposer";
 import {
   AWC_TASKS_LINK_CLASS,
@@ -16,19 +17,22 @@ export default function AwcProjectTaskStalledActions({
   readonly task: Pick<ProjectTaskMeta, "agentRunId" | "title">;
 }) {
   const retryRun = useRetryRunInComposer();
+  const readOnly = useAwcProjectTasksReadOnly();
   const runId = task.agentRunId?.trim() ?? "";
   if (runId.length === 0) {
     return null;
   }
   return (
     <div className="flex items-center gap-2 px-4 pb-3">
-      <button
-        type="button"
-        className={AWC_TASKS_SECONDARY_BUTTON_CLASS}
-        onClick={() => retryRun(runId)}
-      >
-        Retry<span className="sr-only"> {task.title}</span>
-      </button>
+      {readOnly ? null : (
+        <button
+          type="button"
+          className={AWC_TASKS_SECONDARY_BUTTON_CLASS}
+          onClick={() => retryRun(runId)}
+        >
+          Retry<span className="sr-only"> {task.title}</span>
+        </button>
+      )}
       <a
         href={buildProjectTabHash("reports", { report: runId })}
         className={AWC_TASKS_LINK_CLASS}

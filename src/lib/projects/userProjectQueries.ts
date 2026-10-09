@@ -27,7 +27,13 @@ export const listUserProjectsForOwner = async (
           `,
         );
 
-  return rows.map((row) => mapUserProjectRow(row));
+  // The owner's absolute folder path is theirs: a member sees the project, not the path.
+  return rows.map((row) => ({
+    ...mapUserProjectRow(row),
+    folderPath: "",
+    viewerRole:
+      row.viewer_role === "viewer" ? ("viewer" as const) : ("member" as const),
+  }));
 };
 
 export const getUserProjectById = async (
@@ -70,7 +76,7 @@ export const listUserProjectsForMember = async (
 ): Promise<readonly UserProjectRecord[]> => {
   const rows = asRowArray(
     await getSql()`
-      SELECT up.*
+      SELECT up.*, m.role AS viewer_role
       FROM user_projects up
       INNER JOIN project_memberships m ON m.project_id = up.id
       WHERE m.user_id = ${userId}

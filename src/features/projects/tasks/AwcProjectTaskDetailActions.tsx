@@ -6,6 +6,7 @@ import {
   AWC_TASKS_LINK_CLASS,
   AWC_TASKS_SECONDARY_BUTTON_CLASS,
 } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
+import { useAwcProjectTasksReadOnly } from "@/features/projects/tasks/AwcProjectTasksReadOnlyContext";
 import { PROJECT_PAGE_TASKS_COPY as C } from "@/features/projects/tasks/projectPageTasksCopy.constant";
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
 import { resolveTaskLiveViewAction } from "@/features/projects/tasks/utils/resolveTaskLiveViewAction";
@@ -20,6 +21,7 @@ export default function AwcProjectTaskDetailActions({
 }) {
   const { expandRunningSendTask } = useSendTaskModal();
   const retryRun = useRetryRunInComposer();
+  const readOnly = useAwcProjectTasksReadOnly();
   const liveAction = resolveTaskLiveViewAction({
     status: task.status,
     agentRunId: task.agentRunId,
@@ -31,7 +33,7 @@ export default function AwcProjectTaskDetailActions({
   return (
     <div className="mt-3 flex flex-wrap items-center gap-2">
       <span className="text-[12px] text-awc-fg-muted">{C.fromComputer}</span>
-      {liveAction !== null ? (
+      {liveAction !== null && !(readOnly && liveAction.label === "Retry") ? (
         <button
           type="button"
           className={AWC_TASKS_SECONDARY_BUTTON_CLASS}

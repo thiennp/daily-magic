@@ -107,7 +107,8 @@ const useOverviewPanelData = (input: {
       playbooks: counts.harness,
       workflows: counts.workflow,
       agents: counts.agent,
-      showComposition: !compositionLoading,
+      // The composition (playbooks, workflows, agents) belongs to the owner's computer: members see no counts.
+      showComposition: input.isOwner && !compositionLoading,
       computerStatus: input.computerStatus,
       setupHidden,
       setupDone,

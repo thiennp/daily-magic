@@ -77,7 +77,12 @@ export default async function ProjectDetailPage({
     <AppShell>
       <div className={APP_PAGE_STACK_CLASS}>
         <AwcProjectDetailPanel
-          project={access.project}
+          // The owner's absolute path stays with the owner.
+          project={
+            access.role === "owner"
+              ? access.project
+              : { ...access.project, folderPath: "" }
+          }
           startRename={startRename && access.role === "owner"}
           startChatOpen={startChatOpen}
           pageActorRole={access.role}

@@ -1,3 +1,4 @@
+import { safeInstallerOrigin as safeOrigin } from "@/lib/agentWitch/localWake/safeInstallerOrigin";
 import { LOCAL_WAKE_RECEIVER_SOURCE } from "@/lib/agentWitch/localWake/localWakeReceiverSource";
 
 /** `§{` stands for a shell `${` so the template literal does not interpolate it. */
@@ -106,5 +107,5 @@ echo "Stop polling list_project_inbox on a timer. Remove with --uninstall."
 
 export const renderLocalWakeInstallScript = (origin: string): string =>
   shell(INSTALLER_TEMPLATE)
-    .replace("__APP_ORIGIN__", origin.replace(/\/$/, ""))
+    .replace("__APP_ORIGIN__", safeOrigin(origin))
     .replace("__RECEIVER_SOURCE__", () => LOCAL_WAKE_RECEIVER_SOURCE.trimEnd());

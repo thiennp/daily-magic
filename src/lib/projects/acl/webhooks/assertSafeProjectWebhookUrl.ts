@@ -28,15 +28,18 @@ const isPrivateOrLocalIp = (ip: string): boolean => {
     return false;
   }
   if (version === 6) {
-    const normalized = ip.toLowerCase();
-    if (normalized === "::1") return true;
-    if (normalized.startsWith("fc") || normalized.startsWith("fd")) return true;
-    if (normalized.startsWith("fe80")) return true;
-    if (normalized.startsWith("::ffff:")) {
-      const v4 = normalized.slice("::ffff:".length);
-      return isPrivateOrLocalIp(v4);
-    }
-    return false;
+    // Only global unicast (2000::/3) is a public address. That also drops ::, ::1, ULA, link-local,
+    // site-local, multicast, NAT64 (64:ff9b::/96) and v4-mapped; 6to4 and documentation are cut out.
+    const groups = ip.toLowerCase().split(":");
+    const first = Number.parseInt(groups[0] === "" ? "0" : groups[0], 16);
+    const second = Number.parseInt(
+      groups[1] === "" ? "0" : (groups[1] ?? "0"),
+      16,
+    );
+    const global = first >= 0x2000 && first <= 0x3fff;
+    return (
+      !global || first === 0x2002 || (first === 0x2001 && second === 0xdb8)
+    );
   }
   return true;
 };

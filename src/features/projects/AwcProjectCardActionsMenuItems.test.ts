@@ -18,8 +18,7 @@ vi.mock("@/features/projects/AwcProjectDeleteMenuItem", () => ({
 }));
 
 vi.mock("@/features/projects/AwcProjectLeaveMenuItem", () => ({
-  default: () =>
-    createElement("li", { "data-testid": "leave-item" }, "Leave"),
+  default: () => createElement("li", { "data-testid": "leave-item" }, "Leave"),
 }));
 
 const baseProps = {

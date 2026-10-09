@@ -26,6 +26,8 @@ export const validateProjectTaskRefs = async (input: {
   /** The writer (seat null for the owner); gates assigning work to a restricted assistant. */
   readonly actorUserId?: string;
   readonly actorMembershipId?: string | null;
+  /** The assistant that already owns the task: changing its work notifies it, so the lock applies. */
+  readonly currentOwnerMembershipId?: string | null;
   readonly dependsOn?: readonly string[];
   readonly planItemId?: string | null;
 }): Promise<
@@ -47,6 +49,15 @@ export const validateProjectTaskRefs = async (input: {
       senderMembershipId: input.actorMembershipId ?? null,
       senderUserId: input.actorUserId,
       recipientMembershipId: owner,
+    });
+    if (!gate.ok) return { ok: false, code: gate.code };
+  }
+  const current = input.currentOwnerMembershipId;
+  if (typeof current === "string" && input.actorUserId !== undefined) {
+    const gate = await checkBotIsolation({
+      senderMembershipId: input.actorMembershipId ?? null,
+      senderUserId: input.actorUserId,
+      recipientMembershipId: current,
     });
     if (!gate.ok) return { ok: false, code: gate.code };
   }

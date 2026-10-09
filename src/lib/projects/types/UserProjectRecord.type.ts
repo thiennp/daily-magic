@@ -11,4 +11,6 @@ export default interface UserProjectRecord {
   readonly lastUsedAt: string | null;
   readonly createdAt: string;
   readonly updatedAt: string;
+  /** Set only on projects the user joined: a viewer is read-only. Absent for the owner. */
+  readonly viewerRole?: "member" | "viewer";
 }
