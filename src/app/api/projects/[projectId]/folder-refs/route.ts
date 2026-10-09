@@ -1,6 +1,6 @@
 import { listProjectFolderRefs } from "@/lib/projects/acl/listProjectFolderRefs";
 import { upsertProjectFolderRef } from "@/lib/projects/acl/upsertProjectFolderRef";
-import { getUserProjectById } from "@/lib/projects/userProjectQueries";
+import { resolveFolderRefActor } from "@/lib/projects/acl/resolveFolderRefActor";
 import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
@@ -16,15 +16,22 @@ export async function GET(
   }
 
   const { projectId } = await context.params;
-  const project = await getUserProjectById(projectId);
-  if (project === null || project.ownerUserId !== actor.id) {
+  const folderActor = await resolveFolderRefActor({
+    projectId,
+    actorUserId: actor.id,
+  });
+  if (!folderActor.ok) {
+    const missing = folderActor.code === "not_found";
     return Response.json(
-      { ok: false, errorMessage: "Project not found." },
-      { status: 404 },
+      { ok: false, errorMessage: missing ? "Project not found." : "forbidden" },
+      { status: missing ? 404 : 403 },
     );
   }
 
-  const folderRefs = await listProjectFolderRefs(projectId);
+  const folderRefs = await listProjectFolderRefs(
+    projectId,
+    folderActor.isOwner ? null : actor.id,
+  );
   return Response.json({ ok: true, folderRefs });
 }
 

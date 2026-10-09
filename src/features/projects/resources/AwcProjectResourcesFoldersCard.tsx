@@ -14,6 +14,8 @@ import { resolveProjectAccessLoadError } from "@/lib/projects/acl/mapProjectAcce
 interface AwcProjectResourcesFoldersCardProps {
   readonly projectId: string;
   readonly isOwner: boolean;
+  /** Owner or member (not viewer): a member manages folders on their own computers. */
+  readonly canManage: boolean;
   /** user_projects.device_id — picker fallback when no computer seat. */
   readonly projectDeviceId: string | null;
   readonly deviceDisplayName: string;
@@ -23,6 +25,7 @@ interface AwcProjectResourcesFoldersCardProps {
 export default function AwcProjectResourcesFoldersCard({
   projectId,
   isOwner,
+  canManage,
   projectDeviceId,
   deviceDisplayName,
 }: AwcProjectResourcesFoldersCardProps) {
@@ -60,7 +63,7 @@ export default function AwcProjectResourcesFoldersCard({
         {C.foldersTitle}
       </h3>
       <div className="overflow-hidden rounded-2xl bg-awc-surface-2/80 p-3 dark:bg-white/[0.03]">
-        {!isOwner ? (
+        {!canManage ? (
           <p className="px-1 py-2 text-[13px] text-awc-fg-muted dark:text-gray-400">
             {C.foldersOwnerOnly}
           </p>
@@ -78,15 +81,17 @@ export default function AwcProjectResourcesFoldersCard({
         ) : (
           <AwcProjectAccessFolderRefs
             folderRefs={access.folderRefs}
-            computerMembers={access.members.filter(isComputerAccessMember)}
-            projectDevice={projectDevice}
+            computerMembers={
+              isOwner ? access.members.filter(isComputerAccessMember) : []
+            }
+            projectDevice={isOwner ? projectDevice : null}
             ownerDevices={ownerDevices}
             hideChrome
             onAdd={onAdd}
             onRemove={onRemove}
           />
         )}
-        {isOwner && access.message ? (
+        {canManage && access.message ? (
           <p
             className="mt-2 text-sm text-awc-fg-muted dark:text-gray-300"
             role="status"

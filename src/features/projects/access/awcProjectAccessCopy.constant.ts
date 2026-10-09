@@ -29,7 +29,7 @@ export const AWC_PROJECT_ACCESS_COPY = {
   machineRefPlaceholder: PROJECT_PAGE_RESOURCES_COPY.foldersMachinePlaceholder,
   machineRefHelp: "Which computer holds the folder.",
   folderPathLabel: PROJECT_PAGE_RESOURCES_COPY.foldersPathLabel,
-  folderPathPlaceholder: "e.g. ~/code/daily-magic",
+  folderPathPlaceholder: "e.g. ~/code/my-project",
   folderPathHelp: "Absolute or ~ path on that computer.",
   approve: "Approve",
   deny: "Deny",

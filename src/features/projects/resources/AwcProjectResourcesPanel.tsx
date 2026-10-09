@@ -37,6 +37,7 @@ export default function AwcProjectResourcesPanel({
       <AwcProjectResourcesFoldersCard
         projectId={project.id}
         isOwner={pageActorRole === "owner"}
+        canManage={pageActorRole !== "viewer"}
         projectDeviceId={project.deviceId}
         deviceDisplayName={deviceDisplayName}
       />

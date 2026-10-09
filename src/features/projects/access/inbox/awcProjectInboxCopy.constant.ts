@@ -62,7 +62,7 @@ export const AWC_PROJECT_INBOX_COPY = {
   dispatchCommitShaLabel: "Commit",
   dispatchCommitShaPlaceholder: "e.g. abc1234",
   dispatchLocalPathLabel: "Local file or folder",
-  dispatchLocalPathPlaceholder: "e.g. ~/code/daily-magic",
+  dispatchLocalPathPlaceholder: "e.g. ~/code/my-project",
   dispatchAllowClaimIdLabel: "Access claim ID",
   dispatchAllowClaimIdPlaceholder: "e.g. an access claim id",
   dispatchSubmit: "Send",

@@ -1,6 +1,6 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
-import { getUserProjectById } from "@/lib/projects/userProjectQueries";
+import { resolveFolderRefActor } from "@/lib/projects/acl/resolveFolderRefActor";
 import { asRowArray, getSql } from "@/lib/db";
 import { scheduleProjectUpdatedNotify } from "@/lib/projects/acl/messaging/scheduleProjectUpdatedNotify";
 
@@ -11,15 +11,14 @@ export type DeleteProjectFolderRefResult =
 export const deleteProjectFolderRef = async (input: {
   readonly projectId: string;
   readonly refId: string;
+  /** The acting user: the owner, or a member removing a folder on their own computer. */
   readonly ownerUserId: string;
 }): Promise<DeleteProjectFolderRefResult> => {
-  const project = await getUserProjectById(input.projectId);
-  if (project === null) {
-    return { ok: false, code: "not_found" };
-  }
-  if (project.ownerUserId !== input.ownerUserId) {
-    return { ok: false, code: "forbidden" };
-  }
+  const actor = await resolveFolderRefActor({
+    projectId: input.projectId,
+    actorUserId: input.ownerUserId,
+  });
+  if (!actor.ok) return actor;
 
   await ensureProjectAclSchema();
   const sql = getSql();
@@ -28,6 +27,9 @@ export const deleteProjectFolderRef = async (input: {
       DELETE FROM project_folder_refs
       WHERE id = ${input.refId}
         AND project_id = ${input.projectId}
+        AND (${actor.isOwner}::boolean OR machine_or_device_ref IN (
+          SELECT id FROM agent_witch_devices WHERE user_id = ${input.ownerUserId}
+        ))
       RETURNING id
     `,
   );

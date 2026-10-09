@@ -1,5 +1,6 @@
 "use client";
 
+import AwcProjectOverviewFolderPrompt from "@/features/projects/overview/AwcProjectOverviewFolderPrompt";
 import AwcProjectOverviewAssistantsCard from "@/features/projects/overview/AwcProjectOverviewAssistantsCard";
 import AwcProjectOverviewAttentionBanner from "@/features/projects/overview/AwcProjectOverviewAttentionBanner";
 import AwcProjectOverviewCreateTask from "@/features/projects/overview/AwcProjectOverviewCreateTask";
@@ -69,6 +70,12 @@ export default function AwcProjectOverviewPanel({
         <AwcProjectOverviewAttentionBanner
           items={d.attention}
           onOpen={openAttention}
+        />
+      ) : null}
+      {canCreateTask ? (
+        <AwcProjectOverviewFolderPrompt
+          projectId={project.id}
+          onGoto={onGotoTab}
         />
       ) : null}
       <AwcProjectOverviewSetupCard
