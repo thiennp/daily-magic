@@ -6,6 +6,7 @@ import {
   PROJECT_TASKS_FIRST_CLAUSE,
   PROJECT_TASKS_FIRST_WAKE_POINTER,
 } from "@/lib/projects/acl/projectTasksFirstClause.constant";
+import { PROJECT_ORCHESTRATOR_CLAUSE } from "@/lib/projects/acl/projectOrchestratorClause.constant";
 import { PROJECT_TASK_UPDATED_WAKE_CLAUSE } from "@/lib/projects/acl/projectTaskUpdatedWakeClause.constant";
 import {
   PROJECT_B2B_SILENCE_BLOCK_MS,
@@ -56,6 +57,8 @@ export const PROJECT_BRIEFING_DISPATCH_TAIL =
 /** One paragraph: how active members address peers via project_dispatch. */
 export const PROJECT_BRIEFING_HOW_TO_DISPATCH =
   PROJECT_TASKS_FIRST_CLAUSE +
+  " " +
+  PROJECT_ORCHESTRATOR_CLAUSE +
   " " +
   PROJECT_BRIEFING_DISPATCH_ADDRESSING +
   "MUST on connect (webhook-first): " +

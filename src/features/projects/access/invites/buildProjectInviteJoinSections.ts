@@ -11,6 +11,7 @@ import { buildProjectInviteJoinRedeemStep } from "@/features/projects/access/inv
 import type { ProjectInvitePlatform } from "@/features/projects/access/invites/projectInvitePlatform.type";
 import { resolveProjectInviteJoinToken } from "@/features/projects/access/invites/resolveProjectInviteJoinToken";
 import { selectProjectInviteJoinWakeStep } from "@/features/projects/access/invites/selectProjectInviteJoinWakeStep";
+import { PROJECT_ORCHESTRATOR_CLAUSE } from "@/lib/projects/acl/projectOrchestratorClause.constant";
 import { PROJECT_TASKS_FIRST_CLAUSE } from "@/lib/projects/acl/projectTasksFirstClause.constant";
 
 /** Static join text (no input, not reused elsewhere): kept inline. */
@@ -23,6 +24,7 @@ const SUMMARY_LINES: readonly string[] = [
   "5. BEFORE any further work: print a clear human summary to your user covering project name, folder/repo refs, your nickname (self), peer nicknames (projectDisplayName) and teamLabels, and how to work on this project.",
   "   In that summary (or next line): say you can connect with peer bots to send/receive work via project_dispatch preferring toMembershipId from list_project_peers (else toProjectDisplayName).",
   `   REQUIRED from now on — ${PROJECT_TASKS_FIRST_CLAUSE}`,
+  `   ${PROJECT_ORCHESTRATOR_CLAUSE}`,
 ];
 
 /** Step 9 — check_product_updates. */
