@@ -1,6 +1,9 @@
 import { createUserProject } from "@/lib/projects/userProjectMutations";
 import listProjectCompositionCountsForOwner from "@/lib/projects/listProjectCompositionCountsForOwner";
-import { listUserProjectsForOwner } from "@/lib/projects/userProjectQueries";
+import {
+  listUserProjectsForMember,
+  listUserProjectsForOwner,
+} from "@/lib/projects/userProjectQueries";
 import { parseCreateUserProjectBody } from "@/lib/projects/parseUserProjectBody";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
@@ -15,10 +18,14 @@ export async function GET(request: Request): Promise<Response> {
 
   const url = new URL(request.url);
   const deviceId = url.searchParams.get("deviceId");
-  const projects = await listUserProjectsForOwner(
+  const hasDevice = deviceId !== null && deviceId.length > 0;
+  const owned = await listUserProjectsForOwner(
     actor.id,
-    deviceId && deviceId.length > 0 ? deviceId : null,
+    hasDevice ? deviceId : null,
   );
+  // Joined projects have no device of their own: skip them on a device-scoped list.
+  const joined = hasDevice ? [] : await listUserProjectsForMember(actor.id);
+  const projects = [...owned, ...joined];
 
   const compositionCountsByProjectId = Object.fromEntries(
     await listProjectCompositionCountsForOwner(actor.id),

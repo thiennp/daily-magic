@@ -63,3 +63,21 @@ export const touchUserProjectLastUsed = async (
       AND owner_user_id = ${ownerUserId}
   `;
 };
+
+/** Projects the user joined (active membership) but does not own. */
+export const listUserProjectsForMember = async (
+  userId: string,
+): Promise<readonly UserProjectRecord[]> => {
+  const rows = asRowArray(
+    await getSql()`
+      SELECT up.*
+      FROM user_projects up
+      INNER JOIN project_memberships m ON m.project_id = up.id
+      WHERE m.user_id = ${userId}
+        AND m.status = 'active'
+        AND up.owner_user_id <> ${userId}
+      ORDER BY m.created_at DESC
+    `,
+  );
+  return rows.map((row) => mapUserProjectRow(row));
+};
