@@ -59,11 +59,8 @@ describe("project layout v2 L6 Reports + Library", () => {
     expect(disabled).toContain("disabled");
   });
 
-  it("ships no remove / delete / unpublish / New report controls (open Qs)", () => {
-    for (const source of [
-      ...panelSources("reports"),
-      ...panelSources("library"),
-    ]) {
+  it("ships no remove / delete / unpublish / New report controls on Reports (open Qs)", () => {
+    for (const source of panelSources("reports")) {
       expect(source).not.toMatch(
         /\b(Remove|Delete|Unpublish|Revoke|Discard)\b/,
       );
@@ -73,6 +70,14 @@ describe("project layout v2 L6 Reports + Library", () => {
         /blue-|indigo-|purple-|emerald-|amber-|#0a6cf5/i,
       );
     }
+  });
+
+  it("Library detail revokes skills via shared skills hook", () => {
+    const detailActions = read(
+      `${P}/library/AwcProjectLibraryDetailActions.tsx`,
+    );
+    expect(detailActions).toContain('A["library.delete"]');
+    expect(detailActions).toContain("library.skills.revoke");
   });
 
   it("keeps Resources Shared skills mounted; mutate owner-only", () => {

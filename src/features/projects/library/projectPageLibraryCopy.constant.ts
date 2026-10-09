@@ -38,7 +38,9 @@ export const PROJECT_PAGE_LIBRARY_COPY = {
   "library.empty.member":
     "Nothing in this project's library yet. The project owner adds items here.",
   "library.readOnlyNote":
-    "You can view this library. Only the project owner can change it.",
+    "You can view this library. Only the project owner can add or publish items.",
+  "library.memberNote":
+    "You can discard draft skills you created. Only the project owner can add or publish items.",
   "library.visibilityHint":
     "Members and viewers see published items. Drafts are visible only to you.",
   "library.visibilityInfoLabel": "Who sees the library",
@@ -63,5 +65,6 @@ export const PROJECT_PAGE_LIBRARY_COPY = {
   "disabled.addFrom": "Only the project owner can add items.",
   "disabled.edit": "Only the project owner can edit this.",
   "disabled.publish": "Only the project owner can publish.",
-  "disabled.delete": "Only the project owner can delete this.",
+  "disabled.delete":
+    "Only the project owner or its publisher can delete this. Members can delete drafts.",
 } as const;

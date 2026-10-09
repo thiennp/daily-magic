@@ -14,6 +14,7 @@ import AwcProjectLibrarySkillForm from "@/features/projects/library/AwcProjectLi
 import { PROJECT_PAGE_LIBRARY_COPY as C } from "@/features/projects/library/projectPageLibraryCopy.constant";
 import useAwcProjectLibrary from "@/features/projects/library/useAwcProjectLibrary";
 import { PANEL_STATUS_CLASS } from "@/features/projects/projectPagePanelChrome.constant";
+import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
 
@@ -22,6 +23,7 @@ type LibraryMode = "list" | "new-skill" | "new-playbook" | "add-from";
 interface AwcProjectLibraryPanelProps {
   readonly project: UserProjectRecord;
   readonly canEdit: boolean;
+  readonly pageActorRole: ProjectPageActorRole;
 }
 
 /**
@@ -31,6 +33,7 @@ interface AwcProjectLibraryPanelProps {
 export default function AwcProjectLibraryPanel({
   project,
   canEdit,
+  pageActorRole,
 }: AwcProjectLibraryPanelProps) {
   const library = useAwcProjectLibrary(project.id);
   const auto = useAutoSkills(project.id);
@@ -96,7 +99,6 @@ export default function AwcProjectLibraryPanel({
           projectId={project.id}
           itemId={itemId}
           library={library}
-          canEdit={canEdit}
           onToast={setToast}
           onBack={() => {
             setItemId(null);
@@ -106,6 +108,7 @@ export default function AwcProjectLibraryPanel({
         <AwcProjectLibraryList
           library={library}
           canEdit={canEdit}
+          pageActorRole={pageActorRole}
           autoSkillIds={auto.overview?.autoSkillIds ?? []}
           skillStats={impact.impact?.skills ?? []}
           onOpen={setItemId}

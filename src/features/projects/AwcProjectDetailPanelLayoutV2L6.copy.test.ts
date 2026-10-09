@@ -31,7 +31,10 @@ describe("project layout v2 L6 Reports + Library — Product EN copy", () => {
       "Nothing in this project's library yet. The project owner adds items here.",
     );
     expect(L["library.readOnlyNote"]).toBe(
-      "You can view this library. Only the project owner can change it.",
+      "You can view this library. Only the project owner can add or publish items.",
+    );
+    expect(L["library.memberNote"]).toBe(
+      "You can discard draft skills you created. Only the project owner can add or publish items.",
     );
     expect(L["library.visibilityHint"]).toBe(
       "Members and viewers see published items. Drafts are visible only to you.",
@@ -44,8 +47,10 @@ describe("project layout v2 L6 Reports + Library — Product EN copy", () => {
     expect(L["disabled.edit"]).toBe("Only the project owner can edit this.");
     expect(L["disabled.publish"]).toBe("Only the project owner can publish.");
     expect(L["disabled.delete"]).toBe(
-      "Only the project owner can delete this.",
+      "Only the project owner or its publisher can delete this. Members can delete drafts.",
     );
+    expect(A["library.delete"]).toBe("Delete");
+    expect(A["library.delete.draft"]).toBe("Discard draft");
     const skillForm = read(`${P}/library/AwcProjectLibrarySkillForm.tsx`);
     expect(skillForm).toContain('A["library.publish.toast"]');
     expect([

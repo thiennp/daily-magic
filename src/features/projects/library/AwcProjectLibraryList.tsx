@@ -6,14 +6,15 @@ import type { SkillImpactRow } from "@/lib/knowledge/knowledgeImpactView.type";
 import AwcProjectLibraryEmptyOwner from "@/features/projects/library/AwcProjectLibraryEmptyOwner";
 import AwcProjectLibraryRow from "@/features/projects/library/AwcProjectLibraryRow";
 import AwcProjectLibraryToolbar from "@/features/projects/library/AwcProjectLibraryToolbar";
-import { PROJECT_PAGE_LIBRARY_ACTIONS_COPY as A } from "@/features/projects/library/projectPageLibraryActionsCopy.constant";
 import { PROJECT_PAGE_LIBRARY_COPY as C } from "@/features/projects/library/projectPageLibraryCopy.constant";
 import type { AwcProjectLibraryState } from "@/features/projects/library/useAwcProjectLibrary";
+import { resolveProjectLibraryListFooterNote } from "@/features/projects/library/resolveProjectLibraryListFooterNote";
 import {
   countProjectLibraryItems,
   filterProjectLibraryItems,
   type ProjectLibraryFilter,
 } from "@/features/projects/library/utils/buildProjectLibraryItems";
+import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import {
   PANEL_BUTTON_SECONDARY_CLASS,
   PANEL_INTRO_CLASS,
@@ -24,6 +25,7 @@ import {
 interface AwcProjectLibraryListProps {
   readonly library: AwcProjectLibraryState;
   readonly canEdit: boolean;
+  readonly pageActorRole: ProjectPageActorRole;
   /** Skills saved from an auto question get the "Auto" chip. */
   readonly autoSkillIds?: readonly string[];
   /** Per-skill calls and tokens saved (Reports data), for the row meta. */
@@ -37,6 +39,7 @@ interface AwcProjectLibraryListProps {
 export default function AwcProjectLibraryList({
   library,
   canEdit,
+  pageActorRole,
   autoSkillIds = [],
   skillStats = [],
   onOpen,
@@ -53,7 +56,7 @@ export default function AwcProjectLibraryList({
     () => filterProjectLibraryItems(library.items, filter, query),
     [library.items, filter, query],
   );
-  const note = C["library.readOnlyNote"];
+  const footerNote = resolveProjectLibraryListFooterNote(pageActorRole);
 
   if (library.loadFailed && library.items.length === 0) {
     return (
@@ -77,7 +80,9 @@ export default function AwcProjectLibraryList({
       return (
         <>
           <p className={PANEL_STATUS_CLASS}>{C["library.empty.member"]}</p>
-          <p className={`px-1 ${PANEL_INTRO_CLASS}`}>{note}</p>
+          <p className={`px-1 ${PANEL_INTRO_CLASS}`}>
+            {C["library.readOnlyNote"]}
+          </p>
         </>
       );
     }
@@ -111,7 +116,9 @@ export default function AwcProjectLibraryList({
           ))}
         </ul>
       )}
-      {canEdit ? null : <p className={`px-1 ${PANEL_INTRO_CLASS}`}>{note}</p>}
+      {footerNote !== null ? (
+        <p className={`px-1 ${PANEL_INTRO_CLASS}`}>{footerNote}</p>
+      ) : null}
     </>
   );
 }

@@ -28,6 +28,9 @@ export const PROJECT_PAGE_LIBRARY_ACTIONS_COPY = {
   "library.share.note":
     "Members and viewers see published items. Drafts are visible only to you.",
   "library.publish": "Publish",
+  "library.delete": "Delete",
+  "library.delete.draft": "Discard draft",
+  "library.delete.toast": "Removed from this project.",
   "library.publish.toast":
     "Published. Everyone in this project can see it now.",
   "library.save_draft": "Save draft",
