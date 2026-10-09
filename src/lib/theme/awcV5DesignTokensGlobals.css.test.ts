@@ -75,15 +75,19 @@ const collectV5CssMirrorExpectations = (): Array<{
   return expected;
 };
 
+/** Whitespace- and leading-zero-insensitive: prettier rewraps `.05` as `0.05`. */
+const compact = (text: string): string =>
+  text.replace(/\s+/g, "").replace(/(^|[^\d])0\./g, "$1.");
+
 describe("globals.css L3 v5 foundation parity (TS source)", () => {
   it("mirrors every AWC_V5_* CSS-facing entry as --awc-*", () => {
     const expected = collectV5CssMirrorExpectations();
     expect(expected.length).toBeGreaterThan(50);
     for (const { cssName, cssValue } of expected) {
       expect(
-        globalsCss,
+        compact(globalsCss),
         `missing or drifted: ${cssName}: ${cssValue}`,
-      ).toContain(`${cssName}: ${cssValue}`);
+      ).toContain(compact(`${cssName}: ${cssValue}`));
     }
   });
 
