@@ -65,7 +65,6 @@ export default function AwcProjectDetailPanel({
         <AwcProjectDetailBanners
           project={project}
           pageActorRole={pageActorRole}
-          onAttachComputer={() => onGotoTab("team")}
         />
         <AwcProjectDetailTabBar
           activeTab={activeTab}

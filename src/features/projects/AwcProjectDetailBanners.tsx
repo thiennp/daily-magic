@@ -1,12 +1,14 @@
 "use client";
 
+import { useState } from "react";
+
+import AwcProjectAttachComputerDialog from "@/features/projects/AwcProjectAttachComputerDialog";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 
 interface AwcProjectDetailBannersProps {
-  readonly project: Pick<UserProjectRecord, "name" | "deviceId">;
+  readonly project: Pick<UserProjectRecord, "id" | "name" | "deviceId">;
   readonly pageActorRole: ProjectPageActorRole;
-  readonly onAttachComputer: () => void;
 }
 
 const BANNER =
@@ -16,8 +18,8 @@ const BANNER =
 export default function AwcProjectDetailBanners({
   project,
   pageActorRole,
-  onAttachComputer,
 }: AwcProjectDetailBannersProps) {
+  const [attachOpen, setAttachOpen] = useState(false);
   const hasComputer = Boolean(project.deviceId);
   const viewer = pageActorRole === "viewer";
   if (!viewer && hasComputer) {
@@ -43,13 +45,20 @@ export default function AwcProjectDetailBanners({
             <button
               type="button"
               className="awc-focus-ring rounded-awc-control bg-brand-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-awc-blue-700"
-              onClick={onAttachComputer}
+              onClick={() => setAttachOpen(true)}
             >
               Attach a computer
             </button>
           ) : null}
         </div>
       )}
+      {attachOpen ? (
+        <AwcProjectAttachComputerDialog
+          projectId={project.id}
+          projectName={project.name}
+          onClose={() => setAttachOpen(false)}
+        />
+      ) : null}
     </div>
   );
 }
