@@ -36,6 +36,7 @@ export type MembershipView = {
   readonly deliveryMode?: ProjectMembershipDeliveryMode;
   readonly invitedByUserId?: string | null;
   readonly isolatedFromOtherBots?: boolean;
+  readonly closedToOthers?: boolean;
   readonly guidanceSeenVersion?: number | null;
   /** Assistants only: the viewer may block/unblock it and send it new guidance. */
   readonly canManageBot?: boolean;

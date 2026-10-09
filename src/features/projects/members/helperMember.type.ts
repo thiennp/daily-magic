@@ -9,5 +9,6 @@ export type HelperMember = Pick<
   | "deliveryMode"
   | "canManageBot"
   | "isolatedFromOtherBots"
+  | "closedToOthers"
   | "guidanceOutdated"
 >;

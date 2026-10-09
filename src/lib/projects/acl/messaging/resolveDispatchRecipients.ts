@@ -4,7 +4,10 @@ import {
   lookupDisplayNameRecipients,
   type DispatchRecipient,
 } from "@/lib/projects/acl/messaging/lookupDispatchMembershipRecipients";
-import { checkBotIsolation } from "@/lib/projects/acl/messaging/checkBotIsolation";
+import {
+  checkBotIsolation,
+  type BotIsolationCheck,
+} from "@/lib/projects/acl/messaging/checkBotIsolation";
 import { resolveMembershipIdDispatchRecipient } from "@/lib/projects/acl/messaging/resolveMembershipIdDispatchRecipient";
 
 export type { DispatchRecipient };
@@ -72,16 +75,11 @@ type ResolveResult = Awaited<
   ReturnType<typeof resolveDispatchRecipientsUnguarded>
 >;
 
-/** Resolve the one recipient, then refuse bot-to-bot sends an isolated bot may not make. */
+/** Resolve the one recipient, then refuse sends a bot isolation or a closed bot forbids. */
 export const resolveDispatchRecipients = async (
   input: ResolveInput & { readonly senderMembershipId?: string },
 ): Promise<
-  | ResolveResult
-  | {
-      readonly ok: false;
-      readonly code: "bot_isolated";
-      readonly message: string;
-    }
+  ResolveResult | Exclude<BotIsolationCheck, { readonly ok: true }>
 > => {
   const resolved = await resolveDispatchRecipientsUnguarded(input);
   if (!resolved.ok || input.senderMembershipId === undefined) return resolved;

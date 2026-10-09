@@ -11,5 +11,8 @@ export const ensureProjectBotIsolationSchema = async (): Promise<void> => {
     ADD COLUMN IF NOT EXISTS invited_by_user_id TEXT`;
   await sql`ALTER TABLE project_memberships
     ADD COLUMN IF NOT EXISTS isolated_from_other_bots BOOLEAN NOT NULL DEFAULT FALSE`;
+  // Inbound lock: only the inviter (and their own assistants, and the owner) may message it.
+  await sql`ALTER TABLE project_memberships
+    ADD COLUMN IF NOT EXISTS closed_to_others BOOLEAN NOT NULL DEFAULT FALSE`;
   await ensureProjectGuidanceSeenSchema();
 };

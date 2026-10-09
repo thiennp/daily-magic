@@ -4,7 +4,7 @@ import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
 
-/** PATCH { isolated: boolean } — owner or the inviting member. */
+/** PATCH { isolated?: boolean, closed?: boolean } — owner or the inviting member. */
 export async function PATCH(
   request: Request,
   context: {
@@ -20,15 +20,16 @@ export async function PATCH(
   }
   const { projectId, membershipId } = await context.params;
   const body: unknown = await request.json().catch(() => ({}));
+  const flags =
+    body !== null && typeof body === "object"
+      ? (body as { isolated?: unknown; closed?: unknown })
+      : {};
   const isolated =
-    body !== null &&
-    typeof body === "object" &&
-    typeof (body as { isolated?: unknown }).isolated === "boolean"
-      ? (body as { isolated: boolean }).isolated
-      : null;
-  if (isolated === null) {
+    typeof flags.isolated === "boolean" ? flags.isolated : undefined;
+  const closed = typeof flags.closed === "boolean" ? flags.closed : undefined;
+  if (isolated === undefined && closed === undefined) {
     return Response.json(
-      { ok: false, errorMessage: "isolated (boolean) required" },
+      { ok: false, errorMessage: "isolated or closed (boolean) required" },
       { status: 400 },
     );
   }
@@ -37,6 +38,7 @@ export async function PATCH(
     membershipId,
     actorUserId: actor.id,
     isolated,
+    closed,
   });
   if (!result.ok) {
     return projectAccessErrorJson(
@@ -44,5 +46,5 @@ export async function PATCH(
       result.code === "forbidden" ? 403 : 404,
     );
   }
-  return Response.json({ ok: true, isolated: result.isolated });
+  return Response.json({ ok: true });
 }

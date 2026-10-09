@@ -26,6 +26,8 @@ export default interface ProjectMembershipRecord {
   readonly invitedByUserId?: string | null;
   /** Blocked from other people's assistants (see decideBotIsolation). */
   readonly isolatedFromOtherBots?: boolean;
+  /** Only its inviter (and their assistants, and the owner) may message it. */
+  readonly closedToOthers?: boolean;
   /** Product-updates catalog version last served to this assistant; null = never. */
   readonly guidanceSeenVersion?: number | null;
   /** Set when admit was invite auto-approve; invite id prefix (8). */

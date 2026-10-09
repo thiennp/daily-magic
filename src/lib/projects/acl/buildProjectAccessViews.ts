@@ -45,6 +45,7 @@ export const buildMembershipViews = async (
       deliveryMode: m.deliveryMode ?? "webhook",
       invitedByUserId: m.invitedByUserId ?? null,
       isolatedFromOtherBots: m.isolatedFromOtherBots === true,
+      closedToOthers: m.closedToOthers === true,
       guidanceSeenVersion: m.guidanceSeenVersion ?? null,
     };
   });

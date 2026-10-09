@@ -39,6 +39,8 @@ export type AccessMembershipView = {
   /** Assistants only: the viewer may block it and send it new guidance. */
   readonly canManageBot?: boolean;
   readonly isolatedFromOtherBots?: boolean;
+  /** Only its inviter (and their assistants, and the owner) may message it. */
+  readonly closedToOthers?: boolean;
   /** Assistants only: it has not fetched the newest guidance yet. */
   readonly guidanceOutdated?: boolean;
 };

@@ -56,6 +56,7 @@ export default function mapProjectMembershipRow(
       ? String(row.invited_by_user_id)
       : null,
     isolatedFromOtherBots: row.isolated_from_other_bots === true,
+    closedToOthers: row.closed_to_others === true,
     guidanceSeenVersion:
       typeof row.guidance_seen_version === "number"
         ? row.guidance_seen_version
