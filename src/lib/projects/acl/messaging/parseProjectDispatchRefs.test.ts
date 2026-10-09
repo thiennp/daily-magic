@@ -39,6 +39,40 @@ describe("parseProjectDispatchPayload refs media guards", () => {
     }
   });
 
+  it("accepts a local file path to an image as localPath (path only, no bytes)", () => {
+    for (const localPath of [
+      "/Users/me/shots/login.png",
+      "~/Desktop/video/clip.mov",
+      "./docs/design/flow.pdf",
+      "C:\\Users\\me\\shot.jpg",
+    ]) {
+      const result = parseProjectDispatchPayload({
+        kind: "x",
+        summary: "ok",
+        toProjectDisplayName: "Owner",
+        refs: { localPath },
+      });
+      expect(result.ok).toBe(true);
+    }
+  });
+
+  it("still rejects an image path in any other ref key and data URIs in localPath", () => {
+    const otherKey = parseProjectDispatchPayload({
+      kind: "x",
+      summary: "ok",
+      toProjectDisplayName: "Owner",
+      refs: { prUrl: "/Users/me/shots/login.png" },
+    });
+    expect(otherKey.ok).toBe(false);
+    const dataUri = parseProjectDispatchPayload({
+      kind: "x",
+      summary: "ok",
+      toProjectDisplayName: "Owner",
+      refs: { localPath: "/data:image/png;base64,aaaa" },
+    });
+    expect(dataUri.ok).toBe(false);
+  });
+
   it("rejects oversized individual ref values", () => {
     const result = parseProjectDispatchPayload({
       kind: "x",

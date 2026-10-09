@@ -20,7 +20,9 @@ export const parseProjectDispatchRefs = (
   }
   const refs: Record<string, string> = {};
   for (const [key, value] of Object.entries(raw as Record<string, unknown>)) {
-    if (!(PROJECT_MESSAGE_ALLOWED_REF_KEYS as readonly string[]).includes(key)) {
+    if (
+      !(PROJECT_MESSAGE_ALLOWED_REF_KEYS as readonly string[]).includes(key)
+    ) {
       return { ok: false, code: "invalid_ref_key" };
     }
     if (typeof value !== "string") {
@@ -33,12 +35,19 @@ export const parseProjectDispatchRefs = (
     if (trimmed.length > PROJECT_MESSAGE_REF_VALUE_MAX_CHARS) {
       return { ok: false, code: "refs_too_large" };
     }
-    if (refValueLooksLikeMediaOrBlob(trimmed)) {
+    if (
+      refValueLooksLikeMediaOrBlob(trimmed, {
+        allowLocalFilePath: key === "localPath",
+      })
+    ) {
       return { ok: false, code: "media_not_allowed" };
     }
     refs[key] = trimmed;
   }
-  if (Buffer.byteLength(JSON.stringify(refs), "utf8") > PROJECT_MESSAGE_REFS_MAX_BYTES) {
+  if (
+    Buffer.byteLength(JSON.stringify(refs), "utf8") >
+    PROJECT_MESSAGE_REFS_MAX_BYTES
+  ) {
     return { ok: false, code: "refs_too_large" };
   }
   return { ok: true, refs };
