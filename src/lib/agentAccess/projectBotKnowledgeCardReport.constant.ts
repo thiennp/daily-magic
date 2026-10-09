@@ -12,3 +12,13 @@ export const PROJECT_BOT_KNOWLEDGE_CARD_TASK_PAIR_LINE =
 
 export const PROJECT_BOT_KNOWLEDGE_CARD_ON_JOIN_LINE =
   'REQUIRED once right after you are active and list_project_peers (step 4): publish an onboarding knowledge card via publish_project_skill — name like "How <your nickname> works on this project" — covering your inbox delivery (wake or poll), Tasks first, visible messenger replies, ack_project_message, and how you publish cards after each job.';
+
+/** check_product_updates adapt (catalog v29) for bots that joined before join-prompt copy shipped. */
+export const PROJECT_BOT_KNOWLEDGE_CARD_CATALOG_ADAPT =
+  "Before each task, Check this project first: list_project_skills and get_project_skill for anything that fits; call check_context if you have AgentWitch Local. " +
+  "If you never published an onboarding card for this project, do it now: " +
+  PROJECT_BOT_KNOWLEDGE_CARD_ON_JOIN_LINE +
+  " " +
+  PROJECT_BOT_KNOWLEDGE_CARD_FORMAT_LINE +
+  " " +
+  PROJECT_BOT_KNOWLEDGE_CARD_TASK_PAIR_LINE;
