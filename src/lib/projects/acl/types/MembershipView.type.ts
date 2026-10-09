@@ -37,6 +37,8 @@ export type MembershipView = {
   readonly invitedByUserId?: string | null;
   readonly isolatedFromOtherBots?: boolean;
   readonly closedToOthers?: boolean;
+  /** Assistants only: false when it is closed and the viewer did not invite it. */
+  readonly canMessage?: boolean;
   readonly guidanceSeenVersion?: number | null;
   /** Assistants only: the viewer may block/unblock it and send it new guidance. */
   readonly canManageBot?: boolean;

@@ -58,6 +58,8 @@ export const createProjectTask = async (input: {
     projectId,
     taskId: null,
     ownerMembershipId: fields.ownerMembershipId,
+    actorUserId: input.actorUserId,
+    actorMembershipId: writer.membership?.id ?? null,
     dependsOn: fields.dependsOn,
     planItemId: fields.planItemId,
   });

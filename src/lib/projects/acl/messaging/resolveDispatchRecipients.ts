@@ -77,7 +77,10 @@ type ResolveResult = Awaited<
 
 /** Resolve the one recipient, then refuse sends a bot isolation or a closed bot forbids. */
 export const resolveDispatchRecipients = async (
-  input: ResolveInput & { readonly senderMembershipId?: string },
+  input: ResolveInput & {
+    /** Sender seat; null = the owner (no seat); undefined = unguarded. */
+    readonly senderMembershipId?: string | null;
+  },
 ): Promise<
   ResolveResult | Exclude<BotIsolationCheck, { readonly ok: true }>
 > => {
@@ -85,6 +88,7 @@ export const resolveDispatchRecipients = async (
   if (!resolved.ok || input.senderMembershipId === undefined) return resolved;
   const isolation = await checkBotIsolation({
     senderMembershipId: input.senderMembershipId,
+    senderUserId: input.actorUserId,
     recipientMembershipId: resolved.recipients[0].id,
   });
   return isolation.ok ? resolved : isolation;

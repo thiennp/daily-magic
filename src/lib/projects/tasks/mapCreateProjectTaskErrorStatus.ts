@@ -10,6 +10,8 @@ const STATUS_BY_CODE: Readonly<Partial<Record<CreateErrorCode, number>>> = {
   forbidden: 403,
   naming_required: 403,
   missing_scope: 403,
+  bot_closed: 403,
+  bot_isolated: 403,
   not_found: 404,
   task_cap_reached: 409,
   rate_limited: 429,

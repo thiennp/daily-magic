@@ -20,6 +20,7 @@ export const buildProjectTaskSeats = (
       (m) =>
         (m.status === undefined || m.status === "active") &&
         m.role !== "viewer" &&
+        m.canMessage !== false &&
         seatName(m).length > 0,
     )
     .map((m) => ({

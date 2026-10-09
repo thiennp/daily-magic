@@ -87,7 +87,7 @@ export default function AwcProjectOverviewAssistantsCard({
                   {subLine(row)}
                 </div>
               </div>
-              {canSend ? (
+              {canSend && row.canMessage ? (
                 <button
                   type="button"
                   className={OVERVIEW_CTA_SECONDARY_SM_CLASS}

@@ -8,6 +8,8 @@ export type OverviewAssistantRow = {
   readonly initials: string;
   readonly status: "working" | "idle" | "silent" | "checks_on_demand" | null;
   readonly lastAt: string | null;
+  /** False for a closed assistant the viewer did not invite: no Message button. */
+  readonly canMessage: boolean;
 };
 
 const initialsFrom = (name: string): string => {
@@ -40,6 +42,7 @@ const buildOverviewAssistants = (
       initials: initialsFrom(name),
       status: thread?.status ?? null,
       lastAt: thread?.lastMessageAt ?? null,
+      canMessage: member.canMessage !== false,
     };
   });
 };

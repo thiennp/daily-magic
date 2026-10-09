@@ -41,14 +41,27 @@ const loadSeat = async (
   };
 };
 
-/** Dispatch guard: bot isolation (both ways) and a closed bot's inbound lock. */
+/** Dispatch guard: bot isolation (both ways) and a closed bot's inbound lock (no owner exemption). */
 export const checkBotIsolation = async (input: {
-  readonly senderMembershipId: string;
+  /** null for the owner, who has no seat: `senderUserId` stands in. */
+  readonly senderMembershipId: string | null;
+  readonly senderUserId?: string;
   readonly recipientMembershipId: string | null;
 }): Promise<BotIsolationCheck> => {
   if (input.recipientMembershipId === null) return { ok: true };
+  const seatless: IsolationSeat | null =
+    input.senderUserId === undefined
+      ? null
+      : {
+          userId: input.senderUserId,
+          memberKind: "human",
+          invitedByUserId: null,
+          isolated: false,
+        };
   const [sender, recipient] = await Promise.all([
-    loadSeat(input.senderMembershipId),
+    input.senderMembershipId === null
+      ? Promise.resolve(seatless)
+      : loadSeat(input.senderMembershipId),
     loadSeat(input.recipientMembershipId),
   ]);
   if (sender === null || recipient === null) return { ok: true };

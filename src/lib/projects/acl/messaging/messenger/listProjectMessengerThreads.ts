@@ -1,5 +1,7 @@
 import { buildProjectMessengerThreadList } from "@/lib/projects/acl/messaging/messenger/buildProjectMessengerThreadList";
 import { ensureProjectMessengerSchema } from "@/lib/projects/acl/messaging/messenger/ensureProjectMessengerSchema";
+import { canViewerMessageBot } from "@/lib/projects/acl/messaging/canViewerMessageBot";
+import { loadClosedBotSeats } from "@/lib/projects/acl/messaging/messenger/loadClosedBotSeats";
 import { loadProjectMessengerReads } from "@/lib/projects/acl/messaging/messenger/loadProjectMessengerReads";
 import { loadProjectMessengerSnapshot } from "@/lib/projects/acl/messaging/messenger/loadProjectMessengerSnapshot";
 import type { ProjectMessengerThreadList } from "@/lib/projects/acl/messaging/messenger/projectMessenger.type";
@@ -24,13 +26,27 @@ export const listProjectMessengerThreads = async (input: {
     userId: viewer.viewerUserId,
     projectId: viewer.projectId,
   });
+  const closed = await loadClosedBotSeats(viewer.projectId);
+  const threads = buildProjectMessengerThreadList({
+    ...snapshot,
+    lastReadAtByThread,
+    viewerUserId: viewer.viewerUserId,
+    canSend: viewer.canSend,
+  });
   return {
     ok: true,
-    threads: buildProjectMessengerThreadList({
-      ...snapshot,
-      lastReadAtByThread,
-      viewerUserId: viewer.viewerUserId,
-      canSend: viewer.canSend,
-    }),
+    // A closed assistant is offered only to the person who invited it.
+    threads: {
+      ...threads,
+      bots: threads.bots.filter((bot) =>
+        canViewerMessageBot(
+          {
+            closed: closed.has(bot.membershipId),
+            invitedByUserId: closed.get(bot.membershipId) ?? null,
+          },
+          viewer.viewerUserId,
+        ),
+      ),
+    },
   };
 };

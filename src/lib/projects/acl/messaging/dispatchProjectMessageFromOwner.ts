@@ -58,6 +58,7 @@ export const dispatchProjectMessageFromOwner = async (input: {
   const resolved = await resolveDispatchRecipients({
     projectId: input.projectId,
     actorUserId: input.ownerUserId,
+    senderMembershipId: null,
     toMembershipId: parsed.toMembershipId,
     toProjectDisplayName: parsed.toProjectDisplayName,
   });

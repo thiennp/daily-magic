@@ -1,5 +1,6 @@
 import { PRODUCT_CONNECT_UPDATES_CATALOG_VERSION } from "@/lib/agentAccess/productConnectUpdatesMeta.constant";
 import { canEditAssistant } from "@/lib/projects/acl/authorizeMembershipEdit";
+import { canViewerMessageBot } from "@/lib/projects/acl/messaging/canViewerMessageBot";
 import type { MembershipView } from "@/lib/projects/acl/buildProjectAccessViews";
 
 /**
@@ -20,6 +21,13 @@ export const decorateBotManagement = (
             invitedBy: invitedByUserId ?? null,
             ownerMayOverride: false,
           }),
+          canMessage: canViewerMessageBot(
+            {
+              closed: m.closedToOthers === true,
+              invitedByUserId: invitedByUserId ?? null,
+            },
+            viewer.userId,
+          ),
           guidanceOutdated:
             (m.guidanceSeenVersion ?? 0) <
             PRODUCT_CONNECT_UPDATES_CATALOG_VERSION,

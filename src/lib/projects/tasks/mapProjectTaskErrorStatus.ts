@@ -11,6 +11,8 @@ const STATUS_BY_CODE: Readonly<Partial<Record<ProjectTaskErrorCode, number>>> =
     forbidden: 403,
     naming_required: 403,
     missing_scope: 403,
+    bot_closed: 403,
+    bot_isolated: 403,
     not_found: 404,
     task_not_found: 404,
     invalid_transition: 409,

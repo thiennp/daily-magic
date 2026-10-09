@@ -30,7 +30,7 @@ export const isBotIsolationBlocked = (
 
 /**
  * Pure: a closed bot only takes messages from the person who invited it and
- * from assistants that same person invited (the owner never reaches this check).
+ * from assistants that same person invited. No owner exemption.
  */
 export const isClosedBotBlocked = (
   sender: IsolationSeat,

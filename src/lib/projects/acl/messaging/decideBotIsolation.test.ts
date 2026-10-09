@@ -75,4 +75,10 @@ describe("closed bot inbound lock", () => {
       }),
     ).toBeNull();
   });
+
+  it("has no owner exemption: a seatless owner is just another person", () => {
+    expect(decideBotMessageBlock(person("owner"), closedBot("a"))).toBe(
+      "bot_closed",
+    );
+  });
 });

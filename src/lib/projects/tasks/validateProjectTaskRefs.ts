@@ -1,3 +1,4 @@
+import { checkBotIsolation } from "@/lib/projects/acl/messaging/checkBotIsolation";
 import { projectTaskDependsOnReaches } from "@/lib/projects/tasks/projectTaskDependsOnReaches";
 import {
   countProjectTaskRecordsIn,
@@ -6,6 +7,8 @@ import {
 
 export type ProjectTaskRefError =
   | "owner_not_member"
+  | "bot_closed"
+  | "bot_isolated"
   | "self_dependency"
   | "depends_on_not_found"
   | "depends_on_cycle"
@@ -20,6 +23,9 @@ export const validateProjectTaskRefs = async (input: {
   readonly projectId: string;
   readonly taskId: string | null;
   readonly ownerMembershipId?: string | null;
+  /** The writer (seat null for the owner); gates assigning work to a restricted assistant. */
+  readonly actorUserId?: string;
+  readonly actorMembershipId?: string | null;
   readonly dependsOn?: readonly string[];
   readonly planItemId?: string | null;
 }): Promise<
@@ -35,6 +41,14 @@ export const validateProjectTaskRefs = async (input: {
     }))
   ) {
     return { ok: false, code: "owner_not_member" };
+  }
+  if (typeof owner === "string" && input.actorUserId !== undefined) {
+    const gate = await checkBotIsolation({
+      senderMembershipId: input.actorMembershipId ?? null,
+      senderUserId: input.actorUserId,
+      recipientMembershipId: owner,
+    });
+    if (!gate.ok) return { ok: false, code: gate.code };
   }
   const deps = input.dependsOn ?? [];
   if (input.taskId !== null && deps.includes(input.taskId)) {
