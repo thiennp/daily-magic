@@ -29,6 +29,7 @@ export default function HomeMarketingAuthModal({
   onClose,
 }: HomeMarketingAuthModalProps) {
   const [agreed, setAgreed] = useState(false);
+  const [termsError, setTermsError] = useState(false);
   const isSignUp = mode === "up";
 
   return (
@@ -55,16 +56,24 @@ export default function HomeMarketingAuthModal({
           </p>
         ) : null}
         {isSignUp ? (
-          <HomeMarketingAuthTermsCheck agreed={agreed} onChange={setAgreed} />
+          <HomeMarketingAuthTermsCheck
+            agreed={agreed}
+            error={termsError}
+            onChange={(next) => {
+              setAgreed(next);
+              setTermsError(false);
+            }}
+          />
         ) : null}
-        <fieldset
-          disabled={isSignUp && !agreed}
-          className="min-w-0 border-0 p-0"
-        >
-          <Suspense fallback={<p role="status">Loading sign-in form…</p>}>
-            <HomeMarketingLoginForm />
-          </Suspense>
-        </fieldset>
+        <Suspense fallback={<p role="status">Loading sign-in form…</p>}>
+          <HomeMarketingLoginForm
+            termsGate={
+              isSignUp
+                ? { agreed, onMissing: () => setTermsError(true) }
+                : undefined
+            }
+          />
+        </Suspense>
       </div>
     </Modal>
   );

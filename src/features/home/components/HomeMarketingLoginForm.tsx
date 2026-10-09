@@ -6,7 +6,16 @@ import { useMemo } from "react";
 import LoginForm from "@/features/auth/LoginForm";
 import { resolvePostAuthReturnFromSearchParams } from "@/lib/auth/resolvePostAuthReturnFromSearchParams";
 
-export default function HomeMarketingLoginForm() {
+interface HomeMarketingLoginFormProps {
+  readonly termsGate?: {
+    readonly agreed: boolean;
+    readonly onMissing: () => void;
+  };
+}
+
+export default function HomeMarketingLoginForm({
+  termsGate,
+}: HomeMarketingLoginFormProps) {
   const searchParams = useSearchParams();
   const defaultCallbackUrl = useMemo(
     () => resolvePostAuthReturnFromSearchParams(searchParams),
@@ -14,6 +23,10 @@ export default function HomeMarketingLoginForm() {
   );
 
   return (
-    <LoginForm defaultCallbackUrl={defaultCallbackUrl} appearance="marketing" />
+    <LoginForm
+      defaultCallbackUrl={defaultCallbackUrl}
+      appearance="marketing"
+      termsGate={termsGate}
+    />
   );
 }

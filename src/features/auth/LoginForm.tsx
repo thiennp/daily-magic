@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import LoginCheckEmailStep from "@/features/auth/components/LoginCheckEmailStep";
 import LoginFormEmailField from "@/features/auth/components/LoginFormEmailField";
@@ -8,6 +8,9 @@ import LoginFormEmailSubmitButton from "@/features/auth/components/LoginFormEmai
 import LoginFormGoogleButton from "@/features/auth/components/LoginFormGoogleButton";
 import LoginTermsCheckbox from "@/features/auth/components/LoginTermsCheckbox";
 import useLoginForm from "@/features/auth/hooks/useLoginForm";
+import useLoginTermsGate, {
+  type LoginTermsGate,
+} from "@/features/auth/hooks/useLoginTermsGate";
 import type { LoginFormAppearance } from "@/features/auth/loginFormAppearance.constant";
 import { LOGIN_FORM_APPEARANCE_CLASSES } from "@/features/auth/loginFormAppearance.constant";
 import Alert from "@/components/ui/alert/Alert";
@@ -20,6 +23,8 @@ interface LoginFormProps {
   readonly mode?: LoginFormMode;
   /** Lets the card swap its title while the "Check your email" step shows. */
   readonly onSentChange?: (sent: boolean) => void;
+  /** Sign-up consent owned by the parent: blocked clicks call `onMissing`. */
+  readonly termsGate?: LoginTermsGate;
 }
 
 export default function LoginForm({
@@ -27,10 +32,10 @@ export default function LoginForm({
   appearance = "default",
   mode = "in",
   onSentChange,
+  termsGate,
 }: LoginFormProps) {
   const form = useLoginForm({ defaultCallbackUrl });
-  const [termsChecked, setTermsChecked] = useState(false);
-  const [termsError, setTermsError] = useState(false);
+  const terms = useLoginTermsGate(mode === "up", termsGate);
   const appearanceClasses = LOGIN_FORM_APPEARANCE_CLASSES[appearance];
   const isSent = form.sentEmail !== null;
 
@@ -63,7 +68,7 @@ export default function LoginForm({
         <LoginFormGoogleButton
           appearance={appearance}
           disabled={form.isGoogleSigningIn}
-          onGoogleSignIn={form.handleGoogleSignIn}
+          onGoogleSignIn={() => terms.guard(form.handleGoogleSignIn)}
         />
 
         <div className={appearanceClasses.divider}>or use email</div>
@@ -73,14 +78,12 @@ export default function LoginForm({
           className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
-            if (mode === "up" && !termsChecked) {
-              setTermsError(true);
-              return;
-            }
-            const submitted = new FormData(e.currentTarget).get("email");
-            void form.handleEmailSignIn(
-              typeof submitted === "string" ? submitted : undefined,
-            );
+            terms.guard(() => {
+              const submitted = new FormData(e.currentTarget).get("email");
+              void form.handleEmailSignIn(
+                typeof submitted === "string" ? submitted : undefined,
+              );
+            });
           }}
         >
           <LoginFormEmailField
@@ -92,12 +95,9 @@ export default function LoginForm({
           />
           {mode === "up" ? (
             <LoginTermsCheckbox
-              checked={termsChecked}
-              error={termsError}
-              onChange={(next) => {
-                setTermsChecked(next);
-                setTermsError(false);
-              }}
+              checked={terms.termsChecked}
+              error={terms.termsError}
+              onChange={terms.setChecked}
             />
           ) : null}
           <LoginFormEmailSubmitButton
