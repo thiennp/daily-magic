@@ -2,12 +2,13 @@
  * How cloud bots report work: a one-line `resultSummary` on the task board,
  * plus a Playbook skill in the project library when the know-how is reusable.
  * Bots never create auto skills; AgentWitch drafts those on a linked computer
- * from repeated Runs and asks the owner. Terminology and the four learning
+ * from repeated Runs and asks the owner. Library lookup has two lanes: skills_find
+ * on a computer first, list_project_skills with a query otherwise. Terminology and the four learning
  * pipelines: docs/qa/learning-memory-terminology-and-flows.md. Shared by join
- * step 10, PROJECT_ORCHESTRATOR_CLAUSE and check_product_updates (v30).
+ * step 10, PROJECT_ORCHESTRATOR_CLAUSE and check_product_updates (v31).
  */
 export const PROJECT_BOT_PLAYBOOK_LIBRARY_FIRST_LINE =
-  "Before starting, call list_project_skills and get_project_skill for any Playbook skill that fits and reuse it instead of re-deriving the work, to save tokens.";
+  "Before starting, find a Playbook skill that fits and reuse it instead of re-deriving the work, to save tokens: if you have the skills_find tool, call it with a short task description (it returns the best 5); only if you do not have it, or it answers unavailable, call list_project_skills { projectId, query: <short task description> } (best 5, never the whole library). Then get_project_skill for one that fits.";
 
 export const PROJECT_BOT_PLAYBOOK_FORMAT_LINE =
   'Playbook skill (project library): a published skill with name, description, and body sections **When to use**, **Steps**, **Pitfalls**, **Verification** (plain markdown headings OK). Save with publish_project_skill { projectId, name, description, body, kind: "skill" }. To update one, pass its skillId from list_project_skills (a new name creates a new skill; on someone else\'s skill use asDraft: true). Never put secrets, tokens, wake URLs/keys, or private code in a Playbook skill or chat.';

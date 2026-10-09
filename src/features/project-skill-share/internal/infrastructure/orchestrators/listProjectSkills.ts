@@ -1,6 +1,14 @@
+import {
+  filterProjectSkillsByQuery,
+  sortProjectSkillsNewestFirst,
+} from "@/features/project-skill-share/internal/core/filterProjectSkillsByQuery";
 import { canViewProjectSkill } from "@/features/project-skill-share/internal/core/canViewProjectSkill";
 import { isListProjectSkillsArgs } from "@/features/project-skill-share/internal/core/isListProjectSkillsArgs.guardz";
 import type { ListProjectSkillsResult } from "@/features/project-skill-share/internal/core/projectSkillResults.type";
+import {
+  PROJECT_SKILL_LIST_DEFAULT_LIMIT,
+  PROJECT_SKILL_LIST_MAX_LIMIT,
+} from "@/features/project-skill-share/internal/core/projectSkillShare.constant";
 import { toProjectSkillView } from "@/features/project-skill-share/internal/core/toProjectSkillView";
 import { selectProjectSkillRows } from "@/features/project-skill-share/internal/infrastructure/db/selectProjectSkillRows";
 import { resolveProjectSkillMemberRole } from "@/features/project-skill-share/internal/infrastructure/orchestrators/resolveProjectSkillMemberRole";
@@ -8,7 +16,9 @@ import { resolveProjectSkillMemberRole } from "@/features/project-skill-share/in
 /**
  * Orchestrator: list_project_skills. Published for owner | member | viewer;
  * drafts owner-only. Revoked are not listed. Optional `kind` filter
- * ("skill" | "playbook"); omitted = every kind.
+ * ("skill" | "playbook"); omitted = every kind. With `query` and/or `limit`
+ * only the best matches come back (default 5, max 20) plus `total`, so a bot
+ * does not read the whole library every task.
  */
 export const listProjectSkills = async (input: {
   readonly actorUserId: string;
@@ -47,5 +57,20 @@ export const listProjectSkills = async (input: {
         actorUserId: input.actorUserId,
       }),
     );
-  return { ok: true, skills };
+  const query = input.args.query?.trim();
+  const wantsQuery = query !== undefined && query.length > 0;
+  if (!wantsQuery && input.args.limit === undefined) {
+    return { ok: true, skills };
+  }
+  const matched = wantsQuery
+    ? filterProjectSkillsByQuery(skills, query)
+    : sortProjectSkillsNewestFirst(skills);
+  const limit = Math.min(
+    Math.max(
+      Math.floor(input.args.limit ?? PROJECT_SKILL_LIST_DEFAULT_LIMIT),
+      1,
+    ),
+    PROJECT_SKILL_LIST_MAX_LIMIT,
+  );
+  return { ok: true, skills: matched.slice(0, limit), total: matched.length };
 };

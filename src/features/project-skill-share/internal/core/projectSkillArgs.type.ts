@@ -23,4 +23,8 @@ export interface ListProjectSkillsArgs {
   readonly projectId: string;
   /** Omit to list every kind. */
   readonly kind?: ProjectSkillKind;
+  /** Short task description: only matching skills, best first (default 5 rows). */
+  readonly query?: string;
+  /** Max rows when `query` or `limit` is given (default 5, max 20). */
+  readonly limit?: number;
 }

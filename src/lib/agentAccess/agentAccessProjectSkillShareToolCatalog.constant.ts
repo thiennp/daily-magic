@@ -37,10 +37,23 @@ export const AGENT_ACCESS_PROJECT_SKILL_SHARE_TOOLS: readonly AgentAccessToolDef
     {
       name: "list_project_skills",
       description:
-        "List project skills and playbooks (meta + kind + contentHash, no body); pass kind to filter. Owner and members see published skills and all drafts (with latestAuthorName); viewers see published only. Requires ownership, active membership, or viewer access.",
+        "List project skills and playbooks (meta + kind + contentHash, no body); pass kind to filter. Pass query (a short description of your task) to get only the best matches, newest first on ties (default 5, max 20 via limit) plus total; without query or limit the whole library is returned, which costs tokens. Owner and members see published skills and all drafts (with latestAuthorName); viewers see published only. Requires ownership, active membership, or viewer access.",
       inputSchema: {
         type: "object",
-        properties: { projectId: projectIdProp, kind: kindProp },
+        properties: {
+          projectId: projectIdProp,
+          kind: kindProp,
+          query: {
+            type: "string",
+            description:
+              "Short task description; returns the best matching skills only.",
+          },
+          limit: {
+            type: "number",
+            description:
+              "Max rows when query or limit is set (default 5, max 20).",
+          },
+        },
         required: ["projectId"],
         additionalProperties: false,
       },

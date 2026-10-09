@@ -19,7 +19,12 @@ export type PublishProjectSkillResult =
   | ProjectSkillFailure;
 
 export type ListProjectSkillsResult =
-  | { readonly ok: true; readonly skills: readonly ProjectSkillView[] }
+  | {
+      readonly ok: true;
+      readonly skills: readonly ProjectSkillView[];
+      /** Matches before `limit`; only set when `query` or `limit` was given. */
+      readonly total?: number;
+    }
   | ProjectSkillFailure;
 
 export type GetProjectSkillResult =
@@ -48,4 +53,3 @@ export type RehomeProjectSkillsToCloudResult =
       readonly code: "rehome_failed" | ProjectSkillShareErrorCode;
       readonly skills: readonly ProjectSkillRehomeRow[];
     };
-

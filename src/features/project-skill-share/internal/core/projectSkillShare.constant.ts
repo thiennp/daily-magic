@@ -21,3 +21,7 @@ export const PROJECT_SKILL_STATES = ["draft", "published", "revoked"] as const;
 /** A playbook is a project skill with kind "playbook" (same lifecycle / ACL / caps). */
 export const PROJECT_SKILL_KINDS = ["skill", "playbook"] as const;
 export const PROJECT_SKILL_DEFAULT_KIND = "skill";
+
+/** list_project_skills with `query` or `limit`: default and maximum rows returned. */
+export const PROJECT_SKILL_LIST_DEFAULT_LIMIT = 5;
+export const PROJECT_SKILL_LIST_MAX_LIMIT = 20;

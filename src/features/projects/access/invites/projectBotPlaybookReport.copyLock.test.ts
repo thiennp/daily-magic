@@ -74,6 +74,28 @@ describe("bot Playbook report copy lock", () => {
     expect(catalogText()).toContain(PROJECT_BOT_PLAYBOOK_TASK_PAIR_LINE);
   });
 
+  it.each(Object.entries(REPORT_SURFACES))(
+    "%s never tells a bot to read the whole library",
+    (_name, text) => {
+      expect(text).not.toMatch(
+        /list_project_skills(,| and) (then )?get_project_skill/,
+      );
+    },
+  );
+
+  it("library lookup has two lanes: skills_find first, list with a query otherwise", () => {
+    expect(PROJECT_BOT_PLAYBOOK_LIBRARY_FIRST_LINE).toMatch(/skills_find/);
+    expect(PROJECT_BOT_PLAYBOOK_LIBRARY_FIRST_LINE).toMatch(
+      /only if you do not have it, or it answers unavailable/,
+    );
+    expect(PROJECT_BOT_PLAYBOOK_LIBRARY_FIRST_LINE).toMatch(
+      /list_project_skills \{ projectId, query:/,
+    );
+    expect(PROJECT_BOT_PLAYBOOK_LIBRARY_FIRST_LINE).toMatch(
+      /never the whole library/,
+    );
+  });
+
   it("tells bots they do not create auto skills", () => {
     expect(PROJECT_BOT_PLAYBOOK_TASK_PAIR_LINE).toMatch(
       /You do not create auto skills/,
