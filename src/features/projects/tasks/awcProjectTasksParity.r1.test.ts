@@ -4,13 +4,20 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 const read = (rel: string): string =>
-  readFileSync(path.join(process.cwd(), "src/features/projects/tasks", rel), "utf8");
+  readFileSync(
+    path.join(process.cwd(), "src/features/projects/tasks", rel),
+    "utf8",
+  );
 
 describe("Tasks tab parity r1 — design EN + product rules", () => {
   it("offline EN has no trailing period; back is ← Tasks; Status heading", () => {
     const copy = read("projectPageTasksCopy.constant.ts");
-    expect(copy).toContain('offline: "Connection to the project computer was lost"');
-    expect(copy).not.toContain('offline: "Connection to the project computer was lost."');
+    expect(copy).toContain(
+      'offline: "Connection to the project computer was lost"',
+    );
+    expect(copy).not.toContain(
+      'offline: "Connection to the project computer was lost."',
+    );
     expect(copy).toContain('backToList: "← Tasks"');
     expect(copy).toContain('statusTimeline: "Status"');
     expect(copy).toContain('empty: "No tasks yet"');
@@ -28,8 +35,9 @@ describe("Tasks tab parity r1 — design EN + product rules", () => {
 
   it("list rows order title · status · relative time; empty uses design copy", () => {
     const list = read("AwcProjectTasksList.tsx");
-    expect(list).toContain("formatRelativeTimeAgo");
-    expect(list).toContain("AwcProjectTaskStatusChip");
+    const row = read("AwcProjectTaskListRow.tsx");
+    expect(row).toContain("formatRelativeTimeAgo");
+    expect(row).toContain("AwcProjectTaskStatusChip");
     expect(list).toContain("C.emptyFiltered");
     expect(list).toContain("C.clearFilters");
   });

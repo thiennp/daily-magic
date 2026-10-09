@@ -1,34 +1,21 @@
 "use client";
 
-import AwcProjectTaskStalledActions from "@/features/projects/tasks/AwcProjectTaskStalledActions";
 import AwcProjectTasksEmptyCat from "@/features/projects/tasks/AwcProjectTasksEmptyCat";
-import AwcProjectTaskGitTags from "@/features/projects/tasks/AwcProjectTaskGitTags";
-import AwcProjectTaskStatusChip from "@/features/projects/tasks/AwcProjectTaskStatusChip";
+import AwcProjectTaskListRow from "@/features/projects/tasks/AwcProjectTaskListRow";
 import {
   AWC_TASKS_LIST_CLASS,
   AWC_TASKS_PRIMARY_BUTTON_CLASS,
-  AWC_TASKS_ROW_CLASS,
-  AWC_TASKS_ROW_META_CLASS,
-  AWC_TASKS_ROW_TIME_CLASS,
-  AWC_TASKS_ROW_TITLE_CLASS,
   AWC_TASKS_SECONDARY_BUTTON_CLASS,
 } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
 import { PROJECT_PAGE_TASKS_COPY as C } from "@/features/projects/tasks/projectPageTasksCopy.constant";
+import { groupProjectTasksByAssistant } from "@/features/projects/tasks/utils/groupProjectTasks";
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
-import { formatRelativeTimeAgo } from "@/lib/time/formatRelativeTimeAgo";
-
-const formatWhen = (iso: string): string => {
-  const relative = formatRelativeTimeAgo(iso);
-  if (relative !== null) return relative;
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleString();
-};
 
 export default function AwcProjectTasksList({
   tasks,
   hasGit,
   hasActiveFilters,
+  groupByAssistant = false,
   onOpen,
   onAssign,
   onClearFilters,
@@ -36,6 +23,7 @@ export default function AwcProjectTasksList({
   readonly tasks: readonly ProjectTaskMeta[];
   readonly hasGit: boolean;
   readonly hasActiveFilters: boolean;
+  readonly groupByAssistant?: boolean;
   readonly onOpen: (id: string) => void;
   readonly onAssign: () => void;
   readonly onClearFilters: () => void;
@@ -68,45 +56,35 @@ export default function AwcProjectTasksList({
       </div>
     );
   }
+  const groups = groupByAssistant
+    ? groupProjectTasksByAssistant(tasks)
+    : [{ name: "", tasks }];
   return (
-    <ul
-      className={`${AWC_TASKS_LIST_CLASS} [&>li:last-child>button]:border-b-0`}
-    >
-      {tasks.map((task) => (
-        <li key={task.id}>
-          <button
-            type="button"
-            className={AWC_TASKS_ROW_CLASS}
-            onClick={() => {
-              onOpen(task.id);
-            }}
-          >
-            <span className="min-w-0">
-              <span className={AWC_TASKS_ROW_TITLE_CLASS}>{task.title}</span>
-              {task.statusReason || task.summaryLine ? (
-                <span className="mb-1 block whitespace-normal break-words text-[13px] text-awc-fg-muted">
-                  {task.statusReason || task.summaryLine}
-                </span>
-              ) : null}
-              <span className={AWC_TASKS_ROW_META_CLASS}>
-                <span>{task.assistantName?.trim() || "Assistant"}</span>
-                <AwcProjectTaskGitTags
-                  show={hasGit}
-                  branch={task.branch}
-                  worktree={task.worktree}
-                />
+    <div>
+      {groups.map((group) => (
+        <section key={group.name} aria-label={group.name || undefined}>
+          {groupByAssistant ? (
+            <h4 className="m-0 flex items-baseline gap-2 border-b border-awc-border bg-awc-tile/60 px-3.5 py-2 text-[13px] font-semibold text-awc-fg">
+              {group.name}
+              <span className="font-normal text-awc-fg-subtle">
+                {C.groupCount(group.tasks.length)}
               </span>
-            </span>
-            <AwcProjectTaskStatusChip status={task.status} />
-            <span className={AWC_TASKS_ROW_TIME_CLASS}>
-              {formatWhen(task.updatedAt)}
-            </span>
-          </button>
-          {task.status === "stalled" ? (
-            <AwcProjectTaskStalledActions task={task} />
+            </h4>
           ) : null}
-        </li>
+          <ul
+            className={`${AWC_TASKS_LIST_CLASS} [&>li:last-child>button]:border-b-0`}
+          >
+            {group.tasks.map((task) => (
+              <AwcProjectTaskListRow
+                key={task.id}
+                task={task}
+                hasGit={hasGit}
+                onOpen={onOpen}
+              />
+            ))}
+          </ul>
+        </section>
       ))}
-    </ul>
+    </div>
   );
 }

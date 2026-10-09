@@ -6,6 +6,9 @@ import useAwcProjectDevicePresentation from "@/features/projects/hooks/useAwcPro
 import { useAwcProjectMessengerThreads } from "@/features/projects/messenger/hooks/useAwcProjectMessengerThreads";
 import countImportantProjectPitfalls from "@/features/projects/pitfalls/countImportantProjectPitfalls";
 import useAwcProjectPitfalls from "@/features/projects/pitfalls/useAwcProjectPitfalls";
+import useAwcProjectTasks from "@/features/projects/tasks/useAwcProjectTasks";
+import { countOpenProjectTasks } from "@/features/projects/tasks/utils/groupProjectTasks";
+import { projectHasOwnerComputer } from "@/features/projects/utils/projectHasOwnerComputer";
 import resolveProjectHeaderStatus from "@/features/projects/utils/resolveProjectHeaderStatus";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
@@ -26,6 +29,10 @@ const useAwcProjectDetailPanelData = (project: UserProjectRecord) => {
     pitfalls.status === "ready"
       ? countImportantProjectPitfalls(pitfalls.items)
       : 0;
+  const tasks = useAwcProjectTasks(project.id, {
+    hasOwnerComputer: projectHasOwnerComputer(project),
+  });
+  const openTasksCount = countOpenProjectTasks(tasks.allTasks);
   return {
     deviceDisplayName: device.deviceDisplayName,
     editCta: device.editCta,
@@ -33,6 +40,7 @@ const useAwcProjectDetailPanelData = (project: UserProjectRecord) => {
     messengerThreads,
     pitfalls,
     rulesImportantCount,
+    openTasksCount,
   };
 };
 

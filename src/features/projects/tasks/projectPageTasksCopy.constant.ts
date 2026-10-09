@@ -64,6 +64,8 @@ export const PROJECT_PAGE_TASKS_COPY = {
   tasksTabOnly: "Tasks tab only",
   compactChips: "Compact chips",
   fromComputer: "From this computer",
+  groupByAssistant: "Group by assistant",
+  groupCount: (n: number) => (n === 1 ? "1 task" : `${n} tasks`),
   loading: "Loading tasks…",
   loadError: "Could not load tasks. Try again.",
   kvTask: "Task",

@@ -10,8 +10,8 @@ import {
 } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
 import AwcProjectTaskDetail from "@/features/projects/tasks/AwcProjectTaskDetail";
 import AwcProjectTasksAssignDialog from "@/features/projects/tasks/AwcProjectTasksAssignDialog";
-import AwcProjectTasksFilters from "@/features/projects/tasks/AwcProjectTasksFilters";
 import AwcProjectTasksList from "@/features/projects/tasks/AwcProjectTasksList";
+import AwcProjectTasksToolbar from "@/features/projects/tasks/AwcProjectTasksToolbar";
 import AwcProjectTasksOfflineBanner from "@/features/projects/tasks/AwcProjectTasksOfflineBanner";
 import { PROJECT_PAGE_TASKS_COPY as C } from "@/features/projects/tasks/projectPageTasksCopy.constant";
 import useAwcProjectTasks from "@/features/projects/tasks/useAwcProjectTasks";
@@ -34,6 +34,7 @@ export default function AwcProjectTasksPanel({
   });
   const [taskId, setTaskId] = useAwcProjectHashDeepLink("tasks", "task");
   const [assignOpen, setAssignOpen] = useState(false);
+  const [groupByAssistant, setGroupByAssistant] = useState(false);
   const selected =
     taskId === null
       ? null
@@ -58,39 +59,14 @@ export default function AwcProjectTasksPanel({
         />
       ) : (
         <div className={AWC_TASKS_CARD_CLASS}>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2.5 border-b border-awc-border px-3.5 py-3">
-            <AwcProjectTasksFilters
-              assistants={tasks.assistants}
-              assistantId={tasks.assistantFilter}
-              status={tasks.statusFilter}
-              onAssistantChange={tasks.setAssistantFilter}
-              onStatusChange={tasks.setStatusFilter}
-            />
-            <span className="min-w-0 flex-1" />
-            {tasks.planCounts !== null ? (
-              <span
-                className="inline-flex items-center gap-1.5 text-[12px] whitespace-nowrap text-awc-fg-subtle"
-                title={C.planTip}
-              >
-                {C.planCounts(tasks.planCounts.used, tasks.planCounts.max)}
-                <span
-                  className="inline-grid h-[18px] w-[18px] place-items-center rounded-full border border-awc-border-strong bg-awc-surface text-[11px] font-bold text-awc-fg-muted"
-                  aria-label={C.planTip}
-                >
-                  i
-                </span>
-              </span>
-            ) : null}
-            <button
-              type="button"
-              className={AWC_TASKS_PRIMARY_BUTTON_CLASS}
-              onClick={() => {
-                setAssignOpen(true);
-              }}
-            >
-              {C.emptyAssign}
-            </button>
-          </div>
+          <AwcProjectTasksToolbar
+            tasks={tasks}
+            groupByAssistant={groupByAssistant}
+            onGroupByAssistant={setGroupByAssistant}
+            onAssign={() => {
+              setAssignOpen(true);
+            }}
+          />
           <div className="min-w-0">
             {tasks.loadFailed ? (
               <div className="flex flex-col items-start gap-2 px-3.5 py-3">
@@ -110,6 +86,7 @@ export default function AwcProjectTasksPanel({
                 tasks={tasks.tasks}
                 hasGit={hasGit}
                 hasActiveFilters={hasActiveFilters}
+                groupByAssistant={groupByAssistant}
                 onOpen={setTaskId}
                 onAssign={() => {
                   setAssignOpen(true);

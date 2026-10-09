@@ -38,10 +38,9 @@ export default function AwcProjectDetailPanel({
   const nav = useAwcProjectDetailNavigation({ startRename, isOwner });
   const { activeTab, setActiveTab, onGotoTab } = nav;
   const d = useAwcProjectDetailPanelData(project);
-  const reloadThreads = d.messengerThreads.reload;
   const chat = useAwcProjectChatSurface({
     startOpen: startChatOpen,
-    reloadThreads,
+    reloadThreads: d.messengerThreads.reload,
   });
   const leave = useAwcProjectLeaveFlow(project.id);
 
@@ -72,6 +71,7 @@ export default function AwcProjectDetailPanel({
           activeTab={activeTab}
           onTabChange={setActiveTab}
           rulesImportantCount={d.rulesImportantCount}
+          openTasksCount={d.openTasksCount}
         />
         <AwcProjectDetailTabPanels
           activeTab={activeTab}
@@ -101,7 +101,7 @@ export default function AwcProjectDetailPanel({
         isOwner={isOwner}
         threads={d.messengerThreads.threads}
         chat={chat}
-        onUnreadMaybeChanged={reloadThreads}
+        onUnreadMaybeChanged={d.messengerThreads.reload}
       />
       {leave.isOpen ? (
         <AwcProjectLeaveConfirmForm

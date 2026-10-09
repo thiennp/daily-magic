@@ -48,5 +48,9 @@ export const PROJECT_V5_TAB_UNREAD_BADGE_CLASS =
 export const PROJECT_V5_TAB_COUNT_CHIP_CLASS =
   "inline-grid h-[18px] min-w-[18px] place-items-center rounded-full bg-[#f2e4cf] px-1.5 text-[11.5px] font-bold tabular-nums text-[#7a4410] dark:bg-warning-500/20 dark:text-warning-400";
 
+/** Neutral count chip: open tasks on the Tasks tab. */
+export const PROJECT_V5_TAB_OPEN_COUNT_CLASS =
+  "inline-grid h-[18px] min-w-[18px] place-items-center rounded-full bg-gray-200 px-1.5 text-[11.5px] font-bold tabular-nums text-awc-fg-muted dark:bg-white/10 dark:text-gray-300";
+
 export const PROJECT_V5_PANEL_SUBTITLE_CLASS =
   "px-1 text-[length:var(--awc-fs-sm)] text-awc-fg-muted dark:text-gray-400";

@@ -16,4 +16,7 @@ export const PROJECT_PAGE_V5_CHROME_COPY = {
   "tabs.importantCount": (n: number) => String(n),
   "tabs.importantCountAria": (n: number) =>
     n === 1 ? "1 important" : `${n} important`,
+  "tabs.openTasksCount": (n: number) => (n > 99 ? "99+" : String(n)),
+  "tabs.openTasksCountAria": (n: number) =>
+    n === 1 ? "1 open task" : `${n} open tasks`,
 } as const;
