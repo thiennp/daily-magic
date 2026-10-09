@@ -117,6 +117,13 @@
       "parentSlug": "awc-proxy",
       "fsaStatus": "fsa",
       "featurePath": "apps/bridge/features/awc-proxy/features/prompt-optimizer-proxy"
+    },
+    {
+      "slug": "knowledge-proxy",
+      "title": "Project knowledge update for local agents",
+      "parentSlug": "awc-proxy",
+      "fsaStatus": "fsa",
+      "featurePath": "apps/bridge/features/awc-proxy/features/knowledge-proxy"
     }
   ]
 }

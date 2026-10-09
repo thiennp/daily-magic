@@ -1,27 +1,25 @@
 import { randomUUID } from "node:crypto";
 
-import { asRowArray, getSql } from "@/lib/db";
+import { getSql } from "@/lib/db";
 import { scheduleProjectUpdatedNotify } from "@/lib/projects/acl/messaging/scheduleProjectUpdatedNotify";
+import { canUserSubmitProjectKnowledgeCandidate } from "@/lib/projects/knowledge/canUserSubmitProjectKnowledgeCandidate";
 
 const createProjectKnowledgeCandidate = async (input: {
   readonly projectId: string;
   readonly ownerUserId: string;
+  readonly deviceId?: string | null;
   readonly sourceRunId?: string | null;
   readonly kind: "lesson" | "fact" | "decision";
   readonly summaryForCloud?: string | null;
 }): Promise<string | null> => {
   const sql = getSql();
-  const projectRows = asRowArray(
-    await sql`
-      SELECT id
-      FROM user_projects
-      WHERE id = ${input.projectId}
-        AND owner_user_id = ${input.ownerUserId}
-      LIMIT 1
-    `,
-  );
+  const allowed = await canUserSubmitProjectKnowledgeCandidate({
+    projectId: input.projectId,
+    userId: input.ownerUserId,
+    deviceId: input.deviceId,
+  });
 
-  if (projectRows.length === 0) {
+  if (!allowed) {
     return null;
   }
 

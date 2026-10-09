@@ -1,6 +1,7 @@
 import { tryHandleAutomationsProxyRoutes } from "../../awc-proxy/features/automations-proxy/internal/handleAutomationsProxyRoutes";
 import { tryHandlePromptSdlcProxyRoutes } from "../../awc-proxy/features/prompt-optimizer-proxy/internal/handlePromptSdlcProxyRoutes";
 import { tryHandleHarnessProxyRoutes } from "../../awc-proxy/features/harness-proxy/internal/handleHarnessProxyRoutes";
+import { tryHandleKnowledgeProxyRoutes } from "../../awc-proxy/features/knowledge-proxy/internal/handleKnowledgeProxyRoutes";
 import { tryHandleProjectsProxyRoute } from "../../awc-proxy/features/projects-proxy/internal/handleProjectsProxyRoute";
 import { tryHandleLocalDebugPageRoute } from "../../diagnostics/features/local-debug-page/internal/handleLocalDebugPageRoute";
 import { tryHandleHealthIdentityRoutes } from "../../discovery/features/health-identity/internal/handleHealthIdentityRoutes";
@@ -24,6 +25,7 @@ export const BRIDGE_ROUTE_HANDLERS: readonly BridgeRouteHandler[] = [
   tryHandleInstallDeleteApiRoute,
   tryHandleHarnessProxyRoutes,
   tryHandleProjectsProxyRoute,
+  tryHandleKnowledgeProxyRoutes,
   tryHandleAutomationsProxyRoutes,
   tryHandlePromptSdlcProxyRoutes,
 ];

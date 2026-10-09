@@ -1,3 +1,5 @@
+import { buildCheckContextGlobalInstructionLines } from "./agentWitchCheckContextInstruction.constant";
+import { buildKnowledgeReportProjectInstructionLines } from "./agentWitchKnowledgeReportInstruction.constant";
 import {
   HTML_MARKER_BEGIN,
   HTML_MARKER_END,
@@ -6,11 +8,10 @@ import {
 /** Body for `.cursor/rules/agent-witch-check-context.mdc` (alwaysApply). */
 export const buildCursorProjectRuleContent = (projectId: string): string => {
   const body = [
-    "On the first user message of a session, call the AgentWitch MCP tool",
-    "`check_context` with this folder's cwd.",
+    ...buildCheckContextGlobalInstructionLines(),
     `projectId: ${projectId}`,
-    "If status is miss or none (already declined), stay silent.",
-    "If status is hit, follow the tip. Do not dump large context.",
+    "Do not dump large context on hit.",
+    ...buildKnowledgeReportProjectInstructionLines(projectId),
   ].join("\n");
   return [
     "---",

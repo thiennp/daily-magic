@@ -69,14 +69,15 @@ The prompt optimizer is in AWC at `/prompt-optimizer` (`src/features/prompt-opti
 
 Local wake server (typical **`127.0.0.1:47892`**):
 
-| Method | Path                                 | Purpose                                                                                                         |
-| ------ | ------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| GET    | `/health`                            | Liveness                                                                                                        |
-| GET    | `/identity`                          | “This computer” token for AWC pages ([Q&A awb-localhost-identity](../../qa/awb-localhost-identity-and-cors.md)) |
-| GET    | `/watchdog/status`, `/watchdog/logs` | Watchdog diagnostics                                                                                            |
-| POST   | `/watchdog/revive`                   | Kick stale client                                                                                               |
-| GET    | `/update/status`, POST `/update/run` | Self-update                                                                                                     |
-| POST   | `/harness/install`                   | Deterministic harness writes from browser                                                                       |
+| Method | Path                                 | Purpose                                                                                                          |
+| ------ | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| GET    | `/health`                            | Liveness                                                                                                         |
+| GET    | `/identity`                          | “This computer” token for AWC pages ([Q&A awb-localhost-identity](../../qa/awb-localhost-identity-and-cors.md))  |
+| GET    | `/watchdog/status`, `/watchdog/logs` | Watchdog diagnostics                                                                                             |
+| POST   | `/watchdog/revive`                   | Kick stale client                                                                                                |
+| GET    | `/update/status`, POST `/update/run` | Self-update                                                                                                      |
+| POST   | `/harness/install`                   | Deterministic harness writes from browser                                                                        |
+| POST   | `/knowledge/update`                  | Local agents publish project lessons via Mac pairing token ([Q&A](../../qa/awb-knowledge-update-local-agent.md)) |
 
 AWC proxies some routes when the tab is on the same computer:
 

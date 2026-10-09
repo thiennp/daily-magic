@@ -1,8 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const scheduleMock = vi.hoisted(() =>
-  vi.fn(async (_input: unknown) => ({ scheduled: true })),
-);
+const scheduleMock = vi.hoisted(() => vi.fn(async () => ({ scheduled: true })));
 const sqlMock = vi.hoisted(() => vi.fn());
 
 vi.mock("@/lib/db", () => ({
@@ -11,8 +9,17 @@ vi.mock("@/lib/db", () => ({
 }));
 
 vi.mock("@/lib/projects/acl/messaging/scheduleProjectUpdatedNotify", () => ({
-  scheduleProjectUpdatedNotify: (input: unknown) => scheduleMock(input),
+  scheduleProjectUpdatedNotify: scheduleMock,
 }));
+
+const canSubmitMock = vi.hoisted(() => vi.fn(async () => true));
+
+vi.mock(
+  "@/lib/projects/knowledge/canUserSubmitProjectKnowledgeCandidate",
+  () => ({
+    canUserSubmitProjectKnowledgeCandidate: canSubmitMock,
+  }),
+);
 
 import createProjectKnowledgeCandidate from "@/lib/projects/knowledge/createProjectKnowledgeCandidate";
 
@@ -20,12 +27,12 @@ describe("createProjectKnowledgeCandidate notify hook", () => {
   beforeEach(() => {
     scheduleMock.mockClear();
     sqlMock.mockReset();
+    canSubmitMock.mockReset();
+    canSubmitMock.mockResolvedValue(true);
   });
 
   it("schedules after insert success", async () => {
-    sqlMock
-      .mockResolvedValueOnce([{ id: "proj-1" }])
-      .mockResolvedValueOnce([]);
+    sqlMock.mockResolvedValueOnce([]);
     const id = await createProjectKnowledgeCandidate({
       projectId: "proj-1",
       ownerUserId: "owner-1",
@@ -40,7 +47,7 @@ describe("createProjectKnowledgeCandidate notify hook", () => {
   });
 
   it("does not schedule when the project is missing", async () => {
-    sqlMock.mockResolvedValueOnce([]);
+    canSubmitMock.mockResolvedValue(false);
     await expect(
       createProjectKnowledgeCandidate({
         projectId: "missing",

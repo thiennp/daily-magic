@@ -85,6 +85,7 @@ export async function POST(
   const id = await createProjectKnowledgeCandidate({
     projectId: projectId.trim(),
     ownerUserId: auth.device.userId,
+    deviceId: auth.device.id,
     sourceRunId,
     kind: "lesson",
     summaryForCloud: lesson.trim().slice(0, 500),

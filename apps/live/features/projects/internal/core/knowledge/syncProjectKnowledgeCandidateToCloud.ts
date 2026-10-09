@@ -2,6 +2,10 @@ import { AGENT_WITCH_PAIRING_TOKEN_HEADER } from "../agentWitchDeviceAuth.consta
 import type { AgentWitchCloudApiConfig } from "../agentWitchCloudApi";
 import redactTextForProjectKnowledge from "./redactTextForProjectKnowledge";
 
+export type SyncProjectKnowledgeCandidateToCloudResult =
+  | { readonly ok: true; readonly id: string }
+  | { readonly ok: false; readonly httpStatus?: number };
+
 const syncProjectKnowledgeCandidateToCloud = async (
   config: AgentWitchCloudApiConfig,
   projectId: string,
@@ -9,7 +13,7 @@ const syncProjectKnowledgeCandidateToCloud = async (
     readonly sourceRunId?: string;
     readonly lesson: string;
   },
-): Promise<boolean> => {
+): Promise<SyncProjectKnowledgeCandidateToCloudResult> => {
   try {
     const response = await fetch(
       `${config.appOrigin}/api/agent-witch/projects/${encodeURIComponent(projectId)}/knowledge`,
@@ -29,17 +33,21 @@ const syncProjectKnowledgeCandidateToCloud = async (
     );
 
     if (!response.ok) {
-      return false;
+      return { ok: false, httpStatus: response.status };
     }
 
     const body: unknown = await response.json();
-    return (
+    if (
       typeof body === "object" &&
       body !== null &&
-      (body as { ok?: unknown }).ok === true
-    );
+      (body as { ok?: unknown }).ok === true &&
+      typeof (body as { id?: unknown }).id === "string"
+    ) {
+      return { ok: true, id: (body as { id: string }).id };
+    }
+    return { ok: false, httpStatus: response.status };
   } catch {
-    return false;
+    return { ok: false };
   }
 };
 

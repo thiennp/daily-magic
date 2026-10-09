@@ -153,4 +153,10 @@ export const BRIDGE_ROUTE_CATALOG: readonly BridgeRouteCatalogRow[] = [
     featureSlug: "prompt-optimizer-proxy",
     parentSlug: "awc-proxy",
   },
+  {
+    method: "POST",
+    pathname: "/knowledge/update",
+    featureSlug: "knowledge-proxy",
+    parentSlug: "awc-proxy",
+  },
 ];

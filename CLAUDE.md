@@ -134,6 +134,7 @@ npm run agent-witch:install
 - Local version file: `~/.agent-witch/install-version.json`
 - Local watchdog API (wake server): `GET http://127.0.0.1:47892/watchdog/status`, `GET /watchdog/logs`, `POST /watchdog/revive`
 - Local harness install API (wake server): `POST http://127.0.0.1:47892/harness/install` — browser sends `{ appOrigin, profileEmail?, bundle: { name, slug, items[] } }` for deterministic writes to `~/.agent-witch/harness/`
+- Local knowledge report API (wake server): `POST http://127.0.0.1:47892/knowledge/update` — `{ projectId, lesson, sourceRunId? }`; token-saver documents this for Cursor (`~/.cursor/rules/agent-witch-knowledge-report.mdc`), Codex (`~/.codex/AGENTS.md`), and Claude (`~/.claude/CLAUDE.md`)
 - Local self-update API (wake server): `GET http://127.0.0.1:47892/update/status`, `GET /update/logs`, `POST /update/run`
 - Server proxy (same computer as wake server): `GET /api/agent-witch/local-watchdog`, `POST /api/agent-witch/local-watchdog`, `GET /api/agent-witch/local-update`, `POST /api/agent-witch/local-update`
 - Mid-run input: agent outputs `[[AWAITING_INPUT]]` + question; browser answers over WS; Mac stores pending sessions in `pending-run-inputs.json` (see `.cursor/rules/agent-run-input-protocol.mdc`)

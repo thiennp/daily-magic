@@ -23,11 +23,15 @@ describe("writeGlobalTriggers", () => {
     expect(first.codexConfig.wrote).toBe(true);
     expect(first.codexAgents.wrote).toBe(true);
     expect(first.claudeHook.wrote).toBe(true);
+    expect(first.claudeClaudeMd.wrote).toBe(true);
+    expect(first.cursorKnowledgeRule.wrote).toBe(true);
     expect(first.cursorMcp.path.startsWith(root)).toBe(true);
     const second = writeGlobalTriggers({ io });
     expect(second.cursorMcp.wrote).toBe(false);
+    expect(second.cursorKnowledgeRule.wrote).toBe(false);
     expect(second.codexConfig.wrote).toBe(false);
     expect(second.codexAgents.wrote).toBe(false);
+    expect(second.claudeClaudeMd.wrote).toBe(false);
     expect(second.claudeHook.wrote).toBe(false);
   });
 });
