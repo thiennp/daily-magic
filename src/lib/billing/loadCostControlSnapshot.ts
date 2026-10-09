@@ -20,7 +20,7 @@ export const loadCostControlSnapshot = async (input?: {
   const sql = getSql();
   const rows = asRowArray(
     await sql`
-      SELECT railway_spend_eur, neon_spend_eur, related_infra_spend_eur, trial_gate
+      SELECT railway_spend_eur, neon_spend_eur, related_infra_spend_eur
       FROM billing_infra_spend_months
       WHERE month_key = ${month}
       LIMIT 1
@@ -46,14 +46,12 @@ export const loadCostControlSnapshot = async (input?: {
   const related = num(row?.related_infra_spend_eur);
   const spend = railway + neon + related + estimatedUserSpend;
   const resolved = resolveCostControlStatus({ spendEur: spend });
-  const storedGate =
-    row?.trial_gate === "closed" ? "closed" : resolved.trialGate;
   return {
     month,
     trialPlusAdminFreeSpendEur: spend,
     budgetEur: FREE_TRIAL_INFRA_BUDGET_EUR,
     status: resolved.status,
-    trialGate: storedGate,
+    trialGate: resolved.trialGate,
     signals: {
       railwaySpendEur: railway,
       neonSpendEur: neon,
