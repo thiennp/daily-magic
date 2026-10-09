@@ -1,7 +1,7 @@
 import isHumanInviteEmailConfigured from "@/lib/email/isHumanInviteEmailConfigured";
 import sendHumanInviteEmail from "@/lib/email/sendHumanInviteEmail";
 import { getUserById } from "@/lib/auth/userRepository";
-import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
+import { authorizeProjectInviter } from "@/lib/projects/acl/authorizeProjectInviter";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { buildHumanInviteUrl } from "@/lib/projects/acl/humanInvites/buildHumanInviteUrl";
 import { parseHumanInviteRole } from "@/lib/projects/acl/humanInvites/clampHumanInviteParams";
@@ -56,7 +56,7 @@ export const sendHumanProjectEmailInvite = async (input: {
   readonly requireEmailMatch?: unknown;
   readonly requiresApproval?: unknown;
 }): Promise<SendHumanEmailInviteResult> => {
-  const access = await authorizeProjectOwner({
+  const access = await authorizeProjectInviter({
     projectId: input.projectId,
     actorUserId: input.ownerUserId,
   });

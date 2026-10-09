@@ -14,8 +14,8 @@ const helpers = vi.hoisted(() => ({
 }));
 const logCreated = vi.hoisted(() => vi.fn());
 
-vi.mock("@/lib/projects/acl/authorizeProjectOwner", () => ({
-  authorizeProjectOwner: authorize,
+vi.mock("@/lib/projects/acl/authorizeProjectInviter", () => ({
+  authorizeProjectInviter: authorize,
 }));
 vi.mock("@/lib/db", () => ({
   getSql: () => sqlMock,

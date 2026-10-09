@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 
-import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
+import { authorizeProjectInviter } from "@/lib/projects/acl/authorizeProjectInviter";
 import { buildHumanInviteUrl } from "@/lib/projects/acl/humanInvites/buildHumanInviteUrl";
 import {
   clampHumanInviteExpiresDays,
@@ -28,10 +28,7 @@ export type IssueHumanInviteResult =
   | {
       readonly ok: false;
       readonly code:
-        | "not_found"
-        | "forbidden"
-        | "invalid"
-        | "email_required_for_lock";
+        "not_found" | "forbidden" | "invalid" | "email_required_for_lock";
     };
 
 export const issueHumanProjectInvite = async (input: {
@@ -42,7 +39,7 @@ export const issueHumanProjectInvite = async (input: {
   readonly requireEmailMatch?: unknown;
   readonly expiresInDays?: unknown;
 }): Promise<IssueHumanInviteResult> => {
-  const access = await authorizeProjectOwner({
+  const access = await authorizeProjectInviter({
     projectId: input.projectId,
     actorUserId: input.ownerUserId,
   });

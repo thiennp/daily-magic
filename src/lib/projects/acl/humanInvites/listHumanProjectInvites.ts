@@ -1,4 +1,4 @@
-import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
+import { authorizeProjectInviter } from "@/lib/projects/acl/authorizeProjectInviter";
 import mapHumanInviteRow from "@/lib/projects/acl/humanInvites/mapHumanInviteRow";
 import { selectAwaitingApprovalHumanInviteRows } from "@/lib/projects/acl/humanInvites/selectAwaitingApprovalHumanInviteRows";
 import { selectUsableHumanInviteRows } from "@/lib/projects/acl/humanInvites/selectUsableHumanInviteRows";
@@ -9,12 +9,12 @@ export type ListHumanInvitesResult =
   | { readonly ok: true; readonly invites: readonly HumanInviteRecord[] }
   | { readonly ok: false; readonly code: "not_found" | "forbidden" };
 
-/** Owner-only list: auth via authorizeProjectOwner, then usable SELECT. */
+/** Owner or member list: auth via authorizeProjectInviter, then usable SELECT. */
 export const listHumanProjectInvites = async (input: {
   readonly projectId: string;
   readonly ownerUserId: string;
 }): Promise<ListHumanInvitesResult> => {
-  const access = await authorizeProjectOwner({
+  const access = await authorizeProjectInviter({
     projectId: input.projectId,
     actorUserId: input.ownerUserId,
   });

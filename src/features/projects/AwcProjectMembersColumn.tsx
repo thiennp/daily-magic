@@ -1,5 +1,6 @@
 "use client";
 
+import AwcProjectMembersMemberContent from "@/features/projects/members/AwcProjectMembersMemberContent";
 import AwcProjectMembersOwnerContent from "@/features/projects/members/AwcProjectMembersOwnerContent";
 import AwcProjectMembersRailMenu from "@/features/projects/members/AwcProjectMembersRailMenu";
 import { AWC_PROJECT_LEAVE_COPY } from "@/features/projects/awcProjectLeaveCopy.constant";
@@ -36,6 +37,13 @@ export default function AwcProjectMembersColumn({
   onLeave,
 }: AwcProjectMembersColumnProps) {
   const label = PROJECT_PAGE_LAYOUT_V2_COPY.membersColumnLabel;
+  const leaveMenu = onLeave ? (
+    <AwcProjectMembersRailMenu
+      items={[
+        { label: AWC_PROJECT_LEAVE_COPY.trigger, run: onLeave, bad: true },
+      ]}
+    />
+  ) : null;
   return (
     <aside
       id="project-members-column"
@@ -52,25 +60,21 @@ export default function AwcProjectMembersColumn({
         />
       ) : (
         <>
-          <AwcProjectMembersRailHeading
-            count={null}
-            menu={
-              onLeave ? (
-                <AwcProjectMembersRailMenu
-                  items={[
-                    {
-                      label: AWC_PROJECT_LEAVE_COPY.trigger,
-                      run: onLeave,
-                      bad: true,
-                    },
-                  ]}
-                />
-              ) : null
-            }
-          />
-          <p className="px-3.5 text-[13px] text-awc-fg-muted dark:text-gray-400">
-            {C.viewerHint}
-          </p>
+          {pageActorRole === "member" ? (
+            <AwcProjectMembersMemberContent
+              projectId={projectId}
+              ownerEmail={ownerEmail}
+              ownerDisplayName={ownerDisplayName}
+              menu={leaveMenu}
+            />
+          ) : (
+            <>
+              <AwcProjectMembersRailHeading count={null} menu={leaveMenu} />
+              <p className="px-3.5 text-[13px] text-awc-fg-muted dark:text-gray-400">
+                {C.viewerHint}
+              </p>
+            </>
+          )}
         </>
       )}
     </aside>
