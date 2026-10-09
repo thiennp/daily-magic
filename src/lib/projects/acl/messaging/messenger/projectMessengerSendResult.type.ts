@@ -1,4 +1,5 @@
 import type { ProjectMessagePostDenyCode } from "@/lib/projects/acl/messaging/decideProjectMessagePostAccess";
+import type { BotMessageBlock } from "@/lib/projects/acl/messaging/decideBotIsolation";
 import type { ProjectMessageRateLimitFailure } from "@/lib/projects/acl/messaging/assertProjectMessageDispatchRateLimits";
 
 export type ProjectMessengerSendFailureCode =
@@ -22,4 +23,9 @@ export type ProjectMessengerSendResult =
       readonly watchedCount: number;
     }
   | { readonly ok: false; readonly code: ProjectMessengerSendFailureCode }
+  | {
+      readonly ok: false;
+      readonly code: BotMessageBlock;
+      readonly message: string;
+    }
   | ProjectMessageRateLimitFailure;

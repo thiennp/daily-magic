@@ -83,7 +83,8 @@ export const sendHumanProjectEmailInvite = async (input: {
     return { ok: false, code: "rate_limited" };
   }
 
-  const requiresApproval = parseRequiresApproval(input.requiresApproval);
+  const requiresApproval =
+    !access.owner || parseRequiresApproval(input.requiresApproval);
   const token = createHumanInviteToken();
   const inserted = await insertHumanEmailInviteRow({
     projectId: input.projectId,

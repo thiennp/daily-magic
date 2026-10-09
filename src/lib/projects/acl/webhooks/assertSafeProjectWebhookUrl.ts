@@ -22,6 +22,9 @@ const isPrivateOrLocalIp = (ip: string): boolean => {
     if (a === 172 && b >= 16 && b <= 31) return true;
     if (a === 192 && b === 168) return true;
     if (a === 100 && b >= 64 && b <= 127) return true; // CGNAT
+    if (a === 198 && (b === 18 || b === 19)) return true; // benchmarking
+    if (a === 192 && b === 0 && parts[2] === 0) return true; // IETF protocol assignments
+    if (a >= 224) return true; // multicast + reserved
     return false;
   }
   if (version === 6) {
@@ -40,7 +43,10 @@ const isPrivateOrLocalIp = (ip: string): boolean => {
 
 export type SafeWebhookUrlResult =
   | { readonly ok: true; readonly url: URL }
-  | { readonly ok: false; readonly code: "invalid_url" | "https_only" | "blocked_host" };
+  | {
+      readonly ok: false;
+      readonly code: "invalid_url" | "https_only" | "blocked_host";
+    };
 
 /** A3.1 SSRF: https-only; deny private/loopback/link-local/metadata (resolved). */
 export const assertSafeProjectWebhookUrl = async (

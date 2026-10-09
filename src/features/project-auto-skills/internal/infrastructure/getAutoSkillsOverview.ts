@@ -38,6 +38,17 @@ export const getAutoSkillsDeviceView = async (input: {
   readonly pendingClusterIds: readonly string[];
 }> => {
   const role = await resolveProjectSkillMemberRole(input);
+  if (!role.ok) {
+    return {
+      enabled: false,
+      judgePref: "",
+      judgeAgent: null,
+      publishMode: "",
+      neverClusterIds: [],
+      savedClusterIds: [],
+      pendingClusterIds: [],
+    };
+  }
   const settings = await getAutoSkillsSettingsRow(input.projectId);
   const rows = await listAutoSkillSuggestions(input.projectId, [
     "pending",
@@ -47,7 +58,7 @@ export const getAutoSkillsDeviceView = async (input: {
   const ids = (status: string): string[] =>
     rows.filter((r) => r.status === status).map((r) => r.clusterId);
   return {
-    enabled: role.ok && role.role === "owner" && settings.enabled,
+    enabled: role.role === "owner" && settings.enabled,
     judgePref: settings.judgePref,
     judgeAgent: settings.judgeAgent,
     publishMode: settings.publishMode,

@@ -3,6 +3,7 @@ import type {
   ProjectPitfallFailure,
   ProjectPitfallHitRecord,
 } from "@/features/project-pitfalls/internal/core/projectPitfall.type";
+import { resolveProjectPitfallAccess } from "@/features/project-pitfalls/internal/infrastructure/db/resolveProjectPitfallAccess";
 import { recordProjectPitfallHitRow } from "@/features/project-pitfalls/internal/infrastructure/db/recordProjectPitfallHitRow";
 import { getProjectPitfall } from "@/features/project-pitfalls/internal/infrastructure/orchestrators/getProjectPitfall";
 
@@ -26,6 +27,16 @@ export const recordProjectPitfallHit = async (input: {
   );
   if (!parsed.ok) {
     return parsed;
+  }
+  const access = await resolveProjectPitfallAccess({
+    projectId: input.projectId.trim(),
+    actorUserId: input.actorUserId,
+  });
+  if (!access.ok) {
+    return access;
+  }
+  if (access.role === "viewer") {
+    return { ok: false, code: "forbidden" };
   }
   const found = await getProjectPitfall(input);
   if (!found.ok) {

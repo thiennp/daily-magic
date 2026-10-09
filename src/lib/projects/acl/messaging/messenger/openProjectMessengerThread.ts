@@ -1,6 +1,6 @@
+import { isProjectMessengerThreadReachable } from "@/lib/projects/acl/messaging/messenger/isProjectMessengerThreadReachable";
 import { detectProjectMessengerLocalLive } from "@/lib/projects/acl/messaging/messenger/detectProjectMessengerLocalLive";
 import { ensureProjectMessengerSchema } from "@/lib/projects/acl/messaging/messenger/ensureProjectMessengerSchema";
-import { loadProjectMessengerBots } from "@/lib/projects/acl/messaging/messenger/loadProjectMessengerBots";
 import { loadProjectMessengerNeonThreadPage } from "@/lib/projects/acl/messaging/messenger/loadProjectMessengerNeonThreadPage";
 import { loadProjectMessengerOlderFromLocal } from "@/lib/projects/acl/messaging/messenger/loadProjectMessengerOlderFromLocal";
 import { markProjectMessengerThreadRead } from "@/lib/projects/acl/messaging/messenger/markProjectMessengerThreadRead";
@@ -55,12 +55,12 @@ export const openProjectMessengerThread = async (input: {
   }
   await ensureProjectMessengerSchema();
 
-  if (input.threadKey !== PROJECT_MESSENGER_WHOLE_THREAD_KEY) {
-    const bots = await loadProjectMessengerBots(viewer.projectId);
-    if (!bots.some((bot) => bot.membershipId === input.threadKey)) {
-      return { ok: false, code: "thread_not_found" };
-    }
-  }
+  const reachable = await isProjectMessengerThreadReachable({
+    ...input,
+    projectId: viewer.projectId,
+    viewerUserId: input.actorUserId,
+  });
+  if (!reachable) return { ok: false, code: "thread_not_found" };
 
   const before = input.before ?? null;
   const limit = input.limit ?? PROJECT_MESSENGER_PAGE_DEFAULT_LIMIT;

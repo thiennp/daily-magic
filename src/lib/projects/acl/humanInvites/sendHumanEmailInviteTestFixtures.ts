@@ -40,7 +40,7 @@ export const primeSendInviteMocks = (m: {
     readonly markHumanEmailInviteSent: MockFn;
   };
 }): void => {
-  m.authorize.mockResolvedValue({ allow: true });
+  m.authorize.mockResolvedValue({ allow: true, owner: true });
   m.configured.mockReturnValue(true);
   m.getUser.mockResolvedValue({
     id: "owner-1",

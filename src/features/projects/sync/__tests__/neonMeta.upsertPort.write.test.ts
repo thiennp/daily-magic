@@ -44,64 +44,36 @@ const baseMeta = (partial: Record<string, unknown> = {}) =>
 
 const OWNER = { userId: "owner-1", isOwner: true } as const;
 
-describe("createPushNeonMetaPort (History stub wire)", () => {
+describe("upsertProjectTaskNeonMeta writes", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     sqlMock.mockResolvedValue([]);
   });
 
-  it("rejects body fields and does not write Neon", async () => {
-    const port = createPushNeonMetaPort("proj-1", OWNER);
-    const result = await port.pushNeonMeta([
-      {
-        ...baseMeta({ status: "queued" }),
-        body: "NOPE",
-      } as never,
-    ]);
-    expect(result.ok).toBe(false);
-    if (result.ok) throw new Error("unreachable");
-    expect(result.reason).toMatch(/body fields not allowed/);
-    expect(sqlMock).not.toHaveBeenCalled();
-  });
-
-  it("accepts allowlisted meta batch", async () => {
-    const port = createPushNeonMetaPort("proj-1", OWNER);
-    const result = await port.pushNeonMeta([baseMeta()]);
-    expect(result).toEqual({ ok: true });
-  });
-
-  it("T15 I/O: terminal Neon row → updatedAgentRunIds empty (no resurrection)", async () => {
-    sqlMock.mockImplementation(async (...args: unknown[]) => {
-      const strings = args[0] as TemplateStringsArray;
-      const sqlText = strings.join(" ");
-      if (sqlText.includes("SELECT") && sqlText.includes("agent_runs")) {
-        return [
-          {
-            id: "1",
-            status: "completed",
-            updated_at: "2026-10-07T00:30:00.000000Z",
-          },
-        ];
-      }
-      if (sqlText.includes("UPDATE")) {
-        throw new Error("UPDATE must not run for terminal row");
-      }
-      return [];
-    });
-
+  it("queued status is no-op (never pending_approval write)", async () => {
     const result = await upsertProjectTaskNeonMeta({
       projectId: "proj-1",
       actor: OWNER,
-      batch: [
-        baseMeta({
-          status: "running",
-          updatedAt: "2026-10-07T02:00:00.000000Z",
-        }),
-      ],
+      batch: [baseMeta({ status: "queued" })],
     });
     expect(result.ok).toBe(true);
     if (!result.ok) throw new Error("unreachable");
     expect(result.updatedAgentRunIds).toEqual([]);
-    expect(registerCache).not.toHaveBeenCalled();
+    expect(sqlMock).not.toHaveBeenCalled();
+  });
+
+  it("all-or-nothing: projectId mismatch rejects before any write", async () => {
+    const result = await upsertProjectTaskNeonMeta({
+      projectId: "proj-1",
+      actor: OWNER,
+      batch: [
+        baseMeta({ id: "a", agentRunId: "a" }),
+        baseMeta({ id: "b", agentRunId: "b", projectId: "other" }),
+      ],
+    });
+    expect(result.ok).toBe(false);
+    if (result.ok) throw new Error("unreachable");
+    expect(result.reason).toMatch(/projectId mismatch/);
+    expect(sqlMock).not.toHaveBeenCalled();
   });
 });

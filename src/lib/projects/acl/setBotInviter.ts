@@ -22,9 +22,9 @@ const isEligibleInviter = async (
 };
 
 /**
- * Claim an assistant / change who invited it. Unclaimed (no inviter): the
- * owner or any member may set it. Already claimed: only the person who owns
- * the bot may change it. The new inviter is the owner or an active member.
+ * Claim an assistant / change who invited it. Only the person who owns the bot
+ * may do it; for an unclaimed legacy assistant the project owner may too. A
+ * member cannot take over somebody else's assistant. The new inviter is the owner or an active member.
  */
 export const setBotInviter = async (input: {
   readonly projectId: string;
@@ -45,11 +45,12 @@ export const setBotInviter = async (input: {
   );
   if (project === null || rows.length === 0)
     return { ok: false, code: "not_found" };
+  // Whoever does not own the assistant (its person, or the project owner while unclaimed) cannot take it over.
   const unclaimed = !rows[0].invited_by_user_id;
-  if (
-    !unclaimed &&
-    !(await isBotOwnedBy(String(rows[0].user_id), input.actorUserId))
-  ) {
+  const mayChange =
+    (unclaimed && actor.isOwner) ||
+    (await isBotOwnedBy(String(rows[0].user_id), input.actorUserId));
+  if (!mayChange) {
     return { ok: false, code: "forbidden" };
   }
   const inviterUserId = input.inviterUserId?.trim() || input.actorUserId;

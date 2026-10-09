@@ -9,23 +9,14 @@ import { requireAuth } from "@/lib/auth/requireAuth";
 import { authorizeProjectPageActor } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import { isProjectSyncModuleEnabled } from "@/features/projects/sync/projectSyncFlag";
+import { readTasksMetaBody } from "@/app/api/projects/[projectId]/sync/tasks-meta/readTasksMetaBody";
 import { upsertProjectTaskNeonMeta } from "@/features/projects/sync/adapters/upsertProjectTaskNeonMeta";
 import { gateNeonUpsertAfterIdb } from "@/features/projects/sync/adapters/neonMetaIdbGuard";
-import type { IdbFailureKind } from "@/features/projects/sync/adapters/neonMetaIdbGuard";
 
 export const dynamic = "force-dynamic";
 
 type RouteContext = {
   params: Promise<{ readonly projectId: string }>;
-};
-
-type TasksMetaBody = {
-  readonly batch?: unknown;
-  /** Optional IDB outcome from client reconcile — Soft degrade if failed. */
-  readonly idb?: {
-    readonly ok: boolean;
-    readonly failure?: IdbFailureKind;
-  };
 };
 
 export async function POST(
@@ -60,11 +51,12 @@ export async function POST(
     );
   }
 
-  let body: TasksMetaBody;
-  try {
-    body = (await request.json()) as TasksMetaBody;
-  } catch {
-    return Response.json({ ok: false, reason: "invalid_json" }, { status: 400 });
+  const body = await readTasksMetaBody(request);
+  if (body === null) {
+    return Response.json(
+      { ok: false, reason: "invalid_json" },
+      { status: 400 },
+    );
   }
 
   const batch = Array.isArray(body.batch) ? body.batch : null;
@@ -97,13 +89,11 @@ export async function POST(
 
   const result = await upsertProjectTaskNeonMeta({
     projectId,
+    actor: { userId: actor.id, isOwner: page.role === "owner" },
     batch: batch as Readonly<Record<string, unknown>>[],
   });
   if (!result.ok) {
-    return Response.json(
-      { ok: false, reason: result.reason },
-      { status: 400 },
-    );
+    return Response.json({ ok: false, reason: result.reason }, { status: 400 });
   }
   return Response.json({
     ok: true,

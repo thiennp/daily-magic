@@ -9,6 +9,7 @@ import {
   givenMember,
   givenOutsider,
   givenParts,
+  givenViewer,
 } from "@/features/project-pitfalls/internal/infrastructure/orchestrators/projectPitfallOrchestrators.mocks";
 import { upsertProjectPitfall } from "@/features/project-pitfalls/internal/infrastructure/orchestrators/upsertProjectPitfall";
 
@@ -92,6 +93,17 @@ describe("upsertProjectPitfall", () => {
         body: body({ symptom: "" }),
       }),
     ).toMatchObject({ ok: false, code: "invalid_arguments", field: "symptom" });
+    expect(upsertProjectPitfallRow).not.toHaveBeenCalled();
+  });
+
+  it("a read-only viewer cannot write a project rule", async () => {
+    givenViewer();
+    const result = await upsertProjectPitfall({
+      actorUserId: "u1",
+      projectId: "p1",
+      body: body({ id: "stale-next", avoidance: "Our way" }),
+    });
+    expect(result).toEqual({ ok: false, code: "forbidden" });
     expect(upsertProjectPitfallRow).not.toHaveBeenCalled();
   });
 });

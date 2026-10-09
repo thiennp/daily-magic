@@ -2,12 +2,12 @@ import type { ProjectPitfallFailure } from "@/features/project-pitfalls/internal
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
-/** ACL = project membership: owner or active member; else not_found / forbidden. */
+/** ACL = project membership: owner, active member or read-only viewer; else not_found / forbidden. */
 export const resolveProjectPitfallAccess = async (input: {
   readonly projectId: string;
   readonly actorUserId: string;
 }): Promise<
-  | { readonly ok: true; readonly role: "owner" | "member" }
+  | { readonly ok: true; readonly role: "owner" | "member" | "viewer" }
   | ProjectPitfallFailure
 > => {
   const project = await getUserProjectById(input.projectId);
@@ -21,7 +21,6 @@ export const resolveProjectPitfallAccess = async (input: {
     input.projectId,
     input.actorUserId,
   );
-  return membership === null
-    ? { ok: false, code: "forbidden" }
-    : { ok: true, role: "member" };
+  if (membership === null) return { ok: false, code: "forbidden" };
+  return { ok: true, role: membership.role === "viewer" ? "viewer" : "member" };
 };

@@ -13,6 +13,9 @@ vi.mock(
   "@/lib/projects/acl/messaging/messenger/ensureProjectMessengerSchema",
   () => ({ ensureProjectMessengerSchema: async () => undefined }),
 );
+vi.mock("@/lib/projects/acl/messaging/messenger/loadClosedBotSeats", () => ({
+  loadClosedBotSeats: async () => new Map(),
+}));
 vi.mock(
   "@/lib/projects/acl/messaging/messenger/loadProjectMessengerBots",
   () => ({

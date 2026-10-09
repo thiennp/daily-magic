@@ -6,6 +6,8 @@ const STATUS_BY_CODE: Readonly<Record<string, number>> = {
   missing_scope: 403,
   naming_required: 409,
   no_bots: 409,
+  bot_closed: 403,
+  bot_isolated: 403,
   rate_limited: 429,
 };
 

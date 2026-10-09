@@ -24,13 +24,13 @@ describe("authorizeProjectInviter", () => {
 
   it("allows the owner without looking at memberships", async () => {
     authorizeOwner.mockResolvedValue({ allow: true });
-    expect(await ask()).toEqual({ allow: true });
+    expect(await ask()).toEqual({ allow: true, owner: true });
     expect(getMembership).not.toHaveBeenCalled();
   });
 
   it("allows an active human member", async () => {
     getMembership.mockResolvedValue({ memberKind: "human", role: "member" });
-    expect(await ask()).toEqual({ allow: true });
+    expect(await ask()).toEqual({ allow: true, owner: false });
   });
 
   it("refuses viewers, bots and non-members; keeps not_found", async () => {

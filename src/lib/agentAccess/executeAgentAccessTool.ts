@@ -1,3 +1,4 @@
+import { guardProjectKeyCall } from "@/lib/agentAccess/guardProjectKeyCall";
 import type { AgentAccessFeatureToolExecutor } from "@/lib/agentAccess/agentAccessFeatureToolExecutor.type";
 import { executeIssueClaimBotCodeTool } from "@/lib/agentAccess/claimBot/executeIssueClaimBotCodeTool";
 import { executeAgentAccessAccountTools } from "@/lib/agentAccess/executeAgentAccessAccountTools";
@@ -8,7 +9,6 @@ import { executeAgentAccessRunTool } from "@/lib/agentAccess/executeAgentAccessR
 import { executeAgentAccessSendTask } from "@/lib/agentAccess/executeAgentAccessSendTask";
 import { executeAgentAccessWorkflowTool } from "@/lib/agentAccess/executeAgentAccessWorkflowTool";
 import { guardAgentAccessToolUse } from "@/lib/agentAccess/guardAgentAccessToolUse";
-import { guardProjectApiKeyToolUse } from "@/lib/agentAccess/guardProjectApiKeyToolUse";
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
 import {
   isMcpBearerAuth,
@@ -35,7 +35,7 @@ export const executeAgentAccessTool = async (input: {
   }
 
   if (auth.kind === "project_api_key") {
-    const projectGate = guardProjectApiKeyToolUse({
+    const projectGate = await guardProjectKeyCall({
       name: input.name,
       args: input.args,
       projectAuth: auth.projectAuth,

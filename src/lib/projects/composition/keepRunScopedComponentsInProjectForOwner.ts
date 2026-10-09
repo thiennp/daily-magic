@@ -1,5 +1,5 @@
 import keepRunScopedComponentsInProject from "@/lib/projects/composition/keepRunScopedComponentsInProject";
-import listRunScopedEntriesFromAgentRun from "@/lib/projects/composition/listRunScopedEntriesFromAgentRun";
+import loadAgentRunDispatchCompositionExtras from "@/lib/dispatch/loadAgentRunDispatchCompositionExtras";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
 const keepRunScopedComponentsInProjectForOwner = async (input: {
@@ -16,9 +16,13 @@ const keepRunScopedComponentsInProjectForOwner = async (input: {
     return { ok: false, errorMessage: "Project not found." };
   }
 
-  const runScopedEntries = await listRunScopedEntriesFromAgentRun(
-    input.agentRunId,
-  );
+  const extras = await loadAgentRunDispatchCompositionExtras(input.agentRunId);
+  const runScopedEntries =
+    extras.projectId === input.projectId
+      ? (extras.compositionSnapshot?.entries.filter(
+          (entry) => entry.scope === "run",
+        ) ?? [])
+      : [];
 
   if (runScopedEntries.length === 0) {
     return {

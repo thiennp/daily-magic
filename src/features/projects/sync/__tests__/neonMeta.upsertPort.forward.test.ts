@@ -44,47 +44,56 @@ const baseMeta = (partial: Record<string, unknown> = {}) =>
 
 const OWNER = { userId: "owner-1", isOwner: true } as const;
 
-describe("createPushNeonMetaPort (History stub wire)", () => {
+describe("upsertProjectTaskNeonMeta forward write", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     sqlMock.mockResolvedValue([]);
   });
 
-  it("rejects body fields and does not write Neon", async () => {
-    const port = createPushNeonMetaPort("proj-1", OWNER);
-    const result = await port.pushNeonMeta([
-      {
-        ...baseMeta({ status: "queued" }),
-        body: "NOPE",
-      } as never,
-    ]);
-    expect(result.ok).toBe(false);
-    if (result.ok) throw new Error("unreachable");
-    expect(result.reason).toMatch(/body fields not allowed/);
-    expect(sqlMock).not.toHaveBeenCalled();
-  });
-
-  it("accepts allowlisted meta batch", async () => {
-    const port = createPushNeonMetaPort("proj-1", OWNER);
-    const result = await port.pushNeonMeta([baseMeta()]);
-    expect(result).toEqual({ ok: true });
-  });
-
-  it("T15 I/O: terminal Neon row → updatedAgentRunIds empty (no resurrection)", async () => {
+  it("forward write running→completed updates and syncs cache", async () => {
     sqlMock.mockImplementation(async (...args: unknown[]) => {
       const strings = args[0] as TemplateStringsArray;
       const sqlText = strings.join(" ");
-      if (sqlText.includes("SELECT") && sqlText.includes("agent_runs")) {
+      if (sqlText.includes("SELECT") && !sqlText.includes("UPDATE")) {
         return [
           {
             id: "1",
-            status: "completed",
+            status: "running",
             updated_at: "2026-10-07T00:30:00.000000Z",
           },
         ];
       }
       if (sqlText.includes("UPDATE")) {
-        throw new Error("UPDATE must not run for terminal row");
+        return [
+          {
+            id: "1",
+            group_id: null,
+            requester_user_id: "u1",
+            executor_user_id: "u1",
+            prompt: "p",
+            status: "completed",
+            dispatch_policy: "approval",
+            result_output: null,
+            result_exit_code: null,
+            result_outcome_code: null,
+            denial_reason: null,
+            created_at: "2026-10-07T00:00:00.000000Z",
+            updated_at: "2026-10-07T01:00:00.000000Z",
+            started_at: "2026-10-07T00:30:00.000000Z",
+            completed_at: "2026-10-07T01:00:00.000000Z",
+            approval_expires_at: null,
+            capability_id: null,
+            capability_version_id: null,
+            device_id: null,
+            project_id: "proj-1",
+            composition_snapshot_id: null,
+            writer_agent: "claude-cli",
+            last_run_heartbeat_at: null,
+            stop_requested_at: null,
+            estimate_seconds: null,
+            actual_seconds: null,
+          },
+        ];
       }
       return [];
     });
@@ -92,16 +101,11 @@ describe("createPushNeonMetaPort (History stub wire)", () => {
     const result = await upsertProjectTaskNeonMeta({
       projectId: "proj-1",
       actor: OWNER,
-      batch: [
-        baseMeta({
-          status: "running",
-          updatedAt: "2026-10-07T02:00:00.000000Z",
-        }),
-      ],
+      batch: [baseMeta({ status: "done" })],
     });
     expect(result.ok).toBe(true);
     if (!result.ok) throw new Error("unreachable");
-    expect(result.updatedAgentRunIds).toEqual([]);
-    expect(registerCache).not.toHaveBeenCalled();
+    expect(result.updatedAgentRunIds).toEqual(["1"]);
+    expect(registerCache).toHaveBeenCalledOnce();
   });
 });

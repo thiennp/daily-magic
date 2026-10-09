@@ -31,6 +31,9 @@ export const upsertProjectPitfall = async (input: {
   if (!access.ok) {
     return access;
   }
+  if (access.role === "viewer") {
+    return { ok: false, code: "forbidden" };
+  }
   return applyProjectPitfallUpsert({
     projectId,
     actorUserId: input.actorUserId,

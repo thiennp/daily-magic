@@ -1,3 +1,4 @@
+import { assertSafeProjectWebhookUrl } from "@/lib/projects/acl/webhooks/assertSafeProjectWebhookUrl";
 import { signProjectWebhookBody } from "@/lib/projects/acl/webhooks/projectWebhookSecret";
 import { readProjectWakeRetryAfterSeconds } from "@/lib/projects/acl/webhooks/readProjectWakeRetryAfterSeconds";
 
@@ -27,8 +28,12 @@ export const postSignedProjectMembershipWebhook = async (input: {
     body: input.body,
   });
   try {
+    // DNS can change after registration: re-check right before sending, never follow redirects.
+    const safe = await assertSafeProjectWebhookUrl(input.webhookUrl);
+    if (!safe.ok) return { ok: false, error: safe.code };
     const response = await fetch(input.webhookUrl, {
       method: "POST",
+      redirect: "manual",
       headers: {
         "content-type": "application/json",
         "x-awc-signature": signature,

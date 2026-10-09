@@ -17,6 +17,13 @@ export const givenMember = (): void => {
   });
 };
 
+export const givenViewer = (): void => {
+  vi.mocked(resolveProjectPitfallAccess).mockResolvedValue({
+    ok: true,
+    role: "viewer",
+  });
+};
+
 export const givenOwner = (): void => {
   vi.mocked(resolveProjectPitfallAccess).mockResolvedValue({
     ok: true,

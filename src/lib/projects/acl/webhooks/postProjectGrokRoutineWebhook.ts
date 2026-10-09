@@ -1,3 +1,4 @@
+import { assertSafeProjectWebhookUrl } from "@/lib/projects/acl/webhooks/assertSafeProjectWebhookUrl";
 import { readProjectWakeRetryAfterSeconds } from "@/lib/projects/acl/webhooks/readProjectWakeRetryAfterSeconds";
 
 const GROK_ROUTINE_WAKE_TIMEOUT_MS = 3_000;
@@ -23,8 +24,12 @@ export const postProjectGrokRoutineWebhook = async (input: {
   readonly body: string;
 }): Promise<ProjectGrokRoutineWebhookPostResult> => {
   try {
+    // DNS can change after registration: re-check right before sending, never follow redirects.
+    const safe = await assertSafeProjectWebhookUrl(input.webhookUrl);
+    if (!safe.ok) return { result: "fetch_failed" };
     const response = await fetch(input.webhookUrl, {
       method: "POST",
+      redirect: "manual",
       headers: {
         "content-type": "application/json",
         Authorization: `Bearer ${input.bearer}`,

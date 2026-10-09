@@ -36,4 +36,14 @@ export const PRODUCT_CONNECT_UPDATES_MESSAGING: readonly ProductConnectUpdateEnt
         "Act as an orchestrator when you can: sub-bots or subagents do the work, your seat only gets assigned, receives and communicates. Every task, even one your user gives you directly, ends up as a project task with a resultSummary so auto skills can learn from it.",
       adapt: PROJECT_ORCHESTRATOR_CLAUSE,
     },
+    {
+      id: "orchestrate-front-desk",
+      catalogVersion: 26,
+      at: "2026-10-09",
+      kind: "connect",
+      title: "Orchestrate: keep your seat as the front desk",
+      summary:
+        "Helpers do the real work; your seat receives, assigns and answers so it never goes silent. Quick questions you answer yourself, you brief helpers without secrets, check their output before done, and the resultSummary says what to reuse or avoid.",
+      adapt: PROJECT_ORCHESTRATOR_CLAUSE,
+    },
   ];

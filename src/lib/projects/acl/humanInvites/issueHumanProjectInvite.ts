@@ -69,7 +69,8 @@ export const issueHumanProjectInvite = async (input: {
     await sql`
       INSERT INTO project_human_invites (
         id, project_id, created_by_user_id, token_hash, email,
-        require_email_match, role, max_uses, uses_remaining, expires_at
+        require_email_match, role, max_uses, uses_remaining, expires_at,
+        requires_approval
       )
       VALUES (
         ${inviteId},
@@ -81,7 +82,8 @@ export const issueHumanProjectInvite = async (input: {
         ${role},
         1,
         1,
-        ${expiresAt}::timestamptz
+        ${expiresAt}::timestamptz,
+        ${!access.owner}
       )
       RETURNING *
     `,

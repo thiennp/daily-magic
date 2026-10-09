@@ -1,5 +1,6 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
+import { checkBotIsolation } from "@/lib/projects/acl/messaging/checkBotIsolation";
 import { assertProjectMessageDispatchRateLimits } from "@/lib/projects/acl/messaging/assertProjectMessageDispatchRateLimits";
 import { insertProjectMessageWithDeliveries } from "@/lib/projects/acl/messaging/insertProjectMessageWithDeliveries";
 import { decideProjectMessengerSender } from "@/lib/projects/acl/messaging/messenger/decideProjectMessengerSender";
@@ -52,6 +53,13 @@ export const orchestrateProjectMessengerSend = async (input: {
   });
   if (!picked.ok) return picked;
   const { sender } = decided;
+  // Same lock as project_dispatch: closed / isolated assistants, no owner exemption.
+  const isolation = await checkBotIsolation({
+    senderMembershipId: sender.senderMembershipId,
+    senderUserId: input.actorUserId,
+    recipientMembershipId: picked.recipients[0].membershipId,
+  });
+  if (!isolation.ok) return isolation;
   const rate = await assertProjectMessageDispatchRateLimits({
     projectId: input.projectId,
     senderMembershipId: sender.senderMembershipId,

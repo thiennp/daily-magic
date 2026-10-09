@@ -33,11 +33,28 @@ describe("setBotInviter", () => {
     seatMock.mockResolvedValue({ role: "member", memberKind: "human" });
   });
 
-  it("lets any member claim an unclaimed assistant for themselves", async () => {
+  it("lets a member claim an unclaimed assistant only when it is their own bot", async () => {
+    sqlMock.mockResolvedValue(botRow(null));
+    ownedMock.mockResolvedValue(false);
+    expect(await setBotInviter(input)).toEqual({
+      ok: false,
+      code: "forbidden",
+    });
+    ownedMock.mockResolvedValue(true);
     sqlMock.mockResolvedValueOnce(botRow(null)).mockResolvedValue([]);
     expect(await setBotInviter(input)).toEqual({
       ok: true,
       inviterUserId: "me",
+    });
+  });
+
+  it("lets the project owner claim an unclaimed assistant", async () => {
+    actorMock.mockResolvedValue({ ok: true, isOwner: true });
+    ownedMock.mockResolvedValue(false);
+    sqlMock.mockResolvedValueOnce(botRow(null)).mockResolvedValue([]);
+    expect(await setBotInviter({ ...input, actorUserId: "owner" })).toEqual({
+      ok: true,
+      inviterUserId: "owner",
     });
   });
 
@@ -56,6 +73,7 @@ describe("setBotInviter", () => {
 
   it("rejects an inviter who is not the owner or an active member", async () => {
     sqlMock.mockResolvedValue(botRow(null));
+    ownedMock.mockResolvedValue(true);
     seatMock.mockResolvedValue(null);
     expect(
       await setBotInviter({ ...input, inviterUserId: "stranger" }),
