@@ -9,6 +9,7 @@ const run = {
   deviceId: "4d58cce5",
   writerAgent: "antigravity",
   projectId: "bad411bf",
+  capabilityId: null,
 } as AgentRunRecord;
 
 describe("resolveRunRetryComposerOptions (7a3086f1)", () => {
@@ -20,6 +21,18 @@ describe("resolveRunRetryComposerOptions (7a3086f1)", () => {
       writerAgent: "antigravity",
       projectId: "bad411bf",
     });
+  });
+
+  it("keeps the workflow of a workflow run instead of a blank custom task", () => {
+    const options = resolveRunRetryComposerOptions({
+      ...run,
+      capabilityId: "cap-add-vibe-feature",
+    });
+    expect(options).toMatchObject({
+      libraryCapabilityId: "cap-add-vibe-feature",
+      prompt: run.prompt,
+    });
+    expect(options?.customTask).toBeUndefined();
   });
 
   it("has nothing to refill without an ask", () => {
