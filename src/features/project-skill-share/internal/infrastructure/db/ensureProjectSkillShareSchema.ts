@@ -1,3 +1,4 @@
+import { backfillProjectSkillTags } from "@/features/project-skill-share/internal/infrastructure/db/backfillProjectSkillTags";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { getSql } from "@/lib/db";
 
@@ -33,9 +34,26 @@ const createTables = async (): Promise<void> => {
     ON project_skills (project_id, state)`;
   await sql`ALTER TABLE project_skills ADD COLUMN IF NOT EXISTS kind TEXT
     NOT NULL DEFAULT 'skill' CHECK (kind IN ('skill', 'playbook'))`;
+  await sql`ALTER TABLE project_skills ADD COLUMN IF NOT EXISTS tags TEXT[]`;
+  await sql`CREATE TABLE IF NOT EXISTS project_skill_lookup_log (
+    id BIGSERIAL PRIMARY KEY,
+    project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
+    actor_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    tool TEXT NOT NULL CHECK (tool IN ('list', 'get')),
+    had_query BOOLEAN NOT NULL DEFAULT FALSE,
+    query_chars INTEGER NOT NULL DEFAULT 0,
+    returned INTEGER NOT NULL DEFAULT 0,
+    total INTEGER,
+    response_tokens INTEGER NOT NULL DEFAULT 0,
+    top_ids TEXT[] NOT NULL DEFAULT '{}',
+    skill_id TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
+  await sql`CREATE INDEX IF NOT EXISTS project_skill_lookup_log_project_idx
+    ON project_skill_lookup_log (project_id, created_at DESC)`;
+  await backfillProjectSkillTags();
 };
 
-/** Idempotent CREATE (full DDL in db/migrations/058-project-skill-share.sql + 110 kind). */
+/** Idempotent CREATE (full DDL in db/migrations/058-project-skill-share.sql + 110 kind + 132 tags and lookup log). */
 export const ensureProjectSkillShareSchema = async (): Promise<void> => {
   if (state.promise === null) {
     state.promise = createTables().catch((error: unknown) => {

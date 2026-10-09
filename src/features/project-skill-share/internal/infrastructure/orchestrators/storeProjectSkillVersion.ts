@@ -1,3 +1,4 @@
+import { extractSkillTags } from "@/features/project-skill-share/internal/core/extractSkillTags";
 import { computeProjectSkillContentHash } from "@/features/project-skill-share/internal/core/computeProjectSkillContentHash";
 import { decideProjectSkillPublishTransition } from "@/features/project-skill-share/internal/core/decideProjectSkillPublishTransition";
 import { measureProjectSkillBodyBytes } from "@/features/project-skill-share/internal/core/measureProjectSkillBodyBytes";
@@ -39,6 +40,7 @@ export const storeProjectSkillVersion = async (input: {
     name: target.name,
     description:
       target.args.description ?? target.existing?.description ?? null,
+    tags: extractSkillTags(input.body),
     actorUserId: input.actorUserId,
     expectedLatestVersion,
     version,

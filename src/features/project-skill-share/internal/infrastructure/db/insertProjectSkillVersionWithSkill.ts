@@ -17,6 +17,8 @@ export const insertProjectSkillVersionWithSkill = async (input: {
   readonly kind: ProjectSkillKind;
   readonly name: string;
   readonly description: string | null;
+  /** Front matter tags of `body`. */
+  readonly tags: readonly string[];
   readonly actorUserId: string;
   readonly expectedLatestVersion: number;
   readonly version: number;
@@ -36,14 +38,16 @@ export const insertProjectSkillVersionWithSkill = async (input: {
     await sql`
       WITH skill AS (
         INSERT INTO project_skills (project_id, skill_id, kind, name, description,
-          publisher_user_id, state, published_version, latest_version, content_hash)
+          publisher_user_id, state, published_version, latest_version, content_hash, tags)
         VALUES (${input.projectId}, ${input.skillId}, ${input.kind}, ${input.name}, ${input.description},
-          ${input.actorUserId}, ${t.state}, ${t.publishedVersion}, ${input.version}, ${t.contentHash})
+          ${input.actorUserId}, ${t.state}, ${t.publishedVersion}, ${input.version}, ${t.contentHash},
+          ${[...input.tags]}::text[])
         ON CONFLICT (project_id, skill_id) DO UPDATE SET
           kind = CASE WHEN ${keep} THEN project_skills.kind ELSE EXCLUDED.kind END,
           name = CASE WHEN ${keep} THEN project_skills.name ELSE EXCLUDED.name END,
           description = CASE WHEN ${keep} THEN project_skills.description
             ELSE EXCLUDED.description END,
+          tags = CASE WHEN ${keep} THEN project_skills.tags ELSE EXCLUDED.tags END,
           state = EXCLUDED.state, published_version = EXCLUDED.published_version,
           latest_version = EXCLUDED.latest_version, content_hash = EXCLUDED.content_hash,
           revoked_at = CASE WHEN ${keep} THEN project_skills.revoked_at ELSE NULL END,

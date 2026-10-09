@@ -1,6 +1,6 @@
 import type { ProjectSkillFailure } from "@/features/project-skill-share/internal/core/projectSkill.type";
 import { getProjectSkill } from "@/features/project-skill-share/internal/infrastructure/orchestrators/getProjectSkill";
-import { listProjectSkills } from "@/features/project-skill-share/internal/infrastructure/orchestrators/listProjectSkills";
+import { listProjectSkillsTool } from "@/features/project-skill-share/internal/infrastructure/orchestrators/listProjectSkillsTool";
 import { publishProjectSkill } from "@/features/project-skill-share/internal/infrastructure/orchestrators/publishProjectSkill";
 import { revokeProjectSkill } from "@/features/project-skill-share/internal/infrastructure/orchestrators/revokeProjectSkill";
 
@@ -15,7 +15,7 @@ export const PROJECT_SKILL_SHARE_TOOL_HANDLERS: ReadonlyMap<
   ProjectSkillToolHandler
 > = new Map<string, ProjectSkillToolHandler>([
   ["publish_project_skill", publishProjectSkill],
-  ["list_project_skills", listProjectSkills],
+  ["list_project_skills", listProjectSkillsTool],
   ["get_project_skill", getProjectSkill],
   ["revoke_project_skill", revokeProjectSkill],
 ]);

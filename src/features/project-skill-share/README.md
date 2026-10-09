@@ -26,7 +26,7 @@ Project owners and active members share playbooks/skills inside one project (**A
 ## MCP tools (agent-access Bearer or `awc_proj_`)
 
 `publish_project_skill`, `list_project_skills`, `get_project_skill`, `revoke_project_skill`.
-`list_project_skills` takes optional `kind`, `query` (keyword match on name, description and id) and `limit` (default 5, max 20 once `query` or `limit` is set; the result then carries `total`). Without them it returns every skill.
+`list_project_skills` takes optional `kind`, `query` and `limit`. With `query` or `limit` it returns compact rows `{skillId, name, description, tags}` (best 3, max 10) plus `total`, matched on word prefixes of name, tags, description and id (two or more query words must match two of them); without them it returns every skill as before. Tags are the `keywords:` / `tags:` front matter keys of the saved body (column `project_skills.tags`, backfilled for older rows). MCP calls to `list_project_skills` and `get_project_skill` are logged as metadata only in `project_skill_lookup_log` (migration 132); the UI does not log.
 Definitions: `src/lib/agentAccess/agentAccessProjectSkillShareToolCatalog.constant.ts`. Executor: `executeProjectSkillShareTool` (public-api/infrastructure), injected by `src/app/api/agent-access/{mcp,invoke}/route.ts` through `featureToolExecutors` (src/lib may not import features). `awc_proj_` keys are allowlisted and pinned to their projectId by `guardProjectApiKeyToolUse`.
 
 ## Session APIs (Project Access panel)

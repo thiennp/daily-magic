@@ -35,6 +35,7 @@ export const mapProjectSkillRow = (
   createdAt: String(row.created_at),
   updatedAt: String(row.updated_at),
   revokedAt: nullableString(row.revoked_at),
+  tags: Array.isArray(row.tags) ? row.tags.map(String) : [],
   latestAuthorUserId: nullableString(row.latest_author_user_id),
   latestAuthorName: nullableString(row.latest_author_name),
 });

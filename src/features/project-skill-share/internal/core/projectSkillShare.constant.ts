@@ -23,5 +23,7 @@ export const PROJECT_SKILL_KINDS = ["skill", "playbook"] as const;
 export const PROJECT_SKILL_DEFAULT_KIND = "skill";
 
 /** list_project_skills with `query` or `limit`: default and maximum rows returned. */
-export const PROJECT_SKILL_LIST_DEFAULT_LIMIT = 5;
-export const PROJECT_SKILL_LIST_MAX_LIMIT = 20;
+export const PROJECT_SKILL_LIST_DEFAULT_LIMIT = 3;
+export const PROJECT_SKILL_LIST_MAX_LIMIT = 10;
+export const PROJECT_SKILL_MATCH_DESCRIPTION_CHARS = 100;
+export const PROJECT_SKILL_MATCH_TAGS = 5;

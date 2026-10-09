@@ -7,6 +7,10 @@ import { AGENT_ACCESS_TOOLS } from "@/lib/agentAccess/agentAccessTools.constant"
 import { isProjectApiKeyMcpTool } from "@/lib/projects/acl/projectApiKeys/projectApiKeyMcpAllowlist.constant";
 
 vi.mock(
+  "@/features/project-skill-share/internal/infrastructure/db/recordProjectSkillLookup",
+  () => ({ recordProjectSkillLookup: vi.fn() }),
+);
+vi.mock(
   "@/features/project-skill-share/internal/infrastructure/orchestrators/revokeProjectSkill",
   () => ({ revokeProjectSkill: vi.fn() }),
 );

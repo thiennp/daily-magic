@@ -1,6 +1,7 @@
 import type {
   ProjectSkillDetail,
   ProjectSkillFailure,
+  ProjectSkillMatch,
   ProjectSkillMirrorStatus,
   ProjectSkillShareErrorCode,
   ProjectSkillView,
@@ -19,11 +20,15 @@ export type PublishProjectSkillResult =
   | ProjectSkillFailure;
 
 export type ListProjectSkillsResult =
+  | { readonly ok: true; readonly skills: readonly ProjectSkillView[] }
+  | ProjectSkillFailure;
+
+/** `query` / `limit` lookup: best compact matches, `total` before the limit. */
+export type SearchProjectSkillsResult =
   | {
       readonly ok: true;
-      readonly skills: readonly ProjectSkillView[];
-      /** Matches before `limit`; only set when `query` or `limit` was given. */
-      readonly total?: number;
+      readonly matches: readonly ProjectSkillMatch[];
+      readonly total: number;
     }
   | ProjectSkillFailure;
 

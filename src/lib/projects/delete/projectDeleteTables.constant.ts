@@ -46,6 +46,7 @@ export const PROJECT_DELETE_CASCADE_CHILD_TABLES = [
   "project_messenger_thread_reads",
   "project_pitfall_hits",
   "project_pitfalls",
+  "project_skill_lookup_log",
   "project_skill_stats",
   "project_skill_suggestions",
   "project_skill_versions",

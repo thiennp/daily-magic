@@ -21,6 +21,7 @@ export const projectSkillRecordFixture = (
   createdAt: "2026-10-05T00:00:00Z",
   updatedAt: "2026-10-05T00:00:00Z",
   revokedAt: null,
+  tags: [],
   ...overrides,
 });
 

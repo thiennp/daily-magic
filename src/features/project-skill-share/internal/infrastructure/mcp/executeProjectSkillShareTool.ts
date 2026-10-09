@@ -1,3 +1,5 @@
+import { buildProjectSkillLookupLogEntry } from "@/features/project-skill-share/internal/core/buildProjectSkillLookupLogEntry";
+import { recordProjectSkillLookup } from "@/features/project-skill-share/internal/infrastructure/db/recordProjectSkillLookup";
 import { PROJECT_SKILL_SHARE_TOOL_HANDLERS } from "@/features/project-skill-share/internal/infrastructure/mcp/projectSkillShareToolHandlers.constant";
 import type { AgentAccessFeatureToolExecutor } from "@/lib/agentAccess/agentAccessFeatureToolExecutor.type";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
@@ -26,6 +28,14 @@ export const executeProjectSkillShareTool: AgentAccessFeatureToolExecutor =
         },
         true,
       );
+    }
+    const entry = buildProjectSkillLookupLogEntry({
+      tool: input.name,
+      args: input.args,
+      result,
+    });
+    if (entry !== null) {
+      await recordProjectSkillLookup({ actorUserId: input.actor.id, entry });
     }
     return agentAccessTextResult(result);
   };

@@ -40,6 +40,8 @@ export interface ProjectSkillRecord {
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly revokedAt: string | null;
+  /** Front matter keywords / tags of the latest saved body (lowercase). */
+  readonly tags: readonly string[];
   /** Author of latest_version (list queries only). */
   readonly latestAuthorUserId?: string | null;
   readonly latestAuthorName?: string | null;
@@ -89,3 +91,11 @@ export type ProjectSkillFailure = {
   /** Human-readable reason (e.g. owner-only publish); optional. */
   readonly message?: string;
 };
+
+/** Compact row for a `query` lookup: just enough to pick one, no meta flags. */
+export interface ProjectSkillMatch {
+  readonly skillId: string;
+  readonly name: string;
+  readonly description: string;
+  readonly tags: readonly string[];
+}
