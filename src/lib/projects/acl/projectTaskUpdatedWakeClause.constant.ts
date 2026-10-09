@@ -4,4 +4,4 @@ import { PROJECT_MESSAGE_KIND_TASK_UPDATED } from "@/lib/projects/acl/messaging/
 export const PROJECT_TASK_UPDATED_WAKE_CLAUSE =
   `On kind "${PROJECT_MESSAGE_KIND_TASK_UPDATED}": read the summary. If it says stop or the task went to someone else, stop work on it now and reply task.status. ` +
   "If it says assigned to you, start it in priority order (p0 first; list_project_tasks status=queued mine=true sort=priority). " +
-  "Set in_progress via update_project_task when you start, done when finished, passing resultSummary (what you found or delivered, ≤600 chars; for research, the answer). Never work a task owned by another seat. Then ack.";
+  "Set in_progress via update_project_task when you start, done when finished, passing resultSummary (one line, ≤200 chars: what you found or delivered) and saving the full summary on your computer. Never work a task owned by another seat. Then ack.";

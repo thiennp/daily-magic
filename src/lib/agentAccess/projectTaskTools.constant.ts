@@ -15,7 +15,7 @@ const META_PROPERTIES = {
   resultSummary: {
     type: "string",
     description:
-      "The outcome (≤600 chars): what you found or delivered, e.g. the answer to a research task. REQUIRED when you set status done (result_summary_required otherwise). Replaces the description; put the long report in a message/file, not here.",
+      "One-line outcome (≤200 chars) for the project Tasks tab, e.g. the answer to a research task. REQUIRED when you set status done (result_summary_required otherwise). Save the full summary/report on your own computer (no cap there); never send it here.",
   },
   ownerMembershipId: {
     type: "string",
@@ -61,7 +61,7 @@ export const CREATE_PROJECT_TASK_TOOL: AgentAccessToolDefinition = {
 export const UPDATE_PROJECT_TASK_TOOL: AgentAccessToolDefinition = {
   name: "update_project_task",
   description:
-    "Update a project task (from create_project_task or list_project_tasks). Status moves: queued⇄planned → in_progress ⇄ blocked; in_progress → done (done needs resultSummary: the outcome in your own words, so the requester can see the result without opening a log). Anyone may stop work (in_progress|blocked → queued, i.e. To do) or reopen a done/cancelled task (→ queued). Terminal 'cancelled' is allowed from any open status. Retrying a move with nothing else changed returns ok; other moves → invalid_transition. When a task is moved back to To do or given to someone else, the previous owner gets a task.updated message: stop work on it. Send only fields to change; null clears optional fields; an unchanged edit is ok and writes nothing. dependsOn may not form a cycle (depends_on_cycle). A concurrent edit → update_conflict (re-read, retry). Any member who can write (not viewers) may edit any task.",
+    "Update a project task (from create_project_task or list_project_tasks). Status moves: queued⇄planned → in_progress ⇄ blocked; in_progress → done (done needs resultSummary: a one-line outcome; keep the full summary locally). Anyone may stop work (in_progress|blocked → queued, i.e. To do) or reopen a done/cancelled task (→ queued). Terminal 'cancelled' is allowed from any open status. Retrying a move with nothing else changed returns ok; other moves → invalid_transition. When a task is moved back to To do or given to someone else, the previous owner gets a task.updated message: stop work on it. Send only fields to change; null clears optional fields; an unchanged edit is ok and writes nothing. dependsOn may not form a cycle (depends_on_cycle). A concurrent edit → update_conflict (re-read, retry). Any member who can write (not viewers) may edit any task.",
   inputSchema: {
     type: "object",
     properties: {
