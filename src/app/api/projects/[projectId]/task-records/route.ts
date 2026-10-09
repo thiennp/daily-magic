@@ -41,7 +41,7 @@ export async function GET(
 
 /**
  * POST /api/projects/:projectId/task-records (Tasks tab "Create task")
- * Body: { title, description?, priority?, status? queued|planned, ownerMembershipId? }.
+ * Body: { title, description?, priority?, status? queued|planned|in_progress, ownerMembershipId? }.
  * 201 { ok:true, task } · else { ok:false, code } with 400/403/404/409/429.
  */
 export async function POST(

@@ -75,7 +75,7 @@ const parseCommon = (
   return { ok: true, value: { row, projectId } };
 };
 
-/** create_project_task args → meta (title required; status queued|planned). */
+/** create_project_task args → meta (title required; status queued|planned|in_progress). */
 export const parseCreateProjectTaskArgs = (
   args: unknown,
 ): Parsed<ParsedCreateProjectTaskArgs> => {

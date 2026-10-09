@@ -27,10 +27,11 @@ export const PROJECT_TASK_STAGES = [
 ] as const;
 export type ProjectTaskStage = (typeof PROJECT_TASK_STAGES)[number];
 
-/** Statuses a task may be created in (work not started yet). */
+/** Statuses a task may be created in; in_progress lets a bot create a task and start it at once. */
 export const PROJECT_TASK_INITIAL_STATUSES: readonly ProjectTaskStatus[] = [
   "queued",
   "planned",
+  "in_progress",
 ];
 
 /**

@@ -31,13 +31,14 @@ export const insertProjectTaskRecord = async (input: {
       INSERT INTO project_task_records (
         project_id, created_by_user_id, created_by_membership_id,
         owner_membership_id, title, description, result_summary, status, priority, stage,
-        tip_sha, depends_on, plan_item_id, stage_times
+        tip_sha, depends_on, plan_item_id, stage_times, started_at
       ) VALUES (
         ${input.projectId}, ${input.createdByUserId}, ${input.createdByMembershipId},
         ${v.ownerMembershipId}, ${v.title}, ${v.description}, ${v.resultSummary}, ${v.status},
         ${v.priority}, ${v.stage}, ${v.tipSha}, ${[...v.dependsOn]}, ${v.planItemId},
         CASE WHEN ${v.stage}::text IS NULL THEN '{}'::jsonb
-             ELSE jsonb_build_object(${v.stage}::text, NOW()) END
+             ELSE jsonb_build_object(${v.stage}::text, NOW()) END,
+        CASE WHEN ${v.status} = 'in_progress' THEN NOW() END
       )
       RETURNING *
     `,
