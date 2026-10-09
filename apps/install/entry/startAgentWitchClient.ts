@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import { buildApprovalNotificationArgs } from "./buildApprovalNotificationArgs";
 import { spawn } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -2215,10 +2216,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       if (process.platform === "darwin") {
         spawn(
           "osascript",
-          [
-            "-e",
-            `display notification "${promptPreview.replace(/"/g, '\\"')}" with title "Agent dispatch approval" subtitle "${requesterEmail.replace(/"/g, '\\"')}"`,
-          ],
+          [...buildApprovalNotificationArgs({ promptPreview, requesterEmail })],
           { stdio: "ignore" },
         );
       }

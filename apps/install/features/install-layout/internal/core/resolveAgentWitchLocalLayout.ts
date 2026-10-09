@@ -36,8 +36,14 @@ import {
 
 const moduleDirname = resolveAgentWitchBundleAppDir();
 
-export const sanitizeProfileEmailForDir = (email: string): string =>
-  email.trim().toLowerCase();
+/** The address becomes a folder name under profiles/: it must stay one plain path segment. */
+export const sanitizeProfileEmailForDir = (email: string): string => {
+  const value = email.trim().toLowerCase();
+  if (/[\\/\u0000]/.test(value) || value === "." || value === "..") {
+    throw new Error("Invalid profile email.");
+  }
+  return value;
+};
 
 export const sanitizeProfileEmailForLaunchAgentLabel = (
   email: string,

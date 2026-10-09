@@ -1,5 +1,6 @@
-const escapeBashDoubleQuoted = (value: string): string =>
-  value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+/** Single quotes: nothing inside is expanded ($(...), backticks, $VAR), only ' needs closing. */
+const quoteBashSingle = (value: string): string =>
+  `'${value.replace(/'/g, "'\\''")}'`;
 
 export const buildAgentWitchInstallScriptPresetBlock = (input: {
   readonly presetPairingToken?: string;
@@ -13,7 +14,7 @@ export const buildAgentWitchInstallScriptPresetBlock = (input: {
     return "";
   }
 
-  return `PRESET_PAIRING_TOKEN="${escapeBashDoubleQuoted(presetPairingToken)}"
-PRESET_PROFILE_EMAIL="${escapeBashDoubleQuoted(presetProfileEmail)}"
+  return `PRESET_PAIRING_TOKEN=${quoteBashSingle(presetPairingToken)}
+PRESET_PROFILE_EMAIL=${quoteBashSingle(presetProfileEmail)}
 `;
 };

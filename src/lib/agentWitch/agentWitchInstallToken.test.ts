@@ -73,8 +73,8 @@ describe("renderInstallAgentWitchScript preset token", () => {
       presetProfileEmail: "owner@example.com",
     });
 
-    expect(script).toContain(`PRESET_PAIRING_TOKEN="${pairingToken}"`);
-    expect(script).toContain('PRESET_PROFILE_EMAIL="owner@example.com"');
+    expect(script).toContain(`PRESET_PAIRING_TOKEN='${pairingToken}'`);
+    expect(script).toContain("PRESET_PROFILE_EMAIL='owner@example.com'");
     expect(script).toContain("/api/agent-witch/register-install");
   });
 });

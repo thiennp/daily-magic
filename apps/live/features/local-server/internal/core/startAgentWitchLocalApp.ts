@@ -10,6 +10,7 @@ import {
   readPreferredAgentWitchLocalAppPortHint,
   registerAgentWitchLocalAppAccountListening,
 } from "./agentWitchHostLocalAppAccountsDiscovery";
+import { guardLocalAppRequest } from "./guardLocalAppRequest";
 import { listenAgentWitchLocalAppHttpServer } from "./listenAgentWitchLocalAppHttpServer";
 
 import {
@@ -272,8 +273,8 @@ const buildLocalAppUpdateFailureDetailHtml = (
   return `<div class="alert-error">${escapeHtml(updateError)}</div>`;
 };
 
+// No wildcard origin: the handler answers only the origins guardLocalAppRequest accepts.
 const LOCAL_APP_CORS_HEADERS: Record<string, string> = {
-  "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
   "Access-Control-Allow-Headers":
     "Content-Type, Access-Control-Request-Private-Network",
@@ -567,6 +568,24 @@ export const startAgentWitchLocalApp = (input: {
     void (async () => {
       const pathname = request.url?.split("?")[0] ?? "/";
       const method = request.method ?? "GET";
+
+      const guard = guardLocalAppRequest({
+        host: request.headers.host,
+        origin: request.headers.origin,
+        secFetchSite: request.headers["sec-fetch-site"] as string | undefined,
+        localPort: request.socket.localPort,
+      });
+      if (!guard.ok) {
+        response.writeHead(403, { "Content-Type": "application/json" });
+        response.end(
+          JSON.stringify({ ok: false, errorMessage: "Forbidden origin." }),
+        );
+        return;
+      }
+      if (guard.allowOrigin !== null) {
+        response.setHeader("Access-Control-Allow-Origin", guard.allowOrigin);
+        response.setHeader("Vary", "Origin");
+      }
 
       if (method === "OPTIONS") {
         response.writeHead(204, LOCAL_APP_CORS_HEADERS);

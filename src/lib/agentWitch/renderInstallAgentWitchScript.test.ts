@@ -26,7 +26,7 @@ describe("renderInstallAgentWitchScript", () => {
     expect(script).toContain(
       'open "https://www.agentwitch.com/?awLocalTokenHash=${LOCAL_TOKEN_HASH}"',
     );
-    expect(script).toContain(`PRESET_PAIRING_TOKEN="${TEST_PAIRING_TOKEN}"`);
+    expect(script).toContain(`PRESET_PAIRING_TOKEN='${TEST_PAIRING_TOKEN}'`);
     expect(script).not.toContain("Downloading AgentWitch wake server");
     expect(script).toContain("wss://www.agentwitch.com/api/agent-witch/ws");
     expect(script).toContain(
