@@ -2,13 +2,13 @@
 
 import {
   createProjectInviteApi,
-  renameMembershipDisplayNameApi,
   revokeProjectInviteApi,
   updateProjectInviteAutoApproveApi,
 } from "@/features/projects/access/utils/projectAccessApi";
 import { AWC_PROJECT_INVITE_AUTO_APPROVE_COPY } from "@/features/projects/access/invites/awcProjectInviteAutoApproveCopy.constant";
 import { joinTypeIdForInvitePlatform } from "@/features/projects/access/invites/awcProjectInviteAddAssistantTypes";
 import type { ProjectInvitePlatform } from "@/features/projects/access/invites/projectInvitePlatform.type";
+import { renameProjectMember } from "@/features/projects/access/hooks/renameProjectMember";
 import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
 
 export const useAwcProjectInviteActions = (input: {
@@ -39,9 +39,11 @@ export const useAwcProjectInviteActions = (input: {
     platform: ProjectInvitePlatform | null = "grok",
     autoApprove = false,
     joinTypeId: string | null = joinTypeIdForInvitePlatform(platform),
+    isolateBots = false,
   ) => {
     const result = await createProjectInviteApi(input.projectId, {
       autoApprove: autoApprove === true,
+      ...(isolateBots ? { isolateBots: true } : {}),
       ...(platform === null ? {} : { platform }),
     });
     if (result.url) {
@@ -101,22 +103,7 @@ export const useAwcProjectInviteActions = (input: {
     await input.reload();
   };
 
-  const renameMember = async (
-    membershipId: string,
-    projectDisplayName: string,
-  ) => {
-    const result = await renameMembershipDisplayNameApi(
-      input.projectId,
-      membershipId,
-      projectDisplayName,
-    );
-    const errorMessage = result.ok
-      ? undefined
-      : mapProjectAccessError(result.errorMessage, "Failed.");
-    input.setMessage(result.ok ? "Renamed." : (errorMessage ?? "Failed."));
-    await input.reload();
-    return { ok: result.ok, errorMessage };
-  };
+  const renameMember = renameProjectMember(input);
 
   return { createInvite, revokeInvite, turnOffAutoApprove, renameMember };
 };

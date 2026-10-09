@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 
+import { applyBotInviteIsolation } from "@/lib/projects/acl/applyBotInviteIsolation";
 import { applyInitialProjectMembershipDeliveryMode } from "@/lib/projects/acl/applyInitialProjectMembershipDeliveryMode";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { notifyProjectPeersOfMembershipJoin } from "@/lib/projects/acl/messaging/notifyProjectPeersOfMembershipJoin";
@@ -89,6 +90,7 @@ export const approveProjectAccessRequest = async (input: {
     : inserted.membership;
 
   if (requesterIsAgent) {
+    await applyBotInviteIsolation(inserted);
     await carryOverPendingRequestGrokWebhook({
       projectId: input.projectId,
       requestId: input.requestId,

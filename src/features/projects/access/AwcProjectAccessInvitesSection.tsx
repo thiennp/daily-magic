@@ -43,6 +43,7 @@ export default function AwcProjectAccessInvitesSection({
             selection.platform,
             autoApprove,
             selection.joinTypeId,
+            selection.isolateBots === true,
           )
         }
         onRevoke={(id) => void access.revokeInvite(id)}

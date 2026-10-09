@@ -4,6 +4,7 @@ import {
   lookupDisplayNameRecipients,
   type DispatchRecipient,
 } from "@/lib/projects/acl/messaging/lookupDispatchMembershipRecipients";
+import { checkBotIsolation } from "@/lib/projects/acl/messaging/checkBotIsolation";
 import { resolveMembershipIdDispatchRecipient } from "@/lib/projects/acl/messaging/resolveMembershipIdDispatchRecipient";
 
 export type { DispatchRecipient };
@@ -25,7 +26,7 @@ const requireExactlyOneRecipient = (
   return { ok: true, recipients };
 };
 
-export const resolveDispatchRecipients = async (input: {
+const resolveDispatchRecipientsUnguarded = async (input: {
   readonly projectId: string;
   readonly actorUserId: string;
   readonly toMembershipId?: string | null;
@@ -64,4 +65,29 @@ export const resolveDispatchRecipients = async (input: {
     );
   }
   return { ok: false, code: "recipient_not_found" };
+};
+
+type ResolveInput = Parameters<typeof resolveDispatchRecipientsUnguarded>[0];
+type ResolveResult = Awaited<
+  ReturnType<typeof resolveDispatchRecipientsUnguarded>
+>;
+
+/** Resolve the one recipient, then refuse bot-to-bot sends an isolated bot may not make. */
+export const resolveDispatchRecipients = async (
+  input: ResolveInput & { readonly senderMembershipId?: string },
+): Promise<
+  | ResolveResult
+  | {
+      readonly ok: false;
+      readonly code: "bot_isolated";
+      readonly message: string;
+    }
+> => {
+  const resolved = await resolveDispatchRecipientsUnguarded(input);
+  if (!resolved.ok || input.senderMembershipId === undefined) return resolved;
+  const isolation = await checkBotIsolation({
+    senderMembershipId: input.senderMembershipId,
+    recipientMembershipId: resolved.recipients[0].id,
+  });
+  return isolation.ok ? resolved : isolation;
 };

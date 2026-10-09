@@ -64,6 +64,7 @@ export default function AwcProjectMembersInviteBotsSection({
               selection.platform,
               false,
               selection.joinTypeId,
+              selection.isolateBots === true,
             )
           }
         />

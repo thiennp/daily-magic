@@ -27,6 +27,7 @@ export default function AwcProjectInviteAddAssistantControl({
 }: AwcProjectInviteAddAssistantControlProps) {
   const [joinTypeId, setJoinTypeId] = useState<string>("");
   const [open, setOpen] = useState(false);
+  const [isolate, setIsolate] = useState(false);
   const chosen = findSupportedAssistant(joinTypeId);
 
   return (
@@ -64,12 +65,27 @@ export default function AwcProjectInviteAddAssistantControl({
           }}
         />
       ) : null}
+      <label className="flex items-start gap-2 text-[13px] text-awc-fg">
+        <input
+          type="checkbox"
+          className="mt-0.5"
+          checked={isolate}
+          data-invite-isolate=""
+          onChange={(e) => setIsolate(e.target.checked)}
+        />
+        <span>
+          {C.isolateLabel}
+          <span className="block text-[12px] text-awc-fg-muted">
+            {C.isolateHelp}
+          </span>
+        </span>
+      </label>
       <button
         type="button"
         className={`${buttonClassName} justify-self-start`}
         data-invite-create=""
         onClick={() =>
-          onCreate(toAwcProjectInviteAddSelection(joinTypeId || null))
+          onCreate(toAwcProjectInviteAddSelection(joinTypeId || null, isolate))
         }
       >
         {C.button}

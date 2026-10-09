@@ -3,6 +3,7 @@ import { ensureProjectComputerHistorySchema } from "@/lib/projects/acl/ensurePro
 import { ensureProjectInviteAutoApproveEventsSchema } from "@/lib/projects/acl/invites/ensureProjectInviteAutoApproveEventsSchema";
 import { ensureProjectMessageArchiveSchema } from "@/lib/projects/acl/messaging/ensureProjectMessageArchiveSchema";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
+import { ensureProjectBotIsolationSchema } from "@/lib/projects/acl/ensureProjectBotIsolationSchema";
 import { getSql } from "@/lib/db";
 
 export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
@@ -30,6 +31,7 @@ export const ensureProjectInviteHooksSchema = async (): Promise<void> => {
   await sql`ALTER TABLE IF EXISTS project_access_requests
     ADD COLUMN IF NOT EXISTS join_platform TEXT`;
   await ensureProjectInviteAutoApproveEventsSchema();
+  await ensureProjectBotIsolationSchema();
   await sql`CREATE TABLE IF NOT EXISTS project_api_keys (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
     project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,

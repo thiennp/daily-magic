@@ -11,6 +11,8 @@ export type AwcProjectInviteTypeOption = {
 export type AwcProjectInviteAddSelection = {
   readonly platform: ProjectInvitePlatform | null;
   readonly joinTypeId: string | null;
+  /** Checkbox: the assistant may not message other people's assistants. */
+  readonly isolateBots?: boolean;
 };
 
 /** Picker choices: every types[] entry, in types[] order, with its exact label. */
@@ -28,6 +30,7 @@ const INVITE_PLATFORM_JOIN_TYPES: readonly {
 
 export const toAwcProjectInviteAddSelection = (
   joinTypeId: string | null,
+  isolateBots = false,
 ): AwcProjectInviteAddSelection => {
   const known = AWC_PROJECT_INVITE_TYPE_OPTIONS.some(
     (o) => o.id === joinTypeId,
@@ -38,6 +41,7 @@ export const toAwcProjectInviteAddSelection = (
       INVITE_PLATFORM_JOIN_TYPES.find((p) => p.joinTypeId === id)?.platform ??
       null,
     joinTypeId: id,
+    ...(isolateBots ? { isolateBots: true } : {}),
   };
 };
 

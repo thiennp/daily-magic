@@ -17,6 +17,7 @@ import {
 import { clearUnusableProjectInviteCiphertexts } from "@/lib/projects/acl/invites/clearUnusableProjectInviteCiphertexts";
 import { tryEncryptProjectInviteToken } from "@/lib/projects/acl/invites/projectInviteTokenCipher";
 import { auditProjectInviteCreated } from "@/lib/projects/acl/invites/auditProjectInviteCreated";
+import { setProjectInviteIsolateBots } from "@/lib/projects/acl/invites/setProjectInviteIsolateBots";
 import { resolveProjectInviteCreator } from "@/lib/projects/acl/invites/resolveProjectInviteCreator";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { asRowArray, getSql } from "@/lib/db";
@@ -35,6 +36,8 @@ export const createProjectInvite = async (input: {
   readonly autoApprove?: boolean;
   /** grok | muse; unknown → NULL. Drives the join-time delivery_mode. */
   readonly platform?: unknown;
+  /** Checkbox: the joining bot may not message other people's bots. */
+  readonly isolateBots?: boolean;
 }): Promise<CreateProjectInviteResult> => {
   const project = await getUserProjectById(input.projectId);
   if (project === null) {
@@ -98,6 +101,7 @@ export const createProjectInvite = async (input: {
     return { ok: false, code: "invalid" };
   }
   const invite = mapProjectInviteRow(rows[0]);
+  if (input.isolateBots === true) await setProjectInviteIsolateBots(invite.id);
   await clearUnusableProjectInviteCiphertexts(input.projectId);
   await auditProjectInviteCreated({
     projectId: input.projectId,

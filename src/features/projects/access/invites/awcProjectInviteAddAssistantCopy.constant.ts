@@ -11,6 +11,9 @@ export const AWC_PROJECT_INVITE_ADD_ASSISTANT_COPY = {
   dialogClose: "Close",
   typeHelp:
     "Only changes the setup steps in the invite. Any assistant can use it.",
+  isolateLabel: "Block it from other people's assistants",
+  isolateHelp:
+    "It can still message the owner, people and assistants invited by you.",
   createdForAny: "Any assistant",
   createdForType: (label: string) => `For ${label}`,
 } as const;

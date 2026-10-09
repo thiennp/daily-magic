@@ -46,17 +46,21 @@ export async function POST(
   const result = await createProjectInvite({
     projectId,
     ownerUserId: actor.id,
-    teamLabel:
-      typeof payload.teamLabel === "string" ? payload.teamLabel : null,
+    teamLabel: typeof payload.teamLabel === "string" ? payload.teamLabel : null,
     scopes: payload.scopes,
     maxUses: payload.maxUses,
     expiresInDays: payload.expiresInDays,
     autoApprove: payload.autoApprove === true,
     platform: payload.platform,
+    isolateBots: payload.isolateBots === true,
   });
   if (!result.ok) {
     const status =
-      result.code === "forbidden" ? 403 : result.code === "not_found" ? 404 : 400;
+      result.code === "forbidden"
+        ? 403
+        : result.code === "not_found"
+          ? 404
+          : 400;
     return projectAccessErrorJson(result.code, status);
   }
   return Response.json(
