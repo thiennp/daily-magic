@@ -6,7 +6,7 @@ import {
   type ParsedScripts,
 } from "./autoSkillScriptsBlock";
 import { AUTO_SKILL_SCRIPTS_INSTRUCTION } from "./autoSkillScriptsPrompt";
-import { scrubProjectHistorySkillgenSecrets } from "./scrubProjectHistorySkillgenSecrets";
+import { scrubProjectHistorySkillgenTranscript } from "./scrubProjectHistorySkillgenSecrets";
 import { stampProjectHistorySkillgenSourceMessageIds } from "./stampProjectHistorySkillgenSourceMessageIds";
 import { validateProjectHistorySkillgenDraft } from "./validateProjectHistorySkillgenDraft";
 import type { AutoSkillCompleter, AutoSkillRunRecord } from "./autoSkill.types";
@@ -33,7 +33,7 @@ export type AutoSkillDraftResult =
 export const buildAutoSkillTranscript = (
   runs: readonly AutoSkillRunRecord[],
 ): string =>
-  scrubProjectHistorySkillgenSecrets(
+  scrubProjectHistorySkillgenTranscript(
     runs
       .map(
         (run, i) =>
@@ -69,6 +69,9 @@ export const generateAutoSkillDraft = async (
       continue;
     }
     const split = splitScriptsBlock(done.text);
+    if (split.rest.trim() === "NOT_REUSABLE") {
+      return { ok: false, reason: "not_reusable" };
+    }
     const extracted = extractOwnerLlmSkillMarkdown(split.rest);
     if (extracted === null) {
       continue;

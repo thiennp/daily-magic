@@ -22,7 +22,7 @@ import {
 } from "./qualifyProjectHistorySkillgenEpisode";
 import { recordProjectHistorySkillgenMetrics } from "./recordProjectHistorySkillgenMetrics";
 import type { ProjectHistorySkillgenMetricsEvent } from "./recordProjectHistorySkillgenMetrics";
-import { scrubProjectHistorySkillgenSecrets } from "./scrubProjectHistorySkillgenSecrets";
+import { scrubProjectHistorySkillgenTranscript } from "./scrubProjectHistorySkillgenSecrets";
 import { stampProjectHistorySkillgenSourceMessageIds } from "./stampProjectHistorySkillgenSourceMessageIds";
 import { stepProjectHistorySkillgenFsm } from "./stepProjectHistorySkillgenFsm";
 import {
@@ -35,6 +35,8 @@ export type AdvanceProjectHistorySkillgenMessage = {
   readonly messageId: string;
   readonly createdAtMs: number;
   readonly text: string;
+  /** Display name of the sender; removed from the transcript sent to the LLM. */
+  readonly senderLabel?: string | null;
 };
 
 export type AdvanceProjectHistorySkillgenEpisodeDeps = {
@@ -100,9 +102,13 @@ export const advanceProjectHistorySkillgenEpisode = async (
   let draftWritten: WriteProjectHistorySkillgenDraftResult | null = null;
   let tokensSpent = 0;
   let pendingMarkdown: string | null = null;
-  const estimateTokens =
-    input.deps.estimateTokens ?? defaultEstimateTokens;
+  const estimateTokens = input.deps.estimateTokens ?? defaultEstimateTokens;
   const transcript = input.messages.map((m) => m.text).join("\n");
+  const participantNames = input.messages.flatMap((m) =>
+    m.senderLabel === undefined || m.senderLabel === null
+      ? []
+      : [m.senderLabel],
+  );
 
   const pushMetric = (
     from: ProjectHistorySkillgenEpisodeRecord["state"],
@@ -145,16 +151,21 @@ export const advanceProjectHistorySkillgenEpisode = async (
         break;
       }
       const from = episode.state;
-      episode = withTransition(episode, step.nextState, close.ready ? close.reason : null, {
-        messageIds: close.ready ? close.messageIds : episode.messageIds,
-        closedAtMs: close.ready ? input.nowMs : episode.closedAtMs,
-        ownerMarkedSaveAsSkill: input.messages.some((m) =>
-          detectProjectHistorySkillgenOwnerMark(m.text),
-        ),
-        hasSuccessSignal: input.messages.some((m) =>
-          detectProjectHistorySkillgenSuccessSignal(m.text),
-        ),
-      });
+      episode = withTransition(
+        episode,
+        step.nextState,
+        close.ready ? close.reason : null,
+        {
+          messageIds: close.ready ? close.messageIds : episode.messageIds,
+          closedAtMs: close.ready ? input.nowMs : episode.closedAtMs,
+          ownerMarkedSaveAsSkill: input.messages.some((m) =>
+            detectProjectHistorySkillgenOwnerMark(m.text),
+          ),
+          hasSuccessSignal: input.messages.some((m) =>
+            detectProjectHistorySkillgenSuccessSignal(m.text),
+          ),
+        },
+      );
       pushMetric(from, episode.state, episode.reason);
       continue;
     }
@@ -167,7 +178,11 @@ export const advanceProjectHistorySkillgenEpisode = async (
         });
         if (step.ok) {
           pushMetric(episode.state, step.nextState, "draft_cap_reached");
-          episode = withTransition(episode, step.nextState, "draft_cap_reached");
+          episode = withTransition(
+            episode,
+            step.nextState,
+            "draft_cap_reached",
+          );
         }
         break;
       }
@@ -192,7 +207,10 @@ export const advanceProjectHistorySkillgenEpisode = async (
     }
 
     if (episode.state === "SCRUBBING") {
-      const scrub = scrubProjectHistorySkillgenSecrets(transcript);
+      const scrub = scrubProjectHistorySkillgenTranscript(
+        transcript,
+        participantNames,
+      );
       const step = stepProjectHistorySkillgenFsm({
         state: episode.state,
         verdict: { kind: "scrub", residualSecret: scrub.residualSecret },
@@ -262,7 +280,9 @@ export const advanceProjectHistorySkillgenEpisode = async (
       episode = withTransition(episode, step.nextState, dedup.action, {
         contentHash,
         mergeDraftId:
-          dedup.action === "update_draft" ? dedup.draftId : episode.mergeDraftId,
+          dedup.action === "update_draft"
+            ? dedup.draftId
+            : episode.mergeDraftId,
       });
       pushMetric(from, episode.state, episode.reason);
       continue;
@@ -313,6 +333,7 @@ export const advanceProjectHistorySkillgenEpisode = async (
       const markdown = pendingMarkdown ?? "";
       const validated = validateProjectHistorySkillgenDraft({
         skillMarkdown: markdown,
+        knownNames: participantNames,
       });
       const attempts = episode.validateAttempts + (validated.ok ? 0 : 1);
       const step = stepProjectHistorySkillgenFsm({
@@ -351,7 +372,7 @@ export const advanceProjectHistorySkillgenEpisode = async (
         const draftId =
           dedup.action === "update_draft"
             ? dedup.draftId
-            : episode.mergeDraftId ?? randomUUID();
+            : (episode.mergeDraftId ?? randomUUID());
         draftWritten = input.deps.writeDraft({
           projectId: episode.projectId,
           draftId,

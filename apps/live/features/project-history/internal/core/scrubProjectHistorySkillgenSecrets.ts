@@ -3,6 +3,8 @@ import {
   scrubOutboundSecrets,
 } from "@agent-witch/shared/dispatch";
 
+import { scrubProjectHistorySkillgenIdentifiers } from "./scrubProjectHistorySkillgenIdentifiers";
+
 export type ScrubProjectHistorySkillgenSecretsResult = {
   readonly scrubbed: string;
   /** True when a high-confidence secret pattern remains after replacements. */
@@ -34,3 +36,23 @@ export const scrubProjectHistorySkillgenSecrets = (
 export const projectHistorySkillgenTextHasResidualSecret = (
   text: string,
 ): boolean => hasResidualOutboundSecret(text);
+
+/**
+ * Transcript for the owner LLM: secrets and emails scrubbed, then one-off
+ * identifiers (tickets, PRs, hashes, urls, paths, ids and `knownNames`, the
+ * senders/recipients of the chat) replaced by placeholders so the draft
+ * stays reusable.
+ */
+export const scrubProjectHistorySkillgenTranscript = (
+  text: string,
+  knownNames: readonly string[] = [],
+): ScrubProjectHistorySkillgenSecretsResult => {
+  const secrets = scrubProjectHistorySkillgenSecrets(text);
+  return {
+    ...secrets,
+    scrubbed: scrubProjectHistorySkillgenIdentifiers(
+      secrets.scrubbed,
+      knownNames,
+    ),
+  };
+};

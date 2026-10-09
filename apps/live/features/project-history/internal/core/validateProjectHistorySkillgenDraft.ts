@@ -2,12 +2,15 @@ import {
   PROJECT_HISTORY_SKILL_DRAFT_MAX_BODY_BYTES,
   PROJECT_HISTORY_SKILL_DRAFT_MIN_STEPS,
 } from "./projectHistory.constants";
+import { findProjectHistorySkillgenIdentifiers } from "./scrubProjectHistorySkillgenIdentifiers";
 import { projectHistorySkillgenTextHasResidualSecret } from "./scrubProjectHistorySkillgenSecrets";
 
 export type ValidateProjectHistorySkillgenDraftInput = {
   readonly skillMarkdown: string;
   readonly minSteps?: number;
   readonly maxBodyBytes?: number;
+  /** Sender/recipient names that must not appear in the draft. */
+  readonly knownNames?: readonly string[];
 };
 
 export type ValidateProjectHistorySkillgenDraftResult =
@@ -27,6 +30,8 @@ export type ValidateProjectHistorySkillgenDraftResult =
         | "missing_frontmatter"
         | "invalid_name"
         | "missing_description"
+        | "description_repeats_name"
+        | "not_reusable"
         | "missing_version"
         | "missing_status_draft"
         | "missing_source_message_ids"
@@ -36,6 +41,12 @@ export type ValidateProjectHistorySkillgenDraftResult =
     };
 
 const NAME_RE = /^[a-z0-9][a-z0-9-]{0,63}$/;
+
+const slugify = (value: string): string =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 
 const parseFrontmatter = (
   markdown: string,
@@ -57,7 +68,10 @@ const parseFrontmatter = (
       continue;
     }
     const key = line.slice(0, idx).trim();
-    const value = line.slice(idx + 1).trim().replace(/^["']|["']$/g, "");
+    const value = line
+      .slice(idx + 1)
+      .trim()
+      .replace(/^["']|["']$/g, "");
     if (key.length > 0) {
       fm[key] = value;
     }
@@ -133,6 +147,16 @@ export const validateProjectHistorySkillgenDraft = (
   const description = fm.description ?? "";
   if (description.trim().length === 0) {
     return { ok: false, reason: "missing_description" };
+  }
+  if (slugify(description) === slugify(name)) {
+    return { ok: false, reason: "description_repeats_name" };
+  }
+  const bodyAndName = `${name}\n${description}\n${body}`;
+  if (
+    findProjectHistorySkillgenIdentifiers(bodyAndName, input.knownNames)
+      .length > 0
+  ) {
+    return { ok: false, reason: "not_reusable" };
   }
   const version = fm.version ?? "";
   if (version.trim().length === 0) {

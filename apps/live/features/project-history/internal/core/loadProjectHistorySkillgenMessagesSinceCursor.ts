@@ -56,6 +56,7 @@ export const loadProjectHistorySkillgenMessagesSinceCursor = (
       messageId: record.messageId,
       createdAtMs: savedAtMs,
       text: extractProjectHistoryMessageText(record),
+      senderLabel: record.senderLabel ?? null,
     });
   }
   return out;
