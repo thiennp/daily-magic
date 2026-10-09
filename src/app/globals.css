@@ -367,6 +367,62 @@
   --awc-disabled-border: #3a4459;
 }
 
+/*
+  The pine scale is used as text and soft fills as well as for solid buttons.
+  In dark mode lift the text uses and soften the light fills/borders; solid
+  button fills (bg-awc-blue-600/700) stay as they are.
+*/
+.dark .text-awc-blue-600 {
+  color: #7fcdb8;
+}
+.dark .text-awc-blue-700 {
+  color: #8fd6c3;
+}
+.dark .text-awc-blue-800 {
+  color: #a9e0d1;
+}
+.dark .text-awc-blue-900,
+.dark .text-awc-blue-950 {
+  color: #d4efe7;
+}
+.dark .border-awc-blue-200 {
+  border-color: #24574b;
+}
+.dark .border-awc-blue-300 {
+  border-color: #2f6b5c;
+}
+.dark .bg-awc-blue-50 {
+  background-color: #0f2620;
+}
+.dark .bg-awc-blue-100 {
+  background-color: #14312a;
+}
+.dark .marketing-light-surface .text-awc-blue-600 {
+  color: var(--awc-blue-600);
+}
+.dark .marketing-light-surface .text-awc-blue-700 {
+  color: var(--awc-blue-700);
+}
+.dark .marketing-light-surface .text-awc-blue-800 {
+  color: var(--awc-blue-800);
+}
+.dark .marketing-light-surface .text-awc-blue-900,
+.dark .marketing-light-surface .text-awc-blue-950 {
+  color: var(--awc-blue-950);
+}
+.dark .marketing-light-surface .border-awc-blue-200 {
+  border-color: var(--awc-blue-200);
+}
+.dark .marketing-light-surface .border-awc-blue-300 {
+  border-color: var(--awc-blue-300);
+}
+.dark .marketing-light-surface .bg-awc-blue-50 {
+  background-color: var(--awc-blue-50);
+}
+.dark .marketing-light-surface .bg-awc-blue-100 {
+  background-color: var(--awc-blue-100);
+}
+
 .dark .marketing-light-surface {
   --awc-bg: #e8e6e1;
   --awc-surface: #ffffff;
