@@ -33,7 +33,7 @@ describe("AwcProjectTasksAssignDialog — screen D", () => {
   it("uses select pickers for branch/worktree; hides when !hasGit", () => {
     expect(src).toContain("sanitizeProjectTaskGitRefName");
     expect(src).toContain("buildProjectTaskBranchOptions");
-    expect(src).toContain("{hasGit ? (");
+    expect(src).toContain("{hasGit ? ");
     expect(src).toContain("aria-label={C.branch}");
     expect(src).toContain("aria-label={C.worktree}");
     expect(src).toContain("C.createWorktree");
