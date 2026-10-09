@@ -1,5 +1,6 @@
 "use client";
 
+import { isSafeAppCallbackPath } from "@/lib/auth/resolvePostAuthReturnFromSearchParams";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -54,7 +55,10 @@ export default function useLoginForm({
       const dev = await runDevLogin(trimmedEmail, devSecret);
       if (dev.handled) {
         if (dev.feedback === null) {
-          window.location.assign(callbackUrl);
+          // Same-site paths only: a callback like javascript: or //evil.example is never followed.
+          window.location.assign(
+            isSafeAppCallbackPath(callbackUrl) ? callbackUrl : "/",
+          );
         } else {
           setFeedback(dev.feedback);
         }

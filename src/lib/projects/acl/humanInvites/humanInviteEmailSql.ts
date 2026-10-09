@@ -21,6 +21,8 @@ export const expireStaleHumanEmailInvites = async (input: {
 /** Email invites created for this project inside the rate-limit window. */
 export const countRecentHumanEmailInvites = async (
   projectId: string,
+  /** A member is limited by what they sent themselves; the owner passes null (whole project). */
+  createdByUserId: string | null = null,
 ): Promise<number> => {
   const sql = getSql();
   const rows = asRowArray(
@@ -28,6 +30,8 @@ export const countRecentHumanEmailInvites = async (
       SELECT COUNT(*)::int AS n
       FROM project_human_invites
       WHERE project_id = ${projectId}
+        AND (${createdByUserId}::text IS NULL
+          OR created_by_user_id = ${createdByUserId})
         AND delivery = 'email'
         AND created_at > NOW() - make_interval(mins => ${HUMAN_INVITE_EMAIL_RATE_LIMIT_WINDOW_MINUTES})
     `,

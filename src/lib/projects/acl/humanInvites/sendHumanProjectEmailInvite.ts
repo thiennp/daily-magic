@@ -11,7 +11,10 @@ import {
 } from "@/lib/projects/acl/humanInvites/hashHumanInviteToken";
 import { HUMAN_INVITE_DEFAULT_EXPIRES_DAYS } from "@/lib/projects/acl/humanInvites/humanInvite.constants";
 import { insertHumanEmailInviteRow } from "@/lib/projects/acl/humanInvites/insertHumanEmailInviteRow";
-import { HUMAN_INVITE_EMAIL_RATE_LIMIT_COUNT } from "@/lib/projects/acl/humanInvites/humanInviteEmail.constant";
+import {
+  HUMAN_INVITE_EMAIL_MEMBER_RATE_LIMIT_COUNT,
+  HUMAN_INVITE_EMAIL_RATE_LIMIT_COUNT,
+} from "@/lib/projects/acl/humanInvites/humanInviteEmail.constant";
 import {
   countRecentHumanEmailInvites,
   expireStaleHumanEmailInvites,
@@ -78,8 +81,14 @@ export const sendHumanProjectEmailInvite = async (input: {
 
   await ensureProjectAclSchema();
   await expireStaleHumanEmailInvites({ projectId: input.projectId, email });
-  const recent = await countRecentHumanEmailInvites(input.projectId);
-  if (recent >= HUMAN_INVITE_EMAIL_RATE_LIMIT_COUNT) {
+  const recent = await countRecentHumanEmailInvites(
+    input.projectId,
+    access.owner ? null : input.ownerUserId,
+  );
+  const limit = access.owner
+    ? HUMAN_INVITE_EMAIL_RATE_LIMIT_COUNT
+    : HUMAN_INVITE_EMAIL_MEMBER_RATE_LIMIT_COUNT;
+  if (recent >= limit) {
     return { ok: false, code: "rate_limited" };
   }
 

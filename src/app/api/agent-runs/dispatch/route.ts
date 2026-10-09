@@ -6,6 +6,7 @@ import {
   buildAgentRunDispatchPromptRequiredResponse,
 } from "@/lib/dispatch/buildAgentRunDispatchFailureResponse";
 import { isAllowedAppHttpOrigin } from "@/lib/app/isAllowedAppHttpOrigin";
+import { guardAgentRunDispatchBody } from "@/lib/dispatch/guardAgentRunDispatchBody";
 import { parseAgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
 import { isCursorCloudDispatchBody } from "@/lib/dispatch/isCursorCloudDispatchBody";
 import { isCursorCloudExecutorDeviceId } from "@/lib/cursorCloud/cursorCloudExecutorDeviceId.constant";
@@ -38,9 +39,8 @@ export async function POST(request: Request): Promise<Response> {
       targetDeviceId !== undefined &&
       !isCursorCloudExecutorDeviceId(targetDeviceId)
     ) {
-      const tooOldResponse = await refuseTooOldAgentWitchDeviceForConnect(
-        targetDeviceId,
-      );
+      const tooOldResponse =
+        await refuseTooOldAgentWitchDeviceForConnect(targetDeviceId);
       if (tooOldResponse !== null) {
         return tooOldResponse;
       }
@@ -56,6 +56,17 @@ export async function POST(request: Request): Promise<Response> {
           },
         },
         403,
+      );
+    }
+
+    const bodyGuard = await guardAgentRunDispatchBody({
+      requesterUserId: actor.id,
+      body: parsed,
+    });
+    if (!bodyGuard.ok) {
+      return Response.json(
+        { ok: false, errorMessage: bodyGuard.errorMessage },
+        { status: 403 },
       );
     }
 

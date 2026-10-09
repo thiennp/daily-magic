@@ -72,4 +72,16 @@ describe("sendHumanProjectEmailInvite as a member", () => {
       expect.objectContaining({ requiresApproval: true }),
     );
   });
+
+  it("limits what one member sends on their own, below the owner's quota", async () => {
+    authorize.mockResolvedValue({ allow: true, owner: false });
+    helpers.countRecentHumanEmailInvites.mockResolvedValue(5);
+    expect(await call()).toEqual({ ok: false, code: "rate_limited" });
+    expect(helpers.countRecentHumanEmailInvites).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.any(String),
+    );
+    authorize.mockResolvedValue({ allow: true, owner: true });
+    expect((await call()).ok).toBe(true);
+  });
 });

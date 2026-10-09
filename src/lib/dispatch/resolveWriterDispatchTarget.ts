@@ -2,6 +2,7 @@ import isNonEmptyString from "@/lib/agentWitch/isNonEmptyString";
 import isClaudeDispatchPayload from "@/lib/agentWitch/isWriterDispatchPayload";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
+import { guardAgentRunDispatchBody } from "@/lib/dispatch/guardAgentRunDispatchBody";
 import { usersShareGroup } from "@/lib/dispatch/usersShareGroup";
 
 export const resolveClaudeDispatchTarget = async (
@@ -49,6 +50,20 @@ export const resolveClaudeDispatchTarget = async (
         "You can only dispatch to colleagues in a shared group.",
       ),
     };
+  }
+
+  const text = (value: unknown): string | undefined =>
+    typeof value === "string" && value.length > 0 ? value : undefined;
+  const bodyGuard = await guardAgentRunDispatchBody({
+    requesterUserId: sender.userId,
+    body: {
+      sourceRunId: text(payload.sourceRunId),
+      projectId: text(payload.projectId),
+      targetUserId: text(payload.targetUserId),
+    },
+  });
+  if (!bodyGuard.ok) {
+    return { ok: false, error: buildDispatchError(bodyGuard.errorMessage) };
   }
 
   return {

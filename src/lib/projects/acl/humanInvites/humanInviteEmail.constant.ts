@@ -13,6 +13,9 @@ export type HumanInviteDelivery = (typeof HUMAN_INVITE_DELIVERIES)[number];
 
 /** Max email invites a project can send per rolling window. */
 export const HUMAN_INVITE_EMAIL_RATE_LIMIT_COUNT = 20;
+
+/** What one member may send in the same window, so one member cannot use up the owner's quota. */
+export const HUMAN_INVITE_EMAIL_MEMBER_RATE_LIMIT_COUNT = 5;
 export const HUMAN_INVITE_EMAIL_RATE_LIMIT_WINDOW_MINUTES = 60;
 
 /** Plain RFC-ish shape check; Resend does the real validation. */

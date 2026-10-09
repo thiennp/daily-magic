@@ -1,7 +1,7 @@
 import { buildPostAuthReturn } from "@/lib/auth/buildPostAuthReturn";
 
 /** Same-site path only: browsers read "/\\x" like "//x", and control characters split headers. */
-const isSafeAppCallbackPath = (path: string): boolean =>
+export const isSafeAppCallbackPath = (path: string): boolean =>
   path.startsWith("/") &&
   !path.startsWith("//") &&
   !/[\\\u0000-\u001f\u007f]/.test(path) &&
