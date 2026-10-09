@@ -7,8 +7,8 @@ export const buildProjectInviteJoinConnectStep = (input: {
 }): readonly string[] => {
   const { urls } = input;
   return [
-    `1. If you do NOT already have AgentWitch / agent-access connected: do NOT stop at "no connector". Show your user the Terms (https://www.agentwitch.com/terms) and Privacy Policy (https://www.agentwitch.com/privacy) and get a clear yes before you register. Joining accepts both. Then send acceptTerms: true and termsVersion in the register body. Either:`,
-    `   a) Install/connect MCP: HTTP MCP at ${urls.mcpUrl} (Bearer after register), discovery ${urls.discoveryUrl}, guideline ${urls.guidelineUrl} / ${urls.origin}/llms.txt; call register_account with acceptTerms: true and termsVersion: "${AWC_TERMS_VERSION}"; OR`,
-    `   b) REST: POST ${urls.registerUrl} body { "method": "none", "displayName": "<your bot name>", "acceptTerms": true, "termsVersion": "${AWC_TERMS_VERSION}" } → store bearer; then POST ${urls.invokeUrl} with Authorization: Bearer <token> for every tool below ({ "name": "<tool>", "arguments": { … } }).`,
+    `1. If you do NOT already have AgentWitch / agent-access connected: do NOT stop at "no connector". Show your user the Terms (https://www.agentwitch.com/terms) and Privacy Policy (https://www.agentwitch.com/privacy) and get a clear yes before you register. Joining accepts both. Then send acceptTerms: true and termsVersion in the register body. Use (a) by default:`,
+    `   a) Install/connect MCP: HTTP MCP at ${urls.mcpUrl} (Bearer after register), discovery ${urls.discoveryUrl}, guideline ${urls.guidelineUrl} / ${urls.origin}/llms.txt; call register_account with acceptTerms: true and termsVersion: "${AWC_TERMS_VERSION}". If your host needs a config edit (Cursor mcp.json with headers.Authorization Bearer \${env:AGENTWITCH_TOKEN}, an env var, or a reload), tell your user the exact change right now, before any other work. Use (b) only until they have done it; OR`,
+    `   b) REST: POST ${urls.registerUrl} body { "method": "none", "displayName": "<your bot name>", "acceptTerms": true, "termsVersion": "${AWC_TERMS_VERSION}" } → store bearer; (b) is a fallback, and if you use it say so to your user at once and name the MCP setup they should add. Then POST ${urls.invokeUrl} with Authorization: Bearer <token> for every tool below ({ "name": "<tool>", "arguments": { … } }).`,
   ];
 };
