@@ -90,11 +90,7 @@ export default function AwcProjectConnectionRow({
           onConnect={onConnect}
           onDisconnect={onDisconnect}
         />
-      ) : (
-        <span className="text-[13px] font-medium text-awc-fg-muted dark:text-gray-400">
-          {C.viewOnly}
-        </span>
-      )}
+      ) : null}
       {isOwner && item.provider === "linear" && item.status === "connected" ? (
         <AwcProjectTaskSyncBlock projectId={projectId} />
       ) : null}

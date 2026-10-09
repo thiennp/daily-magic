@@ -83,9 +83,11 @@ export default function AwcProjectSettingsNameSection({
           ) : null}
         </form>
       )}
-      <p className="text-[13px] text-awc-fg-muted dark:text-gray-400">
-        {C.nameNote}
-      </p>
+      {canEdit ? (
+        <p className="text-[13px] text-awc-fg-muted dark:text-gray-400">
+          {C.nameNote}
+        </p>
+      ) : null}
     </section>
   );
 }

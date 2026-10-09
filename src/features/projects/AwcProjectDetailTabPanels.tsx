@@ -52,7 +52,10 @@ export default function AwcProjectDetailTabPanels({
               selected ? "flex min-w-0 flex-col gap-4 pt-4" : undefined
             }
           >
-            <AwcProjectTabPanelIntro tabId={tabId} />
+            <AwcProjectTabPanelIntro
+              tabId={tabId}
+              isOwner={pageActorRole === "owner"}
+            />
             <AwcProjectDetailTabPanelBody
               tabId={tabId}
               selected={selected}

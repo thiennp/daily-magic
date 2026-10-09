@@ -4,6 +4,7 @@ import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/autho
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import AwcProjectSettingsDangerZone from "@/features/projects/settings/AwcProjectSettingsDangerZone";
 import AwcProjectSettingsFolderRow from "@/features/projects/settings/AwcProjectSettingsFolderRow";
+import AwcProjectSettingsMemberFolderRow from "@/features/projects/settings/AwcProjectSettingsMemberFolderRow";
 import AwcProjectSettingsHistoryRow from "@/features/projects/settings/AwcProjectSettingsHistoryRow";
 import AwcProjectSettingsTasksChatRow from "@/features/projects/settings/AwcProjectSettingsTasksChatRow";
 import AwcProjectSettingsLeaveZone from "@/features/projects/settings/AwcProjectSettingsLeaveZone";
@@ -40,7 +41,14 @@ export default function AwcProjectDetailSettingsPanel({
         startInEditMode={startRename}
         canEdit={isOwner}
       />
-      <AwcProjectSettingsFolderRow project={project} isOwner={isOwner} />
+      {isOwner ? (
+        <AwcProjectSettingsFolderRow project={project} isOwner />
+      ) : (
+        <AwcProjectSettingsMemberFolderRow
+          project={project}
+          isActiveMember={pageActorRole === "member"}
+        />
+      )}
       <AwcProjectConnectionsSection
         projectId={project.id}
         projectName={project.name}

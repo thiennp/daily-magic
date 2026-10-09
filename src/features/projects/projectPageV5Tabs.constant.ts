@@ -36,3 +36,7 @@ export const PROJECT_PAGE_V5_TAB_SUBTITLES: Record<ProjectPageV5TabId, string> =
     resources: "Folders and code repositories for this project.",
     settings: "Name, folder, and delete.",
   };
+
+/** Settings subtitle for people who cannot rename or delete the project. */
+export const PROJECT_PAGE_V5_SETTINGS_MEMBER_SUBTITLE =
+  "Project details, your folder, and leaving.";
