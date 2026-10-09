@@ -11,7 +11,7 @@ const readSrc = (relativePath: string): string =>
 describe("Grok wake-link setup copy", () => {
   it("points to assistant wake-routine links and the owner form, not chat", () => {
     expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).toBe(
-      "After access is active, the assistant creates its wake routine and posts links to its wake link and key in its user's chat so they can copy both. The project owner clicks Add wake link at Access › People › Members › your assistant › Grok wake link and pastes them there, never into chat.",
+      "Right after joining, even before approval, the assistant creates its wake routine and posts links to its wake link and key in its user's chat so they can copy both. The project owner clicks Add wake link at Access › People › Members › your assistant › Grok wake link and pastes them there (or on the pending request card before approving), never into chat.",
     );
     expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).toMatch(/wake routine/);
     expect(AWC_GROK_WEBHOOK_SETUP_COPY.instruction).not.toMatch(
@@ -35,7 +35,9 @@ describe("Grok wake-link setup copy", () => {
     const connect = readSrc(
       "src/features/projects/access/invites/ProjectInviteConnectSteps.tsx",
     );
-    expect(page).toContain("AWC_PROJECT_INVITE_AUTO_APPROVE_COPY.humanPageWake");
+    expect(page).toContain(
+      "AWC_PROJECT_INVITE_AUTO_APPROVE_COPY.humanPageWake",
+    );
     expect(copy).toMatch(/wake link/i);
     expect(copy).toContain("After access is active");
     expect(copy).toContain("assistant creates its wake routine");
