@@ -81,7 +81,7 @@ export default function AwcMessengerThreadPane({
       {!isLoading && filter === "all" ? noticesSlot : null}
       {isLoading ? <AwcOneWindowFeedLoading /> : null}
       {!isLoading && thread !== null && peers.shown.length === 0 ? (
-        <AwcOneWindowFeedEmpty />
+        <AwcOneWindowFeedEmpty filter={filter} />
       ) : null}
       {!isLoading && thread !== null && peers.shown.length > 0 ? (
         <AwcMessengerTimeline

@@ -27,8 +27,10 @@ describe("One-window wave A (OW-H1 + OW-H4)", () => {
     const empty = read(
       "src/features/projects/messenger/oneWindow/AwcOneWindowFeedEmpty.tsx",
     );
-    expect(empty).toContain("copy.emptyTitle");
-    expect(empty).toContain("copy.emptyBody");
+    // The title and body now come from the active filter's copy.
+    expect(empty).toContain("resolveOneWindowEmptyCopy");
+    expect(empty).toContain("copy.title");
+    expect(empty).toContain("copy.body");
     // Body is emptyBody only — not a second "No messages yet" heading string.
     expect(ONE_WINDOW_FEED_COPY.emptyBody.startsWith("No messages yet")).toBe(
       false,
@@ -85,7 +87,15 @@ describe("One-window wave A (OW-H1 + OW-H4)", () => {
 
   it("feed chrome has no violet / MCP / OAuth / token / window_kind jargon", () => {
     const blob = JSON.stringify(ONE_WINDOW_FEED_COPY).toLowerCase();
-    for (const bad of ["violet", "purple", "mcp", "oauth", "window_kind", " token", "token"]) {
+    for (const bad of [
+      "violet",
+      "purple",
+      "mcp",
+      "oauth",
+      "window_kind",
+      " token",
+      "token",
+    ]) {
       if (bad.trim() === "token") {
         expect(blob.includes('"token"') || blob.includes(" token")).toBe(false);
         continue;

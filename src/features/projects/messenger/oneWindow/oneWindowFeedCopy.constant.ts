@@ -2,6 +2,10 @@
 export const ONE_WINDOW_FEED_COPY = {
   emptyTitle: "No messages yet",
   emptyBody: "Say hello or @ an assistant to assign work.",
+  emptyNeedsTitle: "Nothing needs you",
+  emptyNeedsBody: "Tasks waiting on you and approvals to decide show up here.",
+  emptyApprovalsTitle: "No approvals waiting",
+  emptyApprovalsBody: "Join requests and run approvals show up here.",
   loading: "Loading messages",
   errorTitle: "Messages didn't load",
   errorBody:
