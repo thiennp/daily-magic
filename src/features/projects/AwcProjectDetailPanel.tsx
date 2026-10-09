@@ -45,7 +45,7 @@ export default function AwcProjectDetailPanel({
   const leave = useAwcProjectLeaveFlow(project.id);
 
   return (
-    <div className="grid min-w-0 grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-0 xl:grid-cols-[minmax(0,1fr)_21.25rem]">
+    <div className="grid min-w-0 grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-0 xl:grid-cols-[minmax(0,1fr)_21.25rem] max-md:pb-20">
       <div className="flex min-w-0 flex-col gap-5 lg:pr-5">
         <AwcProjectDetailHeader
           projectId={project.id}

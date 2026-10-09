@@ -20,7 +20,7 @@ export default function KnowledgeChartCard(props: {
   readonly children: ReactNode;
 }) {
   return (
-    <figure className="m-0 flex min-w-0 flex-col gap-1 rounded-lg border border-awc-border bg-awc-surface p-3">
+    <figure className="relative m-0 flex min-w-0 flex-col gap-1 rounded-lg border border-awc-border bg-awc-surface p-3">
       <figcaption className="flex items-center gap-1.5 text-sm font-medium text-awc-fg">
         {props.title}
         <InfoTip text={props.tip} label={`About ${props.title}`} />
@@ -33,27 +33,29 @@ export default function KnowledgeChartCard(props: {
       ) : (
         <>
           {props.children}
-          <table className="sr-only">
-            <caption>{props.title}</caption>
-            <thead>
-              <tr>
-                {props.table.headers.map((header) => (
-                  <th key={header} scope="col">
-                    {header}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {props.table.rows.map((row) => (
-                <tr key={String(row[0])}>
-                  {row.map((cell, index) => (
-                    <td key={`${String(row[0])}-${index}`}>{cell}</td>
+          <div className="sr-only">
+            <table>
+              <caption>{props.title}</caption>
+              <thead>
+                <tr>
+                  {props.table.headers.map((header) => (
+                    <th key={header} scope="col">
+                      {header}
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {props.table.rows.map((row) => (
+                  <tr key={String(row[0])}>
+                    {row.map((cell, index) => (
+                      <td key={`${String(row[0])}-${index}`}>{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           {props.footer !== undefined ? (
             <p className={MUTED_CLASS}>{props.footer}</p>
           ) : null}

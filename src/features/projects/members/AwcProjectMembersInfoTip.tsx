@@ -21,7 +21,7 @@ export default function AwcProjectMembersInfoTip({
       <span
         role="tooltip"
         id={id}
-        className="pointer-events-none absolute -left-2.5 bottom-[calc(100%+6px)] z-30 w-max max-w-[220px] rounded-lg bg-awc-fg px-2.5 py-2 text-left text-[12.5px] font-normal not-italic leading-snug text-awc-surface opacity-0 transition-opacity motion-reduce:transition-none group-focus-within:opacity-100 group-hover:opacity-100"
+        className="pointer-events-none absolute -left-2.5 bottom-[calc(100%+6px)] z-30 w-max max-w-[220px] rounded-lg bg-awc-fg px-2.5 py-2 text-left text-[12.5px] font-normal not-italic leading-snug text-awc-surface hidden group-focus-within:block group-hover:block"
       >
         {children}
       </span>
