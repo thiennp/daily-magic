@@ -49,7 +49,11 @@ export default function AwcProjectTaskRecordRow({
               <span>{C.dependsOn(task.dependsOn.length)}</span>
             ) : null}
           </span>
-          {task.description !== null ? (
+          {task.resultSummary !== null ? (
+            <span className="mt-0.5 line-clamp-2 block text-[12.5px] text-awc-fg-muted">
+              {task.resultSummary}
+            </span>
+          ) : task.description !== null ? (
             <span className="mt-0.5 block truncate text-[12.5px] text-awc-fg-subtle">
               {task.description}
             </span>
