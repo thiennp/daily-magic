@@ -84,6 +84,7 @@ export async function deleteGroupById(
   const sql = getSql();
 
   if (deleteMembers) {
+    // Never take an account that belongs elsewhere: other companies and staff roles stay.
     await sql`
       DELETE FROM users
       WHERE id IN (
@@ -91,6 +92,10 @@ export async function deleteGroupById(
         FROM group_memberships
         WHERE group_id = ${groupId}
       )
+        AND global_role = 'user'
+        AND id NOT IN (
+          SELECT user_id FROM group_memberships WHERE group_id <> ${groupId}
+        )
     `;
   }
 

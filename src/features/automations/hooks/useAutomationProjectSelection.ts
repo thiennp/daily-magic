@@ -23,8 +23,17 @@ export function useAutomationProjectSelection(
   const requiresProjectSelection =
     workflowRequiresProjectSelection(workflowFields);
   const [selectedProjectId, setSelectedProjectId] = useState("");
-  const { projects, isLoading, addProject, removeProject } =
-    useUserProjects("");
+  const {
+    projects: allProjects,
+    isLoading,
+    addProject,
+    removeProject,
+  } = useUserProjects("");
+  // An automation runs on a project the user owns.
+  const projects = useMemo(
+    () => allProjects.filter((project) => project.viewerRole === undefined),
+    [allProjects],
+  );
   const selectedProject = useMemo(() => {
     if (!requiresProjectSelection || selectedProjectId.length === 0) {
       return null;

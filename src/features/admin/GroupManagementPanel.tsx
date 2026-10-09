@@ -96,6 +96,7 @@ export default function GroupManagementPanel({
             groupManagement={groupManagement}
             actorUserId={actorUserId}
             actorIsAdmin={canConfigureDispatchPolicy}
+            actorCanManageAdmins={canDeleteTeam}
           />
         </>
       ) : null}

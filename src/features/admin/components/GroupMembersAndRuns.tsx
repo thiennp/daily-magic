@@ -6,12 +6,15 @@ interface GroupMembersAndRunsProps {
   readonly groupManagement: ReturnType<typeof useGroupManagement>;
   readonly actorUserId: string | null;
   readonly actorIsAdmin: boolean;
+  /** Only the company owner (or platform admin) changes or removes another admin. */
+  readonly actorCanManageAdmins: boolean;
 }
 
 export default function GroupMembersAndRuns({
   groupManagement,
   actorUserId,
   actorIsAdmin,
+  actorCanManageAdmins,
 }: GroupMembersAndRunsProps) {
   const groupId = groupManagement.selectedGroupId;
   const companyName =
@@ -24,6 +27,7 @@ export default function GroupMembersAndRuns({
         companyName={companyName}
         actorUserId={actorUserId}
         actorIsAdmin={actorIsAdmin}
+        actorCanManageAdmins={actorCanManageAdmins}
         memberEmail={groupManagement.memberEmail}
         memberRole={groupManagement.memberRole}
         onMemberEmailChange={groupManagement.setMemberEmail}

@@ -16,7 +16,7 @@ const ADMIN_NAV = [
   { href: "/admin/groups", label: COMPANIES_ENTITY_LABEL, staffOnly: false },
   { href: "/admin/users", label: "Users", staffOnly: true },
   { href: "/admin/cost-control", label: "Cost control", staffOnly: true },
-  { href: "/styleguide", label: "Styleguide", staffOnly: false },
+  { href: "/styleguide", label: "Styleguide", staffOnly: true },
 ] as const;
 
 const LINK_CLASS = "rounded-lg px-3 py-2 text-sm transition";

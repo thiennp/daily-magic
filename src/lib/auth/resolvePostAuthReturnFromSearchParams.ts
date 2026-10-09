@@ -1,7 +1,11 @@
 import { buildPostAuthReturn } from "@/lib/auth/buildPostAuthReturn";
 
+/** Same-site path only: browsers read "/\\x" like "//x", and control characters split headers. */
 const isSafeAppCallbackPath = (path: string): boolean =>
-  path.startsWith("/") && !path.startsWith("//");
+  path.startsWith("/") &&
+  !path.startsWith("//") &&
+  !/[\\\u0000-\u001f\u007f]/.test(path) &&
+  !/%5c|%2f%2f|%0[0-9a-f]/i.test(path);
 
 /** Derive post-auth destination from current page query (marketing home, login, etc.). */
 export const resolvePostAuthReturnFromSearchParams = (

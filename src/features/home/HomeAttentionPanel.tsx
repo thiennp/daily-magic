@@ -30,7 +30,10 @@ export default function HomeAttentionPanel() {
   const [nowMs] = useState(() => Date.now());
   const { projects } = useUserProjects("");
   const recentProjects = useMemo(
-    () => selectHomeRecentProjects(projects),
+    () =>
+      selectHomeRecentProjects(
+        projects.filter((project) => project.viewerRole === undefined),
+      ),
     [projects],
   );
   const questions = useAutoSkillQuestions(recentProjects.map((p) => p.id));

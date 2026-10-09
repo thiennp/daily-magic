@@ -8,6 +8,7 @@ import { requireAgentWitchDeviceAuth } from "@/lib/agentWitch/requireAgentWitchD
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { DispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
 import { updateAgentRunStatus } from "@/lib/dispatch/agentRunQueries";
+import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
 import createAgentRun from "@/lib/dispatch/createAgentRun";
 
 export const dynamic = "force-dynamic";
@@ -74,6 +75,13 @@ export async function POST(
 
   const status =
     parsed.exitCode === 0 ? AgentRunStatus.COMPLETED : AgentRunStatus.FAILED;
+
+  if ((await getAgentRunById(parsed.agentRunId)) !== null) {
+    return Response.json(
+      { ok: false, errorMessage: "This run id is already in use." },
+      { status: 409 },
+    );
+  }
 
   await createAgentRun({
     id: parsed.agentRunId,

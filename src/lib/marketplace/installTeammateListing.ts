@@ -1,6 +1,7 @@
 import { forkPublishedCapability } from "@/lib/capabilities/forkPublishedCapability";
 import { getPublishedCapabilityById } from "@/lib/capabilities/capabilityQueries";
 import { canViewPublishedCapability } from "@/lib/capabilities/canViewPublishedCapability";
+import { requireOwnerProjectIdForCreate } from "@/lib/projects/requireProjectIdForCreate";
 import bindPublishedCapabilityHarnessToProject from "@/lib/marketplace/bindPublishedCapabilityHarnessToProject";
 import type { MarketplaceInstallResult } from "@/lib/marketplace/types/MarketplaceInstallResult.type";
 
@@ -38,7 +39,17 @@ const installTeammateListing = async (
     return installFailure("You cannot install this listing.");
   }
 
-  const forkResult = await forkPublishedCapability(capabilityId, actorUserId, projectId);
+  // Check the project BEFORE the fork writes a library row into it.
+  const gate = await requireOwnerProjectIdForCreate({ actorUserId, projectId });
+  if (!gate.ok) {
+    return installFailure(gate.error);
+  }
+
+  const forkResult = await forkPublishedCapability(
+    capabilityId,
+    actorUserId,
+    gate.projectId,
+  );
 
   if (!forkResult.ok) {
     return installFailure(

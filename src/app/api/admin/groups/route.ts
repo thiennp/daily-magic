@@ -105,7 +105,11 @@ export async function DELETE(request: Request) {
     return Response.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  await deleteGroupById(groupId, body.deleteMembers === true);
+  // Deleting people's accounts is a platform-admin action: a company owner only removes the company.
+  await deleteGroupById(
+    groupId,
+    body.deleteMembers === true && isGlobalAdmin(actor),
+  );
 
   return Response.json({ deleted: true });
 }

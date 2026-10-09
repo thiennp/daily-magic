@@ -6,6 +6,7 @@ interface GroupMembersTableProps {
   readonly members: readonly MemberItem[];
   readonly actorUserId: string | null;
   readonly actorIsAdmin: boolean;
+  readonly actorCanManageAdmins: boolean;
   readonly onRoleChange: (membershipId: string, role: string) => void;
   readonly onRemoveMember: (membershipId: string) => void;
 }
@@ -14,6 +15,7 @@ export default function GroupMembersTable({
   members,
   actorUserId,
   actorIsAdmin,
+  actorCanManageAdmins,
   onRoleChange,
   onRemoveMember,
 }: GroupMembersTableProps) {
@@ -37,6 +39,7 @@ export default function GroupMembersTable({
               member={member}
               isSelf={member.membership.userId === actorUserId}
               actorIsAdmin={actorIsAdmin}
+              actorCanManageAdmins={actorCanManageAdmins}
               onRoleChange={onRoleChange}
               onRemoveMember={onRemoveMember}
             />

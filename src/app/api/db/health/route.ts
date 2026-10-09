@@ -14,13 +14,13 @@ export async function GET() {
       connectedAt,
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Database connection failed";
+    // The driver's message can carry host and user names: keep it in the server log only.
+    console.error("db health check failed", error);
 
     return Response.json(
       {
         connected: false,
-        error: message,
+        error: "Database connection failed",
       },
       { status: 500 },
     );

@@ -42,7 +42,8 @@ export default async function OnboardingFirstTaskPage({
     projectId,
     actorUserId: actor.id,
   });
-  if (!access.ok) {
+  // A viewer is read-only: adding assistants or tasks would be refused by the API.
+  if (!access.ok || access.role === "viewer") {
     notFound();
   }
   const chrome = buildOnboardingUserChrome({

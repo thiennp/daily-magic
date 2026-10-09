@@ -12,6 +12,7 @@ interface GroupMembersTableRowProps {
   readonly member: MemberItem;
   readonly isSelf: boolean;
   readonly actorIsAdmin: boolean;
+  readonly actorCanManageAdmins: boolean;
   readonly onRoleChange: (membershipId: string, role: string) => void;
   readonly onRemoveMember: (membershipId: string) => void;
 }
@@ -23,11 +24,18 @@ export default function GroupMembersTableRow({
   member,
   isSelf,
   actorIsAdmin,
+  actorCanManageAdmins,
   onRoleChange,
   onRemoveMember,
 }: GroupMembersTableRowProps) {
   const isOwner = member.membership.role === GroupRole.GROUP_SUPER_ADMIN;
-  const canEdit = actorIsAdmin && !isOwner && !isSelf;
+  // The server lets only the company owner or a platform admin touch another admin.
+  const isAdminSeat = member.membership.role === GroupRole.GROUP_ADMIN;
+  const canEdit =
+    actorIsAdmin &&
+    !isOwner &&
+    !isSelf &&
+    (!isAdminSeat || actorCanManageAdmins);
   const label = memberLabel(member);
 
   return (

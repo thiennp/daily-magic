@@ -22,7 +22,12 @@ export interface SaveToProjectPickerState {
 export function useSaveToProjectPicker(
   contextProjectId?: string,
 ): SaveToProjectPickerState {
-  const { projects, isLoading } = useUserProjects("");
+  const { projects: allProjects, isLoading } = useUserProjects("");
+  // Library saves go to a project the user owns; a joined project would answer 403.
+  const projects = useMemo(
+    () => allProjects.filter((project) => project.viewerRole === undefined),
+    [allProjects],
+  );
   const [manualProjectId, setManualProjectId] = useState<string | null>(null);
   const defaultProjectId = useMemo(
     () =>

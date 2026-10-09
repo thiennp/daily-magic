@@ -40,4 +40,24 @@ describe("resolvePostAuthReturnFromSearchParams", () => {
       "/",
     );
   });
+
+  it("never returns a callback that can leave the site", () => {
+    for (const evil of [
+      "/\\evil.com",
+      "/%5Cevil.com",
+      "//evil.com",
+      "/%2f%2fevil.com",
+      "/a\nb",
+    ]) {
+      const result = resolvePostAuthReturnFromSearchParams(
+        new URLSearchParams({ callbackUrl: evil }),
+      );
+      expect(result).not.toBe(evil);
+    }
+    expect(
+      resolvePostAuthReturnFromSearchParams(
+        new URLSearchParams({ callbackUrl: "/projects/p1?tab=tasks" }),
+      ),
+    ).toBe("/projects/p1?tab=tasks");
+  });
 });

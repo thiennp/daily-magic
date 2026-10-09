@@ -14,6 +14,7 @@ interface GroupMembersSectionProps {
   readonly companyName: string;
   readonly actorUserId: string | null;
   readonly actorIsAdmin: boolean;
+  readonly actorCanManageAdmins: boolean;
   readonly memberEmail: string;
   readonly memberRole: string;
   readonly onMemberEmailChange: (value: string) => void;
@@ -28,6 +29,7 @@ export default function GroupMembersSection({
   companyName,
   actorUserId,
   actorIsAdmin,
+  actorCanManageAdmins,
   memberEmail,
   memberRole,
   onMemberEmailChange,
@@ -75,6 +77,7 @@ export default function GroupMembersSection({
           members={members}
           actorUserId={actorUserId}
           actorIsAdmin={actorIsAdmin}
+          actorCanManageAdmins={actorCanManageAdmins}
           onRoleChange={onRoleChange}
           onRemoveMember={setPendingMembershipId}
         />
