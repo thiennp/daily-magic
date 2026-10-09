@@ -53,7 +53,9 @@ export default function AwcProjectTaskBoard({
         }}
         onCancel={board.cancel}
       />
-      <p className="m-0 text-[12.5px] text-awc-fg-subtle">{B.boardHint}</p>
+      {readOnly ? null : (
+        <p className="m-0 text-[12.5px] text-awc-fg-subtle">{B.boardHint}</p>
+      )}
       <div className="flex gap-3 overflow-x-auto pb-1" aria-label={B.boardAria}>
         {(shownColumns ?? PROJECT_TASK_BOARD_COLUMNS).map((status) => (
           <AwcProjectTaskBoardColumn

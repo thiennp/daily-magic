@@ -13,6 +13,8 @@ import { resolveComputerRunApprovalCardFields } from "@/lib/projects/acl/runAppr
  */
 export const listProjectPendingRunApprovals = async (input: {
   readonly projectId: string;
+  /** Only runs this person's computer will execute: nobody else can answer them. */
+  readonly executorUserId?: string;
 }): Promise<readonly ComputerRunApprovalPayload[]> => {
   await expireStaleDispatchApprovals();
   const rows = asRowArray(
@@ -20,6 +22,8 @@ export const listProjectPendingRunApprovals = async (input: {
       SELECT *
       FROM agent_runs
       WHERE project_id = ${input.projectId}
+        AND (${input.executorUserId ?? null}::text IS NULL
+          OR executor_user_id = ${input.executorUserId ?? null})
         AND status = ${AgentRunStatus.PENDING_APPROVAL}
         AND (approval_expires_at IS NULL OR approval_expires_at > NOW())
       ORDER BY created_at ASC

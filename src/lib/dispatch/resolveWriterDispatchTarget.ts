@@ -3,6 +3,7 @@ import isClaudeDispatchPayload from "@/lib/agentWitch/isWriterDispatchPayload";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
 import { guardAgentRunDispatchBody } from "@/lib/dispatch/guardAgentRunDispatchBody";
+import { getMembershipForUserInGroup } from "@/lib/auth/groupMembershipQueries";
 import { usersShareGroup } from "@/lib/dispatch/usersShareGroup";
 
 export const resolveClaudeDispatchTarget = async (
@@ -41,7 +42,18 @@ export const resolveClaudeDispatchTarget = async (
   const membership =
     executorUserId !== sender.userId
       ? await usersShareGroup(sender.userId, executorUserId, requestedGroupId)
-      : { shared: true, groupId: requestedGroupId };
+      : {
+          shared: true,
+          // A run is stamped with a company only when you belong to it.
+          groupId:
+            requestedGroupId !== null &&
+            (await getMembershipForUserInGroup(
+              requestedGroupId,
+              sender.userId,
+            )) !== null
+              ? requestedGroupId
+              : null,
+        };
 
   if (!membership.shared) {
     return {

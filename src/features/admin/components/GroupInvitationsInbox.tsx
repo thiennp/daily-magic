@@ -1,14 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import { useGroupInvitations } from "@/features/admin/hooks/useGroupInvitations";
 
 /** Invitations to join a company: nobody is added until they accept here. */
 export default function GroupInvitationsInbox() {
-  const router = useRouter();
+  // The company list is loaded once for the page: a full reload shows the company just joined.
   const { invitations, busyId, error, decide } = useGroupInvitations(() => {
-    router.refresh();
+    window.location.reload();
   });
 
   if (invitations.length === 0 && error === null) return null;

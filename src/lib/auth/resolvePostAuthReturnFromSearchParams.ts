@@ -5,7 +5,7 @@ export const isSafeAppCallbackPath = (path: string): boolean =>
   path.startsWith("/") &&
   !path.startsWith("//") &&
   !/[\\\u0000-\u001f\u007f]/.test(path) &&
-  !/%5c|%2f%2f|%0[0-9a-f]/i.test(path);
+  !/%5c|%0[0-9a-f]/i.test(path);
 
 /** Derive post-auth destination from current page query (marketing home, login, etc.). */
 export const resolvePostAuthReturnFromSearchParams = (

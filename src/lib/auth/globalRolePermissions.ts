@@ -26,5 +26,13 @@ export function canDeleteUser(actor: AuthActor, target: UserRecord): boolean {
     return false;
   }
 
-  return actor.id !== target.id;
+  if (actor.id === target.id) {
+    return false;
+  }
+
+  // Staff accounts are removed only by the super admin: an admin cannot take out the owner account.
+  const targetIsStaff =
+    target.globalRole === GlobalRole.SUPER_ADMIN ||
+    target.globalRole === GlobalRole.ADMIN;
+  return !targetIsStaff || isSuperAdmin(actor);
 }

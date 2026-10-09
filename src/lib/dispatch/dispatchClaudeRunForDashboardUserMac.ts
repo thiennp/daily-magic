@@ -66,6 +66,7 @@ export const dispatchClaudeRunForDashboardUserMac = async (input: {
   const dispatchPolicy = await resolveDispatchPolicyForExecutor({
     executorUserId: target.executorUserId,
     groupId: target.groupId,
+    deviceId: agentResolution.deviceId,
     capabilityPolicyOverride:
       capabilityResolution.capability?.dispatchPolicyOverride ?? null,
   });

@@ -15,6 +15,8 @@ export interface ResolveDispatchPolicyInput {
   readonly executorUserId: string;
   readonly groupId?: string | null;
   readonly capabilityPolicyOverride?: DispatchPolicyValue | null;
+  /** The computer the run goes to; without it the executor's most recently seen one is used. */
+  readonly deviceId?: string | null;
 }
 
 export const resolveDispatchPolicyForExecutor = async (
@@ -28,7 +30,8 @@ export const resolveDispatchPolicyForExecutor = async (
     return input.capabilityPolicyOverride;
   }
 
-  const deviceId = await getActiveDeviceIdForUser(input.executorUserId);
+  const deviceId =
+    input.deviceId ?? (await getActiveDeviceIdForUser(input.executorUserId));
   const devicePolicy =
     deviceId !== null ? await getDeviceDispatchPolicy(deviceId) : null;
   const userPolicy = await getUserAgentDispatchPolicy(input.executorUserId);

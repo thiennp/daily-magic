@@ -36,6 +36,9 @@ export async function GET(
     return projectAccessErrorJson(decision.reason, statusFor(decision.reason));
   }
 
-  const approvals = await listProjectPendingRunApprovals({ projectId });
+  const approvals = await listProjectPendingRunApprovals({
+    projectId,
+    executorUserId: actor.id,
+  });
   return Response.json({ ok: true, approvals });
 }

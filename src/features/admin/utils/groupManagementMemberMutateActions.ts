@@ -33,7 +33,7 @@ export const addGroupMemberAction = async (
   deps.setMemberEmail("");
   deps.setMessage(
     added.invited
-      ? "Invitation sent. They join when they accept it."
+      ? "If that person has an account, they will see your invitation and join when they accept it."
       : "Member added.",
   );
   await refreshSelectedGroupMembers(deps);

@@ -1,3 +1,4 @@
+import { pickCapabilityIdForRun } from "@/lib/dispatch/pickCapabilityIdForRun";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
@@ -52,11 +53,11 @@ export const executeClaudeRunDispatch = async (input: {
     compositionContext.enrichedPayload,
   );
 
-  const capabilityIdForRun =
-    input.capabilityId ??
-    (typeof input.payload.capabilityId === "string"
-      ? input.payload.capabilityId
-      : null);
+  const capabilityIdForRun = await pickCapabilityIdForRun({
+    requesterUserId,
+    resolvedCapabilityId: input.capabilityId,
+    payloadCapabilityId: input.payload.capabilityId,
+  });
 
   const run = await persistAgentRun({
     groupId: input.groupId,

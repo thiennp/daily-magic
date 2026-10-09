@@ -50,8 +50,17 @@ export async function postGroupMember(
     return Response.json({ error: "Invalid role" }, { status: 400 });
   }
 
-  const user = await getUserByEmail(email);
   const platformAdmin = isGlobalAdmin(actor);
+
+  // Decided before any lookup, so the answer says nothing about whether the address has an account.
+  if (!platformAdmin && role === GroupRole.GROUP_SUPER_ADMIN) {
+    return Response.json(
+      { error: "Only a platform admin can add a company owner" },
+      { status: 403 },
+    );
+  }
+
+  const user = await getUserByEmail(email);
 
   if (!user) {
     // A company manager gets the same answer for any address: no way to probe who has an account.
@@ -88,12 +97,6 @@ export async function postGroupMember(
 
   if (!platformAdmin) {
     // Joining a company changes how its admins can dispatch to you: the person decides.
-    if (role === GroupRole.GROUP_SUPER_ADMIN) {
-      return Response.json(
-        { error: "Only a platform admin can add a company owner" },
-        { status: 403 },
-      );
-    }
     await createGroupInvite({
       groupId,
       inviteeUserId: user.id,

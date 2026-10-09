@@ -31,7 +31,10 @@ export const resolveCreateTargetProjectId = async (input?: {
   }
 
   const projectId = resolveSaveToProjectDefault({
-    projects: loaded.projects,
+    // Library items are created in a project the user owns; a joined project would answer 403.
+    projects: loaded.projects.filter(
+      (project) => project.viewerRole === undefined,
+    ),
     contextProjectId: input?.contextProjectId,
     lastUsedProjectId: readLastSaveProjectId(),
   });

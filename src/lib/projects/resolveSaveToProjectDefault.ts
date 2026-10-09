@@ -22,7 +22,11 @@ export const resolveSaveToProjectDefault = (input: {
   readonly lastUsedProjectId?: string | null;
 }): string => {
   const contextProjectId = input.contextProjectId?.trim() ?? "";
-  if (contextProjectId.length > 0) {
+  // The context project counts only when it is one the caller may save into (the list is filtered).
+  if (
+    contextProjectId.length > 0 &&
+    input.projects.some((project) => project.id === contextProjectId)
+  ) {
     return contextProjectId;
   }
 
