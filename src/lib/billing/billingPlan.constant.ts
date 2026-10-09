@@ -11,7 +11,7 @@ export const MAX_ASSISTANT_CONNECTS = {
 } as const;
 
 /** Soft Free/trial infra loss guard (Railway + Neon + related). Admin only. */
-export const FREE_TRIAL_INFRA_BUDGET_EUR = 200;
+export const FREE_TRIAL_INFRA_BUDGET_EUR = 500;
 
 /**
  * Estimated monthly infra cost of one counted trial / admin Free user.

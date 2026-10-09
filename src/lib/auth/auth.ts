@@ -11,7 +11,7 @@ import { GlobalRole, isGlobalRole } from "@/lib/auth/roles";
 import { getUserById } from "@/lib/auth/userRepository";
 import { isAgentAccessSyntheticEmail } from "@/lib/agentAccess/isAgentAccessSyntheticEmail";
 import { SUPER_ADMIN_EMAIL } from "@/lib/auth/constants";
-import { loadBillingPlanForUser } from "@/lib/billing/loadBillingPlanForUser";
+import { grantPendingTrialIfGateOpen } from "@/lib/billing/grantPendingTrialIfGateOpen";
 import { isTrialEntitlementGranted } from "@/lib/billing/isTrialEntitlementGranted";
 import { TRIAL_CLOSED_PRICING_PATH } from "@/lib/billing/trialClosedPricingPath.constant";
 
@@ -35,7 +35,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       ) {
         return true;
       }
-      const row = await loadBillingPlanForUser(user.id);
+      const row = await grantPendingTrialIfGateOpen(user.id);
       // Closed-gate mint: no usable trial session — signed-out Pricing banner.
       if (!isTrialEntitlementGranted(row)) {
         return TRIAL_CLOSED_PRICING_PATH;

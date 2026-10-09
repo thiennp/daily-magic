@@ -4,11 +4,11 @@ import { createNeonAuthAdapter } from "@/lib/auth/neonAdapter";
 import isTestAgentWitchEmail from "@/lib/auth/isTestAgentWitchEmail";
 import { BillingGateError } from "@/lib/billing/billingGateError";
 import { isTrialEntitlementGranted } from "@/lib/billing/isTrialEntitlementGranted";
-import { loadBillingPlanForUser } from "@/lib/billing/loadBillingPlanForUser";
+import { grantPendingTrialIfGateOpen } from "@/lib/billing/grantPendingTrialIfGateOpen";
 import { appendE2eCleanupLogForTestEmail } from "@/lib/e2e/appendE2eCleanupLog";
 
 const assertUsableTrialSession = async (userId: string): Promise<void> => {
-  const row = await loadBillingPlanForUser(userId);
+  const row = await grantPendingTrialIfGateOpen(userId);
   if (isTrialEntitlementGranted(row)) return;
   throw new BillingGateError({
     ok: false,
