@@ -123,6 +123,8 @@ FROM project_skill_lookup_log l
 WHERE l.project_id = $1 AND l.tool = 'list' AND l.had_query AND l.returned > 0;
 ```
 
+**Soft signals on `update_project_task`.** A successful update can carry a `warnings` list (never an error): moving a task to `in_progress` when the same user has no library lookup in the log for the last 20 minutes, and marking it `done` with a `resultSummary` under 15 characters. An unreadable log never warns. A whole-library `list_project_skills` also returns a `warning`. Not built: an automatic `guidance.update` nudge for bots on an old catalog (the owner or inviter can still press the per-bot button, and a bot that holds only an `awc_proj_` key cannot call `check_product_updates` at all).
+
 ### Audit rounds on the lookup itself
 
 Real libraries: AgentWitch (14 skills), baby-care (24 distinct names). Queries come from the AgentWitch project chat (real asks, several with no matching skill) plus short lookups; the baby-care set is author-written, so its numbers are optimistic. A whole-library read of AgentWitch costs about 3,000 tokens.

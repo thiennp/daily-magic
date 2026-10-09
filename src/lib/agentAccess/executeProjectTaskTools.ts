@@ -1,6 +1,11 @@
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
+import {
+  buildTaskReportWarnings,
+  TASK_REPORT_LOOKUP_WINDOW_MINUTES,
+} from "@/lib/agentAccess/buildTaskReportWarnings";
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
+import { hasRecentSkillLookup } from "@/lib/projects/skillLookups/hasRecentSkillLookup";
 import { createProjectTask } from "@/lib/projects/tasks/createProjectTask";
 import { listProjectTasks } from "@/lib/projects/tasks/listProjectTasks";
 import { readProjectTaskClientDbError } from "@/lib/projects/tasks/readProjectTaskClientDbError";
@@ -47,12 +52,30 @@ export const executeProjectTaskTools = async (input: {
       actorUserId: input.actor.id,
       args: input.args,
     });
-    return result.ok
-      ? agentAccessTextResult({
-          ok: true,
-          task: toBotFacingProjectTask(result.task),
-        })
-      : agentAccessTextResult({ ...result, error: result.code }, true);
+    if (!result.ok) {
+      return agentAccessTextResult({ ...result, error: result.code }, true);
+    }
+    const warnings =
+      input.name === "update_project_task"
+        ? buildTaskReportWarnings({
+            args: input.args,
+            taskStatus: result.task.status,
+            resultSummary: result.task.resultSummary,
+            hadRecentLookup:
+              result.task.status === "in_progress"
+                ? await hasRecentSkillLookup({
+                    projectId: result.task.projectId,
+                    actorUserId: input.actor.id,
+                    withinMinutes: TASK_REPORT_LOOKUP_WINDOW_MINUTES,
+                  })
+                : null,
+          })
+        : [];
+    return agentAccessTextResult({
+      ok: true,
+      task: toBotFacingProjectTask(result.task),
+      ...(warnings.length > 0 ? { warnings } : {}),
+    });
   } catch (error: unknown) {
     const code = readProjectTaskClientDbError(error);
     if (code === null) throw error;
