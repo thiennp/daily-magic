@@ -2,7 +2,10 @@ import { DOC_SKILL_ORIGIN } from "./docIngest.constants";
 import type { DocSkillDraft } from "./convertDocToSkillDraft";
 
 /** SKILL.md with the provenance stamp (`source: path@sha`, `origin: folder-doc`). */
-export const buildDocSkillMarkdown = (draft: DocSkillDraft): string =>
+export const buildDocSkillMarkdown = (
+  draft: DocSkillDraft,
+  updatesSkillId?: string,
+): string =>
   [
     "---",
     `name: ${draft.name}`,
@@ -14,6 +17,7 @@ export const buildDocSkillMarkdown = (draft: DocSkillDraft): string =>
     "status: draft",
     `source: ${draft.relPath}@${draft.sha}`,
     `origin: ${DOC_SKILL_ORIGIN}`,
+    ...(updatesSkillId === undefined ? [] : [`updates: ${updatesSkillId}`]),
     "---",
     "",
     draft.body,

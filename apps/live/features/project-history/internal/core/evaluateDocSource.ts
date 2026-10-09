@@ -17,6 +17,8 @@ export type DocEvaluation =
       readonly markdown: string;
       readonly clusterId: string;
       readonly stepCount: number;
+      /** Set when the doc already made a skill and the file changed: Save updates that skill. */
+      readonly updatesSkillId?: string;
     }
   | { readonly kind: "skip"; readonly reason: string };
 
@@ -28,6 +30,7 @@ export const docClusterId = (relPath: string, sha: string): string =>
 export const evaluateDocSource = (
   source: DocSource,
   existingNames: readonly string[],
+  updatesSkillId?: string,
 ): DocEvaluation => {
   const scrubbed = scrubProjectHistorySkillgenSecrets(source.text);
   if (scrubbed.residualSecret) {
@@ -38,7 +41,7 @@ export const evaluateDocSource = (
   if (!gate.ok) {
     return { kind: "skip", reason: gate.reason };
   }
-  const markdown = buildDocSkillMarkdown(draft);
+  const markdown = buildDocSkillMarkdown(draft, updatesSkillId);
   const valid = validateDocSkillDraft(markdown);
   return valid.ok
     ? {
@@ -47,6 +50,7 @@ export const evaluateDocSource = (
         markdown,
         clusterId: docClusterId(draft.relPath, draft.sha),
         stepCount: valid.stepCount,
+        ...(updatesSkillId === undefined ? {} : { updatesSkillId }),
       }
     : { kind: "skip", reason: valid.reason };
 };

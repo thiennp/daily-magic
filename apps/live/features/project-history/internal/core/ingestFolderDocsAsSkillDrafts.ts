@@ -6,6 +6,7 @@ import {
   DOC_INGEST_MAX_PER_PASS,
   DOC_INGEST_MAX_QUESTIONS_PER_PASS,
 } from "./docIngest.constants";
+import type { DocOriginSkill } from "./docOriginSkills";
 import { evaluateDocSource, type DocEvaluation } from "./evaluateDocSource";
 
 export type DocIngestResult = {
@@ -43,6 +44,8 @@ export const ingestFolderDocsAsSkillDrafts = async (input: {
   readonly existingNames: readonly string[];
   /** Skills already created by a doc pass (`origin: folder-doc`). */
   readonly backfilledCount: number;
+  /** Doc-made skills with the file version they came from; a changed file asks to update that skill. */
+  readonly docOrigin?: readonly DocOriginSkill[];
 }): Promise<DocIngestResult> => {
   const settings = await input.cloud.getSettings(input.projectId);
   const sources = collectDocSources(input.folderPath);
@@ -55,9 +58,19 @@ export const ingestFolderDocsAsSkillDrafts = async (input: {
       skipped: {},
     };
   }
-  const evaluations = sources.map((source) =>
-    evaluateDocSource(source, input.existingNames),
-  );
+  const evaluations = sources.map((source): DocEvaluation => {
+    const made = (input.docOrigin ?? []).find(
+      (skill) => skill.relPath === source.relPath,
+    );
+    if (made?.sha === source.sha) {
+      return { kind: "skip", reason: "up_to_date" };
+    }
+    const names =
+      made === undefined
+        ? input.existingNames
+        : input.existingNames.filter((name) => name !== made.skillId);
+    return evaluateDocSource(source, names, made?.skillId);
+  });
   const blocked = new Set([
     ...settings.neverClusterIds,
     ...settings.savedClusterIds,
@@ -75,14 +88,22 @@ export const ingestFolderDocsAsSkillDrafts = async (input: {
       DOC_INGEST_MAX_BACKFILLED - input.backfilledCount,
     ),
   );
-  const toAsk = candidates
-    .slice(0, room)
-    .slice(0, DOC_INGEST_MAX_QUESTIONS_PER_PASS);
+  const updates = candidates.filter((row) => row.updatesSkillId !== undefined);
+  const fresh = candidates
+    .filter((row) => row.updatesSkillId === undefined)
+    .slice(0, room);
+  const toAsk = [...updates, ...fresh].slice(
+    0,
+    DOC_INGEST_MAX_QUESTIONS_PER_PASS,
+  );
   await Promise.all(
     toAsk.map((row) =>
       input.cloud.postSuggestion(input.projectId, {
         clusterId: row.clusterId,
-        title: `Save ${row.draft.relPath} as a skill?`,
+        title:
+          row.updatesSkillId === undefined
+            ? `Save ${row.draft.relPath} as a skill?`
+            : `${row.draft.relPath} changed. Update the skill ${row.updatesSkillId}?`,
         prompt: row.draft.relPath,
         occurrences: 1,
         matches: [],

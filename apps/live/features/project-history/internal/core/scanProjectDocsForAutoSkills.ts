@@ -85,6 +85,7 @@ export const scanProjectDocsForAutoSkills = async (input: {
         ),
       ].map((skill) => skill.name),
       backfilledCount: origin.length,
+      docOrigin: origin,
     });
     await report(
       describeDocScan(

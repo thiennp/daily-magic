@@ -3,9 +3,8 @@ import {
   getAutoSkillSuggestion,
   markAutoSkillSuggestionAnswered,
 } from "@/features/project-auto-skills/internal/infrastructure/autoSkillsSuggestionsDb";
+import { pickAutoSkillId } from "@/features/project-auto-skills/internal/infrastructure/pickAutoSkillId";
 import {
-  deriveProjectSkillIdFromName,
-  listProjectSkills,
   publishProjectSkill,
   resolveProjectSkillMemberRole,
 } from "@/features/project-skill-share/public-api/infrastructure";
@@ -17,22 +16,6 @@ export type AnswerAutoSkillResult =
       readonly status: 403 | 404 | 422;
       readonly message: string;
     };
-
-const pickSkillId = async (
-  actorUserId: string,
-  projectId: string,
-  name: string,
-  suggestionId: string,
-): Promise<string> => {
-  const base =
-    deriveProjectSkillIdFromName(name) ?? `auto-${suggestionId.slice(0, 8)}`;
-  const listed = await listProjectSkills({
-    actorUserId,
-    args: { projectId },
-  });
-  const taken = listed.ok && listed.skills.some((s) => s.skillId === base);
-  return taken ? `${base}-${suggestionId.slice(0, 4)}` : base;
-};
 
 /**
  * Owner answers a question. "save" goes through the existing publish path
@@ -76,12 +59,13 @@ export const answerAutoSkillSuggestion = async (input: {
     await markAutoSkillSuggestionAnswered({ ...base, status, skillId: null });
     return { ok: true, skillId: null };
   }
-  const skillId = await pickSkillId(
-    input.actorUserId,
-    input.projectId,
-    suggestion.draftName,
-    suggestion.id,
-  );
+  const skillId = await pickAutoSkillId({
+    actorUserId: input.actorUserId,
+    projectId: input.projectId,
+    name: suggestion.draftName,
+    suggestionId: suggestion.id,
+    draftBody: suggestion.draftBody,
+  });
   const published = await publishProjectSkill({
     actorUserId: input.actorUserId,
     args: {
