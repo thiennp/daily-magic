@@ -31,7 +31,7 @@ export const PROJECT_V5_TABLIST_CLASS =
   "flex w-full max-w-full gap-1 overflow-x-auto border-b border-awc-border-strong [-ms-overflow-style:none] [scrollbar-width:none] dark:border-gray-700 [&::-webkit-scrollbar]:hidden";
 
 export const PROJECT_V5_TAB_BASE_CLASS =
-  "awc-focus-ring relative inline-flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-t-lg px-3 pb-[11px] pt-2.5 text-[length:var(--awc-fs-body)] font-medium transition-colors";
+  "relative inline-flex h-10 shrink-0 focus-visible:outline-none focus-visible:shadow-[inset_0_0_0_2px_var(--awc-blue-600)] items-center gap-1.5 whitespace-nowrap rounded-t-lg px-3 pb-[11px] pt-2.5 text-[length:var(--awc-fs-body)] font-medium transition-colors";
 
 /** HN-H3: selected = Pine text + 2px underline bar. */
 export const PROJECT_V5_TAB_ACTIVE_CLASS =
