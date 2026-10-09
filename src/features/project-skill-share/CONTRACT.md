@@ -4,12 +4,12 @@
 
 ## Ownership
 
-| Owner         | Owns                                                                                                                                                           |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AWC**       | Store of record: published body ≤ 64KB + meta + contentHash                                                                                                    |
-| **Share**     | `pullPublishedProjectSkillsToMirror`, AWC published source port, list/get ACL (owner / member / viewer for published); decide + call History tombstone for orphans |
+| Owner         | Owns                                                                                                                                                                                                                                                        |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **AWC**       | Store of record: published body ≤ 64KB + meta + contentHash                                                                                                                                                                                                 |
+| **Share**     | `pullPublishedProjectSkillsToMirror`, AWC published source port, list/get ACL (owner / member / viewer for published); decide + call History tombstone for orphans                                                                                          |
 | **History**   | AWL tick that calls pull; real `resolveProjectDataDir` / `writeProjectSkillVersion` / `readProjectSkillVersion` / `tombstoneProjectSkill` / `readProjectSkillTombstone` / `listProjectSkillIds` (dirs 0700 / files 0600); atomic mirror writes + tombstones |
-| **Mac / AWL** | Profile dir layout; inject History port + AWC HTTP source when not in-process                                                                                  |
+| **Mac / AWL** | Profile dir layout; inject History port + AWC HTTP source when not in-process                                                                                                                                                                               |
 
 ## Layout
 
@@ -23,10 +23,10 @@ Hash: `sha256:` + lowercase hex of exact UTF-8 body bytes (no trim).
 
 ## Decide outcomes
 
-| Outcome       | When                                                                 |
-| ------------- | -------------------------------------------------------------------- |
-| `skip`        | Local meta `contentHash` already equals AWC published hash           |
-| `fetch_write` | On published set but local missing or hash differs (even if tombstone exists) |
+| Outcome       | When                                                                                            |
+| ------------- | ----------------------------------------------------------------------------------------------- |
+| `skip`        | Local meta `contentHash` already equals AWC published hash                                      |
+| `fetch_write` | On published set but local missing or hash differs (even if tombstone exists)                   |
 | `remove`      | Local skill id present on disk but **absent** from a **successfully fetched** AWC published set |
 
 `remove` → History `tombstoneProjectSkill({ projectId, skillId, lastContentHash, revokedAt? })`. Share never `unlink`s. Typed input that failed fetch cannot produce `remove`.
@@ -64,7 +64,7 @@ Hash: `sha256:` + lowercase hex of exact UTF-8 body bytes (no trim).
 ## ACL (list / get published)
 
 - **owner | member | viewer** — see published skills.
-- Drafts / revoke / publish — owner or publisher (member); **viewer** never publishes or revokes.
+- Drafts / revoke / publish — owner or publisher (member); any member may discard a draft; **viewer** never publishes or revokes.
 - AWC membership rows today resolve to `member` (DB has no `viewer` yet); `viewer` is accepted by list/get predicates for future ACL / injected roles.
 
 ## Non-goals (v1)

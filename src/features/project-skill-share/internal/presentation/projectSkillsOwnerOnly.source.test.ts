@@ -17,7 +17,7 @@ describe("ProjectSkillsSection owner-only mutate UI", () => {
       "Only the project owner or its publisher can publish.",
     );
     expect(C.disabledDelete).toBe(
-      "Only the project owner or its publisher can delete this.",
+      "Only the project owner or its publisher can delete this. Members can delete drafts.",
     );
   });
 

@@ -4,7 +4,7 @@ import {
 } from "@/features/project-skill-share/public-api/infrastructure";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
-/** POST: revoke (owner, or the member who published it). */
+/** POST: revoke (owner; a member for drafts or skills they published). */
 export async function POST(
   _request: Request,
   context: {

@@ -28,5 +28,6 @@ export const PROJECT_SKILLS_COPY = {
   disabledAdd: "Only the project owner can add items.",
   disabledEdit: "Only the project owner can edit this.",
   disabledPublish: "Only the project owner or its publisher can publish.",
-  disabledDelete: "Only the project owner or its publisher can delete this.",
+  disabledDelete:
+    "Only the project owner or its publisher can delete this. Members can delete drafts.",
 } as const;

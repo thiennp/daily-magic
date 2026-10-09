@@ -32,5 +32,6 @@ export const toProjectSkillView = (input: {
       role: input.role,
       actorUserId: input.actorUserId,
       publisherUserId: input.record.publisherUserId,
+      state: input.record.state,
     }),
 });

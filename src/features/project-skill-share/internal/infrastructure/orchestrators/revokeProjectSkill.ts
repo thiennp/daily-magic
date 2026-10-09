@@ -7,7 +7,7 @@ import { selectProjectSkillRow } from "@/features/project-skill-share/internal/i
 import { updateProjectSkillRevoked } from "@/features/project-skill-share/internal/infrastructure/db/updateProjectSkillRevoked";
 import { resolveProjectSkillMemberRole } from "@/features/project-skill-share/internal/infrastructure/orchestrators/resolveProjectSkillMemberRole";
 
-/** Orchestrator: revoke_project_skill (owner, or the member who published it). Idempotent on revoked. */
+/** Orchestrator: revoke_project_skill (owner; a member for drafts or skills they published). Idempotent on revoked. */
 export const revokeProjectSkill = async (input: {
   readonly actorUserId: string;
   readonly args: unknown;
@@ -30,6 +30,7 @@ export const revokeProjectSkill = async (input: {
     !decideProjectSkillRevokeAccess({
       ...viewer,
       publisherUserId: record.publisherUserId,
+      state: record.state,
     })
   ) {
     return {

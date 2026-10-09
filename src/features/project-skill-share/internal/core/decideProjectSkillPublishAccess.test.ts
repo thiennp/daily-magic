@@ -53,6 +53,18 @@ describe("project skill access rules (owner full; members publish/revoke their o
     expect(r("none", "p")).toBe(false);
   });
 
+  it("revoke: any member may discard a draft; viewers never", () => {
+    const r = (role: "member" | "viewer", actorUserId: string) =>
+      decideProjectSkillRevokeAccess({
+        role,
+        actorUserId,
+        publisherUserId: "p",
+        state: "draft",
+      });
+    expect(r("member", "m")).toBe(true);
+    expect(r("viewer", "m")).toBe(false);
+  });
+
   it("view: published for seats; drafts owner + member; revoked owner-only", () => {
     const member = {
       role: "member" as const,
