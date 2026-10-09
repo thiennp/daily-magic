@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { NOTIFICATIONS_BREADCRUMB_CLASS } from "@/features/notifications/notificationsClasses.constant";
@@ -9,45 +9,28 @@ import {
   type NotificationsFilterId,
 } from "@/features/notifications/notificationsCopy.constant";
 import { filterNotificationItems } from "@/features/notifications/notificationsDemoItems.constant";
-import { readDemoFail } from "@/features/notifications/notificationsDemoLoader";
 import NotificationsApprovalCallout from "@/features/notifications/NotificationsApprovalCallout";
 import NotificationsEmptyState from "@/features/notifications/NotificationsEmptyState";
 import NotificationsFilterBar from "@/features/notifications/NotificationsFilterBar";
 import NotificationsList from "@/features/notifications/NotificationsList";
 import NotificationsLoadError from "@/features/notifications/NotificationsLoadError";
-import NotificationsOlderSection from "@/features/notifications/NotificationsOlderSection";
 import NotificationsPageFooter from "@/features/notifications/NotificationsPageFooter";
 import NotificationsPageHeader from "@/features/notifications/NotificationsPageHeader";
 import NotificationsSignedOutView from "@/features/notifications/NotificationsSignedOutView";
 import NotificationsSkeleton from "@/features/notifications/NotificationsSkeleton";
 import { useNotificationsItems } from "@/features/notifications/useNotificationsItems";
-import { useNotificationsOlder } from "@/features/notifications/useNotificationsOlder";
 import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
-
-type LoadState = "ready" | "loading" | "error";
 
 export default function NotificationsPageClient() {
   const { data: session, status } = useSession();
   const [filter, setFilter] = useState<NotificationsFilterId>("all");
-  const [loadState, setLoadState] = useState<LoadState>(() =>
-    readDemoFail() === "load" ? "error" : "ready",
-  );
   const list = useNotificationsItems();
-  const older = useNotificationsOlder(list.append);
   const { items, counts } = list;
   const visible = useMemo(
     () => filterNotificationItems(items, filter),
     [items, filter],
   );
-  const ready = loadState === "ready";
-
-  const onRetry = useCallback(() => {
-    setLoadState("loading");
-    window.setTimeout(() => {
-      list.reset();
-      setLoadState("ready");
-    }, 200);
-  }, [list]);
+  const ready = !list.loading && !list.loadFailed;
 
   if (status === "loading") return <NotificationsSkeleton />;
   if (status === "unauthenticated" || !session?.user)
@@ -83,9 +66,14 @@ export default function NotificationsPageClient() {
           onShow={() => setFilter("approvals")}
         />
       ) : null}
-      {loadState === "loading" ? <NotificationsSkeleton /> : null}
-      {loadState === "error" ? (
-        <NotificationsLoadError onRetry={onRetry} />
+      {list.loading ? <NotificationsSkeleton /> : null}
+      {list.loadFailed ? (
+        <NotificationsLoadError onRetry={list.reload} />
+      ) : null}
+      {list.decideError !== null ? (
+        <p role="alert" className="text-sm text-awc-bad">
+          {list.decideError}
+        </p>
       ) : null}
       {ready && visible.length === 0 ? (
         <NotificationsEmptyState filter={filter} />
@@ -96,9 +84,6 @@ export default function NotificationsPageClient() {
           onDecide={list.onDecide}
           onMarkRead={list.onMarkRead}
         />
-      ) : null}
-      {ready && filter === "all" ? (
-        <NotificationsOlderSection state={older.state} onLoad={older.load} />
       ) : null}
       <NotificationsPageFooter />
     </div>

@@ -3,7 +3,8 @@
 import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { NOTIFICATIONS_COPY } from "@/features/notifications/notificationsCopy.constant";
 import NotificationsLoadError from "@/features/notifications/NotificationsLoadError";
-import type { OlderState } from "@/features/notifications/useNotificationsOlder";
+
+export type OlderState = "idle" | "loading" | "error" | "done";
 
 interface NotificationsOlderSectionProps {
   readonly state: OlderState;
