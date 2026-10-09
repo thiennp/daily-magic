@@ -16,6 +16,7 @@ const render = (
       records,
       loadFailed,
       reload: () => undefined,
+      initialView: "list" as const,
     }),
   );
 

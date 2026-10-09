@@ -1,13 +1,16 @@
 "use client";
 
+import { useState } from "react";
+
 import useAwcProjectHashDeepLink from "@/features/projects/hooks/useAwcProjectHashDeepLink";
 import AwcProjectTaskRecordDetail from "@/features/projects/tasks/AwcProjectTaskRecordDetail";
-import AwcProjectTaskRecordRow from "@/features/projects/tasks/AwcProjectTaskRecordRow";
-import AwcProjectTaskRecordSort from "@/features/projects/tasks/AwcProjectTaskRecordSort";
-import AwcProjectTaskRecordTabs from "@/features/projects/tasks/AwcProjectTaskRecordTabs";
+import AwcProjectTaskBoard from "@/features/projects/tasks/AwcProjectTaskBoard";
+import AwcProjectTaskRecordListView from "@/features/projects/tasks/AwcProjectTaskRecordListView";
+import AwcProjectTaskRecordViewToggle, {
+  type ProjectTaskRecordsView,
+} from "@/features/projects/tasks/AwcProjectTaskRecordViewToggle";
 import {
   AWC_TASKS_CARD_CLASS,
-  AWC_TASKS_LIST_CLASS,
   AWC_TASKS_PANEL_HEADING_CLASS,
   AWC_TASKS_STATUS_CLASS,
 } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
@@ -21,13 +24,16 @@ export default function AwcProjectTaskRecordsList({
   records,
   loadFailed,
   reload,
+  initialView = "board",
 }: {
   readonly projectId: string;
   readonly records: readonly ProjectTaskRecord[];
   readonly loadFailed: boolean;
   readonly reload: () => void;
+  readonly initialView?: ProjectTaskRecordsView;
 }) {
-  const view = useProjectTaskRecordView(records);
+  const listView = useProjectTaskRecordView(records);
+  const [view, setView] = useState<ProjectTaskRecordsView>(initialView);
   const [recordId, setRecordId] = useAwcProjectHashDeepLink("tasks", "record");
   if (!loadFailed && records.length === 0) return null;
   const selected = records.find((r) => r.id === recordId) ?? null;
@@ -48,40 +54,21 @@ export default function AwcProjectTaskRecordsList({
   }
   return (
     <section aria-label={C.aria} className={AWC_TASKS_CARD_CLASS}>
-      <h3 className={`px-3.5 pt-3 pb-1 ${AWC_TASKS_PANEL_HEADING_CLASS}`}>
-        {C.heading}
-      </h3>
+      <div className="flex flex-wrap items-center justify-between gap-2 px-3.5 pt-3 pb-1">
+        <h3 className={`m-0 ${AWC_TASKS_PANEL_HEADING_CLASS}`}>{C.heading}</h3>
+        <AwcProjectTaskRecordViewToggle view={view} onChange={setView} />
+      </div>
       {loadFailed ? (
         <p className={`px-3.5 ${AWC_TASKS_STATUS_CLASS}`}>{C.loadError}</p>
+      ) : view === "board" ? (
+        <AwcProjectTaskBoard
+          projectId={projectId}
+          records={records}
+          reload={reload}
+          onOpen={setRecordId}
+        />
       ) : (
-        <>
-          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-awc-border px-3.5 pb-2.5">
-            <AwcProjectTaskRecordTabs
-              tab={view.tab}
-              counts={view.counts}
-              onChange={view.setTab}
-            />
-            <AwcProjectTaskRecordSort
-              sortKey={view.sortKey}
-              sortDir={view.sortDir}
-              onKeyChange={view.setSortKey}
-              onToggleDir={view.toggleSortDir}
-            />
-          </div>
-          {view.visible.length === 0 ? (
-            <p className={`px-3.5 ${AWC_TASKS_STATUS_CLASS}`}>{C.tabEmpty}</p>
-          ) : (
-            <ul className={AWC_TASKS_LIST_CLASS}>
-              {view.visible.map((task) => (
-                <AwcProjectTaskRecordRow
-                  key={task.id}
-                  task={task}
-                  onOpen={setRecordId}
-                />
-              ))}
-            </ul>
-          )}
-        </>
+        <AwcProjectTaskRecordListView view={listView} onOpen={setRecordId} />
       )}
     </section>
   );

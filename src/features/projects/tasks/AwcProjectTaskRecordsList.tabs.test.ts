@@ -32,6 +32,7 @@ const render = () =>
       records,
       loadFailed: false,
       reload: () => undefined,
+      initialView: "list" as const,
     }),
   );
 
