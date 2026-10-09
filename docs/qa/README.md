@@ -41,6 +41,7 @@ Open the top `sourcePath` under `docs/qa/` when present.
 | [awc-how-browser-knows-this-computer.md](awc-how-browser-knows-this-computer.md)           | AWC “This computer” / “This computer” vs cloud device list                                                |
 | [awb-localhost-identity-and-cors.md](awb-localhost-identity-and-cors.md)                   | AWB `/identity`, CORS, AWI config vs AWL                                                                  |
 | [awb-knowledge-update-local-agent.md](awb-knowledge-update-local-agent.md)                 | AWB `POST /knowledge/update` + global Cursor rule `agent-witch-knowledge-report.mdc`                      |
+| [learning-memory-terminology-and-flows.md](learning-memory-terminology-and-flows.md)       | Episode notes vs Playbook skills vs candidates vs auto-skills; rollout PR plan (copy, disclosure, fields) |
 | [delegate-local-cli-conversation-context.md](delegate-local-cli-conversation-context.md)   | Local CLI (Cursor, etc.) follow-up context / `--continue`                                                 |
 | [antigravity-cli-shipped-path.md](antigravity-cli-shipped-path.md)                         | agy argv order, OAuth token path, honesty chips (no Writer API fallback stamp)                            |
 | [writer-dispatch-cascade-routing.md](writer-dispatch-cascade-routing.md)                   | Mac dispatch route: continuation vs memory/RAG budget                                                     |

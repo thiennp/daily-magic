@@ -14,6 +14,8 @@ Engineering view of **product pillars 2 and 3**: learn from usage (feedback → 
 
 Confusing **feature-knowledge** with **run memory** is a common agent mistake: only the middle column affects production **Tasks** on a user’s Mac. See [agent-mistakes-catalog.md](agent-mistakes-catalog.md).
 
+**Four product learning pipelines** (episode notes, knowledge candidates, Playbook skills, auto-skills), bot reporting rules, and the approved rollout PR order: [learning-memory-terminology-and-flows.md](../../qa/learning-memory-terminology-and-flows.md).
+
 ---
 
 ## Pillar 2 — Learn from usage (cloud loop)
