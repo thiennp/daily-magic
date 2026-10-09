@@ -1,4 +1,5 @@
 import type { AutoSkillCloud } from "./autoSkillCloud";
+import { buildFolderReferenceProbe } from "./buildFolderReferenceProbe";
 import { collectDocSources } from "./collectDocSources";
 import {
   DOC_INGEST_MAX_BACKFILLED,
@@ -7,6 +8,7 @@ import {
   DOC_INGEST_MAX_QUESTIONS_PER_PASS,
 } from "./docIngest.constants";
 import type { DocOriginSkill } from "./docOriginSkills";
+import { dropStaleDocCandidates } from "./dropStaleDocCandidates";
 import { evaluateDocSource, type DocEvaluation } from "./evaluateDocSource";
 
 export type DocIngestResult = {
@@ -58,7 +60,7 @@ export const ingestFolderDocsAsSkillDrafts = async (input: {
       skipped: {},
     };
   }
-  const evaluations = sources.map((source): DocEvaluation => {
+  const evaluated = sources.map((source): DocEvaluation => {
     const made = (input.docOrigin ?? []).find(
       (skill) => skill.relPath === source.relPath,
     );
@@ -71,6 +73,10 @@ export const ingestFolderDocsAsSkillDrafts = async (input: {
         : input.existingNames.filter((name) => name !== made.skillId);
     return evaluateDocSource(source, names, made?.skillId);
   });
+  const evaluations = dropStaleDocCandidates(
+    evaluated,
+    buildFolderReferenceProbe(input.folderPath),
+  );
   const blocked = new Set([
     ...settings.neverClusterIds,
     ...settings.savedClusterIds,
