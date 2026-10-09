@@ -1,5 +1,15 @@
 export type AwcProjectInboxRefs = Readonly<
-  Partial<Record<"prUrl" | "commitSha" | "localPath" | "allowClaimId", string>>
+  Partial<
+    Record<
+      | "prUrl"
+      | "commitSha"
+      | "localPath"
+      | "allowClaimId"
+      | "branch"
+      | "worktree",
+      string
+    >
+  >
 >;
 
 export default interface AwcProjectInboxMessage {

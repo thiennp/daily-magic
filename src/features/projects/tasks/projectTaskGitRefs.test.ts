@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  buildAssignGitRefs,
   buildProjectTaskBranchOptions,
   buildProjectTaskWorktreeOptions,
   sanitizeProjectTaskGitRefName,
@@ -44,5 +45,22 @@ describe("projectTaskGitRefs — meta names only", () => {
         worktrees: ["wt-csv", "/tmp/wt-secret", "wt-login"],
       }).map((o) => o.id),
     ).toEqual(["wt-csv", "wt-login"]);
+  });
+});
+
+describe("buildAssignGitRefs", () => {
+  it("keeps clean branch and worktree names", () => {
+    expect(
+      buildAssignGitRefs({ branch: "feat/foo", worktree: "wt-1" }),
+    ).toEqual({ branch: "feat/foo", worktree: "wt-1" });
+  });
+
+  it("drops empty and path-like names and returns undefined when nothing is left", () => {
+    expect(buildAssignGitRefs({ branch: "main", worktree: "/tmp/wt" })).toEqual(
+      { branch: "main" },
+    );
+    expect(
+      buildAssignGitRefs({ branch: " ", worktree: "../x" }),
+    ).toBeUndefined();
   });
 });

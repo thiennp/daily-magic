@@ -15,8 +15,8 @@ import {
 /**
  * Assign dialog — Screen D (EN PASS). Submits via existing
  * POST /api/projects/:id/inbox/dispatch (sendMessengerTask → task.assign).
- * Branch/Worktree UI stays meta-only (names); allowlisted refs do not include
- * branch/worktree, so they are not POSTed (no new schema on this tip).
+ * Branch/Worktree are names only (never paths) and ride along as the
+ * `branch` / `worktree` dispatch refs.
  */
 export default function AwcProjectTasksAssignDialog(
   props: AwcProjectTasksAssignFormInput,
@@ -36,7 +36,9 @@ export default function AwcProjectTasksAssignDialog(
     >
       <div className="w-full max-w-md overflow-hidden rounded-xl border border-awc-border-strong bg-awc-surface shadow-[0_12px_32px_rgba(16,24,40,0.18)]">
         <div className="flex items-center gap-2 border-b border-awc-border px-4 py-3.5">
-          <h3 className="m-0 flex-1 text-[16px] font-semibold text-awc-fg">{C.assignTitle}</h3>
+          <h3 className="m-0 flex-1 text-[16px] font-semibold text-awc-fg">
+            {C.assignTitle}
+          </h3>
           <button
             type="button"
             className={AWC_TASKS_SECONDARY_BUTTON_CLASS}
@@ -49,9 +51,7 @@ export default function AwcProjectTasksAssignDialog(
         </div>
         <div className="max-h-[60vh] overflow-auto px-4 py-4">
           <AwcProjectTasksAssignTaskFields form={form} />
-          {hasGit ? (
-            <AwcProjectTasksAssignGitFields form={form} />
-          ) : null}
+          {hasGit ? <AwcProjectTasksAssignGitFields form={form} /> : null}
           {peersError !== null ? (
             <p role="alert" className="mt-2 text-[13px] text-red-600">
               {peersError}

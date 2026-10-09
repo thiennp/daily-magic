@@ -9,9 +9,7 @@ export type ProjectTaskGitRefOption = {
 };
 
 /** Reject absolute/relative paths; keep short git-ish names. */
-export const sanitizeProjectTaskGitRefName = (
-  raw: string,
-): string | null => {
+export const sanitizeProjectTaskGitRefName = (raw: string): string | null => {
   const trimmed = raw.trim();
   if (trimmed.length === 0) return null;
   if (trimmed.length > 128) return null;
@@ -61,3 +59,32 @@ export const buildProjectTaskWorktreeOptions = (input: {
   }
   return out;
 };
+
+/** Branch / worktree names for the dispatch refs; empty or path-like names are dropped. */
+export const buildAssignGitRefs = (input: {
+  readonly branch: string;
+  readonly worktree: string;
+}): Readonly<Record<"branch" | "worktree", string>> | undefined => {
+  const branch = sanitizeProjectTaskGitRefName(input.branch);
+  const worktree = sanitizeProjectTaskGitRefName(input.worktree);
+  if (branch === null && worktree === null) return undefined;
+  return {
+    ...(branch !== null ? { branch } : {}),
+    ...(worktree !== null ? { worktree } : {}),
+  } as Readonly<Record<"branch" | "worktree", string>>;
+};
+
+/** Dispatch refs for the Assign dialog: a new worktree name wins over the picked one. */
+export const resolveAssignGitRefs = (input: {
+  readonly hasGit: boolean;
+  readonly branch: string;
+  readonly worktree: string;
+  readonly createWorktree: boolean;
+  readonly newWorktreeName: string;
+}): Readonly<Record<"branch" | "worktree", string>> | undefined =>
+  input.hasGit
+    ? buildAssignGitRefs({
+        branch: input.branch,
+        worktree: input.createWorktree ? input.newWorktreeName : input.worktree,
+      })
+    : undefined;

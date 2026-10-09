@@ -6,7 +6,10 @@ import { useTaskSkillSuggestions } from "@/features/projects/tasks/useTaskSkillS
 import { useAwcProjectTasksAssignWriter } from "@/features/projects/tasks/useAwcProjectTasksAssignWriter";
 import { useAwcProjectTasksRefOptions } from "@/features/projects/tasks/useAwcProjectTasksRefOptions";
 import { runAssignTaskSubmit } from "@/features/projects/tasks/utils/runAssignTaskSubmit";
-import { sanitizeProjectTaskGitRefName } from "@/features/projects/tasks/projectTaskGitRefs";
+import {
+  resolveAssignGitRefs,
+  sanitizeProjectTaskGitRefName,
+} from "@/features/projects/tasks/projectTaskGitRefs";
 import { useAwcProjectTasksAssignPeers } from "@/features/projects/tasks/useAwcProjectTasksAssignPeers";
 import { PROJECT_MESSAGE_SUMMARY_MAX_CHARS } from "@/lib/projects/acl/messaging/projectMessage.constants";
 
@@ -65,6 +68,7 @@ export const useAwcProjectTasksAssignForm = (
     }
   }
 
+  const fields = { prompt, branch, worktree, createWorktree, newWorktreeName };
   const skillSuggestions = useTaskSkillSuggestions({ open, projectId, prompt });
   const trimmedPrompt = prompt.trim();
   const canSubmit =
@@ -81,9 +85,11 @@ export const useAwcProjectTasksAssignForm = (
 
   const submit = (): void => {
     if (!canSubmit) return;
+    const refs = resolveAssignGitRefs({ hasGit, ...fields });
     const draft = {
       assigneeMembershipId: peers.assistantId,
       summary: trimmedPrompt,
+      ...(refs ? { refs } : {}),
       ...writer.draftFields,
     };
     runAssignTaskSubmit({ draft, setPending, setError, ...input });
@@ -93,7 +99,7 @@ export const useAwcProjectTasksAssignForm = (
     ...peers,
     branchOptions,
     worktreeOptions,
-    fields: { prompt, branch, worktree, createWorktree, newWorktreeName },
+    fields,
     setters: {
       setPrompt,
       setBranch,

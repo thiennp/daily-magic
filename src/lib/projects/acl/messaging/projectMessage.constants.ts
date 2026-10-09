@@ -105,6 +105,9 @@ export const PROJECT_MESSAGE_ALLOWED_REF_KEYS = [
   "commitSha",
   "localPath",
   "allowClaimId",
+  /** Git branch / worktree names only (never paths); set by the Assign dialog. */
+  "branch",
+  "worktree",
 ] as const;
 
 export type ProjectMessageRefKey =

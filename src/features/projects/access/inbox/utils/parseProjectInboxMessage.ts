@@ -1,7 +1,14 @@
 import type AwcProjectInboxMessage from "@/features/projects/access/inbox/types/awcProjectInboxMessage.type";
 import type { AwcProjectInboxRefs } from "@/features/projects/access/inbox/types/awcProjectInboxMessage.type";
 
-const REF_KEYS = ["prUrl", "commitSha", "localPath", "allowClaimId"] as const;
+const REF_KEYS = [
+  "prUrl",
+  "commitSha",
+  "localPath",
+  "allowClaimId",
+  "branch",
+  "worktree",
+] as const;
 
 const asRefs = (value: unknown): AwcProjectInboxRefs => {
   if (value === null || typeof value !== "object" || Array.isArray(value)) {
