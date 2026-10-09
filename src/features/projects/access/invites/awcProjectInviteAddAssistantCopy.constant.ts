@@ -3,6 +3,7 @@ export const AWC_PROJECT_INVITE_ADD_ASSISTANT_COPY = {
   button: "Add assistant",
   /** DF-036 D4: the picker only changes the setup steps written into the invite. */
   typeLabel: "Supported assistants",
+  typeChange: "Change",
   typeAny: "Any supported assistant",
   typeAnyHint: "General steps that fit any assistant",
   dialogTitle: "Supported assistants",

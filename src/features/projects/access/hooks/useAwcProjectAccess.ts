@@ -102,6 +102,7 @@ export const useAwcProjectAccess = (projectId: string) => {
     loadError: model.loadError,
     createdInviteUrl: banner.createdInviteUrl,
     createdInviteToken: banner.createdInviteToken,
+    createdInviteId: banner.createdInviteId,
     createdInvitePlatform: banner.createdInvitePlatform,
     createdInviteJoinTypeId: banner.createdInviteJoinTypeId,
     createdInvitePrompts: banner.createdInvitePrompts,

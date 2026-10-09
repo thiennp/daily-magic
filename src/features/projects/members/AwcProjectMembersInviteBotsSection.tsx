@@ -25,6 +25,7 @@ interface AwcProjectMembersInviteBotsSectionProps {
     | "invites"
     | "createdInviteUrl"
     | "createdInviteToken"
+    | "createdInviteId"
     | "createdInvitePlatform"
     | "createdInviteJoinTypeId"
     | "createdInvitePrompts"
@@ -47,6 +48,10 @@ export default function AwcProjectMembersInviteBotsSection({
 }: AwcProjectMembersInviteBotsSectionProps) {
   const { projectName, createdInviteUrl } = access;
   const prompts = access.createdInvitePrompts ?? {};
+  // The banner already shows the just-created invite; list it only once the banner is gone.
+  const listedInvites = createdInviteUrl
+    ? access.invites.filter((i) => i.inviteId !== access.createdInviteId)
+    : access.invites;
   return (
     <section className={SECTION_CARD} aria-labelledby="members-invite-h">
       <div className="flex items-center gap-2">
@@ -89,7 +94,7 @@ export default function AwcProjectMembersInviteBotsSection({
         </div>
       ) : null}
       <AwcProjectMembersInvitePendingList
-        invites={access.invites}
+        invites={listedInvites}
         onRevoke={(id) => void access.revokeInvite(id)}
         onTurnOffAutoApprove={(id) => void access.turnOffAutoApprove(id)}
         typeLabelFor={(id) =>

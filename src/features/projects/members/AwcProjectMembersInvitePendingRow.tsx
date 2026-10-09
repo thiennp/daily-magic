@@ -47,6 +47,9 @@ export default function AwcProjectMembersInvitePendingRow(
           {p.typeLabel
             ? C.invitePendingTitleFor(p.typeLabel)
             : C.invitePendingTitle}
+          <span className="ml-1.5 font-mono text-[12px] font-normal text-awc-fg-muted">
+            {C.invitePendingRef(invite.inviteId)}
+          </span>
         </span>
         <AwcProjectMembersInviteMeta
           uses={uses}

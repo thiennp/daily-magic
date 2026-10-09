@@ -18,8 +18,8 @@ interface AwcProjectInviteAddAssistantControlProps {
   readonly onCreate: (selection: AwcProjectInviteAddSelection) => void;
 }
 
-const FIELD =
-  "flex w-full items-center gap-2 rounded-lg border border-awc-control-border bg-awc-surface px-2.5 py-2 text-left text-sm text-awc-fg";
+const LINK =
+  "awc-focus-ring inline-flex items-center gap-1.5 justify-self-start text-left text-sm font-semibold text-awc-primary underline underline-offset-2";
 
 /** One shared create control: "Add assistant" + optional supported-assistant picker dialog. */
 export default function AwcProjectInviteAddAssistantControl({
@@ -44,17 +44,15 @@ export default function AwcProjectInviteAddAssistantControl({
       <button
         type="button"
         id="invite-type-select"
-        className={FIELD}
+        className={LINK}
         aria-haspopup="dialog"
         aria-label={`${C.typeLabel}: ${chosen.label}`}
         data-invite-type-picker=""
         data-invite-type-value={joinTypeId}
         onClick={() => setOpen(true)}
       >
-        <span className="flex-1">
-          <AwcBotName name={chosen.label} kindHint={joinTypeId} />
-        </span>
-        <span aria-hidden="true">▾</span>
+        <AwcBotName name={chosen.label} kindHint={joinTypeId} />
+        <span className="font-normal">({C.typeChange})</span>
       </button>
       {open ? (
         <AwcSupportedAssistantsDialog

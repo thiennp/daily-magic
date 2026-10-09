@@ -53,6 +53,7 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
       : `Prompt for the ${kind} assistant. Paste it into your assistant. You can copy it again until it's used.`,
   /** Unused invite row (replaces "Invite sent / Waiting for assistant"); Cancel only, no Approve. */
   invitePendingTitle: "Assistant invite",
+  invitePendingRef: (inviteId: string) => `#${inviteId.slice(0, 4)}`,
   invitePendingTitleFor: (type: string) => `Invite for ${type}`,
   invitePendingSub: (uses: number, expires: string) =>
     `Not used yet · for ${uses === 1 ? "1 assistant" : `${uses} assistants`} · expires ${expires}`,
