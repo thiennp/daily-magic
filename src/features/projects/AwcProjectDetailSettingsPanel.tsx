@@ -8,6 +8,7 @@ import AwcProjectSettingsMemberFolderRow from "@/features/projects/settings/AwcP
 import AwcProjectSettingsHistoryRow from "@/features/projects/settings/AwcProjectSettingsHistoryRow";
 import AwcProjectSettingsTasksChatRow from "@/features/projects/settings/AwcProjectSettingsTasksChatRow";
 import AwcProjectSettingsLeaveZone from "@/features/projects/settings/AwcProjectSettingsLeaveZone";
+import AwcProjectSettingsDefinitionOfDone from "@/features/projects/settings/AwcProjectSettingsDefinitionOfDone";
 import AwcProjectSettingsNameSection from "@/features/projects/settings/AwcProjectSettingsNameSection";
 import AwcProjectConnectionsSection from "@/features/projects/settings/connections/AwcProjectConnectionsSection";
 import AwcProjectSettingsPendingRunApprovalsSection from "@/features/projects/settings/runApprovals/AwcProjectSettingsPendingRunApprovalsSection";
@@ -39,6 +40,10 @@ export default function AwcProjectDetailSettingsPanel({
         projectId={project.id}
         initialName={project.name}
         startInEditMode={startRename}
+        canEdit={isOwner}
+      />
+      <AwcProjectSettingsDefinitionOfDone
+        projectId={project.id}
         canEdit={isOwner}
       />
       {isOwner ? (

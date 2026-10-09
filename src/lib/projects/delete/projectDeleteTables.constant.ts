@@ -25,6 +25,7 @@ export const PROJECT_DELETE_CASCADE_CHILD_TABLES = [
   "project_composition_snapshots",
   "project_computer_history_settings",
   "project_connections",
+  "project_definition_of_done",
   "project_device_bindings",
   "project_folder_refs",
   "project_grok_routine_wake_attempts",

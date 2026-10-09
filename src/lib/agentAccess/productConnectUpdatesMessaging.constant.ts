@@ -46,4 +46,14 @@ export const PRODUCT_CONNECT_UPDATES_MESSAGING: readonly ProductConnectUpdateEnt
         "Helpers do the real work; your seat receives, assigns and answers so it never goes silent. Quick questions you answer yourself, you brief helpers without secrets, check their output before done (code work carries a PR link or commit SHA), and helpers add a reuse-or-avoid line to the resultSummary.",
       adapt: PROJECT_ORCHESTRATOR_CLAUSE,
     },
+    {
+      id: "project-definition-of-done",
+      catalogVersion: 27,
+      at: "2026-10-09",
+      kind: "connect",
+      title: "Definition of done",
+      summary:
+        "The owner can set a definition of done for the project. get_project_briefing returns it as definitionOfDone (and in briefingText); check a task against it before marking it done and say in the done reply how it was met.",
+      adapt: PROJECT_ORCHESTRATOR_CLAUSE,
+    },
   ];

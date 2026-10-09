@@ -25,12 +25,13 @@ describe("project.updated summary + kind", () => {
     expect(PROJECT_UPDATED_DEBOUNCE_MS).toBe(5_000);
   });
 
-  it("allowlists knowledge|folder_refs|repo_urls|project_info only", () => {
+  it("allowlists knowledge|folder_refs|repo_urls|project_info|definition_of_done only", () => {
     expect([...PROJECT_UPDATED_SUMMARY_FIELDS]).toEqual([
       "knowledge",
       "folder_refs",
       "repo_urls",
       "project_info",
+      "definition_of_done",
     ]);
     expect(isProjectUpdatedSummaryField("folder_refs")).toBe(true);
     expect(isProjectUpdatedSummaryField("secret")).toBe(false);

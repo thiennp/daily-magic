@@ -19,5 +19,7 @@ export type ProjectBriefing = {
     readonly boundHarnessSetSlugs: readonly string[];
     readonly note: string | null;
   };
+  /** Owner's definition of done; null when not set. Meet it before marking a task done. */
+  readonly definitionOfDone: string | null;
   readonly briefingText: string;
 };

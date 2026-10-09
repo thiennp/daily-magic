@@ -1,6 +1,7 @@
 import { formatProjectBriefingText } from "@/lib/projects/acl/formatProjectBriefingText";
 import { listBoundHarnessSlugsForProject } from "@/lib/projects/acl/listBoundHarnessSlugsForProject";
 import { listProjectPeers } from "@/lib/projects/acl/messaging/listProjectPeers";
+import { getProjectDefinitionOfDone } from "@/lib/projects/definitionOfDone/projectDefinitionOfDone";
 import { resolveProjectAclAccess } from "@/lib/projects/acl/resolveProjectAclAccess";
 import { selectProjectBriefingHowToDispatch } from "@/lib/projects/acl/selectProjectBriefingHowToDispatch";
 import type { ProjectBriefing } from "@/lib/projects/acl/types/ProjectBriefing.type";
@@ -29,20 +30,20 @@ export const getProjectBriefing = async (input: {
     projectId: input.projectId,
     actorUserId: input.actorUserId,
   });
-  const peers =
-    peersResult.ok
-      ? peersResult.peers
-          .filter((peer) => !peer.isOwner)
-          .map((peer) => ({
-            membershipId: peer.membershipId ?? null,
-            projectDisplayName: peer.projectDisplayName,
-            teamLabel: peer.teamLabel,
-          }))
-      : [];
+  const peers = peersResult.ok
+    ? peersResult.peers
+        .filter((peer) => !peer.isOwner)
+        .map((peer) => ({
+          membershipId: peer.membershipId ?? null,
+          projectDisplayName: peer.projectDisplayName,
+          teamLabel: peer.teamLabel,
+        }))
+    : [];
 
   const boundHarnessSetSlugs = await listBoundHarnessSlugsForProject(
     input.projectId,
   );
+  const definitionOfDone = await getProjectDefinitionOfDone(input.projectId);
   const base = {
     projectId: input.projectId,
     projectName: access.project.name,
@@ -56,10 +57,10 @@ export const getProjectBriefing = async (input: {
       access.membership?.role,
       access.membership?.deliveryMode,
     ),
+    definitionOfDone,
     playbooks: {
       boundHarnessSetSlugs,
-      note:
-        boundHarnessSetSlugs.length === 0 ? "no playbooks bound" : null,
+      note: boundHarnessSetSlugs.length === 0 ? "no playbooks bound" : null,
     },
   };
   return {

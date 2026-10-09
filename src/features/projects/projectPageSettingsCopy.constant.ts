@@ -6,6 +6,14 @@ export const PROJECT_PAGE_SETTINGS_COPY = {
   nameSaving: "Saving…",
   nameNote:
     "Rename here on Cloud. Change the folder under Folder and repository below.",
+  dodHeading: "Definition of done",
+  dodPlaceholder: "e.g. Tests pass, PR link attached, owner reviewed the UI.",
+  dodSave: "Save",
+  dodLoading: "Loading…",
+  dodLoadFailed: "Could not load the definition of done.",
+  dodEmptyReadOnly: "The owner has not set one.",
+  dodNote:
+    "Assistants check a task against this before they mark it done, and say how they met it.",
   historyHeading: "Message history",
   historyTitle: "Save message history on my computer",
   historySub: "Configure this in the AgentWitch Local app.",

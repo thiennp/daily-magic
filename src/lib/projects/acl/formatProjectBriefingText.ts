@@ -26,5 +26,8 @@ export const formatProjectBriefingText = (
     peerLine,
     briefing.howToDispatch,
     playbookLine,
+    ...(briefing.definitionOfDone === null
+      ? []
+      : [`Definition of done: ${briefing.definitionOfDone}`]),
   ].join(" ");
 };

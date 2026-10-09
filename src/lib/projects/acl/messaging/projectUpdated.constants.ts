@@ -4,6 +4,7 @@ export const PROJECT_UPDATED_SUMMARY_FIELDS = [
   "folder_refs",
   "repo_urls",
   "project_info",
+  "definition_of_done",
 ] as const;
 
 export type ProjectUpdatedSummaryField =
