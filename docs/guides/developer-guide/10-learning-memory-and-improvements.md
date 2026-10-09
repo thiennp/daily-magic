@@ -1,20 +1,20 @@
 # Chapter 10 — Learning, memory, and improvements (developers)
 
-Engineering view of **product pillars 2 and 3**: learn from usage (feedback → improvements) and efficient memory (Mac run context for the next **Task**). User vocabulary: [user guide ch.5](../user-guide/05-tasks-dispatch-and-runs.md), [ch.7](../user-guide/07-capabilities-library-playbooks.md). Pillars overview: [product-pillars.md](../../product/product-pillars.md). Honest gaps: [project-composition.md](../../architecture/project-composition.md) §1.9–1.10.
+Engineering view of **product pillars 2 and 3**: learn from usage (feedback → improvements) and efficient memory (Mac **episode notes** injected into the next **Task**). User vocabulary: [user guide ch.5](../user-guide/05-tasks-dispatch-and-runs.md), [ch.7](../user-guide/07-capabilities-library-playbooks.md). Pillars overview: [product-pillars.md](../../product/product-pillars.md). Names and flows for every learning pipeline (episode notes, knowledge candidates, Playbook skills, auto-skills): [learning-memory-terminology-and-flows.md](../../qa/learning-memory-terminology-and-flows.md).
+
+> **Removed code (install bundle 281, 2026-10-08, commit `6ca713c2`).** The NDJSON run memory (`memory/runs.ndjson`, `appendAgentWitchMemoryEntry`, `formatMemoryContextForPrompt`), RAG chunks (`queryAgentWitchRag`, `indexAgentWitchRagText`), `error-chunks.ndjson` and `usage-stats.json` no longer exist; episode notes replaced them. Older docs still describe that path as "today" — notably [project-composition.md](../../architecture/project-composition.md) §1.9–1.10 and §2, and the weakness table in [local-rag-check-v2-design.md](../../design/local-rag-check-v2-design.md). Read them as history, not as current behavior.
 
 ---
 
-## Two different “memory” systems (do not conflate)
+## Memory and knowledge stores (do not conflate)
 
-| System                                   | Audience                                     | Storage                                                                   | Purpose                                                                  |
-| ---------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| **Run memory (product)**                 | End users’ **Tasks** on a **project folder** | Mac: `memory/runs.ndjson` (via `resolveAgentWitchProjectKnowledgePaths`)  | Inject recent **Run** prompt/output into the next writer prompt          |
-| **Repo RAG (product)**                   | Same Mac project folder                      | Mac/repo: RAG chunks (see `indexAgentWitchRagText`, `queryAgentWitchRag`) | Retrieve embedded snippets for dispatch context                          |
-| **Feature-knowledge (repo agents only)** | Coding agents in **daily-magic** git         | `.feature-knowledge/index.json` (TF-IDF over `docs/**`, feature READMEs)  | `npm run feature-knowledge:query` — **not** shipped to Agent Witch users |
+| System                                     | Audience                                     | Storage                                                                                                 | Purpose                                                                                                      |
+| ------------------------------------------ | -------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| **Episode notes (product)**                | End users’ **Tasks** on a **project folder** | Mac: profile-scoped `knowledge.db` → `episodes` (`apps/live/features/knowledge/internal/core/episode/`) | Inject a few budgeted `mistake` / `fix` notes into the next writer prompt                                    |
+| **Shared episode notes (product, opt-in)** | Project owner (Console **Knowledge impact**) | Cloud `project_knowledge_cards`, written from the Mac heartbeat                                         | Owner-only list of redacted note text from members’ computers; only for folders with `knowledgeShare` **on** |
+| **Feature-knowledge (repo agents only)**   | Coding agents in **daily-magic** git         | `.feature-knowledge/index.json` (TF-IDF over `docs/**`, feature READMEs)                                | `npm run feature-knowledge:query` — **not** shipped to Agent Witch users                                     |
 
-Confusing **feature-knowledge** with **run memory** is a common agent mistake: only the middle column affects production **Tasks** on a user’s Mac. See [agent-mistakes-catalog.md](agent-mistakes-catalog.md).
-
-**Four product learning pipelines** (episode notes, knowledge candidates, Playbook skills, auto-skills), bot reporting rules, and the approved rollout PR order: [learning-memory-terminology-and-flows.md](../../qa/learning-memory-terminology-and-flows.md).
+Confusing **feature-knowledge** with **episode notes** is a common agent mistake: only the first two rows affect production **Tasks** or the Console. See [agent-mistakes-catalog.md](agent-mistakes-catalog.md).
 
 ---
 
@@ -46,25 +46,30 @@ Feature slices: `src/features/feedback/`, `src/features/improvements/` · lib: `
 
 ---
 
-## Pillar 3 — Efficient memory (Mac injection)
+## Pillar 3 — Efficient memory (Mac episode notes)
 
-After a writer run, the computer client may append context for the **same project folder** (and optional `projectId`):
+Every writer run on a project folder goes through a **check** before it and a **capture** after it. Both are fail-open: no SQLite, Ollama down or any exception means no notes, never a blocked or failed run. Modules below are in `apps/live/features/knowledge/internal/core/episode/`; the wiring is in `apps/install/entry/startAgentWitchClient.ts`.
 
-| Step               | Module                         | Behavior                                                 |
-| ------------------ | ------------------------------ | -------------------------------------------------------- |
-| Read prior entries | `readAgentWitchMemoryEntries`  | NDJSON lines, malformed lines skipped                    |
-| Append after run   | `appendAgentWitchMemoryEntry`  | Redacts via `redactTextForProjectKnowledge` before write |
-| Prefix next prompt | `formatMemoryContextForPrompt` | Last **N** entries (default 5), truncated previews       |
+| Step                   | Module                                                   | Behavior                                                                                                                                                                                                                                                                                                                                                              |
+| ---------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Plan                   | `resolveKnowledgePlan` (in `resolveWriterDispatchRoute`) | Skip on `cli_continue` or a `minimal` context budget. `chat` tasks: lexical search, ≤2 notes in 150 tokens. `code` tasks: hybrid (lexical + embedding), ≤3 notes in 300 tokens, or ≤6 in 800 when the budget is `full` or the run is a seeded continuation. Minimum score 0.3                                                                                         |
+| Check before the run   | `checkKnowledgeBeforeTask`                               | Scores the project’s notes against the user prompt (embedding wait capped at 400 ms, then lexical only), packs to the token budget, prefixes the text to the prompt, records `injections` and one `knowledge_events` row                                                                                                                                              |
+| User pushback          | `registerKnowledgeUserCorrection`                        | A prompt that corrects the previous run stores a `mistake` note and marks the notes injected into that run as ineffective                                                                                                                                                                                                                                             |
+| Capture after the run  | `captureKnowledgeAfterRun`                               | Redacts prompt and output (`redactTextForProjectKnowledge`). Non-zero exit or a verify-failure line → `mistake` note (fingerprinted, deduped by content hash). New commits or changed files since the run started → `fix` note (`verified` with commits and no verify failure, else `unverified`). A revert commit supersedes the reverted notes and adds a `mistake` |
+| Feedback on injections | `captureKnowledgeAfterRun`                               | Injected notes gain `useful_count` on a pass and `ineffective_count` when the same mistake repeats; `mistake_hits` records prevented vs repeated                                                                                                                                                                                                                      |
+| Limits                 | `episode.types.ts`, `pruneEpisodes`                      | Takeaway ≤280 chars, request ≤200, ≤12 files per note, 2,000 notes per project (never-used notes are dropped first, then oldest)                                                                                                                                                                                                                                      |
 
-Canonical implementation: `apps/live/features/memory/internal/core/agentWitchLocalMemory.ts` (re-exported from AWL memory public-api; invoked from `apps/install/entry/startAgentWitchClient.ts` after `command.claude.run`).
+Today only `mistake` and `fix` notes are written; `decision` and `lesson` exist in `EpisodeKind` for future capture.
 
-RAG indexing often runs in the same capture block (`indexAgentWitchRagText`) — **separate file**, same folder policy; do not treat RAG chunks as the improvements loop.
+**Controls.** Per project folder, `<project>/.agent-witch/token-saver.json`: `knowledge` (default `on`) and `knowledgeShare` (default `off`). Environment: `AGENT_WITCH_KNOWLEDGE=off` disables notes everywhere; `AGENT_WITCH_KNOWLEDGE_HOLDOUT_PERCENT` (0–100, default 10) sets a deterministic slice of runs (hash of the run id) that skips retrieval, so the impact numbers can compare repeat-mistake rates with and without notes.
 
-**Git worktree verdict (Mac, no cloud cost):** before `runWriterTask`, AWI captures a git snapshot; after `command.claude.result`, it appends a one-line verdict to the run report file `details` via `captureAgentWitchGitWorktreeSnapshot` and `formatAgentWitchGitWorktreeVerdict` (`apps/live/features/projects/internal/core/knowledge/`). This supports pillar 2 honest outcomes and pillar 3 selective memory without LLM judges — see [agentcore-lessons-zero-marginal-cost.md](../../product/agentcore-lessons-zero-marginal-cost.md) §2.
+**Git worktree verdict (Mac, no cloud cost):** before `runWriterTask`, AWI captures a git snapshot; after `command.claude.result`, it appends a one-line verdict to the run report file `details` via `captureAgentWitchGitWorktreeSnapshot` and `formatAgentWitchGitWorktreeVerdict` (`apps/live/features/projects/internal/core/knowledge/`). This supports pillar 2 honest outcomes and pillar 3 selective memory without LLM judges — see [agentcore-lessons-zero-marginal-cost.md](../../product/agentcore-lessons-zero-marginal-cost.md) §2. Episode capture reads git separately (`readGitRunChanges`) to link notes to commits.
 
-**Local telemetry (Mac, pillar 3):** `recordAgentWitchChunkRetrievals` increments per-chunk hits when `queryAgentWitchRag` selects chunks for dispatch. Failed runs call `recordAgentWitchErrorOccurrence` + `indexAgentWitchErrorKnowledgeText`. `computeAgentWitchKnowledgeSuggestions` surfaces thresholds (10× RAG without tool, 3× same error → tool then rule hints) on AWL `/knowledge` — **not** auto-accept; cloud `capability_improvements` stays pillar 2 human-in-the-loop.
+**Impact and sharing (Mac → cloud).** AWL `/knowledge` renders the local impact panel (`buildKnowledgeImpactPanelHtml`, `summarizeKnowledgeImpact`). The heartbeat (`buildKnowledgeHeartbeatPayload`, aggregates at most every 10 minutes) sends per-project daily **counts** — runs, holdout runs, repeats with and without notes, injected tokens, mistakes avoided, estimated tokens saved — to `saveKnowledgeHeartbeat` for Console **Knowledge impact** (`src/features/projects/knowledge-impact/`). Note **text** goes up only for folders with `knowledgeShare` on (`buildKnowledgeSharedCards`: ≤20 notes per project per send, re-redacted, ≤4 file names each); turning it off lists the project in `shareOffProjectIds` so the server drops old copies.
 
-**Playbooks / library** reuse capability definitions (pillar 3 + 4): saved prompts are not the same as automatic run memory — see [concepts.md](../../product/concepts.md) (Run memory vs Library).
+**Knowledge candidates (separate from notes).** After a successful Run with a `projectId`, `distillProjectKnowledgeLesson` posts a redacted lesson, and the third occurrence of the same mistake posts `Recurring mistake (3x): …`, to `POST /api/agent-witch/projects/<id>/knowledge` (`syncProjectKnowledgeCandidateToCloud`). The owner promotes or rejects it in the Console — this is the explicit Mac → cloud gate, and it is not the pillar 2 improvements loop.
+
+**Playbooks / library** reuse capability definitions (pillar 3 + 4): saved prompts are not the same as automatic notes — see [concepts.md](../../product/concepts.md) (Run memory vs Library).
 
 ---
 
@@ -72,31 +77,32 @@ RAG indexing often runs in the same capture block (`indexAgentWitchRagText`) —
 
 Copy this table when describing behavior; do not imply features that are not wired.
 
-| Area             | Shipped today                                                                                                                                                                                          | North star (direction)                                                                         |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
-| **Run memory**   | Recency-based prompt/output pairs injected regardless of run outcome; **git verdict** in Mac run report `details` when the folder is a git repo                                                        | Outcome-aware capture; failures excluded from injection; distillation + dedupe                 |
-| **RAG**          | Append + cosine scan; **retrieval counts** in `usage-stats.json`; failed runs index `error-chunks.ndjson` and inject “past failures” on dispatch; AWL `/knowledge` shows usage + local tool/rule hints | Bounded store; linked tools; optional local router LLM before writer; no install-wide fallback |
-| **Improvements** | Cloud `capability_improvements` + accept → new capability version                                                                                                                                      | Full loop from failed run → reviewed suggestion → playbook/workflow/harness update             |
-| **Mac ↔ cloud**  | Memory stays on device; improvements are cloud                                                                                                                                                         | Explicit promotion gates; no implicit upload of run transcripts                                |
+| Area              | Shipped today                                                                                                                                                                                                                                                           | North star (direction)                                                                       |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| **Episode notes** | SQLite notes (`mistake`, `fix`) with hybrid lexical + embedding retrieval under a token budget; fail-open; commit linking and revert detection; useful / ineffective feedback; 10% holdout runs; AWL `/knowledge` impact panel; git verdict in Mac run report `details` | `decision` / `lesson` capture; promote strong notes to Playbook skills through an owner gate |
+| **Failed runs**   | Never injected as raw output; a failed run yields a one-line `mistake` note, and the third repeat becomes a knowledge candidate                                                                                                                                         | Distillation across runs; dedupe across notes with different wording                         |
+| **Improvements**  | Cloud `capability_improvements` + accept → new capability version                                                                                                                                                                                                       | Full loop from failed run → reviewed suggestion → playbook/workflow/harness update           |
+| **Mac ↔ cloud**   | Notes stay on device by default; opt-in `knowledgeShare` sends redacted note text to the owner; impact counts always sent; knowledge candidates need owner promotion                                                                                                    | Explicit promotion gates; no implicit upload of run transcripts                              |
 
-Architecture critique and target layers: [project-composition.md](../../architecture/project-composition.md) (Knowledge layer §2, §1.10).
+Architecture critique and target layers: [project-composition.md](../../architecture/project-composition.md) (written against the removed NDJSON path — see the note at the top of this chapter).
 
 ---
 
 ## When you change this area
 
-1. Query: `npm run feature-knowledge:query -- "run memory improvements feedback" --feature=docs`
+1. Query: `npm run feature-knowledge:query -- "episode notes improvements feedback" --feature=docs`
 2. Read `src/features/feedback/KNOWN_ISSUES.md` and `src/features/improvements/KNOWN_ISSUES.md` if present.
-3. Mac capture path: [Chapter 4](04-mac-bridge-awl-awb-awi.md) + memory module under `apps/live/features/memory/`.
-4. Dispatch/memory limits: [Chapter 5](05-dispatch-presence-and-runs.md) (cascade routing may cap memory entries).
+3. Mac capture path: [Chapter 4](04-mac-bridge-awl-awb-awi.md) + episode module under `apps/live/features/knowledge/`.
+4. Dispatch/memory limits: [Chapter 5](05-dispatch-presence-and-runs.md) (`resolveWriterDispatchRoute` sets the `knowledgePlan`).
 5. Update **user guide** pillar chapters per [guide-maintenance.map.json](../guide-maintenance.map.json); run `npm run feature-knowledge:index` and commit `.feature-knowledge/index.json`.
 
 ---
 
 ## Query aliases
 
-- Agent Witch run memory appendAgentWitchMemoryEntry capability_improvements
+- Agent Witch episode notes knowledge.db captureKnowledgeAfterRun checkKnowledgeBeforeTask
+- run memory runs.ndjson appendAgentWitchMemoryEntry removed replaced by episode notes
 - feedback improvements human in the loop publishCapabilityVersion
-- feature-knowledge vs run memory RAG project folder
+- feature-knowledge vs episode notes project folder
 - pillar 2 pillar 3 developer guide learn from usage efficient memory
-- bo nho run Agent Witch, cai thien capability, feedback run, RAG tren Mac
+- bo nho run Agent Witch, cai thien capability, feedback run, ghi chu episode tren Mac

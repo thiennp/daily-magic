@@ -88,10 +88,10 @@ Mac client cloud HTTP (legacy long-poll paths still documented in CLAUDE.md): he
 
 ### AWL loopback pages (pillar 3 memory)
 
-| Path         | Module                                                                                | Notes                                                                                                   |
-| ------------ | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `/knowledge` | `startAgentWitchLocalApp.ts` + `agentWitchLocalRag` / `agentWitchLocalKnowledgeUsage` | Project RAG chunks, retrieval counts (`usage-stats.json`), local tool/rule **hints** (not auto-publish) |
-| `/errors`    | diagnostics                                                                           | Client stderr tail — not the same as `error-chunks.ndjson` RAG                                          |
+| Path         | Module                                                                          | Notes                                                                                                                                                                               |
+| ------------ | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/knowledge` | `startAgentWitchLocalApp.ts` + `buildKnowledgeImpactPanelHtml` (episode module) | Episode-note impact panel: runs with vs without notes, injected tokens, mistakes avoided, note list; per-folder `knowledge` / `knowledgeShare` toggles (`POST /api/knowledge/flag`) |
+| `/errors`    | diagnostics                                                                     | Client stderr tail — separate from episode notes (a failed run’s `mistake` note is a one-line takeaway, not the stderr)                                                             |
 
 Telemetry and dispatch wiring: [Chapter 10](10-learning-memory-and-improvements.md). Do not conflate with repo `.feature-knowledge/`.
 
