@@ -2,7 +2,7 @@
 
 import type { AwcProjectAccessMember } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 import type { useAwcProjectAccessWakeLinks } from "@/features/projects/access/hooks/useAwcProjectAccessWakeLinks";
-import AwcProjectMembersHelperBotControls from "@/features/projects/members/AwcProjectMembersHelperBotControls";
+import AwcProjectMembersHelperBotLine from "@/features/projects/members/AwcProjectMembersHelperBotLine";
 import AwcProjectMembersHelperRow from "@/features/projects/members/AwcProjectMembersHelperRow";
 import AwcProjectMembersReadOnlyHelperLabel from "@/features/projects/members/AwcProjectMembersReadOnlyHelperLabel";
 import { BOT_MANAGEMENT_COPY as C } from "@/features/projects/members/botManagementCopy.constant";
@@ -70,7 +70,7 @@ export default function AwcProjectMembersHelperListItem({
           </button>
         ) : null}
       </span>
-      <AwcProjectMembersHelperBotControls
+      <AwcProjectMembersHelperBotLine
         projectId={projectId}
         member={member}
         onChanged={changed}

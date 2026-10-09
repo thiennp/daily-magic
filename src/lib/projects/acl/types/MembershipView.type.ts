@@ -42,4 +42,12 @@ export type MembershipView = {
   readonly canManageBot?: boolean;
   /** Assistants only: it has not fetched the newest guidance yet. */
   readonly guidanceOutdated?: boolean;
+  /** Claim feature (assistants only; see decorateBotClaim). */
+  readonly canClaimBot?: boolean;
+  readonly canChangeInviter?: boolean;
+  readonly inviterChoices?: readonly {
+    readonly userId: string;
+    readonly label: string;
+    readonly isYou: boolean;
+  }[];
 };

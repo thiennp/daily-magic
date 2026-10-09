@@ -1,0 +1,22 @@
+export const BOT_CLAIM_COPY = {
+  unclaimed: "Nobody has claimed this assistant",
+  claim: "Claim it",
+  choose: "Choose who invited it",
+  change: "Change who invited it",
+  pickLabel: "Invited by",
+  you: " (you)",
+  submit: "Submit",
+  cancel: "Cancel",
+  failed: "Could not save. Try again.",
+  addTitle: "Add one of my assistants",
+  addHint:
+    "An assistant you already use in another project joins here without a new invite.",
+  addNone: "You have no other assistants to add.",
+  addPick: "Assistant",
+  addName: "Name in this project",
+  addButton: "Add",
+  adding: "Adding…",
+  addTaken: "That name is taken here. Pick another.",
+  addFailed: "Could not add it. Check the name and try again.",
+  addLoadFailed: "Could not load your assistants.",
+} as const;

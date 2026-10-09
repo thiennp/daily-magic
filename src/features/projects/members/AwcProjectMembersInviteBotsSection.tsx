@@ -6,6 +6,7 @@ import AwcProjectInviteCreatedBanner from "@/features/projects/access/invites/Aw
 import { awcProjectInviteTypeLabel } from "@/features/projects/access/invites/awcProjectInviteAddAssistantTypes";
 import { buildCreatedInviteCopyPrompt } from "@/features/projects/access/invites/buildCreatedInviteCopyPrompt";
 import { fetchPendingInviteCopyPrompt } from "@/features/projects/access/invites/fetchPendingInviteCopyPrompt";
+import AwcProjectMembersAddOwnedBot from "@/features/projects/members/AwcProjectMembersAddOwnedBot";
 import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
 import SectionIcon, {
   SECTION_CARD,
@@ -31,6 +32,7 @@ interface AwcProjectMembersInviteBotsSectionProps {
     | "revokeInvite"
     | "turnOffAutoApprove"
     | "clearCreatedInviteBanner"
+    | "reload"
   >;
 }
 
@@ -69,6 +71,10 @@ export default function AwcProjectMembersInviteBotsSection({
           }
         />
       </div>
+      <AwcProjectMembersAddOwnedBot
+        projectId={projectId}
+        onAdded={() => void access.reload()}
+      />
       {createdInviteUrl ? (
         <div>
           <AwcProjectInviteCreatedBanner

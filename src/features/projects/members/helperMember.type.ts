@@ -11,4 +11,7 @@ export type HelperMember = Pick<
   | "isolatedFromOtherBots"
   | "closedToOthers"
   | "guidanceOutdated"
+  | "canClaimBot"
+  | "canChangeInviter"
+  | "inviterChoices"
 >;

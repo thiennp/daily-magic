@@ -44,6 +44,9 @@ vi.mock(
     }),
   }),
 );
+vi.mock("@/lib/projects/acl/decorateBotClaim", () => ({
+  decorateBotClaim: async (members: unknown) => members,
+}));
 vi.mock("@/app/api/projects/[projectId]/access/patchAccessAction", () => ({
   handleProjectAccessPatch: vi.fn(),
 }));

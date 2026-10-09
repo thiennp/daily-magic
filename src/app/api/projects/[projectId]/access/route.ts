@@ -1,3 +1,4 @@
+import { decorateBotClaim } from "@/lib/projects/acl/decorateBotClaim";
 import { decorateBotManagement } from "@/lib/projects/acl/decorateBotManagement";
 import { handleInviterAccessPatch } from "@/app/api/projects/[projectId]/access/handleInviterAccessPatch";
 import { handleProjectAccessPatch } from "@/app/api/projects/[projectId]/access/patchAccessAction";
@@ -45,6 +46,11 @@ export async function GET(
     ownerUserId: access.project.ownerUserId,
     projectDeviceId: access.project.deviceId,
   });
+  const claimDecorated = await decorateBotClaim(members, {
+    userId: actor.id,
+    canWrite: isOwner || access.membership.role === "member",
+    ownerUserId: access.project.ownerUserId,
+  });
   const { pendingRequests, expiredRequests } = isOwner
     ? await buildOwnerPendingAccessViews(projectId)
     : await buildInviterPendingAccessViews({ projectId, userId: actor.id });
@@ -52,7 +58,10 @@ export async function GET(
   return Response.json({
     ok: true,
     project: { id: access.project.id, name: access.project.name },
-    members: decorateBotManagement(members, { userId: actor.id, isOwner }),
+    members: decorateBotManagement(claimDecorated, {
+      userId: actor.id,
+      isOwner,
+    }),
     pendingRequests,
     expiredRequests,
     firstConnect: isOwner

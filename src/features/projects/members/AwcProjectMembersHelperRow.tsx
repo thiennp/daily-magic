@@ -4,7 +4,7 @@ import { useRef } from "react";
 
 import { awcGrokWakeLinkHash } from "@/features/projects/access/awcGrokWakeLinkDeepLink";
 import { useWakeLinkOpenRequest } from "@/features/projects/access/hooks/useWakeLinkOpenRequest";
-import AwcProjectMembersHelperBotControls from "@/features/projects/members/AwcProjectMembersHelperBotControls";
+import AwcProjectMembersHelperBotLine from "@/features/projects/members/AwcProjectMembersHelperBotLine";
 import AwcProjectMembersHelperRowLinks from "@/features/projects/members/AwcProjectMembersHelperRowLinks";
 import AwcProjectMembersHelperRowLabel from "@/features/projects/members/AwcProjectMembersHelperRowLabel";
 import AwcProjectMembersHelperRowMenu from "@/features/projects/members/AwcProjectMembersHelperRowMenu";
@@ -78,7 +78,7 @@ export default function AwcProjectMembersHelperRow(
           onRemove={row.startRemove}
         />
       </div>
-      <AwcProjectMembersHelperBotControls
+      <AwcProjectMembersHelperBotLine
         projectId={p.projectId}
         member={member}
         onChanged={p.onChanged}

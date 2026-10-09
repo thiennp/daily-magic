@@ -43,6 +43,14 @@ export type AccessMembershipView = {
   readonly closedToOthers?: boolean;
   /** Assistants only: it has not fetched the newest guidance yet. */
   readonly guidanceOutdated?: boolean;
+  /** Claim feature (assistants only). */
+  readonly canClaimBot?: boolean;
+  readonly canChangeInviter?: boolean;
+  readonly inviterChoices?: readonly {
+    readonly userId: string;
+    readonly label: string;
+    readonly isYou: boolean;
+  }[];
 };
 
 export type AccessPendingView = {
