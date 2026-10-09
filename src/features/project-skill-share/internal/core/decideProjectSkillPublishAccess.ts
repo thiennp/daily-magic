@@ -11,19 +11,23 @@ export type ProjectSkillPublishAccess =
 
 /**
  * The one publish ACL (server fn, HTTP POST, MCP publish_project_skill):
- * owner publishes, promotes and saves drafts; an active member may only save
- * drafts (asDraft: true with a body — new skill or new draft version);
+ * owner publishes, promotes and saves drafts; an active member publishes and
+ * promotes their own skills (new, or one they published) but on someone
+ * else's skill may only save drafts (asDraft: true with a body);
  * viewer / none never write.
  */
 export const decideProjectSkillPublishAccess = (input: {
   readonly role: ProjectSkillActorRole;
   readonly asDraft: boolean;
   readonly hasBody: boolean;
+  /** No row yet, or the actor published it. */
+  readonly isOwnSkill: boolean;
 }): ProjectSkillPublishAccess => {
   if (input.role === "owner") return { allowed: true, draftOnly: false };
   if (input.role !== "member") {
     return { allowed: false, message: PROJECT_SKILL_ACL_MESSAGES.viewerWrite };
   }
+  if (input.isOwnSkill) return { allowed: true, draftOnly: false };
   return input.asDraft && input.hasBody
     ? { allowed: true, draftOnly: true }
     : { allowed: false, message: PROJECT_SKILL_ACL_MESSAGES.ownerOnlyPublish };

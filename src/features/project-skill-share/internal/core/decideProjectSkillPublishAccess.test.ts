@@ -4,50 +4,53 @@ import { canViewProjectSkill } from "@/features/project-skill-share/internal/cor
 import { decideProjectSkillPublishAccess } from "@/features/project-skill-share/internal/core/decideProjectSkillPublishAccess";
 import { decideProjectSkillRevokeAccess } from "@/features/project-skill-share/internal/core/decideProjectSkillRevokeAccess";
 
-describe("project skill access rules (owner publishes/revokes; members draft; shared published read)", () => {
-  it("publish: owner always; member drafts only (asDraft + body); viewer never", () => {
+describe("project skill access rules (owner full; members publish/revoke their own; shared published read)", () => {
+  it("publish: owner always; member publishes own skills, drafts on others'; viewer never", () => {
     const d = (
       role: "owner" | "member" | "viewer" | "none",
       asDraft: boolean,
       hasBody = true,
-    ) => decideProjectSkillPublishAccess({ role, asDraft, hasBody });
+      isOwnSkill = true,
+    ) =>
+      decideProjectSkillPublishAccess({ role, asDraft, hasBody, isOwnSkill });
     expect(d("owner", false)).toEqual({ allowed: true, draftOnly: false });
-    expect(d("owner", false, false)).toEqual({
+    expect(d("owner", false, false, false)).toEqual({
       allowed: true,
       draftOnly: false,
     });
-    expect(d("member", true)).toEqual({ allowed: true, draftOnly: true });
-    expect(d("member", false)).toMatchObject({ allowed: false });
-    expect(d("member", true, false)).toMatchObject({ allowed: false });
-    expect(d("member", false)).toMatchObject({
+    expect(d("member", false)).toEqual({ allowed: true, draftOnly: false });
+    expect(d("member", false, false)).toEqual({
+      allowed: true,
+      draftOnly: false,
+    });
+    expect(d("member", true, true, false)).toEqual({
+      allowed: true,
+      draftOnly: true,
+    });
+    expect(d("member", false, true, false)).toMatchObject({
+      allowed: false,
       message: expect.stringContaining("asDraft: true"),
     });
+    expect(d("member", true, false, false)).toMatchObject({ allowed: false });
     expect(d("viewer", true)).toMatchObject({ allowed: false });
     expect(d("none", true)).toMatchObject({ allowed: false });
   });
 
-  it("revoke: owner only", () => {
-    expect(
+  it("revoke: owner, or the member who published it", () => {
+    const r = (
+      role: "owner" | "member" | "viewer" | "none",
+      actorUserId: string,
+    ) =>
       decideProjectSkillRevokeAccess({
-        role: "owner",
-        actorUserId: "o",
+        role,
+        actorUserId,
         publisherUserId: "p",
-      }),
-    ).toBe(true);
-    expect(
-      decideProjectSkillRevokeAccess({
-        role: "member",
-        actorUserId: "p",
-        publisherUserId: "p",
-      }),
-    ).toBe(false);
-    expect(
-      decideProjectSkillRevokeAccess({
-        role: "viewer",
-        actorUserId: "p",
-        publisherUserId: "p",
-      }),
-    ).toBe(false);
+      });
+    expect(r("owner", "o")).toBe(true);
+    expect(r("member", "p")).toBe(true);
+    expect(r("member", "m")).toBe(false);
+    expect(r("viewer", "p")).toBe(false);
+    expect(r("none", "p")).toBe(false);
   });
 
   it("view: published for seats; drafts owner + member; revoked owner-only", () => {

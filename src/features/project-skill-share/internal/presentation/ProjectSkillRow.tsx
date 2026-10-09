@@ -10,7 +10,6 @@ import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPag
 interface ProjectSkillRowProps {
   readonly skill: ProjectSkillView;
   readonly busy: boolean;
-  readonly canEdit: boolean;
   readonly onRevoke: (skillId: string) => void;
   readonly onPublishDraft: (skillId: string) => void;
 }
@@ -18,7 +17,6 @@ interface ProjectSkillRowProps {
 export default function ProjectSkillRow({
   skill,
   busy,
-  canEdit,
   onRevoke,
   onPublishDraft,
 }: ProjectSkillRowProps) {
@@ -70,7 +68,6 @@ export default function ProjectSkillRow({
       <ProjectSkillRowActions
         skill={skill}
         busy={busy}
-        canEdit={canEdit}
         hasPendingDraft={hasPendingDraft}
         onRevoke={onRevoke}
         onPublishDraft={onPublishDraft}

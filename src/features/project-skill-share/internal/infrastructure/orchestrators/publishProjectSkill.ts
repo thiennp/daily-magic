@@ -9,7 +9,7 @@ import { resolvePublishProjectSkillTarget } from "@/features/project-skill-share
 import { storeProjectSkillVersion } from "@/features/project-skill-share/internal/infrastructure/orchestrators/storeProjectSkillVersion";
 
 /**
- * Orchestrator: publish_project_skill (project owner only).
+ * Orchestrator: publish_project_skill (owner; members for their own skills).
  * resolve target → store in AWC (or promote draft) → prune to 20 → mirror to AWL when History ON.
  */
 export const publishProjectSkill = async (input: {

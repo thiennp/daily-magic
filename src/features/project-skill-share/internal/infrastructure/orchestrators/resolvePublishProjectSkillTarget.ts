@@ -53,12 +53,6 @@ export const resolvePublishProjectSkillTarget = async (input: {
     actorUserId: input.actorUserId,
   });
   if (role === "project_not_found") return fail("not_found");
-  const access = decideProjectSkillPublishAccess({
-    role,
-    asDraft: args.asDraft === true,
-    hasBody: args.body !== undefined,
-  });
-  if (!access.allowed) return fail("forbidden", access.message);
   const skillId =
     args.skillId ??
     (args.name !== undefined ? deriveProjectSkillIdFromName(args.name) : null);
@@ -69,6 +63,14 @@ export const resolvePublishProjectSkillTarget = async (input: {
     projectId: args.projectId,
     skillId,
   });
+  const access = decideProjectSkillPublishAccess({
+    role,
+    asDraft: args.asDraft === true,
+    hasBody: args.body !== undefined,
+    isOwnSkill:
+      existing === null || existing.publisherUserId === input.actorUserId,
+  });
+  if (!access.allowed) return fail("forbidden", access.message);
   const name = args.name ?? existing?.name;
   if (name === undefined) return fail("invalid_arguments");
   const draftOnly = access.draftOnly && existing !== null;

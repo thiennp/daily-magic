@@ -74,7 +74,7 @@ describe("publishProjectSkill real resolver viewer gate", () => {
     expect(insertProjectSkillVersionWithSkill).not.toHaveBeenCalled();
   });
 
-  it("forbids member from publishing a new skill", async () => {
+  it("allows member to publish a new skill", async () => {
     vi.mocked(getActiveProjectMembership).mockResolvedValue(
       skillActorRoleSeatFixture("member", "human"),
     );
@@ -82,8 +82,8 @@ describe("publishProjectSkill real resolver viewer gate", () => {
       actorUserId: "actor-1",
       args: { projectId: "proj-1", name: "Deploy", body },
     });
-    expect(result).toMatchObject({ ok: false, code: "forbidden" });
-    expect(insertProjectSkillVersionWithSkill).not.toHaveBeenCalled();
+    expect(result.ok).toBe(true);
+    expect(insertProjectSkillVersionWithSkill).toHaveBeenCalled();
   });
 
   it("allows owner to publish a new skill", async () => {

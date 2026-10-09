@@ -52,12 +52,12 @@ describe("revokeProjectSkill real resolver viewer gate", () => {
     expect(updateProjectSkillRevoked).not.toHaveBeenCalled();
   });
 
-  it("forbids member publisher from revoking", async () => {
+  it("forbids member from revoking another publisher's skill", async () => {
     vi.mocked(getActiveProjectMembership).mockResolvedValue(
       skillActorRoleSeatFixture("member", "human"),
     );
     vi.mocked(selectProjectSkillRow).mockResolvedValue(
-      projectSkillRecordFixture({ publisherUserId: "actor-1" }),
+      projectSkillRecordFixture({ publisherUserId: "someone-else" }),
     );
     const result = await revokeProjectSkill({
       actorUserId: "actor-1",
@@ -65,6 +65,25 @@ describe("revokeProjectSkill real resolver viewer gate", () => {
     });
     expect(result).toMatchObject({ ok: false, code: "forbidden" });
     expect(updateProjectSkillRevoked).not.toHaveBeenCalled();
+  });
+
+  it("allows member publisher to revoke their own skill", async () => {
+    vi.mocked(getActiveProjectMembership).mockResolvedValue(
+      skillActorRoleSeatFixture("member", "human"),
+    );
+    const own = projectSkillRecordFixture({ publisherUserId: "actor-1" });
+    vi.mocked(selectProjectSkillRow).mockResolvedValue(own);
+    vi.mocked(updateProjectSkillRevoked).mockResolvedValue({
+      ...own,
+      state: "revoked",
+      revokedAt: "2026-10-05T00:00:00Z",
+    });
+    const result = await revokeProjectSkill({
+      actorUserId: "actor-1",
+      args: { projectId: "proj-1", skillId: "deploy" },
+    });
+    expect(result.ok).toBe(true);
+    expect(updateProjectSkillRevoked).toHaveBeenCalled();
   });
 
   it("allows owner to revoke", async () => {

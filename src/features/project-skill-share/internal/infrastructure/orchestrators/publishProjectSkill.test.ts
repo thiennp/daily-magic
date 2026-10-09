@@ -87,8 +87,11 @@ describe("publishProjectSkill", () => {
     );
   });
 
-  it("forbids members from publishing", async () => {
+  it("forbids members from publishing over another publisher's skill", async () => {
     vi.mocked(resolveProjectSkillActorRole).mockResolvedValue("member");
+    vi.mocked(selectProjectSkillRow).mockResolvedValue(
+      projectSkillRecordFixture({ publisherUserId: "someone-else" }),
+    );
     const result = await publishProjectSkill({
       actorUserId: "m1",
       args: { projectId: "proj-1", name: "Deploy", body },

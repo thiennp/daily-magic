@@ -34,37 +34,39 @@ const role = (r: "owner" | "member" | "viewer") =>
   vi.mocked(resolveProjectSkillActorRole).mockResolvedValue(r);
 const draft = { projectId: "proj-1", body: "# gen", asDraft: true } as const;
 const published = rec({
+  publisherUserId: "owner-1",
   publishedVersion: 3,
   latestVersion: 3,
   contentHash: "sha256:live",
 });
 
-describe("DF-040 members cannot publish or revoke; viewers cannot draft", () => {
+describe("DF-040 members cannot publish or revoke others' skills; viewers cannot draft", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("member publish / promote → forbidden with owner-only message", async () => {
+  it("member publish / promote of another's skill → forbidden with owner-or-publisher message", async () => {
     role("member");
     vi.mocked(selectProjectSkillRow).mockResolvedValue(published);
     for (const args of [
-      { projectId: "proj-1", name: "X", body: "# x" },
+      { projectId: "proj-1", skillId: "deploy", name: "X", body: "# x" },
       { projectId: "proj-1", skillId: "deploy" },
-      { projectId: "proj-1", skillId: "deploy", asDraft: true },
     ]) {
       expect(
         await publishProjectSkill({ actorUserId: "kai", args }),
       ).toMatchObject({
         ok: false,
         code: "forbidden",
-        message: expect.stringContaining("Only the project owner can publish"),
+        message: expect.stringContaining(
+          "Only the project owner or the skill's publisher can publish",
+        ),
       });
     }
     expect(insertProjectSkillVersionWithSkill).not.toHaveBeenCalled();
     expect(promoteProjectSkillDraftVersion).not.toHaveBeenCalled();
   });
 
-  it("member revoke → forbidden; viewer draft → forbidden", async () => {
+  it("member revoke of another's skill → forbidden; viewer draft → forbidden", async () => {
     role("member");
     vi.mocked(selectProjectSkillRow).mockResolvedValue(published);
     expect(

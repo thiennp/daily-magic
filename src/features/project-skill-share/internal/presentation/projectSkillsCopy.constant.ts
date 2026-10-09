@@ -11,8 +11,6 @@ export const PROJECT_SKILLS_COPY = {
   saveDraft: "Save draft",
   publishDraft: "Publish",
   draftByLabel: (name: string) => `Draft by ${name}`,
-  memberDraftHint:
-    "Only the project owner can publish. Save a draft and the owner can publish it.",
   publishing: "Saving…",
   revoke: "Revoke",
   discardDraft: "Discard draft",
@@ -29,6 +27,6 @@ export const PROJECT_SKILLS_COPY = {
   /** Product Shared visibility — exact EN (same as Library disabled.*). */
   disabledAdd: "Only the project owner can add items.",
   disabledEdit: "Only the project owner can edit this.",
-  disabledPublish: "Only the project owner can publish.",
-  disabledDelete: "Only the project owner can delete this.",
+  disabledPublish: "Only the project owner or its publisher can publish.",
+  disabledDelete: "Only the project owner or its publisher can delete this.",
 } as const;

@@ -13,8 +13,12 @@ describe("ProjectSkillsSection owner-only mutate UI", () => {
   it("uses Product EN disabled reasons exactly", () => {
     expect(C.disabledAdd).toBe("Only the project owner can add items.");
     expect(C.disabledEdit).toBe("Only the project owner can edit this.");
-    expect(C.disabledPublish).toBe("Only the project owner can publish.");
-    expect(C.disabledDelete).toBe("Only the project owner can delete this.");
+    expect(C.disabledPublish).toBe(
+      "Only the project owner or its publisher can publish.",
+    );
+    expect(C.disabledDelete).toBe(
+      "Only the project owner or its publisher can delete this.",
+    );
   });
 
   it("disables form + row mutate with aria-describedby for non-owners", () => {
@@ -22,7 +26,6 @@ describe("ProjectSkillsSection owner-only mutate UI", () => {
     const ownerOnly = read("ProjectSkillOwnerOnlyActions.tsx");
     const rowActions = read("ProjectSkillRowActions.tsx");
     const section = read("ProjectSkillsSection.tsx");
-    expect(form).toContain("canEdit");
     expect(form).toContain("ProjectSkillOwnerOnlyActions");
     expect(ownerOnly).toContain("aria-describedby");
     expect(ownerOnly).toContain("disabledAdd");

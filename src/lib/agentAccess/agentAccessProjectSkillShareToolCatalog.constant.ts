@@ -18,7 +18,7 @@ export const AGENT_ACCESS_PROJECT_SKILL_SHARE_TOOLS: readonly AgentAccessToolDef
     {
       name: "publish_project_skill",
       description:
-        "Save or publish a project skill or playbook (kind: skill by default, or playbook). Owner: publish, save drafts, and publish without body to promote the latest draft. Active member: asDraft: true with a body only (new skill, or a new draft version of an existing one; the live version is never changed); publishing is owner-only. Viewer: no writes. Text body ≤ 64KB per version; AWC keeps the last 20 versions. New skill: pass name (skillId optional, derived from name).",
+        "Save or publish a project skill or playbook (kind: skill by default, or playbook). Owner: publish, save drafts, and publish without body to promote the latest draft. Active member: publish or save drafts for a new skill or one they published; on someone else's skill, asDraft: true with a body only (a new draft version; the live version is never changed). Viewer: no writes. Text body ≤ 64KB per version; AWC keeps the last 20 versions. New skill: pass name (skillId optional, derived from name).",
       inputSchema: {
         type: "object",
         properties: {
@@ -63,7 +63,7 @@ export const AGENT_ACCESS_PROJECT_SKILL_SHARE_TOOLS: readonly AgentAccessToolDef
     {
       name: "revoke_project_skill",
       description:
-        "Revoke a project skill (project owner only). Members stop seeing it; versions stay so it can be republished.",
+        "Revoke a project skill (project owner, or the member who published it). Members stop seeing it; versions stay so it can be republished.",
       inputSchema: {
         type: "object",
         properties: { projectId: projectIdProp, skillId: skillIdProp },

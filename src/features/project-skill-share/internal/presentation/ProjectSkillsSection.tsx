@@ -20,7 +20,7 @@ interface ProjectSkillsSectionProps {
   readonly projectId: string;
   /** Owner-only mutate; member/viewer get disabled controls + Product EN reasons. */
   readonly canEdit: boolean;
-  /** Owner or active member: Save draft + see drafts (default = canEdit). */
+  /** Owner or active member: Publish / Save draft + see drafts (default = canEdit). */
   readonly canDraft?: boolean;
 }
 
@@ -70,7 +70,6 @@ export default function ProjectSkillsSection({
             key={skill.skillId}
             skill={skill}
             busy={skills.busy}
-            canEdit={canEdit}
             onRevoke={(skillId) => void skills.revoke(skillId)}
             onPublishDraft={(skillId) => void skills.publish({ skillId })}
           />
@@ -78,7 +77,6 @@ export default function ProjectSkillsSection({
       </ul>
       <ProjectSkillPublishForm
         busy={skills.busy}
-        canEdit={canEdit}
         canDraft={canDraft}
         kind={kind}
         onKind={setKind}

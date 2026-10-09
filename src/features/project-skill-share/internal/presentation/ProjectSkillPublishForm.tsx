@@ -16,8 +16,7 @@ import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPag
 
 interface Props {
   readonly busy: boolean;
-  readonly canEdit: boolean;
-  /** Owner or active member: may Save draft (Publish stays owner-only). */
+  /** Owner or active member: may Publish and Save draft (the server limits members to their own skills). */
   readonly canDraft: boolean;
   readonly kind: ProjectSkillKind;
   readonly onKind: (kind: ProjectSkillKind) => void;
@@ -26,7 +25,6 @@ interface Props {
 
 export default function ProjectSkillPublishForm({
   busy,
-  canEdit,
   canDraft,
   kind,
   onKind,
@@ -43,7 +41,7 @@ export default function ProjectSkillPublishForm({
     canDraft && !busy && !tooLarge && name.trim() !== "" && body.trim() !== "";
 
   const submit = async (asDraft: boolean) => {
-    if (!canDraft || (!asDraft && !canEdit)) return;
+    if (!canDraft) return;
     const ok = await onSubmit({
       name: name.trim(),
       ...(description.trim() === "" ? {} : { description: description.trim() }),
@@ -63,7 +61,7 @@ export default function ProjectSkillPublishForm({
       className="space-y-2 border-t border-awc-border/70 pt-3 dark:border-gray-800/70"
       onSubmit={(event) => {
         event.preventDefault();
-        void submit(!canEdit);
+        void submit(false);
       }}
     >
       <span className="flex flex-wrap items-center justify-between gap-2">
@@ -101,7 +99,6 @@ export default function ProjectSkillPublishForm({
         <ProjectSkillPublishSubmitActions
           busy={busy}
           canSubmit={canSubmit}
-          canPublish={canEdit}
           onSaveDraft={() => void submit(true)}
         />
       ) : (
