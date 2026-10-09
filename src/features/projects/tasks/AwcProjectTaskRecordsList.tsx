@@ -8,8 +8,10 @@ import AwcProjectTaskRecordDetail from "@/features/projects/tasks/AwcProjectTask
 import AwcProjectTaskCreateDialog from "@/features/projects/tasks/AwcProjectTaskCreateDialog";
 import AwcProjectTaskBoard from "@/features/projects/tasks/AwcProjectTaskBoard";
 import AwcProjectTaskRecordListView from "@/features/projects/tasks/AwcProjectTaskRecordListView";
+import AwcProjectTaskPeopleFilters from "@/features/projects/tasks/AwcProjectTaskPeopleFilters";
 import AwcProjectTaskRecordsHeader from "@/features/projects/tasks/AwcProjectTaskRecordsHeader";
 import { type ProjectTaskRecordsView } from "@/features/projects/tasks/AwcProjectTaskRecordViewToggle";
+import { useProjectTaskPeopleFilter } from "@/features/projects/tasks/useProjectTaskPeopleFilter";
 import { useBoardColumnVisibility } from "@/features/projects/tasks/useBoardColumnVisibility";
 import {
   AWC_TASKS_CARD_CLASS,
@@ -34,7 +36,8 @@ export default function AwcProjectTaskRecordsList({
   readonly initialView?: ProjectTaskRecordsView;
 }) {
   const boardColumns = useBoardColumnVisibility();
-  const listView = useProjectTaskRecordView(records);
+  const people = useProjectTaskPeopleFilter(projectId, records);
+  const listView = useProjectTaskRecordView(people.filtered);
   const [creating, setCreating] = useState(false);
   const [view, setView] = useState<ProjectTaskRecordsView>(initialView);
   const [recordId, setRecordId] = useAwcProjectHashDeepLink("tasks", "record");
@@ -62,6 +65,7 @@ export default function AwcProjectTaskRecordsList({
         boardColumns={boardColumns}
         onCreate={() => setCreating(true)}
       />
+      <AwcProjectTaskPeopleFilters filter={people} />
       {creating ? (
         <AwcProjectTaskCreateDialog
           projectId={projectId}
@@ -78,7 +82,7 @@ export default function AwcProjectTaskRecordsList({
       ) : view === "board" ? (
         <AwcProjectTaskBoard
           projectId={projectId}
-          records={records}
+          records={people.filtered}
           reload={reload}
           onOpen={setRecordId}
         />
