@@ -14,12 +14,14 @@ import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageM
 interface AwcProjectMembersHelpersSectionProps {
   readonly projectId: string;
   readonly members: readonly AwcProjectAccessMember[];
-  readonly onMessage: (membershipId: string) => void;
-  readonly onRename: (
+  /** Non-owner member view: names only, no wake / rename / remove controls. */
+  readonly readOnly?: boolean;
+  readonly onMessage?: (membershipId: string) => void;
+  readonly onRename?: (
     membershipId: string,
     name: string,
   ) => Promise<{ readonly ok: boolean }>;
-  readonly onRemove: (membershipId: string) => void;
+  readonly onRemove?: (membershipId: string) => void;
   /** After a wake-link save: reload Access so the row confirms Ready. */
   readonly onWakeSaved?: () => void;
 }
@@ -28,6 +30,7 @@ interface AwcProjectMembersHelpersSectionProps {
 export default function AwcProjectMembersHelpersSection({
   projectId,
   members,
+  readOnly = false,
   onMessage,
   onRename,
   onRemove,
@@ -37,7 +40,7 @@ export default function AwcProjectMembersHelpersSection({
     () => members.filter(isRailAssistantMember),
     [members],
   );
-  const { list: wake } = useAwcProjectAccessWakeLinks(helpers);
+  const { list: wake } = useAwcProjectAccessWakeLinks(readOnly ? [] : helpers);
   const onSaved = (membershipId: string): void => {
     wake.onSaved(membershipId);
     onWakeSaved?.();
@@ -61,6 +64,16 @@ export default function AwcProjectMembersHelpersSection({
         <p className="px-3.5 py-2 text-[13px] text-awc-fg-subtle">
           {C.helpersEmpty}
         </p>
+      ) : readOnly ? (
+        <ul className="flex flex-col">
+          {helpers.map((member) => (
+            <li key={member.id} className="px-3.5 py-2.5 text-sm text-awc-fg">
+              {member.projectDisplayName?.trim() ||
+                member.displayName ||
+                member.userId.slice(0, 8)}
+            </li>
+          ))}
+        </ul>
       ) : (
         <ul className="flex flex-col">
           {helpers.map((member) => (
@@ -75,9 +88,11 @@ export default function AwcProjectMembersHelpersSection({
                   : 0
               }
               onWakeSaved={onSaved}
-              onMessage={onMessage}
-              onRename={async (id, name) => (await onRename(id, name)).ok}
-              onRemove={onRemove}
+              onMessage={onMessage ?? (() => undefined)}
+              onRename={async (id, name) =>
+                (await onRename?.(id, name))?.ok ?? false
+              }
+              onRemove={onRemove ?? (() => undefined)}
             />
           ))}
         </ul>

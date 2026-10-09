@@ -1,6 +1,7 @@
 "use client";
 
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
+import AwcProjectMembersHelpersSection from "@/features/projects/members/AwcProjectMembersHelpersSection";
 import AwcProjectMembersInviteBotsSection from "@/features/projects/members/AwcProjectMembersInviteBotsSection";
 import AwcProjectMembersPeopleSection from "@/features/projects/members/AwcProjectMembersPeopleSection";
 import AwcProjectMembersRailHeading from "@/features/projects/members/AwcProjectMembersRailHeading";
@@ -42,6 +43,11 @@ export default function AwcProjectMembersMemberContent({
         ) : null}
         {ready ? (
           <>
+            <AwcProjectMembersHelpersSection
+              projectId={projectId}
+              members={access.members}
+              readOnly
+            />
             <AwcProjectMembersPeopleSection
               projectId={projectId}
               projectName={access.projectName}
