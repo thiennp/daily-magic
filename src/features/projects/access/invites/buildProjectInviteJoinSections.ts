@@ -5,6 +5,7 @@ import { buildProjectInviteJoinConnectStep } from "@/features/projects/access/in
 import { buildProjectInviteJoinDispatchStep } from "@/features/projects/access/invites/buildProjectInviteJoinDispatchStep";
 import { buildProjectInviteJoinLocalFirstStep } from "@/features/projects/access/invites/buildProjectInviteJoinLocalFirstStep";
 import { buildProjectInviteJoinLeaveStep } from "@/features/projects/access/invites/buildProjectInviteJoinLeaveStep";
+import { buildProjectInviteJoinReportSkillsStep } from "@/features/projects/access/invites/buildProjectInviteJoinReportSkillsStep";
 import { buildProjectInviteJoinPollStep } from "@/features/projects/access/invites/buildProjectInviteJoinPollStep";
 import { buildProjectInviteJoinProjectLine } from "@/features/projects/access/invites/buildProjectInviteJoinProjectLine";
 import { buildProjectInviteJoinRedeemStep } from "@/features/projects/access/invites/buildProjectInviteJoinRedeemStep";
@@ -63,6 +64,8 @@ export type ProjectInviteJoinSections = {
   readonly poll: readonly string[];
   readonly leave: readonly string[];
   readonly productUpdates: readonly string[];
+  /** Step 10 — report work + reuse skills (local rule, or direct report). */
+  readonly reportSkills: readonly string[];
   readonly projectLine: string | null;
 };
 
@@ -94,6 +97,7 @@ export const buildProjectInviteJoinSections = (
     poll: buildProjectInviteJoinPollStep(),
     leave: buildProjectInviteJoinLeaveStep({ projectIdHint }),
     productUpdates: PRODUCT_UPDATES_LINES,
+    reportSkills: buildProjectInviteJoinReportSkillsStep({ projectIdHint }),
     projectLine: buildProjectInviteJoinProjectLine(input),
   };
 };

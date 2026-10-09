@@ -97,6 +97,7 @@ export const buildProjectInviteJoinPage = (
       ...sections.poll,
       ...sections.leave,
       ...sections.productUpdates,
+      ...sections.reportSkills,
       COPY.nextRepair,
       ...(sections.projectLine ? [sections.projectLine] : []),
     ],
