@@ -19,6 +19,8 @@ interface GroupCompanySettingsAccessProps {
   readonly peopleCount: number;
   readonly canConfigureDispatchPolicy: boolean;
   readonly canDeleteTeam: boolean;
+  /** False for an owner who already has a company (one per owner; platform admins are exempt). */
+  readonly canCreateCompany: boolean;
   readonly onSelectGroup: (groupId: string) => void;
   readonly onCreateGroup: (name: string) => void;
   readonly onOpenSettings: () => void;
@@ -31,6 +33,7 @@ export default function GroupCompanySettingsAccess({
   peopleCount,
   canConfigureDispatchPolicy,
   canDeleteTeam,
+  canCreateCompany,
   onSelectGroup,
   onCreateGroup,
   onOpenSettings,
@@ -70,14 +73,16 @@ export default function GroupCompanySettingsAccess({
             </select>
           </label>
         ) : null}
-        <Button
-          variant="outline"
-          onClick={() => {
-            setIsNewOpen(true);
-          }}
-        >
-          {C.newCompany}
-        </Button>
+        {canCreateCompany ? (
+          <Button
+            variant="outline"
+            onClick={() => {
+              setIsNewOpen(true);
+            }}
+          >
+            {C.newCompany}
+          </Button>
+        ) : null}
         {canOpenSettings ? (
           <GroupCompanySettingsGearButton
             companyName={name}

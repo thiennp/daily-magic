@@ -2,14 +2,13 @@
 
 import { signOut } from "next-auth/react";
 
-import { clearProjectSyncOnSignOut } from "@/features/projects/sync/clearProjectSyncOnSignOut";
 import type { Session } from "next-auth";
 
 import { Dropdown } from "@/components/ui/dropdown/Dropdown";
-import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
+import UserDropdownMenuLink from "@/components/header/UserDropdownMenuLink";
 import { COMPANIES_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import formatGlobalRole from "@/lib/auth/formatGlobalRole";
-import type { GlobalRoleValue } from "@/lib/auth/roles";
+import { isPrivilegedGlobalRole, type GlobalRoleValue } from "@/lib/auth/roles";
 
 interface UserDropdownMenuProps {
   readonly isOpen: boolean;
@@ -17,6 +16,8 @@ interface UserDropdownMenuProps {
   readonly displayName: string;
   readonly onClose: () => void;
   readonly showStyleguide: boolean;
+  /** Runs before sign-out (the app clears its local sync state here). */
+  readonly onBeforeSignOut?: () => Promise<void>;
 }
 
 export default function UserDropdownMenu({
@@ -25,6 +26,7 @@ export default function UserDropdownMenu({
   displayName,
   onClose,
   showStyleguide,
+  onBeforeSignOut,
 }: UserDropdownMenuProps) {
   return (
     <Dropdown
@@ -45,57 +47,24 @@ export default function UserDropdownMenu({
       </div>
 
       <ul className="flex flex-col gap-1 border-b border-awc-border py-3 dark:border-gray-800">
-        <li>
-          <DropdownItem
-            onItemClick={onClose}
-            tag="a"
-            href="/account"
-            className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-awc-fg hover:bg-awc-tile hover:text-awc-fg dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-          >
-            Account
-          </DropdownItem>
-        </li>
-        <li>
-          <DropdownItem
-            onItemClick={onClose}
-            tag="a"
-            href="/pricing"
-            className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-awc-fg hover:bg-awc-tile hover:text-awc-fg dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-          >
-            Billing and plans
-          </DropdownItem>
-        </li>
-        <li>
-          <DropdownItem
-            onItemClick={onClose}
-            tag="a"
-            href="/admin/groups"
-            className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-awc-fg hover:bg-awc-tile hover:text-awc-fg dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-          >
-            {COMPANIES_ENTITY_LABEL} management
-          </DropdownItem>
-        </li>
-        <li>
-          <DropdownItem
-            onItemClick={onClose}
-            tag="a"
-            href="/admin/users"
-            className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-awc-fg hover:bg-awc-tile hover:text-awc-fg dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-          >
+        <UserDropdownMenuLink href="/account" onClose={onClose}>
+          Account
+        </UserDropdownMenuLink>
+        <UserDropdownMenuLink href="/pricing" onClose={onClose}>
+          Billing and plans
+        </UserDropdownMenuLink>
+        <UserDropdownMenuLink href="/admin/groups" onClose={onClose}>
+          {COMPANIES_ENTITY_LABEL} management
+        </UserDropdownMenuLink>
+        {isPrivilegedGlobalRole(session.user.globalRole as GlobalRoleValue) ? (
+          <UserDropdownMenuLink href="/admin/users" onClose={onClose}>
             User management
-          </DropdownItem>
-        </li>
+          </UserDropdownMenuLink>
+        ) : null}
         {showStyleguide ? (
-          <li>
-            <DropdownItem
-              onItemClick={onClose}
-              tag="a"
-              href="/styleguide"
-              className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-awc-fg hover:bg-awc-tile hover:text-awc-fg dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-            >
-              Styleguide
-            </DropdownItem>
-          </li>
+          <UserDropdownMenuLink href="/styleguide" onClose={onClose}>
+            Styleguide
+          </UserDropdownMenuLink>
         ) : null}
       </ul>
 
@@ -103,7 +72,7 @@ export default function UserDropdownMenu({
         type="button"
         onClick={() => {
           onClose();
-          void clearProjectSyncOnSignOut().finally(() => {
+          void (onBeforeSignOut?.() ?? Promise.resolve()).finally(() => {
             void signOut({ callbackUrl: "/login" });
           });
         }}

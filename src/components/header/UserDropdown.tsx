@@ -21,10 +21,12 @@ const buildInitials = (displayName: string): string => {
 
 interface UserDropdownProps {
   readonly showStyleguide?: boolean;
+  readonly onBeforeSignOut?: () => Promise<void>;
 }
 
 export default function UserDropdown({
   showStyleguide = false,
+  onBeforeSignOut,
 }: UserDropdownProps) {
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
@@ -112,6 +114,7 @@ export default function UserDropdown({
         displayName={displayName}
         onClose={closeDropdown}
         showStyleguide={showStyleguide}
+        onBeforeSignOut={onBeforeSignOut}
       />
     </div>
   );

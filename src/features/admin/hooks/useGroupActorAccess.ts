@@ -22,6 +22,7 @@ export function useGroupActorAccess(members: readonly MemberItem[]) {
     canDeleteTeam || actorMembership?.role === GroupRole.GROUP_ADMIN;
 
   return {
+    isGlobalAdmin,
     actorUserId,
     actorMembership,
     canDeleteTeam,

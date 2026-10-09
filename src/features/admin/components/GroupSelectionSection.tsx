@@ -16,6 +16,7 @@ interface GroupSelectionSectionProps {
   readonly actorRoleLabel: string | null;
   readonly peopleCount: number;
   readonly canDeleteTeam: boolean;
+  readonly canCreateCompany: boolean;
   readonly canConfigureDispatchPolicy: boolean;
   readonly onNewGroupNameChange: (value: string) => void;
   readonly onSelectGroup: (groupId: string) => void;
@@ -30,6 +31,7 @@ export default function GroupSelectionSection({
   actorRoleLabel,
   peopleCount,
   canDeleteTeam,
+  canCreateCompany,
   canConfigureDispatchPolicy,
   onNewGroupNameChange,
   onSelectGroup,
@@ -76,6 +78,7 @@ export default function GroupSelectionSection({
         peopleCount={peopleCount}
         canConfigureDispatchPolicy={canConfigureDispatchPolicy}
         canDeleteTeam={canDeleteTeam}
+        canCreateCompany={canCreateCompany}
         onSelectGroup={onSelectGroup}
         onCreateGroup={onCreateGroup}
         onOpenSettings={onOpenSettings}

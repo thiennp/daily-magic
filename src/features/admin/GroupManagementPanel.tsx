@@ -27,6 +27,7 @@ export default function GroupManagementPanel({
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const {
+    isGlobalAdmin,
     actorUserId,
     actorMembership,
     canDeleteTeam,
@@ -76,6 +77,8 @@ export default function GroupManagementPanel({
         }
         peopleCount={groupManagement.members.length}
         canDeleteTeam={canDeleteTeam}
+        // A company owner who is not a platform admin may own one company: the server says 409 otherwise.
+        canCreateCompany={isGlobalAdmin || !canDeleteTeam}
         canConfigureDispatchPolicy={canConfigureDispatchPolicy}
         onNewGroupNameChange={groupManagement.setNewGroupName}
         onSelectGroup={groupManagement.handleSelectGroup}
