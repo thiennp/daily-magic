@@ -66,6 +66,10 @@ export const PROJECT_PAGE_MEMBERS_COPY = {
   /** State 2 — join request subtitle; Approve + Deny. */
   requestWaitingApproval: "Wants to join",
   invitePendingCancel: "Cancel invite",
+  inviteCancelConfirmTitle: "Cancel this invite?",
+  inviteCancelConfirmBody:
+    "The link stops working. Anyone who has it can no longer join with it.",
+  inviteCancelKeep: "Keep invite",
   /** DF-014 / 107 — copy the prompt again from an unused invite row (any device). */
   invitePendingCopy: "Copy again",
   invitePendingCopied: "Copied",

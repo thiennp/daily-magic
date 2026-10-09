@@ -1,8 +1,11 @@
 "use client";
 
+import { useState } from "react";
+
 import type { AwcProjectAccessInvite } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 import type { PendingInviteCopyPromptResult } from "@/features/projects/access/invites/fetchPendingInviteCopyPrompt";
 import AwcProjectMembersInvitePendingRow from "@/features/projects/members/AwcProjectMembersInvitePendingRow";
+import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
 import { useInviteRowCopy } from "@/features/projects/members/hooks/useInviteRowCopy";
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
 
@@ -33,6 +36,7 @@ export default function AwcProjectMembersInvitePendingList({
   fetchCopyPrompt,
 }: AwcProjectMembersInvitePendingListProps) {
   const copy = useInviteRowCopy(fetchCopyPrompt);
+  const [cancelId, setCancelId] = useState<string | null>(null);
   return (
     <>
       <ul className="flex flex-col divide-y divide-awc-line">
@@ -53,7 +57,7 @@ export default function AwcProjectMembersInvitePendingList({
                   invite.copyAvailable === true),
               rowState: copy.stateFor(invite.inviteId),
               onCopy: () => void copy.copyPrompt(invite.inviteId, prompt),
-              onRevoke: () => onRevoke(invite.inviteId),
+              onRevoke: () => setCancelId(invite.inviteId),
               onTurnOffAutoApprove: onTurnOffAutoApprove
                 ? () => onTurnOffAutoApprove(invite.inviteId)
                 : undefined,
@@ -61,6 +65,18 @@ export default function AwcProjectMembersInvitePendingList({
           })
         )}
       </ul>
+      <ConfirmDestructiveModal
+        isOpen={cancelId !== null}
+        title={C.inviteCancelConfirmTitle}
+        description={C.inviteCancelConfirmBody}
+        confirmLabel={C.invitePendingCancel}
+        cancelLabel={C.inviteCancelKeep}
+        onClose={() => setCancelId(null)}
+        onConfirm={() => {
+          if (cancelId !== null) onRevoke(cancelId);
+          setCancelId(null);
+        }}
+      />
     </>
   );
 }
