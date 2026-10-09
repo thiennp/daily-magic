@@ -1,3 +1,5 @@
+import { PROJECT_BOT_KNOWLEDGE_CARD_ON_JOIN_LINE } from "@/lib/agentAccess/projectBotKnowledgeCardReport.constant";
+
 /** Join step — 4. when active: briefing, project key, ACL, peers. */
 export const buildProjectInviteJoinBriefingPeersStep = (input: {
   readonly projectIdHint: string;
@@ -14,5 +16,6 @@ export const buildProjectInviteJoinBriefingPeersStep = (input: {
     `   e) REQUIRED: list_project_peers { "projectId": "${projectIdHint}" }.`,
     "      Note your projectDisplayName and membershipId from self (membershipId may be absent until API ships — graceful). Expect peers[] with membershipId?, projectDisplayName, teamLabel, isAgent, isOwner (owner included as isOwner: true); empty peers besides the owner is normal if you are the only member.",
     "      MUST prefer toMembershipId for peer-bot project_dispatch when membershipId is present. Fallback: exact toProjectDisplayName — do not invent names. Re-list peers after any rename; old nickname may still resolve for ~7 days (alias TTL).",
+    `   f) ${PROJECT_BOT_KNOWLEDGE_CARD_ON_JOIN_LINE}`,
   ];
 };
