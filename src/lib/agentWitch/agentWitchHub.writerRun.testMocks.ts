@@ -74,6 +74,10 @@ vi.mock("@/lib/projects/acl/checkProjectMembershipStatus", () => ({
   checkProjectMembershipStatus: vi.fn(async () => "owner"),
 }));
 
+vi.mock("@/lib/projects/acl/findDeviceProjectFolderPath", () => ({
+  findDeviceProjectFolderPath: vi.fn(async () => null),
+}));
+
 vi.mock("@/lib/projects/userProjectQueries", () => ({
   getUserProjectById: vi.fn(async (projectId: string) => ({
     id: projectId,
@@ -90,11 +94,11 @@ vi.mock("@/lib/projects/userProjectQueries", () => ({
 }));
 
 vi.mock("@/lib/dispatch/resolveDispatchCompositionContext", () => ({
-  resolveDispatchCompositionContext: vi.fn(async (input: {
-    readonly payload: Readonly<Record<string, unknown>>;
-  }) => ({
-    ok: true as const,
-    enrichedPayload: input.payload,
-    compositionSnapshotId: null,
-  })),
+  resolveDispatchCompositionContext: vi.fn(
+    async (input: { readonly payload: Readonly<Record<string, unknown>> }) => ({
+      ok: true as const,
+      enrichedPayload: input.payload,
+      compositionSnapshotId: null,
+    }),
+  ),
 }));
