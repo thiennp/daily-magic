@@ -1,3 +1,4 @@
+import { resetDeviceAuthNonceCacheForTests } from "@/server/agentWitch/consumeDeviceAuthNonce";
 import { vi } from "vitest";
 
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
@@ -70,6 +71,7 @@ export const helloLess = (): AgentWitchMessage =>
   }) as AgentWitchMessage;
 
 export const resetDeviceAuthRegisterMocks = (): void => {
+  resetDeviceAuthNonceCacheForTests();
   verifyDeviceAuthHello.mockReset();
   buildServerDeviceAuthAttestation.mockReset();
   getAgentWitchDevicePublicKey.mockReset();

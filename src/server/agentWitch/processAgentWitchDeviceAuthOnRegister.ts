@@ -11,6 +11,7 @@ import {
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import type { AgentWitchConnectionState } from "@/server/agentWitch/processAgentWitchRegisterMessage";
+import { consumeDeviceAuthNonce } from "@/server/agentWitch/consumeDeviceAuthNonce";
 import { resolveAgentWitchDeviceKeyPin } from "@/server/agentWitch/resolveAgentWitchDeviceKeyPin";
 import { sendAgentWitchSocketMessage } from "@/server/agentWitch/sendAgentWitchSocketMessage";
 import type { WebSocket } from "ws";
@@ -78,13 +79,19 @@ export const processAgentWitchDeviceAuthOnRegister = async (
     return true;
   }
 
-  if (
-    !verifyDeviceAuthHello({ devicePublicKey, nonce, signature, origin })
-  ) {
+  if (!verifyDeviceAuthHello({ devicePublicKey, nonce, signature, origin })) {
     return rejectDeviceAuth(
       socket,
       message,
       "Device authentication signature was invalid.",
+    );
+  }
+
+  if (!consumeDeviceAuthNonce(devicePublicKey, nonce)) {
+    return rejectDeviceAuth(
+      socket,
+      message,
+      "Device authentication was already used. Reconnect to try again.",
     );
   }
 
