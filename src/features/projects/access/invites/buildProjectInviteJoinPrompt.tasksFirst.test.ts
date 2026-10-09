@@ -33,5 +33,6 @@ describe("join prompt: Orchestrate", () => {
       projectName: "P",
     });
     expect(prompt).toContain(PROJECT_ORCHESTRATOR_CLAUSE);
+    expect(prompt).toContain("Everything goes on AW");
   });
 });
