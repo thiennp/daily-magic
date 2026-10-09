@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import AwcOneWindowComposerCreateTaskRow from "@/features/projects/messenger/oneWindow/AwcOneWindowComposerCreateTaskRow";
 import AwcOneWindowComposerGoneNotice from "@/features/projects/messenger/oneWindow/AwcOneWindowComposerGoneNotice";
 import AwcOneWindowComposerHint from "@/features/projects/messenger/oneWindow/AwcOneWindowComposerHint";
 import AwcOneWindowComposerPickerSlot from "@/features/projects/messenger/oneWindow/AwcOneWindowComposerPickerSlot";
@@ -11,7 +12,7 @@ import { useOneWindowComposerPrefill } from "@/features/projects/messenger/oneWi
 import AwcOneWindowMentionBox from "@/features/projects/messenger/oneWindow/AwcOneWindowMentionBox";
 import AwcOneWindowMentionError from "@/features/projects/messenger/oneWindow/AwcOneWindowMentionError";
 import { useOneWindowComposerDraft } from "@/features/projects/messenger/oneWindow/useOneWindowComposerDraft";
-import { useOneWindowComposerSend } from "@/features/projects/messenger/oneWindow/useOneWindowComposerSend";
+import { useOneWindowComposerSendWithTask } from "@/features/projects/messenger/oneWindow/useOneWindowComposerSendWithTask";
 import { useOneWindowKeptSendRetry } from "@/features/projects/messenger/oneWindow/useOneWindowKeptSendRetry";
 import type { AwcMessengerComposerProps } from "@/features/projects/messenger/types/awcMessengerComposerProps.type";
 import { PROJECT_MESSENGER_WHOLE_THREAD_KEY } from "@/lib/projects/acl/messaging/messenger/projectMessenger.constant";
@@ -21,6 +22,7 @@ import { PROJECT_MESSENGER_WHOLE_THREAD_KEY } from "@/lib/projects/acl/messaging
  * OW-H2 picker / kept chip. One recipient per send (093103ac): one @ only.
  */
 export default function AwcMessengerComposer({
+  projectId,
   disabled,
   sending,
   assignees,
@@ -30,16 +32,15 @@ export default function AwcMessengerComposer({
   feedSwitch,
 }: AwcMessengerComposerProps) {
   const [mentionError, setMentionError] = useState<string | null>(null);
-  const assistants = assignees.map((a) => ({
-    membershipId: a.membershipId,
-    displayName: a.displayName,
-  }));
+  const assistants = assignees;
   const single = routing?.hideAllRoutingUi ?? assistants.length < 2;
   const feedKey = feedSwitch?.key ?? PROJECT_MESSENGER_WHOLE_THREAD_KEY;
   const privateFeed = feedKey !== PROJECT_MESSENGER_WHOLE_THREAD_KEY;
   const busy = disabled || sending;
   const { progress: keptProgress, pending, sync } = useOneWindowKeptSendRetry();
-  const send = useOneWindowComposerSend({
+  const { send, create, submit } = useOneWindowComposerSendWithTask({
+    projectId,
+    feedKey,
     assistants,
     mentionsEnabled: !single,
     privateFeed,
@@ -55,7 +56,7 @@ export default function AwcMessengerComposer({
     onSubmit: (text, clear) => {
       setMentionError(null);
       if (busy) return;
-      void send(text).then((ok) => {
+      void submit(text).then((ok) => {
         sync();
         if (ok) clear();
       });
@@ -91,6 +92,16 @@ export default function AwcMessengerComposer({
         placeholder={routing?.placeholder}
       />
       <AwcOneWindowMentionError message={mentionError} />
+      <AwcOneWindowComposerCreateTaskRow
+        create={create}
+        send={send}
+        busy={busy}
+        draftEmpty={draft.text.trim() === ""}
+        onSent={() => {
+          sync();
+          draft.clear();
+        }}
+      />
       <AwcOneWindowComposerHint single={single} />
       <AwcOneWindowComposerPickerSlot
         routing={routing}

@@ -39,14 +39,10 @@ export default function AwcMessengerThreadPane({
   onSendTask,
   chatVisibility,
 }: AwcMessengerThreadPaneProps) {
-  const routingAssistants = assignees.map((a) => ({
-    membershipId: a.membershipId,
-    displayName: a.displayName,
-  }));
   const routing = useOneWindowComposerRouting({
     projectId,
     memberKey,
-    assistants: routingAssistants,
+    assistants: assignees,
   });
   const { entries, filter, setFilter, needsCount, approvalsCount, filtered } =
     useOneWindowFeedFilter({ thread, isOwner, chatVisibility });
@@ -96,6 +92,7 @@ export default function AwcMessengerThreadPane({
       ) : null}
       {canSend ? (
         <AwcMessengerComposer
+          projectId={projectId}
           disabled={sending}
           sending={sending}
           assignees={assignees}

@@ -18,6 +18,7 @@ const assignees = [
 const composer = (list = assignees, key = "whole"): string =>
   renderToStaticMarkup(
     createElement(AwcMessengerComposer, {
+      projectId: "p1",
       disabled: false,
       sending: false,
       assignees: list,

@@ -38,6 +38,7 @@ const routing = (
 const composer = (r: Routing, key: string | null = "whole"): string =>
   renderToStaticMarkup(
     createElement(AwcMessengerComposer, {
+      projectId: "p1",
       disabled: false,
       sending: false,
       assignees,

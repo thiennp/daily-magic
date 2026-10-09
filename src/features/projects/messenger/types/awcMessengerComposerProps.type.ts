@@ -8,6 +8,7 @@ export type AwcMessengerComposerRouting = ReturnType<
 >;
 
 export interface AwcMessengerComposerProps {
+  readonly projectId: string;
   readonly disabled: boolean;
   readonly sending: boolean;
   readonly assignees: readonly MessengerTaskAssigneeOption[];
