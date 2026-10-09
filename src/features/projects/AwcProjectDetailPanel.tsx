@@ -50,7 +50,7 @@ export default function AwcProjectDetailPanel({
         <AwcProjectDetailHeader
           projectId={project.id}
           projectName={project.name}
-          status={isOwner || project.deviceId ? d.headerStatus : null}
+          status={isOwner ? d.headerStatus : null}
           pageActorRole={pageActorRole}
           editCta={d.editCta}
           canRename={isOwner}
@@ -80,7 +80,7 @@ export default function AwcProjectDetailPanel({
           deviceDisplayName={d.deviceDisplayName}
           editCta={d.editCta}
           pitfalls={d.pitfalls}
-          computerStatus={d.headerStatus.text}
+          computerStatus={isOwner ? d.headerStatus.text : null}
           onGotoTab={onGotoTab}
           onGotoChat={chat.onGotoChat}
         />

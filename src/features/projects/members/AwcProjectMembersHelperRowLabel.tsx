@@ -18,7 +18,7 @@ export default function AwcProjectMembersHelperRowLabel({
   return (
     <button
       type="button"
-      className="flex min-w-[8rem] flex-1 shrink items-center gap-3 text-left"
+      className="flex min-w-[4.5rem] flex-1 shrink items-center gap-3 text-left"
       aria-expanded={expanded}
       onClick={onToggle}
     >
