@@ -1,3 +1,5 @@
+import { decodeBase64UrlText, encodeBase64UrlText } from "./base64UrlText";
+
 /**
  * Opaque Messenger timeline keyset cursor shared with AW Dispatch (Neon + local).
  * Payload shape: `{ t, id }` = createdAt + messageId. Wire form: base64url(JSON).
@@ -16,9 +18,17 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 export const encodeProjectHistoryTimelineCursor = (
   cursor: ProjectHistoryTimelineCursor,
 ): string =>
-  Buffer.from(JSON.stringify({ t: cursor.t, id: cursor.id }), "utf8").toString(
-    "base64url",
-  );
+  encodeBase64UrlText(JSON.stringify({ t: cursor.t, id: cursor.id }));
+
+const NOT_JSON = Symbol("not-json");
+
+const readCursorJson = (raw: string): unknown => {
+  try {
+    return JSON.parse(decodeBase64UrlText(raw)) as unknown;
+  } catch {
+    return NOT_JSON;
+  }
+};
 
 /**
  * null when absent/blank; "invalid" when present but malformed.
@@ -29,14 +39,8 @@ export const decodeProjectHistoryTimelineCursor = (
   if (raw === null || raw === undefined || raw.trim().length === 0) {
     return null;
   }
-  let parsed: unknown;
-  try {
-    const decoded = Buffer.from(raw.trim(), "base64url").toString("utf8");
-    parsed = JSON.parse(decoded) as unknown;
-  } catch {
-    return "invalid";
-  }
-  if (!isRecord(parsed)) {
+  const parsed = readCursorJson(raw.trim());
+  if (parsed === NOT_JSON || !isRecord(parsed)) {
     return "invalid";
   }
   const t = parsed.t;
