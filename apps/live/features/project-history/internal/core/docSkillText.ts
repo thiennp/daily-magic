@@ -83,3 +83,42 @@ export const linkOnlyShare = (body: string): number => {
     ? 0
     : lines.filter((line) => LINK_ONLY_LINE.test(line)).length / lines.length;
 };
+
+const EXTERNAL_LINK = /^([a-z][a-z0-9+.-]*:|#|\/\/)/i;
+
+/**
+ * A skill does not live in the repo, so `[x](../../docs/a.md)` would be a dead
+ * link. Rewrite relative targets to the path from the folder root; a target
+ * outside the folder keeps only its text.
+ */
+export const rewriteRelativeDocLinks = (
+  body: string,
+  docRelPath: string,
+): string => {
+  const dir = docRelPath.split("/").slice(0, -1);
+  return body.replace(
+    /\[([^\]]+)\]\(([^)\s]+)\)/g,
+    (_match, text: string, target: string) => {
+      if (EXTERNAL_LINK.test(target)) {
+        return `[${text}](${target})`;
+      }
+      const [pathPart = "", anchor] = target.split("#");
+      const resolved = pathPart
+        .split("/")
+        .reduce<string[] | null>(
+          (acc, seg) =>
+            acc === null || seg === "" || seg === "."
+              ? acc
+              : seg === ".."
+                ? acc.length > 0
+                  ? acc.slice(0, -1)
+                  : null
+                : [...acc, seg],
+          dir,
+        );
+      return resolved === null
+        ? text
+        : `[${text}](${resolved.join("/")}${anchor === undefined ? "" : `#${anchor}`})`;
+    },
+  );
+};

@@ -5,10 +5,32 @@ import {
 } from "./docIngest.constants";
 import {
   firstSentence,
+  rewriteRelativeDocLinks,
   readDocSection,
   slugifyDocName,
   splitDocFrontMatter,
 } from "./docSkillText";
+
+const NOISE_WORDS: ReadonlySet<string> = new Set([
+  "new",
+  "using",
+  "one",
+  "existing",
+  "without",
+  "with",
+  "into",
+  "from",
+  "this",
+  "that",
+  "your",
+  "when",
+  "use",
+  "the",
+  "and",
+  "for",
+]);
+
+const MIN_DESCRIPTION_CHARS = 30;
 
 export type DocSource = {
   readonly relPath: string;
@@ -41,7 +63,7 @@ const keywordsOf = (...texts: readonly string[]): readonly string[] =>
         .join(" ")
         .toLowerCase()
         .split(/[^a-z0-9]+/)
-        .filter((word) => word.length >= 3),
+        .filter((word) => word.length >= 3 && !NOISE_WORDS.has(word)),
     ),
   ].slice(0, DOC_INGEST_MAX_KEYWORDS);
 
@@ -75,23 +97,41 @@ const fromQa = (source: DocSource): DocSkillDraft => {
       .trim()
       .slice(0, DOC_INGEST_DESCRIPTION_MAX_CHARS),
     keywords: keywordsOf(aliases, question),
-    body: `${when}${rest}`,
+    body: rewriteRelativeDocLinks(`${when}${rest}`, source.relPath),
     relPath: source.relPath,
     sha: source.sha,
     kind: source.kind,
   };
 };
 
+/** A one-word title is no description: add the first body sentence that says something new. */
+const describe = (given: string, body: string): string => {
+  const base = firstSentence(given, DOC_INGEST_DESCRIPTION_MAX_CHARS);
+  if (base.length >= MIN_DESCRIPTION_CHARS) {
+    return base;
+  }
+  const more = body
+    .split(/\n\s*\n/)
+    .map((block) => block.trim())
+    .filter((block) => block.length > 0 && !block.startsWith("#"))
+    .map((block) => firstSentence(block, DOC_INGEST_DESCRIPTION_MAX_CHARS))
+    .find(
+      (sentence) =>
+        sentence.length >= MIN_DESCRIPTION_CHARS &&
+        !sentence.toLowerCase().startsWith(base.toLowerCase()),
+    );
+  return more === undefined
+    ? base
+    : `${base}. ${more}`.slice(0, DOC_INGEST_DESCRIPTION_MAX_CHARS);
+};
+
 const fromSkillOrCommand = (source: DocSource): DocSkillDraft => {
   const { fm, body } = splitDocFrontMatter(source.text);
   return {
     name: slugifyDocName(fm.name ?? "") || stem(source.relPath),
-    description: firstSentence(
-      fm.description ?? firstParagraph(body),
-      DOC_INGEST_DESCRIPTION_MAX_CHARS,
-    ),
+    description: describe(fm.description ?? firstParagraph(body), body),
     keywords: keywordsOf(fm.keywords ?? fm.tags ?? "", fm.description ?? ""),
-    body: body.trim(),
+    body: rewriteRelativeDocLinks(body.trim(), source.relPath),
     relPath: source.relPath,
     sha: source.sha,
     kind: source.kind,
