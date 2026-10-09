@@ -56,6 +56,11 @@ export default function MyBotRow({
           <p className="text-awc-fg">
             {MY_BOTS_COPY.membershipLabel}: {membership.projectName}
           </p>
+          <p className="text-awc-fg-subtle">
+            {membership.grokWebhookRegistered
+              ? MY_BOTS_COPY.wakesOnItsOwn
+              : MY_BOTS_COPY.checksOnDemand}
+          </p>
           <MyBotOwnedGrokWebhookForm
             projectId={membership.projectId}
             membershipId={membership.membershipId}

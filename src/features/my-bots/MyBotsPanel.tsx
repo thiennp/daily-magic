@@ -14,9 +14,15 @@ import {
   MyBotsLoading,
   MyBotsNoMatch,
 } from "@/features/my-bots/MyBotsListStates";
+import MyBotsFilterChips from "@/features/my-bots/MyBotsFilterChips";
 import MyBotsToolbar from "@/features/my-bots/MyBotsToolbar";
 import { useMyBotsPanel } from "@/features/my-bots/hooks/useMyBotsPanel";
 import { MY_BOTS_COPY } from "@/features/my-bots/myBotsCopy.constant";
+import {
+  countMyBotsByProject,
+  filterMyBotsByProject,
+  type MyBotsProjectFilter,
+} from "@/features/my-bots/utils/filterMyBotsByProject";
 import type { OwnedBotView } from "@/lib/agentAccess/claimBot/listOwnedBots";
 
 export default function MyBotsPanel() {
@@ -24,6 +30,9 @@ export default function MyBotsPanel() {
   const [pendingUnclaim, setPendingUnclaim] = useState<OwnedBotView | null>(
     null,
   );
+  const [projectFilter, setProjectFilter] =
+    useState<MyBotsProjectFilter>("all");
+  const shownBots = filterMyBotsByProject(panel.visibleBots, projectFilter);
   const ready = panel.status === "ok";
   const list = (() => {
     if (panel.status === "loading") return <MyBotsLoading />;
@@ -32,14 +41,20 @@ export default function MyBotsPanel() {
     if (panel.bots.length === 0) {
       return <MyBotsEmpty onClaim={() => panel.setClaimOpen(true)} />;
     }
-    if (panel.visibleBots.length === 0) {
+    if (shownBots.length === 0) {
       return (
-        <MyBotsNoMatch query={panel.query} onClear={() => panel.setQuery("")} />
+        <MyBotsNoMatch
+          query={panel.query}
+          onClear={() => {
+            panel.setQuery("");
+            setProjectFilter("all");
+          }}
+        />
       );
     }
     return (
       <ul className={MK_GRID_CLASS}>
-        {panel.visibleBots.map((bot) => (
+        {shownBots.map((bot) => (
           <MyBotRow
             key={bot.tokenId}
             bot={bot}
@@ -70,9 +85,16 @@ export default function MyBotsPanel() {
       {ready && panel.bots.length > 0 ? (
         <MyBotsToolbar
           query={panel.query}
-          shown={panel.visibleBots.length}
+          shown={shownBots.length}
           total={panel.bots.length}
           onQueryChange={panel.setQuery}
+        />
+      ) : null}
+      {ready && panel.bots.length > 0 ? (
+        <MyBotsFilterChips
+          filter={projectFilter}
+          counts={countMyBotsByProject(panel.visibleBots)}
+          onFilter={setProjectFilter}
         />
       ) : null}
       {panel.unclaimError !== null ? (
