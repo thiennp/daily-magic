@@ -1,5 +1,6 @@
 "use client";
 
+import AwcProjectIsolateCheckbox from "@/features/projects/access/invites/AwcProjectIsolateCheckbox";
 import { useAddOwnedBot } from "@/features/projects/members/useAddOwnedBot";
 import { BOT_CLAIM_COPY as C } from "@/features/projects/members/botClaimCopy.constant";
 
@@ -23,6 +24,8 @@ export default function AwcProjectMembersAddOwnedBot({
     botUserId,
     name,
     setName,
+    isolate,
+    setIsolate,
     pending,
     error,
     pick,
@@ -70,6 +73,7 @@ export default function AwcProjectMembersAddOwnedBot({
               onChange={(e) => setName(e.target.value)}
             />
           </label>
+          <AwcProjectIsolateCheckbox checked={isolate} onChange={setIsolate} />
           <span className="flex gap-3">
             <button
               type="button"

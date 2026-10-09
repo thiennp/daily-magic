@@ -19,6 +19,7 @@ export const useAddOwnedBot = (input: {
   const [open, setOpen] = useState(false);
   const [botUserId, setBotUserId] = useState("");
   const [name, setName] = useState("");
+  const [isolate, setIsolate] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,11 +41,13 @@ export const useAddOwnedBot = (input: {
     const result = await addOwnedBotApi(projectId, {
       botUserId,
       projectDisplayName: name.trim(),
+      ...(isolate ? { isolateBots: true } : {}),
     });
     setPending(false);
     if (result.ok) {
       setOpen(false);
       setBots(null);
+      setIsolate(false);
       onAdded();
     } else {
       setError(result.code === "display_name_taken" ? C.addTaken : C.addFailed);
@@ -58,6 +61,8 @@ export const useAddOwnedBot = (input: {
     botUserId,
     name,
     setName,
+    isolate,
+    setIsolate,
     pending,
     error,
     pick,

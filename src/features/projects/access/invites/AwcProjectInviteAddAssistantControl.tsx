@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import AwcProjectIsolateCheckbox from "@/features/projects/access/invites/AwcProjectIsolateCheckbox";
 import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
 import { AWC_PROJECT_INVITE_ADD_ASSISTANT_COPY as C } from "@/features/projects/access/invites/awcProjectInviteAddAssistantCopy.constant";
 import {
@@ -65,21 +66,7 @@ export default function AwcProjectInviteAddAssistantControl({
           }}
         />
       ) : null}
-      <label className="flex items-start gap-2 text-[13px] text-awc-fg">
-        <input
-          type="checkbox"
-          className="mt-0.5"
-          checked={isolate}
-          data-invite-isolate=""
-          onChange={(e) => setIsolate(e.target.checked)}
-        />
-        <span>
-          {C.isolateLabel}
-          <span className="block text-[12px] text-awc-fg-muted">
-            {C.isolateHelp}
-          </span>
-        </span>
-      </label>
+      <AwcProjectIsolateCheckbox checked={isolate} onChange={setIsolate} />
       <button
         type="button"
         className={`${buttonClassName} justify-self-start`}

@@ -68,7 +68,11 @@ export const fetchOwnedBotsApi = async (
 
 export const addOwnedBotApi = async (
   projectId: string,
-  input: { readonly botUserId: string; readonly projectDisplayName: string },
+  input: {
+    readonly botUserId: string;
+    readonly projectDisplayName: string;
+    readonly isolateBots?: boolean;
+  },
 ): Promise<{ readonly ok: boolean; readonly code?: string }> => {
   const response = await fetch(`/api/projects/${projectId}/owned-bots`, {
     method: "POST",
