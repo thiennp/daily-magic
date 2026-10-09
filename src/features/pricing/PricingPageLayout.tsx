@@ -8,6 +8,7 @@ import PricingFaq from "@/features/pricing/components/PricingFaq";
 import PricingHero from "@/features/pricing/components/PricingHero";
 import PricingHowAiNotes from "@/features/pricing/components/PricingHowAiNotes";
 import PricingOnDemand from "@/features/pricing/components/PricingOnDemand";
+import PricingSeatEstimator from "@/features/pricing/components/PricingSeatEstimator";
 import PricingPlanCards from "@/features/pricing/components/PricingPlanCards";
 import PricingTrustStrip from "@/features/pricing/components/PricingTrustStrip";
 import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
@@ -40,6 +41,7 @@ export default function PricingPageLayout({
       {signedIn ? <BillingPlanSummary /> : null}
       <PricingHero />
       <PricingPlanCards signedIn={signedIn} />
+      <PricingSeatEstimator />
       <PricingTrustStrip />
       <PricingCompareTable />
       <PricingBringYourOwn />
