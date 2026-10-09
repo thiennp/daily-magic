@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import { resolveHomeThisMacDeviceIdentity } from "@/features/home/utils/resolveHomeThisMacDeviceIdentity";
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
-import { addProjectFolderRef } from "@/features/projects/access/utils/mutateProjectFolderRefs";
 import { OVERVIEW_CTA_PRIMARY_SM_CLASS } from "@/features/projects/overview/overviewChrome.constant";
 import { OVERVIEW_FOLDER_PROMPT_COPY as C } from "@/features/projects/overview/overviewFolderPromptCopy.constant";
+import { useAddOverviewFolder } from "@/features/projects/overview/useAddOverviewFolder";
 import { resolveOverviewFolderPrompt } from "@/features/projects/overview/resolveOverviewFolderPrompt";
 import type { ProjectPageNavTarget } from "@/features/projects/projectPageTabs.constant";
 
@@ -19,16 +19,16 @@ import type { ProjectPageNavTarget } from "@/features/projects/projectPageTabs.c
 export default function AwcProjectOverviewFolderPrompt({
   projectId,
   onGoto,
+  onGapChange,
 }: {
   readonly projectId: string;
   readonly onGoto: (tab: ProjectPageNavTarget) => void;
+  /** True while this computer has no folder but another one does. */
+  readonly onGapChange: (gap: boolean) => void;
 }) {
   const access = useAwcProjectAccess(projectId);
   const { devices } = useHomeConnectedMacs();
   const { localTokenHash } = useLocalMacBrowserContext();
-  const [path, setPath] = useState("");
-  const [pending, setPending] = useState(false);
-  const [error, setError] = useState(false);
   const thisDeviceId = resolveHomeThisMacDeviceIdentity({
     localTokenHash,
     devices,
@@ -37,25 +37,14 @@ export default function AwcProjectOverviewFolderPrompt({
     folderRefs: access.folderRefs,
     thisDeviceId,
   });
+  const { path, setPath, pending, error, add } = useAddOverviewFolder({
+    projectId,
+    thisDeviceId,
+    onAdded: access.reload,
+  });
+  const gap = !access.isLoading && kind === "this_computer";
+  useEffect(() => onGapChange(gap), [gap, onGapChange]);
   if (access.isLoading || access.loadError || kind === "none") return null;
-
-  const add = async (): Promise<void> => {
-    if (thisDeviceId === null || path.trim().length === 0) return;
-    setPending(true);
-    setError(false);
-    const result = await addProjectFolderRef({
-      projectId,
-      deviceId: thisDeviceId,
-      folderPath: path.trim(),
-    });
-    setPending(false);
-    if (result.ok) {
-      setPath("");
-      await access.reload();
-    } else {
-      setError(true);
-    }
-  };
 
   const hint =
     thisDeviceId === null

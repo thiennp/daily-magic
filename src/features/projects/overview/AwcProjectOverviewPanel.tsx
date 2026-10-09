@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+
+import { applyThisComputerFolderGap } from "@/features/projects/overview/applyThisComputerFolderGap";
 import AwcProjectOverviewFolderPrompt from "@/features/projects/overview/AwcProjectOverviewFolderPrompt";
 import AwcProjectOverviewAssistantsCard from "@/features/projects/overview/AwcProjectOverviewAssistantsCard";
 import AwcProjectOverviewAttentionBanner from "@/features/projects/overview/AwcProjectOverviewAttentionBanner";
@@ -38,6 +41,7 @@ export default function AwcProjectOverviewPanel({
   onGotoTab,
   onGotoChat,
 }: Props) {
+  const [folderGap, setFolderGap] = useState(false);
   const d = useOverviewPanelData({
     project,
     pitfalls,
@@ -76,10 +80,11 @@ export default function AwcProjectOverviewPanel({
         <AwcProjectOverviewFolderPrompt
           projectId={project.id}
           onGoto={onGotoTab}
+          onGapChange={setFolderGap}
         />
       ) : null}
       <AwcProjectOverviewSetupCard
-        steps={d.steps}
+        steps={applyThisComputerFolderGap(d.steps, folderGap)}
         editCta={editCta}
         onGoto={onGotoTab}
         hidden={d.setupHidden}

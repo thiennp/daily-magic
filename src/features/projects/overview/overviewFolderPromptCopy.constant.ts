@@ -12,6 +12,8 @@ export const OVERVIEW_FOLDER_PROMPT_COPY = {
   add: "Add folder",
   adding: "Adding…",
   openResources: "Open Resources",
+  stepNotHere: "Linked on other computers, none on this one yet.",
+  stepAdd: "Add",
   added: "Folder added.",
   failed: "Could not add the folder. Check the path and try again.",
 } as const;
