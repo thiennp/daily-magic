@@ -1,5 +1,7 @@
 import { execFileSync } from "node:child_process";
 
+import { buildGitSubprocessEnv } from "@agent-witch/shared";
+
 const ANSI = /\u001b\[[0-9;?]*[A-Za-z]/g;
 const MARKER = /^\[\[([A-Z_]+)\]\]$/;
 const NOISE =
@@ -52,6 +54,7 @@ export const readAgentRunGitChangeLine = (
   const git = (args: readonly string[]): string =>
     execFileSync("git", ["-C", folderPath, ...args], {
       encoding: "utf8",
+      env: buildGitSubprocessEnv(),
       timeout: 3000,
       stdio: ["ignore", "pipe", "ignore"],
     }).trim();

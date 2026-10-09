@@ -1,5 +1,6 @@
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
+import { isSafeRunId } from "./safeRunPaths";
 import { resolveRunCompositionOverlayCursorDir } from "./materializeRunScopedCompositionOverlay";
 
 const resolveWriterSpawnEnv = (
@@ -10,7 +11,7 @@ const resolveWriterSpawnEnv = (
   if (
     agentRunId === undefined ||
     !hasRunScopedOverlay ||
-    agentRunId.trim().length === 0
+    !isSafeRunId(agentRunId)
   ) {
     return process.env;
   }

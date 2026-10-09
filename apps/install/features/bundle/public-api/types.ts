@@ -45,7 +45,8 @@
 /** 325 = security: the local app answers only loopback hosts and agentwitch.com origins, the approval banner cannot run AppleScript from a requester's text, harness bundles and profile folders accept only plain names, the wake server trusts only agentwitch.com origins. */
 /** 326 = auto skills stay reusable: tickets, PR numbers, commit hashes, urls, paths, ids and the names of senders/recipients are replaced by placeholders before drafting, and a draft that still has them, or whose description repeats its name, is rejected. */
 /** 327 = auto skills no longer ask for a skill that matches one the project already has (same name, same steps or same content); a draft is told the existing skill names. */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "327";
+/** 328 = security: the Mac client refuses ids, hashes and file names that are paths (run overlay, update manifest), updates only over https, writes config.json 0600, serves no keys or tokens from the local app, tells a script version by its hash. */
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "328";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =

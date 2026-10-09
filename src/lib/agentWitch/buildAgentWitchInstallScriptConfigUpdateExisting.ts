@@ -44,6 +44,7 @@ for (const [key, value] of Object.entries(defaults)) {
     config[key] = value;
   }
 }
-fs.writeFileSync(configPath, \`\${JSON.stringify(config, null, 2)}\\n\`);
+fs.writeFileSync(configPath, \`\${JSON.stringify(config, null, 2)}\\n\`, { mode: 0o600 });
+fs.chmodSync(configPath, 0o600);
 NODE
 `;

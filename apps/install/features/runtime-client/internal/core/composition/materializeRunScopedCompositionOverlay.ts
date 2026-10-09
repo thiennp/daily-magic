@@ -5,6 +5,7 @@ import type { ProjectCompositionSnapshotWire } from "@agent-witch/shared/protoco
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
 import resolveComponentStoreBlobPath from "./resolveComponentStoreBlobPath";
+import { isSafeRunId, resolveInside } from "./safeRunPaths";
 
 const resolveRunOverlayRoot = (
   layout: AgentWitchLocalLayout,
@@ -23,6 +24,10 @@ const materializeRunScopedCompositionOverlay = (
 ):
   | { readonly ok: true }
   | { readonly ok: false; readonly errorMessage: string } => {
+  if (!isSafeRunId(runId)) {
+    return { ok: false, errorMessage: "Run overlay refused: invalid run id." };
+  }
+
   const runEntries = snapshot.entries.filter((entry) => entry.scope === "run");
 
   if (runEntries.length === 0) {
@@ -48,10 +53,18 @@ const materializeRunScopedCompositionOverlay = (
       }
 
       const relative = item.relativePath.trim().replace(/^\/+/, "");
-      const targetPath =
-        relative.length > 0
-          ? path.join(cursorRoot, relative)
-          : path.join(cursorRoot, item.itemKey);
+      const targetPath = resolveInside(
+        cursorRoot,
+        relative.length > 0 ? relative : item.itemKey,
+      );
+
+      if (targetPath === null || targetPath === path.resolve(cursorRoot)) {
+        return {
+          ok: false,
+          errorMessage:
+            "Run overlay refused: a component path points outside the run folder.",
+        };
+      }
 
       fs.mkdirSync(path.dirname(targetPath), { recursive: true });
       fs.copyFileSync(sourcePath, targetPath);

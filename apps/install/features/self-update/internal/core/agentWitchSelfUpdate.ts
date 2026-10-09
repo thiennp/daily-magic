@@ -1,3 +1,8 @@
+import {
+  isSafeBundleRelativePath,
+  isTrustedUpdateOrigin,
+  resolveBundleTarget,
+} from "./safeBundleDownload";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -72,6 +77,9 @@ const readConfigWsUrl = (installDir: string): string | null => {
 const fetchRemoteBundleManifest = async (
   appOrigin: string,
 ): Promise<RemoteBundleManifest | null> => {
+  if (!isTrustedUpdateOrigin(appOrigin)) {
+    return null;
+  }
   const response = await fetch(`${appOrigin}/install/agent-witch/version`, {
     signal: AbortSignal.timeout(10_000),
   });
@@ -90,7 +98,8 @@ const fetchRemoteBundleManifest = async (
   }
 
   const scripts = payload.scripts.filter(
-    (scriptName): scriptName is string => typeof scriptName === "string",
+    (scriptName): scriptName is string =>
+      typeof scriptName === "string" && isSafeBundleRelativePath(scriptName),
   );
 
   return {
@@ -111,6 +120,10 @@ const downloadInstallBundle = async (
   installDir: string,
   relativePath: string,
 ): Promise<void> => {
+  const targetPath = resolveBundleTarget(installDir, relativePath);
+  if (targetPath === null || !isTrustedUpdateOrigin(appOrigin)) {
+    throw new Error(`Refused to download ${relativePath}.`);
+  }
   const response = await fetch(
     `${appOrigin}/install/agent-witch/${relativePath}`,
     { signal: AbortSignal.timeout(60_000) },
@@ -120,7 +133,6 @@ const downloadInstallBundle = async (
     throw new Error(`Failed to download ${relativePath}.`);
   }
 
-  const targetPath = path.join(installDir, relativePath);
   fs.mkdirSync(path.dirname(targetPath), { recursive: true });
   const payload = Buffer.from(await response.arrayBuffer());
   fs.writeFileSync(targetPath, payload);

@@ -22,5 +22,10 @@ export const buildGitSubprocessEnv = (
   for (const key of GIT_HOOK_ENV_KEYS) {
     delete env[key];
   }
+  // A repo an agent just wrote to can name a program in its own config (core.fsmonitor runs on
+  // `git status`). Command-scope config beats the repo's: switch that one off for these calls.
+  env.GIT_CONFIG_COUNT = "1";
+  env.GIT_CONFIG_KEY_0 = "core.fsmonitor";
+  env.GIT_CONFIG_VALUE_0 = "false";
   return env;
 };

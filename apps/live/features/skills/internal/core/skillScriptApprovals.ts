@@ -25,12 +25,16 @@ export type ScriptApprovalRequest = {
   readonly status: "pending" | null;
 };
 
-/** Cluster-style id for the owner question about one script version. */
+/**
+ * Cluster-style id for the owner question about one script version. The cloud keeps the first 80
+ * characters, so the content hash comes first: a long skill or script name must never cut it off,
+ * or a new version would inherit the approval of the old one.
+ */
 export const scriptApprovalKey = (
   skillId: string,
   script: string,
   sha256: string,
-): string => `script:${skillId}:${script}:${sha256.slice(0, 12)}`;
+): string => `script:${sha256.slice(0, 12)}:${skillId}:${script}`;
 
 /** Installed scripts with no owner decision yet (a new version needs a new one). */
 export const listScriptsNeedingApproval = (

@@ -43,6 +43,15 @@ export const handleBridgeRequest = async (
       );
       return;
     }
+    // A cross-site request that carries no Origin (a plain GET/navigation) is not ours either.
+    if (
+      (requestOrigin === undefined || requestOrigin.length === 0) &&
+      request.headers["sec-fetch-site"] === "cross-site"
+    ) {
+      rejectOrigin(response);
+      return;
+    }
+
     if (
       requestOrigin !== undefined &&
       requestOrigin.length > 0 &&

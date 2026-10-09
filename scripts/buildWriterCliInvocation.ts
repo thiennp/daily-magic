@@ -170,7 +170,10 @@ export const buildWriterCliInvocation = (
   commands: WriterCliCommands,
   options?: BuildWriterCliInvocationOptions,
 ): WriterCliInvocation | null => {
-  const prompt = instruction.trim();
+  // The prompt is the last argv item: one that starts with "-" would be read as a CLI flag
+  // (a requester could pass --dangerously-skip-permissions), so it gets a leading space.
+  const trimmed = instruction.trim();
+  const prompt = trimmed.startsWith("-") ? ` ${trimmed}` : trimmed;
   if (!isNonEmptyString(prompt)) {
     return null;
   }
