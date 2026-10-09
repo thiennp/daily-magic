@@ -3,6 +3,7 @@
 import { useId } from "react";
 
 import AwcProjectLibraryDetailFields from "@/features/projects/library/AwcProjectLibraryDetailFields";
+import AwcProjectLibrarySkillContent from "@/features/projects/library/AwcProjectLibrarySkillContent";
 import { PROJECT_PAGE_LIBRARY_ACTIONS_COPY as A } from "@/features/projects/library/projectPageLibraryActionsCopy.constant";
 import { PROJECT_PAGE_LIBRARY_COPY as C } from "@/features/projects/library/projectPageLibraryCopy.constant";
 import type { AwcProjectLibraryState } from "@/features/projects/library/useAwcProjectLibrary";
@@ -13,6 +14,7 @@ import {
 } from "@/features/projects/projectPagePanelChrome.constant";
 
 interface AwcProjectLibraryDetailProps {
+  readonly projectId: string;
   readonly itemId: string;
   readonly library: AwcProjectLibraryState;
   readonly canEdit: boolean;
@@ -22,6 +24,7 @@ interface AwcProjectLibraryDetailProps {
 
 /** Item detail. Draft publish: owner only; non-owners see disabled Publish. */
 export default function AwcProjectLibraryDetail({
+  projectId,
   itemId,
   library,
   canEdit,
@@ -47,6 +50,13 @@ export default function AwcProjectLibraryDetail({
       {item !== null ? (
         <>
           <AwcProjectLibraryDetailFields item={item} />
+          {item.skillId !== null ? (
+            <AwcProjectLibrarySkillContent
+              projectId={projectId}
+              skillId={item.skillId}
+              updatedAt={item.updatedAt}
+            />
+          ) : null}
           {showPublish ? (
             <span className="flex flex-col items-start gap-0.5">
               <button

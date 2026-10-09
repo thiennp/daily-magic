@@ -44,7 +44,11 @@ export default function AwcProjectLibraryDetailFields({
       </dl>
       {item.body.trim().length > 0 ? (
         <section className="flex flex-col gap-1">
-          <h5 className={LABEL_CLASS}>{C["library.detail.body"]}</h5>
+          <h5 className={LABEL_CLASS}>
+            {item.skillId === null
+              ? C["library.detail.body"]
+              : C["library.detail.description"]}
+          </h5>
           <p
             className={`${PANEL_LIST_CLASS} whitespace-pre-wrap p-3 text-[13px] text-awc-fg dark:text-gray-200`}
           >

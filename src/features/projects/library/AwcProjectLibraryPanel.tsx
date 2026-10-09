@@ -93,6 +93,7 @@ export default function AwcProjectLibraryPanel({
         />
       ) : itemId !== null ? (
         <AwcProjectLibraryDetail
+          projectId={project.id}
           itemId={itemId}
           library={library}
           canEdit={canEdit}
