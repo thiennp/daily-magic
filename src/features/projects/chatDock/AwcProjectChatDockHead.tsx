@@ -8,56 +8,48 @@ import {
 import { PROJECT_CHAT_DOCK_COPY as C } from "@/features/projects/chatDock/projectChatDockCopy.constant";
 
 interface AwcProjectChatDockHeadProps {
-  readonly full: boolean;
-  readonly onToggleFull: () => void;
   readonly onClose: () => void;
-  /** P1-S4a: owner's open join requests; the pill shows in full view only. */
+  /** P1-S4a: owner's open join requests; the pill sits next to the title. */
   readonly accessPendingCount?: number;
   readonly onOpenAccess?: () => void;
 }
 
-/** Dock title ("Chat" in full view, "New message" compact) + Full screen / Exit full screen + Minimise. */
+/** Dock title ("Chat") + Minimise (back to the button). */
 export default function AwcProjectChatDockHead({
-  full,
-  onToggleFull,
   onClose,
   accessPendingCount = 0,
   onOpenAccess,
 }: AwcProjectChatDockHeadProps) {
-  const sizeLabel = full ? C["dock.exitFull"] : C["dock.expand"];
-  const title = full ? C["dock.titleFull"] : C["dock.title"];
+  const title = C["dock.titleFull"];
   return (
     <header className={CHAT_DOCK_HEAD_CLASS}>
       <span className="flex min-w-0 items-center gap-2.5">
         <h3 className="m-0 text-[15px] font-semibold text-white">{title}</h3>
-        {full && onOpenAccess !== undefined ? (
-          <AwcProjectChatDockAccessPill count={accessPendingCount} onOpen={onOpenAccess} />
+        {onOpenAccess !== undefined ? (
+          <AwcProjectChatDockAccessPill
+            count={accessPendingCount}
+            onOpen={onOpenAccess}
+          />
         ) : null}
       </span>
       <span className="flex items-center gap-0.5">
         <button
           type="button"
           className={CHAT_DOCK_HEAD_BTN_CLASS}
-          aria-label={sizeLabel}
-          onClick={onToggleFull}
-        >
-          {full ? (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" />
-            </svg>
-          ) : (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-            </svg>
-          )}
-        </button>
-        <button
-          type="button"
-          className={CHAT_DOCK_HEAD_BTN_CLASS}
           aria-label={C["dock.minimise"]}
           onClick={onClose}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
             <path d="M5 12h14" />
           </svg>
         </button>

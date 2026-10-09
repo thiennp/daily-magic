@@ -1,13 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
-
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
-import AwcProjectAskBox from "@/features/projects/askBox/AwcProjectAskBox";
 import AwcProjectChatDockFab from "@/features/projects/chatDock/AwcProjectChatDockFab";
 import AwcProjectChatDockPopover from "@/features/projects/chatDock/AwcProjectChatDockPopover";
 import { openProjectAccessPending } from "@/features/projects/chatDock/openProjectAccessPending";
-import { dockTaskComputerTargets } from "@/features/projects/chatDock/dockTaskComputerTargets";
 import {
   CHAT_DOCK_ROOT_CLASS,
   CHAT_DOCK_ROOT_FULL_CLASS,
@@ -32,8 +28,8 @@ interface AwcProjectChatDockProps {
 }
 
 /**
- * V5-4 floating Chat dock — FAB + popover + full-screen expand.
- * Small dock = ask box; full view = project conversations (former Activity).
+ * V5-4 floating Chat dock — two states only: the button (minimal) and the
+ * full project conversations (maximal, full screen on mobile).
  * Unread FAB click opens the full view on the thread that needs you.
  */
 export default function AwcProjectChatDock({
@@ -45,16 +41,7 @@ export default function AwcProjectChatDock({
 }: AwcProjectChatDockProps) {
   const { dock } = chat;
   const access = useAwcProjectAccess(project.id);
-  const computers = useMemo(
-    () =>
-      dockTaskComputerTargets(access.members).map((t) => ({
-        key: t.key,
-        label: t.label,
-      })),
-    [access.members],
-  );
   if (threads === null) return null;
-  const canSend = threads.canSend;
   const unreadCount = sumMessengerUnread(threads);
   const onFabToggle = () => {
     if (unreadCount > 0) {
@@ -63,24 +50,13 @@ export default function AwcProjectChatDock({
     }
     dock.toggleDock();
   };
-  const rootClass =
-    dock.open && dock.full ? CHAT_DOCK_ROOT_FULL_CLASS : CHAT_DOCK_ROOT_CLASS;
-  const askBox = canSend ? (
-    <AwcProjectAskBox
-      projectId={project.id}
-      bots={threads.bots}
-      computers={computers}
-      onSent={chat.onAskSent}
-      layout="dock"
-    />
-  ) : null;
+  const rootClass = dock.open
+    ? CHAT_DOCK_ROOT_FULL_CLASS
+    : CHAT_DOCK_ROOT_CLASS;
   return (
     <div className={rootClass}>
       {dock.open ? (
         <AwcProjectChatDockPopover
-          full={dock.full}
-          canSend={canSend}
-          onToggleFull={dock.toggleFull}
           onClose={dock.closeDock}
           accessPendingCount={isOwner ? access.pending.length : 0}
           onOpenAccess={() => {
@@ -88,19 +64,18 @@ export default function AwcProjectChatDock({
             window.requestAnimationFrame(() => openProjectAccessPending());
           }}
         >
-          {dock.full ? (
-            <AwcProjectMessengerSection
-              key={`${chat.refreshKey}:${chat.threadKey ?? ""}`}
-              projectId={project.id}
-              hasOwnerComputer={projectHasOwnerComputer(project)}
-              initialThreadKey={chat.threadKey}
-              isOwner={isOwner}
-              initialUnreadCount={unreadForMessengerThread(threads, chat.threadKey ?? PROJECT_MESSENGER_WHOLE_THREAD_KEY)}
-              onUnreadMaybeChanged={onUnreadMaybeChanged}
-            />
-          ) : (
-            askBox
-          )}
+          <AwcProjectMessengerSection
+            key={`${chat.refreshKey}:${chat.threadKey ?? ""}`}
+            projectId={project.id}
+            hasOwnerComputer={projectHasOwnerComputer(project)}
+            initialThreadKey={chat.threadKey}
+            isOwner={isOwner}
+            initialUnreadCount={unreadForMessengerThread(
+              threads,
+              chat.threadKey ?? PROJECT_MESSENGER_WHOLE_THREAD_KEY,
+            )}
+            onUnreadMaybeChanged={onUnreadMaybeChanged}
+          />
         </AwcProjectChatDockPopover>
       ) : (
         <AwcProjectChatDockFab

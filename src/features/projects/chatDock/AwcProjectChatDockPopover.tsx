@@ -3,30 +3,21 @@
 import type { ReactNode } from "react";
 
 import AwcProjectChatDockHead from "@/features/projects/chatDock/AwcProjectChatDockHead";
-import AwcProjectChatDockViewerBanner from "@/features/projects/chatDock/AwcProjectChatDockViewerBanner";
 import {
   CHAT_DOCK_BODY_FULL_CLASS,
-  CHAT_DOCK_COMPOSER_CLASS,
-  CHAT_DOCK_POP_CLASS,
   CHAT_DOCK_POP_FULL_CLASS,
 } from "@/features/projects/chatDock/projectChatDockClasses.constant";
 import { PROJECT_CHAT_DOCK_COPY as C } from "@/features/projects/chatDock/projectChatDockCopy.constant";
 
 interface AwcProjectChatDockPopoverProps {
-  readonly full: boolean;
-  readonly canSend: boolean;
-  readonly onToggleFull: () => void;
   readonly onClose: () => void;
   readonly children: ReactNode;
   readonly accessPendingCount?: number;
   readonly onOpenAccess?: () => void;
 }
 
-/** Dock dialog shell: head, optional viewer banner, composer / full chat slot. */
+/** Dock dialog shell (maximal view): head + the full chat. */
 export default function AwcProjectChatDockPopover({
-  full,
-  canSend,
-  onToggleFull,
   onClose,
   children,
   accessPendingCount,
@@ -36,20 +27,15 @@ export default function AwcProjectChatDockPopover({
     <section
       id="awc-chat-dock-pop"
       role="dialog"
-      aria-label={full ? C["dock.titleFull"] : C["dock.title"]}
-      className={full ? CHAT_DOCK_POP_FULL_CLASS : CHAT_DOCK_POP_CLASS}
+      aria-label={C["dock.titleFull"]}
+      className={CHAT_DOCK_POP_FULL_CLASS}
     >
       <AwcProjectChatDockHead
-        full={full}
-        onToggleFull={onToggleFull}
         onClose={onClose}
         accessPendingCount={accessPendingCount}
         onOpenAccess={onOpenAccess}
       />
-      {canSend || full ? null : <AwcProjectChatDockViewerBanner />}
-      <div className={full ? CHAT_DOCK_BODY_FULL_CLASS : CHAT_DOCK_COMPOSER_CLASS}>
-        {children}
-      </div>
+      <div className={CHAT_DOCK_BODY_FULL_CLASS}>{children}</div>
     </section>
   );
 }

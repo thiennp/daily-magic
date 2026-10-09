@@ -4,34 +4,21 @@ import { useCallback, useEffect, useState } from "react";
 
 import { isOneWindowComposerEscapeTrapActive } from "@/features/projects/messenger/oneWindow/oneWindowComposerEscapeTrap";
 
-/** Open / full-screen state for the floating Chat dock (UI expand only). */
+/**
+ * Chat dock state: minimal (the floating button) or maximal (the full chat).
+ * There is no middle size; `full` is kept as an alias of `open` for callers.
+ */
 export const useAwcProjectChatDock = (initialOpen = false) => {
   const [open, setOpen] = useState(initialOpen);
-  const [full, setFull] = useState(false);
 
   const openDock = useCallback(() => {
     setOpen(true);
   }, []);
-  /** P1-S1: "Go to chat" opens the full view (the One window host). */
-  const openFull = useCallback(() => {
-    setOpen(true);
-    setFull(true);
-  }, []);
   const closeDock = useCallback(() => {
     setOpen(false);
-    setFull(false);
   }, []);
   const toggleDock = useCallback(() => {
-    setOpen((current) => {
-      if (current) {
-        setFull(false);
-        return false;
-      }
-      return true;
-    });
-  }, []);
-  const toggleFull = useCallback(() => {
-    setFull((current) => !current);
+    setOpen((current) => !current);
   }, []);
 
   useEffect(() => {
@@ -41,17 +28,20 @@ export const useAwcProjectChatDock = (initialOpen = false) => {
       if (event.defaultPrevented || isOneWindowComposerEscapeTrapActive()) {
         return;
       }
-      if (full) {
-        setFull(false);
-        return;
-      }
       setOpen(false);
     };
     document.addEventListener("keydown", onKey);
     return () => {
       document.removeEventListener("keydown", onKey);
     };
-  }, [full, open]);
+  }, [open]);
 
-  return { open, full, openDock, openFull, closeDock, toggleDock, toggleFull };
+  return {
+    open,
+    full: open,
+    openDock,
+    openFull: openDock,
+    closeDock,
+    toggleDock,
+  };
 };

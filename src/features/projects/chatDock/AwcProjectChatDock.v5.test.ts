@@ -19,27 +19,28 @@ describe("L3 V5-4 Chat dock — shell contract", () => {
     expect(read("AwcProjectChatDockMessageGlyph.tsx")).toContain("M4 6.5");
   });
 
-  it("Full screen / Exit full screen / Minimise aria match locked verbs; full-screen is UI-only", () => {
+  it("two states only: button and full chat; Minimise is the only size control", () => {
     const head = read("AwcProjectChatDockHead.tsx");
-    expect(head).toContain('C["dock.expand"]');
-    expect(head).toContain('C["dock.exitFull"]');
     expect(head).toContain('C["dock.minimise"]');
-    expect(head).toContain('full ? C["dock.titleFull"] : C["dock.title"]');
-    expect(head).not.toContain("collapse");
-    expect(read("AwcProjectChatDock.tsx")).toContain("AwcProjectAskBox");
-    expect(read("AwcProjectChatDock.tsx")).not.toContain("fetch(");
+    expect(head).toContain('C["dock.titleFull"]');
+    expect(head).not.toContain("onToggleFull");
+    const dock = read("AwcProjectChatDock.tsx");
+    expect(dock).not.toContain("AwcProjectAskBox");
+    expect(dock).toContain("AwcProjectMessengerSection");
+    expect(dock).not.toContain("fetch(");
   });
 
-  it("mobile root clears bottom nav; viewer reason uses locked string + awc-disabled", () => {
-    expect(read("projectChatDockClasses.constant.ts")).toContain("max-md:bottom-[4.75rem]");
-    const viewer = read("AwcProjectChatDockViewerBanner.tsx");
-    expect(viewer).toContain("awc-disabled");
-    expect(viewer).toContain('C["disabled.viewerMessage"]');
-    expect(C["disabled.viewerMessage"]).toBe("Viewers can't send messages.");
+  it("mobile button sits 50px from the right and bottom; full chat fills the screen", () => {
+    const classes = read("projectChatDockClasses.constant.ts");
+    expect(classes).toContain("max-md:bottom-[50px]");
+    expect(classes).toContain("max-md:right-[50px]");
+    expect(classes).toContain("max-md:inset-0");
   });
 
   it("computer targets are task-only; people recipients stay dropped", () => {
-    expect(read("dockTaskComputerTargets.ts")).toContain('memberKind !== "computer"');
+    expect(read("dockTaskComputerTargets.ts")).toContain(
+      'memberKind !== "computer"',
+    );
     expect(read("dockTaskComputerTargets.ts")).not.toMatch(/people|person/i);
   });
 });

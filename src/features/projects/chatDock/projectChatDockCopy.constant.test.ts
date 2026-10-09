@@ -6,8 +6,6 @@ describe("L3 V5-4 Chat dock — Product EN lock", () => {
   it("locks dock title / expand / exitFull / minimise / All assistants / oneRecipient", () => {
     expect(C["dock.title"]).toBe("New message");
     expect(C["dock.titleFull"]).toBe("Chat");
-    expect(C["dock.expand"]).toBe("Full screen");
-    expect(C["dock.exitFull"]).toBe("Exit full screen");
     expect(C["dock.minimise"]).toBe("Minimise");
     expect(C["dock.sendTo.allAssistants"]).toBe("All assistants");
     expect(C["dock.task.oneRecipient"]).toBe(
@@ -18,7 +16,9 @@ describe("L3 V5-4 Chat dock — Product EN lock", () => {
 
   it("never says bot, Mac, API, MCP, or token in locked dock strings", () => {
     for (const value of Object.values(C)) {
-      expect(String(value)).not.toMatch(/\bbots?\b|\bMac\b|\bAPI\b|\bMCP\b|\btoken\b/i);
+      expect(String(value)).not.toMatch(
+        /\bbots?\b|\bMac\b|\bAPI\b|\bMCP\b|\btoken\b/i,
+      );
     }
   });
 });

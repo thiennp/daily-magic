@@ -23,7 +23,9 @@ describe("project layout v2 L2 ask box → V5-4 Chat dock", () => {
     expect(hook).toContain("sendMessengerTask");
     expect(hook).not.toContain("fetch(");
     expect(hook).toContain("needsReply: true");
-    expect(read(`${DOCK_DIR}/AwcProjectChatDock.tsx`)).toContain("AwcProjectAskBox");
+    expect(read(`${DOCK_DIR}/AwcProjectChatDock.tsx`)).not.toContain(
+      "AwcProjectAskBox",
+    );
   });
 
   it("uses Product artifact EN strings", () => {
