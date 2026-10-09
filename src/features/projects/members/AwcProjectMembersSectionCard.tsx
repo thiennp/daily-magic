@@ -1,6 +1,6 @@
 /** Raised white card used by Assistants / People / Invite (design v2: depth on sand). */
 export const SECTION_CARD =
-  "flex flex-col gap-3 rounded-2xl border border-awc-line bg-awc-surface p-3.5 shadow-awc-lift";
+  "flex flex-col gap-3 rounded-awc-card border border-awc-line bg-awc-surface p-3.5 shadow-awc-lift";
 
 const TONE = {
   pine: "bg-awc-accent-soft text-awc-primary",

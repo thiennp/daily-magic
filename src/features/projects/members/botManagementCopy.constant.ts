@@ -2,6 +2,9 @@ export const BOT_MANAGEMENT_COPY = {
   newGuidance: "New guidance",
   updateGuidance: "Update guidance",
   updateSending: "Sending…",
+  updateAll: (count: number) => `Update guidance (${count})`,
+  updateAllSent: (count: number) =>
+    `Sent to ${count}. Waiting for them to confirm.`,
   updateSent: "Sent. Waiting for it to confirm.",
   updateFailed: "Could not send. Try again.",
   closedChip: "Only its inviter can message it",

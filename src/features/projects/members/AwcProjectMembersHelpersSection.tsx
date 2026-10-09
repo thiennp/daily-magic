@@ -4,6 +4,7 @@ import { useMemo } from "react";
 
 import type { AwcProjectAccessMember } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 import { useAwcProjectAccessWakeLinks } from "@/features/projects/access/hooks/useAwcProjectAccessWakeLinks";
+import AwcProjectMembersHelpersUpdateAll from "@/features/projects/members/AwcProjectMembersHelpersUpdateAll";
 import AwcProjectMembersHelperListItem from "@/features/projects/members/AwcProjectMembersHelperListItem";
 import { isRailAssistantMember } from "@/features/projects/members/utils/countRailMembers";
 import SectionIcon, {
@@ -64,6 +65,12 @@ export default function AwcProjectMembersHelpersSection({
         <span className="rounded-full bg-awc-fill px-2 text-[12px] tabular-nums text-awc-fg-muted">
           {helpers.length}
         </span>
+        <AwcProjectMembersHelpersUpdateAll
+          projectId={projectId}
+          outdatedIds={helpers
+            .filter((m) => m.canManageBot && m.guidanceOutdated)
+            .map((m) => m.id)}
+        />
       </div>
       {helpers.length === 0 ? (
         <p className="px-3.5 py-2 text-[13px] text-awc-fg-subtle">

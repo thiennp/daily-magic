@@ -14,7 +14,8 @@ import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/autho
 interface AwcProjectDetailHeaderProps {
   readonly projectId: string;
   readonly projectName: string;
-  readonly status: ProjectHeaderStatus;
+  /** null = nothing to say (a member on a project with no linked computer). */
+  readonly status: ProjectHeaderStatus | null;
   readonly pageActorRole: ProjectPageActorRole;
   readonly editCta: ProjectEditOnMacCta;
   readonly canRename: boolean;
@@ -54,7 +55,9 @@ export default function AwcProjectDetailHeader({
         <div className="min-w-0 space-y-2">
           <h1 className={PROJECT_V5_H1_CLASS}>{projectName}</h1>
           <div className="flex min-w-0 flex-wrap items-center gap-2">
-            <AwcProjectDetailHeaderStatus status={status} />
+            {status !== null ? (
+              <AwcProjectDetailHeaderStatus status={status} />
+            ) : null}
             <AwcProjectRoleChip pageActorRole={pageActorRole} />
             <AwcProjectMobileMembersChip
               projectId={projectId}

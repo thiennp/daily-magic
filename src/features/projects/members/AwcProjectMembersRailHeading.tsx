@@ -32,7 +32,7 @@ export default function AwcProjectMembersRailHeading({
   const extra = avatars.length - STACK_MAX;
   return (
     <div
-      className="mb-3 grid gap-3 rounded-2xl border border-awc-accent-soft-2 bg-gradient-to-br from-awc-accent-soft to-awc-surface p-3.5 shadow-awc-lift"
+      className="mb-3 grid gap-3 rounded-awc-card border border-awc-accent-soft-2 bg-gradient-to-br from-awc-accent-soft to-awc-surface p-3.5 shadow-awc-lift"
       data-members-heading
     >
       <div className="flex items-center gap-2">

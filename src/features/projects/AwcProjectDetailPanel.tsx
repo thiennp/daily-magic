@@ -50,7 +50,7 @@ export default function AwcProjectDetailPanel({
         <AwcProjectDetailHeader
           projectId={project.id}
           projectName={project.name}
-          status={d.headerStatus}
+          status={isOwner || project.deviceId ? d.headerStatus : null}
           pageActorRole={pageActorRole}
           editCta={d.editCta}
           canRename={isOwner}
