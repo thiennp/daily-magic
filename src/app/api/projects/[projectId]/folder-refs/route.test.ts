@@ -34,7 +34,10 @@ describe("POST /api/projects/[projectId]/folder-refs", () => {
   });
 
   it("maps a non-member computer to 403 folder_ref_device_not_member", async () => {
-    upsert.mockResolvedValue({ ok: false, code: "folder_ref_device_not_member" });
+    upsert.mockResolvedValue({
+      ok: false,
+      code: "folder_ref_device_not_member",
+    });
     const response = await post({
       machineOrDeviceRef: DEVICE,
       deviceId: DEVICE,
@@ -52,13 +55,17 @@ describe("POST /api/projects/[projectId]/folder-refs", () => {
       machineOrDeviceRef: DEVICE,
       folderPath: "~/demo",
       deviceId: DEVICE,
+      shared: true,
     });
   });
 
   it("passes deviceId null for the legacy label form and returns the ref", async () => {
     const folderRef = { id: "r1", machineOrDeviceRef: "MacBook Pro" };
     upsert.mockResolvedValue({ ok: true, folderRef });
-    const response = await post({ machineOrDeviceRef: "MacBook Pro", folderPath: "~/x" });
+    const response = await post({
+      machineOrDeviceRef: "MacBook Pro",
+      folderPath: "~/x",
+    });
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({ ok: true, folderRef });
     expect(upsert.mock.calls[0]?.[0]).toMatchObject({ deviceId: null });

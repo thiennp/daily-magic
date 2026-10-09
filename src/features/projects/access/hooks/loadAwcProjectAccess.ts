@@ -16,6 +16,11 @@ export type AwcProjectAccessFolderRef = {
   readonly id: string;
   readonly machineOrDeviceRef: string;
   readonly folderPath: string;
+  /** Visible to other project members. */
+  readonly shared?: boolean;
+  /** Folder is on one of the viewer's own computers (or the viewer owns the project). */
+  readonly isMine?: boolean;
+  readonly deviceName?: string | null;
 };
 
 export type AwcProjectAccessSnapshot =

@@ -31,7 +31,7 @@ export default function AwcProjectResourcesFoldersCard({
 }: AwcProjectResourcesFoldersCardProps) {
   const access = useAwcProjectAccess(projectId);
   const accessCopy = AWC_PROJECT_ACCESS_COPY;
-  const { onAdd, onRemove } = useAwcProjectFolderRefActions({
+  const { onAdd, onRemove, onToggleShared } = useAwcProjectFolderRefActions({
     projectId,
     onMessage: access.setMessage,
     onReload: access.reload,
@@ -63,11 +63,7 @@ export default function AwcProjectResourcesFoldersCard({
         {C.foldersTitle}
       </h3>
       <div className="overflow-hidden rounded-2xl bg-awc-surface-2/80 p-3 dark:bg-white/[0.03]">
-        {!canManage ? (
-          <p className="px-1 py-2 text-[13px] text-awc-fg-muted dark:text-gray-400">
-            {C.foldersOwnerOnly}
-          </p>
-        ) : access.isLoading ? (
+        {access.isLoading ? (
           <p className="text-sm text-awc-fg-muted dark:text-gray-400">
             {C.foldersLoading}
           </p>
@@ -89,6 +85,8 @@ export default function AwcProjectResourcesFoldersCard({
             hideChrome
             onAdd={onAdd}
             onRemove={onRemove}
+            onToggleShared={canManage ? onToggleShared : undefined}
+            readOnly={!canManage}
           />
         )}
         {canManage && access.message ? (

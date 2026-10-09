@@ -69,7 +69,7 @@ describe("GET /api/projects/[projectId]/library", () => {
     expect(body.role).toBe("owner");
   });
 
-  it("member and viewer see published only", async () => {
+  it("member and viewer see the same items as the owner", async () => {
     for (const role of ["member", "viewer"] as const) {
       authorize.mockResolvedValue({
         ok: true,
@@ -81,7 +81,7 @@ describe("GET /api/projects/[projectId]/library", () => {
         params: Promise.resolve({ projectId: "proj-1" }),
       });
       const body = await response.json();
-      expect(body.capabilities).toEqual([published]);
+      expect(body.capabilities).toEqual([draft, published]);
       expect(body.role).toBe(role);
     }
   });

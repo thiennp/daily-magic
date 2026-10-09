@@ -4,8 +4,8 @@ import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCa
 import { asRowArray, getSql } from "@/lib/db";
 
 /**
- * Library items bound to one project (non-archived). Caller filters drafts
- * for non-owners (published-only).
+ * Library items bound to one project (non-archived), drafts included; every
+ * project member sees the same list.
  */
 export async function listPublishedCapabilitiesForProject(
   projectId: string,

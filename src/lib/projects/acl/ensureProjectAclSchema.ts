@@ -67,6 +67,7 @@ export const ensureProjectAclSchema = async (): Promise<void> => {
       machine_or_device_ref TEXT NOT NULL, folder_path TEXT NOT NULL,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
+    await sql`ALTER TABLE project_folder_refs ADD COLUMN IF NOT EXISTS shared BOOLEAN NOT NULL DEFAULT TRUE`;
     await ensureProjectInviteHooksSchema();
     await ensureProjectMembershipDeliveryModeSchema();
     // Single entry for delete-on-read / ack outcome tables (needs project_messages).

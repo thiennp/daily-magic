@@ -2,16 +2,19 @@
 export const buildAddFolderRefBody = (input: {
   readonly deviceId: string;
   readonly folderPath: string;
+  readonly shared?: boolean;
 }) => ({
   deviceId: input.deviceId,
   machineOrDeviceRef: input.deviceId,
   folderPath: input.folderPath,
+  ...(input.shared === undefined ? {} : { shared: input.shared }),
 });
 
 export const addProjectFolderRef = async (input: {
   readonly projectId: string;
   readonly deviceId: string;
   readonly folderPath: string;
+  readonly shared?: boolean;
 }): Promise<{
   readonly ok: boolean;
   readonly code?: string;
@@ -36,6 +39,25 @@ export const removeProjectFolderRef = async (input: {
   const response = await fetch(
     `/api/projects/${input.projectId}/folder-refs/${input.refId}`,
     { method: "DELETE" },
+  );
+  return response.json() as Promise<{
+    readonly ok: boolean;
+    readonly errorMessage?: string;
+  }>;
+};
+
+export const setProjectFolderRefShared = async (input: {
+  readonly projectId: string;
+  readonly refId: string;
+  readonly shared: boolean;
+}): Promise<{ readonly ok: boolean; readonly errorMessage?: string }> => {
+  const response = await fetch(
+    `/api/projects/${input.projectId}/folder-refs/${input.refId}`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ shared: input.shared }),
+    },
   );
   return response.json() as Promise<{
     readonly ok: boolean;

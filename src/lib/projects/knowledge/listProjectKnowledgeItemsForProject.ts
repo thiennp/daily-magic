@@ -12,7 +12,8 @@ export type ProjectKnowledgeItemRow = {
 };
 
 const listProjectKnowledgeItemsForProject = async (
-  ownerUserId: string,
+  /** Null: no owner restriction (caller already authorized a project member). */
+  ownerUserId: string | null,
   projectId: string,
   statusFilter?: readonly string[],
 ): Promise<readonly ProjectKnowledgeItemRow[]> => {
@@ -31,7 +32,7 @@ const listProjectKnowledgeItemsForProject = async (
             pki.created_at
           FROM project_knowledge_items pki
           INNER JOIN user_projects up ON up.id = pki.project_id
-          WHERE up.owner_user_id = ${ownerUserId}
+          WHERE (${ownerUserId}::text IS NULL OR up.owner_user_id = ${ownerUserId})
             AND pki.project_id = ${projectId}
             AND pki.status = ANY(${[...statusFilter]})
           ORDER BY pki.created_at DESC
@@ -48,7 +49,7 @@ const listProjectKnowledgeItemsForProject = async (
             pki.created_at
           FROM project_knowledge_items pki
           INNER JOIN user_projects up ON up.id = pki.project_id
-          WHERE up.owner_user_id = ${ownerUserId}
+          WHERE (${ownerUserId}::text IS NULL OR up.owner_user_id = ${ownerUserId})
             AND pki.project_id = ${projectId}
           ORDER BY pki.created_at DESC
         `,

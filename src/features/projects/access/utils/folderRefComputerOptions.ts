@@ -59,12 +59,16 @@ export const buildFolderRefComputerOptions = (
 
 /** `"{deviceName} · {path}"` — legacy free-text refs fall back to the raw value. */
 export const formatFolderRefRow = (
-  ref: { readonly machineOrDeviceRef: string; readonly folderPath: string },
+  ref: {
+    readonly machineOrDeviceRef: string;
+    readonly folderPath: string;
+    readonly deviceName?: string | null;
+  },
   options: readonly FolderRefComputerOption[],
 ): string => {
   const match = options.find((o) => o.deviceId === ref.machineOrDeviceRef);
   return C.foldersRow(
-    match?.deviceName ?? ref.machineOrDeviceRef,
+    match?.deviceName ?? ref.deviceName ?? ref.machineOrDeviceRef,
     ref.folderPath,
   );
 };

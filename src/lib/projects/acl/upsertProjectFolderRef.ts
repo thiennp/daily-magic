@@ -31,6 +31,8 @@ export const upsertProjectFolderRef = async (input: {
   readonly folderPath: string;
   /** Explicit picker deviceId; always membership-checked. */
   readonly deviceId?: string | null;
+  /** Visible to other members; defaults to shared. */
+  readonly shared?: boolean;
   readonly isComputerMember?: ProjectComputerMemberLookup;
   readonly isOwnerDevice?: ProjectOwnerDeviceLookup;
 }): Promise<UpsertProjectFolderRefResult> => {
@@ -79,10 +81,11 @@ export const upsertProjectFolderRef = async (input: {
   const rows = asRowArray(
     await sql`
       INSERT INTO project_folder_refs (
-        id, project_id, machine_or_device_ref, folder_path
+        id, project_id, machine_or_device_ref, folder_path, shared
       )
       VALUES (
-        ${randomUUID()}, ${input.projectId}, ${machine}, ${folder}
+        ${randomUUID()}, ${input.projectId}, ${machine}, ${folder},
+        ${input.shared ?? true}
       )
       RETURNING *
     `,

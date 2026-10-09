@@ -13,7 +13,13 @@ export const PROJECT_PAGE_RESOURCES_COPY = {
   foldersHint:
     "Only the folder location is stored; files stay on your computer.",
   foldersOwnerOnly:
-    "Viewers cannot add folder paths. Owners and members add the folder on their own computers.",
+    "Viewers cannot add folder paths. Owners and members add the folder on their own computers; shared folders are listed below.",
+  foldersShared: "Shared",
+  foldersPrivate: "Only you",
+  foldersShareToggle: "Share with project members",
+  foldersShareOnAdd: "Share this folder with project members",
+  foldersNowShared: "Folder is now shared with project members.",
+  foldersNowPrivate: "Folder is now private.",
   foldersLoading: "Loading folders…",
   foldersAdd: "Add",
   foldersRemove: "Remove",

@@ -67,7 +67,7 @@ export const getProjectAclPayload = async (input: {
   return {
     ok: true,
     name: access.project.name,
-    folderRefs: folderRefs.map(summarizeFolderRef),
+    folderRefs: folderRefs.filter((ref) => ref.shared).map(summarizeFolderRef),
     repoUrls: access.project.repoUrls,
     defaultBranch: access.project.defaultBranch,
     scopes: access.scopes,

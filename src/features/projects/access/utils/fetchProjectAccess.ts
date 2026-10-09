@@ -4,7 +4,10 @@ import type {
 } from "@/features/projects/access/utils/projectAccessApi.types";
 
 /** Optional `signal` aborts the request (rejects with AbortError — callers ignore it). */
-export const fetchProjectAccess = async (projectId: string, signal?: AbortSignal) => {
+export const fetchProjectAccess = async (
+  projectId: string,
+  signal?: AbortSignal,
+) => {
   const response = await fetch(`/api/projects/${projectId}/access`, {
     cache: "no-store",
     signal,
@@ -44,6 +47,9 @@ export const fetchProjectFolderRefs = async (projectId: string) => {
       readonly id: string;
       readonly machineOrDeviceRef: string;
       readonly folderPath: string;
+      readonly shared?: boolean;
+      readonly isMine?: boolean;
+      readonly deviceName?: string | null;
     }[];
   }>;
 };

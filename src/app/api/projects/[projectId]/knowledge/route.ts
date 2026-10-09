@@ -1,5 +1,5 @@
 import listProjectKnowledgeItemsForProject from "@/lib/projects/knowledge/listProjectKnowledgeItemsForProject";
-import { getUserProjectById } from "@/lib/projects/userProjectQueries";
+import { authorizeProjectPageActor } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -15,9 +15,12 @@ export async function GET(
   }
 
   const { projectId } = await context.params;
-  const project = await getUserProjectById(projectId.trim());
+  const access = await authorizeProjectPageActor({
+    projectId: projectId.trim(),
+    actorUserId: actor.id,
+  });
 
-  if (project === null || project.ownerUserId !== actor.id) {
+  if (!access.ok) {
     return Response.json(
       { ok: false, errorMessage: "Project not found." },
       { status: 404 },
@@ -25,8 +28,8 @@ export async function GET(
   }
 
   const items = await listProjectKnowledgeItemsForProject(
-    actor.id,
-    project.id,
+    null,
+    access.project.id,
     ["candidate", "accepted"],
   );
 

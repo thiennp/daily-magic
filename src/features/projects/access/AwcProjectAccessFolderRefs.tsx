@@ -26,9 +26,13 @@ interface AwcProjectAccessFolderRefsProps {
   readonly onAdd: (
     deviceId: string,
     folderPath: string,
+    shared: boolean,
   ) => Promise<boolean> | boolean;
   readonly onRemove: (refId: string) => void;
+  readonly onToggleShared?: (refId: string, shared: boolean) => void;
   readonly hideChrome?: boolean;
+  /** Viewer: list shared folders only, no add form. */
+  readonly readOnly?: boolean;
 }
 
 export default function AwcProjectAccessFolderRefs({
@@ -38,7 +42,9 @@ export default function AwcProjectAccessFolderRefs({
   ownerDevices,
   onAdd,
   onRemove,
+  onToggleShared,
   hideChrome = false,
+  readOnly = false,
 }: AwcProjectAccessFolderRefsProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
   const computers = useMemo(
@@ -52,13 +58,14 @@ export default function AwcProjectAccessFolderRefs({
   );
   const [machineRef, setMachineRef] = useState("");
   const [folderPath, setFolderPath] = useState("");
+  const [shared, setShared] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const handleAdd = async (): Promise<void> => {
     const blocked = resolveFolderRefAddError(machineRef, computers);
     setError(blocked);
     if (blocked) return;
-    if (await onAdd(machineRef, folderPath)) {
+    if (await onAdd(machineRef, folderPath, shared)) {
       setMachineRef("");
       setFolderPath("");
     }
@@ -80,19 +87,24 @@ export default function AwcProjectAccessFolderRefs({
         folderRefs={folderRefs}
         computers={computers}
         onRemove={onRemove}
+        onToggleShared={onToggleShared}
       />
-      <AwcProjectAccessFolderRefsForm
-        computers={computers}
-        error={error}
-        machineRef={machineRef}
-        folderPath={folderPath}
-        onMachineRef={(value) => {
-          setMachineRef(value);
-          if (value) setError(null);
-        }}
-        onFolderPath={setFolderPath}
-        onAdd={() => void handleAdd()}
-      />
+      {readOnly ? null : (
+        <AwcProjectAccessFolderRefsForm
+          computers={computers}
+          error={error}
+          machineRef={machineRef}
+          folderPath={folderPath}
+          onMachineRef={(value) => {
+            setMachineRef(value);
+            if (value) setError(null);
+          }}
+          onFolderPath={setFolderPath}
+          onAdd={() => void handleAdd()}
+          shared={shared}
+          onShared={onToggleShared ? setShared : undefined}
+        />
+      )}
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { useId } from "react";
 
 import AwcProjectAccessFolderRefsMachineField from "@/features/projects/access/AwcProjectAccessFolderRefsMachineField";
+import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/projectPageResourcesCopy.constant";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import type { FolderRefComputerOption } from "@/features/projects/access/utils/folderRefComputerOptions";
 
@@ -17,6 +18,8 @@ interface AwcProjectAccessFolderRefsFormProps {
   readonly onMachineRef: (value: string) => void;
   readonly onFolderPath: (value: string) => void;
   readonly onAdd: () => void;
+  readonly shared?: boolean;
+  readonly onShared?: (value: boolean) => void;
 }
 
 export default function AwcProjectAccessFolderRefsForm({
@@ -27,6 +30,8 @@ export default function AwcProjectAccessFolderRefsForm({
   onMachineRef,
   onFolderPath,
   onAdd,
+  shared = true,
+  onShared,
 }: AwcProjectAccessFolderRefsFormProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
   const idBase = useId();
@@ -82,6 +87,16 @@ export default function AwcProjectAccessFolderRefsForm({
           </button>
         </div>
       </div>
+      {onShared ? (
+        <label className="flex items-center gap-1.5 text-xs text-awc-fg-muted dark:text-gray-400">
+          <input
+            type="checkbox"
+            checked={shared}
+            onChange={(event) => onShared(event.target.checked)}
+          />
+          {C.foldersShareOnAdd}
+        </label>
+      ) : null}
       {error ? (
         <p className="text-xs text-error-600 dark:text-error-400" role="alert">
           {error}

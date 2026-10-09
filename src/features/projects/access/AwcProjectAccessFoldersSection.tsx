@@ -25,7 +25,7 @@ export default function AwcProjectAccessFoldersSection({
   onReload,
 }: AwcProjectAccessFoldersSectionProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
-  const { onAdd, onRemove } = useAwcProjectFolderRefActions({
+  const { onAdd, onRemove, onToggleShared } = useAwcProjectFolderRefActions({
     projectId,
     onMessage,
     onReload,
@@ -43,6 +43,7 @@ export default function AwcProjectAccessFoldersSection({
         hideChrome
         onAdd={onAdd}
         onRemove={onRemove}
+        onToggleShared={onToggleShared}
       />
     </AwcProjectAccessSection>
   );

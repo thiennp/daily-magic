@@ -2,6 +2,7 @@ import { listProjectFolderRefs } from "@/lib/projects/acl/listProjectFolderRefs"
 import { upsertProjectFolderRef } from "@/lib/projects/acl/upsertProjectFolderRef";
 import { resolveFolderRefActor } from "@/lib/projects/acl/resolveFolderRefActor";
 import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
+import { authorizeProjectPageActor } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -20,19 +21,30 @@ export async function GET(
     projectId,
     actorUserId: actor.id,
   });
-  if (!folderActor.ok) {
+  // Viewers cannot manage folders but may read the ones members shared.
+  const viewer = folderActor.ok
+    ? null
+    : await authorizeProjectPageActor({ projectId, actorUserId: actor.id });
+  if (!folderActor.ok && !viewer?.ok) {
     const missing = folderActor.code === "not_found";
     return Response.json(
       { ok: false, errorMessage: missing ? "Project not found." : "forbidden" },
       { status: missing ? 404 : 403 },
     );
   }
+  const isOwner = folderActor.ok && folderActor.isOwner;
 
   const folderRefs = await listProjectFolderRefs(
     projectId,
-    folderActor.isOwner ? null : actor.id,
+    isOwner ? null : actor.id,
   );
-  return Response.json({ ok: true, folderRefs });
+  return Response.json({
+    ok: true,
+    folderRefs: folderRefs.map((ref) => ({
+      ...ref,
+      isMine: isOwner || ref.deviceOwnerUserId === actor.id,
+    })),
+  });
 }
 
 export async function POST(
@@ -67,12 +79,20 @@ export async function POST(
       ? (body as { deviceId: string }).deviceId
       : null;
 
+  const shared =
+    body !== null &&
+    typeof body === "object" &&
+    typeof (body as { shared?: unknown }).shared === "boolean"
+      ? (body as { shared: boolean }).shared
+      : true;
+
   const result = await upsertProjectFolderRef({
     projectId,
     ownerUserId: actor.id,
     machineOrDeviceRef,
     folderPath,
     deviceId,
+    shared,
   });
 
   if (!result.ok) {

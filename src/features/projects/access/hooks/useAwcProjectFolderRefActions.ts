@@ -3,6 +3,7 @@
 import {
   addProjectFolderRef,
   removeProjectFolderRef,
+  setProjectFolderRefShared,
 } from "@/features/projects/access/utils/mutateProjectFolderRefs";
 import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/projectPageResourcesCopy.constant";
 import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
@@ -46,8 +47,14 @@ export const useAwcProjectFolderRefActions = (input: {
   const onAdd = async (
     deviceId: string,
     folderPath: string,
+    shared = true,
   ): Promise<boolean> => {
-    const result = await addProjectFolderRef({ projectId, deviceId, folderPath });
+    const result = await addProjectFolderRef({
+      projectId,
+      deviceId,
+      folderPath,
+      shared,
+    });
     onMessage(result.ok ? C.foldersAdded : resolveAddFolderRefError(result));
     if (result.ok) await onReload();
     return result.ok;
@@ -64,5 +71,20 @@ export const useAwcProjectFolderRefActions = (input: {
     });
   };
 
-  return { onAdd, onRemove };
+  const onToggleShared = (refId: string, shared: boolean): void => {
+    void setProjectFolderRefShared({ projectId, refId, shared }).then(
+      async (result) => {
+        onMessage(
+          result.ok
+            ? shared
+              ? C.foldersNowShared
+              : C.foldersNowPrivate
+            : mapProjectAccessError(result.errorMessage, C.foldersAddFailed),
+        );
+        await onReload();
+      },
+    );
+  };
+
+  return { onAdd, onRemove, onToggleShared };
 };
