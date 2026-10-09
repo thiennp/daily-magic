@@ -49,18 +49,40 @@ describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain(
       AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
     );
-    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).not.toMatch(/if you can host HTTPS/i);
-    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/MUST on connect \(webhook-first\)/i);
-    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/Inbox wake is webhook-only, via a Grok routine/i);
-    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/do not poll list_project_inbox on a timer/i);
-    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/Once a day, check the project webhook/i);
-    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/get_my_project_webhook_status/);
-    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/MUST ack_project_message/i);
-    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).not.toMatch(/MUST poll list_project_inbox|every 30 seconds while actively working|every 5 minutes when idle/i);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).not.toMatch(
+      /if you can host HTTPS/i,
+    );
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(
+      /MUST on connect \(webhook-first\)/i,
+    );
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(
+      /Inbox wake is webhook-only, via a Grok routine/i,
+    );
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(
+      /do not poll list_project_inbox on a timer/i,
+    );
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/delivery_mode poll/i);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(
+      /Do not install cloudflared tunnel receivers/i,
+    );
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(
+      /Once a day, check the project webhook/i,
+    );
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(
+      /get_my_project_webhook_status/,
+    );
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(
+      /MUST ack_project_message/i,
+    );
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).not.toMatch(
+      /MUST poll list_project_inbox|every 30 seconds while actively working|every 5 minutes when idle/i,
+    );
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(
       /On leave or owner Revoke MUST delete all project-scoped routines/i,
     );
-    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/Website relaunch watches/i);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(
+      /Website relaunch watches/i,
+    );
   });
 });
 

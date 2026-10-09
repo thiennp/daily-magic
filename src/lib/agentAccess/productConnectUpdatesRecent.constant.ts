@@ -1,4 +1,4 @@
-import { PRODUCT_CONNECT_UPDATES_LOCAL_WAKE } from "@/lib/agentAccess/productConnectUpdatesLocalWake.constant";
+import { PRODUCT_CONNECT_UPDATES_POLL_INBOX } from "@/lib/agentAccess/productConnectUpdatesPollInbox.constant";
 import {
   AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
   AWC_GROK_WEBHOOK_DAILY_REPAIR,
@@ -99,5 +99,5 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
     ...PRODUCT_CONNECT_UPDATES_WAKE_ROUTINE,
     ...PRODUCT_CONNECT_UPDATES_PROJECT_TASKS,
     ...PRODUCT_CONNECT_UPDATES_MESSAGING,
-    ...PRODUCT_CONNECT_UPDATES_LOCAL_WAKE,
+    ...PRODUCT_CONNECT_UPDATES_POLL_INBOX,
   ];

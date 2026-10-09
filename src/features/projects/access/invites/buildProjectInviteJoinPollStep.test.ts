@@ -24,12 +24,14 @@ const markdown = renderProjectInviteJoinPageMarkdown(page);
 describe("step 7 poll mode (every connectPath except grok-wake)", () => {
   it("is Product's verbatim line instead of the shared 'On a wake…' rule", () => {
     const step = buildProjectInviteJoinPollStep();
+    expect(step).toHaveLength(2);
     expect(step[0]).toMatch(/^7\. Inbox delivery \(Checks on demand/);
     expect(step[1]).toBe(`   ${POLL_LINE}`);
     expect(step.join(" ")).not.toContain(
       PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE,
     );
     expect(step.join(" ")).not.toContain("On a wake");
+    expect(step.join(" ")).not.toMatch(/cloudflare|local-wake|local wake/i);
   });
 
   it("names only tools that exist in the agent-access catalog", () => {

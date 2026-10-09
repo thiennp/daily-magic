@@ -1,4 +1,4 @@
-import { AWC_LOCAL_WAKE_RECEIVER_CLAUSE } from "@/lib/agentAccess/awcLocalWakeReceiverCopy.constant";
+import { AWC_POLL_INBOX_DELIVERY_CLAUSE } from "@/lib/agentAccess/awcPollInboxDeliveryCopy.constant";
 import {
   AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
   AWC_GROK_WEBHOOK_DAILY_REPAIR,
@@ -65,7 +65,7 @@ export const PROJECT_BRIEFING_HOW_TO_DISPATCH =
   "MUST on connect (webhook-first): " +
   AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS +
   " Inbox wake is webhook-only, via a Grok routine; do not poll list_project_inbox on a timer. " +
-  AWC_LOCAL_WAKE_RECEIVER_CLAUSE +
+  AWC_POLL_INBOX_DELIVERY_CLAUSE +
   " " +
   AWC_GROK_WEBHOOK_DAILY_REPAIR +
   " " +

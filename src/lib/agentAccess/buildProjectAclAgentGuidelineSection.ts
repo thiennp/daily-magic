@@ -1,4 +1,4 @@
-import { AWC_LOCAL_WAKE_RECEIVER_CLAUSE } from "@/lib/agentAccess/awcLocalWakeReceiverCopy.constant";
+import { AWC_POLL_INBOX_DELIVERY_CLAUSE } from "@/lib/agentAccess/awcPollInboxDeliveryCopy.constant";
 import {
   AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
   AWC_GROK_WEBHOOK_DAILY_REPAIR,
@@ -26,7 +26,7 @@ export const buildProjectAclAgentGuidelineSection = (): {
     'After active: rotate_project_api_key once (store awc_proj_ plaintext). REQUIRED list_project_peers (expect self + owner isOwner; owner included; empty peers less common; self/peers MAY include membershipId). get_project_acl for name + folder refs + peers/self. project_dispatch: MUST prefer toMembershipId for peer bots when present; keep toProjectDisplayName: "Owner" for the human (reserved; peers still show isOwner); else toProjectDisplayName — exactly one of toMembershipId | toProjectDisplayName (one recipient per send; toTeamLabel removed). Re-list peers after rename; old nickname may resolve ~7 days (alias TTL). On Approve / invite auto-approve, peers + owner inbox get peer.joined. On project.updated (knowledge|folder_refs|repo_urls|project_info), peers + owner re-pull ACL/briefing. Owner tasks arrive with fromProjectDisplayName === "Owner". Inbox: MUST on connect (webhook-first): ' +
       AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS +
       " Inbox wake is webhook-only, via a Grok routine; do not poll list_project_inbox on a timer. " +
-      AWC_LOCAL_WAKE_RECEIVER_CLAUSE +
+      AWC_POLL_INBOX_DELIVERY_CLAUSE +
       " " +
       AWC_GROK_WEBHOOK_DAILY_REPAIR +
       " " +

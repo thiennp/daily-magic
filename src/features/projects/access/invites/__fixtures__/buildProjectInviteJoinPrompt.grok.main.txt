@@ -65,6 +65,7 @@ Check this project first
    Start with sinceCatalogVersion 0 after join; afterwards pass the last catalogVersion you stored.
    Response includes catalogVersion, entries[], tools[], connect, and adaptHint.
    When hasUpdates (catalog advances): adapt behavior from entries[].adapt, tools, connect, and adaptHint; tell your user briefly that the product catalog advanced.
+   Ignore deprecated catalog id local-wake-receiver (cloudflared installer). Non–Grok Bot inbox delivery is poll-only — follow step 7.
    Store returned catalogVersion for the next call. check_product_updates is catalog-wide — use agent-access Bearer (required/preferred); awc_proj_ alone 401s. Dual-auth: awc_proj_ OK only for project-scoped tools listed in step 4c; prefer agent-access for register_project_webhook and ack_project_message.
 
 10. Report your work so it becomes reusable skills (this project only, the one you were invited to join):
