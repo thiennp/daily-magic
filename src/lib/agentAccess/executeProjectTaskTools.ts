@@ -10,7 +10,11 @@ import { updateProjectTask } from "@/lib/projects/tasks/updateProjectTask";
 const TASK_MUTATION_RUNNERS = {
   create_project_task: createProjectTask,
   update_project_task: (input: { actorUserId: string; args: unknown }) =>
-    updateProjectTask({ ...input, requireResultSummaryOnDone: true }),
+    updateProjectTask({
+      ...input,
+      requireResultSummaryOnDone: true,
+      announceBlockedInChat: true,
+    }),
 } as const;
 
 const isTaskMutationTool = (

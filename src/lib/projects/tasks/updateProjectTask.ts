@@ -11,6 +11,8 @@ import {
   parseUpdateProjectTaskArgs,
   type ProjectTaskArgsError,
 } from "@/lib/projects/tasks/parseProjectTaskToolArgs";
+import { announceProjectTaskBlocked } from "@/lib/projects/tasks/announceProjectTaskBlocked";
+import { checkBotTaskReport } from "@/lib/projects/tasks/checkBotTaskReport";
 import { notifyProjectTaskChanged } from "@/lib/projects/tasks/notifyProjectTaskChanged";
 import { afterProjectTaskWrite } from "@/lib/projects/tasks/afterProjectTaskWrite";
 import type { ProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecord.type";
@@ -31,6 +33,7 @@ export type UpdateProjectTaskResult =
         | ProjectTaskRefError
         | "task_not_found"
         | "result_summary_required"
+        | "blocked_reason_required"
         | "invalid_transition"
         | "update_conflict";
     };
@@ -47,6 +50,8 @@ export const updateProjectTask = async (input: {
   readonly args: unknown;
   /** Bots: finishing a task (→ done) must carry the outcome. */
   readonly requireResultSummaryOnDone?: boolean;
+  /** Bots: blocking a task needs `blockedReason` and tells the project chat. */
+  readonly announceBlockedInChat?: boolean;
 }): Promise<UpdateProjectTaskResult> => {
   const parsed = parseUpdateProjectTaskArgs(input.args);
   if (!parsed.ok) return parsed;
@@ -70,14 +75,15 @@ export const updateProjectTask = async (input: {
     fields,
     status: decision.status,
   });
-  if (
-    input.requireResultSummaryOnDone === true &&
-    values.status === "done" &&
-    current.status !== "done" &&
-    values.resultSummary === null
-  ) {
-    return { ok: false, code: "result_summary_required" };
-  }
+  const report = checkBotTaskReport({
+    current,
+    values,
+    args: input.args,
+    requireResultSummaryOnDone: input.requireResultSummaryOnDone === true,
+    requireBlockedReason: input.announceBlockedInChat === true,
+  });
+  if (!report.ok) return report;
+  const { blockedReason } = report;
   // No-op (incl. a done retry): no write, updated_at untouched.
   if (isProjectTaskWriteUnchanged(current, values)) {
     return { ok: true, task: current };
@@ -108,5 +114,13 @@ export const updateProjectTask = async (input: {
     after: task,
   });
   await afterProjectTaskWrite({ task, origin: "local" });
+  if (input.announceBlockedInChat === true && blockedReason !== null) {
+    await announceProjectTaskBlocked({
+      actorUserId: input.actorUserId,
+      projectId,
+      title: task.title,
+      reason: blockedReason,
+    });
+  }
   return { ok: true, task };
 };
