@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 import type { AutoSkillCompleter, AutoSkillRunRecord } from "./autoSkill.types";
 import type { AutoSkillCloud } from "./autoSkillCloud";
 import { generateAutoSkillDraft } from "./autoSkillDraft";
@@ -10,6 +12,29 @@ import {
   pickClustersToAsk,
 } from "./autoSkillModuleDecide";
 import { buildClusterDraftRuns } from "./autoSkillModuleDraft";
+import { listProjectHistorySkillgenDraftFingerprints } from "./listProjectHistorySkillgenDraftFingerprints";
+import { listProjectHistorySkillgenPublishedFingerprints } from "./listProjectHistorySkillgenPublishedFingerprints";
+import {
+  mergeOrSkipProjectHistorySkillgenDraft,
+  type ProjectHistorySkillgenDraftFingerprint,
+} from "./mergeOrSkipProjectHistorySkillgenDraft";
+import { extractProjectHistorySkillgenStepLines } from "./validateProjectHistorySkillgenDraft";
+
+type ExistingSkills = {
+  readonly drafts: readonly ProjectHistorySkillgenDraftFingerprint[];
+  readonly published: readonly ProjectHistorySkillgenDraftFingerprint[];
+};
+
+const loadExistingSkills = (projectId: string): ExistingSkills => {
+  try {
+    return {
+      drafts: listProjectHistorySkillgenDraftFingerprints(projectId),
+      published: listProjectHistorySkillgenPublishedFingerprints(projectId),
+    };
+  } catch {
+    return { drafts: [], published: [] };
+  }
+};
 
 export type ModuleAskResult = {
   readonly asked: number;
@@ -34,7 +59,13 @@ export const askForRepeatedModules = async (input: {
   readonly judgeLabel: string;
   /** Project folder: scripts are replayed in a temp copy of it. */
   readonly folderPath?: string;
+  /** Skills already in the project; read from disk when omitted. */
+  readonly existing?: ExistingSkills;
 }): Promise<ModuleAskResult> => {
+  const existing = input.existing ?? loadExistingSkills(input.projectId);
+  const existingNames = [...existing.published, ...existing.drafts].map(
+    (skill) => skill.name,
+  );
   const toAsk = pickClustersToAsk(
     input.touched.filter(
       (cluster) =>
@@ -53,9 +84,24 @@ export const askForRepeatedModules = async (input: {
       input.knownRuns,
       input.run,
     );
-    const draft = await generateAutoSkillDraft(runs, input.completer);
+    const draft = await generateAutoSkillDraft(
+      runs,
+      input.completer,
+      existingNames,
+    );
     if (!draft.ok) {
-      draftFailed = true;
+      draftFailed = draft.reason !== "not_reusable";
+      continue;
+    }
+    const duplicate = mergeOrSkipProjectHistorySkillgenDraft({
+      contentHash: `sha256:${createHash("sha256").update(draft.markdown, "utf8").digest("hex")}`,
+      name: draft.name,
+      stepLines: extractProjectHistorySkillgenStepLines(draft.markdown),
+      existingDrafts: existing.drafts,
+      existingPublished: existing.published,
+    });
+    if (duplicate.action !== "create_new") {
+      setClusterState(input.db, cluster.id, "saved");
       continue;
     }
     const parts = await buildScriptQuestionParts(draft, input.folderPath);

@@ -51,10 +51,14 @@ const scriptsOf = (json: string | null): { scripts?: ParsedScripts } => {
 export const generateAutoSkillDraft = async (
   runs: readonly AutoSkillRunRecord[],
   completer: AutoSkillCompleter,
+  existingSkillNames: readonly string[] = [],
 ): Promise<AutoSkillDraftResult> => {
   const prompt = `${buildOwnerLlmSkillWritePrompt({
     scrubbedTranscript: buildAutoSkillTranscript(runs),
-    similarDraftHints: [],
+    similarDraftHints: existingSkillNames.map((name) => ({
+      name,
+      description: "",
+    })),
     mode: "write",
   })}\n${AUTO_SKILL_SCRIPTS_INSTRUCTION}`;
   let reason = "draft_invalid";
