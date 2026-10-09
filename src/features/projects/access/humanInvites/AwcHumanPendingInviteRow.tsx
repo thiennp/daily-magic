@@ -44,13 +44,15 @@ export default function AwcHumanPendingInviteRow({
           {new Date(invite.expiresAt).toLocaleDateString()}
         </div>
       </div>
-      <button
-        type="button"
-        className={AWC_PROJECT_ACCESS_CTA.danger}
-        onClick={() => onRevokeInvite?.(invite.inviteId)}
-      >
-        {copy.revoke}
-      </button>
+      {onRevokeInvite ? (
+        <button
+          type="button"
+          className={AWC_PROJECT_ACCESS_CTA.danger}
+          onClick={() => onRevokeInvite(invite.inviteId)}
+        >
+          {copy.revoke}
+        </button>
+      ) : null}
     </li>
   );
 }

@@ -44,6 +44,7 @@ export default function AwcProjectMembersMemberContent({
             projectName={access.projectName}
             ownerEmail={ownerEmail}
             ownerDisplayName={ownerDisplayName}
+            viewerIsOwner={false}
             accessMembers={access.members}
             pendingRequestCount={0}
             assistantInviteCount={0}

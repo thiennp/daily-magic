@@ -30,13 +30,15 @@ export default function AwcHumanJoinedMemberRow({
             : ""}
         </div>
       </div>
-      <button
-        type="button"
-        className={AWC_PROJECT_ACCESS_CTA.danger}
-        onClick={() => onRemoveMember?.(member.membershipId)}
-      >
-        {copy.remove}
-      </button>
+      {onRemoveMember ? (
+        <button
+          type="button"
+          className={AWC_PROJECT_ACCESS_CTA.danger}
+          onClick={() => onRemoveMember(member.membershipId)}
+        >
+          {copy.remove}
+        </button>
+      ) : null}
     </li>
   );
 }

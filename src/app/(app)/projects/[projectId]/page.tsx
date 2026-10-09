@@ -1,3 +1,4 @@
+import { getUserById } from "@/lib/auth/userRepository";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
@@ -62,6 +63,16 @@ export default async function ProjectDetailPage({
     notFound();
   }
 
+  // A member sees the real owner, not themselves, in the people list.
+  const ownerUser =
+    access.role === "owner"
+      ? null
+      : await getUserById(access.project.ownerUserId);
+  const owner =
+    access.role === "owner"
+      ? { email: actor.email, name: actor.name }
+      : { email: ownerUser?.email ?? null, name: ownerUser?.name ?? null };
+
   return (
     <AppShell>
       <div className={APP_PAGE_STACK_CLASS}>
@@ -70,8 +81,8 @@ export default async function ProjectDetailPage({
           startRename={startRename && access.role === "owner"}
           startChatOpen={startChatOpen}
           pageActorRole={access.role}
-          actorEmail={actor.email}
-          actorDisplayName={actor.name}
+          ownerEmail={owner.email}
+          ownerDisplayName={owner.name}
           actorUserId={actor.id}
         />
       </div>

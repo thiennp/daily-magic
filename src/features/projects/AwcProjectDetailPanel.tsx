@@ -19,8 +19,8 @@ interface AwcProjectDetailPanelProps {
   readonly startRename?: boolean;
   readonly startChatOpen?: boolean;
   readonly pageActorRole?: ProjectPageActorRole;
-  readonly actorEmail?: string | null;
-  readonly actorDisplayName?: string | null;
+  readonly ownerEmail?: string | null;
+  readonly ownerDisplayName?: string | null;
   readonly actorUserId?: string | null;
 }
 
@@ -30,8 +30,8 @@ export default function AwcProjectDetailPanel({
   startRename = false,
   startChatOpen = false,
   pageActorRole = "owner",
-  actorEmail = null,
-  actorDisplayName = null,
+  ownerEmail = null,
+  ownerDisplayName = null,
   actorUserId = null,
 }: AwcProjectDetailPanelProps) {
   const isOwner = pageActorRole === "owner";
@@ -89,8 +89,8 @@ export default function AwcProjectDetailPanel({
       <AwcProjectMembersColumn
         projectId={project.id}
         pageActorRole={pageActorRole}
-        ownerEmail={actorEmail}
-        ownerDisplayName={actorDisplayName}
+        ownerEmail={ownerEmail}
+        ownerDisplayName={ownerDisplayName}
         viewerUserId={actorUserId}
         onMessageHelper={chat.onGotoChat}
         onOpenSettings={() => setActiveTab("settings")}

@@ -11,6 +11,7 @@ export type AwcHumanPeopleSectionBodyProps = {
   readonly projectName: string;
   readonly ownerEmail?: string | null;
   readonly ownerDisplayName?: string | null;
+  readonly viewerIsOwner?: boolean;
   readonly people: PeopleModel;
   /** DF-036: assistants + pending requests + invites (not "Just you"). */
   readonly othersCount?: number;
@@ -21,6 +22,7 @@ export default function AwcHumanPeopleSectionBody({
   projectName,
   ownerEmail = null,
   ownerDisplayName = null,
+  viewerIsOwner = true,
   people,
   othersCount = 0,
 }: AwcHumanPeopleSectionBodyProps) {
@@ -66,6 +68,7 @@ export default function AwcHumanPeopleSectionBody({
         othersCount={othersCount}
         ownerEmail={ownerEmail}
         ownerDisplayName={ownerDisplayName}
+        viewerIsOwner={viewerIsOwner}
         pendingIdsHidden={people.hiddenPending}
         removedIdsHidden={people.hiddenRemoved}
         invitePersonOpen={people.panelOpen}

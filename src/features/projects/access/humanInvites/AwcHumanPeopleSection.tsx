@@ -15,6 +15,8 @@ export type AwcHumanPeopleSectionProps = {
   readonly projectName: string | null;
   readonly ownerEmail?: string | null;
   readonly ownerDisplayName?: string | null;
+  /** False for a member (not the owner): shows the real owner, hides remove/revoke. */
+  readonly viewerIsOwner?: boolean;
   readonly accessMembers: readonly AccessMemberForHumanFilter[];
   /** Owner Access loaded — enable human invite APIs. */
   readonly enabled: boolean;
@@ -37,6 +39,7 @@ export default function AwcHumanPeopleSection({
   projectName,
   ownerEmail = null,
   ownerDisplayName = null,
+  viewerIsOwner = true,
   accessMembers,
   enabled,
   pendingRequestCount = 0,
@@ -82,6 +85,7 @@ export default function AwcHumanPeopleSection({
         projectName={projectName ?? "this project"}
         ownerEmail={ownerEmail}
         ownerDisplayName={ownerDisplayName}
+        viewerIsOwner={viewerIsOwner}
         people={people}
         othersCount={
           countActiveAssistantMembers(accessMembers) +

@@ -15,6 +15,8 @@ export type AwcHumanPeopleMembersListProps = {
   /** Owner row shown first (M2). */
   readonly ownerEmail?: string | null;
   readonly ownerDisplayName?: string | null;
+  /** False for a member viewing the project (owner row names the owner; no remove/revoke). */
+  readonly viewerIsOwner?: boolean;
   readonly pendingIdsHidden?: ReadonlySet<string>;
   readonly removedIdsHidden?: ReadonlySet<string>;
   readonly invitePersonOpen?: boolean;
@@ -40,6 +42,7 @@ export default function AwcHumanPeopleMembersList({
   joinedHumans,
   ownerEmail = null,
   ownerDisplayName = null,
+  viewerIsOwner = true,
   pendingIdsHidden,
   removedIdsHidden,
   invitePersonOpen = false,
@@ -77,7 +80,7 @@ export default function AwcHumanPeopleMembersList({
 
       <AwcHumanPendingInvitesSection
         pendingInvites={visiblePending}
-        onRevokeInvite={onRevokeInvite}
+        onRevokeInvite={viewerIsOwner ? onRevokeInvite : undefined}
         decidingId={decidingId}
         onApproveRequest={onApproveRequest}
         onDenyRequest={onDenyRequest}
@@ -85,8 +88,9 @@ export default function AwcHumanPeopleMembersList({
       <AwcHumanJoinedMembersSection
         joinedHumans={visibleJoined}
         ownerLabel={ownerLabel}
+        viewerIsOwner={viewerIsOwner}
         othersCount={othersCount}
-        onRemoveMember={onRemoveMember}
+        onRemoveMember={viewerIsOwner ? onRemoveMember : undefined}
       />
     </section>
   );

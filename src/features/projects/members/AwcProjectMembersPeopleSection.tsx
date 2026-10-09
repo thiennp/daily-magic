@@ -9,6 +9,7 @@ interface AwcProjectMembersPeopleSectionProps {
   readonly projectName: string | null;
   readonly ownerEmail: string | null;
   readonly ownerDisplayName: string | null;
+  readonly viewerIsOwner?: boolean;
   readonly accessMembers: readonly AccessMemberForHumanFilter[];
   readonly pendingRequestCount: number;
   readonly assistantInviteCount: number;
@@ -24,6 +25,7 @@ export default function AwcProjectMembersPeopleSection({
   projectName,
   ownerEmail,
   ownerDisplayName,
+  viewerIsOwner = true,
   accessMembers,
   pendingRequestCount,
   assistantInviteCount,
@@ -40,6 +42,7 @@ export default function AwcProjectMembersPeopleSection({
         projectName={projectName}
         ownerEmail={ownerEmail}
         ownerDisplayName={ownerDisplayName}
+        viewerIsOwner={viewerIsOwner}
         accessMembers={accessMembers}
         pendingRequestCount={pendingRequestCount}
         assistantInviteCount={assistantInviteCount}

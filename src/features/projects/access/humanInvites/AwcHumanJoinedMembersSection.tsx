@@ -7,6 +7,8 @@ import type { HumanJoinedMemberRow } from "@/features/projects/access/humanInvit
 export type AwcHumanJoinedMembersSectionProps = {
   readonly joinedHumans: readonly HumanJoinedMemberRow[];
   readonly ownerLabel: string;
+  /** False when a member (not the owner) is looking: the owner row names the real owner. */
+  readonly viewerIsOwner?: boolean;
   readonly onRemoveMember?: (membershipId: string) => void;
   /** Assistants + pending requests + invites (DF-036: "Just you" only at 0). */
   readonly othersCount?: number;
@@ -16,6 +18,7 @@ export type AwcHumanJoinedMembersSectionProps = {
 export default function AwcHumanJoinedMembersSection({
   joinedHumans,
   ownerLabel,
+  viewerIsOwner = true,
   onRemoveMember,
   othersCount = 0,
 }: AwcHumanJoinedMembersSectionProps) {
@@ -30,16 +33,18 @@ export default function AwcHumanJoinedMembersSection({
         <li className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-awc-border/70 bg-white px-3 py-2 text-sm dark:border-gray-800 dark:bg-transparent">
           <div>
             <div className="font-medium text-awc-fg dark:text-white/90">
-              {copy.youOwner}
+              {viewerIsOwner ? copy.youOwner : ownerLabel}
             </div>
             <div className="text-xs text-awc-fg-muted">
-              Owner · {ownerLabel}
+              {viewerIsOwner ? `Owner · ${ownerLabel}` : "Owner"}
             </div>
           </div>
         </li>
         {joinedHumans.length === 0 ? (
           <li className="text-sm text-awc-fg-muted">
-            {othersCount > 0 ? copy.joinedNoOtherPeople : copy.joinedOwnerOnly}
+            {othersCount > 0 || !viewerIsOwner
+              ? copy.joinedNoOtherPeople
+              : copy.joinedOwnerOnly}
           </li>
         ) : (
           joinedHumans.map((member) => (
