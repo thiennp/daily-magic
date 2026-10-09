@@ -14,6 +14,13 @@ export const PROJECT_PAGE_RESOURCES_COPY = {
     "Only the folder location is stored; files stay on your computer.",
   foldersOwnerOnly:
     "Viewers cannot add folder paths. Owners and members add the folder on their own computers; shared folders are listed below.",
+  foldersAddFromComputer:
+    "To add a folder, open this project on your computer (the one running AgentWitch).",
+  foldersAddFromComputerOffline:
+    "Open this project on a computer where AgentWitch is running to add a folder.",
+  foldersAddingTo: (name: string) => `Adding on ${name}`,
+  foldersBrowse: "Browse…",
+  foldersBrowsing: "Choose a folder in the dialog…",
   foldersShared: "Shared",
   foldersPrivate: "Only you",
   foldersShareToggle: "Share with project members",

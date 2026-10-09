@@ -3,6 +3,7 @@ import {
   describeAgentWitchProjectFoldersFromWakeServer,
   linkAgentWitchProjectFolderFromWakeServer,
 } from "./linkAgentWitchProjectFolderFromWakeServer";
+import { pickAgentWitchProjectFolderFromWakeServer } from "./pickAgentWitchProjectFolderFromWakeServer";
 import { selectAgentWitchProjectFolderFromWakeServer } from "./selectAgentWitchProjectFolderFromWakeServer";
 import { sendJson } from "../../../../server/features/http-server/public-api/infrastructure";
 import type { BridgeRequestContext } from "../../../../server/internal/bridgeRequestContext.type";
@@ -51,6 +52,13 @@ export const tryHandleProjectsProxyRoute = async (
           },
       ctx.cors.headers,
     );
+    return true;
+  }
+
+  if (ctx.pathname === "/projects/pick-folder") {
+    const pickResult = pickAgentWitchProjectFolderFromWakeServer();
+    const status = pickResult.ok || "cancelled" in pickResult ? 200 : 400;
+    sendJson(ctx.response, status, pickResult, ctx.cors.headers);
     return true;
   }
 

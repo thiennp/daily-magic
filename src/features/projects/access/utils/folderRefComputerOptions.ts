@@ -15,12 +15,15 @@ export type FolderRefComputerOption = {
   readonly deviceId: string;
   readonly deviceName: string;
   readonly label: string;
+  /** Set for an online computer: the local bridge port for the folder picker. */
+  readonly wakePort?: number | null;
 };
 
 /** Project-bound owner device (user_projects.device_id) when no computer seat exists. */
 export type FolderRefProjectDevice = {
   readonly deviceId: string;
   readonly deviceName: string;
+  readonly wakePort?: number | null;
 };
 
 const resolveDeviceName = (member: FolderRefComputerMember): string =>
@@ -42,6 +45,12 @@ export const buildFolderRefComputerOptions = (
     return [{ deviceId, deviceName, label: `${deviceName}${suffix}` }];
   });
   const extras = [...(projectDevice ? [projectDevice] : []), ...ownerDevices];
+  const withPort = fromSeats.map((option) => {
+    const wakePort = extras.find(
+      (device) => device.deviceId.trim() === option.deviceId,
+    )?.wakePort;
+    return wakePort == null ? option : { ...option, wakePort };
+  });
   return extras.reduce<readonly FolderRefComputerOption[]>(
     (options, device) => {
       const deviceId = device.deviceId.trim();
@@ -51,9 +60,12 @@ export const buildFolderRefComputerOptions = (
       const deviceName =
         device.deviceName.trim() ||
         AWC_PROJECT_COMPUTER_MEMBER_COPY.fallbackName;
-      return [...options, { deviceId, deviceName, label: deviceName }];
+      return [
+        ...options,
+        { deviceId, deviceName, label: deviceName, wakePort: device.wakePort },
+      ];
     },
-    fromSeats,
+    withPort,
   );
 };
 
@@ -72,12 +84,3 @@ export const formatFolderRefRow = (
     ref.folderPath,
   );
 };
-
-/** Client-side Add guard; null when the selection is a known computer. */
-export const resolveFolderRefAddError = (
-  machineRef: string,
-  options: readonly FolderRefComputerOption[],
-): string | null =>
-  options.some((o) => o.deviceId === machineRef)
-    ? null
-    : C.foldersChooseComputerFirst;

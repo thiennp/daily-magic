@@ -42,6 +42,7 @@ export default function AwcProjectResourcesFoldersCard({
       devices.map((device) => ({
         deviceId: device.id,
         deviceName: displayNameById.get(device.id) ?? device.deviceLabel ?? "",
+        wakePort: device.isOnline ? device.wakePort : null,
       })),
     [devices, displayNameById],
   );

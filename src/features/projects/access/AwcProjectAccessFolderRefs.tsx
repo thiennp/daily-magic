@@ -7,12 +7,13 @@ import AwcProjectAccessFolderRefsList, {
   type FolderRefRow,
 } from "@/features/projects/access/AwcProjectAccessFolderRefsList";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
+import { useThisComputerFolderTarget } from "@/features/projects/access/hooks/useThisComputerFolderTarget";
 import {
   buildFolderRefComputerOptions,
   type FolderRefComputerMember,
   type FolderRefProjectDevice,
-  resolveFolderRefAddError,
 } from "@/features/projects/access/utils/folderRefComputerOptions";
+import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/projectPageResourcesCopy.constant";
 
 interface AwcProjectAccessFolderRefsProps {
   readonly folderRefs: readonly FolderRefRow[];
@@ -56,17 +57,19 @@ export default function AwcProjectAccessFolderRefs({
       ),
     [computerMembers, projectDevice, ownerDevices],
   );
-  const [machineRef, setMachineRef] = useState("");
+  const target = useThisComputerFolderTarget();
   const [folderPath, setFolderPath] = useState("");
   const [shared, setShared] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const handleAdd = async (): Promise<void> => {
-    const blocked = resolveFolderRefAddError(machineRef, computers);
-    setError(blocked);
-    if (blocked) return;
-    if (await onAdd(machineRef, folderPath, shared)) {
-      setMachineRef("");
+    if (target.kind !== "ready") return;
+    if (folderPath.trim() === "") {
+      setError("Enter a folder path.");
+      return;
+    }
+    setError(null);
+    if (await onAdd(target.deviceId, folderPath, shared)) {
       setFolderPath("");
     }
   };
@@ -89,21 +92,22 @@ export default function AwcProjectAccessFolderRefs({
         onRemove={onRemove}
         onToggleShared={onToggleShared}
       />
-      {readOnly ? null : (
+      {readOnly ? null : target.kind === "ready" ? (
         <AwcProjectAccessFolderRefsForm
-          computers={computers}
+          target={target}
           error={error}
-          machineRef={machineRef}
           folderPath={folderPath}
-          onMachineRef={(value) => {
-            setMachineRef(value);
-            if (value) setError(null);
-          }}
           onFolderPath={setFolderPath}
           onAdd={() => void handleAdd()}
           shared={shared}
           onShared={onToggleShared ? setShared : undefined}
         />
+      ) : target.kind === "mobile" && folderRefs.length > 0 ? null : (
+        <p className="rounded-lg border border-dashed border-awc-border p-3 text-xs text-awc-fg-muted dark:border-gray-800 dark:text-gray-400">
+          {target.kind === "mobile"
+            ? C.foldersAddFromComputer
+            : C.foldersAddFromComputerOffline}
+        </p>
       )}
     </div>
   );
