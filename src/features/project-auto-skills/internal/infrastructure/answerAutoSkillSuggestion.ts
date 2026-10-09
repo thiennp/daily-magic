@@ -1,3 +1,4 @@
+import { pickSkillDescription } from "@/features/project-auto-skills/internal/core/pickSkillDescription";
 import type { AutoSkillAnswer } from "@/features/project-auto-skills/internal/core/projectAutoSkills.type";
 import {
   getAutoSkillSuggestion,
@@ -72,7 +73,7 @@ export const answerAutoSkillSuggestion = async (input: {
       projectId: input.projectId,
       skillId,
       name: suggestion.draftName,
-      description: suggestion.title,
+      description: pickSkillDescription(suggestion.draftBody, suggestion.title),
       body: suggestion.draftBody,
       kind: "skill",
       // Auto-created skills are live at once; only hand-made ones start as drafts.
