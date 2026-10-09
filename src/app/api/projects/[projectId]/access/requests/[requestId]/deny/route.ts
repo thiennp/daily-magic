@@ -1,3 +1,5 @@
+import { handleInviterAccessPatch } from "@/app/api/projects/[projectId]/access/handleInviterAccessPatch";
+import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
 import { denyProjectAccessRequest } from "@/lib/projects/acl/denyProjectAccessRequest";
 import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import { requireAuth } from "@/lib/auth/requireAuth";
@@ -16,6 +18,18 @@ export async function POST(
   }
 
   const { projectId, requestId } = await context.params;
+  const decision = await authorizeProjectOwner({
+    projectId,
+    actorUserId: actor.id,
+  });
+  if (!decision.allow && decision.reason !== "not_found") {
+    return handleInviterAccessPatch({
+      projectId,
+      actorUserId: actor.id,
+      body: { action: "deny", requestId },
+    });
+  }
+
   const result = await denyProjectAccessRequest({
     projectId,
     requestId,

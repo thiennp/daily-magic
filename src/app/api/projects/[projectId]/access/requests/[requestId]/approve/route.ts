@@ -1,3 +1,5 @@
+import { handleInviterAccessPatch } from "@/app/api/projects/[projectId]/access/handleInviterAccessPatch";
+import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
 import { approveProjectAccessRequest } from "@/lib/projects/acl/approveProjectAccessRequest";
 import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import { requireAuth } from "@/lib/auth/requireAuth";
@@ -32,6 +34,18 @@ export async function POST(
   const scopes = Array.isArray(payload.scopes)
     ? payload.scopes.filter((s): s is string => typeof s === "string")
     : null;
+
+  const decision = await authorizeProjectOwner({
+    projectId,
+    actorUserId: actor.id,
+  });
+  if (!decision.allow && decision.reason !== "not_found") {
+    return handleInviterAccessPatch({
+      projectId,
+      actorUserId: actor.id,
+      body: { action: "approve", requestId, projectDisplayName },
+    });
+  }
 
   const result = await approveProjectAccessRequest({
     projectId,
