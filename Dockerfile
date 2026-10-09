@@ -1,10 +1,10 @@
-FROM node:22-bookworm-slim AS deps
+FROM public.ecr.aws/docker/library/node:22-bookworm-slim AS deps
 WORKDIR /app
 ENV CI=1
 COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts
 
-FROM node:22-bookworm-slim AS builder
+FROM public.ecr.aws/docker/library/node:22-bookworm-slim AS builder
 WORKDIR /app
 ENV CI=1
 COPY --from=deps /app/node_modules ./node_modules
@@ -16,7 +16,7 @@ ENV RAILWAY_GIT_COMMIT_SHA=$RAILWAY_GIT_COMMIT_SHA
 ENV AGENT_WITCH_WRITE_SHIPPED_INSTALL_BUNDLE=1
 RUN npm run build
 
-FROM node:22-bookworm-slim AS runner
+FROM public.ecr.aws/docker/library/node:22-bookworm-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV CI=1
