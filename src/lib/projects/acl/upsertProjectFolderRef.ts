@@ -4,6 +4,7 @@ import { checkFolderRefDeviceAcl } from "@/lib/projects/acl/checkFolderRefDevice
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import mapProjectFolderRefRow from "@/lib/projects/acl/mapProjectFolderRefRow";
 import type ProjectFolderRefRecord from "@/lib/projects/acl/types/ProjectFolderRefRecord.type";
+import { seatOwnerPickedComputer } from "@/lib/projects/acl/seatOwnerPickedComputer";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { asRowArray, getSql } from "@/lib/db";
@@ -44,6 +45,9 @@ export const upsertProjectFolderRef = async (input: {
   const folder = input.folderPath.trim();
   if (folder.length === 0) {
     return { ok: false, code: "folder_ref_path_required" };
+  }
+  if (input.isComputerMember === undefined) {
+    await seatOwnerPickedComputer(input);
   }
   const acl = await checkFolderRefDeviceAcl(input);
   if (!acl.ok) {

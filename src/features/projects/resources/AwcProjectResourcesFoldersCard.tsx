@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 
 import AwcProjectAccessFolderRefs from "@/features/projects/access/AwcProjectAccessFolderRefs";
+import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 import { useAwcProjectFolderRefActions } from "@/features/projects/access/hooks/useAwcProjectFolderRefActions";
@@ -32,6 +33,15 @@ export default function AwcProjectResourcesFoldersCard({
     onMessage: access.setMessage,
     onReload: access.reload,
   });
+  const { devices, displayNameById } = useMyMacDevices();
+  const ownerDevices = useMemo(
+    () =>
+      devices.map((device) => ({
+        deviceId: device.id,
+        deviceName: displayNameById.get(device.id) ?? device.deviceLabel ?? "",
+      })),
+    [devices, displayNameById],
+  );
   const projectDevice = useMemo(() => {
     const id = projectDeviceId?.trim() ?? "";
     if (!id) return null;
@@ -39,7 +49,10 @@ export default function AwcProjectResourcesFoldersCard({
   }, [projectDeviceId, deviceDisplayName]);
 
   return (
-    <section className="flex min-w-0 flex-col gap-2" aria-labelledby="res-folders-h">
+    <section
+      className="flex min-w-0 flex-col gap-2"
+      aria-labelledby="res-folders-h"
+    >
       <h3
         id="res-folders-h"
         className="px-1 text-[13px] font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-400"
@@ -67,13 +80,17 @@ export default function AwcProjectResourcesFoldersCard({
             folderRefs={access.folderRefs}
             computerMembers={access.members.filter(isComputerAccessMember)}
             projectDevice={projectDevice}
+            ownerDevices={ownerDevices}
             hideChrome
             onAdd={onAdd}
             onRemove={onRemove}
           />
         )}
         {isOwner && access.message ? (
-          <p className="mt-2 text-sm text-awc-fg-muted dark:text-gray-300" role="status">
+          <p
+            className="mt-2 text-sm text-awc-fg-muted dark:text-gray-300"
+            role="status"
+          >
             {access.message}
           </p>
         ) : null}

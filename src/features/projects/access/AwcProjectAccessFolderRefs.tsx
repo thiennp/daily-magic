@@ -20,6 +20,8 @@ interface AwcProjectAccessFolderRefsProps {
   readonly computerMembers: readonly FolderRefComputerMember[];
   /** Project-bound device when no computer seat exists (pre-068 owners). */
   readonly projectDevice?: FolderRefProjectDevice | null;
+  /** Owner's own connected computers; the server seats one on first folder add. */
+  readonly ownerDevices?: readonly FolderRefProjectDevice[];
   /** Receives the selected computer's deviceId (POSTed as `deviceId`). */
   readonly onAdd: (
     deviceId: string,
@@ -33,14 +35,20 @@ export default function AwcProjectAccessFolderRefs({
   folderRefs,
   computerMembers,
   projectDevice = null,
+  ownerDevices,
   onAdd,
   onRemove,
   hideChrome = false,
 }: AwcProjectAccessFolderRefsProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
   const computers = useMemo(
-    () => buildFolderRefComputerOptions(computerMembers, projectDevice),
-    [computerMembers, projectDevice],
+    () =>
+      buildFolderRefComputerOptions(
+        computerMembers,
+        projectDevice,
+        ownerDevices,
+      ),
+    [computerMembers, projectDevice, ownerDevices],
   );
   const [machineRef, setMachineRef] = useState("");
   const [folderPath, setFolderPath] = useState("");
@@ -63,7 +71,9 @@ export default function AwcProjectAccessFolderRefs({
           <h3 className="text-sm font-medium text-awc-fg dark:text-white/90">
             {copy.folderRefsHeading}
           </h3>
-          <p className="mt-1 text-xs text-awc-fg-muted">{copy.folderRefsHint}</p>
+          <p className="mt-1 text-xs text-awc-fg-muted">
+            {copy.folderRefsHint}
+          </p>
         </>
       )}
       <AwcProjectAccessFolderRefsList
