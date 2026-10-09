@@ -1,4 +1,5 @@
 import {
+  collapseSameNameSkills,
   filterProjectSkillsByQuery,
   sortProjectSkillsNewestFirst,
 } from "@/features/project-skill-share/internal/core/filterProjectSkillsByQuery";
@@ -24,10 +25,11 @@ export const searchProjectSkills = async (input: {
     return loaded;
   }
   const query = loaded.args.query?.trim();
-  const matched =
+  const matched = collapseSameNameSkills(
     query !== undefined && query.length > 0
       ? filterProjectSkillsByQuery(loaded.records, query)
-      : sortProjectSkillsNewestFirst(loaded.records);
+      : sortProjectSkillsNewestFirst(loaded.records),
+  );
   const limit = Math.min(
     Math.max(
       Math.floor(loaded.args.limit ?? PROJECT_SKILL_LIST_DEFAULT_LIMIT),

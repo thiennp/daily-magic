@@ -1,21 +1,8 @@
-const WORD = /[a-z0-9]+/g;
-const STOPWORDS: ReadonlySet<string> = new Set([
-  "a",
-  "an",
-  "the",
-  "and",
-  "or",
-  "to",
-  "of",
-  "in",
-  "on",
-  "for",
-  "with",
-  "is",
-  "it",
-  "how",
-  "new",
-]);
+import {
+  startsWithAny,
+  tokenizeSkillQuery,
+  words,
+} from "@/features/project-skill-share/internal/core/skillQueryWords";
 
 const NAME_WEIGHT = 4;
 const TAG_WEIGHT = 3;
@@ -31,23 +18,6 @@ export type SearchableSkill = {
   readonly tags: readonly string[];
   readonly updatedAt: string;
 };
-
-const words = (text: string): readonly string[] =>
-  text.toLowerCase().match(WORD) ?? [];
-
-/** Distinct, lowercase query words without stopwords. */
-export const tokenizeSkillQuery = (query: string): readonly string[] => [
-  ...new Set(words(query).filter((word) => !STOPWORDS.has(word))),
-];
-
-/** Prefix match either way, so "components" finds "component"; short words (ui) only match as a prefix. */
-const MIN_STEM_CHARS = 4;
-const matchesWord = (word: string, token: string): boolean =>
-  word.startsWith(token) ||
-  (word.length >= MIN_STEM_CHARS && token.startsWith(word));
-
-const startsWithAny = (haystack: readonly string[], token: string): boolean =>
-  haystack.some((word) => matchesWord(word, token));
 
 type Fields = {
   readonly name: readonly string[];
@@ -101,3 +71,25 @@ export const filterProjectSkillsByQuery = <T extends SearchableSkill>(
 export const sortProjectSkillsNewestFirst = <T extends SearchableSkill>(
   skills: readonly T[],
 ): readonly T[] => [...skills].sort(byNewest);
+
+const nameKey = (name: string): string => words(name).join("-");
+
+/**
+ * Keep the first (best or newest) row per normalized name, so near-duplicate
+ * saves of one skill (`name`, `name-e4d6`) take one result slot, not several.
+ */
+export const collapseSameNameSkills = <T extends SearchableSkill>(
+  skills: readonly T[],
+): readonly T[] => {
+  const seen = new Set<string>();
+  return skills.filter((skill) => {
+    const key = nameKey(skill.name);
+    if (seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
+};
+
+export { tokenizeSkillQuery };

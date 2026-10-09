@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   filterProjectSkillsByQuery,
+  collapseSameNameSkills,
   sortProjectSkillsNewestFirst,
   tokenizeSkillQuery,
   type SearchableSkill,
@@ -87,5 +88,19 @@ describe("sortProjectSkillsNewestFirst", () => {
       "old",
     ]);
     expect(rows.map((s) => s.skillId)).toEqual(["old", "new"]);
+  });
+});
+
+describe("collapseSameNameSkills", () => {
+  it("keeps the first row per normalized name", () => {
+    const rows = [
+      skill("implement-ui", "Implement UI", null),
+      skill("implement-ui-e4d6", "implement  ui", null),
+      skill("other", "Other thing", null),
+    ];
+    expect(collapseSameNameSkills(rows).map((s) => s.skillId)).toEqual([
+      "implement-ui",
+      "other",
+    ]);
   });
 });

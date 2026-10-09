@@ -54,6 +54,23 @@ describe("searchProjectSkills / list_project_skills tool", () => {
     expect(JSON.stringify(result)).not.toContain("contentHash");
   });
 
+  it("shows one row for same-name variants and counts them once", async () => {
+    vi.mocked(selectProjectSkillRows).mockResolvedValue([
+      projectSkillRecordFixture({
+        skillId: "deploy-app",
+        name: "Deploy app",
+        updatedAt: "2026-10-08T00:00:00Z",
+      }),
+      projectSkillRecordFixture({
+        skillId: "deploy-app-e4d6",
+        name: "Deploy app",
+      }),
+    ]);
+    const result = await call({ query: "deploy app" });
+    expect(ids(result)).toEqual(["deploy-app"]);
+    expect(result).toMatchObject({ total: 1 });
+  });
+
   it("finds a skill by tag", async () => {
     expect(ids(await call({ query: "scaffold" }))).toEqual(["react-component"]);
   });
