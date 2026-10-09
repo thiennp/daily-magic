@@ -13,7 +13,7 @@ type RouteContext = { params: Promise<{ readonly projectId: string }> };
 const str = (v: unknown, max: number): string | null =>
   typeof v === "string" && v.trim().length > 0 ? v.slice(0, max) : null;
 
-/** Device GET: owner toggles + which clusters are pending / saved / never. */
+/** Device GET: project auto-skill toggle + cluster pending / saved / never. */
 export async function GET(
   request: Request,
   context: RouteContext,

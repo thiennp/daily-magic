@@ -58,7 +58,8 @@ export const getAutoSkillsDeviceView = async (input: {
   const ids = (status: string): string[] =>
     rows.filter((r) => r.status === status).map((r) => r.clusterId);
   return {
-    enabled: role.role === "owner" && settings.enabled,
+    // Project toggle applies to every seat (owner + member bots); UI settings stay owner-only.
+    enabled: settings.enabled,
     judgePref: settings.judgePref,
     judgeAgent: settings.judgeAgent,
     publishMode: settings.publishMode,
