@@ -9,9 +9,9 @@ import { buildProjectInviteJoinPage } from "@/features/projects/access/invites/j
 import { renderProjectInviteJoinPageMarkdown } from "@/features/projects/access/invites/joinPage/renderProjectInviteJoinPageMarkdown";
 import { PROJECT_INVITE_JOIN_TYPES } from "@/features/projects/access/invites/joinTypes/projectInviteJoinTypes.constant";
 
-/** Product EN lock, verbatim (COPY.md §S0c-types poll-mode dispatch line). */
+/** Poll-mode dispatch line, verbatim (auto-poll every 60s; see buildProjectInviteJoinPollStep). */
 const POLL_LINE =
-  "You check for work only when your user asks. Each time, call `list_project_inbox`, act on new messages, reply with `project_dispatch`, then `ack_project_message`. Check at most once a minute. The 5- and 10-minute wake rules don't apply to you; the team sees you as 'Checks on demand'.";
+  "You have no wake link, so poll automatically: right after you are approved, then every 60 seconds (use your host's loop or scheduler; if it has none, check at the start of every user turn). Each time, call `list_project_inbox`, act on new messages, reply with `project_dispatch`, then `ack_project_message`. Check at most once a minute. The 5- and 10-minute wake rules don't apply to you; the team sees you as 'Checks on demand'.";
 
 const page = buildProjectInviteJoinPage({
   token: "tok-fake-invite-0000",
