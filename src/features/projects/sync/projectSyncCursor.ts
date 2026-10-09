@@ -4,12 +4,24 @@
  * Module re-exports this codec so sync callers do not need a new schema.
  */
 
+import {
+  decodeBase64Url,
+  encodeBase64Url,
+} from "@/features/projects/sync/base64Url";
 import type { ProjectSyncCursor } from "@/features/projects/sync/projectSync.types";
 
 export const encodeProjectSyncCursor = (cursor: ProjectSyncCursor): string =>
-  Buffer.from(JSON.stringify({ t: cursor.t, id: cursor.id }), "utf8").toString(
-    "base64url",
-  );
+  encodeBase64Url(JSON.stringify({ t: cursor.t, id: cursor.id }));
+
+const NOT_JSON = Symbol("not-json");
+
+const readCursorJson = (raw: string): unknown => {
+  try {
+    return JSON.parse(decodeBase64Url(raw)) as unknown;
+  } catch {
+    return NOT_JSON;
+  }
+};
 
 /**
  * null when absent/blank; "invalid" when present but malformed.
@@ -21,14 +33,13 @@ export const decodeProjectSyncCursor = (
   if (raw === null || raw === undefined || raw.trim().length === 0) {
     return null;
   }
-  let parsed: unknown;
-  try {
-    const decoded = Buffer.from(raw.trim(), "base64url").toString("utf8");
-    parsed = JSON.parse(decoded) as unknown;
-  } catch {
-    return "invalid";
-  }
-  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+  const parsed = readCursorJson(raw.trim());
+  if (
+    parsed === NOT_JSON ||
+    typeof parsed !== "object" ||
+    parsed === null ||
+    Array.isArray(parsed)
+  ) {
     return "invalid";
   }
   const record = parsed as Record<string, unknown>;
