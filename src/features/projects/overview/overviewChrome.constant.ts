@@ -1,6 +1,6 @@
 /** Overview chrome — V5-1 `--awc-*` tokens; dark: kept for app theme toggle. */
 export const OVERVIEW_CARD_CLASS =
-  "flex flex-col gap-3 rounded-awc-card border border-awc-border bg-awc-surface p-[18px] shadow-awc-card dark:border-gray-800/80 dark:bg-gray-900/40";
+  "flex flex-col gap-3 rounded-awc-card border border-awc-border bg-awc-surface p-[18px] shadow-awc-card";
 
 export const OVERVIEW_CTA_PRIMARY_SM_CLASS =
   "awc-focus-ring inline-flex shrink-0 items-center justify-center rounded-awc-pill bg-awc-blue-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-awc-blue-700";

@@ -309,11 +309,14 @@
   --awc-radius-xl: 28px;
   --awc-radius-dock: 20px;
 
-  --awc-shadow-lift: 0 1px 2px rgba(16,24,40,.05), 0 1px 1px rgba(16,24,40,.03);
-  --awc-shadow-card: 0 0 0 1px rgba(16,24,40,.05), 0 1px 2px rgba(16,24,40,.05);
-  --awc-shadow-dock: 0 18px 48px rgba(16,24,40,.18);
-  --awc-shadow-overlay: 0 16px 48px rgba(16,24,40,.18);
-  --awc-shadow-focus-ring: 0 0 0 2px var(--awc-surface), 0 0 0 4px var(--awc-blue-600);
+  --awc-shadow-lift:
+    0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 1px rgba(16, 24, 40, 0.03);
+  --awc-shadow-card:
+    0 0 0 1px rgba(16, 24, 40, 0.05), 0 1px 2px rgba(16, 24, 40, 0.05);
+  --awc-shadow-dock: 0 18px 48px rgba(16, 24, 40, 0.18);
+  --awc-shadow-overlay: 0 16px 48px rgba(16, 24, 40, 0.18);
+  --awc-shadow-focus-ring:
+    0 0 0 2px var(--awc-surface), 0 0 0 4px var(--awc-blue-600);
 
   --awc-side-w: 240px;
   --awc-top-h: 60px;
@@ -324,6 +327,77 @@
 
   --awc-chip-h: 24px;
   --awc-chip-h-sm: 22px;
+}
+
+/*
+  Dark theme for the --awc-* tokens (the .dark class from ThemeContext). The
+  light-only values above left cards white with dark text in dark mode.
+  Marketing surfaces stay light (see .marketing-light-surface below).
+*/
+.dark {
+  --awc-bg: #0c111d;
+  --awc-surface: #161b26;
+  --awc-surface-2: #1b2130;
+  --awc-tile: #1b2130;
+  --awc-tile-2: #232a3a;
+  --awc-fill: #232a3a;
+  --awc-accent-soft: #14312a;
+  --awc-accent-soft-2: #1d4a3d;
+  --awc-border: #2a3144;
+  --awc-border-strong: #3a4459;
+  --awc-control-border: #667085;
+  --awc-fg: #f2f4f7;
+  --awc-fg-muted: #b0b8c8;
+  --awc-fg-subtle: #98a2b3;
+  --awc-primary: #5fb5a0;
+  --awc-ok-soft: #0f3a26;
+  --awc-ok: #6ee0a8;
+  --awc-ok-dot: #34c47c;
+  --awc-warn-soft: #3d2c0a;
+  --awc-warn: #f5c867;
+  --awc-warn-dot: #f0a020;
+  --awc-bad-soft: #43181a;
+  --awc-bad: #ff9a90;
+  --awc-bad-dot: #f66b5e;
+  --awc-info-soft: #14284d;
+  --awc-attention-bg: #3a2c10;
+  --awc-bubble-own: #1f2937;
+  --awc-disabled-bg: #232a3a;
+  --awc-disabled-fg: #98a2b3;
+  --awc-disabled-border: #3a4459;
+}
+
+.dark .marketing-light-surface {
+  --awc-bg: #e8e6e1;
+  --awc-surface: #ffffff;
+  --awc-surface-2: #f7f6f4;
+  --awc-tile: #f4f3f0;
+  --awc-tile-2: #ebe9e4;
+  --awc-fill: #e9e7e2;
+  --awc-accent-soft: #dde8e3;
+  --awc-accent-soft-2: #c8ddd6;
+  --awc-border: #e0e5ed;
+  --awc-border-strong: #cbd2de;
+  --awc-control-border: #748094;
+  --awc-fg: #101828;
+  --awc-fg-muted: #475467;
+  --awc-fg-subtle: #566073;
+  --awc-primary: var(--awc-blue-600);
+  --awc-ok-soft: #dff3e8;
+  --awc-ok: #0b6b3d;
+  --awc-ok-dot: #12804a;
+  --awc-warn-soft: #fdecc4;
+  --awc-warn: #7a4500;
+  --awc-warn-dot: #b86a00;
+  --awc-bad-soft: #fbdedb;
+  --awc-bad: #b42318;
+  --awc-bad-dot: #d92d20;
+  --awc-info-soft: #e1eaff;
+  --awc-attention-bg: #fbeccb;
+  --awc-bubble-own: #e8ecf3;
+  --awc-disabled-bg: #ebe9e4;
+  --awc-disabled-fg: #566073;
+  --awc-disabled-border: #cbd2de;
 }
 
 @theme inline {
@@ -412,7 +486,6 @@
     box-shadow: var(--awc-shadow-focus-ring);
   }
 }
-
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,

@@ -5,11 +5,11 @@
  * rules use these. (The project skills section copies the same classes.)
  */
 export const PROJECT_PANEL_SURFACE_CLASS =
-  "rounded-awc-card border border-awc-border bg-awc-surface shadow-awc-card dark:border-gray-800/80 dark:bg-gray-900/40";
+  "rounded-awc-card border border-awc-border bg-awc-surface shadow-awc-card";
 
 /** Surface + padding: the default card. */
 export const PROJECT_PANEL_CARD_CLASS = `${PROJECT_PANEL_SURFACE_CLASS} p-4`;
 
 /** Card with an error-tinted border for destructive zones. */
 export const PROJECT_PANEL_CARD_DANGER_CLASS =
-  "rounded-awc-card border border-error-200 bg-awc-surface p-4 shadow-awc-card dark:border-error-900/50 dark:bg-gray-900/40";
+  "rounded-awc-card border border-error-200 bg-awc-surface p-4 shadow-awc-card dark:border-error-900/60";

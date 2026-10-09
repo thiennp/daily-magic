@@ -5,7 +5,7 @@ import {
 
 /** Mirrors Project Access nested section cards (projects/access) without a cross-feature import. */
 export const PROJECT_SKILLS_SECTION_CLASS =
-  "space-y-3 rounded-awc-card border border-awc-border bg-awc-surface p-4 shadow-awc-card dark:border-gray-800/80 dark:bg-gray-900/40";
+  "space-y-3 rounded-awc-card border border-awc-border bg-awc-surface p-4 shadow-awc-card";
 
 export const PROJECT_SKILLS_TITLE_CLASS =
   "text-sm font-semibold text-awc-fg dark:text-white";
