@@ -2,6 +2,7 @@
 
 import AwcProjectOverviewAssistantsCard from "@/features/projects/overview/AwcProjectOverviewAssistantsCard";
 import AwcProjectOverviewAttentionBanner from "@/features/projects/overview/AwcProjectOverviewAttentionBanner";
+import AwcProjectOverviewCreateTask from "@/features/projects/overview/AwcProjectOverviewCreateTask";
 import type { OverviewAttentionItem } from "@/features/projects/overview/buildOverviewAttentionItems";
 import AwcProjectOverviewPitfallsCard from "@/features/projects/overview/AwcProjectOverviewPitfallsCard";
 import AwcProjectOverviewRecentCard from "@/features/projects/overview/AwcProjectOverviewRecentCard";
@@ -20,6 +21,8 @@ interface Props {
   readonly pitfalls: AwcProjectPitfallsState;
   readonly computerStatus: string | null;
   readonly isOwner: boolean;
+  /** Owner or member (not viewer). */
+  readonly canCreateTask: boolean;
   readonly onGotoTab: (tab: ProjectPageNavTarget) => void;
   readonly onGotoChat: (threadKey: string | null) => void;
 }
@@ -30,6 +33,7 @@ export default function AwcProjectOverviewPanel({
   pitfalls,
   computerStatus,
   isOwner,
+  canCreateTask,
   onGotoTab,
   onGotoChat,
 }: Props) {
@@ -47,12 +51,20 @@ export default function AwcProjectOverviewPanel({
   };
   return (
     <div className="flex min-w-0 flex-col gap-4">
-      <AwcProjectOverviewStatsStrip
-        stats={d.stats}
-        onGoto={onGotoTab}
-        onOpenChat={() => onGotoChat(null)}
-        onShowSetup={d.showSetup}
-      />
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <AwcProjectOverviewStatsStrip
+          stats={d.stats}
+          onGoto={onGotoTab}
+          onOpenChat={() => onGotoChat(null)}
+          onShowSetup={d.showSetup}
+        />
+        {canCreateTask ? (
+          <AwcProjectOverviewCreateTask
+            projectId={project.id}
+            onCreated={() => onGotoTab("tasks")}
+          />
+        ) : null}
+      </div>
       {d.attention.length > 0 ? (
         <AwcProjectOverviewAttentionBanner
           items={d.attention}

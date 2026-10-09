@@ -44,6 +44,7 @@ export default function AwcProjectDetailTabPanelBody(
         pitfalls={p.pitfalls}
         computerStatus={p.computerStatus}
         isOwner={p.pageActorRole === "owner"}
+        canCreateTask={p.pageActorRole !== "viewer"}
         onGotoTab={p.onGotoTab}
         onGotoChat={p.onGotoChat}
       />
