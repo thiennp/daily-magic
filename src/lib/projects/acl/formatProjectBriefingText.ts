@@ -19,8 +19,8 @@ export const formatProjectBriefingText = (
       : `Peers: ${briefing.peers.map(formatPeer).join(", ")}.`;
   const playbookLine =
     briefing.playbooks.boundHarnessSetSlugs.length === 0
-      ? "Playbooks: no playbooks bound."
-      : `Playbooks: ${briefing.playbooks.boundHarnessSetSlugs.join(", ")}.`;
+      ? "Harness sets: none bound (reusable know-how lives in the project library: look it up by task before you start)."
+      : `Harness sets: ${briefing.playbooks.boundHarnessSetSlugs.join(", ")}.`;
   return [
     `Project ${briefing.projectName} (${briefing.projectId}). You: ${callerName}.`,
     peerLine,

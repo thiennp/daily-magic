@@ -123,6 +123,7 @@ describe("skills MCP tools", () => {
       ),
     ).toEqual({
       skills: [],
+      unavailable: true,
       note: "no_project_for_cwd",
     });
     const missing = await call("skills_run", {

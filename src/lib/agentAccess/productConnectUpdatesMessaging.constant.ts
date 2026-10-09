@@ -33,7 +33,7 @@ export const PRODUCT_CONNECT_UPDATES_MESSAGING: readonly ProductConnectUpdateEnt
       kind: "connect",
       title: "Orchestrate, and put every task on AW",
       summary:
-        "Act as an orchestrator when you can: sub-bots or subagents do the work, your seat only gets assigned, receives and communicates. Every task, even one your user gives you directly, ends up as a project task with a resultSummary so auto skills can learn from it.",
+        "Act as an orchestrator when you can: sub-bots or subagents do the work, your seat only gets assigned, receives and communicates. Every task, even one your user gives you directly, ends up as a project task with a resultSummary, the line people read on the task board.",
       adapt: PROJECT_ORCHESTRATOR_CLAUSE,
     },
     {

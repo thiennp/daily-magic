@@ -4,6 +4,10 @@ import {
   AWC_GROK_WEBHOOK_DAILY_REPAIR,
 } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
 import {
+  PROJECT_BOT_PLAYBOOK_FORMAT_LINE,
+  PROJECT_BOT_PLAYBOOK_LIBRARY_FIRST_LINE,
+} from "@/lib/agentAccess/projectBotPlaybookReport.constant";
+import {
   PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE,
   PROJECT_UPDATED_WAKE_REPLY_CLAUSE,
 } from "@/lib/projects/acl/projectBriefingHowToDispatch.constant";
@@ -23,6 +27,7 @@ export const buildProjectAclAgentGuidelineSection = (): {
     "After active membership, call get_project_briefing once with { projectId } for project name, your projectDisplayName, peers, how to project_dispatch, and bound playbooks. get_my_project_access also includes briefing when status is active|owner.",
     PROJECT_TASKS_FIRST_CLAUSE,
     PROJECT_ORCHESTRATOR_CLAUSE,
+    `Library: ${PROJECT_BOT_PLAYBOOK_LIBRARY_FIRST_LINE} ${PROJECT_BOT_PLAYBOOK_FORMAT_LINE}`,
     'After active: rotate_project_api_key once (store awc_proj_ plaintext). REQUIRED list_project_peers (expect self + owner isOwner; owner included; empty peers less common; self/peers MAY include membershipId). get_project_acl for name + folder refs + peers/self. project_dispatch: MUST prefer toMembershipId for peer bots when present; keep toProjectDisplayName: "Owner" for the human (reserved; peers still show isOwner); else toProjectDisplayName — exactly one of toMembershipId | toProjectDisplayName (one recipient per send; toTeamLabel removed). Re-list peers after rename; old nickname may resolve ~7 days (alias TTL). On Approve / invite auto-approve, peers + owner inbox get peer.joined. On project.updated (knowledge|folder_refs|repo_urls|project_info), peers + owner re-pull ACL/briefing. Owner tasks arrive with fromProjectDisplayName === "Owner". Inbox: MUST on connect (webhook-first): ' +
       AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS +
       " Inbox wake is webhook-only, via a Grok routine; do not poll list_project_inbox on a timer. " +

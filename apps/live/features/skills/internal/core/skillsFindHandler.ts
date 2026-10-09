@@ -17,7 +17,11 @@ export const handleSkillsFind =
     const scope = resolveToolScope(deps, args);
     if ("unavailable" in scope) {
       return toMcpTextResult(
-        JSON.stringify({ skills: [], note: scope.unavailable }),
+        JSON.stringify({
+          skills: [],
+          unavailable: true,
+          note: scope.unavailable,
+        }),
       );
     }
     const skills = await findSkills({

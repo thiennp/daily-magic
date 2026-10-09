@@ -9,9 +9,17 @@ const isSearch = (args: unknown): boolean => {
   );
 };
 
-/** MCP `list_project_skills`: compact search with `query` or `limit`, else the whole library. */
-export const listProjectSkillsTool = (input: {
+const WHOLE_LIBRARY_WARNING =
+  "Whole library returned. Pass query (a short task description) to get only the best 3 and save tokens.";
+
+/** MCP `list_project_skills`: compact search with `query` or `limit`, else the whole library plus a warning. */
+export const listProjectSkillsTool = async (input: {
   readonly actorUserId: string;
   readonly args: unknown;
-}) =>
-  isSearch(input.args) ? searchProjectSkills(input) : listProjectSkills(input);
+}) => {
+  if (isSearch(input.args)) {
+    return searchProjectSkills(input);
+  }
+  const result = await listProjectSkills(input);
+  return result.ok ? { ...result, warning: WHOLE_LIBRARY_WARNING } : result;
+};

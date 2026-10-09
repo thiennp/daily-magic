@@ -9,7 +9,7 @@ import { countIndexedSkills } from "./skillIndexDb";
  * the CLI echoes the prompt back.
  */
 export const SKILLS_FIND_INSTRUCTION =
-  "Before you start, call the skills_find tool with a short description of the task; use a skill when it clearly fits. Skills are optional.";
+  "Before you start, call the skills_find tool with a short description of the task; use a skill when it clearly fits. If it answers unavailable, look the library up with list_project_skills and a short query instead.";
 
 /**
  * Writers whose global config registers the AgentWitch MCP server
