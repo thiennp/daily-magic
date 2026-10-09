@@ -5,7 +5,6 @@ import { useState } from "react";
 
 import AwcProjectPathDisplay from "@/features/projects/AwcProjectPathDisplay";
 import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
-import AwcProjectRepoUrlsSection from "@/features/projects/repoUrls/AwcProjectRepoUrlsSection";
 import AwcProjectFolderChangeDialog from "@/features/projects/settings/folder/AwcProjectFolderChangeDialog";
 import AwcProjectFolderMissingWarning from "@/features/projects/settings/folder/AwcProjectFolderMissingWarning";
 import AwcProjectFolderStatusChips from "@/features/projects/settings/folder/AwcProjectFolderStatusChips";
@@ -88,7 +87,15 @@ export default function AwcProjectSettingsFolderRow({
         status={status}
       />
       <AwcProjectOpenOnGitHub repoUrls={project.repoUrls} />
-      <AwcProjectRepoUrlsSection project={project} flat />
+      <p className="px-1 text-[13px] text-awc-fg-muted">
+        Git remotes are managed in Resources.{" "}
+        <a
+          href="#resources"
+          className="awc-focus-ring font-semibold text-awc-primary hover:underline"
+        >
+          Open Resources
+        </a>
+      </p>
       {dialogOpen && card.wakePort !== null ? (
         <AwcProjectFolderChangeDialog
           projectId={project.id}

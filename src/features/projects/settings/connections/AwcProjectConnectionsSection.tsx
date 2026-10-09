@@ -7,7 +7,6 @@ import AwcProjectConnectionsEmpty from "@/features/projects/settings/connections
 import AwcProjectConnectionsHeading from "@/features/projects/settings/connections/AwcProjectConnectionsHeading";
 import AwcProjectConnectionsLoadNotes from "@/features/projects/settings/connections/AwcProjectConnectionsLoadNotes";
 import AwcProjectConnectionsNotice from "@/features/projects/settings/connections/AwcProjectConnectionsNotice";
-import AwcProjectConnectionsVsStrip from "@/features/projects/settings/connections/AwcProjectConnectionsVsStrip";
 import { useProjectConnectionsActions } from "@/features/projects/settings/connections/useProjectConnectionsActions";
 import { useProjectConnections } from "@/features/projects/settings/connections/useProjectConnections";
 import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
@@ -77,7 +76,6 @@ export default function AwcProjectConnectionsSection({
           ))}
         </ul>
       ) : null}
-      <AwcProjectConnectionsVsStrip />
       <AwcProjectConnectionDisconnectModal
         item={rows.find((r) => r.provider === disconnect.target) ?? null}
         isConfirming={disconnect.busy}

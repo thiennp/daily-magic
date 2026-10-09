@@ -52,20 +52,20 @@ export default function AwcProjectOverviewPanel({
   };
   return (
     <div className="flex min-w-0 flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <AwcProjectOverviewStatsStrip
-          stats={d.stats}
-          onGoto={onGotoTab}
-          onOpenChat={() => onGotoChat(null)}
-          onShowSetup={d.showSetup}
-        />
-        {canCreateTask ? (
-          <AwcProjectOverviewCreateTask
-            projectId={project.id}
-            onCreated={() => onGotoTab("tasks")}
-          />
-        ) : null}
-      </div>
+      <AwcProjectOverviewStatsStrip
+        stats={d.stats}
+        onGoto={onGotoTab}
+        onOpenChat={() => onGotoChat(null)}
+        onShowSetup={d.showSetup}
+        trailing={
+          canCreateTask ? (
+            <AwcProjectOverviewCreateTask
+              projectId={project.id}
+              onCreated={() => onGotoTab("tasks")}
+            />
+          ) : null
+        }
+      />
       {d.attention.length > 0 ? (
         <AwcProjectOverviewAttentionBanner
           items={d.attention}

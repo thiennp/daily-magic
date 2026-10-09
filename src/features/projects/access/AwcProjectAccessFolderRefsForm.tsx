@@ -34,7 +34,7 @@ export default function AwcProjectAccessFolderRefsForm({
   const idBase = useId();
 
   return (
-    <div className="space-y-2 rounded-lg border border-awc-border/80 p-3 dark:border-gray-800/80">
+    <div className="space-y-2 border-t border-awc-border pt-3 dark:border-gray-800/80">
       <p className="text-[11px] text-awc-fg-muted dark:text-gray-400">
         {copy.folderRefsFormHint}
       </p>

@@ -48,33 +48,22 @@ export default function AwcProjectMembersHelperBotClaim({
     }
   };
   return (
-    <div className="flex flex-col gap-1 px-3.5 pb-2 pl-[2.75rem]">
-      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-        {member.canClaimBot === true ? (
-          <>
-            <span className="text-[12.5px] text-awc-fg-muted">
-              {C.unclaimed}
-            </span>
-            <button
-              type="button"
-              className={LINK}
-              disabled={pending}
-              onClick={() => void submit(null)}
-            >
-              {C.claim}
-            </button>
-          </>
-        ) : null}
-        {!picking ? (
-          <button
-            type="button"
-            className={LINK}
-            onClick={() => setPicking(true)}
-          >
-            {member.canClaimBot === true ? C.choose : C.change}
-          </button>
-        ) : null}
-      </div>
+    <>
+      {member.canClaimBot === true ? (
+        <button
+          type="button"
+          className={LINK}
+          disabled={pending}
+          onClick={() => void submit(null)}
+        >
+          {C.claim}
+        </button>
+      ) : null}
+      {!picking ? (
+        <button type="button" className={LINK} onClick={() => setPicking(true)}>
+          {member.canClaimBot === true ? C.choose : C.change}
+        </button>
+      ) : null}
       {picking ? (
         <AwcProjectMembersHelperBotInviterPicker
           choices={choices}
@@ -90,6 +79,6 @@ export default function AwcProjectMembersHelperBotClaim({
           {C.failed}
         </span>
       ) : null}
-    </div>
+    </>
   );
 }

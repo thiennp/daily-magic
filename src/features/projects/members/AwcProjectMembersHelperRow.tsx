@@ -4,6 +4,7 @@ import { useRef } from "react";
 
 import { awcGrokWakeLinkHash } from "@/features/projects/access/awcGrokWakeLinkDeepLink";
 import { useWakeLinkOpenRequest } from "@/features/projects/access/hooks/useWakeLinkOpenRequest";
+import AwcProjectMembersHelperHealthLine from "@/features/projects/members/AwcProjectMembersHelperHealthLine";
 import AwcProjectMembersHelperBotLine from "@/features/projects/members/AwcProjectMembersHelperBotLine";
 import AwcProjectMembersHelperRowLinks from "@/features/projects/members/AwcProjectMembersHelperRowLinks";
 import AwcProjectMembersHelperRowLabel from "@/features/projects/members/AwcProjectMembersHelperRowLabel";
@@ -17,15 +18,12 @@ import type { HelperMember } from "@/features/projects/members/helperMember.type
 interface AwcProjectMembersHelperRowProps {
   readonly projectId: string;
   readonly member: HelperMember;
-  /** Wake links saved this session (status flips to Checking… until reload). */
   readonly savedIds: ReadonlySet<string>;
-  /** Bumped by `#wake-link-<id>` → expand, open the one-box connect, focus. */
   readonly wakeOpenRequest: number;
   readonly onWakeSaved: (membershipId: string) => void;
   readonly onMessage: (membershipId: string) => void;
   readonly onRename: (membershipId: string, name: string) => Promise<boolean>;
   readonly onRemove: (membershipId: string) => void;
-  /** After block/unblock: reload Access. */
   readonly onChanged: () => void;
 }
 
@@ -62,7 +60,7 @@ export default function AwcProjectMembersHelperRow(
       <div className={ROW}>
         <AwcProjectMembersHelperRowLabel
           name={name}
-          line={showHealth ? health.line : null}
+          line={null}
           expanded={row.open}
           onToggle={row.toggle}
         />
@@ -78,6 +76,9 @@ export default function AwcProjectMembersHelperRow(
           onRemove={row.startRemove}
         />
       </div>
+      {showHealth ? (
+        <AwcProjectMembersHelperHealthLine line={health.line} />
+      ) : null}
       <AwcProjectMembersHelperBotLine
         projectId={p.projectId}
         member={member}

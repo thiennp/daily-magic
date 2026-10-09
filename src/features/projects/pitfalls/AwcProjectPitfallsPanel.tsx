@@ -73,14 +73,16 @@ export default function AwcProjectPitfallsPanel({
             onFilterChange={setFilter}
             onQueryChange={setQuery}
           />
-          <p className="text-[13px] text-awc-fg-muted dark:text-gray-400">
-            {C.panelHint(
-              rows.length,
-              pitfalls.status === "ready" ? pitfalls.items.length : 0,
-            )}{" "}
-            {anyHit ? C.panelHintHasHits : C.panelHintNoHits}{" "}
+          <div className="flex flex-col gap-1 text-[13px] text-awc-fg-muted dark:text-gray-400">
+            <p className="m-0">
+              {C.panelHint(
+                rows.length,
+                pitfalls.status === "ready" ? pitfalls.items.length : 0,
+              )}{" "}
+              {anyHit ? C.panelHintHasHits : C.panelHintNoHits}
+            </p>
             <AwcProjectPitfallsManageButton editCta={manageCta} />
-          </p>
+          </div>
           {visible.length === 0 ? (
             <p className={PITFALL_EMPTY_CLASS}>{C.noMatch}</p>
           ) : (

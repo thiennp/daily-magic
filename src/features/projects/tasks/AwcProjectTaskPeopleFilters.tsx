@@ -1,11 +1,11 @@
 "use client";
 
-import { AWC_TASKS_INPUT_CLASS } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
 import { PROJECT_TASK_RECORDS_COPY as C } from "@/features/projects/tasks/projectTaskRecordsCopy.constant";
 import type { useProjectTaskPeopleFilter } from "@/features/projects/tasks/useProjectTaskPeopleFilter";
 import { PROJECT_TASK_UNASSIGNED } from "@/features/projects/tasks/utils/projectTaskPeopleFilter";
 
-const SELECT_CLASS = `${AWC_TASKS_INPUT_CLASS} w-auto max-w-[14rem]`;
+const SELECT_CLASS =
+  "awc-focus-ring h-8 max-w-[14rem] rounded-full border border-awc-border-strong bg-awc-surface px-3 text-[13px] font-medium text-awc-fg hover:bg-awc-tile";
 
 /** Creator and Assignee dropdowns above the board / list. */
 export default function AwcProjectTaskPeopleFilters({
