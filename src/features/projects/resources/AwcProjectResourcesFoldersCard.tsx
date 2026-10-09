@@ -10,6 +10,7 @@ import { useAwcProjectFolderRefActions } from "@/features/projects/access/hooks/
 import { isComputerAccessMember } from "@/features/projects/access/utils/isComputerAccessMember";
 import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/projectPageResourcesCopy.constant";
 import { resolveProjectAccessLoadError } from "@/lib/projects/acl/mapProjectAccessError";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
 
 interface AwcProjectResourcesFoldersCardProps {
   readonly projectId: string;
@@ -54,7 +55,7 @@ export default function AwcProjectResourcesFoldersCard({
 
   return (
     <section
-      className="flex min-w-0 flex-col gap-2"
+      className={`flex min-w-0 flex-col gap-2 ${CARD}`}
       aria-labelledby="res-folders-h"
     >
       <h3
@@ -63,7 +64,7 @@ export default function AwcProjectResourcesFoldersCard({
       >
         {C.foldersTitle}
       </h3>
-      <div className="overflow-hidden rounded-2xl bg-awc-surface-2/80 p-3 dark:bg-white/[0.03]">
+      <div className="overflow-hidden">
         {access.isLoading ? (
           <p className="text-sm text-awc-fg-muted dark:text-gray-400">
             {C.foldersLoading}

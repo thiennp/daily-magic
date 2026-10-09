@@ -6,6 +6,7 @@ import Button from "@/components/ui/button/Button";
 import { APP_SURFACE_FIELD_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import useAwcProjectRename from "@/features/projects/hooks/useAwcProjectRename";
 import { PROJECT_PAGE_SETTINGS_COPY as C } from "@/features/projects/projectPageSettingsCopy.constant";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
 
 interface AwcProjectSettingsNameSectionProps {
   readonly projectId: string;
@@ -33,7 +34,10 @@ export default function AwcProjectSettingsNameSection({
     });
 
   return (
-    <section className="flex flex-col gap-2" aria-labelledby="p-set-name-h">
+    <section
+      className={`flex flex-col gap-3 ${CARD}`}
+      aria-labelledby="p-set-name-h"
+    >
       <h3
         id="p-set-name-h"
         className="text-[13px] font-semibold text-awc-fg-muted dark:text-gray-400"

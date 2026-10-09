@@ -14,6 +14,7 @@ import AwcProjectUseGitRemote from "@/features/projects/settings/folder/AwcProje
 import { useProjectFolderCard } from "@/features/projects/settings/folder/useProjectFolderCard";
 import { AWC_TASKS_SECONDARY_BUTTON_CLASS } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
 
 /**
  * Folder and repository card: path, which computer holds it, a check of the
@@ -35,7 +36,7 @@ export default function AwcProjectSettingsFolderRow({
 
   return (
     <section
-      className="flex min-w-0 flex-col gap-3"
+      className={`flex min-w-0 flex-col gap-3 ${CARD}`}
       aria-labelledby="p-set-folder-h"
     >
       <h3
@@ -87,7 +88,7 @@ export default function AwcProjectSettingsFolderRow({
         status={status}
       />
       <AwcProjectOpenOnGitHub repoUrls={project.repoUrls} />
-      <AwcProjectRepoUrlsSection project={project} />
+      <AwcProjectRepoUrlsSection project={project} flat />
       {dialogOpen && card.wakePort !== null ? (
         <AwcProjectFolderChangeDialog
           projectId={project.id}

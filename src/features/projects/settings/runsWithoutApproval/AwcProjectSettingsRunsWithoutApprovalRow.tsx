@@ -7,6 +7,7 @@ import AwcRunsWithoutApprovalSwitch from "@/features/projects/settings/runsWitho
 import { RUNS_WITHOUT_APPROVAL_COPY as C } from "@/features/projects/settings/runsWithoutApproval/runsWithoutApprovalCopy.constant";
 import { resolveRunsWithoutApprovalToggle } from "@/features/projects/settings/runsWithoutApproval/resolveRunsWithoutApprovalToggle";
 import { useProjectRunsWithoutApproval } from "@/features/projects/settings/runsWithoutApproval/useProjectRunsWithoutApproval";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
 
 interface AwcProjectSettingsRunsWithoutApprovalRowProps {
   readonly projectId: string;
@@ -36,7 +37,10 @@ export default function AwcProjectSettingsRunsWithoutApprovalRow({
   };
 
   return (
-    <section className="flex flex-col gap-2" aria-labelledby="p-set-rwa-h">
+    <section
+      className={`flex flex-col gap-3 ${CARD}`}
+      aria-labelledby="p-set-rwa-h"
+    >
       <h3
         id="p-set-rwa-h"
         className="text-[13px] font-semibold text-awc-fg-muted dark:text-gray-400"

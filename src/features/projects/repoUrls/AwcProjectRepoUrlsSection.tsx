@@ -15,6 +15,7 @@ import {
 } from "@/features/projects/repoUrls/readProjectRepoMetadata";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import type { ProjectRepoMetadata } from "@/lib/projects/validateProjectRepoUrls";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
 
 interface AwcProjectRepoUrlsSectionProps {
   readonly project: UserProjectRecord;
@@ -23,6 +24,8 @@ interface AwcProjectRepoUrlsSectionProps {
    * Matches get_project_acl relation: "member".
    */
   readonly isActiveMember?: boolean;
+  /** Already inside a card (Settings): a divider instead of its own card. */
+  readonly flat?: boolean;
 }
 
 /**
@@ -34,6 +37,7 @@ interface AwcProjectRepoUrlsSectionProps {
 export default function AwcProjectRepoUrlsSection({
   project,
   isActiveMember = false,
+  flat = false,
 }: AwcProjectRepoUrlsSectionProps) {
   const { data: session } = useSession();
   const sessionUserId =
@@ -67,7 +71,13 @@ export default function AwcProjectRepoUrlsSection({
   }
 
   return (
-    <section className="mt-6 space-y-3 rounded-xl border border-awc-border/80 p-4 dark:border-gray-800/80">
+    <section
+      className={
+        flat
+          ? "mt-2 space-y-3 border-t border-awc-border pt-4 dark:border-gray-800/80"
+          : `mt-6 space-y-3 ${CARD}`
+      }
+    >
       {canEdit ? (
         <AwcProjectRepoUrlsEditor
           key={project.id}

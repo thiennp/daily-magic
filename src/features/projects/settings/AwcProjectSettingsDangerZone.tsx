@@ -7,6 +7,7 @@ import Button from "@/components/ui/button/Button";
 import AwcProjectDeleteConfirmForm from "@/features/projects/AwcProjectDeleteConfirmForm";
 import useDeleteProject from "@/features/projects/hooks/useDeleteProject";
 import { PROJECT_PAGE_SETTINGS_COPY as C } from "@/features/projects/projectPageSettingsCopy.constant";
+import { PROJECT_PANEL_CARD_DANGER_CLASS as DANGER_CARD } from "@/features/projects/projectPanelCardClasses.constant";
 
 interface AwcProjectSettingsDangerZoneProps {
   readonly projectId: string;
@@ -31,7 +32,10 @@ export default function AwcProjectSettingsDangerZone({
   };
 
   return (
-    <section className="flex flex-col gap-2" aria-labelledby="p-set-danger-h">
+    <section
+      className={`flex flex-col gap-3 ${DANGER_CARD}`}
+      aria-labelledby="p-set-danger-h"
+    >
       <h3
         id="p-set-danger-h"
         className="text-[13px] font-semibold text-error-600 dark:text-error-400"

@@ -7,6 +7,7 @@ import Button from "@/components/ui/button/Button";
 import AwcProjectLeaveConfirmForm from "@/features/projects/AwcProjectLeaveConfirmForm";
 import { AWC_PROJECT_LEAVE_COPY } from "@/features/projects/awcProjectLeaveCopy.constant";
 import useLeaveProject from "@/features/projects/hooks/useLeaveProject";
+import { PROJECT_PANEL_CARD_DANGER_CLASS as DANGER_CARD } from "@/features/projects/projectPanelCardClasses.constant";
 
 interface AwcProjectSettingsLeaveZoneProps {
   readonly projectId: string;
@@ -29,7 +30,10 @@ export default function AwcProjectSettingsLeaveZone({
   };
 
   return (
-    <section className="flex flex-col gap-2" aria-labelledby="p-set-leave-h">
+    <section
+      className={`flex flex-col gap-3 ${DANGER_CARD}`}
+      aria-labelledby="p-set-leave-h"
+    >
       <h3
         id="p-set-leave-h"
         className="text-[13px] font-semibold text-error-600 dark:text-error-400"

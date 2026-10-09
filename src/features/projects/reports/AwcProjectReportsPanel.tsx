@@ -5,6 +5,7 @@ import AwcProjectReportDetail from "@/features/projects/reports/AwcProjectReport
 import AwcProjectReportsList from "@/features/projects/reports/AwcProjectReportsList";
 import { PROJECT_PAGE_REPORTS_COPY as C } from "@/features/projects/reports/projectPageReportsCopy.constant";
 import useAwcProjectReports from "@/features/projects/reports/useAwcProjectReports";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
 
 interface AwcProjectReportsPanelProps {
   readonly projectId: string;
@@ -32,7 +33,7 @@ export default function AwcProjectReportsPanel({
   return (
     <section
       aria-label={C["reports.aria"]}
-      className="flex min-w-0 flex-col gap-3"
+      className={`flex min-w-0 flex-col gap-3 ${CARD}`}
     >
       {reportId !== null ? (
         <AwcProjectReportDetail

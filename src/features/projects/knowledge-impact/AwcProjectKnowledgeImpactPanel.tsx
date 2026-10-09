@@ -14,6 +14,7 @@ import {
 import { PROJECT_KNOWLEDGE_IMPACT_COPY as C } from "@/features/projects/knowledge-impact/projectKnowledgeImpactCopy.constant";
 import useAwcProjectKnowledgeImpact from "@/features/projects/knowledge-impact/useAwcProjectKnowledgeImpact";
 import type { KnowledgeImpactTotals } from "@/lib/knowledge/buildProjectKnowledgeImpactView";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
 
 const resolveRepeatHint = (totals: KnowledgeImpactTotals): string =>
   totals.repeatRateHoldout === null
@@ -39,7 +40,7 @@ export default function AwcProjectKnowledgeImpactPanel({
   return (
     <section
       aria-label={C["impact.aria"]}
-      className="flex min-w-0 flex-col gap-3 rounded-xl border border-awc-border p-4"
+      className={`flex min-w-0 flex-col gap-3 ${CARD}`}
     >
       <header className="space-y-0.5">
         <h3 className="text-base font-semibold text-awc-fg">

@@ -15,6 +15,7 @@ import { PROJECT_PAGE_LIBRARY_COPY as C } from "@/features/projects/library/proj
 import useAwcProjectLibrary from "@/features/projects/library/useAwcProjectLibrary";
 import { PANEL_STATUS_CLASS } from "@/features/projects/projectPagePanelChrome.constant";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
 
 type LibraryMode = "list" | "new-skill" | "new-playbook" | "add-from";
 
@@ -59,7 +60,7 @@ export default function AwcProjectLibraryPanel({
   return (
     <section
       aria-label={C["library.aria"]}
-      className="flex min-w-0 flex-col gap-3"
+      className={`flex min-w-0 flex-col gap-3 ${CARD}`}
     >
       <AwcProjectLibraryHeader
         canEdit={canEdit}

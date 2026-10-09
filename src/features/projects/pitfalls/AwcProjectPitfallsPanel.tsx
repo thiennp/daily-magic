@@ -15,6 +15,7 @@ import { PITFALL_EMPTY_CLASS } from "@/features/projects/pitfalls/pitfallsChrome
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import withProjectEditOnMacTab from "@/features/projects/utils/withProjectEditOnMacTab";
+import { PROJECT_PANEL_SURFACE_CLASS as SURFACE } from "@/features/projects/projectPanelCardClasses.constant";
 
 interface AwcProjectPitfallsPanelProps {
   readonly projectId: string;
@@ -54,7 +55,9 @@ export default function AwcProjectPitfallsPanel({
   return (
     <section className="flex min-w-0 flex-col gap-3" aria-label={C.title}>
       {pitfalls.status === "loading" ? (
-        <p className="text-sm text-awc-fg-muted dark:text-gray-400">{C.loading}</p>
+        <p className="text-sm text-awc-fg-muted dark:text-gray-400">
+          {C.loading}
+        </p>
       ) : pitfalls.status === "hidden" ? (
         <p className={PITFALL_EMPTY_CLASS}>{C.unavailable}</p>
       ) : pitfalls.status === "ready" && pitfalls.items.length === 0 ? (
@@ -81,7 +84,7 @@ export default function AwcProjectPitfallsPanel({
           {visible.length === 0 ? (
             <p className={PITFALL_EMPTY_CLASS}>{C.noMatch}</p>
           ) : (
-            <ul className="flex flex-col rounded-2xl bg-awc-surface-2/80 dark:bg-white/[0.03]">
+            <ul className={`flex flex-col overflow-hidden ${SURFACE}`}>
               {visible.map((row) => (
                 <AwcProjectPitfallAccordionRow key={row.id} row={row} />
               ))}

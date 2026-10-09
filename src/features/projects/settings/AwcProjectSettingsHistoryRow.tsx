@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { PROJECT_PAGE_SETTINGS_COPY as C } from "@/features/projects/projectPageSettingsCopy.constant";
 import { requestProjectComputerHistory } from "@/features/projects/utils/requestProjectComputerHistory";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
 
 interface AwcProjectSettingsHistoryRowProps {
   readonly projectId: string;
@@ -38,7 +39,10 @@ export default function AwcProjectSettingsHistoryRow({
   };
 
   return (
-    <section className="flex flex-col gap-2" aria-labelledby="p-set-hist-h">
+    <section
+      className={`flex flex-col gap-3 ${CARD}`}
+      aria-labelledby="p-set-hist-h"
+    >
       <h3
         id="p-set-hist-h"
         className="text-[13px] font-semibold text-awc-fg-muted dark:text-gray-400"

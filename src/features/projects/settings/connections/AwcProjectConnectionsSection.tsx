@@ -10,6 +10,7 @@ import AwcProjectConnectionsNotice from "@/features/projects/settings/connection
 import AwcProjectConnectionsVsStrip from "@/features/projects/settings/connections/AwcProjectConnectionsVsStrip";
 import { useProjectConnectionsActions } from "@/features/projects/settings/connections/useProjectConnectionsActions";
 import { useProjectConnections } from "@/features/projects/settings/connections/useProjectConnections";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
 
 interface AwcProjectConnectionsSectionProps {
   readonly projectId: string;
@@ -41,7 +42,10 @@ export default function AwcProjectConnectionsSection({
   const current = connectFlow.state;
 
   return (
-    <section className="flex flex-col gap-3" aria-labelledby="p-set-conn-h">
+    <section
+      className={`flex flex-col gap-3 ${CARD}`}
+      aria-labelledby="p-set-conn-h"
+    >
       <AwcProjectConnectionsHeading
         rows={rows}
         showSummary={loadState === "ready"}
@@ -56,7 +60,7 @@ export default function AwcProjectConnectionsSection({
       {showList ? (
         <ul
           aria-label="Services"
-          className="divide-y divide-awc-border overflow-hidden rounded-awc-lg border border-awc-border bg-awc-surface"
+          className="divide-y divide-awc-border overflow-hidden"
         >
           {rows.map((item) => (
             <AwcProjectConnectionRow

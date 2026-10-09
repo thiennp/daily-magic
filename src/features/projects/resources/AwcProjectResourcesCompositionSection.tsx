@@ -4,6 +4,7 @@ import useAwcProjectComposition from "@/features/projects/hooks/useAwcProjectCom
 import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/projectPageResourcesCopy.constant";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import resolveProjectEditOnMacLinkProps from "@/features/projects/utils/resolveProjectEditOnMacLinkProps";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
 
 const ROW_CLASS =
   "flex items-center justify-between gap-3 border-t border-awc-border/80 px-3 py-3 first:border-t-0 dark:border-gray-800/80";
@@ -33,7 +34,7 @@ export default function AwcProjectResourcesCompositionSection({
 
   return (
     <section
-      className="flex min-w-0 flex-col gap-2"
+      className={`flex min-w-0 flex-col gap-2 ${CARD}`}
       aria-labelledby="res-pwa-h"
     >
       <div className="flex items-baseline justify-between gap-3 px-1">
@@ -57,7 +58,7 @@ export default function AwcProjectResourcesCompositionSection({
           </span>
         )}
       </div>
-      <div className="overflow-hidden rounded-2xl bg-awc-surface-2/80 dark:bg-white/[0.03]">
+      <div className="overflow-hidden">
         {KINDS.map(({ kind, title }) => {
           const count = isLoading ? 0 : counts[kind];
           return (

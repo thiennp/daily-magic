@@ -4,6 +4,7 @@ import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMemb
 import AwcProjectRepoUrlsSection from "@/features/projects/repoUrls/AwcProjectRepoUrlsSection";
 import AwcProjectOpenOnGitHub from "@/features/projects/settings/folder/AwcProjectOpenOnGitHub";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
 
 /**
  * Folder and repository for a non-owner: the owner's path and computer are not
@@ -19,7 +20,7 @@ export default function AwcProjectSettingsMemberFolderRow({
 }) {
   return (
     <section
-      className="flex min-w-0 flex-col gap-3"
+      className={`flex min-w-0 flex-col gap-3 ${CARD}`}
       aria-labelledby="p-set-folder-h"
     >
       <h3
@@ -48,6 +49,7 @@ export default function AwcProjectSettingsMemberFolderRow({
       <AwcProjectRepoUrlsSection
         project={project}
         isActiveMember={isActiveMember}
+        flat
       />
     </section>
   );
