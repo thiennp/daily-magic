@@ -14,21 +14,9 @@ export const metadata: Metadata = {
     "Simple AgentWitch pricing. Start with a free month, then Pro or Team per seat. Cancel anytime. Prices in USD.",
 };
 
-type PricingSearchParams = {
-  readonly trial_closed?: string;
-};
-
-export default async function PricingPage({
-  searchParams,
-}: {
-  readonly searchParams?: Promise<PricingSearchParams> | PricingSearchParams;
-}) {
+export default async function PricingPage() {
   const actor = await getAuthActor();
   const signedIn = Boolean(actor);
-  const params = await Promise.resolve(searchParams ?? {});
-  const raw = params.trial_closed;
-  const trialClosedBanner =
-    !signedIn && (raw === "1" || raw === "true" || raw === "yes");
 
   if (signedIn) {
     return (
@@ -40,10 +28,7 @@ export default async function PricingPage({
 
   return (
     <MarketingShell>
-      <PricingPageLayout
-        signedIn={false}
-        trialClosedBanner={trialClosedBanner}
-      />
+      <PricingPageLayout signedIn={false} />
     </MarketingShell>
   );
 }

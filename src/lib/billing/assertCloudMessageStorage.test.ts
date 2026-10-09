@@ -26,9 +26,9 @@ describe("assertCloudMessageStorage", () => {
 
   it("allows paid plans", async () => {
     loadBillingPlanForUser.mockResolvedValue(row("pro"));
-    await expect(
-      assertCloudMessageStorage({ userId: "u1" }),
-    ).resolves.toEqual({ ok: true });
+    await expect(assertCloudMessageStorage({ userId: "u1" })).resolves.toEqual({
+      ok: true,
+    });
   });
 
   it("denies trial and admin_free", async () => {
