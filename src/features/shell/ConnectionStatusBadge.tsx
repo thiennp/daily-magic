@@ -1,3 +1,5 @@
+"use client";
+
 import Badge from "@/components/ui/badge/Badge";
 import {
   CONNECTION_STATUS_DISPLAY,
@@ -5,6 +7,7 @@ import {
   STATUS_BADGE_COLORS,
   type PairingStatusKey,
 } from "@/features/shell/connectionStatusMapping.constant";
+import { useConnectingGraceElapsed } from "@/features/shell/useConnectingGrace";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 
 interface ConnectionStatusBadgeProps {
@@ -17,6 +20,8 @@ interface PairingStatusBadgeProps {
 
 export function ConnectionStatusBadge({ status }: ConnectionStatusBadgeProps) {
   const display = CONNECTION_STATUS_DISPLAY[status];
+  const visible = useConnectingGraceElapsed(status);
+  if (!visible) return null;
 
   return (
     <Badge color={STATUS_BADGE_COLORS[display.tone]} size="sm">

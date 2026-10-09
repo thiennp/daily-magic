@@ -16,6 +16,17 @@ describe("toAgentRunReportSummaryMetaText (f4bf6a0c)", () => {
     expect(meta.endsWith(CHANGED)).toBe(true);
     expect(meta.startsWith("Reviewed implementation")).toBe(true);
     expect(meta).toContain("… Changed: ");
+    // Cut at a word boundary, never mid-word ("Vali…").
+    expect(meta).not.toMatch(/Vali…/);
+    expect(meta.startsWith("Reviewed implementation and documentation…")).toBe(
+      true,
+    );
+  });
+
+  it("keeps the first sentence whole when it fits, without an ellipsis", () => {
+    const summary = `Added the settings page. It also validates every field, shows inline errors and keeps the draft when you leave. ${CHANGED}`;
+    const meta = toAgentRunReportSummaryMetaText(summary);
+    expect(meta).toBe(`Added the settings page. ${CHANGED}`);
   });
 
   it("leaves short summaries untouched", () => {
