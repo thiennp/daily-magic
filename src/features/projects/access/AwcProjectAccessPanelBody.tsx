@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 
+import useAwcMemberTaskPulses from "@/features/projects/access/hooks/useAwcMemberTaskPulses";
 import AwcProjectAccessAutoApprovedBanner from "@/features/projects/access/AwcProjectAccessAutoApprovedBanner";
 import AwcProjectAccessComputerMembersSection from "@/features/projects/access/AwcProjectAccessComputerMembersSection";
 import AwcProjectAccessFoldersSection from "@/features/projects/access/AwcProjectAccessFoldersSection";
@@ -45,6 +46,7 @@ export default function AwcProjectAccessPanelBody({
     [access.members],
   );
   const wakeLinks = useAwcProjectAccessWakeLinks(botMembers);
+  const taskPulses = useAwcMemberTaskPulses(projectId);
 
   return (
     <div className="space-y-3">
@@ -84,6 +86,7 @@ export default function AwcProjectAccessPanelBody({
               access.renameMember(membershipId, projectDisplayName)
             }
             wakeLinks={wakeLinks.list}
+            taskPulses={taskPulses}
           />
         </div>
       </AwcProjectAccessSection>

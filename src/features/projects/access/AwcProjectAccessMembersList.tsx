@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import AwcProjectAccessMemberTaskPulse from "@/features/projects/access/AwcProjectAccessMemberTaskPulse";
+import type { AwcMemberTaskPulse } from "@/features/projects/access/utils/resolveMemberTaskPulse";
 import AwcProjectAccessMemberRow from "@/features/projects/access/AwcProjectAccessMemberRow";
 import AwcProjectAccessMemberWakeLinkSlot from "@/features/projects/access/AwcProjectAccessMemberWakeLinkSlot";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
@@ -34,6 +36,11 @@ interface AwcProjectAccessMembersListProps {
   ) => Promise<{ readonly ok: boolean; readonly errorMessage?: string }>;
   /** Owner: wake-link pills, deep-link focus, session saves. */
   readonly wakeLinks?: AwcMemberWakeLinksListProps;
+  /** Owner: task pulse per membership id (omitted while tasks load). */
+  readonly taskPulses?: {
+    readonly nowMs: number;
+    readonly byMembershipId: (membershipId: string) => AwcMemberTaskPulse;
+  };
 }
 
 export default function AwcProjectAccessMembersList({
@@ -43,6 +50,7 @@ export default function AwcProjectAccessMembersList({
   onRevoke,
   onRename,
   wakeLinks,
+  taskPulses,
 }: AwcProjectAccessMembersListProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -96,6 +104,18 @@ export default function AwcProjectAccessMembersList({
               }}
               onRevoke={() => onRevoke(member.id)}
               wakeLinkState={resolveMemberWakeLinkState(member, savedIds)}
+              taskPulse={
+                taskPulses !== undefined &&
+                projectId !== undefined &&
+                member.isAgent ? (
+                  <AwcProjectAccessMemberTaskPulse
+                    projectId={projectId}
+                    membershipId={member.id}
+                    pulse={taskPulses.byMembershipId(member.id)}
+                    nowMs={taskPulses.nowMs}
+                  />
+                ) : null
+              }
               grokWebhook={
                 <AwcProjectAccessMemberWakeLinkSlot
                   projectId={projectId}

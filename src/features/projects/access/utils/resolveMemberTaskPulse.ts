@@ -1,0 +1,58 @@
+import { PROJECT_B2B_SILENCE_NOTIFY_MS } from "@/lib/projects/acl/messaging/projectMessage.constants";
+import type { ProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecord.type";
+
+const OPEN_STATUSES: ReadonlySet<ProjectTaskRecord["status"]> = new Set([
+  "queued",
+  "planned",
+  "in_progress",
+  "blocked",
+]);
+
+export type AwcMemberTaskPulse =
+  | { readonly kind: "idle" }
+  | {
+      readonly kind: "working";
+      readonly openCount: number;
+      readonly lastUpdateMs: number;
+    }
+  | {
+      readonly kind: "quiet";
+      readonly taskId: string;
+      readonly taskTitle: string;
+      readonly quietMinutes: number;
+    };
+
+/**
+ * What the owner sees under a bot: quiet = an in-progress task with no update
+ * past the server's silence window (the seat may be busy and miss wakes).
+ */
+export const resolveMemberTaskPulse = (
+  records: readonly ProjectTaskRecord[],
+  membershipId: string,
+  nowMs: number,
+  quietMs: number = PROJECT_B2B_SILENCE_NOTIFY_MS,
+): AwcMemberTaskPulse => {
+  const open = records.filter(
+    (task) =>
+      task.ownerMembershipId === membershipId && OPEN_STATUSES.has(task.status),
+  );
+  if (open.length === 0) return { kind: "idle" };
+
+  const stale = open
+    .filter((task) => task.status === "in_progress")
+    .filter((task) => nowMs - Date.parse(task.updatedAt) >= quietMs)
+    .sort((a, b) => Date.parse(a.updatedAt) - Date.parse(b.updatedAt))[0];
+  if (stale !== undefined) {
+    return {
+      kind: "quiet",
+      taskId: stale.id,
+      taskTitle: stale.title,
+      quietMinutes: Math.floor((nowMs - Date.parse(stale.updatedAt)) / 60_000),
+    };
+  }
+  return {
+    kind: "working",
+    openCount: open.length,
+    lastUpdateMs: Math.max(...open.map((task) => Date.parse(task.updatedAt))),
+  };
+};

@@ -33,6 +33,8 @@ interface AwcProjectAccessMemberRowProps {
   readonly onCancelEdit: () => void;
   readonly onRevoke: () => void;
   readonly grokWebhook?: ReactNode;
+  /** Owner only: Working / Quiet / Idle line under the name. */
+  readonly taskPulse?: ReactNode;
   /** Owner only: null = no wake-link pill (non-bots, unknown, non-owner). */
   readonly wakeLinkState?: AwcMemberWakeLinkState;
 }
@@ -48,6 +50,7 @@ export default function AwcProjectAccessMemberRow({
   onCancelEdit,
   onRevoke,
   grokWebhook = null,
+  taskPulse = null,
   wakeLinkState = null,
 }: AwcProjectAccessMemberRowProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
@@ -65,7 +68,9 @@ export default function AwcProjectAccessMemberRow({
                 ? member.projectDisplayName
                 : copy.memberNoNickname}
             </span>
-            <span className={`ml-2 text-xs ${PROJECT_PAGE_METADATA_TEXT_CLASS}`}>
+            <span
+              className={`ml-2 text-xs ${PROJECT_PAGE_METADATA_TEXT_CLASS}`}
+            >
               {mutedId}
             </span>
           </>
@@ -73,7 +78,9 @@ export default function AwcProjectAccessMemberRow({
           <span className="text-xs text-awc-fg-muted">{member.userId}</span>
         )}
         {member.teamLabel ? (
-          <span className="ml-1 text-xs text-awc-fg-muted">({member.teamLabel})</span>
+          <span className="ml-1 text-xs text-awc-fg-muted">
+            ({member.teamLabel})
+          </span>
         ) : null}
         {autoApproved ? (
           <span className="ml-2 rounded-full bg-emerald-100 px-1.5 py-0.5 text-[10px] font-medium text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200">
@@ -109,6 +116,7 @@ export default function AwcProjectAccessMemberRow({
           )}
         </p>
       ) : null}
+      {taskPulse}
       {grokWebhook}
     </li>
   );
