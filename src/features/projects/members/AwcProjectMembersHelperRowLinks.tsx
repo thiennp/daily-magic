@@ -4,7 +4,7 @@ import { ASSISTANT_WAKE_BLOCK_COPY as B } from "@/features/projects/members/assi
 import { ASSISTANT_WAKE_HEALTH_COPY as W } from "@/features/projects/members/assistantWakeHealthCopy.constant";
 
 const LINK =
-  "ml-[2.75rem] self-start text-[13px] font-medium text-awc-primary underline-offset-2 hover:underline";
+  "ml-[2.75rem] self-start p-0 text-[13px] font-medium text-awc-primary underline-offset-2 hover:underline";
 
 /** Under an assistant row: Retry when the wake check failed, or "paste a new link" when it can't be reached. */
 export default function AwcProjectMembersHelperRowLinks({
