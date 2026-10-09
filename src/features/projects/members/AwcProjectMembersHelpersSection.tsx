@@ -4,9 +4,7 @@ import { useMemo } from "react";
 
 import type { AwcProjectAccessMember } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 import { useAwcProjectAccessWakeLinks } from "@/features/projects/access/hooks/useAwcProjectAccessWakeLinks";
-import AwcProjectMembersReadOnlyHelperLabel from "@/features/projects/members/AwcProjectMembersReadOnlyHelperLabel";
-import AwcProjectMembersHelperBotControls from "@/features/projects/members/AwcProjectMembersHelperBotControls";
-import AwcProjectMembersHelperRow from "@/features/projects/members/AwcProjectMembersHelperRow";
+import AwcProjectMembersHelperListItem from "@/features/projects/members/AwcProjectMembersHelperListItem";
 import { isRailAssistantMember } from "@/features/projects/members/utils/countRailMembers";
 import SectionIcon, {
   SECTION_CARD,
@@ -16,8 +14,8 @@ import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageM
 interface AwcProjectMembersHelpersSectionProps {
   readonly projectId: string;
   readonly members: readonly AwcProjectAccessMember[];
-  /** Non-owner member view: names only, no wake / rename / remove controls. */
-  readonly readOnly?: boolean;
+  /** The viewer is the project owner (may still remove others' assistants). */
+  readonly isOwner?: boolean;
   readonly onMessage?: (membershipId: string) => void;
   readonly onRename?: (
     membershipId: string,
@@ -34,7 +32,7 @@ interface AwcProjectMembersHelpersSectionProps {
 export default function AwcProjectMembersHelpersSection({
   projectId,
   members,
-  readOnly = false,
+  isOwner = false,
   onMessage,
   onRename,
   onRemove,
@@ -45,7 +43,9 @@ export default function AwcProjectMembersHelpersSection({
     () => members.filter(isRailAssistantMember),
     [members],
   );
-  const { list: wake } = useAwcProjectAccessWakeLinks(readOnly ? [] : helpers);
+  const { list: wake } = useAwcProjectAccessWakeLinks(
+    helpers.filter((member) => member.canManageBot === true),
+  );
   const onSaved = (membershipId: string): void => {
     wake.onSaved(membershipId);
     onWakeSaved?.();
@@ -69,39 +69,20 @@ export default function AwcProjectMembersHelpersSection({
         <p className="px-3.5 py-2 text-[13px] text-awc-fg-subtle">
           {C.helpersEmpty}
         </p>
-      ) : readOnly ? (
-        <ul className="flex flex-col">
-          {helpers.map((member) => (
-            <li key={member.id} className="flex flex-col">
-              <AwcProjectMembersReadOnlyHelperLabel member={member} />
-              <AwcProjectMembersHelperBotControls
-                projectId={projectId}
-                member={member}
-                onChanged={onChanged ?? (() => undefined)}
-              />
-            </li>
-          ))}
-        </ul>
       ) : (
         <ul className="flex flex-col">
           {helpers.map((member) => (
-            <AwcProjectMembersHelperRow
+            <AwcProjectMembersHelperListItem
               key={member.id}
               projectId={projectId}
               member={member}
-              savedIds={wake.savedIds}
-              wakeOpenRequest={
-                wake.request?.membershipId === member.id
-                  ? wake.request.nonce
-                  : 0
-              }
+              isOwner={isOwner}
+              wake={wake}
               onWakeSaved={onSaved}
-              onMessage={onMessage ?? (() => undefined)}
-              onRename={async (id, name) =>
-                (await onRename?.(id, name))?.ok ?? false
-              }
-              onRemove={onRemove ?? (() => undefined)}
-              onChanged={onChanged ?? (() => undefined)}
+              onMessage={onMessage}
+              onRename={onRename}
+              onRemove={onRemove}
+              onChanged={onChanged}
             />
           ))}
         </ul>

@@ -30,9 +30,16 @@ describe("resolveBotManager", () => {
     sqlMock.mockReset();
   });
 
-  it("lets the owner manage any assistant", async () => {
+  it("keeps the owner out of other people's assistants but not their own or legacy seats", async () => {
     actorMock.mockResolvedValue({ ok: true, isOwner: true });
-    sqlMock.mockResolvedValue([row("someone-else")]);
+    sqlMock.mockResolvedValueOnce([row("someone-else")]);
+    expect(await resolveBotManager(input)).toEqual({
+      ok: false,
+      code: "forbidden",
+    });
+    sqlMock.mockResolvedValueOnce([row("u2")]);
+    expect((await resolveBotManager(input)).ok).toBe(true);
+    sqlMock.mockResolvedValueOnce([row(null)]);
     expect((await resolveBotManager(input)).ok).toBe(true);
   });
 

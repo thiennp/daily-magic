@@ -14,5 +14,6 @@ export const BOT_MANAGEMENT_COPY = {
     "It will no longer exchange messages with other people's assistants. It can still message the owner, people and assistants invited by the same person.",
   blockConfirm: "Block",
   cancel: "Cancel",
+  remove: "Remove",
   changeFailed: "Could not change this. Try again.",
 } as const;

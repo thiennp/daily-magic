@@ -91,12 +91,12 @@ describe("owner grok-webhook route auth", () => {
     expect(inserts()).toEqual([]);
   });
 
-  it("404s a wrong, foreign-project, revoked or inactive membership id: the guarded write matches no row", async () => {
+  it("404s a wrong or foreign-project membership id before any write", async () => {
     Object.assign(db, { writable: false, present: false });
     const response = await callPut();
     expect(response.status).toBe(404);
     expect((await response.json()).code).toBe("not_found");
-    expect(inserts()).toHaveLength(1);
-    expect(String(inserts()[0]?.[0])).toContain("m.project_id = ");
+    // The edit gate finds no such seat in this project, so no write is attempted.
+    expect(inserts()).toHaveLength(0);
   });
 });

@@ -20,6 +20,11 @@ export const grokWebhookSql =
     if (text.includes(GUARDED_INSERT)) {
       return state.writable ? [{ webhook_url: values[0] }] : [];
     }
+    if (text.includes("SELECT member_kind, invited_by_user_id")) {
+      return state.present
+        ? [{ member_kind: "human", invited_by_user_id: null }]
+        : [];
+    }
     if (text.includes("SELECT 1 AS present")) {
       return state.present ? [{ present: 1 }] : [];
     }

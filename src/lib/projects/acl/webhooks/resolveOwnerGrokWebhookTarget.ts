@@ -1,10 +1,10 @@
 import { requireAuth } from "@/lib/auth/requireAuth";
-import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
+import { authorizeMembershipEdit } from "@/lib/projects/acl/authorizeMembershipEdit";
 import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import { grokWebhookRouteStatusForCode } from "@/lib/projects/acl/webhooks/grokWebhookRouteStatusForCode";
 import type { ProjectGrokWebhookTarget } from "@/lib/projects/acl/webhooks/projectGrokWebhookTarget";
 
-/** Signed in + owns the project → the condition: an active member row of THIS project. */
+/** Signed in + may edit this seat (its inviter; owner for people/computers) → an active member row of THIS project. */
 export const resolveOwnerGrokWebhookTarget = async (
   params: Promise<{
     readonly projectId: string;
@@ -17,16 +17,17 @@ export const resolveOwnerGrokWebhookTarget = async (
   const { actor, error } = await requireAuth();
   if (error || !actor) return { target: null, denied: error };
   const { projectId, membershipId } = await params;
-  const decision = await authorizeProjectOwner({
+  const decision = await authorizeMembershipEdit({
     projectId,
+    membershipId,
     actorUserId: actor.id,
   });
-  if (!decision.allow) {
+  if (!decision.ok) {
     return {
       target: null,
       denied: projectAccessErrorJson(
-        decision.reason,
-        grokWebhookRouteStatusForCode(decision.reason),
+        decision.code,
+        grokWebhookRouteStatusForCode(decision.code),
       ),
     };
   }

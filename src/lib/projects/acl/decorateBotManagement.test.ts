@@ -8,21 +8,18 @@ const member = (over: Partial<MembershipView>) =>
   ({ id: "m", memberKind: "bot", ...over }) as MembershipView;
 
 describe("decorateBotManagement", () => {
-  it("lets the owner manage every assistant, an inviter only their own", () => {
+  it("lets only the inviter edit; the owner only their own or seats with no inviter", () => {
     const bots = [
       member({ id: "a", invitedByUserId: "u2" }),
-      member({ id: "b", invitedByUserId: "u3" }),
+      member({ id: "b", invitedByUserId: "owner" }),
+      member({ id: "c", invitedByUserId: null }),
     ];
-    expect(
-      decorateBotManagement(bots, { userId: "owner", isOwner: true }).map(
+    const edit = (userId: string, isOwner: boolean) =>
+      decorateBotManagement(bots, { userId, isOwner }).map(
         (m) => m.canManageBot,
-      ),
-    ).toEqual([true, true]);
-    expect(
-      decorateBotManagement(bots, { userId: "u2", isOwner: false }).map(
-        (m) => m.canManageBot,
-      ),
-    ).toEqual([true, false]);
+      );
+    expect(edit("owner", true)).toEqual([false, true, true]);
+    expect(edit("u2", false)).toEqual([true, false, false]);
   });
 
   it("flags assistants that have not seen the newest guidance", () => {

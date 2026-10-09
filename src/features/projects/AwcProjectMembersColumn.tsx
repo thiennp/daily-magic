@@ -66,6 +66,7 @@ export default function AwcProjectMembersColumn({
               ownerEmail={ownerEmail}
               ownerDisplayName={ownerDisplayName}
               menu={leaveMenu}
+              onMessageHelper={onMessageHelper}
             />
           ) : (
             <>

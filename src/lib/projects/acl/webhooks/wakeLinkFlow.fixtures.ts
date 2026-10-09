@@ -40,6 +40,9 @@ export const wakeFlowSql = async (
     wakeFlowDb.grokUrl = String(values[0]);
     return [{ webhook_url: values[0] }];
   }
+  if (text.includes("SELECT member_kind, invited_by_user_id")) {
+    return [{ member_kind: "human", invited_by_user_id: null }];
+  }
   if (text.includes("grok_wake_link_set")) {
     const set = wakeFlowDb.grokUrl !== null;
     return [

@@ -72,7 +72,10 @@ describe("project layout v2 L5 Settings + Members", () => {
     expect(owner).toContain("AwcProjectMembersHelpersSection");
     expect(owner).toContain("AwcProjectMembersInviteBotsSection");
     expect(owner).toContain("useAwcProjectAccess");
-    expect(helpers).toContain("AwcProjectMembersHelperRow");
+    expect(helpers).toContain("AwcProjectMembersHelperListItem");
+    expect(read(`${P}/members/AwcProjectMembersHelperListItem.tsx`)).toContain(
+      "AwcProjectMembersHelperRow",
+    );
     expect(row).toContain("C.menuChat");
     expect(row).toContain("C.menuRename");
     expect(row).toContain("C.menuWebhook");

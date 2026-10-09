@@ -1,3 +1,4 @@
+import { authorizeMembershipEdit } from "@/lib/projects/acl/authorizeMembershipEdit";
 import { revokeProjectMembership } from "@/lib/projects/acl/revokeProjectMembership";
 import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import { requireAuth } from "@/lib/auth/requireAuth";
@@ -19,10 +20,22 @@ export async function POST(
   }
 
   const { projectId, membershipId } = await context.params;
+  const auth = await authorizeMembershipEdit({
+    projectId,
+    membershipId,
+    actorUserId: actor.id,
+    ownerMayOverride: true,
+  });
+  if (!auth.ok) {
+    return projectAccessErrorJson(
+      auth.code,
+      auth.code === "forbidden" ? 403 : 404,
+    );
+  }
   const result = await revokeProjectMembership({
     projectId,
     membershipId,
-    ownerUserId: actor.id,
+    ownerUserId: auth.ownerUserId,
   });
 
   if (!result.ok) {

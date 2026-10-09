@@ -21,11 +21,13 @@ export default function AwcProjectMembersMemberContent({
   ownerEmail,
   ownerDisplayName,
   menu,
+  onMessageHelper,
 }: {
   readonly projectId: string;
   readonly ownerEmail: string | null;
   readonly ownerDisplayName: string | null;
   readonly menu: ReactNode;
+  readonly onMessageHelper?: (membershipId: string) => void;
 }) {
   const access = useAwcProjectAccess(projectId);
   const ready = !access.isLoading && !access.loadError;
@@ -47,7 +49,12 @@ export default function AwcProjectMembersMemberContent({
             <AwcProjectMembersHelpersSection
               projectId={projectId}
               members={access.members}
-              readOnly
+              onMessage={onMessageHelper}
+              onRename={access.renameMember}
+              onRemove={(id) => {
+                void access.revoke(id);
+              }}
+              onWakeSaved={() => void access.reload()}
               onChanged={() => void access.reload()}
             />
             <AwcProjectMembersJoinRequestsSection

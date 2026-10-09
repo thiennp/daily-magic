@@ -1,5 +1,5 @@
 import { requireAuth } from "@/lib/auth/requireAuth";
-import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
+import { authorizeMembershipEdit } from "@/lib/projects/acl/authorizeMembershipEdit";
 import { changeProjectMembershipDeliveryMode } from "@/lib/projects/acl/changeProjectMembershipDeliveryMode";
 import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 
@@ -30,15 +30,13 @@ export async function PUT(
   const { actor, error } = await requireAuth();
   if (error || !actor) return error;
   const { projectId, membershipId } = await context.params;
-  const decision = await authorizeProjectOwner({
+  const decision = await authorizeMembershipEdit({
     projectId,
+    membershipId,
     actorUserId: actor.id,
   });
-  if (!decision.allow) {
-    return projectAccessErrorJson(
-      decision.reason,
-      statusForCode(decision.reason),
-    );
+  if (!decision.ok) {
+    return projectAccessErrorJson(decision.code, statusForCode(decision.code));
   }
   const body: unknown = await request.json().catch(() => null);
   const deliveryMode =
