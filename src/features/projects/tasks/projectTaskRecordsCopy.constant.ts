@@ -56,6 +56,8 @@ export const PROJECT_TASK_RECORDS_COPY = {
   confirmCancel: "Keep as is",
   conflictError: "Someone else changed this task — reloaded.",
   forbiddenError: "You cannot edit tasks in this project.",
+  ownerNotMemberError:
+    "That person is no longer an active member, so the task was not reassigned.",
   genericError: "Could not save the change.",
 } as const;
 

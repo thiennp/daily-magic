@@ -9,12 +9,14 @@ import {
 } from "@/features/projects/tasks/utils/projectTaskRecordChange";
 import type { ProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecord.type";
 
-const errorText = (status: number): string =>
-  status === 409
-    ? C.conflictError
-    : status === 403
-      ? C.forbiddenError
-      : C.genericError;
+const errorText = (status: number, code?: string): string =>
+  code === "owner_not_member"
+    ? C.ownerNotMemberError
+    : status === 409
+      ? C.conflictError
+      : status === 403
+        ? C.forbiddenError
+        : C.genericError;
 
 /** PATCH one record: pending flag, server error text, inline confirm step. */
 export const usePatchProjectTaskRecord = (input: {
@@ -43,7 +45,12 @@ export const usePatchProjectTaskRecord = (input: {
             body: JSON.stringify(patch),
           },
         );
-        if (!res.ok) setError(errorText(res.status));
+        if (!res.ok) {
+          const body = (await res.json().catch(() => ({}))) as {
+            readonly code?: string;
+          };
+          setError(errorText(res.status, body.code));
+        }
         reload();
       } catch {
         setError(C.genericError);
