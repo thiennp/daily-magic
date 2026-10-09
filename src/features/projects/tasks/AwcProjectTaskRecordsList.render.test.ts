@@ -64,9 +64,7 @@ describe("AwcProjectTaskRecordsList (DF-024 Tasks tab rows)", () => {
       "src/features/projects/AwcProjectDetailTabPanelBody.tsx",
       "utf8",
     );
-    expect(body).toContain(
-      "<AwcProjectTasksPanelWithRecords project={project} />",
-    );
+    expect(body).toContain("<AwcProjectTasksPanelWithRecords");
   });
 });
 

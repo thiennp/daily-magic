@@ -11,6 +11,7 @@ export const HUMAN_INVITE_EMAIL_COPY = {
   tooManyEmails: "Invite up to {max} people at a time.",
   sendFailed: "Could not send. Nothing was sent. Try again.",
   wantsToJoin: "Wants to join",
+  waitingForOwner: "Waiting for the owner to approve",
   approve: "Approve",
   deny: "Deny",
   approved: "{name} joined the project.",

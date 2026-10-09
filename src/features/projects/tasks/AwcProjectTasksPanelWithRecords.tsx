@@ -11,8 +11,11 @@ import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type"
  */
 export default function AwcProjectTasksPanelWithRecords({
   project,
+  readOnly = false,
 }: {
   readonly project: UserProjectRecord;
+  /** A viewer reads tasks but cannot create or change them (the server answers 403). */
+  readonly readOnly?: boolean;
 }) {
   const records = useProjectTaskRecords(project.id);
   return (
@@ -22,6 +25,7 @@ export default function AwcProjectTasksPanelWithRecords({
         records={records.records}
         loadFailed={records.loadFailed}
         reload={records.reload}
+        readOnly={readOnly}
       />
       <AwcProjectTasksPanel project={project} />
     </div>

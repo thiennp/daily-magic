@@ -52,24 +52,30 @@ export default function AwcHumanAwaitingApprovalRow({
             {` · ${invite.role === "viewer" ? "Viewer" : "Member"}`}
           </span>
         </span>
-        <span className="flex shrink-0 gap-1.5">
-          <button
-            type="button"
-            className={BTN_DENY}
-            disabled={busy}
-            onClick={() => onDeny?.(invite.inviteId, name)}
-          >
-            {copy.deny}
-          </button>
-          <button
-            type="button"
-            className={BTN_APPROVE}
-            disabled={busy}
-            onClick={() => onApprove?.(invite.inviteId, name)}
-          >
-            {copy.approve}
-          </button>
-        </span>
+        {onApprove && onDeny ? (
+          <span className="flex shrink-0 gap-1.5">
+            <button
+              type="button"
+              className={BTN_DENY}
+              disabled={busy}
+              onClick={() => onDeny?.(invite.inviteId, name)}
+            >
+              {copy.deny}
+            </button>
+            <button
+              type="button"
+              className={BTN_APPROVE}
+              disabled={busy}
+              onClick={() => onApprove?.(invite.inviteId, name)}
+            >
+              {copy.approve}
+            </button>
+          </span>
+        ) : (
+          <span className="shrink-0 text-[12.5px] text-awc-fg-subtle">
+            {copy.waitingForOwner}
+          </span>
+        )}
       </div>
     </li>
   );

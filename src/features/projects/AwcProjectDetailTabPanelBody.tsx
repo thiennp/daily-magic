@@ -96,7 +96,12 @@ export default function AwcProjectDetailTabPanelBody(
     );
   }
   if (t === "tasks" && sel) {
-    return <AwcProjectTasksPanelWithRecords project={project} />;
+    return (
+      <AwcProjectTasksPanelWithRecords
+        project={project}
+        readOnly={p.pageActorRole === "viewer"}
+      />
+    );
   }
   return null;
 }

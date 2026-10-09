@@ -13,7 +13,7 @@ export type BotClaimFlags = {
 
 /**
  * Claim feature: an assistant nobody invited (older seats) can be claimed by
- * the owner or any member; the person who owns the bot can change its inviter.
+ * the owner or the person who owns it; the person who owns the bot can change its inviter.
  * Run BEFORE decorateBotManagement (needs invitedByUserId, which that strips).
  */
 export const decorateBotClaim = async (
@@ -29,8 +29,12 @@ export const decorateBotClaim = async (
     viewerUserId: viewer.userId,
     botUserIds: bots.map((m) => m.userId),
   });
+  const isOwner = viewer.userId === viewer.ownerUserId;
+  // Same rule as setBotInviter: the owner, or the person who owns the bot.
   const claimable = (m: MembershipView): boolean =>
-    viewer.canWrite && (m.invitedByUserId ?? null) === null;
+    viewer.canWrite &&
+    (m.invitedByUserId ?? null) === null &&
+    (isOwner || owned.has(m.userId));
   if (!bots.some((m) => claimable(m) || owned.has(m.userId))) return members;
   const choices = await buildInviterChoices({
     members,

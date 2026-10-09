@@ -23,6 +23,7 @@ export default function AwcProjectTaskBoard({
   reload,
   onOpen,
   columns: shownColumns,
+  readOnly = false,
 }: {
   readonly projectId: string;
   readonly records: readonly ProjectTaskRecord[];
@@ -30,6 +31,8 @@ export default function AwcProjectTaskBoard({
   readonly onOpen: (id: string) => void;
   /** Statuses to draw, in order (the user may hide some). */
   readonly columns?: readonly ProjectTaskStatus[];
+  /** A viewer cannot drag cards between columns. */
+  readonly readOnly?: boolean;
 }) {
   const columns = useMemo(() => groupProjectTasksForBoard(records), [records]);
   const [dragged, setDragged] = useState<ProjectTaskRecord | null>(null);
@@ -72,7 +75,7 @@ export default function AwcProjectTaskBoard({
               dragged !== null && canMoveProjectTask(dragged.status, status)
             }
             onOpen={onOpen}
-            onDragStart={setDragged}
+            onDragStart={readOnly ? () => undefined : setDragged}
             onDragEnd={() => setDragged(null)}
             onDrop={(to) => {
               if (dragged !== null) board.move({ task: dragged, to });

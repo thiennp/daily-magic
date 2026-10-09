@@ -82,8 +82,8 @@ export default function AwcHumanPeopleMembersList({
         pendingInvites={visiblePending}
         onRevokeInvite={viewerIsOwner ? onRevokeInvite : undefined}
         decidingId={decidingId}
-        onApproveRequest={onApproveRequest}
-        onDenyRequest={onDenyRequest}
+        onApproveRequest={viewerIsOwner ? onApproveRequest : undefined}
+        onDenyRequest={viewerIsOwner ? onDenyRequest : undefined}
       />
       <AwcHumanJoinedMembersSection
         joinedHumans={visibleJoined}

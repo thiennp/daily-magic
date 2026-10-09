@@ -29,13 +29,24 @@ describe("decorateBotClaim", () => {
     choicesMock.mockReset().mockResolvedValue(CHOICES);
   });
 
-  it("offers Claim on an unclaimed assistant to anyone who can write", async () => {
+  it("offers Claim on an unclaimed assistant to the person who owns it, with their choices", async () => {
+    ownedMock.mockResolvedValue(new Set(["b1"]));
     const [m] = await decorateBotClaim([bot("b1", null)], viewer);
     expect(m).toMatchObject({
       canClaimBot: true,
-      canChangeInviter: false,
+      canChangeInviter: true,
       inviterChoices: CHOICES,
     });
+  });
+
+  it("offers Claim to the project owner, but not to a member who does not own the assistant", async () => {
+    const [byOwner] = await decorateBotClaim([bot("b1", null)], {
+      ...viewer,
+      userId: "owner",
+    });
+    const [byMember] = await decorateBotClaim([bot("b1", null)], viewer);
+    expect(byOwner).toMatchObject({ canClaimBot: true });
+    expect(byMember).not.toHaveProperty("canClaimBot");
   });
 
   it("does not offer Claim to viewers or on an assistant someone already claimed", async () => {

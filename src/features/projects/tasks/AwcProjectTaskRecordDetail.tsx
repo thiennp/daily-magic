@@ -23,12 +23,14 @@ export default function AwcProjectTaskRecordDetail({
   records,
   reload,
   onBack,
+  readOnly = false,
 }: {
   readonly projectId: string;
   readonly task: ProjectTaskRecord;
   readonly records: readonly ProjectTaskRecord[];
   readonly reload: () => void;
   readonly onBack: () => void;
+  readonly readOnly?: boolean;
 }) {
   const titleOf = (id: string): string =>
     records.find((r) => r.id === id)?.title ?? C.unknownTask;
@@ -100,11 +102,13 @@ export default function AwcProjectTaskRecordDetail({
             </ol>
           </div>
         </div>
-        <AwcProjectTaskRecordControls
-          projectId={projectId}
-          task={task}
-          reload={reload}
-        />
+        {readOnly ? null : (
+          <AwcProjectTaskRecordControls
+            projectId={projectId}
+            task={task}
+            reload={reload}
+          />
+        )}
       </div>
     </section>
   );

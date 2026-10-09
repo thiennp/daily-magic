@@ -22,7 +22,8 @@ export default function AwcProjectTaskRecordsHeader({
   readonly view: ProjectTaskRecordsView;
   readonly onViewChange: (view: ProjectTaskRecordsView) => void;
   readonly boardColumns: ReturnType<typeof useBoardColumnVisibility>;
-  readonly onCreate: () => void;
+  /** Omitted for a read-only viewer. */
+  readonly onCreate?: () => void;
 }) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-2 px-3.5 pt-3 pb-1">
@@ -35,13 +36,15 @@ export default function AwcProjectTaskRecordsHeader({
             onToggle={boardColumns.toggle}
           />
         ) : null}
-        <button
-          type="button"
-          className={AWC_TASKS_PRIMARY_BUTTON_CLASS}
-          onClick={onCreate}
-        >
-          {B.createTask}
-        </button>
+        {onCreate ? (
+          <button
+            type="button"
+            className={AWC_TASKS_PRIMARY_BUTTON_CLASS}
+            onClick={onCreate}
+          >
+            {B.createTask}
+          </button>
+        ) : null}
       </span>
     </div>
   );

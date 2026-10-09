@@ -28,12 +28,14 @@ export default function AwcProjectTaskRecordsList({
   loadFailed,
   reload,
   initialView = "board",
+  readOnly = false,
 }: {
   readonly projectId: string;
   readonly records: readonly ProjectTaskRecord[];
   readonly loadFailed: boolean;
   readonly reload: () => void;
   readonly initialView?: ProjectTaskRecordsView;
+  readonly readOnly?: boolean;
 }) {
   const boardColumns = useBoardColumnVisibility();
   const people = useProjectTaskPeopleFilter(projectId, records);
@@ -50,6 +52,7 @@ export default function AwcProjectTaskRecordsList({
           task={selected}
           records={records}
           reload={reload}
+          readOnly={readOnly}
           onBack={() => {
             setRecordId(null);
           }}
@@ -63,7 +66,7 @@ export default function AwcProjectTaskRecordsList({
         view={view}
         onViewChange={setView}
         boardColumns={boardColumns}
-        onCreate={() => setCreating(true)}
+        onCreate={readOnly ? undefined : () => setCreating(true)}
       />
       <AwcProjectTaskPeopleFilters filter={people} />
       {creating ? (
@@ -85,6 +88,7 @@ export default function AwcProjectTaskRecordsList({
           records={people.filtered}
           reload={reload}
           onOpen={setRecordId}
+          readOnly={readOnly}
         />
       ) : (
         <AwcProjectTaskRecordListView view={listView} onOpen={setRecordId} />
