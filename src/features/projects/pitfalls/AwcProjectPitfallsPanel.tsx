@@ -22,6 +22,8 @@ interface AwcProjectPitfallsPanelProps {
   readonly pitfalls: AwcProjectPitfallsState;
   readonly deviceDisplayName: string;
   readonly editCta: ProjectEditOnMacCta;
+  /** Only people who can edit rules get the "edit on this computer" link. */
+  readonly canManage?: boolean;
 }
 
 /**
@@ -33,6 +35,7 @@ export default function AwcProjectPitfallsPanel({
   pitfalls,
   deviceDisplayName,
   editCta,
+  canManage = true,
 }: AwcProjectPitfallsPanelProps) {
   void deviceDisplayName;
   const [filter, setFilter] = useState<AwcPitfallSeverityFilter>("all");
@@ -81,7 +84,9 @@ export default function AwcProjectPitfallsPanel({
               )}{" "}
               {anyHit ? C.panelHintHasHits : C.panelHintNoHits}
             </p>
-            <AwcProjectPitfallsManageButton editCta={manageCta} />
+            {canManage ? (
+              <AwcProjectPitfallsManageButton editCta={manageCta} />
+            ) : null}
           </div>
           {visible.length === 0 ? (
             <p className={PITFALL_EMPTY_CLASS}>{C.noMatch}</p>

@@ -60,7 +60,7 @@ export default function AwcBotName({
   const kind = resolveAwcBotKind(kindHint ?? name);
   return (
     <span
-      className={`inline-flex min-w-0 items-center gap-1.5 ${className ?? ""}`}
+      className={`inline-flex min-w-0 max-w-full items-center gap-1.5 ${className ?? ""}`}
     >
       <span
         aria-hidden="true"
