@@ -36,6 +36,11 @@ export type AccessMembershipView = {
   readonly autoApprovedViaInviteLabel?: string | null;
   /** webhook = wakes up on its own; poll = Checks on demand. Absent → webhook. */
   readonly deliveryMode?: "webhook" | "poll" | string;
+  /** Assistants only: the viewer may block it and send it new guidance. */
+  readonly canManageBot?: boolean;
+  readonly isolatedFromOtherBots?: boolean;
+  /** Assistants only: it has not fetched the newest guidance yet. */
+  readonly guidanceOutdated?: boolean;
 };
 
 export type AccessPendingView = {

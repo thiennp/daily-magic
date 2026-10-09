@@ -8,7 +8,7 @@ const read = (rel: string): string =>
 
 describe("project access privacy: no member-bot owner identity", () => {
   it("MembershipView never carries bot-owner leak fields", () => {
-    const views = read("src/lib/projects/acl/buildProjectAccessViews.ts");
+    const views = read("src/lib/projects/acl/types/MembershipView.type.ts");
     const briefing = read("src/lib/projects/acl/getProjectBriefing.ts");
     const briefingText = read(
       "src/lib/projects/acl/formatProjectBriefingText.ts",

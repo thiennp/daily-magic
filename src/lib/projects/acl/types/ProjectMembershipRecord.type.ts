@@ -22,6 +22,12 @@ export default interface ProjectMembershipRecord {
   readonly deliveryMode?: ProjectMembershipDeliveryMode;
   readonly createdAt: string;
   readonly revokedAt: string | null;
+  /** User who invited this seat (null for older seats). */
+  readonly invitedByUserId?: string | null;
+  /** Blocked from other people's assistants (see decideBotIsolation). */
+  readonly isolatedFromOtherBots?: boolean;
+  /** Product-updates catalog version last served to this assistant; null = never. */
+  readonly guidanceSeenVersion?: number | null;
   /** Set when admit was invite auto-approve; invite id prefix (8). */
   readonly autoApprovedViaInviteLabel?: string | null;
 }

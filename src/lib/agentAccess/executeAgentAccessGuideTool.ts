@@ -7,6 +7,7 @@ import {
   recordAgentAccessBucketAttempt,
 } from "@/lib/agentAccess/consumeAgentAccessBucket";
 import { ensureAgentAccessSchema } from "@/lib/agentAccess/ensureAgentAccessSchema";
+import { recordGuidanceSeen } from "@/lib/agentAccess/recordGuidanceSeen";
 import { executeCheckProductUpdatesTool } from "@/lib/agentAccess/executeCheckProductUpdatesTool";
 import { hashAgentAccessToken } from "@/lib/agentAccess/hashAgentAccessToken";
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/agentAccessToolCallResult.type";
@@ -49,6 +50,7 @@ export const executeAgentAccessGuideTool = async (input: {
   }
 
   if (input.name === "check_product_updates") {
+    await recordGuidanceSeen(input.actor.id);
     return executeCheckProductUpdatesTool(input.args);
   }
 

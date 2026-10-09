@@ -1,43 +1,7 @@
 import { loadUserProfilesByIds } from "@/lib/projects/acl/isAgentUser";
-import type { ProjectMembershipDeliveryMode } from "@/lib/projects/acl/membershipDeliveryMode.constant";
+import type { MembershipView } from "@/lib/projects/acl/types/MembershipView.type";
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
-import type { ComputerAgentView } from "@/lib/agentWitch/deviceWriters";
-import type { AgentWitchLocalConnectVersionStatus } from "@/lib/agentWitch/types/AgentWitchLocalConnectVersionStatus.type";
-
-/** UI-contract MembershipView (computer fields filled by enrich). */
-export type MembershipView = {
-  readonly id: string;
-  readonly userId: string;
-  readonly role: "owner" | "member" | "viewer";
-  readonly memberKind: "human" | "bot" | "computer";
-  readonly status: "active" | "revoked" | "naming_required";
-  readonly teamLabel: string | null;
-  readonly scopes: readonly string[];
-  readonly projectDisplayName: string | null;
-  readonly isAgent: boolean;
-  readonly displayName: string | null;
-  readonly email: string | null;
-  readonly image: string | null;
-  readonly createdAt: string;
-  readonly revokedAt: string | null;
-  readonly deviceId?: string | null;
-  readonly ownerUserId?: string;
-  readonly ownerDisplayName?: string | null;
-  readonly isOnline?: boolean;
-  readonly isDispatchReady?: boolean;
-  /** Coding tools on this computer; offline whenever the computer is. */
-  readonly agents?: readonly ComputerAgentView[];
-  readonly installBundleVersion?: string | null;
-  readonly connectVersionStatus?: AgentWitchLocalConnectVersionStatus;
-  readonly assignable?: boolean;
-  /** Owner snapshot, active member bots only: false = waiting for wake link. */
-  readonly wakeLinkSet?: boolean;
-  /** Invite id prefix when admitted via invite auto-approve; else null/absent. */
-  readonly autoApprovedViaInviteLabel?: string | null;
-  /** webhook = wakes up on its own; poll = Checks on demand (no wake). */
-  readonly deliveryMode?: ProjectMembershipDeliveryMode;
-};
 
 /** UI-contract PendingRequestView */
 export type PendingRequestView = {
@@ -52,6 +16,8 @@ export type PendingRequestView = {
   readonly expiresAt: string | null;
   readonly suggestedProjectDisplayName: string | null;
 };
+
+export type { MembershipView };
 
 export const buildMembershipViews = async (
   members: readonly ProjectMembershipRecord[],
@@ -77,6 +43,9 @@ export const buildMembershipViews = async (
       deviceId: m.deviceId ?? null,
       autoApprovedViaInviteLabel: m.autoApprovedViaInviteLabel ?? null,
       deliveryMode: m.deliveryMode ?? "webhook",
+      invitedByUserId: m.invitedByUserId ?? null,
+      isolatedFromOtherBots: m.isolatedFromOtherBots === true,
+      guidanceSeenVersion: m.guidanceSeenVersion ?? null,
     };
   });
 };

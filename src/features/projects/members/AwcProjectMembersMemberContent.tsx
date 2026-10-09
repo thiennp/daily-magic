@@ -48,6 +48,7 @@ export default function AwcProjectMembersMemberContent({
               projectId={projectId}
               members={access.members}
               readOnly
+              onChanged={() => void access.reload()}
             />
             <AwcProjectMembersJoinRequestsSection
               projectId={projectId}

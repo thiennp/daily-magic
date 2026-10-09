@@ -13,9 +13,7 @@ const parseScopes = (value: unknown): readonly ProjectAclScope[] => {
   );
 };
 
-const parseStatus = (
-  value: unknown,
-): ProjectMembershipRecord["status"] => {
+const parseStatus = (value: unknown): ProjectMembershipRecord["status"] => {
   if (value === "revoked") return "revoked";
   if (value === "naming_required") return "naming_required";
   return "active";
@@ -54,6 +52,14 @@ export default function mapProjectMembershipRow(
     deliveryMode: parseProjectMembershipDeliveryMode(row.delivery_mode),
     createdAt: String(row.created_at),
     revokedAt: row.revoked_at ? String(row.revoked_at) : null,
+    invitedByUserId: row.invited_by_user_id
+      ? String(row.invited_by_user_id)
+      : null,
+    isolatedFromOtherBots: row.isolated_from_other_bots === true,
+    guidanceSeenVersion:
+      typeof row.guidance_seen_version === "number"
+        ? row.guidance_seen_version
+        : null,
     autoApprovedViaInviteLabel: row.auto_approved_via_invite_label
       ? String(row.auto_approved_via_invite_label)
       : null,

@@ -4,6 +4,7 @@ import { useMemo } from "react";
 
 import type { AwcProjectAccessMember } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 import { useAwcProjectAccessWakeLinks } from "@/features/projects/access/hooks/useAwcProjectAccessWakeLinks";
+import AwcProjectMembersHelperBotControls from "@/features/projects/members/AwcProjectMembersHelperBotControls";
 import AwcProjectMembersHelperRow from "@/features/projects/members/AwcProjectMembersHelperRow";
 import { isRailAssistantMember } from "@/features/projects/members/utils/countRailMembers";
 import SectionIcon, {
@@ -24,6 +25,8 @@ interface AwcProjectMembersHelpersSectionProps {
   readonly onRemove?: (membershipId: string) => void;
   /** After a wake-link save: reload Access so the row confirms Ready. */
   readonly onWakeSaved?: () => void;
+  /** After block/unblock: reload Access. */
+  readonly onChanged?: () => void;
 }
 
 /** Assistants in the project — flat expandable rows with real wake status. */
@@ -35,6 +38,7 @@ export default function AwcProjectMembersHelpersSection({
   onRename,
   onRemove,
   onWakeSaved,
+  onChanged,
 }: AwcProjectMembersHelpersSectionProps) {
   const helpers = useMemo(
     () => members.filter(isRailAssistantMember),
@@ -67,10 +71,17 @@ export default function AwcProjectMembersHelpersSection({
       ) : readOnly ? (
         <ul className="flex flex-col">
           {helpers.map((member) => (
-            <li key={member.id} className="px-3.5 py-2.5 text-sm text-awc-fg">
-              {member.projectDisplayName?.trim() ||
-                member.displayName ||
-                member.userId.slice(0, 8)}
+            <li key={member.id} className="flex flex-col">
+              <span className="px-3.5 py-2.5 text-sm text-awc-fg">
+                {member.projectDisplayName?.trim() ||
+                  member.displayName ||
+                  member.userId.slice(0, 8)}
+              </span>
+              <AwcProjectMembersHelperBotControls
+                projectId={projectId}
+                member={member}
+                onChanged={onChanged ?? (() => undefined)}
+              />
             </li>
           ))}
         </ul>
@@ -93,6 +104,7 @@ export default function AwcProjectMembersHelpersSection({
                 (await onRename?.(id, name))?.ok ?? false
               }
               onRemove={onRemove ?? (() => undefined)}
+              onChanged={onChanged ?? (() => undefined)}
             />
           ))}
         </ul>

@@ -4,6 +4,7 @@ import { useRef } from "react";
 
 import { awcGrokWakeLinkHash } from "@/features/projects/access/awcGrokWakeLinkDeepLink";
 import { useWakeLinkOpenRequest } from "@/features/projects/access/hooks/useWakeLinkOpenRequest";
+import AwcProjectMembersHelperBotControls from "@/features/projects/members/AwcProjectMembersHelperBotControls";
 import AwcProjectMembersHelperRowLinks from "@/features/projects/members/AwcProjectMembersHelperRowLinks";
 import AwcProjectMembersHelperRowLabel from "@/features/projects/members/AwcProjectMembersHelperRowLabel";
 import AwcProjectMembersHelperRowMenu from "@/features/projects/members/AwcProjectMembersHelperRowMenu";
@@ -11,12 +12,7 @@ import AwcProjectMembersHelperRowMoreMenu from "@/features/projects/members/AwcP
 import AwcProjectMembersHelperWakeStatus from "@/features/projects/members/AwcProjectMembersHelperWakeStatus";
 import { useHelperRowWakeStatus } from "@/features/projects/members/hooks/useHelperRowWakeStatus";
 import { useHelperRowState } from "@/features/projects/members/hooks/useHelperRowState";
-import type { AccessMembershipView } from "@/features/projects/access/utils/projectAccessApi.types";
-
-type HelperMember = Pick<
-  AccessMembershipView,
-  "id" | "userId" | "projectDisplayName" | "wakeLinkSet" | "deliveryMode"
->;
+import type { HelperMember } from "@/features/projects/members/helperMember.type";
 
 interface AwcProjectMembersHelperRowProps {
   readonly projectId: string;
@@ -29,6 +25,8 @@ interface AwcProjectMembersHelperRowProps {
   readonly onMessage: (membershipId: string) => void;
   readonly onRename: (membershipId: string, name: string) => Promise<boolean>;
   readonly onRemove: (membershipId: string) => void;
+  /** After block/unblock: reload Access. */
+  readonly onChanged: () => void;
 }
 
 const ROW =
@@ -80,6 +78,11 @@ export default function AwcProjectMembersHelperRow(
           onRemove={row.startRemove}
         />
       </div>
+      <AwcProjectMembersHelperBotControls
+        projectId={p.projectId}
+        member={member}
+        onChanged={p.onChanged}
+      />
       <AwcProjectMembersHelperRowLinks
         cantCheck={status === "cant_check"}
         offerPaste={Boolean(showHealth && health.offerPaste && !row.wakeOpen)}

@@ -1,4 +1,5 @@
 import type { ProductConnectUpdateEntry } from "@/lib/agentAccess/productConnectUpdatesMeta.constant";
+import { PROJECT_ORCHESTRATOR_CLAUSE } from "@/lib/projects/acl/projectOrchestratorClause.constant";
 import { PROJECT_TASKS_FIRST_CLAUSE } from "@/lib/projects/acl/projectTasksFirstClause.constant";
 
 /** Catalog v22: one recipient per send (093103ac); v23: Tasks first (8cf8f64f). */
@@ -24,5 +25,15 @@ export const PRODUCT_CONNECT_UPDATES_MESSAGING: readonly ProductConnectUpdateEnt
       summary:
         "Before acting on any direct project request, check list_project_tasks; create_project_task first for new work. Now in get_agent_guide, the briefing, the join prompt and the wake clause.",
       adapt: PROJECT_TASKS_FIRST_CLAUSE,
+    },
+    {
+      id: "orchestrate-and-report",
+      catalogVersion: 24,
+      at: "2026-10-09",
+      kind: "connect",
+      title: "Orchestrate, and put every task on AW",
+      summary:
+        "Act as an orchestrator when you can: sub-bots or subagents do the work, your seat only gets assigned, receives and communicates. Every task, even one your user gives you directly, ends up as a project task with a resultSummary so auto skills can learn from it.",
+      adapt: PROJECT_ORCHESTRATOR_CLAUSE,
     },
   ];

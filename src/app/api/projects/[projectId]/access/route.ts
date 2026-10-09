@@ -1,3 +1,4 @@
+import { decorateBotManagement } from "@/lib/projects/acl/decorateBotManagement";
 import { handleInviterAccessPatch } from "@/app/api/projects/[projectId]/access/handleInviterAccessPatch";
 import { handleProjectAccessPatch } from "@/app/api/projects/[projectId]/access/patchAccessAction";
 import { buildInviterPendingAccessViews } from "@/lib/projects/acl/approvalCard/buildInviterPendingAccessViews";
@@ -51,7 +52,7 @@ export async function GET(
   return Response.json({
     ok: true,
     project: { id: access.project.id, name: access.project.name },
-    members,
+    members: decorateBotManagement(members, { userId: actor.id, isOwner }),
     pendingRequests,
     expiredRequests,
     firstConnect: isOwner
