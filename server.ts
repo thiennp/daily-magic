@@ -84,7 +84,11 @@ const server = createServer((request, response) => {
   handle(request, response, parsedUrl);
 });
 
-const webSocketServer = new WebSocketServer({ noServer: true });
+// 100 MiB is the library default: one socket could pin the process. 8 MiB covers harness bundles and terminal chunks.
+const webSocketServer = new WebSocketServer({
+  noServer: true,
+  maxPayload: 8 * 1024 * 1024,
+});
 
 server.on("upgrade", (request, socket, head) => {
   if (!nextReady) {
