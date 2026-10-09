@@ -1,6 +1,7 @@
 "use client";
 
 import AwcOneWindowInFeedApprovals from "@/features/projects/messenger/oneWindow/AwcOneWindowInFeedApprovals";
+import AwcOneWindowInFeedRunApprovals from "@/features/projects/messenger/oneWindow/AwcOneWindowInFeedRunApprovals";
 import AwcOneWindowInFeedSkillQuestions from "@/features/projects/messenger/oneWindow/AwcOneWindowInFeedSkillQuestions";
 
 interface AwcOneWindowInFeedCardsProps {
@@ -8,7 +9,7 @@ interface AwcOneWindowInFeedCardsProps {
   readonly enabled: boolean;
 }
 
-/** Owner decision cards above the feed: join approvals, then skill questions. */
+/** Owner decision cards above the feed: join approvals, run approvals, then skill questions. */
 export default function AwcOneWindowInFeedCards({
   projectId,
   enabled,
@@ -16,6 +17,7 @@ export default function AwcOneWindowInFeedCards({
   return (
     <>
       <AwcOneWindowInFeedApprovals projectId={projectId} enabled={enabled} />
+      <AwcOneWindowInFeedRunApprovals projectId={projectId} enabled={enabled} />
       <AwcOneWindowInFeedSkillQuestions
         projectId={projectId}
         enabled={enabled}
