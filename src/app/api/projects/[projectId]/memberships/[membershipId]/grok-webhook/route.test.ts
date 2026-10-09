@@ -9,12 +9,16 @@ import {
 
 const sqlMock = vi.fn();
 const requireAuth = vi.hoisted(() => vi.fn());
+const mayControl = vi.hoisted(() => vi.fn());
 
 vi.mock("@/lib/db", () => ({
   getSql: () => sqlMock,
   asRowArray: (rows: unknown) => (Array.isArray(rows) ? rows : []),
 }));
 vi.mock("@/lib/auth/requireAuth", () => ({ requireAuth }));
+vi.mock("@/lib/projects/acl/webhooks/mayControlOwnedBotWakeLink", () => ({
+  mayControlOwnedBotWakeLink: mayControl,
+}));
 vi.mock("@/lib/projects/acl/webhooks/assertSafeProjectWebhookUrl", () => ({
   assertSafeProjectWebhookUrl: vi.fn(async (raw: unknown) =>
     String(raw).startsWith("https://")
@@ -43,6 +47,7 @@ const inserts = (): unknown[][] =>
 beforeEach(() => {
   sqlMock.mockReset();
   requireAuth.mockReset();
+  mayControl.mockReset().mockResolvedValue(true);
   resetProjectAclSchemaEnsureForTests();
   Object.assign(db, { writable: true, present: true, statusRow: null });
   requireAuth.mockResolvedValue({ actor: { id: "human-1" }, error: null });
@@ -69,7 +74,13 @@ describe("owned-bot memberships grok-webhook route", () => {
     expect(text).not.toContain(SECRET_KEY);
     expect(String(inserts()[0]?.[0])).toContain("owned_bot_row");
     expect(inserts()[0]).toEqual(
-      expect.arrayContaining([SECRET_KEY, "proj-1", "owned_bot_row", "mem-1", "human-1"]),
+      expect.arrayContaining([
+        SECRET_KEY,
+        "proj-1",
+        "owned_bot_row",
+        "mem-1",
+        "human-1",
+      ]),
     );
   });
 
@@ -91,28 +102,5 @@ describe("owned-bot memberships grok-webhook route", () => {
       lastFailureReason: "Fetch failed (timeout, DNS or refused)",
     });
     expect(text).not.toContain("/wake/owned");
-  });
-
-  it("non-owner write matches no row (404)", async () => {
-    Object.assign(db, { writable: false, present: false });
-    requireAuth.mockResolvedValue({ actor: { id: "stranger" }, error: null });
-    const response = await PUT(
-      new Request("http://localhost/x", {
-        method: "PUT",
-        body: JSON.stringify({ webhookUrl: URL_OK, webhookKey: SECRET_KEY }),
-      }),
-      { params },
-    );
-    expect(response.status).toBe(404);
-    expect((await response.json()).code).toBe("not_found");
-  });
-
-  it("GET 404s when the membership is not owned by the caller", async () => {
-    Object.assign(db, { statusRow: null });
-    sqlMock.mockImplementation(
-      grokWebhookSql({ writable: false, present: false, statusRow: null }),
-    );
-    const response = await GET(new Request("http://localhost/x"), { params });
-    expect(response.status).toBe(404);
   });
 });

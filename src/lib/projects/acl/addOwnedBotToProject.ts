@@ -54,6 +54,10 @@ export const addOwnedBotToProject = async (input: {
   if (status === "active" || status === "pending" || status === "owner") {
     return { ok: false, code: "already_in_project" };
   }
+  // A seat that was revoked (maybe by the owner) is not re-seated by a member.
+  if (status === "revoked" && !actor.isOwner) {
+    return { ok: false, code: "forbidden" };
+  }
   const name = await resolveRedeemSuggestedDisplayName({
     projectId: input.projectId,
     suggestedProjectDisplayName: input.projectDisplayName,

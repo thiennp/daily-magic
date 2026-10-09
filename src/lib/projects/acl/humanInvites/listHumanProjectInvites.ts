@@ -9,7 +9,7 @@ export type ListHumanInvitesResult =
   | { readonly ok: true; readonly invites: readonly HumanInviteRecord[] }
   | { readonly ok: false; readonly code: "not_found" | "forbidden" };
 
-/** Owner or member list: auth via authorizeProjectInviter, then usable SELECT. */
+/** Owner: all invites. Member: only the invites they created. */
 export const listHumanProjectInvites = async (input: {
   readonly projectId: string;
   readonly ownerUserId: string;
@@ -22,10 +22,12 @@ export const listHumanProjectInvites = async (input: {
     return { ok: false, code: access.reason };
   }
   await ensureProjectAclSchema();
+  // A member sees only the invites they created (and their invitees' emails), not the owner's.
+  const createdBy = access.owner ? null : input.ownerUserId;
   // 108: "Wants to join" (status accepted) first, then unused pending invites.
   const [awaiting, rows] = await Promise.all([
-    selectAwaitingApprovalHumanInviteRows(input.projectId),
-    selectUsableHumanInviteRows(input.projectId),
+    selectAwaitingApprovalHumanInviteRows(input.projectId, createdBy),
+    selectUsableHumanInviteRows(input.projectId, createdBy),
   ]);
   return {
     ok: true,

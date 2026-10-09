@@ -10,6 +10,7 @@ import {
   toGrokWebhookStatusView,
   type GrokWebhookStatusView,
 } from "@/lib/projects/acl/webhooks/toGrokWebhookStatusView";
+import { mayControlOwnedBotWakeLink } from "@/lib/projects/acl/webhooks/mayControlOwnedBotWakeLink";
 import { writeProjectGrokRoutineWebhook } from "@/lib/projects/acl/webhooks/writeProjectGrokRoutineWebhook";
 
 export const dynamic = "force-dynamic";
@@ -22,7 +23,9 @@ type RouteContext = {
 };
 
 /** GET 200 body: host + flags + last wake meta. Never a URL path, key or response body. */
-type OwnedBotGrokWebhookGetBody = { readonly ok: true } & GrokWebhookStatusView &
+type OwnedBotGrokWebhookGetBody = {
+  readonly ok: true;
+} & GrokWebhookStatusView &
   GrokWakeHealthView;
 
 const statusForCode = (code: string): number => {
@@ -42,6 +45,14 @@ const ownedBotTarget = async (
   const { actor, error } = await requireAuth();
   if (error || !actor) return { target: null, denied: error };
   const { projectId, membershipId } = await context.params;
+  const allowed = await mayControlOwnedBotWakeLink({
+    projectId,
+    membershipId,
+    callerUserId: actor.id,
+  });
+  if (!allowed) {
+    return { target: null, denied: projectAccessErrorJson("not_found", 404) };
+  }
   return {
     target: {
       projectId,

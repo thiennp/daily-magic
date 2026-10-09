@@ -19,7 +19,7 @@ describe("F1 awaiting list carries the accepter's verified account email", () =>
     expect(text).toContain("LEFT JOIN users u ON u.id = i.accepted_by_user_id");
     expect(text).toContain("u.email_verified IS NOT NULL");
     expect(text).toContain("AS accepted_by_email");
-    expect(sqlMock.mock.calls[0].slice(1)).toEqual(["proj-1"]);
+    expect(sqlMock.mock.calls[0].slice(1)).toEqual(["proj-1", null, null]);
   });
 
   it("row → list item maps accepted_by_email; absent → null", () => {
@@ -43,5 +43,17 @@ describe("F1 awaiting list carries the accepter's verified account email", () =>
     expect(toHumanInviteListItem(mapHumanInviteRow(row)).acceptedByEmail).toBe(
       null,
     );
+  });
+});
+
+describe("awaiting list for a member", () => {
+  it("is limited to the invites the member created", async () => {
+    sqlMock.mockClear();
+    await selectAwaitingApprovalHumanInviteRows("proj-1", "member-1");
+    expect(sqlMock.mock.calls[0].slice(1)).toEqual([
+      "proj-1",
+      "member-1",
+      "member-1",
+    ]);
   });
 });

@@ -2,6 +2,7 @@ import { approveProjectAccessRequest } from "@/lib/projects/acl/approveProjectAc
 import { denyProjectAccessRequest } from "@/lib/projects/acl/denyProjectAccessRequest";
 import { listInviterRequestIds } from "@/lib/projects/acl/listInviterRequestIds";
 import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
+import { requesterWasRevoked } from "@/lib/projects/acl/requesterWasRevoked";
 import { resolveOwnerOrActiveHumanSeat } from "@/lib/projects/acl/resolveOwnerOrActiveHumanSeat";
 
 /**
@@ -31,6 +32,13 @@ export const handleInviterAccessPatch = async (input: {
       })
     ).has(requestId);
   if (!seat.ok || !allowed || typeof requestId !== "string") {
+    return projectAccessErrorJson("forbidden", 403);
+  }
+  // An assistant whose seat was revoked comes back only when the owner approves.
+  if (
+    action === "approve" &&
+    (await requesterWasRevoked({ projectId: input.projectId, requestId }))
+  ) {
     return projectAccessErrorJson("forbidden", 403);
   }
   const ownerUserId = seat.project.ownerUserId;

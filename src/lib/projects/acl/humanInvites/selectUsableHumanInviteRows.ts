@@ -10,6 +10,8 @@ import { asRowArray, getSql } from "@/lib/db";
  */
 export const selectUsableHumanInviteRows = async (
   projectId: string,
+  /** A member sees only the invites they created; the owner passes null. */
+  createdByUserId: string | null = null,
 ): Promise<readonly Record<string, unknown>[]> => {
   const sql = getSql();
   return asRowArray(
@@ -17,6 +19,8 @@ export const selectUsableHumanInviteRows = async (
       SELECT *
       FROM project_human_invites
       WHERE project_id = ${projectId}
+        AND (${createdByUserId}::text IS NULL
+          OR created_by_user_id = ${createdByUserId})
         AND ${sql.unsafe(HUMAN_INVITE_USABLE_WHERE_SQL)}
         AND ${sql.unsafe(HUMAN_INVITE_LIST_NEVER_REDEEMED_FRAGMENT)}
       ORDER BY created_at DESC

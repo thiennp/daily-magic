@@ -4,6 +4,7 @@ const seatMock = vi.hoisted(() => vi.fn());
 const idsMock = vi.hoisted(() => vi.fn());
 const approveMock = vi.hoisted(() => vi.fn());
 const denyMock = vi.hoisted(() => vi.fn());
+const revokedMock = vi.hoisted(() => vi.fn());
 vi.mock("@/lib/projects/acl/resolveOwnerOrActiveHumanSeat", () => ({
   resolveOwnerOrActiveHumanSeat: seatMock,
 }));
@@ -12,6 +13,9 @@ vi.mock("@/lib/projects/acl/listInviterRequestIds", () => ({
 }));
 vi.mock("@/lib/projects/acl/approveProjectAccessRequest", () => ({
   approveProjectAccessRequest: approveMock,
+}));
+vi.mock("@/lib/projects/acl/requesterWasRevoked", () => ({
+  requesterWasRevoked: revokedMock,
 }));
 vi.mock("@/lib/projects/acl/denyProjectAccessRequest", () => ({
   denyProjectAccessRequest: denyMock,
@@ -30,7 +34,10 @@ const patch = (body: Record<string, unknown>) =>
 
 describe("handleInviterAccessPatch", () => {
   beforeEach(() => {
-    for (const m of [seatMock, idsMock, approveMock, denyMock]) m.mockReset();
+    for (const m of [seatMock, idsMock, approveMock, denyMock, revokedMock]) {
+      m.mockReset();
+    }
+    revokedMock.mockResolvedValue(false);
     seatMock.mockResolvedValue(memberSeat);
     idsMock.mockResolvedValue(new Set(["r1"]));
     approveMock.mockResolvedValue({ ok: true, request: { id: "r1" } });
@@ -67,5 +74,14 @@ describe("handleInviterAccessPatch", () => {
     expect((await patch({ action: "approve", requestId: "r1" })).status).toBe(
       403,
     );
+  });
+
+  it("will not re-seat an assistant whose seat was revoked: the owner decides", async () => {
+    revokedMock.mockResolvedValue(true);
+    const response = await patch({ action: "approve", requestId: "r1" });
+    expect(response.status).toBe(403);
+    expect(approveMock).not.toHaveBeenCalled();
+    // denying it stays possible for the inviter
+    expect((await patch({ action: "deny", requestId: "r1" })).status).toBe(200);
   });
 });

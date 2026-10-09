@@ -6,6 +6,8 @@ import { asRowArray, getSql } from "@/lib/db";
  */
 export const selectAwaitingApprovalHumanInviteRows = async (
   projectId: string,
+  /** A member sees only the invites they created; the owner passes null. */
+  createdByUserId: string | null = null,
 ): Promise<readonly Record<string, unknown>[]> => {
   const sql = getSql();
   return asRowArray(
@@ -18,6 +20,8 @@ export const selectAwaitingApprovalHumanInviteRows = async (
       WHERE i.project_id = ${projectId}
         AND i.status = 'accepted'
         AND i.revoked_at IS NULL
+        AND (${createdByUserId}::text IS NULL
+          OR i.created_by_user_id = ${createdByUserId})
       ORDER BY i.accepted_at DESC NULLS LAST
       LIMIT 100
     `,
