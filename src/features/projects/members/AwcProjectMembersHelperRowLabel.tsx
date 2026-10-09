@@ -18,12 +18,12 @@ export default function AwcProjectMembersHelperRowLabel({
   return (
     <button
       type="button"
-      className="flex min-w-[4.5rem] flex-1 shrink items-center gap-3 text-left"
+      className="flex min-w-[4.5rem] flex-1 shrink items-center gap-3 overflow-hidden text-left"
       aria-expanded={expanded}
       onClick={onToggle}
     >
       <AwcProjectMembersHelperAvatar name={name} />
-      <span className="min-w-0">
+      <span className="min-w-0 flex-1 overflow-hidden">
         <AwcBotName name={name} className="flex font-semibold text-awc-fg" />
         {line ? (
           <span className="block text-[12px] text-awc-fg-subtle">{line}</span>
