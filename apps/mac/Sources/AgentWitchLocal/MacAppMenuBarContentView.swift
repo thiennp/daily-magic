@@ -15,11 +15,9 @@ struct MacAppMenuBarContentView: View {
 
     private var chrome: MacAppChromeStatus { controller.chromeStatus }
 
-    /// Translocated (quarantined copy) or not installed in an Applications folder.
-    private var showTranslocationBanner: Bool {
-        let path = Bundle.main.bundlePath
-        return isAppTranslocated(bundlePath: path)
-            || !isAppInApplicationsFolder(bundlePath: path, homeDirectory: NSHomeDirectory())
+    /// Mounted disk image, translocated copy, or any folder other than Applications.
+    private var installGuidance: AppInstallGuidance? {
+        resolveAppInstallGuidance(bundlePath: Bundle.main.bundlePath, homeDirectory: NSHomeDirectory())
     }
 
     var body: some View {
@@ -32,9 +30,9 @@ struct MacAppMenuBarContentView: View {
                 Divider().background(MacAppTheme.border)
                 updateStrip(offer)
             }
-            if showTranslocationBanner {
+            if let guidance = installGuidance {
                 Divider().background(MacAppTheme.border)
-                translocationStrip
+                translocationStrip(guidance)
                     .padding(12)
             }
             Divider().background(MacAppTheme.border)
@@ -353,12 +351,12 @@ struct MacAppMenuBarContentView: View {
         .background(MacAppTheme.accentSoft)
     }
 
-    private var translocationStrip: some View {
+    private func translocationStrip(_ guidance: AppInstallGuidance) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("Move AgentWitch Local to Applications")
+            Text(guidance.title)
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(MacAppTheme.brandInk)
-            Text("macOS is running a temporary copy. Quit, drag AgentWitch Local into Applications, then open it from there.")
+            Text(guidance.message)
                 .font(.caption2)
                 .foregroundStyle(MacAppTheme.fgMuted)
                 .fixedSize(horizontal: false, vertical: true)

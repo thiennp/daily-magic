@@ -176,6 +176,7 @@ struct ComputerView: View {
     private var connectedPane: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
+                if let guidance = installGuidance { installGuidanceBanner(guidance) }
                 if controller.portsInUse { portsBanner }
                 if chrome.kind == .waitingForInternet { offlineBanner }
                 if isRunning && controller.connectionNotLinked { notLinkedBanner }
@@ -188,6 +189,31 @@ struct ComputerView: View {
             .frame(maxWidth: 880, alignment: .leading)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+    }
+
+    /// Running from the disk image, a temporary copy or any non-Applications folder.
+    private var installGuidance: AppInstallGuidance? {
+        resolveAppInstallGuidance(bundlePath: Bundle.main.bundlePath, homeDirectory: NSHomeDirectory())
+    }
+
+    private func installGuidanceBanner(_ guidance: AppInstallGuidance) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: "externaldrive.badge.exclamationmark")
+            VStack(alignment: .leading, spacing: 2) {
+                Text(guidance.title).font(.system(size: 13, weight: .semibold))
+                Text(guidance.message)
+                    .font(.system(size: 12)).foregroundStyle(MacAppTheme.fgMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer()
+            Button("Show Applications") {
+                NSWorkspace.shared.open(URL(fileURLWithPath: "/Applications"))
+            }.buttonStyle(.bordered)
+        }
+        .foregroundStyle(MacAppTheme.warning)
+        .padding(.horizontal, 16).padding(.vertical, 12)
+        .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.warningSoft))
+        .accessibilityElement(children: .combine)
     }
 
     private var portsBanner: some View {
