@@ -9,6 +9,7 @@ export type ProjectTaskRecordWrite = Pick<
   ProjectTaskRecord,
   | "title"
   | "description"
+  | "resultSummary"
   | "priority"
   | "stage"
   | "tipSha"
@@ -29,11 +30,11 @@ export const insertProjectTaskRecord = async (input: {
     await getSql()`
       INSERT INTO project_task_records (
         project_id, created_by_user_id, created_by_membership_id,
-        owner_membership_id, title, description, status, priority, stage,
+        owner_membership_id, title, description, result_summary, status, priority, stage,
         tip_sha, depends_on, plan_item_id, stage_times
       ) VALUES (
         ${input.projectId}, ${input.createdByUserId}, ${input.createdByMembershipId},
-        ${v.ownerMembershipId}, ${v.title}, ${v.description}, ${v.status},
+        ${v.ownerMembershipId}, ${v.title}, ${v.description}, ${v.resultSummary}, ${v.status},
         ${v.priority}, ${v.stage}, ${v.tipSha}, ${[...v.dependsOn]}, ${v.planItemId},
         CASE WHEN ${v.stage}::text IS NULL THEN '{}'::jsonb
              ELSE jsonb_build_object(${v.stage}::text, NOW()) END
@@ -64,6 +65,7 @@ export const updateProjectTaskRecord = async (input: {
         owner_membership_id = ${v.ownerMembershipId},
         title = ${v.title},
         description = ${v.description},
+        result_summary = ${v.resultSummary},
         status = ${v.status},
         priority = ${v.priority},
         stage = ${v.stage},

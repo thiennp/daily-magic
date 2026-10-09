@@ -13,6 +13,7 @@ export const isProjectTaskWriteUnchanged = (
 ): boolean =>
   next.title === current.title &&
   next.description === current.description &&
+  next.resultSummary === current.resultSummary &&
   next.status === current.status &&
   next.priority === current.priority &&
   next.stage === current.stage &&
@@ -31,6 +32,7 @@ export const mergeProjectTaskPatch = (input: {
   return {
     title: pick(f.title, c.title),
     description: pick(f.description, c.description),
+    resultSummary: pick(f.resultSummary, c.resultSummary),
     status: input.status,
     priority: pick(f.priority, c.priority),
     stage: pick(f.stage, c.stage),

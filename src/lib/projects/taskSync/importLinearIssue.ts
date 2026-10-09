@@ -41,6 +41,7 @@ export const importLinearIssue = async (input: {
     values: {
       title,
       description: fields.description,
+      resultSummary: null,
       status: fields.status === "planned" ? "planned" : "queued",
       priority: fields.priority,
       stage: null,

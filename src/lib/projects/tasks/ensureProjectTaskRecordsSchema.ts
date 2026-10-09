@@ -69,6 +69,7 @@ export const ensureProjectTaskRecordsSchema = async (): Promise<void> => {
       END $$`;
     await sql`ALTER TABLE project_task_records ADD COLUMN IF NOT EXISTS cancelled_at TIMESTAMPTZ`;
     await sql`ALTER TABLE project_task_records ADD COLUMN IF NOT EXISTS agent_run_id TEXT`;
+    await sql`ALTER TABLE project_task_records ADD COLUMN IF NOT EXISTS result_summary TEXT`;
     await sql`
       CREATE INDEX IF NOT EXISTS project_task_records_agent_run_idx
         ON project_task_records (agent_run_id) WHERE agent_run_id IS NOT NULL`;

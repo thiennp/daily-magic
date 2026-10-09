@@ -33,6 +33,7 @@ const parseRow = (value: unknown): ProjectTaskRecord | null => {
     projectId: str(row.projectId) ?? "",
     title: str(row.title) ?? "",
     description: str(row.description),
+    resultSummary: str(row.resultSummary),
     status,
     priority: inList(PROJECT_TASK_PRIORITIES, row.priority),
     stage: inList(PROJECT_TASK_STAGES, row.stage),

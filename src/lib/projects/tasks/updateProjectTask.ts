@@ -30,6 +30,7 @@ export type UpdateProjectTaskResult =
         | ProjectTaskArgsError
         | ProjectTaskRefError
         | "task_not_found"
+        | "result_summary_required"
         | "invalid_transition"
         | "update_conflict";
     };
@@ -44,6 +45,8 @@ export type UpdateProjectTaskResult =
 export const updateProjectTask = async (input: {
   readonly actorUserId: string;
   readonly args: unknown;
+  /** Bots: finishing a task (→ done) must carry the outcome. */
+  readonly requireResultSummaryOnDone?: boolean;
 }): Promise<UpdateProjectTaskResult> => {
   const parsed = parseUpdateProjectTaskArgs(input.args);
   if (!parsed.ok) return parsed;
@@ -67,6 +70,14 @@ export const updateProjectTask = async (input: {
     fields,
     status: decision.status,
   });
+  if (
+    input.requireResultSummaryOnDone === true &&
+    values.status === "done" &&
+    current.status !== "done" &&
+    values.resultSummary === null
+  ) {
+    return { ok: false, code: "result_summary_required" };
+  }
   // No-op (incl. a done retry): no write, updated_at untouched.
   if (isProjectTaskWriteUnchanged(current, values)) {
     return { ok: true, task: current };

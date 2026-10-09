@@ -6,6 +6,7 @@ import {
   oneOf,
   parseDependsOn,
   parseDescription,
+  parseResultSummary,
   parseTipSha,
   parseTitle,
   type ProjectTaskFieldResult as Result,
@@ -21,6 +22,7 @@ import {
 export type ProjectTaskFieldPatch = {
   readonly title?: string;
   readonly description?: string | null;
+  readonly resultSummary?: string | null;
   readonly priority?: ProjectTaskPriority | null;
   readonly stage?: ProjectTaskStage | null;
   readonly tipSha?: string | null;
@@ -38,6 +40,8 @@ const parseOne = (
       return parseTitle(v);
     case "description":
       return parseDescription(v);
+    case "resultSummary":
+      return parseResultSummary(v);
     case "tipSha":
       return parseTipSha(v);
     case "dependsOn":
@@ -68,6 +72,7 @@ const parseOne = (
 const FIELD_KEYS: readonly (keyof ProjectTaskFieldPatch)[] = [
   "title",
   "description",
+  "resultSummary",
   "priority",
   "stage",
   "tipSha",

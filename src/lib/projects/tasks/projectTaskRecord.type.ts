@@ -10,6 +10,8 @@ export type ProjectTaskRecord = {
   readonly projectId: string;
   readonly title: string;
   readonly description: string | null;
+  /** What the finisher found or delivered (set with done). */
+  readonly resultSummary: string | null;
   readonly status: ProjectTaskStatus;
   readonly priority: ProjectTaskPriority | null;
   readonly stage: ProjectTaskStage | null;

@@ -61,6 +61,16 @@ export default function AwcProjectTaskRecordDetail({
       <p className="m-0 text-[13.5px] text-awc-fg-muted">
         {task.description ?? C.noDescription}
       </p>
+      {task.resultSummary !== null ? (
+        <div className={`${AWC_TASKS_CARD_CLASS} p-4`}>
+          <h3 className={`${AWC_TASKS_PANEL_HEADING_CLASS} mb-1.5`}>
+            {C.outcomeHeading}
+          </h3>
+          <p className="m-0 whitespace-pre-wrap break-words text-[13.5px] text-awc-fg">
+            {task.resultSummary}
+          </p>
+        </div>
+      ) : null}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="flex min-w-0 flex-col gap-4">
           <dl className="m-0 grid grid-cols-[7rem_minmax(0,1fr)] gap-x-3 gap-y-2 text-[13.5px]">

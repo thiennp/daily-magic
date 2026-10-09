@@ -77,6 +77,7 @@ export const createProjectTask = async (input: {
     values: {
       title: fields.title,
       description: fields.description ?? null,
+      resultSummary: fields.resultSummary ?? null,
       status,
       priority: fields.priority ?? null,
       stage: fields.stage ?? null,

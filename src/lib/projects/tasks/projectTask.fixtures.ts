@@ -25,6 +25,7 @@ export const projectTaskRecordFixture = (
   projectId: "p1",
   title: "Ship DF-024",
   description: null,
+  resultSummary: null,
   status: "queued",
   priority: null,
   stage: null,

@@ -3,6 +3,7 @@ import { parseProjectTaskId } from "@/lib/projects/tasks/parseProjectTaskId";
 import {
   PROJECT_TASK_DEPENDS_ON_MAX,
   PROJECT_TASK_DESCRIPTION_MAX_CHARS,
+  PROJECT_TASK_RESULT_SUMMARY_MAX_CHARS,
   PROJECT_TASK_TIP_SHA_PATTERN,
   PROJECT_TASK_TITLE_MAX_CHARS,
 } from "@/lib/projects/tasks/projectTaskTools.constant";
@@ -13,6 +14,8 @@ export type ProjectTaskFieldError =
   | "title_too_long"
   | "description_too_long"
   | "invalid_description"
+  | "result_summary_too_long"
+  | "invalid_result_summary"
   | "invalid_priority"
   | "invalid_stage"
   | "invalid_tip_sha"
@@ -61,6 +64,17 @@ export const parseDescription = (
   const text = scrub(v);
   return text.length > PROJECT_TASK_DESCRIPTION_MAX_CHARS
     ? fail("description_too_long")
+    : ok(text.length > 0 ? text : null);
+};
+
+export const parseResultSummary = (
+  v: unknown,
+): ProjectTaskFieldResult<string | null> => {
+  if (isBlank(v)) return ok(null);
+  if (typeof v !== "string") return fail("invalid_result_summary");
+  const text = scrub(v);
+  return text.length > PROJECT_TASK_RESULT_SUMMARY_MAX_CHARS
+    ? fail("result_summary_too_long")
     : ok(text.length > 0 ? text : null);
 };
 

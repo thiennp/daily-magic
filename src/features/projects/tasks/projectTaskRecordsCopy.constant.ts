@@ -46,6 +46,7 @@ export const PROJECT_TASK_RECORDS_COPY = {
   controlPriority: "Priority",
   controlAssignee: "Assignee",
   noPriority: "No priority",
+  outcomeHeading: "Outcome",
   unassigned: "Unassigned",
   seatsLoading: "Loading people…",
   hintAgent: "Coding agent",

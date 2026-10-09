@@ -53,6 +53,11 @@ export const PROJECT_TASK_TRANSITIONS: Readonly<
 export const PROJECT_TASK_TITLE_MAX_CHARS = 120;
 /** Neon meta cap for description (chars). Longer → description_too_long. */
 export const PROJECT_TASK_DESCRIPTION_MAX_CHARS = 200;
+/**
+ * Outcome a bot writes when it finishes (findings, what was delivered). Longer
+ * than the one-line description, still a short summary: full reports stay local.
+ */
+export const PROJECT_TASK_RESULT_SUMMARY_MAX_CHARS = 600;
 export const PROJECT_TASK_DEPENDS_ON_MAX = 10;
 export const PROJECT_TASK_TIP_SHA_PATTERN = /^[0-9a-f]{7,40}$/;
 

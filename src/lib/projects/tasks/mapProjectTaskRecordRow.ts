@@ -36,6 +36,7 @@ export const mapProjectTaskRecordRow = (
   projectId: String(row.project_id),
   title: String(row.title ?? ""),
   description: str(row.description),
+  resultSummary: str(row.result_summary),
   status: String(row.status) as ProjectTaskStatus,
   priority: str(row.priority) as ProjectTaskPriority | null,
   stage: str(row.stage) as ProjectTaskStage | null,
