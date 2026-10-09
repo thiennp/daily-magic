@@ -1,4 +1,4 @@
-import { PRODUCT_CONNECT_UPDATES_KNOWLEDGE_CARD } from "@/lib/agentAccess/productConnectUpdatesKnowledgeCard.constant";
+import { PRODUCT_CONNECT_UPDATES_PLAYBOOK } from "@/lib/agentAccess/productConnectUpdatesPlaybook.constant";
 import { PRODUCT_CONNECT_UPDATES_POLL_INBOX } from "@/lib/agentAccess/productConnectUpdatesPollInbox.constant";
 import {
   AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS,
@@ -101,5 +101,5 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
     ...PRODUCT_CONNECT_UPDATES_PROJECT_TASKS,
     ...PRODUCT_CONNECT_UPDATES_MESSAGING,
     ...PRODUCT_CONNECT_UPDATES_POLL_INBOX,
-    ...PRODUCT_CONNECT_UPDATES_KNOWLEDGE_CARD,
+    ...PRODUCT_CONNECT_UPDATES_PLAYBOOK,
   ];
