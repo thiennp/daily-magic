@@ -318,7 +318,7 @@ API/build wait for light Arch SHIP → AW Lead routes **Arch review 5**.
 | **S2** | Messages adapter: Messenger uses module IDB + pager explicitly                                              | Soft IDB behavior preserved                                |
 | **S3** | Sessions/skills adapters as needed                                                                          | Never hide live chrome                                     |
 
-Flag suggestion: `AWC_PROJECT_SYNC_MODULE` (Tasks tab + extract). Off = today’s Messenger-only wiring.
+Flag: `AWC_PROJECT_SYNC_MODULE` (Tasks tab + extract). **Rolled out 2026-10-09: ON by default**; kill switch `AWC_PROJECT_SYNC_MODULE=0` (server) / `NEXT_PUBLIC_AWC_PROJECT_SYNC_MODULE=0` (browser) restores today’s Messenger-only wiring.
 
 ---
 
