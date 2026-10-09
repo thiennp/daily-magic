@@ -170,5 +170,6 @@ export type {
 } from "../internal/core/reconcileProjectSyncOnConnect";
 
 export { reportAutoSkillRunCompleted } from "../internal/core/reportAutoSkillRunCompleted";
+export { scanProjectDocsForAutoSkills } from "../internal/core/scanProjectDocsForAutoSkills";
 export { scanProjectTasksForAutoSkills } from "../internal/core/scanProjectTasksForAutoSkills";
 export { syncSkillScriptApprovals } from "../internal/core/syncSkillScriptApprovals";

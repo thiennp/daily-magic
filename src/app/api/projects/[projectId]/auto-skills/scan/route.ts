@@ -11,15 +11,21 @@ type RouteContext = { params: Promise<{ readonly projectId: string }> };
 /**
  * Owner POST: ask the owner's online computers to run past tasks of this
  * project through auto skills now. The computers hold the task history, so
- * the scan runs there; answers show up as questions on the strip.
+ * the scan runs there; answers show up as questions on the strip. A body of
+ * `{ "docs": true }` scans the project folder's docs instead of past tasks.
  */
 export async function POST(
-  _request: Request,
+  request: Request,
   context: RouteContext,
 ): Promise<Response> {
   const { actor, error } = await requireAuth();
   if (error || !actor) return error;
   const { projectId } = await context.params;
+  const body: unknown = await request.json().catch(() => null);
+  const docs =
+    typeof body === "object" &&
+    body !== null &&
+    (body as { docs?: unknown }).docs === true;
   const overview = await getAutoSkillsOverview({
     projectId,
     actorUserId: actor.id,
@@ -48,7 +54,7 @@ export async function POST(
   for (const agent of agents) {
     agent.send({
       type: AGENT_WITCH_MESSAGE_TYPES.AUTOSKILL_SCAN_REQUEST,
-      payload: { projectId },
+      payload: { projectId, ...(docs ? { docs: true } : {}) },
     });
   }
   return Response.json({ ok: true, computers: agents.length }, { status: 202 });

@@ -59,6 +59,19 @@ Mac Run (completed, projectId) ──► auto-skill modules ──► owner ques
 
 Canonical design: [auto-skill-modules-plan.md](../agent-witch/auto-skill-modules-plan.md). Implementation: `apps/live/features/project-history/internal/core/onAutoSkillRunCompleted.ts`, `apps/install/entry/startAgentWitchClient.ts`.
 
+## Folder docs to Playbook skills (deterministic, owner-approved)
+
+A fifth way to get a skill, separate from the four pipelines: the Library's **Scan project docs** button asks a linked computer to read the project folder's `.cursor/skills`, `.cursor/commands` and `docs/qa` and raise owner questions (Save / Not now / Never). **No model runs**, nothing is published without the owner's Save, and the draft text is stored in the cloud until the owner answers (the question says so). It does not use the repeat counter, so a doc is eligible the first time.
+
+- **Conversion.** A skill or command is used as it is; a Q&A doc becomes a skill (file name as the name, the question plus the first sentence of the short answer as the description, `Query aliases` as `keywords:`). The front matter gets `source: <path>@<git blob sha>` and `origin: folder-doc`.
+- **Gates.** At least 3 steps (numbered ones for Q&A: bullet facts are not a procedure); not a pointer page (40% of lines are links); not already a skill (same name or `name-xxxx`); secrets scrubbed and a doc-mode check that rejects home-directory paths and emails but allows relative paths, ids, https URLs, `~/` and system paths.
+- **Caps.** Up to 8 candidates and 3 questions per pass; library 30; 10 doc-made skills until a pilot passes (a whole-library read costs about 140 tokens per skill).
+- **No repeats.** The question id is per doc version (`doc-<path hash>-<sha>`): a doc the owner saved, refused or left pending is not asked again; a changed file is a new question. The status line also counts doc-made skills whose source changed or was deleted (it does not edit or revoke them).
+- **Dry run on this repo:** 60 docs read, 25 eligible (commands and skills mostly; most Q&A docs are explanations, not procedures).
+- **Code:** `apps/live/features/project-history/internal/core/ingestFolderDocsAsSkillDrafts.ts` (+ `evaluateDocSource`, `convertDocToSkillDraft`, `shouldIngestDoc`, `validateDocSkillDraft`, `docOriginSkills`), runner `scanProjectDocsForAutoSkills.ts`, message `autoskill.scan.request` with `docs: true`, button in `AwcAutoSkillsActions.tsx`.
+- **Rescans.** "Scan past tasks" no longer re-extracts or re-judges a run that already fed the module store (`hasProcessedAutoSkillRun`).
+- **Pilot (AgentWitch, 14 skills):** add up to 10 doc-made skills; success is empty-lookup rate down 20% relative, follow-through not lower, 40% of them fetched within 4 weeks, owner acceptance at least 60%, average lookup tokens under 150. Stop if acceptance is under 30% or Never outnumbers Save, or a secret passes the check.
+
 ## Bot / agent reporting (target behavior)
 
 | Action                                           | Required?               | Visible to humans                 |

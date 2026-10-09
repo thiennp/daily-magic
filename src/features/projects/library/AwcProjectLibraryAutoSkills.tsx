@@ -79,10 +79,12 @@ export default function AwcProjectLibraryAutoSkills({
           <AwcAutoSkillsActions
             busy={auto.busy}
             scanning={auto.scanning}
+            scanningDocs={auto.scanningDocs}
             scanError={auto.scanError}
             waiting={waiting}
             open={open}
             onScan={() => void auto.scan()}
+            onScanDocs={() => void auto.scanDocs()}
             onToggleDrafts={() => setOpen(!open)}
           />
         </>

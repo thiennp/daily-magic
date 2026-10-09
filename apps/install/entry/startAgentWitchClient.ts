@@ -65,6 +65,7 @@ import {
   handleProjectMessageHistoryDispatch,
   handleProjectHistoryPageRequest,
   reportAutoSkillRunCompleted,
+  scanProjectDocsForAutoSkills,
   scanProjectTasksForAutoSkills,
   writeProjectHistoryAiSession,
 } from "@agent-witch/live-project-history";
@@ -2275,7 +2276,11 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       typeof parsed.payload.projectId === "string" &&
       parsed.payload.projectId.trim().length > 0
     ) {
-      runAutoSkillScan(config, parsed.payload.projectId.trim());
+      runAutoSkillScan(
+        config,
+        parsed.payload.projectId.trim(),
+        parsed.payload.docs === true,
+      );
     }
   };
 
@@ -2285,6 +2290,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
   const runAutoSkillScan = (
     scanConfig: AgentWitchConfig,
     projectId: string,
+    docs = false,
   ): void => {
     const runConfig = readAgentWitchRunConfig();
     const cloudApi =
@@ -2302,6 +2308,14 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       path.dirname(scanConfig.layout.configPath),
       projectId,
     );
+    if (docs) {
+      void scanProjectDocsForAutoSkills({
+        cloudApi,
+        projectId,
+        folderPath: folderPath ?? null,
+      }).finally(() => autoSkillScansRunning.delete(projectId));
+      return;
+    }
     void scanProjectTasksForAutoSkills({
       cloudApi,
       layout: scanConfig.layout,
