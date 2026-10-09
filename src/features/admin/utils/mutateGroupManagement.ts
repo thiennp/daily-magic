@@ -47,11 +47,12 @@ export async function deleteAdminGroup(
   return null;
 }
 
+/** `invited`: the person was sent an invitation and joins when they accept (not added yet). */
 export async function addGroupMember(
   groupId: string,
   email: string,
   role: string,
-): Promise<string | null> {
+): Promise<{ readonly error: string | null; readonly invited: boolean }> {
   const response = await fetch(`/api/admin/groups/${groupId}/members`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -60,10 +61,13 @@ export async function addGroupMember(
   const payload = (await response.json()) as ApiErrorPayload;
 
   if (!response.ok) {
-    return readApiError(payload, "Could not add member.");
+    return {
+      error: readApiError(payload, "Could not add member."),
+      invited: false,
+    };
   }
 
-  return null;
+  return { error: null, invited: response.status === 202 };
 }
 
 export async function updateGroupMemberRole(

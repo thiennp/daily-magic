@@ -19,19 +19,23 @@ export const addGroupMemberAction = async (
     return;
   }
 
-  const errorMessage = await addGroupMember(
+  const added = await addGroupMember(
     deps.selectedGroupId,
     deps.memberEmail,
     deps.memberRole,
   );
 
-  if (errorMessage) {
-    deps.setMessage(errorMessage);
+  if (added.error) {
+    deps.setMessage(added.error);
     return;
   }
 
   deps.setMemberEmail("");
-  deps.setMessage("Member added.");
+  deps.setMessage(
+    added.invited
+      ? "Invitation sent. They join when they accept it."
+      : "Member added.",
+  );
   await refreshSelectedGroupMembers(deps);
 };
 

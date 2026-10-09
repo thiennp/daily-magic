@@ -6,6 +6,7 @@ import {
   addUserToGroup,
   countSuperAdminsInGroup,
 } from "@/lib/auth/groupMembershipMutations";
+import { createGroupInvite } from "@/lib/auth/groupInvites/createGroupInvite";
 import { getMembershipForUserInGroup } from "@/lib/auth/groupMembershipQueries";
 import { getGroupById } from "@/lib/auth/groupQueries";
 import { getUserByEmail } from "@/lib/auth/userRepository";
@@ -50,12 +51,16 @@ export async function postGroupMember(
   }
 
   const user = await getUserByEmail(email);
+  const platformAdmin = isGlobalAdmin(actor);
 
   if (!user) {
-    return Response.json(
-      { error: "User must sign in before they can be added to a group" },
-      { status: 404 },
-    );
+    // A company manager gets the same answer for any address: no way to probe who has an account.
+    return platformAdmin
+      ? Response.json(
+          { error: "User must sign in before they can be added to a group" },
+          { status: 404 },
+        )
+      : Response.json({ invited: true }, { status: 202 });
   }
 
   const existingMembership = await getMembershipForUserInGroup(
@@ -79,6 +84,23 @@ export async function postGroupMember(
         { status: 409 },
       );
     }
+  }
+
+  if (!platformAdmin) {
+    // Joining a company changes how its admins can dispatch to you: the person decides.
+    if (role === GroupRole.GROUP_SUPER_ADMIN) {
+      return Response.json(
+        { error: "Only a platform admin can add a company owner" },
+        { status: 403 },
+      );
+    }
+    await createGroupInvite({
+      groupId,
+      inviteeUserId: user.id,
+      role: role === GroupRole.GROUP_ADMIN ? "group_admin" : "user",
+      invitedByUserId: actor.id,
+    });
+    return Response.json({ invited: true }, { status: 202 });
   }
 
   const membership = await addUserToGroup(groupId, user.id, role);

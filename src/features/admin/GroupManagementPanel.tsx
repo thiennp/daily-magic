@@ -7,6 +7,7 @@ import CompaniesRulesHead, {
 } from "@/features/admin/components/CompaniesRulesHead";
 import CompaniesRulesOrientationStrip from "@/features/admin/components/CompaniesRulesOrientationStrip";
 import GroupCompanySettingsView from "@/features/admin/components/GroupCompanySettingsView";
+import GroupInvitationsInbox from "@/features/admin/components/GroupInvitationsInbox";
 import GroupMembersAndRuns from "@/features/admin/components/GroupMembersAndRuns";
 import GroupSelectionSection from "@/features/admin/components/GroupSelectionSection";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
@@ -63,6 +64,7 @@ export default function GroupManagementPanel({
         tipLabel="What is a company?"
         lede={C.lede}
       />
+      <GroupInvitationsInbox />
       <GroupSelectionSection
         groups={groupManagement.groups}
         selectedGroupId={selectedGroupId}
