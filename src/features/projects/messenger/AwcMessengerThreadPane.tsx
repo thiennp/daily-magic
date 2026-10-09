@@ -2,9 +2,8 @@
 
 import AwcMessengerComposer from "@/features/projects/messenger/AwcMessengerComposer";
 import AwcMessengerThreadPaneHeader from "@/features/projects/messenger/AwcMessengerThreadPaneHeader";
-import AwcMessengerTimeline from "@/features/projects/messenger/AwcMessengerTimeline";
 import { AWC_PROJECT_MESSENGER_COPY } from "@/features/projects/messenger/awcProjectMessengerCopy.constant";
-import AwcOneWindowFeedEmpty from "@/features/projects/messenger/oneWindow/AwcOneWindowFeedEmpty";
+import AwcOneWindowSearchableTimeline from "@/features/projects/messenger/oneWindow/AwcOneWindowSearchableTimeline";
 import AwcOneWindowFeedLoading from "@/features/projects/messenger/oneWindow/AwcOneWindowFeedLoading";
 import AwcOneWindowFilterBarRow from "@/features/projects/messenger/oneWindow/AwcOneWindowFilterBarRow";
 import AwcOneWindowInFeedCards from "@/features/projects/messenger/oneWindow/AwcOneWindowInFeedCards";
@@ -58,7 +57,6 @@ export default function AwcMessengerThreadPane({
       className="flex min-h-0 min-w-0 flex-1 flex-col bg-awc-surface dark:bg-gray-950"
       aria-label={title}
     >
-      {/* P1-S2: whole feed has no header; an assistant's private feed gets ← Whole project. */}
       {showBack ? (
         <AwcMessengerThreadPaneHeader
           title={title}
@@ -80,19 +78,20 @@ export default function AwcMessengerThreadPane({
       />
       {!isLoading && filter === "all" ? noticesSlot : null}
       {isLoading ? <AwcOneWindowFeedLoading /> : null}
-      {!isLoading && thread !== null && peers.shown.length === 0 ? (
-        <AwcOneWindowFeedEmpty filter={filter} />
-      ) : null}
-      {!isLoading && thread !== null && peers.shown.length > 0 ? (
-        <AwcMessengerTimeline
-          entries={peers.shown}
-          loadingOlder={loadingOlder}
-          canLoadOlder={canLoadOlder}
-          reachedStart={reachedStart}
-          projectComputerOffline={projectComputerOffline}
-          onLoadOlder={onLoadOlder}
-          chatVisibility={chatVisibility}
-          unreadCount={filter === "all" ? unreadCount : 0}
+      {!isLoading && thread !== null ? (
+        <AwcOneWindowSearchableTimeline
+          shown={peers.shown}
+          filter={filter}
+          hasEntries={entries.length > 0}
+          timeline={{
+            loadingOlder,
+            canLoadOlder,
+            reachedStart,
+            projectComputerOffline,
+            onLoadOlder,
+            chatVisibility,
+            unreadCount: filter === "all" ? unreadCount : 0,
+          }}
         />
       ) : null}
       {canSend ? (

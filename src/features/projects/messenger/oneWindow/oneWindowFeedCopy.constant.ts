@@ -2,6 +2,9 @@
 export const ONE_WINDOW_FEED_COPY = {
   emptyTitle: "No messages yet",
   emptyBody: "Say hello or @ an assistant to assign work.",
+  searchLabel: "Search this feed",
+  searchPlaceholder: "Search messages…",
+  searchNoMatch: "No messages match your search.",
   emptyNeedsTitle: "Nothing needs you",
   emptyNeedsBody: "Tasks waiting on you and approvals to decide show up here.",
   emptyApprovalsTitle: "No approvals waiting",

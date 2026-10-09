@@ -40,11 +40,15 @@ describe("P1-S2 One window — full-width Chat surface", () => {
     for (const part of [
       "AwcOneWindowFilterBar",
       "AwcOneWindowInFeedCards",
-      "AwcMessengerTimeline",
+      "AwcOneWindowSearchableTimeline",
       "AwcMessengerComposer",
     ]) {
       expect(pane).toContain(part);
     }
+    // The timeline itself moved into the searchable block.
+    expect(read(`${M}/oneWindow/AwcOneWindowSearchableTimeline.tsx`)).toContain(
+      "AwcMessengerTimeline",
+    );
     expect(read(`${M}/hooks/useMessengerTimelineScroll.ts`)).toContain(
       "TOP_LOAD_THRESHOLD_PX",
     );
