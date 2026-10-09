@@ -11,6 +11,7 @@ import { GlobalRole, isGlobalRole } from "@/lib/auth/roles";
 import { getUserById } from "@/lib/auth/userRepository";
 import { isAgentAccessSyntheticEmail } from "@/lib/agentAccess/isAgentAccessSyntheticEmail";
 import { SUPER_ADMIN_EMAIL } from "@/lib/auth/constants";
+import { markUserEmailVerified } from "@/lib/auth/markUserEmailVerified";
 import { grantPendingTrialIfGateOpen } from "@/lib/billing/grantPendingTrialIfGateOpen";
 
 process.env.AUTH_URL = resolveAppBaseUrl();
@@ -50,7 +51,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
   events: {
-    async signIn({ user, account }) {
+    async signIn({ user, account, profile }) {
+      const provesEmail =
+        account?.provider === "resend" ||
+        (account?.provider === "google" && profile?.email_verified === true);
+      if (user.id && provesEmail) {
+        await markUserEmailVerified(user.id);
+      }
       if (user.email && account?.provider === "google") {
         await ensureSuperAdminGlobalRole(user.email);
       }
