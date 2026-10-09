@@ -4,9 +4,7 @@ import { ACCOUNT_PRIVACY_COPY } from "@/features/account/accountPrivacyCopy.cons
 /** Account page EN — LOCK + COPY.md (EN PASS 2026-10-07). UI-only Soft claim. */
 export const ACCOUNT_TABS = [
   { id: "profile", label: "Profile" },
-  { id: "security", label: "Sign-in and security" },
   { id: "notify", label: "Notifications" },
-  { id: "privacy", label: "Privacy and data" },
 ] as const;
 
 export type AccountTabId = (typeof ACCOUNT_TABS)[number]["id"];
@@ -14,7 +12,7 @@ export type AccountTabId = (typeof ACCOUNT_TABS)[number]["id"];
 export const ACCOUNT_COPY = {
   breadcrumbRoot: "Account",
   h1: "Account",
-  tip: "Your name, how you sign in, what we email you, and your data. Plans and billing live on the Pricing page.",
+  tip: "Your name and what we email you. Plans and billing live on the Pricing page.",
   menuItem: "Account",
 
   profile: {

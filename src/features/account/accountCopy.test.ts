@@ -23,18 +23,12 @@ function collectStrings(value: unknown, out: string[]): void {
 }
 
 describe("ACCOUNT_COPY (LOCK + COPY.md)", () => {
-  it("keeps the four tabs and chrome strings", () => {
-    expect(ACCOUNT_TABS.map((t) => t.id)).toEqual([
-      "profile",
-      "security",
-      "notify",
-      "privacy",
-    ]);
+  it("keeps the tabs that do something and the chrome strings", () => {
+    // Sign-in/security and Privacy/data are hidden until they are wired up.
+    expect(ACCOUNT_TABS.map((t) => t.id)).toEqual(["profile", "notify"]);
     expect(ACCOUNT_TABS.map((t) => t.label)).toEqual([
       "Profile",
-      "Sign-in and security",
       "Notifications",
-      "Privacy and data",
     ]);
     expect(ACCOUNT_COPY.h1).toBe("Account");
     expect(ACCOUNT_COPY.menuItem).toBe("Account");

@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 import AccountH2 from "@/features/account/AccountH2";
 import {
   ACCOUNT_CHIP_CLASS,
@@ -16,7 +14,6 @@ import AccountAvatarColorField from "@/features/account/AccountAvatarColorField"
 import AccountNameForm from "@/features/account/AccountNameForm";
 import AccountProfilePlanCard from "@/features/account/AccountProfilePlanCard";
 import useBillingPlan from "@/features/billing/hooks/useBillingPlan";
-import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 
 type AvatarColorId = (typeof ACCOUNT_AVATAR_COLORS)[number]["id"];
 
@@ -24,6 +21,9 @@ interface AccountProfilePanelProps {
   readonly displayName: string;
   readonly email: string;
   readonly offline: boolean;
+  readonly avatarId: string | null;
+  readonly onAvatarChange: (id: string) => void;
+  readonly onSaveName: (name: string) => Promise<string | null>;
 }
 
 const initialsOf = (value: string): string =>
@@ -38,21 +38,23 @@ export default function AccountProfilePanel({
   displayName,
   email,
   offline,
+  avatarId,
+  onAvatarChange,
+  onSaveName,
 }: AccountProfilePanelProps) {
   const copy = ACCOUNT_COPY.profile;
   const { plan } = useBillingPlan();
-  const [name, setName] = useState(displayName);
-  const [avatarId, setAvatarId] = useState<AvatarColorId>(
-    ACCOUNT_AVATAR_COLORS[0].id,
-  );
-  const [emailNote, setEmailNote] = useState(false);
+  const name = displayName;
+  const currentAvatar: AvatarColorId =
+    ACCOUNT_AVATAR_COLORS.find((color) => color.id === avatarId)?.id ??
+    ACCOUNT_AVATAR_COLORS[0].id;
   const tz =
     typeof Intl !== "undefined"
       ? Intl.DateTimeFormat().resolvedOptions().timeZone
       : "UTC";
   const avatarClass =
-    ACCOUNT_AVATAR_COLORS.find((color) => color.id === avatarId)?.className ??
-    "";
+    ACCOUNT_AVATAR_COLORS.find((color) => color.id === currentAvatar)
+      ?.className ?? "";
 
   return (
     <div className="space-y-6" data-testid="account-profile-panel">
@@ -70,14 +72,12 @@ export default function AccountProfilePanel({
             <p className="text-sm text-awc-fg-muted">{email}</p>
           </div>
           <AccountAvatarColorField
-            avatarId={avatarId}
+            avatarId={currentAvatar}
             offline={offline}
-            onChange={(id) => {
-              setAvatarId(id as AvatarColorId);
-            }}
+            onChange={onAvatarChange}
           />
         </div>
-        <AccountNameForm name={name} offline={offline} onSave={setName} />
+        <AccountNameForm name={name} offline={offline} onSave={onSaveName} />
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <p className={ACCOUNT_LABEL_CLASS}>{copy.email}</p>
@@ -85,23 +85,8 @@ export default function AccountProfilePanel({
           </div>
           <div className="flex items-center gap-2">
             <span className={ACCOUNT_CHIP_CLASS}>✓ {copy.verified}</span>
-            <button
-              type="button"
-              className={APP_SURFACE_CTA_SECONDARY_SM_CLASS}
-              disabled={offline}
-              onClick={() => {
-                setEmailNote(true);
-              }}
-            >
-              {copy.changeEmail}
-            </button>
           </div>
         </div>
-        {emailNote ? (
-          <p role="status" className={ACCOUNT_HINT_CLASS}>
-            {copy.changeEmailNote}
-          </p>
-        ) : null}
         <div className="space-y-1">
           <p className={ACCOUNT_LABEL_CLASS}>{copy.timeZone}</p>
           <p className="text-sm text-awc-fg">{tz}</p>

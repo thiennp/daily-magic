@@ -15,7 +15,8 @@ import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSur
 interface AccountNameFormProps {
   readonly name: string;
   readonly offline: boolean;
-  readonly onSave: (name: string) => void;
+  /** Resolves to an error message, or null when saved. */
+  readonly onSave: (name: string) => Promise<string | null>;
 }
 
 export default function AccountNameForm({
@@ -44,8 +45,10 @@ export default function AccountNameForm({
           return;
         }
         setError("");
-        onSave(draft.trim());
-        setSaved(true);
+        void onSave(draft.trim()).then((message) => {
+          setError(message ?? "");
+          setSaved(message === null);
+        });
       }}
     >
       <label

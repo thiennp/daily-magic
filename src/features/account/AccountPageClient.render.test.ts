@@ -32,9 +32,10 @@ describe("AccountPageClient render", () => {
     expect(html).toContain(ACCOUNT_COPY.h1);
     expect(html).toContain(ACCOUNT_COPY.tip);
     expect(html).toContain("Profile");
-    expect(html).toContain("Sign-in and security");
     expect(html).toContain("Notifications");
-    expect(html).toContain("Privacy and data");
+    expect(html).not.toContain("Sign-in and security");
+    expect(html).not.toContain("Privacy and data");
+    expect(html).not.toContain(ACCOUNT_COPY.profile.changeEmail);
     expect(html).toContain(ACCOUNT_COPY.profile.displayNameTip);
     expect(html).toContain("thien@example.com");
     expect(html).not.toMatch(/\bLane A\b|\bMCP\b|\bOAuth\b/);
