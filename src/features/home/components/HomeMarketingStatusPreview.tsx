@@ -17,20 +17,25 @@ const TONE: Record<(typeof ROWS)[number]["tone"], string> = {
   info: "bg-brand-50 text-brand-800 dark:bg-brand-950/40 dark:text-brand-100",
 };
 
-/** Decorative signed-out hero status card (not interactive). */
+/**
+ * Decorative signed-out hero card (not interactive). Labelled as an example so
+ * it never reads as live device presence.
+ */
 export default function HomeMarketingStatusPreview() {
   return (
     <div aria-hidden="true">
       <MarketingCard as="div" className="space-y-4" interactive={false}>
         <div className="flex items-center gap-2">
-          <span className="inline-block h-2.5 w-2.5 rounded-full bg-emerald-500" />
+          <span className="rounded-full border border-awc-border px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-awc-fg-muted dark:border-gray-700 dark:text-gray-300">
+            Example
+          </span>
           <h3
             className={mergeMarketingClasses(
               "text-sm font-semibold",
               MARKETING_TEXT_PRIMARY_CLASSES,
             )}
           >
-            This computer is online
+            What your computer shows once connected
           </h3>
         </div>
         <ul className="space-y-2">
