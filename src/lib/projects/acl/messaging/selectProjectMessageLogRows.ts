@@ -32,7 +32,8 @@ export const selectProjectMessageLogRows = async (input: {
         AND (
           ${input.viewerIsOwner}::boolean
           OR NOT (
-            sender.member_kind = 'bot' AND recipient.member_kind = 'bot'
+            COALESCE(sender.member_kind, '') = 'bot'
+            AND COALESCE(recipient.member_kind, '') = 'bot'
           )
         )
         -- a closed assistant's messages are visible only to the person who invited it

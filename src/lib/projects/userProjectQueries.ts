@@ -27,13 +27,7 @@ export const listUserProjectsForOwner = async (
           `,
         );
 
-  // The owner's absolute folder path is theirs: a member sees the project, not the path.
-  return rows.map((row) => ({
-    ...mapUserProjectRow(row),
-    folderPath: "",
-    viewerRole:
-      row.viewer_role === "viewer" ? ("viewer" as const) : ("member" as const),
-  }));
+  return rows.map((row) => mapUserProjectRow(row));
 };
 
 export const getUserProjectById = async (
@@ -85,5 +79,11 @@ export const listUserProjectsForMember = async (
       ORDER BY m.created_at DESC
     `,
   );
-  return rows.map((row) => mapUserProjectRow(row));
+  // The owner's absolute folder path is theirs: a member sees the project, not the path.
+  return rows.map((row) => ({
+    ...mapUserProjectRow(row),
+    folderPath: "",
+    viewerRole:
+      row.viewer_role === "viewer" ? ("viewer" as const) : ("member" as const),
+  }));
 };

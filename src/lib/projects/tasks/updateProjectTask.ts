@@ -92,9 +92,7 @@ export const updateProjectTask = async (input: {
     projectId,
     taskId,
     ownerMembershipId: fields.ownerMembershipId,
-    currentOwnerMembershipId: current.ownerMembershipId,
-    actorUserId: input.actorUserId,
-    actorMembershipId: writer.membership?.id ?? null,
+    currentOwnerMembershipId: writer.membership && current.ownerMembershipId,
     dependsOn: fields.dependsOn,
     planItemId: fields.planItemId,
   });

@@ -32,7 +32,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "$APP_ORIGIN" in
-  https://*|http://localhost*|http://127.0.0.1*) ;;
+  https://*|http://localhost|http://localhost:*|http://127.0.0.1|http://127.0.0.1:*) ;;
   *) echo "Refusing to send your token to a non-https origin: $APP_ORIGIN" >&2; exit 1 ;;
 esac
 [[ -n "$PROJECT_ID" ]] || { echo "--project-id is required" >&2; exit 2; }
