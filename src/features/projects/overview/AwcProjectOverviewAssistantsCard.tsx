@@ -1,5 +1,6 @@
 "use client";
 
+import AwcBotName from "@/features/projects/bots/AwcBotName";
 import type { OverviewAssistantRow } from "@/features/projects/overview/buildOverviewAssistants";
 import formatOverviewWhen from "@/features/projects/overview/formatOverviewWhen";
 import {
@@ -34,7 +35,10 @@ export default function AwcProjectOverviewAssistantsCard({
   onGotoTeam,
 }: Props) {
   return (
-    <section className={OVERVIEW_CARD_CLASS} aria-labelledby="overview-assistants-h">
+    <section
+      className={OVERVIEW_CARD_CLASS}
+      aria-labelledby="overview-assistants-h"
+    >
       <div className="flex items-center justify-between gap-2">
         <h3
           id="overview-assistants-h"
@@ -42,14 +46,22 @@ export default function AwcProjectOverviewAssistantsCard({
         >
           {C["overview.assistantsCard"]}
         </h3>
-        <button type="button" className={OVERVIEW_CTA_GHOST_SM_CLASS} onClick={onGotoTeam}>
+        <button
+          type="button"
+          className={OVERVIEW_CTA_GHOST_SM_CLASS}
+          onClick={onGotoTeam}
+        >
           {C.assistantsTeam}
         </button>
       </div>
       {assistants.length === 0 ? (
         <div className="flex flex-wrap items-center justify-between gap-2 py-1">
           <p className="text-[13px] text-awc-fg-muted">{C.assistantsEmpty}</p>
-          <button type="button" className={OVERVIEW_CTA_SECONDARY_SM_CLASS} onClick={onGotoTeam}>
+          <button
+            type="button"
+            className={OVERVIEW_CTA_SECONDARY_SM_CLASS}
+            onClick={onGotoTeam}
+          >
             {C.assistantsInvite}
           </button>
         </div>
@@ -59,7 +71,9 @@ export default function AwcProjectOverviewAssistantsCard({
             <li
               key={row.membershipId}
               className={`flex items-center gap-3 py-2.5 ${
-                index === 0 ? "" : "border-t border-awc-border dark:border-gray-800"
+                index === 0
+                  ? ""
+                  : "border-t border-awc-border dark:border-gray-800"
               }`}
             >
               <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-awc-tile text-xs font-semibold text-awc-fg dark:bg-white/15 dark:text-gray-200">
@@ -67,9 +81,11 @@ export default function AwcProjectOverviewAssistantsCard({
               </span>
               <div className="min-w-0 flex-1">
                 <div className="truncate text-sm font-medium text-awc-fg dark:text-white">
-                  {row.name}
+                  <AwcBotName name={row.name} className="flex" />
                 </div>
-                <div className="truncate text-[12.5px] text-awc-fg-muted">{subLine(row)}</div>
+                <div className="truncate text-[12.5px] text-awc-fg-muted">
+                  {subLine(row)}
+                </div>
               </div>
               {canSend ? (
                 <button

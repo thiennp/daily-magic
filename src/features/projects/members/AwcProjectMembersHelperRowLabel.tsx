@@ -1,5 +1,6 @@
 "use client";
 
+import AwcProjectMembersHelperAvatar from "@/features/projects/members/AwcProjectMembersHelperAvatar";
 import AwcBotName from "@/features/projects/bots/AwcBotName";
 
 /** Assistant row toggle: rounded-square Pine-soft avatar, name and optional wake-health line. */
@@ -21,9 +22,7 @@ export default function AwcProjectMembersHelperRowLabel({
       aria-expanded={expanded}
       onClick={onToggle}
     >
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] border border-awc-accent-soft-2 bg-awc-accent-soft text-[13px] font-semibold text-awc-primary">
-        {name.slice(0, 2).toUpperCase()}
-      </span>
+      <AwcProjectMembersHelperAvatar name={name} />
       <span className="min-w-0">
         <AwcBotName name={name} className="flex font-semibold text-awc-fg" />
         {line ? (

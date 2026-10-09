@@ -4,6 +4,7 @@ import { useMemo } from "react";
 
 import type { AwcProjectAccessMember } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 import { useAwcProjectAccessWakeLinks } from "@/features/projects/access/hooks/useAwcProjectAccessWakeLinks";
+import AwcProjectMembersReadOnlyHelperLabel from "@/features/projects/members/AwcProjectMembersReadOnlyHelperLabel";
 import AwcProjectMembersHelperBotControls from "@/features/projects/members/AwcProjectMembersHelperBotControls";
 import AwcProjectMembersHelperRow from "@/features/projects/members/AwcProjectMembersHelperRow";
 import { isRailAssistantMember } from "@/features/projects/members/utils/countRailMembers";
@@ -72,11 +73,7 @@ export default function AwcProjectMembersHelpersSection({
         <ul className="flex flex-col">
           {helpers.map((member) => (
             <li key={member.id} className="flex flex-col">
-              <span className="px-3.5 py-2.5 text-sm text-awc-fg">
-                {member.projectDisplayName?.trim() ||
-                  member.displayName ||
-                  member.userId.slice(0, 8)}
-              </span>
+              <AwcProjectMembersReadOnlyHelperLabel member={member} />
               <AwcProjectMembersHelperBotControls
                 projectId={projectId}
                 member={member}
