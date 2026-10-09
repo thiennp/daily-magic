@@ -7,6 +7,7 @@ import type {
 import { splitSkillBundle } from "@agent-witch/shared/projectSkills/skillBundleCodec";
 
 import { sanitizeSkillTextForDisplay } from "@/features/agent/utils/sanitizeSkillTextForDisplay";
+import { buildAutoSkillQuestionCopy } from "@/features/projects/autoskills/autoSkillQuestionCopy";
 import AwcAutoSkillScriptList from "@/features/projects/autoskills/AwcAutoSkillScriptList";
 import {
   OW_CARD_NEEDS_CLASS,
@@ -33,6 +34,7 @@ export default function AwcAutoSkillQuestionCard({
   projectName,
 }: AwcAutoSkillQuestionCardProps) {
   const approval = suggestion.kind === "script_approval";
+  const copy = buildAutoSkillQuestionCopy(suggestion);
   const question = approval ? "Allow script to run?" : "Save as skill?";
   return (
     <article
@@ -48,22 +50,17 @@ export default function AwcAutoSkillQuestionCard({
         ) : null}
       </div>
       <h3 className="m-0 text-[15px] font-semibold text-awc-fg">{question}</h3>
-      <p className="mt-1 text-[13px] text-awc-fg-muted">
-        {approval
-          ? `Allow ${suggestion.draftName} to run on your computer? It stays blocked until you approve.`
-          : suggestion.moduleLabel !== null &&
-              suggestion.distinctPrompts !== null
-            ? `This step appeared ${suggestion.occurrences} times in ${suggestion.distinctPrompts} ${suggestion.distinctPrompts === 1 ? "prompt" : "prompts"}.`
-            : `You ran this kind of task ${suggestion.occurrences} times.`}
-      </p>
+      <p className="mt-1 text-[13px] text-awc-fg-muted">{copy.intro}</p>
       {suggestion.moduleLabel !== null ? (
         <p className="mt-1 text-[13px] font-medium text-awc-fg">
           {suggestion.moduleLabel}
         </p>
       ) : null}
-      <p className="mt-1 line-clamp-3 text-[13px] text-awc-fg">
-        {sanitizeSkillTextForDisplay(suggestion.prompt)}
-      </p>
+      {copy.showPrompt ? (
+        <p className="mt-1 line-clamp-3 text-[13px] text-awc-fg">
+          {sanitizeSkillTextForDisplay(suggestion.prompt)}
+        </p>
+      ) : null}
       <details className="mt-2 text-[13px] text-awc-fg">
         <summary className="cursor-pointer font-medium">
           {approval ? "Script" : "Draft skill"}: {suggestion.draftName}
@@ -104,7 +101,7 @@ export default function AwcAutoSkillQuestionCard({
           className={OW_SECONDARY_BUTTON_CLASS}
           onClick={() => onAnswer("never")}
         >
-          {approval ? "Deny" : "Never for this task"}
+          {copy.neverLabel}
         </button>
       </div>
     </article>

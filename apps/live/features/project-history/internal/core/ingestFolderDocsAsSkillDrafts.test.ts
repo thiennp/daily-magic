@@ -59,9 +59,8 @@ describe("ingestFolderDocsAsSkillDrafts", () => {
       skipped: { mostly_links: 1 },
     });
     const asked = postSuggestion.mock.calls.map((call) => call[1]);
-    expect(asked[0]?.judgeLabel).toMatch(
-      /without AI.*stored in your AgentWitch cloud/,
-    );
+    expect(asked[0]?.judgeLabel).toMatch(/No AI used/);
+    expect(asked[0]?.judgeLabel?.length).toBeLessThanOrEqual(120);
     expect(
       asked.every((row) => row.draftBody.includes("origin: folder-doc")),
     ).toBe(true);

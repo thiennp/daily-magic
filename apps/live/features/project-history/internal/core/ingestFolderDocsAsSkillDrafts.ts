@@ -88,7 +88,7 @@ export const ingestFolderDocsAsSkillDrafts = async (input: {
         matches: [],
         draftName: row.draft.name,
         draftBody: row.markdown,
-        judgeLabel: `Drafted without AI from ${row.draft.relPath}. The text is stored in your AgentWitch cloud until you answer.`,
+        judgeLabel: "No AI used: converted from a project doc.",
         kind: "skill",
       }),
     ),
