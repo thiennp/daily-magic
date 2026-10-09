@@ -22,6 +22,13 @@ export type AwcMemberTaskPulse =
       readonly quietMinutes: number;
     };
 
+/** A live run's heartbeat counts as activity; updated_at alone would not. */
+const lastActivityMs = (task: ProjectTaskRecord): number =>
+  Math.max(
+    Date.parse(task.updatedAt),
+    task.runHeartbeatAt ? Date.parse(task.runHeartbeatAt) : 0,
+  );
+
 /**
  * What the owner sees under a bot: quiet = an in-progress task with no update
  * past the server's silence window (the seat may be busy and miss wakes).
@@ -40,20 +47,20 @@ export const resolveMemberTaskPulse = (
 
   const stale = open
     .filter((task) => task.status === "in_progress")
-    .filter((task) => nowMs - Date.parse(task.updatedAt) >= quietMs)
-    .sort((a, b) => Date.parse(a.updatedAt) - Date.parse(b.updatedAt))[0];
+    .filter((task) => nowMs - lastActivityMs(task) >= quietMs)
+    .sort((a, b) => lastActivityMs(a) - lastActivityMs(b))[0];
   if (stale !== undefined) {
     return {
       kind: "quiet",
       taskId: stale.id,
       taskTitle: stale.title,
-      quietMinutes: Math.floor((nowMs - Date.parse(stale.updatedAt)) / 60_000),
+      quietMinutes: Math.floor((nowMs - lastActivityMs(stale)) / 60_000),
     };
   }
   return {
     kind: "working",
     openCount: open.length,
-    lastUpdateMs: Math.max(...open.map((task) => Date.parse(task.updatedAt))),
+    lastUpdateMs: Math.max(...open.map(lastActivityMs)),
   };
 };
 

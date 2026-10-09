@@ -11,9 +11,10 @@ export const listProjectTaskRecords = async (
   await ensureProjectTaskRecordsSchema();
   const rows = asRowArray(
     await getSql()`
-      SELECT t.*, owner.project_display_name AS owner_display_name
+      SELECT t.*, owner.project_display_name AS owner_display_name, run.last_run_heartbeat_at AS run_heartbeat_at
       FROM project_task_records t
       LEFT JOIN project_memberships owner ON owner.id = t.owner_membership_id
+      LEFT JOIN agent_runs run ON run.id = t.agent_run_id AND run.status = 'running'
       WHERE t.project_id = ${projectId}
       ORDER BY t.created_at DESC, t.id DESC
       LIMIT ${PROJECT_TASK_LIST_LIMIT}

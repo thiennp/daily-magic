@@ -31,4 +31,9 @@ export type ProjectTaskRecord = {
   readonly stageTimes: Readonly<Partial<Record<ProjectTaskStage, string>>>;
   readonly createdAt: string;
   readonly updatedAt: string;
+  /**
+   * Last heartbeat of the linked run while it is still RUNNING (list reads
+   * only). Not updated_at: that is the compare-and-set token for task edits.
+   */
+  readonly runHeartbeatAt?: string | null;
 };

@@ -43,6 +43,15 @@ describe("resolveMemberTaskPulse", () => {
     expect(pulse).toMatchObject({ kind: "working", openCount: 2 });
   });
 
+  it("is working while the linked run still heartbeats, however old updatedAt is", () => {
+    const pulse = resolveMemberTaskPulse(
+      [task({ updatedAt: minutesAgo(90), runHeartbeatAt: minutesAgo(0.2) })],
+      "m1",
+      NOW,
+    );
+    expect(pulse.kind).toBe("working");
+  });
+
   it("is quiet on the stalest in-progress task past the window", () => {
     const pulse = resolveMemberTaskPulse(
       [

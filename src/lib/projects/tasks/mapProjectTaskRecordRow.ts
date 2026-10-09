@@ -56,4 +56,5 @@ export const mapProjectTaskRecordRow = (
   stageTimes: toStageTimes(row.stage_times),
   createdAt: iso(row.created_at),
   updatedAt: iso(row.updated_at),
+  runHeartbeatAt: isoOrNull(row.run_heartbeat_at),
 });
