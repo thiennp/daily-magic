@@ -87,6 +87,7 @@ export default function AgentLiveProgressFeed({
         humanSummary={humanSummary}
         failureDetails={failureDetails}
         outcome={outcome}
+        finishedRunId={isWorking ? null : activeRunId}
       />
       <AgentLiveProgressWavesPanel items={wavePlanItems} />
       <ol className="mt-4 space-y-3">
