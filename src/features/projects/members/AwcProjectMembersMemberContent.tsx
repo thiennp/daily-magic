@@ -3,6 +3,7 @@
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 import AwcProjectMembersHelpersSection from "@/features/projects/members/AwcProjectMembersHelpersSection";
 import AwcProjectMembersInviteBotsSection from "@/features/projects/members/AwcProjectMembersInviteBotsSection";
+import AwcProjectMembersJoinRequestsSection from "@/features/projects/members/AwcProjectMembersJoinRequestsSection";
 import AwcProjectMembersPeopleSection from "@/features/projects/members/AwcProjectMembersPeopleSection";
 import AwcProjectMembersRailHeading from "@/features/projects/members/AwcProjectMembersRailHeading";
 import AwcProjectMembersRailSkeleton from "@/features/projects/members/AwcProjectMembersRailSkeleton";
@@ -12,8 +13,8 @@ import type { ReactNode } from "react";
 
 /**
  * Members rail for a (non-owner) member: sees the people and can invite
- * people and assistants (the owner still approves). Join requests and
- * removing people stay with the owner.
+ * people and assistants, and approves the assistants they invited. Other
+ * join requests and removing people stay with the owner.
  */
 export default function AwcProjectMembersMemberContent({
   projectId,
@@ -47,6 +48,13 @@ export default function AwcProjectMembersMemberContent({
               projectId={projectId}
               members={access.members}
               readOnly
+            />
+            <AwcProjectMembersJoinRequestsSection
+              projectId={projectId}
+              pending={access.pending}
+              expired={access.expired}
+              onApprove={access.approve}
+              onDeny={access.deny}
             />
             <AwcProjectMembersPeopleSection
               projectId={projectId}

@@ -35,6 +35,15 @@ vi.mock("@/lib/projects/acl/ensureProjectLinkedComputerSeat", () => ({
 vi.mock("@/lib/projects/acl/enrichProjectAccessBotWakeLinks", () => ({
   enrichProjectAccessBotWakeLinks: async (_id: string, rows: unknown) => rows,
 }));
+vi.mock(
+  "@/lib/projects/acl/approvalCard/buildInviterPendingAccessViews",
+  () => ({
+    buildInviterPendingAccessViews: async () => ({
+      pendingRequests: [],
+      expiredRequests: [],
+    }),
+  }),
+);
 vi.mock("@/app/api/projects/[projectId]/access/patchAccessAction", () => ({
   handleProjectAccessPatch: vi.fn(),
 }));
@@ -55,17 +64,7 @@ const humanSeat = (role: "member" | "viewer") => ({
 
 describe("GET /api/projects/:projectId/access for human seats", () => {
   beforeEach(() => {
-    for (const m of [
-      requireAuth,
-      resolveSeat,
-      listMemberships,
-      buildViews,
-      listPending,
-      buildPending,
-      enrichComputers,
-      liveDeviceIds,
-    ])
-      m.mockReset();
+    vi.resetAllMocks();
     requireAuth.mockResolvedValue({ actor: { id: "user-1" }, error: null });
     listMemberships.mockResolvedValue([]);
     buildViews.mockResolvedValue([
@@ -88,7 +87,6 @@ describe("GET /api/projects/:projectId/access for human seats", () => {
     });
     expect(body.members).toHaveLength(1);
     expect(body.members[0]).not.toHaveProperty("wakeLinkSet");
-    expect(listPending).not.toHaveBeenCalled();
     expect(enrichComputers).toHaveBeenCalled();
   });
 

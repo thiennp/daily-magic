@@ -8,6 +8,12 @@ vi.mock("@/lib/auth/requireAuth", () => ({ requireAuth }));
 vi.mock("@/lib/projects/acl/authorizeProjectOwner", () => ({
   authorizeProjectOwner: authorizeOwner,
 }));
+vi.mock(
+  "@/app/api/projects/[projectId]/access/handleInviterAccessPatch",
+  () => ({
+    handleInviterAccessPatch: async () => new Response("{}", { status: 403 }),
+  }),
+);
 vi.mock("@/app/api/projects/[projectId]/access/patchAccessAction", () => ({
   handleProjectAccessPatch: handlePatch,
 }));

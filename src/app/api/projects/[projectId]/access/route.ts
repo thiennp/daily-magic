@@ -1,4 +1,6 @@
+import { handleInviterAccessPatch } from "@/app/api/projects/[projectId]/access/handleInviterAccessPatch";
 import { handleProjectAccessPatch } from "@/app/api/projects/[projectId]/access/patchAccessAction";
+import { buildInviterPendingAccessViews } from "@/lib/projects/acl/approvalCard/buildInviterPendingAccessViews";
 import { buildOwnerPendingAccessViews } from "@/lib/projects/acl/approvalCard/buildOwnerPendingAccessViews";
 import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
 import { loadEnrichedProjectAccessMembers } from "@/lib/projects/acl/loadEnrichedProjectAccessMembers";
@@ -44,7 +46,7 @@ export async function GET(
   });
   const { pendingRequests, expiredRequests } = isOwner
     ? await buildOwnerPendingAccessViews(projectId)
-    : { pendingRequests: [], expiredRequests: [] };
+    : await buildInviterPendingAccessViews({ projectId, userId: actor.id });
 
   return Response.json({
     ok: true,
@@ -76,15 +78,21 @@ export async function PATCH(
     projectId,
     actorUserId: actor.id,
   });
-  if (!decision.allow) {
-    const status = decision.reason === "not_found" ? 404 : 403;
-    return projectAccessErrorJson(decision.reason, status);
-  }
   const body: unknown = await request.json().catch(() => ({}));
   const payload =
     body !== null && typeof body === "object"
       ? (body as Record<string, unknown>)
       : {};
+  if (!decision.allow) {
+    if (decision.reason === "not_found") {
+      return projectAccessErrorJson(decision.reason, 404);
+    }
+    return handleInviterAccessPatch({
+      projectId,
+      actorUserId: actor.id,
+      body: payload,
+    });
+  }
   return handleProjectAccessPatch({
     projectId,
     ownerUserId: actor.id,
