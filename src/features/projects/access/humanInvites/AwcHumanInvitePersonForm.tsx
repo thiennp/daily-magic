@@ -21,6 +21,7 @@ type FormProps = Omit<AwcHumanInvitePersonPanelProps, "projectName">;
 
 /** Email|Link form + role + actions for Invite person. */
 export default function AwcHumanInvitePersonForm({
+  viewerIsOwner = true,
   createdInvite = null,
   busy = false,
   errorMessage = null,
@@ -94,7 +95,9 @@ export default function AwcHumanInvitePersonForm({
         }}
         invalid={shownError !== null && tab === "email"}
         requiresApproval={send.requiresApproval}
-        onRequiresApprovalChange={send.onRequiresApprovalChange}
+        onRequiresApprovalChange={
+          viewerIsOwner ? send.onRequiresApprovalChange : undefined
+        }
       />
       {createdInvite ? (
         <AwcHumanInviteCreatedLinkBanner

@@ -2,6 +2,8 @@
 
 import { useId, type ReactNode } from "react";
 
+import AwcProjectDetailHeaderMoreIcon from "@/features/projects/AwcProjectDetailHeaderMoreIcon";
+import AwcProjectDetailHeaderMenuItem from "@/features/projects/AwcProjectDetailHeaderMenuItem";
 import useDismissibleMenu from "@/features/projects/hooks/useDismissibleMenu";
 import { PROJECT_PAGE_LAYOUT_V2_COPY } from "@/features/projects/projectPageLayoutV2Copy.constant";
 import {
@@ -17,16 +19,13 @@ interface AwcProjectDetailHeaderActionsProps {
   readonly canRename: boolean;
   readonly canDelete: boolean;
   readonly canLeave: boolean;
+  /** A viewer cannot invite anyone. */
+  readonly canInvite: boolean;
   readonly onRename: () => void;
   readonly onInvite: () => void;
   readonly onDelete: () => void;
   readonly onLeave: () => void;
 }
-
-const ITEM_CLASS =
-  "rounded-awc-control px-3 py-2 text-left text-[length:var(--awc-fs-body)] text-awc-fg hover:bg-awc-tile focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-awc-blue-600 dark:text-gray-100 dark:hover:bg-white/10";
-const DANGER_ITEM_CLASS =
-  "rounded-awc-control px-3 py-2 text-left text-[length:var(--awc-fs-body)] text-awc-bad hover:bg-awc-bad-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-awc-blue-600 dark:text-red-400 dark:hover:bg-red-950/40";
 
 /** Header action cluster: Edit + More actions (Rename / Invite / Delete|Leave). */
 export default function AwcProjectDetailHeaderActions({
@@ -34,6 +33,7 @@ export default function AwcProjectDetailHeaderActions({
   canRename,
   canDelete,
   canLeave,
+  canInvite,
   onRename,
   onInvite,
   onDelete,
@@ -47,7 +47,10 @@ export default function AwcProjectDetailHeaderActions({
     action();
   };
   return (
-    <div ref={wrapRef} className="relative flex w-full shrink-0 items-start gap-2 sm:w-auto">
+    <div
+      ref={wrapRef}
+      className="relative flex w-full shrink-0 items-start gap-2 sm:w-auto"
+    >
       {children}
       <button
         type="button"
@@ -60,22 +63,22 @@ export default function AwcProjectDetailHeaderActions({
           setMenuOpen((open) => !open);
         }}
       >
-        <svg width="16" height="4" viewBox="0 0 18 4" fill="currentColor" aria-hidden>
-          <circle cx="2" cy="2" r="2" />
-          <circle cx="9" cy="2" r="2" />
-          <circle cx="16" cy="2" r="2" />
-        </svg>
+        <AwcProjectDetailHeaderMoreIcon />
       </button>
       {menuOpen ? (
         <div id={menuId} role="menu" className={PROJECT_V5_MENU_CLASS}>
           {canRename ? (
-            <button type="button" role="menuitem" className={ITEM_CLASS} onClick={() => select(onRename)}>
-              {copy.menuRename}
-            </button>
+            <AwcProjectDetailHeaderMenuItem
+              label={copy.menuRename}
+              onSelect={() => select(onRename)}
+            />
           ) : null}
-          <button type="button" role="menuitem" className={ITEM_CLASS} onClick={() => select(onInvite)}>
-            {copy.menuInvite}
-          </button>
+          {canInvite ? (
+            <AwcProjectDetailHeaderMenuItem
+              label={copy.menuInvite}
+              onSelect={() => select(onInvite)}
+            />
+          ) : null}
           {canDelete || canLeave ? (
             <div
               className="my-1 border-t border-awc-border dark:border-gray-800"
@@ -83,14 +86,18 @@ export default function AwcProjectDetailHeaderActions({
             />
           ) : null}
           {canDelete ? (
-            <button type="button" role="menuitem" className={DANGER_ITEM_CLASS} onClick={() => select(onDelete)}>
-              {copy.menuDelete}
-            </button>
+            <AwcProjectDetailHeaderMenuItem
+              danger
+              label={copy.menuDelete}
+              onSelect={() => select(onDelete)}
+            />
           ) : null}
           {canLeave ? (
-            <button type="button" role="menuitem" className={DANGER_ITEM_CLASS} onClick={() => select(onLeave)}>
-              {AWC_PROJECT_LEAVE_COPY.trigger}
-            </button>
+            <AwcProjectDetailHeaderMenuItem
+              danger
+              label={AWC_PROJECT_LEAVE_COPY.trigger}
+              onSelect={() => select(onLeave)}
+            />
           ) : null}
         </div>
       ) : null}

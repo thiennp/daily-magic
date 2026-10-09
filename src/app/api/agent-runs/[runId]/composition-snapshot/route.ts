@@ -1,5 +1,6 @@
 import listRunScopedEntriesFromAgentRun from "@/lib/projects/composition/listRunScopedEntriesFromAgentRun";
 import { getSql, asRowArray } from "@/lib/db";
+import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +19,7 @@ export async function GET(
   const sql = getSql();
   const rows = asRowArray(
     await sql`
-      SELECT requester_user_id, executor_user_id
+      SELECT requester_user_id, executor_user_id, project_id
       FROM agent_runs
       WHERE id = ${runId.trim()}
       LIMIT 1
@@ -44,8 +45,14 @@ export async function GET(
 
   const runScopedEntries = await listRunScopedEntriesFromAgentRun(runId.trim());
 
+  // Keeping components on the project is an owner action (keep-scoped-components).
+  const projectId = rows[0].project_id ? String(rows[0].project_id) : null;
+  const project =
+    projectId === null ? null : await getUserProjectById(projectId);
+
   return Response.json({
     ok: true,
     runScopedCount: runScopedEntries.length,
+    canKeep: project !== null && project.ownerUserId === actor.id,
   });
 }

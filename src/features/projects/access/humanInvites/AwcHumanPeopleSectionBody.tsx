@@ -47,6 +47,7 @@ export default function AwcHumanPeopleSectionBody({
       {people.panelOpen ? (
         <AwcHumanInvitePersonPanel
           projectName={projectName}
+          viewerIsOwner={viewerIsOwner}
           createdInvite={people.createdInvite}
           busy={people.createBusy}
           errorMessage={people.createError}

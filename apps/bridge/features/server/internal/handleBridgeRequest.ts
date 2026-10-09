@@ -9,6 +9,7 @@ import {
 } from "../features/http-server/public-api/infrastructure";
 import type { BridgeRequestContext } from "./bridgeRequestContext.type";
 import { dispatchBridgeRoute } from "./dispatchBridgeRoute";
+import { isAllowedWakeServerHost } from "./isAllowedWakeServerHost";
 
 const buildContext = (
   request: http.IncomingMessage,
@@ -33,6 +34,15 @@ export const handleBridgeRequest = async (
   const cors = buildWakeServerCorsHeaders(requestOrigin);
 
   try {
+    if (!isAllowedWakeServerHost(request.headers.host, wakePort)) {
+      sendJson(
+        response,
+        403,
+        { ok: false, errorMessage: "Forbidden host." },
+        {},
+      );
+      return;
+    }
     if (
       requestOrigin !== undefined &&
       requestOrigin.length > 0 &&

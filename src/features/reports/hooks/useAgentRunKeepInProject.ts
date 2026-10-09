@@ -40,7 +40,8 @@ const useAgentRunKeepInProject = (
             "number"
             ? (data as { runScopedCount: number }).runScopedCount
             : 0;
-        setHasRunScoped(runScopedCount > 0);
+        const canKeep = (data as { canKeep?: unknown }).canKeep === true;
+        setHasRunScoped(runScopedCount > 0 && canKeep);
       } finally {
         if (!controller.signal.aborted) {
           setIsLoading(false);

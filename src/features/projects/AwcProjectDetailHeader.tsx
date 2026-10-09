@@ -69,6 +69,7 @@ export default function AwcProjectDetailHeader({
           canRename={canRename}
           canDelete={canDelete}
           canLeave={canLeave}
+          canInvite={pageActorRole !== "viewer"}
           onRename={onRename}
           onInvite={onInvite}
           onDelete={onDelete}

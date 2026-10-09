@@ -6,6 +6,8 @@ import type {
 
 export type AwcHumanInvitePersonPanelProps = {
   readonly projectName: string;
+  /** A member's invite always needs the owner's approval, so only the owner picks it. */
+  readonly viewerIsOwner?: boolean;
   readonly createdInvite?: CreateHumanInviteResponse | null;
   readonly busy?: boolean;
   readonly errorMessage?: string | null;
