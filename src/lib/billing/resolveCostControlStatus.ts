@@ -4,6 +4,9 @@ import type {
   TrialGate,
 } from "@/lib/billing/types/BillingPlan.type";
 
+/** Temporary: admit everyone. Set to false to close the gate at the budget again. */
+const TRIAL_GATE_DISABLED = true;
+
 export const resolveCostControlStatus = (input: {
   readonly spendEur: number;
   readonly budgetEur?: number;
@@ -13,7 +16,10 @@ export const resolveCostControlStatus = (input: {
 } => {
   const budget = input.budgetEur ?? FREE_TRIAL_INFRA_BUDGET_EUR;
   if (input.spendEur >= budget) {
-    return { status: "over_budget", trialGate: "closed" };
+    return {
+      status: "over_budget",
+      trialGate: TRIAL_GATE_DISABLED ? "open" : "closed",
+    };
   }
   if (input.spendEur >= budget * 0.8) {
     return { status: "near_limit", trialGate: "open" };

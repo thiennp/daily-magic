@@ -11,9 +11,9 @@ describe("resolveCostControlStatus", () => {
     expect(resolveCostControlStatus({ spendEur: 160 }).trialGate).toBe("open");
   });
 
-  it("closes trialGate at or over budget", () => {
+  it("keeps trialGate open over budget while the gate is disabled", () => {
     const over = resolveCostControlStatus({ spendEur: 200 });
     expect(over.status).toBe("over_budget");
-    expect(over.trialGate).toBe("closed");
+    expect(over.trialGate).toBe("open");
   });
 });
