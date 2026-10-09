@@ -5,6 +5,7 @@ import { extractModules } from "./autoSkillModuleExtract";
 import { feedModulesThroughClusters } from "./autoSkillModulePipeline";
 import { selectAutoSkillJudge } from "./autoSkillSelectJudge";
 import { appendAutoSkillRun } from "./autoSkillStore";
+import { hasProcessedAutoSkillRun } from "./hasProcessedAutoSkillRun";
 import type {
   AutoSkillOutcome,
   OnAutoSkillRunCompletedDeps,
@@ -59,6 +60,9 @@ export const onAutoSkillRunCompleted = async (
     if (db === null) {
       deps.saveState(projectId, state);
       return "store_unavailable";
+    }
+    if (hasProcessedAutoSkillRun(db, run.runId)) {
+      return "no_repeat";
     }
     const completer = deps.makeCompleter(choice.kind, availability);
     const { modules } = await extractModules(
