@@ -34,7 +34,7 @@ const createTables = async (): Promise<void> => {
     hit_count INTEGER NOT NULL DEFAULT 0 CHECK (hit_count >= 0),
     last_seen_at TIMESTAMPTZ,
     PRIMARY KEY (project_id, pitfall_id))`;
-  // Copy former daily-magic seeds onto their project before the sync retires
+  // Copy former AgentWitch seeds onto their project before the sync retires
   // the global rows (mirrors 099; both steps idempotent).
   await moveAgentWitchProjectPitfalls();
   await syncGlobalProjectPitfallSeeds();

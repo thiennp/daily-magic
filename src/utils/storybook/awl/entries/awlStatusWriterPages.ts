@@ -64,7 +64,7 @@ export const AWL_STATUS_WRITER_PAGE_ENTRIES: readonly AwlStorybookPageEntry[] =
                   {
                     sessionId: "sess-storybook-1",
                     writerAgent: "cursor",
-                    projectFolderPath: "/Users/storybook/code/daily-magic",
+                    projectFolderPath: "/Users/storybook/code/agentwitch",
                     turns: [
                       {
                         id: "turn-1",

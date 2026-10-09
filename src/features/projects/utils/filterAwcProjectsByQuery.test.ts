@@ -18,7 +18,7 @@ const buildProject = (name: string, folderPath: string): UserProjectRecord => ({
 
 describe("filterAwcProjectsByQuery", () => {
   const projects = [
-    buildProject("Daily Magic", "/Users/study/daily-magic"),
+    buildProject("Weekly Notes", "/Users/study/weekly-notes"),
     buildProject("AgentWitch", "/tmp/agent-witch"),
   ];
 
@@ -28,7 +28,7 @@ describe("filterAwcProjectsByQuery", () => {
 
   it("matches project name or folder path case-insensitively", () => {
     expect(filterAwcProjectsByQuery(projects, "WITCH")).toEqual([projects[1]]);
-    expect(filterAwcProjectsByQuery(projects, "daily-magic")).toEqual([
+    expect(filterAwcProjectsByQuery(projects, "weekly-notes")).toEqual([
       projects[0],
     ]);
   });

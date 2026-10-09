@@ -44,7 +44,7 @@ describe("agentLiveTerminalLocalStore", () => {
   it("AGENT-025 hydrates empty session output from the run output store", () => {
     appendAgentRunTerminalOutput("run-hydrate", "cached stream\n");
     window.localStorage.setItem(
-      "daily-magic.agent-live-terminal.v1",
+      "agentwitch.agent-live-terminal.v1",
       JSON.stringify({
         current: {
           activeRunId: "run-hydrate",

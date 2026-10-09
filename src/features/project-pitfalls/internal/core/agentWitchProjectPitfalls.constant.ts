@@ -4,11 +4,11 @@ import { AGENTWITCH_PROJECT_PITFALLS_SHIP } from "@/features/project-pitfalls/in
 import type { ProjectPitfallContent } from "@/features/project-pitfalls/internal/core/projectPitfall.type";
 import { PROJECT_PITFALL_AGENTWITCH_PROJECT_ID } from "@agent-witch/shared/pitfalls";
 
-/** The AgentWitch (daily-magic) project that owns the former daily-magic seeds. */
+/** The AgentWitch project that owns the former AgentWitch seeds. */
 export const AGENTWITCH_PROJECT_ID = PROJECT_PITFALL_AGENTWITCH_PROJECT_ID;
 
 /**
- * Former platform seeds that only make sense for daily-magic. Since 099 they
+ * Former platform seeds that only make sense for AgentWitch. Since 099 they
  * live as source='project' rows on AGENTWITCH_PROJECT_ID; the global seed rows
  * are retired. Mirrored by db/migrations/099-project-pitfall-seeds-project-scoped.sql.
  */

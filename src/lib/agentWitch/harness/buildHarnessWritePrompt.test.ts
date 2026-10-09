@@ -39,11 +39,11 @@ describe("resolveHarnessSharedItemPath", () => {
 describe("buildHarnessCreateSetPrompt", () => {
   it("includes set metadata for empty set creation", () => {
     const prompt = buildHarnessCreateSetPrompt({
-      name: "Daily Magic Rules",
-      slug: "daily-magic-rules",
+      name: "Agent Witch Rules",
+      slug: "agentwitch-rules",
     });
 
-    expect(prompt).toContain("daily-magic-rules");
+    expect(prompt).toContain("agentwitch-rules");
     expect(prompt).toContain("items: []");
     expect(prompt).toContain("HARNESS_MANIFEST_JSON_START");
   });
@@ -57,12 +57,12 @@ describe("buildHarnessWriteItemsPrompt", () => {
         kind: "rule",
         title: "No Let",
         content: "Prefer const.",
-        setSlugs: ["daily-magic-rules", "team-defaults"],
+        setSlugs: ["agentwitch-rules", "team-defaults"],
       },
     ]);
 
     expect(prompt).toContain("shared/items/item-1/rules/no-let.mdc");
-    expect(prompt).toContain("daily-magic-rules, team-defaults");
+    expect(prompt).toContain("agentwitch-rules, team-defaults");
     expect(prompt).toContain("Prefer const.");
     expect(prompt).toContain("HARNESS_MANIFEST_JSON_START");
   });

@@ -1,7 +1,7 @@
 import { persistOnboardingAutomationCreated } from "@/features/home/utils/onboardingAutomationCreatedApi";
 import { notifyOnboardingAutomationCreatedUpdated } from "@/features/home/utils/onboardingAutomationCreatedEvents";
 
-const STORAGE_KEY = "daily-magic.onboarding.automation-created.v1";
+const STORAGE_KEY = "agentwitch.onboarding.automation-created.v1";
 
 export const readOnboardingAutomationCreated = (): boolean => {
   if (typeof window === "undefined") {

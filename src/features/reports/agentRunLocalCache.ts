@@ -4,7 +4,7 @@ import {
 } from "@/features/reports/agentRunLocalCacheTombstones";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
-const STORAGE_KEY = "daily-magic.agent-runs.v1";
+const STORAGE_KEY = "agentwitch.agent-runs.v1";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -47,7 +47,7 @@ const writeCache = (cache: Record<string, AgentRunRecord>): void => {
 };
 
 export const AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT =
-  "daily-magic:agent-runs-cache-updated";
+  "agentwitch:agent-runs-cache-updated";
 
 const notifyAgentRunsLocalCacheUpdated = (): void => {
   if (typeof window === "undefined" || typeof CustomEvent === "undefined") {

@@ -10,7 +10,7 @@ import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWeb
 describe("isAgentWitchWebSocketSupportedHost", () => {
   it("rejects Vercel preview and production hosts", () => {
     expect(
-      isAgentWitchWebSocketSupportedHost("daily-magic-five.vercel.app"),
+      isAgentWitchWebSocketSupportedHost("agentwitch-five.vercel.app"),
     ).toBe(false);
   });
 
@@ -25,7 +25,7 @@ describe("isAgentWitchWebSocketSupportedHost", () => {
 
   it("allows local and long-running Node hosts", () => {
     expect(isAgentWitchWebSocketSupportedHost("localhost:3000")).toBe(true);
-    expect(isAgentWitchWebSocketSupportedHost("daily-magic.example.com")).toBe(
+    expect(isAgentWitchWebSocketSupportedHost("agentwitch.example.com")).toBe(
       true,
     );
   });
@@ -33,7 +33,7 @@ describe("isAgentWitchWebSocketSupportedHost", () => {
   it("checks full origins", () => {
     expect(
       isAgentWitchWebSocketSupportedOrigin(
-        "https://daily-magic-five.vercel.app",
+        "https://agentwitch-five.vercel.app",
       ),
     ).toBe(false);
     expect(isAgentWitchWebSocketSupportedOrigin("https://agentwitch.com")).toBe(

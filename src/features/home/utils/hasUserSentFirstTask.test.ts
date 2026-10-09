@@ -18,7 +18,7 @@ describe("hasUserSentFirstTask", () => {
 
   it("returns true when onboarding first-task flag is set", () => {
     window.localStorage.setItem(
-      "daily-magic.onboarding.first-task-sent.v1",
+      "agentwitch.onboarding.first-task-sent.v1",
       "true",
     );
 

@@ -7,11 +7,11 @@ describe("parseHarnessSetSharingBody", () => {
   it("parses valid per-set visibility values", () => {
     expect(
       parseHarnessSetSharingBody({
-        setSlug: "daily-magic",
+        setSlug: "agentwitch",
         visibility: HarnessSharingVisibility.GROUP,
       }),
     ).toEqual({
-      setSlug: "daily-magic",
+      setSlug: "agentwitch",
       visibility: HarnessSharingVisibility.GROUP,
     });
   });
@@ -19,7 +19,7 @@ describe("parseHarnessSetSharingBody", () => {
   it("rejects inherit and invalid payloads", () => {
     expect(
       parseHarnessSetSharingBody({
-        setSlug: "daily-magic",
+        setSlug: "agentwitch",
         visibility: "inherit",
       }),
     ).toBeNull();

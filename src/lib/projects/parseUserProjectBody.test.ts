@@ -10,14 +10,14 @@ describe("parseUserProjectBody", () => {
     expect(
       parseCreateUserProjectBody(
         {
-          name: "Daily Magic",
-          folderPath: "~/Projects/daily-magic",
+          name: "Agent Witch",
+          folderPath: "~/Projects/agentwitch",
         },
         "owner@example.com",
       ),
     ).toEqual({
-      name: "Daily Magic",
-      folderPath: "~/Projects/daily-magic",
+      name: "Agent Witch",
+      folderPath: "~/Projects/agentwitch",
       deviceId: undefined,
     });
   });
@@ -45,18 +45,18 @@ describe("parseUserProjectBody", () => {
     expect(
       parseCreateUserProjectBody(
         {
-          name: "Daily Magic",
-          folderPath: "~/Projects/daily-magic",
-          repoUrls: ["https://github.com/org/daily-magic.git"],
+          name: "Agent Witch",
+          folderPath: "~/Projects/agentwitch",
+          repoUrls: ["https://github.com/org/agentwitch.git"],
           defaultBranch: "main",
         },
         "owner@example.com",
       ),
     ).toEqual({
-      name: "Daily Magic",
-      folderPath: "~/Projects/daily-magic",
+      name: "Agent Witch",
+      folderPath: "~/Projects/agentwitch",
       deviceId: undefined,
-      repoUrls: ["https://github.com/org/daily-magic.git"],
+      repoUrls: ["https://github.com/org/agentwitch.git"],
       defaultBranch: "main",
     });
   });
@@ -65,8 +65,8 @@ describe("parseUserProjectBody", () => {
     expect(
       parseCreateUserProjectBody(
         {
-          name: "Daily Magic",
-          folderPath: "~/Projects/daily-magic",
+          name: "Agent Witch",
+          folderPath: "~/Projects/agentwitch",
           repoUrls: ["https://user:pass@github.com/org/repo.git"],
         },
         "owner@example.com",

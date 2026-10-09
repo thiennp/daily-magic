@@ -27,7 +27,7 @@ describe("syncOnboardingFirstTaskSentFlag", () => {
 
   it("migrates local-only true flag to the API once (HOME-006)", () => {
     window.localStorage.setItem(
-      "daily-magic.onboarding.first-task-sent.v1",
+      "agentwitch.onboarding.first-task-sent.v1",
       "true",
     );
 

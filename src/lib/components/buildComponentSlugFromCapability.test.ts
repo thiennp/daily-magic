@@ -15,9 +15,9 @@ describe("buildComponentSlugFromCapability", () => {
   it("derives slug from name when harness slug missing", () => {
     expect(
       buildComponentSlugFromCapability({
-        name: "Daily Magic Review",
+        name: "Agent Witch Review",
         harnessSetSlug: null,
       }),
-    ).toBe("daily-magic-review");
+    ).toBe("agent-witch-review");
   });
 });

@@ -19,7 +19,7 @@ describe("PROJECT_PITFALL_SEEDS", () => {
     const ids = PROJECT_PITFALL_SEEDS.map((seed) => seed.id);
     expect(ids).toEqual(["secrets-in-logs"]);
     PROJECT_PITFALL_SEEDS.forEach((seed) => {
-      expect(JSON.stringify(seed)).not.toMatch(/daily-magic|agent-witch|~\//i);
+      expect(JSON.stringify(seed)).not.toMatch(/agentwitch|agent-witch|~\//i);
     });
   });
 

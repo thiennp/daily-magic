@@ -10,15 +10,15 @@ Per-project registry of known pitfalls (symptom → cause → avoidance + a chec
 
 ## Rules
 
-| Rule     | Value                                                                                            |
-| -------- | ------------------------------------------------------------------------------------------------ |
-| Seeds    | `project_id NULL`, `source = seed`, platform-owned and read-only (1 shipped: secrets-in-logs; daily-magic-only rules moved to the AgentWitch project in migration 099) |
-| Override | Upsert a seed id with a projectId → that project's own row; the global seed row is never changed |
-| Retire   | Upsert with `source: "retired"`; hidden from list unless `includeRetired=true`                   |
-| Cap      | ≤ 64 active (non-retired) per project, seeds + project rows merged                               |
-| Limits   | symptom ≤ 120, cause ≤ 200, avoidance ≤ 280, check `{ kind: command \| id, value }`              |
-| Hits     | `project_pitfall_hits` per project (seed rows stay read-only); `lastSeenAt` only moves forward   |
-| ACL      | Project owner or active member (device token → paired user, else signed-in session)              |
+| Rule     | Value                                                                                                                                                                 |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Seeds    | `project_id NULL`, `source = seed`, platform-owned and read-only (1 shipped: secrets-in-logs; AgentWitch-only rules moved to the AgentWitch project in migration 099) |
+| Override | Upsert a seed id with a projectId → that project's own row; the global seed row is never changed                                                                      |
+| Retire   | Upsert with `source: "retired"`; hidden from list unless `includeRetired=true`                                                                                        |
+| Cap      | ≤ 64 active (non-retired) per project, seeds + project rows merged                                                                                                    |
+| Limits   | symptom ≤ 120, cause ≤ 200, avoidance ≤ 280, check `{ kind: command \| id, value }`                                                                                   |
+| Hits     | `project_pitfall_hits` per project (seed rows stay read-only); `lastSeenAt` only moves forward                                                                        |
+| ACL      | Project owner or active member (device token → paired user, else signed-in session)                                                                                   |
 
 ## HTTP (`/api/agent-witch/projects/[projectId]/pitfalls`)
 

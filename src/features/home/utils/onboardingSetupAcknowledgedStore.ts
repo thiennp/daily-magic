@@ -1,6 +1,6 @@
 import { persistOnboardingSetupAcknowledged } from "@/features/home/utils/onboardingSetupAcknowledgedApi";
 
-const STORAGE_KEY = "daily-magic.onboarding.setup-acknowledged.v1";
+const STORAGE_KEY = "agentwitch.onboarding.setup-acknowledged.v1";
 
 export const readOnboardingSetupAcknowledged = (): boolean => {
   if (typeof window === "undefined") {

@@ -2,6 +2,10 @@
 
 import type { AccessMembershipView } from "@/features/projects/access/utils/projectAccessApi.types";
 import { useHelperBotControls } from "@/features/projects/members/useHelperBotControls";
+import {
+  BOT_CONTROLS_CHIP_CLASS as CHIP,
+  BOT_CONTROLS_LINK_CLASS as LINK,
+} from "@/features/projects/members/botControlsClasses.constant";
 import { BOT_MANAGEMENT_COPY as C } from "@/features/projects/members/botManagementCopy.constant";
 
 type BotMember = Pick<
@@ -9,20 +13,17 @@ type BotMember = Pick<
   "id" | "canManageBot" | "isolatedFromOtherBots" | "guidanceOutdated"
 >;
 
-const CHIP =
-  "rounded-full bg-awc-fill px-2 py-0.5 text-[12px] font-medium text-awc-fg-muted";
-const LINK =
-  "awc-focus-ring text-[12.5px] font-semibold text-awc-primary hover:underline disabled:opacity-50";
-
 /** Per-assistant status line, shown to the owner and the inviting member. */
 export default function AwcProjectMembersHelperBotControls({
   projectId,
   member,
   onChanged,
+  indent = false,
 }: {
   readonly projectId: string;
   readonly member: BotMember;
   readonly onChanged: () => void;
+  readonly indent?: boolean;
 }) {
   const bot = useHelperBotControls({
     projectId,
@@ -32,15 +33,17 @@ export default function AwcProjectMembersHelperBotControls({
   const { guidance, confirming, setConfirming, setBlocked } = bot;
   const blocked = member.isolatedFromOtherBots === true;
   const manage = member.canManageBot === true;
-  const outdated = member.guidanceOutdated === true;
-  if (!manage && !blocked && !outdated) return null;
+  const outdated = member.guidanceOutdated === true && manage;
+  if (!manage && !blocked) return null;
 
   return (
-    <div className="flex flex-col gap-1 px-3.5 pb-2 pl-[2.75rem]">
+    <div
+      className={`flex flex-col gap-1 pb-2 pr-3.5 ${indent ? "pl-[2.75rem]" : "pl-3.5"}`}
+    >
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
         {blocked ? <span className={CHIP}>{C.blockedChip}</span> : null}
         {outdated ? <span className={CHIP}>{C.newGuidance}</span> : null}
-        {outdated && manage && guidance !== "sent" ? (
+        {outdated && guidance !== "sent" ? (
           <button
             type="button"
             className={LINK}

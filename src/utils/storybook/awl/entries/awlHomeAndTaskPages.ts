@@ -36,7 +36,7 @@ export const AWL_HOME_AND_TASK_PAGE_ENTRIES: readonly AwlStorybookPageEntry[] =
       buildBody: (status) =>
         buildAgentWitchLocalTaskPageBody({
           defaultWorkspace:
-            status === "empty" ? "" : "/Users/storybook/code/daily-magic",
+            status === "empty" ? "" : "/Users/storybook/code/agentwitch",
           wsConnected: status !== "error",
           flashError:
             status === "error" ? "Task failed in story fixture." : null,

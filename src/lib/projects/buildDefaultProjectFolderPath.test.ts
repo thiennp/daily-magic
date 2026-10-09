@@ -6,9 +6,9 @@ import { buildAgentWitchProjectsHomePath } from "@/lib/projects/buildAgentWitchP
 describe("buildDefaultProjectFolderPath", () => {
   it("builds a profile-scoped default folder path", () => {
     expect(
-      buildDefaultProjectFolderPath("Daily Magic", "owner@example.com"),
+      buildDefaultProjectFolderPath("Agent Witch", "owner@example.com"),
     ).toBe(
-      `${buildAgentWitchProjectsHomePath("owner@example.com")}/daily-magic`,
+      `${buildAgentWitchProjectsHomePath("owner@example.com")}/agent-witch`,
     );
   });
 });

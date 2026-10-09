@@ -67,8 +67,7 @@ export const AWC_STORYBOOK_SAMPLE_RUN: EnrichedAgentRunRecord = {
   executorEmail: AWC_STORYBOOK_USER.email,
   requesterName: AWC_STORYBOOK_USER.name,
   executorName: AWC_STORYBOOK_USER.name,
-  prompt:
-    "Summarize open PRs for daily-magic and post a short status to Slack.",
+  prompt: "Summarize open PRs for AgentWitch and post a short status to Slack.",
   status: AgentRunStatus.COMPLETED,
   dispatchPolicy: DispatchPolicy.OPEN,
   resultOutput: "Posted status update to #engineering.",

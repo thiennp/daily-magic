@@ -14,6 +14,8 @@ const readMigration = (name: string): string =>
   fs.readFileSync(path.join(process.cwd(), "db/migrations", name), "utf8");
 const sql099 = readMigration("099-project-pitfall-seeds-project-scoped.sql");
 const sql067 = readMigration("067-project-pitfalls.sql");
+// 129 rewords three seeds; the text is then in 099 (old) or 129 (new).
+const sql099Or129 = `${sql099}\n${readMigration("129-pitfall-text-product-name.sql")}`;
 const quoted = (text: string): string => `'${text.replace(/'/g, "''")}'`;
 const MOVED_IDS = [
   "arch-max-lines",
@@ -28,8 +30,8 @@ const MOVED_IDS = [
   "box-no-gh-auth",
 ];
 
-describe("AGENTWITCH_PROJECT_PITFALLS (former daily-magic seeds)", () => {
-  it("moves the 10 daily-magic seeds; with the generic seed they cover 067", () => {
+describe("AGENTWITCH_PROJECT_PITFALLS (former AgentWitch seeds)", () => {
+  it("moves the 10 agentwitch seeds; with the generic seed they cover 067", () => {
     const ids = AGENTWITCH_PROJECT_PITFALLS.map((pitfall) => pitfall.id);
     expect(ids).toEqual(MOVED_IDS);
     const all = [...ids, ...PROJECT_PITFALL_SEEDS.map((seed) => seed.id)];
@@ -60,7 +62,7 @@ describe("AGENTWITCH_PROJECT_PITFALLS (former daily-magic seeds)", () => {
         pitfall.check.value,
         pitfall.severity,
       ].forEach((text) => {
-        expect(sql099).toContain(quoted(text));
+        expect(sql099Or129).toContain(quoted(text));
       });
     });
   });

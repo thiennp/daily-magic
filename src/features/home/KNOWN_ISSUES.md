@@ -68,7 +68,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 **Root cause:** Step completion only inferred from ephemeral `/api/agent-runs?scope=mine` results and non-empty job-history cache; both could be empty after server restart or before cache sync. localStorage alone also did not follow the user across browsers/devices.
 
-**Fix:** Persist per-user `users.onboarding_first_task_sent` (boolean) via `GET`/`POST /api/onboarding/first-task-sent`. Client still mirrors `daily-magic.onboarding.first-task-sent.v1` in localStorage; `loadOnboardingSteps` reads the DB flag and one-time-migrates a local-only true flag to the API. Marking still fires on dispatch ack / run cache upsert.
+**Fix:** Persist per-user `users.onboarding_first_task_sent` (boolean) via `GET`/`POST /api/onboarding/first-task-sent`. Client still mirrors `agentwitch.onboarding.first-task-sent.v1` in localStorage; `loadOnboardingSteps` reads the DB flag and one-time-migrates a local-only true flag to the API. Marking still fires on dispatch ack / run cache upsert.
 
 **Regression test:** `onboardingFirstTaskSentStore.test.ts`, `onboardingFirstTaskSentApi.test.ts`, `onboardingFirstTaskSentQueries.test.ts`, `syncOnboardingFirstTaskSentFlag.test.ts`, `trackOnboardingFromAgentWitchSocketMessage.test.ts`, `hasUserSentFirstTask.test.ts`.
 
@@ -92,7 +92,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 **Root cause:** Step completion only inferred from live `GET /api/automations` results; no per-user DB flag.
 
-**Fix:** Persist `users.onboarding_automation_created` via `GET`/`POST /api/onboarding/automation-created`. Client mirrors `daily-magic.onboarding.automation-created.v1` in localStorage; `loadOnboardingSteps` merges DB flag with automations list. Marking fires on successful automation create (client + API).
+**Fix:** Persist `users.onboarding_automation_created` via `GET`/`POST /api/onboarding/automation-created`. Client mirrors `agentwitch.onboarding.automation-created.v1` in localStorage; `loadOnboardingSteps` merges DB flag with automations list. Marking fires on successful automation create (client + API).
 
 **Regression test:** `onboardingAutomationCreatedQueries.test.ts`, `onboardingAutomationCreatedApi.test.ts`, `onboardingAutomationCreatedStore.test.ts`, `syncOnboardingAutomationCreatedFlag.test.ts`, `hasUserCreatedAutomation.test.ts`.
 
@@ -164,7 +164,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 **Root cause:** `HomeOnboardingSetupCompletePanel` had no dismiss or per-user persistence.
 
-**Fix:** Persist `users.onboarding_setup_acknowledged` via `GET`/`POST /api/onboarding/setup-acknowledged`. Client mirrors `daily-magic.onboarding.setup-acknowledged.v1`; “Continue to home” dismisses to `HomeDashboardHero`. `shouldShowOnboardingSetupCompletePanel` gates the success state.
+**Fix:** Persist `users.onboarding_setup_acknowledged` via `GET`/`POST /api/onboarding/setup-acknowledged`. Client mirrors `agentwitch.onboarding.setup-acknowledged.v1`; “Continue to home” dismisses to `HomeDashboardHero`. `shouldShowOnboardingSetupCompletePanel` gates the success state.
 
 **Regression test:** `onboardingSetupAcknowledgedQueries.test.ts`, `onboardingSetupAcknowledgedApi.test.ts`, `onboardingSetupAcknowledgedStore.test.ts`, `shouldShowOnboardingSetupCompletePanel.test.ts`.
 
@@ -741,5 +741,6 @@ Document every production bug or UX regression here. Each entry must link to a t
 Use the next ID (`HOME-070`, …). Include symptom, root cause, fix paths, and test file.
 
 ### d17fbf8e — computer limit note next to "N connected"
+
 **Symptom:** Sidebar said "You are at your computer limit (5)" under a header of "4 connected", which looked like a wrong count after a delete.
 **Fix:** Soft limit copy now spells out linked vs connected (`{linked} of {max}` plus an offline split). Offline computers still count toward the plan; the note no longer looks like it disagrees with the header.

@@ -5,10 +5,10 @@ import formatProjectFolderPathForList from "@/features/projects/utils/formatProj
 describe("formatProjectFolderPathForList", () => {
   it("MF-02: middle-ellipsis preserves tail path segment", () => {
     const path =
-      "~/.agent-witch/profiles/thien@agentwitch.com/repos/daily-magic";
+      "~/.agent-witch/profiles/thien@agentwitch.com/repos/agentwitch";
     const { display, full } = formatProjectFolderPathForList(path, 40);
     expect(full).toBe(path);
-    expect(display.endsWith("daily-magic")).toBe(true);
+    expect(display.endsWith("agentwitch")).toBe(true);
     expect(display.includes("…")).toBe(true);
     expect(display.length).toBeLessThanOrEqual(40);
   });

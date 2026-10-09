@@ -1,4 +1,4 @@
-export const MAC_DEVICE_REVOKED_EVENT = "daily-magic:mac-device-revoked";
+export const MAC_DEVICE_REVOKED_EVENT = "agentwitch:mac-device-revoked";
 
 export interface MacDeviceRevokedEventDetail {
   readonly deviceId: string;

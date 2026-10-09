@@ -21,7 +21,7 @@ describe("hasUserCreatedAutomation", () => {
 
   it("returns true when local onboarding flag is set", () => {
     window.localStorage.setItem(
-      "daily-magic.onboarding.automation-created.v1",
+      "agentwitch.onboarding.automation-created.v1",
       "true",
     );
 

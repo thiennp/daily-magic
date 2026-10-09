@@ -8,10 +8,10 @@ describe("resolveProjectListCardTitle", () => {
     expect(
       resolveProjectListCardTitle({
         name: DEFAULT_USER_PROJECT_NAME,
-        folderPath: "~/.agent-witch/profiles/user@example.com/daily-magic",
+        folderPath: "~/.agent-witch/profiles/user@example.com/agentwitch",
       }),
     ).toEqual({
-      primary: "daily-magic",
+      primary: "agentwitch",
       secondaryLabel: DEFAULT_USER_PROJECT_NAME,
     });
   });
@@ -20,10 +20,10 @@ describe("resolveProjectListCardTitle", () => {
     expect(
       resolveProjectListCardTitle({
         name: "default",
-        folderPath: "~/repos/daily-magic",
+        folderPath: "~/repos/agentwitch",
       }),
     ).toEqual({
-      primary: "daily-magic",
+      primary: "agentwitch",
       secondaryLabel: DEFAULT_USER_PROJECT_NAME,
     });
   });

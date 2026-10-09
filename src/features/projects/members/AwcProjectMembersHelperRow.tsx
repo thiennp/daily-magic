@@ -82,6 +82,7 @@ export default function AwcProjectMembersHelperRow(
         projectId={p.projectId}
         member={member}
         onChanged={p.onChanged}
+        indent
       />
       <AwcProjectMembersHelperRowLinks
         cantCheck={status === "cant_check"}

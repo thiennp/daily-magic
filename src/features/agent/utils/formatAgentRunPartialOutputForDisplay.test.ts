@@ -11,7 +11,7 @@ describe("formatAgentRunPartialOutputForDisplay (DISPATCH-002)", () => {
       [
         "[[PROGRESS]]",
         "Exploring the app structure",
-        "Found the app at ~/daily-magic. Now exploring the src directory",
+        "Found the app at ~/agentwitch. Now exploring the src directory",
       ].join("\n"),
     );
 
@@ -20,7 +20,7 @@ describe("formatAgentRunPartialOutputForDisplay (DISPATCH-002)", () => {
         {
           title: "Exploring the app structure",
           detail:
-            "Found the app at ~/daily-magic. Now exploring the src directory",
+            "Found the app at ~/agentwitch. Now exploring the src directory",
         },
       ],
       sections: [],

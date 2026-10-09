@@ -39,7 +39,7 @@ describe("resolveSendTaskComposerStepTrailItems", () => {
     showWorkflowTrail: true,
     workflowSelectionLabel: "Research brief",
     showProjectTrail: true,
-    projectSelectionLabel: "daily-magic",
+    projectSelectionLabel: "agentwitch",
     showWriterTrail: true,
     writerAgent: "cursor" as const,
   };

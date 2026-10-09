@@ -1,4 +1,4 @@
-const STORAGE_KEY = "daily-magic.library.last-save-project-id.v1";
+const STORAGE_KEY = "agentwitch.library.last-save-project-id.v1";
 
 export const readLastSaveProjectId = (): string | null => {
   if (typeof window === "undefined") {

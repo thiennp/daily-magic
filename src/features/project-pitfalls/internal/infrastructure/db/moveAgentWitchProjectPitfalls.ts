@@ -6,7 +6,7 @@ import { toProjectPitfallSqlRows } from "@/features/project-pitfalls/internal/co
 import { getSql } from "@/lib/db";
 
 /**
- * Runtime twin of migration 099 (copy half). While a former daily-magic global
+ * Runtime twin of migration 099 (copy half). While a former AgentWitch global
  * seed row still exists, copy it as a source='project' row onto the AgentWitch
  * project, so retiring the global never drops it there. Skipped when that
  * project is absent (local / test DBs). ON CONFLICT DO NOTHING keeps any row

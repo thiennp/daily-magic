@@ -58,10 +58,10 @@ describe("buildAgentWitchInstallUrls", () => {
 
   it("prefers VERCEL_URL over hardcoded fallback origin", () => {
     vi.stubEnv("NODE_ENV", "production");
-    vi.stubEnv("VERCEL_URL", "daily-magic-five.vercel.app");
+    vi.stubEnv("VERCEL_URL", "agentwitch-five.vercel.app");
 
     expect(buildAppOriginFromHeaders(new Headers())).toBe(
-      "https://daily-magic-five.vercel.app",
+      "https://agentwitch-five.vercel.app",
     );
   });
 

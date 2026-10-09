@@ -6,7 +6,7 @@ import {
 } from "@/features/agent/utils/parsePersistedTerminalSession";
 
 export const AGENT_LIVE_TERMINAL_STORE_KEY =
-  "daily-magic.agent-live-terminal.v1";
+  "agentwitch.agent-live-terminal.v1";
 
 export type { PersistedTerminalSession };
 

@@ -46,9 +46,9 @@ describe("prepareAutomationFieldValues", () => {
       id: "project-1",
       ownerUserId: "user-1",
       deviceId: null,
-      name: "Daily Magic",
+      name: "Agent Witch",
       folderPath:
-        "~/.agent-witch/profiles/owner@example.com/projects/daily-magic",
+        "~/.agent-witch/profiles/owner@example.com/projects/agentwitch",
       repoUrls: [],
       defaultBranch: null,
       lastUsedAt: null,
@@ -68,7 +68,7 @@ describe("prepareAutomationFieldValues", () => {
       projectId: "project-1",
       fieldValues: {
         repoPath:
-          "~/.agent-witch/profiles/owner@example.com/projects/daily-magic",
+          "~/.agent-witch/profiles/owner@example.com/projects/agentwitch",
       },
     });
     expect(touchUserProjectLastUsed).toHaveBeenCalledWith(

@@ -6,7 +6,7 @@ import { POLL_INTERVAL_MS } from "@/features/reports/agentRunsPolling.constant";
 describe("useAgentRunsList cache-first contract (REPORTS-006)", () => {
   it("bumps the merged list when the local cache event fires", () => {
     expect(AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT).toBe(
-      "daily-magic:agent-runs-cache-updated",
+      "agentwitch:agent-runs-cache-updated",
     );
   });
 

@@ -11,7 +11,7 @@ describe("resolveAuthSessionCookieOptionsFromRequest", () => {
     vi.stubEnv("NODE_ENV", "development");
 
     const request = new Request(
-      "https://daily-magic-five.vercel.app/api/auth/secret-login",
+      "https://agentwitch-five.vercel.app/api/auth/secret-login",
       {
         headers: { "x-forwarded-proto": "https" },
       },

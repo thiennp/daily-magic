@@ -70,7 +70,7 @@ describe("hasUserCreatedFirstWorkflowOrAgent", () => {
 
   it("returns true when local onboarding flag is set", () => {
     window.localStorage.setItem(
-      "daily-magic.onboarding.workflow-created.v1",
+      "agentwitch.onboarding.workflow-created.v1",
       "true",
     );
 

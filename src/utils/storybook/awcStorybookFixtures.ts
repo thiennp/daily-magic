@@ -11,10 +11,10 @@ export const AWC_STORYBOOK_USER = {
 export const AWC_STORYBOOK_SAMPLE_PROJECT: UserProjectRecord = {
   id: "proj-storybook-1",
   ownerUserId: "user-storybook",
-  name: "daily-magic",
-  folderPath: "/Users/storybook/code/daily-magic",
+  name: "agentwitch",
+  folderPath: "/Users/storybook/code/agentwitch",
   deviceId: "device-storybook-1",
-  repoUrls: ["https://github.com/thiennp/daily-magic.git"],
+  repoUrls: ["https://github.com/thiennp/agentwitch.git"],
   defaultBranch: "main",
   lastUsedAt: "2026-03-01T00:00:00.000Z",
   createdAt: "2026-01-01T00:00:00.000Z",

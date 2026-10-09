@@ -1,6 +1,6 @@
 import { notifyOnboardingWorkflowCreatedUpdated } from "@/features/home/utils/onboardingWorkflowCreatedEvents";
 
-const STORAGE_KEY = "daily-magic.onboarding.workflow-created.v1";
+const STORAGE_KEY = "agentwitch.onboarding.workflow-created.v1";
 
 export const readOnboardingWorkflowCreated = (): boolean => {
   if (typeof window === "undefined") {

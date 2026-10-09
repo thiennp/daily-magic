@@ -1,6 +1,6 @@
 import { persistOnboardingFirstTaskSent } from "@/features/home/utils/onboardingFirstTaskSentApi";
 
-const STORAGE_KEY = "daily-magic.onboarding.first-task-sent.v1";
+const STORAGE_KEY = "agentwitch.onboarding.first-task-sent.v1";
 
 export const readOnboardingFirstTaskSent = (): boolean => {
   if (typeof window === "undefined") {

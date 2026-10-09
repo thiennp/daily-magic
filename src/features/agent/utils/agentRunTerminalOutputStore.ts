@@ -1,4 +1,4 @@
-const OUTPUT_STORE_KEY = "daily-magic.agent-run-terminal-output.v1";
+const OUTPUT_STORE_KEY = "agentwitch.agent-run-terminal-output.v1";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);

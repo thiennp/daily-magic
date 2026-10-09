@@ -1,4 +1,4 @@
-const TOMBSTONE_KEY = "daily-magic.agent-runs.deleted.v1";
+const TOMBSTONE_KEY = "agentwitch.agent-runs.deleted.v1";
 
 const isStringArray = (value: unknown): value is string[] =>
   Array.isArray(value) && value.every((entry) => typeof entry === "string");

@@ -5,7 +5,7 @@ import { PROJECT_PITFALL_SEEDS_SAFETY } from "@/features/project-pitfalls/intern
  * Platform-owned seed templates (projectId null), shown on every project, so
  * only rules that fit any software project belong here. The runtime schema
  * ensure re-syncs global rows from this list and retires any other global
- * seed row. daily-magic-only rules moved to AGENTWITCH_PROJECT_PITFALLS (094).
+ * seed row. AgentWitch-only rules moved to AGENTWITCH_PROJECT_PITFALLS (094).
  * Projects override a seed by upserting the same id.
  */
 export const PROJECT_PITFALL_SEEDS: readonly ProjectPitfallContent[] = [

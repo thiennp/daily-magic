@@ -70,7 +70,7 @@ describe("parseProjectDispatchPayload (A3.4)", () => {
       summary: "claimed allow; sync via localPath",
       toProjectDisplayName: "Buni",
       refs: {
-        prUrl: "https://github.com/thiennp/daily-magic/pull/1",
+        prUrl: "https://github.com/thiennp/agentwitch/pull/1",
         commitSha: "abc123def456",
         localPath: "/Users/me/work/file.ts",
         allowClaimId: "claim-1",

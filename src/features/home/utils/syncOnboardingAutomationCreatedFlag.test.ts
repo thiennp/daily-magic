@@ -27,7 +27,7 @@ describe("syncOnboardingAutomationCreatedFlag", () => {
 
   it("migrates local-only true flag to the API once (HOME-008)", () => {
     window.localStorage.setItem(
-      "daily-magic.onboarding.automation-created.v1",
+      "agentwitch.onboarding.automation-created.v1",
       "true",
     );
 

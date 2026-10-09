@@ -6,10 +6,12 @@ import {
 } from "@/features/projects/access/invites/inviteListStatus";
 import type { AwcProjectAccessInvite } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 
-const base = (overrides: Partial<AwcProjectAccessInvite>): AwcProjectAccessInvite => ({
+const base = (
+  overrides: Partial<AwcProjectAccessInvite>,
+): AwcProjectAccessInvite => ({
   inviteId: "inv-1",
   createdAt: "2026-10-01T00:00:00.000Z",
-  expiresAt: "2026-10-09T00:00:00.000Z",
+  expiresAt: "2099-01-01T00:00:00.000Z",
   revokedAt: null,
   maxUses: 1,
   usesRemaining: 1,
@@ -40,10 +42,7 @@ describe("resolveInviteListStatus", () => {
       ),
     ).toBe("expired");
     expect(
-      resolveInviteListStatus(
-        base({}),
-        Date.parse("2026-10-02T12:00:00.000Z"),
-      ),
+      resolveInviteListStatus(base({}), Date.parse("2026-10-02T12:00:00.000Z")),
     ).toBe("active");
   });
 
