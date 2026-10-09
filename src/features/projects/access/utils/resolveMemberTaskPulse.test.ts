@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { resolveMemberTaskPulse } from "@/features/projects/access/utils/resolveMemberTaskPulse";
+import {
+  resolveMemberTaskPulse,
+  summarizeTaskOwnerPulses,
+} from "@/features/projects/access/utils/resolveMemberTaskPulse";
 import type { ProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecord.type";
 
 const NOW = Date.parse("2026-10-09T12:00:00.000Z");
@@ -64,5 +67,39 @@ describe("resolveMemberTaskPulse", () => {
       NOW,
     );
     expect(pulse.kind).toBe("working");
+  });
+});
+
+describe("summarizeTaskOwnerPulses", () => {
+  it("lists each owner of an open task once, quiet first, skipping unowned and done", () => {
+    const owners = summarizeTaskOwnerPulses(
+      [
+        task({
+          id: "a",
+          ownerMembershipId: "m1",
+          ownerDisplayName: "Alice",
+          updatedAt: minutesAgo(1),
+        }),
+        task({
+          id: "b",
+          ownerMembershipId: "m2",
+          ownerDisplayName: "Bob",
+          updatedAt: minutesAgo(20),
+        }),
+        task({
+          id: "c",
+          ownerMembershipId: "m2",
+          ownerDisplayName: "Bob",
+          status: "queued",
+        }),
+        task({ id: "d", ownerMembershipId: null }),
+        task({ id: "e", ownerMembershipId: "m3", status: "done" }),
+      ],
+      NOW,
+    );
+    expect(owners.map((o) => [o.membershipId, o.name, o.pulse.kind])).toEqual([
+      ["m2", "Bob", "quiet"],
+      ["m1", "Alice", "working"],
+    ]);
   });
 });

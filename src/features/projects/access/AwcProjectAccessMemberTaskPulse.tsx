@@ -23,11 +23,14 @@ export default function AwcProjectAccessMemberTaskPulse({
   membershipId,
   pulse,
   nowMs,
+  canAskStatus = true,
 }: {
   readonly projectId: string;
   readonly membershipId: string;
   readonly pulse: AwcMemberTaskPulse;
   readonly nowMs: number;
+  /** Owner only; members and viewers see the status but cannot send. */
+  readonly canAskStatus?: boolean;
 }) {
   const [ask, setAsk] = useState<AskState>("idle");
 
@@ -70,7 +73,7 @@ export default function AwcProjectAccessMemberTaskPulse({
         </a>
       </p>
       <p className={PROJECT_PAGE_METADATA_TEXT_CLASS}>{copy.quietHint}</p>
-      {ask === "idle" ? (
+      {canAskStatus && ask === "idle" ? (
         <button
           type="button"
           className={AWC_PROJECT_ACCESS_CTA.secondary}

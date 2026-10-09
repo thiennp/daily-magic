@@ -2,6 +2,7 @@
 
 import { twMerge } from "tailwind-merge";
 
+import AwcProjectAccessMemberTeamPulse from "@/features/projects/access/AwcProjectAccessMemberTeamPulse";
 import AwcProjectInboxSection from "@/features/projects/access/inbox/AwcProjectInboxSection";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
@@ -44,6 +45,8 @@ export default function AwcProjectAccessMemberViewerPanel({
             : humanCopy.roleMemberOneLiner}
         </p>
       </header>
+
+      <AwcProjectAccessMemberTeamPulse projectId={projectId} />
 
       <AwcProjectInboxSection
         projectId={projectId}

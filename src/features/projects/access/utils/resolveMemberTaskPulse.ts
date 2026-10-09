@@ -56,3 +56,32 @@ export const resolveMemberTaskPulse = (
     lastUpdateMs: Math.max(...open.map((task) => Date.parse(task.updatedAt))),
   };
 };
+
+export type AwcTaskOwnerPulse = {
+  readonly membershipId: string;
+  readonly name: string;
+  readonly pulse: AwcMemberTaskPulse;
+};
+
+/** Read-only team view: every seat that owns an open task, quiet ones first. */
+export const summarizeTaskOwnerPulses = (
+  records: readonly ProjectTaskRecord[],
+  nowMs: number,
+): readonly AwcTaskOwnerPulse[] => {
+  const names = new Map<string, string>();
+  for (const task of records) {
+    if (task.ownerMembershipId !== null && OPEN_STATUSES.has(task.status)) {
+      names.set(task.ownerMembershipId, task.ownerDisplayName ?? "Assistant");
+    }
+  }
+  return [...names]
+    .map(([membershipId, name]) => ({
+      membershipId,
+      name,
+      pulse: resolveMemberTaskPulse(records, membershipId, nowMs),
+    }))
+    .sort(
+      (a, b) =>
+        Number(b.pulse.kind === "quiet") - Number(a.pulse.kind === "quiet"),
+    );
+};
