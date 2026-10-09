@@ -94,6 +94,7 @@ export const openProjectMessengerThread = async (input: {
     notices: viewer.isOwner ? "owner" : "member",
     // Kept-recipient sends also show in Whole project ("To {name}").
     directInWhole: true,
+    viewerUserId: input.actorUserId,
   });
 
   const resolved = resolveProjectMessengerLoadPage({

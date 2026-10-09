@@ -4,6 +4,7 @@ import {
   createOauthAuthorizationCode,
   hashOauthSecret,
 } from "@/lib/agentAccess/oauth/hashOauthSecrets";
+import { sealOauthDeliveryToken } from "@/lib/agentAccess/oauth/oauthTokenDeliveryCipher";
 import { OAUTH_CODE_TTL_MS } from "@/lib/agentAccess/oauth/oauth.constants";
 import { getSql } from "@/lib/db";
 
@@ -57,12 +58,17 @@ export const issueOauthAuthCodeAfterConsent = async (input: {
     )
     VALUES (
       ${authCodeId},
-      ${input.accessToken},
-      ${input.refreshToken},
+      ${sealOauthDeliveryToken(input.accessToken)},
+      ${sealOauthDeliveryToken(input.refreshToken)},
       ${input.nowIso}
     )
   `;
   await sql`DELETE FROM agent_access_oauth_pending WHERE id = ${input.pending.id}`;
+  // Codes that were never exchanged must not keep tokens around: sweep what outlived its code.
+  await sql`
+    DELETE FROM agent_access_oauth_token_delivery
+    WHERE created_at < NOW() - INTERVAL '1 hour'
+  `;
 
   const url = new URL(input.pending.redirectUri);
   url.searchParams.set("code", code);

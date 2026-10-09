@@ -59,9 +59,10 @@ export async function POST(request: Request): Promise<Response> {
     const project = await createUserProject(actor.id, parsed);
 
     if (project === null) {
+      // No computer given, or not one of the owner's own live computers.
       return Response.json(
-        { ok: false, errorMessage: "Could not save project." },
-        { status: 500 },
+        { ok: false, errorMessage: "Pick one of your own computers." },
+        { status: 400 },
       );
     }
 

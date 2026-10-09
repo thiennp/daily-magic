@@ -1,5 +1,6 @@
 import { DEVICE_ACCESS_TOKEN_TTL_MS } from "@/lib/agentAccess/deviceCode/deviceCode.constants";
 import type { ExchangeAuthorizationCodeResult } from "@/lib/agentAccess/oauth/ExchangeAuthorizationCodeResult.type";
+import { openOauthDeliveryToken } from "@/lib/agentAccess/oauth/oauthTokenDeliveryCipher";
 import { asRowArray, getSql } from "@/lib/db";
 
 /** Mark auth code used and return one-time plaintext tokens. */
@@ -36,9 +37,13 @@ export const deliverOauthAuthCodeTokens = async (input: {
   )[0];
 
   const accessToken =
-    typeof delivery?.access_token === "string" ? delivery.access_token : null;
+    typeof delivery?.access_token === "string"
+      ? openOauthDeliveryToken(delivery.access_token)
+      : null;
   const refreshToken =
-    typeof delivery?.refresh_token === "string" ? delivery.refresh_token : null;
+    typeof delivery?.refresh_token === "string"
+      ? openOauthDeliveryToken(delivery.refresh_token)
+      : null;
 
   if (accessToken === null || refreshToken === null) {
     return {

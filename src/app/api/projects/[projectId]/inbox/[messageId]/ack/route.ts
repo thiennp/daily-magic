@@ -12,10 +12,17 @@ export async function POST(
 ): Promise<Response> {
   const { actor, error } = await requireAuth();
   if (error || !actor) return error;
-  const { messageId } = await context.params;
-  const result = await ackProjectMessage({ messageId, actorUserId: actor.id });
+  const { projectId, messageId } = await context.params;
+  const result = await ackProjectMessage({
+    messageId,
+    actorUserId: actor.id,
+    requiredProjectId: projectId,
+  });
   if (!result.ok) {
-    return Response.json({ ok: false, errorMessage: result.code }, { status: 403 });
+    return Response.json(
+      { ok: false, errorMessage: result.code },
+      { status: 403 },
+    );
   }
   return Response.json({ ok: true, messageId: result.messageId });
 }

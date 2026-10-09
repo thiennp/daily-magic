@@ -13,6 +13,15 @@ const normalizeHost = (host: string): string => {
   return withoutPort;
 };
 
+/**
+ * Any web app on any local port could otherwise call the wake server (install, update, folders).
+ * An installed (production) bridge only trusts agentwitch.com; localhost origins are for
+ * development, or when AGENT_WITCH_WAKE_ALLOW_LOCALHOST_ORIGINS=1 is set on purpose.
+ */
+const localOriginsAllowed = (): boolean =>
+  process.env.NODE_ENV !== "production" ||
+  process.env.AGENT_WITCH_WAKE_ALLOW_LOCALHOST_ORIGINS === "1";
+
 export const isAgentWitchWakeServerAllowedHost = (host: string): boolean => {
   const normalizedHost = normalizeHost(host);
 
@@ -25,7 +34,7 @@ export const isAgentWitchWakeServerAllowedHost = (host: string): boolean => {
   }
 
   if (LOCAL_DEV_HOST_PATTERN.test(host.trim().toLowerCase())) {
-    return true;
+    return localOriginsAllowed();
   }
 
   return false;

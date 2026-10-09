@@ -1,4 +1,5 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
+import { hideClosedAssistantRows } from "@/lib/projects/acl/messaging/messenger/hideClosedAssistantRows";
 import { checkProjectMessageSilence } from "@/lib/projects/acl/messaging/checkProjectMessageSilence";
 import { buildProjectMessengerTimeline } from "@/lib/projects/acl/messaging/messenger/buildProjectMessengerTimeline";
 import { groupProjectMessengerDeliveries } from "@/lib/projects/acl/messaging/messenger/groupProjectMessengerDeliveries";
@@ -43,6 +44,8 @@ export const loadProjectMessengerNeonThreadPage = async (input: {
   readonly includeBotToBot?: boolean;
   readonly notices?: ProjectMessengerNoticeViewer;
   readonly directInWhole?: boolean;
+  /** Who is reading: rows of an assistant closed to them are left out. */
+  readonly viewerUserId?: string;
 }): Promise<LoadProjectMessengerNeonThreadPageResult> => {
   await ensureProjectAclSchema();
   await purgeExpiredProjectMessages();
@@ -61,11 +64,15 @@ export const loadProjectMessengerNeonThreadPage = async (input: {
     fetchLimit,
   });
 
-  const mapped = rows.map((row) => {
-    const entry = mapProjectMessengerRow(row, input.ownerUserId);
-    const cursorAt =
-      typeof row.cursor_at === "string" ? row.cursor_at : entry.createdAt;
-    return { ...entry, createdAt: cursorAt };
+  const mapped = await hideClosedAssistantRows({
+    projectId: input.projectId,
+    viewerUserId: input.viewerUserId,
+    rows: rows.map((row) => {
+      const entry = mapProjectMessengerRow(row, input.ownerUserId);
+      const cursorAt =
+        typeof row.cursor_at === "string" ? row.cursor_at : entry.createdAt;
+      return { ...entry, createdAt: cursorAt };
+    }),
   });
 
   const bots = await loadProjectMessengerBots(input.projectId);

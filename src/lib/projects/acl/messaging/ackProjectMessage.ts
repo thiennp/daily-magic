@@ -19,6 +19,8 @@ export type { AckProjectMessageResult };
 export const ackProjectMessage = async (input: {
   readonly messageId: string;
   readonly actorUserId: string;
+  /** The project the caller addressed (URL); a message of another project is refused. */
+  readonly requiredProjectId?: string;
 }): Promise<AckProjectMessageResult> => {
   await ensureProjectAclSchema();
   const sql = getSql();
@@ -31,6 +33,12 @@ export const ackProjectMessage = async (input: {
     return alreadyAckedProjectMessageOrNotFound(input);
   }
   const projectId = String(rows[0].project_id);
+  if (
+    input.requiredProjectId !== undefined &&
+    input.requiredProjectId !== projectId
+  ) {
+    return { ok: false, code: "forbidden" };
+  }
   const membership = await getActiveProjectMembership(
     projectId,
     input.actorUserId,
