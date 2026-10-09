@@ -1,3 +1,4 @@
+import { findDeviceProjectFolderPath } from "@/lib/projects/acl/findDeviceProjectFolderPath";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { isValidProjectFolderPath } from "@/lib/projects/validateProjectFolderPath";
 
@@ -15,6 +16,13 @@ export const resolveRunFolder = async (
   const project = await getUserProjectById(projectId);
   if (project === null) {
     return undefined;
+  }
+  const deviceFolder = await findDeviceProjectFolderPath(
+    project.id,
+    targetDeviceId,
+  );
+  if (deviceFolder !== null) {
+    return deviceFolder;
   }
   const projectDevice = project.deviceId ?? "";
   const targetDevice = targetDeviceId ?? "";

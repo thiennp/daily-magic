@@ -1,3 +1,4 @@
+import { findDeviceProjectFolderPath } from "@/lib/projects/acl/findDeviceProjectFolderPath";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { isValidProjectFolderPath } from "@/lib/projects/validateProjectFolderPath";
 import { requireProjectIdForCreate } from "@/lib/projects/requireProjectIdForCreate";
@@ -43,6 +44,19 @@ export const resolveAgentRunDispatchProject = async (input: {
         "Project not found. Refresh the project list and try again.",
       code: "not_found",
       status: 404,
+    };
+  }
+
+  // Each computer runs in the folder it registered for the project.
+  const deviceFolder = await findDeviceProjectFolderPath(
+    project.id,
+    input.targetDeviceId,
+  );
+  if (deviceFolder !== null) {
+    return {
+      ok: true,
+      projectId: gate.projectId,
+      projectFolderPath: deviceFolder,
     };
   }
 

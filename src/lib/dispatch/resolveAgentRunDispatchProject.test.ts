@@ -12,6 +12,10 @@ vi.mock("@/lib/projects/userProjectQueries", () => ({
   getUserProjectById: mocks.getUserProjectById,
 }));
 
+vi.mock("@/lib/projects/acl/findDeviceProjectFolderPath", () => ({
+  findDeviceProjectFolderPath: async () => null,
+}));
+
 vi.mock("@/lib/projects/acl/checkProjectMembershipStatus", () => ({
   checkProjectMembershipStatus: mocks.checkProjectMembershipStatus,
 }));

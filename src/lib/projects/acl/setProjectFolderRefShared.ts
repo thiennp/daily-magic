@@ -1,5 +1,6 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { resolveFolderRefActor } from "@/lib/projects/acl/resolveFolderRefActor";
+import { scheduleProjectUpdatedNotify } from "@/lib/projects/acl/messaging/scheduleProjectUpdatedNotify";
 import { asRowArray, getSql } from "@/lib/db";
 
 export type SetProjectFolderRefSharedResult =
@@ -34,5 +35,10 @@ export const setProjectFolderRefShared = async (input: {
     `,
   );
   if (rows.length === 0) return { ok: false, code: "not_found" };
+  await scheduleProjectUpdatedNotify({
+    projectId: input.projectId,
+    fields: ["folder_refs"],
+    actorUserId: input.actorUserId,
+  });
   return { ok: true, shared: input.shared };
 };
