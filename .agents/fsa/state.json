@@ -70,7 +70,8 @@
     "src/features/home/components",
     "src/features/capabilities",
     "src/features/dispatch/hooks",
-    "src/features/notifications"
+    "src/features/notifications",
+    "src/features/projects/library"
   ],
   "blocked": {
     "src/features/home/constants": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing), pre-commit architecture gate fails when it is edited",
@@ -435,6 +436,11 @@
       "unit": "src/features/notifications",
       "sha": "d7507a8a5bfdac075b8b8f4f9123cd6e9b5f397c",
       "at": "2026-10-10T10:23:05.456Z"
+    },
+    {
+      "unit": "src/features/projects/library",
+      "sha": "6c67c703e117f2fd7e38da979a47ca9d3241ad0e",
+      "at": "2026-10-10T10:26:27.578Z"
     }
   ]
 }

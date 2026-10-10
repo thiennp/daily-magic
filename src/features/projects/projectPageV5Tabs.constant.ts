@@ -1,4 +1,4 @@
-import { PROJECT_PAGE_LIBRARY_COPY } from "@/features/projects/library/projectPageLibraryCopy.constant";
+import { PROJECT_PAGE_LIBRARY_COPY } from "@/features/projects/library/public-api/types";
 import { PROJECT_PAGE_TAB_LABELS } from "@/features/projects/projectPageTabs.constant";
 import { PROJECT_PAGE_REPORTS_COPY } from "@/features/projects/reports/public-api/types";
 

@@ -3,8 +3,8 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { PROJECT_PAGE_LIBRARY_ACTIONS_COPY as A } from "@/features/projects/library/projectPageLibraryActionsCopy.constant";
-import { PROJECT_PAGE_LIBRARY_COPY as L } from "@/features/projects/library/projectPageLibraryCopy.constant";
+import { PROJECT_PAGE_LIBRARY_ACTIONS_COPY as A } from "@/features/projects/library/public-api/types";
+import { PROJECT_PAGE_LIBRARY_COPY as L } from "@/features/projects/library/public-api/types";
 import { PROJECT_PAGE_REPORTS_COPY as R } from "@/features/projects/reports/public-api/types";
 
 const P = "src/features/projects";
