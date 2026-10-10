@@ -13,7 +13,7 @@ import AwcProjectSettingsNameSection from "@/features/projects/settings/AwcProje
 import AwcProjectConnectionsSection from "@/features/projects/settings/connections/AwcProjectConnectionsSection";
 import AwcProjectSettingsPendingRunApprovalsSection from "@/features/projects/settings/runApprovals/AwcProjectSettingsPendingRunApprovalsSection";
 import { AwcProjectSettingsMemberPermissionsRow } from "@/features/projects/settings/memberPermissions/public-api/presentation";
-import AwcProjectSettingsRunsWithoutApprovalRow from "@/features/projects/settings/runsWithoutApproval/AwcProjectSettingsRunsWithoutApprovalRow";
+import { AwcProjectSettingsRunsWithoutApprovalRow } from "@/features/projects/settings/runsWithoutApproval/public-api/presentation";
 
 interface AwcProjectDetailSettingsPanelProps {
   readonly project: UserProjectRecord;

@@ -22,7 +22,8 @@
     "src/features/feedback",
     "src/features/projects/bots",
     "src/features/agent-access",
-    "src/features/agent/constants"
+    "src/features/agent/constants",
+    "src/features/projects/settings/runsWithoutApproval"
   ],
   "blocked": {},
   "rounds": [
@@ -140,6 +141,11 @@
       "unit": "src/features/agent/constants",
       "sha": "37281b2dd5a5ce1e9e4a748b25489454aa5230d8",
       "at": "2026-10-10T09:16:37.141Z"
+    },
+    {
+      "unit": "src/features/projects/settings/runsWithoutApproval",
+      "sha": "255384a74b79762783a7d059b097f6e6a4997f5e",
+      "at": "2026-10-10T09:17:43.573Z"
     }
   ]
 }
