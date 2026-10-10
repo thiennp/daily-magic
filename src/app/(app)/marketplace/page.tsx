@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
 import { GuestSessionStateProvider } from "@/features/empty-states/public-api/presentation";
-import MarketplacePageLayout from "@/features/pages/layouts/MarketplacePageLayout";
+import { MarketplacePageLayout } from "@/features/pages/public-api/presentation";
 import AppShell from "@/features/shell/AppShell";
 import { resolveServerSessionHint } from "@/lib/auth/resolveServerSessionHint";
 

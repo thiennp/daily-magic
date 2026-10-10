@@ -1,8 +1,10 @@
-import AutomationsPageLayout from "@/features/pages/layouts/AutomationsPageLayout";
-import LibraryPageLayout from "@/features/pages/layouts/LibraryPageLayout";
-import MarketplacePageLayout from "@/features/pages/layouts/MarketplacePageLayout";
-import ProjectsPageLayout from "@/features/pages/layouts/ProjectsPageLayout";
-import ReportsPageLayout from "@/features/pages/layouts/ReportsPageLayout";
+import {
+  AutomationsPageLayout,
+  LibraryPageLayout,
+  MarketplacePageLayout,
+  ProjectsPageLayout,
+  ReportsPageLayout,
+} from "@/features/pages/public-api/presentation";
 import AwcHomeSignedInStoryView from "@/utils/storybook/AwcHomeSignedInStoryView";
 import AwcProjectDetailStoryView from "@/utils/storybook/AwcProjectDetailStoryView";
 import type { AwcStorybookPageEntry } from "@/utils/storybook/awc/awcStorybookPageEntry.type";

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import AdminGroupsPageLayout from "@/features/pages/layouts/AdminGroupsPageLayout";
+import { AdminGroupsPageLayout } from "@/features/pages/public-api/presentation";
 import { getAuthActor } from "@/lib/auth/auth";
 import {
   listGroups,

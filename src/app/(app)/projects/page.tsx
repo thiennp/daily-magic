@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import ProjectsPageLayout from "@/features/pages/layouts/ProjectsPageLayout";
+import { ProjectsPageLayout } from "@/features/pages/public-api/presentation";
 import AppShell from "@/features/shell/AppShell";
 import { APP_SHELL_NARROW_CONTENT_CLASS } from "@/features/shell/appShellContentWidth.constant";
 import { getAuthActor } from "@/lib/auth/auth";

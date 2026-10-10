@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { getAuthActor } from "@/lib/auth/auth";
 import HomeMarketingLanding from "@/features/home/HomeMarketingLanding";
-import HomePageLayout from "@/features/pages/layouts/HomePageLayout";
+import { HomePageLayout } from "@/features/pages/public-api/presentation";
 import AppShell from "@/features/shell/AppShell";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import { AGENT_WITCH_DEFAULT_ORIGIN } from "@/lib/agentWitch/constants";
