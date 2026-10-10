@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import { buildAssistantOwnerLoginPath } from "@/features/agent-access/buildAssistantOwnerLoginPath";
-import OauthConsentPageView from "@/features/agent-access/oauth-consent/OauthConsentPageView";
-import { OAUTH_CONSENT_COPY } from "@/features/agent-access/oauth-consent/oauthConsentCopy.constant";
-import { readOauthConsentSearchParam } from "@/features/agent-access/oauth-consent/readOauthConsentSearchParam";
+import { OauthConsentPageView } from "@/features/agent-access/public-api/presentation";
+import {
+  buildAssistantOwnerLoginPath,
+  OAUTH_CONSENT_COPY,
+  readOauthConsentSearchParam,
+} from "@/features/agent-access/public-api/types";
 import { formatOauthRedirectHost } from "@/lib/agentAccess/oauth/formatOauthRedirectHost";
 import { loadOauthPending } from "@/lib/agentAccess/oauth/loadOauthPending";
 import { auth } from "@/lib/auth/auth";
@@ -17,9 +19,7 @@ export const metadata: Metadata = {
 };
 
 type PageProps = {
-  readonly searchParams: Promise<
-    Record<string, string | string[] | undefined>
-  >;
+  readonly searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export default async function OauthConsentPage({ searchParams }: PageProps) {
@@ -30,9 +30,7 @@ export default async function OauthConsentPage({ searchParams }: PageProps) {
 
   if (!session?.user?.id) {
     const callback = `/oauth/consent${pendingId.length > 0 ? `?pending=${encodeURIComponent(pendingId)}` : ""}`;
-    redirect(
-      buildAssistantOwnerLoginPath(callback),
-    );
+    redirect(buildAssistantOwnerLoginPath(callback));
   }
 
   const pending =

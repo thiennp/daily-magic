@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   DEVICE_VERIFY_COPY,
   deviceVerifyMessageForErrorCode,
-} from "@/features/agent-access/device-verify/deviceVerifyCopy.constant";
+} from "@/features/agent-access/public-api/types";
 import { AWC_TERMS_VERSION } from "@/lib/agentAccess/awcTermsVersion.constant";
 import {
   formatUserCodeDisplay,
@@ -20,9 +20,7 @@ describe("device-code user_code helpers", () => {
   });
 
   it("verify page copy includes locked owner line and never says bot", () => {
-    expect(DEVICE_VERIFY_COPY.title).toBe(
-      "You'll be this assistant's owner",
-    );
+    expect(DEVICE_VERIFY_COPY.title).toBe("You'll be this assistant's owner");
     expect(DEVICE_VERIFY_COPY.ownerLine).toBe(DEVICE_VERIFY_COPY.title);
     expect(DEVICE_VERIFY_COPY.pageTitle).toBe(
       "Become this assistant's owner | AgentWitch",

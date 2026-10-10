@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { resolveLoginNotice } from "@/features/agent-access/resolveLoginNotice";
+import { resolveLoginNotice } from "@/features/agent-access/public-api/types";
 import LoginPageView from "@/features/auth/LoginPageView";
 import { auth } from "@/lib/auth/auth";
 import { resolvePostAuthReturnFromSearchParams } from "@/lib/auth/resolvePostAuthReturnFromSearchParams";
@@ -9,9 +9,7 @@ interface LoginPageProps {
   readonly searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-export default async function LoginPage({
-  searchParams,
-}: LoginPageProps) {
+export default async function LoginPage({ searchParams }: LoginPageProps) {
   const session = await auth();
   const params = await searchParams;
 

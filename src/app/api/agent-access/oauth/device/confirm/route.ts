@@ -1,4 +1,4 @@
-import { deviceVerifyMessageForErrorCode } from "@/features/agent-access/device-verify/deviceVerifyCopy.constant";
+import { deviceVerifyMessageForErrorCode } from "@/features/agent-access/public-api/types";
 import { isAllowedAppHttpOrigin } from "@/lib/app/isAllowedAppHttpOrigin";
 import { resolveAppBaseUrl } from "@/lib/app/resolveAppBaseUrl";
 import { requireAuth } from "@/lib/auth/requireAuth";

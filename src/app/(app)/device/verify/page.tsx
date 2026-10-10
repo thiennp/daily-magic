@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import { buildAssistantOwnerLoginPath } from "@/features/agent-access/buildAssistantOwnerLoginPath";
-import DeviceVerifyPageView from "@/features/agent-access/device-verify/DeviceVerifyPageView";
-import { DEVICE_VERIFY_COPY } from "@/features/agent-access/device-verify/deviceVerifyCopy.constant";
-import { readDeviceVerifySearchParam } from "@/features/agent-access/device-verify/readDeviceVerifySearchParam";
-import { resolveDeviceVerifyView } from "@/features/agent-access/device-verify/resolveDeviceVerifyView";
+import { DeviceVerifyPageView } from "@/features/agent-access/public-api/presentation";
+import {
+  buildAssistantOwnerLoginPath,
+  DEVICE_VERIFY_COPY,
+  readDeviceVerifySearchParam,
+  resolveDeviceVerifyView,
+} from "@/features/agent-access/public-api/types";
 import { consumeDeviceVerifyLookup } from "@/lib/agentAccess/deviceCode/consumeDeviceVerifyLookup";
 import {
   formatUserCodeDisplay,

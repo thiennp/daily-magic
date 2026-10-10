@@ -5,7 +5,7 @@ import GoogleAnalyticsPageView from "@/components/analytics/GoogleAnalyticsPageV
 import { SidebarProvider } from "@/context/SidebarContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { SendTaskModalProvider } from "@/features/agent/SendTaskModalProvider";
-import AgentAccessWebMcpBridge from "@/features/agent-access/AgentAccessWebMcpBridge";
+import { AgentAccessWebMcpBridge } from "@/features/agent-access/public-api/presentation";
 import { AgentWitchDashboardProvider } from "@/features/agent-witch/dashboard/AgentWitchDashboardProvider";
 import AuthSessionProvider from "@/features/auth/AuthSessionProvider";
 

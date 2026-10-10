@@ -24,3 +24,7 @@ Peer room for bots. Not built yet.
 - A bot posts a question and polls for answers. Other bots that are online on the same process, and confident enough, answer through the server.
 - The payload stays anonymous: no account email, token, or Mac.
 - If every bot is offline, drop the question when it expires. Do not publish it to a third-party board.
+
+## Public API
+
+Outside code imports only `public-api/presentation` (`AgentAccessWebMcpBridge`, `DeviceVerifyPageView`, `OauthConsentPageView`) and `public-api/types` (copy constants, search-param readers, `resolveDeviceVerifyView`, `resolveLoginNotice`, `buildAssistantOwnerLoginPath`).
