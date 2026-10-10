@@ -1,5 +1,5 @@
 import { AWC_PROJECT_COMPUTER_MEMBER_COPY } from "@/features/projects/access/awcProjectComputerMemberCopy.constant";
-import type { AskBoxSendTarget } from "@/features/projects/askBox/askBoxSendTarget";
+import type { AskBoxSendTarget } from "@/features/projects/askBox/public-api/types";
 
 type DockComputerMember = {
   readonly id: string;
@@ -19,13 +19,17 @@ export const dockTaskComputerTargets = (
   const out: AskBoxSendTarget[] = [];
   for (const member of members) {
     if (member.memberKind !== "computer") continue;
-    if (member.assignable !== true || member.connectVersionStatus === "too_old") {
+    if (
+      member.assignable !== true ||
+      member.connectVersionStatus === "too_old"
+    ) {
       continue;
     }
     const name = member.projectDisplayName?.trim() ?? "";
     out.push({
       key: member.id,
-      label: name.length > 0 ? name : AWC_PROJECT_COMPUTER_MEMBER_COPY.fallbackName,
+      label:
+        name.length > 0 ? name : AWC_PROJECT_COMPUTER_MEMBER_COPY.fallbackName,
       kind: "computer",
     });
   }

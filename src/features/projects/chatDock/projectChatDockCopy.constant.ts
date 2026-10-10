@@ -1,5 +1,5 @@
 import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
-import { PROJECT_ASK_BOX_COPY } from "@/features/projects/askBox/projectAskBoxCopy.constant";
+import { PROJECT_ASK_BOX_COPY } from "@/features/projects/askBox/public-api/types";
 
 /**
  * L3 V5-4 Chat dock — Product EN lock (PLAN §5.2 + Product steer 2026-10-06).
