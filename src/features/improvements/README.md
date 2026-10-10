@@ -23,3 +23,7 @@ _None wired in this feature folder._
 - `capabilities`
 
 Query: `npm run feature-knowledge:query -- "..." --feature=improvements`
+
+## Public API
+
+Outside code imports only `public-api/presentation` (`FeedbackImprovementDraft`, `ImprovementReviewPanel`).

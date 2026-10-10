@@ -2,7 +2,7 @@ import {
   APP_SURFACE_CTA_PRIMARY_SM_CLASS,
   APP_SURFACE_CTA_SECONDARY_SM_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
-import FeedbackImprovementDraft from "@/features/improvements/FeedbackImprovementDraft";
+import { FeedbackImprovementDraft } from "@/features/improvements/public-api/presentation";
 import type { CapabilityFeedbackInboxItem } from "@/lib/feedback/types/CapabilityFeedbackRecord.type";
 
 interface FeedbackInboxItemActionsProps {

@@ -4,7 +4,7 @@ import HomePromptOptimizerCtaBox from "@/features/home/components/HomePromptOpti
 import MyOfferingsPanel from "@/features/capabilities/MyOfferingsPanel";
 import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
-import ImprovementReviewPanel from "@/features/improvements/ImprovementReviewPanel";
+import { ImprovementReviewPanel } from "@/features/improvements/public-api/presentation";
 import MarketplaceHomePromo from "@/features/marketplace/MarketplaceHomePromo";
 import HomeAttentionPanel from "@/features/home/HomeAttentionPanel";
 import HomeComputersCard from "@/features/home/HomeComputersCard";
