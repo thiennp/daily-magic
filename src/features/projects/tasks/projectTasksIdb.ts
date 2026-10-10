@@ -1,17 +1,19 @@
 import {
   keyOfProjectTask,
   toIdbProjectTask,
-  type ProjectTaskIdbRecord,
-  type ProjectTaskLocalRecord,
-  type ProjectTaskNeonMeta,
-} from "@/features/projects/sync/adapters/projectTasksAdapter";
-import { PROJECT_SYNC_TABLE_PROJECT_TASKS } from "@/features/projects/sync/projectSyncIdb.constant";
+} from "@/features/projects/sync/public-api/presentation";
+import type {
+  ProjectTaskIdbRecord,
+  ProjectTaskLocalRecord,
+  ProjectTaskNeonMeta,
+} from "@/features/projects/sync/public-api/types";
+import { PROJECT_SYNC_TABLE_PROJECT_TASKS } from "@/features/projects/sync/public-api/types";
 import {
   listProjectSyncByProject,
   listProjectSyncByProjectOrThrowSoft,
   readProjectSyncRow,
   writeProjectSyncRow,
-} from "@/features/projects/sync/projectSyncIdb";
+} from "@/features/projects/sync/public-api/presentation";
 
 export type ProjectTaskIdbRow = ProjectTaskIdbRecord & {
   readonly taskKey: string;

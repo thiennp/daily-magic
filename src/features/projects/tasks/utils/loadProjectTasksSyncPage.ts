@@ -1,13 +1,13 @@
 import type {
   ProjectTaskLocalRecord,
   ProjectTaskNeonMeta,
-} from "@/features/projects/sync/adapters/projectTasksAdapter";
-import { encodeProjectSyncCursor } from "@/features/projects/sync/projectSyncCursor";
+} from "@/features/projects/sync/public-api/types";
+import { encodeProjectSyncCursor } from "@/features/projects/sync/public-api/presentation";
 import {
   idbEntriesOrEmpty,
   softReadIdbEntries,
-} from "@/features/projects/sync/projectSyncIdbSoftDegrade";
-import { loadPage } from "@/features/projects/sync/projectSyncPager";
+} from "@/features/projects/sync/public-api/presentation";
+import { loadPage } from "@/features/projects/sync/public-api/presentation";
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
 import { listProjectTasksIdbOrThrowSoft } from "@/features/projects/tasks/projectTasksIdb";
 import { toProjectTaskMeta } from "@/features/projects/tasks/utils/toProjectTaskMeta";
@@ -24,9 +24,13 @@ export const loadProjectTasksSyncPage = async (input: {
   const idbSoft = await softReadIdbEntries({
     read: () => listProjectTasksIdbOrThrowSoft(projectId),
   });
-  const idbEntries = idbEntriesOrEmpty(idbSoft).map((row) => toProjectTaskMeta(row));
+  const idbEntries = idbEntriesOrEmpty(idbSoft).map((row) =>
+    toProjectTaskMeta(row),
+  );
   const neonEntries: readonly ProjectTaskMeta[] =
-    neonMeta !== undefined ? neonMeta.map((r) => toProjectTaskMeta(r)) : reportEntries;
+    neonMeta !== undefined
+      ? neonMeta.map((r) => toProjectTaskMeta(r))
+      : reportEntries;
   const page = loadPage({
     idbEntries,
     localEntries: (localMeta ?? []).map((r) => toProjectTaskMeta(r)),

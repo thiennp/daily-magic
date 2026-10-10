@@ -1,4 +1,4 @@
-import type { IdbFailureKind } from "@/features/projects/sync/adapters/neonMetaIdbGuard";
+import type { IdbFailureKind } from "@/features/projects/sync/public-api/types";
 
 export type TasksMetaBody = {
   readonly batch?: unknown;

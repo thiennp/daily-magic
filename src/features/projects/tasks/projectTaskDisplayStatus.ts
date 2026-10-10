@@ -1,4 +1,4 @@
-import type { ProjectTaskUiStatus } from "@/features/projects/sync/projectSync.types";
+import type { ProjectTaskUiStatus } from "@/features/projects/sync/public-api/types";
 
 /**
  * Tasks tab display status (UI-only). Sync's ProjectTaskUiStatus plus the

@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 
-import { clearProjectSyncOnLeave } from "@/features/projects/sync/clearProjectSyncOnLeave";
+import { clearProjectSyncOnLeave } from "@/features/projects/sync/public-api/presentation";
 import requestDeleteUserProject from "@/features/projects/utils/requestDeleteUserProject";
 
 /**

@@ -6,13 +6,13 @@ import type {
 import {
   PROJECT_SYNC_TABLE_KEPT_RECIPIENTS,
   PROJECT_SYNC_TABLE_MESSENGER_CHATS,
-} from "@/features/projects/sync/projectSyncIdb.constant";
+} from "@/features/projects/sync/public-api/types";
 import {
   clearProjectSyncAll,
   clearProjectSyncForProject,
   readProjectSyncRow,
   writeProjectSyncRow,
-} from "@/features/projects/sync/projectSyncIdb";
+} from "@/features/projects/sync/public-api/presentation";
 
 /**
  * Messenger chat IDB — thin facade over generalized projectSyncIdb.

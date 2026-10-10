@@ -1,10 +1,10 @@
-import type { ProjectTaskUiStatus } from "@/features/projects/sync/projectSync.types";
+import type { ProjectTaskUiStatus } from "@/features/projects/sync/public-api/types";
 import type { ProjectTaskDisplayStatus } from "@/features/projects/tasks/projectTaskDisplayStatus";
 import type {
   ProjectTaskIdbRecord,
   ProjectTaskLocalRecord,
   ProjectTaskNeonMeta,
-} from "@/features/projects/sync/adapters/projectTasksAdapter";
+} from "@/features/projects/sync/public-api/types";
 
 export type {
   ProjectTaskUiStatus,

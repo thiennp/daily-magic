@@ -1,4 +1,4 @@
-import type { ProjectSyncConnectionState } from "@/features/projects/sync/projectSync.types";
+import type { ProjectSyncConnectionState } from "@/features/projects/sync/public-api/types";
 import type { ProjectTaskDisplayStatus } from "@/features/projects/tasks/projectTaskDisplayStatus";
 import type {
   ProjectTaskMeta,
@@ -23,5 +23,8 @@ export type AwcProjectTasksState = {
   readonly setStatusFilter: (s: ProjectTaskDisplayStatus | "all") => void;
   readonly setChatVisibility: (v: ProjectTasksChatVisibility) => void;
   readonly reload: () => void;
-  readonly assistants: readonly { readonly id: string; readonly name: string }[];
+  readonly assistants: readonly {
+    readonly id: string;
+    readonly name: string;
+  }[];
 };

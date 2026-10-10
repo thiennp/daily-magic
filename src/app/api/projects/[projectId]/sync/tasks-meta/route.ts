@@ -8,10 +8,10 @@
 import { requireAuth } from "@/lib/auth/requireAuth";
 import { authorizeProjectPageActor } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
-import { isProjectSyncModuleEnabled } from "@/features/projects/sync/projectSyncFlag";
+import { isProjectSyncModuleEnabled } from "@/features/projects/sync/public-api/infrastructure";
 import { readTasksMetaBody } from "@/app/api/projects/[projectId]/sync/tasks-meta/readTasksMetaBody";
-import { upsertProjectTaskNeonMeta } from "@/features/projects/sync/adapters/upsertProjectTaskNeonMeta";
-import { gateNeonUpsertAfterIdb } from "@/features/projects/sync/adapters/neonMetaIdbGuard";
+import { upsertProjectTaskNeonMeta } from "@/features/projects/sync/public-api/infrastructure";
+import { gateNeonUpsertAfterIdb } from "@/features/projects/sync/public-api/infrastructure";
 
 export const dynamic = "force-dynamic";
 

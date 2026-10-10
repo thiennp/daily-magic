@@ -37,7 +37,8 @@
     "src/features/projects/knowledge-impact",
     "src/features/projects/repoUrls",
     "src/features/projects/settings/folder",
-    "src/features/agent/send-readiness"
+    "src/features/agent/send-readiness",
+    "src/features/projects/sync"
   ],
   "blocked": {},
   "rounds": [
@@ -230,6 +231,11 @@
       "unit": "src/features/agent/send-readiness",
       "sha": "0162a6285674a42b6b08c5e93d11d4ab92221b8b",
       "at": "2026-10-10T09:33:47.998Z"
+    },
+    {
+      "unit": "src/features/projects/sync",
+      "sha": "e0f58b62763a97b07f16ab5d37428b5089cd2b4c",
+      "at": "2026-10-10T09:35:45.431Z"
     }
   ]
 }

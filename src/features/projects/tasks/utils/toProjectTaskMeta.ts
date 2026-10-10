@@ -1,9 +1,9 @@
-import {
-  toNeonMetaProjectTask,
-  type ProjectTaskIdbRecord,
-  type ProjectTaskLocalRecord,
-  type ProjectTaskNeonMeta,
-} from "@/features/projects/sync/adapters/projectTasksAdapter";
+import { toNeonMetaProjectTask } from "@/features/projects/sync/public-api/presentation";
+import type {
+  ProjectTaskIdbRecord,
+  ProjectTaskLocalRecord,
+  ProjectTaskNeonMeta,
+} from "@/features/projects/sync/public-api/types";
 import type { ProjectTaskMeta } from "@/features/projects/tasks/projectTask.type";
 
 /** Neon / IDB / local task rows → one UI meta shape (assistantName filled later). */

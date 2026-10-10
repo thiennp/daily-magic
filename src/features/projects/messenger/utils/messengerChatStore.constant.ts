@@ -8,7 +8,7 @@ export {
   PROJECT_SYNC_TABLE_MESSENGER_CHATS as MESSENGER_CHAT_STORE,
   PROJECT_SYNC_TABLE_KEPT_RECIPIENTS as MESSENGER_KEPT_RECIPIENT_STORE,
   PROJECT_SYNC_PROJECT_INDEX as MESSENGER_CHAT_PROJECT_INDEX,
-} from "@/features/projects/sync/projectSyncIdb.constant";
+} from "@/features/projects/sync/public-api/types";
 
 /** Trim lock (Lead Q2): a message may leave the browser only when it is
  * BOTH older than this AND outside the newest MAX_MESSAGES, AND confirmed
