@@ -1,10 +1,7 @@
 import type { WebSocket } from "ws";
 
 import type { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
-import {
-  findAgentWitchDeviceByToken,
-  findAgentWitchDeviceRevokeAuditByToken,
-} from "@/lib/agentWitch/findAgentWitchDeviceByToken";
+import { findAgentWitchDeviceByToken } from "@/lib/agentWitch/findAgentWitchDeviceByToken";
 import { reinstateSupersededAgentWitchDevice } from "@/lib/agentWitch/reinstateSupersededAgentWitchDevice";
 import { resolveAgentRegisterIdentityRejection } from "@/lib/agentWitch/resolveAgentRegisterIdentityRejection";
 import { resolveAgentRegisterPlatform } from "@/lib/agentWitch/resolveAgentRegisterPlatform";
@@ -13,6 +10,7 @@ import { updateAgentWitchDevicePlatform } from "@/lib/agentWitch/updateAgentWitc
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { isAgentWitchDevDashboardEnabled } from "@/lib/auth/resolveDevDashboardActor";
+import { logAgentRegisterRejection } from "@/server/agentWitch/logAgentRegisterRejection";
 import { processAgentWitchDeviceAuthOnRegister } from "@/server/agentWitch/processAgentWitchDeviceAuthOnRegister";
 import type { AgentWitchConnectionState } from "@/server/agentWitch/processAgentWitchRegisterMessage";
 import { refuseAgentRegisterOverComputerLimit } from "@/server/agentWitch/refuseAgentRegisterOverComputerLimit";
@@ -31,27 +29,6 @@ const reinstateSupersededDeviceForToken = async (
     }
   } catch (error) {
     console.error("[agent-witch] reinstate check failed", error);
-  }
-};
-
-/** One structured line so a `device_not_linked` is explainable from server logs. */
-const logAgentRegisterRejection = async (
-  pairingToken: string,
-  errorCode: string | undefined,
-): Promise<void> => {
-  try {
-    const audit = await findAgentWitchDeviceRevokeAuditByToken(pairingToken);
-    console.warn(
-      JSON.stringify({
-        event: "agent_register_rejected",
-        errorCode: errorCode ?? null,
-        deviceId: audit?.deviceId ?? null,
-        revokedReason: audit?.revokedReason ?? null,
-        supersededByDeviceId: audit?.supersededByDeviceId ?? null,
-      }),
-    );
-  } catch {
-    // Diagnostics only.
   }
 };
 
