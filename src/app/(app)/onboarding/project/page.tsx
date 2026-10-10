@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import OnboardingCreateProjectBody from "@/features/onboarding/createProject/OnboardingCreateProjectBody";
-import OnboardingShell from "@/features/onboarding/OnboardingShell";
-import { ONBOARDING_COPY as C } from "@/features/onboarding/onboardingCopy.constant";
-import { buildOnboardingUserChrome } from "@/features/onboarding/utils/buildOnboardingUserChrome";
+import {
+  OnboardingCreateProjectBody,
+  OnboardingShell,
+} from "@/features/onboarding/public-api/presentation";
+import {
+  ONBOARDING_COPY as C,
+  buildOnboardingUserChrome,
+} from "@/features/onboarding/public-api/types";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import { getAuthActor } from "@/lib/auth/auth";
 import { buildLoginCallbackPath } from "@/lib/shell/buildLoginCallbackPath";
