@@ -14,7 +14,7 @@ When core is **not** installed, the app runs a PKCE bootstrap against AWC:
 - **Health identity.** `127.0.0.1:43347` is shared by every macOS user, so a 2xx from `/health` is not enough. AWL's `/health` reports `osUid` and `installRootName` (non-secret). The app counts it as Connected / Running only when `osUid == getuid()` and `installRootName` (if present) is `.agent-witch`. If another user's or install's AWL answers, Setting up fails fast with a clear error. An older AWL without `osUid` is **unverified** and never shown as Connected: Setting up fails fast with "AgentWitch Local needs an update…", and the menu shows that same actionable message (not Stopped) until the bundle self-updates or is reinstalled.
 
 - **One instance.** On launch the app looks for other `com.agent-witch.local-app` processes (`resolveDuplicateInstanceAction`). A copy in Applications quits copies running from a disk image or a temporary folder; any other copy hands over to the one already running and quits. Several mounted copies (even other versions) otherwise drive the same LaunchAgent.
-- **Why it is disconnected.** AWL `/health` carries `disconnect {kind, message, nextRetryAt}` (bundle 345+). `server_down` / `dns` show "AgentWitch cloud is unreachable. Nothing is wrong on this computer" with no action (`LocalDisconnectNotice`); `notLinked` keeps the Reconnect button.
+- **Why it is disconnected.** AWL `/health` carries `disconnect {kind, message, nextRetryAt}` (bundle 346+). `server_down` / `dns` show "AgentWitch cloud is unreachable. Nothing is wrong on this computer" with no action (`LocalDisconnectNotice`); `notLinked` keeps the Reconnect button.
 
 ## Build
 
