@@ -1,0 +1,1 @@
+export { loadHumanInviteAcceptPage } from "../loadHumanInviteAcceptPage";

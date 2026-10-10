@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
-import AwcHumanInviteAcceptPage from "@/features/projects/access/humanInvites/AwcHumanInviteAcceptPage";
-import type { HumanInviteAcceptViewState } from "@/features/projects/access/humanInvites/AwcHumanInviteAcceptView";
-import { loadHumanInviteAcceptPage } from "@/features/projects/access/humanInvites/loadHumanInviteAcceptPage";
+import { AwcHumanInviteAcceptPage } from "@/features/projects/access/humanInvites/public-api/presentation";
+import type { HumanInviteAcceptViewState } from "@/features/projects/access/humanInvites/public-api/types";
+import { loadHumanInviteAcceptPage } from "@/features/projects/access/humanInvites/public-api/infrastructure";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import { getAuthActor } from "@/lib/auth/auth";
 

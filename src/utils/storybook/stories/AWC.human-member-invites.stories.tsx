@@ -1,5 +1,5 @@
-import AwcHumanInviteAcceptView from "@/features/projects/access/humanInvites/AwcHumanInviteAcceptView";
-import { HUMAN_INVITE_STORY_PROJECT } from "@/features/projects/access/humanInvites/humanInviteUiFixtures";
+import { AwcHumanInviteAcceptView } from "@/features/projects/access/humanInvites/public-api/presentation";
+import { HUMAN_INVITE_STORY_PROJECT } from "@/features/projects/access/humanInvites/public-api/types";
 
 /**
  * S1–S2 human member invites — core accept states (Storybook fixtures).

@@ -1,4 +1,4 @@
-import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
+import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/public-api/types";
 import { PROJECT_V5_NEUTRAL_CHIP_CLASS } from "@/features/projects/projectPageV5ChromeClasses.constant";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 

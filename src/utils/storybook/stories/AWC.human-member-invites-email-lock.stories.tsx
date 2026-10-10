@@ -1,8 +1,8 @@
-import AwcHumanInviteAcceptView from "@/features/projects/access/humanInvites/AwcHumanInviteAcceptView";
+import { AwcHumanInviteAcceptView } from "@/features/projects/access/humanInvites/public-api/presentation";
 import {
   FIXTURE_INVITED_EMAIL_MASKED,
   HUMAN_INVITE_STORY_PROJECT,
-} from "@/features/projects/access/humanInvites/humanInviteUiFixtures";
+} from "@/features/projects/access/humanInvites/public-api/types";
 
 /**
  * Email-lock accept states. Soft mask: invitedEmailMasked from fixtures only

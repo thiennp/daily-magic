@@ -1,6 +1,6 @@
 "use client";
 
-import AwcHumanPeopleSection from "@/features/projects/access/humanInvites/AwcHumanPeopleSection";
+import { AwcHumanPeopleSection } from "@/features/projects/access/humanInvites/public-api/presentation";
 import type { AccessMemberForHumanFilter } from "@/features/projects/access/humanInvites/utils/public-api/types";
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
 

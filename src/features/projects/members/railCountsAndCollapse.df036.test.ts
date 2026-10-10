@@ -9,7 +9,7 @@ import {
   PENDING_RESOLVED_ANIM_MS,
   PENDING_RESOLVED_COLLAPSE_MS,
 } from "@/features/projects/access/hooks/useCollapsedPendingResolved";
-import AwcHumanPendingInvitesSection from "@/features/projects/access/humanInvites/AwcHumanPendingInvitesSection";
+import { AwcHumanPendingInvitesSection } from "@/features/projects/access/humanInvites/public-api/presentation";
 import AwcProjectMembersRailHeading from "@/features/projects/members/AwcProjectMembersRailHeading";
 import AwcProjectMembersRailSkeleton from "@/features/projects/members/AwcProjectMembersRailSkeleton";
 import { formatInviteExpiry } from "@/features/projects/members/utils/formatInviteExpiry";

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
+import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/public-api/types";
 import { ACCESS_LOG_COPY as C } from "@/features/projects/accessLog/accessLogCopy.constant";
 import { formatAccessLogEvent } from "@/features/projects/accessLog/formatAccessLogEvent";
 import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/public-api/types";

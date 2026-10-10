@@ -1,5 +1,5 @@
 import { AWC_PROJECT_PITFALLS_COPY } from "@/features/projects/pitfalls/public-api/types";
-import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
+import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/public-api/types";
 import { THIS_MAC_DEVICE_BADGE_LABEL } from "@/components/ui/badge/thisMacDeviceBadgeLabel.constant";
 
 /**

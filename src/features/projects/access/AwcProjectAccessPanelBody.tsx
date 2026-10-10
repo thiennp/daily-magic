@@ -12,7 +12,7 @@ import AwcProjectAccessSection from "@/features/projects/access/AwcProjectAccess
 import AwcProjectAccessWakeLinkAwaitingBanner from "@/features/projects/access/AwcProjectAccessWakeLinkAwaitingBanner";
 import AwcProjectAccessInvitesSection from "@/features/projects/access/AwcProjectAccessInvitesSection";
 import AwcProjectInboxSection from "@/features/projects/access/inbox/AwcProjectInboxSection";
-import AwcHumanPeopleSection from "@/features/projects/access/humanInvites/AwcHumanPeopleSection";
+import { AwcHumanPeopleSection } from "@/features/projects/access/humanInvites/public-api/presentation";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { isComputerAccessMember } from "@/features/projects/access/utils/isComputerAccessMember";
 import type { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";

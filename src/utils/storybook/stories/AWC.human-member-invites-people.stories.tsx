@@ -1,13 +1,13 @@
-import AwcHumanInvitePersonPanel from "@/features/projects/access/humanInvites/AwcHumanInvitePersonPanel";
-import AwcHumanInviteUndoToast from "@/features/projects/access/humanInvites/AwcHumanInviteUndoToast";
-import AwcHumanPeopleMembersList from "@/features/projects/access/humanInvites/AwcHumanPeopleMembersList";
+import { AwcHumanInvitePersonPanel } from "@/features/projects/access/humanInvites/public-api/presentation";
+import { AwcHumanInviteUndoToast } from "@/features/projects/access/humanInvites/public-api/presentation";
+import { AwcHumanPeopleMembersList } from "@/features/projects/access/humanInvites/public-api/presentation";
 import {
   FIXTURE_CREATE_201,
   FIXTURE_JOINED_HUMANS,
   FIXTURE_PENDING_INVITES,
   FIXTURE_PENDING_OPEN,
   HUMAN_INVITE_STORY_PROJECT,
-} from "@/features/projects/access/humanInvites/humanInviteUiFixtures";
+} from "@/features/projects/access/humanInvites/public-api/types";
 
 /**
  * S1–S2 human member invites — Invite person + People list (Storybook).

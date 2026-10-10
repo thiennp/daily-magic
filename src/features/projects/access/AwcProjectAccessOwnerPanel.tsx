@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 
 import AwcProjectAccessPanelBody from "@/features/projects/access/AwcProjectAccessPanelBody";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
-import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
+import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/public-api/types";
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 import { ProjectSkillsSection } from "@/features/project-skill-share/public-api/presentation";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";

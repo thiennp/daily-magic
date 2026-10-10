@@ -1,4 +1,4 @@
-import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
+import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/public-api/types";
 import {
   accessLogExpiresDetail,
   accessLogRoleLabel,
