@@ -48,7 +48,8 @@
     "src/features/billing",
     "src/features/account",
     "src/features/agent-witch/dashboard",
-    "src/features/projects/access/humanInvites/utils"
+    "src/features/projects/access/humanInvites/utils",
+    "src/features/styleguide"
   ],
   "blocked": {
     "src/features/home/constants": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing), pre-commit architecture gate fails when it is edited"
@@ -298,6 +299,11 @@
       "unit": "src/features/projects/access/humanInvites/utils",
       "sha": "3c880f10593302bc8ea3261d95e831497122bc2d",
       "at": "2026-10-10T09:49:12.658Z"
+    },
+    {
+      "unit": "src/features/styleguide",
+      "sha": "50e93a300a0950654cbb13b28bcddb6777c06193",
+      "at": "2026-10-10T09:50:18.778Z"
     }
   ]
 }

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import WorkflowProgressSection from "@/features/styleguide/sections/WorkflowProgressSection";
+import { WorkflowProgressSection } from "@/features/styleguide/public-api/presentation";
 
 export default function DevWorkflowProgressPreviewPage() {
   if (process.env.NODE_ENV !== "development") {

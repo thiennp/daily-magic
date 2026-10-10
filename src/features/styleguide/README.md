@@ -21,3 +21,7 @@ _None._
 - `auth`
 
 Query: `npm run feature-knowledge:query -- "..." --feature=styleguide`
+
+## Public API
+
+Outside code imports only `@/features/styleguide/public-api/presentation` (`StyleguideShell` and the `*Section` components).
