@@ -8,6 +8,7 @@
  * --base[=ref]: CI/PR scope (default ref origin/main).
  * --all: scan entire src/ tree (audit mode; avoid in hooks).
  */
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -180,12 +181,35 @@ const checkUtilityNaming = (srcRelativePath: string): Violation | null => {
 const isVendoredUiFile = (srcRelativePath: string): boolean =>
   srcRelativePath.replace(/\\/g, "/").startsWith("src/components/");
 
+/** Ratchet: a file already over the limit at HEAD may be edited as long as it does not grow. */
+const readEffectiveLinesAtHead = (srcRelativePath: string): number | null => {
+  try {
+    const headContent = execFileSync(
+      "git",
+      ["show", `HEAD:${srcRelativePath}`],
+      {
+        cwd: REPO_ROOT,
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+        maxBuffer: 16 * 1024 * 1024,
+      },
+    );
+    return countEffectiveSourceLines(headContent);
+  } catch {
+    return null;
+  }
+};
+
 const checkMaxEffectiveSourceLines = (
   srcRelativePath: string,
   content: string,
 ): Violation | null => {
   const effectiveLineCount = countEffectiveSourceLines(content);
   if (effectiveLineCount <= MAX_EFFECTIVE_SOURCE_LINES) {
+    return null;
+  }
+  const linesAtHead = readEffectiveLinesAtHead(srcRelativePath);
+  if (linesAtHead !== null && effectiveLineCount <= linesAtHead) {
     return null;
   }
 

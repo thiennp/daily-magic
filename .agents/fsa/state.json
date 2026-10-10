@@ -97,24 +97,8 @@
     "src/features/projects/messenger#root"
   ],
   "blocked": {
-    "src/features/home/constants": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing), pre-commit architecture gate fails when it is edited",
     "src/features/projects/access/approvalCard": "outside test AwcProjectAccessPendingList.df036.render.test.ts imports test helper AwcPendingApprovalCard.fixtures",
-    "src/features/projects/messenger/hooks": "importer AwcProjectMessengerSection.tsx exceeds 100 effective lines once prettier-formatted (pre-existing)",
-    "src/features/projects/access/inbox": "outside importer AwcProjectAccessMemberTaskPulse.tsx exceeds 100-line architecture limit (pre-existing); pre-commit rejects touching it",
-    "src/features/projects/access/invites#root": "importer useCreatedInviteBanner.ts over architecture line limit",
-    "src/features/projects/hooks": "repointing AwcProjectNameEditor.tsx makes prettier wrap a line, pushing it over the 100 effective-line architecture limit",
-    "src/features/projects/messenger/utils": "touched importers exceed 100-line architecture limit after prettier (useAwcProjectMessengerThread, AwcProjectMessengerSection, AwcMessengerAiSessionRow, oneWindow tests)",
-    "src/features/projects/access/utils": "5 importers (AwcProjectAccessMemberRow, MemberTaskPulse, MembersList, useAwcProjectAccessPendingListState, AwcProjectInboxDispatchForm) are not prettier-clean; pre-commit reformat pushes them over max-effective-lines 100, so import-only repoint cannot pass the hook",
-    "src/features/projects/access/invites": "importer useCreatedInviteBanner.ts is over max-effective-lines (140), repointing it fails architecture check",
-    "src/features/projects/messenger/types": "importers AwcMessengerAiSessionRow.tsx, useAwcProjectMessengerThread.ts, messengerChatStore.fixtures.ts over max-effective-lines",
-    "src/features/projects/tasks": "importers AwcMessengerAiSessionRow.tsx, AwcProjectMessengerSection.tsx over max-effective-lines",
-    "src/features/projects/access/hooks": "outside importers need test helpers (reactHookRunner.testUtils, createdInviteBanner.testUtils) and vi.mock/source-read of private hook files",
-    "src/features/home/hooks": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing); repointing its imports trips the architecture pre-commit",
-    "src/features/home/utils": "importer HomeNotLinkedConnectBlock.tsx over 100-line limit trips architecture check",
-    "src/features/projects/messenger/oneWindow": "importer AwcProjectMessengerSection.tsx over 100-line limit trips pre-commit",
-    "src/features/projects#root": "importers access/AwcProjectAccessMemberRow.tsx, AwcProjectAccessMemberTaskPulse.tsx over 100-line limit trips pre-commit",
-    "src/features/home#root": "importer projects/AwcProjectsPanel.defaultRender.test.ts needs test helper homeProjectsPanelRenderTestSetup (not exportable); importers over 100-line limit trip pre-commit",
-    "src/features/agent/hooks": "81 outside importer files (limit 80) incl. test files and test-helper homeProjectsPanelRenderTestSetup"
+    "src/features/projects/access/hooks": "outside importers need test helpers (reactHookRunner.testUtils, createdInviteBanner.testUtils) and vi.mock/source-read of private hook files"
   },
   "rounds": [
     {
@@ -595,6 +579,6 @@
   ],
   "limits": {
     "maxFiles": 100,
-    "maxImporters": 80
+    "maxImporters": 100
   }
 }
