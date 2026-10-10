@@ -8,8 +8,8 @@ import {
 } from "@/lib/agentAccess/projectLocalFirstStep.constant";
 import { buildProjectInviteJoinLocalFirstStep } from "@/features/projects/access/invites/buildProjectInviteJoinLocalFirstStep";
 import { buildProjectInviteJoinPrompt } from "@/features/projects/access/invites/buildProjectInviteJoinPrompt";
-import { buildProjectInviteJoinPage } from "@/features/projects/access/invites/joinPage/buildProjectInviteJoinPage";
-import { buildProjectInviteJoinRedeemTypeLine } from "@/features/projects/access/invites/joinPage/buildProjectInviteJoinPollTypeSteps";
+import { buildProjectInviteJoinPage } from "@/features/projects/access/invites/joinPage/public-api/infrastructure";
+import { buildProjectInviteJoinRedeemTypeLine } from "@/features/projects/access/invites/joinPage/public-api/infrastructure";
 
 const NL = String.fromCharCode(10);
 const BLOCK = buildProjectInviteJoinLocalFirstStep().join(NL);

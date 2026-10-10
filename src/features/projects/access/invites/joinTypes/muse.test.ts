@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { AWC_MUSE_HMAC_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcMuseHmacWebhookRegisterCopy.constant";
 import { parseProjectInviteJoinPlatform } from "@/lib/projects/acl/invites/projectInviteJoinPlatform.constant";
 import { resolveInitialProjectMembershipDeliveryMode } from "@/lib/projects/acl/resolveInitialProjectMembershipDeliveryMode";
-import { buildProjectInviteJoinPage } from "@/features/projects/access/invites/joinPage/buildProjectInviteJoinPage";
+import { buildProjectInviteJoinPage } from "@/features/projects/access/invites/joinPage/public-api/infrastructure";
 import { joinType as muse } from "@/features/projects/access/invites/joinTypes/muse";
 
 const page = buildProjectInviteJoinPage({

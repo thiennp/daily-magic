@@ -3,8 +3,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
 import ProjectInviteInstructionsBody from "@/features/projects/access/invites/ProjectInviteInstructionsBody";
-import { buildProjectInviteJoinPage } from "@/features/projects/access/invites/joinPage/buildProjectInviteJoinPage";
-import { renderProjectInviteJoinPageMarkdown } from "@/features/projects/access/invites/joinPage/renderProjectInviteJoinPageMarkdown";
+import { buildProjectInviteJoinPage } from "@/features/projects/access/invites/joinPage/public-api/infrastructure";
+import { renderProjectInviteJoinPageMarkdown } from "@/features/projects/access/invites/joinPage/public-api/infrastructure";
 import { AGENT_ACCESS_TOOLS } from "@/lib/agentAccess/agentAccessTools.constant";
 import { buildAgentAccessGuideline } from "@/lib/agentAccess/buildAgentAccessGuideline";
 import { buildAgentAccessLiveGuide } from "@/lib/agentAccess/buildAgentAccessLiveGuide";

@@ -12,8 +12,8 @@ vi.mock("@/features/projects/access/invites/joinTypes/claude", () => ({
 }));
 
 import { buildProjectInviteShortPrompt } from "@/features/projects/access/invites/buildProjectInviteShortPrompt";
-import { buildProjectInviteJoinPage } from "@/features/projects/access/invites/joinPage/buildProjectInviteJoinPage";
-import { renderProjectInviteJoinPageMarkdown } from "@/features/projects/access/invites/joinPage/renderProjectInviteJoinPageMarkdown";
+import { buildProjectInviteJoinPage } from "@/features/projects/access/invites/joinPage/public-api/infrastructure";
+import { renderProjectInviteJoinPageMarkdown } from "@/features/projects/access/invites/joinPage/public-api/infrastructure";
 
 describe("editing one type module", () => {
   it("changes the /join page but not the short Copy prompt (snapshot)", () => {

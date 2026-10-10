@@ -1,4 +1,4 @@
-import { handleProjectInviteJoinGet } from "@/features/projects/access/invites/joinPage/handleProjectInviteJoinGet";
+import { handleProjectInviteJoinGet } from "@/features/projects/access/invites/joinPage/public-api/infrastructure";
 
 export const dynamic = "force-dynamic";
 

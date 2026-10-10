@@ -5,8 +5,8 @@ import { PROJECT_DISPATCH_PROCESSING_REPLY_CLAUSE } from "@/lib/projects/acl/pro
 import { buildProjectInviteJoinPollStep } from "@/features/projects/access/invites/buildProjectInviteJoinPollStep";
 import { buildProjectInviteJoinPrompt } from "@/features/projects/access/invites/buildProjectInviteJoinPrompt";
 import { buildProjectInviteJoinWakeWebhookStep } from "@/features/projects/access/invites/buildProjectInviteJoinWakeWebhookStep";
-import { buildProjectInviteJoinPage } from "@/features/projects/access/invites/joinPage/buildProjectInviteJoinPage";
-import { renderProjectInviteJoinPageMarkdown } from "@/features/projects/access/invites/joinPage/renderProjectInviteJoinPageMarkdown";
+import { buildProjectInviteJoinPage } from "@/features/projects/access/invites/joinPage/public-api/infrastructure";
+import { renderProjectInviteJoinPageMarkdown } from "@/features/projects/access/invites/joinPage/public-api/infrastructure";
 import { PROJECT_INVITE_JOIN_TYPES } from "@/features/projects/access/invites/joinTypes/public-api/types";
 
 /** Poll-mode dispatch line, verbatim (auto-poll every 60s; see buildProjectInviteJoinPollStep). */

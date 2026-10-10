@@ -28,7 +28,8 @@
     "src/features/shell/hooks",
     "src/features/projects/activityLog",
     "src/features/admin/hooks",
-    "src/features/projects/access/invites/joinTypes"
+    "src/features/projects/access/invites/joinTypes",
+    "src/features/projects/access/invites/joinPage"
   ],
   "blocked": {},
   "rounds": [
@@ -176,6 +177,11 @@
       "unit": "src/features/projects/access/invites/joinTypes",
       "sha": "ccbe249fa71f9a4d2d1abb053fa96fce395a87f5",
       "at": "2026-10-10T09:23:13.072Z"
+    },
+    {
+      "unit": "src/features/projects/access/invites/joinPage",
+      "sha": "233f91dd57f904e156254031195621bef46a05b3",
+      "at": "2026-10-10T09:24:21.981Z"
     }
   ]
 }
