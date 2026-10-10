@@ -6,7 +6,7 @@ import {
   isAtOrOverLimit,
   resolveComputerLimitMessage,
 } from "@/features/billing/resolveEntitlementLimitMessage";
-import { countLinkedAgentWitchComputers } from "@/features/home/utils/isAgentWitchConnectInstallPlaceholderDevice";
+import { countLinkedAgentWitchComputers } from "@/features/home/utils/public-api/presentation";
 
 interface ComputerEntitlementLimitNoteProps {
   readonly devices: readonly {

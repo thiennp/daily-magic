@@ -1,6 +1,6 @@
 import type { CreateAgentAutomationInput } from "@/lib/automations/parseAgentAutomationBody";
 import type AgentAutomationRecord from "@/lib/automations/types/AgentAutomationRecord.type";
-import { markOnboardingAutomationCreated } from "@/features/home/utils/onboardingAutomationCreatedStore";
+import { markOnboardingAutomationCreated } from "@/features/home/utils/public-api/presentation";
 
 export const submitCreateAutomation = async (
   payload: CreateAgentAutomationInput,

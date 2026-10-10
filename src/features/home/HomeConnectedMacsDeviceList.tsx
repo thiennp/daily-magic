@@ -5,8 +5,10 @@ import ConnectThisMacButton from "@/features/home/ConnectThisMacButton";
 import ConnectThisMacRow from "@/features/home/ConnectThisMacRow";
 import HomeConnectedMacDeviceRow from "@/features/home/HomeConnectedMacDeviceRow";
 import HomeMacDeviceTooOldNote from "@/features/home/HomeMacDeviceTooOldNote";
-import { resolveHomeMacDeviceRowConnectFooter } from "@/features/home/utils/resolveHomeMacDeviceRowConnectFooter";
-import { resolveHomeThisMacDeviceIdentity } from "@/features/home/utils/resolveHomeThisMacDeviceIdentity";
+import {
+  resolveHomeMacDeviceRowConnectFooter,
+  resolveHomeThisMacDeviceIdentity,
+} from "@/features/home/utils/public-api/presentation";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 
 interface HomeConnectedMacsDeviceListProps {

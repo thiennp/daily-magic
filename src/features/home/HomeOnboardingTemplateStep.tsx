@@ -12,7 +12,7 @@ import {
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import { CapabilityTemplatePicker } from "@/features/capabilities/public-api/presentation";
 import { useOnboardingSteps } from "@/features/home/hooks/public-api/presentation";
-import isWorkflowOnboardingStepDone from "@/features/home/utils/isWorkflowOnboardingStepDone";
+import { isWorkflowOnboardingStepDone } from "@/features/home/utils/public-api/presentation";
 
 interface HomeOnboardingTemplateStepProps {
   readonly onSaved: () => void;

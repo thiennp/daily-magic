@@ -19,7 +19,7 @@ import { shouldRetryUnreachableWakeIdentityProbe } from "@/features/agent-witch/
 import {
   getLocalMacTokenHashSnapshot,
   subscribeLocalMacTokenHash,
-} from "@/features/home/utils/localMacTokenHashStore";
+} from "@/features/home/utils/public-api/presentation";
 
 const useProbeLocalMacWakeIdentity = (
   isMacBrowser: boolean,

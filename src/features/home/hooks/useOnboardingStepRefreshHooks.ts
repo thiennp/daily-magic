@@ -6,10 +6,12 @@ import useOnboardingPairStepSync from "@/features/home/hooks/useOnboardingPairSt
 import useOnboardingTaskStepRefresh from "@/features/home/hooks/useOnboardingTaskStepRefresh";
 import useOnboardingWorkflowStepRefresh from "@/features/home/hooks/useOnboardingWorkflowStepRefresh";
 import type { OnboardingStep } from "@/features/home/loadOnboardingSteps";
-import isAutomateOnboardingStepDone from "@/features/home/utils/isAutomateOnboardingStepDone";
-import isConnectMacOnboardingStepDone from "@/features/home/utils/isConnectMacOnboardingStepDone";
-import isTaskOnboardingStepDone from "@/features/home/utils/isTaskOnboardingStepDone";
-import isWorkflowOnboardingStepDone from "@/features/home/utils/isWorkflowOnboardingStepDone";
+import {
+  isAutomateOnboardingStepDone,
+  isConnectMacOnboardingStepDone,
+  isTaskOnboardingStepDone,
+  isWorkflowOnboardingStepDone,
+} from "@/features/home/utils/public-api/presentation";
 
 const useOnboardingStepRefreshHooks = (input: {
   readonly steps: readonly OnboardingStep[];

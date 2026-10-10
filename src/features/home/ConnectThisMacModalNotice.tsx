@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { AGENT_WITCH_LOCAL_TOO_OLD_COPY as TOO_OLD } from "@/features/home/agentWitchLocalTooOldCopy.constant";
-import type { ConnectThisMacModalNotice as ConnectThisMacModalNoticeValue } from "@/features/home/utils/ConnectThisMacModalNotice.type";
+import type { ConnectThisMacModalNotice as ConnectThisMacModalNoticeValue } from "@/features/home/utils/public-api/types";
 import { AGENT_WITCH_LOCAL_DOWNLOAD_URL } from "@/lib/agentWitch/agentWitchLocalTooOld.constant";
 
 interface ConnectThisMacModalNoticeProps {

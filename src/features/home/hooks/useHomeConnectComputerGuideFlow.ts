@@ -6,10 +6,12 @@ import useConnectInstallPasteModalDismissal from "@/features/home/hooks/useConne
 import useInstallConnectionStatus from "@/features/home/hooks/useInstallConnectionStatus";
 import {
   buildConnectInstallConnectionStatus,
-  type ConnectInstallConnectionStatus,
-} from "@/features/home/utils/buildConnectInstallConnectionStatus";
-import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
-import { shouldOpenConnectInstallPasteModal } from "@/features/home/utils/shouldOpenConnectInstallPasteModal";
+  shouldOpenConnectInstallPasteModal,
+} from "@/features/home/utils/public-api/presentation";
+import type {
+  ConnectInstallConnectionStatus,
+  BrowserOperatingSystem,
+} from "@/features/home/utils/public-api/types";
 
 const useHomeConnectComputerGuideFlow = (input: {
   readonly onLinked: () => void;

@@ -3,7 +3,7 @@
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ComputersDownloadLink from "@/features/home/ComputersDownloadLink";
 import { DownloadNonMacNote } from "@/features/download/public-api/presentation";
-import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
+import type { BrowserOperatingSystem } from "@/features/home/utils/public-api/types";
 
 interface HomeConnectGuideDownloadExtrasProps {
   readonly operatingSystem: BrowserOperatingSystem;

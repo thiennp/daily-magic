@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { ONBOARDING_WORKFLOW_CREATED_UPDATED_EVENT } from "@/features/home/utils/onboardingWorkflowCreatedEvents";
+import { ONBOARDING_WORKFLOW_CREATED_UPDATED_EVENT } from "@/features/home/utils/public-api/types";
 
 const useOnboardingWorkflowStepRefresh = (input: {
   readonly isWorkflowStepDone: boolean;

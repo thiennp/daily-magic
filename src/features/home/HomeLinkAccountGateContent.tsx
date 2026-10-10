@@ -11,8 +11,10 @@ import {
   useHomeConnectedMacs,
 } from "@/features/home/hooks/public-api/presentation";
 import { usePairedDeviceContext } from "@/features/home/PairedDeviceContext";
-import { countLinkedAgentWitchComputers } from "@/features/home/utils/isAgentWitchConnectInstallPlaceholderDevice";
-import { resolveHomeDashboardMode } from "@/features/home/utils/resolveHomeDashboardMode";
+import {
+  countLinkedAgentWitchComputers,
+  resolveHomeDashboardMode,
+} from "@/features/home/utils/public-api/presentation";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 export interface HomeLinkAccountGateContentProps {

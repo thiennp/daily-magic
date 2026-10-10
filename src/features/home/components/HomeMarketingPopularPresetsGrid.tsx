@@ -4,11 +4,11 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
 import { HOME_MARKETING_POPULAR_PRESETS_COPY } from "@/features/home/constants/public-api/types";
-import type { HomePopularPresetSummary } from "@/features/home/utils/resolveHomePopularPresets";
+import type { HomePopularPresetSummary } from "@/features/home/utils/public-api/types";
 import {
   applyPresetCapabilityIdToSearchParams,
   buildPathWithSearchParams,
-} from "@/features/home/utils/syncHomeMarketingPresetCapabilityQuery";
+} from "@/features/home/utils/public-api/presentation";
 import {
   useMarketingAuthModal,
   MarketingCard,

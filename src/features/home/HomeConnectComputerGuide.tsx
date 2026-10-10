@@ -12,9 +12,11 @@ import {
   useLocalMacBrowserContext,
   usePersonalizedAgentWitchInstallCommand,
 } from "@/features/home/hooks/public-api/presentation";
-import { buildConnectInstallConnectionStatusClassName } from "@/features/home/utils/buildConnectInstallConnectionStatus";
-import { resolveHomeConnectGuideCtas } from "@/features/home/utils/resolveHomeConnectGuideCtas";
-import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
+import {
+  buildConnectInstallConnectionStatusClassName,
+  resolveHomeConnectGuideCtas,
+  detectBrowserOperatingSystem,
+} from "@/features/home/utils/public-api/presentation";
 import HomeConnectGuideDownloadExtras from "@/features/home/HomeConnectGuideDownloadExtras";
 import HomeConnectGuideHeroCopy from "@/features/home/HomeConnectGuideHeroCopy";
 

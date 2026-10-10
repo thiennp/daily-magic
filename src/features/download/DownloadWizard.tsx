@@ -11,7 +11,7 @@ import DownloadStepTabs, {
 import useBrowserSnapshot from "@/hooks/useBrowserSnapshot";
 import DownloadWizardBanner from "@/features/download/DownloadWizardBanner";
 import type { DownloadOsKey } from "@/features/download/downloadOsOptions";
-import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
+import { detectBrowserOperatingSystem } from "@/features/home/utils/public-api/presentation";
 
 const STEP_HASHES: readonly DownloadStepKey[] = [
   "download",

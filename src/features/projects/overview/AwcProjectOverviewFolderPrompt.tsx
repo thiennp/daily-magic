@@ -6,7 +6,7 @@ import {
   useHomeConnectedMacs,
   useLocalMacBrowserContext,
 } from "@/features/home/hooks/public-api/presentation";
-import { resolveHomeThisMacDeviceIdentity } from "@/features/home/utils/resolveHomeThisMacDeviceIdentity";
+import { resolveHomeThisMacDeviceIdentity } from "@/features/home/utils/public-api/presentation";
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 import { OVERVIEW_CTA_PRIMARY_SM_CLASS } from "@/features/projects/overview/overviewChrome.constant";
 import { OVERVIEW_FOLDER_PROMPT_COPY as C } from "@/features/projects/overview/overviewFolderPromptCopy.constant";

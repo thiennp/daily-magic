@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { Modal } from "@/components/ui/modal";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import CopyableBashCommand from "@/features/home/CopyableBashCommand";
-import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
+import { detectBrowserOperatingSystem } from "@/features/home/utils/public-api/presentation";
 import { buildAgentWitchReviveAwlSteps } from "@/lib/agentWitch/buildAgentWitchReviveAwlTerminalCommand";
 
 interface ReviveAwlMacModalProps {

@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 
 import useShowHomeLeftRail from "@/features/home/HomeLeftRailVisibility";
-import resolveHomeDashboardLayoutClasses from "@/features/home/utils/resolveHomeDashboardLayoutClasses";
+import { resolveHomeDashboardLayoutClasses } from "@/features/home/utils/public-api/presentation";
 
 interface HomeDashboardLowerSectionProps {
   readonly children: ReactNode;

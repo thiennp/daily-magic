@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { fetchAgentWitchInstallConnection } from "@/lib/agentWitch/fetchAgentWitchInstallConnection";
 import { CONNECT_INSTALL_PASTE_MODAL_WAKE_POLL_MS } from "@/features/home/constants/public-api/types";
-import { getLocalMacTokenHashSnapshot } from "@/features/home/utils/localMacTokenHashStore";
+import { getLocalMacTokenHashSnapshot } from "@/features/home/utils/public-api/presentation";
 
 const useInstallConnectionStatus = (input: {
   readonly enabled: boolean;

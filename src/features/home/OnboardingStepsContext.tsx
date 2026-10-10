@@ -16,10 +16,12 @@ import {
   loadOnboardingSteps,
   type OnboardingStep,
 } from "@/features/home/loadOnboardingSteps";
-import hasUserAcknowledgedOnboardingSetup from "@/features/home/utils/hasUserAcknowledgedOnboardingSetup";
-import { markOnboardingSetupAcknowledged } from "@/features/home/utils/onboardingSetupAcknowledgedStore";
-import isWorkflowOnboardingStep from "@/features/home/utils/isWorkflowOnboardingStep";
-import { markOnboardingWorkflowCreated } from "@/features/home/utils/onboardingWorkflowCreatedStore";
+import {
+  hasUserAcknowledgedOnboardingSetup,
+  markOnboardingSetupAcknowledged,
+  isWorkflowOnboardingStep,
+  markOnboardingWorkflowCreated,
+} from "@/features/home/utils/public-api/presentation";
 
 interface OnboardingStepsContextValue {
   readonly steps: readonly OnboardingStep[];

@@ -12,7 +12,7 @@ import {
   useConnectTerminalSection,
   usePersonalizedAgentWitchInstallCommand,
 } from "@/features/home/hooks/public-api/presentation";
-import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
+import { detectBrowserOperatingSystem } from "@/features/home/utils/public-api/presentation";
 
 interface ConnectThisMacButtonProps {
   readonly installCommand: string;

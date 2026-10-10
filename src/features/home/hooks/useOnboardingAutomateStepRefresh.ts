@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { ONBOARDING_AUTOMATION_CREATED_UPDATED_EVENT } from "@/features/home/utils/onboardingAutomationCreatedEvents";
+import { ONBOARDING_AUTOMATION_CREATED_UPDATED_EVENT } from "@/features/home/utils/public-api/types";
 
 const useOnboardingAutomateStepRefresh = (input: {
   readonly isAutomateStepDone: boolean;

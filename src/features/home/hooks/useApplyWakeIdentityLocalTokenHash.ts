@@ -8,11 +8,11 @@ import {
   pairedDevicesResource,
 } from "@/features/agent-witch/public-api/presentation";
 import { setAgentWitchLocalHostCookie } from "@/features/agent-witch/utils/public-api/presentation";
-import { applyWakeIdentityToLocalMacTokenHash } from "@/features/home/utils/applyWakeIdentityToLocalMacTokenHash";
 import {
+  applyWakeIdentityToLocalMacTokenHash,
   getLocalMacTokenHashSnapshot,
   setLocalMacTokenHash,
-} from "@/features/home/utils/localMacTokenHashStore";
+} from "@/features/home/utils/public-api/presentation";
 
 const useApplyWakeIdentityLocalTokenHash = (
   identity: LocalAgentWitchIdentitySnapshot["identity"],

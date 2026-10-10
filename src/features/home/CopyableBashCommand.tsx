@@ -9,7 +9,7 @@ import {
   APP_SURFACE_BASH_TERMINAL_PRE_CLASS,
   APP_SURFACE_TERMINAL_COPY_BUTTON_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
-import renderCopyableBashCommandCopyIcon from "@/features/home/utils/renderCopyableBashCommandCopyIcon";
+import { renderCopyableBashCommandCopyIcon } from "@/features/home/utils/public-api/presentation";
 
 interface CopyableBashCommandProps {
   readonly command: string;

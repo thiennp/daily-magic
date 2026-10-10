@@ -1,4 +1,4 @@
-import { markOnboardingWorkflowCreated } from "@/features/home/utils/onboardingWorkflowCreatedStore";
+import { markOnboardingWorkflowCreated } from "@/features/home/utils/public-api/presentation";
 import { resolveCreateTargetProjectId } from "@/features/capabilities/utils/resolveCreateTargetProjectId";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type { HarnessItemKind } from "@/lib/agentWitch/harness/types/HarnessItemKind.constant";

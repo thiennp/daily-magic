@@ -3,8 +3,8 @@
 import { useCallback, useState } from "react";
 
 import useConnectInstallPasteModalDismissal from "@/features/home/hooks/useConnectInstallPasteModalDismissal";
-import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
-import { shouldOpenConnectInstallPasteModal } from "@/features/home/utils/shouldOpenConnectInstallPasteModal";
+import type { BrowserOperatingSystem } from "@/features/home/utils/public-api/types";
+import { shouldOpenConnectInstallPasteModal } from "@/features/home/utils/public-api/presentation";
 
 const useConnectThisMacRowFlow = (input: {
   readonly operatingSystem: BrowserOperatingSystem;

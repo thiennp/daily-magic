@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import { debounceCallback } from "@/features/home/utils/debounceCallback";
+import { debounceCallback } from "@/features/home/utils/public-api/presentation";
 import { AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT } from "@/features/reports/public-api/presentation";
 
 const ONBOARDING_TASK_STEP_CACHE_DEBOUNCE_MS = 400;

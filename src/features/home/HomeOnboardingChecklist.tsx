@@ -14,8 +14,10 @@ import {
   useOnboardingSetupAcknowledged,
 } from "@/features/home/hooks/public-api/presentation";
 import OnboardingStepStatusIcon from "@/features/home/OnboardingStepStatusIcon";
-import { listRequiredOnboardingSteps } from "@/features/home/utils/listRequiredOnboardingSteps";
-import shouldShowOnboardingChecklist from "@/features/home/utils/shouldShowOnboardingChecklist";
+import {
+  listRequiredOnboardingSteps,
+  shouldShowOnboardingChecklist,
+} from "@/features/home/utils/public-api/presentation";
 
 /** Design Setup card. */
 export default function HomeOnboardingChecklist() {

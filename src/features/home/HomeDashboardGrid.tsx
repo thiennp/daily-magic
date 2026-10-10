@@ -6,7 +6,7 @@ import HomeOnboardingAutomateNudge from "@/features/home/HomeOnboardingAutomateN
 import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
 import { HOME_LEFT_RAIL_CLASS } from "@/features/home/homeDashboardLayout.constant";
 import useShowHomeLeftRail from "@/features/home/HomeLeftRailVisibility";
-import resolveHomeDashboardLayoutClasses from "@/features/home/utils/resolveHomeDashboardLayoutClasses";
+import { resolveHomeDashboardLayoutClasses } from "@/features/home/utils/public-api/presentation";
 
 interface HomeDashboardGridProps {
   readonly main: ReactNode;

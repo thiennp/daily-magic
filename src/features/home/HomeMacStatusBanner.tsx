@@ -6,8 +6,10 @@ import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
 } from "@/features/agent-witch/public-api/presentation";
-import { resolveHomeMacStatusForBrowser } from "@/features/home/utils/resolveHomeMacStatusForBrowser";
-import { resolveHomeMacStatusSummary } from "@/features/home/utils/resolveHomeMacStatusSummary";
+import {
+  resolveHomeMacStatusForBrowser,
+  resolveHomeMacStatusSummary,
+} from "@/features/home/utils/public-api/presentation";
 
 const TONE_CLASS_MAP: Record<
   ReturnType<typeof resolveHomeMacStatusSummary>["tone"],

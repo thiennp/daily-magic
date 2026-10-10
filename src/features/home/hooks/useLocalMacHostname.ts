@@ -18,14 +18,14 @@ import { resolveLocalTokenHashMatchesReachableDevice } from "@/features/agent-wi
 import { resolveShouldProbeWakeIdentityInBrowser } from "@/features/agent-witch/utils/public-api/presentation";
 import useApplyWakeIdentityLocalTokenHash from "@/features/home/hooks/useApplyWakeIdentityLocalTokenHash";
 import useProbeLocalMacWakeIdentity from "@/features/home/hooks/useProbeLocalMacWakeIdentity";
-import { consumeLocalTokenHashQueryParam } from "@/features/home/utils/consumeLocalTokenHashQueryParam";
-import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
-import { resolveIsCheckingLocalMacIdentity } from "@/features/home/utils/resolveIsCheckingLocalMacIdentity";
 import {
+  consumeLocalTokenHashQueryParam,
+  detectBrowserOperatingSystem,
+  resolveIsCheckingLocalMacIdentity,
   getLocalMacTokenHashSnapshot,
   setLocalMacTokenHash,
   subscribeLocalMacTokenHash,
-} from "@/features/home/utils/localMacTokenHashStore";
+} from "@/features/home/utils/public-api/presentation";
 const subscribeToOperatingSystem = (): (() => void) => () => undefined;
 
 const getServerOperatingSystemSnapshot = (): "other" => "other";

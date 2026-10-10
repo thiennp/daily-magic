@@ -1,8 +1,8 @@
 "use client";
 
 import ConnectThisLinuxDownloadChoice from "@/features/home/ConnectThisLinuxDownloadChoice";
-import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
-import { shouldShowConnectThisLinuxDownloadChoice } from "@/features/home/utils/shouldShowConnectThisLinuxDownloadChoice";
+import type { BrowserOperatingSystem } from "@/features/home/utils/public-api/types";
+import { shouldShowConnectThisLinuxDownloadChoice } from "@/features/home/utils/public-api/presentation";
 import useIsMobileClient from "@/hooks/useIsMobileClient";
 import {
   buildAgentWitchLocalLinuxAppImageDownloadUrl,

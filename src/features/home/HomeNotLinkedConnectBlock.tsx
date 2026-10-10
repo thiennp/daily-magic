@@ -20,9 +20,11 @@ import {
   useShouldShowConnectThisMac,
   useThisMacHasConnectedLocalBridge,
 } from "@/features/home/hooks/public-api/presentation";
-import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
-import { resolveHomeNotLinkedConnectBlockState } from "@/features/home/utils/resolveHomeNotLinkedConnectBlockState";
-import { resolveHomeThisMacDeviceIdentity } from "@/features/home/utils/resolveHomeThisMacDeviceIdentity";
+import {
+  detectBrowserOperatingSystem,
+  resolveHomeNotLinkedConnectBlockState,
+  resolveHomeThisMacDeviceIdentity,
+} from "@/features/home/utils/public-api/presentation";
 import useIsMobileClient from "@/hooks/useIsMobileClient";
 
 interface HomeNotLinkedConnectBlockProps {

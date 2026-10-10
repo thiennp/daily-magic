@@ -6,7 +6,7 @@ import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSur
 import Badge from "@/components/ui/badge/Badge";
 import { formatAgentLiveProgressLastMacUpdate } from "@/features/agent/utils/formatAgentLiveProgressLastMacUpdate";
 import HomeAttentionRetryButton from "@/features/home/HomeAttentionRetryButton";
-import { formatHomeRunningJobTitle } from "@/features/home/utils/formatHomeRunningJobTitle";
+import { formatHomeRunningJobTitle } from "@/features/home/utils/public-api/presentation";
 import { buildProjectTabHash } from "@/lib/shell/buildNavConsolidationRedirect";
 import { PROJECTS_REPORTS_INTENT_HREF } from "@/lib/shell/projectTabIntentHrefs.constant";
 import { resolveAgentRunLastAliveMs } from "@/lib/dispatch/isAgentRunSilentPastStall";

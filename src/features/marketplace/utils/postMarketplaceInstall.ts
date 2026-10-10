@@ -1,4 +1,4 @@
-import { markOnboardingWorkflowCreated } from "@/features/home/utils/onboardingWorkflowCreatedStore";
+import { markOnboardingWorkflowCreated } from "@/features/home/utils/public-api/presentation";
 import type HarnessInstallBundle from "@/lib/agentWitch/harness/types/HarnessInstallBundle.type";
 
 export interface MarketplaceInstallApiResult {

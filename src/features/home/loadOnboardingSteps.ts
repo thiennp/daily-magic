@@ -1,21 +1,23 @@
-import { buildOnboardingSteps } from "@/features/home/utils/buildOnboardingSteps";
-import { fetchOnboardingBootstrap } from "@/features/home/utils/onboardingBootstrapApi";
-import hasUserCreatedAutomation from "@/features/home/utils/hasUserCreatedAutomation";
-import hasUserCreatedFirstWorkflowOrAgent from "@/features/home/utils/hasUserCreatedFirstWorkflowOrAgent";
-import hasUserPairedMac from "@/features/home/utils/hasUserPairedMac";
-import hasUserSentFirstTask from "@/features/home/utils/hasUserSentFirstTask";
-import syncOnboardingAutomationCreatedFlag from "@/features/home/utils/syncOnboardingAutomationCreatedFlag";
-import syncOnboardingFirstTaskSentFlag from "@/features/home/utils/syncOnboardingFirstTaskSentFlag";
-import syncOnboardingSetupAcknowledgedFlag from "@/features/home/utils/syncOnboardingSetupAcknowledgedFlag";
-import syncOnboardingWorkflowCreatedFlag from "@/features/home/utils/syncOnboardingWorkflowCreatedFlag";
+import {
+  buildOnboardingSteps,
+  fetchOnboardingBootstrap,
+  hasUserCreatedAutomation,
+  hasUserCreatedFirstWorkflowOrAgent,
+  hasUserPairedMac,
+  hasUserSentFirstTask,
+  syncOnboardingAutomationCreatedFlag,
+  syncOnboardingFirstTaskSentFlag,
+  syncOnboardingSetupAcknowledgedFlag,
+  syncOnboardingWorkflowCreatedFlag,
+} from "@/features/home/utils/public-api/presentation";
 import {
   getPairedDevicesSnapshot,
   refreshPairedDevices,
 } from "@/features/agent-witch/public-api/presentation";
 import { listAgentRunsLocalCache } from "@/features/reports/public-api/presentation";
-import type { OnboardingStep } from "@/features/home/utils/buildOnboardingSteps";
+import type { OnboardingStep } from "@/features/home/utils/public-api/types";
 
-export type { OnboardingStep } from "@/features/home/utils/buildOnboardingSteps";
+export type { OnboardingStep } from "@/features/home/utils/public-api/types";
 
 export interface LoadedOnboardingState {
   readonly steps: readonly OnboardingStep[];

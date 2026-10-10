@@ -8,7 +8,7 @@ import {
   buildSignInHrefFromSearchParams,
 } from "@/features/empty-states/public-api/types";
 import { HomeMarketingPopularPresetsGrid } from "@/features/home/components/public-api/presentation";
-import resolveHomePopularPresets from "@/features/home/utils/resolveHomePopularPresets";
+import { resolveHomePopularPresets } from "@/features/home/utils/public-api/presentation";
 import { MarketingCtaLink } from "@/features/marketing/public-api/presentation";
 import {
   APP_SURFACE_BODY_TEXT_CLASS,

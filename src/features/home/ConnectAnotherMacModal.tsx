@@ -5,7 +5,7 @@ import ComputersDownloadLink from "@/features/home/ComputersDownloadLink";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import CopyableBashCommand from "@/features/home/CopyableBashCommand";
-import { resolveConnectAnotherMacLabel } from "@/features/home/utils/resolveConnectAnotherMacLabel";
+import { resolveConnectAnotherMacLabel } from "@/features/home/utils/public-api/presentation";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 interface ConnectAnotherMacModalProps {

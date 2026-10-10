@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
+import type { BrowserOperatingSystem } from "@/features/home/utils/public-api/types";
 
 /**
  * On a Mac the app is the easy path, so the install command (which reserves a

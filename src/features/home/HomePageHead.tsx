@@ -10,8 +10,8 @@ import { useHomeAttentionRuns } from "@/features/home/hooks/public-api/presentat
 import {
   readHomeAttentionTotal,
   subscribeHomeAttentionTotal,
-} from "@/features/home/utils/homeAttentionTotalStore";
-import buildHomeGreeting from "@/features/home/utils/buildHomeGreeting";
+  buildHomeGreeting,
+} from "@/features/home/utils/public-api/presentation";
 
 interface HomePageHeadProps {
   readonly displayName: string;

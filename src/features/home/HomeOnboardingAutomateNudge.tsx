@@ -11,7 +11,7 @@ import {
   useOnboardingSteps,
   useOnboardingSetupAcknowledged,
 } from "@/features/home/hooks/public-api/presentation";
-import shouldShowOnboardingAutomateNudge from "@/features/home/utils/shouldShowOnboardingAutomateNudge";
+import { shouldShowOnboardingAutomateNudge } from "@/features/home/utils/public-api/presentation";
 
 export default function HomeOnboardingAutomateNudge() {
   const { steps } = useOnboardingSteps();

@@ -7,10 +7,12 @@ import HomeOnboardingSetupCompletePanel from "@/features/home/HomeOnboardingSetu
 import HomeOnboardingMainStep from "@/features/home/HomeOnboardingMainStep";
 import HomeOnboardingTemplateStep from "@/features/home/HomeOnboardingTemplateStep";
 import { useOnboardingSteps } from "@/features/home/hooks/public-api/presentation";
-import findNextIncompleteOnboardingStep from "@/features/home/utils/findNextIncompleteOnboardingStep";
-import shouldShowOnboardingSetupCompletePanel from "@/features/home/utils/shouldShowOnboardingSetupCompletePanel";
-import isTaskOnboardingStep from "@/features/home/utils/isTaskOnboardingStep";
-import isWorkflowOnboardingStep from "@/features/home/utils/isWorkflowOnboardingStep";
+import {
+  findNextIncompleteOnboardingStep,
+  shouldShowOnboardingSetupCompletePanel,
+  isTaskOnboardingStep,
+  isWorkflowOnboardingStep,
+} from "@/features/home/utils/public-api/presentation";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 
 interface HomeOnboardingMainPanelProps {

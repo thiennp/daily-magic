@@ -1,6 +1,6 @@
 import HomeMarketingPopularPresetsGrid from "@/features/home/components/HomeMarketingPopularPresetsGrid";
 import { HOME_MARKETING_POPULAR_PRESETS_COPY } from "@/features/home/constants/public-api/types";
-import resolveHomePopularPresets from "@/features/home/utils/resolveHomePopularPresets";
+import { resolveHomePopularPresets } from "@/features/home/utils/public-api/presentation";
 import { MarketingSectionHeader } from "@/features/marketing/public-api/presentation";
 
 export default function HomeMarketingPopularPresets() {

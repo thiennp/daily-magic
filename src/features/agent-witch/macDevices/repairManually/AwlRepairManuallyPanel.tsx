@@ -6,7 +6,7 @@ import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceSty
 import AwlRepairManuallyCommandBlock from "@/features/agent-witch/macDevices/repairManually/AwlRepairManuallyCommandBlock";
 import { AWL_REPAIR_MANUALLY_COPY } from "@/features/agent-witch/macDevices/repairManually/awlRepairManuallyCopy.constant";
 import { buildAwlRepairManuallySteps } from "@/features/agent-witch/macDevices/repairManually/buildAwlRepairManuallySteps";
-import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
+import { detectBrowserOperatingSystem } from "@/features/home/utils/public-api/presentation";
 
 interface AwlRepairManuallyPanelProps {
   /** Defaults to the browser OS (Linux → systemd revive block). */

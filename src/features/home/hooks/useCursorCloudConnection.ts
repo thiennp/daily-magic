@@ -6,7 +6,7 @@ import {
   emptyCursorCloudConnectionSummary,
   parseCursorCloudConnectionSummary,
   readCursorCloudConnectionError,
-} from "@/features/home/utils/parseCursorCloudConnectionSummary";
+} from "@/features/home/utils/public-api/presentation";
 import type { CursorCloudConnectionSummary } from "@/lib/cursorCloud/types/CursorCloudConnection.type";
 
 const loadCursorCloudConnectionSummary = async (): Promise<{

@@ -7,7 +7,7 @@ import {
 import Badge from "@/components/ui/badge/Badge";
 import { summarizeAgentRunReasonForDisplay } from "@/features/agent/utils/summarizeAgentRunReasonForDisplay";
 import HomeAttentionRetryButton from "@/features/home/HomeAttentionRetryButton";
-import { formatHomeRunningJobTitle } from "@/features/home/utils/formatHomeRunningJobTitle";
+import { formatHomeRunningJobTitle } from "@/features/home/utils/public-api/presentation";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { formatRelativeTimeAgo } from "@/lib/time/formatRelativeTimeAgo";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";

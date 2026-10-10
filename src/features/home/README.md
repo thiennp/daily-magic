@@ -53,3 +53,7 @@ Re-index after doc changes: `npm run feature-knowledge:index`.
 ## hooks public API
 
 `hooks/public-api/presentation.ts` exposes the home client hooks (connected Macs, onboarding steps, attention and running-job hooks, install-command and local Mac hooks) and `OnboardingStepsProvider`; import them from there outside `hooks/`.
+
+## Public API: `utils`
+
+Code outside `src/features/home/utils/` imports it only through `utils/public-api/presentation` (helpers, stores, API clients) and `utils/public-api/types` (types and event constants).

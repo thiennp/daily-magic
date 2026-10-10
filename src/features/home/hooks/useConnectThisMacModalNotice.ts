@@ -6,9 +6,11 @@ import { refreshLocalAgentWitchIdentity } from "@/features/agent-witch/public-ap
 import { refreshPairedDevices } from "@/features/agent-witch/public-api/presentation";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
-import type { ConnectThisMacModalNotice } from "@/features/home/utils/ConnectThisMacModalNotice.type";
-import { resolveConnectThisMacModalNotice } from "@/features/home/utils/resolveConnectThisMacModalNotice";
-import { resolveHomeThisMacDeviceIdentity } from "@/features/home/utils/resolveHomeThisMacDeviceIdentity";
+import type { ConnectThisMacModalNotice } from "@/features/home/utils/public-api/types";
+import {
+  resolveConnectThisMacModalNotice,
+  resolveHomeThisMacDeviceIdentity,
+} from "@/features/home/utils/public-api/presentation";
 import { fetchAgentWitchInstallConnection } from "@/lib/agentWitch/fetchAgentWitchInstallConnection";
 import type { AgentWitchLocalTooOldRefusal } from "@/lib/agentWitch/types/AgentWitchLocalTooOldRefusal.type";
 

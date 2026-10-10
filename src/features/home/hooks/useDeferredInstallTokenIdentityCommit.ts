@@ -2,8 +2,10 @@
 
 import { useCallback, useEffect, useRef } from "react";
 
-import { rememberAgentWitchInstallTokenHash } from "@/features/home/utils/rememberAgentWitchInstallTokenHash";
-import { shouldHoldInstallTokenIdentityCommit } from "@/features/home/utils/shouldHoldInstallTokenIdentityCommit";
+import {
+  rememberAgentWitchInstallTokenHash,
+  shouldHoldInstallTokenIdentityCommit,
+} from "@/features/home/utils/public-api/presentation";
 
 /**
  * HOME-066: optionally hold a minted install-token hash until `enabled` is false

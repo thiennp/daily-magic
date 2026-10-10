@@ -15,8 +15,10 @@ import {
   useHomeAttentionRemoteRuns,
   useHomeAttentionRuns,
 } from "@/features/home/hooks/public-api/presentation";
-import selectHomeRecentProjects from "@/features/home/utils/selectHomeRecentProjects";
-import { publishHomeAttentionTotal } from "@/features/home/utils/homeAttentionTotalStore";
+import {
+  selectHomeRecentProjects,
+  publishHomeAttentionTotal,
+} from "@/features/home/utils/public-api/presentation";
 import { useAutoSkillQuestions } from "@/features/project-auto-skills/public-api/presentation";
 
 /**

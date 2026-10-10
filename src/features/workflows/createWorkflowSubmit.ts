@@ -1,4 +1,4 @@
-import { markOnboardingWorkflowCreated } from "@/features/home/utils/onboardingWorkflowCreatedStore";
+import { markOnboardingWorkflowCreated } from "@/features/home/utils/public-api/presentation";
 import { resolveCreateTargetProjectId } from "@/features/capabilities/public-api/presentation";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";

@@ -6,10 +6,11 @@ import {
   APP_SURFACE_STEP_BADGE_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import CopyableBashCommand from "@/features/home/CopyableBashCommand";
-import buildConnectComputerGuideSteps, {
-  CONNECT_COMPUTER_COPY_STEP_TITLE,
-} from "@/features/home/utils/buildConnectComputerGuideSteps";
-import type detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
+import {
+  buildConnectComputerGuideSteps,
+  type detectBrowserOperatingSystem,
+} from "@/features/home/utils/public-api/presentation";
+import { CONNECT_COMPUTER_COPY_STEP_TITLE } from "@/features/home/utils/public-api/types";
 
 interface ConnectComputerGuideStepsProps {
   readonly operatingSystem: ReturnType<typeof detectBrowserOperatingSystem>;

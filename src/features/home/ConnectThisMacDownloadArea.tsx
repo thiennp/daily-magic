@@ -1,8 +1,8 @@
 "use client";
 
 import ConnectThisMacDownloadChoice from "@/features/home/ConnectThisMacDownloadChoice";
-import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
-import { shouldShowConnectThisMacDownloadChoice } from "@/features/home/utils/shouldShowConnectThisMacDownloadChoice";
+import type { BrowserOperatingSystem } from "@/features/home/utils/public-api/types";
+import { shouldShowConnectThisMacDownloadChoice } from "@/features/home/utils/public-api/presentation";
 import useIsMobileClient from "@/hooks/useIsMobileClient";
 import { buildAgentWitchLocalMacAppDownloadUrl } from "@/lib/agentWitch/buildAgentWitchLocalMacAppDownloadUrl";
 

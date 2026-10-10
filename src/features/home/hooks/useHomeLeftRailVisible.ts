@@ -2,7 +2,7 @@
 
 import useOnboardingSetupAcknowledged from "@/features/home/hooks/useOnboardingSetupAcknowledged";
 import useOnboardingSteps from "@/features/home/hooks/useOnboardingSteps";
-import shouldShowHomeLeftRail from "@/features/home/utils/shouldShowHomeLeftRail";
+import { shouldShowHomeLeftRail } from "@/features/home/utils/public-api/presentation";
 
 const useHomeLeftRailVisible = (): boolean => {
   const { steps } = useOnboardingSteps();

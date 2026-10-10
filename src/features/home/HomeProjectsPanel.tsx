@@ -7,7 +7,7 @@ import {
   APP_SURFACE_TEXT_LINK_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import HomeNewProjectButton from "@/features/home/HomeNewProjectButton";
-import selectHomeRecentProjects from "@/features/home/utils/selectHomeRecentProjects";
+import { selectHomeRecentProjects } from "@/features/home/utils/public-api/presentation";
 import AwcProjectsPanel from "@/features/projects/AwcProjectsPanel";
 
 /**

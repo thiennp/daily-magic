@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 
-import selectHomeAttentionRuns from "@/features/home/utils/selectHomeAttentionRuns";
+import { selectHomeAttentionRuns } from "@/features/home/utils/public-api/presentation";
 import {
   AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT,
   listAgentRunsLocalCache,

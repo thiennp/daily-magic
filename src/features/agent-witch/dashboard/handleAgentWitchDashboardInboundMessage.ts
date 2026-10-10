@@ -1,4 +1,4 @@
-import trackOnboardingFromAgentWitchSocketMessage from "@/features/home/utils/trackOnboardingFromAgentWitchSocketMessage";
+import { trackOnboardingFromAgentWitchSocketMessage } from "@/features/home/utils/public-api/presentation";
 import { syncAgentRunHeartbeatLocalCacheFromSocket } from "@/features/reports/utils/public-api/presentation";
 import { syncAgentRunLocalCacheFromSocket } from "@/features/reports/utils/public-api/presentation";
 

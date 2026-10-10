@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { fetchOnboardingSetupAcknowledged } from "@/features/home/utils/onboardingSetupAcknowledgedApi";
-import hasUserAcknowledgedOnboardingSetup from "@/features/home/utils/hasUserAcknowledgedOnboardingSetup";
-import { markOnboardingSetupAcknowledged } from "@/features/home/utils/onboardingSetupAcknowledgedStore";
-import syncOnboardingSetupAcknowledgedFlag from "@/features/home/utils/syncOnboardingSetupAcknowledgedFlag";
+import {
+  fetchOnboardingSetupAcknowledged,
+  hasUserAcknowledgedOnboardingSetup,
+  markOnboardingSetupAcknowledged,
+  syncOnboardingSetupAcknowledgedFlag,
+} from "@/features/home/utils/public-api/presentation";
 
 const useOnboardingSetupAcknowledgedState = (): {
   readonly isSetupAcknowledged: boolean;

@@ -2,7 +2,7 @@ import { useEffect, type Dispatch, type SetStateAction } from "react";
 
 import { pairedDevicesResource } from "@/features/agent-witch/public-api/presentation";
 import type { OnboardingStep } from "@/features/home/loadOnboardingSteps";
-import { countLinkedAgentWitchComputers } from "@/features/home/utils/isAgentWitchConnectInstallPlaceholderDevice";
+import { countLinkedAgentWitchComputers } from "@/features/home/utils/public-api/presentation";
 
 const useOnboardingPairStepSync = (input: {
   readonly isConnectStepDone: boolean;

@@ -2,7 +2,7 @@
 
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import { useLocalMacHostname } from "@/features/home/hooks/public-api/presentation";
-import { resolveHomeThisMacDeviceIdentity } from "@/features/home/utils/resolveHomeThisMacDeviceIdentity";
+import { resolveHomeThisMacDeviceIdentity } from "@/features/home/utils/public-api/presentation";
 import useIsMobileClient from "@/hooks/useIsMobileClient";
 
 export type ThisComputerFolderTarget =

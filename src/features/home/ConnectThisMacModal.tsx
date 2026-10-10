@@ -7,8 +7,10 @@ import ConnectThisMacAppFirst from "@/features/home/ConnectThisMacAppFirst";
 import ConnectThisComputerInstallBody from "@/features/home/ConnectThisComputerInstallBody";
 import ConnectThisLinuxDownloadArea from "@/features/home/ConnectThisLinuxDownloadArea";
 import ConnectThisMacModalNotice from "@/features/home/ConnectThisMacModalNotice";
-import type { ConnectThisMacModalNotice as ConnectThisMacModalNoticeValue } from "@/features/home/utils/ConnectThisMacModalNotice.type";
-import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
+import type {
+  ConnectThisMacModalNotice as ConnectThisMacModalNoticeValue,
+  BrowserOperatingSystem,
+} from "@/features/home/utils/public-api/types";
 import { DownloadNonMacNote } from "@/features/download/public-api/presentation";
 import { buildAgentWitchLocalMacAppDownloadUrl } from "@/lib/agentWitch/buildAgentWitchLocalMacAppDownloadUrl";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";

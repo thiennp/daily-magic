@@ -7,7 +7,7 @@ import {
   pairedDevicesResource,
 } from "@/features/agent-witch/public-api/presentation";
 import useLocalMacHostname from "@/features/home/hooks/useLocalMacHostname";
-import { countLinkedAgentWitchComputers } from "@/features/home/utils/isAgentWitchConnectInstallPlaceholderDevice";
+import { countLinkedAgentWitchComputers } from "@/features/home/utils/public-api/presentation";
 
 /**
  * Browser context for this computer install identity.

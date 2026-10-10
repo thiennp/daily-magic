@@ -4,8 +4,10 @@ import { useSyncExternalStore } from "react";
 
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
-import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
-import { resolveShouldShowConnectThisMac } from "@/features/home/utils/resolveShouldShowConnectThisMac";
+import {
+  detectBrowserOperatingSystem,
+  resolveShouldShowConnectThisMac,
+} from "@/features/home/utils/public-api/presentation";
 import useIsMobileClient from "@/hooks/useIsMobileClient";
 
 const subscribeToOperatingSystem = () => () => undefined;

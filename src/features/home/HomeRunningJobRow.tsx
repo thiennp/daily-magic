@@ -9,9 +9,9 @@ import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import {
   resolveHomeRunningJobBadgeClassName,
   resolveHomeRunningJobBadgeOverride,
-} from "@/features/home/utils/resolveHomeRunningJobBadgeOverride";
-import { formatHomeRunningJobAliveLabel } from "@/features/home/utils/formatHomeRunningJobAliveLabel";
-import { formatHomeRunningJobTitle } from "@/features/home/utils/formatHomeRunningJobTitle";
+  formatHomeRunningJobAliveLabel,
+  formatHomeRunningJobTitle,
+} from "@/features/home/utils/public-api/presentation";
 import HomeRunningJobQuestionButton from "@/features/home/HomeRunningJobQuestionButton";
 import { deleteAgentRunHistory } from "@/features/reports/utils/public-api/presentation";
 import { TrashBinIcon } from "@/icons";
