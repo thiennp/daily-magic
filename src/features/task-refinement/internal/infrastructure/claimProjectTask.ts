@@ -4,6 +4,7 @@ import {
   authorizeProjectTaskWriter,
   type ProjectTaskWriterDenyCode,
 } from "@/lib/projects/tasks/authorizeProjectTaskWriter";
+import { recordClaimTelemetry } from "@/features/task-refinement/internal/infrastructure/recordClaimTelemetry";
 import { loadProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecordReadQueries";
 import {
   claimProjectTaskRefinement,
@@ -93,6 +94,13 @@ export const claimProjectTask = async (input: {
       return { ok: false, code: "claim_failed" };
     }
   }
+  await recordClaimTelemetry({
+    writer,
+    projectId,
+    taskId,
+    claim,
+    actorUserId: input.actorUserId,
+  });
   await syncParentTaskStatus({ projectId, taskId });
   return {
     ok: true,

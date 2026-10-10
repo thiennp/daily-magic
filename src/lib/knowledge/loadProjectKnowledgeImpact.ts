@@ -5,6 +5,7 @@ import {
   type ProjectKnowledgeImpactView,
 } from "@/lib/knowledge/buildProjectKnowledgeImpactView";
 import { ensureProjectKnowledgeSchema } from "@/lib/knowledge/ensureProjectKnowledgeSchema";
+import { loadBotKnowledgeDailyRows } from "@/lib/knowledge/bots/loadBotKnowledgeDailyRows";
 import { loadKnowledgeSharedCards } from "@/lib/knowledge/loadKnowledgeSharedCards";
 import { loadSkillStats } from "@/lib/knowledge/loadSkillStats";
 import { loadKnowledgeComputers } from "@/lib/knowledge/loadKnowledgeComputers";
@@ -49,19 +50,27 @@ export const loadProjectKnowledgeImpact = async (input: {
 }): Promise<ProjectKnowledgeImpactView> => {
   await ensureProjectKnowledgeSchema();
   const windowDays = input.windowDays ?? DEFAULT_WINDOW_DAYS;
-  const [rows, computers, skillStats] = await Promise.all([
+  const [deviceRows, botRows, computers, skillStats] = await Promise.all([
     loadDailyRows(input.projectId, windowDays),
+    loadBotKnowledgeDailyRows(input.projectId, windowDays).catch(() => []),
     loadKnowledgeComputers(input.projectId),
     loadSkillStats(input.projectId),
   ]);
   const view = buildProjectKnowledgeImpactView({
-    rows,
+    rows: [...deviceRows, ...botRows],
     computers,
     windowDays,
     includeComputers: input.includeComputers,
     skillStats,
   });
+  const withBots = {
+    ...view,
+    botRuns: botRows.reduce((sum, row) => sum + row.runs, 0),
+  };
   return input.includeComputers
-    ? { ...view, sharedCards: await loadKnowledgeSharedCards(input.projectId) }
-    : view;
+    ? {
+        ...withBots,
+        sharedCards: await loadKnowledgeSharedCards(input.projectId),
+      }
+    : withBots;
 };

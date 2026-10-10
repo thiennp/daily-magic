@@ -102,4 +102,6 @@ export type ProjectKnowledgeImpactView = {
   readonly skills: readonly SkillImpactRow[];
   /** Weekly skill finds: chosen vs. missed. */
   readonly skillWeekly: readonly SkillWeeklyView[];
+  /** Assistant claims included in the totals (their with/without split is an estimate). */
+  readonly botRuns?: number;
 };

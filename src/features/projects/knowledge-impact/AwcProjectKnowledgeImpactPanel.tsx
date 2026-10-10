@@ -11,6 +11,7 @@ import {
   formatNumber,
   MUTED_CLASS,
 } from "@/features/projects/knowledge-impact/knowledgeImpactFormat";
+import { KNOWLEDGE_IMPACT_BOT_FOOTNOTE } from "@/features/projects/knowledge-impact/knowledgeImpactBotCopy.constant";
 import { PROJECT_KNOWLEDGE_IMPACT_COPY as C } from "@/features/projects/knowledge-impact/projectKnowledgeImpactCopy.constant";
 import useAwcProjectKnowledgeImpact from "@/features/projects/knowledge-impact/useAwcProjectKnowledgeImpact";
 import type { KnowledgeImpactTotals } from "@/lib/knowledge/buildProjectKnowledgeImpactView";
@@ -84,6 +85,9 @@ export default function AwcProjectKnowledgeImpactPanel({
       <KnowledgeComputersList impact={impact} />
       <KnowledgeSharedCardsList impact={impact} />
       <p className={MUTED_CLASS}>{C["footnote"]}</p>
+      {(impact.botRuns ?? 0) > 0 ? (
+        <p className={MUTED_CLASS}>{KNOWLEDGE_IMPACT_BOT_FOOTNOTE}</p>
+      ) : null}
     </section>
   );
 }

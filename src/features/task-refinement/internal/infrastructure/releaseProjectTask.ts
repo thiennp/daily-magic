@@ -6,6 +6,7 @@ import {
 } from "@/lib/projects/tasks/authorizeProjectTaskWriter";
 import type { ProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecord.type";
 import { loadProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecordReadQueries";
+import { recordBotRelease } from "@/lib/knowledge/bots/recordBotKnowledgeEvents";
 import { announceRefinedTaskBlocked } from "@/lib/projects/tasks/refine/announceRefinedTaskBlocked";
 import { parseReleaseArgs } from "@/lib/projects/tasks/refine/parseTaskActionArgs";
 import { finishProjectTaskClaim } from "@/lib/projects/tasks/refine/projectTaskClaimQueries";
@@ -84,6 +85,16 @@ export const releaseProjectTask = async (input: {
       title: task.title,
       reason: decision.blockedReason ?? "Blocked",
       blockCount: finished.blockCount,
+    });
+  }
+  if (writer.membership?.memberKind === "bot") {
+    await recordBotRelease({
+      projectId: a.projectId,
+      taskId: a.taskId,
+      fence: a.fence,
+      outcome: a.outcome,
+      verifySignal: decision.claim.verifySignal,
+      reason: a.blockedReason ?? a.resultSummary,
     });
   }
   await syncParentTaskStatus({ projectId: a.projectId, taskId: a.taskId });
