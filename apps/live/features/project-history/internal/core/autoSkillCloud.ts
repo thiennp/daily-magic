@@ -20,6 +20,10 @@ export type AutoSkillStatusReport = {
   readonly judgeLabel: string | null;
   readonly pausedReason: string | null;
   readonly note: string | null;
+  /** Commits on the folder's main branch (null: no git); lets the app offer a deeper scan. */
+  readonly gitCommits?: number | null;
+  /** Newest commits the last scan fed in. */
+  readonly gitScanned?: number | null;
 };
 
 export type AutoSkillSuggestionPayload = {

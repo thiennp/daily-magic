@@ -38,6 +38,9 @@ const createTables = async (): Promise<void> => {
     ADD COLUMN IF NOT EXISTS script_info JSONB`;
   await sql`ALTER TABLE project_auto_skills
     ADD COLUMN IF NOT EXISTS judge_agent TEXT`;
+  await sql`ALTER TABLE project_auto_skills
+    ADD COLUMN IF NOT EXISTS git_commits INTEGER,
+    ADD COLUMN IF NOT EXISTS git_scanned INTEGER`;
 };
 
 /** Idempotent CREATE (full DDL in db/migrations/120, 121 and 122.. */

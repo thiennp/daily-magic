@@ -15,6 +15,8 @@ export interface AutoSkillScan {
   readonly scanError: string | null;
   readonly scan: () => Promise<void>;
   readonly scanDocs: () => Promise<void>;
+  /** Scan again, reading this many main-branch commits (git folders). */
+  readonly scanCommits: (commits: number) => Promise<void>;
 }
 
 /**
@@ -48,13 +50,16 @@ export const useAutoSkillScan = (input: {
   }, [scanning, lastCheckedAt, reload]);
 
   const run = useCallback(
-    async (docs: boolean): Promise<void> => {
+    async (docs: boolean, commits?: number): Promise<void> => {
       setScanError(null);
       startedAtMs.current = Date.now();
       checkedBefore.current = lastCheckedAt;
       setScanningDocs(docs);
       setScanning(true);
-      const result = await postAutoSkillScan(projectId, { docs });
+      const result = await postAutoSkillScan(projectId, {
+        docs,
+        ...(commits !== undefined ? { commits } : {}),
+      });
       if (!result.ok) {
         setScanning(false);
         setScanningDocs(false);
@@ -66,5 +71,10 @@ export const useAutoSkillScan = (input: {
   const scan = useCallback((): Promise<void> => run(false), [run]);
   const scanDocs = useCallback((): Promise<void> => run(true), [run]);
 
-  return { scanning, scanningDocs, scanError, scan, scanDocs };
+  const scanCommits = useCallback(
+    (commits: number): Promise<void> => run(false, commits),
+    [run],
+  );
+
+  return { scanning, scanningDocs, scanError, scan, scanDocs, scanCommits };
 };

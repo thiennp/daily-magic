@@ -6,7 +6,9 @@ import type { AutoSkillsState } from "@/features/project-auto-skills/public-api/
 import AwcAutoSkillQuestionCard from "@/features/projects/autoskills/AwcAutoSkillQuestionCard";
 import AwcAutoSkillsActions from "@/features/projects/library/AwcAutoSkillsActions";
 import AwcAutoSkillsAgentPicker from "@/features/projects/library/AwcAutoSkillsAgentPicker";
+import AwcAutoSkillsDeeperScan from "@/features/projects/library/AwcAutoSkillsDeeperScan";
 import AwcAutoSkillsHeader from "@/features/projects/library/AwcAutoSkillsHeader";
+import AwcAutoSkillsStatusLine from "@/features/projects/library/AwcAutoSkillsStatusLine";
 import AwcAutoSkillsJudgePicker from "@/features/projects/library/AwcAutoSkillsJudgePicker";
 import {
   autoSkillsDetailParts,
@@ -33,7 +35,6 @@ export default function AwcProjectLibraryAutoSkills({
   }
   const status = formatAutoSkillsStatus(overview, nowMs);
   const waiting = overview.pending.length;
-
   return (
     <section
       aria-label="Auto skills"
@@ -47,23 +48,11 @@ export default function AwcProjectLibraryAutoSkills({
       />
       {overview.enabled ? (
         <>
-          <p
-            role="status"
-            className={`rounded-lg px-3 py-2 text-[13px] ${
-              status.paused
-                ? "bg-awc-warn-soft text-awc-warn"
-                : "bg-white/70 text-awc-fg-muted dark:bg-white/[0.04] dark:text-gray-300"
-            }`}
-          >
-            {status.paused
-              ? status.line
-              : autoSkillsDetailParts(overview, nowMs).join(" · ")}
-            {overview.statusNote !== null ? (
-              <span className="mt-0.5 block text-awc-fg dark:text-gray-200">
-                {overview.statusNote}
-              </span>
-            ) : null}
-          </p>
+          <AwcAutoSkillsStatusLine
+            status={status}
+            detail={autoSkillsDetailParts(overview, nowMs).join(" · ")}
+            note={overview.statusNote}
+          />
           <AwcAutoSkillsJudgePicker
             value={overview.judgePref}
             busy={auto.busy}
@@ -76,6 +65,14 @@ export default function AwcProjectLibraryAutoSkills({
               onChange={(agent) => void auto.setJudgeAgent(agent)}
             />
           ) : null}
+          {auto.scanning ? null : (
+            <AwcAutoSkillsDeeperScan
+              total={overview.gitCommits}
+              scanned={overview.gitScanned}
+              busy={auto.busy}
+              onScan={(commits) => void auto.scanCommits(commits)}
+            />
+          )}
           <AwcAutoSkillsActions
             busy={auto.busy}
             scanning={auto.scanning}

@@ -70,8 +70,8 @@ export default function AwcAutoSkillsActions({
         ) : null}
         <span className="flex flex-col text-[12.5px] text-awc-fg-muted dark:text-gray-400">
           <span>
-            Tasks: checks finished tasks on your online computers for repeated
-            steps.
+            Tasks: checks finished tasks, and the last 100 commits on the main
+            branch if the folder uses git, for repeated steps.
           </span>
           <span>
             Docs: turns this folder&apos;s skills, commands and Q&amp;A into

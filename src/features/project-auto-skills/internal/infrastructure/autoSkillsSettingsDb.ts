@@ -16,11 +16,16 @@ const DEFAULTS: AutoSkillsSettings & AutoSkillsStatus = {
   judgeLabel: null,
   pausedReason: null,
   statusNote: null,
+  gitCommits: null,
+  gitScanned: null,
   lastCheckedAt: null,
 };
 
 const text = (value: unknown): string | null =>
   value === null || value === undefined ? null : String(value);
+
+const count = (value: unknown): number | null =>
+  value === null || value === undefined ? null : Number(value);
 
 /** Settings + last reported status; defaults (enabled) when no row exists. */
 export const getAutoSkillsSettingsRow = async (
@@ -43,6 +48,8 @@ export const getAutoSkillsSettingsRow = async (
     judgeLabel: text(row.judge_label),
     pausedReason: text(row.paused_reason),
     statusNote: text(row.status_note),
+    gitCommits: count(row.git_commits),
+    gitScanned: count(row.git_scanned),
     lastCheckedAt: text(row.last_checked_at),
   };
 };
@@ -71,10 +78,14 @@ export const recordAutoSkillsStatus = async (
   await ensureProjectAutoSkillsSchema();
   await getSql()`
     INSERT INTO project_auto_skills (project_id, judge_kind, judge_label,
-      paused_reason, status_note, last_checked_at)
+      paused_reason, status_note, git_commits, git_scanned, last_checked_at)
     VALUES (${projectId}, ${status.judgeKind}, ${status.judgeLabel},
-      ${status.pausedReason}, ${status.statusNote}, NOW())
+      ${status.pausedReason}, ${status.statusNote}, ${status.gitCommits},
+      ${status.gitScanned}, NOW())
     ON CONFLICT (project_id) DO UPDATE SET judge_kind = EXCLUDED.judge_kind,
       judge_label = EXCLUDED.judge_label, paused_reason = EXCLUDED.paused_reason,
-      status_note = EXCLUDED.status_note, last_checked_at = NOW(), updated_at = NOW()`;
+      status_note = EXCLUDED.status_note,
+      git_commits = COALESCE(EXCLUDED.git_commits, project_auto_skills.git_commits),
+      git_scanned = COALESCE(EXCLUDED.git_scanned, project_auto_skills.git_scanned),
+      last_checked_at = NOW(), updated_at = NOW()`;
 };

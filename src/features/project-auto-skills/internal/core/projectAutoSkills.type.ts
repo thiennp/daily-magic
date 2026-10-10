@@ -17,6 +17,10 @@ export interface AutoSkillsStatus {
   readonly judgeLabel: string | null;
   readonly pausedReason: string | null;
   readonly statusNote: string | null;
+  /** Commits on the folder's main branch, as last reported; null when no git. */
+  readonly gitCommits: number | null;
+  /** Newest main-branch commits the last scan read. */
+  readonly gitScanned: number | null;
   readonly lastCheckedAt: string | null;
 }
 

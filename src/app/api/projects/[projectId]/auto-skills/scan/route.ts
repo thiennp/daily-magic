@@ -13,6 +13,8 @@ type RouteContext = { params: Promise<{ readonly projectId: string }> };
  * project through auto skills now. The computers hold the task history, so
  * the scan runs there; answers show up as questions on the strip. A body of
  * `{ "docs": true }` scans the project folder's docs instead of past tasks.
+ * `{ "commits": n }` sets how many main-branch commits a git folder feeds in
+ * (the computer defaults to 100 and caps it).
  */
 export async function POST(
   request: Request,
@@ -26,6 +28,16 @@ export async function POST(
     typeof body === "object" &&
     body !== null &&
     (body as { docs?: unknown }).docs === true;
+  const commitsRaw =
+    typeof body === "object" && body !== null
+      ? (body as { commits?: unknown }).commits
+      : undefined;
+  const commits =
+    typeof commitsRaw === "number" &&
+    Number.isInteger(commitsRaw) &&
+    commitsRaw >= 1
+      ? commitsRaw
+      : undefined;
   const overview = await getAutoSkillsOverview({
     projectId,
     actorUserId: actor.id,
@@ -54,7 +66,11 @@ export async function POST(
   for (const agent of agents) {
     agent.send({
       type: AGENT_WITCH_MESSAGE_TYPES.AUTOSKILL_SCAN_REQUEST,
-      payload: { projectId, ...(docs ? { docs: true } : {}) },
+      payload: {
+        projectId,
+        ...(docs ? { docs: true } : {}),
+        ...(commits !== undefined ? { commits } : {}),
+      },
     });
   }
   return Response.json({ ok: true, computers: agents.length }, { status: 202 });

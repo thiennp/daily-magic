@@ -14,6 +14,8 @@ const overview = (patch: Partial<AutoSkillsOverview>): AutoSkillsOverview => ({
   judgeLabel: "your computer agent: Codex",
   pausedReason: null,
   statusNote: null,
+  gitCommits: null,
+  gitScanned: null,
   lastCheckedAt: "2026-10-08T11:58:00Z",
   pending: [],
   autoSkillIds: [],

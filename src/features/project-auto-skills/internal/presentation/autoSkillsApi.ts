@@ -46,13 +46,16 @@ export const postAutoSkillAnswer = async (
 /** Owner: ask the owner's online computers to scan past tasks now. */
 export const postAutoSkillScan = async (
   projectId: string,
-  options: { readonly docs?: boolean } = {},
+  options: { readonly docs?: boolean; readonly commits?: number } = {},
 ): Promise<{ readonly ok: boolean; readonly errorMessage?: string }> => {
   try {
     const response = await fetch(`${autoSkillsUrl(projectId)}/scan`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(options.docs === true ? { docs: true } : {}),
+      body: JSON.stringify({
+        ...(options.docs === true ? { docs: true } : {}),
+        ...(options.commits !== undefined ? { commits: options.commits } : {}),
+      }),
     });
     if (response.ok) {
       return { ok: true };

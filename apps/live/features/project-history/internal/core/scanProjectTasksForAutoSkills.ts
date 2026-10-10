@@ -11,6 +11,10 @@ import { probeAutoSkillOllamaModel } from "./autoSkillOllama";
 import { selectAutoSkillJudge } from "./autoSkillSelectJudge";
 import type { AutoSkillOutcome } from "./onAutoSkillRunCompleted.types";
 import { reportAutoSkillRunCompleted } from "./reportAutoSkillRunCompleted";
+import {
+  clampScanCommits,
+  readMainBranchCommits,
+} from "./readMainBranchCommits";
 import { resolveProjectDataDir } from "./resolveProjectDataDir";
 import { PROJECT_HISTORY_TASKS_DIR_NAME } from "./projectHistoryPaths.constant";
 
@@ -29,6 +33,8 @@ type StoredTask = {
 
 export type AutoSkillScanSummary = {
   readonly scanned: number;
+  /** Commits of the main branch fed in (0 when the folder has no git). */
+  readonly commitsScanned: number;
   readonly asked: number;
   readonly outcomes: Readonly<Partial<Record<AutoSkillOutcome, number>>>;
 };
@@ -74,14 +80,30 @@ const readStoredTasks = (projectId: string): StoredTask[] => {
     .slice(-SCAN_MAX_TASKS);
 };
 
-const describeScan = (summary: AutoSkillScanSummary): string =>
-  summary.scanned === 0
-    ? "Scanned this computer: no finished tasks to check yet."
-    : `Scanned ${summary.scanned} finished task${summary.scanned === 1 ? "" : "s"} on this computer · ${
-        summary.asked === 0
-          ? "no repeated step found yet"
-          : `${summary.asked} question${summary.asked === 1 ? "" : "s"} raised`
-      }.`;
+const plural = (n: number, word: string): string =>
+  `${n} ${word}${n === 1 ? "" : "s"}`;
+
+export const describeScan = (
+  summary: AutoSkillScanSummary,
+  branch: string | null = null,
+): string => {
+  const parts = [
+    summary.scanned === 0
+      ? null
+      : `${plural(summary.scanned, "finished task")}`,
+    summary.commitsScanned === 0
+      ? null
+      : `the last ${plural(summary.commitsScanned, "commit")} on ${branch ?? "main"}`,
+  ].filter((part): part is string => part !== null);
+  if (parts.length === 0) {
+    return "Scanned this computer: no finished tasks to check yet.";
+  }
+  return `Scanned ${parts.join(" and ")} on this computer · ${
+    summary.asked === 0
+      ? "no repeated step found yet"
+      : `${plural(summary.asked, "question")} raised`
+  }.`;
+};
 
 /**
  * Manual "Scan past tasks": feeds this computer's finished tasks for one
@@ -93,6 +115,8 @@ export const scanProjectTasksForAutoSkills = async (input: {
   readonly layout: AgentWitchLocalLayout;
   readonly projectId: string;
   readonly folderPath?: string;
+  /** Newest commits of the main branch to feed; default 100. */
+  readonly commits?: number;
 }): Promise<AutoSkillScanSummary> => {
   const outcomes: Partial<Record<AutoSkillOutcome, number>> = {};
   let tasks: StoredTask[] = [];
@@ -101,6 +125,7 @@ export const scanProjectTasksForAutoSkills = async (input: {
   } catch {
     tasks = [];
   }
+  let stopped = false;
   for (const task of tasks) {
     const outcome = await reportAutoSkillRunCompleted({
       cloudApi: input.cloudApi,
@@ -122,11 +147,41 @@ export const scanProjectTasksForAutoSkills = async (input: {
     });
     outcomes[outcome] = (outcomes[outcome] ?? 0) + 1;
     if (outcome === "disabled" || outcome === "paused") {
+      stopped = true;
+      break;
+    }
+  }
+  const history =
+    stopped || input.folderPath === undefined
+      ? null
+      : await readMainBranchCommits(
+          input.folderPath,
+          clampScanCommits(input.commits),
+        ).catch(() => null);
+  // Oldest first so a repeat is noticed on its second occurrence, as in a live run.
+  for (const commit of [...(history?.commits ?? [])].reverse()) {
+    const outcome = await reportAutoSkillRunCompleted({
+      cloudApi: input.cloudApi,
+      projectId: input.projectId,
+      run: {
+        runId: `git:${commit.sha}`,
+        prompt: commit.subject,
+        resultSummary: commit.body.slice(0, 600),
+        completedAt: commit.committedAt,
+        writerAgent: null,
+        taskTitle: commit.subject.slice(0, 120),
+      },
+      layout: input.layout,
+      folderPath: input.folderPath ?? "",
+    });
+    outcomes[outcome] = (outcomes[outcome] ?? 0) + 1;
+    if (outcome === "disabled" || outcome === "paused") {
       break;
     }
   }
   const summary: AutoSkillScanSummary = {
     scanned: tasks.length,
+    commitsScanned: history?.commits.length ?? 0,
     asked: outcomes.asked ?? 0,
     outcomes,
   };
@@ -147,7 +202,9 @@ export const scanProjectTasksForAutoSkills = async (input: {
       judgeKind: choice.ok ? choice.kind : null,
       judgeLabel: choice.ok ? choice.label : null,
       pausedReason: choice.ok ? null : choice.pausedReason,
-      note: describeScan(summary),
+      note: describeScan(summary, history?.branch ?? null),
+      gitCommits: history?.total ?? null,
+      gitScanned: history?.commits.length ?? null,
     });
   } catch {
     // the strip keeps its previous status line

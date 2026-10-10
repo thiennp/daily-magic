@@ -13,6 +13,11 @@ type RouteContext = { params: Promise<{ readonly projectId: string }> };
 const str = (v: unknown, max: number): string | null =>
   typeof v === "string" && v.trim().length > 0 ? v.slice(0, max) : null;
 
+const wholeCount = (v: unknown): number | null =>
+  typeof v === "number" && Number.isInteger(v) && v >= 0 && v < 10_000_000
+    ? v
+    : null;
+
 /** Device GET: project auto-skill toggle + cluster pending / saved / never. */
 export async function GET(
   request: Request,
@@ -58,6 +63,8 @@ export async function POST(
       judgeLabel: str(body.status.judgeLabel, 120),
       pausedReason: str(body.status.pausedReason, 300),
       statusNote: str(body.status.note, 300),
+      gitCommits: wholeCount(body.status.gitCommits),
+      gitScanned: wholeCount(body.status.gitScanned),
     });
     return Response.json({ ok: true });
   }

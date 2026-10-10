@@ -2280,6 +2280,9 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         config,
         parsed.payload.projectId.trim(),
         parsed.payload.docs === true,
+        typeof parsed.payload.commits === "number"
+          ? parsed.payload.commits
+          : undefined,
       );
     }
   };
@@ -2291,6 +2294,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     scanConfig: AgentWitchConfig,
     projectId: string,
     docs = false,
+    commits?: number,
   ): void => {
     const runConfig = readAgentWitchRunConfig();
     const cloudApi =
@@ -2320,6 +2324,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       cloudApi,
       layout: scanConfig.layout,
       projectId,
+      ...(commits !== undefined ? { commits } : {}),
       ...(folderPath !== null && folderPath !== undefined
         ? { folderPath }
         : {}),
