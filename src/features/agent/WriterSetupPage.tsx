@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 
-import WriterSetupPageFooter from "@/features/agent/components/WriterSetupPageFooter";
+import { WriterSetupPageFooter } from "@/features/agent/components/public-api/presentation";
 import HarnessWriterAgentMark from "@/features/agent/icons/HarnessWriterAgentMark";
 import { ensureWriterOnMac } from "@/features/agent/utils/ensureWriterOnMac.util";
 import { WRITER_SETUP_OPTIONS } from "@/features/agent/writerSetupOptions.constant";

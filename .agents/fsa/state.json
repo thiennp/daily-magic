@@ -10,7 +10,8 @@
     "src/features/improvements",
     "src/features/marketing/components",
     "src/features/projects/access/laneCompare",
-    "src/features/projects/botSupportUrl"
+    "src/features/projects/botSupportUrl",
+    "src/features/agent/components"
   ],
   "blocked": {},
   "rounds": [
@@ -68,6 +69,11 @@
       "unit": "src/features/projects/botSupportUrl",
       "sha": "0df9ad3df9922fba514ddf981b66391b78de9fff",
       "at": "2026-10-10T08:58:45.067Z"
+    },
+    {
+      "unit": "src/features/agent/components",
+      "sha": "1624839f0c26fac301e10f9c963da2cceba480b1",
+      "at": "2026-10-10T09:00:21.578Z"
     }
   ]
 }
