@@ -9,6 +9,11 @@ export interface CheckContextHookIo {
   readonly runCheckContext: (
     raw: unknown,
   ) => CheckContextResult | Promise<CheckContextResult>;
+  /** Task-intake prompt for a valid project; null when none applies. */
+  readonly getTaskIntakeContext?: (input: {
+    readonly projectId: string | undefined;
+    readonly cwd: string | undefined;
+  }) => string | null;
 }
 
 const HOOK_EVENT_NAME = "UserPromptSubmit";
@@ -96,9 +101,17 @@ export const runCheckContextHook = async (
       io.writeStderr("[agent-witch] mcp-hook: stdin is not a JSON object\n");
       return 0;
     }
-    const context = toCheckContextHookContext(await io.runCheckContext(input));
-    if (context !== null) {
-      io.writeStdout(formatClaudeHookOutput(context));
+    const result = await io.runCheckContext(input);
+    const intake =
+      io.getTaskIntakeContext?.({
+        projectId: result.projectId,
+        cwd: input.cwd,
+      }) ?? null;
+    const parts = [toCheckContextHookContext(result), intake].filter(
+      (part): part is string => part !== null,
+    );
+    if (parts.length > 0) {
+      io.writeStdout(formatClaudeHookOutput(parts.join("\n\n")));
     }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

@@ -131,6 +131,29 @@ const run = async (): Promise<void> => {
     return;
   }
 
+  if (subcommand === "task-intake") {
+    const { resolveAgentWitchLocalLayout } =
+      await import("@agent-witch/install-layout");
+    const { runTaskIntakeCli } = await import("@agent-witch/live-token-saver");
+    const { readCrossAccountFolderClaims, resolveAgentWitchProjectIdFromCwd } =
+      await import("@agent-witch/live-projects");
+    const layout = resolveAgentWitchLocalLayout();
+    process.exit(
+      runTaskIntakeCli(process.argv.slice(3), {
+        layout,
+        resolveProjectId: resolveAgentWitchProjectIdFromCwd,
+        readClaims: () => readCrossAccountFolderClaims(layout.installDir),
+        writeStdout: (text) => {
+          process.stdout.write(text);
+        },
+        writeStderr: (text) => {
+          process.stderr.write(text);
+        },
+        defaultCwd: process.cwd(),
+      }),
+    );
+  }
+
   if (subcommand === "mcp") {
     const { resolveAgentWitchLocalLayout } =
       await import("@agent-witch/install-layout");

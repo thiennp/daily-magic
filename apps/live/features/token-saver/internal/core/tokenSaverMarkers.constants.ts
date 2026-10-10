@@ -27,3 +27,7 @@ export const MCP_STDIO_ARGS = ["mcp"] as const;
 export const CHECK_CONTEXT_HOOK_SUBCOMMAND = "mcp-hook";
 export const CHECK_CONTEXT_HOOK_NAME = "check_context";
 export const CLAUDE_HOOK_COMMAND = `${MCP_STDIO_COMMAND} ${CHECK_CONTEXT_HOOK_SUBCOMMAND} ${CHECK_CONTEXT_HOOK_NAME}`;
+export const TASK_INTAKE_MARKER_BEGIN = `# BEGIN ${TOKEN_SAVER_MARKER}-task-intake`;
+export const TASK_INTAKE_MARKER_END = `# END ${TOKEN_SAVER_MARKER}-task-intake`;
+export const TASK_INTAKE_PREFS_FILE_NAME = "task-intake-prefs.json";
+export const TASK_INTAKE_CLI_SUBCOMMAND = "task-intake";

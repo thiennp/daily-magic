@@ -23,6 +23,8 @@ describe("writeClaudeGlobalClaudeMd", () => {
     const body = io.readUtf8(path.join(root, CLAUDE_GLOBAL_CLAUDE_MD_RELATIVE));
     expect(body).toContain("/knowledge/update");
     expect(body).toContain("any local agent");
+    expect(body).toContain("# BEGIN agent-witch-token-saver-task-intake");
+    expect(body).toContain("AgentWitch · task intake");
     expect(writeClaudeGlobalClaudeMd({ io }).wrote).toBe(false);
   });
 });

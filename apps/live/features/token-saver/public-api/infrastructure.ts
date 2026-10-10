@@ -43,3 +43,5 @@ export {
   createNodeCliIo,
   createTempCliIo,
 } from "../internal/core/createNodeCliFs";
+export { runTaskIntakeCli } from "../internal/core/runTaskIntakeCli";
+export type { TaskIntakeCliDeps } from "../internal/core/runTaskIntakeCli";

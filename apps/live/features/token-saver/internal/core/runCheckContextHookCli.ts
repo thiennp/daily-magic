@@ -1,5 +1,8 @@
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
+import { readCrossAccountFolderClaims } from "@agent-witch/live-projects";
+
+import { buildTaskIntakeHookContext } from "./buildTaskIntakeHookContext";
 import { createCheckContextRunner } from "./createCheckContextRunner";
 import { runCheckContextHook } from "./runCheckContextHook";
 
@@ -46,6 +49,13 @@ export const runCheckContextHookCli = async (input: {
       process.stdout.write(text);
     },
     writeStderr,
+    getTaskIntakeContext: ({ projectId, cwd }) =>
+      buildTaskIntakeHookContext({
+        layout: input.layout,
+        projectId,
+        cwd,
+        readClaims: () => readCrossAccountFolderClaims(input.layout.installDir),
+      }),
     runCheckContext: createCheckContextRunner({
       layout: input.layout,
       logError: (error) => {
