@@ -1,4 +1,5 @@
 import { ensureProjectSkillUsesSchema } from "@/lib/knowledge/skillUses/ensureProjectSkillUsesSchema";
+import { ensureProjectSkillComparisonsSchema } from "@/lib/knowledge/skillUses/ensureProjectSkillComparisonsSchema";
 import { queueSkillChecksForRun } from "@/lib/knowledge/skillUses/queueSkillChecks";
 import { getSql } from "@/lib/db";
 
@@ -18,9 +19,17 @@ export const recordSkillUsesOnClaim = async (input: {
 }): Promise<void> => {
   try {
     await ensureProjectSkillUsesSchema();
+    await ensureProjectSkillComparisonsSchema();
     await getSql()`
       INSERT INTO project_skill_uses (project_id, skill_id, skill_version, task_id, fence, source)
-      SELECT ${input.projectId}, ps.skill_id, ps.published_version, ${input.taskId},
+      SELECT ${input.projectId}, ps.skill_id,
+             COALESCE((
+               SELECT s.version FROM project_skill_serves s
+               WHERE s.project_id = ${input.projectId} AND s.skill_id = ps.skill_id
+                 AND s.actor_user_id = ${input.actorUserId}
+                 AND s.served_at > NOW() - make_interval(mins => ${LOOKUP_WINDOW_MINUTES})
+               ORDER BY s.served_at DESC LIMIT 1), ps.published_version),
+             ${input.taskId},
              ${input.fence}, MIN(found.source)
       FROM (
         SELECT ${input.assignedSkillId}::text AS skill_id, 'assigned' AS source

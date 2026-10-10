@@ -7,7 +7,7 @@ export const publishSkill = (
   state = "published",
 ): Promise<unknown> =>
   db.exec(
-    `INSERT INTO project_skills (project_id, skill_id, state, published_version) VALUES ('p1', '${skillId}', '${state}', ${version})`,
+    `INSERT INTO project_skills (project_id, skill_id, name, state, published_version) VALUES ('p1', '${skillId}', '${skillId}', '${state}', ${version})`,
   );
 
 export const logSkillGet = (db: PGlite, skillId: string): Promise<unknown> =>

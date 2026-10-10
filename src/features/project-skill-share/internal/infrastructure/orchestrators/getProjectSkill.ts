@@ -3,6 +3,7 @@ import { isProjectSkillRefArgs } from "@/features/project-skill-share/internal/c
 import type { GetProjectSkillResult } from "@/features/project-skill-share/internal/core/projectSkillResults.type";
 import { resolveProjectSkillReadVersion } from "@/features/project-skill-share/internal/core/resolveProjectSkillReadVersion";
 import { toProjectSkillView } from "@/features/project-skill-share/internal/core/toProjectSkillView";
+import { chooseSkillVersionToServe } from "@/lib/knowledge/skillUses/chooseSkillVersionToServe";
 import { selectProjectSkillRow } from "@/features/project-skill-share/internal/infrastructure/db/selectProjectSkillRow";
 import { selectProjectSkillVersionRow } from "@/features/project-skill-share/internal/infrastructure/db/selectProjectSkillVersionRow";
 import { resolveProjectSkillMemberRole } from "@/features/project-skill-share/internal/infrastructure/orchestrators/resolveProjectSkillMemberRole";
@@ -43,8 +44,17 @@ export const getProjectSkill = async (input: {
   }
   /** Owner + active members read drafts (viewers: published only). */
   const canManage = access.role === "owner" || access.role === "member";
+  // While two versions are compared, an assistant gets one of them in turn.
+  const comparedVersion =
+    version === undefined && canManage
+      ? await chooseSkillVersionToServe({
+          projectId,
+          skillId,
+          actorUserId: input.actorUserId,
+        })
+      : null;
   const readVersion = resolveProjectSkillReadVersion({
-    requestedVersion: version,
+    requestedVersion: version ?? comparedVersion ?? undefined,
     publishedVersion: record.publishedVersion,
     latestVersion: record.latestVersion,
     canManage,

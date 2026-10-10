@@ -38,7 +38,10 @@ export default function AwcProjectLibraryAutoSkills({
     return null;
   }
   const status = formatAutoSkillsStatus(overview, nowMs);
-  const waiting = overview.pending.length + overview.skillChecks.length;
+  const waiting =
+    overview.pending.length +
+    overview.skillChecks.length +
+    overview.comparisons.filter((c) => c.ready).length;
   return (
     <section
       aria-label="Auto skills"

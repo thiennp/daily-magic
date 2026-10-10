@@ -1,6 +1,7 @@
 import type { AutoSkillsOverview } from "@/features/project-auto-skills/internal/core/projectAutoSkills.type";
 import { getAutoSkillsSettingsRow } from "@/features/project-auto-skills/internal/infrastructure/autoSkillsSettingsDb";
 import { listAutoSkillSuggestions } from "@/features/project-auto-skills/internal/infrastructure/autoSkillsSuggestionsDb";
+import { listSkillComparisons } from "@/lib/knowledge/skillUses/listSkillComparisons";
 import { listSkillCheckQuestions } from "@/features/project-auto-skills/internal/infrastructure/skillCheckQuestionsDb";
 import { canManageAutoSkills } from "@/features/project-auto-skills/internal/infrastructure/canManageAutoSkills";
 import { resolveProjectSkillMemberRole } from "@/features/project-skill-share/public-api/infrastructure";
@@ -13,16 +14,19 @@ export const getAutoSkillsOverview = async (input: {
   if (!(await canManageAutoSkills(input))) {
     return null;
   }
-  const [settings, pending, saved, skillChecks] = await Promise.all([
-    getAutoSkillsSettingsRow(input.projectId),
-    listAutoSkillSuggestions(input.projectId, ["pending"]),
-    listAutoSkillSuggestions(input.projectId, ["saved"]),
-    listSkillCheckQuestions(input.projectId),
-  ]);
+  const [settings, pending, saved, skillChecks, comparisons] =
+    await Promise.all([
+      getAutoSkillsSettingsRow(input.projectId),
+      listAutoSkillSuggestions(input.projectId, ["pending"]),
+      listAutoSkillSuggestions(input.projectId, ["saved"]),
+      listSkillCheckQuestions(input.projectId),
+      listSkillComparisons(input.projectId),
+    ]);
   return {
     ...settings,
     pending,
     skillChecks,
+    comparisons,
     autoSkillIds: saved.flatMap((s) => (s.skillId === null ? [] : [s.skillId])),
   };
 };

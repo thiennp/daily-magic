@@ -14,6 +14,12 @@ vi.mock("@/lib/knowledge/skillUses/notifySkillCheckDue", () => ({
 vi.mock("@/lib/knowledge/bots/ensureProjectBotKnowledgeSchema", () => ({
   ensureProjectBotKnowledgeSchema: async () => undefined,
 }));
+vi.mock(
+  "@/lib/knowledge/skillUses/ensureProjectSkillComparisonsSchema",
+  () => ({
+    ensureProjectSkillComparisonsSchema: async () => undefined,
+  }),
+);
 vi.mock("@/lib/knowledge/skillUses/ensureProjectSkillUsesSchema", () => ({
   ensureProjectSkillUsesSchema: async () => undefined,
 }));

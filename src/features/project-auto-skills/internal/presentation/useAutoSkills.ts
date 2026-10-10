@@ -6,20 +6,22 @@ import type {
   AutoSkillAnswer,
   AutoSkillJudgePref,
   AutoSkillsOverview,
-  SkillCheckAnswer,
 } from "@/features/project-auto-skills/internal/core/projectAutoSkills.type";
 import {
   autoSkillsUrl,
   fetchAutoSkillsOverview,
   postAutoSkillAnswer,
-  postSkillCheckAnswer,
 } from "@/features/project-auto-skills/internal/presentation/autoSkillsApi";
+import {
+  useSkillQuestionAnswers,
+  type SkillQuestionAnswers,
+} from "@/features/project-auto-skills/internal/presentation/useSkillQuestionAnswers";
 import {
   useAutoSkillScan,
   type AutoSkillScan,
 } from "@/features/project-auto-skills/internal/presentation/useAutoSkillScan";
 
-export interface AutoSkillsState extends AutoSkillScan {
+export interface AutoSkillsState extends AutoSkillScan, SkillQuestionAnswers {
   /** Null while loading and for anyone who may not manage auto skills. */
   readonly overview: AutoSkillsOverview | null;
   readonly busy: boolean;
@@ -27,10 +29,7 @@ export interface AutoSkillsState extends AutoSkillScan {
   readonly setJudgePref: (pref: AutoSkillJudgePref) => Promise<void>;
   readonly setJudgeAgent: (agent: string | null) => Promise<void>;
   readonly answer: (id: string, answer: AutoSkillAnswer) => Promise<boolean>;
-  readonly answerSkillCheck: (
-    checkId: number,
-    answer: SkillCheckAnswer,
-  ) => Promise<boolean>;
+
   readonly reload: () => void;
 }
 
@@ -94,16 +93,7 @@ export const useAutoSkills = (
     [projectId, reload],
   );
 
-  const answerSkillCheck = useCallback(
-    async (checkId: number, value: SkillCheckAnswer): Promise<boolean> => {
-      setBusy(true);
-      const ok = await postSkillCheckAnswer(projectId, checkId, value);
-      setBusy(false);
-      reload();
-      return ok;
-    },
-    [projectId, reload],
-  );
+  const skillAnswers = useSkillQuestionAnswers(projectId, setBusy, reload);
 
   return {
     overview: enabled ? overview : null,
@@ -114,6 +104,6 @@ export const useAutoSkills = (
     setJudgePref: (judgePref) => patch({ judgePref }),
     setJudgeAgent: (judgeAgent) => patch({ judgeAgent }),
     answer,
-    answerSkillCheck,
+    ...skillAnswers,
   };
 };

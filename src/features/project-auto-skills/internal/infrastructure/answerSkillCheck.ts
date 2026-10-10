@@ -4,6 +4,7 @@ import {
   getSkillCheckQuestion,
   markSkillCheckDecided,
 } from "@/features/project-auto-skills/internal/infrastructure/skillCheckQuestionsDb";
+import { startSkillComparison } from "@/lib/knowledge/skillUses/startSkillComparison";
 import { publishProjectSkill } from "@/features/project-skill-share/public-api/infrastructure";
 
 export type AnswerSkillCheckResult =
@@ -64,6 +65,14 @@ export const answerSkillCheck = async (input: {
     actorUserId: input.actorUserId,
     newVersion: published?.version ?? null,
   });
+  if (recorded && input.answer === "both" && published !== null) {
+    await startSkillComparison({
+      projectId: input.projectId,
+      skillId: question.skillId,
+      newVersion: published.version,
+      checkId: input.checkId,
+    });
+  }
   return recorded
     ? { ok: true, newVersion: published?.version ?? null }
     : { ok: false, status: 409, message: "Already answered." };

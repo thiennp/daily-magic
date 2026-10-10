@@ -5,6 +5,7 @@ import type { AutoSkillsOverview } from "@/features/project-auto-skills/public-a
 import {
   AwcAutoSkillQuestionCard,
   AwcSkillCheckQuestionCard,
+  AwcSkillComparisonCard,
 } from "@/features/projects/autoskills/public-api/presentation";
 
 interface AwcAutoSkillsQuestionListProps {
@@ -44,6 +45,21 @@ export default function AwcAutoSkillsQuestionList({
               void auto.answerSkillCheck(question.id, answer).then((ok) => {
                 if (ok && answer !== "old") onSaved();
               });
+            }}
+          />
+        </li>
+      ))}
+      {overview.comparisons.map((comparison) => (
+        <li key={`compare-${comparison.id}`}>
+          <AwcSkillComparisonCard
+            comparison={comparison}
+            busy={auto.busy}
+            onAnswer={(answer) => {
+              void auto
+                .answerSkillComparison(comparison.id, answer)
+                .then((ok) => {
+                  if (ok && answer === "new") onSaved();
+                });
             }}
           />
         </li>

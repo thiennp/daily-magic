@@ -19,7 +19,7 @@ export const createBotKnowledgeDb = async (): Promise<{
     tool TEXT, skill_id TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`);
   await db.exec(`CREATE TABLE project_skills (
-    project_id TEXT, skill_id TEXT, state TEXT, published_version INTEGER)`);
+    project_id TEXT, skill_id TEXT, name TEXT, state TEXT, published_version INTEGER)`);
   await db.exec(
     fs.readFileSync(
       path.resolve(
@@ -47,6 +47,15 @@ export const createBotKnowledgeDb = async (): Promise<{
       "utf-8",
     ),
   );
+  await db.exec(
+    fs.readFileSync(
+      path.resolve(
+        __dirname,
+        "../../../../db/migrations/141-project-skill-comparisons.sql",
+      ),
+      "utf-8",
+    ),
+  );
   const sql = async (strings: TemplateStringsArray, ...values: unknown[]) => {
     const text = strings.reduce((acc, part, i) => `${acc}$${i}${part}`);
     return (await db.query(text, values)).rows;
@@ -56,7 +65,7 @@ export const createBotKnowledgeDb = async (): Promise<{
 
 export const resetBotKnowledgeDb = async (db: PGlite): Promise<void> => {
   await db.exec(
-    "DELETE FROM project_skill_checks; DELETE FROM project_skill_uses; DELETE FROM project_bot_knowledge_events; DELETE FROM project_skill_lookup_log; DELETE FROM project_skills; DELETE FROM user_projects;",
+    "DELETE FROM project_skill_serves; DELETE FROM project_skill_comparisons; DELETE FROM project_skill_checks; DELETE FROM project_skill_uses; DELETE FROM project_bot_knowledge_events; DELETE FROM project_skill_lookup_log; DELETE FROM project_skills; DELETE FROM user_projects;",
   );
   await db.exec("INSERT INTO user_projects (id) VALUES ('p1')");
 };

@@ -19,6 +19,7 @@ const overview = (patch: Partial<AutoSkillsOverview>): AutoSkillsOverview => ({
   lastCheckedAt: "2026-10-08T11:58:00Z",
   pending: [],
   skillChecks: [],
+  comparisons: [],
   autoSkillIds: [],
   ...patch,
 });
