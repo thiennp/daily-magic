@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { AdminNoAccess } from "@/features/admin/components/public-api/presentation";
-import { ADMIN_COPY } from "@/features/admin/adminCopy.constant";
+import { ADMIN_COPY } from "@/features/admin/public-api/types";
 import { AdminCostControlPanel } from "@/features/billing/public-api/presentation";
 import { getAuthActor } from "@/lib/auth/auth";
 import { isGlobalAdmin } from "@/lib/auth/globalRolePermissions";

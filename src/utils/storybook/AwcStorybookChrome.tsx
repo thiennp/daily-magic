@@ -4,7 +4,7 @@ import { SidebarProvider } from "@/context/SidebarContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { SendTaskModalProvider } from "@/features/agent/SendTaskModalProvider";
 import { AgentWitchDashboardProvider } from "@/features/agent-witch/dashboard/public-api/presentation";
-import AdminShell from "@/features/admin/AdminShell";
+import { AdminShell } from "@/features/admin/public-api/presentation";
 import { AuthSessionProvider } from "@/features/auth/public-api/presentation";
 import { AppShell } from "@/features/shell/public-api/presentation";
 import { APP_SHELL_NARROW_CONTENT_CLASS } from "@/features/shell/public-api/types";

@@ -1,4 +1,4 @@
-import GroupManagementPanel from "@/features/admin/GroupManagementPanel";
+import { GroupManagementPanel } from "@/features/admin/public-api/presentation";
 import type { GroupItem } from "@/features/admin/types/public-api/types";
 import { APP_PAGE_STACK_CLASS } from "@/features/shell/public-api/types";
 

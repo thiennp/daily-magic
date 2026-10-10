@@ -3,7 +3,7 @@ import {
   ReportDetailPageLayout,
 } from "@/features/pages/public-api/presentation";
 import { ConnectionLabPageLayout } from "@/features/agent-witch/connection-lab/public-api/presentation";
-import UserManagementPanel from "@/features/admin/UserManagementPanel";
+import { UserManagementPanel } from "@/features/admin/public-api/presentation";
 import PromptSdlcGuidePage from "@/features/prompt-optimizer/internal/presentation/PromptSdlcGuidePage";
 import PromptSdlcPage from "@/features/prompt-optimizer/internal/presentation/PromptSdlcPage";
 import { ShowcasesIndexPageLayout } from "@/features/showcases/public-api/presentation";

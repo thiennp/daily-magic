@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import UserManagementPanel from "@/features/admin/UserManagementPanel";
+import { UserManagementPanel } from "@/features/admin/public-api/presentation";
 import { getAuthActor } from "@/lib/auth/auth";
 import { isGlobalAdmin } from "@/lib/auth/globalRolePermissions";
 import listAdminUsers from "@/lib/auth/listAdminUsers";
