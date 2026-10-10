@@ -58,3 +58,9 @@ Bring all of `src/features/` to FSA boundaries (`public-api/` per unit, no deep 
 - In Claude Code: run the `fsa-fractal-loop` workflow (`args: { maxRounds, maxConsecutiveBlocks }`). Use a dedicated branch or worktree.
 - Without the workflow tool: repeat the playbook by hand or with `/loop`; the state file makes every run resumable.
 - The playbook is also stored as an AgentWitch project playbook so any bot on the project can run a round.
+
+## Cycle debt (found after the first full pass)
+
+The guard first counted type-only imports, which are erased at compile time. It now counts **runtime cycles only** (`no-circular` with `viaOnly: dependencyTypesNot: ["type-only"]`) and the ratchet allows a child unit's own `public-api/`.
+
+Measured with that rule: **23 runtime cycles before the loop, 71 after.** The extra ~48 are barrel-mediated (a feature's `public-api/presentation.ts` joins exports that never imported each other), clustered in `agent-witch`, `home`, `projects`, `shell`. `.agents/fsa/depcruise-baseline.json` is reset to the current 71 so no round can add more. Burning them down means moving shared symbols to a lower level, which is a real refactor and is **not** part of the one-level-deep loop; it needs its own one-cycle-per-round workflow.

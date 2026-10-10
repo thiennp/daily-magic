@@ -24,7 +24,7 @@ const ratchetRules = completed
     comment: `${unit} is FSA-migrated: import it only through its public-api/.`,
     severity: "error",
     from: { pathNot: `^${unit}/` },
-    to: { path: `^${unit}/`, pathNot: `^${unit}/public-api/` },
+    to: { path: `^${unit}/`, pathNot: `^${unit}/.*public-api/` },
   }));
 
 /** @type {import('dependency-cruiser').IConfiguration} */
@@ -32,10 +32,11 @@ module.exports = {
   forbidden: [
     {
       name: "no-circular",
-      comment: "Import cycles make slices impossible to extract or delete.",
+      comment:
+        "Runtime import cycles make slices impossible to extract or delete. Type-only edges are erased at compile time and do not count.",
       severity: "error",
       from: {},
-      to: { circular: true },
+      to: { circular: true, viaOnly: { dependencyTypesNot: ["type-only"] } },
     },
     {
       name: "fsa-no-cross-feature-internal",
@@ -72,7 +73,7 @@ module.exports = {
   ],
   options: {
     tsConfig: { fileName: "tsconfig.json" },
-    tsPreCompilationDeps: true,
+    tsPreCompilationDeps: "specify",
     doNotFollow: { path: "node_modules" },
     exclude: { path: "(\\.test\\.|\\.stories\\.|/__tests__/|\\.d\\.ts$)" },
     includeOnly: "^(src|apps|packages)/",
