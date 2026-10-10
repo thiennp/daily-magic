@@ -8,6 +8,8 @@
  */
 const completed = (() => {
   try {
+    // CommonJS config file: require() is the only synchronous JSON read here.
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     return require("./.agents/fsa/state.json").completed ?? [];
   } catch {
     return [];
