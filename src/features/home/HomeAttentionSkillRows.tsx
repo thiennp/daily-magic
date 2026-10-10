@@ -1,7 +1,7 @@
 "use client";
 
 import type { AutoSkillQuestionsState } from "@/features/project-auto-skills/public-api/presentation";
-import AwcAutoSkillQuestionCard from "@/features/projects/autoskills/AwcAutoSkillQuestionCard";
+import { AwcAutoSkillQuestionCard } from "@/features/projects/autoskills/public-api/presentation";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 interface HomeAttentionSkillRowsProps {

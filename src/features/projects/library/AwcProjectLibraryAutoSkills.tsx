@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import type { AutoSkillsState } from "@/features/project-auto-skills/public-api/presentation";
-import AwcAutoSkillQuestionCard from "@/features/projects/autoskills/AwcAutoSkillQuestionCard";
+import { AwcAutoSkillQuestionCard } from "@/features/projects/autoskills/public-api/presentation";
 import AwcAutoSkillsActions from "@/features/projects/library/AwcAutoSkillsActions";
 import AwcAutoSkillsAgentPicker from "@/features/projects/library/AwcAutoSkillsAgentPicker";
 import AwcAutoSkillsDeeperScan from "@/features/projects/library/AwcAutoSkillsDeeperScan";
