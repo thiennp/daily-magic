@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import AwlRepairManuallyInfoButton from "@/features/agent-witch/macDevices/repairManually/AwlRepairManuallyInfoButton";
+import { AwlRepairManuallyInfoButton } from "@/features/agent-witch/macDevices/public-api/presentation";
 import { AGENT_WITCH_LOCAL_TOO_OLD_COPY } from "@/features/home/agentWitchLocalTooOldCopy.constant";
 import { AGENT_WITCH_LOCAL_DOWNLOAD_URL } from "@/lib/agentWitch/agentWitchLocalTooOld.constant";
 

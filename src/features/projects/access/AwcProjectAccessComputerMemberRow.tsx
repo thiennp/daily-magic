@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import AwlRepairManuallyInfoButton from "@/features/agent-witch/macDevices/repairManually/AwlRepairManuallyInfoButton";
+import { AwlRepairManuallyInfoButton } from "@/features/agent-witch/macDevices/public-api/presentation";
 import { AWC_PROJECT_COMPUTER_MEMBER_COPY } from "@/features/projects/access/awcProjectComputerMemberCopy.constant";
 import {
   describeComputerAccessMember,

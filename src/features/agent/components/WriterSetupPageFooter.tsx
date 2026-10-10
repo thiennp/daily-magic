@@ -1,4 +1,4 @@
-import { AGENT_WITCH_LOCAL_STATUS_DEEP_LINK } from "@/features/agent-witch/macDevices/openAgentWitchLocalStatus";
+import { AGENT_WITCH_LOCAL_STATUS_DEEP_LINK } from "@/features/agent-witch/macDevices/public-api/types";
 
 export default function WriterSetupPageFooter() {
   return (

@@ -4,7 +4,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { MAC_DEVICE_LOCAL_STATUS_LINK_LABEL } from "@/features/agent-witch/macDevices/macDeviceRowMenuCopy.constant";
+import { MAC_DEVICE_LOCAL_STATUS_LINK_LABEL } from "@/features/agent-witch/macDevices/public-api/types";
 
 const isMobileClient = vi.hoisted(() => ({ value: false }));
 

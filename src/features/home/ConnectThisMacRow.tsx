@@ -1,8 +1,10 @@
 "use client";
 
 import { APP_SURFACE_CTA_PRIMARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import MacDeviceIcon from "@/features/agent-witch/macDevices/MacDeviceIcon";
-import { resolveMacDeviceIconClassName } from "@/features/agent-witch/macDevices/utils/resolveMacDeviceIconClassName";
+import {
+  MacDeviceIcon,
+  resolveMacDeviceIconClassName,
+} from "@/features/agent-witch/macDevices/public-api/presentation";
 import ConnectThisMacButton from "@/features/home/ConnectThisMacButton";
 import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/public-api/types";
 

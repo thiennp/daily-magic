@@ -3,8 +3,10 @@
 import { useCallback, useState } from "react";
 
 import { APP_SURFACE_CTA_SECONDARY_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import ReviveAwlMacModal from "@/features/agent-witch/macDevices/ReviveAwlMacModal";
-import { openAgentWitchLocalStatus } from "@/features/agent-witch/macDevices/openAgentWitchLocalStatus";
+import {
+  ReviveAwlMacModal,
+  openAgentWitchLocalStatus,
+} from "@/features/agent-witch/macDevices/public-api/presentation";
 
 interface HomeOpenLocalStatusButtonProps {
   readonly children: React.ReactNode;

@@ -1,4 +1,4 @@
-import { AGENT_WITCH_LOCAL_PROMPT_OPTIMIZER_DEEP_LINK } from "@/features/agent-witch/macDevices/openAgentWitchLocalStatus";
+import { AGENT_WITCH_LOCAL_PROMPT_OPTIMIZER_DEEP_LINK } from "@/features/agent-witch/macDevices/public-api/types";
 import { PROMPT_SDLC_GUIDE_EXAMPLE } from "@/features/prompt-optimizer/internal/presentation/promptSdlcGuideExamples.constant";
 
 /**

@@ -3,7 +3,7 @@
 import { useState, type ReactNode, type MouseEvent } from "react";
 
 import MacDeviceWakeModal from "./MacDeviceWakeModal";
-import { shouldOpenMacDeviceWakeModal } from "@/features/agent-witch/macDevices/utils/shouldOpenMacDeviceWakeModal";
+import { shouldOpenMacDeviceWakeModal } from "@/features/agent-witch/macDevices/public-api/presentation";
 
 interface MacDeviceOfflineWakeHintProps {
   readonly deviceId: string;

@@ -21,3 +21,7 @@ _None._
 - `agent-witch`
 
 Query: `npm run feature-knowledge:query -- "..." --feature=mac-devices`
+
+## Public API
+
+Outside code imports only from `public-api/types.ts` (deep links, copy constants) and `public-api/presentation.ts` (device row, icon, modals, hooks, helpers).

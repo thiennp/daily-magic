@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { AGENT_WITCH_LOCAL_PROMPT_OPTIMIZER_DEEP_LINK } from "@/features/agent-witch/macDevices/openAgentWitchLocalStatus";
+import { AGENT_WITCH_LOCAL_PROMPT_OPTIMIZER_DEEP_LINK } from "@/features/agent-witch/macDevices/public-api/types";
 import {
   PROMPT_SDLC_AWL_GUIDE_HREF,
   PROMPT_SDLC_AWL_PAGE_HREF,
@@ -12,7 +12,9 @@ describe("promptSdlcAwlHref (AWL-H7 PM-3 b)", () => {
     expect(PROMPT_SDLC_AWL_PAGE_HREF).toBe(
       AGENT_WITCH_LOCAL_PROMPT_OPTIMIZER_DEEP_LINK,
     );
-    expect(PROMPT_SDLC_AWL_PAGE_HREF).toBe("agentwitch-local://prompt-optimizer");
+    expect(PROMPT_SDLC_AWL_PAGE_HREF).toBe(
+      "agentwitch-local://prompt-optimizer",
+    );
     expect(PROMPT_SDLC_AWL_PAGE_HREF).not.toMatch(/^https?:\/\//);
     expect(PROMPT_SDLC_AWL_PAGE_HREF).not.toContain("127.0.0.1");
     expect(PROMPT_SDLC_AWL_PAGE_HREF).not.toContain(":43347");

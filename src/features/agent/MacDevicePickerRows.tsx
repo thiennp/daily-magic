@@ -1,7 +1,9 @@
 "use client";
 
-import MacDeviceRow from "@/features/agent-witch/macDevices/MacDeviceRow";
-import { buildMacDeviceDetailText } from "@/features/agent-witch/macDevices/utils/buildMacDeviceDetailText";
+import {
+  MacDeviceRow,
+  buildMacDeviceDetailText,
+} from "@/features/agent-witch/macDevices/public-api/presentation";
 import {
   canWakeMacDeviceFromBrowser,
   deviceMatchesLocalTokenHash,

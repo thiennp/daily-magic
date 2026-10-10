@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
-import buildAgentWitchLocalLogHref from "@/features/agent-witch/macDevices/utils/buildAgentWitchLocalLogHref";
+import { buildAgentWitchLocalLogHref } from "@/features/agent-witch/macDevices/public-api/presentation";
 
 /** Opens the local log page for a device with a wake port (This computer). */
 const useMacDeviceSeeLocalLog = (input: {
