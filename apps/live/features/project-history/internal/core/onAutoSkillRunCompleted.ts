@@ -1,5 +1,6 @@
 import type { AutoSkillRunRecord } from "./autoSkill.types";
 import { askForRepeatedModules } from "./autoSkillModuleAsk";
+import { autoSkillLog } from "./autoSkillLog";
 import { evaluateRunAlone } from "./evaluateRunAlone";
 import { noteJudgeFailure } from "./noteJudgeFailure";
 import { feedRun } from "./feedAutoSkillRun";
@@ -38,6 +39,7 @@ export const onAutoSkillRunCompleted = async (
 ): Promise<AutoSkillOutcome> => {
   const { projectId, run } = input;
   try {
+    autoSkillLog(`run ${run.runId.slice(0, 12)}: reading settings`);
     const settings = await deps.cloud.getSettings(projectId);
     if (!settings.enabled) {
       return "disabled";
@@ -60,6 +62,7 @@ export const onAutoSkillRunCompleted = async (
       deps.saveState(projectId, state);
       return "paused";
     }
+    autoSkillLog(`run ${run.runId.slice(0, 12)}: opening the local store`);
     const db = deps.openModuleDb();
     if (db === null) {
       deps.saveState(projectId, state);
@@ -78,6 +81,7 @@ export const onAutoSkillRunCompleted = async (
           .catch(() => undefined),
     );
     if (input.evaluateEachRun === true) {
+      autoSkillLog(`run ${run.runId.slice(0, 12)}: judging`);
       deps.saveState(projectId, state);
       return evaluateRunAlone({
         projectId,
