@@ -43,7 +43,12 @@ describe("AwcProjectPitfallsSection wiring", () => {
   });
 
   it("uses Product English Safety rules chrome strings", () => {
-    const combined = `${sectionSource}\n${copySource}`;
+    // Import paths (e.g. ".../public-api/...") are not UI text: only check the rest.
+    const withoutImports = sectionSource.replace(
+      /^import[\s\S]*?from\s+"[^"]+";?$/gm,
+      "",
+    );
+    const combined = `${withoutImports}\n${copySource}`;
     expect(combined).not.toMatch(
       /\b(API|endpoint|JSON|HMAC|beta|experimental|unverified|not yet)\b/i,
     );
