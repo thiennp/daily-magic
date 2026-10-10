@@ -19,6 +19,8 @@ import { PROJECT_HISTORY_TASKS_DIR_NAME } from "./projectHistoryPaths.constant";
 
 /** Newest completed tasks to feed; older ones rarely add a new repeat. */
 const SCAN_MAX_TASKS = 60;
+/** The judge failing this many runs in a row (out of usage, signed out) ends the scan. */
+const MAX_JUDGE_FAILURES = 2;
 
 type StoredTask = {
   readonly taskId: string;
@@ -35,6 +37,8 @@ export type AutoSkillScanSummary = {
   /** Commits of the main branch fed in (0 when the folder has no git). */
   readonly commitsScanned: number;
   readonly asked: number;
+  /** Why the scan stopped early (the judge could not answer), when it did. */
+  readonly stoppedReason?: string;
   readonly outcomes: Readonly<Partial<Record<AutoSkillOutcome, number>>>;
 };
 
@@ -104,6 +108,9 @@ export const describeScan = (
   summary: AutoSkillScanSummary,
   branch: string | null = null,
 ): string => {
+  if (summary.stoppedReason !== undefined) {
+    return `Stopped: the judge could not answer (${summary.stoppedReason}). Check that it is signed in and has usage left; runs it already judged are kept.`;
+  }
   const parts = [
     summary.scanned === 0
       ? null
@@ -161,6 +168,11 @@ export const scanProjectTasksForAutoSkills = async (input: {
     prepared,
     describeScanStart(tasks.length, allCommits.length),
   );
+  const health = { failures: 0, reason: null as string | null };
+  const trackJudge = (outcome: AutoSkillOutcome): boolean => {
+    health.failures = outcome === "judge_failed" ? health.failures + 1 : 0;
+    return health.failures >= MAX_JUDGE_FAILURES;
+  };
   let stopped = false;
   for (const [index, task] of tasks.entries()) {
     const outcome = await reportAutoSkillRunCompleted({
@@ -176,6 +188,9 @@ export const scanProjectTasksForAutoSkills = async (input: {
           (task.promptBody ?? "").split("\n", 1)[0]?.trim().slice(0, 120) ?? "",
       },
       layout: input.layout,
+      onJudgeFailure: (reason) => {
+        health.reason = reason;
+      },
       ...(prepared !== null ? { availability: prepared.availability } : {}),
       statusNote: describeScanProgress("task", index + 1, tasks.length),
       evaluateEachRun: true,
@@ -185,7 +200,7 @@ export const scanProjectTasksForAutoSkills = async (input: {
       ...(task.resultBody !== null ? { agentOutput: task.resultBody } : {}),
     });
     outcomes[outcome] = (outcomes[outcome] ?? 0) + 1;
-    if (outcome === "disabled" || outcome === "paused") {
+    if (outcome === "disabled" || outcome === "paused" || trackJudge(outcome)) {
       stopped = true;
       break;
     }
@@ -210,6 +225,9 @@ export const scanProjectTasksForAutoSkills = async (input: {
       },
       layout: input.layout,
       folderPath: input.folderPath ?? "",
+      onJudgeFailure: (reason) => {
+        health.reason = reason;
+      },
       ...(prepared !== null ? { availability: prepared.availability } : {}),
       evaluateEachRun: true,
       statusNote: describeScanProgress(
@@ -219,7 +237,7 @@ export const scanProjectTasksForAutoSkills = async (input: {
       ),
     });
     outcomes[outcome] = (outcomes[outcome] ?? 0) + 1;
-    if (outcome === "disabled" || outcome === "paused") {
+    if (outcome === "disabled" || outcome === "paused" || trackJudge(outcome)) {
       break;
     }
   }
@@ -227,6 +245,9 @@ export const scanProjectTasksForAutoSkills = async (input: {
     scanned: tasks.length,
     commitsScanned: commitsToScan.length,
     asked: outcomes.asked ?? 0,
+    ...(health.failures >= MAX_JUDGE_FAILURES
+      ? { stoppedReason: health.reason ?? "judge_failed" }
+      : {}),
     outcomes,
   };
   const choice = prepared?.choice ?? null;

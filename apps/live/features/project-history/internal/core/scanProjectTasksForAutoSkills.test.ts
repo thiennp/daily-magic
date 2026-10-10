@@ -83,6 +83,19 @@ describe("scanProjectTasksForAutoSkills", () => {
     fs.rmSync(state.root, { recursive: true, force: true });
   });
 
+  it("stops after two runs in a row the judge could not answer, and says why", async () => {
+    for (const id of ["a", "b", "c", "d"]) {
+      writeTask(tasksDir, id, {
+        createdAt: `2026-10-08T0${id.charCodeAt(0) - 96}:00:00.000Z`,
+      });
+    }
+    state.outcome = "judge_failed";
+    const summary = await scan();
+    expect(state.fed).toEqual(["a", "b"]);
+    expect(summary.stoppedReason).toBe("judge_failed");
+    expect(state.statusNote).toContain("Stopped: the judge could not answer");
+  });
+
   it("feeds only completed tasks with a prompt, oldest first", async () => {
     writeTask(tasksDir, "b", { createdAt: "2026-10-08T11:00:00.000Z" });
     writeTask(tasksDir, "a", { createdAt: "2026-10-08T09:00:00.000Z" });

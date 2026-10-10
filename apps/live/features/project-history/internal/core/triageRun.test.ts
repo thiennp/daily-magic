@@ -35,11 +35,14 @@ describe("triageRun", () => {
     expect(prompt).toContain("judge ONLY these changes");
   });
 
-  it("treats a failed call as unknown, so the draft step still decides", async () => {
+  it("reports a failed call with its reason", async () => {
     const failing: AutoSkillCompleter = vi.fn(async () => ({
       ok: false as const,
       reason: "agent_timeout_or_missing",
     }));
-    expect(await triageRun(run, failing)).toBe("unknown");
+    expect(await triageRun(run, failing)).toEqual({
+      kind: "failed",
+      reason: "agent_timeout_or_missing",
+    });
   });
 });

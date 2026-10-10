@@ -103,6 +103,26 @@ describe("evaluateRunAlone", () => {
     expect(completer).not.toHaveBeenCalled();
   });
 
+  it("reports a judge that cannot answer, and tries the run again next scan", async () => {
+    const { db } = { db: new DatabaseSync(":memory:") };
+    ensureAutoSkillModuleSchema(db);
+    const down: AutoSkillCompleter = async () => ({
+      ok: false as const,
+      reason: "agent_exit_1: You're out of usage",
+    });
+    const base = {
+      projectId: "p1",
+      run: r1,
+      db,
+      cloud: {} as AutoSkillCloud,
+      completer: down,
+      judgeLabel: "Cursor",
+      knownClusterIds: new Set<string>(),
+    };
+    expect(await evaluateRunAlone(base)).toBe("judge_failed");
+    expect(await evaluateRunAlone(base)).toBe("judge_failed");
+  });
+
   it("retries next scan when the draft fails", async () => {
     const failing = setup(YES, "this is not a skill at all");
     expect(await failing.evaluate(r1)).toBe("draft_failed");

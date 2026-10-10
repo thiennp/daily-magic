@@ -36,14 +36,20 @@ export const parseTriage = (text: string): RunTriage => {
   }
 };
 
+export type TriageResult =
+  | { readonly kind: RunTriage }
+  | { readonly kind: "failed"; readonly reason: string };
+
 export const triageRun = async (
   run: AutoSkillRunRecord,
   completer: AutoSkillCompleter,
-): Promise<RunTriage> => {
+): Promise<TriageResult> => {
   const answered = await completer({
     prompt: buildTriagePrompt(run),
     json: true,
     timeoutMs: TRIAGE_TIMEOUT_MS,
   });
-  return answered.ok ? parseTriage(answered.text) : "unknown";
+  return answered.ok
+    ? { kind: parseTriage(answered.text) }
+    : { kind: "failed", reason: answered.reason };
 };

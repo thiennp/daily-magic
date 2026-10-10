@@ -9,6 +9,7 @@ import type { AgentWitchCloudApiConfig } from "../../../projects/internal/core/a
 
 import type {
   AutoSkillAvailability,
+  AutoSkillCompleter,
   AutoSkillRunRecord,
 } from "./autoSkill.types";
 import {
@@ -31,6 +32,19 @@ import {
 
 const EMBED_TIMEOUT_MS = 5_000;
 
+/** Tell the caller why the judge failed, without changing what the completer returns. */
+const reportJudgeFailures = (
+  completer: AutoSkillCompleter,
+  onFailure: ((reason: string) => void) | undefined,
+): AutoSkillCompleter =>
+  onFailure === undefined
+    ? completer
+    : async (call) => {
+        const result = await completer(call);
+        if (!result.ok) onFailure(result.reason);
+        return result;
+      };
+
 /**
  * Production wiring for the "completed run" hook: real cloud, Ollama probe,
  * signed-in CLI probe. Fire-and-forget safe (never throws).
@@ -50,6 +64,8 @@ export const reportAutoSkillRunCompleted = async (input: {
   readonly evaluateEachRun?: boolean;
   /** Judge availability probed once by the caller (a scan), so each run skips its own probe. */
   readonly availability?: AutoSkillAvailability;
+  /** Called with the reason when the judge itself could not answer (out of usage, not signed in). */
+  readonly onJudgeFailure?: (reason: string) => void;
 }): Promise<AutoSkillOutcome> =>
   onAutoSkillRunCompleted(
     {
@@ -99,19 +115,19 @@ export const reportAutoSkillRunCompleted = async (input: {
           ),
           botName: null,
         },
-      makeCompleter: (kind, availability) => {
-        if (kind === "ollama" && availability.ollamaModel !== null) {
-          return createOllamaAutoSkillCompleter(availability.ollamaModel);
-        }
-        if (kind === "agent" && availability.agentWriter !== null) {
-          return createAgentAutoSkillCompleter(
-            availability.agentWriter as HarnessWriterAgentId,
-            input.folderPath,
-            undefined,
-            input.evaluateEachRun === true,
-          );
-        }
-        return async () => ({ ok: false, reason: "judge_unavailable" });
-      },
+      makeCompleter: (kind, availability) =>
+        reportJudgeFailures(
+          kind === "ollama" && availability.ollamaModel !== null
+            ? createOllamaAutoSkillCompleter(availability.ollamaModel)
+            : kind === "agent" && availability.agentWriter !== null
+              ? createAgentAutoSkillCompleter(
+                  availability.agentWriter as HarnessWriterAgentId,
+                  input.folderPath,
+                  undefined,
+                  input.evaluateEachRun === true,
+                )
+              : async () => ({ ok: false, reason: "judge_unavailable" }),
+          input.onJudgeFailure,
+        ),
     },
   );

@@ -13,12 +13,18 @@ export type AutoSkillExec = (
   command: string,
   args: readonly string[],
   opts: { readonly timeoutMs: number; readonly cwd?: string },
-) => Promise<{ readonly code: number | null; readonly stdout: string }>;
+) => Promise<{
+  readonly code: number | null;
+  readonly stdout: string;
+  /** What the tool printed on stderr (or its error), trimmed; for the failure reason. */
+  readonly stderr?: string;
+}>;
 
 /** Real spawn: resolves with exit code + stdout (never rejects). */
 export const execAutoSkillCommand: AutoSkillExec = (command, args, opts) =>
   new Promise((resolve) => {
     const chunks: Buffer[] = [];
+    const errors: Buffer[] = [];
     const child = spawn(command, [...args], {
       cwd: opts.cwd ?? os.homedir(),
       stdio: ["ignore", "pipe", "pipe"],
@@ -28,13 +34,18 @@ export const execAutoSkillCommand: AutoSkillExec = (command, args, opts) =>
       resolve({ code: null, stdout: "" });
     }, opts.timeoutMs);
     child.stdout.on("data", (c: Buffer) => chunks.push(Buffer.from(c)));
+    child.stderr.on("data", (c: Buffer) => errors.push(Buffer.from(c)));
     child.on("error", () => {
       clearTimeout(timer);
       resolve({ code: null, stdout: "" });
     });
     child.on("close", (code) => {
       clearTimeout(timer);
-      resolve({ code, stdout: Buffer.concat(chunks).toString("utf8") });
+      resolve({
+        code,
+        stdout: Buffer.concat(chunks).toString("utf8"),
+        stderr: Buffer.concat(errors).toString("utf8").slice(-2_000),
+      });
     });
   });
 
@@ -114,6 +125,8 @@ const buildReadOnlyInvocation = (
         "ask",
         "--sandbox",
         "enabled",
+        "--model",
+        "auto",
         "--output-format",
         "text",
         prompt,
@@ -143,6 +156,18 @@ const buildReadOnlyInvocation = (
 };
 
 /** Owner-agent completer: read-only, headless, fails on non-zero exit. */
+/** ": <first line>" of what the tool said when it failed, so "out of usage" is visible. */
+const describeFailure = (result: {
+  readonly stdout: string;
+  readonly stderr?: string;
+}): string => {
+  const line = `${result.stderr ?? ""}\n${result.stdout}`
+    .split("\n")
+    .map((l) => l.trim())
+    .find((l) => l.length > 0);
+  return line === undefined ? "" : `: ${line.slice(0, 160)}`;
+};
+
 export const createAgentAutoSkillCompleter =
   (
     writer: HarnessWriterAgentId,
@@ -164,7 +189,10 @@ export const createAgentAutoSkillCompleter =
       return { ok: false, reason: "agent_timeout_or_missing" };
     }
     if (result.code !== 0 || result.stdout.trim().length === 0) {
-      return { ok: false, reason: `agent_exit_${result.code}` };
+      return {
+        ok: false,
+        reason: `agent_exit_${result.code}${describeFailure(result)}`,
+      };
     }
     return { ok: true, text: result.stdout };
   };

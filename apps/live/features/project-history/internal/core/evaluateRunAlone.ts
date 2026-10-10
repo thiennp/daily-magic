@@ -57,7 +57,11 @@ export const evaluateRunAlone = async (input: {
     return "no_repeat";
   }
   // A short yes/no first: most runs are one-off edits, and a whole draft costs minutes.
-  if ((await triageRun(run, input.completer)) === "not_reusable") {
+  const triage = await triageRun(run, input.completer);
+  if (triage.kind === "failed") {
+    return "judge_failed"; // not marked: the next scan tries again
+  }
+  if (triage.kind === "not_reusable") {
     markJudged(db, run.runId, "not_reusable");
     return "no_repeat";
   }
@@ -69,7 +73,9 @@ export const evaluateRunAlone = async (input: {
   );
   if (!draft.ok) {
     if (draft.reason !== "not_reusable") {
-      return "draft_failed"; // not marked: the next scan tries again
+      // Not marked: the next scan tries again. A bad answer is a draft
+      // failure; the judge itself failing (out of usage, not signed in) is not.
+      return draft.reason === "draft_invalid" ? "draft_failed" : "judge_failed";
     }
     markJudged(db, run.runId, "not_reusable");
     return "no_repeat";
