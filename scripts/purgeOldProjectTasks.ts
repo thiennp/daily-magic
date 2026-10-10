@@ -1,7 +1,6 @@
 import { writeFile } from "node:fs/promises";
 
-import { neon } from "@neondatabase/serverless";
-
+import { createSql } from "../src/lib/db";
 import { parsePurgeArgs, purgeStatuses } from "./purgeOldProjectTasks.util";
 
 /**
@@ -23,7 +22,7 @@ const main = async (): Promise<void> => {
     console.error("DATABASE_URL is not set.");
     process.exit(1);
   }
-  const sql = neon(url);
+  const sql = createSql(url);
   const statuses = [...purgeStatuses(options.includeOpen)];
   const rows = (await sql`
     SELECT t.* FROM project_task_records t

@@ -35,7 +35,7 @@ Use Neon PostgreSQL. Set `DATABASE_URL` in the hosting provider (Railway, or Ver
 npm run db:migrate
 ```
 
-Railway production runs this before start via `preDeployCommand`. Locally, migrations use the Neon driver (no `psql` required).
+Railway production runs this before start via `preDeployCommand`. Locally, migrations use the `pg` driver (no `psql` required).
 
 Overlapping deploys can run that command at the same time. `db:migrate` holds a transaction advisory lock on one database connection and skips a file already stored in `schema_migrations`, so the second deploy does not fail on a duplicate migration filename.
 

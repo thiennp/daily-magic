@@ -24,9 +24,9 @@ Local dev: `npm run dev` (same upgrade path on `http://localhost:3000`). Use `np
 
 ## Neon database
 
-- **Driver:** `@neondatabase/serverless` via `DATABASE_URL`.
+- **Driver:** `pg` (node-postgres) via `DATABASE_URL` — works with Railway Postgres or any Postgres.
 - **Schema:** `db/schema.sql`, incremental `db/migrations/*`.
-- **Apply locally:** `npm run db:schema` (needs `psql`) or `npm run db:migrate` (Neon driver, no `psql`).
+- **Apply locally:** `npm run db:schema` (needs `psql`) or `npm run db:migrate` (`pg` driver, no `psql`).
 - **Legacy DBs without `schema_migrations`:** `npm run db:migrate:bootstrap`.
 
 Runbook: [deployment.md](../../development/deployment.md).

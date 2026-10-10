@@ -9,10 +9,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { neonConfig, Pool } from "@neondatabase/serverless";
-import ws from "ws";
-
-neonConfig.webSocketConstructor = ws;
+import { Pool } from "pg";
 
 const MIGRATION = join(
   process.cwd(),
@@ -55,6 +52,9 @@ const main = async (): Promise<void> => {
 };
 
 main().catch((error: unknown) => {
-  console.error("backfill-073 failed:", error instanceof Error ? error.message : "unknown");
+  console.error(
+    "backfill-073 failed:",
+    error instanceof Error ? error.message : "unknown",
+  );
   process.exit(1);
 });

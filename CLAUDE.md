@@ -10,7 +10,7 @@ Project guidance for Claude and other AI agents. Rules live in **`.cursor/rules/
 
 Stack: Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Neon PostgreSQL, Vercel.
 
-**Stack:** Next.js · React 19 · TypeScript · Tailwind CSS 4 · Neon (`@neondatabase/serverless`) · Vercel
+**Stack:** Next.js · React 19 · TypeScript · Tailwind CSS 4 · Postgres (`pg`; Railway) · Railway
 
 **Key routes:**
 
