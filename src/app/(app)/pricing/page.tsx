@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import PricingPageLayout from "@/features/pricing/PricingPageLayout";
+import { PricingPageLayout } from "@/features/pricing/public-api/presentation";
 import MarketingShell from "@/features/marketing/MarketingShell";
 import AppShell from "@/features/shell/AppShell";
 import { getAuthActor } from "@/lib/auth/auth";
