@@ -1,5 +1,5 @@
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
-import { AGENT_RUN_TIMED_OUT_COPY } from "@/features/reports/agentRunTimedOutCopy.constant";
+import { AGENT_RUN_TIMED_OUT_COPY } from "@/features/reports/public-api/types";
 
 export const AGENT_LIVE_TERMINAL_STATUS_LABEL: Record<
   AgentLiveTerminalStatus,

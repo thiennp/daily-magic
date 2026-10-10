@@ -1,4 +1,4 @@
-import { upsertAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { upsertAgentRunLocalCache } from "@/features/reports/public-api/presentation";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 /** a13083ee: failed, Stalled and awaiting runs of the last 7 days (max 50). */

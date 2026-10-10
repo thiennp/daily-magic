@@ -12,7 +12,7 @@ import {
   getPairedDevicesSnapshot,
   refreshPairedDevices,
 } from "@/features/agent-witch/pairedDevicesResource";
-import { listAgentRunsLocalCache } from "@/features/reports/agentRunLocalCache";
+import { listAgentRunsLocalCache } from "@/features/reports/public-api/presentation";
 import type { OnboardingStep } from "@/features/home/utils/buildOnboardingSteps";
 
 export type { OnboardingStep } from "@/features/home/utils/buildOnboardingSteps";

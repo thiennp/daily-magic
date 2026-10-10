@@ -1,7 +1,7 @@
 import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { SendTaskComposerPickerItem } from "@/features/agent/utils/buildSendTaskComposerPickerItems";
-import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { getAgentRunLocalCache } from "@/features/reports/public-api/presentation";
 import { buildAgentRunContinueHref } from "@/features/reports/utils/public-api/presentation";
 import { canContinueAgentRunOnStoredMac } from "@/features/reports/utils/public-api/presentation";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";

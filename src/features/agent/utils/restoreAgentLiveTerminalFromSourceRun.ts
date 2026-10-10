@@ -5,7 +5,7 @@ import { mapAgentRunStatusToLiveTerminalStatus } from "@/features/agent/utils/ma
 import { readTerminalStore } from "@/features/agent/utils/agentLiveTerminalLocalStoreIO";
 import { restoreAgentLiveTerminalSession } from "@/features/agent/utils/restoreAgentLiveTerminalSession";
 import { isRestorableAgentLiveTerminalStatus } from "@/features/agent/utils/isRestorableAgentLiveTerminalStatus";
-import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { getAgentRunLocalCache } from "@/features/reports/public-api/presentation";
 import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";
 import { isAgentRunSilentPastStall } from "@/lib/dispatch/isAgentRunSilentPastStall";
 import { seedRestoredAgentLivePendingInput } from "@/features/agent/utils/seedRestoredAgentLivePendingInput";

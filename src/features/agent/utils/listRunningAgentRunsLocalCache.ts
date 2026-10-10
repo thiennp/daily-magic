@@ -1,5 +1,5 @@
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
-import { listAgentRunsLocalCache } from "@/features/reports/agentRunLocalCache";
+import { listAgentRunsLocalCache } from "@/features/reports/public-api/presentation";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 /** Jobs still in flight on this browser (Home running list / expand). */

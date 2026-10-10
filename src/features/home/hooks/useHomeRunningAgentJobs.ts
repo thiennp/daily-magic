@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 
 import { listRunningAgentRunsLocalCache } from "@/features/agent/utils/listRunningAgentRunsLocalCache";
-import { AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT } from "@/features/reports/agentRunLocalCache";
+import { AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT } from "@/features/reports/public-api/presentation";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 const runningJobsCache: {

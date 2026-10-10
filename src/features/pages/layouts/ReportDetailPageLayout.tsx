@@ -1,4 +1,4 @@
-import AgentRunDetail from "@/features/reports/AgentRunDetail";
+import { AgentRunDetail } from "@/features/reports/public-api/presentation";
 
 interface ReportDetailPageLayoutProps {
   readonly runId: string;

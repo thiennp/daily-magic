@@ -7,7 +7,7 @@ import {
   buildAgentRunRecordSocketMessage,
   isTerminalAgentRunRecordStatus,
 } from "@/features/agent/utils/agentLiveRunRecordResync";
-import { fetchAgentRunDetail } from "@/features/reports/fetchAgentRunDetail";
+import { fetchAgentRunDetail } from "@/features/reports/public-api/presentation";
 
 /** The host posts the run result a moment after the stream ends. */
 const RECONCILE_DELAYS_MS = [2_000, 8_000] as const;

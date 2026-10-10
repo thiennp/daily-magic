@@ -14,7 +14,7 @@ import {
   AGENT_LIVE_STOPPING_RUN_RECORD_RESYNC_MS,
 } from "@/features/agent/utils/agentLiveProgressStall.constant";
 import { isAgentLiveTerminalWorking } from "@/features/agent/utils/isAgentLiveTerminalWorking";
-import { fetchAgentRunDetail } from "@/features/reports/fetchAgentRunDetail";
+import { fetchAgentRunDetail } from "@/features/reports/public-api/presentation";
 
 const resyncAgentLiveRunRecordAsync = async (
   runId: string,

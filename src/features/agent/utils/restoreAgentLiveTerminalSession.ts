@@ -3,7 +3,7 @@ import type { PersistedTerminalSession } from "@/features/agent/utils/agentLiveT
 import type { AgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalState.type";
 import { initialAgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalState.type";
 import { shouldPersistAgentLiveTerminalOutput } from "@/features/agent/utils/shouldPersistAgentLiveTerminalOutput";
-import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { getAgentRunLocalCache } from "@/features/reports/public-api/presentation";
 import { resolveRestoredLiveTerminalStatus } from "@/features/agent/utils/resolveRestoredLiveTerminalStatus";
 import { resolveAgentRunLastAliveMs } from "@/lib/dispatch/isAgentRunSilentPastStall";
 import { seedRestoredAgentLivePendingInput } from "@/features/agent/utils/seedRestoredAgentLivePendingInput";

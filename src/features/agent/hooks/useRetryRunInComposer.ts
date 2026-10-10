@@ -4,8 +4,8 @@ import { useCallback } from "react";
 
 import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
 import { retryRunInComposer } from "@/features/agent/utils/retryRunInComposer";
-import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
-import { fetchAgentRunDetail } from "@/features/reports/fetchAgentRunDetail";
+import { getAgentRunLocalCache } from "@/features/reports/public-api/presentation";
+import { fetchAgentRunDetail } from "@/features/reports/public-api/presentation";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 const loadRunForRetry = async (

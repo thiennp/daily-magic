@@ -2,8 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
-import { fetchAgentRunDetail } from "@/features/reports/fetchAgentRunDetail";
-import { upsertAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { fetchAgentRunDetail } from "@/features/reports/public-api/presentation";
+import { upsertAgentRunLocalCache } from "@/features/reports/public-api/presentation";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 /**

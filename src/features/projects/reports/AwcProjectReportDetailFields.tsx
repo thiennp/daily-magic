@@ -13,7 +13,7 @@ import {
 import { resolveProjectReportDetailView } from "@/features/projects/reports/utils/resolveProjectReportDetailView";
 import { resolveAgentRunDetailResultOutputForHonesty } from "@/features/reports/utils/public-api/presentation";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
-import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { getAgentRunLocalCache } from "@/features/reports/public-api/presentation";
 
 const LABEL_CLASS =
   "text-[12px] font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-400";

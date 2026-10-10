@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import {
   AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT,
   listAgentRunsLocalCache,
-} from "@/features/reports/agentRunLocalCache";
+} from "@/features/reports/public-api/presentation";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 const DEFAULT_HISTORY_LIMIT = 5;

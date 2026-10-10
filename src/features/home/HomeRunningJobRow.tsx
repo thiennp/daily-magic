@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { useComposerApprovalWaitingLabel } from "@/features/agent/hooks/useComposerApprovalWaitingLabel";
 import { sanitizeAgentRunTextForDisplay } from "@/features/agent/utils/sanitizeAgentRunTextForDisplay";
-import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
+import { AgentRunStatusBadge } from "@/features/reports/public-api/presentation";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import {
   resolveHomeRunningJobBadgeClassName,

@@ -8,7 +8,7 @@ import { shouldShowAgentLiveRetry } from "@/features/agent/utils/shouldShowAgent
 import { useAgentRunInputRequest } from "@/features/dispatch/agentRunInputStore";
 import { requestAgentRunInputModalReopen } from "@/features/dispatch/utils/agentRunInputModalEvents";
 import { resolveRunInputReopenRequest } from "@/features/dispatch/utils/resolveRunInputReopenRequest";
-import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { getAgentRunLocalCache } from "@/features/reports/public-api/presentation";
 
 interface AgentLiveProgressFeedStatusHeaderProps {
   readonly activeRunId?: string | null;

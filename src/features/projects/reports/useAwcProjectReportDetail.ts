@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { fetchAgentRunDetail } from "@/features/reports/fetchAgentRunDetail";
+import { fetchAgentRunDetail } from "@/features/reports/public-api/presentation";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
 export type AwcProjectReportDetailState =

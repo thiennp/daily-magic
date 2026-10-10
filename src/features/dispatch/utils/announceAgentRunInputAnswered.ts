@@ -1,7 +1,7 @@
 import {
   getAgentRunLocalCache,
   upsertAgentRunLocalCache,
-} from "@/features/reports/agentRunLocalCache";
+} from "@/features/reports/public-api/presentation";
 
 export const AGENT_WITCH_RUN_INPUT_ANSWERED_EVENT =
   "agent-witch:run-input-answered";

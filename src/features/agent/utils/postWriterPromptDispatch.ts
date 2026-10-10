@@ -1,6 +1,6 @@
 import { retryPostClaudePromptDispatch } from "@/features/agent/utils/retryPostClaudePromptDispatch";
 import { readDispatchHttpResponseError } from "@/features/agent/utils/readDispatchHttpResponseError";
-import { upsertAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { upsertAgentRunLocalCache } from "@/features/reports/public-api/presentation";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";

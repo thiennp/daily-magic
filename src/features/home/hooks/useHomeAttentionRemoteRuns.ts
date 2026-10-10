@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 
 import { loadHomeAttentionRemoteRuns } from "@/features/home/utils/loadHomeAttentionRemoteRuns";
-import { POLL_INTERVAL_MS } from "@/features/reports/agentRunsPolling.constant";
+import { POLL_INTERVAL_MS } from "@/features/reports/public-api/types";
 
 const HOME_ATTENTION_REMOTE_REFRESH_MS = POLL_INTERVAL_MS * 12;
 

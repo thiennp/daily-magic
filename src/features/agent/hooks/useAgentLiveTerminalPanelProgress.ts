@@ -1,6 +1,6 @@
 import { useComposerApprovalWaitingLabel } from "@/features/agent/hooks/useComposerApprovalWaitingLabel";
 import { useAgentLiveProgressStallState } from "@/features/agent/hooks/useAgentLiveProgressStallState";
-import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { getAgentRunLocalCache } from "@/features/reports/public-api/presentation";
 import { useAgentRunHeartbeatStallReset } from "@/features/agent/hooks/useAgentRunHeartbeatStallReset";
 import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/public-api/presentation";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";

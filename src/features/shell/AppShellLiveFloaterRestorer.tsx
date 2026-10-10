@@ -7,8 +7,8 @@ import {
   clearLiveFloaterRunId,
   getLiveFloaterRunId,
 } from "@/features/agent/utils/liveFloaterRunIdStorage";
-import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
-import { fetchAgentRunDetail } from "@/features/reports/fetchAgentRunDetail";
+import { getAgentRunLocalCache } from "@/features/reports/public-api/presentation";
+import { fetchAgentRunDetail } from "@/features/reports/public-api/presentation";
 import { isAgentRunSilentPastStall } from "@/lib/dispatch/isAgentRunSilentPastStall";
 import { hasPersistedInProgressAgentLiveTerminalSession } from "@/features/agent/utils/hasPersistedInProgressAgentLiveTerminalSession";
 import {

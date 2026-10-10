@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { listRunningAgentRunsLocalCache } from "@/features/agent/utils/listRunningAgentRunsLocalCache";
-import { upsertAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { upsertAgentRunLocalCache } from "@/features/reports/public-api/presentation";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { DispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";

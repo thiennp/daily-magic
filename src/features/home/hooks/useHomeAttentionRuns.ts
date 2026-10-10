@@ -6,7 +6,7 @@ import selectHomeAttentionRuns from "@/features/home/utils/selectHomeAttentionRu
 import {
   AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT,
   listAgentRunsLocalCache,
-} from "@/features/reports/agentRunLocalCache";
+} from "@/features/reports/public-api/presentation";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 const EMPTY: readonly AgentRunRecord[] = [];

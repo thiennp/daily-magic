@@ -5,7 +5,7 @@ import type { useWsTestPromptHandlers } from "@/features/agent/hooks/useWsTestPr
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import { finishSendTaskSession } from "@/features/agent/utils/finishSendTaskSession";
 import { resolveEndedRunRetryPrefill } from "@/features/agent/utils/resolveEndedRunRetryPrefill";
-import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { getAgentRunLocalCache } from "@/features/reports/public-api/presentation";
 
 /**
  * 73820cb1 (Testi run 4 @298): an agy PTY run leaves the live shell open, and

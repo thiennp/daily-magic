@@ -8,7 +8,7 @@ import {
   SEND_TASK_WRITER_AGENT_QUERY_PARAM,
 } from "@/features/agent/constants/public-api/types";
 import { resolveSendTaskLinkWriterChoice } from "@/features/agent/utils/resolveSendTaskLinkWriterAgent";
-import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { getAgentRunLocalCache } from "@/features/reports/public-api/presentation";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 /**
