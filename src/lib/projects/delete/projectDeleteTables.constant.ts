@@ -55,6 +55,7 @@ export const PROJECT_DELETE_CASCADE_CHILD_TABLES = [
   "project_task_refinement",
   "project_bot_knowledge_events",
   "project_skill_uses",
+  "project_skill_checks",
   "project_task_records",
   "project_task_sync_settings",
   "project_updated_notify_pending",

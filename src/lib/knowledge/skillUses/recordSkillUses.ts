@@ -1,4 +1,5 @@
 import { ensureProjectSkillUsesSchema } from "@/lib/knowledge/skillUses/ensureProjectSkillUsesSchema";
+import { queueSkillChecksForRun } from "@/lib/knowledge/skillUses/queueSkillChecks";
 import { getSql } from "@/lib/db";
 
 /** A skill fetched this recently before a claim counts as used by that run. */
@@ -58,6 +59,7 @@ export const recordSkillUsesOnRelease = async (input: {
         reason_fingerprint = ${input.fingerprint}, released_at = NOW()
       WHERE project_id = ${input.projectId} AND task_id = ${input.taskId}
         AND fence = ${input.fence}`;
+    await queueSkillChecksForRun(input);
   } catch (error: unknown) {
     console.error("skill use release record failed", {
       error: error instanceof Error ? error.message : "record_failed",

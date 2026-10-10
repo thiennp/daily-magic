@@ -18,11 +18,14 @@ vi.mock("@/lib/knowledge/skillUses/ensureProjectSkillUsesSchema", () => ({
 import {
   claimTask,
   createBotKnowledgeDb,
+  resetBotKnowledgeDb,
+} from "@/lib/knowledge/bots/botKnowledgePglite.fixtures";
+import {
   logSkillGet,
   publishSkill,
-  resetBotKnowledgeDb,
+  skillCheckRows,
   skillUseRows,
-} from "@/lib/knowledge/bots/botKnowledgePglite.fixtures";
+} from "@/lib/knowledge/skillUses/skillUsesPglite.fixtures";
 import { recordBotRelease } from "@/lib/knowledge/bots/recordBotKnowledgeEvents";
 
 describe("skill uses of assistant runs (PGlite, real migration SQL)", () => {
