@@ -1,5 +1,5 @@
-import companyOnboardIn30Minutes from "@/features/showcases/articles/companyOnboardIn30Minutes.article";
-import onboardIn15Minutes from "@/features/showcases/articles/onboardIn15Minutes.article";
+import { companyOnboardIn30Minutes } from "@/features/showcases/articles/public-api/types";
+import { onboardIn15Minutes } from "@/features/showcases/articles/public-api/types";
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
 
 export const ONBOARDING_SHOWCASE_ARTICLES: readonly ShowcaseArticle[] = [

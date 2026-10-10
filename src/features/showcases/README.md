@@ -31,3 +31,7 @@ _None._
 - `marketing`
 
 Query: `npm run feature-knowledge:query -- "..." --feature=showcases`
+
+## Articles public API
+
+`src/features/showcases/articles/public-api/types.ts` re-exports the article objects; import them from there outside `articles/`.

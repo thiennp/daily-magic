@@ -1,9 +1,9 @@
-import e2eAutomationsAndReports from "@/features/showcases/articles/e2eAutomationsAndReports.article";
-import e2eCompanyAdmin from "@/features/showcases/articles/e2eCompanyAdmin.article";
-import e2eHomeAndOnboarding from "@/features/showcases/articles/e2eHomeAndOnboarding.article";
-import e2eMarketplaceAndLibrary from "@/features/showcases/articles/e2eMarketplaceAndLibrary.article";
-import e2eSelfDelegate from "@/features/showcases/articles/e2eSelfDelegate.article";
-import e2eTestAccountSignIn from "@/features/showcases/articles/e2eTestAccountSignIn.article";
+import { e2eAutomationsAndReports } from "@/features/showcases/articles/public-api/types";
+import { e2eCompanyAdmin } from "@/features/showcases/articles/public-api/types";
+import { e2eHomeAndOnboarding } from "@/features/showcases/articles/public-api/types";
+import { e2eMarketplaceAndLibrary } from "@/features/showcases/articles/public-api/types";
+import { e2eSelfDelegate } from "@/features/showcases/articles/public-api/types";
+import { e2eTestAccountSignIn } from "@/features/showcases/articles/public-api/types";
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
 
 export const E2E_SHOWCASE_ARTICLES: readonly ShowcaseArticle[] = [

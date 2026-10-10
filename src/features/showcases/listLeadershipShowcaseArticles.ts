@@ -1,5 +1,5 @@
-import automateRecurringWorkWithoutHeadcount from "@/features/showcases/articles/automateRecurringWorkWithoutHeadcount.article";
-import standardizeAiWorkAcrossTheTeam from "@/features/showcases/articles/standardizeAiWorkAcrossTheTeam.article";
+import { automateRecurringWorkWithoutHeadcount } from "@/features/showcases/articles/public-api/types";
+import { standardizeAiWorkAcrossTheTeam } from "@/features/showcases/articles/public-api/types";
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
 
 export const LEADERSHIP_SHOWCASE_ARTICLES: readonly ShowcaseArticle[] = [

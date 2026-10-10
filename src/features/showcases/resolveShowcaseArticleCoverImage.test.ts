@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import agentDelegatesInsideYourCompany from "@/features/showcases/articles/agentDelegatesInsideYourCompany.article";
-import automateForYourselfOrYourTeam from "@/features/showcases/articles/automateForYourselfOrYourTeam.article";
+import { agentDelegatesInsideYourCompany } from "@/features/showcases/articles/public-api/types";
+import { automateForYourselfOrYourTeam } from "@/features/showcases/articles/public-api/types";
 import { enrichShowcaseArticleWithImages } from "@/features/showcases/enrichShowcaseArticleWithImages";
 import { resolveShowcaseArticleCoverImage } from "@/features/showcases/resolveShowcaseArticleCoverImage";
 import {
   getHomeFeaturedShowcases,
   getHomeMoreShowcases,
 } from "@/features/showcases/homeShowcaseRegistry";
-import firstAgentTaskIn5Minutes from "@/features/showcases/articles/firstAgentTaskIn5Minutes.article";
+import { firstAgentTaskIn5Minutes } from "@/features/showcases/articles/public-api/types";
 
 describe("resolveShowcaseArticleCoverImage (SHOWCASES-009)", () => {
   it("returns the first section image after enrichment", () => {

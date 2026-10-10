@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { buildShowcaseTeamDispatchArticleImage } from "@/features/showcases/buildShowcaseTeamDispatchArticleImage";
-import agentDelegatesInsideYourCompany from "@/features/showcases/articles/agentDelegatesInsideYourCompany.article";
+import { agentDelegatesInsideYourCompany } from "@/features/showcases/articles/public-api/types";
 import {
   TEAM_DISPATCH_SHOWCASE_SCREEN,
   buildTeamDispatchShowcasePngPath,

@@ -8,7 +8,7 @@ import { E2E_SHOWCASE_ARTICLES } from "@/features/showcases/e2eShowcaseArticleRe
 import { resolveShowcaseCoverSrc } from "@/features/showcases/resolveShowcaseCoverSrc";
 import { ONBOARDING_SHOWCASE_SCREEN } from "@/features/showcases/onboardingShowcaseScreens.constant";
 import { SHOWCASE_TOPIC_SCREEN } from "@/features/showcases/showcaseTopicScreens.constant";
-import botToBot from "@/features/showcases/articles/botToBot.article";
+import { botToBot } from "@/features/showcases/articles/public-api/types";
 import { resolveShowcaseArticleCoverImage } from "@/features/showcases/resolveShowcaseArticleCoverImage";
 import { enrichShowcaseArticleWithImages } from "@/features/showcases/enrichShowcaseArticleWithImages";
 import { SHOWCASE_ARTICLES } from "@/features/showcases/showcaseArticleRegistry";
