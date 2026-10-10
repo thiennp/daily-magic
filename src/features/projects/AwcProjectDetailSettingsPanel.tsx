@@ -11,7 +11,7 @@ import AwcProjectSettingsLeaveZone from "@/features/projects/settings/AwcProject
 import AwcProjectSettingsDefinitionOfDone from "@/features/projects/settings/AwcProjectSettingsDefinitionOfDone";
 import AwcProjectSettingsNameSection from "@/features/projects/settings/AwcProjectSettingsNameSection";
 import AwcProjectConnectionsSection from "@/features/projects/settings/connections/AwcProjectConnectionsSection";
-import AwcProjectSettingsPendingRunApprovalsSection from "@/features/projects/settings/runApprovals/AwcProjectSettingsPendingRunApprovalsSection";
+import { AwcProjectSettingsPendingRunApprovalsSection } from "@/features/projects/settings/runApprovals/public-api/presentation";
 import { AwcProjectSettingsMemberPermissionsRow } from "@/features/projects/settings/memberPermissions/public-api/presentation";
 import { AwcProjectSettingsRunsWithoutApprovalRow } from "@/features/projects/settings/runsWithoutApproval/public-api/presentation";
 

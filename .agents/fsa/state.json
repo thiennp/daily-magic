@@ -29,7 +29,8 @@
     "src/features/projects/activityLog",
     "src/features/admin/hooks",
     "src/features/projects/access/invites/joinTypes",
-    "src/features/projects/access/invites/joinPage"
+    "src/features/projects/access/invites/joinPage",
+    "src/features/projects/settings/runApprovals"
   ],
   "blocked": {},
   "rounds": [
@@ -182,6 +183,11 @@
       "unit": "src/features/projects/access/invites/joinPage",
       "sha": "233f91dd57f904e156254031195621bef46a05b3",
       "at": "2026-10-10T09:24:21.981Z"
+    },
+    {
+      "unit": "src/features/projects/settings/runApprovals",
+      "sha": "c8f548f9ea72019fccc41d87656c6ac65473c6b4",
+      "at": "2026-10-10T09:25:27.406Z"
     }
   ]
 }

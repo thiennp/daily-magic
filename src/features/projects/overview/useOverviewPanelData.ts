@@ -18,7 +18,7 @@ import buildOverviewRecentActivity from "@/features/projects/overview/buildOverv
 import buildOverviewSetupSteps from "@/features/projects/overview/buildOverviewSetupSteps";
 import summarizeOverviewPitfalls from "@/features/projects/overview/summarizeOverviewPitfalls";
 import sumMessengerUnread from "@/features/projects/overview/sumMessengerUnread";
-import { useProjectPendingRunApprovals } from "@/features/projects/settings/runApprovals/useProjectPendingRunApprovals";
+import { useProjectPendingRunApprovals } from "@/features/projects/settings/runApprovals/public-api/presentation";
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 const useOverviewPanelData = (input: {
