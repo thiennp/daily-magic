@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import Switch from "@/components/form/switch/Switch";
-import AwcProjectDetailSection from "@/features/projects/AwcProjectDetailSection";
+import { AwcProjectDetailSection } from "@/features/projects/public-api/presentation";
 import { AWC_PROJECT_COMPUTER_HISTORY_COPY } from "@/features/projects/computerHistory/awcProjectComputerHistoryCopy.constant";
 import useAwcProjectComputerHistory from "@/features/projects/hooks/useAwcProjectComputerHistory";
 

@@ -8,7 +8,7 @@ import type { AwcProjectLibraryState } from "@/features/projects/library/useAwcP
 import {
   PANEL_LINK_CLASS,
   PANEL_STATUS_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
+} from "@/features/projects/public-api/types";
 
 interface AwcProjectLibraryDetailProps {
   readonly projectId: string;

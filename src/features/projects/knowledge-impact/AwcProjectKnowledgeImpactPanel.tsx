@@ -14,7 +14,7 @@ import {
 import { PROJECT_KNOWLEDGE_IMPACT_COPY as C } from "@/features/projects/knowledge-impact/projectKnowledgeImpactCopy.constant";
 import useAwcProjectKnowledgeImpact from "@/features/projects/knowledge-impact/useAwcProjectKnowledgeImpact";
 import type { KnowledgeImpactTotals } from "@/lib/knowledge/buildProjectKnowledgeImpactView";
-import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/public-api/types";
 
 const resolveRepeatHint = (totals: KnowledgeImpactTotals): string =>
   totals.repeatRateHoldout === null

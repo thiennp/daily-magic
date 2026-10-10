@@ -1,5 +1,5 @@
 import { AWC_PROJECT_MESSENGER_COPY } from "@/features/projects/messenger/awcProjectMessengerCopy.constant";
-import { PROJECT_V5_REASON_CLASS } from "@/features/projects/projectPageV5ChromeClasses.constant";
+import { PROJECT_V5_REASON_CLASS } from "@/features/projects/public-api/types";
 
 /**
  * (i) hint when the project has no owner computer: this browser holds the

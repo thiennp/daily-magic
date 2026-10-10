@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/public-api/types";
 
 /** Inline rename form for an assistant row. */
 export default function AwcProjectMembersRenameForm(p: {

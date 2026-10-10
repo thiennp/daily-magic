@@ -1,7 +1,7 @@
 "use client";
 
-import AwcProjectDetailSection from "@/features/projects/AwcProjectDetailSection";
-import AwcProjectEditOnMacActions from "@/features/projects/AwcProjectEditOnMacActions";
+import { AwcProjectDetailSection } from "@/features/projects/public-api/presentation";
+import { AwcProjectEditOnMacActions } from "@/features/projects/public-api/presentation";
 import AwcProjectPitfallRow from "@/features/projects/pitfalls/AwcProjectPitfallRow";
 import { AWC_PROJECT_PITFALLS_COPY } from "@/features/projects/pitfalls/awcProjectPitfallsCopy.constant";
 import buildAwcProjectPitfallRows from "@/features/projects/pitfalls/buildAwcProjectPitfallRows";

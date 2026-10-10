@@ -9,7 +9,7 @@ import {
 import { NOTIFICATIONS_TIP_CLASS } from "@/features/notifications/notificationsClasses.constant";
 import { NOTIFICATIONS_COPY } from "@/features/notifications/notificationsCopy.constant";
 import NotificationsPageSubtitle from "@/features/notifications/NotificationsPageSubtitle";
-import { PROJECT_V5_H1_CLASS } from "@/features/projects/projectPageV5ChromeClasses.constant";
+import { PROJECT_V5_H1_CLASS } from "@/features/projects/public-api/types";
 
 interface NotificationsPageHeaderProps {
   readonly unread: number;

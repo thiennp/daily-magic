@@ -1,6 +1,6 @@
 "use client";
 
-import AwcProjectEditOnMacActions from "@/features/projects/AwcProjectEditOnMacActions";
+import { AwcProjectEditOnMacActions } from "@/features/projects/public-api/presentation";
 import type { OverviewSetupStep } from "@/features/projects/overview/overviewSetupStep.type";
 import {
   OVERVIEW_CTA_SECONDARY_SM_CLASS,
@@ -8,7 +8,7 @@ import {
 } from "@/features/projects/overview/overviewChrome.constant";
 import { PROJECT_PAGE_OVERVIEW_COPY as C } from "@/features/projects/overview/projectPageOverviewCopy.constant";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/public-api/types";
-import type { ProjectPageNavTarget } from "@/features/projects/projectPageTabs.constant";
+import type { ProjectPageNavTarget } from "@/features/projects/public-api/types";
 
 interface Props {
   readonly step: OverviewSetupStep;

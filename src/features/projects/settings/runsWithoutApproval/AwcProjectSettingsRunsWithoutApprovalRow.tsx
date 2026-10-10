@@ -7,7 +7,7 @@ import AwcRunsWithoutApprovalSwitch from "@/features/projects/settings/runsWitho
 import { RUNS_WITHOUT_APPROVAL_COPY as C } from "@/features/projects/settings/runsWithoutApproval/runsWithoutApprovalCopy.constant";
 import { resolveRunsWithoutApprovalToggle } from "@/features/projects/settings/runsWithoutApproval/resolveRunsWithoutApprovalToggle";
 import { useProjectRunsWithoutApproval } from "@/features/projects/settings/runsWithoutApproval/useProjectRunsWithoutApproval";
-import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/public-api/types";
 
 interface AwcProjectSettingsRunsWithoutApprovalRowProps {
   readonly projectId: string;

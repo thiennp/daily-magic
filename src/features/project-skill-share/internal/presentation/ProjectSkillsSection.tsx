@@ -14,7 +14,7 @@ import {
   PROJECT_SKILLS_SECTION_CLASS,
   PROJECT_SKILLS_TITLE_CLASS,
 } from "@/features/project-skill-share/internal/presentation/projectSkillsSection.constant";
-import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPageMetadataText.constant";
+import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/public-api/types";
 
 interface ProjectSkillsSectionProps {
   readonly projectId: string;

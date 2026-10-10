@@ -15,7 +15,7 @@ import {
 } from "@/features/projects/repoUrls/readProjectRepoMetadata";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import type { ProjectRepoMetadata } from "@/lib/projects/validateProjectRepoUrls";
-import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/public-api/types";
 
 interface AwcProjectRepoUrlsSectionProps {
   readonly project: UserProjectRecord;

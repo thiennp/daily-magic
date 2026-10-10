@@ -1,7 +1,7 @@
 import {
   PANEL_BUTTON_SECONDARY_CLASS,
   PANEL_LIST_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
+} from "@/features/projects/public-api/types";
 import { PROJECT_PAGE_REPORTS_COPY as C } from "@/features/projects/reports/projectPageReportsCopy.constant";
 
 const BOX = "flex flex-col items-start gap-2 px-1 py-4 text-awc-fg-muted";

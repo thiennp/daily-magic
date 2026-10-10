@@ -5,7 +5,7 @@ import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHu
 import {
   PROJECT_V5_BREADCRUMB_CLASS,
   PROJECT_V5_H1_CLASS,
-} from "@/features/projects/projectPageV5ChromeClasses.constant";
+} from "@/features/projects/public-api/types";
 
 interface CompaniesRulesHeadProps {
   readonly crumbs: ReactNode;

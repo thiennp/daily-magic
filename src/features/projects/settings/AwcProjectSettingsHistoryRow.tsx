@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-import { PROJECT_PAGE_SETTINGS_COPY as C } from "@/features/projects/projectPageSettingsCopy.constant";
+import { PROJECT_PAGE_SETTINGS_COPY as C } from "@/features/projects/public-api/types";
 import { requestProjectComputerHistory } from "@/features/projects/utils/public-api/presentation";
-import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/public-api/types";
 
 interface AwcProjectSettingsHistoryRowProps {
   readonly projectId: string;

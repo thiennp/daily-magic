@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 
-import type { ProjectPageNavTarget } from "@/features/projects/projectPageTabs.constant";
+import type { ProjectPageNavTarget } from "@/features/projects/public-api/types";
 import {
   OVERVIEW_FACT_CLASS,
   OVERVIEW_FACT_WARN_CLASS,

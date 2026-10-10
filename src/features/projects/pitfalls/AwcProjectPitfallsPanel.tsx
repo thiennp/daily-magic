@@ -15,7 +15,7 @@ import { PITFALL_EMPTY_CLASS } from "@/features/projects/pitfalls/pitfallsChrome
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/public-api/types";
 import { withProjectEditOnMacTab } from "@/features/projects/utils/public-api/presentation";
-import { PROJECT_PANEL_SURFACE_CLASS as SURFACE } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PANEL_SURFACE_CLASS as SURFACE } from "@/features/projects/public-api/types";
 
 interface AwcProjectPitfallsPanelProps {
   readonly projectId: string;

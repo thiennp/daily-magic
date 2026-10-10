@@ -10,7 +10,7 @@ import useAwcProjectLibraryAddFrom from "@/features/projects/library/useAwcProje
 import {
   PANEL_HEADING_CLASS,
   PANEL_INTRO_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
+} from "@/features/projects/public-api/types";
 import { fillProjectPageCopy } from "@/features/projects/utils/public-api/presentation";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 

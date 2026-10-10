@@ -5,8 +5,8 @@ import { useId } from "react";
 import Button from "@/components/ui/button/Button";
 import { APP_SURFACE_FIELD_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import useAwcProjectDefinitionOfDone from "@/features/projects/hooks/useAwcProjectDefinitionOfDone";
-import { PROJECT_PAGE_SETTINGS_COPY as C } from "@/features/projects/projectPageSettingsCopy.constant";
-import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PAGE_SETTINGS_COPY as C } from "@/features/projects/public-api/types";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/public-api/types";
 import { DEFINITION_OF_DONE_MAX_CHARS } from "@/lib/projects/definitionOfDone/parseDefinitionOfDoneBody";
 
 /** Settings · Definition of done — owner edits, members and viewers read. */

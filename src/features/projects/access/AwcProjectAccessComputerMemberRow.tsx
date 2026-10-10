@@ -10,7 +10,7 @@ import {
   type ComputerAccessMemberStatus,
 } from "@/features/projects/access/utils/describeComputerAccessMember";
 import AwcProjectAccessComputerAgents from "@/features/projects/access/AwcProjectAccessComputerAgents";
-import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPageMetadataText.constant";
+import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/public-api/types";
 
 /** Black / white / gray only (no brand or status hues). */
 const STATUS_CHIP_CLASS: Readonly<Record<ComputerAccessMemberStatus, string>> =

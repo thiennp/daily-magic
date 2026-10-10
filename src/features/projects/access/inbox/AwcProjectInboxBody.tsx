@@ -7,7 +7,7 @@ import AwcProjectInboxArchivedPanel from "@/features/projects/access/inbox/AwcPr
 import AwcProjectInboxMessageList from "@/features/projects/access/inbox/AwcProjectInboxMessageList";
 import AwcProjectInboxRestoreAllConfirmModal from "@/features/projects/access/inbox/AwcProjectInboxRestoreAllConfirmModal";
 import type { useAwcProjectInbox } from "@/features/projects/access/inbox/hooks/useAwcProjectInbox";
-import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPageMetadataText.constant";
+import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/public-api/types";
 
 interface AwcProjectInboxBodyProps {
   readonly inbox: ReturnType<typeof useAwcProjectInbox>;

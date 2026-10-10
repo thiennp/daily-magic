@@ -5,7 +5,7 @@ import { PROJECT_PAGE_LIBRARY_COPY as C } from "@/features/projects/library/proj
 import {
   PANEL_BUTTON_PRIMARY_CLASS,
   PANEL_BUTTON_SECONDARY_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
+} from "@/features/projects/public-api/types";
 
 const LIB_ICON = (
   <svg

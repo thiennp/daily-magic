@@ -10,7 +10,7 @@ import { useAwcProjectFolderRefActions } from "@/features/projects/access/hooks/
 import { isComputerAccessMember } from "@/features/projects/access/utils/isComputerAccessMember";
 import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/projectPageResourcesCopy.constant";
 import { resolveProjectAccessLoadError } from "@/lib/projects/acl/mapProjectAccessError";
-import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/public-api/types";
 
 interface AwcProjectResourcesFoldersCardProps {
   readonly projectId: string;

@@ -2,7 +2,7 @@
 
 import AwcProjectAccessMemberTaskPulse from "@/features/projects/access/AwcProjectAccessMemberTaskPulse";
 import useAwcMemberTaskPulses from "@/features/projects/access/hooks/useAwcMemberTaskPulses";
-import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPageMetadataText.constant";
+import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/public-api/types";
 
 /** Member/viewer Bots & people: who is working, who went quiet (read only). */
 export default function AwcProjectAccessMemberTeamPulse({

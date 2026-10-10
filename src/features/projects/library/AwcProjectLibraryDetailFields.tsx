@@ -10,7 +10,7 @@ import {
   PANEL_HEADING_CLASS,
   PANEL_LIST_CLASS,
   PANEL_ROW_META_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
+} from "@/features/projects/public-api/types";
 
 const LABEL_CLASS =
   "text-[12px] font-semibold uppercase tracking-wide text-awc-fg-muted dark:text-gray-400";

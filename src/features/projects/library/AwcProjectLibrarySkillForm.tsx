@@ -19,7 +19,7 @@ import {
   PANEL_HEADING_CLASS,
   PANEL_INTRO_CLASS,
   PANEL_STATUS_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
+} from "@/features/projects/public-api/types";
 import { fillProjectPageCopy } from "@/features/projects/utils/public-api/presentation";
 
 interface AwcProjectLibrarySkillFormProps {

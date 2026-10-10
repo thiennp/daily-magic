@@ -12,7 +12,7 @@ import ProjectSkillPublishFields from "@/features/project-skill-share/internal/p
 import ProjectSkillPublishSubmitActions from "@/features/project-skill-share/internal/presentation/ProjectSkillPublishSubmitActions";
 import { PROJECT_PLAYBOOKS_COPY } from "@/features/project-skill-share/internal/presentation/projectPlaybooksCopy.constant";
 import { PROJECT_SKILLS_COPY } from "@/features/project-skill-share/internal/presentation/projectSkillsCopy.constant";
-import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPageMetadataText.constant";
+import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/public-api/types";
 
 interface Props {
   readonly busy: boolean;

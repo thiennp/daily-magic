@@ -1,8 +1,7 @@
-import { AWC_PROJECT_LEAVE_COPY } from "@/features/projects/awcProjectLeaveCopy.constant";
+import { AWC_PROJECT_LEAVE_COPY } from "@/features/projects/public-api/types";
 
 export type LeaveUserProjectRequestResult =
-  | { readonly ok: true }
-  | { readonly ok: false; readonly errorMessage: string };
+  { readonly ok: true } | { readonly ok: false; readonly errorMessage: string };
 
 /** Shared POST /api/projects/[projectId]/leave + error mapping. */
 const requestLeaveUserProject = async (

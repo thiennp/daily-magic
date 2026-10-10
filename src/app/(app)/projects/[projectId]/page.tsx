@@ -2,8 +2,8 @@ import { getUserById } from "@/lib/auth/userRepository";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
-import AwcProjectDetailPanel from "@/features/projects/AwcProjectDetailPanel";
-import buildProjectDetailPageMetadata from "@/features/projects/buildProjectDetailPageMetadata";
+import { AwcProjectDetailPanel } from "@/features/projects/public-api/presentation";
+import { buildProjectDetailPageMetadata } from "@/features/projects/public-api/presentation";
 import { AppShell } from "@/features/shell/public-api/presentation";
 import { APP_PAGE_STACK_CLASS } from "@/features/shell/public-api/types";
 import { getAuthActor } from "@/lib/auth/auth";

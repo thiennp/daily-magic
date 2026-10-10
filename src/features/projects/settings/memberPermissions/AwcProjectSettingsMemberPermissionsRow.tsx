@@ -6,7 +6,7 @@ import {
   MEMBER_PERMISSION_GROUPS,
 } from "@/features/projects/settings/memberPermissions/memberPermissionsCopy.constant";
 import { useProjectMemberPermissions } from "@/features/projects/settings/memberPermissions/useProjectMemberPermissions";
-import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/public-api/types";
 import { PROJECT_MEMBER_PERMISSION_KEYS } from "@/lib/projects/acl/memberPermissions/projectMemberPermission.constant";
 
 interface AwcProjectSettingsMemberPermissionsRowProps {

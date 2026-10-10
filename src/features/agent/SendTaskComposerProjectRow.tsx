@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import AwcProjectDeleteConfirmForm from "@/features/projects/AwcProjectDeleteConfirmForm";
+import { AwcProjectDeleteConfirmForm } from "@/features/projects/public-api/presentation";
 import useDeleteUserProject from "@/features/projects/hooks/useDeleteUserProject";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import isDefaultUserProject from "@/lib/projects/isDefaultUserProject";

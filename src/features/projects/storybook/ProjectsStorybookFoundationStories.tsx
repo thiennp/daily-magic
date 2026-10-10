@@ -1,6 +1,6 @@
 "use client";
 
-import AwcProjectsMenuDisabledItem from "@/features/projects/AwcProjectsMenuDisabledItem";
+import { AwcProjectsMenuDisabledItem } from "@/features/projects/public-api/presentation";
 import ProjectsStorybookFrame from "@/features/projects/storybook/ProjectsStorybookFrame";
 import type { ProjectsStorybookViewport } from "@/features/projects/storybook/ProjectsStorybookFrame";
 import {
@@ -8,7 +8,7 @@ import {
   PROJECTS_V5_MENU_ITEM_CLASS,
   PROJECTS_V5_MENU_PANEL_CLASS,
   PROJECTS_V5_PAGE_CLASS,
-} from "@/features/projects/projectsPageV5Classes.constant";
+} from "@/features/projects/public-api/types";
 
 interface ProjectsStorybookFoundationStoriesProps {
   readonly viewport: ProjectsStorybookViewport;
@@ -41,7 +41,11 @@ const ProjectsStorybookFoundationStories = ({
           className={`flex flex-col gap-0.5 ${PROJECTS_V5_MENU_PANEL_CLASS}`}
         >
           <li role="none">
-            <a role="menuitem" href="#view" className={PROJECTS_V5_MENU_ITEM_CLASS}>
+            <a
+              role="menuitem"
+              href="#view"
+              className={PROJECTS_V5_MENU_ITEM_CLASS}
+            >
               View details
             </a>
           </li>

@@ -10,7 +10,7 @@ import {
   parseAwcGrokWakeLinkHash,
 } from "@/features/projects/access/awcGrokWakeLinkDeepLink";
 import { AWC_GROK_WEBHOOK_FORM_COPY } from "@/features/projects/access/awcGrokWebhookFormCopy.constant";
-import { isProjectPageTabId } from "@/features/projects/projectPageTabs.constant";
+import { isProjectPageTabId } from "@/features/projects/public-api/types";
 import {
   listMembersAwaitingWakeLink,
   resolveMemberWakeLinkState,

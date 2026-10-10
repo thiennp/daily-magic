@@ -20,7 +20,7 @@ import {
   PANEL_INTRO_CLASS,
   PANEL_LIST_CLASS,
   PANEL_STATUS_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
+} from "@/features/projects/public-api/types";
 
 interface AwcProjectLibraryListProps {
   readonly library: AwcProjectLibraryState;

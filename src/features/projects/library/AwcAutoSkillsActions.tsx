@@ -3,7 +3,7 @@
 import {
   PANEL_BUTTON_PRIMARY_CLASS,
   PANEL_BUTTON_SECONDARY_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
+} from "@/features/projects/public-api/types";
 
 interface AwcAutoSkillsActionsProps {
   readonly busy: boolean;

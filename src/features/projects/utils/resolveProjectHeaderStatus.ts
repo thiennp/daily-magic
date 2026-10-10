@@ -1,5 +1,5 @@
-import { PROJECT_PAGE_LAYOUT_V2_COPY } from "@/features/projects/projectPageLayoutV2Copy.constant";
-import { PROJECT_PAGE_V5_CHROME_COPY } from "@/features/projects/projectPageV5ChromeCopy.constant";
+import { PROJECT_PAGE_LAYOUT_V2_COPY } from "@/features/projects/public-api/types";
+import { PROJECT_PAGE_V5_CHROME_COPY } from "@/features/projects/public-api/types";
 import type { ProjectDevicePresenceLabel } from "@/features/projects/utils/buildProjectDevicePresenceLabel";
 
 export type ProjectHeaderStatusTone = "ok" | "warn" | "neutral";
@@ -44,7 +44,10 @@ const resolveProjectHeaderStatus = (input: {
     parts.push(v5["status.offlineWaitHint"]);
     return { tone: "neutral", text: parts.join(" · ") };
   }
-  return { tone: "neutral", text: name ? v2.offlineOn(name) : v2.statusOffline };
+  return {
+    tone: "neutral",
+    text: name ? v2.offlineOn(name) : v2.statusOffline,
+  };
 };
 
 export default resolveProjectHeaderStatus;

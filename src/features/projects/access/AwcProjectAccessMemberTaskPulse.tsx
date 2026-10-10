@@ -7,7 +7,7 @@ import { AWC_MEMBER_TASK_PULSE_COPY as copy } from "@/features/projects/access/a
 import { AWC_PROJECT_ACCESS_BADGE_ALERT_CLASS } from "@/features/projects/access/awcProjectAccessSection.constant";
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
 import type { AwcMemberTaskPulse } from "@/features/projects/access/utils/resolveMemberTaskPulse";
-import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPageMetadataText.constant";
+import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/public-api/types";
 import { buildProjectTabHash } from "@/lib/shell/buildNavConsolidationRedirect";
 
 type AskState = "idle" | "confirm" | "sending" | "sent" | "failed";

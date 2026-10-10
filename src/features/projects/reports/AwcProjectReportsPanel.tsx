@@ -5,7 +5,7 @@ import AwcProjectReportDetail from "@/features/projects/reports/AwcProjectReport
 import AwcProjectReportsList from "@/features/projects/reports/AwcProjectReportsList";
 import { PROJECT_PAGE_REPORTS_COPY as C } from "@/features/projects/reports/projectPageReportsCopy.constant";
 import useAwcProjectReports from "@/features/projects/reports/useAwcProjectReports";
-import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/public-api/types";
 
 interface AwcProjectReportsPanelProps {
   readonly projectId: string;

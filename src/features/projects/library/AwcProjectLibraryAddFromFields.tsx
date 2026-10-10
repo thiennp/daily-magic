@@ -6,7 +6,7 @@ import { PROJECT_PAGE_LIBRARY_ACTIONS_COPY as A } from "@/features/projects/libr
 import {
   PANEL_INPUT_CLASS,
   PANEL_STATUS_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
+} from "@/features/projects/public-api/types";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 

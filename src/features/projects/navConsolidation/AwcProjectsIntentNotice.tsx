@@ -1,5 +1,5 @@
 import { APP_SURFACE_CTA_PRIMARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import { AWC_PROJECTS_PAGE_COPY as COPY } from "@/features/projects/awcProjectsPageCopy.constant";
+import { AWC_PROJECTS_PAGE_COPY as COPY } from "@/features/projects/public-api/types";
 import {
   NAV_CONSOLIDATION_INTENT_NOTICE,
   NAV_CONSOLIDATION_NEW_TASK_EMPTY_EXTRA,

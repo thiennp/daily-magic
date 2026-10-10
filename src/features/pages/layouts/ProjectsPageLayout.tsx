@@ -1,12 +1,12 @@
 import { Suspense } from "react";
 
 import AppPageHeader from "@/components/surfaces/AppPageHeader";
-import { AWC_PROJECTS_PAGE_COPY } from "@/features/projects/awcProjectsPageCopy.constant";
-import AwcProjectsPanel from "@/features/projects/AwcProjectsPanel";
+import { AWC_PROJECTS_PAGE_COPY } from "@/features/projects/public-api/types";
+import { AwcProjectsPanel } from "@/features/projects/public-api/presentation";
 import {
   PROJECTS_V5_MUTED_TEXT_CLASS,
   PROJECTS_V5_PAGE_CLASS,
-} from "@/features/projects/projectsPageV5Classes.constant";
+} from "@/features/projects/public-api/types";
 
 export default function ProjectsPageLayout() {
   return (

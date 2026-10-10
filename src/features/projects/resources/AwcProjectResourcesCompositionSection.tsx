@@ -4,7 +4,7 @@ import useAwcProjectComposition from "@/features/projects/hooks/useAwcProjectCom
 import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/projectPageResourcesCopy.constant";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/public-api/types";
 import { resolveProjectEditOnMacLinkProps } from "@/features/projects/utils/public-api/presentation";
-import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/public-api/types";
 
 const ROW_CLASS =
   "flex items-center justify-between gap-3 border-t border-awc-border/80 px-3 py-3 first:border-t-0 dark:border-gray-800/80";

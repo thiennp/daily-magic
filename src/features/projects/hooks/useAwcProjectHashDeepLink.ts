@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import type { ProjectPageTabId } from "@/features/projects/projectPageTabs.constant";
+import type { ProjectPageTabId } from "@/features/projects/public-api/types";
 import { readProjectPageHashParam } from "@/features/projects/utils/public-api/presentation";
 import { buildProjectTabHash } from "@/lib/shell/buildNavConsolidationRedirect";
 

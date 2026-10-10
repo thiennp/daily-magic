@@ -2,9 +2,9 @@
 
 import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/public-api/presentation";
 import AppPanel from "@/components/surfaces/AppPanel";
-import AwcProjectNameEditor from "@/features/projects/AwcProjectNameEditor";
-import AwcProjectsListBody from "@/features/projects/AwcProjectsListBody";
-import AwcProjectsToolbar from "@/features/projects/AwcProjectsToolbar";
+import { AwcProjectNameEditor } from "@/features/projects/public-api/presentation";
+import { AwcProjectsListBody } from "@/features/projects/public-api/presentation";
+import { AwcProjectsToolbar } from "@/features/projects/public-api/presentation";
 import ProjectsStorybookFrame from "@/features/projects/storybook/ProjectsStorybookFrame";
 import type { ProjectsStorybookViewport } from "@/features/projects/storybook/ProjectsStorybookFrame";
 import {

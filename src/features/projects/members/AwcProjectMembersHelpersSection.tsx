@@ -10,7 +10,7 @@ import { isRailAssistantMember } from "@/features/projects/members/utils/countRa
 import SectionIcon, {
   SECTION_CARD,
 } from "@/features/projects/members/AwcProjectMembersSectionCard";
-import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/public-api/types";
 
 interface AwcProjectMembersHelpersSectionProps {
   readonly projectId: string;

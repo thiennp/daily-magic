@@ -1,8 +1,7 @@
-import { AWC_PROJECT_DELETE_COPY } from "@/features/projects/awcProjectDeleteCopy.constant";
+import { AWC_PROJECT_DELETE_COPY } from "@/features/projects/public-api/types";
 
 export type DeleteUserProjectRequestResult =
-  | { readonly ok: true }
-  | { readonly ok: false; readonly errorMessage: string };
+  { readonly ok: true } | { readonly ok: false; readonly errorMessage: string };
 
 /** Shared DELETE /api/projects/[projectId] call + error mapping. */
 const requestDeleteUserProject = async (
@@ -20,7 +19,10 @@ const requestDeleteUserProject = async (
     }
 
     if (response.status === 403) {
-      return { ok: false, errorMessage: AWC_PROJECT_DELETE_COPY.ownerOnlyError };
+      return {
+        ok: false,
+        errorMessage: AWC_PROJECT_DELETE_COPY.ownerOnlyError,
+      };
     }
 
     const message =

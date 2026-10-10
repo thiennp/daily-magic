@@ -5,7 +5,7 @@ import useProjectTasksChatVisibility from "@/features/projects/tasks/useProjectT
 import { writeProjectTasksChatVisibility } from "@/features/projects/tasks/projectTasksChatVisibility";
 import type { ProjectTasksChatVisibility } from "@/features/projects/tasks/projectTask.type";
 import { PROJECT_PAGE_TASKS_COPY as C } from "@/features/projects/tasks/projectPageTasksCopy.constant";
-import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/public-api/types";
 
 /** Screen E inset on project Settings — default keeps chat uncluttered. */
 export default function AwcProjectSettingsTasksChatRow({

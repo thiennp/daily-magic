@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import AwcAutoSkillsDeepScanDialog from "@/features/projects/library/AwcAutoSkillsDeepScanDialog";
-import { PANEL_BUTTON_SECONDARY_CLASS } from "@/features/projects/projectPagePanelChrome.constant";
+import { PANEL_BUTTON_SECONDARY_CLASS } from "@/features/projects/public-api/types";
 
 interface AwcAutoSkillsDeeperScanProps {
   /** Commits on the main branch. */

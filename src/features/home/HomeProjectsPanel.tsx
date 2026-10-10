@@ -8,7 +8,7 @@ import {
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import HomeNewProjectButton from "@/features/home/HomeNewProjectButton";
 import { selectHomeRecentProjects } from "@/features/home/utils/public-api/presentation";
-import AwcProjectsPanel from "@/features/projects/AwcProjectsPanel";
+import { AwcProjectsPanel } from "@/features/projects/public-api/presentation";
 
 /**
  * Signed-in home Projects section. Reuses the /projects panel (same component,

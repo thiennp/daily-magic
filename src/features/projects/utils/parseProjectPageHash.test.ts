@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { isProjectPageTabId } from "@/features/projects/projectPageTabs.constant";
+import { isProjectPageTabId } from "@/features/projects/public-api/types";
 import {
   parseProjectPageHash,
   readProjectPageHashParam,

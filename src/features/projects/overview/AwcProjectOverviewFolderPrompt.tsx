@@ -12,7 +12,7 @@ import { OVERVIEW_CTA_PRIMARY_SM_CLASS } from "@/features/projects/overview/over
 import { OVERVIEW_FOLDER_PROMPT_COPY as C } from "@/features/projects/overview/overviewFolderPromptCopy.constant";
 import { useAddOverviewFolder } from "@/features/projects/overview/useAddOverviewFolder";
 import { resolveOverviewFolderPrompt } from "@/features/projects/overview/resolveOverviewFolderPrompt";
-import type { ProjectPageNavTarget } from "@/features/projects/projectPageTabs.constant";
+import type { ProjectPageNavTarget } from "@/features/projects/public-api/types";
 
 /**
  * Owner-only Overview prompt: no folder saved for the project, or none for the

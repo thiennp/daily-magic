@@ -2,7 +2,7 @@
 
 import { useState, type FocusEvent } from "react";
 
-import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/public-api/types";
 
 export interface RailMenuItem {
   readonly label: string;

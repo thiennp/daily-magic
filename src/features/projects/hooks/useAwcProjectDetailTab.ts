@@ -6,7 +6,7 @@ import {
   DEFAULT_PROJECT_PAGE_TAB,
   isProjectPageTabId,
   type ProjectPageTabId,
-} from "@/features/projects/projectPageTabs.constant";
+} from "@/features/projects/public-api/types";
 import { parseProjectPageHash } from "@/features/projects/utils/public-api/presentation";
 
 const readHashTab = (): ProjectPageTabId => {

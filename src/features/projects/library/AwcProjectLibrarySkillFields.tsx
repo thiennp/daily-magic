@@ -7,7 +7,7 @@ import {
   type ProjectLibraryAuthorKind,
 } from "@/features/projects/library/projectLibraryAuthorCopy.constant";
 import { PROJECT_PAGE_LIBRARY_ACTIONS_COPY as A } from "@/features/projects/library/projectPageLibraryActionsCopy.constant";
-import { PANEL_INPUT_CLASS } from "@/features/projects/projectPagePanelChrome.constant";
+import { PANEL_INPUT_CLASS } from "@/features/projects/public-api/types";
 
 export interface ProjectLibrarySkillDraft {
   readonly name: string;

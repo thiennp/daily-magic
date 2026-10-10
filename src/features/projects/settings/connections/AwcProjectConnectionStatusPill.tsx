@@ -1,4 +1,4 @@
-import { PROJECT_V5_CHIP_BASE_CLASS } from "@/features/projects/projectPageV5ChromeClasses.constant";
+import { PROJECT_V5_CHIP_BASE_CLASS } from "@/features/projects/public-api/types";
 import type { ProjectConnectionStatus } from "@/features/projects/settings/connections/projectConnection.types";
 import { PROJECT_CONNECTIONS_COPY as C } from "@/features/projects/settings/connections/projectConnectionsCopy.constant";
 

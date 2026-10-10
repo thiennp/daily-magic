@@ -3,9 +3,9 @@
 import { useState } from "react";
 
 import { AwcAccessLogPanel } from "@/features/projects/accessLog/public-api/presentation";
-import { AWC_PROJECT_DELETE_COPY } from "@/features/projects/awcProjectDeleteCopy.constant";
+import { AWC_PROJECT_DELETE_COPY } from "@/features/projects/public-api/types";
 import AwcProjectMembersRailMenu from "@/features/projects/members/AwcProjectMembersRailMenu";
-import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/public-api/types";
 
 interface AwcProjectMembersOwnerRailMenuProps {
   readonly projectId: string;

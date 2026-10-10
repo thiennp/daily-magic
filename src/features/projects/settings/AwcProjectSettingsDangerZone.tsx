@@ -4,10 +4,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import Button from "@/components/ui/button/Button";
-import AwcProjectDeleteConfirmForm from "@/features/projects/AwcProjectDeleteConfirmForm";
+import { AwcProjectDeleteConfirmForm } from "@/features/projects/public-api/presentation";
 import useDeleteProject from "@/features/projects/hooks/useDeleteProject";
-import { PROJECT_PAGE_SETTINGS_COPY as C } from "@/features/projects/projectPageSettingsCopy.constant";
-import { PROJECT_PANEL_CARD_DANGER_CLASS as DANGER_CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PAGE_SETTINGS_COPY as C } from "@/features/projects/public-api/types";
+import { PROJECT_PANEL_CARD_DANGER_CLASS as DANGER_CARD } from "@/features/projects/public-api/types";
 
 interface AwcProjectSettingsDangerZoneProps {
   readonly projectId: string;

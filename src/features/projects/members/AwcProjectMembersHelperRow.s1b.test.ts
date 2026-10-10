@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/public-api/types";
 
 const read = (relative: string): string =>
   readFileSync(

@@ -13,7 +13,7 @@ import {
   PANEL_ROW_CLASS,
   PANEL_ROW_META_CLASS,
   PANEL_ROW_TITLE_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
+} from "@/features/projects/public-api/types";
 
 interface AwcProjectLibraryRowProps {
   readonly item: ProjectLibraryItem;

@@ -1,4 +1,4 @@
-import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/public-api/types";
 import { AwcSkeletonBar } from "@/features/shell/loading/public-api/presentation";
 import { AwcSkeletonStatus } from "@/features/shell/loading/public-api/presentation";
 

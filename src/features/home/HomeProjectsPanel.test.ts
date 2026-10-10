@@ -10,7 +10,9 @@ describe("HomeProjectsPanel", () => {
       "utf8",
     );
 
-    expect(source).toContain('from "@/features/projects/AwcProjectsPanel"');
+    expect(source).toContain(
+      'from "@/features/projects/public-api/presentation"',
+    );
     expect(source).toContain("selectProjects={selectHomeRecentProjects}");
     expect(source).toContain("showManageControls={false}");
     expect(source).toContain('href="/projects"');

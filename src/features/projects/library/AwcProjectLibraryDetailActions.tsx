@@ -10,7 +10,7 @@ import { resolveProjectLibrarySkillDelete } from "@/features/projects/library/ut
 import {
   PANEL_BUTTON_PRIMARY_CLASS,
   PANEL_BUTTON_SECONDARY_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
+} from "@/features/projects/public-api/types";
 
 const PANEL_BUTTON_DANGER_CLASS = `${PANEL_BUTTON_SECONDARY_CLASS} border-red-300 text-red-700 hover:border-red-400 dark:border-red-800 dark:text-red-300`;
 

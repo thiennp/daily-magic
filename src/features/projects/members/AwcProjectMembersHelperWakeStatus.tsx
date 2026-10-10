@@ -1,5 +1,5 @@
 import type { RailAssistantWakeStatus } from "@/features/projects/members/utils/resolveRailAssistantWakeStatus";
-import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/public-api/types";
 
 /** Dot tone per status — lock tokens only (DF-036 F2: neutral, never amber; bad = --bad). */
 const DOT_CLASS: Record<RailAssistantWakeStatus, string> = {

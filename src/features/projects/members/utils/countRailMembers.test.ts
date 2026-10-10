@@ -1,9 +1,17 @@
 import { describe, expect, it } from "vitest";
 
-import { countRailMembers, countRailWaiting } from "@/features/projects/members/utils/countRailMembers";
-import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+import {
+  countRailMembers,
+  countRailWaiting,
+} from "@/features/projects/members/utils/countRailMembers";
+import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/public-api/types";
 
-const seat = (id: string, x: Record<string, unknown>) => ({ id, userId: `u-${id}`, isAgent: false, ...x });
+const seat = (id: string, x: Record<string, unknown>) => ({
+  id,
+  userId: `u-${id}`,
+  isAgent: false,
+  ...x,
+});
 
 describe("countRailMembers (DF-036 'Members · {n}')", () => {
   it("just you: 1", () => {
@@ -33,8 +41,20 @@ describe("countRailMembers (DF-036 'Members · {n}')", () => {
   });
 
   it("F5 '{k} waiting' = person invites + join requests + unused assistant invites", () => {
-    expect(countRailWaiting({ peopleInvites: 1, joinRequests: 0, assistantInvites: 1 })).toBe(2);
-    expect(countRailWaiting({ peopleInvites: 0, joinRequests: 0, assistantInvites: 0 })).toBe(0);
+    expect(
+      countRailWaiting({
+        peopleInvites: 1,
+        joinRequests: 0,
+        assistantInvites: 1,
+      }),
+    ).toBe(2);
+    expect(
+      countRailWaiting({
+        peopleInvites: 0,
+        joinRequests: 0,
+        assistantInvites: 0,
+      }),
+    ).toBe(0);
     expect(C.waitingPill(2)).toBe("2 waiting");
   });
 });

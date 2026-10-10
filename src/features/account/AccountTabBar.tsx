@@ -9,7 +9,7 @@ import {
   PROJECT_V5_TAB_BASE_CLASS,
   PROJECT_V5_TAB_INACTIVE_CLASS,
   PROJECT_V5_TABLIST_CLASS,
-} from "@/features/projects/projectPageV5ChromeClasses.constant";
+} from "@/features/projects/public-api/types";
 
 interface AccountTabBarProps {
   readonly activeTab: AccountTabId;

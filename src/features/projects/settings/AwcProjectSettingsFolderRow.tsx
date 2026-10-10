@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import AwcProjectPathDisplay from "@/features/projects/AwcProjectPathDisplay";
+import { AwcProjectPathDisplay } from "@/features/projects/public-api/presentation";
 import { AwcProjectMembersInfoTip } from "@/features/projects/members/public-api/presentation";
 import {
   AwcProjectFolderChangeDialog,
@@ -15,7 +15,7 @@ import {
 } from "@/features/projects/settings/folder/public-api/presentation";
 import { AWC_TASKS_SECONDARY_BUTTON_CLASS } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
-import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/public-api/types";
 
 /**
  * Folder and repository card: path, which computer holds it, a check of the

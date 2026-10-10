@@ -1,7 +1,7 @@
 import type { AwcProjectAccessInvite } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 import type { InviteRowCopyState } from "@/features/projects/members/hooks/useInviteRowCopy";
 import AwcProjectMembersInviteMeta from "@/features/projects/members/AwcProjectMembersInviteMeta";
-import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/public-api/types";
 
 export interface AwcProjectMembersInvitePendingRowProps {
   readonly invite: AwcProjectAccessInvite;

@@ -7,7 +7,7 @@ import { PROJECT_PAGE_LIBRARY_ACTIONS_COPY as A } from "@/features/projects/libr
 import {
   PANEL_BUTTON_PRIMARY_CLASS,
   PANEL_BUTTON_SECONDARY_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
+} from "@/features/projects/public-api/types";
 
 const MENU_CLASS =
   "absolute right-0 z-20 mt-1 min-w-36 overflow-hidden rounded-xl border border-awc-border bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-900";

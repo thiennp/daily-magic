@@ -9,7 +9,7 @@ import AwcProjectConnectionsLoadNotes from "@/features/projects/settings/connect
 import AwcProjectConnectionsNotice from "@/features/projects/settings/connections/AwcProjectConnectionsNotice";
 import { useProjectConnectionsActions } from "@/features/projects/settings/connections/useProjectConnectionsActions";
 import { useProjectConnections } from "@/features/projects/settings/connections/useProjectConnections";
-import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/public-api/types";
 
 interface AwcProjectConnectionsSectionProps {
   readonly projectId: string;

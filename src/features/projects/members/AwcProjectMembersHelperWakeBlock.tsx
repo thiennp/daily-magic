@@ -10,7 +10,7 @@ import { ASSISTANT_WAKE_BLOCK_COPY as B } from "@/features/projects/members/assi
 import { ASSISTANT_WAKE_HEALTH_COPY as W } from "@/features/projects/members/assistantWakeHealthCopy.constant";
 import type { AssistantWakeHealth } from "@/features/projects/members/utils/formatAssistantWakeHealth";
 import type { RailAssistantWakeStatus } from "@/features/projects/members/utils/resolveRailAssistantWakeStatus";
-import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/public-api/types";
 
 interface AwcProjectMembersHelperWakeBlockProps {
   readonly projectId: string;

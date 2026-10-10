@@ -1,5 +1,5 @@
 import { formatInviteExpiry } from "@/features/projects/members/utils/formatInviteExpiry";
-import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/public-api/types";
 
 const TAG =
   "inline-flex items-center rounded-md border border-awc-line bg-awc-tile px-1.5 text-[11.5px] leading-relaxed tabular-nums text-awc-fg-muted";

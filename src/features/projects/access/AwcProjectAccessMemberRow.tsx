@@ -12,7 +12,7 @@ import { awcProjectAccessMemberAnchorId } from "@/features/projects/access/awcPr
 import AwcProjectAccessMemberRenameControls from "@/features/projects/access/AwcProjectAccessMemberRenameControls";
 import AwcProjectAccessMemberWakeLinkPill from "@/features/projects/access/AwcProjectAccessMemberWakeLinkPill";
 import type { AwcMemberWakeLinkState } from "@/features/projects/access/utils/resolveMemberWakeLinkState";
-import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPageMetadataText.constant";
+import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/public-api/types";
 
 interface MemberRow {
   readonly id: string;

@@ -5,8 +5,8 @@ import { useId } from "react";
 import Button from "@/components/ui/button/Button";
 import { APP_SURFACE_FIELD_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import useAwcProjectRename from "@/features/projects/hooks/useAwcProjectRename";
-import { PROJECT_PAGE_SETTINGS_COPY as C } from "@/features/projects/projectPageSettingsCopy.constant";
-import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PAGE_SETTINGS_COPY as C } from "@/features/projects/public-api/types";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/public-api/types";
 
 interface AwcProjectSettingsNameSectionProps {
   readonly projectId: string;

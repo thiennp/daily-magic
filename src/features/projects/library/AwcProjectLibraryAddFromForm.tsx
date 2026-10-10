@@ -6,7 +6,7 @@ import {
   PANEL_BUTTON_PRIMARY_CLASS,
   PANEL_BUTTON_SECONDARY_CLASS,
   PANEL_STATUS_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
+} from "@/features/projects/public-api/types";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 

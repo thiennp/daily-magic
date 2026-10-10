@@ -16,7 +16,7 @@ import { OVERVIEW_GRID2_CLASS } from "@/features/projects/overview/overviewChrom
 import useOverviewPanelData from "@/features/projects/overview/useOverviewPanelData";
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/public-api/types";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/public-api/types";
-import type { ProjectPageNavTarget } from "@/features/projects/projectPageTabs.constant";
+import type { ProjectPageNavTarget } from "@/features/projects/public-api/types";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 interface Props {

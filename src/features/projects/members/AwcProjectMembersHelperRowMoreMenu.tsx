@@ -2,7 +2,7 @@
 
 import { useState, type FocusEvent } from "react";
 
-import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/public-api/types";
 
 interface AwcProjectMembersHelperRowMoreMenuProps {
   readonly name: string;
@@ -16,17 +16,21 @@ const TRIGGER =
   "awc-focus-ring grid size-7 shrink-0 place-items-center rounded-lg text-[15px] font-semibold leading-none text-awc-fg-muted hover:bg-awc-fill";
 const MENU =
   "absolute right-0 top-8 z-20 flex min-w-[11rem] flex-col rounded-[10px] border border-awc-line bg-awc-surface py-1 shadow-awc-card";
-const ITEM = "awc-focus-ring px-3 py-1.5 text-left text-[13px] font-medium hover:bg-awc-fill";
+const ITEM =
+  "awc-focus-ring px-3 py-1.5 text-left text-[13px] font-medium hover:bg-awc-fill";
 
 /** DF-036 F12: the assistant row's ⋯ menu — Message privately · Rename · Wake link · Remove. */
-export default function AwcProjectMembersHelperRowMoreMenu(p: AwcProjectMembersHelperRowMoreMenuProps) {
+export default function AwcProjectMembersHelperRowMoreMenu(
+  p: AwcProjectMembersHelperRowMoreMenuProps,
+) {
   const [open, setOpen] = useState(false);
   const pick = (run: () => void) => () => {
     setOpen(false);
     run();
   };
   const closeOnLeave = (event: FocusEvent<HTMLDivElement>) => {
-    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false);
+    if (!event.currentTarget.contains(event.relatedTarget as Node | null))
+      setOpen(false);
   };
   const items = [
     { label: C.menuChat, run: p.onMessage, bad: false },

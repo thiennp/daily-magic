@@ -13,10 +13,10 @@ import AwcProjectLibraryList from "@/features/projects/library/AwcProjectLibrary
 import AwcProjectLibrarySkillForm from "@/features/projects/library/AwcProjectLibrarySkillForm";
 import { PROJECT_PAGE_LIBRARY_COPY as C } from "@/features/projects/library/projectPageLibraryCopy.constant";
 import useAwcProjectLibrary from "@/features/projects/library/useAwcProjectLibrary";
-import { PANEL_STATUS_CLASS } from "@/features/projects/projectPagePanelChrome.constant";
+import { PANEL_STATUS_CLASS } from "@/features/projects/public-api/types";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
-import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/public-api/types";
 
 type LibraryMode = "list" | "new-skill" | "new-playbook" | "add-from";
 

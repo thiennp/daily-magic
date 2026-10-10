@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { AWC_PROJECT_DELETE_COPY } from "@/features/projects/awcProjectDeleteCopy.constant";
+import { AWC_PROJECT_DELETE_COPY } from "@/features/projects/public-api/types";
 import requestDeleteUserProject from "@/features/projects/utils/requestDeleteUserProject";
 
 describe("requestDeleteUserProject", () => {

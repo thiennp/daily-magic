@@ -7,7 +7,7 @@ import type { PendingInviteCopyPromptResult } from "@/features/projects/access/i
 import AwcProjectMembersInvitePendingRow from "@/features/projects/members/AwcProjectMembersInvitePendingRow";
 import { ConfirmDestructiveModal } from "@/features/shell/public-api/presentation";
 import { useInviteRowCopy } from "@/features/projects/members/hooks/useInviteRowCopy";
-import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/public-api/types";
 
 interface AwcProjectMembersInvitePendingListProps {
   readonly invites: readonly AwcProjectAccessInvite[];

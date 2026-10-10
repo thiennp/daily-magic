@@ -4,10 +4,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import Button from "@/components/ui/button/Button";
-import AwcProjectLeaveConfirmForm from "@/features/projects/AwcProjectLeaveConfirmForm";
-import { AWC_PROJECT_LEAVE_COPY } from "@/features/projects/awcProjectLeaveCopy.constant";
+import { AwcProjectLeaveConfirmForm } from "@/features/projects/public-api/presentation";
+import { AWC_PROJECT_LEAVE_COPY } from "@/features/projects/public-api/types";
 import useLeaveProject from "@/features/projects/hooks/useLeaveProject";
-import { PROJECT_PANEL_CARD_DANGER_CLASS as DANGER_CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PANEL_CARD_DANGER_CLASS as DANGER_CARD } from "@/features/projects/public-api/types";
 
 interface AwcProjectSettingsLeaveZoneProps {
   readonly projectId: string;

@@ -97,7 +97,8 @@
     "src/features/projects/messenger#root",
     "src/features/home/constants",
     "src/features/home/hooks",
-    "src/features/home/utils"
+    "src/features/home/utils",
+    "src/features/projects#root"
   ],
   "blocked": {
     "src/features/projects/access/approvalCard": "outside test AwcProjectAccessPendingList.df036.render.test.ts imports test helper AwcPendingApprovalCard.fixtures",
@@ -595,6 +596,11 @@
       "unit": "src/features/home/utils",
       "sha": "b70f4596244454cabd4b9e66c740ee90379f6800",
       "at": "2026-10-10T11:47:03.570Z"
+    },
+    {
+      "unit": "src/features/projects#root",
+      "sha": "9cf08b9ecb7be412933f5b1b57f4b56352015f46",
+      "at": "2026-10-10T11:51:03.500Z"
     }
   ],
   "limits": {

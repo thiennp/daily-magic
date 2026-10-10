@@ -4,7 +4,7 @@ import {
   PANEL_HEADING_CLASS,
   PANEL_LIST_CLASS,
   PANEL_ROW_META_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
+} from "@/features/projects/public-api/types";
 import { PROJECT_PAGE_REPORTS_COPY as C } from "@/features/projects/reports/projectPageReportsCopy.constant";
 import {
   resolveProjectReportFrom,

@@ -5,7 +5,7 @@ import ProjectSkillRowActions from "@/features/project-skill-share/internal/pres
 import { PROJECT_PLAYBOOKS_COPY } from "@/features/project-skill-share/internal/presentation/projectPlaybooksCopy.constant";
 import { PROJECT_SKILLS_COPY } from "@/features/project-skill-share/internal/presentation/projectSkillsCopy.constant";
 import { PROJECT_SKILLS_BADGE_CLASS } from "@/features/project-skill-share/internal/presentation/projectSkillsSection.constant";
-import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/projectPageMetadataText.constant";
+import { PROJECT_PAGE_METADATA_TEXT_CLASS } from "@/features/projects/public-api/types";
 
 interface ProjectSkillRowProps {
   readonly skill: ProjectSkillView;

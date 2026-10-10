@@ -7,7 +7,7 @@ import {
   isProjectPageTabId,
   type ProjectPageNavTarget,
   type ProjectPageTabId,
-} from "@/features/projects/projectPageTabs.constant";
+} from "@/features/projects/public-api/types";
 
 /** Project page tab + cross-section navigation (Team rail scroll, rename). Chat lives in the dock. */
 const useAwcProjectDetailNavigation = (input: {

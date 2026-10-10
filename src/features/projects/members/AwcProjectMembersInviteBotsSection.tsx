@@ -12,7 +12,7 @@ import SectionIcon, {
   SECTION_CARD,
 } from "@/features/projects/members/AwcProjectMembersSectionCard";
 import AwcProjectMembersInvitePendingList from "@/features/projects/members/AwcProjectMembersInvitePendingList";
-import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/public-api/types";
 
 type ProjectAccess = ReturnType<typeof useAwcProjectAccess>;
 

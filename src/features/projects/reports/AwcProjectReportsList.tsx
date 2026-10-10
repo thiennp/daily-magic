@@ -3,7 +3,7 @@
 import {
   PANEL_BUTTON_SECONDARY_CLASS,
   PANEL_LIST_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
+} from "@/features/projects/public-api/types";
 import AwcProjectReportRow from "@/features/projects/reports/AwcProjectReportRow";
 import AwcProjectReportsFilters from "@/features/projects/reports/AwcProjectReportsFilters";
 import {

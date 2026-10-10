@@ -4,7 +4,7 @@ import { AwcProjectMembersInfoTip } from "@/features/projects/members/public-api
 import { AwcProjectRepoUrlsSection } from "@/features/projects/repoUrls/public-api/presentation";
 import { AwcProjectOpenOnGitHub } from "@/features/projects/settings/folder/public-api/presentation";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
-import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/public-api/types";
 
 /**
  * Folder and repository for a non-owner: the owner's path and computer are not

@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import type { PendingInviteCopyPromptResult } from "@/features/projects/access/invites/fetchPendingInviteCopyPrompt";
-import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
+import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/public-api/types";
 import { copyTextFromLoader } from "@/features/projects/utils/public-api/presentation";
 
 export type InviteRowCopyState =

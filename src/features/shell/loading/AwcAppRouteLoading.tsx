@@ -4,8 +4,8 @@ import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 
 import HomeDashboardSkeleton from "@/features/home/HomeDashboardSkeleton";
-import AwcProjectDetailSkeleton from "@/features/projects/AwcProjectDetailSkeleton";
-import AwcProjectsListSkeleton from "@/features/projects/AwcProjectsListSkeleton";
+import { AwcProjectDetailSkeleton } from "@/features/projects/public-api/presentation";
+import { AwcProjectsListSkeleton } from "@/features/projects/public-api/presentation";
 import AppShell from "@/features/shell/AppShell";
 import { APP_SHELL_NARROW_CONTENT_CLASS } from "@/features/shell/appShellContentWidth.constant";
 import AwcPageSkeleton from "@/features/shell/loading/AwcPageSkeleton";
@@ -25,7 +25,10 @@ export default function AwcAppRouteLoading() {
   const kind = resolveAwcRouteSkeleton(usePathname() ?? "/");
   if (status !== "authenticated" || kind === "none") {
     return (
-      <div className="min-h-screen bg-awc-bg dark:bg-gray-900" aria-busy="true" />
+      <div
+        className="min-h-screen bg-awc-bg dark:bg-gray-900"
+        aria-busy="true"
+      />
     );
   }
   if (kind === "projects") {

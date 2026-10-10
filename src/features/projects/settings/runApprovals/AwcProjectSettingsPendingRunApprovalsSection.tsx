@@ -3,7 +3,7 @@
 import AwcPendingRunApprovalRow from "@/features/projects/settings/runApprovals/AwcPendingRunApprovalRow";
 import { RUN_APPROVALS_COPY as C } from "@/features/projects/settings/runApprovals/runApprovalsCopy.constant";
 import { useProjectPendingRunApprovals } from "@/features/projects/settings/runApprovals/useProjectPendingRunApprovals";
-import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
+import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/public-api/types";
 
 interface AwcProjectSettingsPendingRunApprovalsSectionProps {
   readonly projectId: string;

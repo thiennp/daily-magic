@@ -3,7 +3,7 @@
 import {
   PANEL_LINK_CLASS,
   PANEL_STATUS_CLASS,
-} from "@/features/projects/projectPagePanelChrome.constant";
+} from "@/features/projects/public-api/types";
 import AwcProjectReportDetailFields from "@/features/projects/reports/AwcProjectReportDetailFields";
 import { PROJECT_PAGE_REPORTS_COPY as C } from "@/features/projects/reports/projectPageReportsCopy.constant";
 import useAwcProjectReportDetail from "@/features/projects/reports/useAwcProjectReportDetail";

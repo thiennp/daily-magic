@@ -5,7 +5,7 @@ import {
   ACCOUNT_TABS,
   type AccountTabId,
 } from "@/features/account/accountCopy.constant";
-import { PROJECT_V5_H1_CLASS } from "@/features/projects/projectPageV5ChromeClasses.constant";
+import { PROJECT_V5_H1_CLASS } from "@/features/projects/public-api/types";
 
 interface AccountHeaderProps {
   readonly tab?: AccountTabId;
