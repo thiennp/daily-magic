@@ -7,7 +7,7 @@ import { EmptyStatePanelSkeleton } from "@/features/empty-states/public-api/pres
 import AgentRunCard from "@/features/reports/AgentRunCard";
 import AgentRunsFilters from "@/features/reports/AgentRunsFilters";
 import AgentRunsListLoadErrorPanel from "@/features/reports/AgentRunsListLoadErrorPanel";
-import { useAgentRunsList } from "@/features/reports/hooks/useAgentRunsList";
+import { useAgentRunsList } from "@/features/reports/hooks/public-api/presentation";
 import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
 import { clearAgentRunHistory } from "@/features/reports/utils/deleteAgentRunHistory";
 import { buildNavConsolidationNewTaskHref } from "@/lib/shell/buildNavConsolidationNewTaskHref";

@@ -10,7 +10,7 @@ import {
   AgentRunFeedbackForm,
   FeedbackSubmittedNotice,
 } from "@/features/feedback/public-api/presentation";
-import { useAgentRunDetailState } from "@/features/reports/hooks/useAgentRunDetailState";
+import { useAgentRunDetailState } from "@/features/reports/hooks/public-api/presentation";
 import { canSubmitFeedbackForRunStatus } from "@/lib/feedback/canSubmitFeedbackForRunStatus";
 
 interface AgentRunDetailProps {

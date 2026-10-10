@@ -1,6 +1,6 @@
 "use client";
 
-import useAgentRunKeepInProject from "@/features/reports/hooks/useAgentRunKeepInProject";
+import { useAgentRunKeepInProject } from "@/features/reports/hooks/public-api/presentation";
 
 interface AgentRunKeepInProjectButtonProps {
   readonly runId: string;

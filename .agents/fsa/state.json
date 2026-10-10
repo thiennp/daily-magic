@@ -62,7 +62,8 @@
     "src/features/my-bots",
     "src/features/projects/resources",
     "src/features/agent-witch/macDevices",
-    "src/features/library"
+    "src/features/library",
+    "src/features/reports/hooks"
   ],
   "blocked": {
     "src/features/home/constants": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing), pre-commit architecture gate fails when it is edited",
@@ -385,6 +386,11 @@
       "unit": "src/features/library",
       "sha": "daa85e18999175e1c2f08600daad786f57128a67",
       "at": "2026-10-10T10:07:52.470Z"
+    },
+    {
+      "unit": "src/features/reports/hooks",
+      "sha": "a26cd9d9b89e29eb9399d38287255132a62ba0bf",
+      "at": "2026-10-10T10:10:04.977Z"
     }
   ]
 }
