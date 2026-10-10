@@ -2,7 +2,7 @@
 
 import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
 import { AwcProjectRepoUrlsSection } from "@/features/projects/repoUrls/public-api/presentation";
-import AwcProjectOpenOnGitHub from "@/features/projects/settings/folder/AwcProjectOpenOnGitHub";
+import { AwcProjectOpenOnGitHub } from "@/features/projects/settings/folder/public-api/presentation";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
 

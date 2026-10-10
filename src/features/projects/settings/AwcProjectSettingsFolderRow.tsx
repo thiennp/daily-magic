@@ -5,12 +5,14 @@ import { useState } from "react";
 
 import AwcProjectPathDisplay from "@/features/projects/AwcProjectPathDisplay";
 import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
-import AwcProjectFolderChangeDialog from "@/features/projects/settings/folder/AwcProjectFolderChangeDialog";
-import AwcProjectFolderMissingWarning from "@/features/projects/settings/folder/AwcProjectFolderMissingWarning";
-import AwcProjectFolderStatusChips from "@/features/projects/settings/folder/AwcProjectFolderStatusChips";
-import AwcProjectOpenOnGitHub from "@/features/projects/settings/folder/AwcProjectOpenOnGitHub";
-import AwcProjectUseGitRemote from "@/features/projects/settings/folder/AwcProjectUseGitRemote";
-import { useProjectFolderCard } from "@/features/projects/settings/folder/useProjectFolderCard";
+import {
+  AwcProjectFolderChangeDialog,
+  AwcProjectFolderMissingWarning,
+  AwcProjectFolderStatusChips,
+  AwcProjectOpenOnGitHub,
+  AwcProjectUseGitRemote,
+  useProjectFolderCard,
+} from "@/features/projects/settings/folder/public-api/presentation";
 import { AWC_TASKS_SECONDARY_BUTTON_CLASS } from "@/features/projects/tasks/awcProjectTasksChrome.constant";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";

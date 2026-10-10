@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { pickFolderViaBridge } from "@/features/projects/settings/folder/pickFolderViaBridge";
+import { pickFolderViaBridge } from "@/features/projects/settings/folder/public-api/presentation";
 
 /** Native folder picker on the selected computer; typing stays the fallback. */
 export const useFolderBrowse = (input: {
