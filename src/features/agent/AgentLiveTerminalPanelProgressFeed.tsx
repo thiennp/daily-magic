@@ -3,7 +3,7 @@
 import AgentLiveProgressFeed from "@/features/agent/AgentLiveProgressFeed";
 import { useAgentLiveTerminalPanelProgress } from "@/features/agent/hooks/useAgentLiveTerminalPanelProgress";
 import { resolveAgentLiveFailureDetails } from "@/features/agent/utils/resolveAgentLiveFailureDetails";
-import SendReadinessApprovalWaitingChip from "@/features/agent/send-readiness/SendReadinessApprovalWaitingChip";
+import { SendReadinessApprovalWaitingChip } from "@/features/agent/send-readiness/public-api/presentation";
 
 interface AgentLiveTerminalPanelProgressFeedProps {
   readonly panelProgress: ReturnType<typeof useAgentLiveTerminalPanelProgress>;

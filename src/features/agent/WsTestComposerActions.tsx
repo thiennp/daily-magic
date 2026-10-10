@@ -4,10 +4,12 @@ import ComposerBlockedActionButtons from "@/features/agent/ComposerBlockedAction
 import WsTestComposerHelperText from "@/features/agent/WsTestComposerHelperText";
 import { useWsTestComposerActionsModel } from "@/features/agent/hooks/useWsTestComposerActionsModel";
 import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
-import SendReadinessBanner from "@/features/agent/send-readiness/SendReadinessBanner";
-import SendReadinessMacReadyChip from "@/features/agent/send-readiness/SendReadinessMacReadyChip";
-import SendReadinessWriterNotice from "@/features/agent/send-readiness/SendReadinessWriterNotice";
-import { resolveComposerSendDisabledWithReadiness } from "@/features/agent/send-readiness/resolveComposerSendDisabledWithReadiness";
+import {
+  SendReadinessBanner,
+  SendReadinessMacReadyChip,
+  SendReadinessWriterNotice,
+  resolveComposerSendDisabledWithReadiness,
+} from "@/features/agent/send-readiness/public-api/presentation";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 

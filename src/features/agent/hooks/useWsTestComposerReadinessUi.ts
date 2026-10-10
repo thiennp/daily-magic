@@ -6,8 +6,8 @@ import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
 import {
   resolveSendReadinessBanner,
   resolveSendReadinessSendDisabledReason,
-} from "@/features/agent/send-readiness/resolveSendReadinessBanner";
-import type { SendReadinessBannerModel } from "@/features/agent/send-readiness/sendReadinessBanner.types";
+} from "@/features/agent/send-readiness/public-api/presentation";
+import type { SendReadinessBannerModel } from "@/features/agent/send-readiness/public-api/types";
 import type { ComposerBlockedAction } from "@/features/agent/utils/composerBlockedAction.types";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 

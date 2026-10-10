@@ -1,7 +1,7 @@
 "use client";
 
 import SendTaskComposerWriterAgentPickerRow from "@/features/agent/SendTaskComposerWriterAgentPickerRow";
-import { resolveWriterPickerStatus } from "@/features/agent/send-readiness/resolveWriterPickerStatus";
+import { resolveWriterPickerStatus } from "@/features/agent/send-readiness/public-api/presentation";
 import { HARNESS_WRITER_OPTIONS } from "@/features/harness/constants/harnessFormOptions";
 import type { AgentWitchDeviceWriter } from "@/lib/agentWitch/deviceWriters";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";

@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import { SEND_TASK_DEVICE_ID_QUERY_PARAM } from "@/features/agent/constants/public-api/types";
-import SendReadinessWriterNotice from "@/features/agent/send-readiness/SendReadinessWriterNotice";
+import { SendReadinessWriterNotice } from "@/features/agent/send-readiness/public-api/presentation";
 import { resolveDeepLinkDeviceSwitchNotice } from "@/features/agent/utils/resolveDeepLinkDeviceSwitchNotice";
 
 /** 77e29f7a: the link's computer is kept from first load, before any URL rewrite. */

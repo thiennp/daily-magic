@@ -1,7 +1,7 @@
 "use client";
 
 import WsTestComposerActions from "@/features/agent/WsTestComposerActions";
-import { resolveWriterNotReadyNotice } from "@/features/agent/send-readiness/resolveWriterNotReadyNotice";
+import { resolveWriterNotReadyNotice } from "@/features/agent/send-readiness/public-api/presentation";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 
