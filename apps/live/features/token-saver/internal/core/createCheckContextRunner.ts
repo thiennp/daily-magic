@@ -1,5 +1,5 @@
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
-import { buildKnowledgeNotes } from "@agent-witch/live-knowledge";
+import { recordKnowledgeHookRun } from "@agent-witch/live-knowledge";
 import { resolveAgentWitchProjectIdFromCwd } from "@agent-witch/live-projects";
 
 import type {
@@ -51,12 +51,15 @@ export const createCheckContextRunner = (
       );
       const notes =
         result.projectId !== undefined
-          ? buildKnowledgeNotes({
+          ? recordKnowledgeHookRun({
               layout: deps.layout,
               projectKey: result.projectId,
               message: input.message ?? "",
               ...(input.cwd !== undefined
                 ? { projectFolderPath: input.cwd }
+                : {}),
+              ...(input.sessionId !== undefined
+                ? { sessionId: input.sessionId }
                 : {}),
             })
           : "";

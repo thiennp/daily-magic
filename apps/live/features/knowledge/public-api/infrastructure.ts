@@ -1,5 +1,6 @@
 export { buildKnowledgeHeartbeatPayload } from "../internal/core/episode/buildKnowledgeHeartbeatPayload";
 export { buildKnowledgeNotes } from "../internal/core/episode/buildKnowledgeNotes";
+export { recordKnowledgeHookRun } from "../internal/core/episode/recordKnowledgeHookRun";
 export { captureKnowledgeAfterRun } from "../internal/core/episode/captureKnowledgeAfterRun";
 export { checkKnowledgeBeforeTask } from "../internal/core/episode/checkKnowledgeBeforeTask";
 export { classifyKnowledgeTaskClass } from "../internal/core/episode/classifyKnowledgeTaskClass";

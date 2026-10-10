@@ -15,28 +15,40 @@ const NOTES_TOKEN_BUDGET = 150;
 const NOTES_MAX_CARDS = 2;
 const NOTES_MIN_SCORE = 0.3;
 
+export type KnowledgeNotesResult = {
+  readonly text: string;
+  readonly cards: readonly {
+    readonly episodeId: string;
+    readonly score: number;
+  }[];
+  readonly tokens: number;
+};
+
+const NO_NOTES: KnowledgeNotesResult = { text: "", cards: [], tokens: 0 };
+
 /**
  * Lexical-only, fail-open project notes for agents running outside AgentWitch
- * dispatch (check_context hook / MCP). Empty string when nothing relevant.
+ * dispatch (check_context hook / MCP), with the cards used so a caller can
+ * record the injection. Empty result when nothing relevant.
  */
-export const buildKnowledgeNotes = (input: {
+export const selectKnowledgeNotes = (input: {
   readonly layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">;
   readonly projectKey: string;
   readonly message: string;
   readonly projectFolderPath?: string;
-}): string => {
+}): KnowledgeNotesResult => {
   if (
     !isKnowledgeEnabled() ||
     input.message.trim().length === 0 ||
     (input.projectFolderPath !== undefined &&
       !isKnowledgeOnForFolder(input.projectFolderPath))
   ) {
-    return "";
+    return NO_NOTES;
   }
   try {
     const db = getKnowledgeDb(input.layout);
     if (db === null) {
-      return "";
+      return NO_NOTES;
     }
     const scored = scoreKnowledgeCards({
       cards: listEpisodesWithVectors(db, input.projectKey, {
@@ -47,13 +59,26 @@ export const buildKnowledgeNotes = (input: {
       mode: "fts",
       kinds: ["mistake", "fix", "decision", "lesson"],
     });
-    return packKnowledgeCardsToBudget({
+    const packed = packKnowledgeCardsToBudget({
       cards: selectDiverseKnowledgeCards(scored, NOTES_MIN_SCORE),
       tokenBudget: NOTES_TOKEN_BUDGET,
       maxCards: NOTES_MAX_CARDS,
       promptText: input.message,
-    }).text.trim();
+    });
+    return {
+      text: packed.text.trim(),
+      cards: packed.cards.map((entry) => ({
+        episodeId: entry.card.id,
+        score: entry.score,
+      })),
+      tokens: packed.tokens,
+    };
   } catch {
-    return "";
+    return NO_NOTES;
   }
 };
+
+/** Notes text only (check_context / MCP callers that do not record a run). */
+export const buildKnowledgeNotes = (
+  input: Parameters<typeof selectKnowledgeNotes>[0],
+): string => selectKnowledgeNotes(input).text;
