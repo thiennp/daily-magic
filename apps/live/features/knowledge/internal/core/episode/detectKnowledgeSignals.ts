@@ -87,6 +87,10 @@ export const findFirstErrorLine = (output: string): string => {
   );
 };
 
+/** True only when a line really looks like an error (findFirstErrorLine falls back to line 1). */
+export const hasKnowledgeErrorLine = (output: string): boolean =>
+  output.split("\n").some((line) => ERROR_LINE_PATTERN.test(collapse(line)));
+
 export const normalizeKnowledgeRequest = (prompt: string): string =>
   clip(collapse(prompt), EPISODE_REQUEST_MAX_CHARS);
 

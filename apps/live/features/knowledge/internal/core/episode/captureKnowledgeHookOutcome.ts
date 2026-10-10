@@ -8,31 +8,16 @@ import { buildKnowledgeHookRunId } from "./recordKnowledgeHookRun";
 
 type OpenRun = { readonly run_id: string; readonly project_key: string };
 
-const OPEN_RUN_WINDOW_MS = 6 * 60 * 60 * 1000;
-
-/** This prompt's own run if it is still open, else the session's newest open one. */
+/** The run this prompt opened, if it is still open (exact match only: never guess a run). */
 const findOpenHookRun = (
   db: KnowledgeDatabase,
-  sessionId: string,
-  expectedRunId: string,
-): OpenRun | null => {
-  const exact = db
+  runId: string,
+): OpenRun | null =>
+  (db
     .prepare(
       "SELECT run_id, project_key FROM knowledge_events WHERE run_id = ? AND outcome IS NULL",
     )
-    .get(expectedRunId) as unknown as OpenRun | undefined;
-  if (exact !== undefined) return exact;
-  const since = new Date(Date.now() - OPEN_RUN_WINDOW_MS).toISOString();
-  return (
-    (db
-      .prepare(
-        `SELECT run_id, project_key FROM knowledge_events
-         WHERE run_id LIKE ? AND outcome IS NULL AND ts >= ? ORDER BY ts DESC LIMIT 1`,
-      )
-      .get(`hook:${sessionId}:%`, since) as unknown as OpenRun | undefined) ??
-    null
-  );
-};
+    .get(runId) as unknown as OpenRun | undefined) ?? null;
 
 /**
  * Close the run the prompt hook opened: read the finished turn from the Claude
@@ -52,7 +37,6 @@ export const captureKnowledgeHookOutcome = async (input: {
     if (turn === null || db === null) return false;
     const run = findOpenHookRun(
       db,
-      input.sessionId,
       buildKnowledgeHookRunId(input.sessionId, turn.prompt),
     );
     if (run === null) return false;

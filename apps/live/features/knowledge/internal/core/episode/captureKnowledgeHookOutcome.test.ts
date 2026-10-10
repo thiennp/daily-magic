@@ -107,6 +107,30 @@ describe("captureKnowledgeHookOutcome", () => {
     expect(avoided.n).toBe(1);
   });
 
+  it("never attaches a turn to a different open run of the session", async () => {
+    const layout = {
+      installDir: makeDir("aw-hook-capture-"),
+      profileEmail: null,
+    } as AgentWitchLocalLayout;
+    const cwd = makeDir("aw-hook-cwd-");
+    recordKnowledgeHookRun({
+      layout,
+      projectKey: "p1",
+      projectFolderPath: cwd,
+      message: PROMPT,
+      sessionId: "s1",
+    });
+    const otherTurn = turn("boom", true).replace(PROMPT, "ok");
+    expect(
+      await captureKnowledgeHookOutcome({
+        layout,
+        sessionId: "s1",
+        cwd,
+        transcriptText: otherTurn,
+      }),
+    ).toBe(false);
+  });
+
   it("does nothing when the prompt never opened a run", async () => {
     const layout = {
       installDir: makeDir("aw-hook-capture-"),

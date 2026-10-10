@@ -55,6 +55,28 @@ describe("parseClaudeTranscriptTurn", () => {
     expect(turn?.output).toContain("The tests fail.");
   });
 
+  it("does not count a failing command without a real error line (grep found nothing)", () => {
+    const jsonl = [
+      user("check whether the package file changed please"),
+      assistant([bashCall("b1")]),
+      result("b1", "Exit code 1", true),
+    ].join("\n");
+    expect(parseClaudeTranscriptTurn(jsonl)?.exitCode).toBe(0);
+  });
+
+  it("keeps only the last Bash result, not an older error that was fixed", () => {
+    const jsonl = [
+      user("run the tests for the auth module please"),
+      assistant([bashCall("b1")]),
+      result("b1", "Exit code 1\nTypeError: old failure", true),
+      assistant([bashCall("b2")]),
+      result("b2", "all green"),
+    ].join("\n");
+    const turn = parseClaudeTranscriptTurn(jsonl);
+    expect(turn?.output).not.toContain("old failure");
+    expect(turn?.output).toContain("all green");
+  });
+
   it("passes the turn when a later Bash call succeeds, and ignores non-Bash results", () => {
     const jsonl = [
       user("run the tests for the auth module please"),

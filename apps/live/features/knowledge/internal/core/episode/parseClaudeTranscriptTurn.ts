@@ -1,9 +1,11 @@
+import { hasKnowledgeErrorLine } from "./detectKnowledgeSignals";
+
 export type ClaudeTranscriptTurn = {
   /** What the user asked in the last real prompt of the transcript. */
   readonly prompt: string;
-  /** Bash results and the final assistant text of that turn (tail, capped). */
+  /** The last Bash result and the final assistant text of that turn (tail, capped). */
   readonly output: string;
-  /** 1 when the last Bash call of the turn failed, else 0. */
+  /** 1 when the turn ended on a failing Bash call that printed a real error line, else 0. */
   readonly exitCode: 0 | 1;
 };
 
@@ -107,13 +109,18 @@ export const parseClaudeTranscriptTurn = (
       }
     }
   }
-  const output = [...results.map((r) => r.text), lastAssistantText]
+  // Only the last Bash result decides: an earlier failure that was fixed is not
+  // this turn's mistake, and `grep` finding nothing is not a failure either.
+  const last = results.at(-1);
+  const lastText = last?.text ?? "";
+  const failed = last?.failed === true && hasKnowledgeErrorLine(lastText);
+  const output = [lastText, lastAssistantText]
     .filter((t) => t.length > 0)
     .join("\n")
     .slice(-MAX_OUTPUT_CHARS);
   return {
     prompt: prompt.slice(0, MAX_PROMPT_CHARS),
     output,
-    exitCode: results.at(-1)?.failed === true ? 1 : 0,
+    exitCode: failed ? 1 : 0,
   };
 };
