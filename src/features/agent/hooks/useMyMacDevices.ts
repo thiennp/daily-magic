@@ -13,7 +13,7 @@ import type { AgentWitchDevicePlatform } from "@/lib/agentWitch/types/AgentWitch
 import type { AgentWitchLocalConnectVersionStatus } from "@/lib/agentWitch/types/AgentWitchLocalConnectVersionStatus.type";
 import useSubscribeMacDeviceRevoked from "@/features/agent-witch/macDevices/hooks/useSubscribeMacDeviceRevoked";
 import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
-import { useConnectionLab } from "@/features/agent-witch/connection-lab/ConnectionLabContext";
+import { useConnectionLab } from "@/features/agent-witch/connection-lab/public-api/presentation";
 
 export interface MyMacDevice {
   readonly id: string;

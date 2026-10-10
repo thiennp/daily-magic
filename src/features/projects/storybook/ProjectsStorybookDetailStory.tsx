@@ -1,6 +1,6 @@
 "use client";
 
-import { ConnectionLabProvider } from "@/features/agent-witch/connection-lab/ConnectionLabContext";
+import { ConnectionLabProvider } from "@/features/agent-witch/connection-lab/public-api/presentation";
 import AwcProjectDetailPanel from "@/features/projects/AwcProjectDetailPanel";
 import ProjectsStorybookFrame from "@/features/projects/storybook/ProjectsStorybookFrame";
 import type { ProjectsStorybookViewport } from "@/features/projects/storybook/ProjectsStorybookFrame";

@@ -1,6 +1,6 @@
 import AdminGroupsPageLayout from "@/features/pages/layouts/AdminGroupsPageLayout";
 import ReportDetailPageLayout from "@/features/pages/layouts/ReportDetailPageLayout";
-import ConnectionLabPageLayout from "@/features/agent-witch/connection-lab/ConnectionLabPageLayout";
+import { ConnectionLabPageLayout } from "@/features/agent-witch/connection-lab/public-api/presentation";
 import UserManagementPanel from "@/features/admin/UserManagementPanel";
 import PromptSdlcGuidePage from "@/features/prompt-optimizer/internal/presentation/PromptSdlcGuidePage";
 import PromptSdlcPage from "@/features/prompt-optimizer/internal/presentation/PromptSdlcPage";

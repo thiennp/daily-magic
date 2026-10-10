@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 
-import { useConnectionLab } from "@/features/agent-witch/connection-lab/ConnectionLabContext";
+import { useConnectionLab } from "@/features/agent-witch/connection-lab/public-api/presentation";
 import { useAgentWitchDashboardSocketConnection } from "@/features/agent/hooks/useAgentWitchDashboardSocketConnection";
 import { useAgentLiveFinishedRunReconcile } from "@/features/agent/hooks/useAgentLiveFinishedRunReconcile";
 import { useAgentLiveRunRecordResync } from "@/features/agent/hooks/useAgentLiveRunRecordResync";

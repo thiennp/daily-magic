@@ -38,7 +38,8 @@
     "src/features/projects/repoUrls",
     "src/features/projects/settings/folder",
     "src/features/agent/send-readiness",
-    "src/features/projects/sync"
+    "src/features/projects/sync",
+    "src/features/agent-witch/connection-lab"
   ],
   "blocked": {},
   "rounds": [
@@ -236,6 +237,11 @@
       "unit": "src/features/projects/sync",
       "sha": "e0f58b62763a97b07f16ab5d37428b5089cd2b4c",
       "at": "2026-10-10T09:35:45.431Z"
+    },
+    {
+      "unit": "src/features/agent-witch/connection-lab",
+      "sha": "b73bc92a73d797f70d76060f3da4f78552ec72f4",
+      "at": "2026-10-10T09:37:04.826Z"
     }
   ]
 }
