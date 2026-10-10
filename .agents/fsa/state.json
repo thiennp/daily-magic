@@ -69,7 +69,8 @@
     "src/features/agent-witch/utils",
     "src/features/home/components",
     "src/features/capabilities",
-    "src/features/dispatch/hooks"
+    "src/features/dispatch/hooks",
+    "src/features/notifications"
   ],
   "blocked": {
     "src/features/home/constants": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing), pre-commit architecture gate fails when it is edited",
@@ -428,6 +429,11 @@
       "unit": "src/features/dispatch/hooks",
       "sha": "f28cc6641baa311ea9b1d93cf79eeb807fbc1717",
       "at": "2026-10-10T10:21:49.799Z"
+    },
+    {
+      "unit": "src/features/notifications",
+      "sha": "d7507a8a5bfdac075b8b8f4f9123cd6e9b5f397c",
+      "at": "2026-10-10T10:23:05.456Z"
     }
   ]
 }

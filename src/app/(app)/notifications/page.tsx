@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import NotificationsPageClient from "@/features/notifications/NotificationsPageClient";
+import { NotificationsPageClient } from "@/features/notifications/public-api/presentation";
 import AppShell from "@/features/shell/AppShell";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
