@@ -1,7 +1,7 @@
 "use client";
 
-import AdminSidebar from "@/features/shell/AdminSidebar";
-import AppShell from "@/features/shell/AppShell";
+import { AdminSidebar } from "@/features/shell/public-api/presentation";
+import { AppShell } from "@/features/shell/public-api/presentation";
 
 /**
  * Admin chrome keeps the full primary nav (Marketplace, Automations,

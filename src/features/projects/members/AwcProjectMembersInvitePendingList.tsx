@@ -5,7 +5,7 @@ import { useState } from "react";
 import type { AwcProjectAccessInvite } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 import type { PendingInviteCopyPromptResult } from "@/features/projects/access/invites/fetchPendingInviteCopyPrompt";
 import AwcProjectMembersInvitePendingRow from "@/features/projects/members/AwcProjectMembersInvitePendingRow";
-import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
+import { ConfirmDestructiveModal } from "@/features/shell/public-api/presentation";
 import { useInviteRowCopy } from "@/features/projects/members/hooks/useInviteRowCopy";
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
 

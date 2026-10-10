@@ -17,7 +17,7 @@ import AccountSignedOutView from "@/features/account/AccountSignedOutView";
 import AccountTabBar from "@/features/account/AccountTabBar";
 import { useAccountPrefs } from "@/features/account/useAccountPrefs";
 import useNavigatorOnline from "@/features/account/useNavigatorOnline";
-import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
+import { APP_PAGE_STACK_CLASS } from "@/features/shell/public-api/types";
 
 export default function AccountPageClient() {
   const { data: session, status } = useSession();

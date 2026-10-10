@@ -22,7 +22,7 @@ import { filterAdminUsersByKind } from "@/features/admin/utils/public-api/presen
 import { filterAdminUsersBySearch } from "@/features/admin/utils/public-api/presentation";
 import { useAdminUserActions } from "@/features/admin/hooks/public-api/presentation";
 import { PROJECT_V5_H1_CLASS } from "@/features/projects/projectPageV5ChromeClasses.constant";
-import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
+import { ConfirmDestructiveModal } from "@/features/shell/public-api/presentation";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import { isPrivilegedGlobalRole } from "@/lib/auth/roles";
 

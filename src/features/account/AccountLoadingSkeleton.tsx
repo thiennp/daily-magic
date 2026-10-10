@@ -1,6 +1,6 @@
 import AccountHeader from "@/features/account/AccountHeader";
 import { ACCOUNT_COPY } from "@/features/account/accountCopy.constant";
-import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
+import { APP_PAGE_STACK_CLASS } from "@/features/shell/public-api/types";
 
 export default function AccountLoadingSkeleton() {
   return (

@@ -5,7 +5,7 @@ import Link from "next/link";
 import AccountHeader from "@/features/account/AccountHeader";
 import { ACCOUNT_COPY } from "@/features/account/accountCopy.constant";
 import { APP_SURFACE_CTA_PRIMARY_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
+import { APP_PAGE_STACK_CLASS } from "@/features/shell/public-api/types";
 
 export default function AccountSignedOutView() {
   const copy = ACCOUNT_COPY.signedOut;

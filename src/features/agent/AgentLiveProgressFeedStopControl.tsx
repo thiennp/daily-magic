@@ -3,7 +3,7 @@
 import Button from "@/components/ui/button/Button";
 import AgentLiveProgressActivityDot from "@/features/agent/AgentLiveProgressActivityDot";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
-import { ConnectionStatusBadge } from "@/features/shell/ConnectionStatusBadge";
+import { ConnectionStatusBadge } from "@/features/shell/public-api/presentation";
 
 interface AgentLiveProgressFeedStopControlProps {
   readonly isWorking: boolean;

@@ -19,7 +19,7 @@ import NotificationsPageHeader from "@/features/notifications/NotificationsPageH
 import NotificationsSignedOutView from "@/features/notifications/NotificationsSignedOutView";
 import NotificationsSkeleton from "@/features/notifications/NotificationsSkeleton";
 import { useNotificationsItems } from "@/features/notifications/useNotificationsItems";
-import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
+import { APP_PAGE_STACK_CLASS } from "@/features/shell/public-api/types";
 
 export default function NotificationsPageClient() {
   const { data: session, status } = useSession();

@@ -33,3 +33,7 @@ Query: `npm run feature-knowledge:query -- "..." --feature=shell`
 `v5/public-api/types.ts` (copy and class constants, `resolveDeviceUpdateAction`) and `v5/public-api/presentation.ts` (`AppShellBrand`, `AppShellComputersHeading`, `AppShellDevicesSurface`, `DeviceUpdateButton`). Import the v5 slice only through these files.
 
 `loading/` public API: import skeleton components from `@/features/shell/loading/public-api/presentation` and `AWC_SKELETON_CARD_CLASS` from `@/features/shell/loading/public-api/types`.
+
+## Public API
+
+Outside code imports the shell root only through `public-api/presentation` (`AppShell`, `AdminSidebar`, `ConfirmDestructiveModal`, `ConnectionStatusBadge`) and `public-api/types` (`PRIMARY_NAV`, `BOTTOM_NAV`, `APP_PAGE_STACK_CLASS`, `APP_SHELL_NARROW_CONTENT_CLASS`).

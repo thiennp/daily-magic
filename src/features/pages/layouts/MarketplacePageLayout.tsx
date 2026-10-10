@@ -8,7 +8,7 @@ import {
   MARKETPLACE_PAGE_DESCRIPTION,
   MARKETPLACE_PAGE_TITLE,
 } from "@/features/marketplace/marketplaceCopy.constant";
-import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
+import { APP_PAGE_STACK_CLASS } from "@/features/shell/public-api/types";
 
 export default function MarketplacePageLayout() {
   return (

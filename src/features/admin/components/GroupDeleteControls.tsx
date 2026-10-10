@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import Button from "@/components/ui/button/Button";
-import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
+import { ConfirmDestructiveModal } from "@/features/shell/public-api/presentation";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
 import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import type { GroupItem } from "@/features/admin/types/public-api/types";

@@ -5,7 +5,7 @@ import { useState } from "react";
 import LocalTerminalPre from "@/components/surfaces/LocalTerminalPre";
 import Button from "@/components/ui/button/Button";
 import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/public-api/presentation";
-import { ConnectionStatusBadge } from "@/features/shell/ConnectionStatusBadge";
+import { ConnectionStatusBadge } from "@/features/shell/public-api/presentation";
 import { useAgentRunLiveTerminal } from "@/features/reports/hooks/public-api/presentation";
 
 interface AgentRunLiveTerminalProps {

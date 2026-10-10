@@ -14,7 +14,7 @@ import { AwcListRowsSkeleton } from "@/features/shell/loading/public-api/present
 import { AwcSkeletonBar } from "@/features/shell/loading/public-api/presentation";
 import { AwcSkeletonStatus } from "@/features/shell/loading/public-api/presentation";
 import { AWC_SKELETON_CARD_CLASS } from "@/features/shell/loading/public-api/types";
-import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
+import { APP_PAGE_STACK_CLASS } from "@/features/shell/public-api/types";
 
 /*
  * DF-016: these three class strings intentionally mirror (copy, not import)

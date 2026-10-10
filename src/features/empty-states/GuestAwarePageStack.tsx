@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 
 import { useGuestSessionState } from "@/features/empty-states/useGuestSessionState";
-import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
+import { APP_PAGE_STACK_CLASS } from "@/features/shell/public-api/types";
 
 interface GuestAwarePageStackProps {
   readonly children: ReactNode;

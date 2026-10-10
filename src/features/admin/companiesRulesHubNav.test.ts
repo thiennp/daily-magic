@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 
 import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/public-api/types";
-import { PRIMARY_NAV } from "@/features/shell/appNav.constant";
+import { PRIMARY_NAV } from "@/features/shell/public-api/types";
 
 const read = (relativePath: string): string =>
   readFileSync(path.join(process.cwd(), relativePath), "utf8");

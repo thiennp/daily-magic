@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import { GuestSessionStateProvider } from "@/features/empty-states/public-api/presentation";
 import { MarketplacePageLayout } from "@/features/pages/public-api/presentation";
-import AppShell from "@/features/shell/AppShell";
+import { AppShell } from "@/features/shell/public-api/presentation";
 import { resolveServerSessionHint } from "@/lib/auth/resolveServerSessionHint";
 
 export const dynamic = "force-dynamic";

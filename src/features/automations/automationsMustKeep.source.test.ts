@@ -10,7 +10,7 @@ import { ANOTHER_COMPUTER_DEVICE_BADGE_LABEL } from "@/components/ui/badge/anoth
 import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/public-api/types";
 import { MY_BOTS_COPY } from "@/features/my-bots/public-api/types";
 import { SHELL_NAV_TEAM_ONLY_HREFS } from "@/lib/shell/shellNavTeamOnlyHrefs.constant";
-import { PRIMARY_NAV } from "@/features/shell/appNav.constant";
+import { PRIMARY_NAV } from "@/features/shell/public-api/types";
 
 const read = (...parts: string[]): string =>
   readFileSync(join(process.cwd(), ...parts), "utf8");

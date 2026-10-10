@@ -3,7 +3,7 @@
 import AppPanel from "@/components/surfaces/AppPanel";
 import { AgentPageLayout } from "@/features/pages/public-api/presentation";
 import ConnectionLabScenarioPicker from "@/features/agent-witch/connection-lab/ConnectionLabScenarioPicker";
-import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
+import { APP_PAGE_STACK_CLASS } from "@/features/shell/public-api/types";
 
 export default function ConnectionLabPageLayout() {
   return (

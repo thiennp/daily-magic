@@ -1,5 +1,5 @@
 import PromptSdlcPage from "@/features/prompt-optimizer/public-api/presentation";
-import AppShell from "@/features/shell/AppShell";
+import { AppShell } from "@/features/shell/public-api/presentation";
 
 export const dynamic = "force-dynamic";
 

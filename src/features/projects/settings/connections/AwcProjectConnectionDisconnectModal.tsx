@@ -1,6 +1,6 @@
 "use client";
 
-import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
+import { ConfirmDestructiveModal } from "@/features/shell/public-api/presentation";
 import type { ProjectConnectionItem } from "@/features/projects/settings/connections/projectConnection.types";
 import { PROJECT_CONNECTION_PROVIDER_LABEL } from "@/features/projects/settings/connections/projectConnectionProviders.constant";
 import {

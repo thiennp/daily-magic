@@ -1,7 +1,7 @@
 import AppPageHeader from "@/components/surfaces/AppPageHeader";
 import { AutomationsPageClient } from "@/features/automations/public-api/presentation";
 import { AUTOMATIONS_PAGE_COPY } from "@/features/automations/public-api/types";
-import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
+import { APP_PAGE_STACK_CLASS } from "@/features/shell/public-api/types";
 
 export default function AutomationsPageLayout() {
   return (

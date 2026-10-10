@@ -3,8 +3,8 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { PRIMARY_NAV } from "@/features/shell/appNav.constant";
-import { BOTTOM_NAV } from "@/features/shell/appBottomNav.constant";
+import { PRIMARY_NAV } from "@/features/shell/public-api/types";
+import { BOTTOM_NAV } from "@/features/shell/public-api/types";
 
 const readApp = (relativePath: string): string =>
   readFileSync(join(process.cwd(), relativePath), "utf8");
@@ -28,34 +28,29 @@ describe("nav consolidation routes (scope 1)", () => {
   });
 
   it("reports and my-bots pages redirect with intents", () => {
-    expect(readApp("src/app/(app)/reports/page.tsx")).toContain(
-      '"reports"',
-    );
+    expect(readApp("src/app/(app)/reports/page.tsx")).toContain('"reports"');
     expect(readApp("src/app/(app)/my-bots/page.tsx")).toContain('"bots"');
-    expect(readApp("src/app/(app)/new-task/page.tsx")).toContain(
-      '"new-task"',
-    );
+    expect(readApp("src/app/(app)/new-task/page.tsx")).toContain('"new-task"');
   });
 });
 
-  it("308s /my-bots to projects intent=bots in next.config", () => {
-    const source = readApp("next.config.ts");
-    expect(source).toContain('source: "/my-bots"');
-    expect(source).toContain("/projects?intent=bots");
-    expect(source).toContain("permanent: true");
-  });
+it("308s /my-bots to projects intent=bots in next.config", () => {
+  const source = readApp("next.config.ts");
+  expect(source).toContain('source: "/my-bots"');
+  expect(source).toContain("/projects?intent=bots");
+  expect(source).toContain("permanent: true");
+});
 
-  it("hosts Claim/owned bots on projects intent=bots", () => {
-    const source = readApp("src/features/projects/AwcProjectsPanel.tsx");
-    expect(source).toContain("MyBotsPanel");
-    expect(source).toContain('intent === "bots"');
-    expect(
-      readApp("src/lib/shell/navConsolidationIntent.constant.ts"),
-    ).toContain("Claim or remove an assistant here.");
-  });
+it("hosts Claim/owned bots on projects intent=bots", () => {
+  const source = readApp("src/features/projects/AwcProjectsPanel.tsx");
+  expect(source).toContain("MyBotsPanel");
+  expect(source).toContain('intent === "bots"');
+  expect(readApp("src/lib/shell/navConsolidationIntent.constant.ts")).toContain(
+    "Claim or remove an assistant here.",
+  );
+});
 
-  it("retargets /agent plain entry to projects new-task intent", () => {
-    const source = readApp("src/app/(app)/agent/page.tsx");
-    expect(source).toContain("buildNavConsolidationNewTaskHref");
-  });
-
+it("retargets /agent plain entry to projects new-task intent", () => {
+  const source = readApp("src/app/(app)/agent/page.tsx");
+  expect(source).toContain("buildNavConsolidationNewTaskHref");
+});

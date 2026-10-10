@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 
 import { ProjectsPageLayout } from "@/features/pages/public-api/presentation";
-import AppShell from "@/features/shell/AppShell";
-import { APP_SHELL_NARROW_CONTENT_CLASS } from "@/features/shell/appShellContentWidth.constant";
+import { AppShell } from "@/features/shell/public-api/presentation";
+import { APP_SHELL_NARROW_CONTENT_CLASS } from "@/features/shell/public-api/types";
 import { getAuthActor } from "@/lib/auth/auth";
 import { buildLoginCallbackPath } from "@/lib/shell/buildLoginCallbackPath";
 

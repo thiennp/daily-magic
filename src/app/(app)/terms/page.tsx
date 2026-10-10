@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import MarketingLegalPageLayout from "@/features/marketing/MarketingLegalPageLayout";
 import { MARKETING_TERMS_COPY } from "@/features/marketing/marketingLegalCopy.constant";
-import AppShell from "@/features/shell/AppShell";
+import { AppShell } from "@/features/shell/public-api/presentation";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
 export const metadata: Metadata = {
