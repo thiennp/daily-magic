@@ -95,7 +95,7 @@ describe("scanProjectTasksForAutoSkills", () => {
     expect(state.fed).toEqual(["a", "b"]);
     expect(summary).toMatchObject({ scanned: 2, asked: 0 });
     expect(state.statusNote).toBe(
-      "Scanned 2 finished tasks on this computer · no repeated step found yet.",
+      "Scanned 2 finished tasks on this computer · nothing worth saving as a skill yet.",
     );
   });
 

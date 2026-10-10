@@ -43,6 +43,8 @@ export const reportAutoSkillRunCompleted = async (input: {
   readonly agentOutput?: string;
   /** Progress line the strip shows while a scan works through runs. */
   readonly statusNote?: string;
+  /** Manual scan: judge this run alone, without waiting for a second occurrence. */
+  readonly evaluateEachRun?: boolean;
 }): Promise<AutoSkillOutcome> =>
   onAutoSkillRunCompleted(
     {
@@ -57,6 +59,7 @@ export const reportAutoSkillRunCompleted = async (input: {
       ...(input.statusNote !== undefined
         ? { statusNote: input.statusNote }
         : {}),
+      ...(input.evaluateEachRun === true ? { evaluateEachRun: true } : {}),
     },
     {
       openModuleDb: () => {

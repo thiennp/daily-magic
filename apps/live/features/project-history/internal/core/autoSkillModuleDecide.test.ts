@@ -23,6 +23,47 @@ const cluster = (
   state,
 });
 
+describe("decideModuleCluster judging each run alone", () => {
+  it("asks for a first occurrence", () => {
+    expect(
+      decideModuleCluster({
+        cluster: cluster("a", 1),
+        cloudPending: false,
+        minOccurrences: 1,
+      }),
+    ).toEqual({ action: "ask" });
+  });
+
+  it("does not ask again for a cluster already asked", () => {
+    expect(
+      decideModuleCluster({
+        cluster: cluster("a", 1, "asked"),
+        cloudPending: false,
+        minOccurrences: 1,
+      }),
+    ).toEqual({ action: "none", reason: "asked" });
+  });
+
+  it("still respects saved, never and pending", () => {
+    for (const state of ["saved", "never"] as const) {
+      expect(
+        decideModuleCluster({
+          cluster: cluster("a", 1, state),
+          cloudPending: false,
+          minOccurrences: 1,
+        }).action,
+      ).toBe("none");
+    }
+    expect(
+      decideModuleCluster({
+        cluster: cluster("a", 1),
+        cloudPending: true,
+        minOccurrences: 1,
+      }).action,
+    ).toBe("none");
+  });
+});
+
 describe("decideModuleCluster", () => {
   it("does not ask for the first occurrence", () => {
     expect(

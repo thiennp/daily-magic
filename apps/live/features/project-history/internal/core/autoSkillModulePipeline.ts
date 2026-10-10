@@ -10,6 +10,7 @@ import {
 } from "./autoSkillModuleClusterDb";
 import { reconcileClusterState } from "./autoSkillModuleDecide";
 import { hashAutoSkillPrompt } from "./autoSkillRedact";
+import type { AutoSkillModuleDb } from "./autoSkillModuleDb";
 import { matchModule, type ModuleMatchDeps } from "./autoSkillModuleMatch";
 
 export type ModulePipelineResult = {
@@ -17,6 +18,31 @@ export type ModulePipelineResult = {
   readonly touched: readonly AutoSkillModuleCluster[];
   readonly judgeFailed: boolean;
 };
+
+type CloudAnswers = {
+  readonly saved: ReadonlySet<string>;
+  readonly never: ReadonlySet<string>;
+};
+
+/** Fresh counts of the clusters, with the owner's saved / never answers applied. */
+export const refreshTouchedClusters = (
+  db: AutoSkillModuleDb,
+  clusterIds: readonly string[],
+  cloud: CloudAnswers,
+): AutoSkillModuleCluster[] =>
+  clusterIds
+    .map((id) => refreshCluster(db, id))
+    .filter((c): c is AutoSkillModuleCluster => c !== null)
+    .map((c) => {
+      const state = reconcileClusterState(c.state, {
+        saved: cloud.saved.has(c.id),
+        never: cloud.never.has(c.id),
+      });
+      if (state !== c.state) {
+        setClusterState(db, c.id, state);
+      }
+      return { ...c, state };
+    });
 
 /**
  * Feed every module of the run through match -> occurrence -> cluster count.
@@ -27,10 +53,7 @@ export const feedModulesThroughClusters = async (
   modules: readonly AutoSkillModule[],
   run: AutoSkillRunRecord,
   deps: ModuleMatchDeps,
-  cloud: {
-    readonly saved: ReadonlySet<string>;
-    readonly never: ReadonlySet<string>;
-  },
+  cloud: CloudAnswers,
 ): Promise<ModulePipelineResult> => {
   const clusterIds = new Set<string>();
   let judgeFailed = false;
@@ -50,18 +73,6 @@ export const feedModulesThroughClusters = async (
     });
     clusterIds.add(match.clusterId);
   }
-  const touched = [...clusterIds]
-    .map((id) => refreshCluster(deps.db, id))
-    .filter((c): c is AutoSkillModuleCluster => c !== null)
-    .map((c) => {
-      const state = reconcileClusterState(c.state, {
-        saved: cloud.saved.has(c.id),
-        never: cloud.never.has(c.id),
-      });
-      if (state !== c.state) {
-        setClusterState(deps.db, c.id, state);
-      }
-      return { ...c, state };
-    });
+  const touched = refreshTouchedClusters(deps.db, [...clusterIds], cloud);
   return { touched, judgeFailed };
 };

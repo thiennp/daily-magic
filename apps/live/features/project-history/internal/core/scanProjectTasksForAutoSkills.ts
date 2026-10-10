@@ -107,7 +107,7 @@ export const describeScan = (
   }
   return `Scanned ${parts.join(" and ")} on this computer · ${
     summary.asked === 0
-      ? "no repeated step found yet"
+      ? "nothing worth saving as a skill yet"
       : `${plural(summary.asked, "question")} raised`
   }.`;
 };
@@ -148,6 +148,7 @@ export const scanProjectTasksForAutoSkills = async (input: {
       },
       layout: input.layout,
       statusNote: describeScanProgress("task", index + 1, tasks.length),
+      evaluateEachRun: true,
       ...(input.folderPath !== undefined
         ? { folderPath: input.folderPath }
         : {}),
@@ -182,6 +183,7 @@ export const scanProjectTasksForAutoSkills = async (input: {
       },
       layout: input.layout,
       folderPath: input.folderPath ?? "",
+      evaluateEachRun: true,
       statusNote: describeScanProgress(
         "commit",
         index + 1,

@@ -10,7 +10,8 @@ import type {
 export type ModuleClusterDecision =
   | {
       readonly action: "none";
-      readonly reason: "first" | "never" | "saved" | "already_pending";
+      readonly reason:
+        "first" | "never" | "saved" | "already_pending" | "asked";
     }
   | { readonly action: "ask" };
 
@@ -25,7 +26,14 @@ export type ModuleClusterDecision =
 export const decideModuleCluster = (input: {
   readonly cluster: AutoSkillModuleCluster;
   readonly cloudPending: boolean;
+  /**
+   * Distinct runs a cluster needs before it asks. A manual scan passes 1: the
+   * AI judges each run on its own, and a cluster already asked is not asked
+   * again on every rescan.
+   */
+  readonly minOccurrences?: number;
 }): ModuleClusterDecision => {
+  const minOccurrences = input.minOccurrences ?? MODULE_ASK_MIN_OCCURRENCES;
   const { cluster } = input;
   if (cluster.state === "never") {
     return { action: "none", reason: "never" };
@@ -36,7 +44,13 @@ export const decideModuleCluster = (input: {
   if (input.cloudPending) {
     return { action: "none", reason: "already_pending" };
   }
-  return cluster.occurrences >= MODULE_ASK_MIN_OCCURRENCES
+  if (
+    minOccurrences < MODULE_ASK_MIN_OCCURRENCES &&
+    cluster.state === "asked"
+  ) {
+    return { action: "none", reason: "asked" };
+  }
+  return cluster.occurrences >= minOccurrences
     ? { action: "ask" }
     : { action: "none", reason: "first" };
 };
