@@ -41,3 +41,7 @@ Re-index after doc changes: `npm run feature-knowledge:index`.
 ## types public API
 
 `types/public-api/types.ts` exposes `ConnectedClient` and `AgentWitchStatusResponse`; import them from there outside `types/`.
+
+## components public API
+
+`components/public-api/presentation.ts` exposes the marketing landing components (`HomeMarketingAuthModalProvider`, `HomeMarketingHero`, `HomeMarketingPopularPresets`, `HomeMarketingPopularPresetsGrid`) and `HomePromptOptimizerCtaBox`; import them from there outside `components/`.

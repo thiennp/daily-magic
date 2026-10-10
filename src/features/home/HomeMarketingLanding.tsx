@@ -1,6 +1,6 @@
-import HomeMarketingAuthModalProvider from "@/features/home/components/HomeMarketingAuthModalProvider";
-import HomeMarketingHero from "@/features/home/components/HomeMarketingHero";
-import HomeMarketingPopularPresets from "@/features/home/components/HomeMarketingPopularPresets";
+import { HomeMarketingAuthModalProvider } from "@/features/home/components/public-api/presentation";
+import { HomeMarketingHero } from "@/features/home/components/public-api/presentation";
+import { HomeMarketingPopularPresets } from "@/features/home/components/public-api/presentation";
 import HomeMarketingFaq from "@/features/home/HomeMarketingFaq";
 import HomeMarketingFeatures from "@/features/home/HomeMarketingFeatures";
 import HomeMarketingSecurity from "@/features/home/HomeMarketingSecurity";

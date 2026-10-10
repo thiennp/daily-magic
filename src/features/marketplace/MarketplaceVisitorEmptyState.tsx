@@ -7,7 +7,7 @@ import {
   buildMarketingGetStartedHref,
   buildSignInHrefFromSearchParams,
 } from "@/features/empty-states/public-api/types";
-import HomeMarketingPopularPresetsGrid from "@/features/home/components/HomeMarketingPopularPresetsGrid";
+import { HomeMarketingPopularPresetsGrid } from "@/features/home/components/public-api/presentation";
 import resolveHomePopularPresets from "@/features/home/utils/resolveHomePopularPresets";
 import MarketingCtaLink from "@/features/marketing/MarketingCtaLink";
 import {

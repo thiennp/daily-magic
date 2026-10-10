@@ -1,6 +1,6 @@
 "use client";
 
-import HomePromptOptimizerCtaBox from "@/features/home/components/HomePromptOptimizerCtaBox";
+import { HomePromptOptimizerCtaBox } from "@/features/home/components/public-api/presentation";
 import MyOfferingsPanel from "@/features/capabilities/MyOfferingsPanel";
 import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import { FeedbackInboxPanel } from "@/features/feedback/public-api/presentation";
