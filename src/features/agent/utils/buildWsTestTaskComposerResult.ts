@@ -1,4 +1,4 @@
-import type { UseWsTestTaskComposerResult } from "@/features/agent/hooks/types/UseWsTestTaskComposerResult.type";
+import type { UseWsTestTaskComposerResult } from "@/features/agent/hooks/types/public-api/types";
 import type { buildWsTestComposerDispatchState } from "@/features/agent/utils/buildWsTestComposerDispatchState";
 import type { createWsTestSelectionHandlers } from "@/features/agent/utils/createWsTestSelectionHandlers";
 import type { useComposerProjectSelection } from "@/features/agent/hooks/useComposerProjectSelection";

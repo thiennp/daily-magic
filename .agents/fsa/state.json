@@ -12,7 +12,8 @@
     "src/features/projects/access/laneCompare",
     "src/features/projects/botSupportUrl",
     "src/features/agent/components",
-    "src/features/agent/icons"
+    "src/features/agent/icons",
+    "src/features/agent/hooks/types"
   ],
   "blocked": {},
   "rounds": [
@@ -80,6 +81,11 @@
       "unit": "src/features/agent/icons",
       "sha": "78964a41c6b82798bd4922c01cf723d6e6f80eb8",
       "at": "2026-10-10T09:02:06.924Z"
+    },
+    {
+      "unit": "src/features/agent/hooks/types",
+      "sha": "86821d28aefe8340c1412ab4617967c6901f9f72",
+      "at": "2026-10-10T09:03:55.234Z"
     }
   ]
 }

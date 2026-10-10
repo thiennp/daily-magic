@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 
-import type { UseWsTestTaskComposerResult } from "@/features/agent/hooks/types/UseWsTestTaskComposerResult.type";
+import type { UseWsTestTaskComposerResult } from "@/features/agent/hooks/types/public-api/types";
 import { useLibraryPlaybookSelection } from "@/features/agent/hooks/useLibraryPlaybookSelection";
 import { useComposerProjectSelection } from "@/features/agent/hooks/useComposerProjectSelection";
 import { useSelectedDispatchCapability } from "@/features/dispatch/hooks/useSelectedDispatchCapability";

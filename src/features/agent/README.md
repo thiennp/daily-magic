@@ -31,3 +31,5 @@ New task composer banners and Send disabling: `src/features/agent/send-readiness
 Query: `npm run feature-knowledge:query -- "..." --feature=agent`
 
 Public API (`icons`): outside code imports `HarnessWriterAgentMark` from `@/features/agent/icons/public-api/presentation`.
+
+Public API (`hooks/types`): outside code imports `UseWsTestTaskComposerResult` from `@/features/agent/hooks/types/public-api/types`.
