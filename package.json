@@ -74,7 +74,10 @@
     "storybook:wave:reset-agent-roles": "tsx scripts/storybookWaveQa/resetAgentWaveRoles.ts",
     "storybook:wave:record-agent": "tsx scripts/storybookWaveQa/recordAgentWaveQaReview.ts",
     "storybook:wave:page-brief": "tsx scripts/storybookWaveQa/printWaveQaPageBrief.ts",
-    "storybook:wave:weekly": "npm run storybook:build && STORYBOOK_WAVE_OUTPUT_DIR=storybook-wave-captures tsx scripts/storybookWaveQa/runWeeklyStorybookWaveCapture.ts"
+    "storybook:wave:weekly": "npm run storybook:build && STORYBOOK_WAVE_OUTPUT_DIR=storybook-wave-captures tsx scripts/storybookWaveQa/runWeeklyStorybookWaveCapture.ts",
+    "fsa:deps": "depcruise src --config .dependency-cruiser.cjs --ignore-known .agents/fsa/depcruise-baseline.json",
+    "fsa:deps:baseline": "depcruise src --config .dependency-cruiser.cjs --output-type baseline > .agents/fsa/depcruise-baseline.json",
+    "fsa:next": "tsx .agents/scripts/fsa-next-unit.ts"
   },
   "overrides": {
     "baseline-browser-mapping": "2.11.0",
@@ -129,6 +132,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/ws": "^8.18.1",
+    "dependency-cruiser": "^16.10.4",
     "eslint": "^9",
     "eslint-config-next": "^16.3.6",
     "husky": "^9.1.7",
