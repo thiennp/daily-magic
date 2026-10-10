@@ -7,7 +7,7 @@ import AppPageHeader from "@/components/surfaces/AppPageHeader";
 import AppPanel from "@/components/surfaces/AppPanel";
 import { APP_SURFACE_TEXT_LINK_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import AwcProjectDetailPanel from "@/features/projects/AwcProjectDetailPanel";
-import ProjectsStorybookMockFetchProvider from "@/features/projects/storybook/ProjectsStorybookMockFetchProvider";
+import { ProjectsStorybookMockFetchProvider } from "@/features/projects/storybook/public-api/presentation";
 import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
 import { AWC_STORYBOOK_SAMPLE_PROJECT } from "@/utils/storybook/awcStorybookFixtures";
 import type { StorybookPageStatus } from "@/utils/storybook/storybookPageStatus.constant";
