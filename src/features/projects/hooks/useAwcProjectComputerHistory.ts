@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { requestProjectComputerHistory } from "@/features/projects/utils/requestProjectComputerHistory";
+import { requestProjectComputerHistory } from "@/features/projects/utils/public-api/presentation";
 
 /** Owner opt-in toggle state for project computer history. */
 const useAwcProjectComputerHistory = (

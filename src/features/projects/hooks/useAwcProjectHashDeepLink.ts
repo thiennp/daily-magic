@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import type { ProjectPageTabId } from "@/features/projects/projectPageTabs.constant";
-import { readProjectPageHashParam } from "@/features/projects/utils/parseProjectPageHash";
+import { readProjectPageHashParam } from "@/features/projects/utils/public-api/presentation";
 import { buildProjectTabHash } from "@/lib/shell/buildNavConsolidationRedirect";
 
 const readParam = (tab: ProjectPageTabId, key: string): string | null =>

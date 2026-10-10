@@ -20,7 +20,7 @@ import {
   PANEL_INTRO_CLASS,
   PANEL_STATUS_CLASS,
 } from "@/features/projects/projectPagePanelChrome.constant";
-import { fillProjectPageCopy } from "@/features/projects/utils/fillProjectPageCopy";
+import { fillProjectPageCopy } from "@/features/projects/utils/public-api/presentation";
 
 interface AwcProjectLibrarySkillFormProps {
   readonly skills: AwcProjectLibraryState["skills"];

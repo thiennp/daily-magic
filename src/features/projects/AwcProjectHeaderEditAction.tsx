@@ -6,10 +6,8 @@ import {
   PROJECT_V5_PILL_BUTTON_CLASS,
   PROJECT_V5_REASON_CLASS,
 } from "@/features/projects/projectPageV5ChromeClasses.constant";
-import {
-  shouldShowProjectEditOnMacHelperText,
-  type ProjectEditOnMacCta,
-} from "@/features/projects/utils/resolveProjectEditOnMacCta";
+import { shouldShowProjectEditOnMacHelperText } from "@/features/projects/utils/public-api/presentation";
+import type { ProjectEditOnMacCta } from "@/features/projects/utils/public-api/types";
 
 /**
  * HN-H3 header action: "Edit on this computer" when online on this computer;

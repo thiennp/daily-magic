@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { PROJECT_PAGE_SETTINGS_COPY as C } from "@/features/projects/projectPageSettingsCopy.constant";
-import { requestProjectComputerHistory } from "@/features/projects/utils/requestProjectComputerHistory";
+import { requestProjectComputerHistory } from "@/features/projects/utils/public-api/presentation";
 import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
 
 interface AwcProjectSettingsHistoryRowProps {

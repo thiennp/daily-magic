@@ -13,8 +13,8 @@ import filterAwcProjectPitfallRows, {
 } from "@/features/projects/pitfalls/filterAwcProjectPitfallRows";
 import { PITFALL_EMPTY_CLASS } from "@/features/projects/pitfalls/pitfallsChrome.constant";
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
-import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
-import withProjectEditOnMacTab from "@/features/projects/utils/withProjectEditOnMacTab";
+import type { ProjectEditOnMacCta } from "@/features/projects/utils/public-api/types";
+import { withProjectEditOnMacTab } from "@/features/projects/utils/public-api/presentation";
 import { PROJECT_PANEL_SURFACE_CLASS as SURFACE } from "@/features/projects/projectPanelCardClasses.constant";
 
 interface AwcProjectPitfallsPanelProps {

@@ -4,7 +4,7 @@ import { ProjectSkillsSection } from "@/features/project-skill-share/public-api/
 import AwcProjectResourcesCompositionSection from "@/features/projects/resources/AwcProjectResourcesCompositionSection";
 import AwcProjectResourcesFoldersCard from "@/features/projects/resources/AwcProjectResourcesFoldersCard";
 import { AwcProjectRepoUrlsSection } from "@/features/projects/repoUrls/public-api/presentation";
-import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
+import type { ProjectEditOnMacCta } from "@/features/projects/utils/public-api/types";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 

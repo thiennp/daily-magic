@@ -11,7 +11,7 @@ import {
   PANEL_HEADING_CLASS,
   PANEL_INTRO_CLASS,
 } from "@/features/projects/projectPagePanelChrome.constant";
-import { fillProjectPageCopy } from "@/features/projects/utils/fillProjectPageCopy";
+import { fillProjectPageCopy } from "@/features/projects/utils/public-api/presentation";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 interface Props {

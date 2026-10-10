@@ -14,7 +14,7 @@ import AwcProjectTasksToolbar from "@/features/projects/tasks/AwcProjectTasksToo
 import AwcProjectTasksOfflineBanner from "@/features/projects/tasks/AwcProjectTasksOfflineBanner";
 import { PROJECT_PAGE_TASKS_COPY as C } from "@/features/projects/tasks/projectPageTasksCopy.constant";
 import useAwcProjectTasks from "@/features/projects/tasks/useAwcProjectTasks";
-import { projectHasOwnerComputer } from "@/features/projects/utils/projectHasOwnerComputer";
+import { projectHasOwnerComputer } from "@/features/projects/utils/public-api/presentation";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 /**

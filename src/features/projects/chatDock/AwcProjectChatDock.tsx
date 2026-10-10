@@ -17,7 +17,7 @@ import {
   buildOverviewAttention,
   sumMessengerUnread,
 } from "@/features/projects/overview/public-api/types";
-import { projectHasOwnerComputer } from "@/features/projects/utils/projectHasOwnerComputer";
+import { projectHasOwnerComputer } from "@/features/projects/utils/public-api/presentation";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 interface AwcProjectChatDockProps {

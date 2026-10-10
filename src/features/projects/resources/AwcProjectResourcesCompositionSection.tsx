@@ -2,8 +2,8 @@
 
 import useAwcProjectComposition from "@/features/projects/hooks/useAwcProjectComposition";
 import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/projectPageResourcesCopy.constant";
-import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
-import resolveProjectEditOnMacLinkProps from "@/features/projects/utils/resolveProjectEditOnMacLinkProps";
+import type { ProjectEditOnMacCta } from "@/features/projects/utils/public-api/types";
+import { resolveProjectEditOnMacLinkProps } from "@/features/projects/utils/public-api/presentation";
 import { PROJECT_PANEL_CARD_CLASS as CARD } from "@/features/projects/projectPanelCardClasses.constant";
 
 const ROW_CLASS =

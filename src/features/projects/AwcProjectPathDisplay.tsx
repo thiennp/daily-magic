@@ -4,8 +4,8 @@ import { useCallback, useState } from "react";
 
 import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { PROJECT_PAGE_LAYOUT_V2_COPY } from "@/features/projects/projectPageLayoutV2Copy.constant";
-import copyProjectPathToClipboard from "@/features/projects/utils/copyProjectPathToClipboard";
-import formatProjectPathTruncation from "@/features/projects/utils/formatProjectPathTruncation";
+import { copyProjectPathToClipboard } from "@/features/projects/utils/public-api/presentation";
+import { formatProjectPathTruncation } from "@/features/projects/utils/public-api/presentation";
 
 interface AwcProjectPathDisplayProps {
   readonly folderPath: string;

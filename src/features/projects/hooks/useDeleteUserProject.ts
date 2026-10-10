@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 
-import requestDeleteUserProject from "@/features/projects/utils/requestDeleteUserProject";
+import { requestDeleteUserProject } from "@/features/projects/utils/public-api/presentation";
 
 /**
  * @deprecated Prefer `useDeleteProject(projectId)` (binds id at hook time).

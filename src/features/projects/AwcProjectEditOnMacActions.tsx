@@ -2,8 +2,8 @@
 
 import { useId } from "react";
 
-import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
-import resolveProjectEditOnMacLinkProps from "@/features/projects/utils/resolveProjectEditOnMacLinkProps";
+import type { ProjectEditOnMacCta } from "@/features/projects/utils/public-api/types";
+import { resolveProjectEditOnMacLinkProps } from "@/features/projects/utils/public-api/presentation";
 
 interface AwcProjectEditOnMacActionsProps {
   readonly editCta: ProjectEditOnMacCta;

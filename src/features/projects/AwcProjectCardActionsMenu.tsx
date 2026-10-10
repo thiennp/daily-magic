@@ -9,7 +9,7 @@ import {
   AwcProjectCardLeaveDialog,
 } from "@/features/projects/AwcProjectCardActionsDialogs";
 import AwcProjectCardActionsMenuItems from "@/features/projects/AwcProjectCardActionsMenuItems";
-import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
+import type { ProjectEditOnMacCta } from "@/features/projects/utils/public-api/types";
 import {
   PROJECTS_V5_ICON_BUTTON_CLASS,
   PROJECTS_V5_MENU_PANEL_CLASS,

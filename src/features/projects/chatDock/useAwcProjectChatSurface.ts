@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { useAwcProjectChatDock } from "@/features/projects/chatDock/useAwcProjectChatDock";
-import { isProjectChatHash } from "@/features/projects/utils/isProjectChatHash";
+import { isProjectChatHash } from "@/features/projects/utils/public-api/presentation";
 
 /**
  * P1-S1 Chat surface (replaces the Activity tab): dock open/full state, the

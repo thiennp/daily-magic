@@ -5,7 +5,7 @@ import { useEffect, useId, useState } from "react";
 
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import AwcProjectComputerChoices from "@/features/projects/AwcProjectComputerChoices";
-import { attachProjectComputer } from "@/features/projects/utils/attachProjectComputer";
+import { attachProjectComputer } from "@/features/projects/utils/public-api/presentation";
 import {
   AWC_TASKS_PRIMARY_BUTTON_CLASS,
   AWC_TASKS_SECONDARY_BUTTON_CLASS,

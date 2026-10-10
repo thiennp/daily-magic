@@ -7,8 +7,8 @@ import AwcProjectHeaderEditAction from "@/features/projects/AwcProjectHeaderEdit
 import AwcProjectMobileMembersChip from "@/features/projects/AwcProjectMobileMembersChip";
 import AwcProjectRoleChip from "@/features/projects/AwcProjectRoleChip";
 import { PROJECT_V5_H1_CLASS } from "@/features/projects/projectPageV5ChromeClasses.constant";
-import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
-import type { ProjectHeaderStatus } from "@/features/projects/utils/resolveProjectHeaderStatus";
+import type { ProjectEditOnMacCta } from "@/features/projects/utils/public-api/types";
+import type { ProjectHeaderStatus } from "@/features/projects/utils/public-api/types";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 
 interface AwcProjectDetailHeaderProps {

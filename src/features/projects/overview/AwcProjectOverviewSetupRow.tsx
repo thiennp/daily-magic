@@ -7,7 +7,7 @@ import {
   OVERVIEW_PILL_DONE_CLASS,
 } from "@/features/projects/overview/overviewChrome.constant";
 import { PROJECT_PAGE_OVERVIEW_COPY as C } from "@/features/projects/overview/projectPageOverviewCopy.constant";
-import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
+import type { ProjectEditOnMacCta } from "@/features/projects/utils/public-api/types";
 import type { ProjectPageNavTarget } from "@/features/projects/projectPageTabs.constant";
 
 interface Props {

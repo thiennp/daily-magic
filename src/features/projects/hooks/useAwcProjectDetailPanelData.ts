@@ -8,8 +8,8 @@ import { countImportantProjectPitfalls } from "@/features/projects/pitfalls/publ
 import { useAwcProjectPitfalls } from "@/features/projects/pitfalls/public-api/presentation";
 import useAwcProjectTasks from "@/features/projects/tasks/useAwcProjectTasks";
 import { countOpenProjectTasks } from "@/features/projects/tasks/utils/groupProjectTasks";
-import { projectHasOwnerComputer } from "@/features/projects/utils/projectHasOwnerComputer";
-import resolveProjectHeaderStatus from "@/features/projects/utils/resolveProjectHeaderStatus";
+import { projectHasOwnerComputer } from "@/features/projects/utils/public-api/presentation";
+import { resolveProjectHeaderStatus } from "@/features/projects/utils/public-api/presentation";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 /** Project page data: computer presentation, header status, threads, safety rules. */

@@ -7,7 +7,7 @@ import {
   isProjectPageTabId,
   type ProjectPageTabId,
 } from "@/features/projects/projectPageTabs.constant";
-import { parseProjectPageHash } from "@/features/projects/utils/parseProjectPageHash";
+import { parseProjectPageHash } from "@/features/projects/utils/public-api/presentation";
 
 const readHashTab = (): ProjectPageTabId => {
   if (typeof window === "undefined") {

@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 
 import { clearProjectSyncOnLeave } from "@/features/projects/sync/public-api/presentation";
-import requestLeaveUserProject from "@/features/projects/utils/requestLeaveUserProject";
+import { requestLeaveUserProject } from "@/features/projects/utils/public-api/presentation";
 
 /** Client leave for one project (POST /api/projects/[projectId]/leave). */
 export default function useLeaveProject(projectId: string): {

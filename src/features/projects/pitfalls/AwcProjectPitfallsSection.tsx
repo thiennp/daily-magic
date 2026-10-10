@@ -6,8 +6,8 @@ import AwcProjectPitfallRow from "@/features/projects/pitfalls/AwcProjectPitfall
 import { AWC_PROJECT_PITFALLS_COPY } from "@/features/projects/pitfalls/awcProjectPitfallsCopy.constant";
 import buildAwcProjectPitfallRows from "@/features/projects/pitfalls/buildAwcProjectPitfallRows";
 import useAwcProjectPitfalls from "@/features/projects/pitfalls/useAwcProjectPitfalls";
-import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
-import withProjectEditOnMacTab from "@/features/projects/utils/withProjectEditOnMacTab";
+import type { ProjectEditOnMacCta } from "@/features/projects/utils/public-api/types";
+import { withProjectEditOnMacTab } from "@/features/projects/utils/public-api/presentation";
 
 interface AwcProjectPitfallsSectionProps {
   readonly projectId: string;

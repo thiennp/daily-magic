@@ -5,8 +5,8 @@ import AwcProjectsMenuNote from "@/features/projects/AwcProjectsMenuNote";
 import AwcProjectsMenuDisabledItem from "@/features/projects/AwcProjectsMenuDisabledItem";
 import { PROJECTS_V5_MENU_ITEM_CLASS as MENU_ITEM_CLASS } from "@/features/projects/projectsPageV5Classes.constant";
 import buildAwcProjectDetailHref from "@/lib/projects/buildAwcProjectDetailHref";
-import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
-import resolveProjectEditOnMacLinkProps from "@/features/projects/utils/resolveProjectEditOnMacLinkProps";
+import type { ProjectEditOnMacCta } from "@/features/projects/utils/public-api/types";
+import { resolveProjectEditOnMacLinkProps } from "@/features/projects/utils/public-api/presentation";
 
 interface AwcProjectCardActionsMenuItemsProps {
   readonly projectId: string;

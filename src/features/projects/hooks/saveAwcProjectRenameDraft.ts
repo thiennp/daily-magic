@@ -1,4 +1,4 @@
-import patchUserProjectName from "@/features/projects/utils/patchUserProjectName";
+import { patchUserProjectName } from "@/features/projects/utils/public-api/presentation";
 
 export type SaveAwcProjectRenameDraftResult =
   | { readonly kind: "validation"; readonly message: string }

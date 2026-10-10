@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 
 import { clearProjectSyncOnLeave } from "@/features/projects/sync/public-api/presentation";
-import requestDeleteUserProject from "@/features/projects/utils/requestDeleteUserProject";
+import { requestDeleteUserProject } from "@/features/projects/utils/public-api/presentation";
 
 /**
  * Client delete for one project (DELETE /api/projects/[projectId]).

@@ -9,7 +9,7 @@ import AwcProjectCardActionsMenu from "@/features/projects/AwcProjectCardActions
 import AwcProjectPresenceBadge from "@/features/projects/AwcProjectPresenceBadge";
 import useAwcProjectDevicePresentation from "@/features/projects/hooks/useAwcProjectDevicePresentation";
 import useCanDeleteOwnedProject from "@/features/projects/hooks/useCanDeleteOwnedProject";
-import { shouldShowProjectEditOnMacHelperText } from "@/features/projects/utils/resolveProjectEditOnMacCta";
+import { shouldShowProjectEditOnMacHelperText } from "@/features/projects/utils/public-api/presentation";
 import {
   PROJECTS_V5_CARD_CLASS,
   PROJECTS_V5_CARD_LINK_CLASS,
@@ -18,8 +18,8 @@ import {
   PROJECTS_V5_DEFAULT_CHIP_CLASS,
 } from "@/features/projects/projectsPageV5Classes.constant";
 import formatProjectCompositionCountsLine from "@/lib/projects/formatProjectCompositionCountsLine";
-import formatProjectFolderPathForList from "@/features/projects/utils/formatProjectFolderPathForList";
-import resolveProjectListCardTitle from "@/features/projects/utils/resolveProjectListCardTitle";
+import { formatProjectFolderPathForList } from "@/features/projects/utils/public-api/presentation";
+import { resolveProjectListCardTitle } from "@/features/projects/utils/public-api/presentation";
 import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import { buildProjectCardHrefForIntent } from "@/features/projects/navConsolidation/public-api/presentation";

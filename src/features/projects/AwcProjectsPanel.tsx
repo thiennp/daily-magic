@@ -15,7 +15,7 @@ import {
   parseProjectsNavIntent,
 } from "@/features/projects/navConsolidation/public-api/presentation";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
-import { filterAwcProjectsByQuery } from "@/features/projects/utils/filterAwcProjectsByQuery";
+import { filterAwcProjectsByQuery } from "@/features/projects/utils/public-api/presentation";
 import AppPanel from "@/components/surfaces/AppPanel";
 import {
   PROJECTS_V5_INSET_CLASS,

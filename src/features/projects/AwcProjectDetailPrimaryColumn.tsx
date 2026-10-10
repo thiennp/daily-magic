@@ -5,18 +5,16 @@ import Link from "next/link";
 import { AwcProjectComputerHistorySection } from "@/features/projects/computerHistory/public-api/presentation";
 import AwcProjectDetailSection from "@/features/projects/AwcProjectDetailSection";
 import AwcProjectEditOnMacActions from "@/features/projects/AwcProjectEditOnMacActions";
-import { PROJECT_ACTIVITY_TASK_HASH_WITH_POUND } from "@/features/projects/utils/projectActivityTaskDeepLink.constant";
+import { PROJECT_ACTIVITY_TASK_HASH_WITH_POUND } from "@/features/projects/utils/public-api/types";
 import AwcProjectNameEditor from "@/features/projects/AwcProjectNameEditor";
 import AwcProjectPresenceBadge from "@/features/projects/AwcProjectPresenceBadge";
 import AwcProjectReadOnlyCompositionSections from "@/features/projects/AwcProjectReadOnlyCompositionSections";
 import { AwcProjectPitfallsSection } from "@/features/projects/pitfalls/public-api/presentation";
 import { AwcProjectRepoUrlsSection } from "@/features/projects/repoUrls/public-api/presentation";
 import { AWC_PROJECT_DETAIL_META_LABEL_CLASS } from "@/features/projects/awcProjectDetailSection.constant";
-import {
-  shouldShowProjectEditOnMacHelperText,
-  type ProjectEditOnMacCta,
-} from "@/features/projects/utils/resolveProjectEditOnMacCta";
-import type { ProjectDevicePresenceLabel } from "@/features/projects/utils/buildProjectDevicePresenceLabel";
+import { shouldShowProjectEditOnMacHelperText } from "@/features/projects/utils/public-api/presentation";
+import type { ProjectEditOnMacCta } from "@/features/projects/utils/public-api/types";
+import type { ProjectDevicePresenceLabel } from "@/features/projects/utils/public-api/types";
 import type ProjectCompositionItem from "@/lib/projects/types/ProjectCompositionItem.type";
 import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 import formatProjectCompositionCountsLine from "@/lib/projects/formatProjectCompositionCountsLine";

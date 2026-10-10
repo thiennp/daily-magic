@@ -5,7 +5,7 @@ import { useId, useState } from "react";
 import Button from "@/components/ui/button/Button";
 import { APP_SURFACE_FIELD_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { AWC_PROJECT_DELETE_COPY } from "@/features/projects/awcProjectDeleteCopy.constant";
-import isProjectDeleteConfirmNameMatch from "@/features/projects/utils/isProjectDeleteConfirmNameMatch";
+import { isProjectDeleteConfirmNameMatch } from "@/features/projects/utils/public-api/presentation";
 
 interface AwcProjectDeleteConfirmFieldsProps {
   readonly projectName: string;

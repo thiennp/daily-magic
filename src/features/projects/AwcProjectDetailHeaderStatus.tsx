@@ -2,7 +2,7 @@ import { PROJECT_V5_CHIP_BASE_CLASS } from "@/features/projects/projectPageV5Chr
 import type {
   ProjectHeaderStatus,
   ProjectHeaderStatusTone,
-} from "@/features/projects/utils/resolveProjectHeaderStatus";
+} from "@/features/projects/utils/public-api/types";
 
 const CHIP_BY_TONE: Record<ProjectHeaderStatusTone, string> = {
   ok: `${PROJECT_V5_CHIP_BASE_CLASS} bg-awc-ok-soft text-awc-ok dark:bg-success-500/15 dark:text-success-400`,

@@ -9,7 +9,7 @@ import AwcProjectInboxBody from "@/features/projects/access/inbox/AwcProjectInbo
 import AwcProjectInboxClearBar from "@/features/projects/access/inbox/AwcProjectInboxClearBar";
 import AwcProjectInboxClearConfirmModal from "@/features/projects/access/inbox/AwcProjectInboxClearConfirmModal";
 import AwcProjectInboxDispatchForm from "@/features/projects/access/inbox/AwcProjectInboxDispatchForm";
-import { PROJECT_ACTIVITY_TASK_ANCHOR_ID } from "@/features/projects/utils/projectActivityTaskDeepLink.constant";
+import { PROJECT_ACTIVITY_TASK_ANCHOR_ID } from "@/features/projects/utils/public-api/types";
 import { useAwcProjectInbox } from "@/features/projects/access/inbox/hooks/useAwcProjectInbox";
 import { useAwcProjectInboxLivePoll } from "@/features/projects/access/inbox/hooks/useAwcProjectInboxLivePoll";
 

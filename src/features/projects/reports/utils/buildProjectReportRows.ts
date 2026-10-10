@@ -3,7 +3,7 @@ import {
   buildProjectReportExtras,
   type ProjectReportExtras,
 } from "@/features/projects/reports/utils/buildProjectReportExtras";
-import { fillProjectPageCopy } from "@/features/projects/utils/fillProjectPageCopy";
+import { fillProjectPageCopy } from "@/features/projects/utils/public-api/presentation";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 import { resolveAgentRunTitleSummary } from "@/lib/dispatch/resolveAgentRunTitleSummary";
 

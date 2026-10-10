@@ -8,7 +8,7 @@ import {
   type ProjectPageNavTarget,
   type ProjectPageTabId,
 } from "@/features/projects/projectPageTabs.constant";
-import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
+import type { ProjectEditOnMacCta } from "@/features/projects/utils/public-api/types";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 

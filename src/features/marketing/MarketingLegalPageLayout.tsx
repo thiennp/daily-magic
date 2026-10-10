@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 import MarketingLegalDocBar from "@/features/marketing/MarketingLegalDocBar";
 import MarketingLegalSectionBody from "@/features/marketing/MarketingLegalSectionBody";
 import { type MarketingLegalDoc } from "@/features/marketing/marketingLegalCopy.constant";
-import copyProjectPathToClipboard from "@/features/projects/utils/copyProjectPathToClipboard";
+import { copyProjectPathToClipboard } from "@/features/projects/utils/public-api/presentation";
 
 const slugify = (value: string): string =>
   value

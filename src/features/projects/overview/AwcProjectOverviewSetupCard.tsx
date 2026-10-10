@@ -10,7 +10,7 @@ import {
   OVERVIEW_CTA_GHOST_SM_CLASS,
 } from "@/features/projects/overview/overviewChrome.constant";
 import { PROJECT_PAGE_OVERVIEW_COPY as C } from "@/features/projects/overview/projectPageOverviewCopy.constant";
-import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
+import type { ProjectEditOnMacCta } from "@/features/projects/utils/public-api/types";
 import type { ProjectPageNavTarget } from "@/features/projects/projectPageTabs.constant";
 
 interface Props {
@@ -49,7 +49,10 @@ export default function AwcProjectOverviewSetupCard({
   }
   const pct = Math.round((doneCount / total) * 100);
   return (
-    <section className={OVERVIEW_CARD_CLASS} aria-labelledby="overview-setup-title">
+    <section
+      className={OVERVIEW_CARD_CLASS}
+      aria-labelledby="overview-setup-title"
+    >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <h3
           id="overview-setup-title"
