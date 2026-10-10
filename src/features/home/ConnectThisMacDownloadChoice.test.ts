@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { DOWNLOAD_PAGE_COPY } from "@/features/download/downloadPageCopy.constant";
+import { DOWNLOAD_PAGE_COPY } from "@/features/download/public-api/types";
 import { buildAgentWitchLocalMacAppDownloadUrl } from "@/lib/agentWitch/buildAgentWitchLocalMacAppDownloadUrl";
 
 describe("ConnectThisMacDownloadChoice wiring", () => {

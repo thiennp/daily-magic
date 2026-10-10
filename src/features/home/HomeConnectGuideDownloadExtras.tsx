@@ -2,7 +2,7 @@
 
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ComputersDownloadLink from "@/features/home/ComputersDownloadLink";
-import DownloadNonMacNote from "@/features/download/DownloadNonMacNote";
+import { DownloadNonMacNote } from "@/features/download/public-api/presentation";
 import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
 
 interface HomeConnectGuideDownloadExtrasProps {

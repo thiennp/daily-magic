@@ -9,7 +9,7 @@ import ConnectThisLinuxDownloadArea from "@/features/home/ConnectThisLinuxDownlo
 import ConnectThisMacModalNotice from "@/features/home/ConnectThisMacModalNotice";
 import type { ConnectThisMacModalNotice as ConnectThisMacModalNoticeValue } from "@/features/home/utils/ConnectThisMacModalNotice.type";
 import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
-import DownloadNonMacNote from "@/features/download/DownloadNonMacNote";
+import { DownloadNonMacNote } from "@/features/download/public-api/presentation";
 import { buildAgentWitchLocalMacAppDownloadUrl } from "@/lib/agentWitch/buildAgentWitchLocalMacAppDownloadUrl";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 

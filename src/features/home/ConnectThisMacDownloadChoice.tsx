@@ -1,7 +1,7 @@
 "use client";
 
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import { DOWNLOAD_PAGE_COPY } from "@/features/download/downloadPageCopy.constant";
+import { DOWNLOAD_PAGE_COPY } from "@/features/download/public-api/types";
 
 interface ConnectThisMacDownloadChoiceProps {
   readonly downloadUrl: string;

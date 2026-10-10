@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { APP_SURFACE_CTA_SECONDARY_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import { DOWNLOAD_PAGE_COPY } from "@/features/download/downloadPageCopy.constant";
+import { DOWNLOAD_PAGE_COPY } from "@/features/download/public-api/types";
 import useIsMobileClient from "@/hooks/useIsMobileClient";
 import useThisMacHasConnectedLocalBridge from "@/features/home/hooks/useThisMacHasConnectedLocalBridge";
 import HomeOpenLocalStatusButton from "@/features/home/HomeOpenLocalStatusButton";

@@ -30,7 +30,8 @@
     "src/features/admin/hooks",
     "src/features/projects/access/invites/joinTypes",
     "src/features/projects/access/invites/joinPage",
-    "src/features/projects/settings/runApprovals"
+    "src/features/projects/settings/runApprovals",
+    "src/features/download"
   ],
   "blocked": {},
   "rounds": [
@@ -188,6 +189,11 @@
       "unit": "src/features/projects/settings/runApprovals",
       "sha": "c8f548f9ea72019fccc41d87656c6ac65473c6b4",
       "at": "2026-10-10T09:25:27.406Z"
+    },
+    {
+      "unit": "src/features/download",
+      "sha": "6486c44ff905bcaaccca66db125d59bb90bd6754",
+      "at": "2026-10-10T09:26:29.393Z"
     }
   ]
 }

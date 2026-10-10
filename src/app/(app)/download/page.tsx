@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import DownloadPageBody from "@/features/download/DownloadPageBody";
+import { DownloadPageBody } from "@/features/download/public-api/presentation";
 import AppShell from "@/features/shell/AppShell";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import { AGENT_WITCH_DEFAULT_ORIGIN } from "@/lib/agentWitch/constants";
