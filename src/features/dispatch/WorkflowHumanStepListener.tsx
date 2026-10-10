@@ -2,8 +2,8 @@
 
 import WorkflowHumanStepModal from "@/features/dispatch/WorkflowHumanStepModal";
 import WorkflowStepFailureModal from "@/features/dispatch/WorkflowStepFailureModal";
-import { useWorkflowHumanStepListener } from "@/features/dispatch/hooks/useWorkflowHumanStepListener";
-import { useWorkflowStepFailureListener } from "@/features/dispatch/hooks/useWorkflowStepFailureListener";
+import { useWorkflowHumanStepListener } from "@/features/dispatch/hooks/public-api/presentation";
+import { useWorkflowStepFailureListener } from "@/features/dispatch/hooks/public-api/presentation";
 
 export default function WorkflowHumanStepListener() {
   const {

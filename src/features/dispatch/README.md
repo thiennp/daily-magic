@@ -29,3 +29,7 @@ _None wired in this feature folder._
 - `agent-witch`
 
 Query: `npm run feature-knowledge:query -- "..." --feature=dispatch`
+
+## Hooks public API
+
+`hooks/public-api/types.ts` (dispatch target and approval-request types) and `hooks/public-api/presentation.ts` (dispatch React hooks) are the only entry points other code may import from `hooks/`.

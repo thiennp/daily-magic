@@ -1,4 +1,4 @@
-import type { useTeamDispatchSelection } from "@/features/dispatch/hooks/useTeamDispatchSelection";
+import type { useTeamDispatchSelection } from "@/features/dispatch/hooks/public-api/presentation";
 
 export const createWsTestSelectionHandlers = (
   selection: ReturnType<typeof useTeamDispatchSelection>,

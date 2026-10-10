@@ -9,7 +9,7 @@ import AgentRunInputQuestion from "@/features/dispatch/AgentRunInputQuestion";
 import AgentRunInputQuickReplies from "@/features/dispatch/AgentRunInputQuickReplies";
 import AgentRunPartialOutputPreview from "@/features/dispatch/AgentRunPartialOutputPreview";
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/dispatchApprovalSocket";
-import { useAgentRunInputDraft } from "@/features/dispatch/hooks/useAgentRunInputDraft";
+import { useAgentRunInputDraft } from "@/features/dispatch/hooks/public-api/presentation";
 import { resolveAgentRunInputQuickReplies } from "@/features/dispatch/utils/resolveAgentRunInputQuickReplies";
 import { splitAgentRunInputQuestion } from "@/features/dispatch/utils/splitAgentRunInputQuestion";
 

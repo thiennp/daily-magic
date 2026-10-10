@@ -3,7 +3,7 @@
 import { CapabilityPicker } from "@/features/capabilities/public-api/presentation";
 import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import TeamMemberPicker from "@/features/dispatch/TeamMemberPicker";
-import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
+import { useDispatchTargets } from "@/features/dispatch/hooks/public-api/presentation";
 
 interface TeamDispatchFieldsProps {
   readonly selectedGroupId: string;

@@ -11,7 +11,7 @@ import {
   pairedDevicesResource,
 } from "@/features/agent-witch/pairedDevicesResource";
 import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/public-api/presentation";
-import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
+import { useDispatchTargets } from "@/features/dispatch/hooks/public-api/presentation";
 
 export default function DispatchPolicyPreviewControls() {
   const { groups } = useDispatchTargets();

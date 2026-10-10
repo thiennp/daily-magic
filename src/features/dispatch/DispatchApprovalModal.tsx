@@ -3,8 +3,8 @@
 import Button from "@/components/ui/button/Button";
 import { Modal } from "@/components/ui/modal";
 import DispatchApprovalExpiryNote from "@/features/dispatch/DispatchApprovalExpiryNote";
-import type { DispatchApprovalRequest } from "@/features/dispatch/hooks/useDispatchApprovalListener";
-import { useNowMsEvery } from "@/features/dispatch/hooks/useNowMsEvery";
+import type { DispatchApprovalRequest } from "@/features/dispatch/hooks/public-api/types";
+import { useNowMsEvery } from "@/features/dispatch/hooks/public-api/presentation";
 import { resolveDispatchApprovalExpiry } from "@/features/dispatch/utils/resolveDispatchApprovalExpiry";
 import { formatDispatchApprovalCardBody } from "@/features/dispatch/utils/formatDispatchApprovalCardBody";
 import {

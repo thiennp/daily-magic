@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
+import { useDispatchTargets } from "@/features/dispatch/hooks/public-api/presentation";
 import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 import { useShellNavContext } from "@/features/shell/hooks/public-api/presentation";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";

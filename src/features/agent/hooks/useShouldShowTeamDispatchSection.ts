@@ -1,6 +1,6 @@
 "use client";
 
-import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
+import { useDispatchTargets } from "@/features/dispatch/hooks/public-api/presentation";
 import { resolveShouldShowTeamDispatchSection } from "@/features/agent/utils/resolveShouldShowTeamDispatchSection";
 
 export const useShouldShowTeamDispatchSection = (input: {

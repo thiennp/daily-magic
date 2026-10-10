@@ -8,7 +8,7 @@ import AgentRunCard from "@/features/reports/AgentRunCard";
 import AgentRunsFilters from "@/features/reports/AgentRunsFilters";
 import AgentRunsListLoadErrorPanel from "@/features/reports/AgentRunsListLoadErrorPanel";
 import { useAgentRunsList } from "@/features/reports/hooks/public-api/presentation";
-import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
+import { useDispatchTargets } from "@/features/dispatch/hooks/public-api/presentation";
 import { clearAgentRunHistory } from "@/features/reports/utils/deleteAgentRunHistory";
 import { buildNavConsolidationNewTaskHref } from "@/lib/shell/buildNavConsolidationNewTaskHref";
 import { resolveReportsSignedInEmptyBody } from "@/lib/copy/resolveSoloTeamSurfaceCopy";

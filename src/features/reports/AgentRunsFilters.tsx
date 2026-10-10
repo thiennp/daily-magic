@@ -2,7 +2,7 @@
 
 import { SCOPE_FILTER_OPTIONS } from "@/features/reports/agentRunScopeFilterOptions.constant";
 import { STATUS_FILTER_OPTIONS } from "@/features/reports/agentRunStatusFilterOptions.constant";
-import type { DispatchTargetGroup } from "@/features/dispatch/hooks/useDispatchTargets";
+import type { DispatchTargetGroup } from "@/features/dispatch/hooks/public-api/types";
 import {
   AgentRunScope,
   type AgentRunScopeValue,

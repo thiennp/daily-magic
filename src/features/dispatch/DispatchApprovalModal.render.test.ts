@@ -2,7 +2,7 @@ import { createElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("@/features/dispatch/hooks/useNowMsEvery", () => ({
+vi.mock("@/features/dispatch/hooks/public-api/presentation", () => ({
   useNowMsEvery: () => Date.parse("2026-10-06T14:00:00.000Z"),
 }));
 

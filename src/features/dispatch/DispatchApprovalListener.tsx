@@ -2,7 +2,7 @@
 
 import AgentRunInputModal from "@/features/dispatch/AgentRunInputModal";
 import DispatchApprovalModal from "@/features/dispatch/DispatchApprovalModal";
-import { useDispatchApprovalListener } from "@/features/dispatch/hooks/useDispatchApprovalListener";
+import { useDispatchApprovalListener } from "@/features/dispatch/hooks/public-api/presentation";
 
 export default function DispatchApprovalListener() {
   const {

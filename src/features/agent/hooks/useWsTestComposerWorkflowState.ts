@@ -4,7 +4,7 @@ import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 
 import { useWorkflowUploadExcerptState } from "@/features/agent/hooks/useWorkflowUploadExcerptState";
 
-import type { DispatchTargetCapability } from "@/features/dispatch/hooks/useDispatchTargets";
+import type { DispatchTargetCapability } from "@/features/dispatch/hooks/public-api/types";
 import { useComposerResolvedPrompt } from "@/features/agent/hooks/useComposerResolvedPrompt";
 import { useEffectiveWorkflowFieldValues } from "@/features/agent/hooks/useEffectiveWorkflowFieldValues";
 import { usePrefillProjectFolderTextFields } from "@/features/agent/hooks/usePrefillProjectFolderTextFields";

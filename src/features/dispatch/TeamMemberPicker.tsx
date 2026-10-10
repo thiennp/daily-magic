@@ -1,7 +1,7 @@
 "use client";
 
 import TargetPresenceBadges from "@/features/dispatch/TargetPresenceBadges";
-import type { DispatchTargetMember } from "@/features/dispatch/hooks/useDispatchTargets";
+import type { DispatchTargetMember } from "@/features/dispatch/hooks/public-api/types";
 
 interface TeamMemberPickerProps {
   readonly members: readonly DispatchTargetMember[];

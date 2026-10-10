@@ -6,7 +6,7 @@ import {
   APP_SURFACE_NESTED_CARD_CLASS,
   APP_SURFACE_SECTION_TITLE_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
-import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
+import { useDispatchTargets } from "@/features/dispatch/hooks/public-api/presentation";
 import { COMPANY_DIRECTORY_TITLE } from "@/lib/admin/companyGroupCopy.constant";
 import isUserCreatedCapability from "@/lib/capabilities/isUserCreatedCapability";
 

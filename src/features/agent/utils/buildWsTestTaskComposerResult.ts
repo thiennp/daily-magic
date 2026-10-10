@@ -3,7 +3,7 @@ import type { buildWsTestComposerDispatchState } from "@/features/agent/utils/bu
 import type { createWsTestSelectionHandlers } from "@/features/agent/utils/createWsTestSelectionHandlers";
 import type { useComposerProjectSelection } from "@/features/agent/hooks/useComposerProjectSelection";
 import type { useLibraryPlaybookSelection } from "@/features/agent/hooks/useLibraryPlaybookSelection";
-import type { useTeamDispatchSelection } from "@/features/dispatch/hooks/useTeamDispatchSelection";
+import type { useTeamDispatchSelection } from "@/features/dispatch/hooks/public-api/presentation";
 import type useRunScopedComponentIds from "@/features/agent/hooks/useRunScopedComponentIds";
 import type { useWsTestComposerWorkflowState } from "@/features/agent/hooks/useWsTestComposerWorkflowState";
 

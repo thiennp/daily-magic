@@ -1,7 +1,7 @@
 "use client";
 
 import WorkflowRunStepTimeline from "@/features/dispatch/WorkflowRunStepTimeline";
-import { useWorkflowRunSteps } from "@/features/dispatch/hooks/useWorkflowRunSteps";
+import { useWorkflowRunSteps } from "@/features/dispatch/hooks/public-api/presentation";
 
 interface WorkflowRunStepTimelineBlockProps {
   readonly workflowRunId: string;

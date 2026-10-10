@@ -1,5 +1,5 @@
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
-import type { DispatchTargetCapability } from "@/features/dispatch/hooks/useDispatchTargets";
+import type { DispatchTargetCapability } from "@/features/dispatch/hooks/public-api/types";
 import type LibraryPlaybookTemplate from "@/lib/library/types/LibraryPlaybookTemplate.type";
 
 export const resolveComposerPlaybookContext = (

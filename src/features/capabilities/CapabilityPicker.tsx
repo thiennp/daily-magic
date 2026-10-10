@@ -1,6 +1,6 @@
 "use client";
 
-import type { DispatchTargetCapability } from "@/features/dispatch/hooks/useDispatchTargets";
+import type { DispatchTargetCapability } from "@/features/dispatch/hooks/public-api/types";
 
 interface CapabilityPickerProps {
   readonly capabilities: readonly DispatchTargetCapability[];

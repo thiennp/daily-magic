@@ -9,7 +9,7 @@ import {
   APP_SURFACE_SECTION_TITLE_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import shouldShowMyOfferingsPanel from "@/features/capabilities/shouldShowMyOfferingsPanel";
-import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
+import { useDispatchTargets } from "@/features/dispatch/hooks/public-api/presentation";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import isUserCreatedCapability from "@/lib/capabilities/isUserCreatedCapability";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
