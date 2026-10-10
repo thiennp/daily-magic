@@ -1,6 +1,4 @@
-import {
-  deviceVerifyMessageForErrorCode,
-} from "@/features/agent-access/device-verify/deviceVerifyCopy.constant";
+import { deviceVerifyMessageForErrorCode } from "@/features/agent-access/device-verify/deviceVerifyCopy.constant";
 import { isAllowedAppHttpOrigin } from "@/lib/app/isAllowedAppHttpOrigin";
 import { resolveAppBaseUrl } from "@/lib/app/resolveAppBaseUrl";
 import { requireAuth } from "@/lib/auth/requireAuth";
@@ -42,7 +40,10 @@ export async function POST(request: Request): Promise<Response> {
       // Session expired: the verify page sends the browser to /login and back.
       const code = await readUserCode(request);
       return Response.redirect(
-        new URL(`/device/verify?code=${encodeURIComponent(code)}`, resolveAppBaseUrl()),
+        new URL(
+          `/device/verify?code=${encodeURIComponent(code)}`,
+          resolveAppBaseUrl(),
+        ),
         303,
       );
     }
@@ -67,7 +68,12 @@ export async function POST(request: Request): Promise<Response> {
       );
     }
     return Response.json(
-      { ok: false, error: deviceVerifyMessageForErrorCode(outcome.code), code: outcome.code, detail: outcome.error },
+      {
+        ok: false,
+        error: deviceVerifyMessageForErrorCode(outcome.code),
+        code: outcome.code,
+        detail: outcome.error,
+      },
       { status: outcome.status },
     );
   }

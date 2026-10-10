@@ -39,7 +39,14 @@ describe("POST /api/agent-access/invoke tool error status mapping", () => {
     const cases: readonly [unknown, number][] = [
       [{ ok: false, error: "Not found.", code: "not_found" }, 404],
       [{ ok: false, error: "Bad args.", code: "invalid_arguments" }, 400],
-      [{ ok: false, error: "project_id is required.", code: "project_required" }, 400],
+      [
+        {
+          ok: false,
+          error: "project_id is required.",
+          code: "project_required",
+        },
+        400,
+      ],
       [{ ok: false, message: "No code." }, 400],
     ];
     for (const [value, expected] of cases) {

@@ -31,3 +31,5 @@ export const TASK_INTAKE_MARKER_BEGIN = `# BEGIN ${TOKEN_SAVER_MARKER}-task-inta
 export const TASK_INTAKE_MARKER_END = `# END ${TOKEN_SAVER_MARKER}-task-intake`;
 export const TASK_INTAKE_PREFS_FILE_NAME = "task-intake-prefs.json";
 export const TASK_INTAKE_CLI_SUBCOMMAND = "task-intake";
+export const CURSOR_GLOBAL_TASK_INTAKE_RULE_RELATIVE =
+  ".cursor/rules/agent-witch-task-intake.mdc";

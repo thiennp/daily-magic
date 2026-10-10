@@ -1,4 +1,7 @@
-import { executeProjectSkillShareTool } from "@/features/project-skill-share/public-api/infrastructure";
+import {
+  executeProjectSkillShareToolThenUnblock,
+  executeTaskRefinementTool,
+} from "@/features/task-refinement/public-api/infrastructure";
 import { readAgentAccessRetryAfterHeader } from "@/lib/agentAccess/agentAccessRateLimited";
 import { readAgentAccessInvokeBody } from "@/lib/agentAccess/coerceAgentAccessArguments";
 import { executeAgentAccessTool } from "@/lib/agentAccess/executeAgentAccessTool";
@@ -74,7 +77,10 @@ export async function POST(request: Request): Promise<Response> {
     args: invokeBody.arguments,
     authorization: request.headers.get("authorization"),
     ip: readClientIp(request),
-    featureToolExecutors: [executeProjectSkillShareTool],
+    featureToolExecutors: [
+      executeProjectSkillShareToolThenUnblock,
+      executeTaskRefinementTool,
+    ],
   });
   const parsed = parseToolText(result.text);
 

@@ -6,12 +6,14 @@ import { writeClaudeGlobalHook } from "./writeClaudeGlobalHook";
 import { writeCodexGlobalAgents } from "./writeCodexGlobalAgents";
 import { writeCodexGlobalConfig } from "./writeCodexGlobalConfig";
 import { writeCursorGlobalKnowledgeRule } from "./writeCursorGlobalKnowledgeRule";
+import { writeCursorGlobalTaskIntakeRule } from "./writeCursorGlobalTaskIntakeRule";
 import { writeCursorGlobalMcp } from "./writeCursorGlobalMcp";
 
 export interface WriteGlobalTriggersResult {
   readonly ok: true;
   readonly cursorMcp: CliWriteResult;
   readonly cursorKnowledgeRule: CliWriteResult;
+  readonly cursorTaskIntakeRule: CliWriteResult;
   readonly codexConfig: CliWriteResult;
   readonly codexAgents: CliWriteResult;
   readonly claudeClaudeMd: CliWriteResult;
@@ -31,6 +33,7 @@ export const writeGlobalTriggers = (input?: {
     ok: true,
     cursorMcp: writeCursorGlobalMcp({ io }),
     cursorKnowledgeRule: writeCursorGlobalKnowledgeRule({ io }),
+    cursorTaskIntakeRule: writeCursorGlobalTaskIntakeRule({ io }),
     codexConfig: writeCodexGlobalConfig({ io }),
     codexAgents: writeCodexGlobalAgents({ io }),
     claudeClaudeMd: writeClaudeGlobalClaudeMd({ io }),

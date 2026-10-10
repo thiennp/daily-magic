@@ -17,7 +17,8 @@ export async function GET(request: Request): Promise<Response> {
   const redirectUri = readParam(url, "redirect_uri");
   const responseType = readParam(url, "response_type");
   const codeChallenge = readParam(url, "code_challenge");
-  const codeChallengeMethod = readParam(url, "code_challenge_method") || "plain";
+  const codeChallengeMethod =
+    readParam(url, "code_challenge_method") || "plain";
   const stateRaw = url.searchParams.get("state");
   const state = stateRaw !== null && stateRaw.length > 0 ? stateRaw : null;
 
@@ -68,7 +69,10 @@ export async function GET(request: Request): Promise<Response> {
   const consentUrl = new URL(pending.consentPath, publicOrigin);
   if (!session?.user?.id) {
     const login = new URL("/login", publicOrigin);
-    login.searchParams.set("callbackUrl", consentUrl.pathname + consentUrl.search);
+    login.searchParams.set(
+      "callbackUrl",
+      consentUrl.pathname + consentUrl.search,
+    );
     return Response.redirect(login.toString(), 302);
   }
 

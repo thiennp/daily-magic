@@ -7,8 +7,7 @@ import { readBoundedAgentAccessBody } from "@/lib/agentAccess/readBoundedAgentAc
 
 export const dynamic = "force-dynamic";
 
-const DEVICE_GRANT =
-  "urn:ietf:params:oauth:grant-type:device_code";
+const DEVICE_GRANT = "urn:ietf:params:oauth:grant-type:device_code";
 
 export async function POST(request: Request): Promise<Response> {
   const limited = await guardAgentAccessPost(request);
@@ -26,8 +25,7 @@ export async function POST(request: Request): Promise<Response> {
       ? (payload as Record<string, unknown>)
       : {};
 
-  const grantType =
-    typeof body.grant_type === "string" ? body.grant_type : "";
+  const grantType = typeof body.grant_type === "string" ? body.grant_type : "";
   const deviceCode =
     typeof body.device_code === "string" ? body.device_code : "";
 

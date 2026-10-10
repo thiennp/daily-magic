@@ -1,5 +1,6 @@
 import type { AgentAccessToolDefinition } from "@/lib/agentAccess/agentAccessToolDefinition.type";
 import { LIST_PROJECT_TASKS_TOOL } from "@/lib/agentAccess/listProjectTasksTool.constant";
+import { AGENT_ACCESS_PROJECT_TASK_REFINE_TOOLS } from "@/lib/agentAccess/projectTaskRefineTools.constant";
 
 const META_PROPERTIES = {
   title: { type: "string", description: "Short task title (≤120 chars)." },
@@ -94,4 +95,9 @@ export const UPDATE_PROJECT_TASK_TOOL: AgentAccessToolDefinition = {
 };
 
 export const AGENT_ACCESS_PROJECT_TASK_TOOLS: readonly AgentAccessToolDefinition[] =
-  [CREATE_PROJECT_TASK_TOOL, UPDATE_PROJECT_TASK_TOOL, LIST_PROJECT_TASKS_TOOL];
+  [
+    CREATE_PROJECT_TASK_TOOL,
+    UPDATE_PROJECT_TASK_TOOL,
+    LIST_PROJECT_TASKS_TOOL,
+    ...AGENT_ACCESS_PROJECT_TASK_REFINE_TOOLS,
+  ];

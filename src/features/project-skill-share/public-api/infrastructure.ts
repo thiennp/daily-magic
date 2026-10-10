@@ -1,5 +1,6 @@
 /** Server-only. Never import from 'use client' files. */
 export { publishProjectSkill } from "@/features/project-skill-share/internal/infrastructure/orchestrators/publishProjectSkill";
+export { matchProjectSkillForTask } from "@/features/project-skill-share/internal/infrastructure/orchestrators/matchProjectSkillForTask";
 export { listProjectSkills } from "@/features/project-skill-share/internal/infrastructure/orchestrators/listProjectSkills";
 export { resolveProjectSkillMemberRole } from "@/features/project-skill-share/internal/infrastructure/orchestrators/resolveProjectSkillMemberRole";
 export { deriveProjectSkillIdFromName } from "@/features/project-skill-share/internal/core/deriveProjectSkillIdFromName";

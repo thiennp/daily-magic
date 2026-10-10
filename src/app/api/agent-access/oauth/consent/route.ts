@@ -18,7 +18,10 @@ export async function POST(request: Request): Promise<Response> {
       // Session expired: the consent page sends the browser to /login and back.
       const { pendingId } = await parseOauthConsentBody(request);
       return Response.redirect(
-        new URL(`/oauth/consent?pending=${encodeURIComponent(pendingId)}`, resolveAppBaseUrl()),
+        new URL(
+          `/oauth/consent?pending=${encodeURIComponent(pendingId)}`,
+          resolveAppBaseUrl(),
+        ),
         303,
       );
     }

@@ -1,3 +1,4 @@
+import { PROJECT_TASK_REFINEMENT_CLAUSE } from "@/lib/projects/acl/projectTaskRefinementClause.constant";
 import { PROJECT_BOT_PLAYBOOK_TASK_PAIR_LINE } from "@/lib/agentAccess/projectBotPlaybookReport.constant";
 
 /**
@@ -12,4 +13,5 @@ export const PROJECT_ORCHESTRATOR_CLAUSE =
   "You stay the owner of the task: set it in_progress, brief each helper with the task id, the goal, what done looks like and only this project's context (never your keys, tokens or wake link), check what comes back before you call it done against the project's definition of done (get_project_briefing → definitionOfDone, when the owner set one) and say in your done reply how it was met (for code work, put the PR link or commit SHA in it), then report once, in your own voice, to whoever assigned it. Helpers never post to the project themselves; ask each one to end with a line on what to reuse or avoid, and fold it into your resultSummary. " +
   "Everything goes on AW: every task you do, including work your user gives you directly (chat, CLI, a direct message to you), must end up as a project task. create_project_task (or update the existing one); " +
   PROJECT_BOT_PLAYBOOK_TASK_PAIR_LINE +
-  " Nothing stays only in a private chat.";
+  " Nothing stays only in a private chat. " +
+  PROJECT_TASK_REFINEMENT_CLAUSE;

@@ -1,4 +1,7 @@
-import { executeProjectSkillShareTool } from "@/features/project-skill-share/public-api/infrastructure";
+import {
+  executeProjectSkillShareToolThenUnblock,
+  executeTaskRefinementTool,
+} from "@/features/task-refinement/public-api/infrastructure";
 import {
   handleAgentAccessMcpGet,
   handleAgentAccessMcpPost,
@@ -42,6 +45,9 @@ export async function POST(request: Request): Promise<Response> {
     return unauthorizedMcpChallenge();
   }
   return handleAgentAccessMcpPost(request, {
-    featureToolExecutors: [executeProjectSkillShareTool],
+    featureToolExecutors: [
+      executeProjectSkillShareToolThenUnblock,
+      executeTaskRefinementTool,
+    ],
   });
 }

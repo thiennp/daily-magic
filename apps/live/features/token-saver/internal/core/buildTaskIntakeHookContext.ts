@@ -35,13 +35,15 @@ export const buildTaskIntakeHookContext = (input: {
   readonly projectId: string | undefined;
   readonly cwd: string | undefined;
   readonly prompt?: string | undefined;
+  /** Caller already decided this is a request (the status command without --prompt). */
+  readonly assumeRequest?: boolean;
   readonly readClaims: () => readonly TaskIntakeFolderClaim[];
   readonly fs?: CliFs;
 }): string | null => {
   if (
     input.projectId === undefined ||
     input.cwd === undefined ||
-    !isTaskIntakeCandidatePrompt(input.prompt)
+    (input.assumeRequest !== true && !isTaskIntakeCandidatePrompt(input.prompt))
   ) {
     return null;
   }

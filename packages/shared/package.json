@@ -17,6 +17,7 @@
     "./token-saver": "./src/token-saver/index.ts",
     "./mcp": "./src/mcp/index.ts",
     "./projectSkills": "./src/projectSkills/index.ts",
+    "./taskRefinement": "./src/taskRefinement/index.ts",
     "./host-side-effects": "./src/host-side-effects/index.ts"
   }
 }

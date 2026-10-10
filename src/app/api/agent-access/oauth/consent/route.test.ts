@@ -49,7 +49,10 @@ describe("POST /api/agent-access/oauth/consent", () => {
           accept: "text/html",
           "content-type": "application/x-www-form-urlencoded",
         },
-        body: new URLSearchParams({ pending: "p-1", decision: "approve" }).toString(),
+        body: new URLSearchParams({
+          pending: "p-1",
+          decision: "approve",
+        }).toString(),
       }),
     );
 

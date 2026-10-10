@@ -13,6 +13,7 @@ import {
 } from "@/lib/projects/tasks/parseProjectTaskToolArgs";
 import { announceProjectTaskBlocked } from "@/lib/projects/tasks/announceProjectTaskBlocked";
 import { checkBotTaskReport } from "@/lib/projects/tasks/checkBotTaskReport";
+import { syncParentTaskStatus } from "@/lib/projects/tasks/refine/syncParentTaskStatus";
 import { notifyProjectTaskChanged } from "@/lib/projects/tasks/notifyProjectTaskChanged";
 import { afterProjectTaskWrite } from "@/lib/projects/tasks/afterProjectTaskWrite";
 import type { ProjectTaskRecord } from "@/lib/projects/tasks/projectTaskRecord.type";
@@ -115,6 +116,7 @@ export const updateProjectTask = async (input: {
     after: task,
   });
   await afterProjectTaskWrite({ task, origin: "local" });
+  await syncParentTaskStatus({ projectId, taskId });
   if (input.announceBlockedInChat === true && blockedReason !== null) {
     await announceProjectTaskBlocked({
       actorUserId: input.actorUserId,

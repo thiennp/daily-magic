@@ -68,6 +68,10 @@ export const buildAgentAccessLiveGuide = () => {
         "create_project_task",
         "update_project_task",
         "list_project_tasks",
+        "split_project_task",
+        "claim_project_task",
+        "release_project_task",
+        "list_project_task_blockers",
         "rotate_project_api_key",
       ],
       taskHandoffs:

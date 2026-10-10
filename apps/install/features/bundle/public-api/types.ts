@@ -47,7 +47,7 @@
 /** 327 = auto skills no longer ask for a skill that matches one the project already has (same name, same steps or same content); a draft is told the existing skill names. */
 /** 328 = security: the Mac client refuses ids, hashes and file names that are paths (run overlay, update manifest), updates only over https, writes config.json 0600, serves no keys or tokens from the local app, tells a script version by its hash. */
 /** 339 = auto skills "Scan past tasks" also reads the last 100 commits of the main branch (git folders) and can go deeper on request (autoskill.scan.request commits). */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "340";
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "341";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =

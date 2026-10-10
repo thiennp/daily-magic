@@ -139,7 +139,7 @@ const run = async (): Promise<void> => {
       await import("@agent-witch/live-projects");
     const layout = resolveAgentWitchLocalLayout();
     process.exit(
-      runTaskIntakeCli(process.argv.slice(3), {
+      await runTaskIntakeCli(process.argv.slice(3), {
         layout,
         resolveProjectId: resolveAgentWitchProjectIdFromCwd,
         readClaims: () => readCrossAccountFolderClaims(layout.installDir),

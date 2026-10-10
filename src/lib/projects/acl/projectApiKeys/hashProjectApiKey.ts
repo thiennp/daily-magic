@@ -11,8 +11,7 @@ export const hashProjectApiKey = (token: string): string =>
 export const createProjectApiKeyPlaintext = (): string =>
   `${PROJECT_API_KEY_PREFIX}${randomBytes(PROJECT_API_KEY_BYTES).toString("base64url")}`;
 
-export const projectApiKeyLast4 = (token: string): string =>
-  token.slice(-4);
+export const projectApiKeyLast4 = (token: string): string => token.slice(-4);
 
 export const readBearerProjectApiKey = (
   authorization: string | null,

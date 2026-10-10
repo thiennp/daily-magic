@@ -13,6 +13,8 @@ export interface TaskIntakePref {
   readonly mode: "always-yes";
   readonly folderRealPath: string;
   readonly savedAt: string;
+  /** The user's own reply that allowed saving (audit trail). */
+  readonly answer?: string;
 }
 
 export interface TaskIntakePrefsStore {
@@ -131,6 +133,7 @@ export const rememberTaskIntakeYes = (input: {
   readonly layout: PrefsLayout;
   readonly projectId: string;
   readonly folderRealPath: string;
+  readonly answer?: string;
   readonly fs?: CliFs;
   readonly nowIso?: string;
 }): TaskIntakePref => {
@@ -139,6 +142,7 @@ export const rememberTaskIntakeYes = (input: {
     mode: "always-yes",
     folderRealPath: input.folderRealPath,
     savedAt: input.nowIso ?? new Date().toISOString(),
+    ...(input.answer !== undefined ? { answer: input.answer } : {}),
   };
   const store = readTaskIntakePrefs(input.layout, fs);
   writePrefs(
