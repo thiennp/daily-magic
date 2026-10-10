@@ -1,6 +1,6 @@
 import AppPanel from "@/components/surfaces/AppPanel";
-import { BILLING_COPY } from "@/features/billing/billingCopy.constant";
-import type { AdminCostControlSignals } from "@/features/billing/billingPlan.types";
+import { BILLING_COPY } from "@/features/billing/public-api/types";
+import type { AdminCostControlSignals } from "@/features/billing/public-api/types";
 
 export default function AdminCostBreakdownPanel({
   signals,

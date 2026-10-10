@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 
-import { BILLING_COPY } from "@/features/billing/billingCopy.constant";
-import postBillingCheckoutStub from "@/features/billing/postBillingCheckoutStub";
+import { BILLING_COPY } from "@/features/billing/public-api/types";
+import { postBillingCheckoutStub } from "@/features/billing/public-api/presentation";
 import { PRICING_CONTACT_SALES_HREF } from "@/features/pricing/pricingAuthHrefs.constant";
 import {
   PRICING_CANCEL_NOTE,

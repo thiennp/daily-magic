@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import BillingPlanSummary from "@/features/billing/components/BillingPlanSummary";
+import { BillingPlanSummary } from "@/features/billing/public-api/presentation";
 import PricingBringYourOwn from "@/features/pricing/components/PricingBringYourOwn";
 import PricingCompareTable from "@/features/pricing/components/PricingCompareTable";
 import PricingFaq from "@/features/pricing/components/PricingFaq";

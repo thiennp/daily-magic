@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import AssistantEntitlementLimitNote from "@/features/billing/components/AssistantEntitlementLimitNote";
+import { AssistantEntitlementLimitNote } from "@/features/billing/public-api/presentation";
 import { MK_GRID_CLASS } from "@/features/marketplace/marketplaceBrowseClasses.constant";
 import MyBotRow from "@/features/my-bots/MyBotRow";
 import MyBotUnclaimModal from "@/features/my-bots/MyBotUnclaimModal";

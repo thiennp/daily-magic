@@ -3,8 +3,8 @@ import formatCostControlProgress from "@/features/admin/utils/formatCostControlP
 import type {
   AdminCostControl,
   CostControlStatus,
-} from "@/features/billing/billingPlan.types";
-import formatCostControlStatus from "@/features/billing/formatCostControlStatus";
+} from "@/features/billing/public-api/types";
+import { formatCostControlStatus } from "@/features/billing/public-api/types";
 
 const STATUS_TEXT_CLASS: Record<CostControlStatus, string> = {
   under_budget: "text-awc-ok",

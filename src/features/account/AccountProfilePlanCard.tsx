@@ -9,7 +9,7 @@ import {
   ACCOUNT_ROW_CARD_CLASS,
 } from "@/features/account/accountClasses.constant";
 import { ACCOUNT_COPY } from "@/features/account/accountCopy.constant";
-import type { BillingPlanId } from "@/features/billing/billingPlan.types";
+import type { BillingPlanId } from "@/features/billing/public-api/types";
 
 function planChipLabel(plan: BillingPlanId | null): string {
   const copy = ACCOUNT_COPY.profile;

@@ -13,7 +13,7 @@ import {
 import AccountAvatarColorField from "@/features/account/AccountAvatarColorField";
 import AccountNameForm from "@/features/account/AccountNameForm";
 import AccountProfilePlanCard from "@/features/account/AccountProfilePlanCard";
-import useBillingPlan from "@/features/billing/hooks/useBillingPlan";
+import { useBillingPlan } from "@/features/billing/public-api/presentation";
 
 type AvatarColorId = (typeof ACCOUNT_AVATAR_COLORS)[number]["id"];
 

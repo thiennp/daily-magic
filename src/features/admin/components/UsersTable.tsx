@@ -3,10 +3,10 @@
 import { useState } from "react";
 
 import Button from "@/components/ui/button/Button";
-import AdminSetPlanControl from "@/features/billing/components/AdminSetPlanControl";
-import AdminCostControlExcludeCheckbox from "@/features/billing/components/AdminCostControlExcludeCheckbox";
-import type { BillingPlanId } from "@/features/billing/billingPlan.types";
-import formatBillingPlanLabel from "@/features/billing/formatBillingPlanLabel";
+import { AdminSetPlanControl } from "@/features/billing/public-api/presentation";
+import { AdminCostControlExcludeCheckbox } from "@/features/billing/public-api/presentation";
+import type { BillingPlanId } from "@/features/billing/public-api/types";
+import { formatBillingPlanLabel } from "@/features/billing/public-api/types";
 import formatAdminUserKindLabel from "@/features/admin/utils/formatAdminUserKindLabel";
 import formatAdminUserLastActivity from "@/features/admin/utils/formatAdminUserLastActivity";
 import formatGlobalRole from "@/lib/auth/formatGlobalRole";

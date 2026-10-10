@@ -6,8 +6,8 @@ import Button from "@/components/ui/button/Button";
 import AdminCostBreakdownPanel from "@/features/admin/components/AdminCostBreakdownPanel";
 import AdminCostBudgetPanel from "@/features/admin/components/AdminCostBudgetPanel";
 import AdminDashboardStatCard from "@/features/admin/components/AdminDashboardStatCard";
-import { BILLING_COPY } from "@/features/billing/billingCopy.constant";
-import useAdminCostControl from "@/features/billing/hooks/useAdminCostControl";
+import { BILLING_COPY } from "@/features/billing/public-api/types";
+import { useAdminCostControl } from "@/features/billing/public-api/presentation";
 
 const LINK_CLASS =
   "rounded-lg bg-awc-surface-2 px-3 py-2 text-sm text-awc-fg hover:text-awc-blue-600";

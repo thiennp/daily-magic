@@ -1,6 +1,6 @@
 "use client";
 
-import ComputerEntitlementLimitNote from "@/features/billing/components/ComputerEntitlementLimitNote";
+import { ComputerEntitlementLimitNote } from "@/features/billing/public-api/presentation";
 import ComputersDownloadLink from "@/features/home/ComputersDownloadLink";
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
 import ConnectCursorCloudCard from "@/features/home/ConnectCursorCloudCard";
