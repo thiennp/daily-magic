@@ -2,14 +2,16 @@
 
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
-import AwcProjectSettingsDangerZone from "@/features/projects/settings/AwcProjectSettingsDangerZone";
-import AwcProjectSettingsFolderRow from "@/features/projects/settings/AwcProjectSettingsFolderRow";
-import AwcProjectSettingsMemberFolderRow from "@/features/projects/settings/AwcProjectSettingsMemberFolderRow";
-import AwcProjectSettingsHistoryRow from "@/features/projects/settings/AwcProjectSettingsHistoryRow";
-import AwcProjectSettingsTasksChatRow from "@/features/projects/settings/AwcProjectSettingsTasksChatRow";
-import AwcProjectSettingsLeaveZone from "@/features/projects/settings/AwcProjectSettingsLeaveZone";
-import AwcProjectSettingsDefinitionOfDone from "@/features/projects/settings/AwcProjectSettingsDefinitionOfDone";
-import AwcProjectSettingsNameSection from "@/features/projects/settings/AwcProjectSettingsNameSection";
+import {
+  AwcProjectSettingsDangerZone,
+  AwcProjectSettingsFolderRow,
+  AwcProjectSettingsMemberFolderRow,
+  AwcProjectSettingsHistoryRow,
+  AwcProjectSettingsTasksChatRow,
+  AwcProjectSettingsLeaveZone,
+  AwcProjectSettingsDefinitionOfDone,
+  AwcProjectSettingsNameSection,
+} from "@/features/projects/settings/public-api/presentation";
 import { AwcProjectConnectionsSection } from "@/features/projects/settings/connections/public-api/presentation";
 import { AwcProjectSettingsPendingRunApprovalsSection } from "@/features/projects/settings/runApprovals/public-api/presentation";
 import { AwcProjectSettingsMemberPermissionsRow } from "@/features/projects/settings/memberPermissions/public-api/presentation";
