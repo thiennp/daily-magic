@@ -11,7 +11,7 @@ import {
   parseUpdateProjectTaskArgs,
   type ProjectTaskArgsError,
 } from "@/lib/projects/tasks/parseProjectTaskToolArgs";
-import { announceProjectTaskBlocked } from "@/lib/projects/tasks/announceProjectTaskBlocked";
+import { afterProjectTaskUpdated } from "@/lib/projects/tasks/afterProjectTaskUpdated";
 import { checkBotTaskReport } from "@/lib/projects/tasks/checkBotTaskReport";
 import { syncParentTaskStatus } from "@/lib/projects/tasks/refine/syncParentTaskStatus";
 import { notifyProjectTaskChanged } from "@/lib/projects/tasks/notifyProjectTaskChanged";
@@ -117,13 +117,13 @@ export const updateProjectTask = async (input: {
   });
   await afterProjectTaskWrite({ task, origin: "local" });
   await syncParentTaskStatus({ projectId, taskId });
-  if (input.announceBlockedInChat === true && blockedReason !== null) {
-    await announceProjectTaskBlocked({
-      actorUserId: input.actorUserId,
-      projectId,
-      title: task.title,
-      reason: blockedReason,
-    });
-  }
+  await afterProjectTaskUpdated({
+    projectId,
+    actorUserId: input.actorUserId,
+    before: current.status,
+    task,
+    blockedReason,
+    announceBlocked: input.announceBlockedInChat === true,
+  });
   return { ok: true, task };
 };
