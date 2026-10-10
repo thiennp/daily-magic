@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 
 type QueueFlushSendPrompt = (
   prompt: string,

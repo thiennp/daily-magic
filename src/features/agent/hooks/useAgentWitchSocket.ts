@@ -13,10 +13,10 @@ import { useAgentWitchWriterSessionStart } from "@/features/agent/hooks/useAgent
 import { useWriterSessionPromptContinuation } from "@/features/agent/hooks/useWriterSessionPromptContinuation";
 import { applyAgentWitchSocketMessageBundle } from "@/features/agent/utils/applyAgentWitchSocketMessageBundle";
 import { resolveInitialConnectionStatus } from "@/features/agent/utils/connectAgentWitchDashboardSocket";
-import type { UseAgentWitchSocketResult } from "@/features/agent/types/UseAgentWitchSocketResult.type";
+import type { UseAgentWitchSocketResult } from "@/features/agent/types/public-api/types";
 import type { AgentWitchSocketDisplay } from "@/lib/agentWitch/parseAgentWitchSocketDisplay";
 
-import type { WsTestConnectionStatus } from "../types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "../types/public-api/types";
 
 export type { UseAgentWitchSocketResult };
 

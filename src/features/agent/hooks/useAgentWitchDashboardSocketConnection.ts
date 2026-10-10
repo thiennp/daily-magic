@@ -4,7 +4,7 @@ import { useEffect, type RefObject } from "react";
 
 import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/public-api/presentation";
 import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/public-api/presentation";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import parseAgentWitchSocketDisplay, {
   type AgentWitchSocketDisplay,
 } from "@/lib/agentWitch/parseAgentWitchSocketDisplay";

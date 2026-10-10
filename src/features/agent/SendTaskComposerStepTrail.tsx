@@ -1,7 +1,7 @@
 "use client";
 
 import SendTaskComposerStepTrailLink from "@/features/agent/SendTaskComposerStepTrailLink";
-import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
+import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/public-api/types";
 
 interface SendTaskComposerStepTrailProps {
   readonly items: readonly SendTaskComposerStepTrailViewItem[];

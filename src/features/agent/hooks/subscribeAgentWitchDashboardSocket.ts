@@ -1,5 +1,5 @@
 import { createHttpDashboardSocketShim } from "@/features/agent/utils/createHttpDashboardSocketShim";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 /** 33512877: a stream that has not opened by now is retried, not waited on. */

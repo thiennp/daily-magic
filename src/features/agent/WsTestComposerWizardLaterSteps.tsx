@@ -5,10 +5,10 @@ import SendTaskComposerProjectPickerStep from "@/features/agent/SendTaskComposer
 import SendTaskComposerStepTrail from "@/features/agent/SendTaskComposerStepTrail";
 import SendTaskComposerWriterAgentStep from "@/features/agent/SendTaskComposerWriterAgentStep";
 import WsTestComposerFormStepSection from "@/features/agent/WsTestComposerFormStepSection";
-import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
+import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/public-api/types";
 import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import type { SendTaskComposerPickerItem } from "@/features/agent/utils/buildSendTaskComposerPickerItems";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";

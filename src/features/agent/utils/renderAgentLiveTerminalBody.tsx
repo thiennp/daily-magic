@@ -3,7 +3,7 @@
 import type { ReactElement } from "react";
 
 import AgentLiveTerminalDeveloperMirror from "@/features/agent/AgentLiveTerminalDeveloperMirror";
-import type { AgentMacShellPanelProps } from "@/features/agent/types/AgentMacShellPanelProps.type";
+import type { AgentMacShellPanelProps } from "@/features/agent/types/public-api/types";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 
 export const renderAgentLiveTerminalBody = (input: {

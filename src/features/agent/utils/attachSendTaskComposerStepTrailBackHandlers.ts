@@ -1,5 +1,5 @@
 import type { SendTaskComposerStepTrailItem } from "@/features/agent/utils/resolveSendTaskComposerStepTrail";
-import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
+import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/public-api/types";
 
 export const attachSendTaskComposerStepTrailBackHandlers = (
   items: readonly SendTaskComposerStepTrailItem[],

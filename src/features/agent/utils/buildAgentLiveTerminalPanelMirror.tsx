@@ -2,7 +2,7 @@
 
 import type { ReactElement } from "react";
 
-import type { AgentMacShellPanelProps } from "@/features/agent/types/AgentMacShellPanelProps.type";
+import type { AgentMacShellPanelProps } from "@/features/agent/types/public-api/types";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import { renderAgentLiveTerminalBody } from "@/features/agent/utils/renderAgentLiveTerminalBody";
 

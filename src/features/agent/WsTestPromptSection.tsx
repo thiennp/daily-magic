@@ -8,8 +8,8 @@ import { useShouldShowTeamDispatchSection } from "@/features/agent/hooks/useShou
 import type { useWsTestComposerPanelActions } from "@/features/agent/hooks/useWsTestComposerPanelActions";
 import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
-import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/public-api/types";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import { revokePairedDevice } from "@/features/agent-witch/utils/public-api/presentation";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 

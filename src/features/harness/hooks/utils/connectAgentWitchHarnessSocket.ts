@@ -7,7 +7,7 @@ import { createHttpDashboardSocketShim } from "@/features/agent/utils/createHttp
 import type { HarnessExportResultPayload } from "@/features/harness/types/HarnessExportResult.type";
 import { AGENT_WITCH_PAIRING_TOKEN_STORAGE_KEY } from "@/lib/agentWitch/constants/pairingTokenStorageKey.constant";
 import type HarnessManifest from "@/lib/agentWitch/harness/types/HarnessManifest.type";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 interface ConnectAgentWitchHarnessSocketOptions {

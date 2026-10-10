@@ -2,7 +2,7 @@
 
 import WsTestPanelComposerActiveSession from "@/features/agent/WsTestPanelComposerActiveSession";
 import WsTestPanelDelegationSection from "@/features/agent/WsTestPanelDelegationSection";
-import type { WsTestPanelComposerSectionProps } from "@/features/agent/types/WsTestPanelComposerSectionProps.type";
+import type { WsTestPanelComposerSectionProps } from "@/features/agent/types/public-api/types";
 
 export default function WsTestPanelComposerSection({
   isSessionActive,

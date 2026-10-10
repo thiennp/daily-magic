@@ -87,7 +87,8 @@
     "src/features/showcases",
     "src/features/admin",
     "src/features/projects/utils",
-    "src/features/workflows"
+    "src/features/workflows",
+    "src/features/agent/types"
   ],
   "blocked": {
     "src/features/home/constants": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing), pre-commit architecture gate fails when it is edited",
@@ -541,6 +542,11 @@
       "unit": "src/features/workflows",
       "sha": "f72008d5c2a24c8b035b16626393b493da22c488",
       "at": "2026-10-10T11:06:51.290Z"
+    },
+    {
+      "unit": "src/features/agent/types",
+      "sha": "60a16cdb3750e9bc31cf3fd1c79846a442ac14b4",
+      "at": "2026-10-10T11:08:06.510Z"
     }
   ],
   "limits": {

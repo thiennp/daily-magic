@@ -7,7 +7,7 @@ import Link from "next/link";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import AgentLiveTerminalPanel from "@/features/agent/AgentLiveTerminalPanel";
-import type { AgentMacShellPanelProps } from "@/features/agent/types/AgentMacShellPanelProps.type";
+import type { AgentMacShellPanelProps } from "@/features/agent/types/public-api/types";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import type { AgentLiveTerminalFeedbackPreferredMode } from "@/features/agent/utils/resolveAgentLiveTerminalFeedbackAction";
 

@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchInstallBundleVersion";
 import {

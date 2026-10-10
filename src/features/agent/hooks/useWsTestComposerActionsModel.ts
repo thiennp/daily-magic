@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import { useWsTestComposerReadinessUi } from "@/features/agent/hooks/useWsTestComposerReadinessUi";
 import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import { resolveComposerBlockedAction } from "@/features/agent/utils/resolveComposerBlockedAction";
 
 export const useWsTestComposerActionsModel = (props: {

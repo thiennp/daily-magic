@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import AgentLiveTerminalSteppedMirror from "@/features/agent/AgentLiveTerminalSteppedMirror";
 import { buildAgentLiveTerminalPanelMirror } from "@/features/agent/utils/buildAgentLiveTerminalPanelMirror";
-import type { AgentMacShellPanelProps } from "@/features/agent/types/AgentMacShellPanelProps.type";
+import type { AgentMacShellPanelProps } from "@/features/agent/types/public-api/types";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import { resolveAgentLiveProgressCleanedSource } from "@/features/agent/utils/resolveAgentLiveProgressUpdatesFromSources";
 

@@ -1,4 +1,4 @@
-import type { WsTestComposerWizardResetHandlers } from "@/features/agent/types/WsTestComposerWizardResetHandlers.type";
+import type { WsTestComposerWizardResetHandlers } from "@/features/agent/types/public-api/types";
 
 export const createWsTestComposerWizardResets = (
   setHasRewoundWizard: (value: boolean) => void,

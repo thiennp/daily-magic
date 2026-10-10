@@ -11,7 +11,7 @@ import {
 import { useSession } from "next-auth/react";
 
 import { subscribeAgentWitchDashboardSocket } from "@/features/agent/hooks/subscribeAgentWitchDashboardSocket";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import {
   AgentWitchDashboardContext,
   type AgentWitchDashboardContextValue,

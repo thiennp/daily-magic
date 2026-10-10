@@ -7,7 +7,7 @@ import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestCo
 import type { useWsTestPromptHandlers } from "@/features/agent/hooks/useWsTestPromptHandlers";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { useAgentWitchSocket } from "@/features/agent/hooks/useAgentWitchSocket";
-import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
+import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/public-api/types";
 import type { resolveAgentSessionTargets } from "@/features/agent/utils/resolveAgentSessionTargets";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 

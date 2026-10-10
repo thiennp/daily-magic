@@ -2,7 +2,7 @@
 
 import { createContext, useContext } from "react";
 
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import type { AgentWitchDashboardMessageListener } from "@/features/agent-witch/dashboard/agentWitchDashboardBus";
 
 export interface AgentWitchDashboardContextValue {

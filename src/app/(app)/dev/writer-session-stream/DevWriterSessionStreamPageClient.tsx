@@ -10,7 +10,7 @@ import { formatWriterSessionStartDisplayCommand } from "@/lib/agentWitch/formatW
 import parseAgentWitchSocketDisplay, {
   type AgentWitchSocketDisplay,
 } from "@/lib/agentWitch/parseAgentWitchSocketDisplay";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 
 export default function DevWriterSessionStreamPageClient() {
   const socketRef = useRef<WebSocket | null>(null);

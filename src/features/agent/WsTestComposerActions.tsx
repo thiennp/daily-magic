@@ -10,7 +10,7 @@ import {
   SendReadinessWriterNotice,
   resolveComposerSendDisabledWithReadiness,
 } from "@/features/agent/send-readiness/public-api/presentation";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 
 interface WsTestComposerActionsProps {

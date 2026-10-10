@@ -3,8 +3,8 @@
 import type { RefObject } from "react";
 
 import SendTaskComposerStepTrail from "@/features/agent/SendTaskComposerStepTrail";
-import type { AgentMacShellPanelProps } from "@/features/agent/types/AgentMacShellPanelProps.type";
-import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
+import type { AgentMacShellPanelProps } from "@/features/agent/types/public-api/types";
+import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/public-api/types";
 import WsTestPanelMacSessionSection from "@/features/agent/WsTestPanelMacSessionSection";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import type { AgentLiveTerminalFeedbackPreferredMode } from "@/features/agent/utils/resolveAgentLiveTerminalFeedbackAction";

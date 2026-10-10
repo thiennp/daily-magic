@@ -9,7 +9,7 @@ import {
 } from "@/features/agent/send-readiness/public-api/presentation";
 import type { SendReadinessBannerModel } from "@/features/agent/send-readiness/public-api/types";
 import type { ComposerBlockedAction } from "@/features/agent/utils/composerBlockedAction.types";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 
 export const useWsTestComposerReadinessUi = (input: {
   readonly connectionStatus: WsTestConnectionStatus;

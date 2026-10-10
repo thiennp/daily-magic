@@ -1,4 +1,4 @@
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 
 export const resolveAgentLiveProgressConnectionHint = (input: {
   readonly connectionStatus: WsTestConnectionStatus;

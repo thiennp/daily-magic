@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 
 /** No "Reconnecting…" until a connect has taken this long (a fresh tab connects in well under it). */
 export const CONNECTING_GRACE_MS = 2_000;

@@ -8,7 +8,7 @@ import {
   type PairingStatusKey,
 } from "@/features/shell/connectionStatusMapping.constant";
 import { useConnectingGraceElapsed } from "@/features/shell/useConnectingGrace";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 
 interface ConnectionStatusBadgeProps {
   readonly status: WsTestConnectionStatus;

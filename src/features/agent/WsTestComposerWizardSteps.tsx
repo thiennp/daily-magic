@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import ComposerDeviceSwitchNotice from "@/features/agent/ComposerDeviceSwitchNotice";
-import type { WsTestComposerWizardStepsProps } from "@/features/agent/types/WsTestComposerWizardStepsProps.type";
+import type { WsTestComposerWizardStepsProps } from "@/features/agent/types/public-api/types";
 import WsTestComposerMacSection from "@/features/agent/WsTestComposerMacSection";
 import WsTestComposerWizardLaterSteps from "@/features/agent/WsTestComposerWizardLaterSteps";
 

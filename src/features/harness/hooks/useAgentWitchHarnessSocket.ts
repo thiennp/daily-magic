@@ -14,7 +14,7 @@ import { installOfficialPresetHarnessOnMac } from "@/features/marketplace/public
 import type HarnessManifest from "@/lib/agentWitch/harness/types/HarnessManifest.type";
 import type HarnessItemWriteSpec from "@/lib/agentWitch/harness/types/HarnessItemWriteSpec.type";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 
 export type {
   AgentPairingStatus,

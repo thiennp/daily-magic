@@ -2,7 +2,7 @@
 
 import AgentLiveProgressFeedStopControl from "@/features/agent/AgentLiveProgressFeedStopControl";
 import AgentLiveRunOutcomeChip from "@/features/agent/AgentLiveRunOutcomeChip";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import type { AgentLiveRunOutcome } from "@/features/agent/utils/agentLiveRunOutcomeKind.type";
 import { shouldShowAgentLiveRetry } from "@/features/agent/utils/shouldShowAgentLiveRetry";
 import { useAgentRunInputRequest } from "@/features/dispatch/agentRunInputStore";

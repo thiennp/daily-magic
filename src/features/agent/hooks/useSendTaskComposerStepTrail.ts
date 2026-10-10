@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
-import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
+import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/public-api/types";
 import { attachSendTaskComposerStepTrailBackHandlers } from "@/features/agent/utils/attachSendTaskComposerStepTrailBackHandlers";
 import { resolveSendTaskComposerCurrentWizardStep } from "@/features/agent/utils/resolveSendTaskComposerCurrentWizardStep";
 import {

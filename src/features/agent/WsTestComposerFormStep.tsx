@@ -8,7 +8,7 @@ import WsTestComposerFooter from "@/features/agent/WsTestComposerFooter";
 import WsTestOperatorStepsSection from "@/features/agent/WsTestOperatorStepsSection";
 import { WorkflowCreateDraftComposerNotice } from "@/features/workflows/public-api/presentation";
 import WsTestTaskInputsSection from "@/features/agent/WsTestTaskInputsSection";
-import type WsTestComposerFormStepProps from "@/features/agent/types/WsTestComposerFormStepProps.type";
+import type { WsTestComposerFormStepProps } from "@/features/agent/types/public-api/types";
 import { isComposerStartHotkey } from "@/features/agent/utils/isComposerStartHotkey";
 
 export default function WsTestComposerFormStep(

@@ -3,7 +3,7 @@
 import AppPanel from "@/components/surfaces/AppPanel";
 import { ConnectionStatusBadge } from "@/features/shell/public-api/presentation";
 import { useShellNavContext } from "@/features/shell/hooks/public-api/presentation";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import { resolveComposerApprovalHelper } from "@/lib/copy/resolveSoloTeamSurfaceCopy";
 
 interface WsTestPanelStatusSectionProps {

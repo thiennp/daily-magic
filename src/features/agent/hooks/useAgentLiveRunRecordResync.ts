@@ -2,8 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
-import type { UseAgentWitchLiveTerminalResult } from "@/features/agent/types/UseAgentWitchLiveTerminalResult.type";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { UseAgentWitchLiveTerminalResult } from "@/features/agent/types/public-api/types";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import {
   buildAgentRunRecordSocketMessage,
   isTerminalAgentRunRecordStatus,

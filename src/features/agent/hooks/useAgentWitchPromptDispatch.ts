@@ -23,7 +23,7 @@ import parseAgentWitchSocketDisplay, {
   type AgentWitchSocketDisplay,
 } from "@/lib/agentWitch/parseAgentWitchSocketDisplay";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
-import type { WriterPromptDispatchOptions } from "@/features/agent/types/WriterPromptDispatchOptions.type";
+import type { WriterPromptDispatchOptions } from "@/features/agent/types/public-api/types";
 
 export const useAgentWitchPromptDispatch = (input: {
   readonly socketRef: RefObject<WebSocket | null>;

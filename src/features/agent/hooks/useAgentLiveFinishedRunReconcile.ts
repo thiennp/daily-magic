@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import type { UseAgentWitchLiveTerminalResult } from "@/features/agent/types/UseAgentWitchLiveTerminalResult.type";
+import type { UseAgentWitchLiveTerminalResult } from "@/features/agent/types/public-api/types";
 import {
   buildAgentRunRecordSocketMessage,
   isTerminalAgentRunRecordStatus,

@@ -6,7 +6,7 @@ import { useAgentLiveTerminalRunControls } from "@/features/agent/hooks/useAgent
 import { useAgentWitchLiveTerminalWriterSessionSubscribe } from "@/features/agent/hooks/useAgentWitchLiveTerminalWriterSessionSubscribe";
 import { useClearAnsweredAgentLiveInput } from "@/features/agent/hooks/useClearAnsweredAgentLiveInput";
 import { useShouldRestoreAgentLiveTerminalSession } from "@/features/agent/hooks/useShouldRestoreAgentLiveTerminalSession";
-import type { UseAgentWitchLiveTerminalResult } from "@/features/agent/types/UseAgentWitchLiveTerminalResult.type";
+import type { UseAgentWitchLiveTerminalResult } from "@/features/agent/types/public-api/types";
 import { finishAgentLiveTerminalWriterSession } from "@/features/agent/utils/sendWriterSessionEnd";
 import {
   finishAgentLiveTerminalSession,

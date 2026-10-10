@@ -12,7 +12,7 @@ import {
   resolveAgentLiveTerminalFeedbackAction,
   type AgentLiveTerminalFeedbackPreferredMode,
 } from "@/features/agent/utils/resolveAgentLiveTerminalFeedbackAction";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";

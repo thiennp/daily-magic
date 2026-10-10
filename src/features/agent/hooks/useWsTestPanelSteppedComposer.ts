@@ -6,7 +6,7 @@ import { useSendTaskComposerStepTrail } from "@/features/agent/hooks/useSendTask
 import { useWsTestComposerPanelActions } from "@/features/agent/hooks/useWsTestComposerPanelActions";
 import { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
-import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
+import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/public-api/types";
 import {
   SEND_TASK_CONTINUE_SESSION_QUERY_PARAM,
   SEND_TASK_CUSTOM_TASK_QUERY_PARAM,
