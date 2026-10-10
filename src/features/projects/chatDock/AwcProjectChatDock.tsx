@@ -9,7 +9,7 @@ import {
   CHAT_DOCK_ROOT_FULL_CLASS,
 } from "@/features/projects/chatDock/projectChatDockClasses.constant";
 import type { AwcProjectChatSurface } from "@/features/projects/chatDock/useAwcProjectChatSurface";
-import AwcProjectMessengerSection from "@/features/projects/messenger/AwcProjectMessengerSection";
+import { AwcProjectMessengerSection } from "@/features/projects/messenger/public-api/presentation";
 import { unreadForMessengerThread } from "@/features/projects/messenger/oneWindow/useOneWindowUnreadSnapshot";
 import { PROJECT_MESSENGER_WHOLE_THREAD_KEY } from "@/lib/projects/acl/messaging/messenger/projectMessenger.constant";
 import type { AwcMessengerThreadList } from "@/features/projects/messenger/types/awcProjectMessenger.type";

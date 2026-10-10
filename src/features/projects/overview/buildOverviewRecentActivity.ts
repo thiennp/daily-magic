@@ -1,5 +1,5 @@
 import type { AwcMessengerThreadList } from "@/features/projects/messenger/types/awcProjectMessenger.type";
-import { AWC_PROJECT_MESSENGER_COPY } from "@/features/projects/messenger/awcProjectMessengerCopy.constant";
+import { AWC_PROJECT_MESSENGER_COPY } from "@/features/projects/messenger/public-api/types";
 
 export type OverviewRecentItem = {
   readonly id: string;

@@ -1,14 +1,18 @@
 "use client";
 
 import { PROJECT_ASK_BOX_COPY } from "@/features/projects/askBox/projectAskBoxCopy.constant";
-import type { MessengerTaskRefsDraft } from "@/features/projects/messenger/AwcMessengerTaskRefsPanel";
+import type { MessengerTaskRefsDraft } from "@/features/projects/messenger/public-api/types";
 
 const FIELD =
   "w-full rounded-[10px] border-0 bg-awc-fill px-3 py-2 text-sm text-awc-fg placeholder:text-awc-fg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400/40 dark:bg-white/10 dark:text-white dark:placeholder:text-gray-400";
 
 type RefKey = keyof MessengerTaskRefsDraft;
 
-const REF_FIELDS: readonly { readonly key: RefKey; readonly label: string; readonly mono: boolean }[] = [
+const REF_FIELDS: readonly {
+  readonly key: RefKey;
+  readonly label: string;
+  readonly mono: boolean;
+}[] = [
   { key: "prUrl", label: PROJECT_ASK_BOX_COPY.prUrl, mono: false },
   { key: "commitSha", label: PROJECT_ASK_BOX_COPY.commitSha, mono: true },
   { key: "localPath", label: PROJECT_ASK_BOX_COPY.localPath, mono: true },

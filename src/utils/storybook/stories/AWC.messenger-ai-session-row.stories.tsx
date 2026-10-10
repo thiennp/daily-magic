@@ -1,4 +1,4 @@
-import AwcMessengerTimelineEntryRow from "@/features/projects/messenger/AwcMessengerTimelineEntryRow";
+import { AwcMessengerTimelineEntryRow } from "@/features/projects/messenger/public-api/presentation";
 import {
   aiSessionCompletedFixture,
   aiSessionFailedFixture,
@@ -15,11 +15,18 @@ export default {
   parameters: { layout: "padded" },
 };
 
-const chatNote = entryAt("chat-note-1", NOW - 60_000, "Can you tighten the Load older copy?");
+const chatNote = entryAt(
+  "chat-note-1",
+  NOW - 60_000,
+  "Can you tighten the Load older copy?",
+);
 
 export const TimelineWithAiSessions = () => (
   <div className="flex max-w-lg flex-col gap-3.5 rounded-xl border border-awc-border bg-awc-tile p-4 dark:border-gray-800 dark:bg-white/[0.02]">
-    <AwcMessengerTimelineEntryRow entry={aiSessionFailedFixture()} isMine={false} />
+    <AwcMessengerTimelineEntryRow
+      entry={aiSessionFailedFixture()}
+      isMine={false}
+    />
     <AwcMessengerTimelineEntryRow entry={chatNote} isMine />
     <AwcMessengerTimelineEntryRow
       entry={aiSessionCompletedFixture()}

@@ -5,7 +5,7 @@ import {
 } from "@/features/projects/askBox/askBoxSendTarget";
 import { PROJECT_ASK_BOX_COPY } from "@/features/projects/askBox/projectAskBoxCopy.constant";
 import { PROJECT_CHAT_DOCK_COPY } from "@/features/projects/chatDock/public-api/types";
-import type { MessengerTaskRefsDraft } from "@/features/projects/messenger/AwcMessengerTaskRefsPanel";
+import type { MessengerTaskRefsDraft } from "@/features/projects/messenger/public-api/types";
 import type { MessengerTaskDraft } from "@/features/projects/messenger/utils/validateMessengerTaskDraft";
 
 export type AskBoxDraft = {
