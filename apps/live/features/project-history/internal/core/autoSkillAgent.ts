@@ -101,7 +101,25 @@ export const probeSignedInAutoSkillAgent = async (
 const buildReadOnlyInvocation = (
   writer: HarnessWriterAgentId,
   prompt: string,
+  scoped: boolean,
 ): { command: string; args: readonly string[] } | null => {
+  if (scoped && writer === "cursor") {
+    // Ask mode: answers from the prompt alone, no tools to wander through files.
+    return {
+      command: commands.cursorCommand,
+      args: [
+        "-p",
+        "--trust",
+        "--mode",
+        "ask",
+        "--sandbox",
+        "enabled",
+        "--output-format",
+        "text",
+        prompt,
+      ],
+    };
+  }
   if (writer === "codex") {
     return {
       command: commands.codexCommand,
@@ -130,15 +148,17 @@ export const createAgentAutoSkillCompleter =
     writer: HarnessWriterAgentId,
     folderPath: string | undefined,
     exec: AutoSkillExec = execAutoSkillCommand,
+    /** Judge from the prompt alone: read-only ask mode and no project folder. */
+    scoped = false,
   ): AutoSkillCompleter =>
   async ({ prompt, timeoutMs }) => {
-    const invocation = buildReadOnlyInvocation(writer, prompt);
+    const invocation = buildReadOnlyInvocation(writer, prompt, scoped);
     if (invocation === null) {
       return { ok: false, reason: "agent_unavailable" };
     }
     const result = await exec(invocation.command, invocation.args, {
       timeoutMs,
-      ...(folderPath !== undefined ? { cwd: folderPath } : {}),
+      ...(folderPath !== undefined && !scoped ? { cwd: folderPath } : {}),
     });
     if (result.code === null) {
       return { ok: false, reason: "agent_timeout_or_missing" };

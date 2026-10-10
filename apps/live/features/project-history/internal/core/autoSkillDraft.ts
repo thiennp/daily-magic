@@ -26,6 +26,11 @@ export type AutoSkillDraftResult =
     }
   | { readonly ok: false; readonly reason: string };
 
+const describeChanges = (run: AutoSkillRunRecord): string =>
+  run.changes === undefined
+    ? ""
+    : `\nChanges in this commit (judge ONLY these changes; do not open or search any other file):\n${run.changes}`;
+
 /**
  * Scrubbed prompts + result summaries of the repeated runs. The prompt keeps
  * its case and line breaks (secrets are still redacted) so the draft reads well.
@@ -37,7 +42,7 @@ export const buildAutoSkillTranscript = (
     runs
       .map(
         (run, i) =>
-          `Run ${i + 1} (${run.completedAt.slice(0, 10)})\nPrompt: ${run.prompt.trim().slice(0, PROMPT_CAP)}\nOutcome: ${run.resultSummary.slice(0, RESULT_CAP)}`,
+          `Run ${i + 1} (${run.completedAt.slice(0, 10)})\nPrompt: ${run.prompt.trim().slice(0, PROMPT_CAP)}\nOutcome: ${run.resultSummary.slice(0, RESULT_CAP)}${describeChanges(run)}`,
       )
       .join("\n\n"),
   ).scrubbed;

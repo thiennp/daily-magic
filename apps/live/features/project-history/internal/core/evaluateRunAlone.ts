@@ -6,6 +6,7 @@ import { generateAutoSkillDraft } from "./autoSkillDraft";
 import { loadExistingSkills } from "./autoSkillModuleAsk";
 import type { AutoSkillModuleDb } from "./autoSkillModuleDb";
 import { buildScriptQuestionParts } from "./autoSkillScriptQuestion";
+import { triageRun } from "./triageRun";
 import { mergeOrSkipProjectHistorySkillgenDraft } from "./mergeOrSkipProjectHistorySkillgenDraft";
 import type { AutoSkillOutcome } from "./onAutoSkillRunCompleted.types";
 import { extractProjectHistorySkillgenStepLines } from "./validateProjectHistorySkillgenDraft";
@@ -48,8 +49,16 @@ export const evaluateRunAlone = async (input: {
   if (judgedBefore(db, run.runId)) {
     return "no_repeat";
   }
-  if (`${run.prompt}${run.resultSummary}`.trim().length < MIN_RUN_CHARS) {
+  if (
+    `${run.prompt}${run.resultSummary}${run.changes ?? ""}`.trim().length <
+    MIN_RUN_CHARS
+  ) {
     markJudged(db, run.runId, "too_small");
+    return "no_repeat";
+  }
+  // A short yes/no first: most runs are one-off edits, and a whole draft costs minutes.
+  if ((await triageRun(run, input.completer)) === "not_reusable") {
+    markJudged(db, run.runId, "not_reusable");
     return "no_repeat";
   }
   const existing = loadExistingSkills(input.projectId);

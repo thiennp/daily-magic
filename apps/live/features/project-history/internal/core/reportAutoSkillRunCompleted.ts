@@ -107,6 +107,8 @@ export const reportAutoSkillRunCompleted = async (input: {
           return createAgentAutoSkillCompleter(
             availability.agentWriter as HarnessWriterAgentId,
             input.folderPath,
+            undefined,
+            input.evaluateEachRun === true,
           );
         }
         return async () => ({ ok: false, reason: "judge_unavailable" });

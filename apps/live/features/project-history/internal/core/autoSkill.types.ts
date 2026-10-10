@@ -10,6 +10,8 @@ export type AutoSkillRunRecord = {
   readonly taskTitle?: string;
   /** sha256 prefix of the normalized prompt; survives redaction. */
   readonly promptHash?: string;
+  /** A commit's own changes (file list and diff, trimmed); the only thing a commit run is judged on besides its message. */
+  readonly changes?: string;
   /** True when only a preview was stored (project history is OFF). */
   readonly redacted?: boolean;
 };

@@ -11,9 +11,10 @@ export default function AwcAutoSkillsScanHelp({
     <span className="flex flex-col text-[12.5px] text-awc-fg-muted dark:text-gray-400">
       <span>
         Tasks: checks finished tasks, and the last {commits ?? "N"} commits on
-        the main branch if the folder uses git. The AI judges each one on its
-        own and asks you about any that would make a reusable skill. Each commit
-        takes an AI check, so a small number is quicker.
+        the main branch if the folder uses git. The AI reads only what each
+        commit changed, judges it on its own, and asks you about any that would
+        make a reusable skill. Each commit takes an AI check, so a small number
+        is quicker.
       </span>
       <span>
         Docs: turns this folder&apos;s skills, commands and Q&amp;A into

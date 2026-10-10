@@ -6,6 +6,7 @@ import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 import type { AgentWitchCloudApiConfig } from "../../../projects/internal/core/agentWitchCloudApi";
 
 import { createHttpAutoSkillCloud } from "./autoSkillCloud";
+import { readCommitChanges } from "./readCommitChanges";
 import { announceScanStart, prepareScanJudge } from "./prepareScanJudge";
 import type { AutoSkillOutcome } from "./onAutoSkillRunCompleted.types";
 import { reportAutoSkillRunCompleted } from "./reportAutoSkillRunCompleted";
@@ -191,6 +192,10 @@ export const scanProjectTasksForAutoSkills = async (input: {
   }
   const commitsToScan = stopped ? [] : allCommits;
   for (const [index, commit] of commitsToScan.entries()) {
+    const changes =
+      input.folderPath === undefined
+        ? null
+        : await readCommitChanges(input.folderPath, commit.sha);
     const outcome = await reportAutoSkillRunCompleted({
       cloudApi: input.cloudApi,
       projectId: input.projectId,
@@ -201,6 +206,7 @@ export const scanProjectTasksForAutoSkills = async (input: {
         completedAt: commit.committedAt,
         writerAgent: null,
         taskTitle: commit.subject.slice(0, 120),
+        ...(changes !== null ? { changes } : {}),
       },
       layout: input.layout,
       folderPath: input.folderPath ?? "",
