@@ -1,6 +1,6 @@
 "use client";
 
-import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
+import { AwcProjectMembersInfoTip } from "@/features/projects/members/public-api/presentation";
 import { AwcProjectRepoUrlsSection } from "@/features/projects/repoUrls/public-api/presentation";
 import { AwcProjectOpenOnGitHub } from "@/features/projects/settings/folder/public-api/presentation";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";

@@ -8,7 +8,7 @@ import { useHumanInviteWaitingCount } from "@/features/projects/access/humanInvi
 import {
   countRailMembers,
   countRailWaiting,
-} from "@/features/projects/members/utils/countRailMembers";
+} from "@/features/projects/members/public-api/types";
 import useAwcProjectComposition from "@/features/projects/hooks/useAwcProjectComposition";
 import { useAwcProjectMessengerThreads } from "@/features/projects/messenger/hooks/useAwcProjectMessengerThreads";
 import buildOverviewAssistants from "@/features/projects/overview/buildOverviewAssistants";

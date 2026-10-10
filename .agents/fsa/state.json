@@ -81,7 +81,8 @@
     "src/features/projects/overview",
     "src/features/projects/access/humanInvites#root",
     "src/features/admin/components",
-    "src/features/showcases/articles"
+    "src/features/showcases/articles",
+    "src/features/projects/members"
   ],
   "blocked": {
     "src/features/home/constants": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing), pre-commit architecture gate fails when it is edited",
@@ -504,6 +505,11 @@
       "unit": "src/features/showcases/articles",
       "sha": "aa96f48899a4fc47eeeb8cc092a20c35f195bd60",
       "at": "2026-10-10T10:47:59.570Z"
+    },
+    {
+      "unit": "src/features/projects/members",
+      "sha": "f9305f0ddbd370faeb6619f70cb2741b32c327be",
+      "at": "2026-10-10T10:49:19.658Z"
     }
   ]
 }

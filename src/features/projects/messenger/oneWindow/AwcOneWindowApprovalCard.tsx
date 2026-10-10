@@ -9,7 +9,7 @@ import {
 import AwcOneWindowApprovalStatusPill from "@/features/projects/messenger/oneWindow/AwcOneWindowApprovalStatusPill";
 import AwcOneWindowApprovalResult from "@/features/projects/messenger/oneWindow/AwcOneWindowApprovalResult";
 import AwcOneWindowApprovalRows from "@/features/projects/messenger/oneWindow/AwcOneWindowApprovalRows";
-import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
+import { AwcProjectMembersInfoTip } from "@/features/projects/members/public-api/presentation";
 import { ONE_WINDOW_FEED_COPY } from "@/features/projects/messenger/oneWindow/oneWindowFeedCopy.constant";
 
 export type OneWindowApprovalKind = "run" | "join";

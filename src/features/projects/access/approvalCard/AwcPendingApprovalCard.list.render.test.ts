@@ -2,10 +2,13 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
-import { req, text } from "@/features/projects/access/approvalCard/AwcPendingApprovalCard.fixtures";
+import {
+  req,
+  text,
+} from "@/features/projects/access/approvalCard/AwcPendingApprovalCard.fixtures";
 import AwcPendingResolvedRow from "@/features/projects/access/approvalCard/AwcPendingResolvedRow";
 import AwcProjectAccessPendingList from "@/features/projects/access/AwcProjectAccessPendingList";
-import AwcProjectMembersJoinRequestsSection from "@/features/projects/members/AwcProjectMembersJoinRequestsSection";
+import { AwcProjectMembersJoinRequestsSection } from "@/features/projects/members/public-api/presentation";
 
 describe("pending join list + rail (DF-017)", () => {
   it("list prefills the requested name (requesterLabel) over the preset", () => {
@@ -40,7 +43,9 @@ describe("pending join list + rail (DF-017)", () => {
         requester: "NRG Lead",
       }),
     );
-    expect(text(no)).toContain("Request from NRG Lead denied It has no access.");
+    expect(text(no)).toContain(
+      "Request from NRG Lead denied It has no access.",
+    );
     expect(no).not.toContain("<button");
   });
 

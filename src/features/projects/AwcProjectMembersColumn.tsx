@@ -1,10 +1,12 @@
 "use client";
 
-import AwcProjectMembersMemberContent from "@/features/projects/members/AwcProjectMembersMemberContent";
-import AwcProjectMembersOwnerContent from "@/features/projects/members/AwcProjectMembersOwnerContent";
-import AwcProjectMembersRailMenu from "@/features/projects/members/AwcProjectMembersRailMenu";
+import {
+  AwcProjectMembersMemberContent,
+  AwcProjectMembersOwnerContent,
+  AwcProjectMembersRailHeading,
+  AwcProjectMembersRailMenu,
+} from "@/features/projects/members/public-api/presentation";
 import { AWC_PROJECT_LEAVE_COPY } from "@/features/projects/awcProjectLeaveCopy.constant";
-import AwcProjectMembersRailHeading from "@/features/projects/members/AwcProjectMembersRailHeading";
 import { PROJECT_PAGE_MEMBERS_COPY as C } from "@/features/projects/projectPageMembersCopy.constant";
 import { PROJECT_PAGE_LAYOUT_V2_COPY } from "@/features/projects/projectPageLayoutV2Copy.constant";
 import type { ProjectPageActorRole } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";

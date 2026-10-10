@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import AwcProjectPathDisplay from "@/features/projects/AwcProjectPathDisplay";
-import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
+import { AwcProjectMembersInfoTip } from "@/features/projects/members/public-api/presentation";
 import {
   AwcProjectFolderChangeDialog,
   AwcProjectFolderMissingWarning,

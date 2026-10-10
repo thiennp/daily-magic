@@ -6,7 +6,7 @@ import { HUMAN_INVITE_PERSON_FLOW_COPY } from "@/features/projects/access/humanI
 import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
 import type { InvitePersonTab } from "@/features/projects/access/humanInvites/AwcHumanInvitePersonTabSeg";
 import { INV_INPUT_CLASS } from "@/features/projects/access/humanInvites/invitePersonChromeClasses.constant";
-import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
+import { AwcProjectMembersInfoTip } from "@/features/projects/members/public-api/presentation";
 
 export type AwcHumanInvitePersonFormBodyProps = {
   readonly tab: InvitePersonTab;

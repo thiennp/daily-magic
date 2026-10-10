@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import SectionIcon from "@/features/projects/members/AwcProjectMembersSectionCard";
+import { AwcProjectMembersSectionIcon as SectionIcon } from "@/features/projects/members/public-api/presentation";
 import AwcHumanPeopleSectionBody from "@/features/projects/access/humanInvites/AwcHumanPeopleSectionBody";
 import { useHumanPeopleInvites } from "@/features/projects/access/humanInvites/hooks/public-api/presentation";
 import { countActiveAssistantMembers } from "@/features/projects/access/humanInvites/utils/public-api/presentation";

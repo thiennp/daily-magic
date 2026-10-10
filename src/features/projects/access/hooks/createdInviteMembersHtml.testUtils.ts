@@ -3,9 +3,11 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import type { CreatedInviteBannerState } from "@/features/projects/access/hooks/createdInviteBanner.testUtils";
 import type { AwcProjectAccessInvite } from "@/features/projects/access/hooks/loadAwcProjectAccess";
-import AwcProjectMembersInviteBotsSection from "@/features/projects/members/AwcProjectMembersInviteBotsSection";
+import { AwcProjectMembersInviteBotsSection } from "@/features/projects/members/public-api/presentation";
 
-type SectionAccess = Parameters<typeof AwcProjectMembersInviteBotsSection>[0]["access"];
+type SectionAccess = Parameters<
+  typeof AwcProjectMembersInviteBotsSection
+>[0]["access"];
 
 /** One unused invite as GET /access lists it. */
 export const listed = (inviteId: string): AwcProjectAccessInvite =>

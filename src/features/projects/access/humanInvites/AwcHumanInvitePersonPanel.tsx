@@ -6,7 +6,7 @@ import {
   withProjectName,
 } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
 import type { AwcHumanInvitePersonPanelProps } from "@/features/projects/access/humanInvites/types/awcHumanInvitePersonPanelProps.type";
-import { SECTION_CARD } from "@/features/projects/members/AwcProjectMembersSectionCard";
+import { SECTION_CARD } from "@/features/projects/members/public-api/types";
 
 export type { AwcHumanInvitePersonPanelProps } from "@/features/projects/access/humanInvites/types/awcHumanInvitePersonPanelProps.type";
 

@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { AWC_WAKE_CONNECT_PASTE_COPY as C } from "@/features/projects/access/awcWakeConnectPasteCopy.constant";
-import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
+import { AwcProjectMembersInfoTip } from "@/features/projects/members/public-api/presentation";
 
 const INPUT =
   "block w-full rounded-md border border-awc-border-strong bg-white px-2 py-1.5 font-mono text-xs text-awc-fg placeholder:font-sans";

@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 
-import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
+import { AwcProjectMembersInfoTip } from "@/features/projects/members/public-api/presentation";
 import {
   AWC_PROJECT_ACCESS_BADGE_ALERT_CLASS,
   AWC_PROJECT_ACCESS_BADGE_CLASS,

@@ -8,7 +8,7 @@ import {
   INV_ROLE_GRID_CLASS,
 } from "@/features/projects/access/humanInvites/invitePersonChromeClasses.constant";
 import type { HumanInviteRole } from "@/features/projects/access/humanInvites/types/humanInviteUiContract.type";
-import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
+import { AwcProjectMembersInfoTip } from "@/features/projects/members/public-api/presentation";
 
 export type AwcHumanInvitePersonRolePickerProps = {
   readonly role: HumanInviteRole;

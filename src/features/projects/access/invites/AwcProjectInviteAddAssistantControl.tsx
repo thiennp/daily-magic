@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import AwcProjectIsolateCheckbox from "@/features/projects/access/invites/AwcProjectIsolateCheckbox";
-import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
+import { AwcProjectMembersInfoTip } from "@/features/projects/members/public-api/presentation";
 import { AWC_PROJECT_INVITE_ADD_ASSISTANT_COPY as C } from "@/features/projects/access/invites/awcProjectInviteAddAssistantCopy.constant";
 import {
   toAwcProjectInviteAddSelection,
