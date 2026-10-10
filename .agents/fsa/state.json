@@ -13,7 +13,8 @@
     "src/features/projects/botSupportUrl",
     "src/features/agent/components",
     "src/features/agent/icons",
-    "src/features/agent/hooks/types"
+    "src/features/agent/hooks/types",
+    "src/features/reports/types"
   ],
   "blocked": {},
   "rounds": [
@@ -86,6 +87,11 @@
       "unit": "src/features/agent/hooks/types",
       "sha": "86821d28aefe8340c1412ab4617967c6901f9f72",
       "at": "2026-10-10T09:03:55.234Z"
+    },
+    {
+      "unit": "src/features/reports/types",
+      "sha": "f4119204871618f8015bfe8773121b288e37cc59",
+      "at": "2026-10-10T09:05:24.129Z"
     }
   ]
 }

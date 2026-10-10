@@ -1,4 +1,4 @@
-import type AgentRunSseEvent from "@/features/reports/types/AgentRunSseEvent.type";
+import type { AgentRunSseEvent } from "@/features/reports/types/public-api/types";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);

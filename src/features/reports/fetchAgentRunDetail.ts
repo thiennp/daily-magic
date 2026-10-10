@@ -1,4 +1,4 @@
-import type { AgentRunDetailFetchOutcome } from "@/features/reports/types/AgentRunDetailFetchOutcome.type";
+import type { AgentRunDetailFetchOutcome } from "@/features/reports/types/public-api/types";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
 export async function fetchAgentRunDetail(

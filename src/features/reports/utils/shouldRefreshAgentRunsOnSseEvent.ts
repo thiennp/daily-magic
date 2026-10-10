@@ -1,4 +1,4 @@
-import type AgentRunSseEvent from "@/features/reports/types/AgentRunSseEvent.type";
+import type { AgentRunSseEvent } from "@/features/reports/types/public-api/types";
 
 /** Whether a run-events SSE payload should trigger a job-list refetch. */
 export const shouldRefreshAgentRunsOnSseEvent = (

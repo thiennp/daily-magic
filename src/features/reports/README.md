@@ -23,3 +23,5 @@ Agent run history, live terminal, re-run.
 - `feedback`
 
 Query: `npm run feature-knowledge:query -- "..." --feature=reports`
+
+Public API (`types`): outside code imports `AgentRunDetailFetchOutcome` and `AgentRunSseEvent` from `@/features/reports/types/public-api/types`.
