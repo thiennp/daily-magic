@@ -70,4 +70,4 @@ export type KnowledgeHeartbeatReport = {
 
 /** Computer status shown to project owners (never blocks dispatch). */
 export type KnowledgeComputerStatus =
-  "ready" | "degraded" | "off" | "unavailable" | "unknown";
+  "ready" | "degraded" | "off" | "unavailable" | "unknown" | "stale";

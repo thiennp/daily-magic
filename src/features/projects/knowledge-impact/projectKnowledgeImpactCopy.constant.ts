@@ -77,10 +77,13 @@ export const PROJECT_KNOWLEDGE_IMPACT_COPY = {
   "status.off": "Off",
   "status.unavailable": "Needs Node 22.13+",
   "status.unknown": "Not reported",
+  "status.stale": "Offline",
   "status.fix.degraded":
     "Ollama or the embedding model is missing. Run the install update on that computer.",
   "status.fix.unavailable": "Update Node to 22.13+ on that computer.",
   "status.fix.unknown": "Update the install on that computer.",
+  "status.fix.stale":
+    "No report for over 15 minutes. Open AgentWitch Local on that computer.",
   "cards.heading": "Shared notes",
   "cards.intro":
     "Note text from computers where sharing is on. Only project owners see this.",

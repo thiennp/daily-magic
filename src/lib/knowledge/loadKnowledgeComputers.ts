@@ -4,6 +4,13 @@ import type { KnowledgeCapabilitiesReport } from "@/lib/knowledge/knowledgeHeart
 import { resolveKnowledgeComputerStatus } from "@/lib/knowledge/parseKnowledgeHeartbeat";
 import { resolveComputerLabel } from "@/lib/knowledge/resolveComputerLabel";
 
+const toIso = (value: unknown): string | null =>
+  value instanceof Date
+    ? value.toISOString()
+    : value !== null && value !== undefined
+      ? String(value)
+      : null;
+
 const parseCapabilities = (
   value: unknown,
 ): KnowledgeCapabilitiesReport | null =>
@@ -59,17 +66,16 @@ export const loadKnowledgeComputers = async (
           : row.owner_email !== null && row.owner_email !== undefined
             ? String(row.owner_email)
             : null,
-      status: resolveKnowledgeComputerStatus(capabilities),
+      status: resolveKnowledgeComputerStatus(
+        capabilities,
+        toIso(row.knowledge_capabilities_at),
+      ),
       cardCount: capabilities?.cardCount ?? 0,
       installBundleVersion:
         row.install_bundle_version !== null &&
         row.install_bundle_version !== undefined
           ? String(row.install_bundle_version)
           : null,
-      lastReportAt:
-        row.knowledge_capabilities_at !== null &&
-        row.knowledge_capabilities_at !== undefined
-          ? String(row.knowledge_capabilities_at)
-          : null,
+      lastReportAt: toIso(row.knowledge_capabilities_at),
     };
   });

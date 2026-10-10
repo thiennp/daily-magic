@@ -16,6 +16,7 @@ const BADGE_CLASS: Record<KnowledgeComputerRow["status"], string> = {
   off: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
   unavailable: "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300",
   unknown: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
+  stale: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300",
 };
 
 const resolveFixHint = (
@@ -27,7 +28,9 @@ const resolveFixHint = (
       ? C["status.fix.unavailable"]
       : status === "unknown"
         ? C["status.fix.unknown"]
-        : null;
+        : status === "stale"
+          ? C["status.fix.stale"]
+          : null;
 
 export default function KnowledgeComputersList({
   impact,

@@ -33,3 +33,6 @@ export const TASK_INTAKE_PREFS_FILE_NAME = "task-intake-prefs.json";
 export const TASK_INTAKE_CLI_SUBCOMMAND = "task-intake";
 export const CURSOR_GLOBAL_TASK_INTAKE_RULE_RELATIVE =
   ".cursor/rules/agent-witch-task-intake.mdc";
+/** Claude `Stop` hook: learn from the finished turn. */
+export const KNOWLEDGE_CAPTURE_HOOK_NAME = "knowledge_capture";
+export const CLAUDE_STOP_HOOK_COMMAND = `${MCP_STDIO_COMMAND} ${CHECK_CONTEXT_HOOK_SUBCOMMAND} ${KNOWLEDGE_CAPTURE_HOOK_NAME}`;

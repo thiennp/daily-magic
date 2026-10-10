@@ -24,6 +24,7 @@ export {
   runCheckContextHook,
   type CheckContextHookIo,
 } from "../internal/core/runCheckContextHook";
+export { runKnowledgeCaptureHookCli } from "../internal/core/runKnowledgeCaptureHookCli";
 export { runCheckContextHookCli } from "../internal/core/runCheckContextHookCli";
 export { tryHandleTokenSaverLocalRequest } from "../internal/core/tryHandleTokenSaverLocalRequest";
 export { writeGlobalTriggers } from "../internal/core/writeGlobalTriggers";

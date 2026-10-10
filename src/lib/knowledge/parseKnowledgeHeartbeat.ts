@@ -69,8 +69,13 @@ export const parseKnowledgeHeartbeat = (
   };
 };
 
+/** A computer that has not reported for this long is offline, whatever it last said. */
+export const KNOWLEDGE_REPORT_STALE_MS = 15 * 60 * 1000;
+
 export const resolveKnowledgeComputerStatus = (
   capabilities: KnowledgeCapabilitiesReport | null,
+  reportedAt?: string | null,
+  now: number = Date.now(),
 ): KnowledgeComputerStatus => {
   if (capabilities === null) {
     return "unknown";
@@ -80,6 +85,13 @@ export const resolveKnowledgeComputerStatus = (
   }
   if (capabilities.storage === "none") {
     return "unavailable";
+  }
+  const reportedMs = reportedAt == null ? Number.NaN : Date.parse(reportedAt);
+  if (
+    Number.isFinite(reportedMs) &&
+    now - reportedMs > KNOWLEDGE_REPORT_STALE_MS
+  ) {
+    return "stale";
   }
   return capabilities.ollama === "ready" ? "ready" : "degraded";
 };

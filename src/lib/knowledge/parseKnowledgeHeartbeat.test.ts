@@ -80,4 +80,34 @@ describe("resolveKnowledgeComputerStatus", () => {
     );
     expect(resolveKnowledgeComputerStatus(null)).toBe("unknown");
   });
+
+  it("calls a ready or keyword-only computer stale after 15 minutes without a report", () => {
+    const base = parseKnowledgeHeartbeat({
+      knowledge: { capabilities },
+    })!.capabilities;
+    const now = Date.parse("2026-10-10T12:00:00Z");
+    const ago = (minutes: number) =>
+      new Date(now - minutes * 60_000).toISOString();
+    expect(resolveKnowledgeComputerStatus(base, ago(5), now)).toBe("ready");
+    expect(resolveKnowledgeComputerStatus(base, ago(16), now)).toBe("stale");
+    expect(
+      resolveKnowledgeComputerStatus(
+        { ...base, ollama: "missing" },
+        ago(60),
+        now,
+      ),
+    ).toBe("stale");
+    // A problem the owner has to fix is not hidden behind "offline".
+    expect(
+      resolveKnowledgeComputerStatus(
+        { ...base, storage: "none" },
+        ago(600),
+        now,
+      ),
+    ).toBe("unavailable");
+    expect(resolveKnowledgeComputerStatus(base, null, now)).toBe("ready");
+    expect(resolveKnowledgeComputerStatus(base, "not a date", now)).toBe(
+      "ready",
+    );
+  });
 });

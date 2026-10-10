@@ -60,6 +60,14 @@ const runMcpHookCli = async (hookName: string | undefined): Promise<never> => {
       const { runCheckContextHookCli } =
         await import("@agent-witch/live-token-saver");
       await runCheckContextHookCli({ layout: resolveAgentWitchLocalLayout() });
+    } else if (hookName === "knowledge_capture") {
+      const { resolveAgentWitchLocalLayout } =
+        await import("@agent-witch/install-layout");
+      const { runKnowledgeCaptureHookCli } =
+        await import("@agent-witch/live-token-saver");
+      await runKnowledgeCaptureHookCli({
+        layout: resolveAgentWitchLocalLayout(),
+      });
     } else {
       process.stderr.write(
         `[agent-witch] ${CHECK_CONTEXT_HOOK_SUBCOMMAND}: unknown hook ${hookName ?? "(none)"}\n`,

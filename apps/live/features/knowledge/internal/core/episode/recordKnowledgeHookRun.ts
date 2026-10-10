@@ -4,6 +4,7 @@ import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
 import { selectKnowledgeNotes } from "./buildKnowledgeNotes";
 import { classifyKnowledgeTaskClass } from "./classifyKnowledgeTaskClass";
+import { saveHookGitBefore, snapshotGitBeforeSync } from "./hookGitBefore";
 import { getKnowledgeDb } from "./knowledgeDb";
 import { isKnowledgeOnForFolder } from "./knowledgeProjectFlags";
 import {
@@ -33,7 +34,7 @@ export const buildKnowledgeHookRunId = (
   sessionId: string | undefined,
   message: string,
 ): string =>
-  `hook:${sessionId ?? "nosession"}:${createHash("sha256").update(message).digest("hex").slice(0, 16)}`;
+  `hook:${sessionId ?? "nosession"}:${createHash("sha256").update(message.trim()).digest("hex").slice(0, 16)}`;
 
 /**
  * Notes for a prompt of an agent that runs outside AgentWitch dispatch
@@ -68,6 +69,10 @@ export const recordKnowledgeHookRun = (input: {
       : selectKnowledgeNotes(input);
     if (input.projectFolderPath !== undefined) {
       touchKnowledgeProject(db, input.projectKey, input.projectFolderPath);
+    }
+    if (input.projectFolderPath !== undefined) {
+      const before = snapshotGitBeforeSync(input.projectFolderPath);
+      if (before !== undefined) saveHookGitBefore(input.layout, runId, before);
     }
     recordInjections(db, runId, notes.cards);
     insertKnowledgeEvent(db, {
