@@ -68,3 +68,7 @@ Public API of `connection-lab`: import from `connection-lab/public-api/presentat
 ## `utils` public API
 
 Outside code imports the local-identity, wake-port, cookie and paired-device helpers only through `utils/public-api/presentation.ts` (and the `LocalAgentWitchIdentity` type through `utils/public-api/types.ts`).
+
+## Public API (feature root)
+
+Outside code imports the root files (paired devices resource, local identity store) only through `public-api/types.ts` (snapshot types) and `public-api/presentation.ts` (resources and refresh helpers).

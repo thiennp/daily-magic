@@ -1,4 +1,4 @@
-import type { LocalAgentWitchIdentitySnapshot } from "@/features/agent-witch/localAgentWitchIdentitySnapshot.type";
+import type { LocalAgentWitchIdentitySnapshot } from "@/features/agent-witch/public-api/types";
 import { resolveLocalTokenHashMatchesReachableDevice } from "@/features/agent-witch/utils/public-api/presentation";
 import { resolveSoleReachableLocalTokenHash } from "@/features/agent-witch/utils/public-api/presentation";
 import type { MacDevicePresence } from "@/features/agent-witch/online-wake/public-api/types";

@@ -5,7 +5,7 @@ import { useSyncExternalStore } from "react";
 import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
-} from "@/features/agent-witch/pairedDevicesResource";
+} from "@/features/agent-witch/public-api/presentation";
 import { resolveHomeMacStatusForBrowser } from "@/features/home/utils/resolveHomeMacStatusForBrowser";
 import { resolveHomeMacStatusSummary } from "@/features/home/utils/resolveHomeMacStatusSummary";
 

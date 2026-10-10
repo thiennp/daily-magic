@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import Button from "@/components/ui/button/Button";
 import { Modal } from "@/components/ui/modal";
-import { refreshPairedDevices } from "@/features/agent-witch/pairedDevicesResource";
+import { refreshPairedDevices } from "@/features/agent-witch/public-api/presentation";
 import MacDeviceWakeOfflineLede from "@/features/agent-witch/online-wake/MacDeviceWakeOfflineLede";
 import MacDeviceWakeShellCommandBlock from "@/features/agent-witch/online-wake/MacDeviceWakeShellCommandBlock";
 import {

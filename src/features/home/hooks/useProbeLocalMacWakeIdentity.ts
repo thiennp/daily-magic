@@ -9,12 +9,12 @@ import { resolveShouldProbeWakeIdentityInBrowser } from "@/features/agent-witch/
 import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
-} from "@/features/agent-witch/pairedDevicesResource";
+} from "@/features/agent-witch/public-api/presentation";
 import {
   ensureLocalAgentWitchIdentityLoaded,
   getLocalAgentWitchIdentitySnapshot,
   retryUnreachableLocalAgentWitchIdentity,
-} from "@/features/agent-witch/localAgentWitchIdentityResource";
+} from "@/features/agent-witch/public-api/presentation";
 import { shouldRetryUnreachableWakeIdentityProbe } from "@/features/agent-witch/utils/public-api/presentation";
 import {
   getLocalMacTokenHashSnapshot,

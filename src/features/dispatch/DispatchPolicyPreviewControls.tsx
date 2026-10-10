@@ -9,7 +9,7 @@ import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
-} from "@/features/agent-witch/pairedDevicesResource";
+} from "@/features/agent-witch/public-api/presentation";
 import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/public-api/presentation";
 import { useDispatchTargets } from "@/features/dispatch/hooks/public-api/presentation";
 

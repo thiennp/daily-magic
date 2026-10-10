@@ -1,4 +1,4 @@
-import type { LocalAgentWitchIdentityLoadStatus } from "@/features/agent-witch/localAgentWitchIdentitySnapshot.type";
+import type { LocalAgentWitchIdentityLoadStatus } from "@/features/agent-witch/public-api/types";
 
 /**
  * A skipped wake probe leaves identity status at "idle". That is not an

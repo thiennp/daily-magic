@@ -6,7 +6,7 @@ import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
   refreshPairedDevices,
-} from "@/features/agent-witch/pairedDevicesResource";
+} from "@/features/agent-witch/public-api/presentation";
 import type { MacPresenceTier } from "@/features/agent-witch/online-wake/public-api/types";
 import type { AgentWitchDeviceWriter } from "@/lib/agentWitch/deviceWriters";
 import type { AgentWitchDevicePlatform } from "@/lib/agentWitch/types/AgentWitchDevicePlatform.type";

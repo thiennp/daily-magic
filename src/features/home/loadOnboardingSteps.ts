@@ -11,7 +11,7 @@ import syncOnboardingWorkflowCreatedFlag from "@/features/home/utils/syncOnboard
 import {
   getPairedDevicesSnapshot,
   refreshPairedDevices,
-} from "@/features/agent-witch/pairedDevicesResource";
+} from "@/features/agent-witch/public-api/presentation";
 import { listAgentRunsLocalCache } from "@/features/reports/public-api/presentation";
 import type { OnboardingStep } from "@/features/home/utils/buildOnboardingSteps";
 

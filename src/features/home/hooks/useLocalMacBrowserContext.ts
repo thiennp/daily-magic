@@ -5,7 +5,7 @@ import { useSyncExternalStore } from "react";
 import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
-} from "@/features/agent-witch/pairedDevicesResource";
+} from "@/features/agent-witch/public-api/presentation";
 import useLocalMacHostname from "@/features/home/hooks/useLocalMacHostname";
 import { countLinkedAgentWitchComputers } from "@/features/home/utils/isAgentWitchConnectInstallPlaceholderDevice";
 
@@ -37,8 +37,7 @@ const useLocalMacBrowserContext = (): {
   const isBridgeConnected = resolved.devices.some(
     (device) => device.isConnected,
   );
-  const hasClaimedDevice =
-    countLinkedAgentWitchComputers(resolved.devices) > 0;
+  const hasClaimedDevice = countLinkedAgentWitchComputers(resolved.devices) > 0;
 
   return {
     localHostname,

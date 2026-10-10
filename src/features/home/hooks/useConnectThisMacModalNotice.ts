@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { refreshLocalAgentWitchIdentity } from "@/features/agent-witch/localAgentWitchIdentityResource";
-import { refreshPairedDevices } from "@/features/agent-witch/pairedDevicesResource";
+import { refreshLocalAgentWitchIdentity } from "@/features/agent-witch/public-api/presentation";
+import { refreshPairedDevices } from "@/features/agent-witch/public-api/presentation";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import type { ConnectThisMacModalNotice } from "@/features/home/utils/ConnectThisMacModalNotice.type";

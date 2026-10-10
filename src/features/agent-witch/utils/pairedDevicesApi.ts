@@ -6,7 +6,7 @@ import {
   getPairedDevicesSnapshot,
   hidePairedDeviceAfterRevoke,
   refreshPairedDevices,
-} from "@/features/agent-witch/pairedDevicesResource";
+} from "@/features/agent-witch/public-api/presentation";
 
 interface PairedDevice {
   readonly id: string;

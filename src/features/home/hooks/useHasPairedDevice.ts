@@ -6,7 +6,7 @@ import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
   refreshPairedDevices,
-} from "@/features/agent-witch/pairedDevicesResource";
+} from "@/features/agent-witch/public-api/presentation";
 import { useSubscribeMacDeviceRevoked } from "@/features/agent-witch/macDevices/public-api/presentation";
 import { countLinkedAgentWitchComputers } from "@/features/home/utils/isAgentWitchConnectInstallPlaceholderDevice";
 

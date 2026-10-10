@@ -1,6 +1,6 @@
 import { useEffect, type Dispatch, type SetStateAction } from "react";
 
-import { pairedDevicesResource } from "@/features/agent-witch/pairedDevicesResource";
+import { pairedDevicesResource } from "@/features/agent-witch/public-api/presentation";
 import type { OnboardingStep } from "@/features/home/loadOnboardingSteps";
 import { countLinkedAgentWitchComputers } from "@/features/home/utils/isAgentWitchConnectInstallPlaceholderDevice";
 

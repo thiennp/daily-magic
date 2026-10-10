@@ -6,11 +6,11 @@ import useIsMobileClient from "@/hooks/useIsMobileClient";
 import {
   getLocalAgentWitchIdentitySnapshot,
   subscribeLocalAgentWitchIdentity,
-} from "@/features/agent-witch/localAgentWitchIdentityResource";
+} from "@/features/agent-witch/public-api/presentation";
 import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
-} from "@/features/agent-witch/pairedDevicesResource";
+} from "@/features/agent-witch/public-api/presentation";
 import { readAgentWitchLocalHostCookie } from "@/features/agent-witch/utils/public-api/presentation";
 import { isAgentWitchWakeIdentityProbeSuppressed } from "@/features/agent-witch/utils/public-api/presentation";
 import { collectUniqueWakePorts } from "@/features/agent-witch/utils/public-api/presentation";
