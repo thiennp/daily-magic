@@ -11,7 +11,6 @@ export { formatAgentRunReportSummaryLine } from "../formatAgentRunReportSummaryL
 export { formatAgentRunStatusLabel } from "../formatAgentRunStatusLabel";
 export { handleAgentRunLiveTerminalSocketMessage } from "../handleAgentRunLiveTerminalSocketMessage";
 export { parseAgentRunSseEvent } from "../parseAgentRunSseEvent";
-export { purgeLocalAgentTasksForRevokedDevice } from "../purgeLocalAgentTasksForRevokedDevice";
 export {
   isAgentRunLiveTerminalActive,
   registerAgentRunLiveTerminal,
