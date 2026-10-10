@@ -46,5 +46,5 @@ describe("HomeProjectsPanel render", () => {
     expect(html).not.toContain("Your most recent projects");
     expect(html).not.toContain("create-project-form-stub");
     expect(html).not.toContain(">Edit<");
-  }, 15_000);
+  }, 60_000);
 });

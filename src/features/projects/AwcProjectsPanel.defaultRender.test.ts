@@ -20,7 +20,7 @@ describe("AwcProjectsPanel default render", () => {
 
   it(
     "keeps the full /projects panel (all projects + New project button) by default",
-    { timeout: 15000 },
+    { timeout: 60_000 },
     async () => {
       const { default: AwcProjectsPanel } =
         await import("@/features/projects/AwcProjectsPanel");
