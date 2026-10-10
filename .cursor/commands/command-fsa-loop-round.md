@@ -42,7 +42,7 @@ Skip a file kind that has no symbols; never create empty contract files.
 3. If an outside importer needs something that is not a stable part of the unit (a test helper, a private util), do not export it. Mark the unit blocked (step 5) with that reason.
 4. Add one short paragraph to the owning feature's `README.md` naming the unit's public API (create only if the feature has a README).
 
-Hard limits for a round: ≤ 60 files in the unit, ≤ 25 outside importers, ≤ 3 new files. Over a limit → block the unit.
+Hard limits for a round: the `limits` printed by `npm run fsa:next` (stored in `.agents/fsa/state.json`; currently ≤ 100 files in the unit, ≤ 80 outside importers) and ≤ 3 new files. Over a limit → block the unit.
 
 ## 4. Verify (all must pass)
 

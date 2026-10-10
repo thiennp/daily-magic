@@ -12,6 +12,7 @@ export type FsaUnitMetrics = {
 export type FsaState = {
   readonly completed: readonly string[];
   readonly blocked: Readonly<Record<string, string>>;
+  readonly limits?: FsaLimits;
   readonly rounds: readonly {
     readonly unit: string;
     readonly sha: string;
@@ -46,6 +47,7 @@ export type FsaPick =
       readonly unit: string;
       readonly reason: string;
       readonly pending: number;
+      readonly all: readonly { unit: string; reason: string }[];
     }
   | { readonly kind: "done" };
 
@@ -212,6 +214,7 @@ export const pickNextUnit = (
         unit: stop.unit,
         reason: stop.reason,
         pending: humanStops.length,
+        all: humanStops,
       }
     : { kind: "done" };
 };

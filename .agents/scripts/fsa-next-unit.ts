@@ -12,6 +12,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
 import {
+  DEFAULT_LIMITS,
   type FsaFileGraph,
   type FsaState,
   pickNextUnit,
@@ -32,6 +33,7 @@ const readState = (): FsaState => {
     completed: raw.completed ?? [],
     blocked: raw.blocked ?? {},
     rounds: raw.rounds ?? [],
+    ...(raw.limits ? { limits: raw.limits } : {}),
   };
 };
 
@@ -98,6 +100,10 @@ if (command === "done" && unit) {
     ],
   });
   console.log(`marked done: ${unit}`);
+} else if (command === "unblock" && unit) {
+  const { [unit]: _removed, ...rest } = state.blocked;
+  writeState({ ...state, blocked: rest });
+  console.log(`unblocked: ${unit}`);
 } else if (command === "block" && unit) {
   writeState({
     ...state,
@@ -105,7 +111,8 @@ if (command === "done" && unit) {
   });
   console.log(`marked blocked: ${unit}`);
 } else {
-  const pick = pickNextUnit(buildGraph(), state);
+  const limits = state.limits ?? DEFAULT_LIMITS;
+  const pick = pickNextUnit(buildGraph(), state, limits);
   if (command === "status") {
     console.log(
       JSON.stringify(
@@ -119,6 +126,6 @@ if (command === "done" && unit) {
       ),
     );
   } else {
-    console.log(JSON.stringify(pick, null, 2));
+    console.log(JSON.stringify({ ...pick, limits }, null, 2));
   }
 }
