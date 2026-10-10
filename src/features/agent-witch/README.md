@@ -59,3 +59,7 @@ Bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` when install scripts c
 Public API of `mac-bootstrap`: import from `mac-bootstrap/public-api/{types,presentation,infrastructure}` only (`MacConnectBootstrapView`, `MacConnectBootstrapClient`, `resolveMacConnectBootstrapView`).
 
 Public API of `connection-lab`: import from `connection-lab/public-api/presentation` only (`ConnectionLabAppChrome`, `ConnectionLabPageLayout`, `ConnectionLabProvider`, `useConnectionLab`).
+
+## Dashboard public API
+
+`dashboard/public-api/presentation.ts` exports `AgentWitchDashboardProvider`, `useAgentWitchDashboard` and `useAgentWitchDashboardSubscription` for other features.

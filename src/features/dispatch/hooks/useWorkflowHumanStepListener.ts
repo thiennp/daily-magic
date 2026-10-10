@@ -2,7 +2,7 @@
 
 import { useCallback, useSyncExternalStore, useState } from "react";
 
-import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/useAgentWitchDashboardSubscription";
+import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/public-api/presentation";
 import { postWorkflowHumanStepComplete } from "@/features/agent/utils/postWorkflowHumanStepComplete";
 import { readDelegatedWriterAgentFromStorage } from "@/features/agent/utils/readDelegatedWriterAgentFromStorage";
 import { parseWorkflowHumanStepSocketMessage } from "@/features/dispatch/utils/workflowHumanStepSocket";

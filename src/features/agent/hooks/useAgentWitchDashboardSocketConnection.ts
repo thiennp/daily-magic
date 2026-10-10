@@ -2,8 +2,8 @@
 
 import { useEffect, type RefObject } from "react";
 
-import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/AgentWitchDashboardContext";
-import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/useAgentWitchDashboardSubscription";
+import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/public-api/presentation";
+import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/public-api/presentation";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import parseAgentWitchSocketDisplay, {
   type AgentWitchSocketDisplay,

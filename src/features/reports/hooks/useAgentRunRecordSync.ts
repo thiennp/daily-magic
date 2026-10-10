@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 
-import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/useAgentWitchDashboardSubscription";
+import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/public-api/presentation";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 

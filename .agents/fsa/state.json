@@ -46,7 +46,8 @@
     "src/features/shell/loading",
     "src/features/auth",
     "src/features/billing",
-    "src/features/account"
+    "src/features/account",
+    "src/features/agent-witch/dashboard"
   ],
   "blocked": {
     "src/features/home/constants": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing), pre-commit architecture gate fails when it is edited"
@@ -286,6 +287,11 @@
       "unit": "src/features/account",
       "sha": "934e04214511bc8a1ffd849901c4dbc297b85f88",
       "at": "2026-10-10T09:46:27.383Z"
+    },
+    {
+      "unit": "src/features/agent-witch/dashboard",
+      "sha": "59fe1c5aa938f5b504218476b03b7c0a94cb882c",
+      "at": "2026-10-10T09:47:38.501Z"
     }
   ]
 }

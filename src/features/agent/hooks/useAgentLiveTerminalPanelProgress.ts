@@ -2,7 +2,7 @@ import { useComposerApprovalWaitingLabel } from "@/features/agent/hooks/useCompo
 import { useAgentLiveProgressStallState } from "@/features/agent/hooks/useAgentLiveProgressStallState";
 import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 import { useAgentRunHeartbeatStallReset } from "@/features/agent/hooks/useAgentRunHeartbeatStallReset";
-import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/AgentWitchDashboardContext";
+import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/public-api/presentation";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import { buildAgentLiveProgressSteps } from "@/features/agent/utils/buildAgentLiveProgressSteps";
 import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";

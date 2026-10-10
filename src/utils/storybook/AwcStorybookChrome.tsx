@@ -3,7 +3,7 @@
 import { SidebarProvider } from "@/context/SidebarContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { SendTaskModalProvider } from "@/features/agent/SendTaskModalProvider";
-import { AgentWitchDashboardProvider } from "@/features/agent-witch/dashboard/AgentWitchDashboardProvider";
+import { AgentWitchDashboardProvider } from "@/features/agent-witch/dashboard/public-api/presentation";
 import AdminShell from "@/features/admin/AdminShell";
 import { AuthSessionProvider } from "@/features/auth/public-api/presentation";
 import AppShell from "@/features/shell/AppShell";

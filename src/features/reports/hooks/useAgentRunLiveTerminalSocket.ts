@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useRef, type RefObject } from "react";
 
-import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/AgentWitchDashboardContext";
-import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/useAgentWitchDashboardSubscription";
+import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/public-api/presentation";
+import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/public-api/presentation";
 import { appendAgentRunTerminalOutput } from "@/features/agent/utils/agentRunTerminalOutputStore";
 import { sendDashboardTerminalSubscribe } from "@/features/agent/utils/sendDashboardTerminalSubscribe";
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";

@@ -7,8 +7,8 @@ import {
   clearPendingInputForRun,
 } from "@/features/dispatch/agentRunInputStore";
 
-import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/AgentWitchDashboardContext";
-import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/useAgentWitchDashboardSubscription";
+import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/public-api/presentation";
+import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/public-api/presentation";
 import type { DispatchApprovalRequest } from "@/features/dispatch/hooks/dispatchApprovalRequest.type";
 import {
   parseDispatchApprovalSocketMessage,
