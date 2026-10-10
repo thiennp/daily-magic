@@ -1,9 +1,9 @@
 import { isMacWriterSendReady } from "@/features/agent-witch/online-wake/public-api/presentation";
 import { buildWsTestSendDisabledState } from "@/features/agent/utils/buildWsTestSendDisabledState";
 import { isCursorCloudExecutorDeviceId } from "@/lib/cursorCloud/cursorCloudExecutorDeviceId.constant";
-import type useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
+import type { useMacDeviceSelection } from "@/features/agent/hooks/public-api/types";
 import type { useTeamDispatchSelection } from "@/features/dispatch/hooks/public-api/presentation";
-import type { useWsTestComposerWorkflowState } from "@/features/agent/hooks/useWsTestComposerWorkflowState";
+import type { useWsTestComposerWorkflowState } from "@/features/agent/hooks/public-api/types";
 
 export const buildWsTestComposerDispatchState = (input: {
   readonly selection: ReturnType<typeof useTeamDispatchSelection>;

@@ -3,7 +3,7 @@
 import AppPanel from "@/components/surfaces/AppPanel";
 import { useLocalMacBrowserContext } from "@/features/home/hooks/public-api/presentation";
 import MacDevicePicker from "@/features/agent/MacDevicePicker";
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 
 interface WsTestMacDispatchSectionProps {
   readonly isLibraryPlaybook: boolean;

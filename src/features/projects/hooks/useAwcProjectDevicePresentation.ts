@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 import { buildProjectDevicePresenceLabel } from "@/features/projects/utils/public-api/presentation";
 import { resolveProjectEditOnMacCta } from "@/features/projects/utils/public-api/presentation";
 import { resolveProjectMacDeviceContext } from "@/features/projects/utils/public-api/presentation";

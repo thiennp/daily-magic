@@ -10,7 +10,7 @@ import {
 } from "react";
 
 import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchInstallBundleVersion";
 import {
   buildConnectionScenarioDevices,

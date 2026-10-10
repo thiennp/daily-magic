@@ -7,14 +7,14 @@ import {
   shouldShowAgentLiveTerminalCursor,
   shouldShowAgentLiveTerminalLoadingIndicator,
 } from "@/features/agent/utils/buildAgentLiveTerminalDisplay";
-import { useAgentLiveTerminalLoadingDots } from "@/features/agent/hooks/useAgentLiveTerminalLoadingDots";
+import { useAgentLiveTerminalLoadingDots } from "@/features/agent/hooks/public-api/client";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import { AGENT_LIVE_TERMINAL_STATUS_LABEL } from "@/features/agent/utils/agentLiveTerminalStatusLabel.constant";
 import type { AgentMacShellStatus } from "@/features/agent/utils/reduceAgentMacShellMessage";
 import { shouldShowLiveMacShellInTerminal } from "@/features/agent/utils/shouldShowLiveMacShellInTerminal";
 import { resolvePreferStreamMirrorOverLiveShell } from "@/features/agent/utils/resolvePreferStreamMirrorOverLiveShell";
 
-import { useAgentLiveSessionPlatform } from "@/features/agent/hooks/useAgentLiveSessionPlatform";
+import { useAgentLiveSessionPlatform } from "@/features/agent/hooks/public-api/presentation";
 interface AgentLiveTerminalDeveloperMirrorProps {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;

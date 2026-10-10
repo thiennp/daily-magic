@@ -1,4 +1,4 @@
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 import type ProjectCompositionItem from "@/lib/projects/types/ProjectCompositionItem.type";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";

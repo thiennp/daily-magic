@@ -4,8 +4,8 @@ import Label from "@/components/form/Label";
 import MacDevicePickerLocalInstallModals from "@/features/agent/MacDevicePickerLocalInstallModals";
 import MacDevicePickerRows from "@/features/agent/MacDevicePickerRows";
 import { deviceMatchesLocalTokenHash } from "@/features/agent-witch/online-wake/public-api/presentation";
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
-import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
+import { useMyMacDevices } from "@/features/agent/hooks/public-api/presentation";
 import { useThisMacLocalInstallActions } from "@/features/home/hooks/public-api/presentation";
 import { MARKETPLACE_COMPUTER_PICKER_COPY } from "@/features/marketplace/public-api/types";
 

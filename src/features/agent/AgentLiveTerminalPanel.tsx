@@ -4,7 +4,7 @@ import AgentLiveTerminalPanelProgressFeed from "@/features/agent/AgentLiveTermin
 import AgentLiveTerminalFeedbackChat from "@/features/agent/AgentLiveTerminalFeedbackChat";
 import AgentLiveTerminalPanelSteppedOutput from "@/features/agent/AgentLiveTerminalPanelSteppedOutput";
 import AgentLiveTerminalNextActions from "@/features/agent/AgentLiveTerminalNextActions";
-import { useAgentLiveTerminalPanelProgress } from "@/features/agent/hooks/useAgentLiveTerminalPanelProgress";
+import { useAgentLiveTerminalPanelProgress } from "@/features/agent/hooks/public-api/client";
 import type { AgentLiveTerminalPanelProps } from "@/features/agent/types/public-api/types";
 import { buildAgentLiveTerminalPanelMirror } from "@/features/agent/utils/buildAgentLiveTerminalPanelMirror";
 import { parseLatestAgentLiveTerminalNextActions } from "@/features/agent/utils/splitAgentLiveTerminalOutput";

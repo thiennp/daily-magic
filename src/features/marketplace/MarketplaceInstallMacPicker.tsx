@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import MacDevicePicker from "@/features/agent/MacDevicePicker";
-import type useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
+import type { useMacDeviceSelection } from "@/features/agent/hooks/public-api/types";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 interface MarketplaceInstallMacPickerProps {

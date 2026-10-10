@@ -3,9 +3,9 @@
 import ProjectLibraryLink from "@/features/agent/ProjectLibraryLink";
 
 import SendTaskComposerPickerRow from "@/features/agent/SendTaskComposerPickerRow";
-import { useSendTaskComposerHistoryDelete } from "@/features/agent/hooks/useSendTaskComposerHistoryDelete";
-import { useSendTaskComposerHistoryRuns } from "@/features/agent/hooks/useSendTaskComposerHistoryRuns";
-import { useSendTaskComposerLibraryDelete } from "@/features/agent/hooks/useSendTaskComposerLibraryDelete";
+import { useSendTaskComposerHistoryDelete } from "@/features/agent/hooks/public-api/presentation";
+import { useSendTaskComposerHistoryRuns } from "@/features/agent/hooks/public-api/presentation";
+import { useSendTaskComposerLibraryDelete } from "@/features/agent/hooks/public-api/presentation";
 import { buildSendTaskComposerHistoryPickerItems } from "@/features/agent/utils/buildSendTaskComposerHistoryPickerItems";
 import {
   buildSendTaskComposerPickerItems,

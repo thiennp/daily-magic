@@ -1,5 +1,5 @@
-import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
-import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import type { useWsTestComposerWizard } from "@/features/agent/hooks/public-api/types";
+import type { useWsTestTaskComposer } from "@/features/agent/hooks/public-api/types";
 import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import type { SendTaskComposerPickerItem } from "@/features/agent/utils/buildSendTaskComposerPickerItems";

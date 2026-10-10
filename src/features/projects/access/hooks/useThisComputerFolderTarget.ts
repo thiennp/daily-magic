@@ -1,6 +1,6 @@
 "use client";
 
-import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
+import { useMyMacDevices } from "@/features/agent/hooks/public-api/presentation";
 import { useLocalMacHostname } from "@/features/home/hooks/public-api/presentation";
 import { resolveHomeThisMacDeviceIdentity } from "@/features/home/utils/public-api/presentation";
 import useIsMobileClient from "@/hooks/useIsMobileClient";

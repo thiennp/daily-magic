@@ -2,11 +2,11 @@
 
 import WorkflowTrialRunGatePanel from "@/features/agent/WorkflowTrialRunGatePanel";
 import WsTestPromptSection from "@/features/agent/WsTestPromptSection";
-import type { useWsTestComposerPanelActions } from "@/features/agent/hooks/useWsTestComposerPanelActions";
-import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
-import type { useWsTestPromptHandlers } from "@/features/agent/hooks/useWsTestPromptHandlers";
-import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
-import type { useAgentWitchSocket } from "@/features/agent/hooks/useAgentWitchSocket";
+import type { useWsTestComposerPanelActions } from "@/features/agent/hooks/public-api/types";
+import type { useWsTestComposerWizard } from "@/features/agent/hooks/public-api/types";
+import type { useWsTestPromptHandlers } from "@/features/agent/hooks/public-api/types";
+import type { useWsTestTaskComposer } from "@/features/agent/hooks/public-api/types";
+import type { useAgentWitchSocket } from "@/features/agent/hooks/public-api/types";
 import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/public-api/types";
 import type { resolveAgentSessionTargets } from "@/features/agent/utils/resolveAgentSessionTargets";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";

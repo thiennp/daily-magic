@@ -1,7 +1,7 @@
 "use client";
 
 import MacDevicePicker from "@/features/agent/MacDevicePicker";
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 import { requestEndSendTaskSession } from "@/features/agent/utils/sendTaskSessionEvents";
 import { useLocalMacBrowserContext } from "@/features/home/hooks/public-api/presentation";
 

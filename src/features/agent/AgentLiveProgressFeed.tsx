@@ -5,7 +5,7 @@ import AgentLiveProgressFeedStatus from "@/features/agent/AgentLiveProgressFeedS
 import AgentLiveProgressStepRow from "@/features/agent/AgentLiveProgressStepRow";
 import AgentLiveProgressWavesPanel from "@/features/agent/AgentLiveProgressWavesPanel";
 import AgentLiveTerminalNextActions from "@/features/agent/AgentLiveTerminalNextActions";
-import { useAgentLiveTerminalLoadingDots } from "@/features/agent/hooks/useAgentLiveTerminalLoadingDots";
+import { useAgentLiveTerminalLoadingDots } from "@/features/agent/hooks/public-api/client";
 import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import type {
   AgentLiveProgressStep,

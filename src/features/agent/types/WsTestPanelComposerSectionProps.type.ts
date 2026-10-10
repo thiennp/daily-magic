@@ -1,10 +1,10 @@
 import type { RefObject } from "react";
 
-import type { useWsTestComposerPanelActions } from "@/features/agent/hooks/useWsTestComposerPanelActions";
-import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
-import type { useWsTestPromptHandlers } from "@/features/agent/hooks/useWsTestPromptHandlers";
-import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
-import type { useAgentWitchSocket } from "@/features/agent/hooks/useAgentWitchSocket";
+import type { useWsTestComposerPanelActions } from "@/features/agent/hooks/public-api/types";
+import type { useWsTestComposerWizard } from "@/features/agent/hooks/public-api/types";
+import type { useWsTestPromptHandlers } from "@/features/agent/hooks/public-api/types";
+import type { useWsTestTaskComposer } from "@/features/agent/hooks/public-api/types";
+import type { useAgentWitchSocket } from "@/features/agent/hooks/public-api/types";
 import type { AgentMacShellPanelProps } from "@/features/agent/types/AgentMacShellPanelProps.type";
 import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";

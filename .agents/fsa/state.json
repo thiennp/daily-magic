@@ -98,7 +98,8 @@
     "src/features/home/constants",
     "src/features/home/hooks",
     "src/features/home/utils",
-    "src/features/projects#root"
+    "src/features/projects#root",
+    "src/features/agent/hooks"
   ],
   "blocked": {
     "src/features/projects/access/approvalCard": "outside test AwcProjectAccessPendingList.df036.render.test.ts imports test helper AwcPendingApprovalCard.fixtures",
@@ -602,6 +603,11 @@
       "unit": "src/features/projects#root",
       "sha": "9cf08b9ecb7be412933f5b1b57f4b56352015f46",
       "at": "2026-10-10T11:51:03.500Z"
+    },
+    {
+      "unit": "src/features/agent/hooks",
+      "sha": "5db747e0a37868a3a9bc897937e399e75fc91fc2",
+      "at": "2026-10-10T11:54:59.227Z"
     }
   ],
   "limits": {

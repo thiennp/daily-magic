@@ -5,7 +5,7 @@ import { useMemo, useState, useSyncExternalStore } from "react";
 import DispatchPolicyPreview from "@/features/dispatch/DispatchPolicyPreview";
 import HomeSetupDivider from "@/features/home/HomeSetupDivider";
 import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,

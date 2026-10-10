@@ -2,7 +2,7 @@
 
 import SendTaskComposerMacPickerStep from "@/features/agent/SendTaskComposerMacPickerStep";
 import WsTestDelegatedMacField from "@/features/agent/WsTestDelegatedMacField";
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 import {
   useLocalMacBrowserContext,
   useCursorCloudConnection,

@@ -8,7 +8,7 @@ import {
   APP_SURFACE_SECTION_TITLE_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import Badge from "@/components/ui/badge/Badge";
-import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
+import { useUserProjects } from "@/features/agent/hooks/public-api/presentation";
 import HomeAttentionRunRows from "@/features/home/HomeAttentionRunRows";
 import HomeAttentionSkillRows from "@/features/home/HomeAttentionSkillRows";
 import {

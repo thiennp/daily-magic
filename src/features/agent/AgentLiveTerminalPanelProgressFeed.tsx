@@ -1,7 +1,7 @@
 "use client";
 
 import AgentLiveProgressFeed from "@/features/agent/AgentLiveProgressFeed";
-import { useAgentLiveTerminalPanelProgress } from "@/features/agent/hooks/useAgentLiveTerminalPanelProgress";
+import { useAgentLiveTerminalPanelProgress } from "@/features/agent/hooks/public-api/client";
 import { resolveAgentLiveFailureDetails } from "@/features/agent/utils/resolveAgentLiveFailureDetails";
 import { SendReadinessApprovalWaitingChip } from "@/features/agent/send-readiness/public-api/presentation";
 

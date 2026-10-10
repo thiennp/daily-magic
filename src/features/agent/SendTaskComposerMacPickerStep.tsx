@@ -4,7 +4,7 @@ import SendTaskComposerConnectMacButton from "@/features/agent/SendTaskComposerC
 import SendTaskComposerCursorCloudPickerRow from "@/features/agent/SendTaskComposerCursorCloudPickerRow";
 import SendTaskComposerMacPickerRow from "@/features/agent/SendTaskComposerMacPickerRow";
 import { CURSOR_CLOUD_EXECUTOR_DEVICE_ID } from "@/lib/cursorCloud/cursorCloudExecutorDeviceId.constant";
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 import { canWakeMacDeviceFromBrowser } from "@/features/agent-witch/online-wake/public-api/presentation";
 
 interface SendTaskComposerMacPickerStepProps {

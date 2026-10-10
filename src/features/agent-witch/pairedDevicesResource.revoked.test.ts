@@ -12,7 +12,7 @@ import {
   hidePairedDeviceAfterRevoke,
   withoutRecentlyRevokedDevices,
 } from "@/features/agent-witch/pairedDevicesResource";
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 
 /** d591ae31: a deleted computer disappears at once. */
 describe("withoutRecentlyRevokedDevices", () => {

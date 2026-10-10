@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
+import { useUserProjects } from "@/features/agent/hooks/public-api/presentation";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 import { workflowRequiresProjectSelection } from "@/lib/workflows/workflowProjectFields";

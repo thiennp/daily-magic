@@ -3,8 +3,8 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
-import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
+import { useUserProjects } from "@/features/agent/hooks/public-api/presentation";
+import { useMyMacDevices } from "@/features/agent/hooks/public-api/presentation";
 import { pickDefaultMacDeviceId } from "@/features/agent-witch/online-wake/public-api/presentation";
 import { AwcMyProjectInvitations } from "@/features/projects/invitations/public-api/presentation";
 import AwcProjectsListBody from "@/features/projects/AwcProjectsListBody";

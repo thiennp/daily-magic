@@ -1,5 +1,5 @@
-import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
-import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import type { useWsTestComposerWizard } from "@/features/agent/hooks/public-api/types";
+import type { useWsTestTaskComposer } from "@/features/agent/hooks/public-api/types";
 import type { SendTaskComposerPickerItem } from "@/features/agent/utils/buildSendTaskComposerPickerItems";
 import { getAgentRunLocalCache } from "@/features/reports/public-api/presentation";
 import { buildAgentRunContinueHref } from "@/features/reports/utils/public-api/presentation";

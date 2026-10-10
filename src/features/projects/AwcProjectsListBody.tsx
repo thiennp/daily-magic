@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 import AwcProjectCard from "@/features/projects/AwcProjectCard";
 import Button from "@/components/ui/button/Button";
 import AwcProjectsListLoading from "@/features/projects/AwcProjectsListLoading";

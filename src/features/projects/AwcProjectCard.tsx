@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useId } from "react";
 
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 import { AWC_PROJECTS_PAGE_COPY } from "@/features/projects/awcProjectsPageCopy.constant";
 import AwcProjectCardActionsMenu from "@/features/projects/AwcProjectCardActionsMenu";
 import AwcProjectPresenceBadge from "@/features/projects/AwcProjectPresenceBadge";

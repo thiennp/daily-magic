@@ -6,7 +6,7 @@ import SendTaskComposerStepTrail from "@/features/agent/SendTaskComposerStepTrai
 import WsTestComposerFormStep from "@/features/agent/WsTestComposerFormStep";
 import { WorkflowUploadExcerptProvider } from "@/features/workflows/public-api/presentation";
 import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/public-api/types";
-import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import type { useWsTestTaskComposer } from "@/features/agent/hooks/public-api/types";
 import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 

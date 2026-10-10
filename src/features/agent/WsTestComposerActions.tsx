@@ -2,7 +2,7 @@
 
 import ComposerBlockedActionButtons from "@/features/agent/ComposerBlockedActionButtons";
 import WsTestComposerHelperText from "@/features/agent/WsTestComposerHelperText";
-import { useWsTestComposerActionsModel } from "@/features/agent/hooks/useWsTestComposerActionsModel";
+import { useWsTestComposerActionsModel } from "@/features/agent/hooks/public-api/presentation";
 import type { MacPresenceTier } from "@/features/agent-witch/online-wake/public-api/types";
 import {
   SendReadinessBanner,

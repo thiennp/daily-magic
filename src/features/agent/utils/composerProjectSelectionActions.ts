@@ -1,5 +1,5 @@
-import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
-import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import type { useWsTestComposerWizard } from "@/features/agent/hooks/public-api/types";
+import type { useWsTestTaskComposer } from "@/features/agent/hooks/public-api/types";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 

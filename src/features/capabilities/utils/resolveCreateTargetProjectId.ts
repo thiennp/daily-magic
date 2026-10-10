@@ -1,4 +1,4 @@
-import loadUserProjectsFromApi from "@/features/agent/hooks/loadUserProjectsFromApi";
+import { loadUserProjectsFromApi } from "@/features/agent/hooks/public-api/presentation";
 import { readLastSaveProjectId } from "@/features/capabilities/utils/lastSaveProjectStore";
 import { resolveSaveToProjectDefault } from "@/lib/projects/resolveSaveToProjectDefault";
 

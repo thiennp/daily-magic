@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 
-import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
+import { useMyMacDevices } from "@/features/agent/hooks/public-api/presentation";
 import AwcProjectComputerChoices from "@/features/projects/AwcProjectComputerChoices";
 import { attachProjectComputer } from "@/features/projects/utils/public-api/presentation";
 import {

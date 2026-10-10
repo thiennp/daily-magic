@@ -1,4 +1,4 @@
-import type { useAgentWitchSocket } from "@/features/agent/hooks/useAgentWitchSocket";
+import type { useAgentWitchSocket } from "@/features/agent/hooks/public-api/types";
 
 /** Ends the open writer session and closes the live shell (73820cb1). */
 export const finishSendTaskSession = (

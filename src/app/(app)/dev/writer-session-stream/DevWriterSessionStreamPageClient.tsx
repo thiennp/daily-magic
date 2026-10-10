@@ -3,8 +3,8 @@
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 
 import AgentLiveTerminalPanel from "@/features/agent/AgentLiveTerminalPanel";
-import { useAgentWitchLiveTerminal } from "@/features/agent/hooks/useAgentWitchLiveTerminal";
-import { subscribeAgentWitchDashboardSocket } from "@/features/agent/hooks/subscribeAgentWitchDashboardSocket";
+import { useAgentWitchLiveTerminal } from "@/features/agent/hooks/public-api/presentation";
+import { subscribeAgentWitchDashboardSocket } from "@/features/agent/hooks/public-api/presentation";
 import { sendWriterSessionStartOverSocket } from "@/features/agent/utils/dispatchWriterSessionStart";
 import { formatWriterSessionStartDisplayCommand } from "@/lib/agentWitch/formatWriterCliDisplayCommand";
 import parseAgentWitchSocketDisplay, {

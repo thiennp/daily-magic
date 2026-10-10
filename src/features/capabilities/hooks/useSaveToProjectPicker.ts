@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 
-import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
+import { useUserProjects } from "@/features/agent/hooks/public-api/presentation";
 import {
   readLastSaveProjectId,
   writeLastSaveProjectId,

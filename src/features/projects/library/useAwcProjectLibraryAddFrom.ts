@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import loadUserProjectsFromApi from "@/features/agent/hooks/loadUserProjectsFromApi";
+import { loadUserProjectsFromApi } from "@/features/agent/hooks/public-api/presentation";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";

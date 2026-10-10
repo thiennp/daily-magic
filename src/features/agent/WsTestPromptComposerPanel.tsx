@@ -1,9 +1,9 @@
 "use client";
 
 import AppPanel from "@/components/surfaces/AppPanel";
-import type { useWsTestComposerPanelActions } from "@/features/agent/hooks/useWsTestComposerPanelActions";
-import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
-import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import type { useWsTestComposerPanelActions } from "@/features/agent/hooks/public-api/types";
+import type { useWsTestComposerWizard } from "@/features/agent/hooks/public-api/types";
+import type { useWsTestTaskComposer } from "@/features/agent/hooks/public-api/types";
 import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/public-api/types";
 import WsTestComposerWizardSteps from "@/features/agent/WsTestComposerWizardSteps";
 import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";

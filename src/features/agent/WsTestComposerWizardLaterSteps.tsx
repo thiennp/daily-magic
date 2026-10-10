@@ -6,8 +6,8 @@ import SendTaskComposerStepTrail from "@/features/agent/SendTaskComposerStepTrai
 import SendTaskComposerWriterAgentStep from "@/features/agent/SendTaskComposerWriterAgentStep";
 import WsTestComposerFormStepSection from "@/features/agent/WsTestComposerFormStepSection";
 import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/public-api/types";
-import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
-import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import type { useWsTestComposerWizard } from "@/features/agent/hooks/public-api/types";
+import type { useWsTestTaskComposer } from "@/features/agent/hooks/public-api/types";
 import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import type { SendTaskComposerPickerItem } from "@/features/agent/utils/buildSendTaskComposerPickerItems";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";

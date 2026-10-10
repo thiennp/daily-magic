@@ -1,6 +1,6 @@
 "use client";
 
-import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
+import { useMyMacDevices } from "@/features/agent/hooks/public-api/presentation";
 import { useLocalMacBrowserContext } from "@/features/home/hooks/public-api/presentation";
 import useAwcProjectDevicePresentation from "@/features/projects/hooks/useAwcProjectDevicePresentation";
 import { useAwcProjectMessengerThreads } from "@/features/projects/messenger/hooks/useAwcProjectMessengerThreads";

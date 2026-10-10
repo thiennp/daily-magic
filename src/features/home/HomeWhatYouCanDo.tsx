@@ -6,7 +6,7 @@ import {
   APP_SURFACE_CTA_SECONDARY_SM_CLASS,
   APP_SURFACE_SECTION_TITLE_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
-import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
+import { useMyMacDevices } from "@/features/agent/hooks/public-api/presentation";
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
 import { HOME_WHAT_YOU_CAN_DO_ITEMS } from "@/features/home/constants/public-api/types";
 

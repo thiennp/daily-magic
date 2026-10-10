@@ -2,7 +2,7 @@
 
 import WsTestComposerActions from "@/features/agent/WsTestComposerActions";
 import { resolveWriterNotReadyNotice } from "@/features/agent/send-readiness/public-api/presentation";
-import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import type { useWsTestTaskComposer } from "@/features/agent/hooks/public-api/types";
 import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 
 interface WsTestComposerFooterProps {

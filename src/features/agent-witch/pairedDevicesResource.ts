@@ -1,5 +1,5 @@
-import { loadMyMacDevicesSnapshot } from "@/features/agent/hooks/fetchMyMacDevicesFromApi";
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import { loadMyMacDevicesSnapshot } from "@/features/agent/hooks/public-api/presentation";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 import { createSharedPolledResource } from "@/lib/client/createSharedPolledResource";
 
 export interface PairedDevicesSnapshot {

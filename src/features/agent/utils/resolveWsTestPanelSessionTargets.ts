@@ -1,5 +1,5 @@
-import type { useAgentWitchSocket } from "@/features/agent/hooks/useAgentWitchSocket";
-import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import type { useAgentWitchSocket } from "@/features/agent/hooks/public-api/types";
+import type { useWsTestTaskComposer } from "@/features/agent/hooks/public-api/types";
 import { isLiveAgentLiveTerminalStatus } from "@/features/agent/utils/isLiveAgentLiveTerminalStatus";
 import { resolveAgentSessionTargets } from "@/features/agent/utils/resolveAgentSessionTargets";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";

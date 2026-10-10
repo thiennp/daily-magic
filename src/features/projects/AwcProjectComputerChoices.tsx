@@ -1,6 +1,6 @@
 "use client";
 
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 
 interface AwcProjectComputerChoicesProps {
   readonly devices: readonly MyMacDevice[];

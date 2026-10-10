@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/button/Button";
-import useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
+import { useMacDeviceSelection } from "@/features/agent/hooks/public-api/presentation";
 import MarketplaceInstallMacPicker from "@/features/marketplace/MarketplaceInstallMacPicker";
 import MarketplaceInstallProjectPicker from "@/features/marketplace/MarketplaceInstallProjectPicker";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";

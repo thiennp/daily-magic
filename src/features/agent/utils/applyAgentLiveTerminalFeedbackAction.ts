@@ -1,5 +1,5 @@
-import type { useAgentRunQueue } from "@/features/agent/hooks/useAgentRunQueue";
-import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import type { useAgentRunQueue } from "@/features/agent/hooks/public-api/types";
+import type { useWsTestTaskComposer } from "@/features/agent/hooks/public-api/types";
 import { buildAgentLiveTerminalFeedbackEnqueuePayload } from "@/features/agent/utils/buildAgentLiveTerminalFeedbackEnqueuePayload";
 import type { AgentLiveTerminalFeedbackAction } from "@/features/agent/utils/resolveAgentLiveTerminalFeedbackAction";
 

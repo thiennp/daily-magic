@@ -1,8 +1,7 @@
 "use client";
 
-import useMyMacDevices, {
-  type MyMacDevice,
-} from "@/features/agent/hooks/useMyMacDevices";
+import { useMyMacDevices } from "@/features/agent/hooks/public-api/presentation";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 
 const useHomeConnectedMacs = (): {
   readonly devices: readonly MyMacDevice[];

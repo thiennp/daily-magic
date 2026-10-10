@@ -11,7 +11,7 @@ import {
   isMacPresenceTierHardOffline,
   resolveMacPresenceTier,
 } from "@/features/agent-witch/online-wake/public-api/presentation";
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 import HomeConnectedMacDeviceRowModals from "@/features/home/HomeConnectedMacDeviceRowModals";
 import {
   useMacDeviceSeeLocalLog,

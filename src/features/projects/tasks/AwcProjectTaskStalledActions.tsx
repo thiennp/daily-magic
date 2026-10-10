@@ -1,7 +1,7 @@
 "use client";
 
 import { useAwcProjectTasksReadOnly } from "@/features/projects/tasks/AwcProjectTasksReadOnlyContext";
-import { useRetryRunInComposer } from "@/features/agent/hooks/useRetryRunInComposer";
+import { useRetryRunInComposer } from "@/features/agent/hooks/public-api/presentation";
 import {
   AWC_TASKS_LINK_CLASS,
   AWC_TASKS_SECONDARY_BUTTON_CLASS,

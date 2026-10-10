@@ -3,8 +3,8 @@
 import { createContext, Suspense, useContext, type ReactNode } from "react";
 
 import SendTaskModal from "@/features/agent/SendTaskModal";
-import { useSendTaskModalController } from "@/features/agent/hooks/useSendTaskModalController";
-import { useRedirectPlainSendTaskToProjects } from "@/features/agent/hooks/useRedirectPlainSendTaskToProjects";
+import { useSendTaskModalController } from "@/features/agent/hooks/public-api/presentation";
+import { useRedirectPlainSendTaskToProjects } from "@/features/agent/hooks/public-api/presentation";
 
 interface SendTaskModalContextValue {
   readonly isOpen: boolean;

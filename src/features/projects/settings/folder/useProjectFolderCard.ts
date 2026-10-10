@@ -1,6 +1,6 @@
 "use client";
 
-import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
+import { useMyMacDevices } from "@/features/agent/hooks/public-api/presentation";
 import { useProjectFolderStatus } from "@/features/projects/settings/folder/useProjectFolderStatus";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 

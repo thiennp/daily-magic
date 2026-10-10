@@ -1,4 +1,4 @@
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 
 export const resolveMyMacDevicesAfterFetch = (
   currentDevices: readonly MyMacDevice[],

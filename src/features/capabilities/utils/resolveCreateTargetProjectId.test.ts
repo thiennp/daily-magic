@@ -8,7 +8,7 @@ vi.mock("@/features/capabilities/utils/lastSaveProjectStore", () => ({
   readLastSaveProjectId: vi.fn(() => null),
 }));
 
-import loadUserProjectsFromApi from "@/features/agent/hooks/loadUserProjectsFromApi";
+import { loadUserProjectsFromApi } from "@/features/agent/hooks/public-api/presentation";
 import {
   CREATE_PROJECT_REQUIRED_MESSAGE,
   resolveCreateTargetProjectId,
@@ -44,10 +44,7 @@ describe("resolveCreateTargetProjectId", () => {
   it("falls back to Default from /api/projects", async () => {
     vi.mocked(loadUserProjectsFromApi).mockResolvedValue({
       ok: true,
-      projects: [
-        project("launch", "Launch"),
-        project("default", "Default"),
-      ],
+      projects: [project("launch", "Launch"), project("default", "Default")],
       compositionCountsByProjectId: {},
     });
 

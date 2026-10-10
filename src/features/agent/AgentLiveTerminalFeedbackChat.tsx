@@ -2,7 +2,7 @@
 
 import AgentLiveTerminalFeedbackActionButtons from "@/features/agent/AgentLiveTerminalFeedbackActionButtons";
 import AgentLiveTerminalFeedbackMessageField from "@/features/agent/AgentLiveTerminalFeedbackMessageField";
-import { useAgentLiveTerminalFeedbackDeferredSubmit } from "@/features/agent/hooks/useAgentLiveTerminalFeedbackDeferredSubmit";
+import { useAgentLiveTerminalFeedbackDeferredSubmit } from "@/features/agent/hooks/public-api/presentation";
 import type { AgentLiveTerminalFeedbackPreferredMode } from "@/features/agent/utils/resolveAgentLiveTerminalFeedbackAction";
 
 interface AgentLiveTerminalFeedbackChatProps {

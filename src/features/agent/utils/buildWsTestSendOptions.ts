@@ -1,6 +1,6 @@
 import { buildOfficialWorkflowOrchestrationContext } from "@/features/agent/utils/buildOfficialWorkflowOrchestrationContext";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
-import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import type { useWsTestTaskComposer } from "@/features/agent/hooks/public-api/types";
 import { shouldUseOfficialWorkflowOrchestration } from "@/lib/workflowOrchestration/shouldUseOfficialWorkflowOrchestration";
 
 export const buildWsTestSendOptions = (

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { buildWsTestSendOptions } from "@/features/agent/utils/buildWsTestSendOptions";
-import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import type { useWsTestTaskComposer } from "@/features/agent/hooks/public-api/types";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 const selectedProjectFixture: UserProjectRecord = {

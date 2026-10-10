@@ -1,4 +1,4 @@
-import type { useAgentMacShell } from "@/features/agent/hooks/useAgentMacShell";
+import type { useAgentMacShell } from "@/features/agent/hooks/public-api/types";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import type { AgentWitchSocketDisplay } from "@/lib/agentWitch/parseAgentWitchSocketDisplay";

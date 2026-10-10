@@ -1,6 +1,6 @@
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type { OfficialWorkflowOrchestrationCapabilityContext } from "@/lib/workflowOrchestration/shouldUseOfficialWorkflowOrchestration";
-import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import type { useWsTestTaskComposer } from "@/features/agent/hooks/public-api/types";
 
 export const buildOfficialWorkflowOrchestrationContext = (
   composer: ReturnType<typeof useWsTestTaskComposer>,

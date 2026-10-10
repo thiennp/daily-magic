@@ -9,7 +9,7 @@ import {
   resolveHomeMacDeviceRowConnectFooter,
   resolveHomeThisMacDeviceIdentity,
 } from "@/features/home/utils/public-api/presentation";
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 
 interface HomeConnectedMacsDeviceListProps {
   readonly installCommand: string;

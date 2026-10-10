@@ -1,6 +1,6 @@
 "use client";
 
-import { useRetryRunInComposer } from "@/features/agent/hooks/useRetryRunInComposer";
+import { useRetryRunInComposer } from "@/features/agent/hooks/public-api/presentation";
 import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
 import {
   AWC_TASKS_LINK_CLASS,

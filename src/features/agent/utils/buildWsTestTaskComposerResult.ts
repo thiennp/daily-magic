@@ -1,11 +1,11 @@
-import type { UseWsTestTaskComposerResult } from "@/features/agent/hooks/types/public-api/types";
+import type { UseWsTestTaskComposerResult } from "@/features/agent/hooks/public-api/types";
 import type { buildWsTestComposerDispatchState } from "@/features/agent/utils/buildWsTestComposerDispatchState";
 import type { createWsTestSelectionHandlers } from "@/features/agent/utils/createWsTestSelectionHandlers";
-import type { useComposerProjectSelection } from "@/features/agent/hooks/useComposerProjectSelection";
-import type { useLibraryPlaybookSelection } from "@/features/agent/hooks/useLibraryPlaybookSelection";
+import type { useComposerProjectSelection } from "@/features/agent/hooks/public-api/types";
+import type { useLibraryPlaybookSelection } from "@/features/agent/hooks/public-api/types";
 import type { useTeamDispatchSelection } from "@/features/dispatch/hooks/public-api/presentation";
-import type useRunScopedComponentIds from "@/features/agent/hooks/useRunScopedComponentIds";
-import type { useWsTestComposerWorkflowState } from "@/features/agent/hooks/useWsTestComposerWorkflowState";
+import type { useRunScopedComponentIds } from "@/features/agent/hooks/public-api/types";
+import type { useWsTestComposerWorkflowState } from "@/features/agent/hooks/public-api/types";
 
 export const buildWsTestTaskComposerResult = (input: {
   readonly workflow: ReturnType<typeof useWsTestComposerWorkflowState>;

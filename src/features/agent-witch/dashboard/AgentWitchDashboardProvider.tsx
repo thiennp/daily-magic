@@ -10,7 +10,7 @@ import {
 } from "react";
 import { useSession } from "next-auth/react";
 
-import { subscribeAgentWitchDashboardSocket } from "@/features/agent/hooks/subscribeAgentWitchDashboardSocket";
+import { subscribeAgentWitchDashboardSocket } from "@/features/agent/hooks/public-api/presentation";
 import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import {
   AgentWitchDashboardContext,

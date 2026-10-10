@@ -1,7 +1,7 @@
 "use client";
 
 import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import { useRetryRunInComposer } from "@/features/agent/hooks/useRetryRunInComposer";
+import { useRetryRunInComposer } from "@/features/agent/hooks/public-api/presentation";
 
 /**
  * afae8216: a Failed run stays retryable from Home. 7a3086f1: Retry opens

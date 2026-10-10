@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
-import { useLiveFloaterRunIdPersistence } from "@/features/agent/hooks/useLiveFloaterRunIdPersistence";
+import { useLiveFloaterRunIdPersistence } from "@/features/agent/hooks/public-api/presentation";
 
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
-import { useWsTestPanelController } from "@/features/agent/hooks/useWsTestPanelController";
+import { useWsTestPanelController } from "@/features/agent/hooks/public-api/presentation";
 import WsTestPanelComposerSection from "@/features/agent/WsTestPanelComposerSection";
 import WsTestPanelStatusSection from "@/features/agent/WsTestPanelStatusSection";
 import { resolveStatusSectionSessionError } from "@/features/agent/utils/resolveStatusSectionSessionError";

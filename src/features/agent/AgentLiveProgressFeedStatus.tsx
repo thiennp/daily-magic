@@ -5,7 +5,7 @@ import AgentLiveProgressActivityBar from "@/features/agent/AgentLiveProgressActi
 import AgentLiveProgressFeedStatusHeader from "@/features/agent/AgentLiveProgressFeedStatusHeader";
 import AgentLiveProgressEstimateBar from "@/features/agent/AgentLiveProgressEstimateBar";
 import AgentLiveProgressStuckBanner from "@/features/agent/AgentLiveProgressStuckBanner";
-import { useIsAgentLiveSessionThisMac } from "@/features/agent/hooks/useIsAgentLiveSessionThisMac";
+import { useIsAgentLiveSessionThisMac } from "@/features/agent/hooks/public-api/presentation";
 import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import { formatAgentLiveProgressLastMacUpdate } from "@/features/agent/utils/formatAgentLiveProgressLastMacUpdate";
 import { resolveAgentLiveProgressConnectionHint } from "@/features/agent/utils/resolveAgentLiveProgressConnectionHint";

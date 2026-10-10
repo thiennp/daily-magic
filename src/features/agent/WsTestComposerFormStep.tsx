@@ -3,7 +3,7 @@
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 
 import DelegatedWriterAgentField from "@/features/agent/DelegatedWriterAgentField";
-import { useWsTestComposerDeferredSubmit } from "@/features/agent/hooks/useWsTestComposerDeferredSubmit";
+import { useWsTestComposerDeferredSubmit } from "@/features/agent/hooks/public-api/presentation";
 import WsTestComposerFooter from "@/features/agent/WsTestComposerFooter";
 import WsTestOperatorStepsSection from "@/features/agent/WsTestOperatorStepsSection";
 import { WorkflowCreateDraftComposerNotice } from "@/features/workflows/public-api/presentation";

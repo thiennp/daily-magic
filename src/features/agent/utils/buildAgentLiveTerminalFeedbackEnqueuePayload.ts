@@ -1,5 +1,5 @@
-import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
-import type { useAgentRunQueue } from "@/features/agent/hooks/useAgentRunQueue";
+import type { useWsTestTaskComposer } from "@/features/agent/hooks/public-api/types";
+import type { useAgentRunQueue } from "@/features/agent/hooks/public-api/types";
 
 export const buildAgentLiveTerminalFeedbackEnqueuePayload = (
   composer: ReturnType<typeof useWsTestTaskComposer>,

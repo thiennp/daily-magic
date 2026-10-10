@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { resolveMarketplaceInstallEligibility } from "@/features/marketplace/utils/resolveMarketplaceInstallEligibility";
-import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/public-api/types";
 
 const onlineDevice: MyMacDevice = {
   id: "device-1",

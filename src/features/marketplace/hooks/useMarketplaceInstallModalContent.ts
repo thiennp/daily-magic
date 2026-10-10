@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react";
 
 import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
-import useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
-import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
+import { useMacDeviceSelection } from "@/features/agent/hooks/public-api/presentation";
+import { useUserProjects } from "@/features/agent/hooks/public-api/presentation";
 import { useLocalMacBrowserContext } from "@/features/home/hooks/public-api/presentation";
 import { useAutoSelectFirstProject } from "@/features/marketplace/hooks/useAutoSelectFirstProject";
 import { useMarketplaceInstallListingReset } from "@/features/marketplace/hooks/useMarketplaceInstallListingReset";

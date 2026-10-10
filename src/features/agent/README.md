@@ -36,4 +36,6 @@ Public API (`hooks/types`): outside code imports `UseWsTestTaskComposerResult` f
 
 Public API (`hooks/utils`): outside code imports `fetchUserProjectsForLoader` from `@/features/agent/hooks/utils/public-api/presentation`.
 
+Public API (`hooks`): outside code imports hooks and loaders from `@/features/agent/hooks/public-api/presentation`, hook types from `.../public-api/types`, and hooks that reach React in files without `"use client"` from `.../public-api/client`.
+
 `constants/public-api/types.ts` is the public API of the agent constants unit (send-task query params, storage keys).
