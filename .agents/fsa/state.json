@@ -40,7 +40,8 @@
     "src/features/agent/send-readiness",
     "src/features/projects/sync",
     "src/features/agent-witch/connection-lab",
-    "src/features/pricing"
+    "src/features/pricing",
+    "src/features/automations"
   ],
   "blocked": {},
   "rounds": [
@@ -248,6 +249,11 @@
       "unit": "src/features/pricing",
       "sha": "940c4a2804148c442845984993caec3d6d9213a3",
       "at": "2026-10-10T09:38:05.591Z"
+    },
+    {
+      "unit": "src/features/automations",
+      "sha": "ec28af91e73a052e8c781d936a465ab9bd648703",
+      "at": "2026-10-10T09:39:11.336Z"
     }
   ]
 }
