@@ -24,7 +24,7 @@
 | `npm run dev` / `npm start` (`tsx server.ts`) | `server.ts` handles `/api/health` before the Next handler. The App Router file `src/app/api/health/route.ts` is not reached.    |
 | `npm run dev:next`                            | Next serves `src/app/api/health/route.ts` (`dynamic = "force-dynamic"`). No custom-server early 200, and no computer WebSocket. |
 
-Railway uses `healthcheckPath = "/api/health"` and `healthcheckTimeout = 300` (`railway.toml`). The timeout is how long Railway waits for the first 200. Because the process returns 200 before Next is ready, a green health check can arrive while browsers still see `Service starting` and while `/api/agent-witch/ws` upgrades are destroyed.
+Railway uses `healthcheckPath = "/api/ready"` and `healthcheckTimeout = 300` (`railway.toml`). `/api/ready` returns **200 only when Next is prepared and the database answers `SELECT 1`** (503 otherwise), so a build that cannot serve never replaces the running deploy. `/api/health` stays the always-200 liveness probe: it returns 200 before Next is ready, so it can be green while browsers still see `Service starting` and while `/api/agent-witch/ws` upgrades are destroyed. Point uptime monitors at `/api/ready` to tell "app down" from "database down".
 
 The custom server does not check the HTTP method. Any method on pathname `/api/health` gets the same JSON 200. Railway and operators use GET.
 
@@ -58,6 +58,22 @@ If the async builder throws, `server.ts` sends the sync fallback: the same relea
 
 There is no in-app header badge for the server release label; use `curl` or Railway deploy metadata to compare `release.label` with `AGENT_WITCH_SERVER_RELEASE_LABEL`.
 
+### Readiness: `GET /api/ready`
+
+Built by `buildAgentWitchReadinessPayload` (`src/lib/release/buildAgentWitchReadinessPayload.ts`), answered by `server.ts` before the Next handler.
+
+```json
+{ "ok": true, "nextReady": true, "database": "ok" }
+```
+
+| `database`    | Meaning                              | HTTP                   |
+| ------------- | ------------------------------------ | ---------------------- |
+| `ok`          | `SELECT 1` answered within 3 seconds | 200 (when `nextReady`) |
+| `unreachable` | the query or connection threw        | 503                    |
+| `timeout`     | no answer within 3 seconds           | 503                    |
+
+A Railway edge response of `404 {"message":"Application not found"}` with `x-railway-fallback: true` is **not** produced by this app: Railway has no running service answering the domain. See [awl-cannot-connect-runbook.md](awl-cannot-connect-runbook.md).
+
 ### Prove a deploy
 
 ```bash
@@ -86,4 +102,4 @@ Compare `release.label` with `AGENT_WITCH_SERVER_RELEASE_LABEL` on the commit yo
 
 ## Last reviewed
 
-2026-09-28
+2026-10-10

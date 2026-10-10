@@ -25,6 +25,9 @@ watchPatterns = [
 [deploy]
 preDeployCommand = "/bin/sh -c \"npm run db:migrate\""
 startCommand = "npm start"
-healthcheckPath = "/api/health"
+# /api/ready is 200 only when Next is prepared and the database answers, so a
+# build that cannot serve never replaces the running deploy (/api/health stays
+# the always-200 liveness probe for uptime monitors).
+healthcheckPath = "/api/ready"
 restartPolicyType = "ON_FAILURE"
 healthcheckTimeout = 300

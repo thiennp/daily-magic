@@ -8,6 +8,8 @@ import {
   buildAgentWitchHealthPayload,
   buildAgentWitchHealthPayloadSync,
 } from "./src/lib/release/buildAgentWitchHealthPayload";
+import { buildAgentWitchReadinessPayload } from "./src/lib/release/buildAgentWitchReadinessPayload";
+import { getSql } from "./src/lib/db";
 import {
   AGENT_WITCH_HEALTH_ALLOWED_METHODS,
   isAgentWitchHealthRequestMethodAllowed,
@@ -29,6 +31,7 @@ const host = process.env.HOST ?? "0.0.0.0";
 const port = Number(process.env.PORT ?? "3000");
 const wsPath = process.env.AGENT_WITCH_WS_PATH ?? "/api/agent-witch/ws";
 const healthPath = "/api/health";
+const readyPath = "/api/ready";
 
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
@@ -39,6 +42,32 @@ let nextReady = false;
 
 const server = createServer((request, response) => {
   const parsedUrl = parse(request.url ?? "", true);
+
+  if (parsedUrl.pathname === readyPath) {
+    if (!isAgentWitchHealthRequestMethodAllowed(request.method)) {
+      response.writeHead(405, {
+        Allow: AGENT_WITCH_HEALTH_ALLOWED_METHODS.join(", "),
+        "Content-Type": "application/json",
+      });
+      response.end(JSON.stringify({ ok: false, error: "Method not allowed" }));
+      return;
+    }
+
+    void buildAgentWitchReadinessPayload({
+      nextReady,
+      checkDatabase: () => getSql()`SELECT 1`,
+    }).then((payload) => {
+      if (response.writableEnded) {
+        return;
+      }
+      writeServerOwnedResponse(response, {
+        statusCode: payload.ok ? 200 : 503,
+        contentType: "application/json",
+        body: JSON.stringify(payload),
+      });
+    });
+    return;
+  }
 
   if (parsedUrl.pathname === healthPath) {
     if (!isAgentWitchHealthRequestMethodAllowed(request.method)) {

@@ -21,7 +21,11 @@ A row gets revoked in three ways:
 | Connect-this-Mac placeholder cleanup (`revokePendingInstallDevicesForUser`)                                                                        | no hostname, no bundle version   | Unchanged. Placeholders never ran.                                                                                                                                                                                                                                                                              |
 | The computer was removed in the Console                                                                                                            | row deleted → `unknown_identity` | Unchanged. The Mac wipes its local connection.                                                                                                                                                                                                                                                                  |
 
-## What the client does
+## What the client does (bundle 345+)
+
+The retry delay resets only on `system.ack`, never on socket open, so a server that accepts and then closes cannot loop at 2 seconds. The 60-second in-process stale tick no longer overrides the not-linked wait (a user-initiated Revive still retries at once). A client that gets no ack polls `GET /install/agent-witch/version` over HTTP every 5 minutes and updates itself, because a rejected old bundle never receives `system.ack` or `install.bundle.update`. The watchdog reports `reason: not_linked` and `lastDisconnect`; Revive and reinstall skip it. Diagnosis: [awl-cannot-connect-runbook.md](awl-cannot-connect-runbook.md).
+
+Earlier behaviour:
 
 `device_not_linked` (or the legacy message) makes AWL retry **every 5 minutes**, log one line, and recover on the next `system.ack`. It never wipes anything: only `unknown_identity` does. Logs under the profile `logs/` folder are trimmed at 5 MB.
 
@@ -38,4 +42,4 @@ ORDER BY claimed_at DESC;
 
 ## Last reviewed
 
-2026-10-08
+2026-10-10

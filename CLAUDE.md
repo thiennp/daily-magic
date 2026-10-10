@@ -132,11 +132,14 @@ npm run agent-witch:install
 - Logs under the profile `logs/` dir are trimmed at 5 MB (keep last 1 MB) on each heartbeat
 - Install bundle version API: `GET /install/agent-witch/version` — bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` in `src/lib/agentWitch/agentWitchInstallBundleVersion.ts` whenever any install script changes
 - Local version file: `~/.agent-witch/install-version.json`
-- Local watchdog API (wake server): `GET http://127.0.0.1:47892/watchdog/status`, `GET /watchdog/logs`, `POST /watchdog/revive`
-- Local harness install API (wake server): `POST http://127.0.0.1:47892/harness/install` — browser sends `{ appOrigin, profileEmail?, bundle: { name, slug, items[] } }` for deterministic writes to `~/.agent-witch/harness/`
-- Local knowledge report API (wake server): `POST http://127.0.0.1:47892/knowledge/update` — `{ projectId, lesson, sourceRunId? }`; token-saver documents this for Cursor (`~/.cursor/rules/agent-witch-knowledge-report.mdc`), Codex (`~/.codex/AGENTS.md`), and Claude (`~/.claude/CLAUDE.md`)
-- Local self-update API (wake server): `GET http://127.0.0.1:47892/update/status`, `GET /update/logs`, `POST /update/run`
+- Wake server port: **read it from `~/.agent-witch/wake-port.json`** (`wakePort`); `47892` is only the default and the real port differs when it is taken. The URLs below use `<wakePort>`.
+- Local watchdog API (wake server): `GET http://127.0.0.1:<wakePort>/watchdog/status` (reports `lastDisconnect` and reasons `not_linked` / `cloud_unreachable`, which a revive cannot cure), `GET /watchdog/logs`, `POST /watchdog/revive`
+- Local harness install API (wake server): `POST http://127.0.0.1:<wakePort>/harness/install` — browser sends `{ appOrigin, profileEmail?, bundle: { name, slug, items[] } }` for deterministic writes to `~/.agent-witch/harness/`
+- Local knowledge report API (wake server): `POST http://127.0.0.1:<wakePort>/knowledge/update` — `{ projectId, lesson, sourceRunId? }`; token-saver documents this for Cursor (`~/.cursor/rules/agent-witch-knowledge-report.mdc`), Codex (`~/.codex/AGENTS.md`), and Claude (`~/.claude/CLAUDE.md`)
+- Local self-update API (wake server): `GET http://127.0.0.1:<wakePort>/update/status`, `GET /update/logs`, `POST /update/run`
 - Server proxy (same computer as wake server): `GET /api/agent-witch/local-watchdog`, `POST /api/agent-witch/local-watchdog`, `GET /api/agent-witch/local-update`, `POST /api/agent-witch/local-update`
+- **Never print `~/.agent-witch/profiles/*/config.json` or `config.json` in a chat or log** — it holds the plaintext `pairingToken`. To inspect it, select non-secret keys only: `jq 'del(.pairingToken)' <file>`.
+- Connection diagnosis: `docs/qa/awl-cannot-connect-runbook.md` (server down vs device not linked vs old bundle vs running from a DMG).
 - Mid-run input: agent outputs `[[AWAITING_INPUT]]` + question; browser answers over WS; Mac stores pending sessions in `pending-run-inputs.json` (see `.cursor/rules/agent-run-input-protocol.mdc`)
 
 ---
