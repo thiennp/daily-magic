@@ -8,7 +8,7 @@ import AwcProjectOverviewPanel from "@/features/projects/overview/AwcProjectOver
 import { AwcProjectPitfallsPanel } from "@/features/projects/pitfalls/public-api/presentation";
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/public-api/types";
 import { AwcProjectReportsPanel } from "@/features/projects/reports/public-api/presentation";
-import AwcProjectResourcesPanel from "@/features/projects/resources/AwcProjectResourcesPanel";
+import { AwcProjectResourcesPanel } from "@/features/projects/resources/public-api/presentation";
 import type {
   ProjectPageNavTarget,
   ProjectPageTabId,

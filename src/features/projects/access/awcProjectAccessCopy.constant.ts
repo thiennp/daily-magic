@@ -1,4 +1,4 @@
-import { PROJECT_PAGE_RESOURCES_COPY } from "@/features/projects/resources/projectPageResourcesCopy.constant";
+import { PROJECT_PAGE_RESOURCES_COPY } from "@/features/projects/resources/public-api/types";
 import { PROJECT_ACL_FIRST_CONNECT } from "@/lib/projects/acl/projectAclFirstConnect.constant";
 
 export const AWC_PROJECT_ACCESS_COPY = {

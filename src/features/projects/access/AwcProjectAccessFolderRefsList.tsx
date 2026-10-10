@@ -1,6 +1,6 @@
 "use client";
 
-import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/projectPageResourcesCopy.constant";
+import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/public-api/types";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import {
   type FolderRefComputerOption,

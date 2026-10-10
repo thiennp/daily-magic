@@ -5,7 +5,7 @@ import { useId } from "react";
 import AwcProjectAccessFolderPathField from "@/features/projects/access/AwcProjectAccessFolderPathField";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import type { ThisComputerFolderTarget } from "@/features/projects/access/hooks/useThisComputerFolderTarget";
-import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/projectPageResourcesCopy.constant";
+import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/public-api/types";
 
 const FIELD =
   "mt-1 w-full rounded-md border border-awc-border-strong bg-white px-2 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-950";

@@ -1,6 +1,6 @@
 import { AWC_PROJECT_COMPUTER_MEMBER_COPY } from "@/features/projects/access/awcProjectComputerMemberCopy.constant";
 import { isComputerAccessMember } from "@/features/projects/access/utils/isComputerAccessMember";
-import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/projectPageResourcesCopy.constant";
+import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/public-api/types";
 
 /** Access roster fields the folder-ref computer picker reads. */
 export type FolderRefComputerMember = {

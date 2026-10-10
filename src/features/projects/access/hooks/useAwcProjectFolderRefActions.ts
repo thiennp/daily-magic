@@ -5,7 +5,7 @@ import {
   removeProjectFolderRef,
   setProjectFolderRefShared,
 } from "@/features/projects/access/utils/mutateProjectFolderRefs";
-import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/projectPageResourcesCopy.constant";
+import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/public-api/types";
 import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
 
 /** 403 from the folder-ref device ACL (picked computer not an active seat). */

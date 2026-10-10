@@ -12,7 +12,7 @@ import {
   buildFolderRefComputerOptions,
   formatFolderRefRow,
 } from "@/features/projects/access/utils/folderRefComputerOptions";
-import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/projectPageResourcesCopy.constant";
+import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/public-api/types";
 
 const MEMBERS = [
   {

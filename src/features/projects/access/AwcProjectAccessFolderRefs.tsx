@@ -13,7 +13,7 @@ import {
   type FolderRefComputerMember,
   type FolderRefProjectDevice,
 } from "@/features/projects/access/utils/folderRefComputerOptions";
-import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/projectPageResourcesCopy.constant";
+import { PROJECT_PAGE_RESOURCES_COPY as C } from "@/features/projects/resources/public-api/types";
 
 interface AwcProjectAccessFolderRefsProps {
   readonly folderRefs: readonly FolderRefRow[];
