@@ -2,11 +2,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { deleteSendTaskComposerLibraryItem } from "@/features/agent/utils/deleteSendTaskComposerLibraryItem";
 
-vi.mock("@/features/workflows/submitArchiveWorkflow", () => ({
+vi.mock("@/features/workflows/public-api/presentation", () => ({
   submitArchiveWorkflow: vi.fn(),
 }));
 
-import { submitArchiveWorkflow } from "@/features/workflows/submitArchiveWorkflow";
+import { submitArchiveWorkflow } from "@/features/workflows/public-api/presentation";
 
 describe("deleteSendTaskComposerLibraryItem (AGENT-035)", () => {
   beforeEach(() => {

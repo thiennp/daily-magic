@@ -11,7 +11,7 @@ import {
   WORKFLOW_BUILDER_ABOUT_SECTION,
   WORKFLOW_BUILDER_INSTRUCTIONS_LABEL,
   WORKFLOW_BUILDER_INSTRUCTIONS_PLACEHOLDER,
-} from "@/features/workflows/workflowBuilderCopy.constant";
+} from "@/features/workflows/public-api/types";
 
 type PlaybookType = "workflow" | "agent";
 

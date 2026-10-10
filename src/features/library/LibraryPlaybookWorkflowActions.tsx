@@ -6,7 +6,7 @@ import Button from "@/components/ui/button/Button";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import { buildLibraryPlaybookRemoveConfirmMessage } from "@/features/library/libraryPlaybookRemoveConfirmMessage";
-import { submitArchiveWorkflow } from "@/features/workflows/submitArchiveWorkflow";
+import { submitArchiveWorkflow } from "@/features/workflows/public-api/presentation";
 
 interface LibraryPlaybookWorkflowActionsProps {
   readonly capability: PublishedCapabilityRecord;

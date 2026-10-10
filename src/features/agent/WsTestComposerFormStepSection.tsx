@@ -4,7 +4,7 @@ import SendTaskComposerActiveProjectBadge from "@/features/agent/SendTaskCompose
 import SendTaskRunScopedComponentsPanel from "@/features/agent/SendTaskRunScopedComponentsPanel";
 import SendTaskComposerStepTrail from "@/features/agent/SendTaskComposerStepTrail";
 import WsTestComposerFormStep from "@/features/agent/WsTestComposerFormStep";
-import { WorkflowUploadExcerptProvider } from "@/features/workflows/WorkflowUploadExcerptContext";
+import { WorkflowUploadExcerptProvider } from "@/features/workflows/public-api/presentation";
 import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";

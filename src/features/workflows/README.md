@@ -32,3 +32,5 @@ _None._
 Query: `npm run feature-knowledge:query -- "..." --feature=workflows`
 
 `hooks/` public API: import its hooks (`useCreateWorkflowForm`, `useCreateWorkflowTrialRun`, `useEditWorkflowForm`, `useWorkflowBuilderFlowTreeEditor`) from `@/features/workflows/hooks/public-api/presentation`.
+
+`public-api/` (feature root): components, `readWorkflowCreateDraftPlaybook` and `submitArchiveWorkflow` come from `@/features/workflows/public-api/presentation`; builder copy constants from `@/features/workflows/public-api/types`.

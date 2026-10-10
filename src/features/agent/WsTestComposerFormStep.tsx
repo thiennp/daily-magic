@@ -6,7 +6,7 @@ import DelegatedWriterAgentField from "@/features/agent/DelegatedWriterAgentFiel
 import { useWsTestComposerDeferredSubmit } from "@/features/agent/hooks/useWsTestComposerDeferredSubmit";
 import WsTestComposerFooter from "@/features/agent/WsTestComposerFooter";
 import WsTestOperatorStepsSection from "@/features/agent/WsTestOperatorStepsSection";
-import WorkflowCreateDraftComposerNotice from "@/features/workflows/WorkflowCreateDraftComposerNotice";
+import { WorkflowCreateDraftComposerNotice } from "@/features/workflows/public-api/presentation";
 import WsTestTaskInputsSection from "@/features/agent/WsTestTaskInputsSection";
 import type WsTestComposerFormStepProps from "@/features/agent/types/WsTestComposerFormStepProps.type";
 import { isComposerStartHotkey } from "@/features/agent/utils/isComposerStartHotkey";

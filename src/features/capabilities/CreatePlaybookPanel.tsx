@@ -6,7 +6,7 @@ import Button from "@/components/ui/button/Button";
 import AppPanel from "@/components/surfaces/AppPanel";
 import CreateAgentForm from "@/features/capabilities/CreateAgentForm";
 import { type CreatePlaybookResult } from "@/features/capabilities/submitCreatePlaybook";
-import CreateWorkflowForm from "@/features/workflows/CreateWorkflowForm";
+import { CreateWorkflowForm } from "@/features/workflows/public-api/presentation";
 import type CreateGuestPlaybookPayload from "@/lib/library/guest/types/CreateGuestPlaybookPayload.type";
 
 type PlaybookTab = "workflow" | "agent";
@@ -37,9 +37,9 @@ export default function CreatePlaybookPanel({
             Create a Playbook
           </h2>
           <p className="mt-1 text-sm leading-relaxed text-awc-fg-muted dark:text-gray-400">
-            A Playbook is how AgentWitch runs Tasks on your computer. Start
-            with a workflow or a single agent—questions become a typed form,
-            then you add human steps and specialists.
+            A Playbook is how AgentWitch runs Tasks on your computer. Start with
+            a workflow or a single agent—questions become a typed form, then you
+            add human steps and specialists.
           </p>
         </div>
         <Button

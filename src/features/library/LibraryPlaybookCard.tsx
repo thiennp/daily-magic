@@ -10,7 +10,7 @@ import LibraryPlaybookWorkflowActions from "@/features/library/LibraryPlaybookWo
 import { LIBRARY_PLAYBOOK_CARD_COPY } from "@/features/library/libraryPlaybookCardCopy.constant";
 import LibrarySampleWorkflowBadge from "@/features/library/LibrarySampleWorkflowBadge";
 import LibrarySampleWorkflowPromptPreview from "@/features/library/LibrarySampleWorkflowPromptPreview";
-import EditWorkflowForm from "@/features/workflows/EditWorkflowForm";
+import { EditWorkflowForm } from "@/features/workflows/public-api/presentation";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import isSampleWorkflowCapability from "@/lib/capabilities/isSampleWorkflowCapability";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";

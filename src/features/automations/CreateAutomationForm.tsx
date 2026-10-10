@@ -10,7 +10,7 @@ import CreateAutomationProjectFields from "@/features/automations/CreateAutomati
 import CreateAutomationWebhookReveal from "@/features/automations/CreateAutomationWebhookReveal";
 import { AUTOMATIONS_PAGE_COPY } from "@/features/automations/automationsPageCopy.constant";
 import { useCreateAutomationForm } from "@/features/automations/hooks/useCreateAutomationForm";
-import WorkflowTaskFields from "@/features/workflows/WorkflowTaskFields";
+import { WorkflowTaskFields } from "@/features/workflows/public-api/presentation";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 
 interface CreateAutomationFormProps {

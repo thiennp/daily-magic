@@ -8,7 +8,7 @@ import {
   SEND_TASK_WORKFLOW_DRAFT_QUERY_VALUE,
 } from "@/features/agent/constants/public-api/types";
 import { useLibraryCapabilities } from "@/features/library/public-api/presentation";
-import { readWorkflowCreateDraftPlaybook } from "@/features/workflows/readWorkflowCreateDraftPlaybook";
+import { readWorkflowCreateDraftPlaybook } from "@/features/workflows/public-api/presentation";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import mapPublishedCapabilityToPlaybookTemplate from "@/lib/library/mapPublishedCapabilityToPlaybookTemplate";

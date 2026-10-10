@@ -1,5 +1,5 @@
 import type { SendTaskComposerPickerItem } from "@/features/agent/utils/buildSendTaskComposerPickerItems";
-import { submitArchiveWorkflow } from "@/features/workflows/submitArchiveWorkflow";
+import { submitArchiveWorkflow } from "@/features/workflows/public-api/presentation";
 
 /** Archives a library picker row and reports whether local state should drop it. */
 export const deleteSendTaskComposerLibraryItem = async (

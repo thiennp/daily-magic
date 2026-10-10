@@ -1,7 +1,9 @@
 "use client";
 
-import WorkflowTaskFields from "@/features/workflows/WorkflowTaskFields";
-import MobileWorkflowStepper from "@/features/workflows/MobileWorkflowStepper";
+import {
+  MobileWorkflowStepper,
+  WorkflowTaskFields,
+} from "@/features/workflows/public-api/presentation";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
 interface WsTestTaskInputsSectionProps {
