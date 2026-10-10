@@ -84,7 +84,8 @@
     "src/features/projects/messenger/hooks": "importer AwcProjectMessengerSection.tsx exceeds 100 effective lines once prettier-formatted (pre-existing)",
     "src/features/projects/access/inbox": "outside importer AwcProjectAccessMemberTaskPulse.tsx exceeds 100-line architecture limit (pre-existing); pre-commit rejects touching it",
     "src/features/projects/access/invites#root": "importer useCreatedInviteBanner.ts over architecture line limit",
-    "src/features/projects/tasks/utils": "29 outside importers exceeds limit of 25"
+    "src/features/projects/tasks/utils": "29 outside importers exceeds limit of 25",
+    "src/features/projects/hooks": "repointing AwcProjectNameEditor.tsx makes prettier wrap a line, pushing it over the 100 effective-line architecture limit"
   },
   "rounds": [
     {
