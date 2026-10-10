@@ -9,7 +9,7 @@ import {
 import MyBotOwnedGrokWebhookForm from "@/features/my-bots/MyBotOwnedGrokWebhookForm";
 import { MY_BOTS_COPY } from "@/features/my-bots/myBotsCopy.constant";
 import { buildMyBotMetaLines } from "@/features/my-bots/utils/buildMyBotMetaLines";
-import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
+import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/public-api/types";
 import { FolderIcon, TrashBinIcon } from "@/icons";
 import type { OwnedBotView } from "@/lib/agentAccess/claimBot/listOwnedBots";
 

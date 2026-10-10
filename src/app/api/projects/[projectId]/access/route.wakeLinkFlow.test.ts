@@ -54,7 +54,7 @@ import {
 import {
   buildAwcGrokWakeLinkHref,
   parseAwcGrokWakeLinkHash,
-} from "@/features/projects/access/awcGrokWakeLinkDeepLink";
+} from "@/features/projects/access/public-api/types";
 import { listMembersAwaitingWakeLink } from "@/features/projects/access/utils/resolveMemberWakeLinkState";
 import {
   WAKE_FLOW,

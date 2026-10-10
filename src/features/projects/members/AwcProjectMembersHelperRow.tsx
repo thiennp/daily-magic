@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 
-import { awcGrokWakeLinkHash } from "@/features/projects/access/awcGrokWakeLinkDeepLink";
+import { awcGrokWakeLinkHash } from "@/features/projects/access/public-api/types";
 import { useWakeLinkOpenRequest } from "@/features/projects/access/hooks/useWakeLinkOpenRequest";
 import AwcProjectMembersHelperHealthLine from "@/features/projects/members/AwcProjectMembersHelperHealthLine";
 import AwcProjectMembersHelperBotLine from "@/features/projects/members/AwcProjectMembersHelperBotLine";

@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import AppIcon from "@/components/ui/icon/AppIcon";
 import InfoTip from "@/components/ui/infoTip/InfoTip";
 import { MY_BOTS_COPY } from "@/features/my-bots/myBotsCopy.constant";
-import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
+import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/public-api/types";
 import MyBotsClaimHead from "@/features/my-bots/MyBotsClaimHead";
 import { AlertIcon } from "@/icons";
 

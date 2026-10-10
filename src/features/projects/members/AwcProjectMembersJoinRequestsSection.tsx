@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import AwcExpiredJoinRequestList from "@/features/projects/access/approvalCard/AwcExpiredJoinRequestList";
-import AwcProjectAccessPendingList from "@/features/projects/access/AwcProjectAccessPendingList";
+import { AwcProjectAccessPendingList } from "@/features/projects/access/public-api/presentation";
 import type { AwcProjectAccessPending } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 import {
   nextJoinRequestsStickyProject,

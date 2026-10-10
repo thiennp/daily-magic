@@ -1,4 +1,4 @@
-import { AWC_PROJECT_COMPUTER_MEMBER_COPY } from "@/features/projects/access/awcProjectComputerMemberCopy.constant";
+import { AWC_PROJECT_COMPUTER_MEMBER_COPY } from "@/features/projects/access/public-api/types";
 import type { AskBoxSendTarget } from "@/features/projects/askBox/public-api/types";
 
 type DockComputerMember = {

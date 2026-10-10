@@ -9,7 +9,7 @@ import {
   MARKETPLACE_FILTERED_EMPTY_BODY,
   MARKETPLACE_NO_MATCH_TITLE,
 } from "@/features/marketplace/marketplaceCopy.constant";
-import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
+import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/public-api/types";
 
 interface MarketplaceNoMatchProps {
   readonly query: string;

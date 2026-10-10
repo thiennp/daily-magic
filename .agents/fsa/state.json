@@ -92,7 +92,8 @@
     "src/features/reports",
     "src/features/dispatch",
     "src/features/agent-witch/online-wake",
-    "src/features/agent-witch#root"
+    "src/features/agent-witch#root",
+    "src/features/projects/access#root"
   ],
   "blocked": {
     "src/features/home/constants": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing), pre-commit architecture gate fails when it is edited",
@@ -575,6 +576,11 @@
       "unit": "src/features/agent-witch#root",
       "sha": "77de2c897ee7f647970905ca7a9fcc9da01f87b4",
       "at": "2026-10-10T11:19:12.129Z"
+    },
+    {
+      "unit": "src/features/projects/access#root",
+      "sha": "01ace12b260fd64e5576fdb087154a4978f6e8d2",
+      "at": "2026-10-10T11:25:55.794Z"
     }
   ],
   "limits": {

@@ -1,8 +1,10 @@
 "use client";
 
-import AwcProjectAccessSecretInput from "@/features/projects/access/AwcProjectAccessSecretInput";
-import { AWC_GROK_WEBHOOK_FORM_COPY } from "@/features/projects/access/awcGrokWebhookFormCopy.constant";
-import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
+import { AwcProjectAccessSecretInput } from "@/features/projects/access/public-api/presentation";
+import {
+  AWC_GROK_WEBHOOK_FORM_COPY,
+  AWC_PROJECT_ACCESS_CTA,
+} from "@/features/projects/access/public-api/types";
 import { useOwnedBotGrokWebhookForm } from "@/features/my-bots/hooks/useOwnedBotGrokWebhookForm";
 import { MY_BOTS_COPY } from "@/features/my-bots/myBotsCopy.constant";
 import type { ProjectGrokWebhookStatusView } from "@/features/projects/access/utils/projectGrokWebhookApi";

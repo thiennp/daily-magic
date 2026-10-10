@@ -1,8 +1,10 @@
 "use client";
 
-import AwcWakeConnectPasteCard from "@/features/projects/access/AwcWakeConnectPasteCard";
-import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
-import { formatAwcGrokWakeCopy } from "@/features/projects/access/awcGrokWakeAwaitingCopy.constant";
+import { AwcWakeConnectPasteCard } from "@/features/projects/access/public-api/presentation";
+import {
+  AWC_PROJECT_ACCESS_CTA,
+  formatAwcGrokWakeCopy,
+} from "@/features/projects/access/public-api/types";
 import AwcProjectMembersInfoTip from "@/features/projects/members/AwcProjectMembersInfoTip";
 import { ASSISTANT_WAKE_BLOCK_COPY as B } from "@/features/projects/members/assistantWakeBlockCopy.constant";
 import { ASSISTANT_WAKE_HEALTH_COPY as W } from "@/features/projects/members/assistantWakeHealthCopy.constant";

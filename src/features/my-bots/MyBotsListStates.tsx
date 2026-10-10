@@ -7,7 +7,7 @@ import {
   MK_EMPTY_TITLE_CLASS,
 } from "@/features/marketplace/public-api/types";
 import { MY_BOTS_COPY } from "@/features/my-bots/myBotsCopy.constant";
-import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
+import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/public-api/types";
 import { AlertIcon } from "@/icons";
 
 export function MyBotsLoading() {

@@ -10,7 +10,7 @@ import {
   MARKETPLACE_LOAD_ERROR_TITLE,
   MARKETPLACE_TRY_AGAIN_LABEL,
 } from "@/features/marketplace/marketplaceCopy.constant";
-import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
+import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/public-api/types";
 import { AlertIcon } from "@/icons";
 
 export default function MarketplaceLoadError({

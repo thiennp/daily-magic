@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { AWC_GROK_WEBHOOK_FORM_COPY } from "@/features/projects/access/awcGrokWebhookFormCopy.constant";
+import { AWC_GROK_WEBHOOK_FORM_COPY } from "@/features/projects/access/public-api/types";
 import {
   fetchOwnedBotGrokWebhookStatus,
   saveOwnedBotGrokWebhook,

@@ -2,9 +2,9 @@
 
 import { useMemo } from "react";
 
-import AwcProjectAccessFolderRefs from "@/features/projects/access/AwcProjectAccessFolderRefs";
+import { AwcProjectAccessFolderRefs } from "@/features/projects/access/public-api/presentation";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
-import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
+import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/public-api/types";
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 import { useAwcProjectFolderRefActions } from "@/features/projects/access/hooks/useAwcProjectFolderRefActions";
 import { isComputerAccessMember } from "@/features/projects/access/utils/isComputerAccessMember";
