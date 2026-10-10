@@ -78,7 +78,8 @@
     "storybook:wave:weekly": "npm run storybook:build && STORYBOOK_WAVE_OUTPUT_DIR=storybook-wave-captures tsx scripts/storybookWaveQa/runWeeklyStorybookWaveCapture.ts",
     "fsa:deps": "depcruise src --config .dependency-cruiser.cjs --ignore-known .agents/fsa/depcruise-baseline.json",
     "fsa:deps:baseline": "depcruise src --config .dependency-cruiser.cjs --output-type baseline > .agents/fsa/depcruise-baseline.json",
-    "fsa:next": "tsx .agents/scripts/fsa-next-unit.ts"
+    "fsa:next": "tsx .agents/scripts/fsa-next-unit.ts",
+    "fsa:cycle": "tsx .agents/scripts/fsa-next-cycle.ts"
   },
   "overrides": {
     "baseline-browser-mapping": "2.11.0",
