@@ -7,8 +7,8 @@ import { AdminSetPlanControl } from "@/features/billing/public-api/presentation"
 import { AdminCostControlExcludeCheckbox } from "@/features/billing/public-api/presentation";
 import type { BillingPlanId } from "@/features/billing/public-api/types";
 import { formatBillingPlanLabel } from "@/features/billing/public-api/types";
-import formatAdminUserKindLabel from "@/features/admin/utils/formatAdminUserKindLabel";
-import formatAdminUserLastActivity from "@/features/admin/utils/formatAdminUserLastActivity";
+import { formatAdminUserKindLabel } from "@/features/admin/utils/public-api/presentation";
+import { formatAdminUserLastActivity } from "@/features/admin/utils/public-api/presentation";
 import formatGlobalRole from "@/lib/auth/formatGlobalRole";
 import type AdminUserRecord from "@/lib/auth/types/AdminUserRecord.type";
 

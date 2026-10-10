@@ -14,7 +14,7 @@ import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHu
 import { useGroupActorAccess } from "@/features/admin/hooks/public-api/presentation";
 import { useGroupManagement } from "@/features/admin/hooks/public-api/presentation";
 import type { GroupItem } from "@/features/admin/types/public-api/types";
-import { formatCompanyMemberRoleLabel } from "@/features/admin/utils/formatCompanyMemberRoleLabel";
+import { formatCompanyMemberRoleLabel } from "@/features/admin/utils/public-api/presentation";
 
 interface GroupManagementPanelProps {
   readonly initialGroups: readonly GroupItem[];

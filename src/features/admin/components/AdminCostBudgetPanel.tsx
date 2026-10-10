@@ -1,5 +1,5 @@
 import AppPanel from "@/components/surfaces/AppPanel";
-import formatCostControlProgress from "@/features/admin/utils/formatCostControlProgress";
+import { formatCostControlProgress } from "@/features/admin/utils/public-api/presentation";
 import type {
   AdminCostControl,
   CostControlStatus,

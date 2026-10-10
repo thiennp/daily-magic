@@ -5,7 +5,7 @@ import { useId, useState } from "react";
 import Button from "@/components/ui/button/Button";
 import GroupInviteRoleField from "@/features/admin/components/GroupInviteRoleField";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
-import validateInviteEmail from "@/features/admin/utils/validateInviteEmail";
+import { validateInviteEmail } from "@/features/admin/utils/public-api/presentation";
 
 interface GroupMemberInviteFormProps {
   readonly memberEmail: string;

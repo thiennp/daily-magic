@@ -2,7 +2,7 @@ import {
   ADMIN_USER_KIND_FILTER_OPTIONS,
   adminUserKindFilterLabel,
   type AdminUserKindFilter,
-} from "@/features/admin/utils/adminUserKindLabels.constant";
+} from "@/features/admin/utils/public-api/types";
 
 interface UsersKindFilterProps {
   readonly value: AdminUserKindFilter;

@@ -5,7 +5,7 @@ import { useId, useState } from "react";
 import Button from "@/components/ui/button/Button";
 import GroupCompanyNameField from "@/features/admin/components/GroupCompanyNameField";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
-import validateCompanyName from "@/features/admin/utils/validateCompanyName";
+import { validateCompanyName } from "@/features/admin/utils/public-api/presentation";
 
 interface GroupCreateCompanyPanelProps {
   readonly newGroupName: string;

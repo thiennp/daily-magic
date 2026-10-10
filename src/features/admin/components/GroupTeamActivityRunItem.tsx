@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
-import formatCompanyRunStatus from "@/features/admin/utils/formatCompanyRunStatus";
+import { formatCompanyRunStatus } from "@/features/admin/utils/public-api/presentation";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
 export default function GroupTeamActivityRunItem({

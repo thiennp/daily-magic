@@ -7,16 +7,16 @@ import type {
 import {
   loadGroupMembersForSelection,
   selectAdminGroup,
-} from "@/features/admin/utils/groupManagementLoadActions";
+} from "@/features/admin/utils/public-api/presentation";
 import {
   createAdminGroupAction,
   deleteAdminGroupAction,
-} from "@/features/admin/utils/groupManagementGroupMutateActions";
+} from "@/features/admin/utils/public-api/presentation";
 import {
   addGroupMemberAction,
   removeGroupMemberAction,
   updateGroupMemberRoleAction,
-} from "@/features/admin/utils/groupManagementMemberMutateActions";
+} from "@/features/admin/utils/public-api/presentation";
 import { GroupRole } from "@/lib/auth/roles";
 
 interface UseGroupManagementResult {

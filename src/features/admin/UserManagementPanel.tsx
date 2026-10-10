@@ -17,9 +17,9 @@ import {
 import {
   ADMIN_USER_KIND_FILTER_ALL,
   type AdminUserKindFilter,
-} from "@/features/admin/utils/adminUserKindLabels.constant";
-import filterAdminUsersByKind from "@/features/admin/utils/filterAdminUsersByKind";
-import filterAdminUsersBySearch from "@/features/admin/utils/filterAdminUsersBySearch";
+} from "@/features/admin/utils/public-api/types";
+import { filterAdminUsersByKind } from "@/features/admin/utils/public-api/presentation";
+import { filterAdminUsersBySearch } from "@/features/admin/utils/public-api/presentation";
 import { useAdminUserActions } from "@/features/admin/hooks/public-api/presentation";
 import { PROJECT_V5_H1_CLASS } from "@/features/projects/projectPageV5ChromeClasses.constant";
 import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";

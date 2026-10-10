@@ -52,7 +52,8 @@
     "src/features/styleguide",
     "src/features/projects/askBox",
     "src/features/projects/storybook",
-    "src/features/projects/settings/connections"
+    "src/features/projects/settings/connections",
+    "src/features/admin/utils"
   ],
   "blocked": {
     "src/features/home/constants": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing), pre-commit architecture gate fails when it is edited",
@@ -323,6 +324,11 @@
       "unit": "src/features/projects/settings/connections",
       "sha": "44523e2c054e23dcfb1be6aeb8d0cb918f71eda4",
       "at": "2026-10-10T09:54:12.664Z"
+    },
+    {
+      "unit": "src/features/admin/utils",
+      "sha": "2c83a427122834b41bd3f9f15a8319b694df77e4",
+      "at": "2026-10-10T09:55:42.488Z"
     }
   ]
 }

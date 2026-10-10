@@ -1,6 +1,6 @@
 import UsersKindFilter from "@/features/admin/components/UsersKindFilter";
 import { ADMIN_COPY } from "@/features/admin/adminCopy.constant";
-import type { AdminUserKindFilter } from "@/features/admin/utils/adminUserKindLabels.constant";
+import type { AdminUserKindFilter } from "@/features/admin/utils/public-api/types";
 
 interface AdminUsersToolbarProps {
   readonly query: string;
