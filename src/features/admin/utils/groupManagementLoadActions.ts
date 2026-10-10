@@ -3,7 +3,7 @@ import type { Dispatch, SetStateAction } from "react";
 import type {
   GroupItem,
   MemberItem,
-} from "@/features/admin/types/groupManagement.types";
+} from "@/features/admin/types/public-api/types";
 import {
   fetchAdminGroups,
   fetchGroupMembers,

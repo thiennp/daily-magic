@@ -13,7 +13,7 @@ import GroupSelectionSection from "@/features/admin/components/GroupSelectionSec
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
 import { useGroupActorAccess } from "@/features/admin/hooks/public-api/presentation";
 import { useGroupManagement } from "@/features/admin/hooks/public-api/presentation";
-import type { GroupItem } from "@/features/admin/types/groupManagement.types";
+import type { GroupItem } from "@/features/admin/types/public-api/types";
 import { formatCompanyMemberRoleLabel } from "@/features/admin/utils/formatCompanyMemberRoleLabel";
 
 interface GroupManagementPanelProps {

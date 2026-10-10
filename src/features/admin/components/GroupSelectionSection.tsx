@@ -7,7 +7,7 @@ import GroupCompanySettingsAccess from "@/features/admin/components/GroupCompany
 import GroupCreateCompanyPanel from "@/features/admin/components/GroupCreateCompanyPanel";
 import GroupJoinHonestyCard from "@/features/admin/components/GroupJoinHonestyCard";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
-import type { GroupItem } from "@/features/admin/types/groupManagement.types";
+import type { GroupItem } from "@/features/admin/types/public-api/types";
 
 interface GroupSelectionSectionProps {
   readonly groups: readonly GroupItem[];

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import CompaniesRulesOrientationDispatchCard from "@/features/admin/components/CompaniesRulesOrientationDispatchCard";
 import CompaniesRulesOrientationSafetyCard from "@/features/admin/components/CompaniesRulesOrientationSafetyCard";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
-import type { CompaniesRulesOrientationProject } from "@/features/admin/types/companiesRulesOrientationProject.type";
+import type { CompaniesRulesOrientationProject } from "@/features/admin/types/public-api/types";
 import loadCompaniesRulesOrientationProjects from "@/features/admin/utils/loadCompaniesRulesOrientationProjects";
 import {
   DispatchPolicy,

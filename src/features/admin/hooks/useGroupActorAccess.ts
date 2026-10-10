@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 
-import type { MemberItem } from "@/features/admin/types/groupManagement.types";
+import type { MemberItem } from "@/features/admin/types/public-api/types";
 import { GroupRole, isPrivilegedGlobalRole } from "@/lib/auth/roles";
 
 export function useGroupActorAccess(members: readonly MemberItem[]) {

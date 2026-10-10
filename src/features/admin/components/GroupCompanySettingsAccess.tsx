@@ -7,7 +7,7 @@ import GroupCompanyIdentity from "@/features/admin/components/GroupCompanyIdenti
 import GroupCompanySettingsGearButton from "@/features/admin/components/GroupCompanySettingsGearButton";
 import GroupNewCompanyModal from "@/features/admin/components/GroupNewCompanyModal";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
-import type { GroupItem } from "@/features/admin/types/groupManagement.types";
+import type { GroupItem } from "@/features/admin/types/public-api/types";
 
 const GEAR_CLASS =
   "inline-flex size-9 shrink-0 items-center justify-center rounded-lg text-awc-fg-muted transition hover:bg-awc-tile hover:text-awc-fg";

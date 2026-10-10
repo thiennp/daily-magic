@@ -1,4 +1,4 @@
-import type { GroupItem } from "@/features/admin/types/groupManagement.types";
+import type { GroupItem } from "@/features/admin/types/public-api/types";
 import { GlobalRole } from "@/lib/auth/roles";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 

@@ -1,5 +1,5 @@
 import GroupManagementPanel from "@/features/admin/GroupManagementPanel";
-import type { GroupItem } from "@/features/admin/types/groupManagement.types";
+import type { GroupItem } from "@/features/admin/types/public-api/types";
 import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
 
 interface AdminGroupsPageLayoutProps {

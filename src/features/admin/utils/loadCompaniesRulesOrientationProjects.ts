@@ -1,4 +1,4 @@
-import type { CompaniesRulesOrientationProject } from "@/features/admin/types/companiesRulesOrientationProject.type";
+import type { CompaniesRulesOrientationProject } from "@/features/admin/types/public-api/types";
 
 const loadCompaniesRulesOrientationProjects = async (): Promise<
   readonly CompaniesRulesOrientationProject[]

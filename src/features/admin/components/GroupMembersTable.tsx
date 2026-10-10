@@ -1,6 +1,6 @@
 import GroupMembersTableRow from "@/features/admin/components/GroupMembersTableRow";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
-import type { MemberItem } from "@/features/admin/types/groupManagement.types";
+import type { MemberItem } from "@/features/admin/types/public-api/types";
 
 interface GroupMembersTableProps {
   readonly members: readonly MemberItem[];

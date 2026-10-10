@@ -8,7 +8,7 @@ import CompaniesRulesHead, {
 import GroupDeleteControls from "@/features/admin/components/GroupDeleteControls";
 import GroupDispatchPolicyControl from "@/features/admin/components/GroupDispatchPolicyControl";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
-import type { GroupItem } from "@/features/admin/types/groupManagement.types";
+import type { GroupItem } from "@/features/admin/types/public-api/types";
 
 interface GroupCompanySettingsViewProps {
   readonly groupId: string;

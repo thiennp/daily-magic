@@ -1,7 +1,7 @@
 import AppIcon from "@/components/ui/icon/AppIcon";
 import TargetPresenceBadges from "@/features/dispatch/TargetPresenceBadges";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
-import type { MemberItem } from "@/features/admin/types/groupManagement.types";
+import type { MemberItem } from "@/features/admin/types/public-api/types";
 import { formatCompanyMemberRoleLabel } from "@/features/admin/utils/formatCompanyMemberRoleLabel";
 import { TrashBinIcon } from "@/icons";
 import { GroupRole } from "@/lib/auth/roles";

@@ -7,7 +7,7 @@ import GroupMemberInviteForm from "@/features/admin/components/GroupMemberInvite
 import GroupMembersTable from "@/features/admin/components/GroupMembersTable";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
 import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
-import type { MemberItem } from "@/features/admin/types/groupManagement.types";
+import type { MemberItem } from "@/features/admin/types/public-api/types";
 
 interface GroupMembersSectionProps {
   readonly members: readonly MemberItem[];
