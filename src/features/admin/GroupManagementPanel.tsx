@@ -11,8 +11,8 @@ import GroupInvitationsInbox from "@/features/admin/components/GroupInvitationsI
 import GroupMembersAndRuns from "@/features/admin/components/GroupMembersAndRuns";
 import GroupSelectionSection from "@/features/admin/components/GroupSelectionSection";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
-import { useGroupActorAccess } from "@/features/admin/hooks/useGroupActorAccess";
-import { useGroupManagement } from "@/features/admin/hooks/useGroupManagement";
+import { useGroupActorAccess } from "@/features/admin/hooks/public-api/presentation";
+import { useGroupManagement } from "@/features/admin/hooks/public-api/presentation";
 import type { GroupItem } from "@/features/admin/types/groupManagement.types";
 import { formatCompanyMemberRoleLabel } from "@/features/admin/utils/formatCompanyMemberRoleLabel";
 

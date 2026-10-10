@@ -1,6 +1,6 @@
 import GroupMembersSection from "@/features/admin/components/GroupMembersSection";
 import GroupTeamActivityPanel from "@/features/admin/components/GroupTeamActivityPanel";
-import type { useGroupManagement } from "@/features/admin/hooks/useGroupManagement";
+import type { useGroupManagement } from "@/features/admin/hooks/public-api/presentation";
 
 interface GroupMembersAndRunsProps {
   readonly groupManagement: ReturnType<typeof useGroupManagement>;

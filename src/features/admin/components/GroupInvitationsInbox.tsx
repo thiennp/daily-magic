@@ -1,6 +1,6 @@
 "use client";
 
-import { useGroupInvitations } from "@/features/admin/hooks/useGroupInvitations";
+import { useGroupInvitations } from "@/features/admin/hooks/public-api/presentation";
 
 /** Invitations to join a company: nobody is added until they accept here. */
 export default function GroupInvitationsInbox() {

@@ -24,3 +24,5 @@ Users, groups, company dispatch rules.
 - `dispatch`
 
 Query: `npm run feature-knowledge:query -- "..." --feature=admin`
+
+The `hooks` unit exposes its client hooks only through `hooks/public-api/presentation`.

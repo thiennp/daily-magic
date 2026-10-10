@@ -20,7 +20,7 @@ import {
 } from "@/features/admin/utils/adminUserKindLabels.constant";
 import filterAdminUsersByKind from "@/features/admin/utils/filterAdminUsersByKind";
 import filterAdminUsersBySearch from "@/features/admin/utils/filterAdminUsersBySearch";
-import { useAdminUserActions } from "@/features/admin/hooks/useAdminUserActions";
+import { useAdminUserActions } from "@/features/admin/hooks/public-api/presentation";
 import { PROJECT_V5_H1_CLASS } from "@/features/projects/projectPageV5ChromeClasses.constant";
 import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
