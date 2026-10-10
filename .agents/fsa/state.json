@@ -56,7 +56,8 @@
     "src/features/admin/utils",
     "src/features/onboarding",
     "src/features/projects/pitfalls",
-    "src/features/projects/reports"
+    "src/features/projects/reports",
+    "src/features/projects/accessLog"
   ],
   "blocked": {
     "src/features/home/constants": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing), pre-commit architecture gate fails when it is edited",
@@ -348,6 +349,11 @@
       "unit": "src/features/projects/reports",
       "sha": "38430904fc3ee65881854ea7034245d7d379fdb4",
       "at": "2026-10-10T10:00:24.293Z"
+    },
+    {
+      "unit": "src/features/projects/accessLog",
+      "sha": "a2a336a0cabc83982a323f0821c55a9dcb307d42",
+      "at": "2026-10-10T10:01:28.602Z"
     }
   ]
 }

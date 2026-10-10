@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 import AwcProjectMembersHelpersSection from "@/features/projects/members/AwcProjectMembersHelpersSection";
-import AwcAccessLogRailFooter from "@/features/projects/accessLog/AwcAccessLogRailFooter";
+import { AwcAccessLogRailFooter } from "@/features/projects/accessLog/public-api/presentation";
 import AwcProjectMembersJoinRequestsSection from "@/features/projects/members/AwcProjectMembersJoinRequestsSection";
 import AwcProjectMembersInviteBotsSection from "@/features/projects/members/AwcProjectMembersInviteBotsSection";
 import AwcProjectMembersPeopleSection from "@/features/projects/members/AwcProjectMembersPeopleSection";
