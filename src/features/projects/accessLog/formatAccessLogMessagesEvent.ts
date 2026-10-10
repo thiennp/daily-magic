@@ -4,7 +4,7 @@ import {
 } from "@/features/projects/accessLog/accessLogEventHelpers";
 import { ACCESS_LOG_COPY as C } from "@/features/projects/accessLog/accessLogCopy.constant";
 import { AWC_PROJECT_INBOX_COPY } from "@/features/projects/access/inbox/awcProjectInboxCopy.constant";
-import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/projectAccessLog.type";
+import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/public-api/types";
 
 /** messages.archived / messages.restored → LOCK activity.* (owner reads "You"). */
 export const formatAccessLogMessagesEvent = (

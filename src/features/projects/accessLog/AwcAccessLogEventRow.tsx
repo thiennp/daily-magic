@@ -1,6 +1,6 @@
 import { formatAccessLogEvent } from "@/features/projects/accessLog/formatAccessLogEvent";
 import { formatAccessLogTime } from "@/features/projects/accessLog/formatAccessLogTime";
-import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/projectAccessLog.type";
+import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/public-api/types";
 
 interface AwcAccessLogEventRowProps {
   readonly event: ProjectActivityLogEvent;
@@ -18,7 +18,9 @@ export default function AwcAccessLogEventRow({
   return (
     <li className="border-b border-awc-border px-1 py-2.5 last:border-0 dark:border-gray-700/60">
       <div className="flex items-start justify-between gap-3">
-        <p className="text-sm text-awc-fg dark:text-gray-100">{rendered.line}</p>
+        <p className="text-sm text-awc-fg dark:text-gray-100">
+          {rendered.line}
+        </p>
         <time
           dateTime={event.at}
           title={time.full}

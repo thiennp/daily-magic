@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { ACCESS_LOG_COPY as C } from "@/features/projects/accessLog/accessLogCopy.constant";
 import { formatAccessLogEvent } from "@/features/projects/accessLog/formatAccessLogEvent";
-import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/projectAccessLog.type";
+import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/public-api/types";
 import { PROJECT_DELIVERY_MODE_ACTIVITY_COPY } from "@/lib/projects/acl/projectMembershipDeliveryModeActivity.constant";
 
 const base = (

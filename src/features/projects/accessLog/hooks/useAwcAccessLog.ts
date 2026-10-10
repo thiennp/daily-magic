@@ -2,12 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { fetchProjectAccessLog } from "@/features/projects/activityLog/fetchProjectAccessLog";
+import { fetchProjectAccessLog } from "@/features/projects/activityLog/public-api/presentation";
 import type {
   ProjectActivityCategory,
   ProjectActivityLogEvent,
   ProjectActivityLogRetention,
-} from "@/features/projects/activityLog/projectAccessLog.type";
+} from "@/features/projects/activityLog/public-api/types";
 
 export type AccessLogCategoryFilter = ProjectActivityCategory | "all";
 
@@ -88,8 +88,16 @@ export const useAwcAccessLog = (projectId: string, enabled: boolean) => {
   }, [projectId, category, isLoadingMore]);
 
   return {
-    events, retention, nextCursor, isLoading, isLoadingMore, error, errorMore,
-    ownerOnly, category, setCategory,
+    events,
+    retention,
+    nextCursor,
+    isLoading,
+    isLoadingMore,
+    error,
+    errorMore,
+    ownerOnly,
+    category,
+    setCategory,
     reload: () => setReloadToken((n) => n + 1),
     loadMore: () => void loadMore(),
   };

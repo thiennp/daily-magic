@@ -25,7 +25,8 @@
     "src/features/agent/constants",
     "src/features/projects/settings/runsWithoutApproval",
     "src/features/projects/autoskills",
-    "src/features/shell/hooks"
+    "src/features/shell/hooks",
+    "src/features/projects/activityLog"
   ],
   "blocked": {},
   "rounds": [
@@ -158,6 +159,11 @@
       "unit": "src/features/shell/hooks",
       "sha": "3986456f450a144589deefe9c4ec333cd4d2cf70",
       "at": "2026-10-10T09:19:48.282Z"
+    },
+    {
+      "unit": "src/features/projects/activityLog",
+      "sha": "14cbed07b0d696dac61b68303ffecf3ae1c12d08",
+      "at": "2026-10-10T09:20:53.523Z"
     }
   ]
 }

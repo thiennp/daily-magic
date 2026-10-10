@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { formatAccessLogEvent } from "@/features/projects/accessLog/formatAccessLogEvent";
-import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/projectAccessLog.type";
+import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/public-api/types";
 
 const event = (
   type: "rule.dropped" | "rule.restored",
@@ -19,27 +19,31 @@ const event = (
 describe("formatAccessLogEvent rule.*", () => {
   it("names the safety rule by its title (lowercase noun, trailing period)", () => {
     expect(
-      formatAccessLogEvent(event("rule.dropped", { ruleId: "a", label: "Secrets in logs" })),
+      formatAccessLogEvent(
+        event("rule.dropped", { ruleId: "a", label: "Secrets in logs" }),
+      ),
     ).toEqual({
       line: 'You dropped the safety rule "Secrets in logs".',
       detail: null,
     });
     expect(
-      formatAccessLogEvent(event("rule.restored", { ruleId: "a", label: "Secrets in logs" }))
-        ?.line,
+      formatAccessLogEvent(
+        event("rule.restored", { ruleId: "a", label: "Secrets in logs" }),
+      )?.line,
     ).toBe('You restored the safety rule "Secrets in logs".');
   });
 
   it("falls back when the label is missing or looks like an email", () => {
-    expect(formatAccessLogEvent(event("rule.dropped", { ruleId: "a" }))?.line).toBe(
-      "You dropped a safety rule.",
-    );
+    expect(
+      formatAccessLogEvent(event("rule.dropped", { ruleId: "a" }))?.line,
+    ).toBe("You dropped a safety rule.");
     expect(formatAccessLogEvent(event("rule.restored", {}))?.line).toBe(
       "You restored a safety rule.",
     );
     expect(
-      formatAccessLogEvent(event("rule.dropped", { ruleId: "a", label: "bot@example.com" }))
-        ?.line,
+      formatAccessLogEvent(
+        event("rule.dropped", { ruleId: "a", label: "bot@example.com" }),
+      )?.line,
     ).toBe("You dropped a safety rule.");
     expect(
       formatAccessLogEvent(event("rule.restored", { label: "x@y" }))?.line,

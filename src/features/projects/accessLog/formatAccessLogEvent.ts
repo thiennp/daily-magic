@@ -13,7 +13,7 @@ import { formatAccessLogDeliveryEvent } from "@/features/projects/accessLog/form
 import { formatAccessLogHumanInvite } from "@/features/projects/accessLog/formatAccessLogHumanInvite";
 import { formatAccessLogMessagesEvent } from "@/features/projects/accessLog/formatAccessLogMessagesEvent";
 import { formatAccessLogRuleEvent } from "@/features/projects/accessLog/formatAccessLogRuleEvent";
-import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/projectAccessLog.type";
+import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/public-api/types";
 import { isProjectActivityEventType } from "@/lib/projects/acl/activity/projectActivityEvent.constant";
 
 /** Map one API event to EN line + optional detail. Unknown types → null (skip). */

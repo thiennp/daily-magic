@@ -6,7 +6,7 @@ import {
   type AccessLogRendered,
 } from "@/features/projects/accessLog/accessLogEventHelpers";
 import { ACCESS_LOG_COPY as C } from "@/features/projects/accessLog/accessLogCopy.constant";
-import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/projectAccessLog.type";
+import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/public-api/types";
 import { formatProjectDeliveryModeActivity } from "@/lib/projects/acl/projectMembershipDeliveryModeActivity.constant";
 
 /** member.delivery_mode_changed → locked mode.activity.* or autoWake. */

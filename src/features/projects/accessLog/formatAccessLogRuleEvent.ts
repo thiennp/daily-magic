@@ -1,6 +1,6 @@
 import type { AccessLogRendered } from "@/features/projects/accessLog/accessLogEventHelpers";
 import { ACCESS_LOG_COPY as C } from "@/features/projects/accessLog/accessLogCopy.constant";
-import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/projectAccessLog.type";
+import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/public-api/types";
 
 /** rule.dropped / rule.restored → owner Safety rule line; title from detail.label. */
 export const formatAccessLogRuleEvent = (

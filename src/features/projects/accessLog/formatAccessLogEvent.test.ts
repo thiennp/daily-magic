@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
 import { ACCESS_LOG_COPY as C } from "@/features/projects/accessLog/accessLogCopy.constant";
 import { formatAccessLogEvent } from "@/features/projects/accessLog/formatAccessLogEvent";
-import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/projectAccessLog.type";
+import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/public-api/types";
 
 const base = (
   partial: Partial<ProjectActivityLogEvent> &
@@ -65,7 +65,9 @@ describe("formatAccessLogEvent", () => {
   });
 
   it("omits detail when field absent; shows when present", () => {
-    expect(formatAccessLogEvent(base({ type: "invite.revoked" }))?.detail).toBeNull();
+    expect(
+      formatAccessLogEvent(base({ type: "invite.revoked" }))?.detail,
+    ).toBeNull();
     expect(
       formatAccessLogEvent(
         base({ type: "invite.revoked", detail: { label: "deadbeef" } }),
@@ -87,7 +89,8 @@ describe("formatAccessLogEvent", () => {
       formatAccessLogEvent(base({ type: "invite.auto_approve_enabled" }))?.line,
     ).toBe(C.autoOn);
     expect(
-      formatAccessLogEvent(base({ type: "invite.auto_approve_disabled" }))?.line,
+      formatAccessLogEvent(base({ type: "invite.auto_approve_disabled" }))
+        ?.line,
     ).toBe(C.autoOff);
     expect(formatAccessLogEvent(base({ type: "request.denied" }))?.line).toBe(
       C.requestDeniedNoName,

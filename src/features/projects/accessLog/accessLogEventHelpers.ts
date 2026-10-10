@@ -5,7 +5,7 @@ import { formatAccessLogDate } from "@/features/projects/accessLog/formatAccessL
 import type {
   ProjectActivityLogEvent,
   ProjectActivityMemberKind,
-} from "@/features/projects/activityLog/projectAccessLog.type";
+} from "@/features/projects/activityLog/public-api/types";
 
 export type AccessLogRendered = {
   readonly line: string;

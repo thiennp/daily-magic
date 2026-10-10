@@ -1,5 +1,5 @@
 import { ACCESS_LOG_COPY as C } from "@/features/projects/accessLog/accessLogCopy.constant";
-import type { ProjectActivityLogRetention } from "@/features/projects/activityLog/projectAccessLog.type";
+import type { ProjectActivityLogRetention } from "@/features/projects/activityLog/public-api/types";
 
 interface AwcAccessLogEmptyProps {
   readonly filtered: boolean;

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { formatAccessLogEvent } from "@/features/projects/accessLog/formatAccessLogEvent";
-import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/projectAccessLog.type";
+import type { ProjectActivityLogEvent } from "@/features/projects/activityLog/public-api/types";
 
 const event = (
   type: "messages.archived" | "messages.restored",
