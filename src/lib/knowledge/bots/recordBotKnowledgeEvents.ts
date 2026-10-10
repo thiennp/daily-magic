@@ -1,5 +1,9 @@
 import { asRowArray, getSql } from "@/lib/db";
 import { ensureProjectBotKnowledgeSchema } from "@/lib/knowledge/bots/ensureProjectBotKnowledgeSchema";
+import {
+  recordSkillUsesOnClaim,
+  recordSkillUsesOnRelease,
+} from "@/lib/knowledge/skillUses/recordSkillUses";
 import { fingerprintFailureReason } from "@/lib/knowledge/bots/fingerprintFailureReason";
 
 /** A skill lookup this recent counts as "looked the library up first". */
@@ -38,6 +42,13 @@ export const recordBotClaim = async (input: {
         ${input.skillId}, ${input.effortTier}
       )
       ON CONFLICT (id) DO NOTHING`;
+    await recordSkillUsesOnClaim({
+      projectId: input.projectId,
+      taskId: input.taskId,
+      fence: input.fence,
+      actorUserId: input.actorUserId,
+      assignedSkillId: input.skillId,
+    });
   } catch (error: unknown) {
     console.error("bot knowledge claim record failed", {
       error: error instanceof Error ? error.message : "record_failed",
@@ -79,6 +90,13 @@ export const recordBotRelease = async (input: {
         fingerprint = ${fingerprint}, repeated_mistake = ${repeated},
         released_at = NOW()
       WHERE id = ${botKnowledgeEventId(input.taskId, input.fence)}`;
+    await recordSkillUsesOnRelease({
+      projectId: input.projectId,
+      taskId: input.taskId,
+      fence: input.fence,
+      outcome: input.outcome,
+      fingerprint,
+    });
   } catch (error: unknown) {
     console.error("bot knowledge release record failed", {
       error: error instanceof Error ? error.message : "record_failed",
