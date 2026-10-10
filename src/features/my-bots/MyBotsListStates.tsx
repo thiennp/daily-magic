@@ -1,11 +1,11 @@
 "use client";
 
 import AppIcon from "@/components/ui/icon/AppIcon";
-import MarketplaceSectionSkeleton from "@/features/marketplace/MarketplaceSectionSkeleton";
+import { MarketplaceSectionSkeleton } from "@/features/marketplace/public-api/presentation";
 import {
   MK_EMPTY_CLASS,
   MK_EMPTY_TITLE_CLASS,
-} from "@/features/marketplace/marketplaceBrowseClasses.constant";
+} from "@/features/marketplace/public-api/types";
 import { MY_BOTS_COPY } from "@/features/my-bots/myBotsCopy.constant";
 import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
 import { AlertIcon } from "@/icons";

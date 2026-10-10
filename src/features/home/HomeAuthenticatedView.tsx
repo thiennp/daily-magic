@@ -3,7 +3,7 @@ import { MyOfferingsPanel } from "@/features/capabilities/public-api/presentatio
 import { TeamDirectoryPanel } from "@/features/capabilities/public-api/presentation";
 import { FeedbackInboxPanel } from "@/features/feedback/public-api/presentation";
 import { ImprovementReviewPanel } from "@/features/improvements/public-api/presentation";
-import MarketplaceHomePromo from "@/features/marketplace/MarketplaceHomePromo";
+import { MarketplaceHomePromo } from "@/features/marketplace/public-api/presentation";
 import HomeAttentionPanel from "@/features/home/HomeAttentionPanel";
 import HomeComputersCard from "@/features/home/HomeComputersCard";
 import HomeCursorCloudPanel from "@/features/home/HomeCursorCloudPanel";

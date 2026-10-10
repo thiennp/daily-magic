@@ -28,3 +28,7 @@ Company-published listings on top of harness + capabilities: [docs/product/conce
 - `capabilities`
 
 Query: `npm run feature-knowledge:query -- "..." --feature=marketplace`
+
+## Public API
+
+Other features import only from `public-api/types` (copy and class constants) and `public-api/presentation` (panel, home promo, section skeleton, preset install helper).

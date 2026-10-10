@@ -7,7 +7,7 @@ import {
   MK_SEARCH_INPUT_CLASS,
   MK_SEARCH_WRAP_CLASS,
   MK_TOOLS_CLASS,
-} from "@/features/marketplace/marketplaceBrowseClasses.constant";
+} from "@/features/marketplace/public-api/types";
 import { MY_BOTS_COPY } from "@/features/my-bots/myBotsCopy.constant";
 
 interface MyBotsToolbarProps {

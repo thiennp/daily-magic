@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { AssistantEntitlementLimitNote } from "@/features/billing/public-api/presentation";
-import { MK_GRID_CLASS } from "@/features/marketplace/marketplaceBrowseClasses.constant";
+import { MK_GRID_CLASS } from "@/features/marketplace/public-api/types";
 import MyBotRow from "@/features/my-bots/MyBotRow";
 import MyBotUnclaimModal from "@/features/my-bots/MyBotUnclaimModal";
 import MyBotsClaimForm from "@/features/my-bots/MyBotsClaimForm";

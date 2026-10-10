@@ -5,7 +5,7 @@ import {
   MK_CARD_BASE_CLASS,
   MK_CARD_NAME_CLASS,
   MK_TICON_CLASS,
-} from "@/features/marketplace/marketplaceBrowseClasses.constant";
+} from "@/features/marketplace/public-api/types";
 import MyBotOwnedGrokWebhookForm from "@/features/my-bots/MyBotOwnedGrokWebhookForm";
 import { MY_BOTS_COPY } from "@/features/my-bots/myBotsCopy.constant";
 import { buildMyBotMetaLines } from "@/features/my-bots/utils/buildMyBotMetaLines";

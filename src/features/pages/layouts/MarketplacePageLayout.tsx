@@ -1,13 +1,13 @@
-import MarketplacePanel from "@/features/marketplace/MarketplacePanel";
+import { MarketplacePanel } from "@/features/marketplace/public-api/presentation";
 import {
   MK_DESC_CLASS,
   MK_HEAD_ROW_CLASS,
   MK_TITLE_CLASS,
-} from "@/features/marketplace/marketplaceBrowseClasses.constant";
+} from "@/features/marketplace/public-api/types";
 import {
   MARKETPLACE_PAGE_DESCRIPTION,
   MARKETPLACE_PAGE_TITLE,
-} from "@/features/marketplace/marketplaceCopy.constant";
+} from "@/features/marketplace/public-api/types";
 import { APP_PAGE_STACK_CLASS } from "@/features/shell/public-api/types";
 
 export default function MarketplacePageLayout() {

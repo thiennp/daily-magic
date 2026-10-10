@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { AUTOMATIONS_PAGE_COPY } from "@/features/automations/automationsPageCopy.constant";
-import { MARKETPLACE_COMPUTER_PICKER_COPY } from "@/features/marketplace/marketplaceComputerPickerCopy.constant";
+import { MARKETPLACE_COMPUTER_PICKER_COPY } from "@/features/marketplace/public-api/types";
 import { THIS_MAC_DEVICE_BADGE_LABEL } from "@/components/ui/badge/thisMacDeviceBadgeLabel.constant";
 import { ANOTHER_COMPUTER_DEVICE_BADGE_LABEL } from "@/components/ui/badge/anotherComputerDeviceBadgeLabel.constant";
 import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/public-api/types";
