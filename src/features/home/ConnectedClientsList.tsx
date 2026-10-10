@@ -5,8 +5,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import ConnectedClientsTable from "@/features/home/ConnectedClientsTable";
 import AppPanel from "@/components/surfaces/AppPanel";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import type AgentWitchStatusResponse from "@/features/home/types/AgentWitchStatusResponse.type";
-import type ConnectedClient from "@/features/home/types/ConnectedClient.type";
+import type {
+  AgentWitchStatusResponse,
+  ConnectedClient,
+} from "@/features/home/types/public-api/types";
 
 export default function ConnectedClientsList({
   compact = false,
@@ -66,7 +68,9 @@ export default function ConnectedClientsList({
     return (
       <>
         {message ? (
-          <p className="text-sm text-awc-fg-muted dark:text-gray-400">{message}</p>
+          <p className="text-sm text-awc-fg-muted dark:text-gray-400">
+            {message}
+          </p>
         ) : null}
         {body}
       </>

@@ -37,3 +37,7 @@ npm run feature-knowledge:query -- "HOME-003"
 Or `POST /api/feature-knowledge/query` with `{ "query": "...", "featureSlug": "home" }`.
 
 Re-index after doc changes: `npm run feature-knowledge:index`.
+
+## types public API
+
+`types/public-api/types.ts` exposes `ConnectedClient` and `AgentWitchStatusResponse`; import them from there outside `types/`.

@@ -1,4 +1,4 @@
-import type ConnectedClient from "@/features/home/types/ConnectedClient.type";
+import type { ConnectedClient } from "@/features/home/types/public-api/types";
 import { formatClientId } from "@/features/home/formatClientId";
 import { formatConnectedAt } from "@/features/home/formatConnectedAt";
 

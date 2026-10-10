@@ -5,7 +5,8 @@
     "src/features/setup",
     "src/features/marketing/types",
     "src/features/shell/utils",
-    "src/features/workflows/utils"
+    "src/features/workflows/utils",
+    "src/features/home/types"
   ],
   "blocked": {},
   "rounds": [
@@ -38,6 +39,11 @@
       "unit": "src/features/workflows/utils",
       "sha": "a32c1f5db517e62654fc2c0d6314d3891eda96f4",
       "at": "2026-10-10T08:50:34.716Z"
+    },
+    {
+      "unit": "src/features/home/types",
+      "sha": "5262ab54c3f44aea711c1ffd4118637663f96e64",
+      "at": "2026-10-10T08:51:57.031Z"
     }
   ]
 }
