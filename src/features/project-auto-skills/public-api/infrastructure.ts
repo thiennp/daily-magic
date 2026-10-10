@@ -1,4 +1,5 @@
 /** Server-only. Never import from 'use client' files. */
+export { canManageAutoSkills } from "@/features/project-auto-skills/internal/infrastructure/canManageAutoSkills";
 export { answerAutoSkillSuggestion } from "@/features/project-auto-skills/internal/infrastructure/answerAutoSkillSuggestion";
 export {
   getAutoSkillsDeviceView,

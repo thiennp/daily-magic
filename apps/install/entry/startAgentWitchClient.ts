@@ -71,6 +71,7 @@ import {
 import {
   handleProjectMessageHistoryDispatch,
   handleProjectHistoryPageRequest,
+  judgeDueSkillChecks,
   reportAutoSkillRunCompleted,
   scanProjectDocsForAutoSkills,
   scanProjectTasksForAutoSkills,
@@ -2374,6 +2375,15 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     }
 
     if (
+      parsed.type === "skillcheck.request" &&
+      isRecord(parsed.payload) &&
+      typeof parsed.payload.projectId === "string" &&
+      parsed.payload.projectId.trim().length > 0
+    ) {
+      runSkillChecks(config, parsed.payload.projectId.trim());
+    }
+
+    if (
       parsed.type === "autoskill.scan.request" &&
       isRecord(parsed.payload) &&
       typeof parsed.payload.projectId === "string" &&
@@ -2401,6 +2411,38 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
   ): string | null => {
     const candidate = cloudFolderPath?.trim() ?? "";
     return candidate.length > 0 && fs.existsSync(candidate) ? candidate : null;
+  };
+
+  const skillChecksRunning = new Set<string>();
+
+  /** A skill check is due (cloud request, or after a scan): judge it with this computer's judge. */
+  const runSkillChecks = (
+    checkConfig: AgentWitchConfig,
+    projectId: string,
+  ): void => {
+    const runConfig = readAgentWitchRunConfig();
+    const cloudApi =
+      runConfig === null
+        ? null
+        : resolveAgentWitchCloudApiConfig({
+            wsUrl: runConfig.wsUrl,
+            pairingToken: runConfig.pairingToken,
+          });
+    if (cloudApi === null || skillChecksRunning.has(projectId)) {
+      return;
+    }
+    skillChecksRunning.add(projectId);
+    const folderPath = resolveLinkedProjectFolderPath(
+      path.dirname(checkConfig.layout.configPath),
+      projectId,
+    );
+    void judgeDueSkillChecks({
+      cloudApi,
+      projectId,
+      ...(folderPath !== null && folderPath !== undefined
+        ? { folderPath }
+        : {}),
+    }).finally(() => skillChecksRunning.delete(projectId));
   };
 
   /** Owner pressed "Scan past tasks": feed this computer's finished tasks through auto skills. */
@@ -2444,7 +2486,10 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       ...(folderPath !== null && folderPath !== undefined
         ? { folderPath }
         : {}),
-    }).finally(() => autoSkillScansRunning.delete(projectId));
+    }).finally(() => {
+      autoSkillScansRunning.delete(projectId);
+      runSkillChecks(scanConfig, projectId);
+    });
   };
 
   /** The cloud never echoes a run result back, so this runs where the result is emitted. */

@@ -172,4 +172,5 @@ export type {
 export { reportAutoSkillRunCompleted } from "../internal/core/reportAutoSkillRunCompleted";
 export { scanProjectDocsForAutoSkills } from "../internal/core/scanProjectDocsForAutoSkills";
 export { scanProjectTasksForAutoSkills } from "../internal/core/scanProjectTasksForAutoSkills";
+export { judgeDueSkillChecks } from "../internal/core/judgeDueSkillChecks";
 export { syncSkillScriptApprovals } from "../internal/core/syncSkillScriptApprovals";

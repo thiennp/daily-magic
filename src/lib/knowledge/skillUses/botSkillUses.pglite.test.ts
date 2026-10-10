@@ -8,8 +8,14 @@ vi.mock("@/lib/db", () => ({
   getSql: () => holder.sql,
   asRowArray: (value: unknown) => (Array.isArray(value) ? value : []),
 }));
+vi.mock("@/lib/knowledge/skillUses/notifySkillCheckDue", () => ({
+  notifySkillCheckDue: async () => undefined,
+}));
 vi.mock("@/lib/knowledge/bots/ensureProjectBotKnowledgeSchema", () => ({
   ensureProjectBotKnowledgeSchema: async () => undefined,
+}));
+vi.mock("@/lib/knowledge/skillUses/ensureProjectSkillChecksSchema", () => ({
+  ensureProjectSkillChecksSchema: async () => undefined,
 }));
 vi.mock("@/lib/knowledge/skillUses/ensureProjectSkillUsesSchema", () => ({
   ensureProjectSkillUsesSchema: async () => undefined,
