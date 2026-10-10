@@ -3,7 +3,7 @@
 import { useId } from "react";
 
 import { AWC_PROJECT_INBOX_COPY } from "@/features/projects/access/inbox/awcProjectInboxCopy.constant";
-import AwcBotSupportUrlKindLabel from "@/features/projects/botSupportUrl/AwcBotSupportUrlKindLabel";
+import { AwcBotSupportUrlKindLabel } from "@/features/projects/botSupportUrl/public-api/presentation";
 
 const FIELD =
   "mt-1 w-full rounded-md border border-awc-border-strong bg-white px-2 py-1.5 text-xs dark:border-gray-700 dark:bg-gray-950";
@@ -42,7 +42,10 @@ export default function AwcProjectInboxDispatchRefsFields({
         {copy.dispatchRefsHeading}
       </p>
       <AwcBotSupportUrlKindLabel url={prUrl} />
-      <label className="block text-xs text-awc-fg-muted dark:text-gray-400" htmlFor={prUrlId}>
+      <label
+        className="block text-xs text-awc-fg-muted dark:text-gray-400"
+        htmlFor={prUrlId}
+      >
         {copy.dispatchPrUrlLabel}
         <input
           id={prUrlId}
@@ -52,7 +55,10 @@ export default function AwcProjectInboxDispatchRefsFields({
           onChange={(event) => onPrUrl(event.target.value)}
         />
       </label>
-      <label className="block text-xs text-awc-fg-muted dark:text-gray-400" htmlFor={commitShaId}>
+      <label
+        className="block text-xs text-awc-fg-muted dark:text-gray-400"
+        htmlFor={commitShaId}
+      >
         {copy.dispatchCommitShaLabel}
         <input
           id={commitShaId}
@@ -62,7 +68,10 @@ export default function AwcProjectInboxDispatchRefsFields({
           onChange={(event) => onCommitSha(event.target.value)}
         />
       </label>
-      <label className="block text-xs text-awc-fg-muted dark:text-gray-400" htmlFor={localPathId}>
+      <label
+        className="block text-xs text-awc-fg-muted dark:text-gray-400"
+        htmlFor={localPathId}
+      >
         {copy.dispatchLocalPathLabel}
         <input
           id={localPathId}

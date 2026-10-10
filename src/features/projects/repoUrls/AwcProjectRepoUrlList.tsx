@@ -1,6 +1,6 @@
 "use client";
 
-import AwcBotSupportUrlKindLabel from "@/features/projects/botSupportUrl/AwcBotSupportUrlKindLabel";
+import { AwcBotSupportUrlKindLabel } from "@/features/projects/botSupportUrl/public-api/presentation";
 import { awcProjectRepoUrlFieldError } from "@/features/projects/repoUrls/awcProjectRepoUrlFieldError";
 import { AWC_PROJECT_REPO_URLS_COPY } from "@/features/projects/repoUrls/awcProjectRepoUrlsCopy.constant";
 
