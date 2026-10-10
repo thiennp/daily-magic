@@ -29,7 +29,10 @@ describe("migration 095 project runs without approval", () => {
     // 097 adds rule.*; 098 adds messages.*; 095's list is TS minus those.
     expect(checkListOf(SQL)).toEqual(
       PROJECT_ACTIVITY_EVENT_TYPES.filter(
-        (type) => !type.startsWith("rule.") && !type.startsWith("messages."),
+        (type) =>
+          !type.startsWith("rule.") &&
+          !type.startsWith("messages.") &&
+          type !== "project.member_permissions_changed",
       ),
     );
   });

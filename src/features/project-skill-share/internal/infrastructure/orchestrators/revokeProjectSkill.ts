@@ -7,7 +7,7 @@ import { selectProjectSkillRow } from "@/features/project-skill-share/internal/i
 import { updateProjectSkillRevoked } from "@/features/project-skill-share/internal/infrastructure/db/updateProjectSkillRevoked";
 import { resolveProjectSkillMemberRole } from "@/features/project-skill-share/internal/infrastructure/orchestrators/resolveProjectSkillMemberRole";
 
-/** Orchestrator: revoke_project_skill (owner; a member for drafts or skills they published). Idempotent on revoked. */
+/** Orchestrator: revoke_project_skill (owner; a member unless the owner turned "delete skills" off). Idempotent on revoked. */
 export const revokeProjectSkill = async (input: {
   readonly actorUserId: string;
   readonly args: unknown;
@@ -25,12 +25,15 @@ export const revokeProjectSkill = async (input: {
   if (record === null) {
     return { ok: false, code: "not_found" };
   }
-  const viewer = { role: access.role, actorUserId: input.actorUserId };
+  const viewer = {
+    role: access.role,
+    actorUserId: input.actorUserId,
+    rights: access.rights,
+  };
   if (
     !decideProjectSkillRevokeAccess({
-      ...viewer,
-      publisherUserId: record.publisherUserId,
-      state: record.state,
+      role: access.role,
+      memberMayDelete: access.rights.delete,
     })
   ) {
     return {

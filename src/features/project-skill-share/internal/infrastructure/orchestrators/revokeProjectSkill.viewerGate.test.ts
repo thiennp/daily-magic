@@ -9,6 +9,8 @@ import { updateProjectSkillRevoked } from "@/features/project-skill-share/intern
 import { projectSkillRecordFixture } from "@/features/project-skill-share/internal/infrastructure/orchestrators/projectSkillShareOrchestrators.fixtures";
 import { revokeProjectSkill } from "@/features/project-skill-share/internal/infrastructure/orchestrators/revokeProjectSkill";
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
+import { ALL_MEMBER_PERMISSIONS_ALLOWED } from "@/lib/projects/acl/memberPermissions/projectMemberPermission.constant";
+import { readProjectMemberPermissions } from "@/lib/projects/acl/memberPermissions/readProjectMemberPermissions";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
 vi.mock("@/lib/projects/userProjectQueries", () => ({
@@ -17,6 +19,10 @@ vi.mock("@/lib/projects/userProjectQueries", () => ({
 vi.mock("@/lib/projects/acl/getActiveProjectMembership", () => ({
   getActiveProjectMembership: vi.fn(),
 }));
+vi.mock(
+  "@/lib/projects/acl/memberPermissions/readProjectMemberPermissions",
+  () => ({ readProjectMemberPermissions: vi.fn() }),
+);
 vi.mock(
   "@/features/project-skill-share/internal/infrastructure/db/selectProjectSkillRow",
   () => ({ selectProjectSkillRow: vi.fn() }),
@@ -28,10 +34,10 @@ vi.mock(
 
 describe("revokeProjectSkill real resolver viewer gate", () => {
   beforeEach(() => {
-    vi.mocked(getUserProjectById).mockReset();
-    vi.mocked(getActiveProjectMembership).mockReset();
-    vi.mocked(selectProjectSkillRow).mockReset();
-    vi.mocked(updateProjectSkillRevoked).mockReset();
+    vi.resetAllMocks();
+    vi.mocked(readProjectMemberPermissions).mockResolvedValue(
+      ALL_MEMBER_PERMISSIONS_ALLOWED,
+    );
     vi.mocked(getUserProjectById).mockResolvedValue(
       skillActorRoleProjectFixture,
     );
@@ -52,12 +58,16 @@ describe("revokeProjectSkill real resolver viewer gate", () => {
     expect(updateProjectSkillRevoked).not.toHaveBeenCalled();
   });
 
-  it("forbids member from revoking another publisher's skill", async () => {
+  it("forbids a member when the owner turned delete off, even their own skill", async () => {
+    vi.mocked(readProjectMemberPermissions).mockResolvedValue({
+      ...ALL_MEMBER_PERMISSIONS_ALLOWED,
+      "skill.delete": false,
+    });
     vi.mocked(getActiveProjectMembership).mockResolvedValue(
       skillActorRoleSeatFixture("member", "human"),
     );
     vi.mocked(selectProjectSkillRow).mockResolvedValue(
-      projectSkillRecordFixture({ publisherUserId: "someone-else" }),
+      projectSkillRecordFixture({ publisherUserId: "actor-1" }),
     );
     const result = await revokeProjectSkill({
       actorUserId: "actor-1",
@@ -67,14 +77,16 @@ describe("revokeProjectSkill real resolver viewer gate", () => {
     expect(updateProjectSkillRevoked).not.toHaveBeenCalled();
   });
 
-  it("allows member publisher to revoke their own skill", async () => {
+  it("by default a member may revoke any skill, like the owner", async () => {
     vi.mocked(getActiveProjectMembership).mockResolvedValue(
       skillActorRoleSeatFixture("member", "human"),
     );
-    const own = projectSkillRecordFixture({ publisherUserId: "actor-1" });
-    vi.mocked(selectProjectSkillRow).mockResolvedValue(own);
+    const theirs = projectSkillRecordFixture({
+      publisherUserId: "someone-else",
+    });
+    vi.mocked(selectProjectSkillRow).mockResolvedValue(theirs);
     vi.mocked(updateProjectSkillRevoked).mockResolvedValue({
-      ...own,
+      ...theirs,
       state: "revoked",
       revokedAt: "2026-10-05T00:00:00Z",
     });

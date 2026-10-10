@@ -15,12 +15,15 @@ import {
   PROJECT_SKILL_NAME_MAX_LENGTH,
 } from "@/features/project-skill-share/internal/core/projectSkillShare.constant";
 import { resolveProjectSkillActorRole } from "@/features/project-skill-share/internal/infrastructure/db/resolveProjectSkillActorRole";
+import type { ProjectSkillMemberRights } from "@/features/project-skill-share/internal/core/projectSkillMemberRights.type";
+import { resolveProjectSkillMemberRights } from "@/features/project-skill-share/internal/infrastructure/orchestrators/resolveProjectSkillMemberRights";
 import { selectProjectSkillRow } from "@/features/project-skill-share/internal/infrastructure/db/selectProjectSkillRow";
 
 export type PublishProjectSkillTarget = {
   readonly ok: true;
   readonly args: PublishProjectSkillArgs;
   readonly role: ProjectSkillActorRole;
+  readonly rights: ProjectSkillMemberRights;
   readonly skillId: string;
   readonly kind: ProjectSkillKind;
   readonly name: string;
@@ -59,6 +62,10 @@ export const resolvePublishProjectSkillTarget = async (input: {
   if (skillId === null || !isValidProjectSkillId(skillId)) {
     return fail("invalid_skill_id");
   }
+  const rights = await resolveProjectSkillMemberRights({
+    projectId: args.projectId,
+    role,
+  });
   const existing = await selectProjectSkillRow({
     projectId: args.projectId,
     skillId,
@@ -69,6 +76,7 @@ export const resolvePublishProjectSkillTarget = async (input: {
     hasBody: args.body !== undefined,
     isOwnSkill:
       existing === null || existing.publisherUserId === input.actorUserId,
+    memberMayPublish: rights.publish,
   });
   if (!access.allowed) return fail("forbidden", access.message);
   const name = args.name ?? existing?.name;
@@ -77,5 +85,15 @@ export const resolvePublishProjectSkillTarget = async (input: {
   const kind = draftOnly
     ? (existing?.kind ?? PROJECT_SKILL_DEFAULT_KIND)
     : (args.kind ?? existing?.kind ?? PROJECT_SKILL_DEFAULT_KIND);
-  return { ok: true, args, role, skillId, kind, name, draftOnly, existing };
+  return {
+    ok: true,
+    args,
+    role,
+    rights,
+    skillId,
+    kind,
+    name,
+    draftOnly,
+    existing,
+  };
 };

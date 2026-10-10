@@ -52,6 +52,7 @@ export const publishProjectSkill = async (input: {
     skill: toProjectSkillView({
       record: stored.record,
       role: target.role,
+      rights: target.rights,
       actorUserId: input.actorUserId,
     }),
     version: stored.version,

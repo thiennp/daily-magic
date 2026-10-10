@@ -41,7 +41,9 @@ describe("migration 092 project_activity_events", () => {
     // 095 + 097 + 098 extend the CHECK; 092's own list is the TS list minus those types.
     expect(checkListOf(SQL)).toEqual(
       PROJECT_ACTIVITY_EVENT_TYPES.filter(
-        (type) => !TYPES_ADDED_AFTER_092(type),
+        (type) =>
+          !TYPES_ADDED_AFTER_092(type) &&
+          type !== "project.member_permissions_changed",
       ),
     );
     resetProjectActivityEventsSchemaForTests();

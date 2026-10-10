@@ -2,6 +2,8 @@ import type {
   ProjectSkillActorRole,
   ProjectSkillFailure,
 } from "@/features/project-skill-share/internal/core/projectSkill.type";
+import type { ProjectSkillMemberRights } from "@/features/project-skill-share/internal/core/projectSkillMemberRights.type";
+import { resolveProjectSkillMemberRights } from "@/features/project-skill-share/internal/infrastructure/orchestrators/resolveProjectSkillMemberRights";
 import { resolveProjectSkillActorRole } from "@/features/project-skill-share/internal/infrastructure/db/resolveProjectSkillActorRole";
 
 /** Owner, active member, or viewer; else not_found / forbidden. */
@@ -9,7 +11,11 @@ export const resolveProjectSkillMemberRole = async (input: {
   readonly projectId: string;
   readonly actorUserId: string;
 }): Promise<
-  | { readonly ok: true; readonly role: Exclude<ProjectSkillActorRole, "none"> }
+  | {
+      readonly ok: true;
+      readonly role: Exclude<ProjectSkillActorRole, "none">;
+      readonly rights: ProjectSkillMemberRights;
+    }
   | ProjectSkillFailure
 > => {
   const role = await resolveProjectSkillActorRole(input);
@@ -19,5 +25,9 @@ export const resolveProjectSkillMemberRole = async (input: {
   if (role === "none") {
     return { ok: false, code: "forbidden" };
   }
-  return { ok: true, role };
+  return {
+    ok: true,
+    role,
+    rights: await resolveProjectSkillMemberRights({ ...input, role }),
+  };
 };

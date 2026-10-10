@@ -25,9 +25,12 @@ const checkListAfter = (text: string, marker: string): string[] => {
 
 describe("migration 098 project_messages archive + activity CHECK union", () => {
   it("widens the CHECK to exactly the TS event types (full main ∪ messages.*)", () => {
-    expect(checkListAfter(SQL, "CHECK (event_type IN (")).toEqual([
-      ...PROJECT_ACTIVITY_EVENT_TYPES,
-    ]);
+    // 133 adds project.member_permissions_changed; 098's own list is TS minus it.
+    expect(checkListAfter(SQL, "CHECK (event_type IN (")).toEqual(
+      PROJECT_ACTIVITY_EVENT_TYPES.filter(
+        (type) => type !== "project.member_permissions_changed",
+      ),
+    );
     expect(SQL).toMatch(
       /DROP CONSTRAINT IF EXISTS project_activity_events_event_type_check/,
     );
@@ -52,7 +55,7 @@ describe("migration 098 project_messages archive + activity CHECK union", () => 
       .map((c) => String((c as unknown[])[0]))
       .join("\n");
     expect(ddl).toMatch(
-      /pg_get_constraintdef\(oid\) LIKE '%messages\.restored%'/,
+      /pg_get_constraintdef\(oid\) LIKE '%project\.member_permissions_changed%'/,
     );
     expect(checkListAfter(ddl, "ADD CONSTRAINT")).toEqual([
       ...PROJECT_ACTIVITY_EVENT_TYPES,

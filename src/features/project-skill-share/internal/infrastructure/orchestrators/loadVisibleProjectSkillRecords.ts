@@ -1,5 +1,6 @@
 import { canViewProjectSkill } from "@/features/project-skill-share/internal/core/canViewProjectSkill";
 import { isListProjectSkillsArgs } from "@/features/project-skill-share/internal/core/isListProjectSkillsArgs.guardz";
+import type { ProjectSkillMemberRights } from "@/features/project-skill-share/internal/core/projectSkillMemberRights.type";
 import type {
   ProjectSkillActorRole,
   ProjectSkillFailure,
@@ -14,6 +15,7 @@ export type VisibleProjectSkills =
       readonly ok: true;
       readonly args: ListProjectSkillsArgs;
       readonly role: ProjectSkillActorRole;
+      readonly rights: ProjectSkillMemberRights;
       readonly records: readonly ProjectSkillRecord[];
     }
   | ProjectSkillFailure;
@@ -52,5 +54,11 @@ export const loadVisibleProjectSkillRecords = async (input: {
         publisherUserId: record.publisherUserId,
       }),
     );
-  return { ok: true, args, role: access.role, records };
+  return {
+    ok: true,
+    args,
+    role: access.role,
+    rights: access.rights,
+    records,
+  };
 };

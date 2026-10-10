@@ -26,6 +26,8 @@ export const PROJECT_ACTIVITY_EVENT_TYPES = [
   // 098: Inbox Clear all → archive / Restore (count-only Access log rows).
   "messages.archived",
   "messages.restored",
+  // 133: owner changes what members can do (count-free Access log row).
+  "project.member_permissions_changed",
 ] as const;
 
 export type ProjectActivityEventType =

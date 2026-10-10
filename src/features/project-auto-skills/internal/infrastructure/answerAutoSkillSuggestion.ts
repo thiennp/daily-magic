@@ -5,10 +5,8 @@ import {
   markAutoSkillSuggestionAnswered,
 } from "@/features/project-auto-skills/internal/infrastructure/autoSkillsSuggestionsDb";
 import { pickAutoSkillId } from "@/features/project-auto-skills/internal/infrastructure/pickAutoSkillId";
-import {
-  publishProjectSkill,
-  resolveProjectSkillMemberRole,
-} from "@/features/project-skill-share/public-api/infrastructure";
+import { canManageAutoSkills } from "@/features/project-auto-skills/internal/infrastructure/canManageAutoSkills";
+import { publishProjectSkill } from "@/features/project-skill-share/public-api/infrastructure";
 
 export type AnswerAutoSkillResult =
   | { readonly ok: true; readonly skillId: string | null }
@@ -19,7 +17,7 @@ export type AnswerAutoSkillResult =
     };
 
 /**
- * Owner answers a question. "save" goes through the existing publish path
+ * The owner (or a member the owner allows) answers a question. "save" goes through the existing publish path
  * and the skill is published right away; "not_now" keeps
  * asking at the next repeat; "never" remembers the cluster.
  */
@@ -29,12 +27,11 @@ export const answerAutoSkillSuggestion = async (input: {
   readonly actorUserId: string;
   readonly answer: AutoSkillAnswer;
 }): Promise<AnswerAutoSkillResult> => {
-  const role = await resolveProjectSkillMemberRole(input);
-  if (!role.ok || role.role !== "owner") {
+  if (!(await canManageAutoSkills(input))) {
     return {
       ok: false,
       status: 403,
-      message: "Only the project owner can answer.",
+      message: "You can't answer auto skill questions in this project.",
     };
   }
   const suggestion = await getAutoSkillSuggestion(

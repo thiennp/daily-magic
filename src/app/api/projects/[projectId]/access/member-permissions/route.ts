@@ -1,0 +1,94 @@
+import { requireAuth } from "@/lib/auth/requireAuth";
+import { authorizeProjectOwner } from "@/lib/projects/acl/authorizeProjectOwner";
+import { authorizeProjectPageActor } from "@/lib/projects/acl/humanInvites/authorizeProjectPageActor";
+import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
+import { readProjectMemberPermissions } from "@/lib/projects/acl/memberPermissions/readProjectMemberPermissions";
+import { setProjectMemberPermissions } from "@/lib/projects/acl/memberPermissions/setProjectMemberPermissions";
+
+export const dynamic = "force-dynamic";
+
+type RouteContext = {
+  params: Promise<{ readonly projectId: string }>;
+};
+
+const statusForCode = (code: string): number => {
+  if (code === "forbidden") return 403;
+  if (code === "not_found") return 404;
+  return 400;
+};
+
+/** Read: owner or an active human member/viewer (page actors). Write: owner only. */
+const denyReason = async (
+  access: "read" | "write",
+  projectId: string,
+  actorUserId: string,
+): Promise<string | null> => {
+  if (access === "read") {
+    const page = await authorizeProjectPageActor({ projectId, actorUserId });
+    return page.ok ? null : page.reason;
+  }
+  const decision = await authorizeProjectOwner({ projectId, actorUserId });
+  return decision.allow ? null : decision.reason;
+};
+
+const authorize = async (
+  context: RouteContext,
+  access: "read" | "write",
+): Promise<
+  | {
+      readonly ok: true;
+      readonly projectId: string;
+      readonly actorUserId: string;
+    }
+  | { readonly ok: false; readonly response: Response }
+> => {
+  const { actor, error } = await requireAuth();
+  if (error || !actor) return { ok: false, response: error };
+  const { projectId } = await context.params;
+  const denied = await denyReason(access, projectId, actor.id);
+  if (denied !== null) {
+    return {
+      ok: false,
+      response: projectAccessErrorJson(denied, statusForCode(denied)),
+    };
+  }
+  return { ok: true, projectId, actorUserId: actor.id };
+};
+
+/**
+ * What members may do in this project (default: everything).
+ * GET (owner, or human member/viewer read-only) → { ok, permissions }.
+ * PUT (owner only) { permissions: { "skill.delete": false, … } } (partial) →
+ * { ok, permissions, changed }. Every real change writes an Access log row.
+ */
+export async function GET(
+  _request: Request,
+  context: RouteContext,
+): Promise<Response> {
+  const auth = await authorize(context, "read");
+  if (!auth.ok) return auth.response;
+  const permissions = await readProjectMemberPermissions(auth.projectId);
+  return Response.json({ ok: true, permissions });
+}
+
+export async function PUT(
+  request: Request,
+  context: RouteContext,
+): Promise<Response> {
+  const auth = await authorize(context, "write");
+  if (!auth.ok) return auth.response;
+  const body: unknown = await request.json().catch(() => null);
+  const patch =
+    body !== null && typeof body === "object"
+      ? (body as Record<string, unknown>).permissions
+      : undefined;
+  const result = await setProjectMemberPermissions({
+    projectId: auth.projectId,
+    actorUserId: auth.actorUserId,
+    patch,
+  });
+  if (!result.ok) {
+    return projectAccessErrorJson(result.code, statusForCode(result.code));
+  }
+  return Response.json(result);
+}

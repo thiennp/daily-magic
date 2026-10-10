@@ -18,7 +18,8 @@ const runDdl = async (): Promise<void> => {
         'project.runs_without_approval_enabled',
         'project.runs_without_approval_disabled',
         'rule.dropped', 'rule.restored',
-        'messages.archived', 'messages.restored')),
+        'messages.archived', 'messages.restored',
+        'project.member_permissions_changed')),
       actor_kind TEXT NOT NULL CHECK (actor_kind IN ('owner', 'member', 'system')),
       actor_user_id TEXT REFERENCES users(id) ON DELETE SET NULL,
       actor_label TEXT CHECK (actor_label IS NULL OR char_length(actor_label) <= 120),
@@ -39,14 +40,14 @@ const runDdl = async (): Promise<void> => {
     CREATE UNIQUE INDEX IF NOT EXISTS project_activity_events_source_ref_uidx
     ON project_activity_events (source_ref) WHERE source_ref IS NOT NULL
   `;
-  // Mirrors migration 098 on a 092-era table; no-op once messages.* is allowed.
+  // Mirrors migration 133 on an older table; no-op once the type is allowed.
   await sql`
     DO $$
     BEGIN
       IF NOT EXISTS (
         SELECT 1 FROM pg_constraint
         WHERE conname = 'project_activity_events_event_type_check'
-          AND pg_get_constraintdef(oid) LIKE '%messages.restored%'
+          AND pg_get_constraintdef(oid) LIKE '%project.member_permissions_changed%'
       ) THEN
         ALTER TABLE project_activity_events
           DROP CONSTRAINT IF EXISTS project_activity_events_event_type_check;
@@ -62,14 +63,15 @@ const runDdl = async (): Promise<void> => {
             'project.runs_without_approval_enabled',
             'project.runs_without_approval_disabled',
             'rule.dropped', 'rule.restored',
-            'messages.archived', 'messages.restored'));
+            'messages.archived', 'messages.restored',
+            'project.member_permissions_changed'));
       END IF;
     END $$
   `;
 };
 
 /**
- * DDL only (mirrors migrations 092 + 095 + 097 + 098; every CHECK list must equal
+ * DDL only (mirrors migrations 092 + 095 + 097 + 098 + 133; every CHECK list must equal
  * PROJECT_ACTIVITY_EVENT_TYPES, asserted in projectActivityMigration092.test.ts
  * and projectActivityMigration098.test.ts). Never runs the 073 backfill: that is
  * the migration and scripts/db-backfill-project-activity-073.ts.

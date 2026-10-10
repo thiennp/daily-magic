@@ -26,8 +26,19 @@ export const getProjectSkill = async (input: {
   });
   if (!access.ok) return access;
   const record = await selectProjectSkillRow({ projectId, skillId });
-  const viewer = { role: access.role, actorUserId: input.actorUserId };
-  if (record === null || !canViewProjectSkill({ ...viewer, ...record })) {
+  const viewer = {
+    role: access.role,
+    actorUserId: input.actorUserId,
+    rights: access.rights,
+  };
+  if (
+    record === null ||
+    !canViewProjectSkill({
+      role: viewer.role,
+      actorUserId: viewer.actorUserId,
+      ...record,
+    })
+  ) {
     return { ok: false, code: "not_found" };
   }
   /** Owner + active members read drafts (viewers: published only). */

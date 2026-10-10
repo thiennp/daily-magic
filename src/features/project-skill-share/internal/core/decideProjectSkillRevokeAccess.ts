@@ -1,15 +1,8 @@
-import type {
-  ProjectSkillActorRole,
-  ProjectSkillState,
-} from "@/features/project-skill-share/internal/core/projectSkill.type";
+import type { ProjectSkillActorRole } from "@/features/project-skill-share/internal/core/projectSkill.type";
 
-/** Revoke: the owner; an active member for any draft, or for a skill they published. */
+/** Revoke: the owner; an active member unless the owner turned "delete skills" off for members. */
 export const decideProjectSkillRevokeAccess = (input: {
   readonly role: ProjectSkillActorRole;
-  readonly actorUserId: string;
-  readonly publisherUserId: string;
-  readonly state?: ProjectSkillState;
+  readonly memberMayDelete: boolean;
 }): boolean =>
-  input.role === "owner" ||
-  (input.role === "member" &&
-    (input.state === "draft" || input.actorUserId === input.publisherUserId));
+  input.role === "owner" || (input.role === "member" && input.memberMayDelete);

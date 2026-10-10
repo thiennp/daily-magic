@@ -48,7 +48,7 @@ beforeEach(() => {
 });
 
 describe("answerAutoSkillSuggestion", () => {
-  it("only the owner can answer", async () => {
+  it("a member the owner has not allowed cannot answer", async () => {
     mocks.role.mockResolvedValue({ ok: true, role: "member" });
     expect(
       await answerAutoSkillSuggestion({ ...input, answer: "save" }),

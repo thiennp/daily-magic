@@ -22,6 +22,7 @@ export const listProjectSkills = async (input: {
       toProjectSkillView({
         record,
         role: loaded.role,
+        rights: loaded.rights,
         actorUserId: input.actorUserId,
       }),
     ),

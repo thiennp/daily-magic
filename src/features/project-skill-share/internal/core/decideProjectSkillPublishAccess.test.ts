@@ -4,15 +4,24 @@ import { canViewProjectSkill } from "@/features/project-skill-share/internal/cor
 import { decideProjectSkillPublishAccess } from "@/features/project-skill-share/internal/core/decideProjectSkillPublishAccess";
 import { decideProjectSkillRevokeAccess } from "@/features/project-skill-share/internal/core/decideProjectSkillRevokeAccess";
 
-describe("project skill access rules (owner full; members publish/revoke their own; shared published read)", () => {
-  it("publish: owner always; member publishes own skills, drafts on others'; viewer never", () => {
-    const d = (
-      role: "owner" | "member" | "viewer" | "none",
-      asDraft: boolean,
-      hasBody = true,
-      isOwnSkill = true,
-    ) =>
-      decideProjectSkillPublishAccess({ role, asDraft, hasBody, isOwnSkill });
+describe("project skill access rules (owner full; members follow the owner's setting; shared published read)", () => {
+  const publish = (
+    role: "owner" | "member" | "viewer" | "none",
+    asDraft: boolean,
+    hasBody = true,
+    isOwnSkill = true,
+    memberMayPublish = false,
+  ) =>
+    decideProjectSkillPublishAccess({
+      role,
+      asDraft,
+      hasBody,
+      isOwnSkill,
+      memberMayPublish,
+    });
+
+  it("publish (setting off): owner always; member publishes own skills, drafts on others'; viewer never", () => {
+    const d = publish;
     expect(d("owner", false)).toEqual({ allowed: true, draftOnly: false });
     expect(d("owner", false, false, false)).toEqual({
       allowed: true,
@@ -36,33 +45,33 @@ describe("project skill access rules (owner full; members publish/revoke their o
     expect(d("none", true)).toMatchObject({ allowed: false });
   });
 
-  it("revoke: owner, or the member who published it", () => {
-    const r = (
-      role: "owner" | "member" | "viewer" | "none",
-      actorUserId: string,
-    ) =>
-      decideProjectSkillRevokeAccess({
-        role,
-        actorUserId,
-        publisherUserId: "p",
-      });
-    expect(r("owner", "o")).toBe(true);
-    expect(r("member", "p")).toBe(true);
-    expect(r("member", "m")).toBe(false);
-    expect(r("viewer", "p")).toBe(false);
-    expect(r("none", "p")).toBe(false);
+  it("publish (setting on, the default): a member publishes over someone else's skill; viewers still never", () => {
+    expect(publish("member", false, true, false, true)).toEqual({
+      allowed: true,
+      draftOnly: false,
+    });
+    expect(publish("member", false, false, false, true)).toEqual({
+      allowed: true,
+      draftOnly: false,
+    });
+    expect(publish("viewer", false, true, true, true)).toMatchObject({
+      allowed: false,
+    });
+    expect(publish("none", false, true, true, true)).toMatchObject({
+      allowed: false,
+    });
   });
 
-  it("revoke: any member may discard a draft; viewers never", () => {
-    const r = (role: "member" | "viewer", actorUserId: string) =>
-      decideProjectSkillRevokeAccess({
-        role,
-        actorUserId,
-        publisherUserId: "p",
-        state: "draft",
-      });
-    expect(r("member", "m")).toBe(true);
-    expect(r("viewer", "m")).toBe(false);
+  it("revoke: owner always; member only while the owner left delete on; viewers never", () => {
+    const r = (
+      role: "owner" | "member" | "viewer" | "none",
+      memberMayDelete: boolean,
+    ) => decideProjectSkillRevokeAccess({ role, memberMayDelete });
+    expect(r("owner", false)).toBe(true);
+    expect(r("member", true)).toBe(true);
+    expect(r("member", false)).toBe(false);
+    expect(r("viewer", true)).toBe(false);
+    expect(r("none", true)).toBe(false);
   });
 
   it("view: published for seats; drafts owner + member; revoked owner-only", () => {

@@ -582,6 +582,7 @@ CREATE TABLE IF NOT EXISTS user_projects (
   repo_urls TEXT[] NOT NULL DEFAULT '{}'::TEXT[],
   default_branch TEXT,
   last_used_at TIMESTAMPTZ,
+  member_permissions JSONB NOT NULL DEFAULT '{}'::jsonb,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

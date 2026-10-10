@@ -28,7 +28,9 @@ describe("migration 097 project_activity_events rule.* types", () => {
     // 098 adds messages.*; 097's own list is the TS list minus those types.
     expect(checkListAfter(SQL, "CHECK (event_type IN (")).toEqual(
       PROJECT_ACTIVITY_EVENT_TYPES.filter(
-        (type) => !type.startsWith("messages."),
+        (type) =>
+          !type.startsWith("messages.") &&
+          type !== "project.member_permissions_changed",
       ),
     );
     expect(SQL).toMatch(
@@ -45,7 +47,7 @@ describe("migration 097 project_activity_events rule.* types", () => {
       .map((c) => String((c as unknown[])[0]))
       .join("\n");
     expect(ddl).toMatch(
-      /pg_get_constraintdef\(oid\) LIKE '%messages\.restored%'/,
+      /pg_get_constraintdef\(oid\) LIKE '%project\.member_permissions_changed%'/,
     );
     expect(checkListAfter(ddl, "ADD CONSTRAINT")).toEqual([
       ...PROJECT_ACTIVITY_EVENT_TYPES,

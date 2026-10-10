@@ -80,6 +80,8 @@ export const formatAccessLogEvent = (
       return { line: C.runsWithoutApprovalOn, detail: null };
     case "project.runs_without_approval_disabled":
       return { line: C.runsWithoutApprovalOff, detail: null };
+    case "project.member_permissions_changed":
+      return { line: C.memberPermissionsChanged, detail: null };
     case "rule.dropped":
     case "rule.restored":
       return formatAccessLogRuleEvent(event);

@@ -1,15 +1,15 @@
 import type { AutoSkillsOverview } from "@/features/project-auto-skills/internal/core/projectAutoSkills.type";
 import { getAutoSkillsSettingsRow } from "@/features/project-auto-skills/internal/infrastructure/autoSkillsSettingsDb";
 import { listAutoSkillSuggestions } from "@/features/project-auto-skills/internal/infrastructure/autoSkillsSuggestionsDb";
+import { canManageAutoSkills } from "@/features/project-auto-skills/internal/infrastructure/canManageAutoSkills";
 import { resolveProjectSkillMemberRole } from "@/features/project-skill-share/public-api/infrastructure";
 
-/** Owner-only view for the Library strip; null for everyone else. */
+/** Library strip view for whoever may manage auto skills (owner, or a member the owner allows); null for everyone else. */
 export const getAutoSkillsOverview = async (input: {
   readonly projectId: string;
   readonly actorUserId: string;
 }): Promise<AutoSkillsOverview | null> => {
-  const role = await resolveProjectSkillMemberRole(input);
-  if (!role.ok || role.role !== "owner") {
+  if (!(await canManageAutoSkills(input))) {
     return null;
   }
   const [settings, pending, saved] = await Promise.all([
@@ -58,7 +58,7 @@ export const getAutoSkillsDeviceView = async (input: {
   const ids = (status: string): string[] =>
     rows.filter((r) => r.status === status).map((r) => r.clusterId);
   return {
-    // Project toggle applies to every seat (owner + member bots); UI settings stay owner-only.
+    // Project toggle applies to every seat (owner + member bots); the strip and its settings need "auto skills" allowed.
     enabled: settings.enabled,
     judgePref: settings.judgePref,
     judgeAgent: settings.judgeAgent,
