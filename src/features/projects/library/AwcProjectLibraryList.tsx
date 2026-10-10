@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 
+import type { SkillCheckStat } from "@/features/project-auto-skills/public-api/types";
 import type { SkillImpactRow } from "@/lib/knowledge/knowledgeImpactView.type";
 import AwcProjectLibraryEmptyOwner from "@/features/projects/library/AwcProjectLibraryEmptyOwner";
 import AwcProjectLibraryRow from "@/features/projects/library/AwcProjectLibraryRow";
@@ -28,8 +29,8 @@ interface AwcProjectLibraryListProps {
   readonly pageActorRole: ProjectPageActorRole;
   /** Skills saved from an auto question get the "Auto" chip. */
   readonly autoSkillIds?: readonly string[];
-  /** Per-skill calls and tokens saved (Reports data), for the row meta. */
   readonly skillStats?: readonly SkillImpactRow[];
+  readonly checkStats?: readonly SkillCheckStat[];
   readonly onOpen: (itemId: string) => void;
   readonly onNew?: () => void;
   readonly onAddFrom?: () => void;
@@ -42,6 +43,7 @@ export default function AwcProjectLibraryList({
   pageActorRole,
   autoSkillIds = [],
   skillStats = [],
+  checkStats = [],
   onOpen,
   onNew,
   onAddFrom,
@@ -111,6 +113,7 @@ export default function AwcProjectLibraryList({
                 item.skillId !== null && autoSkillIds.includes(item.skillId)
               }
               stats={skillStats.find((s) => s.skillId === item.skillId)}
+              checkStat={checkStats.find((s) => s.skillId === item.skillId)}
               onOpen={onOpen}
             />
           ))}

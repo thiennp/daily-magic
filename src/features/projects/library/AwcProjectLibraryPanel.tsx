@@ -26,10 +26,7 @@ interface AwcProjectLibraryPanelProps {
   readonly pageActorRole: ProjectPageActorRole;
 }
 
-/**
- * Library tab: project-scoped playbooks/workflows/skills.
- * HN-H3: empty card owns New + Add from; toolbar CTAs only when items exist.
- */
+/** Library tab: project-scoped playbooks/workflows/skills (HN-H3: empty card owns New + Add from). */
 export default function AwcProjectLibraryPanel({
   project,
   canEdit,
@@ -112,6 +109,7 @@ export default function AwcProjectLibraryPanel({
           pageActorRole={pageActorRole}
           autoSkillIds={auto.overview?.autoSkillIds ?? []}
           skillStats={impact.impact?.skills ?? []}
+          checkStats={auto.overview?.skillCheckStats ?? []}
           onOpen={setItemId}
           onNew={startNewSkill}
           onAddFrom={startAddFrom}

@@ -1,5 +1,6 @@
 import type {
   SkillCheckQuestion,
+  SkillCheckStat,
   SkillComparisonView,
 } from "./skillQuestions.type";
 
@@ -91,6 +92,8 @@ export interface AutoSkillsOverview
   readonly skillChecks: readonly SkillCheckQuestion[];
   /** Versions being compared; the ready ones ask for a pick. */
   readonly comparisons: readonly SkillComparisonView[];
+  /** Checks per skill, for the Library list. */
+  readonly skillCheckStats: readonly SkillCheckStat[];
   /** skillIds that were saved from an auto question (Library "Auto" chip). */
   readonly autoSkillIds: readonly string[];
 }
@@ -98,6 +101,7 @@ export interface AutoSkillsOverview
 export type {
   SkillCheckAnswer,
   SkillCheckQuestion,
+  SkillCheckStat,
   SkillComparisonAnswer,
   SkillComparisonView,
 } from "./skillQuestions.type";

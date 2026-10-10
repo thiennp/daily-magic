@@ -7,6 +7,7 @@ import {
 import { PROJECT_PAGE_LIBRARY_COPY as C } from "@/features/projects/library/projectPageLibraryCopy.constant";
 import type { ProjectLibraryItem } from "@/features/projects/library/utils/buildProjectLibraryItems";
 import { formatSkillUsage } from "@/features/projects/library/utils/formatSkillUsage";
+import type { SkillCheckStat } from "@/features/project-auto-skills/public-api/types";
 import type { SkillImpactRow } from "@/lib/knowledge/knowledgeImpactView.type";
 import {
   PANEL_PILL_CLASS,
@@ -19,6 +20,8 @@ interface AwcProjectLibraryRowProps {
   readonly item: ProjectLibraryItem;
   /** Calls, tokens saved and script flag from the Reports data. */
   readonly stats?: SkillImpactRow;
+  /** How often the judge checked this skill and wanted it improved. */
+  readonly checkStat?: SkillCheckStat;
   readonly isAuto?: boolean;
   readonly onOpen: (itemId: string) => void;
 }
@@ -27,6 +30,7 @@ interface AwcProjectLibraryRowProps {
 export default function AwcProjectLibraryRow({
   item,
   stats,
+  checkStat,
   isAuto = false,
   onOpen,
 }: AwcProjectLibraryRowProps) {
@@ -50,6 +54,9 @@ export default function AwcProjectLibraryRow({
               {new Date(item.updatedAt).toLocaleDateString()}
             </time>
             {usage !== null ? ` · ${usage}` : ""}
+            {checkStat !== undefined
+              ? ` · ${checkStat.checks} ${checkStat.checks === 1 ? "check" : "checks"}${checkStat.improves > 0 ? `, ${checkStat.improves} to improve` : ""}`
+              : ""}
           </span>
         </span>
         <span className="flex shrink-0 items-center gap-1.5">

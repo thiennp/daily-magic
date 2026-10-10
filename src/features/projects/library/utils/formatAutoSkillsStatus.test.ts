@@ -20,6 +20,7 @@ const overview = (patch: Partial<AutoSkillsOverview>): AutoSkillsOverview => ({
   pending: [],
   skillChecks: [],
   comparisons: [],
+  skillCheckStats: [],
   autoSkillIds: [],
   ...patch,
 });

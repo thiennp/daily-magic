@@ -29,3 +29,10 @@ export interface SkillComparisonView {
   /** Both versions have enough runs to pick one. */
   readonly ready: boolean;
 }
+
+/** How often a skill was checked and how often the judge wanted it improved. */
+export interface SkillCheckStat {
+  readonly skillId: string;
+  readonly checks: number;
+  readonly improves: number;
+}

@@ -8,6 +8,7 @@ export type {
   AutoSkillsOverview,
   SkillCheckAnswer,
   SkillCheckQuestion,
+  SkillCheckStat,
   SkillComparisonAnswer,
   SkillComparisonView,
 } from "@/features/project-auto-skills/internal/core/projectAutoSkills.type";
