@@ -6,8 +6,10 @@ import { useSession } from "next-auth/react";
 import AgentRunDetailContent from "@/features/reports/AgentRunDetailContent";
 import AgentRunDetailDeleteButton from "@/features/reports/AgentRunDetailDeleteButton";
 import AgentRunDetailLoadErrorPanel from "@/features/reports/AgentRunDetailLoadErrorPanel";
-import AgentRunFeedbackForm from "@/features/feedback/AgentRunFeedbackForm";
-import FeedbackSubmittedNotice from "@/features/feedback/FeedbackSubmittedNotice";
+import {
+  AgentRunFeedbackForm,
+  FeedbackSubmittedNotice,
+} from "@/features/feedback/public-api/presentation";
 import { useAgentRunDetailState } from "@/features/reports/hooks/useAgentRunDetailState";
 import { canSubmitFeedbackForRunStatus } from "@/lib/feedback/canSubmitFeedbackForRunStatus";
 
@@ -22,7 +24,9 @@ export default function AgentRunDetail({ runId }: AgentRunDetailProps) {
 
   if (isLoading) {
     return (
-      <p className="text-sm text-awc-fg-muted dark:text-gray-400">Loading run…</p>
+      <p className="text-sm text-awc-fg-muted dark:text-gray-400">
+        Loading run…
+      </p>
     );
   }
 

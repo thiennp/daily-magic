@@ -18,7 +18,8 @@
     "src/features/projects/navConsolidation",
     "src/features/projects/settings/memberPermissions",
     "src/features/agent/hooks/utils",
-    "src/features/projects/computerHistory"
+    "src/features/projects/computerHistory",
+    "src/features/feedback"
   ],
   "blocked": {},
   "rounds": [
@@ -116,6 +117,11 @@
       "unit": "src/features/projects/computerHistory",
       "sha": "dd733b382b251bac3f7ef305a5142752d3a2c7c5",
       "at": "2026-10-10T09:12:05.941Z"
+    },
+    {
+      "unit": "src/features/feedback",
+      "sha": "85dc630645b8a1ec0d6a98560836f59227ca66dc",
+      "at": "2026-10-10T09:13:07.973Z"
     }
   ]
 }

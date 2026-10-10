@@ -23,3 +23,7 @@ _None wired in this feature folder._
 - `capabilities`
 
 Query: `npm run feature-knowledge:query -- "..." --feature=feedback`
+
+## Public API
+
+Other features import only from `public-api/presentation` (`AgentRunFeedbackForm`, `FeedbackInboxPanel`, `FeedbackSubmittedNotice`).

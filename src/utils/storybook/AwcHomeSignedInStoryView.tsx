@@ -3,7 +3,7 @@
 import HomePromptOptimizerCtaBox from "@/features/home/components/HomePromptOptimizerCtaBox";
 import MyOfferingsPanel from "@/features/capabilities/MyOfferingsPanel";
 import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
-import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
+import { FeedbackInboxPanel } from "@/features/feedback/public-api/presentation";
 import { ImprovementReviewPanel } from "@/features/improvements/public-api/presentation";
 import MarketplaceHomePromo from "@/features/marketplace/MarketplaceHomePromo";
 import HomeAttentionPanel from "@/features/home/HomeAttentionPanel";
