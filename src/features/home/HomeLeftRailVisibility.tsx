@@ -2,7 +2,7 @@
 
 import { createContext, useContext, type ReactNode } from "react";
 
-import useHomeLeftRailVisible from "@/features/home/hooks/useHomeLeftRailVisible";
+import { useHomeLeftRailVisible } from "@/features/home/hooks/public-api/presentation";
 
 const HomeLeftRailVisibilityContext = createContext<boolean | null>(null);
 

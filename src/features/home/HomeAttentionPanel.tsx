@@ -11,8 +11,10 @@ import Badge from "@/components/ui/badge/Badge";
 import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
 import HomeAttentionRunRows from "@/features/home/HomeAttentionRunRows";
 import HomeAttentionSkillRows from "@/features/home/HomeAttentionSkillRows";
-import useHomeAttentionRemoteRuns from "@/features/home/hooks/useHomeAttentionRemoteRuns";
-import useHomeAttentionRuns from "@/features/home/hooks/useHomeAttentionRuns";
+import {
+  useHomeAttentionRemoteRuns,
+  useHomeAttentionRuns,
+} from "@/features/home/hooks/public-api/presentation";
 import selectHomeRecentProjects from "@/features/home/utils/selectHomeRecentProjects";
 import { publishHomeAttentionTotal } from "@/features/home/utils/homeAttentionTotalStore";
 import { useAutoSkillQuestions } from "@/features/project-auto-skills/public-api/presentation";

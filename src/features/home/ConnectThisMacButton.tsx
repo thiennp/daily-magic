@@ -6,10 +6,12 @@ import useIsMobileClient from "@/hooks/useIsMobileClient";
 import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
 import ConnectThisMacModal from "@/features/home/ConnectThisMacModal";
-import useConnectThisMacModalNotice from "@/features/home/hooks/useConnectThisMacModalNotice";
-import useConnectThisMacRowFlow from "@/features/home/hooks/useConnectThisMacRowFlow";
-import useConnectTerminalSection from "@/features/home/hooks/useConnectTerminalSection";
-import usePersonalizedAgentWitchInstallCommand from "@/features/home/hooks/usePersonalizedAgentWitchInstallCommand";
+import {
+  useConnectThisMacModalNotice,
+  useConnectThisMacRowFlow,
+  useConnectTerminalSection,
+  usePersonalizedAgentWitchInstallCommand,
+} from "@/features/home/hooks/public-api/presentation";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 
 interface ConnectThisMacButtonProps {

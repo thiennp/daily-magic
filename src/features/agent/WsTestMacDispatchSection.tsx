@@ -1,7 +1,7 @@
 "use client";
 
 import AppPanel from "@/components/surfaces/AppPanel";
-import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
+import { useLocalMacBrowserContext } from "@/features/home/hooks/public-api/presentation";
 import MacDevicePicker from "@/features/agent/MacDevicePicker";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import ComputersDownloadLink from "@/features/home/ComputersDownloadLink";
 import HomeConnectComputerGuide from "@/features/home/HomeConnectComputerGuide";
 import HomeConnectedMacsPanel from "@/features/home/HomeConnectedMacsPanel";
-import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
+import { useHomeConnectedMacs } from "@/features/home/hooks/public-api/presentation";
 import OnboardingMachineStatus from "@/features/onboarding/machine/OnboardingMachineStatus";
 import OnboardingStepActions from "@/features/onboarding/OnboardingStepActions";
 import { ONBOARDING_COPY as C } from "@/features/onboarding/onboardingCopy.constant";

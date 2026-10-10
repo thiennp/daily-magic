@@ -5,8 +5,10 @@ import { useEffect, useState } from "react";
 import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
 import HomeRunningJobRow from "@/features/home/HomeRunningJobRow";
 import HomeStalledJobRow from "@/features/home/HomeStalledJobRow";
-import { useHomeRunningAgentJobs } from "@/features/home/hooks/useHomeRunningAgentJobs";
-import { useRefreshStalledAgentRuns } from "@/features/home/hooks/useRefreshStalledAgentRuns";
+import {
+  useHomeRunningAgentJobs,
+  useRefreshStalledAgentRuns,
+} from "@/features/home/hooks/public-api/presentation";
 import { isAgentRunSilentPastStall } from "@/lib/dispatch/isAgentRunSilentPastStall";
 
 export default function HomeRunningJobsPanel() {

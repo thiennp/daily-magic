@@ -49,3 +49,7 @@ Re-index after doc changes: `npm run feature-knowledge:index`.
 ## constants public API
 
 `constants/public-api/types.ts` exposes the home copy, CTA, preset-id, limit and class constants (and `HomeOnboardingMainStepContent`); import them from there outside `constants/`.
+
+## hooks public API
+
+`hooks/public-api/presentation.ts` exposes the home client hooks (connected Macs, onboarding steps, attention and running-job hooks, install-command and local Mac hooks) and `OnboardingStepsProvider`; import them from there outside `hooks/`.

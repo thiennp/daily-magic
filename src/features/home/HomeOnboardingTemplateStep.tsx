@@ -11,7 +11,7 @@ import {
   APP_SURFACE_EYEBROW_TEXT_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import { CapabilityTemplatePicker } from "@/features/capabilities/public-api/presentation";
-import useOnboardingSteps from "@/features/home/hooks/useOnboardingSteps";
+import { useOnboardingSteps } from "@/features/home/hooks/public-api/presentation";
 import isWorkflowOnboardingStepDone from "@/features/home/utils/isWorkflowOnboardingStepDone";
 
 interface HomeOnboardingTemplateStepProps {

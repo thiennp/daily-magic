@@ -11,7 +11,7 @@ import {
 } from "react";
 
 import { useOptionalPairedDeviceContext } from "@/features/home/PairedDeviceContext";
-import useOnboardingStepRefreshHooks from "@/features/home/hooks/useOnboardingStepRefreshHooks";
+import { useOnboardingStepRefreshHooks } from "@/features/home/hooks/public-api/presentation";
 import {
   loadOnboardingSteps,
   type OnboardingStep,

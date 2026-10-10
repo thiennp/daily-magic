@@ -6,8 +6,10 @@ import useIsMobileClient from "@/hooks/useIsMobileClient";
 import { APP_SURFACE_TEXT_LINK_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectAnotherMacModal from "@/features/home/ConnectAnotherMacModal";
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
-import useConnectInstallPasteModalDismissal from "@/features/home/hooks/useConnectInstallPasteModalDismissal";
-import usePersonalizedAgentWitchInstallCommand from "@/features/home/hooks/usePersonalizedAgentWitchInstallCommand";
+import {
+  useConnectInstallPasteModalDismissal,
+  usePersonalizedAgentWitchInstallCommand,
+} from "@/features/home/hooks/public-api/presentation";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 import { resolveConnectAnotherMacLabel } from "@/features/home/utils/resolveConnectAnotherMacLabel";
 import { shouldOpenConnectInstallPasteModal } from "@/features/home/utils/shouldOpenConnectInstallPasteModal";

@@ -13,8 +13,10 @@ import {
 } from "@/features/agent-witch/online-wake/public-api/presentation";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import HomeConnectedMacDeviceRowModals from "@/features/home/HomeConnectedMacDeviceRowModals";
-import useMacDeviceSeeLocalLog from "@/features/home/hooks/useMacDeviceSeeLocalLog";
-import useThisMacLocalInstallActions from "@/features/home/hooks/useThisMacLocalInstallActions";
+import {
+  useMacDeviceSeeLocalLog,
+  useThisMacLocalInstallActions,
+} from "@/features/home/hooks/public-api/presentation";
 import { DeviceUpdateButton } from "@/features/shell/v5/public-api/presentation";
 import { resolveDeviceUpdateAction } from "@/features/shell/v5/public-api/types";
 

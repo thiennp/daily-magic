@@ -4,7 +4,7 @@ import AppHero from "@/components/surfaces/AppHero";
 import HomeConnectComputerGuide from "@/features/home/HomeConnectComputerGuide";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
-import { useHasPairedDevice } from "@/features/home/hooks/useHasPairedDevice";
+import { useHasPairedDevice } from "@/features/home/hooks/public-api/presentation";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 
 interface HomeDashboardSectionClientProps {

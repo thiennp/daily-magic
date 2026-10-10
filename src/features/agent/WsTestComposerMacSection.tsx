@@ -3,8 +3,10 @@
 import SendTaskComposerMacPickerStep from "@/features/agent/SendTaskComposerMacPickerStep";
 import WsTestDelegatedMacField from "@/features/agent/WsTestDelegatedMacField";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
-import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
-import useCursorCloudConnection from "@/features/home/hooks/useCursorCloudConnection";
+import {
+  useLocalMacBrowserContext,
+  useCursorCloudConnection,
+} from "@/features/home/hooks/public-api/presentation";
 
 interface WsTestComposerMacSectionProps {
   readonly isLibraryPlaybook: boolean;

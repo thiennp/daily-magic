@@ -3,7 +3,7 @@
 import MacDevicePicker from "@/features/agent/MacDevicePicker";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import { requestEndSendTaskSession } from "@/features/agent/utils/sendTaskSessionEvents";
-import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
+import { useLocalMacBrowserContext } from "@/features/home/hooks/public-api/presentation";
 
 interface WsTestDelegatedMacFieldProps {
   readonly devices: readonly MyMacDevice[];

@@ -2,8 +2,10 @@
 
 import { useEffect } from "react";
 
-import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
-import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
+import {
+  useHomeConnectedMacs,
+  useLocalMacBrowserContext,
+} from "@/features/home/hooks/public-api/presentation";
 import { resolveHomeThisMacDeviceIdentity } from "@/features/home/utils/resolveHomeThisMacDeviceIdentity";
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 import { OVERVIEW_CTA_PRIMARY_SM_CLASS } from "@/features/projects/overview/overviewChrome.constant";

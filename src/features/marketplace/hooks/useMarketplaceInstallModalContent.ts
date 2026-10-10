@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
 import useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
 import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
-import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
+import { useLocalMacBrowserContext } from "@/features/home/hooks/public-api/presentation";
 import { useAutoSelectFirstProject } from "@/features/marketplace/hooks/useAutoSelectFirstProject";
 import { useMarketplaceInstallListingReset } from "@/features/marketplace/hooks/useMarketplaceInstallListingReset";
 import { buildMarketplaceInstalledTaskComposerInput } from "@/features/marketplace/utils/buildMarketplaceInstalledTaskComposerInput";

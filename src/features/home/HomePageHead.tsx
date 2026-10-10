@@ -6,7 +6,7 @@ import {
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import { useSyncExternalStore } from "react";
 
-import useHomeAttentionRuns from "@/features/home/hooks/useHomeAttentionRuns";
+import { useHomeAttentionRuns } from "@/features/home/hooks/public-api/presentation";
 import {
   readHomeAttentionTotal,
   subscribeHomeAttentionTotal,

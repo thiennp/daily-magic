@@ -10,7 +10,7 @@ import { useSelectedDispatchCapability } from "@/features/dispatch/hooks/public-
 import { useTeamDispatchSelection } from "@/features/dispatch/hooks/public-api/presentation";
 import { useAdoptDeepLinkProjectDevice } from "@/features/agent/hooks/useAdoptDeepLinkProjectDevice";
 import useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
-import useCursorCloudConnection from "@/features/home/hooks/useCursorCloudConnection";
+import { useCursorCloudConnection } from "@/features/home/hooks/public-api/presentation";
 import { useWsTestComposerWorkflowState } from "@/features/agent/hooks/useWsTestComposerWorkflowState";
 import { applyComposerLibraryCapabilitySelection } from "@/features/agent/utils/applyComposerLibraryCapabilitySelection";
 import { buildWsTestComposerDispatchState } from "@/features/agent/utils/buildWsTestComposerDispatchState";

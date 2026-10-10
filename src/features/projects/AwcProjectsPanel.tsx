@@ -14,7 +14,7 @@ import {
   AwcProjectsIntentNotice,
   parseProjectsNavIntent,
 } from "@/features/projects/navConsolidation/public-api/presentation";
-import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
+import { useLocalMacBrowserContext } from "@/features/home/hooks/public-api/presentation";
 import { filterAwcProjectsByQuery } from "@/features/projects/utils/public-api/presentation";
 import AppPanel from "@/components/surfaces/AppPanel";
 import {

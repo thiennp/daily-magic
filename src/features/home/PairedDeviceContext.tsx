@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from "react";
 
-import { useHasPairedDevice } from "@/features/home/hooks/useHasPairedDevice";
+import { useHasPairedDevice } from "@/features/home/hooks/public-api/presentation";
 
 type PairedDeviceContextValue = ReturnType<typeof useHasPairedDevice>;
 

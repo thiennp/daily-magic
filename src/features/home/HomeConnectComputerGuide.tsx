@@ -7,9 +7,11 @@ import AppHero from "@/components/surfaces/AppHero";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import ConnectComputerGuideSteps from "@/features/home/ConnectComputerGuideSteps";
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
-import useHomeConnectComputerGuideFlow from "@/features/home/hooks/useHomeConnectComputerGuideFlow";
-import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
-import usePersonalizedAgentWitchInstallCommand from "@/features/home/hooks/usePersonalizedAgentWitchInstallCommand";
+import {
+  useHomeConnectComputerGuideFlow,
+  useLocalMacBrowserContext,
+  usePersonalizedAgentWitchInstallCommand,
+} from "@/features/home/hooks/public-api/presentation";
 import { buildConnectInstallConnectionStatusClassName } from "@/features/home/utils/buildConnectInstallConnectionStatus";
 import { resolveHomeConnectGuideCtas } from "@/features/home/utils/resolveHomeConnectGuideCtas";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";

@@ -6,7 +6,7 @@ import MacDevicePickerRows from "@/features/agent/MacDevicePickerRows";
 import { deviceMatchesLocalTokenHash } from "@/features/agent-witch/online-wake/public-api/presentation";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
-import useThisMacLocalInstallActions from "@/features/home/hooks/useThisMacLocalInstallActions";
+import { useThisMacLocalInstallActions } from "@/features/home/hooks/public-api/presentation";
 import { MARKETPLACE_COMPUTER_PICKER_COPY } from "@/features/marketplace/public-api/types";
 
 interface MacDevicePickerProps {

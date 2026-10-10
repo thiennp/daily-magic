@@ -9,8 +9,10 @@ import {
   APP_SURFACE_SECTION_TITLE_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import HomeSetupMiniBar from "@/features/home/HomeSetupMiniBar";
-import useOnboardingSteps from "@/features/home/hooks/useOnboardingSteps";
-import useOnboardingSetupAcknowledged from "@/features/home/hooks/useOnboardingSetupAcknowledged";
+import {
+  useOnboardingSteps,
+  useOnboardingSetupAcknowledged,
+} from "@/features/home/hooks/public-api/presentation";
 import OnboardingStepStatusIcon from "@/features/home/OnboardingStepStatusIcon";
 import { listRequiredOnboardingSteps } from "@/features/home/utils/listRequiredOnboardingSteps";
 import shouldShowOnboardingChecklist from "@/features/home/utils/shouldShowOnboardingChecklist";
@@ -40,7 +42,9 @@ export default function HomeOnboardingChecklist() {
   }
 
   const progressWidth =
-    requiredSteps.length === 0 ? "0%" : `${(done / requiredSteps.length) * 100}%`;
+    requiredSteps.length === 0
+      ? "0%"
+      : `${(done / requiredSteps.length) * 100}%`;
 
   return (
     <AppPanel as="section" aria-labelledby="home-setup-heading">

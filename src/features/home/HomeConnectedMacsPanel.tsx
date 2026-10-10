@@ -6,10 +6,12 @@ import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
 import ConnectCursorCloudCard from "@/features/home/ConnectCursorCloudCard";
 import HomeConnectedMacsDeviceList from "@/features/home/HomeConnectedMacsDeviceList";
 import HomeConnectedMacsEmptyState from "@/features/home/HomeConnectedMacsEmptyState";
-import useHomeConnectedMacDeviceActions from "@/features/home/hooks/useHomeConnectedMacDeviceActions";
-import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
-import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
-import useShouldShowConnectThisMac from "@/features/home/hooks/useShouldShowConnectThisMac";
+import {
+  useHomeConnectedMacDeviceActions,
+  useHomeConnectedMacs,
+  useLocalMacBrowserContext,
+  useShouldShowConnectThisMac,
+} from "@/features/home/hooks/public-api/presentation";
 import { AppShellComputersHeading } from "@/features/shell/v5/public-api/presentation";
 import { AppShellDevicesSurface } from "@/features/shell/v5/public-api/presentation";
 import {

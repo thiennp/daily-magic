@@ -11,13 +11,15 @@ import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
 import ConnectThisMacModal from "@/features/home/ConnectThisMacModal";
 import { HOME_NOT_LINKED_CONNECT_BLOCK_COPY as C } from "@/features/home/constants/public-api/types";
 import HomeOpenLocalStatusButton from "@/features/home/HomeOpenLocalStatusButton";
-import useConnectThisMacModalNotice from "@/features/home/hooks/useConnectThisMacModalNotice";
-import useConnectThisMacRowFlow from "@/features/home/hooks/useConnectThisMacRowFlow";
-import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
-import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
-import usePersonalizedAgentWitchInstallCommand from "@/features/home/hooks/usePersonalizedAgentWitchInstallCommand";
-import useShouldShowConnectThisMac from "@/features/home/hooks/useShouldShowConnectThisMac";
-import useThisMacHasConnectedLocalBridge from "@/features/home/hooks/useThisMacHasConnectedLocalBridge";
+import {
+  useConnectThisMacModalNotice,
+  useConnectThisMacRowFlow,
+  useHomeConnectedMacs,
+  useLocalMacBrowserContext,
+  usePersonalizedAgentWitchInstallCommand,
+  useShouldShowConnectThisMac,
+  useThisMacHasConnectedLocalBridge,
+} from "@/features/home/hooks/public-api/presentation";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 import { resolveHomeNotLinkedConnectBlockState } from "@/features/home/utils/resolveHomeNotLinkedConnectBlockState";
 import { resolveHomeThisMacDeviceIdentity } from "@/features/home/utils/resolveHomeThisMacDeviceIdentity";

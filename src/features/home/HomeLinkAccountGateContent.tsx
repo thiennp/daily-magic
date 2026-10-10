@@ -6,8 +6,10 @@ import AppHero from "@/components/surfaces/AppHero";
 import HomeConnectComputerGuide from "@/features/home/HomeConnectComputerGuide";
 import { HOME_MAIN_COLUMN_WITHOUT_LEFT_RAIL_CLASS } from "@/features/home/homeDashboardLayout.constant";
 import { HomeLeftRailVisibilityProvider } from "@/features/home/HomeLeftRailVisibility";
-import useCursorCloudConnection from "@/features/home/hooks/useCursorCloudConnection";
-import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
+import {
+  useCursorCloudConnection,
+  useHomeConnectedMacs,
+} from "@/features/home/hooks/public-api/presentation";
 import { usePairedDeviceContext } from "@/features/home/PairedDeviceContext";
 import { countLinkedAgentWitchComputers } from "@/features/home/utils/isAgentWitchConnectInstallPlaceholderDevice";
 import { resolveHomeDashboardMode } from "@/features/home/utils/resolveHomeDashboardMode";

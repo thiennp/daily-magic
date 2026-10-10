@@ -7,8 +7,10 @@ import {
   APP_SURFACE_SECTION_TITLE_CLASS,
   APP_SURFACE_TEXT_LINK_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
-import useOnboardingSteps from "@/features/home/hooks/useOnboardingSteps";
-import useOnboardingSetupAcknowledged from "@/features/home/hooks/useOnboardingSetupAcknowledged";
+import {
+  useOnboardingSteps,
+  useOnboardingSetupAcknowledged,
+} from "@/features/home/hooks/public-api/presentation";
 import shouldShowOnboardingAutomateNudge from "@/features/home/utils/shouldShowOnboardingAutomateNudge";
 
 export default function HomeOnboardingAutomateNudge() {

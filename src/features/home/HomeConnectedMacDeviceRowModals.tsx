@@ -2,7 +2,7 @@
 
 import DeleteLocalMacModal from "@/features/home/DeleteLocalMacModal";
 import UpdateLocalMacModal from "@/features/home/UpdateLocalMacModal";
-import type useThisMacLocalInstallActions from "@/features/home/hooks/useThisMacLocalInstallActions";
+import { type useThisMacLocalInstallActions } from "@/features/home/hooks/public-api/presentation";
 
 interface HomeConnectedMacDeviceRowModalsProps {
   readonly actions: ReturnType<typeof useThisMacLocalInstallActions>;

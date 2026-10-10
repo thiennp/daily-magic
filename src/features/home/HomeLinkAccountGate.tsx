@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 
 import HomeLinkAccountGateContent from "@/features/home/HomeLinkAccountGateContent";
-import { OnboardingStepsProvider } from "@/features/home/hooks/useOnboardingSteps";
+import { OnboardingStepsProvider } from "@/features/home/hooks/public-api/presentation";
 import { PairedDeviceProvider } from "@/features/home/PairedDeviceContext";
 
 interface HomeLinkAccountGateProps {

@@ -95,7 +95,8 @@
     "src/features/agent-witch#root",
     "src/features/projects/access#root",
     "src/features/projects/messenger#root",
-    "src/features/home/constants"
+    "src/features/home/constants",
+    "src/features/home/hooks"
   ],
   "blocked": {
     "src/features/projects/access/approvalCard": "outside test AwcProjectAccessPendingList.df036.render.test.ts imports test helper AwcPendingApprovalCard.fixtures",
@@ -583,6 +584,11 @@
       "unit": "src/features/home/constants",
       "sha": "9578455f301ba5adbb9c76193c17fdcfd8069176",
       "at": "2026-10-10T11:38:25.849Z"
+    },
+    {
+      "unit": "src/features/home/hooks",
+      "sha": "8393e982d20ddd8b7066035e17b711b246861a04",
+      "at": "2026-10-10T11:44:21.488Z"
     }
   ],
   "limits": {

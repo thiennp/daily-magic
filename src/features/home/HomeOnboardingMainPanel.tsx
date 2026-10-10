@@ -6,7 +6,7 @@ import HomeDashboardHero from "@/features/home/HomeDashboardHero";
 import HomeOnboardingSetupCompletePanel from "@/features/home/HomeOnboardingSetupCompletePanel";
 import HomeOnboardingMainStep from "@/features/home/HomeOnboardingMainStep";
 import HomeOnboardingTemplateStep from "@/features/home/HomeOnboardingTemplateStep";
-import useOnboardingSteps from "@/features/home/hooks/useOnboardingSteps";
+import { useOnboardingSteps } from "@/features/home/hooks/public-api/presentation";
 import findNextIncompleteOnboardingStep from "@/features/home/utils/findNextIncompleteOnboardingStep";
 import shouldShowOnboardingSetupCompletePanel from "@/features/home/utils/shouldShowOnboardingSetupCompletePanel";
 import isTaskOnboardingStep from "@/features/home/utils/isTaskOnboardingStep";

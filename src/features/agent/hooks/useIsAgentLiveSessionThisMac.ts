@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import { deviceMatchesLocalTokenHash } from "@/features/agent-witch/online-wake/public-api/presentation";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
-import useLocalMacHostname from "@/features/home/hooks/useLocalMacHostname";
+import { useLocalMacHostname } from "@/features/home/hooks/public-api/presentation";
 
 export const useIsAgentLiveSessionThisMac = (
   sessionDeviceId: string | null | undefined,
