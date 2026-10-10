@@ -24,3 +24,5 @@ _None._
 _None._
 
 Query: `npm run feature-knowledge:query -- "..." --feature=marketing`
+
+Public API: `components/public-api/presentation.ts` exposes `MarketingTrustIcon`.

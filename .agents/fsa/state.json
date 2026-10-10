@@ -7,7 +7,8 @@
     "src/features/shell/utils",
     "src/features/workflows/utils",
     "src/features/home/types",
-    "src/features/improvements"
+    "src/features/improvements",
+    "src/features/marketing/components"
   ],
   "blocked": {},
   "rounds": [
@@ -50,6 +51,11 @@
       "unit": "src/features/improvements",
       "sha": "3fe5ca4845230f1eaa6c23bf159d7eb05e439367",
       "at": "2026-10-10T08:54:05.874Z"
+    },
+    {
+      "unit": "src/features/marketing/components",
+      "sha": "f71e8157bc6380bbdb01892b5aad2209131ec1ab",
+      "at": "2026-10-10T08:55:36.628Z"
     }
   ]
 }
