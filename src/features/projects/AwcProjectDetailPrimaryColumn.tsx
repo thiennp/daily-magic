@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import AwcProjectComputerHistorySection from "@/features/projects/computerHistory/AwcProjectComputerHistorySection";
+import { AwcProjectComputerHistorySection } from "@/features/projects/computerHistory/public-api/presentation";
 import AwcProjectDetailSection from "@/features/projects/AwcProjectDetailSection";
 import AwcProjectEditOnMacActions from "@/features/projects/AwcProjectEditOnMacActions";
 import { PROJECT_ACTIVITY_TASK_HASH_WITH_POUND } from "@/features/projects/utils/projectActivityTaskDeepLink.constant";
