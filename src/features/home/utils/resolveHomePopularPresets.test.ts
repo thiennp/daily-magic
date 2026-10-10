@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { HOME_POPULAR_PRESET_IDS } from "@/features/home/constants/homePopularPresetIds.constant";
+import { HOME_POPULAR_PRESET_IDS } from "@/features/home/constants/public-api/types";
 import resolveHomePopularPresets from "@/features/home/utils/resolveHomePopularPresets";
 
 describe("resolveHomePopularPresets", () => {

@@ -1,4 +1,4 @@
-import { HOME_MARKETING_STEPS_COPY } from "@/features/home/constants/homeMarketingBotsFaqCopy.constant";
+import { HOME_MARKETING_STEPS_COPY } from "@/features/home/constants/public-api/types";
 import {
   MarketingCard,
   MarketingSectionHeader,

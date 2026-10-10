@@ -1,7 +1,7 @@
 "use client";
 
 import AppHero from "@/components/surfaces/AppHero";
-import { HOME_ONBOARDING_MAIN_STEP_CONTENT } from "@/features/home/constants/homeOnboardingMainStepContent.constant";
+import { HOME_ONBOARDING_MAIN_STEP_CONTENT } from "@/features/home/constants/public-api/types";
 import HomeDashboardHero from "@/features/home/HomeDashboardHero";
 import HomeOnboardingSetupCompletePanel from "@/features/home/HomeOnboardingSetupCompletePanel";
 import HomeOnboardingMainStep from "@/features/home/HomeOnboardingMainStep";

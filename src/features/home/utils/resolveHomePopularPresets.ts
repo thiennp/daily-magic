@@ -1,4 +1,4 @@
-import { HOME_POPULAR_PRESET_IDS } from "@/features/home/constants/homePopularPresetIds.constant";
+import { HOME_POPULAR_PRESET_IDS } from "@/features/home/constants/public-api/types";
 import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabilityTemplateById";
 
 export interface HomePopularPresetSummary {

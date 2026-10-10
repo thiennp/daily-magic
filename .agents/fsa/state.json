@@ -94,7 +94,8 @@
     "src/features/agent-witch/online-wake",
     "src/features/agent-witch#root",
     "src/features/projects/access#root",
-    "src/features/projects/messenger#root"
+    "src/features/projects/messenger#root",
+    "src/features/home/constants"
   ],
   "blocked": {
     "src/features/projects/access/approvalCard": "outside test AwcProjectAccessPendingList.df036.render.test.ts imports test helper AwcPendingApprovalCard.fixtures",
@@ -575,6 +576,11 @@
       "unit": "src/features/projects/messenger#root",
       "sha": "395aedb59a04c9cb2901d29f430f58ec096ea944",
       "at": "2026-10-10T11:29:35.854Z"
+    },
+    {
+      "unit": "src/features/home/constants",
+      "sha": "9578455f301ba5adbb9c76193c17fdcfd8069176",
+      "at": "2026-10-10T11:38:25.849Z"
     }
   ],
   "limits": {

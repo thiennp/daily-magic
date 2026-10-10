@@ -9,7 +9,7 @@ import {
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
 import ConnectThisMacModal from "@/features/home/ConnectThisMacModal";
-import { HOME_NOT_LINKED_CONNECT_BLOCK_COPY as C } from "@/features/home/constants/homeNotLinkedConnectBlockCopy.constant";
+import { HOME_NOT_LINKED_CONNECT_BLOCK_COPY as C } from "@/features/home/constants/public-api/types";
 import HomeOpenLocalStatusButton from "@/features/home/HomeOpenLocalStatusButton";
 import useConnectThisMacModalNotice from "@/features/home/hooks/useConnectThisMacModalNotice";
 import useConnectThisMacRowFlow from "@/features/home/hooks/useConnectThisMacRowFlow";

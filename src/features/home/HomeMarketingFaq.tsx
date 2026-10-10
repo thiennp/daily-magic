@@ -1,4 +1,4 @@
-import { HOME_MARKETING_FAQ_COPY } from "@/features/home/constants/homeMarketingBotsFaqCopy.constant";
+import { HOME_MARKETING_FAQ_COPY } from "@/features/home/constants/public-api/types";
 import {
   MARKETING_TEXT_SECONDARY_CLASSES,
   mergeMarketingClasses,

@@ -12,7 +12,7 @@ import {
   HOME_PROMPT_OPTIMIZER_STORYBOOK_GOAL,
   HOME_PROMPT_OPTIMIZER_STORYBOOK_LEDE,
   HOME_PROMPT_OPTIMIZER_STORYBOOK_PROMPT,
-} from "@/features/home/constants/homePromptOptimizerStorybookPreview.constant";
+} from "@/features/home/constants/public-api/types";
 import PromptSdlcField, {
   PROMPT_SDLC_FIELD_CLASS,
 } from "@/features/prompt-optimizer/internal/presentation/PromptSdlcField";

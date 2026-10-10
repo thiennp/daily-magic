@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import {
   CONNECT_INSTALL_PASTE_MODAL_AUTO_CLOSE_MS,
   CONNECT_INSTALL_PASTE_MODAL_WAKE_POLL_MS,
-} from "@/features/home/constants/connectInstallPasteModal.constant";
+} from "@/features/home/constants/public-api/types";
 import { fetchAgentWitchInstallConnection } from "@/lib/agentWitch/fetchAgentWitchInstallConnection";
 
 const useConnectInstallPasteModalDismissal = ({

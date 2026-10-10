@@ -45,3 +45,7 @@ Re-index after doc changes: `npm run feature-knowledge:index`.
 ## components public API
 
 `components/public-api/presentation.ts` exposes the marketing landing components (`HomeMarketingAuthModalProvider`, `HomeMarketingHero`, `HomeMarketingPopularPresets`, `HomeMarketingPopularPresetsGrid`) and `HomePromptOptimizerCtaBox`; import them from there outside `components/`.
+
+## constants public API
+
+`constants/public-api/types.ts` exposes the home copy, CTA, preset-id, limit and class constants (and `HomeOnboardingMainStepContent`); import them from there outside `constants/`.

@@ -8,7 +8,7 @@ import {
 import {
   HOME_PROMPT_OPTIMIZER_CTA_COPY,
   HOME_PROMPT_OPTIMIZER_CTA_HREF,
-} from "@/features/home/constants/homePromptOptimizerCta.constant";
+} from "@/features/home/constants/public-api/types";
 
 /** Signed-in home: one box, one line of copy, one link to Local. No compose form. */
 export default function HomePromptOptimizerCtaBox(): ReactElement {

@@ -1,4 +1,4 @@
-import { HOME_MARKETING_FEATURES_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
+import { HOME_MARKETING_FEATURES_COPY } from "@/features/home/constants/public-api/types";
 import {
   MarketingCard,
   MarketingSectionHeader,

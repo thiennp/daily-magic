@@ -3,7 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
-import { HOME_MARKETING_POPULAR_PRESETS_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
+import { HOME_MARKETING_POPULAR_PRESETS_COPY } from "@/features/home/constants/public-api/types";
 import type { HomePopularPresetSummary } from "@/features/home/utils/resolveHomePopularPresets";
 import {
   applyPresetCapabilityIdToSearchParams,

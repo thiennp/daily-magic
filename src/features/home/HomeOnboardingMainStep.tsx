@@ -8,7 +8,7 @@ import {
   APP_SURFACE_CTA_PRIMARY_CLASS,
   APP_SURFACE_EYEBROW_TEXT_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
-import type { HomeOnboardingMainStepContent } from "@/features/home/constants/homeOnboardingMainStepContent.constant";
+import type { HomeOnboardingMainStepContent } from "@/features/home/constants/public-api/types";
 import HomeOnboardingPriorStepSection from "@/features/home/HomeOnboardingPriorStepSection";
 import type { OnboardingStep } from "@/features/home/loadOnboardingSteps";
 import { resolveOnboardingStepHref } from "@/features/home/resolveOnboardingStepHref";

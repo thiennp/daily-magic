@@ -8,7 +8,7 @@ import {
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
-import { HOME_WHAT_YOU_CAN_DO_ITEMS } from "@/features/home/constants/homeWhatYouCanDo.constant";
+import { HOME_WHAT_YOU_CAN_DO_ITEMS } from "@/features/home/constants/public-api/types";
 
 interface HomeWhatYouCanDoProps {
   readonly installCommand: string;

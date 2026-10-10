@@ -1,4 +1,4 @@
-import { HOME_RECENT_PROJECTS_LIMIT } from "@/features/home/constants/homeRecentProjectsLimit.constant";
+import { HOME_RECENT_PROJECTS_LIMIT } from "@/features/home/constants/public-api/types";
 import compareProjectsByRecentActivity from "@/features/home/utils/compareProjectsByRecentActivity";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 

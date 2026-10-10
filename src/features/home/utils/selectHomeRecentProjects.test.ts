@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { HOME_RECENT_PROJECTS_LIMIT } from "@/features/home/constants/homeRecentProjectsLimit.constant";
+import { HOME_RECENT_PROJECTS_LIMIT } from "@/features/home/constants/public-api/types";
 import selectHomeRecentProjects from "@/features/home/utils/selectHomeRecentProjects";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
@@ -38,7 +38,12 @@ describe("selectHomeRecentProjects", () => {
       buildProject("e", { lastUsedAt: "2026-10-01T10:00:00.000Z" }),
     ];
 
-    expect(ids(selectHomeRecentProjects(projects))).toEqual(["d", "b", "e", "a"]);
+    expect(ids(selectHomeRecentProjects(projects))).toEqual([
+      "d",
+      "b",
+      "e",
+      "a",
+    ]);
   });
 
   it("ranks lastUsedAt above a newer updatedAt (activity beats edits)", () => {
@@ -89,7 +94,12 @@ describe("selectHomeRecentProjects", () => {
   it("is deterministic regardless of input order for full ties", () => {
     const projects = ["c", "a", "b", "d"].map((id) => buildProject(id));
 
-    expect(ids(selectHomeRecentProjects(projects))).toEqual(["a", "b", "c", "d"]);
+    expect(ids(selectHomeRecentProjects(projects))).toEqual([
+      "a",
+      "b",
+      "c",
+      "d",
+    ]);
     expect(ids(selectHomeRecentProjects([...projects].reverse()))).toEqual([
       "a",
       "b",

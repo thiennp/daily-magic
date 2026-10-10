@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { HOME_MARKETING_HERO_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
+import { HOME_MARKETING_HERO_COPY } from "@/features/home/constants/public-api/types";
 import HomeMarketingStatusPreview from "@/features/home/components/HomeMarketingStatusPreview";
 import { MarketingAuthTrigger } from "@/features/marketing/public-api/presentation";
 import {

@@ -6,7 +6,7 @@ import HomePromptOptimizerCtaBox from "@/features/home/components/HomePromptOpti
 import {
   HOME_PROMPT_OPTIMIZER_CTA_COPY,
   HOME_PROMPT_OPTIMIZER_CTA_HREF,
-} from "@/features/home/constants/homePromptOptimizerCta.constant";
+} from "@/features/home/constants/public-api/types";
 import { PROMPT_SDLC_AWL_PAGE_HREF } from "@/features/prompt-optimizer/internal/presentation/promptSdlcAwlHref.constant";
 
 describe("HomePromptOptimizerCtaBox", () => {

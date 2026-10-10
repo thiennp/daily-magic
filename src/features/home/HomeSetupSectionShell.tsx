@@ -14,7 +14,7 @@ import {
   HOME_SETUP_DETAILS_CLASS,
   HOME_SETUP_EXPANDED_CONTENT_CLASS,
   HOME_SETUP_SUMMARY_CLASS,
-} from "@/features/home/constants/homeSetupSectionShellClasses.constant";
+} from "@/features/home/constants/public-api/types";
 import { openHomeSetupFromLocationHash } from "@/features/home/utils/openHomeSetupFromLocationHash";
 import { shouldLazyMountHomeSetupContent } from "@/features/home/utils/shouldLazyMountHomeSetupContent";
 import { ChevronDownIcon } from "@/icons";
