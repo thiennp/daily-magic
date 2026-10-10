@@ -1,8 +1,8 @@
-import type { MacDevicePresence } from "@/features/agent-witch/online-wake/macDevicePresence";
+import type { MacDevicePresence } from "@/features/agent-witch/online-wake/public-api/types";
 import {
   isMacPresenceTierHardOffline,
   resolveMacPresenceTier,
-} from "@/features/agent-witch/online-wake/macDevicePresence";
+} from "@/features/agent-witch/online-wake/public-api/presentation";
 import buildAgentWitchLocalProjectEditorHref from "@/lib/projects/buildAgentWitchLocalProjectEditorHref";
 import { formatRelativeTimeAgo } from "@/lib/time/formatRelativeTimeAgo";
 

@@ -1,5 +1,5 @@
 import { deviceMatchesReachableLocalTokenHash } from "@/features/agent-witch/utils/deviceMatchesReachableLocalTokenHash";
-import type { MacDevicePresence } from "@/features/agent-witch/online-wake/macDevicePresence";
+import type { MacDevicePresence } from "@/features/agent-witch/online-wake/public-api/types";
 
 export const resolveLocalTokenHashMatchesReachableDevice = (input: {
   readonly localTokenHash: string | null;

@@ -1,7 +1,5 @@
-import {
-  countMacPresenceTiers,
-  type MacDevicePresence,
-} from "@/features/agent-witch/online-wake/macDevicePresence";
+import type { MacDevicePresence } from "@/features/agent-witch/online-wake/public-api/types";
+import { countMacPresenceTiers } from "@/features/agent-witch/online-wake/public-api/presentation";
 
 export type HomeMacStatusTone = "online" | "sleeping" | "offline" | "none";
 

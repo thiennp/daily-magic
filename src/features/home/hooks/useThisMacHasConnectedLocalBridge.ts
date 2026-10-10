@@ -1,6 +1,6 @@
 "use client";
 
-import { deviceMatchesLocalTokenHash } from "@/features/agent-witch/online-wake";
+import { deviceMatchesLocalTokenHash } from "@/features/agent-witch/online-wake/public-api/presentation";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 

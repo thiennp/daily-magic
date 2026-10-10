@@ -1,4 +1,4 @@
-import type { MacDevicePresence } from "@/features/agent-witch/online-wake";
+import type { MacDevicePresence } from "@/features/agent-witch/online-wake/public-api/types";
 import {
   resolveHomeMacStatusSummary,
   type HomeMacStatusSummary,

@@ -1,5 +1,5 @@
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
-import { deviceMatchesLocalTokenHash } from "@/features/agent-witch/online-wake";
+import { deviceMatchesLocalTokenHash } from "@/features/agent-witch/online-wake/public-api/presentation";
 
 export interface ProjectMacDeviceContext {
   readonly device: MyMacDevice | null;

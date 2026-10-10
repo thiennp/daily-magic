@@ -1,5 +1,5 @@
-import { deviceMatchesLocalTokenHash } from "@/features/agent-witch/online-wake/deviceMatchesLocalTokenHash";
-import type { MacDevicePresence } from "@/features/agent-witch/online-wake/macDevicePresence";
+import { deviceMatchesLocalTokenHash } from "@/features/agent-witch/online-wake/public-api/presentation";
+import type { MacDevicePresence } from "@/features/agent-witch/online-wake/public-api/types";
 import { deviceMatchesReachableLocalTokenHash } from "@/features/agent-witch/utils/public-api/presentation";
 
 export interface HomeThisMacDeviceIdentity {

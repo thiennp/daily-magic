@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
+import type { MacPresenceTier } from "@/features/agent-witch/online-wake/public-api/types";
 import {
   resolveSendReadinessBanner,
   resolveSendReadinessSendDisabledReason,

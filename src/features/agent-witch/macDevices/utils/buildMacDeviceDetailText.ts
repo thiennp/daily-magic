@@ -1,8 +1,8 @@
 import {
   formatMacPresenceStatusLabel,
   shouldShowMacPresenceLastSeen,
-} from "@/features/agent-witch/online-wake";
-import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
+} from "@/features/agent-witch/online-wake/public-api/presentation";
+import type { MacPresenceTier } from "@/features/agent-witch/online-wake/public-api/types";
 import { buildMacDeviceInstallBundleText } from "@/features/agent-witch/macDevices/utils/buildMacDeviceInstallBundleText";
 import { formatLastSeenText } from "@/lib/time/formatRelativeTimeAgo";
 

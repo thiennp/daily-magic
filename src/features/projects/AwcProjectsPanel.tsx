@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
-import { pickDefaultMacDeviceId } from "@/features/agent-witch/online-wake";
+import { pickDefaultMacDeviceId } from "@/features/agent-witch/online-wake/public-api/presentation";
 import { AwcMyProjectInvitations } from "@/features/projects/invitations/public-api/presentation";
 import AwcProjectsListBody from "@/features/projects/AwcProjectsListBody";
 import AwcProjectsManageControls from "@/features/projects/AwcProjectsManageControls";

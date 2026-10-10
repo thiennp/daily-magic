@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 
 import { useWsTestComposerReadinessUi } from "@/features/agent/hooks/useWsTestComposerReadinessUi";
-import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
+import type { MacPresenceTier } from "@/features/agent-witch/online-wake/public-api/types";
 import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import { resolveComposerBlockedAction } from "@/features/agent/utils/resolveComposerBlockedAction";
 

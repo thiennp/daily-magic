@@ -1,5 +1,5 @@
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
-import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
+import type { MacPresenceTier } from "@/features/agent-witch/online-wake/public-api/types";
 import { parseHeartbeatWriters } from "@/lib/agentWitch/deviceWriters";
 import type { AgentWitchDevicePlatform } from "@/lib/agentWitch/types/AgentWitchDevicePlatform.type";
 

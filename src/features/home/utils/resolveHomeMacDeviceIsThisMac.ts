@@ -1,5 +1,5 @@
 import { deviceMatchesReachableLocalTokenHash } from "@/features/agent-witch/utils/public-api/presentation";
-import type { MacDevicePresence } from "@/features/agent-witch/online-wake/macDevicePresence";
+import type { MacDevicePresence } from "@/features/agent-witch/online-wake/public-api/types";
 
 /**
  * this computer badge in Your Devices — token match on a live/recent row only (HOME-061 / HOME-062).

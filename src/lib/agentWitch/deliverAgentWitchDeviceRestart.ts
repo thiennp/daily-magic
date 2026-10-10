@@ -1,7 +1,7 @@
 import {
   acknowledgeAgentWitchDeviceRestart,
   isAgentWitchDeviceRestartRequested,
-} from "@/features/agent-witch/online-wake/agentWitchDeviceRestartRequest";
+} from "@/features/agent-witch/online-wake/public-api/infrastructure";
 import { findEnrichedAgentClientForUser } from "@/lib/agentWitch/findEnrichedAgentClientForUser";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";

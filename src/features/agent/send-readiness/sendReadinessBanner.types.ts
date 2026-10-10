@@ -1,4 +1,4 @@
-import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
+import type { MacPresenceTier } from "@/features/agent-witch/online-wake/public-api/types";
 
 export type SendReadinessReasonCode =
   | "update_needed"

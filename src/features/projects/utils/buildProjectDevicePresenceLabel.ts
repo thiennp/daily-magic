@@ -1,5 +1,5 @@
-import type { MacDevicePresence } from "@/features/agent-witch/online-wake/macDevicePresence";
-import { resolveMacPresenceTier } from "@/features/agent-witch/online-wake/macDevicePresence";
+import type { MacDevicePresence } from "@/features/agent-witch/online-wake/public-api/types";
+import { resolveMacPresenceTier } from "@/features/agent-witch/online-wake/public-api/presentation";
 import { formatRelativeTimeAgo } from "@/lib/time/formatRelativeTimeAgo";
 
 export interface ProjectDevicePresenceLabel {

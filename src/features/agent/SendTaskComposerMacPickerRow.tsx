@@ -4,7 +4,7 @@ import {
   formatMacPresenceStatusLabel,
   MacDeviceOfflineWakeHint,
   resolveMacPresenceTier,
-} from "@/features/agent-witch/online-wake";
+} from "@/features/agent-witch/online-wake/public-api/presentation";
 import {
   MacDeviceIcon,
   resolveMacDeviceIconClassName,

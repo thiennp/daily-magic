@@ -1,7 +1,5 @@
-import {
-  resolveMacPresenceTier,
-  type MacDevicePresence,
-} from "@/features/agent-witch/online-wake/macDevicePresence";
+import type { MacDevicePresence } from "@/features/agent-witch/online-wake/public-api/types";
+import { resolveMacPresenceTier } from "@/features/agent-witch/online-wake/public-api/presentation";
 
 /** Live / recent presence used for this-Mac identity (HOME-061). */
 export const macDeviceIsReachableForLocalMacIdentity = (

@@ -10,7 +10,7 @@ import {
   canWakeMacDeviceFromBrowser,
   isMacPresenceTierHardOffline,
   resolveMacPresenceTier,
-} from "@/features/agent-witch/online-wake";
+} from "@/features/agent-witch/online-wake/public-api/presentation";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import HomeConnectedMacDeviceRowModals from "@/features/home/HomeConnectedMacDeviceRowModals";
 import useMacDeviceSeeLocalLog from "@/features/home/hooks/useMacDeviceSeeLocalLog";

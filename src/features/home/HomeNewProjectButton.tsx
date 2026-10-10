@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { Modal } from "@/components/ui/modal";
-import { pickDefaultMacDeviceId } from "@/features/agent-witch/online-wake";
+import { pickDefaultMacDeviceId } from "@/features/agent-witch/online-wake/public-api/presentation";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import SendTaskComposerCreateProjectForm from "@/features/agent/SendTaskComposerCreateProjectForm";
 

@@ -2,11 +2,11 @@
 
 import { useState, type ReactNode } from "react";
 
-import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
+import type { MacPresenceTier } from "@/features/agent-witch/online-wake/public-api/types";
 import {
   MacDeviceOfflineWakeHint,
   shouldOfferMacOfflineWakeHint,
-} from "@/features/agent-witch/online-wake";
+} from "@/features/agent-witch/online-wake/public-api/presentation";
 import MacDeviceRowHost from "@/features/agent-witch/macDevices/MacDeviceRowHost";
 import MacDeviceRowInner from "@/features/agent-witch/macDevices/MacDeviceRowInner";
 

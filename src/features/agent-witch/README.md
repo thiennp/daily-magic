@@ -40,6 +40,7 @@ Post-install AI picker: `/setup/writer` on agentwitch.com → WS `writer.ensure`
 ## Key modules
 
 - `online-wake/` — presence tiers, browser wake, cloud restart queue, wake modal UI
+  - Public API: `online-wake/public-api/{types,presentation,infrastructure}` (restart queue DB helpers are in `infrastructure`).
 - `utils/pairedDevicesApi.ts` — fetch/revoke devices, dispatch policy
 - `macDevices/` — device row, rename, menus
 

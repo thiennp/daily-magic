@@ -1,4 +1,4 @@
-import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
+import type { MacPresenceTier } from "@/features/agent-witch/online-wake/public-api/types";
 import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 
 export type ComposerBlockedStateId =

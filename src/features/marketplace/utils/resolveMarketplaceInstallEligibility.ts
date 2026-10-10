@@ -1,7 +1,7 @@
 import {
   canDispatchToMac,
   resolveMacPresenceTier,
-} from "@/features/agent-witch/online-wake";
+} from "@/features/agent-witch/online-wake/public-api/presentation";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import { isOfficialPresetMarketplaceCapabilityId } from "@/lib/marketplace/presetMarketplaceCapabilityId";
 

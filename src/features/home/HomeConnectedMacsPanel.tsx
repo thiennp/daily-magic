@@ -20,7 +20,7 @@ import {
 import {
   buildMacDevicesStatusLine,
   countMacPresenceTiers,
-} from "@/features/agent-witch/online-wake";
+} from "@/features/agent-witch/online-wake/public-api/presentation";
 
 interface HomeConnectedMacsPanelProps {
   readonly installCommand: string;

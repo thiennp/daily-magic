@@ -1,4 +1,4 @@
-import { pickAlternateWriterReadyDeviceId } from "@/features/agent-witch/online-wake";
+import { pickAlternateWriterReadyDeviceId } from "@/features/agent-witch/online-wake/public-api/presentation";
 import type {
   ComposerBlockedStateId,
   ResolveComposerBlockedActionInput,

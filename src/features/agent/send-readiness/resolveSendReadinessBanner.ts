@@ -1,5 +1,5 @@
-import { resolveMacPresenceTier } from "@/features/agent-witch/online-wake";
-import { isMacWriterSendReady } from "@/features/agent-witch/online-wake/macDeviceWriterSendReady";
+import { resolveMacPresenceTier } from "@/features/agent-witch/online-wake/public-api/presentation";
+import { isMacWriterSendReady } from "@/features/agent-witch/online-wake/public-api/presentation";
 import { buildSendReadinessBannerFromReasonCode } from "@/features/agent/send-readiness/sendReadinessBannerCopy.constant";
 import type {
   ResolveSendReadinessBannerInput,

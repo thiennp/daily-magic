@@ -1,7 +1,7 @@
 import {
   isMacPresenceTierHardOffline,
   resolveMacPresenceTier,
-} from "@/features/agent-witch/online-wake";
+} from "@/features/agent-witch/online-wake/public-api/presentation";
 import type {
   ComposerBlockedAction,
   ComposerManualActionId,

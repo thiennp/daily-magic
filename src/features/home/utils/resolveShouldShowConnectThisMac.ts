@@ -1,5 +1,5 @@
 import { deviceMatchesReachableLocalTokenHash } from "@/features/agent-witch/utils/public-api/presentation";
-import type { MacPresenceTier } from "@/features/agent-witch/online-wake/macDevicePresence";
+import type { MacPresenceTier } from "@/features/agent-witch/online-wake/public-api/types";
 import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
 
 export const resolveShouldShowConnectThisMac = (input: {

@@ -1,4 +1,4 @@
-import { isMacWriterSendReady } from "@/features/agent-witch/online-wake";
+import { isMacWriterSendReady } from "@/features/agent-witch/online-wake/public-api/presentation";
 import { buildWsTestSendDisabledState } from "@/features/agent/utils/buildWsTestSendDisabledState";
 import { isCursorCloudExecutorDeviceId } from "@/lib/cursorCloud/cursorCloudExecutorDeviceId.constant";
 import type useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
