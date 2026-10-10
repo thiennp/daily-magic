@@ -2,7 +2,7 @@ import {
   canDispatchToMac,
   canRunWriterDispatchToMac,
   type MacDevicePresence,
-} from "./macDevicePresence";
+} from "./macDispatchReadiness";
 
 export const pickDefaultMacDeviceId = (
   devices: readonly ({ readonly id: string } & MacDevicePresence)[],

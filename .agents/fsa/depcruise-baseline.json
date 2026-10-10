@@ -418,25 +418,6 @@
   },
   {
     "type": "cycle",
-    "from": "src/features/agent-witch/online-wake/macDevicePresence.ts",
-    "to": "src/features/agent-witch/online-wake/pickMacDeviceIdForPresence.ts",
-    "rule": {
-      "severity": "error",
-      "name": "no-circular"
-    },
-    "cycle": [
-      {
-        "name": "src/features/agent-witch/online-wake/pickMacDeviceIdForPresence.ts",
-        "dependencyTypes": ["local", "export"]
-      },
-      {
-        "name": "src/features/agent-witch/online-wake/macDevicePresence.ts",
-        "dependencyTypes": ["local", "import"]
-      }
-    ]
-  },
-  {
-    "type": "cycle",
     "from": "src/features/agent-witch/online-wake/MacDeviceWakeModal.tsx",
     "to": "src/features/agent-witch/public-api/presentation.ts",
     "rule": {
