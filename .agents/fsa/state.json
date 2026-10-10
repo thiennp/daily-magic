@@ -24,7 +24,8 @@
     "src/features/agent-access",
     "src/features/agent/constants",
     "src/features/projects/settings/runsWithoutApproval",
-    "src/features/projects/autoskills"
+    "src/features/projects/autoskills",
+    "src/features/shell/hooks"
   ],
   "blocked": {},
   "rounds": [
@@ -152,6 +153,11 @@
       "unit": "src/features/projects/autoskills",
       "sha": "1e32481c4be4364f0ad9d973d1428376a882ddf7",
       "at": "2026-10-10T09:18:42.548Z"
+    },
+    {
+      "unit": "src/features/shell/hooks",
+      "sha": "3986456f450a144589deefe9c4ec333cd4d2cf70",
+      "at": "2026-10-10T09:19:48.282Z"
     }
   ]
 }

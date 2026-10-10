@@ -4,7 +4,7 @@ import EmptyStatePanelSkeleton from "@/features/empty-states/EmptyStatePanelSkel
 import AgentRunsListGuestPanel from "@/features/reports/AgentRunsListGuestPanel";
 import AgentRunsListSignedInContent from "@/features/reports/AgentRunsListSignedInContent";
 import { useGuestSessionState } from "@/features/empty-states/useGuestSessionState";
-import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
+import { useShellNavContext } from "@/features/shell/hooks/public-api/presentation";
 
 export default function AgentRunsList() {
   const { sessionState } = useGuestSessionState();

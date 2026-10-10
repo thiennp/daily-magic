@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
 import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
-import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
+import { useShellNavContext } from "@/features/shell/hooks/public-api/presentation";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { resolveComposerApprovalWaitingLabel } from "@/lib/copy/resolveSoloTeamSurfaceCopy";
 

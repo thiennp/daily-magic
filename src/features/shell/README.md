@@ -26,3 +26,4 @@ _None._
 Query: `npm run feature-knowledge:query -- "..." --feature=shell`
 
 `utils/` public API: import live-floater restore helpers from `@/features/shell/utils/public-api/presentation`.
+`hooks/` public API: import `useShellNavContext` from `@/features/shell/hooks/public-api/presentation`.

@@ -9,7 +9,7 @@ import {
   APP_SHELL_NAV_LINK_BASE_CLASSES,
   APP_SHELL_NAV_LINK_INACTIVE_CLASSES,
 } from "@/features/shell/appShellNavClasses.constant";
-import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
+import { useShellNavContext } from "@/features/shell/hooks/public-api/presentation";
 import { PRIMARY_NAV } from "@/features/shell/appNav.constant";
 import { filterAppNavForShellContext } from "@/lib/shell/filterAppNavForShellContext";
 

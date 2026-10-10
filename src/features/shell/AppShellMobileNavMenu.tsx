@@ -8,7 +8,7 @@ import { Dropdown } from "@/components/ui/dropdown/Dropdown";
 import AppIcon from "@/components/ui/icon/AppIcon";
 import { useTheme } from "@/context/ThemeContext";
 import { BOTTOM_NAV } from "@/features/shell/appBottomNav.constant";
-import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
+import { useShellNavContext } from "@/features/shell/hooks/public-api/presentation";
 import AppShellBrand from "@/features/shell/v5/AppShellBrand";
 import { APP_SHELL_V5_FONT_CLASS } from "@/features/shell/v5/appShellV5Classes.constant";
 import { ListIcon } from "@/icons";

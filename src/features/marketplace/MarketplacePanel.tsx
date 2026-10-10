@@ -14,7 +14,7 @@ import {
   filterSortMarketplaceListings,
 } from "@/features/marketplace/utils/filterSortMarketplaceListings";
 import { splitMarketplaceOfficialTeammateListings } from "@/features/marketplace/utils/splitMarketplaceOfficialTeammateListings";
-import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
+import { useShellNavContext } from "@/features/shell/hooks/public-api/presentation";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
 
 type MarketplacePanelVariant = "embedded" | "page";

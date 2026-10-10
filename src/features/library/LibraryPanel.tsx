@@ -4,7 +4,7 @@ import EmptyStatePanel from "@/features/empty-states/EmptyStatePanel";
 import EmptyStatePanelSkeleton from "@/features/empty-states/EmptyStatePanelSkeleton";
 import { useGuestSessionState } from "@/features/empty-states/useGuestSessionState";
 import LibraryPlaybookCard from "@/features/library/LibraryPlaybookCard";
-import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
+import { useShellNavContext } from "@/features/shell/hooks/public-api/presentation";
 import { resolveLibrarySignedInEmptyBody } from "@/lib/copy/resolveSoloTeamSurfaceCopy";
 import { useLibraryCapabilities } from "@/features/library/hooks/useLibraryCapabilities";
 import { buildNavConsolidationNewTaskHref } from "@/lib/shell/buildNavConsolidationNewTaskHref";

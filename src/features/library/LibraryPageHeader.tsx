@@ -2,7 +2,7 @@
 
 import AppPageHeader from "@/components/surfaces/AppPageHeader";
 import { useGuestSessionState } from "@/features/empty-states/useGuestSessionState";
-import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
+import { useShellNavContext } from "@/features/shell/hooks/public-api/presentation";
 import { resolveLibraryPageSubtitle } from "@/lib/copy/resolveSoloTeamSurfaceCopy";
 
 export default function LibraryPageHeader() {
