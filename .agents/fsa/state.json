@@ -58,7 +58,8 @@
     "src/features/projects/pitfalls",
     "src/features/projects/reports",
     "src/features/projects/accessLog",
-    "src/features/projects/chatDock"
+    "src/features/projects/chatDock",
+    "src/features/my-bots"
   ],
   "blocked": {
     "src/features/home/constants": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing), pre-commit architecture gate fails when it is edited",
@@ -360,6 +361,11 @@
       "unit": "src/features/projects/chatDock",
       "sha": "19459a2ca345af08309d5ef659dc218770f00582",
       "at": "2026-10-10T10:02:38.016Z"
+    },
+    {
+      "unit": "src/features/my-bots",
+      "sha": "",
+      "at": "2026-10-10T10:03:27.843Z"
     }
   ]
 }

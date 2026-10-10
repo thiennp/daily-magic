@@ -9,7 +9,7 @@ import { pickDefaultMacDeviceId } from "@/features/agent-witch/online-wake";
 import { AwcMyProjectInvitations } from "@/features/projects/invitations/public-api/presentation";
 import AwcProjectsListBody from "@/features/projects/AwcProjectsListBody";
 import AwcProjectsManageControls from "@/features/projects/AwcProjectsManageControls";
-import MyBotsPanel from "@/features/my-bots/MyBotsPanel";
+import { MyBotsPanel } from "@/features/my-bots/public-api/presentation";
 import {
   AwcProjectsIntentNotice,
   parseProjectsNavIntent,
