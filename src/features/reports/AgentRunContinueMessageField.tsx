@@ -3,7 +3,7 @@
 import { useState, type KeyboardEvent } from "react";
 
 import { useAutoGrowTextarea } from "@/hooks/useAutoGrowTextarea";
-import shouldSubmitContinueMessageOnKeyDown from "@/features/reports/utils/shouldSubmitContinueMessageOnKeyDown";
+import { shouldSubmitContinueMessageOnKeyDown } from "@/features/reports/utils/public-api/presentation";
 
 interface AgentRunContinueMessageFieldProps {
   readonly disabled?: boolean;

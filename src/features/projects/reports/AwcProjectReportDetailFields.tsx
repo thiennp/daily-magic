@@ -11,7 +11,7 @@ import {
   resolveProjectReportTitle,
 } from "@/features/projects/reports/utils/buildProjectReportRows";
 import { resolveProjectReportDetailView } from "@/features/projects/reports/utils/resolveProjectReportDetailView";
-import { resolveAgentRunDetailResultOutputForHonesty } from "@/features/reports/utils/resolveAgentRunDetailResultOutputForHonesty";
+import { resolveAgentRunDetailResultOutputForHonesty } from "@/features/reports/utils/public-api/presentation";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 

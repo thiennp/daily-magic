@@ -13,7 +13,7 @@ import {
 import { formatHomeRunningJobAliveLabel } from "@/features/home/utils/formatHomeRunningJobAliveLabel";
 import { formatHomeRunningJobTitle } from "@/features/home/utils/formatHomeRunningJobTitle";
 import HomeRunningJobQuestionButton from "@/features/home/HomeRunningJobQuestionButton";
-import { deleteAgentRunHistory } from "@/features/reports/utils/deleteAgentRunHistory";
+import { deleteAgentRunHistory } from "@/features/reports/utils/public-api/presentation";
 import { TrashBinIcon } from "@/icons";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 

@@ -2,7 +2,7 @@ import {
   isAgentLiveProgressFeedActive,
   isAnyAgentLiveProgressFeedActive,
 } from "@/features/agent/utils/registerAgentLiveProgressFeed";
-import { isAgentRunLiveTerminalActive } from "@/features/reports/utils/registerAgentRunLiveTerminal";
+import { isAgentRunLiveTerminalActive } from "@/features/reports/utils/public-api/presentation";
 
 export interface GlobalAgentRunInputModalDeps {
   readonly isAgentRunLiveTerminalActive: (runId: string) => boolean;

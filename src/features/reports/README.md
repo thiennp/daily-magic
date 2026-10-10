@@ -25,3 +25,5 @@ Agent run history, live terminal, re-run.
 Query: `npm run feature-knowledge:query -- "..." --feature=reports`
 
 Public API (`types`): outside code imports `AgentRunDetailFetchOutcome` and `AgentRunSseEvent` from `@/features/reports/types/public-api/types`.
+
+Public API (`utils`): outside code imports the agent-run helpers (status labels, continue href, history delete, SSE parsing, socket cache sync) from `@/features/reports/utils/public-api/presentation`.

@@ -1,6 +1,6 @@
 "use client";
 
-import { resolveAgentRunReportProgressView } from "@/features/reports/utils/resolveAgentRunReportProgressView";
+import { resolveAgentRunReportProgressView } from "@/features/reports/utils/public-api/presentation";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
 interface AgentRunReportProgressProps {

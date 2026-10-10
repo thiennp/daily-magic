@@ -11,7 +11,7 @@ import { POLL_INTERVAL_MS } from "@/features/reports/agentRunsPolling.constant";
 import { useAgentRunDetailFeedback } from "@/features/reports/hooks/useAgentRunDetailFeedback";
 import { useAgentRunEventsSse } from "@/features/reports/hooks/useAgentRunEventsSse";
 import { useAgentRunRecordSync } from "@/features/reports/hooks/useAgentRunRecordSync";
-import { toEnrichedAgentRun } from "@/features/reports/utils/agentRunDetailState.helpers";
+import { toEnrichedAgentRun } from "@/features/reports/utils/public-api/presentation";
 import { isTerminalAgentRunStatus } from "@/lib/dispatch/isTerminalAgentRunStatus";
 import type CapabilityFeedbackRecord from "@/lib/feedback/types/CapabilityFeedbackRecord.type";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";

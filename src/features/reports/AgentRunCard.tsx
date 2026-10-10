@@ -6,13 +6,13 @@ import { useState } from "react";
 import AppPanel from "@/components/surfaces/AppPanel";
 import AgentRunAgainButton from "@/features/reports/AgentRunAgainButton";
 import AgentRunEstimateComparison from "@/features/reports/AgentRunEstimateComparison";
-import { buildAgentRunContinueHref } from "@/features/reports/utils/buildAgentRunContinueHref";
+import { buildAgentRunContinueHref } from "@/features/reports/utils/public-api/presentation";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
-import { formatAgentRunReportSummaryLine } from "@/features/reports/utils/formatAgentRunReportSummaryLine";
-import { deleteAgentRunHistory } from "@/features/reports/utils/deleteAgentRunHistory";
+import { formatAgentRunReportSummaryLine } from "@/features/reports/utils/public-api/presentation";
+import { deleteAgentRunHistory } from "@/features/reports/utils/public-api/presentation";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
-import { resolveAgentRunHistoryOutcomeBadge } from "@/features/reports/utils/resolveAgentRunHistoryOutcomeBadge";
+import { resolveAgentRunHistoryOutcomeBadge } from "@/features/reports/utils/public-api/presentation";
 
 interface AgentRunCardProps {
   readonly run: EnrichedAgentRunRecord;

@@ -1,5 +1,5 @@
 import { notifyMacDeviceRevoked } from "@/features/agent-witch/macDevices/public-api/presentation";
-import { purgeLocalAgentTasksForRevokedDevice } from "@/features/reports/utils/purgeLocalAgentTasksForRevokedDevice";
+import { purgeLocalAgentTasksForRevokedDevice } from "@/features/reports/utils/public-api/presentation";
 import { type DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
 
 import {

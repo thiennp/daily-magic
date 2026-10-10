@@ -8,7 +8,7 @@ import {
   listAgentRunsLocalCache,
 } from "@/features/reports/agentRunLocalCache";
 import { useAgentRunsRemoteSync } from "@/features/reports/hooks/useAgentRunsRemoteSync";
-import { buildViewerAgentRunsList } from "@/features/reports/utils/buildViewerAgentRunsList";
+import { buildViewerAgentRunsList } from "@/features/reports/utils/public-api/presentation";
 import type { AgentRunScopeValue } from "@/lib/dispatch/AgentRunScope.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
 

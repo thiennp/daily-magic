@@ -1,6 +1,6 @@
 import trackOnboardingFromAgentWitchSocketMessage from "@/features/home/utils/trackOnboardingFromAgentWitchSocketMessage";
-import { syncAgentRunHeartbeatLocalCacheFromSocket } from "@/features/reports/utils/syncAgentRunHeartbeatLocalCacheFromSocket";
-import { syncAgentRunLocalCacheFromSocket } from "@/features/reports/utils/syncAgentRunLocalCacheFromSocket";
+import { syncAgentRunHeartbeatLocalCacheFromSocket } from "@/features/reports/utils/public-api/presentation";
+import { syncAgentRunLocalCacheFromSocket } from "@/features/reports/utils/public-api/presentation";
 
 /** Shared inbound pipeline before fan-out to dashboard subscribers. */
 export const handleAgentWitchDashboardInboundMessage = (input: {

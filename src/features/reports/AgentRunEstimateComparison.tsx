@@ -1,4 +1,4 @@
-import { formatAgentRunEstimateComparison } from "@/features/reports/utils/formatAgentRunEstimateComparison";
+import { formatAgentRunEstimateComparison } from "@/features/reports/utils/public-api/presentation";
 
 export default function AgentRunEstimateComparison(input: {
   readonly estimateSeconds?: number | null;
@@ -9,7 +9,5 @@ export default function AgentRunEstimateComparison(input: {
     return null;
   }
 
-  return (
-    <p className="mt-3 text-sm text-awc-fg dark:text-gray-300">{label}</p>
-  );
+  return <p className="mt-3 text-sm text-awc-fg dark:text-gray-300">{label}</p>;
 }

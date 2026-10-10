@@ -1,6 +1,6 @@
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
-import { formatAgentRunStatusLabel } from "@/features/reports/utils/formatAgentRunStatusLabel";
+import { formatAgentRunStatusLabel } from "@/features/reports/utils/public-api/presentation";
 
 interface AgentRunStatusBadgeProps {
   readonly status: EnrichedAgentRunRecord["status"];
@@ -30,8 +30,7 @@ export default function AgentRunStatusBadge({
   labelOverride = null,
   classNameOverride = null,
 }: AgentRunStatusBadgeProps) {
-  const hasOverride =
-    labelOverride !== null && labelOverride.trim().length > 0;
+  const hasOverride = labelOverride !== null && labelOverride.trim().length > 0;
   const statusLabel = formatAgentRunStatusLabel(status);
   const label = hasOverride ? labelOverride : statusLabel.label;
   const capitalize = !hasOverride && !statusLabel.isFinalCase;

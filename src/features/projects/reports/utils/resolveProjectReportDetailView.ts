@@ -4,7 +4,7 @@ import { isUsableProjectReportSummary } from "@/features/projects/reports/utils/
 import { resolveProjectReportKnownError } from "@/features/projects/reports/utils/resolveProjectReportKnownError";
 import { resolveProjectReportFallbackBody } from "@/features/projects/reports/utils/resolveProjectReportFallbackBody";
 import { stripAgentRunReportMarkerFragments } from "@/features/projects/reports/utils/stripAgentRunReportMarkerFragments";
-import { resolveAgentRunReportProgressView } from "@/features/reports/utils/resolveAgentRunReportProgressView";
+import { resolveAgentRunReportProgressView } from "@/features/reports/utils/public-api/presentation";
 import { isAgentRunSweptStale } from "@/lib/dispatch/isAgentRunStalled";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";

@@ -7,8 +7,8 @@ import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashb
 import { appendAgentRunTerminalOutput } from "@/features/agent/utils/agentRunTerminalOutputStore";
 import { sendDashboardTerminalSubscribe } from "@/features/agent/utils/sendDashboardTerminalSubscribe";
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
-import { handleAgentRunLiveTerminalSocketMessage } from "@/features/reports/utils/handleAgentRunLiveTerminalSocketMessage";
-import { registerAgentRunLiveTerminal } from "@/features/reports/utils/registerAgentRunLiveTerminal";
+import { handleAgentRunLiveTerminalSocketMessage } from "@/features/reports/utils/public-api/presentation";
+import { registerAgentRunLiveTerminal } from "@/features/reports/utils/public-api/presentation";
 
 export function useAgentRunLiveTerminalSocket(input: {
   readonly runId: string;

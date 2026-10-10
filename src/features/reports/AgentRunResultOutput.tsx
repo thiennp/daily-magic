@@ -7,9 +7,9 @@ import AgentLiveTerminalNextActions from "@/features/agent/AgentLiveTerminalNext
 import AgentRunContinueMessageField from "@/features/reports/AgentRunContinueMessageField";
 import AgentRunSemanticOutputView from "@/features/dispatch/AgentRunSemanticOutputView";
 import { formatAgentRunSemanticOutput } from "@/features/dispatch/utils/formatAgentRunSemanticOutput";
-import { buildAgentRunContinueHref } from "@/features/reports/utils/buildAgentRunContinueHref";
-import { canContinueAgentRunOnStoredMac } from "@/features/reports/utils/canContinueAgentRunOnStoredMac";
-import { splitAgentRunResultForDisplay } from "@/features/reports/utils/splitAgentRunResultForDisplay";
+import { buildAgentRunContinueHref } from "@/features/reports/utils/public-api/presentation";
+import { canContinueAgentRunOnStoredMac } from "@/features/reports/utils/public-api/presentation";
+import { splitAgentRunResultForDisplay } from "@/features/reports/utils/public-api/presentation";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 interface AgentRunResultOutputProps {

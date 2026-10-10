@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { deleteAgentRunHistory } from "@/features/reports/utils/deleteAgentRunHistory";
+import { deleteAgentRunHistory } from "@/features/reports/utils/public-api/presentation";
 
 interface AgentRunDetailDeleteButtonProps {
   readonly runId: string;

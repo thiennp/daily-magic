@@ -3,8 +3,8 @@
 import Link from "next/link";
 
 import Button from "@/components/ui/button/Button";
-import { buildAgentRunContinueHref } from "@/features/reports/utils/buildAgentRunContinueHref";
-import { canContinueAgentRunOnStoredMac } from "@/features/reports/utils/canContinueAgentRunOnStoredMac";
+import { buildAgentRunContinueHref } from "@/features/reports/utils/public-api/presentation";
+import { canContinueAgentRunOnStoredMac } from "@/features/reports/utils/public-api/presentation";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 interface AgentRunContinueButtonProps {

@@ -6,7 +6,7 @@ import type { SendTaskComposerPickerItem } from "@/features/agent/utils/buildSen
 import {
   clearAgentRunHistory,
   deleteAgentRunHistory,
-} from "@/features/reports/utils/deleteAgentRunHistory";
+} from "@/features/reports/utils/public-api/presentation";
 
 export const useSendTaskComposerHistoryDelete = (): {
   readonly isDeleting: boolean;

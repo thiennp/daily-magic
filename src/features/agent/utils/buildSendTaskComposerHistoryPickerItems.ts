@@ -1,6 +1,6 @@
 import { buildSendTaskComposerHistoryPickerLabel } from "@/features/agent/utils/buildSendTaskComposerHistoryPickerLabel";
 import type { SendTaskComposerPickerItem } from "@/features/agent/utils/buildSendTaskComposerPickerItems";
-import { canContinueAgentRunOnStoredMac } from "@/features/reports/utils/canContinueAgentRunOnStoredMac";
+import { canContinueAgentRunOnStoredMac } from "@/features/reports/utils/public-api/presentation";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import {
   HARNESS_WRITER_AGENTS,

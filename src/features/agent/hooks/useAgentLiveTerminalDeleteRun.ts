@@ -5,7 +5,7 @@ import { useCallback, type Dispatch, type SetStateAction } from "react";
 import type { AgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalState.type";
 import { finishAgentLiveTerminalSession } from "@/features/agent/utils/reduceAgentLiveTerminalMessage";
 import { finishAgentLiveTerminalWriterSession } from "@/features/agent/utils/sendWriterSessionEnd";
-import { deleteAgentRunHistory } from "@/features/reports/utils/deleteAgentRunHistory";
+import { deleteAgentRunHistory } from "@/features/reports/utils/public-api/presentation";
 
 export const useAgentLiveTerminalDeleteRun = (
   socketRef: { readonly current: WebSocket | null },

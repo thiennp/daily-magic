@@ -8,10 +8,10 @@ import AgentRunEstimateComparison from "@/features/reports/AgentRunEstimateCompa
 import AgentRunKeepInProjectButton from "@/features/reports/AgentRunKeepInProjectButton";
 import AgentRunReportProgress from "@/features/reports/AgentRunReportProgress";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
-import { resolveAgentRunDetailOutcomeMessage } from "@/features/reports/utils/resolveAgentRunDetailOutcomeMessage";
-import { resolveAgentRunDetailResultOutputForHonesty } from "@/features/reports/utils/resolveAgentRunDetailResultOutputForHonesty";
+import { resolveAgentRunDetailOutcomeMessage } from "@/features/reports/utils/public-api/presentation";
+import { resolveAgentRunDetailResultOutputForHonesty } from "@/features/reports/utils/public-api/presentation";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
-import { resolveAgentRunHistoryOutcomeBadge } from "@/features/reports/utils/resolveAgentRunHistoryOutcomeBadge";
+import { resolveAgentRunHistoryOutcomeBadge } from "@/features/reports/utils/public-api/presentation";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
 interface AgentRunDetailContentProps {

@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { handleAgentWitchDashboardInboundMessage } from "@/features/agent-witch/dashboard/handleAgentWitchDashboardInboundMessage";
 import trackOnboardingFromAgentWitchSocketMessage from "@/features/home/utils/trackOnboardingFromAgentWitchSocketMessage";
-import { syncAgentRunHeartbeatLocalCacheFromSocket } from "@/features/reports/utils/syncAgentRunHeartbeatLocalCacheFromSocket";
-import { syncAgentRunLocalCacheFromSocket } from "@/features/reports/utils/syncAgentRunLocalCacheFromSocket";
+import { syncAgentRunHeartbeatLocalCacheFromSocket } from "@/features/reports/utils/public-api/presentation";
+import { syncAgentRunLocalCacheFromSocket } from "@/features/reports/utils/public-api/presentation";
 
 vi.mock(
   "@/features/home/utils/trackOnboardingFromAgentWitchSocketMessage",

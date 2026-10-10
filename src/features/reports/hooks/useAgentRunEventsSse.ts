@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 import type { AgentRunSseEvent } from "@/features/reports/types/public-api/types";
-import { parseAgentRunSseEvent } from "@/features/reports/utils/parseAgentRunSseEvent";
+import { parseAgentRunSseEvent } from "@/features/reports/utils/public-api/presentation";
 
 export function useAgentRunEventsSse(input: {
   readonly runId: string;
