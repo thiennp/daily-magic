@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 
 import type { UserItem } from "@/features/admin/components/UsersTable";
