@@ -34,3 +34,7 @@ _None (guest sync uses existing capabilities routes)._
 - `harness`
 
 Query: `npm run feature-knowledge:query -- "..." --feature=library`
+
+## Public API
+
+Other features import only from `public-api/presentation` (`LibraryPageClient`, `LibraryPageHeader`, `GuestLibraryDraftSyncListener`, `useLibraryCapabilities`).

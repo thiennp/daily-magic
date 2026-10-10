@@ -13,7 +13,7 @@ import DispatchApprovalListener from "@/features/dispatch/DispatchApprovalListen
 import AppShellLiveFloaterRestorer from "@/features/shell/AppShellLiveFloaterRestorer";
 import WorkflowAttentionBanner from "@/features/dispatch/WorkflowAttentionBanner";
 import WorkflowHumanStepListener from "@/features/dispatch/WorkflowHumanStepListener";
-import GuestLibraryDraftSyncListener from "@/features/library/GuestLibraryDraftSyncListener";
+import { GuestLibraryDraftSyncListener } from "@/features/library/public-api/presentation";
 
 interface AppShellProps {
   readonly children: React.ReactNode;

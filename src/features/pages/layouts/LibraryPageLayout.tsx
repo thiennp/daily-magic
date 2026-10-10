@@ -1,6 +1,8 @@
 import { GuestAwarePageStack } from "@/features/empty-states/public-api/presentation";
-import LibraryPageClient from "@/features/library/LibraryPageClient";
-import LibraryPageHeader from "@/features/library/LibraryPageHeader";
+import {
+  LibraryPageClient,
+  LibraryPageHeader,
+} from "@/features/library/public-api/presentation";
 
 export default function LibraryPageLayout() {
   return (
