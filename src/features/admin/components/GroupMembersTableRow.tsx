@@ -1,5 +1,5 @@
 import AppIcon from "@/components/ui/icon/AppIcon";
-import TargetPresenceBadges from "@/features/dispatch/TargetPresenceBadges";
+import { TargetPresenceBadges } from "@/features/dispatch/public-api/presentation";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
 import type { MemberItem } from "@/features/admin/types/public-api/types";
 import { formatCompanyMemberRoleLabel } from "@/features/admin/utils/public-api/presentation";

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import { isAgentLiveTerminalWorking } from "@/features/agent/utils/isAgentLiveTerminalWorking";
-import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
+import type { AgentRunInputRequest } from "@/features/dispatch/public-api/types";
 
 export const useAgentLiveTerminalFeedbackQueue = (input: {
   readonly status: AgentLiveTerminalStatus;

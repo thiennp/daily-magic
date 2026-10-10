@@ -1,4 +1,4 @@
-import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
+import type { AgentRunInputRequest } from "@/features/dispatch/public-api/types";
 import {
   appendAgentLiveTerminalCommandIfMissing,
   buildAgentLiveTerminalCommandEntry,

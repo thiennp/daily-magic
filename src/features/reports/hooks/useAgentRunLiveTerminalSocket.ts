@@ -6,7 +6,7 @@ import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/public-
 import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/public-api/presentation";
 import { appendAgentRunTerminalOutput } from "@/features/agent/utils/agentRunTerminalOutputStore";
 import { sendDashboardTerminalSubscribe } from "@/features/agent/utils/sendDashboardTerminalSubscribe";
-import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
+import type { AgentRunInputRequest } from "@/features/dispatch/public-api/types";
 import { handleAgentRunLiveTerminalSocketMessage } from "@/features/reports/utils/public-api/presentation";
 import { registerAgentRunLiveTerminal } from "@/features/reports/utils/public-api/presentation";
 

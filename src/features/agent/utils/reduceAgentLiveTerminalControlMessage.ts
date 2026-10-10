@@ -1,6 +1,6 @@
-import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
+import type { AgentRunInputRequest } from "@/features/dispatch/public-api/types";
 import { isAgentRunQuestionAlreadyAnswered } from "@/features/agent/utils/isAgentRunQuestionAlreadyAnswered";
-import { parseAgentRunInputContext } from "@/features/dispatch/utils/parseAgentRunInputContext";
+import { parseAgentRunInputContext } from "@/features/dispatch/public-api/presentation";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 import type { AgentLiveTerminalState } from "./agentLiveTerminalState.type";

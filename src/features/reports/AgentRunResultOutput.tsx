@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 
 import AgentLiveTerminalNextActions from "@/features/agent/AgentLiveTerminalNextActions";
 import AgentRunContinueMessageField from "@/features/reports/AgentRunContinueMessageField";
-import AgentRunSemanticOutputView from "@/features/dispatch/AgentRunSemanticOutputView";
-import { formatAgentRunSemanticOutput } from "@/features/dispatch/utils/formatAgentRunSemanticOutput";
+import { AgentRunSemanticOutputView } from "@/features/dispatch/public-api/presentation";
+import { formatAgentRunSemanticOutput } from "@/features/dispatch/public-api/presentation";
 import { buildAgentRunContinueHref } from "@/features/reports/utils/public-api/presentation";
 import { canContinueAgentRunOnStoredMac } from "@/features/reports/utils/public-api/presentation";
 import { splitAgentRunResultForDisplay } from "@/features/reports/utils/public-api/presentation";

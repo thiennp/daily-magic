@@ -1,5 +1,5 @@
 import { readDispatchHttpResponseError } from "@/features/agent/utils/readDispatchHttpResponseError";
-import { setWorkflowHumanStepPending } from "@/features/dispatch/utils/workflowHumanStepPendingStore";
+import { setWorkflowHumanStepPending } from "@/features/dispatch/public-api/presentation";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { parseWorkflowRunStepResponse } from "@/lib/workflowOrchestration/parseWorkflowRunStepResponse";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";

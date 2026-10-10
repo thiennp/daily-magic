@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { postWorkflowHumanStepComplete } from "@/features/agent/utils/postWorkflowHumanStepComplete";
-import { setWorkflowHumanStepPending } from "@/features/dispatch/utils/workflowHumanStepPendingStore";
+import { setWorkflowHumanStepPending } from "@/features/dispatch/public-api/presentation";
 
 describe("postWorkflowHumanStepComplete", () => {
   afterEach(() => {

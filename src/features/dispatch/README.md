@@ -33,3 +33,7 @@ Query: `npm run feature-knowledge:query -- "..." --feature=dispatch`
 ## Hooks public API
 
 `hooks/public-api/types.ts` (dispatch target and approval-request types) and `hooks/public-api/presentation.ts` (dispatch React hooks) are the only entry points other code may import from `hooks/`.
+
+## Public API
+
+Outside code imports from `public-api/` only: `public-api/presentation.ts` (components, stores and client utils), `public-api/types.ts` (types), plus the existing `hooks/public-api/` for hooks.

@@ -4,10 +4,8 @@ import {
 } from "@/features/agent/utils/parseAgentLiveProgressUpdates";
 import { cleanAgentOutputForUser } from "@/features/agent/utils/cleanAgentOutputForUser";
 import { stripAgentRunProgressFromOutput } from "@/features/agent/utils/stripAgentRunProgressFromOutput";
-import {
-  parseAgentRunPartialOutputSections,
-  type AgentRunPartialOutputSection,
-} from "@/features/dispatch/utils/parseAgentRunPartialOutputSections";
+import { parseAgentRunPartialOutputSections } from "@/features/dispatch/public-api/presentation";
+import type { AgentRunPartialOutputSection } from "@/features/dispatch/public-api/types";
 
 export type FormattedAgentRunPartialOutput = {
   readonly progressUpdates: readonly AgentLiveProgressUpdate[];

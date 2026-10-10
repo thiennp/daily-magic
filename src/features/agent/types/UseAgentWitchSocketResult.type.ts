@@ -3,7 +3,7 @@ import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTe
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import type { AgentWitchSocketDisplay } from "@/lib/agentWitch/parseAgentWitchSocketDisplay";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
-import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
+import type { AgentRunInputRequest } from "@/features/dispatch/public-api/types";
 
 export interface UseAgentWitchSocketResult {
   readonly connectionStatus: WsTestConnectionStatus;

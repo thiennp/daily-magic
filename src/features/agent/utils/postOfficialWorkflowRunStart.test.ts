@@ -4,7 +4,7 @@ import { postOfficialWorkflowRunStart } from "@/features/agent/utils/postOfficia
 import {
   getWorkflowHumanStepPendingSnapshot,
   setWorkflowHumanStepPending,
-} from "@/features/dispatch/utils/workflowHumanStepPendingStore";
+} from "@/features/dispatch/public-api/presentation";
 
 describe("postOfficialWorkflowRunStart", () => {
   afterEach(() => {

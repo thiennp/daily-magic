@@ -2,7 +2,7 @@
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import SendTaskLibraryPicker from "@/features/agent/SendTaskLibraryPicker";
-import TeamDispatchFields from "@/features/dispatch/TeamDispatchFields";
+import { TeamDispatchFields } from "@/features/dispatch/public-api/presentation";
 import WsTestPromptComposerPanel from "@/features/agent/WsTestPromptComposerPanel";
 import { useShouldShowTeamDispatchSection } from "@/features/agent/hooks/useShouldShowTeamDispatchSection";
 import type { useWsTestComposerPanelActions } from "@/features/agent/hooks/useWsTestComposerPanelActions";

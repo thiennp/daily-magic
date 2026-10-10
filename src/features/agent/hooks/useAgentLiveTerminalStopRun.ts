@@ -7,7 +7,7 @@ import {
   markAgentLiveTerminalStopRequested,
 } from "@/features/agent/utils/agentLiveTerminalStopRun";
 import type { AgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalState.type";
-import { sendAgentRunStop } from "@/features/dispatch/utils/sendAgentRunStop";
+import { sendAgentRunStop } from "@/features/dispatch/public-api/presentation";
 
 export const useAgentLiveTerminalStopRun = (
   state: AgentLiveTerminalState,

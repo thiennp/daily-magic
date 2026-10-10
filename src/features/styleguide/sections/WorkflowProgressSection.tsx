@@ -1,8 +1,8 @@
 "use client";
 
 import AppPanel from "@/components/surfaces/AppPanel";
-import WorkflowRunStepProgress from "@/features/dispatch/WorkflowRunStepProgress";
-import WorkflowRunStepTimeline from "@/features/dispatch/WorkflowRunStepTimeline";
+import { WorkflowRunStepProgress } from "@/features/dispatch/public-api/presentation";
+import { WorkflowRunStepTimeline } from "@/features/dispatch/public-api/presentation";
 import type { WorkflowStepRunRecord } from "@/lib/workflowOrchestration/types/WorkflowRunRecord.type";
 
 const DEMO_STEPS: readonly WorkflowStepRunRecord[] = [

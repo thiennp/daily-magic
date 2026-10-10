@@ -1,8 +1,8 @@
 import type { AgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalState.type";
-import { getPendingInputForRun } from "@/features/dispatch/agentRunInputStore";
-import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
+import { getPendingInputForRun } from "@/features/dispatch/public-api/presentation";
+import type { AgentRunInputRequest } from "@/features/dispatch/public-api/types";
 import { isAgentRunQuestionAlreadyAnswered } from "@/features/agent/utils/isAgentRunQuestionAlreadyAnswered";
-import { resolveRunInputReopenRequest } from "@/features/dispatch/utils/resolveRunInputReopenRequest";
+import { resolveRunInputReopenRequest } from "@/features/dispatch/public-api/presentation";
 
 /**
  * afae8216: a re-attached floater for a run that is waiting on the user

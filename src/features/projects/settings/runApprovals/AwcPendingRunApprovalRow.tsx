@@ -4,7 +4,7 @@ import Button from "@/components/ui/button/Button";
 import {
   formatDispatchApprovalCardTitle,
   formatDispatchApprovalFolderLine,
-} from "@/features/dispatch/utils/formatDispatchApprovalCardTitle";
+} from "@/features/dispatch/public-api/presentation";
 import { AWC_PENDING_APPROVAL_CARD_COPY } from "@/features/projects/access/approvalCard/awcPendingApprovalCardCopy.constant";
 import { RUN_APPROVALS_COPY as C } from "@/features/projects/settings/runApprovals/runApprovalsCopy.constant";
 import { resolveRunApprovalActionReason } from "@/features/projects/settings/runApprovals/resolveRunApprovalActionReason";
@@ -71,7 +71,10 @@ export default function AwcPendingRunApprovalRow({
         </Button>
       </div>
       {reason !== null ? (
-        <p role="status" className="mt-2 text-[13px] text-awc-fg-muted dark:text-gray-400">
+        <p
+          role="status"
+          className="mt-2 text-[13px] text-awc-fg-muted dark:text-gray-400"
+        >
           {reason}
         </p>
       ) : null}

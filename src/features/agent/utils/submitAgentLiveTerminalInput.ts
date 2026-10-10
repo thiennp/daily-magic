@@ -1,6 +1,6 @@
 import { appendAgentLiveTerminalPrompt } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
 import { formatAgentLiveProgressCheckpointRecord } from "@/features/agent/utils/formatAgentLiveProgressCheckpointRecord";
-import { sendAgentRunInputResponse } from "@/features/dispatch/utils/agentRunInputSocket";
+import { sendAgentRunInputResponse } from "@/features/dispatch/public-api/presentation";
 import type { AgentLiveTerminalState } from "@/features/agent/utils/reduceAgentLiveTerminalMessage";
 
 export const submitAgentLiveTerminalInput = (

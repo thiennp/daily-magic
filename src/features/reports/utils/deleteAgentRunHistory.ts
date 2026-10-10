@@ -1,6 +1,6 @@
 import { removeAgentRunTerminalOutput } from "@/features/agent/utils/agentRunTerminalOutputStore";
 import { removePersistedAgentLiveTerminalSessionByRunId } from "@/features/agent/utils/removePersistedAgentLiveTerminalSessionByRunId";
-import { sendAgentRunStop } from "@/features/dispatch/utils/sendAgentRunStop";
+import { sendAgentRunStop } from "@/features/dispatch/public-api/presentation";
 import {
   clearAgentRunsLocalCache,
   getAgentRunLocalCache,

@@ -9,10 +9,10 @@ import {
   APP_SHELL_WIDE_CONTENT_CLASS,
   APP_SHELL_WIDE_MAIN_CLASS,
 } from "@/features/shell/appShellContentWidth.constant";
-import DispatchApprovalListener from "@/features/dispatch/DispatchApprovalListener";
+import { DispatchApprovalListener } from "@/features/dispatch/public-api/presentation";
 import AppShellLiveFloaterRestorer from "@/features/shell/AppShellLiveFloaterRestorer";
-import WorkflowAttentionBanner from "@/features/dispatch/WorkflowAttentionBanner";
-import WorkflowHumanStepListener from "@/features/dispatch/WorkflowHumanStepListener";
+import { WorkflowAttentionBanner } from "@/features/dispatch/public-api/presentation";
+import { WorkflowHumanStepListener } from "@/features/dispatch/public-api/presentation";
 import { GuestLibraryDraftSyncListener } from "@/features/library/public-api/presentation";
 
 interface AppShellProps {

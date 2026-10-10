@@ -1,6 +1,6 @@
 "use client";
 
-import AgentDispatchPolicyPanel from "@/features/dispatch/AgentDispatchPolicyPanel";
+import { AgentDispatchPolicyPanel } from "@/features/dispatch/public-api/presentation";
 import { HomeSetupEmbeddedProvider } from "@/features/home/HomeSetupEmbeddedContext";
 import HomeSetupDivider from "@/features/home/HomeSetupDivider";
 import { HarnessWorkspace } from "@/features/harness/public-api/presentation";

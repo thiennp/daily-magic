@@ -1,7 +1,5 @@
-import {
-  parseDispatchApprovalSocketMessage,
-  type AgentRunInputRequest,
-} from "@/features/dispatch/utils/agentRunInputSocket";
+import { parseDispatchApprovalSocketMessage } from "@/features/dispatch/public-api/presentation";
+import type { AgentRunInputRequest } from "@/features/dispatch/public-api/types";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>

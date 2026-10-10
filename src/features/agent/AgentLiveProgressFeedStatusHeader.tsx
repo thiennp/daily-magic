@@ -5,9 +5,9 @@ import AgentLiveRunOutcomeChip from "@/features/agent/AgentLiveRunOutcomeChip";
 import type { WsTestConnectionStatus } from "@/features/agent/types/public-api/types";
 import type { AgentLiveRunOutcome } from "@/features/agent/utils/agentLiveRunOutcomeKind.type";
 import { shouldShowAgentLiveRetry } from "@/features/agent/utils/shouldShowAgentLiveRetry";
-import { useAgentRunInputRequest } from "@/features/dispatch/agentRunInputStore";
-import { requestAgentRunInputModalReopen } from "@/features/dispatch/utils/agentRunInputModalEvents";
-import { resolveRunInputReopenRequest } from "@/features/dispatch/utils/resolveRunInputReopenRequest";
+import { useAgentRunInputRequest } from "@/features/dispatch/public-api/presentation";
+import { requestAgentRunInputModalReopen } from "@/features/dispatch/public-api/presentation";
+import { resolveRunInputReopenRequest } from "@/features/dispatch/public-api/presentation";
 import { getAgentRunLocalCache } from "@/features/reports/public-api/presentation";
 
 interface AgentLiveProgressFeedStatusHeaderProps {

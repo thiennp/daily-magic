@@ -2,7 +2,7 @@
 
 import { useEffect, type Dispatch, type SetStateAction } from "react";
 
-import { AGENT_WITCH_RUN_INPUT_ANSWERED_EVENT } from "@/features/dispatch/utils/announceAgentRunInputAnswered";
+import { AGENT_WITCH_RUN_INPUT_ANSWERED_EVENT } from "@/features/dispatch/public-api/presentation";
 import type { AgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalState.type";
 
 export const clearAnsweredAgentLiveInput = (
