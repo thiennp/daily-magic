@@ -1,7 +1,8 @@
 {
   "completed": [
     "src/features/agent-witch/mac-bootstrap",
-    "src/features/projects/invitations"
+    "src/features/projects/invitations",
+    "src/features/setup"
   ],
   "blocked": {},
   "rounds": [
@@ -14,6 +15,11 @@
       "unit": "src/features/projects/invitations",
       "sha": "fa30104f7d68e7906139c5d4bad718577d6ccef6",
       "at": "2026-10-10T08:46:08.438Z"
+    },
+    {
+      "unit": "src/features/setup",
+      "sha": "379085555292ee6ee18835256cd414149b9487e8",
+      "at": "2026-10-10T08:47:15.355Z"
     }
   ]
 }
