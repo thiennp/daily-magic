@@ -33,3 +33,5 @@ Query: `npm run feature-knowledge:query -- "..." --feature=agent`
 Public API (`icons`): outside code imports `HarnessWriterAgentMark` from `@/features/agent/icons/public-api/presentation`.
 
 Public API (`hooks/types`): outside code imports `UseWsTestTaskComposerResult` from `@/features/agent/hooks/types/public-api/types`.
+
+Public API (`hooks/utils`): outside code imports `fetchUserProjectsForLoader` from `@/features/agent/hooks/utils/public-api/presentation`.

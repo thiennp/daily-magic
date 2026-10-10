@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { fetchUserProjectsForLoader } from "@/features/agent/hooks/utils/fetchUserProjectsForLoader";
+import { fetchUserProjectsForLoader } from "@/features/agent/hooks/utils/public-api/presentation";
 import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
