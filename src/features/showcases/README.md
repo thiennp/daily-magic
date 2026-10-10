@@ -35,3 +35,7 @@ Query: `npm run feature-knowledge:query -- "..." --feature=showcases`
 ## Articles public API
 
 `src/features/showcases/articles/public-api/types.ts` re-exports the article objects; import them from there outside `articles/`.
+
+## Public API
+
+Outside `src/features/showcases/`, import only from `public-api/types.ts` (article type, registries, try-next helper), `public-api/presentation.ts` (page layouts, OG image layout) and `public-api/infrastructure.ts` (metadata builder).

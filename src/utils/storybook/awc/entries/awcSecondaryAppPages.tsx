@@ -6,7 +6,7 @@ import { ConnectionLabPageLayout } from "@/features/agent-witch/connection-lab/p
 import UserManagementPanel from "@/features/admin/UserManagementPanel";
 import PromptSdlcGuidePage from "@/features/prompt-optimizer/internal/presentation/PromptSdlcGuidePage";
 import PromptSdlcPage from "@/features/prompt-optimizer/internal/presentation/PromptSdlcPage";
-import ShowcasesIndexPageLayout from "@/features/showcases/ShowcasesIndexPageLayout";
+import { ShowcasesIndexPageLayout } from "@/features/showcases/public-api/presentation";
 import type { AwcStorybookPageEntry } from "@/utils/storybook/awc/awcStorybookPageEntry.type";
 import {
   AWC_STORYBOOK_SAMPLE_ADMIN_USERS,

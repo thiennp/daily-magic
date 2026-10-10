@@ -83,7 +83,8 @@
     "src/features/admin/components",
     "src/features/showcases/articles",
     "src/features/projects/members",
-    "src/features/marketing"
+    "src/features/marketing",
+    "src/features/showcases"
   ],
   "blocked": {
     "src/features/home/constants": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing), pre-commit architecture gate fails when it is edited",
@@ -514,6 +515,11 @@
       "unit": "src/features/marketing",
       "sha": "377f3638d7c2c6a80b70d016eaa67e4c498dd36f",
       "at": "2026-10-10T10:54:46.541Z"
+    },
+    {
+      "unit": "src/features/showcases",
+      "sha": "9d6b1b5a0f5f9f8a6be8ebc82cf35189f53998d2",
+      "at": "2026-10-10T10:56:08.525Z"
     }
   ],
   "limits": {

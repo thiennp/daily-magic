@@ -7,7 +7,7 @@ import {
   MARKETING_HEADER_NAV_ITEMS,
   resolveMarketingFooterProductLinks,
 } from "@/features/marketing/public-api/types";
-import { isShowcaseTryNextAuthRequired } from "@/features/showcases/resolveShowcaseTryNextHref";
+import { isShowcaseTryNextAuthRequired } from "@/features/showcases/public-api/types";
 import {
   PROJECTS_LIBRARY_INTENT_HREF,
   PROJECTS_REPORTS_INTENT_HREF,

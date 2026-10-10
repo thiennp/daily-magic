@@ -1,4 +1,4 @@
-import { E2E_SHOWCASE_ARTICLES } from "@/features/showcases/e2eShowcaseArticleRegistry";
+import { E2E_SHOWCASE_ARTICLES } from "@/features/showcases/public-api/types";
 
 const STAFF_AND_INTERNAL_DISALLOW_PATHS: readonly string[] = [
   "/admin/",

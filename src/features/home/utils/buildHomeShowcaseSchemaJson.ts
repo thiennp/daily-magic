@@ -1,4 +1,4 @@
-import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
+import type { ShowcaseArticle } from "@/features/showcases/public-api/types";
 
 export function buildHomeShowcaseSchemaJson(
   articles: readonly ShowcaseArticle[],

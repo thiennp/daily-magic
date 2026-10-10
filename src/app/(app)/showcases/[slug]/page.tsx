@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import ShowcaseArticleLayout from "@/features/showcases/ShowcaseArticleLayout";
-import { buildShowcaseArticleMetadata } from "@/features/showcases/buildShowcaseArticleMetadata";
-import { isE2eShowcaseSlug } from "@/features/showcases/e2eShowcaseArticleRegistry";
+import { buildShowcaseArticleMetadata } from "@/features/showcases/public-api/infrastructure";
+import { ShowcaseArticleLayout } from "@/features/showcases/public-api/presentation";
 import {
   SHOWCASE_ARTICLES,
   getShowcaseArticleBySlug,
-} from "@/features/showcases/showcaseArticleRegistry";
+  isE2eShowcaseSlug,
+} from "@/features/showcases/public-api/types";
 import { MarketingShell } from "@/features/marketing/public-api/presentation";
 import {
   isStaffPageViewer,

@@ -1,8 +1,10 @@
 import { ImageResponse } from "next/og";
 
-import { isE2eShowcaseSlug } from "@/features/showcases/e2eShowcaseArticleRegistry";
-import { showcaseOgImageLayout } from "@/features/showcases/showcaseOgImageLayout";
-import { getShowcaseArticleBySlug } from "@/features/showcases/showcaseArticleRegistry";
+import { showcaseOgImageLayout } from "@/features/showcases/public-api/presentation";
+import {
+  getShowcaseArticleBySlug,
+  isE2eShowcaseSlug,
+} from "@/features/showcases/public-api/types";
 import { isStaffPageViewer } from "@/lib/auth/requireStaffPageAccess";
 
 export const alt = "AgentWitch real example";

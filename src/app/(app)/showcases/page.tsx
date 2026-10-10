@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import ShowcasesIndexPageLayout from "@/features/showcases/ShowcasesIndexPageLayout";
+import { ShowcasesIndexPageLayout } from "@/features/showcases/public-api/presentation";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
 export const metadata: Metadata = {
