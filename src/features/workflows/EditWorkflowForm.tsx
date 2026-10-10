@@ -6,7 +6,7 @@ import CreateWorkflowFieldsEditor from "@/features/workflows/CreateWorkflowField
 import CreateWorkflowOutputsEditor from "@/features/workflows/CreateWorkflowOutputsEditor";
 import { createDraftWorkflowField } from "@/features/workflows/createDraftWorkflowField";
 import { createDraftWorkflowOutputField } from "@/features/workflows/createDraftWorkflowOutputField";
-import { useEditWorkflowForm } from "@/features/workflows/hooks/useEditWorkflowForm";
+import { useEditWorkflowForm } from "@/features/workflows/hooks/public-api/presentation";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 
 interface EditWorkflowFormProps {

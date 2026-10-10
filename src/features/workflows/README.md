@@ -30,3 +30,5 @@ _None._
 - `capabilities`
 
 Query: `npm run feature-knowledge:query -- "..." --feature=workflows`
+
+`hooks/` public API: import its hooks (`useCreateWorkflowForm`, `useCreateWorkflowTrialRun`, `useEditWorkflowForm`, `useWorkflowBuilderFlowTreeEditor`) from `@/features/workflows/hooks/public-api/presentation`.

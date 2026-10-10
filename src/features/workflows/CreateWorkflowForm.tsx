@@ -9,7 +9,7 @@ import CreateWorkflowFormCollapsiblePanels from "@/features/workflows/CreateWork
 import CreateWorkflowFormSubmitFooter from "@/features/workflows/CreateWorkflowFormSubmitFooter";
 import CreateWorkflowTrialRunSection from "@/features/workflows/CreateWorkflowTrialRunSection";
 import { createDraftWorkflowField } from "@/features/workflows/createDraftWorkflowField";
-import { useCreateWorkflowForm } from "@/features/workflows/hooks/useCreateWorkflowForm";
+import { useCreateWorkflowForm } from "@/features/workflows/hooks/public-api/presentation";
 import WorkflowBuilderCollapsibleSection from "@/features/workflows/WorkflowBuilderCollapsibleSection";
 import WorkflowBuilderFlowTree from "@/features/workflows/WorkflowBuilderFlowTree";
 import { WORKFLOW_BUILDER_ABOUT_SECTION } from "@/features/workflows/workflowBuilderCopy.constant";
