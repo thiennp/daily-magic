@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { useAutoSkills } from "@/features/project-auto-skills/public-api/presentation";
 import useAwcProjectHashDeepLink from "@/features/projects/hooks/useAwcProjectHashDeepLink";
-import useAwcProjectKnowledgeImpact from "@/features/projects/knowledge-impact/useAwcProjectKnowledgeImpact";
+import { useAwcProjectKnowledgeImpact } from "@/features/projects/knowledge-impact/public-api/presentation";
 import AwcProjectLibraryAutoSkills from "@/features/projects/library/AwcProjectLibraryAutoSkills";
 import AwcProjectLibraryAddFrom from "@/features/projects/library/AwcProjectLibraryAddFrom";
 import AwcProjectLibraryDetail from "@/features/projects/library/AwcProjectLibraryDetail";

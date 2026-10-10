@@ -1,7 +1,7 @@
 "use client";
 
 import AwcProjectDetailSettingsPanel from "@/features/projects/AwcProjectDetailSettingsPanel";
-import AwcProjectKnowledgeImpactPanel from "@/features/projects/knowledge-impact/AwcProjectKnowledgeImpactPanel";
+import { AwcProjectKnowledgeImpactPanel } from "@/features/projects/knowledge-impact/public-api/presentation";
 import AwcProjectLibraryPanel from "@/features/projects/library/AwcProjectLibraryPanel";
 import AwcProjectTasksPanelWithRecords from "@/features/projects/tasks/AwcProjectTasksPanelWithRecords";
 import AwcProjectOverviewPanel from "@/features/projects/overview/AwcProjectOverviewPanel";
