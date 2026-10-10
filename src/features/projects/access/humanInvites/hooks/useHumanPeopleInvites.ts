@@ -7,9 +7,9 @@ import { useHumanInviteEmailActions } from "@/features/projects/access/humanInvi
 import { useHumanInviteCreateActions } from "@/features/projects/access/humanInvites/hooks/useHumanInviteCreateActions";
 import { useHumanInviteDestructiveActions } from "@/features/projects/access/humanInvites/hooks/useHumanInviteDestructiveActions";
 import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
-import { filterJoinedHumanMembers } from "@/features/projects/access/humanInvites/utils/filterJoinedHumanMembers";
+import { filterJoinedHumanMembers } from "@/features/projects/access/humanInvites/utils/public-api/presentation";
 import type { HumanInviteListItem } from "@/features/projects/access/humanInvites/types/humanInviteUiContract.type";
-import type { AccessMemberForHumanFilter } from "@/features/projects/access/humanInvites/utils/filterJoinedHumanMembers";
+import type { AccessMemberForHumanFilter } from "@/features/projects/access/humanInvites/utils/public-api/types";
 
 export const useHumanPeopleInvites = (input: {
   readonly projectId: string;

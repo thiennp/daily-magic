@@ -1,7 +1,7 @@
 "use client";
 
 import AwcHumanInviteAcceptJoinBody from "@/features/projects/access/humanInvites/AwcHumanInviteAcceptJoinBody";
-import { isHumanInviteAcceptTerminalState } from "@/features/projects/access/humanInvites/utils/isHumanInviteAcceptTerminalState";
+import { isHumanInviteAcceptTerminalState } from "@/features/projects/access/humanInvites/utils/public-api/presentation";
 import AwcHumanInviteAcceptTerminalView from "@/features/projects/access/humanInvites/AwcHumanInviteAcceptTerminalView";
 import AwcHumanInviteEmailLockAcceptPanel from "@/features/projects/access/humanInvites/AwcHumanInviteEmailLockAcceptPanel";
 import type { HumanInviteRole } from "@/features/projects/access/humanInvites/types/humanInviteUiContract.type";

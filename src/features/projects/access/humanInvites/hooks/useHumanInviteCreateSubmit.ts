@@ -2,7 +2,7 @@ import type {
   CreateHumanInviteBody,
   HumanInviteRole,
 } from "@/features/projects/access/humanInvites/types/humanInviteUiContract.type";
-import { buildHumanInviteCreateBody } from "@/features/projects/access/humanInvites/utils/buildHumanInviteCreateBody";
+import { buildHumanInviteCreateBody } from "@/features/projects/access/humanInvites/utils/public-api/presentation";
 
 /** Copy-link submit: build the create body (email lock only on the Email tab). */
 export const useHumanInviteCreateSubmit = (input: {

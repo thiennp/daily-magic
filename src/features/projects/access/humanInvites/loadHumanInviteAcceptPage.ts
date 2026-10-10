@@ -1,7 +1,7 @@
 import { classifyHumanInviteMiss } from "@/lib/projects/acl/humanInvites/classifyHumanInviteMiss";
 import { peekHumanInviteByToken } from "@/lib/projects/acl/humanInvites/peekHumanInviteByToken";
 import type { HumanInviteAcceptLoad } from "@/features/projects/access/humanInvites/types/humanInviteAcceptLoad.type";
-import { formatHumanInviteInviter } from "@/features/projects/access/humanInvites/utils/formatHumanInviteInviter";
+import { formatHumanInviteInviter } from "@/features/projects/access/humanInvites/utils/public-api/presentation";
 import { getUserById } from "@/lib/auth/userRepository";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 

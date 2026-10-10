@@ -5,8 +5,8 @@ import { useEffect } from "react";
 import SectionIcon from "@/features/projects/members/AwcProjectMembersSectionCard";
 import AwcHumanPeopleSectionBody from "@/features/projects/access/humanInvites/AwcHumanPeopleSectionBody";
 import { useHumanPeopleInvites } from "@/features/projects/access/humanInvites/hooks/useHumanPeopleInvites";
-import { countActiveAssistantMembers } from "@/features/projects/access/humanInvites/utils/countActiveAssistantMembers";
-import type { AccessMemberForHumanFilter } from "@/features/projects/access/humanInvites/utils/filterJoinedHumanMembers";
+import { countActiveAssistantMembers } from "@/features/projects/access/humanInvites/utils/public-api/presentation";
+import type { AccessMemberForHumanFilter } from "@/features/projects/access/humanInvites/utils/public-api/types";
 import AwcProjectAccessSection from "@/features/projects/access/AwcProjectAccessSection";
 import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
 

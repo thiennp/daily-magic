@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import type { SendHumanInviteEmailsInput } from "@/features/projects/access/humanInvites/hooks/useHumanInviteEmailActions";
 import type { HumanInviteRole } from "@/features/projects/access/humanInvites/types/humanInviteUiContract.type";
-import { parseHumanInviteEmailList } from "@/features/projects/access/humanInvites/utils/parseHumanInviteEmailList";
+import { parseHumanInviteEmailList } from "@/features/projects/access/humanInvites/utils/public-api/presentation";
 
 /** DF-025 Email tab: Approve-before-join toggle (default on) + Send invite submit. */
 export const useHumanInviteSendForm = (input: {

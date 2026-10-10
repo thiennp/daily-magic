@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 
 import { createHumanInviteApi } from "@/features/projects/access/humanInvites/humanInviteApi";
-import { mapCreateHumanInviteError } from "@/features/projects/access/humanInvites/utils/buildHumanInviteCreateBody";
+import { mapCreateHumanInviteError } from "@/features/projects/access/humanInvites/utils/public-api/presentation";
 import { HUMAN_INVITE_UI_COPY } from "@/features/projects/access/humanInvites/humanInviteUiCopy.constant";
 import type {
   CreateHumanInviteBody,

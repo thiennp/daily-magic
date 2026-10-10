@@ -6,12 +6,12 @@ import { useCallback, useMemo, useState } from "react";
 
 import type { HumanInviteAcceptViewState } from "@/features/projects/access/humanInvites/AwcHumanInviteAcceptView";
 import { acceptHumanInviteApi } from "@/features/projects/access/humanInvites/humanInviteApi";
-import { mapAcceptError } from "@/features/projects/access/humanInvites/utils/mapHumanInviteAcceptPageError";
+import { mapAcceptError } from "@/features/projects/access/humanInvites/utils/public-api/presentation";
 import {
   checkHumanAcceptNickname,
   initialHumanAcceptNickname,
   isHumanAcceptNamingError,
-} from "@/features/projects/access/humanInvites/utils/resolveHumanAcceptNickname";
+} from "@/features/projects/access/humanInvites/utils/public-api/presentation";
 import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
 
 export const useHumanInviteAcceptFlow = (input: {
