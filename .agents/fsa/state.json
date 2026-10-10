@@ -77,7 +77,8 @@
     "src/features/projects/access/approvalCard": "outside test AwcProjectAccessPendingList.df036.render.test.ts imports test helper AwcPendingApprovalCard.fixtures",
     "src/features/projects/access/humanInvites/types": "45 outside importers exceeds the 25 limit",
     "src/features/projects/messenger/hooks": "importer AwcProjectMessengerSection.tsx exceeds 100 effective lines once prettier-formatted (pre-existing)",
-    "src/features/projects/access/inbox": "outside importer AwcProjectAccessMemberTaskPulse.tsx exceeds 100-line architecture limit (pre-existing); pre-commit rejects touching it"
+    "src/features/projects/access/inbox": "outside importer AwcProjectAccessMemberTaskPulse.tsx exceeds 100-line architecture limit (pre-existing); pre-commit rejects touching it",
+    "src/features/projects/access/invites#root": "importer useCreatedInviteBanner.ts over architecture line limit"
   },
   "rounds": [
     {
