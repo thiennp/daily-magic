@@ -18,7 +18,7 @@ import {
 } from "@/features/project-auto-skills/internal/presentation/useAutoSkillScan";
 
 export interface AutoSkillsState extends AutoSkillScan {
-  /** Null for non-owners and while loading. */
+  /** Null while loading and for anyone who may not manage auto skills. */
   readonly overview: AutoSkillsOverview | null;
   readonly busy: boolean;
   readonly setEnabled: (enabled: boolean) => Promise<void>;
@@ -29,7 +29,7 @@ export interface AutoSkillsState extends AutoSkillScan {
 }
 
 /**
- * Owner-only Auto skills state, shared by the Library strip, the project
+ * Auto skills state (owner, or an allowed member), shared by the Library strip, the project
  * Overview, the One window feed. `enabled` false skips the request.
  */
 export const useAutoSkills = (

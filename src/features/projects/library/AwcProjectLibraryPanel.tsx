@@ -36,7 +36,8 @@ export default function AwcProjectLibraryPanel({
   pageActorRole,
 }: AwcProjectLibraryPanelProps) {
   const library = useAwcProjectLibrary(project.id);
-  const auto = useAutoSkills(project.id);
+  const canUseAutoSkills = pageActorRole !== "viewer";
+  const auto = useAutoSkills(project.id, canUseAutoSkills);
   const impact = useAwcProjectKnowledgeImpact(project.id);
   const [itemId, setItemId] = useAwcProjectHashDeepLink("library", "item");
   const [mode, setMode] = useState<LibraryMode>("list");
@@ -73,7 +74,7 @@ export default function AwcProjectLibraryPanel({
         onNewPlaybook={startNewPlaybook}
         onAddFrom={startAddFrom}
       />
-      {canEdit && mode === "list" && itemId === null ? (
+      {canUseAutoSkills && mode === "list" && itemId === null ? (
         <AwcProjectLibraryAutoSkills auto={auto} onSaved={library.reload} />
       ) : null}
       {toast !== null ? (

@@ -21,7 +21,7 @@ interface AwcProjectLibraryAutoSkillsProps {
   readonly onSaved: () => void;
 }
 
-/** Library "Auto skills" card (owner only): switch, judge, manual scan, drafts to review. */
+/** Library "Auto skills" card (owner, or a member the owner allows; the strip hides itself when the API refuses): switch, judge, manual scan, drafts to review. */
 export default function AwcProjectLibraryAutoSkills({
   auto,
   onSaved,
