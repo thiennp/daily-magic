@@ -4,7 +4,7 @@ import AwcProjectDetailSettingsPanel from "@/features/projects/AwcProjectDetailS
 import { AwcProjectKnowledgeImpactPanel } from "@/features/projects/knowledge-impact/public-api/presentation";
 import { AwcProjectLibraryPanel } from "@/features/projects/library/public-api/presentation";
 import AwcProjectTasksPanelWithRecords from "@/features/projects/tasks/AwcProjectTasksPanelWithRecords";
-import AwcProjectOverviewPanel from "@/features/projects/overview/AwcProjectOverviewPanel";
+import { AwcProjectOverviewPanel } from "@/features/projects/overview/public-api/presentation";
 import { AwcProjectPitfallsPanel } from "@/features/projects/pitfalls/public-api/presentation";
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/public-api/types";
 import { AwcProjectReportsPanel } from "@/features/projects/reports/public-api/presentation";

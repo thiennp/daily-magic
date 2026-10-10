@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { PROJECT_PAGE_OVERVIEW_COPY as C } from "@/features/projects/overview/projectPageOverviewCopy.constant";
+import { PROJECT_PAGE_OVERVIEW_COPY as C } from "@/features/projects/overview/public-api/types";
 import { PROJECT_PAGE_TAB_IDS } from "@/features/projects/projectPageTabs.constant";
 import { PROJECT_PAGE_V5_TAB_SUBTITLES } from "@/features/projects/projectPageV5Tabs.constant";
 import { AWC_PROJECT_PITFALLS_COPY } from "@/features/projects/pitfalls/public-api/types";

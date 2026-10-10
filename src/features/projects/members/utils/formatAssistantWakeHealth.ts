@@ -1,5 +1,5 @@
 import { ASSISTANT_WAKE_HEALTH_COPY as C } from "@/features/projects/members/assistantWakeHealthCopy.constant";
-import formatOverviewWhen from "@/features/projects/overview/formatOverviewWhen";
+import { formatOverviewWhen } from "@/features/projects/overview/public-api/types";
 
 export type AssistantWakeHealth = {
   readonly failed: boolean;

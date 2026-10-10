@@ -13,8 +13,10 @@ import AwcProjectMessengerSection from "@/features/projects/messenger/AwcProject
 import { unreadForMessengerThread } from "@/features/projects/messenger/oneWindow/useOneWindowUnreadSnapshot";
 import { PROJECT_MESSENGER_WHOLE_THREAD_KEY } from "@/lib/projects/acl/messaging/messenger/projectMessenger.constant";
 import type { AwcMessengerThreadList } from "@/features/projects/messenger/types/awcProjectMessenger.type";
-import buildOverviewAttention from "@/features/projects/overview/buildOverviewAttention";
-import sumMessengerUnread from "@/features/projects/overview/sumMessengerUnread";
+import {
+  buildOverviewAttention,
+  sumMessengerUnread,
+} from "@/features/projects/overview/public-api/types";
 import { projectHasOwnerComputer } from "@/features/projects/utils/projectHasOwnerComputer";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 

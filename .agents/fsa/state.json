@@ -77,7 +77,8 @@
     "src/features/projects/settings#root",
     "src/features/shell#root",
     "src/features/marketplace",
-    "src/features/harness"
+    "src/features/harness",
+    "src/features/projects/overview"
   ],
   "blocked": {
     "src/features/home/constants": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing), pre-commit architecture gate fails when it is edited",
@@ -479,6 +480,11 @@
       "unit": "src/features/harness",
       "sha": "53adc46e5e407fb514b50bd4177f949548ab0e05",
       "at": "2026-10-10T10:38:53.513Z"
+    },
+    {
+      "unit": "src/features/projects/overview",
+      "sha": "e1e3da63cd5cb9d9ef9b4c6f263a4909a6645e1b",
+      "at": "2026-10-10T10:40:08.003Z"
     }
   ]
 }

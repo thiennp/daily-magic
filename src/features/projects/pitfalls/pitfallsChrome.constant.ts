@@ -2,7 +2,7 @@ import {
   OVERVIEW_PILL_NEUTRAL_CLASS,
   OVERVIEW_SEVERITY_BLOCK_CLASS,
   OVERVIEW_SEVERITY_WARN_CLASS,
-} from "@/features/projects/overview/overviewChrome.constant";
+} from "@/features/projects/overview/public-api/types";
 import type { ProjectPitfallSeverity } from "@agent-witch/shared/pitfalls";
 
 /** Gray/black Safety rules chrome — severity pills reuse Overview classes. */
