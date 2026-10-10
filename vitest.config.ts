@@ -8,6 +8,10 @@ export default defineConfig({
       TZ: "Europe/Berlin",
     },
     environment: "node",
+    // Render tests import whole feature barrels; under the full parallel run the
+    // default 5s timed out (they pass alone in ~10s). A real hang still fails at 30s.
+    testTimeout: 30_000,
+    hookTimeout: 30_000,
     include: [
       "src/**/*.test.ts",
       "scripts/**/*.test.ts",
