@@ -29,3 +29,5 @@ Compose and send tasks to Mac via AgentWitch.
 New task composer banners and Send disabling: `src/features/agent/send-readiness/`. Contract and priority order: [docs/agent-witch/send-readiness-reason-codes.md](../../docs/agent-witch/send-readiness-reason-codes.md).
 
 Query: `npm run feature-knowledge:query -- "..." --feature=agent`
+
+Public API (`icons`): outside code imports `HarnessWriterAgentMark` from `@/features/agent/icons/public-api/presentation`.

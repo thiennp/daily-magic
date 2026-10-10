@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 
 import { WriterSetupPageFooter } from "@/features/agent/components/public-api/presentation";
-import HarnessWriterAgentMark from "@/features/agent/icons/HarnessWriterAgentMark";
+import { HarnessWriterAgentMark } from "@/features/agent/icons/public-api/presentation";
 import { ensureWriterOnMac } from "@/features/agent/utils/ensureWriterOnMac.util";
 import { WRITER_SETUP_OPTIONS } from "@/features/agent/writerSetupOptions.constant";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";

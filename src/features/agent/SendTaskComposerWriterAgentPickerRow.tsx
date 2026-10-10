@@ -1,6 +1,6 @@
 "use client";
 
-import HarnessWriterAgentMark from "@/features/agent/icons/HarnessWriterAgentMark";
+import { HarnessWriterAgentMark } from "@/features/agent/icons/public-api/presentation";
 import type { WriterPickerStatus } from "@/features/agent/send-readiness/resolveWriterPickerStatus";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 

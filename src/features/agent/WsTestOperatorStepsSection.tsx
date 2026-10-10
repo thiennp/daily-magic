@@ -29,10 +29,7 @@ export default function WsTestOperatorStepsSection({
       </p>
       <ol className="mt-3 space-y-3">
         {operatorSteps.map((step, index) => (
-          <li
-            key={step.id}
-            className="text-sm text-awc-fg dark:text-gray-200"
-          >
+          <li key={step.id} className="text-sm text-awc-fg dark:text-gray-200">
             <span className="font-medium text-awc-fg dark:text-white">
               {index + 1}. {step.title}
             </span>
