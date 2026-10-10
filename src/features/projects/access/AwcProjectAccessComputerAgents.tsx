@@ -1,4 +1,4 @@
-import AwcBotName from "@/features/projects/bots/AwcBotName";
+import { AwcBotName } from "@/features/projects/bots/public-api/presentation";
 
 interface AwcProjectAccessComputerAgentsProps {
   readonly computerName: string;

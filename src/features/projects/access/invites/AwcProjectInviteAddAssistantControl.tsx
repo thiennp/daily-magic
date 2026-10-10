@@ -9,7 +9,7 @@ import {
   toAwcProjectInviteAddSelection,
   type AwcProjectInviteAddSelection,
 } from "@/features/projects/access/invites/awcProjectInviteAddAssistantTypes";
-import AwcBotName from "@/features/projects/bots/AwcBotName";
+import { AwcBotName } from "@/features/projects/bots/public-api/presentation";
 import AwcSupportedAssistantsDialog from "@/features/projects/access/invites/AwcSupportedAssistantsDialog";
 import { findSupportedAssistant } from "@/features/projects/access/invites/awcSupportedAssistants";
 

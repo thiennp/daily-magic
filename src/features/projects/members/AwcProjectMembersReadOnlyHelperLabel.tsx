@@ -1,5 +1,5 @@
 import type { AwcProjectAccessMember } from "@/features/projects/access/hooks/loadAwcProjectAccess";
-import AwcBotName from "@/features/projects/bots/AwcBotName";
+import { AwcBotName } from "@/features/projects/bots/public-api/presentation";
 import AwcProjectMembersHelperAvatar from "@/features/projects/members/AwcProjectMembersHelperAvatar";
 
 /** Non-owner assistant row label: avatar + name with its brand logo. */

@@ -1,7 +1,7 @@
 "use client";
 
 import AwcProjectMembersHelperAvatar from "@/features/projects/members/AwcProjectMembersHelperAvatar";
-import AwcBotName from "@/features/projects/bots/AwcBotName";
+import { AwcBotName } from "@/features/projects/bots/public-api/presentation";
 
 /** Assistant row toggle: rounded-square Pine-soft avatar, name and optional wake-health line. */
 export default function AwcProjectMembersHelperRowLabel({

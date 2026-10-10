@@ -1,6 +1,6 @@
 "use client";
 
-import AwcBotName from "@/features/projects/bots/AwcBotName";
+import { AwcBotName } from "@/features/projects/bots/public-api/presentation";
 import type { OverviewAssistantRow } from "@/features/projects/overview/buildOverviewAssistants";
 import formatOverviewWhen from "@/features/projects/overview/formatOverviewWhen";
 import {

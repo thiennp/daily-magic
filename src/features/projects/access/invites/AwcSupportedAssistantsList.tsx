@@ -1,5 +1,5 @@
 import { AWC_PROJECT_INVITE_ADD_ASSISTANT_COPY as C } from "@/features/projects/access/invites/awcProjectInviteAddAssistantCopy.constant";
-import AwcBotName from "@/features/projects/bots/AwcBotName";
+import { AwcBotName } from "@/features/projects/bots/public-api/presentation";
 import type { AwcSupportedAssistant } from "@/features/projects/access/invites/awcSupportedAssistants";
 
 interface Props {
