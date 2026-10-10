@@ -30,7 +30,8 @@ export const revokePendingInstallDevicesForUser = async (input: {
   if (protectTokenHash.length > 0) {
     await sql`
       UPDATE agent_witch_devices AS device
-      SET revoked_at = NOW()
+      SET revoked_at = NOW(),
+          revoked_reason = 'placeholder_replaced'
       WHERE device.user_id = ${input.userId}
         AND device.revoked_at IS NULL
         AND device.platform = 'mac'
@@ -59,7 +60,8 @@ export const revokePendingInstallDevicesForUser = async (input: {
   } else {
     await sql`
       UPDATE agent_witch_devices AS device
-      SET revoked_at = NOW()
+      SET revoked_at = NOW(),
+          revoked_reason = 'placeholder_replaced'
       WHERE device.user_id = ${input.userId}
         AND device.revoked_at IS NULL
         AND device.platform = 'mac'

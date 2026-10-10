@@ -23,3 +23,38 @@ export async function findAgentWitchDeviceByToken(
 
   return mapAgentWitchDeviceRow(result[0]);
 }
+
+export interface AgentWitchDeviceRevokeAudit {
+  readonly deviceId: string;
+  readonly revokedReason: string | null;
+  readonly supersededByDeviceId: string | null;
+}
+
+/** Why a token's row is revoked, for the register rejection log line. */
+export async function findAgentWitchDeviceRevokeAuditByToken(
+  pairingToken: string,
+): Promise<AgentWitchDeviceRevokeAudit | null> {
+  const sql = getSql();
+  const result = asRowArray(
+    await sql`
+      SELECT dev.id, dev.revoked_reason, dev.superseded_by_device_id
+      FROM agent_witch_devices dev
+      WHERE dev.token_hash = ${hashPairingToken(pairingToken)}
+      LIMIT 1
+    `,
+  );
+  const row = result[0];
+  if (row === undefined) {
+    return null;
+  }
+  const supersededBy =
+    typeof row.superseded_by_device_id === "string"
+      ? row.superseded_by_device_id
+      : null;
+  return {
+    deviceId: String(row.id),
+    revokedReason:
+      typeof row.revoked_reason === "string" ? row.revoked_reason : null,
+    supersededByDeviceId: supersededBy,
+  };
+}

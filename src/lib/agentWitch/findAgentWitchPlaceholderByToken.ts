@@ -32,7 +32,8 @@ export const revokeAgentWitchPlaceholder = async (
   const sql = getSql();
   await sql`
     UPDATE agent_witch_devices
-    SET revoked_at = NOW()
+    SET revoked_at = NOW(),
+        revoked_reason = 'placeholder_consumed'
     WHERE id = ${deviceId}
       AND revoked_at IS NULL
   `;

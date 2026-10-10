@@ -83,6 +83,7 @@ export const revokeSiblingDevicesWithSameLabel = async (input: {
     await sql`
       UPDATE agent_witch_devices
       SET revoked_at = NOW(),
+          revoked_reason = 'superseded',
           superseded_by_device_id = ${input.keepDeviceId}
       WHERE user_id = ${input.userId}
         AND revoked_at IS NULL

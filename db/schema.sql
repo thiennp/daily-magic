@@ -98,6 +98,7 @@ CREATE TABLE IF NOT EXISTS agent_witch_devices (
   last_seen_at TIMESTAMPTZ,
   restart_requested_at TIMESTAMPTZ,
   revoked_at TIMESTAMPTZ,
+  revoked_reason TEXT,
   public_key TEXT,
   last_handshake_at TIMESTAMPTZ,
   preferred_writer TEXT,

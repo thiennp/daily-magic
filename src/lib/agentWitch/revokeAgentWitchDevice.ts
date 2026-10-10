@@ -9,7 +9,8 @@ export async function revokeAgentWitchDevice(input: {
   const result = asRowArray(
     await sql`
       UPDATE agent_witch_devices
-      SET revoked_at = NOW()
+      SET revoked_at = NOW(),
+          revoked_reason = 'user_revoked'
       WHERE id = ${input.deviceId}
         AND user_id = ${input.userId}
         AND revoked_at IS NULL

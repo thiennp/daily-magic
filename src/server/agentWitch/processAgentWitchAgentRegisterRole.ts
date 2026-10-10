@@ -1,7 +1,10 @@
 import type { WebSocket } from "ws";
 
 import type { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
-import { findAgentWitchDeviceByToken } from "@/lib/agentWitch/findAgentWitchDeviceByToken";
+import {
+  findAgentWitchDeviceByToken,
+  findAgentWitchDeviceRevokeAuditByToken,
+} from "@/lib/agentWitch/findAgentWitchDeviceByToken";
 import { reinstateSupersededAgentWitchDevice } from "@/lib/agentWitch/reinstateSupersededAgentWitchDevice";
 import { resolveAgentRegisterIdentityRejection } from "@/lib/agentWitch/resolveAgentRegisterIdentityRejection";
 import { resolveAgentRegisterPlatform } from "@/lib/agentWitch/resolveAgentRegisterPlatform";
@@ -21,16 +24,34 @@ const reinstateSupersededDeviceForToken = async (
 ): Promise<void> => {
   try {
     const device = await findAgentWitchDeviceByToken(pairingToken);
-    if (
-      device !== null &&
-      device.revokedAt !== null &&
-      device.supersededByDeviceId !== null &&
-      device.supersededByDeviceId !== undefined
-    ) {
+    // The SQL decides: a superseded row whose replacement went quiet or was
+    // deleted comes back; removals done on purpose stay revoked.
+    if (device !== null && device.revokedAt !== null) {
       await reinstateSupersededAgentWitchDevice(device.id);
     }
   } catch (error) {
     console.error("[agent-witch] reinstate check failed", error);
+  }
+};
+
+/** One structured line so a `device_not_linked` is explainable from server logs. */
+const logAgentRegisterRejection = async (
+  pairingToken: string,
+  errorCode: string | undefined,
+): Promise<void> => {
+  try {
+    const audit = await findAgentWitchDeviceRevokeAuditByToken(pairingToken);
+    console.warn(
+      JSON.stringify({
+        event: "agent_register_rejected",
+        errorCode: errorCode ?? null,
+        deviceId: audit?.deviceId ?? null,
+        revokedReason: audit?.revokedReason ?? null,
+        supersededByDeviceId: audit?.supersededByDeviceId ?? null,
+      }),
+    );
+  } catch {
+    // Diagnostics only.
   }
 };
 
@@ -89,6 +110,7 @@ export const processAgentWitchAgentRegisterRole = async (
       userId: connectionState.userId,
     });
     if (rejection !== null) {
+      await logAgentRegisterRejection(pairingToken, rejection.errorCode);
       sendAgentWitchSocketMessage(socket, {
         type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
         payload: {

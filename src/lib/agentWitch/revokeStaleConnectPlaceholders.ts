@@ -13,7 +13,8 @@ export const revokeStaleConnectPlaceholders = async (): Promise<number> => {
   const rows = asRowArray(
     await sql`
       UPDATE agent_witch_devices
-      SET revoked_at = NOW()
+      SET revoked_at = NOW(),
+          revoked_reason = 'placeholder_sweep'
       WHERE revoked_at IS NULL
         AND install_bundle_version IS NULL
         AND public_key IS NULL

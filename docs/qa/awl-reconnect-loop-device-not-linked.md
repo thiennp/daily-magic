@@ -29,10 +29,16 @@ Earlier behaviour:
 
 `device_not_linked` (or the legacy message) makes AWL retry **every 5 minutes**, log one line, and recover on the next `system.ack`. It never wipes anything: only `unknown_identity` does. Logs under the profile `logs/` folder are trimmed at 5 MB.
 
+## Why a row was revoked (`revoked_reason`, migration 137)
+
+Every revoke now records a reason: `superseded`, `user_revoked`, `placeholder_sweep`, `placeholder_replaced`, `placeholder_consumed`. Rows revoked before the migration have `NULL`. A rejected register also logs one JSON line, `{"event":"agent_register_rejected","errorCode":…,"deviceId":…,"revokedReason":…}`, so a `device_not_linked` is explainable from the server log.
+
+A `superseded` row whose replacement row was **deleted** (the foreign key nulls `superseded_by_device_id`) is now reinstated at the next register, the same way a replacement that went quiet already was. `user_revoked`, placeholder reasons and `NULL` are never auto-reinstated.
+
 ## Check which row replaced yours
 
 ```sql
-SELECT id, device_label, claimed_at, last_seen_at, revoked_at, superseded_by_device_id
+SELECT id, device_label, claimed_at, last_seen_at, revoked_at, revoked_reason, superseded_by_device_id
 FROM agent_witch_devices
 WHERE user_id = '<user id>'
 ORDER BY claimed_at DESC;
