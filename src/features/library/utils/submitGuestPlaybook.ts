@@ -1,7 +1,7 @@
 import buildGuestLibraryDraftFromCreatePayload from "@/lib/library/guest/buildGuestLibraryDraftFromCreatePayload";
 import { upsertGuestLibraryDraft } from "@/lib/library/guest/guestLibraryDraftStorage";
-import type { CreatePlaybookPayload } from "@/features/capabilities/submitCreatePlaybook";
-import type { CreatePlaybookResult } from "@/features/capabilities/submitCreatePlaybook";
+import type { CreatePlaybookPayload } from "@/features/capabilities/public-api/types";
+import type { CreatePlaybookResult } from "@/features/capabilities/public-api/types";
 
 export const submitGuestPlaybook = async (
   payload: CreatePlaybookPayload,

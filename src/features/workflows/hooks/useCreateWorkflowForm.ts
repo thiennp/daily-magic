@@ -2,12 +2,10 @@
 
 import { useState } from "react";
 
-import { useCapabilityHarnessDraft } from "@/features/capabilities/hooks/useCapabilityHarnessDraft";
-import {
-  submitCreatePlaybook,
-  type CreatePlaybookResult,
-} from "@/features/capabilities/submitCreatePlaybook";
-import type { CreatePlaybookPayload } from "@/features/capabilities/submitCreatePlaybook";
+import { useCapabilityHarnessDraft } from "@/features/capabilities/public-api/presentation";
+import { type CreatePlaybookResult } from "@/features/capabilities/public-api/types";
+import { submitCreatePlaybook } from "@/features/capabilities/public-api/presentation";
+import type { CreatePlaybookPayload } from "@/features/capabilities/public-api/types";
 import { buildWorkflowOutputFieldsFromDrafts } from "@/features/workflows/buildWorkflowOutputFieldsFromDrafts";
 import { buildWorkflowFieldsFromDrafts } from "@/features/workflows/buildWorkflowFieldsFromDrafts";
 import { createDraftWorkflowField } from "@/features/workflows/createDraftWorkflowField";

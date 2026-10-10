@@ -1,8 +1,8 @@
 "use client";
 
-import CapabilityHarnessItemsEditor from "@/features/capabilities/CapabilityHarnessItemsEditor";
-import { PLAYBOOK_HARNESS_SECTION } from "@/features/capabilities/playbookBuilderCopy.constant";
-import type { UseCapabilityHarnessDraftResult } from "@/features/capabilities/hooks/useCapabilityHarnessDraft";
+import { CapabilityHarnessItemsEditor } from "@/features/capabilities/public-api/presentation";
+import { PLAYBOOK_HARNESS_SECTION } from "@/features/capabilities/public-api/types";
+import type { UseCapabilityHarnessDraftResult } from "@/features/capabilities/public-api/types";
 import CreateWorkflowOutputsEditor from "@/features/workflows/CreateWorkflowOutputsEditor";
 import { createDraftWorkflowOutputField } from "@/features/workflows/createDraftWorkflowOutputField";
 import { filterHarnessItemsByKinds } from "@/features/workflows/filterHarnessItemsByKinds";

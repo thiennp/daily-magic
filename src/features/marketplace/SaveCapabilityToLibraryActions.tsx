@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 
-import SaveToProjectSelect from "@/features/capabilities/SaveToProjectSelect";
-import { useSaveToProjectPicker } from "@/features/capabilities/hooks/useSaveToProjectPicker";
+import { SaveToProjectSelect } from "@/features/capabilities/public-api/presentation";
+import { useSaveToProjectPicker } from "@/features/capabilities/public-api/presentation";
 import { runSaveCapabilityToLibrary } from "@/features/marketplace/utils/runSaveCapabilityToLibrary";
 import Button from "@/components/ui/button/Button";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";

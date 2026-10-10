@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { useGuestSessionState } from "@/features/empty-states/public-api/presentation";
-import CreatePlaybookPanel from "@/features/capabilities/CreatePlaybookPanel";
+import { CreatePlaybookPanel } from "@/features/capabilities/public-api/presentation";
 import GuestLibraryPanel from "@/features/library/GuestLibraryPanel";
 import LibraryPanel from "@/features/library/LibraryPanel";
 import { GUEST_LIBRARY_DRAFTS_SYNCED_EVENT } from "@/features/library/guestLibraryDraftsSyncedEvent.constant";

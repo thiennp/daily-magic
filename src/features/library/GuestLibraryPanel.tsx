@@ -1,7 +1,7 @@
 "use client";
 
-import CapabilityTemplatePicker from "@/features/capabilities/CapabilityTemplatePicker";
-import { guestSaveCapabilityTemplateOutcome } from "@/features/capabilities/utils/guestSaveCapabilityTemplateOutcome";
+import { CapabilityTemplatePicker } from "@/features/capabilities/public-api/presentation";
+import { guestSaveCapabilityTemplateOutcome } from "@/features/capabilities/public-api/presentation";
 import GuestLibraryPlaybookCard from "@/features/library/GuestLibraryPlaybookCard";
 import { useGuestLibraryDrafts } from "@/features/library/hooks/useGuestLibraryDrafts";
 import {

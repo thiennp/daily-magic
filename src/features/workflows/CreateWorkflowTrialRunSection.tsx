@@ -2,7 +2,7 @@
 
 import Button from "@/components/ui/button/Button";
 import { APP_SURFACE_NESTED_CARD_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import type { CapabilityHarnessItemPayload } from "@/features/capabilities/hooks/useCapabilityHarnessDraft";
+import type { CapabilityHarnessItemPayload } from "@/features/capabilities/public-api/types";
 import CreateWorkflowTrialRunPromptPreview from "@/features/workflows/CreateWorkflowTrialRunPromptPreview";
 import { useCreateWorkflowTrialRun } from "@/features/workflows/hooks/useCreateWorkflowTrialRun";
 import type DraftWorkflowField from "@/features/workflows/types/DraftWorkflowField.type";

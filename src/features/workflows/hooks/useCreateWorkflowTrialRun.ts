@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
-import type { CapabilityHarnessItemPayload } from "@/features/capabilities/hooks/useCapabilityHarnessDraft";
+import type { CapabilityHarnessItemPayload } from "@/features/capabilities/public-api/types";
 import { buildCreateWorkflowTrialPromptPreview } from "@/features/workflows/CreateWorkflowTrialRunPromptPreview";
 import { buildWorkflowCreateDraftRecord } from "@/features/workflows/buildWorkflowCreateDraftRecord";
 import { buildWorkflowFieldsFromDrafts } from "@/features/workflows/buildWorkflowFieldsFromDrafts";

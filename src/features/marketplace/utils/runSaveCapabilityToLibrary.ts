@@ -1,4 +1,4 @@
-import { saveCapabilityTemplateToLibrary } from "@/features/capabilities/utils/capabilityTemplatesApi";
+import { saveCapabilityTemplateToLibrary } from "@/features/capabilities/public-api/presentation";
 import forkCapabilityToLibrary from "@/features/harness/hooks/forkCapabilityToLibrary";
 import { parsePresetMarketplaceTemplateId } from "@/lib/marketplace/presetMarketplaceCapabilityId";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
@@ -44,7 +44,7 @@ export const runSaveCapabilityToLibrary = async (input: {
       message: result.harnessInstalled
         ? MAC_WORKER_BENEFIT_COPY.savedInstallRequested
         : (result.harnessInstallMessage ??
-            MAC_WORKER_BENEFIT_COPY.savedSetupMacForRules),
+          MAC_WORKER_BENEFIT_COPY.savedSetupMacForRules),
     };
   }
 

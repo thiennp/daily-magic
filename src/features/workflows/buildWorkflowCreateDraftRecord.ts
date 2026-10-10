@@ -1,4 +1,4 @@
-import type { CapabilityHarnessItemPayload } from "@/features/capabilities/hooks/useCapabilityHarnessDraft";
+import type { CapabilityHarnessItemPayload } from "@/features/capabilities/public-api/types";
 import { buildWorkflowFieldsFromDrafts } from "@/features/workflows/buildWorkflowFieldsFromDrafts";
 import type DraftWorkflowField from "@/features/workflows/types/DraftWorkflowField.type";
 import type WorkflowCreateDraftRecord from "@/features/workflows/types/WorkflowCreateDraftRecord.type";

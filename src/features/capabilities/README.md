@@ -2,6 +2,10 @@
 
 Published agents/workflows, team directory, picker.
 
+## Public API
+
+Other features import only `public-api/types` (payload types, harness section copy) and `public-api/presentation` (components, hooks, client helpers).
+
 ## Registry
 
 - **Slug:** `capabilities`

@@ -1,4 +1,4 @@
-import { resolveCreateTargetProjectId } from "@/features/capabilities/utils/resolveCreateTargetProjectId";
+import { resolveCreateTargetProjectId } from "@/features/capabilities/public-api/presentation";
 import guestLibraryDraftToCreatePlaybookPayload from "@/lib/library/guest/guestLibraryDraftToCreatePlaybookPayload";
 import type GuestLibraryDraft from "@/lib/library/guest/types/GuestLibraryDraft.type";
 

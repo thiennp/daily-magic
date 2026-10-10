@@ -10,7 +10,7 @@ import {
   APP_SURFACE_CTA_SECONDARY_SM_CLASS,
   APP_SURFACE_EYEBROW_TEXT_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
-import CapabilityTemplatePicker from "@/features/capabilities/CapabilityTemplatePicker";
+import { CapabilityTemplatePicker } from "@/features/capabilities/public-api/presentation";
 import useOnboardingSteps from "@/features/home/hooks/useOnboardingSteps";
 import isWorkflowOnboardingStepDone from "@/features/home/utils/isWorkflowOnboardingStepDone";
 

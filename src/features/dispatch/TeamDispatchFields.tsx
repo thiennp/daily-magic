@@ -1,6 +1,6 @@
 "use client";
 
-import CapabilityPicker from "@/features/capabilities/CapabilityPicker";
+import { CapabilityPicker } from "@/features/capabilities/public-api/presentation";
 import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import TeamMemberPicker from "@/features/dispatch/TeamMemberPicker";
 import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";

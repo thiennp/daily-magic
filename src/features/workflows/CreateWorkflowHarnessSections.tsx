@@ -1,7 +1,7 @@
 "use client";
 
-import CapabilityHarnessItemsEditor from "@/features/capabilities/CapabilityHarnessItemsEditor";
-import { PLAYBOOK_HARNESS_SECTION } from "@/features/capabilities/playbookBuilderCopy.constant";
+import { CapabilityHarnessItemsEditor } from "@/features/capabilities/public-api/presentation";
+import { PLAYBOOK_HARNESS_SECTION } from "@/features/capabilities/public-api/types";
 import { filterHarnessItemsByKinds } from "@/features/workflows/filterHarnessItemsByKinds";
 import { WORKFLOW_BUILDER_STEPS_SECTION } from "@/features/workflows/workflowBuilderCopy.constant";
 import {

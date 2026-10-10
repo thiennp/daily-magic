@@ -1,10 +1,10 @@
 "use client";
 
-import PlaybookBasicsFields from "@/features/capabilities/PlaybookBasicsFields";
+import { PlaybookBasicsFields } from "@/features/capabilities/public-api/presentation";
 import {
   type CreatePlaybookPayload,
   type CreatePlaybookResult,
-} from "@/features/capabilities/submitCreatePlaybook";
+} from "@/features/capabilities/public-api/types";
 import CreateWorkflowFormCollapsiblePanels from "@/features/workflows/CreateWorkflowFormCollapsiblePanels";
 import CreateWorkflowFormSubmitFooter from "@/features/workflows/CreateWorkflowFormSubmitFooter";
 import CreateWorkflowTrialRunSection from "@/features/workflows/CreateWorkflowTrialRunSection";
