@@ -7,8 +7,7 @@ import { PRODUCT_CONNECT_UPDATES_CATALOG_VERSION } from "@/lib/agentAccess/produ
 const ENTRY_ID = "bot-playbook-skill-report";
 
 describe("product connect Playbook skill catalog", () => {
-  it("is at catalog v31 with one Playbook entry", () => {
-    expect(PRODUCT_CONNECT_UPDATES_CATALOG_VERSION).toBe(31);
+  it("keeps one Playbook entry at catalog v31", () => {
     const entries = PRODUCT_CONNECT_UPDATES.filter((row) =>
       /playbook|knowledge-card/.test(row.id),
     );
@@ -26,11 +25,11 @@ describe("product connect Playbook skill catalog", () => {
     expect(entry?.adapt).toMatch(/do not publish another/);
   });
 
-  it("reaches bots at catalog 28 to 30, and nobody at 31", () => {
+  it("reaches bots at catalog 28 to 30, and not bots already at 31", () => {
     const ids = (since: number) =>
       filterProductConnectUpdatesSince(since).map((row) => row.id);
     expect(ids(28)).toContain(ENTRY_ID);
     expect(ids(30)).toContain(ENTRY_ID);
-    expect(ids(31)).toHaveLength(0);
+    expect(ids(31)).not.toContain(ENTRY_ID);
   });
 });

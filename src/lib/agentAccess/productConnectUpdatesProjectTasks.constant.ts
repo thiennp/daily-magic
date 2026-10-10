@@ -1,6 +1,7 @@
+import { PROJECT_TASK_REFINEMENT_CLAUSE } from "@/lib/projects/acl/projectTaskRefinementClause.constant";
 import type { ProductConnectUpdateEntry } from "@/lib/agentAccess/productConnectUpdatesMeta.constant";
 
-/** Catalog v19: read-only list_project_tasks; v20: sort/mine args + task.updated. */
+/** Catalog v19: read-only list_project_tasks; v20: sort/mine args + task.updated; v32: task refinement tools. */
 export const PRODUCT_CONNECT_UPDATES_PROJECT_TASKS: readonly ProductConnectUpdateEntry[] =
   [
     {
@@ -35,5 +36,15 @@ export const PRODUCT_CONNECT_UPDATES_PROJECT_TASKS: readonly ProductConnectUpdat
         "update_project_task: new terminal status 'cancelled' (from queued|planned|in_progress|blocked; reopen → queued).",
       adapt:
         "Use 'cancelled' for tasks that will never be done. Can be set from any open status. Reopening a cancelled task moves it to queued.",
+    },
+    {
+      id: "task-refinement-tools",
+      catalogVersion: 32,
+      at: "2026-10-10",
+      kind: "mcp_tool",
+      title: "Task refinement: split, claim, release, blockers",
+      summary:
+        "New tools split_project_task (one request into single-purpose subtasks, no repeats, closest skill + effort tier), claim_project_task (5 minute lease, returns a fence), release_project_task (done with a verifySignal, failed, blocked, released) and list_project_task_blockers (tasks waiting for a skill).",
+      adapt: PROJECT_TASK_REFINEMENT_CLAUSE,
     },
   ];

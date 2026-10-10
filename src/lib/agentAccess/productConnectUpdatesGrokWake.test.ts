@@ -5,14 +5,12 @@ import {
   AWC_GROK_WEBHOOK_DAILY_REPAIR,
 } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
 import { PRODUCT_CONNECT_UPDATES } from "@/lib/agentAccess/productConnectUpdates.constant";
-import { PRODUCT_CONNECT_UPDATES_CATALOG_VERSION } from "@/lib/agentAccess/productConnectUpdatesMeta.constant";
 
 describe("product connect grok wake copy", () => {
   it("drops inbox timer polling and tells bots to check status daily and re-enter in the form", () => {
     const blob = PRODUCT_CONNECT_UPDATES.map(
       (entry) => `${entry.summary} ${entry.adapt ?? ""}`,
     ).join("\n");
-    expect(PRODUCT_CONNECT_UPDATES_CATALOG_VERSION).toBe(31);
     expect(blob).toContain(AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS);
     expect(blob).toMatch(/Grok Bot only/);
     expect(blob).not.toMatch(/Slack|Discord|grokbot:\/\//i);
