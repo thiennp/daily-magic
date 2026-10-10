@@ -45,7 +45,8 @@
     "src/features/empty-states",
     "src/features/shell/loading",
     "src/features/auth",
-    "src/features/billing"
+    "src/features/billing",
+    "src/features/account"
   ],
   "blocked": {
     "src/features/home/constants": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing), pre-commit architecture gate fails when it is edited"
@@ -280,6 +281,11 @@
       "unit": "src/features/billing",
       "sha": "3eebb29ee94094ba5869807ae22381bb0ae332df",
       "at": "2026-10-10T09:44:11.230Z"
+    },
+    {
+      "unit": "src/features/account",
+      "sha": "934e04214511bc8a1ffd849901c4dbc297b85f88",
+      "at": "2026-10-10T09:46:27.383Z"
     }
   ]
 }

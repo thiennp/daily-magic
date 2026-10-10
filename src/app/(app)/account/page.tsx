@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import AccountPageClient from "@/features/account/AccountPageClient";
+import { AccountPageClient } from "@/features/account/public-api/presentation";
 import AppShell from "@/features/shell/AppShell";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
