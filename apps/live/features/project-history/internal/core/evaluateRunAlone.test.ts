@@ -81,6 +81,15 @@ describe("evaluateRunAlone", () => {
     ]);
   });
 
+  it("tags the question as a playbook when the draft says so", async () => {
+    const { evaluate, suggestions } = setup(
+      YES,
+      SKILL.replace("version: 0.1.0", "kind: playbook\nversion: 0.1.0"),
+    );
+    expect(await evaluate(r1)).toBe("asked");
+    expect(suggestions[0]).toMatchObject({ libraryKind: "playbook" });
+  });
+
   it("stops after the triage for a one-off run, and never judges it again", async () => {
     const { evaluate, suggestions, completer } = setup(NO, SKILL);
     expect(await evaluate(r1)).toBe("no_repeat");

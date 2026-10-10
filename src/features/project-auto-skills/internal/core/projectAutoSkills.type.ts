@@ -38,6 +38,9 @@ export interface AutoSkillSuggestionMatch {
 
 export type AutoSkillSuggestionKind = "skill" | "script_approval";
 
+/** What the saved Library item will be: one focused procedure, or a broader guide. */
+export type AutoSkillLibraryKind = "skill" | "playbook";
+
 export type AutoSkillReplayStatus = "ok" | "failed" | "not_replayed";
 
 /** One proposed (or installed) script: what it may do and how its replay went. */
@@ -80,6 +83,7 @@ export interface AutoSkillSuggestion {
   readonly skillId: string | null;
   /** `script_approval`: "Allow script X to run on your computer?" (draftBody = script text). */
   readonly kind: AutoSkillSuggestionKind;
+  readonly libraryKind: AutoSkillLibraryKind;
   readonly scriptInfo: AutoSkillScriptInfo | null;
   readonly createdAt: string;
 }

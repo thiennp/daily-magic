@@ -15,10 +15,14 @@ const DRAFT_TIMEOUT_MS = 120_000;
 const RESULT_CAP = 500;
 const PROMPT_CAP = 1_500;
 
+export type AutoSkillLibraryKind = "skill" | "playbook";
+
 export type AutoSkillDraftResult =
   | {
       readonly ok: true;
       readonly name: string;
+      /** What the AI says this is: one focused procedure, or a broader playbook. */
+      readonly libraryKind: AutoSkillLibraryKind;
       readonly description: string;
       readonly markdown: string;
       /** Validated script proposal; absent when none or unparseable. */
@@ -46,6 +50,12 @@ export const buildAutoSkillTranscript = (
       )
       .join("\n\n"),
   ).scrubbed;
+
+/** `kind: playbook` in the draft's frontmatter; anything else is a skill. */
+export const readDraftKind = (markdown: string): AutoSkillLibraryKind => {
+  const header = /^---\s*\n([\s\S]*?)\n---/.exec(markdown)?.[1] ?? "";
+  return /^kind:\s*playbook\s*$/im.test(header) ? "playbook" : "skill";
+};
 
 const scriptsOf = (json: string | null): { scripts?: ParsedScripts } => {
   const parsed = json === null ? null : parseScriptProposals(json);
@@ -96,6 +106,7 @@ export const generateAutoSkillDraft = async (
       return {
         ok: true,
         name: valid.name,
+        libraryKind: readDraftKind(markdown),
         description: valid.description,
         markdown,
         ...scriptsOf(split.json),

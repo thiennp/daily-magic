@@ -66,6 +66,7 @@ export const buildOwnerLlmSkillWritePrompt = (
     "Frontmatter keys: name (kebab-case, a generic action such as review-migration-naming),",
     "description (one sentence starting with 'Use when', different from the name),",
     "keywords (one line, 5 to 8 lowercase search words, comma separated: the verbs, nouns and synonyms a person would use to ask for this task, none of them from the name),",
+    "kind (skill when the transcript shows ONE focused procedure of 3 to 8 steps; playbook when it shows a broader guide for a recurring situation: several procedures, decision points or branches),",
     "version: 0.1.0, status: draft.",
     ...REUSABILITY_RULES,
     "Do NOT write source_message_ids; the system adds the transcript message ids.",

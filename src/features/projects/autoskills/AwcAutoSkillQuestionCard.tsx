@@ -35,7 +35,8 @@ export default function AwcAutoSkillQuestionCard({
 }: AwcAutoSkillQuestionCardProps) {
   const approval = suggestion.kind === "script_approval";
   const copy = buildAutoSkillQuestionCopy(suggestion);
-  const question = approval ? "Allow script to run?" : "Save as skill?";
+  const noun = suggestion.libraryKind === "playbook" ? "playbook" : "skill";
+  const question = approval ? "Allow script to run?" : `Save as ${noun}?`;
   return (
     <article
       className={OW_CARD_NEEDS_CLASS}
@@ -43,7 +44,9 @@ export default function AwcAutoSkillQuestionCard({
     >
       <div className="mb-2 flex flex-wrap items-center gap-2 text-[12.5px]">
         <span className="font-semibold uppercase tracking-wide text-awc-fg-subtle">
-          {approval ? "Script approval" : "Skill question"}
+          {approval
+            ? "Script approval"
+            : `${noun === "playbook" ? "Playbook" : "Skill"} question`}
         </span>
         {projectName !== undefined ? (
           <span className="text-awc-fg-subtle">{projectName}</span>
@@ -63,7 +66,7 @@ export default function AwcAutoSkillQuestionCard({
       ) : null}
       <details className="mt-2 text-[13px] text-awc-fg">
         <summary className="cursor-pointer font-medium">
-          {approval ? "Script" : "Draft skill"}: {suggestion.draftName}
+          {approval ? "Script" : `Draft ${noun}`}: {suggestion.draftName}
         </summary>
         <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap rounded-lg bg-awc-bg/80 p-2 text-[12px] dark:bg-black/20">
           {approval
@@ -83,7 +86,7 @@ export default function AwcAutoSkillQuestionCard({
           className={OW_PRIMARY_BUTTON_CLASS}
           onClick={() => onAnswer("save")}
         >
-          {approval ? "Approve" : "Save as skill"}
+          {approval ? "Approve" : `Save as ${noun}`}
         </button>
         {approval ? null : (
           <button

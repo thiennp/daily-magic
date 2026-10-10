@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { AutoSkillRunRecord } from "./autoSkill.types";
-import { buildAutoSkillTranscript } from "./autoSkillDraft";
+import { readDraftKind, buildAutoSkillTranscript } from "./autoSkillDraft";
 
 const run = (prompt: string): AutoSkillRunRecord => ({
   runId: "r1",
@@ -26,5 +26,16 @@ describe("buildAutoSkillTranscript", () => {
       run("Mail the report to jane.doe@example.com"),
     ]);
     expect(transcript).not.toContain("jane.doe@example.com");
+  });
+});
+
+describe("readDraftKind", () => {
+  it("reads kind: playbook from the frontmatter and defaults to a skill", () => {
+    expect(readDraftKind("---\nname: a\nkind: playbook\n---\nbody")).toBe(
+      "playbook",
+    );
+    expect(readDraftKind("---\nname: a\nkind: skill\n---\nbody")).toBe("skill");
+    expect(readDraftKind("---\nname: a\n---\nkind: playbook")).toBe("skill");
+    expect(readDraftKind("no frontmatter")).toBe("skill");
   });
 });

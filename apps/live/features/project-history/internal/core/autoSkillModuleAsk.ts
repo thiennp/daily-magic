@@ -118,6 +118,7 @@ export const askForRepeatedModules = async (input: {
         summary: r.prompt.split("\n", 1)[0]?.slice(0, 160) ?? "",
       })),
       draftName: draft.name,
+      libraryKind: draft.libraryKind,
       draftBody: parts.draftBody,
       judgeLabel: input.judgeLabel,
       ...(parts.scriptInfo !== undefined

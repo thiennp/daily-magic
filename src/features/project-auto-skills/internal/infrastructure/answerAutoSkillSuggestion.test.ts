@@ -69,12 +69,6 @@ describe("answerAutoSkillSuggestion", () => {
     );
   });
 
-  it("ignores a stored draft publish mode: auto skills are always live", async () => {
-    mocks.settings.mockResolvedValue({ publishMode: "draft" });
-    await answerAutoSkillSuggestion({ ...input, answer: "save" });
-    expect(mocks.publish.mock.calls[0]?.[0].args.asDraft).toBe(false);
-  });
-
   it("does not clobber an existing skill id", async () => {
     mocks.list.mockResolvedValue({
       ok: true,

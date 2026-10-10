@@ -109,6 +109,7 @@ export const evaluateRunAlone = async (input: {
       },
     ],
     draftName: draft.name,
+    libraryKind: draft.libraryKind,
     draftBody: parts.draftBody,
     judgeLabel: input.judgeLabel,
     ...(parts.scriptInfo !== undefined ? { scriptInfo: parts.scriptInfo } : {}),

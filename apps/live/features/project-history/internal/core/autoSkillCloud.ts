@@ -43,6 +43,8 @@ export type AutoSkillSuggestionPayload = {
   readonly draftName: string;
   readonly draftBody: string;
   readonly judgeLabel: string;
+  /** Saved into the Library as this kind; a playbook is a broader guide than a skill. */
+  readonly libraryKind?: "skill" | "playbook";
   /** `script_approval`: owner approval of one installed script version. */
   readonly kind?: "skill" | "script_approval";
   /** Permission list and replay result of the scripts (nothing secret). */

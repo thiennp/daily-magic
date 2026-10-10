@@ -25,6 +25,7 @@ export const mapAutoSkillSuggestionRow = (
   judgeLabel: row.judge_label === null ? null : String(row.judge_label),
   skillId: row.skill_id === null ? null : String(row.skill_id),
   kind: row.kind === "script_approval" ? "script_approval" : "skill",
+  libraryKind: row.library_kind === "playbook" ? "playbook" : "skill",
   scriptInfo:
     row.script_info == null ? null : (row.script_info as AutoSkillScriptInfo),
   createdAt: String(row.created_at),

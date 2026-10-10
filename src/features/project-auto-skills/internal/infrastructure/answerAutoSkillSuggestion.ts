@@ -72,7 +72,7 @@ export const answerAutoSkillSuggestion = async (input: {
       name: suggestion.draftName,
       description: pickSkillDescription(suggestion.draftBody, suggestion.title),
       body: suggestion.draftBody,
-      kind: "skill",
+      kind: suggestion.libraryKind === "playbook" ? "playbook" : "skill",
       // Auto-created skills are live at once; only hand-made ones start as drafts.
       asDraft: false,
     },

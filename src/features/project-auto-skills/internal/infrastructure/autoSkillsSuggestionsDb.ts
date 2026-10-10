@@ -1,4 +1,5 @@
 import type {
+  AutoSkillLibraryKind,
   AutoSkillScriptInfo,
   AutoSkillSuggestion,
   AutoSkillSuggestionKind,
@@ -21,6 +22,7 @@ export type NewAutoSkillSuggestion = {
   readonly draftBody: string;
   readonly judgeLabel: string | null;
   readonly kind?: AutoSkillSuggestionKind;
+  readonly libraryKind?: AutoSkillLibraryKind;
   readonly scriptInfo?: AutoSkillScriptInfo | null;
 };
 
@@ -37,11 +39,12 @@ export const upsertAutoSkillSuggestion = async (
     await getSql()`
       INSERT INTO project_skill_suggestions (project_id, cluster_id, title, prompt,
         occurrences, module_label, distinct_prompts, matches, draft_name, draft_body, judge_label,
-        kind, script_info)
+        kind, script_info, library_kind)
       VALUES (${projectId}, ${s.clusterId}, ${s.title}, ${s.prompt}, ${s.occurrences},
         ${s.moduleLabel ?? null}, ${s.distinctPrompts ?? null},
         ${JSON.stringify(s.matches)}::jsonb, ${s.draftName}, ${s.draftBody}, ${s.judgeLabel},
-        ${s.kind ?? "skill"}, ${s.scriptInfo == null ? null : JSON.stringify(s.scriptInfo)}::jsonb)
+        ${s.kind ?? "skill"}, ${s.scriptInfo == null ? null : JSON.stringify(s.scriptInfo)}::jsonb,
+        ${s.libraryKind ?? "skill"})
       ON CONFLICT (project_id, cluster_id) DO UPDATE SET status = 'pending',
         title = EXCLUDED.title, prompt = EXCLUDED.prompt,
         occurrences = EXCLUDED.occurrences,
@@ -49,7 +52,8 @@ export const upsertAutoSkillSuggestion = async (
         distinct_prompts = EXCLUDED.distinct_prompts, matches = EXCLUDED.matches,
         draft_name = EXCLUDED.draft_name, draft_body = EXCLUDED.draft_body,
         judge_label = EXCLUDED.judge_label, kind = EXCLUDED.kind,
-        script_info = EXCLUDED.script_info, updated_at = NOW()
+        script_info = EXCLUDED.script_info, library_kind = EXCLUDED.library_kind,
+        updated_at = NOW()
       WHERE project_skill_suggestions.status IN ('pending', 'not_now')
       RETURNING id`,
   );

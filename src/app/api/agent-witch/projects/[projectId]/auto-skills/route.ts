@@ -98,6 +98,7 @@ export async function POST(
     draftBody,
     judgeLabel: str(s.judgeLabel, 120),
     kind: s.kind === "script_approval" ? "script_approval" : "skill",
+    libraryKind: s.libraryKind === "playbook" ? "playbook" : "skill",
     scriptInfo: sanitizeScriptInfo(s.scriptInfo),
   });
   return Response.json({ ok: true, raised });

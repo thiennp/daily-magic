@@ -36,6 +36,9 @@ const createTables = async (): Promise<void> => {
   await sql`ALTER TABLE project_skill_suggestions
     ADD COLUMN IF NOT EXISTS kind TEXT NOT NULL DEFAULT 'skill',
     ADD COLUMN IF NOT EXISTS script_info JSONB`;
+  await sql`ALTER TABLE project_skill_suggestions
+    ADD COLUMN IF NOT EXISTS library_kind TEXT NOT NULL DEFAULT 'skill'
+    CHECK (library_kind IN ('skill', 'playbook'))`;
   await sql`ALTER TABLE project_auto_skills
     ADD COLUMN IF NOT EXISTS judge_agent TEXT`;
   await sql`ALTER TABLE project_auto_skills
