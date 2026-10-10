@@ -22,3 +22,7 @@ NextAuth, login UI, sessions, dev secret login.
 - `marketing`
 
 Query: `npm run feature-knowledge:query -- "..." --feature=auth`
+
+## Public API
+
+Outside code imports only from `public-api/`: `presentation.ts` (`AuthSessionProvider`, `LoginForm`, `LoginPageView`, `useStyleguideNavAccess`) and `types.ts` (`LOGIN_PAGE_COPY`).

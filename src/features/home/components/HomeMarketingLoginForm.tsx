@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
-import LoginForm from "@/features/auth/LoginForm";
+import { LoginForm } from "@/features/auth/public-api/presentation";
 import { resolvePostAuthReturnFromSearchParams } from "@/lib/auth/resolvePostAuthReturnFromSearchParams";
 
 interface HomeMarketingLoginFormProps {

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 
-import LoginForm from "@/features/auth/LoginForm";
+import { LoginForm } from "@/features/auth/public-api/presentation";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
 export default function HomeLoginView() {

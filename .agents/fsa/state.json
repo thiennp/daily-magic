@@ -43,7 +43,8 @@
     "src/features/pricing",
     "src/features/automations",
     "src/features/empty-states",
-    "src/features/shell/loading"
+    "src/features/shell/loading",
+    "src/features/auth"
   ],
   "blocked": {},
   "rounds": [
@@ -266,6 +267,11 @@
       "unit": "src/features/shell/loading",
       "sha": "4f51a50be1ca346f4b420497d68fde47175d83fa",
       "at": "2026-10-10T09:41:46.467Z"
+    },
+    {
+      "unit": "src/features/auth",
+      "sha": "e89c9eda6aee5ce3e716afd0916e3d4faf0932ec",
+      "at": "2026-10-10T09:42:47.915Z"
     }
   ]
 }

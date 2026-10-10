@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { BOTTOM_NAV } from "@/features/shell/appBottomNav.constant";
 import { PRIMARY_NAV } from "@/features/shell/appNav.constant";
 import { resolveMarketingFooterProductLinks } from "@/features/marketing/resolveMarketingFooterNav";
-import { LOGIN_PAGE_COPY } from "@/features/auth/loginPageCopy.constant";
+import { LOGIN_PAGE_COPY } from "@/features/auth/public-api/types";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
 describe("COPY-P1 shell and auth labels", () => {

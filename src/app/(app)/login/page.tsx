@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { resolveLoginNotice } from "@/features/agent-access/public-api/types";
-import LoginPageView from "@/features/auth/LoginPageView";
+import { LoginPageView } from "@/features/auth/public-api/presentation";
 import { auth } from "@/lib/auth/auth";
 import { resolvePostAuthReturnFromSearchParams } from "@/lib/auth/resolvePostAuthReturnFromSearchParams";
 

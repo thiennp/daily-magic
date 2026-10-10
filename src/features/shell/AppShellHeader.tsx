@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import UserDropdown from "@/components/header/UserDropdown";
 import { clearProjectSyncOnSignOut } from "@/features/projects/sync/public-api/presentation";
-import useStyleguideNavAccess from "@/features/auth/hooks/useStyleguideNavAccess";
+import { useStyleguideNavAccess } from "@/features/auth/public-api/presentation";
 import AppShellMobileNavMenu from "@/features/shell/AppShellMobileNavMenu";
 import { AppShellBrand } from "@/features/shell/v5/public-api/presentation";
 import { APP_SHELL_V5_TOPBAR_CLASS } from "@/features/shell/v5/public-api/types";

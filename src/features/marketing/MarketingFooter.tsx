@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import useStyleguideNavAccess from "@/features/auth/hooks/useStyleguideNavAccess";
+import { useStyleguideNavAccess } from "@/features/auth/public-api/presentation";
 import MarketingFooterLegalBar from "@/features/marketing/MarketingFooterLegalBar";
 import {
   FOOTER_ADMIN_LINKS,

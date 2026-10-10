@@ -1,4 +1,4 @@
-import LoginPageView from "@/features/auth/LoginPageView";
+import { LoginPageView } from "@/features/auth/public-api/presentation";
 import HomeMarketingLanding from "@/features/home/HomeMarketingLanding";
 import { formatAgentAccessGuidelineMarkdown } from "@/lib/agentAccess/formatAgentAccessGuidelineMarkdown";
 import MarketingLegalPageLayout from "@/features/marketing/MarketingLegalPageLayout";

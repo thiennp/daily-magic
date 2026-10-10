@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { SendTaskModalProvider } from "@/features/agent/SendTaskModalProvider";
 import { AgentWitchDashboardProvider } from "@/features/agent-witch/dashboard/AgentWitchDashboardProvider";
 import AdminShell from "@/features/admin/AdminShell";
-import AuthSessionProvider from "@/features/auth/AuthSessionProvider";
+import { AuthSessionProvider } from "@/features/auth/public-api/presentation";
 import AppShell from "@/features/shell/AppShell";
 import { APP_SHELL_NARROW_CONTENT_CLASS } from "@/features/shell/appShellContentWidth.constant";
 import type { StorybookPageStatus } from "@/utils/storybook/storybookPageStatus.constant";

@@ -9,7 +9,7 @@ vi.mock("@/features/marketing/MarketingShell", () => ({
 
 import { resolveLoginNotice } from "@/features/agent-access/resolveLoginNotice";
 import { buildAssistantOwnerLoginPath } from "@/features/agent-access/buildAssistantOwnerLoginPath";
-import LoginPageView from "@/features/auth/LoginPageView";
+import { LoginPageView } from "@/features/auth/public-api/presentation";
 
 describe("assistant owner /login notice", () => {
   it("builds a /login URL with return URL and the notice key", () => {
