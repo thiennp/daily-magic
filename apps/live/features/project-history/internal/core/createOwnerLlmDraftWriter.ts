@@ -1,11 +1,11 @@
 import { spawn } from "node:child_process";
 import os from "node:os";
 
+import type { HarnessWriterAgentId } from "../../../../adapters/writerDispatch";
 import {
-  buildWriterCliInvocation,
-  resolveWriterCliCommands,
-  type HarnessWriterAgentId,
-} from "../../../../adapters/writerDispatch";
+  buildReadOnlyAgentInvocation,
+  describeAgentFailure,
+} from "./readOnlyAgentInvocation";
 import { PROJECT_HISTORY_SKILLGEN_OWNER_LLM_DRY_RUN_ENV } from "./projectHistory.constants";
 import {
   buildOwnerLlmSkillReflectPrompt,
@@ -40,10 +40,10 @@ const estimateTokens = (text: string): number => Math.ceil(text.length / 4);
 /** Default spawn runner: Cursor/Codex via shared writerDispatch. */
 export const runOwnerLlmCliTurn: OwnerLlmCliRunner = (input) =>
   new Promise((resolve) => {
-    const invocation = buildWriterCliInvocation(
+    // Text in, markdown out: read-only and away from the home folder.
+    const invocation = buildReadOnlyAgentInvocation(
       input.writerAgent,
       input.prompt,
-      resolveWriterCliCommands({}),
     );
     if (invocation === null) {
       resolve({
@@ -56,7 +56,7 @@ export const runOwnerLlmCliTurn: OwnerLlmCliRunner = (input) =>
     const stdout: Buffer[] = [];
     const stderr: Buffer[] = [];
     const child = spawn(invocation.command, [...invocation.args], {
-      cwd: os.homedir(),
+      cwd: os.tmpdir(),
       stdio: ["ignore", "pipe", "pipe"],
     });
     let settled = false;
@@ -93,7 +93,14 @@ export const runOwnerLlmCliTurn: OwnerLlmCliRunner = (input) =>
       if (code !== 0) {
         // A signed-out / failing CLI prints an error and exits non-zero; treating
         // that as success skipped the Codex fallback and yielded unparseable text.
-        finish({ ok: false, reason: `writer_exit_${code}`, tokensUsed: 0 });
+        finish({
+          ok: false,
+          reason: `writer_exit_${code}${describeAgentFailure({
+            stdout: Buffer.concat(stdout).toString("utf8"),
+            stderr: Buffer.concat(stderr).toString("utf8"),
+          })}`,
+          tokensUsed: 0,
+        });
         return;
       }
       const text = `${Buffer.concat(stdout).toString("utf8")}\n${Buffer.concat(stderr).toString("utf8")}`;

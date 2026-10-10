@@ -2,12 +2,15 @@ import { spawn } from "node:child_process";
 import os from "node:os";
 
 import {
-  buildWriterCliInvocation,
   resolveWriterCliCommands,
   type HarnessWriterAgentId,
 } from "../../../../adapters/writerDispatch";
 
 import type { AutoSkillCompleter } from "./autoSkill.types";
+import {
+  buildReadOnlyAgentInvocation,
+  describeAgentFailure,
+} from "./readOnlyAgentInvocation";
 
 export type AutoSkillExec = (
   command: string,
@@ -109,75 +112,17 @@ export const probeSignedInAutoSkillAgent = async (
   return null;
 };
 
-const buildReadOnlyInvocation = (
-  writer: HarnessWriterAgentId,
-  prompt: string,
-  scoped: boolean,
-): { command: string; args: readonly string[] } | null => {
-  if (scoped && writer === "cursor") {
-    // Ask mode: answers from the prompt alone, no tools to wander through files.
-    return {
-      command: commands.cursorCommand,
-      args: [
-        "-p",
-        "--trust",
-        "--mode",
-        "ask",
-        "--sandbox",
-        "enabled",
-        "--model",
-        "auto",
-        "--output-format",
-        "text",
-        prompt,
-      ],
-    };
-  }
-  if (writer === "codex") {
-    return {
-      command: commands.codexCommand,
-      args: [
-        "exec",
-        "-s",
-        "read-only",
-        "-c",
-        'approval_policy="never"',
-        prompt,
-      ],
-    };
-  }
-  if (writer === "claude-cli") {
-    return {
-      command: commands.claudeCommand,
-      args: ["-p", prompt, "--output-format", "text", "--max-turns", "1"],
-    };
-  }
-  return buildWriterCliInvocation(writer, prompt, commands);
-};
-
 /** Owner-agent completer: read-only, headless, fails on non-zero exit. */
-/** ": <first line>" of what the tool said when it failed, so "out of usage" is visible. */
-const describeFailure = (result: {
-  readonly stdout: string;
-  readonly stderr?: string;
-}): string => {
-  const line = `${result.stderr ?? ""}\n${result.stdout}`
-    .split("\n")
-    .map((l) => l.trim())
-    .find((l) => l.length > 0);
-  return line === undefined ? "" : `: ${line.slice(0, 160)}`;
-};
-
 export const createAgentAutoSkillCompleter =
   (
     writer: HarnessWriterAgentId,
     folderPath: string | undefined,
     exec: AutoSkillExec = execAutoSkillCommand,
-    /** Judge from the prompt alone: read-only ask mode and no project folder. */
-    scoped = false,
+    /** Judge from the prompt alone: read-only and no project folder (the default; false only for tests of the old mode). */
+    scoped = true,
   ): AutoSkillCompleter =>
   async ({ prompt, timeoutMs }) => {
-    const invocation = buildReadOnlyInvocation(writer, prompt, scoped);
+    const invocation = buildReadOnlyAgentInvocation(writer, prompt, scoped);
     if (invocation === null) {
       return { ok: false, reason: "agent_unavailable" };
     }
@@ -191,7 +136,7 @@ export const createAgentAutoSkillCompleter =
     if (result.code !== 0 || result.stdout.trim().length === 0) {
       return {
         ok: false,
-        reason: `agent_exit_${result.code}${describeFailure(result)}`,
+        reason: `agent_exit_${result.code}${describeAgentFailure(result)}`,
       };
     }
     return { ok: true, text: result.stdout };

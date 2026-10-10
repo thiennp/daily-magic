@@ -1,6 +1,7 @@
 import type { AutoSkillRunRecord } from "./autoSkill.types";
 import { askForRepeatedModules } from "./autoSkillModuleAsk";
 import { evaluateRunAlone } from "./evaluateRunAlone";
+import { noteJudgeFailure } from "./noteJudgeFailure";
 import { feedRun } from "./feedAutoSkillRun";
 import { selectAutoSkillJudge } from "./autoSkillSelectJudge";
 import { appendAutoSkillRun } from "./autoSkillStore";
@@ -64,7 +65,18 @@ export const onAutoSkillRunCompleted = async (
       deps.saveState(projectId, state);
       return "store_unavailable";
     }
-    const completer = deps.makeCompleter(choice.kind, availability);
+    const completer = noteJudgeFailure(
+      deps.makeCompleter(choice.kind, availability),
+      (reason) =>
+        deps.cloud
+          .postStatus(projectId, {
+            judgeKind: choice.kind,
+            judgeLabel: choice.label,
+            pausedReason: null,
+            note: `The judge could not answer: ${reason}`,
+          })
+          .catch(() => undefined),
+    );
     if (input.evaluateEachRun === true) {
       deps.saveState(projectId, state);
       return evaluateRunAlone({
