@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import AdminDashboard from "@/features/admin/components/AdminDashboard";
+import { AdminDashboard } from "@/features/admin/components/public-api/presentation";
 import { getAuthActor } from "@/lib/auth/auth";
 import { isGlobalAdmin } from "@/lib/auth/globalRolePermissions";
 

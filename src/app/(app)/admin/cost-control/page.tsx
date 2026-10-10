@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import AdminNoAccess from "@/features/admin/components/AdminNoAccess";
+import { AdminNoAccess } from "@/features/admin/components/public-api/presentation";
 import { ADMIN_COPY } from "@/features/admin/adminCopy.constant";
 import { AdminCostControlPanel } from "@/features/billing/public-api/presentation";
 import { getAuthActor } from "@/lib/auth/auth";

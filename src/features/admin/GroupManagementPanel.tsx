@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 
-import CompaniesRulesHead, {
+import {
   COMPANIES_RULES_HUB_CRUMBS,
-} from "@/features/admin/components/CompaniesRulesHead";
-import CompaniesRulesOrientationStrip from "@/features/admin/components/CompaniesRulesOrientationStrip";
-import GroupCompanySettingsView from "@/features/admin/components/GroupCompanySettingsView";
-import GroupInvitationsInbox from "@/features/admin/components/GroupInvitationsInbox";
-import GroupMembersAndRuns from "@/features/admin/components/GroupMembersAndRuns";
-import GroupSelectionSection from "@/features/admin/components/GroupSelectionSection";
+  CompaniesRulesHead,
+  CompaniesRulesOrientationStrip,
+  GroupCompanySettingsView,
+  GroupInvitationsInbox,
+  GroupMembersAndRuns,
+  GroupSelectionSection,
+} from "@/features/admin/components/public-api/presentation";
 import { COMPANIES_RULES_HUB_COPY as C } from "@/features/admin/companiesRulesHubCopy.constant";
 import { useGroupActorAccess } from "@/features/admin/hooks/public-api/presentation";
 import { useGroupManagement } from "@/features/admin/hooks/public-api/presentation";

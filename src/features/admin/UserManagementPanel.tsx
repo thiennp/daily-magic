@@ -5,11 +5,12 @@ import { useMemo, useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import Button from "@/components/ui/button/Button";
-import AdminNoAccess from "@/features/admin/components/AdminNoAccess";
-import AdminUsersToolbar from "@/features/admin/components/AdminUsersToolbar";
-import UsersTable, {
-  type UserItem,
-} from "@/features/admin/components/UsersTable";
+import {
+  AdminNoAccess,
+  AdminUsersToolbar,
+  UsersTable,
+} from "@/features/admin/components/public-api/presentation";
+import type { UserItem } from "@/features/admin/components/public-api/types";
 import {
   ADMIN_COPY,
   ADMIN_USERS_PAGE_SIZE,

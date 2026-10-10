@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import type { UserItem } from "@/features/admin/components/UsersTable";
+import type { UserItem } from "@/features/admin/components/public-api/types";
 
 export function useAdminUserActions(initialUsers: readonly UserItem[]) {
   const [users, setUsers] = useState<readonly UserItem[]>(initialUsers);
