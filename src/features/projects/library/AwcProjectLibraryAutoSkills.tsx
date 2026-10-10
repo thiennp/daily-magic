@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import type { AutoSkillsState } from "@/features/project-auto-skills/public-api/presentation";
 import { AwcAutoSkillQuestionCard } from "@/features/projects/autoskills/public-api/presentation";
+import { AUTO_SKILLS_DEFAULT_SCAN_COMMITS } from "@/features/projects/library/autoSkillsScanCommits.constant";
 import AwcAutoSkillsActions from "@/features/projects/library/AwcAutoSkillsActions";
 import AwcAutoSkillsAgentPicker from "@/features/projects/library/AwcAutoSkillsAgentPicker";
 import AwcAutoSkillsDeeperScan from "@/features/projects/library/AwcAutoSkillsDeeperScan";
@@ -27,6 +28,9 @@ export default function AwcProjectLibraryAutoSkills({
   onSaved,
 }: AwcProjectLibraryAutoSkillsProps) {
   const [open, setOpen] = useState(false);
+  const [commits, setCommits] = useState<number>(
+    AUTO_SKILLS_DEFAULT_SCAN_COMMITS,
+  );
   // Fixed at mount: "last checked" is minute-granular and reloads on every action.
   const [nowMs] = useState(() => Date.now());
   const overview = auto.overview;
@@ -80,7 +84,10 @@ export default function AwcProjectLibraryAutoSkills({
             scanError={auto.scanError}
             waiting={waiting}
             open={open}
-            onScan={() => void auto.scan()}
+            commits={commits}
+            maxCommits={overview.gitCommits}
+            onCommitsChange={setCommits}
+            onScan={() => void auto.scanCommits(commits)}
             onScanDocs={() => void auto.scanDocs()}
             onToggleDrafts={() => setOpen(!open)}
           />

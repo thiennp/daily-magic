@@ -8,8 +8,8 @@ const COMMIT_SEPARATOR = "\u001e";
 const FIELD_SEPARATOR = "\u001f";
 const GIT_TIMEOUT_MS = 20_000;
 
-/** Commits fed to a scan when the owner has not asked for more. */
-export const DEFAULT_SCAN_COMMITS = 100;
+/** Commits fed to a scan when the person has not picked a number (each is judged by an AI call, so keep it small). */
+export const DEFAULT_SCAN_COMMITS = 5;
 /** Hard ceiling for a deeper scan. */
 export const MAX_SCAN_COMMITS = 2_000;
 

@@ -1,5 +1,8 @@
 "use client";
 
+import AwcAutoSkillsScanHelp from "@/features/projects/library/AwcAutoSkillsScanHelp";
+import AwcAutoSkillsCommitsField from "@/features/projects/library/AwcAutoSkillsCommitsField";
+import { AUTO_SKILLS_MAX_SCAN_COMMITS } from "@/features/projects/library/autoSkillsScanCommits.constant";
 import {
   PANEL_BUTTON_PRIMARY_CLASS,
   PANEL_BUTTON_SECONDARY_CLASS,
@@ -12,6 +15,11 @@ interface AwcAutoSkillsActionsProps {
   readonly scanError: string | null;
   readonly waiting: number;
   readonly open: boolean;
+  /** Commits of the main branch to read; NaN while the field is empty. */
+  readonly commits: number;
+  /** Most commits the folder has (null until a scan has counted them). */
+  readonly maxCommits: number | null;
+  readonly onCommitsChange: (commits: number) => void;
   readonly onScan: () => void;
   readonly onScanDocs: () => void;
   readonly onToggleDrafts: () => void;
@@ -25,17 +33,23 @@ export default function AwcAutoSkillsActions({
   scanError,
   waiting,
   open,
+  commits,
+  maxCommits,
+  onCommitsChange,
   onScan,
   onScanDocs,
   onToggleDrafts,
 }: AwcAutoSkillsActionsProps) {
+  const max = maxCommits ?? AUTO_SKILLS_MAX_SCAN_COMMITS;
+  const validCommits =
+    Number.isInteger(commits) && commits >= 1 && commits <= max;
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"
           className={PANEL_BUTTON_PRIMARY_CLASS}
-          disabled={busy || scanning}
+          disabled={busy || scanning || !validCommits}
           onClick={onScan}
         >
           {scanning ? (
@@ -48,6 +62,12 @@ export default function AwcAutoSkillsActions({
             ? "Scanning past tasks…"
             : "Scan past tasks"}
         </button>
+        <AwcAutoSkillsCommitsField
+          commits={commits}
+          max={max}
+          valid={validCommits}
+          onChange={onCommitsChange}
+        />
         <button
           type="button"
           className={PANEL_BUTTON_SECONDARY_CLASS}
@@ -68,17 +88,7 @@ export default function AwcAutoSkillsActions({
             {open ? "Hide drafts" : `Review drafts (${waiting})`}
           </button>
         ) : null}
-        <span className="flex flex-col text-[12.5px] text-awc-fg-muted dark:text-gray-400">
-          <span>
-            Tasks: checks finished tasks, and the last 100 commits on the main
-            branch if the folder uses git, for repeated steps.
-          </span>
-          <span>
-            Docs: turns this folder&apos;s skills, commands and Q&amp;A into
-            questions. No AI runs; the text is stored in your cloud until you
-            answer.
-          </span>
-        </span>
+        <AwcAutoSkillsScanHelp commits={validCommits ? commits : null} />
       </div>
       {scanError !== null ? (
         <p role="alert" className="text-[13px] text-red-600 dark:text-red-400">
