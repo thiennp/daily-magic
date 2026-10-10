@@ -8,6 +8,7 @@ import type { AgentWitchCloudApiConfig } from "../../../projects/internal/core/a
 import { createHttpAutoSkillCloud } from "./autoSkillCloud";
 import { readCommitChanges } from "./readCommitChanges";
 import { autoSkillLog, withTimeout } from "./autoSkillLog";
+import { runPool } from "./scanRunPool";
 import { announceScanStart, prepareScanJudge } from "./prepareScanJudge";
 import type { AutoSkillOutcome } from "./onAutoSkillRunCompleted.types";
 import { reportAutoSkillRunCompleted } from "./reportAutoSkillRunCompleted";
@@ -20,6 +21,8 @@ import { PROJECT_HISTORY_TASKS_DIR_NAME } from "./projectHistoryPaths.constant";
 
 /** Newest completed tasks to feed; older ones rarely add a new repeat. */
 const SCAN_MAX_TASKS = 60;
+/** Runs judged at once: each is mostly waiting on the coding tool. */
+const SCAN_CONCURRENCY = 3;
 /** One run never holds a scan longer than this (a stall becomes a judge failure, not silence). */
 const RUN_TIMEOUT_MS = 8 * 60_000;
 /** The judge failing this many runs in a row (out of usage, signed out) ends the scan. */
@@ -200,89 +203,95 @@ export const scanProjectTasksForAutoSkills = async (input: {
     health.failures = outcome === "judge_failed" ? health.failures + 1 : 0;
     return health.failures >= MAX_JUDGE_FAILURES;
   };
-  let stopped = false;
-  for (const [index, task] of tasks.entries()) {
-    const outcome = await runGuarded(
-      "task",
-      index + 1,
-      tasks.length,
-      health,
-      () =>
-        reportAutoSkillRunCompleted({
-          cloudApi: input.cloudApi,
-          projectId: input.projectId,
-          run: {
-            runId: task.taskId,
-            prompt: task.promptBody ?? "",
-            resultSummary: (task.resultBody ?? "").slice(0, 600),
-            completedAt: task.completedAt ?? task.createdAt,
-            writerAgent: task.writerAgent,
-            taskTitle:
-              (task.promptBody ?? "").split("\n", 1)[0]?.trim().slice(0, 120) ??
-              "",
-          },
-          layout: input.layout,
-          onJudgeFailure: (reason) => {
-            health.reason = reason;
-          },
-          ...(prepared !== null ? { availability: prepared.availability } : {}),
-          statusNote: describeScanProgress("task", index + 1, tasks.length),
-          evaluateEachRun: true,
-          ...(input.folderPath !== undefined
-            ? { folderPath: input.folderPath }
-            : {}),
-          ...(task.resultBody !== null ? { agentOutput: task.resultBody } : {}),
-        }),
-    );
+  const flow = { stopped: false };
+  const record = (outcome: AutoSkillOutcome): void => {
     outcomes[outcome] = (outcomes[outcome] ?? 0) + 1;
     if (outcome === "disabled" || outcome === "paused" || trackJudge(outcome)) {
-      stopped = true;
-      break;
+      flow.stopped = true;
     }
-  }
-  const commitsToScan = stopped ? [] : allCommits;
-  for (const [index, commit] of commitsToScan.entries()) {
-    const changes =
-      input.folderPath === undefined
-        ? null
-        : await readCommitChanges(input.folderPath, commit.sha);
-    const outcome = await runGuarded(
-      "commit",
-      index + 1,
-      commitsToScan.length,
-      health,
-      () =>
-        reportAutoSkillRunCompleted({
-          cloudApi: input.cloudApi,
-          projectId: input.projectId,
-          run: {
-            runId: `git:${commit.sha}`,
-            prompt: commit.subject,
-            resultSummary: commit.body.slice(0, 600),
-            completedAt: commit.committedAt,
-            writerAgent: null,
-            taskTitle: commit.subject.slice(0, 120),
-            ...(changes !== null ? { changes } : {}),
-          },
-          layout: input.layout,
-          folderPath: input.folderPath ?? "",
-          onJudgeFailure: (reason) => {
-            health.reason = reason;
-          },
-          ...(prepared !== null ? { availability: prepared.availability } : {}),
-          evaluateEachRun: true,
-          statusNote: describeScanProgress(
-            "commit",
-            index + 1,
-            commitsToScan.length,
-          ),
-        }),
-    );
-    outcomes[outcome] = (outcomes[outcome] ?? 0) + 1;
-    if (outcome === "disabled" || outcome === "paused" || trackJudge(outcome)) {
-      break;
-    }
-  }
+  };
+  const common = {
+    cloudApi: input.cloudApi,
+    projectId: input.projectId,
+    layout: input.layout,
+    evaluateEachRun: true,
+    onJudgeFailure: (reason: string) => {
+      health.reason = reason;
+    },
+    ...(prepared !== null ? { availability: prepared.availability } : {}),
+  } as const;
+  await runPool(
+    tasks,
+    SCAN_CONCURRENCY,
+    () => flow.stopped,
+    async (task, index) => {
+      record(
+        await runGuarded("task", index + 1, tasks.length, health, () =>
+          reportAutoSkillRunCompleted({
+            ...common,
+            run: {
+              runId: task.taskId,
+              prompt: task.promptBody ?? "",
+              resultSummary: (task.resultBody ?? "").slice(0, 600),
+              completedAt: task.completedAt ?? task.createdAt,
+              writerAgent: task.writerAgent,
+              taskTitle:
+                (task.promptBody ?? "")
+                  .split("\n", 1)[0]
+                  ?.trim()
+                  .slice(0, 120) ?? "",
+            },
+            statusNote: describeScanProgress("task", index + 1, tasks.length),
+            ...(input.folderPath !== undefined
+              ? { folderPath: input.folderPath }
+              : {}),
+            ...(task.resultBody !== null
+              ? { agentOutput: task.resultBody }
+              : {}),
+          }),
+        ),
+      );
+    },
+  );
+  const commitsToScan = flow.stopped ? [] : allCommits;
+  await runPool(
+    commitsToScan,
+    SCAN_CONCURRENCY,
+    () => flow.stopped,
+    async (commit, index) => {
+      const changes =
+        input.folderPath === undefined
+          ? null
+          : await readCommitChanges(input.folderPath, commit.sha);
+      record(
+        await runGuarded(
+          "commit",
+          index + 1,
+          commitsToScan.length,
+          health,
+          () =>
+            reportAutoSkillRunCompleted({
+              ...common,
+              run: {
+                runId: `git:${commit.sha}`,
+                prompt: commit.subject,
+                resultSummary: commit.body.slice(0, 600),
+                completedAt: commit.committedAt,
+                writerAgent: null,
+                taskTitle: commit.subject.slice(0, 120),
+                ...(changes !== null ? { changes } : {}),
+              },
+              folderPath: input.folderPath ?? "",
+              statusNote: describeScanProgress(
+                "commit",
+                index + 1,
+                commitsToScan.length,
+              ),
+            }),
+        ),
+      );
+    },
+  );
   const summary: AutoSkillScanSummary = {
     scanned: tasks.length,
     commitsScanned: commitsToScan.length,

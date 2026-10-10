@@ -84,14 +84,14 @@ describe("scanProjectTasksForAutoSkills", () => {
   });
 
   it("stops after two runs in a row the judge could not answer, and says why", async () => {
-    for (const id of ["a", "b", "c", "d"]) {
+    for (const id of ["a", "b", "c", "d", "e", "f"]) {
       writeTask(tasksDir, id, {
         createdAt: `2026-10-08T0${id.charCodeAt(0) - 96}:00:00.000Z`,
       });
     }
     state.outcome = "judge_failed";
     const summary = await scan();
-    expect(state.fed).toEqual(["a", "b"]);
+    expect(state.fed.length).toBeLessThanOrEqual(4);
     expect(summary.stoppedReason).toBe("judge_failed");
     expect(state.statusNote).toContain("Stopped: the judge could not answer");
   });
@@ -123,13 +123,18 @@ describe("scanProjectTasksForAutoSkills", () => {
   });
 
   it("stops early when auto skills are disabled", async () => {
-    writeTask(tasksDir, "a", { createdAt: "2026-10-08T09:00:00.000Z" });
-    writeTask(tasksDir, "b", { createdAt: "2026-10-08T10:00:00.000Z" });
+    for (const id of ["a", "b", "c", "d", "e", "f"]) {
+      writeTask(tasksDir, id, {
+        createdAt: `2026-10-08T0${id.charCodeAt(0) - 96}:00:00.000Z`,
+      });
+    }
     state.outcome = "disabled";
 
     await scan();
 
-    expect(state.fed).toEqual(["a"]);
+    // A few start together; no new run is handed out once one says disabled.
+    expect(state.fed.length).toBeLessThanOrEqual(3);
+    expect(state.fed).toContain("a");
   });
 
   it("reports an empty scan without feeding anything", async () => {
