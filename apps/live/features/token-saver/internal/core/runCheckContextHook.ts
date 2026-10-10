@@ -13,6 +13,7 @@ export interface CheckContextHookIo {
   readonly getTaskIntakeContext?: (input: {
     readonly projectId: string | undefined;
     readonly cwd: string | undefined;
+    readonly prompt: string | undefined;
   }) => string | null;
 }
 
@@ -106,6 +107,7 @@ export const runCheckContextHook = async (
       io.getTaskIntakeContext?.({
         projectId: result.projectId,
         cwd: input.cwd,
+        prompt: input.message,
       }) ?? null;
     const parts = [toCheckContextHookContext(result), intake].filter(
       (part): part is string => part !== null,

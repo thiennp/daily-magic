@@ -1,20 +1,34 @@
 /** Hook line prefix; the global CLAUDE.md block tells the agent to follow lines that start with it. */
 export const TASK_INTAKE_HOOK_PREFIX = "AgentWitch · task intake";
 
+/** A message is a candidate request only with at least this many words and characters. */
+export const TASK_INTAKE_MIN_REQUEST_WORDS = 4;
+export const TASK_INTAKE_MIN_REQUEST_CHARS = 20;
+
+const TASK_RULES = [
+  "First check whether an AgentWitch task already covers this request (list_project_tasks).",
+  "If one does, mention it in one line and ask whether to work on it now.",
+  "If none does and a task is needed, create one (create_project_task, one-line title), mention it in one line, then continue.",
+  "If no task is needed, say nothing about tasks.",
+];
+
 /** Context for a valid project with no remembered choice. */
 export const buildTaskIntakeAskText = (cwd: string): string =>
   [
     `${TASK_INTAKE_HOOK_PREFIX}: this folder is a linked AgentWitch project.`,
-    "Skip this for questions and one-step edits. For any other new request, ask once per session whether to create an AgentWitch task first, unless already answered this session. Options: always no this session, always yes this session, ask for every new request this session.",
-    `If the user picks always yes, ask exactly once: "Remember this for all future chats in this project?" If yes, run: agent-witch task-intake remember --cwd "${cwd}"`,
+    "Only for a real request (not a question, greeting, acknowledgement or one-step edit): ask once per session whether to create AgentWitch tasks. Options: always no this session, always yes this session, ask for every new request this session.",
+    `If the user explicitly picks always yes, ask exactly once: "Remember this for all future chats in this project?" Only after they answer yes, run: agent-witch task-intake remember --cwd "${cwd}"`,
+    "Once they allow tasks:",
+    ...TASK_RULES,
     "Never write this choice into a repo file.",
   ].join("\n");
 
 /** Context for a valid project where the user already chose always-yes. */
 export const buildTaskIntakeAutoText = (cwd: string): string =>
   [
-    `${TASK_INTAKE_HOOK_PREFIX}: the user chose to always create a task in this project.`,
-    "For a new non-trivial request, create the AgentWitch task without asking, then continue.",
+    `${TASK_INTAKE_HOOK_PREFIX}: the user chose to always create tasks in this project. Do not ask again.`,
+    "Only for a real request (not a question, greeting, acknowledgement or one-step edit):",
+    ...TASK_RULES,
     `To stop remembering (only if the user asks): agent-witch task-intake forget --cwd "${cwd}"`,
   ].join("\n");
 

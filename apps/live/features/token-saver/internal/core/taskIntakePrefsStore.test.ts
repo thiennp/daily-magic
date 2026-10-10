@@ -3,7 +3,10 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { buildTaskIntakeHookContext } from "./buildTaskIntakeHookContext";
+import {
+  buildTaskIntakeHookContext,
+  isTaskIntakeCandidatePrompt,
+} from "./buildTaskIntakeHookContext";
 import {
   findValidFolderClaim,
   forgetTaskIntake,
@@ -13,6 +16,7 @@ import {
   type TaskIntakeFolderClaim,
 } from "./taskIntakePrefsStore";
 
+const REQUEST = "please add a settings page for the project";
 const tempDirs: string[] = [];
 afterEach(() => {
   for (const d of tempDirs.splice(0)) {
@@ -44,18 +48,43 @@ describe("task intake prefs", () => {
         layout,
         projectId: "p1",
         cwd: path.join(folder, "sub"),
+        prompt: REQUEST,
         readClaims: () => [claim],
       });
     expect(ctx()).toContain("ask once per session");
     rememberTaskIntakeYes({ layout, projectId: "p1", folderRealPath: folder });
-    expect(ctx()).toContain("without asking");
+    const auto = ctx() ?? "";
+    expect(auto).toContain("Do not ask again");
+    expect(auto).toContain("mention it in one line");
+    expect(auto).toContain("say nothing about tasks");
     expect(forgetTaskIntake({ layout, projectId: "p1" })).toBe(true);
     expect(ctx()).toContain("ask once per session");
   });
 
+  it("ignores messages that are too short to be a request", () => {
+    const { folder, layout, claim } = setup();
+    for (const prompt of [
+      "ok",
+      "thanks a lot",
+      "yes please do it",
+      undefined,
+    ]) {
+      expect(
+        buildTaskIntakeHookContext({
+          layout,
+          projectId: "p1",
+          cwd: folder,
+          prompt,
+          readClaims: () => [claim],
+        }),
+      ).toBeNull();
+    }
+    expect(isTaskIntakeCandidatePrompt(REQUEST)).toBe(true);
+  });
+
   it("fires nothing when the project has no valid claim for the folder", () => {
     const { folder, layout, claim } = setup();
-    const base = { layout, projectId: "p1", cwd: folder };
+    const base = { layout, projectId: "p1", cwd: folder, prompt: REQUEST };
     expect(
       buildTaskIntakeHookContext({ ...base, readClaims: () => [] }),
     ).toBeNull();
@@ -82,6 +111,7 @@ describe("task intake prefs", () => {
       layout,
       projectId: "p1",
       cwd: folder,
+      prompt: REQUEST,
       readClaims: () => [moved],
     });
     expect(ctx).toBeNull();

@@ -49,11 +49,12 @@ export const runCheckContextHookCli = async (input: {
       process.stdout.write(text);
     },
     writeStderr,
-    getTaskIntakeContext: ({ projectId, cwd }) =>
+    getTaskIntakeContext: ({ projectId, cwd, prompt }) =>
       buildTaskIntakeHookContext({
         layout: input.layout,
         projectId,
         cwd,
+        prompt,
         readClaims: () => readCrossAccountFolderClaims(input.layout.installDir),
       }),
     runCheckContext: createCheckContextRunner({
