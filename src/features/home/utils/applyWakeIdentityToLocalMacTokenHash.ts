@@ -1,6 +1,6 @@
 import type { LocalAgentWitchIdentitySnapshot } from "@/features/agent-witch/localAgentWitchIdentitySnapshot.type";
-import { resolveLocalTokenHashMatchesReachableDevice } from "@/features/agent-witch/utils/resolveLocalTokenHashMatchesReachableDevice";
-import { resolveSoleReachableLocalTokenHash } from "@/features/agent-witch/utils/resolveSoleReachableLocalTokenHash";
+import { resolveLocalTokenHashMatchesReachableDevice } from "@/features/agent-witch/utils/public-api/presentation";
+import { resolveSoleReachableLocalTokenHash } from "@/features/agent-witch/utils/public-api/presentation";
 import type { MacDevicePresence } from "@/features/agent-witch/online-wake/macDevicePresence";
 import { resolveLocalMacTokenHashFromWakeIdentity } from "@/features/home/utils/resolveLocalMacTokenHashFromWakeIdentity";
 

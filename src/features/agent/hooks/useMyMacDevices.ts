@@ -12,7 +12,7 @@ import type { AgentWitchDeviceWriter } from "@/lib/agentWitch/deviceWriters";
 import type { AgentWitchDevicePlatform } from "@/lib/agentWitch/types/AgentWitchDevicePlatform.type";
 import type { AgentWitchLocalConnectVersionStatus } from "@/lib/agentWitch/types/AgentWitchLocalConnectVersionStatus.type";
 import { useSubscribeMacDeviceRevoked } from "@/features/agent-witch/macDevices/public-api/presentation";
-import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
+import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/public-api/presentation";
 import { useConnectionLab } from "@/features/agent-witch/connection-lab/public-api/presentation";
 
 export interface MyMacDevice {

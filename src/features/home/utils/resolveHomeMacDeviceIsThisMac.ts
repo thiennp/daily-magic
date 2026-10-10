@@ -1,4 +1,4 @@
-import { deviceMatchesReachableLocalTokenHash } from "@/features/agent-witch/utils/deviceMatchesReachableLocalTokenHash";
+import { deviceMatchesReachableLocalTokenHash } from "@/features/agent-witch/utils/public-api/presentation";
 import type { MacDevicePresence } from "@/features/agent-witch/online-wake/macDevicePresence";
 
 /**

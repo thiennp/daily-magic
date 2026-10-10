@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 
-import { revokePairedDevice } from "@/features/agent-witch/utils/pairedDevicesApi";
+import { revokePairedDevice } from "@/features/agent-witch/utils/public-api/presentation";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 
 const useHomeConnectedMacDeviceActions = () => {

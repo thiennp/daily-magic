@@ -1,5 +1,5 @@
-import { parseLocalAgentWitchIdentity } from "@/features/agent-witch/utils/parseLocalAgentWitchIdentity";
-import type { LocalAgentWitchIdentity } from "@/features/agent-witch/utils/parseLocalAgentWitchIdentity";
+import { parseLocalAgentWitchIdentity } from "@/features/agent-witch/utils/public-api/presentation";
+import type { LocalAgentWitchIdentity } from "@/features/agent-witch/utils/public-api/types";
 import { fetchLocalAgentWitchWakeJson } from "@/lib/agentWitch/fetchLocalAgentWitchWakeJson";
 import {
   parseWakePortQuery,

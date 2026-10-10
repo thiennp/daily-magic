@@ -7,7 +7,7 @@ import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
 } from "@/features/agent-witch/pairedDevicesResource";
-import { setAgentWitchLocalHostCookie } from "@/features/agent-witch/utils/agentWitchLocalHostCookie";
+import { setAgentWitchLocalHostCookie } from "@/features/agent-witch/utils/public-api/presentation";
 import { applyWakeIdentityToLocalMacTokenHash } from "@/features/home/utils/applyWakeIdentityToLocalMacTokenHash";
 import {
   getLocalMacTokenHashSnapshot,

@@ -1,4 +1,4 @@
-import type { LocalAgentWitchIdentity } from "@/features/agent-witch/utils/parseLocalAgentWitchIdentity";
+import type { LocalAgentWitchIdentity } from "@/features/agent-witch/utils/public-api/types";
 
 export type LocalAgentWitchIdentityLoadStatus = "idle" | "loading" | "ready";
 

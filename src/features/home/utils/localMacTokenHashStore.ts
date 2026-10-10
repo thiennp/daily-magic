@@ -2,7 +2,7 @@ import {
   clearAgentWitchLocalTokenHashCookie,
   readAgentWitchLocalTokenHashCookie,
   setAgentWitchLocalTokenHashCookie,
-} from "@/features/agent-witch/utils/agentWitchLocalTokenHashCookie";
+} from "@/features/agent-witch/utils/public-api/presentation";
 
 const storeState: { tokenHash: string | null } = {
   tokenHash:

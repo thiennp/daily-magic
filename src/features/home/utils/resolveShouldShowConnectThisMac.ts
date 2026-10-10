@@ -1,4 +1,4 @@
-import { deviceMatchesReachableLocalTokenHash } from "@/features/agent-witch/utils/deviceMatchesReachableLocalTokenHash";
+import { deviceMatchesReachableLocalTokenHash } from "@/features/agent-witch/utils/public-api/presentation";
 import type { MacPresenceTier } from "@/features/agent-witch/online-wake/macDevicePresence";
 import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
 

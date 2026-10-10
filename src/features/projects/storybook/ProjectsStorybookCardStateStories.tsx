@@ -1,6 +1,6 @@
 "use client";
 
-import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
+import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/public-api/presentation";
 import AwcProjectCard from "@/features/projects/AwcProjectCard";
 import ProjectsStorybookFrame from "@/features/projects/storybook/ProjectsStorybookFrame";
 import type { ProjectsStorybookViewport } from "@/features/projects/storybook/ProjectsStorybookFrame";

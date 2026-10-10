@@ -3,9 +3,9 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useSyncExternalStore } from "react";
 
-import { isAgentWitchWakeIdentityProbeSuppressed } from "@/features/agent-witch/utils/agentWitchWakeIdentityProbeSession";
-import { resolveLocalTokenHashMatchesReachableDevice } from "@/features/agent-witch/utils/resolveLocalTokenHashMatchesReachableDevice";
-import { resolveShouldProbeWakeIdentityInBrowser } from "@/features/agent-witch/utils/resolveShouldProbeWakeIdentityInBrowser";
+import { isAgentWitchWakeIdentityProbeSuppressed } from "@/features/agent-witch/utils/public-api/presentation";
+import { resolveLocalTokenHashMatchesReachableDevice } from "@/features/agent-witch/utils/public-api/presentation";
+import { resolveShouldProbeWakeIdentityInBrowser } from "@/features/agent-witch/utils/public-api/presentation";
 import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
@@ -15,7 +15,7 @@ import {
   getLocalAgentWitchIdentitySnapshot,
   retryUnreachableLocalAgentWitchIdentity,
 } from "@/features/agent-witch/localAgentWitchIdentityResource";
-import { shouldRetryUnreachableWakeIdentityProbe } from "@/features/agent-witch/utils/shouldRetryUnreachableWakeIdentityProbe";
+import { shouldRetryUnreachableWakeIdentityProbe } from "@/features/agent-witch/utils/public-api/presentation";
 import {
   getLocalMacTokenHashSnapshot,
   subscribeLocalMacTokenHash,

@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 
 import { Modal } from "@/components/ui/modal";
-import { requestLocalAgentWitchDeleteInstallFromWakeServer } from "@/features/agent-witch/utils/requestLocalAgentWitchDeleteInstallFromWakeServer";
+import { requestLocalAgentWitchDeleteInstallFromWakeServer } from "@/features/agent-witch/utils/public-api/presentation";
 import DeleteLocalMacModalPhaseContent, {
   type DeleteLocalMacModalPhase,
 } from "@/features/home/DeleteLocalMacModalPhaseContent";

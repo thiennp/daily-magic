@@ -3,13 +3,13 @@ import {
   clearAgentWitchWakeIdentityProbeSuppression,
   isAgentWitchWakeIdentityProbeSuppressed,
   suppressAgentWitchWakeIdentityProbe,
-} from "@/features/agent-witch/utils/agentWitchWakeIdentityProbeSession";
-import { collectUniqueWakePorts } from "@/features/agent-witch/utils/collectUniqueWakePorts";
+} from "@/features/agent-witch/utils/public-api/presentation";
+import { collectUniqueWakePorts } from "@/features/agent-witch/utils/public-api/presentation";
 import {
   buildAllWakePortsForPage,
   probeLocalAgentWitchWakePorts,
-} from "@/features/agent-witch/utils/probeLocalAgentWitchWakePorts";
-import { resolveWakeIdentityPortsToProbe } from "@/features/agent-witch/utils/resolveWakeIdentityPortsToProbe";
+} from "@/features/agent-witch/utils/public-api/presentation";
+import { resolveWakeIdentityPortsToProbe } from "@/features/agent-witch/utils/public-api/presentation";
 
 const state: {
   snapshot: LocalAgentWitchIdentitySnapshot;

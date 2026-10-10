@@ -63,3 +63,7 @@ Public API of `connection-lab`: import from `connection-lab/public-api/presentat
 ## Dashboard public API
 
 `dashboard/public-api/presentation.ts` exports `AgentWitchDashboardProvider`, `useAgentWitchDashboard` and `useAgentWitchDashboardSubscription` for other features.
+
+## `utils` public API
+
+Outside code imports the local-identity, wake-port, cookie and paired-device helpers only through `utils/public-api/presentation.ts` (and the `LocalAgentWitchIdentity` type through `utils/public-api/types.ts`).

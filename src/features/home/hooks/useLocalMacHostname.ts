@@ -11,11 +11,11 @@ import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
 } from "@/features/agent-witch/pairedDevicesResource";
-import { readAgentWitchLocalHostCookie } from "@/features/agent-witch/utils/agentWitchLocalHostCookie";
-import { isAgentWitchWakeIdentityProbeSuppressed } from "@/features/agent-witch/utils/agentWitchWakeIdentityProbeSession";
-import { collectUniqueWakePorts } from "@/features/agent-witch/utils/collectUniqueWakePorts";
-import { resolveLocalTokenHashMatchesReachableDevice } from "@/features/agent-witch/utils/resolveLocalTokenHashMatchesReachableDevice";
-import { resolveShouldProbeWakeIdentityInBrowser } from "@/features/agent-witch/utils/resolveShouldProbeWakeIdentityInBrowser";
+import { readAgentWitchLocalHostCookie } from "@/features/agent-witch/utils/public-api/presentation";
+import { isAgentWitchWakeIdentityProbeSuppressed } from "@/features/agent-witch/utils/public-api/presentation";
+import { collectUniqueWakePorts } from "@/features/agent-witch/utils/public-api/presentation";
+import { resolveLocalTokenHashMatchesReachableDevice } from "@/features/agent-witch/utils/public-api/presentation";
+import { resolveShouldProbeWakeIdentityInBrowser } from "@/features/agent-witch/utils/public-api/presentation";
 import useApplyWakeIdentityLocalTokenHash from "@/features/home/hooks/useApplyWakeIdentityLocalTokenHash";
 import useProbeLocalMacWakeIdentity from "@/features/home/hooks/useProbeLocalMacWakeIdentity";
 import { consumeLocalTokenHashQueryParam } from "@/features/home/utils/consumeLocalTokenHashQueryParam";

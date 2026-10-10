@@ -10,7 +10,7 @@ import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
 } from "@/features/agent-witch/pairedDevicesResource";
-import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
+import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/public-api/presentation";
 import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
 
 export default function DispatchPolicyPreviewControls() {

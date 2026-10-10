@@ -10,7 +10,7 @@ import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestCo
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
-import { revokePairedDevice } from "@/features/agent-witch/utils/pairedDevicesApi";
+import { revokePairedDevice } from "@/features/agent-witch/utils/public-api/presentation";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 interface WsTestPromptSectionProps {
