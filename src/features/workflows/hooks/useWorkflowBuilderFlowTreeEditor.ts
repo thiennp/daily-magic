@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import type { HarnessItemDraft } from "@/features/harness/types/HarnessItemDraft.type";
+import type { HarnessItemDraft } from "@/features/harness/public-api/types";
 import { describeWorkflowEntryPointSummary } from "@/features/workflows/describeWorkflowEntryPointSummary";
 import { filterHarnessItemsByKinds } from "@/features/workflows/filterHarnessItemsByKinds";
 import type DraftWorkflowField from "@/features/workflows/types/DraftWorkflowField.type";

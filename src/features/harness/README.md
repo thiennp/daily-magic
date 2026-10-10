@@ -28,3 +28,7 @@ _None wired in this feature folder._
 - `library`
 
 Query: `npm run feature-knowledge:query -- "..." --feature=harness`
+
+## Public API
+
+Outside code imports only from `public-api/types` (labels, options, draft and import-status types) and `public-api/presentation` (`HarnessWorkspace`, `HarnessItemFieldsEditor`, `useAgentWitchHarnessSocket`, `forkCapabilityToLibrary`).

@@ -8,7 +8,7 @@ import {
   WORKFLOW_EXTRA_RULE_HARNESS_KINDS,
   WORKFLOW_RUN_STEP_HARNESS_KINDS,
 } from "@/features/workflows/workflowHarnessKindGroups.constant";
-import type { HarnessItemDraft } from "@/features/harness/types/HarnessItemDraft.type";
+import type { HarnessItemDraft } from "@/features/harness/public-api/types";
 import type { HarnessItemKind } from "@/lib/agentWitch/harness/types/HarnessItemKind.constant";
 
 interface CreateWorkflowHarnessSectionsProps {

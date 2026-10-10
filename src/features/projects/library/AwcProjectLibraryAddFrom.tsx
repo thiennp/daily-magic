@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import forkCapabilityToLibrary from "@/features/harness/hooks/forkCapabilityToLibrary";
+import { forkCapabilityToLibrary } from "@/features/harness/public-api/presentation";
 import { useLibraryCapabilities } from "@/features/library/public-api/presentation";
 import AwcProjectLibraryAddFromForm from "@/features/projects/library/AwcProjectLibraryAddFromForm";
 import { PROJECT_PAGE_LIBRARY_ACTIONS_COPY as A } from "@/features/projects/library/projectPageLibraryActionsCopy.constant";

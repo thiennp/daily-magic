@@ -1,5 +1,5 @@
 import { fetchCapabilityTemplateDetail } from "@/features/capabilities/public-api/presentation";
-import type { BorrowImportStatus } from "@/features/harness/hooks/types/BorrowImportStatus.type";
+import type { BorrowImportStatus } from "@/features/harness/public-api/types";
 import type HarnessItemWriteSpec from "@/lib/agentWitch/harness/types/HarnessItemWriteSpec.type";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 

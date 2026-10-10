@@ -1,6 +1,6 @@
 "use client";
 
-import type { HarnessItemDraft } from "@/features/harness/types/HarnessItemDraft.type";
+import type { HarnessItemDraft } from "@/features/harness/public-api/types";
 import { useWorkflowBuilderFlowTreeEditor } from "@/features/workflows/hooks/public-api/presentation";
 import WorkflowBuilderEntryPointTreeNode from "@/features/workflows/WorkflowBuilderEntryPointTreeNode";
 import WorkflowBuilderFlowTreeAddStepActions from "@/features/workflows/WorkflowBuilderFlowTreeAddStepActions";

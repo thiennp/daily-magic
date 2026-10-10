@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import {
   createHarnessItemDraftForKind,
   type HarnessItemDraft,
-} from "@/features/harness/types/HarnessItemDraft.type";
+} from "@/features/harness/public-api/types";
 import type { HarnessItemKind } from "@/lib/agentWitch/harness/types/HarnessItemKind.constant";
 
 export interface CapabilityHarnessItemPayload {

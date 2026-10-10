@@ -1,6 +1,6 @@
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
-import { HARNESS_WRITER_LABELS } from "@/features/harness/constants/harnessFormOptions";
+import { HARNESS_WRITER_LABELS } from "@/features/harness/public-api/types";
 
 export type SendTaskComposerWizardStepId =
   "picker" | "project" | "writer" | "form" | "session";

@@ -1,4 +1,4 @@
-import { HARNESS_KIND_LABELS } from "@/features/harness/constants/harnessFormOptions";
+import { HARNESS_KIND_LABELS } from "@/features/harness/public-api/types";
 import type { CapabilityTemplateHarnessItemSummary } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 interface CapabilityTemplateHarnessPreviewProps {

@@ -1,5 +1,5 @@
 import { saveCapabilityTemplateToLibrary } from "@/features/capabilities/public-api/presentation";
-import forkCapabilityToLibrary from "@/features/harness/hooks/forkCapabilityToLibrary";
+import { forkCapabilityToLibrary } from "@/features/harness/public-api/presentation";
 import { parsePresetMarketplaceTemplateId } from "@/lib/marketplace/presetMarketplaceCapabilityId";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 

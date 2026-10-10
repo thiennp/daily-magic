@@ -1,9 +1,9 @@
 "use client";
 
 import { Modal } from "@/components/ui/modal";
-import HarnessItemFieldsEditor from "@/features/harness/components/HarnessItemFieldsEditor";
-import { HARNESS_KIND_LABELS } from "@/features/harness/constants/harnessFormOptions";
-import type { HarnessItemDraft } from "@/features/harness/types/HarnessItemDraft.type";
+import { HarnessItemFieldsEditor } from "@/features/harness/public-api/presentation";
+import { HARNESS_KIND_LABELS } from "@/features/harness/public-api/types";
+import type { HarnessItemDraft } from "@/features/harness/public-api/types";
 import CreateWorkflowFieldsEditor from "@/features/workflows/CreateWorkflowFieldsEditor";
 import type DraftWorkflowField from "@/features/workflows/types/DraftWorkflowField.type";
 import { WORKFLOW_BUILDER_FLOW_SECTION } from "@/features/workflows/workflowBuilderCopy.constant";

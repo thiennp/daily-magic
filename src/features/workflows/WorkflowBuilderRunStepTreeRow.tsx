@@ -1,7 +1,7 @@
 "use client";
 
-import { HARNESS_KIND_LABELS } from "@/features/harness/constants/harnessFormOptions";
-import type { HarnessItemDraft } from "@/features/harness/types/HarnessItemDraft.type";
+import { HARNESS_KIND_LABELS } from "@/features/harness/public-api/types";
+import type { HarnessItemDraft } from "@/features/harness/public-api/types";
 import { WORKFLOW_BUILDER_FLOW_SECTION } from "@/features/workflows/workflowBuilderCopy.constant";
 
 interface WorkflowBuilderRunStepTreeRowProps {

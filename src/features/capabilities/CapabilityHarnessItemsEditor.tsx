@@ -1,10 +1,10 @@
 "use client";
 
 import Button from "@/components/ui/button/Button";
-import HarnessItemFieldsEditor from "@/features/harness/components/HarnessItemFieldsEditor";
-import { HARNESS_KIND_OPTIONS } from "@/features/harness/constants/harnessFormOptions";
+import { HarnessItemFieldsEditor } from "@/features/harness/public-api/presentation";
+import { HARNESS_KIND_OPTIONS } from "@/features/harness/public-api/types";
 import { PLAYBOOK_HARNESS_SECTION } from "@/features/capabilities/playbookBuilderCopy.constant";
-import type { HarnessItemDraft } from "@/features/harness/types/HarnessItemDraft.type";
+import type { HarnessItemDraft } from "@/features/harness/public-api/types";
 import type { HarnessItemKind } from "@/lib/agentWitch/harness/types/HarnessItemKind.constant";
 
 interface CapabilityHarnessItemsEditorProps {

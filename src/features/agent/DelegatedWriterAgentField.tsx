@@ -1,6 +1,6 @@
 "use client";
 
-import { HARNESS_WRITER_OPTIONS } from "@/features/harness/constants/harnessFormOptions";
+import { HARNESS_WRITER_OPTIONS } from "@/features/harness/public-api/types";
 import AwcFormField, {
   AWC_FORM_CONTROL_CLASS,
 } from "@/components/form/AwcFormField";
