@@ -1,4 +1,4 @@
-import AwcAppRouteLoading from "@/features/shell/loading/AwcAppRouteLoading";
+import { AwcAppRouteLoading } from "@/features/shell/loading/public-api/presentation";
 
 /**
  * DF-016: route skeleton for Home, Projects, project page (Overview / Tasks /

@@ -31,3 +31,5 @@ Query: `npm run feature-knowledge:query -- "..." --feature=shell`
 ## v5 public API
 
 `v5/public-api/types.ts` (copy and class constants, `resolveDeviceUpdateAction`) and `v5/public-api/presentation.ts` (`AppShellBrand`, `AppShellComputersHeading`, `AppShellDevicesSurface`, `DeviceUpdateButton`). Import the v5 slice only through these files.
+
+`loading/` public API: import skeleton components from `@/features/shell/loading/public-api/presentation` and `AWC_SKELETON_CARD_CLASS` from `@/features/shell/loading/public-api/types`.

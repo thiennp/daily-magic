@@ -42,7 +42,8 @@
     "src/features/agent-witch/connection-lab",
     "src/features/pricing",
     "src/features/automations",
-    "src/features/empty-states"
+    "src/features/empty-states",
+    "src/features/shell/loading"
   ],
   "blocked": {},
   "rounds": [
@@ -260,6 +261,11 @@
       "unit": "src/features/empty-states",
       "sha": "9703697e2831b0f9e0419c12a81ac6ae7e52e40a",
       "at": "2026-10-10T09:40:39.712Z"
+    },
+    {
+      "unit": "src/features/shell/loading",
+      "sha": "4f51a50be1ca346f4b420497d68fde47175d83fa",
+      "at": "2026-10-10T09:41:46.467Z"
     }
   ]
 }

@@ -10,10 +10,10 @@ import {
   PROJECT_V5_TAB_INACTIVE_CLASS,
 } from "@/features/projects/projectPageV5ChromeClasses.constant";
 import { PROJECT_PAGE_V5_TAB_LABELS } from "@/features/projects/projectPageV5Tabs.constant";
-import AwcListRowsSkeleton from "@/features/shell/loading/AwcListRowsSkeleton";
-import AwcSkeletonBar from "@/features/shell/loading/AwcSkeletonBar";
-import AwcSkeletonStatus from "@/features/shell/loading/AwcSkeletonStatus";
-import { AWC_SKELETON_CARD_CLASS } from "@/features/shell/loading/awcSkeleton.constant";
+import { AwcListRowsSkeleton } from "@/features/shell/loading/public-api/presentation";
+import { AwcSkeletonBar } from "@/features/shell/loading/public-api/presentation";
+import { AwcSkeletonStatus } from "@/features/shell/loading/public-api/presentation";
+import { AWC_SKELETON_CARD_CLASS } from "@/features/shell/loading/public-api/types";
 import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
 
 /*
@@ -66,7 +66,10 @@ export default function AwcProjectDetailSkeleton() {
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             {[0, 1].map((card) => (
-              <div key={card} className={`${AWC_SKELETON_CARD_CLASS} space-y-3`}>
+              <div
+                key={card}
+                className={`${AWC_SKELETON_CARD_CLASS} space-y-3`}
+              >
                 <AwcSkeletonBar className="h-5 w-1/3" />
                 <AwcSkeletonBar className="h-4 w-full" />
                 <AwcSkeletonBar className="h-4 w-4/5" />

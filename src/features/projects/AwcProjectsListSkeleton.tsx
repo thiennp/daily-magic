@@ -5,8 +5,8 @@ import {
   PROJECTS_V5_PAGE_CLASS,
   PROJECTS_V5_PANEL_CLASS,
 } from "@/features/projects/projectsPageV5Classes.constant";
-import AwcSkeletonBar from "@/features/shell/loading/AwcSkeletonBar";
-import AwcSkeletonStatus from "@/features/shell/loading/AwcSkeletonStatus";
+import { AwcSkeletonBar } from "@/features/shell/loading/public-api/presentation";
+import { AwcSkeletonStatus } from "@/features/shell/loading/public-api/presentation";
 
 /**
  * DF-016 route skeleton for /projects — same page header + panel as

@@ -1,5 +1,5 @@
 import { AWC_PROJECTS_PAGE_COPY } from "@/features/projects/awcProjectsPageCopy.constant";
-import AwcSkeletonBar from "@/features/shell/loading/AwcSkeletonBar";
+import { AwcSkeletonBar } from "@/features/shell/loading/public-api/presentation";
 
 /** Six skeleton cards while the list loads (design: busy region + sr status). */
 export default function AwcProjectsListLoading() {

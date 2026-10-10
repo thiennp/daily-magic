@@ -3,9 +3,9 @@ import {
   HOME_MAIN_COLUMN_WITHOUT_LEFT_RAIL_CLASS,
   HOME_RIGHT_RAIL_WITHOUT_LEFT_RAIL_CLASS,
 } from "@/features/home/homeDashboardLayout.constant";
-import AwcSkeletonBar from "@/features/shell/loading/AwcSkeletonBar";
-import AwcSkeletonStatus from "@/features/shell/loading/AwcSkeletonStatus";
-import { AWC_SKELETON_CARD_CLASS } from "@/features/shell/loading/awcSkeleton.constant";
+import { AwcSkeletonBar } from "@/features/shell/loading/public-api/presentation";
+import { AwcSkeletonStatus } from "@/features/shell/loading/public-api/presentation";
+import { AWC_SKELETON_CARD_CLASS } from "@/features/shell/loading/public-api/types";
 
 /** Design skeleton card: three bars of decreasing width. */
 const SkeletonCard = () => (
