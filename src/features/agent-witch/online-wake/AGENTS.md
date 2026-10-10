@@ -12,9 +12,10 @@ import {
   canDispatchToMac,
   requestAgentWitchWake,
   canWakeMacDeviceFromBrowser,
-  requestAgentWitchDeviceRestart,
   MacDeviceOfflineWakeHint,
 } from "@/features/agent-witch/online-wake";
+// Server-only (uses the DB): import requestAgentWitchDeviceRestart etc. from
+// "@/features/agent-witch/online-wake/public-api/infrastructure", never from this barrel.
 ```
 
 ## Layout
