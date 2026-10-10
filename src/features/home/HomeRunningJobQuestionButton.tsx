@@ -1,6 +1,6 @@
 "use client";
 
-import { useAgentRunInputRequest } from "@/features/dispatch/public-api/presentation";
+import { useAgentRunInputRequest } from "@/features/dispatch/public-api/client";
 import { requestAgentRunInputModalReopen } from "@/features/dispatch/public-api/presentation";
 import { resolveRunInputReopenRequest } from "@/features/dispatch/public-api/presentation";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";

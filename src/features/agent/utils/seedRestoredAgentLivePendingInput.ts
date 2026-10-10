@@ -1,5 +1,5 @@
 import type { AgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalState.type";
-import { getPendingInputForRun } from "@/features/dispatch/public-api/presentation";
+import { getPendingInputForRun } from "@/features/dispatch/public-api/client";
 import type { AgentRunInputRequest } from "@/features/dispatch/public-api/types";
 import { isAgentRunQuestionAlreadyAnswered } from "@/features/agent/utils/isAgentRunQuestionAlreadyAnswered";
 import { resolveRunInputReopenRequest } from "@/features/dispatch/public-api/presentation";

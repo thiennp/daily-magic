@@ -31,7 +31,7 @@ features/       → nested sub-slices (optional, same rules)
 
 ## Three rules (enforce on every change)
 
-1. **Segregated contracts** — Import another feature only from `@/features/<slug>/public-api/presentation`, `…/infrastructure`, or `…/types`. Never a single mixed `index.ts` for presentation + server code.
+1. **Segregated contracts** (a fourth file, `public-api/client.ts`, holds client-only runtime — hooks, stores, sockets without `'use client'` — so server components importing `presentation.ts` never pull it in) — Import another feature only from `@/features/<slug>/public-api/presentation`, `…/infrastructure`, or `…/types`. Never a single mixed `index.ts` for presentation + server code.
 
 2. **No cross-feature internal imports** — `src/features/<a>/internal/**` is private to `<a>`. Forbidden: `@/features/other/internal/...`.
 

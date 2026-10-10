@@ -82,6 +82,7 @@
       "index.tsx",
       "presentation.ts",
       "infrastructure.ts",
+      "client.ts",
       "types.ts",
       "*.type.ts",
       "*.constant.ts",

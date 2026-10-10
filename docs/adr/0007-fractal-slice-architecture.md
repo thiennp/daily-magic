@@ -23,6 +23,7 @@ src/features/<slug>/
 ├── public-api/
 │   ├── presentation.ts    # UI entrypoints, hooks/pages exported to app/ and other features
 │   ├── infrastructure.ts  # Server-only exports (repositories, jobs) — never imported from client bundles
+│   ├── client.ts          # Client-only runtime (hooks, stores, sockets without 'use client'); never imported by server components
 │   └── types.ts           # Shared domain types/DTOs safe for any consumer
 ├── internal/
 │   ├── presentation/      # Components, hooks, route adapters private to the slice

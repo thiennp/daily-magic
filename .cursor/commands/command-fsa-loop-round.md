@@ -33,6 +33,8 @@ npm run fsa:next
 2. List every file **outside** the unit that imports it, with the exact symbols used (`rg "<unit path as @/ alias>" src apps`, plus relative imports from sibling folders).
 3. Decide each symbol's file by what it is: types/DTOs/constants → `types.ts`; React components and client hooks → `presentation.ts`; server-only code (DB, Node APIs, `server-only`) → `infrastructure.ts`.
 
+Add a fourth file, `client.ts`, for exports whose module graph reaches React hooks, client stores or sockets in a file **without** `"use client"`. These must never sit in `presentation.ts`: a server component that imports one pure helper from a mixed barrel pulls the whole client chain into the server build and breaks `npm run build` (this happened on main). Pure helpers and `"use client"` components stay in `presentation.ts`.
+
 Skip a file kind that has no symbols; never create empty contract files.
 
 ## 3. Boundary (the only code change)
@@ -54,7 +56,7 @@ npm run validate:staged
 npm run test:related
 ```
 
-Every 5th round and on **Finish** also run `npm run build`.
+Run `npm run build` in every round that creates or edits a `public-api/presentation.ts` or `client.ts` (barrel leaks only show up in the build, not in `tsc`), and on **Finish**. A build failure caused by your round fails the round.
 
 If `npm run fsa:deps` reports fewer violations than the baseline, run `npm run fsa:deps:baseline` so the baseline only ever shrinks. Never regenerate it when the count went up.
 

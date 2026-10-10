@@ -6,7 +6,7 @@ import {
   loadAgentRunTerminalOutput,
   setAgentRunTerminalOutput,
 } from "@/features/agent/utils/agentRunTerminalOutputStore";
-import { sendAgentRunInputResponse } from "@/features/dispatch/public-api/presentation";
+import { sendAgentRunInputResponse } from "@/features/dispatch/public-api/client";
 import type { AgentRunInputRequest } from "@/features/dispatch/public-api/types";
 import { useAgentRunLiveTerminalSocket } from "@/features/reports/hooks/useAgentRunLiveTerminalSocket";
 import { useAgentRunLiveTerminalSseOutput } from "@/features/reports/hooks/useAgentRunLiveTerminalSseOutput";

@@ -79,7 +79,7 @@ const reviewPrompt = (round) =>
   `Allowed in the diff: new public-api/*.ts files that only re-export, changed import paths/specifiers in importers, .agents/fsa/state.json, a README line. ` +
   `Also fail it if: files were moved or renamed; a public-api file contains logic, an index.ts barrel, or is empty; a 'use client' file imports public-api/infrastructure; ` +
   `a symbol was renamed or its type changed; a default export became named (or the reverse); the baseline .agents/fsa/depcruise-baseline.json grew. ` +
-  `Also run \`npx tsc --noEmit\` and \`npm run fsa:deps\`. ` +
+  `Also run \`npx tsc --noEmit\` and \`npm run fsa:deps\`, and \`npm run build\` if the commit adds or edits a public-api presentation.ts/client.ts; also fail it if a presentation.ts re-exports a module that uses React hooks or a client store without 'use client' (it belongs in client.ts). ` +
   `If you find a problem, FIX it (git commit --amend, no --no-verify) and re-run those checks, then return ok=true, fixed=true. ` +
   `If you cannot fix it, change nothing and return ok=false with the problems.`;
 

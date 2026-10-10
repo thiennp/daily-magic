@@ -1,4 +1,4 @@
-import { parseDispatchApprovalSocketMessage } from "@/features/dispatch/public-api/presentation";
+import { parseDispatchApprovalSocketMessage } from "@/features/dispatch/public-api/client";
 import type { AgentRunInputRequest } from "@/features/dispatch/public-api/types";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 

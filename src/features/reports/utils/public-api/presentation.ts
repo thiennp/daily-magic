@@ -9,7 +9,6 @@ export {
 export { formatAgentRunEstimateComparison } from "../formatAgentRunEstimateComparison";
 export { formatAgentRunReportSummaryLine } from "../formatAgentRunReportSummaryLine";
 export { formatAgentRunStatusLabel } from "../formatAgentRunStatusLabel";
-export { handleAgentRunLiveTerminalSocketMessage } from "../handleAgentRunLiveTerminalSocketMessage";
 export { parseAgentRunSseEvent } from "../parseAgentRunSseEvent";
 export {
   isAgentRunLiveTerminalActive,
