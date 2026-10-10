@@ -15,3 +15,11 @@
 - `src/features/projects/hooks`: importer AwcProjectNameEditor.tsx over 100 lines, prettier rewrap fails ratchet
 - `src/features/projects/tasks`: importer AwcProjectMessengerSection.tsx grows past 100-line ratchet on rewrap
 - `src/features/home#root`: outside test importer needs test helper homeProjectsPanelRenderTestSetup (not exportable)
+
+## Cycle burn-down
+
+- Cycles fixed this run: 2 (`macDevicePresence <-> pickMacDeviceIdForPresence`, `resolveMacDeviceDisplayName <-> buildMacDeviceDisplayNameById`).
+- Cycles blocked this run: 3, recorded in `.agents/fsa/cycles.json`. Reason: the change swapped a barrel import for direct imports but did not remove any cycle from the count (the importing files stay in cycles through `public-api/presentation.ts` barrels); a larger restructure is needed.
+- Remaining: `npm run fsa:cycle -- count` reports total 69, open 66, blocked 3.
+- `npm run fsa:deps` passes on origin/main (c15b27416): no new violations, 82 known violations ignored. An earlier preflight reported 2 `fsa-ratchet-src-features-agent-hooks` errors; they did not reproduce on this run.
+- `npm run build` passes.
