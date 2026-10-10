@@ -1,7 +1,7 @@
 import type {
   ProjectInviteJoinConnectPath,
   ProjectInviteJoinDeliveryMode,
-} from "@/features/projects/access/invites/joinTypes/projectInviteJoinType.type";
+} from "@/features/projects/access/invites/joinTypes/public-api/types";
 
 /** One bot type as served on /join (JSON `types[]`). `matchHints` is an alias of `match`. */
 export type ProjectInviteJoinPageType = {

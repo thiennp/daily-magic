@@ -11,8 +11,8 @@ import type {
   ProjectInviteJoinPage,
   ProjectInviteJoinPageType,
 } from "@/features/projects/access/invites/joinPage/projectInviteJoinPage.type";
-import { PROJECT_INVITE_JOIN_TYPES } from "@/features/projects/access/invites/joinTypes/projectInviteJoinTypes.constant";
-import type { ProjectInviteJoinType } from "@/features/projects/access/invites/joinTypes/projectInviteJoinType.type";
+import { PROJECT_INVITE_JOIN_TYPES } from "@/features/projects/access/invites/joinTypes/public-api/types";
+import type { ProjectInviteJoinType } from "@/features/projects/access/invites/joinTypes/public-api/types";
 
 export type BuildProjectInviteJoinPageInput = {
   readonly token: string;

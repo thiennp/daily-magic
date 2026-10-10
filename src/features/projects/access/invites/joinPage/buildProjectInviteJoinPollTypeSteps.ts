@@ -2,7 +2,7 @@ import {
   PROJECT_MEMBERSHIP_POLL_JOIN_GUIDANCE_LINE as PROJECT_INVITE_JOIN_POLL_GUIDANCE_LINE,
   PROJECT_MEMBERSHIP_POLL_JOIN_SWITCH_LINE as PROJECT_INVITE_JOIN_POLL_SWITCH_LINE,
 } from "@/lib/projects/acl/projectMembershipPollJoinGuidance.constant";
-import type { ProjectInviteJoinType } from "@/features/projects/access/invites/joinTypes/projectInviteJoinType.type";
+import type { ProjectInviteJoinType } from "@/features/projects/access/invites/joinTypes/public-api/types";
 
 /** Locked lines live in lib (shared with the redeem response). */
 export {

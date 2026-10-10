@@ -8,7 +8,7 @@ import {
 } from "@/features/projects/access/invites/joinPage/buildProjectInviteJoinPollTypeSteps";
 import { buildProjectInviteJoinPage } from "@/features/projects/access/invites/joinPage/buildProjectInviteJoinPage";
 import { renderProjectInviteJoinPageMarkdown } from "@/features/projects/access/invites/joinPage/renderProjectInviteJoinPageMarkdown";
-import { PROJECT_INVITE_JOIN_TYPES } from "@/features/projects/access/invites/joinTypes/projectInviteJoinTypes.constant";
+import { PROJECT_INVITE_JOIN_TYPES } from "@/features/projects/access/invites/joinTypes/public-api/types";
 import { buildProjectInviteJoinLocalFirstStep } from "@/features/projects/access/invites/buildProjectInviteJoinLocalFirstStep";
 import { PROJECT_MEMBERSHIP_POLL_INBOX_GUIDANCE } from "@/lib/projects/acl/projectMembershipDeliveryModeGuidance.constant";
 import { parseProjectInviteJoinPlatform } from "@/lib/projects/acl/invites/projectInviteJoinPlatform.constant";

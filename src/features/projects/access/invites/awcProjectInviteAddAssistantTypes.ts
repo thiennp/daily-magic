@@ -1,4 +1,4 @@
-import { PROJECT_INVITE_JOIN_TYPES } from "@/features/projects/access/invites/joinTypes/projectInviteJoinTypes.constant";
+import { PROJECT_INVITE_JOIN_TYPES } from "@/features/projects/access/invites/joinTypes/public-api/types";
 import type { ProjectInvitePlatform } from "@/features/projects/access/invites/projectInvitePlatform.type";
 
 /** One picker choice: a types[] id and its exact label. */

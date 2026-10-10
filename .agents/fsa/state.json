@@ -27,7 +27,8 @@
     "src/features/projects/autoskills",
     "src/features/shell/hooks",
     "src/features/projects/activityLog",
-    "src/features/admin/hooks"
+    "src/features/admin/hooks",
+    "src/features/projects/access/invites/joinTypes"
   ],
   "blocked": {},
   "rounds": [
@@ -170,6 +171,11 @@
       "unit": "src/features/admin/hooks",
       "sha": "b14eda60cdd881df0da8b8163195ade3718a245d",
       "at": "2026-10-10T09:22:01.853Z"
+    },
+    {
+      "unit": "src/features/projects/access/invites/joinTypes",
+      "sha": "ccbe249fa71f9a4d2d1abb053fa96fce395a87f5",
+      "at": "2026-10-10T09:23:13.072Z"
     }
   ]
 }

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { buildProjectInviteJoinSections } from "@/features/projects/access/invites/buildProjectInviteJoinSections";
 import { buildProjectInviteJoinPage } from "@/features/projects/access/invites/joinPage/buildProjectInviteJoinPage";
 import { renderProjectInviteJoinPageMarkdown } from "@/features/projects/access/invites/joinPage/renderProjectInviteJoinPageMarkdown";
-import { PROJECT_INVITE_JOIN_TYPES } from "@/features/projects/access/invites/joinTypes/projectInviteJoinTypes.constant";
+import { PROJECT_INVITE_JOIN_TYPES } from "@/features/projects/access/invites/joinTypes/public-api/types";
 
 const TOKEN = "tok-fake-invite-0000";
 const INPUT = {
