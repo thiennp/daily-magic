@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 
-import EmptyStatePanel from "@/features/empty-states/EmptyStatePanel";
-import EmptyStatePanelSkeleton from "@/features/empty-states/EmptyStatePanelSkeleton";
+import { EmptyStatePanel } from "@/features/empty-states/public-api/presentation";
+import { EmptyStatePanelSkeleton } from "@/features/empty-states/public-api/presentation";
 import AgentRunCard from "@/features/reports/AgentRunCard";
 import AgentRunsFilters from "@/features/reports/AgentRunsFilters";
 import AgentRunsListLoadErrorPanel from "@/features/reports/AgentRunsListLoadErrorPanel";

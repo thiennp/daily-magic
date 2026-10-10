@@ -1,4 +1,4 @@
-import { buildSignInHref } from "@/features/empty-states/buildGuestAuthHrefs";
+import { buildSignInHref } from "@/features/empty-states/public-api/types";
 import { buildPostAuthReturn } from "@/lib/auth/buildPostAuthReturn";
 
 export const homeMarketingSignInCallbackHomeHref = buildSignInHref(

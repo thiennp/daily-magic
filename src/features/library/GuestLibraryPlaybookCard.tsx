@@ -5,7 +5,7 @@ import Link from "next/link";
 import AppPanel from "@/components/surfaces/AppPanel";
 import Button from "@/components/ui/button/Button";
 import LibraryPlaybookTypeBadge from "@/features/library/LibraryPlaybookTypeBadge";
-import { buildSignInHref } from "@/features/empty-states/buildGuestAuthHrefs";
+import { buildSignInHref } from "@/features/empty-states/public-api/types";
 import { removeGuestLibraryDraft } from "@/lib/library/guest/guestLibraryDraftStorage";
 import type GuestLibraryDraft from "@/lib/library/guest/types/GuestLibraryDraft.type";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";

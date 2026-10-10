@@ -3,7 +3,7 @@
 import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
 
-import { GuestSessionStateProvider } from "@/features/empty-states/GuestSessionStateProvider";
+import { GuestSessionStateProvider } from "@/features/empty-states/public-api/presentation";
 import type { StorybookPageStatus } from "@/utils/storybook/storybookPageStatus.constant";
 import { AWC_STORYBOOK_USER } from "@/utils/storybook/awcStorybookFixtures";
 

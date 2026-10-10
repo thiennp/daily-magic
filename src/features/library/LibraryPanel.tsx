@@ -1,8 +1,8 @@
 "use client";
 
-import EmptyStatePanel from "@/features/empty-states/EmptyStatePanel";
-import EmptyStatePanelSkeleton from "@/features/empty-states/EmptyStatePanelSkeleton";
-import { useGuestSessionState } from "@/features/empty-states/useGuestSessionState";
+import { EmptyStatePanel } from "@/features/empty-states/public-api/presentation";
+import { EmptyStatePanelSkeleton } from "@/features/empty-states/public-api/presentation";
+import { useGuestSessionState } from "@/features/empty-states/public-api/presentation";
 import LibraryPlaybookCard from "@/features/library/LibraryPlaybookCard";
 import { useShellNavContext } from "@/features/shell/hooks/public-api/presentation";
 import { resolveLibrarySignedInEmptyBody } from "@/lib/copy/resolveSoloTeamSurfaceCopy";

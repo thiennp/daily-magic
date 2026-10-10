@@ -1,4 +1,4 @@
-import { buildSignInHref } from "@/features/empty-states/buildGuestAuthHrefs";
+import { buildSignInHref } from "@/features/empty-states/public-api/types";
 
 const AUTH_REQUIRED_PATH_PREFIXES = [
   "/admin",

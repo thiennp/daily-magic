@@ -7,7 +7,7 @@ import { useGuestLibraryDrafts } from "@/features/library/hooks/useGuestLibraryD
 import {
   CREATE_FREE_ACCOUNT_HREF,
   buildSignInHref,
-} from "@/features/empty-states/buildGuestAuthHrefs";
+} from "@/features/empty-states/public-api/types";
 import Link from "next/link";
 
 interface GuestLibraryPanelProps {

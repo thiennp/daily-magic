@@ -1,7 +1,7 @@
 "use client";
 
-import { MARKETPLACE_FREE_STARTERS_SECTION_ID } from "@/features/empty-states/buildGuestAuthHrefs";
-import { useGuestSessionState } from "@/features/empty-states/useGuestSessionState";
+import { MARKETPLACE_FREE_STARTERS_SECTION_ID } from "@/features/empty-states/public-api/types";
+import { useGuestSessionState } from "@/features/empty-states/public-api/presentation";
 import {
   MarketplaceFreeStartersSectionBody,
   MarketplaceTeammatesSectionBody,
@@ -20,9 +20,7 @@ import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constan
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
 
 type MarketplaceSectionVisibility =
-  | "all"
-  | "teammatesOnly"
-  | "freeStartersOnly";
+  "all" | "teammatesOnly" | "freeStartersOnly";
 
 interface MarketplaceListingSectionsProps {
   readonly officialListings: readonly HarnessMarketplaceListing[];

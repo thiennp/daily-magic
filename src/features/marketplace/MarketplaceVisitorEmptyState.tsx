@@ -6,7 +6,7 @@ import { useMemo } from "react";
 import {
   buildMarketingGetStartedHref,
   buildSignInHrefFromSearchParams,
-} from "@/features/empty-states/buildGuestAuthHrefs";
+} from "@/features/empty-states/public-api/types";
 import HomeMarketingPopularPresetsGrid from "@/features/home/components/HomeMarketingPopularPresetsGrid";
 import resolveHomePopularPresets from "@/features/home/utils/resolveHomePopularPresets";
 import MarketingCtaLink from "@/features/marketing/MarketingCtaLink";

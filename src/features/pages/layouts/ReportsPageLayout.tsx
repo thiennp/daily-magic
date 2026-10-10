@@ -1,4 +1,4 @@
-import GuestAwarePageStack from "@/features/empty-states/GuestAwarePageStack";
+import { GuestAwarePageStack } from "@/features/empty-states/public-api/presentation";
 import AgentRunsList from "@/features/reports/AgentRunsList";
 import ReportsPageHeader from "@/features/reports/ReportsPageHeader";
 

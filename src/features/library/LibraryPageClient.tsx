@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { useGuestSessionState } from "@/features/empty-states/useGuestSessionState";
+import { useGuestSessionState } from "@/features/empty-states/public-api/presentation";
 import CreatePlaybookPanel from "@/features/capabilities/CreatePlaybookPanel";
 import GuestLibraryPanel from "@/features/library/GuestLibraryPanel";
 import LibraryPanel from "@/features/library/LibraryPanel";

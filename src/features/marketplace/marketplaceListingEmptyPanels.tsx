@@ -1,10 +1,10 @@
-import EmptyStatePanel from "@/features/empty-states/EmptyStatePanel";
+import { EmptyStatePanel } from "@/features/empty-states/public-api/presentation";
 import {
   CREATE_FREE_ACCOUNT_HREF,
   buildSignInHref,
   marketplaceFreeStartersSectionHref,
-} from "@/features/empty-states/buildGuestAuthHrefs";
-import { MARKETPLACE_TEAMMATES_GUEST_EMPTY_COPY } from "@/features/empty-states/signedOutPageEmptyCopy.constant";
+} from "@/features/empty-states/public-api/types";
+import { MARKETPLACE_TEAMMATES_GUEST_EMPTY_COPY } from "@/features/empty-states/public-api/types";
 import { buildNavConsolidationNewTaskHref } from "@/lib/shell/buildNavConsolidationNewTaskHref";
 
 export function MarketplaceFreeStartersGuestEmptyPanel() {

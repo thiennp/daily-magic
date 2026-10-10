@@ -41,7 +41,8 @@
     "src/features/projects/sync",
     "src/features/agent-witch/connection-lab",
     "src/features/pricing",
-    "src/features/automations"
+    "src/features/automations",
+    "src/features/empty-states"
   ],
   "blocked": {},
   "rounds": [
@@ -254,6 +255,11 @@
       "unit": "src/features/automations",
       "sha": "ec28af91e73a052e8c781d936a465ab9bd648703",
       "at": "2026-10-10T09:39:11.336Z"
+    },
+    {
+      "unit": "src/features/empty-states",
+      "sha": "9703697e2831b0f9e0419c12a81ac6ae7e52e40a",
+      "at": "2026-10-10T09:40:39.712Z"
     }
   ]
 }

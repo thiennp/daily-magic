@@ -5,7 +5,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { PROJECTS_LIBRARY_INTENT_HREF } from "@/lib/shell/projectTabIntentHrefs.constant";
 
 import AppPanel from "@/components/surfaces/AppPanel";
-import { buildSignInHrefFromPathAndSearchParams } from "@/features/empty-states/buildGuestAuthHrefs";
+import { buildSignInHrefFromPathAndSearchParams } from "@/features/empty-states/public-api/types";
 import {
   WorkflowTrialRunBlockReason,
   type WorkflowTrialRunBlockReasonValue,

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
-import { useGuestSessionState } from "@/features/empty-states/useGuestSessionState";
+import { useGuestSessionState } from "@/features/empty-states/public-api/presentation";
 import MarketplaceInstallModal from "@/features/marketplace/MarketplaceInstallModal";
 import MarketplacePanelBody from "@/features/marketplace/MarketplacePanelBody";
 import { useMarketplaceInstallFromCapabilityIdQuery } from "@/features/marketplace/hooks/useMarketplaceInstallFromCapabilityIdQuery";

@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import { buildSignInHref } from "@/features/empty-states/buildGuestAuthHrefs";
+import { buildSignInHref } from "@/features/empty-states/public-api/types";
 import { resolveSendTaskModalPanelKey } from "@/features/agent/utils/resolveSendTaskModalPanelKey";
 import { clearPersistedAgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalLocalStore";
 import { clearLiveFloaterRunId } from "@/features/agent/utils/liveFloaterRunIdStorage";

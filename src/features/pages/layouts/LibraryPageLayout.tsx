@@ -1,4 +1,4 @@
-import GuestAwarePageStack from "@/features/empty-states/GuestAwarePageStack";
+import { GuestAwarePageStack } from "@/features/empty-states/public-api/presentation";
 import LibraryPageClient from "@/features/library/LibraryPageClient";
 import LibraryPageHeader from "@/features/library/LibraryPageHeader";
 

@@ -1,9 +1,9 @@
 "use client";
 
-import EmptyStatePanelSkeleton from "@/features/empty-states/EmptyStatePanelSkeleton";
+import { EmptyStatePanelSkeleton } from "@/features/empty-states/public-api/presentation";
 import AgentRunsListGuestPanel from "@/features/reports/AgentRunsListGuestPanel";
 import AgentRunsListSignedInContent from "@/features/reports/AgentRunsListSignedInContent";
-import { useGuestSessionState } from "@/features/empty-states/useGuestSessionState";
+import { useGuestSessionState } from "@/features/empty-states/public-api/presentation";
 import { useShellNavContext } from "@/features/shell/hooks/public-api/presentation";
 
 export default function AgentRunsList() {

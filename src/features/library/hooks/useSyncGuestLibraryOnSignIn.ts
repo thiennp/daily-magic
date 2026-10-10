@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import {
   useGuestSessionState,
   type GuestSessionState,
-} from "@/features/empty-states/useGuestSessionState";
+} from "@/features/empty-states/public-api/presentation";
 import { syncGuestLibraryDraftsToCloud } from "@/features/library/utils/syncGuestLibraryDraftsToCloud";
 
 export function useSyncGuestLibraryOnSignIn(onSynced?: () => void): void {
