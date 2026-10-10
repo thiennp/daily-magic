@@ -1,5 +1,5 @@
 import ComponentCard from "@/components/common/ComponentCard";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+import { mergeMarketingClasses } from "@/features/marketing/public-api/types";
 
 const SWATCHES = [
   { label: "Canvas", className: "bg-awc-bg" },
@@ -23,7 +23,9 @@ export default function MarketingBrandColorSwatchesCard() {
                 swatch.className,
               )}
             />
-            <p className="text-xs font-medium text-awc-fg-muted">{swatch.label}</p>
+            <p className="text-xs font-medium text-awc-fg-muted">
+              {swatch.label}
+            </p>
           </div>
         ))}
       </div>

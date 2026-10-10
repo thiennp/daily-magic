@@ -1,0 +1,1 @@
+export { buildRobotsDisallowPaths } from "../buildRobotsDisallowPaths";

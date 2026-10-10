@@ -1,9 +1,13 @@
 import { HOME_MARKETING_FEATURES_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
-import MarketingCard from "@/features/marketing/MarketingCard";
-import { MARKETING_TEXT_PRIMARY_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
-import { MARKETING_TEXT_SECONDARY_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
-import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+import {
+  MarketingCard,
+  MarketingSectionHeader,
+} from "@/features/marketing/public-api/presentation";
+import {
+  MARKETING_TEXT_PRIMARY_CLASSES,
+  MARKETING_TEXT_SECONDARY_CLASSES,
+  mergeMarketingClasses,
+} from "@/features/marketing/public-api/types";
 
 export default function HomeMarketingFeatures() {
   const copy = HOME_MARKETING_FEATURES_COPY;

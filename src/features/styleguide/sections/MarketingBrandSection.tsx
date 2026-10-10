@@ -1,4 +1,4 @@
-import { MARKETING_DESIGN_SYSTEM_VERSION } from "@/features/marketing/marketingDesignSystem.constant";
+import { MARKETING_DESIGN_SYSTEM_VERSION } from "@/features/marketing/public-api/types";
 import MarketingBrandSectionCards from "@/features/styleguide/sections/MarketingBrandSectionCards";
 
 export default function MarketingBrandSection() {

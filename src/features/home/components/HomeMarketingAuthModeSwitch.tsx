@@ -1,6 +1,6 @@
 "use client";
 
-import type { MarketingAuthMode } from "@/features/marketing/MarketingAuthModalContext";
+import type { MarketingAuthMode } from "@/features/marketing/public-api/presentation";
 
 const OPTIONS: readonly { value: MarketingAuthMode; label: string }[] = [
   { value: "in", label: "Sign in" },

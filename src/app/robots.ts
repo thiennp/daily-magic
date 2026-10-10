@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { buildRobotsDisallowPaths } from "@/features/marketing/buildRobotsDisallowPaths";
+import { buildRobotsDisallowPaths } from "@/features/marketing/public-api/infrastructure";
 
 export default function robots(): MetadataRoute.Robots {
   return {

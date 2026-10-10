@@ -6,13 +6,11 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 import {
   MARKETING_SHOWCASE_CARD_BASE_CLASSES,
   MARKETING_TEXT_LINK_CLASSES,
-} from "@/features/marketing/marketingInteractiveClasses.constant";
-import {
   MARKETING_TEXT_MUTED_CLASSES,
   MARKETING_TEXT_PRIMARY_CLASSES,
   MARKETING_TEXT_SECONDARY_CLASSES,
-} from "@/features/marketing/marketingSurfaceClasses.constant";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+  mergeMarketingClasses,
+} from "@/features/marketing/public-api/types";
 
 export type ShowcaseCardVariant = "default" | "featured" | "spotlight";
 

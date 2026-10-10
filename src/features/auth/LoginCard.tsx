@@ -5,7 +5,7 @@ import { useState } from "react";
 import useBrowserSnapshot from "@/hooks/useBrowserSnapshot";
 import LoginForm, { type LoginFormMode } from "@/features/auth/LoginForm";
 import LoginModeSwitch from "@/features/auth/components/LoginModeSwitch";
-import MarketingCard from "@/features/marketing/MarketingCard";
+import { MarketingCard } from "@/features/marketing/public-api/presentation";
 
 const titleFor = (mode: LoginFormMode, sent: boolean): string => {
   if (sent) return "Check your email";

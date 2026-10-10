@@ -10,7 +10,7 @@ import PricingOnDemand from "@/features/pricing/components/PricingOnDemand";
 import PricingSeatEstimator from "@/features/pricing/components/PricingSeatEstimator";
 import PricingPlanCards from "@/features/pricing/components/PricingPlanCards";
 import PricingTrustStrip from "@/features/pricing/components/PricingTrustStrip";
-import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
+import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/public-api/types";
 
 interface PricingPageLayoutProps {
   readonly signedIn: boolean;

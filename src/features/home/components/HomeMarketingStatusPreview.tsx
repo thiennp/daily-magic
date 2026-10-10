@@ -1,9 +1,9 @@
 import {
   MARKETING_TEXT_PRIMARY_CLASSES,
   MARKETING_TEXT_SECONDARY_CLASSES,
-} from "@/features/marketing/marketingSurfaceClasses.constant";
-import MarketingCard from "@/features/marketing/MarketingCard";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+  mergeMarketingClasses,
+} from "@/features/marketing/public-api/types";
+import { MarketingCard } from "@/features/marketing/public-api/presentation";
 
 const ROWS = [
   { title: "Weekly status summary", state: "Delivered 2 min ago", tone: "ok" },

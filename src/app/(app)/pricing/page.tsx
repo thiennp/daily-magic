@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { PricingPageLayout } from "@/features/pricing/public-api/presentation";
-import MarketingShell from "@/features/marketing/MarketingShell";
+import { MarketingShell } from "@/features/marketing/public-api/presentation";
 import { AppShell } from "@/features/shell/public-api/presentation";
 import { getAuthActor } from "@/lib/auth/auth";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";

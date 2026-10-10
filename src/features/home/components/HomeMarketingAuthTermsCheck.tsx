@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
+import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/public-api/types";
 
 interface HomeMarketingAuthTermsCheckProps {
   readonly agreed: boolean;

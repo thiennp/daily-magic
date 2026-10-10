@@ -8,7 +8,7 @@ import {
   SHOWCASE_ARTICLES,
   getShowcaseArticleBySlug,
 } from "@/features/showcases/showcaseArticleRegistry";
-import MarketingShell from "@/features/marketing/MarketingShell";
+import { MarketingShell } from "@/features/marketing/public-api/presentation";
 import {
   isStaffPageViewer,
   requireStaffPageAccess,

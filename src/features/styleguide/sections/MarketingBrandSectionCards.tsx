@@ -1,7 +1,9 @@
 import ComponentCard from "@/components/common/ComponentCard";
 import AgentWitchLogo from "@/components/branding/AgentWitchLogo";
-import MarketingCtaBand from "@/features/marketing/MarketingCtaBand";
-import MarketingStatusBadge from "@/features/marketing/MarketingStatusBadge";
+import {
+  MarketingCtaBand,
+  MarketingStatusBadge,
+} from "@/features/marketing/public-api/presentation";
 import {
   MARKETING_ANNOUNCEMENT_BAR_CLASSES,
   MARKETING_BUTTON_PRIMARY_CLASSES,
@@ -12,8 +14,8 @@ import {
   MARKETING_METRIC_DESCRIPTION_CLASSES,
   MARKETING_METRIC_VALUE_CLASSES,
   MARKETING_SURFACE_ELEVATED_CLASSES,
-} from "@/features/marketing/marketingDesignSystem.constant";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+  mergeMarketingClasses,
+} from "@/features/marketing/public-api/types";
 import MarketingBrandColorSwatchesCard from "@/features/styleguide/sections/MarketingBrandColorSwatchesCard";
 
 export default function MarketingBrandSectionCards() {

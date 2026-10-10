@@ -5,8 +5,10 @@ import HomeMarketingFaq from "@/features/home/HomeMarketingFaq";
 import HomeMarketingFeatures from "@/features/home/HomeMarketingFeatures";
 import HomeMarketingSecurity from "@/features/home/HomeMarketingSecurity";
 import HomeMarketingSteps from "@/features/home/HomeMarketingSteps";
-import MarketingCtaBand from "@/features/marketing/MarketingCtaBand";
-import MarketingShell from "@/features/marketing/MarketingShell";
+import {
+  MarketingCtaBand,
+  MarketingShell,
+} from "@/features/marketing/public-api/presentation";
 
 /** Design home-v1 signed-out order: hero, what, bots, workflows, files, FAQ, CTA. */
 export default function HomeMarketingLanding() {

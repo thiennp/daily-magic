@@ -12,10 +12,12 @@ import type { ShowcaseGroup } from "@/features/showcases/filterShowcaseGroups";
 import ShowcasesBrowser from "@/features/showcases/ShowcasesBrowser";
 import ShowcasesHero from "@/features/showcases/ShowcasesHero";
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
-import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
-import MarketingShell from "@/features/marketing/MarketingShell";
-import { MARKETING_TEXT_MUTED_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+import {
+  MARKETING_TEXT_LINK_CLASSES,
+  MARKETING_TEXT_MUTED_CLASSES,
+  mergeMarketingClasses,
+} from "@/features/marketing/public-api/types";
+import { MarketingShell } from "@/features/marketing/public-api/presentation";
 
 const phaseWithCovers = (
   articles: readonly ShowcaseArticle[],

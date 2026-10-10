@@ -6,7 +6,7 @@ import {
   HOME_MARKETING_HERO_COPY,
   HOME_MARKETING_HONESTY_FOOTNOTE,
 } from "@/features/home/constants/homeMarketingLandingCopy.constant";
-import { MARKETING_FEATURE_ITEMS } from "@/features/marketing/marketingFeatureItems.constant";
+import { MARKETING_FEATURE_ITEMS } from "@/features/marketing/public-api/types";
 import { AWC_GROK_BOT_WEBHOOK_REGISTER_STEPS } from "@/lib/agentAccess/awcGrokWebhookRegisterCopy.constant";
 import { buildProjectAclAgentGuidelineSection } from "@/lib/agentAccess/buildProjectAclAgentGuidelineSection";
 

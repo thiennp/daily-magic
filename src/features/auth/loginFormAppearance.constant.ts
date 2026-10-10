@@ -1,12 +1,10 @@
 import {
   MARKETING_INPUT_BASE_CLASSES,
   MARKETING_INPUT_FOCUS_CLASSES,
-} from "@/features/marketing/marketingSurfaceClasses.constant";
-import {
   MARKETING_FORM_OUTLINE_BUTTON_CLASSES,
   MARKETING_FORM_PRIMARY_BUTTON_CLASSES,
-} from "@/features/marketing/marketingPalette.constant";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+  mergeMarketingClasses,
+} from "@/features/marketing/public-api/types";
 
 export type LoginFormAppearance = "default" | "marketing";
 

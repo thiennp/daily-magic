@@ -1,7 +1,9 @@
 import { HOME_MARKETING_FAQ_COPY } from "@/features/home/constants/homeMarketingBotsFaqCopy.constant";
-import { MARKETING_TEXT_SECONDARY_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
-import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+import {
+  MARKETING_TEXT_SECONDARY_CLASSES,
+  mergeMarketingClasses,
+} from "@/features/marketing/public-api/types";
+import { MarketingSectionHeader } from "@/features/marketing/public-api/presentation";
 
 export default function HomeMarketingFaq() {
   const copy = HOME_MARKETING_FAQ_COPY;

@@ -3,8 +3,10 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { MARKETING_HEADER_NAV_ITEMS } from "@/features/marketing/marketingHeaderNavItems.constant";
-import { resolveMarketingFooterProductLinks } from "@/features/marketing/resolveMarketingFooterNav";
+import {
+  MARKETING_HEADER_NAV_ITEMS,
+  resolveMarketingFooterProductLinks,
+} from "@/features/marketing/public-api/types";
 import { isShowcaseTryNextAuthRequired } from "@/features/showcases/resolveShowcaseTryNextHref";
 import {
   PROJECTS_LIBRARY_INTENT_HREF,

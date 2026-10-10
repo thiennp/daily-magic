@@ -1,5 +1,5 @@
 import { HOME_MARKETING_SECURITY_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
-import MarketingDarkBand from "@/features/marketing/MarketingDarkBand";
+import { MarketingDarkBand } from "@/features/marketing/public-api/presentation";
 
 export default function HomeMarketingSecurity() {
   return (

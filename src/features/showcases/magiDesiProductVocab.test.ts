@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { MARKETING_INTEGRATION_ITEMS } from "@/features/marketing/marketingIntegrationItems.constant";
+import { MARKETING_INTEGRATION_ITEMS } from "@/features/marketing/public-api/types";
 import { SHOWCASE_ARTICLES } from "@/features/showcases/showcaseArticleRegistry";
 
 const PUBLIC_SHOWCASES_DIR = join(process.cwd(), "public/showcases");

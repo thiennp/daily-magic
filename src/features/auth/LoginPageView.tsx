@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
 import LoginCard from "@/features/auth/LoginCard";
-import MarketingShell from "@/features/marketing/MarketingShell";
+import { MarketingShell } from "@/features/marketing/public-api/presentation";
 
 /** Dedicated sign-in layout: one centered card (not the home marketing hero). */
 type LoginPageViewProps = {

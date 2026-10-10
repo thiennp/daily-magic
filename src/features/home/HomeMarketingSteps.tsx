@@ -1,11 +1,13 @@
 import { HOME_MARKETING_STEPS_COPY } from "@/features/home/constants/homeMarketingBotsFaqCopy.constant";
-import MarketingCard from "@/features/marketing/MarketingCard";
+import {
+  MarketingCard,
+  MarketingSectionHeader,
+} from "@/features/marketing/public-api/presentation";
 import {
   MARKETING_TEXT_PRIMARY_CLASSES,
   MARKETING_TEXT_SECONDARY_CLASSES,
-} from "@/features/marketing/marketingSurfaceClasses.constant";
-import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+  mergeMarketingClasses,
+} from "@/features/marketing/public-api/types";
 
 export default function HomeMarketingSteps() {
   const copy = HOME_MARKETING_STEPS_COPY;

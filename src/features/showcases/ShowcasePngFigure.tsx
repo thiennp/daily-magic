@@ -4,8 +4,10 @@ import {
   SHOWCASE_FIGURE_PADDING_CLASS,
   shouldPreferShowcaseSvgFallback,
 } from "@/features/showcases/showcaseFigureCrop.constant";
-import { MARKETING_TEXT_MUTED_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+import {
+  MARKETING_TEXT_MUTED_CLASSES,
+  mergeMarketingClasses,
+} from "@/features/marketing/public-api/types";
 
 interface ShowcasePngFigureProps {
   readonly pngSrc: string;

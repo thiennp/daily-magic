@@ -4,12 +4,12 @@ import { Suspense, useState } from "react";
 
 import { Modal } from "@/components/ui/modal";
 import HomeMarketingLoginForm from "@/features/home/components/HomeMarketingLoginForm";
-import type { MarketingAuthMode } from "@/features/marketing/MarketingAuthModalContext";
+import type { MarketingAuthMode } from "@/features/marketing/public-api/presentation";
 import {
   MARKETING_TEXT_PRIMARY_CLASSES,
   MARKETING_TEXT_SECONDARY_CLASSES,
-} from "@/features/marketing/marketingSurfaceClasses.constant";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+  mergeMarketingClasses,
+} from "@/features/marketing/public-api/types";
 
 import HomeMarketingAuthModeSwitch from "./HomeMarketingAuthModeSwitch";
 import HomeMarketingAuthTermsCheck from "./HomeMarketingAuthTermsCheck";

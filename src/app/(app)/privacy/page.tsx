@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
-import MarketingLegalPageLayout from "@/features/marketing/MarketingLegalPageLayout";
-import { MARKETING_PRIVACY_COPY } from "@/features/marketing/marketingLegalCopy.constant";
+import { MarketingLegalPageLayout } from "@/features/marketing/public-api/presentation";
+import { MARKETING_PRIVACY_COPY } from "@/features/marketing/public-api/types";
 import { AppShell } from "@/features/shell/public-api/presentation";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 

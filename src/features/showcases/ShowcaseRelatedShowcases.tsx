@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import AppPanel from "@/components/surfaces/AppPanel";
-import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
+import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/public-api/types";
 import type { ShowcaseRelatedLink } from "@/features/showcases/types/ShowcaseArticle.type";
 
 interface ShowcaseRelatedShowcasesProps {

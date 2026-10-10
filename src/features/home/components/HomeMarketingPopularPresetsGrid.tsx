@@ -9,15 +9,17 @@ import {
   applyPresetCapabilityIdToSearchParams,
   buildPathWithSearchParams,
 } from "@/features/home/utils/syncHomeMarketingPresetCapabilityQuery";
-import { useMarketingAuthModal } from "@/features/marketing/MarketingAuthModalContext";
-import MarketingCard from "@/features/marketing/MarketingCard";
-import { MARKETING_CTA_SECONDARY_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import {
+  useMarketingAuthModal,
+  MarketingCard,
+} from "@/features/marketing/public-api/presentation";
+import {
+  MARKETING_CTA_SECONDARY_CLASSES,
   MARKETING_EYEBROW_TEXT_CLASSES,
   MARKETING_TEXT_PRIMARY_CLASSES,
   MARKETING_TEXT_SECONDARY_CLASSES,
-} from "@/features/marketing/marketingSurfaceClasses.constant";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+  mergeMarketingClasses,
+} from "@/features/marketing/public-api/types";
 
 interface HomeMarketingPopularPresetsGridProps {
   readonly presets: readonly HomePopularPresetSummary[];

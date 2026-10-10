@@ -4,8 +4,8 @@ import AppPanel from "@/components/surfaces/AppPanel";
 import {
   MARKETING_TEXT_PRIMARY_CLASSES,
   MARKETING_TEXT_SECONDARY_CLASSES,
-} from "@/features/marketing/marketingSurfaceClasses.constant";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+  mergeMarketingClasses,
+} from "@/features/marketing/public-api/types";
 import ShowcaseArticleBody from "@/features/showcases/ShowcaseArticleBody";
 import ShowcaseRelatedShowcases from "@/features/showcases/ShowcaseRelatedShowcases";
 import ShowcaseTryNextLink from "@/features/showcases/ShowcaseTryNextLink";

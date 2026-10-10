@@ -2,14 +2,14 @@ import Link from "next/link";
 
 import { HOME_MARKETING_HERO_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
 import HomeMarketingStatusPreview from "@/features/home/components/HomeMarketingStatusPreview";
-import MarketingAuthTrigger from "@/features/marketing/MarketingAuthTrigger";
-import { MARKETING_DISPLAY_HEADING_CLASSES } from "@/features/marketing/marketingDesignSystem.constant";
+import { MarketingAuthTrigger } from "@/features/marketing/public-api/presentation";
 import {
+  MARKETING_DISPLAY_HEADING_CLASSES,
   MARKETING_CTA_PRIMARY_CLASSES,
   MARKETING_CTA_SECONDARY_CLASSES,
-} from "@/features/marketing/marketingInteractiveClasses.constant";
-import { MARKETING_TEXT_SECONDARY_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+  MARKETING_TEXT_SECONDARY_CLASSES,
+  mergeMarketingClasses,
+} from "@/features/marketing/public-api/types";
 
 export default function HomeMarketingHero() {
   return (

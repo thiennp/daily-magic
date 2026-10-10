@@ -1,11 +1,11 @@
 import { LoginPageView } from "@/features/auth/public-api/presentation";
 import HomeMarketingLanding from "@/features/home/HomeMarketingLanding";
 import { formatAgentAccessGuidelineMarkdown } from "@/lib/agentAccess/formatAgentAccessGuidelineMarkdown";
-import MarketingLegalPageLayout from "@/features/marketing/MarketingLegalPageLayout";
+import { MarketingLegalPageLayout } from "@/features/marketing/public-api/presentation";
 import {
   MARKETING_PRIVACY_COPY,
   MARKETING_TERMS_COPY,
-} from "@/features/marketing/marketingLegalCopy.constant";
+} from "@/features/marketing/public-api/types";
 import SetupWriterRoutePage from "@/app/(app)/setup/writer/page";
 import type { AwcStorybookPageEntry } from "@/utils/storybook/awc/awcStorybookPageEntry.type";
 const onlyReady = (

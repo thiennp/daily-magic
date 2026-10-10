@@ -11,7 +11,7 @@ import {
 import {
   MarketingAuthModalContext,
   type MarketingAuthMode,
-} from "@/features/marketing/MarketingAuthModalContext";
+} from "@/features/marketing/public-api/presentation";
 
 import HomeMarketingAuthModal from "./HomeMarketingAuthModal";
 
