@@ -103,6 +103,8 @@ final class MacAppMenuController: ObservableObject {
     @Published private(set) var connectionLive: Bool?
     /// AWB: `/health` says the cloud revoked or replaced this computer (needs a new sign-in).
     @Published private(set) var connectionNotLinked: Bool = false
+    /// Why the cloud link is down, when `/health` says (nil on older bundles or while connected).
+    @Published private(set) var connectionDisconnect: LocalDisconnectNotice?
     /// AWI: install bundle version from local `/health` (e.g. "270").
     @Published private(set) var installBundleVersion: String?
     /// Plain line from GET /api/local/projects/folder, e.g. "AgentWitch uses ~/daily-magic (git repo).".
@@ -364,6 +366,7 @@ final class MacAppMenuController: ObservableObject {
         portsInUse = false
         connectionLive = nil
         connectionNotLinked = false
+        connectionDisconnect = nil
         installBundleVersion = nil
         projectFolderSummary = nil
         chromeComputerBound = false
@@ -388,6 +391,7 @@ final class MacAppMenuController: ObservableObject {
         chromeComputerBound = false
         connectionLive = nil
         connectionNotLinked = false
+        connectionDisconnect = nil
         projectFolderSummary = nil
         forgetBoundAccount()
         localPortRange = nil
@@ -980,6 +984,7 @@ final class MacAppMenuController: ObservableObject {
         }
         connectionLive = nil
         connectionNotLinked = false
+        connectionDisconnect = nil
         // No healthy listener: honor exhausted marker from local-app-port.json
         // (written when preflight fails — /health never comes up).
         if let profileDir,
@@ -1022,6 +1027,7 @@ final class MacAppMenuController: ObservableObject {
             }
             connectionLive = json["wsConnected"] as? Bool
             connectionNotLinked = parseLocalConnectionLinkState(json) == .notLinked
+            connectionDisconnect = connectionLive == true ? nil : parseLocalDisconnectNotice(json)
             if connectionLive == true, let email = signedInEmail {
                 rememberBoundAccount(email)
             }

@@ -227,6 +227,15 @@ type LocalAppStatus = {
   readonly wsConnected: boolean;
   /** Cloud says this computer is revoked/unlinked: it will not recover by itself. */
   readonly notLinked?: boolean;
+  /**
+   * Why the cloud link is down (kind: server_down | dns | device_not_linked |
+   * closed_before_ack | unknown). Null while connected. Absent on older bundles.
+   */
+  readonly disconnect?: {
+    readonly kind: string;
+    readonly message: string;
+    readonly nextRetryAt: string | null;
+  } | null;
   readonly lastHeartbeatAt: string | null;
   readonly wakeError: string | null;
   readonly linkCode: string | null;

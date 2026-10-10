@@ -180,6 +180,10 @@ struct ComputerView: View {
                 if controller.portsInUse { portsBanner }
                 if chrome.kind == .waitingForInternet { offlineBanner }
                 if isRunning && controller.connectionNotLinked { notLinkedBanner }
+                if isRunning && !controller.connectionNotLinked,
+                   let notice = controller.connectionDisconnect, notice.kind.isCloudSideOutage {
+                    cloudUnreachableBanner(notice)
+                }
                 heroCard
                 thisComputerCard
                 toolsCard
@@ -268,6 +272,24 @@ struct ComputerView: View {
         .foregroundStyle(MacAppTheme.danger)
         .padding(.horizontal, 16).padding(.vertical, 12)
         .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.dangerSoft))
+    }
+
+    /// The cloud, not this computer, is down: no sign-in or reinstall helps, AWL retries by itself.
+    private func cloudUnreachableBanner(_ notice: LocalDisconnectNotice) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: "icloud.slash")
+            VStack(alignment: .leading, spacing: 2) {
+                Text("AgentWitch cloud is unreachable")
+                    .font(.system(size: 13, weight: .semibold))
+                Text("Nothing is wrong on this computer. Your link is kept and it reconnects by itself when the cloud is back.")
+                    .font(.system(size: 12)).foregroundStyle(MacAppTheme.fgMuted)
+            }
+            Spacer()
+        }
+        .foregroundStyle(MacAppTheme.fg)
+        .padding(.horizontal, 16).padding(.vertical, 12)
+        .background(RoundedRectangle(cornerRadius: 10).fill(MacAppTheme.dangerSoft))
+        .accessibilityElement(children: .combine)
     }
 
     private var heroCard: some View {

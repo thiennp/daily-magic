@@ -64,6 +64,7 @@ final class MacAppAppDelegate: NSObject, NSApplicationDelegate {
     lazy var windowPresenter = MacAppMainWindowPresenter(presenter: windowPresenting)
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        if resolveDuplicateAndMaybeQuit() { return }
         // Menu bar + window are both first-class; do not activate as a dock-only app.
         NSApp.setActivationPolicy(.accessory)
 
@@ -75,6 +76,34 @@ final class MacAppAppDelegate: NSObject, NSApplicationDelegate {
                 try? await Task.sleep(nanoseconds: 800_000_000)
                 self.windowPresenter.present(pageRawValue: MacAppSidebarPage.computer.rawValue)
             }
+        }
+    }
+
+    /// Mounted copies (even other versions) must not run side by side: each one would drive the
+    /// same LaunchAgent. Returns true when this process is quitting.
+    private func resolveDuplicateAndMaybeQuit() -> Bool {
+        let selfPid = ProcessInfo.processInfo.processIdentifier
+        let running = NSRunningApplication.runningApplications(
+            withBundleIdentifier: MacAppConstants.bundleIdentifier
+        ).filter { $0.processIdentifier != selfPid }
+        let others = running.compactMap { app -> OtherAppInstance? in
+            guard let path = app.bundleURL?.path else { return nil }
+            return OtherAppInstance(processIdentifier: app.processIdentifier, bundlePath: path)
+        }
+        switch resolveDuplicateInstanceAction(
+            selfBundlePath: Bundle.main.bundlePath,
+            others: others,
+            homeDirectory: NSHomeDirectory()
+        ) {
+        case .proceed:
+            return false
+        case .activateExistingAndQuit:
+            running.first?.activate(options: [.activateIgnoringOtherApps])
+            NSApp.terminate(nil)
+            return true
+        case .terminateOthers(let pids):
+            running.filter { pids.contains($0.processIdentifier) }.forEach { $0.terminate() }
+            return false
         }
     }
 

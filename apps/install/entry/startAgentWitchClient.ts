@@ -36,6 +36,7 @@ import {
   computeAgentWitchReconnectDelayMs,
   describeAgentWitchDisconnectKind,
   isAgentWitchConnectionHealthStale,
+  readAgentWitchLastDisconnect,
   readAgentWitchConnectionHealth,
   resolveAgentWitchLocalWsConnected,
   shouldReviveAgentWitchWebSocketFromHealth,
@@ -2755,18 +2756,31 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     startLocalHealthCheck,
     stop,
     hasMacSocketOpen: () => state.wsConnected,
-    getStatus: () => ({
-      wsConnected:
-        !state.notLinked &&
-        resolveAgentWitchLocalWsConnected(config.layout, {
-          socketOpen: state.wsConnected,
-        }),
-      notLinked: state.notLinked,
-      lastHeartbeatAt: state.lastHeartbeatAt,
-      wakeError: state.wakeError,
-      linkCode: null,
-      publicKeyRaw: resolveLocalAppPublicKey(config.layout),
-    }),
+    getStatus: () => {
+      const lastDisconnect = state.wsConnected
+        ? null
+        : readAgentWitchLastDisconnect(config.layout);
+      return {
+        disconnect:
+          lastDisconnect === null
+            ? null
+            : {
+                kind: lastDisconnect.kind,
+                message: describeAgentWitchDisconnectKind(lastDisconnect.kind),
+                nextRetryAt: lastDisconnect.nextRetryAt,
+              },
+        wsConnected:
+          !state.notLinked &&
+          resolveAgentWitchLocalWsConnected(config.layout, {
+            socketOpen: state.wsConnected,
+          }),
+        notLinked: state.notLinked,
+        lastHeartbeatAt: state.lastHeartbeatAt,
+        wakeError: state.wakeError,
+        linkCode: null,
+        publicKeyRaw: resolveLocalAppPublicKey(config.layout),
+      };
+    },
     /**
      * Unforced calls (the 60s stale tick) respect a pending backoff timer and
      * the not-linked wait, so they cannot turn a 5-minute retry into a 60s
