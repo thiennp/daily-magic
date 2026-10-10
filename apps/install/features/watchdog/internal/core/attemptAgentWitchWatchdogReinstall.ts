@@ -10,6 +10,10 @@ import {
   recordAgentWitchWatchdogReinstallAttempt,
 } from "./agentWitchWatchdogReinstallState";
 
+/** Identity rejected / cloud down: restarting or reinstalling cannot fix it. */
+const isReviveFutileReason = (reason: string): boolean =>
+  reason === "not_linked" || reason === "cloud_unreachable";
+
 export interface ReinstallAgentWitchFromInstallScriptResult {
   readonly ok: boolean;
   readonly errorMessage?: string;
@@ -20,7 +24,10 @@ export const attemptAgentWitchWatchdogReinstall = async (
   reinstallFromInstallScript: () => Promise<ReinstallAgentWitchFromInstallScriptResult>,
 ): Promise<AgentWitchWatchdogReinstallAttemptResult> => {
   const failedTargets = targets.filter(
-    (entry) => entry.reason !== "healthy" && !entry.revived,
+    (entry) =>
+      entry.reason !== "healthy" &&
+      !isReviveFutileReason(entry.reason) &&
+      !entry.revived,
   );
 
   if (failedTargets.length === 0 || !canRunAgentWitchWatchdogReinstall()) {
@@ -41,7 +48,11 @@ export const attemptAgentWitchWatchdogReinstall = async (
 
   const retriedTargets = await Promise.all(
     targets.map(async (entry) => {
-      if (entry.reason === "healthy" || entry.revived) {
+      if (
+        entry.reason === "healthy" ||
+        isReviveFutileReason(entry.reason) ||
+        entry.revived
+      ) {
         return entry;
       }
 

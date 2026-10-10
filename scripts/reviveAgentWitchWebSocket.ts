@@ -1,3 +1,9 @@
+import {
+  describeAgentWitchDisconnectKind,
+  readAgentWitchLastDisconnect,
+  type AgentWitchLastDisconnect,
+} from "@agent-witch/install-connection-health";
+
 import { isActiveMacOsConsoleUser } from "./isActiveMacOsConsoleUser";
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.constants";
 
@@ -39,6 +45,24 @@ const resolveProfileLayout = (profileEmail: string | null) =>
     ? resolveAgentWitchLocalLayout()
     : resolveAgentWitchLocalLayout(profileEmail);
 
+/** Reasons where kickstarting or reinstalling the Mac client cannot help. */
+const isReviveFutileReason = (reason: AgentWitchReviveReason): boolean =>
+  reason === "not_linked" || reason === "cloud_unreachable";
+
+const resolveStaleReason = (
+  lastDisconnect: AgentWitchLastDisconnect | null,
+): AgentWitchReviveReason => {
+  switch (lastDisconnect?.kind) {
+    case "device_not_linked":
+      return "not_linked";
+    case "server_down":
+    case "dns":
+      return "cloud_unreachable";
+    default:
+      return "stale_connection";
+  }
+};
+
 const shouldReviveTarget = async (
   launchAgentLabel: string,
   profileEmail: string | null,
@@ -56,7 +80,7 @@ const shouldReviveTarget = async (
 
   const health = readAgentWitchConnectionHealth(layout);
   if (isAgentWitchConnectionHealthStale(health, staleAfterMs)) {
-    return "stale_connection";
+    return resolveStaleReason(readAgentWitchLastDisconnect(layout));
   }
 
   return "healthy";
@@ -92,7 +116,9 @@ export const inspectAgentWitchWebSocketTargets = async (input?: {
           staleAfterMs,
         ),
         needsRevive: reason !== "healthy",
+        reviveCanHelp: reason !== "healthy" && !isReviveFutileReason(reason),
         reason,
+        lastDisconnect: readAgentWitchLastDisconnect(layout),
       };
     }),
   );
@@ -231,6 +257,22 @@ export const reviveAgentWitchWebSocket = async (input?: {
       continue;
     }
 
+    if (isReviveFutileReason(reason)) {
+      const lastDisconnect = readAgentWitchLastDisconnect(
+        resolveProfileLayout(target.profileEmail),
+      );
+      results.push({
+        launchAgentLabel: target.launchAgentLabel,
+        profileEmail: target.profileEmail,
+        revived: false,
+        reason,
+        errorMessage: describeAgentWitchDisconnectKind(
+          lastDisconnect?.kind ?? "unknown",
+        ),
+      });
+      continue;
+    }
+
     results.push(
       await reviveTarget({
         launchAgentLabel: target.launchAgentLabel,
@@ -259,7 +301,14 @@ export const reviveAgentWitchWebSocket = async (input?: {
   let reinstallErrorMessage: string | undefined;
   let finalTargets = results;
 
-  if (results.some((entry) => entry.reason !== "healthy" && !entry.revived)) {
+  if (
+    results.some(
+      (entry) =>
+        entry.reason !== "healthy" &&
+        !isReviveFutileReason(entry.reason) &&
+        !entry.revived,
+    )
+  ) {
     // Dynamic import so a partial self-update (missing reinstall helper) cannot
     // crash-loop the whole AgentWitch process on module load (AGENT-049).
     try {

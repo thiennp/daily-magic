@@ -1,7 +1,17 @@
+import type { AgentWitchLastDisconnect } from "@agent-witch/install-connection-health";
+
 import type { AgentWitchConnectionHealth } from "./agentWitchConnectionHealth.constants";
 
+/**
+ * `not_linked` and `cloud_unreachable` are connection problems a restart or
+ * reinstall cannot cure (identity rejected / server down), so revive skips them.
+ */
 export type AgentWitchReviveReason =
-  "healthy" | "not_running" | "stale_connection";
+  | "healthy"
+  | "not_running"
+  | "stale_connection"
+  | "not_linked"
+  | "cloud_unreachable";
 
 export interface AgentWitchReviveTargetResult {
   readonly launchAgentLabel: string;
@@ -26,5 +36,9 @@ export interface AgentWitchWatchdogTargetStatus {
   readonly connectionHealth: AgentWitchConnectionHealth | null;
   readonly isConnectionStale: boolean;
   readonly needsRevive: boolean;
+  /** False when a kickstart/reinstall cannot fix `reason` (see above). */
+  readonly reviveCanHelp: boolean;
   readonly reason: AgentWitchReviveReason;
+  /** Why the cloud link is down, as recorded by the running client. */
+  readonly lastDisconnect: AgentWitchLastDisconnect | null;
 }

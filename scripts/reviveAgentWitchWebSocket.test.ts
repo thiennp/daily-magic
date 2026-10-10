@@ -22,6 +22,17 @@ vi.mock("./agentWitchConnectionHealth", async (importOriginal) => {
   };
 });
 
+vi.mock("@agent-witch/install-connection-health", async (importOriginal) => {
+  const actual =
+    await importOriginal<
+      typeof import("@agent-witch/install-connection-health")
+    >();
+  return {
+    ...actual,
+    readAgentWitchLastDisconnect: vi.fn(() => null),
+  };
+});
+
 vi.mock("./isAgentWitchLaunchAgentRunning", () => ({
   isAgentWitchLaunchAgentRunning: vi.fn(),
 }));
@@ -68,6 +79,8 @@ vi.mock("./ensureAgentWitchCoupledWakeClientHealth", () => ({
     kickstartedLabels: [],
   }),
 }));
+
+import { readAgentWitchLastDisconnect } from "@agent-witch/install-connection-health";
 
 import { isActiveMacOsConsoleUser } from "./isActiveMacOsConsoleUser";
 import { readAgentWitchConnectionHealth } from "./agentWitchConnectionHealth";
@@ -155,6 +168,41 @@ describe("reviveAgentWitchWebSocket", () => {
       reason: "stale_connection",
     });
   });
+
+  it.each([
+    ["device_not_linked", "not_linked"],
+    ["server_down", "cloud_unreachable"],
+    ["dns", "cloud_unreachable"],
+  ] as const)(
+    "does not kickstart or reinstall when the last disconnect is %s",
+    async (kind, expectedReason) => {
+      vi.mocked(listAgentWitchLaunchTargets).mockReturnValue([
+        {
+          profileEmail: "user@example.com",
+          launchAgentLabel: "com.agent-witch.user-at-example-com",
+        },
+      ]);
+      vi.mocked(isAgentWitchLaunchAgentRunning).mockResolvedValue(true);
+      vi.mocked(readAgentWitchConnectionHealth).mockReturnValue(null);
+      vi.mocked(readAgentWitchLastDisconnect).mockReturnValue({
+        at: "2026-10-10T14:00:00.000Z",
+        kind,
+        code: 404,
+        message: "boom",
+        attemptCount: 3,
+        nextRetryAt: null,
+      });
+
+      const result = await reviveAgentWitchWebSocket({ skipLog: true });
+
+      expect(kickstartAgentWitchLaunchAgent).not.toHaveBeenCalled();
+      expect(attemptAgentWitchWatchdogReinstall).not.toHaveBeenCalled();
+      expect(result.targets[0]).toMatchObject({
+        revived: false,
+        reason: expectedReason,
+      });
+    },
+  );
 
   it("skips healthy launch agents", async () => {
     vi.mocked(listAgentWitchLaunchTargets).mockReturnValue([

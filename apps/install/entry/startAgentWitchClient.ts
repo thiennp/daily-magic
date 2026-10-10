@@ -30,12 +30,18 @@ import {
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 import {
   AGENT_WITCH_CONNECTION_STALE_MS,
+  classifyAgentWitchDisconnect,
   clearAgentWitchConnectionHealth,
+  clearAgentWitchLastDisconnect,
+  computeAgentWitchReconnectDelayMs,
+  describeAgentWitchDisconnectKind,
   isAgentWitchConnectionHealthStale,
   readAgentWitchConnectionHealth,
   resolveAgentWitchLocalWsConnected,
   shouldReviveAgentWitchWebSocketFromHealth,
   writeAgentWitchConnectionHealth,
+  writeAgentWitchLastDisconnect,
+  type AgentWitchDisconnectKind,
 } from "@agent-witch/install-connection-health";
 import {
   buildDeviceAuthHelloFields,
@@ -78,6 +84,7 @@ import { buildAgentWitchDeviceRestartAckPayload } from "@agent-witch/install-run
 import {
   ensureAgentWitchInstallVersionRecorded,
   readAgentWitchInstallVersion,
+  fetchAgentWitchRemoteInstallBundleVersion,
   resolveAgentWitchAppOriginFromWsUrl,
   resolveAgentWitchHeartbeatInstallBundleVersion,
 } from "@agent-witch/install-self-update";
@@ -232,9 +239,8 @@ import {
   writeShellPtyInput,
 } from "./legacyScriptDeps";
 const HEARTBEAT_INTERVAL_MS = 30_000;
-const MAX_RECONNECT_DELAY_MS = 30_000;
-/** Revoked/unlinked device: retry rarely instead of every 2s. */
-const NOT_LINKED_RETRY_MS = 5 * 60 * 1_000;
+/** While the WebSocket has no ack, poll the version endpoint over HTTP. */
+const HTTP_BUNDLE_POLL_INTERVAL_MS = 5 * 60 * 1_000;
 const shellSessionIdByRunId = new Map<string, string>();
 const projectFolderPathByRunId = new Map<string, string>();
 const projectIdByRunId = new Map<string, string>();
@@ -1193,9 +1199,12 @@ const runHarnessRequest = async (
   reportHarnessManifest(socket, config.layout);
 };
 
-const computeReconnectDelayMs = (attempt: number): number => {
-  const delayMs = 1000 * 2 ** attempt;
-  return Math.min(MAX_RECONNECT_DELAY_MS, delayMs);
+/** ws reports a non-101 handshake as "Unexpected server response: <status>". */
+const parseUnexpectedServerResponseStatus = (
+  message: string,
+): number | null => {
+  const match = /Unexpected server response: (\d{3})/.exec(message);
+  return match === null ? null : Number(match[1]);
 };
 
 const createAgentWitchClient = (config: AgentWitchConfig) => {
@@ -1214,6 +1223,11 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     reconnectTimer?: NodeJS.Timeout;
     reconnectAttempt: number;
     notLinked: boolean;
+    /** Transport details of the latest failed attempt, for classification. */
+    lastErrorCode: string | null;
+    lastHttpStatus: number | null;
+    socketWasOpen: boolean;
+    httpBundlePollTimer?: NodeJS.Timeout;
     stopped: boolean;
     wsConnected: boolean;
     lastHeartbeatAt: string | null;
@@ -1224,6 +1238,9 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
   } = {
     reconnectAttempt: 0,
     notLinked: false,
+    lastErrorCode: null,
+    lastHttpStatus: null,
+    socketWasOpen: false,
     stopped: false,
     wsConnected: false,
     lastHeartbeatAt: null,
@@ -1340,7 +1357,8 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
   const runLocalSelfUpdateFromHeartbeat = (
     remoteBundleVersion: string,
-    trigger: "system.ack" | "install.bundle.update" = "system.ack",
+    trigger:
+      "system.ack" | "install.bundle.update" | "http.poll" = "system.ack",
   ): void => {
     if (state.selfUpdateInFlight) {
       return;
@@ -1408,7 +1426,6 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     console.log(
       "[agent-witch] Connection health stale — reconnecting WebSocket…",
     );
-    state.reconnectAttempt = 0;
     clearReconnectTimer();
     closeSocket();
     connect();
@@ -1456,8 +1473,61 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     }
   };
 
+  /**
+   * A client the cloud rejects (device_not_linked) or cannot reach never gets
+   * `system.ack` / `install.bundle.update`, so it could never leave an old
+   * bundle. Poll the public version endpoint over HTTP while there is no
+   * fresh ack, so a stale bundle upgrades itself without a WebSocket.
+   */
+  const pollRemoteBundleOverHttp = async (): Promise<void> => {
+    if (state.stopped || state.selfUpdateInFlight) {
+      return;
+    }
+    const health = readAgentWitchConnectionHealth(config.layout);
+    if (
+      health !== null &&
+      !isAgentWitchConnectionHealthStale(
+        health,
+        AGENT_WITCH_CONNECTION_STALE_MS,
+      )
+    ) {
+      return;
+    }
+    const origin = resolveAgentWitchAppOriginFromWsUrl(config.wsUrl);
+    if (origin === null) {
+      return;
+    }
+    const remoteBundleVersion = await fetchAgentWitchRemoteInstallBundleVersion(
+      origin,
+    ).catch(() => null);
+    if (remoteBundleVersion === null || remoteBundleVersion.length === 0) {
+      return;
+    }
+    runLocalSelfUpdateFromHeartbeat(remoteBundleVersion, "http.poll");
+  };
+
+  const clearHttpBundlePoll = (): void => {
+    if (state.httpBundlePollTimer !== undefined) {
+      clearInterval(state.httpBundlePollTimer);
+      state.httpBundlePollTimer = undefined;
+    }
+  };
+
+  const startHttpBundlePoll = (): void => {
+    clearHttpBundlePoll();
+    state.httpBundlePollTimer = setInterval(() => {
+      void pollRemoteBundleOverHttp();
+    }, HTTP_BUNDLE_POLL_INTERVAL_MS);
+    state.httpBundlePollTimer.unref();
+    // First check soon after start so a stale install does not wait 5 min.
+    setTimeout(() => {
+      void pollRemoteBundleOverHttp();
+    }, 30_000).unref();
+  };
+
   const startLocalHealthCheck = (): void => {
     clearLocalHealthCheck();
+    startHttpBundlePoll();
     // Defer first check so initial connect() can write a fresh ack.
     state.localHealthTimer = setInterval(
       checkLocalConnectionHealth,
@@ -1465,15 +1535,46 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     );
   };
 
+  /**
+   * Also runs at startup and on every scheduled reconnect: heartbeats (the old
+   * only caller) never start while the cloud is down, which let an outage log
+   * grow to 178 MB.
+   */
+  const trimClientLogs = (): void => {
+    trimAgentWitchLogs([
+      config.layout.mainLogPath,
+      config.layout.errorLogPath,
+      path.join(config.layout.installDir, "agent-witch.log"),
+      path.join(config.layout.installDir, "agent-witch.error.log"),
+    ]);
+  };
+
   const scheduleReconnect = (): void => {
     if (state.stopped || state.reconnectTimer !== undefined) {
       return;
     }
+    trimClientLogs();
 
-    const delayMs = state.notLinked
-      ? NOT_LINKED_RETRY_MS
-      : computeReconnectDelayMs(state.reconnectAttempt);
+    const kind: AgentWitchDisconnectKind = classifyAgentWitchDisconnect({
+      statusCode: state.lastHttpStatus,
+      errorCode: state.lastErrorCode,
+      socketWasOpen: state.socketWasOpen,
+      notLinked: state.notLinked,
+    });
+    const delayMs = computeAgentWitchReconnectDelayMs({
+      attempt: state.reconnectAttempt,
+      kind,
+    });
+    console.log(`[agent-witch] ${describeAgentWitchDisconnectKind(kind)}`);
     console.log(`[agent-witch] Reconnecting in ${delayMs}ms…`);
+    writeAgentWitchLastDisconnect(config.layout, {
+      at: new Date().toISOString(),
+      kind,
+      code: state.lastHttpStatus,
+      message: state.wakeError ?? "",
+      attemptCount: state.reconnectAttempt,
+      nextRetryAt: new Date(Date.now() + delayMs).toISOString(),
+    });
 
     state.reconnectTimer = setTimeout(() => {
       state.reconnectTimer = undefined;
@@ -1484,12 +1585,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
   const startHeartbeat = (socket: WebSocket): void => {
     clearHeartbeat();
     const sendHeartbeat = async (): Promise<void> => {
-      trimAgentWitchLogs([
-        config.layout.mainLogPath,
-        config.layout.errorLogPath,
-        path.join(config.layout.installDir, "agent-witch.log"),
-        path.join(config.layout.installDir, "agent-witch.error.log"),
-      ]);
+      trimClientLogs();
       const knowledge = await buildKnowledgeHeartbeatPayload(
         config.layout,
         Date.now(),
@@ -1552,7 +1648,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           ? String(parsed.payload.errorMessage ?? "")
           : "";
         console.error(
-          `[agent-witch] This computer is not linked to AgentWitch. Retrying every 5 minutes. ${serverMessage}`.trim(),
+          `[agent-witch] This computer is not linked to AgentWitch. Retrying about every 5 minutes. ${serverMessage}`.trim(),
         );
       }
       state.notLinked = true;
@@ -1561,6 +1657,12 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
     if (parsed.type === "system.ack") {
       state.notLinked = false;
+      // Only a real ack proves the link works; a socket that opens and is
+      // then closed by the server must keep growing its backoff.
+      state.reconnectAttempt = 0;
+      state.lastErrorCode = null;
+      state.lastHttpStatus = null;
+      clearAgentWitchLastDisconnect(config.layout);
     }
 
     if (isUnknownAgentWitchIdentityError(parsed)) {
@@ -2467,17 +2569,21 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     if (state.stopped) {
       return;
     }
+    trimClientLogs();
 
     clearReconnectTimer();
     closeSocket();
+    state.socketWasOpen = false;
+    state.lastErrorCode = null;
+    state.lastHttpStatus = null;
 
     const socket = new WebSocket(config.wsUrl);
     state.socket = socket;
 
     socket.on("open", () => {
       bindAgentWitchLiveRunSocket(config.layout.profileEmail ?? "", socket);
-      state.reconnectAttempt = 0;
       state.wsConnected = true;
+      state.socketWasOpen = true;
       state.wakeError = null;
       console.log(`[agent-witch] Connected to ${config.wsUrl}`);
       if (config.email !== null) {
@@ -2567,6 +2673,9 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
     socket.on("error", (error) => {
       state.wakeError = error.message;
+      state.lastHttpStatus = parseUnexpectedServerResponseStatus(error.message);
+      const errorCode = (error as NodeJS.ErrnoException).code;
+      state.lastErrorCode = typeof errorCode === "string" ? errorCode : null;
       recordAgentWitchLocalTraceEvent(config.layout, {
         kind: "ws_error",
         message: error.message,
@@ -2604,6 +2713,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     unwatchCodingToolsPause();
     clearHeartbeat();
     clearLocalHealthCheck();
+    clearHttpBundlePoll();
     clearReconnectTimer();
     closeSocket();
   };
@@ -2657,7 +2767,19 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       linkCode: null,
       publicKeyRaw: resolveLocalAppPublicKey(config.layout),
     }),
-    reviveWebSocket: (): void => {
+    /**
+     * Unforced calls (the 60s stale tick) respect a pending backoff timer and
+     * the not-linked wait, so they cannot turn a 5-minute retry into a 60s
+     * one. A user-initiated revive (`force`) always retries now.
+     */
+    reviveWebSocket: (input?: { readonly force?: boolean }): void => {
+      if (input?.force !== true) {
+        if (state.notLinked || state.reconnectTimer !== undefined) {
+          return;
+        }
+        connect();
+        return;
+      }
       state.reconnectAttempt = 0;
       connect();
     },
@@ -2842,7 +2964,7 @@ const main = async (): Promise<void> => {
     process.exit(0);
   }
 
-  const reconnectWebSocketsIfStale = (): void => {
+  const reconnectWebSocketsIfStale = (force = false): void => {
     configs.forEach((config, index) => {
       const client = clients[index];
       if (client === undefined) {
@@ -2856,7 +2978,7 @@ const main = async (): Promise<void> => {
       if (!shouldRevive) {
         return;
       }
-      client.reviveWebSocket();
+      client.reviveWebSocket({ force });
     });
   };
 
@@ -2906,7 +3028,9 @@ const main = async (): Promise<void> => {
           layout: config.layout,
           controllers: {
             getStatus: client.getStatus,
-            reviveWebSocket: reconnectWebSocketsIfStale,
+            reviveWebSocket: () => {
+              reconnectWebSocketsIfStale(true);
+            },
             reportHarnessManifestIfConnected:
               client.reportHarnessManifestIfConnected,
           },

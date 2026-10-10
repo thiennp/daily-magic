@@ -16,7 +16,11 @@ export interface AgentWitchWatchdogReinstallState {
 }
 
 export type AgentWitchWatchdogReviveReason =
-  "healthy" | "not_running" | "stale_connection";
+  | "healthy"
+  | "not_running"
+  | "stale_connection"
+  | "not_linked"
+  | "cloud_unreachable";
 
 export interface AgentWitchWatchdogReviveTarget {
   readonly launchAgentLabel: string;

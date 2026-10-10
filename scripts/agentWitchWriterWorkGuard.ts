@@ -327,7 +327,7 @@ export const subscribeAgentWitchWriterWorkIdle = (
 export interface DeferredAgentWitchInstallBundleUpdate {
   readonly layout: AgentWitchLocalLayout;
   readonly remoteBundleVersion: string;
-  readonly trigger: "system.ack" | "install.bundle.update";
+  readonly trigger: "system.ack" | "install.bundle.update" | "http.poll";
 }
 
 let pendingInstallBundleUpdate: DeferredAgentWitchInstallBundleUpdate | null =

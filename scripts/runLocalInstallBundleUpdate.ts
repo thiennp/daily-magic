@@ -67,7 +67,7 @@ export const isAgentWitchInstallBundleUpdateNeeded = (input: {
 export const runLocalInstallBundleUpdate = async (input: {
   readonly layout: AgentWitchLocalLayout;
   readonly remoteBundleVersion: string;
-  readonly trigger: "system.ack" | "install.bundle.update";
+  readonly trigger: "system.ack" | "install.bundle.update" | "http.poll";
 }): Promise<void> => {
   const localBundleVersion =
     readAgentWitchInstallVersion(input.layout.installDir)?.bundleVersion ??
