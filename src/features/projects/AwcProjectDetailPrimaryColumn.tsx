@@ -9,7 +9,7 @@ import { PROJECT_ACTIVITY_TASK_HASH_WITH_POUND } from "@/features/projects/utils
 import AwcProjectNameEditor from "@/features/projects/AwcProjectNameEditor";
 import AwcProjectPresenceBadge from "@/features/projects/AwcProjectPresenceBadge";
 import AwcProjectReadOnlyCompositionSections from "@/features/projects/AwcProjectReadOnlyCompositionSections";
-import AwcProjectPitfallsSection from "@/features/projects/pitfalls/AwcProjectPitfallsSection";
+import { AwcProjectPitfallsSection } from "@/features/projects/pitfalls/public-api/presentation";
 import { AwcProjectRepoUrlsSection } from "@/features/projects/repoUrls/public-api/presentation";
 import { AWC_PROJECT_DETAIL_META_LABEL_CLASS } from "@/features/projects/awcProjectDetailSection.constant";
 import {

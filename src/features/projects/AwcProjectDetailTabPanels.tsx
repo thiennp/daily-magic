@@ -2,7 +2,7 @@
 
 import AwcProjectDetailTabPanelBody from "@/features/projects/AwcProjectDetailTabPanelBody";
 import AwcProjectTabPanelIntro from "@/features/projects/AwcProjectTabPanelIntro";
-import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
+import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/public-api/types";
 import {
   PROJECT_PAGE_TAB_IDS,
   type ProjectPageNavTarget,

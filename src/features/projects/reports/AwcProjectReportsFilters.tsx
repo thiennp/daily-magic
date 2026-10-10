@@ -2,7 +2,7 @@
 
 import { useId } from "react";
 
-import { PITFALL_SEARCH_INPUT_CLASS } from "@/features/projects/pitfalls/pitfallsChrome.constant";
+import { PITFALL_SEARCH_INPUT_CLASS } from "@/features/projects/pitfalls/public-api/types";
 import AwcProjectReportsStatusChips from "@/features/projects/reports/AwcProjectReportsStatusChips";
 import { PROJECT_PAGE_REPORTS_COPY as C } from "@/features/projects/reports/projectPageReportsCopy.constant";
 import type { ProjectReportFilters } from "@/features/projects/reports/utils/filterProjectReports";

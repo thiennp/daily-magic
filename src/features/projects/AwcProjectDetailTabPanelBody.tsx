@@ -5,8 +5,8 @@ import { AwcProjectKnowledgeImpactPanel } from "@/features/projects/knowledge-im
 import AwcProjectLibraryPanel from "@/features/projects/library/AwcProjectLibraryPanel";
 import AwcProjectTasksPanelWithRecords from "@/features/projects/tasks/AwcProjectTasksPanelWithRecords";
 import AwcProjectOverviewPanel from "@/features/projects/overview/AwcProjectOverviewPanel";
-import AwcProjectPitfallsPanel from "@/features/projects/pitfalls/AwcProjectPitfallsPanel";
-import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/useAwcProjectPitfalls";
+import { AwcProjectPitfallsPanel } from "@/features/projects/pitfalls/public-api/presentation";
+import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/public-api/types";
 import AwcProjectReportsPanel from "@/features/projects/reports/AwcProjectReportsPanel";
 import AwcProjectResourcesPanel from "@/features/projects/resources/AwcProjectResourcesPanel";
 import type {

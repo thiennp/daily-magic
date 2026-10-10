@@ -9,7 +9,7 @@ import {
   PITFALL_CHIP_ACTIVE_CLASS,
   PITFALL_CHIP_IDLE_CLASS,
   PITFALL_SEARCH_INPUT_CLASS,
-} from "@/features/projects/pitfalls/pitfallsChrome.constant";
+} from "@/features/projects/pitfalls/public-api/types";
 
 /** Locked chip order + labels (Product: All / Playbooks / Workflows / Skills). */
 const CHIPS: readonly {

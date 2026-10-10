@@ -3,7 +3,7 @@
 import {
   PITFALL_CHIP_ACTIVE_CLASS,
   PITFALL_CHIP_IDLE_CLASS,
-} from "@/features/projects/pitfalls/pitfallsChrome.constant";
+} from "@/features/projects/pitfalls/public-api/types";
 import { PROJECT_PAGE_REPORTS_COPY as C } from "@/features/projects/reports/projectPageReportsCopy.constant";
 import type { ReportStatusFilter } from "@/features/projects/reports/utils/projectReportStatus";
 
