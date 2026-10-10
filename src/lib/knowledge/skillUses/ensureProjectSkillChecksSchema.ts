@@ -27,6 +27,13 @@ export const ensureProjectSkillChecksSchema = async (): Promise<void> => {
       await sql`
         CREATE INDEX IF NOT EXISTS project_skill_checks_due_idx
           ON project_skill_checks (project_id, status, created_at)`;
+      await sql`
+        ALTER TABLE project_skill_checks
+          ADD COLUMN IF NOT EXISTS decision TEXT
+            CHECK (decision IS NULL OR decision IN ('old', 'new', 'both')),
+          ADD COLUMN IF NOT EXISTS decided_at TIMESTAMPTZ,
+          ADD COLUMN IF NOT EXISTS decided_by_user_id TEXT,
+          ADD COLUMN IF NOT EXISTS new_version INTEGER`;
     })().catch((error: unknown) => {
       state.promise = null;
       throw error;

@@ -1,6 +1,7 @@
 import type {
   AutoSkillAnswer,
   AutoSkillsOverview,
+  SkillCheckAnswer,
 } from "@/features/project-auto-skills/internal/core/projectAutoSkills.type";
 
 export const autoSkillsUrl = (projectId: string): string =>
@@ -72,5 +73,26 @@ export const postAutoSkillScan = async (
     };
   } catch {
     return { ok: false, errorMessage: "Could not start the scan." };
+  }
+};
+
+/** Answer a skill check: keep the old version, use the new one, or run both. */
+export const postSkillCheckAnswer = async (
+  projectId: string,
+  checkId: number,
+  answer: SkillCheckAnswer,
+): Promise<boolean> => {
+  try {
+    const response = await fetch(
+      `${autoSkillsUrl(projectId)}/skill-checks/${checkId}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answer }),
+      },
+    );
+    return response.ok;
+  } catch {
+    return false;
   }
 };

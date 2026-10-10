@@ -3,6 +3,7 @@ export type AutoSkillPublishMode = "draft" | "publish";
 export type AutoSkillSuggestionStatus =
   "pending" | "saved" | "not_now" | "never";
 export type AutoSkillAnswer = "save" | "not_now" | "never";
+export type SkillCheckAnswer = "old" | "new" | "both";
 
 export interface AutoSkillsSettings {
   readonly enabled: boolean;
@@ -78,10 +79,25 @@ export interface AutoSkillSuggestion {
   readonly createdAt: string;
 }
 
+/** A judged skill check that proposes a better version and waits for the owner's pick. */
+export interface SkillCheckQuestion {
+  readonly id: number;
+  readonly skillId: string;
+  readonly skillName: string;
+  readonly skillVersion: number;
+  readonly usesAtCheck: number;
+  /** What the judge saw and what it would change. */
+  readonly note: string;
+  readonly proposedBody: string;
+  readonly createdAt: string;
+}
+
 /** What the Library strip renders. */
 export interface AutoSkillsOverview
   extends AutoSkillsSettings, AutoSkillsStatus {
   readonly pending: readonly AutoSkillSuggestion[];
+  /** Skills the judge would improve, waiting for old / new / both. */
+  readonly skillChecks: readonly SkillCheckQuestion[];
   /** skillIds that were saved from an auto question (Library "Auto" chip). */
   readonly autoSkillIds: readonly string[];
 }

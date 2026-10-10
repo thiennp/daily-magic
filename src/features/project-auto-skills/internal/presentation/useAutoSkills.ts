@@ -6,11 +6,13 @@ import type {
   AutoSkillAnswer,
   AutoSkillJudgePref,
   AutoSkillsOverview,
+  SkillCheckAnswer,
 } from "@/features/project-auto-skills/internal/core/projectAutoSkills.type";
 import {
   autoSkillsUrl,
   fetchAutoSkillsOverview,
   postAutoSkillAnswer,
+  postSkillCheckAnswer,
 } from "@/features/project-auto-skills/internal/presentation/autoSkillsApi";
 import {
   useAutoSkillScan,
@@ -25,6 +27,10 @@ export interface AutoSkillsState extends AutoSkillScan {
   readonly setJudgePref: (pref: AutoSkillJudgePref) => Promise<void>;
   readonly setJudgeAgent: (agent: string | null) => Promise<void>;
   readonly answer: (id: string, answer: AutoSkillAnswer) => Promise<boolean>;
+  readonly answerSkillCheck: (
+    checkId: number,
+    answer: SkillCheckAnswer,
+  ) => Promise<boolean>;
   readonly reload: () => void;
 }
 
@@ -88,6 +94,17 @@ export const useAutoSkills = (
     [projectId, reload],
   );
 
+  const answerSkillCheck = useCallback(
+    async (checkId: number, value: SkillCheckAnswer): Promise<boolean> => {
+      setBusy(true);
+      const ok = await postSkillCheckAnswer(projectId, checkId, value);
+      setBusy(false);
+      reload();
+      return ok;
+    },
+    [projectId, reload],
+  );
+
   return {
     overview: enabled ? overview : null,
     busy,
@@ -97,5 +114,6 @@ export const useAutoSkills = (
     setJudgePref: (judgePref) => patch({ judgePref }),
     setJudgeAgent: (judgeAgent) => patch({ judgeAgent }),
     answer,
+    answerSkillCheck,
   };
 };

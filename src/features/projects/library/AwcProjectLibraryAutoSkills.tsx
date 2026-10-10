@@ -3,8 +3,8 @@
 import { useState } from "react";
 
 import type { AutoSkillsState } from "@/features/project-auto-skills/public-api/presentation";
-import { AwcAutoSkillQuestionCard } from "@/features/projects/autoskills/public-api/presentation";
 import { AUTO_SKILLS_DEFAULT_SCAN_COMMITS } from "@/features/projects/library/autoSkillsScanCommits.constant";
+import AwcAutoSkillsQuestionList from "@/features/projects/library/AwcAutoSkillsQuestionList";
 import AwcAutoSkillsActions from "@/features/projects/library/AwcAutoSkillsActions";
 import AwcAutoSkillsAgentPicker from "@/features/projects/library/AwcAutoSkillsAgentPicker";
 import AwcAutoSkillsDeeperScan from "@/features/projects/library/AwcAutoSkillsDeeperScan";
@@ -38,7 +38,7 @@ export default function AwcProjectLibraryAutoSkills({
     return null;
   }
   const status = formatAutoSkillsStatus(overview, nowMs);
-  const waiting = overview.pending.length;
+  const waiting = overview.pending.length + overview.skillChecks.length;
   return (
     <section
       aria-label="Auto skills"
@@ -94,21 +94,11 @@ export default function AwcProjectLibraryAutoSkills({
         </>
       ) : null}
       {open && waiting > 0 ? (
-        <ul className="flex flex-col gap-2">
-          {overview.pending.map((suggestion) => (
-            <li key={suggestion.id}>
-              <AwcAutoSkillQuestionCard
-                suggestion={suggestion}
-                busy={auto.busy}
-                onAnswer={(answer) => {
-                  void auto.answer(suggestion.id, answer).then((ok) => {
-                    if (ok && answer === "save") onSaved();
-                  });
-                }}
-              />
-            </li>
-          ))}
-        </ul>
+        <AwcAutoSkillsQuestionList
+          auto={auto}
+          overview={overview}
+          onSaved={onSaved}
+        />
       ) : null}
     </section>
   );

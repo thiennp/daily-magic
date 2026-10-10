@@ -6,4 +6,6 @@ export type {
   AutoSkillScriptInfoEntry,
   AutoSkillSuggestion,
   AutoSkillsOverview,
+  SkillCheckAnswer,
+  SkillCheckQuestion,
 } from "@/features/project-auto-skills/internal/core/projectAutoSkills.type";
